@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct  6 16:48:38 CEST 2004 - sh@suse.de
+
+- UI: Dropped support for hardcoded images "suseheader" and "yast2"
+  Use path names and/or the wizard instead!
+
+-------------------------------------------------------------------
 Wed Oct  6 16:36:48 CEST 2004 - visnov@suse.cz
 
 - Read whole u32 at once from bytecode to speed it up 
