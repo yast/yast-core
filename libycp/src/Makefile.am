@@ -48,13 +48,9 @@ libycp_la_SOURCES = 					\
 $(srcdir)/scanner.cc: scanner.ll parser.h
 	flex++ -o$@ $<
 
-# we need a pattern rule - otherwise bison may be run twice in parallel
-$(srcdir)/%.h $(srcdir)/%.cc: %.yy
-	bison -y -d -v $<
-	mv -f y.tab.c $(srcdir)/$*.cc
-	mv -f y.tab.h $(srcdir)/$*.h
+BUILT_SOURCES = parser.h
 
-BUILT_SOURCES = parser.cc scanner.cc parser.h
+AM_YFLAGS = -d -v
 
 INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(srcdir)/../../liby2/src/include -I$(includedir) -I/usr/include/YaST2
 
@@ -62,4 +58,4 @@ libycp_la_LDFLAGS = -L$(libdir) -version-info 2:0
 
 libycp_la_LIBADD = -lxcrypt -ly2util
 
-CLEANFILES = y.output $(BUILT_SOURCES)
+CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
