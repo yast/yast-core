@@ -1404,7 +1404,7 @@ YWidget *YUIInterpreter::createMultiLineEdit(YWidget *parent, YWidgetOpt &opt,
  * @arg		string label
  * @optarg	list items the items contained in the selection box
  * @option	shrinkable make the widget very small
- * @option	immediate (NCurses UI special) make `notify trigger immediately when the selected item changes
+ * @option	immediate	make `notify trigger immediately when the selected item changes
  * @usage	`SelectionBox(`id(`pizza), "select your Pizza:", [ "Margarita", `item(`id(`na), "Napoli") ])
  * @examples	SelectionBox1.ycp SelectionBox2.ycp SelectionBox3.ycp SelectionBox4.ycp
  *
