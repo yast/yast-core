@@ -1,0 +1,8 @@
+{
+    Execute (.bash, "/usr/bin/touch tmp.write.remove");
+    return Execute (.remove, "tmp.write.remove");
+}
+
+{
+    return Execute (.remove, "tmp.write.remove");
+}

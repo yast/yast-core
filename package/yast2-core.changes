@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 24 18:01:00 CEST 2002 - arvin@suse.de
+
+- Execute (.target.remove, ...) is now quiet (bug #17177)
+
+-------------------------------------------------------------------
 Wed Jul 24 14:58:06 CEST 2002 - arvin@suse.de
 
 - fixed error messages for Read (.target.yast2, ...) (bug #17170)

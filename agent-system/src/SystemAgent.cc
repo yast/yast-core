@@ -1127,18 +1127,18 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 * @builtin Execute (.target.remove, string file) -> boolean
 	 * Remove a file.
 	 *
-	 * The returnvalue is true or false, depending of the success.
+	 * The return value is true or false depending on the success.
 	 *
-	 * @example Execute (.target.remove, "/tmp/xyzzy")
+	 * @example Execute (.target.remove, "/tmp/xyz")
 	 */
 	if (value.isNull() || !value->isString())
 	{
 	    return YCPError ("Bad file in Execute (.remove, string file)");
 	}
 
-	string removecmd = "/bin/rm " + value->asString()->value();
+	int ret = unlink (value->asString ()->value_cstr ());
 
-	return YCPBoolean (shellcommand (removecmd) == 0);
+	return YCPBoolean (ret == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
