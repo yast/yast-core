@@ -43,8 +43,8 @@ Author: Stefan Hundhammer
 <br>
 <li><a href="#delivery">Event Delivery</a>
     <ul>
-    <li><a href="#reliability">Event Reliability</a>
     <li><a href="#queues">Event Queues vs. One Single Pending Event</a>
+    <li><a href="#reliability">Event Reliability</a>
     <li><a href="#defensive_programming">Defensive Programming</a>
     </ul>
 </ul>
@@ -454,12 +454,301 @@ discussion a bit. ;-)
 
 <h1><a name="delivery">Event Delivery</a></h1>
 
+<h2><a name="queues">Event Queues vs. One Single Pending Event</a></h2>
+
+<p>
+Since the YaST2 UI doesn't have a single
+<a href="#classic_gui">event loop</a>
+where the program spends most of its time, an indefinite period of time may
+pass between causing an event (e.g., the user clicks on a widget) and event
+<i>delivery</i> - the time where the (YCP) application actually receives the
+event and begins processing it. The time gap between that depends on when the
+YCP code executes the next
+<a href="event-builtins.html#UserInput">UserInput()</a>
+etc. statement.
+<p>
+This of course means that events that occured in the mean time need to be
+stored somewhere for the YCP code to pick them up with
+<a href="event-builtins.html#UserInput">UserInput()</a>
+etc.
+<p>
+The first approach that automatically comes to mind is "use a queue and deliver
+them first-in, first-out". But this brings along its own problems:
+
+<p>
+Events are only useful in the context of the dialog they belong to. When an
+event's dialog is closed or when a new dialog is opened on top of that event's
+dialog (a popup for example) it doesn't make any more sense to handle that
+event. Even worse, it will usually lead to utter confusion, maybe even damage.
+<p>
+Imagine this situation: The user opens a YaST2 partitioning module
+just to have a look at his current partitioning scheme.
+
+<p class="info-box">
+Side note: This scenario is fictious. The real YaST2 partitioning module is not
+like that. Any similarities with present or past partitioning modules or
+present or past YaST2 hackers or users is pure coincidence and not intended.
+Ah yes, and no animals were harmed in the process of making that scenario. ;-)
+</p>
+
+<ul>
+<li>The main dialog with an "OK" button (with, say, ID `ok) opens.
+<li>It takes some time to initialize data in the background.
+<li>The user clicks "OK".
+<li>The background initialization takes some more time.
+<li>The user becomes impatient and clicks "OK" again.
+<li>The background initialization still is not done.
+<li>The user clicks "OK" again.
+
+<li>
+The initialization is done. The YCP code reaches
+<a href="event-builtins.html#UserInput">UserInput()</a>.
+
+<li>
+Queued events are delivered (remember, this is only a fictious scenario - the
+UI does not really do that). The first "OK" click from the queue is delivered -
+i.e.
+<a href="event-builtins.html#UserInput">UserInput()</a>
+returns `ok.
+
+<li>
+The initialization code found out that something might be wrong with the
+partitioning or file systems. It might make sense to convert, say, the mounted
+<tt>/usr</tt> file system from <i>oldLameFs-3.0</i> to <i>newCoolFs-0.95Beta</i> -
+which usually works out allright, but of course you never know what disaster
+lies ahead when doing such things with file systems (and, even worse, with an
+experimental beta version).
+
+<li>
+The initialization code opens a popup dialog with some text to informs the
+user about that. The user can now click "OK" to do trigger the file system
+conversion or "Cancel" to keep everything as it is.
+
+<li>
+The handler for that popup dialog calls
+<a href="event-builtins.html#UserInput">UserInput()</a>
+- which happily takes the next event from the queue - the `ok button click
+that doesn't really belong to that dialog, but
+<a href="event-builtins.html#UserInput">UserInput()</a>
+cannot tell that. Neither can the caller. It simply gets `ok as if the  user
+had clicked the "OK" button in the popup.
+
+<li>
+The program has to assume the user confirmed the request to convert the file
+system. The conversion starts.
+
+<li>
+The experimental beta code in <i>newCoolFs-0.95Beta</i> cannot handle the
+existing data in that partition as it should. It asks if it is allright to
+delete all data on that partition. Another popup dialog opens with that
+question.
+
+<li>
+The handler for that confirmation popup takes the next event from the queue
+which is the third `ok click that should have gone to the main window. But the
+handler doesn't know that and takes that `ok as the confirmation it asked for.
+
+<li>
+<tt>/usr</tt> is completely emptied. Half of the system is gone (along with
+most of YaST2's files). The disaster is complete - the system is wrecked beyond
+repair.
+
+</ul>
+
+<p>
+Argh. What a mess.
+<p>
+Yes, this example is contived. But it shows the general problem: Events belong
+to one specific dialog. It never makes any sense to deliver events to other
+dialogs.
+<p>
+But this isn't all. Even if the internal UI engine (the <i>libyui</i>) could
+make sure that events are only delivered to the dialog they belong to (maybe
+with a separate queue for each dialog), events may never blindly be taken from
+any queue. If the user typed (or clicked) a lot ahead, disaster scenarios
+similar to the one described above might occur just as well.
+<p>
+Events are context specific. The dialog they belong to is not their only
+context; they also depend on the application logic (i.e. on YCP code). This is
+another byproduct of the
+<a href="#y2_approach">YaST2 event handling approach</a>.
+<p>
+It has been suggested to use (per-dialog) event queues, but to flush their
+contents when the dialog context changes:
+<ul>
+<li>When a new dialog is opened (<i>OpenDialog()</i>)
+<li>When the current dialog is closed (<i>CloseDialog()</i>)
+<li>When parts of the dialog are replaced (<i>ReplaceWidget()</i>)
+<li>Upon the YCP application's specific request (new UI builtin <i>FlushEvents()</i>)
+</ul>
+
+<p>
+Exactly when and how this should happen is unclear. Every imaginable way has
+its downsides or some pathologic scenarios. You just can't do this right. And
+YCP application developers would have to know when and how this happens - which
+is clearly nothing they should be troubled with.
+<p>
+This is why <b>all current YaST2 UIs have onle one single <i>pending
+event</i> and not a queue of events.</b> When a new event occurs, it usually
+overwrites any event that may still be pending - i.e. events get lost if there
+are too many (more than the YCP application can and wants to handle).
+<p>
+
 
 <h2><a name="reliability">Event Reliability</a></h2>
 
-<h2><a name="queues">Event Queues vs. One Single Pending Event</a></h2>
+<p>
+While it may sound critical to have only one single <i>pending event</i>,
+on this works out just as everybody expects:
+
+<ul>
+
+<li>
+When the YCP application is busy and the user clicks wildly around in the
+dialog, only the last of his clicks is acted upon. This is what all impatient
+users want anyway: "do this, no, do that, no, do that, no, cancel that
+all". The "Cancel" is what he will get, not everything in the sequence he
+clicked.
+<li>
+The YCP application does not get bogged down by a near-endless sequence of
+events from the event queues. If things are so sluggish that there are more
+events than the application can handle in the first place, getting even more to
+handle will not help any.
+<li>
+YaST2 dialogs are designed like fill-in forms with a few (not too many)
+buttons. The input field widgets etc. are self-sufficient; they do their own
+event handling (so no typed text will get lost). No more than one button click
+in each dialog makes sense anyway. After that the user has to wait for the next
+dialog to answer more questions. It does not make any sense to queue events
+here; the context in the next dialog is different anyway.
+
+</ul>
+
+<p>
+As described <a href="#queues">above</a>, events can and do get lost if there
+are too many of them. This is not a problem for button clicks (the most common
+type of event), and it should not be a problem for any other events if the
+YCP application is written <a href="#defensive_programming">defensively</a>.
+
+
+
 
 <h2><a name="defensive_programming">Defensive Programming</a></h2>
+
+<p>
+Don't take anything for granted. Never rely on any specific event to always
+occur to make the application work allright.
+<p>
+In particular, never rely on individual
+<a href="event-reference.html#SelectionChanged">SelectionChanged WidgetEvents</a>
+to keep several widgets in sync with each other. If the user clicks faster than
+the application can handle, don't simply count those events to find out what to
+do. Always treat that as a hint to find out what exactly happened:
+Ask the widgets about their current status. They know best. They are what the
+user sees on the screen. Don't surprise the user with other values than what he
+can see on-screen.
+<p>
+In the past, some widgets that accepted initially selected items upon creation
+had sometimes triggered events for that initial selection, sometimes not. Even
+though it is a performance optimization goal of the UI to suppress such
+program-generated events, it cannot be taken for granted if they occur or
+not. But it's easy not to rely on that. Instead of writing code like this:
+
+<pre class="code">
+{
+    // Example <em>how NOT to do things</em>
+
+    <b>UI::OpenDialog</b>(
+                   ...
+		   `<a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>(`id(`colors ),
+                                 [
+				  `item(`id("FF0000"), "Red" ),
+				  `item(`id("00FF00"), "Blue",<em>true</em>),  // Initially selected
+				  `item(`id("0000FF"), "Green" )
+                                 ] ),
+                  );
+
+    // Intentionally NOT setting the initial color:
+    //
+    // Selecting an item in the SelectionBox upon creation will trigger a
+    // SelectionChanged event right upon entering the event loop.
+    // The SelectionChanged handler code will take care of setting the initial color.
+    // <em>THIS IS A STUPID IDEA!</em>
+
+    <b>map</b> event = $[];
+
+    repeat
+    {
+        event = <b>UI::WaitForEvent()</b>;
+
+        if ( event["ID"]:nil == `colors )
+        {
+            if ( <b>event["EventReason"]</b>:nil == "SelectionChanged" )
+            {
+                // Handle color change
+		setColor( <b>UI::QueryWidget</b>(`id(`colors ), `SelectedItem ) );
+            }
+        }
+        ...
+    } until ( event["ID"]:nil == `close );
+}
+
+</pre>
+
+Write code like that:
+
+<pre class="code">
+{
+    // Fixed the broken logic in the example above
+
+    <b>UI::OpenDialog</b>(
+                   ...
+		   `<a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>(`id(`colors ),
+                                 [
+				  `item(`id("FF0000"), "Red" ),
+				  `item(`id("00FF00"), "Blue",<b>true</b>),  // Initially selected
+				  `item(`id("0000FF"), "Green" )
+                                 ] ),
+                  );
+
+    <em>// Set initial color                                       </em>
+    <em>setColor( UI::QueryWidget(`id(`colors ), `SelectedItem ) );</em>
+
+    <b>map</b> event = $[];
+
+    repeat
+    {
+        event = <b>UI::WaitForEvent()</b>;
+
+        if ( event["ID"]:nil == `colors )
+        {
+            if ( <b>event["EventReason"]</b>:nil == "SelectionChanged" )
+            {
+                // Handle color change
+		setColor( <b>UI::QueryWidget</b>(`id(`colors ), `SelectedItem ) );
+            }
+        }
+        ...
+    } until ( event["ID"]:nil == `close );
+}
+
+</pre>
+
+<p>
+It's that easy. This small change can make code reliable or subject to failure
+on minor outside changes - like a version of the Qt lib that handles things
+differently and sends another <i>SelectionChanged</i> Qt signal that might be
+mapped to a
+<a href="event-reference.html#SelectionChanged">SelectionChanged WidgetEvents</a>
+- or does not send that signal any more like previous versions might have done.
+<p>
+Being sceptical and not believing anything, much less taking anything for
+granted is an attitude that most programmers adopt as they gain more an more
+programming experience.
+<p>
+Keep it that way. It's a healthy attitude. It helps to avoid a lot of problems
+in the first place that might become hard-to-find bugs after a while.
+
 
 
 <br><br><br>
