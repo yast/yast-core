@@ -1761,6 +1761,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 	return 0;
     }
 
+    outstr.clear();
     iconv_t cd = (iconv_t)(-1);
 
     if ( from == "UTF-8" )
@@ -1813,7 +1814,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 	static bool complained = false;
 	if (!complained)
 	{
-	    // glibc-locate is not necessarily installed so only complain once
+	    // glibc-locale is not necessarily installed so only complain once
 	    y2error ("Recode: (errno %d) failed conversion '%s' to '%s'", errno, from.c_str(), to.c_str());
 	    complained = true;
 	}
@@ -1822,14 +1823,9 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     }
 
     size_t inbuf_len  = instr.length();
-    size_t outbuf_len = inbuf_len * MB_CUR_MAX + 1; // worst case
-
+    size_t outbuf_len = recode_buf_size-1;
     char * outbuf = recode_buf;
-    if (outbuf_len > recode_buf_size)
-    {
-	outbuf = new char[outbuf_len];
-    }
-
+    
     char * inptr  = (char *) instr.c_str();
     char * outptr = outbuf;
     char * l	  = NULL;
@@ -1838,22 +1834,17 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 
     do
     {
-
-#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2)
 	iconv_ret = iconv (cd, (&inptr), &inbuf_len, &outptr, &outbuf_len);
-#else
-	iconv_ret = iconv (cd, (const char **) (&inptr), &inbuf_len, &outptr, &outbuf_len);
-#endif
 
 	if (iconv_ret == (size_t)(-1))
 	{
 
-	    if (errno == EILSEQ)
+	    if (errno == EILSEQ)	// Illegal multibyte sequence?
 	    {
 		if (l != outptr)
 		{
-		    *outptr++ = '?';
-		    outbuf_len--;
+		    *outptr++ = '?';	// Insert '?' for the illegal character
+		    outbuf_len--;	// Account for that '?'
 		    l = outptr;
 		}
 		inptr++;
@@ -1864,25 +1855,23 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 		inptr++;
 		continue;
 	    }
-	    else if (errno == E2BIG)
+	    else if (errno == E2BIG)	// Buffer overflow?
 	    {
-		if (!outbuf_len)
-		{
-		    y2internal ( "Recode: unexpected small output buffer" );
-		    break;
-		}
+		*outptr = '\0';		// Terminate converted buffer contents
+		outstr += recode_buf;	// Append buffer to output string
+
+		// Set up buffer for the next chunk and start over
+		outptr = recode_buf;
+		outbuf_len = recode_buf_size-1;
+		continue;
 	    }
 	}
 
     } while (inbuf_len != (size_t)(0));
 
-    *outptr = '\0';
-    outstr = outbuf;
+    *outptr = '\0';			// Terminate converted buffer contents
+    outstr += recode_buf;		// Append buffer to output string
 
-    if (outbuf != recode_buf)
-    {
-	delete [] outbuf;
-    }
     return 0;
 }
 
