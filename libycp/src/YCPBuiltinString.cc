@@ -217,7 +217,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
 	return YCPNull ();
 
     string ss = s->value ();
-    string::size_type start = i1->value ();
+    int start = i1->value ();
 
     if ((start < 0)
 	|| (start > ss.size ()))
@@ -226,7 +226,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
 	return YCPString ("");
     }
 
-    return YCPString (ss.substr (start, string::npos));
+    return YCPString (ss.substr ((string::size_type) start, string::npos));
 }
 
 
