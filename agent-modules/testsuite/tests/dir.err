@@ -5,3 +5,4 @@
 [YCP] tests/dir.ycp:6 post-install ["poi1", "poi2"]
 [YCP] tests/dir.ycp:7 pre-remove ["prr1", "prr2"]
 [YCP] tests/dir.ycp:8 post-remove ["por1", "por2"]
+[agent-modules] ModulesConf.cc(writeFile):560 Modules not modified, not writing

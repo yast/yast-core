@@ -27,3 +27,4 @@
 [YCP] tests/read1.ycp:33 pre-remove.prr2 prre2 prre2a
 [YCP] tests/read1.ycp:34 post-remove.por1 pore1
 [YCP] tests/read1.ycp:35 post-remove.por2 pore2 porte2a
+[agent-modules] ModulesConf.cc(writeFile):560 Modules not modified, not writing
