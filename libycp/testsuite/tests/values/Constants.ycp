@@ -1,0 +1,78 @@
+//
+// Constants
+//
+
+// void
+(nil)
+
+// boolean
+(true)
+(false)
+
+// integer
+(0)
+(1)
+(1234567890)
+
+// float
+(1.0)
+(3.141592653)
+(0.123)
+(1.23E+10)
+(1.23E-10)
+
+// string
+("")
+("abcd")
+("a\n\tb")
+("a\010b")
+("a\012z")
+("\101\0120\12z\129\n")
+("a\n\t\r\b\f\
+b")
+("\"
+")
+
+// byteblock
+
+(#[202122232425262728296A6B00])
+(#[20212223
+	24252627
+	28296A6B
+        00])
+
+// path
+
+(.)
+(.a)
+(.a.b.cde.fgh)
+(.123)		// not a float !
+
+// symbol
+(`name)
+
+// list
+[]
+[1]
+[1,]
+[1,2,3,4,5]
+["a","b","c"]
+[true, 1, "a"]
+
+// map
+$[]
+$[1:1]
+$[1:1,]
+$[1:1,2:2,3:3,4:4,5:5]
+$["a":1,"b":3,"c":5]
+$[`true:1, 1:2, "a":3]
+
+// locale
+{ textdomain "locale"; return _("This is a locale"); }
+{ textdomain "locale"; return _("Single", "Multiple", 5); }
+
+// term
+(`a_term (1, 2,3))
+
+// block
+({ return 42;})

@@ -1,0 +1,11 @@
+[Scanner] tests/modules/module0i.ycp:3 Error: Bad or unknown file 'module0'
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module0i.ycp:10 Error: Unknown identifier 'module0'
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+1
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error

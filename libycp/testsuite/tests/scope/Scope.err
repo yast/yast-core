@@ -1,0 +1,105 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer DoubleUsedVariable
+    // integer Loop
+    // filename: "tests/scope/Scope.ycp"
+    integer DoubleUsedVariable = 0;
+    integer Loop = 0;
+    while ((Loop < 5))
+    {
+    // integer DoubleUsedVariable
+    integer DoubleUsedVariable = 5;
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    Loop = (Loop + 1);
+}
+    DoubleUsedVariable = (DoubleUsedVariable - 2);
+    while ((Loop < 5))
+    {
+    // integer DoubleUsedVariable
+    integer DoubleUsedVariable = 5;
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    Loop = (Loop + 1);
+}
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    return DoubleUsedVariable;
+}
+----------------------------------------------------------------------
+[Scanner] tests/scope/Scope.ycp:61 Error: type mismatch in assignment
+[Scanner] tests/scope/Scope.ycp:61 Error: Expected 'integer', seen 'string'.
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer MultipleUsedVariable
+    // filename: "tests/scope/Scope.ycp"
+    integer MultipleUsedVariable = 0;
+    if (true)
+    {
+    // integer MultipleUsedVariable
+    integer MultipleUsedVariable = 1;
+    MultipleUsedVariable = (MultipleUsedVariable + 1);
+    if (true)
+    YError
+}
+    return MultipleUsedVariable;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Scope.ycp:61 type mismatch in assignment
+[Interpreter] tests/scope/Scope.ycp:89 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer MultipleUsedVariable
+    // filename: "tests/scope/Scope.ycp"
+    integer MultipleUsedVariable = 0;
+    if (true)
+    {
+    // integer MultipleUsedVariable
+    integer MultipleUsedVariable = 1;
+    MultipleUsedVariable = (MultipleUsedVariable + 1);
+    if (true)
+    {
+    while (true)
+    {
+    // string MultipleUsedVariable
+    string MultipleUsedVariable = "";
+    MultipleUsedVariable = "I am a string";
+    break;
+}
+    MultipleUsedVariable = /* f -> i */1.2;
+}
+}
+    return MultipleUsedVariable;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Scope.ycp:116 Implicit float conversion will loose accuracy
+[Scanner] tests/scope/Scope.ycp:120 Error: Mismatched return type in block
+[Scanner] tests/scope/Scope.ycp:120 Error: Expected 'string', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Scope.ycp:120 Mismatched return type in block
+[Scanner] tests/scope/Scope.ycp:133 Error: type mismatch in assignment
+[Scanner] tests/scope/Scope.ycp:133 Error: Expected 'integer', seen 'string'.
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer MultipleUsedVariable
+    // filename: "tests/scope/Scope.ycp"
+    integer MultipleUsedVariable = 0;
+    if (true)
+    YError
+    return MultipleUsedVariable;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Scope.ycp:133 type mismatch in assignment
+[Scanner] tests/scope/Scope.ycp:152 Error: Redefinition of local symbol
+[Scanner] tests/scope/Scope.ycp:151 Error: 'first' defined here.
+[Scanner] tests/scope/Scope.ycp:153 Error: Redefinition of local symbol
+[Scanner] tests/scope/Scope.ycp:151 Error: 'first' defined here.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Scope.ycp:152 Redefinition of local symbol

@@ -1,0 +1,5 @@
+{
+    include "tests/include.inc";
+
+    return inc ();
+}

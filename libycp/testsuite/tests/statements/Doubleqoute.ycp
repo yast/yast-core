@@ -1,0 +1,20 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_doubleqoute.ycp
+#
+#  Purpose:     test cases for YCP doubleqoute
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// The double backquotes `` are called "deep quote". They are used
+// to prevent the enclosed expression from evaluation.
+
+( ``( 1+2 ))
+( ``(name) )
+( ``{ return 3 + 4; } )
+( { return 7; } )

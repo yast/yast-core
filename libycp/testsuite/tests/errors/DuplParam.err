@@ -1,0 +1,11 @@
+[Interpreter] tests/errors/DuplParam.ycp:2 Parameter 'i' has unspecified type
+[Interpreter] tests/errors/DuplParam.ycp:2 Duplicate symbol name i
+[Scanner] tests/errors/DuplParam.ycp:2 Error: Bad parameter
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/errors/DuplParam.ycp"
+    return YError;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/errors/DuplParam.ycp:2 Bad parameter

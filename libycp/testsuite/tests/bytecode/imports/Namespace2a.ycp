@@ -1,0 +1,17 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Namespace2a.ycp
+#
+#  Purpose:     test named scopes
+#
+#  Creator:     mvidner@suse.cz
+#
+#  Maintainer:  mvidner@suse.cz
+#
+# ---------------------------------------------------------
+
+{
+   import "Namespace2";
+   return (Namespace2::globalFunction() == 4711);
+}

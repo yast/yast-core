@@ -1,0 +1,26 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/builtin/manyparams.ycp"
+    y2milestone ("P0:");
+    y2milestone ("P1:%1", .);
+    y2milestone ("P2:%1%2", ., .);
+    y2milestone ("P3:%1%2%3", ., ., .);
+    y2milestone ("P4:%1%2%3%4", ., ., ., .);
+    y2milestone ("P5:%1%2%3%4%5", ., ., ., ., .);
+    y2milestone ("P6:%1%2%3%4%5%6", ., ., ., ., ., .);
+    y2milestone ("P7:%1%2%3%4%5%6%7", ., ., ., ., ., ., .);
+    y2milestone ("P8:%1%2%3%4%5%6%7%8", ., ., ., ., ., ., ., .);
+    y2milestone ("P9:%1%2%3%4%5%6%7%8%9", 1, 2, 3, 4, 5, 6, 7, 8, 9);
+}
+----------------------------------------------------------------------
+[YCP] tests/builtin/manyparams.ycp:10 P0:
+[YCP] tests/builtin/manyparams.ycp:11 P1:.
+[YCP] tests/builtin/manyparams.ycp:13 P2:..
+[YCP] tests/builtin/manyparams.ycp:15 P3:...
+[YCP] tests/builtin/manyparams.ycp:17 P4:....
+[YCP] tests/builtin/manyparams.ycp:19 P5:.....
+[YCP] tests/builtin/manyparams.ycp:21 P6:......
+[YCP] tests/builtin/manyparams.ycp:23 P7:.......
+[YCP] tests/builtin/manyparams.ycp:25 P8:........
+[YCP] tests/builtin/manyparams.ycp:27 P9:123456789

@@ -1,0 +1,20 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer v_integer
+    // integer w_integer
+    // filename: "tests/expressions/isnil.ycp"
+    integer v_integer = nil;
+    integer w_integer = 5;
+    return [(v_integer == nil), (v_integer != nil), (w_integer == nil), (w_integer != nil)];
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer v_integer
+    // filename: "tests/expressions/isnil.ycp"
+    integer v_integer = nil;
+    return [(v_integer == nil), (v_integer != nil)];
+}
+----------------------------------------------------------------------

@@ -1,0 +1,93 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    VoidAssign.ycp
+#
+#  Purpose:     test cases for
+#		  assignment with nil
+#		  default values
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+  integer v_integer = 5;
+  v_integer = nil;
+
+  return ([v_integer == 0, v_integer == nil, is (v_integer, void), is (v_integer, integer) ]
+	  == [false, true, false, true]);
+}
+
+{
+  boolean v_boolean = false;
+  v_boolean = nil;
+
+  return ([v_boolean == false, v_boolean == nil, is (v_boolean, void), is (v_boolean, boolean) ]
+	  == [false, true, false, true]);
+}
+
+{
+  float v_float = 5.5;
+  v_float = nil;
+
+  return ([v_float == 0.0, v_float == nil, is (v_float, void), is (v_float, float) ]
+	  == [false, true, false, true]);
+}
+
+{
+  symbol v_symbol = `a_symbol;
+  v_symbol = nil;
+
+  return ([v_symbol == `nil, v_symbol == nil, is (v_symbol, void), is (v_symbol, symbol) ]
+	  == [false, true, false, true]);
+}
+
+{
+  string v_string = "a string";
+  v_string = nil;
+
+  return ([v_string == "", v_string == nil, is (v_string, void), is (v_string, string) ]
+	  == [false, true, false, true]);
+}
+
+{
+  textdomain "dummy";
+  locale v_locale = _("a locale");
+  v_locale = nil;
+
+  return ([v_locale == _(""), v_locale == nil, is (v_locale, void), is (v_locale, locale) ]
+	  == [false, true, false, true]);
+}
+
+{
+  list v_list = [1,2,3];
+  v_list = nil;
+
+  return ([v_list == [], v_list == nil, size (v_list) == 0, is (v_list, void), is (v_list, list) ]
+	  == [false, true, false, false, true]);
+}
+
+{
+  map v_map = $[1:1,2:2,3:3];
+  v_map = nil;
+
+  return ([v_map == $[], v_map == nil, size (v_map) == 0, is (v_map, void), is (v_map, map) ]
+	  == [false, true, false, false, true]);
+}
+// #13263:
+{
+  // returning nil is allowed
+  define void nilreturn () ``{ return nil; }
+
+  // nil initialisation, ***DEPRECATED**
+  // JUST FOR TEST
+  list(string) ls = nil;
+
+  ls = nilreturn ();
+
+  // testing for nil is allowed
+  return (ls == nil);
+}

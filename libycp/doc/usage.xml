@@ -1,0 +1,20 @@
+Usage of
+
+- parseycp
+
+- runycp
+
+
+-I <path-to-include>
+multiple -I options may be given
+
+--nostd-includes
+dont look in standard include directory
+TODO
+
+-M <path-to-module>
+multiple -M options may be given
+
+--nostd-modules
+dont look in standard module directory
+TODO

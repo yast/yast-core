@@ -1,0 +1,38 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer return_value
+    // filename: "tests/builtin/Builtin_V.ycp"
+    integer return_value = 1;
+    if (true)
+    {
+    // integer multiply()
+    integer multiply (integer value)
+{
+    return (value * 3);
+}
+    return_value = multiply (return_value);
+    if (true)
+    {
+    // integer multiply()
+    integer multiply (integer value)
+{
+    return (value * 5);
+}
+    return_value = multiply (return_value);
+}
+    return_value = multiply (return_value);
+}
+    return (return_value == 45);
+}
+----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin_V.ycp:47 Warning: Useless 'global' outside of module
+[Scanner] tests/builtin/Builtin_V.ycp:51 Warning: Definition shadows global symbol
+[Scanner] tests/builtin/Builtin_V.ycp:47 Warning: 'g' defined here.
+[Scanner] tests/builtin/Builtin_V.ycp:56 Error: Mismatched return type in block
+[Scanner] tests/builtin/Builtin_V.ycp:56 Error: Expected 'string', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin_V.ycp:56 Mismatched return type in block

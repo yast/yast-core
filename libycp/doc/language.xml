@@ -1,0 +1,75 @@
+<!doctype linuxdoc system>
+<article>
+<title>YCP Language Description</title>
+<author>Klaus Kämpf
+&lt;kkaempf@suse.de&gt;
+</author>
+
+<date>Version 2.0, 13-Mar-2002</date>
+<abstract>
+This documents describes the YaST control language
+</abstract>
+
+<toc>
+
+<sect>Intro
+ <sect1>What, Why, Motivation
+ <sect1>Scope
+
+<sect>Types
+
+ <sect1>Basic types
+  <sect2>boolean
+  <sect2>integer
+  <sect2>float
+  <sect2>string
+  <sect2>byteblock
+<sect1>nil
+ <sect1>locale
+  <sect2>textdomain
+
+ <sect1>Complex types
+  <sect2>list
+  <sect2>map
+  <sect2>term
+  <sect2>struct
+
+ <sect1>Modifiers
+  <sect2>const
+
+ <sect1>References
+
+<sect>Operators
+ <sect1>Infix
++, -, *, /
+ <sect1>Bracket
+
+<sect>Statements
+ <sect1>block
+ <sect1>if-then-else
+ <sect1>while
+ <sect1>return
+
+<sect>Builtins
+ <sect1>bool
+ <sect1>integer
+ <sect1>string
+ <sect1>list
+ <sect1>map
+
+<sect>Functions
+ <sect1>usage
+ <sect1>define
+ <sect1>global (scope)
+
+<sect>Modules
+ <sect1>usage
+ <sect1>constructors
+ <sect1>scope
+
+<sect>Externals
+ <sect1>UI
+ <sect1>SCR
+ <sect1>WFM
+
+</article>

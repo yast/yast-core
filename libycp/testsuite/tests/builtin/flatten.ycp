@@ -1,0 +1,10 @@
+// trying to reproduce an error in parsing sequencer.ycp
+{
+    list(integer) il = [1, 2, 3];
+    return flatten ([il, il, il]);
+}
+{
+    list(integer) il = [1, 2, 3];
+    // this is an error, but the error message shows the prototype incorrectly
+    return flatten (il);
+}

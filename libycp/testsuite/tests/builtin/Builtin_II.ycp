@@ -1,0 +1,50 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_II.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 1999/11/11 ---------------
+
+// Does convert a path to itself. This is for consistency with
+// the other topath functions.
+
+( topath(.some.path) == .some.path )
+( topath(.) == . )
+( topath(topath(.)) == . )
+
+
+
+// Converts a string notation of a path to a path. The string may 
+// represent more symbols than one.
+
+( topath(".some.path") == .some.path )
+( topath(".") == . )
+( topath("" + .) == . )
+
+
+
+// Extract a substring of the string <tt>s</tt>, starting at
+// <tt>start</tt> with length of at most <tt>length</tt>.
+// The length defaults to the rest of the string
+
+( substring( "some text", 5 ) == "text" )
+( substring( "some text", 0 ) == "some text" )
+( substring( "some text", 1 ) == "ome text" )
+(true)  // see Notificationis_II.ycp:  ( substring( "some text", -1 ) == "" )
+( substring( "some text", 9 ) == "" )
+(true)  // see Notificationis_II.ycp:  ( substring( "some text", 10 ) == "" )
+( substring( "", 0 ) == "" )
+(true)  // see Notificationis_II.ycp:  ( substring( "", 1 ) == "" )
+
+
+// find (string, string)
+( find ("/dev/hda", "/hd") == 4)
+( find ("/dev/hda", "/") == 0)

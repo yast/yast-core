@@ -1,0 +1,11 @@
+// a simple module with a constructor
+{
+    module "modulec";
+
+    global define void modulec () ``{
+    	// I am bored of Hello, world...
+        // Tschechisch 101 ;)
+	// "Servus", wortl. "zum Erfolg"
+	y2milestone ("Nazdar!");
+    }
+}

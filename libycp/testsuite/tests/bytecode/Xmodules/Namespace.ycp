@@ -1,0 +1,44 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Namespace.ycp
+#
+#  Purpose:     test named scopes
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+   module "example";
+
+   define integer localFunction () {
+	return 42;
+   }
+
+   global define integer globalFunction () {
+	return 4711;
+   }
+
+   global define integer mixedFunction() {
+	return globalFunction() + localFunction();
+   }
+}
+
+{
+   import "example";
+   return (example::globalFunction() == 4711);
+}
+
+{
+   return (example::localFunction() == nil);
+}
+
+{
+   return (example::mixedFunction() == 4753);
+}
+
+

@@ -1,0 +1,101 @@
+Parsed:
+----------------------------------------------------------------------
+`named_symbol
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+`_17
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+`_named_symbol
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // void a
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    void a = nil;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean b
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    boolean b = true;
+    return (b && false);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer c
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    integer c = -2;
+    return (c + 8);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // float d
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    float d = (0. - 2.);
+    return (d - 3.);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // string d
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    string d = "composed";
+    return (d + " string");
+}
+----------------------------------------------------------------------
+[Scanner] tests/scope/GlobalSymbols.ycp:39 Warning: Useless 'global' outside of module
+[Scanner] tests/scope/GlobalSymbols.ycp:39 Error: Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols.ycp:33 Error: 'func1' defined here.
+[Scanner] tests/scope/GlobalSymbols.ycp:40 Error: Undeclared identifier 'i'
+[Scanner] tests/scope/GlobalSymbols.ycp:40 Error: Bad parameter
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/GlobalSymbols.ycp:39 Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols.ycp:53 Warning: Useless 'global' outside of module
+[Scanner] tests/scope/GlobalSymbols.ycp:53 Error: Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols.ycp:47 Error: 'func2' defined here.
+[Scanner] tests/scope/GlobalSymbols.ycp:55 Error: Undeclared identifier 'i'
+[Scanner] tests/scope/GlobalSymbols.ycp:55 Error: Bad parameter
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/GlobalSymbols.ycp:53 Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols.ycp:72 Error: 'global' declaration in nested block
+[Scanner] tests/scope/GlobalSymbols.ycp:72 Warning: Useless 'global' outside of module
+[Scanner] tests/scope/GlobalSymbols.ycp:72 Error: Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols.ycp:63 Error: 'func2' defined here.
+[Scanner] tests/scope/GlobalSymbols.ycp:73 Error: Undeclared identifier 'i'
+[Scanner] tests/scope/GlobalSymbols.ycp:73 Error: Bad parameter
+Parsed:
+----------------------------------------------------------------------
+{
+    // void func2()
+    // filename: "tests/scope/GlobalSymbols.ycp"
+    void func2 (integer i)
+{
+    y2error ("== local  func: %1", i);
+}
+    if (true)
+    {
+    if (true)
+    YError
+}
+    func2 (5);
+    return 0;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/scope/GlobalSymbols.ycp:72 Global definition shadows local symbol

@@ -1,0 +1,12 @@
+{
+    module "circular_M2";
+    import "circular_M1";
+
+    global integer y = nil;
+
+    global define circular_M2 () ``{
+	y2error ("Constructing circular_M2");
+	y = circular_M1::x;
+	y2error ("Got %1", y);
+    }
+}

@@ -1,0 +1,20 @@
+[Scanner] tests/statements/Deep_Quote.ycp:17 Error: Undeclared identifier 'Time'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/Deep_Quote.ycp:17 undeclared identifier
+Parsed:
+----------------------------------------------------------------------
+{ return (8 + 5); }
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{ return `Time; }
+----------------------------------------------------------------------
+[Scanner] tests/statements/Deep_Quote.ycp:20 Error: Undeclared identifier 'Time'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/Deep_Quote.ycp:20 undeclared identifier

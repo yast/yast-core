@@ -1,0 +1,19 @@
+# ---------------------------------------------------------
+#
+#  Filename:    IfThenElse3.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+{
+integer a = 5;
+
+if (false) a = 6;
+else a = 7;
+return a;
+}

@@ -1,0 +1,40 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // list lorig
+    // list lexpect
+    // list lalias
+    // filename: "tests/statements/BracketAlias.ycp"
+    list l = [0, 1, 2, 3];
+    list lorig = [0, 1, 2, 3];
+    list lexpect = [4, 1, 2, 3];
+    list lalias = l;
+    l[0] = 4;
+    if ((lalias != lorig))
+    return false;
+    if ((l != lexpect))
+    return false;
+    return true;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map m
+    // map morig
+    // map mexpect
+    // map malias
+    // filename: "tests/statements/BracketAlias.ycp"
+    map m = $[0:0, 1:1, 2:2, 3:3];
+    map morig = $[0:0, 1:1, 2:2, 3:3];
+    map mexpect = $[0:4, 1:1, 2:2, 3:3];
+    map malias = m;
+    m[0] = 4;
+    if ((malias != morig))
+    return false;
+    if ((m != mexpect))
+    return false;
+    return true;
+}
+----------------------------------------------------------------------

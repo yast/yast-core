@@ -1,0 +1,118 @@
+Parsed:
+----------------------------------------------------------------------
+"NON-TERMINAL define_term"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean AlwaysTrue()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    boolean AlwaysTrue ()
+{
+    return true;
+}
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean AlwaysTrue()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    boolean AlwaysTrue ()
+{
+    return true;
+}
+    return true;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean AlwaysTrue()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    boolean AlwaysTrue ()
+{
+    return false;
+}
+    return true;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean AlwaysTrue()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    boolean AlwaysTrue ()
+{
+    return true;
+}
+    return AlwaysTrue ();
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer comparison()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    integer comparison (boolean maximum, integer Int1, integer Int2)
+{
+    if ((maximum == true))
+    {
+    if ((Int1 >= Int2))
+    return Int1;
+else
+    return Int2;
+}
+else
+    {
+    if ((Int1 <= Int2))
+    return Int1;
+else
+    return Int2;
+}
+}
+    if (((comparison (true, 5, 7) == comparison (true, 7, 5)) && (comparison (false, 5, 7) == comparison (false, 7, 5))))
+    return true;
+    return false;
+}
+----------------------------------------------------------------------
+[Scanner] tests/scope/D_DefineTerm.ycp:64 Warning: Useless 'global' outside of module
+Parsed:
+----------------------------------------------------------------------
+{
+    //T: TEntry (Int2@64:global integer Int2)
+    // boolean maximum
+    // integer Int1
+    // global integer Int2
+    // integer comparison()
+    // filename: "tests/scope/D_DefineTerm.ycp"
+    boolean maximum = true;
+    integer Int1 = 5;
+    global integer Int2 = 7;
+    integer comparison ()
+{
+    if ((maximum == true))
+    {
+    if ((Int1 >= ::Int2))
+    return Int1;
+else
+    return ::Int2;
+}
+else
+    {
+    if ((Int1 <= ::Int2))
+    return Int1;
+else
+    return ::Int2;
+}
+}
+    if ((maximum == true))
+    {
+    if ((Int1 <= ::Int2))
+    {
+    return (comparison () == ::Int2);
+}
+}
+    return false;
+}
+----------------------------------------------------------------------

@@ -1,0 +1,11 @@
+{
+    integer i = 1;
+
+    i = {
+	integer j = 2;
+
+	return j;
+    };
+
+    return i;
+}

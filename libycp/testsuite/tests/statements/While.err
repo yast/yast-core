@@ -1,0 +1,36 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/While.ycp"
+    while (true)
+    return true;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/While.ycp"
+    while (false)
+    {
+    break;
+}
+}
+----------------------------------------------------------------------
+[Scanner] tests/statements/While.ycp:14 Error: 'while' expression not boolean
+[Scanner] tests/statements/While.ycp:14 Error: Expected 'boolean', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/While.ycp:14 'while' expression not boolean
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // filename: "tests/statements/While.ycp"
+    integer i = 1;
+    while ((i < 10))
+    i = (i + 1);
+    return i;
+}
+----------------------------------------------------------------------

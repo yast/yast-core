@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list(integer) il
+    // filename: "tests/builtin/flatten.ycp"
+    list(integer) il = [1, 2, 3];
+    return flatten ([il, il, il]);
+}
+----------------------------------------------------------------------
+[Interpreter] :0 No match for 'flatten (list(integer))':
+[Interpreter] :0 list(any) flatten (list(list(any)))
+[Scanner] tests/builtin/flatten.ycp:9 Error: Bad parameter '<list(integer)> il'
+Parsed:
+----------------------------------------------------------------------
+{
+    // list(integer) il
+    // filename: "tests/builtin/flatten.ycp"
+    list(integer) il = [1, 2, 3];
+    return YError;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/flatten.ycp:9 Bad parameter

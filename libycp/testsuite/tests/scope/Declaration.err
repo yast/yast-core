@@ -1,0 +1,45 @@
+[Scanner] tests/scope/Declaration.ycp:2 Warning: Useless 'global' outside of module
+Parsed:
+----------------------------------------------------------------------
+{
+    //T: TEntry (hallo@2:global map hallo())
+    // global map hallo()
+    // filename: "tests/scope/Declaration.ycp"
+    global map hallo (integer x, list st)
+{
+    y2milestone ("%1 %2", x, st);
+    return select (st, 1, $[]);
+}
+    return (::hallo (17, [true, $[1:45], #[102A]]) == $[1:45]);
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:4 17 [true, $[1:45], #[102A]]
+Parsed:
+----------------------------------------------------------------------
+(::hallo (19, [true, $[1:2], #[DEADBEAF]]) == $[1:2])
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:4 19 [true, $[1:2], #[DEADBEAF]]
+[Scanner] tests/scope/Declaration.ycp:11 Error: Missing 'list' parameter.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Declaration.ycp:11 Missing argument
+[Scanner] tests/scope/Declaration.ycp:12 Error: Expected 'map', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Declaration.ycp:12 Type mismatch
+Parsed:
+----------------------------------------------------------------------
+{
+    // list withnil()
+    // filename: "tests/scope/Declaration.ycp"
+    list withnil (integer a, boolean b)
+{
+    return [a, b];
+}
+    return withnil (42, nil);
+}
+----------------------------------------------------------------------

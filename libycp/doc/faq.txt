@@ -1,0 +1,6 @@
+1. Why no break in foreach() ?
+
+foreach() returns a value, the last execution of tbe block. So the block determines
+the value.
+However, 'break' in the block has no value, so it is undefined.
+-> should we allow 'nil' here ?

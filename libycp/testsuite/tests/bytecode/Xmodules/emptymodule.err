@@ -1,0 +1,3 @@
+[Scanner] tests/modules/emptymodule.ycp:2 Error: Bad or unknown file 'emptyModule'
+runycp: parser error
+runycp: parser error

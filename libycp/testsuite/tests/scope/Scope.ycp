@@ -1,0 +1,156 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Scope.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for the scope of variables
+
+
+// the variable is declared twice
+// the loop is defined, because there is a declaration within that block
+{
+
+   integer DoubleUsedVariable = 0;
+   integer Loop = 0;
+
+   while (Loop < 5)
+   {
+       integer DoubleUsedVariable = 5;
+
+       DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+       Loop = Loop + 1;
+   }
+
+   DoubleUsedVariable = DoubleUsedVariable - 2;
+
+   while (Loop < 5)
+   {
+       integer DoubleUsedVariable = 5;
+
+       DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+       Loop = Loop + 1;
+   }
+
+   DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+
+   return DoubleUsedVariable;
+}
+
+// the variable is declared multiple
+// the block is left with the last return statement
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if (true)
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = MultipleUsedVariable + 1;
+       if (true)
+       {
+           MultipleUsedVariable = "I am a string";
+       }
+   }
+
+   return MultipleUsedVariable;
+}
+
+// the variable is declared multiple
+// the block is left with the last return statement
+// the multiple declared variable is declared with different types
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if (true)
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = MultipleUsedVariable + 1;
+       if (true)
+       {
+           while (true)
+           {
+               string MultipleUsedVariable = "";
+
+               MultipleUsedVariable = "I am a string";
+               break;
+           } 
+           MultipleUsedVariable = 1.20;
+       }
+   }
+
+   return MultipleUsedVariable;
+}
+
+// the variable is declared multiple
+// an inner block is left with return without assignment
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if (true)
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = MultipleUsedVariable + 1;
+       if (true)
+       {
+           while (true)
+           {       
+               string MultipleUsedVariable = "";
+
+               MultipleUsedVariable = "I am a string";
+               return MultipleUsedVariable;
+           }       
+           MultipleUsedVariable = 1.20; 
+       }
+   }
+
+   return MultipleUsedVariable;
+}
+
+// the variable is declared multiple
+// an inner block is left with return without assignment
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if (true)
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = 	// assign block to var
+       {
+           while (true)
+           {
+               string MultipleUsedVariable = "";
+
+               MultipleUsedVariable = "I am a string";
+               return MultipleUsedVariable;
+           }
+       };
+   }
+
+   return MultipleUsedVariable;
+}
+
+
+// double declaration
+{
+  integer first = 1;
+  string first = "";
+  float first = 0.0;
+
+  return first;
+}

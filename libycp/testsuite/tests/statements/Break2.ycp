@@ -1,0 +1,11 @@
+{
+    define integer dummy (list list_var)
+    {
+	integer ret = 42;
+	return ret + foreach (integer entry, list_var, { if (entry == 3) break; if (entry == 4) return entry; });
+    }
+    integer i1 = dummy ([1,2,3]);
+    integer i2 = dummy ([1,2,4]);
+    integer i3 = dummy ([1,2,5]);
+    return [i1, i2, i3];
+}

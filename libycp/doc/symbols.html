@@ -1,0 +1,155 @@
+A few thoughts about handling symbols in the YCP interpreter.
+
+Motivation
+
+Currently, the parser and interpreter are two separate programs
+connected only by the common data format (YCPValue). The parser
+transforms ASCII to YCPValue, the interpreter evaluates a (usually
+complex) YCPValue to another (usually simple) YCPValue.
+
+Since parser and interpreter are always used together, separating
+them isn't particular useful and unneccesarily adds resources to
+running ycp code.
+
+Adding a static type system builds up rather detailed information
+about the data flow and the symbol (variable, function) usage in
+the YCP code. This information helps tremendously during interpretation
+esp. since all kinds of runtime checks aren't needed anymore.
+
+
+Goal
+
+For the static type system, the parser builds up a symbol table
+and a symbol reference tree for the code. This effectively replaces
+the ascii-style symbol representation with a reference-style one.
+We don't save the symbol name any more but a reference to the
+symbol table built up by the parser. This saves runtime space and
+execution time (no lookups needed).
+
+
+Requirements
+
+The symbol table has similar requirements to the current 'Scope'
+implementation but is created and parse time vs. execution time.
+The symbol table information forms a parse and execution environment
+for the YCP language.
+
+Symbol tables must be named in order to implement named environments
+as needed by modules.
+Symbol tables must be stacked in order to implement local environments
+as needed by nested blocks.
+Symbol tables are an essential part of YCP blocks.
+
+
+Implementation
+
+class SymbolTable
+
+A symbol table is a collection of symbol entries.
+
+class SymbolEntry
+
+Every entry stores the following data
+
+- name
+  string representation of the symbols name
+- category
+  kind of symbol, one of:
+  - module (name of symbol table)
+  - variable (name of ycp variable)
+  - function (name of ycp function, with environment)
+  - builtin (name of builtin operator, without environment)
+  - typedef (name of ycp type)
+- type
+  typestring of symbol as defined in static-typing.
+
+
+The symbol table will be stored as a hash table with a
+linked overflow list (for symbols with the same hashcode).
+One could think about keeping separate symbol tables, one for
+each category. But the memory overhead will be too much.
+
+The YCPSymbol value in ycp will now store a pointer to the
+symbol entry instead of the name.
+
+
+Symbol table methods
+
+SymbolEntry *SymbolTable::newEntry (name, category, type[, value])
+SymbolEntry *SymbolTable::findEntry (name [, category])
+void SymbolTable::deleteEntry (SymbolEntry *)
+
+
+Evaluation of a function call
+
+A function call consists of a pointer to the function (symbol
+table entry of category function)
+
+
+=====
+
+Implementing local environments with symbol references
+
+Problem: Time-space efficiency of local environments
+
+a) Create all symbols during parse, store pointer to symbols
+   + no runtime symbol creation/removal
+   - needs space for all symbols
+
+b) Create symbols at runtime (at start of block evaluation)
+   Store number of symbols needed at block header, allocate
+   symbol space at block initialization, symbol reference is
+   offset to symbol space of block
+   - runtime (stack) allocation of symbols
+   + no memory tradeoff
+
+=> symref == symbol array of block + offset
+   since each block has symbol array :
+     symref == block + offset
+   -> no lookup at runtime !
+
+
+Implementing nested scopes at parse time
+
+During parse time, the parser must keep scope information
+in order to build up proper symrefs as mentioned above.
+
+This can be done by having a separate hashtable for every
+local scope or by implementing a linked list of symbols
+representing the scope.
+It must also be possible to access symbols with global scope.
+
+First dimension: Hash code (Fixed array with pointers to
+symbols with equal hash codes)
+Second dimension: Linked list of symbols with equal hash code
+(bucket list, used as an overflow for the hash table)
+Third dimension: Linked list of symbols with equal name,
+representing scope information. The first symbol could be
+the innermost symbol, but this makes accessing the global
+scope problematic.
+
+Maybe a 'global scope' hash table is practical.
+
+
+==============
+
+
+Blocks and symbols
+
+
+symbols can only 'live' in blocks, the block 'owns' the symbol(s)
+
+the symbol table only keep links to symbols for reference and
+scope tracking
+
+symbols have an initial value (ivalue) and a current value (cvalue)
+The initial value is an expression to be evaluated at initialization
+time (can be a function call with side-effects !)
+The current value is a (evaluated) value.
+
+blocks are (linked) list of statements.
+ statements can be
+- expressions (function call)
+- symbol definitions (initial symbol creation)
+- assignments (symbol value change)
+- control statements (if, loop, break, return, ...)

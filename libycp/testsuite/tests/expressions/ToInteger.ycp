@@ -1,0 +1,31 @@
+# ---------------------------------------------------------
+#
+#  Filename:    ToInteger.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// new builtin function tointeger() added on 
+
+( tointeger( 4 )  ==  4 )
+( tointeger( -0 ) ==  0 )
+( tointeger( -1 ) == -1 )
+
+( tointeger( 4.0 )  ==  4 )
+( tointeger( -0.0e2 ) ==  0 )
+( tointeger( -1.3 ) == -1 )
+( tointeger( 3.0 ) * -7 == tointeger( -0.21e2 ) )
+( -3 * tointeger( 700e-2 ) == tointeger( -210e-1 ) )
+
+( tointeger( "42" ) == 42 )
+
+// tointeger () was enhanced to support '0x' and '0' prefix
+// for hexadecimal and octal numbers
+
+( tointeger( "0x42" ) == 66 )
+( tointeger( "042" ) == 34 )

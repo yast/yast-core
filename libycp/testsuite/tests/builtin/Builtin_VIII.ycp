@@ -1,0 +1,125 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_VIII.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 2000/01/18 ---------------
+
+//
+//         lookup(map m, any k, any default) -> any
+//
+// In map m looks up the value matching to given key k.
+// Returns default if the key was not found. Example:
+( lookup($[1:"a", 2:"bc"], 371, "take this") == "take this" )
+
+
+
+//
+//         size(map m) -> integer
+//
+( size( $[] ) == 0 )
+( size( $[ "key": `value] ) == 1 )
+
+
+
+//
+//         foreach(symbol key, symbol value, map m, any exp) -> any
+//
+// For each key:value pair of the map m the expression exp is
+// executed in a new context, where the variables key is bound
+// to the key and value is bound to the value.
+// The return value of the last execution of exp is the value
+// of the foreach construct.
+( foreach(`k, `v, $[1:1,2:4,3:9], ``{ y2debug("v = %1", v); return v; }) == 9 )
+
+
+
+//
+//         sort(list l) -> list
+//
+// Sort the list l according to the YCP builtin predicate <=.
+// Duplicates are not removed. Example:
+(sort([2,1,true,1]) == [true,1,1,2] )
+
+
+
+//
+//         tofloat(integer i) -> float
+//
+( tofloat(4) == 4.0 )
+( tofloat(-4) == -4.0 )
+
+
+
+//
+//         tofloat(float i) -> float
+//
+( tofloat(4711.0) == 4711.0 )
+( tofloat(-4711.0) == -4711.0 )
+
+
+
+//
+//         tofloat(string s) -> float
+//
+( tofloat("42") == 42.0 )
+( tofloat("+42") == 42.0 )
+( tofloat("-42") == -42.0 )
+( tofloat("0xb") == 11.0 )
+( tofloat("-010") == -8.0 )
+( tofloat("Text") == 0.0 )
+
+
+
+//
+//         tostring(float f, integer precision) -> string
+//
+( tostring(0.12345, 4) == "0.1235" )
+
+
+//
+//          tohexstring(integer number) -> string
+//
+( tohexstring(31) == "0x1f" )
+
+
+
+//
+//         filterchars(string s, string include) -> string
+//
+// Returns a string that results from string s by removing all
+// characters that do not occur in include Example:
+
+( filterchars("aÖBÄc", "abcdefghijklmnopqrstuvwxyz") == "ac" )
+
+//
+//         eval(any v) -> any
+//
+// Evaluate a YCP value. See also the builtin ``, which is kind
+// of the counterpart to eval. Example:
+
+( eval(``( 1 + 2 )) == 3 )
+
+# re-enable this later when eval/add are usable as symbols
+# do we need self-modifying code anyway ?
+#{
+#   term b = `eval;
+#   term a = `add;
+#
+#   a = add(a, [1]);
+#   a = add(a, 4);
+#   b = add( b, a );
+#   a = `eval;
+#   b = add( a, b );
+#
+#   return( eval( b ) == [ 1, 4 ] );
+#}
+

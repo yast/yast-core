@@ -1,0 +1,15 @@
+{
+  // check nested statements
+
+  integer i = 1;
+  integer j = 2;
+  {
+    integer i = 2;
+
+    i = i + 1;
+
+    j = i;
+  }
+
+  return ((i == 1) && (j == 3));
+}

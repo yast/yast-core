@@ -1,0 +1,97 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    D_DoWhile.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+"NON-TERMINAL while"
+# NON-TERMINAL while
+#
+# parsevalue -> YCP_Block -> { statement_list } ->
+#                         -> { statement_list YCP_Statement } ->
+#                         -> { statement_list YCP_Statement YCP_Statement } ->
+#                         -> { YCP_Statement YCP_Statement YCP_Statement } ->
+#                         -> { YCP_Statement do_while YCP_Statement }
+#
+#        do_while -> DO YCP_Block WHILE ( expression ) ;
+#
+
+// test of continue within a while-loop
+{
+  integer Symbol0038 = 0;
+
+  do
+  {
+     if( Symbol0038 == 6 ) 
+     {
+         Symbol0038 = Symbol0038 + 1;
+         continue;
+     }
+     else if( Symbol0038 == 7 ) break;
+
+     Symbol0038 = Symbol0038 + 1;
+  }
+  while( Symbol0038 < 10 );
+
+  return Symbol0038 ; 
+}
+
+// break jumps up one while block
+{
+  integer Symbol0039 = 0;
+  integer Symbol0040 = 0;
+
+  do
+  {
+     do
+     {
+         if( Symbol0040 == 0 ) break;
+         Symbol0039 = 20 ;   // this place is never reached because of the break
+
+         Symbol0040 = Symbol0040 + 1;
+     }
+     while( Symbol0040 < 10 );
+     if( Symbol0039 == 7 ) break;
+
+     Symbol0039 = Symbol0039 + 1;
+  }
+  while( Symbol0039 < 10 );
+
+  return Symbol0039 ;
+}
+
+// return of the inner loop assigns a value, therefore this result gets
+// also squared !
+{
+  integer Symbol0041 = 0;
+
+  do
+  {
+      Symbol0041 = {
+                       integer Symbol0042 = 0;
+
+                       do
+                       {
+                           if( Symbol0042 == 7 ) return Symbol0042 ;
+                           Symbol0042 = Symbol0042 + 1;
+                       }
+                       while( Symbol0042 < 10 );
+                       return Symbol0042 ;
+                   };
+
+      if( Symbol0041 == 7 ) return Symbol0041 * Symbol0041;
+
+      Symbol0041 = Symbol0041 + 1;       // to avoid infinite loops
+  }
+  while( Symbol0041 < 10 );
+
+  return Symbol0041 ;
+}
+

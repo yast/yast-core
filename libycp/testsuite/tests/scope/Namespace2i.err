@@ -1,0 +1,48 @@
+[Scanner] tests/scope/Namespace2i.ycp:15 Error: Bad or unknown file 'Namespace2'
+runycp: parser error
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:16 Error: Unknown identifier 'Namespace2'
+[Scanner] tests/scope/Namespace2i.ycp:16 Error: parse error, unexpected $end
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:16 Error: parse error, unexpected ')'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+4711
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:20 Error: Bad or unknown file 'Namespace2'
+runycp: parser error
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:21 Error: Unknown identifier 'Namespace2'
+[Scanner] tests/scope/Namespace2i.ycp:21 Error: parse error, unexpected $end
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:21 Error: parse error, unexpected ')'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+nil
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:25 Error: Bad or unknown file 'Namespace2'
+runycp: parser error
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:26 Error: Unknown identifier 'Namespace2'
+[Scanner] tests/scope/Namespace2i.ycp:26 Error: parse error, unexpected $end
+runycp: parser error
+[Scanner] tests/scope/Namespace2i.ycp:26 Error: parse error, unexpected ')'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+4753
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+runycp: parser error

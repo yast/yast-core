@@ -1,0 +1,151 @@
+            Licence de YaST 2 et SuSE Linux
+            ===============================
+
+     YaST 2 -- Copyright (c) 1995-1999 SuSE GmbH, Nürnberg(Germany) 
+
+
+L'objet de la présente licence est le programme YaST 2 (Yet another
+Setup Tool 2), le nom 'YaST', ainsi que SuSE Linux, la distribution
+Linux de SuSE GmbH, tous les programmes dérivés de YaST 2 et tous les
+ouvrages ou noms dérivés totalement ou partiellement de YaST 2 ainsi
+que l'utilisation, l'application, l'archivage, la reproduction et la
+diffusion de YaST 2, de tous les programmes dérivés de YaST 2 et de tous
+les ouvrages qui en sont dérivés en totalité ou en partie. Le
+programme YaST 2 et tous ses codes sources sont, au sens défini par la
+loi sur les droits d'auteurs, la propriété intellectuelle de SuSE
+GmbH. Le nom YaST est une marque déposée de SuSE GmbH. Dans la suite
+de ce document SuSE est désignée par le terme "concédant de
+licence".  Tout utilisateur ou toute personne procédant au
+traitement de YaST 2 ou des ouvrages qui en sont dérivés totalement ou
+partiellement ainsi que toute personne qui archive, reproduit et
+diffuse YaST 2 ou SuSE Linux est "bénéficiaire de licence" de SuSE
+GmbH. 
+ 
+Par le traitement, l'utilisation, l'application, l'archivage, la
+reproduction et la diffusion de YaST 2, l'utilisateur reconnait
+implicitement les termes de la présente licence. 
+
+Seule la présente licence donne au bénéficiaire de licence le droit
+d'utiliser, de reproduire, de distribuer ou de modifier YaST 2 ou les
+ouvrages qui en sont dérivés. Ces actions sont interdites par la loi
+sur les droits d'auteurs si la présente licence n'est pas reconnue.
+Si la présente licence est pleinement reconnue et respectée, elle
+est valide même sans le consentement écrit du concédant de licence. 
+
+1) Utilisation
+
+YaST 2 et SuSE Linux peuvent être utilisés à des fins privées et
+commerciales si les droits d'auteurs et les clauses de licence des
+paquetages et des programmes installés sont observés. L'utilisation
+de YaST 2, même lorsqu'il s'agit d'une version modifiée, N'EXEMPTE PAS
+en particulier le bénéficiaire de licence de l'obligation d'observer
+les clauses de licence des paquetages installés par l'intermédiaire
+de YaST 2 ou d'ouvrages se basant sur YaST 2. 
+
+2) Traitement
+
+Tous les programmes dérivés de YaST 2 et tous les ouvrages qui en sont
+dérivés en totalité ou en partie doivent être pourvus, sur l'écran
+de démarrage, de la mention claire 'version modifiée'. En outre, la
+personne ayant effectué les modifications devra indiquer son nom sur
+l'écran de démarrage et préciser que SuSE GmbH n'offre pas
+d'assistance technique pour les 'versions modifiées' et que toute
+responsabilité est exclue. Toute modification apportée aux sources
+et n'ayant pas été réalisée par SuSE GmbH est considérée comme
+'version modifiée' et se trouve donc exclue de l'assistance
+technique. Le bénéficiaire de licence a le droit de modifier sa
+copie de YaST 2 créant ainsi un ouvrage basé sur le programme YaST 2, si
+les conditions suivantes sont remplies: 
+
+a) Toute modification doit être indiquée dans les sources avec la
+date et le nom du programmeur ayant réalisé cette modification. Les
+sources modifiés doivent être mis à la disposition de l'utilisateur
+conformément au paragraphe 3), accompagnés de la présente licence
+non modifiée. 
+
+b) Le bénéficiaire de licence a l'obligation de mettre tout ouvrage
+qu'il diffuse et qui est dérivé totalement ou partiellement de YaST 2
+ou de parties de YaST 2 à la disposition de tiers dans sa totalité,
+aux conditions fixées par la présente licence, sans percevoir de
+droits de licence.
+
+c) La modification, même partielle, de la présente licence par un
+bénéficiaire de licence est interdite. 
+
+SuSE se réserve le droit d'inclure dans la version officielle de
+YaST 2 tout ou partie des modifications apportées à YaST 2 sans avoir à
+verser aucune redevance. Le bénéficiaire de licence ne peut pas s'y
+opposer.
+
+3) Diffusion
+
+Il est interdit, sans accord préalable donné par écrit par SuSE
+GmbH, de reproduire, à titre onéreux, YaST 2 ou SuSE Linux ou de
+diffuser des supports de programmes reproduits sans autorisation. 
+La distribution, à titre onéreux du programme YaST 2 et de ses
+sources, qu'il s'agisse d'une version modifiée totalement,
+partiellement ou ne comportant aucune modification ainsi que la
+distribution des ouvrages qui en sont dérivés nécessitent
+l'autorisation préalable et écrite de SuSE GmbH.
+
+Tous les programmes dérivés de YaST 2 et tous les ouvrages qui en sont
+dérivés totalement ou partiellement ne peuvent être diffusés,
+conformément au paragraphe 2b), qu'accompagnés des sources modifiés
+ainsi que de la présente licence. La mise à disposition gratuite de
+YaST 2 ou d'ouvrages qui en sont dérivés sur serveurs FTP ou boîtes à
+lettres est autorisée si les termes de la licence sur les logiciels
+sont respectés.
+
+4) Garantie
+
+Aucune garantie contractuelle n'existe pour YaST 2 ou les ouvrages
+dérivés, ni pour la distribution SuSE Linux. La garantie accordée
+par SuSE GmbH ne couvre que les supports de programmes (CD ROM et
+disquettes).
+
+SuSE GmbH fournit YaST 2 et SuSE Linux "TELS QUELS" sans aucune
+garantie et sans répondre ni de leur adéquation à un usage précis,
+ni de leur utilité pratique. En particulier, SuSE n'est nullement
+responsable de pertes de bénéfices, d'économies non réalisées ni de
+dommages résultant de revendications formulées par des tiers à
+l'encontre du bénéficiaire de licence. SuSE GmbH n'est pas non plus
+responsable de dommages directs ou indirects, en particulier de
+perte ou de création de données enregistrées. 
+
+L'observation des licences respectives, des copyrights et des règles
+d'utilisation des logiciels installés incombe entièrement à
+l'utilisateur de YaST 2 et de SuSE Linux.
+
+5) Droits
+
+Aucun droit autre que ceux définis par la présente licence n'est
+accordé sur YaST 2 ou SuSE Linux. Toute infraction aux règles de la
+présente licence entraîne l'extinction automatique des droits
+accordés au bénéficiaire de licence. Toutefois, les tiers ayant
+obtenu du bénéficiaire de licence des copies ou des droits au titre
+de la présente licence ne voient pas leurs droits annulés tant que
+la présente licence est reconnue et respectée dans tous ses termes.
+
+Si le bénéficiaire de licence se voit imposer des conditions ou
+obligations résultant d'une décision de justice ou découlant de
+clauses de brevets, de clauses de licences, ou pour toute autre
+raison, et si ces conditions et obligations contredisent totalement
+ou partiellement celles de la présente licence, le bénéficiaire de
+licence ne sera expressément dégagé, totalement ou partiellement,
+des obligations liées à la présence licence et à ses conditions que
+par accord préalable de SuSE GmbH donné par écrit. SuSE GmbH a le
+droit de refuser son accord sans avoir à exposer les raisons de son
+refus.
+
+6) Autres restrictions
+
+Si la distribution ou l'utilisation de YaST 2 et de SuSE Linux ou de
+parties de SuSE Linux est restreinte dans un pays, soit par des
+brevets, soit par des interfaces protégées par copyright, SuSE GmbH
+peut spécifier explicitement des limitations géographiques à la
+distribution de YaST 2 et de SuSE Linux ou parties de SuSE Linux,
+excluant ces pays partiellement ou totalement de la distribution. La
+présente licence inclut, dans un tel cas, la restriction totale ou
+partielle comme si elle avait été spécifiée par écrit dans le texte
+de la présente licence. 
+   

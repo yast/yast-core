@@ -1,0 +1,13 @@
+// termbug
+{
+    term contents = `VBox ();
+    contents = add (contents, (`VSpacing (1)));
+
+    return contents;
+}
+
+{
+    term a=``(y2error("hell"));
+
+    return a;
+}

@@ -1,0 +1,14 @@
+#
+# bytecode.exp
+# 'main' file for all bytecode tests
+#
+
+set directories { imports }
+#set directories { constants expressions statements }
+
+foreach dir $directories {
+    set filenames [get-files $srcdir/tests bytecode/$dir "ycp" ]
+    foreach file $filenames {
+	bytecode-run $file tests/bytecode/$dir
+    }
+}

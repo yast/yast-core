@@ -1,0 +1,24 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin1.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# sleep() not tested
+
+
+// The double backquotes `` are called "deep quote". They are used
+// to prevent the enclosed expression from evaluation.
+
+( ``( 1+2 ))
+( ``(name) )	// error
+( ``(`name) )
+( ``{ return 3 + 4; } )
+( { return 7; } )

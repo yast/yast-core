@@ -1,0 +1,51 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Repeat.ycp"
+    repeat
+{
+    return true;
+}
+until (true);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Repeat.ycp"
+    do
+{
+    return true;
+}
+while (true);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Repeat.ycp"
+    repeat
+{
+    break;
+}
+until (false);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Repeat.ycp"
+    do
+{
+    break;
+}
+while (false);
+}
+----------------------------------------------------------------------
+[Scanner] tests/statements/Repeat.ycp:38 Error: 'repeat-until' expression not boolean
+[Scanner] tests/statements/Repeat.ycp:38 Error: Expected 'boolean', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/Repeat.ycp:38 'repeat-until' expression not boolean

@@ -1,0 +1,37 @@
+new interpreter todo
+
+For UI support
+
+- Enhance StaticDeclaration to types (predefined types, typedefs)
+  -> done with DECL_TYPEDEF
+
+- Enhance StaticDeclaration to constants (Variables with constant value)
+  -> done with DECL_CONSTANT
+
+- Add <Namespace>::<block> to syntax
+	UI::{...}
+  -> add c_namespace to SymbolEntry
+
+- Enhance StaticDeclaration to allow specification of namespace
+  -> done with DECL_NAMESPACE
+
+- Add enums to TypeCode
+	`opt (`hstretch|`vstretch)
+
+- Add constructed types to TypeCode
+	`Widget (`Label (string), ...)
+
+- Add constant definitions to TypeCode
+	define CurrentItem UI::CurrentItem
+	so UI::Fun (..., CurrentItem, ...) evaluates CurrentItem in UI namespace
+
+- Allow namespace / module extensions
+
+- Properly support prototypes (separate declaration and definition)
+
+- Support 'external' functions (declaration in ycp, definition externally)
+
+- nested namespaces
+	UI::WFM::...
+
+- merge "module" (YCP namespace) and namespace (builtin namespace)

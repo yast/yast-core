@@ -1,0 +1,36 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Path.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for YCP_Void
+
+# ------- YCP_Path
+.
+._._
+.a0a9a._._._._.a0a9a
+
+# paths may have '-' inside
+# but not directly before or after '.'
+# and '-' can not be the last character
+# see PathErr[1234...].ycp for error cases
+
+.modules.snd-card-ens1371
+
+# ------- concatenating paths
+( . + .example.path )
+( .composed + .path )
+( .three.times + .concatenated + .path )
+( ( .three.times + .concatenated ) + .path )
+( .three.times + ( .concatenated + .path ) )
+( .obscur + .example + . )
+(.obscur+.example+.)

@@ -1,0 +1,121 @@
+	  YaST 2 and SuSE Linux licence terms
+	  ===================================
+
+YaST 2 Copyright (c) 1995 - 1999 SuSE GmbH, Nuernberg (Germany)
+
+The object of this licence is the YaST 2 (Yet another Setup Tool 2) program,
+the name YaST, together with SuSE Linux, the Linux Distribution of 
+SuSE GmbH, all programme derived from YaST 2 and all works or names
+derived in full or in part thereof together with the use, application,
+archiving, reproduction and passing on of YaST 2, all programs derived
+from YaST 2 and all works derived in full or in part thereof.  The YaST 2
+program and all sources is the intellectual property of SuSE GmbH
+within the meaning of the Copyright Law.  The name YaST is a registered
+trademark of SuSE GmbH.  In the following SuSE GmbH is the 
+licensor and every user or processor of YaST 2 or works derived in full
+or in part thereof, together with every person who reproduces, 
+distributes or archives YaST 2 or SuSE Linux, is the licensee of
+SuSE GmbH.
+
+The following licence terms are recognised as a result of the processing,
+use, application, archiving reproduction and dissemination of YaST 2.
+
+Only this licence gives the Licensee the right to use reproduce, to 
+distribute or to amend YaST 2 or works derived from it.  These actions are
+forbidden by the copyright act, if this licence is not recognised. If 
+this licence is recognised and complied with in full, it is also valid
+even without the written consent of the Licensee.
+
+1. Usage
+   YaST 2 and SuSE Linux may be used for personal and commercial
+   purposes if the copyright and licence terms of the installed packages
+   and programmes are observed. The use of YaST 2, even if a modified 
+   version is used, does NOT exempt in particular the Licensee from the 
+   duty to take due care with regard to the licence terms of the 
+   packages or programmes installed through YaST 2 or works based on it.
+
+2. Processing
+   All programmes derived from YaST 2 and all works derived from it in full
+   or parts thereof are to be filled on the opening screen with the clear
+   information "Modified Version". Moreover the operator give his name on
+   the opening screen, stating that SuSE GmbH is not providing any
+   support for the "Modified Version" and is excluded from any liability
+   whatsoever. Every amendment to the sources which are not conducted by
+   SuSE GmbH are deemed to be a "Modified Version". The Licensee is
+   entitled to change his copy from the sources of YaST 2, whereby a work
+   based on the YaST 2 programme is created, provided that the following 
+   conditions are satisfied.
+
+   a) Every amendment must have a note in the source with date and 
+      operator.  The amended sources must be made available for the user
+      in accordance with section 3) together with the unamended licence.
+
+   b) The Licensee is obliged to make all work distributed by him which
+      is derived as a whole or in part from YaST 2 or parts of YaST 2 to
+      third parties as a whole under the terms of this licence without
+      royalties.
+
+   c) The amendment of this licence by a Licensee, even in part, is 
+      forbidden.
+	
+   SuSE GmbH reserves the right to accept parts or all amendments of
+   a modified version of YaST 2 into the official version of YaST 2 free of
+   charge. The Licensee has no bearing on this.
+
+3. Dissemination
+   It is forbidden to reproduce or distribute data carriers which have 
+   been reproduced without authorisation for payment without the prior
+   written consent of SuSE GmbH or SuSE Linux.  Distribution of
+   the YaST 2 programme, its sources, whether amended or unamended in full
+   or in part thereof, and the works derived thereof for a charge require
+   the prior written consent of SuSE GmbH.
+
+   All programmes derived from YaST 2, and all works derived thereof as a
+   whole or parts thereof may only be disseminated with the amended
+   sources and this licence in accordance with 2b).  Making YaST 2 or 
+   works derived thereof available free of charge together with SuSE
+   Linux on FTP Servers and mailboxes is permitted if the licences on the
+   software are observed.
+
+4. Guarantee
+   No guarantee whatsoever is given for YaST 2 or for works derived from 
+   it and SuSE Linux. The SuSE GmbH guarantee only covers 
+   fault-free data carriers.
+
+   SuSE GmbH will provide YaST 2 and SuSE Linux "AS IT IS" without
+   any guarantee whatever that it is fit for a specific purpose or use.
+   In particular SuSE is not liable for lost profit, savings not 
+   made, or damages from the claims lodged by third parties against the 
+   Licensee. SuSE GmbH is not liable either for other direct or 
+   indirect consequential losses, in particular not for the loss or 
+   production of recorded data.
+
+   The observance of the respective licences and copyrights of the 
+   installed software is incumbent solely upon the user of YaST 2 and 
+   SuSE Linux.
+
+5. Rights
+   No other rights to YaST 2 or to SuSE Linux are granted other than 
+   those negotiated in this licence.  An infringement against this 
+   licence automatically terminates the rights of the Licensee. However
+   the right of third parties who have received copies or rights under
+   this licence from the Licensee, are not terminated as long as all
+   parts of his licence are recognised and observed.  If the Licensee
+   is subject to conditions, or obligations as a result of a court
+   judgement, patent terms, licence terms, or another reason, and these
+   conditions or obligations contradict this licence as a whole or in
+   part, the Licensee shall only be exempted in full or in part from 
+   this licence and its terms with the express prior written consent 
+   of SuSE. SuSE is entitled to withhold its consent without 
+   giving reasons.
+
+6. Additional restrictions.
+   If the distribution or use of YaST 2 and SuSE Linux or parts of 
+   SuSE Linux is restricted in a state either by patents or by 
+   interfaces protected by copyright, SuSE GmbH can specify an 
+   explicit geographic restriction of the distribution of YaST 2 and 
+   SuSE Linux or parts of SuSE Linux, in which these states
+   are fully or partially excluded from distribution. In such a case 
+   this licence includes the whole or partial restriction as if it was 
+   written down in this licence.
+

@@ -1,0 +1,21 @@
+Variables and Scope
+
+
+  Variables are always associated with a namespace.
+  Either a known namespace (with a name)
+  or the global namespace (no name, but distinguished)
+  or a local namespace (no name)
+
+  All namespaces are defined within a block, so all variables
+  belong to a block.
+  There's one exception: formal arguments to a function. Such
+  variables neither belong to the block surrounding the function,
+  nor to the block defining the function body.
+
+
+  Treat variables as 'slots' inside a block. Reference them
+  as block + slot_offset at runtime. Symbol tables are only
+  needed during parse time to look up symbols by name. Names
+  are not part of runtime, just handy for log or error output.
+
+  -> distinguish parse-time from run-time !

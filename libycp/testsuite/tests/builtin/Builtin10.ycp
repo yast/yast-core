@@ -1,0 +1,36 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin10.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// Creates a new list that is identical to the list but has
+// the value  prepended as additional element.
+
+{
+     list  MyList = [    "Austria",
+                          "Belgium",
+                          "China",
+                          `D_Nation,
+                          "England",
+                          "France",
+                          "Greece" ];
+     list  NewList = [];
+
+//   "one entry within the list is added (prepend)"
+     NewList = prepend( MyList, .Hungary );
+     return( ( size( MyList ) == 7 ) &&
+             ( (path)select( NewList, 0, nil ) == .Hungary ) );
+}
+
+{
+    return( "test case prepend for list finished" );
+}
+

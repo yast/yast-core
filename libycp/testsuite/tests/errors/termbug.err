@@ -1,0 +1,19 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // term contents
+    // filename: "tests/errors/termbug.ycp"
+    term contents = `VBox ();
+    contents = add (contents, `VSpacing (1));
+    return contents;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // term a
+    // filename: "tests/errors/termbug.ycp"
+    term a = { return y2error ("hell"); };
+    return a;
+}
+----------------------------------------------------------------------

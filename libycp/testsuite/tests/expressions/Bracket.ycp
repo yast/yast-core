@@ -1,0 +1,48 @@
+{
+    list l = nil;
+    return l[0]:1 == 1;
+}
+{
+    map m = $[1:11, "a":"aa", `b:`bb];
+
+    return m["a"]:nil == "aa";
+}
+{
+    map m = $[1:11, "a":"aa", `b:`bb];
+    return m[2]:2 == 2;
+}
+{
+    list l = [1, "a", `b];
+
+    return l[1]:nil == "a";
+}   
+{
+    list l = [1, "a", `b];
+    return l[3]:42 == 42;
+}   
+{
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+
+    return m["a",1]:nil == "a";
+}
+{
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+
+    return m["a"]:nil == l;
+}
+{
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+    return m["b"]:l == l;
+}
+
+
+
+{
+    map m = $["bus":"parallel", "dev_name":"/dev/lp0"];
+ 
+    m = add (m, "uri", m["bus"]:"xxx" + m["dev_name"]:"yyy");
+    return (m == $["bus":"parallel", "dev_name":"/dev/lp0", "uri":"parallel/dev/lp0"]);
+}

@@ -1,0 +1,66 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin9.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// Creates a new list that is identical to the list but has
+// the value  appended as additional element.
+
+{
+     list  MyList = [    "Austria",
+                          "Belgium",
+                          "China",
+                          `D_Nation,
+                          "England",
+                          "France",
+                          "Greece" ];
+     list  NewList = [];
+
+     return( MyList );
+}
+
+{
+     list  MyList = [    "Austria",
+                          "Belgium",
+                          "China",
+                          `D_Nation,
+                          "England",
+                          "France",
+                          "Greece" ];
+     list  NewList = [];
+
+//   "one entry within the list is added"
+     NewList = add( MyList, .Hungary );
+     return( ( size( MyList ) == 7 ) &&
+             ( (path)select( NewList, size( MyList ), nil) == .Hungary ) );
+}
+
+{
+     list  MyList = [    "Austria",
+                          "Belgium",
+                          "China",
+                          `D_Nation,
+                          "England",
+                          "France",
+                          "Greece" ];
+     list  NewList = [];
+
+//   "one entry is added (append) to an empty list"
+     MyList = [];
+     NewList = add( MyList, "Hungary" );
+     return( 
+//           ( select( MyList, 0, nil ) == nil ) &&
+             ( select( NewList, 0, nil ) == "Hungary" ) );
+}
+
+{
+    return( "test case add for list finished" );
+}

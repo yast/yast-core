@@ -1,0 +1,119 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "NameOfModule";
+}
+{
+    // integer al
+    global integer ag = 1;
+    integer al = 2;
+    global define void NameOfModule ()
+{
+    y2milestone ("I am a constructor\n");
+    al = 5;
+}
+    global define integer af ()
+{
+    return (ag + al);
+}
+}
+----------------------------------------------------------------------
+[Scanner] tests/modules/module.ycp:16 Error: Bad or unknown file 'NameOfModule'
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:17 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+[Scanner] tests/modules/module.ycp:17 Error: parse error, unexpected ')'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+6
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:21 Error: Bad or unknown file 'NameOfModule'
+runycp: parser error
+[Scanner] tests/modules/module.ycp:23 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+27
+----------------------------------------------------------------------
+runycp: parser error
+[Scanner] tests/modules/module.ycp:24 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+27
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:26 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+27
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:30 Error: Bad or unknown file 'NameOfModule'
+runycp: parser error
+[Scanner] tests/modules/module.ycp:32 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+27
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:34 Error: Unknown identifier 'NameOfModule'
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+27
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:38 Error: module statement in sub-block
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/module.ycp:40 Error: Undeclared identifier 'a'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/modules/module.ycp:40 undeclared identifier
+Parsed:
+----------------------------------------------------------------------
+1
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer b
+    integer b = 1;
+}
+----------------------------------------------------------------------
+runycp: parser error
+[Scanner] tests/modules/module.ycp:48 Error: Undeclared identifier 'a'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/modules/module.ycp:48 undeclared identifier
+[Scanner] tests/modules/module.ycp:48 Error: Unknown identifier 'B'
+runycp: parser error
+runycp: parser error
+runycp: parser error

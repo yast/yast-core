@@ -1,0 +1,10 @@
+[Scanner] tests/scope/GlobalSymbols2.ycp:8 Warning: Useless 'global' outside of module
+[Scanner] tests/scope/GlobalSymbols2.ycp:9 Error: Global definition shadows local symbol
+[Scanner] tests/scope/GlobalSymbols2.ycp:3 Error: 'func2' defined here.
+[Scanner] tests/scope/GlobalSymbols2.ycp:10 Error: Undeclared identifier 'i'
+[Scanner] tests/scope/GlobalSymbols2.ycp:10 Error: Bad parameter
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/GlobalSymbols2.ycp:9 Global definition shadows local symbol

@@ -1,0 +1,27 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Namespace2.ycp
+#
+#  Purpose:     test named scopes
+#
+#  Creator:     mvidner@suse.cz
+#
+#  Maintainer:  mvidner@suse.cz
+#
+# ---------------------------------------------------------
+
+{
+   import "Namespace2";
+   return (Namespace2::globalFunction() == 4711);
+}
+
+{
+   import "Namespace2";
+   return (Namespace2::localFunction() == nil);
+}
+
+{
+   import "Namespace2";
+   return (Namespace2::mixedFunction() == 4753);
+}

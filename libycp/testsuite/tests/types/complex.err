@@ -1,0 +1,102 @@
+[Scanner] tests/types/complex.ycp:4 Warning: Useless 'global' outside of module
+[Scanner] tests/types/complex.ycp:63 Warning: Useless 'global' outside of module
+Parsed:
+----------------------------------------------------------------------
+{
+    //T: TEntry (CheckEmptyName@4:global string CheckEmptyName())
+    //T: TEntry (DeviceType@63:global string DeviceType())
+    // global string CheckEmptyName()
+    // global string DeviceType()
+    // filename: "tests/types/complex.ycp"
+    textdomain "complex";
+    global string CheckEmptyName (string devtype, string hwname)
+{
+    if (((hwname != nil) && (hwname != "")))
+    return hwname;
+    if (/* _ -> s */regexpmatch (devtype, "(isdn|ippp)-pcmcia-"))
+    return _("PCMCIA ISDN connection");
+else
+    if (regexpmatch (devtype, "(isdn|ippp)-usb-"))
+    return _("USB ISDN connection");
+else
+    if (regexpmatch (devtype, "isdn|ippp"))
+    return _("ISDN connection");
+else
+    if (regexpmatch (devtype, "(modem|ppp)-pcmcia-"))
+    return _("PCMCIA modem");
+else
+    if (regexpmatch (devtype, "(modem|ppp)-usb-"))
+    return _("USB modem");
+else
+    if (regexpmatch (devtype, "modem|ppp"))
+    return _("Modem");
+else
+    if (regexpmatch (devtype, "contr-pcmcia-"))
+    return _("PCMCIA ISDN card");
+else
+    if (regexpmatch (devtype, "contr-usb-"))
+    return _("USB ISDN card");
+else
+    if (regexpmatch (devtype, "contr"))
+    return _("ISDN card");
+else
+    if (regexpmatch (devtype, "net"))
+    return _("ISDN connection");
+else
+    if (regexpmatch (devtype, "eth-pcmcia-"))
+    return _("PCMCIA Ethernet network card");
+else
+    if (regexpmatch (devtype, "tr-pcmcia-"))
+    return _("PCMCIA Token Ring network card");
+else
+    if (regexpmatch (devtype, "fddi-pcmcia-"))
+    return _("PCMCIA FDDI network card");
+else
+    if (regexpmatch (devtype, "eth-usb-"))
+    return _("USB Ethernet network card");
+else
+    if (regexpmatch (devtype, "tr-usb-"))
+    return _("USB Token Ring network card");
+else
+    if (regexpmatch (devtype, "fddi-usb-"))
+    return _("USB FDDI network card");
+else
+    if (regexpmatch (devtype, "eth"))
+    return _("Ethernet network card");
+else
+    if (regexpmatch (devtype, "tr"))
+    return _("Token Ring network card");
+else
+    if (regexpmatch (devtype, "fddi"))
+    return _("FDDI network card");
+else
+    if (regexpmatch (devtype, "dummy"))
+    return _("Dummy network device");
+else
+    if (regexpmatch (devtype, "vmnet"))
+    return _("VMWare network device");
+else
+    if (regexpmatch (devtype, "lo"))
+    return _("Loopback device");
+else
+    if (regexpmatch (devtype, "escon"))
+    return _("Enteprise system connector (ESCON)");
+else
+    if (regexpmatch (devtype, "iucv"))
+    return _("Inter user communication vehicle (IUCV)");
+else
+    if (regexpmatch (devtype, "ctc"))
+    return _("Channel to channel interface (CTC)");
+else
+    if (regexpmatch (devtype, "hsi"))
+    return _("Hipersockets interface (HSI)");
+else
+    if (regexpmatch (devtype, "ci"))
+    return _("Common link access for workstation (CLAW)");
+}
+    global string DeviceType (string type)
+{
+    return "";
+}
+}
+----------------------------------------------------------------------

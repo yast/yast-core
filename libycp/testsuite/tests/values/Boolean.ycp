@@ -1,0 +1,31 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Boolean.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// this tests includes tests for YCP_Boolean
+
+# ------- YCP_Boolean 
+true
+false
+( ! true )
+(!(false))
+(((true)))
+(!((!(!false))))
+
+   	false  // leading white spaces and trailing comment
+
+(true || false)
+(true && false)
+(!true)
+((false) && true)
+((true) && false)
+

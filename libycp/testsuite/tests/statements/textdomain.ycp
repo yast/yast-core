@@ -1,0 +1,16 @@
+{
+    textdomain "first domain";
+
+    define string change_domain (string a) ``{
+	locale l = _("abc");
+	return textdomain;
+    };
+
+    y2milestone ("first textdomain '%1'", textdomain);
+
+    textdomain "second domain";
+
+    y2milestone ("second textdomain '%1'", textdomain);
+    y2milestone ("change_domain '%1'", change_domain(""));
+    return textdomain;
+}

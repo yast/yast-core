@@ -1,0 +1,24 @@
+[Scanner] tests/modules/bad_module.ycp:7 Error: Assignment not allowed in a module
+runycp: parser error
+Parsed:
+----------------------------------------------------------------------
+{
+    ag = 27;
+}
+----------------------------------------------------------------------
+runycp: parser error
+runycp: parser error
+runycp: parser error
+[Scanner] tests/modules/bad_module.ycp:12 Error: Undeclared identifier 'af'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/modules/bad_module.ycp:12 Unknown expression
+Parsed:
+----------------------------------------------------------------------
+{
+    return (ag + al);
+}
+----------------------------------------------------------------------
+runycp: parser error

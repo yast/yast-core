@@ -1,0 +1,11 @@
+//
+{
+    import "module0";
+
+    // The parsed output will drop the module prefix. :(
+    // YEFunction does not remember its full name whereas YEVariable does
+    // and so module1i works better.
+    // This is a minor bug. Prehaps they should not remember their name
+    // but climb the owner ladder when printing?
+    return module0::Inc (1);
+}

@@ -1,0 +1,29 @@
+{
+    if (true)
+	return 1;
+}
+
+{
+    if (false)
+	return 1;
+    else
+	return 2;
+    return 3;
+}
+
+{
+    if (1)
+	break;
+}
+
+{
+    if (false)
+	integer i = 1;
+}
+
+{
+    if (false)
+	return 1;
+    else
+	integer i = 1;
+}

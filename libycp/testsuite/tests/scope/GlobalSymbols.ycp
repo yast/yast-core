@@ -1,0 +1,80 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    GlobalSymbols.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+# symbols
+
+# the restriction is that the variables are only global.
+# that means, the type is determined once, maybe any (see last d).
+
+# This test includes (global) variables, declaration, symbols, blocks
+
+( `named_symbol )
+( `_17 )
+( `_named_symbol )
+
+( { void a=nil; } )
+( { boolean b=true; return b && false; } )
+( { integer c=(-2); return c+8; } )
+( { float d=(0.0-2.0); return d-0.3e1; } )
+( { string d="composed"; return d + " string"; } )
+
+{
+    define void func1 (integer i) {
+        y2error ("== local  func: %1", i);
+    }
+
+    // should warn
+
+    global define void func1 (integer i) {
+        y2error ("== global func: %1", i);
+    }
+    func1 (5);
+    return 0;
+}
+
+{
+    define void func2 (integer i)
+    {
+        y2error ("== local  func: %1", i);
+    }
+
+    // should warn
+    global define void func2 (integer i)
+    {
+        y2error ("== global func: %1", i);
+    }
+
+    func2 (5);
+    return 0;
+}
+
+{
+    define void func2 (integer i) ``{
+        y2error ("== local  func: %1", i);
+    }
+
+    if (true)
+    {
+	if (true)
+	{
+	    // error, global declaration in nested block
+	    global define void func2 (integer i) ``{
+	        y2error ("== global func: %1", i);
+	    }
+	}
+    }
+    func2 (5);
+    return 0;
+}
+

@@ -1,0 +1,97 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list SetOne
+    // list SetEqual
+    // list SetTwo
+    // list SetDifferent
+    // list ResultSet
+    // filename: "tests/builtin/Builtin12.ycp"
+    list SetOne = [0, "Hello world", true];
+    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetTwo = [., (15 % 5)];
+    list SetDifferent = [3.];
+    list ResultSet = [];
+    ResultSet = union (SetOne, SetOne);
+    return (ResultSet == SetOne);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list SetOne
+    // list SetEqual
+    // list SetTwo
+    // list SetDifferent
+    // list ResultSet
+    // filename: "tests/builtin/Builtin12.ycp"
+    list SetOne = [0, "Hello world", true];
+    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetTwo = [., (15 % 5)];
+    list SetDifferent = [3.];
+    list ResultSet = [];
+    ResultSet = union (SetOne, SetEqual);
+    return ((ResultSet == SetOne) && (ResultSet != SetEqual));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list SetOne
+    // list SetEqual
+    // list SetTwo
+    // list SetDifferent
+    // list ResultSet
+    // filename: "tests/builtin/Builtin12.ycp"
+    list SetOne = [0, "Hello world", true];
+    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetTwo = [., (15 % 5)];
+    list SetDifferent = [3.];
+    list ResultSet = [];
+    ResultSet = union (SetOne, SetTwo);
+    return (ResultSet == add (SetOne, select (SetTwo, 0, nil)));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list SetOne
+    // list SetEqual
+    // list SetTwo
+    // list SetDifferent
+    // list ResultSet
+    // filename: "tests/builtin/Builtin12.ycp"
+    list SetOne = [0, "Hello world", true];
+    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetTwo = [., (15 % 5)];
+    list SetDifferent = [3.];
+    list ResultSet = [];
+    ResultSet = union (SetOne, SetDifferent);
+    return (ResultSet == add (SetOne, select (SetDifferent, 0, nil)));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list SetOne
+    // list SetEqual
+    // list SetTwo
+    // list SetDifferent
+    // list ResultSet
+    // filename: "tests/builtin/Builtin12.ycp"
+    list SetOne = [0, "Hello world", true];
+    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetTwo = [., (15 % 5)];
+    list SetDifferent = [3.];
+    list ResultSet = [];
+    ResultSet = union (SetDifferent, SetOne);
+    return (ResultSet != add (SetOne, select (SetDifferent, 0, nil)));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/builtin/Builtin12.ycp"
+    return "test case union finished";
+}
+----------------------------------------------------------------------
