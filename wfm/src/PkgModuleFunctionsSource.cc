@@ -187,6 +187,7 @@ PkgModuleFunctions::SourceCreate (YCPList args)
 	{
 	    new_slot = _sources.size();
 	    _sources.push_back (source_id);
+            _first_free_source_slot = _sources.size();
 	}
 
 	_last_error = MGR.enableSource( source_id );
