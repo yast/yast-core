@@ -34,7 +34,7 @@
 
 
 YMacroPlayer::YMacroPlayer( const string & macroFileName )
-    : _macro( YCPNull() )
+    : _macro( 0 )
 {
     _nextBlockNo = -1;
     readMacroFile( macroFileName );
@@ -63,9 +63,10 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
     y2milestone( "Loading macro file %s", macroFileName.c_str() );
 
     Parser parser( macroFile, macroFileName.c_str() );
-    _macro = YCPCode( parser.parse() );
+    parser.setPreloadNamespaces (false);
+    YCode *parsed = parser.parse();
 
-    if ( _macro.isNull() )
+    if ( !parsed || parsed->isError() )
     {
 	setError();
 	y2error( "Error parsing macro file %s - macro execution aborted",
@@ -73,19 +74,18 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 	return;
     }
 
-    if ( _macro->asCode()->code()->kind() != YCode::yeBlock )
+    if ( parsed->kind() != YCode::yeBlock )
     {
 	setError();
 	y2error( "Macro syntax error in file %s - expected YCP block",
 		 macroFileName.c_str() );
 	return;
     }
+    
+    _macro = static_cast <YBlock *> (parsed) ;
 
-#if 0
-// FIXME:
     y2debug( "Playing macro from file %s - %d macro blocks",
-	     macroFileName.c_str(), _macro->asBlock()->size() );
-#endif
+	     macroFileName.c_str(), _macro->statementCount() );
     _nextBlockNo = 0;
 
     fclose( macroFile );
@@ -94,54 +94,30 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 
 bool YMacroPlayer::finished()
 {
-    if ( error() || _macro.isNull() || _nextBlockNo < 0 )
+    if ( error() || !_macro || _nextBlockNo < 0 )
     {
 	y2warning( "Test for error() first before testing finished() !" );
 	return true;
     }
     else
     {
-#if 0
-// FIXME:
 	y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
-		 _nextBlockNo ,_macro->asBlock()->size(),
-		 _nextBlockNo >= _macro->asBlock()->size() ? "true" : "false" );
+		 _nextBlockNo ,_macro->statementCount(),
+		 _nextBlockNo >= _macro->statementCount() ? "true" : "false" );
 
-	return _nextBlockNo >= _macro->asBlock()->size();
-#else
-	return true;
-#endif
+	return _nextBlockNo >= _macro->statementCount();
     }
 }
 
 
-YBlock YMacroPlayer::nextBlock()
+YCPValue YMacroPlayer::evaluateNextBlock()
 {
-#if 0
-// FIXME:
     if ( error() || finished() )
-    {
 	return YCPNull();
-    }
 
-    YCPStatement macroBlock = _macro->asBlock()->statement( _nextBlockNo++ );
+    y2milestone( "Evaluating macro block #%d", _nextBlockNo );
 
-    if ( ! macroBlock->isNestedStatement() )
-    {
-	setError();
-	y2error( "Invalid macro syntax - block expected, not\n%s",
-		 macroBlock->toString().c_str() );
-
-	return YCPNull();
-    }
-    else
-    {
-	y2debug( "Next macro block to execute:\n%s",
-		 macroBlock->toString().c_str() );
-    }
-
-    return macroBlock->asNestedStatement()->value();
-#endif
+    return _macro->evaluate( _nextBlockNo++ );
 }
 
 

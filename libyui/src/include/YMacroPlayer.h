@@ -20,9 +20,9 @@
 #define YMacroPlayer_h
 
 #include <string>
-#include <ycp/YBlock.h>
 
 class YWidget;
+class YBlock;
 
 class YMacroPlayer
 {
@@ -50,11 +50,11 @@ public:
     bool finished();
 
     /**
-     * Return the next macro block to execute and increment the internal block
+     * Return the result of the next macro block and increment the internal block
      * counter. Returns YCPNull() on any previous error or if finished.
      * Check for error() or finished() before calling this!
      */
-    YBlock nextBlock();
+    YCPValue evaluateNextBlock();
 
     /**
      * Rewind macro execution - prepare to redo from start
@@ -81,7 +81,7 @@ protected:
     /**
      * The parsed macro
      */
-    YCPValue _macro;
+    YBlock* _macro;
 
     /**
      * Error status

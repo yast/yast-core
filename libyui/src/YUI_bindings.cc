@@ -112,7 +112,7 @@ UIGetLanguage( const YCPBoolean & strip )
 }
 
 
-static YCPValue
+YCPValue
 UIUserInput()
 {
     if ( YUIComponent::ui() )
@@ -547,13 +547,11 @@ UICallHandler( void * ptr, int argc, YCPValue argv[] )
 {
     if ( YUIComponent::ui() )
     {
-	y2debug( "Calling builtin" );
 	return YUIComponent::ui()->callBuiltin( ptr, argc, argv );
     }
     else
     {
-	// FIXME: this is an error in fact
-	y2warning( "No UI instance available yet!" );
+	y2error( "No UI instance available yet!" );
 	return YCPVoid();
     }
 }
@@ -564,7 +562,7 @@ UI::UI()
 {
     // Declarations for UI builtins and mapping to the respective C++ function.
     // NOTE: This must be static, registerDeclarations saves a pointer to it!
-    
+
     static declaration_t ui_builtins[] =
 	{
 	    { "UI",			"",			(void *) &UICallHandler, DECL_NAMESPACE | DECL_CALL_HANDLER 	},

@@ -163,10 +163,20 @@ void YUI::terminateUIThread()
 }
 
 
+extern YCPValue UIUserInput ();
+
 YCPValue YUI::callBuiltin( void * function, int argc, YCPValue argv[] )
 {
     YCPValue ret = YCPVoid();
     
+    if ( macroPlayer )
+    {
+	if (function == UIUserInput)
+	{
+	    playNextMacroBlock ();
+	}
+    }
+
     if ( with_threads )
     {
 	_builtinCallData.function	= function;
@@ -198,7 +208,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	y2error( "NULL function pointer!" );
 	return YCPNull();
     }
-
+    
     YCPValue ret = YCPVoid();
 
     switch ( argc )

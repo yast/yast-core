@@ -25,7 +25,7 @@
 
 
 #define VERBOSE_COMMANDS	// pretty verbose logging of each UI command
-#define VERBOSE_REPLACE_WIDGET
+#define VERBOSE_REPLACE_WIDGET 0
 
 #include <stdio.h>
 #include <unistd.h> // pipe()
@@ -629,16 +629,10 @@ YUI::filterInvalidEvents( YEvent * event )
 
 YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
 {
-    y2debug( "Evaluate open dialog" );
-    y2debug( "term: %s", dialog_term->toString().c_str() );
-
-    y2debug( "opts: %s", opts.isNull() ? "none" : opts->toString().c_str() );
-    
     YWidgetOpt opt;
 
     if ( ! opts.isNull() ) // evaluate `opt() contents
     {
-	    y2debug( "There are options" );
 	    YCPList optList = opts->args();
 
 	    for ( int o=0; o < optList->size(); o++ )
@@ -656,9 +650,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
     }
 
     blockEvents();	// We don't want self-generated events from UI builtins.
-    y2debug( "About to create dialog" );
     YDialog *dialog = createDialog( opt );
-    y2debug( "Dialog created" );
 
     if ( dialog )
     {
@@ -885,7 +877,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
     // I must _first_ remove the old widget and then create the new ones. The reason
     // is: Otherwise you couldn't use the same widget ids in the old and new widget tree.
 
-#ifdef VERBOSE_REPLACE_WIDGET
+#if VERBOSE_REPLACE_WIDGET
     rp->dumpDialogWidgetTree();
 #endif
 
@@ -1118,8 +1110,6 @@ void YUI::playMacro( string filename )
 
 void YUI::playNextMacroBlock()
 {
-#if 0
-// FIXME:
     if ( ! macroPlayer )
     {
 	y2error( "No macro player active." );
@@ -1134,21 +1124,15 @@ void YUI::playNextMacroBlock()
     {
 	if ( ! macroPlayer->finished() )
 	{
-	    YCPBlock macroBlock = macroPlayer->nextBlock();
+	    YCPValue result = macroPlayer->evaluateNextBlock();
 
-	    if ( macroPlayer->error() || macroBlock.isNull() )
+	    if ( macroPlayer->error() || result.isNull() )
 	    {
 		y2error( "Macro aborted" );
 		deleteMacroPlayer();
 	    }
-	    else
-	    {
-		y2milestone( "Evaluating macro block:\n%s", macroBlock->toString().c_str() );
-		evaluate( macroBlock );
-	    }
 	}
     }
-#endif
 }
 
 
@@ -1660,7 +1644,6 @@ int YUI::defaultFunctionKey( YCPString ylabel )
 
 YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 {
-    y2debug ( "( %s ), callback @ %p", term->toString().c_str(), _callback );
     if ( term->size() != 1 )	// must have 1 arg - anything allowed
     {
 	return YCPNull();
@@ -1677,7 +1660,6 @@ YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 	{
 	    v = _callback->evaluate( term );
 	}
-	y2debug ( "callback returns ( %s )", v->toString().c_str() );
 	return v;
     }
 
