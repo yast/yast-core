@@ -1,6 +1,4 @@
-#
 # Makefile.am for core/wfm/doc
-#
 
 SUBDIRS =
 
@@ -9,8 +7,6 @@ htmldir = $(docdir)/wfm
 html_DATA = YCP-builtins-wfm.html YCP-builtins-pkg.html
 
 CLEANFILES = YCP-builtins-wfm.html YCP-builtins-pkg.html
-
-all: $(CLEANFILES)
 
 builtin_wfm = $(srcdir)/../src/Y2WFMComponent.cc \
         $(srcdir)/../src/Y2CCWFM.cc
