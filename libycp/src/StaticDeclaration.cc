@@ -114,7 +114,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 
 	if ((declarations->flags & (DECL_WILD|DECL_SYMBOL)) == (DECL_WILD|DECL_SYMBOL))
 	{
-	    fprintf (stderr, "Declaration of %s::%s combines wildcard and symbol\n", filename, name);
+	    y2internal ("Declaration of %s::%s combines wildcard and symbol\n", filename, name);
 	}
 	else if ((declarations->flags & DECL_NAMESPACE) != 0)		// switch namespace
 	{
@@ -526,7 +526,6 @@ StaticDeclaration::readDeclaration (bytecodeistream & str) const
     if (decl == 0)
     {
 	ycp2error ("No match for '%s (%s)'", name, type->toString().c_str());
-//	fprintf (stderr, "No match for builtin '%s (%s)'\n", name, type->toString().c_str());
 	str.setstate (std::ostream::failbit);
     }
     delete [] name;

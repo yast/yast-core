@@ -789,7 +789,7 @@ Bytecode::readEntry (bytecodeistream & str)
 	SymbolTable *table = name_space->table();
 	if (table == 0)
 	{
-	    fprintf (stderr, "No table associated to xref namespace\n");
+	    ycp2error ("No table associated to xref namespace\n");
 	    exit (1);
 	}
 	position = -position - 1;		// -1 .. -n  --> 0 .. n-1
