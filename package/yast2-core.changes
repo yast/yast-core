@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 25 10:49:31 CEST 2003 - cschum@suse.de
+
+- Removed WFM builtin CallFile as it isn't needed anymore by YOU.
+
+-------------------------------------------------------------------
 Wed Jun 25 09:51:34 CEST 2003 - arvin@suse.de
 
 - correct C++ syntax in HwProbe.cc
