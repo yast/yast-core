@@ -10,7 +10,7 @@ configure: all
 all:
 	y2tool y2autoconf
 	y2tool y2automake
-	autoreconf --force --install
+	autoreconf --force --install -v
 
 install: configure
 	make
