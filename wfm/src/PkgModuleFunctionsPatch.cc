@@ -157,9 +157,9 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     std::list<Url> servers;
     _last_error = _y2pm.youPatchManager().instYou().servers( servers );
     if ( _last_error ) {
-      if ( _last_error == YouError::E_get_suseservers_failed ) return YCPString( "get" );
-      if ( _last_error == YouError::E_write_suseservers_failed ) return YCPString( "write" );
-      if ( _last_error == YouError::E_read_suseservers_failed ) return YCPString( "read" );
+      if ( _last_error == YouError::E_get_youservers_failed ) return YCPString( "get" );
+      if ( _last_error == YouError::E_write_youservers_failed ) return YCPString( "write" );
+      if ( _last_error == YouError::E_read_youservers_failed ) return YCPString( "read" );
       return YCPString( "Error getting you servers." );
     }
 
