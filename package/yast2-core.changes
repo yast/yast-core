@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Apr  6 13:21:31 CEST 2005 - visnov@suse.cz
+
+- added virtual destructors to keep gcc4 happy
+
+-------------------------------------------------------------------
 Tue Apr  5 17:18:15 CEST 2005 - visnov@suse.cz
 
 - enable ElectricFence again without checking for 0 size allocs 
