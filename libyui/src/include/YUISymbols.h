@@ -56,6 +56,7 @@
 #define YUIBuiltin_UserInput			"UserInput"
 #define YUIBuiltin_WaitForEvent			"WaitForEvent"
 #define YUIBuiltin_WidgetExists			"WidgetExists"
+#define YUIBuiltin_WizardCommand		"WizardCommand"
 
 #define YUIBuiltin_PostponeShortcutCheck	"PostponeShortcutCheck"
 #define YUIBuiltin_CheckShortcuts		"CheckShortcuts"
@@ -116,7 +117,6 @@
 #define YUIWidget_VSquash			"VSquash"
 #define YUIWidget_VStretch			"VStretch"
 #define YUIWidget_VWeight			"VWeight"
-#define YUIWidget_Wizard			"Wizard"
 #define YUIWidget_PkgSpecial			"PkgSpecial"
 
 
@@ -128,6 +128,7 @@
 #define YUISpecialWidget_DummySpecialWidget	"DummySpecialWidget"
 #define YUISpecialWidget_PartitionSplitter	"PartitionSplitter"
 #define YUISpecialWidget_Slider			"Slider"
+#define YUISpecialWidget_Wizard			"Wizard"
 
 
 // Widget properties
@@ -176,6 +177,7 @@
 #define YUIOpt_scaleToFit			"scaleToFit"
 #define YUIOpt_searchMode			"searchMode"
 #define YUIOpt_shrinkable			"shrinkable"
+#define YUIOpt_showSteps			"showSteps"
 #define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
 #define YUIOpt_updateMode			"updateMode"

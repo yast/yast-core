@@ -48,8 +48,15 @@ public:
      */
     virtual char *widgetClass() { return "YWizard"; }
 
+    /**
+     * Generic direct access to implementation-specific functions.
+     * Derived classes should implement this.
+     **/
+    virtual YCPValue command( const YCPTerm & command );
+
+
 protected:
-    
+
     YCPValue 	_backButtonId;
     YCPString 	_backButtonLabel;
     YCPValue 	_abortButtonId;

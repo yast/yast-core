@@ -19,6 +19,7 @@
 
 #define y2log_component "ui-pkg"
 #include <ycp/y2log.h>
+#include <ycp/YCPTerm.h>
 
 #include "YWizard.h"
 
@@ -43,4 +44,11 @@ YWizard::YWizard( YWidgetOpt & opt,
     setDefaultStretchable( YD_VERT,  true );
 }
 
+
+YCPValue YWizard::command( const YCPTerm & command )
+{
+    y2error( "YWizard::command() not reimplemented!" );
+
+    return YCPNull();
+}
 

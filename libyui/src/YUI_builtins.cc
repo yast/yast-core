@@ -50,6 +50,7 @@
 #include "YMacroPlayer.h"
 #include "YReplacePoint.h"
 #include "YShortcut.h"
+#include "YWizard.h"
 
 using std::string;
 
@@ -129,9 +130,6 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
     }
 
     setenv( "LANG", lang.c_str(), 1 ); // 1 : replace
-#ifdef WE_HOPEFULLY_DONT_NEED_THIS_ANY_MORE
-    setlocale( LC_ALL, "" );	// switch char set mapping in glibc
-#endif
     setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
     YCPTerm newTerm = YCPTerm( "SetLanguage" );
     newTerm->add ( YCPString( lang ) );
@@ -168,10 +166,10 @@ YCPString YUI::evaluateGetProductName()
  * This product name should be concise and meaningful to the user and not
  * cluttered with detailed version information. Don't use something like
  * "SuSE Linux 12.3-i786 Professional". Use something like "SuSE Linux"
- * instead. 
+ * instead.
  * <p>
  * This information can be retrieved with the GetProductName() builtin.
- * 
+ *
  * @example SetProductName( "SuSE HyperWall" );
  **/
 void YUI::evaluateSetProductName( const YCPString & name )
@@ -201,7 +199,7 @@ YCPValue YUI::setLanguage( const YCPTerm & term )
  * @example SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
-void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font, 
+void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font,
     const YCPString & screen_map, const YCPString & unicode_map, const YCPString & encoding )
 {
     setConsoleFont( console_magic, font, screen_map, unicode_map, encoding );
@@ -918,6 +916,53 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
     }
 }
 
+
+
+/**
+ * @builtin WizardCommand( symbol wizardId, term wizardCommand ) -> boolean
+ *
+ * Issue a command to a wizard widget with ID 'wizardId'.
+ * <p>
+ * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
+ * <p>
+ * For available wizard commands see file YQWizard.cc .
+ * If the current UI does not provide a wizard widget, 'false' is returned.
+ * It is safe to call this even for UIs that don't provide a wizard widget. In
+ * this case, all calls to this builtin simply return 'false'.
+ * <p>
+ * Returns true on success.
+ */
+
+YCPValue YUI::evaluateWizardCommand( const YCPValue & id_value, const YCPTerm & command )
+{
+    if ( ! hasWizard() )
+	return YCPBoolean( false );
+
+    if ( ! isSymbolOrId( id_value ) )
+    {
+	return YCPNull();
+    }
+
+    YCPValue id = getId( id_value );
+    YWidget *widget = widgetWithId( id, true );
+
+    if ( ! widget )
+	return YCPBoolean( false );
+
+    YWizard * wizard = dynamic_cast<YWizard *>( widget );
+
+    if ( ! wizard )
+    {
+	y2error( "Widget with ID %s is not a wizard widget!", id_value->toString().c_str() );
+	return YCPBoolean( false );
+    }
+
+    blockEvents();	// Avoid self-generated events from builtins
+    YCPValue ret = wizard->command( command );
+    unblockEvents();
+
+    return ret;
+}
 
 
 

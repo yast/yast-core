@@ -62,6 +62,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_DownloadProgress	)	hasWidget = hasDownloadProgress();
     else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
     else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
+    else if ( symbol == YUISpecialWidget_Wizard			)	hasWidget = hasWizard();
     else
     {
 	y2error( "HasSpecialWidget(): Unknown special widget: %s", symbol.c_str() );
@@ -105,12 +106,6 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, cons
 	y2error( "This UI does not support the DummySpecialWidget." );
 	return 0;
     }
-}
-
-
-bool YUI::hasDummySpecialWidget()
-{
-    return true;
 }
 
 
@@ -493,35 +488,72 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
 }
 
 
-/**
- * Special widget availability check methods.
+
+/*
+ * @widget	Wizard
+ * @short	Wizard frame - not for general use, use the Wizard:: module instead!
+ * @class	YWizard
  *
- * Overwrite if the specific UI provides the corresponding widget.
+ * @option	showSteps	Enable showing wizard steps (use UI::WizardCommand() to set them)
+ *
+ * @arg		any	backButtonId		ID to return when the user presses the "Back" button
+ * @arg		string	backButtonLabel		Label of the "Back" button
+ *
+ * @arg		any	abortButtonId		ID to return when the user presses the "Abort" button
+ * @arg		string	abortButtonLabel	Label of the "Abort" button
+ *
+ * @arg		any	nextButtonId		ID to return when the user presses the "Next" button
+ * @arg		string	nextButtonLabel		Label of the "Next" button
+ *
+ * @usage	`Wizard(`id(`back), "&Back", `id(`abort), "Ab&ort", `id(`next), "&Next" )
+ * @usage	`Wizard(`back, "&Back", `abort, "Ab&ort", `next, "&Next" )
+ *
+ * @description
+ *
+ * This is the UI-specific technical implementation of a wizard dialog's main widget.
+ * This is not intended for general use - use the Wizard:: module instead which will use this
+ * widget properly.
+ * <p>
+ * <b>Note:</b>
+ * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  */
 
-bool YUI::hasDownloadProgress()
+YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
+			     const YCPList & optList, int argnr )
 {
-    return false;
-}
+    if ( term->size() - argnr != 6
+	 || ! isSymbolOrId( term->value( argnr   ) ) || ! term->value( argnr+1 )->isString()
+	 || ! isSymbolOrId( term->value( argnr+2 ) ) || ! term->value( argnr+3 )->isString()
+	 || ! isSymbolOrId( term->value( argnr+4 ) ) || ! term->value( argnr+5 )->isString() )
+    {
+	y2error( "Invalid arguments for the Wizard widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+    
 
-bool YUI::hasBarGraph()
-{
-    return false;
-}
+    // Parse options
 
-bool YUI::hasColoredLabel()
-{
-    return false;
-}
+    for ( int o=0; o < optList->size(); o++ )
+    {
+	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_showSteps ) opt.showSteps.setValue( true );
+	else logUnknownOption( term, optList->value(o) );
+    }
 
-bool YUI::hasSlider()
-{
-    return false;
-}
+    YCPValue	backButtonId		= getId( term->value( argnr ) );
+    YCPString 	backButtonLabel 	= term->value( argnr+1 )->asString();
+    
+    YCPValue	abortButtonId		= getId( term->value( argnr+2 ) );
+    YCPString 	abortButtonLabel	= term->value( argnr+3 )->asString();
+    
+    YCPValue	nextButtonId		= getId( term->value( argnr+4 ) );
+    YCPString 	nextButtonLabel		= term->value( argnr+5 )->asString();
 
-bool YUI::hasPartitionSplitter()
-{
-    return false;
+    return createWizard( parent, opt,
+			 backButtonId,  backButtonLabel,
+			 abortButtonId,	abortButtonLabel,
+			 nextButtonId,	nextButtonLabel  );
 }
 
 
@@ -591,6 +623,21 @@ YWidget * YUI::createPartitionSplitter( YWidget *		parent,
     return 0;
 }
 
+
+
+    /**
+     * Creates a Wizard frame.
+     */
+YWidget *YUI::createWizard( YWidget *parent, YWidgetOpt & opt,
+			    const YCPValue & backButtonId,	const YCPString & backButtonLabel,
+			    const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
+			    const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  )
+{
+    y2error( "Default createWizard() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
 
 
 // EOF

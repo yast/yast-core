@@ -241,7 +241,6 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_Tree		)	w = createTree			( p, opt, term, ol, n );
     else if ( s == YUIWidget_VSpacing		)	w = createSpacing		( p, opt, term, ol, n, false, true );
     else if ( s == YUIWidget_VStretch		)	w = createEmpty			( p, opt, term, ol, n, false, true );
-    else if ( s == YUIWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );
 
     // Special widgets - may or may not be supported by the specific UI.
     // The YCP application should ask for presence of such a widget with Has???Widget() prior to creating one.
@@ -252,6 +251,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUISpecialWidget_ColoredLabel	)	w = createColoredLabel		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_Slider		)	w = createSlider		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_PartitionSplitter	)	w = createPartitionSplitter	( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );
     else
     {
 	y2error( "Unknown widget type %s", s.c_str() );
@@ -2375,62 +2375,6 @@ YWidget * YUI::createPackageSelector( YWidget * parent, YWidgetOpt & opt, const 
     YCPString floppyDevice = numArgs > 0 ? term->value( argnr )->asString() : YCPString( "" );
 
     return createPackageSelector( parent, opt, floppyDevice );
-}
-
-
-
-/*
- * @widget	Wizard
- * @short	Wizard frame - not for general use, use the Wizard:: module instead!
- * @class	YWizard
- *
- * @arg		any	backButtonId		ID to return when the user presses the "Back" button
- * @arg		string	backButtonLabel		Label of the "Back" button
- *
- * @arg		any	abortButtonId		ID to return when the user presses the "Abort" button
- * @arg		string	abortButtonLabel	Label of the "Abort" button
- *
- * @arg		any	nextButtonId		ID to return when the user presses the "Next" button
- * @arg		string	nextButtonLabel		Label of the "Next" button
- *
- * @usage	`Wizard(`id(`back), "&Back", `id(`abort), "Ab&ort", `id(`next), "&Next" )
- * @usage	`Wizard(`back, "&Back", `abort, "Ab&ort", `next, "&Next" )
- *
- * @description
- *
- * This is the UI-specific technical implementation of a wizard dialog's main widget.
- * This is not intended for general use - use the Wizard:: module instead which will use this
- * widget properly.
- */
-
-YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
-			     const YCPList & optList, int argnr )
-{
-    if ( term->size() - argnr != 6
-	 || ! isSymbolOrId( term->value( argnr   ) ) || ! term->value( argnr+1 )->isString()
-	 || ! isSymbolOrId( term->value( argnr+2 ) ) || ! term->value( argnr+3 )->isString()
-	 || ! isSymbolOrId( term->value( argnr+4 ) ) || ! term->value( argnr+5 )->isString() )
-    {
-	y2error( "Invalid arguments for the Wizard widget: %s",
-		 term->toString().c_str() );
-	return 0;
-    }
-    
-    rejectAllOptions( term,optList );
-
-    YCPValue	backButtonId		= getId( term->value( argnr ) );
-    YCPString 	backButtonLabel 	= term->value( argnr+1 )->asString();
-    
-    YCPValue	abortButtonId		= getId( term->value( argnr+2 ) );
-    YCPString 	abortButtonLabel	= term->value( argnr+3 )->asString();
-    
-    YCPValue	nextButtonId		= getId( term->value( argnr+4 ) );
-    YCPString 	nextButtonLabel		= term->value( argnr+5 )->asString();
-
-    return createWizard( parent, opt,
-			 backButtonId,  backButtonLabel,
-			 abortButtonId,	abortButtonLabel,
-			 nextButtonId,	nextButtonLabel  );
 }
 
 

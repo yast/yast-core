@@ -332,6 +332,7 @@ public:
     YCPValue evaluateUserInput				();
     YCPValue evaluateTimeoutUserInput			( const YCPInteger & timeout );
     YCPValue evaluateWaitForEvent			( const YCPInteger & timeout = YCPNull() );
+    YCPValue evaluateWizardCommand			( const YCPValue & id_value, const YCPTerm & command );
     YCPValue evaluatePollInput				();
 
 
@@ -594,15 +595,6 @@ protected:
 				     const YCPString & label, int minValue, int maxValue, int initialValue ) = 0;
 
     /**
-     * Creates a Wizard frame.
-     */
-    virtual YWidget *createWizard( YWidget *parent, YWidgetOpt & opt,
-				   const YCPValue & backButtonId,	const YCPString & backButtonLabel,
-				   const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
-				   const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  )
-	{ return 0; } // FIXME 
-
-    /**
      * Creates a PackageSelector widget.
      *
      * "floppyDevice" may be an empty string if no such device was specified in the YCP code.
@@ -624,7 +616,7 @@ protected:
      * If you do, remember to overwrite the has...() method as well!
      */
     virtual YWidget *createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt );
-    virtual bool     hasDummySpecialWidget();
+    virtual bool     hasDummySpecialWidget() { return true; }
 
     /**
      * Creates a DownloadProgress widget.
@@ -637,7 +629,8 @@ protected:
 						const YCPString & label,
 						const YCPString & filename,
 						int expectedSize );
-    virtual bool	hasDownloadProgress();
+    
+    virtual bool	hasDownloadProgress() { return false; }
 
     /**
      * Creates a BarGraph widget.
@@ -647,7 +640,7 @@ protected:
      * If you do, remember to overwrite the has...() method as well!
      */
     virtual YWidget *	createBarGraph( YWidget *parent, YWidgetOpt & opt );
-    virtual bool	hasBarGraph();
+    virtual bool	hasBarGraph()  { return false; }
 
     /**
      * Creates a ColoredLabelwidget.
@@ -660,7 +653,7 @@ protected:
 					    YCPString label,
 					    YColor foreground, YColor background,
 					    int margin );
-    virtual bool	hasColoredLabel();
+    virtual bool	hasColoredLabel() { return false; }
 
 
     /**
@@ -676,7 +669,7 @@ protected:
 				      int		minValue,
 				      int		maxValue,
 				      int		initialValue );
-    virtual bool	hasSlider();
+    virtual bool	hasSlider() { return false; }
 
     /**
      * Creates a PartitionSplitter widget.
@@ -711,9 +704,21 @@ protected:
 					      const YCPString & newPartLabel,
 					      const YCPString & freeFieldLabel,
 					      const YCPString & newPartFieldLabel );
-    virtual bool	hasPartitionSplitter();
+    
+    virtual bool	hasPartitionSplitter()  { return false; }
 
 
+    /**
+     * Creates a Wizard frame.
+     */
+    virtual YWidget *createWizard( YWidget *parent, YWidgetOpt & opt,
+				   const YCPValue & backButtonId,	const YCPString & backButtonLabel,
+				   const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
+				   const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  );
+    
+    virtual bool	hasWizard() { return false; }
+
+    
     /**
      * UI-specific setLanguage() function.
      * Returns YCPVoid() if OK and YCPNull() on error.
