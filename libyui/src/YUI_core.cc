@@ -24,8 +24,8 @@
 /-*/
 
 
-#define noVERBOSE_COMM		// VERY verbose thread communication logging
-#define noVERBOSE_FIND_RADIO_BUTTON_GROUP
+#define VERBOSE_COMM 0	// VERY verbose thread communication logging
+#define VERBOSE_FIND_RADIO_BUTTON_GROUP 0
 
 #include <stdio.h>
 #include <unistd.h> // pipe()
@@ -248,7 +248,7 @@ void YUI::signalUIThread()
     static char arbitrary = 42;
     write ( pipe_to_ui[1], & arbitrary, 1 );
 
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
     y2debug( "Wrote byte to ui thread %d", pipe_to_ui[1] );
 #endif
 }
@@ -260,7 +260,7 @@ bool YUI::waitForUIThread()
     int res;
 
     do {
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
 	y2debug ( "Waiting for ui thread..." );
 #endif
 	res = read( pipe_from_ui[0], & arbitrary, 1 );
@@ -273,7 +273,7 @@ bool YUI::waitForUIThread()
 	}
     } while ( res == 0 );
 
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
     y2debug ( "Read byte from ui thread" );
 #endif
 
@@ -287,7 +287,7 @@ void YUI::signalYCPThread()
     static char arbitrary;
     write( pipe_from_ui[1], & arbitrary, 1 );
 
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
     y2debug( "Wrote byte to ycp thread %d", pipe_from_ui[1] );
 #endif
 }
@@ -299,7 +299,7 @@ bool YUI::waitForYCPThread()
 
     int res;
     do {
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
 	y2debug ( "Waiting for ycp thread..." );
 #endif
 	res = read( pipe_to_ui[0], & arbitrary, 1 );
@@ -312,7 +312,7 @@ bool YUI::waitForYCPThread()
 	}
     } while ( res == 0 );
 
-#ifdef VERBOSE_COMM
+#if VERBOSE_COMM
     y2debug ( "Read byte from ycp thread" );
 #endif
 
@@ -365,11 +365,11 @@ void YUI::idleLoop( int fd_ycp )
 }
 
 
-YRadioButtonGroup *YUI::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
+YRadioButtonGroup * YUI::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
 {
     YCPValue root_id = root->id();
 
-#ifdef VERBOSE_FIND_RADIO_BUTTON_GROUP
+#if VERBOSE_FIND_RADIO_BUTTON_GROUP
     y2debug( "findRadioButtonGroup( %s, %s )",
 	     root_id.isNull() ? "__" : root_id->toString().c_str(),
 	     widget->id()->toString().c_str() );

@@ -73,7 +73,7 @@ void YUI::evaluateSetModulename( const YCPString & name )
 }
 
 
-const char *YUI::moduleName()
+const char * YUI::moduleName()
 {
     return _moduleName.c_str();
 }
@@ -717,7 +717,7 @@ void YUI::removeDialog()
 }
 
 
-YDialog *YUI::currentDialog() const
+YDialog * YUI::currentDialog() const
 {
     if ( dialogstack.size() >= 1 ) return dialogstack.back();
     else return 0;
