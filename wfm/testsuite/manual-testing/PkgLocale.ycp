@@ -1,0 +1,19 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgLocale.ycp
+#
+#  Purpose:     test "Pkg::{G,S}etLocale" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    string l1 = Pkg::GetLocale();
+    Pkg::SetLocale ("ru_RU.koi8");
+    string l2 = Pkg::GetLocale();
+    return [ l1, l2 ];
+}
