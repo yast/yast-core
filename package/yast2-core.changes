@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  4 17:59:07 CET 2003 - kkaempf@suse.de
+
+- use general state functions from packagemanager, not just
+  the package specific ones (part of #23616)
+
+-------------------------------------------------------------------
 Mon Mar  3 18:07:04 CET 2003 - kkaempf@suse.de
 
 - use packagemanager stati when handling selection, so upgrade
