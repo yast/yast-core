@@ -164,6 +164,25 @@ PkgModuleFunctions::Error (YCPList args)
     return YCPString (_last_error.errstr());
 }
 
+/**
+ * @builtin Pkg::ErrorId
+ *
+ * get current error as id string
+ */
+YCPValue
+PkgModuleFunctions::ErrorId (YCPList args)
+{
+    int errorId = _last_error;
+    switch ( errorId ) {
+        case PMError::E_ok:
+            return YCPString( "ok" );
+        case InstSrcError::E_isrc_cache_duplicate:
+            return YCPString( "instsrc_duplicate" );
+        default:
+            return YCPString( "error" );
+    }
+}
+
 
 /** ------------------------
    convert constInstSrcDescrPtr to YCPMap
