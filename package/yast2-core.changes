@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jul  2 13:40:43 CEST 2002 - msvec@suse.cz
+
+- y2log dir is /var/log/yast2 (#16712)
+- 2.6.2
+
+-------------------------------------------------------------------
 Tue Jul 02 12:45:55 CEST 2002 - arvin@suse.de
 
 - only complain once if recode fails (bug #16773)

@@ -44,7 +44,8 @@ static FILE * Y2LOG_STDERR = stderr;            /* Default output */
 
 #define Y2LOG_FORMAT	"%s <%d> %s(%d)%s %s%s:%d %s%s"
 
-#define Y2LOG_ROOT	"/var/log/y2log"
+#define LOGDIR		"/var/log/yast2"
+#define Y2LOG_ROOT	LOGDIR "/y2log"
 #define Y2LOG_USER	"/.y2log"		/* Relative to $HOME */
 #define Y2LOG_CONF	"/.yast2/logconf.ycp"	/* Relative to $HOME */
 #define Y2LOG_FALLBACK	"/y2log"

@@ -1,6 +1,5 @@
 @HEADER-COMMENT@
-
-# neededforbuild  autoconf automake dejagnu expect gperf gpp hwinfo hwinfo-devel libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools
+# neededforbuild dejagnu expect gperf gpp hwinfo hwinfo-devel libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools
 
 @HEADER@
 Summary:	-
@@ -33,37 +32,40 @@ Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
 
 @PREP@
 
-@BUILD-PROGRAM@
+@BUILD@
 
-@INSTALL-PROGRAM@
+@INSTALL@
+mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 @CLEAN@
 
 %files
 %defattr(-,root,root)
 %{_libdir}/lib*.so.*
+
+%dir %attr(0700,root,root) @logdir@
 %dir @ybindir@
+%dir @plugindir@
+%dir @scrconfdir@
+%dir @execcompdir@/servers
+%dir @execcompdir@/servers_non_y2
+
 @ybindir@/y2base
 @ybindir@/startshell
 @ybindir@/md_autorun
-%dir @plugindir@
 @plugindir@/lib*.so.*
-%dir @scrconfdir@
 @scrconfdir@/*.scr
-%dir @execcompdir@/servers
 @execcompdir@/servers/scr
-%dir @execcompdir@/servers_non_y2
 @execcompdir@/servers_non_y2/ag_*
 /usr/lib/perl5/site_perl/ycp.pm
 
 %files devel
 %defattr(-,root,root)
-/usr/bin/parseycp
-/usr/bin/runycp
+@bindir@/parseycp
+@bindir@/runycp
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 @plugindir@/lib*.so
 @plugindir@/lib*.la
 @includedir@
-%docdir @docdir@
-%doc @docdir@/*
+%doc @docdir@
