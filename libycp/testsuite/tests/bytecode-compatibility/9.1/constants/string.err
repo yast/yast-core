@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/string.ycp"
+    return "Hello, world !";
+}

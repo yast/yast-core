@@ -1,0 +1,24 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "Namespace";
+    //T: TEntry (globalFunction@22:global integer Namespace::globalFunction ())
+    //T: TEntry (mixedFunction@26:global integer Namespace::mixedFunction ())
+    // integer localFunction ()
+    // global integer Namespace::globalFunction ()
+    // global integer Namespace::mixedFunction ()
+    // filename: "tests/bytecode/Module/Namespace.ycp"
+    integer localFunction ()
+{
+    return 42;
+}
+    global integer Namespace::globalFunction ()
+{
+    return 4711;
+}
+    global integer Namespace::mixedFunction ()
+{
+    return (Namespace::globalFunction () + localFunction ());
+}
+}
+----------------------------------------------------------------------

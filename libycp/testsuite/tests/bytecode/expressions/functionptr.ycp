@@ -1,0 +1,12 @@
+{
+    string afun ()
+    {
+	return "Afun";
+    }
+
+    string () funptr = nil;
+    string () funptr1 = afun;
+    
+    return [ funptr (), funptr1 () ];
+}
+

@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/map-map.ycp"
+    return $[1:$[], 2:$[], 3:$[]];
+}

@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/list-one.ycp"
+    return [true];
+}

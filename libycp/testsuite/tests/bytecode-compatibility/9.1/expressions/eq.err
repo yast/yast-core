@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/eq.ycp"
+    return (42 == 42);
+}

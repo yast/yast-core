@@ -433,6 +433,8 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const;
     string qualifiedName () const;
+    
+    static YECallPtr readCall (bytecodeistream & str);
 };
 
 //---------------------------------------------------------

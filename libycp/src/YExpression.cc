@@ -2236,7 +2236,7 @@ YEBuiltin::evaluate (bool cse)
 YECall::YECall (TableEntry* entry)
     : YCode (yeFunction)
     , m_entry (entry)
-    , m_sentry (entry->sentry ())
+    , m_sentry ( entry ? entry->sentry () : 0)
     , m_parameters (0)
     , m_functioncall (0)
 {
@@ -2313,6 +2313,63 @@ YECall::~YECall ()
 	m_functioncall = 0;
     }
 }
+
+
+/**
+ * A static method to read YEFunction for function pointers and
+ * convert it to YEFunctionPointer implementation. This is
+ * needed for backward compatibility with SLES9/9.1
+ *
+ * @param str	the input bytecode stream
+ * @return 	read YCode or 0 on errors
+ */
+YECallPtr YECall::readCall (bytecodeistream & str)
+{
+    YECallPtr res = 0;
+
+    SymbolEntryPtr sentry = Bytecode::readEntry (str);
+    
+    if (!sentry)
+    {
+	return 0;
+    }
+    
+    if (str.isVersion (1,3,2) && sentry->isVariable ())
+    {
+	// it is a function pointer from SLES9/9.1
+	res = new YEFunctionPointer (0);
+    }
+    else
+    {
+	// it is direct function call
+	res = new YEFunction (0);
+    }
+    
+    res->m_sentry = sentry;
+    
+    // read the parameters
+    u_int32_t count = Bytecode::readInt32 (str);
+    
+    if (count>0)
+    {
+	res->m_parameters = new YCodePtr[count];
+
+	for (uint i = 0 ; i < count; i++)
+	{
+	    res->m_parameters[i] = Bytecode::readCode (str);
+	    if (res->m_parameters[i] == 0)
+	    {
+		y2error ("parameter code read failed for %d", i);
+		return 0;
+	    }
+	}
+    }
+
+    res->m_next_param_id = count;
+
+    return res;
+}
+
 
 
 const SymbolEntryPtr 
@@ -2575,7 +2632,7 @@ YEFunction::YEFunction (TableEntry* entry)
     : YECall (entry)
 {
 #if DO_DEBUG
-    y2debug ("YEFunction[%p] (%s)", this, entry->sentry()->toString().c_str());
+    y2debug ("YEFunction[%p] (%s)", this, entry ? entry->sentry()->toString().c_str() : "nil");
 #endif
 }
 
@@ -2604,8 +2661,23 @@ YEFunction::evaluate (bool cse)
     y2debug ("YEFunction::evaluate (%s)\n", toString().c_str());
 #endif
 
-    // FIXME: this could fail    
-    m_functioncall->reset ();
+    if (!m_functioncall)
+    {
+	m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
+	if (m_functioncall == 0)
+	{
+	    y2error ("Cannot create a function call for %s", m_sentry->toString ().c_str ());
+	    return YCPVoid ();
+        }
+    }
+    else
+    {
+	if (! m_functioncall->reset ())
+	{
+	    y2error ("failed to reset function call parameters for %s", m_sentry->toString ().c_str ());
+	    return YCPVoid ();
+	}
+    }
     
     YCPValue m_params [m_next_param_id];
 
@@ -2690,7 +2762,7 @@ YEFunctionPointer::YEFunctionPointer (TableEntry* entry)
 {
     m_kind = yeFunctionPointer;
 #if DO_DEBUG
-    y2debug ("YEFunctionPointer[%p] (%s)", this, entry->sentry()->toString().c_str());
+    y2debug ("YEFunctionPointer[%p] (%s)", this, entry ? entry->sentry()->toString().c_str() : "nil");
 #endif
 }
 

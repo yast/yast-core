@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/not.ycp"
+    return ! (42 > 69);
+}

@@ -1,0 +1,22 @@
+#
+# bytecode-compatibility.exp
+# 'main' file for all bytecode compatibility tests
+#
+
+set versions { 9.1 }
+
+set directories { constants expressions statements imports Xmodules }
+
+#don't compile the modules and bytecode, just run it
+
+foreach ver $versions {
+    puts "Checking bytecode version $ver"
+    foreach dir $directories {
+	set filenames [get-files $srcdir/tests bytecode-compatibility/$ver/$dir "ybc" ]
+	foreach file $filenames {
+	    bytecode-run-compatible $file tests/bytecode-compatibility/$ver/$dir $ver
+	}
+    }
+puts ""
+}
+

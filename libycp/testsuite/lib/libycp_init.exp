@@ -328,3 +328,118 @@ proc bytecode-compile { src dir } {
   return 0
 }
 
+#------------------------------------------------
+#
+# run only a bytecode file
+#
+proc bytecode-run-compatible { src dir ver } {
+
+  set path [split $src "/"]
+  set srcfilename [lindex $path [expr [llength $path]-1]]
+  set srcdirname [lindex $path [expr [llength $path]-2]]
+
+  # extract basename and check extension
+
+  set ycpname [split $srcfilename "."]
+
+  if {[llength $ycpname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return -1
+  }
+  if {[lindex $ycpname [expr [llength $ycpname]-1]] != "ybc"} {
+    fail "Not .ybc extension '$src'"
+    return -1
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # $dir/$srcfilename is the name of the original testfile with relative path,
+  #                 relative to the testsuite directory
+  set test_input "$dir/$srcfilename"
+
+  set base_name [lindex $ycpname 0]
+  set err_name "$dir/$base_name.err"
+  set out_name "$dir/$base_name.out"
+  set ybc_name "$dir/$base_name.ybc"
+  set log_name "$dir/$base_name.log"
+  set tmpout_name "tmp.out.$base_name-$ver"
+  set tmpybc_name "tmp.ybc.$base_name-$ver"
+  set tmperr_name "tmp.err.$base_name-$ver"
+
+  set should_fail0 [grep "xfail" "^$base_name\$"]
+  set should_fail [expr 0 == [string match $should_fail0 ""]]
+
+#  puts "Compiling $srcdirname/$base_name"
+  puts -nonewline "."
+  flush stdout
+
+  # print the test
+
+  set result ""
+  # FIXME: log is to /dev/null !!!
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "-l" "/dev/null" "$ybc_name" ] } catched]
+
+  if {$oops != 0} {
+    set msg "running failed for $srcdirname/$base_name: $catched"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      puts ""
+      fail $msg
+    }
+    return 1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    puts ""
+    fail "Print of $srcdirname/$base_name results in '$result'"
+    return 1
+  }
+
+  if {[diff $err_name $tmperr_name] != 1} {
+      puts ""
+      fail "Wrong print for $srcdirname/$base_name ($err_name vs. $tmperr_name)"
+      return -1
+  }
+  
+#  puts -nonewline "Interpreting $srcdirname/$base_name                   \r"
+#  flush stdout
+
+  # run the test
+
+  set result ""
+  # FIXME: log is to /dev/null !!!
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-o" "$tmpout_name" "-l" "/dev/null" "$ybc_name" ] } catched]
+
+  if {$oops != 0} {
+    puts ""
+    fail "running failed for $srcdirname/$base_name: $catched"
+    return -1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    puts ""
+    set msg "Run of $srcdirname/$base_name results in '$result'"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      fail $msg
+    }
+    return -1
+  }
+
+  if {[diff $out_name $tmpout_name] != 1} {
+      puts ""
+      fail "Wrong result for $srcdirname/$base_name ($out_name vs. $tmpout_name)"
+      return -1
+  }
+  
+  pass $base_name
+
+  return 0
+}

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug 18 15:41:45 CEST 2004 - visnov@suse.cz
+
+- support also bytecode from SLES9/9.1 (#43881)
+- 2.10.7 
+
+-------------------------------------------------------------------
 Wed Aug 18 13:08:02 CEST 2004 - mvidner@suse.cz
 
 - ag_probe: parse carrier detection information from libhd (res_link)

@@ -18,7 +18,7 @@
 /-*/
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 // MAJOR and MINOR number must the the same in header, RELEASE is assumed to
@@ -827,6 +827,13 @@ Bytecode::readCode (bytecodeistream & str)
 	return new YConst ((YCode::ykind)code, str);
     }
     
+    // compatibility with 9.1/SLES
+    if (str.isVersion (1,3,2) && code > YCode::yeExpression)
+    {
+	// yeFunctionPointer did not exist then
+	code++;
+    }
+    
     YCodePtr res = 0;
 
     switch (code)
@@ -930,7 +937,7 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
 	case YCode::yeFunction:
 	{
-	    res = new YEFunction (str);
+	    res = YECall::readCall (str);
 	}
 	break;
 	case YCode::yeFunctionPointer:
@@ -1114,9 +1121,13 @@ Bytecode::readFile (const string & filename)
 	return 0;
     }
     // check YaST_BYTECODE_HEADER
-    if ( instream.isVersionAtMost(atoi (YaST_BYTECODE_MAJOR)
-	, atoi (YaST_BYTECODE_MINOR)
-	, atoi (YaST_BYTECODE_RELEASE)) )
+    if ( 
+	instream.isVersion (
+	    atoi (YaST_BYTECODE_MAJOR)
+	    , atoi (YaST_BYTECODE_MINOR)
+	    , atoi (YaST_BYTECODE_RELEASE))
+	||
+	instream.isVersion (1,3,2) )	// 9.1/SLES9
     {
 #if DO_DEBUG
 //	y2debug ("Header accepted");

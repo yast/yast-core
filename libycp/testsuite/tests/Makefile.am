@@ -2,7 +2,7 @@
 # Makefile.am for libycp/testsuite/tests
 #
 
-SUBDIRS = bytecode
+SUBDIRS = bytecode bytecode-compatibility
 
 EXTRA_DIST= Include/*.inc	\
 	Module/*.ycp							\

@@ -1,0 +1,6 @@
+{
+    // module "NameOfModule"
+    // filename: "tests/bytecode/Xmodules/nameofmodule1.ycp"
+    import "NameOfModule";
+    return (NameOfModule::af () == 6);
+}

@@ -1,0 +1,14 @@
+{
+    // string afun ()
+    // string () funptr
+    // string () funptr1
+    // filename: "functionptr.ycp"
+    string afun ()
+{
+    return "Afun";
+}
+
+    string () funptr = nil;
+    string () funptr1 = afun;
+    return [funptr (), funptr1 ()];
+}

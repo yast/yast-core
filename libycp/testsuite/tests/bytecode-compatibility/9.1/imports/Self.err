@@ -1,0 +1,7 @@
+{
+    // module "Self"
+    // filename: "tests/bytecode/imports/Self.ycp"
+    import "Self";
+    Self::set_i ((Self::get_i () + 1));
+    return Self::get_i ();
+}
