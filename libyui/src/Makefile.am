@@ -11,6 +11,8 @@ libyui_la_SOURCES =				\
 	YUIInterpreter_builtins.cc		\
 	YUIInterpreter_widgets.cc		\
 	YUIInterpreter_special_widgets.cc	\
+						\
+	YEvent.cc				\
 	YMacroRecorder.cc			\
 	YMacroPlayer.cc				\
 	YShortcutManager.cc			\

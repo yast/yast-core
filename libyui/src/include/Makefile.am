@@ -9,10 +9,7 @@ pkginclude_HEADERS =				\
 	YUISymbols.h				\
 	hashtable.gperf				\
 	hashtable.h 				\
-	YMacroRecorder.h			\
-	YMacroPlayer.h				\
-	YShortcutManager.h			\
-	YShortcut.h				\
+						\
 	YAlignment.h				\
 	YBarGraph.h				\
 	YCheckBox.h				\
@@ -22,11 +19,14 @@ pkginclude_HEADERS =				\
 	YDialog.h				\
 	YDownloadProgress.h			\
 	YEmpty.h				\
+	YEvent.h				\
 	YFrame.h				\
 	YImage.h				\
 	YIntField.h				\
 	YLabel.h				\
 	YLogView.h				\
+	YMacroPlayer.h				\
+	YMacroRecorder.h			\
 	YMenuButton.h				\
 	YMultiLineEdit.h			\
 	YMultiSelectionBox.h			\
@@ -39,6 +39,8 @@ pkginclude_HEADERS =				\
 	YReplacePoint.h				\
 	YRichText.h				\
 	YSelectionBox.h				\
+	YShortcut.h				\
+	YShortcutManager.h			\
 	YSlider.h				\
 	YSpacing.h				\
 	YSplit.h				\
