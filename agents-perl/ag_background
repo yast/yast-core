@@ -296,6 +296,7 @@ while (1)
 			ycp::Return('false');
 		    }
 		}
+		ycp::Return('false');
 	    }
 	    elsif ($path eq '.stdin')
 	    {
