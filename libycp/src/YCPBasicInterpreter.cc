@@ -30,28 +30,15 @@ static const char *YCPBasicInterpreterId = "$Id$";
 #include <malloc.h>
 #include <stdarg.h>
 #include <signal.h>
-
 #include "YCPBasicInterpreter.h"
 #include "YCPDebugger.h"
 #include "y2log.h"
 
 static YCPValue evaluateIs (const YCPList& args);
 
-
 // YCPBasicInterpreter
 
-
 YCPDebugger* YCPBasicInterpreter::debugger = NULL;
-
-void YCPBasicInterpreter::debuggerSignalHandler (int signum)
-{
-    if (!debugger)
-    {
-	debugger = new YCPDebugger (signum == SIGUSR2);
-    }
-
-    // debugger->add_interpreter is now called automatically in debugger->debug
-}
 
 YCPBasicInterpreter::YCPBasicInterpreter ()
 {
@@ -65,18 +52,11 @@ YCPBasicInterpreter::YCPBasicInterpreter ()
 
     if (debugger)
 	debugger->add_interpreter (this);
-
-    // USR2 mimics Y2DEBUGGER=2 in pausing the execution.
     // Setting the handler multiple times does not hurt.
     // Sigaction is not necessary because we won't send multiple signals.
-    void (*r)(int);
-    r = signal (SIGUSR2, debuggerSignalHandler);
-    if (r == SIG_ERR)
-    {
+    if (signal (SIGUSR2, debuggerSignalHandler) == SIG_ERR)
 	y2error ("Could not set debuggerSignalHandler");
-    }
 }
-
 
 YCPBasicInterpreter::~YCPBasicInterpreter ()
 {
@@ -1239,4 +1219,15 @@ void YCPBasicInterpreter::reportError (enum loglevel_t severity, const char *mes
     va_start(ap, message);
     Y2Logging::y2_vlogger (severity, interpreter_name().c_str(), current_file.c_str(), current_line, "", message, ap);
     va_end(ap);
+}
+
+// USR2 mimics Y2DEBUGGER=2 in pausing the execution.
+void YCPBasicInterpreter::debuggerSignalHandler (int signum)
+{
+    if (!debugger)
+    {
+	debugger = new YCPDebugger (signum == SIGUSR2);
+    }
+
+    // debugger->add_interpreter is now called automatically in debugger->debug
 }
