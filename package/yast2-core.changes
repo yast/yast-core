@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sat Sep  7 17:02:04 CEST 2002 - kkaempf@suse.de
+
+- add Pkg::PkgGroup to get group tag of a package
+
+-------------------------------------------------------------------
 Sat Sep  7 14:06:46 CEST 2002 - kkaempf@suse.de
 
 - include url to media change callback
