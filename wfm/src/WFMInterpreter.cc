@@ -1343,7 +1343,6 @@ WFMInterpreter::evaluateGetEncoding (const YCPTerm& term)
      * @builtin GetEncoding() -> string
      * Returns the system encoding code (corresponds to RC_LANG system variable) 
      */
-    y2milestone( "System: %s", systemEncoding.c_str() );
     return YCPString(systemEncoding);
 }
 
@@ -1354,7 +1353,6 @@ WFMInterpreter::evaluateGetEnvironmentEncoding (const YCPTerm& term)
      * @builtin GetEnvironmentEncoding() -> string
      * Returns the encoding code of the environment where yast is started 
      */
-    y2milestone( "Environment: %s", environmentEncoding.c_str() );
     return YCPString(environmentEncoding);
 }
 
