@@ -289,8 +289,8 @@ the respective function to display the list.</p>					\
 
 
     UI::ReplaceWidget(`id(`contents),
-		      `DumbTab( [ `item(`id(`showSlideShow), "Slide Sho&w" ),
-				  `item(`id(`showDetails  ), "&Details"    ) ],
+		      `DumbTab( [ `item(`id(`showSlide   ), "Slide Sho&w" ),
+				  `item(`id(`showDetails ), "&Details"    ) ],
 				`VBox(
 				      `VSpacing( 0.4 ),
 				      `VWeight( 1,	// lower layout priority
@@ -323,7 +323,7 @@ the respective function to display the list.</p>					\
 	}
 	if      ( button == `back 	)	delta = 10;
 	else if ( button == `timeout	)	delta = 100;
-	else if ( button == `showSlideShow )	UI::ReplaceWidget(`tabContents, slideShowPage );
+	else if ( button == `showSlide	)	UI::ReplaceWidget(`tabContents, slideShowPage );
 	else if ( button == `showDetails   )
 	{
 	    y2milestone( "detailsPage:\n%1", detailsPage );
