@@ -28,14 +28,14 @@ LosetupAgent::LosetupAgent()
 
 
 YCPValue
-LosetupAgent::Read (const YCPPath& path, const YCPValue& arg)
+LosetupAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue& opt)
 {
     y2internal( "Sorry. No reading of losetups implemented yet");
     return YCPVoid();
 }
 
 
-YCPValue
+YCPBoolean
 LosetupAgent::Write (const YCPPath& path, const YCPValue& value,
 		     const YCPValue& arg)
 {
@@ -107,28 +107,9 @@ LosetupAgent::Write (const YCPPath& path, const YCPValue& value,
 }
 
 
-YCPValue LosetupAgent::Dir(const YCPPath& path)
+YCPList LosetupAgent::Dir(const YCPPath& path)
 {
     return YCPList();
 }
 
-
-YCPValue Y2LosetupComponent::evaluate(const YCPValue& value)
-{
-    if (!interpreter) {
-	agent = new LosetupAgent();
-	interpreter = new SCRInterpreter(agent);
-    }
-
-    return interpreter->evaluate(value);
-}
-
-
-Y2Component *Y2CCLosetup::create(const char *name) const
-{
-    if (!strcmp(name, "ag_losetup")) return new Y2LosetupComponent();
-    else return 0;
-}
-
-Y2CCLosetup g_y2ccag_losetup;
 
