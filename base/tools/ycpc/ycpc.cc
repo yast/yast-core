@@ -1217,6 +1217,8 @@ int main(int argc, char *argv[])
 	    {"help", 0, 0, 'h'},			// show help and exit
 	    {"include-path", 1, 0, 'I'},		// where to find include files
 	    {"module-path", 1, 0, 'M'},			// where to find module files
+	    {"nostdincludes", 0, 0, 142},		// drop all built-in include pathes
+	    {"nostdmodules", 0, 0, 143},		// drop all built-in module pathes
 	    {"logfile", 1, 0, 'l'},			// specify log file
 	    {"no-std-path", 0, 0, 'n'},			// no standard pathes
 	    {"output", 1, 0, 'o'},			// output file
@@ -1235,6 +1237,12 @@ int main(int argc, char *argv[])
 
 	switch (c)
 	{
+	    case 142:
+		YCPPathSearch::clearPathes (YCPPathSearch::Include);
+	    break;
+	    case 143:
+		YCPPathSearch::clearPathes (YCPPathSearch::Module);
+	    break;
 	    case 'h':
 	    case '?':
 		print_help ("ycpc");
