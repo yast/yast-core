@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
+Fri Mar 28 13:34:57 CET 2003 - mvidner@suse.de
+
+- ag_hostnames: added scanning for RPC servers
+
+-------------------------------------------------------------------
 Fri Mar 28 12:16:33 CET 2003 - lslezak@suse.de
 
 - ag_background: limited input buffer size, added .buffer_size
   subpath, updated documentation
+- 2.8.0
 
 -------------------------------------------------------------------
 Thu Mar 13 18:47:16 CET 2003 - kkaempf@suse.de

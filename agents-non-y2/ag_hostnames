@@ -9,7 +9,8 @@
 #
 # Agent for reading
 # - hostnames from local network
-# - hostnames of hosts that have opened port 515
+# - hostnames of hosts that have a particular TCP port open
+# - hostnames of hosts that have a particular RPC service open
 # - hostnames of samba servers
 #
 # Note: hostnames are not sorted.
@@ -22,6 +23,31 @@ fi
 
 # We want to parse English output
 export LC_ALL=C
+
+# this function is duplicated in ag_showexports and ag_hostnames
+# after $1 seconds, kill $2 and all its children
+# return $2's exit status
+function kill_after() {
+    local TIMEOUT=$1
+    local LONG_PID=$2
+
+    {
+	sleep $TIMEOUT
+	LONG_CHILDREN_PIDS=`ps --ppid $LONG_PID --no-headers -o pid`
+	kill $LONG_PID $LONG_CHILDREN_PIDS
+    } &
+    SLEEP_PID=$!
+
+    # now wait until the long command finishes or is killed
+    wait $LONG_PID
+    local RET=$?
+    # if it did not exit because of a signal,
+    # then the killer is useless and we will kill him instead
+    if [ $RET -lt 128 ]; then
+	kill $SLEEP_PID
+    fi
+    return $RET
+}
 
 # RETVAL convention avoids passing return values as stdout
 # and thus spawning new processes
@@ -64,13 +90,36 @@ function is_port_open() {
     /usr/bin/netcat -w 1 -z $1 $2
 }
 
-# hostnames [-p portnum] [interface]
+# uses exit status
+# is_rpc_service_open_long $ADDR $SERVICE
+function is_rpc_service_open_long() {
+    #hack: not quoting $2 enables scanning for a particular version
+    /usr/sbin/rpcinfo -u "$1" $2 >/dev/null || \
+    /usr/sbin/rpcinfo -t "$1" $2 >/dev/null
+}
+
+# uses exit status
+# is_rpc_service_open $ADDR $SERVICE
+# calls is_rpc_service_open but kills it if it takes too long
+function is_rpc_service_open() {
+    is_rpc_service_open_long "$1" "$2" &
+    kill_after 2 $!
+#    local RET=$?
+#    echo "result: $RET" >&2
+#    return $RET
+}
+
+# hostnames [-p portnum|-r rpcservice] [interface]
 # echoes the output
 function hostnames() {
     local PORT
+    local SERVICE
     local INTERFACE
     if [ x$1 = x-p ]; then
 	PORT=$2
+	shift 2
+    elif [ x$1 = x-r ]; then
+	SERVICE="$2"
 	shift 2
     fi
     INTERFACE=$1
@@ -81,7 +130,14 @@ function hostnames() {
 	broadcast_ping; IPS=$RETVAL
 	ANSWER=
 	for IP in $IPS ; do
-	    if [ -z "$PORT" ] || is_port_open $IP $PORT; then
+	    # filter out hosts that do not have the wanted service
+	    if [ -n "$PORT" ]; then
+		is_port_open $IP $PORT || IP=""
+	    elif [ -n "$SERVICE" ]; then
+		is_rpc_service_open $IP "$SERVICE" || IP=""
+	    fi
+
+	    if [ -n "$IP" ] ; then
 		lookup_ip $IP; ycp_item $RETVAL; ANSWER="$ANSWER $RETVAL"
 	    fi
 	done
@@ -106,6 +162,10 @@ while true ; do
 	'Read (.,'*)
 	    PORT=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
 	    hostnames -p $PORT
+	    ;;
+	'Read (.rpc,'*)
+	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.rpc, *"\(.*\)")/\1/')
+	    hostnames -r "$SERVICE"
 	    ;;
 	'Read (.interface,'*)
 	    INTERFACE=$(echo "$COMMAND" | sed 's/^Read (.interface, *"\(.*\)")/\1/')
