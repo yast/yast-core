@@ -105,6 +105,19 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      *				<br>This option is intended used for automatically generated data, e.g., RadioButtons
      *				for software selections that come from file or from some other data base.
      *
+     * @option	key_F1  	(NCurses only) activate this widget with the F1 key
+     * @option	key_F2  	(NCurses only) activate this widget with the F2 key
+     * @option	key_F3  	(NCurses only) activate this widget with the F3 key
+     * @option	key_F4  	(NCurses only) activate this widget with the F4 key
+     * @option	key_F5  	(NCurses only) activate this widget with the F5 key
+     * @option	key_F6  	(NCurses only) activate this widget with the F6 key
+     * @option	key_F7  	(NCurses only) activate this widget with the F7 key
+     * @option	key_F8  	(NCurses only) activate this widget with the F8 key
+     * @option	key_F9  	(NCurses only) activate this widget with the F9 key
+     * @option	key_F10 	(NCurses only) activate this widget with the F10 key
+     * @option	key_F11 	(NCurses only) activate this widget with the F11 key
+     * @option	key_F11 	(NCurses only) activate this widget with the F12 key
+     *
      * @description
      *
      * This is not a widget for general usage, this is just a placeholder for
@@ -121,15 +134,27 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
     {
 	if (rawopt->value(o)->isSymbol())
 	{
-	    string s = rawopt->value(o)->asSymbol()->symbol();
-	    if	    (s == YUIOpt_notify)	opt.notifyMode.setValue(true);
-	    else if (s == YUIOpt_disabled)	opt.isDisabled.setValue(true);
-	    else if (s == YUIOpt_hstretch)	opt.isHStretchable.setValue(true);
-	    else if (s == YUIOpt_vstretch)	opt.isVStretchable.setValue(true);
-	    else if (s == YUIOpt_hvstretch)     { opt.isHStretchable.setValue(true); opt.isVStretchable.setValue(true); }
-	    else if (s == YUIOpt_autoShortcut)	opt.autoShortcut.setValue(true);
-	    else if (s == YUIOpt_easterEgg)	opt.easterEgg.setValue(true);
-	    else if (s == YUIOpt_testMode)	opt.testMode.setValue(true);
+	    string sym = rawopt->value(o)->asSymbol()->symbol();
+	    if	    ( sym == YUIOpt_notify	) opt.notifyMode.setValue(true);
+	    else if ( sym == YUIOpt_disabled	) opt.isDisabled.setValue(true);
+	    else if ( sym == YUIOpt_hstretch	) opt.isHStretchable.setValue(true);
+	    else if ( sym == YUIOpt_vstretch	) opt.isVStretchable.setValue(true);
+	    else if ( sym == YUIOpt_hvstretch	) { opt.isHStretchable.setValue(true); opt.isVStretchable.setValue(true); }
+	    else if ( sym == YUIOpt_autoShortcut) opt.autoShortcut.setValue(true);
+	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue(true);
+	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue(true);
+	    else if ( sym == YUIOpt_key_F1	) opt.key_F1.setValue( true );
+	    else if ( sym == YUIOpt_key_F2	) opt.key_F2.setValue( true );
+	    else if ( sym == YUIOpt_key_F3	) opt.key_F3.setValue( true );
+	    else if ( sym == YUIOpt_key_F4	) opt.key_F4.setValue( true );
+	    else if ( sym == YUIOpt_key_F5	) opt.key_F5.setValue( true );
+	    else if ( sym == YUIOpt_key_F6	) opt.key_F6.setValue( true );
+	    else if ( sym == YUIOpt_key_F7	) opt.key_F7.setValue( true );
+	    else if ( sym == YUIOpt_key_F8	) opt.key_F8.setValue( true );
+	    else if ( sym == YUIOpt_key_F9	) opt.key_F9.setValue( true );
+	    else if ( sym == YUIOpt_key_F10	) opt.key_F10.setValue( true );
+	    else if ( sym == YUIOpt_key_F11	) opt.key_F11.setValue( true );
+	    else if ( sym == YUIOpt_key_F12	) opt.key_F12.setValue( true );
 	    else ol->add(rawopt->value(o));
 	}
 	else if (!rawopt->value(o)->isTerm())
@@ -878,19 +903,6 @@ YWidget *YUIInterpreter::createLogView(YWidget *parent, YWidgetOpt &opt, const Y
  * @class	YPushButton
  * @arg		string label
  * @option	default makes this button the dialogs default button
- * @option	key_F1 (NCurses only) activate this button with the F1 key
- * @option	key_F2 (NCurses only) activate this button with the F2 key
- * @option	key_F3 (NCurses only) activate this button with the F3 key
- * @option	key_F4 (NCurses only) activate this button with the F4 key
- * @option	key_F5 (NCurses only) activate this button with the F5 key
- * @option	key_F6 (NCurses only) activate this button with the F6 key
- * @option	key_F7 (NCurses only) activate this button with the F7 key
- * @option	key_F8 (NCurses only) activate this button with the F8 key
- * @option	key_F9 (NCurses only) activate this button with the F9 key
- * @option	key_F10 (NCurses only) activate this button with the F10 key
- * @option	key_F11 (NCurses only) activate this button with the F11 key
- * @option	key_F11 (NCurses only) activate this button with the F12 key
- * @option	key_Return (NCurses only) activate this button with the Return key
  * @usage	`PushButton(`id(`click), `opt(`default, `hstretch), "Click me")
  * @examples	PushButton1.ycp PushButton2.ycp
  *
@@ -925,19 +937,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 	{
 	    std::string sym = optList->value(o)->asSymbol()->symbol();
 
-	    if      ( sym == YUIOpt_default	) opt.isDefaultButton.setValue( true );
-	    else if ( sym == YUIOpt_key_F1	) opt.key_F1.setValue( true );
-	    else if ( sym == YUIOpt_key_F2	) opt.key_F2.setValue( true );
-	    else if ( sym == YUIOpt_key_F3	) opt.key_F3.setValue( true );
-	    else if ( sym == YUIOpt_key_F4	) opt.key_F4.setValue( true );
-	    else if ( sym == YUIOpt_key_F5	) opt.key_F5.setValue( true );
-	    else if ( sym == YUIOpt_key_F6	) opt.key_F6.setValue( true );
-	    else if ( sym == YUIOpt_key_F7	) opt.key_F7.setValue( true );
-	    else if ( sym == YUIOpt_key_F8	) opt.key_F8.setValue( true );
-	    else if ( sym == YUIOpt_key_F9	) opt.key_F9.setValue( true );
-	    else if ( sym == YUIOpt_key_F10	) opt.key_F10.setValue( true );
-	    else if ( sym == YUIOpt_key_F11	) opt.key_F11.setValue( true );
-	    else if ( sym == YUIOpt_key_F12	) opt.key_F12.setValue( true );
+	    if   ( sym == YUIOpt_default ) opt.isDefaultButton.setValue( true );
 	    else logUnknownOption(term, optList->value(o));
 	}
 	else logUnknownOption(term, optList->value(o));
