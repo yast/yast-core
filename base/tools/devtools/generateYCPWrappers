@@ -23,7 +23,7 @@ open ( HEADER, $header_file )
 while (my $line = <HEADER>)
 {
 	chomp ($line);
-	if ($line =~ /\/\*\s*TYPEINFO: (\S+)\s*\*\//)
+	if ($line =~ /\/\*\s*TYPEINFO:\s*(.*?)\s*\*\//)
 	{
 		# get C++ declaration
 		my $typeinfo = $1;
