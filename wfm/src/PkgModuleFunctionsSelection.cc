@@ -443,7 +443,7 @@ PkgModuleFunctions::ActivateSelections (YCPList args)
 }
 
 /**
- * @builtin PkgUpdateAll (bool only_newer) -> count
+ * @builtin Pkg::SelectionsUpdateAll (bool only_newer) -> count
  *
  * mark all packages for installation which are installed and have
  * an available candidate. if 'only_newer' == true, only affect
