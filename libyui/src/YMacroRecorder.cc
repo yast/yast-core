@@ -135,7 +135,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
     
     recordMakeScreenShot();
 
-    if ( input.isNull() )
+    if ( input->isVoid() )
     {
 	fprintf( _macroFile, "%s%sUI::%s();\n",
 		 YMACRO_INDENT, YMACRO_INDENT, 
@@ -152,7 +152,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
 
     fflush( _macroFile );	// sync to disk at this point - for debugging
 
-    y2debug( "%s", input.isNull() ? "nil" : input->toString().c_str() );
+    y2debug( "Input: %s", input->isVoid() ? "(nil)" : input->toString().c_str() );
 }
 
 
