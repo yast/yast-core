@@ -48,6 +48,7 @@ class YCPDebugger;
 class YCPBasicInterpreter : public YCPScope
 {
 private:
+
     /**
      * name of the currently evaluated module (block).
      * normally empty.
@@ -60,6 +61,7 @@ private:
     bool ui_block;
 
 public:
+
     /**
      * YCP define being evaluated.
      */
@@ -142,6 +144,7 @@ public:
     bool setUIBlock (bool flag) { bool ret = ui_block; ui_block = flag; return ret; }
 
 protected:
+
    /**
      * Override this method to implement term evaluation. When the
      * interpreter executes a @ref YCPEvaluationStatementRep with
@@ -271,13 +274,17 @@ private:
      */
     YCPValue evaluateDefine (bool global, const YCPList& args);
 
+protected:
+
     /**
      * Looks through all macro definitions and tries to find one that
      * matches the given term and evaluates if, if existent. Otherwise
      * returns 0.
      * @param term Term to be evaluated
      */
-    YCPValue evaluateDefinition(const YCPTerm& term);
+    YCPValue evaluateDefinition (const YCPTerm& term);
+
+private:
 
     /**
      * Evaluates the logical && and || operators. The reason,
