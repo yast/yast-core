@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
+
+<!ENTITY  ycpcdata  SYSTEM "ycpc-data.xml">
+
+
+]>
+<book>
+    <bookinfo>
+        <title>YCP Compiler</title>
+        <authorgroup>
+            <author>
+                <firstname>YaST2</firstname>
+                <surname>Team</surname>
+                <affiliation>
+                    <orgname> SUSE Linux AG</orgname>
+                </affiliation>
+            </author>
+        </authorgroup>
+        <corpauthor>SUSE Linux AG</corpauthor>
+        <copyright>
+            <year>2005</year>
+            <holder> SUSE Linux AG</holder>
+        </copyright>
+    </bookinfo>
+
+
+    <toc>
+    </toc>
+    &ycpdata;
+
+</book>
