@@ -45,6 +45,7 @@
 #include "YTable.h"
 #include "YTree.h"
 
+using std::string;
 
 
 /**
@@ -845,7 +846,7 @@ YWidget *YUIInterpreter::createRichText(YWidget *parent, YWidgetOpt &opt, const 
     {
 	if (optList->value(o)->isSymbol() )
 	{
-	    std::string sym = optList->value(o)->asSymbol()->symbol();
+	    string sym = optList->value(o)->asSymbol()->symbol();
 
 	    if      ( sym  == YUIOpt_plainText      ) opt.plainTextMode.setValue(true);
 	    else if ( sym  == YUIOpt_autoScrollDown ) opt.autoScrollDown.setValue(true);
@@ -983,7 +984,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
     {
 	if (optList->value(o)->isSymbol() )
 	{
-	    std::string sym = optList->value(o)->asSymbol()->symbol();
+	    string sym = optList->value(o)->asSymbol()->symbol();
 
 	    if   ( sym == YUIOpt_default ) opt.isDefaultButton.setValue( true );
 	    else logUnknownOption(term, optList->value(o));
@@ -2338,7 +2339,7 @@ YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt &opt,
     {
 	if (optList->value(o)->isSymbol() )
 	{
-	    std::string sym = optList->value(o)->asSymbol()->symbol();
+	    string sym = optList->value(o)->asSymbol()->symbol();
 
 	    if      ( sym == YUIOpt_youMode    ) opt.youMode.setValue( true );
 	    else if ( sym == YUIOpt_updateMode ) opt.updateMode.setValue( true );

@@ -50,6 +50,8 @@
 #include "YReplacePoint.h"
 #include "YShortcut.h"
 
+using std::string;
+
 
 
 YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
@@ -297,7 +299,7 @@ void YUIInterpreter::redrawScreen()
 /**
  * Default UI-specific makeScreenShot() - does nothing
  */
-void YUIInterpreter::makeScreenShot( std::string filename )
+void YUIInterpreter::makeScreenShot( string filename )
 {
     // NOP
 }
@@ -1615,7 +1617,7 @@ YCPValue YUIInterpreter::evaluateSetFunctionKeys( const YCPTerm & term )
 	{
 	    if ( it.key()->isString() && it.value()->isInteger() )
 	    {
-		std::string label = YShortcut::cleanShortcutString( it.key()->asString()->value() );
+		string label = YShortcut::cleanShortcutString( it.key()->asString()->value() );
 		int fkey = it.value()->asInteger()->value();
 
 		if ( fkey > 0 && fkey <= 24 )
@@ -1647,7 +1649,7 @@ int YUIInterpreter::defaultFunctionKey( YCPString ylabel )
 {
     int fkey = 0;
 
-    std::string label = YShortcut::cleanShortcutString( ylabel->value() );
+    string label = YShortcut::cleanShortcutString( ylabel->value() );
 
     if ( label.size() > 0 )
     {
