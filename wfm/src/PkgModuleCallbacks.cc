@@ -46,15 +46,63 @@ using std::string;
 
 //-------------------------------------------------------------------
 // PkgModuleCallbacks
+//-------------------------------------------------------------------
 
+//-------------------------------------------------------------------
+// at start of package provide (i.e. download)
+static std::string provideStartCallbackModule;
+static YCPSymbol provideStartCallbackSymbol("",false);
+
+static void
+provideStartCallbackFunc (const std::string& name, const FSize& size, void *_wfm)
+{
+y2milestone ("provideStartCallbackFunc(%s)", name.c_str());
+    YCPTerm callback = YCPTerm (provideStartCallbackSymbol, provideStartCallbackModule);
+    callback->add(YCPString (name));
+    callback->add(YCPInteger (size));
+    ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+//-------------------------------------------------------------------
+// during package providal
+static std::string provideProgressCallbackModule;
+static YCPSymbol provideProgressCallbackSymbol("",false);
+
+static void
+provideProgressCallbackFunc (int percent, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (provideProgressCallbackSymbol, provideProgressCallbackModule);
+    callback->add(YCPInteger (percent));
+    ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+//-------------------------------------------------------------------
+// at start of package installation (rpm call)
+static std::string startInstallCallbackModule;
+static YCPSymbol startInstallCallbackSymbol("",false);
+
+static void
+startInstallCallbackFunc (const std::string& name, const std::string& summary, const FSize& size, bool is_delete, void *_wfm)
+{
+y2milestone ("installCallbackFunc(%s,%s,%lld,%s)", name.c_str(), summary.c_str(),(long long)size, (is_delete?"del":"ins"));
+    YCPTerm callback = YCPTerm (startInstallCallbackSymbol, startInstallCallbackModule);
+    callback->add(YCPString (name));		// package name
+    callback->add(YCPString (summary));		// package summary
+    callback->add(YCPInteger((long long)size));	// package size
+    callback->add(YCPBoolean(is_delete));	// package is being deleted
+    ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+
+//-------------------------------------------------------------------
+// during package installation (rpm progress)
 static std::string progressCallbackModule;
 static YCPSymbol progressCallbackSymbol("",false);
-static std::string mediaChangeCallbackModule;
-static YCPSymbol mediaChangeCallbackSymbol("",false);
-static std::string mediaErrorCallbackModule;
-static YCPSymbol mediaErrorCallbackSymbol("",false);
 
-void
+static void
 progressCallbackFunc (int percent, void *_wfm)
 {
     YCPTerm callback = YCPTerm (progressCallbackSymbol, progressCallbackModule);
@@ -62,6 +110,26 @@ progressCallbackFunc (int percent, void *_wfm)
     ((YCPInterpreter *)_wfm)->evaluate (callback);
     return;
 }
+
+//-------------------------------------------------------------------
+// at end of package installation
+static std::string doneInstallCallbackModule;
+static YCPSymbol doneInstallCallbackSymbol("",false);
+
+static void
+doneInstallCallbackFunc (const std::string& name, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (doneInstallCallbackSymbol, doneInstallCallbackModule);
+    callback->add(YCPString (name));
+    ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+
+//-------------------------------------------------------------------
+// for media change
+static std::string mediaChangeCallbackModule;
+static YCPSymbol mediaChangeCallbackSymbol("",false);
 
 /**
  * media change callback
@@ -84,6 +152,11 @@ y2milestone ("mediaChangeCallbackFunc(%s,%s,%d,%d)", product.c_str(), url.asStri
     return ret->asInteger()->value();
 }
 
+//-------------------------------------------------------------------
+// for media error
+static std::string mediaErrorCallbackModule;
+static YCPSymbol mediaErrorCallbackSymbol("",false);
+
 static int
 mediaErrorCallbackFunc (PMError error, void *_wfm)
 {
@@ -96,19 +169,121 @@ y2milestone ("mediaErrorCallbackFunc(%d)", (int)error);
     return ret->asInteger()->value();
 }
 
+
+//-------------------------------------------------------------------
+// setup functions
+//-------------------------------------------------------------------
+
 /**
- * @builtin Pkg::SetProgressCallback (string fun) -> nil
+ * @builtin Pkg::CallbackStartProvide (string fun) -> nil
  *
- * set progress callback function
- * will call 'WFM::fun (integer percent)' during rpm
+ * set provide callback function
+ * will call 'fun (string name)' before file download
  */
 YCPValue
-PkgModuleFunctions::SetProgressCallback(YCPList args)
+PkgModuleFunctions::CallbackStartProvide(YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
-	return YCPError ("Bad args to Pkg::SetProgressCallback");
+	return YCPError ("Bad args to Pkg::CallbackStartProvide");
+    }
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	provideStartCallbackModule = name.substr (0, colonpos);
+	provideStartCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	provideStartCallbackModule = "";
+	provideStartCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("provideStartCallback (%s::%s)", provideStartCallbackModule.c_str(), provideStartCallbackSymbol->symbol().c_str());
+    _y2pm.setProvideStartCallback (provideStartCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+
+/**
+ * @builtin Pkg::CallbackProgressProvide (string fun) -> nil
+ *
+ * set provide progress callback function
+ * will call 'fun (int percent)' during file download
+ */
+YCPValue
+PkgModuleFunctions::CallbackProgressProvide(YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackProgressProvide");
+    }
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	provideProgressCallbackModule = name.substr (0, colonpos);
+	provideProgressCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	provideProgressCallbackModule = "";
+	provideProgressCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("provideProgressCallback (%s::%s)", provideProgressCallbackModule.c_str(), provideProgressCallbackSymbol->symbol().c_str());
+    _y2pm.setProvideProgressCallback (provideProgressCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+
+/**
+ * @builtin Pkg::CallbackStartInstall (string fun) -> nil
+ *
+ * set start install callback function
+ * will call 'fun (string name, string summary, int size, bool is_delete)'
+ * before package install/delete
+ */
+YCPValue
+PkgModuleFunctions::CallbackStartInstall(YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackStartInstall");
+    }
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	startInstallCallbackModule = name.substr (0, colonpos);
+	startInstallCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	startInstallCallbackModule = "";
+	startInstallCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("startInstallCallback (%s::%s)", startInstallCallbackModule.c_str(), startInstallCallbackSymbol->symbol().c_str());
+    _y2pm.setInstallationPackageStartCallback (startInstallCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+
+/**
+ * @builtin Pkg::CallbackProgress (string fun) -> nil
+ *
+ * set progress callback function
+ * will call 'fun (integer percent)' during rpm
+ */
+YCPValue
+PkgModuleFunctions::CallbackProgress(YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackProgress");
     }
     string name = args->value(0)->asString()->value();
     string::size_type colonpos = name.find("::");
@@ -123,18 +298,51 @@ PkgModuleFunctions::SetProgressCallback(YCPList args)
 	progressCallbackSymbol = YCPSymbol (name, false);
     }
 y2milestone ("progressCallback (%s::%s)", progressCallbackModule.c_str(), progressCallbackSymbol->symbol().c_str());
-    _y2pm.instTarget().setPackageInstallProgressCallback (progressCallbackFunc, _wfm);
+    _y2pm.setInstallationPackageProgressCallback (progressCallbackFunc, _wfm);
     return YCPVoid();
 }
 
 
 /**
- * @builtin Pkg::SourceSetMediaChangeCallback (integer source, string fun) -> nil
+ * @builtin Pkg::CallbackDoneInstall (string fun) -> nil
+ *
+ * set start install callback function
+ * will call 'fun (string name)'
+ * after package install/delete
+ */
+YCPValue
+PkgModuleFunctions::CallbackDoneInstall(YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackDoneInstall");
+    }
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	doneInstallCallbackModule = name.substr (0, colonpos);
+	doneInstallCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	doneInstallCallbackModule = "";
+	doneInstallCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("doneInstallCallback (%s::%s)", doneInstallCallbackModule.c_str(), doneInstallCallbackSymbol->symbol().c_str());
+    _y2pm.setInstallationPackageDoneCallback (doneInstallCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+
+/**
+ * @builtin Pkg::CallbackMediaChange (integer source, string fun) -> nil
  *
  * set media change callback function
  */
 YCPValue
-PkgModuleFunctions::SourceSetMediaChangeCallback (YCPList args)
+PkgModuleFunctions::CallbackMediaChange (YCPList args)
 {
     InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
     if (!source_id)
@@ -143,7 +351,7 @@ PkgModuleFunctions::SourceSetMediaChangeCallback (YCPList args)
     if ((args->size() != 2)
 	|| !(args->value(1)->isString()))
     {
-	return YCPError ("Bad args to Pkg::SourceSetMediaChangeCallback");
+	return YCPError ("Bad args to Pkg::CallbackMediaChange");
     }
     string name = args->value(1)->asString()->value();
     string::size_type colonpos = name.find("::");
@@ -163,13 +371,13 @@ y2milestone ("mediaChangeCallback (%s::%s)", mediaChangeCallbackModule.c_str(), 
 }
 
 /**
- * @builtin Pkg::SourceSetMediaErrorCallback (integer source, string fun) -> nil
+ * @builtin Pkg::CallbackMediaError (integer source, string fun) -> nil
  *
  * set media error callback function
  * will call 'WFM::fun (string error)' from InstSrc
  */
 YCPValue
-PkgModuleFunctions::SourceSetMediaErrorCallback (YCPList args)
+PkgModuleFunctions::CallbackMediaError (YCPList args)
 {
     InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
     if (!source_id)
@@ -178,7 +386,7 @@ PkgModuleFunctions::SourceSetMediaErrorCallback (YCPList args)
     if ((args->size() != 2)
 	|| !(args->value(1)->isString()))
     {
-	return YCPError ("Bad args to Pkg::SourceSetMediaErrorCallback");
+	return YCPError ("Bad args to Pkg::CallbackMediaError");
     }
     string name = args->value(1)->asString()->value();
     string::size_type colonpos = name.find("::");

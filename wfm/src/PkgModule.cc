@@ -67,6 +67,16 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "GetLocale")		return GetLocale (args);
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
     else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
+
+    // callback functions
+    else if (function == "CallbackStartProvide")	return CallbackStartProvide (args);
+    else if (function == "CallbackProgressProvide")	return CallbackProgressProvide (args);
+    else if (function == "CallbackStartInstall")	return CallbackStartInstall (args);
+    else if (function == "CallbackProgress")	return CallbackProgress (args);
+    else if (function == "CallbackDoneInstall")	return CallbackDoneInstall (args);
+    else if (function == "CallbackMediaChange")	return CallbackMediaChange (args);
+    else if (function == "CallbackMediaError")	return CallbackMediaError (args);
+
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);
     else if (function == "GetBackupPath")	return GetBackupPath (args);
@@ -116,7 +126,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetInstall")	return TargetInstall (args);
     else if (function == "TargetRemove")	return TargetRemove (args);
     else if (function == "TargetLogfile")	return TargetLogfile (args);
-    else if (function == "SetProgressCallback")	return SetProgressCallback (args);
     else if (function == "TargetCapacity")	return TargetCapacity (args);
     else if (function == "TargetUsed")		return TargetUsed (args);
     else if (function == "TargetUpdateInf")	return TargetUpdateInf (args);
@@ -129,8 +138,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
-    else if (function == "SourceSetMediaChangeCallback")return SourceSetMediaChangeCallback (args);
-    else if (function == "SourceSetMediaErrorCallback")	return SourceSetMediaErrorCallback (args);
     else if (function == "SourceCacheCopyTo") return SourceCacheCopyTo (args);
     return YCPError (string ("Undefined Pkg::")+function);
 }

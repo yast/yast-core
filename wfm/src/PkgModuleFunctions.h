@@ -73,6 +73,15 @@ class PkgModuleFunctions
 	YCPValue SetAdditionalLocales (YCPList args);
 	YCPValue GetAdditionalLocales (YCPList args);
 
+	// callbacks
+	YCPValue CallbackStartProvide (YCPList args);
+	YCPValue CallbackProgressProvide (YCPList args);
+	YCPValue CallbackStartInstall (YCPList args);
+	YCPValue CallbackProgress (YCPList args);
+	YCPValue CallbackDoneInstall (YCPList args);
+	YCPValue CallbackMediaChange (YCPList args);
+	YCPValue CallbackMediaError (YCPList args);
+
 	// source related
 	YCPValue SourceCreate (YCPList args);
 	YCPValue SourceStartCache (YCPList args);
@@ -83,8 +92,6 @@ class PkgModuleFunctions
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvideFile (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
-	YCPValue SourceSetMediaChangeCallback (YCPList args);
-	YCPValue SourceSetMediaErrorCallback (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
@@ -92,7 +99,6 @@ class PkgModuleFunctions
 	YCPValue TargetInstall (YCPList args);
 	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetLogfile (YCPList args);
-	YCPValue SetProgressCallback (YCPList args);
 	YCPValue TargetCapacity (YCPList args);
 	YCPValue TargetUsed (YCPList args);
 	YCPValue TargetUpdateInf (YCPList args);
