@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 12 23:21:53 CET 2004 - sh@suse.de
+
+- Fixed non-const reference to const ref for all widget constructors 
+
+-------------------------------------------------------------------
 Fri Mar 12 12:20:54 CET 2004 - visnov@suse.cz
 
 - drop unneeded type info
