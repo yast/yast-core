@@ -61,7 +61,7 @@ PkgModule::evaluate (string function, YCPList args)
 {
     static PkgModuleFunctions f;
 
-    y2milestone ("PkgModule::evaluate (%s, %s)", function.c_str(), args->toString().c_str());
+//    y2milestone ("PkgModule::evaluate (%s, %s)", function.c_str(), args->toString().c_str());
 
     // general functions
     if (function == "GetGroups")		return f.GetGroups (args);
@@ -69,12 +69,14 @@ PkgModule::evaluate (string function, YCPList args)
     // package functions
     else if (function == "IsProvided")		return f.IsProvided (args);
     else if (function == "IsAvailable")		return f.IsAvailable (args);
+    else if (function == "IsSelected")		return f.IsSelected (args);
     else if (function == "DoProvide")		return f.DoProvide (args);
     else if (function == "DoRemove")		return f.DoRemove (args);
     else if (function == "PkgSummary")		return f.PkgSummary (args);
     else if (function == "PkgVersion")		return f.PkgVersion (args);
     else if (function == "PkgSize")		return f.PkgSize (args);
     else if (function == "PkgLocation")		return f.PkgLocation (args);
+    else if (function == "PkgMediaNr")		return f.PkgMediaNr (args);
     else if (function == "IsManualSelection")	return f.IsManualSelection (args);
     else if (function == "SaveState")		return f.SaveState (args);
     else if (function == "RestoreState")	return f.RestoreState (args);

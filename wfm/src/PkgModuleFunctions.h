@@ -80,6 +80,7 @@ class PkgModuleFunctions
 	YCPValue PkgVersion (YCPList args);
 	YCPValue PkgSize (YCPList args);
 	YCPValue PkgLocation (YCPList args);
+	YCPValue PkgMediaNr (YCPList args);
 	YCPValue IsManualSelection (YCPList args);
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);

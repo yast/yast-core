@@ -347,6 +347,7 @@ PkgModuleFunctions::ActivateSelectionPackages (PMSelectionPtr selection)
     if (packs.size() > 0)
     for (it = packs.begin(); it != packs.end(); ++it)
     {
+	y2milestone ("locale: '%s'", (*it).c_str());
 	DoProvideString(*it);
     }
     return true;

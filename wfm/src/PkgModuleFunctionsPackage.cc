@@ -216,7 +216,7 @@ PkgModuleFunctions::DoProvideString (std::string name)
     PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
     if (!selectable)
     {
-	y2error ("Provide: package '%s' not found", name.c_str());
+	//y2error ("Provide: package '%s' not found", name.c_str());
 	return false;
     }
     selectable->set_status (PMSelectable::S_Install);
@@ -453,6 +453,35 @@ PkgModuleFunctions::PkgLocation (YCPList args)
 	archpath = archpath + location;
     }
     return YCPString (archpath.asString());
+}
+
+// ------------------------
+/**   
+   @builtin Pkg::PkgMediaNr (string package) -> integer
+
+   Get media number of package location
+
+*/
+YCPValue
+PkgModuleFunctions::PkgMediaNr (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::PkgMediaNr");
+    }
+    string name = args->value(0)->asString()->value();
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    if (!selectable)
+    {
+	return YCPError ("Package '"+name+"' not found");
+    }
+    PMPackagePtr package = selectable->theObject();
+    if (!package)
+    {
+	return YCPError ("Package '"+name+"' no object");
+    }
+    return YCPInteger (package->medianr());
 }
 
 // ------------------------
