@@ -92,7 +92,7 @@ PkgModuleFunctions::SourceInit (YCPList args)
     unsigned int number_of_known_sources = _sources.size();
     if (number_of_known_sources > 0)
     {
-	for (int i = 0; i < number_of_known_sources; ++i)
+	for (unsigned int i = 0; i < number_of_known_sources; ++i)
 	{
 	    constInstSrcDescrPtr source_descr = _sources[i]->descr();
 	    if ((source_descr)
@@ -195,7 +195,7 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceData");
     }
 
-    int source_slot = args->value(0)->asInteger()->value();
+    unsigned int source_slot = args->value(0)->asInteger()->value();
     if (source_slot < 0
 	|| source_slot >= _sources.size()
 	|| _sources[source_slot] == 0)
