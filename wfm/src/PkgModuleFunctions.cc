@@ -147,9 +147,8 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 74,	Pkg, TargetUpdateInf);
     REGISTERFUNCTIONCALL1 ( 75,	Pkg, TargetUsed);
     REGISTERFUNCTIONCALL  ( 81,	Pkg, YouGetDirectory);
-    REGISTERFUNCTIONCALL  ( 82,	Pkg, YouRetrievePatches);
+    REGISTERFUNCTIONCALL  ( 82,	Pkg, YouProcessPatches);
     REGISTERFUNCTIONCALL2 ( 83,	Pkg, YouRetrievePatchInfo);
-    REGISTERFUNCTIONCALL  ( 85,	Pkg, YouInstallPatches);
     REGISTERFUNCTIONCALL  ( 87,	Pkg, YouRemovePackages);
     REGISTERFUNCTIONCALL  ( 88,	Pkg, YouSelectPatches);
     REGISTERFUNCTIONCALL  ( 89,	Pkg, YouStatus);

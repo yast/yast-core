@@ -264,10 +264,9 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue YouGetUserPassword ();
 	YCPValue YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& persistent);
 	YCPValue YouRetrievePatchInfo (const YCPBoolean& download, const YCPBoolean& sign);
-	YCPValue YouRetrievePatches ();
+	YCPValue YouProcessPatches ();
 	YCPValue YouGetDirectory ();
 	YCPValue YouSelectPatches ();
-	YCPValue YouInstallPatches ();
         YCPValue YouRemovePackages ();
 
 	// function call definitions
@@ -399,10 +398,9 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL 	( Pkg, YouGetUserPassword,	"map<any,any> ()",	PkgModuleFunctions, YouGetUserPassword);
 	Y2FUNCTIONCALL3	( Pkg, YouSetUserPassword,	"string (string, string, boolean)", String, String, Boolean, PkgModuleFunctions, YouSetUserPassword);
 	Y2FUNCTIONCALL2 ( Pkg, YouRetrievePatchInfo, 	"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouRetrievePatchInfo);
-	Y2FUNCTIONCALL  ( Pkg, YouRetrievePatches, 	"boolean ()",		PkgModuleFunctions, YouRetrievePatches);
+	Y2FUNCTIONCALL  ( Pkg, YouProcessPatches, 	"boolean ()",		PkgModuleFunctions, YouProcessPatches);
 	Y2FUNCTIONCALL  ( Pkg, YouGetDirectory, 	"string ()",		PkgModuleFunctions, YouGetDirectory);
 	Y2FUNCTIONCALL  ( Pkg, YouSelectPatches, 	"void ()",		PkgModuleFunctions, YouSelectPatches);
-	Y2FUNCTIONCALL  ( Pkg, YouInstallPatches, 	"boolean ()",		PkgModuleFunctions, YouInstallPatches);
         Y2FUNCTIONCALL  ( Pkg, YouRemovePackages, 	"boolean ()",		PkgModuleFunctions, YouRemovePackages);
 
 

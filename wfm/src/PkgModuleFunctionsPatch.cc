@@ -313,15 +313,15 @@ PkgModuleFunctions::YouRetrievePatchInfo (const YCPBoolean& download, const YCPB
 }
 
 /**   
-   @builtin Pkg::YouRetrievePatches () -> bool
+   @builtin Pkg::YouProcessPatches () -> bool
 
-   Retrieve patches.
+   Download and install patches.
 
 */
 YCPValue
-PkgModuleFunctions::YouRetrievePatches ()
+PkgModuleFunctions::YouProcessPatches ()
 {
-    _last_error = _y2pm.youPatchManager().instYou().retrievePatches();
+    _last_error = _y2pm.youPatchManager().instYou().processPatches();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
@@ -366,20 +366,6 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
     result->add( YCPString( "packages" ), packageList );
 
     return result;
-}
-
-/**   
-   @builtin Pkg::YouInstallPatches () -> bool
-
-   install retrieved patches.
-   
-   Returns true, if patches have been installed, and false if no patches have
-   been installed.
-*/
-YCPValue
-PkgModuleFunctions::YouInstallPatches ()
-{
-    return YCPBoolean( _y2pm.youPatchManager().instYou().installPatches() );
 }
 
 /**
