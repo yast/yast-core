@@ -20,6 +20,7 @@
 #include <Y2CCWFM.h>
 #include <Y2WFMComponent.h>
 
+Y2Component * Y2CCWFM::m_wfm = 0;
 
 Y2CCWFM::Y2CCWFM ()
     : Y2ComponentCreator (Y2ComponentBroker::BUILTIN)
@@ -38,7 +39,13 @@ Y2Component *
 Y2CCWFM::create (const char *name) const
 {
     if (!strcmp(name, "wfm"))
-	return new Y2WFMComponent();
+    {
+	if (m_wfm == 0)
+	{
+	    m_wfm = new Y2WFMComponent();
+	}
+	return m_wfm;
+    }
     else
 	return 0;
 }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Apr 15 15:08:21 CEST 2004 - mvidner@suse.cz
+
+- ensure that there's only one WFM (#37338)
+- 2.9.80
+
+-------------------------------------------------------------------
 Thu Apr 15 09:34:42 CEST 2004 - kkaempf@suse.de
 
 - improve error message for "... type>>" typos (#38967)

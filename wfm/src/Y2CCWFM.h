@@ -24,6 +24,12 @@
 
 class Y2CCWFM : public Y2ComponentCreator
 {
+    /**
+     * Allow only one instance of wfm.
+     * This used to be the job of Y2ScriptComponent (the code is still there)
+     * but now the Perl bindings go around it.
+     */
+    static Y2Component *m_wfm;
 
 public:
 
