@@ -972,6 +972,7 @@ HwProbe::ihwData ()
 	drv = icp->driver;
 	while ((idp = hd_ihw_get_driver(drv))) {
 	    YCPMap  isdnDrvEntry;
+
 	    isdnDrvEntry->add (YCPString ("name"), YCPString(idp->name));
 	    isdnDrvEntry->add (YCPString ("mod_name"), YCPString(idp->mod_name));
 	    isdnDrvEntry->add (YCPString ("type"), YCPInteger (idp->typ));
@@ -982,10 +983,19 @@ HwProbe::ihwData ()
 	    if (idp->description)
 		isdnDrvEntry->add (YCPString ("description"), YCPString(idp->description));
 	    /* temporary until libhd update */
-#if (IHW_VERSION == 0x0204)
-	    if (idp->need_pkg)
-		    isdnDrvEntry->add (YCPString ("need_pkg"), YCPString(idp->need_pkg));
-#endif
+	    if (idp->need_pkg) {
+		YCPList	pkgs;
+		char	*s, *t;
+		char	*str = strdup(idp->need_pkg);
+
+		for (s = str; (t = strchr(s, ',')); s = t + 1) {
+		    *t = 0;
+		    pkgs->add (YCPString (s));
+		}
+		pkgs->add (YCPString (s));
+		isdnDrvEntry->add (YCPString ("need_pkg"), pkgs);
+		free(str);
+	    }
 	    isdnDriver->add (isdnDrvEntry);
 	    drv = idp->next_drv;
 	}
