@@ -2,6 +2,7 @@
 Wed Mar 16 10:15:35 CET 2005 - visnov@suse.cz
 
 - reduced UI logging
+- added YCP testsuites for is() also for build
 - 2.11.26 
 
 -------------------------------------------------------------------
