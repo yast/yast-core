@@ -1,5 +1,5 @@
+// Create an editable combo box with restricted input character set.
 {
-    // Create an editable combo box with restricted input character set.
     UI::OpenDialog(
 	       `VBox(
 		     `ComboBox(`id(`addr), `opt(`editable),
@@ -27,7 +27,8 @@
     // Rather, it returns the ID of the widget (normally the PushButton)
     // that caused UI::UserInput() to return.
     any val=UI::QueryWidget(`id(`addr), `Value);
-    
+    y2base( "Selected %1", val );
+
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
     UI::CloseDialog();
