@@ -139,7 +139,7 @@ YCPValue YTable::queryWidget( const YCPSymbol & property )
 }
 
 
-YCPValue YTable::queryWidget( const YCPTerm & property )
+YCPValue YTable::queryWidgetTerm( const YCPTerm & property )
 {
     string s = property->name();
     if ( s == YUIProperty_Item )

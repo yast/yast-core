@@ -100,7 +100,7 @@ public:
     /**
      * Implements the ui command queryWidget with property given as term.
      */
-    YCPValue queryWidget( const YCPTerm & property );
+    YCPValue queryWidgetTerm( const YCPTerm & property );
 
     /**
      * Returns the number of columns of the table.
