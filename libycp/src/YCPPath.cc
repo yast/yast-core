@@ -52,7 +52,7 @@ YCPPathRep::YCPPathRep(const char *r)
 		if ('-' == *start
 		    || '-' == *c)
 		{
-		    y2error ("bad path constant: dash before/after dot not allowed");
+		    ycp2error ("bad path constant: dash before/after dot not allowed");
 		    components.clear();
 		    return;
 		}
@@ -239,7 +239,7 @@ YCPPathRep::Component::Component(string s)
 				    c++;
 				}
 			    if (!num)
-				y2error("\\x00 not allowed in path constant. Skipping.");
+				ycp2error("\\x00 not allowed in path constant. Skipping.");
 			    component+= num;
 			    break;
 			default:
