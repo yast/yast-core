@@ -131,7 +131,7 @@ PkgModuleFunctions::PkgMediaNames (YCPList args)
 
 	for (vector<InstSrcManager::ISrcId>::const_iterator it = _sources.begin(); it != _sources.end(); ++it)
 	{
-	    if (*it == 0) 
+	    if (*it == 0)
 		continue;
 
 	    map <unsigned int, InstSrcManager::ISrcId>::iterator media_it = rankedsources.find ((*it)->descr()->default_rank());
@@ -183,7 +183,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
 	for (vector<InstSrcManager::ISrcId>::const_iterator it = _sources.begin(); it != _sources.end(); ++it)
 	{
-	    if (*it == 0) 
+	    if (*it == 0)
 		continue;
 
 	    map <unsigned int, InstSrcManager::ISrcId>::iterator media_it = rankedsources.find ((*it)->descr()->default_rank());
@@ -852,7 +852,7 @@ PkgModuleFunctions::PkgSolve (YCPList args)
     if (!_y2pm.packageManager().solveInstall(good, bad, filter_conflicts_with_installed))
     {
 	_solve_errors = bad.size();
-	y2error ("%d packages failed:", bad.size());
+	y2error ("%zd packages failed:", bad.size());
 
 	std::ofstream out ("/var/log/YaST2/badlist");
 	out << bad.size() << " packages failed" << std::endl;

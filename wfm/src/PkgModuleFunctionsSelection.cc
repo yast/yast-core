@@ -280,7 +280,7 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 		out << *p << std::endl;
 	    }
 
-	    y2error ("%d selections failed", bad.size());
+	    y2error ("%zd selections failed", bad.size());
 	    return false;
 	}
 	return true;

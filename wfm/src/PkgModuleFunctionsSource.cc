@@ -81,7 +81,7 @@ PkgModuleFunctions::addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable)
     if (nids.size() > 0)						// if any sources
     {
 	unsigned int number_of_known_sources = 0;
-y2milestone ("addSrcIds %d, known_sources %d", nids.size(), _sources.size());
+	y2milestone ("addSrcIds %zd, known_sources %zd", nids.size(), _sources.size());
 	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();	// loop through all sources
 	     it != nids.end(); ++it)
 	{
