@@ -254,8 +254,8 @@ return for each widget class is described in full detail in the
 <p>
 The YaST2 event handling model has been (and will probably always remain) a
 subject of neverending discussions. Each and every new team member and
-everybody who casually writes a YaST2 module to configure the subsystem that is
-his real responsibility feels compelled to restart this discussion.
+everybody who casually writes a YaST2 module (to configure the subsystem that is
+his real responsibility) feels compelled to restart this discussion.
 <p>
 The idea of having a function called <i>UserInput()</i> seems to conjure up
 ghastly memories of horrible times that we hoped to have overcome: The days of
@@ -264,8 +264,8 @@ Pascal's <i>readln()</i>?) or even low-tech primitive C programs (<i>gets()</i>
 or <i>scanf()</i> are not better, either).
 <p>
 But it's not quite like that. Even though the function name is similar, the
-concept is radically different: It's not just one single value that is being
-read, it's a whole dialog full of whatever widgets you see fit to put
+concept is radically different: It iss not just one single value that is being
+read, it is a whole dialog full of whatever widgets you see fit to put
 there. All the widgets take care of themselves; they all handle their values
 automatically. You just have to ask them
 (<a href="../YCP-builtins-ui.html">UI::QueryWidget()</a>)

@@ -89,7 +89,8 @@ As long as the user does not do any such action, UserInput() waits,
 i.e. execution of the YCP code stops in UserInput().
 In particular, entering text in input fields (TextEntry widgets) or selecting
 an entry in a list (SelectionBox widget) does not make UserInput() continue
-unless the respective widget has the <a href="general#notify">notify option</a> set.
+unless the respective widget has the <a href="event-intro.html#notify">notify
+option</a> set. 
 <p>
 UserInput() returns the ID of the widget that caused it to return. This is
 usually a button ID. It does <b>not</b> return any text entered etc.; use
