@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 05 17:07:35 CEST 2002 - arvin@suse.de
+
+- fixed cpu and boot detection on S390
+
+-------------------------------------------------------------------
 Thu Aug 01 11:10:40 CEST 2002 - arvin@suse.de
 
 - fixes for VNC installation

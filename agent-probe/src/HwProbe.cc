@@ -423,9 +423,11 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    value = YCPBoolean (hd_has_pcmcia (hd_base) ? true : false);
 		break;
 		case 4:		// cpu_arch
+		    hd_free_hd_list (hd_list (hd_base, hw_cpu, 1, 0)); // to trigger scanning
 		    value = cpuArch ();
 		break;
 		case 5:		// boot_arch
+		    hd_free_hd_list (hd_list (hd_base, hw_cpu, 1, 0)); // to trigger scanning
 		    value = bootArch ();
 		break;
 		case 6:		// version
@@ -506,7 +508,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    default:
 		    break;
 		}
-		value = YCPBoolean (hd_change_status (arg->asString()->value_cstr(), status, NULL) == 0);
+		value = YCPBoolean (hd_change_status (arg->asString()->value_cstr(), status, 0) == 0);
 	    }
 	}
 	else			// assume Dir()
