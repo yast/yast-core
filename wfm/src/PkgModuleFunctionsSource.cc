@@ -177,8 +177,11 @@ inline bool YcpArgLoad::Value<YT_MAP, YCPMap>::assign( const YCPValue & arg_r )
  * If no cache is used the media cannot be unmounted, i.e. no CD change possible.
  **/
 YCPValue
-PkgModuleFunctions::SourceSetRamCache (YCPList args)
+PkgModuleFunctions::SourceSetRamCache (const YCPBoolean& a)
 {
+  YCPList args;
+  args->add (a);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -208,8 +211,12 @@ PkgModuleFunctions::SourceSetRamCache (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceStartManager (YCPList args)
+PkgModuleFunctions::SourceStartManager (const YCPBoolean& enable)
 {
+  YCPList args;
+  if( ! enable.isNull ())
+    args->add (enable);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -241,8 +248,12 @@ PkgModuleFunctions::SourceStartManager (YCPList args)
  * @return list of SrcIds (integer)
  **/
 YCPValue
-PkgModuleFunctions::SourceStartCache (YCPList args)
+PkgModuleFunctions::SourceStartCache (const YCPBoolean& enabled)
 {
+  YCPList args;
+  if( ! enabled.isNull ())
+      args->add (enabled);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -268,8 +279,12 @@ PkgModuleFunctions::SourceStartCache (YCPList args)
  * @return list of SrcIds (integer)
  **/
 YCPValue
-PkgModuleFunctions::SourceGetCurrent (YCPList args)
+PkgModuleFunctions::SourceGetCurrent (const YCPBoolean& enabled)
 {
+  YCPList args;
+  if( ! enabled.isNull ())
+      args->add (enabled);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -291,8 +306,10 @@ PkgModuleFunctions::SourceGetCurrent (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceFinishAll (YCPList args)
+PkgModuleFunctions::SourceFinishAll ()
 {
+  YCPList args;
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
   if ( ! decl.load( args ) ) {
@@ -325,8 +342,11 @@ PkgModuleFunctions::SourceFinishAll (YCPList args)
  * </TABLE>
  **/
 YCPValue
-PkgModuleFunctions::SourceGeneralData (YCPList args)
+PkgModuleFunctions::SourceGeneralData (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -365,8 +385,11 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
  * </TABLE>
  **/
 YCPValue
-PkgModuleFunctions::SourceMediaData (YCPList args)
+PkgModuleFunctions::SourceMediaData (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -416,8 +439,11 @@ PkgModuleFunctions::SourceMediaData (YCPList args)
  * </TABLE>
  **/
 YCPValue
-PkgModuleFunctions::SourceProductData (YCPList args)
+PkgModuleFunctions::SourceProductData (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -483,8 +509,11 @@ PkgModuleFunctions::SourceProductData (YCPList args)
  * @return Product info as a map. See @ref Descr2Map
  **/
 YCPValue
-PkgModuleFunctions::SourceProduct (YCPList args)
+PkgModuleFunctions::SourceProduct (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -515,8 +544,13 @@ PkgModuleFunctions::SourceProduct (YCPList args)
  * @return local path as string
  **/
 YCPValue
-PkgModuleFunctions::SourceProvideFile (YCPList args)
+PkgModuleFunctions::SourceProvideFile (const YCPInteger& id, const YCPInteger& mid, const YCPString& f)
 {
+  YCPList args;
+  args->add (id);
+  args->add (mid);
+  args->add (f);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -556,8 +590,13 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
  * @return local path as string
  */
 YCPValue
-PkgModuleFunctions::SourceProvideDir (YCPList args)
+PkgModuleFunctions::SourceProvideDir (const YCPInteger& id, const YCPInteger& mid, const YCPString& d)
 {
+  YCPList args;
+  args->add (id);
+  args->add (mid);
+  args->add (d);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -595,8 +634,12 @@ PkgModuleFunctions::SourceProvideDir (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceChangeUrl (YCPList args)
+PkgModuleFunctions::SourceChangeUrl (const YCPInteger& id, const YCPString& u)
 {
+  YCPList args;
+  args->add (id);
+  args->add (u);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -630,8 +673,11 @@ PkgModuleFunctions::SourceChangeUrl (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceInstallOrder (YCPList args)
+PkgModuleFunctions::SourceInstallOrder (const YCPMap& ord)
 {
+  YCPList args;
+  args->add (ord);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -695,8 +741,11 @@ PkgModuleFunctions::SourceInstallOrder (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
+PkgModuleFunctions::SourceCacheCopyTo (const YCPString& dir)
 {
+  YCPList args;
+  args->add (dir);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -747,8 +796,13 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
  * @return list of SrcIds (integer).
  **/
 YCPValue
-PkgModuleFunctions::SourceScan (YCPList args)
+PkgModuleFunctions::SourceScan (const YCPString& media, const YCPString& pd)
 {
+  YCPList args;
+  args->add (media);
+  if( ! pd.isNull ())
+      args->add (pd);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -799,8 +853,13 @@ PkgModuleFunctions::SourceScan (YCPList args)
  * @return The source_id of the first InstSrc found on the media.
  **/
 YCPValue
-PkgModuleFunctions::SourceCreate (YCPList args)
+PkgModuleFunctions::SourceCreate (const YCPString& media, const YCPString& pd)
 {
+  YCPList args;
+  args->add (media);
+  if( ! pd.isNull ())
+    args->add (pd);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -851,8 +910,12 @@ PkgModuleFunctions::SourceCreate (YCPList args)
  * @return bool
  **/
 YCPValue
-PkgModuleFunctions::SourceSetEnabled (YCPList args)
+PkgModuleFunctions::SourceSetEnabled (const YCPInteger& id, const YCPBoolean& e)
 {
+  YCPList args;
+  args->add (id);
+  args->add (e);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -884,8 +947,11 @@ PkgModuleFunctions::SourceSetEnabled (YCPList args)
  * @return bool
  **/
 YCPValue
-PkgModuleFunctions::SourceFinish (YCPList args)
+PkgModuleFunctions::SourceFinish (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -917,8 +983,11 @@ PkgModuleFunctions::SourceFinish (YCPList args)
  * @return bool
  **/
 YCPValue
-PkgModuleFunctions::SourceDelete (YCPList args)
+PkgModuleFunctions::SourceDelete (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -953,8 +1022,10 @@ PkgModuleFunctions::SourceDelete (YCPList args)
  * @return list of source states (map)
  **/
 YCPValue
-PkgModuleFunctions::SourceEditGet (YCPList args)
+PkgModuleFunctions::SourceEditGet ()
 {
+  YCPList args;
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
   if ( ! decl.load( args ) ) {
@@ -978,8 +1049,11 @@ PkgModuleFunctions::SourceEditGet (YCPList args)
  * @return true
  **/
 YCPValue
-PkgModuleFunctions::SourceEditSet (YCPList args)
+PkgModuleFunctions::SourceEditSet (const YCPList& states)
 {
+  YCPList args;
+  args->add (states);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -1013,8 +1087,11 @@ PkgModuleFunctions::SourceEditSet (YCPList args)
  * @return bool
  **/
 YCPValue
-PkgModuleFunctions::SourceRaisePriority (YCPList args)
+PkgModuleFunctions::SourceRaisePriority (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -1045,8 +1122,11 @@ PkgModuleFunctions::SourceRaisePriority (YCPList args)
  * @return bool
  */
 YCPValue
-PkgModuleFunctions::SourceLowerPriority (YCPList args)
+PkgModuleFunctions::SourceLowerPriority (const YCPInteger& id)
 {
+  YCPList args;
+  args->add (id);
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
 
@@ -1073,8 +1153,10 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
  * Save ranks to disk. Return true on success, false on error.
  **/
 YCPValue
-PkgModuleFunctions::SourceSaveRanks (YCPList args)
+PkgModuleFunctions::SourceSaveRanks ()
 {
+  YCPList args;
+
   //-------------------------------------------------------------------------------------//
   YcpArgLoad decl(__FUNCTION__);
   if ( ! decl.load( args ) ) {
