@@ -985,7 +985,13 @@ block_end:
 
 		if (top->includeDepth == 0)
 		{
+#if DO_DEBUG
+		    y2debug ("Detaching local table");
+#endif
 		    b->detachEnvironment (localTable);		// detach local table
+#if DO_DEBUG
+		    y2debug ("Detaching local table done");
+#endif
 		}
 		else
 		{
@@ -1110,7 +1116,7 @@ statements:
 		YStatementPtr stmt = static_cast<YStatementPtr>($2.c);
 
 #if DO_DEBUG
-		y2debug ("STMT[%s!%s]\n", p_parser->m_block_stack->type->toString().c_str(), $2.t->toString().c_str());
+		y2debug ("STMT[%s!%s]\n", p_parser->m_block_stack->theBlock->type()->toString().c_str(), $2.t->toString().c_str());
 		y2debug ("STMT[kind %d]\n", $2.c->kind());
 		if (stmt) y2debug ("STMT[%s:%d]\n", stmt->toString().c_str(), stmt->line());
 #endif
@@ -1194,6 +1200,7 @@ statement:
 		// evaluate following block in different name space
 		p_parser->scanner()->initTables ($1.v.tval->sentry()->table(), 0);
 
+		y2warning ("Using incompatible coversion");
 		// save environment tables for later restore
 		$2.l = (int)localTable;
 		$2.v.val = (void *)globalTable;

@@ -684,7 +684,29 @@ SymbolTable::remove (TableEntry *entry)
 	else
 	{
 	    int h = hash (entry->m_key);
-	    m_table[h] = candidate;		// next is new first
+	    
+	    if (m_table[h] == entry)
+	    {
+		m_table[h] = candidate;		// next is new first
+	    }
+	    else
+	    {
+		// fix the m_outer chain
+		TableEntry *shadow = m_table[h];
+		while (shadow)
+		{
+		    if (shadow->m_outer == entry)
+		    {
+			shadow->m_outer = entry->m_outer;
+			break;
+		    }
+		}
+		
+		if (!shadow)
+		{
+		    y2internal ("Could not fix the symbol table for %s", entry->key ());
+		}
+	    }
 	}
 
     }
@@ -698,9 +720,31 @@ SymbolTable::remove (TableEntry *entry)
     {
 	//y2debug ("SymbolTable: First in bucket\n");
 	int h = hash (entry->m_key);
-	m_table[h] = entry->m_next;	// next is new first
-	if (entry->m_next != 0)
-	    entry->m_next->m_prev = 0;
+	
+	if (m_table[h] == entry)
+	{
+	    m_table[h] = entry->m_next;	// next is new first
+	    if (entry->m_next != 0)
+		entry->m_next->m_prev = 0;
+	}
+	else
+	{
+	    // removing m_outer
+	    TableEntry *shadow = m_table[h];
+	    while (shadow)
+	    {
+		if (shadow->m_outer == entry)
+		{
+		    shadow->m_outer = entry->m_outer;
+		    break;
+		}
+	    }
+		
+	    if (!shadow)
+	    {
+		y2internal ("Could not fix the symbol table for %s", entry->key ());
+	    }    
+	}
     }
 
     delete entry;

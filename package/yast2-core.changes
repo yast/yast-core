@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug  3 10:01:16 CEST 2004 - visnov@suse.cz
+
+- fix handling of 'import "Summary"' testcase in symbol tables
+- 2.10.3 
+
+-------------------------------------------------------------------
 Mon Aug  2 12:41:29 CEST 2004 - visnov@suse.cz
 
 - better split of YCP interpreter and rest of YaST (use Y2Function only)
