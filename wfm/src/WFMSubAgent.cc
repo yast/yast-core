@@ -42,7 +42,7 @@ WFMSubAgent::~WFMSubAgent ()
 	my_comp->result (YCPVoid ());	// tell server to terminate
 	delete my_comp;
     }
-    
+
     if (my_agent)
     {
 	delete my_agent;
@@ -59,8 +59,8 @@ WFMSubAgent::start ()
 	my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
 
 	if (!my_comp)
-	    ycp2error ("", -1, "Can't create component '%s'", my_name.c_str ());
-	    
+	    ycp2error ("Can't create component '%s'", my_name.c_str ());
+
 	if (my_comp->getSCRAgent () == NULL)
 	{
 	    // the component does not have a SCR agent, better try to push over stdio
