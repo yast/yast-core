@@ -30,6 +30,9 @@ using std::set;
 #include "WFMSubAgent.h"
 #include "PkgModule.h"
 
+class PerlModule;
+
+
 #define MAX_CLIENT_NAME_LEN 160
 
 class WFMInterpreter : public YCPInterpreter
@@ -86,6 +89,11 @@ class WFMInterpreter : public YCPInterpreter
      * Pointer to PkgModule class to handle "Pkg::<function>(...)" calls
      */
     PkgModule *pkgmodule;
+
+    /**
+     * Pointer to PerlModule class to handle "Perl::<function>(...)" calls
+     */
+    PerlModule *perlmodule;
 
     /**
      * This overridden function does only evaluate YCPB_NLOCALE, otherwise

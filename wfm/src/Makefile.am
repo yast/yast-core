@@ -11,6 +11,7 @@ noinst_LTLIBRARIES = liby2wfm.la
 liby2wfm_la_SOURCES =				\
 	WFMInterpreter.cc WFMInterpreter.h	\
 	WFMSubAgent.cc WFMSubAgent.h		\
+	PerlModule.cc PerlModule.h		\
 	PkgModule.cc PkgModule.h		\
 	PkgModuleFunctions.h			\
 	PkgModuleFunctions.cc			\
@@ -23,17 +24,7 @@ liby2wfm_la_SOURCES =				\
 liby2wfm_la_LDFLAGS = -version-info 2:0
 
 libpy2wfm_la_SOURCES =				\
-	WFMInterpreter.cc WFMInterpreter.h	\
-	WFMSubAgent.cc WFMSubAgent.h		\
-	PkgModule.cc PkgModule.h		\
-	PkgModuleFunctions.h			\
-	PkgModuleFunctions.cc			\
-	PkgModuleFunctionsPackage.cc		\
-	PkgModuleFunctionsPatch.cc		\
-	PkgModuleFunctionsSelection.cc		\
-	PkgModuleFunctionsTarget.cc		\
-	PkgModuleFunctionsSource.cc		\
-	PkgModuleCallbacks.cc			\
+	$(liby2wfm_la_SOURCES)			\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h
 libpy2wfm_la_LDFLAGS = -version-info 2:0

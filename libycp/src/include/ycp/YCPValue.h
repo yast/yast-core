@@ -31,6 +31,7 @@
  * the YCPValueRep object belongs to.
  */
 enum YCPValueType {
+    YT_UNDEFINED   = -1,
     YT_VOID        = 0,
     YT_BOOLEAN     = 1,
     YT_INTEGER     = 2,

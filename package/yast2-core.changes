@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Jul 29 19:49:59 CEST 2003 - sh@suse.de
+
+- V 2.8.11
+- Added support for embedded Perl interpreter as plugin
+  (requires new additional package yast2-perl-bindings) 
+
+-------------------------------------------------------------------
 Tue Jul 29 16:43:30 CEST 2003 - arvin@suse.de
 
 - extended meaning of YAST_IS_RUNNING

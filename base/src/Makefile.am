@@ -16,7 +16,8 @@ YAST2CORE =						\
 	$(srcdir)/../../libycp/src/libycp.la		\
 	$(srcdir)/../../liby2/src/liby2.la		\
 	$(srcdir)/../../libyui/src/libyui.la		\
-	$(srcdir)/../../libscr/src/libscr.la
+	$(srcdir)/../../libscr/src/libscr.la		
+
 
 y2base_DEPENDENCIES = $(YAST2CORE)
 
@@ -29,5 +30,6 @@ y2base_LDADD = -ly2pm -ly2util
 
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\
+	$(PERL_LDFLAGS)			\
 	$(YAST2CORE)			\
 	-Xlinker --no-whole-archive

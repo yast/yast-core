@@ -332,6 +332,7 @@ bool	    { logError ("Seen 'bool', use 'boolean' instead", yylineno); return SCA
 UI	{ return UI; }
 WFM	{ return WFM; }
 Pkg	{ return Pkg; }
+Perl	{ return Perl; }
 SCR	{ return SCR; }
 
  /* -- path  */

@@ -74,7 +74,7 @@ static string current_textdomain;
 %token  EMPTY LIST DEFINE UNDEFINE I18N
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL QUOTED_SYMBOL
-%token  DCOLON UI WFM Pkg SCR
+%token  DCOLON UI WFM Pkg Perl SCR
 %token  QUOTED_BLOCK QUOTED_EXPRESSION
 %token	YCP_VOID YCP_BOOLEAN YCP_INTEGER YCP_FLOAT YCP_STRING YCP_TIME YCP_BYTEBLOCK YCP_PATH
 %token  ANY YCP_DECLTYPE MODULE IMPORT EXPORT MAPEXPR INCLUDE GLOBAL TEXTDOMAIN
@@ -948,6 +948,25 @@ term:
 		else
 		{
 		    yyerror ("Only Pkg::<func>(<args>...) allowed"); YYERROR;
+		}
+		$$.l = LINE_NOW;
+	}
+|	Perl other_builtin {
+		if ($2.e->asValue()->isTerm())
+		{
+		    YCPTerm perlterm = $2.e->asValue()->asTerm();
+		    if (perlterm->name_space().empty())
+		    {
+			$$.e = YCPBuiltin (YCPB_WFM, YCPTerm (perlterm->symbol(), "Perl", perlterm->args()));
+		    }
+		    else
+		    {
+			yyerror ("Namespace qualifier after Perl::"); YYERROR;
+		    }
+		}
+		else
+		{
+		    yyerror ("Only Perl::<func>(<args>...) allowed"); YYERROR;
 		}
 		$$.l = LINE_NOW;
 	}

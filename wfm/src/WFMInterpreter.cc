@@ -44,6 +44,7 @@
 #include <y2/pathsearch.h>
 #include <y2/Y2ComponentBroker.h>
 #include <scr/SCRAgent.h>
+#include <PerlModule.h>
 #include <WFMInterpreter.h>
 
 
@@ -73,7 +74,8 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
       local ("ag_system", -1),
       modulename (modulename),
       argumentlist (argumentlist),
-      pkgmodule (0)
+      pkgmodule (0),
+      perlmodule (0)
 {
     current_file = fullname;
     y2debug ("new WFMInterpreter @ %p, my_component @ %p, user_interface @ %p (%s)", this, my_component, user_interface, current_file.c_str());
@@ -144,6 +146,18 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 	    }
 	}
 	return pkgmodule->evaluate (sym, term->args());
+    }
+    else if (term->name_space() == "Perl")
+    {
+	if (perlmodule == 0)
+	{
+	    perlmodule = new PerlModule (this);
+	    if (perlmodule == 0)
+	    {
+		return YCPError ("Can't create PerlModule", YCPVoid());
+	    }
+	}
+	return perlmodule->evaluate( term );
     }
 
     if	    (sym == "UI")		return evaluateWFM_UI (term);
