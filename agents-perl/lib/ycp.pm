@@ -81,18 +81,17 @@ use Sys::Hostname;
 
 @ISA     = qw(Exporter);
 
-@EXPORT_OK= qw(
+
+my @e_io = qw(
 	       ParseTerm
 	       ParseCommand
 	       Return
 	       );
 
-@EXPORT  = qw( y2debug
-	       y2milestone
-	       y2warning
-	       y2error
-	       y2security
-	       y2internal
+@EXPORT_OK = @e_io;
+
+my @e_logging = qw(y2debug y2milestone y2warning y2error y2security y2internal);
+my @e_obsolete  = qw(
 	       ycpDoVerboseLog
 	       ycpInit
 	       ycpArgIsMap
@@ -120,6 +119,11 @@ use Sys::Hostname;
 	       ycpGetArgType
 	       ycpReturn );
 
+@EXPORT = (@e_logging, @e_obsolete);
+
+our %EXPORT_TAGS = (IO => [@e_io],
+		    LOGGING => [@e_logging],
+		    OBSOLETE => [@e_obsolete]);
 
 my $ycpcommand    = "";
 my $ycppath       = "";
@@ -623,6 +627,11 @@ sub WriteYcpString ($)
 #                         L O G G I N G                                        #
 ################################################################################
 =head1 LOGGING
+
+If you are running in the main yast process and thus can afford to import
+YaST::YCP, it is better to use its logging functions because they use log.conf
+and logging just works. In such case, you should not need to use ycp.pm at all.
+Instead, C<use YaST::YCP (":LOGGING")>.
 
 The log output can now be redirected, which will be useful for test suites.
 If the first command-line option is "-l", the second argument is taken as
