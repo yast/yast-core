@@ -1426,13 +1426,11 @@ YSImport::YSImport (std::istream & str)
 	    if (tentry == 0)
 	    {
 		ycp2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
-//		fprintf (stderr, "Unresolved xref to %s::%s\n", m_name.c_str(), sname);
 		m_name = "";						// mark as error
 	    }
 	    else if (tentry->sentry()->type()->match (stype) != 0)
 	    {
-		ycp2error ("Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
-//		fprintf (stderr, "Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
+		ycp2error ("Xref to '%s::%s' expects type <%s> but module provides type <%s>\n", m_name.c_str(), sname, stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
 		m_name = "";
 	    }
 	    delete [] sname;
