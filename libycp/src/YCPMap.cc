@@ -118,7 +118,7 @@ YCPValue YCPMapRep::value(const YCPValue& key) const
 
 
 bool
-YCPMapRep::contains (const YCPValue& key) const
+YCPMapRep::haskey (const YCPValue& key) const
 {
     return stl_map.find (key) != end ();
 }

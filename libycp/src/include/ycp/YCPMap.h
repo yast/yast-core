@@ -95,7 +95,7 @@ public:
     /**
      * Returns true of false whether the map contains the key.
      */
-    bool contains (const YCPValue& key) const;
+    bool haskey (const YCPValue& key) const;
 
     /**
      * Returns a bidirectional STL iterator for the YCPMap that

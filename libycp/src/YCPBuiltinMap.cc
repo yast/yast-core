@@ -23,14 +23,14 @@
 YCPValue evaluateHasKey (YCPInterpreter *interpreter, const YCPList& args)
 {
     /**
-     * @builtin haskey(map m, any k) -> boolean
+     * @builtin haskey (map m, any k) -> boolean
      * Determines whether the map m contains a pair with the key k.
      * Returns true if this is so.
      */
 
-    if (args->size() == 2 && args->value(0)->isMap()) {
-	YCPValue value = args->value(0)->asMap()->value(args->value(1));
-	return YCPBoolean(!value.isNull());
+    if (args->size () == 2 && args->value (0)->isMap ())
+    {
+	return YCPBoolean (args->value(0)->asMap()->haskey(args->value(1)));
     }
 
     if (args->size () == 2 && args->value (0)->isVoid ())
@@ -38,7 +38,7 @@ YCPValue evaluateHasKey (YCPInterpreter *interpreter, const YCPList& args)
 	return YCPBoolean (false);
     }
 
-    return YCPNull();
+    return YCPNull ();
 }
 
 
