@@ -31,6 +31,8 @@ class YProgressBar : public YWidget
 {
 public:
 
+    typedef long long Value_t;
+    
     /**
      * Constructor.
      */
