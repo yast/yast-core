@@ -199,6 +199,7 @@ void PkgModuleFunctions::registerFunctions()
 
     REGISTERFUNCTIONCALL1 ( 123,	Pkg, CallbackYouError);
     REGISTERFUNCTIONCALL1 ( 124,	Pkg, CallbackYouLog);
+    REGISTERFUNCTIONCALL1 ( 125,	Pkg, CallbackYouMessage);
  }
 
 ///////////////////////////////////////////////////////////////////

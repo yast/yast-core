@@ -626,8 +626,40 @@ namespace Y2PMRecipients {
 	callback.addStr( text );
 	callback.addStr( details );
         string result = callback.evaluateStr();
+        INT << "callback result: " << result << endl;
+        DBG << "callback result: " << result << endl;
         if ( result == "" ) return PMError();
-        else return PMError::E_error;
+        if ( result == "abort" ) return YouError::E_user_abort;
+        if ( result == "skip" ) return YouError::E_user_skip;
+        if ( result == "skipall" ) return YouError::E_user_skip_all;
+        if ( result == "retry" ) return YouError::E_user_retry;
+        return PMError::E_error;
+      }
+      return YouError::E_callback_missing;
+    }
+
+    virtual PMError showMessage( const string &type,
+                                 const list<PMYouPatchPtr> &patches )
+    {
+      D__ << "you showmessage: " << type << endl;
+      CB callback( ycpcb( YCPCallbacks::CB_YouMessage ) );
+      if ( callback._set ) {
+	callback.addStr( type );
+        
+        YCPList patchesArg;
+        list<PMYouPatchPtr>::const_iterator it;
+        for( it = patches.begin(); it != patches.end(); ++it ) {
+          YCPMap patch = PkgModuleFunctions::YouPatch( *it );
+          patchesArg.add( patch );
+        }
+
+        callback._func->appendParameter( patchesArg );
+        
+        string result = callback.evaluateStr();
+        if ( result == "" ) return PMError();
+        if ( result == "abort" ) return YouError::E_user_abort;
+        if ( result == "skip" ) return YouError::E_user_skip;
+        return PMError::E_error;
       }
       return YouError::E_callback_missing;
     }
@@ -824,7 +856,6 @@ YCPValue PkgModuleFunctions::CallbackSourceChange( const YCPString& args ) {
 }
 
 YCPValue PkgModuleFunctions::CallbackYouProgress( const YCPString& args ) {
-  y2internal("CallbackYouProgress");
   return SET_YCP_CB( CB_YouProgress, args );
 }
 
@@ -833,12 +864,14 @@ YCPValue PkgModuleFunctions::CallbackYouPatchProgress( const YCPString& args ) {
 }
 
 YCPValue PkgModuleFunctions::CallbackYouError( const YCPString& args ) {
-  y2internal("CallbackYouError");
   return SET_YCP_CB( CB_YouError, args );
 }
 
+YCPValue PkgModuleFunctions::CallbackYouMessage( const YCPString& args ) {
+  return SET_YCP_CB( CB_YouMessage, args );
+}
+
 YCPValue PkgModuleFunctions::CallbackYouLog( const YCPString& args ) {
-  y2internal("CallbackYouLog");
   return SET_YCP_CB( CB_YouLog, args );
 }
 

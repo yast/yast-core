@@ -153,6 +153,7 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue CallbackYouProgress (const YCPString& func);
 	YCPValue CallbackYouPatchProgress (const YCPString& func);
 	YCPValue CallbackYouError (const YCPString& func);
+	YCPValue CallbackYouMessage (const YCPString& func);
 	YCPValue CallbackYouLog (const YCPString& func);
         YCPValue CallbackYouExecuteYcpScript (const YCPString& func);
         YCPValue CallbackYouScriptProgress (const YCPString& func);
@@ -298,6 +299,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouProgress, 	"void (string)",String,		PkgModuleFunctions, CallbackYouProgress);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouPatchProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouPatchProgress);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouError, 	"void (string)",String,		PkgModuleFunctions, CallbackYouError);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackYouMessage, 	"void (string)",String,		PkgModuleFunctions, CallbackYouMessage);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouLog,          "void (string)",String,	        PkgModuleFunctions, CallbackYouLog);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouExecuteYcpScript, "void (string)",String,	PkgModuleFunctions, CallbackYouExecuteYcpScript);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouScriptProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouScriptProgress);
@@ -451,8 +453,9 @@ class PkgModuleFunctions : public Y2Namespace
 
 	virtual Y2Function* createFunctionCall (const string name);
 
+        static YCPMap YouPatch( const PMYouPatchPtr &patch );
+
     protected:
-        YCPMap YouPatch( const PMYouPatchPtr &patch );
 	PMYouServer convertServerObject( const YCPMap &serverMap );
 
 };

@@ -77,6 +77,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
       CB_YouProgress,
       CB_YouPatchProgress,
       CB_YouError,
+      CB_YouMessage,
       CB_YouLog,
       CB_YouExecuteYcpScript,
       CB_YouScriptProgress
@@ -109,6 +110,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	ENUM_OUT( YouProgress );
 	ENUM_OUT( YouPatchProgress );
 	ENUM_OUT( YouError );
+        ENUM_OUT( YouMessage );
 	ENUM_OUT( YouLog );
 	ENUM_OUT( YouExecuteYcpScript );
 	ENUM_OUT( YouScriptProgress );

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar  1 12:39:53 CET 2004 - cschum@suse.de
+
+- WFM: Added Pkg::CallbackYouMessage, Pkg::CallbackYouError and
+       Pkg::CallbackYouLog.
+
+-------------------------------------------------------------------
 Mon Mar  1 11:25:35 CET 2004 - kkaempf@suse.de
 
 - properly add all device resources to output list (#35190)
