@@ -196,7 +196,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
      * all elements of the first list and all of the second list. Identical
      * elements are dropped. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
-     * See also "<tt>mergelist</tt>".
+     * See also "<tt>merge</tt>".
      *
      * Examples: <pre>
      * union ([1, 2], [3, 4]) -> [1, 2, 3, 4]
@@ -245,7 +245,7 @@ static YCPValue
 l_mergelist (const YCPList &list1, const YCPList &list2)
 {
     /**
-     * @builtin mergelist (list l1, list l2) -> list
+     * @builtin merge (list l1, list l2) -> list
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
      * elements are preserved. The order of the elements in the new list is
