@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 23 16:51:23 CET 2004 - sh@suse.de
+
+- Fixed blocker bug #36779: Segfault on UI::QueryWidget(ComboBox) 
+
+-------------------------------------------------------------------
 Tue Mar 23 15:36:21 CET 2004 - kkaempf@suse.de
 
 - don't complain about bad cast if the to-be-casted expression
