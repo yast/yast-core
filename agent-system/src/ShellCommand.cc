@@ -173,7 +173,7 @@ int shellcommand_background(const string &command)
     }
 
     /* return success */
-    return 0;
+    return child;
 }
 
 
