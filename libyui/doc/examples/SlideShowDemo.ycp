@@ -44,7 +44,7 @@
 	return sformat( "SuSE Linux Professional CD %1", mediaNo );
     }
 
-    
+
     define void mediaChange( integer cdNo )
     {
 	UI::ChangeWidget(`nextMedia, `Value, "" );
@@ -152,6 +152,18 @@
     }
 
 
+    define string pkgInfo( string pkgName, string pkgVersion, float pkgSizeMB, string pkgSummary )
+    {
+	string info = sformat( "%1-%2 (%3 MB)", pkgName, pkgVersion, pkgSizeMB );
+
+	if ( size( pkgSummary ) > 0 )
+	    info = info + " - " + pkgSummary;
+
+	return info;
+    }
+
+
+
     if ( ! UI::HasSpecialWidget(`Wizard) ||
 	 ! UI::HasSpecialWidget(`DumbTab ) )
     {
@@ -217,18 +229,42 @@ the respective function to display the list.</p>					\
     UI::WizardCommand(`SetBackButtonLabel( "S&tep" ) );
 
     term slideShowPage =
-	`VBox(
-	      `HBox(
-		    `RichText(`id(`slideText), slide_text ),
-		    `HSpacing( 0.5 ),
-		    `VBox(
-			  `Label(`id(`totalRemaining), totalRemainingTime() ),
-			  `VMultiProgressMeter(`id(`progress), rpms )
-			  )
-		    ),
+	`VBox( `id(`slideShowPage),
+	      `VWeight( 1,	// lower layout priority
+			`HBox(
+			      `RichText(`id(`slideText), slide_text ),
+			      `HSpacing( 0.5 ),
+			      `VBox(
+				    `Label(`id(`totalRemaining), totalRemainingTime() ),
+				    `VWeight( 1, `VMultiProgressMeter(`id(`progress), rpms ) )
+				    )
+			      )
+			),
 	      `VSpacing( 0.3 ),
 	      `Label(`id(`nextMedia ), `opt( `hstretch), "" )
 	      );
+
+
+    term detailsPage =
+	`VBox(`id(`detailsPage ),
+	      `VWeight( 1,	// lower layout priority
+			`HBox(
+			      `VBox(
+				    `VWeight( 1, `Label(`opt(`vstretch, `hstretch), "CD Info" ) ),
+				    `VWeight( 1, `LogView(`id(`pkgLog ),  "", 6, 100 ) ),
+				    `ProgressBar(`id(`progressCurrentPackage), "", 100, 42 )
+				    ),
+			      `HSpacing( 0.5 ),
+			      `VBox(
+				    `Label(`id(`totalRemaining), totalRemainingTime() ),
+				    `VWeight( 1, `VMultiProgressMeter(`id(`progress), rpms ) )
+				    )
+			      )
+			),
+	      `VSpacing( 0.3 ),
+	      `Label(`id(`nextMedia ), `opt( `hstretch), "" )
+	      );
+
 
     UI::ReplaceWidget(`id(`contents),
 		      `DumbTab( [ `item(`id(`showSlideShow), "Slide Sho&w" ),
@@ -259,12 +295,26 @@ the respective function to display the list.</p>					\
 	{
 	    useTimeout = ! useTimeout;
 	    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "&Start" ) );
-	    
+
 	    if ( currentCd < 0 )
 		currentCd = 1;
 	}
-	if ( button == `back 	)	delta = 10;
-	if ( button == `timeout	)	delta = 100;
+	if      ( button == `back 	)	delta = 10;
+	else if ( button == `timeout	)	delta = 100;
+	else if ( button == `showSlideShow )	UI::ReplaceWidget(`tabContents, slideShowPage );
+	else if ( button == `showDetails   )
+	{
+	    y2milestone( "detailsPage:\n%1", detailsPage );
+	    UI::ReplaceWidget(`tabContents, detailsPage   );
+
+
+	    UI::ChangeWidget(`pkgLog, `LastLine,
+			     pkgInfo( "ClosedOffice", "0.8.3", 830.7, "The infamouse office suite" )
+			     + "\n" + pkgInfo( "cool-macs", "27.9.1", 250.3, "An editor-like OS" )
+			     + "\n" + pkgInfo( "hypercool", "1.3.7", 147.3, "A hyper cool gizmofier" )
+			     );
+	    UI::RecalcLayout();
+	}
 
 	if ( delta > 0 )
 	{
