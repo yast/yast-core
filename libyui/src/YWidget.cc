@@ -194,7 +194,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 }
 
 
-YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newvalue )
+YCPValue YWidget::changeWidgetTerm( const YCPTerm & property, const YCPValue & newvalue )
 {
     y2warning( "Widget %s: Couldn't change unkown widget property %s to %s",
 	       id()->toString().c_str(), property->toString().c_str(), newvalue->toString().c_str() );
@@ -217,7 +217,7 @@ YCPValue YWidget::queryWidget( const YCPSymbol & property )
 }
 
 
-YCPValue YWidget::queryWidget( const YCPTerm & property )
+YCPValue YWidget::queryWidgetTerm( const YCPTerm & property )
 {
     y2warning( "Widget %s: Couldn't query unkown widget property %s",
 	       id()->toString().c_str(), property->toString().c_str() );

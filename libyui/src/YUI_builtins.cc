@@ -797,7 +797,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
     else
     {
 	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
-	YCPValue result = widget->changeWidget( property->asTerm(), new_value );
+	YCPValue result = widget->changeWidgetTerm( property->asTerm(), new_value );
 	unblockEvents();
 
 	return result;
@@ -834,7 +834,7 @@ YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & p
     if ( property->isSymbol() )
 	return widget->queryWidget( property->asSymbol() );
     else
-	return widget->queryWidget( property->asTerm() );
+	return widget->queryWidgetTerm( property->asTerm() );
 }
 
 

@@ -121,7 +121,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	cellChanged( item_nr, colnum, YCPString( newtext ) );
 	return YCPBoolean( true );
     }
-    else return YWidget::changeWidget( property, newvalue );
+    else return YWidget::changeWidgetTerm( property, newvalue );
 }
 
 
@@ -154,7 +154,7 @@ YCPValue YTable::queryWidget( const YCPTerm & property )
 	if ( item_nr < 0 ) return YCPVoid();
 	else	       return rows[ item_nr ].makeTerm();
     }
-    else return YWidget::queryWidget( property );
+    else return YWidget::queryWidgetTerm( property );
 }
 
 
