@@ -42,6 +42,7 @@ html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
 	cp -a $(ydatadir)/docbook/images html
 	cp -a $(srcdir)/examples html 
+	-find html -name .svn -type d -exec rm -rf '{}' \; 
 
 CLEANFILES = $(xmlfiles) output.xml
 
@@ -52,3 +53,4 @@ install-data-local:
 	mkdir -p $(DESTDIR)$(htmldir)
 	cp -a $(srcdir)/html/images $(DESTDIR)$(htmldir)
 	cp -a $(srcdir)/examples $(DESTDIR)$(htmldir)
+	-find $(DESTDIR)$(htmldir) -name .svn -type d -exec rm -rf '{}' \; 
