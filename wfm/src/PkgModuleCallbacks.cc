@@ -447,6 +447,19 @@ PkgModuleFunctions::CallbackDonePackage(YCPList args)
 }
 
 
+
+/**
+ * pass callback function to Source
+ *  used for every source, defined here because mediaChangeCallbackFunc is static
+ *  used also after changing the callback function in PkgModuleFunctions::CallbackMediaChange(...)
+ */
+void
+PkgModuleFunctions::SetMediaCallback (InstSrcManager::ISrcId source_id)
+{
+    (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
+}
+
+
 /**
  * @builtin Pkg::CallbackMediaChange (integer source, string fun) -> nil
  *
@@ -455,16 +468,36 @@ PkgModuleFunctions::CallbackDonePackage(YCPList args)
 YCPValue
 PkgModuleFunctions::CallbackMediaChange (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+    string name;
 
-    if ((args->size() != 2)
-	|| !(args->value(1)->isString()))
+    // allow omission of 'src' argument. Since we can handle one callback
+    // function at most, passing a src argument implies a per-source callback
+    // which isn't implemented anyway.
+
+    if ((args->size() == 1)
+	&& (args->value(0)->isString()))
     {
-	return YCPError ("Bad args to Pkg::CallbackMediaChange");
+	name = args->value(0)->asString()->value();
     }
-    string name = args->value(1)->asString()->value();
+
+    // optional source
+    InstSrcManager::ISrcId source_id;
+
+    // if name wasn't set above, check for (source, name) arguments
+    if (name.empty())
+    {
+	source_id = getSourceByArgs (args, 0);
+	if (!source_id)
+	    return YCPVoid();
+
+	if ((args->size() != 2)
+	    || !(args->value(1)->isString()))
+	{
+	    return YCPError ("Bad args to Pkg::CallbackMediaChange");
+	}
+	name = args->value(1)->asString()->value();
+    }
+
     string::size_type colonpos = name.find("::");
     if (colonpos != string::npos)
     {
@@ -476,7 +509,12 @@ PkgModuleFunctions::CallbackMediaChange (YCPList args)
 	mediaChangeCallbackModule = "";
 	mediaChangeCallbackSymbol = YCPSymbol (name, false);
     }
-    (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
+
+    // if source_id given, set it's callback
+
+    if (source_id)
+	SetMediaCallback (source_id);
+
     return YCPVoid();
 }
 

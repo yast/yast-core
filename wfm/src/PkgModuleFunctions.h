@@ -126,6 +126,7 @@ class PkgModuleFunctions
 	YCPValue CallbackSourceChange (YCPList args);
 	YCPValue CallbackYouProgress (YCPList args);
 	YCPValue CallbackYouPatchProgress (YCPList args);
+	void SetMediaCallback (InstSrcManager::ISrcId source_id);
 
 	// source related
         YCPValue SourceStartManager (YCPList args);

@@ -107,6 +107,8 @@ PkgModuleFunctions::addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable)
 	    if (enable)
 		_y2pm.instSrcManager().enableSource (*it);
 
+	    SetMediaCallback (*it);			// inform about callbacks
+	    
 	} // loop over InstSrcManager
 
 

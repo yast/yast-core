@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 28 16:46:33 CET 2003 - kkaempf@suse.de
+
+- make MediaChangeCallback global for all sources (part of #24201)
+
+-------------------------------------------------------------------
 Fri Feb 28 15:26:15 CET 2003 - sh@suse.de
 
 - Added optional "floppyDevice" parameter to YPackageSelector widget
