@@ -4,28 +4,26 @@
 // this time with two sliders
 
 {
-    textdomain "base";
-
     // Check for availability of required widgets
-    
+
     if ( ! UI::HasSpecialWidget(`Slider) ||
 	 ! UI::HasSpecialWidget(`BarGraph ) )
     {
 	UI::OpenDialog(
-		   `VBox( 
+		   `VBox(
 			 `Label("Error: This UI doesn't support the required special widgets!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
 	UI::UserInput();
 	UI::CloseDialog();
-	
+
 	return;
     }
 
-    
+
     // Initialize values
-    
+
     string  unit			= "MB";
     integer win_used			= 350;
     integer total_free			= 1500;
@@ -37,7 +35,7 @@
 
 
     // Create the dialog
-    
+
     UI::OpenDialog(
 	       `VSquash(
 			`VBox(
@@ -51,7 +49,7 @@
 					 ]
 					 ),
 			      `VSpacing(2),
-		     
+
 			      `Left( `Label( _("After installation:") ) ),
 			      `BarGraph( `id(`graph), `opt(`vstretch),
 					 [ win_used, win_free, linux_size ],
@@ -81,7 +79,7 @@
     // Event processing loop - left only via the "close" button
     // or the window manager close button / function.
     any widget = nil;
-                              
+
     do
     {
 	widget = UI::UserInput();
@@ -108,6 +106,6 @@
 	    UI::ChangeWidget(`id(`win_free), `Value, win_free );
 	}
     } while ( widget != `close && widget != `cancel );
-	
+
     UI::CloseDialog();
 }
