@@ -7,7 +7,6 @@ htmldir = $(docdir)/libycp
 html_DATA =			\
 	YCP-builtins.html	\
 	changes.html		\
-	traps.html		\
 	logging.html
 
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
