@@ -58,8 +58,10 @@ following body:
 <p>Where
 <dl>
 <dt><i>source</i>
-<dd>is File ( <i>string</i> ) or Run ( <i>string</i> )<br>FIXME:
-explain arg(n)
+<dd>is File ( <i>string</i> ) or Run ( <i>string</i> )<br>
+<b>`arg (n)</b>: actually, there can be more arguments to Run - strings mixed
+with `arg (n) terms, and these are substituted at Read time,
+eg. Read&nbsp;(.foo, ["arg0", "arg1", "etc"])
 <dt><i>comment-chars</i>
 <dd>is a <i>string</i> of comment characters. Lines beginning with any of
 these characters are discarded. If Fillup ( <i>string</i> ) is
