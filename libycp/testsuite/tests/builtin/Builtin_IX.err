@@ -63,8 +63,8 @@ Parsed:
 ----------------------------------------------------------------------
 (filter (integer k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == tointeger (v)); }) == $[3:3, 5:5])
 ----------------------------------------------------------------------
-[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert a to an integer
-[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert b to an integer
+[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert 'a' to an integer
+[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert 'b' to an integer
 Parsed:
 ----------------------------------------------------------------------
 (filter (integer k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == 2); }) == $[2:"b"])

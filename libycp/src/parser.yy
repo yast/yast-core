@@ -103,7 +103,7 @@ static void yyerror_with_name		(Parser *parser, int lineno, const char *s);
 static void yyerror_with_file		(Parser *parser, int lineno, const char *s);
 static void yyerror_with_tableentry	(Parser *parser, int lineno, const char *s, TableEntry *entry);
 static void yywarning_with_tableentry	(Parser *parser, int lineno, TableEntry *entry);
-static void yyerror_type_mismatch	(Parser *parser, int lineno, constTypePtr expected_type, constTypePtr seen_type);
+static void yyerror_type_mismatch	(Parser *parser, int lineno, const char *s, constTypePtr expected_type, constTypePtr seen_type);
 static void yyerror_missing_argument	(Parser *parser, int lineno, constTypePtr type);
 static void yyerror_assign_const	(Parser *parser, int lineno, const char *s);
 static void yyerror_cant_cast		(Parser *parser, int lineno, constTypePtr from, constTypePtr to);
@@ -120,7 +120,7 @@ static void yyerror_no_module		(Parser *parser, int lineno, const char *module);
 #define yyFerror(name,lineno)			yyerror_with_file (p_parser, lineno, name)
 #define yyTerror(text,lineno,tentry)		yyerror_with_tableentry (p_parser, lineno, text, tentry)
 #define yyTwarning(tentry)			yywarning_with_tableentry (p_parser, 0, tentry)
-#define yyTypeMismatch(expected,seen,lineno)	yyerror_type_mismatch (p_parser, lineno, expected, seen)
+#define yyTypeMismatch(text,expected,seen,lineno)	yyerror_type_mismatch (p_parser, lineno, text, expected, seen)
 #define yyMissingArgument(type,lineno)		yyerror_missing_argument (p_parser, lineno, type)
 #define yyCantCast(from,to,lineno)		yyerror_cant_cast (p_parser, lineno, from, to)
 #define yyNoModule(module,lineno)		yyerror_no_module (p_parser, lineno, module)
@@ -376,7 +376,11 @@ bracket_expression:
 			{
 			    if (! paramType->isInteger ())
 			    {
-				yyTypeMismatch (Type::Integer, paramType, $1.l);
+				yyTypeMismatch ((string ("Bracket parameter '")
+						 + params->value(index)->toString()
+						 + string ("' to '")
+						 + $1.c->toString()
+						 + string ("' has wrong type")).c_str(), Type::Integer, paramType, $1.l);
 				$$.t = 0;
 				break;
 			    }
@@ -389,7 +393,11 @@ bracket_expression:
 			{
 			    if (paramType->match (((constMapTypePtr)cur)->keytype ()) == -1)
 			    {
-				yyTypeMismatch (((constMapTypePtr)cur)->keytype (), paramType, $1.l);
+				yyTypeMismatch ((string ("Bracket parameter '")
+						 + params->value(index)->toString()
+						 + string ("' to '")
+						 + $1.c->toString()
+						 + string ("' has wrong type")).c_str(), ((constMapTypePtr)cur)->keytype (), paramType, $1.l);
 				$$.t = 0;
 				break;
 			    }
@@ -425,7 +433,9 @@ bracket_expression:
 #if DO_DEBUG
 		    y2debug ("default type '%s', determined type '%s'", $5.t->toString().c_str(), $$.t->toString().c_str());
 #endif
-		    yyTypeMismatch ($$.t, $5.t, $1.l);		// -> then we have a type error
+		    yyTypeMismatch ((string ("Bracket default to '")
+				     + $1.c->toString()
+				     + string ("' has wrong type")).c_str(), $$.t, $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
 		else
@@ -532,7 +542,7 @@ compact_expression:
 		// if default is nil, the type can't be seen in a YCPValue
 		if (!$3.t->isMap())
 		{
-		    yyTypeMismatch (Type::Map, $3.t, $3.l);
+		    yyTypeMismatch ("First parameter to 'lookup' has wrong type", Type::Map, $3.t, $3.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -540,7 +550,7 @@ compact_expression:
 		// check the type of the index
 		if ($5.t->match ( (constMapTypePtr($3.t))->keytype())== -1)
 		{
-		    yyTypeMismatch ((constMapTypePtr($3.t))->keytype(), $5.t, $1.l);		// -> then we have a type error
+		    yyTypeMismatch ("Second parameter to 'lookup' has wrong type", (constMapTypePtr($3.t))->keytype(), $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
 
@@ -548,7 +558,7 @@ compact_expression:
 		if (! $7.t->isVoid ()				// default is not 'nil'
 		    && $7.t->match ((constMapTypePtr($3.t))->valuetype()) == -1)	// and it doesn't match the determined type
 		{
-		    yyTypeMismatch ((constMapTypePtr($3.t))->valuetype(), $7.t, $1.l);		// -> then we have a type error
+		    yyTypeMismatch ("Third parameter to 'lookup' has wrong type", (constMapTypePtr($3.t))->valuetype(), $7.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
 
@@ -637,7 +647,7 @@ compact_expression:
 
 		if ($6.t->match (Type::Integer) < 0)
 		{
-		    yyTypeMismatch (Type::Integer, $6.t, $6.l);
+		    yyTypeMismatch ("Last parameter to _(...) has wrong type", Type::Integer, $6.t, $6.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -836,8 +846,7 @@ infix_expression:
 
 		if (!$1.t->isBoolean())
 		{
-		    yyLerror ("Expression before '?' must be boolean", $1.l);
-		    yyTypeMismatch (Type::Boolean, $1.t, $1.l);
+		    yyTypeMismatch ("Expression before '?' must be boolean", Type::Boolean, $1.t, $1.l);
 		    $$.t = 0;
 		}
 		else if ($1.c->kind() == YCode::ycBoolean)
@@ -1121,8 +1130,7 @@ statements:
 			}
 			else if (match < 0)
 			{
-			    yyLerror ("Mismatched return type in block", $2.l);
-			    yyTypeMismatch (p_parser->m_block_stack->type, $2.t, $2.l);
+			    yyTypeMismatch ("Mismatched return type in block", p_parser->m_block_stack->type, $2.t, $2.l);
 			    $$.t = 0;
 			    break;
 			}
@@ -1332,8 +1340,15 @@ statement:
 
 		    ee.setLinenumber ($1.l);			// if YSImport logs an error
 		    string module = name;
-		    $$.c = new YSImport (module, $1.l);
-		    
+		    YSImport *imp = new YSImport (module, $1.l);
+		    if (imp->name().empty())
+		    {
+			yyLerror ("Import failed", $1.l);
+			$$.t = 0;
+			break;
+		    }
+		    $$.c = imp;
+
 		    Y2Namespace *name_space = ((YSImportPtr)$$.c)->nameSpace();
 		    if (name_space == 0)
 		    {
@@ -1487,8 +1502,7 @@ control_statement:
 
 		if (!$3.t->isBoolean())
 		{
-		    yyLerror ("'if' expression not boolean", $3.l);
-		    yyTypeMismatch (Type::Boolean, $3.t, $3.l);
+		    yyTypeMismatch ("'if' expression not boolean", Type::Boolean, $3.t, $3.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -1546,8 +1560,7 @@ control_statement:
 
 		if (!$3.t->isBoolean())
 		{
-		    yyLerror ("'while' expression not boolean", $3.l);
-		    yyTypeMismatch (Type::Boolean, $3.t, $3.l);
+		    yyTypeMismatch ("'while' expression not boolean", Type::Boolean, $3.t, $3.l);
 		    $$.t = 0;
 		}
 		else
@@ -1612,8 +1625,7 @@ control_statement:
 
 		if (!$7.t->isBoolean())
 		{
-		    yyLerror ("'do-while' expression not boolean", $7.l);
-		    yyTypeMismatch (Type::Boolean, $7.t, $7.l);
+		    yyTypeMismatch ("'do-while' expression not boolean", Type::Boolean, $7.t, $7.l);
 		    $$.t = 0;
 		}
 		else
@@ -1652,8 +1664,7 @@ control_statement:
 
 		if (!$7.t->isBoolean())
 		{
-		    yyLerror ("'repeat-until' expression not boolean", $7.l);
-		    yyTypeMismatch (Type::Boolean, $7.t, $7.l);
+		    yyTypeMismatch ("'repeat-until' expression not boolean", Type::Boolean, $7.t, $7.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -1886,8 +1897,7 @@ definition:
 			}
 		        if (match < 0)
 			{
-			    yyLerror ("type mismatch in variable definition", $1.l);
-			    yyTypeMismatch ($1.t, $3.t, $1.l);
+			    yyTypeMismatch ("type mismatch in variable definition", $1.t, $3.t, $1.l);
 			    $$.t = 0;
 			    break;
 //			    tentry->remove();
@@ -2039,7 +2049,7 @@ function_start:
 			if (! ftype->equals (prototype))		// check if definition is equivalent
 			{
 			    yyTerror ("Redeclaration with different type", $1.l, $1.v.tval);
-			    yyTypeMismatch (prototype, ftype, $1.l);
+			    yyTypeMismatch ("", prototype, ftype, $1.l);
 			    $$.t = 0;
 			    break;
 			}
@@ -2101,7 +2111,7 @@ opt_global_identifier:
 		    if (ftype->returnType()->match ($3.t) != 0)
 		    {
 			yyTerror ("Redeclaration with different type", $4.l, $4.v.tval);
-			yyTypeMismatch (ftype->returnType(), $3.t, $4.l);
+			yyTypeMismatch ("", ftype->returnType(), $3.t, $4.l);
 			$$.t = 0;
 			break;
 		    }
@@ -2365,8 +2375,7 @@ assignment:
 		    }
 		    if (match < 0)
 		    {
-			yyLerror ("type mismatch in assignment", $1.l);
-			yyTypeMismatch ($1.t, $3.t, $1.l);
+			yyTypeMismatch ("type mismatch in assignment", $1.t, $3.t, $1.l);
 			$$.t = 0;
 			break;
 //			tentry->remove();
@@ -2454,7 +2463,7 @@ assignment:
 			{
 			    if (! paramType->isInteger ())
 			    {
-				yyTypeMismatch (Type::Integer, paramType, $1.l);
+				yyTypeMismatch ("Bracket parameter has wrong type", Type::Integer, paramType, $1.l);
 				cur = 0;
 				break;
 			    }
@@ -2467,7 +2476,7 @@ assignment:
 			{
 			    if (paramType->match (((constMapTypePtr)cur)->keytype ()) == -1)
 			    {
-				yyTypeMismatch (((constMapTypePtr)cur)->keytype (), paramType, $1.l);
+				yyTypeMismatch ("Bracket parameter has wrong type", ((constMapTypePtr)cur)->keytype (), paramType, $1.l);
 				cur = 0;
 				break;
 			    }
@@ -2480,7 +2489,7 @@ assignment:
 			{
 			    if (! paramType->isInteger ())
 			    {
-				yyTypeMismatch (Type::Integer, paramType, $1.l);
+				yyTypeMismatch ("Bracket parameter has wrong type", Type::Integer, paramType, $1.l);
 				cur = 0;
 				break;
 			    }
@@ -2510,8 +2519,7 @@ assignment:
 		    }
 		    if (match != 0)
 		    {
-			yyLerror ("type mismatch in bracket assignment", $1.l);
-			yyTypeMismatch(cur, $6.t, $1.l);
+			yyTypeMismatch ("type mismatch in bracket assignment", cur, $6.t, $1.l);
 		    }
 #if 0
 		    if (index < params->count ())		// we hit a non-list/non-map before end of bracket
@@ -2925,7 +2933,6 @@ function_call:
 
 			    if (finalT != 0)				// error not shown yet
 			    {
-				yyLerror ((string ("Wrong parameters in call to ") + string (builtin->decl()->name) + string ("(...)")).c_str(), $4.l);
 				constTypePtr seen = bt ? (constTypePtr)(bt->parameters()) : builtin->type();
 				constTypePtr expected;
 				if (finalT->isError())
@@ -2941,7 +2948,7 @@ function_call:
 				{
 				    expected = finalT;
 				}
-				yyTypeMismatch (expected, seen, $4.l);
+				yyTypeMismatch ((string ("Wrong parameters in call to ") + string (builtin->decl()->name) + string ("(...)")).c_str(), expected, seen, $4.l);
 			    }
 
 			    $$.t = 0;
@@ -3472,9 +3479,14 @@ yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 
 
 static void
-yyerror_type_mismatch (Parser *parser, int lineno, constTypePtr expected_type, constTypePtr seen_type)
+yyerror_type_mismatch (Parser *parser, int lineno, const char *s, constTypePtr expected_type, constTypePtr seen_type)
 {
     parser->m_parser_errors++;
+    if (s && *s)
+    {
+	parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->m_lineno);
+    }
+
     if (expected_type->isUnspec())
     {
 	parser->scanner()->logError ("No matching function", lineno);
@@ -3695,8 +3707,7 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
     if ((e1_match_e2 < 0)						// not comparable types
 	&& (e2_match_e1 < 0))
     {
-	yyerror_with_lineinfo (parser, e2->l, "Types are not comparable");
-	yyerror_type_mismatch (parser, e2->l, e1->t, e2->t);
+	yyerror_type_mismatch (parser, e2->l, "Types are not comparable", e1->t, e2->t);
 	result->t = 0;
 	return;
     }
@@ -3906,8 +3917,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	}
 	else
 	{
-	    yyerror_with_lineinfo (parser, parm->l, (string ("Parameter type mismatch") + name).c_str());
-	    yyerror_type_mismatch (parser, parm->l, t, parm->t);
+	    yyerror_type_mismatch (parser, parm->l, (string ("Parameter type mismatch") + name).c_str(), t, parm->t);
 	    yyerror_with_code (parser, parm->l, parm->c, parm->t);
 	}
     }

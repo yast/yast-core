@@ -1,3 +1,4 @@
+[Parser] tests/expressions/Bracket-typeerror.ycp:3 Bracket default to 'l' has wrong type
 [Parser] tests/expressions/Bracket-typeerror.ycp:3 Expected 'term', seen 'list'.
 Parsed:
 ----------------------------------------------------------------------

@@ -50,6 +50,7 @@ Parsed:
 ----------------------------------------------------------------------
 $[1:"a", 2:"bc"][1]:"no"
 ----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-Map.ycp:36 Third parameter to 'lookup' has wrong type
 [Parser] tests/builtin/Builtin-Map.ycp:36 Expected 'string', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------
