@@ -105,6 +105,11 @@ protected:
     void recordYcpCodeLocation();
 
     /**
+     * Record a time stamp to match with y2logs
+     **/
+    void recordTimeStamp();
+
+    /**
      * Record a human-readable identification of the dialog (its heading etc.)
      **/
     void recordDialogDebugLabel();

@@ -18,6 +18,7 @@
 
 
 #include <stdio.h>
+#include <sys/time.h>
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPTerm.h>
@@ -33,6 +34,11 @@
 #include "YMacroRecorder.h"
 #include "YUIComponent.h"
 #include "YUI.h"
+
+#ifndef Y2LOG_DATE
+#   define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
+#endif
+
 
 
 #define YMACRO_INDENT "    "	// 4 blanks
@@ -140,10 +146,21 @@ void YMacroRecorder::recordYcpCodeLocation()
 			 functionName.c_str(),
 			 frame->linenumber );
 	    }
-	
-	    fprintf( _macroFile, "\n" );
 	}
     }
+}
+
+
+void YMacroRecorder::recordTimeStamp()
+{
+    time_t now_seconds = time (NULL);
+    struct tm *tm_now = localtime( &now_seconds );
+    char timeStamp[80];		// that's big enough
+    strftime( timeStamp, sizeof( timeStamp ), Y2LOG_DATE, tm_now );
+
+    fprintf( _macroFile, "%s%s// %s\n",
+	     YMACRO_INDENT, YMACRO_INDENT,
+	     timeStamp );
 }
 
 
@@ -169,6 +186,8 @@ void YMacroRecorder::beginBlock()
     recordDialogDebugLabel();
     fprintf( _macroFile, "%s%s//\n", YMACRO_INDENT, YMACRO_INDENT );
     recordYcpCodeLocation();
+    recordTimeStamp();
+    fprintf( _macroFile, "\n" );
 }
 
 
