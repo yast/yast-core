@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb 17 16:23:47 CET 2004 - mvidner@suse.cz
+
+- reduced SymbolTable size from 211 to 31
+- count objects using MemUsage (liby2util).
+
+-------------------------------------------------------------------
 Tue Feb 17 09:10:40 CET 2004 - mvidner@suse.cz
 
 - fixed memory leaks:
