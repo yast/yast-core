@@ -19,7 +19,11 @@ INCLUDES =					\
 noinst_PROGRAMS = runmodules
 
 runmodules_SOURCES = runmodules.cc
-runmodules_LDADD = -lscr -ly2 -lycp -ly2util
+runmodules_LDADD = -ly2util			\
+	../../liby2/src/liby2.la		\
+	../../libycp/src/libycp.la		\
+	../../libscr/src/libscr.la
+
 runmodules_LDFLAGS = 					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

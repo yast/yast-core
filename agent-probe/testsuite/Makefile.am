@@ -18,7 +18,11 @@ INCLUDES =					\
 noinst_PROGRAMS = runag_hwprobe
 
 runag_hwprobe_SOURCES = runag_hwprobe.cc
-runag_hwprobe_LDADD = -ly2 -lycp -lscr -ly2util
+runag_hwprobe_LDADD = 				\
+	-ly2util				\
+	../../liby2/src/liby2.la		\
+	../../libycp/src/libycp.la		\
+	../../libscr/src/libscr.la
 runag_hwprobe_LDFLAGS = 				\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

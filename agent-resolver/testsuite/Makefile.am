@@ -13,7 +13,12 @@ INCLUDES =					\
 noinst_PROGRAMS = y2ag_resolver
 y2ag_resolver_SOURCES = y2ag_resolver.cc
 
-y2ag_resolver_LDADD = -lscr -ly2 -lycp -ly2util
+y2ag_resolver_LDADD =                           \
+	-ly2util                                \
+	../../liby2/src/liby2.la                \
+	../../libycp/src/libycp.la              \
+	../../libscr/src/libscr.la
+
 y2ag_resolver_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

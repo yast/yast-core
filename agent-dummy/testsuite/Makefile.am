@@ -12,7 +12,11 @@ INCLUDES =		\
 noinst_PROGRAMS = y2ag_dummy
 
 y2ag_dummy_SOURCES = y2ag_dummy.cc
-y2ag_dummy_LDADD = -lscr -ly2 -lycp -ly2util
+y2ag_dummy_LDADD = 					\
+	../../liby2/src/liby2.la			\
+	../../libycp/src/libycp.la			\
+	../../libscr/src/libscr.la			\
+	-ly2util
 y2ag_dummy_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

@@ -20,7 +20,12 @@ INCLUDES =					\
 noinst_PROGRAMS = runag_system
 
 runag_system_SOURCES = runag_system.cc
-runag_system_LDADD = -ly2 -lycp -lscr -ly2util
+runag_system_LDADD =                            \
+	-ly2util                                \
+	../../liby2/src/liby2.la                \
+	../../libycp/src/libycp.la              \
+	../../libscr/src/libscr.la
+
 runag_system_LDFLAGS = 					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
