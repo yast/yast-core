@@ -2,6 +2,8 @@
 Tue Nov  9 07:47:05 CET 2004 - visnov@suse.cz
 
 - don't allow variable declaration for functions and terms (#40441) 
+- issue proper error when unable to create intermediate structures
+  on map/list/term assignment (#39236)
 
 -------------------------------------------------------------------
 Mon Nov  8 17:13:20 CET 2004 - visnov@suse.cz

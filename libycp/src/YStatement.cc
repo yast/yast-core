@@ -594,7 +594,14 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	
     if (current.isNull ())
     {
-	ycp2error ("Non-existent bracket parameter");
+	YCPList correct_until;
+	
+	for (int i = 0 ; i < idx ; i++)
+	{
+	    correct_until->add (arg->value (i));
+	}
+
+	ycp2error ("Intermediate structure with index %s does not exist", correct_until->toString ().c_str ());
 	return YCPNull ();
     }
 #if DO_DEBUG	
@@ -603,7 +610,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     YCPValue argval = arg->value (idx);
     if (argval.isNull())
     {
-	ycp2error ("Invalid bracket parameter");
+	ycp2error ("Invalid bracket parameter 'nil'");
 	return YCPNull ();
     }
 
@@ -611,7 +618,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     {
 	if (!argval->isInteger())
 	{
-	    ycp2error ("Invalid bracket parameter for list");
+	    ycp2error ("Invalid bracket parameter for list, expected integer, seen '%s'", argval->toString().c_str());
 	    return YCPNull ();
 	}
 
@@ -660,7 +667,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     {
 	if (!argval->isInteger())
 	{
-	    ycp2error ("Invalid bracket parameter for term");
+	    ycp2error ("Invalid bracket parameter for term, expected integer, seen '%s'", argval->toString().c_str());
 	    return YCPNull ();
 	}
 	YCPTerm term = current->asTerm();

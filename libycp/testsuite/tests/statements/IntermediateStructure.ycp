@@ -1,0 +1,8 @@
+# testcase for bug #39236
+# issue a proper runtime error when intermediate structures are not created yet
+
+{
+    map <string, map <string, integer> > m = $[];
+    m["a", "b"] = 1;
+}
+

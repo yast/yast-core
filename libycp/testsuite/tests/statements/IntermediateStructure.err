@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, map <string, integer>> m
+    // filename: "tests/statements/IntermediateStructure.ycp"
+    map <string, map <string, integer>> m = $[];
+    m["a", "b"] = 1;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/statements/IntermediateStructure.ycp:6 Intermediate structure with index ["a"] does not exist
