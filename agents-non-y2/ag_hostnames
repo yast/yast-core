@@ -125,6 +125,9 @@ function hostnames() {
     INTERFACE=$1
 
     BADLOOKUP=0
+    if [ $IP_ONLY != 0 ]; then
+	BADLOOKUP=4
+    fi
     broadcast_addr $INTERFACE; BROADCAST=$RETVAL
     if [ "$BROADCAST" ] ; then
 	broadcast_ping; IPS=$RETVAL
@@ -152,6 +155,7 @@ while true ; do
     read COMMAND || exit
     unset IFS
 
+    IP_ONLY=0
     case "$COMMAND" in
 	"result ("*)
 	    exit
@@ -165,6 +169,11 @@ while true ; do
 	    ;;
 	'Read (.rpc,'*)
 	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.rpc, *"\(.*\)")/\1/')
+	    hostnames -r "$SERVICE"
+	    ;;
+	'Read (.ip.rpc,'*)
+	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.ip.rpc, *"\(.*\)")/\1/')
+	    IP_ONLY=1
 	    hostnames -r "$SERVICE"
 	    ;;
 	'Read (.interface,'*)

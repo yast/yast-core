@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Sep 16 14:28:59 CEST 2003 - jsuchome@suse.cz
+
+- adapted ag_hostnames to return list of IP's (#30996)
+- 2.8.31
+
+-------------------------------------------------------------------
 Sun Sep 14 15:09:26 CEST 2003 - arvin@suse.de
 
 - implemented PkgReset function (bug #27970)
