@@ -1,8 +1,13 @@
 -------------------------------------------------------------------
+Mon Dec 02 11:27:20 CET 2002 - arvin@suse.de
+
+- fixed linking (after drop of dumpto agent)
+
+-------------------------------------------------------------------
 Fri Nov 29 16:34:19 CET 2002 - sh@suse.de
 
 - Fixed bug/wish #13866: Delayed keyboard shortcut checking
-  New UI builtins PostponeShortcutCheck(), CheckShortcuts() 
+  New UI builtins PostponeShortcutCheck(), CheckShortcuts()
 
 -------------------------------------------------------------------
 Fri Nov 22 14:24:41 CET 2002 - msvec@suse.cz
@@ -26,7 +31,7 @@ Wed Nov 20 17:38:06 CET 2002 - sh@suse.de
 -------------------------------------------------------------------
 Mon Nov 11 17:55:38 CET 2002 - sh@suse.de
 
-- New widget: IconButton 
+- New widget: IconButton
 
 -------------------------------------------------------------------
 Thu Nov 07 18:47:24 CET 2002 - arvin@suse.de
@@ -45,7 +50,7 @@ Wed Nov  6 18:31:36 CET 2002 - sh@suse.de
 - New UI builtins:
   - AskForExistingDirectory()
   - AskForExistingFile()
-  - AskForSaveFileName() 
+  - AskForSaveFileName()
 
 -------------------------------------------------------------------
 Wed Nov  6 09:06:36 CET 2002 - mvidner@suse.cz
