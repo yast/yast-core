@@ -5,8 +5,8 @@
 @HEADER@
 Summary:	-
 Requires:	YaST2-UI perl netcat
-Provides:	libycp liby2 libyui libscr libpkg
-Obsoletes:	libycp liby2 libyui libscr libpkg
+Provides:	libycp liby2 libyui libscr
+Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
 Obsoletes:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
 Provides:	yast2-agent-modules yast2-agent-probe yast2-agent-system
@@ -25,7 +25,6 @@ Provides:	libycp:/usr/lib/YaST2/include/YCP.h
 Provides:	liby2:/usr/lib/YaST2/include/Y2.h
 Provides:	libyui:/usr/lib/YaST2/include/yui/YUIInterpreter.h
 Provides:	libscr:/usr/lib/YaST2/include/SCR.h
-Provides:	libpkg:/usr/lib/YaST2/include/PKG.h
 Provides:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm y2clients
 Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm y2clients
 
