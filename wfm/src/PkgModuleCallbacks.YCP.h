@@ -22,6 +22,8 @@
 #ifndef PkgModuleCallbacksYCP_h
 #define PkgModuleCallbacksYCP_h
 
+#include <stack>
+
 #include <y2util/Y2SLog.h>
 #include <y2util/stringutil.h>
 #include <y2util/Date.h>
@@ -106,9 +108,18 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
   private:
 
-    // mutable: queries may create empty entries if they do not yet exist
-    mutable map<CBid,string> _mModules;
-    mutable map<CBid,string> _mSymbols;
+    struct CBdata
+    {
+	CBdata (string module, string symbol)
+	    : module (module), symbol (symbol)
+	    { }
+
+	const string module, symbol;
+    };
+
+    typedef map <CBid, stack <CBdata> > _cbdata_t;
+    _cbdata_t _cbdata;
+
 
 #warning Hack to share refcounted PkgModule between WFMInterpreter instances
     YCPInterpreter *& _interpreter; // pointer reference to PkgModuleCtrl
@@ -127,38 +138,39 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
     }
 
     /**
-     * Set a YCPCallbacks data from string "module::symbol"
+     * Set a YCPCallbacks data from string "module::symbol" or "symbol"
      **/
     void setCallback( CBid id_r, const string & name_r ) {
-      string::size_type colonpos = name_r.find("::");
-      if ( colonpos != string::npos ) {
-	_mModules[id_r] = name_r.substr ( 0, colonpos );
-	_mSymbols[id_r] = name_r.substr ( colonpos + 2 );
-      } else {
-	_mModules[id_r] = "";
-	_mSymbols[id_r] = name_r;
-      }
+	string::size_type colonpos = name_r.find("::");
+	if ( colonpos != string::npos )
+	    _cbdata[id_r].push (CBdata (name_r.substr(0, colonpos),
+					name_r.substr(colonpos + 2)));
+	else
+	    _cbdata[id_r].push (CBdata ("", name_r));
     }
+
     /**
-     * Set a YCPCallbacks data according to args_r.
-     **/
-    bool setCallback( CBid id_r, const YCPList & args ) {
-      if ( ! ( args->size() == 1 && args->value(0)->isString() ) ) {
-	return false;
-      }
-      string name = args->value(0)->asString()->value();
-      setCallback( id_r, name );
-      return true;
+     * Pops the YCPCallbacks with id_r.
+     */
+    void popCallback( CBid id_r ) {
+	_cbdata_t::iterator tmp1 = _cbdata.find(id_r);
+	if (tmp1 != _cbdata.end() && !tmp1->second.empty())
+	    tmp1->second.pop();
     }
+
     /**
      * Set the YCPCallback according to args_r.
      * @return YCPVoid on success, otherwise YCPError.
      **/
-    YCPValue setYCPCallback( CBid id_r, const YCPList & args_r ) {
-      if ( ! setCallback( id_r, args_r ) ) {
-	return YCPError( string("Bad args to Pkg::Callback") + cbName( id_r ) );
-      }
-      return YCPVoid();
+    YCPValue setYCPCallback( CBid id_r, const YCPList & args ) {
+	if ( ! ( args->size() == 1 && args->value(0)->isString() ) )
+	    return YCPError( string("Bad args to Pkg::Callback") + cbName( id_r ) );
+	string name = args->value(0)->asString()->value();
+	if (!name.empty ())
+	    setCallback( id_r, name );
+	else
+	    popCallback( id_r );
+	return YCPVoid();
     }
 
     /**
@@ -166,7 +178,10 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
      * no need to create and evaluate it.
      **/
     bool isSet( CBid id_r ) const {
-      return( _interpreter && !_mSymbols[id_r].empty() );
+	if (!_interpreter)
+	    return false;
+	const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
+	return tmp1 != _cbdata.end() && !tmp1->second.empty();
     }
 
   public:
@@ -175,7 +190,11 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
      * @return The YCPCallback term, ready to append any arguments.
      **/
     YCPTerm createCallback( CBid id_r ) const {
-      return YCPTerm( YCPSymbol( _mSymbols[id_r], false ), _mModules[id_r] );
+	const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
+	if (tmp1 == _cbdata.end() || tmp1->second.empty())
+	    return YCPTerm (YCPSymbol ("", false), "");
+	const CBdata& tmp2 = tmp1->second.top();
+	return YCPTerm (YCPSymbol (tmp2.symbol, false), tmp2.module);
     }
 
     /**

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jan 16 11:31:47 CET 2004 - arvin@suse.de
+
+- implemented stack for each ycp callback of packagemanager
+
+-------------------------------------------------------------------
 Thu Jan 15 16:54:50 CET 2004 - mvidner@suse.cz
 
 - agents-perl: added YaST::SCRAgent
