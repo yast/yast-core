@@ -235,8 +235,8 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 		   new SCRSubAgent (path, value));
 
 #if 0
-    // use only for testing
-    FILE *fout = fopen ("/tmp/scr-agents.txt", "w");
+    // only use for testing! insecure!
+    FILE* fout = fopen ("/tmp/scr-agents.txt", "w");
     for (SubAgents::const_iterator agent = agents.begin ();
 	 agent != agents.end (); ++agent)
 	fprintf (fout, "%ld %s\n", (*agent)->get_path ()->length (),
