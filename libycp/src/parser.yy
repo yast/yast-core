@@ -407,7 +407,6 @@ expression:
 		{
 		    $$.c = new YEBracket ($1.c, $3.c, $5.c, $$.t);
 		    $$.l = $1.l;
-#if 0
 		    if (! $5.t->isVoid ()			// default is not 'nil'
 			&& $$.t->isAny ())			// and the map/list is unspecified
 		    {
@@ -416,7 +415,6 @@ expression:
 			$$.c = new YEPropagate ($$.c, $$.t, $5.t);
 			$$.t = $5.t;
 		    }
-#endif
 		}
 	    }
 ;
