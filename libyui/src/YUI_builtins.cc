@@ -919,7 +919,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
 
 
 /**
- * @builtin WizardCommand( symbol wizardId, term wizardCommand ) -> boolean
+ * @builtin WizardCommand( term wizardCommand ) -> boolean
  *
  * Issue a command to a wizard widget with ID 'wizardId'.
  * <p>
@@ -933,28 +933,23 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
  * Returns true on success.
  */
 
-YCPValue YUI::evaluateWizardCommand( const YCPValue & id_value, const YCPTerm & command )
+YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
 {
     if ( ! hasWizard() )
 	return YCPBoolean( false );
 
-    if ( ! isSymbolOrId( id_value ) )
-    {
-	return YCPNull();
-    }
-
-    YCPValue id = getId( id_value );
-    YWidget *widget = widgetWithId( id, true );
+    // A wizard widget always has ID `wizard
+    YWidget * widget = widgetWithId( YCPSymbol( YWizardID ), true );
 
     if ( ! widget )
-	return YCPBoolean( false );
+	return YCPNull();
 
     YWizard * wizard = dynamic_cast<YWizard *>( widget );
 
     if ( ! wizard )
     {
-	y2error( "Widget with ID %s is not a wizard widget!", id_value->toString().c_str() );
-	return YCPBoolean( false );
+	y2error( "Widget with ID %s is not a wizard widget!", YWizardID );
+	return YCPNull();
     }
 
     blockEvents();	// Avoid self-generated events from builtins

@@ -332,7 +332,7 @@ public:
     YCPValue evaluateUserInput				();
     YCPValue evaluateTimeoutUserInput			( const YCPInteger & timeout );
     YCPValue evaluateWaitForEvent			( const YCPInteger & timeout = YCPNull() );
-    YCPValue evaluateWizardCommand			( const YCPValue & id_value, const YCPTerm & command );
+    YCPValue evaluateWizardCommand			( const YCPTerm & command );
     YCPValue evaluatePollInput				();
 
 

@@ -17,7 +17,7 @@
 /-*/
 
 
-#define y2log_component "ui-pkg"
+#define y2log_component "ui"
 #include <ycp/y2log.h>
 #include <ycp/YCPTerm.h>
 
@@ -36,9 +36,8 @@ YWizard::YWizard( YWidgetOpt & opt,
     , _nextButtonId( nextButtonId )
     , _nextButtonLabel( nextButtonLabel )
 {
-    y2debug( "YWizard" );
-
-    // Derived classes need to check opt.shrinkable!
+    // All wizard widgets have a fixed ID `wizard
+    YWidget::setId( YCPSymbol( YWizardID ) );
 
     setDefaultStretchable( YD_HORIZ, true );
     setDefaultStretchable( YD_VERT,  true );

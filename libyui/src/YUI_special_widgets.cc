@@ -514,6 +514,9 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
  * This is not intended for general use - use the Wizard:: module instead which will use this
  * widget properly.
  * <p>
+ * A wizard widget always has ID `wizard.<p>
+ * The ID of the single replace point within the wizard is always `contents.
+ * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.

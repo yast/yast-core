@@ -553,11 +553,11 @@ UIHasSpecialWidget( const YCPSymbol & widget )
 
 
 static YCPValue
-UIWizardCommand( const YCPSymbol & wizard_id, const YCPTerm & command )
+UIWizardCommand( const YCPTerm & command )
 {
     if ( YUIComponent::ui() )
     {
-	return YUIComponent::ui()->evaluateWizardCommand( wizard_id, command );
+	return YUIComponent::ui()->evaluateWizardCommand( command );
     }
     else
 	return YCPBoolean( false );
@@ -640,7 +640,7 @@ UI::UI()
 	    { "Recode",			"any (string, string, string)",				(void*) UIRecode 		},
 	    { "SetModulename",		"void (string)",					(void*) UISetModulename 	},
 	    { "HasSpecialWidget",	"boolean (symbol)",					(void*) UIHasSpecialWidget 	},
-	    { "WizardCommand",		"boolean (symbol, term)",				(void*) UIWizardCommand		},
+	    { "WizardCommand",		"boolean (term)",					(void*) UIWizardCommand		},
 	    { 0, 0, 0, 0, 0, 0, 0 }
 	};
 
