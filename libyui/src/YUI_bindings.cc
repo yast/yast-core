@@ -382,15 +382,25 @@ UIPlayMacro( const YCPString & filename )
     return YCPVoid();
 }
 
+static YCPValue
+UIFakeUserInput1()
+{
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateFakeUserInput( YCPVoid() );
+
+    return YCPVoid();
+}
+
 
 static YCPValue
-UIFakeUserInput( const YCPValue & next_input )
+UIFakeUserInput2( const YCPValue & next_input )
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateFakeUserInput( next_input );
 
     return YCPVoid();
 }
+
 
 
 static YCPValue
@@ -594,7 +604,8 @@ UI::UI()
 	    { "RecordMacro",		"void (string)",					(void*) UIRecordMacro 		},
 	    { "PlayMacro",		"void (string)",					(void*) UIPlayMacro 		},
 	    { "StopRecordMacro",	"void ()",						(void*) UIStopRecordMacro 	},
-	    { "FakeUserInput",		"void (any)",						(void*) UIFakeUserInput 	},
+	    { "FakeUserInput",		"void ()",						(void*) UIFakeUserInput1 	},
+	    { "FakeUserInput",		"void (any)",						(void*) UIFakeUserInput2 	},
 	    { "SetFunctionKeys",	"void (map <any, any>)",				(void*) UISetFunctionKeys 	},
 	    { "ChangeWidget",		"boolean (symbol, symbol, any)",			(void*) UIChangeWidget 		},
 	    { "ChangeWidget",		"boolean (term, symbol, any)",				(void*) UIChangeWidget1 	},

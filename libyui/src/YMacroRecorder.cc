@@ -135,10 +135,20 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
     
     recordMakeScreenShot();
 
-    fprintf( _macroFile, "%s%sUI::%s( %s );\n",
-	     YMACRO_INDENT, YMACRO_INDENT, 
-	     YUIBuiltin_FakeUserInput,
-	     input->toString().c_str() );
+    if ( input.isNull() )
+    {
+	fprintf( _macroFile, "%s%sUI::%s();\n",
+		 YMACRO_INDENT, YMACRO_INDENT, 
+		 YUIBuiltin_FakeUserInput,
+		 input->toString().c_str() );
+    }
+    else
+    {
+	fprintf( _macroFile, "%s%sUI::%s( %s );\n",
+		 YMACRO_INDENT, YMACRO_INDENT, 
+		 YUIBuiltin_FakeUserInput,
+		 input->toString().c_str() );
+    }
 
     fflush( _macroFile );	// sync to disk at this point - for debugging
 

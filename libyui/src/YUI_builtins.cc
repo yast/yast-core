@@ -1148,14 +1148,14 @@ void YUI::deleteMacroPlayer()
 
 /**
  * @builtin FakeUserInput( any nextUserInput ) -> void
+ * @builtin FakeUserInput() -> void
  *
  * Prepare a fake value for the next call to UserInput() -
  * i.e. the next UserInput() will return exactly this value.
  * This is only useful in connection with macros.
- * If called from within a macro, this will relinquish control from the macro
- * to the YCP code until the next UserInput.
  * <p>
- * "nil" is a legal value.
+ * If called without a parameter, the next call to UserInput()
+ * will return "nil".
  */
 void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 {
