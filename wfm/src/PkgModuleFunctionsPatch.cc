@@ -39,11 +39,11 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetServers() -> list(string)
-//
-// get urls of patch servers
-//
+/** 
+   @builtin Pkg::YouGetServers() -> list(string)
+
+   get urls of patch servers
+*/
 YCPValue
 PkgModuleFunctions::YouGetServers (YCPList args)
 {
@@ -55,11 +55,11 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetPatches() -> bool
-//
-// retrieve patches
-//
+/** 
+   @builtin Pkg::YouGetPatches() -> bool
+
+   retrieve patches
+*/
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
@@ -67,11 +67,11 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetPackages () -> bool
-//
-// retrieve package data belonging to patches
-//
+/** 
+   @builtin Pkg::YouGetPackages () -> bool
+
+   retrieve package data belonging to patches
+*/
 YCPValue
 PkgModuleFunctions::YouGetPackages (YCPList args)
 {
@@ -79,11 +79,11 @@ PkgModuleFunctions::YouGetPackages (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouInstallPatches () -> bool
-//
-// install retrieved patches
-//
+/** 
+   @builtin Pkg::YouInstallPatches () -> bool
+
+   install retrieved patches
+*/
 YCPValue
 PkgModuleFunctions::YouInstallPatches (YCPList args)
 {

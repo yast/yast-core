@@ -6,7 +6,7 @@ SUBDIRS = autodocs
 
 htmldir = $(docdir)/wfm
 
-html_DATA = YCP-builtins-wfm.html
+html_DATA = YCP-builtins-wfm.html YCP-builtins-pkg.html
 
 CLEANFILES = YCP-builtins-wfm.html YCP-builtins-pkg.html
 
@@ -16,7 +16,7 @@ builtin_wfm = $(srcdir)/../src/WFMInterpreter.cc \
         $(srcdir)/../src/Y2WFMComponent.cc \
         $(srcdir)/../src/Y2CCWFM.cc
 
-builtin_pkg = $(srcdir)/../src/PkgModule.cc
+builtin_pkg = $(srcdir)/../src/PkgModuleFunctions*.cc
 
 YCP-builtins-wfm.html: $(builtin_wfm)
 	@ybindir@/makebuiltindocs -t "WFM built-in functions" $^ > $@.new

@@ -40,11 +40,11 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::TargetInit(string root, bool new) -> bool
-//
-// initialized pa
-//
+/** 
+   @builtin Pkg::TargetInit(string root, bool new) -> bool
+
+   initialized pa
+*/
 YCPValue
 PkgModuleFunctions::TargetInit (YCPList args)
 {
@@ -61,11 +61,11 @@ PkgModuleFunctions::TargetInit (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::TargetFinish() -> bool
-//
-// finish target usage
-//
+/** 
+   @builtin Pkg::TargetFinish() -> bool
+
+   finish target usage
+*/
 YCPValue
 PkgModuleFunctions::TargetFinish (YCPList args)
 {

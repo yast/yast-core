@@ -39,18 +39,17 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::GetSelections (symbol which) -> ["sel1", "sel2", ...]
-//
-// returns a list of selection names matching the 'which' symbol
-// which can be:<br>
-// `all		: all known selections<br>
-// `avail_base	: available base selections<br>
-// `avail_addon	: available addon selections<br>
-// `inst_base	: installed base selection (usually one !)<br>
-// `inst_addon	: installed addon selections<br>
-// 
+/** 
+   @builtin Pkg::GetSelections (symbol which) -> ["sel1", "sel2", ...]
 
+   returns a list of selection names matching the 'which' symbol
+   which can be:<br>
+   `all		: all known selections<br>
+   `avail_base	: available base selections<br>
+   `avail_addon	: available addon selections<br>
+   `inst_base	: installed base selection (usually one !)<br>
+   `inst_addon	: installed addon selections<br>
+*/
 YCPValue
 PkgModuleFunctions::GetSelections (YCPList args)
 {
@@ -96,11 +95,11 @@ PkgModuleFunctions::GetSelections (YCPList args)
 
 
 // ------------------------
-// 
-// @builtin Pkg::SelSummary (string selection) -> "This is a nice selection"
-//
-// Get summary (aka label) of a selection
-//
+/** 
+   @builtin Pkg::SelSummary (string selection) -> "This is a nice selection"
+
+   Get summary (aka label) of a selection
+*/
 YCPValue
 PkgModuleFunctions::SelSummary (YCPList args)
 {
@@ -115,16 +114,16 @@ PkgModuleFunctions::SelSummary (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::SetSelection (string selection) -> bool
-//
-// Set a new base selection
-// This effetively resets the current package selection to
-// the packages of the newly selected base selection
-// Usually returns true
-// Returns false if the given string does not match
-// a base selection.
-//
+/** 
+   @builtin Pkg::SetSelection (string selection) -> bool
+
+   Set a new base selection
+   This effetively resets the current package selection to
+   the packages of the newly selected base selection
+   Usually returns true
+   Returns false if the given string does not match
+   a base selection.
+*/
 YCPValue
 PkgModuleFunctions::SetSelection (YCPList args)
 {
@@ -138,12 +137,12 @@ PkgModuleFunctions::SetSelection (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::IsManualSelection () -> bool
-//
-// return true if the original list of packages (since the
-// last Pkg::SetSelection was changed.
-//
+/** 
+   @builtin Pkg::IsManualSelection () -> bool
+
+   return true if the original list of packages (since the
+   last Pkg::SetSelection was changed.
+*/
 YCPValue
 PkgModuleFunctions::IsManualSelection (YCPList args)
 {

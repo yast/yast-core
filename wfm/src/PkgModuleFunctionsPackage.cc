@@ -38,13 +38,13 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::GetGroups(string prefix) -> ["group1", "group2", ...]
-//
-// returns a list of strings containing all known RPM groups
-// matching the given prefix<br>
-// If the prefix is the empty string, all groups are returned
+/** 
+   @builtin Pkg::GetGroups(string prefix) -> ["group1", "group2", ...]
 
+   returns a list of strings containing all known RPM groups
+   matching the given prefix<br>
+   If the prefix is the empty string, all groups are returned
+*/
 YCPValue
 PkgModuleFunctions::GetGroups (YCPList args)
 {
@@ -59,13 +59,14 @@ PkgModuleFunctions::GetGroups (YCPList args)
 
 
 // ------------------------
-// 
-// @builtin Pkg::IsProvided (string tag) -> boolean
-//
-// returns a 'true' if the tag is provided in the installed system
-//
-// tag can be a package name, a string from requires/provides
-// or a file name (since a package implictly provides all its files)
+/** 
+   @builtin Pkg::IsProvided (string tag) -> boolean
+
+   returns a 'true' if the tag is provided in the installed system
+
+   tag can be a package name, a string from requires/provides
+   or a file name (since a package implictly provides all its files)
+*/
 YCPValue
 PkgModuleFunctions::IsProvided (YCPList args)
 {
@@ -79,14 +80,15 @@ PkgModuleFunctions::IsProvided (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::IsAvailable (string tag) -> boolean
-//
-// returns a 'true' if the tag is available on any of the currently
-// active installation sources. (i.e. it is installable)
-//
-// tag can be a package name, a string from requires/provides
-// or a file name (since a package implictly provides all its files)
+/** 
+   @builtin Pkg::IsAvailable (string tag) -> boolean
+
+   returns a 'true' if the tag is available on any of the currently
+   active installation sources. (i.e. it is installable)
+
+   tag can be a package name, a string from requires/provides
+   or a file name (since a package implictly provides all its files)
+*/
 YCPValue
 PkgModuleFunctions::IsAvailable (YCPList args)
 {
@@ -107,20 +109,21 @@ PkgModuleFunctions::IsAvailable (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::DoProvide (list tags) -> $["failed1":"reason", ...]
-//
-// Provides (read: installs) a list of tags to the system
-//
-// tag can be a package name, a string from requires/provides
-// or a file name (since a package implictly provides all its files)
-//
-// returns a map of tag,reason pairs if tags could not be provided.
-// Usually this map should be empty (all required packages are
-// installed)
-// If tags could not be provided (due to package install failures or
-// conflicts), the tag is listed as a key and the value describes
-// the reason for the failure (as an already translated string).
+/** 
+   @builtin Pkg::DoProvide (list tags) -> $["failed1":"reason", ...]
+
+   Provides (read: installs) a list of tags to the system
+
+   tag can be a package name, a string from requires/provides
+   or a file name (since a package implictly provides all its files)
+
+   returns a map of tag,reason pairs if tags could not be provided.
+   Usually this map should be empty (all required packages are
+   installed)
+   If tags could not be provided (due to package install failures or
+   conflicts), the tag is listed as a key and the value describes
+   the reason for the failure (as an already translated string).
+*/
 YCPValue
 PkgModuleFunctions::DoProvide (YCPList args)
 {
@@ -134,20 +137,21 @@ PkgModuleFunctions::DoProvide (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::DoRemove (list tags) -> ["failed1", ...]
-//
-// Removes a list of tags from the system
-//
-// tag can be a package name, a string from requires/provides
-// or a file name (since a package implictly provides all its files)
-//
-// returns a map of tag,reason pairs if tags could not be removed.
-// Usually this map should be empty (all required packages are
-// removed)
-// If a tag could not be removed (because other packages still
-// require it), the tag is listed as a key and the value describes
-// the reason for the failure (as an already translated string).
+/** 
+   @builtin Pkg::DoRemove (list tags) -> ["failed1", ...]
+
+   Removes a list of tags from the system
+
+   tag can be a package name, a string from requires/provides
+   or a file name (since a package implictly provides all its files)
+
+   returns a map of tag,reason pairs if tags could not be removed.
+   Usually this map should be empty (all required packages are
+   removed)
+   If a tag could not be removed (because other packages still
+   require it), the tag is listed as a key and the value describes
+   the reason for the failure (as an already translated string).
+*/
 YCPValue
 PkgModuleFunctions::DoRemove (YCPList args)
 {
@@ -161,11 +165,11 @@ PkgModuleFunctions::DoRemove (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::PkgSummary (string package) -> "This is a nice package"
-//
-// Get summary (aka label) of a package
-//
+/** 
+   @builtin Pkg::PkgSummary (string package) -> "This is a nice package"
+
+   Get summary (aka label) of a package
+*/
 YCPValue
 PkgModuleFunctions::PkgSummary (YCPList args)
 {
@@ -179,12 +183,12 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::SaveState() -> bool
-//
-// save the current package selection status for later
-// retrieval via Pkg::RestoreState()
-//
+/** 
+   @builtin Pkg::SaveState() -> bool
+
+   save the current package selection status for later
+   retrieval via Pkg::RestoreState()
+*/
 YCPValue
 PkgModuleFunctions::SaveState (YCPList args)
 {
@@ -193,14 +197,14 @@ PkgModuleFunctions::SaveState (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::RestoreState() -> bool
-//
-// restore the package selection status from a former
-// call to Pkg::SaveState()
-// Returns false if there is no saved state (no Pkg::SaveState()
-// called before)
-//
+/** 
+   @builtin Pkg::RestoreState() -> bool
+
+   restore the package selection status from a former
+   call to Pkg::SaveState()
+   Returns false if there is no saved state (no Pkg::SaveState()
+   called before)
+*/
 YCPValue
 PkgModuleFunctions::RestoreState (YCPList args)
 {
