@@ -16,20 +16,38 @@
 	+ "<p>If it isn't helpful, it should rather not be called a <i>help text</i>.</p>";
 	
     UI::OpenDialog(`opt(`defaultsize ),
-		   `Wizard(`id(`wiz), `opt(`stepsEnabled),
+		   `Wizard(`opt(`stepsEnabled),
 			   `back,  "&Back",
 			   `abort, "Ab&ort",
 			   `next,  "&Next" ) );
 
     // UI::DumpWidgetTree();
 
-    UI::WizardCommand(`wiz, `SetVerboseCommands( true ) );
-    UI::WizardCommand(`wiz, `SetDialogIcon( "/usr/share/YaST2/images/user_add.png" ) );
-    UI::WizardCommand(`wiz, `SetDialogHeading( "Welcome to the YaST2 installation" ) );
-    UI::WizardCommand(`wiz, `SetHelpText( help_text ) );
-    UI::WizardCommand(`wiz, `SetAbortButtonLabel( "&Cancel" ) );
-    UI::WizardCommand(`wiz, `SetBackButtonLabel( "" ) );
-    UI::WizardCommand(`wiz, `SetNextButtonLabel( "&Accept" ) );
+    // UI::WizardCommand(`SetVerboseCommands( true ) );
+    UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/images/user_add.png" ) );
+    UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
+    UI::WizardCommand(`SetHelpText( help_text ) );
+    
+    UI::WizardCommand(`AddStepHeading( "Base Installation" ) );
+    UI::WizardCommand(`AddStep( "Language", 			"lang" 		) );
+    UI::WizardCommand(`AddStep( "Installation Settings", 	"proposal" 	) );
+    UI::WizardCommand(`AddStep( "Perform Installation",		"doit"		) );
+		      
+    UI::WizardCommand(`AddStepHeading( "Configuration" ) );
+    UI::WizardCommand(`AddStep( "Root Password",		"root_pw"	) );
+    UI::WizardCommand(`AddStep( "Network",			"net"		) );
+    UI::WizardCommand(`AddStep( "Online Update",		"you"		) );
+    UI::WizardCommand(`AddStep( "Users",			"auth"		) );
+    UI::WizardCommand(`AddStep( "Clean Up",			"suse_config"	) );
+    UI::WizardCommand(`AddStep( "Release Notes",		"rel_notes"	) );
+    UI::WizardCommand(`AddStep( "Device Configuration",		"hw_proposal"	) );
+
+    if ( false )
+    {
+	UI::WizardCommand(`SetAbortButtonLabel( "&Cancel" ) );
+	UI::WizardCommand(`SetBackButtonLabel( "" ) );
+	UI::WizardCommand(`SetNextButtonLabel( "&Accept" ) );
+    }
     
     while( true )
     {
