@@ -97,7 +97,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 %files devel
 %defattr(-,root,root)
-/usr/bin/parseycp
+/usr/bin/ycpc
 /usr/bin/runycp
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
