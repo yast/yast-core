@@ -80,16 +80,17 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
     for (PMPackageManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
 	 it != _y2pm.packageManager().end(); ++it)
     {
-	if (!(*it)->to_install())
+	if (!((*it)->to_install()))
 	    continue;
 
 	PMPackagePtr package = (*it)->candidateObj();
 	if (!package)
+	{
 	    continue;
+	}
 
 	unsigned int medianr = package->medianr();
 	FSize size = package->size();
-
 	if (medianr > mediasizes.size())
 	{
 	    mediasizes.resize (medianr);
