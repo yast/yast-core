@@ -505,7 +505,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	
     if (current.isNull ())
     {
-	y2error ("Non-existent bracket parameter");
+	ycp2error ("Non-existent bracket parameter");
 	return YCPNull ();
     }
 	
@@ -514,7 +514,7 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
     YCPValue argval = arg->value (idx);
     if (argval.isNull())
     {
-	y2error ("Invalid bracket parameter");
+	ycp2error ("Invalid bracket parameter");
 	return YCPNull ();
     }
 
@@ -522,7 +522,7 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
     {
 	if (!argval->isInteger())
 	{
-	    y2error ("Invalid bracket parameter for list");
+	    ycp2error ("Invalid bracket parameter for list");
 	    return YCPNull ();
 	}
 	YCPList list = current->asList();
@@ -562,7 +562,7 @@ y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str
     {
 	if (!argval->isInteger())
 	{
-	    y2error ("Invalid bracket parameter for term");
+	    ycp2error ("Invalid bracket parameter for term");
 	    return YCPNull ();
 	}
 	YCPTerm term = current->asTerm();
@@ -580,7 +580,7 @@ y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str
 	term->set (argval->asInteger()->value(), val);
 	return term;
     }
-    y2error ("Bracket assignment not list, map, or term");
+    ycp2error ("Bracket assignment not list, map, or term");
     return YCPNull ();
 }
 
@@ -1286,13 +1286,13 @@ YSImport::YSImport (std::istream & str)
 
 	    if (tentry == 0)
 	    {
-		y2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
+		ycp2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
 		fprintf (stderr, "Unresolved xref to %s::%s\n", m_name.c_str(), sname);
 		m_name = "";						// mark as error
 	    }
 	    else if (tentry->sentry()->type()->match (stype) != 0)
 	    {
-		y2error ("Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
+		ycp2error ("Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
 		fprintf (stderr, "Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
 		m_name = "";
 	    }

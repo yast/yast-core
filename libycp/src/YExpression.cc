@@ -98,7 +98,7 @@ YEVariable::evaluate (bool cse)
 	// it's OK for the functions (somebody wants our code (function pointers)), but not others
 	if (! m_entry->isFunction ())
 	{
-	    y2error ("YEVariable::evaluate (%s) has no value", toString().c_str());
+	    ycp2error ("YEVariable::evaluate (%s) has no value", toString().c_str());
 	}
 	value = YCPCode (m_entry->code());
     }
@@ -283,7 +283,7 @@ YETerm::toString () const
     {
 	if (parm->code == 0)
 	{
-	    y2error( "parameter without code");
+	    ycp2error( "parameter without code");
 	    parm = parm->next;
 	    continue;
 	}
@@ -437,7 +437,7 @@ YECompare::evaluate (bool cse)
 	default:
 	    break;
     }
-    y2error ("YECompare unknown type");
+    ycp2error ("YECompare unknown type");
     return YCPBoolean (false);
 }
 
@@ -1557,7 +1557,7 @@ YEBuiltin::YEBuiltin (std::istream & str)
     if (!m_decl
 	|| m_type->isError ())
     {
-	y2error ("Can't bind '%s'", StaticDeclaration::Decl2String (m_decl, true).c_str());
+	ycp2error ("Can't bind '%s'", StaticDeclaration::Decl2String (m_decl, true).c_str());
     }
 }
 
@@ -1642,7 +1642,7 @@ YEBuiltin::finalize ()
     declaration_t *decl = static_declarations.findDeclaration (m_decl, m_type, false);
     if (decl == 0)
     {
-	y2error ("YEBuiltin::finalize() FAILED");
+	ycp2error ("YEBuiltin::finalize() FAILED");
 	return Type::Error;
     }
 
@@ -1970,7 +1970,7 @@ YEBuiltin::evaluate (bool cse)
 	}
 	else
 	{
-	    y2error("YEBuiltin::evaluate [%s (%d args)]: Call handler declared, but not present",
+	    ycp2error("YEBuiltin::evaluate [%s (%d args)]: Call handler declared, but not present",
 		    StaticDeclaration::Decl2String (m_decl, false).c_str(), i);
 	    return YCPNull();
 	}
@@ -2162,12 +2162,12 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
     {
 	if (!code->isReferenceable())	// but the actual parameter isn't referenceable
 	{
-	    y2error ("Can't take reference of '%s'", code->toString().c_str());
+	    ycp2error ("Can't take reference of '%s'", code->toString().c_str());
 	    return expected_type;
 	}
 	else if (match > 0)
 	{
-	    y2error ("Can't reference to type propagation '%s' -> '%s'", type->toString().c_str(), expected_type->toString().c_str());
+	    ycp2error ("Can't reference to type propagation '%s' -> '%s'", type->toString().c_str(), expected_type->toString().c_str());
 	    return expected_type;
 	}
 	else
@@ -2460,7 +2460,7 @@ YEFunction::wantedParameterType () const
 
 bool YEFunction::attachParameter (const YCPValue& arg, int pos)
 {
-    y2error ("Attaching constant parameter not possible at the given position yet");
+    ycp2error ("Attaching constant parameter not possible at the given position yet");
     return false;
 }
 
@@ -2485,7 +2485,7 @@ bool YEFunction::appendParameter (const YCPValue& arg)
 	{
 	    // Our caller should report the place
 	    // in a script where this happened
-	    y2error ("Excessive parameter to %s",
+	    ycp2error ("Excessive parameter to %s",
 		     qualifiedName ().c_str ());
 	}
 	else
@@ -2504,7 +2504,7 @@ bool YEFunction::finishParameters ()
     constTypePtr err_tp = finalize ();
     if (err_tp != NULL)
     {
-	y2error ("Missing %s parameter to %s",
+	ycp2error ("Missing %s parameter to %s",
 		 err_tp->toString ().c_str (), qualifiedName ().c_str ());
 	return false;
     }
