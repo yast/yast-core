@@ -51,7 +51,8 @@ using std::string;
 
 #include "ycp/SymbolEntry.h"
 
-class Point {
+class Point : public MemUsage
+{
   private:
     SymbolEntry *m_entry;		// filename as SymbolEntry (c_filename)
     int m_line;				// line of definition / inclusion

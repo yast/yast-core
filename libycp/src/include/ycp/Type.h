@@ -28,7 +28,7 @@
 
 class FunctionType;
 
-class Type : virtual public Rep
+class Type : virtual public Rep, public MemUsage
 {
     REP_BODY(Type);
 private:

@@ -24,6 +24,8 @@
 #include <string>
 using std::string;
 
+#include <y2util/MemUsage.h>
+
 #include "ycp/YCPValue.h"
 #include "ycp/YCPString.h"
 #include "ycp/Type.h"
@@ -61,7 +63,7 @@ typedef struct ycodelist ycodelist_t;
 /**
  * @short YCode for precompiled ycp code
  */
-class YCode
+class YCode : public MemUsage
 {
 public:
     enum ykind {

@@ -36,7 +36,8 @@ class SymbolTable;
 
 // TableEntry
 
-class TableEntry {
+class TableEntry : public MemUsage
+{
     // hash bucket pointers (all TableEntries of a bucket have the same hash value)
     TableEntry *m_prev;
     TableEntry *m_next;
@@ -82,7 +83,8 @@ public:
 };
 
 
-class SymbolTable {
+class SymbolTable : public MemUsage
+{
 private:
     // number of buckets in hash table
     int m_prime;

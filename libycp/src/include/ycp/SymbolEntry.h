@@ -38,7 +38,7 @@ class TableEntry;
 /**
  */
 
-class SymbolEntry
+class SymbolEntry : public MemUsage
 {
 private:
     // hash for unique strings
