@@ -160,6 +160,9 @@ while true ; do
 	"result ("*)
 	    exit
 	    ;;
+	'Dir (.)')
+	    echo '[ "rpc", "interface", "samba" ]'
+	    ;;
 	'Read (.)')
 	    hostnames
 	    ;;
