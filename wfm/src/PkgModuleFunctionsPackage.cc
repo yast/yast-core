@@ -44,7 +44,6 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPList.h>
 #include <ycp/YCPMap.h>
-#include <ycp/YCPError.h>
 
 using std::string;
 
@@ -54,22 +53,6 @@ inline void assertActiveSources() {
   // dependent on it's needs.
   Y2PM::instSrcManager().enableDefaultSources();
 }
-
-/**
- * helper function, get name from args
- */
-static std::string
-getName (YCPList args)
-{
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	y2error ("Pkg:: expects a string");
-	return "";
-    }
-    return args->value(0)->asString()->value();
-}
-
 
 /**
  * helper function, get selectable by name
@@ -82,7 +65,7 @@ PkgModuleFunctions::getPackageSelectable (const std::string& name)
 
     PMSelectablePtr selectable;
     if (!name.empty())
-	selectable = _y2pm.packageManager().getItem(name);
+        selectable = _y2pm.packageManager().getItem(name);
     return selectable;
 }
 
@@ -97,11 +80,11 @@ getTheObject (PMSelectablePtr selectable)
     PMPackagePtr package;
     if (selectable)
     {
-	package = selectable->theObject();
-	if (!package)
-	{
-	    y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
-	}
+        package = selectable->theObject();
+        if (!package)
+        {
+            y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
+        }
     }
     return package;
 }
@@ -114,17 +97,18 @@ getTheObject (PMSelectablePtr selectable)
  *
  */
 YCPValue
-PkgModuleFunctions::PkgMediaNames (YCPList args)
+PkgModuleFunctions::PkgMediaNames ()
 {
-  // get sources in installation order
-  InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
-  YCPList ycpnames;
+    // get sources in installation order
+    InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
 
-  for ( InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it ) {
-    ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().name)));
-  }
+    YCPList ycpnames;
 
-  return ycpnames;
+    for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
+    {
+	ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().name)));
+    }
+    return ycpnames;
 }
 
 // ------------------------
@@ -136,7 +120,7 @@ PkgModuleFunctions::PkgMediaNames (YCPList args)
  *   Returns the install size, not the archivesize !!
  */
 YCPValue
-PkgModuleFunctions::PkgMediaSizes (YCPList args)
+PkgModuleFunctions::PkgMediaSizes ()
 {
     // get sources in installation order
     InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
@@ -153,36 +137,36 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
     for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
     {
-	vector<FSize> vf ((*it)->descr()->media_count(), FSize (0));
-	mediasizes[(*it)->descr()->default_rank()] = std::make_pair (*it, vf);
+        vector<FSize> vf ((*it)->descr()->media_count(), FSize (0));
+        mediasizes[(*it)->descr()->default_rank()] = std::make_pair (*it, vf);
     }
 
     // scan over all packages
 
     for (PMPackageManager::PMSelectableVec::const_iterator pkg = _y2pm.packageManager().begin();
-	 pkg != _y2pm.packageManager().end(); ++pkg)
+         pkg != _y2pm.packageManager().end(); ++pkg)
     {
-	if (!((*pkg)->to_install()))
-	    continue;
-	PMPackagePtr package = (*pkg)->candidateObj();
-	if (!package)
-	{
-	    continue;
-	}
-	map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.find (package->instSrcRank());
-	if (mediapair == mediasizes.end())
-	{
-	    y2error ("Unknown rank %d for '%s'", package->instSrcRank(), ((std::string)(*pkg)->name()).c_str());
-	    continue;
-	}
-	unsigned int medianr = package->medianr();
-	FSize size = package->size();
-	if (medianr > mediapair->second.second.size())
-	{
-	    y2error ("resize needed %d", medianr);
-	    mediapair->second.second.resize (medianr);
-	}
-	mediapair->second.second[medianr-1] += size;
+        if (!((*pkg)->to_install()))
+            continue;
+        PMPackagePtr package = (*pkg)->candidateObj();
+        if (!package)
+        {
+            continue;
+        }
+        map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.find (package->instSrcRank());
+        if (mediapair == mediasizes.end())
+        {
+            y2error ("Unknown rank %d for '%s'", package->instSrcRank(), ((std::string)(*pkg)->name()).c_str());
+            continue;
+        }
+        unsigned int medianr = package->medianr();
+        FSize size = package->size();
+        if (medianr > mediapair->second.second.size())
+        {
+            y2error ("resize needed %d", medianr);
+            mediapair->second.second.resize (medianr);
+        }
+        mediapair->second.second[medianr-1] += size;
     }
 
     // now convert back to list of lists in installation order
@@ -191,21 +175,22 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
     for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
     {
-	for (map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.begin();
-	     mediapair != mediasizes.end(); ++mediapair)
-	{
-	    if (mediapair->second.first == *it)
-	    {
-		YCPList msizes;
+        for (map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.begin();
+             mediapair != mediasizes.end(); ++mediapair)
+        {
+            if (mediapair->second.first == *it)
+            {
+                YCPList msizes;
 
-		for (unsigned int i = 0; i < mediapair->second.second.size(); ++i)
-		{
-		    msizes->add (YCPInteger (((long long)(mediapair->second.second[i]))));
-		}
-		ycpsizes->add (msizes);
-	    }
-	}
+                for (unsigned int i = 0; i < mediapair->second.second.size(); ++i)
+                {
+                    msizes->add (YCPInteger (((long long)(mediapair->second.second[i]))));
+                }
+                ycpsizes->add (msizes);
+            }
+        }
     }
+
     return ycpsizes;
 }
 
@@ -219,9 +204,9 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
    or a file name (since a package implictly provides all its files)
 */
 YCPValue
-PkgModuleFunctions::IsProvided (YCPList args)
+PkgModuleFunctions::IsProvided (const YCPString& tag)
 {
-    std::string name = getName(args);
+    std::string name = tag->value ();
     if (name.empty())
 	return YCPBoolean (false);
 
@@ -247,9 +232,9 @@ PkgModuleFunctions::IsProvided (YCPList args)
    or a file name (since a package implictly provides all its files)
 */
 YCPValue
-PkgModuleFunctions::IsSelected (YCPList args)
+PkgModuleFunctions::IsSelected (const YCPString& tag)
 {
-    std::string name = getName(args);
+    std::string name = tag->value ();
     if (name.empty())
 	return YCPBoolean (false);
 
@@ -278,21 +263,21 @@ PkgModuleFunctions::IsSelected (YCPList args)
    or a file name (since a package implictly provides all its files)
 */
 YCPValue
-PkgModuleFunctions::IsAvailable (YCPList args)
+PkgModuleFunctions::IsAvailable (const YCPString& tag)
 {
-    std::string name = getName(args);
+    std::string name = tag->value ();
     if (name.empty())
 	return YCPBoolean (false);
 
     PMSelectablePtr selectable = getPackageSelectable (name);
     if (!selectable)
     {
-	selectable = PkgModuleFunctions::WhoProvidesString (name);
-	if (!selectable)
-	    return YCPBoolean (false);
+        selectable = PkgModuleFunctions::WhoProvidesString (name);
+        if (!selectable)
+            return YCPBoolean (false);
     }
     if (selectable->candidateObj() == 0)
-	return YCPBoolean (false);
+        return YCPBoolean (false);
     return YCPBoolean (true);
 }
 
@@ -363,29 +348,22 @@ PkgModuleFunctions::DoProvideString (std::string name)
    the reason for the failure (as an already translated string).
 */
 YCPValue
-PkgModuleFunctions::DoProvide (YCPList args)
+PkgModuleFunctions::DoProvide (const YCPList& tags)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isList()))
-    {
-	return YCPError ("Bad args to Pkg::DoProvide");
-    }
-
     YCPMap ret;
-    YCPList tags = args->value(0)->asList();
     if (tags->size() > 0)
     {
-	for (int i = 0; i < tags->size(); ++i)
-	{
-	    if (tags->value(i)->isString())
-	    {
-		DoProvideString (tags->value(i)->asString()->value());
-	    }
-	    else
-	    {
-		y2error ("Pkg::DoProvide not string '%s'", tags->value(i)->toString().c_str());
-	    }
-	}
+        for (int i = 0; i < tags->size(); ++i)
+        {
+            if (tags->value(i)->isString())
+            {
+                DoProvideString (tags->value(i)->asString()->value());
+            }
+            else
+            {
+                y2error ("Pkg::DoProvide not string '%s'", tags->value(i)->toString().c_str());
+            }
+        }
     }
     return ret;
 }
@@ -421,18 +399,11 @@ PkgModuleFunctions::DoRemoveString (std::string name)
    the reason for the failure (as an already translated string).
 */
 YCPValue
-PkgModuleFunctions::DoRemove (YCPList args)
+PkgModuleFunctions::DoRemove (const YCPList& tags)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isList()))
-    {
-	return YCPError ("Bad args to Pkg::DoRemove");
-    }
-
     _y2pm.packageManager ();
 
     YCPMap ret;
-    YCPList tags = args->value(0)->asList();
     if (tags->size() > 0)
     {
 	for (int i = 0; i < tags->size(); ++i)
@@ -458,15 +429,16 @@ PkgModuleFunctions::DoRemove (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgSummary (YCPList args)
+PkgModuleFunctions::PkgSummary (const YCPString& p)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value ()));
     if (!package)
     {
-	return YCPVoid();
+        return YCPVoid();
     }
 
     return YCPString (package->summary());
+
 }
 
 // ------------------------
@@ -477,15 +449,16 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgVersion (YCPList args)
+PkgModuleFunctions::PkgVersion (const YCPString& p)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value ()));
     if (!package)
     {
-	return YCPVoid();
+        return YCPVoid();
     }
 
     return YCPString (package->edition().asString());
+
 }
 
 // ------------------------
@@ -496,9 +469,9 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgSize (YCPList args)
+PkgModuleFunctions::PkgSize (const YCPString& p)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value ()));
     if (!package)
     {
 	return YCPVoid();
@@ -515,9 +488,9 @@ PkgModuleFunctions::PkgSize (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgGroup (YCPList args)
+PkgModuleFunctions::PkgGroup (const YCPString& p)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value ()));
     if (!package)
     {
 	return YCPVoid();
@@ -525,7 +498,6 @@ PkgModuleFunctions::PkgGroup (YCPList args)
 
     return YCPString (package->group());
 }
-
 
 // ------------------------
 /**
@@ -535,12 +507,12 @@ PkgModuleFunctions::PkgGroup (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgLocation (YCPList args)
+PkgModuleFunctions::PkgLocation (const YCPString& p)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value()));
     if (!package)
     {
-	return YCPVoid();
+       return YCPVoid();
     }
 
     return YCPString (package->location());
@@ -555,7 +527,7 @@ PkgModuleFunctions::PkgLocation (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::SaveState (YCPList args)
+PkgModuleFunctions::SaveState ()
 {
     _y2pm.packageSelectionSaveState();
     return YCPBoolean (true);
@@ -575,11 +547,9 @@ PkgModuleFunctions::SaveState (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::RestoreState (YCPList args)
+PkgModuleFunctions::RestoreState (const YCPBoolean& ch)
 {
-    if ((args->size() > 0)
-	&& (args->value(0)->isBoolean())
-	&& (args->value(0)->asBoolean()->value() == true))
+    if (!ch.isNull () && ch->value () == true)
     {
 	return YCPBoolean (_y2pm.packageSelectionDiffState());
     }
@@ -594,7 +564,7 @@ PkgModuleFunctions::RestoreState (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::ClearSaveState (YCPList args)
+PkgModuleFunctions::ClearSaveState ()
 {
     _y2pm.packageSelectionClearSaveState();
     return YCPBoolean (true);
@@ -609,7 +579,7 @@ PkgModuleFunctions::ClearSaveState (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::IsManualSelection (YCPList args)
+PkgModuleFunctions::IsManualSelection ()
 {
     return YCPBoolean (_y2pm.packageManager().anythingByUser()
 			|| _y2pm.selectionManager().anythingByUser());
@@ -623,7 +593,7 @@ PkgModuleFunctions::IsManualSelection (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgAnyToDelete (YCPList args)
+PkgModuleFunctions::PkgAnyToDelete ()
 {
     return YCPBoolean (_y2pm.packageManager().anythingToDelete ());
 }
@@ -636,7 +606,7 @@ PkgModuleFunctions::PkgAnyToDelete (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgAnyToInstall (YCPList args)
+PkgModuleFunctions::PkgAnyToInstall ()
 {
     return YCPBoolean (_y2pm.packageManager().anythingToInstall ());
 }
@@ -680,21 +650,12 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
 
 
 YCPValue
-PkgModuleFunctions::FilterPackages(YCPList args)
+PkgModuleFunctions::FilterPackages(const YCPBoolean& y_byAuto, const YCPBoolean& y_byApp, const YCPBoolean& y_byUser, const YCPBoolean& y_names_only)
 {
-    if ((args->size() != 4)
-	|| !(args->value(0)->isBoolean())
-	|| !(args->value(1)->isBoolean())
-	|| !(args->value(2)->isBoolean())
-	|| !(args->value(3)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::FilterPackages");
-    }
-
-    bool byAuto = args->value(0)->asBoolean()->value();
-    bool byApp  = args->value(1)->asBoolean()->value();
-    bool byUser = args->value(2)->asBoolean()->value();
-    bool names_only = args->value(3)->asBoolean()->value();
+    bool byAuto = y_byAuto->value();
+    bool byApp  = y_byApp->value();
+    bool byUser = y_byUser->value();
+    bool names_only = y_names_only->value();
 
     YCPList packages;
     PMManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
@@ -735,19 +696,10 @@ PkgModuleFunctions::FilterPackages(YCPList args)
 */
 
 YCPValue
-PkgModuleFunctions::GetPackages(YCPList args)
+PkgModuleFunctions::GetPackages(const YCPSymbol& y_which, const YCPBoolean& y_names_only)
 {
-    if ((args->size() != 2)
-	|| !(args->value(0)->isSymbol())
-	|| !(args->value(1)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::GetPackages");
-    }
-
-    assertActiveSources();
-
-    string which = args->value(0)->asSymbol()->symbol();
-    bool names_only = args->value(1)->asBoolean()->value();
+    string which = y_which->symbol();
+    bool names_only = y_names_only->value();
 
     YCPList packages;
 
@@ -805,16 +757,10 @@ PkgModuleFunctions::GetPackages(YCPList args)
  */
 
 YCPValue
-PkgModuleFunctions::PkgUpdateAll (YCPList args)
+PkgModuleFunctions::PkgUpdateAll (const YCPBoolean& del)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::GetPackages");
-    }
-
     PMUpdateStats stats;
-    stats.delete_unmaintained = args->value(0)->asBoolean()->value();
+    stats.delete_unmaintained = del->value();
     _y2pm.packageManager().doUpdate (stats);
 
     YCPList ret;
@@ -831,9 +777,9 @@ PkgModuleFunctions::PkgUpdateAll (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgInstall (YCPList args)
+PkgModuleFunctions::PkgInstall (const YCPString& p)
 {
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    PMSelectablePtr selectable = getPackageSelectable (p->value ());
 
     if (!selectable)
     {
@@ -850,9 +796,9 @@ PkgModuleFunctions::PkgInstall (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgSrcInstall (YCPList args)
+PkgModuleFunctions::PkgSrcInstall (const YCPString& p)
 {
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    PMSelectablePtr selectable = getPackageSelectable (p->value ());
 
     if (!selectable)
     {
@@ -869,9 +815,9 @@ PkgModuleFunctions::PkgSrcInstall (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgDelete (YCPList args)
+PkgModuleFunctions::PkgDelete (const YCPString& p)
 {
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    PMSelectablePtr selectable = getPackageSelectable (p->value ());
     if (!selectable)
     {
 	return YCPBoolean (false);
@@ -887,9 +833,9 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgNeutral (YCPList args)
+PkgModuleFunctions::PkgNeutral (const YCPString& p)
 {
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    PMSelectablePtr selectable = getPackageSelectable (p->value ());
     if (!selectable)
     {
 	return YCPBoolean (false);
@@ -900,12 +846,12 @@ PkgModuleFunctions::PkgNeutral (YCPList args)
 
 
 /**
- * @builtin Pkg::Reste () -> boolean
+ * @builtin Pkg::Reset () -> boolean
  *
  * Reset most internal stuff on the package manager.
  */
 YCPValue
-PkgModuleFunctions::PkgReset (YCPList args)
+PkgModuleFunctions::PkgReset ()
 {
     _y2pm.selectionManager().setNothingSelected();
     _y2pm.packageManager().setNothingSelected();
@@ -925,19 +871,14 @@ PkgModuleFunctions::PkgReset (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgSolve (YCPList args)
+PkgModuleFunctions::PkgSolve (const YCPBoolean& filter)
 {
     bool filter_conflicts_with_installed = false;
-    if (args->size() > 0)
+    
+    if (! filter.isNull ())
     {
-	if (args->value(0)->isBoolean())
-	{
-	    filter_conflicts_with_installed = args->value(0)->asBoolean()->value();
-	}
-	else
-	{
-	    return YCPError ("Bad args to Pkg::PkgSolve");
-	}
+	filter_conflicts_with_installed = filter->value();
+	
     }
 
     PkgDep::ResultList good;
@@ -958,7 +899,6 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 
 	return YCPBoolean (false);
     }
-
     return YCPBoolean (true);
 }
 
@@ -969,7 +909,7 @@ PkgModuleFunctions::PkgSolve (YCPList args)
    return number of fails
 */
 YCPValue
-PkgModuleFunctions::PkgSolveErrors(YCPList args)
+PkgModuleFunctions::PkgSolveErrors()
 {
     return YCPInteger (_solve_errors);
 }
@@ -986,15 +926,14 @@ PkgModuleFunctions::PkgSolveErrors(YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::PkgCommit (YCPList args)
+PkgModuleFunctions::PkgCommit (const YCPInteger& media)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isInteger())
-	|| (args->value(0)->asInteger()->value() < 0))
+    int medianr = media->value ();
+    
+    if (medianr < 0)
     {
 	return YCPError ("Bad args to Pkg::PkgCommit");
     }
-    unsigned medianr = args->value(0)->asInteger()->value();
 
     std::list<std::string> errors;
     std::list<std::string> remaining;
@@ -1032,7 +971,7 @@ PkgModuleFunctions::PkgCommit (YCPList args)
 */
 
 YCPValue
-PkgModuleFunctions::GetBackupPath (YCPList args)
+PkgModuleFunctions::GetBackupPath ()
 {
     return YCPString (_y2pm.instTarget().getBackupPath().asString());
 }
@@ -1043,14 +982,9 @@ PkgModuleFunctions::GetBackupPath (YCPList args)
    set current path for update backup of rpm config files
 */
 YCPValue
-PkgModuleFunctions::SetBackupPath (YCPList args)
+PkgModuleFunctions::SetBackupPath (const YCPString& p)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SetBackupPath");
-    }
-    Pathname path (args->value(0)->asString()->value());
+    Pathname path (p->value());
     _y2pm.instTarget().setBackupPath (path);
     return YCPVoid();
 }
@@ -1062,13 +996,8 @@ PkgModuleFunctions::SetBackupPath (YCPList args)
    whether to create package backups during install or removal
 */
 YCPValue
-PkgModuleFunctions::CreateBackups (YCPList args)
+PkgModuleFunctions::CreateBackups (const YCPBoolean& flag)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::CreateBackups");
-    }
-    _y2pm.instTarget().createPackageBackups(args->value(0)->asBoolean()->value());
-    return YCPVoid();
+    _y2pm.instTarget ().createPackageBackups (flag->value ());
+    return YCPVoid ();
 }
