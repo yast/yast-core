@@ -396,6 +396,15 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
 	// reset LC_CTYPE !!! (for ncurses)
 	setlocale( LC_CTYPE, locale.c_str() );
     }
+    
+    /* Change language. see info:gettext: */
+    setenv ("LANGUAGE", currentLanguage.c_str(), 1);
+
+    /* Make change known.  */
+    {
+        extern int _nl_msg_cat_cntr;
+        ++_nl_msg_cat_cntr;
+    }
 
     // FIXME: should be ycp2debug
     y2debug ( "WFM SetLanguage(\"%s\"), Encoding(\"%s\")",
