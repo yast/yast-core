@@ -114,7 +114,23 @@ getTheCandidate (PMSelectablePtr selectable)
 YCPValue
 PkgModuleFunctions::PkgMediaSizes (YCPList args)
 {
-    vector<FSize> mediasizes;
+    // compute max number of media across all sources
+
+    unsigned int mediacount = 0;
+
+    for (vector<InstSrcManager::ISrcId>::const_iterator it = _sources.begin();
+	 it != _sources.end(); ++it)
+    {
+	if (*it == 0) 
+	    continue;
+
+	unsigned int count = (*it)->descr()->media_count();
+	if (count > mediacount)
+	    mediacount = count;
+    }
+    MIL << "Max media count " << mediacount << endl:
+
+    vector<FSize> mediasizes(mediacount);
 
     for (PMPackageManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
 	 it != _y2pm.packageManager().end(); ++it)
@@ -132,6 +148,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 	FSize size = package->size();
 	if (medianr > mediasizes.size())
 	{
+	    ERR << "resize needed " << medianr << endl;
 	    mediasizes.resize (medianr);
 	}
 	mediasizes[medianr-1] += size;
@@ -688,7 +705,7 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 
 
 /**
-   @builtin Pkg::PkgCommit (integer medianr) -> [ int successful, list failed, list remaining ]
+   @builtin Pkg::PkgCommit (integer medianr) -> [ int successful, list failed, list remaining, list srcremaining ]
 
    Commit package changes (actually install/delete packages)
 
@@ -709,7 +726,8 @@ PkgModuleFunctions::PkgCommit (YCPList args)
 
     std::list<std::string> errors;
     std::list<std::string> remaining;
-    int count = _y2pm.commitPackages (medianr, errors, remaining);
+    std::list<std::string> srcremaining;
+    int count = _y2pm.commitPackages (medianr, errors, remaining, srcremaining);
 
     YCPList ret;
     ret->add (YCPInteger (count));
@@ -719,13 +737,19 @@ PkgModuleFunctions::PkgCommit (YCPList args)
     {
 	errlist->add (YCPString (*it));
     }
+    ret->add (errlist);
     YCPList remlist;
     for (std::list<std::string>::const_iterator it = remaining.begin(); it != remaining.end(); ++it)
     {
 	remlist->add (YCPString (*it));
     }
-    ret->add (errlist);
     ret->add (remlist);
+    YCPList srclist;
+    for (std::list<std::string>::const_iterator it = srcremaining.begin(); it != srcremaining.end(); ++it)
+    {
+	srclist->add (YCPString (*it));
+    }
+    ret->add (srclist);
     return ret;
 }
 
