@@ -307,12 +307,12 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::DUInit (list string) -> void
+ * @builtin Pkg::InitDU (list string) -> void
  *
  * return init DU calculation for given directories
  */
 YCPValue
-PkgModuleFunctions::TargetDUInit (YCPList args)
+PkgModuleFunctions::TargetInitDU (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isList())
@@ -345,5 +345,36 @@ PkgModuleFunctions::TargetDUInit (YCPList args)
     _y2pm.packageManager().setMountPoints(mountpoints);
     return YCPVoid();
 }
+
+
+/** ------------------------
+ * 
+ * @builtin Pkg::GetDU (void) -> map
+ *
+ * return current DU calculations
+ * $[ "dir" : [ total, used, pkgusage ], .... ]
+ * total == total size for this partition
+ * used == current used size on target
+ * pkgusage == future used size on target based on current package selection
+ */
+YCPValue
+PkgModuleFunctions::TargetGetDU (YCPList args)
+{
+    YCPMap dirmap;
+    std::set<PkgDuMaster::MountPoint> mountpoints = _y2pm.packageManager().currentDu();
+
+    for (std::set<PkgDuMaster::MountPoint>::iterator it = mountpoints.begin();
+	 it != mountpoints.end(); ++it)
+    {
+	YCPList sizelist;
+	sizelist->add (YCPInteger ((long long)(it->_total)));
+	sizelist->add (YCPInteger ((long long)(it->_used)));
+	sizelist->add (YCPInteger ((long long)(it->_pkgusage)));
+
+	dirmap->add (YCPString (it->_mountpoint), sizelist);
+    }
+    return dirmap;
+}
+
 
 

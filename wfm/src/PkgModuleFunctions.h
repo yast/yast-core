@@ -114,7 +114,8 @@ class PkgModuleFunctions
 	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetProducts (YCPList args);
 	YCPValue TargetRebuildDB (YCPList args);
-	YCPValue TargetDUInit (YCPList args);
+	YCPValue TargetInitDU (YCPList args);
+	YCPValue TargetGetDU (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);
