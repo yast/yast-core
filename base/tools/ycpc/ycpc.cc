@@ -918,6 +918,7 @@ int main(int argc, char *argv[])
 		break;
 	    case 'M': {
 		YCPPathSearch::addPath (YCPPathSearch::Module, optarg);
+#if 0
 		char *depend = dependCheck (optarg);
 		if (depend || *depend != 0)
 		{
@@ -925,6 +926,7 @@ int main(int argc, char *argv[])
 		    recompileAll (deplist, depend);
 		    free (depend);
 		}
+#endif
 	    }
 		break;
 	    case 'l':
