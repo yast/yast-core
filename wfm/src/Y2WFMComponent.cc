@@ -164,12 +164,6 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
 }
 
 
-YCPValue
-Y2WFMComponent::evaluate (const YCPValue& command)
-{
-    return YCPError("No interpreter for WFM callback available");
-}
-
 Y2WFMComponent::WFMSubAgents::iterator
 Y2WFMComponent::find_handle (int handle)
 {

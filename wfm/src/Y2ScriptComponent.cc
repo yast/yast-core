@@ -59,13 +59,6 @@ string Y2ScriptComponent::name() const
 }
 
 
-YCPValue
-Y2ScriptComponent::evaluate (const YCPValue& command)
-{
-    return getCallback ()->evaluate (command);
-}
-
-
 Y2Component * Y2ScriptComponent::wfm_instance ()
 {
     if (m_wfm != 0) return m_wfm;

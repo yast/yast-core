@@ -74,12 +74,6 @@ class Y2PluginComponent : public Y2Component
      */
     Y2Component* comp;
 
-    /**
-     * The saved callback pointer to be passed to the component
-     * after creating (plugin loaded).
-     */
-    Y2Component* m_callback;
-
 public:
 
     Y2PluginComponent (bool is_server, string filename, const char* creator_name,
@@ -121,20 +115,6 @@ public:
      * This method is only valid, if the component is a server.
      */
     void setServerOptions (int argc, char** argv);
-
-    /**
-     * Functions to pass callback information
-     * The callback is a pointer to a Y2Component with
-     * a valid evaluate() function.
-     * Override the Y2Component functions here since the plugin
-     * component isn't the 'real' component but just a wrapper
-     * which contains a pointer to the real one.
-     * So any callback information must be passed by the Y2PluginComponent
-     * to the component loaded via plugin.
-     */
-
-    Y2Component* getCallback (void) const;
-    void setCallback (Y2Component *callback);
 
     /**
      * Launches the plugin with the previously set parameters.

@@ -76,11 +76,6 @@ public:
     virtual string name() const;
 
     /**
-     * Only used for callbacks.
-     */
-    virtual YCPValue evaluate (const YCPValue& command);
-
-    /**
      * Implements the communication with the server component.
      * It delegates it to the workflowmanager component.
      */

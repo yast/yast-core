@@ -40,8 +40,7 @@ Y2PluginComponent::Y2PluginComponent (bool is_server, string filename,
       argv (0),
       level (level),
       handle (0),
-      comp (0),
-      m_callback (0)
+      comp (0)
 {
     // load the plugin right-away now, there will be no evaluate prior builtins!!!
     loadPlugin();
@@ -73,46 +72,6 @@ Y2PluginComponent::setServerOptions (int argc, char** argv)
     {
 	comp->setServerOptions (argc, argv);
     }
-}
-
-
-Y2Component*
-Y2PluginComponent::getCallback (void) const
-{
-    Y2Component *callback;
-    if (comp)
-    {
-	callback = comp->getCallback();
-    }
-    else
-    {
-	callback = m_callback;
-    }
-
-#if 0
-    y2warning ("Y2PluginComponent[%p]::getCallback = %p", this, callback);
-#endif
-
-    return callback;
-}
-
-
-void
-Y2PluginComponent::setCallback (Y2Component* callback)
-{
-#if 0
-    y2warning ("Y2PluginComponent[%p]::setCallback(%p)", this, callback);
-#endif
-
-    if (comp)
-    {
-	comp->setCallback (callback);
-    }
-    else
-    {
-	m_callback = callback;
-    }
-    return;
 }
 
 
@@ -265,9 +224,6 @@ Y2PluginComponent::loadPlugin ()
 
 	if (is_server == y2cc->isServerCreator())	// perhaps that's it
 	{
-	    // get current callback before (!) overwriting comp
-	    Y2Component* callback = getCallback();
-
 	    comp = y2cc->create (component_name.c_str());	// try it
 
 	    y2debug ("Y2PluginComponent @ %p created server '%s' @ %p",
@@ -279,12 +235,6 @@ Y2PluginComponent::loadPlugin ()
 		{
 		    comp->setServerOptions (argc, argv);
 		}
-
-		y2debug ("Y2PluginComponent @ %p  %p->setCallback(%p)",
-			 this, comp, callback);
-
-		// pass saved callback pointer to newly created component.
-		comp->setCallback (callback);
 		return true;
 	    }
 	}

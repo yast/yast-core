@@ -49,14 +49,6 @@ public:
      */
     virtual YCPValue doActualWork(const YCPList& arglist, Y2Component *displayserver);
 
-    /**
-     * callback entry point
-     *   usually calls back into Y2WFMInterpreter::evaluate
-     *   We're not using a pointer here because the evaluate() slot
-     *   already exists in the Y2Component class
-     */
-    virtual YCPValue evaluate(const YCPValue& command);
-
     static Y2WFMComponent* instance() { return current_wfm; }
 
     YCPInteger SCROpen (const YCPString& name, const YCPBoolean &check_version);

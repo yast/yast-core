@@ -13,7 +13,9 @@
    File:       Y2Component.h
 
    Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+	       Thomas Roelz <tom@suse.de>
+	       Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer: Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 // -*- c++ -*-
@@ -93,8 +95,7 @@ public:
      * be executed. The execution is performed by some @ref YCPInterpreter.
      * @return the result. Destroy it after use with @ref YCPElementRep#destroy.
      *
-     * This method is only defined, if the component is a server. Or a client
-     * which does support callbacks.
+     * This method is only defined, if the component is a server.
      */
     virtual YCPValue evaluate(const YCPValue& command);
 
@@ -118,15 +119,6 @@ public:
      * This method is only defined, if the component is a server.
      */
     virtual void setServerOptions(int argc, char **argv);
-
-    /**
-     * Functions to pass callback information
-     * The callback is a pointer to a Y2Component with
-     * a valid evaluate() function.
-     */
-
-    virtual Y2Component *getCallback (void) const;
-    virtual void setCallback (Y2Component *callback);
 
     /**
      * Try to import a given namespace. This method is used
@@ -177,13 +169,6 @@ public:
      * the loading of the plugin as well.
      */
     virtual SCRAgent * getSCRAgent ();
-
-private:
-
-    /**
-     * pointer to callback component
-     */
-    Y2Component *callbackComponent;
 };
 
 #endif // Y2Component_h

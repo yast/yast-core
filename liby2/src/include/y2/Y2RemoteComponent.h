@@ -160,7 +160,7 @@ private:
     bool analyseURL(string);
 
     /**
-     * Is the remote connection up so that we can send callbacks there?
+     * Is the remote connection up?
      */
     bool is_up;
 

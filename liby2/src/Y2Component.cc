@@ -30,7 +30,6 @@
 
 Y2Component::Y2Component()
 {
-    callbackComponent = 0;
 }
 
 
@@ -58,28 +57,6 @@ void
 Y2Component::setServerOptions(int, char **)
 {
     // No warning. It is legal to ignore the options
-}
-
-
-Y2Component *
-Y2Component::getCallback (void) const
-{
-#if 0
-    y2warning ("getCallback of %s (%p) equals %s (%p)", name ().c_str (), this,
-	     callbackComponent ? callbackComponent->name ().c_str () : "none", callbackComponent);
-#endif
-    return callbackComponent;
-}
-
-
-void
-Y2Component::setCallback (Y2Component *callback)
-{
-#if 0
-    y2warning ("setCallback of %s (%p) set to %s (%p)", name ().c_str (), this,
-	     callback ? callback->name ().c_str () : "none", callback);
-#endif
-    callbackComponent = callback;
 }
 
 
