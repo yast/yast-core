@@ -33,6 +33,7 @@
 
 #include "pathsearch.h"
 
+// watch out, duplicated in YCPPathSearch::initialize
 static const char *paths[] =
 {
     "/y2update",		// Necessary during installation, but
@@ -261,6 +262,7 @@ std::list<string> YCPPathSearch::searchList[YCPPathSearch::num_Kind];
 
 bool YCPPathSearch::initialized = false;
 
+// watch out, duplicated in char *paths[]
 void
 YCPPathSearch::initialize (Kind kind, const char *suffix)
 {
