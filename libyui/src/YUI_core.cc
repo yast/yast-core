@@ -59,20 +59,18 @@ typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue 
 
 
 bool YUI::_reverseLayout = false;
-YUI * YUI::current_ui = 0;
 
-YUI::YUI( bool with_threads, Y2Component *callback )
+
+YUI::YUI( bool with_threads )
     : id_counter(0)
     , with_threads( with_threads )
     , _moduleName( "yast2" )
     , _productName( "SuSE Linux" )
     , macroRecorder (0)
     , macroPlayer (0)
-    , callbackComponent( callback )
     , _events_blocked( false )
+    , _callback( 0 )
 {
-    if ( ! current_ui )
-	current_ui = this;
 }
 
 
@@ -94,39 +92,6 @@ YUI::~YUI()
 
     deleteMacroRecorder();
     deleteMacroPlayer();
-    
-    if ( current_ui == this )
-	current_ui = 0;
-}
-
-
-void YUI::setCurrentInstance()
-{
-    current_ui = this;
-}
-
-
-Y2Component *
-YUI::getCallback( void ) const
-{
-    // y2debug ( "YUI[%p]::getCallback() = %p", this, callbackComponent );
-    return callbackComponent;
-}
-
-
-void
-YUI::setCallback( Y2Component *callback )
-{
-    // y2debug ( "YUI[%p]::setCallback( %p )", this, callback );
-    callbackComponent = callback;
-    return;
-}
-
-
-string
-YUI::name() const
-{
-    return "UI";	// must be upper case
 }
 
 

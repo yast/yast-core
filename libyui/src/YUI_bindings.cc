@@ -32,13 +32,14 @@
 #include "ycp/y2log.h"
 
 #include "YUI.h"
+#include "YUIComponent.h"
 
 
 static YCPValue
 UISetLanguage( const YCPString & language )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetLanguage( language );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetLanguage( language );
 
     return YCPVoid();
 }
@@ -47,8 +48,8 @@ UISetLanguage( const YCPString & language )
 static YCPValue
 UISetLanguage2( const YCPString & language, const YCPString & encoding )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetLanguage( language, encoding );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetLanguage( language, encoding );
 
     return YCPVoid();
 }
@@ -57,8 +58,8 @@ UISetLanguage2( const YCPString & language, const YCPString & encoding )
 static YCPValue
 UIGetProductName()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateGetProductName();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateGetProductName();
     else
 	return YCPVoid();
 }
@@ -67,8 +68,8 @@ UIGetProductName()
 static YCPValue
 UISetProductName( const YCPString & name )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetProductName( name );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetProductName( name );
 
     return YCPVoid();
 }
@@ -81,8 +82,8 @@ UISetConsoleFont( const YCPString & console_magic,
 		  const YCPString & unicode_map,
 		  const YCPString & encoding )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetConsoleFont( console_magic,
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetConsoleFont( console_magic,
 						 font,
 						 screen_map,
 						 unicode_map,
@@ -94,8 +95,8 @@ UISetConsoleFont( const YCPString & console_magic,
 static YCPValue
 UISetKeyboard()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetKeyboard();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetKeyboard();
 
     return YCPVoid();
 }
@@ -104,8 +105,8 @@ UISetKeyboard()
 static YCPValue
 UIGetLanguage( const YCPBoolean & strip )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateGetLanguage( strip );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateGetLanguage( strip );
     else
 	return YCPVoid();
 }
@@ -114,8 +115,8 @@ UIGetLanguage( const YCPBoolean & strip )
 static YCPValue
 UIUserInput()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateUserInput();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateUserInput();
     else
 	return YCPVoid();
 }
@@ -124,8 +125,8 @@ UIUserInput()
 static YCPValue
 UIPollInput()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluatePollInput();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluatePollInput();
     else
 	return YCPVoid();
 }
@@ -134,8 +135,8 @@ UIPollInput()
 static YCPValue
 UITimeoutUserInput( const YCPInteger& timeout )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateTimeoutUserInput( timeout );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateTimeoutUserInput( timeout );
     else
 	return YCPVoid();
 }
@@ -144,8 +145,8 @@ UITimeoutUserInput( const YCPInteger& timeout )
 static YCPValue
 UIWaitForEvent()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateWaitForEvent();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateWaitForEvent();
     else
 	return YCPVoid();
 }
@@ -154,8 +155,8 @@ UIWaitForEvent()
 static YCPValue
 UIWaitForEvent1( const YCPInteger& timeout )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateWaitForEvent( timeout );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateWaitForEvent( timeout );
     else
 	return YCPVoid();
 }
@@ -164,9 +165,9 @@ UIWaitForEvent1( const YCPInteger& timeout )
 static YCPValue
 UIOpenDialog2( const YCPTerm & opts, const YCPTerm & dialog_term )
 {
-    if ( YUI::instance() )
+    if ( YUIComponent::ui() )
 	// Notice: Parameter order is switched!
-	return YUI::instance()->evaluateOpenDialog( dialog_term, opts );
+	return YUIComponent::ui()->evaluateOpenDialog( dialog_term, opts );
     else
 	return YCPVoid();
 }
@@ -175,8 +176,8 @@ UIOpenDialog2( const YCPTerm & opts, const YCPTerm & dialog_term )
 static YCPValue
 UIOpenDialog( const YCPTerm & dialog_term )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateOpenDialog( dialog_term );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateOpenDialog( dialog_term );
     else
 	return YCPVoid();
 }
@@ -185,8 +186,8 @@ UIOpenDialog( const YCPTerm & dialog_term )
 static YCPValue
 UICloseDialog()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateCloseDialog();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateCloseDialog();
     else
 	return YCPVoid();
 }
@@ -195,8 +196,8 @@ UICloseDialog()
 static YCPValue
 UIChangeWidget( const YCPSymbol & widget_id, const YCPValue & property, const YCPValue & new_value )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateChangeWidget( widget_id, property, new_value );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
     else
 	return YCPVoid();
 }
@@ -205,8 +206,8 @@ UIChangeWidget( const YCPSymbol & widget_id, const YCPValue & property, const YC
 static YCPValue
 UIChangeWidget1( const YCPTerm & widget_id, const YCPValue & property, const YCPValue & new_value )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateChangeWidget( widget_id, property, new_value );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
     else
 	return YCPVoid();
 }
@@ -215,8 +216,8 @@ UIChangeWidget1( const YCPTerm & widget_id, const YCPValue & property, const YCP
 static YCPValue
 UIQueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateQueryWidget( widget_id, property );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -225,8 +226,8 @@ UIQueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
 static YCPValue
 UIQueryWidget1( const YCPSymbol & widget_id, const YCPTerm & property )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateQueryWidget( widget_id, property );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -235,8 +236,8 @@ UIQueryWidget1( const YCPSymbol & widget_id, const YCPTerm & property )
 static YCPValue
 UIQueryWidget2( const YCPTerm & widget_id, const YCPSymbol & property )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateQueryWidget( widget_id, property );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -245,8 +246,8 @@ UIQueryWidget2( const YCPTerm & widget_id, const YCPSymbol & property )
 static YCPValue
 UIQueryWidget3( const YCPTerm & widget_id, const YCPTerm & property )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateQueryWidget( widget_id, property );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -255,8 +256,8 @@ UIQueryWidget3( const YCPTerm & widget_id, const YCPTerm & property )
 static YCPValue
 UIReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateReplaceWidget( widget_id, new_widget );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
     else
 	return YCPVoid();
 }
@@ -265,8 +266,8 @@ UIReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 static YCPValue
 UIReplaceWidget1( const YCPTerm & widget_id, const YCPTerm & new_widget )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateReplaceWidget( widget_id, new_widget );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
     else
 	return YCPVoid();
 }
@@ -275,8 +276,8 @@ UIReplaceWidget1( const YCPTerm & widget_id, const YCPTerm & new_widget )
 static YCPValue
 UISetFocus( const YCPSymbol & widget_id )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateSetFocus( widget_id );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateSetFocus( widget_id );
     else
 	return YCPVoid();
 }
@@ -285,8 +286,8 @@ UISetFocus( const YCPSymbol & widget_id )
 static YCPValue
 UISetFocus1( const YCPTerm & widget_id )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateSetFocus( widget_id );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateSetFocus( widget_id );
     else
 	return YCPVoid();
 }
@@ -295,8 +296,8 @@ UISetFocus1( const YCPTerm & widget_id )
 static YCPValue
 UIBusyCursor()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateBusyCursor();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateBusyCursor();
 
     return YCPVoid();
 }
@@ -305,8 +306,8 @@ UIBusyCursor()
 static YCPValue
 UIRedrawScreen()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateRedrawScreen();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateRedrawScreen();
 
     return YCPVoid();
 }
@@ -315,8 +316,8 @@ UIRedrawScreen()
 static YCPValue
 UINormalCursor()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateNormalCursor();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateNormalCursor();
 
     return YCPVoid();
 }
@@ -325,8 +326,8 @@ UINormalCursor()
 static YCPValue
 UIMakeScreenshot1( const YCPString & filename )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateMakeScreenShot( filename );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateMakeScreenShot( filename );
 
     return YCPVoid();
 }
@@ -335,7 +336,7 @@ UIMakeScreenshot1( const YCPString & filename )
 static YCPValue
 UIMakeScreenshot()
 {
-    if ( YUI::instance() )
+    if ( YUIComponent::ui() )
 	return UIMakeScreenshot1( YCPNull() );
     else
 	return YCPVoid();
@@ -345,8 +346,8 @@ UIMakeScreenshot()
 static YCPValue
 UIDumpWidgetTree()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateDumpWidgetTree();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateDumpWidgetTree();
 
     return YCPVoid();
 }
@@ -355,8 +356,8 @@ UIDumpWidgetTree()
 static YCPValue
 UIRecordMacro( const YCPString & filename )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateRecordMacro( filename );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateRecordMacro( filename );
 
     return YCPVoid();
 }
@@ -365,8 +366,8 @@ UIRecordMacro( const YCPString & filename )
 static YCPValue
 UIStopRecordMacro()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateStopRecordMacro();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateStopRecordMacro();
 
     return YCPVoid();
 }
@@ -375,8 +376,8 @@ UIStopRecordMacro()
 static YCPValue
 UIPlayMacro( const YCPString & filename )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluatePlayMacro( filename );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluatePlayMacro( filename );
 
     return YCPVoid();
 }
@@ -385,8 +386,8 @@ UIPlayMacro( const YCPString & filename )
 static YCPValue
 UIFakeUserInput( const YCPValue & next_input )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateFakeUserInput( next_input );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateFakeUserInput( next_input );
 
     return YCPVoid();
 }
@@ -395,8 +396,8 @@ UIFakeUserInput( const YCPValue & next_input )
 static YCPValue
 UIGlyph( const YCPSymbol & glyphSym  )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateGlyph( glyphSym );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateGlyph( glyphSym );
     else
 	return YCPString( "*" );
 }
@@ -405,8 +406,8 @@ UIGlyph( const YCPSymbol & glyphSym  )
 static YCPValue
 UIGetDisplayInfo()
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateGetDisplayInfo();
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateGetDisplayInfo();
     else
 	return YCPVoid();
 }
@@ -415,8 +416,8 @@ UIGetDisplayInfo()
 static YCPValue
 UIRecalcLayout()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateRecalcLayout();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateRecalcLayout();
 
     return YCPVoid();
 }
@@ -425,8 +426,8 @@ UIRecalcLayout()
 static YCPValue
 UIPostponeShortcutCheck()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluatePostponeShortcutCheck();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluatePostponeShortcutCheck();
 
     return YCPVoid();
 }
@@ -434,8 +435,8 @@ UIPostponeShortcutCheck()
 static YCPValue
 UICheckShortcuts()
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateCheckShortcuts();
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateCheckShortcuts();
 
     return YCPVoid();
 }
@@ -444,8 +445,8 @@ UICheckShortcuts()
 static YCPValue
 UIWidgetExists( const YCPSymbol & widget_id )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateWidgetExists( widget_id );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
     else
 	return YCPVoid();
 }
@@ -454,8 +455,8 @@ UIWidgetExists( const YCPSymbol & widget_id )
 static YCPValue
 UIWidgetExists1( const YCPTerm & widget_id )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateWidgetExists( widget_id );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
     else
 	return YCPVoid();
 }
@@ -464,8 +465,8 @@ UIWidgetExists1( const YCPTerm & widget_id )
 static YCPValue
 UIRunPkgSelection( const YCPValue & widget_id )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateRunPkgSelection( widget_id );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateRunPkgSelection( widget_id );
     else
 	return YCPVoid();
 }
@@ -474,8 +475,8 @@ UIRunPkgSelection( const YCPValue & widget_id )
 static YCPValue
 UIAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateAskForExistingDirectory( startDir, headline );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateAskForExistingDirectory( startDir, headline );
     else
 	return YCPVoid();
 }
@@ -484,8 +485,8 @@ UIAskForExistingDirectory( const YCPString & startDir, const YCPString & headlin
 static YCPValue
 UIAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline  )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateAskForExistingFile( startWith, filter, headline );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateAskForExistingFile( startWith, filter, headline );
     else
 	return YCPVoid();
 }
@@ -494,8 +495,8 @@ UIAskForExistingFile( const YCPString & startWith, const YCPString & filter, con
 static YCPValue
 UIAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateAskForSaveFileName( startWith, filter, headline );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateAskForSaveFileName( startWith, filter, headline );
     else
 	return YCPVoid();
 }
@@ -504,8 +505,8 @@ UIAskForSaveFileName( const YCPString & startWith, const YCPString & filter, con
 static YCPValue
 UISetFunctionKeys( const YCPMap & new_fkeys )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetFunctionKeys( new_fkeys );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetFunctionKeys( new_fkeys );
 
     return YCPVoid();
 }
@@ -514,8 +515,8 @@ UISetFunctionKeys( const YCPMap & new_fkeys )
 static YCPValue
 UIRecode( const YCPString & from, const YCPString & to, const YCPString & text )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateRecode( from, to, text );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateRecode( from, to, text );
     else
 	return YCPVoid();
 }
@@ -524,8 +525,8 @@ UIRecode( const YCPString & from, const YCPString & to, const YCPString & text )
 static YCPValue
 UISetModulename( const YCPString & name )
 {
-    if ( YUI::instance() )
-	YUI::instance()->evaluateSetModulename( name );
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateSetModulename( name );
 
     return YCPVoid();
 }
@@ -534,8 +535,8 @@ UISetModulename( const YCPString & name )
 static YCPValue
 UIHasSpecialWidget( const YCPSymbol & widget )
 {
-    if ( YUI::instance() )
-	return YUI::instance()->evaluateHasSpecialWidget( widget );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateHasSpecialWidget( widget );
     else
 	return YCPBoolean( false );
 }
@@ -544,10 +545,10 @@ UIHasSpecialWidget( const YCPSymbol & widget )
 static YCPValue
 UICallHandler( void * ptr, int argc, YCPValue argv[] )
 {
-    if ( YUI::instance() )
+    if ( YUIComponent::ui() )
     {
 	y2debug( "Calling builtin" );
-	return YUI::instance()->callBuiltin( ptr, argc, argv );
+	return YUIComponent::ui()->callBuiltin( ptr, argc, argv );
     }
     else
     {

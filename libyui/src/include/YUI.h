@@ -22,9 +22,13 @@
 
 #include <pthread.h>
 #include <deque>
+#include <ycp/YCPString.h>
+#include <ycp/YCPVoid.h>
+#include <ycp/YCPTerm.h>
+#include <ycp/YCPInteger.h>
 #include <ycp/YCPMap.h>
-
-#include <Y2.h>
+#include <ycp/YCPBoolean.h>
+#include <ycp/YCPByteblock.h>
 
 #include "YWidget.h"
 #include "YAlignment.h"
@@ -44,6 +48,7 @@ class YMultiSelectionBox;
 class YRadioButtonGroup;
 class YTree;
 class YTreeItem;
+class Y2Component;
 
 
 typedef struct
@@ -86,20 +91,22 @@ struct  YUIBuiltinCallData
  * This class is an abstract base class that contains pure virtuals.
  * It is not intended for direct instantiation, only for inheritance.
  */
-class YUI : public Y2Component
+class YUI
 {
 protected:
     /**
      * Constructor.
      */
-    YUI( bool with_threads, Y2Component *callback );
+    YUI( bool with_threads );
 
+    
+public:
+    
     /**
      * Destructor.
      */
     virtual ~YUI();
 
-public:
     /**
      * Looks up the topmost dialog
      */
@@ -131,19 +138,6 @@ public:
      **/
     virtual bool eventsBlocked() const { return _events_blocked; }
 
-
-    /**
-     * switch callback pointer
-     * used for CallModule() implementation which creates a new
-     * workflow manager (the target of the callback pointer), to
-     * which the callback pointer must be adjusted.
-     * this function is used to pass the getCallback/setCallback
-     * functions from the underlying Y2{Qt,Ncurses,whatever}Component
-     * up to the interpreter.
-     */
-    Y2Component *getCallback( void ) const;
-    void setCallback( Y2Component *callback );
-
     /**
      * Must be called after the constructor of the Qt/NCurses ui
      * is ready. Starts the ui thread.
@@ -160,11 +154,6 @@ public:
     };
 
     /**
-     * Name of component, returns "ui".
-     */
-    string name() const;
-
-    /**
      * Issue an internal error. Derived UIs should overwrite this to display
      * the error message in a suitable manner, e.g. open a popup (and wait for
      * confirmation!).
@@ -173,9 +162,6 @@ public:
      * Notice: This function does _not_ abort the program.
      */
     virtual void internalError( const char *msg );
-    
-    static YUI * instance() { return current_ui; }
-    void setCurrentInstance();
 
     /**
      * Might be handy if you have to recode strings from/to utf-8
@@ -288,6 +274,16 @@ public:
      * 'function'. 
      **/ 
     static YCPValue callFunction( void * function, int argc, YCPValue argv[] );
+
+    /**
+     * Set a callback component.
+     **/
+    void setCallback( Y2Component * callback ) { _callback = callback; }
+    
+    /**
+     * Returns the callback previously set with setCallback().
+     **/
+    Y2Component * getCallback() const { return _callback; }
 
     /**
      * Implementations for most UI builtins.
@@ -952,7 +948,7 @@ protected:
 			  bool 		wait,
 			  bool 		detailed );
 
-
+    
     /**
      * Implements the WFM or SCR callback command.
      */
@@ -1417,11 +1413,6 @@ protected:
     deque<YCPValue> fakeUserInputQueue;
 
     /**
-     * callback handler evaluate function
-     */
-    Y2Component *callbackComponent;
-
-    /**
      * The current mapping of widget labels to default function keys.
      **/
     YCPMap default_fkeys;
@@ -1437,9 +1428,11 @@ protected:
      * have right-to-left writing direction (Arabic, Hebrew).
      **/
     static bool _reverseLayout;
-    
-private:
-    static YUI * current_ui;
+
+    /**
+     * The callback component previously set with setCallback().
+     **/
+    Y2Component * _callback;
 };
 
 #endif // YUI_h

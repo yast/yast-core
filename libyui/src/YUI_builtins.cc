@@ -39,8 +39,7 @@
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPVoid.h>
+#include <Y2.h>
 
 #include "YUI.h"
 #include "YEvent.h"
@@ -1661,22 +1660,22 @@ int YUI::defaultFunctionKey( YCPString ylabel )
 
 YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 {
-    y2debug ( "( %s ), callback @ %p", term->toString().c_str(), callbackComponent );
+    y2debug ( "( %s ), callback @ %p", term->toString().c_str(), _callback );
     if ( term->size() != 1 )	// must have 1 arg - anything allowed
     {
 	return YCPNull();
     }
 
-    if ( callbackComponent )
+    if ( _callback )
     {
 	YCPValue v = YCPNull();
 	if ( to_wfm )		// if it goes to WFM, just send the value
 	{
-	    v = callbackComponent->evaluate ( term->value(0) );
+	    v = _callback->evaluate ( term->value(0) );
 	}
 	else		// going to SCR, send the complete term
 	{
-	    v = callbackComponent->evaluate( term );
+	    v = _callback->evaluate( term );
 	}
 	y2debug ( "callback returns ( %s )", v->toString().c_str() );
 	return v;

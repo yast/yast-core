@@ -31,6 +31,9 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
+#include <ycp/YCPFloat.h>
+#include <ycp/YCPByteblock.h>
+
 #include "YUI.h"
 #include "YUISymbols.h"
 #include "YWidget.h"

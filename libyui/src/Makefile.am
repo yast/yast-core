@@ -9,6 +9,7 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"
 lib_LTLIBRARIES = libyui.la
 
 libyui_la_SOURCES =				\
+	YUIComponent.cc				\
 	YUI_core.cc				\
 	YUI_builtins.cc				\
 	YUI_widgets.cc				\
