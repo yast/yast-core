@@ -121,6 +121,33 @@ PkgModuleFunctions::startCachedSources (bool enabled_only)
 // source related
 
 /**
+ * @builtin Pkg::SourceStartManager (boolean autoEnable) -> boolean
+ *
+ * Starts the InstSrcManager.
+ * @param
+ */
+YCPValue
+PkgModuleFunctions::SourceStartManager (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::SourceCreate");
+    }
+
+    bool enable = args->value(0)->asBoolean()->value();
+
+    if ( enable ) {
+        _y2pm.instSrcManager();
+        return YCPBoolean( true );
+    } else {
+        if ( _y2pm.noAutoInstSrcManager() ) return YCPBoolean( true );
+        else return YCPBoolean( false );
+    }
+}
+
+
+/**
  * @builtin Pkg::SourceCreate (string url) -> integer
  *
  * creates a *NEW* package source under the given url
@@ -304,7 +331,7 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
     data->add (YCPString ("product_dir"), YCPString (source_descr->product_dir().asString()));
     data->add (YCPString ("type"), YCPString (InstSrc::toString (source_descr->type())));
     data->add (YCPString ("url"), YCPString (source_descr->url().asString ()));
-    data->add (YCPString ("enabled"), YCPBoolean(source_id->enabled()));
+    data->add (YCPString ("enabled"), YCPBoolean(source_descr->default_activate()));
     return data;
 }
 
@@ -490,3 +517,29 @@ PkgModuleFunctions::SourceProduct (YCPList args)
     return Descr2Map (source_id->descr());
 }
 
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceSetEnabled (integer source_id, boolean enabled) -> bool
+ *
+ * Set default activation state of source. Return true, if successful, false, if not.
+ */ 
+YCPValue
+PkgModuleFunctions::SourceSetEnabled (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    if ((args->size() != 2)
+	|| !(args->value(1)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::SourceProvideFile");
+    }
+
+    bool enabled = args->value(1)->asBoolean()->value();
+
+    _last_error = _y2pm.instSrcManager().setAutoenable( source_id, enabled );
+
+    if ( _last_error ) return YCPBoolean( false );
+    else return YCPBoolean( true );
+}

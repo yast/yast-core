@@ -92,6 +92,7 @@ class PkgModuleFunctions
 	YCPValue CallbackProgressRebuildDB (YCPList args);
 
 	// source related
+        YCPValue SourceStartManager (YCPList args);
 	YCPValue SourceCreate (YCPList args);
 	YCPValue SourceStartCache (YCPList args);
 	YCPValue SourceGetCurrent (YCPList args);
@@ -102,6 +103,7 @@ class PkgModuleFunctions
 	YCPValue SourceProvideFile (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
 	YCPValue SourceProduct (YCPList args);
+        YCPValue SourceSetEnabled (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);

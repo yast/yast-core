@@ -143,6 +143,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetInitDU")	return TargetInitDU (args);
     else if (function == "TargetGetDU")		return TargetGetDU (args);
     // source related functions
+    else if (function == "SourceStartManager")	return SourceStartManager(args);
     else if (function == "SourceCreate")	return SourceCreate (args);
     else if (function == "SourceStartCache")	return SourceStartCache (args);
     else if (function == "SourceGetCurrent")	return SourceGetCurrent (args);
@@ -153,5 +154,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
     else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
     else if (function == "SourceProduct")	return SourceProduct (args);
+    else if (function == "SourceSetEnabled")	return SourceSetEnabled (args);
     return YCPError (string ("Undefined Pkg::")+function);
 }
