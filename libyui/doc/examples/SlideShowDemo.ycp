@@ -169,18 +169,13 @@
 		      `DumbTab( [ `item(`id(`showSlideShow), "Slide Sho&w" ),
 				  `item(`id(`showDetails  ), "&Details"    ) ],
 				`VBox(
-				      `VSpacing( 1 ),
+				      `VSpacing( 0.5 ),
 				      `HBox(
 					    `HSpacing( 0.5 ),
-					    `ColoredLabel(`opt(`hstretch, `vstretch),
-							   "Test",
-							   `rgb( 200, 200, 200 ),
-							   `rgb( 0, 0, 200 ),
-							   5 ),
-					    // `ReplacePoint(`id(`tabContents), slideShowPage ),
+					    `ReplacePoint(`id(`tabContents), slideShowPage ),
 					    `HSpacing( 0.5 )
 					    ),
-				      `VSpacing( 0.2 )
+				      `VSpacing( 0.5 )
 				      )
 				)
 		      );
