@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun 27 12:38:06 CEST 2003 - msvec@suse.de
+
+- different fix for regexp*
+- 2.8.4
+
+-------------------------------------------------------------------
 Thu Jun 26 13:53:00 CEST 2003 - msvec@suse.de
 
 - fixed regexpsub behavior
