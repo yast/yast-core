@@ -22,7 +22,9 @@ use strict;
 # child running flag
 our $child_running = 0;
 our $child_pid = 0;
-    
+
+# max. size of input buffer (number of lines)
+my $buffer_size = 500;    
 
 # SIGCHLD handler
 sub Handler()
@@ -202,6 +204,10 @@ while (1)
 	    {
 		ycpReturnSkalarAsBoolean($pipe_defined);
 	    }
+	    elsif ($path eq '.buffer_size')
+	    {
+		ycpReturnSkalarAsInt($buffer_size);
+	    }
 	    else
 	    {
 		ErrorPath($path);
@@ -215,6 +221,34 @@ while (1)
 	    }
 	    exit(0);
 	}
+	elsif (ycpCommandIsWrite())
+	{
+	    if ($path eq '.buffer_size')
+	    {
+		if (ycpArgIsInteger())
+		{
+		    my $param = ycpGetArgInteger();
+
+		    if ($param >= 1)
+		    {
+			$buffer_size = ycpGetArgInteger();
+			ycpReturnSkalarAsBoolean(1);
+		    }
+		    else
+		    {
+			ycpReturnSkalarAsBoolean(0);
+		    }
+		}
+		else
+		{
+		    ErrorArg(ycpGetArgType());
+		}
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
 	else
 	{
 	    ErrorCommand(ycpGetCommand());
@@ -223,26 +257,34 @@ while (1)
 	    
     if ($output_avail) 	# script output available
     {
-	$line = <PIPE>;
- 
-	if (!defined $line)	
+	if ($newlines >= $buffer_size)
 	{
-	    $pipe_defined = 0;
-    	    $watch = $stdin_set;	# now watch only STDIN
-    	    close(PIPE);
-	    $exit = $? >> 8;		# high 8 bits are exit value
+	    # too many lines in input buffer - wait for STDIN command
+	    select(my $watch_out = $stdin_set, undef, undef, undef);
 	}
 	else
 	{
-	    chomp($line);
-	    
-	    if ($store_out)
+	    $line = <PIPE>;
+     
+	    if (!defined $line)	
 	    {
-		push(@out, $line);
+		$pipe_defined = 0;
+		$watch = $stdin_set;	# now watch only STDIN
+		close(PIPE);
+		$exit = $? >> 8;		# high 8 bits are exit value
 	    }
-	    
-	    $newlines++;
-	    $total_lines++;
+	    else
+	    {
+		chomp($line);
+		
+		if ($store_out)
+		{
+		    push(@out, $line);
+		}
+		
+		$newlines++;
+		$total_lines++;
+	    }
 	}
     }
 }

@@ -18,6 +18,7 @@ Changes:
 </P>
 
 <UL>
+  <LI><B>2003-03-28:</B> Added .buffer_size description</LI>
   <LI><B>2001-10-23:</B> Initial version</LI>
 </UL>
 
@@ -34,6 +35,9 @@ finished.</P>
 started and YCP code can continue. Agent stores data from STDOUT until they
 are read from YCP, which should parse data and refresh status in dialog.</P>
 
+<P>When input buffer in background agent reaches defined value subprocess is
+stopped until buffer is read. Default buffer size is 500 lines (see
+.buffer_size path).</P>
 
 <H2>Limitations</H2>
 
@@ -68,6 +72,7 @@ But these limitations can be removed...
 <TR><TD>status</TD><TD>none</TD><TD>integer</TD><TD>subprocess exit status</TD></TR>
 <TR><TD>newout</TD><TD>none</TD><TD>list of strings</TD><TD>return output since last reading.</TD></TR>
 <TR><TD>output_open</TD><TD>none</TD><TD>boolean</TD><TD>true if pipe from subprocess is open</TD></TR>
+<TR><TD>buffer_size</TD><TD>none</TD><TD>integer</TD><TD>size of input buffer</TD></TR>
 </TBODY>
 
 </TABLE>
@@ -106,6 +111,27 @@ true</TD></TR>
  
 <P>Example: <TT>SCR::Execute(.background.run_output, "/bin/rpm -qa") -&gt; true</TT></P>
 
+
+<H3>Write subpaths:</H3>
+
+<P>
+<TABLE cellspacing="5">
+
+<THEAD>
+<TR><TD><B>Path name</B></TD><TD><B>Paramenters</B></TD><TD><B>Result type</B></TD><TD><B>Description</B></TD></TR>
+</THEAD>
+
+<TBODY>
+<TR><TD>buffer_size</TD><TD>integer lines</TD><TD>boolean</TD> <TD>Set maximum
+number of stored lines (input buffer size). When this limit is reached
+subprocess will be stopped until new lines are read. Parameter <EM>lines</EM>
+has to be greater than 0. Returns true if new value was set.</TD></TR>
+</TBODY>
+
+</TABLE>
+</P>
+ 
+<P>Example: Set buffer size to 100 lines: <TT>SCR::Write(.background.buffer_size, 100) -&gt; true</TT></P>
 
 <H2>How to use background agent?</H2>
 
