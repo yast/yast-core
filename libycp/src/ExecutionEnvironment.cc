@@ -78,6 +78,7 @@ ExecutionEnvironment::pushframe (string called_function)
     y2debug ("Push frame %s", called_function.c_str ());
     CallFrame* frame = new CallFrame (filename(), linenumber (), called_function);
     m_backtrace.push_back (frame);
+    // backtrace( LOG_MILESTONE, 0 );
     
     if (m_backtrace.size () == WARN_RECURSION)
     {
@@ -90,28 +91,35 @@ void
 ExecutionEnvironment::popframe ()
 {
     y2debug ("Pop frame %p", m_backtrace.back ());
-    CallFrame* frame = m_backtrace.back ();
+    const CallFrame* frame = m_backtrace.back ();
     m_backtrace.pop_back ();
+    // backtrace( LOG_MILESTONE, 0 );
     delete frame;
 }
 
 
 void
-ExecutionEnvironment::backtrace (loglevel_t level, uint omit)
+ExecutionEnvironment::backtrace (loglevel_t level, uint omit) const
 {
     if (m_backtrace.empty ())
 	return;
 	
     // FIXME: omit
-    vector<CallFrame*>::iterator it = m_backtrace.end ();
+    CallStack::const_reverse_iterator it = m_backtrace.rbegin();
     
-    while (it != m_backtrace.begin ())
+    while (it != m_backtrace.rend())
     {
-	it--;
 	ycp2log (level, (*it)->filename.c_str (), (*it)->linenumber
-	    , "", "%s", (*it)->called_function.c_str ());
+		 , "", "%s", (*it)->called_function.c_str ());
+	++it;
     };
+}
 
+
+ExecutionEnvironment::CallStack ExecutionEnvironment::callstack() const
+{
+    // backtrace( LOG_MILESTONE, 0 );
+    return m_backtrace;
 }
 
 /* EOF */

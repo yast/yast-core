@@ -44,12 +44,16 @@ struct CallFrame {
  * where top level block does not exist.
  */
 class ExecutionEnvironment {
+
+public:
+    typedef vector<const CallFrame*> CallStack;
+    
 private:
     int m_linenumber;
     string m_filename;
     bool m_forced_filename;
     YStatementPtr m_statement;
-    vector<CallFrame*> m_backtrace;
+    CallStack m_backtrace;
 
 public:
     ExecutionEnvironment () : m_filename (""), m_forced_filename (false), m_statement(NULL) 
@@ -105,7 +109,15 @@ public:
      * @param skip	number of the top call frames to be omitted 
      *			from the backtrace
      */
-    void backtrace (loglevel_t level, uint skip = 0);
+    void backtrace (loglevel_t level, uint skip = 0) const;
+
+    /**
+     * Returns a copy of the call stack for debugging etc.
+     *
+     * The stack itself may safely be modified. The pointers it contains,
+     * however, may not.
+     **/
+    CallStack callstack() const;
 };
 
 #endif /* _execution_environment_h */
