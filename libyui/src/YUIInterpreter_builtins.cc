@@ -365,6 +365,10 @@ YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
  * The return value is the id of the widget that has been selected
  * or <tt>`cancel</tt> if the user selected the implicit cancel
  * button (for example he closes the window).
+ * <p>
+ * Read more details and usage example in the
+ * <a href="events/event-builtins.html#UserInput">
+ * YaST2 UI Event Handling Documentation</a>.
  */
 YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term )
 {
@@ -388,6 +392,10 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term )
  * or <tt>`cancel</tt> if the user selected the implicite cancel
  * button ( for example he closes the window). Returns nil if no
  * user input has occured.
+ * <p>
+ * Read more details and usage example in the
+ * <a href="events/event-builtins.html#PollInput">
+ * YaST2 UI Event Handling Documentation</a>.
  */
 YCPValue YUIInterpreter::evaluatePollInput( const YCPTerm & term )
 {
@@ -411,6 +419,10 @@ YCPValue YUIInterpreter::evaluatePollInput( const YCPTerm & term )
  * or <tt>`cancel</tt> if the user selected the implicit cancel
  * button (for example he closes the window).
  * Upon timeout, <tt>`timeout</tt> is returned.
+ * <p>
+ * Read more details and usage example in the
+ * <a href="events/event-builtins.html#TimeoutUserInput">
+ * YaST2 UI Event Handling Documentation</a>.
  */
 YCPValue YUIInterpreter::evaluateTimeoutUserInput( const YCPTerm & term )
 {
@@ -433,7 +445,9 @@ YCPValue YUIInterpreter::evaluateTimeoutUserInput( const YCPTerm & term )
  * Extended event handling - very much like UserInput(), but returns much more
  * detailed information about the event that occured in a map.
  * <p>
- * (More documentation follows)
+ * Read more details and usage example in the
+ * <a href="events/event-builtins.html#WaitForEvent">
+ * YaST2 UI Event Handling Documentation</a>.
  */
 YCPValue YUIInterpreter::evaluateWaitForEvent( const YCPTerm & term )
 {
