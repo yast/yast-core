@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jun  6 14:28:27 CEST 2003 - mvidner@suse.cz
+
+- libycp scanner: don't mistake an invalid token for EOF.
+
+-------------------------------------------------------------------
 Wed May 28 11:47:39 CEST 2003 - cschum@suse.de
 
 - Added WFM builtin CallFile needed by YOU.
