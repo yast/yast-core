@@ -293,7 +293,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, SourceGetCurrent, 	"list<integer> (boolean)",Boolean,	PkgModuleFunctions, SourceGetCurrent);
 	Y2FUNCTIONCALL1 ( Pkg, SourceFinish, 		"boolean (integer)",Integer,	PkgModuleFunctions, SourceFinish);
 	Y2FUNCTIONCALL  ( Pkg, SourceFinishAll, 	"boolean ()",		PkgModuleFunctions, SourceFinishAll);
-	Y2FUNCTIONCALL1 ( Pkg, SourceGeneralData, 	"map<string, any> (integer)",Integer,	PkgModuleFunctions, SourceGeneralData);
+	Y2FUNCTIONCALL1 ( Pkg, SourceGeneralData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceGeneralData);
 	Y2FUNCTIONCALL1 ( Pkg, SourceMediaData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceMediaData);
 	Y2FUNCTIONCALL1 ( Pkg, SourceProductData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceProductData);
 	Y2FUNCTIONCALL3 ( Pkg, SourceProvideFile, 	"string (integer, integer, string)",Integer, Integer, String, PkgModuleFunctions, SourceProvideFile);
@@ -307,7 +307,7 @@ class PkgModuleFunctions : public Y2Namespace
         Y2FUNCTIONCALL1 ( Pkg, SourceLowerPriority, 	"void (integer)",Integer,	PkgModuleFunctions, SourceLowerPriority);
         Y2FUNCTIONCALL  ( Pkg, SourceSaveRanks, 	"boolean ()",		PkgModuleFunctions, SourceSaveRanks);
         Y2FUNCTIONCALL2 ( Pkg, SourceChangeUrl, 	"boolean (integer, string)",Integer, String,PkgModuleFunctions, SourceChangeUrl);
-	Y2FUNCTIONCALL1 ( Pkg, SourceInstallOrder, 	"boolean  (map<integer,integer>)",Map,		PkgModuleFunctions, SourceInstallOrder);
+	Y2FUNCTIONCALL1 ( Pkg, SourceInstallOrder, 	"boolean (map<integer,integer>)",Map,		PkgModuleFunctions, SourceInstallOrder);
         Y2FUNCTIONCALL  ( Pkg, SourceEditGet, 		"map ()",		PkgModuleFunctions, SourceEditGet);
         Y2FUNCTIONCALL1 ( Pkg, SourceEditSet, 		"boolean (list)",List, 		PkgModuleFunctions, SourceEditSet);
         Y2FUNCTIONCALL2 ( Pkg, SourceScan, 		"integer (string, string)",String, String, PkgModuleFunctions, SourceScan);
@@ -349,7 +349,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, DoRemove, 		"map<string,any> (list<string>)",List, 		PkgModuleFunctions, DoRemove);
 	Y2FUNCTIONCALL1 ( Pkg, PkgSummary, 		"string (string)",String, 	PkgModuleFunctions, PkgSummary);
 	Y2FUNCTIONCALL1 ( Pkg, PkgVersion, 		"string (string)",String,		PkgModuleFunctions, PkgVersion);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSize, 		"Integer (string)",String,		PkgModuleFunctions, PkgSize);
+	Y2FUNCTIONCALL1 ( Pkg, PkgSize, 		"integer (string)",String,		PkgModuleFunctions, PkgSize);
 	Y2FUNCTIONCALL1 ( Pkg, PkgGroup, 		"string (string)",String,		PkgModuleFunctions, PkgGroup);
 	Y2FUNCTIONCALL1 ( Pkg, PkgLocation, 		"string (string)",String,		PkgModuleFunctions, PkgLocation);
 	Y2FUNCTIONCALL  ( Pkg, IsManualSelection, 	"boolean ()",		PkgModuleFunctions, IsManualSelection);
