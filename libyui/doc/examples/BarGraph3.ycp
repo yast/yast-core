@@ -46,7 +46,7 @@ UI::{
 	plus_buttons  = add( plus_buttons,  `HWeight( 1, `PushButton(`id( i), "+" ) ) );
 	minus_buttons = add( minus_buttons, `HWeight( 1, `PushButton(`id(-i), "-" ) ) );
 	i = i+1;
-    };
+    });
     
     OpenDialog(
 	       `VBox( 
