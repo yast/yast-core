@@ -39,6 +39,8 @@ $Id$
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
 
+#define DO_DEBUG 0
+
 typedef YCPValue (*v2) ();
 typedef YCPValue (*v2v) (const YCPValue &);
 typedef YCPValue (*v2vv) (const YCPValue &, const YCPValue &);
@@ -122,7 +124,9 @@ YEReference::YEReference (SymbolEntry *entry)
     : YCode (yeReference)
     , m_entry (entry)
 {
+#if DO_DEBUG
     y2debug ("YEReference::YEReference (%s)", entry->toString().c_str());
+#endif
 }
 
 
@@ -241,11 +245,15 @@ YETerm::attachParameter (YCode *code, constTypePtr dummy)
     if ((code == 0)
 	|| (code->isError()))
     {
+#if DO_DEBUG
 	y2debug ("YETerm::attachParameter (Error)");
+#endif
 	return Type::Unspec;
     }
 
-//    y2debug ("YETerm::attachParameter (%s)", code->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YETerm::attachParameter (%s)", code->toString().c_str());
+#endif
 
     ycodelist_t *element = new ycodelist_t;
     element->code = code;
@@ -386,7 +394,9 @@ YECompare::evaluate (bool cse)
 
     YCPValue vl = m_left->evaluate (cse);
     YCPValue vr = m_right->evaluate (cse);
-y2debug ("YECompare::evaluate (%s, '%d', %s)", vl.isNull() ? "NULL" : vl->toString().c_str(), m_op, vr.isNull() ? "NULL" : vr->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YECompare::evaluate (%s, '%d', %s)", vl.isNull() ? "NULL" : vl->toString().c_str(), m_op, vr.isNull() ? "NULL" : vr->toString().c_str());
+#endif
 
     if ( (vl.isNull () || vl->isVoid () || vr.isNull () || vr->isVoid ()) && (m_op != C_EQ && m_op != C_NEQ) )	// nil can be compared only for (n)equality
     {
@@ -488,7 +498,10 @@ YELocale::toString () const
 YCPValue
 YELocale::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YELocale::evaluate(%s)\n", toString().c_str());
+#endif
+
     if (cse)
     {
 	return YCPNull();
@@ -508,7 +521,9 @@ YELocale::evaluate (bool cse)
 
     const char *ret = dngettext (m_domain, m_singular, m_plural, count->asInteger()->value());
 
+#if DO_DEBUG
     y2debug ("localize <%s, %s, %d> to <%s>", m_singular, m_plural, (int)(count->asInteger()->value()), ret);
+#endif
 
     return YCPString (ret);
 }
@@ -591,7 +606,9 @@ YEList::toString() const
 YCPValue
 YEList::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YEList::evaluate(%s)\n", toString().c_str());
+#endif
     YCPList list;
     ycodelist_t *element = m_first;
     while (element)
@@ -727,7 +744,9 @@ YEMap::toString() const
 YCPValue
 YEMap::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YEMap::evaluate (%s)\n", toString().c_str());
+#endif
     YCPMap map;
     mapval_t *element = m_first;
     while (element)
@@ -842,7 +861,9 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
     if (to_type->isAny () || to_type->isUnspec () || ( to_type->isBasetype () && value->valuetype () == to_type->valueType ()))
 	return true;
 
+#if DO_DEBUG
     y2debug ("to type: %s", to_type->toString ().c_str () );
+#endif
     if (to_type->isList () && value->isList ())
     {
 	// check types of all elements
@@ -854,7 +875,9 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 
 	for (int i=0; i < v->size (); i++ )
 	{
+#if DO_DEBUG
 	    y2debug ("testing %s", v->value (i)->toString ().c_str ());
+#endif
 	    if (! canPropagate (v->value (i), elem) )
 		return false;
 	}
@@ -898,7 +921,9 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 YCPValue
 YEPropagate::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YEPropagate::evaluate(%s)\n", toString().c_str());
+#endif
     if (cse)
     {
 	return YCPNull();
@@ -991,7 +1016,9 @@ YEUnary::toString() const
 YCPValue
 YEUnary::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YEUnary::evaluate(%s)\n", toString().c_str());
+#endif
     if (cse)
     {
 	return YCPNull();
@@ -1000,7 +1027,9 @@ YEUnary::evaluate (bool cse)
     YCPValue arg = m_arg->evaluate ();
     const declaration_t *decl = m_decl;
 
+#if DO_DEBUG
     y2debug ("func %s (%s)", decl->name, decl->type->toString().c_str());
+#endif
 
 #ifdef BUILTIN_STATISTICS
     FILE *fout = fopen ("/tmp/builtin-use.txt", "a");
@@ -1070,7 +1099,9 @@ YEBinary::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
+#if DO_DEBUG
     y2debug ("YEBinary::evaluate(%s)\n", toString().c_str());
+#endif
 
     if ( (m_decl->flags & DECL_NOEVAL) == DECL_NOEVAL)
     {
@@ -1092,8 +1123,10 @@ YEBinary::evaluate (bool cse)
 	return YCPNull ();
     }
     const declaration_t *decl = m_decl;
+#if DO_DEBUG
     y2debug ("func %s (%s) [%s,%s]", decl->name, decl->type->toString().c_str(), arg1->toString().c_str(), arg2->toString().c_str());
     y2debug ("type1 %d, type2 %d", (int)arg1->valuetype(), (int)arg2->valuetype());
+#endif
 
 #ifdef BUILTIN_STATISTICS
     FILE *fout = fopen ("/tmp/builtin-use.txt", "a");
@@ -1150,7 +1183,9 @@ YETriple::toString() const
 YCPValue
 YETriple::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YETriple::evaluate(%s)\n", toString().c_str());
+#endif
     if (cse)
     {
 	return YCPNull();
@@ -1555,7 +1590,9 @@ YEBuiltin::finalize ()
 {
     extern StaticDeclaration static_declarations;
 
+#if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s)", StaticDeclaration::Decl2String (m_decl, true).c_str());
+#endif
 
     // final type check for all parameters
     declaration_t *decl = static_declarations.findDeclaration (m_decl, m_type, false);
@@ -1574,7 +1611,9 @@ YEBuiltin::finalize ()
 	m_type = decl->type->clone();
     }
     m_decl = decl;
+#if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s : %s)", StaticDeclaration::Decl2String (m_decl, true).c_str(), m_type->toString().c_str());
+#endif
 
     return 0;
 }
@@ -1584,7 +1623,9 @@ constTypePtr
 YEBuiltin::returnType () const
 {
     constTypePtr ret = m_type->returnType ();
-y2debug ("ret '%s' -> %s", m_type->toString().c_str(), ret->toString().c_str());
+#if DO_DEBUG
+    y2debug ("ret '%s' -> %s", m_type->toString().c_str(), ret->toString().c_str());
+#endif
 
     if (!ret->isUnspec())
     {
@@ -1598,7 +1639,9 @@ y2debug ("ret '%s' -> %s", m_type->toString().c_str(), ret->toString().c_str());
     {
 	return Type::Error;
     }
-y2debug ("ret %s", ft->returnType()->toString().c_str());
+#if DO_DEBUG
+    y2debug ("ret %s", ft->returnType()->toString().c_str());
+#endif
 
     return ft->returnType();
 }
@@ -1620,7 +1663,9 @@ YEBuiltin::attachParameter (YCode *code, constTypePtr type)
 {
     extern StaticDeclaration static_declarations;
 
-//    y2debug ("YEBuiltin::attachParameter (%s:%s)", code ? code->toString().c_str() : "<NULL>", type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YEBuiltin::attachParameter (%s:%s)", code ? code->toString().c_str() : "<NULL>", type->toString().c_str());
+#endif
 
     if ((code == 0)
 	|| (code->isError()))
@@ -1634,7 +1679,9 @@ YEBuiltin::attachParameter (YCode *code, constTypePtr type)
     if (!type->isUnspec ())
     {
 	m_type->concat (type);
-//	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), m_type->toString().c_str());
+#if DO_DEBUG
+	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), m_type->toString().c_str());
+#endif
 
 	decl = static_declarations.findDeclaration (m_decl, m_type, true);
 	if (decl == 0)
@@ -1645,10 +1692,12 @@ YEBuiltin::attachParameter (YCode *code, constTypePtr type)
 	    return Type::Unspec;
 	}
     }
+#if DO_DEBUG
     else
     {
 	y2debug ("type '%s' isUnspec", type->toString().c_str());
     }
+#endif
 
     ycodelist_t *element = new ycodelist_t;
     element->code = code;
@@ -1682,7 +1731,9 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
     FunctionTypePtr matchedType;
     constTypePtr addedType;
 
-//    y2debug ("YEBuiltin::attachSymVariable (%s:%s @%d, to %s:%s", name, type->toString().c_str(), line, m_decl->name, m_type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YEBuiltin::attachSymVariable (%s:%s @%d, to %s:%s", name, type->toString().c_str(), line, m_decl->name, m_type->toString().c_str());
+#endif
 
     if (type->isUnspec())							// no type given, might be symbol or untyped variable
     {
@@ -1693,7 +1744,9 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
 	declaration_t *decl = static_declarations.findDeclaration (m_decl, matchedType, true);
 	if (decl != 0)
 	{
-//	    y2debug ("YEBuiltin::attachSymVariable() symbol constant matched");
+#if DO_DEBUG
+	    y2debug ("YEBuiltin::attachSymVariable() symbol constant matched");
+#endif
 	    return attachParameter (new YConst (YCode::ycSymbol, YCPSymbol (name)), addedType);
 	}
 
@@ -1706,7 +1759,9 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
 
     addedType = VariableTypePtr (new VariableType (type));	// it's a typed symbolic variable
 
+#if DO_DEBUG
     y2debug ("addedType %s", addedType->toString().c_str());
+#endif
 
     tentry = m_parameterblock->newEntry (name, SymbolEntry::c_variable, type, line);
     if (tentry == 0)
@@ -1741,7 +1796,9 @@ YEBuiltin::toString() const
 YCPValue
 YEBuiltin::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YEBuiltin::evaluate [%s]", YCode::toString (kind()).c_str());
+#endif
 
     if (cse)
     {
@@ -1769,7 +1826,9 @@ YEBuiltin::evaluate (bool cse)
 	    break;
 	}
 
+#if DO_DEBUG
 	y2debug ("actualp ([%d]%s)", actualp->code->kind(), actualp->code->toString().c_str());
+#endif
 
 	if (actualp->code->isBlock() || ( (m_decl->flags & DECL_NOEVAL) == DECL_NOEVAL))
 	    // block as parameter to builtin function or builtin will eval on its own
@@ -1797,18 +1856,24 @@ YEBuiltin::evaluate (bool cse)
 	    args[i] = YCPVoid ();
 	}
 
+#if DO_DEBUG
 	y2debug ("==> (%s)", args[i]->toString().c_str());
+#endif
 
 	if ((typepos < 0)					// not at wildcard yet
 	    && type->parameterType(i)->isWildcard ())		// at '...' now ?
 	{
 	    typepos = i;
+#if DO_DEBUG
 	    y2debug ("type '...' %d", i);
+#endif
 	}
 
 	if (typepos >= 0)					// at or beyond '...'
 	{
+#if DO_DEBUG
 	    y2debug ("w! args[%d] = '%s'", i, args[i].isNull() ? "nil" : args[i]->toString().c_str());
+#endif
 	    list->add (args[i]);	// Y: add value to list
 	}
 	i++;
@@ -1828,7 +1893,9 @@ YEBuiltin::evaluate (bool cse)
 
     if (typepos >= 0)
     {
+#if DO_DEBUG
 	y2debug ("w! pos %d '%s'", i, list->toString().c_str());
+#endif
 	i = typepos+1;
 	args[i-1] = list;
     }
@@ -1836,8 +1903,10 @@ YEBuiltin::evaluate (bool cse)
 
     // call builtin function
 
+#if DO_DEBUG
     y2debug ("YEBuiltin::evaluate [%s (%d args)]", StaticDeclaration::Decl2String (m_decl, false).c_str(), i);
     y2debug ("parameter 1: %s", i > 0 ? args[0]->toString().c_str() : "nil" );
+#endif
     YCPValue ret = YCPNull();
     if (m_decl->ptr == 0)
     {
@@ -1902,7 +1971,9 @@ YEBuiltin::evaluate (bool cse)
     }
 #endif
 
+#if DO_DEBUG
     y2debug ("YEBuiltin ret (%s)", ret.isNull() ? "NULL" : ret->toString().c_str());
+#endif
 
     return ret;
 }
@@ -1914,7 +1985,9 @@ YEBuiltin::type () const
     constTypePtr return_type = returnType();
     if (return_type->isError())
     {
+#if DO_DEBUG
 	y2debug ("YEBuiltin::type() error !");
+#endif
 	return return_type;
     }
     FunctionTypePtr f = Type::Function(return_type)->clone();
@@ -1945,7 +2018,9 @@ YEFunction::YEFunction (std::istream & str)
     m_entry = Bytecode::readEntry (str);
     ycodelist_t *last = 0;
     Bytecode::readYCodelist (str, &m_parameters, &last);
+#if DO_DEBUG
     y2debug ("YEFunction (fromStream): %s", toString().c_str());
+#endif
 }
 
 
@@ -1982,7 +2057,9 @@ YEFunction::entry() const
 constTypePtr
 YEFunction::attachParameter (YCode *code, constTypePtr type)
 {
-//    y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
+#endif
 
     if (code == 0 || code->isError())
     {
@@ -1992,7 +2069,9 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
     // retrieve function type for formal parameter list
     constFunctionTypePtr ftype = m_entry->type();
 
+#if DO_DEBUG
     y2debug ("ftype (%s)", ftype->toString().c_str());
+#endif
 
     // count the actual parameters (so far) for checking against func->parameterCount()
     int actual_count = 0;
@@ -2021,12 +2100,16 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
     // ok, check whether types match
 
     expected_type = ftype->parameterType (actual_count);
+#if DO_DEBUG
     y2debug ("checking parameter type: expected '%s', given '%s'", expected_type->toString().c_str(), type->toString().c_str());
+#endif
 
     int match = type->match (expected_type);
     if (match < 0)
     {
+#if DO_DEBUG
 	y2debug ("type mismatch");
+#endif
 	// type mismatch
 	return expected_type;
     }
@@ -2052,11 +2135,15 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
 
     if (match > 0)				// propagation possible
     {
+#if DO_DEBUG
 	y2debug ("type propagation");
+#endif
 	code = new YEPropagate (code, type, expected_type);
     }
 
+#if DO_DEBUG
     y2debug ("add parameter to end of actual list");
+#endif
 
     // allocate new function parameter element
     ycodelist_t *element = new ycodelist_t;
@@ -2072,7 +2159,9 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
     {
 	m_parameters = element;
     }
+#if DO_DEBUG
     y2debug ("done");
+#endif
     return 0;
 }
 
@@ -2106,10 +2195,14 @@ YEFunction::finalize()
     // a parameter missing ?
     if (actual_count < ftype->parameterCount())
     {
+#if DO_DEBUG
 	y2debug ("Missing expected_type '%s'", ftype->parameterType (actual_count)->toString().c_str());
+#endif
 	return ftype->parameterType (actual_count);
     }
+#if DO_DEBUG
     y2debug ("parameter count matches");
+#endif
 
     return 0;
 }
@@ -2144,7 +2237,9 @@ YEFunction::evaluate (bool cse)
 	return YCPNull();
     }
 
+#if DO_DEBUG
     y2debug ("YEFunction::evaluate (%s)\n", toString().c_str());
+#endif
 
     ycodelist_t *actualp = m_parameters;
 
@@ -2181,6 +2276,7 @@ YEFunction::evaluate (bool cse)
 	// It's a YEVariable, a formal parameter of a function
 
 	YCPValue value = m_entry->value ();
+#if DO_DEBUG
 	if (value.isNull())
 	{
 	    y2debug ("m_entry value NULL");
@@ -2189,6 +2285,7 @@ YEFunction::evaluate (bool cse)
 	{
 	    y2debug ("m_entry value ([%d] %s)\n", m_entry->value()->valuetype(), m_entry->value()->toString().c_str());
 	}
+#endif
 	if (!value->isCode())
 	{
 	    ycp2error ("Not a function pointer ('%s' is '%s')", m_entry->toString().c_str(), value->toString().c_str());
@@ -2196,7 +2293,9 @@ YEFunction::evaluate (bool cse)
 	}
 
 	func = (YFunction *)(value->asCode()->code());
+#if DO_DEBUG
 	y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
+#endif
     }
 
     // push parameter values for recursion
@@ -2241,7 +2340,9 @@ YEFunction::evaluate (bool cse)
 	}
 
 	SymbolEntry *formalp = func->parameter (p);
+#if DO_DEBUG
 	y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString().c_str());
+#endif
 
 	formalp->setValue (value);
 	actualp = actualp->next;
@@ -2258,7 +2359,9 @@ YEFunction::evaluate (bool cse)
 	func->parameter (p)->pop ();
     }
 
+#if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", definition->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
     return value;
 }
 
