@@ -20,7 +20,7 @@
 #include "HwProbe.h"
 #include <ycp/y2log.h>
 
-/* --------------------------------------------------------------------------------------------------*/
+/* ------------------------------------------------------------------------- */
 /* First, some helper functions  */
 
 
@@ -50,6 +50,7 @@ cpu2string (hd_cpu_arch_t cpu_arch)
     return s;
 }
 
+
 // hd_boot_arch_t -> string
 //
 static const char*
@@ -72,6 +73,7 @@ boot2string (hd_boot_arch_t boot_arch)
     return s;
 }
 
+
 // hd_hotplug_t -> string
 //
 static const char*
@@ -91,6 +93,7 @@ hotplug2string (hd_hotplug_t hotplug)
     return s;
 }
 
+
 // enum access_type to YCPString
 //
 static YCPString
@@ -109,7 +112,80 @@ access2string (unsigned int acc)
 }
 
 
-/* --------------------------------------------------------------------------------------------------*/
+/**
+ *  hd_dev_num_t -> YCPMap
+ */
+static YCPMap
+devnum2map (hd_dev_num_t devnum)
+{
+    YCPMap m;
+
+    switch (devnum.type)
+    {
+	case 'b':
+	    m.add (YCPString ("type"), YCPString ("b"));
+	    break;
+	case 'c':
+	    m.add (YCPString ("type"), YCPString ("c"));
+	    break;
+	default:
+	    m.add (YCPString ("type"), YCPString (""));
+	    break;
+    }
+
+    m.add (YCPString ("major"), YCPInteger (devnum.major));
+    m.add (YCPString ("minor"), YCPInteger (devnum.minor));
+    m.add (YCPString ("range"), YCPInteger (devnum.range));
+
+    return m;
+}
+
+
+/**
+ *  Add the hd_dev_num_t devnum to the YCPMap m with key k if devnum and it's
+ *  type is non-zero.
+ */
+static void
+add_devnum (const hd_dev_num_t* devnum, YCPMap* m, const char* k)
+{
+    if (devnum && devnum->type)
+	m->add (YCPString (k), devnum2map (*devnum));
+}
+
+
+/**
+ *  Add the char* str to the YCPMap m with key k if str in non-zero.
+ */
+static void
+add_str (const char* str, YCPMap* m, const char* k)
+{
+    if (str)
+	m->add (YCPString (k), YCPString (str));
+}
+
+
+/**
+ *  Add the str_list_t* strlist to the YCPMap m with key k if strlist in
+ *  non-zero.
+ */
+static void
+add_strlist (const str_list_t* strlist, YCPMap* m, const char* k)
+{
+    if (strlist)
+    {
+	YCPList l;
+	while (strlist)
+	{
+	    if (strlist->str)
+		l->add (YCPString (strlist->str));
+	    strlist = strlist->next;
+	}
+	m->add (YCPString (k), l);
+    }
+}
+
+
+/* ------------------------------------------------------------------------- */
 /* Now the member functions  */
 
 // convert a libhd resource information to a YCPMap
@@ -618,7 +694,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			if (sm->any.type == sm_sysinfo) {
 			    YCPMap sysinfo;
-			    
+
 			    if (sm->sysinfo.manuf) sysinfo->add(YCPString("manufacturer"), YCPString(sm->sysinfo.manuf));
 			    if (sm->sysinfo.product) sysinfo->add(YCPString("product"), YCPString(sm->sysinfo.product));
 			    if (sm->sysinfo.version) sysinfo->add(YCPString("version"), YCPString(sm->sysinfo.version));
@@ -644,7 +720,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(boardinfo);
 			}
-															 
+
 			if (sm->any.type == sm_chassis)
 			{
 			    YCPMap chassis;
@@ -665,7 +741,7 @@ HwProbe::hd2value (hd_t *hd)
 			if (sm->any.type == sm_processor)
 			{
 			    YCPMap processor;
-			    
+
 			    if (sm->processor.socket) processor->add(YCPString("socket"), YCPString(sm->processor.socket));
 			    if (sm->processor.upgrade.name) processor->add(YCPString("socket_type"), YCPString(sm->processor.upgrade.name));
 			    processor->add(YCPString("socket_status"), YCPString(sm->processor.sock_status ? "Populated" : "Empty"));
@@ -693,7 +769,7 @@ HwProbe::hd2value (hd_t *hd)
 			if (sm->any.type == sm_cache)
 			{
 			    YCPMap cache;
-			    
+
 			    if (sm->cache.socket) cache->add(YCPString("designation"), YCPString(sm->cache.socket));
 			    cache->add(YCPString("level"), YCPInteger(sm->cache.level + 1));
 			    cache->add(YCPString("state"), YCPString(sm->cache.state ? "Enabled" : "Disabled"));
@@ -716,11 +792,11 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(cache);
 			}
-																	    
+
 			if (sm->any.type == sm_connect)
 			{
 			    YCPMap connect;
-			    
+
 			    if (sm->connect.port_type.name) connect->add(YCPString("port_type"), YCPString(sm->connect.port_type.name));
 			    if (sm->connect.i_des) connect->add(YCPString("internal_designator"), YCPString(sm->connect.i_des));
 			    if (sm->connect.x_des) connect->add(YCPString("external_designator"), YCPString(sm->connect.x_des));
@@ -749,7 +825,7 @@ HwProbe::hd2value (hd_t *hd)
 			if (sm->any.type == sm_onboard)
 			{
 			    YCPList onboard_devices;
-			    
+
 			    for (unsigned int u = 0; u < sm->onboard.dev_len; u++) {
 				YCPMap onboard_device;
 
@@ -766,7 +842,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(onboard);
 			}
-																			
+
 			if (sm->any.type == sm_oem)
 			{
 			    YCPList oem_strings;
@@ -795,13 +871,13 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(conf);
 			}
-																		    
+
 			if (sm->any.type == sm_lang)
 			{
 			    YCPList langs;
 			    YCPMap language;
 			    str_list_t *sl;
-			    
+
 			    if ((sl = sm->lang.strings)) {
 				for(; sl; sl = sl->next) {
 				  langs->add(YCPString(sl->str));
@@ -819,7 +895,7 @@ HwProbe::hd2value (hd_t *hd)
 			if (sm->any.type == sm_group)
 			{
 			    YCPMap assoc;
-			    
+
 			    if (sm->group.name) assoc->add(YCPString("group_name"), YCPString(sm->group.name));
 
 			    if (sm->group.items_len) {
@@ -835,7 +911,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(assoc);
 			}
-															    
+
 			if (sm->any.type == sm_memarray)
 			{
 			    YCPMap memarray;
@@ -866,7 +942,7 @@ HwProbe::hd2value (hd_t *hd)
 			    if (sm->memdevice.serial) memdevice->add(YCPString("serial"), YCPString(sm->memdevice.serial));
 			    if (sm->memdevice.asset) memdevice->add(YCPString("asset_tag"), YCPString(sm->memdevice.asset));
 			    if (sm->memdevice.part) memdevice->add(YCPString("part_number"), YCPString(sm->memdevice.part));
-			    memdevice->add(YCPString("memory_array"), YCPInteger(sm->memdevice.array_handle));	
+			    memdevice->add(YCPString("memory_array"), YCPInteger(sm->memdevice.array_handle));
 
 			    if (sm->memdevice.error_handle != 0xfffe) {
 				if (sm->memdevice.error_handle != 0xffff) {
@@ -884,16 +960,16 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(memdevice);
 			}
-															    
+
 			if (sm->any.type == sm_memerror)
 			{
 			    YCPMap memerror;
-			    
+
 			    if (sm->memerror.err_type.name) memerror->add(YCPString("err_type"), YCPString(sm->memerror.err_type.name));
 			    if (sm->memerror.granularity.name) memerror->add(YCPString("granularity"), YCPString(sm->memerror.granularity.name));
 			    if (sm->memerror.operation.name) memerror->add(YCPString("operation"), YCPString(sm->memerror.operation.name));
 			    if (sm->memerror.syndrome) memerror->add(YCPString("syndrome"), YCPInteger(sm->memerror.syndrome));
-			    
+
 			    if (sm->memerror.array_addr != (1U << 31)) memerror->add(YCPString("array_addr"), YCPInteger(sm->memerror.array_addr));
 			    if (sm->memerror.device_addr != (1U << 31)) memerror->add(YCPString("device_addr"), YCPInteger(sm->memerror.device_addr));
 			    if (sm->memerror.range != (1U << 31)) memerror->add(YCPString("range"), YCPInteger(sm->memerror.range));
@@ -901,11 +977,11 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(memerror);
 			}
-																		    
+
 			if (sm->any.type == sm_memarraymap)
 			{
 			    YCPMap memarraymap;
-			    
+
 			    memarraymap->add(YCPString("array_handle"), YCPInteger(sm->memarraymap.array_handle));
 			    memarraymap->add(YCPString("part_width"), YCPInteger(sm->memarraymap.part_width));
 
@@ -919,7 +995,7 @@ HwProbe::hd2value (hd_t *hd)
 			if (sm->any.type == sm_memdevicemap)
 			{
 			    YCPMap memdevicemap;
-			    
+
 			    memdevicemap->add(YCPString("memdevice_handle"), YCPInteger(sm->memdevicemap.memdevice_handle));
 			    memdevicemap->add(YCPString("arraymap_handle"), YCPInteger(sm->memdevicemap.arraymap_handle));
 
@@ -951,11 +1027,11 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(mouse);
 			}
-																		    
+
 			if (sm->any.type == sm_secure)
 			{
 			    YCPMap secure;
-			    
+
 			    if (sm->secure.power.name) secure->add(YCPString("power"), YCPString(sm->secure.power.name));
 			    if (sm->secure.keyboard.name) secure->add(YCPString("keyboard"), YCPString(sm->secure.keyboard.name));
 			    if (sm->secure.admin.name) secure->add(YCPString("admin"), YCPString(sm->secure.admin.name));
@@ -964,11 +1040,11 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(secure);
 			}
-																		    
+
 			if (sm->any.type == sm_power)
 			{
 			    YCPMap power;
-			    
+
 			    power->add(YCPString("hour"), YCPInteger(sm->power.hour));
 			    power->add(YCPString("minute"), YCPInteger(sm->power.minute));
 			    power->add(YCPString("second"), YCPInteger(sm->power.second));
@@ -978,11 +1054,11 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(power);
 			}
-														    
+
 			if (sm->any.type == sm_mem64error)
 			{
 			    YCPMap mem64error;
-			    
+
 			    if (sm->mem64error.err_type.name) mem64error->add(YCPString("err_type"), YCPString(sm->mem64error.err_type.name));
 			    if (sm->mem64error.granularity.name) mem64error->add(YCPString("granularity"), YCPString(sm->mem64error.granularity.name));
 			    if (sm->mem64error.operation.name) mem64error->add(YCPString("operation"), YCPString(sm->mem64error.operation.name));
@@ -1001,7 +1077,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			    smbioslist->add(mem64error);
 			}
-																		    
+
 			// unknown type
 			if (sm->any.type != sm_end)
 			{
@@ -1224,15 +1300,16 @@ HwProbe::hd2value (hd_t *hd)
     if (s)
 	out->add (YCPString ("compat_device"), YCPString (s));
 
-    // linux device name and name2
+    // linux device name, name2, names and num
 
-    s = hd->unix_dev_name;
-    if (s)
-	out->add (YCPString ("dev_name"), YCPString (s));
+    add_str (hd->unix_dev_name, &out, "dev_name");
+    add_str (hd->unix_dev_name2, &out, "dev_name2");
+    add_strlist (hd->unix_dev_names, &out, "dev_names");
+    add_devnum (&hd->unix_dev_num, &out, "dev_num");
 
-    s = hd->unix_dev_name2;
-    if (s)
-	out->add (YCPString ("dev_name2"), YCPString (s));
+    // sysfs path
+
+    add_str (hd->sysfs_id, &out, "sysfs_id");
 
     // BIOS id
     s = hd->rom_id;
