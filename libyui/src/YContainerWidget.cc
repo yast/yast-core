@@ -114,6 +114,14 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 
 void YContainerWidget::addChild( YWidget *child )
 {
+    if (find (children.begin (), children.end (), child) != children.end ())
+    {
+	y2error ("ERROR: Child added twice (%s, #%d) (%s, #%d)",
+		 this->widgetClass(), this->internalId(),
+		 child->widgetClass(), child->internalId());
+	return;
+    }
+
     children.push_back( child );
     childAdded( child ); // tell subclassed ui specific widget
 }
@@ -130,6 +138,10 @@ void YContainerWidget::removeChildren()
 	{
 	    childRemoved( child ); // tell subclassed ui specific widget
 	    delete child;
+	}
+	else
+	{
+	    y2error ("ERROR: Invalid widget child - ignored");
 	}
     }
 }
