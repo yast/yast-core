@@ -36,9 +36,9 @@ public:
      * @param loginname the username for the login
      * @param componentname component to start on the remote machine
      */
-    SudoProtocol (bool is_server, string loginname, string componentname);
+    SudoProtocol (bool is_server, std::string loginname, std::string componentname);
 
-    callStatus callComponent (string password = "", bool passwd_supplied = false);
+    callStatus callComponent (std::string password = "", bool passwd_supplied = false);
 
     /**
      * Returns true, if output is output appears at input again.

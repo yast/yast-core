@@ -29,8 +29,8 @@ class RloginProtocol : public RemoteProtocol
 {
     const bool is_server;
 
-    string loginname;
-    string componentname;
+    std::string loginname;
+    std::string componentname;
 
     /**
      * Set to true, if rlogin just asked us
@@ -47,10 +47,10 @@ public:
      * @param hostname the host to log into
      * @param componentname component to start on the remote machine
      */
-    RloginProtocol (bool is_server, string loginname, string hostname,
-		    string componentname);
+    RloginProtocol (bool is_server, std::string loginname, std::string hostname,
+		    std::string componentname);
 
-    callStatus callComponent (string password = "", bool passwd_supplied = false);
+    callStatus callComponent (std::string password = "", bool passwd_supplied = false);
 
     /**
      * Returns true, if output is output appears at input again.

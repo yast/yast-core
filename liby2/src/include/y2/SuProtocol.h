@@ -28,8 +28,8 @@ class SuProtocol : public RemoteProtocol
 {
     const bool is_server;
 
-    string loginname;
-    string componentname;
+    std::string loginname;
+    std::string componentname;
 
     /**
      * Set to true, if su just asked for the password
@@ -45,9 +45,9 @@ public:
      * @param loginname the username for the login
      * @param componentname component to start on the remote machine
      */
-    SuProtocol (bool is_server, string loginname, string componentname);
+    SuProtocol (bool is_server, std::string loginname, std::string componentname);
 
-    callStatus callComponent (string password = "", bool passwd_supplied = false);
+    callStatus callComponent (std::string password = "", bool passwd_supplied = false);
 
     /**
      * Returns true, if output is output appears at input again.

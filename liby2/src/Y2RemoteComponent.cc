@@ -27,7 +27,7 @@
 #include <unistd.h>
 
 #include "Y2RemoteComponent.h"
-#include "ExternalProgram.h"
+#include <y2util/ExternalProgram.h>
 #include <ycp/YCPParser.h>
 #include <ycp/y2log.h>
 

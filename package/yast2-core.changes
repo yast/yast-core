@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 24 11:34:22 CEST 2003 - cschum@suse.de
+
+- Removed classes ExternalProgram and ExternalDataSource from
+  liby2 as they duplicated the classes from liby2util.
+
+-------------------------------------------------------------------
 Tue Jun 24 11:29:21 CEST 2003 - cschum@suse.de
 
 - Added progress callback for execution of scripts by YOU.

@@ -7,7 +7,6 @@ pkgincludedir = $(includedir)/y2
 # these go to $(pkgincludedir)
 
 pkginclude_HEADERS =							\
-	ExternalDataSource.h ExternalProgram.h				\
 	RemoteProtocol.h RloginProtocol.h RshProtocol.h SuProtocol.h	\
 	SudoProtocol.h TelnetProtocol.h					\
 	Y2CCProgram.h Y2CCRemote.h Y2CCScript.h Y2CCSerial.h Y2CCStdio.h\

@@ -21,7 +21,7 @@
 #ifndef RemoteProtocol_h
 #define RemoteProtocol_h
 
-#include "ExternalProgram.h"
+#include <y2util/ExternalProgram.h>
 
 class RemoteProtocol : public ExternalProgram
 {
@@ -33,7 +33,7 @@ public:
      * @param use_pty, set to true, if you want to communicate over ptys instead
      * of pipes.
      */
-    RemoteProtocol (string commandline, bool use_pty = false);
+    RemoteProtocol (std::string commandline, bool use_pty = false);
 
     /**
      * Returns values of @ref #callComponent.
@@ -51,7 +51,7 @@ public:
      * if the protocol needs a login password (provide a password and try again)
      * or RP_ERROR, if an unrecoverable error occured.
      */
-    virtual callStatus callComponent (string password = "",
+    virtual callStatus callComponent (std::string password = "",
 				      bool passwd_supplied = false) = 0;
 
     /**
@@ -73,7 +73,7 @@ protected:
      * we gave up, i.e. no matching string has been found within
      * maxread characters or if no further characters could be read.
      */
-    int expectOneOf (const string *strings, int number_strings, int maxread);
+    int expectOneOf (const std::string *strings, int number_strings, int maxread);
 };
 
 #endif // RemoteProtocol_h

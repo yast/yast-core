@@ -17,12 +17,11 @@ plugin_LTLIBRARIES = 	\
 	libpy2plugin.la
 
 liby2_la_SOURCES = \
-	ExternalProgram.cc	\
 	Y2Component.cc					\
 	Y2ComponentBroker.cc Y2ComponentCreator.cc 	\
 	genericfrontend.cc pathsearch.cc
 liby2_la_LDFLAGS = -version-info 2:0
-liby2_la_LIBADD = -lutil -ldl
+liby2_la_LIBADD = -ly2util -lutil -ldl
 
 libpy2stdio_la_SOURCES =				\
 	Y2StdioComponent.cc Y2CCStdio.cc

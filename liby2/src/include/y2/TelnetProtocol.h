@@ -29,8 +29,8 @@ class TelnetProtocol : public RemoteProtocol
 {
     const bool is_server;
 
-    string loginname;
-    string componentname;
+    std::string loginname;
+    std::string componentname;
 
 public:
     /**
@@ -41,10 +41,10 @@ public:
      * @param hostname the host to log into
      * @param componentname component to start on the remote machine
      */
-    TelnetProtocol (bool is_server, string loginname, string hostname,
-		    string componentname);
+    TelnetProtocol (bool is_server, std::string loginname, std::string hostname,
+		    std::string componentname);
 
-    callStatus callComponent (string password = "", bool passwd_supplied = false);
+    callStatus callComponent (std::string password = "", bool passwd_supplied = false);
 
     /**
      * Returns true, if output is output appears at input again.

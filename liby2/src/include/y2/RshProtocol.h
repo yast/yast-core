@@ -29,9 +29,9 @@ class RshProtocol : public RemoteProtocol
 {
     const bool is_server;
 
-    string used_shell;
-    string loginname;
-    string componentname;
+    std::string used_shell;
+    std::string loginname;
+    std::string componentname;
 
     /**
      * Set to true, if *sh just asked for the password
@@ -49,10 +49,10 @@ public:
      * @param componentname component to start on the remote machine
      * @param shell the shell used to go to the remote machine (rsh or such like)
      */
-    RshProtocol (bool is_server, string loginname, string hostname,
-		 string componentname, string shell);
+    RshProtocol (bool is_server, std::string loginname, std::string hostname,
+		 std::string componentname, std::string shell);
 
-    callStatus callComponent (string password = "", bool passwd_supplied = false);
+    callStatus callComponent (std::string password = "", bool passwd_supplied = false);
 
     /**
      * Returns true, if output is output appears at input again.
