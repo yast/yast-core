@@ -33,6 +33,7 @@
     list<map> steps = flatten( [ base_installation_steps, config_steps ] );
 
     list<integer> rpms = [ 600, 150, 30, 100 ];
+    boolean useTimeout = false;
 
 
     define void mediaChange( integer cdNo )
@@ -125,6 +126,8 @@
     });
 
     UI::WizardCommand(`SetCurrentStep( "rpmcopy" ) );
+    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "Start" ) );
+    UI::WizardCommand(`SetBackButtonLabel( "S&tep" ) );
 
     UI::ReplaceWidget(`id(`contents),
 		      `HBox(
@@ -147,14 +150,18 @@
 
     while( true )
     {
-	symbol button = (symbol) UI::TimeoutUserInput( 100 );
+	symbol button = useTimeout ? (symbol) UI::TimeoutUserInput( 100 ) : (symbol) UI::UserInput();
 
 	if ( button == `abort )
 	    break;
 
 	integer delta = 0;
-	if ( button == `next 	)	delta = 10;
-	if ( button == `back 	)	delta = 100;
+	if ( button == `next 	)
+	{
+	    useTimeout = ! useTimeout;
+	    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "Start" ) );
+	}
+	if ( button == `back 	)	delta = 10;
 	if ( button == `timeout	)	delta = 100;
 
 	if ( delta > 0 )
