@@ -1,9 +1,14 @@
 -------------------------------------------------------------------
+Tue Feb 15 15:13:32 CET 2005 - arvin@suse.de
+
+- adapted agent-probe to new hwinfo
+
+-------------------------------------------------------------------
 Tue Feb 15 12:43:22 CET 2005 - sh@suse.de
 
 - PackageSelector now supports `opt(`summaryMode) to get installation
   summary right away (-> Anas)
-- V 2.11.21 
+- V 2.11.21
 
 -------------------------------------------------------------------
 Mon Feb  7 16:02:11 CET 2005 - lslezak@suse.cz
@@ -14,8 +19,8 @@ Mon Feb  7 16:02:11 CET 2005 - lslezak@suse.cz
 -------------------------------------------------------------------
 Mon Jan 31 17:35:20 CET 2005 - sh@suse.de
 
-- V 2.11.19 
-- Suppressing plain text passwords in recorded macros 
+- V 2.11.19
+- Suppressing plain text passwords in recorded macros
 
 -------------------------------------------------------------------
 Tue Jan 11 19:18:32 CET 2005 - mvidner@suse.cz

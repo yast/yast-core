@@ -280,10 +280,12 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
     break;
     case res_disk_geo: {
 	RES2TYPE (res_disk_geo_t);
-	*name = (r->logical) ? "disk_log_geo" : "disk_phys_geo";
-	map->add (YCPString ("cylinders"), YCPInteger (r->cyls));
-	map->add (YCPString ("heads"), YCPInteger (r->heads));
-	map->add (YCPString ("sectors"), YCPInteger (r->sectors));
+	if (r->geotype == 0 || r->geotype == 1) {
+	    *name = (r->geotype == 1) ? "disk_log_geo" : "disk_phys_geo";
+	    map->add (YCPString ("cylinders"), YCPInteger (r->cyls));
+	    map->add (YCPString ("heads"), YCPInteger (r->heads));
+	    map->add (YCPString ("sectors"), YCPInteger (r->sectors));
+	}
     }
     break;
     case res_cache: {
