@@ -144,7 +144,7 @@ YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg) {
     if (modules_conf == NULL)
 	Y2_RETURN_VOID("Can't execute Read before being mounted.");
 	    
-    y2debug("XXX: %s", path->toString().c_str());
+    y2debug("Read(%s)", path->toString().c_str());
 
     switch (path->length ()) {
 

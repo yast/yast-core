@@ -23,7 +23,6 @@
 #ifndef Y2Logger_h
 #define Y2Logger_h
 
-#define y2log_component "ag_modules"
 #include <ycp/y2log.h>
 
 /*
