@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 13 13:17:31 CET 2003 - sh@suse.de
+
+- Reduced log severity for UI shortcut conflicts 
+
+-------------------------------------------------------------------
 Wed Feb 12 16:04:19 CET 2003 - kkaempf@suse.de
 
 - add Pkg::TargetFileHasOwner() (#23555)
