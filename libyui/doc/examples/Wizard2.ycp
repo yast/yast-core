@@ -1,4 +1,4 @@
-// Basic example of using the Wizard widget.
+// Example of using the Wizard widget.
 //
 // Note: YCP applications are discouraged from using the Wizard widget directly.
 // Use the Wizard module instead.

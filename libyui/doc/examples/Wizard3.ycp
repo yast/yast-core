@@ -1,4 +1,4 @@
-// Basic example of using the Wizard widget.
+// Advanced example of using the Wizard widget.
 //
 // Note: YCP applications are discouraged from using the Wizard widget directly.
 // Use the Wizard module instead.
@@ -19,7 +19,7 @@
     list<map> config_steps =
 	[
 	  $[ "id": "root",		"label": "Root Password"		],
-	  $[ "id": "proposal",		"label": "Network"			],
+	  $[ "id": "proposal_net",	"label": "Network"			],
           $[ "id": "ask_net_test",	"label": "Network"			],
 	  $[ "id": "do_net_test",	"label": "Network"			],
 	  $[ "id": "you",		"label": "Online Update"		],
@@ -27,7 +27,7 @@
 	  $[ "id": "user",		"label": "Users"			],
 	  $[ "id": "suseconfig",	"label": "Clean Up"			],
 	  $[ "id": "release_notes",	"label": "Release Notes"		],
-	  $[ "id": "proposal",		"label": "Device Configuration"		]
+	  $[ "id": "proposal_hw",	"label": "Device Configuration"		]
 	];
 
     list<map> steps = flatten( [ base_installation_steps, config_steps ] );
