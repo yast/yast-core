@@ -17,6 +17,10 @@
 
 /-*/
 
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
+
 // MAJOR and MINOR number must the the same in header, RELEASE is assumed to
 // provide a backward compatibility
 #define YaST_BYTECODE_HEADER "YaST bytecode "
@@ -49,7 +53,9 @@ Bytecode::namespaceentry_t *Bytecode::m_namespace_nesting_array = 0;
 void
 Bytecode::namespaceInit ()
 {
+#if DO_DEBUG
     y2debug ("Reinitialize namespaces");
+#endif
     if (Bytecode::m_namespace_nesting_array)
     {
 	free (Bytecode::m_namespace_nesting_array);
@@ -76,7 +82,9 @@ Bytecode::readBool (std::istream & str)
 {
     char c;
     str.get (c);
+#if DO_DEBUG
 //    y2debug ("Bytecode::readBool 0x%02x", (unsigned int)c);
+#endif
 
     if (c != 0)
     {
@@ -224,7 +232,9 @@ TypePtr
 Bytecode::readType (std::istream & str)
 {
     int kind = readInt32 (str);
+#if DO_DEBUG
 y2debug ("Bytecode::readType(%d)", kind);
+#endif
     switch ((Type::tkind)kind)
     {
 	case Type::UnspecT:
@@ -387,7 +397,9 @@ Bytecode::writeYCodelist (std::ostream & str, const ycodelist_t *codelist)
 	codep = codep->next;
     }
 
+#if DO_DEBUG
     y2debug ("Bytecode::writeYCodelist %d entries", count);
+#endif
 
     if (Bytecode::writeInt32 (str, count))
     {
@@ -412,7 +424,9 @@ Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t *
 {
     u_int32_t count = readInt32 (str);
 
+#if DO_DEBUG
     y2debug ("Bytecode::readYCodelist %d entries", count);
+#endif
 
     while (count-- > 0)
     {
@@ -461,7 +475,7 @@ Bytecode::namespaceId (const Y2Namespace *name_space)
 	    return i - m_namespace_tare_level;
 	}
     }
-    y2debug ("No ID for %p, level %d", name_space, m_namespace_nesting_level);
+    y2error ("No ID for %p, level %d", name_space, m_namespace_nesting_level);
     return -1;
 }
 
@@ -500,7 +514,9 @@ Bytecode::pushNamespace (const Y2Namespace *name_space, bool with_xrefs)
 	m_namespace_nesting_array_size += 16;
 	m_namespace_nesting_array = (namespaceentry_t *)realloc (m_namespace_nesting_array, sizeof (namespaceentry_t) * m_namespace_nesting_array_size);
     }
+#if DO_DEBUG
     y2debug ("Bytecode::pushNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+#endif
     m_namespace_nesting_array[m_namespace_nesting_level].name_space = name_space;
     m_namespace_nesting_array[m_namespace_nesting_level].with_xrefs = with_xrefs;
     if (with_xrefs)
@@ -517,7 +533,9 @@ Bytecode::pushNamespace (const Y2Namespace *name_space, bool with_xrefs)
 int
 Bytecode::popNamespace (const Y2Namespace *name_space)
 {
+#if DO_DEBUG
     y2debug ("Bytecode::popNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+#endif
     if (name_space == 0)
     {
 	y2error ("Bytecode::popNamespace (%p) NULL", name_space);
@@ -548,7 +566,9 @@ Bytecode::popNamespace (const Y2Namespace *name_space)
 void
 Bytecode::popUptoNamespace (const Y2Namespace *name_space)
 {
+#if DO_DEBUG
     y2debug ("Bytecode::popUptoNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+#endif
     if (name_space == 0)
     {
 	y2error ("Bytecode::popUptoNamespace (%p) NULL", name_space);
@@ -579,7 +599,9 @@ int
 Bytecode::tareStack ()
 {
     int tare = m_namespace_nesting_level - m_namespace_tare_level + 1;
+#if DO_DEBUG
 //    y2debug ("Bytecode::tareStack() level %d, size %d, current tare %d, tare_id %d", m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level, tare);
+#endif
     m_namespace_tare_level = m_namespace_nesting_level + 1;
     return tare;
 }
@@ -588,7 +610,9 @@ Bytecode::tareStack ()
 void
 Bytecode::untareStack (int tare_id)
 {
+#if DO_DEBUG
 //    y2debug ("Bytecode::untareStack() level %d, size %d, current tare %d, tare_id %d", m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level, tare_id);
+#endif
     m_namespace_tare_level -= tare_id;
     return;
 }
@@ -610,7 +634,9 @@ Bytecode::writeEntry (std::ostream & str, const SymbolEntryPtr sentry)
 	y2error ("No id for entry (%s)", sentry->toString().c_str());
 	abort ();
     }
+#if DO_DEBUG
 //    y2debug ("Bytecode::writeEntry (%p:%s: id %d, pos %d)", sentry, sentry->toString().c_str(), id, sentry->position());
+#endif
     Bytecode::writeInt32 (str, id);
     return Bytecode::writeInt32 (str, sentry->position());
 }
@@ -625,7 +651,9 @@ Bytecode::readEntry (std::istream & str)
 
     if (namespace_id == -1)
     {
+#if DO_DEBUG
 	y2debug( "Special entry without namespace" );
+#endif
 	// FIXME: this may be wrong
 	return 0;
     }
@@ -648,7 +676,9 @@ Bytecode::readEntry (std::istream & str)
 	    exit (1);
 	}
 	position = -position - 1;		// -1 .. -n  --> 0 .. n-1
+#if DO_DEBUG
 	y2debug ("get reference %d from table %p", position, table);
+#endif
 	sentry = table->getXRef(position);
     }
     else
@@ -661,7 +691,9 @@ Bytecode::readEntry (std::istream & str)
 	y2error ("invalid entry %d for namespace (%s)", position, name_space->name().c_str());
 	return 0;
     }
+#if DO_DEBUG
     y2debug ("entry <namespace id %d @ %p[%s]> pos %d = (%s)", namespace_id, name_space, name_space->name().c_str(), position, sentry->toString().c_str());
+#endif
     return sentry;
 }
 
@@ -679,7 +711,9 @@ Bytecode::readCode (std::istream & str)
 	y2error ("Can't read from stream");
 	return 0;
     }
+#if DO_DEBUG
 //    y2debug ("Bytecode::readCode (%d:%s)", code, YCode::toString ((YCode::ykind)code).c_str());
+#endif
     if (code < YCode::ycConstant)
     {
 	return new YConst ((YCode::ykind)code, str);
@@ -906,7 +940,9 @@ map <string, YBlockPtr> Bytecode::m_bytecodeCache;
 YBlockPtr 
 Bytecode::readModule (const string & mname)
 {
+#if DO_DEBUG
 //    y2debug ("Bytecode::readModule (%s) ", mname.c_str ());
+#endif
 
     // TODO better error reporting?
     // like: could not find foo.ycp in /modules, /a/modules.
@@ -922,7 +958,9 @@ Bytecode::readModule (const string & mname)
     // check the cache
     if (m_bytecodeCache.find (mname) != m_bytecodeCache.end ())
     {
+#if DO_DEBUG
 //	y2debug ("Bytecode cache hit: %s", mname.c_str ());
+#endif
 
 	return m_bytecodeCache.find (mname)->second;
     }
@@ -973,7 +1011,9 @@ readInt (std::istream & str)
 YCodePtr
 Bytecode::readFile (const string & filename)
 {
+#if DO_DEBUG
 //    y2debug ("Bytecode::readFile (%s)", filename.c_str());
+#endif
     std::ifstream instream (filename.c_str());
     if (!instream.is_open ())
     {
@@ -1000,7 +1040,9 @@ Bytecode::readFile (const string & filename)
 	&& (minor == atoi (YaST_BYTECODE_MINOR))
 	&& (release <= atoi (YaST_BYTECODE_RELEASE)))
     {
+#if DO_DEBUG
 //	y2debug ("Header accepted");
+#endif
 	
 	return readCode (instream);
     }
@@ -1017,7 +1059,9 @@ Bytecode::writeFile (const YCodePtr code, const string & filename)
     // clear errno first
     errno = 0;
 
+#if DO_DEBUG
 //    y2debug ("Bytecode::writeFile (%s)", filename.c_str());
+#endif
     std::ofstream outstream (filename.c_str());
     if (!outstream.is_open ())
     {
