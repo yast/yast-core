@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr  6 11:55:30 CEST 2004 - kkaempf@suse.de
+
+- check strings from hwinfo properly (#36080)
+- 2.9.78
+
+-------------------------------------------------------------------
 Tue Apr  6 08:09:42 CEST 2004 - visnov@suse.cz
 
 - Don't print superflous characters to stdout (#38327) 

@@ -838,8 +838,8 @@ HwProbe::hd2value (hd_t *hd)
 			    for (unsigned int u = 0; u < sm->onboard.dev_len; u++) {
 				YCPMap onboard_device;
 
-				onboard_device->add(YCPString("device_type"), YCPString(sm->onboard.dev[u].type.name));
-				onboard_device->add(YCPString("name"), YCPString(sm->onboard.dev[u].name));
+				if (sm->onboard.dev[u].type.name) onboard_device->add(YCPString("device_type"), YCPString(sm->onboard.dev[u].type.name));
+				if (sm->onboard.dev[u].name) onboard_device->add(YCPString("name"), YCPString(sm->onboard.dev[u].name));
 				onboard_device->add(YCPString("enabled"), YCPBoolean(sm->onboard.dev[u].status));
 
 				onboard_devices->add(onboard_device);
@@ -856,7 +856,7 @@ HwProbe::hd2value (hd_t *hd)
 			{
 			    YCPList oem_strings;
 			    for (str_list_t *sl = sm->oem.oem_strings; sl; sl = sl->next) {
-				oem_strings->add(YCPString(sl->str));
+				if (sl->str) oem_strings->add(YCPString(sl->str));
 			    }
 
 			    YCPMap oemstr;
@@ -871,7 +871,7 @@ HwProbe::hd2value (hd_t *hd)
 			    YCPList config;
 
 			    for (str_list_t *sl = sm->config.options; sl; sl = sl->next) {
-				config->add(YCPString(sl->str));
+				if (sl->str) config->add(YCPString(sl->str));
 			    }
 
 			    YCPMap conf;
@@ -889,7 +889,7 @@ HwProbe::hd2value (hd_t *hd)
 
 			    if ((sl = sm->lang.strings)) {
 				for(; sl; sl = sl->next) {
-				  langs->add(YCPString(sl->str));
+				  if (sl->str) langs->add(YCPString(sl->str));
 				}
 
 				language->add(YCPString("languages"), langs);
@@ -914,7 +914,7 @@ HwProbe::hd2value (hd_t *hd)
 				    items->add(YCPInteger(sm->group.item_handles[i]));
 				}
 
-				assoc->add(YCPString("items"), assoc);
+				assoc->add(YCPString("items"), items);
 			    }
 			    assoc->add(YCPString("type"), YCPString("group_associations"));
 
