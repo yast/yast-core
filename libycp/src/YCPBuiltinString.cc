@@ -755,7 +755,7 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
  * Returns a list with position and length of the first match, if no match
  * is found it returns an empty list.
 
- * The regexp in <tt>pattern</tt> must not contain brackets.
+ * The regexp in <tt>pattern</tt> must not contain round parentheses.
  *
  * Example <pre>
  * regexppos( "abcd012efgh345", "[0-9]+" ) -> [4, 3]
