@@ -548,11 +548,13 @@ HwProbe::hd2value (hd_t *hd)
 		s = cpu2string (info->architecture);
 		out->add (YCPString ("architecture"), YCPString (s));
 
-		if (info->architecture == arch_intel) {
+		if (info->architecture == arch_intel)
+		{
 		    out->add (YCPString ("family"), YCPInteger (info->family));
 		    out->add (YCPString ("model"), YCPInteger (info->model));
 		}
-		else if (info->architecture == arch_alpha) {
+		else if (info->architecture == arch_alpha)
+		{
 		    out->add (YCPString ("variation"), YCPInteger (info->family));
 		    out->add (YCPString ("revision"), YCPInteger (info->model));
 		    if (info->vend_name)
@@ -746,9 +748,10 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("driver"), YCPString (hd->driver));
 
     // model (combined vendor and device names)
-
+    // since model may already be inserted by the cpu stuff above we have
+    // to check for it's present first (kind of weird)
     s = hd->model;
-    if (s)
+    if (s && !out->contains (YCPString ("model")))
 	out->add (YCPString ("model"), YCPString (s));
 
     // driver info

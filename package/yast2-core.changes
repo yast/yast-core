@@ -1,7 +1,8 @@
 -------------------------------------------------------------------
 Wed Jul 24 14:58:06 CEST 2002 - arvin@suse.de
 
-- fixed error messages for Read (.yast2, ...) (bug #17170)
+- fixed error messages for Read (.target.yast2, ...) (bug #17170)
+- fixed model entry in Read (.probe.cpu) (bug #17166)
 
 -------------------------------------------------------------------
 Mon Jul 22 16:52:45 CEST 2002 - arvin@suse.de

@@ -117,6 +117,13 @@ YCPValue YCPMapRep::value(const YCPValue& key) const
 }
 
 
+bool
+YCPMapRep::contains (const YCPValue& key) const
+{
+    return stl_map.find (key) != end ();
+}
+
+
 YCPOrder YCPMapRep::compare(const YCPMap& m) const
 {
     int size_this  = size();
