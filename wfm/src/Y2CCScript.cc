@@ -195,7 +195,8 @@ Y2Component* Y2CCScript::provideNamespace(const char* name)
 
 // this is useless in itself, because then we will have registered builtins
 // but no instance to handle them
-//    initializeBuiltins ();
+    // But see bug 37338 - this helps for code paths which do not reach UI
+    initializeBuiltins ();
 
     // return the component
 

@@ -60,7 +60,22 @@ Y2WFMComponent::Y2WFMComponent ():
         SetLanguage (YCPString (lang));
     }
 
+    // initialize SCR and builtins, so it is enough to create the instance of
+    // WFM to get builtins work - used by perl bindings (#37338)
+
     createDefaultSCR ();
+
+    if (scrs.empty ())
+    {
+	// problems with creation of default SCR in constructor
+	return;
+    }
+
+    if (! current_wfm) 
+    {
+	// if there is wfm already, it will handle the WFM builtins!
+	current_wfm = this;
+    }
 }
 
 
@@ -136,15 +151,6 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     }
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
-
-    if (scrs.empty ())
-    {
-	// problems with creation of default SCR in constructor
-	return YCPVoid ();
-    }
-
-    current_wfm = this;
-
 
     YCPValue v = script->asCode ()->evaluate ();
 
