@@ -471,6 +471,7 @@ YBlock::finishBlock ()
     y2debug ("Reorder done");
 }
 
+
 void
 YBlock::setKind (YBlock::blockkind_t kind)
 {
@@ -788,6 +789,12 @@ YBlock::YBlock (std::istream & str)
 	    int tcount = Bytecode::readInt32 (str);
 	    y2debug ("Module with %d table entries", tcount);
 	    
+	    if (tcount > 0
+		&& m_table == 0)
+	    {
+		m_table = new SymbolTable (-1);
+	    }
+
 	    // HACK ahead: Y2ALLGLOBAL should make all
 	    // symbols visible. It works now, but as a trade-off,
 	    // line numbers are lost also for globals.

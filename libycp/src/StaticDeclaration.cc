@@ -153,6 +153,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		block->setName (string (name));
 
 		Y2Namespace *namespaceNamespace = (Y2Namespace *)block;
+		namespaceNamespace->createTable();
 		SymbolTable *namespaceTable = block->table();
 
 		// create SymbolEntry::c_namespace for the namespace to be entered into the global table

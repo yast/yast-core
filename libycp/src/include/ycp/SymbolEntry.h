@@ -135,6 +135,7 @@ public:
 
     SymbolEntry (std::istream & str, const Y2Namespace *name_space = 0);
 
+    virtual ~SymbolEntry ();
 
     // symbols' link to the defining namespace
     const Y2Namespace *nameSpace () const;

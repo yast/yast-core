@@ -91,6 +91,13 @@ SymbolEntry::SymbolEntry (const char *filename)
 {
 }
 
+SymbolEntry::~SymbolEntry ()
+{
+    if (m_category == c_function)
+    {
+	delete m_payload.m_code;
+    }
+}
 
 const Y2Namespace *
 SymbolEntry::nameSpace () const

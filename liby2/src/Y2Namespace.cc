@@ -29,13 +29,16 @@
 #include "Y2NamespaceCPP.h"
 
 Y2Namespace::Y2Namespace ()
-    : m_table ( new SymbolTable(-1) )
+    : m_table (0)
     , m_symbolcount (0)
 {}
 
 Y2Namespace::~Y2Namespace ()
 {
+    if (m_table)
+    {
     delete m_table;
+}
 }
 
 unsigned int
@@ -47,6 +50,11 @@ Y2Namespace::symbolCount () const
 string
 Y2Namespace::toString () const
 {
+    if (m_table == 0)
+    {
+	return "<empty>";
+    }
+
     SymbolTable* t = m_table;
     string s = t->toString ();
     
@@ -58,8 +66,9 @@ Y2Namespace::symbolEntry (unsigned int position) const
 {
     map<unsigned int, SymbolEntry *>::const_iterator it = m_symbols.find (position);
     if (it == m_symbols.end())
+    {
 	return 0;
-
+    }
     return it->second;
 }
 
@@ -67,15 +76,31 @@ Y2Namespace::symbolEntry (unsigned int position) const
 void
 Y2Namespace::enterSymbol (string name, SymbolEntry* symbol, Point *point )
 {
+    if (m_table == 0)
+    {
+	m_table = new SymbolTable (-1);
+    }
+
     // FIXME: that strdup can hurt
     m_table->enter ( strdup(name.c_str ()), symbol, point);
     m_symbols[symbol->position ()] = symbol;
     m_symbolcount++;
 }
 
-SymbolTable* Y2Namespace::table () const
+
+SymbolTable *
+Y2Namespace::table () const
 {
     return m_table;
+}
+
+void
+Y2Namespace::createTable ()
+{
+    if (m_table == 0)
+    {
+	m_table = new SymbolTable (-1);
+    }
 }
 
 // ************************** Y2NamespaceCPP.h helpers ***********************************

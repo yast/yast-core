@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Feb 19 18:14:32 CET 2004 - visnov@suse.cz
+
+- memory fixes:
+ lazy initialization of a symbol table 
+ free function declarations/definitions in client calls
+
+-------------------------------------------------------------------
 Thu Feb 19 13:06:36 CET 2004 - mvidner@suse.cz
 
 - sort (`a, `b, l, ``( a<b ) )

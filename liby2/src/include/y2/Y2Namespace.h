@@ -30,13 +30,13 @@ class SymbolEntry;
 class SymbolTable;
 class Point;
 class Y2Function;
+class StaticDeclaration;
 
 /**
  * Y2Namespace implements a hash(?) table of nested(?) SymbolEntries and
  * allows to look them up
  */
 class Y2Namespace {
-
 protected:
     SymbolTable* m_table;
     unsigned int m_symbolcount;
@@ -69,6 +69,10 @@ public:
 
     //! get our whole symbol table?
     virtual SymbolTable* table () const;
+
+    // this will ensure existence of the table.
+    // after calling this function @ref table will always return a valid pointer
+    void createTable ();
     
     /**
      * Creates a function call instance, which can be used to call a 
