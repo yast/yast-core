@@ -10,6 +10,7 @@
  * $Id$
  */
 
+#include <y2util/PathInfo.h>
 #include <ycp/y2log.h>
 #include <vector>
 #include <set>
@@ -870,6 +871,9 @@ int IniParser::write()
 			    continue;
 			}
 			s.initReadBy ();
+			// ensure that the directories exist
+			Pathname pn (filename);
+			PathInfo::assert_dir (pn.dirname ());
 			ofstream of(filename.c_str());
 			if (!of.good())
 			{
@@ -899,6 +903,9 @@ int IniParser::write()
     }
     else
     {
+	// ensure that the directories exist
+	Pathname pn (file);
+	PathInfo::assert_dir (pn.dirname ());
 	ofstream of(file.c_str());
 	if (!of.good())
 	{

@@ -1,6 +1,8 @@
 -------------------------------------------------------------------
-Thu Jan 29 16:35:54 CET 2004 - mvidner@suse.cz
+Thu Jan 29 17:49:41 CET 2004 - mvidner@suse.cz
 
+- ini agent: make parent directories when writing files
+  (useful eg. for CA management)
 - fixed bugs revealed by -Woverloaded-virtual
 
 -------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"agent-ini\"
+AM_LDFLAGS = -L$(libdir)
 
 plugin_LTLIBRARIES = libpy2ag_ini.la
 noinst_LTLIBRARIES = liby2ag_ini.la
@@ -21,7 +22,9 @@ libpy2ag_ini_la_SOURCES =                           \
         $(liby2ag_ini_la_SOURCES)                   \
         Y2CCIniAgent.cc         
 libpy2ag_ini_la_LDFLAGS = -version-info 2:0
-libpy2ag_ini_la_LIBADD = ../../libscr/src/libscr.la
+libpy2ag_ini_la_LIBADD =			\
+	../../libscr/src/libscr.la		\
+	-ly2util
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
