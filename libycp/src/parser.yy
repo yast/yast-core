@@ -466,7 +466,7 @@ casted_expression:
 	'(' type ')' castable_expression
 	{
 	    // on error, propagate it
-	    if ($2.t == 0 || $4.t == 0)
+	    if ($2.t == 0 || $4.t == 0 || $4.c == 0)
 	    {
 		$$.c = 0;
 		$$.t = 0;
@@ -474,7 +474,7 @@ casted_expression:
 	    }
 	    
 #if DO_DEBUG
-	    y2debug ("cast %s to %s", $4.t->toString().c_str(), $2.t->toString().c_str());
+	    y2debug ("cast '%s' to '%s'", $4.t->toString().c_str(), $2.t->toString().c_str());
 #endif
 
 	    int match = $4.t->match ($2.t);	// would casted type allow expression type ?
@@ -675,7 +675,8 @@ compact_expression:
 	    }
 |	identifier
 	    {
-		if ($1.t->isUnspec ())		// new (undeclared) identifier
+		if ($1.t == 0
+		    || $1.t->isUnspec ())		// new (undeclared) identifier
 		{
 		    yyVerror ($1.v.nval, $1.l);
 		    $$.t = 0;
@@ -3332,6 +3333,12 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 	    case C_SYMBOL:
 	    {
 		*store_here = new YConst (YCode::ycSymbol, YCPSymbol (value.yval));
+	    }
+	    break;
+	    case SCANNER_ERROR:
+	    {
+		*store_here = 0;
+		lvalp_void->t = 0;
 	    }
 	    break;
 	}

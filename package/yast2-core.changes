@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar 23 15:36:21 CET 2004 - kkaempf@suse.de
+
+- don't complain about bad cast if the to-be-casted expression
+  is already wrong (#36751)
+
+-------------------------------------------------------------------
 Tue Mar 23 14:48:44 CET 2004 - mvidner@suse.cz
 
 - check that external agents returned the correct type (#35363)
