@@ -114,8 +114,9 @@ SystemAgent::SystemAgent ()
 	snprintf (pidstr, 8, "%05d", pid);
 	tempdir = string ("/tmp/YaST2-") + pidstr;
 
-	if ((access(tempdir.c_str(), F_OK) != 0)
-	    && (mkdir (tempdir.c_str(), 0700) == 0))
+	// it's not necessary to check if the dir already exits since mkdir
+	// will fail in that case
+	if (mkdir (tempdir.c_str(), 0700) == 0)
 	    break;
 
 	pid += 42;
