@@ -77,7 +77,7 @@ while ( <STDIN> )
 		# key is parameter name
 		my $key = $_;
 	    	$key =~ s/^[^:]*:\s*//;
-		$key =~ s/^(\S*).*:.*/$1/;
+		$key =~ s/^([^ \t\n\r\f:]*).*:.*/$1/;
 		
 		# remove parameter name from the description
 	    	$desc =~ s/^[^:]*:\s*//;
