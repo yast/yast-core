@@ -256,7 +256,9 @@ SymbolEntry::setValue (YCPValue value)
     
     // use YCPVoid for nil to avoid problems with function references
     if (value.isNull ())
+    {
 	value = YCPVoid ();
+    }
 	
     return m_value = value;
 }
