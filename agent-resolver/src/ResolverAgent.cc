@@ -1,4 +1,5 @@
-/* ResolverAgent.cc
+/*
+ * ResolverAgent.cc
  *
  * Classes for reading the resolv.conf configuration file.
  *
@@ -219,7 +220,7 @@ static int fillCache (const char *filename)
 		*lptr++ = 0;
 		ret->add (YCPString (vptr));
 	    }
-	    
+
 	    value = ret;
 	}
 
@@ -447,7 +448,8 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 
     fillCache (file_name.c_str ());
 
-    if (path->isRoot()) {
+    if (path->isRoot())
+    {
 	if (value.isNull() || value->isVoid())
 	    return YCPBoolean (flushCache (file_name.c_str ()) == 0);
 	if (!value->isMap())
@@ -457,12 +459,15 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 	}
 	localCache = value->asMap();
     }
-    else {
+    else
+    {
 	const char *key = path->component_str(0).c_str();
-	if ((allowedKey (key) == 0) || allowedInfoKey (key)) {
+	if ((allowedKey (key) == 0) || allowedInfoKey (key))
+	{
 	    localCache->add (YCPString (key), value);
 	}
-        else if (strcmp (key, "write_header") == 0) {
+        else if (strcmp (key, "write_header") == 0)
+	{
             if (value->isBoolean ()) {
                 writeHeader = value->asBoolean ()->value ();
             }
@@ -473,8 +478,11 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 	    }
         }
 	else
-	    ycp2error ("Bad key %s for Write(.resolver...)", path->component_str(0).c_str ());
+	{
+	    ycp2error ("Bad key %s for Write(.resolver...)",
+		       path->component_str(0).c_str ());
 	    return YCPBoolean (false);
+	}
     }
 
     cacheDirty = true;
@@ -515,4 +523,3 @@ YCPValue ResolverAgent::otherCommand (const YCPTerm& term)
     }
     return term;
 }
-
