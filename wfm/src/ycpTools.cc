@@ -41,7 +41,7 @@ bool YcpArgLoad::load( const YCPList & args_r )
   string errstr;
 
   if ( unsigned(args_r->size()) > _proto.size() ) {
-    errstr = stringutil::form( "takes %d arg(s) but got %d", _proto.size(), args_r->size() );
+    errstr = stringutil::form( "takes %zu arg(s) but got %d", _proto.size(), args_r->size() );
     ret = false;
 
   } else if ( unsigned(args_r->size()) < _optional ) {

@@ -618,7 +618,7 @@ Reg_Ret solve_regular_expression (const char *input, const char *pattern,
 
     if (compiled.re_nsub > SUB_MAX)
     {
-	snprintf (error, ERR_MAX, "too much subexpresions: %d", compiled.re_nsub);
+	snprintf (error, ERR_MAX, "too many subexpresions: %zu", compiled.re_nsub);
 	reg_ret.error_str = string (error);
 	regfree (&compiled);
 	return reg_ret;

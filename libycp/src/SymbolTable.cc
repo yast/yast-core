@@ -341,7 +341,7 @@ SymbolTable::getXRef (unsigned int position) const
     std::vector<TableEntry *> *refs = m_xrefs.top();
     if (position >= refs->size())
     {
-	y2error ("SymbolTable[%p]::getXRefs position %d >= size %d !", this, position, refs->size());
+	y2error ("SymbolTable[%p]::getXRefs position %u >= size %zu !", this, position, refs->size());
 	return 0;
     }
     return (*refs)[position]->sentry();

@@ -118,7 +118,7 @@ YMultiProgressMeter::maxValue( int segment ) const
 	return _maxValues[ segment ];
     else
     {
-	y2error( "Index %d out of range (0..%ud)", segment, _maxValues.size() -1 );
+	y2error( "Index %d out of range (0..%zu)", segment, _maxValues.size() -1 );
 	return -1;
     }
 }
@@ -131,7 +131,7 @@ YMultiProgressMeter::currentValue( int segment ) const
 	return _currentValues[ segment ];
     else
     {
-	y2error( "Index %d out of range (0..%ud)", segment, _currentValues.size() -1 );
+	y2error( "Index %d out of range (0..%zu)", segment, _currentValues.size() -1 );
 	return -1;
     }
 }
@@ -146,7 +146,7 @@ void YMultiProgressMeter::setCurrentValue( int segment, Value_t value )
 	
 	if ( value > maxValue( segment ) )
 	{
-	    y2error( "Current value %d for segment #%d exceeds maximum of %d",
+	    y2error( "Current value %lld for segment #%d exceeds maximum of %lld",
 		     value, segment, maxValue( segment ) );
 
 	    value = maxValue( segment );
@@ -157,7 +157,7 @@ void YMultiProgressMeter::setCurrentValue( int segment, Value_t value )
     }
     else
     {
-	y2error( "Index %d out of range (0..%ud)", segment, _currentValues.size() -1 );
+	y2error( "Index %d out of range (0..%zu)", segment, _currentValues.size() -1 );
     }
 }
 
