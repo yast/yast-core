@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 27 09:57:38 CEST 2004 - lslezak@suse.cz
+
+- ag_modinfo: modinfo output was incorrectly parsed when it
+  contained more `:' chars
+
+-------------------------------------------------------------------
 Thu Oct 21 15:59:33 CEST 2004 - kkaempf@suse.de
 
 - improve type checking to always use the most detailed type
