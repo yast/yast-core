@@ -43,17 +43,22 @@ public:
 
 
     /**
-     * Record one user input
+     * Record one user input.
      */
     void recordUserInput( const YCPValue & input );
 
 
     /**
-     * Record one widget property
+     * Record one widget property.
      */
     void recordWidgetProperty( YWidget *	widget,
 			       const char *	propertyName );
 
+    /**
+     * Record a (commented out) "UI::MakeScreenShot()" statement.
+     **/
+    void recordMakeScreenShot();
+    
     /**
      * Begin a macro block that will be executed as a whole.
      */
@@ -95,6 +100,11 @@ protected:
      * The internally used macro file; valid if non-null.
      */
     FILE * _macroFile;
+
+    /**
+     * A counter for making screen shots.
+     **/
+    int _screenShotCount;
 };
 
 #endif // YMacroRecorder_h
