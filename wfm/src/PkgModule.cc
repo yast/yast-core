@@ -135,9 +135,11 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetLogfile")	return TargetLogfile (args);
     else if (function == "TargetCapacity")	return TargetCapacity (args);
     else if (function == "TargetUsed")		return TargetUsed (args);
+    else if (function == "TargetBlockSize")	return TargetBlockSize (args);
     else if (function == "TargetUpdateInf")	return TargetUpdateInf (args);
     else if (function == "TargetProducts")	return TargetProducts (args);
     else if (function == "TargetRebuildDB")	return TargetRebuildDB (args);
+    else if (function == "TargetDUInit")	return TargetDUInit (args);
     // source related functions
     else if (function == "SourceCreate")	return SourceCreate (args);
     else if (function == "SourceStartCache")	return SourceStartCache (args);

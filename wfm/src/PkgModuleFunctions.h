@@ -108,11 +108,13 @@ class PkgModuleFunctions
 	YCPValue TargetLogfile (YCPList args);
 	YCPValue TargetCapacity (YCPList args);
 	YCPValue TargetUsed (YCPList args);
+	YCPValue TargetBlockSize (YCPList args);
 	YCPValue TargetUpdateInf (YCPList args);
 	YCPValue TargetInstall (YCPList args);
 	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetProducts (YCPList args);
 	YCPValue TargetRebuildDB (YCPList args);
+	YCPValue TargetDUInit (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);

@@ -151,7 +151,7 @@ PkgModuleFunctions::TargetLogfile (YCPList args)
  * return capacity and usage of partition at directory
  */
 static void
-get_disk_stats (const char *fs, long long *used, long long *size)
+get_disk_stats (const char *fs, long long *used, long long *size, long long *bsize)
 {
     struct statvfs sb;
     if (statvfs (fs, &sb) < 0)
@@ -159,9 +159,9 @@ get_disk_stats (const char *fs, long long *used, long long *size)
 	*used = *size = -1;
 	return;
     }
-    long long blocksize = sb.f_frsize ? : sb.f_bsize;
-    *size = sb.f_blocks * blocksize;
-    *used = (sb.f_blocks - sb.f_bfree) * blocksize;
+    *bsize = sb.f_frsize ? : sb.f_bsize;		// block size
+    *size = sb.f_blocks * *bsize;			// total size
+    *used = (sb.f_blocks - sb.f_bfree) * *bsize;	// free size
 }
 
 
@@ -180,8 +180,8 @@ PkgModuleFunctions::TargetCapacity (YCPList args)
 	return YCPError ("Bad args to Pkg::TargetCapacity");
     }
 
-    long long used, size;
-    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size);
+    long long used, size, bsize;
+    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
 
     return YCPInteger (size);
 }
@@ -201,10 +201,31 @@ PkgModuleFunctions::TargetUsed (YCPList args)
 	return YCPError ("Bad args to Pkg::TargetUsed");
     }
 
-    long long used, size;
-    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size);
+    long long used, size, bsize;
+    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
 
     return YCPInteger (used);
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetBlockSize (string dir) -> integer
+ *
+ * return block size of partition at directory
+ */
+YCPValue
+PkgModuleFunctions::TargetBlockSize (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetBlockSize");
+    }
+
+    long long used, size, bsize;
+    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
+
+    return YCPInteger (bsize);
 }
 
 /** ------------------------
@@ -282,3 +303,47 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
     _y2pm.instTarget().bringIntoCleanState();
     return YCPBoolean (true);
 }
+
+
+/** ------------------------
+ * 
+ * @builtin Pkg::DUInit (list string) -> void
+ *
+ * return init DU calculation for given directories
+ */
+YCPValue
+PkgModuleFunctions::TargetDUInit (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isList())
+	|| (args->value(0)->asList()->size() == 0))
+    {
+	return YCPError ("Bad args to Pkg::TargetDUInit");
+    }
+
+    std::set<PkgDuMaster::MountPoint> mountpoints;
+
+    YCPList dirlist = args->value(0)->asList();
+    for (int i = 0; i < dirlist->size(); ++i)
+    {
+	if (!dirlist->value(i)->isString())
+	{
+	    y2error ("TargetDUInit: bad item %d: %s", i, dirlist->value(i)->toString().c_str());
+	    continue;
+	}
+
+	string dir = dirlist->value(i)->asString()->value();
+
+	long long used, size, bsize;
+	get_disk_stats (dir.c_str(), &used, &size, &bsize);
+
+	y2milestone ("dir %s, bsize %lld, total %lld, used %lld", dir.c_str(), bsize, size, used);
+
+	PkgDuMaster::MountPoint point (dir, FSize (bsize), FSize (size), FSize (used));
+	mountpoints.insert (point);
+    }
+    _y2pm.packageManager().setMountPoints(mountpoints);
+    return YCPVoid();
+}
+
+
