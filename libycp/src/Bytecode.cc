@@ -23,7 +23,7 @@ $Id$
 #define YaST_BYTECODE_HEADER "YaST bytecode "
 #define YaST_BYTECODE_MAJOR "1"
 #define YaST_BYTECODE_MINOR "3"
-#define YaST_BYTECODE_RELEASE "1"
+#define YaST_BYTECODE_RELEASE "2"
 
 #include "ycp/Bytecode.h"
 #include "YCP.h"
