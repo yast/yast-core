@@ -190,7 +190,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		|| type->isUnspec()
 		|| type->isWildcard())
 	    {
-		y2error ("Invalid signature %s:'%s'\n", name, signature.c_str());
+		y2error ("Invalid signature %s::%s:'%s'\n", filename, name, signature.c_str());
 		return;
 	    }
 

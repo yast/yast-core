@@ -274,12 +274,15 @@ Type::nextToken (const char **signature)
 TypePtr
 Type::fromSignature (const char ** signature)
 {
-    if (signature == 0)
+    if ((signature == 0)
+	|| (*signature == 0))
+    {
 	return 0;
-    if (*signature == 0)
-	return 0;
+    }
     if (**signature == 0)
+    {
 	return TypePtr (new Type(UnspecT));
+    }
 
     TypePtr t = 0;
 
@@ -339,7 +342,7 @@ Type::fromSignature (const char ** signature)
     {
 	if (nextToken (signature) != next)
 	{
-	    y2error ("Next '%c' missing at '%s' [%s] k %d\n", next, signature_copy, signature_start, k);
+	    y2error ("Expecting '%c' at '%s' [Complete signature is '%s']\n", next, signature_copy, signature_start);
 	    return 0;
 	}
     }
@@ -349,7 +352,7 @@ Type::fromSignature (const char ** signature)
 //	y2debug ("k %d, signature '%s'", k, *signature);
 	if (k == UnspecT)	// no nothing
 	{
-	    y2error ("No type for '%s' [%s]!\n", signature_copy, signature_start);
+	    y2error ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
 	    return 0;
 	}
 
@@ -358,7 +361,7 @@ Type::fromSignature (const char ** signature)
 
 	if (t1 == 0)
 	{
-	    y2error ("No type for '%s' [%s]!\n", signature_copy, signature_start);
+	    y2error ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
 	    return 0;
 	}
 //	y2debug ("t1 '%s', k %d, signature '%s'", t1->toString().c_str(), k, *signature);
@@ -374,14 +377,14 @@ Type::fromSignature (const char ** signature)
 
 		if (nextToken (signature) != ',')
 		{
-		    y2error ("Next '%c' missing at '%s' [%s]\n", next, signature_copy, signature_start);
+		    y2error ("Expected ',' at '%s' [Complete signature is '%s']\n", signature_copy, signature_start);
 		    return 0;
 		}
 
 		TypePtr t2 = fromSignature (signature);
 		if (t2 == 0)
 		{
-		    y2debug ("No type for '%s' [%s]!\n", signature_copy, signature_start);
+		    y2debug ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
 		    return 0;
 		}
 
@@ -401,7 +404,7 @@ Type::fromSignature (const char ** signature)
 	{
 	    if (nextToken (signature) != next)
 	    {
-		y2error ("Next '%c' missing at '%s' [%s]\n", next, signature_copy, signature_start);
+		y2error ("Expected '%c' at '%s' [Complete signature is '%s']\n", next, signature_copy, signature_start);
 		return 0;
 	    }
 	}
@@ -451,7 +454,7 @@ Type::fromSignature (const char ** signature)
 
 	if (**signature != ')')
 	{
-	    y2error ("Next ')' missing at '%s' [%s]\n", signature_copy, signature_start);
+	    y2error ("Expected ')' at '%s' [Complete signature is '%s']\n", signature_copy, signature_start);
 	    return 0;
 	}
 
@@ -469,7 +472,7 @@ Type::fromSignature (const char ** signature)
 	    TypePtr t1 = fromSignature (signature);
 	    if (t1 == 0)
 	    {
-		y2error ("No type for '%s' [%s]!\n", signature_copy, signature_start);
+		y2error ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
 		return 0;
 	    }
 
@@ -477,7 +480,7 @@ Type::fromSignature (const char ** signature)
 	}
 	if (**signature != '>')
 	{
-	    y2error ("Next '>' missing at '%s' [%s]\n", signature_copy, signature_start);
+	    y2error ("Expected '>' at '%s' [Complete signature is '%s']\n", signature_copy, signature_start);
 	    return 0;
 	}
 	t = tt;
