@@ -969,7 +969,7 @@ YWidget * YUI::createLogView( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * text, and the icon is silently omitted.
  * 
  * Icons are ( at the time of this writing ) loaded from the <em>theme</em>
- * directory, <filename>/usr/share/YaST2/theme/current</filename>.
+ * directory, /usr/share/YaST2/theme/current.
  * 
  */
 
