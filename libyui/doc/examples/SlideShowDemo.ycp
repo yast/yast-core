@@ -274,7 +274,7 @@ the respective function to display the list.</p>					\
 			      `VBox(
 				    `VWeight( 1, cdTable ),
 				    `VWeight( 1, `LogView(`id(`pkgLog ),  "", 6, 100 ) ),
-				    `ProgressBar(`id(`progressCurrentPackage), "", 100, 42 )
+				    `ProgressBar(`id(`progressCurrentPackage), "hypercool-1.3.7 (143.3 MB)", 100, 42 )
 				    ),
 			      `HSpacing( 0.5 ),
 			      `VBox(
