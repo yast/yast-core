@@ -23,8 +23,12 @@ noinst_PROGRAMS = runwfm runc
 runwfm_SOURCES = runwfm.cc
 
 runwfm_LDADD = \
-	../src/libpy2wfm.la
-
+	$(srcdir)/../src/libpy2wfm.la		\
+	$(srcdir)/../../libyui/src/libyui.la    \
+	$(srcdir)/../../libscr/src/libscr.la    \
+	$(srcdir)/../../libycp/src/libycp.la    \
+	$(srcdir)/../../liby2/src/liby2.la      \
+	-ly2util
 
 runc_SOURCES = runc.cc
 runc_LDFLAGS = -L$(libdir)
