@@ -63,6 +63,9 @@ getName (YCPList args)
 PMSelectablePtr
 PkgModuleFunctions::getPackageSelectable (const std::string& name)
 {
+    _y2pm.packageManager ();
+    startCachedSources (true);
+
     PMSelectablePtr selectable;
     if (!name.empty())
 	selectable = _y2pm.packageManager().getItem(name);
@@ -535,6 +538,7 @@ PkgModuleFunctions::GetPackages(YCPList args)
 	return YCPError ("Bad args to Pkg::GetPackages");
     }
 
+    _y2pm.packageManager ();
     startCachedSources (true);
 
     string which = args->value(0)->asSymbol()->symbol();
@@ -626,6 +630,7 @@ YCPValue
 PkgModuleFunctions::PkgInstall (YCPList args)
 {
     PMSelectablePtr selectable = getPackageSelectable (getName(args));
+
     if (!selectable)
     {
 	return YCPBoolean (false);
