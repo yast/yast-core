@@ -5,7 +5,9 @@
  */
 
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -21,7 +23,7 @@
 
 
 static int
-read_loop (int fd, char *buffer, int count)
+read_loop (int fd, char* buffer, int count)
 {
     int offset, block;
 
@@ -48,8 +50,8 @@ read_loop (int fd, char *buffer, int count)
 }
 
 
-static char *
-make_crypt_salt (const char *crypt_prefix, int crypt_rounds)
+static char*
+make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
 {
 #define CRYPT_GENSALT_OUTPUT_SIZE (7 + 22 + 1)
 
@@ -60,8 +62,8 @@ make_crypt_salt (const char *crypt_prefix, int crypt_rounds)
     int fd = open (RANDOM_DEVICE, O_RDONLY);
     if (fd < 0)
     {
-	fprintf (stderr, "Can't open %s for reading: %s\n",
-		 RANDOM_DEVICE, strerror (errno));
+	y2error ("Can't open %s for reading: %s\n", RANDOM_DEVICE,
+		 strerror (errno));
 	return 0;
     }
 
@@ -69,8 +71,7 @@ make_crypt_salt (const char *crypt_prefix, int crypt_rounds)
     if (read_loop (fd, entropy, sizeof(entropy)) != sizeof(entropy))
     {
 	close (fd);
-	fprintf (stderr, "Unable to obtain entropy from %s\n",
-		 RANDOM_DEVICE);
+	y2error ("Unable to obtain entropy from %s\n", RANDOM_DEVICE);
 	return 0;
     }
 
@@ -84,8 +85,7 @@ make_crypt_salt (const char *crypt_prefix, int crypt_rounds)
 
     if (!retval)
     {
-	fprintf (stderr, "Unable to generate a salt, "
-		 "check your crypt settings.\n");
+	y2error ("Unable to generate a salt, check your crypt settings.\n");
 	return 0;
     }
 
@@ -158,7 +158,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 
     if (!newencrypted)
     {
-	y2error ("crypt_r() returns 0 pointer");
+	y2error ("crypt_r () returns 0 pointer");
 	return false;
     }
 
