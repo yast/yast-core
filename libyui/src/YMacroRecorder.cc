@@ -139,8 +139,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
     {
 	fprintf( _macroFile, "%s%sUI::%s();\n",
 		 YMACRO_INDENT, YMACRO_INDENT, 
-		 YUIBuiltin_FakeUserInput,
-		 input->toString().c_str() );
+		 YUIBuiltin_FakeUserInput );
     }
     else
     {
