@@ -84,6 +84,16 @@ bool onlySpaces (const char*str)
 }
 
 /**
+ * Makes a duplicate of s using new char[] and strcpy
+ */
+char * newstrdup (const char *s)
+{
+    char *ns = new char[strlen (s) + 1];
+    strcpy (ns, s);
+    return ns;
+}
+
+/**
  * Return 0 if there is:
  * $[ "begin" : [ "...", "...", ],
  *    "end"   : [ "...", "...", ],]
@@ -245,8 +255,7 @@ int IniParser::initMachine (const YCPMap&scr)
 		if (!CompileRegex (&rewrites[rewrite_len].in,v->asList()->value(i)->asList()->value(0)->asString()->value_cstr()))
 		{
 		    const char*out = v->asList()->value(i)->asList()->value(1)->asString()->value_cstr();
-		    rewrites[rewrite_len].out = new char[strlen(out)+1];
-		    strcpy(rewrites[rewrite_len].out, out);
+		    rewrites[rewrite_len].out = newstrdup (out);
 		    rewrite_len++;
 		}
 	    }
@@ -291,20 +300,22 @@ int IniParser::initMachine (const YCPMap&scr)
 			{
 			    YCPMap m = v->asList()->value(i)->asMap ();
 			    sections[section_len].end_valid = false;
+			    YCPList p;
 			    switch (getBeginEndType (m))
 				{
 				case 0:
+				    p = m->value(YCPString("end"))->asList();
 				    if (CompileRegex (&sections[section_len].end,
-						      m->value(YCPString("end"))->asList()->value(0)->asString()->value_cstr()))
+						      p->value(0)->asString()->value_cstr()))
 					break;
-				    sections[section_len].end_out = new char [
-					m->value(YCPString("end"))->asList()->value(1)->asString()->value().length()+1];
-				    strcpy (sections[section_len].end_out,
-					    m->value(YCPString("end"))->asList()->value(1)->asString()->value_cstr());
+				    sections[section_len].end_out = newstrdup (
+					p->value(1)->asString()->value_cstr());
 				    sections[section_len].end_valid = true;
+				    // Fall through
 				case 1:
+				    p = m->value(YCPString("begin"))->asList();
 				    if (CompileRegex (&sections[section_len].begin,
-						      m->value(YCPString("begin"))->asList()->value(0)->asString()->value_cstr()))
+						      p->value(0)->asString()->value_cstr()))
 					{
 					    if (sections[section_len].end_out)
 						{
@@ -314,10 +325,8 @@ int IniParser::initMachine (const YCPMap&scr)
 						}
 					    break;
 					}
-				    sections[section_len].begin_out = new char [
-					m->value(YCPString("begin"))->asList()->value(1)->asString()->value().length()+1];
-				    strcpy (sections[section_len].begin_out,
-					    m->value(YCPString("begin"))->asList()->value(1)->asString()->value_cstr());
+				    sections[section_len].begin_out =newstrdup(
+					p->value(1)->asString()->value_cstr());
 				    section_len++;
 				    break;
 				case -1:
@@ -341,42 +350,43 @@ int IniParser::initMachine (const YCPMap&scr)
 			{
 			    YCPMap m = v->asList()->value(i)->asMap ();
 			    params[param_len].multiline_valid = false;
+			    YCPList p;
 			    switch (getParamsType (m))
 				{
 				case 0:
+				    p = m->value(YCPString("multiline"))->asList();
 				    if (!CompileRegex (&params[param_len].begin,
-					  m->value(YCPString("multiline"))->asList()->value(0)->asString()->value_cstr()))
+					  p->value(0)->asString()->value_cstr()))
 					if (!CompileRegex (&params[param_len].end,
-					      m->value(YCPString("multiline"))->asList()->value(1)->asString()->value_cstr()))
+					      p->value(1)->asString()->value_cstr()))
 					{
 					    params[param_len].multiline_valid = true;
 					}
 					else
 					{
 					    y2error ("Bad regexp(multiline): %s",
-						m->value(YCPString("multiline"))->asList()->value(1)->asString()->value_cstr());
+						p->value(1)->asString()->value_cstr());
 					    regfree (params[param_len].begin);
 					}
 				    else
 					  y2error ("Bad regexp(multiline): %s",
-					      m->value(YCPString("multiline"))->asList()->value(0)->asString()->value_cstr());
+					      p->value(0)->asString()->value_cstr());
 				case 1:
+				    p = m->value(YCPString("match"))->asList();
 				    if (CompileRegex (&params[param_len].line,
-					  m->value(YCPString("match"))->asList()->value(0)->asString()->value_cstr()))
+					  p->value(0)->asString()->value_cstr()))
 				    {
 					if (params[param_len].multiline_valid)
 					{
 					    y2error ("Bad regexp(match): %s",
-						m->value(YCPString("match"))->asList()->value(0)->asString()->value_cstr());
+						p->value(0)->asString()->value_cstr());
 					    regfree (params[param_len].begin);
 					    regfree (params[param_len].end);
 					}
 					break;
 				    }
-				    params[param_len].out = new char [
-					m->value(YCPString("match"))->asList()->value(1)->asString()->value().length()+1];
-				    strcpy (params[param_len].out,
-					    m->value(YCPString("match"))->asList()->value(1)->asString()->value_cstr());
+				    params[param_len].out = newstrdup (
+					p->value(1)->asString()->value_cstr());
 				    param_len++;
 				    break;
 				case -1:
