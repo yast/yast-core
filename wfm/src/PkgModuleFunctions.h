@@ -57,6 +57,7 @@ class PkgModuleFunctions
 	YCPValue TargetFinish (YCPList args);
 	YCPValue TargetInstall (YCPList args);
 	YCPValue TargetRemove (YCPList args);
+	YCPValue TargetLogfile (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);

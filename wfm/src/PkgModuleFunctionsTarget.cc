@@ -111,4 +111,23 @@ PkgModuleFunctions::TargetRemove(YCPList args)
 }
 
 
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetLogfile (string name) -> bool
+ *
+ * init logfile for target
+ */
+YCPValue
+PkgModuleFunctions::TargetLogfile (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetLogfile");
+    }
+    return YCPBoolean (_y2pm.instTarget().setInstallationLogfile (args->value(0)->asString()->value()));
+}
+
+
+
 

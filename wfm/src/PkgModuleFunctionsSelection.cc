@@ -174,19 +174,8 @@ PkgModuleFunctions::SelectionData (YCPList args)
     data->add (YCPString ("category"), YCPString (selection->category()));
     data->add (YCPString ("visible"), YCPBoolean (selection->visible()));
 
-    std::list<std::string> suggests = selection->suggests();
-    y2milestone ("  with (%d) suggestions", suggests.size());
-    YCPList suggestslist;
-    for (std::list<std::string>::iterator sugIt = suggests.begin();
-	sugIt != suggests.end(); ++sugIt)
-    {
-	if (!((*sugIt).empty()))
-	    suggestslist->add (YCPString (*sugIt));
-    }
-    data->add (YCPString ("suggests"), suggestslist);
-
     std::list<std::string> recommends = selection->recommends();
-    y2milestone ("  with (%d) suggestions", recommends.size());
+    y2milestone ("  with (%d) recommends", recommends.size());
     YCPList recommendslist;
     for (std::list<std::string>::iterator sugIt = recommends.begin();
 	sugIt != recommends.end(); ++sugIt)
@@ -195,6 +184,17 @@ PkgModuleFunctions::SelectionData (YCPList args)
 	    recommendslist->add (YCPString (*sugIt));
     }
     data->add (YCPString ("recommends"), recommendslist);
+
+    std::list<std::string> suggests = selection->suggests();
+    y2milestone ("  with (%d) suggests", suggests.size());
+    YCPList suggestslist;
+    for (std::list<std::string>::iterator sugIt = suggests.begin();
+	sugIt != suggests.end(); ++sugIt)
+    {
+	if (!((*sugIt).empty()))
+	    suggestslist->add (YCPString (*sugIt));
+    }
+    data->add (YCPString ("suggests"), suggestslist);
 
     data->add (YCPString ("archivesize"), YCPInteger ((long long) (selection->archivesize())));
     data->add (YCPString ("order"), YCPString (selection->order()));

@@ -106,6 +106,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetFinish")	return f.TargetFinish (args);
     else if (function == "TargetInstall")	return f.TargetInstall (args);
     else if (function == "TargetRemove")	return f.TargetRemove (args);
+    else if (function == "TargetLogfile")	return f.TargetLogfile (args);
     // source related functions
     else if (function == "SourceInit")		return f.SourceInit (args);
     else if (function == "SourceFinish")	return f.SourceFinish (args);
