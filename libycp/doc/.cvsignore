@@ -1,8 +1,5 @@
-YCP-datatypes.html
-YCP-quoting.html
-YCP-statements.html
-YCP-builtins.html
-YCP-operators.html
+YCPBuiltin*.xml
+html
 Makefile
 Makefile.in
 CATALOG.local
@@ -18,4 +15,4 @@ ycp
 *.out
 *.pdf
 *.ps
-*.tex
+.tex
