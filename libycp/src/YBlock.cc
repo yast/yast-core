@@ -178,7 +178,7 @@ YBlock::newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr ty
     {
 	m_point = point;
     }
-    TableEntry *tentry = new TableEntry (name, sentry, point);	// link symbol and declaration point
+    TableEntry *tentry = new TableEntry (sentry->name(), sentry, point);	// link symbol and declaration point
     attachEntry (tentry);
 
     return tentry;
