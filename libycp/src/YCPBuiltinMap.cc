@@ -42,8 +42,9 @@ m_haskey (const YCPMap &map, const YCPValue &value)
      */
      
     if (map.isNull ())
+    {
 	return YCPNull ();
-	
+    }	
     if (value.isNull ())
     {
 	ycp2error ("Cannot use 'nil' as key in haskey ()");
@@ -426,7 +427,7 @@ YCPBuiltinMap::YCPBuiltinMap ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "haskey", "boolean (const map <flex,any>, const flex)",							    (void *)m_haskey,	DECL_FLEX },
+	{ "haskey", "boolean (const map <any,any>, const any)",								    (void *)m_haskey },
 	{ "mapmap", "map <flex3,flex4> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <map <flex3, flex4>>)",  (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "maplist","list <flex3> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <flex3>)",	    (void *)m_maplist,  DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "filter", "map <flex1,flex2> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <boolean>)",(void *)m_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },

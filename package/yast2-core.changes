@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar  8 18:00:42 CET 2004 - kkaempf@suse.de
+
+- haskey() should accept any key (#35465)
+- 2.9.55
+
+-------------------------------------------------------------------
 Mon Mar  8 17:35:04 CET 2004 - jsrain@suse.de
 
 - probe agent returns additional info for SCSI discs
