@@ -120,29 +120,30 @@
                     looks like this:</para>
 
                 <programlisting>
-                    <emphasis role="b">UI::OpenDialog</emphasis>(
-                    `VBox(
-                    ... // Some input fields etc.
-                    `HBox(
+{
+    UI::OpenDialog(
+            `VBox(
+                ... // Some input fields etc.
+                `HBox(
                     `PushButton(`id(`back ), "Back" ),
                     `PushButton(`id(`next ), "Next" )
                     )
-                    )
-                    );
+                )
+            );
 
-                    symbol button_id = <emphasis role="b">UI::UserInput()</emphasis>;
+    symbol button_id = UI::UserInput();
 
-                    if ( button_id == `next )
-                    {
-                    // Handle "Next" button
-                    }
-                    else if ( button_id == `back )
-                    {
-                    // Handle "Back" button
-                    }
+    if ( button_id == `next )
+    {
+        // Handle "Next" button
+    }
+    else if ( button_id == `back )
+    {
+        // Handle "Back" button
+    }
 
-                    <emphasis role="b">UI::CloseDialog()</emphasis>;
-
+    UI::CloseDialog();
+}
                 </programlisting>
 
                 <para>Strictly spoken, you don't even require a loop around that -
@@ -164,7 +165,7 @@
                         role="i">notify</emphasis> <link linkend="Widget_widget">widget option</link> can be used
                     when creating it with UI::OpenDialog().</para>
 
-                <example><title>Example</title>
+                <example><title>The notify option</title>
 
                     <programlisting>
                         <emphasis role="b">UI::OpenDialog</emphasis>(...

@@ -514,10 +514,7 @@ sub write_toc ()
 
     print $toc_file <<"HTML-HEADER-END";
 
-<h2>
-    Alphabetical Widget Index
-</h2>
-<table>
+<informaltable>
   <tgroup cols="3">
   <tbody>
 HTML-HEADER-END
@@ -541,7 +538,7 @@ HTML-HEADER-END
 	print $toc_file <<"HTML-HEADER-END";
         </tbody>
         </tgroup>
-</table>
+</informaltable>
 HTML-HEADER-END
 
     write_html_footer( $toc_file);
@@ -747,8 +744,7 @@ HTML-END
 	# Table header
 
 	print $outfile <<"HTML-END";
-        <table tabstyle="arguments" frame="all">
-            <title>$w{'widget'} Arguments</title>
+        <informaltable>
             <tgroup cols="3" colsep='1' rowsep='1'>
                 <tbody>
 HTML-END
@@ -782,7 +778,7 @@ HTML-END
 	print $outfile <<"HTML-END";
         </tbody>
         </tgroup>
-    </table>
+    </informaltable>
     </refsect1>
 HTML-END
 
@@ -804,11 +800,9 @@ HTML-END
 	# Table header
 
 	print $outfile <<"HTML-END";
-	<refsect1><title>Optional</title>
-        <table frame="all">
-         <title>$w{'widget'} Optional</title>
-        <tgroup cols="3">
-          <tbody>
+	<refsect1>
+            <title>Optional</title>
+            <variablelist>
 HTML-END
 
 	foreach $line ( @$lines )
@@ -822,17 +816,12 @@ HTML-END
 	    # Table row
 
 	    print $outfile <<"HTML-END";
-            <row>
-    	    <entry>
-    		<replaceable>$arg_type</replaceable>
-    	    </entry>
-    	    <entry>
-    		    <emphasis role="i">$arg_name</emphasis>
-    	    </entry>
-    	    <entry>
-    		@args
-    	    </entry>
-    	</row>
+                <varlistentry>
+                    <term><type>$arg_type</type> <property>$arg_name</property></term>
+                    <listitem>
+                        <para>@args</para>
+                    </listitem>
+                </varlistentry>
 HTML-END
         }
 
@@ -840,9 +829,7 @@ HTML-END
 	# Table footer
 
 	print $outfile <<"HTML-END";
-        </tbody>
-        </tgroup>
-    </table>
+            </variablelist>
     </refsect1>
 HTML-END
 
@@ -852,7 +839,8 @@ HTML-END
     # Create a table for @prop
 
 	print $outfile <<"HTML-END";
-<refsect1><title>Special Properties</title>
+    <refsect1>
+        <title>Special Properties</title>
 HTML-END
 
     if ( $#widget_props < 0 )	# No properties
@@ -871,10 +859,7 @@ HTML-END
 	# Table header
 
 	print $outfile <<"HTML-END";
-    <table>
-     <title>$w{'widget'} Special Properties</title>
-    <tgroup cols="3">
-      <tbody>
+            <variablelist>
 HTML-END
 
 	foreach $property ( @widget_props )
@@ -887,17 +872,12 @@ HTML-END
 	    # Table row
 
 	    print $outfile <<"HTML-END";
-            <row>
-    	    <entry>
-    		<replaceable>$prop_type</replaceable>
-    	    </entry>
-    	    <entry>
-    		    <emphasis role="i">$prop_name</emphasis>
-    	    </entry>
-    	    <entry>
-    		@prop
-    	    </entry>
-    	</row>
+                <varlistentry>
+                    <term><type>$prop_type</type> <property>$prop_name</property></term>
+                    <listitem>
+                        <para>@prop</para>
+                    </listitem>
+                </varlistentry>
 HTML-END
         }
 
@@ -905,9 +885,7 @@ HTML-END
 	# Table footer
 
 	print $outfile <<"HTML-END";
-        </tbody>
-        </tgroup>
-    </table>
+            </variablelist>
     </refsect1>
 HTML-END
 
@@ -925,14 +903,10 @@ HTML-END
 	my $line;
 
 
-	# Table header
-
 	print $outfile <<"HTML-END";
-	<refsect1><title>Options</title>
-<table>
-  <title>$w{'class'} Options</title>
-  <tgroup cols="3">
- <tbody>
+	<refsect1>
+            <title>Options</title>
+            <variablelist>
 HTML-END
 
 	foreach $line ( @$lines )
@@ -942,13 +916,13 @@ HTML-END
 
 	    deb("option for $w{'widget'}: $opt_name");
 
-	    # Table row
-
 	    print $outfile <<"HTML-END";
-    	<row>
-    	    <entry>`opt(`$opt_name)</entry>
-    	    <entry>@opts</entry>
-    	</row>
+                <varlistentry>
+                    <term><option>`opt(`$opt_name)</option></term>
+                    <listitem>
+                        <para>@opts</para>
+                    </listitem>
+                </varlistentry>
 HTML-END
         }
 
@@ -956,10 +930,8 @@ HTML-END
 	# Table footer
 
 	print $outfile <<"HTML-END";
-        </tbody>
-        </tgroup>
-</table>
-</refsect1>
+            </variablelist>
+        </refsect1>
 HTML-END
 
     }
@@ -1001,8 +973,10 @@ HTML-END
 	    if ( open ( EXAMPLE,  $example_dir . "/" . $example ) )
 	    {
 		print $outfile <<"HTML-END";
-<example><title><ulink
-url="$example_dir/$example"><replaceable>$example</replaceable></ulink></title>
+<example>
+    <title>$example</title>
+<para><ulink
+url="$example_dir/$example">$example Source Code</ulink></para>
 HTML-END
                 my $screenshot = "$screenshot_dir/$example";
 		$screenshot =~ s/\.ycp$/.png/;
@@ -1011,14 +985,13 @@ HTML-END
 		{
 		    print $outfile <<"HTML-END";
                     <para>
-      <figure id="$w{'class'}_$example">
-        <title id="title_$example">$example</title>
+      <informalfigure id="$w{'class'}_$example">
         <mediaobject>
           <imageobject>
             <imagedata fileref="$screenshot"  revision="1" format="PNG" />
           </imageobject>
         </mediaobject>
-      </figure>
+      </informalfigure>
       </para>
 
 HTML-END
