@@ -204,6 +204,88 @@ PkgModule::evaluate (string function, YCPList args)
 
 	ret = YCPMap ();
     }
+    else if ((function == "PkgSummary")
+	     && (args->size() == 1)
+	     && (args->value(0)->isString()))
+    {
+	/**
+	 * @builtin Pkg::PkgSummary (string package) -> "This is a nice package"
+	 *
+	 * Get summary (aka label) of a package
+	 *
+	 */
+
+	ret = YCPString ("This is a nice package");
+    }
+    else if ((function == "SelSummary")
+	     && (args->size() == 1)
+	     && (args->value(0)->isString()))
+    {
+	/**
+	 * @builtin Pkg::SelSummary (string selection) -> "This is a nice selection"
+	 *
+	 * Get summary (aka label) of a selection
+	 *
+	 */
+
+	ret = YCPString ("This is a nice selection");
+    }
+    else if ((function == "SetSelection")
+	     && (args->size() == 1)
+	     && (args->value(0)->isString()))
+    {
+	/**
+	 * @builtin Pkg::SetSelection (string selection) -> bool
+	 *
+	 * Set a new base selection
+	 * This effetively resets the current package selection to
+	 * the packages of the newly selected base selection
+	 * Usually returns true
+	 * Returns false if the given string does not match
+	 * a base selection.
+	 *
+	 */
+
+	ret = YCPBoolean (true);
+    }
+    else if (function == "IsManualSelection")
+    {
+	/**
+	 * @builtin Pkg::IsManualSelection () -> bool
+	 *
+	 * return true if the original list of packages (since the
+	 * last Pkg::SetSelection was changed.
+	 *
+	 */
+
+	ret = YCPBoolean (false);
+    }
+    else if (function == "SaveState")
+    {
+	/**
+	 * @builtin Pkg::SaveState() -> bool
+	 *
+	 * save the current package selection status for later
+	 * retrieval via Pkg::RestoreState()
+	 *
+	 */
+
+	ret = YCPBoolean (true);
+    }
+    else if (function == "RestoreState")
+    {
+	/**
+	 * @builtin Pkg::RestoreState() -> bool
+	 *
+	 * restore the package selection status from a former
+	 * call to Pkg::SaveState()
+	 * Returns false if there is no saved state (no Pkg::SaveState()
+	 * called before)
+	 *
+	 */
+
+	ret = YCPBoolean (true);
+    }
     else
     {
 	ret = YCPError ("Undefined Pkg:: function or wrong arguments", YCPVoid());
