@@ -178,6 +178,7 @@ class PkgModuleFunctions
 
 	// package related
 	YCPValue GetPackages (YCPList args);
+	YCPValue FilterPackages (YCPList args);
 	YCPValue IsProvided (YCPList args);
 	YCPValue IsSelected (YCPList args);
 	YCPValue IsAvailable (YCPList args);

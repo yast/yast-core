@@ -86,6 +86,7 @@ PkgModule::evaluate (string function, YCPList args)
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);
+    else if (function == "FilterPackages")	return FilterPackages (args);
     else if (function == "GetBackupPath")	return GetBackupPath (args);
     else if (function == "SetBackupPath")	return SetBackupPath (args);
     else if (function == "CreateBackups")	return CreateBackups (args);

@@ -652,6 +652,66 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
     return;
 }
 
+
+/**
+   @builtin Pkg::FilterPackages(bool byAuto, bool byApp, bool byUser,  bool names_only) -> list of strings
+
+   return list of filtered packages (["pkg1", "pkg2", ..."] if names_only==true,
+    ["pkg1 version release arch", "pkg1 version release arch", ... if
+    names_only == false]
+
+	if one of the first 3 parameters is set to true, it returns:
+	byAuto:  packages you get by dependencies,
+	byApp:   packages you get by selections,
+	byUser:  packages the user explicitly requested.
+
+
+*/
+
+
+YCPValue
+PkgModuleFunctions::FilterPackages(YCPList args)
+{
+    if ((args->size() != 4)
+	|| !(args->value(0)->isBoolean())
+	|| !(args->value(1)->isBoolean())
+	|| !(args->value(2)->isBoolean())
+	|| !(args->value(3)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::FilterPackages");
+    }
+
+    // _y2pm.packageManager ();
+    // startCachedSources (true);
+
+    bool byAuto = args->value(0)->asBoolean()->value();
+    bool byApp  = args->value(1)->asBoolean()->value();
+    bool byUser = args->value(2)->asBoolean()->value();
+    bool names_only = args->value(3)->asBoolean()->value();
+
+    YCPList packages;
+    PMManager::PMSelectableVec::const_iterator it = Y2PM::packageManager().begin();
+
+    while ( it != Y2PM::packageManager().end() )
+    {
+        PMSelectablePtr selectable = *it;
+
+        if ( selectable->to_modify() )
+        {
+            if ( selectable->by_auto() && byAuto ||
+                 selectable->by_appl() && byApp  ||
+                 selectable->by_user() && byUser   )
+            {
+				pgk2list (packages, selectable->theObject(), names_only);
+            }
+        }
+
+        ++it;
+    }
+
+	return packages;
+}
+
 /**
    @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
 
