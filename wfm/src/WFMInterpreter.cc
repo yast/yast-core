@@ -399,7 +399,7 @@ WFMInterpreter::changeToModuleLanguage () const
 	++_nl_msg_cat_cntr;
     }
 
-    y2milestone ("language '%s', text encoding '%s', textdomain '%s'",
+    y2debug ("language '%s', text encoding '%s', textdomain '%s'",
 	     currentLanguage.c_str(), textEncoding.c_str(),
 	     currentTextdomain.c_str());
 
@@ -1321,7 +1321,7 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
 	currentLanguage = term->value(0)->asString()->value();
 
-#warning FIXME: the currentEncoding is not set correctly (unused in ncurses)
+#warning FIXME: the currentEncoding (resp. proposedEncoding) is not set correctly (unused in ncurses)
 
 	if (term->size() > 1 && term->value(1)->isString())
 	{
@@ -1332,16 +1332,16 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	    // Don't call setlocale( LC_ALL, lang) because lang is (mostly) set wrong.
 	    // For ncurses LC_CTYPE has to be set according the terminal encoding and NOT e.g.
 	    // to de_DE for an UTF-8 terminal or de_DE.UTF-8 if it's not an UTF-8 terminal).
-	    // TO DO: get the correct current encoding !!!
-	    
 	    // setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
-	    // proposedEncoding = nl_langinfo (CODESET);
-	    // if (proposedEncoding.empty())
-	    // {
-	    //   y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
-	    // }
-	    // y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
-	    // currentEncoding = "UTF-8";                        // default encoding
+
+	    // TO DO: get the correct encoding !!!
+	    proposedEncoding = nl_langinfo (CODESET);
+	    if (proposedEncoding.empty())
+	    {
+	       y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
+	    }
+	    y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
+	    currentEncoding = "UTF-8";                        // default encoding
 	}
 
 	textdomainOrLanguageHasChanged = true;
