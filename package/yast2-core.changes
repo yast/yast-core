@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan  5 14:47:39 CET 2004 - visnov@suse.cz
+
+- ignore quotes in scr also for testsuites
+- 2.9.14 
+
+-------------------------------------------------------------------
 Tue Dec 16 09:39:28 CET 2003 - mvidner@suse.cz
 
 - ini agent: allow multiple values for the same key

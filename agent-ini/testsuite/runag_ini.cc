@@ -143,7 +143,21 @@ main (int argc, char *argv[])
                 }
                 YCPTerm term = confval->asTerm();
                 for (int i = 0; i < term->size (); i++)
-                    interpreter->evaluate (term->value (i));
+		{
+        	    YCPValue arg = term->value (i);
+
+        	    // WORKAROUND/HACK: adapting the old SCR files to the new interpreter
+        	    // new interpreter requires every argument of an agent to
+        	    // be quoted - but this will not work in the old interpter
+        	    // =>strip quote if exists
+        	    if (arg->isTerm ())
+        	    {
+            		arg = YCPTerm ( YCPSymbol( arg->asTerm ()->symbol ()->symbol (), false ),
+                	arg->asTerm ()->args () );
+        	    }
+
+                    interpreter->evaluate (arg);
+		}
 	    }
 	}
     }
