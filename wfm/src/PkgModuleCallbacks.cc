@@ -29,6 +29,8 @@
 #include <PkgModuleCallbacks.YCP.h> // PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
 #include <y2pm/Y2PMCallbacks.h>
+#include <y2pm/InstSrc.h>
+#include <y2pm/InstSrcDescr.h>
 
 #include <y2pm/PMPackage.h>
 #include <y2pm/PMYouPatchManager.h>
@@ -583,6 +585,7 @@ namespace Y2PMRecipients {
 	callback.addStr( product );
 	callback.addInt( expected );
 	callback.addInt( current );
+	callback.addBool( instSrc->descr()->media_doublesided() );
 	return callback.evaluateStr();
       }
       return MediaChangeCallback::changeMedia( instSrc, error, url, product, expected, current );
