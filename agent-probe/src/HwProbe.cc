@@ -209,7 +209,7 @@ YCPList
 HwProbe::Dir(const YCPPath& path)
 {
     YCPValue v = checkPath (path, YCPNull(), YCPNull(), 2);
-    return v.isNull () ? YCPNull () : v->asList ();
+    return v.isNull() || v->isVoid() ? YCPNull () : v->asList ();
 }
 
 
