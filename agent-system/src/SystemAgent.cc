@@ -106,21 +106,18 @@ remove_directory (const string& path, int depth)
  */
 SystemAgent::SystemAgent ()
 {
-    char pidstr[8];
-    int pid = getpid();
+    char tmp1[25];
+    snprintf (tmp1, 25, "/tmp/YaST2-%05d-XXXXXX", getpid ());
 
-    while (true)
+    const char* tmp2 = mkdtemp (tmp1);
+    if (!tmp2)
     {
-	snprintf (pidstr, 8, "%05d", pid);
-	tempdir = string ("/tmp/YaST2-") + pidstr;
-
-	// it's not necessary to check if the dir already exits since mkdir
-	// will fail in that case
-	if (mkdir (tempdir.c_str(), 0700) == 0)
-	    break;
-
-	pid += 42;
+	y2error ("can't create tmp directory: %m");
+	exit (EXIT_FAILURE);
     }
+
+    tempdir = tmp2;
+    y2debug ("tmp directory is %s", tempdir.c_str ());
 }
 
 
