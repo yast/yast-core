@@ -4,6 +4,7 @@
     // The file is not saved if not changed. We must change something
     // and flush it!
     y2error ("%1", SCR::Read (.ini.v.Val1));
+    sleep (1001);
     SCR::RegisterAgent (.target, `ag_system ());
     SCR::Execute (.target.bash, "echo \"Val1=value12\" >> debug/chg2.in.test");
     y2error ("%1", SCR::Read (.ini.v.Val1));

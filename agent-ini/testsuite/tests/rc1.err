@@ -1,2 +1,3 @@
-tests/rc1.ycp:6: Wrong value for path .INVALID: 4.5
+[Interpreter] tests/rc1.ycp:XXX Wrong value for path .INVALID: 4.5
+[Interpreter] tests/rc1.ycp:XXX Wrong path '.INVALID' in Write().
 [YCP] tests/rc1.ycp:XXX english

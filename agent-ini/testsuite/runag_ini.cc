@@ -5,10 +5,15 @@
  */
 
 
+// prevent unwanted y2debug messages from appearing under our name
+#undef Y2LOG
+#define Y2LOG "scr"
 #include <scr/run_agent.h>
+#include "../../scr/src/ScriptingAgent.h"
+#undef Y2LOG
+#define Y2LOG "agent-ini"
 
 #include "../src/IniAgent.h"
-#include "../../scr/src/ScriptingAgent.h"
 
 int
 main (int argc, char *argv[])

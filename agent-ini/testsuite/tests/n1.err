@@ -6,11 +6,14 @@
 [YCP] tests/n1.ycp:XXX nil
 [agent-ini] IniFile.cc(Write):XXX I do not know what to write to .nosuchtoppath.
 [YCP] tests/n1.ycp:XXX false
-[Interpreter] tests/n1.ycp:XXX Wrong value for path .v.Section1.Val1: 42.0000000000000
-[YCP] tests/n1.ycp:XXX nil
-[YCP] tests/n1.ycp:XXX true
-[Interpreter] tests/n1.ycp:XXX Wrong value for path .vc.Section1.Val1: 42.0000000000000
-[YCP] tests/n1.ycp:XXX nil
+[Interpreter] tests/n1.ycp:XXX Wrong value for path .v.Section1.Val1: 42.
+[Interpreter] tests/n1.ycp:XXX Wrong path '.v.Section1.Val1' in Write().
 [YCP] tests/n1.ycp:XXX false
-[Interpreter] tests/n1.ycp:XXX Wrong value for path .vt.Section1.Val1: 42.0000000000000
-[YCP] tests/n1.ycp:XXX nil
+[YCP] tests/n1.ycp:XXX true
+[Interpreter] tests/n1.ycp:XXX Wrong value for path .vc.Section1.Val1: 42.
+[Interpreter] tests/n1.ycp:XXX Wrong path '.vc.Section1.Val1' in Write().
+[YCP] tests/n1.ycp:XXX false
+[YCP] tests/n1.ycp:XXX false
+[Interpreter] tests/n1.ycp:XXX Wrong value for path .vt.Section1.Val1: 42.
+[Interpreter] tests/n1.ycp:XXX Wrong path '.vt.Section1.Val1' in Write().
+[YCP] tests/n1.ycp:XXX false

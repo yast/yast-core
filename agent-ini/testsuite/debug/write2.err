@@ -1,3 +1,5 @@
 [agent-ini] IniFile.cc(setMyValue):XXX Adding value .v.Val2 = 23
-[Interpreter] debug/write2.ycp:XXX Wrong value for path .v.Val3: 33.1200000000000
+[Interpreter] debug/write2.ycp:XXX Wrong value for path .v.Val3: 33.12
+[Interpreter] debug/write2.ycp:XXX Wrong path '.v.Val3' in Write().
 [Interpreter] debug/write2.ycp:XXX Wrong value for path .v.Val4: ["a", "b", "c"]
+[Interpreter] debug/write2.ycp:XXX Wrong path '.v.Val4' in Write().

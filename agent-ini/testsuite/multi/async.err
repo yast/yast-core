@@ -1,9 +1,6 @@
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test"
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test".xxx
 [agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."multi/async.in.4.test".xxx.homepage = "http://xxx.suse.de/"
-[agent-ini] runag_ini.cc(evaluateInstantiatedTerm):XXX Added at the end of multi/async.in.4.test: [Dialer other]
-homepage = http://www.other.dom
-Product = 
 [YCP] multi/async.ycp:XXX ["multi/async.in.1.test", "multi/async.in.2.test", "multi/async.in.4.test"]
 [YCP] multi/async.ycp:XXX multi/async.in.1.test: ["iqnet_praha", "fortech_litomysl"]
 [YCP] multi/async.ycp:XXX multi/async.in.2.test: ["apexnet_plzen"]

@@ -7,9 +7,13 @@
 [agent-ini] IniFile.cc(getMyValue):XXX Read: Invalid path .vc.Section1 [1]
 [agent-ini] IniFile.cc(getMyValue):XXX Read: Invalid path .vc.Section3 [1]
 [agent-ini] IniFile.cc(dirHelper):XXX Dir: Invalid path .v.Section1.Section2 [2]
+[Interpreter] debug/err1.ycp:XXX SCR::Dir() failed
 [agent-ini] IniFile.cc(dirHelper):XXX Dir: Invalid path .v.Section3 [1]
+[Interpreter] debug/err1.ycp:XXX SCR::Dir() failed
 [agent-ini] IniFile.cc(dirHelper):XXX Dir: Invalid path .s.Section1.Section2 [2]
+[Interpreter] debug/err1.ycp:XXX SCR::Dir() failed
 [agent-ini] IniFile.cc(dirHelper):XXX Dir: Invalid path .s.Section3 [1]
+[Interpreter] debug/err1.ycp:XXX SCR::Dir() failed
 [agent-ini] IniFile.cc(delValue):XXX Delete: Invalid path .v.Section3.Val1 [1]
 [agent-ini] IniFile.cc(delSection):XXX Delete: Invalid path .s.Section1.Section2.Section3 [2]
 [agent-ini] IniParser.cc(write):XXX File debug/err1.in.test did not change. Not saving.

@@ -76,10 +76,11 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
     if (!parser.isStarted())
     {
 	y2warning("Can't execute Write before being mounted.");
-	return YCPNull();
+	return YCPBoolean (false);
     }
     // no need to update if modified, we are changing value
-    bool ok = false;
+
+    bool ok = false; // is the _path_ ok?
     // return value
     YCPBoolean b (true);
 
@@ -128,13 +129,12 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
 	else
 	{
 	    ycp2error ("Wrong value for path %s: %s", path->toString ().c_str (), value->toString ().c_str ());
-	    return YCPNull ();
+	    b = false;
 	}
     }
     if (!ok)
     {
     	ycp2error ( "Wrong path '%s' in Write().", path->toString().c_str () );
-	return YCPNull ();
     }
 
     return b;

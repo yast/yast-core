@@ -4,6 +4,7 @@
     // The file is not saved if not changed. We must change something
     // and flush it!
     y2error ("%1", SCR::Read (.v.Sub.Val1));
+    sleep (1001); // the file's mtime must change
     SCR::RegisterAgent (.target, `ag_system ());
     SCR::Execute (.target.bash, "echo -en \"+Sub\nVal1=value12\n-Sub\n\" >> debug/chg3.in.test");
     y2error ("%1", SCR::Read (.v.Sub.Val1));

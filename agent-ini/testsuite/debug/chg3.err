@@ -1,7 +1,4 @@
 [YCP] debug/chg3.ycp:XXX value11
-[agent-ini] runag_ini.cc(evaluateInstantiatedTerm):XXX Added at the end of debug/chg3.in.test: +Sub
-Val1=value12
--Sub
 [agent-ini] IniParser.cc(UpdateIfModif):XXX Data file 'debug/chg3.in.test' was changed externaly!
 [YCP] debug/chg3.ycp:XXX value12
 [agent-ini] IniParser.cc(write):XXX File debug/chg3.in.test did not change. Not saving.
