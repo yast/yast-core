@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr  4 18:43:39 CEST 2005 - visnov@suse.cz
+
+- temporarily disable ElectricFence to workaround glibc problem
+- another gcc4 fix (logged incorrect function name) 
+
+-------------------------------------------------------------------
 Fri Apr  1 08:52:51 CEST 2005 - visnov@suse.cz
 
 - merged 9.3 branch
