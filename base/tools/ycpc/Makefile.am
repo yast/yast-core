@@ -19,7 +19,6 @@ ycpc_LDADD = ../../../libycp/src/libycp.la \
 	../../../wfm/src/libpy2wfm.la \
 	../../../liby2/src/liby2.la \
 	../../../libscr/src/libscr.la \
-	../../../scr/src/libpy2scr.la \
 	-ly2pm -ly2util
 
 PACKAGE=ycpc
