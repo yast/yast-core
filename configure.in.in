@@ -51,10 +51,6 @@ AGENT_LIBADD='$(top_srcdir)/libscr/src/libscr.la'
 
 ## and generate the output
 AC_OUTPUT(
-	libycp/doc/YCP-quoting.html
-	libycp/doc/YCP-statements.html
-	libycp/doc/YCP-datatypes.html
-	libycp/doc/YCP-operators.html
 	liby2/doc/Y2-access.html
 	liby2/doc/Y2-components.html
 	scr/doc/SCR.html
