@@ -183,6 +183,17 @@ WFMGetEncoding ()
 
 
 static YCPString 
+WFMGetEnvironmentEncoding ()
+{
+    /**
+     * @builtin GetEncoding() -> string
+     * Returns the current encoding code
+     */
+    return Y2WFMComponent::instance ()->GetEnvironmentEncoding ();
+}
+
+
+static YCPString 
 WFMSetLanguage (const YCPString& language)
 {
     /**
@@ -251,6 +262,7 @@ WFM::WFM ()
 	{ "Args",		"any (integer)",		(void*)WFMArgs2 },
 	{ "GetLanguage",	"string ()",			(void*)WFMGetLanguage },
 	{ "GetEncoding",	"string ()",			(void*)WFMGetEncoding },
+	{ "GetEnvironmentEncoding",	"string ()",		(void*)WFMGetEnvironmentEncoding },
 	{ "SetLanguage",	"string (string)",		(void*)WFMSetLanguage },
 	{ "SetLanguage",	"string (string, string)",	(void*)WFMSetLanguage2 },
 	{ "Read",		"any (path,any)",		(void*)WFMRead },

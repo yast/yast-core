@@ -75,6 +75,7 @@ public:
     YCPValue Write (const YCPPath &path, const YCPValue& arg1, const YCPValue& arg2 = YCPNull ());
     YCPValue Execute (const YCPPath &path, const YCPValue& arg1);
     YCPValue CallFunction (const YCPString& client, const YCPList& args = YCPList ());
+    YCPString GetEnvironmentEncoding ();
     
     virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
 private:
@@ -131,6 +132,17 @@ private:
 
     string          currentLanguage;
     string          currentEncoding;
+
+    /**
+     * system encoding
+     */
+    string          systemEncoding;
+
+   /**
+     * environment encoding
+     */
+    string          environmentEncoding;
+
 
     static Y2WFMComponent* current_wfm;
 };

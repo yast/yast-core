@@ -46,13 +46,22 @@ Y2WFMComponent::Y2WFMComponent ():
       pkgmodule (0)
 {
     y2debug ("Initialized Y2WFMComponent instance");
+
     // pre-init language
     const char* lang = get_env_lang ();
     if (lang)
     {
-	SetLanguage( YCPString(lang) );
+        YCPList args;
+        args->add (YCPString (lang));
+
+        // set locale according to the language setting
+        setlocale (LC_ALL, "");
+        // get encoding of the environment where yast is started
+        environmentEncoding = nl_langinfo (CODESET);
+
+        SetLanguage (YCPString (lang));
     }
-    
+
     createDefaultSCR ();
 }
 
@@ -343,6 +352,17 @@ YCPString
 Y2WFMComponent::GetEncoding () const
 {
     return YCPString(currentEncoding);
+}
+
+
+YCPString
+Y2WFMComponent::GetEnvironmentEncoding ()
+{
+    /**
+     * @builtin GetEnvironmentEncoding() -> string
+     * Returns the encoding code of the environment where yast is started
+     */
+    return YCPString(environmentEncoding);
 }
 
 
