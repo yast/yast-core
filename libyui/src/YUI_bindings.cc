@@ -640,7 +640,7 @@ UI::UI()
 	    { "Recode",			"any (string, string, string)",				(void*) UIRecode 		},
 	    { "SetModulename",		"void (string)",					(void*) UISetModulename 	},
 	    { "HasSpecialWidget",	"boolean (symbol)",					(void*) UIHasSpecialWidget 	},
-	    { "WizardCommand",		"boolean (term)",					(void*) UIWizardCommand		},
+	    { "WizardCommand",		"boolean (symbol, term)",				(void*) UIWizardCommand		},
 	    { 0, 0, 0, 0, 0, 0, 0 }
 	};
 
