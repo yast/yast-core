@@ -22,7 +22,7 @@
 #include "ycp/Bytecode.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 #include <ctype.h>
@@ -758,6 +758,24 @@ ListType::equals (constTypePtr expected) const
 }
 
 
+/**
+ * Finds a type that can hold both given types
+ * This should be the narrowest such type - TODO
+ */
+
+constTypePtr
+ListType::commontype (constTypePtr type) const
+{
+    if (type->isList())
+    {
+	constListTypePtr listtype = type;
+	return ListTypePtr (new ListType (m_type->commontype (listtype->m_type)));
+    }
+
+    return Type::Any;
+}
+
+
 bool
 ListType::canCast (constTypePtr to) const
 {
@@ -889,6 +907,24 @@ MapType::equals (constTypePtr expected) const
 	return true;
     }
     return false;
+}
+
+
+/**
+ * Finds a type that can hold both given types
+ * This should be the narrowest such type - TODO
+ */
+
+constTypePtr
+MapType::commontype (constTypePtr type) const
+{
+    if (type->isMap())
+    {
+	constMapTypePtr maptype = type;
+	return MapTypePtr (new MapType (m_keytype->commontype (maptype->m_keytype), m_valuetype->commontype (maptype->m_valuetype)));
+    }
+
+    return Type::Any;
 }
 
 
@@ -1617,7 +1653,7 @@ Type::commontype (constTypePtr type) const
     if (match (type) >= 0)
     {
 #if DO_DEBUG
-//	y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+	y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
 #endif
 	return this;
     }
@@ -1625,12 +1661,12 @@ Type::commontype (constTypePtr type) const
 	     && type->match (this) >= 0)
     {
 #if DO_DEBUG
-//    y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+    y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
 #endif
 	return type;
     }
 #if DO_DEBUG
-//    y2debug ("commontype '%s' ('%s') -> any", toString().c_str(), type->toString().c_str());
+    y2debug ("commontype '%s' ('%s') -> any", toString().c_str(), type->toString().c_str());
 #endif
     return Type::Any;
 }

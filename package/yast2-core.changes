@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 11 11:37:51 CET 2004 - kkaempf@suse.de
+
+- improve type determination of list and map constants (#35567)
+
+-------------------------------------------------------------------
 Wed Mar 10 17:36:14 CET 2004 - jsrain@suse.de
 
 - probe agent returns additional info for ccw devices

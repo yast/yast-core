@@ -290,7 +290,7 @@ public:
 
     YCPValueType valueType () const;
 
-    constTypePtr commontype (constTypePtr type) const;
+    virtual constTypePtr commontype (constTypePtr type) const;
 };
 
 // <flex>
@@ -369,6 +369,7 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
+    constTypePtr commontype (constTypePtr type) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
@@ -394,6 +395,7 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
+    constTypePtr commontype (constTypePtr type) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
