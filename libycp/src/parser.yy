@@ -3641,12 +3641,12 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	if (decl->flags & DECL_FLEX)
 	{
 	    cft = Type::determineFlexType (ft, decl->type);
-	    if (cft == 0)
+	    if (cft == 0)					// failed
 	    {
 		result->t = 0;
 		return;
 	    }
-	    else if (cft->isFunction()
+	    else if (cft->isFunction()				// template function, check final types
 		     && ft->isFunction())
 	    {
 		if (ft->parameters()->match (cft->parameters()) != 0)		//  or realtype does not match actual type
