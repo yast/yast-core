@@ -1,0 +1,7 @@
+{
+  // this produces a crash
+  boolean a = true;
+  integer b = 2;
+
+  any c = a + b;
+}
