@@ -306,6 +306,10 @@ private:
      */
     ifstream scanner;
     /**
+     * name of scanned file
+     */
+    string scanner_file;
+    /**
      * line number of scanned file
      */
     int scanner_line;

@@ -1,3 +1,3 @@
-[agent-ini] IniParser.cc(parse_helper):XXX 3: Section s2 started but section s1 is not finished
-[agent-ini] IniParser.cc(parse_helper):XXX 6: Val2: values at the top level not allowed.
-[agent-ini] IniParser.cc(parse_helper):XXX 7: Nothing to close.
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec2.in.test:3: Section s2 started but section s1 is not finished
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec2.in.test:6: Val2: values at the top level not allowed.
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec2.in.test:7: Nothing to close.

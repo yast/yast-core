@@ -348,6 +348,7 @@ int IniParser::initMachine (const YCPMap&scr)
 int IniParser::scanner_start(const char*fn)
 {
     scanner.open(fn);
+    scanner_file = fn;
     scanner_line = 0;
     if (!scanner.is_open())
         return -1;
@@ -376,6 +377,9 @@ int IniParser::scanner_get(string&s)
     }
     return 0;
 }
+
+#define scanner_error(format,args...) \
+	y2error ("%s:%d: " format, scanner_file.c_str (), scanner_line, ##args)
 
 void StripLine (string&l, regmatch_t&r)
 {
@@ -563,7 +567,7 @@ int IniParser::parse_helper(IniSection&ini)
 			    {   // we are in toplevel section, going deeper
 				// check for toplevel values allowance
 				if (!global_values)
-				    y2error ("%d: %s: values at the top level not allowed.", scanner_line, key.c_str ());
+				    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 				else
 				    ini.initValue (key, val, comment, matched_by);
 			    }
@@ -604,8 +608,7 @@ int IniParser::parse_helper(IniSection&ini)
 					    {
 						if(no_nested_sections)
 						    {
-							y2error ("%d: Section %s started but section %s is not finished",
-								 scanner_line, 
+							scanner_error ("Section %s started but section %s is not finished",
 								 found.c_str(),
 								 path[path.size()-1].c_str());
 							path.pop_back();
@@ -621,7 +624,7 @@ int IniParser::parse_helper(IniSection&ini)
 				else
 				    {
 					if (no_nested_sections)
-					    y2error ("%d: Attempt to create nested section %s.", scanner_line, found.c_str ());
+					    scanner_error ("Attempt to create nested section %s.", found.c_str ());
 					else
 					{
 					    ini.findSection(path).initSection(found, comment, i);
@@ -666,7 +669,7 @@ int IniParser::parse_helper(IniSection&ini)
 					comment = "";
 				    }
 				if (!path.size ())
-				    y2error ("%d: Nothing to close.", scanner_line);
+				    scanner_error ("Nothing to close.");
 				else if (!found.empty ())
 				    {   // there is a subexpression
 					int len = path.size ();
@@ -686,7 +689,7 @@ int IniParser::parse_helper(IniSection&ini)
 					    {
 						toclose = m - 1;
 					    }
-					    y2error ("%d: Unexpected closing %s. Closing section %s.", scanner_line, found.c_str(), path[toclose].c_str());
+					    scanner_error ("Unexpected closing %s. Closing section %s.", found.c_str(), path[toclose].c_str());
 					    path.resize (toclose);
 					}
 				    }
@@ -727,7 +730,7 @@ int IniParser::parse_helper(IniSection&ini)
 				    {   // we are in toplevel section, going deeper
 					// check for toplevel values allowance
 					if (!global_values)
-					    y2error ("%d: %s: values at the top level not allowed.", scanner_line, key.c_str ());
+					    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 					else
 					    ini.initValue (key, val, comment, i);
 				    }
@@ -783,7 +786,7 @@ int IniParser::parse_helper(IniSection&ini)
 		    //
 		    {
 			if (!onlySpaces (line.c_str()))
-			    y2error ("%d: Extra characters: %s", scanner_line, line.c_str ());
+			    scanner_error ("Extra characters: %s", line.c_str ());
 		    }
 		}
 	}

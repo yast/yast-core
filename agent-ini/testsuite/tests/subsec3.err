@@ -1,1 +1,1 @@
-[agent-ini] IniParser.cc(parse_helper):XXX 22: Unexpected closing zzz. Closing section a1.
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec3.in.test:22: Unexpected closing zzz. Closing section a1.

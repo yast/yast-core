@@ -1,6 +1,6 @@
-[agent-ini] IniParser.cc(parse_helper):XXX 15: Extra characters: seCTIon=sec1
-[agent-ini] IniParser.cc(parse_helper):XXX 16: Extra characters: VaLUe=val1=value1
-[agent-ini] IniParser.cc(parse_helper):XXX 17: Extra characters: ValuE=val2=value3
-[agent-ini] IniParser.cc(parse_helper):XXX 19: Extra characters: SECTION=sec2
-[agent-ini] IniParser.cc(parse_helper):XXX 20: Extra characters: VALUE=val1=value21
-[agent-ini] IniParser.cc(parse_helper):XXX 21: Extra characters: value=val2=value23
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:15: Extra characters: seCTIon=sec1
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:16: Extra characters: VaLUe=val1=value1
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:17: Extra characters: ValuE=val2=value3
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:19: Extra characters: SECTION=sec2
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:20: Extra characters: VALUE=val1=value21
+[agent-ini] IniParser.cc(parse_helper):XXX tests/icreg2.in.test:21: Extra characters: value=val2=value23

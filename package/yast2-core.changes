@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec  1 18:21:00 CET 2004 - mvidner@suse.cz
+
+- ini agent: include file name in parse errors (#48777)
+
+-------------------------------------------------------------------
 Thu Nov 18 21:17:16 CET 2004 - kkaempf@suse.de
 
 - increase bison stack limit (#45509)

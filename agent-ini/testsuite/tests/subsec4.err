@@ -1,2 +1,2 @@
-[agent-ini] IniParser.cc(parse_helper):XXX 5: key2: values at the top level not allowed.
-[agent-ini] IniParser.cc(parse_helper):XXX 6: Nothing to close.
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec4.in.test:5: key2: values at the top level not allowed.
+[agent-ini] IniParser.cc(parse_helper):XXX tests/subsec4.in.test:6: Nothing to close.
