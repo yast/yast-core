@@ -21,10 +21,11 @@
 #define Y2WFMComponent_h
 
 #include <y2/Y2Component.h>
+#include <WFMSubAgent.h>
 
+class PkgModule;
 
-class WFMInterpreter;
-
+#define MAX_CLIENT_NAME_LEN 160
 
 class Y2WFMComponent : public Y2Component
 {
@@ -43,12 +44,12 @@ public:
     /**
      * Returns "wfm";
      */
-    string name() const;
+    virtual string name() const;
 
     /**
      * Executes the YCP script.
      */
-    YCPValue doActualWork(const YCPList& arglist, Y2Component *displayserver);
+    virtual YCPValue doActualWork(const YCPList& arglist, Y2Component *displayserver);
 
     /**
      * callback entry point
@@ -56,15 +57,79 @@ public:
      *   We're not using a pointer here because the evaluate() slot
      *   already exists in the Y2Component class
      */
-    YCPValue evaluate(const YCPValue& command);
+    virtual YCPValue evaluate(const YCPValue& command);
+    
+    static Y2WFMComponent* instance() { return current_wfm; }
 
+    YCPInteger SCROpen (const YCPString& name, const YCPBoolean &check_version);
+    void SCRClose (const YCPInteger& handle);
+    YCPString SCRGetName (const YCPInteger &handle);
+    void SCRSetDefault (const YCPInteger &handle);
+    YCPInteger SCRGetDefault () const;
+    YCPValue GetClientName(const YCPInteger& filedescriptor);
+    YCPValue Args (const YCPInteger& index = YCPNull ()) const;
+    YCPString GetLanguage () const;
+    YCPString GetEncoding () const;
+    YCPString SetLanguage (const YCPString& language, const YCPString& encoding = YCPNull ());
+    YCPValue Read (const YCPPath &path, const YCPValue& arg);
+    YCPValue Write (const YCPPath &path, const YCPValue& arg1, const YCPValue& arg2 = YCPNull ());
+    YCPValue Execute (const YCPPath &path, const YCPValue& arg1);
+    YCPValue CallFunction (const YCPString& client, const YCPList& args = YCPList ());
+    
+    virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
 private:
-    /**
-     * used to pass interpreter from doActualWork ()
-     * to evaluate () for callback purposes
+       /**
+     * Type and list of SCR instances.
      */
-    WFMInterpreter *interpreter_ptr;
+    typedef vector <WFMSubAgent*> WFMSubAgents;
+    WFMSubAgents scrs;
 
+    /**
+     * Finds a SCR instance to a given handle.
+     */
+    WFMSubAgents::iterator find_handle (int);
+
+    /**
+     * Handle count.
+     */
+    int handle_cnt;
+
+    /**
+     * Handle of default SCR instance.
+     */
+    int default_handle;
+
+    /**
+     * The local system agent.
+     */
+    WFMSubAgent local;
+
+    /**
+     * Get the language from the environment.
+     */
+    const char* get_env_lang () const;
+
+    /**
+     * The name of the module that is realized by this wfm.
+     */
+    string modulename;
+
+    /**
+     * Arguments of the module that is realized through
+     * the wfm. The script has access to it via the builtin
+     * args(). The symbol of the term itself is the module name.
+     */
+    YCPList argumentlist;
+
+    /**
+     * Pointer to PkgModule class to handle "Pkg::<function>(...)" calls
+     */
+    PkgModule *pkgmodule;
+
+    string          currentLanguage;
+    string          currentEncoding;
+
+    static Y2WFMComponent* current_wfm;
 };
 
 
