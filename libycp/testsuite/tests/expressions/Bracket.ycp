@@ -53,3 +53,24 @@
     list l = [ s["foo"]: "none", s["not"]: "none2" ];
     return ["bar", "none2"] ==l;
 }
+
+
+// some testings for bad situations at runtime (nils)
+
+{
+    // nil as the map
+    map<string,integer> s = nil;
+    return s["foo"]:42 == 42;
+}
+
+{
+    // nil as the map and the argument
+    map<string,integer> s = nil;
+    return s[nil]:42 == 42;
+}
+
+{
+    // nil as an argument
+    map<string,integer> s = $[ "foo": 5];
+    return s[nil]:42 == 42;
+}

@@ -1348,7 +1348,7 @@ YEBracket::evaluate (bool cse)
     if (cse && (var_value.isNull () || def_value.isNull ()) )
 	return YCPNull ();
 
-    if (var_value->isVoid())
+    if (var_value.isNull() || var_value->isVoid())
 	return def_value;
 
     YCPValue arg_value = m_arg->evaluate (cse);
@@ -1357,7 +1357,7 @@ YEBracket::evaluate (bool cse)
     if (cse && arg_value.isNull () )
 	return YCPNull ();
 
-    if (arg_value->isVoid()
+    if (arg_value.isNull() || arg_value->isVoid()
 	|| !arg_value->isList())
     {
 	return def_value;
