@@ -49,6 +49,8 @@
 #include "YReplacePoint.h"
 
 
+bool YUIInterpreter::_reverseLayout = false;
+
 
 YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
     : id_counter(0)
@@ -58,7 +60,6 @@ YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
     , macroRecorder(0)
     , macroPlayer(0)
     , callbackComponent( callback )
-    , menuSelection( YCPVoid() )
 {
 }
 

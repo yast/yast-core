@@ -1613,8 +1613,6 @@ YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
 	return YCPVoid();
     }
 
-    setMenuSelection( YCPVoid() );
-
     // call overloaded method from specific UI
     return runPkgSelection( selector );
 }

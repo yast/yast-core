@@ -505,6 +505,12 @@ YWidget *YUIInterpreter::createAlignment( YWidget *parent, YWidgetOpt & opt, con
 	return 0;
     }
 
+    if ( reverseLayout() )
+    {
+	if 	( halign == YAlignBegin )	halign = YAlignEnd;
+	else if ( halign == YAlignEnd   )	halign = YAlignBegin;
+    }
+
     rejectAllOptions( term,optList );
     YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, halign, valign ) );
     assert( alignment );

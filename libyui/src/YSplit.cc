@@ -22,6 +22,7 @@
 #include <ycp/y2log.h>
 
 #include "YSplit.h"
+#include "YUIInterpreter.h"
 
 
 #ifdef max
@@ -265,6 +266,15 @@ void YSplit::setSize( long newWidth, long newHeight )
 	calcSecondaryGeometry( newWidth,  widths,  x_pos );
     }
 
+    if ( YUIInterpreter::reverseLayout() )
+    {
+	// Mirror the widget X geometry for languages with left-to-right
+	// writing direction (Arabic, Hebrew).
+	
+	for ( int i = 0; i < numChildren(); i++ )
+	    x_pos[i] = newWidth - x_pos[i] - widths[i];
+    }
+
     doResize( widths, heights, x_pos, y_pos );
 }
 
@@ -392,7 +402,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	    }
 	}
     }
-    else	// The pathological case : Not enough space.
+    else	// The pathological case: Not enough space.
     {
 	/*
 	 * We're in deep shit.

@@ -142,21 +142,6 @@ public:
     virtual void internalError( const char *msg );
 
     /**
-     * Retrieve the last menu selection.
-     * Only valid if userInput() or pollInput() returned ET_MENU.
-     */
-    const YCPValue & getMenuSelection() const		{ return menuSelection; }
-
-    /**
-     * Set the last menu selection.
-     *
-     * Derived UIs should call this in their menu handlers prior to returning
-     * from pollInput() or userInput() with ET_MENU.
-     */
-    void setMenuSelection( const YCPValue & sel )	{ menuSelection = sel; }
-
-
-    /**
      * Might be handy if you have to recode strings from/to utf-8
      */
     static int Recode( const string & str,
@@ -234,6 +219,17 @@ public:
      * contained in 'label' are stripped away before any comparison.
      **/
     int defaultFunctionKey( YCPString label );
+
+    /**
+     * Returns 'true' if widget geometry should be reversed for languages that
+     * have right-to-left writing direction (Arabic, Hebrew).
+     **/
+    static bool reverseLayout() { return _reverseLayout; }
+
+    /**
+     * Set reverse layout for Arabic / Hebrew support
+     **/
+    static void setReverseLayout( bool rev ) { _reverseLayout = rev; }
 
 
 protected:
@@ -1383,15 +1379,15 @@ protected:
     Y2Component *callbackComponent;
 
     /**
-     * The last menu selection.
-     * Only valid if userInput() or pollInput() returned ET_MENU.
-     */
-    YCPValue menuSelection;
-
-    /**
      * The current mapping of widget labels to default function keys.
      **/
     YCPMap default_fkeys;
+
+    /**
+     * Returns 'true' if widget geometry should be reversed for languages that
+     * have right-to-left writing direction (Arabic, Hebrew).
+     **/
+    static bool _reverseLayout;
 };
 
 #endif // YUIInterpreter_h
