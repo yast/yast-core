@@ -1,19 +1,29 @@
+// Simple ProgressBar example
 {
-    UI::OpenDialog(
-	       `VBox(
-		     `ProgressBar(`id(`pr), "This is a progressbar", 4, 0), // 4 steps
-		     `PushButton("Next")
-		     )
-	       );
- 
-    integer prog = 0;
+    integer max_progress = 7;
+    integer progress = 0;
     
-    while (prog < 4) 
+    UI::OpenDialog(
+		   `VBox(
+			 `ProgressBar(`id(`pr), "Sample progress bar", max_progress, progress ),
+			 `PushButton(`id(`next), "Next"),
+			 `Right(`PushButton(`id(`close), "&Close" ) )
+			 )
+		   );
+ 
+    
+    while ( progress < max_progress ) 
     {
-	UI::UserInput();
-	prog = prog + 1;
-	UI::ChangeWidget(`id(`pr), `Value, prog);
-	UI::ChangeWidget(`id(`pr), `Label, sformat("Progress %1 out of 4", prog));
+	symbol button = (symbol) UI::UserInput();
+
+	if ( button == `next )
+	{
+	    progress = progress + 1;
+	    UI::ChangeWidget(`id(`pr), `Value, progress);
+	    UI::ChangeWidget(`id(`pr), `Label, sformat("Progress %1 of %2", progress, max_progress ));
+	}
+	else if ( button == `close )
+	    break;
     }
     
     UI::CloseDialog();
