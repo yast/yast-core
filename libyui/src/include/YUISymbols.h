@@ -164,6 +164,23 @@
 #define YUIOpt_zeroHeight			"zeroHeight"
 #define YUIOpt_zeroWidth			"zeroWidth"
 
+#define YUIOpt_key_F1				"key_F1"
+#define YUIOpt_key_F2				"key_F2"
+#define YUIOpt_key_F3				"key_F3"
+#define YUIOpt_key_F4				"key_F4"
+#define YUIOpt_key_F5				"key_F5"
+#define YUIOpt_key_F6				"key_F6"
+#define YUIOpt_key_F7				"key_F7"
+#define YUIOpt_key_F8				"key_F8"
+#define YUIOpt_key_F9				"key_F9"
+#define YUIOpt_key_F10				"key_F10"
+#define YUIOpt_key_F11				"key_F11"
+#define YUIOpt_key_F12				"key_F12"
+#define YUIOpt_key_Return			"key_Return"
+
+#define YUIOpt_youMode				"youMode"
+#define YUIOpt_updateMode			"updateMode"
+
 
 // Predefined glyphs for builtin Glyph()
 //

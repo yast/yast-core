@@ -146,8 +146,24 @@ struct YWidgetOpt
     YBoolOpt tiled;		// YImage
     YBoolOpt scaleToFit;	// YImage
     YBoolOpt countShowDelta;	// YPartitionSplitter
+    
+    YBoolOpt key_F1;		// YPushButton
+    YBoolOpt key_F2;		// YPushButton
+    YBoolOpt key_F3;		// YPushButton
+    YBoolOpt key_F4;		// YPushButton
+    YBoolOpt key_F5;		// YPushButton
+    YBoolOpt key_F6;		// YPushButton
+    YBoolOpt key_F7;		// YPushButton
+    YBoolOpt key_F8;		// YPushButton
+    YBoolOpt key_F9;		// YPushButton
+    YBoolOpt key_F10;		// YPushButton
+    YBoolOpt key_F11;		// YPushButton
+    YBoolOpt key_F12;		// YPushButton
+    YBoolOpt key_Return;	// YPushButton
 
-
+    YBoolOpt youMode;		// YPackageSelector
+    YBoolOpt updateMode;	// YPackageSelector
+    
     // YDialog-specific options
     //
     // These are multiplexed into YWidgetOpt since YDialog inherits

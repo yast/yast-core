@@ -877,6 +877,19 @@ YWidget *YUIInterpreter::createLogView(YWidget *parent, YWidgetOpt &opt, const Y
  * @class	YPushButton
  * @arg		string label
  * @option	default makes this button the dialogs default button
+ * @option	key_F1 (NCurses only) activate this button with the F1 key
+ * @option	key_F2 (NCurses only) activate this button with the F2 key
+ * @option	key_F3 (NCurses only) activate this button with the F3 key
+ * @option	key_F4 (NCurses only) activate this button with the F4 key
+ * @option	key_F5 (NCurses only) activate this button with the F5 key
+ * @option	key_F6 (NCurses only) activate this button with the F6 key
+ * @option	key_F7 (NCurses only) activate this button with the F7 key
+ * @option	key_F8 (NCurses only) activate this button with the F8 key
+ * @option	key_F9 (NCurses only) activate this button with the F9 key
+ * @option	key_F10 (NCurses only) activate this button with the F10 key
+ * @option	key_F11 (NCurses only) activate this button with the F11 key
+ * @option	key_F11 (NCurses only) activate this button with the F12 key
+ * @option	key_Return (NCurses only) activate this button with the Return key
  * @usage	`PushButton(`id(`click), `opt(`default, `hstretch), "Click me")
  * @examples	PushButton1.ycp PushButton2.ycp
  *
@@ -907,7 +920,26 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 
     for (int o=0; o < optList->size(); o++)
     {
-	if (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_default) opt.isDefaultButton.setValue(true);
+	if (optList->value(o)->isSymbol() )
+	{
+	    std::string sym = optList->value(o)->asSymbol()->symbol();
+
+	    if      ( sym == YUIOpt_default	) opt.isDefaultButton.setValue( true );
+	    else if ( sym == YUIOpt_key_F1	) opt.key_F1.setValue( true );
+	    else if ( sym == YUIOpt_key_F2	) opt.key_F2.setValue( true );
+	    else if ( sym == YUIOpt_key_F3	) opt.key_F3.setValue( true );
+	    else if ( sym == YUIOpt_key_F4	) opt.key_F4.setValue( true );
+	    else if ( sym == YUIOpt_key_F5	) opt.key_F5.setValue( true );
+	    else if ( sym == YUIOpt_key_F6	) opt.key_F6.setValue( true );
+	    else if ( sym == YUIOpt_key_F7	) opt.key_F7.setValue( true );
+	    else if ( sym == YUIOpt_key_F8	) opt.key_F8.setValue( true );
+	    else if ( sym == YUIOpt_key_F9	) opt.key_F9.setValue( true );
+	    else if ( sym == YUIOpt_key_F10	) opt.key_F10.setValue( true );
+	    else if ( sym == YUIOpt_key_F11	) opt.key_F11.setValue( true );
+	    else if ( sym == YUIOpt_key_F12	) opt.key_F12.setValue( true );
+	    else if ( sym == YUIOpt_key_Return	) opt.key_Return.setValue( true );
+	    else logUnknownOption(term, optList->value(o));
+	}
 	else logUnknownOption(term, optList->value(o));
     }
     return createPushButton(parent, opt, term->value(argnr)->asString());
@@ -1308,6 +1340,7 @@ YWidget *YUIInterpreter::createMultiLineEdit(YWidget *parent, YWidgetOpt &opt,
  * @arg		string label
  * @optarg	list items the items contained in the selection box
  * @option	shrinkable make the widget very small
+ * @option	immediate (NCurses UI special) make `notify trigger immediately when the selected item changes
  * @usage	`SelectionBox(`id(`pizza), "select your Pizza:", [ "Margarita", `item(`id(`na), "Napoli") ])
  * @examples	SelectionBox1.ycp SelectionBox2.ycp SelectionBox3.ycp SelectionBox4.ycp
  *
@@ -1337,7 +1370,12 @@ YWidget *YUIInterpreter::createSelectionBox(YWidget *parent, YWidgetOpt &opt, co
 
     for (int o=0; o < optList->size(); o++)
     {
-	if (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_shrinkable) opt.isShrinkable.setValue(true);
+	if      (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue(true);
+	else if (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_immediate  )
+	{
+	    opt.notifyMode.setValue(true);
+	    opt.immediateMode.setValue(true);
+	}
 	else logUnknownOption(term, optList->value(o));
     }
 
@@ -2202,6 +2240,8 @@ YWidget *YUIInterpreter::createIntField(YWidget *parent, YWidgetOpt &opt, const 
  * @widget	PackageSelector
  * @short	Complete software package selection
  * @class	YPackageSelector
+ * @option	youMode start in YOU (YaST Online Update) mode
+ * @option	updateMode start in update Mode
  * @usage	`PackageSelector()
  *
  * @examples	PackageSelector1.ycp
@@ -2229,7 +2269,21 @@ YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt &opt,
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+
+    // Parse options
+
+    for (int o=0; o < optList->size(); o++)
+    {
+	if (optList->value(o)->isSymbol() )
+	{
+	    std::string sym = optList->value(o)->asSymbol()->symbol();
+
+	    if      ( sym == YUIOpt_youMode    ) opt.youMode.setValue( true );
+	    else if ( sym == YUIOpt_updateMode ) opt.updateMode.setValue( true );
+	    else logUnknownOption(term, optList->value(o));
+	}
+	else logUnknownOption(term, optList->value(o));
+    }
 
     return createPackageSelector(parent, opt);
 }
