@@ -35,11 +35,11 @@
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
+#include <ycp/YCPInteger.h>
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPList.h>
 #include <ycp/YCPMap.h>
-#include <ycp/YCPError.h>
 
 using std::string;
 using std::endl;
@@ -69,15 +69,14 @@ PkgModuleFunctions::getPatchSelectable (const std::string& name)
    get map with status information
 
 */
-YCPValue
-PkgModuleFunctions::YouStatus (YCPList args)
+YCPMap
+PkgModuleFunctions::YouStatus ()
 {
     YCPMap result;
 
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
     InstYou &you = _y2pm.youPatchManager().instYou();
-
     PMYouPatchPathsPtr paths = you.paths();
     
     result->add( YCPString( "product" ), YCPString( paths->product() ) );
@@ -98,20 +97,15 @@ PkgModuleFunctions::YouStatus (YCPList args)
    Set server to be used for getting patches.
 
    @param map  you server map as returned from YouGetServers.
-   
+
    @return ""      success
            "args"  wrong arguments
            "error" other error
 */
 YCPValue
-PkgModuleFunctions::YouSetServer (YCPList args)
+PkgModuleFunctions::YouSetServer (const YCPMap& servers)
 {
-    if ( ( args->size() != 1) || !args->value(0)->isMap() )
-    {
-	return YCPString ("args");
-    }
-
-    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
+    PMYouServer server = convertServerObject( servers );
 
     InstYou &you = _y2pm.youPatchManager().instYou();
 
@@ -119,6 +113,7 @@ PkgModuleFunctions::YouSetServer (YCPList args)
 
     return YCPString( "" );
 }
+
 
 /**
    @builtin Pkg::YouGetUserPassword()
@@ -129,13 +124,8 @@ PkgModuleFunctions::YouSetServer (YCPList args)
                "password" password
 */
 YCPValue
-PkgModuleFunctions::YouGetUserPassword (YCPList args)
+PkgModuleFunctions::YouGetUserPassword ()
 {
-    if ( ( args->size() != 0) )
-    {
-	return YCPString ("args");
-    }
-
     InstYou &you = _y2pm.youPatchManager().instYou();
 
     you.readUserPassword();
@@ -164,18 +154,11 @@ PkgModuleFunctions::YouGetUserPassword (YCPList args)
            "error" other error
 */
 YCPValue
-PkgModuleFunctions::YouSetUserPassword (YCPList args)
+PkgModuleFunctions::YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& p)
 {
-    if ( ( args->size() != 3 ) || !( args->value( 0 )->isString() ) ||
-         !( args->value( 1 )->isString() ) ||
-         !( args->value( 2 )->isBoolean() ) )
-    {
-	return YCPString( "args" );
-    }
-
-    string username = args->value(0)->asString()->value_cstr();
-    string password = args->value(1)->asString()->value_cstr();
-    bool persistent = args->value(2)->asBoolean()->value();
+    string username = user->value_cstr();
+    string password = passwd->value_cstr();
+    bool persistent = p->value();
 
     _last_error =
         _y2pm.youPatchManager().instYou().setUserPassword( username,
@@ -200,7 +183,7 @@ PkgModuleFunctions::YouSetUserPassword (YCPList args)
 
                        "url"        URL of server.
                        "name"       Descriptive name of server.
-                       "directory"  Directory file used to get list of patches. 
+                       "directory"  Directory file used to get list of patches.
 
    @return ""      success
            "args"  bad args
@@ -208,14 +191,9 @@ PkgModuleFunctions::YouSetUserPassword (YCPList args)
            "write" error writing file to disk
            "read"  error reading file after download
 */
-YCPValue
-PkgModuleFunctions::YouGetServers (YCPList args)
+YCPString
+PkgModuleFunctions::YouGetServers (YCPList& strings)
 {
-    if ((args->size() != 1) || !(args->value(0)->isList()))
-    {
-	return YCPString( "args" );
-    }
-
     std::list<PMYouServer> servers;
     _last_error = _y2pm.youPatchManager().instYou().servers( servers );
     if ( _last_error ) {
@@ -225,7 +203,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
       return YCPString( "Error getting you servers." );
     }
 
-    YCPList result = YCPList( args->value( 0 )->asList() );
+    YCPList result = YCPList( strings );
     std::list<PMYouServer>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
       YCPMap serverMap;
@@ -248,7 +226,7 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
 
     YCPValue urlValue = serverMap->value( YCPString( "url" ) );
     if ( !urlValue.isNull() ) url = urlValue->asString()->value();
-    
+
     YCPValue nameValue = serverMap->value( YCPString( "name" ) );
     if ( !nameValue.isNull() ) name = nameValue->asString()->value();
 
@@ -263,20 +241,15 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
   @builtin Pkg::YouGetDirectory() -> error string
 
   retrieve directory file listing all available patches
-  
+
   @return ""       success
           "url"    url not valid
           "login"  login failed
           "error"  other error
 */
 YCPValue
-PkgModuleFunctions::YouGetDirectory (YCPList args)
+PkgModuleFunctions::YouGetDirectory ()
 {
-    if ( ( args->size() != 0) )
-    {
-	return YCPString ("args");
-    }
-
     InstYou &you = _y2pm.youPatchManager().instYou();
 
     _last_error = you.retrievePatchDirectory();
@@ -289,10 +262,11 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 }
 
 /**   
-  @builtin Pkg::YouGetPatches() -> error string
+  @builtin Pkg::YouGetPatches( string url, boolean download_again, boolean check_signatures ) -> error string
 
   retrieve patches
   
+  @param string  url of patch server.
   @param bool    true if patches should be downloaded again
   @param bool    true if signatures should be checked.
   
@@ -305,16 +279,14 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
           "login" login failed
 */
 YCPValue
-PkgModuleFunctions::YouGetPatches (YCPList args)
+PkgModuleFunctions::YouGetPatches (const YCPString& u, const YCPBoolean& download, const YCPBoolean& sig)
 {
-    if ( ( args->size() != 2) || 
-         !args->value( 0 )->isBoolean() || !args->value( 1 )->isBoolean() )
-    {
-	return YCPString ("args");
-    }
+    string urlstr = u->value_cstr();
+    Url url( urlstr );
+    if ( !url.isValid() ) return YCPString( "url" );
 
-    bool reload = args->value( 0 )->asBoolean()->value();
-    bool checkSig = args->value( 1 )->asBoolean()->value();
+    bool reload = download->value();
+    bool checkSig = sig->value();
 
     InstYou &you = _y2pm.youPatchManager().instYou();
 
@@ -336,7 +308,7 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
   attach source of patches
 */
 YCPValue
-PkgModuleFunctions::YouAttachSource (YCPList args)
+PkgModuleFunctions::YouAttachSource ()
 {
     _last_error = _y2pm.youPatchManager().instYou().attachSource();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -350,7 +322,7 @@ PkgModuleFunctions::YouAttachSource (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::YouGetPackages (YCPList args)
+PkgModuleFunctions::YouGetPackages ()
 {
     _last_error = _y2pm.youPatchManager().instYou().retrievePatches();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -364,30 +336,28 @@ PkgModuleFunctions::YouGetPackages (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::YouSelectPatches (YCPList args)
+PkgModuleFunctions::YouSelectPatches ()
 {
     int kinds = PMYouPatch::kind_security | PMYouPatch::kind_recommended;
 
     _y2pm.youPatchManager().instYou().selectPatches( kinds );
-
-    return YCPVoid();
+    
+    return YCPVoid ();
 }
 
 /**
-  @builtin Pkg::YouFirstPatch () -> map
+  @builtin Pkg::YouFirstPatch (bool) -> map
 
   @param bool If true progress is reset, if false or missing it isn't touched.
 
   get information about first selected patch.
 */
-YCPValue
-PkgModuleFunctions::YouFirstPatch (YCPList args)
+YCPMap
+PkgModuleFunctions::YouFirstPatch (const YCPBoolean& reset)
 {
     bool resetProgress = true;
-    if ( ( args->size() == 1 ) && ( args->value(0)->isBoolean() ) )
-    {
-	resetProgress = args->value( 0 )->asBoolean()->value();
-    }
+    
+    if( !reset.isNull() ) resetProgress = reset->value();
 
     YCPMap result;
 
@@ -406,8 +376,8 @@ PkgModuleFunctions::YouFirstPatch (YCPList args)
 
    get information about next patch to be installed.
 */
-YCPValue
-PkgModuleFunctions::YouNextPatch (YCPList args)
+YCPMap
+PkgModuleFunctions::YouNextPatch ()
 {
     YCPMap result;
 
@@ -453,7 +423,7 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
 }
 
 /**
-  @builtin Pkg::YouGetCurrentPatch () -> error string
+  @builtin Pkg::YouGetCurrentPatch ( boolean reload, boolean check_signature ) -> error string
 
   download current patch.
 
@@ -467,16 +437,10 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
           "abort" user aborted operation
 */
 YCPValue
-PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
+PkgModuleFunctions::YouGetCurrentPatch (const YCPBoolean& download, const YCPBoolean& sig)
 {
-    if ( (args->size() != 2) || !args->value(0)->isBoolean() ||
-         !args->value( 1 )->isBoolean() )
-    {
-	return YCPString( "args" );
-    }
-
-    bool reload = args->value( 0 )->asBoolean()->value();
-    bool checkSig = args->value( 1 )->asBoolean()->value();
+    bool reload = download->value();
+    bool checkSig = sig->value();
 
     _last_error =
         _y2pm.youPatchManager().instYou().retrieveCurrentPatch( reload, checkSig );
@@ -497,11 +461,11 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 
   @return ""        success
           "skipped" patch was been skipped during download
-          "abort"   user aborted installation of patch
+	  "abort"   user aborted installation of patch
           "error"   install error
 */
-YCPValue
-PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
+YCPString
+PkgModuleFunctions::YouInstallCurrentPatch ()
 {
     _last_error = _y2pm.youPatchManager().instYou().installCurrentPatch();
     if ( !_last_error ) return YCPString( "" );
@@ -517,7 +481,7 @@ PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
    install retrieved patches
 */
 YCPValue
-PkgModuleFunctions::YouInstallPatches (YCPList args)
+PkgModuleFunctions::YouInstallPatches ()
 {
     _last_error = _y2pm.youPatchManager().instYou().installPatches();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -530,7 +494,7 @@ PkgModuleFunctions::YouInstallPatches (YCPList args)
    remove downloaded packages.
 */
 YCPValue
-PkgModuleFunctions::YouRemovePackages (YCPList args)
+PkgModuleFunctions::YouRemovePackages ()
 {
     _last_error = _y2pm.youPatchManager().instYou().removePackages();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -543,7 +507,7 @@ PkgModuleFunctions::YouRemovePackages (YCPList args)
   Disconnect YOU from server.
 */
 YCPValue
-PkgModuleFunctions::YouDisconnect (YCPList args)
+PkgModuleFunctions::YouDisconnect ()
 {
     _last_error = _y2pm.youPatchManager().instYou().disconnect();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -556,7 +520,7 @@ PkgModuleFunctions::YouDisconnect (YCPList args)
    finish update. Writes date of last update.
 */
 YCPValue
-PkgModuleFunctions::YouFinish (YCPList args)
+PkgModuleFunctions::YouFinish ()
 {
     _last_error = _y2pm.youPatchManager().instYou().writeLastUpdate();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
