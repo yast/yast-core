@@ -84,7 +84,7 @@ PkgModuleFunctions::YouStatus (YCPList args)
     result->add( YCPString( "basearch" ), YCPString( paths->baseArch() ) );
     result->add( YCPString( "business" ), YCPBoolean( paths->businessProduct() ) );
 
-    result->add( YCPString( "mirrorurl" ), YCPString( paths->mirrorList() ) );
+    result->add( YCPString( "mirrorurl" ), YCPString( paths->youUrl() ) );
     
     result->add( YCPString( "lastupdate" ), YCPInteger( you.lastUpdate() ) );
     
