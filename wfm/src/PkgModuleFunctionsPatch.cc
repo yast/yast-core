@@ -330,6 +330,7 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
 
   download current patch.
 
+  @param bool true if patch should be reloaded from the server.
   @param bool true if signatures should be checked.
 
   @return ""      success
@@ -341,14 +342,17 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
 YCPValue
 PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 {
-    if ((args->size() != 1) || !(args->value(0)->isBoolean()))
+    if ( (args->size() != 2) || !args->value(0)->isBoolean() ||
+         !args->value( 1 )->isBoolean() )
     {
 	return YCPString( "args" );
     }
 
-    bool checkSig = args->value(0)->asBoolean()->value();
+    bool reload = args->value( 0 )->asBoolean()->value();
+    bool checkSig = args->value( 1 )->asBoolean()->value();
 
-    _last_error = _y2pm.youPatchManager().instYou().retrieveCurrentPatch( checkSig );
+    _last_error =
+        _y2pm.youPatchManager().instYou().retrieveCurrentPatch( reload, checkSig );
     if ( _last_error ) {
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ||
