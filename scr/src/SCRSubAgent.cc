@@ -96,7 +96,18 @@ SCRSubAgent::mount (SCRAgent *parent)
 	// term's arguments are preloaded into the server component
 	for (int i = 0; i < term->size (); i++)
 	{
-	    my_comp->evaluate (term->value (i));
+	    YCPValue arg = term->value (i);
+
+	    // WORKAROUND/HACK: adapting the old SCR files to the new interpreter
+	    // new interpreter requires every argument of an agent to
+	    // be quoted - but this will not work in the old interpter
+	    // =>strip quote if exists
+	    if (arg->isTerm ())
+	    {
+		arg = YCPTerm ( YCPSymbol( arg->asTerm ()->symbol ()->symbol (), false ),
+		    arg->asTerm ()->args () );
+	    }
+	    my_comp->evaluate (arg);
 	}
     }
 

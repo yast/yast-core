@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 22 10:36:10 CEST 2003 - visnov@suse.cz
+
+- workaround to allow quotes in scrfiles
+- 2.9.3
+
+-------------------------------------------------------------------
 Thu Oct 16 16:30:46 CEST 2003 - visnov@suse.cz
 
 - added support for typecast syntax and list<type> syntax
