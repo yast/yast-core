@@ -954,8 +954,8 @@ Bytecode::readFile (const string & filename)
     }
     // check YaST_BYTECODE_HEADER
 
+    char header[sizeof(YaST_BYTECODE_HEADER)+1];
     int headerlen = strlen (YaST_BYTECODE_HEADER);
-    char *header = new char [headerlen + 1];
     instream.read (header, headerlen);
     header[headerlen] = 0;
     if (strcmp (header, YaST_BYTECODE_HEADER) != 0)

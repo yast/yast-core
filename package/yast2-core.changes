@@ -2,6 +2,7 @@
 Wed Feb 18 14:41:58 CET 2004 - visnov@suse.cz
 
 - drop unused md5 implementation 
+- fix memory leak in reading bytecode header
 
 -------------------------------------------------------------------
 Tue Feb 17 18:14:57 CET 2004 - mvidner@suse.cz
