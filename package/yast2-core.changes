@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 10 15:09:45 CEST 2004 - sh@suse.de
+
+- Improved `opt(`debugLayout) UI logging 
+
+-------------------------------------------------------------------
 Fri Sep 10 12:16:55 CEST 2004 - ma@suse.de
 
 - Pass information about readonly mounted partitions in Pkg::TargetGetDU.
