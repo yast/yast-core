@@ -37,7 +37,7 @@ public:
      * @param maxProgress the maximum value
      * @param initialProgress the initial value
      */
-    YProgressBar(YWidgetOpt &opt,
+    YProgressBar( YWidgetOpt &opt,
 		 const YCPString & label,
 		 const YCPInteger & maxProgress,
 		 const YCPInteger & initialProgress);
@@ -46,23 +46,23 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YProgressBar"; }
+    virtual char *widgetClass( ) { return "YProgressBar"; }
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Change the ProgressBar label. Overload this, but call
      * YProgressBar::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label. This method cannot be overidden.  The label of the
@@ -70,13 +70,13 @@ public:
      * by the ui. Therefore setProgress stores the current ProgressBar in
      * #ProgressBar.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * Change the progress. Overload this, but call
      * YProgressBar::setProgress at the end of your own function.
      */
-    virtual void setProgress(const YCPInteger & progress);
+    virtual void setProgress( const YCPInteger & progress);
 
     /**
      * Get the current progress.  This method cannot be overidden.  The progress
@@ -84,7 +84,7 @@ public:
      * the ui. Therefore setProgress stores the current ProgressBar in
      * #ProgressBar.
      */
-    YCPInteger getProgress();
+    YCPInteger getProgress( );
 
 
 protected:

@@ -23,30 +23,30 @@
 #include "YContainerWidget.h"
 
 
-YContainerWidget::YContainerWidget(YWidgetOpt &opt)
-    : YWidget(opt)
+YContainerWidget::YContainerWidget( YWidgetOpt &opt)
+    : YWidget( opt)
 {
 }
 
 
-YContainerWidget::~YContainerWidget()
+YContainerWidget::~YContainerWidget( )
 {
-    if ( ! isValid() )
+    if ( ! isValid( ) )
     {
-	y2error("ERROR: Trying to destroy invalid container widget");
+	y2error( "ERROR: Trying to destroy invalid container widget");
 	return;
     }
 
-    removeChildren();
+    removeChildren( );
 }
 
 
 void YContainerWidget::childDeleted ( YWidget *deletedChild )
 {
-    if ( ! isValid() )
+    if ( ! isValid( ) )
     {
-	y2error("YContainerWidget::childDeleted(deletedChild=%s #%d): Invalid container widget",
-		deletedChild->widgetClass(), deletedChild->internalId() );
+	y2error( "YContainerWidget::childDeleted(deletedChild=%s #%d): Invalid container widget",
+		deletedChild->widgetClass( ), deletedChild->internalId( ) );
 	return;
     }
 
@@ -56,103 +56,103 @@ void YContainerWidget::childDeleted ( YWidget *deletedChild )
      */
 
     bool found = false;
-    vector<YWidget *>::iterator it = children.begin();
-    int deletedChildId = deletedChild->internalId();
+    vector<YWidget *>::iterator it = children.begin( );
+    int deletedChildId = deletedChild->internalId( );
 
-    while ( ! found && it != children.end() )
+    while ( ! found && it != children.end( ) )
     {
-	if ( (*it)->internalId() == deletedChildId )	// Don't compare pointers here!
+	if ( ( *it)->internalId() == deletedChildId )	// Don't compare pointers here!
 	    found = true;
 	else
 	    ++it;
     }
 
     if ( found )
-	children.erase(it);
+	children.erase( it);
 
     /*
      * It's OK if the child hasn't been found. This means nothing worse
      * than somebody else already erased the entry from the children
-     * list - e.g. removeChildren().
+     * list - e.g. removeChildren( ).
      */
 }
 
 
-void YContainerWidget::dumpDialogWidgetTree()
+void YContainerWidget::dumpDialogWidgetTree( )
 {
-    YContainerWidget *dialog = dynamic_cast <YContainerWidget *> ( yDialog() );
+    YContainerWidget *dialog = dynamic_cast <YContainerWidget *> ( yDialog( ) );
 
     if ( dialog )
-	dialog->dumpWidgetTree();
+	dialog->dumpWidgetTree( );
     else
-	dumpWidgetTree();
+	dumpWidgetTree( );
 }
 
 
-void YContainerWidget::dumpWidgetTree(int indentationLevel)
+void YContainerWidget::dumpWidgetTree( int indentationLevel)
 {
-    dumpWidget(this, indentationLevel );
+    dumpWidget( this, indentationLevel );
 
-    for (int i = 0; i < numChildren(); i++)
+    for ( int i = 0; i < numChildren( ); i++)
     {
-	if ( children[i]->isContainer() )
-	    (dynamic_cast <YContainerWidget *> (children[i]) )->dumpWidgetTree ( indentationLevel + 1 );
+	if ( children[i]->isContainer( ) )
+	    ( dynamic_cast <YContainerWidget *> ( children[i]) )->dumpWidgetTree ( indentationLevel + 1 );
 	else
 	    dumpWidget( children[i], indentationLevel + 1 );
     }
 }
 
 
-void YContainerWidget::dumpWidget(YWidget *w, int indentationLevel)
+void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel)
 {
     string indentation ( indentationLevel * 4, ' ' );
 
-    y2debug("Widget tree: %s%s #%d at %p",
-	    indentation.c_str(), w->widgetClass(), w->internalId(), w );
+    y2debug( "Widget tree: %s%s #%d at %p",
+	    indentation.c_str( ), w->widgetClass( ), w->internalId( ), w );
 }
 
 
-void YContainerWidget::addChild(YWidget *child)
+void YContainerWidget::addChild( YWidget *child)
 {
-    children.push_back(child);
-    childAdded(child); // tell subclassed ui specific widget
+    children.push_back( child);
+    childAdded( child); // tell subclassed ui specific widget
 }
 
 
-void YContainerWidget::removeChildren()
+void YContainerWidget::removeChildren( )
 {
-    while (numChildren() > 0)
+    while ( numChildren() > 0)
     {
 	YWidget *child = children[0];
-	children.erase(children.begin());
+	children.erase( children.begin());
 
-	if ( child->isValid() )
+	if ( child->isValid( ) )
 	{
-	    childRemoved(child); // tell subclassed ui specific widget
+	    childRemoved( child); // tell subclassed ui specific widget
 	    delete child;
 	}
     }
 }
 
 
-YWidget *YContainerWidget::findWidget(const YCPValue & id) const
+YWidget *YContainerWidget::findWidget( const YCPValue & id) const
 {
-    for (int c=0; c<numChildren(); c++)
+    for ( int c=0; c<numChildren( ); c++)
     {
-	if (children[c]->isValid())
+	if ( children[c]->isValid())
 	{
-	    if (children[c]->id()->equal(id))
+	    if ( children[c]->id()->equal(id))
 		return children[c];
 
-	    if (children[c]->isContainer())
+	    if ( children[c]->isContainer())
 	    {
-		YWidget *found = (dynamic_cast <YContainerWidget *>(children[c]))->findWidget(id);
-		if (found) return found;
+		YWidget *found = ( dynamic_cast <YContainerWidget *>( children[c]))->findWidget(id);
+		if ( found) return found;
 	    }
 	}
 	else
 	{
-	    y2error("ERROR: Invalid widget child #%d - ignored", c);
+	    y2error( "ERROR: Invalid widget child #%d - ignored", c);
 	}
     }
 
@@ -160,58 +160,58 @@ YWidget *YContainerWidget::findWidget(const YCPValue & id) const
 }
 
 
-bool YContainerWidget::isContainer() const
+bool YContainerWidget::isContainer( ) const
 {
     return true;
 }
 
 
-long YContainerWidget::nicesize(YUIDimension dim)
+long YContainerWidget::nicesize( YUIDimension dim)
 {
-    return child(0)->nicesize(dim);
+    return child( 0)->nicesize(dim);
 }
 
 
-bool YContainerWidget::stretchable(YUIDimension dim)
+bool YContainerWidget::stretchable( YUIDimension dim)
 {
-    return child(0)->stretchable(dim);
+    return child( 0)->stretchable(dim);
 }
 
 
-void YContainerWidget::setSize(long newwidth, long newheight)
+void YContainerWidget::setSize( long newwidth, long newheight)
 {
-    child(0)->setSize(newwidth, newheight);
+    child( 0)->setSize(newwidth, newheight);
 }
 
 
 
-void YContainerWidget::childAdded(YWidget *)
+void YContainerWidget::childAdded( YWidget *)
 {
     // dummy default implementation
 }
 
 
-void YContainerWidget::childRemoved(YWidget *)
+void YContainerWidget::childRemoved( YWidget *)
 {
     // dummy default implementation
 }
 
 
-int YContainerWidget::numChildren() const
+int YContainerWidget::numChildren( ) const
 {
-    return children.size();
+    return children.size( );
 }
 
 
-YWidget *YContainerWidget::child(int i) const
+YWidget *YContainerWidget::child( int i) const
 {
-    if (i >= 0 && i < numChildren() )
+    if ( i >= 0 && i < numChildren( ) )
 	return children[i];
     else
     {
-	y2internal( "INTERNAL ERROR: YContainerWidget::child(): "
-		    "No child #%d (have only %d children)",
-		    i, numChildren());
+	y2internal( "INTERNAL ERROR: YContainerWidget::child( ): "
+		    "No child #%d ( have only %d children)",
+		    i, numChildren( ));
 
 	return 0;
     }
@@ -220,13 +220,13 @@ YWidget *YContainerWidget::child(int i) const
 
 void YContainerWidget::saveUserInput( YMacroRecorder *macroRecorder )
 {
-    vector<YWidget *>::iterator it = children.begin();
+    vector<YWidget *>::iterator it = children.begin( );
 
-    while ( it != children.end() )
+    while ( it != children.end( ) )
     {
 	YWidget *widget = *it;
 
-	if ( widget->isContainer() || widget->hasId() )
+	if ( widget->isContainer( ) || widget->hasId( ) )
 	{
 	    /*
 	     * It wouldn't do any good to save the user input of any widget

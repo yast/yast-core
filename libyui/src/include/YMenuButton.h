@@ -42,31 +42,31 @@ public:
      * @param opt widget options
      * @param label the button label
      */
-    YMenuButton(YWidgetOpt &opt, YCPString label);
+    YMenuButton( YWidgetOpt &opt, YCPString label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YMenuButton"; }
+    virtual char *widgetClass( ) { return "YMenuButton"; }
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * change the label of the push button. Overload this, but call
      * YMenuButton::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label of the MenuButton entry. This method cannot be
@@ -74,12 +74,12 @@ public:
      * calling setLabel, i.e. not by the ui. Therefore setLabel stores the
      * current label in label.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * Get the MenuButton's toplevel menu.
      */
-    YMenu * getToplevelMenu()	{ return toplevel_menu; }
+    YMenu * getToplevelMenu( )	{ return toplevel_menu; }
 
 
     /**
@@ -113,13 +113,13 @@ public:
      *
      * Overwrite this method.
      */
-    virtual void createMenu() = 0;
+    virtual void createMenu( ) = 0;
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
 
 protected:
@@ -129,7 +129,7 @@ protected:
     YCPString 	label;
 
     /**
-     * The next (free) item ID to use
+     * The next ( free) item ID to use
      */
     int 	next_index;
 
@@ -149,7 +149,7 @@ protected:
  * Helper class for menu items.
  *
  * This class provides the infrastructure for managing children
- * (i.e. submenus), yet it doesn't actually handle such children. Derived
+ * ( i.e. submenus), yet it doesn't actually handle such children. Derived
  * classes may choose to do this.
  **/
 class YMenuItem
@@ -162,18 +162,18 @@ public:
     YMenuItem( const YCPString &	label,
 	       YMenu *			parent_menu	= 0,
 	       int			index		= -1,
-	       const YCPValue & 	id		= YCPVoid() );
+	       const YCPValue & 	id		= YCPVoid( ) );
 
-    virtual ~YMenuItem() {}
+    virtual ~YMenuItem( ) {}
 
 
-    const YMenu *	getParent()	const 	{ return parent;	}
-    const YCPValue &	getId()		const 	{ return id;	}
-    int			getIndex()	const 	{ return index;	}
-    const YCPString &	getLabel()	const 	{ return label;	}
-    virtual bool	hasChildren()	const	{ return false;	}
-    YMenuItemList &	itemList()		{ return items; }
-    virtual bool	isMenu()	const	{ return false; }
+    const YMenu *	getParent( )	const 	{ return parent;	}
+    const YCPValue &	getId( )		const 	{ return id;	}
+    int			getIndex( )	const 	{ return index;	}
+    const YCPString &	getLabel( )	const 	{ return label;	}
+    virtual bool	hasChildren( )	const	{ return false;	}
+    YMenuItemList &	itemList( )		{ return items; }
+    virtual bool	isMenu( )	const	{ return false; }
 
     /**
      * Set this menu item's label. This will NOT have any immediate
@@ -210,14 +210,14 @@ public:
     YMenu( const YCPString & 	label,
 	   YMenu *		parent_menu 	= 0,
 	   int			index		= -1,
-	   const YCPValue &	id 		= YCPVoid() );
+	   const YCPValue &	id 		= YCPVoid( ) );
 
-    virtual ~YMenu() {}
+    virtual ~YMenu( ) {}
 
 
-    virtual bool	hasChildren()	const	{ return items.size() > 0; }
+    virtual bool	hasChildren( )	const	{ return items.size( ) > 0; }
     void		addMenuItem( YMenuItem *item );
-    virtual bool	isMenu()	const	{ return true; }
+    virtual bool	isMenu( )	const	{ return true; }
 };
 
 

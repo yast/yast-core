@@ -12,7 +12,7 @@
 
   File:		YUIInterpreter_special_widgets.cc
   
-		Special (optional) widgets
+		Special ( optional) widgets
 
 		
   Authors:	Mathias Kettner <kettner@suse.de>
@@ -41,7 +41,7 @@
 
 
 /**
- * @builtin HasSpecialWidget(`symbol widget) -> boolean
+ * @builtin HasSpecialWidget( `symbol widget) -> boolean
  *
  * Checks for support of a special widget type. Use this prior to creating a
  * widget of this kind. Do not use this to check for ordinary widgets like
@@ -51,68 +51,68 @@
  * Returns true if the UI supports the special widget and false if not.
  */
 
-YCPValue YUIInterpreter::evaluateHasSpecialWidget(const YCPTerm & term)
+YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term)
 {
     bool hasWidget = false;
 
-    if (term->size() != 1 || ! term->value(0)->isSymbol() )
-	return YCPNull();
+    if ( term->size() != 1 || ! term->value( 0)->isSymbol() )
+	return YCPNull( );
 
-    string symbol = term->value(0)->asSymbol()->symbol();
+    string symbol = term->value( 0)->asSymbol()->symbol();
 
-    if	    (symbol == YUISpecialWidget_DummySpecialWidget	)	hasWidget = hasDummySpecialWidget();
-    else if (symbol == YUISpecialWidget_BarGraph		)	hasWidget = hasBarGraph();
-    else if (symbol == YUISpecialWidget_ColoredLabel		)	hasWidget = hasColoredLabel();
-    else if (symbol == YUISpecialWidget_DownloadProgress	)	hasWidget = hasDownloadProgress();
-    else if (symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
-    else if (symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
+    if	    ( symbol == YUISpecialWidget_DummySpecialWidget	)	hasWidget = hasDummySpecialWidget( );
+    else if ( symbol == YUISpecialWidget_BarGraph		)	hasWidget = hasBarGraph( );
+    else if ( symbol == YUISpecialWidget_ColoredLabel		)	hasWidget = hasColoredLabel( );
+    else if ( symbol == YUISpecialWidget_DownloadProgress	)	hasWidget = hasDownloadProgress( );
+    else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider( );
+    else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter( );
     else
     {
-	y2error("HasSpecialWidget(): Unknown special widget: %s", symbol.c_str() );
-	return YCPNull();
+	y2error( "HasSpecialWidget(): Unknown special widget: %s", symbol.c_str( ) );
+	return YCPNull( );
     }
 
-    return YCPBoolean(hasWidget);
+    return YCPBoolean( hasWidget);
 }
 
 
 
 //
 // =============================================================================
-// High level (abstract libyui layer) widget creation functions.
-// Most call a corresponding low level (specific UI) widget creation function.
+// High level ( abstract libyui layer) widget creation functions.
+// Most call a corresponding low level ( specific UI) widget creation function.
 //
 // Special widgets that may or may not be supported by a specific UI.
-// Remember to overwrite the has...() method as well as the create...() method!
+// Remember to overwrite the has...( ) method as well as the create...( ) method!
 // =============================================================================
 //
 
 
-YWidget *YUIInterpreter::createDummySpecialWidget(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 						  const YCPList &optList, int argnr)
 {
-    if (term->size() - argnr > 0)
+    if ( term->size() - argnr > 0)
     {
-	y2error("Invalid arguments for the DummySpecialWidget widget: %s",
-		term->toString().c_str());
+	y2error( "Invalid arguments for the DummySpecialWidget widget: %s",
+		term->toString( ).c_str());
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+    rejectAllOptions( term,optList);
 
-    if ( hasDummySpecialWidget() )
+    if ( hasDummySpecialWidget( ) )
     {
-	return createDummySpecialWidget(parent, opt);
+	return createDummySpecialWidget( parent, opt);
     }
     else
     {
-	y2error("This UI does not support the DummySpecialWidget.");
+	y2error( "This UI does not support the DummySpecialWidget.");
 	return 0;
     }
 }
 
 
-bool YUIInterpreter::hasDummySpecialWidget()
+bool YUIInterpreter::hasDummySpecialWidget( )
 {
     return true;
 }
@@ -124,11 +124,11 @@ bool YUIInterpreter::hasDummySpecialWidget()
  * Normally, the implementation within the libyui returns 0.
  */
 
-YWidget *YUIInterpreter::createDummySpecialWidget(YWidget *parent, YWidgetOpt &opt)
+YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt)
 {
-    opt.isHeading.setValue(true);
-    opt.isOutputField.setValue(true);
-    return createLabel(parent, opt, YCPString("DummySpecialWidget"));
+    opt.isHeading.setValue( true);
+    opt.isOutputField.setValue( true);
+    return createLabel( parent, opt, YCPString( "DummySpecialWidget"));
 }
 
 
@@ -136,12 +136,12 @@ YWidget *YUIInterpreter::createDummySpecialWidget(YWidget *parent, YWidgetOpt &o
 
 /*
  * @widget	BarGraph
- * @short	Horizontal bar graph (optional widget)
+ * @short	Horizontal bar graph ( optional widget)
  * @class	YBarGraph
- * @arg		list values the initial values (integer numbers)
+ * @arg		list values the initial values ( integer numbers)
  * @optarg	list labels the labels for each part; use "%1" to include the
  *		current numeric value. May include newlines.
- * @usage	if ( HasSpecialWidget(`BarGraph) {...
+ * @usage	if ( HasSpecialWidget( `BarGraph) {...
  *		`BarGraph( [450, 100, 700],
  *		[ "Windows used\n%1 MB", "Windows free\n%1 MB", "Linux\n%1 MB" ] )
  *
@@ -151,51 +151,51 @@ YWidget *YUIInterpreter::createDummySpecialWidget(YWidget *parent, YWidgetOpt &o
  *
  * A horizontal bar graph for graphical display of proportions of integer
  * values.  Labels can be passed for each portion; they can include a "%1"
- * placeholder where the current value will be inserted (sformat() -style) and
+ * placeholder where the current value will be inserted ( sformat() -style) and
  * newlines. If no labels are specified, only the values will be
  * displayed. Specify empty labels to suppress this.
  * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget(`BarGraph)</tt> before using it.
+ * for availability with <tt>HasSpecialWidget( `BarGraph)</tt> before using it.
  *
  */
 
-YWidget *YUIInterpreter::createBarGraph(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 					const YCPList &optList, int argnr)
 {
-    int numArgs = term->size() - argnr;
+    int numArgs = term->size( ) - argnr;
 
     if ( numArgs < 1 || numArgs > 2
 	 || ! term->value(argnr)->isList()
 	 || ( numArgs > 1 && ! term->value(argnr+1)->isList() )
 	 )
     {
-	y2error("Invalid arguments for the BarGraph widget: %s",
-		term->toString().c_str());
+	y2error( "Invalid arguments for the BarGraph widget: %s",
+		term->toString( ).c_str());
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+    rejectAllOptions( term,optList);
     YBarGraph *barGraph;
 
-    if ( hasBarGraph() )
+    if ( hasBarGraph( ) )
     {
-	barGraph = dynamic_cast <YBarGraph *> ( createBarGraph(parent, opt) );
-	assert(barGraph);
+	barGraph = dynamic_cast <YBarGraph *> ( createBarGraph( parent, opt) );
+	assert( barGraph);
 
-	barGraph->parseValuesList( term->value( argnr )->asList() );
+	barGraph->parseValuesList( term->value( argnr )->asList( ) );
 
 	if ( numArgs > 1 )
 	{
-	    barGraph->parseLabelsList( term->value( argnr+1 )->asList() );
+	    barGraph->parseLabelsList( term->value( argnr+1 )->asList( ) );
 	}
 
-	barGraph->doUpdate();
+	barGraph->doUpdate( );
     }
     else
     {
-	y2error("This UI does not support the BarGraph widget.");
+	y2error( "This UI does not support the BarGraph widget.");
 	return 0;
     }
 
@@ -213,45 +213,45 @@ YWidget *YUIInterpreter::createBarGraph(YWidget *parent, YWidgetOpt &opt, const 
  * @arg		color foreground color
  * @arg		color background color
  * @arg		integer margin around the widget in pixels
- * @usage	`ColoredLabel("Hello, World!", `rgb(255, 0, 255), `rgb(0, 128, 0), 20 )
+ * @usage	`ColoredLabel( "Hello, World!", `rgb( 255, 0, 255), `rgb( 0, 128, 0), 20 )
  *
  * @examples	ColoredLabel1.ycp ColoredLabel2.ycp ColoredLabel3.ycp ColoredLabel4.ycp
  *
  * @description
  *
  * Very much the same as a `Label except you specify foreground and background colors and margins.
- * This widget is only available on graphical UIs with at least 15 bit color depth (32767 colors).
+ * This widget is only available on graphical UIs with at least 15 bit color depth ( 32767 colors).
  * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget(`ColoredLabel)</tt> before using it.
+ * for availability with <tt>HasSpecialWidget( `ColoredLabel)</tt> before using it.
  */
 
-YWidget *YUIInterpreter::createColoredLabel(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 					    const YCPList &optList, int argnr)
 {
-    if (term->size() - argnr != 4
+    if ( term->size() - argnr != 4
 	|| ! term->value( argnr   )->isString()		// label
 	|| ! term->value( argnr+1 )->isTerm()		// foreground color
 	|| ! term->value( argnr+2 )->isTerm()		// background color
 	|| ! term->value( argnr+3 )->isInteger() )	// margin
     {
-	y2error( "Invalid arguments for the ColoredLabel widget: %s", term->toString().c_str() );
+	y2error( "Invalid arguments for the ColoredLabel widget: %s", term->toString( ).c_str() );
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+    rejectAllOptions( term,optList);
 
     YColor fg;
     YColor bg;
-    YCPString label = term->value( argnr )->asString();
+    YCPString label = term->value( argnr )->asString( );
     parseRgb( term->value( argnr+1 ), &fg, true );
     parseRgb( term->value( argnr+2 ), &bg, true );
-    int margin  = term->value( argnr+3 )->asInteger()->value();
+    int margin  = term->value( argnr+3 )->asInteger( )->value();
 
-    if ( ! hasColoredLabel() )
+    if ( ! hasColoredLabel( ) )
     {
-	y2error("This UI does not support the ColoredLabel widget.");
+	y2error( "This UI does not support the ColoredLabel widget.");
 	return 0;
     }
 
@@ -263,37 +263,37 @@ YWidget *YUIInterpreter::createColoredLabel(YWidget *parent, YWidgetOpt &opt, co
 
 /*
  * @widget	DownloadProgress
- * @short	Self-polling file growth progress indicator (optional widget)
+ * @short	Self-polling file growth progress indicator ( optional widget)
  * @class	YDownloadProgress
  * @arg		string label label above the indicator
  * @arg		string filename file name with full path of the file to poll
  * @arg		integer expectedSize expected final size of the file in bytes
- * @usage	if ( HasSpecialWidget(`DownloadProgress) {...
- *		`DownloadProgress("Base system (230k)", "/tmp/aaa_base.rpm", 230*1024);
+ * @usage	if ( HasSpecialWidget( `DownloadProgress) {...
+ *		`DownloadProgress( "Base system ( 230k)", "/tmp/aaa_base.rpm", 230*1024);
  *
  * @examples	DownloadProgress1.ycp
  *
  * @description
  *
  * This widget automatically displays the progress of a lengthy download
- * operation. The widget itself (i.e. the UI) polls the specified file and
+ * operation. The widget itself ( i.e. the UI) polls the specified file and
  * automatically updates the display as required even if the download is taking
  * place in the foreground.
  * <p>
  * Please notice that this will work only if the UI runs on the same machine as
- * the file to download which may not taken for granted (but which is so for
+ * the file to download which may not taken for granted ( but which is so for
  * most users).
  * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget(`DownloadProgress)</tt> before using it.
+ * for availability with <tt>HasSpecialWidget( `DownloadProgress)</tt> before using it.
  *
  */
 
-YWidget *YUIInterpreter::createDownloadProgress(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 						const YCPList &optList, int argnr)
 {
-    int numArgs = term->size() - argnr;
+    int numArgs = term->size( ) - argnr;
 
     if ( numArgs != 3
 	 || ! term->value(argnr  )->isString()
@@ -301,25 +301,25 @@ YWidget *YUIInterpreter::createDownloadProgress(YWidget *parent, YWidgetOpt &opt
 	 || ! term->value(argnr+2)->isInteger()
 	 )
     {
-	y2error("Invalid arguments for the DownloadProgress widget: %s",
-		term->toString().c_str());
+	y2error( "Invalid arguments for the DownloadProgress widget: %s",
+		term->toString( ).c_str());
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+    rejectAllOptions( term,optList);
     YWidget *downloadProgress;
 
-    if ( hasDownloadProgress() )
+    if ( hasDownloadProgress( ) )
     {
-	YCPString label	 = term->value(argnr)->asString();
-	YCPString filename = term->value(argnr+1)->asString();
-	int expectedSize	 = term->value(argnr+2)->asInteger()->value();
+	YCPString label	 = term->value( argnr)->asString();
+	YCPString filename = term->value( argnr+1)->asString();
+	int expectedSize	 = term->value( argnr+2)->asInteger()->value();
 
-	downloadProgress = createDownloadProgress(parent, opt, label, filename, expectedSize);
+	downloadProgress = createDownloadProgress( parent, opt, label, filename, expectedSize);
     }
     else
     {
-	y2error("This UI does not support the DownloadProgress widget.");
+	y2error( "This UI does not support the DownloadProgress widget.");
 	return 0;
     }
 
@@ -330,36 +330,36 @@ YWidget *YUIInterpreter::createDownloadProgress(YWidget *parent, YWidgetOpt &opt
 
 /*
  * @widget	Slider
- * @short	Numeric limited range input (optional widget)
+ * @short	Numeric limited range input ( optional widget)
  * @class	YSlider
  * @arg		string	label		Explanatory label above the slider
  * @arg		integer minValue	minimum value
  * @arg		integer maxValue	maximum value
  * @arg		integer initialValue	initial value
- * @usage	if ( HasSpecialWidget(`Slider) {...
- *		`Slider("Percentage", 1, 100, 50)
+ * @usage	if ( HasSpecialWidget( `Slider) {...
+ *		`Slider( "Percentage", 1, 100, 50)
  *
  * @examples	Slider1.ycp Slider2.ycp ColoredLabel3.ycp
  *
  * @description
  *
- * A horizontal slider with (numeric) input field that allows input of an
+ * A horizontal slider with ( numeric) input field that allows input of an
  * integer value in a given range. The user can either drag the slider or
  * simply enter a value in the input field.
  * <p>
- * Remember you can use <tt>`opt(`notify)</tt> in order to get instant response
+ * Remember you can use <tt>`opt( `notify)</tt> in order to get instant response
  * when the user changes the value - if this is desired.
  * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget(`Slider)</tt> before using it.
+ * for availability with <tt>HasSpecialWidget( `Slider)</tt> before using it.
  *
  */
 
-YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 				      const YCPList &optList, int argnr)
 {
-    int numArgs = term->size() - argnr;
+    int numArgs = term->size( ) - argnr;
 
     if ( numArgs != 4
 	 || ! term->value(argnr)->isString()
@@ -368,25 +368,25 @@ YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YC
 	 || ! term->value(argnr+3)->isInteger()
 	 )
     {
-	y2error("Invalid arguments for the Slider widget: %s",
-		term->toString().c_str());
+	y2error( "Invalid arguments for the Slider widget: %s",
+		term->toString( ).c_str());
 	return 0;
     }
 
-    rejectAllOptions(term,optList);
+    rejectAllOptions( term,optList);
     YWidget *slider;
 
-    if ( hasSlider() )
+    if ( hasSlider( ) )
     {
-	YCPString label	= term->value(argnr)->asString();
-	int minValue	= term->value(argnr+1)->asInteger()->value();
-	int maxValue	= term->value(argnr+2)->asInteger()->value();
-	int initialValue	= term->value(argnr+3)->asInteger()->value();
-	slider = createSlider(parent, opt, label, minValue, maxValue, initialValue);
+	YCPString label	= term->value( argnr)->asString();
+	int minValue	= term->value( argnr+1)->asInteger()->value();
+	int maxValue	= term->value( argnr+2)->asInteger()->value();
+	int initialValue	= term->value( argnr+3)->asInteger()->value();
+	slider = createSlider( parent, opt, label, minValue, maxValue, initialValue);
     }
     else
     {
-	y2error("This UI does not support the Slider widget.");
+	y2error( "This UI does not support the Slider widget.");
 	return 0;
     }
 
@@ -396,12 +396,12 @@ YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YC
 
 /*
  * @widget	PartitionSplitter
- * @short	Hard disk partition splitter tool (optional widget)
+ * @short	Hard disk partition splitter tool ( optional widget)
  * @class	YPartitionSplitter
  *
  * @arg integer	usedSize		size of the used part of the partition
  * @arg integer	totalFreeSize 		total size of the free part of the partition
- *					(before the split)
+ *					( before the split)
  * @arg integer newPartSize		suggested size of the new partition
  * @arg integer minNewPartSize		minimum size of the new partition
  * @arg integer minFreeSize		minimum free size of the old partition
@@ -410,9 +410,9 @@ YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YC
  * @arg string	newPartLabel  		BarGraph label for the new partition
  * @arg string	freeFieldLabel		label for the remaining free space field
  * @arg string	newPartFieldLabel	label for the new size field
- * @usage	if ( HasSpecialWidget(`PartitionSplitter) {...
- *		`PartitionSplitter(600, 1200, 800, 300, 50,
- *                                 "Windows used\n%1 MB", "Windows used\n%1 MB", "Linux\n%1 MB", "Linux (MB)")
+ * @usage	if ( HasSpecialWidget( `PartitionSplitter) {...
+ *		`PartitionSplitter( 600, 1200, 800, 300, 50,
+ *                                 "Windows used\n%1 MB", "Windows used\n%1 MB", "Linux\n%1 MB", "Linux ( MB)")
  *
  * @examples	PartitionSplitter1.ycp PartitionSplitter2.ycp
  *
@@ -420,8 +420,8 @@ YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YC
  *
  * A very specialized widget to allow a user to comfortably split an existing
  * hard disk partition in two parts. Shows a bar graph that displays the used
- * space of the partition, the remaining free space (before the split) of the
- * partition and the space of the new partition (as suggested).
+ * space of the partition, the remaining free space ( before the split) of the
+ * partition and the space of the new partition ( as suggested).
  * Below the bar graph is a slider with an input fields to the left and right
  * where the user can either input the desired remaining free space or the
  * desired size of the new partition or drag the slider to do this.
@@ -433,13 +433,13 @@ YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt, const YC
  * <p>
  * <b>Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget(`PartitionSplitter)</tt> before using it.
+ * for availability with <tt>HasSpecialWidget( `PartitionSplitter)</tt> before using it.
  * */
 
-YWidget *YUIInterpreter::createPartitionSplitter(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 						 const YCPList &optList, int argnr)
 {
-    int numArgs = term->size() - argnr;
+    int numArgs = term->size( ) - argnr;
 
     if ( numArgs != 10
 	 || ! term->value(argnr  )->isInteger()	// usedSize
@@ -454,31 +454,31 @@ YWidget *YUIInterpreter::createPartitionSplitter(YWidget *parent, YWidgetOpt &op
 	 || ! term->value(argnr+9)->isString()	// newPartFieldLabel
 	 )
     {
-	y2error("Invalid arguments for the PartitionSplitter widget: %s",
-		term->toString().c_str());
+	y2error( "Invalid arguments for the PartitionSplitter widget: %s",
+		term->toString( ).c_str());
 	return 0;
     }
 
-    for (int o=0; o < optList->size(); o++)
+    for ( int o=0; o < optList->size( ); o++)
     {
-	if (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_countShowDelta) opt.countShowDelta.setValue(true);
-	else logUnknownOption(term, optList->value(o));
+	if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_countShowDelta) opt.countShowDelta.setValue( true);
+	else logUnknownOption( term, optList->value( o));
     }
 
     YWidget *splitter;
 
-    if ( hasPartitionSplitter() )
+    if ( hasPartitionSplitter( ) )
     {
-	int 	usedSize		= term->value(argnr  )->asInteger()->value();
-	int 	totalFreeSize		= term->value(argnr+1)->asInteger()->value();
-	int 	newPartSize		= term->value(argnr+2)->asInteger()->value();
-	int 	minNewPartSize		= term->value(argnr+3)->asInteger()->value();
-	int 	minFreeSize		= term->value(argnr+4)->asInteger()->value();
-	YCPString usedLabel		= term->value(argnr+5)->asString();
-	YCPString freeLabel		= term->value(argnr+6)->asString();
-	YCPString newPartLabel		= term->value(argnr+7)->asString();
-	YCPString freeFieldLabel		= term->value(argnr+8)->asString();
-	YCPString newPartFieldLabel	= term->value(argnr+9)->asString();
+	int 	usedSize		= term->value( argnr  )->asInteger( )->value();
+	int 	totalFreeSize		= term->value( argnr+1)->asInteger()->value();
+	int 	newPartSize		= term->value( argnr+2)->asInteger()->value();
+	int 	minNewPartSize		= term->value( argnr+3)->asInteger()->value();
+	int 	minFreeSize		= term->value( argnr+4)->asInteger()->value();
+	YCPString usedLabel		= term->value( argnr+5)->asString();
+	YCPString freeLabel		= term->value( argnr+6)->asString();
+	YCPString newPartLabel		= term->value( argnr+7)->asString();
+	YCPString freeFieldLabel		= term->value( argnr+8)->asString();
+	YCPString newPartFieldLabel	= term->value( argnr+9)->asString();
 
 	splitter = createPartitionSplitter( parent, opt,
 					    usedSize, totalFreeSize,
@@ -489,7 +489,7 @@ YWidget *YUIInterpreter::createPartitionSplitter(YWidget *parent, YWidgetOpt &op
     }
     else
     {
-	y2error("This UI does not support the PartitionSplitter widget.");
+	y2error( "This UI does not support the PartitionSplitter widget.");
 	return 0;
     }
 
@@ -503,27 +503,27 @@ YWidget *YUIInterpreter::createPartitionSplitter(YWidget *parent, YWidgetOpt &op
  * Overwrite if the specific UI provides the corresponding widget.
  */
 
-bool YUIInterpreter::hasDownloadProgress()
+bool YUIInterpreter::hasDownloadProgress( )
 {
     return false;
 }
 
-bool YUIInterpreter::hasBarGraph()
+bool YUIInterpreter::hasBarGraph( )
 {
     return false;
 }
 
-bool YUIInterpreter::hasColoredLabel()
+bool YUIInterpreter::hasColoredLabel( )
 {
     return false;
 }
 
-bool YUIInterpreter::hasSlider()
+bool YUIInterpreter::hasSlider( )
 {
     return false;
 }
 
-bool YUIInterpreter::hasPartitionSplitter()
+bool YUIInterpreter::hasPartitionSplitter( )
 {
     return false;
 }
@@ -533,50 +533,50 @@ bool YUIInterpreter::hasPartitionSplitter()
  * Default low level specific UI implementations for optional widgets.
  *
  * UIs that overwrite any of those should overwrite the corresponding
- * has...() method as well!
+ * has...( ) method as well!
  */
 
-YWidget *YUIInterpreter::createDownloadProgress(YWidget *parent, YWidgetOpt &opt,
+YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &opt,
 						const YCPString &label,
 						const YCPString &filename,
 						int expectedSize)
 {
-    y2error("Default createDownloadProgress() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+    y2error( "Default createDownloadProgress( ) method called - "
+	    "forgot to call HasSpecialWidget( )?" );
 
     return 0;
 }
 
-YWidget *YUIInterpreter::createBarGraph(YWidget *parent, YWidgetOpt &opt)
+YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt)
 {
-    y2error("Default createBarGraph() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+    y2error( "Default createBarGraph( ) method called - "
+	    "forgot to call HasSpecialWidget( )?" );
 
     return 0;
 }
 
-YWidget *YUIInterpreter::createColoredLabel(YWidget *parent, YWidgetOpt &opt,
+YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt,
 					    YCPString label,
 					    YColor fg, YColor bg, int margin )
 {
-    y2error("Default createColoredLabel() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+    y2error( "Default createColoredLabel( ) method called - "
+	    "forgot to call HasSpecialWidget( )?" );
 
     return 0;
 }
 
-YWidget *YUIInterpreter::createSlider(YWidget *parent, YWidgetOpt &opt,
+YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt &opt,
 				      const YCPString &label,
 				      int minValue, int maxValue, int initialValue)
 {
-    y2error("Default createSlider() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+    y2error( "Default createSlider( ) method called - "
+	    "forgot to call HasSpecialWidget( )?" );
 
     return 0;
 }
 
 
-YWidget *YUIInterpreter::createPartitionSplitter(YWidget *		parent,
+YWidget *YUIInterpreter::createPartitionSplitter( YWidget *		parent,
 						 YWidgetOpt &		opt,
 						 int 			usedSize,
 						 int 			totalFreeSize,
@@ -589,8 +589,8 @@ YWidget *YUIInterpreter::createPartitionSplitter(YWidget *		parent,
 						 const YCPString &	freeFieldLabel,
 						 const YCPString &	newPartFieldLabel )
 {
-    y2error("Default createPartitionSplitter() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+    y2error( "Default createPartitionSplitter( ) method called - "
+	    "forgot to call HasSpecialWidget( )?" );
 
     return 0;
 }

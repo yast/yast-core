@@ -19,15 +19,15 @@
 
 #include "YSquash.h"
 
-YSquash::YSquash(YWidgetOpt &opt, bool hsquash, bool vsquash)
-    : YContainerWidget(opt)
+YSquash::YSquash( YWidgetOpt &opt, bool hsquash, bool vsquash)
+    : YContainerWidget( opt)
 {
     squash[YD_HORIZ] = hsquash;
     squash[YD_VERT]  = vsquash;
 }
 
-bool YSquash::stretchable(YUIDimension dim)
+bool YSquash::stretchable( YUIDimension dim)
 {
-    return !squash[dim] && child(0)->stretchable(dim);
+    return !squash[dim] && child( 0)->stretchable(dim);
 }
 

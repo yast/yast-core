@@ -19,17 +19,17 @@
 
 #include "YSpacing.h"
 
-YSpacing::YSpacing(YWidgetOpt &opt, float size, bool horizontal, bool vertical)
-    : YWidget(opt)
+YSpacing::YSpacing( YWidgetOpt &opt, float size, bool horizontal, bool vertical)
+    : YWidget( opt)
 {
     relativeSize[YD_HORIZ] = horizontal ? size : 0.0;
     relativeSize[YD_VERT ] = vertical   ? size : 0.0;
 }
 
 
-long YSpacing::nicesize(YUIDimension dim)
+long YSpacing::nicesize( YUIDimension dim)
 {
-    return absoluteSize(dim, relativeSize[dim]);
+    return absoluteSize( dim, relativeSize[dim]);
 }
 
 
@@ -42,8 +42,8 @@ bool YSpacing::isLayoutStretch( YUIDimension dim ) const
 /**
  * Default implementation. Overwrite this for UI specific units.
  */
-long YSpacing::absoluteSize(YUIDimension dim, float relativeSize)
+long YSpacing::absoluteSize( YUIDimension dim, float relativeSize)
 {
-    return (long) (relativeSize + 0.5);
+    return ( long) ( relativeSize + 0.5);
 }
 

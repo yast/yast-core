@@ -23,11 +23,11 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPSymbol.h>
 #include "YShortcut.h"
-#include <ctype.h>	// toupper(), tolower()
+#include <ctype.h>	// toupper( ), tolower( )
 
 
 // Return the number of elements of an array of any type
-#define DIM(ARRAY)	((int) (sizeof(ARRAY)/(sizeof(ARRAY[0]))))
+#define DIM( ARRAY)	( (int) ( sizeof(ARRAY)/(sizeof(ARRAY[0]))))
 
 
 YShortcut::YShortcut( YWidget *shortcut_widget )
@@ -42,17 +42,17 @@ YShortcut::YShortcut( YWidget *shortcut_widget )
 }
 
 
-YShortcut::~YShortcut()
+YShortcut::~YShortcut( )
 {
 }
 
 
 string
-YShortcut::shortcutString()
+YShortcut::shortcutString( )
 {
     if ( ! _shortcut_string_chached )
     {
-	_shortcut_string = getShortcutString();
+	_shortcut_string = getShortcutString( );
 	_shortcut_string_chached = true;
 
 	// Note: We really need a separate variable here - an empty string
@@ -64,11 +64,11 @@ YShortcut::shortcutString()
 
 
 string
-YShortcut::cleanShortcutString()
+YShortcut::cleanShortcutString( )
 {
     if ( ! _clean_shortcut_string_chached )
     {
-	_clean_shortcut_string = cleanShortcutString( shortcutString() );
+	_clean_shortcut_string = cleanShortcutString( shortcutString( ) );
     }
 
     return _clean_shortcut_string;
@@ -82,7 +82,7 @@ YShortcut::cleanShortcutString( string shortcut_string )
 
     while ( ( pos = findShortcutPos( shortcut_string, pos ) ) != string::npos )
     {
-	shortcut_string.erase( pos, (string::size_type) 1 );
+	shortcut_string.erase( pos, ( string::size_type) 1 );
     }
 
     return shortcut_string;
@@ -90,50 +90,50 @@ YShortcut::cleanShortcutString( string shortcut_string )
 
 
 char
-YShortcut::preferred()
+YShortcut::preferred( )
 {
     if ( _preferred < 0 )
     {
-	_preferred = normalized( findShortcut( shortcutString() ) );
+	_preferred = normalized( findShortcut( shortcutString( ) ) );
     }
 
-    return (char) _preferred;
+    return ( char) _preferred;
 }
 
 
 char
-YShortcut::shortcut()
+YShortcut::shortcut( )
 {
     if ( _shortcut < 0 )
     {
-	_shortcut = preferred();
+	_shortcut = preferred( );
     }
 
-    return (char) _shortcut;
+    return ( char) _shortcut;
 }
 
 
 void
 YShortcut::setShortcut( char new_shortcut )
 {
-    string str = cleanShortcutString();
+    string str = cleanShortcutString( );
     char findme[] = { tolower( new_shortcut ), toupper( new_shortcut ), 0 };
     string::size_type pos = str.find_first_of( findme );
 
     if ( pos == string::npos )
     {
 	y2error( "Can't find '%c' in %s \"%s\"",
-		 new_shortcut, widgetClass(), cleanShortcutString().c_str() );
+		 new_shortcut, widgetClass( ), cleanShortcutString( ).c_str() );
 
 	return;
     }
 
     str.insert( pos,
-		string( 1, shortcutMarker() ) );	// equivalent to 'string( "&" )'
+		string( 1, shortcutMarker( ) ) );	// equivalent to 'string( "&" )'
 
-    YCPSymbol propertyName( widget()->shortcutProperty(), true );
+    YCPSymbol propertyName( widget( )->shortcutProperty(), true );
     YCPValue propertyValue = YCPString( str );
-    widget()->changeWidget( propertyName, propertyValue );
+    widget( )->changeWidget( propertyName, propertyValue );
 
     _shortcut_string_chached		= false;
     _clean_shortcut_string_chached	= false;
@@ -142,14 +142,14 @@ YShortcut::setShortcut( char new_shortcut )
 
 
 int
-YShortcut::distinctShortcutChars()
+YShortcut::distinctShortcutChars( )
 {
     if ( _distinctShortcutChars < 0 )	// chache this value - it's expensive!
     {
 	// Create and initiazlize "contained" array - what possible shortcut
 	// characters are contained in that string?
 
-	bool contained[ sizeof(char) << 8 ];
+	bool contained[ sizeof( char) << 8 ];
 
 	for ( int i=0; i < DIM( contained ); i++ )
 	    contained[i] = false;
@@ -157,12 +157,12 @@ YShortcut::distinctShortcutChars()
 
 	// Mark characters as contained
 
-	string clean = cleanShortcutString();
+	string clean = cleanShortcutString( );
 
-	for ( string::size_type pos=0; pos < clean.length(); pos++ )
+	for ( string::size_type pos=0; pos < clean.length( ); pos++ )
 	{
 	    if ( YShortcut::isValid( clean[ pos ] ) )
-		contained[ (int) clean[ pos ] ] = true;
+		contained[ ( int) clean[ pos ] ] = true;
 	}
 
 
@@ -184,30 +184,30 @@ YShortcut::distinctShortcutChars()
 
 
 string
-YShortcut::getShortcutString()
+YShortcut::getShortcutString( )
 {
-    if ( ! widget()->shortcutProperty() )
+    if ( ! widget( )->shortcutProperty() )
     {
-	y2error( "ERROR: %s widgets can't handle shortcuts!", widgetClass() );
+	y2error( "ERROR: %s widgets can't handle shortcuts!", widgetClass( ) );
 	return string( "" );
     }
 
-    YCPSymbol propertyName( widget()->shortcutProperty(), true );
-    YCPValue propertyValue = widget()->queryWidget( propertyName );
+    YCPSymbol propertyName( widget( )->shortcutProperty(), true );
+    YCPValue propertyValue = widget( )->queryWidget( propertyName );
 
-    return propertyValue.isNull() || ! propertyValue->isString() ?
-	string( "" ) : propertyValue->asString()->value();
+    return propertyValue.isNull( ) || ! propertyValue->isString( ) ?
+	string( "" ) : propertyValue->asString( )->value();
 }
 
 
 string::size_type
 YShortcut::findShortcutPos( const string &str, string::size_type pos )
 {
-    while ( ( pos = str.find( shortcutMarker(), pos ) ) != string::npos )
+    while ( ( pos = str.find( shortcutMarker( ), pos ) ) != string::npos )
     {
-	if ( pos+1 < str.length() )
+	if ( pos+1 < str.length( ) )
 	{
-	    if ( str[ pos+1 ] == shortcutMarker() )	// escaped marker? ("&&")
+	    if ( str[ pos+1 ] == shortcutMarker( ) )	// escaped marker? ( "&&")
 	    {
 		pos += 2;				// skip this and search for more
 	    }
@@ -231,7 +231,7 @@ YShortcut::findShortcut( const string &str, string::size_type pos )
 {
     pos = findShortcutPos( str, pos );
 
-    return pos == string::npos ? (char) 0 : str[ pos+1 ];
+    return pos == string::npos ? ( char) 0 : str[ pos+1 ];
 }
 
 
@@ -251,5 +251,5 @@ YShortcut::normalized( char c )
     if ( c >= 'a' && c <= 'z' )	return c - 'a' + 'A';
     if ( c >= 'A' && c <= 'Z' )	return c;
     if ( c >= '0' && c <= '9' )	return c;
-    return (char) 0;
+    return ( char) 0;
 }

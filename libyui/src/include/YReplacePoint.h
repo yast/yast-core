@@ -31,18 +31,18 @@ public:
     /**
      * Constructor
      */
-    YReplacePoint(YWidgetOpt &opt);
+    YReplacePoint( YWidgetOpt &opt);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YReplacePoint"; }
+    virtual char *widgetClass( ) { return "YReplacePoint"; }
 
     /**
      * Inherited from YWidget. Returns true.
      */
-    bool isReplacePoint() const;
+    bool isReplacePoint( ) const;
 };
 
 

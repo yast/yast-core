@@ -37,78 +37,78 @@ public:
     /**
      * Constructor
      */
-    YContainerWidget(YWidgetOpt &opt);
+    YContainerWidget( YWidgetOpt &opt);
 
     /**
      * Cleans up: Deletes all child widgets.
      */
-    virtual ~YContainerWidget();
+    virtual ~YContainerWidget( );
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YContainerWidget"; }
+    virtual char *widgetClass( ) { return "YContainerWidget"; }
 
     /**
      * Returns the number of child widgets.
      */
-    int numChildren() const;
+    int numChildren( ) const;
 
     /**
      * Returns one of the child widgets.
      */
-    YWidget *child(int i) const;
+    YWidget *child( int i) const;
 
     /**
      * Default implementation, that assumes exactly one child.
      * Returns the nicesize of the child.
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    long nicesize(YUIDimension dim);
+    long nicesize( YUIDimension dim);
 
     /**
      * Default implementation, that assumes exactly one child.
      * Returns, whether the child is stretchable
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    bool stretchable(YUIDimension dim);
+    bool stretchable( YUIDimension dim);
 
     /**
      * Default implementation, that assumes exactly one child.
      * Sets the size of the child.
      */
-    void setSize(long newwidth, long newheight);
+    void setSize( long newwidth, long newheight);
 
     /**
      * Adds a new child widget. I will take over the memory and
      * delete the child for you after use!
      */
-    void addChild(YWidget *child);
+    void addChild( YWidget *child);
 
     /**
-     * Removes and deletes all child widgets. Calls childRemoved()
+     * Removes and deletes all child widgets. Calls childRemoved( )
      * for each child just before it is being removed in order
      * to inform the derived ui specific widget.
      */
-    void removeChildren();
+    void removeChildren( );
 
     /**
      * Looks for a child widget with a certain ID. Searches
      * recursively.
      * @return A pointer to the found widget or 0 if non has been found
      */
-    YWidget *findWidget(const YCPValue & id) const;
+    YWidget *findWidget( const YCPValue & id) const;
 
     /**
      * Returns true, since this is a container widget.
      */
-    bool isContainer() const;
+    bool isContainer( ) const;
 
     /**
      * Child deletion notification. See YWidget.h for details.
      */
-    virtual void childDeleted(YWidget *child);
+    virtual void childDeleted( YWidget *child);
 
 
 protected:
@@ -117,14 +117,14 @@ protected:
      * widget that a child has been added. The default implementation
      * does nothing.
      */
-    virtual void childAdded(YWidget *child);
+    virtual void childAdded( YWidget *child);
 
     /**
      * Call back function that reports to the ui specific
      * widget that a child has been removed. The default implementation
      * does nothing.
      */
-    virtual void childRemoved(YWidget *child);
+    virtual void childRemoved( YWidget *child);
 
 
 public:
@@ -132,7 +132,7 @@ public:
      * Debugging function:
      * Dump the widget tree from here on to the log file.
      */
-    void dumpWidgetTree(int indentationLevel = 0 );
+    void dumpWidgetTree( int indentationLevel = 0 );
 
     /**
      * Debugging function:
@@ -140,7 +140,7 @@ public:
      * If there is no such dialog parent, dump the widget tree from
      * here on.
      */
-    void dumpDialogWidgetTree();
+    void dumpDialogWidgetTree( );
 
     /**
      * Recursively save the user input of all child widgets to a macro recorder:
@@ -154,10 +154,10 @@ public:
 protected:
 
     /**
-     * Helper function for dumpWidgetTree():
+     * Helper function for dumpWidgetTree( ):
      * Dump one widget to the log file.
      */
-    void dumpWidget(YWidget *w, int indentationLevel);
+    void dumpWidget( YWidget *w, int indentationLevel);
 
 
     /**

@@ -24,7 +24,7 @@
 
 
 YPackageSelector::YPackageSelector( YWidgetOpt &opt )
-    : YWidget(opt)
+    : YWidget( opt)
 {
     y2debug( "YPackageSelector" );
 

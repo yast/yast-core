@@ -27,55 +27,55 @@
 #include "YLabel.h"
 
 
-YLabel::YLabel(YWidgetOpt &opt, YCPString text)
-    : YWidget(opt)
-    , text(text)
+YLabel::YLabel( YWidgetOpt &opt, YCPString text)
+    : YWidget( opt)
+    , text( text)
 {
-    y2debug("YLabel(%s)", text->value_cstr());
+    y2debug( "YLabel(%s)", text->value_cstr( ));
 }
 
 
-YCPValue YLabel::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YLabel::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /**
      * @property string Value the label text
      */
-    if (s == YUIProperty_Value)
+    if ( s == YUIProperty_Value)
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    setLabel(newValue->asString());
-	    return YCPBoolean(true);
+	    setLabel( newValue->asString());
+	    return YCPBoolean( true);
 	}
 	else
 	{
-	    y2error("Label: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString().c_str());
-	    return YCPBoolean(false);
+	    y2error( "Label: Invalid parameter %s for Value property. Must be string",
+		    newValue->toString( ).c_str());
+	    return YCPBoolean( false);
 	}
     }
-    else return YWidget::changeWidget(property, newValue);
+    else return YWidget::changeWidget( property, newValue);
 }
 
 
 
-YCPValue YLabel::queryWidget(const YCPSymbol & property)
+YCPValue YLabel::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if (s == YUIProperty_Value)	return getLabel();
-    else return YWidget::queryWidget(property);
+    string s = property->symbol( );
+    if ( s == YUIProperty_Value)	return getLabel( );
+    else return YWidget::queryWidget( property);
 }
 
 
-void YLabel::setLabel(const YCPString &label)
+void YLabel::setLabel( const YCPString &label)
 {
     text = label;
 }
 
 
-YCPString YLabel::getLabel()
+YCPString YLabel::getLabel( )
 {
     return text;
 }

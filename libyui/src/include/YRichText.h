@@ -35,29 +35,29 @@ public:
      * @param text the initial text of the RichText
      * @param opt the widget options
      */
-    YRichText(YWidgetOpt &opt, YCPString text);
+    YRichText( YWidgetOpt &opt, YCPString text);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YRichText"; }
+    virtual char *widgetClass( ) { return "YRichText"; }
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Change the RichText text. Overload this, but call
      * YRichText::setRichText at the end of your own function.
      */
-    virtual void setText(const YCPString & RichText);
+    virtual void setText( const YCPString & RichText);
 
     /**
      * Get the current RichText text. This method cannot be overidden. The value
@@ -65,7 +65,7 @@ public:
      * i.e. not by the ui. Therefore setRichText stores the current RichText in
      * #RichText.
      */
-    YCPString getText();
+    YCPString getText( );
 
 
 protected:

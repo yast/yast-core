@@ -36,30 +36,30 @@ public:
     /**
      * Destructor
      */
-    virtual ~YMacroPlayer();
+    virtual ~YMacroPlayer( );
 
     /**
      * Report error status
      */
-    bool error() const { return _error; }
+    bool error( ) const { return _error; }
 
     /**
      * Returns "true" if the execution of the entire macro is finished.
-     * Undefined on error, so check for error() first!
+     * Undefined on error, so check for error( ) first!
      */
-    bool finished();
+    bool finished( );
 
     /**
      * Return the next macro block to execute and increment the internal block
-     * counter. Returns YCPNull() on any previous error or if finished.
-     * Check for error() or finished() before calling this!
+     * counter. Returns YCPNull( ) on any previous error or if finished.
+     * Check for error( ) or finished( ) before calling this!
      */
-    YCPBlock nextBlock();
+    YCPBlock nextBlock( );
 
     /**
      * Rewind macro execution - prepare to redo from start
      */
-    void rewind();
+    void rewind( );
 
 protected:
 
@@ -71,12 +71,12 @@ protected:
     /**
      * Clear error status
      */
-    void clearError()	{ _error = false; }
+    void clearError( )	{ _error = false; }
 
     /**
      * Set error status
      */
-    void setError()	{ _error = true; }
+    void setError( )	{ _error = true; }
 
     /**
      * The parsed macro

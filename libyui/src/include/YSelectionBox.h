@@ -38,47 +38,47 @@ public:
      * @param text the initial text of the SelectionBox label
      * @param opt the widget options
      */
-    YSelectionBox(YWidgetOpt &opt, YCPString label);
+    YSelectionBox( YWidgetOpt &opt, YCPString label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YSelectionBox"; }
+    virtual char *widgetClass( ) { return "YSelectionBox"; }
 
     /**
      * Adds an item to the selection box.
      */
-    void addItem(const YCPValue &id, const YCPString & text, bool selected);
+    void addItem( const YCPValue &id, const YCPString & text, bool selected);
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Change the label text. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label text. This method cannot be overidden.  The value
      * of the label cannot be changed other than by calling setLabel, i.e. not
      * by the ui. Therefore setLabel stores the current label in #label.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
 
 protected:
@@ -89,23 +89,23 @@ protected:
      * @param index index of the new item.
      * @param selected true if the item should be selected.
      */
-    virtual void itemAdded(const YCPString & string, int index, bool selected);
+    virtual void itemAdded( const YCPString & string, int index, bool selected);
 
     /**
      * Returns the index of the currently
      * selected item or -1 if no item is selected.
      */
-    virtual int getCurrentItem() = 0;
+    virtual int getCurrentItem( ) = 0;
 
     /**
      * Selects an item from the list.
      */
-    virtual void setCurrentItem(int index) = 0;
+    virtual void setCurrentItem( int index) = 0;
 
     /**
      * Returns the current number of items
      */
-    int numItems() const;
+    int numItems( ) const;
 
     /**
      * Searches for an item with a certain id or a certain label.
@@ -113,7 +113,7 @@ protected:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId(const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue &id, bool report_error);
 
     /**
      * The current label of the selectionbox

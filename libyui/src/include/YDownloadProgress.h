@@ -42,16 +42,16 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YDownloadProgress"; }
+    virtual char *widgetClass( ) { return "YDownloadProgress"; }
 
     /**
-     * Implements the ChangeWidget() UI command.
+     * Implements the ChangeWidget( ) UI command.
      */
     YCPValue changeWidget( const YCPSymbol & property,
 			   const YCPValue &  newValue );
 
     /**
-     * Implements the QueryWidget() UI command.
+     * Implements the QueryWidget( ) UI command.
      */
     YCPValue queryWidget( const YCPSymbol & property );
 
@@ -66,7 +66,7 @@ public:
     /**
      * Change the filename.
      *
-     * Overwrite this, but call YDownloadProgress::setFilename()
+     * Overwrite this, but call YDownloadProgress::setFilename( )
      * at the end of your own method.
      */
     virtual void setFilename( const YCPString &newFilename );
@@ -74,22 +74,22 @@ public:
     /**
      * Change the expected size of the file being downloaded.
      *
-     * Overwrite this, but call YDownloadProgress::setExpectedSize()
+     * Overwrite this, but call YDownloadProgress::setExpectedSize( )
      * at the end of your own method.
      */
     virtual void setExpectedSize( int newExpectedSize );
 
 
-    YCPString	label()		{ return _label;	}
-    YCPString	filename()	{ return _filename;	}
-    int		expectedSize()	{ return _expectedSize; }
+    YCPString	label( )		{ return _label;	}
+    YCPString	filename( )	{ return _filename;	}
+    int		expectedSize( )	{ return _expectedSize; }
 
 
     /**
      * Returns the current size of the file that is being downloaded.
-     * Returns 0 if this file doesn't exist (yet).
+     * Returns 0 if this file doesn't exist ( yet).
      */
-    long currentFileSize();
+    long currentFileSize( );
 
 
 private:

@@ -31,130 +31,130 @@
 #include "YTable.h"
 
 
-YTable::YTable(YWidgetOpt &opt, int num_cols)
-    : YWidget(opt)
-    , num_cols(num_cols)
+YTable::YTable( YWidgetOpt &opt, int num_cols)
+    : YWidget( opt)
+    , num_cols( num_cols)
 {
-    setDefaultStretchable(YD_HORIZ, true);
-    setDefaultStretchable(YD_VERT,  true);
+    setDefaultStretchable( YD_HORIZ, true);
+    setDefaultStretchable( YD_VERT,  true);
 }
 
 
-YCPValue YTable::changeWidget(const YCPSymbol & property,
+YCPValue YTable::changeWidget( const YCPSymbol & property,
 			      const YCPValue & newValue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /*
      * @property integer CurrentItem the ID of the currently selected item
      */
-    if (s == YUIProperty_CurrentItem)  // Sort for item with that id
+    if ( s == YUIProperty_CurrentItem)  // Sort for item with that id
     {
-	int index = itemWithId(newValue, true); // true: log error
-	if (index < 0) return YCPBoolean(false);
+	int index = itemWithId( newValue, true); // true: log error
+	if ( index < 0) return YCPBoolean( false);
 	else
 	{
-	    setCurrentItem(index);
-	    return YCPBoolean(true);
+	    setCurrentItem( index);
+	    return YCPBoolean( true);
 	}
     }
 
     /*
-     * @property list(item) Items a list of all table items
+     * @property list( item) Items a list of all table items
      */
-    else if (s == YUIProperty_Items) // Change whole selection box!
+    else if ( s == YUIProperty_Items) // Change whole selection box!
     {
-	if (!newValue->isList())
+	if ( !newValue->isList())
 	{
-	    y2warning("Items property of Table widget must be a list");
-	    return YCPBoolean(false);
+	    y2warning( "Items property of Table widget must be a list");
+	    return YCPBoolean( false);
 	}
 	OptimizeChanges below( *this ); // delay screen updates until this block is left
 
-	itemsCleared();
-	rows.clear();
-	return YCPBoolean(addItems(newValue->asList()));
+	itemsCleared( );
+	rows.clear( );
+	return YCPBoolean( addItems(newValue->asList()));
     }
-    else return YWidget::changeWidget(property, newValue);
+    else return YWidget::changeWidget( property, newValue);
 }
 
 
 
-YCPValue YTable::changeWidget(const YCPTerm & property, const YCPValue & newvalue)
+YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newvalue)
 {
-    string s = property->symbol()->symbol();
+    string s = property->symbol( )->symbol();
     /*
-     * @property item		Item(id)	read: a single item (string or term)
-     * @property integer|string	Item(id,column) write: replacement for one specific cell (see example)
+     * @property item		Item( id)	read: a single item ( string or term)
+     * @property integer|string	Item( id,column) write: replacement for one specific cell ( see example)
      */
-    if (s == YUIProperty_Item)
+    if ( s == YUIProperty_Item)
     {
-	if (property->size() != 2 || !property->value(1)->isInteger())
+	if ( property->size() != 2 || !property->value( 1)->isInteger())
 	{
-	    y2error("Table %s: property `Item() needs two arguments: item id and column number",
-		    id()->toString().c_str());
-	    return YCPBoolean(false);
+	    y2error( "Table %s: property `Item( ) needs two arguments: item id and column number",
+		    id( )->toString().c_str());
+	    return YCPBoolean( false);
 	}
-	YCPValue itemid = property->value(0);
-	int item_nr = itemWithId(itemid, true);
-	if (item_nr < 0) return YCPBoolean(false);
+	YCPValue itemid = property->value( 0);
+	int item_nr = itemWithId( itemid, true);
+	if ( item_nr < 0) return YCPBoolean( false);
 
-	int colnum = (int)(property->value(1)->asInteger()->value());
-	if (colnum >= numCols() || colnum < 0)
+	int colnum = ( int)(property->value(1)->asInteger()->value());
+	if ( colnum >= numCols( ) || colnum < 0)
 	{
-	    y2error("Table %s: Invalid column number %d",
-		    id()->toString().c_str(), colnum);
-	    return YCPBoolean(false);
+	    y2error( "Table %s: Invalid column number %d",
+		    id( )->toString().c_str(), colnum);
+	    return YCPBoolean( false);
 	}
 
 	string newtext;
-	if (newvalue->isString()) newtext = newvalue->asString()->value();
-	else if (newvalue->isInteger()) newtext = newvalue->asInteger()->toString();
+	if ( newvalue->isString()) newtext = newvalue->asString( )->value();
+	else if ( newvalue->isInteger()) newtext = newvalue->asInteger( )->toString();
 	else
 	{
-	    y2error("Table %s: Invalid value for cell (%s|%d). Must be string or integer",
-		    id()->toString().c_str(), itemid->toString().c_str(), colnum);
-	    return YCPBoolean(false);
+	    y2error( "Table %s: Invalid value for cell ( %s|%d). Must be string or integer",
+		    id( )->toString().c_str(), itemid->toString( ).c_str(), colnum);
+	    return YCPBoolean( false);
 	}
 
 	rows[item_nr].elements[colnum] = newtext;
-	cellChanged(item_nr, colnum, YCPString( newtext ) );
-	return YCPBoolean(true);
+	cellChanged( item_nr, colnum, YCPString( newtext ) );
+	return YCPBoolean( true);
     }
-    else return YWidget::changeWidget(property, newvalue);
+    else return YWidget::changeWidget( property, newvalue);
 }
 
 
-YCPValue YTable::queryWidget(const YCPSymbol & property)
+YCPValue YTable::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if (s == YUIProperty_CurrentItem)
+    string s = property->symbol( );
+    if ( s == YUIProperty_CurrentItem)
     {
-	int index = getCurrentItem();
-	y2debug("current item: %d", index);
-	if (index >= 0) return rows[index].id;
-	else	      return YCPVoid();
+	int index = getCurrentItem( );
+	y2debug( "current item: %d", index);
+	if ( index >= 0) return rows[index].id;
+	else	      return YCPVoid( );
     }
-    else return YWidget::queryWidget(property);
+    else return YWidget::queryWidget( property);
 }
 
 
-YCPValue YTable::queryWidget(const YCPTerm &property)
+YCPValue YTable::queryWidget( const YCPTerm &property)
 {
-    string s = property->symbol()->symbol();
-    if (s == YUIProperty_Item)
+    string s = property->symbol( )->symbol();
+    if ( s == YUIProperty_Item)
     {
-	if (property->size() != 1)
+	if ( property->size() != 1)
 	{
-	    y2error("Table %s: property `Item() needs one argument",
-		    id()->toString().c_str());
-	    return YCPVoid();
+	    y2error( "Table %s: property `Item( ) needs one argument",
+		    id( )->toString().c_str());
+	    return YCPVoid( );
 	}
-	int item_nr = itemWithId(property->value(0), true);
-	if (item_nr < 0) return YCPVoid();
-	else	       return rows[item_nr].makeTerm();
+	int item_nr = itemWithId( property->value(0), true);
+	if ( item_nr < 0) return YCPVoid( );
+	else	       return rows[item_nr].makeTerm( );
     }
-    else return YWidget::queryWidget(property);
+    else return YWidget::queryWidget( property);
 }
 
 
@@ -162,13 +162,13 @@ YCPValue YTable::queryWidget(const YCPTerm &property)
  * Insert a number of items.
  * Reimplemented in YQTable to keep QListView happy.
  */
-bool YTable::addItems(const YCPList &itemlist)
+bool YTable::addItems( const YCPList &itemlist)
 {
-    for ( int i = 0; i < itemlist->size(); i++ )
+    for ( int i = 0; i < itemlist->size( ); i++ )
     {
-	YCPValue item = itemlist->value(i);
+	YCPValue item = itemlist->value( i);
 
-	if ( ! addItem(item) )
+	if ( ! addItem( item) )
 	    return false;	// Error
     }
 
@@ -176,101 +176,101 @@ bool YTable::addItems(const YCPList &itemlist)
 }
 
 
-bool YTable::addItem(const YCPValue &item)
+bool YTable::addItem( const YCPValue &item)
 {
-    if (!item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item)
+    if ( !item->isTerm() || item->asTerm( )->symbol()->symbol() != YUISymbol_item)
     {
-	y2error("Invalid item specification %s: Must be `" YUISymbol_item "() term",
-		  item->toString().c_str());
+	y2error( "Invalid item specification %s: Must be `" YUISymbol_item "( ) term",
+		  item->toString( ).c_str());
 	return false;
     }
 
-    YCPList collist = item->asTerm()->args();
-    if (collist->size() != numCols() + 1)
+    YCPList collist = item->asTerm( )->args();
+    if ( collist->size() != numCols( ) + 1)
     {
-	y2error("Invalid item specification %s: Wrong number of elements",
-		  item->toString().c_str());
+	y2error( "Invalid item specification %s: Wrong number of elements",
+		  item->toString( ).c_str());
 	return false;
     }
 
-    if (!collist->value(0)->isTerm()
+    if ( !collist->value(0)->isTerm()
 	|| collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
 	|| collist->value(0)->asTerm()->size() != 1)
     {
-	y2error("Invalid item specification %s: Must begin with `" YUISymbol_id "() term",
-		  item->toString().c_str());
+	y2error( "Invalid item specification %s: Must begin with `" YUISymbol_id "( ) term",
+		  item->toString( ).c_str());
 	return false;
     }
 
-    YCPValue id = collist->value(0)->asTerm()->value(0);
+    YCPValue id = collist->value( 0)->asTerm()->value(0);
 
     // Prepare stl vector of strings of the content
     vector<string> row;
-    for (int r=1; r< collist->size(); r++)
+    for ( int r=1; r< collist->size( ); r++)
     {
-	YCPValue value = collist->value(r);
-	if      (value->isString()) row.push_back(value->asString()->value());
-	else if (value->isInteger()) row.push_back(value->toString());
-	else if (value->isVoid()) row.push_back("");
+	YCPValue value = collist->value( r);
+	if      ( value->isString()) row.push_back( value->asString()->value());
+	else if ( value->isInteger()) row.push_back( value->toString());
+	else if ( value->isVoid()) row.push_back( "");
 	else
 	{
-	    y2error("Invalid value %s in item. Must be string, integer or void",
-		      value->toString().c_str());
-	    row.push_back("");
+	    y2error( "Invalid value %s in item. Must be string, integer or void",
+		      value->toString( ).c_str());
+	    row.push_back( "");
 	}
     }
-    addItem(id, row);
+    addItem( id, row);
     return true;
 }
 
 
 
-void YTable::addItem(const YCPValue &id, vector<string> elements)
+void YTable::addItem( const YCPValue &id, vector<string> elements)
 {
-    rows.push_back(YTableRow(id, elements));
-    itemAdded(elements, rows.size() - 1);
+    rows.push_back( YTableRow(id, elements));
+    itemAdded( elements, rows.size( ) - 1);
 }
 
 
-void YTable::itemAdded(vector<string>, int)
+void YTable::itemAdded( vector<string>, int)
 {
     // default dummy implementaion
 }
 
 
-int YTable::numItems() const
+int YTable::numItems( ) const
 {
-    return rows.size();
+    return rows.size( );
 }
 
 
-int YTable::itemWithId(const YCPValue &id, bool report_error)
+int YTable::itemWithId( const YCPValue &id, bool report_error)
 {
-    for (int i=0; i<numItems(); i++)
+    for ( int i=0; i<numItems( ); i++)
     {
-	if      (rows[i].id->equal(id)) return i;
+	if      ( rows[i].id->equal(id)) return i;
     }
-    if (report_error)
-	y2error("Table: No item %s existing", id->toString().c_str());
+    if ( report_error)
+	y2error( "Table: No item %s existing", id->toString( ).c_str());
 
     return -1;
 }
 
-int YTable::numCols() const
+int YTable::numCols( ) const
 {
     return num_cols;
 }
 
 
-YCPTerm YTableRow::makeTerm() const
+YCPTerm YTableRow::makeTerm( ) const
 {
     // Return the item as term
-    YCPTerm itemterm(YUISymbol_item, true);
-    YCPTerm idterm(YUISymbol_id, true);
-    idterm->add(id);
-    itemterm->add(idterm);
-    for (unsigned int c=0; c < elements.size(); c++)
-	itemterm->add(YCPString(elements[c]));
+    YCPTerm itemterm( YUISymbol_item, true);
+    YCPTerm idterm( YUISymbol_id, true);
+    idterm->add( id);
+    itemterm->add( idterm);
+    for ( unsigned int c=0; c < elements.size( ); c++)
+	itemterm->add( YCPString(elements[c]));
     return itemterm;
 }
 

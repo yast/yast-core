@@ -40,7 +40,7 @@ public:
     /**
      * Symbols for the different kinds of alignments. AT_UNCHANGED
      * means that the widget should not be made stretchable and
-     * have the default alignment (centered).
+     * have the default alignment ( centered).
      */
 
     /**
@@ -49,25 +49,25 @@ public:
      * @param valign How the child widget is aligned vertically
      * @param opt the widget options
      */
-    YAlignment(YWidgetOpt &opt, YAlignmentType halign, YAlignmentType valign);
+    YAlignment( YWidgetOpt &opt, YAlignmentType halign, YAlignmentType valign);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YAlignment"; }
+    virtual char *widgetClass( ) { return "YAlignment"; }
 
     /**
      * Moves a child widget to a new position.
      */
-    virtual void moveChild(YWidget *child, long newx, long newy) = 0;
+    virtual void moveChild( YWidget *child, long newx, long newy) = 0;
 
     /**
      * In an aligned dimension the widget is always stretchable.
      * In an unchanged dimension the widget is stretchable if the
      * child is stretchable.
      */
-    bool stretchable(YUIDimension dim);
+    bool stretchable( YUIDimension dim);
 
     /**
      * Sets the size and move the child widget according to its
@@ -75,7 +75,7 @@ public:
      * function in order to resize the ui specific widget, but
      * calls this method at the end.
      */
-    void setSize(long newwidth, long newheight);
+    void setSize( long newwidth, long newheight);
 
 protected:
     /**

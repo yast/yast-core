@@ -36,68 +36,68 @@ public:
      * Creates a new text entry with a label and an initial text. Enters it into
      * the radio button group rbg.
      */
-    YRadioButton(YWidgetOpt &opt, const YCPString & label, YRadioButtonGroup *rbg);
+    YRadioButton( YWidgetOpt &opt, const YCPString & label, YRadioButtonGroup *rbg);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YRadioButton"; }
+    virtual char *widgetClass( ) { return "YRadioButton"; }
 
     /**
      * Cleans up. Removes the button from the radio button group
      */
-    virtual ~YRadioButton();
+    virtual ~YRadioButton( );
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Set the text in the entry to a new value
      */
-    virtual void setValue(const YCPBoolean & checked) = 0;
+    virtual void setValue( const YCPBoolean & checked) = 0;
 
     /**
      * get the text currently entered in the text entry
      */
-    virtual YCPBoolean getValue() = 0;
+    virtual YCPBoolean getValue( ) = 0;
 
     /**
      * change the label of the text entry. Overload this, but call
      * YRadioButton::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label of the text entry. This method cannot be overidden.
      * The value of the label cannot be changed other than by calling setLabel,
      * i.e. not by the ui. Therefore setLabel stores the current label in #label.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * This function is called from @ref YRadioButtonGroup#~YRadioButtonGroup and
      * tells that the pointer to the radiobuttongroup is not longer valid.
      */
-    void buttonGroupIsDead();
+    void buttonGroupIsDead( );
 
     /**
      * Get a pointer to the radio button group this button belongs to.
      */
-    YRadioButtonGroup *buttonGroup();
+    YRadioButtonGroup *buttonGroup( );
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
 
 protected:

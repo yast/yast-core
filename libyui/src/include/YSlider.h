@@ -45,16 +45,16 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YSlider"; }
+    virtual char *widgetClass( ) { return "YSlider"; }
 
     /**
-     * Implements the ChangeWidget() UI command.
+     * Implements the ChangeWidget( ) UI command.
      */
     YCPValue changeWidget( const YCPSymbol & property,
 			   const YCPValue &  newValue );
 
     /**
-     * Implements the QueryWidget() UI command.
+     * Implements the QueryWidget( ) UI command.
      */
     YCPValue queryWidget( const YCPSymbol & property );
 
@@ -69,23 +69,23 @@ public:
     /**
      * Change the slider value.
      *
-     * Overload this, but call YSlider::setValue()
+     * Overload this, but call YSlider::setValue( )
      * at the end of your own method.
      */
     virtual void setValue( int newValue );
 
 
-    YCPString	label()		{ return _label; }
-    int		value()		{ return _value; }
-    int		minValue()	{ return _minValue; }
-    int		maxValue()	{ return _maxValue; }
+    YCPString	label( )		{ return _label; }
+    int		value( )		{ return _value; }
+    int		minValue( )	{ return _minValue; }
+    int		maxValue( )	{ return _maxValue; }
 
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
 
 private:

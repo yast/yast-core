@@ -20,13 +20,13 @@
 
 #include "YReplacePoint.h"
 
-YReplacePoint::YReplacePoint(YWidgetOpt &opt)
-    : YContainerWidget(opt)
+YReplacePoint::YReplacePoint( YWidgetOpt &opt)
+    : YContainerWidget( opt)
 {
     // NOP
 }
 
-bool YReplacePoint::isReplacePoint() const
+bool YReplacePoint::isReplacePoint( ) const
 {
     return true;
 }

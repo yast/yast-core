@@ -27,56 +27,56 @@
 #include "YPushButton.h"
 
 
-YPushButton::YPushButton(YWidgetOpt &opt, YCPString label)
-    : YWidget(opt)
-    , label(label)
+YPushButton::YPushButton( YWidgetOpt &opt, YCPString label)
+    : YWidget( opt)
+    , label( label)
 {
 }
 
 
 
 
-void YPushButton::setLabel(const YCPString &label)
+void YPushButton::setLabel( const YCPString &label)
 {
     this->label = label;
 }
 
 
-YCPString YPushButton::getLabel()
+YCPString YPushButton::getLabel( )
 {
     return label;
 }
 
 
-YCPValue YPushButton::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YPushButton::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /**
      * @property string Label the text on the PushButton
      */
-    if (s == YUIProperty_Label)
+    if ( s == YUIProperty_Label)
     {
-	if (newvalue->isString())
+	if ( newvalue->isString())
 	{
-	    setLabel(newvalue->asString());
-	    return YCPBoolean(true);
+	    setLabel( newvalue->asString());
+	    return YCPBoolean( true);
 	}
 	else
 	{
-	    y2error("PushButton: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str());
-	    return YCPBoolean(false);
+	    y2error( "PushButton: Invalid parameter %s for Label property. Must be string",
+		    newvalue->toString( ).c_str());
+	    return YCPBoolean( false);
 	}
     }
-    else return YWidget::changeWidget(property, newvalue);
+    else return YWidget::changeWidget( property, newvalue);
 }
 
 
 
-YCPValue YPushButton::queryWidget(const YCPSymbol & property)
+YCPValue YPushButton::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if (s == YUIProperty_Label) return getLabel();
-    else return YWidget::queryWidget(property);
+    string s = property->symbol( );
+    if ( s == YUIProperty_Label) return getLabel( );
+    else return YWidget::queryWidget( property);
 }

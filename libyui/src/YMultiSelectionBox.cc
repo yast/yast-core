@@ -28,11 +28,11 @@
 #include "YMultiSelectionBox.h"
 
 
-YMultiSelectionBox::YMultiSelectionBox(YWidgetOpt &opt, YCPString label)
-    : YWidget(opt)
-    , label(label)
+YMultiSelectionBox::YMultiSelectionBox( YWidgetOpt &opt, YCPString label)
+    : YWidget( opt)
+    , label( label)
 {
-    y2debug("YMultiSelectionBox(%s)", label->value_cstr());
+    y2debug( "YMultiSelectionBox(%s)", label->value_cstr( ));
 
     // Derived classes need to check opt.shrinkable!
 
@@ -42,26 +42,26 @@ YMultiSelectionBox::YMultiSelectionBox(YWidgetOpt &opt, YCPString label)
 }
 
 
-YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
 {
-    string sym = property->symbol();
+    string sym = property->symbol( );
 
     /**
      * @property string Label
      * The label above the list describing what it is all about
      */
-    if (sym == YUIProperty_Label)
+    if ( sym == YUIProperty_Label)
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    setLabel( newValue->asString() );
+	    setLabel( newValue->asString( ) );
 
 	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error("MultiSelectionBox: Invalid parameter %s for Label property. Must be string",
-		    newValue->toString().c_str());
+	    y2error( "MultiSelectionBox: Invalid parameter %s for Label property. Must be string",
+		    newValue->toString( ).c_str());
 
 	    return YCPBoolean( false );
 	}
@@ -74,10 +74,10 @@ YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol & property, const YCPV
     else if ( sym == YUIProperty_CurrentItem )	 // Select item with that id
     {
 	int index = itemWithId( newValue, true ); // true: log error
-	if (index < 0) return YCPBoolean( false );
+	if ( index < 0) return YCPBoolean( false );
 	else
 	{
-	    setCurrentItem(index);
+	    setCurrentItem( index);
 	    return YCPBoolean( true );
 	}
     }
@@ -87,21 +87,21 @@ YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol & property, const YCPV
      */
     else if ( sym == YUIProperty_SelectedItems )
     {
-	if ( ! newValue->isList() )
+	if ( ! newValue->isList( ) )
 	{
 	    y2error( "MultiSelectionBox: Can't set property %s: "
 		     "Expected list of IDs or item labels, not %s",
-		     sym.c_str(), newValue->toString().c_str() );
+		     sym.c_str( ), newValue->toString( ).c_str() );
 
 	    return YCPBoolean( false );
 	}
 
 	OptimizeChanges below( *this ); // delay screen updates until this block is left
 
-	deselectAllItems();
-	YCPList selected_items = newValue->asList();
+	deselectAllItems( );
+	YCPList selected_items = newValue->asList( );
 
-	for ( int i = 0; i < selected_items->size(); i++ )
+	for ( int i = 0; i < selected_items->size( ); i++ )
 	{
 	    YCPValue id = selected_items->value( i );
 	    int index	= itemWithId( id, true ); // true: log error
@@ -116,36 +116,36 @@ YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol & property, const YCPV
 
 	return YCPBoolean( false );
     }
-    else return YWidget::changeWidget(property, newValue);
+    else return YWidget::changeWidget( property, newValue);
 }
 
 
 
-YCPValue YMultiSelectionBox::queryWidget(const YCPSymbol & property)
+YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property)
 {
-    string sym = property->symbol();
-    if      ( sym == YUIProperty_Label       ) return getLabel();
+    string sym = property->symbol( );
+    if      ( sym == YUIProperty_Label       ) return getLabel( );
     else if ( sym == YUIProperty_CurrentItem )
     {
-	int index = getCurrentItem();
-	y2debug("current item: %d", index);
+	int index = getCurrentItem( );
+	y2debug( "current item: %d", index);
 
 	if ( index >= 0 )
 	{
-	    if ( item_ids->value(index).isNull() ) return item_labels->value( index );
+	    if ( item_ids->value( index).isNull() ) return item_labels->value( index );
 	    else return item_ids->value( index );
 	}
-	else return YCPVoid();
+	else return YCPVoid( );
     }
     else if ( sym == YUIProperty_SelectedItems )
     {
 	YCPList selected_items;
 
-	for ( int i = 0; i < numItems(); i++ )
+	for ( int i = 0; i < numItems( ); i++ )
 	{
 	    if ( itemIsSelected( i ) )	// ask specific UI for selection state
 	    {
-		selected_items->add( item_ids->value( i ).isNull() ?
+		selected_items->add( item_ids->value( i ).isNull( ) ?
 				     item_labels->value( i ) : item_ids->value( i ) );
 	    }
 	}
@@ -162,7 +162,7 @@ void YMultiSelectionBox::setLabel( const YCPString &label )
 }
 
 
-YCPString YMultiSelectionBox::getLabel()
+YCPString YMultiSelectionBox::getLabel( )
 {
     return label;
 }
@@ -172,7 +172,7 @@ void YMultiSelectionBox::addItem( const YCPString &	text,
 				  const YCPValue  &	id,
 				  bool 			selected )
 {
-    y2debug( "Adding item '%s'", text->value().c_str() );
+    y2debug( "Adding item '%s'", text->value( ).c_str() );
 
     item_labels->add( text );
     item_ids->add( id );
@@ -180,28 +180,28 @@ void YMultiSelectionBox::addItem( const YCPString &	text,
 }
 
 
-int YMultiSelectionBox::numItems() const
+int YMultiSelectionBox::numItems( ) const
 {
-    return item_ids->size();
+    return item_ids->size( );
 }
 
 
-void YMultiSelectionBox::deleteAllItems()
+void YMultiSelectionBox::deleteAllItems( )
 {
-    item_labels = YCPList();
-    item_ids	= YCPList();
+    item_labels = YCPList( );
+    item_ids	= YCPList( );
 }
 
 
-int YMultiSelectionBox::itemWithId(const YCPValue &id, bool report_error)
+int YMultiSelectionBox::itemWithId( const YCPValue &id, bool report_error)
 {
-    for ( int i=0; i < numItems(); i++ )
+    for ( int i=0; i < numItems( ); i++ )
     {
-	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal(id) ) return i;
-	else if (item_labels->value(i)->equal(id)) return i;
+	if ( ! item_ids->value( i).isNull() && item_ids->value( i)->equal(id) ) return i;
+	else if ( item_labels->value(i)->equal(id)) return i;
     }
-    if (report_error)
-	y2error("MultiSelectionBox: No item %s existing", id->toString().c_str());
+    if ( report_error)
+	y2error( "MultiSelectionBox: No item %s existing", id->toString( ).c_str());
 
     return -1;
 }

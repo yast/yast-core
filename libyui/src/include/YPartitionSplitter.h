@@ -52,16 +52,16 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YPartitionSplitter"; }
+    virtual char *widgetClass( ) { return "YPartitionSplitter"; }
 
     /**
-     * Implements the ChangeWidget() UI command.
+     * Implements the ChangeWidget( ) UI command.
      */
     YCPValue changeWidget( const YCPSymbol & property,
 			   const YCPValue &  newValue );
 
     /**
-     * Implements the QueryWidget() UI command.
+     * Implements the QueryWidget( ) UI command.
      */
     YCPValue queryWidget( const YCPSymbol & property );
 
@@ -69,7 +69,7 @@ public:
     /**
      * Change the slider value.
      *
-     * Overload this, but call YPartitionSplitter::setValue()
+     * Overload this, but call YPartitionSplitter::setValue( )
      * at the end of your own method.
      */
     virtual void setValue( int newValue );
@@ -77,19 +77,19 @@ public:
 
     // Access methods
 
-    int 		usedSize()           	{ return _usedSize;		}
-    int 		totalFreeSize()      	{ return _totalFreeSize;	}
-    int 		newPartSize()           { return _newPartSize;		}
-    int 		minNewPartSize()	{ return _minNewPartSize;	}
-    int			maxNewPartSize()	{ return _totalFreeSize - _minFreeSize;    }
-    int 		minFreeSize()        	{ return _minFreeSize;			   }
-    int 		maxFreeSize()        	{ return _totalFreeSize - _minNewPartSize; }
-    int			remainingFreeSize()	{ return _totalFreeSize - _newPartSize;    }
-    const YCPString 	usedLabel()          	{ return _usedLabel;		}
-    const YCPString 	freeLabel()          	{ return _freeLabel;		}
-    const YCPString 	newPartLabel()         	{ return _newPartLabel;		}
-    const YCPString 	freeFieldLabel()     	{ return _freeFieldLabel;	}
-    const YCPString 	newPartFieldLabel()    	{ return _newPartFieldLabel;	}
+    int 		usedSize( )           	{ return _usedSize;		}
+    int 		totalFreeSize( )      	{ return _totalFreeSize;	}
+    int 		newPartSize( )           { return _newPartSize;		}
+    int 		minNewPartSize( )	{ return _minNewPartSize;	}
+    int			maxNewPartSize( )	{ return _totalFreeSize - _minFreeSize;    }
+    int 		minFreeSize( )        	{ return _minFreeSize;			   }
+    int 		maxFreeSize( )        	{ return _totalFreeSize - _minNewPartSize; }
+    int			remainingFreeSize( )	{ return _totalFreeSize - _newPartSize;    }
+    const YCPString 	usedLabel( )          	{ return _usedLabel;		}
+    const YCPString 	freeLabel( )          	{ return _freeLabel;		}
+    const YCPString 	newPartLabel( )         	{ return _newPartLabel;		}
+    const YCPString 	freeFieldLabel( )     	{ return _freeFieldLabel;	}
+    const YCPString 	newPartFieldLabel( )    	{ return _newPartFieldLabel;	}
 
     
     /**
@@ -97,12 +97,12 @@ public:
      * Inherited from YWidget.
      *
      * This widget is a special case: It has several subwidgets that might get
-     * a keyboard shortcut (yet none of them can be set later with
-     * UI::ChangeWidget()). It (currently) cannot be treated properly in the
+     * a keyboard shortcut ( yet none of them can be set later with
+     * UI::ChangeWidget( )). It ( currently) cannot be treated properly in the
      * shortcut checker / shortcut conflict resolver. This function is
      * overwritten here merely for the sake of completeness.
      */
-    const char *shortcutProperty() { return (const char *) 0; }
+    const char *shortcutProperty( ) { return ( const char *) 0; }
     
 
 private:

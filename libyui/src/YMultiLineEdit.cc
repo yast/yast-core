@@ -27,61 +27,61 @@
 #include "YMultiLineEdit.h"
 
 
-YMultiLineEdit::YMultiLineEdit(YWidgetOpt &opt, const YCPString &label)
-    : YWidget(opt)
-    , _label(label)
+YMultiLineEdit::YMultiLineEdit( YWidgetOpt &opt, const YCPString &label)
+    : YWidget( opt)
+    , _label( label)
 {
-    setDefaultStretchable(YD_HORIZ, true);
-    setDefaultStretchable(YD_VERT,  true);
+    setDefaultStretchable( YD_HORIZ, true);
+    setDefaultStretchable( YD_VERT,  true);
 }
 
 
-void YMultiLineEdit::setLabel(const YCPString & newLabel)
+void YMultiLineEdit::setLabel( const YCPString & newLabel)
 {
     _label = newLabel;
 }
 
 
 
-YCPValue YMultiLineEdit::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YMultiLineEdit::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /**
      * @property string Value
      * The text contents as one large string containing newlines.
      */
-    if (s == YUIProperty_Value )
+    if ( s == YUIProperty_Value )
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    setText( newValue->asString() );
-	    return YCPBoolean(true);
+	    setText( newValue->asString( ) );
+	    return YCPBoolean( true);
 	}
 	else
 	{
 	    y2error( "MultiLineEdit: Invalid Value property - string expected, not %s",
-		     newValue->toString().c_str() );
+		     newValue->toString( ).c_str() );
 
-	    return YCPBoolean(false);
+	    return YCPBoolean( false);
 	}
     }
     /**
      * @property string Label The label above the log text.
      */
-    else if (s == YUIProperty_Label )
+    else if ( s == YUIProperty_Label )
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    setLabel( newValue->asString() );
-	    return YCPBoolean(true);
+	    setLabel( newValue->asString( ) );
+	    return YCPBoolean( true);
 	}
 	else
 	{
 	    y2error( "MultiLineEdit: Invalid Label property - string expected, not %s",
-		     newValue->toString().c_str() );
+		     newValue->toString( ).c_str() );
 
-	    return YCPBoolean(false);
+	    return YCPBoolean( false);
 	}
     }
     else return YWidget::changeWidget( property, newValue );
@@ -89,12 +89,12 @@ YCPValue YMultiLineEdit::changeWidget(const YCPSymbol & property, const YCPValue
 
 
 
-YCPValue YMultiLineEdit::queryWidget(const YCPSymbol & property)
+YCPValue YMultiLineEdit::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if      (s == YUIProperty_Label) return label();
-    else if (s == YUIProperty_Value) return text();
-    else return YWidget::queryWidget(property);
+    string s = property->symbol( );
+    if      ( s == YUIProperty_Label) return label( );
+    else if ( s == YUIProperty_Value) return text( );
+    else return YWidget::queryWidget( property);
 }
 
 

@@ -26,10 +26,10 @@
 #include "YMenuButton.h"
 
 
-YMenuButton::YMenuButton(YWidgetOpt &opt, YCPString label)
-    : YWidget(opt)
-    , label(label)
-    , next_index(0)
+YMenuButton::YMenuButton( YWidgetOpt &opt, YCPString label)
+    : YWidget( opt)
+    , label( label)
+    , next_index( 0)
 {
     toplevel_menu = new YMenu( YCPString( "" ) );
 }
@@ -37,49 +37,49 @@ YMenuButton::YMenuButton(YWidgetOpt &opt, YCPString label)
 
 
 
-void YMenuButton::setLabel(const YCPString &label)
+void YMenuButton::setLabel( const YCPString &label)
 {
     this->label = label;
 }
 
 
-YCPString YMenuButton::getLabel()
+YCPString YMenuButton::getLabel( )
 {
     return label;
 }
 
 
-YCPValue YMenuButton::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YMenuButton::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /**
      * @property string Label the text on the MenuButton
      */
-    if (s == YUIProperty_Label)
+    if ( s == YUIProperty_Label)
     {
-	if (newvalue->isString())
+	if ( newvalue->isString())
 	{
-	    setLabel(newvalue->asString());
-	    return YCPBoolean(true);
+	    setLabel( newvalue->asString());
+	    return YCPBoolean( true);
 	}
 	else
 	{
-	    y2error("MenuButton: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str());
-	    return YCPBoolean(false);
+	    y2error( "MenuButton: Invalid parameter %s for Label property. Must be string",
+		    newvalue->toString( ).c_str());
+	    return YCPBoolean( false);
 	}
     }
-    else return YWidget::changeWidget(property, newvalue);
+    else return YWidget::changeWidget( property, newvalue);
 }
 
 
 
-YCPValue YMenuButton::queryWidget(const YCPSymbol & property)
+YCPValue YMenuButton::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if (s == YUIProperty_Label) return getLabel();
-    else return YWidget::queryWidget(property);
+    string s = property->symbol( );
+    if ( s == YUIProperty_Label) return getLabel( );
+    else return YWidget::queryWidget( property);
 }
 
 
@@ -120,17 +120,17 @@ YMenuButton::addSubMenu( const YCPString &	sub_menu_label,
 YCPValue
 YMenuButton::indexToId( int index )
 {
-    if ( index >= 0 && (unsigned) index < items.size() )
+    if ( index >= 0 && ( unsigned) index < items.size( ) )
     {
-	YCPValue id = items[ index ]->getId();
-	y2debug( "Selected menu item with ID '%s'", id->toString().c_str() );
+	YCPValue id = items[ index ]->getId( );
+	y2debug( "Selected menu item with ID '%s'", id->toString( ).c_str() );
 
 	return id;
     }
     else
     {
 	y2error( "No menu item with index %d", index );
-	return YCPVoid();
+	return YCPVoid( );
     }
 }
 

@@ -35,41 +35,41 @@ public:
     /**
      * Creates a new text entry with a label and an initial text.
      */
-    YTextEntry(YWidgetOpt &opt, const YCPString & label);
+    YTextEntry( YWidgetOpt &opt, const YCPString & label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YTextEntry"; }
+    virtual char *widgetClass( ) { return "YTextEntry"; }
 
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget for the widget specific properties.
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Set the text in the entry to a new value
      */
-    virtual void setText(const YCPString & text) = 0;
+    virtual void setText( const YCPString & text) = 0;
 
     /**
      * get the text currently entered in the text entry
      */
-    virtual YCPString getText() = 0;
+    virtual YCPString getText( ) = 0;
 
     /**
      * change the label of the text entry. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label of the text entry. This method cannot be
@@ -77,7 +77,7 @@ public:
      * calling setLabel, i.e. not by the ui. Therefore setLabel stores the
      * current label in #label.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * Change the valid input characters.
@@ -85,18 +85,18 @@ public:
      * Overload this, but call YTextEntry::setValidChars at the end of your own
      * method.
      */
-    virtual void setValidChars(const YCPString &validChars);
+    virtual void setValidChars( const YCPString &validChars);
 
     /**
      * Get the valid input characters.
      */
-    YCPString getValidChars();
+    YCPString getValidChars( );
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
     
 protected:

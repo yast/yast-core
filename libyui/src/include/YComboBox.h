@@ -34,47 +34,47 @@ public:
     /**
      * Constructor
      */
-    YComboBox(YWidgetOpt &opt, YCPString label);
+    YComboBox( YWidgetOpt &opt, YCPString label);
 
     /**
-     * Returns whether or not any value (not only from the list) can be
+     * Returns whether or not any value ( not only from the list) can be
      * entered.
      */
-    bool editable() const { return _editable; }
+    bool editable( ) const { return _editable; }
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YComboBox"; }
+    virtual char *widgetClass( ) { return "YComboBox"; }
 
     /**
      * Adds an item to the selection box.
      */
-    void addItem(const YCPValue &id, const YCPString & text, bool selected);
+    void addItem( const YCPValue &id, const YCPString & text, bool selected);
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property);
 
     /**
      * Change the label text. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString & label);
+    virtual void setLabel( const YCPString & label);
 
     /**
      * Get the current label text. This method cannot be overidden.
      * The value of the label cannot be changed other than by calling setLabel,
      * i.e. not by the ui. Therefore setLabel stores the current label in #label.
      */
-    YCPString getLabel();
+    YCPString getLabel( );
 
     /**
      * Change the valid input characters.
@@ -82,18 +82,18 @@ public:
      * Overload this, but call YComboBox::setValidChars at the end of your own
      * method.
      */
-    virtual void setValidChars(const YCPString &validChars);
+    virtual void setValidChars( const YCPString &validChars);
 
     /**
      * Get the valid input characters.
      */
-    YCPString getValidChars();
+    YCPString getValidChars( );
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty() { return YUIProperty_Label; }
+    const char *shortcutProperty( ) { return YUIProperty_Label; }
     
 
 protected:
@@ -104,31 +104,31 @@ protected:
      * @param index index of the new item.
      * @param selected true if the item should be selected.
      */
-    virtual void itemAdded(const YCPString & string, int index, bool selected);
+    virtual void itemAdded( const YCPString & string, int index, bool selected);
 
     /**
      * Returns the ComboBox value.
      */
-    virtual YCPString getValue() const = 0;
+    virtual YCPString getValue( ) const = 0;
 
     /**
      * Sets the ComboBox value to a random value that is not already in
      * the item list. Will be called for editable ComboBox widgets only.
      */
-    virtual void setValue(const YCPString &new_value) = 0;
+    virtual void setValue( const YCPString &new_value) = 0;
 
     /**
      * Selects an item from the list. Notice there intentionally is no
-     * corresponding getCurrentItem() method - use getValue() instead.
+     * corresponding getCurrentItem( ) method - use getValue( ) instead.
      */
-    virtual void setCurrentItem(int index) = 0;
+    virtual void setCurrentItem( int index) = 0;
 
 
 private:
     /**
      * Returns the current number of items
      */
-    int numItems() const;
+    int numItems( ) const;
 
     /**
      * Searches for an item with a certain id or a certain label.
@@ -136,12 +136,12 @@ private:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId(const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue &id, bool report_error);
 
     /**
      * Looks up the ID of a given list item's value.
      */
-    YCPValue IdForValue(const YCPValue &val);
+    YCPValue IdForValue( const YCPValue &val);
 
     /**
      * Save the widget's user input to a macro recorder.
@@ -173,7 +173,7 @@ private:
     YCPList item_labels;
 
     /**
-     * Any input (not only from the list) permitted?
+     * Any input ( not only from the list) permitted?
      */
     bool _editable;
 };

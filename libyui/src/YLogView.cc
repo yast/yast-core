@@ -26,44 +26,44 @@
 #include "YLogView.h"
 
 
-YLogView::YLogView(YWidgetOpt &opt, const YCPString &label, int visibleLines, int maxLines)
-    : YWidget(opt)
-    , _label(label)
-    , _visibleLines(visibleLines)
-    , _maxLines(maxLines)
+YLogView::YLogView( YWidgetOpt &opt, const YCPString &label, int visibleLines, int maxLines)
+    : YWidget( opt)
+    , _label( label)
+    , _visibleLines( visibleLines)
+    , _maxLines( maxLines)
 {
-    setDefaultStretchable(YD_HORIZ, true);
-    setDefaultStretchable(YD_VERT,  true);
+    setDefaultStretchable( YD_HORIZ, true);
+    setDefaultStretchable( YD_VERT,  true);
 }
 
 
-void YLogView::setLabel(const YCPString & newLabel)
+void YLogView::setLabel( const YCPString & newLabel)
 {
     _label = newLabel;
 }
 
 
-void YLogView::clearText()
+void YLogView::clearText( )
 {
-    _logText.clear();
+    _logText.clear( );
 }
 
 
 void YLogView::appendText( const YCPString & newText )
 {
-    string		text 	= newText->value();
+    string		text 	= newText->value( );
     string::size_type 	from	= 0;
     string::size_type 	to	= 0;
 
 
     // Split the text into single lines
 
-    while ( to < text.size() )
+    while ( to < text.size( ) )
     {
 	from = to;
 	to   = text.find( '\n', from );
 	if ( to == string::npos )		// no more newline
-	    to = text.size();
+	    to = text.size( );
 	else
 	    to++;				// include the newline
 
@@ -71,13 +71,13 @@ void YLogView::appendText( const YCPString & newText )
 	appendLine( text.substr( from, to - from ) );
     }
 
-    if ( to < text.size() )		// anything left over?
+    if ( to < text.size( ) )		// anything left over?
     {
 	// Output the rest
-	appendLine( text.substr( to, text.size() - to ) );
+	appendLine( text.substr( to, text.size( ) - to ) );
     }
 
-    setLogText( YCPString( logText() ) );// pass the entire text to the specific UI's widget
+    setLogText( YCPString( logText( ) ) );// pass the entire text to the specific UI's widget
 }
 
 
@@ -85,18 +85,18 @@ void YLogView::appendLine( const string & line )
 {
     _logText.push_back( line );
 
-    if ( maxLines() > 0 && _logText.size() > (unsigned) maxLines() )
+    if ( maxLines( ) > 0 && _logText.size( ) > ( unsigned) maxLines( ) )
     {
-	_logText.pop_front();
+	_logText.pop_front( );
     }
 }
 
 
-string YLogView::logText()
+string YLogView::logText( )
 {
     string text;
 
-    for ( unsigned i=0; i < _logText.size(); i++ )
+    for ( unsigned i=0; i < _logText.size( ); i++ )
     {
 	text += _logText[i];
     }
@@ -106,67 +106,67 @@ string YLogView::logText()
 
 
 
-YCPValue YLogView::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YLogView::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
 {
-    string s = property->symbol();
+    string s = property->symbol( );
 
     /**
      * @property string Value
      * All log lines. Set this property to replace or clear the entire contents.
      * Can only be set, not queried.
      */
-    if (s == YUIProperty_Value)
+    if ( s == YUIProperty_Value)
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    clearText();
-	    appendText( newValue->asString() );
-	    return YCPBoolean(true);
+	    clearText( );
+	    appendText( newValue->asString( ) );
+	    return YCPBoolean( true);
 	}
 	else
 	{
 	    y2error( "LogView: Invalid Value property - string expected, not %s",
-		     newValue->toString().c_str() );
+		     newValue->toString( ).c_str() );
 
-	    return YCPBoolean(false);
+	    return YCPBoolean( false);
 	}
     }
     /**
      * @property string LastLine
-     * The last log line. Set this property to append one or more line(s) to the log.
+     * The last log line. Set this property to append one or more line( s) to the log.
      * Can only be set, not queried.
      */
-    if (s == YUIProperty_LastLine)
+    if ( s == YUIProperty_LastLine)
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    appendText( newValue->asString() );
-	    return YCPBoolean(true);
+	    appendText( newValue->asString( ) );
+	    return YCPBoolean( true);
 	}
 	else
 	{
 	    y2error( "LogView: Invalid LastLine property - string expected, not %s",
-		     newValue->toString().c_str() );
+		     newValue->toString( ).c_str() );
 
-	    return YCPBoolean(false);
+	    return YCPBoolean( false);
 	}
     }
     /**
      * @property string Label The label above the log text.
      */
-    else if (s == YUIProperty_Label)
+    else if ( s == YUIProperty_Label)
     {
-	if (newValue->isString())
+	if ( newValue->isString())
 	{
-	    setLabel( newValue->asString() );
-	    return YCPBoolean(true);
+	    setLabel( newValue->asString( ) );
+	    return YCPBoolean( true);
 	}
 	else
 	{
 	    y2error( "LogView: Invalid Label property - string expected, not %s",
-		     newValue->toString().c_str() );
+		     newValue->toString( ).c_str() );
 
-	    return YCPBoolean(false);
+	    return YCPBoolean( false);
 	}
     }
     else return YWidget::changeWidget( property, newValue );
@@ -174,9 +174,9 @@ YCPValue YLogView::changeWidget(const YCPSymbol & property, const YCPValue & new
 
 
 
-YCPValue YLogView::queryWidget(const YCPSymbol & property)
+YCPValue YLogView::queryWidget( const YCPSymbol & property)
 {
-    string s = property->symbol();
-    if (s == YUIProperty_Label) return label();
-    else return YWidget::queryWidget(property);
+    string s = property->symbol( );
+    if ( s == YUIProperty_Label) return label( );
+    else return YWidget::queryWidget( property);
 }
