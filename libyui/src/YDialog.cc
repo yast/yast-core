@@ -68,3 +68,33 @@ void YDialog::checkShortcuts( bool force )
     _shortcutCheckPostponed	= false;
 }
 
+
+std::list<YWidget *> YDialog::widgets() const
+{
+    std::list<YWidget *> widgetList;
+    fillWidgetList( widgetList, this );
+
+    return widgetList;
+}
+
+
+void YDialog::fillWidgetList( std::list<YWidget *> 	widgetList,
+			      const YContainerWidget *	parent 		) const
+{
+    if ( ! parent )
+	return;
+    
+    for ( int i = 0; i < parent->numChildren(); i++ )
+    {
+	YWidget * child = parent->child( i );
+
+	if ( ! child->isDialog() )
+	{
+	    widgetList.push_back( child );
+	    YContainerWidget * container = dynamic_cast<YContainerWidget *> (child);
+
+	    if ( container )
+		fillWidgetList( widgetList, container );
+	}
+    }
+}

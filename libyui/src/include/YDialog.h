@@ -21,6 +21,7 @@
 #ifndef YDialog_h
 #define YDialog_h
 
+#include <list>
 #include "YContainerWidget.h"
 
 class YMacroRecorder;
@@ -103,9 +104,22 @@ public:
      **/
     bool shortcutCheckPostponed() const { return _shortcutCheckPostponed; }
 
+    /**
+     * Return a list of all widgets that belong to this dialog.
+     **/
+    std::list<YWidget *> widgets() const;
+    
     
 protected:
 
+    /**
+     * Recursively fill a widgets list with all children and grandchildren of
+     * 'parent' that are in the same dialog.   
+     **/
+    void fillWidgetList( std::list<YWidget *> 		widgetList,
+			 const YContainerWidget * 	parent )	const;
+
+	
     /*
      * The dialog options
      */

@@ -203,7 +203,7 @@ int YContainerWidget::numChildren() const
 }
 
 
-YWidget *YContainerWidget::child(int i)
+YWidget *YContainerWidget::child(int i) const
 {
     if (i >= 0 && i < numChildren() )
 	return children[i];

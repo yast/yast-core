@@ -58,7 +58,7 @@ public:
     /**
      * Returns one of the child widgets.
      */
-    YWidget *child(int i);
+    YWidget *child(int i) const;
 
     /**
      * Default implementation, that assumes exactly one child.
