@@ -146,7 +146,7 @@ YCPString YTree::getLabel()
 
 
 YTreeItem *
-YTree::addItem ( YTreeItem *		parentItem,
+YTree::addItem( YTreeItem *		parentItem,
 		 const YCPValue &	id,
 		 const YCPString &	text,
 		 bool			open )
@@ -163,7 +163,7 @@ YTree::addItem ( YTreeItem *		parentItem,
 
 
 YTreeItem *
-YTree::addItem ( YTreeItem *		parentItem,
+YTree::addItem( YTreeItem *		parentItem,
 		 const YCPString &	text,
 		 void *			data,
 		 bool			open )
@@ -188,7 +188,7 @@ YTree::rebuildTree()
 
 
 YTreeItem *
-YTree::findItemWithId ( const YCPValue & id )
+YTree::findItemWithId( const YCPValue & id )
 {
     for ( unsigned i=0; i < items.size(); i++ )
     {
@@ -203,7 +203,7 @@ YTree::findItemWithId ( const YCPValue & id )
 
 
 YTreeItem *
-YTree::findItemWithText	( const YCPString & text )
+YTree::findItemWithText( const YCPString & text )
 {
     for ( unsigned i=0; i < items.size(); i++ )
     {
@@ -226,7 +226,7 @@ void YTree::saveUserInput( YMacroRecorder *macroRecorder )
 /*==========================================================================*/
 
 
-YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool open )
+YTreeItem::YTreeItem( YTree * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
     , _data(0)
     , text ( newText )
@@ -238,7 +238,7 @@ YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool o
 }
 
 
-YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bool open )
+YTreeItem::YTreeItem( YTreeItem * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
     , _data(0)
     , text ( newText )
@@ -250,7 +250,7 @@ YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bo
 }
 
 
-YTreeItem::YTreeItem ( YTree * parent, YCPString newText, void * data, bool open )
+YTreeItem::YTreeItem( YTree * parent, YCPString newText, void * data, bool open )
     : id( YCPNull() )
     , _data( data )
     , text ( newText )
@@ -262,7 +262,7 @@ YTreeItem::YTreeItem ( YTree * parent, YCPString newText, void * data, bool open
 }
 
 
-YTreeItem::YTreeItem ( YTreeItem * parent, YCPString newText, void * data, bool open )
+YTreeItem::YTreeItem( YTreeItem * parent, YCPString newText, void * data, bool open )
     : id( YCPNull() )
     , _data( data )
     , text ( newText )
@@ -291,7 +291,7 @@ YTreeItem::~YTreeItem()
 
 
 YTreeItem *
-YTreeItem::findItemWithId ( const YCPValue & id )
+YTreeItem::findItemWithId( const YCPValue & id )
 {
     if ( ! getId().isNull() && getId()->equal( id ) )
 	return this;
@@ -309,7 +309,7 @@ YTreeItem::findItemWithId ( const YCPValue & id )
 
 
 YTreeItem *
-YTreeItem::findItemWithText ( const YCPString & text )
+YTreeItem::findItemWithText( const YCPString & text )
 {
     if ( getText()->equal( text ) )
 	return this;

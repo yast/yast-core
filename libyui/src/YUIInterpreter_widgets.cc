@@ -431,7 +431,7 @@ YWidget *YUIInterpreter::createEmpty( YWidget *parent, YWidgetOpt & opt, const Y
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUIInterpreter::createSpacing( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					 int argnr, bool horizontal, bool vertical )
 {
     // Process parameters
@@ -546,7 +546,7 @@ YWidget *YUIInterpreter::createAlignment( YWidget *parent, YWidgetOpt & opt, con
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *YUIInterpreter::createFrame ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUIInterpreter::createFrame( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				       const YCPList & optList, int argnr, YRadioButtonGroup *rbg )
 {
 
@@ -1819,7 +1819,7 @@ YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, cons
  * itself, if desired.
  */
 
-YWidget *YUIInterpreter::createTree ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUIInterpreter::createTree( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int termSize = term->size() - argnr;
 
@@ -1859,7 +1859,7 @@ YWidget *YUIInterpreter::createTree ( YWidget *parent, YWidgetOpt & opt, const Y
 
 
 int
-YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
+YUIInterpreter::parseTreeItemList( const YCPList &	itemList,
 				    YTree *		tree,
 				    YTreeItem *		parentItem )
 {

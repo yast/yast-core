@@ -85,7 +85,7 @@ YUIInterpreter::~YUIInterpreter()
 
 
 Y2Component *
-YUIInterpreter::getCallback ( void )
+YUIInterpreter::getCallback( void )
 {
     y2debug ( "YUIInterpreter[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
@@ -93,7 +93,7 @@ YUIInterpreter::getCallback ( void )
 
 
 void
-YUIInterpreter::setCallback ( Y2Component *callback )
+YUIInterpreter::setCallback( Y2Component *callback )
 {
     y2debug ( "YUIInterpreter[%p]::setCallback( %p )", this, callback );
     callbackComponent = callback;
@@ -102,7 +102,7 @@ YUIInterpreter::setCallback ( Y2Component *callback )
 
 
 string
-YUIInterpreter::interpreter_name () const
+YUIInterpreter::interpreter_name() const
 {
     return "UI";	// must be upper case
 }
@@ -183,7 +183,7 @@ void YUIInterpreter::signalUIThread()
 }
 
 
-bool YUIInterpreter::waitForUIThread ()
+bool YUIInterpreter::waitForUIThread()
 {
     char arbitrary;
     int res;
@@ -318,7 +318,7 @@ YCPValue YUIInterpreter::evaluateInstantiatedTerm( const YCPTerm & term )
 
 YCPValue YUIInterpreter::callback( const YCPValue & value )
 {
-    y2debug ( "YUIInterpreter::callback ( %s )", value->toString().c_str() );
+    y2debug ( "YUIInterpreter::callback( %s )", value->toString().c_str() );
     if ( value->isBuiltin() )
     {
 	YCPBuiltin b = value->asBuiltin();
@@ -462,14 +462,14 @@ YCPValue YUIInterpreter::evaluateLocale( const YCPLocale & l )
 
 
 
-YCPValue YUIInterpreter::setTextdomain ( const string& textdomain )
+YCPValue YUIInterpreter::setTextdomain( const string& textdomain )
 {
     return evaluateWFM ( YCPBuiltin ( YCPB_LOCALDOMAIN, YCPString ( textdomain ) ) );
 }
 
 
 
-string YUIInterpreter::getTextdomain ( void )
+string YUIInterpreter::getTextdomain( void )
 {
     YCPValue v = evaluateWFM ( YCPBuiltin ( YCPB_GETTEXTDOMAIN ) );
     if ( ! v.isNull() && v->isString() )

@@ -41,7 +41,7 @@ YContainerWidget::~YContainerWidget()
 }
 
 
-void YContainerWidget::childDeleted ( YWidget *deletedChild )
+void YContainerWidget::childDeleted( YWidget *deletedChild )
 {
     if ( ! isValid() )
     {
