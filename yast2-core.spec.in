@@ -83,5 +83,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 /usr/bin/runycp
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
+@plugindir@/lib*.so
+@plugindir@/lib*.la
 @includedir@
 %doc @docdir@
