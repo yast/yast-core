@@ -36,7 +36,7 @@ YMultiProgressMeter::YMultiProgressMeter( const YWidgetOpt & 	opt,
 {
     for ( int i=0; i < maxValues->size(); i++ )
     {
-	int val = maxValues->value( i )->asInteger()->value();
+	Value_t val = maxValues->value( i )->asInteger()->value();
 	_maxValues.push_back( val );
 	_currentValues.push_back( val );
     }
@@ -101,7 +101,7 @@ YCPValue YMultiProgressMeter::queryWidget( const YCPSymbol & property )
 
 	for ( int i=0; i < segments(); i++ )
 	{
-	    int val = ( i < (int) _currentValues.size() ) ? _currentValues[ i ] : -1;
+	    Value_t val = ( i < (int) _currentValues.size() ) ? _currentValues[ i ] : -1;
 	    values->add( YCPInteger( val ) );
 	}
 
@@ -111,7 +111,8 @@ YCPValue YMultiProgressMeter::queryWidget( const YCPSymbol & property )
 }
 
 
-int YMultiProgressMeter::maxValue( int segment ) const
+YMultiProgressMeter::Value_t
+YMultiProgressMeter::maxValue( int segment ) const
 {
     if ( segment >= 0 && segment <= (int) _maxValues.size() )
 	return _maxValues[ segment ];
@@ -123,7 +124,8 @@ int YMultiProgressMeter::maxValue( int segment ) const
 }
 
 
-int YMultiProgressMeter::currentValue( int segment ) const
+YMultiProgressMeter::Value_t
+YMultiProgressMeter::currentValue( int segment ) const
 {
     if ( segment >= 0 && segment <= (int) _currentValues.size() )
 	return _currentValues[ segment ];
@@ -135,7 +137,7 @@ int YMultiProgressMeter::currentValue( int segment ) const
 }
 
 
-void YMultiProgressMeter::setCurrentValue( int segment, int value )
+void YMultiProgressMeter::setCurrentValue( int segment, Value_t value )
 {
     if ( segment >= 0 && segment <= (int) _currentValues.size() )
     {

@@ -31,6 +31,8 @@ class YMultiProgressMeter : public YWidget
 {
 public:
 
+    typedef long long Value_t;
+
     /**
      * Constructor
      */
@@ -62,19 +64,19 @@ public:
     /**
      * Returns the maximum value for the specified segment (counting from 0)
      **/
-    int maxValue( int segment ) const;
+    Value_t maxValue( int segment ) const;
 
     /**
      * Returns the current value for the specified segment (counting from 0).
      * If no value has been set yet, -1 is returned.
      **/
-    int currentValue( int segment ) const;
+    Value_t currentValue( int segment ) const;
 
     /**
      * Sets the current value for the specified segment.
      * This must be in the range 0..maxValue( segment ).
      **/
-    void setCurrentValue( int segment, int value );
+    void setCurrentValue( int segment, Value_t value );
 
     /**
      * Returns 'true' if the orientation is horizontal.
@@ -98,9 +100,9 @@ protected:
 
 private:
 
-    bool		_horizontal;
-    std::vector<int>	_maxValues;
-    std::vector<int>	_currentValues;
+    bool			_horizontal;
+    std::vector<Value_t>	_maxValues;
+    std::vector<Value_t>	_currentValues;
 };
 
 
