@@ -73,6 +73,9 @@ class PkgModuleFunctions
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvide (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
+	YCPValue SourceAttach (YCPList args);
+	YCPValue SourceIsAttached (YCPList args);
+	YCPValue SourceRelease (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);

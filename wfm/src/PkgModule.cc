@@ -131,6 +131,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvide")	return SourceProvide (args);
-    else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
+    else if (function == "SourceAttach")	return SourceAttach (args);
+    else if (function == "SourceIsAttached")	return SourceIsAttached (args);
+    else if (function == "SourceRelease")	return SourceRelease (args);
     return YCPError ("Undefined Pkg:: function");
 }

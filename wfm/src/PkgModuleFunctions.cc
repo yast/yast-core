@@ -583,3 +583,89 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
     return YCPBoolean (true);
 }
 
+
+
+/**
+ * @builtin Pkg::SourceAttach (integer source_id) -> bool
+ *
+ * HACK! don't use !
+ */
+YCPValue
+PkgModuleFunctions::SourceAttach (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isInteger()))
+    {
+	return YCPError ("Bad args to Pkg::SourceAttach");
+    }
+
+    unsigned int source_slot = args->value(0)->asInteger()->value();
+
+    if (source_slot < 0
+	|| source_slot >= _sources.size()
+	|| _sources[source_slot] == 0)
+    {
+	return YCPError ("Source not active");
+    }
+
+    InstSrcManager::ISrcId source_id = _sources[source_slot];
+    MediaAccessPtr media = MediaAccessPtr::cast_away_const (source_id->media());
+    return YCPBoolean (media->attach() == PMError::E_ok);
+}
+
+/**
+ * @builtin Pkg::SourceIsAttached (integer source_id) -> bool
+ *
+ * HACK! don't use !
+ */
+YCPValue
+PkgModuleFunctions::SourceIsAttached (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isInteger()))
+    {
+	return YCPError ("Bad args to Pkg::SourceIsAttached");
+    }
+
+    unsigned int source_slot = args->value(0)->asInteger()->value();
+
+    if (source_slot < 0
+	|| source_slot >= _sources.size()
+	|| _sources[source_slot] == 0)
+    {
+	return YCPError ("Source not active");
+    }
+
+    InstSrcManager::ISrcId source_id = _sources[source_slot];
+    MediaAccessPtr media = MediaAccessPtr::cast_away_const (source_id->media());
+    return YCPBoolean (media->isAttached());
+}
+
+/**
+ * @builtin Pkg::SourceRelease (integer source_id, bool eject) -> bool
+ *
+ * HACK! don't use !
+ */
+YCPValue
+PkgModuleFunctions::SourceRelease (YCPList args)
+{
+    if ((args->size() != 2)
+	|| !(args->value(0)->isInteger())
+	|| !(args->value(1)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::SourceRelease");
+    }
+
+    unsigned int source_slot = args->value(0)->asInteger()->value();
+
+    if (source_slot < 0
+	|| source_slot >= _sources.size()
+	|| _sources[source_slot] == 0)
+    {
+	return YCPError ("Source not active");
+    }
+
+    InstSrcManager::ISrcId source_id = _sources[source_slot];
+    MediaAccessPtr media = MediaAccessPtr::cast_away_const (source_id->media());
+    return YCPBoolean (media->release(args->value(1)->asBoolean()->value()));
+}
