@@ -36,8 +36,9 @@
 PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
     : _wfm (wfmInterpreter)
     , _first_free_source_slot(0)
+    , _cache_started(false)
 {
-    _y2pm.packageManager(false);	// start without target
+    _y2pm.packageManager();
 }
 
 /**

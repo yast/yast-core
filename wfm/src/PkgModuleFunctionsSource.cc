@@ -68,25 +68,75 @@ PkgModuleFunctions::getSourceByArgs (YCPList args, int pos)
 
     return _sources[source_slot];
 }
+
+
+/*
+ * start cached sources
+ *
+ * set _sources and _first_free_source_slot
+ */
+void
+PkgModuleFunctions::startCachedSources (bool enabled_only)
+{
+    if (_cache_started)
+	return;
+
+    InstSrcManager::ISrcIdList nids;
+
+    _y2pm.instSrcManager().getSources (nids, enabled_only);
+    if (nids.size() > 0)
+    {
+	unsigned int number_of_known_sources = _sources.size();
+	int new_slot = -1;
+
+	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();
+	     it != nids.end(); ++it)
+	{
+	    number_of_known_sources = _sources.size();
+
+	    if (_first_free_source_slot < number_of_known_sources)
+	    {
+		new_slot = _first_free_source_slot;
+		_sources[_first_free_source_slot] = *it;
+
+		// find next free slot
+		while (++_first_free_source_slot < number_of_known_sources)
+		{
+		    if (_sources[_first_free_source_slot] == 0)
+			break;
+		}
+	    }
+	    else		// add a new slot
+	    {
+		new_slot = _sources.size();
+		_sources.push_back (*it);
+	    }
+	} // loop over InstSrcManager
+	_cache_started = true;
+    } // any sources at all
+
+    return;
+}
+
 // ------------------------------------------------------------------
 // source related
 
 /**
- * @builtin Pkg::SourceInit (string url) -> integer
+ * @builtin Pkg::SourceCreate (string url) -> integer
  *
- * initializes a *NEW* package source under the given url
+ * creates a *NEW* package source under the given url
  * This is only needed at initial installation or in
  * the source manager. Normal code should rely on the
  * cached sources.
  * @see SourceList
  */
 YCPValue
-PkgModuleFunctions::SourceInit (YCPList args)
+PkgModuleFunctions::SourceCreate (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
-	return YCPError ("Bad args to Pkg::SourceInit");
+	return YCPError ("Bad args to Pkg::SourceCreate");
     }
 
     const Url url( args->value(0)->asString()->value() );
@@ -141,6 +191,7 @@ PkgModuleFunctions::SourceInit (YCPList args)
 	}
 
 	err = MGR.enableSource( source_id );
+
 	y2milestone ("enable: %d: %s", new_slot, err.errstr().c_str());
 	return YCPInteger (new_slot);
     }
@@ -149,14 +200,16 @@ PkgModuleFunctions::SourceInit (YCPList args)
 
 
 /**
- * @builtin Pkg::SourceList (boolean enabled_only) -> list of integer
+ * @builtin Pkg::SourceStartCache (boolean enabled_only) -> list of integer
+ *
+ * Start cached sources
  *
  * return list of known (and enabled) source id's
  * This starts the packagemanager from it's cache of known
  * sources
  */
 YCPValue
-PkgModuleFunctions::SourceList (YCPList args)
+PkgModuleFunctions::SourceStartCache (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isBoolean()))
@@ -164,51 +217,28 @@ PkgModuleFunctions::SourceList (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceList");
     }
 
-    YCPList sources;
-    bool enabled_only ( args->value(0)->asBoolean()->value() );
-
-    InstSrcManager::ISrcIdList nids;
-
-    _y2pm.instSrcManager().getSources (nids, enabled_only);
-    if (nids.size() > 0)
-    {
-	unsigned int number_of_known_sources = _sources.size();
-	int new_slot = -1;
-
-	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();
-	     it != nids.end(); ++it)
-	{
-	    number_of_known_sources = _sources.size();
-
-	    if (_first_free_source_slot < number_of_known_sources)
-	    {
-		new_slot = _first_free_source_slot;
-		_sources[_first_free_source_slot] = *it;
-
-		// find next free slot
-		while (++_first_free_source_slot < number_of_known_sources)
-		{
-		    if (_sources[_first_free_source_slot] == 0)
-			break;
-		}
-	    }
-	    else		// add a new slot
-	    {
-		new_slot = _sources.size();
-		_sources.push_back (*it);
-	    }
-	}
-
-	for (unsigned int i = 0; i < _sources.size(); ++i)
-	{
-	    sources->add (YCPInteger (i));
-	}
-	return sources;
-
-    } // nids > 0
-
-    return YCPError ("No source data found", sources);
+    startCachedSources (args->value(0)->asBoolean()->value());
+    return SourceGetCurrent (YCPList());
 }
+
+
+/**
+ * @builtin Pkg::SourceGetCurrent (void) -> list of source ids
+ *
+ * return all currently known and enabled sources
+ *
+ */
+YCPValue
+PkgModuleFunctions::SourceGetCurrent (YCPList args)
+{
+    YCPList sources;
+    for (unsigned int i = 0; i < _sources.size(); ++i)
+    {
+	sources->add (YCPInteger (i));
+    }
+    return sources;
+}
+
 
 /**
  * @builtin Pkg::SourceFinish (integer id) -> bool

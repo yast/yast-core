@@ -200,7 +200,10 @@ PkgModuleFunctions::IsSelected (YCPList args)
 YCPValue
 PkgModuleFunctions::IsAvailable (YCPList args)
 {
+    startCachedSources (true);		// start cached sources
+
 #warning must check tags, not package names
+
     PMSelectablePtr selectable = getPackageSelectable (getName(args));
     if (!selectable)
 	return YCPBoolean (false);
@@ -248,6 +251,9 @@ PkgModuleFunctions::DoProvide (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::DoProvide");
     }
+
+    startCachedSources (true);
+
     YCPMap ret;
     YCPList tags = args->value(0)->asList();
     if (tags->size() > 0)
@@ -305,6 +311,9 @@ PkgModuleFunctions::DoRemove (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::DoRemove");
     }
+
+    _y2pm.packageManager ();
+
     YCPMap ret;
     YCPList tags = args->value(0)->asList();
     if (tags->size() > 0)
@@ -334,6 +343,9 @@ PkgModuleFunctions::DoRemove (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSummary (YCPList args)
 {
+    _y2pm.packageManager ();
+    startCachedSources (true);
+
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -353,6 +365,9 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgVersion (YCPList args)
 {
+    _y2pm.packageManager ();
+    startCachedSources (true);
+
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -372,6 +387,9 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSize (YCPList args)
 {
+    _y2pm.packageManager ();
+    startCachedSources (true);
+
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -418,14 +436,13 @@ PkgModuleFunctions::RestoreState (YCPList args)
    @builtin Pkg::IsManualSelection () -> bool
 
    return true if the original list of packages (since the
-   last Pkg::SetSelection was changed.
+   last Pkg::SetSelection()) was changed.
 
 */
 YCPValue
 PkgModuleFunctions::IsManualSelection (YCPList args)
 {
-
-    return YCPBoolean (false);
+    return YCPBoolean (_y2pm.packageManager().anythingByUser());
 }
 
 // ------------------------
@@ -473,6 +490,8 @@ PkgModuleFunctions::GetPackages(YCPList args)
     {
 	return YCPError ("Bad args to Pkg::GetPackages");
     }
+
+    startCachedSources (true);
 
     string which = args->value(0)->asSymbol()->symbol();
     bool names_only = args->value(1)->asBoolean()->value();

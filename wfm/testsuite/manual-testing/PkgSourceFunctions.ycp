@@ -1,5 +1,5 @@
 {
-    integer source = Pkg::SourceInit("dir:///dist/7.3-i386");
+    integer source = Pkg::SourceInit("cd:///");
     if (source == nil)
 	return 1;
     y2milestone ("General %1", Pkg::SourceGeneralData (source));

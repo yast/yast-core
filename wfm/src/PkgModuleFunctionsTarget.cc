@@ -60,7 +60,9 @@ PkgModuleFunctions::TargetInit (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::TargetInit");
     }
-    bool newdb = args->value(1)->asBoolean()->value();
+
+    bool newdb = args->value(1)->asBoolean()->value();		// used again below
+
     PMError err = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
     if (err)
 	return YCPError (err.errstr().c_str(), YCPBoolean (false));

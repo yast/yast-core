@@ -56,6 +56,14 @@ class PkgModuleFunctions
 	PMSelectablePtr getPatchSelectable (const std::string& name);
 
 	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
+	void startCachedSources (bool enabled_only);
+
+	bool SetSelectionString (std::string name);
+	bool DoProvideString (std::string name);
+	bool DoRemoveString (std::string name);
+
+	// if startCachedSources was called already
+	bool _cache_started;
 
     public:
 	// general
@@ -66,8 +74,9 @@ class PkgModuleFunctions
 	YCPValue GetAdditionalLocales (YCPList args);
 
 	// source related
-	YCPValue SourceInit (YCPList args);
-	YCPValue SourceList (YCPList args);
+	YCPValue SourceCreate (YCPList args);
+	YCPValue SourceStartCache (YCPList args);
+	YCPValue SourceGetCurrent (YCPList args);
 	YCPValue SourceFinish (YCPList args);
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
@@ -94,7 +103,6 @@ class PkgModuleFunctions
 	YCPValue SetBackupPath (YCPList args);
 	YCPValue SelectionData (YCPList args);
 	YCPValue SetSelection (YCPList args);
-	bool SetSelectionString (std::string name);	// internal
 	YCPValue ClearSelection (YCPList args);
 	YCPValue ActivateSelections (YCPList args);
 	YCPValue SelectionsUpdateAll (YCPList args);
@@ -105,9 +113,7 @@ class PkgModuleFunctions
 	YCPValue IsSelected (YCPList args);
 	YCPValue IsAvailable (YCPList args);
 	YCPValue DoProvide (YCPList args);
-	bool DoProvideString (std::string name);	// internal
 	YCPValue DoRemove (YCPList args);
-	bool DoRemoveString (std::string name);	// internal
 	YCPValue PkgSummary (YCPList args);
 	YCPValue PkgVersion (YCPList args);
 	YCPValue PkgSize (YCPList args);
