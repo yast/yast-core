@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Sat Feb 28 11:42:42 CET 2004 - kkaempf@suse.de
+
+- improve usage of existing type information for builtin
+  functions
+- fix bytecode input to be upward compatible with previous
+  version
+- properly release unneeded memory
+- 2.9.44
+
+-------------------------------------------------------------------
 Fri Feb 27 16:43:07 CET 2004 - visnov@suse.cz
 
 - added openslp to neededforbuild
