@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Sep  5 21:33:11 CEST 2002 - kkaempf@suse.de
+
+- add Pkg:: functions for package backup
+  and rebuilddb progress
+- 2.6.28
+
+-------------------------------------------------------------------
 Wed Sep  4 14:55:37 CEST 2002 - kkaempf@suse.de
 
 - check for loops in selection requirements.
