@@ -74,7 +74,6 @@ class PkgModuleFunctions
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvideFile (YCPList args);
-	YCPValue SourceProvideLocation (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
 	YCPValue SourceSetMediaChangeCallback (YCPList args);
 	YCPValue SourceSetMediaErrorCallback (YCPList args);
@@ -124,8 +123,6 @@ class PkgModuleFunctions
 
 	YCPValue PkgPrepareOrder (YCPList args);
 	YCPValue PkgMediaSizes (YCPList args);
-	YCPValue PkgNextDelete (YCPList args);
-	YCPValue PkgNextInstall (YCPList args);
 
 	// you patch related
         YCPValue YouStatus (YCPList args);

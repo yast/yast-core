@@ -41,13 +41,6 @@
 
 using std::string;
 
-// for Pkg::PkgPrepareOrder, PkgNextDelete, PkgNextInstall
-static bool prepare_order_called = false;
-static std::list<PMPackagePtr> packs_to_delete;
-static std::list<PMPackagePtr>::const_iterator deleteIt;
-static std::list<PMPackagePtr> packs_to_install;
-static std::list<PMPackagePtr>::const_iterator installIt;
-
 /**
  * helper function, get name from args
  */
@@ -113,23 +106,6 @@ getTheCandidate (PMSelectablePtr selectable)
 
 // ------------------------
 /**   
-   @builtin Pkg::PkgPrepareOrder () -> [ delcount, inscount ]
-     prepare for PkgNextInstall, PkgNextDelete
- */
-YCPValue
-PkgModuleFunctions::PkgPrepareOrder (YCPList args)
-{
-    _y2pm.packageManager().getPackagesToInsDel (packs_to_delete, packs_to_install);
-    deleteIt = packs_to_delete.begin();
-    installIt = packs_to_install.begin();
-    prepare_order_called = true;
-    YCPList counts;
-    counts->add (YCPInteger (packs_to_delete.size()));
-    counts->add (YCPInteger (packs_to_install.size()));
-    return counts;
-}
-
-/**   
    @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
      return cumulated sizes (in kb !) to be installed from different media
 
@@ -171,46 +147,6 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
 // ------------------------
 /**   
-   @builtin Pkg::PkgNextDelete -> string
-	nil on error
-	"" on no-more-elements
-	"name" else
- */
-YCPValue
-PkgModuleFunctions::PkgNextDelete (YCPList args)
-{
-    if (!prepare_order_called)
-	return YCPError ("PkgNextDelete without prepare");
-
-    if (deleteIt == packs_to_delete.end())
-	return YCPString("");
-    YCPString ret ((*deleteIt)->name());
-    ++deleteIt;
-    return ret;
-}
-
-// ------------------------
-/**   
-   @builtin Pkg::PkgNextInstall -> string
-	nil on error
-	"" on no-more-elements
-	"name" else
- */
-YCPValue
-PkgModuleFunctions::PkgNextInstall (YCPList args)
-{
-    if (!prepare_order_called)
-	return YCPError ("PkgNextInstall without prepare");
-
-    if (installIt == packs_to_install.end())
-	return YCPString("");
-    YCPString ret ((*installIt)->name());
-    ++installIt;
-    return ret;
-}
-
-// ------------------------
-/**   
    @builtin Pkg::IsProvided (string tag) -> boolean
 
    returns a 'true' if the tag is provided in the installed system
@@ -221,12 +157,9 @@ PkgModuleFunctions::PkgNextInstall (YCPList args)
 YCPValue
 PkgModuleFunctions::IsProvided (YCPList args)
 {
-#warning must check tags, not package names
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
-    if (!selectable)
-	return YCPBoolean (false);
-    if (selectable->installedObj() == 0)
-	return YCPBoolean (false);
+    // check package name first, then tag
+    if (!_y2pm.instTarget().isInstalled (getName(args)))
+	return YCPBoolean (_y2pm.instTarget().isProvided (getName(args)));
     return YCPBoolean (true);
 }
 

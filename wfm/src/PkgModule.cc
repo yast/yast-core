@@ -90,10 +90,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgSolve")		return PkgSolve (args);
     else if (function == "PkgCommit")		return PkgCommit (args);
 
-    else if (function == "PkgPrepareOrder")	return PkgPrepareOrder (args);
     else if (function == "PkgMediaSizes")	return PkgMediaSizes (args);
-    else if (function == "PkgNextDelete")	return PkgNextDelete (args);
-    else if (function == "PkgNextInstall")	return PkgNextInstall (args);
     // selection related
     else if (function == "GetSelections")	return GetSelections (args);
     else if (function == "SelectionData")	return SelectionData (args);
@@ -131,7 +128,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
-    else if (function == "SourceProvideLocation")return SourceProvideLocation (args);
     else if (function == "SourceSetMediaChangeCallback")return SourceSetMediaChangeCallback (args);
     else if (function == "SourceSetMediaErrorCallback")	return SourceSetMediaErrorCallback (args);
     else if (function == "SourceCacheCopyTo") return SourceCacheCopyTo (args);

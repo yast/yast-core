@@ -250,8 +250,7 @@ PkgModuleFunctions::SourceFinish (YCPList args)
  * @builtin Pkg::SourceGeneralData (integer id) -> map
  *
  * returns general data about the source as a map:
- *   $[ "base_arch" : string,
- *	"default_activate" : bool,
+ *   $[ "default_activate" : bool,
  *	"product_dir" : string,
  *	"url" : string,			// also in SourceMediaData
  *	"type" : string
@@ -271,7 +270,6 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
     if (!source_descr)
 	return YCPError ("No description for source", data);
 
-    data->add (YCPString ("base_arch"), YCPString ((const std::string &)source_descr->base_arch()));
     data->add (YCPString ("default_activate"), YCPBoolean (source_descr->default_activate()));
     data->add (YCPString ("product_dir"), YCPString (source_descr->product_dir().asString()));
     data->add (YCPString ("type"), YCPString (InstSrc::toString (source_descr->type())));
@@ -352,15 +350,14 @@ PkgModuleFunctions::SourceProductData (YCPList args)
     data->add (YCPString ("baseproductversion"), YCPString (PkgEdition::toString (source_descr->content_baseproduct().edition)));
     data->add (YCPString ("vendor"), YCPString (source_descr->content_vendor ()));
     data->add (YCPString ("defaultbase"), YCPString (source_descr->content_defaultbase ()));
-    const std::string& base_arch = (const std::string &)(source_descr->base_arch());
-    InstSrcDescr::ArchMap::const_iterator a_it = source_descr->content_archmap().find (base_arch);
-    if (a_it != source_descr->content_archmap().end())
+    InstSrcDescr::ArchMap::const_iterator it1 = source_descr->content_archmap().find (_y2pm.baseArch());
+    if (it1 != source_descr->content_archmap().end())
     {
 	YCPList architectures;
-	for (std::list<Pathname>::const_iterator p_it = a_it->second.begin();
-	     p_it != a_it->second.end(); ++p_it)
+	for (std::list<PkgArch>::const_iterator it2 = it1->second.begin();
+	     it2 != it1->second.end(); ++it2)
 	{
-	    architectures->add (YCPString (p_it->asString()));
+	    architectures->add (YCPString ((const std::string &)(*it2)));
 	}
 	data->add (YCPString ("architectures"), architectures);
     }
@@ -418,44 +415,6 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
 	return YCPVoid();
     }
     return YCPString (media->localPath (filename).asString());
-}
-
-
-
-/**
- * @builtin Pkg::SourceProvideLocation (integer source, string package) -> string path
- * provide 'best' package for current architecture from source to local path
- * return nil on error
- */
-
-YCPValue
-PkgModuleFunctions::SourceProvideLocation (YCPList args)
-{
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
-
-    if ((args->size() != 2)
-	|| !(args->value(1)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SourceProvideLocation");
-    }
-
-    PMSelectablePtr selectable = getPackageSelectable (args->value(1)->asString()->value());
-    if (selectable)
-    {
-	PMPackagePtr package = selectable->candidateObj();
-	if (package)
-	{
-	    Pathname path = (InstSrcPtr::cast_away_const(source_id))->provideLocation (package->medianr(), Pathname (package->location()));
-	    if (!path.empty())
-	    {
-		return YCPString (path.asString());
-	    }
-	}
-    }
-    y2error ("Fail SourceProvideLocation(%s)", args->value(1)->asString()->value().c_str());
-    return YCPVoid();
 }
 
 

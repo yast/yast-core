@@ -187,7 +187,7 @@ PkgModuleFunctions::SelectionData (YCPList args)
 	return YCPError ("Selection '"+name+"' no object", data);
     }
     y2milestone ("PkgModuleFunctions::SelectionData(%s)", name.c_str());
-    data->add (YCPString ("summary"), YCPString (selection->summary("")));
+    data->add (YCPString ("summary"), YCPString (selection->summary(LangCode(""))));
     data->add (YCPString ("category"), YCPString (selection->category()));
     data->add (YCPString ("visible"), YCPBoolean (selection->visible()));
 
