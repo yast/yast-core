@@ -87,6 +87,7 @@ class PkgModuleFunctions
 	YCPValue SetAdditionalLocales (YCPList args);
 	YCPValue GetAdditionalLocales (YCPList args);
 	YCPValue Error (YCPList args);
+	YCPValue ErrorDetails (YCPList args);
 	YCPValue ErrorId (YCPList args);
 
 	// callbacks

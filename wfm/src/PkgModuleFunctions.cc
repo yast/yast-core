@@ -167,6 +167,17 @@ PkgModuleFunctions::Error (YCPList args)
 }
 
 /**
+ * @builtin Pkg::ErrorDetails
+ *
+ * get current error details as string
+ */
+YCPValue
+PkgModuleFunctions::ErrorDetails (YCPList args)
+{
+    return YCPString (_last_error.errDetails());
+}
+
+/**
  * @builtin Pkg::ErrorId
  *
  * get current error as id string

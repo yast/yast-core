@@ -132,10 +132,11 @@ PkgModuleFunctions::YouCheckAuthorization (YCPList args)
 
    @param list(string)  list of strings where results are stored.
 
-   @return ""     success
-           "args" bad args
-           "get"  error getting file from server
-           "read" error reading file after download
+   @return ""      success
+           "args"  bad args
+           "get"   error getting file from server
+           "write" error writing file to disk
+           "read"  error reading file after download
 */
 YCPValue
 PkgModuleFunctions::YouGetServers (YCPList args)
@@ -149,6 +150,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     _last_error = _y2pm.youPatchManager().instYou().servers( servers );
     if ( _last_error ) {
       if ( _last_error == YouError::E_get_suseservers_failed ) return YCPString( "get" );
+      if ( _last_error == YouError::E_write_suseservers_failed ) return YCPString( "write" );
       if ( _last_error == YouError::E_read_suseservers_failed ) return YCPString( "read" );
       return YCPString( "Error getting you servers." );
     }

@@ -68,6 +68,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
     else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
     else if (function == "Error")		return Error (args);
+    else if (function == "ErrorDetails")	return ErrorDetails (args);
     else if (function == "ErrorId")		return ErrorId (args);
 
     // callback functions
