@@ -1344,6 +1344,7 @@ statement:
 		    if (imp->name().empty())
 		    {
 			yyLerror ("Import failed", $1.l);
+			delete imp;
 			$$.t = 0;
 			break;
 		    }
@@ -1353,6 +1354,7 @@ statement:
 		    if (name_space == 0)
 		    {
 			yyNoModule (name, $1.l);
+			delete imp;
 			$$.t = 0;
 			break;
 		    }
@@ -1361,6 +1363,7 @@ statement:
 		    if (tentry == 0)
 		    {
 			yyLerror ("Import failed", $1.l);
+			delete imp;
 			$$.t = 0;
 			break;
 		    }
