@@ -16,7 +16,7 @@ builtin_wfm = $(srcdir)/../src/WFMInterpreter.cc \
         $(srcdir)/../src/Y2WFMComponent.cc \
         $(srcdir)/../src/Y2CCWFM.cc
 
-builtin_pkg = $(srcdir)/../src/PkgModuleFunctions*.cc
+builtin_pkg = $(srcdir)/../src/PkgModule*.cc
 
 YCP-builtins-wfm.html: $(builtin_wfm)
 	@ybindir@/makebuiltindocs -t "WFM built-in functions" $^ > $@.new
