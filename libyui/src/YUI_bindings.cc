@@ -153,7 +153,7 @@ UIWaitForEvent()
 
 
 static YCPValue
-UIWaitForEvent1( const YCPInteger& timeout )
+UIWaitForEvent1( const YCPInteger & timeout )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateWaitForEvent( timeout );
@@ -556,9 +556,7 @@ static YCPValue
 UIWizardCommand( const YCPTerm & command )
 {
     if ( YUIComponent::ui() )
-    {
 	return YUIComponent::ui()->evaluateWizardCommand( command );
-    }
     else
 	return YCPBoolean( false );
 }
