@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Dec 12 20:46:22 CET 2003 - msvec@suse.cz
+
+- adapted for the logging changes in liby2util
+- 2.9.12
+
+-------------------------------------------------------------------
 Mon Dec 15 12:33:48 CET 2003 - ma@suse.de
 
 - Removed outdated Pkg::SelectionsUpdateAll
