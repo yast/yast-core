@@ -1,14 +1,13 @@
 -------------------------------------------------------------------
-Tue Feb 17 16:23:47 CET 2004 - mvidner@suse.cz
+Tue Feb 17 18:14:57 CET 2004 - mvidner@suse.cz
 
-- reduced SymbolTable size from 211 to 31
-- count objects using MemUsage (liby2util).
-
--------------------------------------------------------------------
-Tue Feb 17 09:10:40 CET 2004 - mvidner@suse.cz
-
-- fixed memory leaks:
+- fixed leaks:
   parsed code in Y2WFMComponent::CallFunction and SCRAgent::readconf
+- reduced memory consumption a bit:
+  reduced SymbolTable size from 211 to 31
+  TableEntry::m_inner removed
+- count objects using MemUsage (liby2util).
+- 2.9.34
 
 -------------------------------------------------------------------
 Mon Feb 16 21:49:42 CET 2004 - kkaempf@suse.de
