@@ -212,7 +212,7 @@ sub ParseTerm ($)
     my $symbol;
     my @ret;
 
-    $input =~ s/^\s*(\w*)\s*//;
+    $input =~ s/^\s*`?(\w*)\s*//; # allow both Term and `Term (for the NI)
     $symbol = $1;
     if (! $symbol)
     {
