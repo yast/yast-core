@@ -133,6 +133,7 @@ examples_DATA =					\
 	Tree2.ycp				\
 	UserInput.ycp				\
 	VBox1.ycp				\
+	WaitForEvent.ycp			\
 	Weight1.ycp				\
 	Weight2.ycp				\
 	WidgetExists.ycp			\
