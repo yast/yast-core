@@ -123,6 +123,19 @@ PkgModuleFunctions::addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable)
 void
 PkgModuleFunctions::startCachedSources (bool enabled_only, bool force)
 {
+    if ( enabled_only ) {
+      // (ma) If enabled requested, check instSrcManager in case
+      // sources are not yet enabled!
+      InstSrcManager::ISrcIdList ids;
+      _y2pm.instSrcManager().getSources( ids );
+      for ( InstSrcManager::ISrcIdList::const_iterator it = ids.begin(); it != ids.end(); ++it ) {
+	bool shouldBeEnabled = (*it)->descr()->default_activate();
+	if ( shouldBeEnabled && ! (*it)->enabled() ) {
+	  _y2pm.instSrcManager().enableSource( *it );
+	}
+      }
+    }
+
     if (_cache_started && !force)
 	return;
 
@@ -201,28 +214,6 @@ PkgModuleFunctions::SourceCreate (YCPList args)
     Pathname dir;
     if (args->size() == 2)
 	dir = Pathname (args->value(1)->asString()->value());
-
-#if 0
-    // check if url already known
-
-    unsigned int number_of_known_sources = _sources.size();
-    if (number_of_known_sources > 0)
-    {
-	for (unsigned int i = 0; i < number_of_known_sources; ++i)
-	{
-	    constInstSrcDescrPtr source_descr = _sources[i]->descr();
-	    if ((source_descr)
-		&& (source_descr->url().asString() == url.asString())
-		&& (dir.empty()
-		    || (!dir.empty()
-			&& (source_descr->product_dir() == dir))))
-	    {
-		y2milestone ("Source '%s' already known", url.asString().c_str());
-		return YCPInteger (i);
-	    }
-	}
-    }
-#endif
 
     unsigned int new_slot = _first_free_source_slot;
 
