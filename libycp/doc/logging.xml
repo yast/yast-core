@@ -1,0 +1,373 @@
+<?xml version="1.0"?>
+<article>
+  <title>YaST2 Logging</title>
+  <section>
+    <title>Introduction</title>
+    <para>During execution <emphasis role="b">YaST2</emphasis> components create log messages.
+The purpose is to inform the user or the programmer about errors
+and other incidents.</para>
+    <para>The logging should be used instead of
+<literal>fprintf(stderr,...)</literal> to create logmessages of different
+types. It can be better controlled, what to log and what not, where
+to log and how to log.</para>
+  </section>
+  <section>
+    <title>Quick start</title>
+    <itemizedlist spacing="compact">
+      <listitem>
+        <para>Use <literal>y2debug()</literal> for debugging messages,
+<literal>y2warning()</literal> for warnings and <literal>y2error()</literal> for error
+messages, syntax is same as <literal>printf(3)</literal>.</para>
+      </listitem>
+      <listitem>
+        <para>Set <literal>"export Y2DEBUG=1"</literal> in your <literal>.profile</literal> or
+run <literal>"Y2DEBUG=1 yast2"</literal>.</para>
+      </listitem>
+      <listitem>
+        <para>If <literal>root</literal>, see <literal>/var/log/YaST2/y2log</literal>, otherwise
+<literal>~/.y2log</literal> for the output.</para>
+      </listitem>
+      <listitem>
+        <para>In the <literal>y2log</literal>, entries are uniquely identified by the
+filename and line number.</para>
+      </listitem>
+    </itemizedlist>
+    <para/>
+  </section>
+  <section>
+    <title>Logging levels</title>
+    <para>There exist six different log levels denoting incidents of
+different importance:</para>
+    <variablelist>
+      <varlistentry>
+        <term>0: DEBUG</term>
+        <listitem>
+          <para>Debug messages, which help the programmers.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>1: MILESTONE</term>
+        <listitem>
+          <para>Normal log messages. Some important actions are logged. For
+example each time a <emphasis role="b">YaST2</emphasis> module is started, a log entry is
+created.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>2: WARNING</term>
+        <listitem>
+          <para>Some error has occured, but the execution could be
+continued.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>3: ERROR</term>
+        <listitem>
+          <para>Some major error has occured. The execution may be continued,
+but probably more errors will occur.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>4: SECURITY</term>
+        <listitem>
+          <para>Some security relevant incident has occured.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>5: INTERNAL</term>
+        <listitem>
+          <para>Internal error. Please enter into Bugzilla or directly contact
+the programmers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>In the default setting the levels 1-5 are logged, level 0
+(DEBUG) is switched off. See the <link linkend="control">Logging
+control</link> and <link linkend="env">Environment control</link> for more
+details how to control the logging and its levels.</para>
+    <para/>
+  </section>
+  <section>
+    <title>Logging functions</title>
+    <para>According to the <link linkend="levels">logging levels</link>, use the
+following logging functions:</para>
+    <programlisting>
+void y2debug(const char *format, ...);
+void y2milestone(const char *format, ...);
+void y2warning(const char *format, ...);
+void y2error(const char *format, ...);
+void y2security(const char *format, ...);
+void y2internal(const char *format, ...);
+</programlisting>
+    <para>The parameter <literal>format</literal> is the format string like the one
+for <literal>printf(3)</literal></para>
+    <naked-text>
+      <para/>
+    </naked-text>
+    <para/>
+  </section>
+  <section>
+    <title>Additional functions</title>
+    <para/>
+    <section>
+      <title>Setting the logfile name</title>
+      <programlisting>
+void y2setLogfileName(const char *filename);
+</programlisting>
+      <para>This function sets the logfile name. If the name cannot be open
+for writing (append), it use the default <link linkend="logfiles">logfiles</link>. If you want to output the debug log
+the <literal>stderr</literal>, use <literal>"-"</literal> as the argument for the
+y2setLogfileName:</para>
+      <programlisting>
+y2setLogfileName("-");
+</programlisting>
+      <para/>
+    </section>
+    <section>
+      <title>Universal logging functions:</title>
+      <programlisting>
+void y2logger(loglevel_t level, const char *format, ...);
+void y2vlogger(loglevel_t level, const char *format, va_list ap);
+</programlisting>
+      <para>These functions are provided probably only for those who don't
+want to use the regular <link linkend="functions">logging functions</link>.
+For example for setting the loglevel acording to some rule.</para>
+      <para/>
+    </section>
+  </section>
+  <section>
+    <title>Components</title>
+    <para>As the filenames are not unique over the whole <emphasis role="b">YaST2</emphasis>
+source, you can specify the component name. Then the pair of the
+component name and the filename will uniquely identify the
+message.</para>
+    <para><emphasis role="b">Note:</emphasis> I think that the filenames should be self
+explaining and thus unique overall the whole source. Then the
+component name can be removed, but as now the filename is not
+unique, you can optionally specify the component name.</para>
+    <para>As the component is a more general property then filename, it
+should be same in all messages in one file. So for one source file
+it is defined only once, at the beginning of the file. And because
+of implementation purposes (just) before the inclusion of <literal><ulink url="y2log.h">y2log.h</ulink></literal>:</para>
+    <programlisting>
+#define y2log_component "y2a_mods"
+#include &lt;ycp/y2log.h&gt;
+</programlisting>
+    <para/>
+  </section>
+  <section>
+    <title>Logfiles</title>
+    <para>The <emphasis role="b">YaST2</emphasis> log is written to a file. If you work as normal
+user, the default logfile is <literal>~/.y2log</literal>. If you work as
+root, the file is <literal>/var/log/YaST2/y2log</literal>. The logfile is
+created with the permissions 600, since it may contain secret data
+when the debug level is turned on.</para>
+    <para>If the logfile cannot be open, the <literal>stderr</literal> is use
+instead.</para>
+    <para/>
+  </section>
+  <section>
+    <title>Log entries</title>
+    <para>Each log entry consist of these fields:</para>
+    <variablelist>
+      <varlistentry>
+        <term>
+          <literal>date</literal>
+        </term>
+        <listitem>
+          <para>The date when the log entry has been made.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>time</literal>
+        </term>
+        <listitem>
+          <para>The time when the log entry has been made.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>level</literal>
+        </term>
+        <listitem>
+          <para>The log entry level. See <link linkend="levels">Logging
+levels</link>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>hostname</literal>
+        </term>
+        <listitem>
+          <para>The hostname of host where the yast2 runs.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>pid</literal>
+        </term>
+        <listitem>
+          <para>The process ID of the yast2 process.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>component</literal>
+        </term>
+        <listitem>
+          <para>The name of the current component. Optional and probably
+obsolete.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>filename</literal>
+        </term>
+        <listitem>
+          <para>The name of the source file where the log entry has been
+made.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>function</literal>
+        </term>
+        <listitem>
+          <para>The name of the function where the log entry has been
+made.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>line</literal>
+        </term>
+        <listitem>
+          <para>The line number where the log entry has been made.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+          <literal>message</literal>
+        </term>
+        <listitem>
+          <para>The text of the log message.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>The output format:</para>
+    <programlisting>
+date time &lt;level&gt; hostname(pid) [component] filename(function):line message...
+date time &lt;level&gt; hostname(pid) filename(function):line message...
+</programlisting>
+    <para>Example:</para>
+    <programlisting>
+2000-10-13 15:35:36 &lt;3&gt; beholder(2971) [ag_modules] Modules.cc(quit):22 io=7
+2000-10-13 15:35:37 &lt;0&gt; beholder(2971) ModulesAgent.cc(main):23 irq=7
+</programlisting>
+    <para/>
+  </section>
+  <section>
+    <title>Logging control</title>
+    <para>The log control uses a simple ini-like configuration file. It is
+looked for at /etc/YaST2/log.conf for root and at
+$HOME/.yast2/log.conf for regular users.</para>
+    <para>Example log.conf file could look like:</para>
+    <programlisting>
+    [Log]
+    file = true
+    syslog = false
+    debug = false
+
+    [Debug]
+    YCP = true
+    agent-pam = true
+    packagemanager = false
+</programlisting>
+    <para>"syslog=true", which basically means remote-logging. The similar
+option "file=true" means use the usual log files for logging. You
+could also turn those off which means no logging would be done at
+all, but rather don't do that ;-)</para>
+    <para>The "debug=true" means basically the same as Y2DEBUG=1 (that
+envirnoment variable overrides the log.conf settings) and that is
+log by default all debug messages (if not said otherwise).</para>
+    <para>You can turn debuggin on ("agent-pam=true") for a particular
+component (even if "debug=false") and also turn debugging off (for
+the case that "debug=true").</para>
+    <para>To provide a useful example, normal developers would need
+something like this $HOME/.yast2/log.conf (and unset Y2DEBUG):</para>
+    <programlisting>
+    [Debug]
+    YCP = true
+    agent-pam = true
+</programlisting>
+    <para>It means turn YCP debug messages on and also turn on some
+particular agent. The other debug are in most uninteresting, so let
+them turned off.</para>
+    <para>During installation , define the variable "Loghost" on the
+command line with the log server ip address (Loghost=192.168.1.1 )
+and all messages will be sent to this host. If you add y2debug,
+debugging will also be activated in log.conf.</para>
+    <para>On the server side, using syslog-ng, you can have logging per
+host using the following filters:</para>
+    <programlisting>
+source network {
+    tcp();
+    udp();
+};
+
+destination netmessages { file("/var/log/messages.$HOST"); };
+log { source(network); filter(f_messages); destination(netmessages); }; 
+
+</programlisting>
+    <para/>
+  </section>
+  <section>
+    <title>Environment control</title>
+    <para>Additionally to the usual <link linkend="control">logfile control</link>
+you can control some logging feature by the environment
+variables.</para>
+    <variablelist>
+      <varlistentry>
+        <term>Y2DEBUG</term>
+        <listitem>
+          <para>By setting this variable to an arbitrary value you turn on the
+debug log output. But only when entry control is not covered by the
+usual <link linkend="control">logfile control</link>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Y2DEBUGALL</term>
+        <listitem>
+          <para>By setting this variable to an arbitrary value you turn on the
+debug log output. Everything will be logged.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Y2DEBUGSHELL</term>
+        <listitem>
+          <para>By setting this variable to an arbitrary value you turn on the
+debug log output for the bash_background processes.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Y2MAXLOGSIZE</term>
+        <listitem>
+          <para>By this variable you can control the size of logfiles. See <link linkend="logfiles">Logfiles</link> for details.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Y2MAXLOGNUM</term>
+        <listitem>
+          <para>By this variable you can control the number of logfiles. See <link linkend="logfiles">Logfiles</link> for details.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>Example: call the module <literal>password</literal> with <emphasis role="b">QT</emphasis>
+interface and debugging messages set to on:</para>
+    <programlisting>
+bash$ Y2DEBUG=1 yast2 users
+</programlisting>
+    <para/>
+  </section>
+</article>
