@@ -33,17 +33,21 @@ class YCPInterpreter;
 /**
  * @short Handler for Callbacks received or triggered. Needs access to WFM.
  *
- * <B>NOTE:</B> Public references to YCPCallbacks and Y2PMReceive are not
- * usable outside PkgModuleCallbacks.cc because both class definitions reside
- * within the implementation file.
+ * <B>NOTE:</B> Public references to @ref YCPCallbacks and @ref Y2PMReceive are
+ * intentionally not usable outside PkgModuleCallbacks.cc, because both class
+ * definitions reside within the implementation file. They are public because
+ * callback realated @ref PkgModuleFunctions methods are defined in the same file
+ * and use them to set the YCP callbacks. Appart from this, there's no need to
+ * propagate the interface.
  *
  * <H5>How to introduce new YCP callbacks</H5>
  * <OL>
- * <LI>Consult PkgModuleCallbacks.YCP.h and introduce a new value in enum CBid
- *     (and adjust switch in cbName). This enum value is used to set and access
- *     the YCP callbacks data.
- * <LI>Consult PkgModuleCallbacks.cc and implement PkgModuleFunctions::CallbackWhateverName,
- *     to set the calbacks module and symbol.
+ * <LI>In class @ref YCPCallbacks introduce a new value in enum CBid.
+ *     This enum value is used to set and access the YCP callbacks data.
+ * <LI>In class @ref PkgModuleFunctions declare a method CallbackWhateverName,
+ *     and implement it in PkgModuleCallbacks.cc to set the calback data.
+ * <LI>Finaly adjust @ref PkgModule::evaluate to make the method available to
+ *     the YCP code.
  * </OL>
  * <H5>How to introduce new recipient which triggers the YCP callbacks</H5>
  * <OL>
@@ -61,7 +65,7 @@ class YCPInterpreter;
  * shared among the recipient classes, if you need to exchage data or coordinate
  * different recipients.
  *
- * See also class @ref Report (in libutil).
+ * See also class @ref Report (in liby2util).
  **/
 class PkgModuleFunctions::CallbackHandler {
   CallbackHandler & operator=( const CallbackHandler & );

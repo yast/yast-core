@@ -92,7 +92,7 @@ inline ostream & operator<<( ostream & str, const YCPValue & obj )
 /**
  * @short Stores YCPCallback related data and communicates with YCPInterpreter
  *
- * For each YCPCallback, it's data identified by the <CODE>CB_id</CODE>
+ * For each YCPCallback it's data, identified by a <CODE>@ref CBid</CODE>,
  * are stored in maps.
  *
  * To invoke a YCPCallback:
@@ -108,20 +108,14 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
   public:
 
     /**
-     * Unique id for each YCPCallback we may have to trigger
+     * Unique id for each YCPCallback we may have to trigger.
+     * On changes here, adapt @ref cbName.
      **/
     enum CBid {
       CB_ProgressRebuildDB,
-      CB_StartConvertDb,
-      CB_ProgressConvertDb,
-      CB_NotifyConvertDb,
-      CB_StopConvertDb,
-      CB_StartProvide,
-      CB_ProgressProvide,
-      CB_DoneProvide,
-      CB_StartPackage,
-      CB_ProgressPackage,
-      CB_DonePackage,
+      CB_StartConvertDb, CB_ProgressConvertDb, CB_NotifyConvertDb, CB_StopConvertDb,
+      CB_StartProvide, CB_ProgressProvide, CB_DoneProvide,
+      CB_StartPackage, CB_ProgressPackage, CB_DonePackage,
       CB_MediaChange,
       CB_SourceChange,
       CB_YouProgress,
@@ -132,7 +126,8 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
     /**
      * Returns the enum name without the leading "CB_"
-     * (e.g. "StartProvide" for CB_StartProvide).
+     * (e.g. "StartProvide" for CB_StartProvide). Should
+     * be in sync with @ref CBid.
      **/
     static string cbName( CBid id_r ) {
       switch ( id_r ) {
@@ -246,10 +241,10 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
   public:
 
+#warning Free interface for YCPCallback sending is ok, but a functional one is desired too.
     /**
      * @short Convenience base class for YCPCallback sender
      *
-#warning Free interface for YCPCallback sending is ok, but a functional one is desired too.
      * A functional interface for sending YCPCallbacks with well known arguments
      * and return values is desirable. Esp. for YCPcallbacks triggered from
      * multiple recipients. Currently each recipient has to implememt correct
