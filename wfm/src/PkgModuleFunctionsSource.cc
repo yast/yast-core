@@ -968,7 +968,12 @@ PkgModuleFunctions::SourceEditGet (YCPList args)
 /****************************************************************************************
  * @builtin Pkg::SourceEditSet ( list source_states ) -> true
  *
- * @param source_states
+ * Rearange known InstSrces rank and default state according to source_states
+ * (highest priority first). Known InstSrces not mentioned in source_states
+ * are deleted.
+ *
+ * @param source_states List of source states. Same format as returned by
+ * @ref SourceEditGet.
  *
  * @return true
  **/
