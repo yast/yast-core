@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Dec 18 16:09:37 CET 2002 - mvidner@suse.de
+
+- perl library:
+ * Fixed parsing compounds containing a number starting with 0.
+ * Use the script base name as the log component instead of "perl".
+
+-------------------------------------------------------------------
 Mon Dec 02 15:31:50 CET 2002 - arvin@suse.de
 
 - consider all four environment variables `LANGUAGE', `LC_ALL',
