@@ -31,8 +31,6 @@ pkginclude_HEADERS =				\
 	YMultiLineEdit.h			\
 	YMultiSelectionBox.h			\
 	YPackageSelector.h			\
-	YPkgTreeFilterView.h			\
-	YPkgRpmGroupTagsFilterView.h		\
 	YPartitionSplitter.h			\
 	YProgressBar.h				\
 	YPushButton.h				\

@@ -33,8 +33,6 @@ libyui_la_SOURCES =				\
 	YMultiLineEdit.cc			\
 	YMultiSelectionBox.cc			\
 	YPackageSelector.cc			\
-	YPkgTreeFilterView.cc			\
-	YPkgRpmGroupTagsFilterView.cc		\
 	YPartitionSplitter.cc			\
 	YProgressBar.cc				\
 	YPushButton.cc				\
