@@ -3,7 +3,7 @@ UI::{
     OpenDialog( `opt(`defaultsize),
 		`VBox(
 		      `RichText(`opt(`plainText),
-				"This is a RichText in plainText mode.\n"
+				"This is a RichText in   plainText   mode.\n"
 				+"No HTML tags are supported here, but line breaks\n"
 				+"are output literally - as are HTML tags like <b> or <i> or &product;."
 				),
