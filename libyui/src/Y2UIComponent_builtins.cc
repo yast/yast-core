@@ -239,10 +239,10 @@ YCPValue Y2UIComponent::setKeyboard(  )
  */
 
 YCPValue Y2UIComponent::setConsoleFont( const YCPString & console_magic,
-					 const YCPString & font,
-					 const YCPString & screen_map,
-					 const YCPString & unicode_map,
-					 const YCPString & encoding )
+					const YCPString & font,
+					const YCPString & screen_map,
+					const YCPString & unicode_map,
+					const YCPString & encoding )
 {
     // NOP
 
