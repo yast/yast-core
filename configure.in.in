@@ -36,6 +36,9 @@ if [[ "$yast_found_efence" = "no" ]]; then
  AC_MSG_ERROR(efence lib is missing. Please install the package ElectricFence.)
 fi
 
+PKG_CHECK_MODULES([Y2UTIL], [liby2util])
+AC_SUBST(Y2UTIL_CFLAGS)
+AC_SUBST(Y2UTIL_LIBS)
 
 # for historic reasons this value is called SUSEVERSION
 SUSEVERSION=`echo $VERSION | cut -d . -f 1,2`
@@ -45,25 +48,28 @@ AGENT_INCLUDES='dnl
  -I$(top_srcdir)/libycp/src/include dnl
  -I$(top_srcdir)/liby2/src/include dnl
  -I$(top_srcdir)/libscr/src/include dnl
- -I$(includedir)'
+ ${Y2UTIL_CFLAGS}'
 AC_SUBST(AGENT_INCLUDES)
 
 # override AGENT_LIBADD which is AC_SUBSTed in YAST2-CHECKS-PROGRAM
-AGENT_LIBADD='$(top_srcdir)/libscr/src/libscr.la'
+AGENT_LIBADD='dnl
+ $(top_builddir)/libscr/src/libscr.la dnl
+ $(top_builddir)/libycp/src/libycp.la dnl
+ $(top_builddir)/liby2/src/liby2.la dnl
+ ${Y2UTIL_LIBS}'
 
 AX_CHECK_DOCBOOK
-
+CREATE_PKGCONFIG=true
 ## some common checks
 @YAST2-CHECKS-COMMON@
 @YAST2-CHECKS-PROGRAM@
 @YAST2-CHECKS-TESTSUITE@
 
-
 ## and generate the output
-AC_OUTPUT(
+AC_CONFIG_FILES([
 	liby2/doc/Y2-access.html
 	liby2/doc/Y2-components.html
 	scr/doc/SCR.html
 	scr/doc/intro_to_scr.html
-)
+])
 @YAST2-OUTPUT@

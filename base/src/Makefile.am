@@ -2,8 +2,6 @@
 # Makefile.am for core/base/src
 #
 
-AM_LDFLAGS = -L$(libdir)
-
 ybin_PROGRAMS = y2base
 
 y2base_SOURCES = y2base.cc
@@ -28,7 +26,7 @@ y2base_DEPENDENCIES = $(YAST2CORE)
 # link the plugin against any special library.
 #
 
-y2base_LDADD = -L$(libdir) -ly2util
+y2base_LDADD = ${Y2UTIL_LIBS}
 
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\

@@ -12,7 +12,7 @@ DOC=/usr/share/doc/packages
 doxygen.css @RPMNAME@.tag: index.html
 
 index.html: $(wildcard $(top_srcdir)/*/*.cc $(top_srcdir)/*/*/*.cc)
-	@ybindir@/ydoxygen PROJECT_NAME=@RPMNAME@ \
+	${YDOXYGEN} PROJECT_NAME=@RPMNAME@ \
 		INPUT=.. \
 		"TAGFILES=\
 		\"$(DOC)/liby2util/autodocs/liby2util.tag = \

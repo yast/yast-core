@@ -12,7 +12,7 @@ EXTRA_DIST = $(html_DATA)
 builtin = $(srcdir)/../src/SystemAgent.cc
 
 ag_system-builtins.html: $(builtin)
-	@ybindir@/makebuiltindocs -t "SCR System agent functions" -a $(builtin) > $@.new
+	`pkg-config --variable=ybindir yast2-devtools`/makebuiltindocs -t "SCR System agent functions" -a $(builtin) > $@.new
 	mv $@.new $@
 
 CLEANFILES = ag_system-builtins.html

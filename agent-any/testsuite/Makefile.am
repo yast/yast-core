@@ -9,23 +9,16 @@ AM_CXXFLAGS = -DY2LOG=\"agent-any\"
 PACKAGE = ag_anyagent
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES =						\
-	-I$(srcdir)/../../libycp/src/include		\
-	-I$(srcdir)/../../liby2/src/include		\
-	-I$(srcdir)/../../libscr/src/include		\
-	-I$(includedir)
+INCLUDES = ${AGENT_INCLUDES}
 
 noinst_PROGRAMS = runag_anyagent
 
 runag_anyagent_SOURCES = runag_anyagent.cc
-runag_anyagent_LDADD = -ly2util
+runag_anyagent_LDADD = ${AGENT_LIBADD}
 # why is whole-archive necessary?
-runag_anyagent_LDFLAGS = -L$(libdir)		\
-	../../libscr/src/libscr.la		\
-	../../liby2/src/liby2.la		\
-	../../libycp/src/libycp.la		\
+runag_anyagent_LDFLAGS = \
 	-Xlinker --whole-archive		\
-	../../liby2/src/libpy2stdio.la		\
+	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_anyagent.la		\
 	-Xlinker --no-whole-archive
 

@@ -3,7 +3,7 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
-	-DLOCALEDIR=\"${localedir}\"  -fno-inline
+	-DLOCALEDIR=\"${localedir}\"
 
 plugin_LTLIBRARIES = libpy2wfm.la
 
@@ -23,14 +23,14 @@ libpy2wfm_la_LIBADD = \
 	../../libycp/src/libycp.la		\
 	../../liby2/src/libpy2stdio.la		\
 	../../liby2/src/liby2.la		\
-	-ly2util
+	${Y2UTIL_LIBS}
 
 INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libyui/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+	-I$(top_srcdir)/libycp/src/include	\
+	-I$(top_srcdir)/liby2/src/include	\
+	-I$(top_srcdir)/libyui/src/include	\
+	-I$(top_srcdir)/libscr/src/include	\
+	${Y2UTIL_CFLAGS}
 
 wfmincludedir = $(includedir)/wfm
 

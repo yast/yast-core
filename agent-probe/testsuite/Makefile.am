@@ -9,26 +9,14 @@ AM_CXXFLAGS = -DY2LOG=\"agent-probe\"
 PACKAGE = ag_hwprobe
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+INCLUDES = ${AGENT_INCLUDES}
 
 noinst_PROGRAMS = runag_hwprobe
 
 runag_hwprobe_SOURCES = runag_hwprobe.cc
-runag_hwprobe_LDADD = 				\
-	-ly2util				\
-	../../liby2/src/liby2.la		\
-	../../libycp/src/libycp.la		\
-	../../libscr/src/libscr.la
+runag_hwprobe_LDADD = ${AGENT_LIBADD}
 runag_hwprobe_LDFLAGS = 			\
-	-L../../libycp/src			\
-	-L../../liby2/src			\
-	-L../../libscr/src			\
-	-L$(libdir)				\
 	-Xlinker --whole-archive		\
-	../../liby2/src/libpy2stdio.la		\
+	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_hwprobe.la		\
 	-Xlinker --no-whole-archive

@@ -10,34 +10,33 @@ PACKAGE = wfm
 AUTOMAKE_OPTIONS = dejagnu
 
 INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(srcdir)/../../libyui/src/include    \
+	-I$(top_srcdir)/libycp/src/include	\
+	-I$(top_srcdir)/liby2/src/include	\
+	-I$(top_srcdir)/libscr/src/include	\
+	-I$(top_srcdir)/libyui/src/include	\
 	-I$(srcdir)/../src			\
-	-I$(includedir)                         \
-        -I/usr/include/YaST2
+	${Y2UTIL_CFLAGS}
 
 noinst_PROGRAMS = runwfm runc
 
 runwfm_SOURCES = runwfm.cc
 
 runwfm_LDADD = \
-	$(srcdir)/../src/libpy2wfm.la		\
-	$(srcdir)/../../libyui/src/libyui.la    \
-	$(srcdir)/../../libscr/src/libscr.la    \
-	$(srcdir)/../../libycp/src/libycp.la    \
-	$(srcdir)/../../liby2/src/liby2.la      \
-	-ly2util
+	../src/libpy2wfm.la			\
+	$(top_builddir)/libyui/src/libyui.la	\
+	$(top_builddir)/libscr/src/libscr.la	\
+	$(top_builddir)/libycp/src/libycp.la	\
+	$(top_builddir)/liby2/src/liby2.la	\
+	${Y2UTIL_LIBS}
 
 runc_SOURCES = runc.cc
 runc_LDFLAGS = -L$(libdir)
-runc_LDADD = $(srcdir)/../src/libpy2wfm.la     \
-	$(srcdir)/../../libyui/src/libyui.la    \
-	$(srcdir)/../../libscr/src/libscr.la    \
-	$(srcdir)/../../libycp/src/libycp.la    \
-	$(srcdir)/../../liby2/src/liby2.la      \
-	-ly2util
+runc_LDADD = ../src/libpy2wfm.la		\
+	$(top_builddir)/libyui/src/libyui.la	\
+	$(top_builddir)/libscr/src/libscr.la	\
+	$(top_builddir)/libycp/src/libycp.la	\
+	$(top_builddir)/liby2/src/liby2.la	\
+	${Y2UTIL_LIBS}
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp	\

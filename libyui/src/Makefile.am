@@ -64,11 +64,10 @@ libyui_la_SOURCES =				\
 
 
 INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
+	-I$(top_srcdir)/libycp/src/include	\
+	-I$(top_srcdir)/liby2/src/include	\
 	-I$(srcdir)/include			\
-	-I$(includedir)				\
-	-I/usr/include/YaST2
+	${Y2UTIL_CFLAGS}
 
 libyui_la_LDFLAGS = -version-info 2:0
 libyui_la_LIBADD = -lpthread

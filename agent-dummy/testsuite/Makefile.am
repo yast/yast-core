@@ -7,7 +7,7 @@ AM_CXXFLAGS = -DY2LOG=\"agent-dummy\"
 AUTOMAKE_OPTIONS = dejagnu
 
 INCLUDES =		\
-	-I$(includedir)
+	${Y2UTIL_CFLAGS}
 
 noinst_PROGRAMS = y2ag_dummy
 
@@ -16,12 +16,8 @@ y2ag_dummy_LDADD = 					\
 	../../liby2/src/liby2.la			\
 	../../libycp/src/libycp.la			\
 	../../libscr/src/libscr.la			\
-	-ly2util
+	${Y2UTIL_LIBS}
 y2ag_dummy_LDFLAGS =				\
-	-L../../libycp/src			\
-	-L../../liby2/src			\
-	-L../../libscr/src			\
-	-L$(libdir)				\
 	-Xlinker --whole-archive		\
 	../../liby2/src/libpy2stdio.la		\
 	../src/libpy2ag_dummy.la		\

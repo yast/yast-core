@@ -4,7 +4,6 @@
 
 SUBDIRS = include
 
-AM_LDFLAGS = -L$(libdir)
 AM_CXXFLAGS = -DY2LOG=\"liby2\" -DYAST2DIR=\"${yast2dir}\"		\
 	-DPLUGINDIR=\"${plugindir}\" -DEXECCOMPDIR=\"${execcompdir}\"
 
@@ -25,7 +24,7 @@ liby2_la_SOURCES = \
 	SymbolEntry.cc
 
 liby2_la_LDFLAGS = -version-info 2:0
-liby2_la_LIBADD = -ly2util -lutil -ldl
+liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl
 
 libpy2stdio_la_SOURCES =				\
 	Y2StdioComponent.cc Y2CCStdio.cc
@@ -57,4 +56,4 @@ INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/include				\
 	-I$(srcdir)/include/y2				\
-	-I$(includedir)
+	${Y2UTIL_CFLAGS}

@@ -14,7 +14,7 @@ libpy2ag_dummy_la_LDFLAGS = -version-info 2:0
 libpy2ag_dummy_la_LIBADD = @AGENT_LIBADD@
 
 INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+	-I$(top_srcdir)/libycp/src/include	\
+	-I$(top_srcdir)/liby2/src/include	\
+	-I$(top_srcdir)/libscr/src/include	\
+	${Y2UTIL_CFLAGS}

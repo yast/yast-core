@@ -6,7 +6,7 @@ SUBDIRS = config lib libycp.test tests
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
-INCLUDES = -I$(srcdir)/../src/include -I$(srcdir)/../../liby2/src/include -I$(includedir) -I/usr/include/YaST2
+INCLUDES = -I$(srcdir)/../src/include -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
 
 bindir = $(prefix)/bin
 libdir = ../src/.libs
@@ -14,16 +14,13 @@ libdir = ../src/.libs
 noinst_PROGRAMS = testSignature runc runycp
 
 runc_SOURCES = runc.cc
-runc_LDFLAGS = -L$(libdir) 
-runc_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util
+runc_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}
 
 runycp_SOURCES = runycp.cc
-runycp_LDFLAGS = -L$(libdir)
-runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util -lefence
+runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS} -lefence
 
 testSignature_SOURCES = testSignature.cc
-testSignature_LDFLAGS = -L$(libdir)
-testSignature_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util
+testSignature_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}
 
 PACKAGE=libycp
 

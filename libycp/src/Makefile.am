@@ -52,10 +52,10 @@ BUILT_SOURCES = parser.h
 
 AM_YFLAGS = -d -v
 
-INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(srcdir)/../../liby2/src/include -I$(includedir) -I/usr/include/YaST2
+INCLUDES = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
 
-libycp_la_LDFLAGS = -L$(libdir) -version-info 2:0
+libycp_la_LDFLAGS = -version-info 2:0
 
-libycp_la_LIBADD = -lxcrypt -ly2util
+libycp_la_LIBADD = ${Y2UTIL_LIBS} -lxcrypt
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)

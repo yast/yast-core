@@ -5,16 +5,14 @@
 AM_CXXFLAGS = -DY2LOG=\"libscr\"
 
 INCLUDES =						\
-	-I$(srcdir)/../../libycp/src/include		\
-	-I$(srcdir)/../../liby2/src/include		\
+	-I$(top_srcdir)/libycp/src/include		\
+	-I$(top_srcdir)/liby2/src/include		\
 	-I$(srcdir)/../src/include			\
-	-I$(includedir)					\
-	-I/usr/include/YaST2
+	${Y2UTIL_CFLAGS}
 
 noinst_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
-runscr_LDADD = ../src/libscr.la ../../liby2/src/liby2.la -lycp -ly2util
-runscr_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
+runscr_LDADD = ../src/libscr.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la ${Y2UTIL_LIBS}
 
 PACKAGE = libscr
 AUTOMAKE_OPTIONS = dejagnu

@@ -3,29 +3,27 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
-AM_LDFLAGS = -L$(libdir)
 
-INCLUDES = -I$(srcdir)/../../../libycp/src/include \
-	-I$(srcdir)/../../../liby2/src/include \
-	-I$(srcdir)/../../../libyui/src/include \
-	-I$(srcdir)/../../../libscr/src/include \
-	-I$(srcdir)/../../../wfm/src		\
-	-I$(includedir)				\
-	-I/usr/include/YaST2
+INCLUDES = -I$(top_srcdir)/libycp/src/include \
+	-I$(top_srcdir)/liby2/src/include \
+	-I$(top_srcdir)/libyui/src/include \
+	-I$(top_srcdir)/libscr/src/include \
+	-I$(top_srcdir)/wfm/src		\
+	${Y2UTIL_CFLAGS}
 
 bin_PROGRAMS = ycpc
 ycpc_SOURCES = ycpc.cc
-ycpc_LDADD = ../../../libycp/src/libycp.la \
-	../../../libyui/src/libyui.la \
-	../../../wfm/src/libpy2wfm.la \
-	../../../liby2/src/liby2.la \
-	../../../libscr/src/libscr.la \
-	../../../scr/src/libpy2scr.la \
-	-ly2util
-	
+ycpc_LDADD = $(top_builddir)/libycp/src/libycp.la \
+	$(top_builddir)/libyui/src/libyui.la \
+	$(top_builddir)/wfm/src/libpy2wfm.la \
+	$(top_builddir)/liby2/src/liby2.la \
+	$(top_builddir)/libscr/src/libscr.la \
+	$(top_builddir)/scr/src/libpy2scr.la \
+	${Y2UTIL_LIBS}
+
 ycpc_LDFLAGS = \
        -Xlinker --whole-archive        \
-        ../../../liby2/src/libpy2plugin.la         \
+        $(top_builddir)/liby2/src/libpy2plugin.la         \
        -Xlinker --no-whole-archive 
 
 

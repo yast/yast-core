@@ -21,3 +21,5 @@ missing
 mkinstalldirs
 stamp-h*
 Makefile.am.common
+*.pc
+*.pc.in

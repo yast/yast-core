@@ -5,15 +5,14 @@
 AM_CXXFLAGS = -DY2LOG=\"libyui\"
 
 INCLUDES =						\
-	-I$(srcdir)/../../libycp/src/include		\
-	-I$(srcdir)/../../liby2/src/include		\
+	-I$(top_srcdir)/libycp/src/include		\
+	-I$(top_srcdir)/liby2/src/include		\
 	-I$(srcdir)/../src/include			\
-	-I$(includedir)
+	${Y2UTIL_CFLAGS}
 
 noinst_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
-runyui_LDADD = ../src/libyui.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la -lpthread -ly2util
-runyui_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
+runyui_LDADD = ../src/libyui.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la ${Y2UTIL_LIBS} -lpthread
 
 AUTOMAKE_OPTIONS = dejagnu
 
