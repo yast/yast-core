@@ -33,7 +33,7 @@
 		   );
 
     map event = $[];
-    any id = nil;
+    any id    = nil;
 
     // Event loop
     

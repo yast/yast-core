@@ -35,7 +35,7 @@
 	{
 	    // process "OK" button
 	    
-	    y2debug( "OK button activated" );
+	    y2milestone( "OK button activated" );
 
 	    
 	    // Retrieve widget contents
@@ -48,13 +48,13 @@
 	    // process "Cancel" buttton
 	    // or window manager close button (this also returns `cancel)
 	    
-	    y2debug( "Cancel button activated" );
+	    y2milestone( "Cancel button activated" );
 	}
 	else if ( widget_id == `help )
 	{
 	    // process "Help" button
 	    
-	    y2debug( "Help button activated" );
+	    y2milestone( "Help button activated" );
 	}
 
 	// No other "else" branch necessary: None of the TextEntry widget has
@@ -73,5 +73,5 @@
     
     // Dump the values entered into the log file
     
-    y2debug( "Name: %1 Address: %2", name, addr );
+    y2milestone( "Name: %1 Address: %2", name, addr );
 }

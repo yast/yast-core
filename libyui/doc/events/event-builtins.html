@@ -114,7 +114,6 @@ any widget_id = <b>UI::UserInput()</b>;
 
 
 <h3>Example:</h3>
-
 <pre class="code">
 // UserInput.ycp
 //
@@ -153,7 +152,7 @@ any widget_id = <b>UI::UserInput()</b>;
 	{
 	    // process "OK" button
 
-	    y2debug( "OK button activated" );
+	    y2milestone( "OK button activated" );
 
 
 	    // Retrieve widget contents
@@ -166,13 +165,13 @@ any widget_id = <b>UI::UserInput()</b>;
 	    // process "Cancel" buttton
 	    // or window manager close button (this also returns `cancel)
 
-	    y2debug( "Cancel button activated" );
+	    y2milestone( "Cancel button activated" );
 	}
 	else if ( widget_id == `help )
 	{
 	    // process "Help" button
 
-	    y2debug( "Help button activated" );
+	    y2milestone( "Help button activated" );
 	}
 
 	// No other "else" branch necessary: None of the TextEntry widget has
@@ -191,7 +190,7 @@ any widget_id = <b>UI::UserInput()</b>;
 
     // Dump the values entered into the log file
 
-    y2debug( "Name: %1 Address: %2", name, addr );
+    y2milestone( "Name: %1 Address: %2", name, addr );
 }
 
 </pre>
@@ -228,7 +227,6 @@ any widget_id = <b>UI::PollInput()</b>;
 </pre>
 
 <h3>Example:</h3>
-
 <pre class="code">
 // PollInput.ycp
 //
@@ -314,7 +312,6 @@ any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 </pre>
 
 <h3>Example:</h3>
-
 <pre class="code">
 // TimeoutUserInput.ycp
 //
@@ -387,6 +384,22 @@ to get those events in the first place.
 <p>
 On the downside, using WaitForEvent() means accessing the ID that caused an
 event requires a map lookup.
+<p>
+Notice that you still need UI::QueryWidget() to get the contents of the widget
+that caused the event. In the general case you'll need to QueryWidget most
+widgets on-screen anyway so delivering that one value along with the event
+wouldn't help too much.
+
+<p class="info-box">
+<b>Important:</b> Don't blindly rely on getting each and every individual event
+that you think should come. The UI keeps track of only one pending event (which
+is usually the last one that occured). If many events occur between individual
+WaitForEvent() calls, all but the last will be lost. 
+Read <a href="events-general.html#pending_events">here</a> why.
+It is relatively easy to programm defensively in a way that losing individual
+events doesn't matter: Also use QueryWidget() to get the status of all your
+widgets. Don't keep redundant information about widget status in your code. Ask
+them. Always.
 
 
 <h3>Usage:</h3>
@@ -399,6 +412,7 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 
 </pre>
 
+<h3>Example:</h3>
 <pre class="code">
 // WaitForEvent.ycp
 //
@@ -435,7 +449,7 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 		   );
 
     <b>map</b> event = $[];
-    any id = nil;
+    any id    = nil;
 
     // Event loop
     
