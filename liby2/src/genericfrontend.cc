@@ -101,10 +101,6 @@ main (int argc, char **argv)
     // set a defined umask
     umask (0022);
 
-    // The environment variable YAST_IS_RUNNING is checked in rpm
-    // post install scripts. Might be useful for other scripts as
-    // well.
-    setenv ("YAST_IS_RUNNING", "1", 1);
 
     y2milestone ("Launched YaST2 component '%s'", progname);
 
@@ -344,6 +340,23 @@ main (int argc, char **argv)
     // the client is always the callback component of the server
     server->setCallback (client);
 
+
+    // The environment variable YAST_IS_RUNNING is checked in rpm
+    // post install scripts. Might be useful for other scripts as
+    // well.
+    if (strcmp (client_name, "installation.ycp") == 0 &&
+	arglist->contains (YCPString ("initial")))
+    {
+	setenv ("YAST_IS_RUNNING", "instsys", 1);
+    }
+    else
+    {
+	setenv ("YAST_IS_RUNNING", "yes", 1);
+    }
+
+    y2milestone ("YAST_IS_RUNNING is %s", getenv ("YAST_IS_RUNNING"));
+
+
     // Now start communication
     YCPValue result = client->doActualWork(arglist, server);   // give arglist collected above
 
@@ -357,8 +370,8 @@ main (int argc, char **argv)
 
     // might be useful in tracking segmentation faults
     y2milestone ("Finished YaST2 component '%s'", progname);
-    
-    if( result->isBoolean() ) 
+
+    if( result->isBoolean() )
 	exit( result->asBoolean()->value() ? 0 : YCP_ERROR );
 
     exit (EXIT_SUCCESS);
