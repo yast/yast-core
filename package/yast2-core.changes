@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  2 11:20:28 CET 2004 - msvec@suse.cz
+
+- disabled part of the agents-perl testsute (byteblock)
+- 2.9.49
+
+-------------------------------------------------------------------
 Mon Mar  1 18:38:40 CET 2004 - sh@suse.de
 
 - Enable saving of screen shot name if recording macro 
