@@ -1,5 +1,7 @@
 #!/bin/bash
 
+unset LANG
+unset LC_ALL
 unset Y2DEBUG
 unset Y2DEBUGGER
 export Y2DEBUGSHELL=1
