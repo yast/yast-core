@@ -23,6 +23,8 @@
  * Author: Mathias Kettner <kettner@suse.de>
  */
 
+#define KMTRACE 0
+
 #include <config.h>
 #include <unistd.h>
 #include <regex.h>
@@ -35,6 +37,10 @@
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
 #include <ycp/Bytecode.h>
+
+#if KMTRACE
+#include "/opt/kde3/include/ktrace.h"
+#endif
 
 #include <scr/SCR.h>
 #include <UI.h>
@@ -128,6 +134,10 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 	    return 0;	// shouldn't happen since findy2() already checked
     }
 
+#if KMTRACE
+    ktrace();
+#endif
+
     // to be on the safe side
     initializeBuiltins ();
     
@@ -152,6 +162,10 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 	script = YCPCode ( Bytecode::readFile (ybc_filename) );
 	y2milestone ("Bytecode file loaded");
     }
+    
+#if KMTRACE
+    kuntrace ();
+#endif
 
     if (script->code () != 0)
     {

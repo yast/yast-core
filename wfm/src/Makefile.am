@@ -47,6 +47,7 @@ libpy2wfm_la_SOURCES =				\
 	Y2CCScript.cc Y2CCScript.h
 
 libpy2wfm_la_LDFLAGS = -version-info 2:0
+# use this for KMTrace: libpy2wfm_la_LIBADD = liby2wfm.la /opt/kde3/lib/libktrace_s.a
 libpy2wfm_la_LIBADD = liby2wfm.la
 
 INCLUDES =					\
