@@ -21,18 +21,33 @@
 
 #include <string.h>
 #include <stdio.h>
-#define y2log_component "ui-component"
+#define y2log_component "ui"
 #include <ycp/y2log.h>
+#include <ycp/YCPValue.h>
+#include <ycp/YCPVoid.h>
 
 #include "YUIComponent.h"
 #include "YUI.h"
 
 
 YUI * YUIComponent::_ui = 0;
+YUIComponent * YUIComponent::_uiComponent = 0;
 
 
 YUIComponent::YUIComponent()
 {
+    _argc		= 0;
+    _argv		= 0;
+    _macro_file 	= 0;
+    _with_threads	= false;
+
+    if ( _uiComponent )
+    {
+	y2error( "Multiple instances of UI component!" );
+	return;
+    }
+    
+    _uiComponent	= this;
 }
 
 
@@ -43,40 +58,65 @@ YUIComponent::~YUIComponent()
 }
 
 
-void YUIComponent::setServerOptions( int argc, char **argv )
+YUIComponent * YUIComponent::uiComponent()
+{
+    return _uiComponent;
+}
+
+
+YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] )
 {
     if ( ! _ui )
     {
-	// Evaluate some command line arguments
-	
-	bool with_threads = true;
-	const char * macro_file = 0;
+	y2debug( "Late creation of UI instance" );
+	_ui = createUI( _argc, _argv, _with_threads, _macro_file );
+    }
 
-	for ( int i=0; i < argc; i++ )
+    if ( _ui )
+	return _ui->callBuiltin( function, fn_argc, fn_argv );
+    else
+	return YCPVoid();
+}
+
+
+
+void YUIComponent::setServerOptions( int argc, char **argv )
+{
+    // Evaluate some command line arguments
+	
+    _with_threads = true;
+    _macro_file	  = 0;
+
+    for ( int i=0; i < argc; i++ )
+    {
+	if ( strcmp( argv[i], "--nothreads" ) == 0 )
 	{
-	    if ( strcmp( argv[i], "--nothreads" ) == 0 )
+	    _with_threads = false;
+	}
+	else if ( strcmp( argv[i], "--macro" ) == 0 )
+	{
+	    if ( i+1 >= argc )
 	    {
-		with_threads = false;
+		y2error( "Missing arg for '--macro'" );
+		fprintf( stderr, "y2base: Missing argument for --macro\n" );
+		exit( 1 );
 	    }
-	    else if ( strcmp( argv[i], "--macro" ) == 0 )
+	    else
 	    {
-		if ( i+1 >= argc )
-		{
-		    y2error( "Missing arg for '--macro'" );
-		    fprintf( stderr, "y2base: Missing argument for --macro\n" );
-		    exit( 1 );
-		}
-		else
-		{
-		    macro_file = argv[++i];
-		    y2milestone( "Playing macro '%s' from command line",
-				 macro_file ? macro_file : "<NULL>" );
-		}
+		_macro_file = argv[++i];
+		y2milestone( "Playing macro '%s' from command line",
+			     _macro_file ? _macro_file : "<NULL>" );
 	    }
 	}
-	
-	_ui = createUI( argc, argv, with_threads, macro_file );
     }
+
+    _argc = argc;
+    _argv = argv;
+
+    // We only save those values for now. The UI gets instantiated upon the
+    // first call to YUIComponent::ui() which will usually happen when the
+    // first UI builtin is due to be executed via the call handler (see
+    // YUI_bindings.cc).
 }
 
 

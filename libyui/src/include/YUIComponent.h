@@ -56,10 +56,25 @@ protected:
 public:
 
     /**
-     * Returns the instance of this type of UI or 0 if none has been created yet.
+     * Returns the instance of the UI component 0 if none has been created yet.
+     **/
+    static YUIComponent * uiComponent();
+
+    /**
+     * Returns the instance of the UI or 0 if none has been created yet.
+     * Note: This does _not_ create a UI on the first call; this happens in the
+     * first call of a UI builtin via the YUIComponent's call handler which
+     * creates a UI upon its first call and then calls the UI's call handler.
      **/
     static YUI * ui() { return _ui; }
 
+    /**
+     * YUIComponent level call handler; this creates the actual UI instance
+     * upon its first call and then hands over the function to be called to the
+     * UI's call handler. Weird, huh? ;-)
+     **/
+    YCPValue callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] );
+    
     /**
      * Called from generic frontend upon session close.
      * This deletes the UI.
@@ -92,7 +107,15 @@ public:
     
 private:
 
-    static YUI *	_ui;
+    static YUI *		_ui;
+    static YUIComponent *	_uiComponent;
+
+    int			_argc;
+    char **		_argv;
+    const char *	_macro_file;
+    bool		_with_threads;
+
+    
 };
 
 #endif // YUI_h

@@ -555,9 +555,9 @@ UIHasSpecialWidget( const YCPSymbol & widget )
 static YCPValue
 UICallHandler( void * ptr, int argc, YCPValue argv[] )
 {
-    if ( YUIComponent::ui() )
+    if ( YUIComponent::uiComponent() )
     {
-	return YUIComponent::ui()->callBuiltin( ptr, argc, argv );
+	return YUIComponent::uiComponent()->callBuiltin( ptr, argc, argv );
     }
     else
     {
