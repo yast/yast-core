@@ -419,7 +419,7 @@ static YCPValue
 s_mergestring (const YCPList &l, const YCPString &s)
 {
     /**
-     * @builtin mergestring (list (string) l, string c) -> string
+     * @builtin mergestring (list&lt;string&gt; l, string c) -> string
      * Merges a list of strings to a single list. Inserts <tt>c</tt>
      * between list elements (c may be empty). List elements which
      * are not of type strings are ignored.
@@ -811,6 +811,7 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
      * // h == nil
      * </pre>
      */
+    // ")
 
     if (i.isNull () || p.isNull ())
 	return YCPNull ();
@@ -868,7 +869,7 @@ s_timestring (const YCPString &fmt, const YCPInteger &time, const YCPBoolean &ut
      * Combination of standard libc functions gmtime or localtime and strftime.
      *
      * Example <pre>
-     * timestring ("", 100, false) -> ""
+     * timestring ("%F %T %Z", time (), false) -> "2004-08-24 14:55:05 CEST"
      * </pre>
      */
 
@@ -926,7 +927,7 @@ s_cryptmd5 (const YCPString &s)
      * password encryption.
      *
      * Example: <pre>
-     * crypt ("readable") -> "WEgvferaeaFy6"
+     * cryptmd5 ("readable") -> "$1$BBtzrzzz$zc2vEB7XnA3Iq7pOgDsxD0"
      * </pre>
      */
 
