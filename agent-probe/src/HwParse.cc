@@ -1,12 +1,13 @@
 /**
 
-    HwParse.cc
+  HwParse.cc
 
-    Purpose:	ycp to libhd interface, parse hd_t and construct YCPValueRep
-    Creator:	kkaempf@suse.de
-    Maintainer:	kkaempf@suse.de
+  Purpose:	ycp to libhd interface, parse hd_t and construct YCPValueRep
 
-    $Id$
+  Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+  Maintainer:	Arvin Schnell <arvin@suse.de>
+
 */
 
 #include <stdio.h>
@@ -25,10 +26,10 @@
 
 // hd_cpu_arch_t -> string
 //
-static char *
+static const char*
 cpu2string (hd_cpu_arch_t cpu_arch)
 {
-    char *s;
+    const char *s;
     switch (cpu_arch)
     {
 	case arch_intel:   s = "i386"; break;
@@ -51,10 +52,10 @@ cpu2string (hd_cpu_arch_t cpu_arch)
 
 // hd_boot_arch_t -> string
 //
-static char *
+static const char*
 boot2string (hd_boot_arch_t boot_arch)
 {
-    char *s;
+    const char *s;
     switch (boot_arch)
     {
 	case boot_lilo:  s = "lilo"; break;
@@ -73,10 +74,10 @@ boot2string (hd_boot_arch_t boot_arch)
 
 // hd_hotplug_t -> string
 //
-static char*
+static const char*
 hotplug2string (hd_hotplug_t hotplug)
 {
-    char* s;
+    const char* s;
     switch (hotplug)
     {
 	case hp_none:     s = 0; break;
@@ -95,7 +96,7 @@ hotplug2string (hd_hotplug_t hotplug)
 static YCPString
 access2string (unsigned int acc)
 {
-    char *s;
+    const char *s;
     switch ((enum access_flags)acc)
     {
 	case acc_unknown: s = "?"; break;
@@ -491,7 +492,7 @@ YCPValue
 HwProbe::hd2value (hd_t *hd)
 {
     YCPMap out;
-    char *s;
+    const char* s;
 
     // we're just probing this hardware, so the user is running yast2
     // and configuring this hardware.
@@ -634,13 +635,13 @@ HwProbe::hd2value (hd_t *hd)
 
     // bus
 
-    s = hd_bus_name (hd_base, hd->bus);
+    s = hd->bus.name;
     if (s)
     {
 	out->add (YCPString ("bus"), YCPString (s));
     }
 
-    if (hd->bus == bus_pci)
+    if (hd->bus.id == bus_pci)
     {
 	int i = hd->slot >> 8;
 
@@ -669,41 +670,44 @@ HwProbe::hd2value (hd_t *hd)
 
     // device name
 
-    s = hd->dev_name;
-    if (s == 0)
-	s = hd_device_name (hd_base, hd->vend, hd->dev);
+    s = hd->device.name;
     if (s)
+    {
 	out->add (YCPString ("device"), YCPString (s));
+    }
 
     // vendor name
 
-    s = hd->vend_name;
-    if (s == 0)
-	s = hd_vendor_name (hd_base, hd->vend);
+    s = hd->vendor.name;
     if (s)
+    {
 	out->add (YCPString ("vendor"), YCPString (s));
+    }
 
     // sub device name
 
-    s = hd->sub_dev_name;
-    if (s == 0)
-	s = hd_sub_device_name (hd_base, hd->vend, hd->dev, hd->sub_vend, hd->sub_dev);
+    s = hd->sub_device.name;
     if (s)
+    {
 	out->add (YCPString ("sub_device"), YCPString (s));
+    }
 
     // sub vendor name
 
-    s = hd->sub_vend_name;
-    if (s == 0)
-	s = hd_vendor_name (hd_base, hd->sub_vend);
+    s = hd->sub_vendor.name;
     if (s)
+    {
 	out->add (YCPString ("sub_vendor"), YCPString (s));
+    }
 
     // unique key
 
     s = hd->unique_id;
     if (s)
+    {
 	out->add (YCPString ("unique_key"), YCPString (s));
+    }
+
     if (hd->old_unique_id != 0
 	&& strcmp (s, hd->old_unique_id) != 0)
     {
@@ -712,27 +716,38 @@ HwProbe::hd2value (hd_t *hd)
 
     // vendor, device, subvendor, subdevice id, if known
 
-    if (hd->vend > 0)
-	out->add (YCPString ("vendor_id"), YCPInteger (hd->vend));
-    if (hd->dev > 0)
-	out->add (YCPString ("device_id"), YCPInteger (hd->dev));
-    if (hd->sub_vend > 0)
-	out->add (YCPString ("sub_vendor_id"), YCPInteger (hd->sub_vend));
-    if (hd->sub_dev > 0)
-	out->add (YCPString ("sub_device_id"), YCPInteger (hd->sub_dev));
+    if (hd->vendor.id > 0)
+    {
+	out->add (YCPString ("vendor_id"), YCPInteger (hd->vendor.id));
+    }
+
+    if (hd->device.id > 0)
+    {
+	out->add (YCPString ("device_id"), YCPInteger (hd->device.id));
+    }
+
+    if (hd->sub_vendor.id > 0)
+    {
+	out->add (YCPString ("sub_vendor_id"), YCPInteger (hd->sub_vendor.id));
+    }
+
+    if (hd->sub_device.id > 0)
+    {
+	out->add (YCPString ("sub_device_id"), YCPInteger (hd->sub_device.id));
+    }
 
     // class and subclass id
 
-    out->add (YCPString ("class_id"), YCPInteger (hd->base_class));
-    out->add (YCPString ("sub_class_id"), YCPInteger (hd->sub_class));
+    out->add (YCPString ("class_id"), YCPInteger (hd->base_class.id));
+    out->add (YCPString ("sub_class_id"), YCPInteger (hd->sub_class.id));
 
     // revision
 
-    s = hd->rev_name;
-    if ((s == 0) && (hd->rev != 0))
+    s = hd->revision.name;
+    if ((s == 0) && (hd->revision.id != 0))
     {
 	static char revbuf[64];
-	sprintf (revbuf, "%d", hd->rev);
+	sprintf (revbuf, "%d", hd->revision.id);
 	s = revbuf;
     }
     if (s)
@@ -740,21 +755,15 @@ HwProbe::hd2value (hd_t *hd)
 
     // compat vendor name
 
-    if (hd->compat_vend)
-    {
-	s = hd_vendor_name (hd_base, hd->compat_vend);
-	if (s)
-	    out->add (YCPString ("compat_vendor"), YCPString (s));
-    }
+    s = hd->compat_vendor.name;
+    if (s)
+	out->add (YCPString ("compat_vendor"), YCPString (s));
 
     // compat device name
 
-    if (hd->compat_vend && hd->compat_dev)
-    {
-	s = hd_device_name (hd_base, hd->compat_vend, hd->compat_dev);
-	if (s)
-	    out->add (YCPString ("compat_device"), YCPString (s));
-    }
+    s = hd->compat_device.name;
+    if (s)
+	out->add (YCPString ("compat_device"), YCPString (s));
 
     // linux device name
 
@@ -763,14 +772,13 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("dev_name"), YCPString (s));
 
     // BIOS id
-
     s = hd->rom_id;
     if (s)
 	out->add (YCPString ("bios_id"), YCPString (s));
 
     // Programming interface
-    if (hd->prog_if != 0)
-	out->add (YCPString ("prog_if"), YCPInteger (hd->prog_if));
+    if (hd->prog_if.id != 0)
+	out->add (YCPString ("prog_if"), YCPInteger (hd->prog_if.id));
 
     if (hd->driver != 0)
 	out->add (YCPString ("driver"), YCPString (hd->driver));

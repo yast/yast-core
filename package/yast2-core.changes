@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Aug 16 15:43:56 CEST 2002 - arvin@suse.de
+
+- adaptions for libhd version 5.12
+
+-------------------------------------------------------------------
 Thu Aug 15 12:01:15 CEST 2002 - arvin@suse.de
 
 - added handling of hotplug entry to probe agent (bug #13571)

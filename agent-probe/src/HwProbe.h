@@ -1,11 +1,14 @@
 /**
- HwProbe.h
 
- Purpose:	class definition for HwProbe
- Creator:	kkaempf@suse.de
- Maintainer:	kkaempf@suse.de
+  HwProbe.h
 
- */
+  Purpose:	class definition for HwProbe
+
+  Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+  Maintainer:	Arvin Schnell <arvin@suse.de>
+
+*/
 
 // -*- c++ -*-
 

@@ -4,10 +4,10 @@
 
   Purpose:	hardware autoprobe repository access
 		handling of .probe paths
-  Creator:	kkaempf@suse.de
-  Maintainer:	kkaempf@suse.de
 
-  Written by Klaus K"ampf (kkaempf@suse.de) 1999
+  Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+  Maintainer:	Arvin Schnell <arvin@suse.de>
 
   see doc/hwprobe.html for a description
 
