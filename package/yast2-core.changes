@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 25 16:26:38 CEST 2003 - kkeil@suse.de
+
+- new ISDN interface for agent-probe, data is now based on CDB
+
+-------------------------------------------------------------------
 Wed Aug 20 18:52:54 CEST 2003 - mjancar@suse.cz
 
 - require the perl version we build with
