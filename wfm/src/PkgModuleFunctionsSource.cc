@@ -196,7 +196,7 @@ PkgModuleFunctions::SourceSetRamCache (YCPList args)
 /****************************************************************************************
  * @builtin Pkg::SourceStartManager (boolean autoEnable = true) -> true
  *
- * Make shure the InstSrcManager is up and knows all available InstSrces.
+ * Make sure the InstSrcManager is up and knows all available InstSrces.
  * Dependent on the value of autoEnable, InstSources may be enabled on the
  * fly. It's save to call this multiple times, and once the InstSources are
  * actually enabled, it's even cheap (enabling an InstSrc is expensive).
@@ -227,14 +227,14 @@ PkgModuleFunctions::SourceStartManager (YCPList args)
 /****************************************************************************************
  * @builtin Pkg::SourceStartCache (boolean enabled_only = true) -> list of SrcIds (integer)
  *
- * Make shure the InstSrcManager is up, and return the list of SrcIds.
+ * Make sure the InstSrcManager is up, and return the list of SrcIds.
  * In fact nothing more than:
  * <PRE>
  *   SourceStartManager( enabled_only );
  *   return SourceGetCurrent( enabled_only );
  * </PRE>
  *
- * @param enabled_only If true, make shure all InstSrces are enabled according to
+ * @param enabled_only If true, make sure all InstSrces are enabled according to
  * their default, and return the Ids of enabled InstSrces only. If false, return
  * the Ids of all known InstSrces.
  *
@@ -738,7 +738,7 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
  *
  * In contrary to @ref SourceCreate, InstSrces are loaded into the InstSrcManager,
  * but not enabled (packages and selections are not provided to the PackageManager),
- * and the SrcIds of <b>all<\b> InstSrces found are returned.
+ * and the SrcIds of <b>all</b> InstSrces found are returned.
  *
  * @param url The media to scan.
  *
