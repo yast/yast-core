@@ -23,36 +23,31 @@
 #include "../config.h"
 
 #include <sys/stat.h>
-#include <netinet/in.h>
-
-extern "C" {
-    int inet_aton(const char *cp, struct in_addr *inp);
-}
 
 
 YCPValue evaluateRemove(YCPInterpreter *interpreter, const YCPList& args)
 {
-  /**
-   * @builtin remove(list|term l, integer i) -> any
-   * Remove the i'th value from a list or a term. The first value has the index 0.
-   * The call remove([1,2,3], 1) thus returns [1,3]. Returns nil if the
-   * index is invalid.
-   *
-   * Example <pre>
-   * remove([1,2], 0) -> [2]
-   * remove(`fun(3,7), 0) -> [3,7];
-   * remove(`fun(3,7), 1) -> `fun(7);
-   * </pre>
-   *
-   * @builtin remove(map m, any k) -> map
-   * Remove the key k and a corresponding value from a map m.
-   * Returns nil if the key k is not found in m.
-   *
-   * Example <pre>
-   * remove($[1:2], 0) -> $[]
-   * remove ($[1:2, 3:4], 1) -> $[3:4]
-   * </pre>
-   */
+    /**
+     * @builtin remove(list|term l, integer i) -> any
+     * Remove the i'th value from a list or a term. The first value has the index 0.
+     * The call remove([1,2,3], 1) thus returns [1,3]. Returns nil if the
+     * index is invalid.
+     *
+     * Example <pre>
+     * remove([1,2], 0) -> [2]
+     * remove(`fun(3,7), 0) -> [3,7];
+     * remove(`fun(3,7), 1) -> `fun(7);
+     * </pre>
+     *
+     * @builtin remove(map m, any k) -> map
+     * Remove the key k and a corresponding value from a map m.
+     * Returns nil if the key k is not found in m.
+     *
+     * Example <pre>
+     * remove($[1:2], 0) -> $[]
+     * remove ($[1:2, 3:4], 1) -> $[3:4]
+     * </pre>
+     */
 
     if (args->value(0)->isMap())
     {
@@ -67,43 +62,42 @@ YCPValue evaluateRemove(YCPInterpreter *interpreter, const YCPList& args)
 	map->remove(key);
 	return map;
     }
+    else if (args->value(1)->isInteger())
+    {
+	long idx = args->value(1)->asInteger()->value();
 
-  else if (args->value(1)->isInteger()) {
+	YCPList list = YCPList();
 
-    long idx = args->value(1)->asInteger()->value();
+	if (args->value(0)->isList())
+	    list = args->value(0)->asList()->shallowCopy();
+	else if (args->value(0)->isTerm()) {
+	    list = args->value(0)->asTerm()->args()->shallowCopy();
+	    if(!idx)
+		return list;
+	    else
+		idx--;
+	}
+	else {
+	    interpreter->reportError(LOG_ERROR, "Wrong argument for remove()");
+	    return YCPVoid();
+	}
 
-    YCPList list = YCPList();
-
-    if (args->value(0)->isList())
-      list = args->value(0)->asList()->shallowCopy();
-    else if (args->value(0)->isTerm()) {
-      list = args->value(0)->asTerm()->args()->shallowCopy();
-      if(!idx)
-        return list;
-      else
-        idx--;
+	if (idx < 0 || idx >= list->size()) {
+	    interpreter->reportError(LOG_ERROR, "Index %ld for remove() out of range", idx);
+	    return YCPVoid();
+	}
+	else {
+	    list->remove(idx);
+	    if(args->value(0)->isList())
+		return list;
+	    else {
+		YCPTerm term = YCPTerm(args->value(0)->asTerm()->symbol(),list);
+		return term;
+	    }
+	}
     }
-    else {
-        interpreter->reportError(LOG_ERROR, "Wrong argument for remove()");
-        return YCPVoid();
-    }
 
-    if (idx < 0 || idx >= list->size()) {
-      interpreter->reportError(LOG_ERROR, "Index %ld for remove() out of range", idx);
-      return YCPVoid();
-    }
-    else {
-      list->remove(idx);
-      if(args->value(0)->isList())
-        return list;
-      else {
-        YCPTerm term = YCPTerm(args->value(0)->asTerm()->symbol(),list);
-        return term;
-      }
-    }
-  }
-
-  return YCPNull();
+    return YCPNull();
 }
 
 
@@ -266,109 +260,109 @@ YCPValue evaluateY2TraceLog (loglevel_t level, YCPInterpreter *interpreter, YCPL
 
 YCPValue evaluateY2log(loglevel_t level, YCPInterpreter *interpreter, const YCPList &args)
 {
-  if (args->size () > 0 && args->value (0)->isInteger ())
-    return evaluateY2TraceLog (level, interpreter, args);
+    if (args->size () > 0 && args->value (0)->isInteger ())
+	return evaluateY2TraceLog (level, interpreter, args);
 
-  YCPValue arg = evaluateSformat(interpreter,args);
-  if(arg.isNull() || !arg->isString())
-    return YCPNull();
+    YCPValue arg = evaluateSformat(interpreter,args);
+    if(arg.isNull() || !arg->isString())
+	return YCPNull();
 
-  int line = interpreter->current_line;
-  const char *file = interpreter->current_file.c_str();
-  const char *func = interpreter->current_func.c_str();
-  const char *message = arg->asString()->value().c_str();
+    int line = interpreter->current_line;
+    const char *file = interpreter->current_file.c_str();
+    const char *func = interpreter->current_func.c_str();
+    const char *message = arg->asString()->value().c_str();
 
-  ycp2log(level,file,line,func,"%s",message);
-  return YCPVoid();
+    ycp2log(level,file,line,func,"%s",message);
+    return YCPVoid();
 }
 
 YCPValue evaluateY2TraceLog (loglevel_t level, YCPInterpreter *interpreter, YCPList args)
 {
-  // positive: pretend one of our callers invoked the log
-  // negative: print backtrace
-  int frame = args->value (0)->asInteger ()->value ();
-  const char *message = "";
-  string message_s;
-  if (args->size () == 1)
-  {
-      message = "frame 0";
-  }
-  else
-  {
-      args->remove (0);
-      YCPValue arg = evaluateSformat (interpreter,args);
-      if (arg.isNull () || !arg->isString ())
-      {
-	  return YCPNull ();
-      }
-      message_s = arg->asString ()->value ();
-      message = message_s.c_str ();
-      // if we did not use message_s, message would point to a
-      // temporary string that is destroyed at the end of the
-      // enclosing block, that is, here
-  }
+    // positive: pretend one of our callers invoked the log
+    // negative: print backtrace
+    int frame = args->value (0)->asInteger ()->value ();
+    const char *message = "";
+    string message_s;
+    if (args->size () == 1)
+    {
+	message = "frame 0";
+    }
+    else
+    {
+	args->remove (0);
+	YCPValue arg = evaluateSformat (interpreter,args);
+	if (arg.isNull () || !arg->isString ())
+	{
+	    return YCPNull ();
+	}
+	message_s = arg->asString ()->value ();
+	message = message_s.c_str ();
+	// if we did not use message_s, message would point to a
+	// temporary string that is destroyed at the end of the
+	// enclosing block, that is, here
+    }
 
-  if (frame <= 0)
-  {
-      int line = interpreter->current_line;
-      const char *file = interpreter->current_file.c_str();
-      const char *func = interpreter->current_func.c_str();
-      ycp2log(level,file,line,func,"%s",message);
-  }
+    if (frame <= 0)
+    {
+	int line = interpreter->current_line;
+	const char *file = interpreter->current_file.c_str();
+	const char *func = interpreter->current_func.c_str();
+	ycp2log(level,file,line,func,"%s",message);
+    }
 
-  if (frame != 0)
-  {
-      typedef vector<YCPInterpreter::CallFrame>::reverse_iterator ri;
-      ri i = interpreter->backtrace.rbegin ();
-      ri e = interpreter->backtrace.rend ();
-      int f = 1;
-      while (i != e)
-      {
-	  int line = i->line;
-	  const char *file = i->file.c_str ();
-	  const char *func = i->func.c_str ();
+    if (frame != 0)
+    {
+	typedef vector<YCPInterpreter::CallFrame>::reverse_iterator ri;
+	ri i = interpreter->backtrace.rbegin ();
+	ri e = interpreter->backtrace.rend ();
+	int f = 1;
+	while (i != e)
+	{
+	    int line = i->line;
+	    const char *file = i->file.c_str ();
+	    const char *func = i->func.c_str ();
 
-	  if (frame > 0)
-	  {
-	      if (f == frame)
-	      {
-		  ycp2log(level,file,line,func,"%s",message);
-		  break;
-	      }
-	  }
-	  else
-	  {
-	      ycp2log(level,file,line,func,"frame %d",f);
-	  }
-	  ++f;
-	  ++i;
-      }
-  }
-  return YCPVoid ();
+	    if (frame > 0)
+	    {
+		if (f == frame)
+		{
+		    ycp2log(level,file,line,func,"%s",message);
+		    break;
+		}
+	    }
+	    else
+	    {
+		ycp2log(level,file,line,func,"frame %d",f);
+	    }
+	    ++f;
+	    ++i;
+	}
+    }
+    return YCPVoid ();
 }
 
 YCPValue evaluateY2Debug(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_DEBUG,interpreter,args);
+    return evaluateY2log(LOG_DEBUG,interpreter,args);
 }
 
 YCPValue evaluateY2Milestone(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_MILESTONE,interpreter,args);
+    return evaluateY2log(LOG_MILESTONE,interpreter,args);
 }
 
 YCPValue evaluateY2Warning(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_WARNING,interpreter,args);
+    return evaluateY2log(LOG_WARNING,interpreter,args);
 }
 
 YCPValue evaluateY2Error(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_ERROR,interpreter,args);
+    return evaluateY2log(LOG_ERROR,interpreter,args);
 }
 
 YCPValue evaluateY2Security(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_SECURITY,interpreter,args);
+    return evaluateY2log(LOG_SECURITY,interpreter,args);
 }
 
 YCPValue evaluateY2Internal(YCPInterpreter *interpreter, const YCPList& args) {
-  return evaluateY2log(LOG_INTERNAL,interpreter,args);
+    return evaluateY2log(LOG_INTERNAL,interpreter,args);
 }
 
 
@@ -377,16 +371,13 @@ YCPValue evaluateBuiltinOp (YCPInterpreter *interpreter, builtin_t code, const Y
     switch (code)
     {
 	case YCPB_ADD:
-	{
 	    if (args->size() == 2)
 		return args->value(0)->asBuiltin()->functionalAdd (args->value(1), false);
-	}
-	break;
+	    break;
 	default:
 	    break;
     }
+
     ycp2warning (interpreter->current_file.c_str(), interpreter->current_line, "evaluateBuiltinOp unknown code %d", code);
     return YCPNull();
 }
-
-
