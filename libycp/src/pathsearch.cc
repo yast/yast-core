@@ -366,14 +366,14 @@ YCPPathSearch::bytecodeForFile (string filename)
     
     // check the modification times
     struct stat file_stat;
-    if (stat (ybc.c_str (), &file_stat) != 0 && ! S_ISREG(file_stat.st_mode))
+    if (stat (ybc.c_str (), &file_stat) != 0 || ! S_ISREG(file_stat.st_mode))
     {
 	// return empty file
 	return "";
     }
     time_t ybc_time = file_stat.st_mtime;
     
-    if (stat (filename.c_str (), &file_stat) != 0 && ! S_ISREG(file_stat.st_mode))
+    if (stat (filename.c_str (), &file_stat) != 0 || ! S_ISREG(file_stat.st_mode))
     {
 	// return empty file
 	return "";
