@@ -2,6 +2,7 @@
 Wed Sep  1 18:22:15 CEST 2004 - sh@suse.de
 
 - Fixed bug #44579: YMultiProgressBar integer overflow 
+- V 2.10.9
 
 -------------------------------------------------------------------
 Mon Aug 30 16:40:13 CEST 2004 - mvidner@suse.cz
