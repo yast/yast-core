@@ -1,0 +1,11 @@
+{
+  void f (string s) {
+    return;
+  }
+
+  map m = $[ "a" : "A" ];
+
+  string s = (string)(m["a"]:nil);
+
+  f((string)(m["a"]:nil));
+}

@@ -259,7 +259,6 @@ Type::match (constTypePtr expected) const
 #if DO_DEBUG
     y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 #endif
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
     if (basematch (expected) < 0)
     {
 #if DO_DEBUG
@@ -284,6 +283,9 @@ Type::match (constTypePtr expected) const
 
     if (m_kind == ek)
     {
+#if DO_DEBUG
+	y2debug ("m_kind (%d) == expected m_kind (%d)", m_kind, ek);
+#endif
 	return 0;
     }
 
@@ -442,13 +444,13 @@ Type::matchvalue (YCPValue value) const
 bool
 Type::canCast (constTypePtr to) const
 {
+#if DO_DEBUG
+    y2debug ("Type::canCast [%s] -> [%s]", toString().c_str(), to->toString().c_str());
+#endif
     if (isAny())
     {
 	return true;
     }
-#if DO_DEBUG
-    y2debug ("Type::canCast [%s] -> [%s]", toString().c_str(), to->toString().c_str());
-#endif
     return (match (to) >= 0);
 }
 
@@ -1887,12 +1889,19 @@ Type::detailedtype (constTypePtr type) const
     y2debug ("Type::detailedtype '%s' ('%s')", toString().c_str(), type->toString().c_str());
 #endif
 
-    if (isVoid())		// 'nil' does not contain type information
+    if (isVoid())			// 'nil' does not contain type information
     {
 #if DO_DEBUG
 	y2debug ("Type::detailedtype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
 #endif
 	return type;
+    }
+    else if (type->isVoid())		// 'nil' does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+#endif
+	return this;
     }
     else if (type->isAny())		// 'any' does not contain type information
     {

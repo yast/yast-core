@@ -450,7 +450,8 @@ bracket_expression:
 		    $$.c = new YEBracket ($1.c, $3.c, $5.c, $$.t);
 		    $$.l = $1.l;
 		    if (! $5.t->isVoid ()			// default is not 'nil'
-			&& $$.t->isAny ())			// and the map/list is unspecified
+			&& $$.t->isAny ()			// and the map/list is unspecified
+			&& !$5.t->isAny())			// don't cast any -> any
 		    {
 			// for non-nil default and cur == Any use the type of the default,
 			// but with runtime type checking
@@ -481,11 +482,10 @@ casted_expression:
 		break;
 	    }
 	    
-#if DO_DEBUG
-	    y2debug ("cast '%s' to '%s'", $4.t->toString().c_str(), $2.t->toString().c_str());
-#endif
-
 	    int match = $4.t->match ($2.t);	// would casted type allow expression type ?
+#if DO_DEBUG
+	    y2debug ("cast '%s' to '%s' match %d", $4.t->toString().c_str(), $2.t->toString().c_str(), match);
+#endif
 	    if (match == 0)
 	    {
 		$$.c = $4.c;			// types match anyway

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 28 18:15:15 CEST 2004 - kkaempf@suse.de
+
+- 'any' has more type information than 'void' (#47659)
+- dont propagate any->any (regression found with above fix)
+
+-------------------------------------------------------------------
 Wed Oct 27 10:12:59 CEST 2004 - arvin@suse.de
 
 - removed has_apm from probe agent
