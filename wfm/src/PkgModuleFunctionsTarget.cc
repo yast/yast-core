@@ -368,10 +368,7 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 	{
 	    readonly = partmap->value(YCPString("readonly"))->asBoolean()->value();
 	}
-	else
-	{
-	    good = false;
-	}
+	// else: optional arg, using default
 
 	if (!good)
 	{
