@@ -46,7 +46,7 @@ using std::string;
 struct Reg_Ret
 {
     string  result_str;
-    string  match_str[SUB_MAX];  // index 0 not used!!
+    string  match_str[SUB_MAX+1];  // index 0 not used!!
     int     match_nb;       // 0 - 9
     string  error_str;
     bool    error;
@@ -855,7 +855,8 @@ Reg_Ret solve_regular_expression( const char        *input,
 	return reg_ret;
     }
 
-    static const char *index[] = {
+    static const char *index[SUB_MAX+1] = {
+        NULL, /* not used */
 	"\\0", "\\1", "\\2", "\\3", "\\4",
 	"\\5", "\\6", "\\7", "\\8", "\\9"
     };
@@ -863,7 +864,7 @@ Reg_Ret solve_regular_expression( const char        *input,
     string input_str(input);
     string result_str(result);
 
-    for(unsigned int i=1; i<=compiled.re_nsub && i<SUB_MAX; i++) {
+    for(unsigned int i=1; (i <= compiled.re_nsub) && (i <= SUB_MAX); i++) {
 	reg_ret.match_str[i] = matchptr[i].rm_so >= 0 ? input_str.substr(matchptr[i].rm_so, matchptr[i].rm_eo - matchptr[i].rm_so) : "";
 	reg_ret.match_nb = i;
 

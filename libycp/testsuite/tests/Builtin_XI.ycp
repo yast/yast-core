@@ -3,10 +3,13 @@
 ( regexpmatch( "aaabbb", ".*ab.*" ) == true )
 ( regexpmatch( "aaabbb", ".*ba.*" ) == false)
 
-( regexpsub( "aaabbb", "(.*ab).*",  "s_\\1_e" ) == "s_aaab_e" )
-( regexpsub( "aaabbb", "(.*abb)(.*)",  "s_\\1_e\\2" ) ==  "s_aaabb_eb" )
+( regexpsub( "aaabbb", "(.*ab).*",  "s_\\0_e" ) == "s_aaab_e" )
+( regexpsub( "aaabbb", "(.*abb)(.*)",  "s_\\0_e\\1" ) ==  "s_aaabb_eb" )
 
 ( regexptokenize( "aaabbBb", "(.*[A-Z]).*") ==  [ "aaabbB" ] )
 ( regexptokenize( "aaabbb", "(.*ab)(.*)") ==  [ "aaab", "bb" ] )
 ( regexptokenize( "aaabbb", "(.*ba).*") == [] )
 ( regexptokenize( "aaabbb", "(.*ba).*()") == [] )
+
+( regexptokenize( "0123456789abc", ".*(1)(2)(3)(4)(5)(6)(7)(8)(9)(a).*") == ["1", "2", "3", "4", "5", "6", "7", "8", "9", "a"] )
+( regexpsub( "0123456789abc", ".*(1)(2)(3)(4)(5)(6)(7)(8)(9)(a).*", "x\\0_x\\1_x\\2_x\\3_x\\4_x\\5_x\\6_x\\7_x\\8_x\\9_") == "x1_x2_x3_x4_x5_x6_x7_x8_x9_xa_" )
