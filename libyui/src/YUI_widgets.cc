@@ -2422,10 +2422,10 @@ YWidget * YUI::widgetWithId( const YCPValue & id, bool log_error )
 	YWidget *widget = currentDialog()->findWidget( id );
 	if ( widget ) return widget;
 	if ( log_error )
-	    y2error( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
+	    ycperror( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
     }
     else if ( log_error )
-	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
+	ycperror( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
 		 id->toString().c_str() );
 
     return 0;
@@ -2438,10 +2438,10 @@ YWidget * YUI::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, 
 	YWidget *widget = widgetRoot->findWidget( id );
 	if ( widget ) return widget;
 	if ( log_error )
-	    y2error( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
+	    ycperror( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
     }
     else if ( log_error )
-	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
+	ycperror( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
 		 id->toString().c_str() );
 
     return 0;
