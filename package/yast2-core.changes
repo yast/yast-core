@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Sep 11 19:13:33 CEST 2002 - kkaempf@suse.de
+
+- copy product and selection data to target (#19324)
+- 2.6.41
+
+-------------------------------------------------------------------
 Wed Sep 11 13:00:13 CEST 2002 - kkaempf@suse.de
 
 - allow rewrite of url if cdrom device changed due

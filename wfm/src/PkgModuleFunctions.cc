@@ -195,7 +195,7 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
 {
     YCPMap map;
 
-    map->add (YCPString ("product"), YCPString (PkgNameEd::toString(descr->content_product())));
+    map->add (YCPString ("product"), YCPString ((const std::string &)(descr->content_product().name) + " " + descr->content_product().edition.version()));
     map->add (YCPString ("vendor"), YCPString (descr->content_vendor()));
     map->add (YCPString ("requires"), YCPString (descr->content_requires().asString()));
     return map;

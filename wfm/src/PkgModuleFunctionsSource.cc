@@ -527,6 +527,23 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
     {
 	return YCPError (string ("SourceCacheCopyTo failed: ")+_last_error.errstr(), YCPBoolean (false));
     }
+
+    // copy product data of all open sources
+    for (unsigned int i = 0; i < _sources.size(); ++i)
+    {
+	if (_sources[i] != 0)
+	{
+	    _y2pm.instTarget().installProduct(_sources[i]->descr());
+	}
+    }
+
+    // copy selection data to target
+    for (PMManager::PMSelectableVec::const_iterator it = _y2pm.selectionManager().begin();
+	 it != _y2pm.selectionManager().end();
+	 ++it)
+    {
+	_y2pm.instTarget().installSelection(Pathname((const std::string &)((*it)->name())+".sel"));
+    }
     return YCPBoolean (true);
 }
 
