@@ -62,6 +62,4 @@ libycp_la_LDFLAGS = -L$(libdir) -version-info 2:0
 
 libycp_la_LIBADD = -lxcrypt -ly2util
 
-EXTRA_DIST = scanner.ll $(BUILT_SOURCES)
-
 CLEANFILES = y.output $(BUILT_SOURCES)
