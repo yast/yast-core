@@ -334,6 +334,7 @@ FlexType::FlexType (std::istream & str)
     : Type (FlexT, str)
     , m_number (Bytecode::readInt32 (str))
 {
+//    fprintf( stderr, "Flex number: %d\n", m_number);
 }
 
 
@@ -346,7 +347,7 @@ std::ostream &
 FlexType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
-    Bytecode::writeInt32 (str, m_number);
+//    Bytecode::writeInt32 (str, m_number);
     return str;
 }
 
