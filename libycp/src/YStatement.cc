@@ -1242,6 +1242,10 @@ YSImport::toString() const
 }
 
 
+// Import module from bytecode
+//
+// If an error occurs, m_name will be set to empty
+//
 YSImport::YSImport (std::istream & str)
     : YStatement (ysImport, str)
     , Import (Bytecode::readCharp (str), 0, true)			// don't open references in Import()
@@ -1284,9 +1288,9 @@ YSImport::YSImport (std::istream & str)
 	    {
 		y2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
 		fprintf (stderr, "Unresolved xref to %s::%s\n", m_name.c_str(), sname);
-		m_name = "";
+		m_name = "";						// mark as error
 	    }
-	    if (tentry->sentry()->type()->match (stype) != 0)
+	    else if (tentry->sentry()->type()->match (stype) != 0)
 	    {
 		y2error ("Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
 		fprintf (stderr, "Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
