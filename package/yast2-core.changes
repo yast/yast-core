@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug 01 11:10:40 CEST 2002 - arvin@suse.de
+
+- fixes for VNC installation
+
+-------------------------------------------------------------------
 Mon Jul 29 16:35:19 CEST 2002 - arvin@suse.de
 
 - disable Qt/KDE's own malloc implementation (it's too late to
