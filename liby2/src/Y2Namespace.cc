@@ -318,11 +318,17 @@ Y2Namespace::initialize ()
     
     if (table ())
     { 
-	Y2Function* c = createFunctionCall (name ());
-	if (c)
+	SymbolTable* t = table ();
+	t->disableUsage ();
+	if (t->find (name ().c_str ()))
 	{
-	    c->evaluateCall ();
+	    Y2Function* c = createFunctionCall (name ());
+	    if (c)
+	    {
+		c->evaluateCall ();
+	    }
 	}
+	t->enableUsage ();
     }
 }
 
