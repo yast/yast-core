@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Sep  6 14:35:55 CEST 2002 - kkaempf@suse.de
+
+- fix update api, allow for deletion of old packages
+  return number of unknown packages
+- fix packager UI to show unknown packages
+- 2.6.29
+
+-------------------------------------------------------------------
 Thu Sep  5 21:33:11 CEST 2002 - kkaempf@suse.de
 
 - add Pkg:: functions for package backup
