@@ -75,6 +75,8 @@
 // compile with full debug info, enable with YCP_YYDEBUG=1 in run-time env
 #define YYDEBUG 0
 #define YYERROR_VERBOSE 1
+#define YYINITDEPTH 1000
+#define YYMAXDEPTH 50000
 
 // define type of parser values
 struct yystype_type {
