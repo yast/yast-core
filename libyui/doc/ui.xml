@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-"/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
-
-
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
+"/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd" [
 
 <!ENTITY  YUI_special_widgets SYSTEM "YUI_special_widgets.xml">
 <!ENTITY  YUI_widgets SYSTEM "YUI_widgets.xml">

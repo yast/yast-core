@@ -31,7 +31,7 @@ html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
 	cp -a $(ydatadir)/docbook/images html
 
-EXTRA_DIST = 
+EXTRA_DIST =  builtins.xml
 
 CLEANFILES = $(xmlfiles)
 

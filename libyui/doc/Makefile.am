@@ -18,7 +18,12 @@ html_DATA =			\
 	$(htmlfiles)		\
 	html/yast2docs.css
 
-EXTRA_DIST = $(html_DATA)
+EXTRA_DIST = ui-arch.jpg \
+	     README.newapi \
+	     YCP-UI-layout.xml \
+	     YCP-UI-richtext.xml \
+	     macro-recorder.xml \
+	     ui.xml
 
 
 
