@@ -266,14 +266,14 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 		SetSelectionString (*it, true);
 	    }
 	}
-#warning Solve selections
-	y2milestone ("Selecting all required");
-	const PMSolvable::PkgRelList_type& requires = selection->requires();
-	for (PMSolvable::PkgRelList_type::const_iterator it = requires.begin();
-	     it != requires.end(); ++it)
+
+	PkgDep::ResultList good;
+	PkgDep::ErrorResultList bad;
+
+	if (!_y2pm._y2pm.selectionManager().solveInstall(good, bad))
 	{
-	    y2milestone ("Selecting requires '%s'", ((const std::string &)(it->name())).c_str());
-	    SetSelectionString ((const std::string &)(it->name()), true);
+	    ERR << bad.size() << " selections failed" << endl;
+	    return false;
 	}
 	return true;
     }
