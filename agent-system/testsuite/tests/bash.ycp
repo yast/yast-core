@@ -7,37 +7,37 @@
 }
 
 {
-    return Execute(.bash, "/bin/cat tests/data1.read");
+    return Execute (.bash, "/bin/cat tests/data1.read");
 }
 
 {
-    return Execute(.bash, "/bin/cat tests/data2.read");
+    return Execute (.bash, "/bin/cat tests/data2.read");
 }
 
 {
-    return Execute(.bash, "/bin/cat tests/missing");
+    return Execute (.bash, "/bin/cat tests/missing");
 }
 
 {
-    return Execute(.bash_output, "/bin/cat tests/data1.read");
+    return Execute (.bash_output, "/bin/cat tests/data1.read");
 }
 
 {
-    return Execute(.bash_output, "/bin/cat tests/data2.read");
+    return Execute (.bash_output, "/bin/cat tests/data2.read");
 }
 
 {
-    return Execute(.bash_output, "/bin/cat tests/missing");
+    return Execute (.bash_output, "/bin/cat tests/missing");
 }
 
 {
-    return Execute(.bash_background, "/bin/cat tests/data1.read");
+    return Execute (.bash_background, "/bin/cat tests/data1.read") != 0;
 }
 
 {
-    return Execute(.bash_background, "/bin/cat tests/data2.read");
+    return Execute (.bash_background, "/bin/cat tests/data2.read") != 0;
 }
 
 {
-    return Execute(.bash_background, "/bin/cat tests/missing");
+    return Execute (.bash_background, "/bin/cat tests/missing") != 0;
 }
