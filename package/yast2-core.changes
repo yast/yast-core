@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 26 19:27:12 CET 2004 - arvin@suse.de
+
+- added uml detection
+
+-------------------------------------------------------------------
 Fri Mar 26 18:08:43 CET 2004 - kkaempf@suse.de
 
 - enhance type information for 'is()' (#37146)
@@ -6,7 +11,7 @@ Fri Mar 26 18:08:43 CET 2004 - kkaempf@suse.de
 -------------------------------------------------------------------
 Fri Mar 26 15:54:09 CET 2004 - visnov@suse.cz
 
-- 2.9.68 
+- 2.9.68
 
 -------------------------------------------------------------------
 Fri Mar 26 12:28:55 CET 2004 - visnov@suse.cz
@@ -14,7 +19,7 @@ Fri Mar 26 12:28:55 CET 2004 - visnov@suse.cz
 - handle closing of default SCR gracefully (#37050)
 - do not allow to pass 'nil' to Pkg (#37052)
 - show full function name for parameter mismatch (#36924)
- 
+
 -------------------------------------------------------------------
 Thu Mar 25 14:59:28 CET 2004 - kkaempf@suse.de
 
@@ -33,23 +38,23 @@ Wed Mar 24 15:41:19 CET 2004 - kkaempf@suse.de
 -------------------------------------------------------------------
 Wed Mar 24 15:32:29 CET 2004 - sh@suse.de
 
-- Fixed bug #36802: Combo box returns nil instead of "" 
+- Fixed bug #36802: Combo box returns nil instead of ""
 
 -------------------------------------------------------------------
 Wed Mar 24 12:43:47 CET 2004 - visnov@suse.cz
 
-- empty void function produces just warning (#35536) 
+- empty void function produces just warning (#35536)
 
 -------------------------------------------------------------------
 Tue Mar 23 17:21:01 CET 2004 - visnov@suse.cz
 
-- allow repeated use of Pkg in ycpc (#35533) 
+- allow repeated use of Pkg in ycpc (#35533)
 - close include files (#36747)
 
 -------------------------------------------------------------------
 Tue Mar 23 16:51:23 CET 2004 - sh@suse.de
 
-- Fixed blocker bug #36779: Segfault on UI::QueryWidget(ComboBox) 
+- Fixed blocker bug #36779: Segfault on UI::QueryWidget(ComboBox)
 
 -------------------------------------------------------------------
 Tue Mar 23 15:36:21 CET 2004 - kkaempf@suse.de
@@ -83,7 +88,7 @@ Mon Mar 22 16:56:46 CET 2004 - cschum@suse.de
 -------------------------------------------------------------------
 Mon Mar 22 14:52:43 CET 2004 - visnov@suse.cz
 
-- 2.9.63 
+- 2.9.63
 
 -------------------------------------------------------------------
 Fri Mar 19 17:21:06 CET 2004 - kkaempf@suse.de

@@ -260,6 +260,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "cdb_isdn",		 8, pr_null,	0},
 	{ "has_smp",		 9, pr_null,	0},
 	{ "bios_video",		10, pr_bios,	0},
+	{ "is_uml",		11, pr_null,	0},
 	{ "has_apm",		12, pr_bios,	0},
 	{ "framebuffer",	13, pr_fb,	0},
 	{ "status",		14, pr_null,	sub_status},
@@ -447,6 +448,8 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    byItem (hw_display, false);
 		    value = biosVideo ();
 		break;
+		case 11:		// is_uml
+		    value = YCPBoolean (hd_is_uml (hd_base) ? true : false);
 		case 12:		// has_apm
 		    value = YCPBoolean (hd_apm_enabled (hd_base) ? true : false);
 		break;
