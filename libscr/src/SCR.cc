@@ -203,6 +203,9 @@ SCRUnmountAgent (const YCPPath &path) {
 
 SCR::SCR ()
 {
+    // already done, we must avoid double registration
+    if (registered) return;
+    
     y2debug( "Registering SCR builtins in %p", &static_declarations );
 
     // must be static, registerDeclarations saves a pointer to it!
