@@ -21,6 +21,9 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPInteger.h"
 #include "ycp/Bytecode.h"
+#include "ycp/ExecutionEnvironment.h"
+
+extern ExecutionEnvironment ee;
 
 // YCPIntegerRep
 
@@ -42,10 +45,13 @@ YCPIntegerRep::YCPIntegerRep(const char *r)
 	    converted = sscanf(r, "%Lo", &v);
     }
     else
+    {
 	converted = sscanf(r, "%Ld", &v);
+    }
 
-    if (converted != 1) {
-        y2warning("Cannot convert '%s' to an integer", r);
+    if (converted != 1)
+    {
+        ycp2warning (ee.filename().c_str(), ee.linenumber(), "Cannot convert '%s' to an integer", r);
         v = 0;
     }
 }

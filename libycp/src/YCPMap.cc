@@ -20,7 +20,9 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPMap.h"
 #include "ycp/Bytecode.h"
+#include "ycp/ExecutionEnvironment.h"
 
+extern ExecutionEnvironment ee;
 
 // YCPMapRep
 
@@ -50,7 +52,7 @@ YCPMapRep::add (const YCPValue& key, const YCPValue& value)
 	&& !key->isInteger()
 	&& !key->isSymbol())
     {
-	y2error ("Only integer, string, or symbol constant allowed as key in map");
+	ycp2error ("Only integer, string, or symbol constant allowed as key in map");
 	return;
     }
     YCPValueYCPValueMap::iterator pos = stl_map.find( key );
@@ -70,7 +72,7 @@ YCPMapRep::functionalAdd (const YCPValue& key, const YCPValue& value) const
 	&& !key->isInteger()
 	&& !key->isSymbol())
     {
-	y2error ("Only integer, string, or symbol constant allowed as key in map");
+	ycp2error ("Only integer, string, or symbol constant allowed as key in map");
 	return YCPNull ();
     }
 
@@ -91,7 +93,7 @@ void YCPMapRep::remove(const YCPValue& key)
 {
     if (!key->isString() && !key->isInteger() && !key->isSymbol())
     {
-        y2error ("Only integer, string, or symbol constant allowed as key in map");
+        ycp2error ("Only integer, string, or symbol constant allowed as key in map");
         return;
     }
 

@@ -24,6 +24,9 @@
 #include <algorithm>
 #include "ycp/Bytecode.h"
 #include "ycp/YCPCodeCompare.h"
+#include "ycp/ExecutionEnvironment.h"
+
+extern ExecutionEnvironment ee;
 
 // YCPListRep
 
@@ -76,8 +79,9 @@ YCPListRep::set (const int i, const YCPValue& value)
 void
 YCPListRep::remove (const int n)
 {
-    if ((n < 0) || (n >= size())) {
-        y2error("Invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
+    if ((n < 0) || (n >= size()))
+    {
+        ycp2error("Invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
         abort();
     }
     elements.erase (elements.begin () + n);
@@ -145,7 +149,9 @@ YCPListRep::shallowCopy() const
     YCPListRep* newlist = new YCPListRep ();
     newlist->reserve (size());
     for (int i=0; i<size(); i++)
+    {
 	newlist->add(value(i));
+    }
     y2debug ("YCPListRep::shallowCopy result: %s", newlist->toString ().c_str () );
     return newlist;
 }
