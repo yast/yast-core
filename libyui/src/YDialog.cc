@@ -32,6 +32,7 @@ YDialog::YDialog( const YWidgetOpt & opt )
     _hasInfoColor.setValue( opt.hasInfoColor.value() );
     _isDecorated.setValue( opt.isDecorated.value() );
     _isCentered.setValue( opt.isCentered.value() );
+    _hasSmallDecorations.setValue( opt.hasSmallDecorations.value() );
     _shortcutCheckPostponed = false;
 }
 

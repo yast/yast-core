@@ -87,6 +87,11 @@ public:
     bool isCentered() { return _isCentered.value(); }
 
     /**
+     * Returns true if the dialog has the `smallDecorations option set.
+     */
+    bool hasSmallDecorations() { return _hasSmallDecorations.value(); }
+
+    /**
      * Checks the keyboard shortcuts of all children of this dialog
      * ( not for sub-dialogs! ) unless shortcut checks are postponed or 'force'
      * is 'true'.
@@ -132,6 +137,7 @@ protected:
     YBoolOpt	_hasInfoColor;
     YBoolOpt	_isDecorated;
     YBoolOpt	_isCentered;
+    YBoolOpt	_hasSmallDecorations;
 
     bool	_shortcutCheckPostponed;
 };

@@ -625,6 +625,11 @@ YUI::filterInvalidEvents( YEvent * event )
  * comes in handy if no window manager is running. This option may be ignored in
  * non-graphical UIs.
  * <p>
+ * <tt>`smallDecorations</tt> tells the window manager to use only minimal
+ * decorations - in particular, no title bar. This is useful for very small
+ * popups (like only a one line label and no button). Don't overuse this.
+ * This option is ignored for `defaultsize dialogs.
+ * <p>
  * The option <tt>`warncolor</tt> displays the entire dialog in a bright
  * warning color.
  * <p>
@@ -645,11 +650,12 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
 	    {
 		if ( optList->value(o)->isSymbol() )
 		{
-		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) 	opt.hasDefaultSize.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )	opt.isCentered.setValue( true );
+		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) 		opt.hasDefaultSize.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )		opt.hasWarnColor.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )		opt.hasInfoColor.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )		opt.isDecorated.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )		opt.isCentered.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_smallDecorations )	opt.hasSmallDecorations.setValue( true );
 		    else
 			y2warning( "Unknown option %s for OpenDialog", opts->value(o)->toString().c_str() );
 		}
