@@ -41,6 +41,8 @@ using namespace std;
 
 #define DECLSIZE 127
 
+#define DO_DEBUG 0
+
 //
 // list of namespace prefixes to mark as 'predefined'
 // They will be auto-loaded by the scanner on first appearance
@@ -54,8 +56,9 @@ static char *predefined[] = {
 StaticDeclaration::StaticDeclaration()
 {
     m_declTable = new SymbolTable(-1);
-//    y2debug ("m_declTable %p", m_declTable);
-
+#if DO_DEBUG
+    y2debug ("m_declTable %p", m_declTable);
+#endif
     char **pptr = predefined;
     SymbolEntry *sentry;
     Point *point = new Point ("<predefined>");
@@ -96,7 +99,9 @@ StaticDeclaration::registerDeclarations (const char *filename,
 
     while (declarations->name != 0)
     {
-//	y2debug( "Registering %s", declarations->name );
+#if DO_DEBUG
+	y2debug( "Registering %s", declarations->name );
+#endif
 	const char *name = declarations->name;
 
 	if (*name == 0)		// exit on empty name
@@ -115,7 +120,9 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		m_active_predefined.push_back (*track_info);
 		track_info = 0;
 	    }
-//	    y2debug ("NAMESPACE (%s)", name);
+#if DO_DEBUG
+	    y2debug ("NAMESPACE (%s)", name);
+#endif
             declarations->name_space = namespace_decl;
 
 	    TableEntry *tentry = table->find (name);
@@ -151,7 +158,9 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		// create SymbolEntry::c_namespace for the namespace to be entered into the global table
 		SymbolEntry *sentry = new SymbolEntry (name, Type::Unspec, namespaceTable);
 
-//		y2debug ("Entered Namespace '%s' (block %p) into namespaceTable %p", name, block, namespaceTable);
+#if DO_DEBUG
+		y2debug ("Entered Namespace '%s' (block %p) into namespaceTable %p", name, block, namespaceTable);
+#endif
 
 		// enter into global table
 		namespace_point = new Point (filename);
@@ -185,7 +194,9 @@ StaticDeclaration::registerDeclarations (const char *filename,
 	    }
 
 #if 0
+#if DO_DEBUG
 y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str());
+#endif
 	    if (type->hasFlex()
 		&& (declarations->flags & DECL_FLEX) == 0)
 	    {
@@ -280,22 +291,32 @@ StaticDeclaration::Decl2String (const declaration_t *declaration, bool full)
 declaration_t *
 StaticDeclaration::findDeclaration (const char *name) const
 {
-//    y2debug ("StaticDeclaration::findDeclaration '%s'", name);
+#if DO_DEBUG
+    y2debug ("StaticDeclaration::findDeclaration '%s'", name);
+#endif
 
     // split the name by the namespace
     char *next = strstr (name, "::");
-//    y2debug( "Next is %p", next );
+
+#if DO_DEBUG
+    y2debug( "Next is %p", next );
+#endif
+
     TableEntry *tentry = 0;
     if (next == NULL)
     {
    	tentry = m_declTable->find (name);
-//	y2debug( "No namespace, found %p", tentry );
+#if DO_DEBUG
+	y2debug( "No namespace, found %p", tentry );
+#endif
     }
     else
     {
 	*next = '\0';
 	tentry = m_declTable->find (name);
-//	y2debug( "Namespace found: %p", tentry );
+#if DO_DEBUG
+	y2debug( "Namespace found: %p", tentry );
+#endif
 	*next = ':';
 	if (tentry != 0
 	   && tentry->sentry()->table() != 0)
@@ -303,7 +324,9 @@ StaticDeclaration::findDeclaration (const char *name) const
 	    // continue recursively;
 	    // skip delimiter
 	    next += 2;
-//	    y2debug( "Recursive search for %s", next );
+#if DO_DEBUG
+	    y2debug( "Recursive search for %s", next );
+#endif
 	    tentry = tentry->sentry()->table()->find (next);
 	}
     }
@@ -322,7 +345,9 @@ StaticDeclaration::findDeclaration (const char *name) const
 declaration_t *
 StaticDeclaration::findDeclaration (const char *name, constTypePtr type, bool partial) const
 {
-//    y2debug ("StaticDeclaration::findDeclaration '%s':%s <%s>", name, type->toString().c_str (), partial?"partial":"full");
+#if DO_DEBUG
+    y2debug ("StaticDeclaration::findDeclaration '%s':%s <%s>", name, type->toString().c_str (), partial?"partial":"full");
+#endif
 
     declaration_t *decl = findDeclaration (name);
     if (decl == 0)
@@ -342,7 +367,9 @@ StaticDeclaration::findDeclaration (const char *name, constTypePtr type, bool pa
 declaration_t *
 StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool partial) const
 {
-//    y2debug ("StaticDeclaration::findDeclaration (%p, %s, %s)", decl, type->toString().c_str (), partial ? "partial" : "full");
+#if DO_DEBUG
+    y2debug ("StaticDeclaration::findDeclaration (%p, %s, %s)", decl, type->toString().c_str (), partial ? "partial" : "full");
+#endif
     if (decl == 0)
     {
 	return 0;
@@ -359,7 +386,9 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	constTypePtr dtype = decl->type;		// declaration type
 	constTypePtr atype = type;			// argument type
 
-//	y2debug ("decl check: declared '%s', actual '%s'", dtype->toString().c_str(), atype->toString().c_str());
+#if DO_DEBUG
+	y2debug ("decl check: declared '%s', actual '%s'", dtype->toString().c_str(), atype->toString().c_str());
+#endif
 
 	// if only argument types are given, skip the
 	// return type in type checking
@@ -373,7 +402,9 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    constFunctionTypePtr fatype = atype;
 	    int dcount = fdtype->parameterCount();		// declaration count
 	    int acount = fatype->parameterCount();		// actual count
-//	    y2debug ("dcount %d, acout %d", dcount, acount);
+#if DO_DEBUG
+	    y2debug ("dcount %d, acout %d", dcount, acount);
+#endif
 	    int i;
 	    
 	    if (acount == 0) 
@@ -392,14 +423,18 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 		{
 		    if (i >= dcount)					// no more parameters in current declaration
 		    {
-//			y2debug ("too few parameters");
+#if DO_DEBUG
+			y2debug ("too few parameters");
+#endif
 			error = true;
 			break;
 		    }
 		    dt = fdtype->parameterType (i);
 		    if (fatype->parameterType(i)->match (dt) != 0)		// parameters do not match
 		    {
-//			y2debug ("parameters at %d do not match", i);
+#if DO_DEBUG
+			y2debug ("parameters at %d do not match", i);
+#endif
 			error = true;
 			break;
 		    }
@@ -408,14 +443,18 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 			break;
 		    }
 		}
-//		y2debug ("loop exit %d", i);
+#if DO_DEBUG
+		y2debug ("loop exit %d", i);
+#endif
 	    
 		// this was not the last argument in declared arguments
 		// and the next one is not wildcard (can be omited completely)
 		// it's an error
 		if (!partial && i != dcount && !dt->isWildcard () && !fdtype->parameterType(i)->isWildcard ())
 		{
-//		    y2debug ("missing parameters");
+#if DO_DEBUG
+		    y2debug ("missing parameters");
+#endif
 		    error = true;
 		}
 	    }
@@ -429,7 +468,9 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 
     if (decl == 0)
     {
-//	y2debug ("findDecl failed");
+#if DO_DEBUG
+	y2debug ("findDecl failed");
+#endif
 	if (!partial)
 	{
 //	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
@@ -444,7 +485,9 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
     }
     else
     {
-//	y2debug ("match for decl '%s'", Decl2String (decl, true).c_str());
+#if DO_DEBUG
+	y2debug ("match for decl '%s'", Decl2String (decl, true).c_str());
+#endif
 #ifdef BUILTIN_STATISTICS
 	FILE *fout = fopen ("/tmp/builtin-lookup.txt", "a");
 	if (fout) {
