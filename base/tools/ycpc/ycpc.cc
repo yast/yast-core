@@ -10,6 +10,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <utime.h>
+#include <errno.h>
 #include <sys/stat.h>
 
 #include <fstream>
@@ -59,7 +60,7 @@ static char *ui_name = 0;
 #define UI_QT_NAME "qt"
 #define UI_NCURSES_NAME "ncurses"
 
-#define progress(text,param)	{ if (!quiet) fprintf (stderr,(text),(param)); }
+#define progress(...)	{ if (!quiet) fprintf (stderr, __VA_ARGS__); }
 
 //---------------------------------------------------------------------------..
 
@@ -587,7 +588,7 @@ makeDirList (const char *dir)
 	}
     }
 
-    if (verbose) printf ("directory %s listed, %d files\n", dir, deplist.size());
+    if (verbose) printf ("directory %s listed, %zu files\n", dir, deplist.size());
     return deplist;
 }
 
@@ -601,7 +602,7 @@ makeDirList (const char *dir)
 std::map <std::string, std::list <FileDep> >
 makeDependMap (const std::list<FileDep> & dep)
 {
-    if (verbose) printf ("makeDependMap (), %d files\n", dep.size());
+    if (verbose) printf ("makeDependMap (), %zu files\n", dep.size());
 
     std::map <std::string, std::list <FileDep> > depmap;
 
@@ -627,7 +628,7 @@ makeDependMap (const std::list<FileDep> & dep)
 
 	if (verbose > 2)
 	{
-	    printf ("Map %s: %d entries\n", resolved.front().name().c_str(), resolved.size());
+	    printf ("Map %s: %zu entries\n", resolved.front().name().c_str(), resolved.size());
 	}
 
 	if (verbose > 1)
@@ -864,11 +865,11 @@ parsefile (const char *infname)
 
     if (c == NULL || c->isError ())
     {
-	progress ("Error\n", 0);
+	progress ("Error\n");
 	return NULL;
     }
 
-    progress ("done\n", 0);
+    progress ("done\n");
 
     return c;
 }
@@ -905,7 +906,7 @@ compilefile (const char *infname, const char *outfname)
 
     if (c != NULL )
     {
-	progress ("saving ...\n", 0);
+	progress ("saving ...\n");
 	return Bytecode::writeFile (c, ofname) ? 0 : 1;
     }
 
@@ -951,7 +952,7 @@ processfile (const char *infname, const char *outfname)
 	    }
 	}
 
-	progress ("Parsed:\n", 0);
+	progress ("Parsed:\n");
 	if (outstream.is_open())
 	{
 	    outstream << c->toString() << endl;
@@ -970,11 +971,11 @@ processfile (const char *infname, const char *outfname)
 	YCodePtr c = Bytecode::readFile (infname);
 	if (c == 0)
 	{
-	    progress ("Bytecode read failed\n", 0);
+	    progress ("Bytecode read failed\n");
 	    return 1;
 	}
 
-	progress ("Result:\n", 0);
+	progress ("Result:\n");
 
 	std::ofstream outstream;
 
@@ -1007,9 +1008,9 @@ processfile (const char *infname, const char *outfname)
 
     if (read_n_run)
     {
-	progress ("Reading:\n", 0);
+	progress ("Reading:\n");
 	YCodePtr c = Bytecode::readFile (infname);
-	progress ("Running:\n", 0);
+	progress ("Running:\n");
 
 	Y2Component *server = Y2ComponentBroker::createServer (ui_name);
 	if (!server)
@@ -1019,7 +1020,7 @@ processfile (const char *infname, const char *outfname)
 	}
 
 	YCPValue result = c->evaluate();
-	progress ("Result:\n", 0);
+	progress ("Result:\n");
 	std::ofstream outstream;
 
 	// print out the result
@@ -1376,7 +1377,7 @@ int main(int argc, char *argv[])
     {
 	std::map <std::string, std::list <FileDep> > depmap = makeDependMap (deplist);
 
-	if (verbose) printf ("Map generated, %d entries, computing order\n", depmap.size());
+	if (verbose) printf ("Map generated, %zu entries, computing order\n", depmap.size());
 
 	if (depmap.empty())
 	{
