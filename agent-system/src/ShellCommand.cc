@@ -44,19 +44,13 @@ shellcommand (const string &command, const string &tempdir)
     {
 	/* y2log stderr */
 
-	FILE *err = NULL;
+	FILE *err = 0;
 	if (!tempdir.empty ())
 	    err = fopen ((tempdir + "/stderr").c_str (), "w");
 
-	char *s1 = (char *) malloc (sizeof (char *) * 1024);
-	if (s1 == NULL)
-	{
-	    y2error ("s1 malloc error");
-	    return -1;
-	}
-
+	char s1[1024];
 	FILE *stream1 = fdopen (pipe1[0], "r");
-	if (stream1 == NULL)
+	if (stream1 == 0)
 	{
 	    y2error ("stream1 fdopen error");
 	    free (s1);
@@ -67,7 +61,7 @@ shellcommand (const string &command, const string &tempdir)
 	while (fgets (s1, 1024, stream1))
 	{
 	    if (err)
-		fprintf (err, "%s", s1);
+		fputs (s1, err);
 	    // yes, this should be y2error but some external
 	    // programs print normal messages via stderr
 	    // bug reports are filed but who knows if such programs
@@ -76,7 +70,6 @@ shellcommand (const string &command, const string &tempdir)
 	}
 
 	fclose (stream1);
-	free (s1);
 
 	if (err)
 	    fclose (err);
@@ -103,19 +96,13 @@ shellcommand (const string &command, const string &tempdir)
 	{
 	    /* y2log stdout */
 
-	    FILE *out = NULL;
+	    FILE *out = 0;
 	    if (!tempdir.empty ())
 		out = fopen ((tempdir + "/stdout").c_str (), "w");
 
-	    char *s2 = (char *) malloc (sizeof (char *) * 1024);
-	    if (s2 == NULL)
-	    {
-		y2error ("s2 malloc error");
-		_exit (1);
-	    }
-
+	    char s2[1024];
 	    FILE *stream2 = fdopen (pipe2[0], "r");
-	    if (stream2 == NULL)
+	    if (stream2 == 0)
 	    {
 		y2error ("stream2 fdopen error");
 		free (s2);
@@ -126,12 +113,11 @@ shellcommand (const string &command, const string &tempdir)
 	    while (fgets (s2, 1024, stream2))
 	    {
 		if (out)
-		    fprintf (out, "%s", s2);
+		    fputs (s2, out);
 		y2debug ("%s", s2);
 	    }
 
 	    fclose (stream2);
-	    free (s2);
 
 	    if (out)
 		fclose (out);
