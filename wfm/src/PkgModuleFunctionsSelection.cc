@@ -107,8 +107,10 @@ PkgModuleFunctions::GetSelections (YCPList args)
 	}
 	else if (status == "selected")
 	{
-	    if ((*it)->status() == PMSelectable::S_Install)
+	    if ((*it)->to_install())
+	    {
 		selection = (*it)->candidateObj();
+	    }
 	}
 	else if (status == "installed")
 	{
@@ -308,14 +310,14 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 		_y2pm.selectionManager().setNothingSelected();
 		_y2pm.packageManager().setNothingSelected();
 	    }
-	    else if (selectable->status() == PMSelectable::S_Install)
+	    else if (selectable->to_install())
 	    {
 		// don't recurse if already selected
 		return true;
 	    }
 	}
 
-	if (!selectable->set_status(PMSelectable::S_Install))
+	if (!selectable->user_set_install())
 	{
 	    y2error ("Cant select %s", name.c_str());
 	    return false;
@@ -413,11 +415,7 @@ PkgModuleFunctions::ClearSelection (YCPList args)
 	    _y2pm.packageManager().setNothingSelected();
 	}
 
-	bool ret = true;
-	if (selectable->status() == PMSelectable::S_Install)
-	    ret = selectable->set_status (PMSelectable::S_NoInst);
-	else if (selectable->status() == PMSelectable::S_Update)
-	    ret = selectable->set_status (PMSelectable::S_KeepInstalled);
+	bool ret = selectable->user_unset();
 
 	return YCPBoolean (ret);
     }
