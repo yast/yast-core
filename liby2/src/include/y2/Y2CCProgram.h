@@ -67,6 +67,11 @@ public:
      * YASTHOME/servers, resp.
      */
     Y2Component *create(const char *name, int level, int current_level) const;
+    
+    /**
+     * Importing a namespace from a program-based subcomponent is not possible.
+     */
+    virtual Y2Component* provideNamespace(const char* name_space);
 };
 
 

@@ -117,5 +117,13 @@ Y2CCPlugin::create (const char* name, int level, int current_level) const
 }
 
 
+Y2Component*
+Y2CCPlugin::provideNamespace(const char*)
+{
+    y2debug ("Y2PluginComponent cannot import namespaces");
+    return NULL;
+}
+
+
 Y2CCPlugin g_y2ccplugin0 (true);
 Y2CCPlugin g_y2ccplugin1 (false);

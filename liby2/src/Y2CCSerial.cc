@@ -93,5 +93,13 @@ Y2Component *Y2CCSerial::create(const char *componentname) const
 }
 
 
+Y2Component*
+Y2CCSerial::provideNamespace(const char*)
+{
+    y2debug ("Y2SerialComponent cannot import namespaces");
+    return NULL;
+}
+
+
 Y2CCSerial g_y2ccserial0 (true);
 Y2CCSerial g_y2ccserial1 (false);

@@ -27,6 +27,7 @@
 #include "Y2CCProgram.h"
 #include "Y2ProgramComponent.h"
 #include <ycp/pathsearch.h>
+#include <ycp/y2log.h>
 
 
 Y2CCProgram::Y2CCProgram (bool server, bool non_y2)
@@ -88,6 +89,14 @@ Y2CCProgram::create (const char *name, int level, int current_level) const
     }
 
     return 0;		// no such file or no read rights for directory
+}
+
+
+Y2Component*
+Y2CCProgram::provideNamespace(const char*)
+{
+    y2debug ("Y2ProgramComponent cannot import namespaces");
+    return NULL;
 }
 
 

@@ -84,6 +84,14 @@ Y2CCRemote::create (const char* componentname) const
 }
 
 
+Y2Component*
+Y2CCRemote::provideNamespace(const char*)
+{
+    y2debug ("Y2RemoteComponent cannot import namespaces");
+    return NULL;
+}
+
+
 bool
 Y2CCRemote::analyseURL (const char* componentname, string& protocol,
 			string& loginname, string& password, string& hostname,

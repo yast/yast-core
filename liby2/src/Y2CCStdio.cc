@@ -25,6 +25,8 @@
 #include "Y2CCStdio.h"
 #include "Y2StdioComponent.h"
 
+#include <ycp/y2log.h>
+
 Y2CCStdio::Y2CCStdio (bool creates_servers, bool to_stderr)
     : Y2ComponentCreator (Y2ComponentBroker::BUILTIN),
       creates_servers (creates_servers),
@@ -51,6 +53,14 @@ Y2Component *Y2CCStdio::create (const char *name) const
 	return new Y2StdioComponent (creates_servers, false, true);
 
     return 0;
+}
+
+
+Y2Component*
+Y2CCStdio::provideNamespace(const char*)
+{
+    y2debug ("Y2StdioComponent cannot import namespaces");
+    return NULL;
 }
 
 

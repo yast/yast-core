@@ -66,6 +66,12 @@ public:
      * The name must not contain any slash.
      */
     Y2Component* create (const char* name, int level, int current_level) const;
+    
+    /**
+     * Importing a namespace from a plugin subcomponent is not possible.
+     */
+    Y2Component* provideNamespace(const char* name_space);
+
 };
 
 

@@ -54,6 +54,11 @@ public:
 
     Y2Component* create (const char* name) const;
 
+    /**
+     * Importing a namespace from a remote subcomponent is not possible.
+     */    
+    virtual Y2Component* provideNamespace(const char* name_space);
+
 private:
     /**
      * Analyses an URL of the form protocol://login:password@host/componentname

@@ -48,6 +48,11 @@ public:
     bool isServerCreator() const;
 
     Y2Component *create(const char *name) const;
+
+    /**
+     * Importing a namespace from a stdio subcomponent is not possible.
+     */
+    Y2Component* provideNamespace(const char* name_space);
 };
 
 
