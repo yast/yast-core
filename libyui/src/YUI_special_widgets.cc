@@ -12,7 +12,7 @@
 
   File:		YUI_special_widgets.cc
   
-		Special ( optional ) widgets
+		Special (optional) widgets
 
 		
   Authors:	Mathias Kettner <kettner@suse.de>

@@ -594,6 +594,15 @@ protected:
 				     const YCPString & label, int minValue, int maxValue, int initialValue ) = 0;
 
     /**
+     * Creates a Wizard frame.
+     */
+    virtual YWidget *createWizard( YWidget *parent, YWidgetOpt & opt,
+				   const YCPValue & backButtonId,	const YCPString & backButtonLabel,
+				   const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
+				   const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  )
+	{ return 0; } // FIXME 
+
+    /**
      * Creates a PackageSelector widget.
      *
      * "floppyDevice" may be an empty string if no such device was specified in the YCP code.
@@ -1203,6 +1212,13 @@ protected:
     YWidget *createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 			       const YCPList & optList, int argnr );
 
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a Wizard widget.
+     */
+    YWidget *createWizard( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			   const YCPList & optList, int argnr );
+    
     /**
      * Helper function of createWidgetTree.
      * Creates a DummySpecialWidget.

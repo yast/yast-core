@@ -52,6 +52,7 @@ pkginclude_HEADERS =				\
 	YTree.h					\
 	YWidget.h				\
 	YWidgetOpt.h				\
+	YWizard.h				\
 	TreeItem.h
 
 

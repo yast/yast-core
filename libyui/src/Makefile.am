@@ -55,7 +55,8 @@ libyui_la_SOURCES =				\
 	YTable.cc				\
 	YTextEntry.cc				\
 	YTree.cc				\
-	YWidget.cc
+	YWidget.cc				\
+	YWizard.cc
 
 
 INCLUDES =					\

@@ -81,8 +81,8 @@ public:
     void setSize( long newwidth, long newheight );
 
     /**
-     * Adds a new child widget. I will take over the memory and
-     * delete the child for you after use!
+     * Adds a new child widget. The YContainerwidget assumes ownership and
+     * takes care of deleting the child.
      */
     void addChild( YWidget *child );
 

@@ -12,7 +12,7 @@
 
   File:		YUI_widgets.cc
 
-		Standard ( mandatory ) widgets
+		Standard (mandatory) widgets
 
 
   Authors:	Mathias Kettner <kettner@suse.de>
@@ -229,6 +229,7 @@ YWidget *YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_Password		)	w = createTextEntry		( p, opt, term, ol, n, true );
     else if ( s == YUIWidget_ProgressBar	)	w = createProgressBar		( p, opt, term, ol, n );
     else if ( s == YUIWidget_PackageSelector	)	w = createPackageSelector	( p, opt, term, ol, n );
+    else if ( s == YUIWidget_PkgSpecial		)	w = createPkgSpecial		( p, opt, term, ol, n );
     else if ( s == YUIWidget_PushButton		)	w = createPushButton		( p, opt, term, ol, n, false );
     else if ( s == YUIWidget_IconButton		)	w = createPushButton		( p, opt, term, ol, n, true );
     else if ( s == YUIWidget_MenuButton		)	w = createMenuButton		( p, opt, term, ol, n );
@@ -240,7 +241,7 @@ YWidget *YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_Tree		)	w = createTree			( p, opt, term, ol, n );
     else if ( s == YUIWidget_VSpacing		)	w = createSpacing		( p, opt, term, ol, n, false, true );
     else if ( s == YUIWidget_VStretch		)	w = createEmpty			( p, opt, term, ol, n, false, true );
-    else if ( s == YUIWidget_PkgSpecial		)	w = createPkgSpecial		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );
 
     // Special widgets - may or may not be supported by the specific UI.
     // The YCP application should ask for presence of such a widget with Has???Widget() prior to creating one.
@@ -908,9 +909,9 @@ YWidget *YUI::createRichText( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
 YWidget *YUI::createLogView( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 3
-	 || ! term->value(argnr	 )->isString()
-	 || ! term->value(argnr+1)->isInteger()
-	 || ! term->value(argnr+2)->isInteger())
+	 || ! term->value( argnr   )->isString()
+	 || ! term->value( argnr+1 )->isInteger()
+	 || ! term->value( argnr+2 )->isInteger())
     {
 	y2error( "Invalid arguments for the LogView widget: %s",
 		 term->toString().c_str() );
@@ -2376,6 +2377,61 @@ YWidget *YUI::createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YC
     return createPackageSelector( parent, opt, floppyDevice );
 }
 
+
+
+/*
+ * @widget	Wizard
+ * @short	Wizard frame - not for general use, use the Wizard:: module instead!
+ * @class	YWizard
+ *
+ * @arg		any	backButtonId		ID to return when the user presses the "Back" button
+ * @arg		string	backButtonLabel		Label of the "Back" button
+ *
+ * @arg		any	abortButtonId		ID to return when the user presses the "Abort" button
+ * @arg		string	abortButtonLabel	Label of the "Abort" button
+ *
+ * @arg		any	nextButtonId		ID to return when the user presses the "Next" button
+ * @arg		string	nextButtonLabel		Label of the "Next" button
+ *
+ * @usage	`Wizard(`id(`back), "&Back", `id(`abort), "Ab&ort", `id(`next), "&Next" )
+ * @usage	`Wizard(`back, "&Back", `abort, "Ab&ort", `next, "&Next" )
+ *
+ * @description
+ *
+ * This is the UI-specific technical implementation of a wizard dialog's main widget.
+ * This is not intended for general use - use the Wizard:: module instead which will use this
+ * widget properly.
+ */
+
+YWidget * YUI::createWizard( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					const YCPList & optList, int argnr )
+{
+    if ( term->size() - argnr != 6
+	 || ! isSymbolOrId( term->value( argnr   ) ) || ! term->value( argnr+1 )->isString()
+	 || ! isSymbolOrId( term->value( argnr+2 ) ) || ! term->value( argnr+3 )->isString()
+	 || ! isSymbolOrId( term->value( argnr+4 ) ) || ! term->value( argnr+5 )->isString() )
+    {
+	y2error( "Invalid arguments for the Wizard widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+    
+    rejectAllOptions( term,optList );
+
+    YCPValue	backButtonId		= getId( term->value( argnr ) );
+    YCPString 	backButtonLabel 	= term->value( argnr+1 )->asString();
+    
+    YCPValue	abortButtonId		= getId( term->value( argnr+2 ) );
+    YCPString 	abortButtonLabel	= term->value( argnr+3 )->asString();
+    
+    YCPValue	nextButtonId		= getId( term->value( argnr+4 ) );
+    YCPString 	nextButtonLabel		= term->value( argnr+5 )->asString();
+
+    return createWizard( parent, opt,
+			 backButtonId,  backButtonLabel,
+			 abortButtonId,	abortButtonLabel,
+			 nextButtonId,	nextButtonLabel  );
+}
 
 
 

@@ -116,6 +116,7 @@
 #define YUIWidget_VSquash			"VSquash"
 #define YUIWidget_VStretch			"VStretch"
 #define YUIWidget_VWeight			"VWeight"
+#define YUIWidget_Wizard			"Wizard"
 #define YUIWidget_PkgSpecial			"PkgSpecial"
 
 

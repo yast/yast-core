@@ -138,6 +138,7 @@ examples_DATA =					\
 	Weight2.ycp				\
 	WidgetExists.ycp			\
 	WindowID.ycp				\
+	Wizard1.ycp				\
 	memtest.ycp				\
 	win_resizer.ycp				\
 	win_resizer2.ycp
