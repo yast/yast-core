@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 21 15:46:46 CET 2005 - visnov@suse.cz
+
+- report YCP module import only when reading the bytecode 
+
+-------------------------------------------------------------------
 Tue Feb 15 15:13:32 CET 2005 - arvin@suse.de
 
 - adapted agent-probe to new hwinfo
