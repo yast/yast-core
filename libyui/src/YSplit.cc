@@ -133,11 +133,11 @@ int YSplit::bossChild()
 	if ( boss >= 0 )
 	{
 	    y2debug( "YSplit::boss(): "
-		    "Found boss child: #%d ( %s ) - nice size: %ld, weight: %ld",
-		    boss,
-		    child( boss )->widgetClass(),
-		    child( boss )->nicesize( primary ),
-		    child( boss )->weight( primary ) );
+		     "Found boss child: #%d ( %s ) - nice size: %ld, weight: %ld",
+		     boss,
+		     child( boss )->widgetClass(),
+		     child( boss )->nicesize( primary ),
+		     child( boss )->weight( primary ) );
 	}
 	else
 	{
@@ -327,12 +327,12 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	if ( debugLayout )
 	{
 	    y2debug( "Distributing extra space" );
-	    y2debug( "new size: %ld", 		newSize		);
-	    y2debug( "distributable size: %ld", 	distributableSize );
-	    y2debug( "rubber band extra: %ld",	rubberBandExtra	);
-	    y2debug( "rubber bands: %d", 	rubberBands	);
-	    y2debug( "total weight: %ld", 	totalWeight	);
-	    y2debug( "non weighted extra: %ld", 	nonWeightedExtra );
+	    y2debug( "new size: %ld", 			newSize			);
+	    y2debug( "distributable size: %ld", 	distributableSize	);
+	    y2debug( "rubber band extra: %ld",		rubberBandExtra		);
+	    y2debug( "rubber bands: %d", 		rubberBands		);
+	    y2debug( "total weight: %ld", 		totalWeight		);
+	    y2debug( "non weighted extra: %ld", 	nonWeightedExtra 	);
 	}
 
 	for ( int i = 0; i < numChildren(); i++ )
@@ -382,13 +382,13 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	    if ( debugLayout )
 	    {
 		y2debug( "child #%d ( %s ) will get %ld "
-			"( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-			i, child(i)->widgetClass(),
-			childSize[i],
-			child(i)->nicesize( primary ),
-			child(i)->weight( primary ),
-			child(i)->stretchable( primary ) ? "yes" : "no",
-			childPos[i] );
+			 "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
+			 i, child(i)->widgetClass(),
+			 childSize[i],
+			 child(i)->nicesize( primary ),
+			 child(i)->weight( primary ),
+			 child(i)->stretchable( primary ) ? "yes" : "no",
+			 childPos[i] );
 	    }
 	}
     }
@@ -469,14 +469,14 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 		if ( debugLayout )
 		{
 		    y2debug( "child #%d ( %s ) will get %ld - %ld too small "
-			    "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-			    i, child(i)->widgetClass(),
-			    childSize[i],
-			    child(i)->nicesize( primary ) - childSize[i],
-			    child(i)->nicesize( primary ),
-			    child(i)->weight( primary ),
-			    child(i)->stretchable( primary ) ? "yes" : "no",
-			    childPos[i] );
+			     "(nice size: %ld, weight: %ld, stretchable: %s), pos %ld",
+			     i, child(i)->widgetClass(),
+			     childSize[i],
+			     child(i)->nicesize( primary ) - childSize[i],
+			     child(i)->nicesize( primary ),
+			     child(i)->weight( primary ),
+			     child(i)->stretchable( primary ) ? "yes" : "no",
+			     childPos[i] );
 		}
 	    }
 	} while ( tooSmall > 0 && loserCount > 0 );
@@ -524,13 +524,13 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 	if ( debugLayout )
 	{
 	    y2debug( "child #%d ( %s ) will get %ld "
-		    "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-		    i, child(i)->widgetClass(),
-		    childSize[i],
-		    nice,
-		    child(i)->weight( secondary ),
-		    child(i)->stretchable( secondary ) ? "yes" : "no",
-		    childPos[i] );
+		     "(nice size: %ld, weight: %ld, stretchable: %s), pos %ld",
+		     i, child(i)->widgetClass(),
+		     childSize[i],
+		     nice,
+		     child(i)->weight( secondary ),
+		     child(i)->stretchable( secondary ) ? "yes" : "no",
+		     childPos[i] );
 	}
     }
 }

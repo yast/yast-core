@@ -280,7 +280,7 @@ void YUIInterpreter::uiThreadMainLoop()
 	else
 	{
 	    y2error( "Command to ui is not a term: '%s'",
-		    command->toString().c_str() );
+		     command->toString().c_str() );
 	    box_in_the_middle = YCPVoid();
 	}
 
@@ -531,8 +531,8 @@ YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget *root,
 
 #ifdef VERBOSE_FIND_RADIO_BUTTON_GROUP
     y2debug( "findRadioButtonGroup( %s, %s )",
-	    root_id.isNull() ? "__" : root_id->toString().c_str(),
-	    widget->id()->toString().c_str() );
+	     root_id.isNull() ? "__" : root_id->toString().c_str(),
+	     widget->id()->toString().c_str() );
 #endif
 
     bool is_rbg = root->isRadioButtonGroup();

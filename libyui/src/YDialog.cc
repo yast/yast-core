@@ -102,3 +102,4 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
 	}
     }
 }
+

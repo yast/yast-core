@@ -102,7 +102,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else
     {
 	y2internal( "Unknown term symbol in executeUICommand: %s",
-		   symbol.c_str() );
+		    symbol.c_str() );
 	return YCPVoid();
     }
 
@@ -115,7 +115,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
 
 
 
- // builtin HasSpecialWidget() -> YUIInterpreter_special_widgets.cc
+// builtin HasSpecialWidget() -> YUIInterpreter_special_widgets.cc
 
 
 /**
@@ -236,11 +236,11 @@ YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateSetConsoleFont( const YCPTerm & term )
 {
     if ( term->size() == 5 &&
-	term->value(0)->isString() &&
-	term->value(1)->isString() &&
-	term->value(2)->isString() &&
-	term->value(3)->isString() &&
-	term->value(4)->isString()   )
+	 term->value(0)->isString() &&
+	 term->value(1)->isString() &&
+	 term->value(2)->isString() &&
+	 term->value(3)->isString() &&
+	 term->value(4)->isString()   )
     {
 	return setConsoleFont( term->value(0)->asString(),	// console magic
 			       term->value(1)->asString(),	// font
@@ -385,7 +385,7 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll )
     if ( ! dialog )
     {
 	y2error( "%s(): No dialog existing",
-		poll ? YUIBuiltin_PollInput : YUIBuiltin_UserInput );
+		 poll ? YUIBuiltin_PollInput : YUIBuiltin_UserInput );
 	internalError( "No dialog existing during UserInput().\n"
 		       "\n"
 		       "Please check the log file!" );
@@ -547,8 +547,8 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
 {
     int s = term->size();
     if ( ( s == 1 || s == 2 )
-	&& term->value( s-1 )->isTerm()
-	&& ( s == 1 || term->value(0)->isTerm() && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt ) )
+	 && term->value( s-1 )->isTerm()
+	 && ( s == 1 || term->value(0)->isTerm() && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt ) )
     {
 	YCPList optList;
 	if ( s == 2 ) optList = term->value(0)->asTerm()->args();
@@ -664,9 +664,9 @@ void YUIInterpreter::closeDialog( YDialog * )
 YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
 {
     if ( term->size() != 3
-	|| ! checkId( term->value(0) )
-	|| ( ! term->value(1)->isSymbol() &&
-	     ! term->value(1)->isTerm()	 ) )
+	 || ! checkId( term->value(0) )
+	 || ( ! term->value(1)->isSymbol() &&
+	      ! term->value(1)->isTerm()	 ) )
     {
 	return YCPNull();
     }
@@ -682,7 +682,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
 
 	if ( widget->shortcutProperty()				// The widget has a shortcut property
 	     && sym->symbol() == widget->shortcutProperty()	// and this is what should be changed
-	     && ret->isBoolean()				// and the change didn't return 'nil' ( error )
+	     && ret->isBoolean()				// and the change didn't return 'nil' (error)
 	     && ret->asBoolean()->value() )			// and was successful
 	{
 	    // The shortcut property has just successfully been changed
@@ -776,7 +776,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
     if ( ! replpoint->isReplacePoint() )
     {
 	y2error( "ReplaceWidget: widget %s is not a ReplacePoint",
-		id->toString().c_str() );
+		 id->toString().c_str() );
 	return YCPBoolean( false );
     }
 
@@ -1455,7 +1455,7 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
 {
     if ( term->size() != 1
-	|| ! checkId( term->value(0) ) ) return YCPNull();
+	 || ! checkId( term->value(0) ) ) return YCPNull();
 
     YCPValue id = getId( term->value(0) );
     YWidget *widget = widgetWithId( id, false ); // reports error
@@ -1475,7 +1475,7 @@ YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
 {
     if ( term->size() != 1
-	|| ! checkId( term->value( 0 ) ) )	// check for `id()
+	 || ! checkId( term->value( 0 ) ) )	// check for `id()
     {
 	y2error( "RunPkgSelection(): expecting `id( ... ), not '%s'", term->toString().c_str() );
 	return YCPNull();
@@ -1712,9 +1712,9 @@ YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
 YCPValue YUIInterpreter::evaluateRecode( const YCPTerm & term )
 {
     if ( ( term->size() != 3 )
-	|| ! (term->value(0)->isString())
-	|| ! (term->value(1)->isString())
-	|| ! (term->value(2)->isString()))
+	 || ! (term->value(0)->isString())
+	 || ! (term->value(1)->isString())
+	 || ! (term->value(2)->isString()))
     {
 	y2error( "Wrong number or type of arguments for Recode ( string from, string to, string text )" );
 	return YCPVoid();
@@ -1722,9 +1722,9 @@ YCPValue YUIInterpreter::evaluateRecode( const YCPTerm & term )
 
     string outstr;
     if ( Recode ( term->value(2)->asString()->value(),
-		term->value(0)->asString()->value(),
-		term->value(1)->asString()->value(),
-		outstr ) != 0 )
+		  term->value(0)->asString()->value(),
+		  term->value(1)->asString()->value(),
+		  outstr ) != 0 )
     {
 	static bool warned_about_recode = false;
 	if ( ! warned_about_recode )
@@ -1757,7 +1757,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 			    const string & to, string & outstr )
 {
     if ( from == to
-	|| instr.empty())
+	 || instr.empty())
     {
 	outstr = instr;
 	return 0;
@@ -1769,7 +1769,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     if ( from == "UTF-8" )
     {
 	if ( fromutf8_cd == ( iconv_t )( -1 )
-	    || fromutf8_name != to)
+	     || fromutf8_name != to)
 	{
 	    if ( fromutf8_cd != ( iconv_t )( -1 ) )
 	    {
@@ -1783,7 +1783,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     else if ( to == "UTF-8" )
     {
 	if ( toutf8_cd == ( iconv_t )( -1 )
-	    || toutf8_name != from)
+	     || toutf8_name != from)
 	{
 	    if ( toutf8_cd != ( iconv_t )( -1 ) )
 	    {
@@ -1797,8 +1797,8 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     else
     {
 	if ( fromto_cd == ( iconv_t )( -1 )
-	    || from_name != from
-	    || to_name != to)
+	     || from_name != from
+	     || to_name != to)
 	{
 	    if ( fromto_cd != ( iconv_t )( -1 ) )
 	    {

@@ -65,7 +65,7 @@ YCPValue YPushButton::changeWidget( const YCPSymbol & property, const YCPValue &
 	else
 	{
 	    y2error( "PushButton: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -80,3 +80,4 @@ YCPValue YPushButton::queryWidget( const YCPSymbol & property )
     if ( s == YUIProperty_Label ) return getLabel();
     else return YWidget::queryWidget( property );
 }
+

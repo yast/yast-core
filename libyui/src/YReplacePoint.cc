@@ -30,3 +30,4 @@ bool YReplacePoint::isReplacePoint() const
 {
     return true;
 }
+

@@ -66,7 +66,7 @@ YCPValue YMenuButton::changeWidget( const YCPSymbol & property, const YCPValue &
 	else
 	{
 	    y2error( "MenuButton: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }

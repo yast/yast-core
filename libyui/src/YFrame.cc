@@ -17,6 +17,7 @@
 
 /-*/
 
+
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
 #define y2log_component "ui"
@@ -64,7 +65,7 @@ YCPValue YFrame::changeWidget( const YCPSymbol & property, const YCPValue & newV
 	else
 	{
 	    y2error( "Frame: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -78,3 +79,4 @@ YCPValue YFrame::queryWidget( const YCPSymbol & property )
     if ( s == YUIProperty_Label ) return getLabel();
     else return YWidget::queryWidget( property );
 }
+

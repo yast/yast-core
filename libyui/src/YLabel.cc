@@ -52,7 +52,7 @@ YCPValue YLabel::changeWidget( const YCPSymbol & property, const YCPValue & newV
 	else
 	{
 	    y2error( "Label: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -79,5 +79,4 @@ YCPString YLabel::getLabel()
 {
     return text;
 }
-
 

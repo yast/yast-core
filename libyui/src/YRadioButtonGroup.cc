@@ -17,6 +17,7 @@
 
 /-*/
 
+
 #define noVERBOSE_ADD_RADIO_BUTTON
 
 #include <algorithm>
@@ -43,22 +44,22 @@ YRadioButtonGroup::~YRadioButtonGroup()
     /*
      * When a YRadioButtonGroup is destroyed, the destructors
      * are called in this order:
-    *
-    * YRadioButtonGroup::~YRadioButtonGroup
-    * YContainerWidget::~YContainerWidget
-    * YWidget::~YWidget
-    *
-    * But in YContainerWidget::~YContainerWidget radio buttons belonging
-    * to this group may be deleted. They have a pointer to this group and
-    * call removeRadioButton. But at this point of time, my vector of
-    * RadioButtons is not valid any longer.
-    *
-    * My solution is: In my destructor I tell all RadioButtons
-    * that I'm dead. They set their pointer to RBG to 0.
-    * Disadvantage: The 0 pointer must be handled separately
-    * at all places in the code. If you have a better solution,
-    * please tell me.
-    */
+     *
+     * YRadioButtonGroup::~YRadioButtonGroup
+     * YContainerWidget::~YContainerWidget
+     * YWidget::~YWidget
+     *
+     * But in YContainerWidget::~YContainerWidget radio buttons belonging
+     * to this group may be deleted. They have a pointer to this group and
+     * call removeRadioButton. But at this point of time, my vector of
+     * RadioButtons is not valid any longer.
+     *
+     * My solution is: In my destructor I tell all RadioButtons
+     * that I'm dead. They set their pointer to RBG to 0.
+     * Disadvantage: The 0 pointer must be handled separately
+     * at all places in the code. If you have a better solution,
+     * please tell me.
+     */
 
     for ( unsigned i=0; i<buttonlist.size(); i++ )
 	buttonlist[i]->buttonGroupIsDead();
@@ -75,7 +76,7 @@ void YRadioButtonGroup::addRadioButton( YRadioButton *button )
 {
 #ifdef VERBOSE_ADD_RADIO_BUTTON
     y2debug( "this=%p, addRadioButton( YRadioButton *%p )",
-	    this, button );
+	     this, button );
 #endif
     buttonlist.push_back( button );
 }
@@ -88,7 +89,7 @@ void YRadioButtonGroup::removeRadioButton( YRadioButton *button )
     else
     {
 	y2internal( "ButtonGroup %s contains no RadioButton %s",
-		   id()->toString().c_str(), button->id()->toString().c_str() );
+		    id()->toString().c_str(), button->id()->toString().c_str() );
     }
 }
 
@@ -130,7 +131,7 @@ YRadioButton *YRadioButtonGroup::currentButton() const
 bool YRadioButtonGroup::setCurrentButton( const YCPValue & id )
 {
     bool found = false;
-    for ( unsigned i=0; i<buttonlist.size(); i++ )
+    for ( unsigned i=0; i < buttonlist.size(); i++ )
     {
 	if ( buttonlist[i]->id()->equal( id ) )
 	{
@@ -142,7 +143,7 @@ bool YRadioButtonGroup::setCurrentButton( const YCPValue & id )
     if ( ! found && ! id->isVoid() )
     {
 	y2warning( "CurrentButton: no RadioButton with id %s belongs to RadioButtonGroup( `id( %s ) )",
-		  id->toString().c_str(), this->id()->toString().c_str() );
+		   id->toString().c_str(), this->id()->toString().c_str() );
 	return false;
     }
     else return true;
@@ -151,8 +152,9 @@ bool YRadioButtonGroup::setCurrentButton( const YCPValue & id )
 
 void YRadioButtonGroup::uncheckOtherButtons( const YRadioButton *radiobutton )
 {
-    for ( unsigned i=0; i<buttonlist.size(); i++ )
+    for ( unsigned i=0; i < buttonlist.size(); i++ )
     {
 	if ( buttonlist[i] != radiobutton ) buttonlist[i]->setValue( YCPBoolean( false ) );
     }
 }
+

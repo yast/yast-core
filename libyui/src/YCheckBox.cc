@@ -54,7 +54,7 @@ YCPValue YCheckBox::changeWidget( const YCPSymbol & property, const YCPValue & n
     if ( s == YUIProperty_Value )
     {
 	if ( newvalue->isBoolean() ||
-	    newvalue->isVoid()      ) // -> tri-state - neither on nor off
+	     newvalue->isVoid()      ) // -> tri-state - neither on nor off
 	{
 	    setValue( newvalue );
 	    return YCPBoolean( true );
@@ -62,7 +62,7 @@ YCPValue YCheckBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "CheckBox: Invalid parameter %s for property `Value. Must be boolean or nil.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -76,7 +76,7 @@ YCPValue YCheckBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "CheckBox: Invalid parameter %s for property `Label. Must be string.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -98,3 +98,4 @@ void YCheckBox::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
+

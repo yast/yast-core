@@ -77,8 +77,8 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YDownloadProgress::changeWidget( `Value ): "
-		    "Error: Expecting string, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting string, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -96,8 +96,8 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YDownloadProgress::changeWidget( `Filename ): "
-		    "Error: Expecting string, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting string, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -114,8 +114,8 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 	    if ( val < 1 )
 	    {
 		y2warning( "YDownloadProgress::changeWidget( `expectedSize ): "
-			  "Warning: New value %d below minValue ( %d )",
-			  val, 0 );
+			   "Warning: New value %d below minValue ( %d )",
+			   val, 0 );
 		setExpectedSize(0);
 	    }
 	    else
@@ -128,8 +128,8 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YDownloadProgress::changeWidget( `expectedSize ): "
-		    "Error: Expecting integer value, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting integer value, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -158,3 +158,4 @@ long YDownloadProgress::currentFileSize()
     else
 	return 0L;
 }
+

@@ -73,7 +73,7 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 	else
 	{
 	    y2error( "Tree: Invalid parameter %s for Label property - must be string.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -147,9 +147,9 @@ YCPString YTree::getLabel()
 
 YTreeItem *
 YTree::addItem( YTreeItem *		parentItem,
-		 const YCPValue &	id,
-		 const YCPString &	text,
-		 bool			open )
+		const YCPValue &	id,
+		const YCPString &	text,
+		bool			open )
 {
     YTreeItem *treeItem;
 
@@ -164,9 +164,9 @@ YTree::addItem( YTreeItem *		parentItem,
 
 YTreeItem *
 YTree::addItem( YTreeItem *		parentItem,
-		 const YCPString &	text,
-		 void *			data,
-		 bool			open )
+		const YCPString &	text,
+		void *			data,
+		bool			open )
 {
     YTreeItem *treeItem;
 

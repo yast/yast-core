@@ -180,3 +180,4 @@ YCPValue YLogView::queryWidget( const YCPSymbol & property )
     if ( s == YUIProperty_Label ) return label();
     else return YWidget::queryWidget( property );
 }
+

@@ -251,7 +251,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	{
 	    if ( shortcut->widget()->autoShortcut() )
 	    {
-		y2debug( "Automatically assigning shortcut '%c' to %s( `opt( `autoShortcut ), \"%s\" )",
+		y2debug( "Automatically assigning shortcut '%c' to %s(`opt(`autoShortcut ), \"%s\" )",
 			 candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
 	    }
 	    else

@@ -51,7 +51,7 @@ YCPValue YColoredLabel::changeWidget( const YCPSymbol & property, const YCPValue
 	else
 	{
 	    y2error( "Label: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }

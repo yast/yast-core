@@ -27,11 +27,11 @@
 #include "YSlider.h"
 
 
-YSlider::YSlider( YWidgetOpt & opt,
-		  const YCPString & label,
-		  int minValue,
-		  int maxValue,
-		  int initialValue )
+YSlider::YSlider( YWidgetOpt &		opt,
+		  const YCPString & 	label,
+		  int 			minValue,
+		  int 			maxValue,
+		  int 			initialValue )
     : YWidget( opt )
     , _label( label )
     , _minValue( minValue )
@@ -71,15 +71,15 @@ YCPValue YSlider::changeWidget( const YCPSymbol & property,
 	    if ( val < minValue() )
 	    {
 		y2warning( "YSlider::changeWidget( `Value ): "
-			  "Warning: New value %d below minValue ( %d )",
-			  val, minValue() );
+			   "Warning: New value %d below minValue ( %d )",
+			   val, minValue() );
 		setValue( minValue() );
 	    }
 	    else if ( val > maxValue() )
 	    {
 		y2warning( "YSlider::changeWidget( `Value ): "
-			  "Warning: New value %d above maxValue ( %d )",
-			  val, maxValue() );
+			   "Warning: New value %d above maxValue ( %d )",
+			   val, maxValue() );
 		setValue( maxValue() );
 	    }
 	    else
@@ -92,8 +92,8 @@ YCPValue YSlider::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YSlider::changeWidget( `Value ): "
-		    "Error: Expecting integer value, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting integer value, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -111,8 +111,8 @@ YCPValue YSlider::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YSlider::changeWidget( `Value ): "
-		    "Error: Expecting string, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting string, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -136,3 +136,4 @@ void YSlider::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
+

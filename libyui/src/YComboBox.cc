@@ -57,7 +57,7 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "ComboBox: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -107,14 +107,14 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	    else
 	    {
 		y2error( "ComboBox: Invalid parameter %s for ValidChars property. Must be string.",
-			newvalue->toString().c_str() );
+			 newvalue->toString().c_str() );
 		return YCPBoolean( false );
 	    }
 	}
 	else
 	{
 	    y2error( "ComboBox: Setting the ValidChars property doesn't make sense "
-		    "for a non-editable ComboBox!" );
+		     "for a non-editable ComboBox!" );
 	    return YCPBoolean( false );
 	}
     }

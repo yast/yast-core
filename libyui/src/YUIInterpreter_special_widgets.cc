@@ -89,12 +89,12 @@ YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term )
 
 
 YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						  const YCPList & optList, int argnr )
+						   const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr > 0 )
     {
 	y2error( "Invalid arguments for the DummySpecialWidget widget: %s",
-		term->toString().c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
@@ -162,7 +162,7 @@ YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &
  */
 
 YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					const YCPList & optList, int argnr )
+					 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -172,7 +172,7 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, cons
 	 )
     {
 	y2error( "Invalid arguments for the BarGraph widget: %s",
-		term->toString().c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
@@ -228,13 +228,13 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, cons
  */
 
 YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					    const YCPList & optList, int argnr )
+					     const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 4
-	|| ! term->value( argnr   )->isString()		// label
-	|| ! term->value( argnr+1 )->isTerm()		// foreground color
-	|| ! term->value( argnr+2 )->isTerm()		// background color
-	|| ! term->value( argnr+3 )->isInteger() )	// margin
+	 || ! term->value( argnr   )->isString()		// label
+	 || ! term->value( argnr+1 )->isTerm()		// foreground color
+	 || ! term->value( argnr+2 )->isTerm()		// background color
+	 || ! term->value( argnr+3 )->isInteger() )	// margin
     {
 	y2error( "Invalid arguments for the ColoredLabel widget: %s", term->toString().c_str() );
 	return 0;
@@ -291,7 +291,7 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt, 
  */
 
 YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						const YCPList & optList, int argnr )
+						 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -302,7 +302,7 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & o
 	 )
     {
 	y2error( "Invalid arguments for the DownloadProgress widget: %s",
-		term->toString().c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
@@ -357,7 +357,7 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & o
  */
 
 YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-				      const YCPList & optList, int argnr )
+				       const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -369,7 +369,7 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const 
 	 )
     {
 	y2error( "Invalid arguments for the Slider widget: %s",
-		term->toString().c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
@@ -378,10 +378,10 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const 
 
     if ( hasSlider() )
     {
-	YCPString label	= term->value( argnr )->asString();
-	int minValue	= term->value( argnr+1 )->asInteger()->value();
-	int maxValue	= term->value( argnr+2 )->asInteger()->value();
-	int initialValue	= term->value( argnr+3 )->asInteger()->value();
+	YCPString label	 = term->value( argnr   )->asString();
+	int minValue	 = term->value( argnr+1 )->asInteger()->value();
+	int maxValue	 = term->value( argnr+2 )->asInteger()->value();
+	int initialValue = term->value( argnr+3 )->asInteger()->value();
 	slider = createSlider( parent, opt, label, minValue, maxValue, initialValue );
     }
     else
@@ -437,7 +437,7 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const 
  * */
 
 YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						 const YCPList & optList, int argnr )
+						  const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -455,7 +455,7 @@ YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & 
 	 )
     {
 	y2error( "Invalid arguments for the PartitionSplitter widget: %s",
-		term->toString().c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
@@ -469,16 +469,16 @@ YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & 
 
     if ( hasPartitionSplitter() )
     {
-	int 	usedSize		= term->value( argnr  )->asInteger()->value();
-	int 	totalFreeSize		= term->value( argnr+1 )->asInteger()->value();
-	int 	newPartSize		= term->value( argnr+2 )->asInteger()->value();
-	int 	minNewPartSize		= term->value( argnr+3 )->asInteger()->value();
-	int 	minFreeSize		= term->value( argnr+4 )->asInteger()->value();
-	YCPString usedLabel		= term->value( argnr+5 )->asString();
-	YCPString freeLabel		= term->value( argnr+6 )->asString();
-	YCPString newPartLabel		= term->value( argnr+7 )->asString();
-	YCPString freeFieldLabel		= term->value( argnr+8 )->asString();
-	YCPString newPartFieldLabel	= term->value( argnr+9 )->asString();
+	int 		usedSize		= term->value( argnr   )->asInteger()->value();
+	int 		totalFreeSize		= term->value( argnr+1 )->asInteger()->value();
+	int 		newPartSize		= term->value( argnr+2 )->asInteger()->value();
+	int 		minNewPartSize		= term->value( argnr+3 )->asInteger()->value();
+	int 		minFreeSize		= term->value( argnr+4 )->asInteger()->value();
+	YCPString 	usedLabel		= term->value( argnr+5 )->asString();
+	YCPString 	freeLabel		= term->value( argnr+6 )->asString();
+	YCPString 	newPartLabel		= term->value( argnr+7 )->asString();
+	YCPString 	freeFieldLabel		= term->value( argnr+8 )->asString();
+	YCPString 	newPartFieldLabel	= term->value( argnr+9 )->asString();
 
 	splitter = createPartitionSplitter( parent, opt,
 					    usedSize, totalFreeSize,
@@ -537,12 +537,12 @@ bool YUIInterpreter::hasPartitionSplitter()
  */
 
 YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
-						const YCPString & label,
-						const YCPString & filename,
-						int expectedSize )
+						 const YCPString & label,
+						 const YCPString & filename,
+						 int expectedSize )
 {
     y2error( "Default createDownloadProgress() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
 }
@@ -550,47 +550,47 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & o
 YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createBarGraph() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
 }
 
 YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
-					    YCPString label,
-					    YColor fg, YColor bg, int margin )
+					     YCPString label,
+					     YColor fg, YColor bg, int margin )
 {
     y2error( "Default createColoredLabel() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
 }
 
 YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt,
-				      const YCPString & label,
-				      int minValue, int maxValue, int initialValue )
+				       const YCPString & label,
+				       int minValue, int maxValue, int initialValue )
 {
     y2error( "Default createSlider() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
 }
 
 
 YWidget *YUIInterpreter::createPartitionSplitter( YWidget *		parent,
-						 YWidgetOpt &		opt,
-						 int 			usedSize,
-						 int 			totalFreeSize,
-						 int 			newPartSize,
-						 int 			minNewPartSize,
-						 int 			minFreeSize,
-						 const YCPString &	usedLabel,
-						 const YCPString &	freeLabel,
-						 const YCPString &	newPartLabel,
-						 const YCPString &	freeFieldLabel,
-						 const YCPString &	newPartFieldLabel )
+						  YWidgetOpt &		opt,
+						  int 			usedSize,
+						  int 			totalFreeSize,
+						  int 			newPartSize,
+						  int 			minNewPartSize,
+						  int 			minFreeSize,
+						  const YCPString &	usedLabel,
+						  const YCPString &	freeLabel,
+						  const YCPString &	newPartLabel,
+						  const YCPString &	freeFieldLabel,
+						  const YCPString &	newPartFieldLabel )
 {
     y2error( "Default createPartitionSplitter() method called - "
-	    "forgot to call HasSpecialWidget()?" );
+	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
 }

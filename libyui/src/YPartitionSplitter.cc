@@ -78,15 +78,15 @@ YCPValue YPartitionSplitter::changeWidget( const YCPSymbol & property,
 	    if ( val < minNewPartSize() )
 	    {
 		y2warning( "YPartitionSplitter::changeWidget( `Value ): "
-			  "Warning: New value %d below minNewPartSize ( %d )",
-			  val, minNewPartSize() );
+			   "Warning: New value %d below minNewPartSize ( %d )",
+			   val, minNewPartSize() );
 		setValue( minNewPartSize() );
 	    }
 	    else if ( val > maxNewPartSize() )
 	    {
 		y2warning( "YPartitionSplitter::changeWidget( `Value ): "
-			  "Warning: New value %d above maxNewPartSize ( %d )",
-			  val, maxNewPartSize() );
+			   "Warning: New value %d above maxNewPartSize ( %d )",
+			   val, maxNewPartSize() );
 		setValue( maxNewPartSize() );
 	    }
 	    else

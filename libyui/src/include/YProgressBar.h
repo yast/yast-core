@@ -32,15 +32,12 @@ class YProgressBar : public YWidget
 public:
 
     /**
-     * Creates a new new ProgressBar
-     * @param label the ProgressBar label
-     * @param maxProgress the maximum value
-     * @param initialProgress the initial value
+     * Constructor.
      */
-    YProgressBar( YWidgetOpt & opt,
-		 const YCPString & label,
-		 const YCPInteger & maxProgress,
-		 const YCPInteger & initialProgress );
+    YProgressBar( YWidgetOpt & 		opt,
+		  const YCPString & 	label,
+		  const YCPInteger & 	maxProgress,
+		  const YCPInteger & 	initialProgress );
 
     /**
      * Returns a descriptive name of this widget class for logging,

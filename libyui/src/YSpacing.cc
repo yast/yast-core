@@ -19,6 +19,7 @@
 
 #include "YSpacing.h"
 
+
 YSpacing::YSpacing( YWidgetOpt & opt, float size, bool horizontal, bool vertical )
     : YWidget( opt )
 {

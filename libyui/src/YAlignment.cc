@@ -26,8 +26,8 @@ using std::min;
 
 
 YAlignment::YAlignment( YWidgetOpt & opt,
-		       YAlignmentType halign,
-		       YAlignmentType valign )
+			YAlignmentType halign,
+			YAlignmentType valign )
     : YContainerWidget( opt )
 {
     align[ YD_HORIZ ] = halign;

@@ -27,10 +27,10 @@
 #include "YProgressBar.h"
 
 
-YProgressBar::YProgressBar( YWidgetOpt & opt,
-			   const YCPString & label,
-			   const YCPInteger & maxProgress,
-			   const YCPInteger & progress )
+YProgressBar::YProgressBar( YWidgetOpt & 	opt,
+			    const YCPString & 	label,
+			    const YCPInteger & 	maxProgress,
+			    const YCPInteger &	progress )
     : YWidget( opt )
     , label( label )
     , maxProgress( maxProgress )
@@ -85,7 +85,7 @@ YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue 
 	    else if ( p->value() > maxProgress->value() )
 	    {
 		y2warning( "Too big value %s for progress bar ( max is %s )",
-			  p->toString().c_str(), maxProgress->toString().c_str() );
+			   p->toString().c_str(), maxProgress->toString().c_str() );
 		p = maxProgress;
 	    }
 	    setProgress(p);
@@ -95,7 +95,7 @@ YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue 
 	else
 	{
 	    y2error( "ProgressBar: Invalid parameter %s for Value property. Must be integer",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -113,7 +113,7 @@ YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue 
 	else
 	{
 	    y2error( "ProgressBar: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }

@@ -61,7 +61,7 @@ YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCP
 	else
 	{
 	    y2error( "MultiSelectionBox: Invalid parameter %s for Label property. Must be string",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}

@@ -102,3 +102,4 @@ void YMultiLineEdit::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
+

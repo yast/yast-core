@@ -17,6 +17,7 @@
 
 /-*/
 
+
 #include <ycp/YCPBoolean.h>
 #include <ycp/YCPInteger.h>
 #include <ycp/YCPSymbol.h>
@@ -42,13 +43,13 @@ YWidget::YWidget( YWidgetOpt & opt )
 {
     internal_widget_id = next_internal_widget_id++;
 
-    enabled		= ! opt.isDisabled.value();
-    notify		= opt.notifyMode.value();
-    _autoShortcut	= opt.autoShortcut.value();
+    enabled			= ! opt.isDisabled.value();
+    notify			= opt.notifyMode.value();
+    _autoShortcut		= opt.autoShortcut.value();
     _stretch[ YD_HORIZ ]	= opt.isHStretchable.value();
-    _stretch[ YD_VERT ]	= opt.isVStretchable.value();
-    _weight[ YD_HORIZ ]	= opt.hWeight.value();
-    _weight[ YD_VERT ]	= opt.vWeight.value();
+    _stretch[ YD_VERT  ]	= opt.isVStretchable.value();
+    _weight[ YD_HORIZ ]		= opt.hWeight.value();
+    _weight[ YD_VERT  ]		= opt.vWeight.value();
 
     if ( ! enabled )	setEnabling( false );
     if ( notify )	setNotify( notify );
@@ -64,9 +65,7 @@ YWidget::~YWidget()
     }
 
     if ( yparent && yparent->isValid() )
-    {
 	yparent->childDeleted( this );
-    }
 
     invalidate();
 }
@@ -153,7 +152,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 	    return YCPBoolean( true );
 	}
 	else y2error( "Wrong argument %s for widget property `Enabled - boolean expected.",
-		     newvalue->toString().c_str() );
+		      newvalue->toString().c_str() );
     }
 
     /*
@@ -167,7 +166,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 	    return YCPBoolean( true );
 	}
 	else y2error( "Wrong argument %s for widget property `Notify - boolean expected.",
-		     newvalue->toString().c_str() );
+		      newvalue->toString().c_str() );
     }
 
     return YCPBoolean( false );
@@ -177,7 +176,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newvalue )
 {
     y2warning( "Widget %s: Couldn't change unkown widget property %s to %s",
-	      id()->toString().c_str(), property->toString().c_str(), newvalue->toString().c_str() );
+	       id()->toString().c_str(), property->toString().c_str(), newvalue->toString().c_str() );
     return YCPVoid();
 }
 
@@ -185,13 +184,13 @@ YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newva
 YCPValue YWidget::queryWidget( const YCPSymbol & property )
 {
     string symbol = property->symbol();
-    if ( symbol == YUIProperty_Enabled ) return YCPBoolean( getEnabling() );
-    if ( symbol == YUIProperty_Notify ) return YCPBoolean( getNotify()   );
-    if ( symbol == YUIProperty_WindowID ) return YCPInteger( windowID    );
+    if ( symbol == YUIProperty_Enabled ) 	return YCPBoolean( getEnabling() );
+    if ( symbol == YUIProperty_Notify )		return YCPBoolean( getNotify()   );
+    if ( symbol == YUIProperty_WindowID ) 	return YCPInteger( windowID      );
     else
     {
 	y2error( "Widget %s: Couldn't query unkown widget property %s",
-		id()->toString().c_str(), symbol.c_str() );
+		 id()->toString().c_str(), symbol.c_str() );
 	return YCPVoid();
     }
 }
@@ -200,7 +199,7 @@ YCPValue YWidget::queryWidget( const YCPSymbol & property )
 YCPValue YWidget::queryWidget( const YCPTerm & property )
 {
     y2warning( "Widget %s: Couldn't query unkown widget property %s",
-	      id()->toString().c_str(), property->toString().c_str() );
+	       id()->toString().c_str(), property->toString().c_str() );
     return YCPVoid();
 }
 
@@ -227,7 +226,7 @@ bool YWidget::getEnabling() const
 long YWidget::nicesize( YUIDimension dim )
 {
     y2error( "YWidget::nicesize( YUIDimension dim ) called - "
-	    "this method should be overwritten in derived classes!" );
+	     "this method should be overwritten in derived classes!" );
     return 1;
 }
 
@@ -331,3 +330,4 @@ void YWidget::saveUserInput( YMacroRecorder *macroRecorder )
      * YMacroRecorder::recordWidgetProperty() in the overwritten method.
      */
 }
+

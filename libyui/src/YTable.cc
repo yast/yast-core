@@ -41,7 +41,7 @@ YTable::YTable( YWidgetOpt & opt, int num_cols )
 
 
 YCPValue YTable::changeWidget( const YCPSymbol & property,
-			      const YCPValue & newValue )
+			       const YCPValue & newValue )
 {
     string s = property->symbol();
 
@@ -92,7 +92,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	if ( property->size() != 2 || ! property->value(1)->isInteger() )
 	{
 	    y2error( "Table %s: property `Item() needs two arguments: item id and column number",
-		    id()->toString().c_str() );
+		     id()->toString().c_str() );
 	    return YCPBoolean( false );
 	}
 	YCPValue itemid = property->value(0);
@@ -103,7 +103,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	if ( colnum >= numCols() || colnum < 0 )
 	{
 	    y2error( "Table %s: Invalid column number %d",
-		    id()->toString().c_str(), colnum );
+		     id()->toString().c_str(), colnum );
 	    return YCPBoolean( false );
 	}
 
@@ -113,7 +113,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	else
 	{
 	    y2error( "Table %s: Invalid value for cell ( %s|%d ). Must be string or integer",
-		    id()->toString().c_str(), itemid->toString().c_str(), colnum );
+		     id()->toString().c_str(), itemid->toString().c_str(), colnum );
 	    return YCPBoolean( false );
 	}
 
@@ -147,7 +147,7 @@ YCPValue YTable::queryWidget( const YCPTerm & property )
 	if ( property->size() != 1 )
 	{
 	    y2error( "Table %s: property `Item() needs one argument",
-		    id()->toString().c_str() );
+		     id()->toString().c_str() );
 	    return YCPVoid();
 	}
 	int item_nr = itemWithId( property->value(0), true );
@@ -181,7 +181,7 @@ bool YTable::addItem( const YCPValue & item )
     if ( ! item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item )
     {
 	y2error( "Invalid item specification %s: Must be `" YUISymbol_item "() term",
-		  item->toString().c_str() );
+		 item->toString().c_str() );
 	return false;
     }
 
@@ -189,16 +189,16 @@ bool YTable::addItem( const YCPValue & item )
     if ( collist->size() != numCols() + 1 )
     {
 	y2error( "Invalid item specification %s: Wrong number of elements",
-		  item->toString().c_str() );
+		 item->toString().c_str() );
 	return false;
     }
 
     if ( ! collist->value(0)->isTerm()
-	|| collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
-	|| collist->value(0)->asTerm()->size() != 1)
+	 || collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
+	 || collist->value(0)->asTerm()->size() != 1)
     {
 	y2error( "Invalid item specification %s: Must begin with `" YUISymbol_id "() term",
-		  item->toString().c_str() );
+		 item->toString().c_str() );
 	return false;
     }
 
@@ -215,7 +215,7 @@ bool YTable::addItem( const YCPValue & item )
 	else
 	{
 	    y2error( "Invalid value %s in item. Must be string, integer or void",
-		      value->toString().c_str() );
+		     value->toString().c_str() );
 	    row.push_back( "" );
 	}
     }
@@ -279,3 +279,5 @@ void YTable::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
 }
+
+

@@ -27,7 +27,7 @@
 
 
 // Return the number of elements of an array of any type
-#define DIM( ARRAY )	( ( int ) ( sizeof( ARRAY)/( sizeof( ARRAY[0] ) ) ) )
+#define DIM( ARRAY )	( (int) ( sizeof( ARRAY)/( sizeof( ARRAY[0] ) ) ) )
 
 
 YShortcut::YShortcut( YWidget *shortcut_widget )
@@ -253,3 +253,4 @@ YShortcut::normalized( char c )
     if ( c >= '0' && c <= '9' )	return c;
     return ( char ) 0;
 }
+

@@ -46,7 +46,7 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
     if ( ! isValid() )
     {
 	y2error( "YContainerWidget::childDeleted( deletedChild=%s #%d ): Invalid container widget",
-		deletedChild->widgetClass(), deletedChild->internalId() );
+		 deletedChild->widgetClass(), deletedChild->internalId() );
 	return;
     }
 
@@ -108,7 +108,7 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
     string indentation ( indentationLevel * 4, ' ' );
 
     y2debug( "Widget tree: %s%s #%d at %p",
-	    indentation.c_str(), w->widgetClass(), w->internalId(), w );
+	     indentation.c_str(), w->widgetClass(), w->internalId(), w );
 }
 
 

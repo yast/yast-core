@@ -29,9 +29,9 @@
 #include "YRadioButton.h"
 
 
-YRadioButton::YRadioButton( YWidgetOpt & opt,
-			   const YCPString & label,
-			   YRadioButtonGroup *radiobuttongroup )
+YRadioButton::YRadioButton( YWidgetOpt & 	opt,
+			    const YCPString & 	label,
+			    YRadioButtonGroup *	radiobuttongroup )
     : YWidget( opt )
     , label( label )
     , radiobuttongroup( radiobuttongroup )
@@ -74,7 +74,7 @@ YCPValue YRadioButton::changeWidget( const YCPSymbol & property, const YCPValue 
 	else
 	{
 	    y2error( "RadioButton: Invalid parameter %s for property `Value. Must be boolean",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -92,7 +92,7 @@ YCPValue YRadioButton::changeWidget( const YCPSymbol & property, const YCPValue 
 	else
 	{
 	    y2error( "RadioButton: Invalid parameter %s for property `Label. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -104,7 +104,7 @@ YCPValue YRadioButton::changeWidget( const YCPSymbol & property, const YCPValue 
 YCPValue YRadioButton::queryWidget( const YCPSymbol & property )
 {
     string s = property->symbol();
-    if	   ( s == YUIProperty_Value ) return getValue();
+    if	    ( s == YUIProperty_Value ) return getValue();
     else if ( s == YUIProperty_Label ) return getLabel();
     else return YWidget::queryWidget( property );
 }

@@ -80,7 +80,7 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for Value property. Must be string.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -97,7 +97,7 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for Label property. Must be string.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -114,7 +114,7 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for ValidChars property. Must be string.",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }

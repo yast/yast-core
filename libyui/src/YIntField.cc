@@ -71,15 +71,15 @@ YCPValue YIntField::changeWidget( const YCPSymbol & property,
 	    if ( val < minValue() )
 	    {
 		y2warning( "YIntField::changeWidget( `Value ): "
-			  "Warning: New value %d below minValue ( %d )",
-			  val, minValue() );
+			   "Warning: New value %d below minValue ( %d )",
+			   val, minValue() );
 		setValue( minValue() );
 	    }
 	    else if ( val > maxValue() )
 	    {
 		y2warning( "YIntField::changeWidget( `Value ): "
-			  "Warning: New value %d above maxValue ( %d )",
-			  val, maxValue() );
+			   "Warning: New value %d above maxValue ( %d )",
+			   val, maxValue() );
 		setValue( maxValue() );
 	    }
 	    else
@@ -92,8 +92,8 @@ YCPValue YIntField::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YIntField::changeWidget( `Value ): "
-		    "Error: Expecting integer value, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting integer value, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -111,8 +111,8 @@ YCPValue YIntField::changeWidget( const YCPSymbol & property,
 	else
 	{
 	    y2error( "YIntField::changeWidget( `Value ): "
-		    "Error: Expecting string, not %s",
-		    newValue->toString().c_str() );
+		     "Error: Expecting string, not %s",
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -135,3 +135,4 @@ void YIntField::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
+

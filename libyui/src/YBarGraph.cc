@@ -16,6 +16,7 @@
 
 /-*/
 
+
 #include <stdio.h>
 
 #define y2log_component "ui"
@@ -58,7 +59,7 @@ YCPValue YBarGraph::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "YBarGraph::changeWidget( `Values ): list of integers expected, not %s",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -80,7 +81,7 @@ YCPValue YBarGraph::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "YBarGraph::changeWidget( `Labels ): list of strings expected, not %s",
-		    newValue->toString().c_str() );
+		     newValue->toString().c_str() );
 
 	    return YCPBoolean( false );
 	}
@@ -172,9 +173,9 @@ void YBarGraph::parseLabelsList( const YCPList & newLabels )
     if ( newLabels->size() != segments() )
     {
 	y2warning( "YBarGraph::parseLabelsList(): Warning: "
-		  "The number of labels ( %d ) is not equal "
-		  "to the number of values ( %d )!",
-		  segments(), newLabels->size() );
+		   "The number of labels ( %d ) is not equal "
+		   "to the number of values ( %d )!",
+		   segments(), newLabels->size() );
     }
 
     for ( int i=0; i < newLabels->size(); i++ )
@@ -215,3 +216,4 @@ void YBarGraph::doUpdate()
 {
     // NOP
 }
+

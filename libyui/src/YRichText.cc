@@ -58,7 +58,7 @@ YCPValue YRichText::changeWidget( const YCPSymbol & property, const YCPValue & n
 	else
 	{
 	    y2error( "RichText: Invalid parameter %s for Value property. Must be string",
-		    newvalue->toString().c_str() );
+		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
     }
@@ -85,6 +85,4 @@ YCPString YRichText::getText()
 {
     return text;
 }
-
-
 
