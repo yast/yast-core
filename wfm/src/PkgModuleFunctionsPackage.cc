@@ -920,6 +920,25 @@ PkgModuleFunctions::PkgInstall (YCPList args)
 
 
 /**
+   @builtin Pkg::PkgSrcInstall (string package) -> boolean
+
+   Select source of package for installation
+
+*/
+YCPValue
+PkgModuleFunctions::PkgSrcInstall (YCPList args)
+{
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+
+    if (!selectable)
+    {
+	return YCPBoolean (false);
+    }
+    return YCPBoolean (selectable->set_source_install());
+}
+
+
+/**
    @builtin Pkg::PkgDelete (string package) -> boolean
 
    Select package for deletion

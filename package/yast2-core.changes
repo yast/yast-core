@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 13 18:47:16 CET 2003 - kkaempf@suse.de
+
+- handle installation of source packages (#25318).
+- 2.7.34
+
+-------------------------------------------------------------------
 Tue Mar 11 10:07:56 CET 2003 - kkaempf@suse.de
 
 - fix parseycp syntax checker to detect trailing errors

@@ -201,6 +201,7 @@ class PkgModuleFunctions
 	YCPValue PkgFileHasOwner (YCPList args);
 
 	YCPValue PkgInstall (YCPList args);
+	YCPValue PkgSrcInstall (YCPList args);
 	YCPValue PkgDelete (YCPList args);
 	YCPValue PkgNeutral (YCPList args);
 	YCPValue PkgSolve (YCPList args);
