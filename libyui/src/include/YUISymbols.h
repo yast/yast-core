@@ -177,7 +177,7 @@
 #define YUIOpt_scaleToFit			"scaleToFit"
 #define YUIOpt_searchMode			"searchMode"
 #define YUIOpt_shrinkable			"shrinkable"
-#define YUIOpt_showSteps			"showSteps"
+#define YUIOpt_stepsEnabled			"stepsEnabled"
 #define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
 #define YUIOpt_updateMode			"updateMode"

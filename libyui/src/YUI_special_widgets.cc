@@ -494,7 +494,7 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
  * @short	Wizard frame - not for general use, use the Wizard:: module instead!
  * @class	YWizard
  *
- * @option	showSteps	Enable showing wizard steps (use UI::WizardCommand() to set them)
+ * @option	stepsEnabled	Enable showing wizard steps (use UI::WizardCommand() to set them)
  *
  * @arg		any	backButtonId		ID to return when the user presses the "Back" button
  * @arg		string	backButtonLabel		Label of the "Back" button
@@ -537,7 +537,7 @@ YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 
     for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_showSteps ) opt.showSteps.setValue( true );
+	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_stepsEnabled ) opt.stepsEnabled.setValue( true );
 	else logUnknownOption( term, optList->value(o) );
     }
 

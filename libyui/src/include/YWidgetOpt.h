@@ -154,7 +154,7 @@ struct YWidgetOpt
     YBoolOpt searchMode;	// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector
     YBoolOpt youMode;		// YPackageSelector
-    YBoolOpt showSteps;		// YWizard
+    YBoolOpt stepsEnabled;	// YWizard
     
     // YDialog-specific options
     //
