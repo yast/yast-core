@@ -17,7 +17,7 @@
 #include <string>
 
 #include <YCP.h>
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 #include "DummyAgent.h"
@@ -36,7 +36,7 @@ DummyAgent::DummyAgent ()
  * Dummy 'Read' function
  */
 YCPValue
-DummyAgent::Read (const YCPPath& path, const YCPValue& arg)
+DummyAgent::Read (const YCPPath& path, const YCPValue& arg , const YCPValue&)
 {
     YCPValue deflt = YCPVoid ();
     YCPValue v = YCPNull ();
@@ -53,7 +53,7 @@ DummyAgent::Read (const YCPPath& path, const YCPValue& arg)
 
     y2debug("%sRead	%s", DUMMY_LOG_STRING,
 	    (path->toString() + (arg.isNull()?"":(" "+arg->toString())) +
-	     (v.isNull()?"":(" "+v->toString())) ).c_str());
+			      (v.isNull()?"":(" "+v->toString())) ).c_str());
 
     return v;
 }
@@ -62,7 +62,7 @@ DummyAgent::Read (const YCPPath& path, const YCPValue& arg)
 /**
  * Dummy 'Write' function
  */
-YCPValue
+YCPBoolean
 DummyAgent::Write (const YCPPath& path, const YCPValue& value,
 		   const YCPValue& arg)
 {
@@ -81,10 +81,10 @@ DummyAgent::Write (const YCPPath& path, const YCPValue& value,
 
     y2debug("%sWrite	%s", DUMMY_LOG_STRING,
 	    (path->toString() + " " + value->toString() +
-	     (arg.isNull()?"":(" "+arg->toString())) +
-	     (v.isNull()?"":(" "+v->toString())) ).c_str());
+			      (arg.isNull()?"":(" "+arg->toString())) +
+			      (v.isNull()?"":(" "+v->toString())) ).c_str());
 
-    return v;
+    return v.isNull () ? YCPNull () : v->asBoolean ();
 }
 
 
@@ -110,8 +110,8 @@ DummyAgent::Execute (const YCPPath& path, const YCPValue& value,
     
     y2debug("%sExecute	%s", DUMMY_LOG_STRING,
 	    (path->toString() + " " + value->toString() +
-	     (arg.isNull()?"":(" "+arg->toString())) +
-	     (v.isNull()?"":(" "+v->toString())) ).c_str());
+			      (arg.isNull()?"":(" "+arg->toString())) +
+			      (v.isNull()?"":(" "+v->toString())) ).c_str());
 
     return v;
 }
@@ -120,7 +120,7 @@ DummyAgent::Execute (const YCPPath& path, const YCPValue& value,
 /**
  * Dummy 'Dir' function
  */
-YCPValue DummyAgent::Dir(const YCPPath& path)
+YCPList DummyAgent::Dir(const YCPPath& path)
 {
     YCPList l;
 
@@ -149,7 +149,7 @@ YCPValue DummyAgent::Dir(const YCPPath& path)
 YCPValue DummyAgent::otherCommand(const YCPTerm& term)
 {
     // y2debug("otherCommand(%s)",term->toString().c_str());
-    string sym = term->symbol()->symbol();
+    string sym = term->name();
 
     if (sym == "DataMap")
     {

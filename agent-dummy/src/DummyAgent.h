@@ -55,13 +55,13 @@ public:
      * @param path Specifies what part of the subtree should
      * be read. The path is specified _relatively_ to Root()!
      */
-    YCPValue Read(const YCPPath& path, const YCPValue& arg = YCPNull());
+    YCPValue Read(const YCPPath& path, const YCPValue& arg = YCPNull(), const YCPValue& opt = YCPNull());
 
     /**
      * Writes data. Destroy the result after use.
      * @return Value defined in DataMap command. If no value is defined in DataMap, YCPBoolean(true) is returned.
      */
-    YCPValue Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg = YCPNull());
+    YCPBoolean Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg = YCPNull());
 
     /**
      * Execute a program. Destroy the result after use.
@@ -72,7 +72,7 @@ public:
     /**
      * Get a list of all subtrees.
      */
-    YCPValue Dir(const YCPPath& path);
+    YCPList Dir(const YCPPath& path);
 
     /**
      * Evaluates the DataMap() command

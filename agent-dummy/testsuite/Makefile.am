@@ -20,6 +20,5 @@ y2ag_dummy_LDFLAGS =					\
 	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../src/libpy2ag_dummy.la		\
 	-Xlinker --no-whole-archive
