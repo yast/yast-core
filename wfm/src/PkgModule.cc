@@ -193,5 +193,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceSaveRanks")	return SourceSaveRanks (args);
     else if (function == "SourceChangeUrl")	return SourceChangeUrl(args);
     else if (function == "SourceInstallOrder")	return SourceInstallOrder(args);
+    else if (function == "SourceEditGet")	return SourceEditGet(args);
+    else if (function == "SourceEditSet")	return SourceEditSet(args);
     return YCPError (string ("Undefined Pkg::")+function);
 }

@@ -145,6 +145,8 @@ class PkgModuleFunctions
         YCPValue SourceSetEnabled (YCPList args);
 	YCPValue SourceFinish (YCPList args);
         YCPValue SourceDelete (YCPList args);
+	YCPValue SourceEditGet (YCPList args);
+	YCPValue SourceEditSet (YCPList args);
 	// deprecated
         YCPValue SourceRaisePriority (YCPList args);
         YCPValue SourceLowerPriority (YCPList args);

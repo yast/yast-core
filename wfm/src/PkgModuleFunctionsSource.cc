@@ -90,6 +90,100 @@ inline YCPList asYCPList( const InstSrcManager::ISrcIdList & ids_r )
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
+// InstSrcManager::SrcDelSet <- YCPList of YCPInteger
+/////////////////////////////////////////////////////////////////////////////////////////
+
+inline bool YcpArgLoad::Value<YT_LIST, InstSrcManager::SrcDelSet>::assign( const YCPValue & arg_r )
+{
+  YCPList l =  arg_r->asList(); // YT_LIST asserted
+  _value.clear();
+
+  bool valid = true;
+
+  for ( unsigned i = 0; i < unsigned(l->size()); ++i ) {
+    YCPValue el = l->value(i);
+    if ( el->isInteger() ) {
+      _value.insert( el->asInteger()->value() );
+    } else {
+      y2warning( "List entry %d: INTEGER expected but got '%s'", i, asString( el ).c_str() );
+      valid = false;
+      break;
+    }
+  }
+
+  if ( ! valid ) {
+    _value.clear();
+  }
+
+  return valid;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// InstSrcManager::SrcStateVector <-> YCPList of YCPMap
+/////////////////////////////////////////////////////////////////////////////////////////
+
+inline YCPList asYCPList( const InstSrcManager::SrcStateVector & states_r )
+{
+  YCPList ret;
+  for ( InstSrcManager::SrcStateVector::const_iterator it = states_r.begin(); it != states_r.end(); ++it ) {
+    YCPMap el;
+    el->add( YCPString("SrcId"),	YCPInteger( it->first ) );
+    el->add( YCPString("enabled"),	YCPBoolean( it->second ) );
+    ret->add( el );
+  }
+  return ret;
+}
+
+inline bool YcpArgLoad::Value<YT_LIST, InstSrcManager::SrcStateVector>::assign( const YCPValue & arg_r )
+{
+  YCPList l =  arg_r->asList(); // YT_LIST asserted
+  _value.clear();
+  _value.reserve( l->size() );
+
+  bool valid = true;
+  YCPString tag_SrcId( "SrcId" );
+  YCPString tag_enabled( "enabled" );
+
+  for ( unsigned i = 0; i < unsigned(l->size()); ++i ) {
+    YCPValue el = l->value(i);
+    if ( el->isMap() ) {
+      YCPMap m = el->asMap();
+      InstSrcManager::SrcState state;
+
+      if ( (el = m->value( tag_SrcId ))->isInteger() ) {
+	state.first = el->asInteger()->value();
+      } else {
+	y2warning( "List entry %d: MAP[SrcId]: INTEGER expected but got '%s'", i, asString( el ).c_str() );
+	valid = false;
+	break;
+      }
+
+      if ( (el = m->value( tag_enabled ))->isBoolean() ) {
+	state.second = el->asBoolean()->value();
+      } else {
+	y2warning( "List entry %d: MAP[enabled]: BOOLEAN expected but got '%s'", i, asString( el ).c_str() );
+	valid = false;
+	break;
+      }
+
+      // store state in vector
+      _value.push_back( state );
+
+    } else {
+      y2warning( "List entry %d: MAP expected but got '%s'", i, asString( el ).c_str() );
+      valid = false;
+      break;
+    }
+  }
+
+  if ( ! valid ) {
+    _value.clear();
+  }
+
+  return valid;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 // YCPMap <-> YCPMap
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -106,7 +200,7 @@ inline bool YcpArgLoad::Value<YT_MAP, YCPMap>::assign( const YCPValue & arg_r )
 /////////////////////////////////////////////////////////////////////////////////////////
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceSetRamCache (boolean allow) -> true
+ * @builtin Pkg::SourceSetRamCache (boolean allow) -> true
  *
  * In InstSys: Allow/prevent InstSrces from caching package metadata on ramdisk.
  * If no cache is used the media cannot be unmounted, i.e. no CD change possible.
@@ -129,7 +223,7 @@ PkgModuleFunctions::SourceSetRamCache (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceStartManager (boolean autoEnable = true) -> true
+ * @builtin Pkg::SourceStartManager (boolean autoEnable = true) -> true
  *
  * Make shure the InstSrcManager is up and knows all available InstSrces.
  * Dependent on the value of autoEnable, InstSources may be enabled on the
@@ -160,7 +254,7 @@ PkgModuleFunctions::SourceStartManager (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceStartCache (boolean enabled_only = true) -> list of SrcIds (integer)
+ * @builtin Pkg::SourceStartCache (boolean enabled_only = true) -> list of SrcIds (integer)
  *
  * Make shure the InstSrcManager is up, and return the list of SrcIds.
  * In fact nothing more than:
@@ -193,7 +287,7 @@ PkgModuleFunctions::SourceStartCache (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceGetCurrent (boolean enabled_only = true) -> list of SrcIds (integer)
+ * @builtin Pkg::SourceGetCurrent (boolean enabled_only = true) -> list of SrcIds (integer)
  *
  * Return the list of all enabled InstSrc Ids.
  *
@@ -219,7 +313,7 @@ PkgModuleFunctions::SourceGetCurrent (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceFinishAll () -> true
+ * @builtin Pkg::SourceFinishAll () -> true
  *
  * Disable all InstSrces.
  *
@@ -246,7 +340,7 @@ PkgModuleFunctions::SourceFinishAll (YCPList args)
 /////////////////////////////////////////////////////////////////////////////////////////
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceGeneralData (integer SrcId) -> map
+ * @builtin Pkg::SourceGeneralData (integer SrcId) -> map
  *
  * @param SrcId Specifies the InstSrc to query.
  *
@@ -286,7 +380,7 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceMediaData (integer SrcId) -> map
+ * @builtin Pkg::SourceMediaData (integer SrcId) -> map
  *
  * @param SrcId Specifies the InstSrc to query.
  *
@@ -326,7 +420,7 @@ PkgModuleFunctions::SourceMediaData (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceProductData (integer SrcId) -> map
+ * @builtin Pkg::SourceProductData (integer SrcId) -> map
  *
  * @param SrcId Specifies the InstSrc to query.
  *
@@ -411,8 +505,7 @@ PkgModuleFunctions::SourceProductData (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceProduct (integer SrcId) -> map
+ * @builtin Pkg::SourceProduct (integer SrcId) -> map
  *
  * @param SrcId Specifies the InstSrc to query.
  *
@@ -438,7 +531,7 @@ PkgModuleFunctions::SourceProduct (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceProvideFile (integer SrcId, integer medianr, string file) -> string path
+ * @builtin Pkg::SourceProvideFile (integer SrcId, integer medianr, string file) -> string path
  *
  * Let an InstSrc provide some file (make it available at the local filesystem).
  *
@@ -478,7 +571,7 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceProvideDir (integer SrcId, integer medianr, string dir) -> string path
+ * @builtin Pkg::SourceProvideDir (integer SrcId, integer medianr, string dir) -> string path
  *
  * Let an InstSrc provide some directory (make it available at the local filesystem) and
  * all the files within it (non recursive).
@@ -519,8 +612,7 @@ PkgModuleFunctions::SourceProvideDir (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceChangeUrl (integer SrcId, string url ) -> true
+ * @builtin Pkg::SourceChangeUrl (integer SrcId, string url ) -> true
  *
  * Change url of an InstSrc. Used primarely when re-starting during installation
  * and a cd-device changed from hdX to srX since ide-scsi was activated.
@@ -557,8 +649,7 @@ PkgModuleFunctions::SourceChangeUrl (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceInstallOrder (map order_map) -> true
+ * @builtin Pkg::SourceInstallOrder (map order_map) -> true
  *
  * Explicitly set an install order.
  *
@@ -623,7 +714,7 @@ PkgModuleFunctions::SourceInstallOrder (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceCacheCopyTo (string dir) -> true
+ * @builtin Pkg::SourceCacheCopyTo (string dir) -> true
  *
  * Copy cache data of all installation sources to the target located below 'dir'.
  * To be called at end of initial installation.
@@ -666,7 +757,7 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceScan (string media_url [, string product_dir]) -> list of SrcIds (integer)
+ * @builtin Pkg::SourceScan (string media_url [, string product_dir]) -> list of SrcIds (integer)
  *
  * Load all InstSrces found at media_url, i.e. all sources mentioned in /media.1/products.
  * If no /media.1/products is available, InstSrc is expected to be located directly
@@ -721,7 +812,7 @@ PkgModuleFunctions::SourceScan (YCPList args)
 }
 
 /****************************************************************************************
- * <b>Builtin:</b> Pkg::SourceCreate (string media_url [, string product_dir]) -> integer
+ * @builtin Pkg::SourceCreate (string media_url [, string product_dir]) -> integer
  *
  * Load and enable all InstSrces found at media_url, i.e. all sources mentioned in /media.1/products.
  * If no /media.1/products is available, InstSrc is expected to be located directly below
@@ -778,8 +869,7 @@ PkgModuleFunctions::SourceCreate (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceSetEnabled (integer SrcId, boolean enabled) -> bool
+ * @builtin Pkg::SourceSetEnabled (integer SrcId, boolean enabled) -> bool
  *
  * Set the default activation state of an InsrSrc.
  *
@@ -814,8 +904,7 @@ PkgModuleFunctions::SourceSetEnabled (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceFinish (integer SrcId) -> bool
+ * @builtin Pkg::SourceFinish (integer SrcId) -> bool
  *
  * Disable an InsrSrc.
  *
@@ -847,8 +936,7 @@ PkgModuleFunctions::SourceFinish (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceDelete (integer SrcId) -> bool
+ * @builtin Pkg::SourceDelete (integer SrcId) -> bool
  *
  * Delete an InsrSrc. The InsrSrc together with all metadata cached on disk
  * is removed. The SrcId passed becomes invalid (other SrcIds stay valid).
@@ -881,15 +969,76 @@ PkgModuleFunctions::SourceDelete (YCPList args)
 }
 
 /****************************************************************************************
+ * @builtin Pkg::SourceEditGet () -> list of source states (map)
  *
- * <b>Builtin:</b> Pkg::SourceRaisePriority (integer SrcId) -> bool
+ * Return a list of states for all known InstSources sorted according to the
+ * source priority (highest first). A source state is a map:
+ * <TABLE>
+ * <TR><TD>$[<TD>"SrcId"	<TD>: YCPInteger
+ * <TR><TD>,<TD>"enabled"	<TD>: YCPBoolean
+ * <TR><TD>];
+ * </TABLE>
+ *
+ * @return list of source states (map)
+ **/
+YCPValue
+PkgModuleFunctions::SourceEditGet (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  return asYCPList( _y2pm.instSrcManager().editGet() );
+}
+
+/****************************************************************************************
+ * @builtin Pkg::SourceEditSet ( list source_states, list todel ) -> true
+ *
+ * @param source_states
+ *
+ * @param todel
+ *
+ * @return true
+ **/
+YCPValue
+PkgModuleFunctions::SourceEditSet (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  InstSrcManager::SrcStateVector & source_states( decl.arg<YT_LIST, InstSrcManager::SrcStateVector>() );
+  InstSrcManager::SrcDelSet &      source_todel(  decl.arg<YT_LIST, InstSrcManager::SrcDelSet>() );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  PMError err = _y2pm.instSrcManager().editSet( source_states, source_todel );
+  if ( err )
+    return pkgError( err );
+
+  return YCPBoolean( true );
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// DEPRECATED
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/****************************************************************************************
+ * @builtin Pkg::SourceRaisePriority (integer SrcId) -> bool
  *
  * Raise priority of source.
  *
  * @param SrcId Specifies the InstSrc.
  *
  * @return bool
- */
+ **/
 YCPValue
 PkgModuleFunctions::SourceRaisePriority (YCPList args)
 {
@@ -914,8 +1063,7 @@ PkgModuleFunctions::SourceRaisePriority (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceLowerPriority (integer SrcId) -> void
+ * @builtin Pkg::SourceLowerPriority (integer SrcId) -> void
  *
  * Lower priority of source.
  *
@@ -947,11 +1095,10 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
 }
 
 /****************************************************************************************
- *
- * <b>Builtin:</b> Pkg::SourceSaveRanks () -> boolean
+ * @builtin Pkg::SourceSaveRanks () -> boolean
  *
  * Save ranks to disk. Return true on success, false on error.
- */
+ **/
 YCPValue
 PkgModuleFunctions::SourceSaveRanks (YCPList args)
 {

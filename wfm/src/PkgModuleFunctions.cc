@@ -38,6 +38,7 @@
 PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *& wfmInterpreter)
     : _callbackHandler( *new CallbackHandler( wfmInterpreter ) )
 {
+  // it's cheap to launch them
   _y2pm.packageManager();
   _y2pm.selectionManager();
 }
