@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Sep  8 22:56:42 CEST 2002 - kkaempf@suse.de
+
+- add function to retrieve space calculation
+- 2.6.34
+
+-------------------------------------------------------------------
 Sun Sep  8 17:02:50 CEST 2002 - kkaempf@suse.de
 
 - add function to pass directories to space calculation in
