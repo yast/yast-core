@@ -23,8 +23,6 @@
 #include <y2/Y2Component.h>
 #include <WFMSubAgent.h>
 
-class PkgModule;
-
 #define MAX_CLIENT_NAME_LEN 160
 
 class Y2WFMComponent : public Y2Component
@@ -124,11 +122,6 @@ private:
      * args(). The symbol of the term itself is the module name.
      */
     YCPList argumentlist;
-
-    /**
-     * Pointer to PkgModule class to handle "Pkg::<function>(...)" calls
-     */
-    PkgModule *pkgmodule;
 
     string          currentLanguage;
     string          currentEncoding;

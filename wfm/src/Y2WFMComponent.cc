@@ -42,8 +42,7 @@ Y2WFMComponent::Y2WFMComponent ():
       handle_cnt (1),
       local ("ag_system", -1),
       modulename (""),
-      argumentlist (YCPList()),
-      pkgmodule (0)
+      argumentlist (YCPList())
 {
     y2debug ("Initialized Y2WFMComponent instance");
 
@@ -140,16 +139,12 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
 	// problems with creation of default SCR in constructor
 	return YCPVoid ();
     }
-
-
-    // preserve stack ordering of WFMs - callmodule
-    Y2WFMComponent* old_wfm = current_wfm;
-    current_wfm = this;
     
+    current_wfm = this;
+
+
     YCPValue v = script->asCode ()->evaluate ();
     
-    current_wfm = old_wfm;
-
     y2debug( "Evaluation finished" );
 
     return v;
