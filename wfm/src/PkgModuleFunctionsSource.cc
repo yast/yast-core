@@ -205,6 +205,7 @@ PkgModuleFunctions::SourceCreate (YCPList args)
     if (args->size() == 2)
 	dir = Pathname (args->value(1)->asString()->value());
 
+#if 0
     // check if url already known
 
     unsigned int number_of_known_sources = _sources.size();
@@ -224,6 +225,7 @@ PkgModuleFunctions::SourceCreate (YCPList args)
 	    }
 	}
     }
+#endif
 
     unsigned int new_slot = _first_free_source_slot;
 

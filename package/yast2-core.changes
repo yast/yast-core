@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar  3 14:52:20 CET 2003 - cschum@suse.de
+
+- Allow installation sources for different products from same URL
+  (#24492).
+
+-------------------------------------------------------------------
 Fri Feb 28 16:46:33 CET 2003 - kkaempf@suse.de
 
 - make MediaChangeCallback global for all sources (part of #24201)
