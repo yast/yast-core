@@ -1,6 +1,11 @@
 -------------------------------------------------------------------
+Tue Jul 15 21:13:53 CEST 2003 - arvin@suse.de
+
+- fixed testsuite of wfm
+
+-------------------------------------------------------------------
 Tue Jul 15 17:28:36 CEST 2003 - sh@suse.de
- 
+
 - V 2.8.7
 
 UI changes:
@@ -11,13 +16,13 @@ UI changes:
 - Basic support for right-to-left languages like Arabic / Hebrew
   (not perfect yet)
 - `id() now optional for UI builtins if ID type is symbol
- 
+
 
 -------------------------------------------------------------------
 Tue Jul 15 11:59:50 CEST 2003 - gs@suse.de
 
-- 2.8.6 
-- advanced event handling in libyui 
+- 2.8.6
+- advanced event handling in libyui
 
 -------------------------------------------------------------------
 Tue Jul 15 10:21:48 CEST 2003 - mvidner@suse.cz

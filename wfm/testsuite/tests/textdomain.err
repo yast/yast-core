@@ -1,3 +1,4 @@
 [YCP] tests/textdomain.ycp:9 first textdomain 'first domain'
 [YCP] tests/textdomain.ycp:13 second textdomain 'second domain'
+[wfm] WFMInterpreter.cc(changeToModuleLanguage):388 language '', encoding '', textdomain 'first domain'
 [YCP] tests/textdomain.ycp:6 change_domain 'first domain'
