@@ -397,7 +397,7 @@ while (1)
 	    
 	    my $pos = index($input2, "\n");
 	    
-	    if ($len == 0)
+	    if ((defined $len) && $len == 0)
 	    {
 		$pipe_defined_err = 0;
 		$watch = $stdin_set;	# now watch only STDIN
