@@ -94,7 +94,7 @@ struct yystype_type {
 #endif
 
 #define LINE_NOW (p_parser->m_lineno)
-#define FILE_NOW (p_parser->filename ())
+#define FILE_NOW (p_parser->scanner()->filename ())
 
 // our private error function
 
@@ -1319,7 +1319,7 @@ statement:
 
 		scannerstack_t *scanner = new (scannerstack_t);
 		scanner->down = 0;
-		scanner->filename = string (FILE_NOW);		// save current filename
+		scanner->filename = FILE_NOW;		// save current filename
 		scanner->linenumber = $1.l;
 		scanner->scanner = p_parser->scanner();
 		scanner->state = SCAN_START_INCLUDE;	// see start_block()
@@ -1328,12 +1328,11 @@ statement:
 		scannerstack_push (p_parser->m_scanner_stack, scanner);
 
 #if DO_DEBUG
-		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
+		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW.c_str(), $1.l, yychar, p_parser->scanner(), $2.v.sval);
 #endif
 		p_parser->m_block_stack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
 
 		p_parser->setScanner (new Scanner (fd, $2.v.sval));
-		p_parser->setFilename ($2.v.sval);
 
 		// pass the outer scanner's tables
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
@@ -3366,7 +3365,6 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 	
 	currentScanner = top->scanner;
 	pr->setScanner (currentScanner);
-	pr->setFilename (top->filename);
 	
 	// restore the text domain
 	pr->m_block_stack->textdomain = top->old_textdomain;
@@ -4162,7 +4160,7 @@ start_block (Parser *parser, constTypePtr type)
 
     if (parser->m_blockstack_depth == 0)	// initial block
     {
-	top->theBlock = new YBlock (parser->filename(), YBlock::b_file);
+	top->theBlock = new YBlock (parser->scanner()->filename(), YBlock::b_file);
 	parser->m_current_block = top->theBlock;
     }
     else					// intermediate block

@@ -265,6 +265,11 @@ public:
     int lineNumber() const;
 
     /**
+     * Gets the currently scanned file
+     */
+    string filename() const;
+
+    /**
      * Is called by @ref #LexerError.
      * Is also called by yyerror for error reporting. It reports
      * the error via y2log and also reports the filename, if available

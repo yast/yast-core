@@ -314,6 +314,13 @@ Scanner::lineNumber () const
 }
 
 
+string
+Scanner::filename () const
+{
+    return m_filename;
+}
+
+
 char *
 Scanner::extend_scanbuffer (int addsize)
 {

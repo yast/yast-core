@@ -24,12 +24,9 @@
 #include "ycp/Parser.h"
 #include "ycp/Scanner.h"
 #include "ycp/y2log.h"
-#include "ycp/ExecutionEnvironment.h"
 #include "ycp/StaticDeclaration.h"
 #include "ycp/SymbolTable.h"
 
-// for logging
-extern ExecutionEnvironment ee;
 extern StaticDeclaration static_declarations;
 
 int yyparse (void *parser);
@@ -85,17 +82,12 @@ Parser::Parser(int fd, const char *filename)
 Parser::~Parser()
 {
     if (m_scanner) delete m_scanner;
-    restoreFilename ();
 }
 
 
 void
 Parser::setInput(FILE *file, const char *filename)
 {
-    if (filename)
-    {
-	setFilename (filename);
-    }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (file, filename);
     if (m_buffered) m_scanner->setBuffered ();
@@ -106,7 +98,6 @@ Parser::setInput(FILE *file, const char *filename)
 void
 Parser::setInput(const char *buf)
 {
-    setFilename ("");
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (buf);
     if (m_buffered) m_scanner->setBuffered ();
@@ -117,10 +108,6 @@ Parser::setInput(const char *buf)
 void
 Parser::setInput(int fd, const char *filename)
 {
-    if (filename)
-    {
-	setFilename (filename);
-    }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (fd, filename);
     if (m_buffered) m_scanner->setBuffered ();
@@ -196,28 +183,6 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 	m_at_eof = true;
     }
     return m_result;
-}
-
-
-const char *
-Parser::filename () const
-{
-    return ee.filename().c_str ();
-}
-
-
-void
-Parser::setFilename (const string f)
-{
-    m_restore_name = ee.filename();
-    ee.setFilename (f);
-}
-
-
-void
-Parser::restoreFilename () const
-{
-    ee.setFilename (m_restore_name);
 }
 
 

@@ -80,11 +80,6 @@ class Parser
     bool m_depends;
 
     /**
-     * Filename of ExecutionEnvironment, restore at destructor
-     */
-    string m_restore_name;
-    
-    /**
      * If true, the scanner reached EOF.
      */
     bool m_at_eof;
@@ -100,10 +95,6 @@ public:
      * Copied from struct parserret
      */
     int m_lineno;
-
-    //parserret:
-    //const char *filename;
-    //parserret() : result (0), lineno (0) { }
 
     /**
      * Loop nesting level. Detects break outside a loop.
@@ -243,27 +234,6 @@ public:
      * Only dependencies ?
      */
     bool depends() const;
-
-    /**
-     * Accesses filename from ExecutionEnvironment
-     */
-    const char *filename () const;
-
-    /**
-     * Sets filename in ExecutionEnvironment
-     */
-    void setFilename (const string f);
-
-    /**
-     * Restore filename to ExecutionEnvironment
-     */
-    void restoreFilename () const;
-
-    /**
-     * Resets the parser. Use this call before you parse from
-     * a new source. It resets the line numbers in the scanner.
-     */
-//    void reset();
 };
 
 #endif // Parser_h

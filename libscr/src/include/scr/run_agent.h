@@ -152,11 +152,9 @@ run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
 	{
 	    break;
 	}
-	parser->restoreFilename ();			// restore callers filename
 	YCPValue result = value->evaluate ();
 	printf ("(%s)\n", result->toString ().c_str ());	// send result to caller
 	fflush (0);
-	parser->setFilename (fname);			// set our filename
     }
 
     if (infile != stdin)

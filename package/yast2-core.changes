@@ -2,6 +2,7 @@
 Wed Jun 23 11:32:09 CEST 2004 - visnov@suse.cz
 
 - allow YCP code to call overloaded functions in other namespaces
+- parser should not use ExecutionEnvironment for logging (#42088)
 
 -------------------------------------------------------------------
 Wed Jun 16 17:57:03 CEST 2004 - arvin@suse.de
