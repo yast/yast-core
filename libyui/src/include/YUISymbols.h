@@ -77,6 +77,7 @@
 #define YUIWidget_HVStretch			"HVStretch"
 #define YUIWidget_HWeight			"HWeight"
 #define YUIWidget_Heading			"Heading"
+#define YUIWidget_IconButton			"IconButton"
 #define YUIWidget_Image				"Image"
 #define YUIWidget_IntField			"IntField"
 #define YUIWidget_Label				"Label"

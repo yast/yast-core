@@ -41,6 +41,7 @@
 #include "YRadioButtonGroup.h"
 #include "YSelectionBox.h"
 #include "YMultiSelectionBox.h"
+#include "YPushButton.h"
 #include "YTable.h"
 #include "YTree.h"
 
@@ -211,7 +212,8 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
     else if (s == YUIWidget_Password	)	w = createTextEntry		(p, opt, term, ol, n, true);
     else if (s == YUIWidget_ProgressBar	)	w = createProgressBar		(p, opt, term, ol, n);
     else if (s == YUIWidget_PackageSelector)	w = createPackageSelector	(p, opt, term, ol, n);
-    else if (s == YUIWidget_PushButton	)	w = createPushButton		(p, opt, term, ol, n);
+    else if (s == YUIWidget_PushButton	)	w = createPushButton		(p, opt, term, ol, n, false);
+    else if (s == YUIWidget_IconButton	)	w = createPushButton		(p, opt, term, ol, n, true );
     else if (s == YUIWidget_MenuButton	)	w = createMenuButton		(p, opt, term, ol, n);
     else if (s == YUIWidget_RadioButton	)	w = createRadioButton		(p, opt, term, ol, n, rbg);
     else if (s == YUIWidget_RichText	)	w = createRichText		(p, opt, term, ol, n);
@@ -906,17 +908,18 @@ YWidget *YUIInterpreter::createLogView(YWidget *parent, YWidgetOpt &opt, const Y
 
 
 /**
- * @widget	PushButton
+ * @widget	PushButton IconButton
  * @short	Perform action on click
  * @class	YPushButton
+ * @arg		string iconName (IconButton only)
  * @arg		string label
  * @option	default makes this button the dialogs default button
  * @usage	`PushButton(`id(`click), `opt(`default, `hstretch), "Click me")
- * @examples	PushButton1.ycp PushButton2.ycp
+ * @examples	PushButton1.ycp PushButton2.ycp IconButton1.ycp
  *
  * @description
  *
- * A <tt>PushButton</tt> is a simple button with a text label the user can
+ * A <tt>PushButton</tt> is a button with a text label the user can
  * press in order to activate some action. If you call <tt>UserInput()</tt> and
  * the user presses the button, <tt>UserInput()</tt> returns with the id of the
  * pressed button.
@@ -925,16 +928,47 @@ YWidget *YUIInterpreter::createLogView(YWidget *parent, YWidgetOpt &opt, const Y
  * label. For example "&Apply" as a button label will allow the user to
  * activate the button with Alt-A, even if it currently doesn't have keyboard
  * focus. This is important for UIs that don't support using a mouse.
+ * <p>
+ * An <tt>IconButton</tt> is pretty much the same, but it has an icon in
+ * addition to the text. If the UI cannot handle icons, it displays only the
+ * text, and the icon is silently omitted.
+ * <p>
+ * Icons are (at the time of this writing) loaded from the <i>theme</i>
+ * directory, <tt>/usr/share/YaST2/theme/current</tt>.
  */
 
-YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term, const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+					  const YCPList &optList, int argnr,
+					  bool isIconButton )
 {
-    if (term->size() - argnr != 1
-	|| !term->value(argnr)->isString())
+    YCPString label( "" );
+    YCPString iconName( "" );
+    
+    if ( isIconButton )
     {
-	y2error("Invalid arguments for the PushButton widget: %s",
-		term->toString().c_str());
-	return 0;
+	if ( term->size() - argnr != 2
+	     || ! term->value(argnr)->isString()
+	     || ! term->value(argnr+1)->isString() )
+	{
+	    y2error("Invalid arguments for the IconButton widget: %s",
+		    term->toString().c_str());
+	    return 0;
+	}
+    
+	iconName = term->value( argnr   )->asString();
+	label    = term->value( argnr+1 )->asString();
+    }
+    else
+    {
+	if ( term->size() - argnr != 1
+	     || !term->value(argnr)->isString() )
+	{
+	    y2error("Invalid arguments for the PushButton widget: %s",
+		    term->toString().c_str());
+	    return 0;
+	}
+	
+	label = term->value( argnr )->asString();
     }
 
     // Parse options
@@ -950,7 +984,15 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 	}
 	else logUnknownOption(term, optList->value(o));
     }
-    return createPushButton(parent, opt, term->value(argnr)->asString());
+
+    
+    YPushButton * button = dynamic_cast<YPushButton *>
+	( createPushButton(parent, opt, label ) );
+
+    if ( isIconButton && button )
+	button->setIcon( iconName );
+    
+    return button;
 }
 
 

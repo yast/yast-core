@@ -68,6 +68,15 @@ public:
      * #label.
      */
     YCPString getLabel();
+    
+    /**
+     * Set this button's icon from an icon file in the UI's default icon directory.
+     * Clear the icon if the name is empty.
+     *
+     * This default implementation does nothing.
+     * UIs that can handle icons can choose to overwrite this method.
+     **/
+    virtual void setIcon( const YCPString & icon_name ) {}
 
     /**
      * The name of the widget property that holds the keyboard shortcut.

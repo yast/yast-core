@@ -1,7 +1,26 @@
 -------------------------------------------------------------------
+Mon Nov 11 17:55:38 CET 2002 - sh@suse.de
+
+- New widget: IconButton 
+
+-------------------------------------------------------------------
 Thu Nov 07 18:47:24 CET 2002 - arvin@suse.de
 
 - adaption of libycp for bison version 1.75
+
+-------------------------------------------------------------------
+Thu Nov  7 13:32:16 CET 2002 - sh@suse.de
+
+- Fixed bug #19389: Frame widget shows keyboard shortcuts, but
+  can't handle any
+
+-------------------------------------------------------------------
+Wed Nov  6 18:31:36 CET 2002 - sh@suse.de
+
+- New UI builtins:
+  - AskForExistingDirectory()
+  - AskForExistingFile()
+  - AskForSaveFileName() 
 
 -------------------------------------------------------------------
 Wed Nov  6 09:06:36 CET 2002 - mvidner@suse.cz

@@ -1040,10 +1040,11 @@ protected:
 
     /**
      * Helper function of createWidgetTree.
-     * Creates a push button.
+     * Creates a PushButton or an IconButton.
      */
     YWidget *createPushButton(YWidget *parent, YWidgetOpt &opt,
-			      const YCPTerm &term, const YCPList &optList, int argnr);
+			      const YCPTerm &term, const YCPList &optList, int argnr,
+			      bool isIconButton );
 
     /**
      * Helper function for createWidgetTreeTree.

@@ -47,6 +47,7 @@ examples_DATA =					\
 	Heading2.ycp				\
 	Heading3.ycp				\
 	HelloWorld.ycp				\
+	IconButton1.ycp				\
 	Image-animated.ycp			\
 	Image-local.ycp				\
 	Image-scaled.ycp			\

@@ -1,0 +1,12 @@
+UI::{
+    // Build a dialog with one icon button.
+    // Wait until that button is clicked,
+    // then close the dialog and terminate.
+
+    OpenDialog(
+	       `IconButton( "button_active.png", "&OK" )
+	       );
+
+    UserInput();
+    CloseDialog();
+}
