@@ -36,15 +36,14 @@ function lookup_ip() {
     if [ $BADLOOKUP != 4 ] ; then
 #	NAME=$(dig +short +tries=1 +time=1 -x $ip | sed -e 's/\.$//')
 #	NAME=$(dig +short -x $ip | sed -e 's/\.$//')
-	NAME=$(host -W1 $ip | sed -n '/.*domain name pointer \(.*\)\.$/s//\1/p')
-	if [ -z $NAME ] ; then
-	    BADLOOKUP=$(expr $BADLOOKUP + 1)
-	fi
-	NAME=${NAME:-$ip}
+#	NAME=$(host -W1 $ip | sed -n '/.*domain name pointer \(.*\)\.$/s//\1/p')
+	NAME="$(getent hosts "$ip" | sed -e 's/^[0-9. ]*//')"
+	[ -z "$NAME" ] && BADLOOKUP=$(expr $BADLOOKUP + 1)
+	NAME="${NAME:-$ip}"
     else
-	NAME=$ip
+	NAME="$ip"
     fi
-    RETVAL=$NAME
+    RETVAL="$NAME"
 }
 
 # uses RETVAL
