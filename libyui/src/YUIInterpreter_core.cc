@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <unistd.h> // pipe()
 #include <fcntl.h>  // fcntl()
-#include <errno.h>  // strerror()
+#include <errno.h> 
 #include <locale.h> // setlocale()
 #include <pthread.h>
 #include <assert.h>
@@ -138,7 +138,7 @@ void YUIInterpreter::topmostConstructorHasFinished()
 	arg = fcntl(pipe_to_ui[0], F_GETFL);
 	if (fcntl(pipe_to_ui[0], F_SETFL, arg | O_NONBLOCK) < 0)
 	{
-	    y2error("Couldn't set O_NONBLOCK: %s\n", strerror(errno));
+	    y2error("Couldn't set O_NONBLOCK: errno=%d: %m", errno);
 	    with_threads = false;
 	    close(pipe_to_ui[0]);
 	    close(pipe_to_ui[1]);
@@ -192,11 +192,13 @@ bool YUIInterpreter::waitForUIThread ()
 #ifdef VERBOSE_COMM
 	y2debug ("Waiting for ui thread...");
 #endif
-	res = read (pipe_from_ui[0], &arbitrary, 1);
-	if (res == -1) {
-	    y2error ("waitForUIThread: %m");
-	    if (errno == EINTR)
+	res = read( pipe_from_ui[0], &arbitrary, 1 );
+	if ( res == -1 )
+	{
+	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
+	    else
+		y2error ("waitForUIThread: %m");
 	}
     } while (res == 0);
 
@@ -229,11 +231,13 @@ bool YUIInterpreter::waitForYCPThread()
 #ifdef VERBOSE_COMM
 	y2debug ("Waiting for ycp thread...");
 #endif
-	res = read (pipe_to_ui[0], &arbitrary, 1);
-	if (res == -1) {
-	    y2error ("waitForYCPThread: %m");
-	    if (errno == EINTR)
+	res = read( pipe_to_ui[0], &arbitrary, 1 );
+	if (res == -1)
+	{
+	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
+	    else
+		y2error ("waitForYCPThread: errno=%d: %m", errno );
 	}
     } while (res == 0);
 
