@@ -583,10 +583,15 @@ UICallHandler( void * ptr, int argc, YCPValue argv[] )
     }
 }
 
-
+bool UI::registered = false;
 
 UI::UI()
 {
+    if (registered)
+    {
+	return;
+    }
+
     // Declarations for UI builtins and mapping to the respective C++ function.
     // NOTE: This must be static, registerDeclarations saves a pointer to it!
 
@@ -654,6 +659,8 @@ UI::UI()
 
     extern StaticDeclaration static_declarations;
     static_declarations.registerDeclarations ("UI", ui_builtins );
+
+    registered = true;
 }
 
 

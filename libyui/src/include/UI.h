@@ -26,6 +26,7 @@ class UI {
 public:
     UI ();
 
+    static bool registered;
 };
 
 

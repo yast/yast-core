@@ -152,9 +152,15 @@ WFMExecute (const YCPPath& p, const YCPValue& arg)
 }
 
 
+bool WFM::registered = false;
 
 WFM::WFM ()
 {
+    if (registered)
+    {
+	return;
+    }
+
     y2debug( "registering WFM builtins" );
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
@@ -183,5 +189,7 @@ WFM::WFM ()
     };
 
     static_declarations.registerDeclarations ("WFM", declarations);
+
+    registered = true;
 }
 

@@ -26,6 +26,7 @@ class WFM {
 public:
     WFM ();
 
+    static bool registered;
 };
 
 
