@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Sat Sep  7 14:06:46 CEST 2002 - kkaempf@suse.de
+
+- include url to media change callback
+- report translated selection label
+- 2.6.31
+
+-------------------------------------------------------------------
 Fri Sep 06 16:46:07 CEST 2002 - arvin@suse.de
 
 - provide/obsolete more old packages
