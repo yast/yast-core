@@ -7,11 +7,13 @@ htmldir = $(docdir)/libycp
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
+htmlfiles = $(wildcard html/.html)
 
 
 html_DATA =			\
 	html/yast2docs.css	\
-	html/*.html
+	html/index.html		\
+	$(htmlfiles)
 
 html/index.html: $(xmlfiles) builtins.xml
 	XML_CATALOG_FILES=@XML_CATALOG@\
@@ -20,9 +22,10 @@ html/index.html: $(xmlfiles) builtins.xml
 
 
 $(xmlfiles) : $(builtin)
-	@ybindir@/ydoc2 ../src/$(subst xml,cc,$@)
-	@XSLTPROC@ @STYLESHEET_YDOC@ output.xml > $@
+	@ybindir@/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
+	@XSLTPROC@ @STYLESHEET_YDOC@ $@.tmp > $@
 	@ybindir@/replace_entities $@
+	rm $@.tmp
 
 html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
