@@ -978,6 +978,23 @@ PkgModuleFunctions::PkgNeutral (YCPList args)
 
 
 /**
+ * @builtin Pkg::Reste () -> boolean
+ *
+ * Reset most internal stuff on the package manager.
+ */
+YCPValue
+PkgModuleFunctions::PkgReset (YCPList args)
+{
+    _y2pm.selectionManager().setNothingSelected();
+    _y2pm.packageManager().setNothingSelected();
+
+    // FIXME also reset "conflict ignore list" in UI
+
+    return YCPBoolean (true);
+}
+
+
+/**
    @builtin Pkg::PkgSolve () -> boolean
    Optional: Pkg::PkgSolve (true) to filter all conflicts with installed packages
 	(installed packages will be preferred)

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sun Sep 14 15:09:26 CEST 2003 - arvin@suse.de
+
+- implemented PkgReset function (bug #27970)
+
+-------------------------------------------------------------------
 Wed Sep 10 17:08:31 CEST 2003 - arvin@suse.de
 
 - fixed setting of YAST_IS_RUNNING (bug #30409)

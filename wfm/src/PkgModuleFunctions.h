@@ -199,6 +199,7 @@ class PkgModuleFunctions
 	YCPValue PkgSrcInstall (YCPList args);
 	YCPValue PkgDelete (YCPList args);
 	YCPValue PkgNeutral (YCPList args);
+	YCPValue PkgReset (YCPList args);
 	YCPValue PkgSolve (YCPList args);
 	YCPValue PkgSolveErrors (YCPList args);
 	YCPValue PkgCommit (YCPList args);

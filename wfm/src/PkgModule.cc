@@ -117,6 +117,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgSrcInstall")	return PkgSrcInstall (args);
     else if (function == "PkgDelete")		return PkgDelete (args);
     else if (function == "PkgNeutral")		return PkgNeutral (args);
+    else if (function == "PkgReset")		return PkgReset (args);
     else if (function == "PkgSolve")		return PkgSolve (args);
     else if (function == "PkgSolveErrors")	return PkgSolveErrors (args);
     else if (function == "PkgCommit")		return PkgCommit (args);
