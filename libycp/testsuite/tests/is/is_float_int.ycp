@@ -1,0 +1,3 @@
+{
+    return is (3.14, integer);
+}
