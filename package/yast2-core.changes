@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 17 17:14:36 CET 2003 - sh@suse.de
+
+- Fixed bug #23599: Recode: unexpected small output buffer
+
+-------------------------------------------------------------------
 Thu Feb 13 13:17:31 CET 2003 - sh@suse.de
 
 - Reduced log severity for UI shortcut conflicts 
