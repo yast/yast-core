@@ -1019,11 +1019,11 @@ processfile (const char *infname, const char *outfname)
 	progress ("Parsed:\n", 0);
 	if (outstream.is_open())
 	{
-	    outstream << c->toString();
+	    outstream << c->toString() << endl;
 	}
 	else
 	{
-	    std::cout << c->toString();
+	    std::cout << c->toString() << endl;
 	}
 
 	return 0;
@@ -1061,11 +1061,11 @@ processfile (const char *infname, const char *outfname)
 
 	if (outstream.is_open())
 	{
-	    outstream << c->toString();
+	    outstream << c->toString() << endl;
 	}
 	else
 	{
-	    std::cout << c->toString();
+	    std::cout << c->toString() << endl;
 	}
 
     }
@@ -1105,11 +1105,11 @@ processfile (const char *infname, const char *outfname)
 
 	if (outstream.is_open())
 	{
-	    outstream << result->toString();
+	    outstream << result->toString() << endl;
 	}
 	else
 	{
-	    std::cout << result->toString();
+	    std::cout << result->toString() << endl;
 	}
 
     }
