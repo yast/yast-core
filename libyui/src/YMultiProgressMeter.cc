@@ -139,6 +139,9 @@ void YMultiProgressMeter::setCurrentValue( int segment, int value )
 {
     if ( segment >= 0 && segment <= (int) _currentValues.size() )
     {
+	if ( value < 0 )	// Allow -1 etc. as marker values
+	    value = 0;
+	
 	if ( value > maxValue( segment ) )
 	{
 	    y2error( "Current value %d for segment #%d exceeds maximum of %d",
