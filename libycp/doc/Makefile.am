@@ -31,9 +31,9 @@ html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
 	cp -a $(ydatadir)/docbook/images html
 
-EXTRA_DIST = $(html_DATA)
+EXTRA_DIST = 
 
-CLEANFILES = $(xmlfiles) output.xml
+CLEANFILES = $(xmlfiles)
 
 clean-local:
 	rm -rf html

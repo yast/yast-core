@@ -23,9 +23,10 @@ EXTRA_DIST = $(html_DATA)
 
 
 $(xmlfiles) : $(builtin)
-	@ybindir@/ydoc2 ../src/$(subst xml,cc,$@)
-	@XSLTPROC@ @STYLESHEET_YDOC@ output.xml > $@
+	@ybindir@/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
+	@XSLTPROC@ @STYLESHEET_YDOC@ $@.tmp > $@
 	@ybindir@/replace_entities $@
+	rm $@.tmp
 
 html/index.html: $(xmlfiles) ui.xml
 	XML_CATALOG_FILES=@XML_CATALOG@\
