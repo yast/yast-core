@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov 12 15:37:39 CET 2004 - sh@suse.de
+
+- New debugging tools in UI:
+  - Widget property WidgetClass (all widgets)
+  - Widget property DebugLabel  (all widgets)
+
+-------------------------------------------------------------------
 Tue Nov  9 07:47:05 CET 2004 - visnov@suse.cz
 
 - don't allow variable declaration for functions and terms (#40441) 
