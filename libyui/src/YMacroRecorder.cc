@@ -231,14 +231,15 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
     
     YCPValue val = widget->queryWidget( YCPSymbol( propertyName ) );
     
-    fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s\n",
+    fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s \"%s\"\n",
 	     // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget	     
 	     YMACRO_INDENT, YMACRO_INDENT,
 	     YUIBuiltin_ChangeWidget,
 	     id->toString().c_str(),
 	     propertyName,
 	     val->toString().c_str(),
-	     widget->widgetClass() );
+	     widget->widgetClass(),
+	     widget->debugLabel().c_str() );
 
     y2debug( "Recording %s status: %s: %s",
 	     widget->widgetClass(), propertyName, val->toString().c_str() );
