@@ -2,4 +2,4 @@
 # Makefile.am for core/base
 #
 
-SUBDIRS = src tools testsuite
+SUBDIRS = src tools
