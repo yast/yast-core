@@ -1253,7 +1253,7 @@ YSImport::YSImport (std::istream & str)
 	return;
     }
 
-    Bytecode::pushNamespace (nameSpace ());				// see YBlock::YBlock(str) for popUptoNamespace()
+    Bytecode::pushNamespace (nameSpace (), true);			// see YBlock::YBlock(str) for popUptoNamespace()
 
     bool xref_debug = (getenv (XREFDEBUG) != 0);
 

@@ -45,7 +45,7 @@ $Id$
 int Bytecode::m_namespace_nesting_level = -1;
 int Bytecode::m_namespace_nesting_array_size = 0;
 int Bytecode::m_namespace_tare_level = 0;
-const Y2Namespace **Bytecode::m_namespace_nesting_array = 0;
+Bytecode::namespaceentry_t *Bytecode::m_namespace_nesting_array = 0;
 
 // ------------------------------------------------------------------
 // bool I/O
@@ -441,7 +441,7 @@ Bytecode::namespaceId (const Y2Namespace *name_space)
 {
     for (int i = m_namespace_tare_level; i <= m_namespace_nesting_level; i++)
     {
-	if (m_namespace_nesting_array[i] == name_space)
+	if (m_namespace_nesting_array[i].name_space == name_space)
 	{
 	    return i - m_namespace_tare_level;
 	}
@@ -461,7 +461,7 @@ Bytecode::namespacePtr (int namespace_id)
     namespace_id += m_namespace_tare_level;
     if (namespace_id <= m_namespace_nesting_level)	// local namespace
     {
-	return m_namespace_nesting_array[namespace_id];
+	return m_namespace_nesting_array[namespace_id].name_space;
     }
     y2error ("Block id %d > nesting_level %d", namespace_id - m_namespace_tare_level, m_namespace_nesting_level - m_namespace_tare_level);
     return 0;
@@ -471,7 +471,7 @@ Bytecode::namespacePtr (int namespace_id)
 // push namespace to stack
 //  the stack resembles the nesting of namespaces
 int
-Bytecode::pushNamespace (const Y2Namespace *name_space)
+Bytecode::pushNamespace (const Y2Namespace *name_space, bool with_xrefs)
 {
     if (name_space == 0)
     {
@@ -482,13 +482,16 @@ Bytecode::pushNamespace (const Y2Namespace *name_space)
     m_namespace_nesting_level++;
     if (m_namespace_nesting_array_size <= m_namespace_nesting_level)
     {
-	m_namespace_nesting_array_size++;
-	m_namespace_nesting_array = (const Y2Namespace **)realloc (m_namespace_nesting_array, sizeof (Y2Namespace *) * m_namespace_nesting_array_size);
+	m_namespace_nesting_array_size += 16;
+	m_namespace_nesting_array = (namespaceentry_t *)realloc (m_namespace_nesting_array, sizeof (namespaceentry_t) * m_namespace_nesting_array_size);
     }
     y2debug ("Bytecode::pushNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
-    m_namespace_nesting_array[m_namespace_nesting_level] = name_space;
-
-    name_space->table()->openXRefs();
+    m_namespace_nesting_array[m_namespace_nesting_level].name_space = name_space;
+    m_namespace_nesting_array[m_namespace_nesting_level].with_xrefs = with_xrefs;
+    if (with_xrefs)
+    {
+	name_space->table()->openXRefs();
+    }
 
     return m_namespace_nesting_level-m_namespace_tare_level;
 }
@@ -510,14 +513,17 @@ Bytecode::popNamespace (const Y2Namespace *name_space)
     {
 	y2error ("Bytecode::popNamespace (%p) empty stack", name_space);
     }
-    else if (m_namespace_nesting_array[m_namespace_nesting_level] != name_space)
+    else if (m_namespace_nesting_array[m_namespace_nesting_level].name_space != name_space)
     {
-	y2error ("Bytecode::popNamespace (%p) not top of stack [%d]%p", name_space, m_namespace_nesting_level, m_namespace_nesting_array[m_namespace_nesting_level]);
+	y2error ("Bytecode::popNamespace (%p) not top of stack [%d]%p", name_space, m_namespace_nesting_level, m_namespace_nesting_array[m_namespace_nesting_level].name_space);
     }
     else
     {
+	if (m_namespace_nesting_array[m_namespace_nesting_level].with_xrefs)
+	{
+	    name_space->table()->closeXRefs();
+	}
 	m_namespace_nesting_level--;
-	name_space->table()->closeXRefs();
     }
     return 0;
 }
@@ -536,8 +542,12 @@ Bytecode::popUptoNamespace (const Y2Namespace *name_space)
 
     while (m_namespace_nesting_level >= m_namespace_tare_level)
     {
-	const Y2Namespace *top_space = m_namespace_nesting_array[m_namespace_nesting_level--];
-	top_space->table()->closeXRefs();
+	const Y2Namespace *top_space = m_namespace_nesting_array[m_namespace_nesting_level].name_space;
+	if (m_namespace_nesting_array[m_namespace_nesting_level].with_xrefs)
+	{
+	    top_space->table()->closeXRefs();
+	}
+	m_namespace_nesting_level--;
 	if (top_space == name_space)
 	{
 	    return;

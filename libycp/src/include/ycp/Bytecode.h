@@ -40,7 +40,8 @@ class Bytecode {
     static int m_namespace_nesting_level;
     static int m_namespace_nesting_array_size;
     static int m_namespace_tare_level;
-    static const Y2Namespace **m_namespace_nesting_array;
+    typedef struct { const Y2Namespace *name_space; bool with_xrefs; } namespaceentry_t;
+    static namespaceentry_t *m_namespace_nesting_array;
     static map<string, YBlock*> m_bytecodeCache;
 
     public:
@@ -85,7 +86,7 @@ class Bytecode {
 	static const Y2Namespace *namespacePtr (int namespace_id);
 
 	// push given namespace to id stack, return new id, -1 on error
-	static int pushNamespace (const Y2Namespace *name_space);
+	static int pushNamespace (const Y2Namespace *name_space, bool with_xrefs = false);
 
 	// pop given namespace from id stack, return namespace id, -1 on error
 	static int popNamespace (const Y2Namespace *name_space);
