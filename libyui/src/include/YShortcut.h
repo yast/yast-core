@@ -64,9 +64,16 @@ public:
     string shortcutString();
 
     /**
-     * Returns the shortcut string without any "&" markers.
+     * Returns the shortcut string (from the widget's shortcut property)
+     * without any "&" markers.
      **/
     string cleanShortcutString();
+
+    /**
+     * Static version of the above for general use:
+     * Returns the specified string without any "&" markers.
+     **/
+    static string cleanShortcutString( string shortcutString );
 
     /**
      * The preferred shortcut character, i.e. the character that had been

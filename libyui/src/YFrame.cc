@@ -23,11 +23,12 @@
 #include <ycp/y2log.h>
 #include "YUISymbols.h"
 #include "YFrame.h"
+#include "YShortcut.h"
 
 
 YFrame::YFrame( YWidgetOpt &opt, const YCPString &newLabel)
     : YContainerWidget(opt)
-    , label ( newLabel )
+    , label( YCPString( YShortcut::cleanShortcutString( newLabel->value() ) ) )
 {
 }
 
@@ -51,16 +52,18 @@ YCPValue YFrame::changeWidget(const YCPSymbol& property, const YCPValue& newValu
     /**
      * @property string Value the label text
      */
-    if (s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if (newValue->isString())
+	if ( newValue->isString() )
 	{
-	    setLabel(newValue->asString());
-	    return YCPBoolean(true);
+	    string new_label = newValue->asString()->value();
+	    new_label = YShortcut::cleanShortcutString( new_label );
+	    setLabel( YCPString( new_label ) );
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error("Label: Invalid parameter %s for Value property. Must be string",
+	    y2error("Frame: Invalid parameter %s for Value property. Must be string",
 		    newValue->toString().c_str());
 	    return YCPBoolean(false);
 	}

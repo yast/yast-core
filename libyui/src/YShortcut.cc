@@ -68,16 +68,24 @@ YShortcut::cleanShortcutString()
 {
     if ( ! _clean_shortcut_string_chached )
     {
-	_clean_shortcut_string = shortcutString();
-	string::size_type pos = 0;
-
-	while ( ( pos = findShortcutPos( _clean_shortcut_string, pos ) ) != string::npos )
-	{
-	    _clean_shortcut_string.erase( pos, (string::size_type) 1 );
-	}
+	_clean_shortcut_string = cleanShortcutString( shortcutString() );
     }
 
     return _clean_shortcut_string;
+}
+
+
+string
+YShortcut::cleanShortcutString( string shortcut_string )
+{
+    string::size_type pos = 0;
+
+    while ( ( pos = findShortcutPos( shortcut_string, pos ) ) != string::npos )
+    {
+	shortcut_string.erase( pos, (string::size_type) 1 );
+    }
+
+    return shortcut_string;
 }
 
 

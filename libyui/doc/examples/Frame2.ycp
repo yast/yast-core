@@ -1,6 +1,6 @@
 UI(``{
     OpenDialog( `VBox(
-		      `Frame ( "CPU Speed",
+		      `Frame ( "CPU &Speed",
 			       `RadioButtonGroup(
 						 `VBox(
 						       `Left(`RadioButton("Normal"	)),
