@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov  2 13:50:23 CET 2004 - kkaempf@suse.de
+
+- check for proper return statement in definition of non-void
+  functions (#40687)
+
+-------------------------------------------------------------------
 Tue Nov  2 10:47:09 CET 2004 - kkaempf@suse.de
 
 - use identical type checking for bracket operator and lookup()

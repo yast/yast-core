@@ -49,9 +49,9 @@
 #include <string>
 #include <list>
 
-//#ifndef DO_DEBUG
-#define DO_DEBUG 1
-//#endif
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
 
 #include "YCP.h"
 #include "ycp/Scanner.h"
@@ -137,6 +137,8 @@ static constTypePtr attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *pa
 
 //! set by function declaration in order to predefine a definitions block return type
 static constTypePtr declared_return_type = Type::Unspec;
+//! set when a return statement is encountered
+static constTypePtr found_return_type = Type::Unspec;
 //! begin of a block
 //! @param type declared return type
 static YBlockPtr start_block (Parser *parser, constTypePtr type);
@@ -1118,9 +1120,10 @@ statements:
 		}
 
 		YStatementPtr stmt = static_cast<YStatementPtr>($2.c);
-
+		YBlockPtr theblock = p_parser->m_block_stack->theBlock;
+		constTypePtr typeofblock = theblock->type ();
 #if DO_DEBUG
-		y2debug ("STMT[%s!%s]\n", p_parser->m_block_stack->theBlock->type()->toString().c_str(), $2.t->toString().c_str());
+		y2debug ("STMT[%s!%s]\n", typeofblock->toString().c_str(), $2.t->toString().c_str());
 		y2debug ("STMT[kind %d]\n", $2.c->kind());
 		if (stmt) y2debug ("STMT[%s:%d]\n", stmt->toString().c_str(), stmt->line());
 #endif
@@ -1128,16 +1131,19 @@ statements:
 		if (!($2.t)->isUnspec ())			// return statement
 		{
 #if DO_DEBUG
-		    y2debug ("Return in block: %s", $2.t->toString().c_str());
+		    y2debug ("Return in block: %s, typeofblock %s, declared_return_type %s", $2.t->toString().c_str(), typeofblock->toString().c_str(), declared_return_type->toString().c_str());
 #endif
-		    if (p_parser->m_block_stack->theBlock->type ()->isUnspec ())	// type undefined yet
+		    found_return_type = $2.t;
+
+		    if (typeofblock->isUnspec ())	// type undefined yet
 		    {
 			if (!($2.t)->isNil())				// "return nil;" does not define the block type !
 			{
 #if DO_DEBUG
 			    y2debug ("Block type (%s)", $2.t->toString().c_str());
 #endif
-			    p_parser->m_block_stack->theBlock->setType ($2.t);
+			    theblock->setType ($2.t);
+			    typeofblock = $2.t;
 			}
 		    }
 		    else						// type is already defined, check it
@@ -1148,7 +1154,7 @@ statements:
 			// since nil (void) matches everything, handle this separately
 			if ($2.t->isVoid())				// "return;"
 			{
-			    if (p_parser->m_block_stack->theBlock->type ()->isVoid())
+			    if (typeofblock->isVoid())
 			    {
 				match = 0;
 			    }
@@ -1159,26 +1165,26 @@ statements:
 			}
 			else						// "return <expression>;"
 			{
-			    match = $2.t->match (p_parser->m_block_stack->theBlock->type ());
+			    match = $2.t->match (typeofblock);
 			}
 
 			if (match > 0)
 			{
-			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->m_block_stack->theBlock->type ());
+			    ((YSReturnPtr)stmt)->propagate ($2.t, typeofblock);
 			}
 			else if (match < 0)
 			{
-			    yyTypeMismatch ("Mismatched return type in block", p_parser->m_block_stack->theBlock->type (), $2.t, $2.l);
+			    yyTypeMismatch ("Mismatched return type in block", typeofblock, $2.t, $2.l);
 			    $$.t = 0;
 			    break;
 			}
 		    }
 		}
 
-		p_parser->m_block_stack->theBlock->attachStatement (stmt);
+		theblock->attachStatement (stmt);
 		y2debug ("attached statement '%s'", stmt == 0 ? "<NULL>" : stmt->toString().c_str());
 		$$.c = stmt;
-		$$.t = p_parser->m_block_stack->theBlock->type ();
+		$$.t = typeofblock;
 		$$.l = $1.l;
 	    }
 | /* empty  */
@@ -1896,8 +1902,10 @@ definition:
 		    $$.t = 0;
 		    break;
 		}
-
-		if ($2.c == 0)
+#if DO_DEBUG
+		y2debug ("block type '%s'", $2.t->toString().c_str());
+#endif
+		if ($2.c == 0)						// empty function definition
 		{
 		    constTypePtr type = $1.v.tval->sentry ()->type ();
 		    if (!type->isFunction () )
@@ -1919,6 +1927,16 @@ definition:
 		    else
 		    {
 			yyLerror ("Empty function definition for function not returning void", $1.l);
+			$$.t = 0;
+			break;
+		    }
+		}
+		else
+		{
+		    if (!$2.t->isVoid()					// non-void function
+			&& found_return_type->isUnspec())		// no 'return' statement found
+		    {
+			yyLerror ("No return statement in non-void function definition", $2.l);
 			$$.t = 0;
 			break;
 		    }
@@ -2093,9 +2111,13 @@ function_start:
 
 		FunctionTypePtr ftype (new FunctionType ($1.t));
 
-		// save the current declared_return_type, start with the declared return type
+		// save the current declared_return_type on the '$$' stack
 		$$.t = declared_return_type;
+		// start with this functions declared return type
 		declared_return_type = $1.t;
+
+		// used for tracking 'return' statements inside the function definition
+		found_return_type = Type::Unspec;
 
 		// loop through formalparam_t, adding each formal
 		//  parameter to the function definition (private block)
