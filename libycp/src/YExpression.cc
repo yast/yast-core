@@ -292,12 +292,6 @@ YETerm::toString () const
 YCPValue
 YETerm::evaluate (bool cse)
 {
-    // FIXME: this is not optimal, sometimes it really is a constant
-    if (cse)
-    {
-	return YCPNull ();
-    }
-
     YCPTerm term (m_name);
 
     ycodelist_t *actualp = m_parameters;

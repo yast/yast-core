@@ -22,7 +22,7 @@ $Id$
 // provide a backward compatibility
 #define YaST_BYTECODE_HEADER "YaST bytecode "
 #define YaST_BYTECODE_MAJOR "1"
-#define YaST_BYTECODE_MINOR "1"
+#define YaST_BYTECODE_MINOR "2"
 #define YaST_BYTECODE_RELEASE "1"
 
 #include "ycp/Bytecode.h"

@@ -37,12 +37,17 @@ class YCPTermRep : public YCPValueRep
     /**
      * The terms name
      */
-    const string s;
+    string s;
 
     /**
      * YCP list representing the term's arguments
      */
     YCPList l;
+
+    /**
+     * Set the new term name
+     */
+    void setName (string name);
 
 protected:
     friend class YCPTerm;
@@ -67,7 +72,7 @@ public:
      * Returns the term's name
      */
     string name() const;
-
+    
     /**
      * Returns the term's arguments list
      */

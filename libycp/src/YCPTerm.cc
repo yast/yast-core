@@ -46,6 +46,14 @@ YCPTermRep::name() const
 }
 
 
+// set name of term
+void
+YCPTermRep::setName(string name)
+{
+    s = name;
+}
+
+
 // get list of term
 YCPList
 YCPTermRep::args() const
@@ -160,7 +168,7 @@ YCPTermRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 YCPTerm::YCPTerm (std::istream & str)
-    : YCPValue (YCPNull())
+    : YCPValue (YCPTerm("no-name-so-far"))
 {
     string s;
     if (Bytecode::readString (str, s))
@@ -168,7 +176,11 @@ YCPTerm::YCPTerm (std::istream & str)
 	YCPList list (str);
 	if (!list.isNull())
 	{
-	    element = new YCPTermRep (s, list);
+	    (const_cast<YCPTermRep*>(static_cast<const YCPTermRep*>(element)))->setName(s);
+	    for (uint i = 0 ; i < list->size () ; i++)
+	    {
+		(const_cast<YCPTermRep*>(static_cast<const YCPTermRep*>(element)))->add (list->value (i));
+	    }
 	}
     }
 }

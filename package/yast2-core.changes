@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jan 30 13:01:36 CET 2004 - visnov@suse.cz
+
+- implemented constant evaluation of terms (#34167)
+- bytecode version change!
+
+-------------------------------------------------------------------
 Thu Jan 29 18:09:18 CET 2004 - msvec@suse.cz
 
 - 2.9.23

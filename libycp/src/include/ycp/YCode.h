@@ -66,11 +66,12 @@ class YCode
 public:
     enum ykind {
 	yxError = 0,
-	// [1] Constants	(-> YCPValue, except(!) locale and term -> yeLocale, yeTerm)
+	// [1] Constants	(-> YCPValue, except(!) term -> yeLocale)
 	ycVoid, ycBoolean, ycInteger, ycFloat,	// constants
 	ycString, ycByteblock, ycPath, ycSymbol,
 	ycList,					// list
 	ycMap,					// map
+	ycTerm,					// term
 
 	ycEntry,
 
@@ -78,14 +79,14 @@ public:
 	ycLocale,				// locale constant (gettext)
 	ycFunction,				// a function definition (parameters and body)
 
-	// [15] Expressions	(-> declaration_t + values)
+	// [16] Expressions	(-> declaration_t + values)
 	yePropagate,		// type propagation (value, type)
 	yeUnary,		// unary (prefix) operator
 	yeBinary,		// binary (infix) operator
 	yeTriple,		// <exp> ? <exp> : <exp>
 	yeCompare,		// compare
 
-	// [20] Value expressions (-> values + internal)
+	// [21] Value expressions (-> values + internal)
 	yeLocale,		// locale expression (ngettext)
 	yeList,			// list expression
 	yeMap,			// map expression
@@ -94,11 +95,11 @@ public:
 	yeIs,			// is()
 	yeBracket,		// <name> [ <expr>, ... ] : <expr>
 
-	// [27] Block (-> linked list of statements)
+	// [28] Block (-> linked list of statements)
 	yeBlock,		// block expression
 	yeReturn,		// quoted expression
 
-	// [29] Symbolref (-> SymbolEntry)
+	// [30] Symbolref (-> SymbolEntry)
 	yeVariable,		// variable ref
 	yeBuiltin,		// builtin ref + args
 	yeFunction,		// function ref + args
@@ -106,7 +107,7 @@ public:
 
 	yeExpression,		// -- placeholder --
 
-	// [34] Statements	(-> YCode + next)
+	// [35] Statements	(-> YCode + next)
 	ysTypedef,		// typedef
 	ysVariable,		// variable defintion (-> YSAssign)
 	ysFunction,		// function definition
