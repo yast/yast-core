@@ -30,8 +30,8 @@
 
 
 Y2PluginComponent::Y2PluginComponent (bool is_server, string filename,
-				      const char *creator_name,
-				      const char *component_name, int level)
+				      const char* creator_name,
+				      const char* component_name, int level)
     : is_server (is_server),
       filename (filename),
       creator_name (creator_name),
@@ -62,14 +62,14 @@ Y2PluginComponent::~Y2PluginComponent ()
 
 
 void
-Y2PluginComponent::setServerOptions (int argc, char **argv)
+Y2PluginComponent::setServerOptions (int argc, char** argv)
 {
     this->argc = argc;
     this->argv = argv;
 }
 
 
-Y2Component *
+Y2Component*
 Y2PluginComponent::getCallback (void) const
 {
     Y2Component *callback;
@@ -81,19 +81,22 @@ Y2PluginComponent::getCallback (void) const
     {
 	callback = m_callback;
     }
+
 #if 0
     y2warning ("Y2PluginComponent[%p]::getCallback = %p", this, callback);
 #endif
+
     return callback;
 }
 
 
 void
-Y2PluginComponent::setCallback (Y2Component *callback)
+Y2PluginComponent::setCallback (Y2Component* callback)
 {
 #if 0
     y2warning ("Y2PluginComponent[%p]::setCallback(%p)", this, callback);
 #endif
+
     if (comp)
     {
 	comp->setCallback (callback);
@@ -123,7 +126,7 @@ Y2PluginComponent::evaluate (const YCPValue& command)
 }
 
 
-SCRAgent *
+SCRAgent*
 Y2PluginComponent::getSCRAgent ()
 {
     if (!handle)
@@ -163,14 +166,15 @@ Y2PluginComponent::result (const YCPValue& result)
 string
 Y2PluginComponent::name () const
 {
-    // Note: It might also be possible to call the name function of
+    // Note: It is also be possible to call the name function of
     // the Y2Component.
     return component_name;
 }
 
 
 YCPValue
-Y2PluginComponent::doActualWork (const YCPList& arglist, Y2Component *user_interface)
+Y2PluginComponent::doActualWork (const YCPList& arglist,
+				 Y2Component* user_interface)
 {
     if (!handle)
     {
@@ -235,7 +239,7 @@ Y2PluginComponent::loadPlugin ()
 
     // Locate the global y2cc.
 
-    Y2ComponentCreator * y2cc = 0;
+    Y2ComponentCreator* y2cc = 0;
 
     for (int num = -1; ; num++)
     {
@@ -254,18 +258,23 @@ Y2PluginComponent::loadPlugin ()
 	if (is_server == y2cc->isServerCreator())	// perhaps that's it
 	{
 	    // get current callback before (!) overwriting comp
-	    Y2Component *callback = getCallback();
+	    Y2Component* callback = getCallback();
 
 	    comp = y2cc->create (component_name.c_str());	// try it
 
-	    y2debug ("Y2PluginComponent @ %p created server '%s' @ %p", this, component_name.c_str(), comp);
+	    y2debug ("Y2PluginComponent @ %p created server '%s' @ %p",
+		     this, component_name.c_str(), comp);
+
 	    if (comp)		// success
 	    {
 		if (argc > 0)
 		{
 		    comp->setServerOptions (argc, argv);
 		}
-		y2debug ("Y2PluginComponent @ %p  %p->setCallback(%p)", this, comp, callback);
+
+		y2debug ("Y2PluginComponent @ %p  %p->setCallback(%p)",
+			 this, comp, callback);
+
 		// pass saved callback pointer to newly created component.
 		comp->setCallback (callback);
 		return true;
@@ -281,7 +290,7 @@ Y2PluginComponent::loadPlugin ()
 }
 
 
-Y2ComponentCreator *
+Y2ComponentCreator*
 Y2PluginComponent::locateSym (int num)
 {
     const int size = 100;
@@ -296,7 +305,7 @@ Y2PluginComponent::locateSym (int num)
 	snprintf (buffer, size, "g_y2cc%s%d", creator_name.c_str(), num);
     }
 
-    Y2ComponentCreator * y2cc = ( Y2ComponentCreator * ) dlsym (handle, buffer);
+    Y2ComponentCreator* y2cc = (Y2ComponentCreator*) dlsym (handle, buffer);
     if (dlerror() != 0)
     {
 	return 0;

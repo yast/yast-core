@@ -71,8 +71,8 @@ Y2CCPlugin::free_rxs () const
 }
 
 
-Y2Component *
-Y2CCPlugin::create (const char *name, int level, int current_level) const
+Y2Component*
+Y2CCPlugin::create (const char* name, int level, int current_level) const
 {
     if (strlen (name) > 0 && name[0] == '/')
 	return 0;
@@ -87,7 +87,7 @@ Y2CCPlugin::create (const char *name, int level, int current_level) const
 	make_rxs ();
     }
 
-    const char *tmp = name;
+    const char* tmp = name;
 
     if (strcmp (tmp, "stderr") == 0)
 	tmp = "stdio";
@@ -99,6 +99,12 @@ Y2CCPlugin::create (const char *name, int level, int current_level) const
 	regexec (&rxr2, name, 0, 0, 0) == 0 ||
 	regexec (&rxr3, name, 0, 0, 0) == 0)
 	tmp = "remote";
+
+    if (strcmp (tmp, "ag_evms") == 0 ||
+	strcmp (tmp, "ag_fdisk") == 0 ||
+	strcmp (tmp, "ag_lvm") == 0 ||
+	strcmp (tmp, "ag_md") == 0)
+	tmp = "ag_storage";
 
     // Look for the plugin and create component.
 
@@ -112,4 +118,3 @@ Y2CCPlugin::create (const char *name, int level, int current_level) const
 
 Y2CCPlugin g_y2ccplugin0 (true);
 Y2CCPlugin g_y2ccplugin1 (false);
-

@@ -58,7 +58,7 @@ class Y2PluginComponent : public Y2Component
     /**
      * Stores options for a server plugin.
      */
-    char **argv;
+    char** argv;
 
     /**
      * The component level the plugin was started in.
@@ -68,18 +68,18 @@ class Y2PluginComponent : public Y2Component
     /**
      * Handle of the dynamic loaded library.
      */
-    void *handle;
+    void* handle;
 
     /**
      * The created Y2Component.
      */
-    Y2Component *comp;
+    Y2Component* comp;
 
     /**
      * The saved callback pointer to be passed to the component
      * after creating (plugin loaded).
      */
-    Y2Component *m_callback;
+    Y2Component* m_callback;
 
 public:
 
@@ -106,7 +106,7 @@ public:
     /**
      * Returns the SCRAgent of the Y2Component or NULL if it doesn't have one.
      */
-    SCRAgent * getSCRAgent ();
+    SCRAgent* getSCRAgent ();
 
     /**
      * Tells this server, that the client doesn't need it's services
@@ -121,7 +121,7 @@ public:
      *
      * This method is only valid, if the component is a server.
      */
-    void setServerOptions (int argc, char **argv);
+    void setServerOptions (int argc, char** argv);
 
     /**
      * Functions to pass callback information
@@ -134,13 +134,13 @@ public:
      * to the component loaded via plugin.
      */
 
-    Y2Component *getCallback (void) const;
+    Y2Component* getCallback (void) const;
     void setCallback (Y2Component *callback);
 
     /**
      * Launches the plugin with the previously set parameters.
      */
-    YCPValue doActualWork (const YCPList& arglist, Y2Component *user_interface);
+    YCPValue doActualWork (const YCPList& arglist, Y2Component* user_interface);
 
 private:
     /**
@@ -151,7 +151,7 @@ private:
     /**
      * Tries to locate the global componentcreator via dlsym.
      */
-    Y2ComponentCreator * locateSym (int num);
+    Y2ComponentCreator* locateSym (int num);
 
 };
 

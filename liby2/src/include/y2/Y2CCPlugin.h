@@ -66,7 +66,7 @@ public:
      * Creates a component. It is searched in the in YASTHOME/plugin.
      * The name must not contain any slash.
      */
-    Y2Component *create (const char *name, int level, int current_level) const;
+    Y2Component* create (const char* name, int level, int current_level) const;
 };
 
 
