@@ -150,8 +150,9 @@ struct YWidgetOpt
     YBoolOpt countShowDelta;	// YPartitionSplitter
     YLongOpt key_Fxx;		// YPushButton: No. of F-Key ( 1..24 ), 0 if none
 
-    YBoolOpt youMode;		// YPackageSelector
+    YBoolOpt searchMode;	// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector
+    YBoolOpt youMode;		// YPackageSelector
     
     // YDialog-specific options
     //

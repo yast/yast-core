@@ -2356,6 +2356,7 @@ YWidget *YUIInterpreter::createPackageSelector( YWidget *parent, YWidgetOpt & op
 
 	    if	    ( sym == YUIOpt_youMode    ) opt.youMode.setValue( true );
 	    else if ( sym == YUIOpt_updateMode ) opt.updateMode.setValue( true );
+	    else if ( sym == YUIOpt_searchMode ) opt.searchMode.setValue( true );
 	    else logUnknownOption( term, optList->value(o) );
 	}
 	else logUnknownOption( term, optList->value(o) );

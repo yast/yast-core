@@ -172,6 +172,7 @@
 #define YUIOpt_outputField			"outputField"
 #define YUIOpt_plainText			"plainText"
 #define YUIOpt_scaleToFit			"scaleToFit"
+#define YUIOpt_searchMode			"searchMode"
 #define YUIOpt_shrinkable			"shrinkable"
 #define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
