@@ -830,10 +830,12 @@ YSIf::evaluate (bool cse)
     {
 	ycp2error ("'if (%s)' evaluates to non-boolean '%s' (valuetype %d).", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype());
     }
-    else if ((bval->asBoolean()->value() == true)
-	     && (m_true != 0))
+    else if (bval->asBoolean()->value() == true)
     {
-	return m_true->evaluate (cse);
+	if (m_true != 0)
+	{
+	    return m_true->evaluate (cse);
+	}
     }
     else if (m_false != 0)
     {

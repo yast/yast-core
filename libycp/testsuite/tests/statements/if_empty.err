@@ -1,0 +1,16 @@
+[Scanner] tests/statements/if_empty.ycp:4 Warning: Empty statement after 'if'
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // filename: "tests/statements/if_empty.ycp"
+    integer i = 1;
+    if (true)
+{ /*EMPTY*/ }
+else
+    {
+    i = 42;
+}
+    return i;
+}
+----------------------------------------------------------------------

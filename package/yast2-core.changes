@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 25 13:05:34 CET 2004 - kkaempf@suse.de
+
+- treat empty block after 'if' properly (#36902)
+
+-------------------------------------------------------------------
 Wed Mar 24 15:41:19 CET 2004 - kkaempf@suse.de
 
 - treat _("") as "", don't call dgettext() (#36850)

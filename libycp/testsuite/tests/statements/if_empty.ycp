@@ -1,0 +1,13 @@
+//
+{
+    integer i = 1;
+    if (true)
+    {
+	// do nothing
+    }
+    else
+    {
+	i = 42;
+    }
+    return i;
+}
