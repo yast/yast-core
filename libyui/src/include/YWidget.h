@@ -329,19 +329,20 @@ public:
      */
     virtual const char *shortcutProperty() { return ( const char * ) 0; }
 
-
-protected:
+private:
 
     /**
      * Make this widget invalid. This operation cannot be reversed.
      */
-    void invalidate() { magic=0;}
+    void invalidate() { magic=0; }
 
     /**
      * This object is only valid if this magic number is
      * YWIDGET_MAGIC. Use YWidget::isValid() to check this.
      */
     int magic;
+
+protected:
 
     /**
      * The user provided widget id of this widget -
