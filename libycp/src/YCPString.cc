@@ -89,7 +89,7 @@ YCPStringRep::toString() const
 	else if (*r == '\r') ret += "\\r";
 	else if (*r == '\f') ret += "\\f";
 	else if (*r == '\b') ret += "\\b";
-	else if (*r < 32) {
+	else if ((unsigned char)*r < 32) {
 	    char s[8];
 	    snprintf (s, 8, "\\%03o", (unsigned char)*r);
 	    ret += s;

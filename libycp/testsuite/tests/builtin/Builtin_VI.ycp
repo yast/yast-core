@@ -31,10 +31,10 @@
 
 ( size( [] ) == 0 )
 ( size( $[ 1: "A", 2: `bb ] ) == 2 )
-( size( "Käsekuchen" ) == 10 )
+( size( "KÃ¤sekuchen" ) == 10 )
 
 // uses select, because operator '==' is not defined on maps
-( find(any n, [ [], -1, $[ 1: "A", 2: `bb ], "Käsekuchen", 3.14, .a.path ], 
+( find(any n, [ [], -1, $[ 1: "A", 2: `bb ], "KÃ¤sekuchen", 3.14, .a.path ], 
        {  if (is( n, list)) return (size (tolist (n)) > 0);
 	  else if (is( n, term)) return (size (toterm (n)) > 0);
 	  else if (is( n, map)) return (size (tomap (n)) > 0);

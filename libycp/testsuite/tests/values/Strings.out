@@ -4,7 +4,7 @@
 ("Hello world$")
 ("Hello world")
 ("Hello\r\n\t\b\fworldHello")
-("Special characters: !#$%&\264()*+,-./:;<=>?@[]^_`{}|~")
+("Special characters: !#$%&'()*+,-./:;<=>?@[]^_`{}|~")
 ("Hello world\n Hello world")
 ("Hello world Hello world")
 ("Hello world999Hallo world")

@@ -50,7 +50,7 @@
 // Returns a string that results from string<tt>s</tt> by
 // copying each character that is below 0x7F (127).
 //
-( toascii( "aÖBÄc" ) == "aBc" )
+( toascii( "aÃ–BÃ„c" ) == "aBc" )
 ( toascii( "Special characters: !#$%&()*+,-./:;<=>?@[]^_`{}|~") == "Special characters: !#$%&()*+,-./:;<=>?@[]^_`{}|~" )
 
 

@@ -50,10 +50,10 @@
 
 # strings
 "string"
-(( "größer" < "kleiner" ) == true )
-(( "gr\366\377er" < "kleiner" ) == true )
-(( "größer" <= "kleiner" ) == true )
-(( "größer" > "kleiner" ) == false )
+(( "grÃ¶ÃŸer" < "kleiner" ) == true )
+(( "gr\303\266\303\237er" < "kleiner" ) == true )
+(( "grÃ¶ÃŸer" <= "kleiner" ) == true )
+(( "grÃ¶ÃŸer" > "kleiner" ) == false )
 (( "klein"  > "kleiner" ) == false )
 (( "klein"  >= "kleiner" ) == false )
 (( "klein"  == "kleiner" ) == false )

@@ -24,7 +24,7 @@
 "Hello world\755"	// octal const too large
 "Hello\r\n\t\b\fworld\
 Hello"
-"Special characters: !#$%&´()*+,-./:;<=>?@[]^_`{}|~"
+"Special characters: !#$%&'()*+,-./:;<=>?@[]^_`{}|~"
 "Hello world
  Hello world"
 "Hello world\

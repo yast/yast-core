@@ -98,7 +98,7 @@
 // Returns a string that results from string s by removing all
 // characters that do not occur in include Example:
 
-( filterchars("aÖBÄc", "abcdefghijklmnopqrstuvwxyz") == "ac" )
+( filterchars("aÃ–BÃ„c", "abcdefghijklmnopqrstuvwxyz") == "ac" )
 
 //
 //         eval(any v) -> any
