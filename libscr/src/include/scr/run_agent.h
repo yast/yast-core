@@ -15,6 +15,8 @@
 #include <scr/SCR.h>
 
 
+void run_agent_instance (int, char*[], bool, SCRAgent*);
+
 /**
  * Function to run an agent. Only use in testsuites for agents.
  */
