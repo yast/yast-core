@@ -1890,6 +1890,12 @@ YEBuiltin::finalize ()
 			mask |= 1LL << (number - 1);
 		    }
 		}
+		else if ((number == 0)			// no digit following %
+			 && (*cptr != '%'))		// %% is allowed
+		{
+		    ycp2error ("Bad '%%' selector in format string at '%s', use '%%n' (n=1,2,...) instead ", cptr-1);
+		    return Type::Error;
+		}
 	    }
 	    cptr++;
 	}
