@@ -3,7 +3,7 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
-	-DLOCALEDIR=\"${localedir}\"
+	-DLOCALEDIR=\"${localedir}\"  -fno-inline
 
 # to look for the packagemanager in the prefix first (really first?)
 AM_LDFLAGS = -L${libdir}
