@@ -1284,10 +1284,13 @@ YCPValue
 WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 {
     /**
-     * @builtin SetLanguage("de_DE" [, encoding]) -> void
+     * @builtin SetLanguage("de_DE" [, encoding]) -> "<proposed encoding>"
      * Selects the language for translate()
-     * @example SetLanguage("de_DE", "ISO-8859-1") -> nil
-     * if the encoding isn't specified, it's set to nl_langinfo (CODESET)
+     * @example SetLanguage("de_DE@euro", "ISO-8859-1") -> ""
+     * @example SetLanguage("de_DE@euro") -> "ISO-8859-15"
+     * if the encoding isn't specified, it's set to "UTF-8"
+     * The "<proposed encoding>" is the output of 'nl_langinfo (CODESET)'
+     * and only given if SetLanguage() is called with a single argument.
      */
 
     if (term->size() > 0 && term->value(0)->isString())
