@@ -18,6 +18,10 @@
 /-*/
 // -*- c++ -*-
 
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
+
 #include <libintl.h>
 
 #include "ycp/YCode.h"
@@ -205,7 +209,9 @@ YCode::toString() const
 std::ostream &
 YCode::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("YCode::toStream (%d:%s)", (int)m_kind, YCode::toString (m_kind).c_str());
+#endif
     return str.put ((char)m_kind);
 }
 
@@ -213,7 +219,9 @@ YCode::toStream (std::ostream & str) const
 YCPValue
 YCode::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("evaluate(%s) = nil", toString().c_str());
+#endif
     if (isError())
     {
 	y2error ("evaluating error code");
@@ -244,7 +252,9 @@ YConst::YConst (ykind kind, std::istream & str)
 {
     if (Bytecode::readBool (str))		// not nil
     {
+#if DO_DEBUG
 	y2debug ("YConst::YConst (%d:%s)", (int)kind, YCode::toString (kind).c_str());
+#endif
 	switch (kind)
 	{
 	    case YCode::ycVoid:
@@ -304,7 +314,9 @@ YConst::YConst (ykind kind, std::istream & str)
 	    break;
 	    case YCode::ycEntry:
 	    {
+#if DO_DEBUG
 		y2debug ("YCode::ycEntry:");
+#endif
 		m_value = YCPEntry (Bytecode::readEntry (str));
 	    }
 	    break;
@@ -316,7 +328,9 @@ YConst::YConst (ykind kind, std::istream & str)
 	}
 	if (!m_value.isNull())
 	{
+#if DO_DEBUG
 	    y2debug ("m_value '%s'", m_value->toString().c_str());
+#endif
 	}
     }
     else
@@ -368,7 +382,9 @@ YCPValue
 YConst::evaluate (bool cse)
 {
     YCPValue v = m_value;
+#if DO_DEBUG
     y2debug("evaluate(%s) = %s", toString().c_str(), v.isNull() ? "NULL" : v->toString().c_str());
+#endif
     return v;
 }
 
@@ -487,7 +503,9 @@ YLocale::evaluate (bool cse)
     if (cse) return YCPNull();
 
     const char *ret = dgettext (*m_domain, m_locale);
+#if DO_DEBUG
     y2debug ("localize <%s> to <%s>", m_locale, ret);
+#endif
     return YCPString (ret);
 }
 
@@ -519,7 +537,9 @@ YDeclaration::toString() const
 YCPValue
 YDeclaration::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug("evaluate(declaration %s) = nil", toString().c_str());
+#endif
     return YCPNull();
 }
 
@@ -576,7 +596,9 @@ YFunction::setDefinition (std::istream & str)
 {
     if (Bytecode::readBool (str))
     {
+#if DO_DEBUG
 	y2debug ("YFunction::YFunction: have definition!");
+#endif
 
 	if (m_declaration != 0)
 	{
@@ -599,7 +621,9 @@ YFunction::setDefinition (std::istream & str)
     }
     else
     {
+#if DO_DEBUG
 	y2debug ("YFunction::setDefinition(stream): no definition!");
+#endif
     }
 
     return;
@@ -656,7 +680,9 @@ YFunction::toString() const
 YCPValue
 YFunction::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YFunction::evaluate(%s)\n", toString().c_str());
+#endif
     // there's nothing to evaluate for a function _definition_
     // its all in the function call.
     return YCPCode (YCodePtr (this));		// YCPCode will take care of YCodePtr
@@ -671,10 +697,14 @@ YFunction::YFunction (std::istream & str)
     , m_definition (0)
     , m_is_global (false)		// don't care about globalness any more
 {
+#if DO_DEBUG
     y2debug ("YFunction::YFunction (from stream)");
+#endif
     if (Bytecode::readBool (str))
     {
+#if DO_DEBUG
 	y2debug ("YFunction::YFunction: need_declaration !");
+#endif
 	m_declaration = (YBlockPtr)Bytecode::readCode (str);
 	if ((m_declaration == 0)
 	    || (!m_declaration->isBlock()))
@@ -692,13 +722,17 @@ std::ostream &
 YFunction::toStreamDefinition (std::ostream & str) const
 {
     bool need_declaration = ((m_declaration != 0) && (m_declaration->symbolCount() > 0));
+#if DO_DEBUG
     y2debug ("YFunction::toStreamDefinition, need_declaration %d", need_declaration);
+#endif
 
     // definition
 
     bool need_definition = (m_definition != 0);
     Bytecode::writeBool (str, need_definition);
+#if DO_DEBUG
     y2debug ("YFunction::toStreamDefinition, need_definition %d", need_definition);
+#endif
     if (need_definition)
     {
 	if (need_declaration)
@@ -734,7 +768,9 @@ YFunction::toStream (std::ostream & str) const
     // declaration
 
     bool need_declaration = ((m_declaration != 0) && (m_declaration->symbolCount() > 0));
+#if DO_DEBUG
     y2debug ("YFunction::toStream, need_declaration %d", need_declaration);
+#endif
     Bytecode::writeBool (str, need_declaration);
     if (need_declaration)
     {
@@ -766,14 +802,18 @@ YError::YError (int line, const char *msg)
     , m_line (line)
     , m_msg (msg)
 {
+#if DO_DEBUG
     y2debug ("YError::YError %p: m_line %d, msg %s", this, m_line, m_msg);
+#endif
 }
 
 
 YCPValue
 YError::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YError::evaluate %p: m_line %d, msg %s", this, m_line, m_msg);
+#endif
     if (m_line > 0)
     {
 	extern ExecutionEnvironment ee;
