@@ -27,6 +27,7 @@
 #include <y2util/Url.h>
 #include <y2util/FSize.h>
 #include <y2pm/InstData.h>
+#include <y2pm/InstSrcDescr.h>
 #include <y2pm/PMObject.h>
 #include <y2pm/PMSelectable.h>
 
@@ -128,7 +129,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 	if (count > mediacount)
 	    mediacount = count;
     }
-    MIL << "Max media count " << mediacount << endl:
+    y2milestone ("Max media count %d", mediacount);
 
     vector<FSize> mediasizes(mediacount);
 
@@ -148,7 +149,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 	FSize size = package->size();
 	if (medianr > mediasizes.size())
 	{
-	    ERR << "resize needed " << medianr << endl;
+	    y2error ("resize needed %d", medianr);
 	    mediasizes.resize (medianr);
 	}
 	mediasizes[medianr-1] += size;
