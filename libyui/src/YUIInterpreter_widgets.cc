@@ -680,7 +680,7 @@ YWidget *YUIInterpreter::createWeight( YWidget *parent, YWidgetOpt & opt, const 
 	return 0;
     }
     rejectAllOptions( term,optList );
-    long weightValue = ( long)( term->value( argnr )->asInteger()->value() );
+    long weightValue = (long)( term->value( argnr )->asInteger()->value() );
 
     /**
      * This is an exception from the general rule: No YWeight widget is created,

@@ -99,7 +99,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	int item_nr = itemWithId( itemid, true );
 	if ( item_nr < 0 ) return YCPBoolean( false );
 
-	int colnum = ( int)( property->value(1)->asInteger()->value() );
+	int colnum = (int)( property->value(1)->asInteger()->value() );
 	if ( colnum >= numCols() || colnum < 0 )
 	{
 	    y2error( "Table %s: Invalid column number %d",
