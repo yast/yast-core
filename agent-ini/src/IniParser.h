@@ -21,7 +21,7 @@
 #include <y2util/RepDef.h>
 #include <YCP.h>
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <vector>

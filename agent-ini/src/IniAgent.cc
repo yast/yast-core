@@ -33,12 +33,12 @@ IniAgent::~IniAgent()
 /**
  * Dir
  */
-YCPValue IniAgent::Dir(const YCPPath& path)
+YCPList IniAgent::Dir(const YCPPath& path)
 {
     if (!parser.isStarted())
 	{
 	    y2warning("Can't execute Dir before being mounted.");
-	    return YCPVoid();
+	    return YCPNull();
 	}
     parser.UpdateIfModif ();
 
@@ -46,13 +46,13 @@ YCPValue IniAgent::Dir(const YCPPath& path)
     if (!parser.inifile.Dir (path, l))
 	return l;
 
-    return YCPVoid();
+    return YCPNull();
 }
 
 /**
  * Read
  */
-YCPValue IniAgent::Read(const YCPPath &path, const YCPValue& arg)
+YCPValue IniAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPValue& optarg)
 {
     if (!parser.isStarted())
 	{
@@ -71,12 +71,12 @@ YCPValue IniAgent::Read(const YCPPath &path, const YCPValue& arg)
 /**
  * Write
  */
-YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPValue& arg)
+YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPValue& arg)
 {
     if (!parser.isStarted())
     {
 	y2warning("Can't execute Write before being mounted.");
-	return YCPVoid();
+	return YCPNull();
     }
     // no need to update if modified, we are changing value
     bool ok = false;
@@ -127,14 +127,15 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
 	    }
 	else
 	{
-	    return YCPError (string ("Wrong value for path ") +  path->toString () + string (": ") + value->toString ());
+	    ycp2error ("Wrong value for path %s: %s", path->toString ().c_str (), value->toString ().c_str ());
+	    return YCPNull ();
 	}
     }
     if (!ok)
-    	return YCPError (
-		string ("Wrong path '")
-		+ path->toString()
-		+ string ("' in Write()."));
+    {
+    	ycp2error ( "Wrong path '%s' in Write().", path->toString().c_str () );
+	return YCPNull ();
+    }
 
     return b;
 }
@@ -144,7 +145,7 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
  */
 YCPValue IniAgent::otherCommand(const YCPTerm& term)
 {
-    string sym = term->symbol()->symbol();
+    string sym = term->name();
     if (sym == "SysConfigFile") 
     {
 	if (term->size () != 1 || !term->value (0)->isString ())
@@ -180,7 +181,7 @@ YCPValue IniAgent::otherCommand(const YCPTerm& term)
 
 YCPTerm IniAgent::generateSysConfigTemplate (string fn)
 {
-    YCPTerm t (string ("IniAgent"), false);
+    YCPTerm t (string ("IniAgent"));
     YCPMap m;
     YCPList l;
 

@@ -1,38 +1,21 @@
+
+
 /*
- * YaST2: Core system
- *
- * Description:
- *   YaST2 SCR: Ini agent implementation
- *
- * Authors:
- *   Petr Blahos <pblahos@suse.cz>
- *
- * $Id$
+ *  Author: Arvin Schnell <arvin@suse.de>
  */
 
-#include "Y2CCIniAgent.h"
-#include "Y2IniAgentComponent.h"
+
+#undef Y2LOG
+#define Y2LOG "scr"
+#include <scr/Y2AgentComponent.h>
+#include <scr/Y2CCAgentComponent.h>
+#undef Y2LOG
+#define Y2LOG "agent-ini"
+
+#include "IniAgent.h"
 
 
-Y2CCIniAgent::Y2CCIniAgent()
-    : Y2ComponentCreator(Y2ComponentBroker::BUILTIN)
-{
-}
+typedef Y2AgentComp <IniAgent> Y2IniAgentComp;
 
+Y2CCAgentComp <Y2IniAgentComp> g_y2ccag_ini ("ag_ini");
 
-bool
-Y2CCIniAgent::isServerCreator() const
-{
-    return true;
-}
-
-
-Y2Component *
-Y2CCIniAgent::create(const char *name) const
-{
-    if (!strcmp(name, "ag_ini")) return new Y2IniAgentComponent();
-    else return 0;
-}
-
-
-Y2CCIniAgent g_y2ccag_ini;
