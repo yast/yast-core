@@ -122,14 +122,11 @@ YEVariable::evaluate (bool cse)
 	if (! m_entry->isFunction ())
 	{
 	    ycp2error ("YEVariable::evaluate (%s) is not initialized", toString().c_str());
-	}
-	if (m_entry->code())
-	{
-	    value = YCPCode (m_entry->code());
+	    value = YCPVoid ();
 	}
 	else
 	{
-	    value = YCPVoid ();
+	    value = YCPReference (m_entry);
 	}
     }
 #if DO_DEBUG
@@ -1069,6 +1066,11 @@ YEPropagate::evaluate (bool cse)
 	     && v->isFloat())
     {
 	return YCPInteger ((long long)(v->asFloat()->value()));
+    }
+    else if (v->isReference () 
+	&& m_to->match (v->asReference ()->entry ()->type ()) == 0)
+    {
+	return v;
     }
     else if (canPropagate (v, m_to))
     {
@@ -2708,74 +2710,36 @@ YEFunctionPointer::evaluate (bool cse)
     y2debug ("YEFunctionPointer::evaluate (%s)\n", toString().c_str());
 #endif
 
-    YFunctionPtr func = NULL;
-
-    YCPValue v = m_sentry->value();
-    if (v.isNull()
-	|| v->isVoid())
+    YCPValue ptr = m_sentry->value ();
+    if (ptr.isNull () || ! ptr->isReference ())
     {
-	ycp2error ("Function pointer (%s) is nil", m_sentry->toString().c_str());
+	ycp2error ("Function pointer (%s) is %s"
+	    , m_sentry->toString().c_str()
+	    , ptr.isNull () ? "NULL" : ptr->toString ().c_str ());
 	return YCPNull();
     }
-    if (!v->isCode())
+    
+    SymbolEntryPtr ptr_sentry = ptr->asReference ()->entry ();
+
+    Y2Namespace* ns = const_cast<Y2Namespace*> (ptr_sentry->nameSpace ());
+
+    m_functioncall = ns->createFunctionCall (
+	ptr_sentry->name (),
+	ptr_sentry->type ()
+    );
+    
+    if (!m_functioncall)
     {
-	ycp2error ("Function pointer (%s) points to non-code (%s)", m_sentry->toString().c_str(), v->toString().c_str());
-	return YCPNull();
+	y2internal ("Cannot get function call object for %s", m_sentry->toString().c_str());
+	return YCPVoid ();
     }
 
-    YCodePtr c = v->asCode()->code();
-    if (c->kind() != YCode::ycFunction)
-    {
-	ycp2error ("Function pointer (%s) points to non-function (%s)", m_sentry->toString().c_str(), v->toString().c_str());
-	return YCPNull();
-    }
+    // FIXME: this could fail    
+    m_functioncall->reset ();
+    
+    YCPValue m_params [m_next_param_id];
 
-    // It's a YEVariable, a formal parameter of a function
-
-    YCPValue value = m_sentry->value ();
-#if DO_DEBUG
-    if (value.isNull())
-    {
-	y2debug ("m_sentry value NULL");
-    }
-    else
-    {
-	y2debug ("m_sentry value ([%d] %s)\n", m_sentry->value()->valuetype(), m_sentry->value()->toString().c_str());
-    }
-#endif
-    if (value.isNull()
-	    || !value->isCode())
-    {
-	ycp2error ("Not a function pointer ('%s' is '%s')", m_sentry->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
-	return YCPNull();
-    }
-
-    func = (YFunctionPtr)(value->asCode()->code());
-#if DO_DEBUG
-    y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
-#endif
-
-    // push parameter values for recursion
-    for (unsigned int p = 0; p < func->parameterCount(); p++)
-    {
-        func->parameter (p)->push ();
-    }
-
-    // push also local parameters
-    YCodePtr definition = func->definition ();
-
-    if (definition == 0)
-    {
-        ycp2error ("Function '%s' is only declared, but not defined yet.", m_entry->toString ().c_str ());
-        return YCPNull();
-    }
-
-    if (definition->isBlock())
-    {
-       ((YBlockPtr)definition)->pushToStack ();
-    }
-
-    for (unsigned int p = 0; p < m_next_param_id; p++)
+    for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
 	// FIXME, check for symbol or block type and suppress evaluation
 
@@ -2784,13 +2748,6 @@ YEFunctionPointer::evaluate (bool cse)
 	if (value.isNull())
 	{
 	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
-
-            // cleanup: pop parameter values for recursion
-            for (unsigned int p = 0; p < func->parameterCount(); p++)
-            {
-                func->parameter (p)->pop ();
-            }
-
 	    return value;
 	}
 	
@@ -2798,12 +2755,13 @@ YEFunctionPointer::evaluate (bool cse)
 	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
 #endif
 
-        SymbolEntryPtr formalp = func->parameter (p);
-#if DO_DEBUG
-        y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString ().c_str ());
-#endif
+	m_params [p] = value;
+    }
 
-        formalp->setValue (value);
+    // set the parameters for Y2Function
+    for (unsigned int p = 0; p < m_next_param_id ; p++)
+    {
+	m_functioncall->attachParameter (m_params[p], p);
     }
     
     extern ExecutionEnvironment ee;
@@ -2812,23 +2770,11 @@ YEFunctionPointer::evaluate (bool cse)
     int linenumber = ee.linenumber ();
     string filename = ee.filename ();
 
-    value = definition->evaluate ();
-
-    if (definition->isBlock())
-    {
-       // pop also local parameters
-       ((YBlockPtr)definition)->popFromStack ();
-    }
+    YCPValue value = m_functioncall->evaluateCall ();
 
     // restore the context info
     ee.setLinenumber (linenumber);
     ee.setFilename (filename);
-
-    // pop parameter values for recursion
-    for (unsigned int p = 0; p < func->parameterCount(); p++)
-    {
-        func->parameter (p)->pop ();
-    }
 
 #if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());

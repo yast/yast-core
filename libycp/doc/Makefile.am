@@ -14,7 +14,7 @@ builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 YCP-builtins.html: $(builtin)
 	@ybindir@/makebuiltindocs $(builtin) > $@.new && mv $@.new $@
 
-EXTRA_DIST = *.xml $(html_DATA)
+EXTRA_DIST = $(html_DATA)
 
 CLEANFILES = CATALOG.local *.out *.aux *.dvi *.tex *.ps *.pdf *.log *.dsl \
 	YCP-builtins.html

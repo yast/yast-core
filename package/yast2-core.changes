@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Aug 16 15:41:18 CEST 2004 - visnov@suse.cz
+
+- fix function pointers from perl-bindings (#43606)
+- 2.10.5 
+
+-------------------------------------------------------------------
 Thu Aug 12 11:36:02 CEST 2004 - jsrain@suse.cz
 
 - added libpng to neededforbuild
