@@ -673,7 +673,9 @@ namespace Y2PMRecipients {
 				const string & url,
 				const string & product,
 				int current,
+				const std::string & currentLabel,
 				int expected,
+				const std::string & expectedLabel,
                                 bool doublesided ) {
       CB callback( ycpcb( YCPCallbacks::CB_MediaChange ) );
       if ( callback._set ) {
@@ -681,12 +683,16 @@ namespace Y2PMRecipients {
 	callback.addStr( url );
 	callback.addStr( product );
 	callback.addInt( current );
+	callback.addStr( currentLabel );
 	callback.addInt( expected );
+	callback.addStr( expectedLabel );
 	callback.addBool( doublesided );
 	return callback.evaluateStr();
       }
-      return MediaChangeCallback::changeMedia( error, url, product, current,
-                                               expected, doublesided );
+      return MediaChangeCallback::changeMedia( error, url, product,
+					       current, currentLabel,
+                                               expected, expectedLabel,
+					       doublesided );
     }
   };
 
