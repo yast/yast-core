@@ -60,7 +60,7 @@ class PkgModuleFunctions
 	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
 	void startCachedSources (bool enabled_only);
 
-	bool SetSelectionString (std::string name);
+	bool SetSelectionString (std::string name, bool recursive = false);
 	bool DoProvideString (std::string name);
 	bool DoRemoveString (std::string name);
 

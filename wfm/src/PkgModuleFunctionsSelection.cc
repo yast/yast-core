@@ -225,7 +225,7 @@ PkgModuleFunctions::SelectionData (YCPList args)
 // sel selection by string
 
 bool
-PkgModuleFunctions::SetSelectionString (std::string name)
+PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 {
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (selectable)
@@ -233,7 +233,8 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 	PMSelectionPtr selection = selectable->theObject();
 	if (selection)
 	{
-	    if (selection->isBase())
+	    if (!recursive
+		&& selection->isBase())
 	    {
 		y2milestone ("Changing base selection, re-setting manager");
 		_y2pm.selectionManager().setNothingSelected();
@@ -244,7 +245,7 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 		return true;
 	    }
 	}
-	y2milestone ("Selecting new base");
+
 	if (!selectable->set_status(PMSelectable::S_Install))
 	{
 	    y2error ("Cant select %s", name.c_str());
@@ -262,7 +263,7 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 		 it != recommends.end(); ++it)
 	    {
 		y2milestone ("Selecting recommends '%s'", it->c_str());
-		SetSelectionString (*it);
+		SetSelectionString (*it, true);
 	    }
 	}
 #warning Solve selections
@@ -272,7 +273,7 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 	     it != requires.end(); ++it)
 	{
 	    y2milestone ("Selecting requires '%s'", ((const std::string &)(it->name())).c_str());
-	    SetSelectionString ((const std::string &)(it->name()));
+	    SetSelectionString ((const std::string &)(it->name()), true);
 	}
 	return true;
     }
