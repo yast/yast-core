@@ -77,7 +77,7 @@ read_logconf ()
 	int save_errno = errno;
 
 	FILE *file = fopen (logconfname.c_str (), "r");
-	if (file && (Y2Logging::loggingInitialized() < 1))
+	if (file)
 	{
 	    YCPParser parser (file, logconfname.c_str ());
 	    y2logconf = parser.parse ();

@@ -843,6 +843,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    ycp2warning ("", 0, "Execute (.bash, ...) without full path !");
 	}
 #endif
+
 	/* check for and construct shell enviroment */
 	YCPMap variables;
 	if (environment->isMap())

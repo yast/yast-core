@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug 29 12:04:59 CEST 2002 - arvin@suse.de
+
+- more fixes for initialization of logging
+
+-------------------------------------------------------------------
 Wed Aug 28 22:47:48 CEST 2002 - kkaempf@suse.de
 
 - more Pkg:: functions for media change via packagemanager
