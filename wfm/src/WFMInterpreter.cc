@@ -34,7 +34,6 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <locale.h>
-#include <langinfo.h>
 #include <libintl.h>
 #include <algorithm>
 
@@ -1284,15 +1283,27 @@ YCPValue
 WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 {
     /**
-     * @builtin SetLanguage("de_DE" [, encoding]) -> void
+     * @builtin SetLanguage("de_DE", [encoding]) -> void
      * Selects the language for translate()
      * @example SetLanguage("de_DE", "ISO-8859-1") -> nil
-     * if the encoding isn't specified, it's set to nl_langinfo (CODESET)
+     * if the encoding isn't specified, it's set to "UTF-8"
      */
 
     if (term->size() > 0 && term->value(0)->isString())
     {
 	currentLanguage = term->value(0)->asString()->value();
+
+	// search for optional encoding (e.g. "de_DE.ISO8859-1") or other
+	// stuff we don't want (e.g. "de_DE@euro", "de_DE.ISO8859-1@euro"
+	// and remove it so we can safely add the encoding we want
+	// ("de_DE.UTF-8")
+
+	string::size_type pos = currentLanguage.find_first_of(".@");
+
+	if ( pos != string::npos ) // if encoding etc. specified
+	{
+	    currentLanguage = currentLanguage.substr (0, pos); // remove it
+	}
 
 	if (term->size() > 1 && term->value(1)->isString())
 	{
@@ -1300,13 +1311,7 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	}
 	else
 	{
-	    setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
-	    currentEncoding = nl_langinfo (CODESET);
-	    if (currentEncoding.empty())
-	    {
-		y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
-		currentEncoding = "UTF-8";	// default encoding
-	    }
+	    currentEncoding = "UTF-8";	// default encoding
 	}
 
 	textdomainOrLanguageHasChanged = true;
