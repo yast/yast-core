@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `ProgressBar(`id(`pr), "This is a progressbar", 4, 0), // 4 steps
@@ -17,4 +17,4 @@ UI(``{
     }
     
     CloseDialog();
-})
+}

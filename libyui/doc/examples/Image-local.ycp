@@ -3,7 +3,7 @@
  * Load image from local file. This may not always be supported, so check if
  * this feature is available prior to using it! 
  **/
-UI(``{
+UI::{
 
     if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
     {
@@ -28,4 +28,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     if ( ! HasSpecialWidget(`DownloadProgress) )
     {
 	OpenDialog(
@@ -26,4 +26,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

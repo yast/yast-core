@@ -1,5 +1,5 @@
 // Example for a RichText widget
-UI(``{
+UI::{
     OpenDialog( `opt(`defaultsize),
 		`VBox(
 		      `RichText( "<h3>RichText example</h3>"
@@ -26,4 +26,4 @@ UI(``{
 	     );
   UserInput();
   CloseDialog();
-})
+}

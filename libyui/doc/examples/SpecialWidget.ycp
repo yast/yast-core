@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build a dialog with a "special" widget - one that may not be supported
     // by all UIs.
 
@@ -31,4 +31,4 @@ UI(``{
     
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Label("Today's menu"),
@@ -16,5 +16,5 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}
 

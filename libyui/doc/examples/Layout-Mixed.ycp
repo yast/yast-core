@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Layout example:
     //
     // Build a dialog with three widgets with different weights and
@@ -26,5 +26,5 @@ UI(``{
 
     UserInput();
     CloseDialog();
-})
+}
 

@@ -3,7 +3,7 @@
 // Create a dialog with a BarGraph with a number of segments
 // and a "+" and a "-" button for each segment.
 
-UI(``{
+UI::{
     // Check for availability of the BarGraph widget - this is necessary since
     // this is an optional widget that not all UIs need to support.
     
@@ -46,7 +46,7 @@ UI(``{
 	plus_buttons  = add( plus_buttons,  `HWeight( 1, `PushButton(`id( i), "+" ) ) );
 	minus_buttons = add( minus_buttons, `HWeight( 1, `PushButton(`id(-i), "-" ) ) );
 	i = i+1;
-    });
+    };
     
     OpenDialog(
 	       `VBox( 
@@ -102,4 +102,4 @@ UI(``{
     } while ( button_id != `close && button_id != `cancel );
     
     CloseDialog();
-})
+}

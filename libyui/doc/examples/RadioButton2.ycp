@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `RadioButtonGroup(`id(`rb), 
 				 `VBox(
@@ -36,6 +36,6 @@ UI(``{
     y2milestone("Terminating.");
     
     CloseDialog();
-})
+}
 
 					      

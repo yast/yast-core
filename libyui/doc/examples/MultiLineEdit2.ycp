@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one multi line edit field and an OK button.
     OpenDialog(
 	       `VBox(
@@ -37,4 +37,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

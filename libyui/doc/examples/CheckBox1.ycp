@@ -1,7 +1,7 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `CheckBox("A &checked check box\nwith multi-line", true)
 	       );
     UserInput();
     CloseDialog();
-})
+}

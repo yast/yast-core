@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `PushButton(`id(`test),   `opt(`hstretch, `disabled), "Disabled"),
@@ -18,5 +18,5 @@ UI(``{
 	else 
 	    ChangeWidget(`id(`test), `Label, "Disabled");
     }
-})
+}
 

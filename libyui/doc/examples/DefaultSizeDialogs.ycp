@@ -3,7 +3,7 @@
 // Example for multiple dialogs
 
 
-UI(``{
+UI::{
     OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `Label( "Top level dialog" ),
@@ -47,4 +47,4 @@ UI(``{
     CloseDialog(); UserInput();
     CloseDialog(); UserInput();
     CloseDialog();
-})
+}

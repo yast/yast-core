@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     if ( ! HasSpecialWidget(`ColoredLabel) )
     {
 	OpenDialog(
@@ -24,4 +24,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -3,7 +3,7 @@
  * Creates one standard (predefined) image and a user-defined image.  
  **/
 {  
-    UI (``{
+    UI::{
 	global define void ImageDemo(byteblock pixels) ``{
 	    OpenDialog(
 		       `VBox(
@@ -13,7 +13,7 @@
 	    UserInput();
 	    CloseDialog();
 	};
-    });
+    };
 
     byteblock image_data = SCR::Read( .target.byte, "image1.png" );
     UI::ImageDemo( image_data );

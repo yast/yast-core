@@ -2,8 +2,7 @@
  * Memory usage test
  */
 {
-  UI(
-     `OpenDialog(
+  UI::OpenDialog(
 		 `VBox(
 		       `PushButton(`id(`eat_mem1),  `opt(`default, `hstretch), "&Eat memory (1)"),
 		       `PushButton(`id(`eat_mem10), `opt(`hstretch), "Eat &more memory (10)"),
@@ -11,8 +10,7 @@
 		       `HCenter(`Label(`id(`count), "Feed me!" ) ),
 		       `PushButton(`id(`quit), "&Quit")
 		       )
-		 )
-     );
+		 );
 
   any button = nil;
   integer count = 0;
@@ -49,7 +47,7 @@
       } until ( button == `quit );
 
 
-  UI(``{
+  UI::{
       CloseDialog();
 
       OpenDialog(
@@ -59,5 +57,5 @@
 		       )
 		 );
       UserInput();
-  });
+  };
 }

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox( 
 		     `TextEntry("Name:"),
@@ -7,4 +7,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

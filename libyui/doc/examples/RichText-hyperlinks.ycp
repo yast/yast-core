@@ -1,5 +1,5 @@
 // Example for a RichText widget with hyperlinks
-UI(``{
+UI::{
     OpenDialog( `opt(`defaultsize),
 		`VBox(
 		      `RichText( "<h3>RichText example</h3>"
@@ -34,4 +34,4 @@ UI(``{
     } until ( ret == `close );
     
     CloseDialog();
-})
+}

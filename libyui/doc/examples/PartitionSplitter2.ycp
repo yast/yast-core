@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     if ( ! HasSpecialWidget(`Slider) ||
 	 ! HasSpecialWidget(`BarGraph ) )
     {
@@ -47,4 +47,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build a dialog with one menu button with a submenu.
     // Wait the user selects a menu entry, 
     // then close the dialog and terminate.
@@ -24,4 +24,4 @@ UI(``{
     CloseDialog();
 
     y2milestone( "Selected: %1", id );
-})
+}

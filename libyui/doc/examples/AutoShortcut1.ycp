@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // (Minimalistic) Demo for automatically generated shortcuts.
     //
     // See 'AutoShortcut2.ycp' for a more realistic example.
@@ -34,5 +34,5 @@ UI(``{
 
     UserInput();
     CloseDialog();
-})
+}
 

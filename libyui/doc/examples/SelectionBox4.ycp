@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Create a selection box with three entries.
     // All entries have IDs to identify them independent of locale
     // (The texts might have to be translated!).
@@ -60,4 +60,4 @@ UI(``{
     UserInput();
     
     CloseDialog();
-})
+}

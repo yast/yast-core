@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one label, 4 Beatles buttons and an OK button.
     OpenDialog(
 	       `VBox( 
@@ -55,4 +55,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

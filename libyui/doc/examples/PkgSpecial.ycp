@@ -1,7 +1,7 @@
 /**
  * PkgSpecial example - not for general use!
  **/
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Label( "Hello, world!" ),
@@ -13,4 +13,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

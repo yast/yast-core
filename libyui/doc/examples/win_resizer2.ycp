@@ -3,7 +3,7 @@
 // Windows partition splitter,
 // this time with two sliders
 
-UI(``{
+UI::{
     // Check for availability of required widgets
     
     if ( ! HasSpecialWidget(`Slider) ||
@@ -106,4 +106,4 @@ UI(``{
     } while ( widget != `close && widget != `cancel );
 	
     CloseDialog();
-})
+}

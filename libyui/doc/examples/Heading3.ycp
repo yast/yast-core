@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one label, 4 Beatles buttons and an OK button.
     OpenDialog(
 	       `VBox(
@@ -29,4 +29,4 @@ UI(``{
 	else if ( button == `ringo )	ChangeWidget(`id(`favourite), `Value, "Ringo Starr" );
 
     } until ( button == `ok );
-})
+}

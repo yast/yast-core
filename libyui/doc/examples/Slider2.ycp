@@ -8,7 +8,7 @@
 // used to be red, blue and green. You need to use a bit of imagination
 // here. ;-)
 
-UI(``{
+UI::{
     // Check for availability of required widgets
     
     if ( ! HasSpecialWidget(`Slider) ||
@@ -75,4 +75,4 @@ UI(``{
 	      widget != `cancel );	// the window manager close function/button
 	
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with three buttons.
     // "Cancel" is the default button, i.e. pressing "Return" will
     // activate it.
@@ -34,5 +34,5 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}
 

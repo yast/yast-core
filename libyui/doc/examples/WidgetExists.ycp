@@ -1,4 +1,4 @@
-UI(``{
+UI::{
 
     /**
      * Return a text summary of existing buttons.
@@ -57,4 +57,4 @@ UI(``{
     } until ( button == `close );
 
     CloseDialog();
-})
+}

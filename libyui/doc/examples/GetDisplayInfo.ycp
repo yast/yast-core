@@ -5,7 +5,7 @@
  **/
 
 
-UI(``{
+UI::{
     map info_map = GetDisplayInfo();
     string info_text = "<ul>";
 
@@ -28,4 +28,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

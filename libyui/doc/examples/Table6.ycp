@@ -6,7 +6,7 @@ if ( size (WFM::Args()) > 0 )
     MAXVALUE = WFM::Args(0);
 }
 
-UI(``{
+UI::{
 
     integer i = 0;
     list itemlist = [];
@@ -45,6 +45,6 @@ UI(``{
     }
 
     CloseDialog();
-});
+};
 
 }

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one text entry field, 4 Beatles buttons and an OK button.
     OpenDialog(
 	       `VBox( 
@@ -36,4 +36,4 @@ UI(``{
     } until ( button == `ok );
 
     CloseDialog();
-})
+}

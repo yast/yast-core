@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Check for availability of special widgets required for this example
     
     if ( ! HasSpecialWidget(`DownloadProgress) )
@@ -83,4 +83,4 @@ UI(``{
     // Clean up
     
     CloseDialog();
-})
+}

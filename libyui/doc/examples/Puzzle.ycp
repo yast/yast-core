@@ -5,14 +5,14 @@
 
 {
 
-UI(``{
+UI::{
 
   define DebugDialog(any str) ``{
     OpenDialog(`VBox(`RichText(sformat("%1",str)),`PushButton(_("&OK"))));
     any r = UserInput();
     CloseDialog();
   };
-});
+};
 
 
 define buttons_table (list buttons) ``{

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     string part1 =
 	"They sought it with thimbles, they sought it with care;\n"	+
 	"They pursued it with forks and hope;\n"			+
@@ -79,5 +79,5 @@ UI(``{
     
     ChangeWidget(`id(`log), `Value, thats_it); UserInput();
     CloseDialog();
-})
+}
    

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Tree(`id(`dest_dir),
@@ -91,4 +91,4 @@ UI(``{
     UserInput();
 
     CloseDialog();
-})
+}

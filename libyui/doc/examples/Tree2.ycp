@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build a dialog with a tree for directory selection, three
     // buttons with common values and a label that directly echoes any
     // selected directory.
@@ -94,4 +94,4 @@ UI(``{
     // Remember to read values from the dialog's widgets BEFORE closing it!
     CloseDialog();
 
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `TextEntry(`id(`test),   `opt(`disabled), "TestEntry", "Disabled"),
@@ -18,5 +18,5 @@ UI(``{
 	else 
 	    ChangeWidget(`id(`test), `Value, "Disabled");
     }
-})
+}
 

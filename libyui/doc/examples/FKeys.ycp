@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Set default function keys.
     //
     // Those examples are taken from the YaST2 style guide.
@@ -84,4 +84,4 @@ UI(``{
     } while ( button != "Close" );
     
     CloseDialog();
-})
+}

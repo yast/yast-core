@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one text entry field and an OK button.
     OpenDialog(
 	       `VBox( 
@@ -31,4 +31,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox( 
 		     `ComboBox( "Select your Pizza:",
@@ -12,4 +12,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with MuliLineEdit widget,
     // a character counter for the MuliLineEdit's contents as they are typed
     // and an OK button.
@@ -56,4 +56,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

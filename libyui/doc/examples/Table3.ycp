@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     list itemlist1 =
 	[
 	 `item(`id(3), "Spaghetti",	  8),
@@ -42,5 +42,5 @@ UI(``{
     }
     
     CloseDialog();
-})
+}
 

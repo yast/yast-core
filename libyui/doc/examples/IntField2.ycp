@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `IntField( `id(`perc), "Percentage:", 0, 100, 50),
@@ -17,4 +17,4 @@ UI(``{
 		     )
 	       );
     UserInput();
-})
+}

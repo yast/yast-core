@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Create an editable combo box with restricted input character set.
     OpenDialog(
 	       `VBox(
@@ -43,4 +43,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Frame("Shrinkable Textentries",
@@ -14,4 +14,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `VCenter( // Makes the HSquash stretchable vertically
@@ -14,4 +14,4 @@ UI(``{
     
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Label("This is a long label which makes space"),
@@ -11,4 +11,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     /*
      * This will cause an internal error since UserInput() is called without
      * any dialog being opened.
@@ -9,4 +9,4 @@ UI(``{
 	any ret = UserInput();
 	y2milestone( "UserInput() returned %1", ret );
     }
-})
+}

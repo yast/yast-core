@@ -2,7 +2,7 @@
  * Example for an animated image
  **/
 {
-    UI (``{
+    UI::{
 	global define void MovieDemo(byteblock movie) ``{
 	    OpenDialog(
 		       `VBox(
@@ -11,7 +11,7 @@
 	    UserInput();
 	    CloseDialog();
 	};
-    });
+    };
     
     byteblock movie = SCR::Read( .target.byte, "/usr/share/splash/keys.mng" );
     UI::MovieDemo( movie );

@@ -2,7 +2,7 @@
  * Advanced ColoredLabel example: A sample ColoredLabel widget and sliders
  * for both foreground and background colors.
  **/
-UI(``{
+UI::{
     if ( ! HasSpecialWidget(`ColoredLabel) || ! HasSpecialWidget(`Slider) )
     {
 	OpenDialog(
@@ -76,4 +76,4 @@ UI(``{
     } while ( widget != `close );
     
     CloseDialog();
-})
+}

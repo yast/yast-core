@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `HSpacing(50),	// make the dialog wider
@@ -28,5 +28,5 @@ UI(``{
     }
 
     CloseDialog();
-})
+}
 

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     if ( ! HasSpecialWidget(`Slider) )
     {
 	OpenDialog(
@@ -21,4 +21,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `RadioButtonGroup(`id(`rb), 
 				 `VBox(
@@ -28,6 +28,6 @@ UI(``{
     }
     
     CloseDialog();
-})
+}
 
 					      

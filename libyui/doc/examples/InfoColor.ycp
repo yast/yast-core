@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog( `opt( `infocolor ),
 		`VBox( 
 		      `Heading("This is an info dialog."),
@@ -20,4 +20,4 @@ UI(``{
     
     CloseDialog();
     CloseDialog();
-})
+}

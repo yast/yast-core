@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `ReplacePoint(`id(`rp), `Label("This is a label")),
@@ -11,4 +11,4 @@ UI(``{
     ReplaceWidget(`id(`rp), `HBox(`PushButton("Button1"), `PushButton("Button2")));
     UserInput();
     CloseDialog();
-})
+}

@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Simple MultiSelectionBox example:
     //
     // All items are simple strings, none has an ID, no item preselected.
@@ -19,4 +19,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

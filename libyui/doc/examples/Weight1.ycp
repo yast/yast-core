@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `HBox(
 		     `HWeight(1, `PushButton("First Button (W: 50)")),
@@ -8,4 +8,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

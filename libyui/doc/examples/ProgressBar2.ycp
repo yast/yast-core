@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Heading("Adjust the volume"),
@@ -22,4 +22,4 @@ UI(``{
     }
     
     CloseDialog();
-})
+}

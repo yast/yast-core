@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog( `opt( `decorated ),
 		`VBox( 
 		      `Label("This Dialog is decorated.\n\n"
@@ -31,4 +31,4 @@ UI(``{
     CloseDialog();
     CloseDialog();
     CloseDialog();
-})
+}

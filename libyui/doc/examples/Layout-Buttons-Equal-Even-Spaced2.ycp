@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Layout example:
     //
     // Build a dialog with three equal sized buttons,
@@ -25,5 +25,5 @@ UI(``{
 
     UserInput();
     CloseDialog();
-})
+}
 

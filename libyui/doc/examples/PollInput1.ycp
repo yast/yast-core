@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Label(`id(`lab), "Money: 800 Euro"),
@@ -20,4 +20,4 @@ UI(``{
 	num = num - 1;
     }
     CloseDialog();
-})
+}

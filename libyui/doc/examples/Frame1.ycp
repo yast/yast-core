@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `Frame ( "Important",
@@ -9,4 +9,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

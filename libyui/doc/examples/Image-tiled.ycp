@@ -2,7 +2,7 @@
  * Advanced Image widget features:
  * Load image from local file and scale it to fit the available space.
  **/
-UI(``{
+UI::{
 
     if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
     {
@@ -31,4 +31,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

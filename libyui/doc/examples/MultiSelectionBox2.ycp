@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // More realistic MultiSelectionBox example:
     //
     // Items have IDs, some are preselected.
@@ -21,4 +21,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

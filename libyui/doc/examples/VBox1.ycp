@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `PushButton("First"),
@@ -8,4 +8,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

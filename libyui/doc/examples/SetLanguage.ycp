@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Example for SetLanguage() GetLanguage()
     
     OpenDialog(
@@ -43,5 +43,5 @@ UI(``{
 	    ChangeWidget(`id(`lang_label), `Value, GetLanguage(false));
 	}
     }
-})
+}
 

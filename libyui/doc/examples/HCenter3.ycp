@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `VCenter(`PushButton(`opt(`vstretch), "Button 1")),
@@ -8,6 +8,6 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}
 
 	       

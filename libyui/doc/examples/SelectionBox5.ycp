@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox( 
 		     `SelectionBox( `opt(`shrinkable),
@@ -16,4 +16,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

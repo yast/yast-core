@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Demo for postponed shortcut checking
 
     term b_kilroy 	= `PushButton(`opt(`hstretch), "&Kilroy");
@@ -68,5 +68,5 @@ UI(``{
     
 	
     CloseDialog();
-})
+}
 

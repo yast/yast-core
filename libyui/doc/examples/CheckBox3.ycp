@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Build dialog with one check box and buttons to set its state to
     // on, off or "don't care" (tri-state).
     
@@ -56,4 +56,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

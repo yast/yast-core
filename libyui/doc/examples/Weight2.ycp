@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     OpenDialog(
 	       `VBox(
 		     `HBox(
@@ -24,4 +24,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

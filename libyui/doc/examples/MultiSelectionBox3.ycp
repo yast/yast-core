@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Advanced MultiSelectionBox example:
     //
     // Retrieve the list of selected items and output it.
@@ -33,7 +33,7 @@ UI(``{
 
     foreach ( `topping, selected_items, ``{
 	pizza_description = sformat( "%1\n%2", pizza_description, topping );
-    });
+    } );
 
 
     // Open a new dialog to echo the selection.
@@ -47,4 +47,4 @@ UI(``{
 	       );
     UserInput();
     CloseDialog();
-})
+}

@@ -1,7 +1,7 @@
 // Look into ~/.y2log. For widgets that don't get their
 // minsizes, warnings appear.
 {
-    UI(``{
+    UI::{
 	OpenDialog(
 		   `opt(`defaultsize),
 		   `VBox(
@@ -45,6 +45,6 @@
 		   );
 	UserInput();
 	CloseDialog();
-    });
+    };
 }
 

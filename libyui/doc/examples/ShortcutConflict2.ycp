@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Demo for shortcut checking:
     // Deliberately generate a shortcut conflict.
     
@@ -31,5 +31,5 @@ UI(``{
 
 	
     CloseDialog();
-})
+}
 

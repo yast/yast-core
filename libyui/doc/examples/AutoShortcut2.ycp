@@ -1,4 +1,4 @@
-UI(``{
+UI::{
     // Demo for automatically generated shortcuts.
     //
     // This is a more realistic example - it points out how the `autoShortcut
@@ -21,7 +21,7 @@ UI(``{
 
     foreach ( `sel, sw_selections, ``{
 	radio_box = add( radio_box, `Left( `RadioButton(`opt(`autoShortcut), sel ) ) );
-    });
+    } );
 
     y2milestone( "radio_box: %1", radio_box );
 
@@ -38,5 +38,5 @@ UI(``{
 
     UserInput();
     CloseDialog();
-})
+}
 
