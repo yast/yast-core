@@ -624,6 +624,8 @@ YBlock::YBlock (bytecodeistream & str)
     , m_point (0)
     , m_statements (0)
     , m_last_statement (0)
+    , m_includes (0)
+    , m_running (false)
 {
     Bytecode::readString (str, m_name);		// read name
 
