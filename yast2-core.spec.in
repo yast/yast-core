@@ -27,7 +27,18 @@ Provides:	libyui:/usr/lib/YaST2/include/yui/YUIInterpreter.h
 Provides:	libscr:/usr/lib/YaST2/include/SCR.h
 Provides:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
 Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
-
+Provides:	libycp-devel liby2-devel libyui-devel libscr-devel
+Obsoletes:	libycp-devel liby2-devel libyui-devel libscr-devel
+Provides:	yast2-agent-any-devel yast2-agent-ini-devel
+Obsoletes:	yast2-agent-any-devel yast2-agent-ini-devel
+Provides:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
+Obsoletes:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
+Provides:	yast2-agent-probe-devel yast2-agent-system-devel
+Obsoletes:	yast2-agent-probe-devel yast2-agent-system-devel
+Provides:	yast2-core-scr-devel yast2-core-wfm-devel
+Obsoletes:	yast2-core-scr-devel yast2-core-wfm-devel
+Provides:	yast2-core-translator-devel
+Obsoletes:	yast2-core-translator-devel
 %description devel
 -
 
