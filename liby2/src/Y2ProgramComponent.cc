@@ -374,7 +374,7 @@ void Y2ProgramComponent::sendToExternal(const YCPValue& value)
     bool error = (write(to_external[1], v, strlen(v)) < 0);
     if (error)
     {
-	y2debug ("Error writing to external program %s: Couldn't send %s (%s)", bin_file.c_str(), v, errno);
+	y2debug ("Error writing to external program %s: Couldn't send %s (%s)", bin_file.c_str(), v, strerror (errno));
 	terminateExternalProgram();
     }
     free(v);
