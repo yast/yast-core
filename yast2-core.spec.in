@@ -15,8 +15,8 @@ Provides:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Obsoletes:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Provides:	y2base yast2-base y2translator y2xlator
 Obsoletes:	y2base yast2-base y2translator y2xlator
-Provides:	yast2-core-scr-soho
-Obsoletes:	yast2-core-scr-soho
+Provides:	yast2-core-scr-soho yast2-lib64-compat
+Obsoletes:	yast2-core-scr-soho yast2-lib64-compat
 
 %description
 -
