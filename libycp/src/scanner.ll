@@ -580,7 +580,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		if (! tentry->sentry()->isModule())
 		{
 		    logError ("Not a module '%s'", LINE_VAR, colon);
-		    free (namespace_prefix);
+		    delete[] namespace_prefix;
 		    return SCANNER_ERROR;
 		}
 		
@@ -591,7 +591,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		if (namespaceTable == 0)
 		{
 		    logError ("Module table is empty", LINE_VAR);
-		    free (namespace_prefix);
+		    delete[] namespace_prefix;
 		    return SCANNER_ERROR;
 		}
 
@@ -607,7 +607,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		{
 		    logError ("Unknown identifier '%s::%s'", LINE_VAR, namespace_prefix, yytext);
 		}
-		free (namespace_prefix);
+		delete[] namespace_prefix;
 		return SCANNER_ERROR;
 	    }
 
