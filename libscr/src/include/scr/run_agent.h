@@ -121,6 +121,7 @@ run_agent (int argc, char* argv[], bool load_scr)
 	    break;
 	value = interpreter->evaluate (value);
 	printf ("(%s)\n", value->toString ().c_str ());
+	fflush (0);
     }
 
     if (infile != stdin)
