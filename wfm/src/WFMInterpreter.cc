@@ -45,6 +45,23 @@
 #include <scr/SCRAgent.h>
 #include <WFMInterpreter.h>
 
+
+const char*
+WFMInterpreter::get_env_lang () const
+{
+    static char* names[] = { "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG" };
+
+    for (size_t i = 0; i < sizeof (names)/sizeof (names[0]); i++)
+    {
+	const char* tmp = getenv (names[i]);
+	if (tmp)
+	    return tmp;
+    }
+
+    return 0;
+}
+
+
 WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 				Y2Component *user_interface,
 				string modulename, string fullname,
@@ -64,8 +81,8 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
     default_handle = 0;
 
     // pre-init language
-    char *lang = getenv ("LANG");
-    if (lang != NULL)
+    const char* lang = get_env_lang ();
+    if (lang)
     {
 	YCPList args;
 	args->add (YCPString (lang));
@@ -351,6 +368,7 @@ WFMInterpreter::changeToModuleLanguage () const
 
     /* Change language. see info:gettext: */
     setenv ("LANGUAGE", currentLanguage.c_str(), 1);
+    setenv ("LC_MESSAGES", currentLanguage.c_str(), 1);
     setenv ("LANG", currentLanguage.c_str(), 1);
 
     /* Make change known.  */

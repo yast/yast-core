@@ -134,6 +134,12 @@ protected:
     YCPValue importModule (const string& modulename);
 
 private:
+
+    /**
+     * Get the language from the environment.
+     */
+    const char* get_env_lang () const;
+
     /**
      * translator data
      */

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Dec 02 15:31:50 CET 2002 - arvin@suse.de
+
+- consider all four environment variables `LANGUAGE', `LC_ALL',
+  `LC_MESSAGES' and `LANG' to get the language during startup
+  (bug #22008)
+
+-------------------------------------------------------------------
 Mon Dec 02 11:27:20 CET 2002 - arvin@suse.de
 
 - fixed linking (after drop of dumpto agent)
