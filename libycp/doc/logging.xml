@@ -1,6 +1,7 @@
-<?xml version="1.0"?>
-<article>
-  <title>YaST2 Logging</title>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<section id="yast2-logging">
+<title>YaST2 Logging</title>
   <section>
     <title>Introduction</title>
     <para>During execution <emphasis role="b">YaST2</emphasis> components create log messages.
@@ -370,4 +371,4 @@ bash$ Y2DEBUG=1 yast2 users
 </programlisting>
     <para/>
   </section>
-</article>
+</section>
