@@ -596,11 +596,11 @@ YUI::filterInvalidEvents( YEvent * event )
 	if ( widgetEvent->widget()->yDialog() != currentDialog() )
 	{
 	    /**
-	     * Silently discard events from all but the current ( topmost ) dialog.
+	     * Silently discard events from all but the current (topmost) dialog.
 	     *
 	     * This may happen even here even though the specific UI should have
 	     * taken care about that: Events may still be in the queue. They might
-	     * have been valid (i.e. belonged to the topmost dialog ) when they
+	     * have been valid (i.e. belonged to the topmost dialog) when they
 	     * arrived, but maybe simply nobody has evaluated them.
 	     **/
 
