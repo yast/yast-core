@@ -282,6 +282,7 @@ until		{ return UNTIL;		};
 empty		{ return EMPTY;		};
 list		{ return LIST;		};
 block		{ return BLOCK;		};
+map		{ return MAP;		};
 include		{ return INCLUDE;	};
 import		{ return IMPORT;	};
 export		{ return EXPORT;	};
@@ -317,8 +318,6 @@ integer     { RESULT (YCPDeclType(YT_INTEGER), YCP_DECLTYPE);	};
 float       { RESULT (YCPDeclType(YT_FLOAT), YCP_DECLTYPE);	};
 string      { RESULT (YCPDeclType(YT_STRING), YCP_DECLTYPE);	};
 byteblock   { RESULT (YCPDeclType(YT_BYTEBLOCK), YCP_DECLTYPE);	};
- /* list is a keyword and done by parser.yy  */
-map         { RESULT (YCPDeclType(YT_MAP), YCP_DECLTYPE);	};
 locale      { RESULT (YCPDeclType(YT_LOCALE), YCP_DECLTYPE);	};
 term        { RESULT (YCPDeclType(YT_TERM), YCP_DECLTYPE);	};
 path        { RESULT (YCPDeclType(YT_PATH), YCP_DECLTYPE);	};

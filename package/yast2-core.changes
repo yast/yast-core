@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 14 09:51:09 CET 2003 - visnov@suse.cz
+
+- allow map to specify its types like map<string,integer>
+- 2.9.6 
+
+-------------------------------------------------------------------
 Thu Nov 13 13:51:49 CET 2003 - gs@suse.de
 
 - libyui: KeyEvent added
