@@ -33,7 +33,7 @@ YSelectionBox::YSelectionBox( YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
 {
-    y2debug( "YSelectionBox( %s )", label->value_cstr() );
+    // y2debug( "YSelectionBox( %s )", label->value_cstr() );
 
     // Derived classes need to check opt.shrinkable!
 
@@ -92,7 +92,7 @@ YCPValue YSelectionBox::queryWidget( const YCPSymbol & property )
     else if ( s == YUIProperty_CurrentItem )
     {
 	int index = getCurrentItem();
-	y2debug( "current item: %d", index );
+	// y2debug( "current item: %d", index );
 	if ( index >= 0 )
 	{
 	    if ( item_ids->value( index ).isNull() ) return item_labels->value( index );

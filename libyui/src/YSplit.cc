@@ -355,9 +355,9 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 		if ( childSize[i] < child(i)->nicesize( primary ) )
 		{
-		    y2debug ( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
-			      "- check the layout!",
-			      i, child(i)->widgetClass(), child(i)->nicesize( primary ), childSize[i] );
+		    y2debug( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
+			     "- check the layout!",
+			     i, child(i)->widgetClass(), child(i)->nicesize( primary ), childSize[i] );
 		}
 	    }
 	    else
@@ -526,9 +526,9 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 
 	if ( childSize[i] < nice )
 	{
-	    y2debug ( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
-		      "- check the layout!",
-		      i, child(i)->widgetClass(), nice, childSize[i] );
+	    y2debug( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
+		     "- check the layout!",
+		     i, child(i)->widgetClass(), nice, childSize[i] );
 	}
 
 	if ( debugLayout )

@@ -30,7 +30,7 @@ YColoredLabel::YColoredLabel( YWidgetOpt & opt, YCPString text )
     : YWidget( opt )
     , text( text )
 {
-    y2debug( "YColoredLabel( %s )", text->value_cstr() );
+    // y2debug( "YColoredLabel( %s )", text->value_cstr() );
 }
 
 

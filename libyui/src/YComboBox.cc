@@ -33,7 +33,7 @@ YComboBox::YComboBox( YWidgetOpt & opt, YCPString label )
     , label( label )
     , validChars( "" )
 {
-    y2debug( "YComboBox( %s )", label->value_cstr() );
+    // y2debug( "YComboBox( %s )", label->value_cstr() );
 
     _editable = opt.isEditable.value();
 }

@@ -33,7 +33,7 @@ YTree::YTree( YWidgetOpt & opt, YCPString newLabel )
     : YWidget( opt )
     , label( newLabel )
 {
-    y2debug( "YTree( %s )", newLabel->value_cstr() );
+    // y2debug( "YTree( %s )", newLabel->value_cstr() );
     setDefaultStretchable( YD_HORIZ, true );
     setDefaultStretchable( YD_VERT,  true );
 }

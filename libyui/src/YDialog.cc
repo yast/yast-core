@@ -48,9 +48,7 @@ bool YDialog::isDialog() const
 
 void YDialog::setInitialSize()
 {
-    y2debug( "Setting initial dialog size" );
     setSize( nicesize( YD_HORIZ ), nicesize( YD_VERT ) );
-    y2debug( "Initial dialog size done" );
 }
 
 

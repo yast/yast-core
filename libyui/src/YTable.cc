@@ -131,7 +131,7 @@ YCPValue YTable::queryWidget( const YCPSymbol & property )
     if ( s == YUIProperty_CurrentItem )
     {
 	int index = getCurrentItem();
-	y2debug( "current item: %d", index );
+	// y2debug( "current item: %d", index );
 	if ( index >= 0 ) return rows[ index ].id;
 	else	      return YCPVoid();
     }

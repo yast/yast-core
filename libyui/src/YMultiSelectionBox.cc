@@ -32,7 +32,7 @@ YMultiSelectionBox::YMultiSelectionBox( YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
 {
-    y2debug( "YMultiSelectionBox( %s )", label->value_cstr() );
+    // y2debug( "YMultiSelectionBox( %s )", label->value_cstr() );
 
     // Derived classes need to check opt.shrinkable!
 
@@ -128,7 +128,7 @@ YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property )
     else if ( sym == YUIProperty_CurrentItem )
     {
 	int index = getCurrentItem();
-	y2debug( "current item: %d", index );
+	// y2debug( "current item: %d", index );
 
 	if ( index >= 0 )
 	{
@@ -172,7 +172,7 @@ void YMultiSelectionBox::addItem( const YCPString &	text,
 				  const YCPValue  &	id,
 				  bool 			selected )
 {
-    y2debug( "Adding item '%s'", text->value().c_str() );
+    // y2debug( "Adding item '%s'", text->value().c_str() );
 
     item_labels->add( text );
     item_ids->add( id );

@@ -31,7 +31,7 @@ YLabel::YLabel( YWidgetOpt & opt, YCPString text )
     : YWidget( opt )
     , text( text )
 {
-    y2debug( "YLabel( %s )", text->value_cstr() );
+    // y2debug( "YLabel( %s )", text->value_cstr() );
 }
 
 

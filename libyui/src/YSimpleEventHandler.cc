@@ -27,8 +27,8 @@
 using std::string;
 
 
-#define VERBOSE_EVENTS	1
-#define VERBOSE_BLOCK	1
+#define VERBOSE_EVENTS	0
+#define VERBOSE_BLOCK	0
 
 
 YSimpleEventHandler::YSimpleEventHandler()

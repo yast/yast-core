@@ -26,7 +26,7 @@
 YPackageSelector::YPackageSelector( YWidgetOpt & opt )
     : YWidget( opt )
 {
-    y2debug( "YPackageSelector" );
+    // y2debug( "YPackageSelector" );
 
     // Derived classes need to check opt.shrinkable!
 

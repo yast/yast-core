@@ -18,8 +18,6 @@
 /-*/
 
 
-#define noVERBOSE_ADD_RADIO_BUTTON
-
 #include <algorithm>
 
 #include <ycp/YCPSymbol.h>
@@ -74,10 +72,6 @@ bool YRadioButtonGroup::isRadioButtonGroup() const
 
 void YRadioButtonGroup::addRadioButton( YRadioButton *button )
 {
-#ifdef VERBOSE_ADD_RADIO_BUTTON
-    y2debug( "this=%p, addRadioButton( YRadioButton *%p )",
-	     this, button );
-#endif
     buttonlist.push_back( button );
 }
 
