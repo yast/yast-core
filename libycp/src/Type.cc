@@ -128,7 +128,9 @@ Type::Type (tkind kind, std::istream & str)
     , m_const (Bytecode::readBool (str))
     , m_reference (Bytecode::readBool (str))
 {
+#if DO_DEBUG
     y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_reference);
+#endif
 }
 
 
@@ -139,7 +141,9 @@ Type::Type (tkind kind, std::istream & str)
 std::ostream &
 Type::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
+#endif
     Bytecode::writeInt32 (str, m_kind);
     Bytecode::writeBool (str, m_const);
     Bytecode::writeBool (str, m_reference);
@@ -198,12 +202,16 @@ Type::basematch (constTypePtr expected) const
 {
     tkind ek = expected->m_kind;
 
+#if DO_DEBUG
 //    y2debug ("basematch '%s', expected '%s'[%d]", toString().c_str(), expected->toString().c_str(), ek);
+#endif
 
     if (isError()
 	|| ek == ErrorT)
     {
+#if DO_DEBUG
 	y2debug ("Error !");
+#endif
 	return -1;
     }
 
@@ -211,7 +219,9 @@ Type::basematch (constTypePtr expected) const
 	&& (!expected->isConst()
 	    && isConst()))
     {
+#if DO_DEBUG
 	y2debug ("doesn't expect const");
+#endif
 	return -1;
     }
 
@@ -221,7 +231,9 @@ Type::basematch (constTypePtr expected) const
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
+#if DO_DEBUG
 //	y2debug ("free match");
+#endif
 	return 1;
     }
 
@@ -251,7 +263,9 @@ Type::match (constTypePtr expected) const
 #endif
     if (basematch (expected) < 0)
     {
+#if DO_DEBUG
 //	y2debug ("basematch failed");
+#endif
 	return -1;
     }
 
@@ -263,7 +277,9 @@ Type::match (constTypePtr expected) const
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
+#if DO_DEBUG
 //	y2debug ("free match");
+#endif
 	return 0;
     }
 
@@ -314,7 +330,9 @@ Type::equals (constTypePtr expected) const
     if (m_nocheck)
 	return true;
 
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
 
     return (isBasetype() == expected->isBasetype()) && (expected->m_kind == m_kind);
 }
@@ -346,7 +364,9 @@ FlexType::FlexType (bool as_const)
 FlexType::FlexType (std::istream & str)
     : Type (FlexT, str)
 {
+#if DO_DEBUG
     y2debug ("FlexType::FlexType");
+#endif
 }
 
 
@@ -391,8 +411,9 @@ FlexType::matchFlex (constTypePtr type, unsigned int number) const
 int
 FlexType::match (constTypePtr expected) const
 {
+#if DO_DEBUG
     y2debug ("FlexType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     return (expected->isFlex() ? 0 : -1);
 }
 
@@ -441,7 +462,9 @@ NFlexType::NFlexType (std::istream & str)
     : Type (NFlexT, str)
     , m_number (Bytecode::readInt32 (str))
 {
+#if DO_DEBUG
     y2debug ("NFlexType::NFlexType(stream: %d)", m_number);
+#endif
 }
 
 
@@ -453,7 +476,9 @@ NFlexType::~NFlexType ()
 std::ostream &
 NFlexType::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("NFlexType::toStream (%d)", m_number);
+#endif
     Type::toStream (str);
     Bytecode::writeInt32 (str, m_number);
     return str;
@@ -492,8 +517,9 @@ NFlexType::matchFlex (constTypePtr type, unsigned int number) const
 int
 NFlexType::match (constTypePtr expected) const
 {
+#if DO_DEBUG
     y2debug ("NFlexType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     return (expected->isFlex() ? 0 : -1);
 }
 
@@ -607,8 +633,9 @@ VariableType::match (constTypePtr expected) const
 bool
 VariableType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isVariable()
 	    && m_type->equals (((constVariableTypePtr)expected)->m_type))
     {
@@ -719,8 +746,9 @@ ListType::match (constTypePtr expected) const
 bool
 ListType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isList()
 	    && m_type->equals (((constListTypePtr)expected)->m_type))
     {
@@ -851,8 +879,9 @@ MapType::match (constTypePtr expected) const
 bool
 MapType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isMap()
 	    && m_valuetype->equals (((constMapTypePtr)expected)->m_valuetype)
 	    && m_keytype->equals (((constMapTypePtr)expected)->m_keytype) )
@@ -866,8 +895,9 @@ MapType::equals (constTypePtr expected) const
 bool
 MapType::canCast (constTypePtr to) const
 {
+#if DO_DEBUG
 //    y2debug ("canCast '%s' to '%s'", toString().c_str(), to->toString().c_str());
-
+#endif
     if (to->isMap ())
 	return (m_keytype->canCast (((constMapTypePtr)to)->m_keytype))
 	    && (m_valuetype->canCast (((constMapTypePtr)to)->m_valuetype));
@@ -981,8 +1011,9 @@ BlockType::match (constTypePtr expected) const
 bool
 BlockType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isBlock()
 	    && m_type->equals (((constBlockTypePtr)expected)->m_type) )
     {
@@ -1167,8 +1198,9 @@ TupleType::match (constTypePtr expected) const
 bool
 TupleType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isTuple())
     {
 	const TupleType & tt = (const TupleType)expected;
@@ -1412,7 +1444,9 @@ FunctionType::match (constTypePtr expected) const
 	constFunctionTypePtr ft (expected);
 	if (m_returntype->match (ft->m_returntype) < 0)
 	{
+#if DO_DEBUG
 //	    y2debug ("return type mismatch");
+#endif
 	    return -1;
 	}
 
@@ -1430,7 +1464,9 @@ FunctionType::match (constTypePtr expected) const
 	{
 	    if ((esize != 0 && m_arguments == NULL) || (esize != m_arguments->parameterCount()))
 	    {
+#if DO_DEBUG
 //		y2debug ("parameter count mismatch");
+#endif
 		return -1;
 	    }
 	}
@@ -1456,14 +1492,17 @@ FunctionType::match (constTypePtr expected) const
 bool
 FunctionType::equals (constTypePtr expected) const
 {
+#if DO_DEBUG
 //    y2debug ("FunctionType::equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#endif
     if (expected->isFunction())
     {
 	constFunctionTypePtr ft (expected);
 	if (! m_returntype->equals (ft->m_returntype))
 	{
+#if DO_DEBUG
 //	    y2debug ("return type mismatch");
+#endif
 	    return false;
 	}
 
@@ -1480,7 +1519,9 @@ FunctionType::equals (constTypePtr expected) const
 	{
 	    if (! m_arguments->parameterType(index)->equals (ft->parameterType(index)))
 	    {
+#if DO_DEBUG
 //		y2debug ("parameter %d type mismatch", index);
+#endif
 		return false;
 	    }
 	}

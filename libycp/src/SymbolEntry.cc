@@ -390,8 +390,8 @@ string
 SymbolEntry::toString (bool with_type) const
 {
     string s = (with_type && m_global) ? "global " : "";
-    y2debug ("SymbolEntry::toString %p: name '%s'", this, m_name.asString().c_str());
 #if DO_DEBUG
+    y2debug ("SymbolEntry::toString %p: name '%s'", this, m_name.asString().c_str());
     y2debug ("SymbolEntry::toString %p: with_type %d, cat %s, name '%s'", this, with_type, catString().c_str(), m_name.asString().c_str());
 #endif
     switch (m_category)
@@ -498,8 +498,9 @@ SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
     m_category  = (category_t)Bytecode::readInt32 (str);
     m_type = Bytecode::readType (str);
 
+#if DO_DEBUG
     y2debug ("SymbolEntry::fromStream (%s)", toString().c_str());
-
+#endif
     if (m_category == c_builtin)
     {
 	// re-create declaration from name and type
@@ -526,7 +527,9 @@ SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
 std::ostream &
 SymbolEntry::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("SymbolEntry::toStream (%p:%s)", this, toString().c_str());
+#endif
     Bytecode::writeBool (str, m_global);
     Bytecode::writeInt32 (str, m_position);
     Bytecode::writeCharp (str, m_name.asString().c_str());

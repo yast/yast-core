@@ -24,6 +24,10 @@
 #include "ycp/SymbolEntry.h"
 #include "ycp/Bytecode.h"
 
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
+
 // make debugging switchable so initial setup of StaticDeclaration
 //   doesn't clobber debug output
 int SymbolTableDebug = 0;
@@ -117,7 +121,9 @@ void
 TableEntry::makeDefinition (int line)
 {
     Point *point = new Point (m_point->sentry(), line, m_point->point());	// duplicate current m_point, replacing line
-//    y2debug ("TableEntry::makeDefinition (%s -> %s)", m_point->toString().c_str(), point->toString().c_str());
+#if DO_DEBUG
+    y2debug ("TableEntry::makeDefinition (%s -> %s)", m_point->toString().c_str(), point->toString().c_str());
+#endif
     delete m_point;
     m_point = point;
 }
@@ -267,7 +273,7 @@ SymbolTable::~SymbolTable()
 	    }
 	}
     }
-#if 1
+#if DO_DEBUG
     y2debug ("%d of %d buckets used\n", used, m_prime);
     y2debug ("%d elements, %d bucketuse\n", count, count / m_prime);
     y2debug ("bucket size max %d, average %d\n", maxlen, (maxlen / m_prime) + 1);
@@ -281,7 +287,9 @@ SymbolTable::~SymbolTable()
 void
 SymbolTable::openXRefs ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::openXRefs()", this);
+#endif
     m_xrefs.push (new (std::vector<TableEntry *>));
 
     return;
@@ -291,7 +299,9 @@ SymbolTable::openXRefs ()
 void
 SymbolTable::closeXRefs ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::closeXRefs()", this);
+#endif
     if (m_xrefs.empty())
     {
 	y2error ("SymbolTable[%p]::closeXRefs without openXRefs", this);
@@ -326,7 +336,9 @@ SymbolTable::getXRef (unsigned int position) const
 void
 SymbolTable::startUsage ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::startUsage", this);
+#endif
     if (m_used == 0)
     {
 	m_used = new (std::map<const char *, TableEntry *>);
@@ -349,7 +361,9 @@ SymbolTable::countUsage ()
 void
 SymbolTable::endUsage ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::endUsage", this);
+#endif
     if (m_used)
     {
 	delete m_used;
@@ -362,7 +376,9 @@ SymbolTable::endUsage ()
 void
 SymbolTable::enableUsage ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::enableUsage", this);
+#endif
     m_track_usage = true;
 }
 
@@ -370,7 +386,9 @@ SymbolTable::enableUsage ()
 void
 SymbolTable::disableUsage ()
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::disableUsage", this);
+#endif
     m_track_usage = false;
 }
 
@@ -378,8 +396,9 @@ SymbolTable::disableUsage ()
 std::ostream &
 SymbolTable::writeUsage (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("SymbolTable[%p]::writeUsage", this);
-
+#endif
     if (m_used == 0)
     {
 	Bytecode::writeInt32 (str, 0);
@@ -395,7 +414,9 @@ SymbolTable::writeUsage (std::ostream & str) const
     {
 	TableEntry *tentry = it->second;
 	tentry->sentry()->setPosition (xrefs.size());
+#if DO_DEBUG
 	y2debug ("%d -> %s", xrefs.size(), tentry->sentry()->toString().c_str());
+#endif
 	xrefs.push_back (tentry);
     }
 
@@ -404,8 +425,9 @@ SymbolTable::writeUsage (std::ostream & str) const
     bool xref_debug = (getenv (XREFDEBUG) != 0);
 
     if (xref_debug) y2milestone ("Need %d symbols from table %p\n", rsize, this);
+#if DO_DEBUG
     else y2debug ("Need %d symbols from table %p\n", rsize, this);
-
+#endif
     Bytecode::writeInt32 (str, rsize);
 
     int position = 0;
@@ -414,8 +436,9 @@ SymbolTable::writeUsage (std::ostream & str) const
 	SymbolEntryPtr sentry = xrefs[position]->sentry();
 
 	if (xref_debug) y2milestone("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+#if DO_DEBUG
 	else y2debug("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
-
+#endif
 	Bytecode::writeCharp (str, sentry->name());
 	sentry->type()->toStream (str);
 	sentry->setPosition (-position - 1);			// negative position -> Xref
@@ -449,17 +472,21 @@ SymbolTable::enter (TableEntry *entry)
 
     entry->m_table = this;
 
+#if DO_DEBUG
     if (SymbolTableDebug)
     {
 	y2debug ("SymbolTable::enter (entry %p(%s) into %p as '%s')\n", entry, entry->sentry()->toString().c_str(), this, key);
 	y2debug ("SymbolTable %p before (%s)\n", this, toString().c_str());
     }
+#endif
     int h = hash (key);			// compute hash
     bucket = m_table[h];
 
     if (bucket == 0)			// first entry in bucket
     {
+#if DO_DEBUG
 	if (SymbolTableDebug) y2debug ("first entry in bucket");
+#endif
 	m_table[h] = entry;
     }
     else
@@ -468,8 +495,9 @@ SymbolTable::enter (TableEntry *entry)
 	{
 	    if (strcmp (key, bucket->m_key) == 0)	// match !
 	    {
+#if DO_DEBUG
 		if (SymbolTableDebug) y2debug ("match, add as new scope");
-
+#endif
 		// put entry at start of scope chain
 
 		entry->m_outer = bucket;
@@ -478,7 +506,9 @@ SymbolTable::enter (TableEntry *entry)
 
 		if (bucket->m_prev)
 		{
+#if DO_DEBUG
 		    if (SymbolTableDebug) y2debug ("bucket->m_prev");
+#endif
 		    entry->m_prev = bucket->m_prev;
 		    bucket->m_prev->m_next = entry;
 		}
@@ -490,7 +520,9 @@ SymbolTable::enter (TableEntry *entry)
 
 		if (bucket->m_next)
 		{
+#if DO_DEBUG
 		    if (SymbolTableDebug) y2debug ("bucket->m_next");
+#endif
 		    entry->m_next = bucket->m_next;
 		    bucket->m_next->m_prev = entry;
 		}
@@ -503,7 +535,9 @@ SymbolTable::enter (TableEntry *entry)
 	    }
 	    else if (bucket->m_next == 0)		// end of chain, no equal key found
 	    {
+#if DO_DEBUG
 		if (SymbolTableDebug) y2debug ("bucket->m_next == 0");
+#endif
 		bucket->m_next = entry;
 		entry->m_prev = bucket;
 
@@ -515,8 +549,9 @@ SymbolTable::enter (TableEntry *entry)
 	}  // while bucket
 
     }
+#if DO_DEBUG
     if (SymbolTableDebug) y2debug ("Table after (%s)\n", toString().c_str());
-
+#endif
     return entry;
 }
 
