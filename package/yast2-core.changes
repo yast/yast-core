@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 16 21:49:42 CET 2004 - kkaempf@suse.de
+
+- properly support indirect function calls via pointers (#34579)
+
+-------------------------------------------------------------------
 Mon Feb 16 18:17:08 CET 2004 - mvidner@suse.cz
 
 - don't segfault when agent output cannot be parsed (#34581)

@@ -1,0 +1,43 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // void afun ()
+    // void () funptr
+    // void indirect (void () funparam)
+    // filename: "tests/types/functionpointer2.ycp"
+    void afun ()
+{
+    y2milestone ("Afun");
+}
+    void () funptr = nil;
+    y2milestone ("Calling nil");
+    funptr ();
+    y2milestone ("Calling non-nil");
+    funptr = afun;
+    funptr ();
+    void indirect (void () funparam)
+{
+    y2milestone ("Calling funparam");
+    funparam ();
+}
+    y2milestone ("Calling indirect variable");
+    indirect (afun);
+    y2milestone ("Calling indirect constant");
+    indirect (funptr);
+    y2milestone ("Calling indirect nil");
+    indirect (nil);
+}
+----------------------------------------------------------------------
+[YCP] tests/types/functionpointer2.ycp:9 Calling nil
+[Interpreter] tests/types/functionpointer2.ycp:10 Not a function pointer ('void () funptr' is 'nil')
+[YCP] tests/types/functionpointer2.ycp:12 Calling non-nil
+[YCP] tests/types/functionpointer2.ycp:4 Afun
+[YCP] tests/types/functionpointer2.ycp:22 Calling indirect variable
+[YCP] tests/types/functionpointer2.ycp:18 Calling funparam
+[YCP] tests/types/functionpointer2.ycp:4 Afun
+[YCP] tests/types/functionpointer2.ycp:25 Calling indirect constant
+[YCP] tests/types/functionpointer2.ycp:18 Calling funparam
+[YCP] tests/types/functionpointer2.ycp:4 Afun
+[YCP] tests/types/functionpointer2.ycp:28 Calling indirect nil
+[YCP] tests/types/functionpointer2.ycp:18 Calling funparam
+[Interpreter] tests/types/functionpointer2.ycp:19 Function pointer (void () funparam) is nil

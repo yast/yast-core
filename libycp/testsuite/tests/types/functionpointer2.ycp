@@ -1,0 +1,31 @@
+{
+    void afun ()
+    {
+	y2milestone ("Afun");
+    }
+
+    void () funptr = nil;
+
+    y2milestone ("Calling nil");
+    funptr ();
+
+    y2milestone ("Calling non-nil");
+    funptr = afun;
+    funptr ();
+
+    void indirect (void () funparam)
+    {
+	y2milestone ("Calling funparam");
+	funparam ();
+    }
+
+    y2milestone ("Calling indirect variable");
+    indirect (afun);
+
+    y2milestone ("Calling indirect constant");
+    indirect (funptr);
+
+    y2milestone ("Calling indirect nil");
+    indirect (nil);
+}
+

@@ -2149,7 +2149,31 @@ YEFunction::evaluate (bool cse)
     ycodelist_t *actualp = m_parameters;
 
     YFunction *func = (YFunction *)(m_entry->code());
-    y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
+
+    if (func == 0
+	&& m_entry->type()->isFunction())
+    {
+	YCPValue v = m_entry->value();
+	if (v.isNull()
+	    || v->isVoid())
+	{
+	    ycp2error ("Function pointer (%s) is nil", m_entry->toString().c_str());
+	    return YCPNull();
+	}
+	if (!v->isCode())
+	{
+	    ycp2error ("Function pointer (%s) points to non-code (%s)", m_entry->toString().c_str(), v->toString().c_str());
+	    return YCPNull();
+	}
+
+	YCode *c = v->asCode()->code();
+	if (c->kind() != YCode::ycFunction)
+	{
+	    ycp2error ("Function pointer (%s) points to non-function (%s)", m_entry->toString().c_str(), c->toString().c_str());
+	    return YCPNull();
+	}
+	func = (YFunction *)c;
+    }
 
     // check for function or function pointer
     if (func->kind() != YCode::ycFunction)			// must be pointer
@@ -2158,12 +2182,16 @@ YEFunction::evaluate (bool cse)
 
 	YCPValue value = m_entry->value ();
 	if (value.isNull())
+	{
 	    y2debug ("m_entry value NULL");
+	}
 	else
+	{
 	    y2debug ("m_entry value ([%d] %s)\n", m_entry->value()->valuetype(), m_entry->value()->toString().c_str());
+	}
 	if (!value->isCode())
 	{
-	    ycp2error ("Not a function pointer (%s)", m_entry->toString().c_str());
+	    ycp2error ("Not a function pointer ('%s' is '%s')", m_entry->toString().c_str(), value->toString().c_str());
 	    return YCPNull();
 	}
 
