@@ -1,0 +1,5 @@
+{
+    list<string> languages = ["de", "en_GB", "en_US"];
+    Pkg::SetAdditionalLocales (languages);
+    return Pkg::GetAdditionalLocales () == languages;
+}
