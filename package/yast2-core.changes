@@ -3,6 +3,7 @@ Fri Feb 20 17:17:17 CET 2004 - visnov@suse.cz
 
 - correctly free code in YEBinary and YETriple
 - don't create a table entry for filename in block
+- free the code after optimizing it out
 
 -------------------------------------------------------------------
 Fri Feb 20 15:34:06 CET 2004 - arvin@suse.de

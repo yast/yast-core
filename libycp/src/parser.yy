@@ -594,6 +594,7 @@ compact_expression:
 								     : ($3.t->isVoid()
 									? $5.t->isVoid()
 									: $3.t->match ($5.t) == 0)));
+		    delete $3.c;
 		    $$.t = Type::Boolean;
 		}
 		$$.l = $1.l;
@@ -839,10 +840,32 @@ infix_expression:
 		    if ($1.c->evaluate (true)->asBoolean()->value() == true)
 		    {
 			$$.c = $3.c;
+			
+			// free unused code
+			if ($1.c)
+			{
+			    delete $1.c;
+			}
+
+			if ($5.c)
+			{
+			    delete $5.c;
+			}
 		    }
 		    else
 		    {
 			$$.c = $5.c;
+
+			// free unused code
+			if ($1.c)
+			{
+			    delete $1.c;
+			}
+
+			if ($3.c)
+			{
+			    delete $3.c;
+			}
 		    }
 		}
 		else
@@ -2382,6 +2405,7 @@ list:
 		else if (list->isList())
 		{
 		    $$.c = new YConst (YCode::ycList, list->asList());
+		    delete $2.c;
 		}
 		else
 		{
@@ -2461,6 +2485,7 @@ map:
 		else			// YCPMap constant
 		{
 		    $$.c = new YConst (YCode::ycMap, map->asMap());
+		    delete $2.c;
 		}
 
 		$$.t = $2.t;
