@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Sun Mar 14 22:13:18 CET 2004 - kkaempf@suse.de
+
+- use Ustring for all strings
+- drop last pointer from linked lists
+- drop unused Type::setNocheck
+- delete m_parameterblock from YEBuiltin if not used
+
+-------------------------------------------------------------------
 Fri Mar 12 23:21:53 CET 2004 - sh@suse.de
 
 - Fixed non-const reference to const ref for all widget constructors 
