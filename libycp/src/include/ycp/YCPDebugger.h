@@ -101,7 +101,7 @@ public:
     /**
      * Adds a interpreter to the list of interpreters.
      */
-    void add_interpreter (YCPBasicInterpreter *);
+    Interpreter * add_interpreter (YCPBasicInterpreter *);
 
     /**
      * Deletes a interpreter from the list of interpreters. Calls
@@ -123,9 +123,9 @@ private:
 
     /**
      * Searchs the interpreter in the list of interpreters. Calls
-     * abort if the interpreter is not found in the list.
+     * add_interpreter if the interpreter is not found in the list.
      */
-    Interpreter * find_inter (const YCPBasicInterpreter *);
+    Interpreter * find_inter (YCPBasicInterpreter *);
 
     /**
      * Searchs the interpreter with the specified unique id in the

@@ -478,13 +478,14 @@ YCPDebugger::print_scope (Interpreter *inter)
 }
 
 
-void
+YCPDebugger::Interpreter *
 YCPDebugger::add_interpreter (YCPBasicInterpreter *inter)
 {
     Interpreter tmp;
     tmp.interpreter = inter;
     tmp.unique_id = unique_id_cnt++;
     interpreters.push_back (tmp);
+    return &interpreters.back ();
 }
 
 
@@ -523,16 +524,14 @@ YCPDebugger::list_interpreters ()
 
 
 YCPDebugger::Interpreter *
-YCPDebugger::find_inter (const YCPBasicInterpreter *inter)
+YCPDebugger::find_inter (YCPBasicInterpreter *inter)
 {
     for (vector <Interpreter>::iterator cur = interpreters.begin ();
 	 cur != interpreters.end (); cur++)
 	if ((*cur).interpreter == inter)
 	    return &(*cur);
 
-    y2error ("fatal error: called from unknown interpreter");
-    abort ();
-    return 0;
+    return add_interpreter (inter);
 }
 
 

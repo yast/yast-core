@@ -328,6 +328,12 @@ private:
      * Debugger for all interpreters.
      */
     static YCPDebugger *debugger;
+
+    /**
+     * Activate the debugger
+     * @param signum signal number
+     */
+    static void debuggerSignalHandler (int signum);
 };
 
 

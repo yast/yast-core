@@ -16,6 +16,9 @@ variable <tt>Y2DEBUGGER</tt>. With a value of 1, the debugger opens the port
 19473 and continues execution of the program. With a value of 2, the debugger
 waits for the frontend to connect.</li>
 
+<li>The debugger will also open the port and wait for a frontend if the
+process receives SIGUSR2.</li>
+
 <li>You can use <tt>telnet</tt> (<tt>telnet machine 19473</tt>) as a very
 simple frontend or the ycpdebugger, a full features graphical qt frontend with
 syntax highlighting.</li>
