@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 04 21:09:30 CET 2003 - arvin@suse.de
+
+- handle InstSrcDescr::content_flags (bug #21561)
+
+-------------------------------------------------------------------
 Tue Mar  4 17:59:07 CET 2003 - kkaempf@suse.de
 
 - use general state functions from packagemanager, not just

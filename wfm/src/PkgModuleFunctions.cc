@@ -109,7 +109,7 @@ PkgModuleFunctions::GetLocale (YCPList args)
 /**
  * @builtin Pkg::SetAdditionalLocales (list of string) -> void
  *
- * set list of 
+ * set list of
  */
 YCPValue
 PkgModuleFunctions::SetAdditionalLocales (YCPList args)
@@ -215,6 +215,7 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
     // for installation/modules/Product.ycp
     map->add (YCPString ("name"), YCPString ((const std::string &)(descr->content_product().name)));
     map->add (YCPString ("version"), YCPString (descr->content_product().edition.version()));
+    map->add (YCPString ("flags"), YCPString (descr->content_flags()));
 
     // vendor already in map
 
