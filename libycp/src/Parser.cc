@@ -38,47 +38,47 @@ int yyparse (void *parser);
 
 Parser::Parser()
     : m_scanner(0)
-    , buffered(false)
+    , m_buffered(false)
     , m_depends (false)
 {
     init ();
     m_at_eof = false;
-    lineno = 0;
+    m_lineno = 0;
 }
 
 Parser::Parser(FILE *file, const char *filename)
     : m_scanner(0)
-    , buffered(false)
+    , m_buffered(false)
     , m_depends (false)
 {
     setInput(file, filename);
     init ();
     m_at_eof = false;
-    lineno = 0;
+    m_lineno = 0;
 }
 
 
 Parser::Parser(const char *buf)
     : m_scanner (0)
-    , buffered (false)
+    , m_buffered (false)
     , m_depends (false)
 {
     setInput(buf);
     init ();
     m_at_eof = false;
-    lineno = 0;
+    m_lineno = 0;
 }
 
 
 Parser::Parser(int fd, const char *filename)
     : m_scanner (0)
-    , buffered (false)
+    , m_buffered (false)
     , m_depends (false)
 {
     setInput(fd, filename);
     init ();
     m_at_eof = false;
-    lineno = 0;
+    m_lineno = 0;
 }
 
 
@@ -98,7 +98,7 @@ Parser::setInput(FILE *file, const char *filename)
     }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (file, filename);
-    if (buffered) m_scanner->setBuffered ();
+    if (m_buffered) m_scanner->setBuffered ();
     m_at_eof = false;
 }
 
@@ -109,7 +109,7 @@ Parser::setInput(const char *buf)
     setFilename ("");
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (buf);
-    if (buffered) m_scanner->setBuffered ();
+    if (m_buffered) m_scanner->setBuffered ();
     m_at_eof = false;
 }
 
@@ -123,7 +123,7 @@ Parser::setInput(int fd, const char *filename)
     }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (fd, filename);
-    if (buffered) m_scanner->setBuffered ();
+    if (m_buffered) m_scanner->setBuffered ();
     m_at_eof = false;
 }
 
@@ -132,7 +132,7 @@ void
 Parser::setBuffered()
 {
     if (m_scanner) m_scanner->setBuffered ();
-    buffered = true;
+    m_buffered = true;
     m_at_eof = false;
 }
 
@@ -187,15 +187,15 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 
     m_scanner->initTables (gTable, lTable);
 
-    result = 0;
+    m_result = 0;
 
     yyparse ((void *) this);
     
-    if (lineno == -1)
+    if (m_lineno == -1)
     {
 	m_at_eof = true;
     }
-    return result;
+    return m_result;
 }
 
 
@@ -224,13 +224,13 @@ Parser::restoreFilename () const
 void
 Parser::init ()
 {
-    result = 0;
-    loopCount = 0;
-    parserErrors = 0;
-    blockStack = 0;
-    scannerStack = 0;
-    current_block = 0;
-    blockstack_depth = 0;
+    m_result = 0;
+    m_loop_count = 0;
+    m_parser_errors = 0;
+    m_block_stack = 0;
+    m_scanner_stack = 0;
+    m_current_block = 0;
+    m_blockstack_depth = 0;
 
     // initialize preloaded namespaces
     const std::list<std::pair<std::string, Y2Namespace *> > & active_predefined = static_declarations.active_predefined();

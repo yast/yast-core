@@ -91,7 +91,7 @@ struct yystype_type {
 #warning YYLSP_NEEDED
 #endif
 
-#define LINE_NOW (p_parser->lineno)
+#define LINE_NOW (p_parser->m_lineno)
 #define FILE_NOW (p_parser->filename ())
 
 // our private error function
@@ -185,8 +185,8 @@ struct blockstack_t : stack_t {
     TableEntry *self;		//!< c_self entry during module parsing
 };
 #define blockstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
-#define blockstack_pop(s) (p_parser->blockstack_depth--, (blockstack_t *)stack_pop ((stack_t **)&(s)))
-#define blockstack_at_toplevel() (p_parser->blockstack_depth == 1)
+#define blockstack_pop(s) (p_parser->m_blockstack_depth--, (blockstack_t *)stack_pop ((stack_t **)&(s)))
+#define blockstack_at_toplevel() (p_parser->m_blockstack_depth == 1)
 
 enum scan_states {
     SCAN_FILE,		//!< a plain file
@@ -203,7 +203,7 @@ struct scannerstack_t : stack_t {
 };
 #define scannerstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
 #define scannerstack_pop(s) (scannerstack_t *)stack_pop ((stack_t **)&(s))
-#define scannerstack_empty() (p_parser->scannerStack == 0)
+#define scannerstack_empty() (p_parser->m_scanner_stack == 0)
 
 // mark here if we're parsing a module
 static bool inside_module = false;
@@ -265,13 +265,13 @@ static bool inside_module = false;
 ycp:	compact_expression
 	    {
 		inside_module = false; 		// reset for next call
-		p_parser->result = ($1.t == 0) ? 0 : $1.c;
-		p_parser->current_block = 0;
-		p_parser->lineno = $1.l;
-		if (p_parser->parserErrors > 0)
+		p_parser->m_result = ($1.t == 0) ? 0 : $1.c;
+		p_parser->m_current_block = 0;
+		p_parser->m_lineno = $1.l;
+		if (p_parser->m_parser_errors > 0)
 		{
-		    p_parser->parserErrors = 0;
-		    p_parser->result = new YError ($1.l, "Parser error");
+		    p_parser->m_parser_errors = 0;
+		    p_parser->m_result = new YError ($1.l, "Parser error");
 		    YYABORT;
 		}
 		y2debug ("\n------------------------------------------- accept -------------------------------------------\n");
@@ -280,13 +280,13 @@ ycp:	compact_expression
 	    }
 |	END_OF_FILE
 	    {
-		p_parser->result = 0;
-		p_parser->lineno = -1;
-		if (p_parser->parserErrors > 0)
+		p_parser->m_result = 0;
+		p_parser->m_lineno = -1;
+		if (p_parser->m_parser_errors > 0)
 		{
-		    p_parser->parserErrors = 0;
+		    p_parser->m_parser_errors = 0;
 		    // yyerror ("EOF");
-		    p_parser->result = new YError ($1.l, "EOF");
+		    p_parser->m_result = new YError ($1.l, "EOF");
 		    YYABORT;
 		}
 		y2debug ("\n-------------------------------------------- EOF --------------------------------------------\n");
@@ -612,15 +612,15 @@ compact_expression:
 	    }
 |	TEXTDOMAIN
 	    {
-		if (p_parser->blockStack == 0
-		    || p_parser->blockStack->textdomain == 0)
+		if (p_parser->m_block_stack == 0
+		    || p_parser->m_block_stack->textdomain == 0)
 		{
 		    yyLerror ("No textdomain defined", $1.l);
 		    $$.t = 0;
 		    break;
 		}
 
-		$$.c = new YConst (YCode::ycString, YCPString (p_parser->blockStack->textdomain));
+		$$.c = new YConst (YCode::ycString, YCPString (p_parser->m_block_stack->textdomain));
 		$$.t = Type::String;
 		$$.l = $1.l;
 	    }
@@ -632,8 +632,8 @@ compact_expression:
 		    break;
 		}
 
-		if (p_parser->blockStack == 0
-		    || p_parser->blockStack->textdomain == 0)
+		if (p_parser->m_block_stack == 0
+		    || p_parser->m_block_stack->textdomain == 0)
 		{
 		    yyLerror ("No textdomain defined", $1.l);
 		    $$.t = 0;
@@ -647,21 +647,21 @@ compact_expression:
 		    break;
 		}
 
-		$$.c = new YELocale ($2.v.sval, $4.v.sval, $6.c, p_parser->blockStack->textdomain);
+		$$.c = new YELocale ($2.v.sval, $4.v.sval, $6.c, p_parser->m_block_stack->textdomain);
 		$$.t = Type::Locale;
 		$$.l = $1.l;
 	    }
 |	I18N STRING ')'
 	    {
-		if (p_parser->blockStack == 0
-		    || p_parser->blockStack->textdomain == 0)
+		if (p_parser->m_block_stack == 0
+		    || p_parser->m_block_stack->textdomain == 0)
 		{
 		    yyLerror ("No textdomain defined", $1.l);
 		    $$.t = 0;
 		}
 		else
 		{
-		    $$.c = new YLocale ($2.v.sval, p_parser->blockStack->textdomain);
+		    $$.c = new YLocale ($2.v.sval, p_parser->m_block_stack->textdomain);
 		    $$.t = Type::Locale;
 		}
 		$$.l = $1.l;
@@ -881,9 +881,9 @@ block:
 		{
 		    declared_return_type = Type::Unspec;
 		}
-		else if (p_parser->blockStack != NULL)
+		else if (p_parser->m_block_stack != NULL)
 		{
-		    b_t = p_parser->blockStack->type;
+		    b_t = p_parser->m_block_stack->type;
 		}
 
 		start_block (p_parser, b_t);
@@ -933,7 +933,7 @@ block_end:
 		// pop block from block stack
 		// unlink local symbols from symbol table
 
-		blockstack_t *top = p_parser->blockStack;
+		blockstack_t *top = p_parser->m_block_stack;
 		bool is_include = true;
 
 		if (top == 0
@@ -942,7 +942,7 @@ block_end:
 #if DO_DEBUG
 		    y2debug ("block end");
 #endif
-		    top = blockstack_pop (p_parser->blockStack);
+		    top = blockstack_pop (p_parser->m_block_stack);
 		    is_include = false;
 		}
 
@@ -987,7 +987,7 @@ block_end:
 #if DO_DEBUG
 			    y2debug ("active_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
 #endif
-			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
+			    p_parser->m_current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
 		    }
 		    const std::list<std::pair<std::string, Y2Namespace *> > & autoimport_predefined= p_parser->scanner()->autoimport_predefined();
@@ -999,7 +999,7 @@ block_end:
 #if DO_DEBUG
 			    y2debug ("autoimport_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
 #endif
-			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
+			    p_parser->m_current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
 		    }
 		}
@@ -1051,7 +1051,7 @@ block_end:
 
 /* -------------------------------------------------------------- */
 /* Statements */
-/* statements are always inside a block, so p_parser->blockStack is valid !  */
+/* statements are always inside a block, so p_parser->m_block_stack is valid !  */
 
 statements:
 	statements statement
@@ -1078,7 +1078,7 @@ statements:
 		YStatementPtr stmt = static_cast<YStatementPtr>($2.c);
 
 #if DO_DEBUG
-		y2debug ("STMT[%s!%s]\n", p_parser->blockStack->type->toString().c_str(), $2.t->toString().c_str());
+		y2debug ("STMT[%s!%s]\n", p_parser->m_block_stack->type->toString().c_str(), $2.t->toString().c_str());
 		y2debug ("STMT[kind %d]\n", $2.c->kind());
 		if (stmt) y2debug ("STMT[%s:%d]\n", stmt->toString().c_str(), stmt->line());
 #endif
@@ -1088,14 +1088,14 @@ statements:
 #if DO_DEBUG
 		    y2debug ("Return in block: %s", $2.t->toString().c_str());
 #endif
-		    if (p_parser->blockStack->type->isUnspec ())	// type undefined yet
+		    if (p_parser->m_block_stack->type->isUnspec ())	// type undefined yet
 		    {
 			if (!($2.t)->isNil())				// "return nil;" does not define the block type !
 			{
 #if DO_DEBUG
 			    y2debug ("Block type (%s)", $2.t->toString().c_str());
 #endif
-			    p_parser->blockStack->type = $2.t;		// this is the block type
+			    p_parser->m_block_stack->type = $2.t;		// this is the block type
 			}
 		    }
 		    else						// type is already defined, check it
@@ -1106,7 +1106,7 @@ statements:
 			// since nil (void) matches everything, handle this separately
 			if ($2.t->isVoid())				// "return;"
 			{
-			    if (p_parser->blockStack->type->isVoid())
+			    if (p_parser->m_block_stack->type->isVoid())
 			    {
 				match = 0;
 			    }
@@ -1117,27 +1117,27 @@ statements:
 			}
 			else						// "return <expression>;"
 			{
-			    match = $2.t->match (p_parser->blockStack->type);
+			    match = $2.t->match (p_parser->m_block_stack->type);
 			}
 
 			if (match > 0)
 			{
-			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->blockStack->type);
+			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->m_block_stack->type);
 			}
 			else if (match < 0)
 			{
 			    yyLerror ("Mismatched return type in block", $2.l);
-			    yyTypeMismatch (p_parser->blockStack->type, $2.t, $2.l);
+			    yyTypeMismatch (p_parser->m_block_stack->type, $2.t, $2.l);
 			    $$.t = 0;
 			    break;
 			}
 		    }
 		}
 
-		p_parser->blockStack->theBlock->attachStatement (stmt);
+		p_parser->m_block_stack->theBlock->attachStatement (stmt);
 		y2debug ("attached statement '%s'", stmt == 0 ? "<NULL>" : stmt->toString().c_str());
 		$$.c = stmt;
-		$$.t = p_parser->blockStack->type;
+		$$.t = p_parser->m_block_stack->type;
 		$$.l = $1.l;
 	    }
 | /* empty  */
@@ -1199,7 +1199,7 @@ statement:
 		    break;
 		}
 
-		if (p_parser->current_block->isModule())
+		if (p_parser->m_current_block->isModule())
 		{
 		    yyLerror ("duplicate module statement", $1.l);
 		    $$.t = 0;
@@ -1219,12 +1219,12 @@ statement:
 		// table entry when we finish the module block and so
 		// that other syntax rules know we are in a module.
 
-		p_parser->current_block->setKind (YBlock::b_module);
-		p_parser->current_block->setName (name);
+		p_parser->m_current_block->setKind (YBlock::b_module);
+		p_parser->m_current_block->setName (name);
 
 		// enter 'self' entry so namespace references to current module get ignored
 		SymbolEntryPtr sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
-		TableEntry *self = new TableEntry (name, sself, new Point (sself, $1.l, p_parser->current_block->point()));
+		TableEntry *self = new TableEntry (name, sself, new Point (sself, $1.l, p_parser->m_current_block->point()));
 		p_parser->scanner()->localTable()->enter (self);
 
 		// module has private global table
@@ -1234,7 +1234,7 @@ statement:
 		y2debug ("Create module table");
 #endif
 
-		globalTable = p_parser->current_block->table ();
+		globalTable = p_parser->m_current_block->table ();
 		p_parser->scanner()->initTables (globalTable, 0);
 #if DO_DEBUG
 		y2debug ("overlaying globalTable %p", globalTable);
@@ -1250,7 +1250,7 @@ statement:
 	    
 		// check, if it is not included yet in the current block
 		
-		if (p_parser->blockStack->theBlock->isIncluded ($2.v.sval)) 
+		if (p_parser->m_block_stack->theBlock->isIncluded ($2.v.sval)) 
 		{
 #if DO_DEBUG
 		    y2debug ("Skipping reinclude of the file %s in block", $2.v.sval);
@@ -1292,12 +1292,12 @@ statement:
 		scanner->scanner = p_parser->scanner();
 		scanner->state = SCAN_START_INCLUDE;	// see start_block()
 
-		scannerstack_push (p_parser->scannerStack, scanner);
+		scannerstack_push (p_parser->m_scanner_stack, scanner);
 
 #if DO_DEBUG
 		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
 #endif
-		p_parser->blockStack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
+		p_parser->m_block_stack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
 
 		p_parser->setScanner (new Scanner (fd, $2.v.sval));
 		p_parser->setFilename ($2.v.sval);
@@ -1309,7 +1309,7 @@ statement:
 		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
 #endif
 		$$.c = new YSInclude ($2.v.sval, scanner->linenumber);
-		p_parser->blockStack->theBlock->addIncluded ($2.v.sval);
+		p_parser->m_block_stack->theBlock->addIncluded ($2.v.sval);
 		$$.l = $1.l;
 		$$.t = Type::Unspec;
 
@@ -1329,7 +1329,7 @@ statement:
 		TableEntry *tentry = p_parser->scanner()->localTable()->find (name, SymbolEntry::c_module);
 		if (tentry == 0)
 		{
-		    if (string (name) == p_parser->current_block->name())
+		    if (string (name) == p_parser->m_current_block->name())
 		    {
 			yywarning("Ignoring self-import", $1.l);
 			break;
@@ -1346,7 +1346,7 @@ statement:
 			break;
 		    }
 		    
-		    tentry = p_parser->blockStack->theBlock->newNamespace (module, name_space, $1.l);
+		    tentry = p_parser->m_block_stack->theBlock->newNamespace (module, name_space, $1.l);
 		    if (tentry == 0)
 		    {
 			yyLerror ("Import failed", $1.l);
@@ -1360,9 +1360,9 @@ statement:
 |	FULLNAME STRING ';'
 |	TEXTDOMAIN STRING ';'
 	    {
-		p_parser->blockStack->textdomain = $2.v.sval;
+		p_parser->m_block_stack->textdomain = $2.v.sval;
 		$$.t = Type::Unspec;
-		$$.c = new YSTextdomain (p_parser->blockStack->textdomain, $1.l);
+		$$.c = new YSTextdomain (p_parser->m_block_stack->textdomain, $1.l);
 		$$.l = $1.l;
 	    }
 |	EXPORT identifier_list ';'
@@ -1385,7 +1385,7 @@ statement:
 		    break;
 		}
 
-		TableEntry *tentry = p_parser->blockStack->theBlock->newEntry ($3.v.nval, SymbolEntry::c_typedef, $2.t, $1.l);
+		TableEntry *tentry = p_parser->m_block_stack->theBlock->newEntry ($3.v.nval, SymbolEntry::c_typedef, $2.t, $1.l);
 		if (tentry == 0)		/* can't happen ... since we check above for known identifier */
 		{
 		    yyLerror ("typedef symbol duplicate", $3.l);
@@ -1406,7 +1406,7 @@ statement:
 		    break;
 		}
 
-		if (p_parser->blockStack->theBlock->isModule ())
+		if (p_parser->m_block_stack->theBlock->isModule ())
 		{
 		    yyLerror ("Assignment not allowed in a module", $1.l);
 		    $$.t = 0;
@@ -1427,7 +1427,7 @@ statement:
 		    break;
 		}
 
-		if (p_parser->blockStack->theBlock->isModule ())
+		if (p_parser->m_block_stack->theBlock->isModule ())
 		{
 		    yyLerror ("Function call not allowed in a module", $1.l);
 		    $$.t = 0;
@@ -1447,7 +1447,7 @@ statement:
 		}
 
 		// include block has code NULL
-		if (p_parser->blockStack->theBlock->isModule () && $1.c != 0)
+		if (p_parser->m_block_stack->theBlock->isModule () && $1.c != 0)
 		{
 		    yyLerror ("Block not allowed in a module", $1.l);
 		    $$.t = 0;
@@ -1468,7 +1468,7 @@ statement:
 |	control_statement
 	    {
 		if ($1.t != 0
-		    && p_parser->blockStack->theBlock->isModule ())
+		    && p_parser->m_block_stack->theBlock->isModule ())
 		{
 		    yyLerror ("Statement not allowed in a module", $1.l);
 		    $$.t = 0;
@@ -1546,7 +1546,7 @@ control_statement:
 		    break;
 		}
 
-		p_parser->loopCount++;
+		p_parser->m_loop_count++;
 
 		if (!$3.t->isBoolean())
 		{
@@ -1561,7 +1561,7 @@ control_statement:
 	    }
 	statement
 	    {
-		p_parser->loopCount--;
+		p_parser->m_loop_count--;
 		if (($5.t == 0)
 		    || ($6.t == 0))
 		{
@@ -1590,11 +1590,11 @@ control_statement:
 	    }
 |	DO
 	    {
-		p_parser->loopCount++;
+		p_parser->m_loop_count++;
 	    }
 	block
 	    {
-		p_parser->loopCount--;
+		p_parser->m_loop_count--;
 		if ($3.t == 0)
 		{
 		    $$.t = 0;
@@ -1627,11 +1627,11 @@ control_statement:
 	    }
 |	REPEAT
 	    {
-		p_parser->loopCount++;
+		p_parser->m_loop_count++;
 	    }
 	block
 	    {
-		p_parser->loopCount--;
+		p_parser->m_loop_count--;
 		if ($3.t == 0)
 		{
 		    $$.t = 0;
@@ -1666,7 +1666,7 @@ control_statement:
 	    }
 |	BREAK ';'
 	    {
-		if (p_parser->loopCount <= 0)
+		if (p_parser->m_loop_count <= 0)
 		{
 		    yyLerror ("'break' outside of loop.", $1.l);
 		    $$.t = 0;
@@ -1678,7 +1678,7 @@ control_statement:
 	    }
 |	CONTINUE ';'
 	    {
-		if (p_parser->loopCount <= 0)
+		if (p_parser->m_loop_count <= 0)
 		{
 		    yyLerror ("'continue' outside of loop.", $1.l);
 		    $$.t = 0;
@@ -1778,7 +1778,7 @@ definition:
 #if DO_DEBUG
 		y2debug ("parameter block end");
 #endif
-		blockstack_t *top = blockstack_pop (p_parser->blockStack);
+		blockstack_t *top = blockstack_pop (p_parser->m_block_stack);
 		top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 
 		$$.c = 0;
@@ -1804,7 +1804,7 @@ definition:
 #if DO_DEBUG
 		y2debug ("parameter block end");
 #endif
-		blockstack_t *top = blockstack_pop (p_parser->blockStack);
+		blockstack_t *top = blockstack_pop (p_parser->m_block_stack);
 		top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 
 		if ($2.t == 0)			// error in block
@@ -2005,7 +2005,7 @@ function_start:
 		    if (tentry == 0)
 		    {
 			yyLerror ("Duplicate parameter", formalp->line);
-			blockstack_pop (p_parser->blockStack);
+			blockstack_pop (p_parser->m_block_stack);
 			parameter_block->detachEnvironment (p_parser->scanner()->localTable());
 			$$.t = 0;
 			
@@ -2070,7 +2070,7 @@ opt_global_identifier:
 #if DO_DEBUG
 		    y2debug ("new %s symbol <%s>'%s'", ($1.v.bval) ? "global" : "local", $3.t->toString().c_str(), $4.v.nval);
 #endif
-		    $$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.nval, ($1.v.bval) ? SymbolEntry::c_global : SymbolEntry::c_unspec, $3.t, $4.l);
+		    $$.v.tval = p_parser->m_block_stack->theBlock->newEntry ($4.v.nval, ($1.v.bval) ? SymbolEntry::c_global : SymbolEntry::c_unspec, $3.t, $4.l);
 		}
 		else if ($4.v.tval->sentry()->onlyDeclared())
 		{
@@ -2132,10 +2132,10 @@ opt_global_identifier:
 			{
 			    yywarning ("Definition shadows global symbol", $4.l);
 			    yyTwarning ($4.v.tval);
-			    $$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
+			    $$.v.tval = p_parser->m_block_stack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
 			}
 		    }
-		    else if ($4.v.tval->sentry()->nameSpace() == p_parser->blockStack->theBlock->nameSpace())
+		    else if ($4.v.tval->sentry()->nameSpace() == p_parser->m_block_stack->theBlock->nameSpace())
 		    {
 			yyTerror ("Redefinition of local symbol", $4.l, $4.v.tval);
 			$$.t = 0;
@@ -2145,7 +2145,7 @@ opt_global_identifier:
 		    {
 			// yywarning ("Definition shadows local symbol", $4.l);
 
-			$$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
+			$$.v.tval = p_parser->m_block_stack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
 		    }
 		}
 
@@ -2183,11 +2183,11 @@ opt_global:
 		{
 		    yyLerror ("'global' declaration in nested block", $1.l);
 #if DO_DEBUG
-		    y2debug ("Nesting level is %d", p_parser->blockstack_depth);
+		    y2debug ("Nesting level is %d", p_parser->m_blockstack_depth);
 #endif
 		    $$.v.bval = false;
 		}
-		if (!p_parser->blockStack->theBlock->isModule())
+		if (!p_parser->m_block_stack->theBlock->isModule())
 		{
 		    yywarning ("Useless 'global' outside of module", $1.l);
 		    $$.v.bval = false;
@@ -2270,21 +2270,21 @@ formal_param:
 		    {
 			case SymbolEntry::c_builtin:
 			{
-			    p_parser->parserErrors++;
+			    p_parser->m_parser_errors++;
 			    p_parser->scanner()->logError ("Formal parameter '%s' shadows builtin function", $2.l, entry->name());
 			    $$.t = 0;
 			}
 			break;
 			case SymbolEntry::c_function:
 			{
-			    p_parser->parserErrors++;
+			    p_parser->m_parser_errors++;
 			    p_parser->scanner()->logError ("Formal parameter '%s' shadows function", $2.l, entry->name());
 			    $$.t = 0;
 			}
 			break;
 			case SymbolEntry::c_unspec:
 			{
-			    p_parser->parserErrors++;
+			    p_parser->m_parser_errors++;
 			    p_parser->scanner()->logError ("Parameter '%s' shadows function name", $2.l, entry->name());
 			    $$.t = 0;
 			}
@@ -2690,7 +2690,7 @@ function_call:
 
 			if (decl->flags & DECL_LOOP)			// allow break in code parameter
 			{
-			    p_parser->loopCount++;
+			    p_parser->m_loop_count++;
 			}
 			$$.t = decl->type;
 		    }
@@ -2747,7 +2747,7 @@ function_call:
 		    {
 			// end block for possible symbol parameters
 
-			blockstack_t *top = blockstack_pop (p_parser->blockStack);
+			blockstack_t *top = blockstack_pop (p_parser->m_block_stack);
 			top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 			YEBuiltinPtr bf = (YEBuiltinPtr)($3.c);
 #if DO_DEBUG
@@ -2780,7 +2780,7 @@ function_call:
 
 			if (builtin->decl()->flags & DECL_LOOP)
 			{
-			    p_parser->loopCount--;
+			    p_parser->m_loop_count--;
 			}
 
 			constTypePtr finalT = builtin->finalize ();
@@ -2865,7 +2865,7 @@ function_call:
 		{
 		    // end block for possible symbol parameters
 
-		    blockstack_t *top = blockstack_pop (p_parser->blockStack);
+		    blockstack_t *top = blockstack_pop (p_parser->m_block_stack);
 		    top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 		    YEBuiltinPtr bf = (YEBuiltinPtr)($3.c);
 #if DO_DEBUG
@@ -3108,7 +3108,7 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 
     while (token == END_OF_FILE)
     {
-	scannerstack_t *top = scannerstack_pop (pr->scannerStack);		// eof of include ?
+	scannerstack_t *top = scannerstack_pop (pr->m_scanner_stack);		// eof of include ?
 #if DO_DEBUG
 	y2debug ("EOF, top %p, current %p, yychar ?\n", top, currentScanner);
 #endif
@@ -3124,7 +3124,7 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 	pr->setFilename (top->filename);
 	
 	YSFilename* fn = new YSFilename (top->filename);
-	pr->current_block->attachStatement (fn);
+	pr->m_current_block->attachStatement (fn);
 	
 	delete top;			    // free scannerstack_t new'd at INCLUDE
 	token = currentScanner->yylex();
@@ -3138,7 +3138,7 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 
 	tokenValue value   = currentScanner->scannedValue();
 	lvalp_void->v	   = value;
-	pr->lineno	   = lvalp_void->l = currentScanner->lineNumber();
+	pr->m_lineno	   = lvalp_void->l = currentScanner->lineNumber();
 
 	switch (token)
 	{
@@ -3181,29 +3181,29 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 static void
 yyerror_with_lineinfo (Parser *parser, int lineno, const char *s)
 {
-    parser->parserErrors++;
-    parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->lineno);
+    parser->m_parser_errors++;
+    parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->m_lineno);
 }
 
 
 static void
 yywarning_with_lineinfo (Parser *parser, int lineno, const char *s)
 {
-    parser->scanner()->logWarning (s, (lineno > 0) ? lineno : parser->lineno);
+    parser->scanner()->logWarning (s, (lineno > 0) ? lineno : parser->m_lineno);
 }
 
 
 static void
 yyerror_with_code (Parser *parser, int lineno, YCodePtr c, constTypePtr t)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     if (c == 0)
     {
-	parser->scanner()->logError ("Bad parameter", (lineno > 0) ? lineno : parser->lineno);
+	parser->scanner()->logError ("Bad parameter", (lineno > 0) ? lineno : parser->m_lineno);
     }
     else
     {
-	parser->scanner()->logError ("Bad parameter '<%s> %s'", (lineno > 0) ? lineno : parser->lineno, t->toString().c_str(), c ? c->toString().c_str() : "<err>");
+	parser->scanner()->logError ("Bad parameter '<%s> %s'", (lineno > 0) ? lineno : parser->m_lineno, t->toString().c_str(), c ? c->toString().c_str() : "<err>");
     }
 }
 
@@ -3211,35 +3211,35 @@ yyerror_with_code (Parser *parser, int lineno, YCodePtr c, constTypePtr t)
 static void
 yyerror_with_name (Parser *parser, int lineno, const char *name)
 {
-    parser->parserErrors++;
-    parser->scanner()->logError ("Undeclared identifier '%s'", (lineno > 0) ? lineno : parser->lineno, name);
+    parser->m_parser_errors++;
+    parser->scanner()->logError ("Undeclared identifier '%s'", (lineno > 0) ? lineno : parser->m_lineno, name);
 }
 
 
 static void
 yyerror_assign_const (Parser *parser, int lineno, const char *name)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     if (*name == 0)
-	parser->scanner()->logError ("Assignment to const", (lineno > 0) ? lineno : parser->lineno);
+	parser->scanner()->logError ("Assignment to const", (lineno > 0) ? lineno : parser->m_lineno);
     else
-	parser->scanner()->logError ("Assignment to const identifier '%s'", (lineno > 0) ? lineno : parser->lineno, name);
+	parser->scanner()->logError ("Assignment to const identifier '%s'", (lineno > 0) ? lineno : parser->m_lineno, name);
 }
 
 
 static void
 yyerror_with_file (Parser *parser, int lineno, const char *name)
 {
-    parser->parserErrors++;
-    parser->scanner()->logError ("Bad or unknown file '%s'", (lineno > 0) ? lineno : parser->lineno, name);
+    parser->m_parser_errors++;
+    parser->scanner()->logError ("Bad or unknown file '%s'", (lineno > 0) ? lineno : parser->m_lineno, name);
 }
 
 
 static void
 yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *tentry)
 {
-    parser->parserErrors++;
-    int line = (lineno > 0) ? lineno : parser->lineno;
+    parser->m_parser_errors++;
+    int line = (lineno > 0) ? lineno : parser->m_lineno;
     parser->scanner()->logError (s, line);
     const Point *point = tentry->point();
     bool start = true;
@@ -3284,7 +3284,7 @@ yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *
 static void
 yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 {
-    int line = (lineno > 0) ? lineno : parser->lineno;
+    int line = (lineno > 0) ? lineno : parser->m_lineno;
     const Point *point = tentry->point();
     bool start = true;
     while (point != 0)
@@ -3328,7 +3328,7 @@ yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 static void
 yyerror_type_mismatch (Parser *parser, int lineno, constTypePtr expected_type, constTypePtr seen_type)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     if (expected_type->isUnspec())
     {
 	parser->scanner()->logError ("No matching function", lineno);
@@ -3347,20 +3347,20 @@ yyerror_type_mismatch (Parser *parser, int lineno, constTypePtr expected_type, c
 static void
 yyerror_missing_argument (Parser *parser, int lineno, constTypePtr type)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     parser->scanner()->logError ("Missing '%s' parameter.", lineno, type->toString().c_str());
 }
 
 
 static void yyerror_cant_cast (Parser *parser, int lineno, constTypePtr from, constTypePtr to)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     parser->scanner()->logError ("Can't cast from '%s' to '%s'.", lineno, from->toString().c_str(), to->toString().c_str());
 }
 
 static void yyerror_no_module (Parser *parser, int lineno, const char *module)
 {
-    parser->parserErrors++;
+    parser->m_parser_errors++;
     parser->scanner()->logError ("Can't load module '%s'.", lineno, module);
 }
 
@@ -3794,7 +3794,7 @@ static stack_t *stack_pop (stack_t **stack)
 
 
 // start a block
-// pushes new element on blockStack
+// pushes new element on m_block_stack
 // opens new scope for block-local definitions
 
 static YBlockPtr
@@ -3805,49 +3805,49 @@ start_block (Parser *parser, constTypePtr type)
 #endif
 
     // check if this block is starting an include file. This means all definitions go to the
-    // including (the current blockStack) block -> don't open up a new block !
+    // including (the current m_block_stack) block -> don't open up a new block !
 
-    if ((parser->scannerStack != 0)
-	&& (parser->scannerStack->state == SCAN_START_INCLUDE))
+    if ((parser->m_scanner_stack != 0)
+	&& (parser->m_scanner_stack->state == SCAN_START_INCLUDE))
     {
 #if DO_DEBUG
 	y2debug ("Include !");
 #endif
 	// now we're inside the include file
-	parser->scannerStack->state = SCAN_INCLUDE;
-	parser->blockStack->includeDepth++;
+	parser->m_scanner_stack->state = SCAN_INCLUDE;
+	parser->m_block_stack->includeDepth++;
 
-	return parser->blockStack->theBlock;
+	return parser->m_block_stack->theBlock;
     }
 
     // start new block
     // push block on block stack
     blockstack_t *top = new (blockstack_t);
 
-    if (parser->blockstack_depth == 0)		// initial block
+    if (parser->m_blockstack_depth == 0)	// initial block
     {
 	top->theBlock = new YBlock (parser->filename(), YBlock::b_file);
-	parser->current_block = top->theBlock;
+	parser->m_current_block = top->theBlock;
     }
     else					// intermediate block
     {
-	top->theBlock = new YBlock (parser->current_block->point());
+	top->theBlock = new YBlock (parser->m_current_block->point());
     }
 	
 #if DO_DEBUG
     y2debug ("YBlock created");
 #endif
     // inherit textdomain from outer block
-    top->textdomain = (parser->blockStack ? parser->blockStack->textdomain : 0);
+    top->textdomain = (parser->m_block_stack ? parser->m_block_stack->textdomain : 0);
     top->type = type;
     top->includeDepth = 0;
     top->self = 0;
 
-    blockstack_push (parser->blockStack, top);
-    parser->blockstack_depth++;
+    blockstack_push (parser->m_block_stack, top);
+    parser->m_blockstack_depth++;
 
 #if DO_DEBUG
-    y2debug ("Push block#%d:%s", parser->blockstack_depth, type->toString().c_str());
+    y2debug ("Push block#%d:%s", parser->m_blockstack_depth, type->toString().c_str());
 #endif
 
     return top->theBlock;

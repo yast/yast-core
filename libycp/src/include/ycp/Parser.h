@@ -71,7 +71,7 @@ class Parser
      * Is true, if the input can be buffered, i.e. more than one
      * character may be read at once in order to gain performance.
      */
-    bool buffered;
+    bool m_buffered;
 
     /**
      * Is true, if just imported modules and included files are
@@ -94,12 +94,12 @@ public:
      * Copied from struct parserret
      * Does not need to be deleted by us
      */
-    YCodePtr result;
+    YCodePtr m_result;
 
     /**
      * Copied from struct parserret
      */
-    int lineno;
+    int m_lineno;
 
     //parserret:
     //const char *filename;
@@ -109,33 +109,33 @@ public:
      * Loop nesting level. Detects break outside a loop.
      * Was a static variable in parser.yy
      */
-    int loopCount;
+    int m_loop_count;
 
     /**
      * Errors during one parse.
      * Was a static variable in parser.yy
      */
-    int parserErrors;
+    int m_parser_errors;
 
     /**
      * Stack of parsed blocks 
      */
-    blockstack_t *blockStack;
+    blockstack_t *m_block_stack;
 
     /**
      * Scanners used for include parsing
      */
-    scannerstack_t *scannerStack;
+    scannerstack_t *m_scanner_stack;
     
     /**
      * pointer to the currently parsed block
      */
-    YBlockPtr current_block;
+    YBlockPtr m_current_block;
     
     /**
      * integer number for the depth of the current block
      */
-    int blockstack_depth;
+    int m_blockstack_depth;
     
     /**
      * Initialize the internal state of the parser.
