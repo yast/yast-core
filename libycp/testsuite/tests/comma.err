@@ -1,1 +1,1 @@
-[Scanner] tests/comma.ycp:15 Syntax error: parse error, unexpected ','
+[Scanner] tests/comma.ycp:15 Syntax error: syntax error, unexpected ','

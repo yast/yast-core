@@ -4,4 +4,4 @@ Parsed:
   return 1;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/Parser.ycp:1 Syntax error: parse error, unexpected '}', expecting $end
+[Scanner] tests/Parser.ycp:1 Syntax error: syntax error, unexpected '}', expecting $end
