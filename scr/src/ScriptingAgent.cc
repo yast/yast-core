@@ -151,6 +151,11 @@ ScriptingAgent::Write (const YCPPath &path, const YCPValue &value,
 	ycp2error ("SCR::Write() failed");
 	return YCPNull ();
     }
+    if (!v->isBoolean ())
+    {
+	ycp2error ("SCR::Write() did not return a boolean");
+	return YCPNull ();
+    }
     return v->asBoolean ();
 }
 
@@ -162,6 +167,11 @@ ScriptingAgent::Dir (const YCPPath &path)
     if (v.isNull())
     {
 	ycp2error ("SCR::Dir() failed");
+	return YCPNull ();
+    }
+    if (!v->isList ())
+    {
+	ycp2error ("SCR::Dir() did not return a list");
 	return YCPNull ();
     }
     return v->asList ();
@@ -188,6 +198,11 @@ ScriptingAgent::Error (const YCPPath &path)
     if (v.isNull())
     {
 	ycp2error ("SCR::Error() failed");
+	return YCPNull ();
+    }
+    if (!v->isMap ())
+    {
+	ycp2error ("SCR::Error() did not return a map");
 	return YCPNull ();
     }
     return v->asMap ();

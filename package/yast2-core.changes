@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar 23 14:48:44 CET 2004 - mvidner@suse.cz
+
+- check that external agents returned the correct type (#35363)
+- 2.9.66
+
+-------------------------------------------------------------------
 Tue Mar 23 11:33:13 CET 2004 - kkaempf@suse.de
 
 - check for function type in "<name> (...)" properly (#36246)

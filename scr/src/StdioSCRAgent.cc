@@ -67,7 +67,18 @@ StdioSCRAgent::Write (const YCPPath &path, const YCPValue &value,
     }
     
     YCPValue v = m_handler->evaluate (r);
-    return v.isNull () ? YCPNull () : v->asBoolean ();
+
+    if (v.isNull())
+    {
+	ycp2error ("SCR::Write() failed");
+	return YCPNull ();
+    }
+    if (!v->isBoolean ())
+    {
+	ycp2error ("SCR::Write() did not return a boolean");
+	return YCPNull ();
+    }
+    return v->asBoolean ();
 }
 
 
@@ -83,7 +94,17 @@ StdioSCRAgent::Dir (const YCPPath &path)
     r.add (path);
     
     YCPValue v = m_handler->evaluate (r);
-    return v.isNull () ? YCPNull () : v->asList ();
+    if (v.isNull())
+    {
+	ycp2error ("SCR::Dir() failed");
+	return YCPNull ();
+    }
+    if (!v->isList ())
+    {
+	ycp2error ("SCR::Dir() did not return a list");
+	return YCPNull ();
+    }
+    return v->asList ();
 }
 
 
@@ -109,6 +130,32 @@ StdioSCRAgent::Execute (const YCPPath &path, const YCPValue &value,
     }
     
     return m_handler->evaluate (r);
+}
+
+
+YCPMap
+StdioSCRAgent::Error (const YCPPath &path)
+{
+    if (! m_handler)
+	return YCPNull ();
+	
+    y2debug( "This is StdioSCRAgent(%p)::Error", this );
+    
+    YCPTerm r ( "Error" );
+    r.add (path);
+    
+    YCPValue v = m_handler->evaluate (r);
+    if (v.isNull())
+    {
+	ycp2error ("SCR::Error() failed");
+	return YCPNull ();
+    }
+    if (!v->isMap ())
+    {
+	ycp2error ("SCR::Error() did not return a map");
+	return YCPNull ();
+    }
+    return v->asMap ();
 }
 
 
