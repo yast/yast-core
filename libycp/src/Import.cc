@@ -18,6 +18,10 @@
 /-*/
 // -*- c++ -*-
 
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
+
 #include <libintl.h>
 
 #include "ycp/Import.h"
@@ -63,7 +67,9 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	return -1;
     }
 
+#if DO_DEBUG
     y2debug ("Import::import (%s), preloaded_namespace %p", name.c_str(), preloaded_namespace);
+#endif
 
     m_name = name;
 
@@ -78,7 +84,9 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 
 	if (name_space == 0)
 	{
+#if DO_DEBUG
 	    y2debug ("Loading module '%s'", cname);
+#endif
 	    Y2Component* comp = Y2ComponentBroker::getNamespaceComponent (cname);	// find component for name
 
 	    if (comp == 0)
@@ -104,7 +112,9 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	}
 
 	m_active_modules.insert (std::make_pair (m_name, name_space));			// insert to list of known modules
+#if DO_DEBUG
 	y2debug ("Module '%s' loaded, name_space @%p, table @%p", cname, name_space, table);
+#endif
 
 	m_module = m_active_modules.find (m_name);
 
@@ -113,7 +123,9 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
     else
     {
 	table = m_module->second->table();
+#if DO_DEBUG
 	y2debug ("Module '%s' already loaded, name_space %p, table %p", m_name.c_str(), m_module->second, table);
+#endif
 	if (table == 0)
 	{
 	    fprintf (stderr, "Oops, no table for already loaded module '%s'\n", m_name.c_str());
@@ -139,7 +151,9 @@ void
 Import::disableTracking ()
 {
     m_disable_tracking++;
+#if DO_DEBUG
     y2debug ("Import::disableTracking (%d)", m_disable_tracking);
+#endif
     return;
 }
 
@@ -148,7 +162,9 @@ void
 Import::enableTracking ()
 {
     m_disable_tracking--;
+#if DO_DEBUG
     y2debug ("Import::enableTracking (%d)", m_disable_tracking);
+#endif
     if (m_disable_tracking > 0)
     {
 	return;
@@ -156,7 +172,9 @@ Import::enableTracking ()
     while (!m_table_stack.empty())
     {
 	SymbolTable *table = m_table_stack.top().second;
+#if DO_DEBUG
 	y2debug ("enableUsage (%s:%p)", m_table_stack.top().first.c_str(), table);
+#endif
 	table->enableUsage();
 	m_table_stack.pop();
     }
