@@ -132,6 +132,11 @@ ycp:
 expression:
 	compact_expression
 |	infix_expression
+|	typecast_expression
+;
+
+typecast_expression:
+	'(' typedecl ')' expression	{ $$.e = $4.e; $$.l = $2.l; }
 ;
 
 compact_expression:
@@ -546,6 +551,7 @@ typedecl:
 	ANY
 |	YCP_DECLTYPE
 |	LIST			{ $$.e = YCPDeclType(YT_LIST); }
+|	LIST ST typedecl GT	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
 |	LIST '(' typedecl ')'	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
 |	'[' EMPTY ']'		{ $$.e = YCPDeclStruct(); }
 |	'[' tupledecl ']'	{ $$.e = $2.e; }

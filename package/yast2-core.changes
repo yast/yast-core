@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Oct 16 16:30:46 CEST 2003 - visnov@suse.cz
+
+- added support for typecast syntax and list<type> syntax
+  of typed lists.
+- 2.9.2 
+
+-------------------------------------------------------------------
 Thu Oct 02 11:35:20 CEST 2003 - arvin@suse.de
 
 - fixed compiling of losetup agent
