@@ -573,8 +573,8 @@ namespace Y2PMRecipients {
 				const string & error,
 				const string & url,
 				const string & product,
-				int expected,
-				int current ) {
+				int current,
+				int expected ) {
       CB callback( ycpcb( YCPCallbacks::CB_MediaChange ) );
       if ( callback._set ) {
 	// doublesided media: bool instSrc->descr()->media_doublesided()
@@ -583,12 +583,12 @@ namespace Y2PMRecipients {
 	callback.addStr( error );
 	callback.addStr( url );
 	callback.addStr( product );
-	callback.addInt( expected );
 	callback.addInt( current );
+	callback.addInt( expected );
 	callback.addBool( instSrc->descr()->media_doublesided() );
 	return callback.evaluateStr();
       }
-      return MediaChangeCallback::changeMedia( instSrc, error, url, product, expected, current );
+      return MediaChangeCallback::changeMedia( instSrc, error, url, product, current, expected );
     }
   };
 
