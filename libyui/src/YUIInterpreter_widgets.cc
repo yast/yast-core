@@ -13,11 +13,11 @@
   File:		YUIInterpreter_widgets.cc
 
 		Standard (mandatory) widgets
-  
+
 
   Authors:	Mathias Kettner <kettner@suse.de>
 		Stefan Hundhammer <sh@suse.de>
-  
+
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
@@ -95,7 +95,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      * @option	vstretch	Make this widget stretchable in the vertical   dimension.
      *				<br>See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
      *
-     * @option	hstretch	Make this widget stretchable in both dimensions.
+     * @option	hvstretch	Make this widget stretchable in both dimensions.
      *				<br>See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
      *
      * @option  autoShortcut	Automatically choose a keyboard shortcut for this widget and don't complain
@@ -844,7 +844,7 @@ YWidget *YUIInterpreter::createRichText(YWidget *parent, YWidgetOpt &opt, const 
 	if (optList->value(o)->isSymbol() )
 	{
 	    std::string sym = optList->value(o)->asSymbol()->symbol();
-	
+
 	    if      ( sym  == YUIOpt_plainText      ) opt.plainTextMode.setValue(true);
 	    else if ( sym  == YUIOpt_autoScrollDown ) opt.autoScrollDown.setValue(true);
 	    else if ( sym  == YUIOpt_shrinkable     ) opt.isShrinkable.setValue(true);
@@ -947,7 +947,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 {
     YCPString label( "" );
     YCPString iconName( "" );
-    
+
     if ( isIconButton )
     {
 	if ( term->size() - argnr != 2
@@ -958,7 +958,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 		    term->toString().c_str());
 	    return 0;
 	}
-    
+
 	iconName = term->value( argnr   )->asString();
 	label    = term->value( argnr+1 )->asString();
     }
@@ -971,7 +971,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 		    term->toString().c_str());
 	    return 0;
 	}
-	
+
 	label = term->value( argnr )->asString();
     }
 
@@ -989,13 +989,13 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 	else logUnknownOption(term, optList->value(o));
     }
 
-    
+
     YPushButton * button = dynamic_cast<YPushButton *>
 	( createPushButton(parent, opt, label ) );
 
     if ( isIconButton && button )
 	button->setIcon( iconName );
-    
+
     return button;
 }
 
