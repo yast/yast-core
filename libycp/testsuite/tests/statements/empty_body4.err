@@ -1,16 +1,33 @@
-[Parser] tests/statements/empty_body4.ycp:8 Empty function definition
+[Scanner] tests/statements/empty_body4.ycp:8 Warning: Empty function definition
 Parsed:
 ----------------------------------------------------------------------
-Parser error
+{
+    // void func (string a)
+    // filename: "tests/statements/empty_body4.ycp"
+    void func (string a)
+{
+    return;
+}
+    y2milestone ("Hello1");
+}
 ----------------------------------------------------------------------
-[Interpreter] tests/statements/empty_body4.ycp:7 Parser error
+[YCP] tests/statements/empty_body4.ycp:11 Hello1
 Parsed:
 ----------------------------------------------------------------------
 "we are ok"
 ----------------------------------------------------------------------
-[Parser] tests/statements/empty_body4.ycp:19 Empty function definition
+[Scanner] tests/statements/empty_body4.ycp:19 Warning: Empty function definition
 Parsed:
 ----------------------------------------------------------------------
-Parser error
+{
+    // void func (string a)
+    // filename: "tests/statements/empty_body4.ycp"
+    void func (string a)
+{
+    return;
+}
+    y2milestone ("Hello2");
+    func ("foo");
+}
 ----------------------------------------------------------------------
-[Interpreter] tests/statements/empty_body4.ycp:18 Parser error
+[YCP] tests/statements/empty_body4.ycp:22 Hello2

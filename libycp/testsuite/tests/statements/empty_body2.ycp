@@ -1,0 +1,9 @@
+// function body may not be empty, for non-void function it's an error
+//
+//
+{
+  define integer func(string a, string b, string c) ``{
+  }
+
+  func( "Hello", "cruel" ,"World");
+}

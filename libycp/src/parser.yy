@@ -1845,9 +1845,29 @@ definition:
 
 		if ($2.c == 0)
 		{
-		    yyLerror ("Empty function definition", $1.l);
-		    $$.t = 0;
-		    break;
+		    constTypePtr type = $1.v.tval->sentry ()->type ();
+		    if (!type->isFunction () )
+		    {
+			y2internal ("Internal error: Expected function type, found %s", type->toString ());
+			$$.t = 0;
+			break;
+		    }
+		    
+		    // get the return type
+		    type = ((constFunctionTypePtr)type)->returnType ();
+		    if (type->isVoid ())
+		    {
+			yywarning ("Empty function definition", $1.l);
+			YBlockPtr block = new YBlock (p_parser->m_current_block->point());
+			block->attachStatement (new YSReturn((YCodePtr)0, $1.l));
+			$2.c = block;
+		    }
+		    else
+		    {
+			yyLerror ("Empty function definition for function not returning void", $1.l);
+			$$.t = 0;
+			break;
+		    }
 		}
 								// link the function entry with the function definition
 		SymbolEntryPtr entry = $1.v.tval->sentry();

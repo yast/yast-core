@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 24 12:43:47 CET 2004 - visnov@suse.cz
+
+- empty void function produces just warning (#35536) 
+
+-------------------------------------------------------------------
 Tue Mar 23 17:21:01 CET 2004 - visnov@suse.cz
 
 - allow repeated use of Pkg in ycpc (#35533) 
