@@ -17,7 +17,7 @@ runc_SOURCES = runc.cc
 runc_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}
 
 runycp_SOURCES = runycp.cc
-runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS} 
+runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS} -lefence
 
 testSignature_SOURCES = testSignature.cc
 testSignature_LDADD = ../src/libycp.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr  5 17:18:15 CEST 2005 - visnov@suse.cz
+
+- enable ElectricFence again without checking for 0 size allocs 
+
+-------------------------------------------------------------------
 Mon Apr  4 18:43:39 CEST 2005 - visnov@suse.cz
 
 - temporarily disable ElectricFence to workaround glibc problem
