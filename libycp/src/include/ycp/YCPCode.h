@@ -37,6 +37,7 @@
 class YCPCodeRep : public YCPValueRep
 {
     YCode *m_code;
+    bool m_owner;
 
 protected:
     friend class YCPCode;
@@ -45,12 +46,12 @@ protected:
      * Constructor
      */
     YCPCodeRep();
-    YCPCodeRep (YCode *c);
+    YCPCodeRep (YCode *c, bool owner);
 
     /**
      * Cleans up.
      */
-    ~YCPCodeRep() {}
+    ~YCPCodeRep();
 
 public:
     YCode *code() const;
@@ -94,7 +95,7 @@ class YCPCode : public YCPValue
     DEF_COMMON(Code, Value);
 public:
     YCPCode() : YCPValue (new YCPCodeRep ()) {}
-    YCPCode (YCode *code) : YCPValue (new YCPCodeRep (code)) {}
+    YCPCode (YCode *code, bool owner = false) : YCPValue (new YCPCodeRep (code, owner)) {}
     YCPCode (std::istream & str);
 };
 

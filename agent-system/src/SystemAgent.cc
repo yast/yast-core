@@ -506,7 +506,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	YCPValue contents = YCPNull ();
 	if (p->isBlock ())
 	{
-	    contents = YCPCode (p);
+	    contents = YCPCode (p, true);	// true means the YCPCode will delete the code if not needed anymore
 	}
 	else
 	{

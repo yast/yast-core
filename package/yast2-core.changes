@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Feb 20 13:45:30 CET 2004 - visnov@suse.cz
+
+- more memory fixes:
+  allow YCPCode to free the code (used in system agent)
+  share textdomain (helps in reading bytecode)
+
+-------------------------------------------------------------------
 Thu Feb 19 18:14:32 CET 2004 - visnov@suse.cz
 
 - memory fixes:

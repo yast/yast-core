@@ -118,7 +118,7 @@ class YELocale : public YCode {
     const char *m_singular;
     const char *m_plural;
     YCode *m_count;
-    const char *m_domain;
+    YLocale::t_uniquedomains::const_iterator m_domain;
 public:
     YELocale (const char *singular, const char *plural, YCode *count, const char *textdomain);
     YELocale (std::istream & str);

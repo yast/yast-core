@@ -31,14 +31,24 @@ $Id$
 YCPCodeRep::YCPCodeRep()
 {
     m_code = 0;
+    m_owner = false;
 }
 
 
-YCPCodeRep::YCPCodeRep(YCode *code)
+YCPCodeRep::YCPCodeRep(YCode *code, bool owner)
 {
     m_code = code;
+    m_owner = owner;
 }
 
+
+YCPCodeRep::~YCPCodeRep ()
+{
+    if (m_owner)
+    {
+	delete m_code;
+    }
+}
 
 YCode *
 YCPCodeRep::code() const

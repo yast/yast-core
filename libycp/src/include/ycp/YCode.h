@@ -240,15 +240,37 @@ public:
 //    YCode *loadFrom (FILE *in);
 };
 
+#include <ext/hash_set>
+#include <string>
+#include <cstddef>
+
 /**
  * locale
  * string and textdomain
  * @see: YELocale
  */
 
+class YELocale;
+
 class YLocale : public YCode {
-    const char *m_locale;
-    const char *m_domain;
+    const char *m_locale;    
+
+    struct eqstr
+    {
+	bool operator()(const char* s1, const char* s2) const
+	{
+	    return strcmp(s1, s2) == 0;
+	}
+    };
+    
+    typedef __gnu_cxx::hash_set<const char*, __gnu_cxx::hash<const char*>, eqstr> t_uniquedomains;
+    
+    static t_uniquedomains domains;
+    
+    t_uniquedomains::const_iterator m_domain;
+    
+    friend class YELocale;
+
 public:
     YLocale (const char *locale, const char *textdomain);
     YLocale (std::istream & str);

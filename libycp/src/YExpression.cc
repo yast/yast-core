@@ -462,8 +462,8 @@ YELocale::YELocale (const char *singular, const char *plural, YCode *count, cons
     , m_singular (singular)
     , m_plural (plural)
     , m_count (count)
-    , m_domain (textdomain)
 {
+    m_domain = YLocale::domains.insert (textdomain).first;
 }
 
 
@@ -473,7 +473,16 @@ YELocale::YELocale (std::istream & str)
     m_singular = Bytecode::readCharp (str);
     m_plural = Bytecode::readCharp (str);
     m_count = Bytecode::readCode (str);
-    m_domain = Bytecode::readCharp (str);
+    const char * dom = Bytecode::readCharp (str);
+
+    std::pair <YLocale::t_uniquedomains::iterator, bool> res = YLocale::domains.insert (dom);
+
+    // the textdomain was already there, we can free the memory allocated in readCharp
+    if (! res.second)
+    {
+        delete[] dom;
+    }
+    m_domain = res.first;
 }
 
 
@@ -519,7 +528,7 @@ YELocale::evaluate (bool cse)
 	return YCPNull ();
     }
 
-    const char *ret = dngettext (m_domain, m_singular, m_plural, count->asInteger()->value());
+    const char *ret = dngettext (*m_domain, m_singular, m_plural, count->asInteger()->value());
 
 #if DO_DEBUG
     y2debug ("localize <%s, %s, %d> to <%s>", m_singular, m_plural, (int)(count->asInteger()->value()), ret);
@@ -536,7 +545,7 @@ YELocale::toStream (std::ostream & str) const
     Bytecode::writeCharp (str, m_singular);
     Bytecode::writeCharp (str, m_plural);
     m_count->toStream (str);
-    return Bytecode::writeCharp (str, m_domain);
+    return Bytecode::writeCharp (str, *m_domain);
 }
 
 

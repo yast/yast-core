@@ -398,11 +398,13 @@ YConst::type () const
 // ------------------------------------------------------------------
 // locale
 
+YLocale::t_uniquedomains YLocale::domains;
+
 YLocale::YLocale (const char *locale, const char *textdomain)
     : YCode (ycLocale)
     , m_locale (locale)
-    , m_domain (textdomain)
 {
+    m_domain = domains.insert (textdomain).first;
 }
 
 
@@ -410,7 +412,17 @@ YLocale::YLocale (std::istream & str)
     : YCode (ycLocale)
 {
     m_locale = Bytecode::readCharp (str);
-    m_domain = Bytecode::readCharp (str);
+    
+    const char * dom = Bytecode::readCharp (str);
+    
+    std::pair <YLocale::t_uniquedomains::iterator, bool> res = domains.insert (dom);
+    
+    // the textdomain was already there, we can free the memory allocated in readCharp
+    if (! res.second)
+    {
+	delete[] dom;
+    }
+    m_domain = res.first;
 }
 
 
@@ -430,7 +442,7 @@ YLocale::value () const
 const char *
 YLocale::domain () const
 {
-    return m_domain;
+    return (*m_domain);
 }
 
 
@@ -439,7 +451,7 @@ YLocale::toStream (std::ostream & str) const
 {
     YCode::toStream (str);
     Bytecode::writeCharp (str, m_locale);
-    return Bytecode::writeCharp (str, m_domain);
+    return Bytecode::writeCharp (str, *m_domain);
 }
 
 string
@@ -454,7 +466,7 @@ YLocale::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
-    const char *ret = dgettext (m_domain, m_locale);
+    const char *ret = dgettext (*m_domain, m_locale);
     y2debug ("localize <%s> to <%s>", m_locale, ret);
     return YCPString (ret);
 }
