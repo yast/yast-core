@@ -114,6 +114,8 @@ class PkgModuleFunctions
 	 */
 	~PkgModuleFunctions ();
 
+    protected:
+        YCPMap YouPatch( const PMYouPatchPtr &patch );
 
 };
 #endif // PkgModuleFunctions_h

@@ -165,10 +165,7 @@ PkgModuleFunctions::YouFirstPatch (YCPList args)
 
     PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().firstPatch();
     if ( patch ) {
-      result->add( YCPString( "name" ),
-                   YCPString( patch->name() ) );
-      result->add( YCPString( "summary" ),
-                   YCPString( patch->shortDescription() ) );
+      result = YouPatch( patch );
     } else {
       y2debug("No more patches.");
     }
@@ -176,7 +173,7 @@ PkgModuleFunctions::YouFirstPatch (YCPList args)
     return result;
 }
 
-/**   
+/**
    @builtin Pkg::YouNextPatch () -> map
 
    get information about next patch to be installed.
@@ -188,13 +185,25 @@ PkgModuleFunctions::YouNextPatch (YCPList args)
 
     PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().nextPatch();
     if ( patch ) {
-      result->add( YCPString( "name" ),
-                   YCPString( patch->name() ) );
-      result->add( YCPString( "summary" ),
-                   YCPString( patch->shortDescription() ) );
+      result = YouPatch( patch );
     } else {
       y2debug("No more patches.");
     }
+
+    return result;
+}
+
+YCPMap
+PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
+{
+    YCPMap result;
+
+    result->add( YCPString( "kind" ), YCPString( patch->kindLabel( patch->kind() ) ) );
+    result->add( YCPString( "name" ), YCPString( patch->name() ) );
+    result->add( YCPString( "summary" ), YCPString( patch->shortDescription() ) );
+    result->add( YCPString( "description" ), YCPString( patch->longDescription() ) );
+    result->add( YCPString( "preinformation" ), YCPString( patch->preInformation() ) );
+    result->add( YCPString( "postinformation" ), YCPString( patch->postInformation() ) );
 
     return result;
 }
