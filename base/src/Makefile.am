@@ -11,7 +11,6 @@ y2base_SOURCES = y2base.cc
 YAST2CORE =						\
 	$(srcdir)/../../liby2/src/libpy2plugin.la	\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../../liby2/src/libpy2program.la	\
 	$(srcdir)/../../wfm/src/libpy2wfm.la		\
 	$(srcdir)/../../scr/src/libpy2scr.la		\
