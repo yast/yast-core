@@ -39,7 +39,7 @@
 #include "ycp/ExecutionEnvironment.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 typedef YCPValue (*v2) ();

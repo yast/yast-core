@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 23 11:33:13 CET 2004 - kkaempf@suse.de
+
+- check for function type in "<name> (...)" properly (#36246)
+
+-------------------------------------------------------------------
 Mon Mar 22 18:15:53 CET 2004 - cschum@suse.de
 
 - Repackage tarball

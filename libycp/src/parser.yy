@@ -2818,7 +2818,7 @@ function_call:
 			}
 		    }
 /*
-		    else if (sentry->type() == Type::Term) // a term
+		    else if (sentry->type()->isTerm()) // a term
 		    {
 #if DO_DEBUG
 			y2debug ("Term! (%s)", sentry->toString().c_str());
@@ -2830,7 +2830,7 @@ function_call:
 		    }
 #endif
 */
-		    else
+		    else if (sentry->type()->isFunction())
 		    {
 #if DO_DEBUG
 			y2debug ("Doing function call, starting params");
@@ -2840,6 +2840,11 @@ function_call:
 #if DO_DEBUG
 			y2debug ("Function! (%s)", sentry->toString(true).c_str());
 #endif
+		    }
+		    else
+		    {
+			yyTerror ("Identifier is not a function", $1.l, $1.v.tval);
+			break;
 		    }
 		}
 
@@ -3887,9 +3892,8 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    term->attachParameter (parm->c);
 	    return 0;
 	}
-	default:
+	default:			// not a builtin/term/function
 	{
-	    fprintf (stderr, "attach_parameter to unknown (%s)\n", code->toString().c_str());
 	    t = Type::Error;
 	}
 	break;
@@ -3900,7 +3904,10 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 #if DO_DEBUG
 	y2debug ("attach_parameter error, t:%s", t->toString().c_str());
 #endif
-	name = string (" in call to ") + name + string ("(...)");
+	if (!name.empty())
+	{
+	    name = string (" in call to ") + name + string ("(...)");
+	}
 
 	if (t->isUnspec())
 	{
