@@ -28,7 +28,7 @@
 #include "Y2CCPkg.h"
 #include "Y2PkgComponent.h"
 
-Y2Component *Y2CCPkg::create(const char *name, int level, int) const
+Y2Component *Y2CCPkg::createInLevel(const char *name, int level, int) const
 {
     if (strcmp (name, "pkg") == 0)
     {

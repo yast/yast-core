@@ -43,7 +43,7 @@ public:
     /**
      * Tries to create a Pkg module
      */
-    virtual Y2Component *create(const char *name, int level, int current_level) const;
+    virtual Y2Component *createInLevel(const char *name, int level, int current_level) const;
 
     virtual bool isServerCreator() const;
     
