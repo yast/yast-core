@@ -148,19 +148,7 @@ struct YWidgetOpt
     YBoolOpt tiled;		// YImage
     YBoolOpt scaleToFit;	// YImage
     YBoolOpt countShowDelta;	// YPartitionSplitter
-    
-    YBoolOpt key_F1;		// YPushButton
-    YBoolOpt key_F2;		// YPushButton
-    YBoolOpt key_F3;		// YPushButton
-    YBoolOpt key_F4;		// YPushButton
-    YBoolOpt key_F5;		// YPushButton
-    YBoolOpt key_F6;		// YPushButton
-    YBoolOpt key_F7;		// YPushButton
-    YBoolOpt key_F8;		// YPushButton
-    YBoolOpt key_F9;		// YPushButton
-    YBoolOpt key_F10;		// YPushButton
-    YBoolOpt key_F11;		// YPushButton
-    YBoolOpt key_F12;		// YPushButton
+    YLongOpt key_Fxx;		// YPushButton: No. of F-Key (1..24), 0 if none
 
     YBoolOpt youMode;		// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector

@@ -108,16 +108,8 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      *
      * @option	key_F1  	(NCurses only) activate this widget with the F1 key
      * @option	key_F2  	(NCurses only) activate this widget with the F2 key
-     * @option	key_F3  	(NCurses only) activate this widget with the F3 key
-     * @option	key_F4  	(NCurses only) activate this widget with the F4 key
-     * @option	key_F5  	(NCurses only) activate this widget with the F5 key
-     * @option	key_F6  	(NCurses only) activate this widget with the F6 key
-     * @option	key_F7  	(NCurses only) activate this widget with the F7 key
-     * @option	key_F8  	(NCurses only) activate this widget with the F8 key
-     * @option	key_F9  	(NCurses only) activate this widget with the F9 key
-     * @option	key_F10 	(NCurses only) activate this widget with the F10 key
-     * @option	key_F11 	(NCurses only) activate this widget with the F11 key
-     * @option	key_F11 	(NCurses only) activate this widget with the F12 key
+     * @option  key_Fxx 	(NCurses only) activate this widget with the Fxx key
+     * @option	key_F24 	(NCurses only) activate this widget with the F24 key
      *
      * @description
      *
@@ -144,18 +136,30 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_autoShortcut) opt.autoShortcut.setValue(true);
 	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue(true);
 	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue(true);
-	    else if ( sym == YUIOpt_key_F1	) opt.key_F1.setValue( true );
-	    else if ( sym == YUIOpt_key_F2	) opt.key_F2.setValue( true );
-	    else if ( sym == YUIOpt_key_F3	) opt.key_F3.setValue( true );
-	    else if ( sym == YUIOpt_key_F4	) opt.key_F4.setValue( true );
-	    else if ( sym == YUIOpt_key_F5	) opt.key_F5.setValue( true );
-	    else if ( sym == YUIOpt_key_F6	) opt.key_F6.setValue( true );
-	    else if ( sym == YUIOpt_key_F7	) opt.key_F7.setValue( true );
-	    else if ( sym == YUIOpt_key_F8	) opt.key_F8.setValue( true );
-	    else if ( sym == YUIOpt_key_F9	) opt.key_F9.setValue( true );
-	    else if ( sym == YUIOpt_key_F10	) opt.key_F10.setValue( true );
-	    else if ( sym == YUIOpt_key_F11	) opt.key_F11.setValue( true );
-	    else if ( sym == YUIOpt_key_F12	) opt.key_F12.setValue( true );
+	    else if ( sym == YUIOpt_key_F1	) opt.key_Fxx.setValue( 1 );
+	    else if ( sym == YUIOpt_key_F2	) opt.key_Fxx.setValue( 2 );
+	    else if ( sym == YUIOpt_key_F3	) opt.key_Fxx.setValue( 3 );
+	    else if ( sym == YUIOpt_key_F4	) opt.key_Fxx.setValue( 4 );
+	    else if ( sym == YUIOpt_key_F5	) opt.key_Fxx.setValue( 5 );
+	    else if ( sym == YUIOpt_key_F6	) opt.key_Fxx.setValue( 6 );
+	    else if ( sym == YUIOpt_key_F7	) opt.key_Fxx.setValue( 7 );
+	    else if ( sym == YUIOpt_key_F8	) opt.key_Fxx.setValue( 8 );
+	    else if ( sym == YUIOpt_key_F9	) opt.key_Fxx.setValue( 9 );
+	    else if ( sym == YUIOpt_key_F10	) opt.key_Fxx.setValue( 10 );
+	    else if ( sym == YUIOpt_key_F11	) opt.key_Fxx.setValue( 11 );
+	    else if ( sym == YUIOpt_key_F12	) opt.key_Fxx.setValue( 12 );
+	    else if ( sym == YUIOpt_key_F13	) opt.key_Fxx.setValue( 13 );
+	    else if ( sym == YUIOpt_key_F14	) opt.key_Fxx.setValue( 14 );
+	    else if ( sym == YUIOpt_key_F15	) opt.key_Fxx.setValue( 15 );
+	    else if ( sym == YUIOpt_key_F16	) opt.key_Fxx.setValue( 16 );
+	    else if ( sym == YUIOpt_key_F17	) opt.key_Fxx.setValue( 17 );
+	    else if ( sym == YUIOpt_key_F18	) opt.key_Fxx.setValue( 18 );
+	    else if ( sym == YUIOpt_key_F19	) opt.key_Fxx.setValue( 19 );
+	    else if ( sym == YUIOpt_key_F20	) opt.key_Fxx.setValue( 20 );
+	    else if ( sym == YUIOpt_key_F21	) opt.key_Fxx.setValue( 21 );
+	    else if ( sym == YUIOpt_key_F22	) opt.key_Fxx.setValue( 22 );
+	    else if ( sym == YUIOpt_key_F23	) opt.key_Fxx.setValue( 23 );
+	    else if ( sym == YUIOpt_key_F24	) opt.key_Fxx.setValue( 24 );
 	    else ol->add(rawopt->value(o));
 	}
 	else if (!rawopt->value(o)->isTerm())

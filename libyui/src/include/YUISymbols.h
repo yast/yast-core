@@ -184,6 +184,18 @@
 #define YUIOpt_key_F10				"key_F10"
 #define YUIOpt_key_F11				"key_F11"
 #define YUIOpt_key_F12				"key_F12"
+#define YUIOpt_key_F13				"key_F13"
+#define YUIOpt_key_F14				"key_F14"
+#define YUIOpt_key_F15				"key_F15"
+#define YUIOpt_key_F16				"key_F16"
+#define YUIOpt_key_F17				"key_F17"
+#define YUIOpt_key_F18				"key_F18"
+#define YUIOpt_key_F19				"key_F19"
+#define YUIOpt_key_F20				"key_F20"
+#define YUIOpt_key_F21				"key_F21"
+#define YUIOpt_key_F22				"key_F22"
+#define YUIOpt_key_F23				"key_F23"
+#define YUIOpt_key_F24				"key_F24"
 
 
 // Predefined glyphs for builtin Glyph()
