@@ -5,11 +5,29 @@
 @YAST2-INIT-PROGRAM@
 
 ## special stuff
+
+# libycp needs flex and bison
 AM_PROG_LEX
 AC_CHECK_PROGS(YACC, 'bison -y -d -v' byacc, false)
 if test "$YACC" = false; then
 	AC_MSG_ERROR([bison not installed])
 fi
+
+# liby2:Y2SerialComponent needs term.h -> ncurses, ncurses-devel
+yast_found_ncurses=no
+AC_CHECK_HEADER(term.h,[yast_found_ncurses=yes])
+if [[ "$yast_found_ncurses" = "no" ]]; then
+ AC_MSG_ERROR(Headers for ncurses are missing. Please install the package ncurses-devel.)
+fi
+
+
+# libycp: y2crypt needs xcrypt.h -> libxcrypt, libxcrypt-devel
+yast_found_xcrypt=no
+AC_CHECK_HEADER(xcrypt.h,[yast_found_xcrypt=yes])
+if [[ "$yast_found_xcrypt" = "no" ]]; then
+ AC_MSG_ERROR(Headers for xcrypt are missing. Please install the package libxcrypt-devel.)
+fi
+
 
 # for historic reasons this value is called SUSEVERSION
 SUSEVERSION=`echo $VERSION | cut -d . -f 1,2`
