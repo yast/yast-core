@@ -129,6 +129,7 @@ examples_DATA =					\
 	TooBig.ycp				\
 	Tree1.ycp				\
 	Tree2.ycp				\
+	UserInput.ycp				\
 	VBox1.ycp				\
 	Weight1.ycp				\
 	Weight2.ycp				\

@@ -11,6 +11,7 @@ html_DATA =			\
 	ui-arch.html		\
 	UI-additional.html	\
 	YCP-UI-layout.html	\
+	YCP-UI-events.html	\
 	YCP-builtins-ui.html	\
 	YCP-UI-richtext.html	\
 	README.newapi
