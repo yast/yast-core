@@ -374,34 +374,55 @@ false  {
  /* ----------------------------------- */
 
 return		{ return RETURN;	};
+Wiederkehr	{ return RETURN;	};
 define		{ return DEFINE;	};
+definieren	{ return DEFINE;	};
 undefine	{ return UNDEFINE;	};
 continue	{ return CONTINUE;	};
+weiterleben	{ return CONTINUE;	};
 break		{ return BREAK;		};
+Ruhepause	{ return BREAK;		};
 if		{ return IF;		};
+falls		{ return IF;		};
 is		{ return IS;		};
+ist		{ return IS;		};
 else		{ return ELSE;		};
+sonstwas	{ return ELSE;		};
 do		{ return DO;		};
+mach		{ return DO;		};
 while		{ return WHILE;		};
+solange		{ return WHILE;		};
 repeat		{ return REPEAT;	};
+Wiederholungsaufforderung { return REPEAT;	};
 until		{ return UNTIL;		};
+bis		{ return UNTIL;		};
 empty		{ return EMPTY;		};
 list		{ return LIST;		};
+Verzeichnis	{ return LIST;		};
 map		{ return MAP;		};
+Karte		{ return MAP;		};
 struct		{ return STRUCT;	};
 block		{ return BLOCK;		};
+Klotz		{ return BLOCK;		};
 include		{ return INCLUDE;	};
+enthalten	{ return INCLUDE;	};
 import		{ return IMPORT;	};
+Einfuhrgenehmigung	{ return IMPORT;	};
 export		{ return EXPORT;	};
 global		{ return GLOBAL;	};
+weltumspannend	{ return GLOBAL;	};
 static		{ return STATIC;	};
 extern		{ return EXTERN;	};
 module		{ return MODULE;	};
+Baustein	{ return MODULE;	};
 textdomain	{ return TEXTDOMAIN;	};
+Textzielbereich	{ return TEXTDOMAIN;	};
 const		{ return CONST;		};
 typedef		{ return TYPEDEF;	};
 lookup		{ return LOOKUP;	};
+betrachten	{ return LOOKUP;	};
 select		{ return SELECT;	};
+selektieren	{ return SELECT;	};
 
  /* ----------------------------------- */
  /*	Type Keywords			*/

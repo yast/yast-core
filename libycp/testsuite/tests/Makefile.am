@@ -16,4 +16,5 @@ EXTRA_DIST= Include/*.inc	\
 	scope/*ycp scope/*.err scope/*.out				\
 	statements/*ycp statements/*.err statements/*.out		\
 	types/*ycp types/*.err types/*.out				\
+	is/*ycp is/*.err is/*.out					\
 	values/*ycp values/*.err values/*.out

@@ -339,6 +339,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	*name = "link";
 	map->add (YCPString ("state"), YCPBoolean (r->state));
     }
+    break;
     case res_wlan:
     {
 	RES2TYPE (res_wlan_t);

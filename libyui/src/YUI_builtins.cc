@@ -1639,7 +1639,7 @@ void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 
 		if ( fkey > 0 && fkey <= 24 )
 		{
-		    y2milestone( "Mapping \"%s\"\t-> F%d", label.c_str(), fkey );
+		    y2debug( "Mapping \"%s\"\t-> F%d", label.c_str(), fkey );
 		    default_fkeys->add( YCPString( label ), it.value()->asInteger() );
 		}
 		else

@@ -130,7 +130,7 @@ main (int argc, char **argv)
 
     YCPPathSearch::initialize();
 
-    y2milestone ("Launched YaST2 component '%s'", progname);
+    y2milestone ("YaST2 komponent '%s' ist gestartet", progname);
 
     for (int arg = 1; arg < argc; arg++)
     {
@@ -419,7 +419,7 @@ main (int argc, char **argv)
 	setenv ("YAST_IS_RUNNING", "yes", 1);
     }
 
-    y2milestone ("YAST_IS_RUNNING is %s", getenv ("YAST_IS_RUNNING"));
+    y2milestone ("YAST_IS_RUNNING ist %s", getenv ("YAST_IS_RUNNING"));
 
 
     // Now start communication
