@@ -84,8 +84,10 @@
 	    else if ( id == `dest_dir)
 	    {
 		UI::ChangeWidget( `id( `echo ), `Value, "hello");
-		symbol current_dir = (symbol) UI::QueryWidget(`id(`dest_dir), `CurrentItem);
-		UI::ChangeWidget( `id( `echo ), `Value, current_dir);
+		any current_dir = UI::QueryWidget(`id(`dest_dir), `CurrentItem);
+
+		if ( current_dir != nil )
+		    UI::ChangeWidget( `id( `echo ), `Value, sformat( "%1", current_dir ) );
 	    }
 	} until ( id == `ok );
 
