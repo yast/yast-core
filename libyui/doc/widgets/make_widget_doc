@@ -54,7 +54,7 @@
 # of contents) file is generated that contains hyperlinks to the
 # individual widget HTML files. This TOC file is generated at the very
 # end of the program from information collected in the '%toc_target'
-# and '%toc_description' hashes. 
+# and '%toc_description' hashes.
 #
 # The TOC will contain an entry for each word in each '@widget'
 # section - some '@widget' sections describe more than one widget
@@ -272,7 +272,7 @@ sub read_main_file()
 		        # corresponding C++ source file (because there isn't one).
 
 			@prop = ();
-			$widget{ 'class' } =~ s:\((.*)\):$1: ;
+			$widget{ 'class' } =~ s:\( *([^ ]*) *\):$1:
 		    }
 		    else	# read Yclass-file.cc
 		    {
@@ -486,7 +486,7 @@ sub write_widget_html_doc ()
     write_html_footer( $html_file);
 
     # Notice: $html_file will be closed automatically by its destructor.
-    
+
 }
 
 #-----------------------------------------------------------------------------
