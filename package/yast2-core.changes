@@ -1,7 +1,18 @@
 -------------------------------------------------------------------
+Thu Jan 29 16:35:54 CET 2004 - mvidner@suse.cz
+
+- fixed bugs revealed by -Woverloaded-virtual
+
+-------------------------------------------------------------------
 Thu Jan 29 13:17:35 CET 2004 - visnov@suse.cz
 
 - don't distribute bison-generated code 
+
+-------------------------------------------------------------------
+Thu Jan 29 09:46:33 CET 2004 - mvidner@suse.cz
+
+- fixed YError::toString signature
+- libycp/testsuite runs again (added xfail)
 
 -------------------------------------------------------------------
 Wed Jan 28 10:56:52 CET 2004 - arvin@suse.de
@@ -18,7 +29,7 @@ Wed Jan 28 05:53:43 CET 2004 - nashif@suse.de
 Tue Jan 27 18:46:39 CET 2004 - mvidner@suse.cz
 
 - moved agent-ypserv to yast2-nis-client
-  and agent-lostup to yast2-storage
+  and agent-losetup to yast2-storage
 
 -------------------------------------------------------------------
 Tue Jan 27 18:09:09 CET 2004 - sh@suse.de
