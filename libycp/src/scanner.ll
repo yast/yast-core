@@ -140,12 +140,24 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	RESULT (Type::ConstInteger, C_INTEGER);
     }
 
+	/* wrong octal constant */
+
+0[0-9]* {
+	logError("bad octal constant", LINE_VAR);
+    }
+
 	/* hexadecimal constant  */
 
 0x[0-9A-Fa-f]+ {
 	debug_scanner("<hex>");
 	sscanf (yytext, "0x%Lx", &(token_value.ival));
 	RESULT (Type::ConstInteger, C_INTEGER);
+    }
+    
+	/* wrong hexadecimal constant */
+
+0x[0-9A-Za-z]* {
+	logError("bad hexadecimal constant", LINE_VAR);
     }
 
  /* ----------------------------------- */

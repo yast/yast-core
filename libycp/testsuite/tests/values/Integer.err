@@ -74,6 +74,7 @@ Parsed:
 ----------------------------------------------------------------------
 27
 ----------------------------------------------------------------------
+[Parser] tests/values/Integer.ycp:42 bad octal constant
 Parsed:
 ----------------------------------------------------------------------
 1
@@ -86,6 +87,8 @@ Parsed:
 ----------------------------------------------------------------------
 3735928559
 ----------------------------------------------------------------------
+[Parser] tests/values/Integer.ycp:48 bad hexadecimal constant
+[Parser] tests/values/Integer.ycp:49 bad hexadecimal constant
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -93,4 +96,4 @@ Parsed:
     return (42 / 0);
 }
 ----------------------------------------------------------------------
-[Interpreter] tests/values/Integer.ycp:57 division by zero
+[Interpreter] tests/values/Integer.ycp:60 division by zero

@@ -39,11 +39,14 @@
 # ------- octal representation
 01
 033
+039	// wrong
 
 # ------- hex representation
 0x1
 0x0
 0xDeaDBeeF
+0xz	// wrong
+0x	// wrong
 
 #
 # overflows nearby value representations are not implemented correctly

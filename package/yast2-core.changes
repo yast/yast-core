@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov  3 10:04:58 CET 2004 - visnov@suse.cz
+
+- Recognize wrong octal and hexa constants and report them (#47883) 
+
+-------------------------------------------------------------------
 Wed Nov  3 09:26:59 CET 2004 - visnov@suse.cz
 
 - Always create a symbol table for modules (#42007) 
