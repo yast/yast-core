@@ -541,8 +541,8 @@ YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 
     for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_stepsEnabled ) opt.stepsEnabled.setValue( true );
-	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_treeEnabled  ) opt.treeEnabled.setValue( true );
+	if      ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_stepsEnabled ) opt.stepsEnabled.setValue( true );
+	else if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_treeEnabled  ) opt.treeEnabled.setValue( true );
 	else logUnknownOption( term, optList->value(o) );
     }
 
