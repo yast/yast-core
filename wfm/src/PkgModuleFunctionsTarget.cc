@@ -91,6 +91,7 @@ PkgModuleFunctions::TargetInit (YCPList args)
 YCPValue
 PkgModuleFunctions::TargetFinish (YCPList args)
 {
+    _y2pm.instTarget().setInstallationLogfile ("");	// close logfile
     return YCPBoolean (true);
 }
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar  7 10:43:34 CET 2003 - kkaempf@suse.de
+
+- close target logfile at shutdown (#24756)
+- 2.7.30
+
+-------------------------------------------------------------------
 Wed Mar  5 18:55:48 CET 2003 - kkaempf@suse.de
 
 - enhance provideDone and packageDone callbacks to return a
