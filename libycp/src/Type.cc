@@ -766,7 +766,14 @@ ListType::equals (constTypePtr expected) const
 constTypePtr
 ListType::commontype (constTypePtr type) const
 {
-    if (type->isList())
+#if DO_DEBUG
+    y2debug ("commontype '%s', '%s'", toString().c_str(), type->toString().c_str());
+#endif
+    if (type->isVoid())
+    {
+	return constListTypePtr (this);
+    }
+    else if (type->isList())
     {
 	constListTypePtr listtype = type;
 	return ListTypePtr (new ListType (m_type->commontype (listtype->m_type)));
@@ -918,7 +925,14 @@ MapType::equals (constTypePtr expected) const
 constTypePtr
 MapType::commontype (constTypePtr type) const
 {
-    if (type->isMap())
+#if DO_DEBUG
+    y2debug ("commontype '%s', '%s'", toString().c_str(), type->toString().c_str());
+#endif
+    if (type->isVoid())
+    {
+	return constMapTypePtr (this);
+    }
+    else if (type->isMap())
     {
 	constMapTypePtr maptype = type;
 	return MapTypePtr (new MapType (m_keytype->commontype (maptype->m_keytype), m_valuetype->commontype (maptype->m_valuetype)));
