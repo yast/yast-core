@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Sep  7 10:41:47 CEST 2004 - visnov@suse.cz
+
+- support newer flex (patch by tcrhak)
+- 2.10.12 
+
+-------------------------------------------------------------------
 Mon Sep  6 09:04:58 CEST 2004 - jsrain@suse.cz
 
 - Added Pkg::PkgMarkLicenseConfirmed() (#44145)
