@@ -47,6 +47,25 @@
 #include <y2pm/InstSrcManager.h>
 #include <y2pm/PMYouServers.h>
 
+#define Y2REFFUNCTIONCALL1(namespace, name, signature, param1type, impl_class, impl_func)  \
+class namespace##name##Function1 : public Y2CPPFunctionCall <impl_class> {      \
+public:                                                 \
+    namespace##name##Function1(impl_class* instance) :  \
+        Y2CPPFunctionCall <impl_class> (signature, instance)    \
+    {}                                                  \
+    virtual void registerParameters (YBlock* decl)      \
+    {                                                   \
+        TypePtr t = Type::Const##param1type->clone ();  \
+        t->asReference();                               \
+        newParameter (decl, 1, t );                     \
+    }                                                   \
+    virtual YCPValue evaluate (bool cse=false)          \
+    {                                                   \
+        if (cse) return YCPNull ();                     \
+        return m_instance->impl_func (m_param1->value ()->asReference ());   \
+    }                                                   \
+}
+
 
 /**
  * A simple class for package management access
@@ -237,7 +256,7 @@ class PkgModuleFunctions : public Y2Namespace
 
 	// you patch related
         YCPMap YouStatus ();
-	YCPString YouGetServers (YCPList& strings);
+	YCPString YouGetServers (YCPReference strings);
 	YCPValue YouSetServer (const YCPMap& strings);
 	YCPValue YouGetUserPassword ();
 	YCPValue YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& persistent);
@@ -376,7 +395,7 @@ class PkgModuleFunctions : public Y2Namespace
 
 	// you patch related
         Y2FUNCTIONCALL  ( Pkg, YouStatus, 		"map<any,any> ()",		PkgModuleFunctions, YouStatus);
-// FIXME:	Y2FUNCTIONCALL1 ( Pkg, YouGetServers, 		List, 		PkgModuleFunctions, YouGetServers);
+	Y2REFFUNCTIONCALL1 ( Pkg, YouGetServers, 	"string (list<any>&)",	List,	PkgModuleFunctions, YouGetServers);
 	Y2FUNCTIONCALL1	( Pkg, YouSetServer,		"string (map<any,any>)",Map, PkgModuleFunctions, YouSetServer);
 	Y2FUNCTIONCALL 	( Pkg, YouGetUserPassword,	"map<any,any> ()",	PkgModuleFunctions, YouGetUserPassword);
 	Y2FUNCTIONCALL3	( Pkg, YouSetUserPassword,	"string (string, string, boolean)", String, String, Boolean, PkgModuleFunctions, YouSetUserPassword);

@@ -192,7 +192,7 @@ PkgModuleFunctions::YouSetUserPassword (const YCPString& user, const YCPString& 
            "read"  error reading file after download
 */
 YCPString
-PkgModuleFunctions::YouGetServers (YCPList& strings)
+PkgModuleFunctions::YouGetServers (YCPReference strings)
 {
     std::list<PMYouServer> servers;
     _last_error = _y2pm.youPatchManager().instYou().servers( servers );
@@ -203,7 +203,7 @@ PkgModuleFunctions::YouGetServers (YCPList& strings)
       return YCPString( "Error getting you servers." );
     }
 
-    YCPList result = YCPList( strings );
+    YCPList result;
     std::list<PMYouServer>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
       YCPMap serverMap;
@@ -212,6 +212,8 @@ PkgModuleFunctions::YouGetServers (YCPList& strings)
       serverMap->add( YCPString( "directory" ), YCPString( (*it).directory() ) );
       result->add( serverMap );
     }
+    
+    strings->entry ()->setValue (result);
 
     return YCPString( "" );
 }
