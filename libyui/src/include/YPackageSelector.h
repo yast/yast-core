@@ -21,7 +21,6 @@
 
 #include "YWidget.h"
 #include <ycp/YCPString.h>
-#include <ycp/YCPList.h>
 
 class YMacroRecorder;
 
