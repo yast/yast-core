@@ -97,17 +97,20 @@ main (int argc, char **argv)
 	}
     }
 
+    // set a defined umask
+    umask (0022);
+
+    // The environment variable YAST_IS_RUNNING is checked in rpm
+    // post install scripts. Might be useful for other scripts as
+    // well.
+    setenv ("YAST_IS_RUNNING", "1", 1);
+
     y2milestone ("Launched YaST2 component '%s'", progname);
 
     for (int arg = 1; arg < argc; arg++)
     {
 	y2debug ("arg %d: %s", arg, argv[arg]);
     }
-
-    // The environment variable YAST_IS_RUNNING is checked in rpm
-    // post install scripts. Might be useful for other scripts as
-    // well.
-    setenv ("YAST_IS_RUNNING", "1", 1);
 
     // Now evaluate command line options in sequence
 

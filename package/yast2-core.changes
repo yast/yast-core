@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Dec 20 16:57:46 CET 2002 - arvin@suse.de
+
+- merged from 8.1 branch:
+  - set umask to 0022 in genericfronted.cc
+
+-------------------------------------------------------------------
 Thu Dec 19 13:43:33 CET 2002 - cschum@suse.de
 
 - Pkg:: interface
