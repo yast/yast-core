@@ -111,7 +111,7 @@ Type::Type ()
 }
 
 Type::Type (const Type &type)
-    : m_kind (type.m_kind)
+    : Rep (type), m_kind (type.m_kind)
 {
 }
 
