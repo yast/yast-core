@@ -1,0 +1,11 @@
+//
+{
+    // test of repeat_names and changing the file (#42297)
+
+    y2error ("%1", SCR::Read (.ini.v.Val1));
+    SCR::Write (.ini.v.Val2, ["New"]);
+    sleep (1001); // the file's mtime must change
+    SCR::RegisterAgent (.target, `ag_system ());
+    SCR::Execute (.target.bash, "echo 'Val1=PartC' >>debug/chg-repeat.in.test");
+    y2error ("%1", SCR::Read (.ini.v.Val1));
+}

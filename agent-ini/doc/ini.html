@@ -23,64 +23,53 @@ How to generate the TOC in Emacs:
 Mark the TOC, then C-w, C-u M-| ~mvidner/bin/htmltoc ini.html RET
 -->
 Ini agent description<br />
-&nbsp;&nbsp;Purpose<br />
-&nbsp;&nbsp;Specification<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Ini file entities<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Patterns<br />
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#config">Configuration file for
-ini files</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File Specification:<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Configuration map<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#params">Params:</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#comments">Comments:</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#sections">Sections:</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#subindent">Subindent:</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#options">Options:</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
-href="#rewrite">rewrite</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;Configuration file for sysconfig files
-(former rc files)<br />
-&nbsp;&nbsp;<a href="#ycp-interface">Interface for
-ini-agent</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;Accessing keys<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All-at-once Read/Write<br />
-&nbsp;&nbsp;&nbsp;&nbsp;SysConfig/flat mode<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Final write<br />
+&nbsp;&nbsp;<a href="#purpose">Purpose</a><br />
+&nbsp;&nbsp;<a href="#specification">Specification</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#entities">Ini file entities</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#patterns">Patterns</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#config">Configuration file for ini files</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#configmap">Configuration map</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#params">Params:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#comments">Comments:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#sections">Sections:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#subindent">Subindent:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#options">Options:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rewrite">rewrite</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#sysconfig">Configuration file for sysconfig files (former rc files)</a><br />
+&nbsp;&nbsp;<a href="#ycp-interface">Interface for ini-agent</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#access">Accessing keys</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#all">All-at-once Read/Write</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#flat">SysConfig/flat mode</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#finally">Final write</a><br />
 &nbsp;&nbsp;<a href="#TODOs">TODOs</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;Flag repeat_names<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Allowed section names and key names<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Browser<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Re-ordering<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Section renaming<br />
-&nbsp;&nbsp;&nbsp;&nbsp;I am the highest authority!<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#allowed">Allowed section names and key names</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#browser">Browser</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#reorder">Re-ordering</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#rename">Section renaming</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#dontreread">I am the highest authority!</a><br />
 &nbsp;&nbsp;<a href="#examples">Examples</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;Dialup providers (package providers)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;smb.conf<br />
-&nbsp;&nbsp;&nbsp;&nbsp;/etc/lilo.conf<br />
-&nbsp;&nbsp;&nbsp;&nbsp;Rewrite rules<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ex.providers">Dialup providers (package providers)</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ex.smb">smb.conf</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ex.lilo">/etc/lilo.conf</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ex.rewrite">Rewrite rules</a><br />
 &nbsp;&nbsp;<a href="#implementation">Implementation</a><br />
-&nbsp;&nbsp;Changes<br />
+&nbsp;&nbsp;<a href="#changes">Changes</a><br />
 </p>
 
 <hr />
-<h2>Purpose</h2>
+<h2 id="purpose">Purpose</h2>
 
 <p>The ini agent is a common agent to read a variety of ini files.
 The main purpose for this agent were configuration files for samba
 (/etc/samba.conf).</p>
 
-<h2>Specification</h2>
+<h2 id="specification">Specification</h2>
 
 <p class="notimpl">Texts like this mean that described feature will
 be implemented later. (That means when all other features are
 implemented.)</p>
 
-<h3>Ini file entities</h3>
+<h3 id="entities">Ini file entities</h3>
 
 <p>The agent sees an ini file as containing these basic entities:
 entries, sections and comments. <b>Entries</b> have a name and a
@@ -124,7 +113,7 @@ top-level. Definitely section name may be the same as key name. But
 maybe for some ini files, there may be more keys with the same name
 or more sections with the same name.</p>
 
-<h3>Patterns</h3>
+<h3 id="patterns">Patterns</h3>
 
 <p>Lets use regular expressions to find out what kind of line we
 are processing. We need regular expression to read and recognize
@@ -226,7 +215,7 @@ href="#options">options</a>"  : [ "option1", "option2", ... ]],
 `IniAgent (<i>File specification</i>, <i>Configuration map</i>)
 </pre>
 
-<h4>File Specification:</h4>
+<h4 id="filespec">File Specification:</h4>
 
 <dl>
 <dt>Single file mode</dt>
@@ -249,7 +238,7 @@ care not to cd in your program :-)</p>
 
 <p>See also the option <a href="#read_only">read_only</a>.</p>
 
-<h4>Configuration map</h4>
+<h4 id="configmap">Configuration map</h4>
 
 <h4 id="params">Params:</h4>
 
@@ -391,7 +380,9 @@ file</dd>
 
 <dd>there may be more keys with the same name and more sections
 with the same name. Note that sections with the same name as keys
-are allowed</dd>
+are allowed.<br />
+This option also disables merging of data if the file
+is <a href="#finally">modified</a> externally.</dd>
 
 <dt id="comments_last">"comments_last"</dt>
 
@@ -451,7 +442,7 @@ do not specify it, it will default to 0, which could be OK but
 needn't.</li>
 </ul>
 
-<h3>Configuration file for sysconfig files (former rc files)</h3>
+<h3 id="sysconfig">Configuration file for sysconfig files (former rc files)</h3>
 
 <p>Ini agent may be easily used for parsing files in sysconfig
 directory, but care must be taken to keep the files clean. No such
@@ -490,7 +481,7 @@ equivalent IniAgent is:</p>
 <h2 id="ycp-interface">Interface for ini-agent</h2>
 
 Assume, agent is mounted on path .ini 
-<h3>Accessing keys</h3>
+<h3 id="access">Accessing keys</h3>
 
 <p>Because ini file structure may be hierarchical and there can be
 sections and keys with any name, we must use some keyword to
@@ -582,7 +573,7 @@ Deleting only one instance of many values/sections with the same
 name is not possible. All of them are deleted by <tt>Write
 (.ini.value|section.<i>foo</i>.<i>bar</i>, nil)</tt></p>
 
-<h4>All-at-once Read/Write</h4>
+<h4 id="all">All-at-once Read/Write</h4>
 
 <tt>Read (.ini.all.<i>sectionname</i>.<i>sectionname</i>)</tt> or
 simply <tt>Read (.ini.all)</tt> returns a map as follows: 
@@ -617,7 +608,7 @@ subsections (see above) or values:
 <p>TODO: how does it interact with multiple-files support? Erasing
 a file this way probably does not work.</p>
 
-<h3>SysConfig/flat mode</h3>
+<h3 id="flatmode">SysConfig/flat mode</h3>
 
 <p>This mode is used for reading sysconfig-files and is compatibile
 with rc-agent. So values are accessible under
@@ -627,11 +618,12 @@ with rc-agent. So values are accessible under
 value, new value will be created. You may not create value by
 writting its comment.</p>
 
-<h3>Final write</h3>
+<h3 id="finally">Final write</h3>
 
 <p>Changes are written to disk when Write (.ini, nil) is called or
 in agent destructor. Agent handles external change of ini file, in
-other words, it writes only changed values. If you do not call
+other words, it writes only changed values (except when <a
+href="#repeat_names">repeat_names</a> is used). If you do not call
 Write at the end, agent writes changed data to disk in the
 destructor.<br />
 By default file is written only if something changed. File may be
@@ -650,24 +642,24 @@ false. True is returned otherwise.</p>
 I am going to implement following features when someone requests
 them. I do not want to fill the agent with features that will be
 never used.<br />
-<h3>Allowed section names and key names</h3>
+<h3 id="allowed">Allowed section names and key names</h3>
 
 There can be list of allowed names for sections/keys. No problem to
 implement, just tell if you need it. But do you really need it? 
-<h3>Browser</h3>
+<h3 id="browser">Browser</h3>
 
 There could be some Read function that would return structure that
 could be passed to tree widget. It is really the fastest way to
 create it in C++ but I am not sure if it is possible to do it
 enough versatile. Another problem is with changes. 
-<h3>Re-ordering</h3>
+<h3 id="reorder">Re-ordering</h3>
 
 We should be able to change order of values/sections. 
-<h3>Section renaming</h3>
+<h3 id="rename">Section renaming</h3>
 
 We should be able to rename section. Easy to implement. Does
 anybody need it? 
-<h3>I am the highest authority!</h3>
+<h3 id="dontreread">I am the highest authority!</h3>
 
 Client should be able to tell agent not to re-read externally
 changed file. Sometimes, when client completly re-creates file, its
@@ -679,7 +671,7 @@ re-read could cause big mess. <br />
 Each features should be tested in testsuite. Look for an
 inspiration there. Here are some most common or interesting
 examples:<br />
-<h3>Dialup providers (package providers)</h3>
+<h3 id="ex.providers">Dialup providers (package providers)</h3>
 
 <pre>
 .ini
@@ -702,7 +694,7 @@ examples:<br />
 )
 </pre>
 
-<h3>smb.conf</h3>
+<h3 id="ex.smb">smb.conf</h3>
 
 <pre>
 .ini
@@ -729,7 +721,7 @@ examples:<br />
 )
 </pre>
 
-<h3>/etc/lilo.conf</h3>
+<h3 id="ex.lilo">/etc/lilo.conf</h3>
 
 <pre>
 .ini
@@ -763,7 +755,7 @@ examples:<br />
 )
 </pre>
 
-<h3>Rewrite rules</h3>
+<h3 id="ex.rewrite">Rewrite rules</h3>
 
 <p>See testsuites, <tt>multi/rewrite*</tt>. TODO FIXME: insert an
 example here.</p>
@@ -825,7 +817,7 @@ else we are in normal mode
 <i><b>Note:</b> The complete development documentation is available
 in the <a href="autodocs/index.html"><tt>autodocs/</tt></a>
 directory.</i> 
-<h2>Changes</h2>
+<h2 id="changes">Changes</h2>
 
 <ul>
 <li><b>2001-10-09:</b> Forced final write changed from Write
@@ -845,6 +837,9 @@ Functionality changed too.</li>
 <li><b>2002-11-29:</b> A rewrite of the docs.</li>
 
 <li><b>2003-12-16:</b> Added repeat_names, .ini.all.</li>
+
+<li><b>2004-12-01:</b> Do not merge external changes when repeat_names is
+enabled. (<a href="http://bugzilla.suse.de/42297">#42297</a>)</li>
 </ul>
 
 <address>Martin Vidner &lt;mvidner@suse.cz&gt;,<br />

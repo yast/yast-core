@@ -818,6 +818,14 @@ void IniParser::UpdateIfModif ()
 {
     if (read_only)
         return;
+    // #42297: parsing a file with repeat_names cannot remove duplicates
+    // so reparsing it would duplicate the whole file.
+    // Therefore we do not reparse.
+    if (repeat_names)
+    {
+	y2debug ("Skipping possible reparse due to repeat_names");
+	return;
+    }
     if (multiple_files)
 	parse ();
     else

@@ -1,6 +1,8 @@
 -------------------------------------------------------------------
-Wed Dec  1 18:21:00 CET 2004 - mvidner@suse.cz
+Thu Dec  2 14:35:11 CET 2004 - mvidner@suse.cz
 
+- ini agent: do not merge external changes when repeat_names is
+  enabled (#42297)
 - ini agent: include file name in parse errors (#48777)
 
 -------------------------------------------------------------------
