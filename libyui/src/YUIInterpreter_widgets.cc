@@ -129,6 +129,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if (s == YUIOpt_hvstretch)     { opt.isHStretchable.setValue(true); opt.isVStretchable.setValue(true); }
 	    else if (s == YUIOpt_autoShortcut)	opt.autoShortcut.setValue(true);
 	    else if (s == YUIOpt_easterEgg)	opt.easterEgg.setValue(true);
+	    else if (s == YUIOpt_testMode)	opt.testMode.setValue(true);
 	    else ol->add(rawopt->value(o));
 	}
 	else if (!rawopt->value(o)->isTerm())
@@ -937,7 +938,6 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 	    else if ( sym == YUIOpt_key_F10	) opt.key_F10.setValue( true );
 	    else if ( sym == YUIOpt_key_F11	) opt.key_F11.setValue( true );
 	    else if ( sym == YUIOpt_key_F12	) opt.key_F12.setValue( true );
-	    else if ( sym == YUIOpt_key_Return	) opt.key_Return.setValue( true );
 	    else logUnknownOption(term, optList->value(o));
 	}
 	else logUnknownOption(term, optList->value(o));

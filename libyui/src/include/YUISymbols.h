@@ -158,6 +158,7 @@
 #define YUIOpt_plainText			"plainText"
 #define YUIOpt_scaleToFit			"scaleToFit"
 #define YUIOpt_shrinkable			"shrinkable"
+#define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
 #define YUIOpt_vstretch				"vstretch"
 #define YUIOpt_warncolor			"warncolor"
@@ -176,7 +177,6 @@
 #define YUIOpt_key_F10				"key_F10"
 #define YUIOpt_key_F11				"key_F11"
 #define YUIOpt_key_F12				"key_F12"
-#define YUIOpt_key_Return			"key_Return"
 
 #define YUIOpt_youMode				"youMode"
 #define YUIOpt_updateMode			"updateMode"

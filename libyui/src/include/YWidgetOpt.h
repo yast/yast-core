@@ -120,6 +120,7 @@ struct YWidgetOpt
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
     YBoolOpt easterEgg;
+    YBoolOpt testMode;
 
     YLongOpt hWeight;		// from YUIInterpreter::createWeight()
     YLongOpt vWeight;		// from YUIInterpreter::createWeight()
@@ -159,7 +160,6 @@ struct YWidgetOpt
     YBoolOpt key_F10;		// YPushButton
     YBoolOpt key_F11;		// YPushButton
     YBoolOpt key_F12;		// YPushButton
-    YBoolOpt key_Return;	// YPushButton
 
     YBoolOpt youMode;		// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector
