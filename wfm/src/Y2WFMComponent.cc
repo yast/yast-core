@@ -634,7 +634,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 Y2Namespace *
 Y2WFMComponent::import (const char* name_space)
 {
-    y2debug ("Y2WFMComponent::import (%s)", name_space);
+    y2milestone ("Y2WFMComponent::import (%s)", name_space);
 
     // create the namespace
     // maybe this failed, but it does not mean any problems, block () will simply return 0

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb 24 10:03:56 CET 2005 - visnov@suse.cz
+
+- revert  YCP module import reporting change
+- 2.11.24
+
+-------------------------------------------------------------------
 Tue Feb 22 16:17:49 CET 2005 - mvidner@suse.cz
 
 - Added wireles card features to agent-probe (#65391).

@@ -1099,8 +1099,6 @@ Bytecode::readModule (const string & mname)
 	return m_bytecodeCache->find (mname)->second;
     }
     
-    y2milestone ("YCP module import (%s)", mname.c_str ());
-
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
     YBlockPtr block = (YBlockPtr)Bytecode::readFile (filename);
 
