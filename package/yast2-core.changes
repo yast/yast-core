@@ -1,12 +1,18 @@
 -------------------------------------------------------------------
+Tue Mar 30 19:58:27 CEST 2004 - arvin@suse.de
+
+- fixed setting of YAST_IS_RUNNING (bug #37536)
+
+-------------------------------------------------------------------
 Tue Mar 30 17:18:52 CEST 2004 - sh@suse.de
 
-- Fixed bug #37534: MultiSelectionBox returns [nil] without item IDs
+- Fixed bug #37534: MultiSelectionBox returns [nil] without item
+  IDs
 
 -------------------------------------------------------------------
 Tue Mar 30 16:51:24 CEST 2004 - sh@suse.de
 
-- added `opt(`treeEnabled) for wizard widget 
+- added `opt(`treeEnabled) for wizard widget
 
 -------------------------------------------------------------------
 Tue Mar 30 13:45:04 CEST 2004 - kkaempf@suse.de

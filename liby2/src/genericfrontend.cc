@@ -48,7 +48,7 @@ static void print_help ();
 static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)));
 static bool is_ycp_value (const char* arg);
 
-void 
+void
 SIGSEGVhandler (int sig)
 {
     signal (sig, SIG_IGN);
@@ -72,7 +72,7 @@ main (int argc, char **argv)
     // Ignore SIGPIPE. No use in signals. Signals can't be assigned to
     // components
     signal(SIGPIPE, SIG_IGN);
-    
+
     // Give some output for the SIGSEGV
     signal(SIGSEGV, SIGSEGVhandler);
 
@@ -127,7 +127,7 @@ main (int argc, char **argv)
 
     // set a defined umask
     umask (0022);
-    
+
     YCPPathSearch::initialize();
 
     y2milestone ("Launched YaST2 component '%s'", progname);
@@ -158,7 +158,7 @@ main (int argc, char **argv)
 	// Logfile already done at program start --> ignore here
 	arg+=2;	  // skip over logfilename
     }
-    
+
 
     // Check for namespace exceptions registration
     while (!strcmp(argv[arg], "-n"))
@@ -168,7 +168,7 @@ main (int argc, char **argv)
 	if (pos == NULL)
 	{
 	    print_error ("Option %s argument must be in format namespace=component", argv[arg-1]);
-	    exit (5);	    
+	    exit (5);
 	}
 	*pos = 0;
 	Y2ComponentBroker::registerNamespaceException (argv[arg], pos+1);
@@ -213,7 +213,7 @@ main (int argc, char **argv)
 	{
 	    Parser parser (0, "<stdin>");	// set parser to stdin
 	    YCodePtr pc = parser.parse ();
-	    
+
 	    YCPValue option = YCPNull ();
 	    if (pc)
 	    {
@@ -257,9 +257,9 @@ main (int argc, char **argv)
 	    while (!feof(file))	  // Parse all values until EOF
 	    {
 		Parser parser(file, argv[arg]);   // set parser to file
-		
+
 		YCodePtr pc = parser.parse ();
-		
+
 		if ( pc )
 		{
 		    arglist->add( pc->evaluate(true) );
@@ -279,9 +279,9 @@ main (int argc, char **argv)
 	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
 	{
 	    Parser parser (argv[arg]);	// set parser to option
-	    
+
 	    YCodePtr pc = parser.parse ();
-	    
+
 	    if (!pc )
 	    {
 		print_error ("Client option %s is not a valid YCP value", argv[arg]);
@@ -351,9 +351,9 @@ main (int argc, char **argv)
 	    while (!feof(file))	  // Parse all values until EOF
 	    {
 		Parser parser(file, argv[arg]);   // set parser to file
-		
+
 		YCodePtr pc = parser.parse ();
-		
+
 		if (pc)
 		{
 		    preload->add(pc->evaluate (true));   // add to preload list
@@ -373,9 +373,9 @@ main (int argc, char **argv)
 	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
 	{
 	    Parser parser (argv[arg]);	// set parser to option
-	    
+
 	    YCodePtr pc = parser.parse ();
-	    
+
 	    if (!pc)
 	    {
 		print_error ("Server option %s is not a valid YCP value", argv[arg]);
@@ -408,7 +408,8 @@ main (int argc, char **argv)
     // The environment variable YAST_IS_RUNNING is checked in rpm
     // post install scripts. Might be useful for other scripts as
     // well.
-    if (strcmp (client_name, "installation.ycp") == 0 &&
+    if ((strcmp (client_name, "installation") == 0 ||
+	 strcmp (client_name, "installation.ycp") == 0) &&
 	arglist->contains (YCPString ("initial")))
     {
 	setenv ("YAST_IS_RUNNING", "instsys", 1);
