@@ -1446,6 +1446,8 @@ int main(int argc, char *argv[])
 		    fprintf (stderr, "Compilation failed for %s\n", depit->path().c_str());
 		    break;
 		}
+
+		ret = 0;
 	    }
 	    else
 	    {
