@@ -1453,13 +1453,19 @@ YSImport::YSImport (std::istream & str)
 
 	    if (tentry == 0)
 	    {
-		ycp2error ("Unresolved xref to %s::%s\n", m_name->c_str(), sname);
+		ycp2error ("Import '%s' failed\n", m_name->c_str());
+		ycp2error ("Symbol '%s::%s' does not exist.\n", m_name->c_str(), sname);
 		m_name = SymbolEntry::emptyUstring;			// mark as error
+		break;
 	    }
 	    else if (tentry->sentry()->type()->match (stype) != 0)
 	    {
-		ycp2error ("Xref to '%s::%s' expects type <%s> but module provides type <%s>\n", m_name->c_str(), sname, stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
+		ycp2error ("Import '%s' failed\n", m_name->c_str());
+		ycp2error ("A reference to '%s::%s' expects type <%s> but module provides type <%s>\n",
+			m_name->c_str(), sname,
+			stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
 		m_name = SymbolEntry::emptyUstring;
+		break;
 	    }
 	    delete [] sname;
 	}
