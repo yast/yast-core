@@ -146,6 +146,7 @@
 #define YUIProperty_Items			"Items"
 #define YUIProperty_Label			"Label"
 #define YUIProperty_Labels			"Labels"
+#define YUIProperty_OpenItems			"OpenItems"
 #define YUIProperty_LastLine			"LastLine"
 #define YUIProperty_Notify			"Notify"
 #define YUIProperty_SelectedItems		"SelectedItems"

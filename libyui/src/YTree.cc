@@ -21,6 +21,7 @@
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPMap.h>
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
@@ -125,6 +126,20 @@ YCPValue YTree::queryWidget( const YCPSymbol & property )
 	else
 	    return YCPVoid();
     }
+    else if ( s == YUIProperty_Items )
+    {
+	return itemsTermList( items );
+    }
+    /*
+     * @property OpenItems a map of open items - can only be queried, not set
+     */
+    else if ( s == YUIProperty_OpenItems )
+    {
+	YCPMap openItems;
+	findOpenItems( openItems, items );
+
+	return openItems;
+    }
     else
 	return YWidget::queryWidget( property );
 
@@ -186,6 +201,74 @@ YTree::rebuildTree()
 }
 
 
+YCPList YTree::itemsTermList( YTreeItemList items )
+{
+    YCPList list;
+
+    for ( YTreeItemListIterator it = items.begin();
+	  it != items.end();
+	  ++it )
+    {
+	YTreeItem * item = *it;
+	YCPTerm itemTerm( YUISymbol_item );	// `item()
+	YCPValue id = item->getId();
+
+	if ( ! id.isNull() )
+	{
+	    YCPTerm idTerm( YUISymbol_id );	// `id()
+	    idTerm->add( id );			// `id(`something )
+	    itemTerm->add( idTerm );		// `item(`id(`something ) )
+	}
+
+	YCPString itemText = item->getText();
+	itemTerm->add( itemText );
+
+	if ( item->isOpen() || item->isOpenByDefault() )
+	{
+	    // y2milestone( "Open item: %s", itemText->value().c_str() );
+	    itemTerm->add( YCPBoolean( true ) );
+	}
+
+	YCPList childrenList = itemsTermList( item->itemList() );
+
+	if ( childrenList->size() > 0 )
+	    itemTerm->add( childrenList );
+
+	if ( itemTerm->size() > 1 )
+	    list->add( itemTerm );
+	else
+	    list->add( itemText );
+	    
+    }
+
+    return list;
+}
+
+
+
+void YTree::findOpenItems( YCPMap & openItems, YTreeItemList items )
+{
+    for ( YTreeItemListIterator it = items.begin();
+	  it != items.end();
+	  ++it )
+    {
+	YTreeItem * item = *it;
+	
+	if ( item->isOpen() || item->isOpenByDefault() )
+	{
+	    YCPValue id = item->getId();
+
+	    if ( id.isNull() )
+		openItems->add( item->getText(), YCPString( "Text" ) );
+	    else
+		openItems->add( id, YCPString( "ID" ) );
+
+	    findOpenItems( openItems, item->itemList() );
+	}
+    }
+}
+
+
 
 YTreeItem *
 YTree::findItemWithId( const YCPValue & id )
@@ -233,6 +316,7 @@ YTreeItem::YTreeItem( YTree * parent, YCPValue newId, YCPString newText, bool op
     , parentTree ( parent )
     , parentItem ( ( YTreeItem * ) 0 )
     , openByDefault ( open )
+    , _open( open )
 {
     parent->items.push_back ( this );
 }
@@ -245,6 +329,7 @@ YTreeItem::YTreeItem( YTreeItem * parent, YCPValue newId, YCPString newText, boo
     , parentTree ( ( YTree * ) 0 )
     , parentItem ( parent )
     , openByDefault ( open )
+    , _open( open )
 {
     parent->items.push_back ( this );
 }
@@ -257,6 +342,7 @@ YTreeItem::YTreeItem( YTree * parent, YCPString newText, void * data, bool open 
     , parentTree ( parent )
     , parentItem ( ( YTreeItem * ) 0 )
     , openByDefault ( open )
+    , _open( open )
 {
     parent->items.push_back ( this );
 }
@@ -269,6 +355,7 @@ YTreeItem::YTreeItem( YTreeItem * parent, YCPString newText, void * data, bool o
     , parentTree ( ( YTree * ) 0 )
     , parentItem ( parent )
     , openByDefault ( open )
+    , _open( open )
 {
     parent->items.push_back ( this );
 }

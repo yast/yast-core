@@ -148,6 +148,17 @@ protected:
     YTreeItem *findItemWithText	( const YCPString & text );
 
     /**
+     * Returns a YCPList of items in the format needed for creating a tree
+     * widget. 
+     **/
+    YCPList itemsTermList( YTreeItemList items );
+    
+    /**
+     * Recursively fills a map 'openItems' with items that are open.
+     **/
+    void findOpenItems( YCPMap & openItems, YTreeItemList items );
+    
+    /**
      * The items.
      */
     YTreeItemList items;
@@ -240,6 +251,17 @@ public:
     YTreeItem *findItemWithText	( const YCPString & text );
 
     /**
+     * Set this item's "open" flag. The UI has to take care to set this each
+     * time the user opens or closes a branch. 
+     **/
+    void setOpen( bool open ) { _open = open; }
+
+    /**
+     * Returns this item's "open" flag.
+     **/
+    bool isOpen()		const { return _open; }
+
+    /**
      * Returns the opaque data pointer for applicaton use.
      **/
     void * data() const { return _data; }
@@ -259,6 +281,7 @@ protected:
     YTree *		parentTree;
     YTreeItem *		parentItem;
     bool		openByDefault;
+    bool		_open;
 
     YTreeItemList	items;
 };
