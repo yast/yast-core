@@ -214,7 +214,7 @@ PkgModuleFunctions::SourceStartCache (YCPList args)
     if ((args->size() != 1)
 	|| !(args->value(0)->isBoolean()))
     {
-	return YCPError ("Bad args to Pkg::SourceList");
+	return YCPError ("Bad args to Pkg::SourceStartCache");
     }
 
     startCachedSources (args->value(0)->asBoolean()->value());
@@ -418,7 +418,7 @@ PkgModuleFunctions::SourceProductData (YCPList args)
 /**
  * @builtin Pkg::SourceProvideFile (integer source, integer medianr, string file) -> string path
  * provide file from source to local path
- * @param source	source id from SourceList()
+ * @param source	source id from SourceStartCache()
  * @param medianr	should be 0 (let the packagemanager decide about the media)
  * @param file		filename relative to source (i.e. CD) root path
  */
