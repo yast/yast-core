@@ -64,7 +64,7 @@ YCPValue YTable::changeWidget( const YCPSymbol & property,
      */
     else if ( s == YUIProperty_Items ) // Change whole selection box!
     {
-	if ( !newValue->isList() )
+	if ( ! newValue->isList() )
 	{
 	    y2warning( "Items property of Table widget must be a list" );
 	    return YCPBoolean( false );
@@ -89,7 +89,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
      */
     if ( s == YUIProperty_Item )
     {
-	if ( property->size() != 2 || !property->value(1)->isInteger() )
+	if ( property->size() != 2 || ! property->value(1)->isInteger() )
 	{
 	    y2error( "Table %s: property `Item() needs two arguments: item id and column number",
 		    id()->toString().c_str() );
@@ -178,7 +178,7 @@ bool YTable::addItems( const YCPList & itemlist )
 
 bool YTable::addItem( const YCPValue & item )
 {
-    if ( !item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item )
+    if ( ! item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item )
     {
 	y2error( "Invalid item specification %s: Must be `" YUISymbol_item "() term",
 		  item->toString().c_str() );
@@ -193,7 +193,7 @@ bool YTable::addItem( const YCPValue & item )
 	return false;
     }
 
-    if ( !collist->value(0)->isTerm()
+    if ( ! collist->value(0)->isTerm()
 	|| collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
 	|| collist->value(0)->asTerm()->size() != 1)
     {

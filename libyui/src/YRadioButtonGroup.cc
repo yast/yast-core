@@ -139,7 +139,7 @@ bool YRadioButtonGroup::setCurrentButton( const YCPValue & id )
 	}
 	else buttonlist[i]->setValue( YCPBoolean( false ) );
     }
-    if ( !found && !id->isVoid() )
+    if ( ! found && ! id->isVoid() )
     {
 	y2warning( "CurrentButton: no RadioButton with id %s belongs to RadioButtonGroup( `id( %s ) )",
 		  id->toString().c_str(), this->id()->toString().c_str() );

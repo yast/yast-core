@@ -166,7 +166,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_key_none	) opt.key_Fxx.setValue( -1 );
 	    else ol->add( rawopt->value(o) );
 	}
-	else if ( !rawopt->value(o)->isTerm() )
+	else if ( ! rawopt->value(o)->isTerm() )
 	{
 	    y2warning( "Invalid widget option %s. Options must be symbols or terms",
 		      rawopt->value(o)->toString().c_str() );
@@ -743,7 +743,7 @@ YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YC
 	{
 	    // Create and add the next child widget.
 
-	    if ( !term->value(w)->isTerm() )
+	    if ( ! term->value(w)->isTerm() )
 	    {
 		y2error( "%s: Should be a widget specification",
 			term->value(w)->toString().c_str() );
@@ -753,7 +753,7 @@ YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YC
 
 	    YWidget *child = createWidgetTree( split, rbg, term->value(w)->asTerm() );
 
-	    if ( !child )
+	    if ( ! child )
 	    {
 		delete split;
 		return 0;
@@ -1229,7 +1229,7 @@ YWidget *YUIInterpreter::createRadioButton( YWidget *parent, YWidgetOpt & opt, c
     YCPBoolean checked( false );
     if ( s == 2 ) checked = term->value( argnr+1 )->asBoolean();
 
-    if ( !rbg )
+    if ( ! rbg )
     {
 	y2error( "%s: must be inside a RadioButtonGroup",
 		term->toString().c_str() );
@@ -1467,7 +1467,7 @@ YWidget *YUIInterpreter::createSelectionBox( YWidget *parent, YWidgetOpt & opt, 
 		else
 		{
 		    int argnr = checkId( iterm->value(0) ) ? 1 : 0;
-		    if ( iterm->size() <= argnr || !iterm->value( argnr )->isString() )
+		    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
 			y2error( "SelectionBox: Invalid item arguments in %s",
 				iterm->toString().c_str() );
 		    else
@@ -1725,7 +1725,7 @@ YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, cons
 		else
 		{
 		    int argnr = checkId( iterm->value(0) ) ? 1 : 0;
-		    if ( iterm->size() <= argnr || !iterm->value( argnr )->isString() )
+		    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
 			y2error( "ComboBox: Invalid item arguments in %s",
 				iterm->toString().c_str() );
 		    else
@@ -2033,7 +2033,7 @@ YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const Y
 	{
 	    YCPTerm t=v->asTerm();
 	    if ( t->size() != 1 ||
-		!t->value(0)->isString() )
+		! t->value(0)->isString() )
 	    {
 		y2error( "Invalid Table column specification %s",
 			t->toString().c_str() );

@@ -262,7 +262,7 @@ void YUIInterpreter::uiThreadMainLoop()
 	// Anyway: Why do we set the pipe to non-blocking if
 	// we wait in idleLoop for it to become readable? It
 	// is needed in YUIQt::idleLoop for QSocketNotifier.
-	if ( !waitForYCPThread () )
+	if ( ! waitForYCPThread () )
 	    continue;
 
 	if ( terminate_ui_thread ) return;
@@ -306,7 +306,7 @@ YCPValue YUIInterpreter::evaluateInstantiatedTerm( const YCPTerm & term )
 	{
 	    box_in_the_middle = term;
 	    signalUIThread();
-	    while ( !waitForUIThread() );
+	    while ( ! waitForUIThread() );
 
 	    return box_in_the_middle;
 	}
@@ -472,7 +472,7 @@ YCPValue YUIInterpreter::setTextdomain ( const string& textdomain )
 string YUIInterpreter::getTextdomain ( void )
 {
     YCPValue v = evaluateWFM ( YCPBuiltin ( YCPB_GETTEXTDOMAIN ) );
-    if ( !v.isNull() && v->isString() )
+    if ( ! v.isNull() && v->isString() )
 	return v->asString()->value();
     return "ui";
 }

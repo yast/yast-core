@@ -382,7 +382,7 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll )
 
     YDialog *dialog = currentDialog();
 
-    if ( !dialog )
+    if ( ! dialog )
     {
 	y2error( "%s(): No dialog existing",
 		poll ? YUIBuiltin_PollInput : YUIBuiltin_UserInput );
@@ -603,7 +603,7 @@ YCPValue YUIInterpreter::evaluateCloseDialog( const YCPTerm & term )
     if ( term->size() == 0 )
     {
 	YDialog *dialog = currentDialog();
-	if ( !dialog )
+	if ( ! dialog )
 	{
 	    return YCPError ( "Can't CloseDialog: No dialog existing.", YCPBoolean( false ) );
 	}
@@ -674,7 +674,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
     YCPValue id = getId( term->value(0) );
 
     YWidget *widget = widgetWithId( id, true );
-    if ( !widget ) return YCPVoid();
+    if ( ! widget ) return YCPVoid();
     else if ( term->value(1)->isSymbol() )
     {
 	YCPSymbol sym = term->value(1)->asSymbol();
@@ -732,7 +732,7 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
     YCPValue id = getId( term->value(0) );
 
     YWidget *widget = widgetWithId( id, true ); // reports error
-    if ( !widget ) return YCPVoid();
+    if ( ! widget ) return YCPVoid();
     else if ( term->value(1)->isSymbol() )
 	return widget->queryWidget( term->value(1)->asSymbol() );
     else
@@ -771,9 +771,9 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
     YCPValue id = getId( term->value(0) );
     YWidget *replpoint = widgetWithId( id, true ); // reports error
-    if ( !replpoint ) return YCPBoolean( false );
+    if ( ! replpoint ) return YCPBoolean( false );
 
-    if ( !replpoint->isReplacePoint() )
+    if ( ! replpoint->isReplacePoint() )
     {
 	y2error( "ReplaceWidget: widget %s is not a ReplacePoint",
 		id->toString().c_str() );
@@ -849,7 +849,7 @@ YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
     YCPValue id = getId( term->value(0) );
     YWidget *widget = widgetWithId( id, true );
 
-    if ( !widget )
+    if ( ! widget )
 	return YCPVoid();
 
     return YCPBoolean( widget->setKeyboardFocus() );
@@ -956,7 +956,7 @@ YCPValue YUIInterpreter::evaluateDumpWidgetTree( const YCPTerm & term )
 
     YDialog *dialog = currentDialog();
 
-    if ( !dialog )
+    if ( ! dialog )
     {
 	y2error( "DumpWidgetTree: No dialog existing." );
 	return YCPVoid();
@@ -1727,7 +1727,7 @@ YCPValue YUIInterpreter::evaluateRecode( const YCPTerm & term )
 		outstr ) != 0 )
     {
 	static bool warned_about_recode = false;
-	if ( !warned_about_recode )
+	if ( ! warned_about_recode )
 	{
 	    y2error ( "Recode ( %s, %s, ... )", term->value(0)->asString()->value().c_str(), term->value( 1)->asString()->value().c_str() );
 	    warned_about_recode = true;
@@ -1814,7 +1814,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     if ( cd == ( iconv_t )( -1 ) )
     {
 	static bool complained = false;
-	if ( !complained )
+	if ( ! complained )
 	{
 	    // glibc-locale is not necessarily installed so only complain once
 	    y2error ( "Recode: ( errno %d ) failed conversion '%s' to '%s'", errno, from.c_str(), to.c_str() );
