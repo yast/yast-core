@@ -46,10 +46,12 @@ Y2CCScript::Y2CCScript()
 Y2Component *
 Y2CCScript::createInLevel (const char *name, int level, int) const
 {
-    if (name == 0)
+    if (name == 0
+	|| *name == 0)
     {
 	return 0;
     }
+
     string modulename = name;
     string filename = string(name) + ".ycp";
     FILE *file = 0;
@@ -70,9 +72,13 @@ Y2CCScript::createInLevel (const char *name, int level, int) const
 	}
 
 	file = fopen (fullname.c_str(), "r");
-	if (!file) return 0; // Not found under the direct path either.
+	if (!file)
+	{
+	    return 0;			// Not found under the direct path either.
+	}
 
 	filename = name;
+
 	// 2nd try: examine the file: Is it not executable or does
 	// the name end in .ycp or does the file begin with #!/bin/y2wfm
 
@@ -107,20 +113,24 @@ Y2CCScript::createInLevel (const char *name, int level, int) const
 		}
 	    }
 	}
-	if (!try_it) return 0;
 
-	modulename = string(name);
-
-	string::size_type slashpos = modulename.rfind('/');
-	if (slashpos != string::npos)
+	if (!try_it)
 	{
-	    modulename = modulename.substr(slashpos + 1);
+	    return 0;
 	}
 
-	string::size_type dotpos = modulename.find('.');
+	modulename = string (name);
+
+	string::size_type slashpos = modulename.rfind ('/');
+	if (slashpos != string::npos)
+	{
+	    modulename = modulename.substr (slashpos + 1);
+	}
+
+	string::size_type dotpos = modulename.find ('.');
 	if (dotpos != string::npos)
 	{
-	    modulename = modulename.substr(0, dotpos);
+	    modulename = modulename.substr (0, dotpos);
 	}
     }
     else
