@@ -134,16 +134,6 @@ public:
      **/
     virtual std::string debugLabel()		{ return dialogDebugLabel(); }
 
-    /**
-     * Reimplemented from YContainerwidget to keep track of new children
-     **/
-    virtual void addChild( YWidget *child );
-
-    /**
-     * Reimplemented from YContainerwidget to keep track of deleted children
-     **/
-    virtual void childDeleted( YWidget *child );
-
 
 protected:
 
@@ -153,6 +143,11 @@ protected:
      **/
     void fillWidgetList( YWidgetList &			widgetList,
 			 const YContainerWidget * 	parent )	const;
+
+    /**
+     * Format a debug label.
+     **/
+    string formatDebugLabel( YWidget * widget, const string & debLabel );
 
 
     //
@@ -167,7 +162,6 @@ protected:
     YBoolOpt	_hasSmallDecorations;
 
     bool	_shortcutCheckPostponed;
-    YWidget *	_debugLabelWidget;
 };
 
 

@@ -22,9 +22,6 @@
 #include <ycp/y2log.h>
 #include <ycp/YCPSymbol.h>
 #include "YDialog.h"
-#include "YWizard.h"
-#include "YLabel.h"
-#include "YMenuButton.h"
 #include "YShortcutManager.h"
 
 using std::string;
@@ -40,7 +37,6 @@ YDialog::YDialog( const YWidgetOpt & opt )
     _isCentered.setValue( opt.isCentered.value() );
     _hasSmallDecorations.setValue( opt.hasSmallDecorations.value() );
     _shortcutCheckPostponed = false;
-    _debugLabelWidget = 0;
 }
 
 
@@ -129,36 +125,39 @@ string YDialog::dialogDebugLabel()
     if ( _debugLabelWidget )
     {
 	string label = _debugLabelWidget->debugLabel();
-	label = string( "Dialog \"" ) + label + string( "\"" );
 
-	return label;
+	if ( ! label.empty() )
+	    return formatDebugLabel( _debugLabelWidget, label );
     }
-    else
+
+
+    for ( int i=0; i < numChildren(); i++ )
     {
-	return "Dialog";
+	if ( child(i) && child(i)->isValid() )
+	{
+	    string label = child(i)->debugLabel();
+
+	    if ( ! label.empty() )
+		return formatDebugLabel( child(0), label );
+	}
     }
+
+    return widgetClass();
 }
 
 
-void YDialog::addChild( YWidget * newChild )
+string YDialog::formatDebugLabel( YWidget * widget, const string & debLabel )
 {
-    YContainerWidget::addChild( newChild );
+    if ( debLabel.empty() )
+	return "";
 
-    if ( ! _debugLabelWidget )
-    {
-	if 	( dynamic_cast<YWizard  	*> (newChild ) )	_debugLabelWidget = newChild;
-	else if ( dynamic_cast<YLabel   	*> (newChild ) )	_debugLabelWidget = newChild;
-	else if ( dynamic_cast<YMenuButton 	*> (newChild ) )	_debugLabelWidget = newChild;
-    }
-}
+    string label = "Dialog with ";
+    label += widget->widgetClass();
+    label += " \"";
+    label += debLabel;
+    label += "\"";
 
-
-void YDialog::childDeleted( YWidget * deletedChild )
-{
-    if ( deletedChild == _debugLabelWidget )
-	_debugLabelWidget = 0;
-    
-    YContainerWidget::childDeleted( deletedChild );
+    return label;
 }
 
 

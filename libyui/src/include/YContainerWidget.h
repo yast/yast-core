@@ -148,7 +148,15 @@ public:
     void dumpDialogWidgetTree();
 
     /**
-     * Recursively save the user input of all child widgets to a macro recorder:
+     * Returns a (possibly translated) text describing this dialog for
+     * debugging.
+     **/
+    virtual std::string debugLabel();
+
+    /**
+     * Recursively save the user input of all child widgets
+     * to a macro recorder:
+     *
      * All child widgets that could contain data entered by the user
      * are requested to send their contents to the macro recorder, e.g. input
      * fields, check boxes etc.
@@ -164,11 +172,17 @@ protected:
      */
     void dumpWidget( YWidget *w, int indentationLevel );
 
-
     /**
-     * Storage for all child widgets.
-     */
-    vector<YWidget *> children;
+     * Format a debug label.
+     **/
+    string formatDebugLabel( YWidget * widget, const string & debLabel );
+
+    //
+    // Data members
+    //
+
+    vector<YWidget *> 	children;
+    YWidget *		_debugLabelWidget;
 };
 
 

@@ -21,11 +21,16 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 #include "YContainerWidget.h"
+#include "YWizard.h"
+#include "YLabel.h"
+#include "YMenuButton.h"
+#include "YPushButton.h"
 
 
 YContainerWidget::YContainerWidget( const YWidgetOpt & opt )
     : YWidget( opt )
 {
+    _debugLabelWidget = 0;
 }
 
 
@@ -50,6 +55,9 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
 	return;
     }
 
+    
+    if ( deletedChild == _debugLabelWidget )
+	_debugLabelWidget = 0;
 
     /*
      * Search the entry for the deleted widget in the children list and delete it
@@ -58,6 +66,7 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
     bool found = false;
     vector<YWidget *>::iterator it = children.begin();
     int deletedChildId = deletedChild->internalId();
+    
 
     while ( ! found && it != children.end() )
     {
@@ -68,7 +77,10 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
     }
 
     if ( found )
+    {
+	childRemoved( *it ); // Notify derived classes
 	children.erase( it );
+    }
 
     /*
      * It's OK if the child hasn't been found. This means nothing worse
@@ -135,12 +147,21 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 
 void YContainerWidget::addChild( YWidget *child )
 {
-    if (find (children.begin (), children.end (), child) != children.end ())
+    if ( find( children.begin(), children.end(), child ) != children.end() )
     {
-	y2error ("ERROR: Child added twice (%s, #%d) (%s, #%d)",
+	y2error( "ERROR: Child added twice (%s, #%d) (%s, #%d)",
 		 this->widgetClass(), this->internalId(),
-		 child->widgetClass(), child->internalId());
+		 child->widgetClass(), child->internalId() );
 	return;
+    }
+
+    if ( ! _debugLabelWidget )
+    {
+	if 	( dynamic_cast<YWizard  	*> (child ) )	_debugLabelWidget = child;
+	else if ( dynamic_cast<YLabel   	*> (child ) )	_debugLabelWidget = child;
+	else if ( dynamic_cast<YMenuButton 	*> (child ) )	_debugLabelWidget = child;
+	else if ( dynamic_cast<YPushButton 	*> (child ) )	_debugLabelWidget = child;
+	else if ( dynamic_cast<YLabel		*> (child ) )	_debugLabelWidget = child;
     }
 
     children.push_back( child );
@@ -154,10 +175,11 @@ void YContainerWidget::removeChildren()
     {
 	YWidget *child = children[0];
 	children.erase( children.begin() );
+	_debugLabelWidget = 0;
 
 	if ( child->isValid() )
 	{
-	    childRemoved( child ); // tell subclassed ui specific widget
+	    childRemoved( child ); // Notify derived classes
 	    delete child;
 	}
 	else
@@ -257,6 +279,48 @@ YWidget *YContainerWidget::child( int i ) const
 }
 
 
+string YContainerWidget::debugLabel()
+{
+    if ( _debugLabelWidget )
+    {
+	string label = _debugLabelWidget->debugLabel();
+	
+	if ( ! label.empty() )
+	    return formatDebugLabel( _debugLabelWidget, label );
+    }
+
+
+    for ( int i=0; i < numChildren(); i++ )
+    {
+	if ( child(i) && child(i)->isValid() )
+	{
+	    string label = child(i)->debugLabel();
+
+	    if ( ! label.empty() )
+		return formatDebugLabel( child(0), label );
+	}
+    }
+	    
+
+
+    return "";
+}
+
+
+string YContainerWidget::formatDebugLabel( YWidget * widget, const string & debLabel )
+{
+    if ( ! widget || debLabel.empty() )
+	return "";
+
+    string label = widget->widgetClass();
+    label += " \"";
+    label += debLabel;
+    label += "\"";
+
+    return label;
+}
+
+
 void YContainerWidget::saveUserInput( YMacroRecorder *macroRecorder )
 {
     vector<YWidget *>::iterator it = children.begin();
@@ -271,7 +335,8 @@ void YContainerWidget::saveUserInput( YMacroRecorder *macroRecorder )
 	     * It wouldn't do any good to save the user input of any widget
 	     * that doesn't have an ID since this ID is required to make use of
 	     * this saved data later when playing the macro.
-	     * Other than that, container widgets need to recurse over all their children.
+	     * Other than that, container widgets need to recurse over all
+	     * their children. 
 	     */
 
 	    widget->saveUserInput( macroRecorder );
