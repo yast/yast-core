@@ -28,6 +28,7 @@ using std::set;
 #include <ycp/YCPInterpreter.h>
 #include <y2/Y2Component.h>
 #include "WFMSubAgent.h"
+#include "PkgModule.h"
 
 #define MAX_CLIENT_NAME_LEN 160
 
@@ -80,6 +81,11 @@ class WFMInterpreter : public YCPInterpreter
      * args(). The symbol of the term itself is the module name.
      */
     YCPList argumentlist;
+
+    /**
+     * Pointer to PkgModule class to handle "Pkg::<function>(...)" calls
+     */
+    PkgModule *pkgmodule;
 
     /**
      * This overridden function does only evaluate YCPB_NLOCALE, otherwise

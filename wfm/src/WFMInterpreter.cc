@@ -45,7 +45,6 @@
 #include <scr/SCRAgent.h>
 #include <WFMInterpreter.h>
 
-
 WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 				Y2Component *user_interface,
 				string modulename, string fullname,
@@ -55,7 +54,8 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
       handle_cnt (1),
       local ("ag_system", -1),
       modulename (modulename),
-      argumentlist (argumentlist)
+      argumentlist (argumentlist),
+      pkgmodule (0)
 {
     current_file = fullname;
     y2debug ("new WFMInterpreter @ %p, my_component @ %p, user_interface @ %p (%s)", this, my_component, user_interface, current_file.c_str());
@@ -80,6 +80,9 @@ WFMInterpreter::~WFMInterpreter ()
 
     for (WFMSubAgents::iterator it = scrs.begin (); it != scrs.end (); it++)
         delete *it;
+
+    if (pkgmodule != 0)
+	delete pkgmodule;
 }
 
 
@@ -108,7 +111,20 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 {
     string sym = term->symbol()->symbol();
 
-    y2debug ("%s", term->toString().c_str());
+    y2debug ("WFMInterpreter::evaluateInstantiatedTerm (%s::%s)", term->name_space().c_str(), term->toString().c_str());
+
+    if (term->name_space() == "Pkg")
+    {
+	if (pkgmodule == 0)
+	{
+	    pkgmodule = new PkgModule;
+	    if (pkgmodule == 0)
+	    {
+		return YCPError ("Can't create PkgModule", YCPVoid());
+	    }
+	}
+	return pkgmodule->evaluate (sym, term->args());
+    }
 
     if	    (sym == "UI")		return evaluateWFM_UI (term);
 
