@@ -358,6 +358,7 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
 	}
 	if (ret->isBreak())
 	{
+	    ret = YCPVoid();
 	    break;
 	}
     }
