@@ -62,11 +62,14 @@ shellcommand (const string &command, const string &tempdir)
 	{
 	    if (err)
 		fputs (s1, err);
-	    // yes, this should be y2error but some external
-	    // programs print normal messages via stderr
-	    // bug reports are filed but who knows if such programs
-	    // ever get fixed.
-	    y2warning ("%s", s1);
+
+	    /* Yes, this should be y2error but some external
+	     * programs print normal messages via stderr
+	     * bug reports are filed but who knows if such programs
+	     * ever get fixed. Thus we set this temporarily to
+	     * y2warning.
+	     */
+	    y2error ("%s", s1);
 	}
 
 	fclose (stream1);
