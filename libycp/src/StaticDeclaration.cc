@@ -80,6 +80,9 @@ StaticDeclaration::~StaticDeclaration ()
 
 //------------------------------------------------------------------------
 // registration
+//
+// WARNING: It is not possible to register the same static data twice!
+// It creates a neverending cycle via declaration_t::next.
 
 void
 StaticDeclaration::registerDeclarations (const char *filename,
