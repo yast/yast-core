@@ -39,26 +39,30 @@ Y2Component::~Y2Component()
 }
 
 
-YCPValue Y2Component::evaluate(const YCPValue&)
+YCPValue
+Y2Component::evaluate(const YCPValue&)
 {
     y2internal ("component %s: stub function Y2Component::evaluate() called", name ().c_str ());
     return YCPNull();
 }
 
 
-void Y2Component::result(const YCPValue&)
+void
+Y2Component::result(const YCPValue&)
 {
     // No warning. It is legal to ignore the result
 }
 
 
-void Y2Component::setServerOptions(int, char **)
+void
+Y2Component::setServerOptions(int, char **)
 {
     // No warning. It is legal to ignore the options
 }
 
 
-Y2Component *Y2Component::getCallback (void) const
+Y2Component *
+Y2Component::getCallback (void) const
 {
 #if 0
     y2warning ("getCallback of %s (%p) equals %s (%p)", name ().c_str (), this,
@@ -68,7 +72,8 @@ Y2Component *Y2Component::getCallback (void) const
 }
 
 
-void Y2Component::setCallback (Y2Component *callback)
+void
+Y2Component::setCallback (Y2Component *callback)
 {
 #if 0
     y2warning ("setCallback of %s (%p) set to %s (%p)", name ().c_str (), this,
@@ -78,18 +83,22 @@ void Y2Component::setCallback (Y2Component *callback)
 }
 
 
-YCPValue Y2Component::doActualWork(const YCPList&, Y2Component *)
+YCPValue
+Y2Component::doActualWork(const YCPList&, Y2Component *)
 {
     y2internal ("component %s: stub function Y2Component::doActualWork() called",
 		name().c_str());
     return YCPNull();
 }
 
-Y2Namespace* Y2Component::import (const char* name_space)
+
+Y2Namespace *
+Y2Component::import (const char* name_space)
 {
     y2internal ("default import (%s) called, should not happen", name_space);
     return NULL;
 }
+
 
 SCRAgent *
 Y2Component::getSCRAgent ()
