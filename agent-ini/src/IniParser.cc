@@ -954,7 +954,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
     }
 
     if (ini.getComment ()[0])
-        of << indent << ini.getComment();
+        of << ini.getComment();
     if (readby>=0 && readby < (int)sections.size ())
 	{
 	    snprintf (out_buffer, 2048, sections[readby].begin.out.c_str (), ini.getName());
@@ -976,7 +976,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 		{
 		    IniEntry&e = ci->e ();
 		    if (e.getComment ()[0])
-			of << indent2 << e.getComment();
+			of << e.getComment();
 		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ())
 			snprintf (out_buffer, 2048, params[e.getReadBy ()].line.out.c_str (), e.getName(), e.getValue());
 		    of << indent2 << out_buffer << "\n";

@@ -3,7 +3,7 @@
   Key=Val
   +Sub
     Key=Val
-    ; Changed
+; Changed
     +Sub
       Key=Val
     -Sub

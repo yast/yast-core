@@ -337,10 +337,15 @@ href="#no_nested_sections">no_nested_sections</a>.</p>
 
 <h4 id="subindent">Subindent:</h4>
 
-<p>This string will be added before each line in subsections. If
+<p>This string will be added before each data line in subsections. If
 you want to have indented subsections, use this.</p>
 
 <p>Example: "subindent" : " ", or "subindent" : "\t".</p>
+
+<!-- bug 74698 -->
+<p>Formerly the comments were indented too but it turns out that
+there are some configuration files that allow indenting data but
+not comments. Also the comment indentation would grow endlessly.</p>
 
 <h4 id="options">Options:</h4>
 

@@ -17,11 +17,11 @@ End xs1
 
 ; comment s1
 Section s1
-  ; comment v1
+; comment v1
   Val1=v1
-  ; comment s2
+; comment s2
   Section s2
-    ; comment val1=v3
+; comment val1=v3
     Val1=v3
     Section s3
       V=X
@@ -34,7 +34,7 @@ Section s1
       aa=ooo
     End xx
   End zzz
-  ; comment val2=v2
+; comment val2=v2
   Val2=v2
 ; comment before s1
 End s1

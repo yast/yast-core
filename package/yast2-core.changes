@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 30 16:21:49 CEST 2005 - mvidner@suse.cz
+
+- ini agent: do not indent comments (#74698)
+
+-------------------------------------------------------------------
 Tue Mar 15 09:44:18 CET 2005 - locilka@suse.cz
 
 - Checked, fixed and added YCP builtins description and examples

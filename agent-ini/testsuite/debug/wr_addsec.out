@@ -5,7 +5,7 @@
     Key=Val
     +Sub
       Key=Val
-      ; Comment
+; Comment
       +Sub
       -Sub
     -Sub
