@@ -5,6 +5,9 @@
 AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
 	-DLOCALEDIR=\"${localedir}\"
 
+# to look for the packagemanager in the prefix first (really first?)
+AM_LDFLAGS = -L${libdir}
+
 plugin_LTLIBRARIES = libpy2wfm.la
 noinst_LTLIBRARIES = liby2wfm.la
 
@@ -26,12 +29,15 @@ liby2wfm_la_SOURCES =				\
 	PkgModuleCallbacks.YCP.h		\
 	PkgModuleCallbacks.cc
 liby2wfm_la_LDFLAGS = -version-info 2:0
+# this makes it use the version from our prefix instead of /usr/lib
+liby2wfm_la_LIBADD = -ly2pm
 
 libpy2wfm_la_SOURCES =				\
 	$(liby2wfm_la_SOURCES)			\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h
 libpy2wfm_la_LDFLAGS = -version-info 2:0
+libpy2wfm_la_LIBADD = -ly2pm
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
