@@ -4,7 +4,8 @@
 // Use the Wizard module instead.
 
 {
-    UI::OpenDialog( `Wizard( `back,  "&Back",
+    UI::OpenDialog(`opt(`defaultsize),
+		   `Wizard( `back,  "&Back",
 			     `abort, "Ab&ort",
 			     `next,  "&Next" ) );
 
