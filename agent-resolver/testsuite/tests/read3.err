@@ -1,0 +1,28 @@
+[YCP] tests/read3.ycp:2 .resolver ["search", "nameserver", "domain", "sortlist", "options"]
+[YCP] tests/read3.ycp:3 .resolver.modified dhcpcd
+[YCP] tests/read3.ycp:4 .resolver.backup /etc/resolv.conf.saved.by.dhcpcd
+[YCP] tests/read3.ycp:5 .resolver.process dhcpcd
+[YCP] tests/read3.ycp:6 .resolver.process_id 1038
+[YCP] tests/read3.ycp:7 .resolver.script /sbin/modify_resolvconf
+[YCP] tests/read3.ycp:8 .resolver.saveto 
+[YCP] tests/read3.ycp:9 .resolver.info This is a temporary resolv.conf created by service dhcpcd.
+#               The previous file has been saved and will be restored later.
+#               
+#               If you don't like your resolv.conf to be changed, you
+#               can set MODIFY_{RESOLV,NAMED}_CONF_DYNAMICALLY=no. This
+#               variables are placed in /etc/sysconfig/network/config.
+#               
+#               You can also configure service dhcpcd not to modify it.
+#               
+#               If you don't like dhcpcd to change your nameserver
+#               settings
+#               then either set DHCLIENT_MODIFY_RESOLV_CONF=no
+#               in /etc/sysconfig/network/dhcp, or
+#               set MODIFY_RESOLV_CONF_DYNAMICALLY=no in
+#               /etc/sysconfig/network/config or (manually) use dhcpcd
+#               with -R.  If you only want to keep your searchlist, set
+#               DHCLIENT_KEEP_SEARCHLIST=yes in /etc/sysconfig/network/dhcp or
+#               (manually) use the -K option.
+#
+[YCP] tests/read3.ycp:10 .resolver.search nil
+[YCP] tests/read3.ycp:11 .resolver.domain suse.cz

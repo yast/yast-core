@@ -58,6 +58,7 @@ static const info_entry headers[] = {
     {"process",     "# Process: "},
     {"process_id",  "# Process_id: "},
     {"script",      "# Script:"},
+    {"saveto",      "# Saveto:"},
     {"info",        "# Info:"},
     {0, 0}
 };

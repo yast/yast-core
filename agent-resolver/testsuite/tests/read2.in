@@ -4,5 +4,5 @@
 # DO NOT EDIT
 domain suse.de
 nameserver 10.10.0.1
-nameserver 10.10.128.1
-search suse.de
+nameserver      10.10.128.1
+search  suse.de

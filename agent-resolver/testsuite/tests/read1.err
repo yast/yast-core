@@ -1,0 +1,6 @@
+[YCP] tests/read1.ycp:2 .resolver ["search", "nameserver", "domain", "sortlist", "options"]
+[YCP] tests/read1.ycp:3 .resolver.search ["suse.de", "suse.de"]
+[YCP] tests/read1.ycp:4 .resolver.nameserver ["10.10.0.1", "10.10.128.1"]
+[YCP] tests/read1.ycp:5 .resolver.domain suse.de
+[YCP] tests/read1.ycp:6 .resolver.sortlist ["130.155.160.0/255.255.240.0", "130.155.0.0"]
+[YCP] tests/read1.ycp:7 .resolver.options ["ndots:3", "rotate", "no-check-names"]

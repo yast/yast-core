@@ -1,1 +1,9 @@
-($["domain":"suse.de", "nameserver":["10.10.0.1", "10.10.128.1"], "options":["ndots:3", "rotate", "no-check-names"], "search":["suse.de", "suse.de"], "sortlist":["130.155.160.0/255.255.240.0", "130.155.0.0"]])
+(nil)
+# /etc/resolv.conf
+#
+search suse.de suse.de
+nameserver 10.10.0.1
+nameserver 10.10.128.1
+domain suse.de
+sortlist 130.155.160.0/255.255.240.0 130.155.0.0
+options ndots:3 rotate no-check-names

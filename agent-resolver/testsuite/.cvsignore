@@ -8,4 +8,4 @@ tmp.err*
 tmp.log*
 .deps
 .libs
-y2ag_resolver
+runresolver

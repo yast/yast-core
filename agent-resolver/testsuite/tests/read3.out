@@ -1,0 +1,32 @@
+(nil)
+### BEGIN INFO
+#
+# Modified_by:  dhcpcd
+# Backup:       /etc/resolv.conf.saved.by.dhcpcd
+# Process:      dhcpcd
+# Process_id:   1038
+# Script:       /sbin/modify_resolvconf
+# Saveto:       
+# Info:         This is a temporary resolv.conf created by service dhcpcd.
+#               The previous file has been saved and will be restored later.
+#               
+#               If you don't like your resolv.conf to be changed, you
+#               can set MODIFY_{RESOLV,NAMED}_CONF_DYNAMICALLY=no. This
+#               variables are placed in /etc/sysconfig/network/config.
+#               
+#               You can also configure service dhcpcd not to modify it.
+#               
+#               If you don't like dhcpcd to change your nameserver
+#               settings
+#               then either set DHCLIENT_MODIFY_RESOLV_CONF=no
+#               in /etc/sysconfig/network/dhcp, or
+#               set MODIFY_RESOLV_CONF_DYNAMICALLY=no in
+#               /etc/sysconfig/network/config or (manually) use dhcpcd
+#               with -R.  If you only want to keep your searchlist, set
+#               DHCLIENT_KEEP_SEARCHLIST=yes in /etc/sysconfig/network/dhcp or
+#               (manually) use the -K option.
+#
+### END INFO
+domain suse.cz
+nameserver 10.20.0.2
+nameserver 10.20.16.1

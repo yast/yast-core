@@ -1,3 +1,8 @@
 {
-  return Read(.resolver);
+    y2warning(".resolver %1",SCR::Dir(.));
+    y2warning(".resolver.search %1",SCR::Read(.search));
+    y2warning(".resolver.nameserver %1",SCR::Read(.nameserver));
+    y2warning(".resolver.domain %1",SCR::Read(.domain));
+    y2warning(".resolver.sortlist %1",SCR::Read(.sortlist));
+    y2warning(".resolver.options %1",SCR::Read(.options));
 }
