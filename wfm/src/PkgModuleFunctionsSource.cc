@@ -84,10 +84,10 @@ PkgModuleFunctions::startCachedSources (bool enabled_only)
     InstSrcManager::ISrcIdList nids;
 
     _y2pm.instSrcManager().getSources (nids, enabled_only);
+
     if (nids.size() > 0)
     {
 	unsigned int number_of_known_sources = _sources.size();
-	int new_slot = -1;
 
 	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();
 	     it != nids.end(); ++it)
@@ -96,7 +96,6 @@ PkgModuleFunctions::startCachedSources (bool enabled_only)
 
 	    if (_first_free_source_slot < number_of_known_sources)
 	    {
-		new_slot = _first_free_source_slot;
 		_sources[_first_free_source_slot] = *it;
 
 		// find next free slot
@@ -108,8 +107,8 @@ PkgModuleFunctions::startCachedSources (bool enabled_only)
 	    }
 	    else		// add a new slot
 	    {
-		new_slot = _sources.size();
 		_sources.push_back (*it);
+                _first_free_source_slot = _sources.size();
 	    }
 	} // loop over InstSrcManager
 	_cache_started = true;
@@ -304,6 +303,7 @@ PkgModuleFunctions::SourceGeneralData (YCPList args)
     data->add (YCPString ("product_dir"), YCPString (source_descr->product_dir().asString()));
     data->add (YCPString ("type"), YCPString (InstSrc::toString (source_descr->type())));
     data->add (YCPString ("url"), YCPString (source_descr->url().asString ()));
+    data->add (YCPString ("enabled"), YCPBoolean(source_id->enabled()));
     return data;
 }
 
