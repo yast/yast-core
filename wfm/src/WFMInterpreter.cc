@@ -88,6 +88,8 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 	YCPList args;
 	args->add (YCPString (lang));
 	evaluateSetLanguage (YCPTerm (YCPSymbol("SetLanguage", false), args));
+	// set locale according to the language setting
+	setlocale( LC_ALL, "" );
     }
 }
 
@@ -359,8 +361,11 @@ WFMInterpreter::evaluateBuiltinBuiltin (builtin_t code, const YCPList& args)
 void
 WFMInterpreter::changeToModuleLanguage () const
 {
+
+    // DON'T call setlocale( LC_ALL ) !!!
+    // setlocale (LC_ALL, currentLanguage.c_str());
+
     // change module and language
-    setlocale (LC_ALL, currentLanguage.c_str());
     setlocale (LC_NUMERIC, "C");	// but always format numbers with "."
 
     bindtextdomain (currentTextdomain.c_str(), LOCALEDIR);
@@ -378,7 +383,7 @@ WFMInterpreter::changeToModuleLanguage () const
 	++_nl_msg_cat_cntr;
     }
 
-    y2debug ("language '%s', encoding '%s', textdomain '%s'",
+    y2milestone ("language '%s', encoding '%s', textdomain '%s'",
 	     currentLanguage.c_str(), currentEncoding.c_str(),
 	     currentTextdomain.c_str());
 
@@ -1300,13 +1305,20 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
 	currentLanguage = term->value(0)->asString()->value();
 
+#warning FIXME: No need to get the proposed encoding - what is the encoding in the argument good for? 
+
 	if (term->size() > 1 && term->value(1)->isString())
 	{
 	    currentEncoding = term->value(1)->asString()->value();
 	}
 	else
 	{
-	    setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
+	    // To Do: remove this part - not needed any longer, encoding for gettext is always UTF-8.
+	    
+	    // Don't call setlocale( LC_ALL, lang) because this mostly is wrong (for ncurses LC_CTYPE 
+	    // has to be set according the terminal encoding and NOT e.g. to de_DE or de_DE.UTF-8 if it's
+	    // not an UTF-8 terminal).
+	    // setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
 	    proposedEncoding = nl_langinfo (CODESET);
 	    if (proposedEncoding.empty())
 	    {
