@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 29 15:29:28 CEST 2002 - sh@suse.de
+
+- New widget options for YPushButton: key_F1 .. key_F12
+- New widget option for YSelectionBox: immediate
+- New widget options for YPackageSelector: youMode, updateMode
+
+-------------------------------------------------------------------
 Thu Aug 29 12:04:59 CEST 2002 - arvin@suse.de
 
 - more fixes for initialization of logging
