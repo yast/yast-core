@@ -387,7 +387,7 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll)
 	internalError( "No dialog existing during UserInput().\n"
 		       "\n"
 		       "Please check the log file!" );
-	return YCPSymbol("internalError", true);
+	return YCPNull();
     }
 
     if ( dialog->shortcutCheckPostponed() )
