@@ -15,9 +15,8 @@
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Stanislav Visnovsky <visnov@suse.cz>
 
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
-$Id$
 /-*/
 
 #include "UI.h"
