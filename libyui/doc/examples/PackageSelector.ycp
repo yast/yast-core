@@ -1,5 +1,5 @@
 UI(``{
-    OpenDialog(`opt(`defaultsize, `testMode), `PackageSelector(`id(`selector) ));
+    OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`youMode) ) );
     RunPkgSelection(`id(`selector) );
     CloseDialog();
 })
