@@ -333,7 +333,8 @@ PkgModuleFunctions::YouRetrievePatches ()
 YCPValue
 PkgModuleFunctions::YouSelectPatches ()
 {
-    int kinds = PMYouPatch::kind_security | PMYouPatch::kind_recommended;
+    int kinds = PMYouPatch::kind_security | PMYouPatch::kind_recommended |
+                PMYouPatch::kind_patchlevel;
 
     _y2pm.youPatchManager().instYou().selectPatches( kinds );
     
