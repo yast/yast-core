@@ -1282,7 +1282,7 @@ statement:
 		if (fd < 0)
 		{
 		    yyFerror (fn.c_str(), $1.l);
-		    free ((void *)($2.v.sval));
+		    delete[] $2.v.sval;
 		    $$.t = 0;
 		    break;
 		}
@@ -2547,7 +2547,7 @@ constant:
 |	STRING
 	    {
 		$$.c = new YConst (YCode::ycString, YCPString ($1.v.sval));
-		free ((void *)($1.v.sval));
+		delete[] $1.v.sval;
 		$$.t = Type::String;
 		$$.l = $1.l;
 	    }
