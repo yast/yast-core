@@ -11,7 +11,7 @@ INCLUDES =						\
 	-I/usr/include/YaST2				\
 	-I$(includedir)
 
-bin_PROGRAMS = runyui
+noinst_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
 runyui_LDADD = ../src/libyui.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la -lpthread -ly2util
 runyui_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)

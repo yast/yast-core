@@ -11,8 +11,8 @@ INCLUDES = -I$(srcdir)/../src/include -I$(srcdir)/../../liby2/src/include -I$(in
 bindir = $(prefix)/bin
 libdir = ../src/.libs
 
-bin_PROGRAMS = runc runycp
-noinst_PROGRAMS = testSignature
+bin_PROGRAMS = runycp
+noinst_PROGRAMS = testSignature runc
 
 runc_SOURCES = runc.cc
 runc_LDFLAGS = -L$(libdir)
