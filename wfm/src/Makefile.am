@@ -33,16 +33,21 @@ liby2wfm_la_SOURCES =				\
 	PkgModuleCallbacks.cc
 
 liby2wfm_la_LDFLAGS = -version-info 2:0
-# this makes it use the version from our prefix instead of /usr/lib
-liby2wfm_la_LIBADD = -ly2pm
+liby2wfm_la_LIBADD = \
+	$(srcdir)/../../scr/src/libpy2scr.la		\
+	$(srcdir)/../../libyui/src/libyui.la		\
+	$(srcdir)/../../libscr/src/libscr.la		\
+	$(srcdir)/../../libycp/src/libycp.la		\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../../liby2/src/liby2.la		\
+	-ly2pm -ly2util
 
 libpy2wfm_la_SOURCES =				\
-	$(liby2wfm_la_SOURCES)			\
 	Y2ScriptComponent.cc Y2ScriptComponent.h\
 	Y2CCScript.cc Y2CCScript.h
 
 libpy2wfm_la_LDFLAGS = -version-info 2:0
-libpy2wfm_la_LIBADD = -ly2pm
+libpy2wfm_la_LIBADD = liby2wfm.la
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
