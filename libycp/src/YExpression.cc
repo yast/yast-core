@@ -2871,7 +2871,7 @@ Y2YCPFunction::Y2YCPFunction (SymbolEntryPtr entry)
     y2debug ("Y2YCPFunction[%p] (%s)", this, entry->toString().c_str());
 #endif
     // allocate an array for the parameters
-    m_parameters = new YCPValue[((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ()] (YCPNull ());
+    m_parameters = new YCPValue[((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ()];
     for (int i=0; i<((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
     {
 	m_parameters[i] = YCPNull ();

@@ -66,6 +66,7 @@ inline YCPInteger asYCPInteger( const InstSrcManager::ISrcId & id_r )
   return YCPInteger( id_r->srcID() );
 }
 
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, InstSrcManager::ISrcId>::assign( const YCPValue & arg_r )
 {
   InstSrc::UniqueID srcID = arg_r->asInteger()->value(); // YT_INTEGER asserted
@@ -106,6 +107,7 @@ inline YCPList asYCPList( const InstSrcManager::SrcStateVector & states_r )
   return ret;
 }
 
+template<>
 inline bool YcpArgLoad::Value<YT_LIST, InstSrcManager::SrcStateVector>::assign( const YCPValue & arg_r )
 {
   YCPList l =  arg_r->asList(); // YT_LIST asserted
@@ -159,6 +161,7 @@ inline bool YcpArgLoad::Value<YT_LIST, InstSrcManager::SrcStateVector>::assign( 
 // YCPMap <-> YCPMap
 /////////////////////////////////////////////////////////////////////////////////////////
 
+template<>
 inline bool YcpArgLoad::Value<YT_MAP, YCPMap>::assign( const YCPValue & arg_r )
 {
   _value = arg_r->asMap(); // YT_MAP asserted

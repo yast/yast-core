@@ -165,6 +165,7 @@ class YcpArgLoad {
 ///////////////////////////////////////////////////////////////////
 // YT_BOOLEAN
 ///////////////////////////////////////////////////////////////////
+template<>
 inline bool YcpArgLoad::Value<YT_BOOLEAN, bool>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asBoolean()->value();
   return true;
@@ -173,26 +174,32 @@ inline bool YcpArgLoad::Value<YT_BOOLEAN, bool>::assign( const YCPValue & arg_r 
 ///////////////////////////////////////////////////////////////////
 // YT_INTEGER
 ///////////////////////////////////////////////////////////////////
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, unsigned long long>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
 }
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, long long>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
 }
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, unsigned long>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
 }
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, long>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
 }
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, unsigned>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
 }
+template<>
 inline bool YcpArgLoad::Value<YT_INTEGER, int>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asInteger()->value();
   return true;
@@ -201,17 +208,20 @@ inline bool YcpArgLoad::Value<YT_INTEGER, int>::assign( const YCPValue & arg_r )
 ///////////////////////////////////////////////////////////////////
 // YT_STRING
 ///////////////////////////////////////////////////////////////////
+template<>
 inline bool YcpArgLoad::Value<YT_STRING, std::string>::assign( const YCPValue & arg_r ) {
   _value = arg_r->asString()->value();
   return true;
 }
 
+template<>
 inline bool YcpArgLoad::Value<YT_STRING, Pathname>::assign( const YCPValue & arg_r )
 {
   _value = arg_r->asString()->value();
   return true;
 }
 
+template<>
 inline bool YcpArgLoad::Value<YT_STRING, Url>::assign( const YCPValue & arg_r )
 {
   _value = arg_r->asString()->value();

@@ -50,7 +50,7 @@ public:
      */
     SCRAgent* getSCRAgent ();
 
-    YCPValue Y2AgentComp<Agent>::Read (const YCPPath &path);
+    YCPValue Read (const YCPPath &path);
     
 private:
 
