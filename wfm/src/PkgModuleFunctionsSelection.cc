@@ -215,7 +215,7 @@ PkgModuleFunctions::SetSelection (YCPList args)
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name); 
     if (selectable)
     {
-	return YCPBoolean (selectable->set_status(PMSelectable::S_Install, true));
+	return YCPBoolean (selectable->set_status(PMSelectable::S_Install));
     }
     return YCPError ("Selectable not available", YCPBoolean (false));
 }
@@ -242,9 +242,9 @@ PkgModuleFunctions::ClearSelection (YCPList args)
     {
 	bool ret = true;
 	if (selectable->status() == PMSelectable::S_Install)
-	    ret = selectable->set_status (PMSelectable::S_NoInst, true);
+	    ret = selectable->set_status (PMSelectable::S_NoInst);
 	else if (selectable->status() == PMSelectable::S_Update)
-	    ret = selectable->set_status (PMSelectable::S_KeepInstalled, true);
+	    ret = selectable->set_status (PMSelectable::S_KeepInstalled);
 	return YCPBoolean (ret);
     }
     return YCPError ("No selectable found", YCPBoolean (false));

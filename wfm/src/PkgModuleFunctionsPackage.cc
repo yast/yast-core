@@ -38,6 +38,12 @@
 
 using std::string;
 
+// for Pkg::PkgFirstDelete, PkgNextDelete
+static std::list<PMPackagePtr> packs_to_delete;
+
+// for Pkg::PkgFirstInstall, PkgNextInstall
+static std::list<PMPackagePtr> packs_to_install;
+
 // ------------------------
 /**   
    @builtin Pkg::GetGroups(string prefix) -> ["group1", "group2", ...]

@@ -89,7 +89,7 @@ PkgModuleFunctions::SourceInit (YCPList args)
 
     // check if url already known
 
-    int number_of_known_sources = _sources.size();
+    unsigned int number_of_known_sources = _sources.size();
     if (number_of_known_sources > 0)
     {
 	for (int i = 0; i < number_of_known_sources; ++i)
@@ -158,7 +158,7 @@ PkgModuleFunctions::SourceFinish (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceFinish");
     }
 
-    int source_slot = args->value(0)->asInteger()->value();
+    unsigned int source_slot = args->value(0)->asInteger()->value();
 
     if (_sources[source_slot] == 0)
     {
@@ -240,7 +240,7 @@ PkgModuleFunctions::SourceMediaData (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceData");
     }
 
-    int source_slot = args->value(0)->asInteger()->value();
+    unsigned int source_slot = args->value(0)->asInteger()->value();
 
     if (source_slot < 0
 	|| source_slot >= _sources.size()
@@ -256,7 +256,7 @@ PkgModuleFunctions::SourceMediaData (YCPList args)
     if (!source_descr)
 	return YCPError ("No description for source", data);
 
-    data->add (YCPString ("media_count"), YCPInteger (atoi (source_descr->media_count().c_str())));
+    data->add (YCPString ("media_count"), YCPInteger (source_descr->media_count()));
     data->add (YCPString ("media_id"), YCPString (source_descr->media_id()));
     data->add (YCPString ("media_vendor"), YCPString (source_descr->media_vendor()));
     data->add (YCPString ("url"), YCPString (source_descr->url().asString ()));
@@ -296,7 +296,7 @@ PkgModuleFunctions::SourceProductData (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceData");
     }
 
-    int source_slot = args->value(0)->asInteger()->value();
+    unsigned int source_slot = args->value(0)->asInteger()->value();
 
     if (source_slot < 0
 	|| source_slot >= _sources.size()

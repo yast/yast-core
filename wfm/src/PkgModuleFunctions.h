@@ -38,7 +38,7 @@ class PkgModuleFunctions
     private:
 	Y2PM _y2pm;
 	vector<InstSrcManager::ISrcId> _sources;
-	int _first_free_source_slot;
+	unsigned int _first_free_source_slot;
 
     public:
 	// general
