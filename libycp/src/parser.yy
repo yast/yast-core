@@ -956,6 +956,7 @@ block_end:
 		YBlockPtr b = top->theBlock;
 
 		SymbolTable *localTable = p_parser->scanner()->localTable();
+		extern SymbolTable *builtinTable;	// for predefined namespaces
 #if 0
 		y2debug ("table before (%s)", localTable->toString().c_str());
 #endif
@@ -1007,6 +1008,13 @@ block_end:
 			    y2debug ("autoimport_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
 #endif
 			    p_parser->m_current_block->pretachStatement (new YSImport (it->first, name_space));
+			    
+			    // reset symbol entry category - BEWARE: this makes it non-reentrant
+                    	    TableEntry* tentry = builtinTable->find (it->first.c_str ());
+                    	    if (tentry && tentry->sentry ())
+                    	    {
+                        	tentry->sentry ()->setCategory (SymbolEntry::c_predefined);
+                    	    }
 			}
 		    }
 		}
