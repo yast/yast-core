@@ -390,10 +390,18 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 	    if (path->isPrefixOf (it_path))
 	    {
 		YCPString str = YCPString (it_path->component_str (path_length));
+		// do not add duplicates (when would they occur?)
 		const int size = dir_list->size ();
 		if (size == 0 || !dir_list->value (size - 1)->equal (str))
 		    dir_list->add (str);
 	    }
+	}
+
+	// Catch Dir (.yast2.nosuchpath)
+	if (dir_list->size () == 0)
+	{
+	    return YCPError ("Path '" + path->toString () +
+			     "' does not exist and cannot be dirred", dir_list);
 	}
 
 	return dir_list;
