@@ -61,12 +61,6 @@ public:
      */
     YCPString getLabel();
 
-    /**
-     * The name of the widget property that holds the keyboard shortcut.
-     * Inherited from YWidget.
-     */
-    const char *shortcutProperty() { return YUIProperty_Label; }
-
 
 protected:
     /**
