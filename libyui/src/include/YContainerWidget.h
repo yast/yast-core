@@ -51,6 +51,11 @@ public:
     virtual char *widgetClass() { return "YContainerWidget"; }
 
     /**
+     * Returns 'true' if there are any child widgets.
+     **/
+    bool hasChildren() const;
+
+    /**
      * Returns the number of child widgets.
      */
     int numChildren() const;

@@ -215,6 +215,12 @@ int YContainerWidget::numChildren() const
 }
 
 
+bool YContainerWidget::hasChildren() const
+{
+    return children.size() > 0;
+}
+
+
 YWidget *YContainerWidget::child( int i ) const
 {
     if ( i >= 0 && i < numChildren() )

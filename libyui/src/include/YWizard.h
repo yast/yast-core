@@ -25,6 +25,8 @@
 
 class YMacroRecorder;
 
+#define YWizardContentsReplacePointID "contents"
+
 /**
  * @short Implementation of the SelectionBox widget.
  */
