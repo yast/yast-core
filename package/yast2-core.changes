@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
 Mon Mar  1 12:39:53 CET 2004 - cschum@suse.de
 
-- WFM: Added Pkg::CallbackYouMessage, Pkg::CallbackYouError and
+WFM: - Added Pkg::CallbackYouMessage, Pkg::CallbackYouError and
        Pkg::CallbackYouLog.
+     - Renamed Pkg::YouGetPatches to Pkg::YouRetrievePatchInfo.
+     - Renamed Pkg::YouGetPackages to Pkg::YouRetrievePatches.
+     - Removed obsolete functions Pkg::YouAttachSource,
+       Pkg::YouDisconnect, Pkg::YouFinish, Pkg::YouFirstPatch,
+       Pkg::YouGetCurrentPatch, Pkg::YouInstallCurrentPatch and
+       Pkg::YouNextPatch.
 
 -------------------------------------------------------------------
 Mon Mar  1 11:25:35 CET 2004 - kkaempf@suse.de
