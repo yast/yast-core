@@ -22,7 +22,9 @@
  */
 
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -252,24 +254,22 @@ YCPDebugger::debug (YCPBasicInterpreter *inter, EntryPoint entrypoint,
 static int
 split (const string& in, int n, string* out, const char* delim)
 {
-    char* buffer = strdup (in.c_str ());
-    char* tmp = buffer;
+    // this ain't the fastest split implementation
 
     int i = 0;
 
-    while (true) {
-	const char* t = strsep (&tmp, delim);
-	if (t == 0)
-	    break;
-	if (*t != '\0') {
-	    out[i++] = t;
-	    if (i == n)
-		break;
-	}
-    }
+    const string::size_type l = in.length ();
+    string::size_type a = 0;
 
-    free (buffer);
-    return i;
+    while (true)
+    {
+        string::size_type b = in.find_first_of (delim, a);
+        if (a != b && a != l)
+            out[i++] = in.substr (a, b - a);
+        if (b == string::npos || i == n)
+            return i;
+        a = b + 1;
+    }
 }
 
 
