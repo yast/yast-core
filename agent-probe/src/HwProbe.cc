@@ -300,6 +300,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "joystick",		ITEM(hw_joystick),	pr_null,	0},
 	{ "bios",		ITEM(hw_bios),		pr_null,	0},
 	{ "pppoe",		ITEM(hw_pppoe),		pr_null,	0},
+	{ "redasd",		ITEM(hw_redasd),	pr_null,	0},
 	{ 0, 0, pr_null, 0 }
     };
 
