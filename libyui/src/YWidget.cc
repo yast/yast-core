@@ -264,7 +264,7 @@ void YWidget::setDefaultStretchable( YUIDimension dim, bool newStretch )
 }
 
 
-bool YWidget::stretchable( YUIDimension dim )
+bool YWidget::stretchable( YUIDimension dim ) const
 {
     return _stretch[ dim ];
 }
@@ -331,7 +331,7 @@ bool YWidget::isReplacePoint() const
 }
 
 
-bool YWidget::isLayoutStretch( YUIDimension dim )
+bool YWidget::isLayoutStretch( YUIDimension dim ) const
 {
     return false;
 }

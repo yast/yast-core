@@ -45,7 +45,7 @@ public:
      * In an unsquashed dimension the widget is stretchable if the
      * child is stretchable.
      */
-    bool stretchable( YUIDimension dim );
+    bool stretchable( YUIDimension dim ) const;
 
 
 protected:

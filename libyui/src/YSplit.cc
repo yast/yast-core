@@ -234,7 +234,7 @@ int YSplit::countLayoutStretchChildren( YUIDimension dimension )
 }
 
 
-bool YSplit::stretchable( YUIDimension dimension )
+bool YSplit::stretchable( YUIDimension dimension ) const
 {
     for ( int i = 0; i < numChildren(); i++ )
     {

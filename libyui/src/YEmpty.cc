@@ -32,7 +32,7 @@ long YEmpty::nicesize( YUIDimension dim )
 }
 
 
-bool YEmpty::isLayoutStretch( YUIDimension dim )
+bool YEmpty::isLayoutStretch( YUIDimension dim ) const
 {
     return stretchable( dim );
 }

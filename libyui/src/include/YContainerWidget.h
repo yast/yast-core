@@ -72,7 +72,7 @@ public:
      * Returns, whether the child is stretchable
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    bool stretchable( YUIDimension dim );
+    bool stretchable( YUIDimension dim ) const;
 
     /**
      * Default implementation, that assumes exactly one child.

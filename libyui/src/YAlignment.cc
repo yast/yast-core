@@ -35,7 +35,7 @@ YAlignment::YAlignment( YWidgetOpt & opt,
 }
 
 
-bool YAlignment::stretchable( YUIDimension dim )
+bool YAlignment::stretchable( YUIDimension dim ) const
 {
     if ( align[ dim ] == YAlignUnchanged ) return child(0)->stretchable( dim );
     else return true;

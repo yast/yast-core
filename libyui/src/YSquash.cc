@@ -26,7 +26,7 @@ YSquash::YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash )
     squash[ YD_VERT ]  = vsquash;
 }
 
-bool YSquash::stretchable( YUIDimension dim )
+bool YSquash::stretchable( YUIDimension dim ) const
 {
     return ! squash[ dim ] && child(0)->stretchable( dim );
 }

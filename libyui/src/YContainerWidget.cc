@@ -184,7 +184,7 @@ long YContainerWidget::nicesize( YUIDimension dim )
 }
 
 
-bool YContainerWidget::stretchable( YUIDimension dim )
+bool YContainerWidget::stretchable( YUIDimension dim ) const
 {
     return child(0)->stretchable( dim );
 }

@@ -53,7 +53,7 @@ public:
      * Such widgets will receive special treatment in layout calculations.
      * Inherited from YWidget.
      */
-    bool isLayoutStretch( YUIDimension dim );
+    bool isLayoutStretch( YUIDimension dim ) const;
 
 };
 

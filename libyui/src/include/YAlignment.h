@@ -67,7 +67,7 @@ public:
      * In an unchanged dimension the widget is stretchable if the
      * child is stretchable.
      */
-    bool stretchable( YUIDimension dim );
+    bool stretchable( YUIDimension dim ) const;
 
     /**
      * Sets the size and move the child widget according to its

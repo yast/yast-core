@@ -161,7 +161,7 @@ public:
      * Such widgets will receive special treatment in layout calculations.
      * The default implementation returns false.
      */
-    virtual bool isLayoutStretch( YUIDimension dim );
+    virtual bool isLayoutStretch( YUIDimension dim ) const;
 
     /**
      * Minimum size the widget should have to make it look and feel nice. For a
@@ -182,7 +182,7 @@ public:
      *
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    virtual bool stretchable( YUIDimension dim );
+    virtual bool stretchable( YUIDimension dim ) const;
 
     /**
      * Set the stretchable state to "newStretch" regardless of any `hstretch or

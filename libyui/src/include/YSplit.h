@@ -71,7 +71,7 @@ public:
      * that dimension.
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    virtual bool stretchable( YUIDimension dimension );
+    virtual bool stretchable( YUIDimension dimension ) const;
 
     /**
      * Sets the size of the Split. Here the layout policy
