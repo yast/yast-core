@@ -37,7 +37,7 @@
 
 #include "YBarGraph.h"
 
-
+#include <assert.h>
 
 
 /**
