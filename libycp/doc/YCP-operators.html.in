@@ -1,33 +1,11 @@
 <html><head>
 <title>YCP language Reference: YCP Operators</title>
-</head><body> <!--bgcolor=#ffffff-->
-<!-- Author: Michal Svec <msvec@suse.cz> -->
-<!-- $Id$ -->
-<a name="top"><p>
+</head><body> 
 <h1>YCP language Reference: YCP Operators</h1>
-<hr>
 
-<p>
-Authors: Dan Vesely &lt;<a href="mailto:dan@suse.cz">dan@suse.cz</a>&gt;,
-Michal Svec &lt;<a href="mailto:msvec@suse.cz">msvec@suse.cz</a>&gt;.
 
-<p>
-YCP knows the following operators:<br>
-<a href="#comparison">comparison operators</a>,
-<a href="#boolean">boolean operators</a>,
-<a href="#bit">bit operators</a>,
-<a href="#math">math operators</a>,
-<a href="#triple">triple operator</a>.
-
-<p>Operators <a href="#precedence">precedence</a>.
-- <b>Important!</b>
-
-<p><hr><p>
-
-<a name="comparison"><tt><b>comparison operators</tt></b>
-<ul>
-        These are binary operators for comparison of two values. The result is always boolean.
-<p>
+<h2>comparison operators</h2>
+<p>These are binary operators for comparison of two values. The result is always boolean.</p>
         <table border="1">
                 <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
                 <tr><td align="center">==</td><td>almost all</td><td>True if operands are equal, otherwise false.</td></tr>
@@ -37,12 +15,11 @@ YCP knows the following operators:<br>
                 <tr><td align="center">&gt;=</td><td>almost all</td><td>True if left operand is greater or equal to the right one, otherwise false.</td></tr>
                 <tr><td align="center">!=</td><td>almost all</td><td>True if operands are not equal, otherwise false.</td></tr>
         </table>
-</ul>
 
-<a name="boolean"><tt><b>boolean operators</tt></b>
-<ul>
+        <h2>boolean operators</h2>
+        <p>
         These are logical operators, that works with boolean datatype, two are binary one is unary. The result is always boolean.
-<p>
+        </p>
         <table border="1">
                 <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
                 <tr><td align="center">&amp;&amp;</td><td>boolean</td><td>True if both operands are true, otherwise false (logical and).</td></tr>
@@ -50,12 +27,11 @@ YCP knows the following operators:<br>
                 <tr><td align="center">!</td><td>boolean</td><td>True if the operand if false, otherwise false (logical not).</td></tr>
         </table>
 
-</ul>
 
-<a name="bit"><tt><b>bit operators</tt></b>
-<ul>
+        <h2>bit operators</h2>
+        <p>
         These are bit operators that works with integer, two are binary one is unary. The result is always integer.
-<p>
+</p>
         <table border="1">
                 <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
                 <tr><td align="center">&amp;</td><td>integer</td><td>Bits of the result number are product of the bits of the operands (bit and).</td></tr>
@@ -65,12 +41,10 @@ YCP knows the following operators:<br>
                 <tr><td align="center">&gt;&gt;</td><td>integer</td><td>Bits of the result number are right shifted bits of the operands (bit shift right).</td></tr>
         </table>
 
-</ul>
 
-<a name="math"><tt><b>math operators</tt></b>
-<ul>
-        There math operators works with numeric data types (integer and float) and also with string. All are binary (except unary minus).
-<p>
+        <h2>math operators</h2>
+        <p>
+        There math operators works with numeric data types (integer and float) and also with string. All are binary (except unary minus).  </p>
         <table border="1">
                 <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
                 <tr><td align="center">+</td><td>integer, float, string</td><td>The result is sum of the numbers or concatenation of the strings.</td></tr>
@@ -81,12 +55,10 @@ YCP knows the following operators:<br>
                 <tr><td align="center">unary -</td><td>integer, float</td><td>The result is negative number.</td></tr>
         </table>
 
-</ul>
-
-<a name="triple"><tt><b>triple operator</tt></b>
-<ul>
+        <h2>triple operator</h2>
+        <p>
         This is the operator known from C language ( <i>condition</i> <b>?</b> <i>expression</i> <b>:</b> <i>expression</i>). The first operand is expression that can evaluate to boolean, types of second and third operands are code dependent. The result of the triple operator expression is the second operand in the case the first operand (condition) evaluates to true, the third one otherwise.
-<p>
+        </p>
         <table border="1">
                 <tr><th>Code</th><th>Result</th><th>Comment</th></tr>
                 <tr><td>(3 &gt; 2) ? true : false</td><td>true</td><td>The expression (3 > 2) evaluates to true, the result is true</td></tr>
@@ -96,18 +68,19 @@ YCP knows the following operators:<br>
 
   <p>
   <b>Note:</b> Using brackets makes code cleaner, but is not necessary (according to operators precedence).
+  </p>
   <p>
   <b>Note:</b> With the introduction of the
   <a href="bracket.html">index operator</a> ( a = mapvar["key"]:default ),
   the sequence "]:" became a lexical token usable only for indexing,
   so watch out when using the triple operator with lists and maps. Use
   parentheses or white space.
-</ul>
+  </p>
 
-<a name="precedence"><tt><b>operators precedence</tt></b>
-<ul>
+  <h2>operators precedence</h2>
+  <p>
         The table of operators precedence (from lowest to highest).
-<p>
+</p>
         <table border="1">
                 <tr><th>&nbsp;Direction&nbsp;</th><th>&nbsp;Operators&nbsp;</th></tr>
                 <tr><td align="center">right</td><td>=</td></tr>
@@ -118,19 +91,11 @@ YCP knows the following operators:<br>
                 <tr><td align="center">left</td><td>&lt; &lt;= &gt; &gt;=</td></tr>
                 <tr><td align="center">left</td><td>+ -</td></tr>
                 <tr><td align="center">left</td><td>* / %</td></tr>
-                <tr><td align="center">left</td><td><font color="red">&lt;&lt; &gt;&gt;</font></td></tr>
-                <tr><td align="center">left</td><td><font color="red">|</font></td></tr>
-                <tr><td align="center">left</td><td><font color="red">&amp;</font></td></tr>
+                <tr><td align="center">left</td><td>&lt;&lt; &gt;&gt;</td></tr>
+                <tr><td align="center">left</td><td>|</td></tr>
+                <tr><td align="center">left</td><td>&amp;</td></tr>
                 <tr><td align="center">prefix</td><td>! ~ -</td></tr>
         </table>
-
-	<p><b>Note:</b> The <font color="red">marked</font> operators'
-	precedence is different from those of the C language. This is
-	a bug (#21251, #21260) which will be fixed in the future so
-	you should always use parentheses in expressions involving
-	&lt;&lt;, &gt;&gt;, &amp; and |.</p>
-
-</ul>
 
 </body></html>
 <!-- vim: ft=html

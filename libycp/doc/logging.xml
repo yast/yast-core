@@ -35,7 +35,7 @@ filename and line number.</para>
     </itemizedlist>
     <para/>
   </section>
-  <section>
+  <section id="logging-levels">
     <title>Logging levels</title>
     <para>There exist six different log levels denoting incidents of
 different importance:</para>
@@ -83,14 +83,14 @@ the programmers.</para>
       </varlistentry>
     </variablelist>
     <para>In the default setting the levels 1-5 are logged, level 0
-(DEBUG) is switched off. See the <link linkend="control">Logging
-control</link> and <link linkend="env">Environment control</link> for more
+(DEBUG) is switched off. See the <link linkend="logging-control">Logging
+control</link> and <link linkend="logging-env">Environment control</link> for more
 details how to control the logging and its levels.</para>
     <para/>
   </section>
-  <section>
+  <section id="logging-functions">
     <title>Logging functions</title>
-    <para>According to the <link linkend="levels">logging levels</link>, use the
+    <para>According to the <link linkend="logging-levels">logging levels</link>, use the
 following logging functions:</para>
     <programlisting>
 void y2debug(const char *format, ...);
@@ -102,21 +102,17 @@ void y2internal(const char *format, ...);
 </programlisting>
     <para>The parameter <literal>format</literal> is the format string like the one
 for <literal>printf(3)</literal></para>
-    <naked-text>
-      <para/>
-    </naked-text>
-    <para/>
   </section>
   <section>
     <title>Additional functions</title>
     <para/>
-    <section>
+    <section id="logging-logfiles">
       <title>Setting the logfile name</title>
       <programlisting>
 void y2setLogfileName(const char *filename);
 </programlisting>
       <para>This function sets the logfile name. If the name cannot be open
-for writing (append), it use the default <link linkend="logfiles">logfiles</link>. If you want to output the debug log
+for writing (append), it use the default <link linkend="logging-logfiles">logfiles</link>. If you want to output the debug log
 the <literal>stderr</literal>, use <literal>"-"</literal> as the argument for the
 y2setLogfileName:</para>
       <programlisting>
@@ -131,7 +127,7 @@ void y2logger(loglevel_t level, const char *format, ...);
 void y2vlogger(loglevel_t level, const char *format, va_list ap);
 </programlisting>
       <para>These functions are provided probably only for those who don't
-want to use the regular <link linkend="functions">logging functions</link>.
+want to use the regular <link linkend="logging-functions">logging functions</link>.
 For example for setting the loglevel acording to some rule.</para>
       <para/>
     </section>
@@ -192,7 +188,7 @@ instead.</para>
           <literal>level</literal>
         </term>
         <listitem>
-          <para>The log entry level. See <link linkend="levels">Logging
+          <para>The log entry level. See <link linkend="logging-levels">Logging
 levels</link>.</para>
         </listitem>
       </varlistentry>
@@ -268,7 +264,7 @@ date time &lt;level&gt; hostname(pid) filename(function):line message...
 </programlisting>
     <para/>
   </section>
-  <section>
+  <section id="logging-control">
     <title>Logging control</title>
     <para>The log control uses a simple ini-like configuration file. It is
 looked for at /etc/YaST2/log.conf for root and at
@@ -321,11 +317,10 @@ destination netmessages { file("/var/log/messages.$HOST"); };
 log { source(network); filter(f_messages); destination(netmessages); }; 
 
 </programlisting>
-    <para/>
   </section>
-  <section>
+  <section id="logging-env">
     <title>Environment control</title>
-    <para>Additionally to the usual <link linkend="control">logfile control</link>
+    <para>Additionally to the usual <link linkend="logging-control">logfile control</link>
 you can control some logging feature by the environment
 variables.</para>
     <variablelist>
@@ -334,7 +329,7 @@ variables.</para>
         <listitem>
           <para>By setting this variable to an arbitrary value you turn on the
 debug log output. But only when entry control is not covered by the
-usual <link linkend="control">logfile control</link>.</para>
+usual <link linkend="logging-control">logfile control</link>.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
@@ -354,13 +349,13 @@ debug log output for the bash_background processes.</para>
       <varlistentry>
         <term>Y2MAXLOGSIZE</term>
         <listitem>
-          <para>By this variable you can control the size of logfiles. See <link linkend="logfiles">Logfiles</link> for details.</para>
+          <para>By this variable you can control the size of logfiles. See <link linkend="logging-logfiles">Logfiles</link> for details.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
         <term>Y2MAXLOGNUM</term>
         <listitem>
-          <para>By this variable you can control the number of logfiles. See <link linkend="logfiles">Logfiles</link> for details.</para>
+          <para>By this variable you can control the number of logfiles. See <link linkend="logging-logfiles">Logfiles</link> for details.</para>
         </listitem>
       </varlistentry>
     </variablelist>

@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinByteblock.cc
+   Summary:     YCP Byteblock Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -32,9 +33,12 @@ static YCPValue
 b_tobyteblock (const YCPValue &v)
 {
     /**
-     * @builtin tobyteblock (any value) -> byteblock
-     * Converts a value to a byteblock.
+     * @builtin tobyteblock
+     * @short Converts a value to a byteblock.
+     * @description
      * If the value can't be converted to a byteblock, nilbyteblock is returned.
+     * @param any VALUE
+     * @return byteblock
      *
      */
 
@@ -53,8 +57,10 @@ static YCPValue
 b_size (const YCPByteblock &v)
 {
     /**
-     * @builtin size (byteblock value) -> integer
-     * Returns a size of a byteblock in bytes.
+     * @builtin size
+     * @short  Returns a size of a byteblock in bytes.
+     * @param byteblock VALUE
+     * @return integer
      *
      */
 

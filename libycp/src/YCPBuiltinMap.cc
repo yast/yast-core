@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinMap.cc
+   Summary:     Map Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -36,9 +37,14 @@ static YCPValue
 m_haskey (const YCPMap &map, const YCPValue &value)
 {
     /**
-     * @builtin haskey (map m, any k) -> boolean
-     * Determines whether the map <tt>m</tt> contains a pair with the
-     * key <tt>k</tt>. Returns true if this is so.
+     * @builtin haskey
+     * @short Check if map has a certain key
+     * @description
+     * Determines whether the map <tt>MAP</tt> contains a pair with the
+     * key <tt>KEY</tt>. Returns true if this is true.
+     * @param map MAP
+     * @param any KEY
+     * @return boolean
      */
      
     if (map.isNull ())
@@ -61,15 +67,20 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
 			  const YCPMap &map, const YCPCode &expr)
 {
     /**
-     * @builtin filter (key k, value v, map m, block (boolean) c) -> map
-     * For each key/value pair of the map <tt>m</tt> the expression <tt>exp</tt>
-     * is evaluated in a new context, where the variable <tt>k</tt> is assigned
-     * to the key and <tt>v</tt> to the value of the pair. If the expression
+     * @builtin filter
+     * @short Filter a Map
+     * @description
+     * For each key/value pair of the map <tt>MAP</tt> the expression <tt>EXPR</tt>
+     * is evaluated in a new context, where the variable <tt>KEY</tt> is assigned
+     * to the key and <tt>VALUE</tt> to the value of the pair. If the expression
      * evaluates to true, the key/value pair is appended to the returned map.
      *
-     * Example: <pre>
-     * filter (`k, `v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == v); }) -> $[3:3, 5:5]
-     * </pre>
+     * @param any KEY
+     * @param any VALUE
+     * @param map MAP
+     * @param blocl EXPR
+     * @return map
+     * @usage filter (`k, `v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == v); }) -> $[3:3, 5:5]
      */
 
     if (map.isNull ())
@@ -110,20 +121,26 @@ m_mapmap (const YCPSymbol &key, const YCPSymbol &value,
 			  const YCPMap &map, const YCPCode &expr)
 {
     /**
-     * @builtin mapmap (symbol k, symbol v, map m, expression exp) -> map
-     * Maps an operation onto all key/value pairs of the map <tt>m</tt> and
-     * thus creates a new map. For each key/value pair of the map <tt>m</tt>
-     * the expression <tt>exp</tt> is evaluated in a new context, where the
-     * variable <tt>k</tt> is assigned to the key and <tt>v</tt> to the value
+     * @builtin mapmap
+     * @short Maps an operation onto all key/value pairs of a map
+     * @description
+     * Maps an operation onto all key/value pairs of the map <tt>MAP</tt> and
+     * thus creates a new map. For each key/value pair of the map <tt>MAP</tt>
+     * the expression <tt>EXPR</tt> is evaluated in a new context, where the
+     * variable <tt>KEY</tt> is assigned to the key and <tt>VALUE</tt> to the value
      * of the pair. The result is the map of those evaluations.
      *
      * The result of each evaluation <i>must</i> be a map with a single entry
      * which will be added to the result map.
      *
-     * Examples: <pre>
-     * mapmap (`k, `v, $[1:"a", 2:"b"], { return ($[k+10 : v+"x"]); }) -> $[ 11:"ax", 12:"bx" ]
-     * mapmap (`k, `v, $[1:"a", 2:"b"], { any a = k+10; any b = v+"x"; map ret = $[a:b]; return (ret); }) -> $[ 11:"ax", 12:"bx" ]
-     * </pre>
+     * @param any KEY
+     * @param any VALUE
+     * @param map MAP
+     * @param block EXPR
+     * @return map
+     *
+     * @usage mapmap (`k, `v, $[1:"a", 2:"b"], { return ($[k+10 : v+"x"]); }) -> $[ 11:"ax", 12:"bx" ]
+     * @usage mapmap (`k, `v, $[1:"a", 2:"b"], { any a = k+10; any b = v+"x"; map ret = $[a:b]; return (ret); }) -> $[ 11:"ax", 12:"bx" ]
      */
 
     if (map.isNull ())
@@ -169,17 +186,23 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
 			    const YCPMap &map, const YCPCode &expr)
 {
     /**
-     * @builtin maplist (symbol k, symbol v, map m, block c) -> list
+     * @builtin maplist 
+     * @short Maps an operation onto all elements key/value and create a list
+     * @description
      * Maps an operation onto all elements key/value pairs of a map and thus creates
      * a list.
-     * For each key/value pair of the map <tt>m</tt> the expression <tt>e</tt>
-     * is evaluated in a new context, where the variable <tt>k</tt>
-     * is assigned to the key and <tt>v</tt> to the value of the pair.
-     * The result is the list of those evaluations.
      *
-     * Example: <pre>
-     * maplist (`k, `v, $[1:"a", 2:"b"], { return [k+10, v+"x"]; }) -> [ [11, "ax"], [ 12, "bx" ] ]
-     * </pre>
+     * For each key/value pair of the map <tt>MAP</tt> the expression <tt>e</tt>
+     * is evaluated in a new context, where the variable <tt>KEY</tt>
+     * is assigned to the key and <tt>VALUE</tt> to the value of the pair.
+     * The result is the list of those evaluations.
+     * @param any KEY
+     * @param any VALUE
+     * @param map MAP
+     * @param block EXPR
+     * @return list
+     *
+     * @usage maplist (`k, `v, $[1:"a", 2:"b"], { return [k+10, v+"x"]; }) -> [ [11, "ax"], [ 12, "bx" ] ]
      */
 
     if (map.isNull ())
@@ -217,11 +240,18 @@ static YCPValue
 m_unionmap (const YCPMap &map1, const YCPMap &map2)
 {
     /**
-     * @builtin union (map m1, map m2) -> map
+     * @builtin union
+     * @short Union of 2 maps
+     * @description
      * Interprets two maps as sets and returns a new map that has all
-     * elements of the first map <tt>m1</tt>and all of the second map
-     * <tt>m2</tt>. If elements have identical keys, values from
-     * <tt>m2</tt> overwrite elements from <tt>m1</tt>.
+     * elements of the first map <tt>MAP1</tt>and all of the second map
+     * <tt>MAP2</tt>. If elements have identical keys, values from
+     * <tt>MAP2</tt> overwrite elements from <tt>MAP1</tt>.
+     *
+     * @param map MAP1
+     * @param map MAP2
+     * @return map
+     *
      */
 
     if (map1.isNull () || map2.isNull ())
@@ -247,14 +277,18 @@ static YCPValue
 m_addmap (const YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
-     * @builtin add (map m, any k, any v) -> map
-     * Adds the key/value pair <tt>k : v</tt> to the map <tt>m</tt> and
-     * returns the newly Created map. If the key <tt>k</tt> exists in
-     * <tt>k</tt>, the old key/value pair is replaced with the new one.
+     * @builtin add 
+     * @short Add a key/value pair to a map
+     * @description
+     * Adds the key/value pair <tt>k : v</tt> to the map <tt>MAP</tt> and
+     * returns the newly Created map. If the key <tt>KEY</tt> exists in
+     * <tt>KEY</tt>, the old key/value pair is replaced with the new one.
      *
-     * Example: <pre>
-     * add ($[a: 17, b: 11], `b, nil) -> $[a:17, b:nil].
-     * </pre>
+     * @param map MAP
+     * @param any KEY
+     * @param any VALUE
+     * @return map
+     * @usage add ($[a: 17, b: 11], `b, nil) -> $[a:17, b:nil].
      */
 
     if (map.isNull ())
@@ -274,18 +308,21 @@ static YCPValue
 m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
-     * @builtin change (map m, any k, any v) -> map
-     *
+     * @builtin change
+     * @short Change element pair in a map
+     * @description
      * DO NOT use this yet. It's for a special requst, not for common use!!!
      *
-     * Adds the key/value pair <tt>k : v</tt> to the map <tt>m</tt> and
-     * returns the map. <tt>m</tt> <i>is</i> modified. If the key <tt>k</tt>
-     * exists in <tt>k</tt>, the old key/value pair is replaced with the new
+     * Adds the key/value pair <tt>KEY : VALUE</tt> to the map <tt>MAP</tt> and
+     * returns the map. <tt>MAP</tt> <i>is</i> modified. If the key <tt>KEY</tt>
+     * exists in <tt>KEY</tt>, the old key/value pair is replaced with the new
      * one.
      *
-     * Example: <pre>
-     * change ($[.a: 17, .b: 11], .b, nil) -> $[.a:17, .b:nil].
-     * </pre>
+     * @param map MAP
+     * @param any KEY
+     * @param any VALUE
+     *
+     * @usage change ($[.a: 17, .b: 11], .b, nil) -> $[.a:17, .b:nil].
      */
 
     if (map.isNull ())
@@ -309,8 +346,12 @@ static YCPValue
 m_size (const YCPValue &map)
 {
     /**
-     * @builtin size (map m) -> integer
-     * Returns the number of key/value pairs in the map <tt>m</tt>
+     * @builtin size
+     * @short Size of a map
+     * @description
+     * Returns the number of key/value pairs in the map <tt>MAP</tt>
+     * @param map MAP
+     * @return integer
      */
 
     if (map.isNull ()
@@ -326,16 +367,22 @@ static YCPValue
 m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YCPCode &expr)
 {
     /**
-     * @builtin foreach(symbol key, symbol value, map m, any exp) -> any
-     * For each key:value pair of the map <tt>m</tt> the expression
-     * <tt>exp</tt> is executed in a new context, where the variables
-     * <tt>key</tt> is bound to the key and <tt>value</tt> is bound to the
+     * @builtin foreach
+     * @short Process the content of a map
+     * @description
+     * For each key:value pair of the map <tt>MAP</tt> the expression
+     * <tt>EXPR</tt> is executed in a new context, where the variables
+     * <tt>KEY</tt> is bound to the key and <tt>VALUE</tt> is bound to the
      * value. The return value of the last execution of exp is the value
      * of the <tt>foreach</tt> construct.
      * 
-     * Example <pre>
-     * foreach (integer k, integer v, $[1:1,2:4,3:9], { y2debug("v = %1", v); return v; }) -> 9 
-     * </pre>
+     * @param any KEY
+     * @param any VALUE
+     * @param map MAP
+     * @param any EXPR
+     * @return map
+     *
+     * @usage foreach (integer k, integer v, $[1:1,2:4,3:9], { y2debug("v = %1", v); return v; }) -> 9 
      */
      
     if (map.isNull ())
@@ -370,9 +417,12 @@ static YCPValue
 m_tomap (const YCPValue &v)
 {
     /**
-     * @builtin tomap (any value) -> map
-     * Converts a value to a map.
+     * @builtin tomap
+     * @short Converts a value to a map.
+     * @description
      * If the value can't be converted to a map, nilmap is returned.
+     * @param any VALUE
+     * @return map
      *
      */
 
@@ -392,14 +442,17 @@ static YCPValue
 m_remove (const YCPMap &map, const YCPValue &key)
 {
     /**
-     * @builtin remove (map l, any key) -> map
-     * Remove the value with the key <tt>key</tt> from a map. Returns
+     * @builtin remove
+     * @short Remove key/value pair from a map
+     * @description
+     * Remove the value with the key <tt>KEY</tt> from a map. Returns
      * nil if the key is invalid.
+     * @param map MAP
+     * @param any KEY
+     * @return map
      *
-     * Example: <pre>
-     * remove($[1:2], 0) -> nil
-     * remove ($[1:2, 3:4], 1) -> $[3:4]
-     * </pre>
+     * @usage remove($[1:2], 0) -> nil
+     * @usage remove ($[1:2, 3:4], 1) -> $[3:4]
      */
 
     if (map.isNull ())

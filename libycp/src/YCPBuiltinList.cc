@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinList.cc
+   Summary:     YCP List Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -45,15 +46,20 @@ static YCPValue
 l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
-     * @builtin find (<i>type</i> s, list&lt;<i>type</i>&gt; l, block&lt;boolean&gt; e) -> any
-     * Searches for a certain item in the list. It applies the expression
-     * <tt>e</tt> to each element in the list and returns the first element
-     * the makes the expression evaluate to true, if <tt>s</tt> is bound to
-     * that element. Returns nil, if none is found.
+     * @builtin find
+     * @short Search for a certain element in a list
+     * @param any VAR
+     * @param list LIST
+     * @param block EXPR
      *
-     * Example: <pre>
-     * find (integer n, [3,5,6,4], ``(n >= 5)) -> 5
-     * </pre>
+     * @description
+     * Searches for a certain item in the list. It applies the expression
+     * <tt>EXPR</tt> to each element in the list and returns the first element
+     * the makes the expression evaluate to true, if <tt>VAR</tt> is bound to
+     * that element. 
+     *
+     * @return any Returns nil, if nothing is found.
+     * @usage find (integer n, [3,5,6,4], ``(n >= 5)) -> 5
      */
      
     if (list.isNull ())
@@ -93,13 +99,16 @@ static YCPValue
 l_prepend (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin prepend (list&lt;<i>type</i>&gt; l, <i>type</i> v) -> list&lt;<i>type</i>&gt;
-     * Creates a new list that is identical to the list <tt>l</tt> but has
-     * the value <tt>v</tt> prepended as additional element.
+     * @builtin prepend 
+     * @short Prepend a list with a new element
+     * @param any ELEMENT Element to prepend
+     * @param list LIST List
+     * @return list
+     * @description
+     * Creates a new list that is identical to the list <tt>LIST</tt> but has
+     * the value <tt>ELEMENT</tt> prepended as additional element.
      *
-     * Example: <pre>
-     * prepend ([1, 4], 8) -> [8, 1, 4]
-     * </pre>
+     * @usage prepend ([1, 4], 8) -> [8, 1, 4]
      */
 
     if (list.isNull ())
@@ -115,13 +124,17 @@ static YCPValue
 l_contains (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin contains (list&lt;<i>type</i>&gt; l, <i>type</i> v) -> boolean
-     * Determines, if a certain value <tt>v</tt> is contained in
-     * a list <tt>l</tt>. Returns true, if this is so.
+     * @builtin contains 
+     * @short Check if a list contains an element
+     * @param list LIST List
+     * @param any ELEMENT Element
+     * @return boolean True if element is in the list.
+     * @description
      *
-     * Example: <pre>
-     * contains ([1, 2, 5], 2) -> true
-     * </pre>
+     * Determines, if a certain value <tt>ELEMENT</tt> is contained in
+     * a list <tt>LIST</tt>. 
+     *
+     * @usage contains ([1, 2, 5], 2) -> true
      */
 
     if (list.isNull ())
@@ -145,14 +158,18 @@ static YCPValue
 l_setcontains (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin setcontains (list&lt;<i>type</i>&gt; l, <i>type</i> v) -> boolean
-     * Determines, if a certain value <tt>v</tt> is contained in
-     * a list <tt>l</tt>, but assumes that <tt>l</tt> is sorted. If <tt>l</tt> is
+     * @builtin setcontains
+     * @short Check if a sorted list contains an element
+     *
+     * @param list LIST List
+     * @param any ELEMENT Element
+     * @return boolean True if element is in the list.
+     * @description
+     * Determines, if a certain value <tt>ELEMENT</tt> is contained in
+     * a list <tt>LIST</tt>, but assumes that <tt>LIST</tt> is sorted. If <tt>LIST</tt> is
      * not sorted, the result is undefined.
      *
-     * Example: <pre>
-     * setcontains ([1, 2, 5], 2) -> true
-     * </pre>
+     * @usage setcontains ([1, 2, 5], 2) -> true
      */
 
     if (list.isNull ())
@@ -191,19 +208,23 @@ static YCPValue
 l_unionlist (const YCPList &list1, const YCPList &list2)
 {
     /**
-     * @builtin union (list l1, list l2) -> list
+     * @builtin union
+     * @short Union of lists
+     * @param list LIST1 First List
+     * @param list LIST2 Second List
+     * @return list 
+     *
+     * @description
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
      * elements are dropped. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
-     * See also "<tt>merge</tt>".
-     *
+     * 
      * WARNING: quadratic complexity so far
      *
-     * Examples: <pre>
-     * union ([1, 2], [3, 4]) -> [1, 2, 3, 4]
-     * union ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 4]
-     * </pre>
+     * @see merge
+     * @usage union ([1, 2], [3, 4]) -> [1, 2, 3, 4]
+     * @usage union ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 4]
      */
 
     if (list1.isNull () || list2.isNull ())
@@ -247,17 +268,20 @@ static YCPValue
 l_mergelist (const YCPList &list1, const YCPList &list2)
 {
     /**
-     * @builtin merge (list l1, list l2) -> list
+     * @builtin merge 
+     * @short Merge two lists into one
+     * @param list LIST1 First List
+     * @param list LIST2 Second List
+     * @return list 
+     * @description
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
      * elements are preserved. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
-     * See also "<tt>union</tt>".
+     * @see union
      *
-     * Examples: <pre>
-     * merge ([1, 2], [3, 4]) -> [1, 2, 3, 4]
-     * merge ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 2, 3, 4]
-     * </pre>
+     * @usage merge ([1, 2], [3, 4]) -> [1, 2, 3, 4]
+     * @usage merge ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 2, 3, 4]
      */
 
     if (list1.isNull () || list2.isNull ())
@@ -285,15 +309,19 @@ static YCPValue
 l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
-     * @builtin filter (variable&lt;<i>type</i>&gt; v, list&lt;<i>type</i>&gt; l, block&lt;boolean&gt; c) -> list&lt;<i>type</i>&gt;
-     * For each element of the list <tt>l</tt> the expression <tt>c</tt>
-     * is executed in a new context, where the variable <tt>v</tt>
+     * @builtin filter
+     * @short Filter a List
+     * @param any VAR Variable
+     * @param list LIST List to be filtered
+     * @param block<boolean> EXPR Block
+     * @return list 
+     * @description
+     * For each element of the list <tt>LIST</tt> the expression <tt>expr</tt>
+     * is executed in a new context, where the variable <tt>VAR</tt>
      * is assigned to that value. If the expression evaluates to true under
      * this circumstances, the value is appended to the result list.
      *
-     * Example: <pre>
-     * filter (integer v, [1, 2, 3, 5], { return (v > 2); }) -> [3, 5]
-     * </pre>
+     * @usage filter (integer v, [1, 2, 3, 5], { return (v > 2); }) -> [3, 5]
      */
 
     if (list.isNull ())
@@ -335,17 +363,20 @@ static YCPValue
 l_maplist (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
-     * @builtin maplist (variable&lt;<i>in_type</i>&gt; v, list&lt;<i>in_type</i>&gt; l, block&lt;out_type&gt; c) -> list&lt;<i>out_type</i>&gt;
-     * Maps an operation onto all elements of a list and thus creates
-     * a new list.
-     * For each element of the list <tt>l</tt> the expression <tt>c</tt>
-     * is evaluated in a new context, where the variable <tt>v</tt>
+     * @builtin maplist
+     * @short Maps an operation onto all elements of a list and thus creates a new list.
+     * @param any VAR
+     * @param list<any> LIST
+     * @param block EXPR
+     * @return list<any>
+     *
+     * @description
+     * For each element of the list <tt>LIST</tt> the expression <tt>EXPR</tt>
+     * is evaluated in a new context, where the variable <tt>VAR</tt>
      * is assigned to that value. The result is the list of those
      * evaluations.
      *
-     * Example: <pre>
-     * maplist (integer v, [1, 2, 3, 5], { return (v + 1); }) -> [2, 3, 4, 6]
-     * </pre>
+     * @usage maplist (integer v, [1, 2, 3, 5], { return (v + 1); }) -> [2, 3, 4, 6]
      */
 
     if (list.isNull ())
@@ -382,26 +413,23 @@ static YCPValue
 l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
-     * @builtin listmap (variable&lt;<i>in_type</i>&gt; v, list&lt;<i>in_type</i>&gt; l, block&lt; map&lt;key_type, val_type&gt; &gt; exp) -> map&lt;key_type, val_type&gt;
-     * Maps an operation onto all elements of a list and thus creates a map.
-     * For each element <tt>v</tt> of the list <tt>l</tt> in the expression
-     * <tt>exp</tt> is evaluated in a new context. The result is the map of
+     * @builtin listmap
+     * @short Maps an operation onto all elements of a list and thus creates a map.
+     * @param any VAR
+     * @param list LIST
+     * @param block EXPR
+     * @return list
+     *
+     * @description
+     * For each element <tt>VAR</tt> of the list <tt>LIST</tt> in the expression
+     * <tt>EXPR</tt> is evaluated in a new context. The result is the map of
      * those evaluations.
      *
      * The result of each evaluation <i>must</i> be
      * a map with a single entry which will be added to the result map.
      *
-     * Examples: <pre>
-     * listmap (integer k, [1,2,3], {
-     *     return $[k, "xy"];
-     * })                            -> $[ 1:"xy", 2:"xy" ]
-     * listmap (integer k, [1,2,3], {
-     *     any a = k+10;
-     *     any b = sformat ("x%1", k);
-     *     map ret = $[a,b];
-     *     return ret;
-     * })                            -> $[ 11:"x1", 12:"x2", 13:"x3" ]
-     * </pre>
+     * @usage listmap (integer k, [1,2,3], { return $[k, "xy"]; })  -> $[ 1:"xy", 2:"xy" ]
+     * @usage listmap (integer k, [1,2,3], { any a = k+10;  any b = sformat ("x%1", k);   map ret = $[a,b];   return ret; }) -> $[ 11:"x1", 12:"x2", 13:"x3" ]
      */
 
 
@@ -463,13 +491,15 @@ static YCPValue
 l_flatten (const YCPList &list)
 {
     /**
-     * @builtin flatten (list&lt; list&lt;<i>type</i>&gt; &gt; l) -> list&lt;<i>type</i>&gt;
-     * Gets a list l of lists and creates a single list that is
-     * the concatenation of those lists in l.
+     * @builtin flatten
+     * @short Flatten List
+     * @param list<list> LIST
+     * @return list
+     * @description
+     * Gets a list  of lists <tt>LIST</tt> and creates a single list that is
+     * the concatenation of those lists in <tt>LIST</tt>.
      *
-     * Example: <pre>
-     * flatten ([ [1, 2], [3, 4] ]) -> [1, 2, 3, 4]
-     * </pre>
+     * @usage flatten ([ [1, 2], [3, 4] ]) -> [1, 2, 3, 4]
      */
 
     if (list.isNull ())
@@ -502,12 +532,14 @@ static YCPValue
 l_toset (const YCPList &list)
 {
     /**
-     * @builtin toset (list&lt;<i>type</i>&gt; l) -> list&lt;<i>type</i>&gt;
+     * @builtin toset
+     * @short Sort list and remove duplicates
+     * @param list LIST
+     * @return list Sorted list with unique items
+     * @description
      * Scans a list for duplicates, removes them and sorts the list.
      *
-     * Example: <pre>
-     * toset ([1, 5, 3, 2, 3, true, false, true]) -> [false, true, 1, 2, 3, 5]
-     * </pre>
+     * @usage toset ([1, 5, 3, 2, 3, true, false, true]) -> [false, true, 1, 2, 3, 5]
      */
 
     if (list.isNull ())
@@ -536,13 +568,16 @@ static YCPValue
 l_sortlist (const YCPList &list)
 {
     /**
-     * @builtin sort (list&lt;<i>type</i>&gt; l) -> list&lt;<i>type</i>&gt;
-     * Sort the list l according to the YCP builtin predicate <b>&lt;</b>.
+     * @builtin sort
+     * @id sort_1
+     * @short Sort A List according to the YCP builtin predicate <b>></b>
+     * @param list LIST
+     * @return list Sorted list
+     * @description
+     * Sort the list LIST according to the YCP builtin predicate <b>></b>.
      * Duplicates are not removed.
      *
-     * Example: <pre>
-     * sort ([2, 1, true, 1]) -> [true, 1, 1, 2]
-     * </pre>
+     * @usage sort ([2, 1, true, 1]) -> [true, 1, 1, 2]
      */
 
     if (list.isNull ())
@@ -560,27 +595,31 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
 	 const YCPList &list, const YCPCode &order)
 {
     /**
-     * @builtin sort (variable&lt;<i>type</i>&gt; x, variable&lt;<i>type</i>&gt; y, list&lt;<i>type</i>&gt; l, block&lt;boolean&gt; less) -> list&lt;<i>type</i>&gt;
-     * Sorts the list <tt>l</tt>. You have to specify an order on the
+     * @builtin sort
+     * @id sort_2
+     * @short Sort list using an expression
+     * @param any x
+     * @param any y 
+     * @param list LIST
+     * @param block EXPR
+     * @return list
+     * @description
+     * Sorts the list <tt>LIST</tt>. You have to specify an order on the
      * list elements by naming formal variables <tt>x</tt> and <tt>y</tt> and
-     * specify an expression <tt>less</tt> that evaluates to a boolean
+     * specify an expression <tt>EXPR</tt> that evaluates to a boolean
      * value depending on <tt>x</tt> and <tt>y</tt>.
-     * Return true if <tt>x</tt> &lt; <tt>y</tt> to
+     * Return true if <tt>x</tt>><tt>y</tt> to
      * sort the list ascending.
      *
-     * <strong>
      * The comparison must be an irreflexive one,
-     * that is "&lt;" instead of "&lt;=".
-     * </strong>
+     * that is ">" instead of ">=".
      *
-     * It is because we no longer use bubblesort (yuck) but std::sort
+     * It is because we no longer use bubblesort (yuck) but <b>std::sort</b>
      * which requires a <a
      * href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">strict
      * weak ordering</a>.
      *
-     * Examples: <pre>
-     * sort (integer x, integer y, [ 3,6,2,8 ], ``(x < y)) -> [ 2, 3, 6, 8 ]
-     * </pre>
+     * @usage sort (integer x, integer y, [ 3,6,2,8 ], ``(x < y)) -> [ 2, 3, 6, 8 ]
      */
 
     if (list.isNull ())
@@ -613,23 +652,25 @@ static YCPValue
 l_splitstring (const YCPString &s, const YCPString &c)
 {
     /**
-     * @builtin splitstring (string s, string c) -> list&lt;string&gt;
-     * Splits <tt>s</tt> into sub-strings at delimiter chars <tt>c</tt>.
-     * the resulting pieces do not contain <tt>c</tt>
+     * @builtin splitstring
+     * @short Split a string
+     * @param string STR
+     * @param string DELIM
+     * @return list<string>
      *
-     * see also: mergestring
+     * @description
+     * Splits <tt>STR</tt> into sub-strings at delimiter chars <tt>DELIM</tt>.
+     * the resulting pieces do not contain <tt>DELIM</tt>
      *
-     * If <tt>s</tt> starts with <tt>c</tt>, the first string in the result list is empty
-     * If <tt>s</tt> ends with <tt>c</tt>, the last string in the result list is empty.
-     * If <tt>s</tt> does not contain <tt>c</tt>, the result is a singleton list with <tt>s</tt>.
+     * If <tt>STR</tt> starts with <tt>DELIM</tt>, the first string in the result list is empty
+     * If <tt>STR</tt> ends with <tt>DELIM</tt>, the last string in the result list is empty.
+     * If <tt>STR</tt> does not contain <tt>DELIM</tt>, the result is a singleton list with <tt>STR</tt>.
      *
-     * Examples: <pre>
-     * splitstring ("/abc/dev/ghi", "/") -> ["", "abc", "dev", "ghi" ]
-     * splitstring ("abc/dev/ghi/", "/") -> ["abc", "dev", "ghi", "" ]
-     * splitstring ("abc/dev/ghi/", ".") -> ["abc/dev/ghi/" ]
-     * splitstring ("text/with:different/separators", "/:")
-     *                                   -> ["text", "with", "different", "separators"]
-     * </pre>
+     * @see mergestring
+     * @usage splitstring ("/abc/dev/ghi", "/") -> ["", "abc", "dev", "ghi" ]
+     * @usage splitstring ("abc/dev/ghi/", "/") -> ["abc", "dev", "ghi", "" ]
+     * @usage splitstring ("abc/dev/ghi/", ".") -> ["abc/dev/ghi/" ]
+     * @usage splitstring ("text/with:different/separators", "/:") -> ["text", "with", "different", "separators"]
      */
 
     if (s.isNull ())
@@ -686,15 +727,16 @@ static YCPValue
 l_changelist (YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin change (list l, value v) -> list
-     *
+     * @builtin change
+     * @short Change a list
+     * @param list LIST
+     * @param any value
+     * @return list
+     * @description
      * DO NOT use this yet. Its for a special requst, not for common use!!!
+     * changes the list LIST adds a new element
      *
-     * changes the list l adds a new element
-     *
-     * Example: <pre>
-     * change ([1, 4], 8) -> [1, 4, 8]
-     * </pre>
+     * @usage change ([1, 4], 8) -> [1, 4, 8]
      */
 
     if (list.isNull ())
@@ -713,13 +755,16 @@ static YCPValue
 l_add (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin add (list&lt;<i>type</i>&gt; l, <i>type</i> v) -> list&lt;<i>type</i>&gt;
-     * Creates a new list that is identical to the list <tt>l</tt> but has
-     * the value <tt>v</tt> appended as additional element.
+     * @builtin add
+     * @short Create a new list with a new element
+     * @param list LIST
+     * @param any VAR
+     * @return list The new list
+     * @description
+     * Creates a new list that is identical to the list <tt>LIST</tt> but has
+     * the value <tt>VAR</tt> appended as additional element.
      *
-     * Example: <pre>
-     * add ([1, 4], 8) -> [1, 4, 8]
-     * </pre>
+     * @usage add ([1, 4], 8) -> [1, 4, 8]
      */
 
     if (list.isNull ())
@@ -736,8 +781,12 @@ static YCPValue
 l_size (const YCPValue &list)
 {
     /**
-     * @builtin size (list l) -> integer
-     * Returns the number of elements of the list <tt>l</tt>
+     * @builtin size 
+     * @short Return size of list
+     * @param list LIST
+     * @return integer size of the list.
+     * @description
+     * Returns the number of elements of the list <tt>LIST</tt>
      */
 
     if (list.isNull ()
@@ -753,14 +802,16 @@ static YCPValue
 l_remove (const YCPList &list, const YCPInteger &i)
 {
     /**
-     * @builtin remove (list&lt;<i>type</i>&gt; l, integer i) -> list&lt;<i>type</i>&gt;
+     * @builtin remove
+     * @short Remove element from a list
+     * @param list LIST
+     * @param integer e element index
+     * @return list Returns nil if the index is invalid.
+     * @description
      * Remove the <tt>i</tt>'th value from a list. The first value has the
-     * index 0. The call remove ([1,2,3], 1) thus returns [1,3]. Returns
-     * nil if the index is invalid.
+     * index 0. The call remove ([1,2,3], 1) thus returns [1,3].
      *
-     * Example: <pre>
-     * remove ([1, 2], 0) -> [2]
-     * </pre>
+     * @usage remove ([1, 2], 0) -> [2]
      */
 
     if (list.isNull ())
@@ -794,16 +845,20 @@ static YCPValue
 l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
-     * @builtin select (list&lt;<i>type</i>&gt; l, integer i, <i>type</i> default) -> <i>type</i>
-     * Gets the <tt>i</tt>'th value of a list. The first value has the
-     * index 0. The call select([1,2,3], 1) thus returns 2. Returns <tt>default</tt>
+     * @builtin select
+     * @short Selet a list element
+     * @param list LIST
+     * @param integer INDEX
+     * @param any  DEFAULT
+     * @return any
+     * @description
+     * Gets the <tt>INDEX</tt>'th value of a list. The first value has the
+     * index 0. The call select([1,2,3], 1) thus returns 2. Returns <tt>DEFAULT</tt>
      * if the index is invalid or if the found entry has a different type
      * than the default value.
      *
-     * Examples: <pre>
-     * select ([1, 2], 22, 0) -> 0
-     * select ([1, "two"], 0, "no") -> "no"
-     * </pre>
+     * @usage select ([1, 2], 22, 0) -> 0
+     * @usage select ([1, "two"], 0, "no") -> "no"
      */
 
     if (list.isNull()
@@ -844,15 +899,19 @@ static YCPValue
 l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 {
     /**
-     * @builtin foreach (variable&lt;<i>in_type</i>&gt; v, list&lt;<i>in_type</i>&gt; l, <i>out_type</i> exp) -> <i>out_type</i>
-     * For each element of the list <tt>l</tt> the expression <tt>exp</tt>
-     * is executed in a new context, where the variable <tt>v</tt> is
+     * @builtin foreach
+     * @short Process the content of a list 
+     * @param any VAR
+     * @param list LIST
+     * @param block EXPR
+     * @description
+     * For each element of the list <tt>LIST</tt> the expression <tt>EXPR</tt>
+     * is executed in a new context, where the variable <tt>VAR</tt> is
      * assigned to that value. The return value of the last execution of
-     * <tt>exp</tt> is the value of the <tt>foreach</tt> construct.
+     * <tt>EXPR</tt> is the value of the <tt>foreach</tt> construct.
      *
-     * Example <pre>
-     * foreach (integer v, [1,2,3], { return v; }) -> 3
-     * </pre>
+     * @return any return value of last execution of EXPR
+     * @usage foreach (integer v, [1,2,3], { return v; }) -> 3
      */
 
     if (list.isNull ())
@@ -887,8 +946,11 @@ static YCPValue
 l_tolist (const YCPValue &v)
 {
     /**
-     * @builtin tolist (any value) -> list
-     * Converts a value to a list.
+     * @builtin tolist
+     * @short Converts a value to a list.
+     * @param any VAR
+     * @return list
+     * @description
      * If the value can't be converted to a list, nillist is returned.
      *
      */

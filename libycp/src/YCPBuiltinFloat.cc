@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinFloat.cc
+   Summary:     YCP Float Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -36,7 +37,7 @@ static YCPValue
 f_plus (const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtin float f1 + float f2 -> float
+     * @operator float f1 + float f2 -> float
      * Addition of floats.
      *
      * Example: <pre>
@@ -55,7 +56,7 @@ static YCPValue
 f_minus (const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtin float f1 - float f2 -> float
+     * @operator float f1 - float f2 -> float
      * Subtraction of floats.
      *
      * Example: <pre>
@@ -74,7 +75,7 @@ static YCPValue
 f_mult (const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtin float f1 * float f2 -> float
+     * @operator float f1 * float f2 -> float
      * Multiplication of floats.
      *
      * Example: <pre>
@@ -93,7 +94,7 @@ static YCPValue
 f_div (const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtin float f1 * float f2 -> float
+     * @operator float f1 * float f2 -> float
      * Division of floats.
      *
      * Example: <pre>
@@ -118,7 +119,7 @@ static YCPValue
 f_neg (const YCPFloat &f1)
 {
     /**
-     * @builtin - float i -> float
+     * @operator - float i -> float
      * Negative of float.
      */
 
@@ -133,13 +134,15 @@ static YCPValue
 f_tostring (const YCPFloat &f, const YCPInteger &precision)
 {
     /**
-     * @builtin tostring (float f, integer precision) -> string
+     * @builtin tostring 
+     * @short Converts a floating point number to a string
+     * @description
      * Converts a floating point number to a string, using the
      * specified precision.
-     *
-     * Example: <pre>
-     * tostring (0.12345, 4) -> 0.1235
-     * </pre>
+     * @param float FLOAT
+     * @param integer PRECISION
+     * @return string
+     * @usage tostring (0.12345, 4) -> 0.1235
      */
 
     if (f.isNull () || precision.isNull ())
@@ -158,15 +161,16 @@ static YCPValue
 f_tofloat (const YCPValue &v)
 {
     /**
-     * @builtin tofloat (any value) -> float
-     * Converts a value to a floating point number.
+     * @builtin tofloat
+     * @short Converts a value to a floating point number.
+     * @description
      * If the value can't be converted to a float, nilfloat is returned.
+     * @param any VALUE
+     * @return float
      *
-     * Example: <pre>
-     * tofloat (4) -> 4.0
-     * tofloat ("42") -> 42.0
-     * tofloat ("3.14") -> 3.14
-     * </pre>
+     * @usage tofloat (4) -> 4.0
+     * @usage tofloat ("42") -> 42.0
+     * @usage tofloat ("3.14") -> 3.14
      */
 
     if (v.isNull())

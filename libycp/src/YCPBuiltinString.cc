@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinString.cc
+   Summary:     YCP String Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -60,9 +61,12 @@ static YCPValue
 s_size (const YCPString &s)
 {
     /**
-     * @builtin size (string s) -> integer
-     * Returns the number of characters of the string <tt>s</tt>
+     * @builtin size
+     * @short Returns the number of characters of the string <tt>s</tt>
+     * @param string s String
+     * @description
      * Notice, that size(nil) -> nil
+     * @return integer Size of string
      */
      
     if (s.isNull ())
@@ -80,7 +84,7 @@ static YCPValue
 s_plus1 (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin string s1 + string s2 -> string
+     * @operator string s1 + string s2 -> string
      * Returns concatenation of <tt>s1</tt> and <tt>s2</tt>.
      *
      * Example: <pre>
@@ -99,13 +103,18 @@ static YCPValue
 s_plus2 (const YCPString &s1, const YCPInteger &i2)
 {
     /**
-     * @builtin string s1 + integer i2 -> string
+     * @operator string s1 + integer i2 -> string
+     * @short String and integer Concatenation 
+     *
+     * @description
      * Returns concatenation of <tt>s1</tt> and <tt>i2</tt> after
      * transforming <tt>i2</tt> to a string.
      *
-     * Example: <pre>
+     * Example: 
+     *
+     * <code>
      * "YaST" + 2 -> "YaST2"
-     * </pre>
+     * </code>
      */
 
     if (s1.isNull () || i2.isNull ())
@@ -119,13 +128,16 @@ static YCPValue
 s_plus3 (const YCPString &s1, const YCPPath &p2)
 {
     /**
-     * @builtin string s1 + path p2 -> string
+     * @operator string s1 + path p2 -> string
+     * @short String and path Concatenation
+     * @description
      * Returns concatenation of <tt>s1</tt> and <tt>p2</tt> after
      * transforming <tt>p2</tt> to a string.
      *
-     * Example: <pre>
+     * Example: 
+     * <code>
      * "YaST" + .two -> "YaST.two"
-     * </pre>
+     * </code>
      */
 
     if (s1.isNull () || p2.isNull ())
@@ -139,14 +151,18 @@ static YCPValue
 s_plus4 (const YCPString &s1, const YCPSymbol &s2)
 {
     /**
-     * @builtin string s1 + symbol s2 -> string
+     * @operator string s1 + symbol s2 -> string
+     * @short String and symbol Concatenation
+     *
+     * @description
      * Returns concatenation of <tt>s1</tt> and <tt>s2</tt> after
      * transforming <tt>s2</tt> to a string AND stripping the leading
      * backquote.
      *
-     * Example: <pre>
+     * Example: 
+     * <code>
      * "YaST" + `two -> "YaSTtwo"
-     * </pre>
+     * </code>
      */
 
     if (s1.isNull () || s2.isNull ())
@@ -160,12 +176,15 @@ static YCPValue
 s_issubstring (const YCPString &target, const YCPString &sub)
 {
     /**
-     * @builtin issubstring (string s, string substring) -> bool
+     * @builtin issubstring
+     * @short searches for a specific string within another string
+     * @param string s String to be searched
+     * @param string substring Pattern to be searched for
+     * @return boolean
+     * @description 
      * Return true, if <tt>substring</tt> is a substring of <tt>s</tt>.
      *
-     * Example: <pre>
-     * issubstring ("some text", "tex") -> true
-     * </pre>
+     * @usage issubstring ("some text", "tex") -> true
      */
 
     if (target.isNull () || sub.isNull ())
@@ -182,12 +201,14 @@ static YCPValue
 s_tohexstring (const YCPInteger &i)
 {
     /**
-     * @builtin tohexstring (integer number) -> string
-     * Converts a integer to a hexadecimal string.
+     * @builtin tohexstring
+     * @short Converts a integer to a hexadecimal string.
+     * @param integer number Number
+     * @return string Number in Hex
      *
-     * Example: <pre>
-     * tohexstring (31) -> "0x1f"
-     * </pre>
+     * @description
+     * 
+     * @usage tohexstring (31) -> "0x1f"
      */
 
     if (i.isNull ())
@@ -203,14 +224,22 @@ static YCPValue
 s_substring1 (const YCPString &s, const YCPInteger &i1)
 {
     /**
-     * @builtin substring (string s, integer start) -> string
-     * Extract a substring of the string <tt>s</tt>, starting at
-     * <tt>start</tt> after the first one.
+     * @builtin substring
+     * @id substring_1
+     * @short Return part of a string
+     * @param string s Original String
+     * @param inetger start Start posistion
+     * @optarg integer end End Posistion
+     * @return string 
+     * @description
      *
-     * Examples: <pre>
-     * substring ("some text", 5) -> "text"
-     * substring ("some text", 42) -> ""
-     * </pre>
+     * Returns the portion of string  specified by the start and length
+     * parameters.
+     *
+     * @usage substring ("some text", 5) -> "text"
+     * @usage substring ("some text", 42) -> ""
+     * @usage substring ("some text", 5, 2) -> "te"
+     * @usage substring ("some text", 42, 2) -> ""
      */
 
     if (s.isNull () || i1.isNull ())
@@ -234,15 +263,20 @@ static YCPValue
 s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin substring (string s, integer start, integer length) -> string
-     * Extract a substring of the string <tt>s</tt>, starting at
-     * <tt>start</tt> after the first one with length of at most
-     * <tt>length</tt>.
+     * @builtin substring
+     * @id substring_2
+     * @short Extract a substring
+     * @description
+     * Extract a substring of the string <tt>STRING</tt>, starting at
+     * <tt>START</tt> after the first one with length of at most
+     * <tt>LENGTH</tt>.
      *
-     * Example: <pre>
-     * substring ("some text", 5, 2) -> "te"
-     * substring ("some text", 42, 2) -> ""
-     * </pre>
+     * @param string STRING
+     * @param integer START
+     * @param integer LENGTH
+     * @return string
+     * @usage substring ("some text", 5, 2) -> "te"
+     * @usage substring ("some text", 42, 2) -> ""
      */
 
     if (s.isNull () || i1.isNull() || i2.isNull ())
@@ -266,14 +300,24 @@ static YCPValue
 s_find (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin find (string s1, string s2) -> integer
-     * Returns the first position in <tt>s1</tt> where the
-     * string <tt>s2</tt> is contained in <tt>s1</tt>.
+     * @builtin find
+     * @short Return position of a substring
+     * @param string STRING1 String
+     * @param string STRING2 Substring
+     * @return integer
+     * If substring is not found find returns `-1'.
      *
-     * Examples: <pre>
-     * find ("abcdefghi", "efg") -> 4
-     * find ("aaaaa", "z") -> -1
-     * </pre>
+     * @description
+     *
+     * The `find' function searches string for a specified substring (possibly
+     * a single character) and returns its starting position.
+     * 
+     * Returns the first position in <tt>STRING1</tt> where the
+     * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
+     *
+     *
+     * @usage find ("abcdefghi", "efg") -> 4
+     * @usage find ("aaaaa", "z") -> -1
      */
 
     if (s1.isNull () || s2.isNull ())
@@ -293,13 +337,14 @@ static YCPValue
 s_tolower (const YCPString &s)
 {
     /**
-     * @builtin tolower (string s) -> string
-     * Returns a string that results from string <tt>s</tt> by
-     * converting each character tolower.
+     * @builtin tolower
+     * @short Make a string lowercase
+     * @param string s String
+     * @return string String in lower case
+     * @description
+     * Returns string with all alphabetic characters converted to lowercase.
      *
-     * Example: <pre>
-     * tolower ("aBcDeF") -> "abcdef"
-     * </pre>
+     * @usage tolower ("aBcDeF") -> "abcdef"
      */
 
     if (s.isNull ())
@@ -316,13 +361,14 @@ static YCPValue
 s_toupper (const YCPString &s)
 {
     /**
-     * @builtin toupper (string s) -> string
-     * Returns a string that results from string <tt>s</tt> by
-     * converting each character toupper.
+     * @builtin toupper
+     * @short  Make a string uppercase
+     * @description 
      *
-     * Example: <pre>
-     * tolower ("aBcDeF") -> "ABCDEF"
-     * </pre>
+     * Returns string with all alphabetic characters converted to
+     * uppercase.
+     *
+     * @usage tolower ("aBcDeF") -> "ABCDEF"
      */
 
     if (s.isNull ())
@@ -339,13 +385,16 @@ static YCPValue
 s_toascii (const YCPString &s)
 {
     /**
-     * @builtin toascii (string s) -> string
-     * Returns a string that results from string <tt>s</tt> by
+     * @builtin toascii 
+     * @short FIXME
+     * @param string STRING
+     * @return string
+     *
+     * @description
+     * Returns a string that results from string <tt>STRING</tt> by
      * copying each character that is below 0x7F (127).
      *
-     * Example: <pre>
-     * toascii ("aÖBÄc") -> "aBc"
-     * </pre>
+     * @usage toascii ("axx") -> "aB"
      */
 
     if (s.isNull ())
@@ -364,13 +413,17 @@ static YCPValue
 s_removechars (const YCPString &s, YCPString &r)
 {
     /**
-     * @builtin deletechars (string s, string remove) -> string
-     * Returns a string that results from string <tt>s</tt> by removing
-     * all characters that occur in <tt>remove</tt>.
+     * @builtin deletechars
      *
-     * Example: <pre>
-     * deletechars ("aÖBÄc", "abcdefghijklmnopqrstuvwxyz") -> "ÖBÄ"
-     * </pre>
+     * @short Delete charachters from  a string (FIXME)
+     * @param string STRING
+     * @param string REMOVE Charachters to be removed
+     * @return string
+     * @description
+     * Returns a string that results from string <tt>STRING</tt> by removing
+     * all characters that occur in <tt>REMOVE</tt>.
+     *
+     * @usage deletechars ("a", "abcdefghijklmnopqrstuvwxyz") -> ""
      */
 
     if (s.isNull () || r.isNull ())
@@ -392,13 +445,17 @@ static YCPValue
 s_filterchars (const YCPString &s, const YCPString &i)
 {
     /**
-     * @builtin filterchars (string s, string include) -> string
-     * Returns a string that results from string <tt>s</tt> by removing
+     * @builtin filterchars
+     * @short Filter charachters out of a String
+     * @param string STRING
+     * @param string include String to be included
+     * @return string
+     * @description
+     *
+     * Returns a string that results from string <tt>STRING</tt> by removing
      * all characters that do not occur in <tt>include</tt>.
      *
-     * Example: <pre>
-     * filterchars ("aÖBÄc", "abcdefghijklmnopqrstuvwxyz") -> "ac"
-     * </pre>
+     * @usage filterchars ("a", "abcdefghijklmnopqrstuvwxyz") -> "ac"
      */
 
     if (s.isNull () || i.isNull ())
@@ -419,21 +476,26 @@ static YCPValue
 s_mergestring (const YCPList &l, const YCPString &s)
 {
     /**
-     * @builtin mergestring (list&lt;string&gt; l, string c) -> string
-     * Merges a list of strings to a single list. Inserts <tt>c</tt>
-     * between list elements (c may be empty). List elements which
-     * are not of type strings are ignored.
+     * @builtin mergestring 
+     * @short Join list elements with a string
+     * @param list<string> PIECES A List of strings
+     * @param string GLUE
+     * @return string 
+     * @description
      *
-     * See also: splitstring
+     * Returns a string containing a string representation of all the list
+     * elements in the same order, with the glue string between each element.
+     * 
+     * List elements which are not of type strings are ignored.
      *
-     * Examples: <pre>
-     * mergestring (["", "abc", "dev", "ghi"], "/") -> "/abc/dev/ghi"
-     * mergestring (["abc", "dev", "ghi", ""], "/") -> "abc/dev/ghi/"
-     * mergestring ([1, "a", 3], ".") -> "a"
-     * mergestring ([], ".") -> ""
-     * mergestring (["abc", "dev", "ghi"], "") -> "abcdevghi"
-     * mergestring (["abc", "dev", "ghi"], "123") -> "abc123dev123ghi"
-     * </pre>
+     * @see splitstring
+     *
+     * @usage mergestring (["", "abc", "dev", "ghi"], "/") -> "/abc/dev/ghi"
+     * @usage mergestring (["abc", "dev", "ghi", ""], "/") -> "abc/dev/ghi/"
+     * @usage mergestring ([1, "a", 3], ".") -> "a"
+     * @usage mergestring ([], ".") -> ""
+     * @usage mergestring (["abc", "dev", "ghi"], "") -> "abcdevghi"
+     * @usage mergestring (["abc", "dev", "ghi"], "123") -> "abc123dev123ghi"
      */
      
     if (l.isNull ())
@@ -475,14 +537,19 @@ static YCPValue
 s_findfirstnotof (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin findfirstnotof (string s1, string s2) -> integer
-     * Returns the position of the first character in <tt>s1</tt> that is
-     * not contained in <tt>s2</tt>.
+     * @builtin findfirstnotof
+     * @short Search string for first non matching chars
+     * @param string STRING
+     * @param string CHARS
+     * @description
+     * The `findfirstnotof' function searches the first element of string that
+     * doesn't match any character stored in chars and returns its position.
      *
-     * Examples: <pre>
-     * findfirstnotof ("abcdefghi", "abcefghi") -> 3
-     * findfirstnotof ("aaaaa", "a") -> nil
-     * </pre>
+     * @return integer the position of the first character in <tt>STRING</tt> that is
+     * not contained in <tt>CHARS</tt>.
+     *
+     * @usage findfirstnotof ("abcdefghi", "abcefghi") -> 3
+     * @usage findfirstnotof ("aaaaa", "a") -> nil
      */
      
     if (s1.isNull () || s2.isNull ())
@@ -506,14 +573,21 @@ static YCPValue
 s_findfirstof (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin findfirstof (string s1, string s2) -> integer
-     * Returns the position of the first character in <tt>s1</tt> that is
-     * contained in <tt>s2</tt>.
+     * @builtin findfirstof
+     * @short Find position of first matching charachters in string
+     * @param string STRING
+     * @param string CHARS Charachters to find
+     * @description
+     * The `findfirstof' function searches string for the first match of any
+     * character stored in chars and returns its position. 
      *
-     * Examples: <pre>
-     * findfirstof ("abcdefghi", "cxdv") -> 2
-     * findfirstof ("aaaaa", "z") -> nil
-     * </pre>
+     * If no match is found findfirstof returns `nil'. 
+     * 
+     * @return integer the position of the first character in <tt>STRING</tt> that is
+     * contained in <tt>CHARS</tt>.
+     *
+     * @usage findfirstof ("abcdefghi", "cxdv") -> 2
+     * @usage findfirstof ("aaaaa", "z") -> nil
      */
 
     if (s1.isNull () || s2.isNull ())
@@ -533,14 +607,20 @@ static YCPValue
 s_findlastof (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin findlastof (string s1, string s2) -> integer
-     * Returns the position of the last character in <tt>s1</tt> that is
-     * contained in <tt>s2</tt>.
+     * @builtin findlastof 
+     * @short Searches string for the last match
+     * @description
+     * The `findlastof' function searches string for the last match of any
+     * character stored in chars and returns its position.
      *
-     * Examples: <pre>
-     * findlastof ("abcdecfghi", "cxdv") -> 5
-     * findlastof ("aaaaa", "z") -> nil
-     * </pre>
+     * @param string STRING String
+     * @param string CHARS Charachters to find
+     *
+     * @return integer the position of the last character in <tt>STRING</tt> that is
+     * contained in <tt>CHARS</tt>.
+     *
+     * @usage findlastof ("abcdecfghi", "cxdv") -> 5
+     * @usage findlastof ("aaaaa", "z") -> nil
      */
 
     if (s1.isNull () || s2.isNull ())
@@ -559,14 +639,21 @@ static YCPValue
 s_findlastnotof (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin findlastnotof( string s_1, string s_2 ) -> integer
-     * Returns the position of the last character in <tt>s_1</tt> that is
-     * NOT contained in <tt>s_2</tt>.
+     * @builtin findlastnotof
+     * @short Searches the last element of string that doesn't match
+     * @param string STRING
+     * @param string CHARS Charachters
+     * @description The `findlastnotof' function searches the last element of
+     * string that doesn't match any character stored in chars and returns its
+     * position.
      *
-     * Example <pre>
-     * findlastnotof( "abcdefghi", "abcefghi" ) -> 3 ('d')
-     * findlastnotof("aaaaa", "a") -> nil
-     * </pre>
+     * If no match is found the function returns `nil'.
+     * 
+     * @return integer The position of the last character in <tt>STRING</tt> that is
+     * NOT contained in <tt>CHARS</tt>.
+     *
+     * @usage findlastnotof( "abcdefghi", "abcefghi" ) -> 3 ('d')
+     * @usage findlastnotof("aaaaa", "a") -> nil
      */
 
     if (s1.isNull () || s2.isNull ())
@@ -665,18 +752,19 @@ static YCPValue
 s_regexpmatch (const YCPString &i, const YCPString &p)
 {
     /**
-     * @builtin regexpmatch (string input, string pattern) -> boolean
+     * @builtin regexpmatch
      *
-     * Searches a string for a POSIX Extended Regular Expression match.
+     * @short Searches a string for a POSIX Extended Regular Expression match.
+     * @param string INPUT
+     * @param string PATTERN
+     * @return boolean
      *
-     * See regex(7).
+     * @see regex(7)
      *
-     * Example <pre>
-     * regexpmatch ("aaabbbccc", "ab") -> true
-     * regexpmatch ("aaabbbccc", "^ab") -> false
-     * regexpmatch ("aaabbbccc", "ab+c") -> true
-     * regexpmatch ("aaa(bbb)ccc", "\\(.*\\)") -> true     
-     * </pre>
+     * @usage regexpmatch ("aaabbbccc", "ab") -> true
+     * @usage regexpmatch ("aaabbbccc", "^ab") -> false
+     * @usage regexpmatch ("aaabbbccc", "ab+c") -> true
+     * @usage regexpmatch ("aaa(bbb)ccc", "\\(.*\\)") -> true     
      */
 
     if (i.isNull () || p.isNull ())
@@ -700,16 +788,19 @@ static YCPValue
 s_regexppos(const YCPString& inp, const YCPString& pat)
 {
     /**
-     * @builtin regexppos (string input, string pattern) -> [ pos, len ]
-     * Returns a pair with position and length of the first match.
+     * @builtin regexppos 
+     * @short  Returns a pair with position and length of the first match.
+     * @param string INPUT
+     * @param string PATTERN
+     * @return list
+     *
+     * @description
      * If no match is found it returns an empty list.
      *
-     * See regex(7).
+     * @see  regex(7).
      *
-     * Example <pre>
-     * regexppos ("abcd012efgh345", "[0-9]+") -> [4, 3]
-     * regexppos ("aaabbb", "[0-9]+") -> []
-     * </pre>
+     * @usage regexppos ("abcd012efgh345", "[0-9]+") -> [4, 3]
+     * @usage ("aaabbb", "[0-9]+") -> []
      */
 
     if (inp.isNull () || pat.isNull ())
@@ -739,17 +830,21 @@ static YCPValue
 s_regexpsub (const YCPString &i, const YCPString &p, const YCPString &m)
 {
     /**
-     * @builtin regexpsub (string input, string pattern, string output) -> string
+     * @builtin regexpsub
+     * @short Regex Substitution
+     * @param string INPUT
+     * @param string PATTERN
+     * @param string OUTPUT
+     * @return string
+     * @description 
      * Searches a string for a POSIX Extended Regular Expression match
-     * and returns <i>output</i> with the matched subexpressions
+     * and returns <i>OUTPUT</i> with the matched subexpressions
      * substituted or <b>nil</b> if no match was found.
      *
-     * See regex(7).
+     * @see regex(7)
      *
-     * Examples: <pre>
-     * regexpsub ("aaabbb", "(.*ab)", "s_\\1_e") -> "s_aaab_e"
-     * regexpsub ("aaabbb", "(.*ba)", "s_\\1_e") -> nil
-     * </pre>
+     * @usage regexpsub ("aaabbb", "(.*ab)", "s_\\1_e") -> "s_aaab_e"
+     * @usage regexpsub ("aaabbb", "(.*ba)", "s_\\1_e") -> nil
      */
 
     if (i.isNull () || p.isNull () || m.isNull ())
@@ -778,22 +873,25 @@ static YCPValue
 s_regexptokenize (const YCPString &i, const YCPString &p)
 {
     /**
-     * @builtin regexptokenize (string input, string pattern) -> list handle
+     * @builtin regexptokenize
+     * @short Regex tokenize
+     * @param string INPUT
+     * @param string PATTERN
+     * @return list
      *
+     * @see regex(7).
+     * @description
      * Searches a string for a POSIX Extended Regular Expression match
      * and returns a list of the matched subexpressions
-     *
-     * See regex(7).
      *
      * If the pattern does not match, the list is empty.
      * Otherwise the list contains then matchted subexpressions for each pair
      * of parenthesize in pattern.
      *
-     * If the pattern is invalid, <b>nil</b> is returned.
-     * In the include "common_functions, there are some convinience function,
-     * like tokenX or regexp_error
+     * If the pattern is invalid, 'nil' is returned.
      *
-     * Examples: <pre>
+     * Examples: 
+     * <code>
      * list e = regexptokenize ("aaabbBb", "(.*[A-Z]).*");
      *
      * // e ==  [ "aaabbB" ]
@@ -809,7 +907,7 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
      * list h = regexptokenize ("aaabbb", "(.*ba).*(");
      *
      * // h == nil
-     * </pre>
+     * </code>
      */
     // ")
 
@@ -844,8 +942,10 @@ static YCPValue
 s_tostring (const YCPValue &v)
 {
     /**
-     * @builtin tostring (any value) -> string
-     * Converts a value to a string.
+     * @builtin tostring 
+     * @short Converts a value to a string.
+     * @param any VALUE
+     * @return string
      *
      */
 
@@ -865,12 +965,17 @@ static YCPValue
 s_timestring (const YCPString &fmt, const YCPInteger &time, const YCPBoolean &utc_flag)
 {
    /**
-     * @builtin timestring (string format, integer time, boolean utc) -> string
+     * @builtin timestring
+     * @short Return time string
+     * @description
      * Combination of standard libc functions gmtime or localtime and strftime.
      *
-     * Example <pre>
-     * timestring ("%F %T %Z", time (), false) -> "2004-08-24 14:55:05 CEST"
-     * </pre>
+     * @param string FORMAT
+     * @param integer TIME
+     * @param boolean UTC
+     * @return string
+     *
+     * @usage timestring ("%F %T %Z", time (), false) -> "2004-08-24 14:55:05 CEST"
      */
 
     if (fmt.isNull () || time.isNull () || utc_flag.isNull ())
@@ -893,13 +998,15 @@ static YCPValue
 s_crypt (const YCPString &s)
 {
     /**
-     * @builtin crypt (string unencrypted) -> string
-     * Encrypt the string <tt>unencrypted</tt> using the standard
+     * @builtin crypt
+     * @short Encrypt a string
+     * @description
+     * Encrypt the string <tt>UNENCRYPTED</tt> using the standard
      * password encryption provided by the system.
+     * @param string UNENCRYPTED
+     * @return string 
      *
-     * Example: <pre>
-     * crypt ("readable") -> "Y2PEyAiaeaFy6"
-     * </pre>
+     * @usage crypt ("readable") -> "Y2PEyAiaeaFy6"
      */
 
     if (s.isNull ())
@@ -922,13 +1029,15 @@ static YCPValue
 s_cryptmd5 (const YCPString &s)
 {
     /**
-     * @builtin cryptmd5 (string unencrypted) -> string
-     * Encrypt the string <tt>unencrypted</tt> using md5
+     * @builtin cryptmd5
+     * @short Encrypt a string using md5
+     * @description
+     * Encrypt the string <tt>UNENCRYPTED</tt> using md5
      * password encryption.
+     * @param string  UNENCRYPTED
+     * @return string
      *
-     * Example: <pre>
-     * cryptmd5 ("readable") -> "$1$BBtzrzzz$zc2vEB7XnA3Iq7pOgDsxD0"
-     * </pre>
+     * @usage cryptmd5 ("readable") -> "$1$BBtzrzzz$zc2vEB7XnA3Iq7pOgDsxD0"
      */
 
     if (s.isNull ())
@@ -951,13 +1060,15 @@ static YCPValue
 s_cryptbigcrypt(const YCPString& original)
 {
     /**
-     * @builtin cryptbigcrypt (string unencrypted) -> string
-     * Encrypt the string <tt>unencrypted</tt> using bigcrypt
+     * @builtin cryptbigcrypt
+     * @short Encrypt a string using bigcrypt
+     * @description
+     * Encrypt the string <tt>UNENCRYPTED</tt> using bigcrypt
      * password encryption. The password is not truncated.
+     * @param string UNENCRYPTED
+     * @return string
      *
-     * Example <pre>
-     * cryptbigcrypt ("readable") -> "d4brTQmcVbtNg"
-     * </pre>
+     * @usage cryptbigcrypt ("readable") -> "d4brTQmcVbtNg"
      */
 
     if (original.isNull ())
@@ -980,13 +1091,15 @@ static YCPValue
 s_cryptblowfish(const YCPString& original)
 {
     /**
-     * @builtin cryptblowfish (string unencrypted) -> string
-     * Encrypt the string <tt>unencrypted</tt> using blowfish
+     * @builtin cryptblowfish
+     * @short Encrypt a string with blowfish
+     * @description
+     * Encrypt the string <tt>UNENCRYPTED</tt> using blowfish
      * password encryption. The password is not truncated.
      *
-     * Example <pre>
-     * cryptblowfish ("readable") -> "$2a$05$B3lAUExB.Bqpy8Pq0TpZt.s7EydrmxJRuhOZR04YG01ptwOUR147C"
-     * </pre>
+     * @param string UNENCRYPTED
+     * @return string
+     * @usage cryptblowfish ("readable") -> "$2a$05$B3lAUExB.Bqpy8Pq0TpZt.s7EydrmxJRuhOZR04YG01ptwOUR147C"
      */
 
     if (original.isNull ())
@@ -1009,7 +1122,7 @@ static YCPValue
 s_dgettext (const YCPString& domain, const YCPString& text)
 {
     /**
-     * @builtin _(string text) -> string
+     * @operator _(string text) -> string
      * Translates the text using the current textdomain. 
      *
      * Example <pre>
@@ -1018,16 +1131,19 @@ s_dgettext (const YCPString& domain, const YCPString& text)
      */
 
     /**
-     * @builtin dgettext (string textdomain, string text) -> string
+     * @builtin dgettext
+     * @short Translates the text using the given text domain
+     * @description
      * Translates the text using the given text domain into
      * the current language.
      *
      * This is a special case builtin not intended for general use.
      * See _() instead.
      *
-     * Example <pre>
-     * dgettext ("base", "No") -> "Nie"
-     * </pre>
+     * @param string textdomain
+     * @param string text
+     * @return string
+     * @usage dgettext ("base", "No") -> "Nie"
      */
 
     if (domain.isNull () || domain->isVoid ()) 
@@ -1052,7 +1168,7 @@ static YCPValue
 s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString& plural, const YCPInteger& count)
 {
     /**
-     * @builtin _(string singular, string plural, integer value) -> string
+     * @operator _(string singular, string plural, integer value) -> string
      * Translates the text using a locale-aware plural form handling and the 
      * current textdomain. The chosen form of the translation depends 
      * on the <tt>value</tt>.
@@ -1063,17 +1179,24 @@ s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString
      */
 
     /**
-     * @builtin dngettext (string textdomain, string singular, string plural, integer value) -> string
+     * @builtin dngettext
+     * @short Translates the text using a locale-aware plural form handling
+     * @description
      * Translates the text using a locale-aware plural form handling using
      * the given textdomain.
+     *
      * The chosen form of the translation depend on the <tt>value</tt>.
      *
      * This is a special case builtin not intended for general use.
      * See _() instead.
      *
-     * Example <pre>
-     * dngettext ("base", "%1 File", "%1 Files", 2) -> "%1 soubory"
-     * </pre>
+     * @param string textdomain
+     * @param string singular
+     * @param string plural
+     * @param integer value
+     * @return string
+     *
+     * @usage dngettext ("base", "%1 File", "%1 Files", 2) -> "%1 soubory"
      */
 
     if (domain.isNull () || domain->isVoid ()) 

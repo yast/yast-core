@@ -29,7 +29,7 @@ static YCPValue
 b_lnot (const YCPBoolean &b)
 {
     /**
-     * @builtin ! boolean b -> boolean
+     * @operator ! boolean b -> boolean
      * Logical not for booleans.
      *
      * Example: <pre>
@@ -48,7 +48,7 @@ static YCPValue
 b_or (const YCPCode &b1, const YCPCode &b2)
 {
     /**
-     * @builtin boolean b1 || boolean b2 -> boolean
+     * @operator boolean b1 || boolean b2 -> boolean
      * Logical or for booleans.
      *
      * Example: <pre>
@@ -80,7 +80,7 @@ static YCPValue
 b_and (const YCPCode &b1, const YCPCode &b2)
 {
     /**
-     * @builtin boolean b1 && boolean b2 -> boolean
+     * @operator boolean b1 && boolean b2 -> boolean
      * Logical and for booleans.
      *
      * Example: <pre>

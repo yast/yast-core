@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinPath.cc
+   Summary:     YCP Path Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -32,14 +33,16 @@ static YCPValue
 p_size (const YCPPath &path)
 {
     /**
-     * @builtin size (path p) -> integer
-     * Returns the number of path elements of the path p, i.e. the
-     * length of <tt>p</tt>.
+     * @builtin size
+     * @short Returns the number of path elements
+     * @description
+     * Returns the number of path elements of the path PATH, i.e. the
+     * length of <tt>PATH</tt>.
+     * @param path PATH
+     * @return integer Number of elements in the path
      *
-     * Examples: <pre>
-     * size (.hello.world) -> 2
-     * size (.) -> 0
-     * </pre>
+     * @usage size (.hello.world) -> 2
+     * @usage size (.) -> 0
      */
      
     if (path.isNull ())
@@ -53,13 +56,16 @@ static YCPValue
 p_add (const YCPPath &path, const YCPString &s)
 {
     /**
-     * @builtin add (path p, string s) -> path
-     * Returns <tt>p</tt> with added path element created from string
-     * <tt>s</tt>.
+     * @builtin add
+     * @short Add a path element to existing path
+     * @description
+     * Returns <tt>PATH</tt> with added path element created from string
+     * <tt>STR</tt>.
+     * @param path PATH
+     * @param string STR
+     * @return path
      *
-     * Example: <pre>
-     * add (.aaa, "anypath...\n\"") -> .aaa."anypath...\n\""
-     * </pre>
+     * @usage add (.aaa, "anypath...\n\"") -> .aaa."anypath...\n\""
      */
 
     if (path.isNull () || s.isNull ())
@@ -76,7 +82,7 @@ static YCPValue
 p_plus (const YCPPath &path1, const YCPPath &path2)
 {
     /**
-     * @builtin path p1 + path p2 -> path
+     * @operator path p1 + path p2 -> path
      * Returns <tt>p1</tt> with added <tt>p2</tt> element created from
      * string <tt>s</tt>.
      *
@@ -99,14 +105,15 @@ static YCPValue
 p_topath (const YCPValue &v)
 {
     /**
-     * @builtin topath (string s) -> path
-     * Converts a value to a path.
+     * @builtin topath
+     * @short Converts a value to a path.
+     * @description
      * If the value can't be converted to a path, nilpath is returned.
+     * @param string STR
+     * @return path
      *
-     * Example: <pre>
-     * topath ("path") -> .path
-     * topath (".some.path") -> .some.path
-     * </pre>
+     * @usage topath ("path") -> .path
+     * @usage topath (".some.path") -> .some.path
      */
 
     if (v.isNull())

@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinTerm.cc
+   Summary:     YCP Term Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -33,8 +34,11 @@ static YCPValue
 t_size (const YCPTerm &term)
 {
     /**
-     * @builtin size (term t) -> integer
-     * Returns the number of arguments of the term <tt>t</tt>.
+     * @builtin size
+     * @short Returns the number of arguments of the term <tt>t</tt>.
+     * @param term TERM 
+     * @return integer Size of the term
+     *
      */
 
     if (term.isNull ())
@@ -48,13 +52,16 @@ static YCPValue
 t_add (const YCPTerm &term, const YCPValue &value)
 {
     /**
-     * @builtin add (term t, any v) -> term
-     * Adds the value <tt>v</tt> to the term <tt>t</tt> and returns the
-     * newly created term. As always in YCP, <tt>t</tt> is not modified.
+     * @builtin add
+     * @short Add value to term
+     * @description
+     * Adds the value <tt>VALUE</tt> to the term <tt>TERM</tt> and returns the
+     * newly created term. As always in YCP, <tt>TERM</tt> is not modified.
      *
-     * Example: <pre>
-     * add (sym (a), b) -> sym (a, b)
-     * </pre>
+     * @param term TERM 
+     * @param any VALUE 
+     * @return term
+     * @usage add (sym (a), b) -> sym (a, b)
      */
 
     if (term.isNull () || value.isNull ())
@@ -68,12 +75,11 @@ static YCPValue
 t_symbolof (const YCPTerm &term)
 {
     /**
-     * @builtin symbolof (term t) -> symbol
-     * Returns the symbol of the term <tt>t</tt>.
-     *
-     * Example: <pre>
-     * symbolof (`hrombuch (18, false)) -> `hrombuch
-     * </pre>
+     * @builtin symbolof
+     * @short Returns the symbol of the term <tt>t</tt>.
+     * @param term TERM
+     * @return symbol
+     * @usage symbolof (`hrombuch (18, false)) -> `hrombuch
      */
 
     if (term.isNull ())
@@ -89,15 +95,19 @@ YCPValue
 t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 {
     /**
-     * @builtin select (term t, integer i, any default) -> any
+     * @builtin select
+     * @short Select item from term
+     * @description
      * Gets the <tt>i</tt>'th value of the term <tt>t</tt>. The first value
      * has the index 0. The call <tt>select ([1, 2, 3], 1)</tt> thus returns
      * 2. Returns the <tt>default</tt> if the index is invalid or the found
      * value has a diffetent type that <tt>default</tt>.
      *
-     * Example: <pre>
-     * select (`hirn (true, false), 33, true) -> true
-     * </pre>
+     * @param term TERM
+     * @param integer ITEM
+     * @param any DEFAULT
+     *
+     * @usage select (`hirn (true, false), 33, true) -> true
      */
 
     if (term.isNull ()
@@ -125,9 +135,12 @@ static YCPValue
 t_toterm (const YCPValue &v)
 {
     /**
-     * @builtin toterm (any value) -> term
-     * Converts a value to a term.
+     * @builtin toterm
+     * @short Converts a value to a term.
+     * @description
      * If the value can't be converted to a term, nilterm is returned.
+     * @param any VALUE
+     * @return term
      *
      */
 
@@ -151,15 +164,18 @@ static YCPValue
 t_remove (const YCPTerm &term, const YCPInteger &i)
 {
     /**
-     * @builtin remove (term t, integer i) -> term
+     * @builtin remove
+     * @short Remove item from term
+     * @description
      * Remove the i'th value from a term. The first value has the index 1 (!).
      * (The index counting is for compatibility reasons with the 'old'
-     *  remove which allowed 'remove(`term(1,2,3), 0) = [1,2,3]'
-     *  Use 'argsof (term) -> list' for this kind of transformation.)
-     *
-     * Example: <pre>
-     * remove (`fun(1, 2), 1) -> `fun(2)
-     * </pre>
+     * remove which allowed 'remove(`term(1,2,3), 0) = [1,2,3]'
+     * Use 'argsof (term) -> list' for this kind of transformation.)
+     * @param term TERM
+     * @param integer i
+     * @return term
+     *  
+     * @usage remove (`fun(1, 2), 1) -> `fun(2)
      */
 
     if (term.isNull () || i.isNull ())
@@ -184,12 +200,11 @@ static YCPValue
 t_argsof (const YCPTerm &term)
 {
     /**
-     * @builtin argsof (term t) -> list
-     * Returns the arguments of a term.
-     *
-     * Example: <pre>
-     * argsof (`fun(1, 2)) -> [1, 2]
-     * </pre>
+     * @builtin argsof
+     * @short Returns the arguments of a term.
+     * @param term TERM
+     * @return list
+     * @usage argsof (`fun(1, 2)) -> [1, 2]
      */
 
     if (term.isNull ())

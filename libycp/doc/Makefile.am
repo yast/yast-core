@@ -2,23 +2,39 @@
 # Makefile.am for core/libycp/doc
 #
 SUBDIRS = ycp
+
 htmldir = $(docdir)/libycp
+builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
+builtinxml := $(builtin:%.cc=%.xml)
+xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
+
 
 html_DATA =			\
-	YCP-builtins.html	\
-	changes.html		\
-	logging.html
+	html/yast2docs.css	\
+	html/*.html
 
-builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
+html/index.html: $(xmlfiles) builtins.xml
+	XML_CATALOG_FILES=@XML_CATALOG@\
+	@XSLTPROC@ --xinclude \
+	@STYLESHEET_HTML@ builtins.xml
 
-YCP-builtins.html: $(builtin)
-	@ybindir@/makebuiltindocs $^ > $@.new && mv $@.new $@
+
+$(xmlfiles) : $(builtin)
+	@ybindir@/ydoc2 ../src/$(subst xml,cc,$@)
+	@XSLTPROC@ @STYLESHEET_YDOC@ output.xml > $@
+	@ybindir@/replace_entities $@
+
+html/yast2docs.css: html/index.html
+	cp @STYLESHEET_CSS@ html
+	cp -a $(ydatadir)/docbook/images html
 
 EXTRA_DIST = $(html_DATA)
 
-CLEANFILES = CATALOG.local *.out *.aux *.dvi *.tex *.ps *.pdf *.log *.dsl \
-	YCP-builtins.html
+CLEANFILES = $(xmlfiles) output.xml
 
 clean-local:
-	rm -rf ycp.junk
-	rm -rf ycp
+	rm -rf html
+
+install-data-local:
+	mkdir -p $(DESTDIR)$(htmldir)
+	cp -a $(srcdir)/html/images $(DESTDIR)$(htmldir)

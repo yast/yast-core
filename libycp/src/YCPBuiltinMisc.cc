@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinMisc.cc
+   Summary:     Miscellaneous YCP Builtins
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
@@ -42,8 +43,9 @@ static YCPInteger
 Time ()
 {
     /**
-     * @builtin time () -> integer
-     * Return the number of seconds since 1.1.1970.
+     * @builtin time
+     * @short Return the number of seconds since 1.1.1970.
+     * @return integer
      */
 
     return YCPInteger (time (0));
@@ -54,8 +56,10 @@ static YCPValue
 Sleep (const YCPInteger & ms)
 {
     /**
-     * @builtin sleep (integer ms) -> void
-     * Sleeps a number of milliseconds.
+     * @builtin sleep 
+     * @short Sleeps a number of milliseconds.
+     * @param integer MILLISECONDS Time in milliseconds
+     * @return void
      */
      
     if (ms.isNull ())
@@ -70,9 +74,10 @@ static YCPInteger
 Random (const YCPInteger & max)
 {
     /**
-     * @builtin random (integer max) -> integer
-     * Random number generator.
-     * Returns integer in the interval <0,max).
+     * @builtin random
+     * @short Random number generator.
+     * @param integer MAX
+     * @return integer Returns integer in the interval (0,MAX).
      */
 
     if (max.isNull ())
@@ -88,9 +93,13 @@ static YCPInteger
 Srandom1 ()
 {
     /**
-     * @builtin srandom () -> integer
+     * @builtin srandom
+     * @short Initialize random number generator
+     * @description
      * Initialize random number generator with current date and
      * time and returns the seed.
+     * @return integer
+     * @id srandom_1
      */
 
     int ret = time (0);
@@ -103,8 +112,11 @@ static YCPValue
 Srandom2 (const YCPInteger & seed)
 {
     /**
-     * @builtin srandom (integer seed) -> void
-     * Initialize random number generator.
+     * @builtin srandom
+     * @short Initialize random number generator.
+     * @param integer SEED
+     * @return void
+     * @id srandom_2
      */
 
     if (seed.isNull ())
@@ -122,14 +134,13 @@ static YCPValue
 Eval (const YCPValue & v)
 {
     /**
-     * @builtin eval (any v) -> any
-     * Evaluate a YCP value. See also the builtin ``, which is
-     * kind of the counterpart to eval.
+     * @builtin eval
+     * @short Evaluate a YCP value.
+     * @description
+     * See also the builtin ``, which is kind of the counterpart to eval.
      *
-     * Examples: <pre>
-     * eval (``(1+2)) -> 3
-     * { term a = ``add(); a = add(a, [1]); a = add(a, 4); return eval(a); } -> [1,4]
-     * </pre>
+     * @usage eval (``(1+2)) -> 3
+     * @usage { term a = ``add(); a = add(a, [1]); a = add(a, 4); return eval(a); } -> [1,4]
      */
 
     if (v.isNull ())
@@ -148,15 +159,20 @@ static YCPString
 s_sformat (const YCPValue &format, const YCPValue &_argv)
 {
     /**
-     * @builtin sformat (string form, any par1, any par2, ...) -> string
-     * form is a string that may contains placeholders %1, %2, ...
+     * @builtin  sformat
+     * @short Format a String
+     * @description
+     * FORM is a string that may contains placeholders %1, %2, ...
      * Each placeholder is substituted with the argument converted
      * to string whose number is after the %. Only 1-9 are allowed
      * by now. The percentage sign is donated with %%.
      *
-     * Example: <pre>
-     * sformat ("%2 is greater %% than %1", 3, "five") -> "five is greater % than 3"
-     * </pre>
+     * @param string FORM
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
+     * @return string
+     * @usage sformat ("%2 is greater %% than %1", 3, "five") -> "five is greater % than 3"
      */
      
     if (format.isNull ()
@@ -242,14 +258,16 @@ static YCPValue
 Y2Debug (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2debug (string format, ...) -> void
-     * Log a message to the y2log. Arguments are same as for sformat() builtin.
+     * @builtin y2debug
+     * @short Log a message to the y2log.
+     * @description
+     * Arguments are same as for sformat() builtin.
      * The y2log component is "YCP", so you can control these messages the
      * same way as other y2log messages.
+     * @param string FORMAT
+     * @return void
      *
-     * Example: <pre>
-     * y2debug ("%1 is smaller than %2", 7, "13");
-     * </pre>
+     * @usage y2debug ("%1 is smaller than %2", 7, "13");
      */
 
     return Y2Log (LOG_DEBUG, format, args);
@@ -259,7 +277,10 @@ static YCPValue
 Y2Milestone (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2milestone (string format, ...) -> void
+     * @builtin y2milestone
+     * @short Log a milestone to the y2log.
+     * @param string FORMAT
+     * @return void
      */
 
     return Y2Log (LOG_MILESTONE, format, args);
@@ -270,7 +291,10 @@ static YCPValue
 Y2Warning (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2warning (string format, ...) -> void
+     * @builtin y2warning
+     * @short Log a warning to the y2log.
+     * @param string FORMAT
+     * @return void
      */
 
     return Y2Log (LOG_WARNING, format, args);
@@ -281,7 +305,10 @@ static YCPValue
 Y2Error (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2error (string format, ...) -> void
+     * @builtin y2error
+     * @short Log an error to the y2log.
+     * @param string FORMAT
+     * @return void
      */
 
     return Y2Log (LOG_ERROR, format, args);
@@ -292,7 +319,10 @@ static YCPValue
 Y2Security (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2security (string format, ...) -> void
+     * @builtin y2security
+     * @short Log a security message to the y2log.
+     * @param string FORMAT
+     * @return void
      */
 
     return Y2Log (LOG_SECURITY, format, args);
@@ -303,7 +333,10 @@ static YCPValue
 Y2Internal (const YCPString & format, const YCPList & args)
 {
     /**
-     * @builtin y2internal (string format, ...) -> void
+     * @builtin y2internal
+     * @short Log an internal message to the y2log.
+     * @param string FORMAT
+     * @return void
      */
 
     return Y2Log (LOG_INTERNAL, format, args);

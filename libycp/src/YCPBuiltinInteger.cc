@@ -11,7 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	YCPBuiltinInteger.cc
-
+   Summary:     YCP Integer Builtins
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Arvin Schnell <arvin@suse.de>
    Maintainer:	Arvin Schnell <arvin@suse.de>
@@ -33,7 +33,7 @@ static YCPValue
 i_plus (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 + integer i2 -> integer
+     * @operator integer i1 + integer i2 -> integer
      * Addition of integers.
      *
      * Example: <pre>
@@ -52,7 +52,7 @@ static YCPValue
 i_minus (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 - integer i2 -> integer
+     * @operator integer i1 - integer i2 -> integer
      * Subtraction of integers.
      *
      * Example: <pre>
@@ -71,7 +71,7 @@ static YCPValue
 i_mult (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 * integer i2 -> integer
+     * @operator integer i1 * integer i2 -> integer
      * Multiplication of integers.
      *
      * Example: <pre>
@@ -90,7 +90,7 @@ static YCPValue
 i_div (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 / integer i2 -> integer
+     * @operator integer i1 / integer i2 -> integer
      * Division of integers.
      *
      * Examples: <pre>
@@ -116,7 +116,7 @@ static YCPValue
 i_mod (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 % integer i2 -> integer
+     * @operator integer i1 % integer i2 -> integer
      * Modulus of integers.
      *
      * Examples: <pre>
@@ -135,7 +135,7 @@ static YCPValue
 i_and (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 & integer i2 -> integer
+     * @operator integer i1 & integer i2 -> integer
      * Bitwise and of integers.
      *
      * Examples: <pre>
@@ -155,7 +155,7 @@ static YCPValue
 i_xor (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 ^ integer i2 -> integer
+     * @operator integer i1 ^ integer i2 -> integer
      * Bitwise exclusive or of integers.
      *
      * Examples: <pre>
@@ -175,7 +175,7 @@ static YCPValue
 i_or (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 | integer i2 -> integer
+     * @operator integer i1 | integer i2 -> integer
      * Bitwise or of integers.
      *
      * Examples: <pre>
@@ -195,7 +195,7 @@ static YCPValue
 i_left (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 << integer i2 -> integer
+     * @operator integer i1 << integer i2 -> integer
      * Bitwise shift left for integers.
      *
      * Example: <pre>
@@ -214,7 +214,7 @@ static YCPValue
 i_right (const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
-     * @builtin integer i1 >> integer i2 -> integer
+     * @operator integer i1 >> integer i2 -> integer
      * Bitwise shift right for integers.
      *
      * Example: <pre>
@@ -233,7 +233,7 @@ static YCPValue
 i_neg (const YCPInteger &i1)
 {
     /**
-     * @builtin - integer i -> integer
+     * @operator - integer i -> integer
      * Negative of integer.
      */
 
@@ -248,7 +248,7 @@ static YCPValue
 i_bnot (const YCPInteger &i1)
 {
     /**
-     * @builtin ~ integer i -> integer
+     * @operator ~ integer i -> integer
      * Bitwise not of integer.
      *
      * Example: <pre>
@@ -267,16 +267,17 @@ static YCPValue
 i_tointeger (const YCPValue &v)
 {
     /**
-     * @builtin tointeger (any value) -> integer
-     * Converts a value to an integer.
+     * @builtin tointeger
+     * @short Converts a value to an integer.
+     * @description
      * If the value can't be converted to an integer, nilinteger is returned.
+     * @param any VALUE
+     * @return integer 
      *
-     * Example: <pre>
-     * tointeger (4.03) -> 4
-     * tointeger ("42") -> 42
-     * tointeger ("0x42") -> 66
-     * tointeger ("042") -> 34
-     * </pre>
+     * @usage tointeger (4.03) -> 4
+     * @usage tointeger ("42") -> 42
+     * @usage tointeger ("0x42") -> 66
+     * @usage tointeger ("042") -> 34
      */
 
     if (v.isNull())
