@@ -40,7 +40,7 @@
 using std::string;
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::GetSelections (symbol status, string category) -> ["sel1", "sel2", ...]
 
    returns a list of selection names matching the status symbol
@@ -54,7 +54,7 @@ using std::string;
    `available	: available selections<br>
    `selected	: selected but not yet installed selections<br>
    `installed	: installed selection<br>
-   
+
 */
 YCPValue
 PkgModuleFunctions::GetSelections (YCPList args)
@@ -130,16 +130,17 @@ PkgModuleFunctions::GetSelections (YCPList args)
 
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::SelectionData (string selection)
   	->	$["summary" : "This is a nice selection",
   		"category" : "Network",
   		"visible" : true,
+  		"recommends" : ["sel1", "sel2", ...],
   		"suggests" : ["sel1", "sel2", ...],
   		"archivesize" : 12345678
   		"order" : "042"]
 
-   Get summary (aka label), category, visible, suggests, archivesize,
+   Get summary (aka label), category, visible, recommends, suggests, archivesize,
   	and order attributes of a selection
    Returns an empty list if no selection found
    Returns nil if called with wrong arguments
@@ -172,6 +173,7 @@ PkgModuleFunctions::SelectionData (YCPList args)
     data->add (YCPString ("summary"), YCPString (selection->summary("")));
     data->add (YCPString ("category"), YCPString (selection->category()));
     data->add (YCPString ("visible"), YCPBoolean (selection->visible()));
+
     std::list<std::string> suggests = selection->suggests();
     y2milestone ("  with (%d) suggestions", suggests.size());
     YCPList suggestslist;
@@ -182,6 +184,18 @@ PkgModuleFunctions::SelectionData (YCPList args)
 	    suggestslist->add (YCPString (*sugIt));
     }
     data->add (YCPString ("suggests"), suggestslist);
+
+    std::list<std::string> recommends = selection->recommends();
+    y2milestone ("  with (%d) suggestions", recommends.size());
+    YCPList recommendslist;
+    for (std::list<std::string>::iterator sugIt = recommends.begin();
+	sugIt != recommends.end(); ++sugIt)
+    {
+	if (!((*sugIt).empty()))
+	    recommendslist->add (YCPString (*sugIt));
+    }
+    data->add (YCPString ("recommends"), recommendslist);
+
     data->add (YCPString ("archivesize"), YCPInteger ((long long) (selection->archivesize())));
     data->add (YCPString ("order"), YCPString (selection->order()));
     selection->stopRetrieval();
@@ -190,7 +204,53 @@ PkgModuleFunctions::SelectionData (YCPList args)
 }
 
 // ------------------------
-/**   
+
+bool
+PkgModuleFunctions::SetSelectionString (std::string name)
+{
+    PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
+    if (selectable)
+    {
+	PMSelectionPtr selection = selectable->theObject();
+	if (selection)
+	{
+	    if (selection->isBase())
+	    {
+		y2milestone ("Changing base selection, re-setting manager");
+		_y2pm.selectionManager().setNothingSelected();
+	    }
+	    else if (selectable->status() == PMSelectable::S_Install)
+	    {
+		// don't recurse if already selected
+		return true;
+	    }
+	}
+	y2milestone ("Selecting new base");
+	if (!selectable->set_status(PMSelectable::S_Install))
+	{
+	    y2error ("Cant select %s", name.c_str());
+	    return false;
+	}
+
+	// RECURSION
+	// select all recommended selections of a base selection
+
+	if (selection->isBase())
+	{
+	    y2milestone ("Base ! Selecting all recommends");
+	    for (std::list<std::string>::const_iterator it = selection->recommends().begin();
+		 it != selection->recommends().end(); ++it)
+	    {
+		y2milestone ("Selecting recommends '%s'", it->c_str());
+		SetSelectionString (*it);
+	    }
+	}
+	return true;
+    }
+    return false;
+}
+
+/**
    @builtin Pkg::SetSelection (string selection) -> bool
 
    Set a new selection
@@ -212,16 +272,12 @@ PkgModuleFunctions::SetSelection (YCPList args)
 	return YCPError ("Bad args to Pkg::SetSelection");
     }
     string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name); 
-    if (selectable)
-    {
-	return YCPBoolean (selectable->set_status(PMSelectable::S_Install));
-    }
-    return YCPError ("Selectable not available", YCPBoolean (false));
+
+    return YCPBoolean (SetSelectionString (name));
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::ClearSelection (string selection) -> bool
 
    Clear a selected selection
@@ -250,3 +306,64 @@ PkgModuleFunctions::ClearSelection (YCPList args)
     return YCPError ("No selectable found", YCPBoolean (false));
 }
 
+
+// ------------------------
+
+// internal
+// select/deselect all packages from selection
+
+bool
+PkgModuleFunctions::ActivateSelectionPackages (PMSelectionPtr selection)
+{
+    y2milestone ("activate selection %s", ((const std::string &)(selection->name())).c_str());
+    for (std::list<std::string>::const_iterator it = selection->delpacks().begin();
+	 it != selection->delpacks().end(); ++it)
+    {
+	DoRemoveString(*it);
+    }
+    for (std::list<std::string>::const_iterator it = selection->delpacks(_y2pm.getPreferredLocale()).begin();
+	 it != selection->delpacks(_y2pm.getPreferredLocale()).end(); ++it)
+    {
+	DoRemoveString(*it);
+    }
+    for (std::list<std::string>::const_iterator it = selection->inspacks().begin();
+	 it != selection->inspacks().end(); ++it)
+    {
+	DoProvideString(*it);
+    }
+    for (std::list<std::string>::const_iterator it = selection->inspacks(_y2pm.getPreferredLocale()).begin();
+	 it != selection->inspacks(_y2pm.getPreferredLocale()).end(); ++it)
+    {
+	DoProvideString(*it);
+    }
+    return true;
+}
+
+// ------------------------
+/**
+   @builtin Pkg::ActivateSelections () -> bool
+
+   Activate all selected selections (-> loop through all packages
+	and select/deselect accordingly
+
+   *** IT'S A WORKAROUND, DON'T USE ***
+*/
+YCPValue
+PkgModuleFunctions::ActivateSelections (YCPList args)
+{
+    // reset package manager
+    _y2pm.packageManager().setNothingSelected();
+
+    for (PMManager::PMSelectableVec::const_iterator it = Y2PM::selectionManager().begin();
+	 it != Y2PM::selectionManager().end();
+	 ++it)
+    {
+	if ((*it)->status() != PMSelectable::S_Install)
+	    continue;
+	PMSelectionPtr selection = (*it)->theObject();
+	if (selection == 0)
+	    continue;
+	ActivateSelectionPackages (selection);
+    }
+    return YCPBoolean (true);
+}

@@ -25,6 +25,7 @@
 #include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
+#include <y2util/YRpmGroupsTree.h>
 #include <y2pm/InstData.h>
 
 #include <ycp/YCPVoid.h>
@@ -38,11 +39,72 @@
 
 using std::string;
 
-// for Pkg::PkgFirstDelete, PkgNextDelete
+// for Pkg::PkgPrepareOrder, PkgNextDelete, PkgNextInstall
+static bool prepare_order_called = false;
 static std::list<PMPackagePtr> packs_to_delete;
-
-// for Pkg::PkgFirstInstall, PkgNextInstall
+static std::list<PMPackagePtr>::const_iterator deleteIt;
 static std::list<PMPackagePtr> packs_to_install;
+static std::list<PMPackagePtr>::const_iterator installIt;
+
+// ------------------------
+/**   
+   @builtin Pkg::PkgPrepareOrder () -> [ delcount, inscount ]
+     prepare for PkgNextInstall, PkgNextDelete
+ */
+YCPValue
+PkgModuleFunctions::PkgPrepareOrder (YCPList args)
+{
+    _y2pm.packageManager().getPackagesToInsDel (packs_to_delete, packs_to_install);
+    deleteIt = packs_to_delete.begin();
+    installIt = packs_to_install.begin();
+    prepare_order_called = true;
+    YCPList counts;
+    counts->add (YCPInteger (packs_to_delete.size()));
+    counts->add (YCPInteger (packs_to_install.size()));
+    return counts;
+}
+
+// ------------------------
+/**   
+   @builtin Pkg::PkgNextDelete -> string
+	nil on error
+	"" on no-more-elements
+	"name" else
+ */
+YCPValue
+PkgModuleFunctions::PkgNextDelete (YCPList args)
+{
+    if (!prepare_order_called)
+	return YCPError ("PkgNextDelete without prepare");
+
+    if (deleteIt == packs_to_delete.end())
+	return YCPString("");
+    YCPString ret ((*deleteIt)->name());
+    ++deleteIt;
+    return ret;
+}
+
+// ------------------------
+/**   
+   @builtin Pkg::PkgNextInstall -> string
+	nil on error
+	"" on no-more-elements
+	"name" else
+ */
+YCPValue
+PkgModuleFunctions::PkgNextInstall (YCPList args)
+{
+    if (!prepare_order_called)
+	return YCPError ("PkgNextInstall without prepare");
+
+    if (installIt == packs_to_install.end())
+	return YCPString("");
+    YCPString ret ((*installIt)->name());
+    ++installIt;
+    return ret;
+}
+
+
 
 // ------------------------
 /**   
@@ -56,11 +118,9 @@ YCPValue
 PkgModuleFunctions::GetGroups (YCPList args)
 {
     YCPList groups;
-    groups->add (YCPString ("System/YaST"));
-    groups->add (YCPString ("Applications/Office"));
-    groups->add (YCPString ("Development/C++"));
-    groups->add (YCPString ("Network/WWW"));
-    groups->add (YCPString ("X11/Games"));
+#warning Pkg::GetGroups still needed ?
+//    const YRpmGroupsTree *groups_tree = _y2pm.packageManager().rpmGroupsTree();
+    
     return groups;
 }
 
@@ -82,8 +142,43 @@ PkgModuleFunctions::IsProvided (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::IsProvided");
     }
-
+#warning must check tags, not package names
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    if (!selectable)
+	return YCPBoolean (false);
+    if (selectable->installedObj() == 0)
+	return YCPBoolean (false);
     return YCPBoolean (true);
+}
+
+// ------------------------
+/**   
+   @builtin Pkg::IsSelected (string tag) -> boolean
+
+   returns a 'true' if the tag is selected for installation
+
+   tag can be a package name, a string from requires/provides
+   or a file name (since a package implictly provides all its files)
+*/
+YCPValue
+PkgModuleFunctions::IsSelected (YCPList args)
+{
+    if ((args->size() != 1)
+        || !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::IsSelected");
+    }
+#warning must check tags, not package names
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    if (!selectable)
+	return YCPBoolean (false);
+    if ((selectable->status() == PMSelectable::S_Install)
+	|| (selectable->status() == PMSelectable::S_Update)
+	|| (selectable->status() == PMSelectable::S_Auto))
+    {
+	return YCPBoolean (true);
+    }
+    return YCPBoolean (false);
 }
 
 // ------------------------
@@ -104,15 +199,28 @@ PkgModuleFunctions::IsAvailable (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::IsAvailable");
     }
-    string pkgname = args->value(0)->asString()->value_cstr();
-    PMError err = _y2pm.instTarget().init (false);
-    if (err)
+#warning must check tags, not package names
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    if (!selectable)
+	return YCPBoolean (false);
+    if (selectable->candidateObj() == 0)
+	return YCPBoolean (false);
+    return YCPBoolean (true);
+}
+
+
+// internal
+bool
+PkgModuleFunctions::DoProvideString (std::string name)
+{
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    if (!selectable)
     {
-	return YCPError (err.errstr());
+	y2error ("Provide: package '%s' not found", name.c_str());
+	return false;
     }
-    const std::list<PMPackagePtr> pkglist = _y2pm.instTarget().getPackages ();
-    const std::list<PMPackagePtr> matches = InstData::findPackages (pkglist, pkgname);
-    return YCPBoolean (matches.size() > 0);
+    selectable->set_status (PMSelectable::S_Install);
+    return true;
 }
 
 // ------------------------
@@ -139,8 +247,37 @@ PkgModuleFunctions::DoProvide (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::DoProvide");
     }
+    YCPMap ret;
+    YCPList tags = args->value(0)->asList();
+    if (tags->size() > 0)
+    {
+	for (int i = 0; i < tags->size(); ++i)
+	{
+	    if (tags->value(i)->isString())
+	    {
+		DoProvideString (tags->value(i)->asString()->value());
+	    }
+	    else
+	    {
+		y2error ("Pkg::DoProvide not string '%s'", tags->value(i)->toString().c_str());
+	    }
+	}
+    }
+    return ret;
+}
 
-    return YCPMap ();
+// internal
+bool
+PkgModuleFunctions::DoRemoveString (std::string name)
+{
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    if (!selectable)
+    {
+	y2error ("Remove: package '%s' not found", name.c_str());
+	return false;
+    }
+    selectable->set_status (PMSelectable::S_Del);
+    return true;
 }
 
 // ------------------------
@@ -167,8 +304,23 @@ PkgModuleFunctions::DoRemove (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::DoRemove");
     }
-
-    return YCPMap ();
+    YCPMap ret;
+    YCPList tags = args->value(0)->asList();
+    if (tags->size() > 0)
+    {
+	for (int i = 0; i < tags->size(); ++i)
+	{
+	    if (tags->value(i)->isString())
+	    {
+		DoRemoveString (tags->value(i)->asString()->value());
+	    }
+	    else
+	    {
+		y2error ("Pkg::DoRemove not string '%s'", tags->value(i)->toString().c_str());
+	    }
+	}
+    }
+    return ret;
 }
 
 // ------------------------

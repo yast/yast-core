@@ -77,11 +77,15 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "IsManualSelection")	return f.IsManualSelection (args);
     else if (function == "SaveState")		return f.SaveState (args);
     else if (function == "RestoreState")	return f.RestoreState (args);
+    else if (function == "PkgPrepareOrder")	return f.PkgPrepareOrder (args);
+    else if (function == "PkgNextDelete")	return f.PkgNextDelete (args);
+    else if (function == "PkgNextInstall")	return f.PkgNextInstall (args);
     // selection related
     else if (function == "GetSelections")	return f.GetSelections (args);
     else if (function == "SelectionData")	return f.SelectionData (args);
     else if (function == "SetSelection")	return f.SetSelection (args);
     else if (function == "ClearSelection")	return f.ClearSelection (args);
+    else if (function == "ActivateSelections")	return f.ActivateSelections (args);
     // patch related functions
     else if (function == "YouStatus")		return f.YouStatus (args);
     else if (function == "YouGetServers")	return f.YouGetServers (args);

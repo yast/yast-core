@@ -59,20 +59,30 @@ class PkgModuleFunctions
 	YCPValue GetSelections (YCPList args);
 	YCPValue SelectionData (YCPList args);
 	YCPValue SetSelection (YCPList args);
+	bool SetSelectionString (std::string name);	// internal
 	YCPValue ClearSelection (YCPList args);
+	YCPValue ActivateSelections (YCPList args);
+	bool ActivateSelectionPackages (PMSelectionPtr selection); // internal
 
 	// package related
 	YCPValue GetGroups (YCPList args);
 	YCPValue IsProvided (YCPList args);
+	YCPValue IsSelected (YCPList args);
 	YCPValue IsAvailable (YCPList args);
 	YCPValue DoProvide (YCPList args);
+	bool DoProvideString (std::string name);	// internal
 	YCPValue DoRemove (YCPList args);
+	bool DoRemoveString (std::string name);	// internal
 	YCPValue PkgSummary (YCPList args);
 	YCPValue PkgVersion (YCPList args);
 	YCPValue PkgSize (YCPList args);
 	YCPValue IsManualSelection (YCPList args);
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);
+
+	YCPValue PkgPrepareOrder (YCPList args);
+	YCPValue PkgNextDelete (YCPList args);
+	YCPValue PkgNextInstall (YCPList args);
 
 	// you patch related
         YCPValue YouStatus (YCPList args);
