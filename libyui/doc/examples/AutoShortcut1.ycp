@@ -1,4 +1,4 @@
-UI::{
+{
     // (Minimalistic) Demo for automatically generated shortcuts.
     //
     // See 'AutoShortcut2.ycp' for a more realistic example.
@@ -12,7 +12,7 @@ UI::{
     //
     // There shouldn't be any complaints about shortcuts in the log file when this is started.
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `RadioButtonGroup(
 				       `Frame( "Software Selection",
@@ -32,7 +32,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

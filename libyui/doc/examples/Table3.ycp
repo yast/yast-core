@@ -1,4 +1,4 @@
-UI::{
+{
     list itemlist1 =
 	[
 	 `item(`id(3), "Spaghetti",	  8),
@@ -20,7 +20,7 @@ UI::{
 
     integer listnum = 0;
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Prices"),
 		     `HSpacing(40),	// make the table and thus the dialog wide enough
@@ -35,12 +35,12 @@ UI::{
 		     )
 	       );
 
-    while (UserInput() != `cancel)
+    while (UI::UserInput() != `cancel)
     {
 	listnum = 1 - listnum;
-	ChangeWidget(`id(`table), `Items, select(itemslists, listnum, nil));
+	UI::ChangeWidget(`id(`table), `Items, select(itemslists, listnum, nil));
     }
     
-    CloseDialog();
+    UI::CloseDialog();
 }
 

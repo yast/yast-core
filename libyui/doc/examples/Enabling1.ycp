@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `PushButton(`id(`test),   `opt(`hstretch, `disabled), "Disabled"),
 		     `PushButton(`id(`change), `opt(`hstretch), "&Change")
@@ -8,15 +8,15 @@ UI::{
 
     boolean enabled = false;
     
-    while (UserInput() != `cancel)
+    while (UI::UserInput() != `cancel)
     {
 	enabled = !enabled;
-	ChangeWidget(`id(`test), `Enabled, enabled);
+	UI::ChangeWidget(`id(`test), `Enabled, enabled);
 	
 	if (enabled) 
-	    ChangeWidget(`id(`test), `Label, "Enabled");
+	    UI::ChangeWidget(`id(`test), `Label, "Enabled");
 	else 
-	    ChangeWidget(`id(`test), `Label, "Disabled");
+	    UI::ChangeWidget(`id(`test), `Label, "Disabled");
     }
 }
 

@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox( 
 		     `SelectionBox( `opt(`shrinkable),
 				   "Minimalistic selbox (rather ugly): ",
@@ -14,6 +14,6 @@ UI::{
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

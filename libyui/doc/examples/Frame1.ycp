@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Frame ( "Important",
 			      `Label("Hello, World!")
@@ -7,6 +7,6 @@ UI::{
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

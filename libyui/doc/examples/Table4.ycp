@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Today's menu"),
 		     `HSpacing(40),	// make the table and thus the dialog wider
@@ -22,22 +22,22 @@ UI::{
 		     )
 	       );
 
-    while (UserInput() != `cancel)
+    while (UI::UserInput() != `cancel)
     {
-	any id = QueryWidget(`id(`table), `CurrentItem);
+	any id = UI::QueryWidget(`id(`table), `CurrentItem);
 	if (is(id, integer)) {
-	    string text = sformat("Line: %1", QueryWidget(`id(`table), `Item(id)));
-	    OpenDialog(
+	    string text = sformat("Line: %1", UI::QueryWidget(`id(`table), `Item(id)));
+	    UI::OpenDialog(
 		       `VBox(
 			     `Label(text),
 			     `PushButton("&OK")
 			     )
 		       );
-	    UserInput();
-	    CloseDialog();
+	    UI::UserInput();
+	    UI::CloseDialog();
 	}
     }
 
-    CloseDialog();
+    UI::CloseDialog();
 }
 

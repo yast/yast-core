@@ -1,14 +1,14 @@
-UI::{
+{
 
     /**
      * Return a text summary of existing buttons.
      **/
-    define Summary() ``{
+    define string Summary() ``{
 	
 	string summary = 
-	    ( WidgetExists(`id(`top    ) ) ? "Top button exists"      : "No top button"      ) +
-	    ( WidgetExists(`id(`center ) ) ? "\nCenter button exists" : "\nNo center button" )	+
-	    ( WidgetExists(`id(`bottom ) ) ? "\nBottom button exists" : "\nNo bottom button" );
+	    ( UI::WidgetExists(`id(`top    ) ) ? "Top button exists"      : "No top button"      ) +
+	    ( UI::WidgetExists(`id(`center ) ) ? "\nCenter button exists" : "\nNo center button" )	+
+	    ( UI::WidgetExists(`id(`bottom ) ) ? "\nBottom button exists" : "\nNo bottom button" );
 
 	return summary;
 
@@ -17,10 +17,10 @@ UI::{
     /**
      * Remove button with given id and update summary.
      **/
-    define RemoveButton( term id ) ``{
-	ReplaceWidget( id, `Empty() );
-	ChangeWidget( `id(`summary), `Value, Summary() );
-	RecalcLayout();
+    define void RemoveButton( term id ) ``{
+	UI::ReplaceWidget( id, `Empty() );
+	UI::ChangeWidget( `id(`summary), `Value, Summary() );
+	UI::RecalcLayout();
     }
 
 
@@ -28,7 +28,7 @@ UI::{
      * main
      **/
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `ReplacePoint( `id(`rp_top    ), `PushButton(`id(`top    ), "Top Button"    ) ),
 		     `ReplacePoint( `id(`rp_center ), `PushButton(`id(`center ), "Center Button" ) ),
@@ -40,21 +40,21 @@ UI::{
 		     )
 	       );
 
-    // Better wait until now before doing the summary - it isn't much use before OpenDialog()
-    // since of course all WidgetExists() calls return false until then.
-    ChangeWidget( `id(`summary), `Value, Summary() );
-    RecalcLayout();
+    // Better wait until now before doing the summary - it isn't much use before UI::OpenDialog()
+    // since of course all UI::WidgetExists() calls return false until then.
+    UI::ChangeWidget( `id(`summary), `Value, Summary() );
+    UI::RecalcLayout();
     
     any button = nil;
 
     repeat
     {
-	button = UserInput();
+	button = UI::UserInput();
 
 	if	( button == `top    ) 	RemoveButton(`id(`rp_top    ) );
 	else if	( button == `center )	RemoveButton(`id(`rp_center ) );
 	else if	( button == `bottom )	RemoveButton(`id(`rp_bottom ) );
     } until ( button == `close );
 
-    CloseDialog();
+    UI::CloseDialog();
 }

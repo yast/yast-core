@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `HSpacing(50),	// make the dialog wider
 		     `Label("Double-click any item to increase the number."),
@@ -20,13 +20,13 @@ UI::{
 		     )
 	       );
     
-    while ( UserInput() != `cancel)
+    while ( UI::UserInput() != `cancel)
     {
-	integer current_item  = QueryWidget(`id(`table), `CurrentItem);
-	integer current_value = tointeger(select(QueryWidget(`id(`table), `Item(current_item)), 2, 1));
-	ChangeWidget(`id(`table), `Item(current_item, 1), current_value+1);
+	integer current_item  = (integer) UI::QueryWidget(`id(`table), `CurrentItem);
+	integer current_value = tointeger(select((list) UI::QueryWidget(`id(`table), `Item(current_item)), 2, 1));
+	UI::ChangeWidget(`id(`table), `Item(current_item, 1), current_value+1);
     }
 
-    CloseDialog();
+    UI::CloseDialog();
 }
 

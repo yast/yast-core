@@ -28,7 +28,7 @@
 			  )
 		    );
 
-    symbol button = nil;
+    any button = nil;
     string name = "";
 
     repeat

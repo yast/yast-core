@@ -17,7 +17,7 @@
     define string formatEvent( map event ) ``{
 	string html = "<h3>Event:</h3><p>";
 
-	foreach ( `key, `value, event, ``{
+	foreach (string key, string value, event, ``{
 	    html = html + "<font color=blue>" + key + "</font>: " + value + "<br>";
 	});
 
@@ -220,13 +220,13 @@
 
 	if ( event["ID"]:nil == `bill )
 	{
-	    if ( ! UI::QueryWidget(`send_mafioso, `Value ) )
+	    if ( ! (boolean) UI::QueryWidget(`send_mafioso, `Value ) )
 		UI::ChangeWidget(`send_mafioso, `Value, true );
 	}
 	else if ( event["ID"]:nil == `send_mafioso )
 	{
-	    if ( UI::QueryWidget(`bill, `Value ) &&
-		 ! UI::QueryWidget(`send_mafioso, `Value ) )
+	    if ( (boolean) UI::QueryWidget(`bill, `Value ) &&
+		 ! (boolean) UI::QueryWidget(`send_mafioso, `Value ) )
 	    {
 		UI::ChangeWidget(`cash, `Value, true );
 	    }

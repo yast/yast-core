@@ -1,10 +1,10 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox( 
 		     `Label("Labels can have\nmultiple lines." ),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

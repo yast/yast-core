@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three widgets with different weights.
@@ -14,7 +14,7 @@ UI::{
     // respective weights at all times.
     //
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `HWeight( 1, `PushButton( `opt(`default), "OK\n25%" ) ),
 		     `HWeight( 1, `PushButton( "Cancel everything\n25%" ) ),
@@ -22,7 +22,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

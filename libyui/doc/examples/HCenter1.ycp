@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("This is a long label which makes space"),
 		     `HBox(
@@ -9,6 +9,6 @@ UI::{
 			   )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

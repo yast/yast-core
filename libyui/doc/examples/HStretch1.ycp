@@ -1,5 +1,5 @@
-UI::{  
-  OpenDialog(
+{  
+  UI::OpenDialog(
 	     `VBox( 
 		   `Label("Some text goes here"),
 		   `Label("This is some more text, that is quite long, as you can see."),
@@ -9,7 +9,7 @@ UI::{
 			 )
 		   )
 	     );
-  any ret = UserInput();
-  CloseDialog();
+  any ret = UI::UserInput();
+  UI::CloseDialog();
   return ret;
 }

@@ -1,8 +1,9 @@
 
 {
     import "Wizard";
+    import "Label";
 
-    byteblock image = SCR::Read (.target.byte, "empty.gif");
+    byteblock image = (byteblock) SCR::Read (.target.byte, "empty.gif");
 
     Wizard::CreateDialog ();
 
@@ -10,8 +11,8 @@
     string caption = "Penguins";
     term penguins = `Frame ("Penguins", `Image (`id (`img), image, "Penguins"));
     Wizard::SetContentsButtons (caption, penguins, help,
-				BackButtonLabel (),
-				NextButtonLabel ());
+                                Label::BackButton (),
+                                Label::NextButton ());
 
     any windowID = UI::QueryWidget (`id (`img), `WindowID);
     y2debug ("windowID=%1", windowID);

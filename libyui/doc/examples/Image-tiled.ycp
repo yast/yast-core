@@ -2,24 +2,24 @@
  * Advanced Image widget features:
  * Load image from local file and scale it to fit the available space.
  **/
-UI::{
+{
 
-    if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
+    if ( ! lookup( UI::GetDisplayInfo(), "HasLocalImageSupport", false ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Loading images from local files not supported!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
 
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `HBox(
 			   `VSpacing( 5 ),
@@ -29,6 +29,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog( `VBox(
+{
+    UI::OpenDialog( `VBox(
 		      `Frame ( "CPU &Speed",
 			       `RadioButtonGroup(
 						 `VBox(
@@ -13,6 +13,6 @@ UI::{
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

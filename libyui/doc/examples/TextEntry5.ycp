@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Frame("Shrinkable Textentries",
 			    `HBox(
@@ -12,6 +12,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK" )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

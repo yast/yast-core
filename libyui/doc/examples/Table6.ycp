@@ -1,12 +1,10 @@
 {
 
-integer MAXVALUE = 100;
-if ( size (WFM::Args()) > 0 )
-{
-    MAXVALUE = WFM::Args(0);
-}
-
-UI::{
+    integer MAXVALUE = 100;
+    if ( size (WFM::Args()) > 0 )
+    {
+        MAXVALUE = (integer) WFM::Args(0);
+    }
 
     integer i = 0;
     list itemlist = [];
@@ -16,11 +14,11 @@ UI::{
 	itemlist = add( itemlist, `item(`id(i), "abcdefghijklm", 0, i ) );
 	i = i+1;
 	y2debug( "ITEM added: ", i );
-    } until( i > WFM::MAXVALUE );
+    } until( i > MAXVALUE );
 
     y2debug( "ITEMLIST done - open dialog" );
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `HSpacing(50),	// make the dialog wider
 		     `Label("Double-click any item to increase the amount column."),
@@ -37,14 +35,13 @@ UI::{
 	       );
     y2debug( "Dialog opened with ITEMLIST" );
 
-    while ( UserInput() != `cancel)
+    while ( UI::UserInput() != `cancel)
     {
-	integer current_item  = QueryWidget(`id(`table), `CurrentItem);
-	integer current_value = tointeger(select(QueryWidget(`id(`table), `Item(current_item)), 2, 0));
-	ChangeWidget(`id(`table), `Item(current_item, 1), current_value+1);
+	integer current_item  = (integer) UI::QueryWidget(`id(`table), `CurrentItem);
+	integer current_value = tointeger(select((list) UI::QueryWidget(`id(`table), `Item(current_item)), 2, 0));
+	UI::ChangeWidget(`id(`table), `Item(current_item, 1), current_value+1);
     }
 
-    CloseDialog();
-};
+    UI::CloseDialog();
 
 }

@@ -1,16 +1,16 @@
-UI::{
+{
     // Check for availability of special widgets required for this example
     
-    if ( ! HasSpecialWidget(`DownloadProgress) )
+    if ( ! UI::HasSpecialWidget(`DownloadProgress) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the DownloadProgress widget!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -30,7 +30,7 @@ UI::{
     // one, "Close", which is deliberately set apart from the others with some
     // empty space.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `DownloadProgress(`id(`progress), "YaST2 log file", logfile_name, logfile_expected_size ),
 		     `HBox(
@@ -49,21 +49,21 @@ UI::{
     
     do
     {
-	button = UserInput();
+	button = UI::UserInput();
 
 	if ( button == `y2log )
 	{
 	    // Watch the Y2 log file
 	    
-	    ChangeWidget(`id(`progress), `Filename, 	logfile_name		);
-	    ChangeWidget(`id(`progress), `ExpectedSize,	logfile_expected_size	);
+	    UI::ChangeWidget(`id(`progress), `Filename, 	logfile_name		);
+	    UI::ChangeWidget(`id(`progress), `ExpectedSize,	logfile_expected_size	);
 	}
 	else if ( button == `null )
 	{
 	    // Watch no file - i.e. reset the progress bar
 	    
-	    ChangeWidget(`id(`progress), `Filename, 	"" );
-	    ChangeWidget(`id(`progress), `ExpectedSize,	1024 );
+	    UI::ChangeWidget(`id(`progress), `Filename, 	"" );
+	    UI::ChangeWidget(`id(`progress), `ExpectedSize,	1024 );
 	}
 	else if ( button == `blurb )
 	{
@@ -82,5 +82,5 @@ UI::{
 
     // Clean up
     
-    CloseDialog();
+    UI::CloseDialog();
 }

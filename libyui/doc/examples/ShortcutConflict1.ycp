@@ -1,8 +1,8 @@
-UI::{
+{
     // Demo for shortcut checking:
     // Deliberately generate a shortcut conflict.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `PushButton( "&OK" ),
 		     `PushButton( "Also &OK" ),
@@ -12,7 +12,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three equal sized buttons,
@@ -13,7 +13,7 @@ UI::{
     // here: This is what makes the HSpacing()s grow. Otherwise, they
     // would retain a constant size, and the buttons would grow.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `HWeight(1, `PushButton( `opt(`default), "&OK" ) ),
 		     `HSpacing(`opt(`hstretch), 3),
@@ -23,7 +23,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

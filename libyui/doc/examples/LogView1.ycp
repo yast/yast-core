@@ -1,4 +1,4 @@
-UI::{
+{
     string part1 =
 	"They sought it with thimbles, they sought it with care;\n"	+
 	"They pursued it with forks and hope;\n"			+
@@ -58,7 +58,7 @@ UI::{
     string thats_it = "\n\n*** Press [OK] once more to exit. ***";
     
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `LogView(`id(`log),
 			      "&Excerpt from \"The Hunting Of The Snark\" by Lewis Carroll",
@@ -68,16 +68,16 @@ UI::{
 		     )
 	       );
 
-    ChangeWidget(`id(`log), `LastLine, part1 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part2 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part3 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part4 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part5 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part6 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part7 );	UserInput();
-    ChangeWidget(`id(`log), `LastLine, part8 );	UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part1 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part2 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part3 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part4 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part5 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part6 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part7 );	UI::UserInput();
+    UI::ChangeWidget(`id(`log), `LastLine, part8 );	UI::UserInput();
     
-    ChangeWidget(`id(`log), `Value, thats_it); UserInput();
-    CloseDialog();
+    UI::ChangeWidget(`id(`log), `Value, thats_it); UI::UserInput();
+    UI::CloseDialog();
 }
    

@@ -1,13 +1,13 @@
-UI::{
+{
     // Set default function keys.
     //
     // Those examples are taken from the YaST2 style guide.
     // Real applications should of course use the predefined
     // button labels from the Label module.
 
-    // define void SetFunctionKeys( map fkeys ) ``{};
+    // define void UI::SetFunctionKeys( map fkeys ) ``{};
 
-    SetFunctionKeys(
+    UI::SetFunctionKeys(
 		    $[
 		      "Help"		: 1,
 		      "Info"		: 2,
@@ -42,7 +42,7 @@ UI::{
 	"Use this with the NCurses UI.\n" +
 	"Press [F1] there to show function key bindings.";
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `VSpacing(),
 		     `Label( help ),
@@ -74,14 +74,14 @@ UI::{
 
     // Using string widget IDs for the buttons so they can easily be printed
     // into the feedback field.
-    string button = "";
+    any button = "";
 
     do
     {
-	button = UserInput();
+	button = UI::UserInput();
 	y2milestone( "Input: %1", button );
-	ChangeWidget(`id(`feedback), `Value, button );
+	UI::ChangeWidget(`id(`feedback), `Value, button );
     } while ( button != "Close" );
 
-    CloseDialog();
+    UI::CloseDialog();
 }

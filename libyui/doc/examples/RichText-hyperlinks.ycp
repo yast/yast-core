@@ -1,12 +1,12 @@
 // Example for a RichText widget with hyperlinks
-UI::{
-    OpenDialog( `opt(`defaultsize),
+{
+    UI::OpenDialog( `opt(`defaultsize),
 		`VBox(
 		      `RichText( "<h3>RichText example</h3>"
 				 + "<p>RichText may contain <a href=\"hyper\">hyperlinks</a>,"
 				 + "very much like HTML.</p>"
 				 + "<p>Clicking on a <a href=\"link\">link</a> will make "
-				 + "<a href=\"user_input\">UserInput()</a> return "
+				 + "<a href=\"user_input\">UI::UserInput()</a> return "
 				 + "with the <i>href</i> part of the hyperlink"
 				 + "as a (string) return value. The product is: &product;.<br>" 
 				 + "Do you know that 2 &gt; 1 ?"
@@ -24,15 +24,15 @@ UI::{
 
     repeat
     {
-	ret = UserInput();
+	ret = UI::UserInput();
 
 	if ( ret != nil )
 	{
 	    string val = sformat( "%1", ret );
-	    ChangeWidget(`id(`val), `Value, val );
+	    UI::ChangeWidget(`id(`val), `Value, val );
 	}
 	
     } until ( ret == `close );
     
-    CloseDialog();
+    UI::CloseDialog();
 }

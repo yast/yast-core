@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three widgets with different weights and
@@ -14,7 +14,7 @@ UI::{
     // stretchable. 
     //
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `HWeight( 33, `PushButton( `opt(`default), "OK\n33%" ) ),
 		     `PushButton( `opt(`hstretch), "Apply\nNo Weight" ),
@@ -24,7 +24,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

@@ -1,10 +1,10 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox( 
 		     `Label("完時"),
 		     `PushButton("&OK完時")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

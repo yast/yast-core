@@ -1,7 +1,5 @@
 // Example for the file selection builtins
 {
-    include "ui/file_popups.ycp";
-    
     UI::OpenDialog( `opt(`defaultsize),
 		    `VBox(
 			  `Image(`suseheader, "SuSE" ),
@@ -31,7 +29,7 @@
 			  )
 		    );
 
-    symbol button = nil;
+    any button = nil;
     string name = "";
 
     repeat
@@ -41,22 +39,22 @@
 
 	if ( button == `askDir )
 	{
-	    name = PopupDir( "/tmp" );
+	    name = UI::AskForExistingDirectory( "/tmp", "" );
 	}
 	else if ( button == `dir )
 	{
-	    name = PopupFile( "" );
+	    name = UI::AskForExistingFile("", "*", "");
 	}
 	else if ( button == `load )
 	{
-	    name = PopupFileWithMask( "/tmp", [ "*png" ] );
+	    name = UI::AskForExistingFile("/tmp", "*png", "");
 	}
 	else if ( button == `saveAs )
 	{
-	    name = SaveFileAs( "/tmp" );
+	    name = UI::AskForSaveFileName("/tmp", "*", "");
 	}
 
-	if ( name == "" )
+	if ( name == nil )
 	    name = "<canceled>";
 
 	if ( name != "" )	// Label update necessary?

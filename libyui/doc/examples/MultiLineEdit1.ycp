@@ -1,10 +1,10 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox( 
 		     `MultiLineEdit("Problem &description:"),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

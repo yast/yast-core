@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three equal sized buttons.
@@ -7,7 +7,7 @@ UI::{
     // When resized, all buttons will resize equally in order to
     // maintain the equal layout weights.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `HWeight(1, `PushButton( `opt(`default), "&OK" ) ),
 		     `HWeight(1, `PushButton( "&Cancel everything" ) ),
@@ -15,7 +15,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

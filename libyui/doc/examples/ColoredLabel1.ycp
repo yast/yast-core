@@ -1,19 +1,19 @@
-UI::{
-    if ( ! HasSpecialWidget(`ColoredLabel) )
+{
+    if ( ! UI::HasSpecialWidget(`ColoredLabel) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the ColoredLabel widget!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `ColoredLabel( "Hello, blue world!",
 				    `rgb(255, 255, 255 ),	// foreground
@@ -22,6 +22,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

@@ -1,4 +1,4 @@
-UI::{
+{
     // Create a selection box with three entries.
     // All entries have IDs to identify them independent of locale
     // (The texts might have to be translated!).
@@ -7,7 +7,7 @@ UI::{
     // There are two buttons to select a "Today's special" and a
     // "veggie" pizza to demonstrate how to select list entries
     // from within a YCP script - even without having to use item IDs.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `SelectionBox(`id(`pizza),
 				   "Select your Pizza:",
@@ -32,32 +32,32 @@ UI::{
     
     repeat
 	{
-	    id = UserInput();
+	    id = UI::UserInput();
 
-	    if      ( id == `todays_special ) ChangeWidget( `id( `pizza ), `CurrentItem, "Napoli" );
-	    else if ( id == `veggie         ) ChangeWidget( `id( `pizza ), `CurrentItem, "Funghi" );
+	    if      ( id == `todays_special ) UI::ChangeWidget( `id( `pizza ), `CurrentItem, "Napoli" );
+	    else if ( id == `veggie         ) UI::ChangeWidget( `id( `pizza ), `CurrentItem, "Funghi" );
 	} until ( id == `ok );
 
     // Get the input from the selection box.
     //
-    // Notice: The return value of UserInput() does NOT return this value!
+    // Notice: The return value of UI::UserInput() does NOT return this value!
     // Rather, it returns the ID of the widget (normally the PushButton)
-    // that caused UserInput() to return.
-    string pizza = QueryWidget(`id(`pizza), `CurrentItem);
+    // that caused UI::UserInput() to return.
+    string pizza = (string) UI::QueryWidget(`id(`pizza), `CurrentItem);
     
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
-    CloseDialog();
+    UI::CloseDialog();
 
     
     // Pop up a new dialog to echo the selection.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Pizza " + pizza + " coming right up"),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    CloseDialog();
+    UI::CloseDialog();
 }

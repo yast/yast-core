@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Today's menu"),
 		     `HSpacing(40),	// make the table and thus the dialog wider
@@ -23,14 +23,14 @@ UI::{
 		     )
 	       );
 
-    ChangeWidget(`id(`table), `CurrentItem, 2);
+    UI::ChangeWidget(`id(`table), `CurrentItem, 2);
     
-    while (UserInput() != `cancel)
+    while (UI::UserInput() != `cancel)
     {
-	ChangeWidget(`id(`table), `CurrentItem, 
-		     (QueryWidget(`id(`table), `CurrentItem) + 1) % 4);
+	UI::ChangeWidget(`id(`table), `CurrentItem, 
+		     ((integer) UI::QueryWidget(`id(`table), `CurrentItem) + 1) % 4);
     }
     
-    CloseDialog();
+    UI::CloseDialog();
 }
 

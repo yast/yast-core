@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `PushButton("This is a very long button - it reserves extra space for the label."),
 		     `HBox(
@@ -8,14 +8,14 @@ UI::{
 			   )
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    ReplaceWidget(`id(`rp), `Left(`Label("Left")));
-    UserInput();
+    UI::ReplaceWidget(`id(`rp), `Left(`Label("Left")));
+    UI::UserInput();
     
-    ReplaceWidget(`id(`rp), `Right(`Label("Right")));
-    UserInput();
+    UI::ReplaceWidget(`id(`rp), `Right(`Label("Right")));
+    UI::UserInput();
     
-    ReplaceWidget(`id(`rp), `HCenter(`Label("HCenter")));
-    UserInput();
+    UI::ReplaceWidget(`id(`rp), `HCenter(`Label("HCenter")));
+    UI::UserInput();
 }

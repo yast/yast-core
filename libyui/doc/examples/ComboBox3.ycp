@@ -1,9 +1,9 @@
-UI::{
+{
     // Create a combo box with three entries.
     // All entries have IDs to identify them independent of locale
     // (The texts might have to be translated!).
     // Entry "Funghi" will be selected by default.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `ComboBox(`id(`pizza), `opt(`editable),
 				    "Select your Pizza:",
@@ -15,18 +15,18 @@ UI::{
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
 
     // Get the input from the selection box.
     //
-    // Notice: The return value of UserInput() does NOT return this value!
+    // Notice: The return value of UI::UserInput() does NOT return this value!
     // Rather, it returns the ID of the widget (normally the PushButton)
-    // that caused UserInput() to return.
-    symbol pizza=QueryWidget(`id(`pizza), `Value);
+    // that caused UI::UserInput() to return.
+    any pizza=UI::QueryWidget(`id(`pizza), `Value);
     
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
-    CloseDialog();
+    UI::CloseDialog();
 
     // Evaluate selection
 
@@ -37,13 +37,13 @@ UI::{
     else if ( pizza == `sal )	toppings = "Tomatoes, Cheese, Sausage";
     
     // Pop up a new dialog to echo the selection.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("You will get a pizza with:"),
 		     `Label(toppings),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

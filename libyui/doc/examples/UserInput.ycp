@@ -40,8 +40,8 @@
 	    
 	    // Retrieve widget contents
 	    
-	    name = UI::QueryWidget(`id(`name ), `Value );
-	    addr = UI::QueryWidget(`id(`addr ), `Value );
+	    name = (string) UI::QueryWidget(`id(`name ), `Value );
+	    addr = (string) UI::QueryWidget(`id(`addr ), `Value );
 	}
 	else if ( widget_id == `cancel )
 	{
@@ -58,14 +58,14 @@
 	}
 
 	// No other "else" branch necessary: None of the TextEntry widget has
-	// the `notify option set, so none of them can make UserInput() return.
+	// the `notify option set, so none of them can make UI::UserInput() return.
 	
     } until ( widget_id == `ok || widget_id == `cancel );
 
 
 	
     // Close the dialog - but only after retrieving all information that may
-    // still be stored only in its widgets: QueryWidget() works only for
+    // still be stored only in its widgets: UI::QueryWidget() works only for
     // widgets that are still on the screen!
 	
     UI::CloseDialog();

@@ -1,11 +1,11 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `PushButton("First"),
 		     `PushButton("Second"),
 		     `PushButton("Third")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

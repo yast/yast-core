@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Select your extras"),
 		     `Left(`CheckBox(`id(`cheese), "Extra Cheese")),
@@ -7,22 +7,22 @@ UI::{
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    boolean cheese = QueryWidget(`id(`cheese), `Value);
-    boolean pepr   = QueryWidget(`id(`pepr),   `Value);
-    CloseDialog();
+    UI::UserInput();
+    boolean cheese = (boolean) UI::QueryWidget(`id(`cheese), `Value);
+    boolean pepr   = (boolean) UI::QueryWidget(`id(`pepr),   `Value);
+    UI::CloseDialog();
 
-    define yesno(boolean b) ``{ if (b) return "yes"; else return "no"; };
+    define string yesno(boolean b) ``{ if (b) return "yes"; else return "no"; };
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Left(`Label("Extra Cheese: " + yesno(cheese))),
 		     `Left(`Label("Pepperoni: "    + yesno(pepr))),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 
 	       

@@ -1,8 +1,8 @@
-UI::{
+{
     // Build dialog with one check box and buttons to set its state to
     // on, off or "don't care" (tri-state).
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox( 
 		     `CheckBox(`id(`cb), "Format hard disk"),
 		     `HBox(
@@ -21,25 +21,25 @@ UI::{
     
     repeat
 	{
-	    button = UserInput();
+	    button = UI::UserInput();
 
-	    if      ( button == `setOn    ) ChangeWidget ( `id(`cb), `Value, true  );
-	    else if ( button == `setOff   ) ChangeWidget ( `id(`cb), `Value, false );
-	    else if ( button == `dontCare ) ChangeWidget ( `id(`cb), `Value, nil   );
+	    if      ( button == `setOn    ) UI::ChangeWidget ( `id(`cb), `Value, true  );
+	    else if ( button == `setOff   ) UI::ChangeWidget ( `id(`cb), `Value, false );
+	    else if ( button == `dontCare ) UI::ChangeWidget ( `id(`cb), `Value, nil   );
 	} until ( button == `ok );
 	
 
     // Get the check box's value.
     //
-    // Notice: The return value of UserInput() does NOT return this value!
+    // Notice: The return value of UI::UserInput() does NOT return this value!
     // Rather, it returns the ID of the widget (normally the PushButton)
-    // that caused UserInput() to return.
+    // that caused UI::UserInput() to return.
     
-    boolean cb_val = QueryWidget(`id(`cb), `Value);
+    boolean cb_val = (boolean) UI::QueryWidget(`id(`cb), `Value);
     
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
-    CloseDialog();
+    UI::CloseDialog();
 
     // Convert the check box value to string.
     string valStr = "Don't care";
@@ -47,13 +47,13 @@ UI::{
     if ( cb_val == false ) valStr = "No";
     
     // Pop up a new dialog to echo the input.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Your selection:"),
 		     `Label(valStr),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

@@ -1,8 +1,8 @@
-UI::{
+{
     // Demo for shortcut checking:
     // Deliberately generate a shortcut conflict.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `PushButton( `id(1), "&Do Something 1..." ),
 		     `PushButton( `id(2), "&Do Something 2..." ),
@@ -17,19 +17,19 @@ UI::{
     
     do
     {
-	button = UserInput();
+	button = UI::UserInput();
 
 	if ( button != `quit )
 	{
 	    count = count + 1;
 	    string label = sformat( "&Do Something %1...", count );
 	    y2milestone( "Changing button label for button #%1 to \"%2\"", button, label );
-	    ChangeWidget( `id( button ), `Label, label );
+	    UI::ChangeWidget( `id( button ), `Label, label );
 	}
 	
     } while ( button != `quit );
 
 	
-    CloseDialog();
+    UI::CloseDialog();
 }
 

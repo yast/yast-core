@@ -1,19 +1,19 @@
-UI::{
-    if ( ! HasSpecialWidget(`ColoredLabel) )
+{
+    if ( ! UI::HasSpecialWidget(`ColoredLabel) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the ColoredLabel widget!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `ColoredLabel( `opt(`hstretch), "red"  , `rgb( 255,  0,    0 ), `rgb( 80, 80, 80 ), 10 ),
 		     `ColoredLabel( `opt(`hstretch), "green", `rgb(   0, 255,   0 ), `rgb( 80, 80, 80 ), 10 ),
@@ -26,6 +26,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

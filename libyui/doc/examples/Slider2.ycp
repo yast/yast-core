@@ -8,20 +8,20 @@
 // used to be red, blue and green. You need to use a bit of imagination
 // here. ;-)
 
-UI::{
+{
     // Check for availability of required widgets
     
-    if ( ! HasSpecialWidget(`Slider) ||
-	 ! HasSpecialWidget(`BarGraph ) )
+    if ( ! UI::HasSpecialWidget(`Slider) ||
+	 ! UI::HasSpecialWidget(`BarGraph ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the required special widgets!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -36,7 +36,7 @@ UI::{
 
     // Create the dialog
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `HSpacing(50),	// force width
 		     `BarGraph( `id(`graph),
@@ -52,9 +52,11 @@ UI::{
     
     // Event processing loop - left only via the "close" button
     // or the window manager close button / function.
+    any widget = nil;
+
     do
     {
-	any widget = UserInput();
+	widget = UI::UserInput();
 
 	if ( widget == `red   ||	// any of the sliders?
 	     widget == `blue  ||
@@ -62,17 +64,17 @@ UI::{
 	{
 	    // Get all slider values
 	    
-	    red   = QueryWidget(`id(`red),   `Value );
-	    green = QueryWidget(`id(`green), `Value );
-	    blue  = QueryWidget(`id(`blue),  `Value );
+	    red   = (integer) UI::QueryWidget(`id(`red),   `Value );
+	    green = (integer) UI::QueryWidget(`id(`green), `Value );
+	    blue  = (integer) UI::QueryWidget(`id(`blue),  `Value );
 
 	    
 	    // Update bar graph
 	    
-	    ChangeWidget(`id(`graph), `Values, [ red, green, blue ] );
+	    UI::ChangeWidget(`id(`graph), `Values, [ red, green, blue ] );
 	}
     } while ( widget != `close &&	// the real "Close" button
 	      widget != `cancel );	// the window manager close function/button
 	
-    CloseDialog();
+    UI::CloseDialog();
 }

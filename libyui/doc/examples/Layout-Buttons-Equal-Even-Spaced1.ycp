@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three equal sized buttons.
@@ -8,7 +8,7 @@ UI::{
     // Excess space will go to the HStretch() widgets between the
     // buttons, i.e. there will be empty space between the buttons.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `HWeight(1, `PushButton( `opt(`default), "&OK" ) ),
 		     `HStretch(),
@@ -18,7 +18,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

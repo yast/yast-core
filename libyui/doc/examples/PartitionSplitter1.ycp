@@ -1,14 +1,14 @@
-UI::{
-    if ( ! HasSpecialWidget(`PartitionSplitter) )
+{
+    if ( ! UI::HasSpecialWidget(`PartitionSplitter) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the PartitionSplitter widget!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -20,7 +20,7 @@ UI::{
     integer linux_min	= 300;
     integer linux_size	= 800;
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `HSpacing( 60 ),	// wider default size
 		     `PartitionSplitter( win_used, total_free,
@@ -34,6 +34,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

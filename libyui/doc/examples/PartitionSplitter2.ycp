@@ -1,15 +1,15 @@
-UI::{
-    if ( ! HasSpecialWidget(`Slider) ||
-	 ! HasSpecialWidget(`BarGraph ) )
+{
+    if ( ! UI::HasSpecialWidget(`Slider) ||
+	 ! UI::HasSpecialWidget(`BarGraph ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the required special widgets!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -21,7 +21,7 @@ UI::{
     integer linux_min	= 300;
     integer linux_size	= 800;
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `HSpacing( 60 ),	// wider default size
 		     `Left( `Label( "Now:") ),
@@ -45,6 +45,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

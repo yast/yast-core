@@ -1,8 +1,8 @@
-UI::{
+{
     // Demo for shortcut checking:
     // Deliberately generate a shortcut conflict.
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `RadioButtonGroup(
 				       `VBox(
@@ -20,7 +20,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

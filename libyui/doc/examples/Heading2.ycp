@@ -1,11 +1,11 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox( 
 		     `Heading("This Is a Heading."),
 		     `Label("This is a Label."),
 		     `PushButton("&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

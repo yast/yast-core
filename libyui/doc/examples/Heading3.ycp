@@ -1,6 +1,6 @@
-UI::{
+{
     // Build dialog with one label, 4 Beatles buttons and an OK button.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("My favourite Beatle:"),
 		     // `Heading(`id(`favourite), "Press one of the buttons below"),
@@ -21,12 +21,12 @@ UI::{
     // The 4 Beatles buttons will just propose a name.
     repeat
     {
-        button = UserInput();
+        button = UI::UserInput();
 
-	if      ( button == `john )	ChangeWidget(`id(`favourite), `Value, "John Lennon");
-	else if ( button == `paul )	ChangeWidget(`id(`favourite), `Value, "Paul McCartney");
-	else if ( button == `george )	ChangeWidget(`id(`favourite), `Value, "George Harrison");
-	else if ( button == `ringo )	ChangeWidget(`id(`favourite), `Value, "Ringo Starr" );
+	if      ( button == `john )	UI::ChangeWidget(`id(`favourite), `Value, "John Lennon");
+	else if ( button == `paul )	UI::ChangeWidget(`id(`favourite), `Value, "Paul McCartney");
+	else if ( button == `george )	UI::ChangeWidget(`id(`favourite), `Value, "George Harrison");
+	else if ( button == `ringo )	UI::ChangeWidget(`id(`favourite), `Value, "Ringo Starr" );
 
     } until ( button == `ok );
 }

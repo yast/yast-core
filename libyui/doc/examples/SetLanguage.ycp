@@ -1,46 +1,46 @@
-UI::{
-    // Example for SetLanguage() GetLanguage()
+{
+    // Example for UI::SetLanguage() UI::GetLanguage()
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `TextEntry(`id(`lang_field), "&Language:"),
 		     `HBox(
 			   `Label("Current language:"),
-			   `Label(`id(`lang_label), `opt(`outputField, `hstretch), GetLanguage(false))
+			   `Label(`id(`lang_label), `opt(`outputField, `hstretch), UI::GetLanguage(false))
 			   ),
 		     `HBox(
-			   `PushButton(`id(`set),		"&SetLanguage()\n"),
-			   `PushButton(`id(`get_strip),		"&GetLanguage()\nstrip encoding"),
-			   `PushButton(`id(`get_nostrip),	"&GetLanguage()\nwith encoding"),
+			   `PushButton(`id(`set),		"&UI::SetLanguage()\n"),
+			   `PushButton(`id(`get_strip),		"&UI::GetLanguage()\nstrip encoding"),
+			   `PushButton(`id(`get_nostrip),	"&UI::GetLanguage()\nwith encoding"),
 			   `HSpacing(3),
 			   `PushButton(`id(`close), "&Close" )
 			   )
 		     )
 	       );
 
-    SetFocus(`id(`lang_field));
+    UI::SetFocus(`id(`lang_field));
 	     
     while(true)
     {
-	any id = UserInput();
+	any id = UI::UserInput();
 
 	if ( id == `close )
 	{
-	    CloseDialog();
+	    UI::CloseDialog();
 	    return;
 	}
 	else if ( id == `get_strip )
 	{
-	    ChangeWidget(`id(`lang_field), `Value, GetLanguage(true));
+	    UI::ChangeWidget(`id(`lang_field), `Value, UI::GetLanguage(true));
 	}
 	else if ( id == `get_nostrip )
 	{
-	    ChangeWidget(`id(`lang_field), `Value, GetLanguage(false));
+	    UI::ChangeWidget(`id(`lang_field), `Value, UI::GetLanguage(false));
 	}
 	else if ( id == `set )
 	{
-	    SetLanguage(QueryWidget(`id(`lang_field), `Value));
-	    ChangeWidget(`id(`lang_label), `Value, GetLanguage(false));
+	    UI::SetLanguage((string) UI::QueryWidget(`id(`lang_field), `Value));
+	    UI::ChangeWidget(`id(`lang_label), `Value, UI::GetLanguage(false));
 	}
     }
 }

@@ -3,29 +3,29 @@
  * Load image from local file. This may not always be supported, so check if
  * this feature is available prior to using it! 
  **/
-UI::{
+{
 
-    if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
+    if ( ! lookup( UI::GetDisplayInfo(), "HasLocalImageSupport", false ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Loading images from local files not supported!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
 
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox( 
 		     `Image( "/usr/share/doc/susetour/img/games0.png", "Games" ),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

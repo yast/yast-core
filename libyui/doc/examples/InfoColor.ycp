@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog( `opt( `infocolor ),
+{
+    UI::OpenDialog( `opt( `infocolor ),
 		`VBox( 
 		      `Heading("This is an info dialog."),
 		      `RichText("This should even work with multi line rich texts. "
@@ -8,16 +8,16 @@ UI::{
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog( `opt( `infocolor, `decorated ),
+    UI::OpenDialog( `opt( `infocolor, `decorated ),
 		`VBox( 
 		      `Heading("This is a decorated warning dialog."),
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
+    UI::UserInput();
     
-    CloseDialog();
-    CloseDialog();
+    UI::CloseDialog();
+    UI::CloseDialog();
 }

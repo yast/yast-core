@@ -3,18 +3,16 @@
  * Creates one standard (predefined) image and a user-defined image.  
  **/
 {  
-    UI::{
-	global define void ImageDemo(byteblock pixels) ``{
-	    OpenDialog(
-		       `VBox(
-			     `Image(pixels, "Image 1"), 
-			     `Image(`suseheader, "SuSE header"),
-			     `PushButton("&OK")));
-	    UserInput();
-	    CloseDialog();
-	};
+    global define void ImageDemo(byteblock pixels) ``{
+        UI::OpenDialog(
+                   `VBox(
+                         `Image(pixels, "Image 1"), 
+                         `Image(`suseheader, "SuSE header"),
+                         `PushButton("&OK")));
+        UI::UserInput();
+        UI::CloseDialog();
     };
 
-    byteblock image_data = SCR::Read( .target.byte, "image1.png" );
-    UI::ImageDemo( image_data );
+    byteblock image_data = (byteblock) SCR::Read( .target.byte, "image1.png" );
+    ImageDemo( image_data );
 }

@@ -1,9 +1,9 @@
-UI::{
+{
     // Advanced MultiSelectionBox example:
     //
     // Retrieve the list of selected items and output it.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox( 
 		     `MultiSelectionBox( `id(`toppings), "Select pizza toppings:",
 					 [
@@ -17,13 +17,13 @@ UI::{
 		     `PushButton( `opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    list selected_items = QueryWidget( `id(`toppings), `SelectedItems );
+    UI::UserInput();
+    list selected_items = (list) UI::QueryWidget( `id(`toppings), `SelectedItems );
     
     // Remember to retrieve the widget's data _before_ the dialog is closed,
     // i.e. before it is destroyed!
     
-    CloseDialog();
+    UI::CloseDialog();
 
     
     
@@ -38,13 +38,13 @@ UI::{
 
     // Open a new dialog to echo the selection.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label( "Your pizza will come with:\n" ),
 		     `Label( pizza_description ),
 		     `PushButton( `opt(`default), "&OK" )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

@@ -20,7 +20,7 @@
    * Call functions with suspected memory leaks here
    */
   
-  define eater() ``{
+  define void eater() ``{
       ReadY2( "timezone.ycp" );
   };
   
@@ -47,15 +47,13 @@
       } until ( button == `quit );
 
 
-  UI::{
-      CloseDialog();
+  UI::CloseDialog();
 
-      OpenDialog(
-		 `VBox(
-		       `Heading( "\n     Burp!    \n" ),
-		       `PushButton( `opt(`default),"&OK" )
-		       )
-		 );
-      UserInput();
-  };
+  UI::OpenDialog(
+             `VBox(
+                   `Heading( "\n     Burp!    \n" ),
+                   `PushButton( `opt(`default),"&OK" )
+                   )
+             );
+  UI::UserInput();
 }

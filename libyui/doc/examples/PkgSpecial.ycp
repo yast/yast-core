@@ -1,8 +1,8 @@
 /**
  * PkgSpecial example - not for general use!
  **/
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Label( "Hello, world!" ),
 		     `PkgSpecial( "dummy1" ),
@@ -11,6 +11,6 @@ UI::{
 		     `PushButton( `opt(`default), "&Ok" )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

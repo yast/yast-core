@@ -2,30 +2,30 @@
  * Advanced Image widget features:
  * Load image from local file and scale it to fit the available space.
  **/
-UI::{
+{
 
-    if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
+    if ( ! lookup( UI::GetDisplayInfo(), "HasLocalImageSupport", false ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Loading images from local files not supported!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
 
     
-    OpenDialog( `opt(`defaultsize), 
+    UI::OpenDialog( `opt(`defaultsize), 
 	       `VBox(
 		     `Image( `opt(`scaleToFit), "/usr/share/doc/susetour/img/games0.png", "Games" ),
 		     `Right( `Label( "Resize the window to scale the image" ) ),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

@@ -1,4 +1,4 @@
-UI::{
+{
     // Build a dialog with one menu button with a submenu.
     // Wait the user selects a menu entry, 
     // then close the dialog and terminate.
@@ -6,7 +6,7 @@ UI::{
     // Please note it's pretty pointless to create menu entries without an ID -
     // you'd never know what entry the user selected.
     
-    OpenDialog( 
+    UI::OpenDialog( 
 	       `MenuButton( "&Create",
 			    [
 			     `item(`id(`folder), "&Folder" 	),
@@ -20,8 +20,8 @@ UI::{
 			    )
 	       );
 
-    any id = UserInput();
-    CloseDialog();
+    any id = UI::UserInput();
+    UI::CloseDialog();
 
     y2milestone( "Selected: %1", id );
 }

@@ -1,6 +1,6 @@
-UI::{
+{
     // Build dialog with one text entry field, 4 Beatles buttons and an OK button.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox( 
 		     `TextEntry(`id(`name), "Name:"),
 		     `HBox(
@@ -15,25 +15,25 @@ UI::{
     // Wait for user input.
     any button = nil;
 
-    FakeUserInput(`john);
-    FakeUserInput(`paul);
-    FakeUserInput(`george);
-    FakeUserInput(`ringo);
+    UI::FakeUserInput(`john);
+    UI::FakeUserInput(`paul);
+    UI::FakeUserInput(`george);
+    UI::FakeUserInput(`ringo);
 
     // Input loop that only the OK button will leave.
     // The 4 Beatles buttons will just propose a name.
     repeat
     {
-        button = UserInput();
+        button = UI::UserInput();
 
-	if      ( button == `john )	ChangeWidget(`id(`name), `Value, "John Lennon");
-	else if ( button == `paul )	ChangeWidget(`id(`name), `Value, "Paul McCartney");
-	else if ( button == `george )	ChangeWidget(`id(`name), `Value, "George Harrison");
-	else if ( button == `ringo )	ChangeWidget(`id(`name), `Value, "Ringo Starr" );
+	if      ( button == `john )	UI::ChangeWidget(`id(`name), `Value, "John Lennon");
+	else if ( button == `paul )	UI::ChangeWidget(`id(`name), `Value, "Paul McCartney");
+	else if ( button == `george )	UI::ChangeWidget(`id(`name), `Value, "George Harrison");
+	else if ( button == `ringo )	UI::ChangeWidget(`id(`name), `Value, "Ringo Starr" );
 
 	sleep( 3 * 1000 );
 	
     } until ( button == `ok );
 
-    CloseDialog();
+    UI::CloseDialog();
 }

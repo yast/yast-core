@@ -3,20 +3,22 @@
 // Windows partition splitter,
 // this time with two sliders
 
-UI::{
+{
+    textdomain "base";
+
     // Check for availability of required widgets
     
-    if ( ! HasSpecialWidget(`Slider) ||
-	 ! HasSpecialWidget(`BarGraph ) )
+    if ( ! UI::HasSpecialWidget(`Slider) ||
+	 ! UI::HasSpecialWidget(`BarGraph ) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the required special widgets!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -36,7 +38,7 @@ UI::{
 
     // Create the dialog
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VSquash(
 			`VBox(
 			      `HSpacing(50),		// force width
@@ -78,32 +80,34 @@ UI::{
 
     // Event processing loop - left only via the "close" button
     // or the window manager close button / function.
+    any widget = nil;
+                              
     do
     {
-	any widget = UserInput();
+	widget = UI::UserInput();
 
 	if ( widget == `linux_size )
 	{
-	    linux_size = QueryWidget(`id(`linux_size), `Value );
+	    linux_size = (integer) UI::QueryWidget(`id(`linux_size), `Value );
 	    win_free = total_free - linux_size;
-	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
-	    ChangeWidget(`id(`win_free), `Value, win_free );
+	    UI::ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    UI::ChangeWidget(`id(`win_free), `Value, win_free );
 	} else if ( widget == `win_free )
 	{
-	    win_free = QueryWidget(`id(`win_free ), `Value );
+	    win_free = (integer) UI::QueryWidget(`id(`win_free ), `Value );
 	    linux_size = total_free - win_free;
-	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
-	    ChangeWidget(`id(`linux_size), `Value, linux_size );
+	    UI::ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    UI::ChangeWidget(`id(`linux_size), `Value, linux_size );
 	}
 	else if ( widget == `suggest )
 	{
 	    linux_size	= suggested_linux_size;
 	    win_free	= total_free - linux_size;
-	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
-	    ChangeWidget(`id(`linux_size), `Value, linux_size );
-	    ChangeWidget(`id(`win_free), `Value, win_free );
+	    UI::ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    UI::ChangeWidget(`id(`linux_size), `Value, linux_size );
+	    UI::ChangeWidget(`id(`win_free), `Value, win_free );
 	}
     } while ( widget != `close && widget != `cancel );
 	
-    CloseDialog();
+    UI::CloseDialog();
 }

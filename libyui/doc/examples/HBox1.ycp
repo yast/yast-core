@@ -1,11 +1,11 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `HBox(
 		     `PushButton("First" ),
 		     `PushButton("Second"),
 		     `PushButton("Third" )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

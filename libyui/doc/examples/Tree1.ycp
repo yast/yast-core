@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Tree(`id(`dest_dir),
 				   "Select destination directory:",
@@ -62,33 +62,33 @@ UI::{
 
     repeat
 	{
-	    id = UserInput();
+	    id = UI::UserInput();
 
-	    if      ( id == `sel_usr)		ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
-	    else if ( id == `sel_usr_local)	ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
-	    else if ( id == `sel_opt) 		ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
+	    if      ( id == `sel_usr)		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
+	    else if ( id == `sel_usr_local)	UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
+	    else if ( id == `sel_opt) 		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
 	} until ( id == `ok );
 
     // Get the input from the tree.
     //
-    // Notice: The return value of UserInput() does NOT return this value!
+    // Notice: The return value of UI::UserInput() does NOT return this value!
     // Rather, it returns the ID of the widget (normally the PushButton)
-    // that caused UserInput() to return.
-    any dest_dir = QueryWidget(`id(`dest_dir), `CurrentItem);
+    // that caused UI::UserInput() to return.
+    string dest_dir = (string) UI::QueryWidget(`id(`dest_dir), `CurrentItem);
 
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
-    CloseDialog();
+    UI::CloseDialog();
 
 
     // Pop up a new dialog to echo the selection.
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label("Selected destination directory: " + dest_dir),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
 
-    CloseDialog();
+    UI::CloseDialog();
 }

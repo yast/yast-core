@@ -3,48 +3,48 @@
 // Example for multiple dialogs
 
 
-UI::{
-    OpenDialog(`opt(`defaultsize),
+{
+    UI::OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `Label( "Top level dialog" ),
 		     `PushButton(`opt(`default), "OK\nLevel 1" )
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog(`opt(`defaultsize),
+    UI::OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `Label( "Another dialog on top of the previous" ),
 		     `PushButton(`opt(`default), "OK\nLevel 2" )
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog(`opt(`defaultsize),
+    UI::OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `Label( "A third dialog" ),
 		     `PushButton(`opt(`default), "OK\nLevel 3" )
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
 
-    OpenDialog( `VBox(
+    UI::OpenDialog( `VBox(
 		      `Label( "An independent popup dialog" ),
 		      `PushButton(`opt(`default), "OK" )
 		      )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog( `VBox(
+    UI::OpenDialog( `VBox(
 		      `Label( "And another independent popup dialog" ),
 		      `PushButton(`opt(`default), "OK" )
 		      )
 		);
-    UserInput();
+    UI::UserInput();
 
-    CloseDialog(); UserInput();
-    CloseDialog(); UserInput();
-    CloseDialog(); UserInput();
-    CloseDialog(); UserInput();
-    CloseDialog();
+    UI::CloseDialog(); UI::UserInput();
+    UI::CloseDialog(); UI::UserInput();
+    UI::CloseDialog(); UI::UserInput();
+    UI::CloseDialog(); UI::UserInput();
+    UI::CloseDialog();
 }

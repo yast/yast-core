@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `RadioButtonGroup(`id(`rb), 
 				 `VBox(
 				       `Label("How do you want to crash?"),
@@ -17,15 +17,15 @@ UI::{
     
     while (true)
     {
-	any ret = UserInput();
+	any ret = UI::UserInput();
 
 	if ( ret == `close ) break;
 	else if (ret == `next)
 	{
 	    y2milestone("Hit next");
-	    integer current = QueryWidget(`id(`rb), `CurrentButton);
+	    integer current = (integer) UI::QueryWidget(`id(`rb), `CurrentButton);
 	    current = (current + 1) % 4;
-	    ChangeWidget(`id(`rb), `CurrentButton, current);
+	    UI::ChangeWidget(`id(`rb), `CurrentButton, current);
 	}
 	else
 	{
@@ -35,7 +35,7 @@ UI::{
 
     y2milestone("Terminating.");
     
-    CloseDialog();
+    UI::CloseDialog();
 }
 
 					      

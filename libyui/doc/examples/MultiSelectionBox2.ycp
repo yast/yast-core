@@ -1,11 +1,11 @@
-UI::{
+{
     // More realistic MultiSelectionBox example:
     //
     // Items have IDs, some are preselected.
     // Notice 'false' is default anyway for the selection state,
     // so you may or may not explicitly specify that.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox( 
 		     `MultiSelectionBox( "Select pizza toppings:",
 					 [
@@ -19,6 +19,6 @@ UI::{
 		     `PushButton( `opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

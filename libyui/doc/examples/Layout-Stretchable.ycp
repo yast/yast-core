@@ -1,4 +1,4 @@
-UI::{
+{
     // Layout example:
     //
     // Build a dialog with three widgets without any weights.
@@ -14,7 +14,7 @@ UI::{
     // (generally) of equal size!
     //
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `HBox(
 		     `PushButton( `opt(`hstretch, `default), "I am stretchable" ),
 		     `PushButton( "I am not"  ),
@@ -22,7 +22,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

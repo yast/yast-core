@@ -1,14 +1,14 @@
-UI::{
-    if ( ! HasSpecialWidget(`DownloadProgress) )
+{
+    if ( ! UI::HasSpecialWidget(`DownloadProgress) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the DownloadProgress widget!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
@@ -17,13 +17,13 @@ UI::{
     // string  filename = "/var/log/y2log";
     integer expected_size = 20 * 1024;
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `DownloadProgress("YaST2 log file", filename, expected_size ),
 		     `HSpacing(50), // force width
 		     `PushButton(`opt(`default), "&Close")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

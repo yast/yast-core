@@ -1,12 +1,12 @@
-UI::{
+{
     // Build a dialog with one button.
     // Wait until that button is clicked,
     // then close the dialog and terminate.
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `PushButton( "&OK" )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

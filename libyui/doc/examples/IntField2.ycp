@@ -1,20 +1,20 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `IntField( `id(`perc), "Percentage:", 0, 100, 50),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
     
-    integer percentage = QueryWidget(`id(`perc), `Value);
-    CloseDialog();
+    integer percentage = (integer) UI::QueryWidget(`id(`perc), `Value);
+    UI::CloseDialog();
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Label( sformat( "You entered: %1%%", percentage) ),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
+    UI::UserInput();
 }

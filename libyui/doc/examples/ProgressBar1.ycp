@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `ProgressBar(`id(`pr), "This is a progressbar", 4, 0), // 4 steps
 		     `PushButton("Next")
@@ -10,11 +10,11 @@ UI::{
     
     while (prog < 4) 
     {
-	UserInput();
+	UI::UserInput();
 	prog = prog + 1;
-	ChangeWidget(`id(`pr), `Value, prog);
-	ChangeWidget(`id(`pr), `Label, sformat("Progress %1 out of 4", prog));
+	UI::ChangeWidget(`id(`pr), `Value, prog);
+	UI::ChangeWidget(`id(`pr), `Label, sformat("Progress %1 out of 4", prog));
     }
     
-    CloseDialog();
+    UI::CloseDialog();
 }

@@ -1,4 +1,4 @@
-UI::{
+{
     // Demo for automatically generated shortcuts.
     //
     // This is a more realistic example - it points out how the `autoShortcut
@@ -25,7 +25,7 @@ UI::{
 
     y2milestone( "radio_box: %1", radio_box );
 
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `RadioButtonGroup(
 				       `Frame( "Software Selection",
@@ -36,7 +36,7 @@ UI::{
 		     )
 	       );
 
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }
 

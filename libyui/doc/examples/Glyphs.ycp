@@ -1,15 +1,15 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `Heading( "Glyphs" ),
-		     `Left( `Label( Glyph(`ArrowLeft		) + " ArrowLeft"	) ),
-		     `Left( `Label( Glyph(`ArrowRight		) + " ArrowRight"	) ),
-		     `Left( `Label( Glyph(`ArrowUp		) + " ArrowUp"		) ),
-		     `Left( `Label( Glyph(`ArrowDown		) + " ArrowDown"	) ),
-		     `Left( `Label( Glyph(`CheckMark		) + " CheckMark"	) ),
-		     `Left( `Label( Glyph(`BulletArrowRight	) + " BulletArrowRight"	) ),
-		     `Left( `Label( Glyph(`BulletCircle		) + " BulletCircle"	) ),
-		     `Left( `Label( Glyph(`BulletSquare		) + " BulletSquare"	) ),
+		     `Left( `Label( UI::Glyph(`ArrowLeft		) + " ArrowLeft"	) ),
+		     `Left( `Label( UI::Glyph(`ArrowRight		) + " ArrowRight"	) ),
+		     `Left( `Label( UI::Glyph(`ArrowUp		) + " ArrowUp"		) ),
+		     `Left( `Label( UI::Glyph(`ArrowDown		) + " ArrowDown"	) ),
+		     `Left( `Label( UI::Glyph(`CheckMark		) + " CheckMark"	) ),
+		     `Left( `Label( UI::Glyph(`BulletArrowRight	) + " BulletArrowRight"	) ),
+		     `Left( `Label( UI::Glyph(`BulletCircle		) + " BulletCircle"	) ),
+		     `Left( `Label( UI::Glyph(`BulletSquare		) + " BulletSquare"	) ),
 		     `VSpacing(),
 		     `Left( `Label( "If you see only question marks,\n"+
 				    "maybe you forgot to start this example\n" +
@@ -18,6 +18,6 @@ UI::{
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

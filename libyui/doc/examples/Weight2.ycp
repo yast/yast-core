@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog(
+{
+    UI::OpenDialog(
 	       `VBox(
 		     `HBox(
 			   `HWeight(1, `PushButton(`opt(`hstretch), "Weight 1")),
@@ -22,6 +22,6 @@ UI::{
 			   )
 		     )
 	       );
-    UserInput();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
 }

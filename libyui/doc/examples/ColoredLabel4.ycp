@@ -2,22 +2,22 @@
  * Advanced ColoredLabel example: A sample ColoredLabel widget and sliders
  * for both foreground and background colors and a colored label beside each slider.
  **/
-UI::{
-    if ( ! HasSpecialWidget(`ColoredLabel) || ! HasSpecialWidget(`Slider) )
+{
+    if ( ! UI::HasSpecialWidget(`ColoredLabel) || ! UI::HasSpecialWidget(`Slider) )
     {
-	OpenDialog(
+	UI::OpenDialog(
 		   `VBox( 
 			 `Label("Error: This UI doesn't support the required special widgets!"),
 			 `PushButton(`opt(`default), "&OK")
 			 )
 		   );
-	UserInput();
-	CloseDialog();
+	UI::UserInput();
+	UI::CloseDialog();
 	
 	return;
     }
 
-    define void sample( integer fg_red, integer fg_green, integer fg_blue,
+    define term sample( integer fg_red, integer fg_green, integer fg_blue,
 			integer bg_red, integer bg_green, integer bg_blue ) ``{
 	return `ColoredLabel( `opt(`hstretch),
 			      "Use the sliders\nto change color",
@@ -26,7 +26,7 @@ UI::{
 			      30 );
     };
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `ReplacePoint(`id(`sample), sample( 200, 0, 0,
 							 0, 0, 200) ),
@@ -77,22 +77,22 @@ UI::{
 		     )
 	       );
 
-    symbol widget = nil;
+    any widget = nil;
 
     do
     {
-	widget = UserInput();
+	widget = UI::UserInput();
 
 	if ( widget != `close )
 	{
-	    ReplaceWidget(`id(`sample),
-			  sample( QueryWidget(`id(`fg_red  ), `Value ),
-				  QueryWidget(`id(`fg_green), `Value ),
-				  QueryWidget(`id(`fg_blue ), `Value ),
+	    UI::ReplaceWidget(`id(`sample),
+			  sample( (integer) UI::QueryWidget(`id(`fg_red  ), `Value ),
+				  (integer) UI::QueryWidget(`id(`fg_green), `Value ),
+				  (integer) UI::QueryWidget(`id(`fg_blue ), `Value ),
 				  
-				  QueryWidget(`id(`bg_red  ), `Value ),
-				  QueryWidget(`id(`bg_green), `Value ),
-				  QueryWidget(`id(`bg_blue ), `Value )
+				  (integer) UI::QueryWidget(`id(`bg_red  ), `Value ),
+				  (integer) UI::QueryWidget(`id(`bg_green), `Value ),
+				  (integer) UI::QueryWidget(`id(`bg_blue ), `Value )
 				  )
 			  );
 
@@ -100,5 +100,5 @@ UI::{
 	
     } while ( widget != `close );
     
-    CloseDialog();
+    UI::CloseDialog();
 }

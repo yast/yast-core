@@ -1,5 +1,5 @@
-UI::{
-    OpenDialog( `opt( `decorated ),
+{
+    UI::OpenDialog( `opt( `decorated ),
 		`VBox( 
 		      `Label("This Dialog is decorated.\n\n"
 			     + "You might not see a difference\n"
@@ -8,9 +8,9 @@ UI::{
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog( `opt( `warncolor ),
+    UI::OpenDialog( `opt( `warncolor ),
 		`VBox( 
 		      `Heading("This is a warning dialog."),
 		      `RichText("This should even work with multi line rich texts. "
@@ -19,16 +19,16 @@ UI::{
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
+    UI::UserInput();
     
-    OpenDialog( `opt( `warncolor, `decorated ),
+    UI::OpenDialog( `opt( `warncolor, `decorated ),
 		`VBox( 
 		      `Heading("This is a decorated warning dialog."),
 		      `PushButton("&OK")
 		      )
 		);
-    UserInput();
-    CloseDialog();
-    CloseDialog();
-    CloseDialog();
+    UI::UserInput();
+    UI::CloseDialog();
+    UI::CloseDialog();
+    UI::CloseDialog();
 }

@@ -1,14 +1,14 @@
-UI::{
+{
     // Build a dialog with a tree for directory selection, three
     // buttons with common values and a label that directly echoes any
     // selected directory.
     //
     // The tree in this example uses the `notify option that makes
-    // UserInput() return immediately as soon as the user selects a
+    // UI::UserInput() return immediately as soon as the user selects a
     // tree item rather than the default behaviour which waits for the
     // user to activate a button.
     
-    OpenDialog(
+    UI::OpenDialog(
 	       `VBox(
 		     `Tree(`id(`dest_dir),
 			   `opt(`notify),
@@ -76,22 +76,22 @@ UI::{
 
     repeat
 	{
-	    id = UserInput();
+	    id = UI::UserInput();
 
-	    if      ( id == `sel_usr)		ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
-	    else if ( id == `sel_usr_local)	ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
-	    else if ( id == `sel_opt) 		ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
+	    if      ( id == `sel_usr)		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
+	    else if ( id == `sel_usr_local)	UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
+	    else if ( id == `sel_opt) 		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
 	    else if ( id == `dest_dir)
 	    {
-		ChangeWidget( `id( `echo ), `Value, "hello");
-		symbol current_dir = QueryWidget(`id(`dest_dir), `CurrentItem);
-		ChangeWidget( `id( `echo ), `Value, current_dir);
+		UI::ChangeWidget( `id( `echo ), `Value, "hello");
+		symbol current_dir = (symbol) UI::QueryWidget(`id(`dest_dir), `CurrentItem);
+		UI::ChangeWidget( `id( `echo ), `Value, current_dir);
 	    }
 	} until ( id == `ok );
 
 
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
-    CloseDialog();
+    UI::CloseDialog();
 
 }
