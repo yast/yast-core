@@ -148,6 +148,9 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue CallbackStartPackage (const YCPString& func);
 	YCPValue CallbackProgressPackage (const YCPString& func);
 	YCPValue CallbackDonePackage (const YCPString& func);
+	YCPValue CallbackStartDownload (const YCPString& func);
+	YCPValue CallbackProgressDownload (const YCPString& func);
+	YCPValue CallbackDoneDownload (const YCPString& func);
 	YCPValue CallbackMediaChange (const YCPString& func);
 	YCPValue CallbackSourceChange (const YCPString& func);
 	YCPValue CallbackYouProgress (const YCPString& func);
@@ -291,6 +294,9 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, CallbackStartPackage, 	"void (string)",String,		PkgModuleFunctions, CallbackStartPackage);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressPackage, "void (string)",String,		PkgModuleFunctions, CallbackProgressPackage);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackDonePackage, 	"void (string)",String,		PkgModuleFunctions, CallbackDonePackage);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackStartDownload, 	"void (string)",String,		PkgModuleFunctions, CallbackStartDownload);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressDownload,"void (string)",String,		PkgModuleFunctions, CallbackProgressDownload);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackDoneDownload, 	"void (string)",String,		PkgModuleFunctions, CallbackDoneDownload);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackMediaChange, 	"void (string)",String,		PkgModuleFunctions, CallbackMediaChange);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackSourceChange, 	"void (string)",String, 	PkgModuleFunctions, CallbackSourceChange);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouProgress, 	"void (string)",String,		PkgModuleFunctions, CallbackYouProgress);

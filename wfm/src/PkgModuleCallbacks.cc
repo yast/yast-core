@@ -585,6 +585,50 @@ namespace Y2PMRecipients {
   };
 
   ///////////////////////////////////////////////////////////////////
+  // MediaCallbacks::DownloadProgressCallback
+  ///////////////////////////////////////////////////////////////////
+  struct DownloadProgressReceive : public Recipient, public MediaCallbacks::DownloadProgressCallback
+  {
+    DownloadProgressReceive( RecipientCtl & construct_r ) : Recipient( construct_r ) {}
+
+    ProgressCounter _pc;
+
+    virtual void reportbegin() {
+      _pc.reset();
+    }
+    virtual void reportend()   {
+    }
+    virtual void start( const Url & url_r, const Pathname & localpath_r ) {
+      CB callback( ycpcb( YCPCallbacks::CB_StartDownload ) );
+      if ( callback._set ) {
+	callback.addStr( url_r );
+	callback.addStr( localpath_r );
+	callback.evaluate();
+      }
+    }
+    virtual void progress( const ProgressData & prg ) {
+      CB callback( ycpcb( YCPCallbacks::CB_ProgressDownload ) );
+      if ( callback._set ) {
+	_pc = prg;
+	if ( _pc.updateIfNewPercent() ) {
+	  // report changed values
+	  callback.addInt( _pc.percent() );
+	  callback.addInt( _pc.max() );
+	  callback.evaluate();
+	}
+      }
+    }
+    virtual void stop( PMError error ) {
+      CB callback( ycpcb( YCPCallbacks::CB_DoneDownload ) );
+      if ( callback._set ) {
+	callback.addInt( error );
+	callback.addStr( error.errstr() );
+	callback.evaluate();
+      }
+    }
+  };
+
+  ///////////////////////////////////////////////////////////////////
   // InstYou::Callbacks
   ///////////////////////////////////////////////////////////////////
   //
@@ -721,6 +765,9 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
     // InstSrcManagerCallbacks
     Y2PMRecipients::MediaChangeReceive _mediaChangeReceive;
 
+    // MediaCallbacks
+    Y2PMRecipients::DownloadProgressReceive _downloadProgressReceive;
+
     // YouCallbacks
     Y2PMRecipients::YouReceive _youReceive;
 
@@ -742,6 +789,7 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
       , _commitInstallReceive( *this )
       , _commitRemoveReceive( *this )
       , _mediaChangeReceive( *this )
+      , _downloadProgressReceive( *this )
       , _youReceive( *this )
     {
       RpmDbCallbacks::convertDbReport.redirectTo( _convertDbReceive );
@@ -757,6 +805,8 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
       Y2PMCallbacks::commitRemoveReport.redirectTo( _commitRemoveReceive );
 
       InstSrcManagerCallbacks::mediaChangeReport.redirectTo( _mediaChangeReceive );
+
+      MediaCallbacks::downloadProgressReport.redirectTo( _downloadProgressReceive );
 
       // YOU is still special. Does not trigger via Report.
       InstYou::setCallbacks( &_youReceive );
@@ -777,6 +827,8 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
       Y2PMCallbacks::commitRemoveReport.redirectTo( 0 );
 
       InstSrcManagerCallbacks::mediaChangeReport.redirectTo( 0 );
+
+      MediaCallbacks::downloadProgressReport.redirectTo( 0 );
 
       // YOU is still special. Does not Trigger via Report.
       InstYou::setCallbacks( 0 );
@@ -843,6 +895,16 @@ YCPValue PkgModuleFunctions::CallbackProgressPackage( const YCPString& args ) {
 }
 YCPValue PkgModuleFunctions::CallbackDonePackage( const YCPString& args ) {
   return SET_YCP_CB( CB_DonePackage, args );
+}
+
+YCPValue PkgModuleFunctions::CallbackStartDownload( const YCPString& args ) {
+  return SET_YCP_CB( CB_StartDownload, args );
+}
+YCPValue PkgModuleFunctions::CallbackProgressDownload( const YCPString& args ) {
+  return SET_YCP_CB( CB_ProgressDownload, args );
+}
+YCPValue PkgModuleFunctions::CallbackDoneDownload( const YCPString& args ) {
+  return SET_YCP_CB( CB_DoneDownload, args );
 }
 
 YCPValue PkgModuleFunctions::CallbackMediaChange( const YCPString& args ) {

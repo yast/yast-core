@@ -195,6 +195,9 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 127,	Pkg, PkgGetLicensesToConfirm);
     REGISTERFUNCTIONCALL  ( 128,	Pkg, PkgSolveCheckTargetOnly);
     REGISTERFUNCTIONCALL2 ( 129,	Pkg, PkgGetFilelist);
+    REGISTERFUNCTIONCALL1 ( 130,	Pkg, CallbackStartDownload);
+    REGISTERFUNCTIONCALL1 ( 131,	Pkg, CallbackProgressDownload);
+    REGISTERFUNCTIONCALL1 ( 132,	Pkg, CallbackDoneDownload);
 }
 
 ///////////////////////////////////////////////////////////////////

@@ -1,7 +1,15 @@
 -------------------------------------------------------------------
+Tue Mar 16 23:57:59 CET 2004 - ma@suse.de
+
+- Added Pkg::CallbackStartDownload, Pkg::CallbackProgressDownload
+  and Pkg::CallbackDoneDownload. Triggered from y2pm when downloading
+  files via ftp/http.
+- 2.9.61
+
+-------------------------------------------------------------------
 Mon Mar 15 16:26:54 CET 2004 - visnov@suse.cz
 
-- 2.9.60 
+- 2.9.60
 
 -------------------------------------------------------------------
 Sun Mar 14 22:13:18 CET 2004 - kkaempf@suse.de
@@ -14,7 +22,7 @@ Sun Mar 14 22:13:18 CET 2004 - kkaempf@suse.de
 -------------------------------------------------------------------
 Fri Mar 12 23:21:53 CET 2004 - sh@suse.de
 
-- Fixed non-const reference to const ref for all widget constructors 
+- Fixed non-const reference to const ref for all widget constructors
 
 -------------------------------------------------------------------
 Fri Mar 12 17:43:25 CET 2004 - kkaempf@suse.de
@@ -25,7 +33,7 @@ Fri Mar 12 17:43:25 CET 2004 - kkaempf@suse.de
 Fri Mar 12 12:20:54 CET 2004 - visnov@suse.cz
 
 - drop unneeded type info
-- 2.9.58 
+- 2.9.58
 
 -------------------------------------------------------------------
 Thu Mar 11 22:29:27 CET 2004 - ma@suse.de

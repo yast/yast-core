@@ -28,6 +28,7 @@
 #include <y2util/stringutil.h>
 #include <y2util/Date.h>
 #include <y2util/FSize.h>
+#include <y2util/Url.h>
 #include <y2util/Pathname.h>
 
 #include <y2/Y2ComponentBroker.h>
@@ -72,6 +73,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
       CB_StartConvertDb, CB_ProgressConvertDb, CB_NotifyConvertDb, CB_StopConvertDb,
       CB_StartProvide, CB_ProgressProvide, CB_DoneProvide,
       CB_StartPackage, CB_ProgressPackage, CB_DonePackage,
+      CB_StartDownload, CB_ProgressDownload, CB_DoneDownload,
       CB_MediaChange,
       CB_SourceChange,
       CB_YouProgress,
@@ -105,6 +107,9 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	ENUM_OUT( StartPackage );
 	ENUM_OUT( ProgressPackage );
 	ENUM_OUT( DonePackage );
+	ENUM_OUT( StartDownload );
+	ENUM_OUT( ProgressDownload );
+	ENUM_OUT( DoneDownload );
 	ENUM_OUT( MediaChange );
 	ENUM_OUT( SourceChange );
 	ENUM_OUT( YouProgress );
@@ -176,7 +181,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
                  c, module.c_str (), symbol.c_str ());
 	  return;
         }
-	
+
 	// ensure it is an initialized namespace
 	ns->initialize ();
 
@@ -290,6 +295,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
 	  CB & addStr( const string & arg ) { if (_func != NULL) _func->appendParameter( YCPString( arg ) ); return *this; }
 	  CB & addStr( const Pathname & arg ) { return addStr( arg.asString() ); }
+	  CB & addStr( const Url & arg ) { return addStr( arg.asString() ); }
 
 	  CB & addInt( long long arg ) { if (_func != NULL) _func->appendParameter( YCPInteger( arg ) ); return *this; }
 
