@@ -35,7 +35,7 @@
     list<map> steps = flatten( [ base_installation_steps, config_steps ] );
     */
 
-    string mode = "update";
+    string mode = "installation";
     list<map> steps = flatten( [ ProductControl::getModules("initial", mode) , ProductControl::getModules("continue", mode) ] );
     steps = filter(map s, steps, ``(s["label"]:""!=""));
 
@@ -50,9 +50,11 @@
 				`Heading( "Current workflow step:" ),
 				`VSpacing(0.5),
 				`Label( "ID: " +  current_id ),
-                                `Label( "Command: " + command)
+                                `Label( "Command: " + command),
+                                `PushButton(`id(`switch), "Switch Test")
 				) );
 	UI::WizardCommand(`SetCurrentStep( current_id ) );
+        ProductControl::CurrentWizardStep = current_id;
     };
 
     if ( ! UI::HasSpecialWidget(`Wizard) )
@@ -80,6 +82,8 @@
     UI::WizardCommand(`SetHelpText( help_text ) );
 
     list<map> stagemode = [$["stage":"initial","mode":mode], $["stage":"continue","mode":mode]];
+    string switchmode = "update";
+    list<map> stagemode2 = [$["stage":"initial","mode":switchmode], $["stage":"continue","mode":switchmode]];
     ProductControl::AddWizardSteps(stagemode);
 
 
@@ -90,6 +94,10 @@
     {
 	symbol button = (symbol) UI::UserInput();
 
+        if (button == `switch )
+        {
+            ProductControl::UpdateWizardSteps(stagemode2);
+        }
 	if ( button == `abort )
 	    break;
 
