@@ -19,7 +19,7 @@
 
 #include "YSpacing.h"
 
-YSpacing::YSpacing( YWidgetOpt &opt, float size, bool horizontal, bool vertical)
+YSpacing::YSpacing( YWidgetOpt & opt, float size, bool horizontal, bool vertical)
     : YWidget( opt)
 {
     relativeSize[YD_HORIZ] = horizontal ? size : 0.0;

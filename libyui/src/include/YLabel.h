@@ -34,7 +34,7 @@ public:
      * Creates a new new label
      * @param text the initial text of the label
      */
-    YLabel( YWidgetOpt &opt, YCPString text);
+    YLabel( YWidgetOpt & opt, YCPString text);
 
     /**
      * Returns a descriptive name of this widget class for logging,

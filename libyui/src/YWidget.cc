@@ -33,7 +33,7 @@
 int YWidget::next_internal_widget_id = 0;
 
 
-YWidget::YWidget( YWidgetOpt &opt)
+YWidget::YWidget( YWidgetOpt & opt)
     : magic( YWIDGET_MAGIC)
     , user_widget_id( YCPNull())
     , yparent( 0)
@@ -72,7 +72,7 @@ YWidget::~YWidget( )
 }
 
 
-void YWidget::setId( const YCPValue &id)
+void YWidget::setId( const YCPValue & id)
 {
     user_widget_id = id;
 }
@@ -197,7 +197,7 @@ YCPValue YWidget::queryWidget( const YCPSymbol & property)
 }
 
 
-YCPValue YWidget::queryWidget( const YCPTerm &property)
+YCPValue YWidget::queryWidget( const YCPTerm & property)
 {
     y2warning( "Widget %s: Couldn't query unkown widget property %s",
 	      id( )->toString().c_str(), property->toString( ).c_str());

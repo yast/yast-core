@@ -20,7 +20,7 @@
 
 #include "YEmpty.h"
 
-YEmpty::YEmpty( YWidgetOpt &opt)
+YEmpty::YEmpty( YWidgetOpt & opt)
     :YWidget( opt)
 {
 }

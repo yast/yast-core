@@ -157,8 +157,8 @@ void YUIInterpreter::topmostConstructorHasFinished( )
 void YUIInterpreter::createUIThread( )
 {
     pthread_attr_t attr;
-    pthread_attr_init( &attr);
-    pthread_create( &ui_thread, &attr, start_ui_thread, this);
+    pthread_attr_init( & attr);
+    pthread_create( & ui_thread, & attr, start_ui_thread, this);
 }
 
 
@@ -175,7 +175,7 @@ void YUIInterpreter::terminateUIThread( )
 void YUIInterpreter::signalUIThread( )
 {
     static char arbitrary = 42;
-    write ( pipe_to_ui[1], &arbitrary, 1);
+    write ( pipe_to_ui[1], & arbitrary, 1);
 
 #ifdef VERBOSE_COMM
     y2debug( "Wrote byte to ui thread %d", pipe_to_ui[1]);
@@ -192,7 +192,7 @@ bool YUIInterpreter::waitForUIThread ( )
 #ifdef VERBOSE_COMM
 	y2debug ( "Waiting for ui thread...");
 #endif
-	res = read( pipe_from_ui[0], &arbitrary, 1 );
+	res = read( pipe_from_ui[0], & arbitrary, 1 );
 	if ( res == -1 )
 	{
 	    if ( errno == EINTR || errno == EAGAIN )
@@ -214,7 +214,7 @@ bool YUIInterpreter::waitForUIThread ( )
 void YUIInterpreter::signalYCPThread( )
 {
     static char arbitrary;
-    write( pipe_from_ui[1], &arbitrary, 1);
+    write( pipe_from_ui[1], & arbitrary, 1);
 
 #ifdef VERBOSE_COMM
     y2debug( "Wrote byte to ycp thread %d", pipe_from_ui[1]);
@@ -231,7 +231,7 @@ bool YUIInterpreter::waitForYCPThread( )
 #ifdef VERBOSE_COMM
 	y2debug ( "Waiting for ycp thread...");
 #endif
-	res = read( pipe_to_ui[0], &arbitrary, 1 );
+	res = read( pipe_to_ui[0], & arbitrary, 1 );
 	if ( res == -1)
 	{
 	    if ( errno == EINTR || errno == EAGAIN )
@@ -488,10 +488,10 @@ void YUIInterpreter::idleLoop( int fd_ycp)
 {
     // Just wait for fd_ycp to become readable
     fd_set fdset;
-    FD_ZERO( &fdset);
-    FD_SET( fd_ycp, &fdset);
+    FD_ZERO( & fdset);
+    FD_SET( fd_ycp, & fdset);
     // FIXME: check for EINTR
-    select( fd_ycp+1, &fdset, 0, 0, 0);
+    select( fd_ycp+1, & fdset, 0, 0, 0);
 }
 
 
@@ -516,10 +516,10 @@ YWidget *YUIInterpreter::userInput( YDialog *, EventType *event)
 bool YUIInterpreter::waitForEvent( int fd_ycp)
 {
     fd_set fdset;
-    FD_ZERO( &fdset);
-    FD_SET( fd_ycp, &fdset);
+    FD_ZERO( & fdset);
+    FD_SET( fd_ycp, & fdset);
     // FIXME: check for EINTR
-    select( fd_ycp+1, &fdset, 0, 0, 0);
+    select( fd_ycp+1, & fdset, 0, 0, 0);
     return false;
 }
 

@@ -32,7 +32,7 @@ public:
     /**
      * Constructor
      */
-    YFrame( YWidgetOpt &opt, const YCPString &label );
+    YFrame( YWidgetOpt & opt, const YCPString & label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

@@ -33,7 +33,7 @@ public:
     /**
      * Constructor
      */
-    YEmpty( YWidgetOpt &opt);
+    YEmpty( YWidgetOpt & opt);
 
     /**
      * Returns a descriptive name of this widget class for logging,

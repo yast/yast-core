@@ -28,7 +28,7 @@
 #include "YMultiSelectionBox.h"
 
 
-YMultiSelectionBox::YMultiSelectionBox( YWidgetOpt &opt, YCPString label)
+YMultiSelectionBox::YMultiSelectionBox( YWidgetOpt & opt, YCPString label)
     : YWidget( opt)
     , label( label)
 {
@@ -156,7 +156,7 @@ YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property)
 }
 
 
-void YMultiSelectionBox::setLabel( const YCPString &label )
+void YMultiSelectionBox::setLabel( const YCPString & label )
 {
     this->label = label;
 }
@@ -193,7 +193,7 @@ void YMultiSelectionBox::deleteAllItems( )
 }
 
 
-int YMultiSelectionBox::itemWithId( const YCPValue &id, bool report_error)
+int YMultiSelectionBox::itemWithId( const YCPValue & id, bool report_error)
 {
     for ( int i=0; i < numItems( ); i++ )
     {

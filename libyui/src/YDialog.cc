@@ -24,7 +24,7 @@
 #include "YShortcutManager.h"
 
 
-YDialog::YDialog( YWidgetOpt &opt)
+YDialog::YDialog( YWidgetOpt & opt)
     : YContainerWidget( opt)
 {
     _hasDefaultSize.setValue( opt.hasDefaultSize.value());

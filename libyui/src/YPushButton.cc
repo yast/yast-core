@@ -27,7 +27,7 @@
 #include "YPushButton.h"
 
 
-YPushButton::YPushButton( YWidgetOpt &opt, YCPString label)
+YPushButton::YPushButton( YWidgetOpt & opt, YCPString label)
     : YWidget( opt)
     , label( label)
 {
@@ -36,7 +36,7 @@ YPushButton::YPushButton( YWidgetOpt &opt, YCPString label)
 
 
 
-void YPushButton::setLabel( const YCPString &label)
+void YPushButton::setLabel( const YCPString & label)
 {
     this->label = label;
 }

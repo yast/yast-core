@@ -28,10 +28,10 @@
 
 /**
  * @short Template class for tree items that can handle tree children in a
- * generic way - firstChild( ), next( ) and parent( ). Each item stores one value
+ * generic way - firstChild(), next() and parent(). Each item stores one value
  * of type 'PAYLOAD'.
  *
- * Class 'PAYLOAD' needs to provide operator=( ).
+ * Class 'PAYLOAD' needs to provide operator=().
  **/
 template<class PAYLOAD> class TreeItem
 {
@@ -39,7 +39,7 @@ public:
 
     /**
      * Constructor. Creates a new tree item with value "val" and inserts it
-     * ( without maintaining any meaningful sort order!) into the children list
+     * ( without maintaining any meaningful sort order! ) into the children list
      * of "parent".
      **/
     TreeItem<PAYLOAD> ( const PAYLOAD &		val,
@@ -77,7 +77,7 @@ protected:
     
 private:
     /**
-     * Private ( i.e. disabled) copy constructor and operator=( )
+     * Private ( i.e. disabled ) copy constructor and operator=()
      * - neither makes any sense with this class.
      **/
     TreeItem<PAYLOAD>             ( const TreeItem<PAYLOAD> & ) {}
@@ -90,14 +90,14 @@ public:
      * Destructor. Takes care of children - they will be deleted along with
      * this item.
      **/
-    virtual ~TreeItem<PAYLOAD> ( )
+    virtual ~TreeItem<PAYLOAD> ()
     {
-	TreeItem<PAYLOAD> * child = firstChild( );
+	TreeItem<PAYLOAD> * child = firstChild();
 
 	while ( child )
 	{
 	    TreeItem<PAYLOAD> * lastChild = child;
-	    child = child->next( );
+	    child = child->next();
 	    delete lastChild;
 	}
     }
@@ -106,7 +106,7 @@ public:
     /**
      * Returns this item's value, the "payload".
      **/
-    const PAYLOAD & value( ) const { return _value; }
+    const PAYLOAD & value() const { return _value; }
 
     /**
      * Set this item's value, the "payload".
@@ -120,17 +120,17 @@ public:
     /**
      * Returns this item's parent or 0 if there is none.
      **/
-    TreeItem<PAYLOAD> * 	parent( ) 	const { return _parent; 	}
+    TreeItem<PAYLOAD> * 	parent() 	const { return _parent; 	}
 
     /**
      * Returns this item's next sibling or 0 if there is none.
      **/
-    TreeItem<PAYLOAD> * 	next( ) 		const { return _next; 		}
+    TreeItem<PAYLOAD> * 	next() 		const { return _next; 		}
 
     /**
      * Returns this item's first child or 0 if there is none.
      **/
-    TreeItem<PAYLOAD> * 	firstChild( )	const { return _firstChild;	}
+    TreeItem<PAYLOAD> * 	firstChild()	const { return _firstChild;	}
 
     /**
      * Sets this item's parent.
@@ -155,14 +155,14 @@ public:
      *
      * This default method does not maintain any meaningful sorting order -
      * derived classes that require this might want to use the other
-     * constructor ( with 'autoAddChild' set to 'false') take care of child
+     * constructor ( with 'autoAddChild' set to 'false' ) take care of child
      * insertion themselves.
      **/
     void addChild( TreeItem<PAYLOAD> * newChild )
     {
 	if ( newChild )
 	{
-	    newChild->setNext( firstChild( ) );
+	    newChild->setNext( firstChild() );
 	    setFirstChild( newChild );
 	}
     }
@@ -181,7 +181,7 @@ protected:
 /**
  * @short Template class for tree items that maintain sort order.
  *
- * Class 'PAYLOAD' to provide operator<( ) in addition to what template
+ * Class 'PAYLOAD' to provide operator<() in addition to what template
  *'TreeItem' requires.
  **/
 template<class PAYLOAD> class SortedTreeItem: public TreeItem<PAYLOAD>
@@ -213,7 +213,7 @@ public:
     /**
      * Destructor.
      **/
-    virtual ~SortedTreeItem<PAYLOAD> ( ) {}
+    virtual ~SortedTreeItem<PAYLOAD> () {}
 
     
     /**
@@ -225,30 +225,30 @@ public:
 	if ( ! newChild )
 	    return;
 
-	if ( ! firstChild( ) ||
-	     newChild->value( ) < firstChild( )->value() )
+	if ( ! firstChild() ||
+	     newChild->value() < firstChild()->value() )
 	{
 	    // Insert as first child
 
-	    newChild->setNext( firstChild( ) );
+	    newChild->setNext( firstChild() );
 	    setFirstChild( newChild );
 	}
 	else
 	{
 	    // Search correct place to insert
 
-	    TreeItem<PAYLOAD> * child = firstChild( );
+	    TreeItem<PAYLOAD> * child = firstChild();
 
-	    while ( child->next( ) &&
-		    child->next( )->value() < newChild->value( ) )
+	    while ( child->next() &&
+		    child->next()->value() < newChild->value() )
 	    {
-		child = child->next( );
+		child = child->next();
 	    }
 
 
 	    // Insert after 'child'
 
-	    newChild->setNext( child->next( ) );
+	    newChild->setNext( child->next() );
 	    child->setNext( newChild );
 	}
     }
@@ -257,26 +257,26 @@ public:
     /**
      * Returns this item's parent or 0 if there is none.
      **/
-    SortedTreeItem<PAYLOAD> * 	parent( ) 	const
-	{ return ( SortedTreeItem<PAYLOAD> *) _parent; 	}
+    SortedTreeItem<PAYLOAD> * 	parent() 	const
+	{ return ( SortedTreeItem<PAYLOAD> * ) _parent; 	}
 
     /**
      * Returns this item's next sibling or 0 if there is none.
      **/
-    SortedTreeItem<PAYLOAD> * 	next( ) 		const
-	{ return ( SortedTreeItem<PAYLOAD> *) _next; 	}
+    SortedTreeItem<PAYLOAD> * 	next() 		const
+	{ return ( SortedTreeItem<PAYLOAD> * ) _next; 	}
 
     /**
      * Returns this item's first child or 0 if there is none.
      **/
-    SortedTreeItem<PAYLOAD> * 	firstChild( )	const
-	{ return ( SortedTreeItem<PAYLOAD> *) _firstChild; }
+    SortedTreeItem<PAYLOAD> * 	firstChild()	const
+	{ return ( SortedTreeItem<PAYLOAD> * ) _firstChild; }
     
     
 private:
     
     /**
-     * Private ( i.e. disabled) copy constructor and operator=( )
+     * Private ( i.e. disabled ) copy constructor and operator=()
      * - neither makes any sense with this class.
      **/
     SortedTreeItem<PAYLOAD>             ( const SortedTreeItem<PAYLOAD> & ) {}
@@ -286,21 +286,21 @@ private:
 
 
 /**
- * Find a direct child ( i.e., non-recursive) with value "searchVal".
+ * Find a direct child ( i.e., non-recursive ) with value "searchVal".
  * Returns 0 if there is no such child.
  **/
 template<class ITEM, class PAYLOAD> inline
 ITEM *
 findDirectChild( ITEM * item, PAYLOAD searchVal )
 {
-    TreeItem<PAYLOAD> * child = item->firstChild( );
+    TreeItem<PAYLOAD> * child = item->firstChild();
 
     while ( child )
     {
-	if ( child->value( ) == searchVal )
-	    return dynamic_cast<ITEM *> ( child);
+	if ( child->value() == searchVal )
+	    return dynamic_cast<ITEM *> ( child );
 
-	child = child->next( );
+	child = child->next();
     }
 
     return 0;

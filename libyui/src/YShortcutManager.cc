@@ -59,7 +59,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
     // Count wanted shortcuts
     for ( unsigned i=0; i < _shortcutList.size( ); i++ )
-	_wanted[ _shortcutList[i]->preferred( ) ]++;
+	_wanted[ (int) _shortcutList[i]->preferred( ) ]++;
 
 
     // Report errors
@@ -72,7 +72,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 	if ( YShortcut::isValid( shortcut->preferred( ) ) )
 	{
-	    if ( _wanted[ shortcut->preferred( ) ] > 1 )	// shortcut char used more than once
+	    if ( _wanted[ (int) shortcut->preferred( ) ] > 1 )	// shortcut char used more than once
 	    {
 		shortcut->setConflict( );
 		_conflictCount++;
@@ -100,7 +100,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 	if ( ! shortcut->conflict( ) )
 	{
-	    _used[ shortcut->preferred( ) ] = true;
+	    _used[ (int) shortcut->preferred( ) ] = true;
 	}
     }
 
@@ -220,7 +220,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
     char candidate = shortcut->preferred( );			// This is always normalized, no need to normalize again.
 
     if ( ! YShortcut::isValid( candidate)			// Can't use this character - pick another one.
-	 || _used[ candidate ] )				
+	 || _used[ (int) candidate ] )				
     {
 	candidate = 0;						// Restart from scratch - forget the preferred character.
 	string str = shortcut->cleanShortcutString( );
@@ -230,16 +230,16 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	    char c = YShortcut::normalized( str[ pos ] );
 	    // y2debug( "Checking #%d '%c'", ( int) c, c );
 
-	    if ( YShortcut::isValid( c ) && ! _used[ c ] )	// Could we use this character?
+	    if ( YShortcut::isValid( c ) && ! _used[ (int) c ] ) 	// Could we use this character?
 	    {
-		if ( _wanted[ c ] < _wanted[ candidate ]	// Is this a better choice than what we already have -
-		     || ! YShortcut::isValid( candidate ) )	// or don't we have anything yet?
+		if ( _wanted[ (int) c ] < _wanted[ (int) candidate ]	// Is this a better choice than what we already have -
+		     || ! YShortcut::isValid( candidate ) )		// or don't we have anything yet?
 		{
-		    candidate = c;				// Use this one.
+		    candidate = c;			// Use this one.
 		    // y2debug( "Picking %c", c );
 
-		    if ( _wanted[ c ] == 0 )	// It doesn't get any better than this:
-			break;			// Nobody wants this shortcut anyway.
+		    if ( _wanted[ (int) c ] == 0 )	// It doesn't get any better than this:
+			break;				// Nobody wants this shortcut anyway.
 		}
 	    }
 	}
@@ -267,7 +267,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 		     candidate, shortcut->widgetClass( ), shortcut->cleanShortcutString( ).c_str() );
 	}
 
-	_used[ candidate ] = true;
+	_used[ (int) candidate ] = true;
 	shortcut->setConflict( false );
 	_conflictCount--;
     }

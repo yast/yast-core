@@ -37,7 +37,7 @@ public:
      * @param maxProgress the maximum value
      * @param initialProgress the initial value
      */
-    YProgressBar( YWidgetOpt &opt,
+    YProgressBar( YWidgetOpt & opt,
 		 const YCPString & label,
 		 const YCPInteger & maxProgress,
 		 const YCPInteger & initialProgress);

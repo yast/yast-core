@@ -35,7 +35,7 @@ public:
      * @param label the button label
      * @param opt widget options
      */
-    YPushButton( YWidgetOpt &opt, YCPString label);
+    YPushButton( YWidgetOpt & opt, YCPString label);
 
     /**
      * Returns a descriptive name of this widget class for logging,

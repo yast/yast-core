@@ -54,9 +54,9 @@ public:
     const char *widgetClass( ) { return widget( )->widgetClass(); }
 
     /**
-     * Returns the complete shortcut string ( which may or may not contain "&"),
+     * Returns the complete shortcut string ( which may or may not contain "& "),
      * i.e. the value of the widget's shortcut property. For PushButtons, this
-     * is the label on the button ( e.g., "&Details..."), for other widgets
+     * is the label on the button ( e.g., "& Details..."), for other widgets
      * usually the caption above it.
      *
      * This value is chached, i.e. this isn't a too expensive operation.
@@ -65,19 +65,19 @@ public:
 
     /**
      * Returns the shortcut string ( from the widget's shortcut property)
-     * without any "&" markers.
+     * without any "& " markers.
      **/
     string cleanShortcutString( );
 
     /**
      * Static version of the above for general use:
-     * Returns the specified string without any "&" markers.
+     * Returns the specified string without any "& " markers.
      **/
     static string cleanShortcutString( string shortcutString );
 
     /**
      * The preferred shortcut character, i.e. the character that had been
-     * preceded by "&" before checking / resolving conflicts began.
+     * preceded by "& " before checking / resolving conflicts began.
      **/
     char preferred( );
 
@@ -116,13 +116,13 @@ public:
     static char shortcutMarker( ) { return '&'; }
 
     /**
-     * Static function: Find the next occurrence of the shortcut marker ( '&') in a
+     * Static function: Find the next occurrence of the shortcut marker ( '& ') in a
      * string, beginning at starting position start_pos.
      *
      * Returns string::npos if not found or the position of the shortcut marker ( !)
      * if found.
      **/
-    static string::size_type findShortcutPos( const string &str, string::size_type start_pos = 0 );
+    static string::size_type findShortcutPos( const string & str, string::size_type start_pos = 0 );
 
     /**
      * Static function: Find the next shortcut marker in a string, beginning at
@@ -130,7 +130,7 @@ public:
      *
      * Returns the shortcut character or 0 if none found.
      **/
-    static char findShortcut( const string &str, string::size_type start_pos = 0 );
+    static char findShortcut( const string & str, string::size_type start_pos = 0 );
 
     /**
      * Returns 'true' if 'c' is a valid shortcut character, i.e. [a-zA-Z0-9],
@@ -148,7 +148,7 @@ public:
 protected:
 
     /**
-     * Obtain the widget's shortcut property - the string that contains "&" to
+     * Obtain the widget's shortcut property - the string that contains "& " to
      * designate a shortcut.
      **/
     string getShortcutString( );

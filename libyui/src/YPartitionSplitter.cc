@@ -50,8 +50,8 @@ YPartitionSplitter::YPartitionSplitter( YWidgetOpt &		opt,
     , _freeFieldLabel 		( freeFieldLabel	)
     , _newPartFieldLabel	( newPartFieldLabel 	)
 {
-    setDefaultStretchable( YD_HORIZ, true);
-    setStretchable( YD_VERT, false);
+    setDefaultStretchable( YD_HORIZ, true );
+    setStretchable( YD_VERT, false );
 }
 
 
@@ -64,57 +64,57 @@ void YPartitionSplitter::setValue( int newValue )
 YCPValue YPartitionSplitter::changeWidget( const YCPSymbol & property,
 					   const YCPValue  & newValue )
 {
-    string sym = property->symbol( );
+    string sym = property->symbol();
 
     /**
      * @property integer Value the numerical value
      */
     if ( sym == YUIProperty_Value )
     {
-	if ( newValue->isInteger( ) )
+	if ( newValue->isInteger() )
 	{
-	    int val = newValue->asInteger( )->value();
+	    int val = newValue->asInteger()->value();
 
-	    if ( val < minNewPartSize( ) )
+	    if ( val < minNewPartSize() )
 	    {
-		y2warning( "YPartitionSplitter::changeWidget(`Value): "
-			  "Warning: New value %d below minNewPartSize ( %d)",
-			  val, minNewPartSize( ) );
-		setValue( minNewPartSize( ) );
+		y2warning( "YPartitionSplitter::changeWidget( `Value ): "
+			  "Warning: New value %d below minNewPartSize ( %d )",
+			  val, minNewPartSize() );
+		setValue( minNewPartSize() );
 	    }
-	    else if ( val > maxNewPartSize( ) )
+	    else if ( val > maxNewPartSize() )
 	    {
-		y2warning( "YPartitionSplitter::changeWidget(`Value): "
-			  "Warning: New value %d above maxNewPartSize ( %d)",
-			  val, maxNewPartSize( ) );
-		setValue( maxNewPartSize( ) );
+		y2warning( "YPartitionSplitter::changeWidget( `Value ): "
+			  "Warning: New value %d above maxNewPartSize ( %d )",
+			  val, maxNewPartSize() );
+		setValue( maxNewPartSize() );
 	    }
 	    else
 	    {
 		setValue( val );
 	    }
 
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YPartitionSplitter::changeWidget( `Value): "
+	    y2error( "YPartitionSplitter::changeWidget( `Value ): "
 		     "Error: Expecting integer value, not %s",
-		     newValue->toString( ).c_str() );
+		     newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
 
-YCPValue YPartitionSplitter::queryWidget( const YCPSymbol & property)
+YCPValue YPartitionSplitter::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if 		( s == YUIProperty_Value)	return YCPInteger( newPartSize( ) );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if 		( s == YUIProperty_Value )	return YCPInteger( newPartSize() );
+    else return YWidget::queryWidget( property );
 }
 
 

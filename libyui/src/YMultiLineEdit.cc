@@ -27,7 +27,7 @@
 #include "YMultiLineEdit.h"
 
 
-YMultiLineEdit::YMultiLineEdit( YWidgetOpt &opt, const YCPString &label)
+YMultiLineEdit::YMultiLineEdit( YWidgetOpt & opt, const YCPString & label)
     : YWidget( opt)
     , _label( label)
 {

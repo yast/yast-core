@@ -31,7 +31,7 @@
 #include "YTable.h"
 
 
-YTable::YTable( YWidgetOpt &opt, int num_cols)
+YTable::YTable( YWidgetOpt & opt, int num_cols)
     : YWidget( opt)
     , num_cols( num_cols)
 {
@@ -139,7 +139,7 @@ YCPValue YTable::queryWidget( const YCPSymbol & property)
 }
 
 
-YCPValue YTable::queryWidget( const YCPTerm &property)
+YCPValue YTable::queryWidget( const YCPTerm & property)
 {
     string s = property->symbol( )->symbol();
     if ( s == YUIProperty_Item)
@@ -162,7 +162,7 @@ YCPValue YTable::queryWidget( const YCPTerm &property)
  * Insert a number of items.
  * Reimplemented in YQTable to keep QListView happy.
  */
-bool YTable::addItems( const YCPList &itemlist)
+bool YTable::addItems( const YCPList & itemlist)
 {
     for ( int i = 0; i < itemlist->size( ); i++ )
     {
@@ -176,7 +176,7 @@ bool YTable::addItems( const YCPList &itemlist)
 }
 
 
-bool YTable::addItem( const YCPValue &item)
+bool YTable::addItem( const YCPValue & item)
 {
     if ( !item->isTerm() || item->asTerm( )->symbol()->symbol() != YUISymbol_item)
     {
@@ -225,7 +225,7 @@ bool YTable::addItem( const YCPValue &item)
 
 
 
-void YTable::addItem( const YCPValue &id, vector<string> elements)
+void YTable::addItem( const YCPValue & id, vector<string> elements)
 {
     rows.push_back( YTableRow(id, elements));
     itemAdded( elements, rows.size( ) - 1);
@@ -244,7 +244,7 @@ int YTable::numItems( ) const
 }
 
 
-int YTable::itemWithId( const YCPValue &id, bool report_error)
+int YTable::itemWithId( const YCPValue & id, bool report_error)
 {
     for ( int i=0; i<numItems( ); i++)
     {

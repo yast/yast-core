@@ -36,7 +36,7 @@ public:
      * Creates a new text entry with a label and an initial text. Enters it into
      * the radio button group rbg.
      */
-    YRadioButton( YWidgetOpt &opt, const YCPString & label, YRadioButtonGroup *rbg);
+    YRadioButton( YWidgetOpt & opt, const YCPString & label, YRadioButtonGroup *rbg);
 
     /**
      * Returns a descriptive name of this widget class for logging,

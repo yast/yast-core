@@ -129,7 +129,7 @@ YShortcut::setShortcut( char new_shortcut )
     }
 
     str.insert( pos,
-		string( 1, shortcutMarker( ) ) );	// equivalent to 'string( "&" )'
+		string( 1, shortcutMarker( ) ) );	// equivalent to 'string( "& " )'
 
     YCPSymbol propertyName( widget( )->shortcutProperty(), true );
     YCPValue propertyValue = YCPString( str );
@@ -201,7 +201,7 @@ YShortcut::getShortcutString( )
 
 
 string::size_type
-YShortcut::findShortcutPos( const string &str, string::size_type pos )
+YShortcut::findShortcutPos( const string & str, string::size_type pos )
 {
     while ( ( pos = str.find( shortcutMarker( ), pos ) ) != string::npos )
     {
@@ -216,7 +216,7 @@ YShortcut::findShortcutPos( const string &str, string::size_type pos )
 	}
 	else
 	{
-	    // A pathological case: The string ends with '&'.
+	    // A pathological case: The string ends with '& '.
 	    // This is invalid anyway, but prevent endless loop even in this case.
 	    return string::npos;
 	}
@@ -227,7 +227,7 @@ YShortcut::findShortcutPos( const string &str, string::size_type pos )
 
 
 char
-YShortcut::findShortcut( const string &str, string::size_type pos )
+YShortcut::findShortcut( const string & str, string::size_type pos )
 {
     pos = findShortcutPos( str, pos );
 

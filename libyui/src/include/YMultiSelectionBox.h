@@ -38,7 +38,7 @@ public:
      * @param text the initial text of the MultiSelectionBox label
      * @param opt the widget options
      */
-    YMultiSelectionBox( YWidgetOpt &opt, YCPString label);
+    YMultiSelectionBox( YWidgetOpt & opt, YCPString label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -148,7 +148,7 @@ protected:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error);
 
     /**
      * The current label of the selectionbox

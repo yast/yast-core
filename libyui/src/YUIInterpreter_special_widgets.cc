@@ -88,8 +88,8 @@ YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term)
 //
 
 
-YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-						  const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+						  const YCPList & optList, int argnr)
 {
     if ( term->size() - argnr > 0)
     {
@@ -124,7 +124,7 @@ bool YUIInterpreter::hasDummySpecialWidget( )
  * Normally, the implementation within the libyui returns 0.
  */
 
-YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt)
+YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt)
 {
     opt.isHeading.setValue( true);
     opt.isOutputField.setValue( true);
@@ -161,8 +161,8 @@ YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &
  *
  */
 
-YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-					const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					const YCPList & optList, int argnr)
 {
     int numArgs = term->size( ) - argnr;
 
@@ -227,8 +227,8 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt, const
  * for availability with <tt>HasSpecialWidget( `ColoredLabel)</tt> before using it.
  */
 
-YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-					    const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					    const YCPList & optList, int argnr)
 {
     if ( term->size() - argnr != 4
 	|| ! term->value( argnr   )->isString()		// label
@@ -245,8 +245,8 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt, c
     YColor fg;
     YColor bg;
     YCPString label = term->value( argnr )->asString( );
-    parseRgb( term->value( argnr+1 ), &fg, true );
-    parseRgb( term->value( argnr+2 ), &bg, true );
+    parseRgb( term->value( argnr+1 ), & fg, true );
+    parseRgb( term->value( argnr+2 ), & bg, true );
     int margin  = term->value( argnr+3 )->asInteger( )->value();
 
     if ( ! hasColoredLabel( ) )
@@ -290,8 +290,8 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt, c
  *
  */
 
-YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-						const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+						const YCPList & optList, int argnr)
 {
     int numArgs = term->size( ) - argnr;
 
@@ -356,8 +356,8 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &op
  *
  */
 
-YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-				      const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				      const YCPList & optList, int argnr)
 {
     int numArgs = term->size( ) - argnr;
 
@@ -436,8 +436,8 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt &opt, const Y
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter)</tt> before using it.
  * */
 
-YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-						 const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+						 const YCPList & optList, int argnr)
 {
     int numArgs = term->size( ) - argnr;
 
@@ -536,9 +536,9 @@ bool YUIInterpreter::hasPartitionSplitter( )
  * has...( ) method as well!
  */
 
-YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &opt,
-						const YCPString &label,
-						const YCPString &filename,
+YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
+						const YCPString & label,
+						const YCPString & filename,
 						int expectedSize)
 {
     y2error( "Default createDownloadProgress( ) method called - "
@@ -547,7 +547,7 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt &op
     return 0;
 }
 
-YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt)
+YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt)
 {
     y2error( "Default createBarGraph( ) method called - "
 	    "forgot to call HasSpecialWidget( )?" );
@@ -555,7 +555,7 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt &opt)
     return 0;
 }
 
-YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt,
+YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 					    YCPString label,
 					    YColor fg, YColor bg, int margin )
 {
@@ -565,8 +565,8 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt &opt,
     return 0;
 }
 
-YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt &opt,
-				      const YCPString &label,
+YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt,
+				      const YCPString & label,
 				      int minValue, int maxValue, int initialValue)
 {
     y2error( "Default createSlider( ) method called - "

@@ -38,7 +38,7 @@ public:
      * @param text the initial text of the SelectionBox label
      * @param opt the widget options
      */
-    YSelectionBox( YWidgetOpt &opt, YCPString label);
+    YSelectionBox( YWidgetOpt & opt, YCPString label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -49,7 +49,7 @@ public:
     /**
      * Adds an item to the selection box.
      */
-    void addItem( const YCPValue &id, const YCPString & text, bool selected);
+    void addItem( const YCPValue & id, const YCPString & text, bool selected);
 
     /**
      * Implements the ui command changeWidget.
@@ -113,7 +113,7 @@ protected:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error);
 
     /**
      * The current label of the selectionbox

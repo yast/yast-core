@@ -20,7 +20,7 @@
 
 #include "YImage.h"
 
-YImage::YImage( YWidgetOpt &opt)
+YImage::YImage( YWidgetOpt & opt)
     : YWidget( opt)
 {
 }

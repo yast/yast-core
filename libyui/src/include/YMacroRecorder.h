@@ -45,7 +45,7 @@ public:
     /**
      * Record one user input
      */
-    void recordUserInput( const YCPValue &input );
+    void recordUserInput( const YCPValue & input );
 
 
     /**
@@ -73,7 +73,7 @@ protected:
      * All write functions check the internally used macro file prior to using
      * it, so it is perfectly safe to use them even if the initial open failed.
      **/
-    void openMacroFile( const string &macroFileName );
+    void openMacroFile( const string & macroFileName );
 
     /**
      * Close the internally used macro file.

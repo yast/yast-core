@@ -28,14 +28,14 @@
 #include "YCheckBox.h"
 
 
-YCheckBox::YCheckBox( YWidgetOpt &opt, const YCPString &label)
+YCheckBox::YCheckBox( YWidgetOpt & opt, const YCPString & label)
     : YWidget( opt)
     , label( label)
 {
 }
 
 
-void YCheckBox::setLabel( const YCPString &label)
+void YCheckBox::setLabel( const YCPString & label)
 {
     this->label = label;
 }

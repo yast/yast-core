@@ -34,7 +34,7 @@ public:
     /**
      * Constructor
      */
-    YComboBox( YWidgetOpt &opt, YCPString label);
+    YComboBox( YWidgetOpt & opt, YCPString label);
 
     /**
      * Returns whether or not any value ( not only from the list) can be
@@ -51,7 +51,7 @@ public:
     /**
      * Adds an item to the selection box.
      */
-    void addItem( const YCPValue &id, const YCPString & text, bool selected);
+    void addItem( const YCPValue & id, const YCPString & text, bool selected);
 
     /**
      * Implements the ui command changeWidget.
@@ -82,7 +82,7 @@ public:
      * Overload this, but call YComboBox::setValidChars at the end of your own
      * method.
      */
-    virtual void setValidChars( const YCPString &validChars);
+    virtual void setValidChars( const YCPString & validChars);
 
     /**
      * Get the valid input characters.
@@ -115,7 +115,7 @@ protected:
      * Sets the ComboBox value to a random value that is not already in
      * the item list. Will be called for editable ComboBox widgets only.
      */
-    virtual void setValue( const YCPString &new_value) = 0;
+    virtual void setValue( const YCPString & new_value) = 0;
 
     /**
      * Selects an item from the list. Notice there intentionally is no
@@ -136,12 +136,12 @@ private:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error);
 
     /**
      * Looks up the ID of a given list item's value.
      */
-    YCPValue IdForValue( const YCPValue &val);
+    YCPValue IdForValue( const YCPValue & val);
 
     /**
      * Save the widget's user input to a macro recorder.

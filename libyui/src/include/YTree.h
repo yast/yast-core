@@ -47,7 +47,7 @@ public:
      * @param opt the widget options
      * @param text the initial text of the label
      */
-    YTree( YWidgetOpt &opt, YCPString label);
+    YTree( YWidgetOpt & opt, YCPString label);
 
 
     /**
@@ -139,13 +139,13 @@ protected:
      * Recursively search for an item with a given ID.
      * Returns 0 if not found.
      */
-    YTreeItem *findItemWithId	( const YCPValue &id );
+    YTreeItem *findItemWithId	( const YCPValue & id );
 
     /**
      * Recursively search for an item with a given text.
      * Returns 0 if not found.
      */
-    YTreeItem *findItemWithText	( const YCPString &text );
+    YTreeItem *findItemWithText	( const YCPString & text );
 
     /**
      * The items.
@@ -162,7 +162,7 @@ private:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error);
 #endif
 
     /**
@@ -231,13 +231,13 @@ public:
      * Recursively search for an item with a given ID.
      * Returns 0 if not found.
      */
-    YTreeItem *findItemWithId	( const YCPValue &id );
+    YTreeItem *findItemWithId	( const YCPValue & id );
 
     /**
      * Recursively search for an item with a given text.
      * Returns 0 if not found.
      */
-    YTreeItem *findItemWithText	( const YCPString &text );
+    YTreeItem *findItemWithText	( const YCPString & text );
 
     /**
      * Returns the opaque data pointer for applicaton use.

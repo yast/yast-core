@@ -31,7 +31,7 @@
 #include "YBarGraph.h"
 
 
-YBarGraph::YBarGraph( YWidgetOpt &opt)
+YBarGraph::YBarGraph( YWidgetOpt & opt)
     :YWidget( opt)
 {
     setDefaultStretchable( YD_HORIZ, true);
@@ -141,7 +141,7 @@ string YBarGraph::label( int n)
 
 
 
-void YBarGraph::parseValuesList( const YCPList &newVal )
+void YBarGraph::parseValuesList( const YCPList & newVal )
 {
     _values.clear( );
 
@@ -165,7 +165,7 @@ void YBarGraph::parseValuesList( const YCPList &newVal )
 }
 
 
-void YBarGraph::parseLabelsList( const YCPList &newLabels )
+void YBarGraph::parseLabelsList( const YCPList & newLabels )
 {
     _labels.clear( );
 

@@ -28,7 +28,7 @@
 #include "YComboBox.h"
 
 
-YComboBox::YComboBox( YWidgetOpt &opt, YCPString label)
+YComboBox::YComboBox( YWidgetOpt & opt, YCPString label)
     : YWidget( opt)
     , label( label)
     , validChars( "")
@@ -140,7 +140,7 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property)
 }
 
 
-void YComboBox::setLabel( const YCPString &label)
+void YComboBox::setLabel( const YCPString & label)
 {
     this->label = label;
 }
@@ -152,7 +152,7 @@ YCPString YComboBox::getLabel( )
 }
 
 
-void YComboBox::setValidChars( const YCPString &newValidChars)
+void YComboBox::setValidChars( const YCPString & newValidChars)
 {
     this->validChars= newValidChars;
 }
@@ -164,7 +164,7 @@ YCPString YComboBox::getValidChars( )
 }
 
 
-void YComboBox::addItem( const YCPValue &id, const YCPString & text, bool selected)
+void YComboBox::addItem( const YCPValue & id, const YCPString & text, bool selected)
 {
     item_ids->add( id);
     item_labels->add( text);
@@ -177,7 +177,7 @@ void YComboBox::addItem( const YCPValue &id, const YCPString & text, bool select
 }
 
 
-void YComboBox::itemAdded( const YCPString &, int, bool)
+void YComboBox::itemAdded( const YCPString & , int, bool)
 {
     // default dummy implementaion
 }
@@ -189,7 +189,7 @@ int YComboBox::numItems( ) const
 }
 
 
-int YComboBox::itemWithId( const YCPValue &id, bool report_error)
+int YComboBox::itemWithId( const YCPValue & id, bool report_error)
 {
     for ( int i=0; i < numItems( ); i++ )
     {
@@ -203,7 +203,7 @@ int YComboBox::itemWithId( const YCPValue &id, bool report_error)
 }
 
 
-YCPValue YComboBox::IdForValue( const YCPValue &val)
+YCPValue YComboBox::IdForValue( const YCPValue & val)
 {
     for ( int i=0; i < numItems( ); i++ )
     {

@@ -91,7 +91,7 @@ public:
     /**
      * Set the translation.
      **/
-    void setTranslation( const std::string &newTrans ) { _translation = newTrans; }
+    void setTranslation( const std::string & newTrans ) { _translation = newTrans; }
 
     /**
      * operator< : Compares translations.

@@ -30,7 +30,7 @@
 #define max( a, b) ( (a) >? ( b))
 
 
-YSplit::YSplit( YWidgetOpt &opt, YUIDimension dimension)
+YSplit::YSplit( YWidgetOpt & opt, YUIDimension dimension)
     : YContainerWidget( opt)
     , primary( dimension )
     , secondary( dimension == YD_HORIZ ? YD_VERT : YD_HORIZ )
@@ -496,8 +496,8 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 
 void YSplit::calcSecondaryGeometry( long	newSize,
-				    sizeVector &childSize,
-				    posVector  &childPos )
+				    sizeVector & childSize,
+				    posVector  & childPos )
 {
     for ( int i = 0; i < numChildren( ); i++ )
     {
@@ -536,10 +536,10 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 }
 
 
-void YSplit::doResize( sizeVector &width,
-		       sizeVector &height,
-		       posVector  &x_pos,
-		       posVector  &y_pos  )
+void YSplit::doResize( sizeVector & width,
+		       sizeVector & height,
+		       posVector  & x_pos,
+		       posVector  & y_pos  )
 {
     for ( int i = 0; i < numChildren( ); i++ )
     {

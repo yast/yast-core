@@ -27,8 +27,8 @@
 #include "YIntField.h"
 
 
-YIntField::YIntField( YWidgetOpt &opt,
-		      const YCPString &label,
+YIntField::YIntField( YWidgetOpt & opt,
+		      const YCPString & label,
 		      int minValue,
 		      int maxValue,
 		      int initialValue )
@@ -43,7 +43,7 @@ YIntField::YIntField( YWidgetOpt &opt,
 }
 
 
-void YIntField::setLabel( const YCPString &newLabel )
+void YIntField::setLabel( const YCPString & newLabel )
 {
     _label = newLabel;
 }

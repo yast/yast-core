@@ -36,7 +36,7 @@ public:
      * @param horizontal flag: use "size" for the horizontal dimension?
      * @param vertical flag: use "size" for the vertical dimension?
      */
-    YSpacing( YWidgetOpt &opt, float size, bool horizontal, bool vertical);
+    YSpacing( YWidgetOpt & opt, float size, bool horizontal, bool vertical);
 
     /**
      * Returns a descriptive name of this widget class for logging,

@@ -33,7 +33,7 @@ public:
     /**
      * Creates a new and empty radio button group.
      */
-    YRadioButtonGroup( YWidgetOpt &opt);
+    YRadioButtonGroup( YWidgetOpt & opt);
 
     /**
      * Cleans up

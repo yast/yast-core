@@ -34,7 +34,7 @@ public:
      * Constructor
      */
     YIntField( YWidgetOpt &	opt,
-	       const YCPString &label,
+	       const YCPString & label,
 	       int 		minValue,
 	       int 		maxValue,
 	       int 		initialValue );

@@ -51,7 +51,7 @@ public:
     /**
      * Constructor
      */
-    YWidget( YWidgetOpt &opt);
+    YWidget( YWidgetOpt & opt);
 
     /**
      * Destructor
@@ -79,7 +79,7 @@ public:
     /**
      * Sets the id of the widget
      */
-    void setId( const YCPValue &id);
+    void setId( const YCPValue & id);
 
     /**
      * Checks whether or not the widget has an ID

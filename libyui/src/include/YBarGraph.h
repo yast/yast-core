@@ -33,7 +33,7 @@ public:
     /**
      * Constructor
      */
-    YBarGraph( YWidgetOpt &opt);
+    YBarGraph( YWidgetOpt & opt);
 
 
     /**
@@ -63,13 +63,13 @@ public:
     /**
      * Parse and store new values.
      */
-    void parseValuesList( const YCPList &newValues );
+    void parseValuesList( const YCPList & newValues );
 
 
     /**
      * Parse and store new labels.
      */
-    void parseLabelsList( const YCPList &newLabels );
+    void parseLabelsList( const YCPList & newLabels );
 
     /**
      * Perform a display update after values and/or labels have changed.

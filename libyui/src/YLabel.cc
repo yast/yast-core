@@ -27,7 +27,7 @@
 #include "YLabel.h"
 
 
-YLabel::YLabel( YWidgetOpt &opt, YCPString text)
+YLabel::YLabel( YWidgetOpt & opt, YCPString text)
     : YWidget( opt)
     , text( text)
 {
@@ -69,7 +69,7 @@ YCPValue YLabel::queryWidget( const YCPSymbol & property)
 }
 
 
-void YLabel::setLabel( const YCPString &label)
+void YLabel::setLabel( const YCPString & label)
 {
     text = label;
 }

@@ -32,7 +32,7 @@
 #include "YRadioButtonGroup.h"
 
 
-YRadioButtonGroup::YRadioButtonGroup( YWidgetOpt &opt)
+YRadioButtonGroup::YRadioButtonGroup( YWidgetOpt & opt)
     : YContainerWidget( opt)
 {
 }

@@ -27,7 +27,7 @@
 #include "YProgressBar.h"
 
 
-YProgressBar::YProgressBar( YWidgetOpt &opt,
+YProgressBar::YProgressBar( YWidgetOpt & opt,
 			   const YCPString & label,
 			   const YCPInteger & maxProgress,
 			   const YCPInteger & progress)
@@ -41,13 +41,13 @@ YProgressBar::YProgressBar( YWidgetOpt &opt,
 }
 
 
-void YProgressBar::setLabel( const YCPString &label)
+void YProgressBar::setLabel( const YCPString & label)
 {
     this->label = label;
 }
 
 
-void YProgressBar::setProgress( const YCPInteger &progress)
+void YProgressBar::setProgress( const YCPInteger & progress)
 {
     this->progress = progress;
 }

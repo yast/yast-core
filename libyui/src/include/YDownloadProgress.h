@@ -69,7 +69,7 @@ public:
      * Overwrite this, but call YDownloadProgress::setFilename( )
      * at the end of your own method.
      */
-    virtual void setFilename( const YCPString &newFilename );
+    virtual void setFilename( const YCPString & newFilename );
 
     /**
      * Change the expected size of the file being downloaded.

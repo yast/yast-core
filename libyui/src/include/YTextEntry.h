@@ -35,7 +35,7 @@ public:
     /**
      * Creates a new text entry with a label and an initial text.
      */
-    YTextEntry( YWidgetOpt &opt, const YCPString & label);
+    YTextEntry( YWidgetOpt & opt, const YCPString & label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -85,7 +85,7 @@ public:
      * Overload this, but call YTextEntry::setValidChars at the end of your own
      * method.
      */
-    virtual void setValidChars( const YCPString &validChars);
+    virtual void setValidChars( const YCPString & validChars);
 
     /**
      * Get the valid input characters.

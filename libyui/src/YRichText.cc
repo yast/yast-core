@@ -27,7 +27,7 @@
 #include "YRichText.h"
 
 
-YRichText::YRichText( YWidgetOpt &opt, YCPString text)
+YRichText::YRichText( YWidgetOpt & opt, YCPString text)
     : YWidget( opt)
     , text( text)
     , autoScrollDown( false )
@@ -75,7 +75,7 @@ YCPValue YRichText::queryWidget( const YCPSymbol & property)
 }
 
 
-void YRichText::setText( const YCPString &RichText)
+void YRichText::setText( const YCPString & RichText)
 {
     text = RichText;
 }

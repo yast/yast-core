@@ -35,7 +35,7 @@ public:
     /**
      * Creates a new YSplit
      */
-    YSplit( YWidgetOpt &opt, YUIDimension newPrimaryDimension );
+    YSplit( YWidgetOpt & opt, YUIDimension newPrimaryDimension );
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -152,10 +152,10 @@ protected:
      * The vectors passed are the sizes previously calculated by
      * calcPrimaryGeometry( ) and calcSecondaryGeometry( ).
      */
-    void doResize( sizeVector &width,
-		   sizeVector &height,
-		   posVector  &x_pos,
-		   posVector  &y_pos  );
+    void doResize( sizeVector & width,
+		   sizeVector & height,
+		   posVector  & x_pos,
+		   posVector  & y_pos  );
 
 
 protected:

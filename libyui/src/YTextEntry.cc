@@ -28,7 +28,7 @@
 #include "YTextEntry.h"
 
 
-YTextEntry::YTextEntry( YWidgetOpt &opt, const YCPString &label)
+YTextEntry::YTextEntry( YWidgetOpt & opt, const YCPString & label)
     : YWidget( opt)
     , label( label)
     , validChars( "")
@@ -40,7 +40,7 @@ YTextEntry::YTextEntry( YWidgetOpt &opt, const YCPString &label)
 }
 
 
-void YTextEntry::setLabel( const YCPString &label)
+void YTextEntry::setLabel( const YCPString & label)
 {
     this->label = label;
 }
@@ -52,7 +52,7 @@ YCPString YTextEntry::getLabel( )
 }
 
 
-void YTextEntry::setValidChars( const YCPString &newValidChars)
+void YTextEntry::setValidChars( const YCPString & newValidChars)
 {
     this->validChars= newValidChars;
 }

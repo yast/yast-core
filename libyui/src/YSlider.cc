@@ -27,8 +27,8 @@
 #include "YSlider.h"
 
 
-YSlider::YSlider( YWidgetOpt &opt,
-		  const YCPString &label,
+YSlider::YSlider( YWidgetOpt & opt,
+		  const YCPString & label,
 		  int minValue,
 		  int maxValue,
 		  int initialValue )
@@ -43,7 +43,7 @@ YSlider::YSlider( YWidgetOpt &opt,
 }
 
 
-void YSlider::setLabel( const YCPString &newLabel )
+void YSlider::setLabel( const YCPString & newLabel )
 {
     _label = newLabel;
 }

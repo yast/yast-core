@@ -29,7 +29,7 @@
 #include "YTree.h"
 
 
-YTree::YTree( YWidgetOpt &opt, YCPString newLabel )
+YTree::YTree( YWidgetOpt & opt, YCPString newLabel )
     : YWidget( opt )
     , label( newLabel )
 {
@@ -133,7 +133,7 @@ YCPValue YTree::queryWidget( const YCPSymbol & property)
 
 
 void
-YTree::setLabel( const YCPString &label)
+YTree::setLabel( const YCPString & label)
 {
     this->label = label;
 }
@@ -188,7 +188,7 @@ YTree::rebuildTree( )
 
 
 YTreeItem *
-YTree::findItemWithId ( const YCPValue &id )
+YTree::findItemWithId ( const YCPValue & id )
 {
     for ( unsigned i=0; i < items.size( ); i++ )
     {
@@ -203,7 +203,7 @@ YTree::findItemWithId ( const YCPValue &id )
 
 
 YTreeItem *
-YTree::findItemWithText	( const YCPString &text )
+YTree::findItemWithText	( const YCPString & text )
 {
     for ( unsigned i=0; i < items.size( ); i++ )
     {
@@ -291,7 +291,7 @@ YTreeItem::~YTreeItem( )
 
 
 YTreeItem *
-YTreeItem::findItemWithId ( const YCPValue &id )
+YTreeItem::findItemWithId ( const YCPValue & id )
 {
     if ( ! getId( ).isNull() && getId( )->equal( id ) )
 	return this;
@@ -309,7 +309,7 @@ YTreeItem::findItemWithId ( const YCPValue &id )
 
 
 YTreeItem *
-YTreeItem::findItemWithText ( const YCPString &text )
+YTreeItem::findItemWithText ( const YCPString & text )
 {
     if ( getText( )->equal( text ) )
 	return this;

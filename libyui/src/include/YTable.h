@@ -57,7 +57,7 @@ public:
      * Creates a new and empty Table
      * @param num_cols The number of columns of the table
      */
-    YTable( YWidgetOpt &opt, int num_cols);
+    YTable( YWidgetOpt & opt, int num_cols);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -69,18 +69,18 @@ public:
      * Adds an item to the table that is given as term
      * yet to be parsed.
      */
-    bool addItem( const YCPValue &item);
+    bool addItem( const YCPValue & item);
 
     /**
      * Adds a list of items to the table. The list
      * contains item specifications yet to be parsed.
      */
-    virtual bool addItems( const YCPList &itemlist);
+    virtual bool addItems( const YCPList & itemlist);
 
     /**
      * Adds an item to the table.
      */
-    void addItem( const YCPValue &id, vector<string> elements);
+    void addItem( const YCPValue & id, vector<string> elements);
 
     /**
      * Implements the ui command changeWidget.
@@ -126,7 +126,7 @@ protected:
      * Is called, when the contents of a cell has been changed. Overload
      * this and change the cell text.
      */
-    virtual void cellChanged( int index, int colnum, const YCPString &newtext) = 0;
+    virtual void cellChanged( int index, int colnum, const YCPString & newtext) = 0;
 
     /**
      * Returns the index of the currently
@@ -162,7 +162,7 @@ protected:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue &id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error);
 
 
 private:

@@ -23,7 +23,7 @@
 #include "YContainerWidget.h"
 
 
-YContainerWidget::YContainerWidget( YWidgetOpt &opt)
+YContainerWidget::YContainerWidget( YWidgetOpt & opt)
     : YWidget( opt)
 {
 }

@@ -29,7 +29,7 @@
 #include "YSelectionBox.h"
 
 
-YSelectionBox::YSelectionBox( YWidgetOpt &opt, YCPString label)
+YSelectionBox::YSelectionBox( YWidgetOpt & opt, YCPString label)
     : YWidget( opt)
     , label( label)
 {
@@ -104,7 +104,7 @@ YCPValue YSelectionBox::queryWidget( const YCPSymbol & property)
 }
 
 
-void YSelectionBox::setLabel( const YCPString &label)
+void YSelectionBox::setLabel( const YCPString & label)
 {
     this->label = label;
 }
@@ -116,7 +116,7 @@ YCPString YSelectionBox::getLabel( )
 }
 
 
-void YSelectionBox::addItem( const YCPValue &id, const YCPString & text, bool selected)
+void YSelectionBox::addItem( const YCPValue & id, const YCPString & text, bool selected)
 {
     item_ids->add( id);
     item_labels->add( text);
@@ -124,7 +124,7 @@ void YSelectionBox::addItem( const YCPValue &id, const YCPString & text, bool se
 }
 
 
-void YSelectionBox::itemAdded( const YCPString &, int, bool)
+void YSelectionBox::itemAdded( const YCPString & , int, bool)
 {
     // default dummy implementation
 }
@@ -136,7 +136,7 @@ int YSelectionBox::numItems( ) const
 }
 
 
-int YSelectionBox::itemWithId( const YCPValue &id, bool report_error)
+int YSelectionBox::itemWithId( const YCPValue & id, bool report_error)
 {
     for ( int i=0; i < numItems( ); i++ )
     {

@@ -29,8 +29,8 @@
 #include "YRadioButton.h"
 
 
-YRadioButton::YRadioButton( YWidgetOpt &opt,
-			   const YCPString &label,
+YRadioButton::YRadioButton( YWidgetOpt & opt,
+			   const YCPString & label,
 			   YRadioButtonGroup *radiobuttongroup)
     : YWidget( opt)
     , label( label)
@@ -46,7 +46,7 @@ YRadioButton::~YRadioButton( )
 }
 
 
-void YRadioButton::setLabel( const YCPString &label)
+void YRadioButton::setLabel( const YCPString & label)
 {
     this->label = label;
 }

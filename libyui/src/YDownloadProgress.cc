@@ -41,13 +41,13 @@ YDownloadProgress::YDownloadProgress( YWidgetOpt &	opt,
 }
 
 
-void YDownloadProgress::setLabel( const YCPString &newLabel )
+void YDownloadProgress::setLabel( const YCPString & newLabel )
 {
     _label = newLabel;
 }
 
 
-void YDownloadProgress::setFilename( const YCPString &newFilename )
+void YDownloadProgress::setFilename( const YCPString & newFilename )
 {
     _filename = newFilename;
 }
@@ -153,7 +153,7 @@ long YDownloadProgress::currentFileSize( )
 {
     struct stat stat_info;
 
-    if ( stat( filename( )->value().c_str(), &stat_info ) == 0 )
+    if ( stat( filename( )->value().c_str(), & stat_info ) == 0 )
 	return ( long) stat_info.st_size;
     else
 	return 0L;

@@ -61,7 +61,7 @@ public:
      * Set the label above the log lines. Overload this, but call
      * YMultiLineEdit::setLabel at the end of your own function.
      */
-    virtual void	setLabel( const YCPString &newLabel );
+    virtual void	setLabel( const YCPString & newLabel );
 
     /**
      * Set the edited text.

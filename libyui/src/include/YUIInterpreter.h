@@ -166,13 +166,13 @@ public:
     /**
      * Parse a menu list ( for menu buttons)
      */
-    int parseMenuItemList ( const YCPList &itemList, YMenuButton *menu_button, YMenu *parentMenu = 0 );
+    int parseMenuItemList ( const YCPList & itemList, YMenuButton *menu_button, YMenu *parentMenu = 0 );
 
 
     /**
      * Parse a tree item list
      */
-    int parseTreeItemList ( const YCPList &itemList, YTree *tree, YTreeItem *parentItem = 0 );
+    int parseTreeItemList ( const YCPList & itemList, YTree *tree, YTreeItem *parentItem = 0 );
 
 
     /**
@@ -195,7 +195,7 @@ public:
      * @return pointer to the new widget or 0 if it was not successful.
      * And error has been logged in this case
      */
-    YWidget *createWidgetTree( YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg, const YCPTerm & term);
+    YWidget *createWidgetTree( YWidget *parent, YWidgetOpt & opt, YRadioButtonGroup *rbg, const YCPTerm & term);
 
     /**
      * Overloaded version for convenience. Supplies empty widget options.
@@ -210,7 +210,7 @@ public:
      * the id is not existing.
      */
 
-    YWidget *widgetWithId( const YCPValue &id, bool log_error=false);
+    YWidget *widgetWithId( const YCPValue & id, bool log_error=false);
 
     /**
      * Overloaded version of widgetWithId. Does not search for the widget id in the
@@ -220,7 +220,7 @@ public:
      * @param log_error set to true if you want me to log an error if
      * the id is not existing.
      */
-    YWidget *widgetWithId( YContainerWidget *widgetRoot, const YCPValue &id, bool log_error=false);
+    YWidget *widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error=false);
 
     /**
      * Implements the UI command ReplaceWidget.
@@ -347,40 +347,40 @@ protected:
      * Creates a dialog.
      * @param widget Widget the dialog contains. Each dialog contains exactly one widget.
      */
-    virtual YDialog *createDialog( YWidgetOpt &opt) = 0;
+    virtual YDialog *createDialog( YWidgetOpt & opt) = 0;
 
     /**
      * Creates a split
      */
-    virtual YContainerWidget *createSplit( YWidget *parent, YWidgetOpt &opt, YUIDimension dimension) = 0;
+    virtual YContainerWidget *createSplit( YWidget *parent, YWidgetOpt & opt, YUIDimension dimension) = 0;
 
     /**
      * Creates a replace point.
      */
-    virtual YContainerWidget *createReplacePoint( YWidget *parent, YWidgetOpt &opt) = 0;
+    virtual YContainerWidget *createReplacePoint( YWidget *parent, YWidgetOpt & opt) = 0;
 
     /**
      * Creates an alignment widget
      */
-    virtual YContainerWidget *createAlignment( YWidget *parent, YWidgetOpt &opt,
+    virtual YContainerWidget *createAlignment( YWidget *parent, YWidgetOpt & opt,
 					      YAlignmentType halign,
 					      YAlignmentType valign) = 0;
 
     /**
      * Creates a squash widget
      */
-    virtual YContainerWidget *createSquash( YWidget *parent, YWidgetOpt &opt, bool hsquash, bool vsquash) = 0;
+    virtual YContainerWidget *createSquash( YWidget *parent, YWidgetOpt & opt, bool hsquash, bool vsquash) = 0;
 
 
     /**
      * Creates a radio button group.
      */
-    virtual YContainerWidget *createRadioButtonGroup( YWidget *parent, YWidgetOpt &opt) = 0;
+    virtual YContainerWidget *createRadioButtonGroup( YWidget *parent, YWidgetOpt & opt) = 0;
 
     /**
      * Creates a frame widget
      */
-    virtual YContainerWidget *createFrame( YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
+    virtual YContainerWidget *createFrame( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
 
 
@@ -391,12 +391,12 @@ protected:
     /**
      * Creates an empty widget
      */
-    virtual YWidget *createEmpty( YWidget *parent, YWidgetOpt &opt) = 0;
+    virtual YWidget *createEmpty( YWidget *parent, YWidgetOpt & opt) = 0;
 
     /**
      * Creates a spacing widget
      */
-    virtual YWidget *createSpacing( YWidget *parent, YWidgetOpt &opt, float size, bool horizontal, bool vertical) = 0;
+    virtual YWidget *createSpacing( YWidget *parent, YWidgetOpt & opt, float size, bool horizontal, bool vertical) = 0;
 
     /**
      * Creates a label.
@@ -404,13 +404,13 @@ protected:
      * @param heading true if the label is a Heading( )
      * @param output_field true if the label should look like an output field ( 3D look)
      */
-    virtual YWidget *createLabel( YWidget *parent, YWidgetOpt &opt, const YCPString & text) = 0;
+    virtual YWidget *createLabel( YWidget *parent, YWidgetOpt & opt, const YCPString & text) = 0;
 
     /**
      * Creates a rich text widget
      * @param text Initial text of the label
      */
-    virtual YWidget *createRichText( YWidget *parent, YWidgetOpt &opt, const YCPString & text) = 0;
+    virtual YWidget *createRichText( YWidget *parent, YWidgetOpt & opt, const YCPString & text) = 0;
 
 
     /**
@@ -419,27 +419,27 @@ protected:
      * @param visibleLines default number of vislible lines
      * @param maxLines number of lines to store ( use 0 for "all")
      */
-    virtual YWidget *createLogView( YWidget *parent, YWidgetOpt &opt,
+    virtual YWidget *createLogView( YWidget *parent, YWidgetOpt & opt,
 				   const YCPString & label, int visibleLines, int maxLines ) = 0;
 
     /**
      * Creates a push button.
      * @param label Label of the button
      */
-    virtual YWidget *createPushButton( YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
+    virtual YWidget *createPushButton( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a menu button.
      * @param label Label of the button
      */
-    virtual YWidget *createMenuButton( YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
+    virtual YWidget *createMenuButton( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a radio button and inserts it into a radio button group
      * @param label Label of the radio button
      * @param rbg the radio button group the new button will belong to
      */
-    virtual YWidget *createRadioButton( YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg,
+    virtual YWidget *createRadioButton( YWidget *parent, YWidgetOpt & opt, YRadioButtonGroup *rbg,
 				       const YCPString & label, bool checked) = 0;
 
     /**
@@ -447,69 +447,69 @@ protected:
      * @param label Label of the checkbox
      * @param true if it is checked
      */
-    virtual YWidget *createCheckBox( YWidget *parent, YWidgetOpt &opt, const YCPString & label, bool checked) = 0;
+    virtual YWidget *createCheckBox( YWidget *parent, YWidgetOpt & opt, const YCPString & label, bool checked) = 0;
 
     /**
      * Creates a text entry or password entry field.
      */
-    virtual YWidget *createTextEntry( YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString & text) = 0;
+    virtual YWidget *createTextEntry( YWidget *parent, YWidgetOpt & opt, const YCPString & label, const YCPString & text) = 0;
 
     /**
      * Creates a MultiLineEdit widget.
      */
-    virtual YWidget *createMultiLineEdit( YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString & text) = 0;
+    virtual YWidget *createMultiLineEdit( YWidget *parent, YWidgetOpt & opt, const YCPString & label, const YCPString & text) = 0;
 
     /**
      * Creates a selection box
      */
-    virtual YWidget *createSelectionBox( YWidget *parent, YWidgetOpt &opt, const YCPString &label) = 0;
+    virtual YWidget *createSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a multi selection box
      */
-    virtual YWidget *createMultiSelectionBox( YWidget *parent, YWidgetOpt &opt, const YCPString &label) = 0;
+    virtual YWidget *createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a combo box
      */
-    virtual YWidget *createComboBox( YWidget *parent, YWidgetOpt &opt, const YCPString &label) = 0;
+    virtual YWidget *createComboBox( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a tree
      */
-    virtual YWidget *createTree( YWidget *parent, YWidgetOpt &opt, const YCPString &label) = 0;
+    virtual YWidget *createTree( YWidget *parent, YWidgetOpt & opt, const YCPString & label) = 0;
 
     /**
      * Creates a table widget
      */
-    virtual YWidget *createTable( YWidget *parent, YWidgetOpt &opt, vector<string> header) = 0;
+    virtual YWidget *createTable( YWidget *parent, YWidgetOpt & opt, vector<string> header) = 0;
 
     /**
      * Creates a progress bar
      */
-    virtual YWidget *createProgressBar( YWidget *parent, YWidgetOpt &opt, const YCPString &label,
+    virtual YWidget *createProgressBar( YWidget *parent, YWidgetOpt & opt, const YCPString & label,
 				       const YCPInteger & maxprogress, const YCPInteger & progress) = 0;
 
     /**
      * Creates an image widget from a YCP byteblock
      */
-    virtual YWidget *createImage( YWidget *parent, YWidgetOpt &opt, YCPByteblock imagedata, YCPString defaulttext) = 0;
+    virtual YWidget *createImage( YWidget *parent, YWidgetOpt & opt, YCPByteblock imagedata, YCPString defaulttext) = 0;
 
     /**
      * Creates an image widget from a file name
      */
-    virtual YWidget *createImage( YWidget *parent, YWidgetOpt &opt, YCPString file_name, YCPString defaulttext) = 0;
+    virtual YWidget *createImage( YWidget *parent, YWidgetOpt & opt, YCPString file_name, YCPString defaulttext) = 0;
 
     /**
      * Creates an image widget from a predefined set of images
      */
-    virtual YWidget *createImage( YWidget *parent, YWidgetOpt &opt, ImageType img, YCPString defaulttext) = 0;
+    virtual YWidget *createImage( YWidget *parent, YWidgetOpt & opt, ImageType img, YCPString defaulttext) = 0;
 
     /**
      * Creates an IntField widget.
      */
-    virtual YWidget *createIntField( YWidget *parent, YWidgetOpt &opt,
-				    const YCPString &label, int minValue, int maxValue, int initialValue) = 0;
+    virtual YWidget *createIntField( YWidget *parent, YWidgetOpt & opt,
+				    const YCPString & label, int minValue, int maxValue, int initialValue) = 0;
 
     /**
      * Creates a PackageSelector widget.
@@ -517,12 +517,12 @@ protected:
      * "floppyDevice" may be an empty string if no such device was specified in the YCP code.
      * Usually it is something like "/dev/fd0".
      */
-    virtual YWidget *createPackageSelector( YWidget *parent, YWidgetOpt &opt, const YCPString &floppyDevice ) = 0;
+    virtual YWidget *createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YCPString & floppyDevice ) = 0;
 
     /**
      * Creates a PkgSpecial widget, i.e. a specific subwidget.
      */
-    virtual YWidget *createPkgSpecial( YWidget *parent, YWidgetOpt &opt, const YCPString &subwidget ) = 0;
+    virtual YWidget *createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPString & subwidget ) = 0;
 
 
     /**
@@ -532,7 +532,7 @@ protected:
      * Overwrite this method at your own discretion.
      * If you do, remember to overwrite the has...( ) method as well!
      */
-    virtual YWidget *createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt);
+    virtual YWidget *createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt);
     virtual bool     hasDummySpecialWidget( );
 
     /**
@@ -542,9 +542,9 @@ protected:
      * Overwrite this method at your own discretion.
      * If you do, remember to overwrite the has...( ) method as well!
      */
-    virtual YWidget *	createDownloadProgress( YWidget *parent, YWidgetOpt &opt,
-					       const YCPString &label,
-					       const YCPString &filename,
+    virtual YWidget *	createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
+					       const YCPString & label,
+					       const YCPString & filename,
 					       int expectedSize);
     virtual bool	hasDownloadProgress( );
 
@@ -555,7 +555,7 @@ protected:
      * Overwrite this method at your own discretion.
      * If you do, remember to overwrite the has...( ) method as well!
      */
-    virtual YWidget *	createBarGraph( YWidget *parent, YWidgetOpt &opt);
+    virtual YWidget *	createBarGraph( YWidget *parent, YWidgetOpt & opt);
     virtual bool	hasBarGraph( );
 
     /**
@@ -565,7 +565,7 @@ protected:
      * Overwrite this method at your own discretion.
      * If you do, remember to overwrite the has...( ) method as well!
      */
-    virtual YWidget *	createColoredLabel( YWidget *parent, YWidgetOpt &opt,
+    virtual YWidget *	createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 					   YCPString label,
 					   YColor foreground, YColor background,
 					   int margin );
@@ -628,7 +628,7 @@ protected:
      * Returns YCPVoid( ) if OK and YCPNull( ) on error.
      * This default implementation does nothing.
      */
-    virtual YCPValue setLanguage( const YCPTerm &term);
+    virtual YCPValue setLanguage( const YCPTerm & term);
 
 
     /**
@@ -636,11 +636,11 @@ protected:
      * Returns YCPVoid( ) if OK and YCPNull( ) on error.
      * This default implementation does nothing.
      */
-    virtual YCPValue setConsoleFont ( const YCPString &console_magic,
-				      const YCPString &font,
-				      const YCPString &screen_map,
-				      const YCPString &unicode_map,
-				      const YCPString &encoding );
+    virtual YCPValue setConsoleFont ( const YCPString & console_magic,
+				      const YCPString & font,
+				      const YCPString & screen_map,
+				      const YCPString & unicode_map,
+				      const YCPString & encoding );
 
 
     /**
@@ -776,7 +776,7 @@ protected:
     /**
      * Evaluates a locale. Evaluate _( "string") to "string".
      */
-    YCPValue evaluateLocale( const YCPLocale &);
+    YCPValue evaluateLocale( const YCPLocale & );
 
     /**
      * Start macro recording to file "filename".
@@ -953,8 +953,8 @@ protected:
      * @param argnr the index of the first non-id and non-opt argument ( 0, 1 or 2)
      * @param rbg Pointer to the current radio button group
      */
-    YWidget *createReplacePoint( YWidget *parent, YWidgetOpt &opt,
-				const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createReplacePoint( YWidget *parent, YWidgetOpt & opt,
+				const YCPTerm & term, const YCPList & optList, int argnr,
 				YRadioButtonGroup *rbg);
 
 
@@ -962,8 +962,8 @@ protected:
      * Helper function of createWidgetTree.
      * Creates one of Empty, HStretch, VStretch, Stretch
      */
-    YWidget *createEmpty( YWidget *parent, YWidgetOpt &opt,
-			 const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createEmpty( YWidget *parent, YWidgetOpt & opt,
+			 const YCPTerm & term, const YCPList & optList, int argnr,
 			 bool hstretchable, bool vstretchable);
 
     /**
@@ -972,16 +972,16 @@ protected:
      * @param horizontal true if this is a HSpacing
      * @param vertical true if this is a VSpacing
      */
-    YWidget *createSpacing( YWidget *parent, YWidgetOpt &opt,
-			   const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createSpacing( YWidget *parent, YWidgetOpt & opt,
+			   const YCPTerm & term, const YCPList & optList, int argnr,
 			   bool horizontal, bool vertical);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a frame widget.
      */
-    YWidget *createFrame( YWidget *parent, YWidgetOpt &opt,
-			 const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createFrame( YWidget *parent, YWidgetOpt & opt,
+			 const YCPTerm & term, const YCPList & optList, int argnr,
 			 YRadioButtonGroup *rbg);
 
     /**
@@ -989,8 +989,8 @@ protected:
      * Creates a weight widget.
      * @param dim dimension of the weight, either YD_HORIZ or YD_VERT
      */
-    YWidget *createWeight( YWidget *parent, YWidgetOpt &opt,
-			  const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createWeight( YWidget *parent, YWidgetOpt & opt,
+			  const YCPTerm & term, const YCPList & optList, int argnr,
 			  YRadioButtonGroup *rbg, YUIDimension dim);
 
     /**
@@ -1000,8 +1000,8 @@ protected:
      * @param halign the horizontal alignment
      * @param valign the vertical alignment
      */
-    YWidget *createAlignment( YWidget *parent, YWidgetOpt &opt,
-			     const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createAlignment( YWidget *parent, YWidgetOpt & opt,
+			     const YCPTerm & term, const YCPList & optList, int argnr,
 			     YRadioButtonGroup *rbg,
 			     YAlignmentType halign, YAlignmentType valign);
 
@@ -1013,8 +1013,8 @@ protected:
      * @param hsquash whether the child is being squashed horizontally
      * @param vsquash whether the child is being squashed vertically
      */
-    YWidget *createSquash( YWidget *parent, YWidgetOpt &opt,
-			  const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createSquash( YWidget *parent, YWidgetOpt & opt,
+			  const YCPTerm & term, const YCPList & optList, int argnr,
 			  YRadioButtonGroup *rbg, bool hsquash, bool vsquash);
 
     /**
@@ -1023,8 +1023,8 @@ protected:
      *
      * @param dim Dimension of the layoutbox
      */
-    YWidget *createLBox( YWidget *parent, YWidgetOpt &opt,
-			const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createLBox( YWidget *parent, YWidgetOpt & opt,
+			const YCPTerm & term, const YCPList & optList, int argnr,
 			YRadioButtonGroup *rbg, YUIDimension dim);
 
     /**
@@ -1033,61 +1033,61 @@ protected:
      *
      * @param heading true if the label is a Heading( )
      */
-    YWidget *createLabel( YWidget *parent, YWidgetOpt &opt,
-			 const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createLabel( YWidget *parent, YWidgetOpt & opt,
+			 const YCPTerm & term, const YCPList & optList, int argnr,
 			 bool heading);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a RichText.
      */
-    YWidget *createRichText( YWidget *parent, YWidgetOpt &opt,
-			    const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createRichText( YWidget *parent, YWidgetOpt & opt,
+			    const YCPTerm & term, const YCPList & optList, int argnr);
 
 
     /**
      * Helper function of createWidgetTree.
      * Creates a LogView.
      */
-    YWidget *createLogView( YWidget *parent, YWidgetOpt &opt,
-			   const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createLogView( YWidget *parent, YWidgetOpt & opt,
+			   const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a PushButton or an IconButton.
      */
-    YWidget *createPushButton( YWidget *parent, YWidgetOpt &opt,
-			      const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createPushButton( YWidget *parent, YWidgetOpt & opt,
+			      const YCPTerm & term, const YCPList & optList, int argnr,
 			      bool isIconButton );
 
     /**
      * Helper function for createWidgetTreeTree.
      * Creates a menu button.
      */
-    YWidget *createMenuButton( YWidget *parent, YWidgetOpt &opt,
-			       const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createMenuButton( YWidget *parent, YWidgetOpt & opt,
+			       const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a CheckBox.
      */
-    YWidget *createCheckBox( YWidget *parent, YWidgetOpt &opt,
-			    const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createCheckBox( YWidget *parent, YWidgetOpt & opt,
+			    const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a RadioButton.
      */
-    YWidget *createRadioButton( YWidget *parent, YWidgetOpt &opt,
-			       const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createRadioButton( YWidget *parent, YWidgetOpt & opt,
+			       const YCPTerm & term, const YCPList & optList, int argnr,
 			       YRadioButtonGroup *rbg);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a RadioButtonGroup.
      */
-    YWidget *createRadioButtonGroup( YWidget *parent, YWidgetOpt &opt,
-				    const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createRadioButtonGroup( YWidget *parent, YWidgetOpt & opt,
+				    const YCPTerm & term, const YCPList & optList, int argnr,
 				    YRadioButtonGroup *rbg);
 
     /**
@@ -1096,128 +1096,128 @@ protected:
      *
      * @param password true if this should be password entry field
      */
-    YWidget *createTextEntry( YWidget *parent, YWidgetOpt &opt,
-			     const YCPTerm &term, const YCPList &optList, int argnr,
+    YWidget *createTextEntry( YWidget *parent, YWidgetOpt & opt,
+			     const YCPTerm & term, const YCPList & optList, int argnr,
 			     bool password);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a MultiLineEdit.
      */
-    YWidget *createMultiLineEdit( YWidget *parent, YWidgetOpt &opt,
-				 const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
+				 const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a SelectionBox.
      */
-    YWidget *createSelectionBox( YWidget *parent, YWidgetOpt &opt,
-				const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createSelectionBox( YWidget *parent, YWidgetOpt & opt,
+				const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function for createWidgetTreeTree.
      * Creates a MultiSelectionBox.
      */
-    YWidget *createMultiSelectionBox( YWidget *parent, YWidgetOpt &opt,
-				     const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt,
+				     const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a ComboBox.
      */
-    YWidget *createComboBox( YWidget *parent, YWidgetOpt &opt,
-			    const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createComboBox( YWidget *parent, YWidgetOpt & opt,
+			    const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a Tree.
      */
-    YWidget *createTree( YWidget *parent, YWidgetOpt &opt,
-			const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createTree( YWidget *parent, YWidgetOpt & opt,
+			const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a Table.
      */
-    YWidget *createTable( YWidget *parent, YWidgetOpt &opt,
-			 const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createTable( YWidget *parent, YWidgetOpt & opt,
+			 const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a ProgressBar.
      */
-    YWidget *createProgressBar( YWidget *parent, YWidgetOpt &opt,
-			       const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createProgressBar( YWidget *parent, YWidgetOpt & opt,
+			       const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates an Image.
      */
-    YWidget *createImage( YWidget *parent, YWidgetOpt &opt,
-			 const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createImage( YWidget *parent, YWidgetOpt & opt,
+			 const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates an IntField.
      */
-    YWidget *createIntField( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-			    const YCPList &optList, int argnr);
+    YWidget *createIntField( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a PackageSelector.
      */
-    YWidget *createPackageSelector( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-				   const YCPList &optList, int argnr);
+    YWidget *createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				   const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a PkgSpecial subwidget.
      */
-    YWidget *createPkgSpecial( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-			      const YCPList &optList, int argnr);
+    YWidget *createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			      const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a DummySpecialWidget.
      */
-    YWidget *createDummySpecialWidget( YWidget *parent, YWidgetOpt &opt,
-				      const YCPTerm &term, const YCPList &optList, int argnr);
+    YWidget *createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt,
+				      const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a DownloadProgress.
      */
-    YWidget *createDownloadProgress( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-				    const YCPList &optList, int argnr);
+    YWidget *createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				    const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a BarGraph.
      */
-    YWidget *createBarGraph( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-			    const YCPList &optList, int argnr);
+    YWidget *createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a ColoredLabel.
      */
-    YWidget *createColoredLabel( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-				const YCPList &optList, int argnr);
+    YWidget *createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a Slider.
      */
-    YWidget *createSlider( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-			  const YCPList &optList, int argnr);
+    YWidget *createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			  const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.
      * Creates a PartitionSplitter.
      */
-    YWidget *createPartitionSplitter( YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-				     const YCPList &optList, int argnr);
+    YWidget *createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				     const YCPList & optList, int argnr);
 
 
 
@@ -1228,7 +1228,7 @@ protected:
      * has with id 17.
      * @return The widget id on success or YCPNull on failure
      */
-    YCPValue getWidgetId( const YCPTerm &term, int *argnr);
+    YCPValue getWidgetId( const YCPTerm & term, int *argnr);
 
     /**
      * Looks for widget options in the term. Returns the list
@@ -1241,14 +1241,14 @@ protected:
      * Returns the number of the first non-id and non-opt argument.
      * @return The option list, which may be empty, but never YCPNull
      */
-    YCPList getWidgetOptions( const YCPTerm &term, int *argnr);
+    YCPList getWidgetOptions( const YCPTerm & term, int *argnr);
 
     /**
      * Logs a warning for an unknown widget option
      * @param term the widget term, e.g. PushButton( `opt(`unknown), ...)
      * @param option the unknown option itself
      */
-    void logUnknownOption( const YCPTerm &term, const YCPValue &option);
+    void logUnknownOption( const YCPTerm & term, const YCPValue & option);
 
     /**
      * Logs warning messages for all widget options other than the
@@ -1256,7 +1256,7 @@ protected:
      * @param term the widget term, e.g. PushButton( `opt(`unknown), ...)
      * @param optList the list of options not yet processed
      */
-    void rejectAllOptions( const YCPTerm &term, const YCPList &optList);
+    void rejectAllOptions( const YCPTerm & term, const YCPList & optList);
 
     /**
      * Enters a dialog into the dialog map.

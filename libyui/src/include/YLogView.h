@@ -82,7 +82,7 @@ public:
      * Set the label above the log lines. Overload this, but call
      * YLogView::setLabel at the end of your own function.
      */
-    virtual void	setLabel( const YCPString &newLabel );
+    virtual void	setLabel( const YCPString & newLabel );
 
     /**
      * Retrieve the entire log text as one large string of concatenated lines

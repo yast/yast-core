@@ -47,7 +47,7 @@ YMacroPlayer::~YMacroPlayer( )
 
 
 
-void YMacroPlayer::readMacroFile( const string &macroFileName )
+void YMacroPlayer::readMacroFile( const string & macroFileName )
 {
     clearError( );
     FILE * macroFile = fopen( macroFileName.c_str( ), "r" );

@@ -67,14 +67,14 @@ public:
      *
      * Why? Just picture the following ( admittedly pathologic) situation:
      *
-     * [&OK]
-     * [&OK]
-     * [&OK]
+     * [& OK]
+     * [& OK]
+     * [& OK]
      *
      * This will result in something like this:
      *
-     * [&OK]
-     * [O&K]
+     * [& OK]
+     * [O& K]
      * [OK]
      *
      * I.e. the first OK button will retain its preferred shortcut ( 'O'), the

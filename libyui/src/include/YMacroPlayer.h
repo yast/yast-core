@@ -66,7 +66,7 @@ protected:
     /**
      * Read and parse a macro file. Sets the internal "error" status.
      **/
-    void readMacroFile( const string &macroFileName );
+    void readMacroFile( const string & macroFileName );
 
     /**
      * Clear error status

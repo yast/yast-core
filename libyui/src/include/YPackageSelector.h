@@ -36,7 +36,7 @@ public:
      * Constructor
      * @param opt the widget options
      */
-    YPackageSelector( YWidgetOpt &opt );
+    YPackageSelector( YWidgetOpt & opt );
 
     /**
      * Returns a descriptive name of this widget class for logging,

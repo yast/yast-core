@@ -48,7 +48,7 @@ YMacroRecorder::~YMacroRecorder( )
 }
 
 
-void YMacroRecorder::openMacroFile( const string &macroFileName )
+void YMacroRecorder::openMacroFile( const string & macroFileName )
 {
     _macroFile = fopen( macroFileName.c_str( ), "w" );
 
@@ -119,7 +119,7 @@ void YMacroRecorder::endBlock( )
 }
 
 
-void YMacroRecorder::recordUserInput( const YCPValue &input )
+void YMacroRecorder::recordUserInput( const YCPValue & input )
 {
     if ( ! _macroFile )
 	return;

@@ -26,14 +26,14 @@
 #include "YShortcut.h"
 
 
-YFrame::YFrame( YWidgetOpt &opt, const YCPString &newLabel)
+YFrame::YFrame( YWidgetOpt & opt, const YCPString & newLabel)
     : YContainerWidget( opt)
     , label( YCPString( YShortcut::cleanShortcutString( newLabel->value( ) ) ) )
 {
 }
 
 
-void YFrame::setLabel( const YCPString &newLabel )
+void YFrame::setLabel( const YCPString & newLabel )
 {
     this->label = newLabel;
 }

@@ -406,13 +406,13 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll)
     {
 	if ( poll )
 	{
-	    event_widget = filterInvalidEvents( pollInput( dialog, &event_type) );
+	    event_widget = filterInvalidEvents( pollInput( dialog, & event_type) );
 	}
 	else
 	{
 	    do
 	    {
-		event_widget = filterInvalidEvents( userInput( dialog, &event_type) );
+		event_widget = filterInvalidEvents( userInput( dialog, & event_type) );
 	    } while ( event_type != ET_CANCEL &&
 		      event_type != ET_DEBUG  &&
 		      event_type != ET_MENU   &&
@@ -788,7 +788,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
     // group belonging to the new subtree.
 
     bool contains;
-    YRadioButtonGroup *rbg = findRadioButtonGroup( currentDialog(), replpoint, &contains);
+    YRadioButtonGroup *rbg = findRadioButtonGroup( currentDialog(), replpoint, & contains);
 
     // I must _first_ remove the old widget and then create the new ones. The reason
     // is: Otherwise you couldn't use the same widget ids in the old and new widget tree.
@@ -1140,7 +1140,7 @@ YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
  * some characters defined in Unicode / UTF-8.
  * <p>
  * Please note the value returned may consist of more than one character; for
- * example, Glyph( `ArrowRight) may return something like "-&gt;".
+ * example, Glyph( `ArrowRight) may return something like "-& gt;".
  * <p>
  * Predefined glyphs include:
  * <ul>
@@ -1836,7 +1836,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 
     do
     {
-	iconv_ret = iconv ( cd, ( &inptr), &inbuf_len, &outptr, &outbuf_len);
+	iconv_ret = iconv ( cd, ( & inptr), & inbuf_len, & outptr, & outbuf_len);
 
 	if ( iconv_ret == ( size_t)(-1))
 	{

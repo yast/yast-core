@@ -35,7 +35,7 @@ public:
      * @param text the initial text of the RichText
      * @param opt the widget options
      */
-    YRichText( YWidgetOpt &opt, YCPString text);
+    YRichText( YWidgetOpt & opt, YCPString text);
 
     /**
      * Returns a descriptive name of this widget class for logging,

@@ -32,7 +32,7 @@ public:
     /**
      * Constructor
      */
-    YImage( YWidgetOpt &opt);
+    YImage( YWidgetOpt & opt);
 
     /**
      * Returns a descriptive name of this widget class for logging,

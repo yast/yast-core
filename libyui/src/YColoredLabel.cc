@@ -26,7 +26,7 @@
 #include "YColoredLabel.h"
 
 
-YColoredLabel::YColoredLabel( YWidgetOpt &opt, YCPString text)
+YColoredLabel::YColoredLabel( YWidgetOpt & opt, YCPString text)
     : YWidget( opt)
     , text( text)
 {
@@ -68,7 +68,7 @@ YCPValue YColoredLabel::queryWidget( const YCPSymbol & property)
 }
 
 
-void YColoredLabel::setLabel( const YCPString &label)
+void YColoredLabel::setLabel( const YCPString & label)
 {
     text = label;
 }
