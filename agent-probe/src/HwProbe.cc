@@ -450,6 +450,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		break;
 		case 11:		// is_uml
 		    value = YCPBoolean (hd_is_uml (hd_base) ? true : false);
+		break;
 		case 12:		// has_apm
 		    value = YCPBoolean (hd_apm_enabled (hd_base) ? true : false);
 		break;
