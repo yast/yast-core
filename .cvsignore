@@ -20,3 +20,4 @@ ltmain.sh
 missing
 mkinstalldirs
 stamp-h*
+Makefile.am.common
