@@ -196,7 +196,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 
 YCPValue YWidget::changeWidgetTerm( const YCPTerm & property, const YCPValue & newvalue )
 {
-    y2warning( "Widget %s: Couldn't change unkown widget property %s to %s",
+    y2warning( "Widget %s: Couldn't change unknown widget property %s to %s",
 	       id()->toString().c_str(), property->toString().c_str(), newvalue->toString().c_str() );
     return YCPVoid();
 }
