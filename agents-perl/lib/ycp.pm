@@ -679,6 +679,9 @@ variable is set. This is for compatibility with the logging system in libycp.
 
 =cut
 
+my $log_component = $0;		# use program name as the log component
+$log_component =~ s:.*/::;	# strip path part
+
 sub y2debug	{ y2logger (0, @_); }
 sub y2milestone	{ y2logger (1, @_); }
 sub y2warning	{ y2logger (2, @_); }
@@ -696,10 +699,10 @@ sub y2logger ($@)
     }
 
     my $tm = localtime;
-    my $datestr = sprintf( "%04d-%02d-%02d %02d:%02d:%02d <%d> %s(%d) [perl]",
+    my $datestr = sprintf( "%04d-%02d-%02d %02d:%02d:%02d <%d> %s(%d) [%s]",
 			   $tm->year+1900, $tm->mon+1, $tm->mday,
 			   $tm->hour, $tm->min, $tm->sec,
-			   $level, $hostname, $$);
+			   $level, $hostname, $$, $log_component);
 
     print LOG "$datestr ", join(" ", @_), "\n";
 }
