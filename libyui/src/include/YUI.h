@@ -789,6 +789,7 @@ protected:
     virtual bool hasAnimationSupport()		{ return false; }
     virtual bool hasIconSupport()		{ return false; }
     virtual bool hasFullUtf8Support()		{ return false; }
+    virtual bool richTextSupportsTable()	{ return false; }
 
     /**
      * UI-specific busyCursor function.

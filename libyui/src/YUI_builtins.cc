@@ -1363,6 +1363,10 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
  *		<td>	HasFullUtf8Support	</td>	<td>boolean</td>
  *		<td>	<i>true</i> if all UTF-8 characters can be displayed simultaneously.</td>
  *	</tr>
+ *	<tr>
+ *		<td>	RichTextSupportsTable	</td>	<td>boolean</td>
+ *		<td>	<i>true</i> if this UI's RichText widget supports HTML-like table tags</td>
+ *	</tr>
  * </table>
  *
  * <p>
@@ -1389,6 +1393,7 @@ YCPMap YUI::evaluateGetDisplayInfo()
     info_map->add( YCPString( YUICap_HasAnimationSupport	), YCPBoolean( hasAnimationSupport()	) );
     info_map->add( YCPString( YUICap_HasIconSupport		), YCPBoolean( hasIconSupport()		) );
     info_map->add( YCPString( YUICap_HasFullUtf8Support		), YCPBoolean( hasFullUtf8Support()	) );
+    info_map->add( YCPString( YUICap_RichTextSupportsTable	), YCPBoolean( richTextSupportsTable()	) );
 
     return info_map;
 }
