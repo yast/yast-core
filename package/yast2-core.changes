@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Apr  5 21:49:56 CEST 2004 - ma@suse.de
+
+- Include source packages to install in disk usage
+  calculation. (#38257)
+- 2.9.76
+
+-------------------------------------------------------------------
 Fri Apr  2 22:09:36 CEST 2004 - msvec@suse.cz
 
 - fixed agent-probe to report correct requires (#37335)
@@ -8,12 +15,12 @@ Fri Apr  2 22:09:36 CEST 2004 - msvec@suse.cz
 Fri Apr  2 16:14:59 CEST 2004 - visnov@suse.cz
 
 - YaST is now GPL
-- 2.9.76 
+- 2.9.76
 
 -------------------------------------------------------------------
 Thu Apr  1 18:01:55 CEST 2004 - visnov@suse.cz
 
-- restore textdomain at the end of included file (#36989) 
+- restore textdomain at the end of included file (#36989)
 
 -------------------------------------------------------------------
 Wed Mar 31 14:19:11 CEST 2004 - sh@suse.de

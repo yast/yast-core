@@ -256,27 +256,43 @@ PkgModuleFunctions::PkgMediaSizes ()
     for (PMPackageManager::PMSelectableVec::const_iterator pkg = _y2pm.packageManager().begin();
          pkg != _y2pm.packageManager().end(); ++pkg)
     {
-        if (!((*pkg)->to_install()))
-            continue;
-        PMPackagePtr package = (*pkg)->candidateObj();
-        if (!package)
+      if ( ! ( (*pkg)->to_install() || (*pkg)->source_install() ) )
+	continue;
+
+      PMPackagePtr package = (*pkg)->candidateObj();
+      if (!package)
+      {
+	continue;
+      }
+
+      map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.find (package->instSrcRank());
+      if (mediapair == mediasizes.end())
+      {
+	y2error ("Unknown rank %d for '%s'", package->instSrcRank(), ((std::string)(*pkg)->name()).c_str());
+	continue;
+      }
+
+      if ( (*pkg)->to_install() ) {
+	unsigned int medianr = package->medianr();
+	FSize size = package->size();
+	if (medianr > mediapair->second.second.size())
         {
-            continue;
-        }
-        map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.find (package->instSrcRank());
-        if (mediapair == mediasizes.end())
+	  y2error ("resize needed %d", medianr);
+	  mediapair->second.second.resize (medianr);
+	}
+	mediapair->second.second[medianr-1] += size;
+      }
+
+      if ( (*pkg)->source_install() ) {
+	unsigned int medianr = atoi( package->sourceloc().c_str() );
+	FSize size = package->sourcesize();
+	if (medianr > mediapair->second.second.size())
         {
-            y2error ("Unknown rank %d for '%s'", package->instSrcRank(), ((std::string)(*pkg)->name()).c_str());
-            continue;
-        }
-        unsigned int medianr = package->medianr();
-        FSize size = package->size();
-        if (medianr > mediapair->second.second.size())
-        {
-            y2error ("resize needed %d", medianr);
-            mediapair->second.second.resize (medianr);
-        }
-        mediapair->second.second[medianr-1] += size;
+	  y2error ("resize needed %d", medianr);
+	  mediapair->second.second.resize (medianr);
+	}
+	mediapair->second.second[medianr-1] += size;
+      }
     }
 
     // now convert back to list of lists in installation order
