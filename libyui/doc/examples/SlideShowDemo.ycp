@@ -1,0 +1,153 @@
+// SlideShow demo: Using Wizard and MultiProgressMeter
+//
+// Note: YCP applications are discouraged from using the Wizard widget directly.
+// Use the Wizard module instead.
+
+{
+
+    list<map> base_installation_steps =
+	[
+	  $[ "id": "language",		"label": "Language"			],
+	  $[ "id": "proposal",		"label": "Installation Settings"	],
+	  $[ "id": "do_resize",		"label": "Perform Installation"		],
+	  $[ "id": "prepdisk",		"label": "Perform Installation"		],
+	  $[ "id": "kickoff",		"label": "Perform Installation"		],
+	  $[ "id": "rpmcopy",		"label": "Perform Installation"		],
+	  $[ "id": "finish",		"label": "Perform Installation"		]
+	];
+
+    list<map> config_steps =
+	[
+	  $[ "id": "root",		"label": "Root Password"		],
+	  $[ "id": "proposal_net",	"label": "Network"			],
+          $[ "id": "ask_net_test",	"label": "Network"			],
+	  $[ "id": "do_net_test",	"label": "Network"			],
+	  $[ "id": "you",		"label": "Online Update"		],
+	  $[ "id": "auth",		"label": "Users"			],
+	  $[ "id": "user",		"label": "Users"			],
+	  $[ "id": "suseconfig",	"label": "Clean Up"			],
+	  $[ "id": "release_notes",	"label": "Release Notes"		],
+	  $[ "id": "proposal_hw",	"label": "Device Configuration"		]
+	];
+
+    list<map> steps = flatten( [ base_installation_steps, config_steps ] );
+
+    list<integer> rpms = [ 600, 150, 30, 100 ];
+
+
+    define list<integer> subtract( list<integer> valueList, integer delta )
+    {
+	boolean subtracted = false;
+	list<integer> newList = [];
+
+	foreach ( integer val, valueList, ``{
+	    if ( val > 0 && ! subtracted )
+	    {
+		val = val - delta;
+		subtracted = true;
+	    }
+
+	    if ( val < 0 )
+		val = 0;
+
+	    newList = add( newList, val );
+	});
+
+	return newList;
+    }
+
+    
+    define string remainingTime( list<integer> rpms )
+    {
+	integer left = 0;
+	
+	foreach ( integer val, rpms, ``{
+	    left = left + val;
+	});
+
+	integer minutes = left / 30;
+	
+	return minutes < 10 ?
+	    sformat( "Remaining:\n0:0%1:17", minutes ) :
+	    sformat( "Remaining:\n0:%1:37" , minutes );
+    }
+
+
+    if ( ! UI::HasSpecialWidget(`Wizard) )
+    {
+	y2error( "This works only with UIs that provide the wizard widget!" );
+	return;
+    }
+
+    string help_text = "<p>Please wait while packages are being installed.</p>";
+
+    UI::OpenDialog(`opt(`defaultsize ),
+		   `Wizard(`opt(`stepsEnabled),
+			   `back,  "&Back",
+			   `abort, "Ab&ort",
+			   `next,  "&Next" ) );
+
+    // UI::DumpWidgetTree();
+
+    // UI::WizardCommand(`SetVerboseCommands( true ) );
+    UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
+    UI::WizardCommand(`SetDialogHeading( "Package Installation" ) );
+    UI::WizardCommand(`SetHelpText( help_text ) );
+
+    UI::WizardCommand(`AddStepHeading( "Base Installation" ) );
+
+    foreach ( map step, base_installation_steps, ``{
+	UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
+    });
+
+
+    UI::WizardCommand(`AddStepHeading( "Configuration" ) );
+
+    foreach ( map step, config_steps, ``{
+	UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
+    });
+
+    UI::WizardCommand(`SetCurrentStep( "rpmcopy" ) );
+
+    UI::ReplaceWidget(`id(`contents),
+		      `HBox(
+			    `VBox(
+				  `VWeight( 4, `HVCenter(
+							 `Image(`opt(`scaleToFit),
+								"/usr/share/doc/susetour/img/office0.png", "Games" )
+							 )
+					    ),
+				  `VWeight( 1, `RichText( "<p>Thank you for buying this product!</p>"    ) )
+				  ),
+			    `HSpacing( 0.5 ),
+			    `VBox(
+				  `Label(`id(`time), remainingTime( rpms ) ),
+				  `VMultiProgressMeter(`id(`progress), rpms ),
+				  `PushButton(`id(`details), "&Details..." )
+				  )
+			    )
+		      );
+
+    while( true )
+    {
+	symbol button = (symbol) UI::UserInput();
+
+	if ( button == `abort )
+	    break;
+
+	integer delta = 0;
+	if ( button == `next )	delta = 10;
+	if ( button == `back )	delta = 100;
+
+	if ( delta > 0 )
+	{
+	    rpms = subtract( rpms, 10 );
+	    UI::ChangeWidget(`progress, `Values, rpms );
+	    UI::ChangeWidget(`time, `Value, remainingTime( rpms ) );
+	    UI::RecalcLayout();
+	}
+    }
+
+    UI::CloseDialog();
+
+}
