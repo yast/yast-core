@@ -728,7 +728,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    close(fd);
 	    return YCPBoolean (written == length);
 	}
-	ycp2error ("Write (.string, \"%s,\") failed: %s", filename.c_str (), strerror (errno));
+	ycp2error ("Write (.string, \"%s\") failed: %s", filename.c_str (), strerror (errno));
 	return YCPBoolean(false);
     }
 
