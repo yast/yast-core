@@ -766,74 +766,17 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
 }
 
 
-/**
- * @widgets	Time
- * @short	Simple static text
- * @class	YTime
- * @arg		string label
- * @option	outputField make the label look like an input field in read-only mode
- * @usage	`Time( "Time:" , "20:20:20" )
- *
- *
- * @description
- *
- * TODO
- */
-
-YWidget * YUI::createTime( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
-			    const YCPList & optList, int argnr )
-{
-
-    if ( term->size() - argnr < 1 || term->size() - argnr > 2
-	 || !term->value(argnr)->isString()
-	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
-    {
-	y2error( "Invalid arguments for the Time widget: %s",
-		 term->toString().c_str() );
-	return 0;
-    }
-    YWidget *_time;
-    YCPString initial_time( "2000-01-01" );
-
-
-    if (hasTime())
-    {
-        if ( term->size() >= argnr + 2 ) initial_time = term->value( argnr+1 )->asString();
-
-        for ( int o=0; o < optList->size(); o++ )
-        {
-            if ( optList->value(o)->isSymbol() )
-            {
-                string sym = optList->value(o)->asSymbol()->symbol();
-
-                if	    ( sym  == YUIOpt_autoAdvance    ) opt.autoAdvance.setValue( true );
-                else    logUnknownOption( term, optList->value(o) );
-            }
-            else logUnknownOption( term, optList->value(o) );
-        }
-
-        _time = createTime( parent, opt, term->value( argnr )->asString(), initial_time );
-    } else {
-	y2error( "This UI does not support the Time widget." );
-	return 0;
-    }
-
-    return _time;
-}
-
-
-
 
 /**
  * @widgets	Date
- * @short	Simple static text
+ * @short	Date input field
  * @class	YDate
  * @arg		string label
  * @usage	`Date( "Date:", "2004-10-12" )
  *
  * @description
  *
- * TODO
+ * TODO - contact nashif@suse.de
  */
 
 YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -852,7 +795,7 @@ YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
     if ( term->size() >= argnr + 2 ) initial_date = term->value( argnr+1 )->asString();
     YWidget *_date;
 
-    if (hasDate())
+    if ( hasDate() )
     {
         _date = createDate( parent, opt, term->value( argnr )->asString(), initial_date );
     }
@@ -864,6 +807,64 @@ YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
 
     return _date;
 }
+
+
+
+/**
+ * @widgets	Time
+ * @short	Time input field
+ * @class	YTime
+ * @arg		string label
+ * @usage	`Time( "Time:" , "20:20:20" )
+ *
+ *
+ * @description
+ *
+ * TODO - contact nashif@suse.de
+ */
+YWidget * YUI::createTime( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr )
+{
+
+    if ( term->size() - argnr < 1 || term->size() - argnr > 2
+	 || !term->value(argnr)->isString()
+	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
+    {
+	y2error( "Invalid arguments for the Time widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+    YWidget *_time;
+    YCPString initial_time( "2000-01-01" );
+
+
+    if ( hasTime() )
+    {
+        if ( term->size() >= argnr + 2 ) initial_time = term->value( argnr+1 )->asString();
+
+        for ( int o=0; o < optList->size(); o++ )
+        {
+            if ( optList->value(o)->isSymbol() )
+            {
+                string sym = optList->value(o)->asSymbol()->symbol();
+
+                if   ( sym  == YUIOpt_autoAdvance    ) opt.autoAdvance.setValue( true );
+                else logUnknownOption( term, optList->value(o) );
+            }
+            else logUnknownOption( term, optList->value(o) );
+        }
+
+        _time = createTime( parent, opt, term->value( argnr )->asString(), initial_time );
+    }
+    else
+    {
+	y2error( "This UI does not support the Time widget." );
+	return 0;
+    }
+
+    return _time;
+}
+
 
 
 /*
@@ -957,35 +958,23 @@ YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
 }
 
 
-/**
- * Default low level specific UI implementations for optional widgets.
- *
- * UIs that overwrite any of those should overwrite the corresponding
- * has...() method as well!
- */
-
-YWidget * YUI::createTime( YWidget *parent, YWidgetOpt & opt,
-				       const YCPString & label,
-				       const YCPString & time)
-{
-    y2error( "Default Time() method called - "
-	     "forgot to call HasSpecialWidget()?" );
-
-    return 0;
-}
-
-/**
- * Default low level specific UI implementations for optional widgets.
- *
- * UIs that overwrite any of those should overwrite the corresponding
- * has...() method as well!
- */
 
 YWidget * YUI::createDate( YWidget *parent, YWidgetOpt & opt,
 				       const YCPString & label,
 				       const YCPString & date)
 {
     y2error( "Default Date() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
+
+
+YWidget * YUI::createTime( YWidget *parent, YWidgetOpt & opt,
+				       const YCPString & label,
+				       const YCPString & time)
+{
+    y2error( "Default Time() method called - "
 	     "forgot to call HasSpecialWidget()?" );
 
     return 0;
