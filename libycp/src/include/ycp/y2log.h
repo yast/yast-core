@@ -79,6 +79,7 @@
 // c++ interface for logging
 class Logger {
 public:
+    virtual ~Logger() {}
     virtual void error(string error) = 0;
     virtual void warning(string warning) = 0;
 };

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 31 10:47:00 CEST 2005 - coolo@suse.de
+
+- build better with gcc4
+
+-------------------------------------------------------------------
 Wed Mar 30 16:21:49 CEST 2005 - mvidner@suse.cz
 
 - ini agent: do not indent comments (#74698)

@@ -10,6 +10,7 @@
 
 
 #include <ycp/y2log.h>
+#include <ycp/YCPTerm.h>
 #include <y2/Y2Component.h>
 
 #include <ycp/YCPVoid.h>
