@@ -90,35 +90,6 @@ inline YCPList asYCPList( const InstSrcManager::ISrcIdList & ids_r )
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// InstSrcManager::SrcDelSet <- YCPList of YCPInteger
-/////////////////////////////////////////////////////////////////////////////////////////
-
-inline bool YcpArgLoad::Value<YT_LIST, InstSrcManager::SrcDelSet>::assign( const YCPValue & arg_r )
-{
-  YCPList l =  arg_r->asList(); // YT_LIST asserted
-  _value.clear();
-
-  bool valid = true;
-
-  for ( unsigned i = 0; i < unsigned(l->size()); ++i ) {
-    YCPValue el = l->value(i);
-    if ( el->isInteger() ) {
-      _value.insert( el->asInteger()->value() );
-    } else {
-      y2warning( "List entry %d: INTEGER expected but got '%s'", i, asString( el ).c_str() );
-      valid = false;
-      break;
-    }
-  }
-
-  if ( ! valid ) {
-    _value.clear();
-  }
-
-  return valid;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////
 // InstSrcManager::SrcStateVector <-> YCPList of YCPMap
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -995,11 +966,9 @@ PkgModuleFunctions::SourceEditGet (YCPList args)
 }
 
 /****************************************************************************************
- * @builtin Pkg::SourceEditSet ( list source_states, list todel ) -> true
+ * @builtin Pkg::SourceEditSet ( list source_states ) -> true
  *
  * @param source_states
- *
- * @param todel
  *
  * @return true
  **/
@@ -1010,14 +979,13 @@ PkgModuleFunctions::SourceEditSet (YCPList args)
   YcpArgLoad decl(__FUNCTION__);
 
   InstSrcManager::SrcStateVector & source_states( decl.arg<YT_LIST, InstSrcManager::SrcStateVector>() );
-  InstSrcManager::SrcDelSet &      source_todel(  decl.arg<YT_LIST, InstSrcManager::SrcDelSet>() );
 
   if ( ! decl.load( args ) ) {
     return pkgError_bad_args;
   }
   //-------------------------------------------------------------------------------------//
 
-  PMError err = _y2pm.instSrcManager().editSet( source_states, source_todel );
+  PMError err = _y2pm.instSrcManager().editSet( source_states );
   if ( err )
     return pkgError( err );
 
