@@ -19,6 +19,7 @@
 
 #include <libintl.h>
 #include <locale.h>
+#include <errno.h>
 
 #include <y2/Y2ComponentBroker.h>
 
