@@ -1,8 +1,13 @@
 -------------------------------------------------------------------
+Tue Aug 05 17:05:50 CEST 2003 - arvin@suse.de
+
+- fixed testsuite
+
+-------------------------------------------------------------------
 Tue Aug  5 13:13:41 CEST 2003 - gs@suse.de
 
 - V 2.8.13
-- libyui: YUI builtin SetKeyboard added 
+- libyui: YUI builtin SetKeyboard added
 
 -------------------------------------------------------------------
 Thu Jul 31 11:35:19 CEST 2003 - arvin@suse.de
