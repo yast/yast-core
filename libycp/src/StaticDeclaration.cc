@@ -526,7 +526,9 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
         d = d->name_space;
 	n = std::string(d->name) + "::" + n;
     }
+#if DO_DEBUG
     y2debug ("StaticDeclaration::writeDeclaration('%s':%s)", n.c_str(), decl->type->toString().c_str());
+#endif
  
     Bytecode::writeCharp (str, n.c_str());
     decl->type->toStream (str);
@@ -540,7 +542,9 @@ StaticDeclaration::readDeclaration (std::istream & str) const
 {
     char *name = Bytecode::readCharp (str);
     constTypePtr type = Bytecode::readType (str);
+#if DO_DEBUG
     y2debug ("StaticDeclaration::readDeclaration('%s':%s)", name, type->toString().c_str());
+#endif
     declaration_t *decl = findDeclaration (name, type);
     if (decl == 0)
     {
