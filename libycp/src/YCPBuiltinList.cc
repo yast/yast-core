@@ -741,8 +741,9 @@ YCPValue evaluateLSort(YCPInterpreter *interpreter, const YCPList& args)
 {
     /**
      * @builtin lsort(list l) -> list
-     * Sort the list l according to the current locale.
-     * Duplicates are not removed.
+     * Sort the list l according to the current locale. Duplicates are
+     * not removed. The function assumes that the strings in the list are
+     * UTF-8 encoded.
      *
      * Example <pre>
      * lsort (["a", "b", "ä"]) -> ["a", "ä", "b"]

@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       runycp.cc
 
@@ -18,6 +18,8 @@
 /-*/
 
 #include <stdio.h>
+#include <locale.h>
+
 #include <ycp/YCPParser.h>
 #include <ycp/YCPInterpreter.h>
 #include <ycp/y2log.h>
@@ -27,6 +29,8 @@ extern int yydebug;
 int
 main (int argc, const char *argv[])
 {
+    setlocale (LC_ALL, "");
+
     const char *fname = 0;
     FILE *infile = stdin;
 
@@ -101,7 +105,7 @@ main (int argc, const char *argv[])
 	{
 	    break;
 	}
-	fprintf (stderr, 
+	fprintf (stderr,
 	    "Parsed:\n"
 	    "----------------------------------------------------------------------\n"
 	    "%s\n"

@@ -25,6 +25,7 @@
 #include <stdio.h>
 
 #include "y2log.h"
+#include "y2string.h"
 #include "YCPString.h"
 
 
@@ -68,9 +69,15 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
     }
     else
     {
-	// FIXME: What encoding do our strings have? Always UTF-8?
-	// Likely we need iconv here.
-	tmp = strcoll (v.c_str (), s->v.c_str ());
+	const char* a = value_cstr ();
+	const char* b = s->value_cstr ();
+
+	wstring wa, wb;
+
+	if (utf82wchar (a, &wa) && utf82wchar (b, &wb))
+	    tmp = wcscoll (wa.c_str (), wb.c_str ());
+	else
+	    tmp = strcoll (a, b);
     }
 
     if (tmp == 0)

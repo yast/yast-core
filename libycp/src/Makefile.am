@@ -26,7 +26,7 @@ libycp_la_SOURCES = 								\
 	YCPBuiltinFloat.cc YCPBuiltinList.cc					\
 	YCPBuiltinString.cc YCPBuiltinTerm.cc					\
 	YCPBuiltinMap.cc YCPBuiltinMisc.cc					\
-	y2crypt.cc y2crypt.h
+	y2crypt.cc y2crypt.h y2string.cc y2string.h
 
 $(srcdir)/scanner.cc: scanner.ll $(srcdir)/parser.h
 	flex++ -o$@ $<
