@@ -49,9 +49,9 @@
 #include <string>
 #include <list>
 
-#ifndef DO_DEBUG
-#define DO_DEBUG 0
-#endif
+//#ifndef DO_DEBUG
+#define DO_DEBUG 1
+//#endif
 
 #include "YCP.h"
 #include "ycp/Scanner.h"
@@ -547,6 +547,8 @@ compact_expression:
 		    break;
 		}
 
+		yywarning ("'lookup()' is deprecated", $1.l);
+
 		// lookup needs special treatment because we must
 		// pass a 'type hint' about the default expression
 		// if default is nil, the type can't be seen in a YCPValue
@@ -556,7 +558,7 @@ compact_expression:
 		    $$.t = 0;
 		    break;
 		}
-		
+
 		// check the type of the index
 		if ($5.t->match ( (constMapTypePtr($3.t))->keytype())== -1)
 		{
@@ -564,16 +566,35 @@ compact_expression:
 		    $$.t = 0;
 		}
 
+		// likely type of lookup() expression
+
+		$$.t = (constMapTypePtr($3.t))->valuetype();
+
 		// default ($7) must match for non-nil
-		if (! $7.t->isVoid ()				// default is not 'nil'
-		    && $7.t->match ((constMapTypePtr($3.t))->valuetype()) == -1)	// and it doesn't match the determined type
+		if (! $7.t->isVoid ()			// default is not 'nil'
+		    && $7.t->match ($$.t) == -1)	// and it doesn't match the determined type
 		{
-		    yyTypeMismatch ("Third parameter to 'lookup' has wrong type", (constMapTypePtr($3.t))->valuetype(), $7.t, $1.l);		// -> then we have a type error
+		    yyTypeMismatch ("Third parameter to 'lookup' has wrong type", $$.t, $7.t, $1.l);	// -> then we have a type error
 		    $$.t = 0;
 		}
-		check_void_assign (0, &($7));
-		$$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $7.t);
-		$$.t = $7.t;
+		else
+		{
+		    // see bracket_expression !!
+		    check_void_assign (0, &($7));
+		    $$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $$.t);
+		    if (! $7.t->isVoid ()                       // default is not 'nil'
+			&& $$.t->isAny()			// map is unspecified
+			&& !$7.t->isAny())                      // don't cast any -> any
+                    {
+                        // for non-nil default and cur == Any use the type of the default,
+                        // but with runtime type checking
+                        $$.c = new YEPropagate ($$.c, Type::Any, $7.t);
+                    }
+                    $$.t = $$.t->detailedtype ($7.t);
+#if DO_DEBUG
+                    y2debug ("detailed type '%s'", $$.t->toString().c_str());
+#endif
+		}
 		$$.l = $1.l;
 	    }
 |	function_call

@@ -46,10 +46,12 @@ Parsed:
 ----------------------------------------------------------------------
 "** lookup **"
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Map.ycp:35 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 $[1:"a", 2:"bc"][1]:"no"
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Map.ycp:36 Warning: 'lookup()' is deprecated
 [Parser] tests/builtin/Builtin-Map.ycp:36 Third parameter to 'lookup' has wrong type
 [Parser] tests/builtin/Builtin-Map.ycp:36 Expected 'string', seen 'const integer'.
 Parsed:
@@ -57,6 +59,7 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-Map.ycp:36 Parser error
+[Scanner] tests/builtin/Builtin-Map.ycp:37 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 $[1:"a", 2:"bc"][371]:"take this"

@@ -1,0 +1,14 @@
+[Scanner] tests/types/lookup.ycp:5 Warning: 'lookup()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // map card
+    // string module_name
+    // filename: "tests/types/lookup.ycp"
+    map card = $["module":["abc", "def"]];
+    string module_name = /* any -> string */card["module"]:nil;
+    y2milestone ("module_name: %1", module_name);
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/lookup.ycp:5 Can't convert value '["abc", "def"]' to type 'string'
+[YCP] tests/types/lookup.ycp:9 module_name: nil

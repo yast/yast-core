@@ -24,7 +24,7 @@
 #include "ycp/YCPCode.h"	// for YT_Code in matchvalue()
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 #include <ctype.h>

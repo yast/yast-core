@@ -1,3 +1,4 @@
+[Scanner] tests/expressions/Lookup.ycp:26 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -40,6 +41,7 @@ Parsed:
     return node5;
 }
 ----------------------------------------------------------------------
+[Scanner] tests/expressions/Lookup.ycp:54 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -58,9 +60,10 @@ Parsed:
     map node5 = $[8:node1, 11:node4];
     map node6 = $[7:"Greece"];
     map node7 = $[12:node5, 13:node6];
-    return (node7[14]:"abc" == "abc");
+    return (/* any -> string */node7[14]:"abc" == "abc");
 }
 ----------------------------------------------------------------------
+[Scanner] tests/expressions/Lookup.ycp:66 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

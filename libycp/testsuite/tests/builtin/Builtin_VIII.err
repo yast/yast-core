@@ -1,3 +1,4 @@
+[Scanner] tests/builtin/Builtin_VIII.ycp:21 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 ($[1:"a", 2:"bc"][371]:"take this" == "take this")

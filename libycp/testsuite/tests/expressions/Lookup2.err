@@ -1,18 +1,20 @@
+[Scanner] tests/expressions/Lookup2.ycp:8 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
     // map m1
     // filename: "tests/expressions/Lookup2.ycp"
     map m1 = nil;
-    return [m1["huhu"]:"hoho"];
+    return [/* any -> string */m1["huhu"]:"hoho"];
 }
 ----------------------------------------------------------------------
+[Scanner] tests/expressions/Lookup2.ycp:13 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
     // map m1
     // filename: "tests/expressions/Lookup2.ycp"
     map m1 = nil;
-    return m1["huhu"]:"hoho";
+    return /* any -> string */m1["huhu"]:"hoho";
 }
 ----------------------------------------------------------------------
