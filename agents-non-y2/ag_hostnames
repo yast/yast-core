@@ -154,6 +154,8 @@ while true ; do
     IFS=
     read COMMAND || exit
     unset IFS
+    # strip leading backquote introduced by NI
+    COMMAND=${COMMAND#\`}
 
     IP_ONLY=0
     case "$COMMAND" in

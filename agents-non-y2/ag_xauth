@@ -30,6 +30,8 @@ while true ; do
     IFS=
     read COMMAND || exit
     unset IFS
+    # strip leading backquote introduced by NI
+    COMMAND=${COMMAND#\`}
 
     case "$COMMAND" in
 	"result ("*)
