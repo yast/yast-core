@@ -1,22 +1,24 @@
 {
-    return Read (.byte, "tests/data1.read");
+    return SCR::Read (.byte, "tests/data1.read");
 }
 
 {
-    return Read (.byte, "tests/data2.read");
+    return SCR::Read (.byte, "tests/data2.read");
 }
 
 {
-    byteblock data = Read (.byte, "tests/data2.read");
-    return Write (.byte, "tmp.write.byte", data);
+    any data = SCR::Read (.byte, "tests/data2.read");
+    if( is (data, byteblock) ) {
+	return SCR::Write (.byte, "tmp.write.byte", tobyteblock (data) );
+    }
 }
 
 {
     // this must produce a error in the log
-    return Read (.byte, "tests/not-here.data");
+    return SCR::Read (.byte, "tests/not-here.data");
 }
 
 {
     // this must not produce a error in the log
-    return Read (.byte, [ "tests/not-here.data", #[ff] ]);
+    return SCR::Read (.byte, [ "tests/not-here.data", #[ff] ]);
 }

@@ -1,1 +1,1 @@
-[Interpreter] tests/byte.ycp:16 Read (.byte, "tests/not-here.data") failed: No such file or directory
+[Interpreter] tests/byte.ycp:18 Read (.byte, "tests/not-here.data") failed: No such file or directory

@@ -29,8 +29,8 @@
 
 #include <config.h>
 #include <YCP.h>
-#include <y2/pathsearch.h>
-#include <ycp/YCPParser.h>
+#include <ycp/pathsearch.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 #include "SystemAgent.h"
@@ -293,13 +293,14 @@ dump_value (int level, const YCPValue& value)
  * Read function
  */
 YCPValue
-SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
+SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 {
     y2debug ("Read (%s)", path->toString().c_str());
 
     if (path->isRoot())
     {
-	return YCPError ("Read () called without sub-path");
+	ycp2error ("Read () called without sub-path");
+	return YCPNull ();
     }
 
     const string cmd = path->component_str (0); // just a shortcut
@@ -328,7 +329,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 
     if (arg.isNull())
     {
-	return YCPError ("Filename arg for Read is nil");
+	ycp2error ("Filename arg for Read is nil");
+	return YCPNull ();
     }
 
     YCPValue default_value = YCPNull();
@@ -349,7 +351,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     else
     {
 	y2error ("Read (%s, %s) failed !", cmd.c_str(), arg->toString().c_str());
-	return YCPError ("Bad filename arg for Read (...)");
+	ycp2error ("Bad filename arg for Read (...)");
+	return YCPNull ();
     }
 
     if (cmd == "string")
@@ -374,10 +377,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 	}
 	else
 	{
-	    return YCPError (string ("Read (.string, \"")
-			     + filename
-			     + "\") failed: "
-			     + strerror (ret));
+	    ycp2error ("Read (.string, \"%s\") failed: %d", filename.c_str (), ret);
+	    return YCPNull ();
 	}
     }
 
@@ -493,10 +494,26 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 		return YCPError ("Open file '" + filename + "' failed: " + strerror (errno));
 	    }
 	}
-	YCPParser parser (fd, filename.c_str ());
+	Parser parser (fd, filename.c_str ());
 	parser.setBuffered(); // Read from file. Buffering is always possible here
-	YCPValue contents = parser.parse();
+	YCode *p = parser.parse();
 	close(fd);
+	
+	if (!p)
+	{	return YCPError ("Parsing file '" + filename + "' failed");
+	}
+	
+	YCPValue contents = YCPNull ();
+	if (p->isBlock ())
+	{
+	    contents = YCPCode (p);
+	}
+	else
+	{
+	    contents = p->evaluate (true);
+	    delete p;
+	}
+
 	return !contents.isNull() ? contents : YCPVoid();
     }
 
@@ -626,7 +643,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 /**
  * Write function
  */
-YCPValue
+YCPBoolean
 SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 		    const YCPValue& arg)
 {
@@ -634,7 +651,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
     if (path->isRoot())
     {
-	return YCPError ("Write () called without sub-path", YCPBoolean (false));
+	ycp2error ("Write () called without sub-path");
+	return YCPBoolean (false);
     }
 
     const string cmd = path->component_str (0); // just a shortcut
@@ -653,14 +671,14 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
 	if (path->length() != 2)
 	{
-	    return YCPError ("Bad path argument in call to Write (.passwd.name)",
-			     YCPBoolean (false));
+	    ycp2error ("Bad path argument in call to Write (.passwd.name)");
+	    return YCPBoolean (false);
 	}
 
 	if (value.isNull() || !value->isString())
 	{
-	    return YCPError ("Bad password argument in call to Write (.passwd)",
-			     YCPBoolean (false));
+	    ycp2error ("Bad password argument in call to Write (.passwd)");
+	    return YCPBoolean (false);
 	}
 
 	string passwd = value->asString()->value();
@@ -689,12 +707,14 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
 	if (value.isNull() || !value->isString())
 	{
-	    return YCPError ("Bad filename arg for Write (.string ...)", YCPBoolean (false));
+	    ycp2error ("Bad filename arg for Write (.string ...)");
+	    return YCPBoolean (false);
 	}
 
 	if (arg.isNull() || !arg->isString())
 	{
-	    return YCPError ("Bad string value for Write (.string ...)", YCPBoolean (false));
+	    ycp2error ("Bad string value for Write (.string ...)");
+	    return YCPBoolean (false);
 	}
 
 	string filename = value->asString()->value();
@@ -708,10 +728,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    close(fd);
 	    return YCPBoolean (written == length);
 	}
-	return YCPError (string ("Write (.string, \"")
-			 + filename
-			 + "\") failed: "
-			 + strerror (errno), YCPBoolean(false));
+	ycp2error ("Write (.string, \"%s,\") failed: %s", filename.c_str (), strerror (errno));
+	return YCPBoolean(false);
     }
 
     else if (cmd == "byte")
@@ -723,14 +741,14 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
 	if (value.isNull () || !value->isString ())
 	{
-	    return YCPError ("Bad filename arg for Write (.byte, ...)",
-			     YCPBoolean (false));
+	    ycp2error ("Bad filename arg for Write (.byte, ...)");
+	    return YCPBoolean (false);
 	}
 
 	if (arg.isNull () || !arg->isByteblock ())
 	{
-	    return YCPError ("Bad value for Write (.byte, filename, byteblock)",
-			     YCPBoolean (false));
+	    ycp2error ("Bad value for Write (.byte, filename, byteblock)");
+	    return YCPBoolean (false);
 	}
 
 	string filename = value->asString ()->value ();
@@ -745,8 +763,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (write_size == size);
 	}
 
-	return YCPError (string ("Write (.byte, \"") + filename + "\") failed: "
-			 + strerror (errno), YCPBoolean (false));
+	ycp2error ("Write (.byte, \"%s\") failed: %s", filename.c_str (), strerror (errno));
+	return YCPBoolean (false);
     }
 
     else if (cmd == "ycp" || cmd == "yast2")
@@ -773,8 +791,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
 	if (value.isNull() || !(value->isString() || value->isList()))
 	{
-	    return YCPError ("Bad arguments to Write (" + cmd + ", string filename ...)",
-			     YCPBoolean (false));
+	    ycp2error ("Bad arguments to Write (%s, string filename ...)", cmd.c_str ());
+	    return YCPBoolean (false);
 	}
 
 	string filename;
@@ -791,9 +809,9 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 		|| (!flist->value(0)->isString())
 		|| (!flist->value(1)->isInteger()))
 	    {
-		return YCPError ("Bad [filename, mode] list in call to Write (" +
-				 cmd + ", [ string filename, integer mode ], ...)",
-				 YCPBoolean (false));
+		ycp2error ("Bad [filename, mode] list in call to Write (%s, [ string filename, integer mode ], ...)",
+		    cmd.c_str ());
+		return YCPBoolean (false);
 	    }
 	    filename = flist->value(0)->asString()->value();
 	    filemode = (int)(flist->value(1)->asInteger()->value());
@@ -801,8 +819,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 
 	if (filename.length() == 0)
 	{
-	    return YCPError ("Invalid empty filename in Write (" + cmd + ", ...)",
-			     YCPBoolean (false));
+	    ycp2error ("Invalid empty filename in Write (%s, ...)", cmd.c_str ());
+	    return YCPBoolean (false);
 	}
 
 	// Create directory, if missing
@@ -817,8 +835,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	bool success = false;
 	if (fd < 0)
 	{
-	    return YCPError ("Error opening '" + filename + "': " + strerror (errno),
-			     YCPBoolean (false));
+	    ycp2error ("Error opening '%s': %s", filename.c_str (), strerror (errno));
+	    return YCPBoolean (false);
 	}
 
 	// string contents = (arg.isNull() ? "" : arg->toString());
@@ -832,8 +850,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	return YCPBoolean(success);
     }
 
-    return YCPError (string("Undefined subpath for Write (") + path->toString() + ")",
-		     YCPBoolean (false));
+    ycp2error ("Undefined subpath for Write (%s)", path->toString ().c_str ());
+    return YCPBoolean (false);
 }
 
 

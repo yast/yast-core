@@ -1,7 +1,7 @@
 {
-    return Read (.size, "tests/data1.read");
+    return SCR::Read (.size, "tests/data1.read");
 }
 
 {
-    return Read (.size, "tests/data2.read");
+    return SCR::Read (.size, "tests/data2.read");
 }

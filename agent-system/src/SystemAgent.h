@@ -16,7 +16,6 @@
 
 #include <ycp/YCPValue.h>
 #include <scr/SCRAgent.h>
-#include <scr/SCRInterpreter.h>
 
 
 /**
@@ -33,24 +32,24 @@ public:
     /**
      * Read data
      */
-    YCPValue Read (const YCPPath& path, const YCPValue& arg = YCPNull());
+    virtual YCPValue Read (const YCPPath& path, const YCPValue& arg = YCPNull(), const YCPValue& opt = YCPNull ());
 
     /**
      * Write data
      */
-    YCPValue Write (const YCPPath& path, const YCPValue& value,
+    virtual YCPBoolean Write (const YCPPath& path, const YCPValue& value,
 		    const YCPValue& arg = YCPNull());
 
     /**
      * Execute a command
      */
-    YCPValue Execute (const YCPPath& path, const YCPValue& value = YCPNull(),
+    virtual YCPValue Execute (const YCPPath& path, const YCPValue& value = YCPNull(),
 		      const YCPValue& arg = YCPNull());
 
     /**
      * Get a list of all subtrees
      */
-    YCPValue Dir (const YCPPath& path) { return YCPList (); }
+    virtual YCPList Dir (const YCPPath& path) { return YCPList (); }
 
 private:
 

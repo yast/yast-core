@@ -1,8 +1,8 @@
 {
-    Execute (.bash, "/usr/bin/touch tmp.write.remove");
-    return Execute (.remove, "tmp.write.remove");
+    SCR::Execute (.bash, "/usr/bin/touch tmp.write.remove");
+    return SCR::Execute (.remove, "tmp.write.remove");
 }
 
 {
-    return Execute (.remove, "tmp.write.remove");
+    return SCR::Execute (.remove, "tmp.write.remove");
 }
