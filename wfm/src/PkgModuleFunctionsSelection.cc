@@ -167,13 +167,14 @@ PkgModuleFunctions::GetSelections (YCPList args)
    Returns nil if called with wrong arguments
 
 */
+
 YCPValue
 PkgModuleFunctions::SelectionData (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
-	return YCPError ("Bad args to Pkg::SelSummary");
+	return YCPError ("Bad args to Pkg::SelectionData");
     }
     YCPMap data;
     string name = args->value(0)->asString()->value();
@@ -218,6 +219,73 @@ PkgModuleFunctions::SelectionData (YCPList args)
 
     return data;
 }
+
+
+// ------------------------
+/**
+   @builtin Pkg::SelectionContent (string selection, boolean to_delete, string language) -> list
+  	->	["aaa_base", "k_deflt", ... ]
+
+   Get list of packages listed in a selection
+
+   selection	= name of selection
+   to_delete	= if false, return packages to be installed
+		  if true, return packages to be deleted
+   language	= if "" (empty), return only non-language specific packages
+		  else return only packages machting the language
+
+   Returns an empty list if no matching selection found
+   Returns nil if called with wrong arguments
+
+*/
+
+YCPValue
+PkgModuleFunctions::SelectionContent (YCPList args)
+{
+    if ((args->size() != 3)
+	|| !(args->value(0)->isString())
+	|| !(args->value(1)->isBoolean())
+	|| !(args->value(2)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SelectionContent");
+    }
+    YCPList data;
+    string name = args->value(0)->asString()->value();
+
+    PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
+    if (!selectable)
+    {
+	return YCPError ("Selection '"+name+"' not found", data);
+    }
+    PMSelectionPtr selection = selectable->theObject();
+    if (!selection)
+    {
+	return YCPError ("Selection '"+name+"' no object", data);
+    }
+
+    std::list<std::string> pacnames;
+    YCPList paclist;
+    LangCode locale (args->value(2)->asString()->value());
+
+    if (args->value(1)->asBoolean()->value() == false)			// inspacks
+    {
+	pacnames = selection->inspacks (locale);
+    }
+    else
+    {
+	pacnames = selection->delpacks (locale);
+    }
+
+    for (std::list<std::string>::iterator pacIt = pacnames.begin();
+	pacIt != pacnames.end(); ++pacIt)
+    {
+	if (!((*pacIt).empty()))
+	    paclist->add (YCPString (*pacIt));
+    }
+
+    return paclist;
+}
+
 
 // ------------------------
 

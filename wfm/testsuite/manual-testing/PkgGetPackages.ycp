@@ -1,13 +1,14 @@
 // Test Pkg::GetPackages
 
 {
-    Pkg::SourceInit ("dir:///dist/7.3-i386/CD1");
+    integer src = Pkg::SourceCreate ("dir:///dist/next-i386");
     y2milestone ("Pkg::GetPackages(`installed, true) %1", Pkg::GetPackages(`installed, true));
     y2milestone ("Pkg::GetPackages(`installed, false) %1", Pkg::GetPackages(`installed, false));
     y2milestone ("Pkg::GetPackages(`selected, true) %1", Pkg::GetPackages(`selected, true));
     y2milestone ("Pkg::GetPackages(`selected, false) %1", Pkg::GetPackages(`selected, false));
     y2milestone ("Pkg::GetPackages(`available, true) %1", Pkg::GetPackages(`available, true));
     y2milestone ("Pkg::GetPackages(`available, false) %1", Pkg::GetPackages(`available, false));
+    Pkg::SourceFinish (src);
     return 0;
 }
 

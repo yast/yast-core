@@ -120,6 +120,7 @@ PkgModule::evaluate (string function, YCPList args)
     // selection related
     else if (function == "GetSelections")	return GetSelections (args);
     else if (function == "SelectionData")	return SelectionData (args);
+    else if (function == "SelectionContent")	return SelectionContent (args);
     else if (function == "SetSelection")	return SetSelection (args);
     else if (function == "ClearSelection")	return ClearSelection (args);
     else if (function == "ActivateSelections")	return ActivateSelections (args);

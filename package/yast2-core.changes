@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb 21 16:13:43 CET 2003 - kkaempf@suse.de
+
+- add Pkg::SelectionContent() function (#23589)
+  adpated testsuite accordingly.
+
+-------------------------------------------------------------------
 Thu Feb 20 15:56:00 CET 2003 - arvin@suse.de
 
 - resolver agent doesn't complain about empty lists (bug #23797)

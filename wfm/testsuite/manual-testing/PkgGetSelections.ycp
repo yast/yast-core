@@ -1,7 +1,7 @@
 // Test Pkg::GetSelections
 
 {
-    Pkg::SourceInit ("dir:///dist/7.3-i386");
+    integer src = Pkg::SourceCreate ("dir:///dist/next-i386");
     y2milestone ("Pkg::GetSelections(`all, base) %1", Pkg::GetSelections(`all, "base"));
     y2milestone ("Pkg::GetSelections(`all, ) %1", Pkg::GetSelections(`all, ""));
     y2milestone ("Pkg::GetSelections(`available, base) %1", Pkg::GetSelections(`available, "base"));
@@ -10,6 +10,7 @@
     y2milestone ("Pkg::GetSelections(`selected, ) %1", Pkg::GetSelections(`selected, ""));
     y2milestone ("Pkg::GetSelections(`installed, base) %1", Pkg::GetSelections(`installed, "base"));
     y2milestone ("Pkg::GetSelections(`installed, ) %1", Pkg::GetSelections(`installed, ""));
+    Pkg::SourceFinish (src);
     return 0;
 }
 

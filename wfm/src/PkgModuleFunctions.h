@@ -171,6 +171,7 @@ class PkgModuleFunctions
 	YCPValue SetBackupPath (YCPList args);
 	YCPValue CreateBackups (YCPList args);
 	YCPValue SelectionData (YCPList args);
+	YCPValue SelectionContent (YCPList args);
 	YCPValue SetSelection (YCPList args);
 	YCPValue ClearSelection (YCPList args);
 	YCPValue ActivateSelections (YCPList args);
