@@ -107,8 +107,29 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 {
     string indentation ( indentationLevel * 4, ' ' );
 
-    y2debug( "Widget tree: %s%s #%d at %p",
-	     indentation.c_str(), w->widgetClass(), w->internalId(), w );
+    string descr( w->debugLabel() );
+
+    if ( ! descr.empty() )
+	descr = "\"" + descr + "\"";
+
+    if ( w->hasId() )
+    {
+	if ( ! descr.empty() )
+	    descr += " ";
+
+	descr += "`id( " + w->id()->toString() + " )";
+    }
+
+    if ( descr.empty() )
+    {
+	y2debug( "Widget tree: %s%s #%d at %p",
+		 indentation.c_str(), w->widgetClass(), w->internalId(), w );
+    }
+    else
+    {
+	y2debug( "Widget tree: %s%s %s at %p",
+		 indentation.c_str(), w->widgetClass(), descr.c_str(), w );
+    }
 }
 
 
