@@ -42,9 +42,31 @@
 	extern ExecutionEnvironment ee;		\
 	y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
     } while (0)
+#define ycp2error(format,args...) 		\
+    do {					\
+	extern ExecutionEnvironment ee;		\
+	y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
+    } while (0)
 #define ycp2security(file,line,format,args...) \
     y2ycp(LOG_SECURITY,file,line,format,##args)
 #define ycp2internal(file,line,format,args...) \
     y2ycp(LOG_INTERNAL,file,line,format,##args)
+
+// logging cleanup
+#define ycp_log(level, format,args...) 		\
+    do {					\
+	extern ExecutionEnvironment ee;		\
+	y2_logger(level, Y2LOG, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
+    } while (0)
+
+
+#define ycperror(format,args...) 		\
+    ycp_log(LOG_ERROR, format, ##args)
+
+#define ycpwarning(format,args...) 		\
+    ycp_log(LOG_WARNING, format, ##args)
+
+#define ycpdebug(format,args...) 		\
+    ycp_log(LOG_DEBUG, format, ##args)
 
 #endif /* _y2log_ycp_h */
