@@ -428,7 +428,7 @@ namespace Y2PMRecipients {
 
 #warning CB_ProgressProvide seems to be untriggered
     // Depends on what YCP expects. We could redirect a media download callback
-    // if YCP does not alredy use it.
+    // if YCP does not already use it.
 
     virtual CBSuggest result( PMError error, const Pathname & localpath ) {
       if ( error || _isRemote ) {
