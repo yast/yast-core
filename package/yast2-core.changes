@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Feb 27 13:31:18 CET 2004 - visnov@suse.cz
+
+- ycodeptr branch merge:
+  - counted pointers for YCode and SymbolEntry
+  - allow to start bytecode clients
+  - initialization of namespaces now in Y2Namespace
+  - improved flex type matching 
+
+-------------------------------------------------------------------
 Wed Feb 25 12:51:33 CET 2004 - ma@suse.de
 
 - Adapt to new Y2PM locale setting interface.

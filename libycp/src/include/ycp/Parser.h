@@ -27,8 +27,9 @@
 #include <string>
 
 #include "ycp/Scanner.h"
+#include "ycp/YCode.h"
+
 class Scanner;
-class YCode;
 class blockstack_t;
 class scannerstack_t;
 class YBlock;
@@ -93,7 +94,7 @@ public:
      * Copied from struct parserret
      * Does not need to be deleted by us
      */
-    YCode *result;
+    YCodePtr result;
 
     /**
      * Copied from struct parserret
@@ -129,7 +130,7 @@ public:
     /**
      * pointer to the currently parsed block
      */
-    YBlock *current_block;
+    YBlockPtr current_block;
     
     /**
      * integer number for the depth of the current block
@@ -186,7 +187,7 @@ public:
      * of the including block.
      * see: Scanner::initTables()
      */
-    YCode *parse(SymbolTable *gTable = 0, SymbolTable *lTable = 0);
+    YCodePtr parse(SymbolTable *gTable = 0, SymbolTable *lTable = 0);
 
     /**
      * Accesses the scanner

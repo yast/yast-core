@@ -22,6 +22,7 @@
 #define Import_h
 
 #include <string>
+#include <stack>
 using std::string;
 
 #include "ycp/YCode.h"
@@ -31,16 +32,18 @@ class SymbolEntry;
 class Y2Namespace;
 
 class Import {
+    // track tables of nested imports, no need to track their usage
+
+    static int m_disable_tracking;
+    static std::stack <std::pair <string, SymbolTable *> > m_table_stack;
+public:
+    static void disableTracking ();
+    static void enableTracking ();
+
 public:
     // module block pointer, pointer to constructor
-    typedef struct {
-	Y2Namespace *name_space;	// name_space defining the module, non-const since it might get evaluated
-	const SymbolEntry *constructor;	// pointer to constructor (NULL if no constructor)
-	bool activated;			// true if block already evaluated
-    } module_entry;
-
     // map of name : module_entry
-    typedef std::map<std::string, module_entry> module_map;
+    typedef std::map<std::string, Y2Namespace *> module_map;
 
 
 protected:
@@ -52,10 +55,15 @@ protected:
     module_map::iterator m_module;
 
 public:
+    Import ();
+
     // load module by name. If block != 0, it's already loaded
     //   name_space is non-const since it might get evaluated
-    Import (const string &name, Y2Namespace *name_space = 0, bool from_stream = false);
+    Import (const string &name, Y2Namespace *name_space = 0);
     ~Import ();
+
+    int import (const string &name, Y2Namespace *preloaded_namespace = 0);		// delayed import, use in case default constructor was used
+
     string name () const;
     Y2Namespace *nameSpace () const;		// return NULL on failure
 };

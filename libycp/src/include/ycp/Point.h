@@ -54,16 +54,16 @@ using std::string;
 class Point : public MemUsage
 {
   private:
-    SymbolEntry *m_entry;		// filename as SymbolEntry (c_filename)
+    SymbolEntryPtr m_entry;		// filename as SymbolEntry (c_filename)
     int m_line;				// line of definition / inclusion
     const Point *m_point;		// points to toplevel point for include files
   public:
     Point (std::string filename, int line = 0, const Point *point = 0);
-    Point (SymbolEntry *sentry, int line = 0, const Point *point = 0);
+    Point (SymbolEntryPtr sentry, int line = 0, const Point *point = 0);
     Point (std::istream & str);
     ~Point (void);
 
-    SymbolEntry *sentry (void) const;
+    SymbolEntryPtr sentry (void) const;
     std::string filename (void) const;
     int line (void) const;
     const Point *point (void) const;

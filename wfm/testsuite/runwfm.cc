@@ -107,7 +107,7 @@ main (int argc, char *argv[])
     // register builtins;
     WFM wfm;
 
-    YCode* value = 0;
+    YCodePtr value = 0;
 
     for (;;)
     {

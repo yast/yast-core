@@ -42,6 +42,25 @@ $Id$
 extern ExecutionEnvironment ee;
 
 // ------------------------------------------------------------------
+
+IMPL_DERIVED_POINTER(YStatement, YCode);
+IMPL_DERIVED_POINTER(YSExpression, YCode);
+IMPL_DERIVED_POINTER(YSBlock, YCode);
+IMPL_DERIVED_POINTER(YSReturn, YCode);
+IMPL_DERIVED_POINTER(YSTypedef, YCode);
+IMPL_DERIVED_POINTER(YSFunction, YCode);
+IMPL_DERIVED_POINTER(YSAssign, YCode);
+IMPL_DERIVED_POINTER(YSBracket, YCode);
+IMPL_DERIVED_POINTER(YSIf, YCode);
+IMPL_DERIVED_POINTER(YSWhile, YCode);
+IMPL_DERIVED_POINTER(YSRepeat, YCode);
+IMPL_DERIVED_POINTER(YSDo, YCode);
+IMPL_DERIVED_POINTER(YSTextdomain, YCode);
+IMPL_DERIVED_POINTER(YSInclude, YCode);
+IMPL_DERIVED_POINTER(YSImport, YCode);
+IMPL_DERIVED_POINTER(YSFilename, YCode);
+
+// ------------------------------------------------------------------
 // statement (-> statement, next statement)
 
 YStatement::YStatement (ykind kind, int line)
@@ -98,7 +117,7 @@ YStatement::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // expression as statement
 
-YSExpression::YSExpression (YCode *expr, int line)
+YSExpression::YSExpression (YCodePtr expr, int line)
     : YStatement (ysExpression, line)
     , m_expr (expr)
 {
@@ -114,7 +133,6 @@ YSExpression::YSExpression (std::istream & str)
 
 YSExpression::~YSExpression ()
 {
-    delete m_expr;
 }
 
 
@@ -122,7 +140,10 @@ string
 YSExpression::toString() const
 {
     string s = m_expr->toString();
-    s += ";";
+    if (!m_expr->isBlock())
+    {
+	s += ";";
+    }
     return s;
 }
 
@@ -145,9 +166,56 @@ YSExpression::evaluate (bool cse)
 
 
 // ------------------------------------------------------------------
+// block as statement
+
+YSBlock::YSBlock (YBlockPtr block, int line)
+    : YStatement (ysBlock, line)
+    , m_block (block)
+{
+    m_block->setKind (YBlock::b_statement);
+}
+
+
+YSBlock::YSBlock (std::istream & str)
+    : YStatement (ysBlock, str)
+{
+    m_block = Bytecode::readCode (str);
+}
+
+
+YSBlock::~YSBlock ()
+{
+}
+
+
+string
+YSBlock::toString() const
+{
+    string s = m_block->toString();
+    return s;
+}
+
+
+std::ostream &
+YSBlock::toStream (std::ostream & str) const
+{
+    YStatement::toStream (str);
+    return m_block->toStream (str);
+}
+
+
+YCPValue
+YSBlock::evaluate (bool cse)
+{
+    y2debug ("YSBlock::evaluate(%s:%d)\n", toString().c_str(), line());
+    return m_block->evaluate (cse);
+}
+
+
+// ------------------------------------------------------------------
 // return
 
-YSReturn::YSReturn (YCode *value, int line)
+YSReturn::YSReturn (YCodePtr value, int line)
     : YStatement (ysReturn, line)
     , m_value (value)
 {
@@ -167,12 +235,10 @@ YSReturn::YSReturn (std::istream & str)
 
 YSReturn::~YSReturn ()
 {
-    if (m_value)
-	delete m_value;
 }
 
 
-YCode *
+YCodePtr 
 YSReturn::value() const
 {
     return m_value;
@@ -260,7 +326,7 @@ YSReturn::evaluate (bool cse)
 // ------------------------------------------------------------------
 // function definition
 
-YSFunction::YSFunction (SymbolEntry *entry, int line)
+YSFunction::YSFunction (SymbolEntryPtr entry, int line)
     : YStatement (ysFunction, line)
     , m_entry (entry)
 {
@@ -273,24 +339,24 @@ YSFunction::~YSFunction ()
 }
 
 
-SymbolEntry *
+SymbolEntryPtr
 YSFunction::entry() const
 {
     return m_entry;
 }
 
 
-YFunction *
+YFunctionPtr
 YSFunction::function() const
 {
-    return (YFunction *)(m_entry->code());
+    return (YFunctionPtr)(m_entry->code());
 }
 
 
 string
 YSFunction::toString() const
 {
-    return m_entry->toString() + "\n" + ((YFunction *)(m_entry->code()))->definition()->toString();
+    return m_entry->toString() + "\n" + ((YFunctionPtr)(m_entry->code()))->definition()->toString();
 }
 
 
@@ -379,7 +445,7 @@ YSTypedef::evaluate (bool cse)
 // assignment or definition
 // -> the ykind tells
 
-YSAssign::YSAssign (bool definition, SymbolEntry *entry, YCode *code, int line)
+YSAssign::YSAssign (bool definition, SymbolEntryPtr entry, YCodePtr code, int line)
     : YStatement (definition ? ysVariable : ysAssign, line)
     , m_entry (entry)
     , m_code (code)
@@ -404,7 +470,6 @@ YSAssign::YSAssign (bool definition, std::istream & str)
 YSAssign::~YSAssign ()
 {
     // don't delete m_entry here, it belongs to SymbolTable
-    delete m_code;
 }
 
 
@@ -434,7 +499,7 @@ YSAssign::evaluate (bool cse)
     if (cse) return YCPNull();
     y2debug ("YSAssign::evaluate(%s)\n", toString().c_str());
     YCPValue value = m_code->evaluate ();
-    m_entry->setValue (value);
+    m_entry->setValue (value.isNull() ? YCPVoid() : value);
     y2debug ("YSAssign::evaluate (%s) = '%s'\n", m_code->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
 
     return YCPNull();
@@ -445,7 +510,7 @@ YSAssign::evaluate (bool cse)
 // bracket assignment
 
 
-YSBracket::YSBracket (SymbolEntry *entry, YCode *arg, YCode *code, int line)
+YSBracket::YSBracket (SymbolEntryPtr entry, YCodePtr arg, YCodePtr code, int line)
     : YStatement (ysBracket, line)
     , m_entry (entry)
     , m_arg (arg)
@@ -457,8 +522,6 @@ YSBracket::YSBracket (SymbolEntry *entry, YCode *arg, YCode *code, int line)
 YSBracket::~YSBracket ()
 {
     // don't delete m_entry here, it belongs to SymbolTable
-    delete m_arg;
-    delete m_code;
 }
 
 
@@ -635,7 +698,7 @@ y2debug ("%s = %s", m_entry->name(), result->toString().c_str());
 // ------------------------------------------------------------------
 // If-then-else statement (-> bool expr, true statement, false statement)
 
-YSIf::YSIf (YCode *a_condition, YCode *a_true, YCode *a_false, int line)
+YSIf::YSIf (YCodePtr a_condition, YCodePtr a_true, YCodePtr a_false, int line)
     : YStatement (ysIf, line)
     , m_condition (a_condition)
     , m_true (a_true)
@@ -659,9 +722,6 @@ YSIf::YSIf (std::istream & str)
 
 YSIf::~YSIf ()
 {
-    delete m_condition;
-    delete m_true;
-    if (m_false) delete m_false;
 }
 
 
@@ -747,18 +807,26 @@ YSIf::evaluate (bool cse)
 // ------------------------------------------------------------------
 // while-do statement (-> bool condition, loop statement)
 
-YSWhile::YSWhile (YCode *condition, YCode *loop, int line)
+YSWhile::YSWhile (YCodePtr condition, YCodePtr loop, int line)
     : YStatement (ysWhile, line)
     , m_condition (condition)
     , m_loop (loop)
 {
+    if (loop
+	&& loop->isBlock())
+    {
+	YBlockPtr block = loop;
+	if (block->isStatement())
+	{
+	    y2milestone ("Converting statement-block to YSBlock");
+	    loop = new YSBlock (loop, line);
+	}
+    }
 }
 
 
 YSWhile::~YSWhile ()
 {
-    delete m_condition;
-    delete m_loop;
 }
 
 
@@ -767,9 +835,13 @@ YSWhile::toString () const
 {
     string s = "while (" + m_condition->toString() + ")\n    ";
     if (m_loop != 0)
+    {
 	s += m_loop->toString();
+    }
     else
+    {
 	s += "{ /* EMPTY */ }";
+    }
     return s;
 }
 
@@ -812,6 +884,12 @@ YSWhile::evaluate (bool cse)
     for (;;)
     {
 	YCPValue bval = m_condition->evaluate ();
+	if (bval.isNull ())
+	{
+	    ycp2error ("while condition is nil.");
+	    return YCPNull ();
+	}
+    
 	if (!bval->isBoolean())
 	{
 	    ycp2error ("'while (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -831,7 +909,7 @@ YSWhile::evaluate (bool cse)
 
 	if (m_loop->isBlock())
 	{
-	    lval = ((YBlock *)m_loop)->evaluate ();
+	    lval = ((YBlockPtr)m_loop)->evaluate ();
 	    if (first_iteration) first_iteration = false;
 	}
 	else
@@ -869,7 +947,7 @@ YSWhile::evaluate (bool cse)
 // ------------------------------------------------------------------
 // repeat-until statement (-> loop statement, bool condition)
 
-YSRepeat::YSRepeat (YCode *loop, YCode *condition, int line)
+YSRepeat::YSRepeat (YCodePtr loop, YCodePtr condition, int line)
     : YStatement (ysRepeat, line)
     , m_loop (loop)
     , m_condition (condition)
@@ -891,8 +969,6 @@ YSRepeat::YSRepeat (std::istream & str)
 
 YSRepeat::~YSRepeat ()
 {
-    delete m_loop;
-    delete m_condition;
 }
 
 
@@ -942,7 +1018,7 @@ YSRepeat::evaluate (bool cse)
 	{
 	    if (m_loop->isBlock())
 	    {
-		lval = ((YBlock *)m_loop)->evaluate ();
+		lval = ((YBlockPtr)m_loop)->evaluate ();
 		if (first_iteration) first_iteration = false;
 	    }
 	    else
@@ -955,6 +1031,12 @@ YSRepeat::evaluate (bool cse)
 	    || lval->isVoid())		// normal block/statement or 'continue'
 	{
 	    YCPValue bval = m_condition->evaluate ();
+	    if (bval.isNull ())
+	    {
+		ycp2error ("until condition is nil.");
+		return YCPNull ();
+	    }
+    
 	    if (!bval->isBoolean())
 	    {
 		ycp2error ( "'repeat ... until (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -985,7 +1067,7 @@ YSRepeat::evaluate (bool cse)
 // ------------------------------------------------------------------
 // do-while statement (-> loop statement, bool condition)
 
-YSDo::YSDo (YCode *loop, YCode *condition, int line)
+YSDo::YSDo (YCodePtr loop, YCodePtr condition, int line)
     : YStatement (ysDo, line)
     , m_loop (loop)
     , m_condition (condition)
@@ -1007,8 +1089,6 @@ YSDo::YSDo (std::istream & str)
 
 YSDo::~YSDo ()
 {
-    delete m_loop;
-    delete m_condition;
 }
 
 
@@ -1059,7 +1139,7 @@ YSDo::evaluate (bool cse)
 	{
 	    if (m_loop->isBlock())
 	    {
-		lval = ((YBlock *)m_loop)->evaluate ();
+		lval = ((YBlockPtr)m_loop)->evaluate ();
 		if (first_iteration) first_iteration = false;
 	    }
 	    else
@@ -1071,6 +1151,12 @@ YSDo::evaluate (bool cse)
 	    || lval->isVoid())		// normal block/statement or 'continue'
 	{
 	    YCPValue bval = m_condition->evaluate ();
+	    if (bval.isNull ())
+	    {
+		ycp2error ("while condition is nil.");
+		return YCPNull ();
+	    }
+    
 	    if (!bval->isBoolean())
 	    {
 		ycp2error ("'do (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -1204,12 +1290,19 @@ YSInclude::evaluate (bool cse)
 //-------------------------------------------------------------------
 // import
 
-// normal 'import' statement
+// normal 'import' statement during .ycp parsing
 
 YSImport::YSImport (const string &name, int line)
     : YStatement (ysImport, line)
-    , Import (name)
 {
+    Import::disableTracking();				// don't track variable usage _inside_ the imported module
+
+    if (import (name) != 0)
+    {
+	y2debug ("import '%s' failed", name.c_str());	// debug only, import() already logged the error
+    }
+
+    Import::enableTracking();				// continue tracking in .ycp
 }
 
 
@@ -1243,12 +1336,13 @@ YSImport::toString() const
 
 
 // Import module from bytecode
+//   -> we're in bytecode reading and just encountered an 'import' statement in bytecode
 //
 // If an error occurs, m_name will be set to empty
 //
 YSImport::YSImport (std::istream & str)
     : YStatement (ysImport, str)
-    , Import (Bytecode::readCharp (str), 0, true)			// don't open references in Import()
+    , Import (Bytecode::readCharp (str))	// <=== this does the importing
 {
     if (nameSpace() == 0)
     {
@@ -1256,6 +1350,9 @@ YSImport::YSImport (std::istream & str)
 	m_name = "";		// Pass error about failed import to top
 	return;
     }
+
+    // now load symbols we need from the just imported namespace
+    // (this import statement is here because symbols are needed from the namespace)
 
     Bytecode::pushNamespace (nameSpace (), true);			// see YBlock::YBlock(str) for popUptoNamespace()
 
@@ -1268,7 +1365,7 @@ YSImport::YSImport (std::istream & str)
 
     if (xrefcount != 0)
     {
-	SymbolTable *table = m_module->second.name_space->table();
+	SymbolTable *table = m_module->second->table();
 
 	const char *sname;
 	TypePtr stype;
@@ -1279,8 +1376,8 @@ YSImport::YSImport (std::istream & str)
 	    sname = Bytecode::readCharp (str);
 	    stype = Bytecode::readType (str);
 
-	    if (xref_debug) y2milestone ("Xref -------- '%s' <%s>\n", sname, stype->toString().c_str());
-	    else y2debug ("Xref -------- '%s' <%s>\n", sname, stype->toString().c_str());
+	    if (xref_debug) y2milestone ("Xref -------------------------------- '%s' <%s>\n", sname, stype->toString().c_str());
+	    else y2debug ("Xref -------------------------------- '%s' <%s>\n", sname, stype->toString().c_str());
 
 	    tentry = table->xref (sname);				// look for match in table
 
@@ -1308,7 +1405,7 @@ YSImport::toStream (std::ostream & str) const
     YStatement::toStream (str);
     Bytecode::writeCharp (str, m_name.c_str());
 
-    SymbolTable *table = m_module->second.name_space->table();
+    SymbolTable *table = m_module->second->table();
     table->writeUsage (str);
 
     y2debug ("pushNamespace import '%s'", m_name.c_str());
@@ -1321,26 +1418,11 @@ YSImport::toStream (std::ostream & str) const
 YCPValue
 YSImport::evaluate (bool cse)
 {
-    if (!cse
-	&& (nameSpace () != NULL)
-	&& !m_module->second.activated)
+    if (!cse && (nameSpace () != NULL))
     {
 	y2debug ("Evaluating namespace '%s'", m_name.c_str());
-	// init all definitions
-
-	nameSpace()->evaluate (cse);
-
-	// run constructor
-
-	if (m_module->second.constructor != 0)
-	{
-	    y2debug ("Calling constructor '%s'", m_name.c_str());
-	    YEFunction fun (m_module->second.constructor);
-	    fun.finalize();
-	    fun.evaluate();
-	}
-
-	m_module->second.activated = true;
+	
+	nameSpace()->initialize ();
     }
 
     return YCPNull();

@@ -126,7 +126,7 @@ YCPValue
 Y2StdioComponent::receive ()
 {
     y2debug ("receive begin");
-    YCode* pc = parser.parse ();
+    YCodePtr pc = parser.parse ();
     if (pc)
     {
 	y2debug ("receive end %s", pc->toString ().c_str ());

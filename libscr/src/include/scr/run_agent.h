@@ -101,19 +101,26 @@ run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
     if (fname && load_scr)
     {
 	int len = strlen (fname);
-	if (len > 5 && strcmp (&fname[len-4], ".ycp") == 0) {
+	if (len > 5
+	    && strcmp (&fname[len-4], ".ycp") == 0)
+	{
 	    char* cname = strdup (fname);
 	    strcpy (&cname[len-4], ".scr");
-	    if (access (cname, R_OK) == 0) {
+	    if (access (cname, R_OK) == 0)
+	    {
 		YCPValue confval = SCRAgent::readconf (cname);
-		if (confval.isNull () || !confval->isTerm ()) {
+		if (confval.isNull ()
+		    || !confval->isTerm ())
+		{
 		    fprintf (stderr, "Failed to read '%s'\n", cname);
 		    fprintf (stderr, "Read result: %s\n", confval->toString().c_str());
 		    exit (EXIT_FAILURE);
 		}
 		YCPTerm term = confval->asTerm();
 		for (int i = 0; i < term->size (); i++)
+		{
 		    agent->otherCommand (term->value (i)->asTerm ());
+		}
 	    }
 	}
     }
@@ -123,7 +130,8 @@ run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
     if (fname != 0)
     {
 	infile = fopen (fname, "r");
-	if (infile == 0) {
+	if (infile == 0)
+	{
 	    fprintf (stderr, "Failed to open '%s'\n", fname);
 	    exit (EXIT_FAILURE);
 	}
@@ -136,23 +144,26 @@ run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
     // evaluate ycp script
     parser->setInput (infile, fname);
     parser->setBuffered ();
-    YCode* value = 0;
+    YCodePtr value = 0;
     while (true)
     {
-	value = parser->parse ();
+	value = parser->parse ();			// error reports show our filename
 	if (value == 0)
+	{
 	    break;
+	}
+	parser->restoreFilename ();			// restore callers filename
 	YCPValue result = value->evaluate ();
-	printf ("(%s)\n", result->toString ().c_str ());
+	printf ("(%s)\n", result->toString ().c_str ());	// send result to caller
 	fflush (0);
-	delete value;
+	parser->setFilename (fname);			// set our filename
     }
 
     if (infile != stdin)
+    {
 	fclose (infile);
-
-    if( value != 0 ) delete value;
+    }
     delete user_interface;
-    delete parser;
+    delete parser;					// restores callers filename
 
 }

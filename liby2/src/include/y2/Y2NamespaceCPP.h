@@ -39,8 +39,8 @@ using std::string;
 #include "ycp/YCPValue.h"
 #include "ycp/YCode.h"
 #include "ycp/YBlock.h"
+#include "ycp/SymbolEntryPtr.h"
 
-class SymbolEntry;
 class SymbolTable;
 class Y2Function;
 
@@ -49,14 +49,14 @@ class Y2CPPFunction;
 class Y2CPPFunctionCallBase : public YBlock
 {
 protected:
-    SymbolEntry* m_param1;
-    SymbolEntry* m_param2;
-    SymbolEntry* m_param3;
-    SymbolEntry* m_param4;
+    SymbolEntryPtr m_param1;
+    SymbolEntryPtr m_param2;
+    SymbolEntryPtr m_param3;
+    SymbolEntryPtr m_param4;
     
     string m_signature;
 
-    void newParameter (YBlock* decl, uint pos, constTypePtr type);
+    void newParameter (YBlockPtr decl, uint pos, constTypePtr type);
 
 public:
     Y2CPPFunctionCallBase (string ns, string signature) : 
@@ -68,7 +68,7 @@ public:
 	, m_signature (signature)
     {}
 
-    virtual void registerParameters (YBlock* decl) = 0;
+    virtual void registerParameters (YBlockPtr decl) = 0;
     
     friend class Y2CPPFunction;
 };
@@ -95,7 +95,7 @@ class Y2CPPFunction : public YFunction {
 public:
     Y2CPPFunction( Y2Namespace* parent, string name, Y2CPPFunctionCallBase* call_impl );
 
-    SymbolEntry* sentry (uint position);
+    SymbolEntryPtr sentry (uint position);
 };
 
 
@@ -122,7 +122,7 @@ public:							\
     namespace##name##Function(impl_class* instance) : 	\
 	Y2CPPFunctionCall <impl_class> (signature, instance)	\
     {}							\
-    virtual void registerParameters (YBlock*)		\
+    virtual void registerParameters (YBlockPtr)		\
     {							\
     }							\
     virtual YCPValue evaluate (bool cse=false)		\
@@ -159,7 +159,7 @@ public:							\
     namespace##name##Function1(impl_class* instance) : 	\
 	Y2CPPFunctionCall <impl_class> (signature, instance)	\
     {}							\
-    virtual void registerParameters (YBlock* decl)	\
+    virtual void registerParameters (YBlockPtr decl)	\
     {							\
 	newParameter (decl, 1, Type::Const##param1type );	\
     }							\
@@ -197,7 +197,7 @@ public:							\
     namespace##name##Function2(impl_class* instance) : 	\
 	Y2CPPFunctionCall <impl_class> (signature, instance)	\
     {}							\
-    virtual void registerParameters (YBlock* decl)	\
+    virtual void registerParameters (YBlockPtr decl)	\
     {							\
 	newParameter (decl, 1, Type::Const##param1type );	\
 	newParameter (decl, 2, Type::Const##param2type );	\
@@ -240,7 +240,7 @@ public:							\
     namespace##name##Function3(impl_class* instance) : 	\
 	Y2CPPFunctionCall <impl_class> (signature, instance)	\
     {}							\
-    virtual void registerParameters (YBlock* decl)	\
+    virtual void registerParameters (YBlockPtr decl)	\
     {							\
 	newParameter (decl, 1, Type::Const##param1type );	\
 	newParameter (decl, 2, Type::Const##param2type );	\
@@ -287,7 +287,7 @@ public:							\
     namespace##name##Function4(impl_class* instance) : 	\
 	Y2CPPFunctionCall <impl_class> (signature, instance)	\
     {}							\
-    virtual void registerParameters (YBlock* decl)	\
+    virtual void registerParameters (YBlockPtr decl)	\
     {							\
 	newParameter (decl, 1, Type::Const##param1type );	\
 	newParameter (decl, 2, Type::Const##param2type );	\
@@ -322,7 +322,7 @@ public:							\
 	    this, 							\
 	    #name,							\
 	    new namespace##name##Function (this));			\
-	enterSymbol (#name, mf->sentry (position), 0);			\
+	enterSymbol (mf->sentry (position), 0);			\
     } while (0)
 
 
@@ -344,7 +344,7 @@ public:							\
 	    this, 							\
 	    #name,							\
 	    new namespace##name##Function1 (this));			\
-	enterSymbol (#name, mf->sentry (position), 0);			\
+	enterSymbol (mf->sentry (position), 0);			\
     } while (0)
 
 
@@ -366,7 +366,7 @@ public:							\
 	    this, 							\
 	    #name,							\
 	    new namespace##name##Function2 (this));			\
-	enterSymbol (#name, mf->sentry (position), 0);			\
+	enterSymbol (mf->sentry (position), 0);			\
     } while (0)
 
 
@@ -388,7 +388,7 @@ public:							\
 	    this, 							\
 	    #name,							\
 	    new namespace##name##Function3 (this));			\
-	enterSymbol (#name, mf->sentry (position), 0);			\
+	enterSymbol (mf->sentry (position), 0);			\
     } while (0)
 
 
@@ -410,7 +410,7 @@ public:							\
 	    this, 							\
 	    #name,							\
 	    new namespace##name##Function4 (this));			\
-	enterSymbol (#name, mf->sentry (position), 0);			\
+	enterSymbol (mf->sentry (position), 0);			\
     } while (0)
 
 

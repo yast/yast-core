@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "Self";
+    //T: TEntry (get_i@6:global integer Self::get_i ())
+    //T: TEntry (set_i@11:global void Self::set_i (integer ii))
+    // integer i
+    // global integer Self::get_i ()
+    // global void Self::set_i (integer ii)
+    // filename: "tests/bytecode/Module/Self.ycp"
+    integer i = 1;
+    global integer Self::get_i ()
+{
+    return i;
+}
+    global void Self::set_i (integer ii)
+{
+    i = ii;
+    return;
+}
+}
+----------------------------------------------------------------------

@@ -34,14 +34,14 @@ extern ExecutionEnvironment ee;
 class TestY2Component : public Y2Component {
     virtual Y2Namespace *import (const char* name)
     {
-        Y2Namespace *block = Bytecode::readModule (name);
+        YBlockPtr block = (YBlockPtr)Bytecode::readModule (name);
         if (block == 0 )
         {
             y2debug ("Cannot import module");
             return NULL;
         }
 
-        return block;
+        return block->nameSpace();
     }
     virtual string name () const { return "test";}
 
@@ -60,7 +60,7 @@ public:
     virtual bool isServerCreator () const { return true;};
 } cc;
 
-extern int yydebug;
+//extern int yydebug;
 extern int SymbolTableDebug;
 
 int
@@ -173,7 +173,7 @@ main (int argc, const char *argv[])
 	
     ee.setFilename (string (fname));
 
-    YCode *code = 0;
+    YCodePtr code = 0;
 
     SymbolTableDebug = 0;
 

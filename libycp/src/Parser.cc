@@ -151,11 +151,13 @@ Parser::atEOF()
     return m_at_eof;
 }
 
+
 Scanner *
 Parser::scanner ()
 {
     return m_scanner;
 }
+
 
 void
 Parser::setScanner (Scanner *s)
@@ -163,15 +165,18 @@ Parser::setScanner (Scanner *s)
     m_scanner = s;
 }
 
-YCode *
+
+YCodePtr
 Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 {
+#if 0
     extern int yydebug;
 
     yydebug = (getenv ("YCP_YYDEBUG") == 0) ? 0 : 1;
 
     if (yydebug)
 	y2debug ("Running with full debug");
+#endif
 
     if (m_scanner == 0)
     {
@@ -186,6 +191,7 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
     result = 0;
 
     yyparse ((void *) this);
+    
     if (lineno == -1)
     {
 	m_at_eof = true;

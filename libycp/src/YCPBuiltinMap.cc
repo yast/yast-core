@@ -76,8 +76,8 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
 	return YCPNull ();
 
     YCPMap ret;
-    SymbolEntry *k = key->asEntry()->entry();
-    SymbolEntry *v = value->asEntry()->entry();
+    SymbolEntryPtr k = key->asEntry()->entry();
+    SymbolEntryPtr v = value->asEntry()->entry();
 
     for (YCPMapIterator pos = map->begin (); pos != map->end (); ++pos)
     {
@@ -132,8 +132,8 @@ m_mapmap (const YCPSymbol &key, const YCPSymbol &value,
     YCPMap expr_map;
     YCPMap curr_map;
     YCPMap ret;
-    SymbolEntry *k = key->asEntry()->entry();
-    SymbolEntry *v = value->asEntry()->entry();
+    SymbolEntryPtr k = key->asEntry()->entry();
+    SymbolEntryPtr v = value->asEntry()->entry();
 
     for (YCPMapIterator pos = map->begin (); pos != map->end (); ++pos)
     {
@@ -187,8 +187,8 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
 
     YCPList ret;
 
-    SymbolEntry *k = key->asEntry()->entry();
-    SymbolEntry *v = value->asEntry()->entry();
+    SymbolEntryPtr k = key->asEntry()->entry();
+    SymbolEntryPtr v = value->asEntry()->entry();
 
     for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
     {
@@ -335,8 +335,8 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
     if (map.isNull ())
 	return YCPNull ();
 
-    SymbolEntry *k = key->asEntry()->entry();
-    SymbolEntry *v = val->asEntry()->entry();
+    SymbolEntryPtr k = key->asEntry()->entry();
+    SymbolEntryPtr v = val->asEntry()->entry();
     YCPValue ret = YCPVoid();
 
     for (YCPMapIterator pos = map->begin(); pos != map->end(); ++pos)
@@ -421,8 +421,8 @@ YCPBuiltinMap::YCPBuiltinMap ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "haskey", "boolean (const map <any,any>, const any)",								    (void *)m_haskey	},
-	{ "mapmap", "map <any,any> (variable <any>, variable <flex>, const map <any,flex>, const block <map <any, any>>)",	    (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "haskey", "boolean (const map <flex,any>, const flex)",							    (void *)m_haskey	},
+	{ "mapmap", "map <any,any> (variable <any>, variable <flex>, const map <any,flex>, const block <map <any, any>>)",  (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "maplist","list <any> (variable <any>, variable <any>, const map <any,any>, const block <any>)",		    (void *)m_maplist,  DECL_LOOP|DECL_SYMBOL },
 	{ "filter", "map <any,flex> (variable <any>, variable <flex>, const map <any,flex>, const block <boolean>)",	    (void *)m_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "union",  "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
@@ -430,9 +430,9 @@ YCPBuiltinMap::YCPBuiltinMap ()
 	{ "add",    "map <any,any> (const map <any,any>, const any, const any)",					    (void *)m_addmap	},
 	{ "change", "map <any,any> (const map <any,any>, const any, const any)",					    (void *)m_changemap	},
 	{ "size",   "integer (const map <any,any>)",									    (void *)m_size	},
-	{ "foreach","flex (variable <any>, variable <any>, const map <any,any>, const block <flex>)",			    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX},
+	{ "foreach","flex1 (variable <flex2>, variable <flex3>, const map <flex2,flex3>, const block <flex1>)",		    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "tomap",  "map <any,any> (const any)",									    (void *)m_tomap,	DECL_FLEX },
-        { "remove", "map <flex,any> (const map <flex,any>, const flex)", 						    (void *)m_remove,	DECL_FLEX },
+        { "remove", "map <flex1,flex2> (const map <flex1,flex2>, const flex1)", 					    (void *)m_remove,	DECL_FLEX },
 	{ 0 }
 	// "lookup" is in parser.yy
     };

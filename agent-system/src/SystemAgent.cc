@@ -496,7 +496,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	}
 	Parser parser (fd, filename.c_str ());
 	parser.setBuffered(); // Read from file. Buffering is always possible here
-	YCode *p = parser.parse();
+	YCodePtr p = parser.parse();
 	close(fd);
 	
 	if (!p)
@@ -506,12 +506,11 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	YCPValue contents = YCPNull ();
 	if (p->isBlock ())
 	{
-	    contents = YCPCode (p, true);	// true means the YCPCode will delete the code if not needed anymore
+	    contents = YCPCode (p);
 	}
 	else
 	{
 	    contents = p->evaluate (true);
-	    delete p;
 	}
 
 	return !contents.isNull() ? contents : YCPVoid();

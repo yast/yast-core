@@ -441,7 +441,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	if (tentry != 0)
 	{
 	    y2debug ("found (%s)", tentry->toString().c_str());
-	    SymbolEntry *sentry = tentry->sentry();
+	    SymbolEntryPtr sentry = tentry->sentry();
 	    namespaceTable = tentry->sentry()->table();		// will be != if sentry is c_namespace
 
 	    while (namespaceTable == 0)

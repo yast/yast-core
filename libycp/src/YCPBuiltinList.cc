@@ -64,7 +64,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 
     YCPValue ret = YCPNull ();
 
-    SymbolEntry *s = symbol->asEntry()->entry();
+    SymbolEntryPtr s = symbol->asEntry()->entry();
 
     for (int i = 0; i < list->size (); i++)
     {
@@ -302,7 +302,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 
     YCPList ret;
 
-    SymbolEntry *s = symbol->asEntry()->entry();
+    SymbolEntryPtr s = symbol->asEntry()->entry();
 
     for (int i = 0; i < list->size (); i++)
     {
@@ -353,7 +353,7 @@ l_maplist (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
     }
 
     YCPList ret;
-    SymbolEntry *s = symbol->asEntry()->entry();
+    SymbolEntryPtr s = symbol->asEntry()->entry();
 
     for (int i = 0; i < list->size (); i++)
     {
@@ -403,7 +403,7 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	return YCPNull ();
     }
 
-    SymbolEntry *key = symbol->asEntry()->entry();
+    SymbolEntryPtr key = symbol->asEntry()->entry();
 
     YCPMap ret;
     YCPList curr_list;
@@ -846,7 +846,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 	return YCPNull ();
     }
     
-    SymbolEntry *s = sym->asEntry()->entry();
+    SymbolEntryPtr s = sym->asEntry()->entry();
     YCPValue ret = YCPVoid();
 
     for (int i=0; i < list->size(); i++)

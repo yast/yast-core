@@ -31,26 +31,20 @@ $Id$
 YCPCodeRep::YCPCodeRep()
 {
     m_code = 0;
-    m_owner = false;
 }
 
 
-YCPCodeRep::YCPCodeRep(YCode *code, bool owner)
+YCPCodeRep::YCPCodeRep(YCodePtr code)
 {
     m_code = code;
-    m_owner = owner;
 }
 
 
 YCPCodeRep::~YCPCodeRep ()
 {
-    if (m_owner)
-    {
-	delete m_code;
-    }
 }
 
-YCode *
+YCodePtr
 YCPCodeRep::code() const
 {
     return m_code;
@@ -109,13 +103,13 @@ YCPCode::YCPCode (std::istream & str)
 // YCPEntryRep
 
 
-YCPEntryRep::YCPEntryRep (SymbolEntry *entry)
+YCPEntryRep::YCPEntryRep (SymbolEntryPtr entry)
 {
     m_entry = entry;
 }
 
 
-SymbolEntry *
+SymbolEntryPtr
 YCPEntryRep::entry() const
 {
     return m_entry;
@@ -166,13 +160,13 @@ YCPEntryRep::toStream (std::ostream & str) const
 // YCPReferenceRep
 
 
-YCPReferenceRep::YCPReferenceRep (SymbolEntry *entry)
+YCPReferenceRep::YCPReferenceRep (SymbolEntryPtr entry)
 {
     m_entry = entry;
 }
 
 
-SymbolEntry *
+SymbolEntryPtr
 YCPReferenceRep::entry() const
 {
     return m_entry;

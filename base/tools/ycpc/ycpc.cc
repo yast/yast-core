@@ -54,6 +54,7 @@ static int compile = 0;		// just compile source to bytecode
 static int read_n_print = 0;	// read and print bytecode
 static int read_n_run = 0;	// read and run bytecode
 static int freshen = 0;		// freshen recompilation
+static int force = 0;		// force recompilation
 static int no_implicit_namespaces = 0;	// don't preload implicit namespaces
 static char *ui_name = 0;
 #define UI_QT_NAME "qt"
@@ -73,9 +74,9 @@ typedef struct recurse_struct {
 				// else: length of current subdir in path[], path[startlen...currentlen-1] == current recursion point
 } recurseT;
 
-recurseT *recurseStart (const char *path);
-recurseT *recurseNext (recurseT *handle, struct stat *st = 0);
-void recurseEnd (recurseT *handle);
+static recurseT *recurseStart (const char *path);
+static recurseT *recurseNext (recurseT *handle, struct stat *st = 0);
+static void recurseEnd (recurseT *handle);
 
 
 /**
@@ -85,7 +86,7 @@ void recurseEnd (recurseT *handle);
  *
  */
 
-recurseT *
+static recurseT *
 recurseStart (const char *path)
 {
     y2debug ("recurseStart(%s)", path);
@@ -140,7 +141,7 @@ recurseStart (const char *path)
  *
  */
 
-void
+static void
 recurseEnd (recurseT *handle)
 {
     closedir (handle->d);
@@ -157,7 +158,7 @@ recurseEnd (recurseT *handle)
  *
  */
 
-recurseT *
+static recurseT *
 recurseNext (recurseT *handle, struct stat *st)
 {
     struct dirent *dent;
@@ -241,137 +242,34 @@ recurseNext (recurseT *handle, struct stat *st)
 
 //-----------------------------------------------------------------------------
 
-
-/**
- * Recurse through directories, checking times against '.depend'
- *
- * return empty char * if no recompile needed
- * return NULL if error
- * return pathname of .depend file if recompile needed (.ybc missing, .ybc older than .ycp, any file newer than .depend) 
- *   in this case, the pathname is malloc'ed and should be free'd
- */
-
-char *
-dependCheck (const char *path)
-{
-    char *name = (char *)malloc (strlen (path) + strlen (STAMPNAME) + 1);
-    if (name == 0)
-    {
-	perror ("malloc");
-	return NULL;
-    }
-    strcpy (name, path);
-    strcat (name, STAMPNAME);
-
-    struct stat st;
-    time_t dependtime;
-
-    if (lstat (name, &st) != 0)				// check existance of .depend
-    {
-	printf ("No .depend found, recompiling\n");
-	return name;					// -> must recompile
-    }
-
-    dependtime = st.st_mtime;
-
-    recurseT *handle, *next;
-
-    handle = recurseStart (path);
-    if (handle == 0)
-    {
-	return NULL;
-    }
-
-    int ret = 0;
-    int extpos;
-
-    while (handle)
-    {
-	next = recurseNext (handle, &st);
-	if (next == 0)
-	{
-	    recurseEnd (handle);
-	    handle = 0;
-	    break;
-	}
-	handle = next;
-
-	// compute position of extension
-	extpos = handle->length + strlen (handle->path + handle->length) - 4;
-	if (extpos > 0)
-	{
-	    if (strcmp (handle->path + extpos, ".ycp") == 0)	// .ycp existing, check .ybc
-	    {
-		time_t ycptime = st.st_mtime;
-
-		strcpy (handle->path + extpos, ".ybc");
-		if (lstat (handle->path, &st) != 0)				// .ybc probably not existing
-		{
-		    handle->path[extpos] = 0;
-		    printf ("%s.ycp is not compiled\n", handle->path);
-		    ret = 1;
-		    break;
-		}
-		handle->path[extpos] = 0;
-
-		if (ycptime > st.st_mtime)
-		{
-		    printf ("%s.ycp newer than compiled .ybc\n", handle->path);
-		    ret = 1;
-		    break;
-		}
-
-		st.st_mtime = ycptime;
-	    }
-	    else
-	    {
-		st.st_mtime = dependtime;					// don't care about any other files
-	    }
-
-	    if (dependtime < st.st_mtime)
-	    {
-		printf ("%s.ycp newer than .depend\n", handle->path);
-		ret = 1;
-	        break;
-	    }
-	}
-    }
-
-    if (handle)
-    {
-	recurseEnd (handle);
-    }
-
-    if (ret == 0) return "";
-    return name;
-}
-
-//-----------------------------------------------------------------------------
-
 class FileDep {
     private:
 	std::string m_name;
 	std::string m_path;
 	bool m_is_module;
 	bool m_have_source;
-	time_t mtime_source;
-	time_t mtime_binary;
+	time_t m_srctime;
+	time_t m_bintime;
     public:
 	FileDep () {};
-	FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source = true);
+	FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source, time_t srctime, time_t bintime);
 	const std::string & name () const;
 	const std::string & path () const;
 	void setPath (const std::string &path);
 	bool is_module () const;
+	time_t srctime () const;
+	time_t bintime () const;
 	std::string toString() const;
 };
 
 
-FileDep::FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source)
+FileDep::FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source, time_t srctime, time_t bintime)
     : m_name (name)
     , m_path (path)
     , m_is_module (is_module)
     , m_have_source (have_source)
+    , m_srctime (srctime)
+    , m_bintime (bintime)
 {
 }
 
@@ -387,6 +285,20 @@ const std::string &
 FileDep::path () const
 {
     return m_path;
+}
+
+
+time_t
+FileDep::srctime () const
+{
+    return m_srctime;
+}
+
+
+time_t
+FileDep::bintime () const
+{
+    return m_bintime;
 }
 
 
@@ -407,7 +319,10 @@ FileDep::is_module () const
 std::string
 FileDep::toString () const
 {
-    return string (m_is_module ? "module \"" : "include \"") + m_name + string ("\" at '") + m_path + string ("'");
+    return string (m_is_module ? "module \"" : "include \"")
+	    + m_name
+	    + string ("\" at '")
+	    + m_path + string ("'");
 }
 
 //-----------------------------------------------------------------------------
@@ -419,25 +334,44 @@ FileDep
 resolveDep (const char *name, bool as_module)
 {
     if (verbose > 1) printf ("resolveDep (%s %s)", as_module ? "import" : "include", name);
-    std::string path;
+    std::string srcpath;
+    time_t srctime = 0;
+    std::string binpath;
+    time_t bintime = 0;
     bool have_source = true;
+    struct stat st;
+
     if (as_module)
     {
-	path = YCPPathSearch::findModule (name, true);	// find source code for module
-	if (path.empty())
+	srcpath = YCPPathSearch::findModule (name, true);	// find source code for module
+	if (srcpath.empty())
 	{
 	    have_source = false;
-	    path = YCPPathSearch::findModule (name);	// find binary code for module
+	}
+	else if (stat (srcpath.c_str(), &st) == 0)
+	{
+	    srctime = st.st_mtime;
+	}
+	binpath = YCPPathSearch::findModule (name);		// find binary code for module
+	if (!binpath.empty()
+	    && stat (binpath.c_str(), &st) == 0)
+	{
+	    bintime = st.st_mtime;
 	}
     }
     else
     {
-	path = YCPPathSearch::findInclude (name);
+	srcpath = YCPPathSearch::findInclude (name);
+	if (!srcpath.empty()
+	    && stat (srcpath.c_str(), &st) == 0)
+	{
+	    srctime = st.st_mtime;
+	}
     }
 
-    if (verbose > 1) printf (" -> '%s'\n", path.c_str());
+    if (verbose > 1) printf (" -> '%s'\n", srcpath.c_str());
 
-    return FileDep (name, path, as_module, have_source);
+    return FileDep (name, have_source ? srcpath : binpath, as_module, have_source, srctime, bintime);
 }
 
 //-----------------------------------------------------------------------------
@@ -513,7 +447,7 @@ parseFile (const char *path, const char *expected)
 		return deplist;
 	    }
 	    have_module = true;
-	    deplist.push_back (FileDep (name, path, true));
+	    deplist.push_back (FileDep (name, path, true, false, 0, 0));
 	}
 	else if (*lptr == 'i')
 	{
@@ -552,7 +486,9 @@ parseFile (const char *path, const char *expected)
 		while (*lptr)
 		{
 		    if (*lptr == '"')
+		    {
 			break;
+		    }
 		    lptr++;
 		}
 		*lptr++ = 0;
@@ -582,7 +518,7 @@ parseFile (const char *path, const char *expected)
 	    fprintf (stderr, "%s is not a module\n", path);
 	    exit (1);
 	}
-	deplist.push_front (FileDep (expected, path, false));
+	deplist.push_front (FileDep (expected, path, false, false, 0, 0));
     }
 
     if (verbose > 1) printf ("parseFile (%s) done\n", path);
@@ -611,7 +547,7 @@ makeDirList (const char *dir)
 
     if (S_ISREG (st.st_mode))				// a single file
     {
-	deplist.push_back (FileDep ("", dir, false));
+	deplist.push_back (FileDep ("", dir, false, false, 0, 0));
 	return deplist;
     }
 
@@ -647,7 +583,7 @@ makeDirList (const char *dir)
 	extpos = handle->length + strlen (handle->path + handle->length) - 4;
 	if (strcmp (handle->path + extpos, ".ycp") == 0)
 	{
-	    deplist.push_back (FileDep ("", handle->path, false));
+	    deplist.push_back (FileDep ("", handle->path, false, false, 0, 0));
 	    if (verbose) printf ("%s\n", handle->path);
 	}
     }
@@ -800,7 +736,7 @@ depTree (std::string module, const std::map<std::string, std::list<FileDep> > & 
 	return ret;
     }
 
-    if (verbose < 1) printf ("\nCheck '%s': ", module.c_str()); fflush (stdout);
+    if (verbose > 1) printf ("\nCheck '%s': ", module.c_str()); fflush (stdout);
 
     std::list<FileDep> dl = it->second;		// get <mod> <imp> <imp> <imp> list
 
@@ -878,7 +814,7 @@ recompileAll (const std::list<std::string> & deplist, const char *depend)
 /**
  * parse file and return corresponding YCode or NULL for error
  */
-YCode *
+YCodePtr
 parsefile (const char *infname)
 {
     if (infname == NULL)
@@ -921,7 +857,7 @@ parsefile (const char *infname)
 
     if (verbose > 2) SymbolTableDebug = 1;
 
-    YCode *c = NULL;
+    YCodePtr c = NULL;
 
     c = parser->parse ();
 
@@ -966,7 +902,7 @@ compilefile (const char *infname, const char *outfname)
 	progress ("compiling to '%s'\n", ofname.c_str ());
     }
     
-    YCode *c = parsefile (infname);
+    YCodePtr c = parsefile (infname);
     
     if (c != NULL )
     {
@@ -992,7 +928,7 @@ processfile (const char *infname, const char *outfname)
     
     if (parse)
     {
-	YCode *c = parsefile (infname);
+	YCodePtr c = parsefile (infname);
 	
 	if (c == NULL) return 1;
 	
@@ -1032,7 +968,7 @@ processfile (const char *infname, const char *outfname)
     if (read_n_print)
     {
 	progress ("Reading:\n", 0);
-	YCode *c = Bytecode::readFile (infname);
+	YCodePtr c = Bytecode::readFile (infname);
 	if (c == 0)
 	{
 	    progress ("Bytecode read failed\n", 0);
@@ -1073,7 +1009,7 @@ processfile (const char *infname, const char *outfname)
     if (read_n_run)
     {
 	progress ("Reading:\n", 0);
-	YCode *c = Bytecode::readFile (infname);
+	YCodePtr c = Bytecode::readFile (infname);
 	progress ("Running:\n", 0);
 
 	Y2Component *server = Y2ComponentBroker::createServer (ui_name);
@@ -1214,11 +1150,12 @@ int main(int argc, char *argv[])
 	    {"no-implicit-imports", 0, 0, 'd'},		// don't preload implicit namespaces
 	    {"fsyntax-only", 0, 0, 'E'},		// parse only
 	    {"freshen", 0, 0, 'f'},			// freshen .ybc files
+	    {"Force", 0, 0, 'F'},			// force recompile of all dependant files
 	    {"help", 0, 0, 'h'},			// show help and exit
 	    {"include-path", 1, 0, 'I'},		// where to find include files
 	    {"module-path", 1, 0, 'M'},			// where to find module files
-	    {"nostdincludes", 0, 0, 142},		// drop all built-in include pathes
-	    {"nostdmodules", 0, 0, 143},		// drop all built-in module pathes
+	    {"nostdincludes", 0, 0, 257},		// drop all built-in include pathes
+	    {"nostdmodules", 0, 0, 258},		// drop all built-in module pathes
 	    {"logfile", 1, 0, 'l'},			// specify log file
 	    {"no-std-path", 0, 0, 'n'},			// no standard pathes
 	    {"output", 1, 0, 'o'},			// output file
@@ -1232,15 +1169,15 @@ int main(int argc, char *argv[])
 	    {0, 0, 0, 0}
 	};
 
-	int c = getopt_long (argc, argv, "h?vVnpqrtRdEcfI:M:o:l:u:", options, &option_index);
+	int c = getopt_long (argc, argv, "h?vVnpqrtRdEcFfI:M:o:l:u:", options, &option_index);
 	if (c == EOF) break;
 
 	switch (c)
 	{
-	    case 142:
+	    case 257:
 		YCPPathSearch::clearPaths (YCPPathSearch::Include);
 	    break;
-	    case 143:
+	    case 258:
 		YCPPathSearch::clearPaths (YCPPathSearch::Module);
 	    break;
 	    case 'h':
@@ -1283,6 +1220,9 @@ int main(int argc, char *argv[])
 		break;
 	    case 'f':
 		freshen = 1;
+		break;
+	    case 'F':
+		force = 1;
 		break;
 	    case 'I':
 		incpathes.push_front (string (optarg));		// push to front so first one is last in list
@@ -1352,7 +1292,7 @@ int main(int argc, char *argv[])
 	&& (compile == read_n_print)
 	&& (compile == read_n_run))
     {
-	fprintf (stderr, "-E, -p, or -c must be given\n");
+	fprintf (stderr, "c-, -E, -f, or -p must be given\n");
     }
 
     if (optind == argc)
@@ -1466,8 +1406,20 @@ int main(int argc, char *argv[])
 	    exit (1);
 	}
 	std::list <FileDep>::iterator depit;
+
+	depit = deplist.end();
+	depit--;					// get last element, existance is guaranteed
+	time_t starttime = depit->bintime() == 0 ? depit->srctime() : depit->bintime();
+	string startname = depit->name();
+
 	for (depit = deplist.begin(); depit != deplist.end(); depit++)
 	{
+	    if (depit->srctime() > starttime)
+	    {
+		printf ("%s is newer than %s\n", depit->toString().c_str(), startname.c_str());
+		time (&starttime);
+	    }
+
 	    if (!depit->is_module())
 	    {
 		continue;

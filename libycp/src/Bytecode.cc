@@ -47,6 +47,21 @@ int Bytecode::m_namespace_nesting_array_size = 0;
 int Bytecode::m_namespace_tare_level = 0;
 Bytecode::namespaceentry_t *Bytecode::m_namespace_nesting_array = 0;
 
+void
+Bytecode::namespaceInit ()
+{
+    y2debug ("Reinitialize namespaces");
+    if (Bytecode::m_namespace_nesting_array)
+    {
+	free (Bytecode::m_namespace_nesting_array);
+    }
+    
+    Bytecode::m_namespace_nesting_array = 0;
+    Bytecode::m_namespace_nesting_level = -1;
+    Bytecode::m_namespace_nesting_array_size = 0;
+    Bytecode::m_namespace_tare_level = 0;
+}
+
 // ------------------------------------------------------------------
 // bool I/O
 
@@ -587,12 +602,12 @@ Bytecode::untareStack (int tare_id)
 //  position is the index in module table's m_xrefs[] for _external_ symbols, see YSImport
 //
 std::ostream &
-Bytecode::writeEntry (std::ostream & str, const SymbolEntry *sentry)
+Bytecode::writeEntry (std::ostream & str, const SymbolEntryPtr sentry)
 {
     int id = Bytecode::namespaceId (sentry->nameSpace());
     if (id < 0)
     {
-	y2error ("No id for entry (%p:%s)", sentry, sentry->toString().c_str());
+	y2error ("No id for entry (%s)", sentry->toString().c_str());
 	abort ();
     }
 //    y2debug ("Bytecode::writeEntry (%p:%s: id %d, pos %d)", sentry, sentry->toString().c_str(), id, sentry->position());
@@ -601,7 +616,7 @@ Bytecode::writeEntry (std::ostream & str, const SymbolEntry *sentry)
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 Bytecode::readEntry (std::istream & str)
 {
     // read reference to namespaces (namespace_id) symbol table (position)
@@ -623,7 +638,7 @@ Bytecode::readEntry (std::istream & str)
 	return 0;
     }
 
-    SymbolEntry *sentry;
+    SymbolEntryPtr sentry;
     if (position < 0)				// it's an Xref !
     {
 	SymbolTable *table = name_space->table();
@@ -655,7 +670,7 @@ Bytecode::readEntry (std::istream & str)
 
 
 // read code from stream
-YCode *
+YCodePtr
 Bytecode::readCode (std::istream & str)
 {
     char code;
@@ -669,6 +684,8 @@ Bytecode::readCode (std::istream & str)
     {
 	return new YConst ((YCode::ykind)code, str);
     }
+    
+    YCodePtr res = 0;
 
     switch (code)
     {
@@ -681,179 +698,187 @@ Bytecode::readCode (std::istream & str)
 	}
 	case YCode::ycLocale:
 	{
-	    return new YLocale (str);
+	    res = new YLocale (str);
 	}
+	break;
 	case YCode::ycFunction:
 	{
-	    return new YFunction (str);
+	    res = new YFunction (str);
 	}
+	break;
 	case YCode::yePropagate:
 	{
-	    return new YEPropagate (str);
+	    res = new YEPropagate (str);
 	}
 	break;
 	case YCode::yeUnary:
 	{
-	    return new YEUnary (str);
+	    res = new YEUnary (str);
 	}
 	break;
 	case YCode::yeBinary:
 	{
-	    return new YEBinary (str);
+	    res = new YEBinary (str);
 	}
 	break;
 	case YCode::yeTriple:
 	{
-	    return new YETriple (str);
+	    res = new YETriple (str);
 	}
 	break;
 	case YCode::yeCompare:
 	{
-	    return new YECompare (str);
+	    res = new YECompare (str);
 	}
 	break;
 	case YCode::yeLocale:
 	{
-	    return new YELocale (str);
+	    res = new YELocale (str);
 	}
 	break;
 	case YCode::yeList:
 	{
-	    return new YEList (str);
+	    res = new YEList (str);
 	}
 	break;
 	case YCode::yeMap:
 	{
-	    return new YEMap (str);
+	    res = new YEMap (str);
 	}
 	break;
 	case YCode::yeTerm:
 	{
-	    return new YETerm (str);
+	    res = new YETerm (str);
 	}
 	break;
 	case YCode::yeIs:
 	{
-	    return new YEIs (str);
+	    res = new YEIs (str);
 	}
 	break;
 	case YCode::yeBracket:
 	{
-	    return new YEBracket (str);
+	    res = new YEBracket (str);
 	}
 	break;
 	case YCode::yeBlock:
 	{
-	    return new YBlock (str);
+	    res = new YBlock (str);
 	}
 	break;
 	case YCode::yeReturn:
 	{
-	    return new YEReturn (str);
+	    res = new YEReturn (str);
 	}
 	break;
 	case YCode::yeVariable:
 	{
-	    return new YEVariable (str);
+	    res = new YEVariable (str);
 	}
 	break;
 	case YCode::yeReference:
 	{
-	    return new YEReference (str);
+	    res = new YEReference (str);
 	}
 	break;
 	case YCode::yeBuiltin:
 	{
-	    return new YEBuiltin (str);
+	    res = new YEBuiltin (str);
 	}
 	break;
 	case YCode::yeFunction:
 	{
-	    return new YEFunction (str);
+	    res = new YEFunction (str);
 	}
 	break;
 	case YCode::ysTypedef:
 	{
-	    return new YSTypedef (str);
+	    res = new YSTypedef (str);
 	}
 	break;
 	case YCode::ysVariable:
 	{
-	    return new YSAssign (true, str);
+	    res = new YSAssign (true, str);
 	}
 	break;
 	case YCode::ysFunction:
 	{
-	    return new YSFunction (str);
+	    res = new YSFunction (str);
 	}
 	break;
 	case YCode::ysAssign:
 	{
-	    return new YSAssign (false, str);
+	    res = new YSAssign (false, str);
 	}
 	break;
 	case YCode::ysBracket:
 	{
-	    return new YSBracket (str);
+	    res = new YSBracket (str);
 	}
 	break;
 	case YCode::ysIf:
 	{
-	    return new YSIf (str);
+	    res = new YSIf (str);
 	}
 	break;
 	case YCode::ysWhile:
 	{
-	    return new YSWhile (str);
+	    res = new YSWhile (str);
 	}
 	break;
 	case YCode::ysDo:
 	{
-	    return new YSDo (str);
+	    res = new YSDo (str);
 	}
 	break;
 	case YCode::ysRepeat:
 	{
-	    return new YSRepeat (str);
+	    res = new YSRepeat (str);
 	}
 	break;
 	case YCode::ysExpression:
 	{
-	    return new YSExpression (str);
+	    res = new YSExpression (str);
 	}
 	break;
 	case YCode::ysReturn:
 	{
-	    return new YSReturn (str);
+	    res = new YSReturn (str);
 	}
 	break;
 	case YCode::ysBreak:
 	{
-	    return new YStatement ((YCode::ykind)code, str);
+	    res = new YStatement ((YCode::ykind)code, str);
 	}
 	break;
 	case YCode::ysContinue:
 	{
-	    return new YStatement ((YCode::ykind)code, str);
+	    res = new YStatement ((YCode::ykind)code, str);
 	}
 	break;
 	case YCode::ysTextdomain:
 	{
-	    return new YSTextdomain (str);
+	    res = new YSTextdomain (str);
 	}
 	break;
 	case YCode::ysInclude:
 	{
-	    return new YSInclude (str);
+	    res = new YSInclude (str);
 	}
 	break;
 	case YCode::ysFilename:
 	{
-	    return new YSFilename (str);
+	    res = new YSFilename (str);
 	}
+	break;
 	case YCode::ysImport:
 	{
-	    return new YSImport (str);
+	    res = new YSImport (str);
+	}
+	break;
+	case YCode::ysBlock:
+	{
+	    res = new YSBlock (str);
 	}
 	break;
 	default:
@@ -862,7 +887,11 @@ Bytecode::readCode (std::istream & str)
 	}
 	break;
     }
-    return 0;
+    
+    if (! res->valid())
+	return 0;
+
+    return res;
 }
 
 
@@ -870,11 +899,11 @@ Bytecode::readCode (std::istream & str)
 // File I/O
 
 // static member
-map <string, YBlock*> Bytecode::m_bytecodeCache;
+map <string, YBlockPtr> Bytecode::m_bytecodeCache;
 
 // read file from module path
 
-YBlock *
+YBlockPtr 
 Bytecode::readModule (const string & mname)
 {
 //    y2debug ("Bytecode::readModule (%s) ", mname.c_str ());
@@ -899,7 +928,7 @@ Bytecode::readModule (const string & mname)
     }
 
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
-    YBlock *block = (YBlock *)Bytecode::readFile (filename);
+    YBlockPtr block = (YBlockPtr)Bytecode::readFile (filename);
 
     if (block == NULL)
     {
@@ -911,7 +940,6 @@ Bytecode::readModule (const string & mname)
     if (!block->isModule())
     {
 	y2error ("'%s' is no module", filename.c_str());
-	delete block;
 	return NULL;
     }
 
@@ -942,7 +970,7 @@ readInt (std::istream & str)
 
 
 // read YCode from file, return YCode (YError in case of failure)
-YCode *
+YCodePtr
 Bytecode::readFile (const string & filename)
 {
 //    y2debug ("Bytecode::readFile (%s)", filename.c_str());
@@ -984,7 +1012,7 @@ Bytecode::readFile (const string & filename)
 
 // write YCode to file, return errno (i.e. file not existing)
 int
-Bytecode::writeFile (const YCode *code, const string & filename)
+Bytecode::writeFile (const YCodePtr code, const string & filename)
 {
     // clear errno first
     errno = 0;

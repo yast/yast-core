@@ -177,7 +177,7 @@ YCPTerm::YCPTerm (std::istream & str)
 	if (!list.isNull())
 	{
 	    (const_cast<YCPTermRep*>(static_cast<const YCPTermRep*>(element)))->setName(s);
-	    for (uint i = 0 ; i < list->size () ; i++)
+	    for (int i = 0 ; i < list->size () ; i++)
 	    {
 		(const_cast<YCPTermRep*>(static_cast<const YCPTermRep*>(element)))->add (list->value (i));
 	    }

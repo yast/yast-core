@@ -60,7 +60,7 @@ StaticDeclaration::StaticDeclaration()
     y2debug ("m_declTable %p", m_declTable);
 #endif
     char **pptr = predefined;
-    SymbolEntry *sentry;
+    SymbolEntryPtr sentry;
     Point *point = new Point ("<predefined>");
     while (*pptr != 0)
     {
@@ -157,7 +157,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		SymbolTable *namespaceTable = block->table();
 
 		// create SymbolEntry::c_namespace for the namespace to be entered into the global table
-		SymbolEntry *sentry = new SymbolEntry (name, Type::Unspec, namespaceTable);
+		SymbolEntryPtr sentry = new SymbolEntry (name, Type::Unspec, namespaceTable);
 
 #if DO_DEBUG
 		y2debug ("Entered Namespace '%s' (block %p) into namespaceTable %p", name, block, namespaceTable);
@@ -194,10 +194,10 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		return;
 	    }
 
-#if 0
 #if DO_DEBUG
 y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str());
 #endif
+#if 0
 	    if (type->hasFlex()
 		&& (declarations->flags & DECL_FLEX) == 0)
 	    {
@@ -205,10 +205,12 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 		return;
 	    }
 #endif
+	    declarations->type = type;
+
 	    TableEntry *tentry = table->find (name);
 	    if (tentry != 0)			// check for overloading
 	    {
-		const SymbolEntry *entry = tentry->sentry();
+		const SymbolEntryPtr entry = tentry->sentry();
 		declaration_t *decl = entry->declaration();
 		if (decl == 0)
 		{
@@ -224,7 +226,7 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 	    }
 	    else		// first entry with that name
 	    {
-		SymbolEntry *sentry = new SymbolEntry (name, type, declarations, name_space);
+		SymbolEntryPtr sentry = new SymbolEntry (name, type, declarations, name_space);
 		table->enter (name, sentry, new Point (sentry, 0, namespace_point));
 	    }
 
@@ -235,7 +237,6 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 		fclose (fout);
 	    }
 #endif
-	    declarations->type = type;
 	}
 	declarations++;
     }

@@ -1,7 +1,6 @@
 /**
  * File:	Y2LanguageLoader.cc
  * Author:	Martin Vidner <mvidner@suse.cz>
- * $Id$
  *
  * In the transparent language binding architecture, created to bring
  * Perl to YaST, component creators are asked whether they can provide

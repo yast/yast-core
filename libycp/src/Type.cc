@@ -22,6 +22,8 @@ $Id$
 #include "ycp/Type.h"
 #include "ycp/Bytecode.h"
 
+#define DO_DEBUG 1
+
 #include <ctype.h>
 
 //----------------------------------------------------------------...
@@ -313,7 +315,7 @@ Type::clone () const
 
 
 TypePtr
-Type::unflex (constTypePtr type) const
+Type::unflex (constTypePtr type, unsigned int number) const
 {
     return clone();
 }
@@ -321,15 +323,18 @@ Type::unflex (constTypePtr type) const
 //----------------------------------------------------------------
 // FlexType
 
-FlexType::FlexType ()
+FlexType::FlexType (unsigned int number)
     : Type (FlexT)
+    , m_number (number)
 {
 }
 
 
 FlexType::FlexType (std::istream & str)
     : Type (FlexT, str)
+    , m_number (Bytecode::readInt32 (str))
 {
+    fprintf (stderr, "FlexType::fromStream");
 }
 
 
@@ -341,6 +346,7 @@ FlexType::~FlexType ()
 std::ostream &
 FlexType::toStream (std::ostream & str) const
 {
+    fprintf (stderr, "FlexType::toStream");
     Type::toStream (str);
     return str;
 }
@@ -349,14 +355,29 @@ FlexType::toStream (std::ostream & str) const
 string
 FlexType::toString () const
 {
-    return preToString() + "<flex>" + postToString();
+    static char numbuf[8];
+    if (m_number == 0)
+    {
+	numbuf[0] = 0;
+    }
+    else
+    {
+	sprintf (numbuf, "%d", m_number);
+    }
+    return preToString() + "<flex" + string (numbuf) + "> " + postToString();
 }
 
 
 constTypePtr
-FlexType::matchFlex (constTypePtr type) const
+FlexType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+    if (number != m_number)
+    {
+	return 0;
+    }
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (type->isUnspec ())
     {
 	return Type::Any;
@@ -383,10 +404,11 @@ FlexType::clone () const
 
 
 TypePtr
-FlexType::unflex (constTypePtr type) const
+FlexType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp;
-    if (m_kind == FlexT)
+    if (m_kind == FlexT
+	&& m_number == number)
     {
 	tp = type->clone();
 	if (isConst()) tp->asConst();		// keep qualifiers from flex
@@ -396,7 +418,9 @@ FlexType::unflex (constTypePtr type) const
     {
 	tp = clone();
     }
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 
@@ -439,11 +463,15 @@ VariableType::toString () const
 
 
 constTypePtr
-VariableType::matchFlex (constTypePtr type) const
+VariableType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (m_kind == FlexT)
+    {
 	return type;
+    }
     return 0;
 }
 
@@ -488,10 +516,12 @@ VariableType::clone () const
 
 
 TypePtr
-VariableType::unflex (constTypePtr type) const
+VariableType::unflex (constTypePtr type, unsigned int number) const
 {
-    TypePtr tp = VariableTypePtr (new VariableType (m_type->unflex(type)));
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    TypePtr tp = VariableTypePtr (new VariableType (m_type->unflex (type, number)));
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 
@@ -544,12 +574,14 @@ ListType::toString () const
 
 
 constTypePtr
-ListType::matchFlex (constTypePtr type) const
+ListType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (type->isList())
     {
-	return m_type->matchFlex (((constListTypePtr)type)->m_type);
+	return m_type->matchFlex (((constListTypePtr)type)->m_type, number);
     }
     return 0;
 }
@@ -602,10 +634,12 @@ ListType::clone () const
 
 
 TypePtr
-ListType::unflex (constTypePtr type) const
+ListType::unflex (constTypePtr type, unsigned int number) const
 {
-    TypePtr tp = ListTypePtr (new ListType (m_type->unflex(type)));
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    TypePtr tp = ListTypePtr (new ListType (m_type->unflex (type, number)));
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 //----------------------------------------------------------------
@@ -664,17 +698,21 @@ MapType::toString () const
 
 
 constTypePtr
-MapType::matchFlex (constTypePtr type) const
+MapType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (!type->isMap())
     {
 	return 0;
     }
-    constTypePtr flex = m_valuetype->matchFlex (((constMapTypePtr)type)->m_valuetype);
+    constTypePtr flex = m_valuetype->matchFlex (((constMapTypePtr)type)->m_valuetype, number);
     if (flex)
+    {
 	return flex;
-    return m_keytype->matchFlex (((constMapTypePtr)type)->m_keytype);
+    }
+    return m_keytype->matchFlex (((constMapTypePtr)type)->m_keytype, number);
 }
 
 
@@ -732,10 +770,25 @@ MapType::clone () const
 
 
 TypePtr
-MapType::unflex (constTypePtr type) const
+MapType::unflex (constTypePtr type, unsigned int number) const
 {
-    TypePtr tp = MapTypePtr (new MapType (Type::Any, m_valuetype->unflex(type)));
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    TypePtr tp;
+    if (m_keytype->isFlex())
+    {
+	tp = MapTypePtr (new MapType (m_keytype->unflex (type, number), m_valuetype));
+    }
+    else if (m_valuetype->isFlex())
+    {
+	tp = MapTypePtr (new MapType (m_keytype, m_valuetype->unflex (type, number)));
+    }
+    else
+    {
+	tp = clone();
+    }
+
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 
@@ -780,12 +833,14 @@ BlockType::toString () const
 
 
 constTypePtr
-BlockType::matchFlex (constTypePtr type) const
+BlockType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (type->isBlock())
     {
-	return m_type->matchFlex (((constBlockTypePtr)type)->m_type);
+	return m_type->matchFlex (((constBlockTypePtr)type)->m_type, number);
     }
     return 0;
 }
@@ -838,10 +893,12 @@ BlockType::clone () const
 
 
 TypePtr
-BlockType::unflex (constTypePtr type) const
+BlockType::unflex (constTypePtr type, unsigned int number) const
 {
-    TypePtr tp = BlockTypePtr (new BlockType (m_type->unflex(type)));
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    TypePtr tp = BlockTypePtr (new BlockType (m_type->unflex (type, number)));
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 
@@ -922,9 +979,11 @@ TupleType::toString () const
 
 
 constTypePtr
-TupleType::matchFlex (constTypePtr type) const
+TupleType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (!type->isTuple())
     {
 	return 0;
@@ -933,12 +992,12 @@ TupleType::matchFlex (constTypePtr type) const
     constTupleTypePtr tt = (constTupleTypePtr)type;
     for (unsigned index = 0; index < m_types.size(); index++)
     {
-	constTypePtr t = tt->parameterType(index);
+	constTypePtr t = tt->parameterType (index);
 	if (t->isError())
 	{
 	    break;
 	}
-	t = m_types[index]->matchFlex(t);
+	t = m_types[index]->matchFlex (t, number);
 	if (t != 0)
 	{
 	    return t;
@@ -1049,14 +1108,16 @@ TupleType::clone () const
 
 
 TypePtr
-TupleType::unflex (constTypePtr type) const
+TupleType::unflex (constTypePtr type, unsigned int number) const
 {
-    TupleTypePtr tp = TupleTypePtr (new TupleType (m_types[0]->unflex (type)));
+    TupleTypePtr tp = TupleTypePtr (new TupleType (m_types[0]->unflex (type, number)));
     for (unsigned index = 1; index < m_types.size(); index++)
     {
-	tp->concat (m_types[index]->unflex (type));
+	tp->concat (m_types[index]->unflex (type, number));
     }
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 
@@ -1177,20 +1238,25 @@ FunctionType::toString () const
 
 
 constTypePtr
-FunctionType::matchFlex (constTypePtr type) const
+FunctionType::matchFlex (constTypePtr type, unsigned int number) const
 {
-//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
     if (!type->isFunction())
+    {
 	return 0;
-
+    }
     if (!m_arguments)
+    {
 	return 0;
-
+    }
     constFunctionTypePtr ft = (constFunctionTypePtr)type;
     if (!ft->m_arguments)
+    {
 	return 0;
-
-    return m_arguments->matchFlex (ft->m_arguments);
+    }
+    return m_arguments->matchFlex (ft->m_arguments, number);
 }
 
 
@@ -1303,17 +1369,19 @@ FunctionType::clone () const
 
 
 TypePtr
-FunctionType::unflex (constTypePtr type) const
+FunctionType::unflex (constTypePtr type, unsigned int number) const
 {
-    FunctionTypePtr tp = FunctionTypePtr (new FunctionType (m_returntype->unflex (type)));
+    FunctionTypePtr tp = FunctionTypePtr (new FunctionType (m_returntype->unflex (type, number)));
     if (m_arguments != 0)
     {
-	for (unsigned index = 0; index < m_arguments->parameterCount(); index++)
+	for (unsigned index = 0; index < m_arguments->parameterCount (); index++)
 	{
-	    tp->concat (m_arguments->parameterType(index)->unflex(type));
+	    tp->concat (m_arguments->parameterType(index)->unflex (type, number));
 	}
     }
-//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#if DO_DEBUG
+    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+#endif
     return tp;
 }
 

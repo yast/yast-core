@@ -29,7 +29,7 @@ using std::string;
 #include <list>
 #include <stack>
 
-#include "ycp/SymbolEntry.h"
+#include "ycp/SymbolEntryPtr.h"
 #include "ycp/Point.h"
 
 class SymbolTable;
@@ -55,7 +55,7 @@ class TableEntry : public MemUsage
     TableEntry *m_outer;
 
     const char *m_key;			// search key, usually the symbol name
-    SymbolEntry *m_entry;		// complete symbol data, cannot be const since category might change
+    SymbolEntryPtr m_entry;		// complete symbol data, cannot be const since category might change
     const Point *m_point;		// definition point (file, line)
 
     SymbolTable *m_table;		// backpointer to table
@@ -64,13 +64,13 @@ protected:
     friend class SymbolTable;
 
 public:
-    TableEntry (const char *key, SymbolEntry *entry, const Point *point, SymbolTable *table = 0);
+    TableEntry (const char *key, SymbolEntryPtr entry, const Point *point, SymbolTable *table = 0);
     TableEntry (std::istream & str);
     ~TableEntry ();
     const char *key () const;
     TableEntry *next () const;
     const SymbolTable *table () const;
-    SymbolEntry *sentry () const;
+    SymbolEntryPtr sentry () const;
     const Point *point () const;
     string toString () const;
     string toStringSymbols () const;
@@ -105,6 +105,7 @@ private:
 
     // these are the actually used entries of this table
     // they are only stored if needed
+    bool m_track_usage;
     std::map<const char *, TableEntry *> *m_used;
 
     // stack of external references, needed during bytecode I/O by YSImport
@@ -132,7 +133,7 @@ public:
     // enter/find/remove
 
     // enter SymbolEntry to table as innermost definition
-    TableEntry *enter (const char *key, SymbolEntry *entry, const Point *point);
+    TableEntry *enter (const char *key, SymbolEntryPtr entry, const Point *point);
 
     // enter TableEntry to table as innermost definition
     TableEntry *enter (TableEntry *entry);
@@ -157,7 +158,7 @@ public:
     void closeXRefs ();
 
     // return the vector of references from top of m_references
-    SymbolEntry *getXRef (unsigned int position) const;
+    SymbolEntryPtr getXRef (unsigned int position) const;
 
     //---------------------------------------------------------------
     // usage tracking
@@ -167,6 +168,9 @@ public:
     int countUsage ();
 
     void endUsage ();
+
+    void enableUsage ();
+    void disableUsage ();
 
     //---------------------------------------------------------------
     // write usage to stream, see YSImport

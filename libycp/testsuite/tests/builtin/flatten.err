@@ -8,7 +8,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 No match for 'flatten : <unspec> (list <integer>)':
-flatten:list <<flex>> (const list <list <<flex>>>)
+flatten:list <<flex> > (const list <list <<flex> >>)
 tests/builtin/flatten.ycp:9:Bad parameter '<list <integer>> il'
 [Parser] tests/builtin/flatten.ycp:9 Bad parameter '<list <integer>> il'
 Parsed:

@@ -66,6 +66,7 @@ Type::vt2type (enum YCPValueType vt)
  * signature parser, get next token
  * >= 0 -> tkind
  * -1 -> const
+ * -100 (-x) -> Flex
  * '&' -> reference
  *  '<'
  *  '>'
@@ -137,7 +138,14 @@ Type::nextToken (const char **signature)
 	    else if (strncasecmp (*signature, "flex", 4) == 0)
 	    {
 		*signature += 4;
-		k = FlexT;
+		k = 0;
+		while (isdigit (**signature))
+		{
+		    k *= 10;
+		    k += (**signature - '0');
+		    *signature += 1;
+		}
+		k = -100 - k;
 	    }
 	}
 	break;
@@ -311,7 +319,6 @@ Type::fromSignature (const char ** signature)
 	case BooleanT:		t = TypePtr (new Type (BooleanT)); break;
 	case ByteblockT:	t = TypePtr (new Type (ByteblockT)); break;
 	case ErrorT:		t = TypePtr (new Type (ErrorT)); break;
-	case FlexT:		t = FlexTypePtr (new FlexType ()); break;
 	case FloatT:		t = TypePtr (new Type (FloatT)); break;
 	case IntegerT:		t = TypePtr (new Type (IntegerT)); break;
 	case LocaleT:		t = TypePtr (new Type (LocaleT)); break;
@@ -332,7 +339,14 @@ Type::fromSignature (const char ** signature)
 	case MapT:		k = MapT; next = '<'; break;
 	case TupleT:		k = TupleT; next = '<'; break;
 	default:
-	    y2debug ("Signature code %d [%s] not handled\n", **signature, signature_start);
+	    if (k <= -100)
+	    {
+		t = FlexTypePtr (new FlexType (-(k+100)));
+	    }
+	    else
+	    {
+		y2error ("Builtin signature code %d [%s] not handled\n", **signature, signature_start);
+	    }
 	break;
     }
 
@@ -507,7 +521,7 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 
     // if builtin decl returns 'flex', the parameter deduces the return type
 
-    FunctionTypePtr result = actual->clone();
+    FunctionTypePtr result;
     y2debug ("ANY type check (declared '%s', actual '%s'!", declared->toString().c_str(), actual->toString().c_str());
 
     if (declared->parameterCount() <= 0)
@@ -515,32 +529,28 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 	y2error ("declared->parameterCount() <= 0");
 	return Type::Error->clone();
     }
-#if 0
-    for (int i = 0; i < declared->parameterCount (); i++)		// search for flex in declared parameter list
-    {
-	dtype = declared->parameterType (i);
-	btype = actual->parameterType (i);
-	y2debug ("scanning dtype '%s' for flex, btype '%s'", dtype->toString().c_str(), btype->toString().c_str());
-	if (btype->isError ())		// oops, we dont have the matching parameter yet
-	    break;
 
-	if (dtype->matchFlex() != 0)
-	    break;
-    }
-#endif
-    constTypePtr flextype = declared->matchFlex (actual);
+    unsigned int flexnumber = 0;
 
-    y2debug ("flextype '%s'", flextype == 0 ? "NONE" : flextype->toString().c_str());
+    constTypePtr flextype;
+    do
+    {
+	flextype = declared->matchFlex (actual, flexnumber);
 
-    if (flextype == 0)
-    {
-	result = declared->clone();
+	y2debug ("flextype %d:'%s'", flexnumber, flextype == 0 ? "NONE" : flextype->toString().c_str());
+
+	if (flextype == 0)
+	{
+	    result = declared->clone();
+	}
+	else
+	{
+	    // exchange <flex> with the correct type
+	    result = declared->unflex (flextype, flexnumber);
+	    declared = result;
+	}
     }
-    else
-    {
-	// exchange <flex> with the correct type
-	result = declared->unflex (flextype);
-    }
+    while ((flexnumber++ == 0) || (flextype != 0));
 
     y2debug ("determineFlexType returns '%s'", result->toString().c_str());
     return result;

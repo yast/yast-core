@@ -1,0 +1,10 @@
+#
+# modules.exp
+# 'main' file for all modules tests
+#
+
+bytecode-compile Mode.ycp modules
+
+bytecode-compile Installation.ycp modules
+
+

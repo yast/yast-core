@@ -155,6 +155,15 @@ public:
      * Called automatically in each find.
      */
     static void initialize ();
+    
+    /**
+     * Search for a YBC file corresponding to the given YCP file. It also
+     * checks, if the YBC file is newer than the YCP.
+     *
+     * @param file the YCP file for which YBC file should be found
+     * @return YBC file name or empty string if no YBC file was found
+     */
+    static string bytecodeForFile (string file);
 
 private:
     static bool initialized;

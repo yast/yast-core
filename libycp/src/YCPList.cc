@@ -248,7 +248,7 @@ YCPListRep::commaList() const
     for (unsigned index = 0; index < elements.size(); index++)
     {
 	if (index != 0) ret += ", ";
-	ret += elements[index].isNull()?"(null)":elements[index]->toString();
+	ret += elements[index].isNull() ? "(null)" : elements[index]->toString();
     }
     return ret;
 }

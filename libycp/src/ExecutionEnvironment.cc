@@ -3,7 +3,7 @@
  *
  * Description:
  *   YaST2 execution environment, i.e. processing context.
- *   Contains reference to the current block, the current statement, 
+ *   Contains reference to the current statement, 
  *   the current file name and backtrace.
  *   This information can be used for logging, debugger etc.
  *
@@ -15,7 +15,6 @@
 #include "ycp/ExecutionEnvironment.h"
 
 #include "ycp/YStatement.h"
-#include "ycp/YBlock.h"
 
 #include "ycp/y2log.h"
 
@@ -49,7 +48,7 @@ ExecutionEnvironment::setLinenumber (int line)
 const string 
 ExecutionEnvironment::filename () const
 {
-    return (m_forced_filename || ! block()) ? m_filename : block()->filename();
+    return m_filename;
 }
 
 
@@ -62,7 +61,7 @@ ExecutionEnvironment::setFilename (const string & filename)
 }
 
 
-YStatement* 
+YStatementPtr
 ExecutionEnvironment::statement () const
 {
     return m_statement;
@@ -70,7 +69,7 @@ ExecutionEnvironment::statement () const
 
 
 void
-ExecutionEnvironment::setStatement (YStatement* s)
+ExecutionEnvironment::setStatement (YStatementPtr s)
 {
     m_statement = s;
     
@@ -79,47 +78,6 @@ ExecutionEnvironment::setStatement (YStatement* s)
 	m_linenumber = s->line ();
     }
     
-    return;
-}
-
-
-YBlock* 
-ExecutionEnvironment::block () const
-{
-    if (m_blocks.empty())
-    {
-	return NULL;
-    }
-    return m_blocks.top ();
-}
-
-
-void
-ExecutionEnvironment::pushBlock (YBlock* b)
-{
-    m_blocks.push (b);
-    if (b->isFile()
-	|| b->isModule())
-    {
-	setFilename (b->filename());
-    }
-    else
-    {
-	m_forced_filename = false;
-    }
-    return;
-}
-
-
-void
-ExecutionEnvironment::popBlock ()
-{
-    if (!m_blocks.empty())
-    {
-	y2debug ("ExecutionEnvironment::popBlock ()");
-	m_blocks.pop ();
-    }
-    m_forced_filename = false;
     return;
 }
 

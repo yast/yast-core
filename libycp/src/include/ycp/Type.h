@@ -174,7 +174,7 @@ public:
     /*
      * match <flex> to type, return type if <flex> matches
      */
-    virtual constTypePtr matchFlex (constTypePtr type) const { return 0; }
+    virtual constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const { return 0; }
 
     /**
      * check match with expected type
@@ -196,7 +196,7 @@ public:
     /**
      * replace any 'FlexT' with 'type'
      */
-    virtual TypePtr unflex (constTypePtr type) const;
+    virtual TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
 
     /**
      * prefix qualifier
@@ -280,15 +280,16 @@ public:
 class FlexType : public Type
 {
     REP_BODY(FlexType);
+    unsigned int m_number;		// there can be more than one flex
 public:
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
-    FlexType ();
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    FlexType (unsigned int number = 0);
     FlexType (std::istream & str);
     ~FlexType ();
 };
@@ -305,11 +306,11 @@ public:
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     VariableType (constTypePtr type = Type::Unspec);
     VariableType (std::istream & str);
@@ -327,12 +328,12 @@ private:
 public:
     string toString () const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     ListType (constTypePtr type = Type::Unspec);
@@ -352,12 +353,12 @@ private:
 public:
     string toString () const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr keytype () const { return m_keytype; }
     constTypePtr valuetype () const { return m_valuetype; }
     std::ostream & toStream (std::ostream & str) const;
@@ -377,12 +378,12 @@ private:
 public:
     string toString () const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr returnType () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     BlockType (constTypePtr type);
@@ -401,12 +402,12 @@ protected:
 public:
     string toString () const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     TupleType (constTypePtr type);
     TupleType (std::istream & str);
@@ -429,12 +430,12 @@ public:
     FunctionType (constTypePtr return_type, constFunctionTypePtr arguments);
     string toString () const;
     bool isBasetype () const { return false; }
-    constTypePtr matchFlex (constTypePtr type) const;
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const { return false; }
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type) const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     FunctionType (constTypePtr returntype = Type::Unspec);
     FunctionType (std::istream & str);

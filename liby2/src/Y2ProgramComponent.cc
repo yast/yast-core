@@ -344,20 +344,15 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	    return YCPNull ();
 	}
 
-	YCode* c = parser.parse ();
+	YCodePtr c = parser.parse ();
 	
 	if (c == NULL || c->isError())
 	{
 	    y2error ("External program returned invalid data.");
-	    
-	    if (c != NULL) 
-		delete c;
-
 	    return YCPNull ();
 	}
 	
 	YCPValue ret = c->evaluate (true);
-	delete c;
 
 	return ret;
     }

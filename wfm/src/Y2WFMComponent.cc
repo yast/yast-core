@@ -420,7 +420,9 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
     return YCPString (proposedEncoding);
 }
 
-YCPValue Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
+
+YCPValue
+Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
 {
     /**
      * @builtin Read (path, [any]) -> any
@@ -450,6 +452,7 @@ YCPValue Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
     }
 }
 
+
 YCPValue
 Y2WFMComponent::Write (const YCPPath &path, const YCPValue &arg1, const YCPValue &arg2)
 {
@@ -473,6 +476,7 @@ Y2WFMComponent::Write (const YCPPath &path, const YCPValue &arg1, const YCPValue
 
     return local.agent ()->Write (p, arg1, arg2);
 }
+
 
 YCPValue
 Y2WFMComponent::Execute (const YCPPath &path, const YCPValue &arg1)
@@ -498,6 +502,7 @@ Y2WFMComponent::Execute (const YCPPath &path, const YCPValue &arg1)
     return local.agent ()->Execute (p, arg1);
 }
 
+
 YCPValue
 Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 {
@@ -518,74 +523,40 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
      */
 
     string new_modulename = client->value ();
-    string filename = "clients/" + new_modulename + ".ycp";
-    string fullname = Y2PathSearch::findy2 (filename);
-
-    int fd = -1;
-    if (!fullname.empty ())
+	
+    // try loading a client via Y2ComponentBroker
+    Y2Component* client_comp = Y2ComponentBroker::createClient (new_modulename.c_str ());
+    if (client_comp)
     {
-	fd = open (fullname.c_str (), O_RDONLY, 0644);
-    }
-
-    if (fd < 0)
-    {
-	// try loading a client via Y2ComponentBroker
-	Y2Component* client = Y2ComponentBroker::createClient (new_modulename.c_str ());
-	if (client)
-	{
-	    ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
+	ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
 		       "Calling YaST client %s", new_modulename.c_str ());
-	    YCPValue result = client->doActualWork (args, NULL);
+	YCPValue result = client_comp->doActualWork (args, NULL);
 
-	    ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
+	ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
 		       "Called YaST client returned: %s", result.isNull () ? "nil" : result->toString ().c_str ());
-	    return result;
+	return result;
 
-	}
-	else
-	{
-	    // no help
-	    return YCPError ("Can't find YCP client component " + filename + ": " + strerror (errno));
-	}
-    }
-
-    YCPValue result = YCPVoid();
-
-    Parser parser(fd, fullname.c_str());
-    parser.setBuffered(); // Read from file. Buffering is always possible here
-    YCode* ycpscript = parser.parse();
-    close(fd);
-
-    if (! ycpscript)
-    {
-	    result = YCPError ("Invalid YCP component " + fullname);
     }
     else
     {
-	ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
-		       "Calling YCP function module %s", filename.c_str());
-
-	// I just evaluate the value ycpscript. But I have to make
-	// sure, that it has access to it's arguments given in argterm.
-	// If temporarily overwrite the member variable argumentlist.
-
-	YCPList old_argumentlist = this->argumentlist;
-	this->argumentlist = args; // YYYYYYYYYYY switch CallFunction from term to list
-
-	result = ycpscript->evaluate();
-
-	argumentlist = old_argumentlist;
-	delete ycpscript;
+	// no help
+	ycp2error ("Can't find YCP client component %s: %s", new_modulename.c_str(), strerror (errno));
+	return YCPNull ();
     }
-
-    return result;
 }
 
-Y2Namespace* Y2WFMComponent::import (const char* name_space)
+
+Y2Namespace *
+Y2WFMComponent::import (const char* name_space)
 {
+    y2milestone ("Y2WFMComponent::import (%s)", name_space);
+
     // create the namespace
     // maybe this failed, but it does not mean any problems, block () will simply return 0
-    Y2Namespace *ns = Bytecode::readModule (name_space);
-
-    return ns;
+    YBlockPtr block = Bytecode::readModule (name_space);
+    if (block == 0)
+    {
+	return 0;
+    }
+    return block->nameSpace();
 }

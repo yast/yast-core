@@ -49,7 +49,7 @@ void Y2ScriptComponent::setupComponent (string cn, string fn,
     script = sc;
     client_name = cn;
     fullname = fn;
-    m_wfm = 0;
+//    m_wfm = 0;
 }
 
 
@@ -94,6 +94,9 @@ YCPValue Y2ScriptComponent::doActualWork(const YCPList& arglist, Y2Component *us
 
     // Let the wfm do the work
     YCPValue result = wfm_instance()->doActualWork(wfm_arglist, user_interface);
+    
+    // remove reference to the script
+    script = YCPNull();
 
     return result;
 }

@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, map <string, string>> connections
+    // filename: "tests/builtin/Builtin-remove.ycp"
+    map <string, map <string, string>> connections = $[];
+    connections = remove (connections, "foo");
+    return connections;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-remove.ycp:3 Key "foo" for remove () does not exist

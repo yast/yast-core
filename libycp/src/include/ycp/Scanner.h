@@ -16,7 +16,6 @@
 		Mathias Kettner <kettner@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
-$Id$
 /-*/
 // -*- c++ -*-
 

@@ -1,0 +1,25 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "NameOfModule";
+    //T: TEntry (ag@4:global integer NameOfModule::ag)
+    //T: TEntry (NameOfModule@7:global void NameOfModule::NameOfModule ())
+    //T: TEntry (af@12:global integer NameOfModule::af ())
+    // global integer NameOfModule::ag
+    // integer al
+    // global void NameOfModule::NameOfModule ()
+    // global integer NameOfModule::af ()
+    // filename: "tests/bytecode/Module/NameOfModule.ycp"
+    global integer NameOfModule::ag = 1;
+    integer al = 2;
+    global void NameOfModule::NameOfModule ()
+{
+    y2milestone ("I am a constructor\n");
+    al = 5;
+}
+    global integer NameOfModule::af ()
+{
+    return (NameOfModule::ag + al);
+}
+}
+----------------------------------------------------------------------

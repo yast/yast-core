@@ -7,6 +7,7 @@ site.exp
 .libs
 y2wfm
 runwfm
+runc
 tmp.*
 differr
 diffout

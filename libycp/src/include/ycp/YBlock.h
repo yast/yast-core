@@ -29,6 +29,7 @@ using std::string;
 #include <y2/Y2Namespace.h>
 #include "ycp/YStatement.h"
 
+//-------------------------------------------------------------------
 
 /**
  * filename hash
@@ -44,7 +45,9 @@ class YSImport;
  * block (-> list of statements, list of symbols)
  */
 
-class YBlock : public YCode, public Y2Namespace  {
+class YBlock : public YCode, public Y2Namespace
+{
+    REP_BODY (YBlock);
 private:
     // hash for unique strings, used for filenames
     static UstringHash m_filenameHash;
@@ -55,7 +58,7 @@ public:
 	b_unknown = 0,		// 0: unspecified
 	b_module,		// 1: toplevel module (-> m_table != 0)
 	b_file,			// 2: toplevel file block
-	b_statement,		// 3: used as statement (local block)
+	b_statement,		// 3: used as statement (local block which might contain return)
 	b_definition,		// 4: used as function definition
 	b_value,		// 5: used as value (intermediate block)
 	b_namespace,		// 6: block defines a namespace
@@ -66,7 +69,7 @@ private:
     // --------------------------------
     // general block data
 
-    // Block kind,
+    // Block kind
     // b_statement == implict return YCPNull() (block is statement, default)
     // else YCPVoid () (treat block as expression)
     blockkind_t m_kind;
@@ -77,6 +80,9 @@ private:
 
     // --------------------------------
     // Environment
+    // keep track of symbols entered into SymbolTable (declared
+    // in this block), we must remove then at finishBlock()
+    // so they go out of scope
 
     struct yTElist {
 	struct yTElist *next;
@@ -93,14 +99,6 @@ private:
     // points to 0 after detachEnvironment()
     yTElist_t *m_last_tparm;
 
-    // block environment as SymbolEntry array used during
-    //  execution time
-    unsigned int m_count;
-    SymbolEntry **m_senvironment;
-
-    // add symbol to m_senvironment
-    unsigned int addSymbol (SymbolEntry *entry);
-
     // --------------------------------
     // source file, needs environment
 
@@ -113,7 +111,7 @@ private:
     // Block content
 
     struct stmtlist {
-	YStatement *stmt;
+	YStatementPtr stmt;
 	struct stmtlist *next;
     };
     typedef struct stmtlist stmtlist_t;
@@ -177,6 +175,9 @@ public:
     const string name () const;
     void setName (const string & name);
 
+    const Y2Namespace *nameSpace () const { return (const Y2Namespace *)this; }
+    Y2Namespace *nameSpace () { return (Y2Namespace *)this; }
+
     //---------------------------------------------------------------
     // block kind
 
@@ -200,7 +201,7 @@ public:
     // add new value code to this block
     //   (used for functions which accept either symbolic variables or values, e.g. foreach())
     // returns position
-    unsigned int newValue (constTypePtr type, YCode *code);
+    unsigned int newValue (constTypePtr type, YCodePtr code);
 
     // add a new table entry to this block
     //  and attach it to m_tenvironment
@@ -218,41 +219,20 @@ public:
     //---------------------------------------------------------------
     // symbol handling
 
-    // find symbol in m_senvironment, return -1 if not found
-    virtual int findSymbol (const SymbolEntry *entry) const;
-
-    // release symbol entry from m_senvironment
-    //   it's no longer owned by this block but by a ysFunction()
-    void releaseSymbol (unsigned int position);
-    void releaseSymbol (SymbolEntry *entry);
-
-    // number of local variables (environment entries)
-    virtual unsigned int symbolCount () const;
-
-    // get entry by position
-    virtual SymbolEntry *symbolEntry (unsigned int position) const;
-
     // Attach entry (variable, typedef, ...) to local environment
     void attachEntry (TableEntry *entry);
 
     // Detach local environment from symbol table
-    //  convert m_tenvironment to m_senvironment
     void detachEnvironment (SymbolTable *table);
-
-    // push all local variables to stack, uses SymbolEntry::push()
-    void push_to_stack ();
-
-    // pop all local variables from stack, uses SymbolEntry::pop()
-    void pop_from_stack ();
 
     //---------------------------------------------------------------
     // statement handling
 
     // Attach statement to end of block
-    void attachStatement (YStatement *statement);
+    void attachStatement (YStatementPtr statement);
 
     // Pretach statement to beginning block
-    void pretachStatement (YStatement *statement);
+    void pretachStatement (YStatementPtr statement);
 
     // count the statements in this block
     int statementCount () const;
@@ -261,7 +241,7 @@ public:
     // return
 
     // returns the return statement if the block just consists of a single return
-    YSReturn *justReturn () const;
+    YSReturnPtr justReturn () const;
 
     //---------------------------------------------------------------
     // include

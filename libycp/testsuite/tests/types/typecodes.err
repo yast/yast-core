@@ -85,8 +85,8 @@ No match for '+ : <unspec> (const symbol, const path)':
 +:string (string, path)
 +:path (path, path)
 +:path (path, string)
-+:list <<flex>> (const list <<flex>>, const list <<flex>>)
-+:list <<flex>> (const list <<flex>>, const <flex>)
++:list <<flex> > (const list <<flex> >, const list <<flex> >)
++:list <<flex> > (const list <<flex> >, const <flex> )
 +:list (const list, any)
 +:map (const map, const map)
 Parsed:

@@ -7,7 +7,6 @@
  * Authors: Mathias Kettner <kettner@suse.de>
  *          Michal Svec <msvec@suse.cz>
  *
- * $Id$
  */
 
 #ifndef _y2log_ycp_h

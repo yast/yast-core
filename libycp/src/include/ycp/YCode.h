@@ -25,6 +25,7 @@
 using std::string;
 
 #include <y2util/MemUsage.h>
+#include "ycp/YCodePtr.h"
 
 #include "ycp/YCPValue.h"
 #include "ycp/YCPString.h"
@@ -40,15 +41,16 @@ using std::string;
 
 struct ycodelist {
     struct ycodelist *next;
-    YCode *code;
+    YCodePtr code;
 };
 typedef struct ycodelist ycodelist_t;
 
 /**
  * @short YCode for precompiled ycp code
  */
-class YCode : public MemUsage
+class YCode : public Rep, public MemUsage
 {
+    REP_BODY(YCode);
 public:
     enum ykind {
 	yxError = 0,
@@ -102,19 +104,21 @@ public:
 	ysWhile,		// while () do ...
 	ysDo,			// do ... while ()
 	ysRepeat,		// repeat ... until ()
-	ysExpression,		// any expression (function call)
-	ysReturn,
-	ysBreak,
-	ysContinue,
-	ysTextdomain,
-	ysInclude,
-	ysFilename,
-	ysImport,		// 50
+	ysExpression,		//  any expression (function call)
+	ysReturn,		// return
+	ysBreak,		// break
+	ysContinue,		// continue
+	ysTextdomain,		// textdomain
+	ysInclude,		// include
+	ysFilename,		//  restore filename after include
+	ysImport,		// import
+	ysBlock,		// [51] a block as statement
 	ysStatement		// -- placeholder --
     };
 
 protected:
     ykind m_kind;
+    bool m_valid;
 
 public:
 
@@ -132,6 +136,11 @@ public:
      * Returns the YCode kind
      */
     ykind kind() const;
+   
+    /**
+     * Returns true, if this instance is valid.
+     */
+    bool valid() const;
 
     /**
      * Returns an ASCII representation of the YCode.
@@ -192,7 +201,9 @@ public:
  *
  */
 
-class YError : public YCode {
+class YError : public YCode
+{
+    REP_BODY(YError);
     int m_line;
     const char *m_msg;
 public:
@@ -208,7 +219,9 @@ public:
  * constant (-> YCPValue)
  */
 
-class YConst : public YCode {
+class YConst : public YCode
+{
+    REP_BODY(YConst);
     YCPValue m_value;		// constant (not allowed in union :-( )
 public:
     YConst (ykind kind, YCPValue value);		// Constant
@@ -219,9 +232,6 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type() const;
-
-//    bool saveTo (FILE *out) const;
-//    YCode *loadFrom (FILE *in);
 };
 
 #include <ext/hash_set>
@@ -236,8 +246,10 @@ public:
 
 class YELocale;
 
-class YLocale : public YCode {
-    const char *m_locale;    
+class YLocale : public YCode
+{
+    REP_BODY(YLocale);
+    const char *m_locale;		// the string to be translated
 
     struct eqstr
     {
@@ -246,13 +258,13 @@ class YLocale : public YCode {
 	    return strcmp(s1, s2) == 0;
 	}
     };
-    
+
     typedef __gnu_cxx::hash_set<const char*, __gnu_cxx::hash<const char*>, eqstr> t_uniquedomains;
-    
-    static t_uniquedomains domains;
-    
+
+    static t_uniquedomains domains;	// keep every textdomain only once
+
     t_uniquedomains::const_iterator m_domain;
-    
+
     friend class YELocale;
 
 public:
@@ -271,7 +283,9 @@ public:
  * declaration (-> declaration_t)
  */
 
-class YDeclaration : public YCode {
+class YDeclaration : public YCode
+{
+    REP_BODY(YDeclaration);
     declaration_t *m_value;	// builtin declaration
 public:
     YDeclaration (ykind kind, declaration_t *value);	// Builtin decl
@@ -290,7 +304,9 @@ public:
  *   SymbolEntry points to YFunction.
  */
 
-class YFunction : public YCode {
+class YFunction : public YCode
+{
+    REP_BODY(YFunction);
     // array of formal arguments of a function
     // the formal parameters must be available in the local scope during parse
     // of the function body (startDefinition()) and removed afterwards (endDefintion()).
@@ -302,26 +318,26 @@ class YFunction : public YCode {
     // @see YEFunction::attachActualParameter()
     //
     // if NULL, it's a (void) function
-    YBlock *m_declaration;
+    YBlockPtr m_declaration;
 
     // the function definition ('body') is the block defining this function
-    YBlock *m_definition;
+    YBlockPtr m_definition;
 
     bool m_is_global;
 
 public:
-    YFunction (YBlock *parameterblock, const SymbolEntry *entry = 0);
+    YFunction (YBlockPtr parameterblock, const SymbolEntryPtr entry = 0);
     YFunction (std::istream & str);
     ~YFunction ();
 
     // access to formal parameters
     unsigned int parameterCount () const;
-    YBlock *declaration () const;
-    SymbolEntry *parameter (unsigned int position) const;
+    YBlockPtr declaration () const;
+    SymbolEntryPtr parameter (unsigned int position) const;
 
     // access to definition block (= 0 if declaration only)
-    YBlock *definition () const;
-    void setDefinition (YBlock *body);
+    YBlockPtr definition () const;
+    void setDefinition (YBlockPtr body);
     // read definition from stream
     void setDefinition (std::istream & str);
 

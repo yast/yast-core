@@ -24,8 +24,11 @@ $Id$
 #include <string>
 using std::string;
 
+#define DO_DEBUG 0
+
 #include "ycp/y2log.h"
 #include "ycp/SymbolEntry.h"
+#include "ycp/SymbolEntryPtr.h"
 #include "ycp/SymbolTable.h"
 #include "ycp/StaticDeclaration.h"
 #include "ycp/YBlock.h"
@@ -33,23 +36,26 @@ using std::string;
 #include "ycp/YCPVoid.h"
 #include "ycp/Bytecode.h"
 
+IMPL_BASE_POINTER(SymbolEntry);
+
 UstringHash SymbolEntry::_nameHash;
 
 /**
  * constructor
  */
 
-SymbolEntry::SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *code)
+SymbolEntry::SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCodePtr code)
     : m_global ((cat == c_global)||(cat == c_filename))
     , m_namespace (name_space)
     , m_position (position)
     , m_name (Ustring (_nameHash, name))
     , m_category ((cat == c_filename) ? cat : (m_global ? c_unspec : cat))
     , m_type (type)
+    , m_code (code)
     , m_value (YCPNull())
 {
-    m_payload.m_code = code;
 }
+
 
 // builtin
 SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *decl, const Y2Namespace* name_space)
@@ -59,6 +65,7 @@ SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *de
     , m_name (Ustring (_nameHash, name))
     , m_category (c_builtin)
     , m_type (type)
+    , m_code (0)
     , m_value (YCPNull())
 {
     m_payload.m_decl = decl;
@@ -73,6 +80,7 @@ SymbolEntry::SymbolEntry (const char *name, constTypePtr type, SymbolTable *tabl
     , m_name (Ustring (_nameHash, name))
     , m_category (c_namespace)
     , m_type (type)
+    , m_code (0)
     , m_value (YCPNull())
 {
     m_payload.m_table = table;
@@ -87,16 +95,13 @@ SymbolEntry::SymbolEntry (const char *filename)
     , m_name (Ustring (_nameHash, filename))
     , m_category (c_filename)
     , m_type (Type::Unspec)
+    , m_code (0)
     , m_value (YCPNull())
 {
 }
 
 SymbolEntry::~SymbolEntry ()
 {
-    if (m_category == c_function)
-    {
-	delete m_payload.m_code;
-    }
 }
 
 const Y2Namespace *
@@ -123,9 +128,8 @@ SymbolEntry::isGlobal () const
 bool
 SymbolEntry::onlyDeclared () const
 {
-y2debug ("onlyDeclared '%s', category %d, payload %p", name(), category(), code());
     return (m_category == c_function)			// only functions may be 'only declared'
-	   && (((YFunction *)(m_payload.m_code))->definition() == 0);
+	   && (((YFunctionPtr)m_code)->definition() == 0);
 }
 
 
@@ -145,25 +149,25 @@ SymbolEntry::setPosition (unsigned int position)
 
 
 void
-SymbolEntry::setCode (YCode *code)
+SymbolEntry::setCode (YCodePtr code)
 {
     if (m_category == c_builtin || m_category == c_module)
     {
 	y2error ("setDeclaration: Wrong category (%s)", toString().c_str());
 	return;
     }
-    m_payload.m_code = code;
+    m_code = code;
 }
 
 
-YCode *
+YCodePtr
 SymbolEntry::code () const
 {
     if (m_category == c_builtin || m_category == c_module)
     {
 	return 0;
     }
-    return m_payload.m_code;
+    return m_code;
 }
 
 
@@ -387,9 +391,9 @@ string
 SymbolEntry::toString (bool with_type) const
 {
     string s = (with_type && m_global) ? "global " : "";
-
-//y2debug ("SymbolEntry::toString %p: with_type %d, cat %s, name %s", this, with_type, catString().c_str(), m_name.asString().c_str());
-
+#if DO_DEBUG
+    y2debug ("SymbolEntry::toString %p: with_type %d, cat %s, name '%s'", this, with_type, catString().c_str(), m_name.asString().c_str());
+#endif
     switch (m_category)
     {
 	case c_unspec:
@@ -402,14 +406,16 @@ SymbolEntry::toString (bool with_type) const
 #if 1
 	    return s + catString() + " \"" + m_name.asString() + "\"";
 #else
-	    return s + catString() + " \"" + m_name.asString() + "\"/*" + ((with_type && m_payload.m_code) ? m_payload.m_code->toString() : "") + "*/";
+	    return s + catString() + " \"" + m_name.asString() + "\"/*" + ((with_type && m_code) ? m_code->toString() : "") + "*/";
 #endif
 	}
 	break;
 	case c_variable:
 	case c_reference:
 	case c_function:
-//	    y2debug ("m_namespace %p[%s], m_global %d, with_type %d", m_namespace, m_namespace ? m_namespace->name().c_str() : "", m_global, with_type);
+#if DO_DEBUG
+	    y2debug ("m_namespace %p[%s], m_global %d, with_type %d", m_namespace, m_namespace ? m_namespace->name().c_str() : "", m_global, with_type);
+#endif
 	case c_builtin:
 	{
 	    if (with_type)
@@ -429,15 +435,16 @@ SymbolEntry::toString (bool with_type) const
 		    s += "(" + m_payload.m_decl->type->toString() + ")";
 		}
 		else if ((m_category == c_function)
-			 && (m_payload.m_code != 0))
+			 && (m_code != 0))
 		{
-		    s += ((YFunction *)(m_payload.m_code))->toStringDeclaration();
+		    s += ((YFunctionPtr)m_code)->toStringDeclaration();
 		}
 		return s;
 	    }
 	    else
 	    {
-		return string ((m_global && (m_namespace!=0)) ? (m_namespace->name() + "::") : "") + m_name.asString();
+		string s = string ((m_global && (m_namespace!=0)) ? (m_namespace->name() + "::") : "") + m_name.asString();
+		return s;
 	    }
 	}
 	break;
@@ -477,9 +484,9 @@ SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
     , m_name (Ustring (_nameHash, Bytecode::readCharp (str)))
     , m_category ((category_t)Bytecode::readInt32 (str))
     , m_type (Bytecode::readType (str))
+    , m_code (0)
     , m_value (YCPNull())    // value stays NULL to enforce re-initialization from payload
 {
-    m_payload.m_code = 0;
     y2debug ("SymbolEntry::fromStream (%s)", toString().c_str());
 
     if (m_category == c_builtin)
@@ -497,7 +504,7 @@ SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
     {
 	if (Bytecode::readBool (str))
 	{
-	    m_payload.m_code = Bytecode::readCode (str);
+	    m_code = Bytecode::readCode (str);
 	}
     }
 #endif

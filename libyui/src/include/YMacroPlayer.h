@@ -81,7 +81,7 @@ protected:
     /**
      * The parsed macro
      */
-    YBlock* _macro;
+    YBlockPtr _macro;
 
     /**
      * Error status

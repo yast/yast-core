@@ -29,7 +29,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/types/functionpointer2.ycp:9 Calling nil
-[Interpreter] tests/types/functionpointer2.ycp:10 Not a function pointer ('void () funptr' is 'nil')
+[Interpreter] tests/types/functionpointer2.ycp:10 Function pointer (void () funptr) is nil
 [YCP] tests/types/functionpointer2.ycp:12 Calling non-nil
 [YCP] tests/types/functionpointer2.ycp:4 Afun
 [YCP] tests/types/functionpointer2.ycp:22 Calling indirect variable

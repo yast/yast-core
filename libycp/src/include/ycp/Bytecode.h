@@ -27,10 +27,10 @@
 #include "ycp/YCPValue.h"
 #include "ycp/YCode.h"
 #include "ycp/YStatement.h"
+#include "ycp/YBlock.h"
 #include "ycp/Type.h"
 
 class Y2Namespace;
-class YBlock;
 
 #include <iosfwd>
 #include <string>
@@ -42,7 +42,7 @@ class Bytecode {
     static int m_namespace_tare_level;
     typedef struct { const Y2Namespace *name_space; bool with_xrefs; } namespaceentry_t;
     static namespaceentry_t *m_namespace_nesting_array;
-    static map<string, YBlock*> m_bytecodeCache;
+    static map<string, YBlockPtr> m_bytecodeCache;
 
     public:
 	// bool I/O
@@ -80,6 +80,7 @@ class Bytecode {
 	//-----------------------------------------------------------
 	// block nesting handling
 	//
+	static void namespaceInit ();
 	// retrieve ID (nesting level) for namespace
 	static int namespaceId (const Y2Namespace *name_space);
 	// retrieve namespace for ID
@@ -103,27 +104,27 @@ class Bytecode {
 	// SymbolEntry pointer (!) handling
 	//   the SymbolEntries itself are 'owned' by Y2Namespace (YBlock in YCP) and referenced via pointers
 	//   to SymbolEntry. These functions handle stream I/O for SymbolEntry pointers.
-	static std::ostream &writeEntry (std::ostream & str, const SymbolEntry *entry);
-	static SymbolEntry *readEntry (std::istream & str);
+	static std::ostream &writeEntry (std::ostream & str, const SymbolEntryPtr entry);
+	static SymbolEntryPtr readEntry (std::istream & str);
 
 	//-----------------------------------------------------------
 	// YCode read.
 	// Must be implemented outside of YCode since we have derived classes to allocate...
 	// see YCode for write
-	static YCode *readCode (std::istream & str);
+	static YCodePtr readCode (std::istream & str);
 
 	// File I/O
 	// reading and writing complete files is done via separate functions
 	// which add/check a 'magic value' header denoting "YCode" and its version.
 
 	// read YCode from file in Module path, return YBlock (NULL in case of error)
-	static YBlock *readModule (const string & mname);
+	static YBlockPtr readModule (const string & mname);
 
 	// read YCode from file, return YCode (YError in case of failure)
-	static YCode *readFile (const string & filename);
+	static YCodePtr readFile (const string & filename);
 
 	// write YCode to file, return errno (i.e. file not existing)
-	static int writeFile (const YCode *code, const string & filename);
+	static int writeFile (const YCodePtr code, const string & filename);
 };
 
 #endif // Bytecode_h

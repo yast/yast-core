@@ -63,7 +63,7 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
     y2milestone( "Loading macro file %s", macroFileName.c_str() );
 
     Parser parser( macroFile, macroFileName.c_str() );
-    YCode *parsed = parser.parse();
+    YCodePtr parsed = parser.parse();
 
     if ( !parsed || parsed->isError() )
     {
@@ -81,7 +81,7 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 	return;
     }
     
-    _macro = static_cast <YBlock *> (parsed) ;
+    _macro = static_cast <YBlockPtr> (parsed) ;
 
     y2debug( "Playing macro from file %s - %d macro blocks",
 	     macroFileName.c_str(), _macro->statementCount() );

@@ -91,10 +91,10 @@ SCRAgent::readconf (const char *filename)
     while ((fgets_result != 0) && (line[0] != '.'));
 
     Parser parser (file, filename);
-    YCode* tmpvalue = parser.parse ();
+    YCodePtr tmpvalue = parser.parse ();
     fclose (file);
 
-    y2debug( "Parsed value (%p): %s", tmpvalue, tmpvalue != 0 ? tmpvalue->toString().c_str() : "not available" );
+    y2debug( "Parsed value '%s'", tmpvalue != 0 ? tmpvalue->toString().c_str() : "not available" );
     if (tmpvalue == 0 || tmpvalue->kind () != YCode::yeTerm )
     {
 	ycp2error ("Not a term in scr file.");
@@ -103,7 +103,7 @@ SCRAgent::readconf (const char *filename)
 
     // it is a term, generate YCPValue through its evaluation
     YCPValue ret = tmpvalue->evaluate();
-    delete tmpvalue;
+
     return ret;
 }
 

@@ -42,6 +42,8 @@ $Id$
 #include <string>
 using std::string;
 
+#define DO_DEBUG 0
+
 #include "ycp/Point.h"
 #include "ycp/Bytecode.h"
 
@@ -58,19 +60,23 @@ Point::Point (std::string filename, int line, const Point *point)
     , m_line (line)
     , m_point (point)
 {
-//    y2debug ("Point (%s, %d, %s)", filename.c_str(), line, point ? point->toString().c_str() : "<nil>");
+#if DO_DEBUG
+    y2debug ("Point (%s, %d, %s)", filename.c_str(), line, point ? point->toString().c_str() : "<nil>");
+#endif
 }
 
 
 // Definition point
 // sentry is defined in point at line
 
-Point::Point (SymbolEntry *sentry, int line, const Point *point)
+Point::Point (SymbolEntryPtr sentry, int line, const Point *point)
     : m_entry (sentry)
     , m_line (line)
     , m_point (point)
 {
-//    y2debug ("Point (<%s>, %d, %s)", sentry->toString().c_str(), line, point ? point->toString().c_str() : "<nil>");
+#if DO_DEBUG
+    y2debug ("Point (<%s>, %d, %s)", sentry->toString().c_str(), line, point ? point->toString().c_str() : "<nil>");
+#endif
 }
 
 
@@ -79,7 +85,7 @@ Point::~Point (void)
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 Point::sentry (void) const
 {
     return m_entry;
@@ -132,7 +138,9 @@ Point::Point (std::istream & str)
     , m_line (Bytecode::readInt32 (str))
     , m_point (0)
 {
-//    y2debug ("Point::Point(<stream>): %s", toString().c_str());
+#if DO_DEBUG
+    y2debug ("Point::Point(<stream>): %s", toString().c_str());
+#endif
     if (Bytecode::readBool (str))
     {
 	m_point = new Point (str);
@@ -142,7 +150,9 @@ Point::Point (std::istream & str)
 std::ostream &
 Point::toStream (std::ostream & str) const
 {
-//    y2debug ("Point::toStream (%s)", toString().c_str());
+#if DO_DEBUG
+    y2debug ("Point::toStream (%s)", toString().c_str());
+#endif
     Bytecode::writeEntry (str, m_entry);
     Bytecode::writeInt32 (str, m_line);
     if (m_point)
@@ -158,3 +168,4 @@ Point::toStream (std::ostream & str) const
 }
 
 
+// EOF

@@ -23,14 +23,15 @@
 #define SymbolEntry_h
 
 #include <y2util/Ustring.h>
+#include <y2util/RepDef.h>
 
 #include "ycp/YCPValue.h"
 #include "ycp/Type.h"
 #include "ycp/StaticDeclaration.h"
+#include "ycp/YCode.h"
 
 #include <stack>
 
-class YCode;
 class YBlock;
 class Y2Namespace;
 class TableEntry;
@@ -38,8 +39,10 @@ class TableEntry;
 /**
  */
 
-class SymbolEntry : public MemUsage
+class SymbolEntry : public Rep, public MemUsage
 {
+    REP_BODY (SymbolEntry);
+
 private:
     // hash for unique strings
     static UstringHash _nameHash;
@@ -97,9 +100,6 @@ private:
      * -> set by YSVariable and YSFunction
      *
      * It is grossly overloaded:
-     *  c_variable:	YCode* (any value)
-     *  c_reference:	YCode* (YEReference*)
-     *  c_function:	YCode* (YFunction* to be precise)
      *	c_builtin:	declaration_t*
      *  c_module:	Y2Namespace*
      *  c_namespace:	SymbolTable *
@@ -108,11 +108,19 @@ private:
      *	c_filename	n/a (just uses m_name)
      */
     union payload {
-	YCode *m_code;
 	Y2Namespace *m_namespace;
 	declaration_t *m_decl;
 	SymbolTable *m_table;
     } m_payload;
+
+    /*
+     * Valid for
+     *  c_variable:	YCode* (any value)
+     *  c_reference:	YCode* (YEReference*)
+     *  c_function:	YCode* (YFunction* to be precise)
+     */
+
+    YCodePtr m_code;
 
     /*	the current (actual) value of the entry c_const  */
     YCPValue m_value;
@@ -122,7 +130,7 @@ private:
 public:
 
     // create symbol beloging to namespace (at position)
-    SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *payload = 0);
+    SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCodePtr payload = 0);
 
     // create builtin symbol (category == c_builtin), name_space != 0 for symbols inside namespace
     SymbolEntry (const char *name, constTypePtr type, declaration_t *payload, const Y2Namespace *name_space = 0);
@@ -147,8 +155,8 @@ public:
     bool onlyDeclared () const;
 
     // payload access for variables and functions
-    void setCode (YCode *code);
-    YCode *code () const;
+    void setCode (YCodePtr code);
+    YCodePtr code () const;
     
     // payload access for builtins
     void setDeclaration (declaration_t *decl);

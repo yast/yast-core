@@ -26,6 +26,7 @@ $Id$
 #endif
 
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #include <ycp/y2log.h>
@@ -343,5 +344,53 @@ YCPPathSearch::clearPaths (Kind kind)
 {
     searchList[kind].clear();
 }
+
+
+string
+YCPPathSearch::bytecodeForFile (string filename)
+{
+    y2debug ("Testing existence of bytecode for %s", filename.c_str() );
+    string ybc;
+    
+    // check the YCP extension
+    if (filename.find_last_of ("ycp") == filename.length ()-1)
+    {
+	ybc = filename;
+	ybc[ filename.length()-2 ] = 'b';
+	ybc[ filename.length()-1 ] = 'c';
+    }
+    else
+    {
+	// no extension, no ybc lookup
+	return "";
+    }
+    
+    // check the modification times
+    struct stat file_stat;
+    if (stat (ybc.c_str (), &file_stat) != 0 && ! S_ISREG(file_stat.st_mode))
+    {
+	// return empty file
+	return "";
+    }
+    time_t ybc_time = file_stat.st_mtime;
+    
+    if (stat (filename.c_str (), &file_stat) != 0 && ! S_ISREG(file_stat.st_mode))
+    {
+	// return empty file
+	return "";
+    }
+    
+    time_t ycp_time = file_stat.st_mtime;
+    
+    // compare the times
+    if (ycp_time > ybc_time)
+    {
+	// too new
+	return "";
+    }
+    
+    return ybc;
+}
+
 
 // EOF

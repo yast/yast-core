@@ -74,3 +74,65 @@ proc ycp-run { src } {
 
   return 0
 }
+
+#------------------------------------------------
+#
+# compile a file into a bytecode
+#
+proc bytecode-compile { src dir } {
+
+  set path [split $src "/"]
+  set srcfilename [lindex $path [expr [llength $path]-1]]
+  set srcdirname [lindex $path [expr [llength $path]-2]]
+
+  # extract basename and check extension
+
+  set ycpname [split $srcfilename "."]
+
+  if {[llength $ycpname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return -1
+  }
+  if {[lindex $ycpname [expr [llength $ycpname]-1]] != "ycp"} {
+    fail "Not .ycp extension '$src'"
+    return -1
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # $dir/$srcfilename is the name of the original testfile with relative path,
+  #                 relative to the testsuite directory
+  set test_input "$dir/$srcfilename"
+
+  set base_name [lindex $ycpname 0]
+  set ybc_name "$dir/$base_name.ybc"
+  set tmpout_name "tmp.out.$base_name"
+  set tmpybc_name "tmp.ybc.$base_name"
+  set tmperr_name "tmp.err.$base_name"
+
+  # compile the test
+
+  set result ""
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-c" "-l" "$tmperr_name" "-o" "$ybc_name" "$test_input" ] } catched]
+
+  if {$oops != 0} {
+    fail "compilation failed for module $srcdirname/$base_name: $catched"
+    return -1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    set msg "Compilation of $srcdirname/$base_name results in '$result'"
+    fail $msg
+
+    return -1
+  }
+
+  pass $base_name
+
+  return 0
+}
+
+

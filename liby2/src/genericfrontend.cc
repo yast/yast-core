@@ -212,13 +212,12 @@ main (int argc, char **argv)
 	else if (!strcmp(argv[arg], "-s"))	// Parse one value (YCPList of options) from stdin
 	{
 	    Parser parser (0, "<stdin>");	// set parser to stdin
-	    YCode *pc = parser.parse ();
+	    YCodePtr pc = parser.parse ();
 	    
 	    YCPValue option = YCPNull ();
 	    if (pc)
 	    {
 		option = pc->evaluate(true);	// get one value (should be a YCPList)
-		delete pc;
 	    }
 
 	    if (option.isNull())
@@ -259,13 +258,12 @@ main (int argc, char **argv)
 	    {
 		Parser parser(file, argv[arg]);   // set parser to file
 		
-		YCode *pc = parser.parse ();
+		YCodePtr pc = parser.parse ();
 		
 		if ( pc )
 		{
 		    arglist->add( pc->evaluate(true) );
 		    one_value_parsed = true;
-		    delete pc;
 		}
 	    }
 
@@ -282,7 +280,7 @@ main (int argc, char **argv)
 	{
 	    Parser parser (argv[arg]);	// set parser to option
 	    
-	    YCode *pc = parser.parse ();
+	    YCodePtr pc = parser.parse ();
 	    
 	    if (!pc )
 	    {
@@ -291,7 +289,6 @@ main (int argc, char **argv)
 	    }
 
 	    arglist->add( pc->evaluate (true));   // add to arglist
-	    delete pc;
 	}
 	else break;   // must be server name
 
@@ -355,13 +352,12 @@ main (int argc, char **argv)
 	    {
 		Parser parser(file, argv[arg]);   // set parser to file
 		
-		YCode *pc = parser.parse ();
+		YCodePtr pc = parser.parse ();
 		
 		if (pc)
 		{
 		    preload->add(pc->evaluate (true));   // add to preload list
 		    one_value_parsed = true;
-		    delete pc;
 		}
 	    }
 
@@ -378,7 +374,7 @@ main (int argc, char **argv)
 	{
 	    Parser parser (argv[arg]);	// set parser to option
 	    
-	    YCode *pc = parser.parse ();
+	    YCodePtr pc = parser.parse ();
 	    
 	    if (!pc)
 	    {
@@ -387,7 +383,6 @@ main (int argc, char **argv)
 	    }
 
 	    preload->add (pc->evaluate (true));	// add to preload list
-	    delete pc;
 	}
 	else break; // specific server options
 

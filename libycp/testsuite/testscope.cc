@@ -21,7 +21,7 @@
 #include <ycp/YCPScope.h>
 #include <ycp/y2log.h>
 
-extern int yydebug;
+//extern int yydebug;
 
 int
 main (int argc, const char *argv[])

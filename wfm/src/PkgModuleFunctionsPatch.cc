@@ -206,7 +206,7 @@ PkgModuleFunctions::YouGetServers (YCPReference strings)
       return YCPString( "Error getting you servers." );
     }
 
-    YCPList result;
+    YCPList result = strings->entry ()->value ()->asList ();
     std::list<PMYouServer>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
       YCPMap serverMap;

@@ -21,6 +21,7 @@ $Id$
 /-*/
 
 #include "ycp/y2log.h"
+#include "ycp/ExecutionEnvironment.h"
 
 #include "ycp/YCPVoid.h"
 #include "ycp/YCPBoolean.h"
@@ -67,7 +68,7 @@ YCPValueRep::asVoid() const
 {
     if (!isVoid())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Void!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Void!",
 	      toString().c_str());
 	abort();
     }
@@ -79,7 +80,7 @@ YCPValueRep::asBoolean() const
 {
     if (!isBoolean())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Boolean!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Boolean!",
 	      toString().c_str());
 	abort();
     }
@@ -91,7 +92,7 @@ YCPValueRep::asInteger() const
 {
     if (!isInteger())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Integer!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Integer!",
 	      toString().c_str());
 	abort();
     }
@@ -103,7 +104,7 @@ YCPValueRep::asFloat() const
 {
     if (!isFloat())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Float!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Float!",
 	      toString().c_str());
 	abort();
     }
@@ -115,7 +116,7 @@ YCPValueRep::asString() const
 {
     if (!isString())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not String!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not String!",
 	      toString().c_str());
 	abort();
     }
@@ -127,7 +128,7 @@ YCPValueRep::asByteblock() const
 {
     if (!isByteblock())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Byteblock!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Byteblock!",
 	      toString().c_str());
 	abort();
     }
@@ -140,7 +141,7 @@ YCPValueRep::asPath() const
 {
     if (!isPath())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Path!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Path!",
 	      toString().c_str());
 	abort();
     }
@@ -152,7 +153,7 @@ YCPValueRep::asSymbol() const
 {
     if (!isSymbol())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Symbol!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Symbol!",
 	      toString().c_str());
 	abort();
     }
@@ -164,7 +165,7 @@ YCPValueRep::asList() const
 {
     if (!isList())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not List!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not List!",
 	      toString().c_str());
 	abort();
     }
@@ -176,7 +177,7 @@ YCPValueRep::asTerm() const
 {
     if (!isTerm())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Term!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Term!",
 	      toString().c_str());
 	abort();
     }
@@ -188,7 +189,7 @@ YCPValueRep::asMap() const
 {
     if (!isMap())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Map!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Map!",
 	      toString().c_str());
 	abort();
     }
@@ -200,7 +201,7 @@ YCPValueRep::asCode() const
 {
     if (!isCode())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Code !",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Code !",
 	      toString().c_str());
 	abort();
     }
@@ -212,7 +213,7 @@ YCPValueRep::asEntry() const
 {
     if (!isEntry())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Entry !",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Entry !",
 	      toString().c_str());
 	abort();
     }
@@ -224,7 +225,7 @@ YCPValueRep::asReference() const
 {
     if (!isReference())
     {
-	y2error("Invalid cast of YCP value '%s'! Should be but is not Reference!",
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not Reference!",
 	      toString().c_str());
 	abort();
     }
@@ -258,7 +259,7 @@ YCPValueRep::compare (const YCPValue& v, bool rl) const
 	case YT_CODE:	     return this->asCode()->compare (v->asCode());
 	case YT_REFERENCE:   return this->asReference()->compare (v->asReference());
 	default:
-	    y2error("Sorry, comparison of '%s' with '%s' not yet implemented",
+	    ycp2error("Sorry, comparison of '%s' with '%s' not yet implemented",
 		  toString().c_str(), v->toString().c_str());
 	    return YO_EQUAL;
 	}

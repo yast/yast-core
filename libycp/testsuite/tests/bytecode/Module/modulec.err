@@ -1,0 +1,13 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "modulec";
+    //T: TEntry (modulec@5:global void modulec::modulec ())
+    // global void modulec::modulec ()
+    // filename: "tests/bytecode/Module/modulec.ycp"
+    global void modulec::modulec ()
+{
+    y2milestone ("Nazdar!");
+}
+}
+----------------------------------------------------------------------

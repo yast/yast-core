@@ -1,0 +1,23 @@
+[Scanner] tests/bytecode/Module/Identifier2.ycp:26 Warning: Definition shadows global symbol
+[Scanner] tests/bytecode/Module/Identifier2.ycp:26 Warning: 'a' defined in tests/bytecode/Module/Identifier2.ycp:20.
+Parsed:
+----------------------------------------------------------------------
+{
+    module "Identifier2";
+    //T: TEntry (a@20:global integer Identifier2::a)
+    //T: TEntry (this_is_global@21:global integer Identifier2::this_is_global)
+    //T: TEntry (f@24:global list <integer> Identifier2::f ())
+    // global integer Identifier2::a
+    // global integer Identifier2::this_is_global
+    // global list <integer> Identifier2::f ()
+    // filename: "tests/bytecode/Module/Identifier2.ycp"
+    global integer Identifier2::a = 55;
+    global integer Identifier2::this_is_global = 2;
+    global list <integer> Identifier2::f ()
+{
+    // integer a
+    integer a = 42;
+    return [Identifier2::this_is_global, Identifier2::a, a];
+}
+}
+----------------------------------------------------------------------

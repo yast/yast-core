@@ -22,12 +22,14 @@ pkginclude_HEADERS =					\
 	YCPBuiltinMap.h	YCPBuiltinMisc.h		\
 	YCPBuiltinPath.h YCPBuiltinString.h		\
 	YCPBuiltinTerm.h YCPBuiltinVoid.h		\
-	StaticDeclaration.h YCode.h			\
+	StaticDeclaration.h				\
+	YCode.h	YCodePtr.h				\
 	YCPCode.h					\
 	YCPCodeCompare.h				\
 	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
 	SymbolTable.h SymbolEntry.h Scanner.h Parser.h 	\
+	SymbolEntryPtr.h				\
 	y2log.h ycpless.h pathsearch.h			\
 	ExecutionEnvironment.h
 

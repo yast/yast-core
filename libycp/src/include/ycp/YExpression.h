@@ -31,16 +31,37 @@ using std::string;
 #include "y2/Y2Function.h"
 
 //---------------------------------------------------------
+
+DEFINE_DERIVED_POINTER(YEVariable, YCode);
+DEFINE_DERIVED_POINTER(YEReference, YCode);
+DEFINE_DERIVED_POINTER(YETerm, YCode);
+DEFINE_DERIVED_POINTER(YECompare, YCode);
+DEFINE_DERIVED_POINTER(YELocale, YCode);
+DEFINE_DERIVED_POINTER(YEList, YCode);
+DEFINE_DERIVED_POINTER(YEMap, YCode);
+DEFINE_DERIVED_POINTER(YEPropagate, YCode);
+DEFINE_DERIVED_POINTER(YEUnary, YCode);
+DEFINE_DERIVED_POINTER(YEBinary, YCode);
+DEFINE_DERIVED_POINTER(YETriple, YCode);
+DEFINE_DERIVED_POINTER(YEIs, YCode);
+DEFINE_DERIVED_POINTER(YEReturn, YCode);
+DEFINE_DERIVED_POINTER(YEBracket, YCode);
+DEFINE_DERIVED_POINTER(YEBuiltin, YCode);
+DEFINE_DERIVED_POINTER(YEFunction, YCode);
+
+//---------------------------------------------------------
 // variable ref (-> Block + position)
 
-class YEVariable : public YCode {
-    SymbolEntry *m_entry;
+class YEVariable : public YCode
+{
+    REP_BODY(YEVariable);
+    SymbolEntryPtr m_entry;
 public:
-    YEVariable (SymbolEntry *entry);
+    YEVariable (SymbolEntryPtr entry);
     YEVariable (std::istream & str);
     ~YEVariable () {};
     const char *name () const;
-    SymbolEntry *entry () const;
+    SymbolEntryPtr entry () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -50,14 +71,16 @@ public:
 //---------------------------------------------------------
 // reference (-> Block + position)
 
-class YEReference : public YCode {
-    SymbolEntry *m_entry;
+class YEReference : public YCode
+{
+    REP_BODY(YEReference);
+    SymbolEntryPtr m_entry;
 public:
-    YEReference (SymbolEntry *entry);
+    YEReference (SymbolEntryPtr entry);
     YEReference (std::istream & str);
     ~YEReference () {};
     const char *name () const;
-    SymbolEntry *entry () const;
+    SymbolEntryPtr entry () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -67,7 +90,9 @@ public:
 //---------------------------------------------------------
 // Term (-> name, args)
 
-class YETerm : public YCode {
+class YETerm : public YCode
+{
+    REP_BODY(YETerm);
     const char *m_name;
     ycodelist_t *m_parameters;
     ycodelist_t *m_last;
@@ -76,7 +101,7 @@ public:
     YETerm (std::istream & str);
     ~YETerm ();
     // dummy is here just to make it similar to YEBuiltin and YEFunction
-    constTypePtr attachParameter (YCode *code, constTypePtr dummy = Type::Unspec);
+    constTypePtr attachParameter (YCodePtr code, constTypePtr dummy = Type::Unspec);
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -87,7 +112,9 @@ public:
 //---------------------------------------------------------
 // Compare (-> arg1, arg2, type)
 
-class YECompare : public YCode {
+class YECompare : public YCode
+{
+    REP_BODY(YECompare);
 public:
     enum cmp_op { C_NOT = 1, C_EQ = 2, C_LT = 4,	// base operations
 		  C_NEQ = C_NOT|C_EQ,
@@ -97,11 +124,11 @@ public:
     };
     typedef cmp_op c_op;	    
 private:
-    YCode *m_left;
+    YCodePtr m_left;
     c_op m_op;
-    YCode *m_right;
+    YCodePtr m_right;
 public:
-    YECompare (YCode *left, c_op op, YCode *right);
+    YECompare (YCodePtr left, c_op op, YCodePtr right);
     YECompare (std::istream & str);
     ~YECompare ();
     string toString () const;
@@ -114,13 +141,15 @@ public:
 //---------------------------------------------------------
 // locale expression (-> singular, plural, count)
 
-class YELocale : public YCode {
+class YELocale : public YCode
+{
+    REP_BODY(YELocale);
     const char *m_singular;
     const char *m_plural;
-    YCode *m_count;
+    YCodePtr m_count;
     YLocale::t_uniquedomains::const_iterator m_domain;
 public:
-    YELocale (const char *singular, const char *plural, YCode *count, const char *textdomain);
+    YELocale (const char *singular, const char *plural, YCodePtr count, const char *textdomain);
     YELocale (std::istream & str);
     ~YELocale ();
     string toString () const;
@@ -133,38 +162,42 @@ public:
 //---------------------------------------------------------
 // list expression (-> value, next list value)
 
-class YEList : public YCode {
+class YEList : public YCode
+{
+    REP_BODY(YEList);
     ycodelist_t *m_first;
     ycodelist_t *m_last;
 public:
-    YEList (YCode *code);
+    YEList (YCodePtr code);
     YEList (std::istream & str);
     ~YEList ();
-    void attach (YCode *element);
-//    YCode *code () const;
+    void attach (YCodePtr element);
+//    YCodePtr code () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const { return Type::List(); }
     int count () const;
-    YCode* value (int index) const;
+    YCodePtr value (int index) const;
 };
 
 
 //---------------------------------------------------------
 // map expression (-> key, value, next key/value pair)
 
-class YEMap : public YCode {
-    typedef struct mapval { YCode *key; YCode *value; struct mapval *next; } mapval_t;
+class YEMap : public YCode
+{
+    REP_BODY(YEMap);
+    typedef struct mapval { YCodePtr key; YCodePtr value; struct mapval *next; } mapval_t;
     mapval_t *m_first;
     mapval_t *m_last;
 public:
-    YEMap (YCode *key, YCode *value);
+    YEMap (YCodePtr key, YCodePtr value);
     YEMap (std::istream & str);
     ~YEMap ();
-    void attach (YCode *key, YCode *value);
-//    YCode *key () const;
-//    YCode *value () const;
+    void attach (YCodePtr key, YCodePtr value);
+//    YCodePtr key () const;
+//    YCodePtr value () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -175,12 +208,14 @@ public:
 //---------------------------------------------------------
 // propagation expression (-> value, from type, to type)
 
-class YEPropagate : public YCode {
+class YEPropagate : public YCode
+{
+    REP_BODY(YEPropagate);
     constTypePtr m_from;
     constTypePtr m_to;
-    YCode *m_value;
+    YCodePtr m_value;
 public:
-    YEPropagate (YCode *value, constTypePtr from, constTypePtr to);
+    YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to);
     YEPropagate (std::istream & str);
     ~YEPropagate ();
     string toString () const;
@@ -194,15 +229,17 @@ public:
 //---------------------------------------------------------
 // unary expression (-> declaration_t, arg)
 
-class YEUnary : public YCode {
+class YEUnary : public YCode
+{
+    REP_BODY(YEUnary);
     declaration_t *m_decl;
-    YCode *m_arg;		// argument
+    YCodePtr m_arg;		// argument
 public:
-    YEUnary (declaration_t *decl, YCode *arg);		// expression
+    YEUnary (declaration_t *decl, YCodePtr arg);		// expression
     YEUnary (std::istream & str);
     ~YEUnary ();
     declaration_t *decl () const;
-//    YCode *arg () const;
+//    YCodePtr arg () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -213,17 +250,19 @@ public:
 //---------------------------------------------------------
 // binary expression (-> declaration_t, arg1, arg2)
 
-class YEBinary : public YCode {
+class YEBinary : public YCode
+{
+    REP_BODY(YEBinary);
     declaration_t *m_decl;
-    YCode *m_arg1;		// argument1
-    YCode *m_arg2;		// argument2
+    YCodePtr m_arg1;		// argument1
+    YCodePtr m_arg2;		// argument2
 public:
-    YEBinary (declaration_t *decl, YCode *arg1, YCode *arg2);
+    YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2);
     YEBinary (std::istream & str);
     ~YEBinary ();
     declaration_t *decl ();
-//    YCode *arg1 () const;
-//    YCode *arg2 () const;
+//    YCodePtr arg1 () const;
+//    YCodePtr arg2 () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -234,17 +273,19 @@ public:
 //---------------------------------------------------------
 // Triple (? :) expression (-> bool expr, true value, false value)
 
-class YETriple : public YCode {
-    YCode *m_expr;		// bool expr
-    YCode *m_true;		// true value
-    YCode *m_false;		// false value
+class YETriple : public YCode
+{
+    REP_BODY(YETriple);
+    YCodePtr m_expr;		// bool expr
+    YCodePtr m_true;		// true value
+    YCodePtr m_false;		// false value
 public:
-    YETriple (YCode *a_expr, YCode *a_true, YCode *a_false);
+    YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false);
     YETriple (std::istream & str);
     ~YETriple ();
-//    YCode *expr () const;
-//    YCode *iftrue () const;
-//    YCode *iffalse () const;
+//    YCodePtr expr () const;
+//    YCodePtr iftrue () const;
+//    YCodePtr iffalse () const;
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -255,11 +296,13 @@ public:
 //---------------------------------------------------------
 // is (-> expression, type)
 
-class YEIs : public YCode {
-    YCode *m_expr;
+class YEIs : public YCode
+{
+    REP_BODY(YEIs);
+    YCodePtr m_expr;
     constTypePtr m_type;
 public:
-    YEIs (YCode *expr, constTypePtr type);
+    YEIs (YCodePtr expr, constTypePtr type);
     YEIs (std::istream & str);
     ~YEIs ();
     string toString () const;
@@ -272,10 +315,12 @@ public:
 //---------------------------------------------------------
 // return (-> expression)
 
-class YEReturn : public YCode {
-    YCode *m_expr;
+class YEReturn : public YCode
+{
+    REP_BODY(YEReturn);
+    YCodePtr m_expr;
 public:
-    YEReturn (YCode *expr);
+    YEReturn (YCodePtr expr);
     YEReturn (std::istream & str);
     ~YEReturn ();
     string toString () const;
@@ -288,13 +333,15 @@ public:
 //---------------------------------------------------------
 // bracket (-> expression)
 
-class YEBracket : public YCode {
-    YCode *m_var;		// (list, map) variable
-    YCode *m_arg;		// bracket arguments
-    YCode *m_def;		// default expression
+class YEBracket : public YCode
+{
+    REP_BODY(YEBracket);
+    YCodePtr m_var;		// (list, map) variable
+    YCodePtr m_arg;		// bracket arguments
+    YCodePtr m_def;		// default expression
     constTypePtr m_resultType;	// result type according to the parser
 public:
-    YEBracket (YCode *var, YCode *arg, YCode *def, constTypePtr resultType);
+    YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr resultType);
     YEBracket (std::istream & str);
     ~YEBracket ();
     string toString () const;
@@ -307,17 +354,19 @@ public:
 //---------------------------------------------------------
 // Builtin ref (-> declaration_t, type, Args)
 
-class YEBuiltin : public YCode {
+class YEBuiltin : public YCode
+{
+    REP_BODY(YEBuiltin);
     declaration_t *m_decl;
     FunctionTypePtr m_type;
 
     // symbol parameters (NULL, if no symbolic parameters)
-    YBlock *m_parameterblock;
+    YBlockPtr m_parameterblock;
 
     ycodelist_t *m_parameters;
     ycodelist_t *m_last;
 public:
-    YEBuiltin (declaration_t *decl, YBlock *parameterblock = 0, constTypePtr type = 0);
+    YEBuiltin (declaration_t *decl, YBlockPtr parameterblock = 0, constTypePtr type = 0);
     YEBuiltin (std::istream & str);
     ~YEBuiltin ();
     declaration_t *decl () const;
@@ -325,29 +374,31 @@ public:
     constTypePtr finalize ();
     constTypePtr returnType () const;
     // see YEFunction::attachParameter
-    constTypePtr attachParameter (YCode *code, constTypePtr type = Type::Unspec);
+    constTypePtr attachParameter (YCodePtr code, constTypePtr type = Type::Unspec);
     // attach symbolic variable parameter to function, return created TableEntry
     constTypePtr attachSymVariable (const char *name, constTypePtr type, unsigned int line, TableEntry *&tentry);
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type () const;
-    YBlock *parameterBlock () const;
+    YBlockPtr parameterBlock () const;
 };
 
 //---------------------------------------------------------
 // Function ref (-> SymbolEntry ( param, param, ...) )
 
-class YEFunction : public YCode, public Y2Function {
-    const SymbolEntry *m_entry;
+class YEFunction : public YCode, public Y2Function
+{
+    REP_BODY(YEFunction);
+    const SymbolEntryPtr m_entry;
     ycodelist_t *m_parameters;
     // no need for m_last since we're counting the parameters anyway in attachParameter()
     string qualifiedName () const;
 public:
-    YEFunction (const SymbolEntry *entry);
+    YEFunction (const SymbolEntryPtr entry);
     YEFunction (std::istream & str);
     ~YEFunction ();
-    const SymbolEntry *entry () const;
+    const SymbolEntryPtr entry () const;
     /**
      * Attach parameter to external function call
      * @param code: parameter code
@@ -357,7 +408,7 @@ public:
      *    Type::Unspec if bad code (NULL or isError)
      *    Type::Error if excessive parameter
      */
-    constTypePtr attachParameter (YCode *code, constTypePtr type);
+    constTypePtr attachParameter (YCodePtr code, constTypePtr type);
     /**
      * 'close' function, perform final parameter check
      * if ok, return 0

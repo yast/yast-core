@@ -36,8 +36,7 @@
  */
 class YCPCodeRep : public YCPValueRep
 {
-    YCode *m_code;
-    bool m_owner;
+    YCodePtr m_code;
 
 protected:
     friend class YCPCode;
@@ -46,7 +45,7 @@ protected:
      * Constructor
      */
     YCPCodeRep();
-    YCPCodeRep (YCode *c, bool owner);
+    YCPCodeRep (YCodePtr c);
 
     /**
      * Cleans up.
@@ -54,7 +53,7 @@ protected:
     ~YCPCodeRep();
 
 public:
-    YCode *code() const;
+    YCodePtr code() const;
 
     /**
      * Compares two YCodes for equality, greaterness or smallerness.
@@ -95,7 +94,7 @@ class YCPCode : public YCPValue
     DEF_COMMON(Code, Value);
 public:
     YCPCode() : YCPValue (new YCPCodeRep ()) {}
-    YCPCode (YCode *code, bool owner = false) : YCPValue (new YCPCodeRep (code, owner)) {}
+    YCPCode (YCodePtr code) : YCPValue (new YCPCodeRep (code)) {}
     YCPCode (std::istream & str);
 };
 
@@ -243,7 +242,7 @@ public:
  */
 class YCPEntryRep : public YCPValueRep
 {
-    SymbolEntry *m_entry;
+    SymbolEntryPtr m_entry;
 
 protected:
     friend class YCPEntry;
@@ -252,7 +251,7 @@ protected:
      * Constructor
      */
     YCPEntryRep ();
-    YCPEntryRep (SymbolEntry *entry);
+    YCPEntryRep (SymbolEntryPtr entry);
 
     /**
      * Cleans up.
@@ -260,7 +259,7 @@ protected:
     ~YCPEntryRep() {}
 
 public:
-    SymbolEntry *entry() const;
+    SymbolEntryPtr entry() const;
 
     /**
      * Compares two YCPEntrys for equality, greaterness or smallerness.
@@ -300,7 +299,7 @@ class YCPEntry : public YCPValue
 {
     DEF_COMMON(Entry, Value);
 public:
-    YCPEntry (SymbolEntry *entry) : YCPValue (new YCPEntryRep (entry)) {}
+    YCPEntry (SymbolEntryPtr entry) : YCPValue (new YCPEntryRep (entry)) {}
     YCPEntry (std::istream & str);
 };
 
@@ -314,7 +313,7 @@ public:
  */
 class YCPReferenceRep : public YCPValueRep
 {
-    SymbolEntry *m_entry;
+    SymbolEntryPtr m_entry;
 
 protected:
     friend class YCPReference;
@@ -323,7 +322,7 @@ protected:
      * Constructor
      */
     YCPReferenceRep ();
-    YCPReferenceRep (SymbolEntry *entry);
+    YCPReferenceRep (SymbolEntryPtr entry);
 
     /**
      * Cleans up.
@@ -331,7 +330,7 @@ protected:
     ~YCPReferenceRep() {}
 
 public:
-    SymbolEntry *entry() const;
+    SymbolEntryPtr entry() const;
 
     /**
      * Compares two YCPReferences for equality, greaterness or smallerness.
@@ -371,7 +370,7 @@ class YCPReference : public YCPValue
 {
     DEF_COMMON(Reference, Value);
 public:
-    YCPReference (SymbolEntry *entry) : YCPValue (new YCPReferenceRep (entry)) {}
+    YCPReference (SymbolEntryPtr entry) : YCPValue (new YCPReferenceRep (entry)) {}
     YCPReference (std::istream & str);
 };
 

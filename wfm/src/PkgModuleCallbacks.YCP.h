@@ -174,6 +174,9 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
                  c, module.c_str (), symbol.c_str ());
 	  return;
         }
+	
+	// ensure it is an initialized namespace
+	ns->initialize ();
 
         _cbdata[id_r].push (CBdata (module, symbol, ns));
       } else {

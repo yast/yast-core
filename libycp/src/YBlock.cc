@@ -24,6 +24,8 @@ $Id$
 
 #include <stack>
 
+#define DO_DEBUG 1
+
 // needed for YBlock
 
 #include "ycp/SymbolEntry.h"
@@ -37,7 +39,11 @@ $Id$
 
 extern ExecutionEnvironment ee;
 
+// ------------------------------------------------------------------
+
 UstringHash YBlock::m_filenameHash;
+
+IMPL_DERIVED_POINTER(YBlock, YCode);
 
 // ------------------------------------------------------------------
 // block (-> list of statements, list of symbols, kind)
@@ -48,16 +54,15 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
     , m_name ("")
     , m_tenvironment (0)
     , m_last_tparm (0)
-    , m_count (0)
-    , m_senvironment (0)
     , m_point (0)
     , m_statements (0)
     , m_last_statement (0)
 {
+#if DO_DEBUG
     y2debug ("YBlock::YBlock [%p] (%s)", this, filename.c_str());
-
+#endif
     // add filename as SymbolEntry:c_filename
-    SymbolEntry *sentry = new SymbolEntry ((Y2Namespace *)this, m_count, filename.c_str(), SymbolEntry::c_filename, Type::Unspec);
+    SymbolEntryPtr sentry = new SymbolEntry (nameSpace(), 0, filename.c_str(), SymbolEntry::c_filename, Type::Unspec);
     addSymbol (sentry);
 
     m_point = new Point (sentry);
@@ -71,8 +76,6 @@ YBlock::YBlock (const Point *point)
     , m_name ("")
     , m_tenvironment (0)
     , m_last_tparm (0)
-    , m_count (0)
-    , m_senvironment (0)
     , m_point (point)
     , m_statements (0)
     , m_last_statement (0)
@@ -82,12 +85,13 @@ YBlock::YBlock (const Point *point)
 
 YBlock::~YBlock ()
 {
+#if DO_DEBUG
     y2debug ("YBlock::~YBlock [%p]", this);
+#endif
     stmtlist_t *stmt = m_statements;
     while (stmt)
     {
 	stmtlist_t *nexts = stmt->next;
-	delete stmt->stmt;
 	delete stmt;
 	stmt = nexts;
     }
@@ -105,17 +109,6 @@ YBlock::~YBlock ()
 	delete tp;
 	tp = next;
     }
-    if (m_senvironment)
-    {
-	for (unsigned int p = 0; p < m_count; p++)
-	{
-	    if (m_senvironment[p] != 0)
-	    {
-		delete m_senvironment[p];
-	    }
-	}
-	free (m_senvironment);
-    }
 }
 
 
@@ -126,40 +119,21 @@ YBlock::filename () const
 }
 
 
-// private:
-// add symbol to m_senvironment
-unsigned int
-YBlock::addSymbol (SymbolEntry *entry)
-{
-    y2debug ("YBlock::addSymbol (%s @%d)", entry->toString().c_str(), m_count);
-
-    m_count++;
-    // FIXME: make a more room at once
-    m_senvironment = (SymbolEntry **)realloc (m_senvironment, sizeof (SymbolEntry *) * m_count);
-
-    if (m_senvironment == 0)
-    {
-	y2error ("OOM !");
-	abort();
-    }
-    m_senvironment[m_count-1] = entry;
-    return m_count;
-}
-
-
 // add new value code to this block
 //   (used for functions which accept either symbolic variables or values, e.g. foreach())
 // returns position
 unsigned int
-YBlock::newValue (constTypePtr type, YCode *code)
+YBlock::newValue (constTypePtr type, YCodePtr code)
 {
     static char name[8];
-    sprintf (name, "_%d", m_count);		// create 'fake' name
+    sprintf (name, "_%d", symbolCount());		// create 'fake' name
 
+#if DO_DEBUG
     y2debug ("YBlock::newValue (%s %s)", type->toString().c_str(), name);
+#endif
 
 // FIXME: check duplicates
-    return addSymbol (new SymbolEntry ((Y2Namespace *)this, m_count, name, SymbolEntry::c_const, type, code));
+    return addSymbol (new SymbolEntry (nameSpace(), symbolCount(), name, SymbolEntry::c_const, type, code));
 }
 
 
@@ -167,7 +141,9 @@ YBlock::newValue (constTypePtr type, YCode *code)
 SymbolTable *
 YBlock::table () const
 {
+#if DO_DEBUG
     y2debug ("YBlock[%p]::table() -> %p", this, m_table );
+#endif
     return m_table;
 }
 
@@ -178,20 +154,20 @@ YBlock::table () const
 TableEntry *
 YBlock::newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr type, unsigned int line)
 {
-    y2debug ("YBlock(%p)::newEntry (%s, cat %d, type %s, line %d)", this, name, (int)cat, type->toString().c_str(), line);
+#if DO_DEBUG
+    y2debug ("YBlock(%p, ns %p)::newEntry (%s, cat %d, type %s, line %d)", this, nameSpace(), name, (int)cat, type->toString().c_str(), line);
+#endif
 
-    // check duplicates
-    for (unsigned int p = 0; p < m_count; p++)
+    // check duplicates (in Y2Namespace)
+    if (lookupSymbol (name) != 0)
     {
-	if ((m_senvironment[p] != 0)
-	    && (strcmp (m_senvironment[p]->name(), name) == 0)
-	    && !m_senvironment[p]->likeNamespace())		// allow symbol if namespace of same name already declared
-	{
-	    return 0;
-	}
+#if DO_DEBUG
+    y2debug ("already defined");
+#endif
+	return 0;
     }
 
-    SymbolEntry *sentry = new SymbolEntry ((Y2Namespace *)this, m_count, name, cat, type);
+    SymbolEntryPtr sentry = new SymbolEntry (nameSpace(), symbolCount(), name, cat, type);
     addSymbol (sentry);
 
     // cat == SymbolEntry::c_filename: inclusion point, include file sentry included at line in (current file) m_point
@@ -209,79 +185,13 @@ YBlock::newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr ty
 }
 
 
-// find symbol in m_senvironment, return -1 if not found
-int
-YBlock::findSymbol (const SymbolEntry *entry) const
-{
-    for (unsigned int p = 0; p < m_count; p++)
-    {
-	if (m_senvironment[p] == entry)
-	{
-	    return p;
-	}
-    }
-    return -1;
-}
-
-
-// release symbol entry from m_senvironment
-//   it's no longer owned by this block but by a ysFunction()
-void
-YBlock::releaseSymbol (unsigned int position)
-{
-    y2debug ("YBlock::releaseSymbol (%d)", position);
-    if (position < m_count)
-    {
-	if (m_senvironment[position] != 0)
-	{
-	    m_senvironment[position]->setNamespace (0);
-	    m_senvironment[position] = 0;
-	}
-    }
-    return;
-}
-
-
-// release symbol entry from m_senvironment
-//   it's no longer owned by this block but by a ysFunction()
-void
-YBlock::releaseSymbol (SymbolEntry *entry)
-{
-    y2debug ("YBlock::releaseSymbol (%s)", entry->toString().c_str());
-    int p = findSymbol (entry);
-    if (p >= 0)
-    {
-	releaseSymbol (p);
-    }
-    return;
-}
-
-
-// number of local variables (environment entries)
-unsigned int
-YBlock::symbolCount (void) const
-{
-    return m_count;
-}
-
-
-// get entry by position
-SymbolEntry *
-YBlock::symbolEntry (unsigned int position) const
-{
-    if (position >= m_count)
-    {
-	return 0;
-    }
-    return m_senvironment[position];
-}
-
-
 // Attach entry (variable, typedef, ...) to local environment
 void
 YBlock::attachEntry (TableEntry *tentry)
 {
-//    y2debug ("YBlock[%p]::attachEntry (%p)", this, tentry/*->toString().c_str()*/);
+#if DO_DEBUG
+    y2debug ("YBlock[%p]::attachEntry (%p)", this, tentry/*->toString().c_str()*/);
+#endif
 
     yTElist_t *newt = new (yTElist_t);
     newt->tentry = tentry;
@@ -306,10 +216,15 @@ YBlock::attachEntry (TableEntry *tentry)
 
 
 void
-YBlock::attachStatement (YStatement *statement)
+YBlock::attachStatement (YStatementPtr statement)
 {
-//    y2debug ("YBlock[%p]::attachStatement (%p:%s)", this, statement, statement->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("YBlock[%p]::attachStatement (%s)", this, statement ? statement->toString().c_str() : "<NULL>");
+#endif
+    if (statement == 0)
+    {
+	return;
+    }
     stmtlist_t *newstmt = new (stmtlist_t);
     newstmt->stmt = statement;
     newstmt->next = 0;
@@ -329,9 +244,11 @@ YBlock::attachStatement (YStatement *statement)
 
 
 void
-YBlock::pretachStatement (YStatement *statement)
+YBlock::pretachStatement (YStatementPtr statement)
 {
-//    y2debug ("YBlock[%p]::pretachStatement (%p:%s)", this, statement, statement->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YBlock[%p]::pretachStatement (%s)", this, statement->toString().c_str());
+#endif
 
     stmtlist_t *newstmt = new (stmtlist_t);
     newstmt->stmt = statement;
@@ -346,24 +263,29 @@ YBlock::pretachStatement (YStatement *statement)
 TableEntry *
 YBlock::newNamespace (const string & name, Y2Namespace *name_space, int line)
 {
+#if DO_DEBUG
     y2debug ("YBlock[%p]::newNamespace ('%s' namespace@<%p>):%d", this, name.c_str(), name_space, line);
+#endif
 
     TableEntry *tentry = newEntry (strdup (name.c_str()), SymbolEntry::c_module, Type::Unspec, line);
     tentry->sentry()->setPayloadNamespace (name_space);
 
-//    y2debug ("environment of %p after addNamespace (%s)", this, environmentToString().c_str());
+#if DO_DEBUG
+    y2debug ("environment of %p after addNamespace (%s)", this, environmentToString().c_str());
+#endif
     return tentry;
 }
 
 
 // detach environment from symbol table
 //   remove all in m_tenvironment listed table entries
-//   compact m_senvironment (delete all released slots)
 
 void
 YBlock::detachEnvironment (SymbolTable *table)
 {
-//    y2debug ("YBlock::detachEnvironment of %p (%s) from %s", this, environmentToString().c_str(), table->toString().c_str());
+#if DO_DEBUG
+    y2debug ("YBlock::detachEnvironment of %p (%s) from %s", this, environmentToString().c_str(), table->toString().c_str());
+#endif
 
     // unlink table entries belonging to table (usually, these are the local symbols)
 
@@ -376,7 +298,9 @@ YBlock::detachEnvironment (SymbolTable *table)
 	if (tp->tentry
 	    && tp->tentry->table() == table)
 	{
+#if DO_DEBUG
 	    y2debug ("Remove %s", tp->tentry->toString().c_str());
+#endif
 	    table->remove (tp->tentry);			// remove the TableEntry
 	    delete tp;
 	    if (prev != 0)
@@ -401,76 +325,16 @@ YBlock::detachEnvironment (SymbolTable *table)
     }
     m_last_tparm = 0;
 
-    int free_slots = 0;
-
-    for (unsigned int i = 0; i < m_count; i++)
-    {
-	if (m_senvironment[i] == 0)		// slot is free, move all one down
-	{
-	    y2debug ("Slot %d of %d is free", i, m_count);
-	    free_slots++;
-	    for (unsigned j = i+1; j < m_count; j++)
-	    {
-		y2debug ("Moving %d to %d", j, j-1);
-		if (m_senvironment[j] != 0)
-		{
-		    m_senvironment[j]->setPosition (j-1);
-		}
-		m_senvironment[j-1] = m_senvironment[j];
-	    }
-	}
-    }
-    m_count -= free_slots;
-
     return;
-}
-
-
-void
-YBlock::finishBlock ()
-{
-    // ATM, we only reorder sentries, so global ones are on top of the table
-    // it is important to allow a bytecode ignore changes in local symbols - the indexes for globals
-    // are not changed
-    if ( m_count == 0 ) return;
-    
-    y2debug ("Going to reorder");
-    SymbolEntry** new_environment = (SymbolEntry **)calloc (sizeof (SymbolEntry *), m_count);
-
-    int next_index = 0;
-
-    // globals first
-    for (uint i = 0 ; i < m_count ; i++)
-    {
-	if (m_senvironment[i]->isGlobal ())
-	{
-	    new_environment[next_index] = m_senvironment[i];
-	    new_environment[next_index]->setPosition (next_index);
-	    next_index++;
-	}
-    }
-    
-    // then locals
-    for (uint i = 0 ; i < m_count ; i++)
-    {
-	if (! m_senvironment[i]->isGlobal ())
-	{
-	    new_environment[next_index] = m_senvironment[i];
-	    new_environment[next_index]->setPosition (next_index);
-	    next_index++;
-	}
-    }
-    free (m_senvironment);
-    m_senvironment = new_environment;
-
-    y2debug ("Reorder done");
 }
 
 
 void
 YBlock::setKind (YBlock::blockkind_t kind)
 {
-//    y2debug ("YBlock::setKind %p: %d", this, (int)kind);
+#if DO_DEBUG
+    y2debug ("YBlock::setKind %p: %d", this, (int)kind);
+#endif
     m_kind = kind;
     return;
 }
@@ -483,15 +347,15 @@ YBlock::kind () const
 }
 
 
-YSReturn *
+YSReturnPtr
 YBlock::justReturn () const
 {
     if (m_statements != 0)
     {
-	YStatement *stmt = m_statements->stmt;
+	YStatementPtr stmt = m_statements->stmt;
 	if (stmt->kind() == YCode::ysReturn)
 	{
-	    return (YSReturn *)stmt;
+	    return (YSReturnPtr)stmt;
 	}
     }
     return 0;
@@ -530,7 +394,9 @@ YBlock::endInclude ()
     }
     else
     {
+#if DO_DEBUG
 	y2debug ("YBlock::endInclude(%s)", m_point->toString().c_str());
+#endif
 	m_point = point;
     }
     return;
@@ -553,22 +419,7 @@ YBlock::environmentToString () const
 	tp = tp->next;
     }
 
-    for (unsigned int p = 0; p < m_count; p++)
-    {
-	if (m_senvironment[p])
-	{
-	    if (!m_senvironment[p]->isFilename())
-	    {
-		s += "\n    // ";
-		s += m_senvironment[p]->toString();
-	    }
-	}
-	else
-	{
-	    s += "\n    // ";
-	    s += "<released>";
-	}
-    }
+    s += symbolsToString();
 
     return s;
 }
@@ -599,7 +450,6 @@ YBlock::toString () const
     stmtlist_t *stmt = m_statements;
     while (stmt)
     {
-//	y2debug ("Statements so far: %s", s.c_str ());
 	s += "\n    ";
 	s += stmt->stmt->toString();
 	stmt = stmt->next;
@@ -610,40 +460,6 @@ YBlock::toString () const
 }
 
 
-void
-YBlock::push_to_stack ()
-{
-    // push the stack for recursion    
-    if (m_senvironment)
-    {
-        for (unsigned int p = 0; p < m_count; p++)
-        {
-            if (m_senvironment[p] != 0 && m_senvironment[p]->isVariable ())
-            {
-                y2debug ("Push %s", m_senvironment[p]->name ());
-		m_senvironment[p]->push ();
-            }
-        }
-    }
-}
-
-void
-YBlock::pop_from_stack ()
-{
-    // pop the stack for recursion    
-    if (m_senvironment)
-    {
-        for (unsigned int p = 0; p < m_count; p++)
-        {
-            if (m_senvironment[p] != 0 && m_senvironment[p]->isVariable ())
-            {
-                y2debug ("Pop %s", m_senvironment[p]->name ());
-		m_senvironment[p]->pop ();
-            }
-        }
-    }
-}
-
 YCPValue
 YBlock::evaluate (bool cse)
 {
@@ -652,18 +468,25 @@ YBlock::evaluate (bool cse)
 	return YCPNull();
     }
 
+#if DO_DEBUG
     y2debug ("YBlock::evaluate([%d]%s)\n", (int)m_kind, toString().c_str());
+#endif
 
-    ee.pushBlock (this);
+    string restore_name;
+    if (!filename().empty())
+    {
+	restore_name = ee.filename ();
+	ee.setFilename (filename());
+    }
 
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
     while (stmt)
     {
-	YStatement *statement = stmt->stmt;
+	YStatementPtr statement = stmt->stmt;
 	
-#if 0
-	y2warning ("%d: %s", statement->line (), statement->toString ().c_str ());
+#if DO_DEBUG
+	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
 #endif
 
 	ee.setStatement (statement);
@@ -671,16 +494,22 @@ YBlock::evaluate (bool cse)
 
 	if (!value.isNull())
 	{
+#if DO_DEBUG
 	    y2debug ("Block exit (%s)", value->toString().c_str());
+#endif
 	    break;
 	}
 
 	stmt = stmt->next;
     }
-    y2debug ("YBlock::evaluate ee.popBlock()");
-    ee.popBlock ();
+    if (!restore_name.empty())
+    {
+	ee.setFilename (restore_name);
+    }
 
+#if DO_DEBUG
     y2debug ("YBlock::evaluate done (stmt %p, kind %d, value '%s')\n", stmt, m_kind, value.isNull() ? "NULL" : value->toString().c_str());
+#endif
 
     // if stmt==0 we're at the end of the block. If the block is evaluated as a statement,
     //   it returns NULL, else it returns Void
@@ -701,7 +530,9 @@ YBlock::evaluate (bool cse)
 YCPValue
 YBlock::evaluate (int statement_index, bool skip_initial_imports)
 {
+#if DO_DEBUG
     y2debug("YBlock::evaluate(#%d)\n", statement_index);
+#endif
     
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
@@ -729,7 +560,9 @@ YBlock::evaluate (int statement_index, bool skip_initial_imports)
 
     value = stmt->stmt->evaluate ();
     
-    // y2debug("YBlock::evaluate statement done (value '%s')\n", value.isNull() ? "NULL" : value->toString().c_str());
+#if DO_DEBUG
+    y2debug("YBlock::evaluate statement done (value '%s')\n", value.isNull() ? "NULL" : value->toString().c_str());
+#endif
 
     return value;
 }
@@ -760,7 +593,6 @@ YBlock::YBlock (std::istream & str)
     , m_name ("")
     , m_tenvironment (0)
     , m_last_tparm (0)
-    , m_senvironment (0)
     , m_point (0)
     , m_statements (0)
     , m_last_statement (0)
@@ -769,28 +601,30 @@ YBlock::YBlock (std::istream & str)
 
     m_kind = (blockkind_t)Bytecode::readInt32 (str);
 
-    Bytecode::pushNamespace ((Y2Namespace *)this);
+    Bytecode::pushNamespace (nameSpace());
 
-    m_count = Bytecode::readInt32 (str);	// read m_senvironment
+    unsigned int scount = Bytecode::readInt32 (str);	// read Y2Namespace::m_symbols
 
-    y2debug("YBlock::fromStream (%p:\"%s\", %d entries, kind %d)", this, m_name.c_str(), m_count, m_kind);
+#if DO_DEBUG
+    y2debug("YBlock::fromStream (%p:\"%s\", %d entries, kind %d)", this, m_name.c_str(), scount, m_kind);
+#endif
 
     // read all symbol entries belonging to this block
 
-    if (m_count > 0)
+    if (scount > 0)
     {
-	m_senvironment = (SymbolEntry **)realloc (m_senvironment, sizeof (SymbolEntry *) * m_count);
-
-	for (unsigned int i = 0; i < m_count; i++)
+	for (unsigned int i = 0; i < scount; i++)
 	{
-	    SymbolEntry *entry = new SymbolEntry (str, (Y2Namespace *)this);
-	    m_senvironment[i] = entry;
+	    SymbolEntryPtr sentry = new SymbolEntry (str, nameSpace());
+	    addSymbol (sentry);
 	}
 
 	if (m_kind == b_module)			// if its a module, re-construct the table
 	{
 	    int tcount = Bytecode::readInt32 (str);
+#if DO_DEBUG
 	    y2debug ("Module with %d table entries", tcount);
+#endif
 
 	    if (tcount > 0
 		&& m_table == 0)
@@ -814,20 +648,20 @@ YBlock::YBlock (std::istream & str)
 		    m_table->enter (tentry);
 		}
 	    }
-	    
+
 	    if (getenv("Y2ALLGLOBAL") != NULL)
 	    {
 		delete m_table; // FIXME: memory leak
 		m_table = new SymbolTable(-1);
 		m_table->openXRefs ();
-		for (uint i = 0 ; i < m_count ; i++)
+		for (unsigned int i = 0 ; i < scount ; i++)
 		{
-		    SymbolEntry *se = m_senvironment[i];
-		    if (!se->isModule()				// don't re-export imported modules
-			&& !se->isNamespace())			//   or predefined namespaces
+		    SymbolEntryPtr sentry = symbolEntry (i);
+		    if (!sentry->isModule()				// don't re-export imported modules
+			&& !sentry->isNamespace())			//   or predefined namespaces
 		    {
-			TableEntry* te = m_table->enter(se->name (), se, 0);
-			attachEntry (te);
+			TableEntry* tentry = m_table->enter(sentry->name (), sentry, 0);
+			attachEntry (tentry);
 		    }
 		}
 	    }
@@ -837,26 +671,30 @@ YBlock::YBlock (std::istream & str)
     m_point = new Point (str);
 
     u_int32_t count = Bytecode::readInt32 (str);
+#if DO_DEBUG
     y2debug ("YBlock::fromStream (%p:\"%s\", %d statements)", this, m_name.c_str(), count);
+#endif
 
     stmtlist_t *stmt;
     for (u_int32_t i = 0; i < count; i++)
     {
 	stmt = new stmtlist_t;
 
-	YCode *code = Bytecode::readCode (str);
+	YCodePtr code = Bytecode::readCode (str);
 	if (code == 0)
 	{
 	    m_kind = b_unknown;
+	    m_valid = false;
 	    break;
 	}
 	if (!code->isStatement())			// code must be statement
 	{
 	    y2error ("Code is no statement: %d", code->kind());
+	    m_valid = false;
 	    break;
 	}
 
-	stmt->stmt = (YStatement *)code;
+	stmt->stmt = (YStatementPtr)code;
 	stmt->next = 0;
 	if (stmt->stmt == 0)
 	{
@@ -874,29 +712,35 @@ YBlock::YBlock (std::istream & str)
     }
 
     Bytecode::popUptoNamespace (this);
+#if DO_DEBUG
     y2debug ("done");
+#endif
 }
 
 
 std::ostream &
 YBlock::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("YBlock::toStream (%p:\"%s\", kind %d)", this, m_name.c_str(), m_kind);
+#endif
     YCode::toStream (str);
 
-    Bytecode::pushNamespace ((Y2Namespace *)this);
+    Bytecode::pushNamespace (nameSpace());
 
     Bytecode::writeString (str, m_name);			// write name
     Bytecode::writeInt32 (str, m_kind);				// write kind
 
-    y2debug ("YBlock %p: %d symbol entries", this, m_count);
-    Bytecode::writeInt32 (str, m_count);			// write m_senvironment
+#if DO_DEBUG
+    y2debug ("YBlock %p: %d symbol entries", this, symbolCount());
+#endif
+    Bytecode::writeInt32 (str, symbolCount());			// write Y2Namespace::m_symbols
 
-    if (m_count > 0)
+    if (symbolCount() > 0)
     {
-	for (unsigned int i = 0; i < m_count; i++)
+	for (unsigned int i = 0; i < symbolCount(); i++)
 	{
-	    SymbolEntry *entry = m_senvironment[i];
+	    SymbolEntryPtr entry = symbolEntry (i);
 	    entry->toStream (str);				// write SymbolEntry
 	}
 
@@ -911,7 +755,9 @@ YBlock::toStream (std::ostream & str) const
 		tcount++;
 		tptr = tptr->next;
 	    }
+#if DO_DEBUG
 	    y2debug ("Module with %d table entries", tcount);
+#endif
 
 	    Bytecode::writeInt32 (str, tcount);
 
@@ -927,21 +773,27 @@ YBlock::toStream (std::ostream & str) const
     m_point->toStream (str);
 
     u_int32_t count = statementCount();				// count statements
+#if DO_DEBUG
     y2debug ("YBlock %p: %d statements", this, count);
+#endif
     Bytecode::writeInt32 (str, count);
 
     stmtlist_t *stmt = m_statements;
     while (stmt)						// write statements
     {
-//	y2debug ("toStream: %s", stmt->stmt->toString().c_str());
+#if DO_DEBUG
+	y2debug ("toStream: %s", stmt->stmt->toString().c_str());
+#endif
 	stmt->stmt->toStream (str);				// YSImport will push it's namespace
 
 	stmt = stmt->next;
     }
 
-    Bytecode::popUptoNamespace ((Y2Namespace *)this);
+    Bytecode::popUptoNamespace (nameSpace());
 
+#if DO_DEBUG
     y2debug ("YBlock::toStream done");
+#endif
     return str;
 }
 
@@ -972,7 +824,9 @@ YBlock::createFunctionCall (const string name)
     if (func_te == NULL || !func_te->sentry ()->isFunction ()) 
 	return NULL;
     
+#if DO_DEBUG
     y2debug ("allocating new YEFunction %s", name.c_str ());
+#endif
     return new YEFunction (func_te->sentry ());
 }
 

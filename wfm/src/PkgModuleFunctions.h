@@ -53,7 +53,7 @@ public:                                                 \
     namespace##name##Function1(impl_class* instance) :  \
         Y2CPPFunctionCall <impl_class> (signature, instance)    \
     {}                                                  \
-    virtual void registerParameters (YBlock* decl)      \
+    virtual void registerParameters (YBlockPtr decl)    \
     {                                                   \
         TypePtr t = Type::Const##param1type->clone ();  \
         t->asReference();                               \

@@ -34,7 +34,7 @@ int SymbolTableDebug = 0;
 //--------------------------------------------------------------
 // TableEntry
 
-TableEntry::TableEntry (const char *key, SymbolEntry *entry, const Point *point, SymbolTable *table)
+TableEntry::TableEntry (const char *key, SymbolEntryPtr entry, const Point *point, SymbolTable *table)
     : m_prev (0)
     , m_next (0)
     , m_outer (0)
@@ -84,7 +84,7 @@ TableEntry::key() const
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 TableEntry::sentry() const
 {
     return m_entry;
@@ -149,7 +149,7 @@ TableEntry::toStream (std::ostream & str) const
     {
 //	y2debug ("TableEntry::toStream: write global function prototype");
 
-	((YFunction *)(m_entry->code()))->toStream (str);
+	((YFunctionPtr)(m_entry->code()))->toStream (str);
     }
     return str;
 }
@@ -197,6 +197,7 @@ SymbolTable::SymbolTable (int prime)
     // and each has its symbol table.
     // Better yet use rehashing - TODO
     : m_prime ((prime <= 0) ? 31 : prime)
+    , m_track_usage (true)
     , m_used (0)
 {
     m_table = (TableEntry **)calloc (m_prime, sizeof (TableEntry *));
@@ -281,7 +282,7 @@ SymbolTable::~SymbolTable()
 void
 SymbolTable::openXRefs ()
 {
-//    y2debug ("SymbolTable[%p]::openXRefs()", this);
+    y2debug ("SymbolTable[%p]::openXRefs()", this);
     m_xrefs.push (new (std::vector<TableEntry *>));
 
     return;
@@ -291,7 +292,7 @@ SymbolTable::openXRefs ()
 void
 SymbolTable::closeXRefs ()
 {
-//    y2debug ("SymbolTable[%p]::closeXRefs()", this);
+    y2debug ("SymbolTable[%p]::closeXRefs()", this);
     if (m_xrefs.empty())
     {
 	y2error ("SymbolTable[%p]::closeXRefs without openXRefs", this);
@@ -304,7 +305,7 @@ SymbolTable::closeXRefs ()
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 SymbolTable::getXRef (unsigned int position) const
 {
     if (m_xrefs.empty())
@@ -326,7 +327,7 @@ SymbolTable::getXRef (unsigned int position) const
 void
 SymbolTable::startUsage ()
 {
-//    y2debug ("SymbolTable[%p]::startUsage", this);
+    y2debug ("SymbolTable[%p]::startUsage", this);
     if (m_used == 0)
     {
 	m_used = new (std::map<const char *, TableEntry *>);
@@ -349,7 +350,7 @@ SymbolTable::countUsage ()
 void
 SymbolTable::endUsage ()
 {
-//    y2debug ("SymbolTable[%p]::endUsage", this);
+    y2debug ("SymbolTable[%p]::endUsage", this);
     if (m_used)
     {
 	delete m_used;
@@ -359,10 +360,26 @@ SymbolTable::endUsage ()
 }
 
 
+void
+SymbolTable::enableUsage ()
+{
+    y2debug ("SymbolTable[%p]::enableUsage", this);
+    m_track_usage = true;
+}
+
+
+void
+SymbolTable::disableUsage ()
+{
+    y2debug ("SymbolTable[%p]::disableUsage", this);
+    m_track_usage = false;
+}
+
+
 std::ostream &
 SymbolTable::writeUsage (std::ostream & str) const
 {
-//    y2debug ("SymbolTable[%p]::convertUsage2XRef", this);
+    y2debug ("SymbolTable[%p]::writeUsage", this);
 
     if (m_used == 0)
     {
@@ -379,26 +396,26 @@ SymbolTable::writeUsage (std::ostream & str) const
     {
 	TableEntry *tentry = it->second;
 	tentry->sentry()->setPosition (xrefs.size());
-//	y2debug ("%d -> %s", xrefs.size(), tentry->sentry()->toString().c_str());
+	y2debug ("%d -> %s", xrefs.size(), tentry->sentry()->toString().c_str());
 	xrefs.push_back (tentry);
     }
 
     int rsize = xrefs.size();
 
-//    bool xref_debug = (getenv (XREFDEBUG) != 0);
-//
-//    if (xref_debug) y2milestone ("Need %d symbols from table %p\n", rsize, this);
-//    else y2debug ("Need %d symbols from table %p\n", rsize, this);
+    bool xref_debug = (getenv (XREFDEBUG) != 0);
+
+    if (xref_debug) y2milestone ("Need %d symbols from table %p\n", rsize, this);
+    else y2debug ("Need %d symbols from table %p\n", rsize, this);
 
     Bytecode::writeInt32 (str, rsize);
 
     int position = 0;
     while (position < rsize)
     {
-	SymbolEntry *sentry = xrefs[position]->sentry();
+	SymbolEntryPtr sentry = xrefs[position]->sentry();
 
-//	if (xref_debug) y2milestone("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
-//	else y2debug("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+	if (xref_debug) y2milestone("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+	else y2debug("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
 
 	Bytecode::writeCharp (str, sentry->name());
 	sentry->type()->toStream (str);
@@ -419,7 +436,7 @@ SymbolTable::size() const
 
 
 TableEntry *
-SymbolTable::enter (const char *key, SymbolEntry *entry, const Point *point)
+SymbolTable::enter (const char *key, SymbolEntryPtr entry, const Point *point)
 {
     return enter (new TableEntry (key, entry, point, this));
 }
@@ -524,7 +541,8 @@ SymbolTable::find (const char *key, SymbolEntry::category_t category)
 	    if ((category == SymbolEntry::c_unspec)		// wildcard
 		|| (tentry->sentry()->category() == category))	// or matching
 	    {
-		if (m_used
+		if (m_track_usage
+		    && m_used
 		    && m_used->find (tentry->m_key) == m_used->end())
 		{
 		    tentry->sentry()->setPosition (m_used->size());	// store the position in the sentry

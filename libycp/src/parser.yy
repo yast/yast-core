@@ -20,7 +20,7 @@
 
    yystype is a struct with four elements
 
-    YCode *c		pointer to code (where applicable)
+    YCodePtr c		pointer to code (where applicable)
     tokenValue v	value of token (where applicable)
     constTypePtr t	type of current syntactic element
     int l		line number of syntactic element
@@ -49,6 +49,8 @@
 #include <string>
 #include <list>
 
+#define DO_DEBUG 1
+
 #include "YCP.h"
 #include "ycp/Scanner.h"
 #include "ycp/y2log.h"
@@ -68,12 +70,12 @@
 #include "ycp/Parser.h"
 
 // compile with full debug info, enable with YCP_YYDEBUG=1 in run-time env
-#define YYDEBUG 1
+#define YYDEBUG 0
 #define YYERROR_VERBOSE 1
 
 // define type of parser values
 struct yystype_type {
-    YCode *c;			// code (for parser level syntax)
+    YCodePtr c;			// code (for parser level syntax)
     tokenValue v;		// token (for scanner level syntax)
     constTypePtr t;		// type (NULL for error)
     int l;
@@ -96,7 +98,7 @@ struct yystype_type {
 
 static void yyerror_with_lineinfo	(Parser *parser, int lineno, const char *s);
 static void yywarning_with_lineinfo	(Parser *parser, int lineno, const char *s);
-static void yyerror_with_code		(Parser *parser, int lineno, YCode *c, constTypePtr t);
+static void yyerror_with_code		(Parser *parser, int lineno, YCodePtr c, constTypePtr t);
 static void yyerror_with_name		(Parser *parser, int lineno, const char *s);
 static void yyerror_with_file		(Parser *parser, int lineno, const char *s);
 static void yyerror_with_tableentry	(Parser *parser, int lineno, const char *s, TableEntry *entry);
@@ -129,13 +131,13 @@ static void yyerror_no_module		(Parser *parser, int lineno, const char *module);
 // returns NULL if success, != NULL (expected type) if wrong parameter type
 //  Type::Unspec if bad code (code == NULL), Type::Error if excessive parameter
 
-static constTypePtr attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1 = 0);
+static constTypePtr attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1 = 0);
 
 //! set by function declaration in order to predefine a definitions block return type
 static constTypePtr declared_return_type = Type::Unspec;
 //! begin of a block
 //! @param type declared return type
-static YBlock *start_block (Parser *parser, constTypePtr type);
+static YBlockPtr start_block (Parser *parser, constTypePtr type);
 
 extern "C" {
 int yylex (YYSTYPE *, void *);
@@ -176,7 +178,7 @@ static stack_t *stack_pop (stack_t **stack);
 //! stack for blocks
 
 struct blockstack_t : stack_t {
-    YBlock *theBlock;		//!< pointer to block
+    YBlockPtr theBlock;		//!< pointer to block
     const char *textdomain;	//!< textdomain (if defined)
     constTypePtr type;		//!< return type of block
     int includeDepth;		//!< block is include file, all definitions go to the outer block
@@ -350,17 +352,21 @@ bracket_expression:
 
 		    // index into YEList of bracket parameters, the list cannot be empty
 		    int index = 0;
-		    YEList* params = (YEList*)$3.c;
+		    YEListPtr params = (YEListPtr)$3.c;
 
 		    do
 		    {
 			constTypePtr paramType = params->value (index)->type ();	// type of bracket parameter at index
-//			y2debug ("paramvalue (%d) '%s'", index, params->value(index)->toString().c_str());
-//			y2debug ("paramType '%s'", paramType->toString().c_str());
+#if DO_DEBUG
+			y2debug ("paramvalue (%d) '%s'", index, params->value(index)->toString().c_str());
+			y2debug ("paramType '%s'", paramType->toString().c_str());
+#endif
 			if (paramType->isFunction())
 			{
 			    paramType = ((constFunctionTypePtr)paramType)->returnType ();
+#if DO_DEBUG
 			    y2debug ("paramType is function returning '%s'", paramType->toString().c_str());
+#endif
 			}
 			
 			// for lists, only integer is acceptable
@@ -414,7 +420,9 @@ bracket_expression:
 		if (! $5.t->isVoid ()				// default is not 'nil'
 		    && $5.t->match ($$.t) == -1)		// and it doesn't match the determined type
 		{
+#if DO_DEBUG
 		    y2debug ("default type '%s', determined type '%s'", $5.t->toString().c_str(), $$.t->toString().c_str());
+#endif
 		    yyTypeMismatch ($$.t, $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
@@ -444,14 +452,16 @@ casted_expression:
 	'(' type ')' castable_expression
 	{
 	    // on error, propagate it
-	    if ($2.t == 0 || $4.t == 0 )
+	    if ($2.t == 0 || $4.t == 0)
 	    {
 		$$.c = 0;
 		$$.t = 0;
 		break;
 	    }
 	    
+#if DO_DEBUG
 	    y2debug ("cast %s to %s", $4.t->toString().c_str(), $2.t->toString().c_str());
+#endif
 
 	    int match = $4.t->match ($2.t);	// would casted type allow expression type ?
 	    if (match > 0)
@@ -485,7 +495,9 @@ compact_expression:
 	block
 	    {
 		$$ = $1;
+#if DO_DEBUG
 		y2debug ("compact_expression: block");
+#endif
 		/*
 		 * If a block is used as an expression, we must make
 		 * sure it does have a type. It is either provided by
@@ -531,7 +543,7 @@ compact_expression:
 		}
 		
 		// check the type of the index
-		if ($5.t->match ( (constMapTypePtr($3.t))->keytype() )== -1)
+		if ($5.t->match ( (constMapTypePtr($3.t))->keytype())== -1)
 		{
 		    yyTypeMismatch ((constMapTypePtr($3.t))->keytype(), $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
@@ -564,9 +576,8 @@ compact_expression:
 		    $$.t = 0;
 		    break;
 		}
-
 		$$.c = new YEReturn ($2.c);
-		$$.t = BlockTypePtr ( new BlockType ($2.t) );
+		$$.t = BlockTypePtr ( new BlockType ($2.t));
 	    }
 |	IS '(' expression ',' type ')'
 	    {
@@ -664,10 +675,12 @@ compact_expression:
 		}
 		else
 		{
-		    SymbolEntry *sentry = $1.v.tval->sentry();
+		    SymbolEntryPtr sentry = $1.v.tval->sentry();
 		    $$.c = new YEVariable (sentry);
 		    $$.t = sentry->type();
+#if DO_DEBUG
 		    y2debug ("identifier '<%s>%s' !", $$.t->toString().c_str(), sentry->name());
+#endif
 		    $$.l = $1.l;
 		}
 	    }
@@ -764,13 +777,12 @@ infix_expression:
 
 		if ($2.c->isConstant())
 		{
-		    YConst *c = (YConst *)$2.c;
+		    YConstPtr c = (YConstPtr)$2.c;
 		    if (c->kind() == YCode::ycBoolean)
 		    {
 			$$.c = new YConst (YCode::ycBoolean, YCPBoolean (!(c->value()->asBoolean()->value())));
 			$$.t = Type::Boolean;
 			$$.l = $1.l;
-			delete c;
 		    }
 		    else
 		    {
@@ -793,20 +805,18 @@ infix_expression:
 
 		if ($2.c->isConstant())
 		{
-		    YConst *c = (YConst *)$2.c;
+		    YConstPtr c = (YConstPtr)$2.c;
 		    if (c->kind() == YCode::ycInteger)
 		    {
 			$$.c = new YConst (YCode::ycInteger, YCPInteger (-(c->value()->asInteger()->value())));
 			$$.t = Type::Integer;
 			$$.l = $1.l;
-			delete c;
 		    }
 		    else if ($2.c->kind() == YCode::ycFloat)
 		    {
 			$$.c = new YConst (YCode::ycFloat, YCPFloat (-(c->value()->asFloat()->value())));
 			$$.t = Type::Float;
 			$$.l = $1.l;
-			delete c;
 		    }
 		    else
 		    {
@@ -840,32 +850,10 @@ infix_expression:
 		    if ($1.c->evaluate (true)->asBoolean()->value() == true)
 		    {
 			$$.c = $3.c;
-			
-			// free unused code
-			if ($1.c)
-			{
-			    delete $1.c;
-			}
-
-			if ($5.c)
-			{
-			    delete $5.c;
-			}
 		    }
 		    else
 		    {
 			$$.c = $5.c;
-
-			// free unused code
-			if ($1.c)
-			{
-			    delete $1.c;
-			}
-
-			if ($3.c)
-			{
-			    delete $3.c;
-			}
 		    }
 		}
 		else
@@ -889,7 +877,7 @@ block:
 		
 		constTypePtr b_t = declared_return_type;
 		
-		if ( ! declared_return_type->isUnspec () )
+		if ( ! declared_return_type->isUnspec ())
 		{
 		    declared_return_type = Type::Unspec;
 		}
@@ -903,7 +891,9 @@ block:
 	block_end
 	    {
 		$$ = $3;
-		y2debug ("block: ([%p]%s:%s)", $$.c, $$.c ? $$.c->toString().c_str() : "<nil>", $$.t ? $$.t->toString().c_str() : "<ERR>");
+#if DO_DEBUG
+		y2debug ("block: (%s:%s)", $$.c ? $$.c->toString().c_str() : "<nil>", $$.t ? $$.t->toString().c_str() : "<ERR>");
+#endif
 	    }
 |	QUOTED_BLOCK
 	    {
@@ -919,7 +909,7 @@ block:
 
 		constTypePtr b_t = declared_return_type;
 
-		if ( ! declared_return_type->isUnspec () )
+		if ( ! declared_return_type->isUnspec ())
 		{
 		    declared_return_type = Type::Unspec;
 		}
@@ -929,7 +919,9 @@ block:
 	block_end
 	    {
 		$$ = $3;
-		y2debug ("block: ([%p]%s:%s)", $$.c, $$.c ? $$.c->toString().c_str() : "<nil>", $$.t ? $$.t->toString().c_str() : "<ERR>");
+#if DO_DEBUG
+		y2debug ("block: (%s:%s)", $$.c ? $$.c->toString().c_str() : "<nil>", $$.t ? $$.t->toString().c_str() : "<ERR>");
+#endif
 	    }
 ;
 
@@ -947,17 +939,19 @@ block_end:
 		if (top == 0
 		    || (top->includeDepth == 0))
 		{
+#if DO_DEBUG
 		    y2debug ("block end");
+#endif
 		    top = blockstack_pop (p_parser->blockStack);
 		    is_include = false;
 		}
 
-		YBlock *b = top->theBlock;
-		y2debug ("Pop %s block %p[stack %p], top block %p, depth %d", is_include ? "include" : "normal", b, top, p_parser->blockStack ? p_parser->blockStack->theBlock : 0, p_parser->blockstack_depth);
-		y2debug ("blockStack %p", p_parser->blockStack);
+		YBlockPtr b = top->theBlock;
 
 		SymbolTable *localTable = p_parser->scanner()->localTable();
-//		y2debug ("table before (%s)", localTable->toString().c_str());
+#if 0
+		y2debug ("table before (%s)", localTable->toString().c_str());
+#endif
 
 		if (top->self != 0)
 		{
@@ -990,7 +984,9 @@ block_end:
 			name_space = it->second;
 			if (name_space->table()->countUsage() > 0)
 			{
+#if DO_DEBUG
 			    y2debug ("active_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
+#endif
 			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
 		    }
@@ -1000,7 +996,9 @@ block_end:
 			name_space = it->second;
 			if (name_space->table()->countUsage() > 0)
 			{
+#if DO_DEBUG
 			    y2debug ("autoimport_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
+#endif
 			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
 		    }
@@ -1026,11 +1024,9 @@ block_end:
 		    {
 			yyLerror ("Empty module", $1.l);
 			$$.t = 0;
-			delete b;
 			break;
 		    }
 		    $$.c = 0;
-		    delete b;
 		}
 		else if (is_include)		// this was an include block
 		{
@@ -1038,7 +1034,7 @@ block_end:
 		}
 		else
 		{
-		    b->finishBlock ();
+		    b->finish ();
 		    $$.c = b;			// normal block
 		}
 
@@ -1063,29 +1059,42 @@ statements:
 		if (($1.t == 0)
 		    || ($2.t == 0))
 		{
+#if DO_DEBUG
 		    y2debug ("bad statements (%p) or statement (%p)", (const void *)$1.t, (const void *)$2.t);
+#endif
 		    $$.t = 0;
 		    break;
 		}
 
 		if ($2.c == 0)			// empty statement
 		{
+#if DO_DEBUG
 		    y2debug ("Empty statement");
+#endif
 		    $$.t = Type::Unspec;
 		    break;
 		}
 
-		YStatement *stmt = (YStatement *)($2.c);
-		y2debug ("STMT[%s!%s:%s:%d]\n", p_parser->blockStack->type->toString().c_str(), $2.t->toString().c_str(), stmt->toString().c_str(), stmt->line());
+		YStatementPtr stmt = static_cast<YStatementPtr>($2.c);
+
+#if DO_DEBUG
+		y2debug ("STMT[%s!%s]\n", p_parser->blockStack->type->toString().c_str(), $2.t->toString().c_str());
+		y2debug ("STMT[kind %d]\n", $2.c->kind());
+		if (stmt) y2debug ("STMT[%s:%d]\n", stmt->toString().c_str(), stmt->line());
+#endif
 
 		if (!($2.t)->isUnspec ())			// return statement
 		{
+#if DO_DEBUG
 		    y2debug ("Return in block: %s", $2.t->toString().c_str());
+#endif
 		    if (p_parser->blockStack->type->isUnspec ())	// type undefined yet
 		    {
 			if (!($2.t)->isNil())				// "return nil;" does not define the block type !
 			{
+#if DO_DEBUG
 			    y2debug ("Block type (%s)", $2.t->toString().c_str());
+#endif
 			    p_parser->blockStack->type = $2.t;		// this is the block type
 			}
 		    }
@@ -1113,13 +1122,12 @@ statements:
 
 			if (match > 0)
 			{
-			    ((YSReturn *)stmt)->propagate ($2.t, p_parser->blockStack->type);
+			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->blockStack->type);
 			}
 			else if (match < 0)
 			{
 			    yyLerror ("Mismatched return type in block", $2.l);
 			    yyTypeMismatch (p_parser->blockStack->type, $2.t, $2.l);
-			    delete stmt;
 			    $$.t = 0;
 			    break;
 			}
@@ -1127,7 +1135,7 @@ statements:
 		}
 
 		p_parser->blockStack->theBlock->attachStatement (stmt);
-
+		y2debug ("attached statement '%s'", stmt == 0 ? "<NULL>" : stmt->toString().c_str());
 		$$.c = stmt;
 		$$.t = p_parser->blockStack->type;
 		$$.l = $1.l;
@@ -1156,13 +1164,13 @@ statement:
 		p_parser->scanner()->initTables ($1.v.tval->sentry()->table(), 0);
 
 		// save environment tables for later restore
-		$2.c = (YCode *)localTable;
+		$2.l = (int)localTable;
 		$2.v.val = (void *)globalTable;
 	    }
 	block_end
 	    {
 		// restore environment
-		p_parser->scanner()->initTables ((SymbolTable *)($2.v.val), (SymbolTable *)($2.c));
+		p_parser->scanner()->initTables ((SymbolTable *)($2.v.val), (SymbolTable *)($2.l));
 
 		if ($4.t == 0)
 		{
@@ -1173,10 +1181,13 @@ statement:
 		if ($4.c				// block not empty
 		    && $4.c->isBlock())
 		{
-		    YBlock *block = (YBlock *)($4.c);
+		    YBlockPtr block = (YBlockPtr)($4.c);
 		    block->setKind (YBlock::b_using);
 		    block->setName (string ($1.v.tval->key()));
 		}
+#if DO_DEBUG
+		y2debug ("block_end");
+#endif
 		$$ = $4;
 	    }
 |	MODULE STRING ';'
@@ -1212,18 +1223,22 @@ statement:
 		p_parser->current_block->setName (name);
 
 		// enter 'self' entry so namespace references to current module get ignored
-		SymbolEntry *sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
+		SymbolEntryPtr sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
 		TableEntry *self = new TableEntry (name, sself, new Point (sself, $1.l, p_parser->current_block->point()));
 		p_parser->scanner()->localTable()->enter (self);
 
 		// module has private global table
 		// globalTable has already been saved at IMPORT.
 
+#if DO_DEBUG
 		y2debug ("Create module table");
+#endif
 
 		globalTable = p_parser->current_block->table ();
 		p_parser->scanner()->initTables (globalTable, 0);
+#if DO_DEBUG
 		y2debug ("overlaying globalTable %p", globalTable);
+#endif
 
 		inside_module = true;
 
@@ -1237,7 +1252,9 @@ statement:
 		
 		if (p_parser->blockStack->theBlock->isIncluded ($2.v.sval)) 
 		{
-		    y2debug ("Skipping reinclude of the file %s in block %p", $2.v.sval, p_parser->current_block);
+#if DO_DEBUG
+		    y2debug ("Skipping reinclude of the file %s in block", $2.v.sval);
+#endif
 		    $$.c = new YSInclude ($2.v.sval, $2.l, true);
 		    $$.l = $1.l;
 		    $$.t = Type::Unspec;
@@ -1255,7 +1272,9 @@ statement:
 		    break;
 		}
 
+#if DO_DEBUG
 		y2debug ("include %s:%s", $2.v.sval, fn.c_str());
+#endif
 		int fd = open (fn.c_str(), O_RDONLY);
 		if (fd < 0)
 		{
@@ -1275,7 +1294,9 @@ statement:
 
 		scannerstack_push (p_parser->scannerStack, scanner);
 
+#if DO_DEBUG
 		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
+#endif
 		p_parser->blockStack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
 
 		p_parser->setScanner (new Scanner (fd, $2.v.sval));
@@ -1284,8 +1305,9 @@ statement:
 		// pass the outer scanner's tables
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
 
+#if DO_DEBUG
 		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
-
+#endif
 		$$.c = new YSInclude ($2.v.sval, scanner->linenumber);
 		p_parser->blockStack->theBlock->addIncluded ($2.v.sval);
 		$$.l = $1.l;
@@ -1295,8 +1317,9 @@ statement:
 |	IMPORT STRING ';'
 	    {
 		const char *name = $2.v.sval;
+#if DO_DEBUG
 		y2debug ("import '%s'", name);
-
+#endif
 		$$.c = 0;
 		$$.l = $1.l;
 		$$.t = Type::Unspec;
@@ -1315,7 +1338,7 @@ statement:
 		    string module = name;
 		    $$.c = new YSImport (module, $1.l);
 		    
-		    Y2Namespace *name_space = ((YSImport *)$$.c)->nameSpace();
+		    Y2Namespace *name_space = ((YSImportPtr)$$.c)->nameSpace();
 		    if (name_space == 0)
 		    {
 			yyNoModule (name, $1.l);
@@ -1363,7 +1386,7 @@ statement:
 		}
 
 		TableEntry *tentry = p_parser->blockStack->theBlock->newEntry ($3.v.nval, SymbolEntry::c_typedef, $2.t, $1.l);
-		if (tentry == 0)		/* can't happen ... */
+		if (tentry == 0)		/* can't happen ... since we check above for known identifier */
 		{
 		    yyLerror ("typedef symbol duplicate", $3.l);
 		    $$.t = 0;
@@ -1395,7 +1418,9 @@ statement:
 	    }
 |	function_call ';'
 	    {
+#if DO_DEBUG
 		y2debug ("statement: function call");
+#endif
 		if ($1.t == 0)
 		{
 		    $$.t = 0;
@@ -1422,19 +1447,23 @@ statement:
 		}
 
 		// include block has code NULL
-		if (p_parser->blockStack->theBlock->isModule () && $1.c != 0 )
+		if (p_parser->blockStack->theBlock->isModule () && $1.c != 0)
 		{
 		    yyLerror ("Block not allowed in a module", $1.l);
 		    $$.t = 0;
 		    break;
 		}
 
-		if ($1.c != 0)			// block not empty
+		if ($1.c == 0)				// block empty
 		{
-		    ((YBlock *)$1.c)->setKind (YBlock::b_statement);
+		    $$.c = 0;
+		    $$.t = Type::Unspec;
+		    break;
 		}
 
-		$$ = $1;
+		$$.c = new YSBlock ($1.c, $1.l);
+		$$.t = $1.t;				// might contain a 'return' statement
+		$$.l = $1.l;
 	    }
 |	control_statement
 	    {
@@ -1591,7 +1620,7 @@ control_statement:
 		}
 		else
 		{
-		    $$.c = new YSDo ((YBlock *)$3.c, $7.c, $1.l);
+		    $$.c = new YSDo ((YBlockPtr)$3.c, $7.c, $1.l);
 		}
 		$$.t = $3.t;
 		$$.l = $1.l;
@@ -1626,10 +1655,11 @@ control_statement:
 		    yyLerror ("'repeat-until' expression not boolean", $7.l);
 		    yyTypeMismatch (Type::Boolean, $7.t, $7.l);
 		    $$.t = 0;
+		    break;
 		}
 		else
 		{
-		    $$.c = new YSRepeat ((YBlock *)$3.c, $7.c, $1.l);
+		    $$.c = new YSRepeat ((YBlockPtr)$3.c, $7.c, $1.l);
 		}
 		$$.t = $3.t;
 		$$.l = $1.l;
@@ -1661,7 +1691,7 @@ control_statement:
 |	RETURN ';'
 	    {
 		$$.t = Type::Void;			// differentiate "return;" from "return nil;" for type checking
-		$$.c = new YSReturn ((YCode *)0, $1.l);
+		$$.c = new YSReturn ((YCodePtr)0, $1.l);
 		$$.l = $1.l;
 	    }
 |	RETURN expression ';'
@@ -1695,11 +1725,11 @@ opt_else:
 type:
 	C_TYPE				// type ($$.t) is set by scanner
 					// C_TYPE includes already expanded typedefs
-|	LIST				{ $$.t = ListTypePtr ( new ListType (Type::Any) ); }
-|	LIST '<' type '>'		{ $$.t = ListTypePtr ( new ListType ($3.t) ); }
-|	MAP				{ $$.t = MapTypePtr ( new MapType (Type::Any, Type::Any) ); }
-|	MAP '<' type ',' type '>'	{ $$.t = MapTypePtr ( new MapType ($3.t, $5.t) ); }
-|	BLOCK '<' type '>'		{ $$.t = BlockTypePtr ( new BlockType ($3.t) ); }
+|	LIST				{ $$.t = ListTypePtr ( new ListType (Type::Any)); }
+|	LIST '<' type '>'		{ $$.t = ListTypePtr ( new ListType ($3.t)); }
+|	MAP				{ $$.t = MapTypePtr ( new MapType (Type::Any, Type::Any)); }
+|	MAP '<' type ',' type '>'	{ $$.t = MapTypePtr ( new MapType ($3.t, $5.t)); }
+|	BLOCK '<' type '>'		{ $$.t = BlockTypePtr ( new BlockType ($3.t)); }
 |	CONST type			{ TypePtr t = $2.t->clone(); t->asConst();
 					  if (!t->isConst())  yywarning ("Bogus 'const'", $2.l);
 					  $$.t = t;
@@ -1708,7 +1738,7 @@ type:
 					  if (!t->isReference())  yywarning ("Bogus '&'", $1.l);
 					  $$.t = t;
 					}
-|	type '(' ')'			{ $$.t = FunctionTypePtr ( new FunctionType ($1.t) ); }
+|	type '(' ')'			{ $$.t = FunctionTypePtr ( new FunctionType ($1.t)); }
 |	type '(' types ')'		{ $$.t = new FunctionType ( $1.t, (constFunctionTypePtr)$3.t); }
 ;
 
@@ -1745,7 +1775,9 @@ definition:
 		// pop block from block stack
 		// unlink local symbols from symbol table
 
+#if DO_DEBUG
 		y2debug ("parameter block end");
+#endif
 		blockstack_t *top = blockstack_pop (p_parser->blockStack);
 		top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 
@@ -1769,7 +1801,9 @@ definition:
 		// pop block from block stack
 		// unlink local symbols from symbol table
 
+#if DO_DEBUG
 		y2debug ("parameter block end");
+#endif
 		blockstack_t *top = blockstack_pop (p_parser->blockStack);
 		top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
 
@@ -1786,22 +1820,25 @@ definition:
 		    break;
 		}
 								// link the function entry with the function definition
-		SymbolEntry *entry = $1.v.tval->sentry();
-		YFunction *func = (YFunction *)(entry->code());
-		func->setDefinition ((YBlock *)$2.c);
+		SymbolEntryPtr entry = $1.v.tval->sentry();
+		YFunctionPtr func = (YFunctionPtr)(entry->code());
+		func->setDefinition ((YBlockPtr)$2.c);
 		$$.c = new YSFunction (entry, $1.l);
 		$$.t = Type::Unspec;			// function def is typeless
 		$$.l = $1.l;
 
+#if DO_DEBUG
 		y2debug ("Func (%s) done", $$.c->toString().c_str());
-
+#endif
 	    }
 |	opt_global_identifier '=' expression ';'		/* variable definition */
 	    {
 		if (($1.t == 0)
 		    || ($3.t == 0))
 		{
+#if DO_DEBUG
 		    y2debug ("Bad identifier (%p) or expression (%p)", (const void *)$1.t, (const void *)$3.t);
+#endif
 		    $$.t = 0;
 		    break;
 		}
@@ -1894,7 +1931,9 @@ function_start:
 		if (($1.t == 0)
 		    || ($3.t == 0))
 		{
+#if DO_DEBUG
 		    y2debug ("Bad identifier (%p) or parameters (%p)", (const void *)$1.t, (const void *)$3.t);
+#endif
 		    $$.t = 0;
 		    break;
 		}
@@ -1910,27 +1949,30 @@ function_start:
 		formalparam_t *formalp = $3.v.fpval;
 
 		// start parameter block before parameter checking, it's popped in any case
+#if DO_DEBUG
 		y2debug ("start parameter block for '%s()'", ($1.t) ? $1.v.tval->sentry()->name() : "<err>");
-
+#endif
 		// start with the declared return type
-		YBlock *parameter_block = start_block (p_parser, $1.t);
+		YBlockPtr parameter_block = start_block (p_parser, $1.t);
 
 		// get the functions symbol entry
-		SymbolEntry *fentry = $1.v.tval->sentry();
+		SymbolEntryPtr fentry = $1.v.tval->sentry();
 
 		// remember the prototype, if set for later checking
 		constTypePtr prototype = Type::Unspec;
 		if (fentry->onlyDeclared())
 		{
 		    prototype = fentry->type();
+#if DO_DEBUG
 		    y2debug ("prototype: %s", prototype->toString().c_str());
+#endif
 		}
 
 		// it's a function
 		fentry->setCategory (SymbolEntry::c_function);
 
 		// create new function
-		YFunction *func = new YFunction (parameter_block, fentry);
+		YFunctionPtr func = new YFunction (parameter_block, fentry);
 		fentry->setCode (func);
 
 		$$.c = func;
@@ -1950,8 +1992,9 @@ function_start:
 
 		while (formalp != 0)				// while we have parameters
 		{
+#if DO_DEBUG
 		    y2debug ("formal param '%s %s'@%d", formalp->type->toString().c_str(), formalp->name, formalp->line);
-
+#endif
 		    // compute function type
 
 		    ftype->concat (formalp->type);
@@ -1968,7 +2011,6 @@ function_start:
 			
 			// to properly delete a function, also the corresponding SymbolEntry must be
 			// adapted (so it does not try to access the YFunction anymore)
-			delete func;
 			fentry->setCategory (SymbolEntry::c_unspec);
 			func = 0;
 			break;
@@ -1995,10 +2037,14 @@ function_start:
 			}
 		    }
 
+#if DO_DEBUG
 		    y2debug ("func '%s'", func->toString().c_str());
 		    y2debug ("ftype (%s:%s)", fentry->name(), ftype->toString().c_str());
+#endif
 		    fentry->setType (ftype);
-		    y2debug ("sentry (%p: %s)", fentry, fentry->toString().c_str());
+#if DO_DEBUG
+		    y2debug ("sentry (%s)", fentry->toString().c_str());
+#endif
 		}
 	    }
 ;
@@ -2021,12 +2067,14 @@ opt_global_identifier:
 		{
 		    // new symbol
 
+#if DO_DEBUG
 		    y2debug ("new %s symbol <%s>'%s'", ($1.v.bval) ? "global" : "local", $3.t->toString().c_str(), $4.v.nval);
+#endif
 		    $$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.nval, ($1.v.bval) ? SymbolEntry::c_global : SymbolEntry::c_unspec, $3.t, $4.l);
 		}
 		else if ($4.v.tval->sentry()->onlyDeclared())
 		{
-		    SymbolEntry *fentry = $4.v.tval->sentry();
+		    SymbolEntryPtr fentry = $4.v.tval->sentry();
 
 		    // declared, but not defined function (!) symbol
 		    // check if the current declaration matches
@@ -2087,7 +2135,7 @@ opt_global_identifier:
 			    $$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
 			}
 		    }
-		    else if ($4.v.tval->sentry()->nameSpace() == p_parser->blockStack->theBlock)
+		    else if ($4.v.tval->sentry()->nameSpace() == p_parser->blockStack->theBlock->nameSpace())
 		    {
 			yyTerror ("Redefinition of local symbol", $4.l, $4.v.tval);
 			$$.t = 0;
@@ -2101,14 +2149,27 @@ opt_global_identifier:
 		    }
 		}
 
+		if ($$.v.tval == 0)		// bad identifier, exit here
+		{
+#if DO_DEBUG
+		    y2debug ("bad identifier");
+#endif
+		    $$.t = 0;
+		    break;
+		}
+
 		if ($1.v.bval)
 		{
+#if DO_DEBUG
 		    y2debug ("enter (%s) to global table %p", $$.v.tval->toString().c_str(), p_parser->scanner()->globalTable());
+#endif
 		    p_parser->scanner()->globalTable()->enter ($$.v.tval);
 		}
 		else
 		{
+#if DO_DEBUG
 		    y2debug ("enter (%s) to local table %p", $$.v.tval->toString().c_str(), p_parser->scanner()->localTable());
+#endif
 		    p_parser->scanner()->localTable()->enter ($$.v.tval);
 		}
 	    }
@@ -2121,7 +2182,9 @@ opt_global:
 		if (!blockstack_at_toplevel())
 		{
 		    yyLerror ("'global' declaration in nested block", $1.l);
+#if DO_DEBUG
 		    y2debug ("Nesting level is %d", p_parser->blockstack_depth);
+#endif
 		    $$.v.bval = false;
 		}
 		if (!p_parser->blockStack->theBlock->isModule())
@@ -2164,7 +2227,9 @@ tupletype:
 		if (($1.t == 0)
 		    || ($3.t == 0))
 		{
+#if DO_DEBUG
 		   y2debug ("Bad tupletype (%p) or formal_param (%p)", (const void *)$1.t, (const void *)$3.t);
+#endif
 		   $$.t = 0;
 		   break;
 		}
@@ -2200,7 +2265,7 @@ formal_param:
 	        }
 		else					// known identifier, check and clone it
 		{
-		    SymbolEntry *entry = $2.v.tval->sentry();
+		    SymbolEntryPtr entry = $2.v.tval->sentry();
 		    switch (entry->category())
 		    {
 			case SymbolEntry::c_builtin:
@@ -2413,7 +2478,6 @@ list:
 		    $$.t = 0;
 		    break;
 		}
-
 		$$.t = ListTypePtr (new ListType ($2.t));
 		$$.l = $1.l;
 	    }
@@ -2441,7 +2505,7 @@ list_elements:
 		}
 
 		$$.t = $1.t->commontype ($3.t);
-		((YEList *)$1.c)->attach ($3.c);
+		((YEListPtr)$1.c)->attach ($3.c);
 		$$.c = $1.c;
 		$$.l = $1.l;
 	    }
@@ -2509,7 +2573,6 @@ map_elements:
 		    $$.t = 0;
 		    break;
 		}
-
 		$$.c = new YEMap ($1.c, $3.c);
 		$$.t = MapTypePtr (new MapType ($1.t, $3.t));
 		$$.l = $1.l;
@@ -2538,7 +2601,7 @@ map_elements:
 		constTypePtr valuetype = mt->valuetype()->commontype ($5.t);
 		$$.t = MapTypePtr (new MapType (keytype, valuetype));
 
-		((YEMap *)$1.c)->attach ($3.c, $5.c);
+		((YEMapPtr)$1.c)->attach ($3.c, $5.c);
 		$$.c = $1.c;
 		$$.l = $1.l;
 	    }
@@ -2576,7 +2639,9 @@ function_call:
 
 		if ($1.t->isSymbol())					// function_name is C_SYMBOL
 		{
+#if DO_DEBUG
 		    y2debug ("Term %s(...)", $1.v.nval);
+#endif
 		    /* C_SYMBOL  */
 		    $$.c = new YETerm ($1.v.nval);
 		    $$.t = Type::Term;
@@ -2585,7 +2650,7 @@ function_call:
 		{
 
 
-		    SymbolEntry *sentry = $1.v.tval->sentry();
+		    SymbolEntryPtr sentry = $1.v.tval->sentry();
 
 		    if (sentry->isBuiltin())	// a builtin function
 		    {
@@ -2597,23 +2662,30 @@ function_call:
 
 			declaration_t *decl = sentry->declaration();
 
+#if DO_DEBUG
 			y2debug ("Builtin! (%s)%s", sentry->toString().c_str(), (decl->next == 0) ? "!" : "?");
-
+#endif
 			$$.v.val = decl;
 			if ((decl->next != 0)				// if overloaded
 			    || (decl->flags & DECL_SYMBOL))		// or can have a symbol as parameter
 			{
 			    // start block for possible symbol parameters
-			    YBlock *block = start_block (p_parser, Type::Unspec);
-			    y2debug ("opening parameter scope block %p for %s", block, sentry->name());
+			    YBlockPtr block = start_block (p_parser, Type::Unspec);
+#if DO_DEBUG
+			    y2debug ("opening parameter scope for %s", sentry->name());
+#endif
 
 			    $$.c = new YEBuiltin (decl, block);
+#if DO_DEBUG
 			    y2debug ("Builtin with block ...");
+#endif
 			}
 			else
 			{
 			    $$.c = new YEBuiltin (decl);
+#if DO_DEBUG
 			    y2debug ("Builtin ...");
+#endif
 			}
 
 			if (decl->flags & DECL_LOOP)			// allow break in code parameter
@@ -2625,18 +2697,26 @@ function_call:
 /*
 		    else if (sentry->type() == Type::Term) // a term
 		    {
+#if DO_DEBUG
 			y2debug ("Term! (%s)", sentry->toString().c_str());
+#endif
 			$$.c = new YETerm (sentry->name());
 			$$.t = sentry->type();
+#if DO_DEBUG
 			y2debug ("Term ...");
 		    }
+#endif
 */
 		    else
 		    {
+#if DO_DEBUG
 			y2debug ("Doing function call, starting params");
+#endif
 			$$.c = new YEFunction (sentry);			// an extern function
 			$$.t = sentry->type();
-			y2debug ("Function! (%s)@%p", sentry->toString(true).c_str(), $$.c);
+#if DO_DEBUG
+			y2debug ("Function! (%s)", sentry->toString(true).c_str());
+#endif
 		    }
 		}
 
@@ -2655,20 +2735,24 @@ function_call:
 		if (($3.t == 0)
 		    || ($4.t == 0))			// error in parameters
 		{
+#if DO_DEBUG
 		    y2debug ("Bad function (%p) or parameters %p)", (const void *)$3.t, (const void *)$4.t);
+#endif
 		    $$.t = 0;
 
 		    // check if symfunc parameter block must be popped from stack
 		    
 		    if ($3.t != 0 && ($3.c->kind() == YCode::yeBuiltin)
-			&& (((YEBuiltin *)$3.c)->parameterBlock() != NULL))
+			&& (((YEBuiltinPtr)$3.c)->parameterBlock() != NULL))
 		    {
 			// end block for possible symbol parameters
 
 			blockstack_t *top = blockstack_pop (p_parser->blockStack);
 			top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
-			YEBuiltin *bf = (YEBuiltin *)($3.c);
-			y2debug ("closing parameter scope block %p for %s", top->theBlock, bf->decl() ? bf->decl()->name : "<err>");
+			YEBuiltinPtr bf = (YEBuiltinPtr)($3.c);
+#if DO_DEBUG
+			y2debug ("closing parameter scope block for %s", bf->decl() ? bf->decl()->name : "<err>");
+#endif
 		    }
 		    break;
 		}
@@ -2677,18 +2761,22 @@ function_call:
 		{
 		    case YCode::yeTerm:			// a plain term
 		    {
+#if DO_DEBUG
 			y2debug ("YCode::yeTerm");
+#endif
 			$$.c = $3.c;
 			$$.t = $3.t;
 		    }
 		    break;
 		    case YCode::yeBuiltin:			// a builtin function
 		    {
+#if DO_DEBUG
 			y2debug ("YCode::yeBuiltin");
+#endif
 			// yeBuiltin matched
 			//   do final check for parameters
 
-			YEBuiltin *builtin = (YEBuiltin *)$3.c;
+			YEBuiltinPtr builtin = (YEBuiltinPtr)$3.c;
 
 			if (builtin->decl()->flags & DECL_LOOP)
 			{
@@ -2709,13 +2797,14 @@ function_call:
 			    {
 				yyMissingArgument (finalT, $1.l);
 			    }
-			    delete builtin;
 
 			    $$.t = 0;
 			}
 			else
 			{
+#if DO_DEBUG
 			    y2debug ("yeBuiltin matched");
+#endif
 			    $$.c = $3.c;
 			    $$.t = builtin->returnType();
 			}
@@ -2723,8 +2812,10 @@ function_call:
 		    break;
 		    case YCode::yeFunction:			// an extern function
 		    {
-			y2debug ("YCode::yeFunction (%s)@%p", $3.c->toString().c_str(), $3.c);
-			YEFunction *function = (YEFunction *)$3.c;
+#if DO_DEBUG
+			y2debug ("YCode::yeFunction (%s)", $3.c->toString().c_str());
+#endif
+			YEFunctionPtr function = (YEFunctionPtr)$3.c;
 
 			// close parameter list
 			constTypePtr finalT = function->finalize ();
@@ -2746,7 +2837,9 @@ function_call:
 			else
 			{
 			     // yeFunction matched
+#if DO_DEBUG
 			     y2debug ("yeFunction matched");
+#endif
 			     $$.c = $3.c;
 			     constFunctionTypePtr ft = $3.t;
 			     $$.t = ft->returnType ();
@@ -2756,7 +2849,9 @@ function_call:
 		    break;
 		    default:				// anything else is an error
 		    {
+#if DO_DEBUG
 			y2debug ("Error");
+#endif
 			$$.t = 0;
 		    }
 		    break;
@@ -2766,14 +2861,16 @@ function_call:
 		// check if symfunc parameter block must be popped from stack
 
 		if (($3.c->kind() == YCode::yeBuiltin)
-		    && (((YEBuiltin *)$3.c)->parameterBlock() != NULL))
+		    && (((YEBuiltinPtr)$3.c)->parameterBlock() != NULL))
 		{
 		    // end block for possible symbol parameters
 
 		    blockstack_t *top = blockstack_pop (p_parser->blockStack);
 		    top->theBlock->detachEnvironment (p_parser->scanner()->localTable());		// detach local table
-		    YEBuiltin *bf = (YEBuiltin *)($3.c);
-		    y2debug ("closing parameter scope block %p for %s", top->theBlock, bf->decl() ? bf->decl()->name : "<err>");
+		    YEBuiltinPtr bf = (YEBuiltinPtr)($3.c);
+#if DO_DEBUG
+		    y2debug ("closing parameter scope block for %s", bf->decl() ? bf->decl()->name : "<err>");
+#endif
 		}
 
 		if ($$.t == 0)
@@ -2783,7 +2880,9 @@ function_call:
 
 		$$.l = $1.l;
 
+#if DO_DEBUG
 		y2debug ("fcall (%s:%s)", $$.t->toString().c_str(), $$.c->toString().c_str());
+#endif
 	    }
 ;
 
@@ -2804,17 +2903,20 @@ function_call:
 parameters:
 	/* empty  */
 	    {
-		y2debug ("Empty parameters (%p)", ($0.t != NULL)? $0.c: NULL);
+#if DO_DEBUG
+		y2debug ("Empty parameters");
+#endif
 		$$.c = 0;
 		$$.t = Type::Unspec;
 	    }
 |	type identifier
 	    {
-		y2debug ("parameters: type/name ($0.c@%p, [%s '%s'])", ($0.t != NULL)? $0.c: NULL, $1.t->toString().c_str(), $2.t->isUnspec () ? $2.v.nval : $2.v.tval->key());
-
-
+#if DO_DEBUG
+		y2debug ("parameters: type/name ([%s '%s'])", $1.t->toString().c_str(), $2.t->isUnspec () ? $2.v.nval : $2.v.tval->key());
+#endif
 		/* if the function was not found, better fail now */
-		if ($0.t != 0 ) {
+		if ($0.t != 0)
+		{
 
 		    /* $1.t == type, $2.v symbol*/
 		    constTypePtr t = attach_parameter (p_parser, $0.c, &($1), &($2));
@@ -2832,17 +2934,20 @@ parameters:
 	    }
 |	expression
 	    {
-		y2debug ("parameters: expression (%p)", $1.c);
-
+#if DO_DEBUG
+		y2debug ("parameters: expression");
+#endif
 		if ($1.t == 0)			// parameter 'expression' is bad
 		{
+#if DO_DEBUG
 		    y2debug ("parameter 'expression' is bad");
+#endif
 		    $$.t = 0;
 		    break;
 		}
 
 		/* if the function was not found, better fail now */
-		if ($0.t != 0 )
+		if ($0.t != 0)
 		{
 		    // attach parameter ($1) to function ($0), checking types
 
@@ -2850,7 +2955,9 @@ parameters:
 
 		    if (t != 0)
 		    {
+#if DO_DEBUG
 			y2debug ("attach_parameter failed");
+#endif
 			$$.t = 0;
 			break;
 		    }
@@ -2861,8 +2968,9 @@ parameters:
 	    }
 |	parameters ',' type identifier
 	    {
-		y2debug ("parameters: parameters, type/name (%p)", $0.c);
-
+#if DO_DEBUG
+		y2debug ("parameters: parameters, type/name");
+#endif
 		if ($1.t == 0)
 		{
 		    $$.t = 0;
@@ -2877,7 +2985,8 @@ parameters:
 		}
 
 		/* if the function was not found, better fail now */
-		if ($0.t != 0 ) {
+		if ($0.t != 0)
+		{
 
 		    /* $3.t == type, $4 symbol*/
 		    constTypePtr t = attach_parameter (p_parser, $0.c, &($3), &($4));
@@ -2915,8 +3024,8 @@ parameters:
 		}
 
 		/* if the function was not found, better fail now */
-		if ($0.t != 0 ) {
-
+		if ($0.t != 0 )
+		{
 		    constTypePtr t = attach_parameter (p_parser, $0.c, &($3));
 		    if (t != 0)
 		    {
@@ -2963,7 +3072,9 @@ identifier:
 	IDENTIFIER
 |	SYMBOL
 	    {
+#if DO_DEBUG
 		y2debug ("<new> symbol '%s' !", (const char *)$1.v.nval);
+#endif
 		$$.v.nval = $1.v.nval;
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
@@ -2998,12 +3109,16 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
     while (token == END_OF_FILE)
     {
 	scannerstack_t *top = scannerstack_pop (pr->scannerStack);		// eof of include ?
+#if DO_DEBUG
 	y2debug ("EOF, top %p, current %p, yychar ?\n", top, currentScanner);
+#endif
 	if (top == 0)
 	{
 	    break;								// no
 	}
+#if DO_DEBUG
 	y2debug ("EOF, back to %s:%d\n", top->filename.c_str(), top->linenumber);
+#endif
 	currentScanner = top->scanner;
 	pr->setScanner (currentScanner);
 	pr->setFilename (top->filename);
@@ -3018,7 +3133,7 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
     if (token != END_OF_FILE)
     {
 	// store the value of the lexical token
-	YCode **store_here = (YCode **) &(lvalp_void->c);
+	YCodePtr *store_here = (YCodePtr *) &(lvalp_void->c);
 	lvalp_void->t	   = currentScanner->scannedType();
 
 	tokenValue value   = currentScanner->scannedValue();
@@ -3079,7 +3194,7 @@ yywarning_with_lineinfo (Parser *parser, int lineno, const char *s)
 
 
 static void
-yyerror_with_code (Parser *parser, int lineno, YCode *c, constTypePtr t)
+yyerror_with_code (Parser *parser, int lineno, YCodePtr c, constTypePtr t)
 {
     parser->parserErrors++;
     if (c == 0)
@@ -3169,13 +3284,42 @@ yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *
 static void
 yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 {
+    int line = (lineno > 0) ? lineno : parser->lineno;
     const Point *point = tentry->point();
-    char *s = "'%s' defined in %s:%d.";
+    bool start = true;
     while (point != 0)
     {
-	parser->scanner()->logWarning (s, lineno, tentry->key(), point->filename().c_str(), point->line());
-	point = point->point();
-	s = "Included from %s:%d.";
+	const Point *next = point->point();
+	if (start)
+	{
+	    if (next == 0)
+	    {
+		parser->scanner()->logWarning ("Definition point (%s:%d) without parent\n", line, point->filename().c_str(), point->line());
+	    }
+	    // definition point
+	    else if (point->line() == 0)
+	    {
+		parser->scanner()->logWarning ("'%s' defined as %s.", line, tentry->key(), next->filename().c_str());
+	    }
+	    else
+	    {
+		parser->scanner()->logWarning ("'%s' defined in %s:%d.", line, tentry->key(), next->filename().c_str(), point->line());
+	    }
+	}
+	else if (point->line() != 0)
+	{
+	    if (next == 0)
+	    {
+		parser->scanner()->logWarning ("Inclusion point (%s:%d) without parent\n", line, point->filename().c_str(), point->line());
+	    }
+	    else
+	    {
+		// inclusion point
+		parser->scanner()->logWarning ("Included from %s:%d.", line, next->filename().c_str(), point->line());
+	    }
+	}
+	point = next;
+	start = false;
     }
     return;
 }
@@ -3254,8 +3398,9 @@ i_check_unary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, Parser* p)
     result->t = ((constFunctionTypePtr)(decl->type))->returnType ();
     result->l = e1->l;
 
+#if DO_DEBUG
     y2debug ("check_unary_op (%s/%s) good (ret = %s)", op, e1->t->toString().c_str(), result->t->toString().c_str());
-
+#endif
     return;
 }
 
@@ -3281,7 +3426,9 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
     }
 
     FunctionTypePtr ft = Type::Function (Type::Unspec);		// the declaration determines the return type
-//y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
+#if DO_DEBUG
+    y2debug ("check_binary_op e1 %p, e2 %p", &(e1->t), &(e2->t));
+#endif
     ft->concat (e1->t);
     ft->concat (e2->t);
     declaration_t *decl = static_declarations.findDeclaration (op, ft, true);
@@ -3342,7 +3489,9 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	result->l = e1->l;
     }
 
+#if DO_DEBUG
     y2debug ("check_binary_op (%s/%s/%s) good (ret = '%s')", e1->t->toString().c_str(), op, e2->t->toString().c_str(), result->t->toString().c_str());
+#endif
     return;
 }
 
@@ -3367,11 +3516,21 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
 	return;
     }
 
+#if DO_DEBUG
     y2debug ("check_compare_op e1'%s' op %d e2'%s'", e1->t->toString().c_str(), (int)op, e2->t->toString().c_str());
+#endif
+
     int e1_match_e2 = e1->t->match (e2->t);
+
+#if DO_DEBUG
     y2debug ("e1_match_e2 %d", e1_match_e2);
+#endif
+
     int e2_match_e1 = e2->t->match (e1->t);
+
+#if DO_DEBUG
     y2debug ("e2_match_e1 %d", e2_match_e1);
+#endif
 
     if ((e1_match_e2 < 0)						// not comparable types
 	&& (e2_match_e1 < 0))
@@ -3399,7 +3558,9 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
     result->t = Type::Boolean;
     result->l = e1->l;
 
+#if DO_DEBUG
     y2debug ("check_compare_op '%s'", result->c->toString().c_str());
+#endif
     return;
 }
 
@@ -3419,7 +3580,7 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
 */
 
 static constTypePtr
-attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
+attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 {
     if ((code == 0)
 	|| (parm->t == 0))
@@ -3427,7 +3588,9 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 	return Type::Unspec;
     }
 
-    y2debug ("attach_parameter (code %p, p %p(%s), p1 %p)", code, parm, parm1 ? parm->t->toString().c_str() : parm->c->toString().c_str(), parm1);
+#if DO_DEBUG
+    y2debug ("attach_parameter (p %p(%s), p1 %p)", parm, parm1 ? parm->t->toString().c_str() : parm->c->toString().c_str(), parm1);
+#endif
 
     ee.setLinenumber (parm->l);
 
@@ -3437,11 +3600,15 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
     {
 	case YCode::yeBuiltin:
 	{
+#if DO_DEBUG
 	    y2debug ("YCode::yeBuiltin:");
-	    YEBuiltin *builtin = (YEBuiltin *)code; 
+#endif
+	    YEBuiltinPtr builtin = (YEBuiltinPtr)code; 
 	    
 	    // FIXME: new symbol could be probably devised, but it is a debug, anyway
+#if DO_DEBUG
 	    y2debug ("attach_parameter builtin ([%s]%s:%s)", builtin->toString().c_str(), parm1 ? "new symbol" : parm->c->toString().c_str(), parm->t->toString().c_str());
+#endif
 	    if (builtin->parameterBlock() == 0)
 	    {
 		t = builtin->attachParameter (parm->c, parm->t);
@@ -3453,22 +3620,22 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 	    if ((parm1 == 0)						// parameter is an expression (not 'type identifier')
 		&& ((parm->c->kind() != YCode::ycSymbol)		//  not a symbol
 		     || (parm->c->isConstant()				//   or a constant
-			 && ((YConst *)(parm->c))->value().isNull())))	//   and nilsymbol
+			 && ((YConstPtr)(parm->c))->value().isNull())))	//   and nilsymbol
 	    {
 		constTypePtr type = parm->t;
+#if DO_DEBUG
 		y2debug ("attach_parameter builtin expr ([%s]%s:%s)", builtin->toString().c_str(), parm->c->toString().c_str(), type->toString().c_str());
-		if (parm->c->kind() == YCode::yeBlock)
+#endif
+		if (parm->c->isBlock())
 		{
 		    // parameter is block
-		    y2debug ("parameter is block");
 
-		    YBlock *b = (YBlock *)(parm->c);
-		    YSReturn *ret = b->justReturn();
+		    YBlockPtr b = (YBlockPtr)(parm->c);
+		    YSReturnPtr ret = b->justReturn();
 		    if (ret != 0 && ret->value () != 0)
 		    {
 			parm->c = new YEReturn (ret->value());
 			ret->clearValue ();
-			delete b;
 		    }
 		    type = BlockTypePtr ( new BlockType (type->isUnspec () ? Type::Void : type));
 		}
@@ -3477,7 +3644,9 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 	    else							// attach type/name or symbol expression
 	    {
 		TableEntry *tentry = 0;
+#if DO_DEBUG
 		y2debug ("check for 'type name' or 'symbol' expression");
+#endif
 
 		// check for "type name" or "symbol" expression
 
@@ -3505,7 +3674,9 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 		if ((t == 0)
 		    && (tentry != 0))
 		{
+#if DO_DEBUG
 		    y2debug ("Enter %s to local table", tentry->toString().c_str());
+#endif
 		    parser->scanner()->localTable()->enter (tentry);
 		}
 	    }
@@ -3513,18 +3684,27 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 	break;
         case YCode::yeFunction:
 	{
+#if DO_DEBUG
 	    y2debug ("YCode::yeFunction:");
-	    YEFunction *func = (YEFunction *)code; 
+#endif
+	    YEFunctionPtr func = (YEFunctionPtr)code; 
+#if DO_DEBUG
 	    y2debug ("attach_parameter func ([%s]%s:%s)", func->toString().c_str(), parm->c->toString().c_str(), parm->t->toString().c_str());
+#endif
 
 	    t = func->attachParameter (parm->c, parm->t);
 	}
 	break;
 	case YCode::yeTerm:
 	{
+#if DO_DEBUG
 	    y2debug ("YCode::yeTerm:");
-	    YETerm *term = (YETerm *)code; 
+#endif
+	    YETermPtr term = (YETermPtr)code; 
+
+#if DO_DEBUG
 	    y2debug ("attach_parameter term ([%s]%s)", term->toString().c_str(), parm->c->toString().c_str());
+#endif
 	    term->attachParameter (parm->c);
 	    return 0;
 	}
@@ -3538,7 +3718,9 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 
     if (t != 0)
     {
+#if DO_DEBUG
 	y2debug ("attach_parameter error, t:%s", t->toString().c_str());
+#endif
 	if (t->isUnspec())
 	{
 //	    yyerror_with_lineinfo (parser, parm->l, "No matching function");
@@ -3564,7 +3746,9 @@ attach_parameter (Parser *parser, YCode *code, YYSTYPE *parm, YYSTYPE *parm1)
 	    yyerror_with_code (parser, parm->l, parm->c, parm->t);
 	}
     }
+#if DO_DEBUG
     y2debug ("attach_parameter() -> %s", t ? t->toString().c_str() : "OK");
+#endif
     return t;
 }
 
@@ -3589,12 +3773,16 @@ static stack_t *stack_pop (stack_t **stack)
 	*stack = element->down;
 	if (*stack == 0)
 	{
+#if DO_DEBUG
 	    y2debug ("STACK EMPTY NOW");
+#endif
 	}
     }
     else
     {
+#if DO_DEBUG
 	y2debug ("POP EMPTY STACK");
+#endif
     }
     return element;
 }
@@ -3604,16 +3792,22 @@ static stack_t *stack_pop (stack_t **stack)
 // pushes new element on blockStack
 // opens new scope for block-local definitions
 
-static YBlock *
+static YBlockPtr
 start_block (Parser *parser, constTypePtr type)
 {
+#if DO_DEBUG
+    y2debug ("start_block");
+#endif
+
     // check if this block is starting an include file. This means all definitions go to the
     // including (the current blockStack) block -> don't open up a new block !
 
     if ((parser->scannerStack != 0)
 	&& (parser->scannerStack->state == SCAN_START_INCLUDE))
     {
+#if DO_DEBUG
 	y2debug ("Include !");
+#endif
 	// now we're inside the include file
 	parser->scannerStack->state = SCAN_INCLUDE;
 	parser->blockStack->includeDepth++;
@@ -3635,6 +3829,9 @@ start_block (Parser *parser, constTypePtr type)
 	top->theBlock = new YBlock (parser->current_block->point());
     }
 	
+#if DO_DEBUG
+    y2debug ("YBlock created");
+#endif
     // inherit textdomain from outer block
     top->textdomain = (parser->blockStack ? parser->blockStack->textdomain : 0);
     top->type = type;
@@ -3644,7 +3841,9 @@ start_block (Parser *parser, constTypePtr type)
     blockstack_push (parser->blockStack, top);
     parser->blockstack_depth++;
 
-    y2debug ("Push block#%d:%s, top %p, down %p", parser->blockstack_depth, type->toString().c_str(), parser->blockStack->theBlock, parser->blockStack->down ? ((blockstack_t *)parser->blockStack->down)->theBlock : 0);
+#if DO_DEBUG
+    y2debug ("Push block#%d:%s", parser->blockstack_depth, type->toString().c_str());
+#endif
 
     return top->theBlock;
 }

@@ -3,7 +3,7 @@
 #
 
 EXTRA_DIST= Include/*.inc	\
-	Module/*.ycp							\
+	Module/*.ycp Module/*.out Module/*.err				\
 	Xmodules/*ycp Xmodules/*.err Xmodules/*.out			\
 	constants/*ycp constants/*.err constants/*.out			\
 	expressions/*.ycp expressions/*.err expressions/*.out		\

@@ -34,6 +34,7 @@
 
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
+#include <ycp/Bytecode.h>
 
 #include <scr/SCR.h>
 #include <UI.h>
@@ -58,7 +59,6 @@ static void initializeBuiltins ()
     static SCR scr;
     static UI ui;
     static WFM wfm;
-// FIXME: this must be now done dynamically    static Pkg pkg;
 }
 
 Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
@@ -128,16 +128,30 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 	    return 0;	// shouldn't happen since findy2() already checked
     }
 
+    // to be on the safe side
     initializeBuiltins ();
-
-    // Parse Script
-    Parser parser(file, fullname.c_str());
-    parser.setBuffered();
-
-    YCPCode script = YCPCode( parser.parse() );
-    fclose(file);
     
-    y2milestone( "Parsing finished" );
+    // check, if there is a newer YBC client
+    YCPCode script;
+    
+    string ybc_filename = YCPPathSearch::bytecodeForFile (fullname);
+    if (ybc_filename.empty ())
+    {
+	// Parse Script
+	Parser parser(file, fullname.c_str());
+	parser.setBuffered();
+
+	script = YCPCode( parser.parse() );
+	fclose(file);
+    
+	y2milestone ("Parsing finished");
+    }
+    else
+    {
+	y2milestone ("Using bytecode file %s", ybc_filename.c_str ());
+	script = YCPCode ( Bytecode::readFile (ybc_filename) );
+	y2milestone ("Bytecode file loaded");
+    }
 
     if (script->code () != 0)
     {

@@ -13,8 +13,6 @@
    File:       YCPCodeCompare.h
    Author:     Martin Vidner <mvidner@suse.cz>
 
-$Id$
-
 /-*/
 
 #ifndef YCPCodeCompare_h
@@ -32,8 +30,8 @@ $Id$
 class YCPCodeCompare : public std::binary_function <const YCPValue &, const YCPValue &, bool>
 {
 private:
-    SymbolEntry *se1;
-    SymbolEntry *se2;
+    SymbolEntryPtr se1;
+    SymbolEntryPtr se2;
     YCPCode order;
 public:
     // in fact symbol entries and ycode

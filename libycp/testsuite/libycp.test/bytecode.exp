@@ -6,7 +6,12 @@
 set directories { constants expressions statements imports Xmodules }
 #set directories { constants expressions statements imports Xmodules }
 
-# compile the modules first
+# check the modules first
+foreach file [get-files $srcdir/tests/ bytecode/Module "ycp" ] {
+    ycp-run $file tests/bytecode/Module
+}
+
+# then compile the modules
 foreach file [get-files $srcdir/tests/ bytecode/Module "ycp" ] {
     bytecode-compile $file tests/bytecode/Module
 }

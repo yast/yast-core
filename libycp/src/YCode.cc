@@ -40,12 +40,21 @@ $Id$
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
 
+// ------------------------------------------------------------------
+
+IMPL_BASE_POINTER(YCode);
+IMPL_DERIVED_POINTER(YError, YCode);
+IMPL_DERIVED_POINTER(YConst, YCode);
+IMPL_DERIVED_POINTER(YLocale, YCode);
+IMPL_DERIVED_POINTER(YDeclaration, YCode);
+IMPL_DERIVED_POINTER(YFunction, YCode);
 
 // ------------------------------------------------------------------
 // YCode
 
 YCode::YCode (ykind kind)
     : m_kind (kind)
+    , m_valid (true)
 {
 }
 
@@ -59,6 +68,13 @@ YCode::ykind
 YCode::kind() const
 {
     return m_kind;
+}
+
+
+bool
+YCode::valid() const
+{
+    return m_valid;
 }
 
 
@@ -159,6 +175,7 @@ YCode::toString (ykind kind)
 	"ysTextdomain",
 	"ysInclude",
 	"ysImport",
+	"ysBlock",		// a block
 
 	"ysStatement"		// -- placeholder --
     };
@@ -350,8 +367,9 @@ YConst::toString() const
 YCPValue
 YConst::evaluate (bool cse)
 {
-    y2debug("evaluate(%s) = %s", toString().c_str(), m_value.isNull()?"NULL":m_value->toString().c_str());
-    return m_value;
+    YCPValue v = m_value;
+    y2debug("evaluate(%s) = %s", toString().c_str(), v.isNull() ? "NULL" : v->toString().c_str());
+    return v;
 }
 
 
@@ -364,7 +382,9 @@ YConst::toStream (std::ostream & str) const
     }
     YCode::toStream (str);
     if (m_value.isNull())
+    {
 	return Bytecode::writeBool (str, false);
+    }
     Bytecode::writeBool (str, true);
     return m_value->toStream (str);
 }
@@ -514,7 +534,7 @@ YDeclaration::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // function definition
 
-YFunction::YFunction (YBlock *declaration, const SymbolEntry *entry)
+YFunction::YFunction (YBlockPtr declaration, const SymbolEntryPtr entry)
     : YCode (ycFunction)
     , m_declaration (declaration)
     , m_definition (0)
@@ -525,19 +545,17 @@ YFunction::YFunction (YBlock *declaration, const SymbolEntry *entry)
 
 YFunction::~YFunction ()
 {
-    if (m_declaration) delete m_declaration;
-    if (m_definition) delete m_definition;
 }
 
 
-YBlock *
+YBlockPtr
 YFunction::definition() const
 {
     return m_definition;
 }
 
 
-YBlock *
+YBlockPtr
 YFunction::declaration() const
 {
     return m_declaration;
@@ -545,7 +563,7 @@ YFunction::declaration() const
 
 
 void
-YFunction::setDefinition (YBlock *definition)
+YFunction::setDefinition (YBlockPtr definition)
 {
     m_definition = definition;
     definition->setKind (YBlock::b_definition);
@@ -562,15 +580,15 @@ YFunction::setDefinition (std::istream & str)
 
 	if (m_declaration != 0)
 	{
-	    Bytecode::pushNamespace ((Y2Namespace *)m_declaration);
+	    Bytecode::pushNamespace (m_declaration->nameSpace());
 	}
 
-	m_definition = (YBlock *)Bytecode::readCode (str);
+	m_definition = (YBlockPtr)Bytecode::readCode (str);
 	m_definition->setKind (YBlock::b_definition);
 
 	if (m_declaration != 0)
 	{
-	    Bytecode::popNamespace ((Y2Namespace *)m_declaration);
+	    Bytecode::popNamespace (m_declaration->nameSpace());
 	}
 
 	if ((m_definition == 0)
@@ -595,7 +613,7 @@ YFunction::parameterCount (void) const
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 YFunction::parameter (unsigned int position) const
 {
     return (m_declaration ? m_declaration->symbolEntry (position) : 0);
@@ -641,7 +659,7 @@ YFunction::evaluate (bool cse)
     y2debug ("YFunction::evaluate(%s)\n", toString().c_str());
     // there's nothing to evaluate for a function _definition_
     // its all in the function call.
-    return YCPCode (this);
+    return YCPCode (YCodePtr (this));		// YCPCode will take care of YCodePtr
 }
 
 
@@ -657,7 +675,7 @@ YFunction::YFunction (std::istream & str)
     if (Bytecode::readBool (str))
     {
 	y2debug ("YFunction::YFunction: need_declaration !");
-	m_declaration = (YBlock *)Bytecode::readCode (str);
+	m_declaration = (YBlockPtr)Bytecode::readCode (str);
 	if ((m_declaration == 0)
 	    || (!m_declaration->isBlock()))
 	{
@@ -685,12 +703,12 @@ YFunction::toStreamDefinition (std::ostream & str) const
     {
 	if (need_declaration)
 	{
-	    Bytecode::pushNamespace ((Y2Namespace *)m_declaration);	// keep the declaration accessible during definition write
+	    Bytecode::pushNamespace (m_declaration->nameSpace());	// keep the declaration accessible during definition write
 	}
 	m_definition->toStream (str);
 	if (need_declaration)
 	{
-	    Bytecode::popNamespace ((Y2Namespace *)m_declaration);
+	    Bytecode::popNamespace (m_declaration->nameSpace());
 	}
     }
 

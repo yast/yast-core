@@ -49,9 +49,28 @@ typedef YCPValue (*v2vvvv) (const YCPValue &, const YCPValue &, const YCPValue &
 typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
 
 // ------------------------------------------------------------------
+
+IMPL_DERIVED_POINTER(YEVariable, YCode);
+IMPL_DERIVED_POINTER(YEReference, YCode);
+IMPL_DERIVED_POINTER(YETerm, YCode);
+IMPL_DERIVED_POINTER(YECompare, YCode);
+IMPL_DERIVED_POINTER(YELocale, YCode);
+IMPL_DERIVED_POINTER(YEList, YCode);
+IMPL_DERIVED_POINTER(YEMap, YCode);
+IMPL_DERIVED_POINTER(YEPropagate, YCode);
+IMPL_DERIVED_POINTER(YEUnary, YCode);
+IMPL_DERIVED_POINTER(YEBinary, YCode);
+IMPL_DERIVED_POINTER(YETriple, YCode);
+IMPL_DERIVED_POINTER(YEIs, YCode);
+IMPL_DERIVED_POINTER(YEReturn, YCode);
+IMPL_DERIVED_POINTER(YEBracket, YCode);
+IMPL_DERIVED_POINTER(YEBuiltin, YCode);
+IMPL_DERIVED_POINTER(YEFunction, YCode);
+
+// ------------------------------------------------------------------
 // variable ref (-> SymbolEntry)
 
-YEVariable::YEVariable (SymbolEntry *entry)
+YEVariable::YEVariable (SymbolEntryPtr entry)
     : YCode (yeVariable)
     , m_entry (entry)
 {
@@ -65,7 +84,7 @@ YEVariable::YEVariable (std::istream & str)
 }
 
 
-SymbolEntry *
+SymbolEntryPtr
 YEVariable::entry() const
 {
     return m_entry;
@@ -98,12 +117,20 @@ YEVariable::evaluate (bool cse)
 	// it's OK for the functions (somebody wants our code (function pointers)), but not others
 	if (! m_entry->isFunction ())
 	{
-	    ycp2error ("YEVariable::evaluate (%s) has no value", toString().c_str());
+	    ycp2error ("YEVariable::evaluate (%s) is not initialized", toString().c_str());
 	}
-	value = YCPCode (m_entry->code());
+	if (m_entry->code())
+	{
+	    value = YCPCode (m_entry->code());
+	}
+	else
+	{
+	    value = YCPVoid ();
+	}
     }
-
+#if DO_DEBUG
     y2debug ("YEVariable::evaluate (%s) = %s", toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
     return value;
 }
 
@@ -120,7 +147,7 @@ YEVariable::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // reference (-> SymbolEntry)
 
-YEReference::YEReference (SymbolEntry *entry)
+YEReference::YEReference (SymbolEntryPtr entry)
     : YCode (yeReference)
     , m_entry (entry)
 {
@@ -137,7 +164,7 @@ YEReference::YEReference (std::istream & str)
 }
 
 
-SymbolEntry *
+SymbolEntryPtr 
 YEReference::entry() const
 {
     return m_entry;
@@ -164,8 +191,9 @@ YEReference::evaluate (bool cse)
     if (cse) return YCPNull();
 
     YCPValue value = YCPReference (m_entry);
-
+#if DO_DEBUG
     y2debug ("YEReference::evaluate (%s) = %s", toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
     return value;
 }
 
@@ -222,7 +250,6 @@ YETerm::~YETerm ()
     while (parm)
     {
 	ycodelist_t *next = parm->next;
-	delete parm->code;
 	delete parm;
 	parm = next;
     }
@@ -240,7 +267,7 @@ YETerm::~YETerm ()
      */
 
 constTypePtr
-YETerm::attachParameter (YCode *code, constTypePtr dummy)
+YETerm::attachParameter (YCodePtr code, constTypePtr dummy)
 {
     if ((code == 0)
 	|| (code->isError()))
@@ -319,6 +346,10 @@ YETerm::evaluate (bool cse)
 	actualp = actualp->next;
     }
 
+#if DO_DEBUG
+    y2debug ("YETerm::evaluate (%s) = '%s'", toString().c_str(), term->toString().c_str());
+#endif
+
     return term;
 }
 
@@ -336,7 +367,7 @@ YETerm::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // Compare (-> left, right, type)
 
-YECompare::YECompare (YCode *left, c_op op, YCode *right)
+YECompare::YECompare (YCodePtr left, c_op op, YCodePtr right)
     : YCode (yeCompare)
     , m_left (left)
     , m_op (op)
@@ -358,8 +389,6 @@ YECompare::YECompare (std::istream & str)
 
 YECompare::~YECompare ()
 {
-    delete m_left;
-    delete m_right;
 }
 
 
@@ -457,7 +486,7 @@ YECompare::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // locale expression (-> singular, plural, count)
 
-YELocale::YELocale (const char *singular, const char *plural, YCode *count, const char *textdomain)
+YELocale::YELocale (const char *singular, const char *plural, YCodePtr count, const char *textdomain)
     : YCode (yeLocale)
     , m_singular (singular)
     , m_plural (plural)
@@ -490,7 +519,6 @@ YELocale::~YELocale ()
 {
     free ((void *)m_singular);
     free ((void *)m_plural);
-    delete (m_count);
 }
 
 
@@ -552,7 +580,7 @@ YELocale::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // list expression (-> value, next list value)
 
-YEList::YEList (YCode *code)
+YEList::YEList (YCodePtr code)
     : YCode (yeList)
 {
     m_first = new ycodelist_t;
@@ -577,7 +605,6 @@ YEList::~YEList ()
     ycodelist_t *next;
     while (element)
     {
-	delete element->code;
 	next = element->next;
 	delete element;
 	element = next;
@@ -586,7 +613,7 @@ YEList::~YEList ()
 
 
 void
-YEList::attach (YCode *code)
+YEList::attach (YCodePtr code)
 {
     ycodelist_t *element = new ycodelist_t;
     element->code = code;
@@ -604,7 +631,9 @@ YEList::toString() const
     while (element)
     {
 	if (element != m_first)
+	{
 	    s += ", ";
+	}
 	s += element->code->toString();
 	element = element->next;
     }
@@ -618,11 +647,14 @@ YEList::evaluate (bool cse)
 #if DO_DEBUG
     y2debug ("YEList::evaluate(%s)\n", toString().c_str());
 #endif
+
     YCPList list;
     ycodelist_t *element = m_first;
+
     while (element)
     {
 	YCPValue value = element->code->evaluate (cse);
+
 	if (value.isNull())
 	{
 	    return value;
@@ -637,7 +669,8 @@ YEList::evaluate (bool cse)
 }
 
 
-int YEList::count () const
+int
+YEList::count () const
 {
     int res = 0;
     ycodelist_t *element = m_first;
@@ -650,7 +683,8 @@ int YEList::count () const
 }
 
 
-YCode* YEList::value (int index) const
+YCodePtr
+YEList::value (int index) const
 {
     ycodelist_t *element = m_first;
     while (element && index)
@@ -673,7 +707,7 @@ YEList::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // map expression (-> key, value, next key/value pair)
 
-YEMap::YEMap (YCode *key, YCode *value)
+YEMap::YEMap (YCodePtr key, YCodePtr value)
     : YCode (yeMap)
     , m_first (0)
     , m_last (0)
@@ -690,8 +724,8 @@ YEMap::YEMap (std::istream & str)
     u_int32_t count = Bytecode::readInt32 (str);
     while (count-- > 0)
     {
-	YCode *key = Bytecode::readCode (str);
-	YCode *value = Bytecode::readCode (str);
+	YCodePtr key = Bytecode::readCode (str);
+	YCodePtr value = Bytecode::readCode (str);
 	attach (key, value);
     }
 }
@@ -703,8 +737,6 @@ YEMap::~YEMap ()
     mapval_t *next;
     while (element)
     {
-	delete element->key;
-	delete element->value;
 	next = element->next;
 	delete element;
 	element = next;
@@ -713,7 +745,7 @@ YEMap::~YEMap ()
 
 
 void
-YEMap::attach (YCode *key, YCode *value)
+YEMap::attach (YCodePtr key, YCodePtr value)
 {
     mapval_t *element = new mapval_t;
     element->key = key;
@@ -735,6 +767,9 @@ YEMap::attach (YCode *key, YCode *value)
 string
 YEMap::toString() const
 {
+#if DO_DEBUG
+    y2debug ("YEMap::toString()");
+#endif
     mapval_t *element = m_first;
     string s = "$[";
     while (element)
@@ -828,7 +863,7 @@ YEMap::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // propagation expression (-> declaration_t for conversion, value)
 
-YEPropagate::YEPropagate (YCode *value, constTypePtr from, constTypePtr to)
+YEPropagate::YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to)
     : YCode (yePropagate)
     , m_from (from)
     , m_to (to)
@@ -854,7 +889,6 @@ YEPropagate::YEPropagate (std::istream & str)
 
 YEPropagate::~YEPropagate ()
 {
-    delete m_value;
 }
 
 
@@ -933,7 +967,7 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
     if (to_type->isFunction ()
 	&& value->isCode ())
     {
-	YCode* c = value->asCode ()->code ();
+	YCodePtr c = value->asCode ()->code ();
 	constFunctionTypePtr t = (constFunctionTypePtr)to_type;
 #warning Function type cannot be checked at runtime, because of the return type
 	return c->kind () == ycFunction;
@@ -995,7 +1029,7 @@ YEPropagate::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // unary expression (-> declaration_t, arg)
 
-YEUnary::YEUnary (declaration_t *decl, YCode *arg)
+YEUnary::YEUnary (declaration_t *decl, YCodePtr arg)
     : YCode (yeUnary)
     , m_decl (decl)
     , m_arg (arg)
@@ -1018,7 +1052,6 @@ YEUnary::YEUnary (std::istream & str)
 
 YEUnary::~YEUnary ()
 {
-    delete m_arg;
 }
 
 
@@ -1079,7 +1112,7 @@ YEUnary::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // binary expression (-> declaration_t, arg1, arg2)
 
-YEBinary::YEBinary (declaration_t *decl, YCode *arg1, YCode *arg2)
+YEBinary::YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2)
     : YCode (yeBinary)
     , m_decl (decl)
     , m_arg1 (arg1)
@@ -1104,8 +1137,6 @@ YEBinary::YEBinary (std::istream & str)
 
 YEBinary::~YEBinary ()
 {
-    delete m_arg1;
-    delete m_arg2;
 }
 
 
@@ -1184,7 +1215,7 @@ YEBinary::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // Triple (? :) expression (-> bool expr, true value, false value)
 
-YETriple::YETriple (YCode *a_expr, YCode *a_true, YCode *a_false)
+YETriple::YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false)
     : YCode (yeTriple)
     , m_expr (a_expr)
     , m_true (a_true)
@@ -1204,9 +1235,6 @@ YETriple::YETriple (std::istream & str)
 
 YETriple::~YETriple ()
 {
-    delete m_expr;
-    delete m_true;
-    delete m_false;
 }
 
 
@@ -1267,7 +1295,7 @@ YETriple::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // is (expression, type)
 
-YEIs::YEIs (YCode *expr, constTypePtr type)
+YEIs::YEIs (YCodePtr expr, constTypePtr type)
     : YCode (yeIs)
     , m_expr (expr)
     , m_type (type)
@@ -1285,7 +1313,6 @@ YEIs::YEIs (std::istream & str)
 
 YEIs::~YEIs ()
 {
-    delete m_expr;
 }
 
 
@@ -1326,7 +1353,7 @@ YEIs::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // Return (expression)
 
-YEReturn::YEReturn (YCode *expr)
+YEReturn::YEReturn (YCodePtr expr)
     : YCode (yeReturn)
     , m_expr (expr)
 {
@@ -1342,7 +1369,6 @@ YEReturn::YEReturn (std::istream & str)
 
 YEReturn::~YEReturn ()
 {
-    delete m_expr;
 }
 
 
@@ -1374,7 +1400,7 @@ YEReturn::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // bracket expression: identifier [ arg, arg, ...] : default
 
-YEBracket::YEBracket (YCode *var, YCode *arg, YCode *def, constTypePtr resultType)
+YEBracket::YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr resultType)
     : YCode (yeBracket)
     , m_var (var)
     , m_arg (arg)
@@ -1396,9 +1422,6 @@ YEBracket::YEBracket (std::istream & str)
 
 YEBracket::~YEBracket ()
 {
-    delete m_var;
-    delete m_arg;
-    delete m_def;
 }
 
 
@@ -1524,7 +1547,7 @@ YEBracket::toStream (std::ostream & str) const
 // ------------------------------------------------------------------
 // builtin function ref (-> declaration_t, type, parameters)
 
-YEBuiltin::YEBuiltin (declaration_t *decl, YBlock *parameterblock, constTypePtr type)
+YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePtr type)
     : YCode (yeBuiltin)
     , m_decl (decl)
     , m_type (type==0 ? Type::Function(Type::Unspec) : (FunctionTypePtr)(type->clone()))
@@ -1546,13 +1569,13 @@ YEBuiltin::YEBuiltin (std::istream & str)
     m_decl = static_declarations.readDeclaration (str);
     if (Bytecode::readBool (str))
     {
-	m_parameterblock = (YBlock *)Bytecode::readCode (str);
-	Bytecode::pushNamespace ((Y2Namespace *)m_parameterblock);
+	m_parameterblock = (YBlockPtr)Bytecode::readCode (str);
+	Bytecode::pushNamespace (m_parameterblock->nameSpace());
     }
     Bytecode::readYCodelist (str, &m_parameters, &m_last);
     if (m_parameterblock != 0)
     {
-	Bytecode::popNamespace ((Y2Namespace *)m_parameterblock);
+	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
     if (!m_decl
 	|| m_type->isError ())
@@ -1578,12 +1601,12 @@ YEBuiltin::toStream (std::ostream & str) const
     {
 	Bytecode::writeBool (str, true);
 	m_parameterblock->toStream (str);
-	Bytecode::pushNamespace ((Y2Namespace *)m_parameterblock);
+	Bytecode::pushNamespace (m_parameterblock->nameSpace());
     }
     Bytecode::writeYCodelist (str, m_parameters);
     if (m_parameterblock != 0)
     {
-	Bytecode::popNamespace ((Y2Namespace *)m_parameterblock);
+	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
     return str;
 }
@@ -1595,14 +1618,8 @@ YEBuiltin::~YEBuiltin ()
     while (parm)
     {
 	ycodelist_t *next = parm->next;
-	delete parm->code;
 	delete parm;
 	parm = next;
-    }
-    
-    if (m_parameterblock)
-    {
-	delete m_parameterblock;
     }
 }
 
@@ -1614,7 +1631,7 @@ YEBuiltin::decl () const
 }
 
 
-YBlock *
+YBlockPtr
 YEBuiltin::parameterBlock () const
 {
     return m_parameterblock;
@@ -1703,7 +1720,7 @@ YEBuiltin::returnType () const
 // if type == Unspec (default !), called from stream creation
 
 constTypePtr
-YEBuiltin::attachParameter (YCode *code, constTypePtr type)
+YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
 {
     extern StaticDeclaration static_declarations;
 
@@ -1881,7 +1898,7 @@ YEBuiltin::evaluate (bool cse)
 	}
 	else if (actualp->code->kind() == ycEntry)
 	{
-	    args[i] = ((YConst *)(actualp->code))->value();
+	    args[i] = ((YConstPtr)(actualp->code))->value();
 	}
 	else
 	{
@@ -2047,19 +2064,22 @@ YEBuiltin::type () const
 // ------------------------------------------------------------------
 // function ref (-> SymbolEntry + Parameters)
 
-YEFunction::YEFunction (const SymbolEntry *entry)
+YEFunction::YEFunction (const SymbolEntryPtr entry)
     : YCode (yeFunction)
     , m_entry (entry)
     , m_parameters (0)
 {
+#if DO_DEBUG
+    y2debug ("YEFunction[%p] (%s)", this, entry->toString().c_str());
+#endif
 }
 
 
 YEFunction::YEFunction (std::istream & str)
     : YCode (yeFunction)
+    , m_entry (Bytecode::readEntry (str))
     , m_parameters (0)
 {
-    m_entry = Bytecode::readEntry (str);
     ycodelist_t *last = 0;
     Bytecode::readYCodelist (str, &m_parameters, &last);
 #if DO_DEBUG
@@ -2070,18 +2090,20 @@ YEFunction::YEFunction (std::istream & str)
 
 YEFunction::~YEFunction ()
 {
+#if DO_DEBUG
+    y2debug ("YEFunction::~YEFunction[%p] (%s)", this, m_entry->toString().c_str());
+#endif
     ycodelist_t *parm = m_parameters;
     while (parm)
     {
 	ycodelist_t *next = parm->next;
-	delete parm->code;
 	delete parm;
 	parm = next;
     }
 }
 
 
-const SymbolEntry *
+const SymbolEntryPtr 
 YEFunction::entry() const
 {
     return m_entry;
@@ -2099,7 +2121,7 @@ YEFunction::entry() const
      */
 
 constTypePtr
-YEFunction::attachParameter (YCode *code, constTypePtr type)
+YEFunction::attachParameter (YCodePtr code, constTypePtr type)
 {
 #if DO_DEBUG
     y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
@@ -2172,7 +2194,7 @@ YEFunction::attachParameter (YCode *code, constTypePtr type)
 	}
 	else
 	{
-	    YEVariable *var = (YEVariable *)code;
+	    YEVariablePtr var = (YEVariablePtr)code;
 	    code = new YEReference (var->entry());
 	}
     }
@@ -2255,6 +2277,9 @@ YEFunction::finalize()
 string
 YEFunction::toString() const
 {
+#if DO_DEBUG
+    y2debug ("YEFunction::toString [%p]", this);
+#endif
     string s = m_entry->toString(false);
 
     s += " (";
@@ -2287,7 +2312,7 @@ YEFunction::evaluate (bool cse)
 
     ycodelist_t *actualp = m_parameters;
 
-    YFunction *func = (YFunction *)(m_entry->code());
+    YFunctionPtr func = (YFunctionPtr)(m_entry->code());
 
     if (func == 0
 	&& m_entry->type()->isFunction())
@@ -2305,13 +2330,13 @@ YEFunction::evaluate (bool cse)
 	    return YCPNull();
 	}
 
-	YCode *c = v->asCode()->code();
+	YCodePtr c = v->asCode()->code();
 	if (c->kind() != YCode::ycFunction)
 	{
 	    ycp2error ("Function pointer (%s) points to non-function (%s)", m_entry->toString().c_str(), c->toString().c_str());
 	    return YCPNull();
 	}
-	func = (YFunction *)c;
+	func = (YFunctionPtr)c;
     }
 
     // check for function or function pointer
@@ -2336,7 +2361,7 @@ YEFunction::evaluate (bool cse)
 	    return YCPNull();
 	}
 
-	func = (YFunction *)(value->asCode()->code());
+	func = (YFunctionPtr)(value->asCode()->code());
 #if DO_DEBUG
 	y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
 #endif
@@ -2349,7 +2374,7 @@ YEFunction::evaluate (bool cse)
     }
 
     // push also local parameters
-    YBlock *definition = func->definition ();
+    YBlockPtr definition = func->definition ();
 
     if (definition == 0)
     {
@@ -2357,7 +2382,7 @@ YEFunction::evaluate (bool cse)
 	return YCPNull();
     }
 
-    definition->push_to_stack ();
+    definition->pushToStack ();
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)
     {
@@ -2383,7 +2408,7 @@ YEFunction::evaluate (bool cse)
 	    return value;
 	}
 
-	SymbolEntry *formalp = func->parameter (p);
+	SymbolEntryPtr formalp = func->parameter (p);
 #if DO_DEBUG
 	y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString().c_str());
 #endif
@@ -2395,7 +2420,7 @@ YEFunction::evaluate (bool cse)
     YCPValue value = definition->evaluate ();
 
     // pop also local parameters
-    definition->pop_from_stack ();
+    definition->popFromStack ();
 
     // pop parameter values for recursion
     for (unsigned int p = 0; p < func->parameterCount(); p++)
@@ -2432,8 +2457,11 @@ YEFunction::type () const
 constTypePtr
 YEFunction::wantedParameterType () const
 {
-
-    YFunction *func_f = dynamic_cast<YFunction *> (m_entry->code ());
+    if (m_entry->code ()->kind() != YCode::ycFunction)
+    {
+	return Type::Unspec;
+    }
+    YFunctionPtr func_f = m_entry->code ();
 
     // find out number of already done parameters
     ycodelist_t *actual = m_parameters;
@@ -2449,7 +2477,7 @@ YEFunction::wantedParameterType () const
     }
 
     // returns NULL if actual_count is out of bounds
-    SymbolEntry *param_se = func_f->parameter (actual_count);
+    SymbolEntryPtr param_se = func_f->parameter (actual_count);
 
     // this is for value conversion purposes. if this is an excess
     // parameter, we don't care about the type now since
@@ -2458,13 +2486,17 @@ YEFunction::wantedParameterType () const
     return param_tp;
 }
 
-bool YEFunction::attachParameter (const YCPValue& arg, int pos)
+
+bool
+YEFunction::attachParameter (const YCPValue& arg, int pos)
 {
     ycp2error ("Attaching constant parameter not possible at the given position yet");
     return false;
 }
 
-bool YEFunction::appendParameter (const YCPValue& arg)
+
+bool
+YEFunction::appendParameter (const YCPValue& arg)
 {
     // evil hack - pretend that the actual type is the expected type
     // FIXME
@@ -2498,7 +2530,9 @@ bool YEFunction::appendParameter (const YCPValue& arg)
     return true;
 }
 
-bool YEFunction::finishParameters ()
+
+bool
+YEFunction::finishParameters ()
 {
     // now must check if we got fewer parameters than needed
     constTypePtr err_tp = finalize ();
@@ -2511,7 +2545,9 @@ bool YEFunction::finishParameters ()
     return true;
 }
 
-string YEFunction::qualifiedName () const
+
+string
+YEFunction::qualifiedName () const
 {
     string n = m_entry->nameSpace () ?
 	(m_entry->nameSpace ()->name () + string ("::")) :

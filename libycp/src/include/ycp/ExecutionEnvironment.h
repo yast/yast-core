@@ -10,7 +10,6 @@
  * Authors:
  *   Stanislav Visnovsky <visnov@suse.cz>
  *
- * $Id$
  */
 
 #ifndef _execution_environment_h
@@ -19,10 +18,9 @@
 #include <stack>
 #include <string>
 
-using namespace std;
+#include "ycp/YStatement.h"
 
-class YBlock;
-class YStatement;
+using namespace std;
 
 struct CallFrame;
 
@@ -39,9 +37,8 @@ private:
     int m_linenumber;
     string m_filename;
     bool m_forced_filename;
-    YStatement* m_statement;
+    YStatementPtr m_statement;
     stack<CallFrame*> m_backtrace;
-    stack<YBlock*> m_blocks;
 
 public:
     ExecutionEnvironment () : m_forced_filename (false), m_statement(NULL) {};
@@ -70,27 +67,12 @@ public:
     /**
      * Return the currently evaluated statement.
      */
-    YStatement* statement () const;
+    YStatementPtr statement () const;
 
     /**
      * Set the currently evaluated statement.
      */
-    void setStatement (YStatement* s);
-
-    /**
-     * Return the currently evaluated block. 
-     */
-    YBlock* block () const;
-
-    /**
-     * Set the currently evaluated block.
-     */
-    void pushBlock (YBlock* b);
-    
-    /**
-     * Remove a block from stack after its evaluation.
-     */
-    void popBlock ();
+    void setStatement (YStatementPtr s);
 
     /**
      * Push another call frame to the backtrace stack according to the
