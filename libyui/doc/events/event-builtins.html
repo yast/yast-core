@@ -16,7 +16,7 @@ Author: Stefan Hundhammer
 &lt;<a href="mailto:sh@suse.de?subject=YaST2 Event Handling">sh@suse.de</a>&gt;
 </p>
 
-<h1 align=center><a name="ui_builtins">Event-related UI Builtin Functions</a></h1>
+<h1>Event-related UI Builtin Functions</h1>
 
 <table class="navigation-bar" width=100%>
     <tr>
@@ -346,7 +346,7 @@ any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 	if ( id == <b>`timeout</b> )
 	{
 	    // Periodic screen update
-	    
+
 	    countdown = countdown - 1;
 	    integer seconds_left = countdown * interval_millisec / 1000;
 	    <b>UI::ChangeWidget</b>(`id(`seconds ), `Value, sformat( "%1", seconds_left ) );
@@ -361,6 +361,144 @@ any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 
 
 <h2><a name="WaitForEvent">WaitForEvent()</a></h2>
+
+<p>
+WaitForEvent() is an extended combination of 
+<a href="#UserInput">UserInput()</a> and 
+<a href="#TimeoutUserInput">TimeoutUserInput()</a>: It waits until user input
+is available or until the (millisecond) timeout is expired. 
+It  returns an event map rather than just a simple ID.
+<p>
+In the case of timeout, it returns a map with a
+<a href="event-reference.html#TimeoutEvent">timeout event</a>.
+<p>
+The timeout argument is optional. If it isn't specified, WaitForEvent() 
+(like <a href="#UserInput">UserInput()</a>)
+keeps waiting until user input is available.
+<p>
+Use WaitForEvent() for more fine-grained control of events. It is useful
+primarily to tell the difference between different types of events of the same
+widget - for example, if different actions should be performed upon selecting
+an item in a <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>
+or a <a href="../widgets/YTable-widget.html">Table</a> widget.
+Notice that you still need the 
+<a href="events-general.html#notify">notify option</a>
+to get those events in the first place.
+<p>
+On the downside, using WaitForEvent() means accessing the ID that caused an
+event requires a map lookup.
+
+
+<h3>Usage:</h3>
+<pre class="code">
+map event = <b>UI::WaitForEvent()</b>;
+
+</pre>
+<pre class="code">
+map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
+
+</pre>
+
+<pre class="code">
+// WaitForEvent.ycp
+//
+// Example for common usage of UI::WaitForEvent()
+
+{
+    // Build dialog with a selection box and some buttons.
+    //
+    // Output goes to the log file: ~/.y2log for normal users
+    // or /var/log/YaST2/y2log for root.
+    
+    integer timeout_millisec = 20 * 1000;
+    
+    <b>UI::OpenDialog</b>(
+		   `VBox(
+			 `SelectionBox(`id(`pizza ), `opt(`notify, `immediate ),
+				       "Select your Pi&zza:",
+					[
+					 `item(`id(`napoli 	), "Napoli"      	),
+					 `item(`id(`funghi 	), "Funghi"		),
+					 `item(`id(`salami 	), "Salami"       	),
+					 `item(`id(`prociutto	), "Prosciutto"		),
+					 `item(`id(`stagioni	), "Quattro Stagioni"	),
+					 `item(`id(`chef   	), "A la Chef", true	)
+					 ]
+					),
+			 `HBox(
+			       `PushButton(`id(`ok     ), "&OK" ),
+			       `PushButton(`id(`cancel ), "&Cancel" ),
+			       `HSpacing(),
+			       `PushButton(`id(`details ), "&Details..." )
+			       )
+			 )
+		   );
+
+    <b>map</b> event = $[];
+    any id = nil;
+
+    // Event loop
+    
+    repeat
+    {
+	event = <em>UI::WaitForEvent</em>( timeout_millisec );
+	id    = <b>event["ID"]</b>:nil; // We'll need this often - cache it
+
+	if ( id == `pizza )
+	{
+	    if ( <b>event["EventReason"]</b>:nil == "Activated" )
+	    {
+		// Handle pizza "activate" (double click or space pressed)
+		
+		y2milestone( "Pizza activated" );
+		id = `details;	// Handle as if "Details" button were clicked
+		
+	    }
+	    else if ( <b>event["EventReason"]</b>:nil == "SelectionChanged" )
+	    {
+		// Handle pizza selection change
+		
+		y2milestone( "Pizza selected" );
+	    }
+	}
+
+	if ( id == `details )
+	{
+	    y2milestone( "Show details" );
+	}
+
+	if ( id == <b>`timeout</b> )
+	{
+	    // Handle timeout
+	    
+	    y2milestone( "Timeout detected by ID" );
+	}
+
+	if ( <b>event["EventType"]</b>:nil == "TimeoutEvent" ) // Equivalent
+	{
+	    // Handle timeout
+	    
+	    y2milestone( "Timeout detected by event type" );
+
+	    // Open a popup dialog
+	    
+	    <b>UI::OpenDialog</b>( `VBox(
+				  `Label( "Not hungry?" ),
+				  `PushButton(`opt(`default ), "&OK" ) 
+				  )
+			    );
+	    <b>UI::TimeoutUserInput</b>( 10 * 1000 ); // Automatically close after 10 seconds
+	    <b>UI::CloseDialog()</b>;
+	}
+
+	
+    } until ( id == `ok || id == `cancel );
+
+	
+    <b>UI::CloseDialog()</b>;
+}
+</pre>
+
 
 <table class="navigation-bar" width=100%>
     <tr>
