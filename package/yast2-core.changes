@@ -4,7 +4,7 @@ Fri Feb 28 15:26:15 CET 2003 - sh@suse.de
 - Added optional "floppyDevice" parameter to YPackageSelector widget
 
 -------------------------------------------------------------------
-Fri Feb 28 13:43:49 CET 2003 - kk@suse.de
+Fri Feb 28 13:43:49 CET 2003 - kkaempf@suse.de
 
 - don't treat nl_langinfo() as godsend, they're all lying anyway.
   We return nl_langinfo as a propsed encoding only and set UTF-8
