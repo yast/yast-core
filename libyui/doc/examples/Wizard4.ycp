@@ -24,6 +24,11 @@
     // UI::DumpWidgetTree();
 
     // UI::WizardCommand(`SetVerboseCommands( true ) );
+    
+    UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
+    UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
+    UI::WizardCommand(`SetHelpText( help_text ) );
+
 
     UI::WizardCommand(`AddTreeItem( "", "First Toplevel Item" , "tl1" ) );
     UI::WizardCommand(`AddTreeItem( "", "Second Toplevel Item", "tl2" ) );
@@ -40,19 +45,16 @@
     UI::WizardCommand(`AddTreeItem( "1-2", "First 3rd level "  , "3rd 1" ) );
     UI::WizardCommand(`AddTreeItem( "1-2", "Second 3rd level " , "3rd 2" ) );
 
+    UI::WizardCommand(`SelectTreeItem( "3rd 1" ) );
     
-    UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
-    UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
-    UI::WizardCommand(`SetHelpText( help_text ) );
-
 
     while ( true )
     {
-	any id = UI::UserInput();
+	map event = UI::WaitForEvent();
 
-	y2milestone( "UI::UserInput() returned %1", id );
+	y2milestone( "Got event: %1", event );
 
-	if ( id == `abort )
+	if ( event[ "ID" ]:nil == `abort )
 	    break;
     }
 
