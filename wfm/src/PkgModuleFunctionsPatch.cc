@@ -78,7 +78,7 @@ PkgModuleFunctions::YouStatus ()
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
     InstYou &you = _y2pm.youPatchManager().instYou();
-    PMYouProductPtr product = you.paths()->product();
+    PMYouProductPtr product = you.paths()->primaryProduct();
     
     result->add( YCPString( "product" ), YCPString( product->product() ) );
     result->add( YCPString( "version" ), YCPString( product->version() ) );
