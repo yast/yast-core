@@ -31,6 +31,7 @@ $Id$
 #include "ycp/YCPFloat.h"
 #include "ycp/YCPList.h"
 #include "ycp/YCPMap.h"
+#include "ycp/YCPVoid.h"
 #include "ycp/YExpression.h"
 
 #include "ycp/Bytecode.h"
@@ -1881,8 +1882,7 @@ YEBuiltin::evaluate (bool cse)
 
 	if (args[i].isNull ())
 	{
-	    ycp2error ("Argument (%s) to %s(...) is error", actualp->code->toString().c_str(), m_decl->name);
-	    return YCPNull ();
+	    args[i] = YCPVoid ();
 	}
 
 	y2debug ("==> (%s)", args[i]->toString().c_str());
