@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Thu Sep 30 10:01:27 CEST 2004 - visnov@suse.cz
 
-- log non-existend directory in .target.dir as a milestone only (bug #45573) 
+- log non-existent directory in .target.dir as a milestone only (bug #45573) 
 
 -------------------------------------------------------------------
 Thu Sep 23 18:21:23 CEST 2004 - arvin@suse.de
