@@ -420,7 +420,7 @@ YCPBuiltinMap::YCPBuiltinMap ()
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
 	{ "haskey", "boolean (const map <any,any>, const any)",								    (void *)m_haskey	},
-	{ "mapmap", "map <any,flex> (variable <any>, variable <flex>, const map <any,flex>, const block <map <any, flex>>)",	    (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "mapmap", "map <any,any> (variable <any>, variable <flex>, const map <any,flex>, const block <map <any, any>>)",	    (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "maplist","list <any> (variable <any>, variable <any>, const map <any,any>, const block <any>)",		    (void *)m_maplist,  DECL_LOOP|DECL_SYMBOL },
 	{ "filter", "map <any,flex> (variable <any>, variable <flex>, const map <any,flex>, const block <boolean>)",	    (void *)m_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "union",  "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
