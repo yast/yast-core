@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Oct 15 14:28:06 CEST 2004 - kkaempf@suse.de
+
+- add .probe.bluetooth (#47297)
+
+-------------------------------------------------------------------
 Fri Oct 15 09:06:15 CEST 2004 - visnov@suse.de
 
 - Move Pkg namespace to the pkg-bindings package

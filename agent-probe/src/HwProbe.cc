@@ -305,6 +305,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "redasd",		ITEM(hw_redasd),	pr_null,	0},
 	{ "block",		ITEM(hw_block),		pr_null,	0},
 	{ "tape",		ITEM(hw_tape),		pr_null,	0},
+	{ "bluetooth",		ITEM(hw_bluetooth),	pr_null,	0},
 //not-yet-in-hwinfo	{ "vbe",		ITEM(hw_vbe),		pr_null,	0},
 	{ 0, 0, pr_null, 0 }
     };
