@@ -22,8 +22,9 @@
 
 #include <config.h>
 #include <YCP.h>
-#include <ycp/YCPParser.h>
 #include <ycp/y2log.h>
+
+#include <ycp/YCPMap.h>
 
 #include "ResolverAgent.h"
 
@@ -206,7 +207,7 @@ static int fillCache (const char *filename)
 
 	    y2debug ("list of strings '%s'", lbuf);
 
-	    value = YCPList();
+	    YCPList ret;
 
 	    for (;;) {
 		vptr = lptr;
@@ -215,8 +216,10 @@ static int fillCache (const char *filename)
 		    || (lptr == vptr))
 		    break;
 		*lptr++ = 0;
-		value->asList()->add (YCPString (vptr));
+		ret->add (YCPString (vptr));
 	    }
+	    
+	    value = ret;
 	}
 
 	// single value, but multiple lines allowed
@@ -225,12 +228,12 @@ static int fillCache (const char *filename)
 
 	    y2debug ("multiple lines '%s':'%s'", lbuf, vptr);
 
-	    value = localCache->asMap()->value (key);
+	    value = localCache->value (key);
 	    if (value.isNull())
 		value = YCPList();
 	    lptr = nextWhitespace (vptr);
 	    *lptr = 0;
-	    value->asList()->add (YCPString (vptr));
+	    value = value->asList()->functionalAdd (YCPString (vptr));
 	}
 
 	// single value
@@ -288,7 +291,7 @@ static int flushCache (const char *filename)
         fprintf (f, "### BEGIN INFO\n#\n");
         while (headers[i].key != 0)
 	{
-	    info = localCache->asMap ()->value (YCPString (headers[i].key));
+	    info = localCache->value (YCPString (headers[i].key));
 	    if (info.isNull () || info->isVoid ())
 		y2warning ("Info key %s not found!", headers[i].key);
 	    else
@@ -405,7 +408,7 @@ static int allowedKey (const char *key)
 
 //========================================================================
 
-ResolverAgent::ResolverAgent (const string &fname) : file_name (fname)
+ResolverAgent::ResolverAgent () : file_name ("/etc/resolv.conf")
 {
 }
 
@@ -418,7 +421,7 @@ ResolverAgent::~ResolverAgent ()
 
 
 YCPValue
-ResolverAgent::Read (const YCPPath& path, const YCPValue& arg)
+ResolverAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue& optarg)
 {
     y2debug ("Read(.resolver%s)", path->toString().c_str());
 
@@ -435,7 +438,7 @@ ResolverAgent::Read (const YCPPath& path, const YCPValue& arg)
 }
 
 
-YCPValue
+YCPBoolean
 ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 		      const YCPValue& arg)
 {
@@ -447,7 +450,10 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 	if (value.isNull() || value->isVoid())
 	    return YCPBoolean (flushCache (file_name.c_str ()) == 0);
 	if (!value->isMap())
-	    return YCPError ("Bad value to Write (.resolver)", YCPBoolean (false));
+	{
+	    ycp2error ("Bad value to Write (.resolver)");
+	    return YCPBoolean (false);
+	}
 	localCache = value->asMap();
     }
     else {
@@ -460,12 +466,14 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
                 writeHeader = value->asBoolean ()->value ();
             }
             else
-                return YCPError ("Bad value to Write (.resolver.write_header)",
-				 YCPBoolean (false));
+	    {
+                ycp2error ("Bad value to Write (.resolver.write_header)");
+		return YCPBoolean (false);
+	    }
         }
 	else
-	    return YCPError ("Bad key " + path->component_str(0) +
-			     " for Write(.resolver...)", YCPBoolean (false));
+	    ycp2error ("Bad key %s for Write(.resolver...)", path->component_str(0).c_str ());
+	    return YCPBoolean (false);
     }
 
     cacheDirty = true;
@@ -477,7 +485,7 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
  * Get a list of all subtrees.
  */
 
-YCPValue ResolverAgent::Dir (const YCPPath& path)
+YCPList ResolverAgent::Dir (const YCPPath& path)
 {
     YCPList retval;
 
@@ -491,48 +499,19 @@ YCPValue ResolverAgent::Dir (const YCPPath& path)
     return retval;
 }
 
-
-
-// -------------------------------------------------------------
-// Y2ResolverComponent
-
-YCPValue Y2ResolverComponent::evaluate(const YCPValue& value)
+YCPValue ResolverAgent::otherCommand (const YCPTerm& term)
 {
-    y2debug ("evaluate (%s)", value->toString().c_str());
     string fname = "/etc/resolv.conf";
-    bool new_name = false;
 
-    if (value->isTerm ()) {
-        YCPTerm term = value->asTerm ();
-        string symbol = term->symbol()->symbol();
-        if (symbol == "ResolverAgent" && term->size () == 1) {
-            if (term->value(0)->isString()) {
-                fname = term->value (0)->asString ()->value ();
-                y2debug ("resolving file now: %s", fname.c_str ());
-                if (agent) delete agent;
-                agent = 0;
-                new_name = true;
-            }
+    string symbol = term->name ();
+    if (symbol == "ResolverAgent" && term->size () == 1) {
+	if (term->value(0)->isString()) {
+    	    fname = term->value (0)->asString ()->value ();
+            y2debug ("resolving file now: %s", fname.c_str ());
+	    cacheValid = false;
+	    file_name = fname;
         }
     }
-
-
-    if (!agent) {
-        agent = new ResolverAgent(fname);
-    }
-
-    if (!interpreter) {
-        interpreter = new SCRInterpreter(agent);
-    }
-
-    return new_name ? YCPSymbol ("ag_resolver ()", true) : interpreter->evaluate(value);
+    return term;
 }
 
-
-Y2Component *Y2CCResolver::create(const char *name) const
-{
-    if (!strcmp(name, "ag_resolver")) return new Y2ResolverComponent();
-    else return 0;
-}
-
-Y2CCResolver g_y2ccag_resolver;

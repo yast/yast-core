@@ -21,6 +21,5 @@ y2ag_resolver_LDFLAGS =					\
  	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../src/libpy2ag_resolver.la		\
 	-Xlinker --no-whole-archive
