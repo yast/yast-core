@@ -5,6 +5,7 @@
 htmldir = $(docdir)/agent-losetup/autodocs
 
 html_DATA = index.html $(wildcard *.html)
+
 CLEANFILES = $(html_DATA)
 
 index.html: $(srcdir)/../../src/*.h

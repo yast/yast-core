@@ -1,7 +1,3 @@
 Makefile
 Makefile.in
-DummyAgent.html
-Y2CCDummy.html
-Y2DummyComponent.html
-heir.html
-index.html
+*.html
