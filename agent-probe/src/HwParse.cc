@@ -590,6 +590,438 @@ HwProbe::hd2value (hd_t *hd)
 		out->add (YCPString ("apm_biosflags"), YCPInteger ((info->apm_bios_flags)));
 		out->add (YCPString ("is_pnp_bios"), YCPBoolean ((info->is_pnp_bios)));
 		out->add (YCPString ("lba_support"), YCPBoolean ((info->lba_support)));
+
+		// add SMBIOS info if it is present
+		if (hd_base->smbios)
+		{
+		    // result is a list (there can be multiple components (e.g.
+		    // processor, card slot) present in the system)
+		    YCPList smbioslist;
+		    hd_smbios_t *sm;
+
+		    // cycle through all smbios entries
+		    for(sm = hd_base->smbios; sm; sm = sm->next) {
+			switch(sm->any.type) {
+  			    case sm_biosinfo: {
+				YCPMap biosinfo;
+
+    				if (sm->biosinfo.vendor) biosinfo->add(YCPString("vendor"), YCPString(sm->biosinfo.vendor));
+				if (sm->biosinfo.version) biosinfo->add(YCPString("version"), YCPString(sm->biosinfo.version));
+				if (sm->biosinfo.date) biosinfo->add(YCPString("date"), YCPString(sm->biosinfo.date));
+				biosinfo->add(YCPString("start_address"), YCPInteger(sm->biosinfo.start));
+				biosinfo->add(YCPString("rom_size"), YCPInteger(sm->biosinfo.rom_size));
+				biosinfo->add(YCPString("type"), YCPString("biosinfo"));
+
+				smbioslist->add(biosinfo);
+			    }
+			    break;
+															
+			  case sm_sysinfo: {
+				YCPMap sysinfo;
+				
+				if (sm->sysinfo.manuf) sysinfo->add(YCPString("manufacturer"), YCPString(sm->sysinfo.manuf));
+				if (sm->sysinfo.product) sysinfo->add(YCPString("product"), YCPString(sm->sysinfo.product));
+				if (sm->sysinfo.version) sysinfo->add(YCPString("version"), YCPString(sm->sysinfo.version));
+				if (sm->sysinfo.serial) sysinfo->add(YCPString("serial"), YCPString(sm->sysinfo.serial));
+				if (sm->sysinfo.wake_up.name) sysinfo->add(YCPString("wake_up"), YCPString(sm->sysinfo.wake_up.name));
+				if (sm->sysinfo.wake_up.id) sysinfo->add(YCPString("wake_up_id"), YCPInteger(sm->sysinfo.wake_up.id));
+				sysinfo->add(YCPString("type"), YCPString("sysinfo"));
+
+				smbioslist->add(sysinfo);
+			  }
+			  break;
+
+			  case sm_boardinfo: {
+				YCPMap boardinfo;
+
+				if (sm->boardinfo.manuf) boardinfo->add(YCPString("manufacturer"), YCPString(sm->boardinfo.manuf));
+				if (sm->boardinfo.product) boardinfo->add(YCPString("product"), YCPString(sm->boardinfo.product));
+				if (sm->boardinfo.version) boardinfo->add(YCPString("version"), YCPString(sm->boardinfo.version));
+				if (sm->boardinfo.serial) boardinfo->add(YCPString("serial"), YCPString(sm->boardinfo.serial));
+				if (sm->boardinfo.asset) boardinfo->add(YCPString("asset_tag"), YCPString(sm->boardinfo.asset));
+				if (sm->boardinfo.location) boardinfo->add(YCPString("location"), YCPString(sm->boardinfo.location));
+				boardinfo->add(YCPString("type"), YCPString("boardinfo"));
+
+				smbioslist->add(boardinfo);
+			    }
+			    break;
+															 
+			  case sm_chassis: {
+			      YCPMap chassis;
+
+				if (sm->chassis.manuf) chassis->add(YCPString("manufacturer"), YCPString(sm->chassis.manuf));
+				if (sm->chassis.version) chassis->add(YCPString("version"), YCPString(sm->chassis.version));
+				if (sm->chassis.serial) chassis->add(YCPString("serial"), YCPString(sm->chassis.serial));
+				if (sm->chassis.asset) chassis->add(YCPString("asset_tag"), YCPString(sm->chassis.asset));
+				if (sm->chassis.lock) chassis->add(YCPString("lock_present"), YCPBoolean(true));
+				if (sm->chassis.oem) chassis->add(YCPString("oem_info"), YCPInteger(sm->chassis.oem));
+				if (sm->chassis.ch_type.name) chassis->add(YCPString("chassis_type"), YCPString(sm->chassis.ch_type.name));
+				if (sm->chassis.ch_type.id) chassis->add(YCPString("chassis_type_id"), YCPInteger(sm->chassis.ch_type.id));
+				chassis->add(YCPString("type"), YCPString("chassis"));
+
+				smbioslist->add(chassis);
+			    }
+			    break;
+
+			    case sm_processor: {
+				YCPMap processor;
+				
+				if (sm->processor.socket) processor->add(YCPString("socket"), YCPString(sm->processor.socket));
+				if (sm->processor.upgrade.name) processor->add(YCPString("socket_type"), YCPString(sm->processor.upgrade.name));
+				processor->add(YCPString("socket_status"), YCPString(sm->processor.sock_status ? "Populated" : "Empty"));
+				if (sm->processor.pr_type.name) processor->add(YCPString("processor_type"), YCPString(sm->processor.pr_type.name));
+				if (sm->processor.family.name) processor->add(YCPString("family"), YCPString(sm->processor.family.name));
+				if (sm->processor.manuf) processor->add(YCPString("manufacturer"), YCPString(sm->processor.manuf));
+				if (sm->processor.version) processor->add(YCPString("version"), YCPString(sm->processor.version));
+				if (sm->processor.serial) processor->add(YCPString("serial"), YCPString(sm->processor.serial));
+				if (sm->processor.asset) processor->add(YCPString("asset_tag"), YCPString(sm->processor.asset));
+				if (sm->processor.part) processor->add(YCPString("part_number"), YCPString(sm->processor.part));
+				if (sm->processor.cpu_id) processor->add(YCPString("pocessor_id"), YCPInteger(sm->processor.cpu_id));
+				if (sm->processor.cpu_status.name) processor->add(YCPString("cpu_status"), YCPString(sm->processor.cpu_status.name));
+				if (sm->processor.voltage) processor->add(YCPString("voltage"), YCPFloat(float(sm->processor.voltage) / 10.0));
+				if (sm->processor.ext_clock) processor->add(YCPString("ext_clock"), YCPInteger(sm->processor.ext_clock));
+				if (sm->processor.max_speed) processor->add(YCPString("max_speed"), YCPInteger(sm->processor.max_speed));
+				if (sm->processor.current_speed) processor->add(YCPString("current_speed"), YCPInteger(sm->processor.current_speed));
+				if (sm->processor.l1_cache) processor->add(YCPString("L1_cache_idx"), YCPInteger(sm->processor.l1_cache));
+				if (sm->processor.l2_cache) processor->add(YCPString("L2_cache_idx"), YCPInteger(sm->processor.l2_cache));
+				if (sm->processor.l3_cache) processor->add(YCPString("L3_cache_idx"), YCPInteger(sm->processor.l3_cache));
+				processor->add(YCPString("type"), YCPString("processor"));
+
+				smbioslist->add(processor);
+			    }
+			    break;
+                                                                                                                                
+
+			    case sm_cache: {
+				YCPMap cache;
+				
+				if (sm->cache.socket) cache->add(YCPString("designation"), YCPString(sm->cache.socket));
+				cache->add(YCPString("level"), YCPInteger(sm->cache.level + 1));
+				cache->add(YCPString("state"), YCPString(sm->cache.state ? "Enabled" : "Disabled"));
+				if (sm->cache.mode.name) cache->add(YCPString("mode"), YCPString(sm->cache.mode.name));
+
+				if (sm->cache.location.name) {
+				    cache->add(YCPString("location_id"), YCPInteger(sm->cache.location.id));
+				    cache->add(YCPString("location"), YCPString(sm->cache.location.name));
+				    cache->add(YCPString("socketed"), YCPBoolean(sm->cache.socketed));
+				}
+
+				if (sm->cache.ecc.name) cache->add(YCPString("ecc"), YCPString(sm->cache.ecc.name));
+				if (sm->cache.cache_type.name) cache->add(YCPString("cache_type"), YCPString(sm->cache.cache_type.name));
+				if (sm->cache.assoc.name) cache->add(YCPString("associativity"), YCPString(sm->cache.assoc.name));
+				if (sm->cache.max_size) cache->add(YCPString("max_size"), YCPInteger(sm->cache.max_size));
+				if (sm->cache.current_size) cache->add(YCPString("current_size"), YCPInteger(sm->cache.current_size));
+				if (sm->cache.speed) cache->add(YCPString("speed"), YCPInteger(sm->cache.speed));
+
+				cache->add(YCPString("type"), YCPString("cache"));
+
+				smbioslist->add(cache);
+			    }
+			    break;
+																	    
+			    case sm_connect: {
+				YCPMap connect;
+				
+				if (sm->connect.port_type.name) connect->add(YCPString("port_type"), YCPString(sm->connect.port_type.name));
+				if (sm->connect.i_des) connect->add(YCPString("internal_designator"), YCPString(sm->connect.i_des));
+				if (sm->connect.x_des) connect->add(YCPString("external_designator"), YCPString(sm->connect.x_des));
+				if (sm->connect.i_type.name) connect->add(YCPString("internal_connector"), YCPString(sm->connect.i_type.name));
+				if (sm->connect.x_type.name) connect->add(YCPString("external_connector"), YCPString(sm->connect.x_type.name));
+				connect->add(YCPString("type"), YCPString("port_connector"));
+
+				smbioslist->add(connect);
+			    }
+			    break;
+																		    
+			    case sm_slot: {
+				YCPMap sslot;
+
+				if (sm->slot.desig) sslot->add(YCPString("designation"), YCPString(sm->slot.desig));
+				if (sm->slot.slot_type.name) sslot->add(YCPString("slot_type"), YCPString(sm->slot.slot_type.name));
+				if (sm->slot.bus_width.name) sslot->add(YCPString("bus_width"), YCPString(sm->slot.bus_width.name));
+				if (sm->slot.usage.name) sslot->add(YCPString("status"), YCPString(sm->slot.usage.name));
+				if (sm->slot.length.name) sslot->add(YCPString("length"), YCPString(sm->slot.length.name));
+				sslot->add(YCPString("slot_id"), YCPInteger(sm->slot.id));
+				sslot->add(YCPString("type"), YCPString("system_slot"));
+
+				smbioslist->add(sslot);
+			    }
+			    break;
+
+			    case sm_onboard: {
+				YCPList onboard_devices;
+				
+				for (unsigned int u = 0; u < sm->onboard.dev_len; u++) {
+				    YCPMap onboard_device;
+
+				    onboard_device->add(YCPString("device_type"), YCPString(sm->onboard.dev[u].type.name));
+				    onboard_device->add(YCPString("name"), YCPString(sm->onboard.dev[u].name));
+				    onboard_device->add(YCPString("enabled"), YCPBoolean(sm->onboard.dev[u].status));
+
+				    onboard_devices->add(onboard_device);
+				}
+
+				YCPMap onboard;
+				onboard->add(YCPString("devices"), onboard_devices);
+				onboard->add(YCPString("type"), YCPString("onboard_devices"));
+
+				smbioslist->add(onboard);
+			    }
+			    break;
+																			
+			    case sm_oem: {
+				YCPList oem_strings;
+				for (str_list_t *sl = sm->oem.oem_strings; sl; sl = sl->next) {
+				    oem_strings->add(YCPString(sl->str));
+				}
+
+				YCPMap oemstr;
+				oemstr->add(YCPString("oem_strings"), oem_strings);
+				oemstr->add(YCPString("type"), YCPString("oem_strings"));
+
+				smbioslist->add(oemstr);
+			    }
+			    break;
+
+			    case sm_config: {
+				YCPList config;
+
+				for (str_list_t *sl = sm->config.options; sl; sl = sl->next) {
+				    config->add(YCPString(sl->str));
+				}
+
+				YCPMap conf;
+				conf->add(YCPString("config_options"), config);
+				conf->add(YCPString("type"), YCPString("config_options"));
+
+				smbioslist->add(conf);
+			    }
+			    break;
+																			
+			    case sm_lang: {
+				YCPList langs;
+				YCPMap language;
+				str_list_t *sl;
+				
+				if ((sl = sm->lang.strings)) {
+				    for(; sl; sl = sl->next) {
+				      langs->add(YCPString(sl->str));
+				    }
+
+				    language->add(YCPString("languages"), langs);
+				}
+
+				if (sm->lang.current) language->add(YCPString("current"), YCPString(sm->lang.current));
+				language->add(YCPString("type"), YCPString("language_info"));
+
+				smbioslist->add(language);
+			    }
+			    break;
+
+			    case sm_group: {
+				YCPMap assoc;
+				
+				if (sm->group.name) assoc->add(YCPString("group_name"), YCPString(sm->group.name));
+
+				if (sm->group.items_len) {
+				    YCPList items;
+
+				    for (int i = 0; i < sm->group.items_len; i++) {
+					items->add(YCPInteger(sm->group.item_handles[i]));
+				    }
+
+				    assoc->add(YCPString("items"), assoc);
+				}
+				assoc->add(YCPString("type"), YCPString("group_associations"));
+
+				smbioslist->add(assoc);
+			    }
+			    break;
+                                                                                                                                
+			    case sm_memarray: {
+				YCPMap memarray;
+
+				if (sm->memarray.use.name) memarray->add(YCPString("use"), YCPString(sm->memarray.use.name));
+				if (sm->memarray.location.name) memarray->add(YCPString("location"), YCPString(sm->memarray.location.name));
+				memarray->add(YCPString("slots"), YCPInteger(sm->memarray.slots));
+				if (sm->memarray.max_size) memarray->add(YCPString("max_size"), YCPInteger(sm->memarray.max_size));
+				if (sm->memarray.ecc.name) memarray->add(YCPString("ecc"), YCPString(sm->memarray.ecc.name));
+
+				if (sm->memarray.error_handle != 0xfffe ) {
+				    if (sm->memarray.error_handle != 0xffff) {
+					memarray->add(YCPString("error_handle"), YCPInteger(sm->memarray.error_handle));
+				    }
+				}
+				memarray->add(YCPString("type"), YCPString("memarray"));
+
+				smbioslist->add(memarray);
+			    }
+			    break;
+
+			    case sm_memdevice: {
+				YCPMap memdevice;
+
+				if (sm->memdevice.location) memdevice->add(YCPString("location"), YCPString(sm->memdevice.location));
+				if (sm->memdevice.bank) memdevice->add(YCPString("bank"), YCPString(sm->memdevice.bank));
+				if (sm->memdevice.manuf) memdevice->add(YCPString("manufacturer"), YCPString(sm->memdevice.manuf));
+				if (sm->memdevice.serial) memdevice->add(YCPString("serial"), YCPString(sm->memdevice.serial));
+				if (sm->memdevice.asset) memdevice->add(YCPString("asset_tag"), YCPString(sm->memdevice.asset));
+				if (sm->memdevice.part) memdevice->add(YCPString("part_number"), YCPString(sm->memdevice.part));
+				memdevice->add(YCPString("memory_array"), YCPInteger(sm->memdevice.array_handle));	
+
+				if (sm->memdevice.error_handle != 0xfffe) {
+				    if (sm->memdevice.error_handle != 0xffff) {
+					memdevice->add(YCPString("error_handle"), YCPInteger(sm->memdevice.error_handle));
+				    }
+				}
+
+				if (sm->memdevice.form.name) memdevice->add(YCPString("form_factor"), YCPString(sm->memdevice.form.name));
+				if (sm->memdevice.mem_type.name) memdevice->add(YCPString("mem_type"), YCPString(sm->memdevice.mem_type.name));
+				memdevice->add(YCPString("width"), YCPInteger(sm->memdevice.width));
+				if (sm->memdevice.eccbits) memdevice->add(YCPString("eccbits"), YCPInteger(sm->memdevice.eccbits));
+				memdevice->add(YCPString("size"), YCPInteger(sm->memdevice.size));
+				if (sm->memdevice.speed) memdevice->add(YCPString("speed"), YCPInteger(sm->memdevice.speed));
+				memdevice->add(YCPString("type"), YCPString("memdevice"));
+
+				smbioslist->add(memdevice);
+			    }
+			    break;
+                                                                                                                                
+			    case sm_memerror: {
+				YCPMap memerror;
+				
+				if (sm->memerror.err_type.name) memerror->add(YCPString("err_type"), YCPString(sm->memerror.err_type.name));
+				if (sm->memerror.granularity.name) memerror->add(YCPString("granularity"), YCPString(sm->memerror.granularity.name));
+				if (sm->memerror.operation.name) memerror->add(YCPString("operation"), YCPString(sm->memerror.operation.name));
+				if (sm->memerror.syndrome) memerror->add(YCPString("syndrome"), YCPInteger(sm->memerror.syndrome));
+				
+				if (sm->memerror.array_addr != (1U << 31)) memerror->add(YCPString("array_addr"), YCPInteger(sm->memerror.array_addr));
+				if (sm->memerror.device_addr != (1U << 31)) memerror->add(YCPString("device_addr"), YCPInteger(sm->memerror.device_addr));
+				if (sm->memerror.range != (1U << 31)) memerror->add(YCPString("range"), YCPInteger(sm->memerror.range));
+				memerror->add(YCPString("type"), YCPString("memerror"));
+
+				smbioslist->add(memerror);
+			    }
+			    break;
+																			
+			    case sm_memarraymap: {
+				YCPMap memarraymap;
+				
+				memarraymap->add(YCPString("array_handle"), YCPInteger(sm->memarraymap.array_handle));
+				memarraymap->add(YCPString("part_width"), YCPInteger(sm->memarraymap.part_width));
+
+				memarraymap->add(YCPString("start_addr"), YCPInteger(sm->memarraymap.start_addr));
+				memarraymap->add(YCPString("end_addr"), YCPInteger(sm->memarraymap.end_addr));
+				memarraymap->add(YCPString("type"), YCPString("memarraymap"));
+
+				smbioslist->add(memarraymap);
+			    }
+			    break;
+
+			    case sm_memdevicemap: {
+				YCPMap memdevicemap;
+				
+				memdevicemap->add(YCPString("memdevice_handle"), YCPInteger(sm->memdevicemap.memdevice_handle));
+				memdevicemap->add(YCPString("arraymap_handle"), YCPInteger(sm->memdevicemap.arraymap_handle));
+
+				if (sm->memdevicemap.row_pos != 0xff) memdevicemap->add(YCPString("row"), YCPInteger(sm->memdevicemap.row_pos));
+
+				if (!sm->memdevicemap.interleave_pos || sm->memdevicemap.interleave_pos != 0xff) {
+				    memdevicemap->add(YCPString("interleave_pos"), YCPInteger(sm->memdevicemap.interleave_pos));
+				}
+
+				if(!sm->memdevicemap.interleave_depth || sm->memdevicemap.interleave_depth != 0xff) {
+				    memdevicemap->add(YCPString("interleave_depth"), YCPInteger(sm->memdevicemap.interleave_depth));
+				}
+
+				memdevicemap->add(YCPString("start_addr"), YCPInteger(sm->memdevicemap.start_addr));
+				memdevicemap->add(YCPString("end_addr"), YCPInteger(sm->memdevicemap.end_addr));
+				memdevicemap->add(YCPString("type"), YCPString("memdevicemap"));
+
+				smbioslist->add(memdevicemap);
+			    }
+			    break;
+
+			    case sm_mouse: {
+				YCPMap mouse;
+
+				if (sm->mouse.mtype.name) mouse->add(YCPString("mtype"), YCPString(sm->mouse.mtype.name));
+				if (sm->mouse.interface.name) mouse->add(YCPString("interface"), YCPString(sm->mouse.interface.name));
+				if (sm->mouse.buttons) mouse->add(YCPString("buttons"), YCPInteger(sm->mouse.buttons));
+				mouse->add(YCPString("type"), YCPString("mouse"));
+
+				smbioslist->add(mouse);
+			    }
+			    break;
+																			
+			    case sm_secure: {
+				YCPMap secure;
+				
+				if (sm->secure.power.name) secure->add(YCPString("power"), YCPString(sm->secure.power.name));
+				if (sm->secure.keyboard.name) secure->add(YCPString("keyboard"), YCPString(sm->secure.keyboard.name));
+				if (sm->secure.admin.name) secure->add(YCPString("admin"), YCPString(sm->secure.admin.name));
+				if (sm->secure.reset.name) secure->add(YCPString("reset"), YCPString(sm->secure.reset.name));
+				secure->add(YCPString("type"), YCPString("secure"));
+
+				smbioslist->add(secure);
+			    }
+			    break;
+																			
+			    case sm_power: {
+				YCPMap power;
+				
+				power->add(YCPString("hour"), YCPInteger(sm->power.hour));
+				power->add(YCPString("minute"), YCPInteger(sm->power.minute));
+				power->add(YCPString("second"), YCPInteger(sm->power.second));
+				power->add(YCPString("day"), YCPInteger(sm->power.day));
+				power->add(YCPString("month"), YCPInteger(sm->power.month));
+				power->add(YCPString("type"), YCPString("power"));
+
+				smbioslist->add(power);
+			    }
+			    break;
+                                                                                                                                
+			    case sm_mem64error: {
+				YCPMap mem64error;
+				
+				if (sm->mem64error.err_type.name) mem64error->add(YCPString("err_type"), YCPString(sm->mem64error.err_type.name));
+				if (sm->mem64error.granularity.name) mem64error->add(YCPString("granularity"), YCPString(sm->mem64error.granularity.name));
+				if (sm->mem64error.operation.name) mem64error->add(YCPString("operation"), YCPString(sm->mem64error.operation.name));
+				if (sm->mem64error.syndrome) mem64error->add(YCPString("syndrome"), YCPInteger(sm->mem64error.syndrome));
+
+				if (sm->mem64error.array_addr != (1llu << 63) && sm->mem64error.array_addr != (1ll << 31)) {
+				    mem64error->add(YCPString("array_addr"), YCPInteger(sm->mem64error.array_addr));
+				}
+
+				if (sm->mem64error.device_addr != (1llu << 63) && sm->mem64error.device_addr != (1ll << 31)) {
+				    mem64error->add(YCPString("device_addr"), YCPInteger(sm->mem64error.device_addr));
+				}
+
+				if (sm->mem64error.range != (1u << 31)) mem64error->add(YCPString("range"), YCPInteger(sm->mem64error.range));
+				mem64error->add(YCPString("type"), YCPString("mem64error"));
+
+				smbioslist->add(mem64error);
+			    }
+			    break;
+																			
+			    case sm_end:
+			    break;
+
+			    // unknown type
+			    default: {
+				YCPMap unknown;
+
+				unknown->add(YCPString("type"), YCPString(sm->any.type == sm_inactive ? "inactive" : "unknown"));
+				unknown->add(YCPString("type_id"), YCPInteger(sm->any.type));
+
+				smbioslist->add(unknown);
+			    }
+			    break;
+			}
+		    }
+
+		    out->add (YCPString ("smbios"), smbioslist);
+		}
 	    }
 	    break;
 	    case hd_detail_cpu: {
