@@ -274,6 +274,8 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
+private:
+    void bind ();
 };
 
 

@@ -1105,8 +1105,7 @@ YSTextdomain::YSTextdomain (const string &textdomain, int line)
     : YStatement (ysTextdomain, line)
     , m_domain (textdomain)
 {
-    y2debug ("going to bind a domain %s", m_domain.c_str() );
-    bindtextdomain (m_domain.c_str (), LOCALEDIR);
+    bind ();
 }
 
 
@@ -1127,6 +1126,8 @@ YSTextdomain::YSTextdomain (std::istream & str)
     : YStatement (ysTextdomain, str)
 {
     Bytecode::readString (str, m_domain);
+    
+    bind ();
 }
 
 
@@ -1142,6 +1143,14 @@ YCPValue
 YSTextdomain::evaluate (bool cse)
 {
     return YCPNull();
+}
+
+void
+YSTextdomain::bind ()
+{
+    y2debug ("going to bind a domain %s", m_domain.c_str() );
+    bindtextdomain (m_domain.c_str (), LOCALEDIR);
+    bind_textdomain_codeset (m_domain.c_str (), "UTF-8");
 }
 
 // ------------------------------------------------------------------
