@@ -48,13 +48,9 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   struct RecipientCtl {
     const YCPCallbacks & _ycpcb;
-    bool _inCommitInstall;
-    bool _inCommitRemove;
     public:
       RecipientCtl( const YCPCallbacks & ycpcb_r )
 	: _ycpcb( ycpcb_r )
-	, _inCommitInstall( false )
-	, _inCommitRemove( false )
       {}
       virtual ~RecipientCtl() {}
   };
@@ -224,8 +220,6 @@ namespace Y2PMRecipients {
     virtual void reportend()   {
     }
     virtual void start( const Pathname & filename ) {
-      if ( _control._inCommitInstall )
-	return; // CommitInstall sends CB_StartPackage
       CB callback( ycpcb( YCPCallbacks::CB_StartPackage ) );
       if ( callback._set ) {
 	callback.addStr( filename );
@@ -247,8 +241,6 @@ namespace Y2PMRecipients {
       }
     }
     virtual void stop( PMError error ) {
-      if ( _control._inCommitInstall )
-	return; // CommitInstall sends CB_StartPackage
       CB callback( ycpcb( YCPCallbacks::CB_DonePackage ) );
       if ( callback._set ) {
 	callback.addInt( error );
@@ -273,8 +265,6 @@ namespace Y2PMRecipients {
     virtual void reportend()   {
     }
     virtual void start( const std::string & label ) {
-      if ( _control._inCommitRemove )
-	return; // CommitRemove sends CB_StartPackage
       CB callback( ycpcb( YCPCallbacks::CB_StartPackage ) );
       if ( callback._set ) {
 	callback.addStr( label );
@@ -296,8 +286,6 @@ namespace Y2PMRecipients {
       }
     }
     virtual void stop( PMError error ) {
-      if ( _control._inCommitRemove )
-	return; // CommitRemove sends CB_StartPackage
       CB callback( ycpcb( YCPCallbacks::CB_DonePackage ) );
       if ( callback._set ) {
 	callback.addInt( error );
@@ -382,15 +370,59 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   struct CommitProvideReceive : public Recipient, public Y2PMCallbacks::CommitProvideCallback
   {
-    CommitProvideReceive( RecipientCtl & construct_r ) : Recipient( construct_r ) {}
+    ///////////////////////////////////////////////////////////////////
+    // Redirecting MediaCallbacks::DownloadProgressCallback
+    // to trigger CB_ProgressProvide during CommitProvide.
+    struct RedirectDownloadProgress : public Recipient, public ReportReceive<MediaCallbacks::DownloadProgressCallback>
+    {
+      RedirectDownloadProgress( RecipientCtl & construct_r )
+	: Recipient( construct_r )
+	, ReportReceive<MediaCallbacks::DownloadProgressCallback>( MediaCallbacks::downloadProgressReport )
+      {}
 
+      ProgressCounter _pc;
+
+      virtual void reportbegin() {
+	_pc.reset();
+      }
+      virtual void reportend() {
+      }
+      virtual void start( const Url & url_r, const Pathname & localpath_r ) {
+      }
+      virtual void progress( const ProgressData & prg ) {
+	CB callback( ycpcb( YCPCallbacks::CB_ProgressProvide ) );
+	if ( callback._set ) {
+	  _pc = prg;
+	  if ( _pc.updateIfNewPercent() ) {
+	    // report changed values
+	    callback.addInt( _pc.percent() );
+	    callback.evaluate();
+	  }
+	}
+      }
+      virtual void stop( PMError error ) {
+      }
+    };
+    ///////////////////////////////////////////////////////////////////
+
+    CommitProvideReceive( RecipientCtl & construct_r )
+      : Recipient( construct_r )
+      , _redirect( 0 )
+    {}
+
+    RedirectDownloadProgress * _redirect;
     string _name;
     FSize  _size;
     bool   _isRemote;
 
     virtual void reportbegin() {
+      // redirect MediaCallbacks::downloadProgressReport
+      _redirect = new RedirectDownloadProgress( _control );
     }
     virtual void reportend()   {
+      // restrore MediaCallbacks::downloadProgressReport
+      delete _redirect;
+      _redirect = 0;
     }
     virtual void start( constPMPackagePtr pkg, bool sourcepkg ) {
       // remember values to send on attempt
@@ -415,10 +447,6 @@ namespace Y2PMRecipients {
       }
       return CommitProvideCallback::attempt( cnt ); // return default implementation
     }
-
-#warning CB_ProgressProvide seems to be untriggered
-    // Depends on what YCP expects. We could redirect a media download callback
-    // if YCP does not already use it.
 
     virtual CBSuggest result( PMError error, const Pathname & localpath ) {
       if ( error || _isRemote ) {
@@ -446,18 +474,59 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   struct CommitInstallReceive : public Recipient, public Y2PMCallbacks::CommitInstallCallback
   {
-    CommitInstallReceive( RecipientCtl & construct_r ) : Recipient( construct_r ) {}
+    ///////////////////////////////////////////////////////////////////
+    // Redirecting RpmDbCallbacks::InstallPkgCallback
+    // to triggr progress only
+    struct RedirectInstallPkg : public Recipient, public ReportReceive<RpmDbCallbacks::InstallPkgCallback>
+    {
+      RedirectInstallPkg( RecipientCtl & construct_r )
+        : Recipient( construct_r )
+        , ReportReceive<RpmDbCallbacks::InstallPkgCallback>( RpmDbCallbacks::installPkgReport )
+      {}
 
+      ProgressCounter _pc;
+
+      virtual void reportbegin() {
+	_pc.reset();
+      }
+      virtual void reportend()   {
+      }
+      virtual void start( const Pathname & filename ) {
+      }
+      virtual void progress( const ProgressData & prg ) {
+	CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
+	if ( callback._set ) {
+	  _pc = prg;
+	  if ( _pc.updateIfNewPercent( 5 ) ) {
+	    // report changed values
+	    callback.addInt( _pc.percent() );
+	    callback.evaluate();
+	  }
+	}
+      }
+      virtual void stop( PMError error ) {
+      }
+    };
+    ///////////////////////////////////////////////////////////////////
+
+    CommitInstallReceive( RecipientCtl & construct_r )
+      : Recipient( construct_r )
+      , _redirect( 0 )
+    {}
+
+    RedirectInstallPkg * _redirect;
     string   _name;
     FSize    _size;
     string   _summary;
 
     virtual void reportbegin() {
-      // let InstallPkgCallback send ProgressPackage only. Start/Done is sent here.
-      _control._inCommitInstall = true;
+      // redirect RpmDbCallbacks::installPkgReport
+      _redirect = new RedirectInstallPkg( _control );
     }
     virtual void reportend()   {
-      _control._inCommitInstall = false;
+      // restore RpmDbCallbacks::installPkgReport
+      delete _redirect;
+      _redirect = 0;
     }
     virtual void start( constPMPackagePtr pkg, bool sourcepkg, const Pathname & path ) {
       // remember values to send on attempt
@@ -499,18 +568,59 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   struct CommitRemoveReceive : public Recipient, public Y2PMCallbacks::CommitRemoveCallback
   {
-    CommitRemoveReceive( RecipientCtl & construct_r ) : Recipient( construct_r ) {}
+    ///////////////////////////////////////////////////////////////////
+    // Redirecting RpmDbCallbacks::RemovePkgCallback
+    // to triggr progress only
+    struct RedirectRemovePkg : public Recipient, public ReportReceive<RpmDbCallbacks::RemovePkgCallback>
+    {
+      RedirectRemovePkg( RecipientCtl & construct_r )
+        : Recipient( construct_r )
+        , ReportReceive<RpmDbCallbacks::RemovePkgCallback>( RpmDbCallbacks::removePkgReport )
+      {}
 
+      ProgressCounter _pc;
+
+      virtual void reportbegin() {
+	_pc.reset();
+      }
+      virtual void reportend()   {
+      }
+      virtual void start( const std::string & label ) {
+      }
+      virtual void progress( const ProgressData & prg ) {
+	CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
+	if ( callback._set ) {
+	  _pc = prg;
+	  if ( _pc.updateIfNewPercent( 5 ) ) {
+	    // report changed values
+	    callback.addInt( _pc.percent() );
+	    callback.evaluate();
+	  }
+	}
+      }
+      virtual void stop( PMError error ) {
+      }
+    };
+    ///////////////////////////////////////////////////////////////////
+
+    CommitRemoveReceive( RecipientCtl & construct_r )
+      : Recipient( construct_r )
+      , _redirect( 0 )
+    {}
+
+    RedirectRemovePkg * _redirect;
     string   _name;
     FSize    _size;
     string   _summary;
 
     virtual void reportbegin() {
-      // let RemovePkgCallback send ProgressPackage only. Start/Done is sent here.
-      _control._inCommitRemove = true;
+      // redirect RpmDbCallbacks::removePkgReport
+      _redirect = new RedirectRemovePkg( _control );
     }
     virtual void reportend()   {
-      _control._inCommitRemove = false;
+      // restore RpmDbCallbacks::removePkgReport
+      delete _redirect;
+      _redirect = 0;
     }
     virtual void start( constPMPackagePtr pkg ) {
       // remember values to send on attempt

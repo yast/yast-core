@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Mar 18 20:29:56 CET 2004 - ma@suse.de
+
+- Let Pkg::CommitProvide Callback report progress, if package is
+  downloaded via ftp/http.
+- 2.9.62
+
+-------------------------------------------------------------------
 Wed Mar 17 13:51:41 CET 2004 - mvidner@suse.cz
 
 - include MemUsage.h unconditionally, let *it* (un)define D_MEMUSAGE
@@ -6,7 +13,7 @@ Wed Mar 17 13:51:41 CET 2004 - mvidner@suse.cz
 -------------------------------------------------------------------
 Wed Mar 17 13:02:14 CET 2004 - visnov@suse.cz
 
-- don't pass YCPNull to UI builtins 
+- don't pass YCPNull to UI builtins
 
 -------------------------------------------------------------------
 Tue Mar 16 23:57:59 CET 2004 - ma@suse.de
