@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar  3 18:07:04 CET 2003 - kkaempf@suse.de
+
+- use packagemanager stati when handling selection, so upgrade
+  properly gets required and recommended selections too.
+
+-------------------------------------------------------------------
 Mon Mar  3 14:52:20 CET 2003 - cschum@suse.de
 
 - Allow installation sources for different products from same URL
