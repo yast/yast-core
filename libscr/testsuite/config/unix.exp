@@ -40,7 +40,7 @@ proc scr-run { src } {
   # run the test
 
   set result ""
-  set oops [catch { set result [exec "runscr" "$test_input" ">" "$tmpout_name" "2>" "$tmperr_name" ] } catched]
+  set oops [catch { set result [exec "./runscr" "$test_input" ">" "$tmpout_name" "2>" "$tmperr_name" ] } catched]
 
   if {$oops != 0} {
     fail "test case failed for $base_name: $catched"
