@@ -29,8 +29,6 @@
 #include <PkgModuleCallbacks.YCP.h> // PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
 #include <y2pm/Y2PMCallbacks.h>
-#include <y2pm/InstSrc.h>
-#include <y2pm/InstSrcDescr.h>
 #include <y2pm/InstSrcManager.h>
 
 #include <y2pm/PMPackage.h>
@@ -561,26 +559,24 @@ namespace Y2PMRecipients {
     /**
      *
      **/
-    virtual string changeMedia( constInstSrcPtr instSrc,
-				const string & error,
+    virtual string changeMedia( const string & error,
 				const string & url,
 				const string & product,
 				int current,
-				int expected ) {
+				int expected,
+                                bool doublesided ) {
       CB callback( ycpcb( YCPCallbacks::CB_MediaChange ) );
       if ( callback._set ) {
-	// doublesided media: bool instSrc->descr()->media_doublesided()
-	// may require: #include <y2pm/InstSrc.h>
-	//              #include <y2pm/InstSrcDescr.h>
 	callback.addStr( error );
 	callback.addStr( url );
 	callback.addStr( product );
 	callback.addInt( current );
 	callback.addInt( expected );
-	callback.addBool( instSrc->descr()->media_doublesided() );
+	callback.addBool( doublesided );
 	return callback.evaluateStr();
       }
-      return MediaChangeCallback::changeMedia( instSrc, error, url, product, current, expected );
+      return MediaChangeCallback::changeMedia( error, url, product, current,
+                                               expected, doublesided );
     }
   };
 
