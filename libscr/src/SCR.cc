@@ -31,6 +31,8 @@ $Id$
 
 extern StaticDeclaration static_declarations;
 
+bool SCR::registered = false;
+
 static YCPValue 
 SCRRead3 (const YCPPath &path, const YCPValue &args = YCPNull (), const YCPValue &opt = YCPNull ()) {
     y2debug( "Running SCR::Read on SCR agent %p", SCRAgent::instance() );
@@ -152,5 +154,7 @@ SCR::SCR ()
     };
 
     static_declarations.registerDeclarations ("SCR", declarations);
+    
+    registered = true;
 }
 

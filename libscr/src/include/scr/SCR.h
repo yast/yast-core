@@ -26,6 +26,7 @@ class SCR {
 public:
     SCR ();
 
+    static bool registered;
 };
 
 
