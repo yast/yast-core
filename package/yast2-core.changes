@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Mar 10 17:36:14 CET 2004 - jsrain@suse.de
+
+- probe agent returns additional info for ccw devices
+- moved additional info for scsi devices to "detail" submap
+
+-------------------------------------------------------------------
 Wed Mar 10 15:26:28 CET 2004 - kkaempf@suse.de
 
 - fix whitespace handling in agent-resolver (#34888)

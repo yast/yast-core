@@ -1176,19 +1176,33 @@ HwProbe::hd2value (hd_t *hd)
 		scsi_t *info = hd->detail->scsi.data;
 		if (info)
 		{
+		    YCPMap detail;
 #if defined(__s390__) || defined(__s390x__)
 		    char buf[128];
 		    snprintf (buf, 128, "0x%llx", info->wwpn);
-		    out->add (YCPString ("wwpn"), YCPString (buf));
+		    detail->add (YCPString ("wwpn"), YCPString (buf));
 		    snprintf (buf, 128, "0x%llx", info->fcp_lun);
-		    out->add (YCPString ("fcp_lun"), YCPString (buf));
+		    detail->add (YCPString ("fcp_lun"), YCPString (buf));
 		    if (info->controller_id)
-			out->add (YCPString ("controller_id"), YCPString (info->controller_id));
+			detail->add (YCPString ("controller_id"), YCPString (info->controller_id));
 #endif
-		    out->add (YCPString ("host"), YCPInteger (info->host));
-		    out->add (YCPString ("channel"), YCPInteger (info->channel));
-		    out->add (YCPString ("id"), YCPInteger (info->id));
-		    out->add (YCPString ("lun"), YCPInteger (info->lun));
+		    detail->add (YCPString ("host"), YCPInteger (info->host));
+		    detail->add (YCPString ("channel"), YCPInteger (info->channel));
+		    detail->add (YCPString ("id"), YCPInteger (info->id));
+		    detail->add (YCPString ("lun"), YCPInteger (info->lun));
+		    out->add (YCPString ("detail"), detail);
+		}
+	    }
+	    break;
+	    case hd_detail_ccw: {
+		ccw_t *info = hd->detail->ccw.data;
+		if (info)
+		{
+		    YCPMap detail;
+		    detail->add (YCPString ("lcss"), YCPInteger ((int)info->lcss));
+		    detail->add (YCPString ("cu_model"), YCPInteger ((int)info->cu_model));
+		    detail->add (YCPString ("dev_model"), YCPInteger ((int)info->dev_model));
+		    out->add (YCPString ("detail"), detail);
 		}
 	    }
 	    break;
