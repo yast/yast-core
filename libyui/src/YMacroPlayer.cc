@@ -73,7 +73,7 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 	return;
     }
 
-    if ( parsed->kind() != YCode::yeBlock )
+    if ( !parsed->isBlock() )
     {
 	setError();
 	y2error( "Macro syntax error in file %s - expected YCP block",
@@ -98,21 +98,20 @@ bool YMacroPlayer::finished()
 	y2warning( "Test for error() first before testing finished() !" );
 	return true;
     }
-    else
-    {
-	y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
-		 _nextBlockNo ,_macro->statementCount(),
-		 _nextBlockNo >= _macro->statementCount() ? "true" : "false" );
+    y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
+	      _nextBlockNo ,_macro->statementCount(),
+	      _nextBlockNo >= _macro->statementCount() ? "true" : "false" );
 
-	return _nextBlockNo >= _macro->statementCount();
-    }
+    return _nextBlockNo >= _macro->statementCount();
 }
 
 
 YCPValue YMacroPlayer::evaluateNextBlock()
 {
     if ( error() || finished() )
+    {
 	return YCPNull();
+    }
 
     y2milestone( "Evaluating macro block #%d", _nextBlockNo );
 
