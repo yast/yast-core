@@ -155,7 +155,7 @@ public:
     // pop current list of references from top of m_references
     void closeXRefs ();
 
-    // return the vector of references from to of m_references
+    // return the vector of references from top of m_references
     SymbolEntry *getXRef (unsigned int position) const;
 
     //---------------------------------------------------------------
