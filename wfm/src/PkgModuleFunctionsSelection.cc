@@ -175,7 +175,7 @@ PkgModuleFunctions::SelectionData (YCPList args)
     }
     YCPMap data;
     string name = args->value(0)->asString()->value();
-    y2milestone ("looking up (%s)", name.c_str());
+
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (!selectable)
     {
@@ -186,13 +186,12 @@ PkgModuleFunctions::SelectionData (YCPList args)
     {
 	return YCPError ("Selection '"+name+"' no object", data);
     }
-    y2milestone ("PkgModuleFunctions::SelectionData(%s)", name.c_str());
+
     data->add (YCPString ("summary"), YCPString (selection->summary(_y2pm.getPreferredLocale())));
     data->add (YCPString ("category"), YCPString (selection->category()));
     data->add (YCPString ("visible"), YCPBoolean (selection->visible()));
 
     std::list<std::string> recommends = selection->recommends();
-    y2milestone ("  with (%d) recommends", recommends.size());
     YCPList recommendslist;
     for (std::list<std::string>::iterator sugIt = recommends.begin();
 	sugIt != recommends.end(); ++sugIt)
@@ -203,7 +202,6 @@ PkgModuleFunctions::SelectionData (YCPList args)
     data->add (YCPString ("recommends"), recommendslist);
 
     std::list<std::string> suggests = selection->suggests();
-    y2milestone ("  with (%d) suggests", suggests.size());
     YCPList suggestslist;
     for (std::list<std::string>::iterator sugIt = suggests.begin();
 	sugIt != suggests.end(); ++sugIt)
@@ -262,7 +260,6 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 	    for (std::list<std::string>::const_iterator it = recommends.begin();
 		 it != recommends.end(); ++it)
 	    {
-		y2milestone ("Selecting recommends '%s'", it->c_str());
 		SetSelectionString (*it, true);
 	    }
 	}
