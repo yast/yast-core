@@ -91,6 +91,8 @@ PkgModuleFunctions::TargetFinish (YCPList args)
  * @builtin Pkg::TargetInstall(string name) -> bool
  *
  * install package by name
+ * !! uses callbacks !! 
+ * You should do an 'import "PackageCallbacks"' before !
  */
 YCPValue
 PkgModuleFunctions::TargetInstall(YCPList args)
@@ -100,7 +102,7 @@ PkgModuleFunctions::TargetInstall(YCPList args)
     {
 	return YCPError ("Bad args to Pkg::TargetInstall");
     }
-    PMError err = _y2pm.installFile (args->value(0)->asString()->value());
+    PMError err = _y2pm.installFile (Pathname (args->value(0)->asString()->value()));
     return YCPBoolean (!err);
 }
 
@@ -110,6 +112,8 @@ PkgModuleFunctions::TargetInstall(YCPList args)
  * @builtin Pkg::TargetRemove(string name) -> bool
  *
  * install package by name
+ * !! uses callbacks !! 
+ * You should do an 'import "PackageCallbacks"' before !
  */
 YCPValue
 PkgModuleFunctions::TargetRemove(YCPList args)
@@ -226,7 +230,7 @@ PkgModuleFunctions::TargetUpdateInf (YCPList args)
 
     YCPMap retmap;
     retmap->add (YCPString ("basesystem"), YCPString (parser.basesystem()));
-    retmap->add (YCPString ("distname"), YCPString (parser.distversion()));
+    retmap->add (YCPString ("distname"), YCPString (parser.distname()));
     retmap->add (YCPString ("distversion"), YCPString (parser.distversion()));
     retmap->add (YCPString ("distrelease"), YCPString (parser.distrelease()));
     retmap->add (YCPString ("ftppatch"), YCPString (parser.ftppatch()));
@@ -241,3 +245,37 @@ PkgModuleFunctions::TargetUpdateInf (YCPList args)
     return retmap;
 }
 
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetProducts () -> list
+ *
+ * return list of maps of all installed products in reverse
+ * installation order (product installed last comes first)
+ */
+
+YCPValue
+PkgModuleFunctions::TargetProducts (YCPList args)
+{
+    YCPList prdlist;
+    std::list<constInstSrcDescrPtr> products = _y2pm.instTarget().getProducts();
+    for (std::list<constInstSrcDescrPtr>::const_iterator it = products.begin();
+	 it != products.end(); ++it)
+    {
+	prdlist->add(Descr2Map (*it));
+    }
+    return prdlist;
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetRebuildDB () -> bool
+ *
+ * call "rpm --rebuilddb"
+ */
+
+YCPValue
+PkgModuleFunctions::TargetRebuildDB (YCPList args)
+{
+    _y2pm.instTarget().bringIntoCleanState();
+    return YCPBoolean (true);
+}

@@ -31,6 +31,8 @@
 #include <ycp/YCPList.h>
 #include <ycp/YCPInterpreter.h>
 
+#include <y2pm/InstSrcDescrPtr.h>
+
 /**
  * A simple class for package management access
  */
@@ -61,6 +63,8 @@ class PkgModuleFunctions
 	bool SetSelectionString (std::string name);
 	bool DoProvideString (std::string name);
 	bool DoRemoveString (std::string name);
+
+	YCPMap Descr2Map (constInstSrcDescrPtr descr);
 
 	// if startCachedSources was called already
 	bool _cache_started;
@@ -93,16 +97,19 @@ class PkgModuleFunctions
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvideFile (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
+	YCPValue SourceProduct (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
 	YCPValue TargetFinish (YCPList args);
-	YCPValue TargetInstall (YCPList args);
-	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetLogfile (YCPList args);
 	YCPValue TargetCapacity (YCPList args);
 	YCPValue TargetUsed (YCPList args);
 	YCPValue TargetUpdateInf (YCPList args);
+	YCPValue TargetInstall (YCPList args);
+	YCPValue TargetRemove (YCPList args);
+	YCPValue TargetProducts (YCPList args);
+	YCPValue TargetRebuildDB (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);
@@ -128,6 +135,8 @@ class PkgModuleFunctions
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);
 	YCPValue PkgUpdateAll (YCPList args);
+	YCPValue PkgAnyToDelete (YCPList args);
+	YCPValue PkgAnyToInstall (YCPList args);
 
 	YCPValue PkgInstall (YCPList args);
 	YCPValue PkgDelete (YCPList args);

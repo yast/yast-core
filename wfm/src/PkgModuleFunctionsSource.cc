@@ -471,3 +471,21 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
     }
     return YCPBoolean (true);
 }
+
+
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceProduct (integer source_id) -> map
+ *
+ * return $["product" : string, "vendor" : string ]
+ */
+
+YCPValue
+PkgModuleFunctions::SourceProduct (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+    return Descr2Map (source_id->descr());
+}
+

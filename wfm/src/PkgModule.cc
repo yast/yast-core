@@ -94,6 +94,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SaveState")		return SaveState (args);
     else if (function == "RestoreState")	return RestoreState (args);
     else if (function == "PkgUpdateAll")	return PkgUpdateAll (args);
+    else if (function == "PkgAnyToDelete")	return PkgAnyToDelete (args);
+    else if (function == "PkgAnyToInstall")	return PkgAnyToInstall (args);
 
     else if (function == "PkgInstall")		return PkgInstall (args);
     else if (function == "PkgDelete")		return PkgDelete (args);
@@ -130,6 +132,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetCapacity")	return TargetCapacity (args);
     else if (function == "TargetUsed")		return TargetUsed (args);
     else if (function == "TargetUpdateInf")	return TargetUpdateInf (args);
+    else if (function == "TargetProducts")	return TargetProducts (args);
+    else if (function == "TargetRebuildDB")	return TargetRebuildDB (args);
     // source related functions
     else if (function == "SourceCreate")	return SourceCreate (args);
     else if (function == "SourceStartCache")	return SourceStartCache (args);
@@ -139,6 +143,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
-    else if (function == "SourceCacheCopyTo") return SourceCacheCopyTo (args);
+    else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
+    else if (function == "SourceProduct")	return SourceProduct (args);
     return YCPError (string ("Undefined Pkg::")+function);
 }

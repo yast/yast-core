@@ -374,7 +374,7 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 	return YCPVoid();
     }
 
-    return YCPString (package->edition().toString());
+    return YCPString (package->edition().asString());
 }
 
 // ------------------------
@@ -443,6 +443,32 @@ YCPValue
 PkgModuleFunctions::IsManualSelection (YCPList args)
 {
     return YCPBoolean (_y2pm.packageManager().anythingByUser());
+}
+
+// ------------------------
+/**
+   @builtin Pkg::PkgAnyToDelete () -> bool
+
+   return true if any packages are to be deleted
+
+*/
+YCPValue
+PkgModuleFunctions::PkgAnyToDelete (YCPList args)
+{
+    return YCPBoolean (_y2pm.packageManager().anythingToDelete ());
+}
+
+// ------------------------
+/**
+   @builtin Pkg::AnyToInstall () -> bool
+
+   return true if any packages are to be installed
+
+*/
+YCPValue
+PkgModuleFunctions::PkgAnyToInstall (YCPList args)
+{
+    return YCPBoolean (_y2pm.packageManager().anythingToInstall ());
 }
 
 // ------------------------

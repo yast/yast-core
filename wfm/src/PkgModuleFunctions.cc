@@ -22,6 +22,7 @@
 #include <ycp/y2log.h>
 #include <PkgModuleFunctions.h>
 
+#include <y2pm/InstSrcDescr.h>
 #include <y2pm/InstSrcManager.h>
 #include <y2pm/InstSrcDescr.h>
 #include <ycp/YCPError.h>
@@ -150,3 +151,21 @@ PkgModuleFunctions::GetAdditionalLocales (YCPList args)
     }
     return langycplist;
 }
+
+
+/** ------------------------
+   convert constInstSrcDescrPtr to YCPMap
+ */
+
+YCPMap
+PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
+{
+    YCPMap map;
+
+    map->add (YCPString ("product"), YCPString (PkgNameEd::toString(descr->content_product())));
+    map->add (YCPString ("vendor"), YCPString (descr->content_vendor()));
+    map->add (YCPString ("requires"), YCPString (descr->content_requires().asString()));
+    return map;
+}
+
+
