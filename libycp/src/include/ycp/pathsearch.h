@@ -138,9 +138,17 @@ public:
 
     /**
      * prepends a path to the search list
-     * @param path
+     * @param kind, kind of files to find in path
+     * @param path, string path to directory
      */
     static void addPath (Kind kind, const string& path);
+
+    /**
+     * clears the specified search list
+     * @param kind, kind fo pathes to clear
+     * used for '--nostdmodules' and '--nostdincludes' in ycpc
+     */
+    static void clearPathes (Kind kind);
 
     /**
      * Initializes the search paths if not done already.

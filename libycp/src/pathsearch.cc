@@ -69,12 +69,21 @@ Y2PathSearch::searchPath (WHAT what, int level)
 
 	for (int i = 0; i < NUM_LEVELS; i++)
 	{
-	    if (strcmp (paths[i], "HOME") == 0 && home)
+	    if (home
+		&& strcmp (paths[i], "HOME") == 0)
+	    {
 		my_paths[i] = string (home) + "/.yast2";
-	    else if (strcmp (paths[i], "Y2DIR") == 0 && y2dir)
+	    }
+	    else if (y2dir
+		     && (strcmp (paths[i], "Y2DIR") == 0)
+		     && (strcmp (YAST2DIR, y2dir) != 0))		// prevent path duplication
+	    {
 		my_paths[i] = string (y2dir);
+	    }
 	    else
+	    {
 		my_paths[i] = string (paths[i]);
+	    }
 	}
     }
 
@@ -82,21 +91,30 @@ Y2PathSearch::searchPath (WHAT what, int level)
     {
 	case EXECCOMP:
 	    if (level == NUM_LEVELS - 1) // FIXME
+	    {
 		return EXECCOMPDIR;
+	    }
 	    else
+	    {
 		return my_paths[level];
-	    break;
+	    }
+	break;
 
 	case PLUGIN:
 	    if (level == NUM_LEVELS - 1) // FIXME
+	    {
 		return PLUGINDIR;
+	    }
 	    else
+	    {
 		return my_paths[level] + "/plugin";
-	    break;
+	    }
+	break;
 
 	default:
-	    return my_paths[level];
+	break;
     }
+    return my_paths[level];
 }
 
 
@@ -125,7 +143,9 @@ Y2PathSearch::findy2 (string filename, int mode, int level)
 	if (pathname[pathname.length()-1] != '/') pathname += "/";
 	pathname = completeFilename (pathname + filename);
 	if (access (pathname.c_str(), mode) == 0)
+	{
 	    return pathname;
+	}
     }
     return "";
 }
@@ -154,7 +174,9 @@ Y2PathSearch::findy2exe (string root, string compname, bool server,
 	// Check at least if it is executable (for others) and
 	// if it is a regular file.
 	if (S_ISREG (buf.st_mode) && buf.st_mode & S_IXOTH == S_IXOTH)
+	{
 	    return pathname;
+	}
     }
 
     return "";
@@ -174,7 +196,9 @@ Y2PathSearch::findy2plugin (string name, int level)
     if (stat (filename.c_str (), &buf) == 0)
     {
 	if (S_ISREG (buf.st_mode))
+	{
 	    return filename;
+	}
     }
     return "";
 }
@@ -186,7 +210,9 @@ Y2PathSearch::defaultComponentLevel ()
     for (int i = 0; i < NUM_LEVELS; i++)
     {
 	if (searchPath (GENERIC, i) == YAST2DIR)
+	{
 	    return i;
+	}
     }
     /* NOTREACHED */
     return NUM_LEVELS - 1;
@@ -200,7 +226,9 @@ Y2PathSearch::currentComponentLevel ()
     int current_level = defaultComponentLevel ();
     char *levelstring = getenv ("Y2LEVEL");
     if (levelstring)
+    {
 	current_level = atoi (levelstring);
+    }
     return current_level;
 }
 
@@ -248,7 +276,9 @@ YCPPathSearch::find (Kind kind, const string& name)
 	&& name[1] == '/')
     {
 	if (access (name.c_str(), R_OK) == 0)
+	{
 	    return name;
+	}
 	return "";
     }
 
@@ -295,5 +325,23 @@ YCPPathSearch::findModule (string name, bool the_source)
 void
 YCPPathSearch::addPath (Kind kind, const string& path)
 {
+    std::list<std::string>::iterator it = searchList[kind].begin();
+    while (it != searchList[kind].end())
+    {
+	if (*it == path)
+	{
+	    return;					// already in list, drop duplicate
+	}
+	it++;
+    }
     searchList[kind].push_front (path);
 }
+
+
+void
+YCPPathSearch::clearPathes (Kind kind)
+{
+    searchList[kind].clear();
+}
+
+// EOF
