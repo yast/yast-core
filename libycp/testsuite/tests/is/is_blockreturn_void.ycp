@@ -1,0 +1,4 @@
+// useless test. ``{return;} == {return;} == nil, and nil matches void
+{
+   return is (``{ return; }, void) == true;
+}

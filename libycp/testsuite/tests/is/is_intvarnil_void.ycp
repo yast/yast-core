@@ -1,0 +1,4 @@
+{
+    integer i = nil;
+    return is (i, void) == true;
+}

@@ -1,3 +1,4 @@
+// does passing as function parameter influence the type ? No !
 {
   any a = $["foo": ["bar"]];
 
@@ -6,5 +7,5 @@
       return is (a, map<string, list<string> >);
   }
 
-  return checkmap (a);
+  return is (a, map <string, list <string> >) == checkmap (a);
 }

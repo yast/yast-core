@@ -1431,16 +1431,23 @@ YCPValue
 YEIs::evaluate (bool cse)
 {
 #if DO_DEBUG
-    y2debug ("YEIs::evaluate (%s)", toString().c_str());
+    y2debug ("YEIs::evaluate (%s)%s", toString().c_str(), cse ? "<cse>" : "");
 #endif
-    YCPValue value = m_expr->evaluate (cse);
+
+    YCPValue value = m_expr->evaluate (cse);		// evaluate the value
+
     if (value.isNull())
     {
-	ycp2error ("'is()' expression evaluates to nil.");
-	return YCPBoolean (false);
+	if (!cse)					// thats an error at runtime
+	{
+	    ycp2error ("'is()' expression evaluates to nil.");
+	}
+	return value;
     }
-    constTypePtr value_type;
-    if (value->isCode())
+
+    constTypePtr value_type;				// now determine the values type
+
+    if (value->isCode())				// value is YCode
     {
 	YCodePtr code = value->asCode()->code();
 	
@@ -1455,18 +1462,18 @@ YEIs::evaluate (bool cse)
 	    value_type = code->type ();
 	}
     }
-    else if (value->isReference ())
+    else if (value->isReference ())			// value is Reference
     {
 	value_type = value->asReference ()->entry ()->type ();
     }
-    else
+    else						// value is constant (YCPValue)
     {
-	value_type = Type::vt2type (value->valuetype());
+        return YCPBoolean (m_type->matchvalue (value) >= 0);
     }
-#if DO_DEBUG
-    y2debug ("YEIs::evaluate (value '%s', value_type '%s', expected_type '%s')", toString().c_str(), value_type->toString().c_str(), m_type->toString().c_str());
-#endif
-    return YCPBoolean (m_type->match (value_type) >= 0);
+
+    // allow full or propagated match
+
+    return YCPBoolean (value_type->match (m_type) >= 0);
 }
 
 

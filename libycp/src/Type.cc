@@ -20,6 +20,8 @@
 #include "ycp/y2log.h"
 #include "ycp/Type.h"
 #include "ycp/Bytecode.h"
+#include "ycp/YCPMap.h"		// for YCPMapIterator
+#include "ycp/YCPCode.h"	// for YT_Code in matchvalue()
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
@@ -257,10 +259,11 @@ Type::match (constTypePtr expected) const
 #if DO_DEBUG
     y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 #endif
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
     if (basematch (expected) < 0)
     {
 #if DO_DEBUG
-//	y2debug ("basematch failed");
+	y2debug ("basematch failed");
 #endif
 	return -1;
     }
@@ -274,7 +277,7 @@ Type::match (constTypePtr expected) const
 	|| ek == UnspecT)			// list == list<unspec>
     {
 #if DO_DEBUG
-//	y2debug ("free match");
+	y2debug ("free match");
 #endif
 	return 0;
     }
@@ -303,6 +306,136 @@ Type::match (constTypePtr expected) const
 	return (ek == LocaleT) ? 0 : -1;
     }
     return -1;
+}
+
+
+int
+Type::matchvalue (YCPValue value) const
+{
+#if DO_DEBUG
+    y2debug ("matchvalue type '%s', value '%s'", toString().c_str(), value.isNull()?"NULL":value->toString().c_str());
+#endif
+    y2debug ("matchvalue type '%s'[%d], value '%s'[%d]", toString().c_str(), m_kind, value.isNull()?"NULL":value->toString().c_str(), value.isNull()?-1:value->valuetype());
+
+    if (value.isNull()) return -1;			// error value
+
+    if (isAny()) return 0;				// type 'any' matches any value
+
+    int m = -1;
+
+    switch (value->valuetype())
+    {
+	case YT_VOID:
+	    m = 0;					// value 'nil' matches any type
+	break;
+	case YT_BOOLEAN:
+	    if (isBoolean ()) m = 0;
+	break;
+	case YT_INTEGER:
+	    if (isInteger ()) m = 0;
+	break;
+	case YT_FLOAT:
+	    if (isFloat ()) m = 0;
+	break;
+	case YT_STRING:
+	    if (isString ()) m = 0;
+	break;
+	case YT_BYTEBLOCK:
+	    if (isByteblock ()) m = 0;
+	break;
+	case YT_PATH:
+	    if (isPath ()) m = 0;
+	break;
+	case YT_SYMBOL:
+	    if (isSymbol ()) m = 0;
+	break;
+	case YT_TERM:
+	    if (isTerm ()) m = 0;
+	break;
+	case YT_LIST:
+	{
+	    if (!isList()) break;
+
+	    m = 0;
+
+	    constTypePtr type = this;
+	    constTypePtr element_type = ((constListTypePtr)type)->type();
+	    y2debug ("isList, element_type '%s'", element_type->toString().c_str());
+	    if (element_type->isAny()			// list<any>
+		|| element_type->isUnspec())		// list
+	    {
+		break;					// -> match
+	    }
+
+	    // check every list element
+	    YCPList lvalue = value->asList();
+	    for (int i = 0; i < lvalue->size(); i++)
+	    {
+		YCPValue evalue = lvalue->value (i);	// get list element value
+		y2debug ("evalue '%s'", evalue->toString().c_str());
+		if (element_type->matchvalue (evalue) < 0)
+		{
+		    y2debug ("Foul");
+		    m = -1;
+		    break;
+		}
+	    }
+	}
+	break;
+	case YT_MAP:
+	{
+	    if (!isMap()) break;
+
+	    m = 0;
+
+	    constTypePtr type = this;
+	    constTypePtr key_type = ((constMapTypePtr)type)->keytype();
+	    constTypePtr element_type = ((constMapTypePtr)type)->valuetype();
+	    y2debug ("isMap, key_type '%s', element_type '%s'", key_type->toString().c_str(), element_type->toString().c_str());
+	    if (element_type->isAny()			// map<keytype, any>
+		|| element_type->isUnspec())		// map
+	    {
+		break;					// -> match
+	    }
+
+	    // check every map element
+	    YCPMap mvalue = value->asMap();
+	    for (YCPMapIterator i = mvalue->begin(); i != mvalue->end(); i++)
+	    {
+		YCPValue kvalue = i.key();			// get map key value
+		YCPValue evalue = i.value();			// get map element value
+		y2debug ("kvalue '%s', evalue '%s'", kvalue->toString().c_str(), evalue->toString().c_str());
+		if (key_type->matchvalue (kvalue) < 0)
+		{
+		    y2debug ("Key has bad type");
+		    m = -1;
+		    break;
+		}
+		if (element_type->matchvalue (evalue) < 0)
+		{
+		    y2debug ("Value has bad type");
+		    m = -1;
+		    break;
+		}
+	    }
+	}
+	break;
+	case YT_CODE:					// ``{ ... }
+	{
+	    YCPCode ycpcode = value->asCode();
+	    y2debug ("Code (%s)", ycpcode->toString().c_str());
+	}
+	break;
+	case YT_RETURN:					// { return; }
+	{
+	    m = 0;					// -> evaluates to 'nil' -> matches every type
+	}
+	break;
+	default:
+	break;
+    }
+    y2debug ("matchvalue -> %d", m);
+    return m;
 }
 
 

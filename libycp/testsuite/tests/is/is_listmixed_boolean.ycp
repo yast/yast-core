@@ -1,0 +1,3 @@
+{
+   return is ([true, 8], list<boolean>) == false;
+}

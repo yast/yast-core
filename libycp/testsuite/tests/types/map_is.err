@@ -9,6 +9,6 @@ Parsed:
 {
     return is (a, map <string, list <string>>);
 }
-    return checkmap (a);
+    return (is (a, map <string, list <string>>) == checkmap (a));
 }
 ----------------------------------------------------------------------

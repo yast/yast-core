@@ -22,33 +22,29 @@ Parsed:
     return _("%1 linux system installed", "%1 linux systems installed", (40 + 2));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/values/Locale.ycp:27 Warning: Superfluous 'is()' expression, type is known:
-[Scanner] tests/values/Locale.ycp:27 Warning: locale
-[Scanner] tests/values/Locale.ycp:30 Warning: Superfluous 'is()' expression, type is known:
-[Scanner] tests/values/Locale.ycp:30 Warning: locale
 Parsed:
 ----------------------------------------------------------------------
 {
-    // locale a
-    // locale b
+    // string a
+    // locale al
+    // string b
+    // locale bl
     // filename: "tests/values/Locale.ycp"
     textdomain "textdomain";
-    locale a = _("abc");
-    if (false)
-    return a;
-    locale b = _("abc", "def", 42);
-    if (false)
-    return b;
-    return _("Ok");
+    string a = _("abc");
+    locale al = a;
+    string b = _("def", "abc", 42);
+    locale bl = b;
+    return (a == bl);
 }
 ----------------------------------------------------------------------
-[Parser] tests/values/Locale.ycp:35 No textdomain defined
+[Parser] tests/values/Locale.ycp:33 No textdomain defined
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
-[Interpreter] tests/values/Locale.ycp:35 Parser error
-[Scanner] tests/values/Locale.ycp:40 Warning: Empty locale constant
+[Interpreter] tests/values/Locale.ycp:33 Parser error
+[Scanner] tests/values/Locale.ycp:38 Warning: Empty locale constant
 Parsed:
 ----------------------------------------------------------------------
 {

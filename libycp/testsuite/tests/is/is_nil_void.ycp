@@ -1,0 +1,3 @@
+{
+    return is (nil, void) == true;
+}

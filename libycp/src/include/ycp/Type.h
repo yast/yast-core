@@ -204,6 +204,12 @@ public:
     virtual int match (constTypePtr expected) const;
 
     /**
+     * check match with value
+     * <0: no match, ==0: full match, >0: propagated match
+     */
+    virtual int matchvalue (YCPValue value) const;
+
+    /**
      * check, if the type can be casted (at runtime considered
      * to be - similar to dynamic_cast) to another type
      */

@@ -23,13 +23,11 @@
 { // string -> locale propagation
   textdomain "textdomain";
 
-  locale a = _("abc");
-  if (!is (a, locale))
-	return a;
-  locale b = _("abc", "def", 42);
-  if (!is (b, locale))
-	return b;
-  return _("Ok");
+  string a = _("abc");
+  locale al = a;
+  string b = _("def", "abc", 42);
+  locale bl = b;
+  return a == bl;
 }
 
 (_("Error, no textdomain defined"))

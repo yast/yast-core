@@ -1,0 +1,5 @@
+{
+    list l1 = ["1", "11"];
+
+    return is (l1, list<string> ) == true;
+}

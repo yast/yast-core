@@ -599,28 +599,8 @@ compact_expression:
 		    $$.t = 0;
 		    break;
 		}
-
-		if ( ($3.t->isAny () || $3.t->isUnspec ()) // expression type unknown
-			 && !$5.t->isVoid())	//   and checked type known
-		{
-		    $$.c = new YEIs ($3.c, $5.t);
-		    $$.t = Type::Boolean;
-		}
-		else
-		{
-		    yywarning ("Superfluous 'is()' expression, type is known:", $1.l);
-		    yywarning ($3.t->toString().c_str(), $3.l);
-		    // is (<expr>, any) only evalutes to true if <expr> is also any
-		    //   match() can't be used in this case since any->match(<expr>) would return true
-		    // is (void, <type>) only evalutes to true if <type> is also void
-		    //   match() can't be used in this case since type->match(void) would return true (type always accepts nil)
-		    $$.c = new YConst (YCode::ycBoolean, YCPBoolean ($5.t->isAny()
-								     ? $3.t->isAny()
-								     : ($3.t->isVoid()
-									? $5.t->isVoid()
-									: $3.t->match ($5.t) == 0)));
-		    $$.t = Type::Boolean;
-		}
+		$$.c = new YEIs ($3.c, $5.t);
+		$$.t = Type::Boolean;
 		$$.l = $1.l;
 	    }
 |	TEXTDOMAIN

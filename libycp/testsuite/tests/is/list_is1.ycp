@@ -1,0 +1,5 @@
+{
+    any a = ["1", "11"];
+
+    return is (a, list<string> ) == true;
+}

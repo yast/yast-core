@@ -18,7 +18,7 @@
   v_integer = nil;
 
   return ([v_integer == 0, v_integer == nil, is (v_integer, void), is (v_integer, integer) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -26,7 +26,7 @@
   v_boolean = nil;
 
   return ([v_boolean == false, v_boolean == nil, is (v_boolean, void), is (v_boolean, boolean) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -34,7 +34,7 @@
   v_float = nil;
 
   return ([v_float == 0.0, v_float == nil, is (v_float, void), is (v_float, float) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -42,7 +42,7 @@
   v_symbol = nil;
 
   return ([v_symbol == `nil, v_symbol == nil, is (v_symbol, void), is (v_symbol, symbol) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -50,7 +50,7 @@
   v_string = nil;
 
   return ([v_string == "", v_string == nil, is (v_string, void), is (v_string, string) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -59,7 +59,7 @@
   v_locale = nil;
 
   return ([v_locale == _(""), v_locale == nil, is (v_locale, void), is (v_locale, locale) ]
-	  == [false, true, false, true]);
+	  == [false, true, true, true]);
 }
 
 {
@@ -67,7 +67,7 @@
   v_list = nil;
 
   return ([v_list == [], v_list == nil, size (v_list) == 0, is (v_list, void), is (v_list, list) ]
-	  == [false, true, true, false, true]);
+	  == [false, true, true, true, true]);
 }
 
 {
@@ -75,7 +75,7 @@
   v_map = nil;
 
   return ([v_map == $[], v_map == nil, size (v_map) == 0, is (v_map, void), is (v_map, map) ]
-	  == [false, true, true, false, true]);
+	  == [false, true, true, true, true]);
 }
 // #13263:
 {

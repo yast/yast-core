@@ -1,0 +1,4 @@
+{
+    integer i = 42;
+    return is (i, integer) == true;
+}

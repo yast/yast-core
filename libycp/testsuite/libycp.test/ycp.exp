@@ -3,11 +3,11 @@
 # 'main' file for all ycp tests
 #
 
-set directories { builtin errors expressions includes modules scope statements types values }
+set directories { builtin errors expressions includes is modules scope statements types values }
 
 
 # original line
-#set directories { builtin errors expressions includes modules scope statements types values }
+#set directories { builtin errors expressions includes is modules scope statements types values }
 
 # compile the modules first
 foreach file [get-files $srcdir/tests/ Module "ycp" ] {

@@ -1,0 +1,19 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean f (block <integer> bi)
+    // filename: "tests/is/is_blockreturn42_blockinteger.ycp"
+    boolean f (block <integer> bi)
+{
+    y2milestone ("called");
+    return is (bi, block <integer>);
+}
+    return (f ({
+    y2milestone ("calling");
+    return 42;
+}
+) == false);
+}
+----------------------------------------------------------------------
+[YCP] tests/is/is_blockreturn42_blockinteger.ycp:7 calling
+[YCP] tests/is/is_blockreturn42_blockinteger.ycp:4 called

@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, list <string>> m1
+    // map m2
+    // any m3
+    // list <boolean> result1
+    // boolean Check (any m)
+    // list <boolean> result2
+    // filename: "tests/is/complex_is.ycp"
+    map <string, list <string>> m1 = $["one":["1", "11"], "two":["2", "22"]];
+    map m2 = m1;
+    any m3 = m1;
+    list <boolean> result1 = [is (m1, map <string, list <string>>), is (m2, map <string, list <string>>), is (m3, map <string, list <string>>), is ($["one":["1", "11"], "two":["2", "22"]], map <string, list <string>>)];
+    boolean Check (any m)
+{
+    return is (m, map <string, list <string>>);
+}
+    list <boolean> result2 = [Check (m1), Check (m2), Check (m3), Check ($["one":["1", "11"], "two":["2", "22"]])];
+    return (result1 == result2);
+}
+----------------------------------------------------------------------
