@@ -554,7 +554,7 @@ tupledecl:
 	typedecl SYMBOL
 		{ YCPSymbol s = $2.e->asValue()->asSymbol();
 		  if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		  }
 		  YCPDeclStruct d;
 		  d->add (s, $1.e->asValue());
@@ -563,7 +563,7 @@ tupledecl:
 |	tupledecl ',' typedecl SYMBOL
 		{ YCPSymbol s = $4.e->asValue()->asSymbol();
 		  if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		  }
 		  YCPDeclStruct d = $1.e->asValue()->asDeclaration()->asDeclStruct();
 		  d->add (s, $3.e->asValue());
@@ -586,7 +586,7 @@ vardecl:
 		b->add($2.e->asValue());
 		YCPSymbol s = $3.e->asValue()->asSymbol();
 		if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		}
 		b->add(YCPSymbol (s->symbol(), true));
 		b->add($5.e->asValue());
@@ -693,7 +693,7 @@ definition_prefix:
 |	definition_symbol typedecl SYMBOL
 		{ YCPSymbol s = $3.e->asValue()->asSymbol();
 		  if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		  }
 		  YCPDeclTerm d = $1.e->asValue()->asDeclaration()->asDeclTerm();
 		  d->add (s, $2.e->asValue());
@@ -702,7 +702,7 @@ definition_prefix:
 |	definition_prefix ',' typedecl SYMBOL
 		{ YCPSymbol s = $4.e->asValue()->asSymbol();
 		  if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		  }
 		  YCPDeclTerm d = $1.e->asValue()->asDeclaration()->asDeclTerm();
 		  d->add (s, $3.e->asValue());
@@ -714,7 +714,7 @@ definition_symbol:
 	SYMBOL '('
 		{ YCPSymbol s = $1.e->asValue()->asSymbol();
 		  if (0 && s->isQuoted ()) {
-		    yyerror ("Can't declare qouted symbol"); YYERROR;
+		    yyerror ("Can't declare quoted symbol"); YYERROR;
 		  }
 		  $$.e = YCPDeclTerm(s);
 		}
@@ -1032,7 +1032,7 @@ identifier:
 	SYMBOL DCOLON SYMBOL {
 				YCPSymbol modname = $1.e->asValue()->asSymbol();
 				if (modname->isQuoted ()) {
-				    yyerror ("Can't qoute module qualifier"); YYERROR;
+				    yyerror ("Can't quote module qualifier"); YYERROR;
 				}
 				YCPSymbol symname = $3.e->asValue()->asSymbol();
 				$$.e = YCPIdentifier (symname->symbol(), modname->symbol());
@@ -1040,7 +1040,7 @@ identifier:
 |	DCOLON SYMBOL	{
 				YCPSymbol s = $2.e->asValue()->asSymbol();
 				if (s->isQuoted ()) {
-				    yyerror ("Can't qoute global symbol"); YYERROR;
+				    yyerror ("Can't quote global symbol"); YYERROR;
 				}
 				$$.e = YCPIdentifier (s->symbol(), "_");
 			}
