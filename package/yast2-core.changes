@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov 13 13:51:49 CET 2003 - gs@suse.de
+
+- libyui: KeyEvent added
+
+-------------------------------------------------------------------
 Mon Nov 10 16:47:38 CET 2003 - visnov@suse.cz
 
 - allow block also specify a return type (ignored)
