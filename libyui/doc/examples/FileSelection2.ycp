@@ -14,6 +14,7 @@
 				`HWeight( 1,
 					  `VBox(
 						`PushButton(`id(`askDir), `opt(`hstretch), "Select &Directory..." ),
+						`PushButton(`id(`dir), `opt(`hstretch), "&Current Directory..." ),
 						`PushButton(`id(`load ),  `opt(`hstretch), "&Load File..." ),
 						`PushButton(`id(`saveAs), `opt(`hstretch), "Save &As..." )
 						)
@@ -41,6 +42,10 @@
 	if ( button == `askDir )
 	{
 	    name = PopupDir( "/tmp" );
+	}
+	else if ( button == `dir )
+	{
+	    name = PopupDir( "" );
 	}
 	else if ( button == `load )
 	{
