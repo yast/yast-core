@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 16 11:03:40 CET 2004 - mvidner@suse.cz
+
+- ycpc: re-add trailing newlines (should fix yast2-nis-client)
+
+-------------------------------------------------------------------
 Fri Feb 13 22:55:44 CET 2004 - kkaempf@suse.de
 
 - replace module timestamps with import lists checking the
