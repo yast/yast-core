@@ -773,8 +773,8 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
  * @usage	`Date( "Date:", "2004-10-12" )
  *
  * @description
- *
- * TODO - contact nashif@suse.de
+ * A Date input widget for entering dates. 
+ * This widget is available in the Qt interface only
  */
 
 YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -815,10 +815,9 @@ YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
  * @arg		string label
  * @usage	`Time( "Time:" , "20:20:20" )
  *
- *
  * @description
- *
- * TODO - contact nashif@suse.de
+ * A Time input widget for entering time. 
+ * This widget is available in the Qt interface only
  */
 YWidget * YUI::createTime( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
 			    const YCPList & optList, int argnr )
