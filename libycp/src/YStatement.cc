@@ -1321,6 +1321,7 @@ YSImport::YSImport (const string &name, int line)
     if (import (name) != 0)
     {
 	y2debug ("import '%s' failed", name.c_str());	// debug only, import() already logged the error
+	m_name = "";
     }
 
     Import::enableTracking();				// continue tracking in .ycp
