@@ -1343,7 +1343,7 @@ statement:
 		    YSImport *imp = new YSImport (module, $1.l);
 		    if (imp->name().empty())
 		    {
-			yyLerror ("Import failed", $1.l);
+			yyNoModule (name, $1.l);
 			delete imp;
 			$$.t = 0;
 			break;
@@ -1362,7 +1362,7 @@ statement:
 		    tentry = p_parser->m_block_stack->theBlock->newNamespace (module, name_space, $1.l);
 		    if (tentry == 0)
 		    {
-			yyLerror ("Import failed", $1.l);
+			yyNoModule (name, $1.l);
 			delete imp;
 			$$.t = 0;
 			break;
