@@ -86,10 +86,13 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "YouStatus")		return f.YouStatus (args);
     else if (function == "YouGetServers")	return f.YouGetServers (args);
     else if (function == "YouGetPatches")	return f.YouGetPatches (args);
+    else if (function == "YouAttachSource")	return f.YouAttachSource (args);
     else if (function == "YouGetPackages")	return f.YouGetPackages (args);
     else if (function == "YouSelectPatches")	return f.YouSelectPatches (args);
+    else if (function == "YouFirstPatch")	return f.YouFirstPatch (args);
     else if (function == "YouNextPatch")	return f.YouNextPatch (args);
-    else if (function == "YouInstallNextPatch")	return f.YouInstallNextPatch (args);
+    else if (function == "YouGetCurrentPatch")	return f.YouGetCurrentPatch (args);
+    else if (function == "YouInstallCurrentPatch")	return f.YouInstallCurrentPatch (args);
     else if (function == "YouInstallPatches")	return f.YouInstallPatches (args);
     // target related functions
     else if (function == "TargetInit")		return f.TargetInit (args);

@@ -78,10 +78,13 @@ class PkgModuleFunctions
         YCPValue YouStatus (YCPList args);
 	YCPValue YouGetServers (YCPList args);
 	YCPValue YouGetPatches (YCPList args);
+	YCPValue YouAttachSource (YCPList args);
 	YCPValue YouGetPackages (YCPList args);
 	YCPValue YouSelectPatches (YCPList args);
+	YCPValue YouFirstPatch (YCPList args);
 	YCPValue YouNextPatch (YCPList args);
-	YCPValue YouInstallNextPatch (YCPList args);
+	YCPValue YouGetCurrentPatch (YCPList args);
+	YCPValue YouInstallCurrentPatch (YCPList args);
 	YCPValue YouInstallPatches (YCPList args);
 
 	/**
