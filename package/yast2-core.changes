@@ -1,12 +1,17 @@
 -------------------------------------------------------------------
+Tue Feb 25 14:57:52 CET 2003 - arvin@suse.de
+
+- use locale dependent string compare (bug #23850)
+
+-------------------------------------------------------------------
 Tue Feb 25 09:45:55 CET 2003 - gs@suse.de
 
-- #include <assert.h> in YUIInterpreter_special_widgets.cc 
+- #include <assert.h> in YUIInterpreter_special_widgets.cc
 
 -------------------------------------------------------------------
 Mon Feb 24 17:28:42 CET 2003 - gs@suse.de
 
-- setLanguage: call nl_langinfo (bug #23348) 
+- setLanguage: call nl_langinfo (bug #23348)
 
 -------------------------------------------------------------------
 Mon Feb 24 17:06:26 CET 2003 - kkaempf@suse.de

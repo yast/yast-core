@@ -56,8 +56,12 @@ const char* YCPStringRep::value_cstr() const
 
 YCPOrder YCPStringRep::compare(const YCPString& s) const
 {
-    if (v == s->v) return YO_EQUAL;
-    else return v < s->v ? YO_LESS : YO_GREATER;
+    const int tmp = strcoll (v.c_str (), s->v.c_str ());
+
+    if (tmp == 0)
+	return YO_EQUAL;
+    else
+	return tmp < 0 ? YO_LESS : YO_GREATER;
 }
 
 
