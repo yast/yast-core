@@ -336,6 +336,7 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
+    const char *domain () const { return m_domain->c_str(); };
 private:
     void bind ();
 };
