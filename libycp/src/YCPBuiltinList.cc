@@ -493,7 +493,7 @@ YCPValue evaluateMapmap(YCPInterpreter *interpreter, const YCPList& args)
 	    else if (curr_value->isMap() )
 	    {
 		curr_map = curr_value->asMap();
-		if ( curr_map->size() > 1 )
+		if ( curr_map->size() == 1 )
 		{
 		    YCPMapIterator it = curr_map->begin();
         	    ret->add (it.key(), it.value());
@@ -577,7 +577,7 @@ YCPValue evaluateListmap(YCPInterpreter *interpreter, const YCPList& args)
 	    else if (curr_value->isMap() )
 	    {
 		curr_map = curr_value->asMap();
-		if ( curr_map->size() > 1 )
+		if ( curr_map->size() == 1 )
 		{
 		    YCPMapIterator it = curr_map->begin();
         	    ret->add (it.key(), it.value());

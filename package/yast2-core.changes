@@ -1,10 +1,19 @@
 -------------------------------------------------------------------
+Mon Nov 10 16:47:38 CET 2003 - visnov@suse.cz
+
+- allow block also specify a return type (ignored)
+- WFM::call () is now the same as WFM::CallFunction ()
+- fix mapmap () and maplist () if returning a map
+- 2.9.5
+
+-------------------------------------------------------------------
 Thu Nov  6 15:49:52 CET 2003 - mvidner@suse.cz
 
 - Using doxygen instead of kdoc.
 - 2.9.4
 
 -------------------------------------------------------------------
+>>>>>>> 1.169
 Wed Oct 22 16:45:10 CEST 2003 - visnov@suse.cz
 
 - implemented mapmap and listmap accepting also $[] as a result

@@ -71,7 +71,7 @@ static string current_textdomain;
 
   /* SCANNER_ERROR is returned when yylex does not have a valid token */
 %token  SCANNER_ERROR
-%token  EMPTY LIST DEFINE UNDEFINE I18N
+%token  EMPTY LIST DEFINE UNDEFINE I18N BLOCK
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL QUOTED_SYMBOL
 %token  DCOLON UI WFM Pkg Perl SCR
@@ -550,6 +550,8 @@ statement_as_block:
 typedecl:
 	ANY
 |	YCP_DECLTYPE
+|	BLOCK			{ $$.e = YCPDeclType(YT_BLOCK); } 
+|	BLOCK ST typedecl GT	{ $$.e = YCPDeclType(YT_BLOCK); } 
 |	LIST			{ $$.e = YCPDeclType(YT_LIST); }
 |	LIST ST typedecl GT	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
 |	LIST '(' typedecl ')'	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
@@ -1008,16 +1010,6 @@ term:
 |	identifier
 ;
 
-opt_default:
-	':' expression
-	    {
-		$$.e = $2.e;
-	    }
-| /* empty */
-	    {
-		$$.e = YCPNull();
-	    }
-;
 
 /* -------------------------------------------------------------- */
 /* after UI, SCR, or WFM */

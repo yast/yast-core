@@ -223,7 +223,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
     else if (sym == "GetEncoding")	return evaluateGetEncoding (term);
 
     else if (sym == "CallModule")	return evaluateCallModule (term);
-    else if (sym == "CallFunction")	return evaluateCallFunction (term);
+    else if (sym == "CallFunction" || sym == "call" )	return evaluateCallFunction (term);
     else if (sym == "GetClientName")	return evaluateGetClientName (term);
 
     else if (sym == "Args")		return evaluateArgs (term);

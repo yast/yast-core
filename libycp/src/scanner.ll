@@ -281,6 +281,7 @@ repeat		{ return REPEAT;	};
 until		{ return UNTIL;		};
 empty		{ return EMPTY;		};
 list		{ return LIST;		};
+block		{ return BLOCK;		};
 include		{ return INCLUDE;	};
 import		{ return IMPORT;	};
 export		{ return EXPORT;	};
@@ -321,7 +322,6 @@ map         { RESULT (YCPDeclType(YT_MAP), YCP_DECLTYPE);	};
 locale      { RESULT (YCPDeclType(YT_LOCALE), YCP_DECLTYPE);	};
 term        { RESULT (YCPDeclType(YT_TERM), YCP_DECLTYPE);	};
 path        { RESULT (YCPDeclType(YT_PATH), YCP_DECLTYPE);	};
-block       { RESULT (YCPDeclType(YT_BLOCK), YCP_DECLTYPE);	};
 declaration { RESULT (YCPDeclType(YT_DECLARATION), YCP_DECLTYPE); };
 symbol      { RESULT (YCPDeclType(YT_SYMBOL), YCP_DECLTYPE);	};
 
