@@ -35,6 +35,7 @@
 #include <ycp/YCPTerm.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPCode.h>
+#include <y2util/ExternalProgram.h>
 
 Y2ProgramComponent::Y2ProgramComponent (string chroot_path, string bin_file,
 					const char *component_name, bool non_y2,
@@ -275,13 +276,11 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 	setenv("Y2LEVEL", levelstring, 1); // 1: overwrite, if variable exists
 
 	// child input
-	dup2(to_external[0], 0);   // set reading end to stdin
-	close(to_external[0]);     // close reading end (dup2 has duplicated it)
+	ExternalProgram::renumber_fd (to_external[0], 0); // set reading end to stdin
 	close(to_external[1]);     // writing end belongs to father process
 
 	// child output
-        dup2(from_external[1], 1); // set writing end to stdout
-	close(from_external[1]);   // close writing end (dup2 has duplicated it)
+        ExternalProgram::renumber_fd (from_external[1], 1); // set writing end to stdout
 	close(from_external[0]);   // reading end belongs to father process
 
 	// Depending on whether it is a server or a client component

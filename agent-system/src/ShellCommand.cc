@@ -19,6 +19,7 @@
 #include "ycp/y2log.h"
 
 #include "ShellCommand.h"
+#include <y2util/ExternalProgram.h>
 
 
 /**
@@ -82,9 +83,8 @@ shellcommand (const string &command, const string &tempdir)
     {
 	/* y2log stdout */
 
-	dup2 (pipe1[1], 2);
+	ExternalProgram::renumber_fd (pipe1[1], 2);
 	close (pipe1[0]);
-	close (pipe1[1]);
 
 	int pipe2[2];
 	if (pipe (pipe2))
@@ -131,9 +131,8 @@ shellcommand (const string &command, const string &tempdir)
 	{
 	    /* child process */
 
-	    dup2 (pipe2[1], 1);
+	    ExternalProgram::renumber_fd (pipe2[1], 1);
 	    close (pipe2[0]);
-	    close (pipe2[1]);
 
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
