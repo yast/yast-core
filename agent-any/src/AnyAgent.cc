@@ -123,7 +123,9 @@ AnyAgent::~AnyAgent ()
 YCPValue
 AnyAgent::otherCommand (const YCPTerm & term)
 {
-    const string sym = term->symbol ()->symbol ();
+    const string sym = term->name ();
+    
+    y2debug( "Received term in otherCommand: %s", term->toString().c_str() );
 
     if (sym == "Description" && term->size () >= 4)
     {
@@ -139,7 +141,7 @@ AnyAgent::otherCommand (const YCPTerm & term)
 	if (v->isTerm ())
 	{
 	    YCPTerm t = v->asTerm ();
-	    const string s = t->symbol ()->symbol ();
+	    const string s = t->name ();
 	    if (s == "File" && t->size () > 0)
 	    {
 		mType = MTYPE_FILE;
@@ -165,13 +167,17 @@ AnyAgent::otherCommand (const YCPTerm & term)
 		    mName = t;
 	    }
 	    else
-		return YCPError (string ("Bad first arg of Description (): ") +
-				 s, YCPNull ());
+	    {
+		ycp2error ("Bad first arg of Description (): %s", s.c_str ());
+		return YCPNull ();
+	    }
 	}
 
 	if (mType == MTYPE_NONE)
-	    return YCPError ("First arg of Description () not recognized",
-			     YCPNull ());
+	{
+	    ycp2error ("First arg of Description () not recognized");
+	    return YCPNull ();
+	}
 
 	// extract comment characters
 	// or `Fillup ("<comment chars>")
@@ -183,19 +189,23 @@ AnyAgent::otherCommand (const YCPTerm & term)
 	else if (term->value (1)->isTerm ())
 	{
 	    YCPTerm fillterm = term->value (1)->asTerm ();
-	    if ((fillterm->symbol ()->symbol () == "Fillup") &&
+	    if ((fillterm->name () == "Fillup") &&
 		(fillterm->size () == 1) && (fillterm->value (0)->isString ()))
 	    {
 		isFillup = true;
 		mComment = fillterm->value (0)->asString ()->value ();
 	    }
 	    else
-		return YCPError ("Second arg of Description() not Fillup(string)",
-				 YCPNull ());
+	    {
+		ycp2error ("Second arg of Description() not Fillup(string)");
+		return YCPNull ();
+	    }
 	}
 	else
-	    return YCPError ("Second arg of Description() not string",
-			     YCPNull ());
+	{
+	    ycp2error ("Second arg of Description() not string");
+	    return YCPNull ();
+	}
 
 	// extract read-only flag
 
@@ -246,11 +256,13 @@ AnyAgent::otherCommand (const YCPTerm & term)
  */
 
 YCPValue
-AnyAgent::Read (const YCPPath & path, const YCPValue & arg)
+AnyAgent::Read (const YCPPath & path, const YCPValue& arg, const YCPValue& optarg)
 {
     if (!description_read)
-	return YCPError ("Can't execute Read prior to reading Description.",
-			 YCPVoid ());
+    {
+	ycp2error ("Can't execute Read prior to reading Description.");
+	return YCPVoid ();
+    }
 
     y2debug ("Read (%s: %s, %s, %s)", path->toString ().c_str (),
 	     mName->toString ().c_str (), mSyntax->toString ().c_str (),
@@ -259,9 +271,10 @@ AnyAgent::Read (const YCPPath & path, const YCPValue & arg)
     YCPValue value = validateCache (YCPNull (), arg);
 
     if (value.isNull ())
-	return YCPError ("Read validate failed", YCPNull ());
-    else if (value->isError ())
-	return value;
+    {
+	ycp2error ("Read validate failed");
+	return YCPNull ();
+    }
 
     if (!path->isRoot ())
     {
@@ -320,20 +333,24 @@ AnyAgent::Read (const YCPPath & path, const YCPValue & arg)
  *
  */
 
-YCPValue
+YCPBoolean
 AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 		 const YCPValue & arg)
 {
     if (!description_read)
-	return YCPError ("Can't execute Write prior to reading Description.",
-			 YCPBoolean (false));
+    {
+	ycp2error("Can't execute Write prior to reading Description.");
+	return YCPBoolean (false);
+    }
 
     y2debug ("Write (%s:%s)", path->toString ().c_str (),
 	     value->toString ().c_str ());
 
     if (mReadOnly)
-	return YCPError (string ("Write (") + path->toString () +
-			 ") is read-only", YCPBoolean (false));
+    {
+	ycp2error ("Write (%s) is read-only", path->toString ().c_str ());
+	return YCPBoolean (false);
+    }
 
     // fill cache, can't be program here
 
@@ -354,8 +371,6 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 		YCPValue vc_result = validateCache (value->asList ());
 		if (vc_result.isNull ())
 		    return YCPBoolean (false);
-		else if (vc_result->isError ())
-		    return vc_result;
 
 		return YCPBoolean (true);
 	    }
@@ -366,8 +381,10 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 	    if ((len == 2) && isdigit (path->component_str (1)[0]))
 	    {
 		if (!value->isString ())
-		    return YCPError (string ("Bad value ") + path->toString () +
-				     " for path", YCPBoolean (false));
+		{
+		    ycp2error ( "Bad value %s for path", path->toString ().c_str ());
+		    return YCPBoolean (false);
+		}
 
 		YCPList newdata;
 
@@ -401,14 +418,12 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 		YCPValue vc_result = validateCache (newdata);
 		if (vc_result.isNull ())
 		    return YCPBoolean (false);
-		else if (vc_result->isError ())
-		    return vc_result;
 
 		return YCPBoolean (true);
 	    }
 
-	    return YCPError ("Bad write path " + path->toString (),
-			     YCPBoolean (false));
+	    ycp2error ("Bad write path %s", path->toString ().c_str());
+	    return YCPBoolean (false);
 	}
 
 	// path not root and not ._
@@ -419,16 +434,20 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
     YCPValue syntax = findSyntax (mSyntax, path);
 
     if (syntax.isNull ())
-	return YCPError ("No syntax for path " + path->toString (),
-			 YCPBoolean (false));
+    {
+	ycp2error ("No syntax for path %s", path->toString ().c_str ());
+	return YCPBoolean (false);
+    }
 
     // convert value to string
 
     const string s = unparseData (syntax, value);
 
     if (s.empty ())
-	return YCPError ("Wrong value for path " + path->toString (),
-			 YCPBoolean (false));
+    {
+	ycp2error ("Wrong value for path %s", path->toString ().c_str ());
+	return YCPBoolean (false);
+    }
 
     // place value into cache, write string ...
 
@@ -454,8 +473,10 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 
 	std::ofstream dummy_file (fname);
 	if (!dummy_file)
-	    return YCPError (string ("Cant open path ") + sfname,
-			     YCPBoolean (false));
+	{
+	    ycp2error ("Can't open path %s", sfname.c_str ());
+	    return YCPBoolean (false);
+	}
 
 	dummy_file << s.c_str () << std::endl;
 
@@ -473,12 +494,14 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 */
 
 
-YCPValue
+YCPList
 AnyAgent::Dir (const YCPPath & path)
 {
     if (!description_read)
-	return YCPError ("Can't execute Dir prior to reading Description.",
-			 YCPVoid ());
+    {
+	ycp2error ("Can't execute Dir prior to reading Description.");
+	return YCPNull ();
+    }
 
     YCPList l;
     l->add (mSyntax);
@@ -532,7 +555,10 @@ AnyAgent::validateCache (const YCPList & data, const YCPValue & arg)
     }
 
     if (alldata.isNull ())
-	return YCPError ("validateCache oops alldata failed", YCPBoolean (false));
+    {
+	ycp2error ("validateCache oops alldata failed");
+	return YCPBoolean (false);
+    }
 
     cchanged = true;
 
@@ -582,7 +608,7 @@ AnyAgent::evalArg (const YCPValue & arg)
 	    // `arg(n), check n for correct type and match for current arg
 
 	    YCPTerm ta = t->value (i)->asTerm ();
-	    if (ta->symbol ()->symbol () == "arg"
+	    if (ta->name () == "arg"
 		&& ta->size () == 1 && ta->value (0)->isInteger ())
 	    {
 		int ti = ta->value (0)->asInteger ()->value ();
@@ -666,8 +692,10 @@ AnyAgent::readFile (const YCPValue & arg)
 	}
 
 	if (fp == 0)
-	    return YCPError (string ("Can't run '") + ss + "': " +
-			     strerror (errno), YCPNull ());
+	{
+	    ycp2error ("Can't run '%s': %d", ss.c_str (), errno);
+	    return YCPNull ();
+	}
     }
     else
     {
@@ -679,10 +707,13 @@ AnyAgent::readFile (const YCPValue & arg)
 	{
 	    mtime = 0;	// error case: reset mtime
 	    if (errno == ENOENT)
-		return YCPError (string ("File not found ") + ss, YCPList ());
+	    {
+		ycp2error ("File not found %s", s);
+		return YCPList ();
+	    }
 
-	    return YCPError (string ("Can't stat '") + ss + "' :" +
-			     strerror (errno), YCPNull ());
+	    ycp2error ("Can't stat '%s' :%d", s, errno);
+	    return YCPNull ();
 	}
 
 	if (buf.st_mtime == mtime)
@@ -695,10 +726,13 @@ AnyAgent::readFile (const YCPValue & arg)
 	if (fp == 0)
 	{
 	    if (errno == EACCES)
-		return YCPError (string ("Cant access ") + ss, YCPList ());
+	    {
+		ycp2error ("Cant access %s", s);
+		return YCPList ();
+	    }
 
-	    return YCPError (string ("Error opening '") + ss + "' :" +
-			     strerror (errno), YCPNull ());
+	    ycp2error ( "Error opening '%s': %d", s, errno);
+	    return YCPNull ();
 	}
     }
 
@@ -914,7 +948,7 @@ AnyAgent::findSyntax (const YCPValue & syntax, const YCPPath & path)
 	    {
 		case YT_TERM: {
 		    YCPTerm t = cur_syntax->asTerm ();
-		    string s = t->symbol ()->symbol ();
+		    string s = t->name ();
 
 		    // `tuple_name (<cur_syntax>)
 
@@ -934,7 +968,7 @@ AnyAgent::findSyntax (const YCPValue & syntax, const YCPPath & path)
 				if (v->isTerm ())
 				{
 				    YCPTerm vt = v->asTerm ();
-				    if (islower (vt->symbol ()->symbol ()[0]) &&
+				    if (islower (vt->name ()[0]) &&
 					(vt->size () > 0))
 				    {
 					if (tnum == 0)
@@ -955,7 +989,7 @@ AnyAgent::findSyntax (const YCPValue & syntax, const YCPPath & path)
 				if (v->isTerm ())
 				{
 				    YCPTerm vt = v->asTerm ();
-				    if (p == vt->symbol ()->symbol () && vt->size () > 0)
+				    if (p == vt->name () && vt->size () > 0)
 				    {
 					cur_syntax = vt->value (0);
 					break;

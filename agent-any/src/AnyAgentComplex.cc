@@ -291,9 +291,8 @@ AnyAgent::unparseList (const YCPList & syntax, const YCPValue & value)
 		    {
 			YCPTerm term = element->asTerm ();
 			if ((term.isNull ())
-			    || ((term->symbol ()).isNull ())
-			    || ((term->symbol ()->symbol () != "Skip")
-				&& (term->symbol ()->symbol () !=
+			    || ((term->name () != "Skip")
+				&& (term->name () !=
 				    "Fillup")))
 			{
 			    break;
@@ -410,9 +409,9 @@ AnyAgent::unparseTuple (const YCPList & syntax, const YCPValue & value)
 	    if (element->valuetype () == YT_TERM)
 	    {
 		YCPTerm term = element->asTerm ();
-		if (!(term.isNull ()) && (!(term->symbol ()).isNull ()) &&
-		    ((term->symbol ()->symbol () == "Skip") ||
-		     (term->symbol ()->symbol () == "Fillup")))
+		if (!(term.isNull ()) && 
+		    ((term->name () == "Skip") ||
+		     (term->name () == "Fillup")))
 		    continue;
 	    }
 	    break;
@@ -445,7 +444,7 @@ AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
 	case YT_TERM: {
 
 	    YCPTerm term = syntax->asTerm ();
-	    const string s = term->symbol ()->symbol ();
+	    const string s = term->name ();
 	    y2debug ("YT_TERM (%s)", s.c_str ());
 
 	    // Optional
@@ -729,7 +728,7 @@ AnyAgent::unparseData (const YCPValue & syntax, const YCPValue & value)
 	    {
 		y2error ("YT_TERM no term");
 	    }
-	    string s = term->symbol ()->symbol ();
+	    string s = term->name ();
 	    y2debug ("YT_TERM (%s)", s.c_str ());
 
 	    // Optional
