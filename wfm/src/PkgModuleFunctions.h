@@ -86,6 +86,7 @@ class PkgModuleFunctions
 	void addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable);
 
 	bool SetSelectionString (std::string name, bool recursive = false);
+	PMSelectablePtr WhoProvidesString (std::string tag);
 	bool DoProvideString (std::string name);
 	bool DoRemoveString (std::string name);
 

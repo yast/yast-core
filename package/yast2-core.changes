@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Feb 24 17:06:26 CET 2003 - kkaempf@suse.de
+
+- finally fix Pkg:: functions to act upon tag string
+  instead of package names.
+  This will make "yast2 -i <name-of-.so>" possible.
+
+-------------------------------------------------------------------
 Mon Feb 24 12:10:32 CET 2003 - arvin@suse.de
 
 - added command .bash_input to system agent

@@ -61,6 +61,7 @@ getName (YCPList args)
     return args->value(0)->asString()->value();
 }
 
+
 /**
  * helper function, get selectable by name
  */
@@ -78,6 +79,10 @@ PkgModuleFunctions::getPackageSelectable (const std::string& name)
 }
 
 
+/**
+ * helper function, get the current object of a selectable
+ */
+
 static PMPackagePtr
 getTheObject (PMSelectablePtr selectable)
 {
@@ -92,6 +97,7 @@ getTheObject (PMSelectablePtr selectable)
     }
     return package;
 }
+
 
 #if 0 // currently unused
 static PMPackagePtr
@@ -109,6 +115,7 @@ getTheCandidate (PMSelectablePtr selectable)
     return package;
 }
 #endif
+
 // ------------------------
 /**
  *  @builtin Pkg::PkgMediaNames () -> [ "source_1_name", "source_2_name", ...]
@@ -282,11 +289,21 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 YCPValue
 PkgModuleFunctions::IsProvided (YCPList args)
 {
-    // check package name first, then tag
-    if (!_y2pm.instTarget().isInstalled (getName(args)))
-	return YCPBoolean (_y2pm.instTarget().isProvided (getName(args)));
+    std::string name = getName(args);
+    if (name.empty())
+	return YCPBoolean (false);
+
+    // check package name first, then tag, then file
+    if (!_y2pm.instTarget().hasPackage (PkgName (name)))		// package
+    {
+	if (!_y2pm.instTarget().hasProvides (name))			// provided tag
+	{
+	    return YCPBoolean (_y2pm.instTarget().hasFile (name));	// file name
+	}
+    }
     return YCPBoolean (true);
 }
+
 
 // ------------------------
 /**
@@ -300,10 +317,17 @@ PkgModuleFunctions::IsProvided (YCPList args)
 YCPValue
 PkgModuleFunctions::IsSelected (YCPList args)
 {
-#warning must check tags, not package names
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
-    if (!selectable)
+    std::string name = getName(args);
+    if (name.empty())
 	return YCPBoolean (false);
+
+    PMSelectablePtr selectable = getPackageSelectable (name);
+    if (!selectable)
+    {
+	selectable = PkgModuleFunctions::WhoProvidesString (name);
+	if (!selectable)
+	    return YCPBoolean (false);
+    }
     if (selectable->to_install())
     {
 	return YCPBoolean (true);
@@ -326,26 +350,67 @@ PkgModuleFunctions::IsAvailable (YCPList args)
 {
     startCachedSources (true);		// start cached sources
 
-#warning must check tags, not package names
-
-    PMSelectablePtr selectable = getPackageSelectable (getName(args));
-    if (!selectable)
+    std::string name = getName(args);
+    if (name.empty())
 	return YCPBoolean (false);
+
+    PMSelectablePtr selectable = getPackageSelectable (name);
+    if (!selectable)
+    {
+	selectable = PkgModuleFunctions::WhoProvidesString (name);
+	if (!selectable)
+	    return YCPBoolean (false);
+    }
     if (selectable->candidateObj() == 0)
 	return YCPBoolean (false);
     return YCPBoolean (true);
 }
 
 
-// internal
+/**
+ * helper function, find a package which provides tag (as a
+ *   provided tag or a provided file)
+ *
+ */
+
+PMSelectablePtr
+PkgModuleFunctions::WhoProvidesString (std::string tag)
+{
+    for (PMPackageManager::PMSelectableVec::const_iterator sel = _y2pm.packageManager().begin();
+	 sel != _y2pm.packageManager().end(); ++sel)
+    {
+	if ((*sel)->has_installed()
+	    && (*sel)->installedObj()->doesProvide (PkgRelation (PkgName (tag))))
+	{
+	    return *sel;
+	}
+	else if ((*sel)->has_candidate()
+	    && (*sel)->candidateObj()->doesProvide (PkgRelation (PkgName (tag))))
+	{
+	    return *sel;
+	}
+    }
+    return 0;
+}
+
+
+/**
+ * helper function, install a package which provides tag (as a
+ *   package name, a provided tag, or a provided file
+ *
+ */
+
 bool
 PkgModuleFunctions::DoProvideString (std::string name)
 {
-    PMSelectablePtr selectable = getPackageSelectable(name);
+    PMSelectablePtr selectable = getPackageSelectable (name);		// by name
     if (!selectable)
     {
-	//y2error ("Provide: package '%s' not found", name.c_str());
-	return false;
+	selectable = WhoProvidesString (name);				// by tag
+	if (!selectable)
+	{
+	    return false;						// no package found
+	}
     }
     selectable->appl_set_install();
     return true;
