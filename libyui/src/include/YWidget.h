@@ -248,6 +248,17 @@ public:
     bool getNotify() const;
 
     /**
+     * Returns 'true' if this widget should send key events, i.e. if it has
+     * `opt(`keyEvent) set. 
+     **/
+    bool sendKeyEvents() const { return _sendKeyEvents; }
+
+    /**
+     * Specify whether or not this widget should send key events.
+     **/
+    void setSendKeyEvents( bool doSend ) { _sendKeyEvents = doSend; }
+
+    /**
      * Returns 'true' if a keyboard shortcut should automatically be assigned
      * to this widget - without complaints in the log file.
      **/
@@ -329,6 +340,27 @@ public:
      */
     virtual const char *shortcutProperty() { return ( const char * ) 0; }
 
+    
+    // NCurses optimizations
+
+    
+    /**
+     * In some UIs updating the screen content is an expensive operation. Use
+     * startMultipleChanges() to tell the ui that you're going to perform multiple
+     * chages to the widget.
+     * The UI may delay any screen updates until doneMultipleChanges() is called.
+     */
+    virtual void startMultipleChanges() {}
+
+    /**
+     * In some UIs updating the screen content is an expensive operation. Use
+     * startMultipleChanges() to tell the ui that you're going to perform multiple
+     * chages to the widget.
+     * The UI may delay any screen updates until doneMultipleChanges() is called.
+     */
+    virtual void doneMultipleChanges() {}
+
+
 private:
 
     /**
@@ -369,31 +401,31 @@ protected:
     YWidget *yparent;
 
     /**
-     * true if the widget is enabled. Disabled widgets can't
-     * take user input.
+     * Flag: Can this widget currently receive user input?
      */
     bool enabled;
 
     /**
-     * true if this widget will cause UserInput to return when
-     * triggered.
-     */
+     * Flag: Make UserInput() return on detailed events?
+     **/
     bool notify;
 
+    /**
+     * Flag: Make UserInput() return on single key events?
+     **/
+    bool _sendKeyEvents;
 
     /**
-     * True if a keyboard shortcut should automatically be assigned to this
-     * widget - without complaints in the log file.
+     * Flag: Automatically assign a keyboard shortcut without complaints in the
+     * log file? 
      **/
     bool _autoShortcut;
 
     /**
-     * This pointer can be used by the subclassing ui specific
-     * widget to store a pointer to the ui specific implementation
-     * of the widget. This is not very nice, but it avoid multiple
-     * inheritance with common base classes and other ugly things.
-     */
-    void *rep;
+     * Pointer to the UI specific widget representation that belongs to this
+     * widget. For Qt, this will be a pointer to a QWidget (subclass).
+     **/
+    void * rep;
 
     /**
      * Stretchability in both dimensions.
@@ -410,26 +442,10 @@ protected:
      */
     long windowID;
 
+
 public:
-
     /**
-     * In some UIs updating the screen content is an expensive operation. Use
-     * startMultipleChanges() to tell the ui that you're going to perform multiple
-     * chages to the widget.
-     * The UI may delay any screen updates until doneMultipleChanges() is called.
-     */
-    virtual void startMultipleChanges() {}
-
-    /**
-     * In some UIs updating the screen content is an expensive operation. Use
-     * startMultipleChanges() to tell the ui that you're going to perform multiple
-     * chages to the widget.
-     * The UI may delay any screen updates until doneMultipleChanges() is called.
-     */
-    virtual void doneMultipleChanges() {}
-
-    /**
-     * A little helperclass that calls startMultipleChanges() in it's constructor
+     * Helper class that calls startMultipleChanges() in its constructor
      * and cares about the necessary call to doneMultipleChanges() when it goes
      * out of scope.
      */

@@ -51,6 +51,7 @@ YWidget::YWidget( YWidgetOpt & opt )
 
     enabled			= ! opt.isDisabled.value();
     notify			= opt.notifyMode.value();
+    _sendKeyEvents		= opt.keyEvents.value();
     _autoShortcut		= opt.autoShortcut.value();
     _stretch[ YD_HORIZ ]	= opt.isHStretchable.value();
     _stretch[ YD_VERT  ]	= opt.isVStretchable.value();
