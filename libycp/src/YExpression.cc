@@ -782,51 +782,7 @@ YEMap::toStream (std::ostream & str) const
 }
 
 
-// ------------------------------------------------------------------
-// lookup expression (-> code, code, code, type)
-
-YELookup::YELookup (YCode *map, YCode *key, YCode *dflt, constTypePtr type)
-    : YCode (yeLookup)
-    , m_map (map)
-    , m_key (key)
-    , m_default (dflt)
-    , m_type (type->valueType ())
-{
-}
-
-
-YELookup::YELookup (std::istream & str)
-    : YCode (yeLookup)
-{
-    m_map = Bytecode::readCode (str);
-    m_key = Bytecode::readCode (str);
-    m_default = Bytecode::readCode (str);
-}
-
-
-YELookup::~YELookup ()
-{
-    delete m_map;
-    delete m_key;
-    delete m_default;
-}
-
-string
-YELookup::toString () const
-{
-    string s = "lookup (";
-    s += m_map->toString();
-    s += ", ";
-    s += m_key->toString();
-    s += ", ";
-    s += m_default->toString();
-    s += ")";
-    return s;
-}
-
-YCPValue
-YELookup::evaluate (bool cse)
-{
+// I will let this comment here for the moment
     /**
      * @builtin lookup (map m, any k, any default) -> any
      * Looks up the value matching to given key <tt>k</tt>. Returns
@@ -840,44 +796,6 @@ YELookup::evaluate (bool cse)
      * lookup ($[1:"a", 2:"bc"], 1, true) -> true
      * </pre>
      */
-
-    YCPValue v_map = m_map->evaluate (cse);
-    YCPValue v_key = m_key->evaluate (cse);
-    YCPValue v_default = m_default->evaluate (cse);
-
-    y2debug ("YELookup::evaluate (%s,%s,%s)",
-	v_map.isNull()?"nil":v_map->toString().c_str(),
-	v_key.isNull()?"nil":v_key->toString().c_str(),
-	v_default.isNull()?"nil":v_default->toString().c_str());
-
-    if (v_map.isNull() || v_map->isVoid())
-	return v_default;
-
-    if (v_key.isNull() || v_key->isVoid())
-	return v_default;
-
-    YCPValue ret = v_map->asMap()->value (v_key);
-
-    if (ret.isNull()				// not found
-	|| ((m_type != YT_VOID)
-	    && (ret->valuetype () != m_type)))	// or wrong type
-    {
-	return v_default;			// -> return default
-    }
-
-    return ret;
-}
-
-
-std::ostream &
-YELookup::toStream (std::ostream & str) const
-{
-    YCode::toStream (str);
-    m_map->toStream (str);
-    m_key->toStream (str);
-    return m_default->toStream (str);
-}
-
 
 // ------------------------------------------------------------------
 // propagation expression (-> declaration_t for conversion, value)

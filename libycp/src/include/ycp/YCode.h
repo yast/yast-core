@@ -91,15 +91,14 @@ public:
 	yeList,			// list expression
 	yeMap,			// map expression
 	yeTerm,			// <name> ( ...)
-	yeLookup,		// lookup ()
 	yeIs,			// is()
 	yeBracket,		// <name> [ <expr>, ... ] : <expr>
 
-	// [28] Block (-> linked list of statements)
+	// [27] Block (-> linked list of statements)
 	yeBlock,		// block expression
 	yeReturn,		// quoted expression
 
-	// [30] Symbolref (-> SymbolEntry)
+	// [29] Symbolref (-> SymbolEntry)
 	yeVariable,		// variable ref
 	yeBuiltin,		// builtin ref + args
 	yeFunction,		// function ref + args
@@ -107,7 +106,7 @@ public:
 
 	yeExpression,		// -- placeholder --
 
-	// [35] Statements	(-> YCode + next)
+	// [34] Statements	(-> YCode + next)
 	ysTypedef,		// typedef
 	ysVariable,		// variable defintion (-> YSAssign)
 	ysFunction,		// function definition

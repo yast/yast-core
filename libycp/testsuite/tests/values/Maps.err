@@ -47,7 +47,7 @@ Parsed:
     map m = union (m1, m2);
     if ((size (m) != 5))
     return false;
-    if ((lookup (m, 3, nil) != "4"))
+    if ((m[3]:nil != "4"))
     return false;
     return true;
 }

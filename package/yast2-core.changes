@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
+Fri Jan 30 16:37:48 CET 2004 - visnov@suse.cz
+
+- for lookup use the same code as for bracket
+- bytecode version change! 
+
+-------------------------------------------------------------------
 Fri Jan 30 13:01:36 CET 2004 - visnov@suse.cz
 
 - implemented constant evaluation of terms (#34167)
-- bytecode version change!
+- bytecode change
 
 -------------------------------------------------------------------
 Thu Jan 29 18:09:18 CET 2004 - msvec@suse.cz

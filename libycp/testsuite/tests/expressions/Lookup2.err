@@ -4,7 +4,7 @@ Parsed:
     // map m1
     // filename: "tests/expressions/Lookup2.ycp"
     map m1 = nil;
-    return ["hoho"];
+    return [m1["huhu"]:"hoho"];
 }
 ----------------------------------------------------------------------
 Parsed:
@@ -13,6 +13,6 @@ Parsed:
     // map m1
     // filename: "tests/expressions/Lookup2.ycp"
     map m1 = nil;
-    return lookup (m1, "huhu", "hoho");
+    return m1["huhu"]:"hoho";
 }
 ----------------------------------------------------------------------

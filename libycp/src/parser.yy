@@ -506,8 +506,23 @@ compact_expression:
 		    $$.t = 0;
 		    break;
 		}
+		
+		// check the type of the index
+		if ($5.t->match ( (constMapTypePtr($3.t))->keytype() )== -1)
+		{
+		    yyTypeMismatch ((constMapTypePtr($3.t))->keytype(), $5.t, $1.l);		// -> then we have a type error
+		    $$.t = 0;
+		}
 
-		$$.c = new YELookup ($3.c, $5.c, $7.c, $7.t);
+		// default ($7) must match for non-nil
+		if (! $7.t->isVoid ()				// default is not 'nil'
+		    && $7.t->match ((constMapTypePtr($3.t))->valuetype()) == -1)	// and it doesn't match the determined type
+		{
+		    yyTypeMismatch ((constMapTypePtr($3.t))->valuetype(), $7.t, $1.l);		// -> then we have a type error
+		    $$.t = 0;
+		}
+
+		$$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $7.t);
 		$$.t = $7.t;
 		$$.l = $1.l;
 	    }

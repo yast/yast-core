@@ -11,7 +11,7 @@
 (false)
 ("** lookup **")
 ("a")
-(42)
+(nil)
 ("take this")
 ("** foreach **")
 (7)

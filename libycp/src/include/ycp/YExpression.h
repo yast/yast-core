@@ -173,29 +173,6 @@ public:
 
 
 //---------------------------------------------------------
-// lookup expression (-> map, key, default value, default type)
-
-class YELookup : public YCode {
-    YCode *m_map;
-    YCode *m_key;
-    YCode *m_default;
-    enum YCPValueType m_type;
-public:
-    YELookup (YCode *map, YCode *key, YCode *dftl, constTypePtr type);
-    YELookup (std::istream & str);
-    ~YELookup ();
-//    YCode *map () const;
-//    YCode *key () const;
-//    YCode *dflt () const;
-//    YCode *value () const;
-    string toString () const;
-    YCPValue evaluate (bool cse = false);
-    std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return m_default->type(); }
-};
-
-
-//---------------------------------------------------------
 // propagation expression (-> value, from type, to type)
 
 class YEPropagate : public YCode {

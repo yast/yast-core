@@ -667,11 +667,6 @@ Bytecode::readCode (std::istream & str)
 	    return new YETerm (str);
 	}
 	break;
-	case YCode::yeLookup:
-	{
-	    return new YELookup (str);
-	}
-	break;
 	case YCode::yeIs:
 	{
 	    return new YEIs (str);
