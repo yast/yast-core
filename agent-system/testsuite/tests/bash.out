@@ -6,6 +6,7 @@
 ($["exit":0, "stderr":"", "stdout":""])
 ($["exit":0, "stderr":"", "stdout":"Software is like sex. It's better when it's free.\n"])
 ($["exit":1, "stderr":"/bin/cat: tests/missing: No such file or directory\n", "stdout":""])
+($["exit":42, "stderr":"", "stdout":"life\n"])
 (true)
 (true)
 (true)

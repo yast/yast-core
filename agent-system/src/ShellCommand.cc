@@ -183,30 +183,18 @@ shellcommand (const string &command, const string &tempdir)
 
 
 /**
- * Execute shell command on background
+ * Execute shell command in background. That means start and forget
+ * about it!
  */
 int
 shellcommand_background (const string &command)
 {
-    /* fork the child */
-    fflush (0);
-    pid_t child = fork ();
-    if (child == -1)
-    {
-	y2error ("fork failed");
-	return -1;
-    }
+    int ret = system (string (command + " >/dev/null 2>&1 &").c_str ());
 
-    if (!child)
-    {
-	/* child process */
+    if (WIFEXITED (ret))
+	return WEXITSTATUS (ret);
 
-	shellcommand (command, "");
-	_exit (0);
-    }
-
-    /* return success */
-    return child;
+    return WTERMSIG (ret) + 128;
 }
 
 

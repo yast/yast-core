@@ -31,13 +31,18 @@
 }
 
 {
-    return Execute (.bash_background, "/bin/cat tests/data1.read") != 0;
+    return Execute (.bash_output, "/bin/echo $WHAT ; exit 42", $["WHAT":"life"]);
 }
 
 {
-    return Execute (.bash_background, "/bin/cat tests/data2.read") != 0;
+    return Execute (.bash_background, "/bin/cat tests/data1.read") == 0;
 }
 
 {
-    return Execute (.bash_background, "/bin/cat tests/missing") != 0;
+    return Execute (.bash_background, "/bin/cat tests/data2.read") == 0;
+}
+
+{
+    // you don't get a message in the log from this one
+    return Execute (.bash_background, "/bin/cat tests/missing") == 0;
 }

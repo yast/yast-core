@@ -3,6 +3,8 @@ Thu Aug 08 12:51:44 CEST 2002 - arvin@suse.de
 
 - fixed error logging for .string command of system agent and
   added testsuite for that
+- redirect stdout and stderr to /dev/null for .bash_background
+  command of system agent (bug #17223)
 
 -------------------------------------------------------------------
 Wed Aug 07 19:28:50 CEST 2002 - arvin@suse.de
