@@ -20,7 +20,10 @@
 
 /-*/
 
-#define _GNU_SOURCE	// for get_current_dir_name ()
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -98,68 +101,10 @@ Y2PathSearch::searchPath (WHAT what, int level)
 string
 Y2PathSearch::completeFilename (const string& fname)
 {
-    // y2debug ("complete_filename (%s)", fname.c_str());
-    if (fname.empty() || (fname[0] == '/'))
-	return fname;
-
-    char* tmp1 = get_current_dir_name ();
-    string cwd = tmp1;
-    free (tmp1);
-
-    const char *fptr = fname.c_str();
-    // y2debug ("complete_filename cwd (%s)", cwd.c_str());
-
-    // scan filename, stripping leading ./ and ../
-    // for every ../, remove a trailing path from cwd
-
-    while (*fptr == '.')
-    {
-	fptr++;
-	if (*fptr == '/')
-	{
-	    // skip "./"
-	    fptr++;
-	    continue;
-	}
-	else if (*fptr == '.')
-	{
-	    // handle ".."
-	    fptr++;
-	    if (*fptr != '/')
-	    {
-		// .. without /
-		fptr--;
-		y2error ("Bad filename prefix (%s)", fptr);
-		break;
-	    }
-
-	    fptr++;	// skip '/'
-
-	    // handle "../", adapt cwd accordingly
-	    string::size_type slashpos = cwd.rfind ('/');
-	    if (slashpos == string::npos)
-	    {
-		fptr--;
-		y2error ("Filename (%s) doesn't match cwd (%s)", fptr, cwd.c_str());
-		break;
-	    }
-	    cwd.resize (slashpos);
-	}
-	else
-	{
-	    // just leading dot, keep it.
-	    break;
-	}
-    }
-
-    if (cwd == "/")
-    {
-	cwd = "";
-    }
-
-    // y2debug ("complete_filename -> %s/%s", cwd.c_str(), fptr);
-
-    return cwd + "/" + string (fptr);
+    char* cfn = canonicalize_file_name (fname.c_str ());
+    string ret = cfn ? string (cfn) : fname;
+    free (cfn);
+    return ret;
 }
 
 
