@@ -223,7 +223,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent() ) {
+	if ( _pc.updateIfNewPercent(5) ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
@@ -272,7 +272,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent() ) {
+	if ( _pc.updateIfNewPercent(5) ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
