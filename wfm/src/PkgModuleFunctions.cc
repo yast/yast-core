@@ -159,6 +159,11 @@ PkgModuleFunctions::SourceFinish (YCPList args)
     }
 
     unsigned int source_slot = args->value(0)->asInteger()->value();
+    if ((source_slot < 0)
+	|| source_slot >= _sources.size())
+    {
+	return YCPError ("Bad source id", YCPBoolean (false));
+    }
 
     if (_sources[source_slot] == 0)
     {
@@ -353,3 +358,40 @@ PkgModuleFunctions::SourceProductData (YCPList args)
     return data;
 }
 
+
+/**
+ * @builtin Pkg::SourceProvide (integer source, string file) -> string path
+ * provide file from source to local path
+ */
+YCPValue
+PkgModuleFunctions::SourceProvide (YCPList args)
+{
+    if ((args->size() != 2)
+	|| !(args->value(0)->isInteger())
+	|| !(args->value(1)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SourceData");
+    }
+    
+    unsigned int source_slot = args->value(0)->asInteger()->value();
+    if ((source_slot < 0)
+	|| source_slot >= _sources.size())
+    {
+	return YCPError ("Bad source id");
+    }
+
+    if (_sources[source_slot] == 0)
+    {
+	return YCPError ("Source not active");
+    }
+
+    constMediaAccessPtr media = _sources[source_slot]->media();
+    std::string filename = args->value(1)->asString()->value();
+    PMError err = media->provideFile (Pathname (filename));
+    if (err)
+    {
+	y2error ("provideFile(%s) failed: %s", filename.c_str(), err.errstr().c_str());
+	return YCPVoid();
+    }
+    return YCPString (media->localPath (filename).asString());
+}

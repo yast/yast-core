@@ -238,8 +238,11 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 	if (selection->isBase())
 	{
 	    y2milestone ("Base ! Selecting all recommends");
-	    for (std::list<std::string>::const_iterator it = selection->recommends().begin();
-		 it != selection->recommends().end(); ++it)
+	    const std::list<std::string> recommends = selection->recommends();
+	    if (recommends.size() == 0)
+		return true;
+	    for (std::list<std::string>::const_iterator it = recommends.begin();
+		 it != recommends.end(); ++it)
 	    {
 		y2milestone ("Selecting recommends '%s'", it->c_str());
 		SetSelectionString (*it);
@@ -316,23 +319,33 @@ bool
 PkgModuleFunctions::ActivateSelectionPackages (PMSelectionPtr selection)
 {
     y2milestone ("activate selection %s", ((const std::string &)(selection->name())).c_str());
-    for (std::list<std::string>::const_iterator it = selection->delpacks().begin();
-	 it != selection->delpacks().end(); ++it)
+
+    std::list<std::string>::const_iterator it;
+    std::list<std::string> packs = selection->delpacks();
+    y2milestone ("%d delpacks", packs.size());
+    if (packs.size() > 0)
+    for (it = packs.begin(); it != packs.end(); ++it)
     {
 	DoRemoveString(*it);
     }
-    for (std::list<std::string>::const_iterator it = selection->delpacks(_y2pm.getPreferredLocale()).begin();
-	 it != selection->delpacks(_y2pm.getPreferredLocale()).end(); ++it)
+    packs = selection->delpacks(_y2pm.getPreferredLocale());
+    y2milestone ("%d locale delpacks", packs.size());
+    if (packs.size() > 0)
+    for (it = packs.begin(); it != packs.end(); ++it)
     {
 	DoRemoveString(*it);
     }
-    for (std::list<std::string>::const_iterator it = selection->inspacks().begin();
-	 it != selection->inspacks().end(); ++it)
+    packs = selection->inspacks();
+    y2milestone ("%d inspacks", packs.size());
+    if (packs.size() > 0)
+    for (it = packs.begin(); it != packs.end(); ++it)
     {
 	DoProvideString(*it);
     }
-    for (std::list<std::string>::const_iterator it = selection->inspacks(_y2pm.getPreferredLocale()).begin();
-	 it != selection->inspacks(_y2pm.getPreferredLocale()).end(); ++it)
+    packs = selection->inspacks(_y2pm.getPreferredLocale());
+    y2milestone ("%d locale inspacks", packs.size());
+    if (packs.size() > 0)
+    for (it = packs.begin(); it != packs.end(); ++it)
     {
 	DoProvideString(*it);
     }

@@ -339,7 +339,6 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 	return YCPError ("Bad args to Pkg::PkgSummary");
     }
     string name = args->value(0)->asString()->value();
-    y2milestone ("looking up (%s)", name.c_str());
     PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
     if (!selectable)
     {
@@ -370,7 +369,6 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 	return YCPError ("Bad args to Pkg::PkgSummary");
     }
     string name = args->value(0)->asString()->value();
-    y2milestone ("looking up (%s)", name.c_str());
     PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
     if (!selectable)
     {
@@ -398,10 +396,9 @@ PkgModuleFunctions::PkgSize (YCPList args)
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
-	return YCPError ("Bad args to Pkg::PkgSummary");
+	return YCPError ("Bad args to Pkg::PkgSize");
     }
     string name = args->value(0)->asString()->value();
-    y2milestone ("looking up (%s)", name.c_str());
     PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
     if (!selectable)
     {
@@ -414,6 +411,48 @@ PkgModuleFunctions::PkgSize (YCPList args)
     }
 
     return YCPInteger ((long long)(package->size()));
+}
+
+// ------------------------
+/**   
+   @builtin Pkg::PkgLocation (string package) -> string filename
+
+   Get location of package
+
+*/
+YCPValue
+PkgModuleFunctions::PkgLocation (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::PkgLocation");
+    }
+    string name = args->value(0)->asString()->value();
+    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    if (!selectable)
+    {
+	return YCPError ("Package '"+name+"' not found");
+    }
+    PMPackagePtr package = selectable->theObject();
+    if (!package)
+    {
+	return YCPError ("Package '"+name+"' no object");
+    }
+    const std::string location = package->location();
+    string::size_type archpos = location.find(' ');
+    Pathname archpath;
+    if (archpos != string::npos)
+    {
+	archpath = string (location, archpos+1);
+	archpath = archpath + string (location, 0, archpos);
+    }
+    else
+    {
+	archpath = Pathname ((const std::string &)(package->arch()));
+	archpath = archpath + location;
+    }
+    return YCPString (archpath.asString());
 }
 
 // ------------------------

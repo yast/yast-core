@@ -79,3 +79,36 @@ PkgModuleFunctions::TargetFinish (YCPList args)
     return YCPBoolean (true);
 }
 
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetInstall(string name) -> bool
+ *
+ * install package by name
+ */
+YCPValue
+PkgModuleFunctions::TargetInstall(YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetInstall");
+    }
+    PMError err = _y2pm.instTarget().installPackage (args->value(0)->asString()->value());
+    return YCPBoolean (!err);
+}
+
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetRemove(string name) -> bool
+ *
+ * install package by name
+ */
+YCPValue
+PkgModuleFunctions::TargetRemove(YCPList args)
+{
+    return YCPBoolean (true);
+}
+
+
+

@@ -50,10 +50,13 @@ class PkgModuleFunctions
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
+	YCPValue SourceProvide (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
 	YCPValue TargetFinish (YCPList args);
+	YCPValue TargetInstall (YCPList args);
+	YCPValue TargetRemove (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);
@@ -76,6 +79,7 @@ class PkgModuleFunctions
 	YCPValue PkgSummary (YCPList args);
 	YCPValue PkgVersion (YCPList args);
 	YCPValue PkgSize (YCPList args);
+	YCPValue PkgLocation (YCPList args);
 	YCPValue IsManualSelection (YCPList args);
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);

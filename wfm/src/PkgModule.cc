@@ -74,6 +74,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgSummary")		return f.PkgSummary (args);
     else if (function == "PkgVersion")		return f.PkgVersion (args);
     else if (function == "PkgSize")		return f.PkgSize (args);
+    else if (function == "PkgLocation")		return f.PkgLocation (args);
     else if (function == "IsManualSelection")	return f.IsManualSelection (args);
     else if (function == "SaveState")		return f.SaveState (args);
     else if (function == "RestoreState")	return f.RestoreState (args);
@@ -101,11 +102,14 @@ PkgModule::evaluate (string function, YCPList args)
     // target related functions
     else if (function == "TargetInit")		return f.TargetInit (args);
     else if (function == "TargetFinish")	return f.TargetFinish (args);
+    else if (function == "TargetInstall")	return f.TargetInstall (args);
+    else if (function == "TargetRemove")	return f.TargetRemove (args);
     // source related functions
     else if (function == "SourceInit")		return f.SourceInit (args);
     else if (function == "SourceFinish")	return f.SourceFinish (args);
     else if (function == "SourceGeneralData")	return f.SourceGeneralData (args);
     else if (function == "SourceMediaData")	return f.SourceMediaData (args);
     else if (function == "SourceProductData")	return f.SourceProductData (args);
+    else if (function == "SourceProvide")	return f.SourceProvide (args);
     return YCPError ("Undefined Pkg:: function");
 }
