@@ -196,6 +196,9 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL  ( 120,        Pkg, SourceEditGet );
     REGISTERFUNCTIONCALL1 ( 121,        Pkg, SourceEditSet );
     REGISTERFUNCTIONCALL2 ( 122,        Pkg, SourceScan );
+
+    REGISTERFUNCTIONCALL1 ( 123,	Pkg, CallbackYouError);
+    REGISTERFUNCTIONCALL1 ( 124,	Pkg, CallbackYouLog);
  }
 
 ///////////////////////////////////////////////////////////////////

@@ -36,6 +36,7 @@
 #include <y2pm/PMYouPatchManager.h>
 #include <y2pm/InstYou.h>
 #include <y2pm/InstTarget.h>
+#include <y2pm/YouError.h>
 
 ///////////////////////////////////////////////////////////////////
 namespace Y2PMRecipients {
@@ -312,7 +313,7 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   //
 #warning InstTargetCallbacks::ScriptExecCallback is actually YOU specific
-  // Actually a YouScriptProgress and the behaviour of precentage
+  // Actually a YouScriptProgress and the behaviour of percentage
   // report is strange. Space for improvement (e.g. error reporting).
   // Maybe provide a common YCP callback for ScriptExec and let
   // YOU redirect it to YouScriptProgress, if this kind of report
@@ -592,7 +593,8 @@ namespace Y2PMRecipients {
   {
     YouReceive( RecipientCtl & construct_r ) : Recipient( construct_r ) {}
 
-    virtual bool progress( int percent ) {
+    virtual bool progress( int percent )
+    {
       D__ << "you progress: " << percent << endl;
       CB callback( ycpcb( YCPCallbacks::CB_YouProgress ) );
       if ( callback._set ) {
@@ -601,7 +603,9 @@ namespace Y2PMRecipients {
       }
       return false;
     }
-    virtual bool patchProgress( int percent, const string & pkg ) {
+
+    virtual bool patchProgress( int percent, const string & pkg )
+    {
       D__ << "you patch progress: " << percent << endl;
       CB callback( ycpcb( YCPCallbacks::CB_YouPatchProgress ) );
       if ( callback._set ) {
@@ -611,6 +615,36 @@ namespace Y2PMRecipients {
       }
       return false;
     }
+
+    virtual PMError showError( const string &type, const string &text,
+                               const string &details )
+    {
+      D__ << "you error: " << text << endl;
+      CB callback( ycpcb( YCPCallbacks::CB_YouError ) );
+      if ( callback._set ) {
+	callback.addStr( type );
+	callback.addStr( text );
+	callback.addStr( details );
+        string result = callback.evaluateStr();
+        if ( result == "" ) return PMError();
+        else return PMError::E_error;
+      }
+      return YouError::E_callback_missing;
+    }
+
+    virtual PMError log( const string &text )
+    {
+      D__ << "you log: " << text << endl;
+      CB callback( ycpcb( YCPCallbacks::CB_YouLog ) );
+      if ( callback._set ) {
+	callback.addStr( text );
+        string result = callback.evaluateStr();
+        if ( result == "" ) return PMError();
+        else return PMError::E_error;
+      }
+      return YouError::E_callback_missing;
+    }
+
     virtual bool executeYcpScript( const string & script ) {
       D__ << "you execute YCP script" << endl;
       CB callback( ycpcb( YCPCallbacks::CB_YouExecuteYcpScript ) );
@@ -792,12 +826,24 @@ YCPValue PkgModuleFunctions::CallbackSourceChange( const YCPString& args ) {
 }
 
 YCPValue PkgModuleFunctions::CallbackYouProgress( const YCPString& args ) {
+  y2internal("CallbackYouProgress");
   return SET_YCP_CB( CB_YouProgress, args );
 }
 
 YCPValue PkgModuleFunctions::CallbackYouPatchProgress( const YCPString& args ) {
   return SET_YCP_CB( CB_YouPatchProgress, args );
 }
+
+YCPValue PkgModuleFunctions::CallbackYouError( const YCPString& args ) {
+  y2internal("CallbackYouError");
+  return SET_YCP_CB( CB_YouError, args );
+}
+
+YCPValue PkgModuleFunctions::CallbackYouLog( const YCPString& args ) {
+  y2internal("CallbackYouLog");
+  return SET_YCP_CB( CB_YouLog, args );
+}
+
 YCPValue PkgModuleFunctions::CallbackYouExecuteYcpScript( const YCPString& args ) {
   return SET_YCP_CB( CB_YouExecuteYcpScript, args );
 }

@@ -371,6 +371,8 @@ PkgModuleFunctions::SetSelection (const YCPString& selection)
 YCPValue
 PkgModuleFunctions::ClearSelection (const YCPString& selection)
 {
+    y2internal("ClearSelection");
+
     string name = selection->value();
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (selectable)

@@ -152,6 +152,8 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue CallbackSourceChange (const YCPString& func);
 	YCPValue CallbackYouProgress (const YCPString& func);
 	YCPValue CallbackYouPatchProgress (const YCPString& func);
+	YCPValue CallbackYouError (const YCPString& func);
+	YCPValue CallbackYouLog (const YCPString& func);
         YCPValue CallbackYouExecuteYcpScript (const YCPString& func);
         YCPValue CallbackYouScriptProgress (const YCPString& func);
         YCPValue CallbackStartRebuildDb (const YCPString& func);
@@ -295,6 +297,8 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, CallbackSourceChange, 	"void (string)",String, 	PkgModuleFunctions, CallbackSourceChange);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouProgress, 	"void (string)",String,		PkgModuleFunctions, CallbackYouProgress);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouPatchProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouPatchProgress);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackYouError, 	"void (string)",String,		PkgModuleFunctions, CallbackYouError);
+	Y2FUNCTIONCALL1 ( Pkg, CallbackYouLog,          "void (string)",String,	        PkgModuleFunctions, CallbackYouLog);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouExecuteYcpScript, "void (string)",String,	PkgModuleFunctions, CallbackYouExecuteYcpScript);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouScriptProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouScriptProgress);
         Y2FUNCTIONCALL1 ( Pkg, CallbackStartRebuildDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStartRebuildDb);
