@@ -18,6 +18,18 @@
 
 /-*/
 
+/** 
+ * @file Y2NamespaceCPP.h
+ * @brief Helper classes/macros for accessing a C++-based namespace from YCP interpreter
+ *
+ * These macros and helper classes ease building a table of a functions to be avaiable
+ * to the rest of YaST.
+ *
+ * Each function must be implemented using a class. The class declaration and all needed machinery
+ * are hidden in the @ref Y2FUNCTIONCALL macros. Then, the macro must be registered
+ * at runtime using the corresponding @ref REGISTERFUNCTIONCALL macro.
+ */
+
 #ifndef Y2NamespaceCPP_h
 #define Y2NamespaceCPP_h
 
@@ -87,6 +99,23 @@ public:
 };
 
 
+/**
+ * @def Y2FUNCTIONCALL(namespace, name, signature, impl_class, impl_func)
+ * @brief Macro to declare a class for calling a C++-based method without parameters.
+ *
+ * The method @ref impl_func must return a YCPValue.
+ *
+ * @param namespace	in which namespace should the method exist
+ * @param name		the name in the namespace, how should the method be known
+ * @param signature	textual representation of the method signature
+ * @param impl_class	C++ class implementing the method
+ * @param impl_func	method of the @ref impl_class to be called
+ *
+ * The following example will declare a class allowing to call string Pkg::YouGetDirectory(), which
+ * is implemented by a method YCPValue PkgModuleFunctions::YouGetDirectory ():
+ *
+ * Y2FUNCTIONCALL (Pkg, YouGetDirectory, "string ()", PkgModuleFunctions, YouGetDirectory)
+ */
 #define Y2FUNCTIONCALL(namespace, name, signature, impl_class, impl_func)	\
 class namespace##name##Function : public Y2CPPFunctionCall <impl_class> {	\
 public:							\
@@ -104,6 +133,26 @@ public:							\
 }
 
 
+/**
+ * @def Y2FUNCTIONCALL1(namespace, name, signature, param1type, impl_class, impl_func)
+ * @brief Macro to declare a class for calling a C++-based method with a single parameter.
+ *
+ * The method @ref impl_func must return a YCPValue. The type of a parameter is prefixed
+ * with YCP to get a valid YCPValue-based class. As a consequence, the parameter
+ * type must start with the uppercase letter, for example List for YCPList.
+ *
+ * @param namespace	in which namespace should the method exist
+ * @param name		the name in the namespace, how should the method be known
+ * @param signature	textual representation of the method signature
+ * @param param1type	the type of the method parameter
+ * @param impl_class	C++ class implementing the method
+ * @param impl_func	method of the @ref impl_class to be called
+ *
+ * The following example will declare a class allowing to call boolean Pkg::IsAvailable(string tag), which
+ * is implemented by a method YCPValue PkgModuleFunctions::IsAvailable (const YCPString& tag):
+ *
+ * Y2FUNCTIONCALL1 (Pkg, IsAvailable, "boolean (string)", PkgModuleFunctions, IsAvailable)
+ */
 #define Y2FUNCTIONCALL1(namespace, name, signature, param1type, impl_class, impl_func)	\
 class namespace##name##Function1 : public Y2CPPFunctionCall <impl_class> {	\
 public:							\
@@ -121,6 +170,27 @@ public:							\
     }							\
 }
 
+/**
+ * @def Y2FUNCTIONCALL2(namespace, name, signature, param1type, param2type, impl_class, impl_func)
+ * @brief Macro to declare a class for calling a C++-based method with two parameters.
+ *
+ * The method @ref impl_func must return a YCPValue. The types of parameters are prefixed
+ * with YCP to get a valid YCPValue-based classes. As a consequence, the parameter
+ * type must start with the uppercase letter, for example List for YCPList.
+ *
+ * @param namespace	in which namespace should the method exist
+ * @param name		the name in the namespace, how should the method be known
+ * @param signature	textual representation of the method signature
+ * @param param1type	the type of the method 1st parameter
+ * @param param2type	the type of the method 2nd parameter
+ * @param impl_class	C++ class implementing the method
+ * @param impl_func	method of the @ref impl_class to be called
+ *
+ * The following example will declare a class allowing to call boolean Pkg::TargetInit(string root, boolean new), 
+ * which is implemented by a method YCPValue PkgModuleFunctions::TargetInit (const YCPString& root, const YCPString& new):
+ *
+ * Y2FUNCTIONCALL2 (Pkg, TargetInit, "boolean (string, boolean)", PkgModuleFunctions, TargetInit)
+ */
 #define Y2FUNCTIONCALL2(namespace, name, signature, param1type, param2type, impl_class, impl_func)	\
 class namespace##name##Function2 : public Y2CPPFunctionCall <impl_class> {	\
 public:							\
@@ -141,6 +211,29 @@ public:							\
     }							\
 }
 
+/**
+ * @def Y2FUNCTIONCALL3(namespace, name, signature, param1type, param2type, param3type, impl_class, impl_func)
+ * @brief Macro to declare a class for calling a C++-based method with three parameters.
+ *
+ * The method @ref impl_func must return a YCPValue. The types of parameters are prefixed
+ * with YCP to get a valid YCPValue-based classes. As a consequence, the parameter
+ * type must start with the uppercase letter, for example List for YCPList.
+ *
+ * @param namespace	in which namespace should the method exist
+ * @param name		the name in the namespace, how should the method be known
+ * @param signature	textual representation of the method signature
+ * @param param1type	the type of the method 1st parameter
+ * @param param2type	the type of the method 2nd parameter
+ * @param param3type	the type of the method 3rd parameter
+ * @param impl_class	C++ class implementing the method
+ * @param impl_func	method of the @ref impl_class to be called
+ *
+ * The following example will declare a class allowing to call string Pkg::SourceProvideFile (integer SrcId, integer medianr, string file), 
+ * which is implemented by a method 
+ * YCPValue PkgModuleFunctions::SourceProvideFile (const YCPInteger& id, const YCPInteger& mid, const YCPString& f):
+ *
+ * Y2FUNCTIONCALL3 (Pkg, SourceProvideFile, "string (integer, integer, string)", PkgModuleFunctions, SourceProvideFile)
+ */
 #define Y2FUNCTIONCALL3(namespace, name, signature, param1type, param2type, param3type, impl_class, impl_func)	\
 class namespace##name##Function3 : public Y2CPPFunctionCall <impl_class> {	\
 public:							\
@@ -162,6 +255,32 @@ public:							\
     }							\
 }
 
+/**
+ * @def Y2FUNCTIONCALL4(namespace, name, signature, param1type, param2type, param3type, param4type, impl_class, impl_func)
+ * @brief Macro to declare a class for calling a C++-based method with three parameters.
+ *
+ * The method @ref impl_func must return a YCPValue. The types of parameters are prefixed
+ * with YCP to get a valid YCPValue-based classes. As a consequence, the parameter
+ * type must start with the uppercase letter, for example List for YCPList.
+ *
+ * @param namespace	in which namespace should the method exist
+ * @param name		the name in the namespace, how should the method be known
+ * @param signature	textual representation of the method signature
+ * @param param1type	the type of the method 1st parameter
+ * @param param2type	the type of the method 2nd parameter
+ * @param param3type	the type of the method 3rd parameter
+ * @param param4type	the type of the method 4th parameter
+ * @param impl_class	C++ class implementing the method
+ * @param impl_func	method of the @ref impl_class to be called
+ *
+ * The following example will declare a class allowing to call 
+ * list<string> Pkg::FilterPackages (bool byAuto, bool byApp, bool byUser, bool names_only), 
+ * which is implemented by a method 
+ * YCPValue PkgModuleFunctions::FilterPackages(const YCPBoolean& byAuto, const YCPBoolean& byApp, const YCPBoolean& byUser, const YCPBoolean& names_only):
+ *
+ * Y2FUNCTIONCALL4 ( Pkg, FilterPackages, "list<string> (boolean, boolean, boolean, boolean)", Boolean, 
+ * Boolean, Boolean, Boolean, PkgModuleFunctions, FilterPackages);
+ */
 #define Y2FUNCTIONCALL4(namespace, name, signature, param1type, param2type, param3type, param4type, impl_class, impl_func)	\
 class namespace##name##Function4 : public Y2CPPFunctionCall <impl_class> {	\
 public:							\
@@ -185,6 +304,18 @@ public:							\
     }							\
 }
 
+/**
+ * @def REGISTERFUNCTIONCALL(position, namespace, name)
+ * @brief Registers a function without parameter in a namespace.
+ *
+ * The function class must be already declared using the @ref Y2FUNCTIONCALL macro.
+ * This macro registers the symbol in a table of globally visible symbols
+ * of the namespace.
+ *
+ * @param position	integer ID of the function in the namespace, must be unique
+ * @param namespace	the namespace, where the function should be registered
+ * @param name		the name of the function in the namespace
+ */
 #define REGISTERFUNCTIONCALL(position, namespace, name)			\
     do {								\
 	Y2CPPFunction* mf = new Y2CPPFunction (				\
@@ -195,6 +326,18 @@ public:							\
     } while (0)
 
 
+/**
+ * @def REGISTERFUNCTIONCALL1(position, namespace, name)
+ * @brief Registers a function with a single parameter in a namespace.
+ *
+ * The function class must be already declared using the @ref Y2FUNCTIONCALL1 macro.
+ * This macro registers the symbol in a table of globally visible symbols
+ * of the namespace.
+ *
+ * @param position	integer ID of the function in the namespace, must be unique
+ * @param namespace	the namespace, where the function should be registered
+ * @param name		the name of the function in the namespace
+ */
 #define REGISTERFUNCTIONCALL1(position, namespace, name)		\
     do {								\
 	Y2CPPFunction* mf = new Y2CPPFunction (				\
@@ -205,6 +348,18 @@ public:							\
     } while (0)
 
 
+/**
+ * @def REGISTERFUNCTIONCALL2(position, namespace, name)
+ * @brief Registers a function with two parameters in a namespace.
+ *
+ * The function class must be already declared using the @ref Y2FUNCTIONCALL2 macro.
+ * This macro registers the symbol in a table of globally visible symbols
+ * of the namespace.
+ *
+ * @param position	integer ID of the function in the namespace, must be unique
+ * @param namespace	the namespace, where the function should be registered
+ * @param name		the name of the function in the namespace
+ */
 #define REGISTERFUNCTIONCALL2(position, namespace, name)		\
     do {								\
 	Y2CPPFunction* mf = new Y2CPPFunction (				\
@@ -215,6 +370,18 @@ public:							\
     } while (0)
 
 
+/**
+ * @def REGISTERFUNCTIONCALL3(position, namespace, name)
+ * @brief Registers a function with three parameters in a namespace.
+ *
+ * The function class must be already declared using the @ref Y2FUNCTIONCALL3 macro.
+ * This macro registers the symbol in a table of globally visible symbols
+ * of the namespace.
+ *
+ * @param position	integer ID of the function in the namespace, must be unique
+ * @param namespace	the namespace, where the function should be registered
+ * @param name		the name of the function in the namespace
+ */
 #define REGISTERFUNCTIONCALL3(position, namespace, name)		\
     do {								\
 	Y2CPPFunction* mf = new Y2CPPFunction (				\
@@ -225,6 +392,18 @@ public:							\
     } while (0)
 
 
+/**
+ * @def REGISTERFUNCTIONCALL4(position, namespace, name)
+ * @brief Registers a function with four parameters in a namespace.
+ *
+ * The function class must be already declared using the @ref Y2FUNCTIONCALL4 macro.
+ * This macro registers the symbol in a table of globally visible symbols
+ * of the namespace.
+ *
+ * @param position	integer ID of the function in the namespace, must be unique
+ * @param namespace	the namespace, where the function should be registered
+ * @param name		the name of the function in the namespace
+ */
 #define REGISTERFUNCTIONCALL4(position, namespace, name)		\
     do {								\
 	Y2CPPFunction* mf = new Y2CPPFunction (				\
