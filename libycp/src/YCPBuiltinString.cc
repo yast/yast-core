@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <regex.h>
+#include <libintl.h>
 #include <iostream>
 #include <string>
 
@@ -1010,6 +1011,20 @@ s_cryptblowfish(const YCPString& original)
 }
 
 
+static YCPValue
+s_dgettext (const YCPString& domain, const YCPString& text)
+{
+    return YCPString (dgettext (domain->value().c_str(), text->value().c_str()));
+}
+
+
+static YCPValue
+s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString& plural, const YCPInteger& count)
+{
+    return YCPString (dngettext (domain->value().c_str(), singular->value().c_str(), plural->value().c_str(), count->value()));
+}
+
+
 YCPBuiltinString::YCPBuiltinString ()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -1044,6 +1059,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "regexppos",	   "list<integer> (string, string)",	(void *)s_regexppos },
 	{ "regexpsub",	   "string (string, string, string)",	(void *)s_regexpsub },
 	{ "regexptokenize","list <string> (string, string)",	(void *)s_regexptokenize },
+	{ "dgettext",	   "string (string, string)",		(void *)s_dgettext},
+	{ "dngettext",	   "string (string, string, string, integer)",	(void *)s_dngettext},
 	{ 0 }
     };
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 19 17:21:06 CET 2004 - kkaempf@suse.de
+
+- add "dgettext" and "dngettext" builtins to support easy
+  re-translation after language change.
+
+-------------------------------------------------------------------
 Fri Mar 19 14:57:00 CET 2004 - mvidner@suse.cz
 
 - added AGENT_LIBADD so that agents work from standalone Perl
