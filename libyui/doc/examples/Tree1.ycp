@@ -76,6 +76,9 @@
     // that caused UI::UserInput() to return.
     string dest_dir = (string) UI::QueryWidget(`id(`dest_dir), `CurrentItem);
 
+    if ( dest_dir == nil )
+	dest_dir = "";
+
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!
     UI::CloseDialog();
