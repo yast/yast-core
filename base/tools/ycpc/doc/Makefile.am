@@ -2,7 +2,7 @@
 # Makefile.am for core/y2base/tools/ycpc
 #
 htmldir = $(docdir)/ycpc
-xmlfiles = ycpc.xml
+xmlfiles = ycpc.xml ycpc-data.xml
 htmlfiles = $(wildcard html/.html)
 
 
@@ -21,9 +21,7 @@ html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
 	cp -a `pkg-config --variable=yast2dir yast2-devtools`/data/docbook/images html
 
-EXTRA_DIST =  builtins.xml
-
-CLEANFILES = $(xmlfiles)
+EXTRA_DIST = $(xmlfiles)
 
 clean-local:
 	rm -rf html
