@@ -119,6 +119,7 @@ struct YWidgetOpt
     YBoolOpt isHStretchable;
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
+    YBoolOpt autoAdvance;
     YBoolOpt keyEvents;	
     YBoolOpt easterEgg;
     YBoolOpt testMode;
