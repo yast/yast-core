@@ -53,6 +53,13 @@ Y2Namespace::~Y2Namespace ()
 }
 
 
+const string
+Y2Namespace::name () const
+{
+    return "";
+}
+
+
 unsigned int
 Y2Namespace::symbolCount () const
 {

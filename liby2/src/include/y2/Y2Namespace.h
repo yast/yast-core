@@ -77,7 +77,7 @@ public:
     void finish ();
 
     //! what namespace do we implement
-    virtual const string name () const = 0;
+    virtual const string name () const;
     //! used for error reporting
     virtual const string filename () const = 0;
     
