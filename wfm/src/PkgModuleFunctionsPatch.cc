@@ -31,6 +31,7 @@
 #include <y2pm/YouError.h>
 #include <y2pm/PMYouPatchManager.h>
 #include <y2pm/InstYou.h>
+#include <y2pm/PMPackage.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -325,6 +326,16 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
     result->add( YCPString( "description" ), YCPString( patch->longDescription() ) );
     result->add( YCPString( "preinformation" ), YCPString( patch->preInformation() ) );
     result->add( YCPString( "postinformation" ), YCPString( patch->postInformation() ) );
+    
+    YCPList packageList;
+    
+    std::list<PMPackagePtr> packages = patch->packages();
+    std::list<PMPackagePtr>::const_iterator itPkg;
+    for ( itPkg = packages.begin(); itPkg != packages.end(); ++itPkg ) {
+      packageList->add( YCPString( (*itPkg)->nameEd() ) );
+    }
+    
+    result->add( YCPString( "packages" ), packageList );
 
     return result;
 }
