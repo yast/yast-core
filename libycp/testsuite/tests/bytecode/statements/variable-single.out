@@ -1,5 +1,0 @@
-{
-    // integer i
-    integer i = 0;
-    return i;
-}

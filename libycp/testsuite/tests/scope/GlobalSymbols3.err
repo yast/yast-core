@@ -1,9 +1,0 @@
-[Scanner] tests/scope/GlobalSymbols3.ycp:8 Error: Redefinition of local symbol
-[Scanner] tests/scope/GlobalSymbols3.ycp:3 Error: 'func2' defined here.
-[Scanner] tests/scope/GlobalSymbols3.ycp:9 Error: Undeclared identifier 'i'
-[Scanner] tests/scope/GlobalSymbols3.ycp:9 Error: Bad parameter
-Parsed:
-----------------------------------------------------------------------
-YError
-----------------------------------------------------------------------
-[Interpreter] tests/scope/GlobalSymbols3.ycp:8 Redefinition of local symbol

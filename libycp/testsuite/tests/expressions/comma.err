@@ -1,9 +1,0 @@
-[Scanner] tests/expressions/comma.ycp:15 Error: parse error, unexpected ','
-runycp: parser error
-Parsed:
-----------------------------------------------------------------------
-"World"
-----------------------------------------------------------------------
-runycp: parser error
-runycp: parser error
-runycp: parser error

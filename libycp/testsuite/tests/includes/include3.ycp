@@ -1,5 +1,0 @@
-{
-    include "tests/include3.inc";
-
-    return inc (0);
-}

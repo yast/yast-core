@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       YCPMap.h
 
@@ -28,7 +28,7 @@
 
 typedef map<YCPValue, YCPValue, ycpless> YCPValueYCPValueMap;
 class YCPMapIterator;
- 
+
 /**
  * @short A mapping from keys to values.
  * A map is also called assiciative array. It is a mapping from a set
@@ -66,8 +66,20 @@ public:
     /**
      * Is like @ref #add, but doesn't change this map.
      * It creates a newly created map.
-     */ 
+     */
     YCPMap functionalAdd(const YCPValue& key, const YCPValue& value) const;
+
+    /**
+     * Creates a copy of this list, i.e. creates a new list with
+     * the same elements as this one. The elements themselves
+     * are <b>not</b> copied, but only cloned!
+     */
+    YCPMap shallowCopy() const;
+
+    /**
+     * Remove a value from the map.
+     */
+    void remove(const YCPValue& key);
 
     /**
      * Returns the number of key/value pairs.
@@ -79,6 +91,11 @@ public:
      * to that key. Returns 0, if the key is not found.
      */
     YCPValue value(const YCPValue& key) const;
+
+    /**
+     * Returns true of false whether the map contains the key.
+     */
+    bool haskey (const YCPValue& key) const;
 
     /**
      * Returns a bidirectional STL iterator for the YCPMap that
@@ -98,14 +115,14 @@ public:
      * Compares two YCPMaps for equality, greaterness or smallerness.
      * Comparison is done as follows:
      *   shorter <  longer
-     *   pairwise comparison for maps of equal length not being empty 
+     *   pairwise comparison for maps of equal length not being empty
      * @param v value to compare against
      * @return YO_LESS,    if this is smaller than v,
      *         YO_EQUAL,   if this is equal to v,
      *         YO_GREATER, if this is greater to v
      */
     YCPOrder compare(const YCPMap &v) const;
-        
+
     /**
      * Returns an ASCII representation of the map.
      * Maps are denoted by a comma separated list of pairs
@@ -114,15 +131,10 @@ public:
     string toString() const;
 
     /**
-     * Output value as bytecode to stream
-     */
-    std::ostream & toStream (std::ostream & str) const;
-
-    /**
      * Returns YT_MAP. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
-    
+
 
 private:
     /**
@@ -145,7 +157,6 @@ class YCPMap : public YCPValue
     DEF_COMMON(Map, Value);
 public:
     YCPMap() : YCPValue(new YCPMapRep()) {}
-    YCPMap(std::istream & str);
 };
 
 

@@ -1,8 +1,0 @@
-// tests for the static type system
-
-// 1. optional return type for define
-
-{
-    define string x () ``{ return 0; }
-    define integer y () ``{ return 1; }
-}

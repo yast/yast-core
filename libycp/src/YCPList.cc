@@ -10,20 +10,24 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPList.cc
+   File:	YCPList.cc
 
-   Authors:	Mathias Kettner <kettner@suse.de>
-		Klaus Kaempf <kkaempf@suse.de>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
+/*
+ * YCPList data type
+ *
+ * Author: Mathias Kettner <kettner@suse.de>
+ */
 
 #include "YCP.h"
-#include "ycp/y2log.h"
-#include "ycp/YCPList.h"
+#include "y2log.h"
+#include "YCPList.h"
+#include "YCPInterpreter.h"
 #include <algorithm>
-#include "ycp/Bytecode.h"
 
 // YCPListRep
 
@@ -34,8 +38,7 @@ YCPListRep::YCPListRep()
 }
 
 
-int
-YCPListRep::size() const
+int YCPListRep::size() const
 {
     return elements.size();
 }
@@ -48,22 +51,19 @@ YCPListRep::reserve (int size)
 }
 
 
-bool
-YCPListRep::isEmpty() const
+bool YCPListRep::isEmpty() const
 {
     return elements.empty();
 }
 
 
-void
-YCPListRep::add (const YCPValue& value)
+void YCPListRep::add(const YCPValue& value)
 {
     elements.push_back(value);
 }
 
 
-void
-YCPListRep::set (const int i, const YCPValue& value)
+void YCPListRep::set(const int i, const YCPValue& value)
 {
     if (i < 0)
 	return;
@@ -73,8 +73,7 @@ YCPListRep::set (const int i, const YCPValue& value)
 }
 
 
-void
-YCPListRep::remove (const int n)
+void YCPListRep::remove(const int n)
 {
     if ((n < 0) || (n >= size())) {
         y2error("Invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
@@ -84,8 +83,7 @@ YCPListRep::remove (const int n)
 }
 
 
-void
-YCPListRep::swap (int x, int y)
+void YCPListRep::swap(int x, int y)
 {
     // FIXME: should produce a warning
     if ((x < 0) || (x >= size()) || (y < 0) || (y >= size()))
@@ -95,21 +93,31 @@ YCPListRep::swap (int x, int y)
 }
 
 
-static bool compareYCP (const YCPValue& y1, const YCPValue& y2)
+static bool compareYCP( const YCPValue& y1, const YCPValue& y2 )
 {
-    return (y1->compare(y2)) == YO_LESS;
+    return y1->compare(y2) == YO_LESS;
 }
 
 
-void
-YCPListRep::sortlist()
+void YCPListRep::sortlist()
 {
     std::sort (elements.begin (), elements.end (), compareYCP);
 }
 
 
-YCPList
-YCPListRep::shallowCopy() const
+static bool lcompareYCP( const YCPValue& y1, const YCPValue& y2 )
+{
+    return y1->compare(y2, true) == YO_LESS;
+}
+
+
+void YCPListRep::lsortlist()
+{
+    std::sort (elements.begin (), elements.end (), lcompareYCP);
+}
+
+
+YCPList YCPListRep::shallowCopy() const
 {
     YCPList newlist;
     newlist->reserve (size());
@@ -119,43 +127,31 @@ YCPListRep::shallowCopy() const
 }
 
 
-YCPList
-YCPListRep::functionalAdd (const YCPValue& val, bool prepend) const
+YCPList YCPListRep::functionalAdd(const YCPValue& val, bool prepend) const
 {
 #warning TODO: implement this better. Avoid duplicating the list.
-    YCPList newlist;
-    newlist->reserve (size() + 1);
-    if (prepend)
-    {
-	newlist->add(val);
-    }
-    for (int i=0; i<size(); i++)
-    {
+   YCPList newlist;
+   newlist->reserve (size() + 1);
+   if (prepend) newlist->add(val);
+   for (int i=0; i<size(); i++)
        newlist->add(value(i));
-    }
-    if (!prepend)
-    {
-	newlist->add(val);
-    }
-    return newlist;
+   if (!prepend) newlist->add(val);
+   return newlist;
 }
 
 
-YCPValue
-YCPListRep::value(int n) const
+YCPValue YCPListRep::value(int n) const
 {
-    if ((n < 0) || (n >= size()))
-    {
-	y2error ("invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
-	//abort();
-	return YCPNull();
-    }
-    return elements[n];
+  if ((n < 0) || (n >= size())) {
+    y2error ("invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
+    //abort();
+    return YCPNull();
+  }
+  return elements[n];
 }
 
 
-YCPOrder
-YCPListRep::compare(const YCPList& l) const
+YCPOrder YCPListRep::compare(const YCPList& l) const
 {
     int size_this  = size();
     int size_l     = l->size();
@@ -193,26 +189,23 @@ YCPListRep::compare(const YCPList& l) const
     }
 }
 
-string
-YCPListRep::toString() const
+string YCPListRep::toString() const
 {
     return "[" + commaList() + "]";
 }
 
 
-YCPValueType
-YCPListRep::valuetype() const
+YCPValueType YCPListRep::valuetype() const
 {
     return YT_LIST;
 }
 
 
-string
-YCPListRep::commaList() const
+string YCPListRep::commaList() const
 {
     string ret;
 
-    for (unsigned index = 0; index < elements.size(); index++)
+    for (unsigned index=0; index<elements.size(); index++)
     {
 	if (index != 0) ret += ", ";
 	ret += elements[index].isNull()?"(null)":elements[index]->toString();
@@ -220,36 +213,3 @@ YCPListRep::commaList() const
     return ret;
 }
 
-
-/**
- * Output value as bytecode to stream
- */
-std::ostream &
-YCPListRep::toStream (std::ostream & str) const
-{
-    Bytecode::writeInt32 (str, elements.size());
-    for (unsigned index = 0; index < elements.size(); index++)
-    {
-	if (!Bytecode::writeValue (str, elements[index]))
-	    break;
-    }
-    return str;
-}
-
-
-// --------------------------------------------------------
-
-YCPList::YCPList(std::istream & str)
-    : YCPValue (YCPList())
-{
-    u_int32_t len = Bytecode::readInt32 (str);
-    if (str.good())
-    {
-	(*this)->reserve (len);
-	for (unsigned index = 0; index < len; index++)
-	{
-	    YCPValue value = Bytecode::readValue (str);
-	    (*this)->set (index, value);
-	}
-    }
-}

@@ -1,6 +1,0 @@
-//
-{
-    import "module1";
-
-    return module1::j + 1;
-}

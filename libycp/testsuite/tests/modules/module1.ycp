@@ -1,6 +1,0 @@
-// a simple module
-{
-    module "module1";
-
-    global integer j = 42;
-}

@@ -15,11 +15,18 @@
    Author:     Arvin Schnell <arvin@suse.de>
    Maintainer: Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
 
-#define _GNU_SOURCE
+/*
+ * Debugger for YCP
+ */
 
+
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
@@ -32,10 +39,11 @@ $Id$
 #include <arpa/inet.h>
 #include <errno.h>
 
-#include "ycp/YCPDebugger.h"
-#include "ycp/YCode.h"
-#include "ycp/YCPCode.h"
-#include "ycp/y2log.h"
+#include "YCPBasicInterpreter.h"
+#include "YCPScope.h"
+#include "YCPScopeInstance.h"
+#include "YCPDebugger.h"
+#include "y2log.h"
 
 
 YCPDebugger::YCPDebugger (bool wait_for_frontend)
@@ -63,46 +71,12 @@ YCPDebugger::~YCPDebugger ()
 }
 
 
-int
-YCPDebugger::lineNumber () const
-{
-    return m_line;
-}
-
-
-void
-YCPDebugger::setLineNumber (int line)
-{
-    m_line = line;
-    return;
-}
-
-
-const char *
-YCPDebugger::filename () const
-{
-    return m_filename;
-}
-
-
-void
-YCPDebugger::setFilename (const char *filename)
-{
-    y2debug ("setFilename (%s)\n", filename);
-    if (filename)
-    {
-	m_filename = filename;
-    }
-    return;
-}
-
-
 bool
 YCPDebugger::ignore (EntryPoint entrypoint, const YCPElement &element)
 {
     switch (entrypoint) {
 
-    case Interpreter: {
+    case BasicInterpreter: {
 
 	const YCPValue value = element->asValue ();
 	if (!value->isBlock ())
@@ -143,9 +117,16 @@ YCPDebugger::ignore (EntryPoint entrypoint, const YCPElement &element)
     return false;
 }
 
+// On a Ctrl-C, the telnet client sends
+// IAC InterruptProcess IAC DO TimingMark
+static const char *telnet_break = "\xff\xf4\xff\xfd\x06";
+// So we reply IAC WON'T TimingMark, otherwise the client gets confused.
+static const char *telnet_wont_timing_mark = "\xff\xfc\x06";
+// Of course this is a quick hack, but it works.
+// See also RFC 854, RFC 860.
 
 void
-YCPDebugger::debug (YCPInterpreter *inter, EntryPoint entrypoint,
+YCPDebugger::debug (YCPBasicInterpreter *inter, EntryPoint entrypoint,
 		    const YCPElement &element)
 {
     Interpreter *act = find_inter (inter);
@@ -208,8 +189,13 @@ YCPDebugger::debug (YCPInterpreter *inter, EntryPoint entrypoint,
     // discarded, thus this must be the last check. Kind of ugly!
     if (goon) {
 	string cmd = read_line (false);
-	if (cmd == "interrupt")
+	if (cmd == "interrupt" || cmd == "I" || cmd == "\003")
 	    goon = false;
+	else if (cmd == telnet_break)
+	{
+	    goon = false;
+	    write_line (telnet_wont_timing_mark);
+	}
     }
 
     /*
@@ -278,27 +264,23 @@ YCPDebugger::debug (YCPInterpreter *inter, EntryPoint entrypoint,
 
 
 static int
-split (const string &in, int n, string *out, const char *delim)
+split (const string& in, int n, string* out, const char* delim)
 {
-    char buffer [in.length () + 1];
-    strcpy (buffer, in.c_str ());
-    char *tmp = buffer;
+    // this ain't the fastest split implementation
 
     int i = 0;
 
-    while (true) {
+    const string::size_type l = in.length ();
+    string::size_type a = 0;
 
-	char *t = strsep (&tmp, delim);
-
-	if (t == NULL)
-	    return i;
-
-	if (*t != '\0') {
-	    out[i++] = t;
-	    if (i == n)
-		return i;
-	}
-
+    while (true)
+    {
+        string::size_type b = in.find_first_of (delim, a);
+        if (a != b && a != l)
+            out[i++] = in.substr (a, b - a);
+        if (b == string::npos || i == n)
+            return i;
+        a = b + 1;
     }
 }
 
@@ -310,26 +292,34 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
     string args[5];
     int nargs = split (command, 5, args, " \t");
 
-    if (nargs == 1 && args[0] == "interrupt") {
+    if (nargs == 1 && (args[0] == "interrupt" || args[0] == "I" ||
+		       args[0] == "\003")) {
 	return false;
     }
 
-    if (nargs == 1 && args[0] == "continue") {
+    if (nargs == 1 && args[0] == telnet_break) {
+	write_line (telnet_wont_timing_mark);
+	return false;
+    }
+
+    if (nargs == 1 && (args[0] == "continue" ||
+		       args[0] == "c" || args[0] == "fg")) {
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "single") {
+    if (nargs == 1 && (args[0] == "single" ||
+		       args[0] == "stepi" || args[0] == "si")) {
 	single_mode = true;
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "step") {
+    if (nargs == 1 && (args[0] == "step" || args[0] == "s")) {
 	leave_position.setpos (inter->interpreter->current_file,
 			       inter->interpreter->current_line);
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "next") {
+    if (nargs == 1 && (args[0] == "next" || args[0] == "n")) {
 	hold_level = inter->interpreter->scopeLevel;
 	return true;
     }
@@ -363,59 +353,88 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 	return false;
     }
 
-    if (nargs == 1 && args[0] == "scope") {
-	print_scope (inter);
-	return false;
-    }
+    // scope [#<interp_no>] [<namespace>]
+    if (nargs >= 1 && args[0] == "scope") {
+	Interpreter * tmp = inter;
+	int scopearg = 1;
+	string scopename = "";
 
-    if (nargs == 2 && args[0] == "scope" && args[1][0] == '#') {
-	int unique_id = atoi (args[1].substr (1).c_str ());
-	Interpreter * tmp = find_inter (unique_id);
+	if (nargs == 2 && args[1][0] == '#') {	
+	    int unique_id = atoi (args[1].substr (1).c_str ());
+	    tmp = find_inter (unique_id);
+	    scopearg = 2;
+	}
+
+	if (nargs > scopearg) {
+	    scopename = args[scopearg];
+	}
+
 	if (tmp)
-	    print_scope (tmp);
+	    print_scope (tmp, scopename);
 	else
 	    write_line ("unknown interpreter");
 	return false;
     }
 
-    if (nargs == 2 && args[0] == "print") {
-	print_variable (inter, args[1]);
-	return false;
-    }
+    // {p|print} [#<interp_no>] [<namespace>::]<variable>
+    if (nargs >= 2 && (args[0] == "print" || args[0] == "p")) {
+	Interpreter * tmp = inter;
+	int vararg = 1;
+	string varname;
+	string scopename = "";
 
-    if (nargs == 3 && args[0] == "print" && args[1][0] == '#') {
-	int unique_id = atoi (args[1].substr (1).c_str ());
-	Interpreter * tmp = find_inter (unique_id);
+	if (args[1][0] == '#') {
+	    int unique_id = atoi (args[1].substr (1).c_str ());
+	    tmp = find_inter (unique_id);
+	    vararg = 2;
+	}
+
+	if (nargs > vararg) {
+	    varname = args[vararg];
+	}
+	else {
+	    write_line ("missing variable name");
+	    return false;
+	}
+
+	string::size_type dcpos = varname.find ("::");
+	if (dcpos != string::npos) {
+	    scopename = varname.substr (0, dcpos);
+	    varname = varname.substr (dcpos + 2);
+	    if (scopename.empty ())
+		scopename = "_"; // explicit global namespace
+	}
+
 	if (tmp)
-	    print_variable (tmp, args[2]);
+	    print_variable (tmp, varname, scopename);
 	else
 	    write_line ("unknown interpreter");
 	return false;
     }
 
-    if (nargs == 2 && args[0] == "list") {
-	if (args[1] == "breakpoints") {
+    if (nargs == 2 && (args[0] == "list" || args[0] == "l")) {
+	if (args[1] == "breakpoints" || args[1] == "b") {
 	    list_breakpoints ();
 	    return false;
 	}
-	if (args[1] == "interpreters") {
+	if (args[1] == "interpreters" || args[1] == "i") {
 	    list_interpreters ();
 	    return false;
 	}
-	if (args[1] == "source") {
+	if (args[1] == "source" || args[1] == "s") {
 	    list_source (inter->interpreter->current_file.c_str ());
 	    return false;
 	}
     }
 
-    if (nargs == 3 && args[0] == "break") {
-	add_breakpoint (args[1], strtol (args[2].c_str (), NULL, 10));
+    if (nargs == 3 && (args[0] == "break" || args[0] == "b")) {
+	add_breakpoint (args[1], strtol (args[2].c_str (), 0, 10));
 	list_breakpoints ();
 	return false;
     }
 
     if (nargs == 3 && args[0] == "clear") {
-	if (delete_breakpoint (args[1], strtol (args[2].c_str (), NULL, 10))) {
+	if (delete_breakpoint (args[1], strtol (args[2].c_str (), 0, 10))) {
 	    list_breakpoints ();
 	    return false;
 	}
@@ -429,16 +448,9 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 
 
 bool
-YCPDebugger::print_variable (Interpreter *inter, const string &name)
+YCPDebugger::print_variable (Interpreter *inter, const string &name, const string& scopename)
 {
-    YCPScopeInstance::YCPScopeInstance *instance = inter->interpreter->scopeTop;
-
-    if (!instance) {
-	write_line ("variable not found");
-	return false;
-    }
-
-    YCPValue value = instance->lookupValue (name);
+    YCPValue value = inter->interpreter->lookupValue (name, scopename);
     if (value.isNull ()) {
 	write_line ("variable not found");
 	return false;
@@ -452,9 +464,17 @@ YCPDebugger::print_variable (Interpreter *inter, const string &name)
 
 
 void
-YCPDebugger::print_scope (Interpreter *inter)
+YCPDebugger::print_scope (Interpreter *inter, const string& scopename)
 {
-    YCPScopeInstance::YCPScopeInstance *instance = inter->interpreter->scopeTop;
+    const YCPScopeInstance *instance = inter->interpreter->scopeTop;
+
+    if (!scopename.empty())
+    {
+	if (scopename == "_")
+	    instance = inter->interpreter->scopeGlobal;
+	else
+	    instance = inter->interpreter->lookupInstance (scopename);
+    }
 
     write_line ("BEGIN SCOPE");
 
@@ -487,18 +507,19 @@ YCPDebugger::print_scope (Interpreter *inter)
 }
 
 
-void
-YCPDebugger::add_interpreter (YCPInterpreter *inter)
+YCPDebugger::Interpreter *
+YCPDebugger::add_interpreter (YCPBasicInterpreter *inter)
 {
     Interpreter tmp;
     tmp.interpreter = inter;
     tmp.unique_id = unique_id_cnt++;
     interpreters.push_back (tmp);
+    return &interpreters.back ();
 }
 
 
 void
-YCPDebugger::delete_interpreter (YCPInterpreter *inter)
+YCPDebugger::delete_interpreter (YCPBasicInterpreter *inter)
 {
     for (vector <Interpreter>::iterator cur = interpreters.begin ();
 	 cur != interpreters.end (); cur++)
@@ -532,15 +553,14 @@ YCPDebugger::list_interpreters ()
 
 
 YCPDebugger::Interpreter *
-YCPDebugger::find_inter (const YCPInterpreter *inter)
+YCPDebugger::find_inter (YCPBasicInterpreter *inter)
 {
     for (vector <Interpreter>::iterator cur = interpreters.begin ();
 	 cur != interpreters.end (); cur++)
 	if ((*cur).interpreter == inter)
 	    return &(*cur);
 
-    y2error ("fatal error: called from unknown interpreter");
-    abort ();
+    return add_interpreter (inter);
 }
 
 
@@ -552,7 +572,7 @@ YCPDebugger::find_inter (int unique_id)
 	if ((*cur).unique_id == unique_id)
 	    return &(*cur);
 
-    return NULL;
+    return 0;
 }
 
 
@@ -670,7 +690,7 @@ YCPDebugger::check_socket (bool block)
 
     int res;
     do {
-	res = select (FD_SETSIZE, &read_fd_set, NULL, NULL, &timeout);
+	res = select (FD_SETSIZE, &read_fd_set, 0, 0, &timeout);
     } while (res == -1 && errno == EINTR);
 
     if (res < 0) {
@@ -721,7 +741,7 @@ YCPDebugger::read_line (bool block) const
 
     int res;
     do {
-	res = select (FD_SETSIZE, &read_fd_set, NULL, NULL, &timeout);
+	res = select (FD_SETSIZE, &read_fd_set, 0, 0, &timeout);
     } while (res == -1 && errno == EINTR);
 
     // Test for timeout.

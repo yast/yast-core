@@ -1,9 +1,0 @@
-// $Id$
-
-// tried with 3.14 and compare with 6.14, it gets the correct
-//   result but compare failed -> usual numerical problem
-{
-    float add1 = 3 + 3.0;		// propagate first operand
-    float add2 = 3.0 + 3;		// propagate second operand
-    return [(add1 == 6.0), (add2 == 6)];	// propagate second compare
-}

@@ -1,6 +1,0 @@
-{
-    define integer inc (integer j)
-    ``{
-	return j + 1;
-    }
-}

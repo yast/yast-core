@@ -1,9 +1,0 @@
-// function body may not be empty
-//
-//
-{
-  define void func(string a, string b, string c) ``{
-  }
-
-  func( "Hello", "cruel" ,"World");
-}

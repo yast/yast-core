@@ -1,57 +1,53 @@
 #
-# Makefile.am for libycp
+# Makefile.am for core/libycp/src
 #
 
 SUBDIRS = include
 
-# for pathsearch.cc
-# FIXME use the standard defines
-AM_CXXFLAGS = -DYAST2DIR=\"/usr/share/YaST2\"		\
-	-DPLUGINDIR=\"/usr/lib/YaST2/plugin\"		\
-	-DEXECCOMPDIR=\"/usr/lib/YaST2/plugin\"
+AM_CXXFLAGS = -DY2LOG=\"libycp\" -DYAST2DIR=\"${yast2dir}\"
 
 lib_LTLIBRARIES = libycp.la
 
-#
-# Sources, in REVERSE constructor order
-#   -> initialize y2log FIRST
-#
+libycp_la_SOURCES = 								\
+										\
+	YCPBasicInterpreter.cc YCPBlock.cc YCPBoolean.cc YCPBreakStatement.cc	\
+	YCPByteblock.cc YCPContinueStatement.cc YCPDeclAny.cc			\
+	YCPDeclList.cc YCPDeclStruct.cc YCPDeclTerm.cc YCPDeclType.cc		\
+	YCPDeclaration.cc YCPDoWhileBlock.cc YCPElement.cc			\
+	YCPEvaluationStatement.cc YCPFloat.cc YCPIfThenElseStatement.cc		\
+	YCPInteger.cc YCPInterpreter.cc YCPList.cc YCPLocale.cc YCPMap.cc	\
+	YCPParser.cc YCPPath.cc YCPReturnStatement.cc YCPScanner.cc		\
+	YCPNestedStatement.cc YCPBuiltinStatement.cc				\
+	YCPStatement.cc YCPString.cc YCPSymbol.cc YCPTerm.cc			\
+	YCPValue.cc YCPVoid.cc YCPWhileBlock.cc parser.yy scanner.ll y2log.cc	\
+	YCPScope.cc YCPIdentifier.cc YCPDebugger.cc YCPScopeInstance.cc		\
+	YCPError.cc								\
+	YCPBuiltin.cc YCPBuiltinInteger.cc YCPBuiltinPath.cc			\
+	YCPBuiltinFloat.cc YCPBuiltinList.cc					\
+	YCPBuiltinString.cc YCPBuiltinTerm.cc					\
+	YCPBuiltinMap.cc YCPBuiltinMisc.cc					\
+	y2crypt.cc y2crypt.h y2string.cc y2string.h
 
-libycp_la_SOURCES = 					\
-	pathsearch.cc					\
-	Bytecode.cc					\
-	StaticDeclaration.cc YCode.cc YCPCode.cc	\
-	YExpression.cc YStatement.cc YBlock.cc		\
-	SymbolTable.cc					\
-	Scanner.cc Parser.cc 				\
-	YCPBoolean.cc					\
-	YCPElement.cc YCPByteblock.cc YCPFloat.cc	\
-	YCPInteger.cc YCPList.cc			\
-	YCPMap.cc YCPPath.cc				\
-	YCPString.cc YCPSymbol.cc YCPTerm.cc		\
-	YCPValue.cc YCPVoid.cc parser.yy scanner.ll	\
-	YCPError.cc					\
-	YBuiltin.cc YCPBuiltinInteger.cc		\
-	YCPBuiltinPath.cc YCPBuiltinFloat.cc		\
-	YCPBuiltinList.cc YCPBuiltinBoolean.cc		\
-	YCPBuiltinString.cc YCPBuiltinTerm.cc		\
-	YCPBuiltinVoid.cc YCPBuiltinMap.cc		\
-	YCPBuiltinMisc.cc				\
-	SymbolEntry.cc					\
-	TypeCode.cc					\
-	y2log.cc
-
-$(srcdir)/scanner.cc: scanner.ll parser.h
+$(srcdir)/scanner.cc: scanner.ll $(srcdir)/parser.h
 	flex++ -o$@ $<
 
-BUILT_SOURCES = parser.cc scanner.cc parser.h
+$(srcdir)/parser.h $(srcdir)/parser.cc: parser.yy
+	bison -y -d -v $<
+	mv -f y.tab.c $(srcdir)/parser.cc
+	mv -f y.tab.h $(srcdir)/parser.h
 
-INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp
+$(srcdir)/hashtable.h: hashtable.gperf
+	gperf -k 3,5,7 -L ANSI-C -C -E -I -t <$< >$@.new
+	mv -f $@.new $@
 
-libycp_la_LDFLAGS = -version-info 3:0
+BUILT_SOURCES = parser.cc scanner.cc parser.h hashtable.h
 
-libycp_la_LIBADD = -lcrypt
+INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(includedir)
 
-EXTRA_DIST = scanner.ll $(BUILT_SOURCES)
+libycp_la_LDFLAGS = -version-info 2:0:0
+
+libycp_la_LIBADD = -lxcrypt -ly2util
+
+EXTRA_DIST = scanner.ll parser.yy hashtable.gperf
 
 CLEANFILES = y.output $(BUILT_SOURCES)

@@ -1,8 +1,0 @@
-{
-    define integer plus (integer i, integer j)
-    {
-	return i + j;
-    }
-
-    return plus (1,1);
-}

@@ -1,3 +1,0 @@
-[libycp] YCPPath.cc(YCPPathRep):56 bad path constant: dash before/after dot not allowed
-[Scanner] tests/values/PathErr3.ycp:18 Error: not a path constant
-runycp: parser error

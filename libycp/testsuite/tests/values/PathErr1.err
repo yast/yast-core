@@ -1,4 +1,0 @@
-[Scanner] tests/values/PathErr1.ycp:18 Error: dash behind path constant not allowed
-[Scanner] tests/values/PathErr1.ycp:18 Error: parse error, unexpected $end
-runycp: parser error
-runycp: parser error

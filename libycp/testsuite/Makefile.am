@@ -1,26 +1,29 @@
 #
-# Makefile.am for libycp/testsuite
+# Makefile.am for core/libycp/testsuite
 #
 
 SUBDIRS = config lib libycp.test tests
 
-INCLUDES = -I$(srcdir)/../src/include
+AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
-bindir = /usr/bin
-libdir = ../src/.libs
+INCLUDES = -I$(srcdir)/../src/include -I$(includedir)		\
+	-I$(includedir)
 
-bin_PROGRAMS = ycpc runc runycp
-ycpc_SOURCES = ycpc.cc
-ycpc_LDADD = ../src/libycp.la
-runc_SOURCES = runc.cc
-runc_LDADD = ../src/libycp.la
+bin_PROGRAMS = runycp parseycp testscope
 runycp_SOURCES = runycp.cc
-runycp_LDADD = ../src/libycp.la
+runycp_LDADD = ../src/libycp.la -ly2util
+parseycp_SOURCES = parseycp.cc
+parseycp_LDADD = ../src/libycp.la -ly2util
+testscope_SOURCES = testscope.cc
+testscope_LDADD = ../src/libycp.la -ly2util
 
+
+PACKAGE = libycp
 AUTOMAKE_OPTIONS = dejagnu
 
 clean-local:
-	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp libycp.log libycp.sum site.bak log.tmp
-	rm -f $(bin_PROGRAMS)
+	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp	\
+	libycp.log libycp.sum site.bak
+	rm -f runycp parseycp testscope
 
 EXTRA_DIST = README

@@ -10,10 +10,11 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPList.h
+   File:	YCPList.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -103,6 +104,11 @@ public:
     void sortlist();
 
     /**
+     * Sorts the list (locale aware). This function changes the list.
+     */
+    void lsortlist();
+
+    /**
      * Creates a copy of this list, i.e. creates a new list with
      * the same elements as this one. The elements themselves
      * are <b>not</b> copied, but only cloned!
@@ -151,11 +157,6 @@ public:
     string toString() const;
 
     /**
-     * Output value as bytecode to stream
-     */
-    std::ostream & toStream (std::ostream & str) const;
-
-    /**
      * Returns YT_LIST. See @ref YCPValueRep#type.
      */
     YCPValueType valuetype() const;
@@ -179,7 +180,6 @@ class YCPList : public YCPValue
     DEF_COMMON(List, Value);
 public:
     YCPList() : YCPValue(new YCPListRep()) {}
-    YCPList(std::istream & str);
 };
 
 #endif   // YCPList_h

@@ -1,6 +1,0 @@
-// $Id$
-
-{
-    integer add1 = tointeger (3.0 + 3.0);
-    return [(add1 == 6.0)];
-}

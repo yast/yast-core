@@ -1,9 +1,0 @@
-{
-    module "NameOfModule";
-
-    global define integer f() {
-	module "Again";
-
-	return 0;
-    }
-}

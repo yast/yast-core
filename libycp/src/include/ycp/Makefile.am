@@ -1,32 +1,26 @@
 #
-# Makefile.am for libycp/src/include/ycp
+# Makefile.am for core/libycp/src/include/ycp
 #
 
 pkgincludedir = $(includedir)/ycp
 
 # these go to $(pkgincludedir)
 
-pkginclude_HEADERS =					\
-							\
-	YCPBoolean.h YCPByteblock.h			\
-	YCPElement.h YCPFloat.h				\
-	YCPInteger.h YCPList.h				\
-	YCPMap.h YCPPath.h				\
-	YCPString.h YCPSymbol.h YCPTerm.h		\
-	YCPValue.h YCPVoid.h toString.h			\
-	YCPError.h YCPDebugger.h			\
-	TypeCode.h					\
-	YCPBuiltinBoolean.h YCPBuiltinFloat.h		\
-	YCPBuiltinInteger.h YCPBuiltinList.h		\
-	YCPBuiltinMap.h	YCPBuiltinMisc.h		\
-	YCPBuiltinPath.h YCPBuiltinString.h		\
-	YCPBuiltinTerm.h YCPBuiltinVoid.h		\
-	StaticDeclaration.h YCode.h			\
-	YCPCode.h					\
-	Bytecode.h					\
-	YExpression.h YStatement.h YBlock.h		\
-	SymbolTable.h SymbolEntry.h Scanner.h Parser.h 	\
-	y2log.h ycpless.h md5.h
+pkginclude_HEADERS =								\
+										\
+	YCPBasicInterpreter.h YCPScope.h YCPBlock.h YCPBoolean.h		\
+	YCPBreakStatement.h YCPByteblock.h YCPContinueStatement.h		\
+	YCPDeclAny.h YCPDeclList.h YCPDeclStruct.h				\
+	YCPDeclTerm.h YCPDeclType.h YCPDeclaration.h YCPDoWhileBlock.h		\
+	YCPElement.h YCPEvaluationStatement.h YCPFloat.h			\
+	YCPIfThenElseStatement.h YCPInteger.h YCPInterpreter.h YCPList.h	\
+	YCPNestedStatement.h YCPBuiltinStatement.h				\
+	YCPLocale.h YCPMap.h YCPParser.h YCPPath.h YCPReturnStatement.h		\
+	YCPScanner.h YCPStatement.h YCPString.h YCPSymbol.h YCPTerm.h		\
+	YCPValue.h YCPVoid.h YCPWhileBlock.h parserret.h toString.h		\
+	YCPBuiltin.h YCPError.h	YCPIdentifier.h	YCPDebugger.h			\
+	YCPScopeInstance.h							\
+	y2log.h ycpless.h
 
 #<INSTALL-HEADER-TARGET>
 
