@@ -90,6 +90,8 @@ PkgModuleFunctions::YouStatus ()
 	result->add( YCPString( "mirrorurl" ), YCPString( product->youUrl() ) );
     }
     result->add( YCPString( "lastupdate" ), YCPInteger( you.lastUpdate() ) );
+    result->add( YCPString( "installedpatches" ),
+                 YCPInteger( you.installedPatches() ) );
     
     return result;
 }
