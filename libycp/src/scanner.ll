@@ -661,6 +661,12 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	return SCANNER_ERROR;
     }
 
+<namespace>. {
+	    debug_scanner("?%s?", yytext);
+	    logError ("Unexpected char '%s'", LINE_VAR, yytext);
+	    return SCANNER_ERROR;
+	}
+
   /* plain symbol  */
 {SYMBOL} {
 	/*y2debug ("builtinTable %p, m_localTable %p, m_globalTable %p", builtinTable, m_localTable, m_globalTable);*/
