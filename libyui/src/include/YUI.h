@@ -493,12 +493,20 @@ protected:
     /**
      * Creates a Time input filed
      */
-    virtual YWidget *createTime( YWidget *parent, YWidgetOpt & opt, const YCPString & label,  const YCPString & time ) = 0;
+    virtual YWidget *createTime( YWidget *parent,
+                                 YWidgetOpt & opt,   
+                                const YCPString & label,
+                                const YCPString & time );
+    virtual bool	hasTime() { return false; }
 
     /**
      * Creates a Date input filed
      */
-    virtual YWidget *createDate( YWidget *parent, YWidgetOpt & opt, const YCPString & label,  const YCPString & date ) = 0;
+    virtual YWidget *createDate( YWidget *parent,
+            YWidgetOpt & opt, 
+            const YCPString & label,
+            const YCPString & date );
+    virtual bool	hasDate() { return false; }
 
     /**
      * Creates a rich text widget

@@ -76,7 +76,6 @@
 #define YUIWidget_Bottom			"Bottom"
 #define YUIWidget_CheckBox			"CheckBox"
 #define YUIWidget_ComboBox			"ComboBox"
-#define YUIWidget_Date			        "Date"
 #define YUIWidget_Empty				"Empty"
 #define YUIWidget_Frame				"Frame"
 #define YUIWidget_HBox				"HBox"
@@ -110,7 +109,6 @@
 #define YUIWidget_SelectionBox			"SelectionBox"
 #define YUIWidget_Table				"Table"
 #define YUIWidget_TextEntry			"TextEntry"
-#define YUIWidget_Time			        "Time"
 #define YUIWidget_Top				"Top"
 #define YUIWidget_Tree				"Tree"
 #define YUIWidget_VBox				"VBox"
@@ -126,6 +124,7 @@
 
 #define YUISpecialWidget_BarGraph		"BarGraph"
 #define YUISpecialWidget_ColoredLabel		"ColoredLabel"
+#define YUISpecialWidget_Date			"Date"
 #define YUISpecialWidget_DownloadProgress	"DownloadProgress"
 #define YUISpecialWidget_DumbTab		"DumbTab"
 #define YUISpecialWidget_DummySpecialWidget	"DummySpecialWidget"
@@ -133,6 +132,7 @@
 #define YUISpecialWidget_VMultiProgressMeter	"VMultiProgressMeter"
 #define YUISpecialWidget_PartitionSplitter	"PartitionSplitter"
 #define YUISpecialWidget_Slider			"Slider"
+#define YUISpecialWidget_Time			"Time"
 #define YUISpecialWidget_Wizard			"Wizard"
 
 
