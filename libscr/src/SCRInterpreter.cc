@@ -137,6 +137,7 @@ SCRInterpreter::evaluateSCR (const YCPValue& value)
     if (value->isBuiltin())
     {
 	YCPBuiltin b = value->asBuiltin();
+	y2debug ("SCRInterpreter::evaluateSCR builtin #%d", b->builtin_code());
 	if (b->builtin_code() == YCPB_DEEPQUOTE)
 	{
 	    return evaluate (b->value(0));
@@ -157,6 +158,6 @@ SCRInterpreter::evaluateSCR (const YCPValue& value)
 	}
 	return evaluateInstantiatedTerm (t);
     }
-    y2error ("SCR::%s\n", value->toString().c_str());
+    y2error ("Unknown (vt %d) SCR::%s\n", value->valuetype(), value->toString().c_str());
     return YCPError ("Unknown SCR:: operation");
 }

@@ -527,7 +527,12 @@ YCPValue Y2ResolverComponent::evaluate(const YCPValue& value)
         interpreter = new SCRInterpreter(agent);
     }
 
-    return new_name ? YCPSymbol ("ag_resolver ()", true) : interpreter->evaluate(value);
+    if (new_name)
+	return YCPSymbol ("ag_resolver ()", true);
+    bool flag = interpreter->enableSubclassed (true);
+    YCPValue v = interpreter->evaluate(value);
+    interpreter->enableSubclassed (flag);
+    return v;
 }
 
 

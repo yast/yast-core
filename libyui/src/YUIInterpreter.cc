@@ -410,9 +410,9 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
     }
     else if (value->isBlock())
     {
-	bool b = setUIBlock (true);
+	bool b = enableSubclassed (true);
 	YCPValue v = evaluate (value);
-	setUIBlock (b);
+	enableSubclassed (b);
 	return v;
     }
     return YCPError ("Unknown UI:: operation");

@@ -50,7 +50,8 @@ YCPValue Y2IniAgentComponent::evaluate(const YCPValue& value)
         agent = new IniAgent();
         interpreter = new SCRInterpreter(agent);
     }
-    
-    return interpreter->evaluate(value);
+    bool flag = interpreter->enableSubclassed (true);
+    YCPValue v = interpreter->evaluate (value);
+    interpreter->enableSubclassed (flag);
+    return v;
 }
-

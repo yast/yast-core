@@ -44,7 +44,7 @@ YCPDebugger* YCPBasicInterpreter::debugger = NULL;
 
 
 YCPBasicInterpreter::YCPBasicInterpreter ()
-    : ui_block (false)
+    : enable_subclassed (false)
 {
     if (!debugger)
     {
@@ -653,9 +653,9 @@ YCPValue YCPBasicInterpreter::evaluateTerm(const YCPTerm& term)
     }
 
     if (ret.isNull()
-	&& ui_block)
+	&& enable_subclassed)
     {
-	// use subclassed YUIInterpreter
+	// use subclassed Interpreter
 	ret = evaluateInstantiatedTerm (evalterm);
     }
 

@@ -119,8 +119,10 @@ YCPValue Y2LosetupComponent::evaluate(const YCPValue& value)
 	agent = new LosetupAgent();
 	interpreter = new SCRInterpreter(agent);
     }
-
-    return interpreter->evaluate(value);
+    bool flag = interpreter->enableSubclassed (true);
+    YCPValue v = interpreter->evaluate (value);
+    interpreter->enableSubclassed (flag);
+    return v;
 }
 
 

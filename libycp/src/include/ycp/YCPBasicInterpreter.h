@@ -56,9 +56,9 @@ private:
     string moduleName;
 
     /**
-     * evaluate block via evaluateUI
+     * evaluate block via subclassed evaluateInstantiatedTerm
      */
-    bool ui_block;
+    bool enable_subclassed;
 
 public:
 
@@ -135,13 +135,14 @@ public:
     YCPValue setModuleName (const string& modulename);
 
     /**
-     * set interpreter for block
-     * used for UI::{...} so the block gets evaluated via
-     * evaluateUI instead evaluate
+     * enable/disable use of subclassed interpreter
+     * used when recursively calling evaluate() from inside
+     * a subclassed interpreter (YUIInterpreter, SCRInterpreter)
+     * so it's evaluateInstantiatedTerm() gets called
      * @param flag
      * @return current flag
      */
-    bool setUIBlock (bool flag) { bool ret = ui_block; ui_block = flag; return ret; }
+    bool enableSubclassed (bool flag) { bool ret = enable_subclassed; enable_subclassed = flag; return ret; }
 
 protected:
 
