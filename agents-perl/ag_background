@@ -20,9 +20,12 @@ use strict;
 
 use IPC::Open3;
 
+# WNOHANG constant
+use POSIX ":sys_wait_h";
+
 # child running flag
 our $child_running = 0;
-our $child_pid = 0;
+our $child_pid = -1;
 
 # max. size of input buffer (number of lines)
 my $buffer_size = 500;    
@@ -41,7 +44,9 @@ sub Handler()
 {
     if ($child_running)
     {
+	waitpid(-1, WNOHANG);
         $child_running = 0;
+	$child_pid = -1;
     }
 }
 
@@ -199,6 +204,10 @@ while (1)
 	    {
 		ycp::Return($total_lines);
 	    }
+	    if ($path eq '.pid')
+	    {
+		ycp::Return($child_pid);
+	    }
 	    elsif ($path eq '.newlines')
 	    {
 		ycp::Return($newlines);
@@ -249,7 +258,7 @@ while (1)
 	    }
 	    elsif ($path eq '.output_open')
 	    {
-		ycp::Return(defined($pipe_defined) ? 'true' : 'false');
+		ycp::Return($pipe_defined ? 'true' : 'false');
 	    }
 	    elsif ($path eq '.buffer_size')
 	    {
@@ -296,7 +305,10 @@ while (1)
 			ycp::Return('false');
 		    }
 		}
-		ycp::Return('false');
+		else
+		{
+		    ycp::Return('false');
+		}
 	    }
 	    elsif ($path eq '.stdin')
 	    {
