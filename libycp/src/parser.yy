@@ -3950,7 +3950,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    y2debug ("YCode::yeFunction:");
 #endif
 	    YEFunctionPtr func = (YEFunctionPtr)code; 
-	    name = func->entry()->name();
+	    name = func->qualifiedName();
 #if DO_DEBUG
 	    y2debug ("attach_parameter func ([%s]%s:%s)", func->toString().c_str(), parm->c->toString().c_str(), parm->t->toString().c_str());
 #endif

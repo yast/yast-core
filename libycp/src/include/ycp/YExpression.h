@@ -398,7 +398,6 @@ class YEFunction : public YCode, public Y2Function
     REP_BODY(YEFunction);
     const SymbolEntryPtr m_entry;
     ycodelist_t *m_parameters;
-    string qualifiedName () const;
 public:
     YEFunction (const SymbolEntryPtr entry);
     YEFunction (std::istream & str);
@@ -426,6 +425,7 @@ public:
     virtual YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const;
+    string qualifiedName () const;
 
     // implementation of the Y2Function interface:
 

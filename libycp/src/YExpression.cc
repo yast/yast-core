@@ -2639,7 +2639,7 @@ YEFunction::finishParameters ()
 string
 YEFunction::qualifiedName () const
 {
-    string n = m_entry->nameSpace () ?
+    string n = m_entry->nameSpace () && ! m_entry->nameSpace ()->name ().empty ()?
 	(m_entry->nameSpace ()->name () + string ("::")) :
 	"";
     return n + m_entry->name ();
