@@ -73,14 +73,14 @@ void IniSection::initValue (const string&key,const string&val,const string&comme
     if (v != values.end())
 	{
 	    // update value
-	    v->second.init(comment, val, rb);
+	    v->second.init(k, comment, rb, val);
 	    index.remove(IniName (k, IniName::VALUE));
 	}
     else
 	{
 	    // create new value
 	    IniEntry e;
-	    e.init (comment, val, rb);
+	    e.init (k, comment, rb, val);
 	    values[k] = e;
 	}
     index.push_back(IniName (k,IniName::VALUE));

@@ -1,4 +1,4 @@
-/**
+/**							-*- c++ -*-
  * YaST2: Core system
  *
  * Description:
@@ -26,53 +26,95 @@ using std::vector;
 using std::string;
 
 /**
- * This keeps value, its comment and index of rule it was read by.
+ * Base class of IniEntry and IniSection.
+ * This keeps name, its comment and index of rule it was read by.
  * set* functions are used from ycp code to change values.
  * init* functions are set when reading file from disk
  */
-class IniEntry
+class IniBase
 {
-private:
+protected:
+    /** name */
+    string name;
     /** comment */
     string comment;
-    /** value */
-    string val;
-    /** index to params in IniParser using which this value was read */
+    /** index to params/sections in IniParser using which this item was read */
     int read_by;
     /** changed? */
     bool dirty;
+
+    /** IniSection default ctor sets to -1. Why?*/
+    IniBase (int rb)
+	: name (), comment (), read_by (rb), dirty (false) {}
+    /** Used by another IniSection ctor */
+    IniBase (const string &n)
+	: name (n), comment (), read_by (0), dirty (true) {}
+
 public:
-    IniEntry () 
-	: comment (), val (), read_by (0), dirty (false) {}
+    virtual ~IniBase () {}
+
+    const char* getName()    const { return name.c_str();    }
     const char* getComment() const { return comment.c_str(); }
-    const char* getValue()   const { return val.c_str();     }
     int getReadBy()          const { return read_by;   }
 
     /** set dirty flag to false */
-    void clean() { dirty = false; }
+    virtual void clean() { dirty = false; }
 
+    /** changes and sets dirty flag */
+    void setName(const string&c)    { dirty = true; name = c;    }
     /** changes and sets dirty flag */
     void setComment(const string&c) { dirty = true; comment = c; }
     /** changes and sets dirty flag */
-    void setValue(const string&c)   { dirty = true; val = c;     }
-    /** changes and sets dirty flag */
     void setReadBy(int r)	    { dirty = true; read_by = r; }
+    /** sets dirty flag */
+    void setDirty()		    { dirty = true; }
 
     /** changes value only if not dirty */
+    void initName(const string&c)    { if (!dirty) name = c;    }
+    /** changes value only if not dirty */
     void initComment(const string&c) { if (!dirty) comment = c; }
+    /** changes value only if not dirty */
+    void initReadBy(const int r)     { if (!dirty) read_by = r; }
+
+    /** changes values only if not dirty */
+    void init(const string &n,const string&c, int rb)
+	    {
+		if (!dirty)
+		    {
+			name = n;
+			comment = c;
+			read_by = rb;
+		    }
+	    }
+};
+
+/**
+ * Only the string value in addition to IniBase
+ */
+class IniEntry : public IniBase
+{
+private:
+    /** value */
+    string val;
+public:
+    IniEntry ()
+	: IniBase (0), val () {}
+    const char* getValue()   const { return val.c_str();     }
+
+    void setValue(const string&c)   { dirty = true; val = c;     }
+
     /** changes value only if not dirty */
     void initValue(const string&c)   { if (!dirty) val = c;     }
     /** changes value only if not dirty */
     void initReadBy(const int r)     { if (!dirty) read_by = r; }
 
     /** changes values only if not dirty */
-    void init(const string &c,const string&v, int rb)
+    void init(const string &n, const string &c, int rb, const string &v)
 	    {
 		if (!dirty)
 		    {
-			comment = c;
 			val = v;
-			read_by = rb;
+			IniBase::init (n, c, rb);
 		    }
 	    }
 };
@@ -108,7 +150,7 @@ typedef map<const string,IniEntry>::iterator IniEntryMapIterator;
 /**
  * Section definition.
  */
-class IniSection
+class IniSection : public IniBase
 {
 private:
     /** ignore case (in key names and section names) */
@@ -134,27 +176,17 @@ private:
      */
     IniFileIndex index;
 
-    /** we need section name here */
-    string name;
-
     /**
      * if this is global section, there may be comment at the end
      * this is quite special case, it is impossible to change it
      */
     string end_comment;
 
-    /** section have some private info */
-    string comment;
-    /** index to IniParser::sections using which this section was found */
-    int read_by;
     /** index to IniParser::rewrites for filename - section name mapping
      * It appears that read_by was used for both purposes,
      * causing bug (#19066).
      */
     int rewrite_by;
-
-    /** dirty flag */
-    bool dirty;
 
     /**
      * values contained by this section
@@ -253,12 +285,13 @@ private:
     int dirValueFlat (const YCPPath&p, YCPList&l);
 public:
     IniSection ()
-	: ignore_case (false), ignore_style (0), allow_values (true), 
+	: IniBase (-1),
+	  ignore_case (false), ignore_style (0), allow_values (true), 
 	  allow_sections (true), allow_subsub (true), flat (false),
-	  index (), name (), end_comment (), comment (), 
-	  read_by(-1), rewrite_by(-1), dirty (false), values(), sections()
+	  index (), end_comment (), 
+	  rewrite_by(-1), values(), sections()
 	    {}
-    ~IniSection () {}
+    virtual ~IniSection () {}
 
     /** 
      * this is a constructor for newly added sections --> sets dirty 
@@ -268,10 +301,11 @@ public:
      * @param n name of section
      */
     IniSection (bool ic, int is, bool allow_ss, string n)
-	: ignore_case (ic), ignore_style (is), allow_values (true), 
+	: IniBase (n),
+	  ignore_case (ic), ignore_style (is), allow_values (true), 
 	  allow_sections (allow_ss), allow_subsub (allow_ss), flat (false),
-	  index (), name (n), end_comment (), comment (), 
-	  read_by(0), rewrite_by(0), dirty (true), values(), sections()
+	  index (), end_comment (),
+	  rewrite_by(0), values(), sections()
 	    {}
 
     /**
@@ -299,10 +333,6 @@ public:
     void initReadBy () { read_by = -1; }
 
     /** sets dirty flag also */
-    void setComment (const char*c)      { dirty = true; comment = c; }
-    /** sets dirty flag also */
-    void setReadBy (int c) 	     	{ dirty = true; read_by = c; }
-    /** sets dirty flag also */
     void setRewriteBy (int c) 	     	{ dirty = true; rewrite_by = c; }
     /** 
      * If there is no comment at the beginning and no values and no
@@ -321,7 +351,6 @@ public:
      */
     void setNesting (bool no_sub_sec, bool global_val);
     
-    int getReadBy() { return read_by; }
     int getRewriteBy() { return rewrite_by; }
     /**
      * Gets section on a path. Recursive. Attention! This function
@@ -396,12 +425,9 @@ public:
 
     bool isDirty ();
     /** set all subsection and values to clean */
-    void clean();
-    void setDirty () { dirty = true; }
+    virtual void clean();
     void setFlat ()  { flat  = true; }
 
-    const char* getName() const { return name.c_str(); }
-    const char* getComment() const { return comment.c_str(); }
     const char* getEndComment() const { return end_comment.c_str(); }
 };
 
