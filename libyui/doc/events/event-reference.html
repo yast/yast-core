@@ -227,7 +227,7 @@ Some other widgets
 <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>,
 <a href="../widgets/YTree-widget.html">Tree</a>)
 can also trigger this kind of event if they have the
-<a href="events-general.html#notify">notify option</a>
+<a href="event-intro.html#notify">notify option</a>
 set.
 <p class="info-box">
 <b>User interface style hint:</b>
@@ -264,7 +264,7 @@ to get things done.
     </tr>
     <tr>
 	<td><a href="../widgets/YTable-widget.html">Table</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Double click on an item (Qt).
@@ -274,7 +274,7 @@ to get things done.
     </tr>
     <tr>
 	<td><a href="../widgets/YSelectionBox-widget.html">SelectionBox</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Double click on an item (Qt).
@@ -284,7 +284,7 @@ to get things done.
     </tr>
     <tr>
 	<td><a href="../widgets/YTree-widget.html">Tree</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Double click on an item (Qt).
@@ -326,7 +326,7 @@ A <i>ValueChanged</i>
 is sent by most interactive widgets that have a value that can be changed by
 the user. 
 They all require the
-<a href="events-general.html#notify">notify option</a>
+<a href="event-intro.html#notify">notify option</a>
 to be set to send this event.
 <p>
 Widgets that have the concept of a "selected item" like
@@ -350,7 +350,7 @@ which can send both events, depending on what the user did.
     </thead>
     <tr>
 	<td><a href="../widgets/YMultiSelectionBox-widget.html">MultiSelectionBox</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Toggle an item's on/off state:
 	    <ul>
@@ -361,7 +361,7 @@ which can send both events, depending on what the user did.
     </tr>
     <tr>
 	<td><a href="../widgets/YRadioButton-widget.html">RadioButton</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Toggle the on/off state:
 	    <ul>
@@ -372,7 +372,7 @@ which can send both events, depending on what the user did.
     </tr>
     <tr>
 	<td><a href="../widgets/YRadioButton-widget.html">RadioButton</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Set this RadioButton to <i>on</i>:
 	    <ul>
@@ -391,12 +391,12 @@ which can send both events, depending on what the user did.
 	    <a href="../widgets/YTextEntry-widget.html">TextEntry</a><br>
 	    <a href="../widgets/YMultiLineEdit-widget.html">MultiLineEdit</a>
 	</td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>Enter text.</td>
     </tr>
     <tr>
 	<td><a href="../widgets/YComboBox-widget.html">ComboBox</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Select another value from the drop-down list:
@@ -416,7 +416,7 @@ which can send both events, depending on what the user did.
     </tr>
     <tr>
 	<td><a href="../widgets/YIntField-widget.html">IntField</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Change the numeric value:
 	    <ul>
@@ -430,7 +430,7 @@ which can send both events, depending on what the user did.
     </tr>
     <tr>
 	<td><a href="../widgets/YSlider-widget.html">Slider</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Move the slider.
@@ -441,7 +441,7 @@ which can send both events, depending on what the user did.
     </tr>
     <tr>
 	<td><a href="../widgets/YPartitionSplitter-widget.html">PartitionSplitter</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    <ul>
 	    <li>Move the slider.
@@ -521,11 +521,11 @@ or other widgets in the same dialog until the user actually accepts a value
 	    <table>
 	        <tr>
 		    <td>Qt:</td>
-		    <td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+		    <td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 		</tr>
 	        <tr>
 		    <td>NCurses:</td>
-		    <td>`opt(<a href="events-general.html#notify">`notify</a>,&nbsp;`immediate&nbsp;)</td>
+		    <td>`opt(<a href="event-intro.html#notify">`notify</a>,&nbsp;`immediate&nbsp;)</td>
 		</tr>
 	    </table>
 	</td>
@@ -542,7 +542,7 @@ or other widgets in the same dialog until the user actually accepts a value
 	<td>
 	    <a href="../widgets/YTable-widget.html">Table</a><br>
 	</td>
-	<td><a href="events-general.html#notify">`opt(`notify,&nbsp;`immediate&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify,&nbsp;`immediate&nbsp;)</a></td>
 	<td>
 	    Select another item:
 	    <ul>
@@ -556,7 +556,7 @@ or other widgets in the same dialog until the user actually accepts a value
 	<td>
 	    <a href="../widgets/YTree-widget.html">Tree</a><br>
 	</td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Select another item:
 	    <ul>
@@ -568,7 +568,7 @@ or other widgets in the same dialog until the user actually accepts a value
     </tr>
     <tr>
 	<td><a href="../widgets/YMultiSelectionBox-widget.html">MultiSelectionBox</a></td>
-	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td><a href="event-intro.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
 	    Select another item:
 	    <ul>
@@ -633,7 +633,7 @@ particularly important.
 For most YCP applications this difference is purely academic. Simply use the ID
 and treat it like it were just another button's ID.
 <p>
-No <a href="events-general.html#notify">notify option</a> is necessary for
+No <a href="event-intro.html#notify">notify option</a> is necessary for
 getting this event. Both
 <a href="../widgets/YMenuButton-widget.html">MenuButton</a> and
 <a href="../widgets/YRichText-widget.html">RichText</a>

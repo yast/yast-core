@@ -20,7 +20,7 @@ Author: Stefan Hundhammer
 
 <table class="navigation-bar" width=100%>
     <tr>
-	<td width="33%" align="left">Prev: (none)</td>
+	<td width="33%" align="left">Prev: <a href="event-intro.html">Introduction</a></td>
 	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
 	<td width="33%" align="right">Next: <a href="event-reference.html">Event Reference</a></td>
     </tr>
@@ -81,7 +81,7 @@ details.
 UI::UserInput() waits for the user to do some input. Normally this means it
 waits until the user clicks on a push button.
 <p>
-Widgets that have the <a href="events-general.html#notify">notify option</a>
+Widgets that have the <a href="event-intro.html#notify">notify option</a>
 set can also cause UserInput() to return - i.e. to resume the control flow in
 the YCP code with the next statement after UserInput().
 <p>
@@ -209,7 +209,7 @@ have clicked on a button since the last call to PollInput() or
 <a href="#UserInput">UserInput()</a>.
 <p>
 If there is one, the ID of the widget (usually a button unless other widgets
-have the  <a href="events-general.html#notify">notify option</a> set) ID is
+have the  <a href="event-intro.html#notify">notify option</a> set) ID is
 returned. If there is none, <i>nil</i> (the YCP value for "nothing", "invalid")
 is returned.
 <p>
@@ -383,7 +383,7 @@ widget - for example, if different actions should be performed upon selecting
 an item in a <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>
 or a <a href="../widgets/YTable-widget.html">Table</a> widget.
 Notice that you still need the
-<a href="events-general.html#notify">notify option</a>
+<a href="event-intro.html#notify">notify option</a>
 to get those events in the first place.
 <p>
 On the downside, using WaitForEvent() means accessing the ID that caused an
@@ -399,7 +399,7 @@ wouldn't help too much.
 that you think should come. The UI keeps track of only one pending event (which
 is usually the last one that occured). If many events occur between individual
 WaitForEvent() calls, all but the last will be lost.
-Read <a href="events-general.html#pending_events">here</a> why.
+Read <a href="event-intro.html#pending_events">here</a> why.
 It is relatively easy to programm defensively in a way that losing individual
 events doesn't matter: Also use QueryWidget() to get the status of all your
 widgets. Don't keep redundant information about widget status in your code. Ask
@@ -524,7 +524,7 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 
 <table class="navigation-bar" width=100%>
     <tr>
-	<td width="33%" align="left">Prev: (none)</td>
+	<td width="33%" align="left">Prev: <a href="event-intro.html">Introduction</a></td>
 	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
 	<td width="33%" align="right">Next: <a href="event-reference.html">Event Reference</a></td>
     </tr>

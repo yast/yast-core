@@ -6,6 +6,7 @@ htmldir = $(docdir)/libyui/events
 
 html_DATA =			\
 	index.html		\
+	event-intro.html	\
 	event-builtins.html	\
 	event-reference.html	\
 	events.css
