@@ -53,10 +53,10 @@
     y2ycp(LOG_INTERNAL,file,line,format,##args)
 
 // logging cleanup
-#define ycp_log(level, format,args...) 		\
+#define ycp_log(level,format,args...) 		\
     do {					\
 	extern ExecutionEnvironment ee;		\
-	y2_logger(level, Y2LOG, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
+	y2_logger(level, Y2LOG, ee.filename().c_str(), ee.linenumber(), "", format, ##args);	\
     } while (0)
 
 
