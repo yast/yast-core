@@ -74,11 +74,10 @@ do {									\
 #define y2vlogger(level, format, ap) \
     y2_logger_func(level,y2log_component,__FILE__,__LINE__,__FUNCTION__,format,ap)
 
-//#ifndef WITH_Y2DEBUG
 #ifdef WITHOUT_Y2DEBUG
-#define y2debug(format, args...)
+#  define y2debug(format, args...)
 #else
-#define y2debug(format, args...)	y2logger(LOG_DEBUG,format,##args)
+#  define y2debug(format, args...)	y2logger(LOG_DEBUG,format,##args)
 #endif
 
 #define y2milestone(format, args...)	y2logger(LOG_MILESTONE,format,##args)
