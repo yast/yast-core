@@ -25,7 +25,7 @@ using std::endl;
 #include "ModulesConf.h"
 #include "Y2Logger.h"
 
-#define BACKUP_EXTENSION ".-"
+#define BACKUP_EXTENSION ".YaST2save"
 #define FINAL_COMMENT "YaST2_final_modules_conf_comment"
 
 /**
