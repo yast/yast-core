@@ -17,6 +17,8 @@
 
 /-*/
 
+#define MAX_DEBUG_LABEL_LEN	70
+
 
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
@@ -80,3 +82,22 @@ YCPString YLabel::getLabel()
     return text;
 }
 
+
+std::string YLabel::debugLabel()
+{
+    string label = getLabel()->value();
+    
+    if ( label.size() > MAX_DEBUG_LABEL_LEN )
+    {
+	label.resize( MAX_DEBUG_LABEL_LEN );
+	label.append( "..." );
+    }
+
+    for ( string::size_type i=0; i < label.size(); i++ )
+    {
+	if ( label[i] == '\n' )		label[i] = ' ';
+	if ( label[i] == '\"' )		label[i] = ' ';
+    }
+
+    return label;
+}

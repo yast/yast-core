@@ -71,7 +71,7 @@ public:
      * Reimplemented from YWidget since a YLabel doesn't have a shortcut
      * property.  
      **/
-    virtual std::string debugLabel() { return getLabel()->value(); }
+    virtual std::string debugLabel();
 
     
 protected:
