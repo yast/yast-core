@@ -1014,6 +1014,28 @@ s_cryptblowfish(const YCPString& original)
 static YCPValue
 s_dgettext (const YCPString& domain, const YCPString& text)
 {
+    /**
+     * @builtin _(string text) -> string
+     * Translates the text using the current textdomain. 
+     *
+     * Example <pre>
+     * _("File") -> "Soubor"
+     * </pre>
+     */
+
+    /**
+     * @builtin dgettext (string textdomain, string text) -> string
+     * Translates the text using the given text domain into
+     * the current language.
+     *
+     * This is a special case builtin not intended for general use.
+     * See _() instead.
+     *
+     * Example <pre>
+     * dgettext ("base", "No") -> "Nie"
+     * </pre>
+     */
+
     if (domain.isNull () || domain->isVoid ()) 
     {
 	return YCPNull ();
@@ -1035,6 +1057,31 @@ s_dgettext (const YCPString& domain, const YCPString& text)
 static YCPValue
 s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString& plural, const YCPInteger& count)
 {
+    /**
+     * @builtin _(string singular, string plural, integer value) -> string
+     * Translates the text using a locale-aware plural form handling and the 
+     * current textdomain. The chosen form of the translation depends 
+     * on the <tt>value</tt>.
+     *
+     * Example <pre>
+     * _("%1 File", "%1 Files", 2) -> "%1 soubory"
+     * </pre>
+     */
+
+    /**
+     * @builtin dngettext (string textdomain, string singular, string plural, integer value) -> string
+     * Translates the text using a locale-aware plural form handling using
+     * the given textdomain.
+     * The chosen form of the translation depend on the <tt>value</tt>.
+     *
+     * This is a special case builtin not intended for general use.
+     * See _() instead.
+     *
+     * Example <pre>
+     * dngettext ("base", "%1 File", "%1 Files", 2) -> "%1 soubory"
+     * </pre>
+     */
+
     if (domain.isNull () || domain->isVoid ()) 
     {
 	return YCPNull ();
