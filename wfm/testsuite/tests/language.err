@@ -1,3 +1,3 @@
-[wfm] WFMInterpreter.cc(evaluateSetLanguage):1349 GET encoding for de_DE@euro:  ISO-8859-15
-[wfm] WFMInterpreter.cc(evaluateSetLanguage):1328 SET encoding to: UTF-8
-[wfm] WFMInterpreter.cc(evaluateSetLanguage):1349 GET encoding for cs_CZ:  ISO-8859-2
+[wfm] WFMInterpreter.cc(evaluateSetLanguage):1390 GET encoding for de_DE@euro:  ISO-8859-15
+[wfm] WFMInterpreter.cc(evaluateSetLanguage):1369 SET encoding to: UTF-8
+[wfm] WFMInterpreter.cc(evaluateSetLanguage):1390 GET encoding for cs_CZ:  ISO-8859-2
