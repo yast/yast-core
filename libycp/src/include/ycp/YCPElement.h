@@ -259,7 +259,7 @@ private:
 
     /**
      * Gives you a new reference to this object. Increases the @ref #reference_counter.
-     * This method is delared const though it changes a member value - the
+     * This method is declared const though it changes a member value - the
      * reference_counter. But it _is_ constant in that it doesn't change
      * the YCP meaning of this YCPElementRep.
      */
