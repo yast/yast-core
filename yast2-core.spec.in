@@ -89,8 +89,9 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @execcompdir@/servers/scr
 @execcompdir@/servers_non_y2/ag_*
 # perl part (stdio agents)
-%_mandir/man3/ycp.3pm.gz
-%_mandir/man3/YaST::SCRAgent.3pm.gz
+# *: regular build compresses them, debug does not
+%_mandir/man3/ycp.3pm*
+%_mandir/man3/YaST::SCRAgent.3pm*
 %{perl_vendorlib}/ycp.pm
 %dir %{perl_vendorlib}/YaST
 %{perl_vendorlib}/YaST/SCRAgent.pm
