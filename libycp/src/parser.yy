@@ -307,11 +307,11 @@ expression:
 |	infix_expression
 |	compact_expression '[' list_elements CLOSEBRACKET expression
 	    {
-		if (($1.t == 0)
+		if (($1.t == 0)			// any errors yet ?
 		    || ($3.t == 0)
 		    || ($5.t == 0))
 		{
-		    $$.t = 0;
+		    $$.t = 0;			// Y: break out
 		    break;
 		}
 		else if (!$1.t->isList()
@@ -327,21 +327,23 @@ expression:
 			// cannot find out anything
 			$$.t = Type::Any;
 		}
-		else {
+		else
+		{
 		    // try to determine the type as far as possible, following the list of arguments,
 		    // doing a type check as we go
-		    
+		    // come out with $$.t == 0 if error, else determined type
+
 		    // the currently tested structured type
 		    constTypePtr cur = $1.t;
 
-		    // index into YEList, the list cannot be empty
+		    // index into YEList of bracket parameters, the list cannot be empty
 		    int index = 0;
 		    YEList* params = (YEList*)$3.c;
 
 		    do
 		    {
-			constTypePtr paramType = params->value (index)->type ();
-			
+			constTypePtr paramType = params->value (index)->type ();	// type of bracket parameter at index
+
 			if (paramType->isFunction())
 			{
 			    paramType = ((constFunctionTypePtr)paramType)->returnType ();
@@ -361,7 +363,6 @@ expression:
 				cur = ((constListTypePtr)cur)->type ();
 			    }
 			}
-			
 			else if (cur->isMap ())
 			{
 			    if (paramType->match (((constMapTypePtr)cur)->keytype ()) == -1)
@@ -378,26 +379,28 @@ expression:
 
 			index++;
 
-		    } while ( index < params->count () && (cur->isList () || cur->isMap ()));
-		    
+		    } while (index < params->count ()
+			     && (cur->isList () || cur->isMap ()));
+
 		    // quit on error
 		    if ($$.t == 0)
 			break;
-			
-		    if (index < params->count () && $$.t != 0)
+
+		    if (index < params->count ())		// we hit a non-list/non-map before end of bracket
 		    {
-			$$.t = Type::Any;
-		    } 
+			$$.t = Type::Any;			// why's that ?
+		    }
 		    else 
 		    {
 			$$.t = cur;
 		    }
-		}
-		
-		// default must match for non-nil
-		if (! $5.t->isVoid () && $5.t->match ($$.t) == -1)
+		}					// type determination done
+
+		// default ($5) must match for non-nil
+		if (! $5.t->isVoid ()				// default is not 'nil'
+		    && $5.t->match ($$.t) == -1)		// and it doesn't match the determined type
 		{
-		    yyTypeMismatch ($$.t, $5.t, $1.l);
+		    yyTypeMismatch ($$.t, $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
 		else
@@ -405,14 +408,15 @@ expression:
 		    $$.c = new YEBracket ($1.c, $3.c, $5.c, $$.t);
 		    $$.l = $1.l;
 
-		    if (! $5.t->isVoid () && $$.t->isAny ())
+		    if (! $5.t->isVoid ()			// default is not 'nil'
+			&& $$.t->isAny ())			// and the map/list is unspecified
 		    {
 			// for non-nil default and cur == Any use the type of the default,
 			// but with runtime type checking
 			$$.c = new YEPropagate ($$.c, $$.t, $5.t);
 			$$.t = $5.t;
 		    }
-		    
+
 		}
 	    }
 ;
