@@ -4,7 +4,8 @@
 
 @HEADER@
 Summary:	-
-Requires:	perl netcat
+Requires:	netcat
+Requires:	perl = %{perl_version}
 Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 20 18:52:54 CEST 2003 - mjancar@suse.cz
+
+- require the perl version we build with
+
+-------------------------------------------------------------------
 Mon Aug 18 17:48:56 CEST 2003 - arvin@suse.de
 
 - added ycp builtin findlastnotof
