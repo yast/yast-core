@@ -1499,6 +1499,11 @@ YCPString PkgModuleFunctions::PkgGetLicenseToConfirm( const YCPString & package 
     return YCPString("");
   }
 
+  if (! PMPackagePtr(selectable->candidateObj())->hasLicenseToConfirm ()) {
+    // license was confirmed before
+    return YCPString ("");
+  }
+
   string text( join( PMPackagePtr(selectable->candidateObj())->licenseToConfirm() ) );
   return YCPString( text );
 }
@@ -1523,11 +1528,25 @@ YCPMap PkgModuleFunctions::PkgGetLicensesToConfirm( const YCPList & packages )
     }
 
     string text( join( PMPackagePtr(selectable->candidateObj())->licenseToConfirm() ) );
-    if ( text.length() ) {
+    if ( text.length() && PMPackagePtr(selectable->candidateObj())->hasLicenseToConfirm ()) {
       ret->add( packages->value(i), YCPString( text ) );
     }
   }
 
   return ret;
+}
+
+YCPBoolean PkgModuleFunctions::PkgMarkLicenseConfirmed (const YCPString & package)
+{
+  PMSelectablePtr selectable = getPackageSelectable( package->value() );
+
+  if ( ! ( selectable && selectable->candidateObj() ) ) {
+    // unknown or no candidate package
+    return YCPBoolean(false);
+  }
+
+  PMPackagePtr(selectable->candidateObj())->markLicenseConfirmed ();
+  return YCPBoolean( true );
+
 }
 

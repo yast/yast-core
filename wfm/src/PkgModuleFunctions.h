@@ -369,6 +369,8 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPString PkgGetLicenseToConfirm( const YCPString & package );
 	/* TYPEINFO: map<string,string>(list<string>)*/
 	YCPMap    PkgGetLicensesToConfirm( const YCPList & packages );
+	/* TYPEINFO: string(string)*/
+	YCPBoolean PkgMarkLicenseConfirmed (const YCPString & package);
 
 	// you patch related
 	/* TYPEINFO: map<any,any>()*/

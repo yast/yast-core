@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Sep  6 09:04:58 CEST 2004 - jsrain@suse.cz
+
+- Added Pkg::PkgMarkLicenseConfirmed() (#44145)
+- Changed  Pkg::PkgGetLicenseToConfirm() and
+  Pkg::PkgGetLicensesToConfirm() to return only unconfirmed
+  licenses (#44145)
+
+-------------------------------------------------------------------
 Thu Sep  2 18:20:02 CEST 2004 - sh@suse.de
 
 - Added Pkg::PkgMediaCount()
