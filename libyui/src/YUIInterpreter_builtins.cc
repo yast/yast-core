@@ -11,13 +11,13 @@
 \----------------------------------------------------------------------/
 
   File:		YUIInterpreter_builtins.cc
-  
+
 		UI builtin commands
-		
+
 
   Authors:	Mathias Kettner <kettner@suse.de>
 		Stefan Hundhammer <sh@suse.de>
-  
+
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
@@ -1338,11 +1338,13 @@ YCPValue YUIInterpreter::evaluateWidgetExists(const YCPTerm& term)
 
 
 /**
- * @builtin RunPkgSelection(`id(any pkgSelId ) -> void
+ * @builtin RunPkgSelection(`id(any pkgSelId ) -> any
  *
  * <b>Not to be used outside the package selection</b>
  * Initialize and run the PackageSelector widget identified by 'pkgSelId'.
  * Black magic to everybody outside. ;-)
+ * <p>
+ * Returns `cancel if the user wishes to cancel his selections.
  */
 YCPValue YUIInterpreter::evaluateRunPkgSelection(const YCPTerm& term)
 {
@@ -1360,14 +1362,14 @@ YCPValue YUIInterpreter::evaluateRunPkgSelection(const YCPTerm& term)
     {
 	y2error( "RunPkgSelection(): No PackageSelector widget with ID '%s'",
 		 id->toString().c_str() );
+
+	return YCPVoid();
     }
-    else
-    {
-	// call overloaded method from specific UI
-	runPkgSelection( selector );
-    }
-    
-    return YCPVoid();
+
+    setMenuSelection( YCPVoid() );
+
+    // call overloaded method from specific UI
+    return runPkgSelection( selector );
 }
 
 

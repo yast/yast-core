@@ -679,7 +679,7 @@ protected:
      * Use this to post-initialize widget stuff that cannot be done in the
      * createPackageSelector() method. 
      **/
-    virtual void runPkgSelection( YWidget * packageSelector ) {}
+    virtual YCPValue runPkgSelection( YWidget * packageSelector ) { return YCPVoid(); }
 
     
     /**
