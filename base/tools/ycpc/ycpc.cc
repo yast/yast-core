@@ -906,10 +906,10 @@ compilefile (const char *infname, const char *outfname)
     if (c != NULL )
     {
 	progress ("saving ...\n", 0);
-	return Bytecode::writeFile (c, ofname);
+	return Bytecode::writeFile (c, ofname) ? 0 : 1;
     }
 
-    return 1;
+    return 2;
 }
 
 
@@ -1348,10 +1348,17 @@ int main(int argc, char *argv[])
 		}
 	        continue;
 	    }
+	    
+	    ret = compilefile (argv[i], 0);
 
-	    if (compilefile (argv[i], 0))
+	    if (ret == 1)
 	    {
 		fprintf (stderr, "Compilation of '%s' failed: %s\n", argv[i], strerror (errno));
+		break;
+	    }
+	    else if (ret == 2)
+	    {
+		fprintf (stderr, "Compilation of '%s' failed\n", argv[i]);
 		break;
 	    }
 	    ret = 0;
@@ -1427,9 +1434,16 @@ int main(int argc, char *argv[])
 	    if (compile)
 	    {
 		errno = 0;
-		if (compilefile (depit->path().c_str(), NULL))
+		
+		ret = compilefile (depit->path().c_str(), NULL);
+		if (ret == 1)
 		{
 		    fprintf (stderr, "Compilation failed for %s: %s\n", depit->path().c_str(), strerror (errno));
+		    break;
+		}
+		else if (ret == 2)
+		{
+		    fprintf (stderr, "Compilation failed for %s\n", depit->path().c_str());
 		    break;
 		}
 	    }
