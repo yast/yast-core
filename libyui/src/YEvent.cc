@@ -64,7 +64,6 @@ YEvent::toString( EventType eventType )
 	case UnknownEvent:		return "UnknownEvent";
 	case WidgetEvent:		return "WidgetEvent";
 	case MenuEvent:			return "MenuEvent";
-	case KeyboardEvent:		return "KeyboardEvent";
 	case CancelEvent:		return "CancelEvent";
 	case TimeoutEvent:		return "TimeoutEvent";
 	case DebugEvent:		return "DebugEvent";

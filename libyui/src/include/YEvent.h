@@ -42,7 +42,6 @@ public:
 	UnknownEvent,
 	WidgetEvent,
 	MenuEvent,
-	KeyboardEvent,
 	CancelEvent,
 	TimeoutEvent,
 	DebugEvent
@@ -237,7 +236,7 @@ class YDebugEvent: public YSimpleEvent
 {
 public:
     
-    YDebugEvent() : YSimpleEvent( CancelEvent, "debugHotkey" ) {}
+    YDebugEvent() : YSimpleEvent( DebugEvent, "debugHotkey" ) {}
 };
 
 
