@@ -22,9 +22,9 @@ html/index.html: $(xmlfiles) wfm.xml
 
 
 $(xmlfiles) : $(builtin)
-	@ybindir@/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
+	`pkg-config --variable=ybindir yast2-devtools`/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
 	@XSLTPROC@ @STYLESHEET_YDOC@ $@.tmp > $@
-	@ybindir@/replace_entities $@
+	`pkg-config --variable=ybindir yast2-devtools`/replace_entities $@
 	rm $@.tmp
 
 html/yast2docs.css: html/index.html
