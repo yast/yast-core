@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jan 29 18:09:18 CET 2004 - msvec@suse.cz
+
+- 2.9.23
+
+-------------------------------------------------------------------
 Thu Jan 29 18:07:41 CET 2004 - visnov@suse.cz
 
 - temporary fix bytecode testsuite for nonroot build 
