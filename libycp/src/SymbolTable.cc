@@ -194,7 +194,11 @@ SymbolTable::hash (const char *s)
 
 
 SymbolTable::SymbolTable (int prime)
-    : m_prime ((prime <= 0) ? 211 : prime)
+    // The 31 used to be 211, but that is too much.
+    // because eg. in runlevel there's 1200 blocks
+    // and each has its symbol table.
+    // Better yet use rehashing - TODO
+    : m_prime ((prime <= 0) ? 31 : prime)
     , m_used (0)
 {
     m_table = (TableEntry **)calloc (m_prime, sizeof (TableEntry *));

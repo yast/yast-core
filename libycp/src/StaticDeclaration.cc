@@ -53,7 +53,7 @@ static char *predefined[] = {
 
 StaticDeclaration::StaticDeclaration()
 {
-    m_declTable = new SymbolTable(211);
+    m_declTable = new SymbolTable(-1);
 //    y2debug ("m_declTable %p", m_declTable);
 
     char **pptr = predefined;

@@ -31,7 +31,7 @@
 #include "md5.h"
 
 Y2Namespace::Y2Namespace ()
-    : m_table ( new SymbolTable(211) )
+    : m_table ( new SymbolTable(-1) )
     , m_symbolcount (0)
 {}
 

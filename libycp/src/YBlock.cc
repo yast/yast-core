@@ -808,7 +808,7 @@ YBlock::YBlock (std::istream & str)
 	    if (getenv("Y2ALLGLOBAL") != NULL)
 	    {
 		delete m_table; // FIXME: memory leak
-		m_table = new SymbolTable(211);
+		m_table = new SymbolTable(-1);
 		m_table->openXRefs ();
 		for (uint i = 0 ; i < m_count ; i++)
 		{

@@ -130,7 +130,7 @@ Scanner::initTables (SymbolTable *globalTable, SymbolTable *localTable)
     else if (m_globalTable == 0)
     {
 	m_owningGlobal = true;
-	m_globalTable = new SymbolTable (211);
+	m_globalTable = new SymbolTable (-1);
 	y2debug ("m_globalTable %p", m_globalTable);
     }
 
@@ -142,7 +142,7 @@ Scanner::initTables (SymbolTable *globalTable, SymbolTable *localTable)
     else if (m_localTable == 0)
     {
 	m_owningLocal = true;
-	m_localTable = new SymbolTable (211);
+	m_localTable = new SymbolTable (-1);
 	y2debug ("m_localTable %p", m_localTable);
     }
 
