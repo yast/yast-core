@@ -4046,7 +4046,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
     }
 
 #if DO_DEBUG
-    y2debug ("attach_parameter (p %p(%s), p1 %p)", parm, parm1 ? parm->t->toString().c_str() : parm->c->toString().c_str(), parm1);
+    y2debug ("attach_parameter (p %p(%s:%s), p1 %p)", parm, parm1 ? parm->t->toString().c_str() : parm->c->toString().c_str(), parm1 ? "" : parm->t->toString().c_str(), parm1);
 #endif
 
     ee.setLinenumber (parm->l);
