@@ -236,8 +236,25 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
+    
+    if (it == scrs.end ())
+    {
+	// invalid handle
+	ycperror ("Trying to close undefined handle '%d'", handle);
+	return;
+    }
     delete *it;
     scrs.erase (it);
+    
+    ycpmilestone ("SCR handle %d closed", handle);
+    
+    // if it was the default one, try to handle the situation gracefully
+    if (handle == default_handle)
+    {
+	default_handle = -1;
+	ycpmilestone ("There is no default SCR set now");
+	// SCR::instance () is set to NULL by the SCRAgent destructor
+    }
 }
 
 

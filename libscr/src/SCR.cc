@@ -35,7 +35,11 @@ bool SCR::registered = false;
 
 static YCPValue 
 SCRRead3 (const YCPPath &path, const YCPValue &args = YCPNull (), const YCPValue &opt = YCPNull ()) {
-    y2debug( "Running SCR::Read on SCR agent %p", SCRAgent::instance() );
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     YCPValue ret = SCRAgent::instance()->Read( path, args, opt );
     
     return ret;
@@ -53,30 +57,55 @@ SCRRead (const YCPPath &path) {
 
 static YCPValue 
 SCRWrite2 (const YCPPath &path, const YCPValue& value) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Write (2 args)  on SCR agent %p", SCRAgent::instance () );
     return SCRAgent::instance ()->Write (path, value);
 }
 
 static YCPValue 
 SCRWrite3 (const YCPPath &path, const YCPValue& value, const YCPValue& arg) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Write (3 args) on SCR agent %p", SCRAgent::instance () );
     return SCRAgent::instance ()->Write (path, value, arg);
 }
 
 static YCPValue 
 SCRDir (const YCPPath& path) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Dir on SCR agent %p", SCRAgent::instance () );
     return SCRAgent::instance ()->Dir (path);
 }
 
 static YCPValue 
 SCRExecute (const YCPPath &path) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     return SCRAgent::instance ()->Execute (path);
 }
 
 static YCPValue 
 SCRError (const YCPPath &path) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Error on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
     
@@ -85,6 +114,11 @@ SCRError (const YCPPath &path) {
 
 static YCPValue 
 SCRExecute2 (const YCPPath &path, const YCPValue &arg) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
     y2debug( "args: %s", arg.isNull () ? "null" : arg->toString ().c_str () );
@@ -94,6 +128,11 @@ SCRExecute2 (const YCPPath &path, const YCPValue &arg) {
 
 static YCPValue 
 SCRExecute3 (const YCPPath &path, const YCPValue &arg, const YCPValue &opt) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
     y2debug( "args: %s,%s", arg.isNull () ? "null" : arg->toString ().c_str (), opt.isNull () ? "null" : opt->toString ().c_str () );
@@ -103,6 +142,11 @@ SCRExecute3 (const YCPPath &path, const YCPValue &arg, const YCPValue &opt) {
 
 static YCPValue 
 SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::RegisterAgent on SCR agent %p", SCRAgent::instance () );
     y2debug( "Path: %s", path->toString ().c_str () );
     y2debug( "Arg: %s", arg->toString ().c_str () );
@@ -111,6 +155,11 @@ SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
 
 static YCPValue 
 SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::RegisterAgent on SCR agent %p", SCRAgent::instance () );
     y2debug( "Path: %s", path->toString ().c_str () );
     y2debug( "Arg: %s", arg->toString ().c_str () );
@@ -119,6 +168,11 @@ SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
 
 static YCPValue 
 SCRUnregisterAgent (const YCPPath &path) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::UnregisterAgent on SCR agent %p", SCRAgent::instance () );
     y2debug( "Path: %s", path->toString ().c_str () );
     return SCRAgent::instance ()->UnregisterAgent (path);
@@ -126,12 +180,22 @@ SCRUnregisterAgent (const YCPPath &path) {
 
 static YCPValue 
 SCRUnregisterAllAgents () {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::UnregisterAllAgents on SCR agent %p", SCRAgent::instance () );
     return SCRAgent::instance ()->UnregisterAllAgents ();
 }
 
 static YCPValue 
 SCRUnmountAgent (const YCPPath &path) {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
     y2debug( "Running SCR::UnmountAgent on SCR agent %p", SCRAgent::instance () );
     y2debug( "Path: %s", path->toString ().c_str () );
     return SCRAgent::instance ()->UnmountAgent (path);

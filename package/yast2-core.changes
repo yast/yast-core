@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 26 12:28:55 CET 2004 - visnov@suse.cz
+
+- handle closing of default SCR gracefully (#37050)
+ 
+-------------------------------------------------------------------
 Thu Mar 25 14:59:28 CET 2004 - kkaempf@suse.de
 
 - warn if rhs of assignment is a void function (#36922)

@@ -71,4 +71,7 @@
 #define ycpinternal(format,args...) 		\
     ycp_log(LOG_INTERNAL, format, ##args)
 
+#define ycpmilestone(format,args...) 		\
+    ycp_log(LOG_MILESTONE, format, ##args)
+
 #endif /* _y2log_ycp_h */
