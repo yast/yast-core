@@ -114,31 +114,35 @@ void YMacroRecorder::recordYcpCodeLocation()
 {
     extern ExecutionEnvironment ee;	// YCP interpreter status
     ExecutionEnvironment::CallStack callStack( ee.callstack() );
-    const CallFrame * frame = callStack.back();
-    string functionName;
-
-    if ( frame && frame->called_function.find( "Wizard::UserInput" ) == string::npos  )
-	functionName = frame->called_function;
-
-    if ( frame )
+    
+    if ( ! callStack.empty() )
     {
-	if ( functionName.empty() )
+	const CallFrame * frame = callStack.back();
+	string functionName;
+
+	if ( frame && frame->called_function.find( "Wizard::UserInput" ) == string::npos  )
+	    functionName = frame->called_function;
+
+	if ( frame )
 	{
-	    fprintf( _macroFile, "%s%s//   %s:%d\n",
-		     YMACRO_INDENT, YMACRO_INDENT,
-		     frame->filename.c_str(),
-		     frame->linenumber );
-	}
-	else
-	{
-	    fprintf( _macroFile, "%s%s//   %s(%s):%d\n",
-		     YMACRO_INDENT, YMACRO_INDENT,
-		     frame->filename.c_str(),
-		     functionName.c_str(),
-		     frame->linenumber );
-	}
+	    if ( functionName.empty() )
+	    {
+		fprintf( _macroFile, "%s%s//   %s:%d\n",
+			 YMACRO_INDENT, YMACRO_INDENT,
+			 frame->filename.c_str(),
+			 frame->linenumber );
+	    }
+	    else
+	    {
+		fprintf( _macroFile, "%s%s//   %s(%s):%d\n",
+			 YMACRO_INDENT, YMACRO_INDENT,
+			 frame->filename.c_str(),
+			 functionName.c_str(),
+			 frame->linenumber );
+	    }
 	
-	fprintf( _macroFile, "\n" );
+	    fprintf( _macroFile, "\n" );
+	}
     }
 }
 

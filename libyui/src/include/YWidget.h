@@ -76,7 +76,7 @@ public:
      * This makes this useful for debugging only.
      **/
     virtual std::string debugLabel();
-
+ 
     /**
      * Checks whether or not this object is valid. This is to enable
      * dangling pointer error checking ( i.e. this object is already

@@ -64,7 +64,16 @@ public:
      * i.e. not by the ui. Therefore setLabel stores the current label in #label.
      */
     YCPString getLabel();
+    
+    /**
+     * Returns a descriptive label of this widget instance for debugging.
+     * 
+     * Reimplemented from YWidget since a YLabel doesn't have a shortcut
+     * property.  
+     **/
+    virtual std::string debugLabel() { return getLabel()->value(); }
 
+    
 protected:
     /**
      * Current label text

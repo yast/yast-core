@@ -54,7 +54,6 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
 		 deletedChild->widgetClass(), deletedChild->internalId() );
 	return;
     }
-
     
     if ( deletedChild == _debugLabelWidget )
 	_debugLabelWidget = 0;
@@ -67,7 +66,6 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
     vector<YWidget *>::iterator it = children.begin();
     int deletedChildId = deletedChild->internalId();
     
-
     while ( ! found && it != children.end() )
     {
 	if ( ( *it )->internalId() == deletedChildId )	// Don't compare pointers here!
@@ -289,7 +287,6 @@ string YContainerWidget::debugLabel()
 	    return formatDebugLabel( _debugLabelWidget, label );
     }
 
-
     for ( int i=0; i < numChildren(); i++ )
     {
 	if ( child(i) && child(i)->isValid() )
@@ -297,11 +294,10 @@ string YContainerWidget::debugLabel()
 	    string label = child(i)->debugLabel();
 
 	    if ( ! label.empty() )
-		return formatDebugLabel( child(0), label );
+		return formatDebugLabel( child(i), label );
 	}
     }
 	    
-
 
     return "";
 }
@@ -312,10 +308,20 @@ string YContainerWidget::formatDebugLabel( YWidget * widget, const string & debL
     if ( ! widget || debLabel.empty() )
 	return "";
 
-    string label = widget->widgetClass();
-    label += " \"";
-    label += debLabel;
-    label += "\"";
+    string label;
+
+    if ( widget->isContainer() )
+    {
+	label = debLabel;
+    }
+    else
+    {
+	label = "YContainerWidget with ";
+	label = widget->widgetClass();
+	label += " \"";
+	label += debLabel;
+	label += "\"";
+    }
 
     return label;
 }

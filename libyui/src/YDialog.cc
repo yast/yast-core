@@ -130,7 +130,6 @@ string YDialog::dialogDebugLabel()
 	    return formatDebugLabel( _debugLabelWidget, label );
     }
 
-
     for ( int i=0; i < numChildren(); i++ )
     {
 	if ( child(i) && child(i)->isValid() )
@@ -138,7 +137,7 @@ string YDialog::dialogDebugLabel()
 	    string label = child(i)->debugLabel();
 
 	    if ( ! label.empty() )
-		return formatDebugLabel( child(0), label );
+		return formatDebugLabel( child(i), label );
 	}
     }
 
@@ -152,10 +151,18 @@ string YDialog::formatDebugLabel( YWidget * widget, const string & debLabel )
 	return "";
 
     string label = "Dialog with ";
-    label += widget->widgetClass();
-    label += " \"";
-    label += debLabel;
-    label += "\"";
+
+    if ( widget->isContainer() )
+    {
+	label += debLabel;
+    }
+    else
+    {
+	label += widget->widgetClass();
+	label += " \"";
+	label += debLabel;
+	label += "\"";
+    }
 
     return label;
 }
