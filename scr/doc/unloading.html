@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+<TITLE>YaST2: Unloading SCR agents</TITLE>
+</HEAD>
+<BODY bgcolor=#ffffff>
+<P><IMG SRC="../../images/heading.png"></IMG></P>
+<H1>YaST2: Unloading SCR agents</H1>
+
+<p>For every scr path, there is one file in a scrconf
+directory. During startup, the scr does only read the
+first line, which contains the scr path.</p>
+
+<p>When the scr path is used, the scr starts (called
+mount) the agent. This can be a builtin, plugin or
+external program. Example:</p>
+
+<pre>
+    SCR(`Read(.etc.hosts));
+</pre>
+
+<p>You can also explicity mount a scr path:</p>
+
+<pre>
+  SCR(`MountAgent(.etc.hosts));
+</pre>
+
+<p>The gimmick is, you can also unmount a scr path:</p>
+
+<pre>
+  SCR(`UnmountAgent(.etc.hosts));
+</pre>
+
+<p>This destroys the agent, thus freeing it's
+memory. Plugins are unloaded and external programs
+stopped/killed.</p>
+
+<p><hr>
+<SMALL>Last changed 30-8-2000 17:00, <A HREF="mailto:kkaempf@suse.de">Klaus K�pf</A></SMALL><BR>
+<SMALL>Copyright &copy; by <A HREF="http://w3.suse.de">SuSE GmbH</A></SMALL>
+</BODY>
+</HTML>
+
+
