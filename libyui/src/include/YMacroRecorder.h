@@ -55,9 +55,13 @@ public:
 			       const char *	propertyName );
 
     /**
-     * Record a (commented out) "UI::MakeScreenShot()" statement.
+     * Record a "UI::MakeScreenShot()" statement.
+     *
+     * If 'enabled' is 'false', this statement will be commented out.
+     * If no file name is given, a default file name (with auto-increment) will
+     * be used. 
      **/
-    void recordMakeScreenShot();
+    void recordMakeScreenShot( bool enabled=false, const char * filename=0 );
     
     /**
      * Begin a macro block that will be executed as a whole.

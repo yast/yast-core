@@ -155,7 +155,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
 }
 
 
-void YMacroRecorder::recordMakeScreenShot()
+void YMacroRecorder::recordMakeScreenShot( bool enabled, const char * filename )
 {
     if ( ! _macroFile )
 	return;
@@ -177,9 +177,18 @@ void YMacroRecorder::recordMakeScreenShot()
     //
     // End of discussion before it even starts. ;-)
 
-    fprintf( _macroFile, "%s%s// UI::%s( \"/tmp/yast2-%04d.png\");\n",
+    char buffer[256];
+    
+    if ( ! filename )
+    {
+	sprintf( buffer, "/tmp/yast2-%04d", _screenShotCount++ );
+	filename = buffer;
+    }
+	
+    fprintf( _macroFile, "%s%s%sUI::%s( \"%s\" );\n",
 	     YMACRO_INDENT, YMACRO_INDENT,
-	     YUIBuiltin_MakeScreenShot, _screenShotCount++ );
+	     enabled ? "" : "// ",
+	     YUIBuiltin_MakeScreenShot, filename );
 }
 
 
