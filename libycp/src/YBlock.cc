@@ -23,7 +23,9 @@
 
 #include <stack>
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 // needed for YBlock
 
