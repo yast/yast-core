@@ -60,7 +60,7 @@ class PkgModuleFunctions
 	PMSelectablePtr getPatchSelectable (const std::string& name);
 
 	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
-	void startCachedSources (bool enabled_only);
+	void startCachedSources (bool enabled_only, bool force = false);
 
 	bool SetSelectionString (std::string name, bool recursive = false);
 	bool DoProvideString (std::string name);

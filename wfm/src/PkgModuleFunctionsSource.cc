@@ -74,12 +74,19 @@ PkgModuleFunctions::getSourceByArgs (YCPList args, int pos)
  * start cached sources
  *
  * set _sources and _first_free_source_slot
+ * If force is true, the _sources is recreated even if it already existed.
+ * This invalidates all source_ids used by the caller.
  */
 void
-PkgModuleFunctions::startCachedSources (bool enabled_only)
+PkgModuleFunctions::startCachedSources (bool enabled_only, bool force)
 {
-    if (_cache_started)
+    if (_cache_started && !force)
 	return;
+
+    if ( force ) {
+        _sources.clear();
+        _first_free_source_slot = 0;
+    }
 
     InstSrcManager::ISrcIdList nids;
 
@@ -572,6 +579,8 @@ PkgModuleFunctions::SourceSetEnabled (YCPList args)
  * @builtin Pkg::SourceDelete (integer source_id ) -> bool
  *
  * Delete source. Return true, if successful, false, if not.
+ * This function invalidates all source_ids. Use SourceGetCurrent to get
+ * the new list of source_ids.
  */ 
 YCPValue
 PkgModuleFunctions::SourceDelete (YCPList args)
@@ -583,6 +592,8 @@ PkgModuleFunctions::SourceDelete (YCPList args)
     _last_error = _y2pm.instSrcManager().deleteSource( source_id );
     if ( _last_error ) return YCPBoolean( false );
 
+    startCachedSources( false, true );
+
     return YCPBoolean( true );
 }
 
@@ -591,6 +602,8 @@ PkgModuleFunctions::SourceDelete (YCPList args)
  * @builtin Pkg::SourceRaisePriority (integer source_id ) -> bool
  *
  * Raise priority of source. Return true on success, false on error.
+ * This function invalidates all source_ids. Use SourceGetCurrent to get
+ * the new list of source_ids.
  */ 
 YCPValue
 PkgModuleFunctions::SourceRaisePriority (YCPList args)
@@ -602,6 +615,8 @@ PkgModuleFunctions::SourceRaisePriority (YCPList args)
     _last_error = _y2pm.instSrcManager().rankUp( source_id );
     if ( _last_error ) return YCPBoolean( false );
 
+    startCachedSources( false, true );
+
     return YCPBoolean( true );
 }
 
@@ -610,7 +625,9 @@ PkgModuleFunctions::SourceRaisePriority (YCPList args)
  * @builtin Pkg::SourceLowerPriority (integer source_id ) -> void
  *
  * Raise priority of source. Return true on success, false on error.
- */ 
+ * This function invalidates all source_ids. Use SourceGetCurrent to get
+ * the new list of source_ids.
+ */
 YCPValue
 PkgModuleFunctions::SourceLowerPriority (YCPList args)
 {
@@ -620,6 +637,8 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
 
     _last_error = _y2pm.instSrcManager().rankDown( source_id );
     if ( _last_error ) return YCPBoolean( false );
+
+    startCachedSources( false, true );
 
     return YCPBoolean( true );
 }
