@@ -117,6 +117,13 @@ YCPDebugger::ignore (EntryPoint entrypoint, const YCPElement &element)
     return false;
 }
 
+// On a Ctrl-C, the telnet client sends
+// IAC InterruptProcess IAC DO TimingMark
+static const char *telnet_break = "\xff\xf4\xff\xfd\x06";
+// So we reply IAC WON'T TimingMark, otherwise the client gets confused.
+static const char *telnet_wont_timing_mark = "\xff\xfc\x06";
+// Of course this is a quick hack, but it works.
+// See also RFC 854, RFC 860.
 
 void
 YCPDebugger::debug (YCPBasicInterpreter *inter, EntryPoint entrypoint,
@@ -182,8 +189,13 @@ YCPDebugger::debug (YCPBasicInterpreter *inter, EntryPoint entrypoint,
     // discarded, thus this must be the last check. Kind of ugly!
     if (goon) {
 	string cmd = read_line (false);
-	if (cmd == "interrupt")
+	if (cmd == "interrupt" || cmd == "I" || cmd == "\003")
 	    goon = false;
+	else if (cmd == telnet_break)
+	{
+	    goon = false;
+	    write_line (telnet_wont_timing_mark);
+	}
     }
 
     /*
@@ -280,26 +292,34 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
     string args[5];
     int nargs = split (command, 5, args, " \t");
 
-    if (nargs == 1 && args[0] == "interrupt") {
+    if (nargs == 1 && (args[0] == "interrupt" || args[0] == "I" ||
+		       args[0] == "\003")) {
 	return false;
     }
 
-    if (nargs == 1 && args[0] == "continue") {
+    if (nargs == 1 && args[0] == telnet_break) {
+	write_line (telnet_wont_timing_mark);
+	return false;
+    }
+
+    if (nargs == 1 && (args[0] == "continue" ||
+		       args[0] == "c" || args[0] == "fg")) {
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "single") {
+    if (nargs == 1 && (args[0] == "single" ||
+		       args[0] == "stepi" || args[0] == "si")) {
 	single_mode = true;
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "step") {
+    if (nargs == 1 && (args[0] == "step" || args[0] == "s")) {
 	leave_position.setpos (inter->interpreter->current_file,
 			       inter->interpreter->current_line);
 	return true;
     }
 
-    if (nargs == 1 && args[0] == "next") {
+    if (nargs == 1 && (args[0] == "next" || args[0] == "n")) {
 	hold_level = inter->interpreter->scopeLevel;
 	return true;
     }
@@ -348,12 +368,13 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 	return false;
     }
 
-    if (nargs == 2 && args[0] == "print") {
+    if (nargs == 2 && (args[0] == "print" || args[0] == "p")) {
 	print_variable (inter, args[1]);
 	return false;
     }
 
-    if (nargs == 3 && args[0] == "print" && args[1][0] == '#') {
+    if (nargs == 3 && (args[0] == "print" || args[0] == "p") &&
+	args[1][0] == '#') {
 	int unique_id = atoi (args[1].substr (1).c_str ());
 	Interpreter * tmp = find_inter (unique_id);
 	if (tmp)
@@ -363,22 +384,22 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 	return false;
     }
 
-    if (nargs == 2 && args[0] == "list") {
-	if (args[1] == "breakpoints") {
+    if (nargs == 2 && (args[0] == "list" || args[0] == "l")) {
+	if (args[1] == "breakpoints" || args[1] == "b") {
 	    list_breakpoints ();
 	    return false;
 	}
-	if (args[1] == "interpreters") {
+	if (args[1] == "interpreters" || args[1] == "i") {
 	    list_interpreters ();
 	    return false;
 	}
-	if (args[1] == "source") {
+	if (args[1] == "source" || args[1] == "s") {
 	    list_source (inter->interpreter->current_file.c_str ());
 	    return false;
 	}
     }
 
-    if (nargs == 3 && args[0] == "break") {
+    if (nargs == 3 && (args[0] == "break" || args[0] == "b")) {
 	add_breakpoint (args[1], strtol (args[2].c_str (), 0, 10));
 	list_breakpoints ();
 	return false;

@@ -1,6 +1,7 @@
 <html>
 
 <head>
+  <!-- $Id$ -->
   <title>The YCP Debugger</title>
 </head>
 
@@ -12,7 +13,7 @@
 
 <li>The debugger is part of libycp. To use it, you must set the environment
 variable <tt>Y2DEBUGGER</tt>. With a value of 1, the debugger opens the port
-19743 and continues execution of the program. With a value of 2, the debugger
+19473 and continues execution of the program. With a value of 2, the debugger
 waits for the frontend to connect.</li>
 
 <li>You can use <tt>telnet</tt> (<tt>telnet machine 19473</tt>) as a very
@@ -23,9 +24,13 @@ syntax highlighting.</li>
 
 <h3>Commands</h3>
 
+<p>(Some gdb-compatible aliases have been added.)</p>
+
 <dl>
 
 <dt>interrupt</dt>
+<dt>I</dt>
+<dt>^C</dt>
 <dd>Interrupts the program. You can only interrupt the interpreter while it is
 working. For example, you can not interrupt while the interpreter is waiting
 for the return of a UserInput ().</dd>
@@ -33,21 +38,27 @@ for the return of a UserInput ().</dd>
 <spacer type=vertical size=20>
 
 <dt>continue</dt>
+<dt>c</dt>
+<dt>fg</dt>
 <dd>Resume program execution.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>single</dt>
+<dt>stepi</dt>
+<dt>si</dt>
 <dd>Execute a single YCP instruction.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>step</dt>
+<dt>s</dt>
 <dd>Continues program execution until the current source line is left.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>next</dt>
+<dt>n</dt>
 <dd>Continues program execution until the next YCP instruction on the same
 level.</dd>
 
@@ -65,23 +76,25 @@ higher level.</dd>
 <spacer type=vertical size=20>
 
 <dt>token</dt>
-<dd>Prints token the actual interpreter is working on.</dd>
+<dd>Prints the token the current interpreter is working on.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>scope [#n]</dt>
-<dd>Prints the entire definition scope of the actual interpreter or
+<dd>Prints the entire definition scope of the current interpreter or
 the interpreter with the unique number #n.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>print [#n] VARIABLE</dt>
-<dd>Prints the value of the variable in the actual interpreter or
+<dt>p [#n] VARIABLE</dt>
+<dd>Prints the value of the variable in the current interpreter or
 the interpreter with the unique number #n.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>break FILENAME LINENUM</dt>
+<dt>b FILENAME LINENUM</dt>
 <dd>Set a breakpoint at line LINENUM in source file FILENAME.</dd>
 
 <spacer type=vertical size=20>
@@ -92,11 +105,13 @@ the interpreter with the unique number #n.</dd>
 <spacer type=vertical size=20>
 
 <dt>list breakpoints</dt>
+<dt>l b</dt>
 <dd>Prints a list of all breakpoints.</dd>
 
 <spacer type=vertical size=20>
 
 <dt>list interpreters</dt>
+<dt>l i</dt>
 <dd>Prints a list of all interpreters.</dd>
 
 <spacer type=vertical size=20>
