@@ -629,6 +629,50 @@ YBlock::evaluate (bool cse)
 }
 
 
+YCPValue
+YBlock::evaluate (int statement_index)
+{
+    y2debug("YBlock::evaluate(#%d)\n", statement_index);
+    
+    stmtlist_t *stmt = m_statements;
+    YCPValue value = YCPVoid ();
+    while (stmt && statement_index > 0)
+    {
+	stmt = stmt->next;
+	statement_index--;
+    }
+    
+    if (!stmt)
+    {
+	// we are at the end
+	return YCPNull ();
+    }
+    
+    y2milestone("YBlock::evaluating:\n%s", stmt->stmt->toString ().c_str());
+    
+    value = stmt->stmt->evaluate ();
+    
+    // y2debug("YBlock::evaluate statement done (value '%s')\n", value.isNull() ? "NULL" : value->toString().c_str());
+
+    return value;
+}
+
+
+int
+YBlock::statementCount () const
+{
+    int res = 0;
+    stmtlist_t *stmt = m_statements;
+
+    while (stmt)
+    {
+	stmt = stmt->next;
+	res++;
+    }
+    
+    return res;
+}
+
 // --------------------------
 // bytecode I/O
 

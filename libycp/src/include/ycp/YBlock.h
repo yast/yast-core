@@ -203,6 +203,13 @@ public:
 
     virtual YCPValue evaluate (bool cse = false);
     
+    // evaluate a single statement
+    // this is a special purpose interface for macro player
+    // does not handle break, return
+    YCPValue evaluate (int statement_index);
+    
+    int statementCount () const;
+    
     // push all local variables to stack, uses SymbolEntry::push()
     void push_to_stack ();
     // pop all local variables from stack, uses SymbolEntry::pop()
