@@ -33,6 +33,8 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Declaration.ycp:19 Parser error
+tests/scope/Declaration.ycp:34:Types are not comparable
+[Parser] tests/scope/Declaration.ycp:34 Types are not comparable
 tests/scope/Declaration.ycp:34:Expected 'map', seen 'const integer'.
 [Parser] tests/scope/Declaration.ycp:34 Expected 'map', seen 'const integer'.
 Parsed:
