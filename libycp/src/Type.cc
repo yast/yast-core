@@ -101,9 +101,9 @@ Type::Block()
 
 
 FunctionTypePtr
-Type::Function()
+Type::Function(constTypePtr return_type)
 {
-    return FunctionTypePtr ( new FunctionType (Type::Unspec) );
+    return FunctionTypePtr ( new FunctionType (return_type) );
 }
 
 //----------------------------------------------------------------
@@ -132,7 +132,7 @@ Type::Type (tkind kind, std::istream & str)
     , m_const (Bytecode::readBool (str))
     , m_reference (Bytecode::readBool (str))
 {
-y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_reference);
+//y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_reference);
 }
 
 
@@ -143,7 +143,7 @@ y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_refe
 std::ostream & 
 Type::toStream (std::ostream & str) const
 {
-y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
+//y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
     Bytecode::writeInt32 (str, m_kind);
     Bytecode::writeBool (str, m_const);
     Bytecode::writeBool (str, m_reference);
@@ -1073,8 +1073,10 @@ FunctionType::FunctionType (constTypePtr return_type, constFunctionTypePtr argum
     : Type (FunctionT)
     , m_returntype (return_type)
 {
-    for (int i = 0; i < arguments->parameterCount (); i++ )
+    for (int i = 0; i < arguments->parameterCount (); i++)
+    {
 	concat (arguments->parameterType (i));
+    }
 }
 
 FunctionType::FunctionType (std::istream & str)
@@ -1086,7 +1088,7 @@ y2debug ("FunctionType::FunctionType (stream)");
     {
 	m_arguments = Bytecode::readType (str);
     }
-y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p", (const void *)m_returntype, (const void *)m_arguments);
+y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p)", (const void *)m_returntype, (const void *)m_arguments);
 }
 
 
@@ -1094,7 +1096,7 @@ std::ostream &
 FunctionType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
-y2debug ("FunctionType::toStream (m_returntype %p, m_arguments %p", (const void *)m_returntype, (const void *)m_arguments);
+//y2debug ("FunctionType::toStream (m_returntype %p, m_arguments %p", (const void *)m_returntype, (const void *)m_arguments);
     Bytecode::writeType (str, m_returntype);
     if (m_arguments)
     {

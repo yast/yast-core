@@ -1624,7 +1624,8 @@ type:
 ;
 
 types:
-	type			{ FunctionTypePtr t = Type::Function(); t->concat ($1.t); $$.t = t; }
+	type			{ FunctionTypePtr t = Type::Function(Type::Unspec);	// not a real function, just a container for the parameter types
+				  t->concat ($1.t); $$.t = t; }
 |	types ',' type		{ FunctionTypePtr t = $1.t->clone(); t->concat ($3.t); $$.t = t; }
 ;
 /* -------------------------------------------------------------- */
@@ -3103,7 +3104,7 @@ i_check_unary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, Parser* p)
 	return;
     }
 
-    FunctionTypePtr ft = Type::Function();
+    FunctionTypePtr ft = Type::Function (Type::Unspec);		// the declaration determines the return type
     ft->concat (e1->t);
     declaration_t *decl = static_declarations.findDeclaration (op, ft);
 
@@ -3144,7 +3145,7 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	return;
     }
 
-    FunctionTypePtr ft = Type::Function ();
+    FunctionTypePtr ft = Type::Function (Type::Unspec);		// the declaration determines the return type
 y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
     ft->concat (e1->t);
     ft->concat (e2->t);
@@ -3157,7 +3158,7 @@ y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
 	if ((e1_to_e2 > e2_to_e1)
 	    && (e2_to_e1 > 0))
 	{
-	    FunctionTypePtr ft1 = Type::Function();		// propagate e1->t --> e2->t
+	    FunctionTypePtr ft1 = Type::Function (Type::Unspec);		// propagate e1->t --> e2->t
 	    ft1->concat (e2->t);
 	    ft1->concat (e2->t);
 	    decl = static_declarations.findDeclaration (op, ft1);
@@ -3171,7 +3172,7 @@ y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
 	else if ((e2_to_e1 > e1_to_e2)
 		  && (e1_to_e2 > 0))
 	{
-	    FunctionTypePtr ft1 = Type::Function();		// propagate e2->t --> e1->t
+	    FunctionTypePtr ft1 = Type::Function (Type::Unspec);		// propagate e2->t --> e1->t
 	    ft1->concat (e1->t);
 	    ft1->concat (e1->t);
 	    decl = static_declarations.findDeclaration (op, ft1);

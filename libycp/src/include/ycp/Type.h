@@ -141,7 +141,7 @@ public:
     static ListTypePtr     List();
     static MapTypePtr      Map();
     static BlockTypePtr    Block();
-    static FunctionTypePtr Function();
+    static FunctionTypePtr Function(constTypePtr return_type);
 
     static const constTypePtr Nil;	/* "return nil;" type */
 

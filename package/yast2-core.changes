@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb  3 10:34:17 CET 2004 - kkaempf@suse.de
+
+- Fix type for YEBuiltin (#34249)
+
+-------------------------------------------------------------------
 Tue Feb  3 07:58:12 CET 2004 - visnov@suse.cz
 
 - ycpc puts a new line at the end for -E (msvec@suse.cz) 

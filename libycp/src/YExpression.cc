@@ -1453,7 +1453,7 @@ YEBracket::toStream (std::ostream & str) const
 YEBuiltin::YEBuiltin (declaration_t *decl, YBlock *parameterblock, constTypePtr type)
     : YCode (yeBuiltin)
     , m_decl (decl)
-    , m_type (type==0 ? Type::Function() : (FunctionTypePtr)(type->clone()))
+    , m_type (type==0 ? Type::Function(Type::Unspec) : (FunctionTypePtr)(type->clone()))
     , m_parameterblock (parameterblock)
     , m_parameters (0)
     , m_last (0)
@@ -1911,7 +1911,13 @@ YEBuiltin::evaluate (bool cse)
 constTypePtr
 YEBuiltin::type () const
 {
-    FunctionTypePtr f = Type::Function()->clone();
+    constTypePtr return_type = returnType();
+    if (return_type->isError())
+    {
+	y2debug ("YEBuiltin::type() error !");
+	return return_type;
+    }
+    FunctionTypePtr f = Type::Function(return_type)->clone();
     ycodelist_t *parm = m_parameters;
     while (parm)
     {
@@ -2239,7 +2245,9 @@ YEFunction::type () const
     return m_entry->type ();
 }
 
-constTypePtr YEFunction::wantedParameterType () const
+
+constTypePtr
+YEFunction::wantedParameterType () const
 {
 
     YFunction *func_f = dynamic_cast<YFunction *> (m_entry->code ());

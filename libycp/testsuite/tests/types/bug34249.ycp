@@ -1,0 +1,7 @@
+{
+  list l = [];
+  l[tointeger("1")] = add ( l[tointeger("1")]:[], "");
+
+  // l[tointeger("1")] = add ( l[tointeger("1")]:$[], "", "");
+}
+
