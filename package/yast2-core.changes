@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug 12 15:18:23 CEST 2003 - arvin@suse.de
+
+- added warnings about to libyui about wrong widget tree structure
+- fixed parsing of class tag in make_widget_doc
+- also handle release notes url here
+
+-------------------------------------------------------------------
 Wed Aug  6 12:59:15 CEST 2003 - gs@suse.de
 
 - V 2.8.16
@@ -8,7 +15,7 @@ Wed Aug  6 12:59:15 CEST 2003 - gs@suse.de
 -------------------------------------------------------------------
 Wed Aug  6 11:57:08 CEST 2003 - fehr@suse.de
 
-- added new ycp builtin regexppos 
+- added new ycp builtin regexppos
 - version 2.8.15
 
 -------------------------------------------------------------------
