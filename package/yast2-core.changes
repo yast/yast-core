@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Sun Mar  7 12:07:24 CET 2004 - kkaempf@suse.de
+
+- use propagation information from Type::match in Type::canCast
+
+-------------------------------------------------------------------
+Sun Mar  7 12:07:09 CET 2004 - kkaempf@suse.de
+
+- add UI::WizardCommand (sh@suse.de)
+
+-------------------------------------------------------------------
 Fri Mar  5 15:58:20 CET 2004 - mvidner@suse.cz
 
 - enabled nested::namespaces in the scanner
