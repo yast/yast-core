@@ -9,6 +9,7 @@ WFM: - Added Pkg::CallbackYouMessage, Pkg::CallbackYouError and
        Pkg::YouDisconnect, Pkg::YouFinish, Pkg::YouFirstPatch,
        Pkg::YouGetCurrentPatch, Pkg::YouInstallCurrentPatch and
        Pkg::YouNextPatch.
+- 2.9.46
 
 -------------------------------------------------------------------
 Mon Mar  1 11:25:35 CET 2004 - kkaempf@suse.de
