@@ -232,7 +232,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	debug_scanner ("<string>");
 	BEGIN (INITIAL);
 	*m_scandataBufferPtr = '\0';
-	token_value.sval = strdup (m_scandataBuffer);
+	token_value.sval = Scanner::doStrdup (m_scandataBuffer);
 	RESULT (Type::ConstString, STRING);
     }
 
@@ -419,7 +419,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 
 \`{SYMBOL} {
 	debug_scanner("<`symbol>");
-	token_value.yval = strdup (yytext + 1);
+	token_value.yval = Scanner::doStrdup (yytext + 1);
 	RESULT (Type::ConstSymbol, C_SYMBOL);
     }
 
@@ -474,7 +474,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    if (getenv (XREFDEBUG) != 0) y2milestone ("Autoimported (%s), table %p", yytext, namespaceTable);
 	    else y2debug ("builtin namespace (%s) -> table %p", yytext, namespaceTable);
 
-	    namespace_prefix = strdup (yytext);
+	    namespace_prefix = Scanner::doStrdup (yytext);
 	    BEGIN (namespace);
 	}
 	else
@@ -522,7 +522,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		}
 		y2debug ("imported namespace (%s) -> table %p", yytext, namespaceTable);
 
-		namespace_prefix = strdup (yytext);
+		namespace_prefix = Scanner::doStrdup (yytext);
 
 		BEGIN (namespace);
 	    }
@@ -647,7 +647,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    case SymbolEntry::c_const:
 	    {
 		// FIXME
-		token_value.sval = strdup (yytext);
+		token_value.sval = Scanner::doStrdup (yytext);
 		RESULT (Type::ConstString, STRING);
 	    }
 	    break;
@@ -674,7 +674,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	if (tentry == 0)
 	{
 	    debug_scanner("<Symbol(%s)>", yytext);
-	    token_value.nval = strdup (yytext);
+	    token_value.nval = Scanner::doStrdup (yytext);
 	    RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
 	}
 	token_value.tval = tentry;
@@ -685,7 +685,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    case SymbolEntry::c_predefined:
 	    {
 		y2debug ("<Symbol equals module(%s@%p)>", yytext, tentry);
-		token_value.nval = strdup (yytext);
+		token_value.nval = Scanner::doStrdup (yytext);
 		RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
 	    }
 	    break;
@@ -699,7 +699,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    {
 		y2debug ("<Const(%s@%p)>", yytext, tentry);
 		// FIXME
-		token_value.sval = strdup (yytext);
+		token_value.sval = Scanner::doStrdup (yytext);
 		RESULT (Type::ConstString, STRING);
 	    }
 	    break;
@@ -775,7 +775,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    case SymbolEntry::c_const:
 	    {
 		// FIXME
-		token_value.sval = strdup (name);
+		token_value.sval = Scanner::doStrdup (name);
 		RESULT (Type::ConstString, STRING);
 	    }
 	    break;

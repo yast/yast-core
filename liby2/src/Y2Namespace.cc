@@ -26,6 +26,7 @@
 #include <ycp/SymbolTable.h>
 #include <ycp/SymbolEntryPtr.h>
 #include <ycp/SymbolEntry.h>
+#include <ycp/Scanner.h>
 
 #define DO_DEBUG 1
 
@@ -348,8 +349,7 @@ Y2CPPFunction::Y2CPPFunction (Y2Namespace* parent, string name, Y2CPPFunctionCal
 SymbolEntryPtr
 Y2CPPFunction::sentry (unsigned int position)
 {
-    // FIXME: strdup
-    SymbolEntryPtr morefun = new SymbolEntry (m_parent, position, strdup(m_name.c_str()), SymbolEntry::c_global, 
+    SymbolEntryPtr morefun = new SymbolEntry (m_parent, position, Scanner::doStrdup (m_name.c_str()), SymbolEntry::c_global, 
             Type::fromSignature ( m_impl->m_signature ), this );
     morefun->setCategory (SymbolEntry::c_function); 
     return morefun;
@@ -368,8 +368,7 @@ Y2CPPFunctionCallBase::newParameter (YBlockPtr decl, unsigned pos, constTypePtr 
 	case 3: name = "param3"; break;
 	case 4: name = "param4"; break;
     }
-    // FIXME: strdup
-    SymbolEntryPtr param = decl->newEntry ( strdup(name.c_str()), SymbolEntry::c_global, type, 0)->sentry ();
+    SymbolEntryPtr param = decl->newEntry ( Scanner::doStrdup (name.c_str()), SymbolEntry::c_global, type, 0)->sentry ();
     param->setCategory (SymbolEntry::c_variable);
     
     switch (pos)

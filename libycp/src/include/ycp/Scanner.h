@@ -283,6 +283,11 @@ public:
      */
     const std::list<std::pair<std::string, Y2Namespace *> > & autoimport_predefined() const { return m_autoimport_predefined; };
 
+    /**
+     * strdup via new, so delete [] can be used safely
+     */
+    static char *doStrdup (const char *s);
+
 private:
     /**
      * Used in the rules of the scanner to define the value

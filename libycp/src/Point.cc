@@ -46,6 +46,7 @@ using std::string;
 
 #include "ycp/Point.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Scanner.h"
 
 #include "ycp/y2log.h"
 
@@ -56,7 +57,7 @@ using std::string;
 // If point == 0 then its a toplevel file (and the line should be 0)
 
 Point::Point (std::string filename, int line, const Point *point)
-    : m_entry (new SymbolEntry (strdup (filename.c_str())))
+    : m_entry (new SymbolEntry (Scanner::doStrdup (filename.c_str())))
     , m_line (line)
     , m_point (point)
 {

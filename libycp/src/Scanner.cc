@@ -33,6 +33,19 @@ $Id$
 extern SymbolTable* builtinTable;
 extern StaticDeclaration static_declarations;
 
+/**
+ * strdup via new, so delete [] can be used safely
+ */
+char *
+Scanner::doStrdup (const char *s)
+{
+    if (s == 0) return 0;
+    char *t = new char [strlen (s) + 1];
+    strcpy (t, s);
+    return t;
+}
+
+
 Scanner::Scanner (FILE *inputfile, const char *fname)
     : m_filename (fname ? fname : "")
     , m_inputBuffer (0)
