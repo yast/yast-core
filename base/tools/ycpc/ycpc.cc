@@ -358,7 +358,7 @@ class FileDep {
 	time_t mtime_binary;
     public:
 	FileDep () {};
-	FileDep (const std::string & name, const std::string & path, bool is_module);
+	FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source = true);
 	const std::string & name () const;
 	const std::string & path () const;
 	void setPath (const std::string &path);
@@ -367,7 +367,7 @@ class FileDep {
 };
 
 
-FileDep::FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source = true)
+FileDep::FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source)
     : m_name (name)
     , m_path (path)
     , m_is_module (is_module)
