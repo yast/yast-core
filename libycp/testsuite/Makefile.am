@@ -34,4 +34,4 @@ clean-local:
 	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp libycp.log libycp.sum site.bak log.tmp
 	rm -f $(bin_PROGRAMS)
 
-EXTRA_DIST = README runtest.sh
+EXTRA_DIST = README runtest.sh xfail
