@@ -345,39 +345,118 @@ Y2Internal (const YCPString & format, const YCPList & args)
 
 // TODO: copy docs and implementatin from head
 static YCPValue
-Y2FDebug (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FDebug (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Debug (format, args);
+
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Debug (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_DEBUG, 0);
+    }
+
+    return YCPVoid ();
 }
 
 static YCPValue
-Y2FMilestone (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FMilestone (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Milestone (format, args);
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Milestone (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_MILESTONE, 0);
+    }
+
+    return YCPVoid ();
 }
 
 static YCPValue
-Y2FWarning (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FWarning (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Warning (format, args);
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Warning (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_WARNING, 0);
+    }
+
+    return YCPVoid ();
 }
 
 static YCPValue
-Y2FError (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FError (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Error (format, args);
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Error (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_ERROR, 0);
+    }
+
+    return YCPVoid ();
 }
 
 static YCPValue
-Y2FSecurity (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FSecurity (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Security (format, args);
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Security (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_SECURITY, 0);
+    }
+
+    return YCPVoid ();
 }
 
 static YCPValue
-Y2FInternal (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+Y2FInternal (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
-    return Y2Internal (format, args);
+  // FIXME: positive: pretend one of our callers invoked the log
+  // negative: print backtrace
+    extern ExecutionEnvironment ee;
+
+    int frame = f->value ();
+  
+    Y2Internal (format, args);
+
+    if (frame < 0)
+    {
+	ee.backtrace (LOG_INTERNAL, 0);
+    }
+
+    return YCPVoid ();
 }
 
 

@@ -1,0 +1,18 @@
+# testcase for a backtrace
+
+{
+
+define void aoo (integer value) ``{
+	y2milestone (-1, "My test");
+}
+
+define void boo (integer value) ``{
+	aoo (value+1);
+}
+
+define void foo (integer foo_val) ``{
+	boo (foo_val+1);
+}
+
+foo (41);
+}

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Nov  8 17:13:20 CET 2004 - visnov@suse.cz
+
+- reintroduced YCP backtraces (#41841)
+- 2.11.13 
+
+-------------------------------------------------------------------
 Mon Nov  8 12:58:22 CET 2004 - visnov@suse.cz
 
 - Don't crash on wrong nested import (#47357)

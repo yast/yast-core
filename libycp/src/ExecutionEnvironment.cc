@@ -18,19 +18,6 @@
 
 #include "ycp/y2log.h"
 
-struct CallFrame {
-    string called_function;
-    string filename;
-    int linenumber;
-    
-    CallFrame (string f, int l, string func): 
-	called_function (func),
-	filename (f),
-	linenumber (l)
-    {}
-};
-
-
 int
 ExecutionEnvironment::linenumber () const
 {
@@ -86,23 +73,37 @@ void
 ExecutionEnvironment::pushframe (string called_function)
 {
     y2debug ("Push frame %s", called_function.c_str ());
-    m_backtrace.push (new CallFrame (filename(), linenumber (), called_function));
+    CallFrame* frame = new CallFrame (filename(), linenumber (), called_function);
+    m_backtrace.push_back (frame);
 }
 
 
 void
 ExecutionEnvironment::popframe ()
 {
-    y2debug ("Pop frame %p", m_backtrace.top ());
-    delete m_backtrace.top ();
-    m_backtrace.pop ();
+    y2debug ("Pop frame %p", m_backtrace.back ());
+    CallFrame* frame = m_backtrace.back ();
+    m_backtrace.pop_back ();
+    delete frame;
 }
 
 
-string
-ExecutionEnvironment::backtrace (uint omit)
+void
+ExecutionEnvironment::backtrace (loglevel_t level, uint omit)
 {
-    return "not implemented";
+    if (m_backtrace.empty ())
+	return;
+	
+    // FIXME: omit
+    vector<CallFrame*>::iterator it = m_backtrace.end ();
+    
+    while (it != m_backtrace.begin ())
+    {
+	it--;
+	ycp2log (level, (*it)->filename.c_str (), (*it)->linenumber
+	    , "", "%s", (*it)->called_function.c_str ());
+    };
+
 }
 
 /* EOF */

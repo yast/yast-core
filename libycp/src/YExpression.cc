@@ -2807,12 +2807,16 @@ YEFunction::evaluate (bool cse)
     // save the context info
     int linenumber = ee.linenumber ();
     string filename = ee.filename ();
+    
+    ee.pushframe (toString ());
 
     YCPValue value = m_functioncall->evaluateCall ();
 
     // restore the context info
     ee.setLinenumber (linenumber);
     ee.setFilename (filename);
+    
+    ee.popframe ();
 
 #if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());

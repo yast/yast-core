@@ -18,11 +18,22 @@
 #include <stack>
 #include <string>
 
+#include "y2log.h"
 #include "ycp/YStatement.h"
 
 using namespace std;
 
-struct CallFrame;
+struct CallFrame {
+    string called_function;
+    string filename;
+    int linenumber;
+
+    CallFrame (string f, int l, string func):
+        called_function (func),
+        filename (f),
+        linenumber (l)
+    {}
+};
 
 /**
  * Class to track current execution environment. Typically used for logging
@@ -38,10 +49,11 @@ private:
     string m_filename;
     bool m_forced_filename;
     YStatementPtr m_statement;
-    stack<CallFrame*> m_backtrace;
+    vector<CallFrame*> m_backtrace;
 
 public:
-    ExecutionEnvironment () : m_forced_filename (false), m_statement(NULL) {};
+    ExecutionEnvironment () : m_filename (""), m_forced_filename (false), m_statement(NULL) 
+	{ m_backtrace.clear (); };
     ~ExecutionEnvironment() {};
 
     /**
@@ -88,12 +100,12 @@ public:
     void popframe ();
     
     /**
-     * Return the string containing the current backtrace.
+     * Report the current backtrace to log.
      *
      * @param skip	number of the top call frames to be omitted 
      *			from the backtrace
      */
-    string backtrace (uint skip = 0);
+    void backtrace (loglevel_t level, uint skip = 0);
 };
 
 #endif /* _execution_environment_h */
