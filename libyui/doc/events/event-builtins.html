@@ -400,7 +400,7 @@ wouldn't help too much.
 that you think should come. The UI keeps track of only one pending event (which
 is usually the last one that occured). If many events occur between individual
 WaitForEvent() calls, all but the last will be lost.
-Read <a href="event-intro.html#pending_events">here</a> why.
+Read <a href="event-intro.html#queues">here</a> why.
 It is relatively easy to programm defensively in a way that losing individual
 events doesn't matter: Also use QueryWidget() to get the status of all your
 widgets. Don't keep redundant information about widget status in your code. Ask
