@@ -309,13 +309,53 @@ screen with data that keep changing (time etc.) while waiting for user input.
 
 <h3>Usage:</h3>
 <pre class="code">
-any widget_id = <b>UI::TimeoutUserInput( integer timeout_millisec )</b>;
+any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 
 </pre>
 
 <h3>Example:</h3>
 
 <pre class="code">
+// TimeoutUserInput.ycp
+//
+// Example for common usage of UI::TimeoutUserInput()
+
+{
+    // Build dialog with two labels and an "OK" button.
+
+    integer countdown_sec       = 30;
+    integer interval_millisec   = 200;
+    integer countdown           = countdown_sec * 1000 / interval_millisec;
+
+    <b>UI::OpenDialog</b>(
+                   `VBox(
+                         `Label( "Rebooting Planet Earth..." ),
+                         `Label(`id(`seconds ), sformat( "%1", countdown_sec ) ),
+                         `PushButton(`id(`ok ), `opt(`default ), "&OK" )
+                         )
+                   );
+
+    any id = nil;
+
+    // Event loop
+
+    repeat
+    {
+        id = <em>UI::TimeoutUserInput</em>( interval_millisec );
+
+	if ( id == <b>`timeout</b> )
+	{
+	    // Periodic screen update
+	    
+	    countdown = countdown - 1;
+	    integer seconds_left = countdown * interval_millisec / 1000;
+	    <b>UI::ChangeWidget</b>(`id(`seconds ), `Value, sformat( "%1", seconds_left ) );
+	}
+
+    } until ( id == `ok || countdown <= 0 );
+
+    <b>UI::CloseDialog()</b>;
+}
 </pre>
 
 

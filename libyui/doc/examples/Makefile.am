@@ -127,6 +127,7 @@ examples_DATA =					\
 	TextEntry4.ycp				\
 	TextEntry5.ycp				\
 	TextEntry6.ycp				\
+	TimeoutUserInput.ycp			\
 	TooBig.ycp				\
 	Tree1.ycp				\
 	Tree2.ycp				\

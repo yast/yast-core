@@ -22,14 +22,14 @@ body
 
 h1
 {
-    background-color:#D8D8F0;
+    background-color:#D8D8F4;
     margin-botton:0;
     text-align:center;
 }
 
 h2
 {
-    background-color:#D8D8F0;
+    background-color:#D8D8F4;
     margin-top:1.5cm;
     padding-left:0.3cm;
 }
@@ -46,7 +46,7 @@ td
 .code
 {
     font-family:monospace;
-    background-color:#E0E0E0;
+    background-color:#E0E0ED;
     margin-left:0.75cm;
     padding-left:0.3cm;
     padding-right:0.3cm;
@@ -64,6 +64,10 @@ td
 {
     background-color:#B0B0F0;
     font-weight:bolder;
+    padding-left:0.2cm;
+    padding-right:0.2cm;
+    padding-top:0.1cm;
+    padding-bottom:0.1cm;
 }
 
 
@@ -80,6 +84,6 @@ td
     padding-top:0.3cm;
     padding-bottom:0.3cm;
     margin-left:0.75cm;
-    background-color:#E0E0E0;
+    background-color:#E0E0ED;
 }
 
