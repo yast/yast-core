@@ -249,7 +249,7 @@ struct scannerstack_t : stack_t {
 %right UMINUS
 %left ':'
 %left CLOSEBRACKET
-%right '['
+%left '['
 
 /* ---------------------------------------------------------------------- */
 %%
@@ -305,7 +305,11 @@ expression:
 	compact_expression
 |	casted_expression
 |	infix_expression
-|	compact_expression '[' list_elements CLOSEBRACKET expression
+|	bracket_expression
+;
+
+bracket_expression:
+	compact_expression '[' list_elements CLOSEBRACKET expression
 	    {
 		if (($1.t == 0)			// any errors yet ?
 		    || ($3.t == 0)
@@ -388,7 +392,7 @@ expression:
 
 		    if (index < params->count ())		// we hit a non-list/non-map before end of bracket
 		    {
-			$$.t = Type::Any;			// why's that ?
+			$$.t = Type::Any;			// we can't say anything about the resulting type, must propagate to default type
 		    }
 		    else 
 		    {
@@ -419,8 +423,14 @@ expression:
 	    }
 ;
 
+castable_expression:
+|	compact_expression
+|	casted_expression
+|	bracket_expression
+;
+
 casted_expression:
-	'(' type ')' compact_expression
+	'(' type ')' castable_expression
 	{
 	    // on error, propagate it
 	    if ($2.t == 0 || $4.t == 0 )

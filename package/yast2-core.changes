@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 27 10:16:00 CET 2004 - kkaempf@suse.de
+
+- fix cast vs. bracket precedence (#34156)
+
+-------------------------------------------------------------------
 Tue Jan 27 09:21:28 CET 2004 - visnov@suse.cz
 
 - always bind textdomain (even in bytecode)
