@@ -59,6 +59,12 @@
 					       "Muenchen",
 					       "Berlin"
 					       ]
+					      ),
+					`item(`id(`czech), "Czech Republic",
+					      [
+					       "Praha",
+					       "Brno"
+					       ]
 					      )
 					]
 				       ),
