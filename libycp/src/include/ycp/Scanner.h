@@ -27,6 +27,8 @@
 #ifndef Scanner_h
 #define Scanner_h
 
+/* Work around bug in flex.  */
+#undef yyFlexLexer
 #include "FlexLexer.h"
 #include "ycp/StaticDeclaration.h"
 #include <stdio.h>
