@@ -34,7 +34,6 @@ YCPBooleanRep::YCPBooleanRep(const char *r)
 {
 }
 
-
 bool
 YCPBooleanRep::value() const
 {
@@ -76,7 +75,25 @@ YCPBooleanRep::compare(const YCPBoolean& b) const
 
 // --------------------------------------------------------
 
+YCPBoolean* YCPBoolean::trueboolean = NULL;
+YCPBoolean* YCPBoolean::falseboolean = NULL;
+
+YCPBoolean::YCPBoolean (bool v)
+    : YCPValue ( *(
+	v ?
+	trueboolean ? trueboolean : (trueboolean = new YCPBoolean (new YCPBooleanRep (true)) )
+	:
+	falseboolean ? falseboolean : (falseboolean = new YCPBoolean (new YCPBooleanRep (false)) )
+    ))
+{
+}
+
 YCPBoolean::YCPBoolean (bytecodeistream & str)
-    : YCPValue (new YCPBooleanRep (Bytecode::readBool (str)))
+    : YCPValue (*(
+	Bytecode::readBool (str) ? 
+	trueboolean ? trueboolean : (trueboolean = new YCPBoolean (new YCPBooleanRep (true)) )
+	:
+	falseboolean ? falseboolean : (falseboolean = new YCPBoolean (new YCPBooleanRep (false)) )
+    ))
 {
 }

@@ -40,7 +40,7 @@ protected:
      * Creates a new YCPVoidRep
      */
     YCPVoidRep();
-
+    
 public:
     /**
      * Gives the ASCII representation of this value, i.e.
@@ -74,8 +74,10 @@ public:
 class YCPVoid : public YCPValue
 {
     DEF_COMMON(Void, Value);
+    
+    static YCPVoid* nil;
 public:
-    YCPVoid() : YCPValue(new YCPVoidRep()) {}
+    YCPVoid();
     YCPVoid(bytecodeistream & str);
 };
 #endif   // YCPVoid_h

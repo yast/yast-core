@@ -92,8 +92,12 @@ public:
 class YCPBoolean : public YCPValue
 {
     DEF_COMMON(Boolean, Value);
+    
+    static YCPBoolean* trueboolean;
+    static YCPBoolean* falseboolean;
+    
 public:
-    YCPBoolean(bool v) : YCPValue(new YCPBooleanRep(v)) {}
+    YCPBoolean(bool v);
     YCPBoolean(const char *r) : YCPValue(new YCPBooleanRep(r)) {}
     YCPBoolean(bytecodeistream & str);
 };
