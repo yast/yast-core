@@ -89,6 +89,9 @@
 		if ( current_dir != nil )
 		    UI::ChangeWidget( `id( `echo ), `Value, sformat( "%1", current_dir ) );
 	    }
+
+	    y2milestone( "Items:\n%1", UI::QueryWidget(`dest_dir, `Items ) );
+	    y2milestone( "OpenItems:\n%1", UI::QueryWidget(`dest_dir, `OpenItems ) );
 	} until ( id == `ok );
 
 
