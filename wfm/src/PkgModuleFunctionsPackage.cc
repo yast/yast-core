@@ -57,6 +57,7 @@ getName (YCPList args)
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
+	y2error ("Pkg:: expects a string");
 	return "";
     }
     return args->value(0)->asString()->value();
@@ -87,6 +88,21 @@ getTheObject (PMSelectablePtr selectable)
     if (selectable)
     {
 	package = selectable->theObject();
+	if (!package)
+	{
+	    y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
+	}
+    }
+    return package;
+}
+
+static PMPackagePtr
+getTheCandidate (PMSelectablePtr selectable)
+{
+    PMPackagePtr package;
+    if (selectable)
+    {
+	package = selectable->candidateObj();
 	if (!package)
 	{
 	    y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
@@ -441,7 +457,7 @@ PkgModuleFunctions::PkgSize (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgLocation (YCPList args)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheCandidate (getPackageSelectable (getName(args)));
     if (!package)
     {
 	return YCPVoid();
@@ -472,7 +488,8 @@ PkgModuleFunctions::PkgLocation (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgMediaNr (YCPList args)
 {
-    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    PMPackagePtr package = getTheCandidate (getPackageSelectable (getName(args)));
+    if (!package)
     {
 	return YCPVoid();
     }
