@@ -30,6 +30,11 @@ public:
      * Constructor
      */
     YAnyOpt()			{ _defined = false; }
+    
+    /**
+     * Destructor
+     */
+    virtual ~YAnyOpt() {}
 
     /**
      * Set the value.
