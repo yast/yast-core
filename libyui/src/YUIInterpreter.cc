@@ -1938,7 +1938,13 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 
     if (cd == (iconv_t)(-1))
     {
-	y2error ("Recode: (errno %d) failed conversion '%s' to '%s'", errno, from.c_str(), to.c_str());
+	static bool complained = false;
+	if (!complained)
+	{
+	    // glibc-locate is not necessarily installed so only complain once
+	    y2error ("Recode: (errno %d) failed conversion '%s' to '%s'", errno, from.c_str(), to.c_str());
+	    complained = true;
+	}
 	outstr = instr;
 	return 1;
     }

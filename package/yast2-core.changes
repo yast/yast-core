@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 02 12:45:55 CEST 2002 - arvin@suse.de
+
+- only complain once if recode fails (bug #16773)
+
+-------------------------------------------------------------------
 Thu Jun 27 16:18:36 CEST 2002 - arvin@suse.de
 
 - the Read (.yast2, ...) of the system agent appends "data/" the
