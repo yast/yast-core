@@ -699,18 +699,26 @@ YBlock::evaluate (bool cse)
 
 
 YCPValue
-YBlock::evaluate (int statement_index)
+YBlock::evaluate (int statement_index, bool skip_initial_imports)
 {
     y2debug("YBlock::evaluate(#%d)\n", statement_index);
     
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
+
+    while (skip_initial_imports
+	   && stmt
+	   && stmt->stmt->kind() == YCode::ysImport)
+    {
+	stmt =stmt->next;
+    }
+    
     while (stmt && statement_index > 0)
     {
 	stmt = stmt->next;
 	statement_index--;
     }
-    
+
     if (!stmt)
     {
 	// we are at the end
@@ -718,7 +726,7 @@ YBlock::evaluate (int statement_index)
     }
     
     y2milestone("YBlock::evaluating:\n%s", stmt->stmt->toString ().c_str());
-    
+
     value = stmt->stmt->evaluate ();
     
     // y2debug("YBlock::evaluate statement done (value '%s')\n", value.isNull() ? "NULL" : value->toString().c_str());
@@ -783,7 +791,7 @@ YBlock::YBlock (std::istream & str)
 	{
 	    int tcount = Bytecode::readInt32 (str);
 	    y2debug ("Module with %d table entries", tcount);
-	    
+
 	    if (tcount > 0
 		&& m_table == 0)
 	    {
