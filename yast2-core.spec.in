@@ -13,8 +13,10 @@ Provides:	yast2-agent-modules yast2-agent-probe yast2-agent-system
 Obsoletes:	yast2-agent-modules yast2-agent-probe yast2-agent-system
 Provides:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Obsoletes:	yast2-core-scr yast2-core-wfm yast2-core-translator
-Provides:	y2base yast2-base
-Obsoletes:	y2base yast2-base
+Provides:	y2base yast2-base y2translator y2xlator
+Obsoletes:	y2base yast2-base y2translator y2xlator
+Provides:	yast2-core-scr-soho
+Obsoletes:	yast2-core-scr-soho
 
 %description
 -
@@ -39,6 +41,9 @@ Provides:	yast2-core-scr-devel yast2-core-wfm-devel
 Obsoletes:	yast2-core-scr-devel yast2-core-wfm-devel
 Provides:	yast2-core-translator-devel
 Obsoletes:	yast2-core-translator-devel
+Provides:	yast2-core-scr-soho-devel
+Obsoletes:	yast2-core-scr-soho-devel
+
 %description devel
 -
 

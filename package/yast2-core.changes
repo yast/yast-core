@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 06 16:46:07 CEST 2002 - arvin@suse.de
+
+- provide/obsolete more old packages
+
+-------------------------------------------------------------------
 Fri Sep  6 14:35:55 CEST 2002 - kkaempf@suse.de
 
 - fix update api, allow for deletion of old packages
