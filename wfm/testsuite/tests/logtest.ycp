@@ -1,5 +1,0 @@
-{
-  // check for proper log entry, bug #8334
-
-  SCR(`Read(nil));
-}

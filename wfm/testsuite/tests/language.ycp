@@ -1,7 +1,4 @@
 {
-    WFM::SetLanguage ("de_DE@euro");
-    WFM::SetLanguage ("de_DE", "UTF-8"); 
-    WFM::SetLanguage ("cs_CZ");
-
+    WFM::SetLanguage ("cs_CZ", "ISO-8859-2");
     return WFM::GetLanguage();
 }

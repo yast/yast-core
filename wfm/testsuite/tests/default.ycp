@@ -1,7 +1,7 @@
 {
     list ret = [];
 
-    ret = add (ret, SCRGetDefault ());
+    ret = add (ret, WFM::SCRGetDefault ());
 
     return ret;
 }

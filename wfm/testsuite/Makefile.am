@@ -14,32 +14,26 @@ INCLUDES =					\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
 	-I$(srcdir)/../src			\
-	-I$(includedir)
+	-I$(includedir)                         \
+        -I/usr/include/YaST2
 
-noinst_PROGRAMS = runwfm y2wfm
+noinst_PROGRAMS = runwfm
 
 runwfm_SOURCES = runwfm.cc
-runwfm_LDADD = -ly2 -lycp -ly2util -ly2pm
+runwfm_LDADD = -ly2 -lycp -ly2util -ly2pm -lscr
 
 runwfm_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
+	-L$(srcdir)/../../scr/src			\
+	-L$(srcdir)/../../libscr/src			\
 	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../../scr/src/libpy2scr.la		\
+	$(srcdir)/../../liby2/src/liby2.la		\
+	$(srcdir)/../../libyui/src/libyui.la		\
 	$(srcdir)/../src/libpy2wfm.la			\
-	-Xlinker --no-whole-archive
-
-y2wfm_SOURCES = y2wfm.cc
-y2wfm_LDADD = -ly2 -lycp -ly2util -ly2pm
-
-y2wfm_LDFLAGS = 					\
-	-L$(srcdir)/../../libycp/src			\
-	-L$(srcdir)/../../liby2/src			\
-	-L$(libdir)					\
-	-Xlinker --whole-archive			\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../src/libpy2wfm.la			\
 	-Xlinker --no-whole-archive
 

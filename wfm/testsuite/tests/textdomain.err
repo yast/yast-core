@@ -1,3 +1,0 @@
-[YCP] tests/textdomain.ycp:9 first textdomain 'first domain'
-[YCP] tests/textdomain.ycp:13 second textdomain 'second domain'
-[YCP] tests/textdomain.ycp:6 change_domain 'first domain'

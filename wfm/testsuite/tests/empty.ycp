@@ -4,7 +4,7 @@
 
     y2milestone ("empty");
 
-    global define do_log () ``{
+    define void do_log () ``{
         y2milestone ("empty::do_log");    
     }
 }

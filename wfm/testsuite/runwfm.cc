@@ -19,11 +19,12 @@
 
 #include <stdio.h>
 
-#include "WFMInterpreter.h"
-
 #include <y2/Y2StdioComponent.h>
-#include <ycp/YCPParser.h>
+#include <y2/Y2ComponentBroker.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
+#include <WFM.h>
+#include <Y2ScriptComponent.h>
 
 extern int yydebug;
 
@@ -57,12 +58,12 @@ main (int argc, char *argv[])
 	}
     }
 
-    YCPParser *parser;
-    parser = new YCPParser ();
+    Parser *parser;
+    parser = new Parser ();
 
     if (!parser)
     {
-	fprintf (stderr, "Failed to create YCPParser\n");
+	fprintf (stderr, "Failed to create Parser\n");
 	return 1;
     }
 
@@ -76,14 +77,14 @@ main (int argc, char *argv[])
 	return 1;
     }
 
-    WFMInterpreter *interpreter = new WFMInterpreter (user_interface, user_interface,
-						      "runwfm", "unknown", YCPList ());
-    if (!interpreter)
+    // create the component "wfm", the Workflowmanager to do the work.
+    Y2Component *workflowmanager = Y2ComponentBroker::createClient("wfm");
+
+    if (!workflowmanager)
     {
-	fprintf (stderr, "Failed to create WFMInterpreter\n");
-	delete user_interface;
+        y2error ("Failed to create component wfm (Workflowmanager)");
 	delete parser;
-	return 1;
+        return 1;
     }
 
     if (fname != 0)
@@ -102,27 +103,34 @@ main (int argc, char *argv[])
 
     parser->setInput (infile, fname);
     parser->setBuffered();
+    parser->setPreloadNamespaces (false);
+    
+    // register builtins;
+    WFM wfm;
 
-    YCPValue value = YCPVoid();
+    YCode* value = 0;
 
     for (;;)
     {
 	value = parser->parse();
-	if (value.isNull())
+	if (value == 0)
 	{
 	    break;
 	}
-	value = interpreter->evaluate(value);
+	
+	// Prepare the arguments. It has the form [script, [clientargs...]]
+	YCPList wfm_arglist;
+	wfm_arglist->add (YCPCode (value));
+	wfm_arglist->add (YCPString ("testing"));
+	wfm_arglist->add (YCPString ("testing-fullname"));
+	wfm_arglist->add (YCPList());
 
-	if (!value.isNull() && (value->isError()))
-	{
-	    // triggers error log in interpreter
-	    value = interpreter->evaluate(value);
-	}
-	printf ("(%s)\n", value.isNull()?"(NULL)":value->toString().c_str());
+	// Let the wfm do the work
+	YCPValue res = workflowmanager->doActualWork(wfm_arglist, user_interface);
+
+	printf ("(%s)\n", res.isNull()?"nil":res->toString().c_str());
     }
 
-    delete interpreter;
     delete parser;
 
     if (infile != stdin)

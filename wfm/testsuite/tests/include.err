@@ -1,6 +1,0 @@
-[Interpreter] tests/include.ycp:5 Can't find YCP include component empty.ycp: No such file or directory
-[YCP] tests/empty.ycp:5 empty
-[YCP] ../testsuite/tests/empty.ycp:5 empty
-[Interpreter] tests/include.ycp:8 Can't find YCP include component /empty.ycp: No such file or directory
-[Interpreter] tests/include.ycp:9 Can't find YCP include component ../empty.ycp: No such file or directory
-[Interpreter] tests/include.ycp:10 Can't find YCP include component .empty.ycp: No such file or directory
