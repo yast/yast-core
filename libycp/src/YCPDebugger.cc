@@ -376,6 +376,37 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 	return false;
     }
 
+    // scopes [#<interp_no>]
+    if (nargs >= 1 && args[0] == "scopes") {
+	Interpreter * tmp = inter;
+
+	if (nargs == 2 && args[1][0] == '#') {	
+	    int unique_id = atoi (args[1].substr (1).c_str ());
+	    tmp = find_inter (unique_id);
+	}
+
+	if (tmp) {
+	    YCPScope *s = tmp->interpreter;
+	    write_line ("scopeLevel\t%d", s->scopeLevel);
+	    write_line ("scopeGlobal\t%p", s->scopeGlobal);
+	    write_line ("scopeTop\t%p", s->scopeTop);
+
+	    if (s->instances) {
+		YCPScope::YCPScopeInstanceContainer::iterator
+		    i = s->instances->begin (),
+		    e = s->instances->end ();
+		for (; i != e; ++i) {
+		    write_line ("%s\t%p", i->first.c_str(), i->second);
+		}
+	    }
+	    else
+		write_line ("no instances");
+	}
+	else
+	    write_line ("unknown interpreter");
+	return false;
+    }
+
     // {p|print} [#<interp_no>] [<namespace>::]<variable>
     if (nargs >= 2 && (args[0] == "print" || args[0] == "p")) {
 	Interpreter * tmp = inter;
