@@ -1,11 +1,11 @@
 .
 
 `anyagent(
-    Description (
-    ``(File ("tests/proc_filesystems.in")),	// real file name
+    `Description (
+    (`File ("tests/proc_filesystems.in")),	// real file name
     "#\n",			// Comment
     true,				// read-only
-     ``(Tuple (Value (Or (Whitespace(), "nodev")), Optional (Whitespace()),
-     Name (String("^ \n")), Continue("\n")))
+     (`Tuple (`Value (`Or (`Whitespace(), "nodev")), `Optional (`Whitespace()),
+     `Name (`String("^ \n")), `Continue("\n")))
     )
 )

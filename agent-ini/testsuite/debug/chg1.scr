@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("debug/chg1.in.test",
+  `IniAgent("debug/chg1.in.test",
     $[
       "options" : [ "global_values" ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

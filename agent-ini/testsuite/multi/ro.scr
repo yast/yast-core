@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent( [ "multi/ro.in.*.test" ],
+  `IniAgent( [ "multi/ro.in.*.test" ],
     $[
       "options" : [ "read_only" ],
       "comments": [ "^[ \t]*#.*", "^[ \t]*$" ],

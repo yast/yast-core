@@ -1,5 +1,5 @@
 .
 
 `ag_dummy (
-    DataMap ($["a":"huhu"], 0)
+    `DataMap ($["a":"huhu"], 0)
 )

@@ -1,15 +1,15 @@
 .
 
 `anyagent(
-    Description (
-      ``(File ("tests/etc_hosts.in")),	// real file name
+    `Description (
+      (`File ("tests/etc_hosts.in")),	// real file name
       "#\n",			// Comment
       false,			// read-only
-      ``(List (
-	Tuple (
-	  `ip4 (Ip4Number()),
-	  Separator (" \t"),
-	  `hostname (List (Hostname(), Whitespace()))
+      (`List (
+	`Tuple (
+	  `ip4 (`Ip4Number()),
+	  `Separator (" \t"),
+	  `hostname (`List (`Hostname(), `Whitespace()))
 	),
 	"\n"
       )

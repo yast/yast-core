@@ -2,7 +2,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/icase3.in.test",
+  `IniAgent("tests/icase3.in.test",
     $[
       "options" : [ "ignore_case" , "first_upper" ],
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],

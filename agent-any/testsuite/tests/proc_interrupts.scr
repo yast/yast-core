@@ -1,17 +1,17 @@
 .
 
 `anyagent(
-    Description (
-  ``(File ("tests/proc_interrupts.in")),	// real file name
+    `Description (
+  (`File ("tests/proc_interrupts.in")),	// real file name
   "#\n",			// Comment
   true,				// read-only
-  ``(Tuple (
-      Choice (
-	["     ", Sequence (Whitespace(),"CPU",String("^\n"))],
-	["NMI:", Sequence (Whitespace(), `nmi(Number()))],
-	[" ", Sequence (Whitespace(), Name(Number()), ":", Whitespace(), Value(List(String("^ \t\n,"), String (", \t"))))]
+  (`Tuple (
+      `Choice (
+	["     ", `Sequence (`Whitespace(),"CPU",`String("^\n"))],
+	["NMI:", `Sequence (`Whitespace(), `nmi(`Number()))],
+	[" ", `Sequence (`Whitespace(), `Name(`Number()), ":", `Whitespace(), `Value(`List(`String("^ \t\n,"), `String (", \t"))))]
       ),
-      Continue ("\n")
+      `Continue ("\n")
   ))
     )
 )

@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/linecnt1.in.test",
+  `IniAgent("tests/linecnt1.in.test",
     $[
       "options" : [ "line_can_continue" ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

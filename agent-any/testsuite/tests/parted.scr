@@ -4,28 +4,28 @@
 .
 
 `ag_anyagent(
-  Description (
-  ``(File ("tests/parted.in")),
+  `Description (
+  (`File ("tests/parted.in")),
   "\n", true,
-  ``(Tuple (
-      Choice (
-	[Name(Number()), Value(Tuple(
-		 Whitespace(),
-		`start(String("^ \t")),
-		 Whitespace(),
-		`end(String("^ \t")),
-		 Whitespace(),
-		`type(String("^ \t\n")),
-		 Optional (Whitespace()),
-		 Optional (`filesystem(String("^ \t\n"))),
-		 Optional (Whitespace()),
-		 Optional (`flags(String("^\n"))),
-		 Optional(String("^\n"))
+  (`Tuple (
+      `Choice (
+	[`Name(`Number()), `Value(`Tuple(
+		 `Whitespace(),
+		`start(`String("^ \t")),
+		 `Whitespace(),
+		`end(`String("^ \t")),
+		 `Whitespace(),
+		`type(`String("^ \t\n")),
+		 `Optional (`Whitespace()),
+		 `Optional (`filesystem(`String("^ \t\n"))),
+		 `Optional (`Whitespace()),
+		 `Optional (`flags(`String("^\n"))),
+		 `Optional(`String("^\n"))
 		))
 	],
-	[String ("^\n"), Skip ()]
+	[`String ("^\n"), `Skip ()]
       ),
-      Continue ("\n")
+      `Continue ("\n")
   ))
   )
 )

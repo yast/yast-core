@@ -1,29 +1,29 @@
 .
 
 `anyagent(
-    Description (
-      ``(File ("tests/proc_cpuinfo.in")),	// real file name
+    `Description (
+      (`File ("tests/proc_cpuinfo.in")),	// real file name
   "#\n",			// Comment
   true,				// read-only
-  ``(Tuple (
-    "processor",	Whitespace(), ": ", `processor (Number()), "\n",
-    "vendor_id",	Whitespace(), ": ", `vendor_id (String("^\n")), "\n",
-    "cpu family",	Whitespace(), ": ", `family (Number()), "\n",
-    "model",		Whitespace(), ": ", `model (Number()), "\n",
-    "model name",	Whitespace(), ": ", `model_name (String("^\n")), "\n",
-    "stepping",		Whitespace(), ": ", `stepping(Number()), "\n",
-    "cpu MHz",		Whitespace(), ": ", `mhz(Float()), "\n",
-    "cache size",	Whitespace(), ": ", `cache(Number()), " KB\n",
-    "fdiv_bug",		Whitespace(), ": ", `fdiv_bug(Boolean()), "\n",
-    "hlt_bug",		Whitespace(), ": ", `hlt_bug(Boolean()), "\n",
-    "sep_bug",		Whitespace(), ": ", `sep_bug(Boolean()), "\n",
-    "f00f_bug",		Whitespace(), ": ", `f00f_bug(Boolean()), "\n",
-    "coma_bug",		Whitespace(), ": ", `coma_bug(Boolean()), "\n",
-    "fpu",		Whitespace(), ": ", `fpu(Boolean()), "\n",
-    "fpu_exception",	Whitespace(), ": ", `fpu_exception(Boolean()), "\n",
-    "cpuid level",	Whitespace(), ": ", `cpuid_level(Number()), "\n",
-    "wp",		Whitespace(), ": ", `wp(Boolean()), "\n",
-    "flags",		Whitespace(), ": ", `flags(List(String("^ \n"), " ")), "\n",
-    "bogomips",		Whitespace(), ": ", `bogomips(Float()), "\n")
+  (`Tuple (
+    "processor",	`Whitespace(), ": ", `processor (`Number()), "\n",
+    "vendor_id",	`Whitespace(), ": ", `vendor_id (`String("^\n")), "\n",
+    "cpu family",	`Whitespace(), ": ", `family (`Number()), "\n",
+    "model",		`Whitespace(), ": ", `model (`Number()), "\n",
+    "model name",	`Whitespace(), ": ", `model_name (`String("^\n")), "\n",
+    "stepping",		`Whitespace(), ": ", `stepping(`Number()), "\n",
+    "cpu MHz",		`Whitespace(), ": ", `mhz(`Float()), "\n",
+    "cache size",	`Whitespace(), ": ", `cache(`Number()), " KB\n",
+    "fdiv_bug",		`Whitespace(), ": ", `fdiv_bug(`Boolean()), "\n",
+    "hlt_bug",		`Whitespace(), ": ", `hlt_bug(`Boolean()), "\n",
+    "sep_bug",		`Whitespace(), ": ", `sep_bug(`Boolean()), "\n",
+    "f00f_bug",		`Whitespace(), ": ", `f00f_bug(`Boolean()), "\n",
+    "coma_bug",		`Whitespace(), ": ", `coma_bug(`Boolean()), "\n",
+    "fpu",		`Whitespace(), ": ", `fpu(`Boolean()), "\n",
+    "fpu_exception",	`Whitespace(), ": ", `fpu_exception(`Boolean()), "\n",
+    "cpuid level",	`Whitespace(), ": ", `cpuid_level(`Number()), "\n",
+    "wp",		`Whitespace(), ": ", `wp(`Boolean()), "\n",
+    "flags",		`Whitespace(), ": ", `flags(`List(`String("^ \n"), " ")), "\n",
+    "bogomips",		`Whitespace(), ": ", `bogomips(`Float()), "\n")
     ))
 )

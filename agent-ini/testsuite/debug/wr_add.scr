@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("debug/wr_add.in.test",
+  `IniAgent("debug/wr_add.in.test",
     $[
       "options" : [ "global_values" ],
       "subindent" : "  ",

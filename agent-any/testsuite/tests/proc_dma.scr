@@ -1,11 +1,11 @@
 .
 
 `anyagent(
-    Description (
-      ``(File ("tests/proc_dma.in")),	// real file name
+    `Description (
+      (`File ("tests/proc_dma.in")),	// real file name
 	"#\n",			// Comment
 	true,				// read-only
-	``(Tuple (Optional (Whitespace()), Value (Number()), ": ",
-	Name(String("^\n")), Continue ("\n")))
+	(`Tuple (`Optional (`Whitespace()), `Value (`Number()), ": ",
+	`Name(`String("^\n")), `Continue ("\n")))
     )
 )

@@ -2,7 +2,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/icreg2.in.test",
+  `IniAgent("tests/icreg2.in.test",
     $[
       "options" : [ ],
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],

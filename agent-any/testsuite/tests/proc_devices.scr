@@ -1,22 +1,22 @@
 .
 
 `anyagent(
-    Description (
-    ``(File ("tests/proc_devices.in")),	// real file name
+    `Description (
+    (`File ("tests/proc_devices.in")),	// real file name
      "#\n",			// Comment
     true,				// read-only
-     ``(Tuple (
-      Choice (
+     (`Tuple (
+      `Choice (
         ["Character devices:\n",
 	`char (
-	  Tuple (Optional (Whitespace()), Value (Number()), Whitespace(), Name(String("^\n")), Continue ("\n"))
+	  `Tuple (`Optional (`Whitespace()), `Value (`Number()), `Whitespace(), `Name(`String("^\n")), `Continue ("\n"))
 	)
 	]
       ),
-      Choice (
+      `Choice (
 	["Block devices:\n",
 	`block (
-	  Tuple (Optional (Whitespace()), Value (Number()), Whitespace(), Name(String("^\n")), Continue ("\n"))
+	  `Tuple (`Optional (`Whitespace()), `Value (`Number()), `Whitespace(), `Name(`String("^\n")), `Continue ("\n"))
 	)
 	]
       )

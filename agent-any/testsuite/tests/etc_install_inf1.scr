@@ -1,41 +1,41 @@
 .
 
 `anyagent(
-    Description (
-      ``(File("tests/etc_install_inf1.in")),	// real file name
+    `Description (
+      (`File("tests/etc_install_inf1.in")),	// real file name
       "#\n",				// Comment
       true,				// read-only
-      ``(Tuple (
-	  Choice (
-	   [ "Language:",	Sequence (Whitespace (), `language (String("^\n")))],
-	   [ "Keytable:",	Sequence (Whitespace (), `keytable (String("^\n")))],
-	   [ "Display:",	Sequence (Whitespace (), `display(String("^\n")))],
-	   [ "Bootmode:",	Sequence (Whitespace (), `bootmode(String("^\n")))],
-	   [ "Sourcemounted:",	Sequence (Whitespace (), `sourcemounted(String("^\n")))],
-	   [ "Cdrom:",		Sequence (Whitespace (), `cdrom(String("^\n")))],
-	   [ "Partition:",	Sequence (Whitespace (), `partition(String("^\n")))],
-	   [ "Fstyp:",		Sequence (Whitespace (), `fstype(String("^\n")))],
-	   [ "Netdevice:",	Sequence (Whitespace (), `netdevice(String("^\n")))],
-	   [ "IP:", 		Sequence (Whitespace (), `ip(String("^\n")))],
-	   [ "Netmask:",	Sequence (Whitespace (), `netmask(String("^\n")))],
-	   [ "Gateway:",	Sequence (Whitespace (), `gateway(String("^\n")))],
-	   [ "Nameserver:",	Sequence (Whitespace (), `nameserver(String("^\n")))],
-	   [ "Server:",		Sequence (Whitespace (), `server(String("^\n")))],
-	   [ "Serverdir:",	Sequence (Whitespace (), `serverdir(String("^\n")))],
-	   [ "alias ",		Sequence (Whitespace (), `alias(String("^\n")))],
-	   [ "Machinename:",	Sequence (Whitespace (), `machinename(String("^\n")))],
-	   [ "Domain:",		Sequence (Whitespace (), `domain(String("^\n")))],
-	   [ "SMP:",		Sequence (Whitespace (), `smp(String("^\n")))],
-	   [ "Mouse-Device:",	Sequence (Whitespace (), `mouse_device(String("^\n")))],
-	   [ "Mouse-Type:",	Sequence (Whitespace (), `mouse_type(String("^\n")))],
-	   [ "INITRD_MODULES=",	Sequence (Whitespace (), `initrd_modules(String("^\n")))],
-	   [ "options ",	Sequence (Whitespace (), `options(String("^\n")))],
-	   [ "Floppy-Disk:",	Sequence (Whitespace (), `floppy_disk(String("^\n")))],
-	   [ "YaST2-Update:",	Sequence (Whitespace (), `yast2_update(String("^\n")))],
-	   [ "Textmode:",	Sequence (Whitespace (), `textmode(String("^\n")))],
-	   [ "Framebuffer:",	Sequence (Whitespace (), `framebuffer(String("^\n")))]
+      (`Tuple (
+	  `Choice (
+	   [ "Language:",	`Sequence (`Whitespace (), `language (`String("^\n")))],
+	   [ "Keytable:",	`Sequence (`Whitespace (), `keytable (`String("^\n")))],
+	   [ "Display:",	`Sequence (`Whitespace (), `display(`String("^\n")))],
+	   [ "Bootmode:",	`Sequence (`Whitespace (), `bootmode(`String("^\n")))],
+	   [ "Sourcemounted:",	`Sequence (`Whitespace (), `sourcemounted(`String("^\n")))],
+	   [ "Cdrom:",		`Sequence (`Whitespace (), `cdrom(`String("^\n")))],
+	   [ "Partition:",	`Sequence (`Whitespace (), `partition(`String("^\n")))],
+	   [ "Fstyp:",		`Sequence (`Whitespace (), `fstype(`String("^\n")))],
+	   [ "Netdevice:",	`Sequence (`Whitespace (), `netdevice(`String("^\n")))],
+	   [ "IP:", 		`Sequence (`Whitespace (), `ip(`String("^\n")))],
+	   [ "Netmask:",	`Sequence (`Whitespace (), `netmask(`String("^\n")))],
+	   [ "Gateway:",	`Sequence (`Whitespace (), `gateway(`String("^\n")))],
+	   [ "Nameserver:",	`Sequence (`Whitespace (), `nameserver(`String("^\n")))],
+	   [ "Server:",		`Sequence (`Whitespace (), `server(`String("^\n")))],
+	   [ "Serverdir:",	`Sequence (`Whitespace (), `serverdir(`String("^\n")))],
+	   [ "alias ",		`Sequence (`Whitespace (), `alias(`String("^\n")))],
+	   [ "Machinename:",	`Sequence (`Whitespace (), `machinename(`String("^\n")))],
+	   [ "Domain:",		`Sequence (`Whitespace (), `domain(`String("^\n")))],
+	   [ "SMP:",		`Sequence (`Whitespace (), `smp(`String("^\n")))],
+	   [ "Mouse-Device:",	`Sequence (`Whitespace (), `mouse_device(`String("^\n")))],
+	   [ "Mouse-Type:",	`Sequence (`Whitespace (), `mouse_type(`String("^\n")))],
+	   [ "INITRD_MODULES=",	`Sequence (`Whitespace (), `initrd_modules(`String("^\n")))],
+	   [ "options ",	`Sequence (`Whitespace (), `options(`String("^\n")))],
+	   [ "Floppy-Disk:",	`Sequence (`Whitespace (), `floppy_disk(`String("^\n")))],
+	   [ "YaST2-Update:",	`Sequence (`Whitespace (), `yast2_update(`String("^\n")))],
+	   [ "Textmode:",	`Sequence (`Whitespace (), `textmode(`String("^\n")))],
+	   [ "Framebuffer:",	`Sequence (`Whitespace (), `framebuffer(`String("^\n")))]
 	  ),
-	  Continue ("\n")
+	  `Continue ("\n")
 	))
     )
 )

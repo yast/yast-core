@@ -1,11 +1,11 @@
 .
 
 `anyagent(
-    Description (
-     ``(File ("tests/proc_fb.in")),	// real file name
+    `Description (
+     (`File ("tests/proc_fb.in")),	// real file name
      "#\n",			// Comment
      true,				// read-only
-    ``(List (Tuple (`fb (Number()), " ", `type (List (String ("^ \n"), " "))), "\n")
+    (`List (`Tuple (`fb (`Number()), " ", `type (`List (`String ("^ \n"), " "))), "\n")
     )
     )
 )

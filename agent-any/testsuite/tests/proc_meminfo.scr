@@ -1,24 +1,24 @@
 .
 
 `anyagent(
-    Description (
-    ``(File ("tests/proc_meminfo.in")),	// real file name
+    `Description (
+    (`File ("tests/proc_meminfo.in")),	// real file name
     "#\n",			// Comment
     true,				// read-only
-    ``(Tuple (
-      Choice (
-	["     ", Sequence (Whitespace(),"total",String("^\n"))],
-	["Mem:", `mem(Tuple (Whitespace(), `total(Number()), Whitespace(), `used(Number()), Whitespace(), `free(Number()), Whitespace(), `shared(Number()), Whitespace(), `buffers(Number()), Whitespace(), `cached(Number())))],
-	["Swap:", `swap(Tuple (Whitespace(), `total(Number()), Whitespace(), `used(Number()), Whitespace(), `free(Number())))],
-	["MemTotal:", Sequence (Whitespace(), `memtotal(Number()), String("^\n"))],
-	["MemFree:", Sequence (Whitespace(), `memfree(Number()), String("^\n"))],
-	["MemShared:", Sequence (Whitespace(), `memshared(Number()), String("^\n"))],
-	["Buffers:", Sequence (Whitespace(), `buffers(Number()), String("^\n"))],
-	["Cached:", Sequence (Whitespace(), `cached(Number()), String("^\n"))],
-	["SwapTotal:", Sequence (Whitespace(), `swaptotal(Number()), String("^\n"))],
-	["SwapFree:", Sequence (Whitespace(), `swapfree(Number()), String("^\n"))]
+    (`Tuple (
+      `Choice (
+	["     ", `Sequence (`Whitespace(),"total",`String("^\n"))],
+	["Mem:", `mem(`Tuple (`Whitespace(), `total(`Number()), `Whitespace(), `used(`Number()), `Whitespace(), `free(`Number()), `Whitespace(), `shared(`Number()), `Whitespace(), `buffers(`Number()), `Whitespace(), `cached(`Number())))],
+	["Swap:", `swap(`Tuple (`Whitespace(), `total(`Number()), `Whitespace(), `used(`Number()), `Whitespace(), `free(`Number())))],
+	["MemTotal:", `Sequence (`Whitespace(), `memtotal(`Number()), `String("^\n"))],
+	["MemFree:", `Sequence (`Whitespace(), `memfree(`Number()), `String("^\n"))],
+	["MemShared:", `Sequence (`Whitespace(), `memshared(`Number()), `String("^\n"))],
+	["Buffers:", `Sequence (`Whitespace(), `buffers(`Number()), `String("^\n"))],
+	["Cached:", `Sequence (`Whitespace(), `cached(`Number()), `String("^\n"))],
+	["SwapTotal:", `Sequence (`Whitespace(), `swaptotal(`Number()), `String("^\n"))],
+	["SwapFree:", `Sequence (`Whitespace(), `swapfree(`Number()), `String("^\n"))]
       ),
-      Continue ("\n")
+      `Continue ("\n")
       ))
     )
 )

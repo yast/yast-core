@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent( [ "multi/write.in.*.test" ],
+  `IniAgent( [ "multi/write.in.*.test" ],
     $[
       "options" : [ ],
       "comments": [ "^[ \t]*#.*", "^[ \t]*$" ],

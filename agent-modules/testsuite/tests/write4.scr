@@ -1,6 +1,6 @@
 .
 
 `ag_modules(
-    ModulesConf("tests/write4.in.test")
+    `ModulesConf("tests/write4.in.test")
 )
 
