@@ -77,8 +77,51 @@ PkgModuleFunctions::YouStatus (YCPList args)
     result->add( YCPString( "product" ), YCPString( paths->product() ) );
     result->add( YCPString( "version" ), YCPString( paths->version() ) );
     result->add( YCPString( "basearch" ), YCPString( paths->baseArch() ) );
+    result->add( YCPString( "business" ), YCPBoolean( paths->businessProduct() ) );
     
     return result;
+}
+
+/**
+   @builtin Pkg::YouCheckAuthorization() -> error string
+
+   Try to login to update server.
+
+   @param string server url
+   @param string registration code
+   @param string password
+
+   @return "ok"     success
+           "args" bad args
+           "error_login"  authorization failed
+           "url_invalid" invalid url
+           "url_not_found" url not found
+           "error" other error
+*/
+YCPValue
+PkgModuleFunctions::YouCheckAuthorization (YCPList args)
+{
+    if ( ( args->size() != 3 ) || !( args->value( 0 )->isString() ) ||
+         !( args->value( 1 )->isString() ) || !( args->value( 2 )->isString() ) )
+    {
+	return YCPString( "args" );
+    }
+
+    string u = args->value(0)->asString()->value_cstr();
+    Url url( u );
+    if ( !url.isValid() ) return YCPString( "url_invalid" );
+
+    string regcode = args->value(1)->asString()->value_cstr();
+    string password = args->value(2)->asString()->value_cstr();
+
+    PMError error = _y2pm.youPatchManager().instYou().checkAuthorization( url, regcode, password );
+
+    if ( error ) {
+        if ( error == YouError::E_auth_failed ) return YCPString( "error_login" );
+        else return YCPString( "error" );
+    }
+
+    return YCPString( "" );
 }
 
 // ------------------------

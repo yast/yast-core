@@ -112,6 +112,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SelectionsUpdateAll")	return SelectionsUpdateAll (args);
     // patch related functions
     else if (function == "YouStatus")		return YouStatus (args);
+    else if (function == "YouCheckAuthorization")	return YouCheckAuthorization (args);
     else if (function == "YouGetServers")	return YouGetServers (args);
     else if (function == "YouGetPatches")	return YouGetPatches (args);
     else if (function == "YouAttachSource")	return YouAttachSource (args);
