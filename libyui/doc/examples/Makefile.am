@@ -77,6 +77,7 @@ examples_DATA =					\
 	MultiSelectionBox2.ycp			\
 	MultiSelectionBox3.ycp			\
 	PackageSelector.ycp			\
+	PackageSelector-YOU.ycp			\
 	PartitionSplitter1.ycp			\
 	PartitionSplitter2.ycp			\
 	Password1.ycp				\
