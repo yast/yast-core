@@ -16,7 +16,8 @@ INCLUDES =					\
 	-I$(srcdir)/../src			\
 	-I$(includedir)
 
-noinst_PROGRAMS = runwfm
+noinst_PROGRAMS = runwfm y2wfm
+
 runwfm_SOURCES = runwfm.cc
 runwfm_LDADD = -ly2 -lycp -ly2util -ly2pm
 
@@ -29,7 +30,6 @@ runwfm_LDFLAGS =					\
 	$(srcdir)/../src/libpy2wfm.la			\
 	-Xlinker --no-whole-archive
 
-bin_PROGRAMS = y2wfm
 y2wfm_SOURCES = y2wfm.cc
 y2wfm_LDADD = -ly2 -lycp -ly2util -ly2pm
 

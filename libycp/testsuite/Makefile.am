@@ -9,7 +9,9 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"
 INCLUDES = -I$(srcdir)/../src/include -I$(includedir)		\
 	-I$(includedir)
 
-bin_PROGRAMS = runycp parseycp testscope
+bin_PROGRAMS = runycp parseycp
+noinst_PROGRAMS = testscope
+
 runycp_SOURCES = runycp.cc
 runycp_LDADD = ../src/libycp.la -ly2util
 parseycp_SOURCES = parseycp.cc

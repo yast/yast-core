@@ -10,7 +10,7 @@ INCLUDES =						\
 	-I$(srcdir)/../src/include			\
 	-I$(includedir)
 
-bin_PROGRAMS = runyui
+noinst_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
 runyui_LDADD = ../src/libyui.la -lycp -lpthread -ly2util
 runyui_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
