@@ -56,7 +56,10 @@ const char* YCPStringRep::value_cstr() const
 
 YCPOrder YCPStringRep::compare(const YCPString& s) const
 {
-    const int tmp = strcoll (v.c_str (), s->v.c_str ());
+    // This function must not be locale aware otherwise bad
+    // things happen when changing the locale.
+
+    const int tmp = v.compare (s->v);
 
     if (tmp == 0)
 	return YO_EQUAL;

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 07 15:42:48 CET 2003 - arvin@suse.de
+
+- make string compare function locale unaware again as it leads
+  to strange results after changing the locale
+
+-------------------------------------------------------------------
 Fri Mar  7 10:43:34 CET 2003 - kkaempf@suse.de
 
 - close target logfile at shutdown (#24756)
