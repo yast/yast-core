@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 21 17:29:55 CET 2003 - arvin@suse.de
+
+- make it build with latest yast2-packagemanager
+
+-------------------------------------------------------------------
 Tue Jan 14 15:52:42 CET 2003 - arvin@suse.de
 
 - probe agent handles capability flags of libhd (bug #20068)
