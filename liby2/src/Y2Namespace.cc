@@ -28,7 +28,9 @@
 #include <ycp/SymbolEntry.h>
 #include <ycp/Scanner.h>
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #include "Y2Namespace.h"
 #include "Y2NamespaceCPP.h"
