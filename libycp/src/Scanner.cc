@@ -338,3 +338,19 @@ Scanner::extend_scanbuffer (int addsize)
     m_scandataBufferSize += addsize;
     return m_scandataBuffer;
 }
+
+void
+Scanner::closeInput ()
+{
+    // reading from an open file
+    if (m_inputFile)
+    {
+	fclose (m_inputFile);
+    }
+
+    // reading from a file descriptor
+    else if (m_inputFd >= 0)
+    {
+	close (m_inputFd);
+    }
+}

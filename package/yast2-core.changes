@@ -2,6 +2,7 @@
 Tue Mar 23 17:21:01 CET 2004 - visnov@suse.cz
 
 - allow repeated use of Pkg in ycpc (#35533) 
+- close include files (#36747)
 
 -------------------------------------------------------------------
 Tue Mar 23 16:51:23 CET 2004 - sh@suse.de

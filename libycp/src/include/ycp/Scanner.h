@@ -288,6 +288,11 @@ public:
      */
     static char *doStrdup (const char *s);
 
+    /**
+     *
+     */
+    void closeInput ();
+    
 private:
     /**
      * Used in the rules of the scanner to define the value

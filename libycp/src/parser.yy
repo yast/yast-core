@@ -3291,6 +3291,9 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 #if DO_DEBUG
 	y2debug ("EOF, back to %s:%d\n", top->filename.c_str(), top->linenumber);
 #endif
+	// close the old file
+	pr->scanner ()->closeInput ();
+	
 	currentScanner = top->scanner;
 	pr->setScanner (currentScanner);
 	pr->setFilename (top->filename);
