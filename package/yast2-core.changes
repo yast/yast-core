@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr  6 08:09:42 CEST 2004 - visnov@suse.cz
+
+- Don't print superflous characters to stdout (#38327) 
+
+-------------------------------------------------------------------
 Mon Apr  5 22:43:53 CEST 2004 - ma@suse.de
 
 - Send correct size of source packages to install
