@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 17 17:49:27 CET 2003 - gs@suse.de
+
+- don't call nl_langinfo in WMFInterpreter setLanguage
+  (encoding is not set correctly, bug #23348)
+
+-------------------------------------------------------------------
 Mon Feb 17 17:14:36 CET 2003 - sh@suse.de
 
 - Fixed bug #23599: Recode: unexpected small output buffer
