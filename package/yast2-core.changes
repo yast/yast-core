@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jun 24 11:29:21 CEST 2003 - cschum@suse.de
+
+- Added progress callback for execution of scripts by YOU.
+
+-------------------------------------------------------------------
 Tue Jun 10 12:03:24 CEST 2003 - arvin@suse.de
 
 - fixed file list for rpm v4

@@ -42,6 +42,7 @@ PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
     _y2pm.packageManager();
 
     initYouCallbacks();
+    initInstTargetCallbacks();
 }
 
 /**

@@ -449,6 +449,7 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 
   @return ""        success
           "skipped" patch was been skipped during download
+          "abort"   user aborted installation of patch
           "error"   install error
 */
 YCPValue
@@ -457,6 +458,7 @@ PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
     _last_error = _y2pm.youPatchManager().instYou().installCurrentPatch();
     if ( !_last_error ) return YCPString( "" );
     if ( _last_error == YouError::E_empty_location ) return YCPString( "skipped" );
+    else if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
     
     return YCPString( "error" );
 }

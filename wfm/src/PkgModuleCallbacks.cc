@@ -35,6 +35,7 @@ All callbacks have a common interface:
 
 #include <y2pm/PMYouPatchManager.h>
 #include <y2pm/InstYou.h>
+#include <y2pm/InstTarget.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -698,4 +699,33 @@ YCPValue
 PkgModuleFunctions::CallbackYouExecuteYcpScript( YCPList args )
 {
     return _youCallbacks->setCallback( "executeYcpScript", args );
+}
+
+class InstTargetCallbacks : public InstTarget::Callbacks, public YCPCallbacks
+{
+  public:
+    InstTargetCallbacks( YCPInterpreter *interpreter ) :
+      YCPCallbacks( interpreter ) {}
+  
+    bool scriptProgress( int percent )
+    {
+      D__ << "InstTarget script progress: " << percent << endl;
+
+      YCPTerm callback = createCallback( "scriptProgress" );
+      callback->add( YCPInteger ( percent ) );
+      return evaluateBool( callback );
+    }
+};
+
+void PkgModuleFunctions::initInstTargetCallbacks()
+{
+  InstTargetCallbacks *callbacks = new InstTargetCallbacks( _wfm );
+  InstTarget::setCallbacks( callbacks );
+  _instTargetCallbacks = callbacks;
+}
+
+YCPValue
+PkgModuleFunctions::CallbackYouScriptProgress( YCPList args )
+{
+  return _instTargetCallbacks->setCallback( "scriptProgress", args );
 }

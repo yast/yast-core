@@ -101,8 +101,10 @@ class PkgModuleFunctions
 	InstSrcManager::ISrcIdList _inst_order;
 
         YCPCallbacks *_youCallbacks;
+        YCPCallbacks *_instTargetCallbacks;
 
         void initYouCallbacks();
+        void initInstTargetCallbacks();
 
     public:
 	// general
@@ -128,6 +130,7 @@ class PkgModuleFunctions
 	YCPValue CallbackYouProgress (YCPList args);
 	YCPValue CallbackYouPatchProgress (YCPList args);
 	YCPValue CallbackYouExecuteYcpScript (YCPList args);
+        YCPValue CallbackYouScriptProgress (YCPList args);
 	void SetMediaCallback (InstSrcManager::ISrcId source_id);
 
 	// source related
