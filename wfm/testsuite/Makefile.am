@@ -13,7 +13,7 @@ INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
-	-I$(srcdir)/../src/include/wfm
+	-I$(srcdir)/../src
 
 noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc

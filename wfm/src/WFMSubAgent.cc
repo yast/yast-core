@@ -21,7 +21,7 @@
 #include <ycp/y2log.h>
 #include <y2/Y2ComponentBroker.h>
 #include <scr/SCRAgent.h>
-#include <wfm/WFMSubAgent.h>
+#include <WFMSubAgent.h>
 
 
 WFMSubAgent::WFMSubAgent (const string& name, int handle)

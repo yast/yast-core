@@ -16,6 +16,6 @@ EXTRA_DIST = $(html_DATA)
 CLEANFILES = $(html_DATA)
 
 $(filter-out index.html, $(html_DATA)): index.html
-index.html: $(srcdir)/../../src/include/wfm/*.h
-	cd $(srcdir)/../../src/include/wfm && @ybindir@/ydoc -p @RPMNAME@ *.h
-	mv -f $(srcdir)/../../src/include/wfm/*.html .
+index.html: $(srcdir)/../../src/*.h
+	cd $(srcdir)/../../src && @ybindir@/ydoc -p @RPMNAME@ *.h
+	mv -f $(srcdir)/../../src/*.html .

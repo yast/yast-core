@@ -17,8 +17,8 @@
 
 /-*/
 
-#include <wfm/Y2CCWFM.h>
-#include <wfm/Y2WFMComponent.h>
+#include <Y2CCWFM.h>
+#include <Y2WFMComponent.h>
 
 
 Y2CCWFM::Y2CCWFM ()

@@ -43,7 +43,7 @@
 #include <y2/pathsearch.h>
 #include <y2/Y2ComponentBroker.h>
 #include <scr/SCRAgent.h>
-#include <wfm/WFMInterpreter.h>
+#include <WFMInterpreter.h>
 
 
 WFMInterpreter::WFMInterpreter (Y2Component *my_component,

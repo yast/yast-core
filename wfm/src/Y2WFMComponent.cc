@@ -18,8 +18,8 @@
 /-*/
 
 #include <ycp/y2log.h>
-#include <wfm/Y2WFMComponent.h>
-#include <wfm/WFMInterpreter.h>
+#include <Y2WFMComponent.h>
+#include <WFMInterpreter.h>
 
 
 Y2WFMComponent::Y2WFMComponent ()
