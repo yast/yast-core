@@ -5,6 +5,7 @@ SUBDIRS = ycp
 htmldir = $(docdir)/libycp
 
 html_DATA =			\
+	YCP-builtins.html	\
 	changes.html		\
 	traps.html		\
 	logging.html
@@ -12,7 +13,7 @@ html_DATA =			\
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 
 YCP-builtins.html: $(builtin)
-	@ybindir@/makebuiltindocs $(builtin) > $@.new && mv $@.new $@
+	@ybindir@/makebuiltindocs $^ > $@.new && mv $@.new $@
 
 EXTRA_DIST = $(html_DATA)
 

@@ -667,9 +667,15 @@ s_regexpmatch (const YCPString &i, const YCPString &p)
     /**
      * @builtin regexpmatch (string input, string pattern) -> boolean
      *
-     * Examples: <pre>
-     * regexpmatch ("aaabbb", ".*ab.*") -> true
-     * regexpmatch ("aaabbb", ".*ba.*") -> false
+     * Searches a string for a POSIX Extended Regular Expression match.
+     *
+     * See regex(7).
+     *
+     * Example <pre>
+     * regexpmatch ("aaabbbccc", "ab") -> true
+     * regexpmatch ("aaabbbccc", "^ab") -> false
+     * regexpmatch ("aaabbbccc", "ab+c") -> true
+     * regexpmatch ("aaa(bbb)ccc", "\\(.*\\)") -> true     
      * </pre>
      */
 
@@ -694,13 +700,15 @@ static YCPValue
 s_regexppos(const YCPString& inp, const YCPString& pat)
 {
     /**
-     * @builtin regexppos( string input, string pattern ) -> [ pos, len ]
-     * Returns a list with position and length of the first match, if no match
-     * is found it returns an empty list.
+     * @builtin regexppos (string input, string pattern) -> [ pos, len ]
+     * Returns a pair with position and length of the first match.
+     * If no match is found it returns an empty list.
+     *
+     * See regex(7).
      *
      * Example <pre>
-     * regexppos( "abcd012efgh345", "[0-9]+" ) -> [4, 3]
-     * regexppos( "aaabbb", "[0-9]+" ) -> []
+     * regexppos ("abcd012efgh345", "[0-9]+") -> [4, 3]
+     * regexppos ("aaabbb", "[0-9]+") -> []
      * </pre>
      */
 
@@ -731,11 +739,16 @@ static YCPValue
 s_regexpsub (const YCPString &i, const YCPString &p, const YCPString &m)
 {
     /**
-     * @builtin regexpsub (string input, string pattern, string match) -> string
+     * @builtin regexpsub (string input, string pattern, string output) -> string
+     * Searches a string for a POSIX Extended Regular Expression match
+     * and returns <i>output</i> with the matched subexpressions
+     * substituted or <b>nil</b> if no match was found.
+     *
+     * See regex(7).
      *
      * Examples: <pre>
-     * regexpsub ("aaabbb", "(.*ab).*", "s_\\1_e") -> "s_aaab_e"
-     * regexpsub ("aaabbb", "(.*ba).*", "s_\\1_e") -> nil
+     * regexpsub ("aaabbb", "(.*ab)", "s_\\1_e") -> "s_aaab_e"
+     * regexpsub ("aaabbb", "(.*ba)", "s_\\1_e") -> nil
      * </pre>
      */
 
@@ -767,19 +780,21 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
     /**
      * @builtin regexptokenize (string input, string pattern) -> list handle
      *
-     * !Attention pattern have to include parenthesize "(" ")"
-     * If you need no parenthesize, use regexp_match
+     * Searches a string for a POSIX Extended Regular Expression match
+     * and returns a list of the matched subexpressions
      *
-     * If the pattern does not not match, the list ist empty.
+     * See regex(7).
+     *
+     * If the pattern does not match, the list is empty.
      * Otherwise the list contains then matchted subexpressions for each pair
      * of parenthesize in pattern.
      *
-     * If pattern does not contain a valid pattern, nil is returned.
+     * If the pattern is invalid, <b>nil</b> is returned.
      * In the include "common_functions, there are some convinience function,
      * like tokenX or regexp_error
      *
      * Examples: <pre>
-     * list e = regexptokenize ("aaabbBb", "(.*[A-Z]).*")
+     * list e = regexptokenize ("aaabbBb", "(.*[A-Z]).*");
      *
      * // e ==  [ "aaabbB" ]
      *
@@ -787,35 +802,13 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
      *
      * // h == [ "aaab", "bb" ]
      *
-     * include "wizard/common_functions.ycp"
-     * token1 (h)         -> "aaab"
-     * token2 (h)         -> "bb"
-     *   ...
-     * token9 (h)         -> ""
-     * regexp_matched (h) -> true
-     * regexp_error (h)   -> false
-     *
      * list h = regexptokenize ("aaabbb", "(.*ba).*");
      *
      * // h == []
      *
-     * token1 (h)         ->  ""
-     * token2 (h)         ->  ""
-     *   ...
-     * token9 (h)         ->  ""
-     * regexp_matched (h) ->  false
-     * regexp_error (h)   ->  false
-     *
      * list h = regexptokenize ("aaabbb", "(.*ba).*(");
      *
      * // h == nil
-     *
-     * token1 (h)         ->  ""
-     * token2 (h)         ->  ""
-     *   ...
-     * token9 (h)         ->  ""
-     * regexp_matched (h) ->  nil
-     * regexp_error (h)   ->  true
      * </pre>
      */
 
