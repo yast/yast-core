@@ -27,7 +27,8 @@
 using std::string;
 
 
-#define VERBOSE_BLOCK	0
+#define VERBOSE_EVENTS	1
+#define VERBOSE_BLOCK	1
 
 
 YSimpleEventHandler::YSimpleEventHandler()
@@ -46,7 +47,12 @@ YSimpleEventHandler::~YSimpleEventHandler()
 void YSimpleEventHandler::clear()
 {
     if ( _pending_event )
+    {
+#if VERBOSE_EVENTS
+	y2milestone( "Clearing pending event: %s", YEvent::toString( _pending_event->eventType() ) );
+#endif
 	delete _pending_event;
+    }
 }
 
 
@@ -94,6 +100,10 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
 	delete _pending_event;
     }
 
+#if VERBOSE_EVENTS
+	y2milestone( "New pending event: %s", YEvent::toString( event->eventType() ) );
+#endif
+	
     _pending_event = event;
 }
 
