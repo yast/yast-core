@@ -228,7 +228,6 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 
     else if (sym == "CallModule")	return evaluateCallModule (term);
     else if (sym == "CallFunction" || sym == "call" )	return evaluateCallFunction (term);
-    else if (sym == "GetClientName")	return evaluateGetClientName (term);
 
     else if (sym == "Args")		return evaluateArgs (term);
 
@@ -429,7 +428,7 @@ WFMInterpreter::changeToModuleLanguage () const
     // setlocale (LC_ALL, currentLanguage.c_str());
 
     setlocale (LC_NUMERIC, "C");	// always format numbers with "."
-    
+
     bindtextdomain (currentTextdomain.c_str(), LOCALEDIR);
 
     bind_textdomain_codeset (currentTextdomain.c_str(), textEncoding.c_str());
@@ -1010,75 +1009,6 @@ WFMInterpreter::evaluateCallFunction (const YCPTerm& term)
 }
 
 
-YCPValue WFMInterpreter::evaluateGetClientName(const YCPTerm& term)
-{
-    /**
-     * @builtin GetClientName(integer filedescriptor) -> string
-     * This builtin read the clientname from a pipe
-     */
-
-    if (term->size() == 1 && term->value(0)->isInteger())
-    {
-	YCPList arglist = argList();
-	long long index = term->value(0)->asInteger()->value();
-	if (index < 0)
-	{
-	    return YCPError ("Invalid negative index to Args(). Only values >= 0 are allowed");
-	}
-	else
-	{
-	   int   clnamefd;
-	   int   readgood, red;
-	   char  readstr[MAX_CLIENT_NAME_LEN+2] = "";
-
-	   // char debug_buffer[100];
-	   // sprintf( debug_buffer, "NB. %lld", index);
-	   // y2debug( debug_buffer);
-
-	   clnamefd = index;
-
-	   readgood = 0;
-	   do {
-	      red = read( clnamefd, readstr + readgood, MAX_CLIENT_NAME_LEN - 1 - readgood);
-
-	      // sprintf( debug_buffer, "READ %d -- %s", red, readstr);
-	      // y2error( debug_buffer);
-
-	      if (red == 0)
-		 break;
-	      if (red < 0)
-	      {
-		 YCPError(" Can't read secret from fd\n");
-		 y2error( " Can't read secret from fd\n");
-		 readgood = -1;
-		 break;
-	      }
-	      readgood += red;
-
-	   } while (readgood < MAX_CLIENT_NAME_LEN - 1);
-
-	   if ( readgood > 0 )
-	   {
-	      readstr[readgood] = 0;
-
-	      // sprintf( debug_buffer, "READ %s", readstr);
-	      // y2debug( debug_buffer);
-	      y2debug ("Client: %s", readstr);
-	      return YCPString( readstr );
-	   }
-	   else
-	   {
-	      y2error( "Can't read from pipe. readgood <= 0");
-	      return YCPNull();
-	   }
-	}
-    }
-
-    return YCPError ("Bad args for GetClientName()");
-}
-
-
-
 YCPValue
 WFMInterpreter::sendUnquoted (Y2Component *server, const YCPValue& value) const
 {
@@ -1341,7 +1271,7 @@ WFMInterpreter::evaluateGetEncoding (const YCPTerm& term)
 {
     /**
      * @builtin GetEncoding() -> string
-     * Returns the system encoding code (corresponds to RC_LANG system variable) 
+     * Returns the system encoding code (corresponds to RC_LANG system variable)
      */
     return YCPString(systemEncoding);
 }
@@ -1351,7 +1281,7 @@ WFMInterpreter::evaluateGetEnvironmentEncoding (const YCPTerm& term)
 {
     /**
      * @builtin GetEnvironmentEncoding() -> string
-     * Returns the encoding code of the environment where yast is started 
+     * Returns the encoding code of the environment where yast is started
      */
     return YCPString(environmentEncoding);
 }

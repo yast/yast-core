@@ -157,14 +157,14 @@ private:
 
     /**
      * system encoding
-     */ 
-    string 	    systemEncoding;	 
+     */
+    string 	    systemEncoding;
 
    /**
      * environment encoding
-     */ 
+     */
     string	    environmentEncoding;
-    
+
     /**
      * Implements the builtin UI
      */
@@ -214,11 +214,6 @@ private:
      * Implements the builtin CallFile
      */
     YCPValue evaluateCallFile(const YCPTerm&);
-
-    /**
-     * Implements the builtin GetClientName
-     */
-    YCPValue evaluateGetClientName(const YCPTerm& term);
 
     /**
      * Implements the builtin Read (path, arg).
@@ -275,7 +270,7 @@ private:
      * Implements the builtin GetEnvironmentEncoding
      */
     YCPValue evaluateGetEnvironmentEncoding(const YCPTerm&);
-    
+
     /**
      * Sends a YCP value to a server component and gets the answer.
      * If the value is a quoted symbol or a quoted term, then
