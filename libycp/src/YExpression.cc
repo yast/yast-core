@@ -67,7 +67,9 @@ IMPL_DERIVED_POINTER(YEIs, YCode);
 IMPL_DERIVED_POINTER(YEReturn, YCode);
 IMPL_DERIVED_POINTER(YEBracket, YCode);
 IMPL_DERIVED_POINTER(YEBuiltin, YCode);
-IMPL_DERIVED_POINTER(YEFunction, YCode);
+IMPL_DERIVED_POINTER(YECall, YCode);
+IMPL_DERIVED_POINTER(YEFunction, YECall);
+IMPL_DERIVED_POINTER(YEFunctionPointer, YECall);
 
 // ------------------------------------------------------------------
 // variable ref (-> SymbolEntry)
@@ -727,6 +729,24 @@ YEList::toStream (std::ostream & str) const
 }
 
 
+constTypePtr
+YEList::type () const
+{
+    ycodelist_t *element = m_first;
+    
+    constTypePtr res = m_first->code->type ();
+    element = element->next;
+
+    while (element)
+    {
+	res = res->commontype (element->code->type ());
+	element = element->next;
+    }
+    
+    return new ListType (res);
+}
+
+
 // ------------------------------------------------------------------
 // map expression (-> key, value, next key/value pair)
 
@@ -866,6 +886,26 @@ YEMap::toStream (std::ostream & str) const
     return str;
 }
 
+
+constTypePtr
+YEMap::type () const
+{
+
+    mapval_t *element = m_first;
+
+    constTypePtr res_key = m_first->key->type ();
+    constTypePtr res_value = m_first->value->type ();
+    element = element->next;
+
+    while (element)
+    {
+	res_key = res_key->commontype (element->key->type ());
+	res_value = res_value->commontype (element->value->type ());
+	element = element->next;
+    }
+    
+    return new MapType (res_key, res_value);
+}
 
 // I will let this comment here for the moment
     /**
@@ -1035,7 +1075,7 @@ YEPropagate::evaluate (bool cse)
 	return v;
     }
 
-    ycp2error ("Can't convert value '%s' from type '%s' to '%s'", v->toString().c_str(), m_from->toString().c_str(), m_to->toString().c_str());
+    ycp2error ("Can't convert value '%s' to type '%s'", v->toString().c_str(), m_to->toString().c_str());
 
     return YCPNull ();
 }
@@ -1244,6 +1284,32 @@ YEBinary::toStream (std::ostream & str) const
 }
 
 
+constTypePtr
+YEBinary::type () const
+{
+    if (m_decl->flags && DECL_FLEX)
+    {
+	// reconstruct type
+	FunctionTypePtr ft = new FunctionType (Type::Unspec);
+	ft->concat (m_arg1->type ());
+	ft->concat (m_arg2->type ());
+	
+	constTypePtr cft = Type::determineFlexType (ft, m_decl->type);
+        if (cft == 0)                                       // failed
+        {
+	    y2internal ("Cannot determine type of the binary operator: %s", toString ().c_str ());
+            return Type::Unspec;
+        }
+	
+	return ((constFunctionTypePtr)cft)->returnType ();
+
+    }
+    else
+    {
+	return ((constFunctionTypePtr)m_decl->type)->returnType (); 
+    }
+}
+
 // ------------------------------------------------------------------
 // Triple (? :) expression (-> bool expr, true value, false value)
 
@@ -1371,19 +1437,30 @@ YEIs::evaluate (bool cse)
 	ycp2error ("'is()' expression evaluates to nil.");
 	return YCPBoolean (false);
     }
-    constTypePtr expected_type;
+    constTypePtr value_type;
     if (value->isCode())
     {
-	expected_type = value->asCode()->code()->type();
+	YCodePtr code = value->asCode()->code();
+	
+	// is it a function? => function pointer
+	if (code->kind () != YCode::ycFunction)
+	{
+	    // assume the code was passed via doublequotes
+	    value_type = new BlockType (code->type ());
+	}
+	else
+	{
+	    value_type = code->type ();
+	}
     }
     else
     {
-	expected_type = Type::vt2type (value->valuetype());
+	value_type = Type::vt2type (value->valuetype());
     }
 #if DO_DEBUG
-    y2debug ("YEIs::evaluate (value '%s', value->valuetype() %d, expected_type '%s')", toString().c_str(), value->valuetype(), expected_type->toString().c_str());
+    y2debug ("YEIs::evaluate (value '%s', value_type '%s', expected_type '%s')", toString().c_str(), value_type->toString().c_str(), m_type->toString().c_str());
 #endif
-    return YCPBoolean (m_type->match (expected_type) >= 0);
+    return YCPBoolean (m_type->match (value_type) >= 0);
 }
 
 
@@ -1712,9 +1789,10 @@ constTypePtr
 YEBuiltin::finalize ()
 {
     extern StaticDeclaration static_declarations;
-
+    
 #if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s)", StaticDeclaration::Decl2String (m_decl, true).c_str());
+    y2debug ("m_type: %s", m_type->toString ().c_str());
 #endif
 
     // final type check for all parameters
@@ -1789,7 +1867,7 @@ YEBuiltin::closeParameters ()
 
 
 constTypePtr
-YEBuiltin::returnType () const
+YEBuiltin::type () const
 {
     constTypePtr ret = m_type->returnType ();
 #if DO_DEBUG
@@ -1815,6 +1893,12 @@ YEBuiltin::returnType () const
     return ft->returnType();
 }
 
+constTypePtr
+YEBuiltin::completeType () const
+{
+    return m_type;
+}
+
 
     /**
      * Attach parameter to external function call
@@ -1830,8 +1914,6 @@ YEBuiltin::returnType () const
 constTypePtr
 YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
 {
-    extern StaticDeclaration static_declarations;
-
 #if DO_DEBUG
     y2debug ("YEBuiltin::attachParameter (%s:%s)", code ? code->toString().c_str() : "<NULL>", type->toString().c_str());
 #endif
@@ -1843,7 +1925,6 @@ YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
 	return Type::Unspec;
     }
 
-    declaration_t *decl = 0;
 
     if (!type->isUnspec ())
     {
@@ -1853,15 +1934,6 @@ YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
 #if DO_DEBUG
 	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), ntype->toString().c_str());
 #endif
-
-	decl = static_declarations.findDeclaration (m_decl, ntype, true);
-	if (decl == 0)
-	{
-	    // FIXME: check for propagation
-	    static_declarations.findDeclaration (m_decl, ntype, false);	// force error output
-	    // FIXME: return expected type
-	    return Type::Unspec;
-	}
 	m_type = ntype;
     }
 #if DO_DEBUG
@@ -2152,54 +2224,93 @@ YEBuiltin::evaluate (bool cse)
 }
 
 
-constTypePtr
-YEBuiltin::type () const
-{
-    return m_type;
-}
-
 // ------------------------------------------------------------------
-// function ref (-> SymbolEntry + Parameters)
+// function call parameter handling (-> SymbolEntry + Parameters)
 
-YEFunction::YEFunction (TableEntry* entry)
+YECall::YECall (TableEntry* entry)
     : YCode (yeFunction)
     , m_entry (entry)
     , m_sentry (entry->sentry ())
     , m_parameters (0)
+    , m_functioncall (0)
 {
 #if DO_DEBUG
-    y2debug ("YEFunction[%p] (%s)", this, entry->sentry()->toString().c_str());
+    y2debug ("YECall[%p] (%s)", this, entry->sentry()->toString().c_str());
 #endif
+    // lookup the maximal number of parameters for this entry (and overloads)
+    // retrieve function type for formal parameter list
+    int max = 0;
+    
+    TableEntry* t = entry;
+    while (t)
+    {
+	int curr = ((constFunctionTypePtr)t->sentry ()->type ())->parameterCount ();
+	if (curr > max)
+	{
+	    max = curr;
+	}
+	
+	t = t->next_overloaded ();
+    }
+    
+    if (max>0)
+    {
+	m_parameters = new YCodePtr[max];
+    }
+    m_next_param_id = 0;
 }
 
 
-YEFunction::YEFunction (std::istream & str)
+YECall::YECall (std::istream & str)
     : YCode (yeFunction)
     , m_entry (0)
     , m_sentry (Bytecode::readEntry (str))
     , m_parameters (0)
+    , m_functioncall (0)
+    , m_next_param_id (0)
 {
-    Bytecode::readYCodelist (str, &m_parameters);
+    u_int32_t count = Bytecode::readInt32 (str);
+    if (count>0)
+    {
+	m_parameters = new YCodePtr[count];
+	
+	for (uint i = 0 ; i < count; i++)
+	{
+	    m_parameters[i] = Bytecode::readCode (str);
+	    if (m_parameters[i] == 0)
+	    {
+		y2error ("parameter code read failed for %d", i);
+		m_valid = false;
+		return;
+	    }
+	}
+    }
+    
+    m_next_param_id = count;
+
 #if DO_DEBUG
-    y2debug ("YEFunction (fromStream): %s", toString().c_str());
+    y2debug ("YECall (fromStream): %s", toString().c_str());
 #endif
 }
 
 
-YEFunction::~YEFunction ()
+YECall::~YECall ()
 {
-    ycodelist_t *parm = m_parameters;
-    while (parm)
+    if (m_parameters)
     {
-	ycodelist_t *next = parm->next;
-	delete parm;
-	parm = next;
+	delete[] m_parameters;
+    }
+    
+    if (m_functioncall)
+    {
+	delete m_functioncall;
+	m_functioncall = 0;
     }
 }
 
 
 const SymbolEntryPtr 
-YEFunction::entry() const
+YECall::entry() const
 {
     return m_sentry;
 }
@@ -2216,41 +2327,43 @@ YEFunction::entry() const
      */
 
 constTypePtr
-YEFunction::attachParameter (YCodePtr code, constTypePtr type)
+YECall::attachParameter (YCodePtr code, constTypePtr type)
 {
 #if DO_DEBUG
-    y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
+    y2debug ("YECall::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
 #endif
 
     if (code == 0 || code->isError())
     {
 	return Type::Unspec;
     }
-
-    // allocate new function parameter element
-    ycodelist_t *element = new ycodelist_t;
-
-    element->code = code;
-    element->type = type;
-    element->next = 0;
-
+    
+    // check, if there is not too many of params
     if (m_parameters == 0)
     {
-	m_parameters = element;
+	// excessive parameter - we don't expect any
+	return Type::Error;
     }
-    else
+    
+    uint max = 0;
+    TableEntry* t = m_entry;
+    while (t)
     {
-	ycodelist_t *actual = m_parameters;
-	// move to the end of actual parameter list,
-	//   the parameter will be added to the end
+        uint curr = ((constFunctionTypePtr)t->sentry ()->type ())->parameterCount ();
+        if (curr > max)
+        {
+            max = curr;
+        }
 
-	while (actual->next != 0)
-	{
-	    actual = actual->next;
-	}
-
-	actual->next = element;
+        t = t->next_overloaded ();
     }
+    
+    if (m_next_param_id >= max)
+    {
+	return Type::Error;
+    }
+
+    m_parameters[m_next_param_id++] = code;
 
 #if DO_DEBUG
     y2debug ("done");
@@ -2268,20 +2381,8 @@ YEFunction::attachParameter (YCodePtr code, constTypePtr type)
  */
 
 constTypePtr
-YEFunction::finalize()
+YECall::finalize()
 {
-    // count the actual parameters (so far) for checking against func->parameterCount()
-    int actual_count = 0;
-    ycodelist_t *actual = m_parameters;
-
-    // count actual parameter list,
-
-    while (actual != 0)
-    {
-	actual_count++;
-	actual = actual->next;
-    }
-    
     TableEntry* entry = m_entry;
 
     while (entry)
@@ -2297,7 +2398,7 @@ YEFunction::finalize()
 	constFunctionTypePtr ftype = sentry->type();
 	
 	// not the correct number of parameters?
-	if (actual_count != ftype->parameterCount())
+	if ((int)m_next_param_id != ftype->parameterCount())
 	{
 	    // try to continue with the next one
 	    entry = next_overloaded;
@@ -2305,14 +2406,12 @@ YEFunction::finalize()
 	}
     
 	bool accept = true;
-	actual = m_parameters;
-	int check_count = 0;
 	// ok, check whether types match
-	while (actual)
+	for (uint check_count = 0; check_count < m_next_param_id ; check_count++)
 	{
 	    constTypePtr expected_type = ftype->parameterType (check_count);
-	    YCodePtr code = actual->code;
-	    constTypePtr type = actual->type;
+	    YCodePtr code = m_parameters[check_count];
+	    constTypePtr type = code->type ();
 	    
 	    // if the parameter type is block, find out the type for the actual param
 	    if (expected_type->isBlock ())
@@ -2324,7 +2423,7 @@ YEFunction::finalize()
 	    }
 
 #if DO_DEBUG
-	    y2debug ("checking parameter type: expected '%s', given '%s'", expected_type->toString().c_str(), type->toString().c_str());
+	    y2debug ("checking parameter %d type: expected '%s', given '%s'", check_count, expected_type->toString().c_str(), type->toString().c_str());
 #endif
 
 	    int match = type->match (expected_type);
@@ -2334,10 +2433,9 @@ YEFunction::finalize()
 		y2debug ("type mismatch");
 #endif
 		// type mismatch
-		actual = 0;
 		entry = next_overloaded;
 		accept = false;
-		continue;
+		break;
 	    }
 
 	    if (expected_type->isReference())	// function expects a reference
@@ -2345,25 +2443,20 @@ YEFunction::finalize()
 		if (! code->isReferenceable())	// but the actual parameter isn't referenceable
 		{
 		    y2debug ("Can't take reference of '%s'", code->toString().c_str());
-		    actual = 0;
 		    entry = next_overloaded;
 		    accept = false;
-		    continue;
+		    break;
 		}
 		else if (match > 0)
 		{
 #if DO_DEBUG
 		    y2debug ("Can't reference to type propagation '%s' -> '%s'", type->toString().c_str(), expected_type->toString().c_str());
 #endif		    
-		    actual = 0;
 		    entry = next_overloaded;
 		    accept = false;
-		    continue;
+		    break;
 		}
 	    }
-
-	    actual = actual->next;
-	    check_count++;
 	}
 	
 	if (accept)
@@ -2372,17 +2465,15 @@ YEFunction::finalize()
 	    y2debug ("Accepting for: %s", entry->sentry()->toString().c_str());
 #endif
 	    // adapt the code (add propagation/references if needed)
-	    actual = m_parameters;
-	    int check_count = 0;
-	    while (actual)
+	    for (uint check_count = 0 ; check_count < m_next_param_id; check_count++ )
 	    {
 		constTypePtr expected_type = ftype->parameterType (check_count);
-		constTypePtr type = actual->type;
+		constTypePtr type = m_parameters[check_count]->type ();
 	    
 		// if the parameter type is block, find out the type for the actual param
 		if (expected_type->isBlock ())
 		{
-		    if (actual->code->isBlock ())
+		    if (m_parameters[check_count]->isBlock ())
 		    {
 			type = new BlockType(type->isUnspec () ? Type::Void : type);
 		    }
@@ -2392,16 +2483,14 @@ YEFunction::finalize()
 
 		if (expected_type->isReference())	// function expects a reference
 		{
-		    YEVariablePtr var = (YEVariablePtr)(actual->code);
-		    actual->code = new YEReference (var->entry());
+		    YEVariablePtr var = (YEVariablePtr)(m_parameters[check_count]);
+		    m_parameters[check_count] = new YEReference (var->entry());
 		}
 
 		if (match > 0)				// propagation
 		{
-		    actual->code = new YEPropagate (actual->code, type, expected_type);
+		    m_parameters[check_count] = new YEPropagate (m_parameters[check_count], type, expected_type);
 		}
-		actual = actual->next;
-		check_count++;
 	    }
 	    
 	    // update the sentry
@@ -2418,26 +2507,82 @@ YEFunction::finalize()
 
 
 string
-YEFunction::toString() const
+YECall::toString() const
 {
 #if DO_DEBUG
-    y2debug ("YEFunction::toString [%p]", this);
+    y2debug ("YECall::toString [%p]", this);
 #endif
     string s = m_sentry->toString(false);
 
     s += " (";
-    ycodelist_t *parm = m_parameters;
-    while (parm)
+    
+    for (uint i = 0 ; i < m_next_param_id ; i++)
     {
-	s += parm->code->toString().c_str();
-	if (parm->next != 0)
+	s += m_parameters[i]->toString().c_str();
+	if (i + 1 < m_next_param_id)
 	{
 	    s += ", ";
 	}
-	parm = parm->next;
     }
     s += ")";
     return s;
+}
+
+
+std::ostream &
+YECall::toStream (std::ostream & str) const
+{
+    YCode::toStream (str);
+    if (Bytecode::writeEntry (str, m_sentry))
+    {
+	Bytecode::writeInt32 (str, m_next_param_id);
+
+	for (uint i = 0 ; i < m_next_param_id; i++)
+	{
+	    m_parameters[i]->toStream (str);
+	}
+    }
+    return str;
+}
+
+
+constTypePtr
+YECall::type () const
+{
+    return ((constFunctionTypePtr)(m_sentry->type ()))->returnType ();
+}
+
+
+string
+YECall::qualifiedName () const
+{
+    string n = m_sentry->nameSpace () && ! m_sentry->nameSpace ()->name ().empty ()?
+	(m_sentry->nameSpace ()->name () + string ("::")) :
+	"";
+    return n + m_sentry->name ();
+}
+
+// ------------------------------------------------------------------
+// function ref (-> SymbolEntry + Parameters)
+
+YEFunction::YEFunction (TableEntry* entry)
+    : YECall (entry)
+{
+#if DO_DEBUG
+    y2debug ("YEFunction[%p] (%s)", this, entry->sentry()->toString().c_str());
+#endif
+}
+
+
+YEFunction::YEFunction (std::istream & str)
+    : YECall (str)
+{
+    m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
+    if (m_functioncall == 0)
+    {
+	y2error ("Cannot create a function call for %s", m_sentry->toString ().c_str ());
+	m_valid = false;
+    }
 }
 
 
@@ -2453,63 +2598,279 @@ YEFunction::evaluate (bool cse)
     y2debug ("YEFunction::evaluate (%s)\n", toString().c_str());
 #endif
 
-    ycodelist_t *actualp = m_parameters;
+    // FIXME: this could fail    
+    m_functioncall->reset ();
+    
+    YCPValue m_params [m_next_param_id];
 
-    YFunctionPtr func = (YFunctionPtr)(m_sentry->code());
-
-    if (func == 0
-	&& m_sentry->type()->isFunction())
+    for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
-	YCPValue v = m_sentry->value();
-	if (v.isNull()
-	    || v->isVoid())
-	{
-	    ycp2error ("Function pointer (%s) is nil", m_sentry->toString().c_str());
-	    return YCPNull();
-	}
-	if (!v->isCode())
-	{
-	    ycp2error ("Function pointer (%s) points to non-code (%s)", m_sentry->toString().c_str(), v->toString().c_str());
-	    return YCPNull();
-	}
+	// FIXME, check for symbol or block type and suppress evaluation
 
-	YCodePtr c = v->asCode()->code();
-	if (c->kind() != YCode::ycFunction)
-	{
-	    ycp2error ("Function pointer (%s) points to non-function (%s)", m_sentry->toString().c_str(), v->toString().c_str());
-	    return YCPNull();
-	}
-	func = (YFunctionPtr)c;
-    }
+	YCPValue value = m_parameters[p]->evaluate ();
 
-    // check for function or function pointer
-    if (func->kind() != YCode::ycFunction)			// must be pointer
-    {
-	// It's a YEVariable, a formal parameter of a function
-
-	YCPValue value = m_sentry->value ();
-#if DO_DEBUG
 	if (value.isNull())
 	{
-	    y2debug ("m_sentry value NULL");
+	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
+	    return value;
 	}
-	else
-	{
-	    y2debug ("m_sentry value ([%d] %s)\n", m_sentry->value()->valuetype(), m_sentry->value()->toString().c_str());
-	}
-#endif
-	if (value.isNull()
-	    || !value->isCode())
-	{
-	    ycp2error ("Not a function pointer ('%s' is '%s')", m_sentry->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
-	    return YCPNull();
-	}
-
-	func = (YFunctionPtr)(value->asCode()->code());
+	
 #if DO_DEBUG
-	y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
+	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
 #endif
+
+	m_params [p] = value;
     }
+
+    // set the parameters for Y2Function
+    for (unsigned int p = 0; p < m_next_param_id ; p++)
+    {
+	m_functioncall->attachParameter (m_params[p], p);
+    }
+    
+    extern ExecutionEnvironment ee;
+
+    // save the context info
+    int linenumber = ee.linenumber ();
+    string filename = ee.filename ();
+
+    YCPValue value = m_functioncall->evaluateCall ();
+
+    // restore the context info
+    ee.setLinenumber (linenumber);
+    ee.setFilename (filename);
+
+#if DO_DEBUG
+    y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
+    return value;
+}
+
+
+/**
+ * 'close' function, perform final parameter check
+ * if ok, return 0
+ * if missing parameter, return its type
+ * if undefined, return Type::Error (wrong type was already
+ *   reported in attachParameter()
+ */
+
+constTypePtr
+YEFunction::finalize()
+{
+    constTypePtr res = YECall::finalize ();
+    
+    if (res != 0)
+    {
+	return res;
+    }
+    
+    m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
+    if (m_functioncall == 0)
+    {
+	y2error ("Cannot create a function call for %s", m_sentry->toString ().c_str ());
+	return Type::Error;
+    }
+
+    return 0;
+}
+
+
+// ------------------------------------------------------------------
+// function ref (-> SymbolEntry + Parameters)
+
+YEFunctionPointer::YEFunctionPointer (TableEntry* entry)
+    : YECall (entry)
+{
+    m_kind = yeFunctionPointer;
+#if DO_DEBUG
+    y2debug ("YEFunctionPointer[%p] (%s)", this, entry->sentry()->toString().c_str());
+#endif
+}
+
+
+YEFunctionPointer::YEFunctionPointer (std::istream & str)
+    : YECall (str)
+{
+    m_kind = yeFunctionPointer;
+}
+
+
+YCPValue
+YEFunctionPointer::evaluate (bool cse)
+{
+    if (cse)
+    {
+	return YCPNull();
+    }
+
+#if DO_DEBUG
+    y2debug ("YEFunctionPointer::evaluate (%s)\n", toString().c_str());
+#endif
+
+    YFunctionPtr func = NULL;
+
+    YCPValue v = m_sentry->value();
+    if (v.isNull()
+	|| v->isVoid())
+    {
+	ycp2error ("Function pointer (%s) is nil", m_sentry->toString().c_str());
+	return YCPNull();
+    }
+    if (!v->isCode())
+    {
+	ycp2error ("Function pointer (%s) points to non-code (%s)", m_sentry->toString().c_str(), v->toString().c_str());
+	return YCPNull();
+    }
+
+    YCodePtr c = v->asCode()->code();
+    if (c->kind() != YCode::ycFunction)
+    {
+	ycp2error ("Function pointer (%s) points to non-function (%s)", m_sentry->toString().c_str(), v->toString().c_str());
+	return YCPNull();
+    }
+
+    // It's a YEVariable, a formal parameter of a function
+
+    YCPValue value = m_sentry->value ();
+#if DO_DEBUG
+    if (value.isNull())
+    {
+	y2debug ("m_sentry value NULL");
+    }
+    else
+    {
+	y2debug ("m_sentry value ([%d] %s)\n", m_sentry->value()->valuetype(), m_sentry->value()->toString().c_str());
+    }
+#endif
+    if (value.isNull()
+	    || !value->isCode())
+    {
+	ycp2error ("Not a function pointer ('%s' is '%s')", m_sentry->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+	return YCPNull();
+    }
+
+    func = (YFunctionPtr)(value->asCode()->code());
+#if DO_DEBUG
+    y2debug ("func kind ([%d] %s)\n", func->kind(), func->toString().c_str());
+#endif
+
+    // push parameter values for recursion
+    for (unsigned int p = 0; p < func->parameterCount(); p++)
+    {
+        func->parameter (p)->push ();
+    }
+
+    // push also local parameters
+    YCodePtr definition = func->definition ();
+
+    if (definition == 0)
+    {
+        ycp2error ("Function '%s' is only declared, but not defined yet.", m_entry->toString ().c_str ());
+        return YCPNull();
+    }
+
+    if (definition->isBlock())
+    {
+       ((YBlockPtr)definition)->pushToStack ();
+    }
+
+    for (unsigned int p = 0; p < m_next_param_id; p++)
+    {
+	// FIXME, check for symbol or block type and suppress evaluation
+
+	YCPValue value = m_parameters[p]->evaluate ();
+
+	if (value.isNull())
+	{
+	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
+
+            // cleanup: pop parameter values for recursion
+            for (unsigned int p = 0; p < func->parameterCount(); p++)
+            {
+                func->parameter (p)->pop ();
+            }
+
+	    return value;
+	}
+	
+#if DO_DEBUG
+	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
+#endif
+
+        SymbolEntryPtr formalp = func->parameter (p);
+#if DO_DEBUG
+        y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString ().c_str ());
+#endif
+
+        formalp->setValue (value);
+    }
+    
+    extern ExecutionEnvironment ee;
+
+    // save the context info
+    int linenumber = ee.linenumber ();
+    string filename = ee.filename ();
+
+    value = definition->evaluate ();
+
+    if (definition->isBlock())
+    {
+       // pop also local parameters
+       ((YBlockPtr)definition)->popFromStack ();
+    }
+
+    // restore the context info
+    ee.setLinenumber (linenumber);
+    ee.setFilename (filename);
+
+    // pop parameter values for recursion
+    for (unsigned int p = 0; p < func->parameterCount(); p++)
+    {
+        func->parameter (p)->pop ();
+    }
+
+#if DO_DEBUG
+    y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
+    return value;
+}
+
+
+// ------------------------------------------------------------------
+// function call for outside of YCP (similar to YEFunction) (-> SymbolEntry + Parameters)
+
+Y2YCPFunction::Y2YCPFunction (SymbolEntryPtr entry)
+    : Y2Function ()
+    , m_sentry (entry)
+    , m_parameters (0)
+{
+#if DO_DEBUG
+    y2debug ("Y2YCPFunction[%p] (%s)", this, entry->toString().c_str());
+#endif
+    // allocate an array for the parameters
+    m_parameters = new YCPValue[((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ()] (YCPNull ());
+    for (int i=0; i<((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
+    {
+	m_parameters[i] = YCPNull ();
+    }
+}
+
+
+Y2YCPFunction::~Y2YCPFunction ()
+{
+    delete[] m_parameters;
+}
+
+
+YCPValue
+Y2YCPFunction::evaluateCall ()
+{
+#if DO_DEBUG
+//    y2debug ("Y2YCPFunction::evaluateCall (%s)\n", toString().c_str());
+#endif
+
+    YFunctionPtr func = (YFunctionPtr)(m_sentry->code());
 
     // push parameter values for recursion
     for (unsigned int p = 0; p < func->parameterCount(); p++)
@@ -2533,18 +2894,11 @@ YEFunction::evaluate (bool cse)
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)
     {
-	if (actualp == 0)
-	{
-	    break;
-	}
-
-	// FIXME, check for symbol or block type and suppress evaluation
-
-	YCPValue value = actualp->code->evaluate ();
+	YCPValue value = m_parameters[p];
 
 	if (value.isNull())
 	{
-	    ycp2error ("Parameter eval failed (%s)", actualp->code->toString().c_str());
+	    ycp2error ("Parameter not specified (%d)", p);
 
 	    // cleanup: pop parameter values for recursion
 	    for (unsigned int p = 0; p < func->parameterCount(); p++)
@@ -2554,14 +2908,13 @@ YEFunction::evaluate (bool cse)
 
 	    return value;
 	}
-
+	
 	SymbolEntryPtr formalp = func->parameter (p);
 #if DO_DEBUG
 	y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString().c_str());
 #endif
 
 	formalp->setValue (value);
-	actualp = actualp->next;
     }
     
     extern ExecutionEnvironment ee;
@@ -2595,27 +2948,8 @@ YEFunction::evaluate (bool cse)
 }
 
 
-std::ostream &
-YEFunction::toStream (std::ostream & str) const
-{
-    YCode::toStream (str);
-    if (Bytecode::writeEntry (str, m_sentry))
-    {
-	Bytecode::writeYCodelist (str, m_parameters);
-    }
-    return str;
-}
-
-
 constTypePtr
-YEFunction::type () const
-{
-    return m_sentry->type ();
-}
-
-
-constTypePtr
-YEFunction::wantedParameterType () const
+Y2YCPFunction::wantedParameterType () const
 {
     if (m_sentry->code ()->kind() != YCode::ycFunction)
     {
@@ -2624,39 +2958,41 @@ YEFunction::wantedParameterType () const
     YFunctionPtr func_f = m_sentry->code ();
 
     // find out number of already done parameters
-    ycodelist_t *actual = m_parameters;
-    int actual_count = 0;
-
-    // move to the end of actual parameter list,
-    //   the parameter will be added to the end
-
-    while (actual != 0)
+    for (int i = 0 ; i < ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
     {
-        actual_count++;
-        actual = actual->next;
+	if (m_parameters[i].isNull ())
+	{
+	    // returns NULL if actual_count is out of bounds
+	    SymbolEntryPtr param_se = func_f->parameter (i);
+
+	    // this is for value conversion purposes. if this is an excess
+	    // parameter, we don't care about the type now since
+	    // attachParameter will complain anyway
+    	    constTypePtr param_tp = param_se ? param_se->type () : Type::Any;
+	    return param_tp;
+	}
     }
-
-    // returns NULL if actual_count is out of bounds
-    SymbolEntryPtr param_se = func_f->parameter (actual_count);
-
-    // this is for value conversion purposes. if this is an excess
-    // parameter, we don't care about the type now since
-    // attachParameter will complain anyway
-    constTypePtr param_tp = param_se ? param_se->type () : Type::Any;
-    return param_tp;
+    
+    // all parameters done
+    return Type::Unspec;
 }
 
 
 bool
-YEFunction::attachParameter (const YCPValue& arg, int pos)
+Y2YCPFunction::attachParameter (const YCPValue& arg, int pos)
 {
-    ycp2error ("Attaching constant parameter not possible at the given position yet");
-    return false;
+    if (pos < 0 || pos > ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount () )
+    {
+	y2error ("Attaching parameter to function '%s' at incorrect position: %d", m_sentry->toString().c_str(), pos );
+	return false;
+    }
+    m_parameters[pos] = arg;
+    return true;
 }
 
 
 bool
-YEFunction::appendParameter (const YCPValue& arg)
+Y2YCPFunction::appendParameter (const YCPValue& arg)
 {
     if (arg.isNull())
     {
@@ -2664,61 +3000,63 @@ YEFunction::appendParameter (const YCPValue& arg)
 	return false;
     }
 
-    // evil hack - pretend that the actual type is the expected type
-    // FIXME
-    constTypePtr param_tp = wantedParameterType ();
-
-    // Such YConsts without a specific type produce invalid
-    // bytecode. (Which is OK if only Y2Function::evaluate is used)
-    // The actual parameter's YCode becomes owned by the function call?
-    YConst *param_c = new YConst (YCode::ycConstant, arg);
-
-    // Attach the parameter
-    // Returns NULL if OK, Type::Error if excessive argument
-    // Other errors (bad code, bad type) shouldn't happen
-    constTypePtr err_tp = attachParameter (param_c, param_tp);
-    if (err_tp != NULL)
+    // FIXME: check the type
+    
+    // lookup the first non-set parameter
+    for (int i = 0 ; i < ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
     {
-	if (err_tp->isError ())
+	if (m_parameters[i].isNull ())
 	{
-	    // Our caller should report the place
-	    // in a script where this happened
-	    ycp2error ("Excessive parameter to %s",
-		     qualifiedName ().c_str ());
+#if DO_DEBUG
+	    y2debug ("Assigning parameter %d: %s", i, arg->toString ().c_str ());
+#endif	    
+	    m_parameters[i] = arg;
+	    return true;
 	}
-	else
-	{
-	    y2internal ("attachParameter returned %s",
-			err_tp->toString ().c_str ());
-	}
-	return false;
     }
-    return true;
+    
+    // Our caller should report the place
+    // in a script where this happened
+    ycp2error ("Excessive parameter to %s", qualifiedName ().c_str ());
+
+    return false;
 }
 
 
 bool
-YEFunction::finishParameters ()
+Y2YCPFunction::finishParameters ()
 {
-    // now must check if we got fewer parameters than needed
-    constTypePtr err_tp = finalize ();
-    if (err_tp != NULL)
+    for (int i = 0 ; i < ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
     {
-	ycp2error ("Missing '%s' parameter to %s",
-		 err_tp->toString ().c_str (), qualifiedName ().c_str ());
-	return false;
+	if (m_parameters [i].isNull ())
+	{
+	    y2error ("Missing parameter %d to %s",
+		 i, qualifiedName ().c_str ());
+	    return false;
+	}
     }
     return true;
 }
 
 
 string
-YEFunction::qualifiedName () const
+Y2YCPFunction::qualifiedName () const
 {
     string n = m_sentry->nameSpace () && ! m_sentry->nameSpace ()->name ().empty ()?
 	(m_sentry->nameSpace ()->name () + string ("::")) :
 	"";
     return n + m_sentry->name ();
+}
+
+bool
+Y2YCPFunction::reset ()
+{
+    for (int i=0; i<((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
+    {
+	m_parameters[i] = YCPNull ();
+    }
+
+    return true;
 }
 
 // EOF

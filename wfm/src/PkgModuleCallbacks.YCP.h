@@ -245,7 +245,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	  return NULL;
       }
 
-      Y2Function* func = ns->createFunctionCall (name);
+      Y2Function* func = ns->createFunctionCall (name, Type::Unspec); // FIXME: here we can setup the type check
       if (func == NULL)
       {
           ycp2error ("Cannot find function %s in module %s as a callback", name.c_str (), module.c_str());

@@ -25,8 +25,8 @@
 // provide a backward compatibility
 #define YaST_BYTECODE_HEADER "YaST bytecode "
 #define YaST_BYTECODE_MAJOR "1"
-#define YaST_BYTECODE_MINOR "3"
-#define YaST_BYTECODE_RELEASE "2"
+#define YaST_BYTECODE_MINOR "4"
+#define YaST_BYTECODE_RELEASE "0"
 
 #include "ycp/Bytecode.h"
 #include "YCP.h"
@@ -853,6 +853,11 @@ Bytecode::readCode (std::istream & str)
 	case YCode::yeFunction:
 	{
 	    res = new YEFunction (str);
+	}
+	break;
+	case YCode::yeFunctionPointer:
+	{
+	    res = new YEFunctionPointer (str);
 	}
 	break;
 	case YCode::ysTypedef:

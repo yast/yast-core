@@ -96,10 +96,12 @@ public:
 	yeBuiltin,		// builtin ref + args
 	yeFunction,		// function ref + args
 	yeReference,		// reference to a variable (identical to yeVariable but with different semantics)
+	// SuSE Linux v9.2
+	yeFunctionPointer,	// function pointer
 
 	yeExpression,		// -- placeholder --
 
-	// [34] Statements	(-> YCode + next)
+	// [35] Statements	(-> YCode + next)
 	ysTypedef,		// typedef
 	ysVariable,		// variable defintion (-> YSAssign)
 	ysFunction,		// function definition
@@ -117,8 +119,9 @@ public:
 	ysInclude,		// include
 	ysFilename,		//  restore filename after include
 	ysImport,		// import
-	ysBlock,		// [51] a block as statement
+	ysBlock,		// [52] a block as statement
 	ysStatement		// -- placeholder --
+	
     };
 
 protected:

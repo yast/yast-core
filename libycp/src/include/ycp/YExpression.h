@@ -47,7 +47,9 @@ DEFINE_DERIVED_POINTER(YEIs, YCode);
 DEFINE_DERIVED_POINTER(YEReturn, YCode);
 DEFINE_DERIVED_POINTER(YEBracket, YCode);
 DEFINE_DERIVED_POINTER(YEBuiltin, YCode);
-DEFINE_DERIVED_POINTER(YEFunction, YCode);
+DEFINE_DERIVED_POINTER(YECall, YCode);
+DEFINE_DERIVED_POINTER(YEFunction, YECall);
+DEFINE_DERIVED_POINTER(YEFunctionPointer, YECall);
 
 //---------------------------------------------------------
 // variable ref (-> Block + position)
@@ -175,7 +177,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return Type::List; }
+    constTypePtr type() const;
     int count () const;
     YCodePtr value (int index) const;
 };
@@ -199,7 +201,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return Type::Map; }
+    constTypePtr type() const;
 };
 
 
@@ -241,7 +243,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return m_decl->type; }
+    constTypePtr type() const { return ((constFunctionTypePtr)m_decl->type)->returnType (); }
 };
 
 
@@ -264,7 +266,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return m_decl->type; }
+    constTypePtr type() const;
 };
 
 
@@ -379,7 +381,6 @@ public:
     constTypePtr finalize ();
     // check if m_parameterblock is really needed, drop if not
     void closeParameters ();
-    constTypePtr returnType () const;
     // see YEFunction::attachParameter
     constTypePtr attachParameter (YCodePtr code, constTypePtr type = Type::Unspec);
     // attach symbolic variable parameter to function, return created TableEntry
@@ -388,22 +389,27 @@ public:
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type () const;
+    constTypePtr completeType () const;
     YBlockPtr parameterBlock () const;
 };
 
 //---------------------------------------------------------
-// Function ref (-> SymbolEntry ( param, param, ...) )
+// Function call - parameter handling common base 
 
-class YEFunction : public YCode, public Y2Function
+class YECall : public YCode
 {
-    REP_BODY(YEFunction);
+    REP_BODY(YECall);
+protected:
     TableEntry* m_entry;
     SymbolEntryPtr m_sentry;
-    ycodelist_t *m_parameters;
+    YCodePtr *m_parameters;
+    Y2Function* m_functioncall;
+    
+    uint m_next_param_id;
 public:
-    YEFunction (TableEntry* entry);
-    YEFunction (std::istream & str);
-    ~YEFunction ();
+    YECall (TableEntry* entry);
+    YECall (std::istream & str);
+    ~YECall ();
     const SymbolEntryPtr entry () const;
     /**
      * Attach parameter to external function call
@@ -422,11 +428,49 @@ public:
      * if undefined, return Type::Error (wrong type was already
      *   reported in attachParameter()
      */
-    constTypePtr finalize ();
+    virtual constTypePtr finalize ();
     string toString () const;
-    virtual YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const;
+    string qualifiedName () const;
+};
+
+//---------------------------------------------------------
+// Function ref (-> SymbolEntry ( param, param, ...) )
+
+class YEFunction : public YECall
+{
+    REP_BODY(YEFunction);
+public:
+    YEFunction (TableEntry* entry);
+    YEFunction (std::istream & str);
+    virtual YCPValue evaluate (bool cse = false);
+    virtual constTypePtr finalize ();
+};
+
+//---------------------------------------------------------
+// Function ref (-> SymbolEntry ( param, param, ...) )
+
+class YEFunctionPointer : public YECall
+{
+    REP_BODY(YEFunctionPointer);
+public:
+    YEFunctionPointer (TableEntry* entry);
+    YEFunctionPointer (std::istream & str);
+    virtual YCPValue evaluate (bool cse = false);
+};
+
+//---------------------------------------------------------
+// Function call for outer space (similar to YEFunction) ref (-> SymbolEntry ( param, param, ...) )
+
+class Y2YCPFunction : public Y2Function
+{
+    SymbolEntryPtr m_sentry;
+    YCPValue* m_parameters;
+public:
+    Y2YCPFunction (SymbolEntryPtr entry);
+    ~Y2YCPFunction ();
+    
     string qualifiedName () const;
 
     // implementation of the Y2Function interface:
@@ -435,7 +479,8 @@ public:
     virtual constTypePtr wantedParameterType () const;
     virtual bool appendParameter (const YCPValue& arg);
     virtual bool finishParameters ();
-    virtual YCPValue evaluateCall () { return evaluate (); }
+    virtual YCPValue evaluateCall ();
+    virtual bool reset ();
 };
 
 #endif   // YExpression_h

@@ -13,11 +13,11 @@
    File:	PkgModuleFunctions.h
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:  Klaus Kaempf <kkaempf@suse.de>
 
    Purpose:	Access to packagemanager
 		Handles Pkg::function (list_of_arguments) calls
-		from WFMInterpreter.
 /-*/
 
 #ifndef PkgModuleFunctions_h
@@ -40,32 +40,11 @@
 #include <ycp/YBlock.h>
 
 #include <y2/Y2Namespace.h>
-#include <y2/Y2NamespaceCPP.h>
 
 #include <y2pm/PMSelectablePtr.h>
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/PMYouServers.h>
 #include <y2pm/PMYouPatchPtr.h>
-
-#define Y2REFFUNCTIONCALL1(namespace, name, signature, param1type, impl_class, impl_func)  \
-class namespace##name##Function1 : public Y2CPPFunctionCall <impl_class> {      \
-public:                                                 \
-    namespace##name##Function1(impl_class* instance) :  \
-        Y2CPPFunctionCall <impl_class> (signature, instance)    \
-    {}                                                  \
-    virtual void registerParameters (YBlockPtr decl)    \
-    {                                                   \
-        TypePtr t = Type::Const##param1type->clone ();  \
-        t->asReference();                               \
-        newParameter (decl, 1, t );                     \
-    }                                                   \
-    virtual YCPValue evaluate (bool cse=false)          \
-    {                                                   \
-        if (cse) return YCPNull ();                     \
-        return m_instance->impl_func (m_param1->value ()->asReference ());   \
-    }                                                   \
-}
-
 
 /**
  * A simple class for package management access
@@ -119,7 +98,10 @@ class PkgModuleFunctions : public Y2Namespace
     private: // source related
 
       bool sourceStartManager( bool autoEnable );
+      
+      // builtin handling
       void registerFunctions ();
+      vector<string> _registered_functions;
 
     private:
 
@@ -132,293 +114,277 @@ class PkgModuleFunctions : public Y2Namespace
 
     public:
 	// general
+	/* TYPEINFO: void() */
 	YCPValue InstSysMode ();
+	/* TYPEINFO: void(string) */
 	YCPValue SetLocale (const YCPString& locale);
+	/* TYPEINFO: string() */
 	YCPValue GetLocale ();
+	/* TYPEINFO: void(list<string>) */
 	YCPValue SetAdditionalLocales (YCPList args);
+	/* TYPEINFO: list<string>() */
 	YCPValue GetAdditionalLocales ();
+	/* TYPEINFO: string() */
 	YCPValue LastError ();
+	/* TYPEINFO: string() */
 	YCPValue LastErrorDetails ();
+	/* TYPEINFO: string() */
 	YCPValue LastErrorId ();
 
 	// callbacks
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackStartProvide (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackProgressProvide (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackDoneProvide (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackStartPackage (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackProgressPackage (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackDonePackage (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackStartDownload (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackProgressDownload (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackDoneDownload (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackMediaChange (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackSourceChange (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackYouProgress (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackYouPatchProgress (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackYouError (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackYouMessage (const YCPString& func);
+	/* TYPEINFO: void(string) */
 	YCPValue CallbackYouLog (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackYouExecuteYcpScript (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackYouScriptProgress (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackStartRebuildDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackProgressRebuildDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackNotifyRebuildDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackStopRebuildDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackStartConvertDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackProgressConvertDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackNotifyConvertDb (const YCPString& func);
+	/* TYPEINFO: void(string) */
         YCPValue CallbackStopConvertDb (const YCPString& func);
 	void SetMediaCallback (PM::ISrcId source_id);
 
 
 	// source related
+	/* TYPEINFO: boolean(boolean)*/
         YCPValue SourceStartManager (const YCPBoolean&);
+	/* TYPEINFO: integer(string,string)*/
 	YCPValue SourceCreate (const YCPString&, const YCPString&);
+	/* TYPEINFO: list<integer>(boolean)*/
 	YCPValue SourceStartCache (const YCPBoolean&);
+	/* TYPEINFO: list<integer>(boolean)*/
 	YCPValue SourceGetCurrent (const YCPBoolean& enabled);
+	/* TYPEINFO: boolean(integer)*/
 	YCPValue SourceFinish (const YCPInteger&);
+	/* TYPEINFO: boolean()*/
 	YCPValue SourceFinishAll ();
+	/* TYPEINFO: map<string,any>(integer)*/
 	YCPValue SourceGeneralData (const YCPInteger&);
+	/* TYPEINFO: map<string,any>(integer)*/
 	YCPValue SourceMediaData (const YCPInteger&);
+	/* TYPEINFO: map<string,any>(integer)*/
 	YCPValue SourceProductData (const YCPInteger&);
+	/* TYPEINFO: string(integer,integer,string)*/
 	YCPValue SourceProvideFile (const YCPInteger&, const YCPInteger&, const YCPString&);
+	/* TYPEINFO: string(integer,integer,string)*/
 	YCPValue SourceProvideDir (const YCPInteger&, const YCPInteger&, const YCPString&);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue SourceCacheCopyTo (const YCPString&);
+	/* TYPEINFO: boolean(boolean)*/
 	YCPValue SourceSetRamCache (const YCPBoolean&);
+	/* TYPEINFO: map<string,string>(integer)*/
 	YCPValue SourceProduct (const YCPInteger&);
+	/* TYPEINFO: boolean(integer,boolean)*/
         YCPValue SourceSetEnabled (const YCPInteger&, const YCPBoolean&);
+	/* TYPEINFO: boolean(integer)*/
         YCPValue SourceDelete (const YCPInteger&);
+	/* TYPEINFO: void(integer)*/
         YCPValue SourceRaisePriority (const YCPInteger&);
+	/* TYPEINFO: void(integer)*/
         YCPValue SourceLowerPriority (const YCPInteger&);
+	/* TYPEINFO: boolean()*/
         YCPValue SourceSaveRanks ();
+	/* TYPEINFO: boolean(integer,string)*/
         YCPValue SourceChangeUrl (const YCPInteger&, const YCPString&);
+	/* TYPEINFO: boolean(map<integer,integer>)*/
 	YCPValue SourceInstallOrder (const YCPMap&);
+	/* TYPEINFO: list<map<string,any>>()*/
         YCPValue SourceEditGet ();
+	/* TYPEINFO: boolean(list<map<string,any>>)*/
         YCPValue SourceEditSet (const YCPList& args);
+	/* TYPEINFO: list<integer>(string,string)*/
         YCPValue SourceScan (const YCPString& media, const YCPString& product_dir);
 
 	// target related
+	/* TYPEINFO: boolean(string,boolean)*/
 	YCPValue TargetInit (const YCPString& root, const YCPBoolean& n);
+	/* TYPEINFO: boolean()*/
 	YCPBoolean TargetFinish ();
+	/* TYPEINFO: boolean(string)*/
 	YCPBoolean TargetLogfile (const YCPString&);
+	/* TYPEINFO: integer(string)*/
 	YCPInteger TargetCapacity (const YCPString&);
+	/* TYPEINFO: integer(string)*/
 	YCPInteger TargetUsed (const YCPString&);
+	/* TYPEINFO: integer(string)*/
 	YCPInteger TargetBlockSize (const YCPString&);
+	/* TYPEINFO: map<string,string>(string)*/
 	YCPValue TargetUpdateInf (const YCPString&);
+	/* TYPEINFO: boolean(string)*/
 	YCPBoolean TargetInstall (const YCPString&);
+	/* TYPEINFO: boolean(string)*/
 	YCPBoolean TargetRemove (const YCPString&);
+	/* TYPEINFO: list<any>()*/
 	YCPList TargetProducts ();
+	/* TYPEINFO: boolean()*/
 	YCPBoolean TargetRebuildDB ();
+	/* TYPEINFO: void(list<map<any,any>>)*/
 	YCPValue TargetInitDU (const YCPList&);
+	/* TYPEINFO: map<string,list<integer>>()*/
 	YCPValue TargetGetDU ();
+	/* TYPEINFO: boolean(string)*/
 	YCPBoolean TargetFileHasOwner (const YCPString&);
 
 	// selection related
+	/* TYPEINFO: list<string>(symbol,string)*/
 	YCPValue GetSelections (const YCPSymbol& stat, const YCPString& cat);
+	/* TYPEINFO: string()*/
 	YCPValue GetBackupPath ();
+	/* TYPEINFO: void(string)*/
 	YCPValue SetBackupPath (const YCPString& path);
+	/* TYPEINFO: void(boolean)*/
 	YCPValue CreateBackups (const YCPBoolean& flag);
+	/* TYPEINFO: map<string,any>(string)*/
 	YCPValue SelectionData (const YCPString& cat);
+	/* TYPEINFO: list<string>(string,boolean,string)*/
 	YCPValue SelectionContent (const YCPString&, const YCPBoolean&, const YCPString&);
+	/* TYPEINFO: boolean(string)*/
 	YCPBoolean SetSelection (const YCPString&);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue ClearSelection (const YCPString&);
+	/* TYPEINFO: boolean() */
 	YCPBoolean ActivateSelections ();
 
 	// package related
+	/* TYPEINFO: list<string>(symbol,boolean)*/
 	YCPValue GetPackages (const YCPSymbol& which, const YCPBoolean& names_only);
+	/* TYPEINFO: list<string>(boolean,boolean,boolean,boolean)*/
 	YCPValue FilterPackages (const YCPBoolean& byAuto, const YCPBoolean& byApp, const YCPBoolean& byUser, const YCPBoolean& names_only);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue IsProvided (const YCPString& tag);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue IsSelected (const YCPString& tag);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue IsAvailable (const YCPString& tag);
+	/* TYPEINFO: map<string,any>(list<string>)*/
 	YCPValue DoProvide (const YCPList& args);
+	/* TYPEINFO: map<string,any>(list<string>)*/
 	YCPValue DoRemove (const YCPList& args);
+	/* TYPEINFO: string(string)*/
 	YCPValue PkgSummary (const YCPString& package);
+	/* TYPEINFO: string(string)*/
 	YCPValue PkgVersion (const YCPString& package);
+	/* TYPEINFO: integer(string)*/
 	YCPValue PkgSize (const YCPString& package);
+	/* TYPEINFO: string(string)*/
 	YCPValue PkgGroup (const YCPString& package);
+	/* TYPEINFO: string(string)*/
 	YCPValue PkgLocation (const YCPString& package);
+	/* TYPEINFO: map<string,any>(string)*/
 	YCPValue PkgProperties (const YCPString& package);
+	/* TYPEINFO: list<string>(string,symbol)*/
 	YCPList  PkgGetFilelist (const YCPString& package, const YCPSymbol& which);
+	/* TYPEINFO: boolean()*/
 	YCPValue IsManualSelection ();
+	/* TYPEINFO: boolean()*/
 	YCPValue ClearSaveState ();
+	/* TYPEINFO: boolean()*/
 	YCPValue SaveState ();
+	/* TYPEINFO: boolean(boolean)*/
 	YCPValue RestoreState (const YCPBoolean&);
+	/* TYPEINFO: list<integer>(boolean)*/
 	YCPValue PkgUpdateAll (const YCPBoolean& del);
+	/* TYPEINFO: boolean()*/
 	YCPValue PkgAnyToDelete ();
+	/* TYPEINFO: boolean()*/
 	YCPValue PkgAnyToInstall ();
+	// FIXME: is this needed?
 	YCPValue PkgFileHasOwner (YCPList args);
 
+	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgInstall (const YCPString& p);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgSrcInstall (const YCPString& p);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgDelete (const YCPString& p);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgNeutral (const YCPString& p);
+	/* TYPEINFO: boolean()*/
 	YCPValue PkgReset ();
+	/* TYPEINFO: boolean(boolean)*/
 	YCPBoolean PkgSolve (const YCPBoolean& filter);
+	/* TYPEINFO: boolean()*/
 	YCPBoolean PkgSolveCheckTargetOnly ();
+	/* TYPEINFO: integer()*/
 	YCPValue PkgSolveErrors ();
+	/* TYPEINFO: list<any>(integer)*/
 	YCPValue PkgCommit (const YCPInteger& medianr);
 
+	/* FIXME: is this needed? */
 	YCPValue PkgPrepareOrder (YCPList args);
+	/* TYPEINFO: list<list<integer>>()*/
 	YCPValue PkgMediaSizes ();
+	/* TYPEINFO: list<string>()*/
 	YCPValue PkgMediaNames ();
 
+	/* TYPEINFO: string(string)*/
 	YCPString PkgGetLicenseToConfirm( const YCPString & package );
+	/* TYPEINFO: map<string,string>(list<string>)*/
 	YCPMap    PkgGetLicensesToConfirm( const YCPList & packages );
 
 	// you patch related
+	/* TYPEINFO: map<any,any>()*/
         YCPMap YouStatus ();
+	/* TYPEINFO: string(list<any>&)*/
 	YCPString YouGetServers (YCPReference strings);
+	/* TYPEINFO: string(map<any,any>)*/
 	YCPValue YouSetServer (const YCPMap& strings);
+	/* TYPEINFO: map<any,any>()*/
 	YCPValue YouGetUserPassword ();
+	/* TYPEINFO: string(string,string,boolean)*/
 	YCPValue YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& persistent);
+	/* TYPEINFO: string(boolean,boolean)*/
 	YCPValue YouRetrievePatchInfo (const YCPBoolean& download, const YCPBoolean& sign);
+	/* TYPEINFO: boolean()*/
 	YCPValue YouProcessPatches ();
+	/* TYPEINFO: string()*/
 	YCPValue YouGetDirectory ();
+	/* TYPEINFO: void()*/
 	YCPValue YouSelectPatches ();
+	/* TYPEINFO: boolean()*/
         YCPValue YouRemovePackages ();
-
-	// function call definitions
-	Y2FUNCTIONCALL  ( Pkg, InstSysMode, 		"void ()",		PkgModuleFunctions, InstSysMode);
-	Y2FUNCTIONCALL1 ( Pkg, SetLocale, 		"void (string)",String, 	PkgModuleFunctions, SetLocale);
-	Y2FUNCTIONCALL  ( Pkg, GetLocale, 		"string ()",		PkgModuleFunctions, GetLocale);
-	Y2FUNCTIONCALL1 ( Pkg, SetAdditionalLocales, 	"void (list<string>)",List, 		PkgModuleFunctions, SetAdditionalLocales);
-	Y2FUNCTIONCALL  ( Pkg, GetAdditionalLocales, 	"list<string> ()",		PkgModuleFunctions, GetAdditionalLocales);
-	Y2FUNCTIONCALL  ( Pkg, LastError, 		"string ()",		PkgModuleFunctions, LastError);
-	Y2FUNCTIONCALL  ( Pkg, LastErrorDetails, 	"string ()",		PkgModuleFunctions, LastErrorDetails);
-	Y2FUNCTIONCALL  ( Pkg, LastErrorId, 		"string ()",		PkgModuleFunctions, LastErrorId);
-
-	// callbacks
-	Y2FUNCTIONCALL1 ( Pkg, CallbackStartProvide, 	"void (string)",String,		PkgModuleFunctions, CallbackStartProvide);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressProvide, "void (string)",String,		PkgModuleFunctions, CallbackProgressProvide);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackDoneProvide, 	"void (string)",String,		PkgModuleFunctions, CallbackDoneProvide);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackStartPackage, 	"void (string)",String,		PkgModuleFunctions, CallbackStartPackage);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressPackage, "void (string)",String,		PkgModuleFunctions, CallbackProgressPackage);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackDonePackage, 	"void (string)",String,		PkgModuleFunctions, CallbackDonePackage);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackStartDownload, 	"void (string)",String,		PkgModuleFunctions, CallbackStartDownload);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressDownload,"void (string)",String,		PkgModuleFunctions, CallbackProgressDownload);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackDoneDownload, 	"void (string)",String,		PkgModuleFunctions, CallbackDoneDownload);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackMediaChange, 	"void (string)",String,		PkgModuleFunctions, CallbackMediaChange);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackSourceChange, 	"void (string)",String, 	PkgModuleFunctions, CallbackSourceChange);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackYouProgress, 	"void (string)",String,		PkgModuleFunctions, CallbackYouProgress);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackYouPatchProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouPatchProgress);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackYouError, 	"void (string)",String,		PkgModuleFunctions, CallbackYouError);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackYouMessage, 	"void (string)",String,		PkgModuleFunctions, CallbackYouMessage);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackYouLog,          "void (string)",String,	        PkgModuleFunctions, CallbackYouLog);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackYouExecuteYcpScript, "void (string)",String,	PkgModuleFunctions, CallbackYouExecuteYcpScript);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackYouScriptProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouScriptProgress);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackStartRebuildDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStartRebuildDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackProgressRebuildDb, "void (string)",String,	PkgModuleFunctions, CallbackProgressRebuildDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackNotifyRebuildDb, "void (string)",String,		PkgModuleFunctions, CallbackNotifyRebuildDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackStopRebuildDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStopRebuildDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackStartConvertDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStartConvertDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackProgressConvertDb, "void (string)",String,	PkgModuleFunctions, CallbackProgressConvertDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackNotifyConvertDb, "void (string)",String,		PkgModuleFunctions, CallbackNotifyConvertDb);
-        Y2FUNCTIONCALL1 ( Pkg, CallbackStopConvertDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStopConvertDb);
-
-	// source related
-        Y2FUNCTIONCALL1 ( Pkg, SourceStartManager, 	"boolean (boolean)",Boolean,	PkgModuleFunctions, SourceStartManager);
-	Y2FUNCTIONCALL2 ( Pkg, SourceCreate, 		"integer (string, string)",String, String,	PkgModuleFunctions, SourceCreate);
-	Y2FUNCTIONCALL1 ( Pkg, SourceStartCache, 	"list<integer> (boolean)",Boolean,	PkgModuleFunctions, SourceStartCache);
-	Y2FUNCTIONCALL1 ( Pkg, SourceGetCurrent, 	"list<integer> (boolean)",Boolean,	PkgModuleFunctions, SourceGetCurrent);
-	Y2FUNCTIONCALL1 ( Pkg, SourceFinish, 		"boolean (integer)",Integer,	PkgModuleFunctions, SourceFinish);
-	Y2FUNCTIONCALL  ( Pkg, SourceFinishAll, 	"boolean ()",		PkgModuleFunctions, SourceFinishAll);
-	Y2FUNCTIONCALL1 ( Pkg, SourceGeneralData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceGeneralData);
-	Y2FUNCTIONCALL1 ( Pkg, SourceMediaData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceMediaData);
-	Y2FUNCTIONCALL1 ( Pkg, SourceProductData, 	"map<string,any> (integer)",Integer,	PkgModuleFunctions, SourceProductData);
-	Y2FUNCTIONCALL3 ( Pkg, SourceProvideFile, 	"string (integer, integer, string)",Integer, Integer, String, PkgModuleFunctions, SourceProvideFile);
-	Y2FUNCTIONCALL3 ( Pkg, SourceProvideDir, 	"string (integer, integer, string)",Integer, Integer, String, PkgModuleFunctions, SourceProvideDir);
-	Y2FUNCTIONCALL1 ( Pkg, SourceCacheCopyTo, 	"boolean (string)",String,		PkgModuleFunctions, SourceCacheCopyTo);
-	Y2FUNCTIONCALL1 ( Pkg, SourceSetRamCache, 	"boolean (boolean)",Boolean,	PkgModuleFunctions, SourceSetRamCache);
-	Y2FUNCTIONCALL1 ( Pkg, SourceProduct, 		"map<string,string> (integer)",Integer,	PkgModuleFunctions, SourceProduct);
-        Y2FUNCTIONCALL2 ( Pkg, SourceSetEnabled, 	"boolean (integer, boolean)",Integer, Boolean, PkgModuleFunctions, SourceSetEnabled);
-        Y2FUNCTIONCALL1 ( Pkg, SourceDelete, 		"boolean (integer)",Integer,	PkgModuleFunctions, SourceDelete);
-        Y2FUNCTIONCALL1 ( Pkg, SourceRaisePriority, 	"void (integer)",Integer,	PkgModuleFunctions, SourceRaisePriority);
-        Y2FUNCTIONCALL1 ( Pkg, SourceLowerPriority, 	"void (integer)",Integer,	PkgModuleFunctions, SourceLowerPriority);
-        Y2FUNCTIONCALL  ( Pkg, SourceSaveRanks, 	"boolean ()",		PkgModuleFunctions, SourceSaveRanks);
-        Y2FUNCTIONCALL2 ( Pkg, SourceChangeUrl, 	"boolean (integer, string)",Integer, String,PkgModuleFunctions, SourceChangeUrl);
-	Y2FUNCTIONCALL1 ( Pkg, SourceInstallOrder, 	"boolean (map<integer,integer>)",Map,		PkgModuleFunctions, SourceInstallOrder);
-        Y2FUNCTIONCALL  ( Pkg, SourceEditGet, 		"list<map<string,any>> ()",		PkgModuleFunctions, SourceEditGet);
-        Y2FUNCTIONCALL1 ( Pkg, SourceEditSet, 		"boolean (list<map<string,any>>)",List, 		PkgModuleFunctions, SourceEditSet);
-        Y2FUNCTIONCALL2 ( Pkg, SourceScan, 		"list<integer> (string, string)",String, String, PkgModuleFunctions, SourceScan);
-
-	// target related
-	Y2FUNCTIONCALL2 ( Pkg, TargetInit, 		"boolean (string, boolean)",String, Boolean,PkgModuleFunctions, TargetInit);
-	Y2FUNCTIONCALL  ( Pkg, TargetFinish, 		"boolean ()",		PkgModuleFunctions, TargetFinish);
-	Y2FUNCTIONCALL1 ( Pkg, TargetLogfile, 		"boolean (string)",String,		PkgModuleFunctions, TargetLogfile);
-	Y2FUNCTIONCALL1 ( Pkg, TargetCapacity, 		"integer (string)",String,		PkgModuleFunctions, TargetCapacity);
-	Y2FUNCTIONCALL1 ( Pkg, TargetUsed, 		"integer (string)",String,		PkgModuleFunctions, TargetUsed);
-	Y2FUNCTIONCALL1 ( Pkg, TargetBlockSize, 	"integer (string)",String,		PkgModuleFunctions, TargetBlockSize);
-	Y2FUNCTIONCALL1 ( Pkg, TargetUpdateInf, 	"map<string,string> (string)",String,		PkgModuleFunctions, TargetUpdateInf);
-	Y2FUNCTIONCALL1 ( Pkg, TargetInstall, 		"boolean (string)",String,		PkgModuleFunctions, TargetInstall);
-	Y2FUNCTIONCALL1 ( Pkg, TargetRemove, 		"boolean (string)",String,		PkgModuleFunctions, TargetRemove);
-	Y2FUNCTIONCALL  ( Pkg, TargetProducts, 		"list<any> ()",		PkgModuleFunctions, TargetProducts);
-	Y2FUNCTIONCALL  ( Pkg, TargetRebuildDB, 	"boolean ()",		PkgModuleFunctions, TargetRebuildDB);
-	Y2FUNCTIONCALL1 ( Pkg, TargetInitDU, 		"void (list<map<any,any> >)",List,		PkgModuleFunctions, TargetInitDU);
-	Y2FUNCTIONCALL  ( Pkg, TargetGetDU, 		"map<string,list<integer>> ()",		PkgModuleFunctions, TargetGetDU);
-	Y2FUNCTIONCALL1 ( Pkg, TargetFileHasOwner, 	"boolean (string)",String, 	PkgModuleFunctions, TargetFileHasOwner);
-
-	// selection related
-	Y2FUNCTIONCALL2 ( Pkg, GetSelections, 		"list<string> (symbol, string)",Symbol, String, PkgModuleFunctions, GetSelections);
-	Y2FUNCTIONCALL  ( Pkg, GetBackupPath, 		"string ()",		PkgModuleFunctions, GetBackupPath);
-	Y2FUNCTIONCALL1 ( Pkg, SetBackupPath, 		"void (string)",String,		PkgModuleFunctions, SetBackupPath);
-	Y2FUNCTIONCALL1 ( Pkg, CreateBackups, 		"void (boolean)",Boolean,	PkgModuleFunctions, CreateBackups);
-	Y2FUNCTIONCALL1 ( Pkg, SelectionData, 		"map<string,any> (string)",String,		PkgModuleFunctions, SelectionData);
-	Y2FUNCTIONCALL3 ( Pkg, SelectionContent, 	"list<string> (string, boolean, string)",String, Boolean, String, PkgModuleFunctions, SelectionContent);
-	Y2FUNCTIONCALL1 ( Pkg, SetSelection, 		"boolean (string)",String,		PkgModuleFunctions, SetSelection);
-	Y2FUNCTIONCALL1 ( Pkg, ClearSelection, 		"boolean (string)",String, 	PkgModuleFunctions, ClearSelection);
-	Y2FUNCTIONCALL  ( Pkg, ActivateSelections, 	"boolean ()",		PkgModuleFunctions, ActivateSelections);
-
-	// package related
-	Y2FUNCTIONCALL2 ( Pkg, GetPackages, 		"list<string> (symbol, boolean)",Symbol, Boolean, PkgModuleFunctions, GetPackages);
-	Y2FUNCTIONCALL4 ( Pkg, FilterPackages, 		"list<string> (boolean, boolean, boolean, boolean)",Boolean, Boolean, Boolean, Boolean, PkgModuleFunctions, FilterPackages);
-	Y2FUNCTIONCALL1 ( Pkg, IsProvided, 		"boolean (string)",String,		PkgModuleFunctions, IsProvided);
-	Y2FUNCTIONCALL1 ( Pkg, IsSelected, 		"boolean (string)",String,		PkgModuleFunctions, IsSelected);
-	Y2FUNCTIONCALL1 ( Pkg, IsAvailable, 		"boolean (string)",String,		PkgModuleFunctions, IsAvailable);
-	Y2FUNCTIONCALL1 ( Pkg, DoProvide, 		"map<string,any> (list<string>)",List,		PkgModuleFunctions, DoProvide);
-	Y2FUNCTIONCALL1 ( Pkg, DoRemove, 		"map<string,any> (list<string>)",List, 		PkgModuleFunctions, DoRemove);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSummary, 		"string (string)",String, 	PkgModuleFunctions, PkgSummary);
-	Y2FUNCTIONCALL1 ( Pkg, PkgVersion, 		"string (string)",String,		PkgModuleFunctions, PkgVersion);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSize, 		"integer (string)",String,		PkgModuleFunctions, PkgSize);
-	Y2FUNCTIONCALL1 ( Pkg, PkgGroup, 		"string (string)",String,		PkgModuleFunctions, PkgGroup);
-	Y2FUNCTIONCALL1 ( Pkg, PkgLocation, 		"string (string)",String,		PkgModuleFunctions, PkgLocation);
-	Y2FUNCTIONCALL1 ( Pkg, PkgProperties,		"map<string,any> (string)",String,		PkgModuleFunctions, PkgProperties);
-	Y2FUNCTIONCALL2 ( Pkg, PkgGetFilelist,	        "list<string> (string,symbol)",String,Symbol,		PkgModuleFunctions, PkgGetFilelist);
-	Y2FUNCTIONCALL  ( Pkg, IsManualSelection, 	"boolean ()",		PkgModuleFunctions, IsManualSelection);
-	Y2FUNCTIONCALL  ( Pkg, ClearSaveState, 		"boolean ()",		PkgModuleFunctions, ClearSaveState);
-	Y2FUNCTIONCALL  ( Pkg, SaveState, 		"boolean ()",		PkgModuleFunctions, SaveState);
-	Y2FUNCTIONCALL1 ( Pkg, RestoreState, 		"boolean (boolean)",Boolean, 	PkgModuleFunctions, RestoreState);
-	Y2FUNCTIONCALL1 ( Pkg, PkgUpdateAll, 		"list<integer> (boolean)",Boolean,	PkgModuleFunctions, PkgUpdateAll);
-	Y2FUNCTIONCALL  ( Pkg, PkgAnyToDelete, 		"boolean ()",		PkgModuleFunctions, PkgAnyToDelete);
-	Y2FUNCTIONCALL  ( Pkg, AnyToInstall, 		"boolean ()",		PkgModuleFunctions, PkgAnyToInstall);
-
-	Y2FUNCTIONCALL1 ( Pkg, PkgInstall, 		"boolean (string)",String,		PkgModuleFunctions, PkgInstall);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSrcInstall, 		"boolean (string)",String,		PkgModuleFunctions, PkgSrcInstall);
-	Y2FUNCTIONCALL1 ( Pkg, PkgDelete, 		"boolean (string)",String,		PkgModuleFunctions, PkgDelete);
-	Y2FUNCTIONCALL1 ( Pkg, PkgNeutral, 		"boolean (string)",String,		PkgModuleFunctions, PkgNeutral);
-	Y2FUNCTIONCALL  ( Pkg, PkgReset, 		"boolean ()",		PkgModuleFunctions, PkgReset);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSolve, 		"boolean (boolean)",Boolean,	PkgModuleFunctions, PkgSolve);
-	Y2FUNCTIONCALL  ( Pkg, PkgSolveCheckTargetOnly, "boolean ()",			PkgModuleFunctions, PkgSolveCheckTargetOnly);
-	Y2FUNCTIONCALL  ( Pkg, PkgSolveErrors, 		"integer ()",			PkgModuleFunctions, PkgSolveErrors);
-	Y2FUNCTIONCALL1 ( Pkg, PkgCommit, 		"list<any> (integer)",Integer,	PkgModuleFunctions, PkgCommit);
-
-	Y2FUNCTIONCALL  ( Pkg, PkgMediaSizes, 		"list<list<integer>> ()",		PkgModuleFunctions, PkgMediaSizes);
-	Y2FUNCTIONCALL  ( Pkg, PkgMediaNames, 		"list<string> ()",		PkgModuleFunctions, PkgMediaNames);
-
-	Y2FUNCTIONCALL1 ( Pkg, PkgGetLicenseToConfirm,  "string (string)",                   String, PkgModuleFunctions, PkgGetLicenseToConfirm );
-	Y2FUNCTIONCALL1 ( Pkg, PkgGetLicensesToConfirm, "map<string,string> (list<string>)", List,   PkgModuleFunctions, PkgGetLicensesToConfirm );
-
-	// you patch related
-        Y2FUNCTIONCALL  ( Pkg, YouStatus, 		"map<any,any> ()",		PkgModuleFunctions, YouStatus);
-	Y2REFFUNCTIONCALL1 ( Pkg, YouGetServers, 	"string (list<any>&)",	List,	PkgModuleFunctions, YouGetServers);
-	Y2FUNCTIONCALL1	( Pkg, YouSetServer,		"string (map<any,any>)",Map, PkgModuleFunctions, YouSetServer);
-	Y2FUNCTIONCALL 	( Pkg, YouGetUserPassword,	"map<any,any> ()",	PkgModuleFunctions, YouGetUserPassword);
-	Y2FUNCTIONCALL3	( Pkg, YouSetUserPassword,	"string (string, string, boolean)", String, String, Boolean, PkgModuleFunctions, YouSetUserPassword);
-	Y2FUNCTIONCALL2 ( Pkg, YouRetrievePatchInfo, 	"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouRetrievePatchInfo);
-	Y2FUNCTIONCALL  ( Pkg, YouProcessPatches, 	"boolean ()",		PkgModuleFunctions, YouProcessPatches);
-	Y2FUNCTIONCALL  ( Pkg, YouGetDirectory, 	"string ()",		PkgModuleFunctions, YouGetDirectory);
-	Y2FUNCTIONCALL  ( Pkg, YouSelectPatches, 	"void ()",		PkgModuleFunctions, YouSelectPatches);
-        Y2FUNCTIONCALL  ( Pkg, YouRemovePackages, 	"boolean ()",		PkgModuleFunctions, YouRemovePackages);
-
 
 	/**
 	 * Constructor.
@@ -451,7 +417,7 @@ class PkgModuleFunctions : public Y2Namespace
     	    else return YCPVoid ();
 	}
 
-	virtual Y2Function* createFunctionCall (const string name);
+	virtual Y2Function* createFunctionCall (const string name, constFunctionTypePtr type);
 
         static YCPMap YouPatch( const PMYouPatchPtr &patch );
 

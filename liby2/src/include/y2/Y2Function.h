@@ -70,6 +70,12 @@ public:
      * Executes the call
      */
     virtual YCPValue evaluateCall () = 0;
+
+    /**
+     * Reset the currecn parameters, so the instance
+     * can be reused for the next call (appendParameter etc)
+     */    
+    virtual bool reset () = 0;
 };
 
 #endif // Y2Function_h

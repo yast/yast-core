@@ -33,7 +33,8 @@ Parsed:
 [Interpreter] tests/builtin/Builtin_III.ycp:66 No match for 'sformat : <unspec> (const integer)'
 [Interpreter] tests/builtin/Builtin_III.ycp:66 Please fix parameter types to match one of:
 [Interpreter] tests/builtin/Builtin_III.ycp:66 'sformat : string (string, ...)' 
-[Parser] tests/builtin/Builtin_III.ycp:66 Bad parameter '<const integer> 42'
+[Parser] tests/builtin/Builtin_III.ycp:66 Wrong parameters in call to sformat(...)
+[Parser] tests/builtin/Builtin_III.ycp:66 Expected '(string, ...)', seen '(const integer)'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error

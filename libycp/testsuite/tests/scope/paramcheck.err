@@ -1,11 +1,7 @@
-[Parser] tests/scope/paramcheck.ycp:15 Parameters don't match any declaration:
-[Parser] tests/scope/paramcheck.ycp:15 FortyTwo ("nasty")
-[Parser] tests/scope/paramcheck.ycp:15 Candidates are:
-[Parser] tests/scope/paramcheck.ycp:15 integer FortyTwo ()
-[Parser] tests/scope/paramcheck.ycp:16 Parameters don't match any declaration:
-[Parser] tests/scope/paramcheck.ycp:16 Add (1, 2, 3)
-[Parser] tests/scope/paramcheck.ycp:16 Candidates are:
-[Parser] tests/scope/paramcheck.ycp:16 integer Add (integer a, integer b)
+[Parser] tests/scope/paramcheck.ycp:15 Excessive parameter in call to FortyTwo(...)
+[Parser] tests/scope/paramcheck.ycp:15 Bad parameter '<string> "nasty"'
+[Parser] tests/scope/paramcheck.ycp:16 Excessive parameter in call to Add(...)
+[Parser] tests/scope/paramcheck.ycp:16 Bad parameter '<const integer> 3'
 [Parser] tests/scope/paramcheck.ycp:17 Parameters don't match any declaration:
 [Parser] tests/scope/paramcheck.ycp:17 Add (17)
 [Parser] tests/scope/paramcheck.ycp:17 Candidates are:

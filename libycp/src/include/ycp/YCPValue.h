@@ -256,6 +256,11 @@ class YCPValue : public YCPElement
 {
     DEF_COMMON(Value, Element);
 public:
+    /**
+     * Default constructor to allow arrays of YCPValues. It will
+     * initialize the value to YCPNull ().
+     */
+    YCPValue () : YCPElement (YCPNull ()) {};
 };
 
 

@@ -183,7 +183,7 @@ static stack_t *stack_pop (stack_t **stack);
 struct blockstack_t : stack_t {
     YBlockPtr theBlock;		//!< pointer to block
     const char *textdomain;	//!< textdomain (if defined)
-    constTypePtr type;		//!< return type of block
+//    constTypePtr type;		//!< return type of block
     int includeDepth;		//!< block is include file, all definitions go to the outer block
     TableEntry *self;		//!< c_self entry during module parsing
 };
@@ -907,7 +907,7 @@ block:
 		}
 		else if (p_parser->m_block_stack != NULL)
 		{
-		    b_t = p_parser->m_block_stack->type;
+		    b_t = p_parser->m_block_stack->theBlock->type ();
 		}
 
 		start_block (p_parser, b_t);
@@ -1071,7 +1071,7 @@ block_end:
 		}
 
 		// See the comment about types at the "expression" rule.
-		$$.t = top->type;
+		$$.t = top->theBlock->type ();
 		$$.l = $1.l;
 
 		if (!is_include)
@@ -1120,14 +1120,14 @@ statements:
 #if DO_DEBUG
 		    y2debug ("Return in block: %s", $2.t->toString().c_str());
 #endif
-		    if (p_parser->m_block_stack->type->isUnspec ())	// type undefined yet
+		    if (p_parser->m_block_stack->theBlock->type ()->isUnspec ())	// type undefined yet
 		    {
 			if (!($2.t)->isNil())				// "return nil;" does not define the block type !
 			{
 #if DO_DEBUG
 			    y2debug ("Block type (%s)", $2.t->toString().c_str());
 #endif
-			    p_parser->m_block_stack->type = $2.t;		// this is the block type
+			    p_parser->m_block_stack->theBlock->setType ($2.t);
 			}
 		    }
 		    else						// type is already defined, check it
@@ -1138,7 +1138,7 @@ statements:
 			// since nil (void) matches everything, handle this separately
 			if ($2.t->isVoid())				// "return;"
 			{
-			    if (p_parser->m_block_stack->type->isVoid())
+			    if (p_parser->m_block_stack->theBlock->type ()->isVoid())
 			    {
 				match = 0;
 			    }
@@ -1149,16 +1149,16 @@ statements:
 			}
 			else						// "return <expression>;"
 			{
-			    match = $2.t->match (p_parser->m_block_stack->type);
+			    match = $2.t->match (p_parser->m_block_stack->theBlock->type ());
 			}
 
 			if (match > 0)
 			{
-			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->m_block_stack->type);
+			    ((YSReturnPtr)stmt)->propagate ($2.t, p_parser->m_block_stack->theBlock->type ());
 			}
 			else if (match < 0)
 			{
-			    yyTypeMismatch ("Mismatched return type in block", p_parser->m_block_stack->type, $2.t, $2.l);
+			    yyTypeMismatch ("Mismatched return type in block", p_parser->m_block_stack->theBlock->type (), $2.t, $2.l);
 			    $$.t = 0;
 			    break;
 			}
@@ -1168,7 +1168,7 @@ statements:
 		p_parser->m_block_stack->theBlock->attachStatement (stmt);
 		y2debug ("attached statement '%s'", stmt == 0 ? "<NULL>" : stmt->toString().c_str());
 		$$.c = stmt;
-		$$.t = p_parser->m_block_stack->type;
+		$$.t = p_parser->m_block_stack->theBlock->type ();
 		$$.l = $1.l;
 	    }
 | /* empty  */
@@ -2895,25 +2895,23 @@ function_call:
 			    yywarning ((string (decl->name) + "(...) is deprecated, please fix").c_str(), $1.l);
 			}
 		    }
-/*
-		    else if (sentry->type()->isTerm()) // a term
-		    {
-#if DO_DEBUG
-			y2debug ("Term! (%s)", sentry->toString().c_str());
-#endif
-			$$.c = new YETerm (sentry->name());
-			$$.t = sentry->type();
-#if DO_DEBUG
-			y2debug ("Term ...");
-		    }
-#endif
-*/
 		    else if (sentry->type()->isFunction())
 		    {
 #if DO_DEBUG
 			y2debug ("Doing function call, starting params");
 #endif
-			$$.c = new YEFunction ($1.v.tval);			// an extern function
+			if (sentry->isVariable ())
+			{
+#if DO_DEBUG
+			    y2debug ("Doing function call via function pointer, starting params");
+#endif
+//			    y2internal ("Doing function call via function pointer, starting params");
+			    $$.c = new YEFunctionPointer ($1.v.tval);		// an extern function
+			}
+			else
+			{
+			    $$.c = new YEFunction ($1.v.tval);			// an extern function
+			}
 			$$.t = sentry->type();
 #if DO_DEBUG
 			y2debug ("Function! (%s)", sentry->toString(true).c_str());
@@ -2994,28 +2992,15 @@ function_call:
 			constTypePtr finalT = builtin->finalize ();
 			if (finalT != 0)
 			{
-			    constFunctionTypePtr bt;
-			    constFunctionTypePtr dt;
-			    if (builtin->type()->isFunction())
+			    constFunctionTypePtr bt = 0;
+			    constFunctionTypePtr dt = 0;
+			    if (builtin->completeType()->isFunction())
 			    {
-				bt = builtin->type();
+				bt = builtin->completeType();
 			    }
 			    if (builtin->decl()->type->isFunction())
 			    {
 				dt = builtin->decl()->type;
-			    }
-			    if (finalT->isError()
-				&& bt != 0
-				&& dt != 0)
-			    {
-				if (bt->parameterCount() < dt->parameterCount())
-				{
-				    yyMissingArgument (dt->parameterType(bt->parameterCount()), $1.l);
-				    if (builtin->decl()->flags & DECL_FLEX == 0)
-				    {
-					finalT = 0;			// mark 'error shown'
-				    }
-				}
 			    }
 
 			    if (finalT != 0)				// error not shown yet
@@ -3046,16 +3031,17 @@ function_call:
 			    y2debug ("yeBuiltin matched");
 #endif
 			    $$.c = $3.c;
-			    $$.t = builtin->returnType();
+			    $$.t = builtin->type ();
 			}
 		    }
 		    break;
+		    case YCode::yeFunctionPointer:
 		    case YCode::yeFunction:			// an extern function
 		    {
 #if DO_DEBUG
 			y2debug ("YCode::yeFunction (%s)", $3.c->toString().c_str());
 #endif
-			YEFunctionPtr function = (YEFunctionPtr)$3.c;
+			YECallPtr function = (YECallPtr)$3.c;
 
 			// close parameter list
 			constTypePtr finalT = function->finalize ();
@@ -4017,12 +4003,13 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    }
 	}
 	break;
+	case YCode::yeFunctionPointer:
         case YCode::yeFunction:
 	{
 #if DO_DEBUG
 	    y2debug ("YCode::yeFunction:");
 #endif
-	    YEFunctionPtr func = (YEFunctionPtr)code; 
+	    YECallPtr func = (YECallPtr)code; 
 	    name = func->qualifiedName();
 #if DO_DEBUG
 	    y2debug ("attach_parameter func ([%s]%s:%s)", func->toString().c_str(), parm->c->toString().c_str(), parm->t->toString().c_str());
@@ -4173,7 +4160,7 @@ start_block (Parser *parser, constTypePtr type)
 #endif
     // inherit textdomain from outer block
     top->textdomain = (parser->m_block_stack ? parser->m_block_stack->textdomain : 0);
-    top->type = type;
+    top->theBlock->setType (type);
     top->includeDepth = 0;
     top->self = 0;
 

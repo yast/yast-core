@@ -8,7 +8,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [Parser] tests/types/bracket.ycp:12 Bracket parameter '"bar"' to 'a' has wrong type
-[Parser] tests/types/bracket.ycp:12 Expected 'integer', seen 'string'.
+[Parser] tests/types/bracket.ycp:12 Expected 'integer', seen 'const string'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
@@ -73,7 +73,7 @@ Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:51 Parser error
 [Parser] tests/types/bracket.ycp:61 Bracket parameter '0' to 'a' has wrong type
-[Parser] tests/types/bracket.ycp:61 Expected 'string', seen 'integer'.
+[Parser] tests/types/bracket.ycp:61 Expected 'string', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error

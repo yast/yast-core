@@ -18,6 +18,7 @@
 /-*/
 // -*- c++ -*-
 
+#include "ycp/Type.h"
 #include "ycp/YBlock.h"
 #include "ycp/YCPVoid.h"
 
@@ -57,6 +58,7 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
     , m_point (0)
     , m_statements (0)
     , m_last_statement (0)
+    , m_type (Type::Unspec)
 {
 #if DO_DEBUG
     y2debug ("YBlock::YBlock [%p] (%s)", this, filename.c_str());
@@ -79,6 +81,7 @@ YBlock::YBlock (const Point *point)
     , m_point (point)
     , m_statements (0)
     , m_last_statement (0)
+    , m_type (Type::Unspec)
 {
 }
 
@@ -828,18 +831,62 @@ YBlock::addIncluded (string includefile)
 
 
 Y2Function *
-YBlock::createFunctionCall (const string name)
+YBlock::createFunctionCall (const string name, constFunctionTypePtr type)
 {
+    if (table () == 0)
+    {
+	// try local symbols
+	for (unsigned int i = 0 ; i < m_symbolcount ; i++)
+	{
+	    if (m_symbols[i]->name () == name && m_symbols[i]->isFunction ())
+	    {
+		// found
+		
+		// FIXME: handle overloading
+		return new Y2YCPFunction (m_symbols[i]);
+	    }
+	}
+
+	// not found
+	return NULL;
+    }
+
     TableEntry *func_te = table()->find (name.c_str (), SymbolEntry::c_function);
     
+    if (func_te == NULL)
+    {
+	// try local symbols
+	for (unsigned int i = 0 ; i < m_symbolcount ; i++)
+	{
+	    if (m_symbols[i]->name () == name && m_symbols[i]->isFunction ())
+	    {
+		// found
+		
+		// FIXME: handle overloading
+		return new Y2YCPFunction (m_symbols[i]);
+	    }
+	}
+
+	// not found
+	return NULL;
+    }
+
     // can't find the function definition
-    if (func_te == NULL || !func_te->sentry ()->isFunction ()) 
+    if (!func_te->sentry ()->isFunction ()) 
 	return NULL;
     
 #if DO_DEBUG
-    y2debug ("allocating new YEFunction %s", name.c_str ());
+    y2debug ("allocating new Y2YCPFunction %s", name.c_str ());
 #endif
-    return new YEFunction (func_te);
+
+    // FIXME: handle overloading
+
+    return new Y2YCPFunction (func_te->sentry ());
+}
+
+void YBlock::setType (constTypePtr type)
+{
+    m_type = type;
 }
 
 // EOF

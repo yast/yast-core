@@ -78,7 +78,6 @@ prepend ([], 8)
 [Interpreter] tests/builtin/Builtin-List.ycp:48 No match for 'prepend : <unspec> (list <const integer>)'
 [Interpreter] tests/builtin/Builtin-List.ycp:48 Please fix parameter types to match one of:
 [Interpreter] tests/builtin/Builtin-List.ycp:48 'prepend : list <<T>> (const list <<T>>, const <T>)' 
-[Parser] tests/builtin/Builtin-List.ycp:48 Missing 'const <T>' parameter.
 [Parser] tests/builtin/Builtin-List.ycp:48 Wrong parameters in call to prepend(...)
 [Parser] tests/builtin/Builtin-List.ycp:48 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>)'.
 Parsed:
@@ -89,7 +88,8 @@ Parser error
 [Interpreter] tests/builtin/Builtin-List.ycp:50 No match for 'prepend : <unspec> (list <const integer>, const integer, const integer)'
 [Interpreter] tests/builtin/Builtin-List.ycp:50 Please fix parameter types to match one of:
 [Interpreter] tests/builtin/Builtin-List.ycp:50 'prepend : list <<T>> (const list <<T>>, const <T>)' 
-[Parser] tests/builtin/Builtin-List.ycp:50 Bad parameter '<const integer> 3'
+[Parser] tests/builtin/Builtin-List.ycp:50 Wrong parameters in call to prepend(...)
+[Parser] tests/builtin/Builtin-List.ycp:50 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>, const integer, const integer)'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error

@@ -159,10 +159,12 @@ YCode::toString (ykind kind)
 	"yeBuiltin",		// builtin ref + args
 	"yeFunction",		// function ref + args
 	"yeReference",		// reference
+        // SuSE Linux v9.2
+        "yeFunctionPointer",      // function pointer
 
 	"yeExpression",		// -- placeholder --
 
-	// [34] Statements	(-> YCode + next)
+	// [35] Statements	(-> YCode + next)
 	"ysTypedef",		// typedef
 	"ysVariable",		// variable definition (-> YSAssign)
 	"ysFunction",		// function definition
@@ -411,19 +413,19 @@ YConst::type () const
 {
     switch (m_kind)
     {
-	case ycVoid:		return Type::Void; break;
-	case ycBoolean:		return Type::Boolean; break;
-	case ycInteger:		return Type::Integer; break;
-	case ycFloat:		return Type::Float; break;
-	case ycString:		return Type::String; break;
-	case ycByteblock:	return Type::Byteblock; break;
-	case ycPath:		return Type::Path; break;
-	case ycSymbol:		return Type::Symbol; break;
+	case ycVoid:		return Type::ConstVoid; break;
+	case ycBoolean:		return Type::ConstBoolean; break;
+	case ycInteger:		return Type::ConstInteger; break;
+	case ycFloat:		return Type::ConstFloat; break;
+	case ycString:		return Type::ConstString; break;
+	case ycByteblock:	return Type::ConstByteblock; break;
+	case ycPath:		return Type::ConstPath; break;
+	case ycSymbol:		return Type::ConstSymbol; break;
 	case ycList:		return Type::ListUnspec; break;
 	case ycMap:		return Type::MapUnspec; break;
-	case ycTerm:		return Type::Term; break;
-	case yeBlock:		return Type::Any; break;
-	case ycLocale:		return Type::Locale; break;
+	case ycTerm:		return Type::ConstTerm; break;
+	case yeBlock:		return Type::ConstAny; break;
+	case ycLocale:		return Type::ConstLocale; break;
 	default:
 	    break;
     }

@@ -13,9 +13,10 @@
    File:	PkgModuleFunctions.cc
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:  Klaus Kaempf <kkaempf@suse.de>
 
-   Purpose:	PkgModuleFunctions constructor, destructor
+   Purpose:	PkgModuleFunctions constructor, destructor and call handling
 /-*/
 
 
@@ -31,6 +32,104 @@
 #include <ycp/YCPBoolean.h>
 #include <ycp/YCPMap.h>
 #include <ycp/YCPVoid.h>
+
+class Y2PkgFunction: public Y2Function 
+{
+    unsigned int m_position;
+    PkgModuleFunctions* m_instance;
+    YCPValue m_param1;
+    YCPValue m_param2;
+    YCPValue m_param3;
+    YCPValue m_param4;
+public:
+
+    Y2PkgFunction (PkgModuleFunctions* instance, unsigned int pos);    
+    bool attachParameter (const YCPValue& arg, const int position);
+    constTypePtr wantedParameterType () const;
+    bool appendParameter (const YCPValue& arg);
+    bool finishParameters ();
+    YCPValue evaluateCall ();
+    bool reset ();
+};
+
+
+    Y2PkgFunction::Y2PkgFunction (PkgModuleFunctions* instance, unsigned int pos) :
+	m_position (pos)
+	, m_instance (instance)
+	, m_param1 ( YCPNull () )
+	, m_param2 ( YCPNull () )
+	, m_param3 ( YCPNull () )
+	, m_param4 ( YCPNull () )
+    {
+    };
+    
+    bool Y2PkgFunction::attachParameter (const YCPValue& arg, const int position)
+    {
+	switch (position)
+	{
+	    case 0: m_param1 = arg; break; 
+	    case 1: m_param2 = arg; break; 
+	    case 2: m_param3 = arg; break; 
+	    case 3: m_param4 = arg; break; 
+	    default: return false;
+	}
+
+	return true;
+    }
+    
+    constTypePtr Y2PkgFunction::wantedParameterType () const
+    {
+	y2internal ("wantedParameterType not implemented");
+	return Type::Unspec;
+    }
+    
+    bool Y2PkgFunction::appendParameter (const YCPValue& arg)
+    {
+	if (m_param1.isNull ())
+	{
+	    m_param1 = arg;
+	    return true;
+	} else if (m_param2.isNull ())
+	{
+	    m_param2 = arg;
+	    return true;
+	} else if (m_param3.isNull ())
+	{
+	    m_param3 = arg;
+	    return true;
+	} else if (m_param4.isNull ())
+	{
+	    m_param4 = arg;
+	    return true;
+	}
+	y2internal ("appendParameter > 3 not implemented");
+	return false;
+    }
+    
+    bool Y2PkgFunction::finishParameters ()
+    {
+	y2internal ("finishParameters not implemented");
+	return true;
+    }
+    
+    YCPValue Y2PkgFunction::evaluateCall ()
+    {
+	switch (m_position) {
+#include "PkgBuiltinCalls.h"
+	}
+	
+	return YCPNull ();
+    }
+    
+    bool Y2PkgFunction::reset ()
+    {
+	m_param1 = YCPNull ();
+	m_param2 = YCPNull ();
+	m_param3 = YCPNull ();
+	m_param4 = YCPNull ();
+
+	return true;
+    }
 
 /**
  * Constructor.
@@ -55,149 +154,22 @@ PkgModuleFunctions::~PkgModuleFunctions ()
     delete &_callbackHandler;
 }
 
-Y2Function* PkgModuleFunctions::createFunctionCall (const string name)
+Y2Function* PkgModuleFunctions::createFunctionCall (const string name, constFunctionTypePtr type)
 {
-    TableEntry *func_te = table ()->find (name.c_str (), SymbolEntry::c_function);
-    if (func_te)
+    vector<string>::iterator it = find (_registered_functions.begin ()
+	, _registered_functions.end (), name);
+    if (it == _registered_functions.end ())
     {
-        return new YEFunction (func_te);
+	y2error ("No such function %s", name.c_str ());
+	return NULL;
     }
-    y2error ("No such function %s", name.c_str ());
-    return NULL;
+    
+    return new Y2PkgFunction (this, it - _registered_functions.begin ());
 }
 
 void PkgModuleFunctions::registerFunctions()
 {
-    REGISTERFUNCTIONCALL  ( 0,	Pkg, ActivateSelections);
-    REGISTERFUNCTIONCALL  ( 1,	Pkg, AnyToInstall);
-    REGISTERFUNCTIONCALL  ( 2,	Pkg, ClearSaveState);
-    REGISTERFUNCTIONCALL1 ( 3,	Pkg, ClearSelection);
-    REGISTERFUNCTIONCALL1 ( 4,	Pkg, CreateBackups);
-    REGISTERFUNCTIONCALL1 ( 5,	Pkg, DoProvide);
-    REGISTERFUNCTIONCALL1 ( 6,	Pkg, DoRemove);
-    REGISTERFUNCTIONCALL4 ( 7,	Pkg, FilterPackages);
-    REGISTERFUNCTIONCALL  ( 8,	Pkg, GetAdditionalLocales);
-    REGISTERFUNCTIONCALL  ( 9,	Pkg, GetBackupPath);
-    REGISTERFUNCTIONCALL  ( 10, Pkg, GetLocale);
-    REGISTERFUNCTIONCALL2 ( 11,	Pkg, GetPackages);
-    REGISTERFUNCTIONCALL2 ( 12,	Pkg, GetSelections);
-    REGISTERFUNCTIONCALL  ( 13,	Pkg, InstSysMode);
-    REGISTERFUNCTIONCALL1 ( 14,	Pkg, IsAvailable);
-    REGISTERFUNCTIONCALL  ( 15,	Pkg, IsManualSelection);
-    REGISTERFUNCTIONCALL1 ( 16,	Pkg, IsProvided);
-    REGISTERFUNCTIONCALL1 ( 17,	Pkg, IsSelected);
-    REGISTERFUNCTIONCALL  ( 18,	Pkg, PkgAnyToDelete);
-    REGISTERFUNCTIONCALL1 ( 19,	Pkg, PkgCommit);
-    REGISTERFUNCTIONCALL1 ( 20,	Pkg, PkgDelete);
-    REGISTERFUNCTIONCALL1 ( 21,	Pkg, PkgGroup);
-    REGISTERFUNCTIONCALL1 ( 22,	Pkg, PkgInstall);
-    REGISTERFUNCTIONCALL  ( 23,	Pkg, PkgMediaNames);
-    REGISTERFUNCTIONCALL  ( 24,	Pkg, PkgMediaSizes);
-    REGISTERFUNCTIONCALL1 ( 25,	Pkg, PkgNeutral);
-    REGISTERFUNCTIONCALL1 ( 26,	Pkg, PkgSize);
-    REGISTERFUNCTIONCALL1 ( 27,	Pkg, PkgSolve);
-    REGISTERFUNCTIONCALL  ( 28,	Pkg, PkgSolveErrors);
-    REGISTERFUNCTIONCALL1 ( 29,	Pkg, PkgSrcInstall);
-    REGISTERFUNCTIONCALL1 ( 30,	Pkg, PkgSummary);
-    REGISTERFUNCTIONCALL1 ( 31,	Pkg, PkgVersion);
-    REGISTERFUNCTIONCALL  ( 32,	Pkg, PkgReset);
-    REGISTERFUNCTIONCALL1 ( 33,	Pkg, RestoreState);
-    REGISTERFUNCTIONCALL  ( 34,	Pkg, SaveState);
-    REGISTERFUNCTIONCALL3 ( 35,	Pkg, SelectionContent);
-    REGISTERFUNCTIONCALL1 ( 36,	Pkg, SelectionData);
-    REGISTERFUNCTIONCALL1 ( 37,	Pkg, SetAdditionalLocales);
-    REGISTERFUNCTIONCALL1 ( 38,	Pkg, SetBackupPath);
-    REGISTERFUNCTIONCALL1 ( 39,	Pkg, SetLocale);
-    REGISTERFUNCTIONCALL1 ( 40,	Pkg, SetSelection);
-    REGISTERFUNCTIONCALL1 ( 41,	Pkg, SourceCacheCopyTo);
-    REGISTERFUNCTIONCALL2 ( 42,	Pkg, SourceChangeUrl);
-    REGISTERFUNCTIONCALL2 ( 43,	Pkg, SourceCreate);
-    REGISTERFUNCTIONCALL1 ( 44,	Pkg, SourceDelete);
-    REGISTERFUNCTIONCALL1 ( 45,	Pkg, SourceFinish);
-    REGISTERFUNCTIONCALL  ( 46,	Pkg, SourceFinishAll);
-    REGISTERFUNCTIONCALL1 ( 47,	Pkg, SourceGeneralData);
-    REGISTERFUNCTIONCALL1 ( 48,	Pkg, SourceGetCurrent);
-    REGISTERFUNCTIONCALL1 ( 49,	Pkg, SourceInstallOrder);
-    REGISTERFUNCTIONCALL1 ( 50,	Pkg, SourceLowerPriority);
-    REGISTERFUNCTIONCALL1 ( 51,	Pkg, SourceMediaData);
-    REGISTERFUNCTIONCALL1 ( 52,	Pkg, SourceProduct);
-    REGISTERFUNCTIONCALL1 ( 53,	Pkg, SourceProductData);
-    REGISTERFUNCTIONCALL3 ( 54,	Pkg, SourceProvideDir);
-    REGISTERFUNCTIONCALL3 ( 55,	Pkg, SourceProvideFile);
-    REGISTERFUNCTIONCALL1 ( 56,	Pkg, SourceRaisePriority);
-    REGISTERFUNCTIONCALL  ( 57,	Pkg, SourceSaveRanks);
-    REGISTERFUNCTIONCALL2 ( 58,	Pkg, SourceSetEnabled);
-    REGISTERFUNCTIONCALL1 ( 59,	Pkg, SourceSetRamCache);
-    REGISTERFUNCTIONCALL1 ( 60,	Pkg, SourceStartCache);
-    REGISTERFUNCTIONCALL1 ( 61,	Pkg, SourceStartManager);
-    REGISTERFUNCTIONCALL1 ( 62,	Pkg, TargetInitDU);
-    REGISTERFUNCTIONCALL1 ( 63,	Pkg, TargetBlockSize);
-    REGISTERFUNCTIONCALL1 ( 64,	Pkg, TargetCapacity);
-    REGISTERFUNCTIONCALL1 ( 65,	Pkg, TargetFileHasOwner);
-    REGISTERFUNCTIONCALL  ( 66,	Pkg, TargetFinish);
-    REGISTERFUNCTIONCALL  ( 67,	Pkg, TargetGetDU);
-    REGISTERFUNCTIONCALL2 ( 68,	Pkg, TargetInit);
-    REGISTERFUNCTIONCALL1 ( 69,	Pkg, TargetInstall);
-    REGISTERFUNCTIONCALL1 ( 70,	Pkg, TargetLogfile);
-    REGISTERFUNCTIONCALL  ( 71,	Pkg, TargetProducts);
-    REGISTERFUNCTIONCALL  ( 72,	Pkg, TargetRebuildDB);
-    REGISTERFUNCTIONCALL1 ( 73,	Pkg, TargetRemove);
-    REGISTERFUNCTIONCALL1 ( 74,	Pkg, TargetUpdateInf);
-    REGISTERFUNCTIONCALL1 ( 75,	Pkg, TargetUsed);
-    REGISTERFUNCTIONCALL  ( 81,	Pkg, YouGetDirectory);
-    REGISTERFUNCTIONCALL  ( 82,	Pkg, YouProcessPatches);
-    REGISTERFUNCTIONCALL2 ( 83,	Pkg, YouRetrievePatchInfo);
-    REGISTERFUNCTIONCALL  ( 87,	Pkg, YouRemovePackages);
-    REGISTERFUNCTIONCALL  ( 88,	Pkg, YouSelectPatches);
-    REGISTERFUNCTIONCALL  ( 89,	Pkg, YouStatus);
-    REGISTERFUNCTIONCALL1 ( 90,	Pkg, PkgUpdateAll);
-    REGISTERFUNCTIONCALL  ( 91,	Pkg, LastError);
-    REGISTERFUNCTIONCALL  ( 92,	Pkg, LastErrorId);
-    REGISTERFUNCTIONCALL  ( 93,	Pkg, LastErrorDetails);
-
-    // callback registration routines
-    REGISTERFUNCTIONCALL1 ( 94,		Pkg, CallbackMediaChange);
-    REGISTERFUNCTIONCALL1 ( 95,		Pkg, CallbackSourceChange);
-    REGISTERFUNCTIONCALL1 ( 96,		Pkg, CallbackStartProvide);
-    REGISTERFUNCTIONCALL1 ( 97,		Pkg, CallbackProgressProvide);
-    REGISTERFUNCTIONCALL1 ( 98,		Pkg, CallbackDoneProvide);
-    REGISTERFUNCTIONCALL1 ( 99,		Pkg, CallbackStartPackage);
-    REGISTERFUNCTIONCALL1 ( 100,	Pkg, CallbackProgressPackage);
-    REGISTERFUNCTIONCALL1 ( 101,	Pkg, CallbackDonePackage);
-    REGISTERFUNCTIONCALL1 ( 102,	Pkg, CallbackYouProgress);
-    REGISTERFUNCTIONCALL1 ( 103,	Pkg, CallbackYouPatchProgress);
-    REGISTERFUNCTIONCALL1 ( 104,	Pkg, CallbackYouExecuteYcpScript);
-    REGISTERFUNCTIONCALL1 ( 105,	Pkg, CallbackYouScriptProgress);
-    REGISTERFUNCTIONCALL1 ( 106,	Pkg, CallbackStartRebuildDb);
-    REGISTERFUNCTIONCALL1 ( 107,	Pkg, CallbackProgressRebuildDb);
-    REGISTERFUNCTIONCALL1 ( 108,	Pkg, CallbackNotifyRebuildDb);
-    REGISTERFUNCTIONCALL1 ( 109,	Pkg, CallbackStopRebuildDb);
-    REGISTERFUNCTIONCALL1 ( 110,	Pkg, CallbackStartConvertDb);
-    REGISTERFUNCTIONCALL1 ( 111,	Pkg, CallbackProgressConvertDb);
-    REGISTERFUNCTIONCALL1 ( 112,	Pkg, CallbackNotifyConvertDb);
-    REGISTERFUNCTIONCALL1 ( 113,	Pkg, CallbackStopConvertDb);
-
-    REGISTERFUNCTIONCALL1 ( 114,	Pkg, PkgLocation);
-    REGISTERFUNCTIONCALL1 ( 115,	Pkg, YouSetServer);
-    REGISTERFUNCTIONCALL  ( 116,	Pkg, YouGetUserPassword);
-    REGISTERFUNCTIONCALL3 ( 117,	Pkg, YouSetUserPassword);
-    REGISTERFUNCTIONCALL1 ( 118,	Pkg, PkgProperties);
-    REGISTERFUNCTIONCALL1 ( 119,	Pkg, YouGetServers);
-    REGISTERFUNCTIONCALL  ( 120,        Pkg, SourceEditGet );
-    REGISTERFUNCTIONCALL1 ( 121,        Pkg, SourceEditSet );
-    REGISTERFUNCTIONCALL2 ( 122,        Pkg, SourceScan );
-
-    REGISTERFUNCTIONCALL1 ( 123,	Pkg, CallbackYouError);
-    REGISTERFUNCTIONCALL1 ( 124,	Pkg, CallbackYouLog);
-    REGISTERFUNCTIONCALL1 ( 125,	Pkg, CallbackYouMessage);
-
-    REGISTERFUNCTIONCALL1 ( 126,	Pkg, PkgGetLicenseToConfirm);
-    REGISTERFUNCTIONCALL1 ( 127,	Pkg, PkgGetLicensesToConfirm);
-    REGISTERFUNCTIONCALL  ( 128,	Pkg, PkgSolveCheckTargetOnly);
-    REGISTERFUNCTIONCALL2 ( 129,	Pkg, PkgGetFilelist);
-    REGISTERFUNCTIONCALL1 ( 130,	Pkg, CallbackStartDownload);
-    REGISTERFUNCTIONCALL1 ( 131,	Pkg, CallbackProgressDownload);
-    REGISTERFUNCTIONCALL1 ( 132,	Pkg, CallbackDoneDownload);
+#include "PkgBuiltinTable.h"
 }
 
 ///////////////////////////////////////////////////////////////////

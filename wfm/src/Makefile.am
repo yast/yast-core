@@ -32,6 +32,7 @@ liby2wfm_la_SOURCES =				\
 	PkgModuleCallbacks.YCP.h		\
 	PkgModuleCallbacks.cc
 
+
 liby2wfm_la_LDFLAGS = -version-info 2:0
 liby2wfm_la_LIBADD = \
 	../../scr/src/libpy2scr.la		\
@@ -83,6 +84,16 @@ install-pkgincludeHEADERS: $(pkginclude_HEADERS)
 			$(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincludedir)/$$p;		\
 	  	fi									\
 	done
+
+BUILT_SOURCES = PkgBuiltinTable.h PkgBuiltinCalls.h
+
+PkgBuiltinTable.h : PkgModuleFunctions.h
+	$(top_srcdir)/base/tools/devtools/generateYCPWrappers PkgModuleFunctions.h PkgBuiltinCalls.h PkgBuiltinTable.h
+
+PkgBuiltinCalls.h : PkgModuleFunctions.h
+	$(top_srcdir)/base/tools/devtools/generateYCPWrappers PkgModuleFunctions.h PkgBuiltinCalls.h PkgBuiltinTable.h
+
+CLEANFILES = $(BUILT_SOURCES)
 
 #</INSTALL-HEADER-TARGET>
 

@@ -314,7 +314,7 @@ Y2Namespace::initialize ()
 	t->disableUsage ();
 	if (t->find (name ().c_str ()))
 	{
-	    Y2Function* c = createFunctionCall (name ());
+	    Y2Function* c = createFunctionCall (name (), 0);
 	    if (c)
 	    {
 		c->evaluateCall ();

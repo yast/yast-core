@@ -7,3 +7,5 @@ wfm
 .deps
 .libs
 *.kdoc
+PkgBuiltinCalls.h
+PkgBuiltinTable.h

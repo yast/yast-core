@@ -123,6 +123,8 @@ private:
      * List of all included files so far.
      */
     std::list<std::string> m_includes;
+    
+    constTypePtr m_type;
 
 public:
     //---------------------------------------------------------------
@@ -138,7 +140,11 @@ public:
     //---------------------------------------------------------------
     // YCode
 
-    constTypePtr type () const { return Type::Any; }
+    // warning: it is return type in fact!
+    constTypePtr type () const { return m_type; }
+    
+    // set the return type of this block
+    void setType (constTypePtr type);
 
     // the whole block is parsed, do final changes
     void finishBlock ();
@@ -163,7 +169,7 @@ public:
     //   non-const return since we must be able to find() which tracks references
     virtual SymbolTable *table () const;
 
-    virtual Y2Function* createFunctionCall (const string name);
+    virtual Y2Function* createFunctionCall (const string name, constFunctionTypePtr type);
 
     // returns the current parse file as Point
     const Point *point () const;

@@ -26,6 +26,7 @@ using std::string;
 
 #include "ycp/YCPValue.h"
 #include "ycp/SymbolEntryPtr.h"
+#include "ycp/Type.h"
 
 class SymbolTable;
 class Point;
@@ -115,9 +116,10 @@ public:
      * instance, the caller can (and should) delete it.
      *
      * @param name	name of the required function
+     * @param type	the type of the function (needed for overloading)
      * @return 		an object, that can be used to call the function, or NULL on error
      */
-    virtual Y2Function* createFunctionCall (const string name) = 0;
+    virtual Y2Function* createFunctionCall (const string name, constFunctionTypePtr type) = 0;
 
     // push all local variables to stack, uses SymbolEntry::push()
     void pushToStack ();
