@@ -26,12 +26,12 @@ runag_system_LDADD =                            \
 	../../libycp/src/libycp.la              \
 	../../libscr/src/libscr.la
 
-runag_system_LDFLAGS = 					\
-	-L$(srcdir)/../../libycp/src			\
-	-L$(srcdir)/../../liby2/src			\
-	-L$(srcdir)/../../libscr/src			\
- 	-L$(libdir)					\
-	-Xlinker --whole-archive			\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../src/libpy2ag_system.la		\
+runag_system_LDFLAGS = 				\
+	-L../../libycp/src			\
+	-L../../liby2/src			\
+	-L../../libscr/src			\
+	-L$(libdir)				\
+	-Xlinker --whole-archive		\
+	../../liby2/src/libpy2stdio.la		\
+	../src/libpy2ag_system.la		\
 	-Xlinker --no-whole-archive

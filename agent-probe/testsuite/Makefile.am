@@ -23,12 +23,12 @@ runag_hwprobe_LDADD = 				\
 	../../liby2/src/liby2.la		\
 	../../libycp/src/libycp.la		\
 	../../libscr/src/libscr.la
-runag_hwprobe_LDFLAGS = 				\
-	-L$(srcdir)/../../libycp/src			\
-	-L$(srcdir)/../../liby2/src			\
-	-L$(srcdir)/../../libscr/src			\
-	-L$(libdir)					\
-	-Xlinker --whole-archive			\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../src/libpy2ag_hwprobe.la		\
+runag_hwprobe_LDFLAGS = 			\
+	-L../../libycp/src			\
+	-L../../liby2/src			\
+	-L../../libscr/src			\
+	-L$(libdir)				\
+	-Xlinker --whole-archive		\
+	../../liby2/src/libpy2stdio.la		\
+	../src/libpy2ag_hwprobe.la		\
 	-Xlinker --no-whole-archive

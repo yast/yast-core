@@ -24,14 +24,14 @@ runmodules_LDADD = -ly2util			\
 	../../libycp/src/libycp.la		\
 	../../libscr/src/libscr.la
 
-runmodules_LDFLAGS = 					\
-	-L$(srcdir)/../../libycp/src			\
-	-L$(srcdir)/../../liby2/src			\
-	-L$(srcdir)/../../libscr/src			\
-	-L$(libdir)					\
-	-Xlinker --whole-archive			\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../src/libpy2ag_modules.la		\
+runmodules_LDFLAGS = 				\
+	-L../../libycp/src			\
+	-L../../liby2/src			\
+	-L../../libscr/src			\
+	-L$(libdir)				\
+	-Xlinker --whole-archive		\
+	../../liby2/src/libpy2stdio.la		\
+	../src/libpy2ag_modules.la		\
 	-Xlinker --no-whole-archive
 
 clean-local:
