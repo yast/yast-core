@@ -273,7 +273,7 @@ YETerm::toString () const
     ycodelist_t *parm = m_parameters;
     while (parm)
     {
-	if (parm->code == 0) 
+	if (parm->code == 0)
 	{
 	    y2error( "parameter without code");
 	    parm = parm->next;
@@ -293,11 +293,11 @@ YCPValue
 YETerm::evaluate (bool cse)
 {
     // FIXME: this is not optimal, sometimes it really is a constant
-    if (cse) 
+    if (cse)
     {
 	return YCPNull ();
     }
-    
+
     YCPTerm term (m_name);
 
     ycodelist_t *actualp = m_parameters;
@@ -316,7 +316,7 @@ YETerm::evaluate (bool cse)
 	term->add (value);
 	actualp = actualp->next;
     }
-    
+
     return term;
 }
 
@@ -399,7 +399,7 @@ y2debug ("YECompare::evaluate (%s, '%d', %s)", vl.isNull() ? "NULL" : vl->toStri
 	ycp2error ("Nil can be compared only for equality and non-equality");
 	return YCPNull ();
     }
-    
+
     // left value is nil
     if (vl.isNull() || vl->isVoid ())
     {
@@ -937,9 +937,9 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 	constTypePtr elem = ((constListTypePtr)to_type)->type ();
 	if (elem->isAny ()) return true;
 	if (elem->isUnspec ()) return true;
-	
+
 	YCPList v = value->asList ();
-	
+
 	for (int i=0; i < v->size (); i++ )
 	{
 	    y2debug ("testing %s", v->value (i)->toString ().c_str ());
@@ -948,20 +948,20 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 	}
 	return true;
     }
-    
+
     if (to_type->isMap () && value->isMap ())
     {
 	// check types of all elements
 	constTypePtr key = ((constMapTypePtr)to_type)->keytype ();
 	constTypePtr elem = ((constMapTypePtr)to_type)->valuetype ();
-	
+
 	if (elem->isAny () && key->isAny ()) return true;
 
 	// not typed maps
 	if (elem->isUnspec () && key->isUnspec ()) return true;
-	
+
 	YCPMap map = value->asMap ();
-	
+
 	for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
 	{
 	    if (! canPropagate (pos.key (), key) )
@@ -971,7 +971,7 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 	}
 	return true;
     }
-    
+
     if (to_type->isFunction () && value->isCode ())
     {
 	YCode* c = value->asCode ()->code ();
@@ -979,7 +979,7 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 #warning Function type cannot be checked at runtime, because of the return type
 	return c->kind () == ycFunction;
     }
-    
+
     return false;
 }
 
@@ -1159,7 +1159,7 @@ YEBinary::evaluate (bool cse)
     if (cse) return YCPNull();
 
     y2debug ("YEBinary::evaluate(%s)\n", toString().c_str());
-    
+
     if ( (m_decl->flags & DECL_NOEVAL) == DECL_NOEVAL)
     {
 	return (*(v2vv)m_decl->ptr) (YCPCode(m_arg1), YCPCode (m_arg2));
@@ -1245,13 +1245,13 @@ YETriple::evaluate (bool cse)
     }
 
     YCPValue expr = m_expr->evaluate ();
-    
+
     if (expr.isNull ())
     {
 	ycp2error ("Condition expression evaluates to nil in ?: expression");
 	return YCPNull ();
     }
-    
+
     if (expr->isBoolean())
     {
 	if (expr->asBoolean()->value() == true)
@@ -1431,7 +1431,7 @@ YEBracket::evaluate (bool cse)
 {
     YCPValue var_value = m_var->evaluate (cse);
     YCPValue def_value = m_def->evaluate (cse);
-    
+
     // parse time?
     if (cse && (var_value.isNull () || def_value.isNull ()) )
 	return YCPNull ();
@@ -1440,7 +1440,7 @@ YEBracket::evaluate (bool cse)
 	return def_value;
 
     YCPValue arg_value = m_arg->evaluate (cse);
-    
+
     // parse time?
     if (cse && arg_value.isNull () )
 	return YCPNull ();
@@ -1872,7 +1872,7 @@ YEBuiltin::evaluate (bool cse)
 	{
 	    args[i] = actualp->code->evaluate ();
 	}
-	
+
 	if ((args[i].isNull() || args[i]->isVoid())
 	    && ((m_decl->flags & DECL_NIL) == 0))
 	{
@@ -1931,32 +1931,54 @@ YEBuiltin::evaluate (bool cse)
     {
 	return ret;
     }
-    switch (type->parameterCount ())
+
+    if (m_decl->name_space && ( m_decl->name_space->flags & DECL_CALL_HANDLER ) )
     {
-	case 0:
-	    ret = (*(v2)m_decl->ptr) ();
-	break;
-	case 1:
-	    ret = (*(v2v)m_decl->ptr) (args[0]);
-	break;
-	case 2:
-	    ret = (*(v2vv)m_decl->ptr) (args[0], args[1]);
-	break;
-	case 3:
-	    ret = (*(v2vvv)m_decl->ptr) (args[0], args[1], args[2]);
-	break;
-	case 4:
-	    ret = (*(v2vvvv)m_decl->ptr) (args[0], args[1], args[2], args[3]);
-	break;
-	case 5:
-	    ret = (*(v2vvvvv)m_decl->ptr) (args[0], args[1], args[2], args[3], args[4]);
-	break;
-	default:
+	// The bultin belongs to a name space with a special call handler -
+	// don't simply call the builtin function via m_decl->ptr(),
+	// call the call handler and pass the builtin function pointer and
+	// arguments to the call handler
+	call_handler_t call_handler = (call_handler_t) m_decl->name_space->ptr;
+	if (call_handler)
 	{
-	    ycp2error ("Bad builtin: Arg count %d", i);
-	    ret = YCPNull ();
+	    return call_handler (m_decl->ptr, type->parameterCount (), args);
 	}
-	break;
+	else
+	{
+	    y2error("YEBuiltin::evaluate [%s (%d args)]: Call handler declared, but not present",
+		    StaticDeclaration::Decl2String (m_decl, false).c_str(), i);
+	    return YCPNull();
+	}
+    }
+    else
+    {
+	switch (type->parameterCount ())
+	{
+	    case 0:
+		ret = (*(v2)m_decl->ptr) ();
+	    break;
+	    case 1:
+		ret = (*(v2v)m_decl->ptr) (args[0]);
+	    break;
+	    case 2:
+		ret = (*(v2vv)m_decl->ptr) (args[0], args[1]);
+	    break;
+	    case 3:
+		ret = (*(v2vvv)m_decl->ptr) (args[0], args[1], args[2]);
+	    break;
+	    case 4:
+		ret = (*(v2vvvv)m_decl->ptr) (args[0], args[1], args[2], args[3]);
+	    break;
+	    case 5:
+		ret = (*(v2vvvvv)m_decl->ptr) (args[0], args[1], args[2], args[3], args[4]);
+	    break;
+	    default:
+	    {
+		ycp2error ("Bad builtin: Arg count %d", i);
+		ret = YCPNull ();
+	    }
+	    break;
+	}
     }
 
 #ifdef BUILTIN_STATISTICS
@@ -2301,7 +2323,7 @@ YEFunction::toStream (std::ostream & str) const
 
 constTypePtr
 YEFunction::type () const
-{	
+{
     return m_entry->type ();
 }
 
