@@ -213,6 +213,16 @@ y2milestone ("formatEvent(%1)", event);
     {
 	event = UI::WaitForEvent( timeout * 1000 );
 
+	any widget = event["ID"]:nil;
+	
+	if ( widget != nil && UI::WidgetExists(`id( widget ) ) )
+	{
+	    
+	    y2debug( "Event from %1 \"%2\"",
+		     UI::QueryWidget(`id( widget ), `WidgetClass ),
+		     UI::QueryWidget(`id( widget ), `DebugLabel  ) );
+	}
+
 	if ( event != nil )
 	{
 	    UI::ChangeWidget(`event_display, `Value, formatEvent( event ) );

@@ -30,6 +30,9 @@
 #include "YUISymbols.h"
 #include "YShortcut.h"
 #include "YWidget.h"
+#include "YUIComponent.h"
+#include "YUI.h"
+#include "YDialog.h"
 
 using std::string;
 
@@ -177,7 +180,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
     }
 
     /*
-     * @property boolean Notify the current notify state ( see also `opt( `notify ) )
+     * @property boolean Notify the current notify state (see also `opt( `notify ))
      */
     if ( symbol == YUIProperty_Notify )
     {
@@ -205,9 +208,28 @@ YCPValue YWidget::changeWidgetTerm( const YCPTerm & property, const YCPValue & n
 YCPValue YWidget::queryWidget( const YCPSymbol & property )
 {
     string symbol = property->symbol();
-    if ( symbol == YUIProperty_Enabled 	) 	return YCPBoolean( getEnabling() );
-    if ( symbol == YUIProperty_Notify 	)	return YCPBoolean( getNotify()   );
-    if ( symbol == YUIProperty_WindowID	) 	return YCPInteger( windowID      );
+    if ( symbol == YUIProperty_Enabled 		) 	return YCPBoolean( getEnabling() );
+    if ( symbol == YUIProperty_Notify 		)	return YCPBoolean( getNotify()   );
+    if ( symbol == YUIProperty_WindowID		) 	return YCPInteger( windowID      );
+    /*
+     * @property string WidgetClass the widget class of this widget (YLabel, YPushButton, ...)
+     */ 
+    if ( symbol == YUIProperty_WidgetClass 	) 	return YCPString( widgetClass() );
+    /*
+     * @property string DebugLabel a (possibly translated) text describing this widget for debugging
+     */ 
+    if ( symbol == YUIProperty_DebugLabel	) 	return YCPString( debugLabel() );
+    /*
+     * @property string DialogDebugLabel 	a (possibly translated) text describing this dialog for debugging
+     * @property string DialogDebugLabel1	alias for DialogDebugLabel
+     * @property string DialogDebugLabel2 	another (possibly translated) text describing this dialog for debugging
+     */ 
+    if ( symbol == YUIProperty_DialogDebugLabel ||
+	 symbol == YUIProperty_DialogDebugLabel1 ||
+	 symbol == YUIProperty_DialogDebugLabel2 )
+    {
+	return YUIComponent::ui()->currentDialog()->queryWidget( property );
+    }
     else
     {
 	y2error( "Widget %s: Couldn't query unkown widget property %s",

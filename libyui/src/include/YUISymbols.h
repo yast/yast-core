@@ -140,6 +140,10 @@
 
 #define YUIProperty_CurrentButton		"CurrentButton"
 #define YUIProperty_CurrentItem			"CurrentItem"
+#define YUIProperty_DebugLabel			"DebugLabel"
+#define YUIProperty_DialogDebugLabel		"DialogDebugLabel"
+#define YUIProperty_DialogDebugLabel1		"DialogDebugLabel1"
+#define YUIProperty_DialogDebugLabel2		"DialogDebugLabel2"
 #define YUIProperty_EasterEgg			"EasterEgg"
 #define YUIProperty_Enabled			"Enabled"
 #define YUIProperty_ExpectedSize		"ExpectedSize"
@@ -148,13 +152,14 @@
 #define YUIProperty_Items			"Items"
 #define YUIProperty_Label			"Label"
 #define YUIProperty_Labels			"Labels"
-#define YUIProperty_OpenItems			"OpenItems"
 #define YUIProperty_LastLine			"LastLine"
 #define YUIProperty_Notify			"Notify"
+#define YUIProperty_OpenItems			"OpenItems"
 #define YUIProperty_SelectedItems		"SelectedItems"
 #define YUIProperty_ValidChars			"ValidChars"
 #define YUIProperty_Value			"Value"
 #define YUIProperty_Values			"Values"
+#define YUIProperty_WidgetClass			"WidgetClass"
 #define YUIProperty_WindowID			"WindowID"
 
 

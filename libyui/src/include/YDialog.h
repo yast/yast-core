@@ -93,7 +93,7 @@ public:
 
     /**
      * Checks the keyboard shortcuts of all children of this dialog
-     * ( not for sub-dialogs! ) unless shortcut checks are postponed or 'force'
+     * (not for sub-dialogs!) unless shortcut checks are postponed or 'force'
      * is 'true'.
      *
      * A forced shortcut check resets postponed checking.
@@ -114,9 +114,19 @@ public:
     bool shortcutCheckPostponed() const { return _shortcutCheckPostponed; }
 
     /**
+     * Implements the ui command queryWidget
+     */
+    YCPValue queryWidget( const YCPSymbol & property );
+
+    /**
      * Return a list of all widgets that belong to this dialog.
      **/
     YWidgetList widgets() const;
+    
+    virtual std::string dialogDebugLabel();
+    virtual std::string dialogDebugLabel1()	{ return dialogDebugLabel(); }
+    virtual std::string debugLabel()		{ return dialogDebugLabel(); }
+    virtual std::string dialogDebugLabel2();
     
     
 protected:

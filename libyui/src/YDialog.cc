@@ -20,6 +20,7 @@
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
+#include <ycp/YCPSymbol.h>
 #include "YDialog.h"
 #include "YShortcutManager.h"
 
@@ -69,6 +70,21 @@ void YDialog::checkShortcuts( bool force )
 }
 
 
+YCPValue YDialog::queryWidget( const YCPSymbol & property )
+{
+    string symbol = property->symbol();
+    
+    if ( symbol == YUIProperty_DebugLabel ||
+	 symbol == YUIProperty_DialogDebugLabel ||
+	 symbol == YUIProperty_DialogDebugLabel1 )	return YCPString( dialogDebugLabel() );
+    if ( symbol == YUIProperty_DialogDebugLabel2 )	return YCPString( dialogDebugLabel2() );
+    else
+    {
+	return YWidget::queryWidget( property );
+    }
+}
+
+
 YWidgetList YDialog::widgets() const
 {
     YWidgetList widgetList;
@@ -103,3 +119,14 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
     }
 }
 
+
+std::string YDialog::dialogDebugLabel()
+{
+    return string( "<TO DO>" );
+}
+
+
+std::string YDialog::dialogDebugLabel2()
+{
+    return string( "<TO DO>" );
+}
