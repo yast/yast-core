@@ -3,4 +3,4 @@
 #
 
 EXTRA_DIST = *.ycp *.in *.out *.err runtest.sh
-CLEANFILES = *.test *.scr *.-
+
