@@ -1,3 +1,4 @@
 Makefile
 Makefile.in
 ycp-pm-pod.html
+pod*.tmp
