@@ -156,7 +156,7 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property )
 	    
 	    YCPValue id = item_ids->value( current );
 	    
-	    if ( ! id->isVoid() )
+	    if ( ! id.isNull() && ! id->isVoid() )
 		return id;
 	}
 
