@@ -33,279 +33,279 @@
 int YWidget::next_internal_widget_id = 0;
 
 
-YWidget::YWidget( YWidgetOpt & opt)
-    : magic( YWIDGET_MAGIC)
-    , user_widget_id( YCPNull())
-    , yparent( 0)
-    , rep( 0)
-    , windowID( -1)
+YWidget::YWidget( YWidgetOpt & opt )
+    : magic( YWIDGET_MAGIC )
+    , user_widget_id( YCPNull() )
+    , yparent( 0 )
+    , rep( 0 )
+    , windowID( -1 )
 {
     internal_widget_id = next_internal_widget_id++;
 
-    enabled		= ! opt.isDisabled.value( );
-    notify		= opt.notifyMode.value( );
-    _autoShortcut	= opt.autoShortcut.value( );
-    _stretch[YD_HORIZ]	= opt.isHStretchable.value( );
-    _stretch[YD_VERT]	= opt.isVStretchable.value( );
-    _weight[YD_HORIZ]	= opt.hWeight.value( );
-    _weight[YD_VERT]	= opt.vWeight.value( );
+    enabled		= ! opt.isDisabled.value();
+    notify		= opt.notifyMode.value();
+    _autoShortcut	= opt.autoShortcut.value();
+    _stretch[YD_HORIZ]	= opt.isHStretchable.value();
+    _stretch[YD_VERT]	= opt.isVStretchable.value();
+    _weight[YD_HORIZ]	= opt.hWeight.value();
+    _weight[YD_VERT]	= opt.vWeight.value();
 
-    if ( ! enabled )	setEnabling( false);
-    if ( notify )	setNotify( notify);
+    if ( ! enabled )	setEnabling( false );
+    if ( notify )	setNotify( notify );
 }
 
 
-YWidget::~YWidget( )
+YWidget::~YWidget()
 {
-    if ( ! isValid( ) )
+    if ( ! isValid() )
     {
-	y2error( "ERROR: Trying to destroy invalid widget");
+	y2error( "ERROR: Trying to destroy invalid widget" );
 	return;
     }
 
-    if ( yparent && yparent->isValid( ) )
+    if ( yparent && yparent->isValid() )
     {
 	yparent->childDeleted( this );
     }
 
-    invalidate( );
+    invalidate();
 }
 
 
-void YWidget::setId( const YCPValue & id)
+void YWidget::setId( const YCPValue & id )
 {
     user_widget_id = id;
 }
 
 
-bool YWidget::hasId( ) const
+bool YWidget::hasId() const
 {
-    return ( ! user_widget_id.isNull( ) && ! user_widget_id->isVoid( ) );
+    return ( ! user_widget_id.isNull() && ! user_widget_id->isVoid() );
 }
 
 
-YCPValue YWidget::id( ) const
+YCPValue YWidget::id() const
 {
-    if ( ! isValid( ) )
+    if ( ! isValid() )
     {
 	y2error( "YWidget::id(): Invalid widget" );
-	return YCPString( "<invalid widget>");
+	return YCPString( "<invalid widget>" );
     }
 
-    if ( user_widget_id.isNull( ) )
-	return YCPVoid( );
+    if ( user_widget_id.isNull() )
+	return YCPVoid();
     else
 	return user_widget_id;
 }
 
 
-void YWidget::setParent( YWidget *parent)
+void YWidget::setParent( YWidget *parent )
 {
     yparent = parent;
 }
 
 
-YWidget * YWidget::yParent( ) const
+YWidget * YWidget::yParent() const
 {
     return yparent;
 }
 
 
-YWidget * YWidget::yDialog( )
+YWidget * YWidget::yDialog()
 {
     YWidget *parent = this;
 
-    while ( parent && ! parent->isDialog( ) )
+    while ( parent && ! parent->isDialog() )
     {
-	parent = parent->yParent( );
+	parent = parent->yParent();
     }
 
     if ( ! parent )
     {
-	y2warning( "Warning: No dialog parent for %s", widgetClass( ) );
+	y2warning( "Warning: No dialog parent for %s", widgetClass() );
     }
 
     return parent;
 }
 
 
-YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string symbol = property->symbol( );
+    string symbol = property->symbol();
 
-    if ( ! isValid( ) )
+    if ( ! isValid() )
     {
-	y2error( "YWidget::changeWidget(%s): ERROR: Invalid widget", symbol.c_str( ) );
+	y2error( "YWidget::changeWidget( %s ): ERROR: Invalid widget", symbol.c_str() );
 
-	return YCPBoolean( false);	// Error
+	return YCPBoolean( false );	// Error
     }
 
     /*
      * @property boolean Enabled the current enabled/disabled state
      */
-    if ( symbol == YUIProperty_Enabled)
+    if ( symbol == YUIProperty_Enabled )
     {
-	if ( newvalue->isBoolean())
+	if ( newvalue->isBoolean() )
 	{
-	    bool e = newvalue->asBoolean( )->value();
-	    setEnabling( e);
+	    bool e = newvalue->asBoolean()->value();
+	    setEnabling( e );
 	    enabled = e;
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else y2error( "Wrong argument %s for widget property `Enabled - boolean expected.",
-		     newvalue->toString( ).c_str());
+		     newvalue->toString().c_str() );
     }
 
     /*
-     * @property boolean Notify the current notify state ( see also `opt( `notify))
+     * @property boolean Notify the current notify state ( see also `opt( `notify ) )
      */
-    if ( symbol == YUIProperty_Notify)
+    if ( symbol == YUIProperty_Notify )
     {
-	if ( newvalue->isBoolean())
+	if ( newvalue->isBoolean() )
 	{
-	    setNotify( newvalue->asBoolean()->value());
-	    return YCPBoolean( true);
+	    setNotify( newvalue->asBoolean()->value() );
+	    return YCPBoolean( true );
 	}
 	else y2error( "Wrong argument %s for widget property `Notify - boolean expected.",
-		     newvalue->toString( ).c_str());
+		     newvalue->toString().c_str() );
     }
 
-    return YCPBoolean( false);
+    return YCPBoolean( false );
 }
 
 
-YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newvalue)
+YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newvalue )
 {
     y2warning( "Widget %s: Couldn't change unkown widget property %s to %s",
-	      id( )->toString().c_str(), property->toString( ).c_str(), newvalue->toString( ).c_str());
-    return YCPVoid( );
+	      id()->toString().c_str(), property->toString().c_str(), newvalue->toString().c_str() );
+    return YCPVoid();
 }
 
 
-YCPValue YWidget::queryWidget( const YCPSymbol & property)
+YCPValue YWidget::queryWidget( const YCPSymbol & property )
 {
-    string symbol = property->symbol( );
-    if ( symbol == YUIProperty_Enabled) return YCPBoolean( getEnabling( ) );
-    if ( symbol == YUIProperty_Notify ) return YCPBoolean( getNotify( )   );
+    string symbol = property->symbol();
+    if ( symbol == YUIProperty_Enabled ) return YCPBoolean( getEnabling() );
+    if ( symbol == YUIProperty_Notify ) return YCPBoolean( getNotify()   );
     if ( symbol == YUIProperty_WindowID ) return YCPInteger( windowID    );
     else
     {
 	y2error( "Widget %s: Couldn't query unkown widget property %s",
-		id( )->toString().c_str(), symbol.c_str( ));
-	return YCPVoid( );
+		id()->toString().c_str(), symbol.c_str() );
+	return YCPVoid();
     }
 }
 
 
-YCPValue YWidget::queryWidget( const YCPTerm & property)
+YCPValue YWidget::queryWidget( const YCPTerm & property )
 {
     y2warning( "Widget %s: Couldn't query unkown widget property %s",
-	      id( )->toString().c_str(), property->toString( ).c_str());
-    return YCPVoid( );
+	      id()->toString().c_str(), property->toString().c_str() );
+    return YCPVoid();
 }
 
 
 
-void YWidget::setNotify( bool notify)
+void YWidget::setNotify( bool notify )
 {
     this->notify = notify;
 }
 
 
-bool YWidget::getNotify( ) const
+bool YWidget::getNotify() const
 {
     return notify;
 }
 
 
-bool YWidget::getEnabling( ) const
+bool YWidget::getEnabling() const
 {
     return enabled;
 }
 
 
-long YWidget::nicesize( YUIDimension dim)
+long YWidget::nicesize( YUIDimension dim )
 {
-    y2error( "YWidget::nicesize(YUIDimension dim) called - "
-	    "this method should be overwritten in derived classes!");
+    y2error( "YWidget::nicesize( YUIDimension dim ) called - "
+	    "this method should be overwritten in derived classes!" );
     return 1;
 }
 
 
-void YWidget::setStretchable( YUIDimension dim, bool newStretch)
+void YWidget::setStretchable( YUIDimension dim, bool newStretch )
 {
     _stretch[dim] = newStretch;
 }
 
 
-void YWidget::setDefaultStretchable( YUIDimension dim, bool newStretch)
+void YWidget::setDefaultStretchable( YUIDimension dim, bool newStretch )
 {
     _stretch[dim] |= newStretch;
 }
 
 
-bool YWidget::stretchable( YUIDimension dim)
+bool YWidget::stretchable( YUIDimension dim )
 {
     return _stretch[dim];
 }
 
 
-long YWidget::weight( YUIDimension dim)
+long YWidget::weight( YUIDimension dim )
 {
     return _weight[dim];
 }
 
 
-bool YWidget::hasWeight( YUIDimension dim)
+bool YWidget::hasWeight( YUIDimension dim )
 {
     // DO NOT simply return _weight[dim] here
-    // since weight( ) might be overwritten in derived classes!
+    // since weight() might be overwritten in derived classes!
 
-    return weight( dim) > 0;
+    return weight( dim ) > 0;
 }
 
-void YWidget::setSize( long newwidth, long newheight)
+void YWidget::setSize( long newwidth, long newheight )
 {
 }
 
 
-void YWidget::setEnabling( bool)
+void YWidget::setEnabling( bool )
 {
     // Default implementation for widgets that can't be enabled
     // or disabled
 }
 
 
-void *YWidget::widgetRep( )
+void *YWidget::widgetRep()
 {
     return rep;
 }
 
 
-void YWidget::setWidgetRep( void *r)
+void YWidget::setWidgetRep( void *r )
 {
     rep = r;
 }
 
 
-bool YWidget::isDialog( ) const
+bool YWidget::isDialog() const
 {
     return false;
 }
 
 
-bool YWidget::isContainer( ) const
+bool YWidget::isContainer() const
 {
     return false;
 }
 
 
-bool YWidget::isRadioButtonGroup( ) const
+bool YWidget::isRadioButtonGroup() const
 {
     return false;
 }
 
-bool YWidget::isReplacePoint( ) const
+bool YWidget::isReplacePoint() const
 {
     return false;
 }
@@ -316,9 +316,9 @@ bool YWidget::isLayoutStretch( YUIDimension dim )
     return false;
 }
 
-bool YWidget::setKeyboardFocus( )
+bool YWidget::setKeyboardFocus()
 {
-    y2error( "Widget %s cannot accept the keyboard focus.", id( )->toString().c_str() );
+    y2error( "Widget %s cannot accept the keyboard focus.", id()->toString().c_str() );
     return false;
 }
 
@@ -328,6 +328,6 @@ void YWidget::saveUserInput( YMacroRecorder *macroRecorder )
     /*
      * This default implementation does nothing. Overwrite this method in any
      * derived class that has user input to save, e.g. TextEntry etc. and call
-     * YMacroRecorder::recordWidgetProperty( ) in the overwritten method.
+     * YMacroRecorder::recordWidgetProperty() in the overwritten method.
      */
 }

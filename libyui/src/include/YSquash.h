@@ -32,20 +32,20 @@ public:
     /**
      * Constructor
      */
-    YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash);
+    YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash );
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YSquash"; }
+    virtual char *widgetClass() { return "YSquash"; }
 
     /**
      * In a squashed dimension the widget NOT stretchable.
      * In an unsquashed dimension the widget is stretchable if the
      * child is stretchable.
      */
-    bool stretchable( YUIDimension dim);
+    bool stretchable( YUIDimension dim );
 
 
 protected:

@@ -31,92 +31,92 @@
 
 YRadioButton::YRadioButton( YWidgetOpt & opt,
 			   const YCPString & label,
-			   YRadioButtonGroup *radiobuttongroup)
-    : YWidget( opt)
-    , label( label)
-    , radiobuttongroup( radiobuttongroup)
+			   YRadioButtonGroup *radiobuttongroup )
+    : YWidget( opt )
+    , label( label )
+    , radiobuttongroup( radiobuttongroup )
 {
 }
 
 
-YRadioButton::~YRadioButton( )
+YRadioButton::~YRadioButton()
 {
-    if ( radiobuttongroup)
-	radiobuttongroup->removeRadioButton( this);
+    if ( radiobuttongroup )
+	radiobuttongroup->removeRadioButton( this );
 }
 
 
-void YRadioButton::setLabel( const YCPString & label)
+void YRadioButton::setLabel( const YCPString & label )
 {
     this->label = label;
 }
 
 
-YCPString YRadioButton::getLabel( )
+YCPString YRadioButton::getLabel()
 {
     return label;
 }
 
 
-YCPValue YRadioButton::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YRadioButton::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
     /*
-     * @property boolean Value the state of the RadioButton ( on or off)
+     * @property boolean Value the state of the RadioButton ( on or off )
      */
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if ( newvalue->isBoolean())
+	if ( newvalue->isBoolean() )
 	{
-	    setValue( newvalue->asBoolean());
-	    return YCPBoolean( true);
+	    setValue( newvalue->asBoolean() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "RadioButton: Invalid parameter %s for property `Value. Must be boolean",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
 
     /*
      * @property string Label the RadioButton's text
      */
-    else if ( s == YUIProperty_Label)
+    else if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setLabel( newvalue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "RadioButton: Invalid parameter %s for property `Label. Must be string",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newvalue);
+    else return YWidget::changeWidget( property, newvalue );
 }
 
 
 
-YCPValue YRadioButton::queryWidget( const YCPSymbol & property)
+YCPValue YRadioButton::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if	   ( s == YUIProperty_Value) return getValue( );
-    else if ( s == YUIProperty_Label) return getLabel( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if	   ( s == YUIProperty_Value ) return getValue();
+    else if ( s == YUIProperty_Label ) return getLabel();
+    else return YWidget::queryWidget( property );
 }
 
 
-void YRadioButton::buttonGroupIsDead( )
+void YRadioButton::buttonGroupIsDead()
 {
     radiobuttongroup = 0;
 }
 
 
-YRadioButtonGroup *YRadioButton::buttonGroup( )
+YRadioButtonGroup *YRadioButton::buttonGroup()
 {
     return radiobuttongroup;
 }
@@ -124,13 +124,13 @@ YRadioButtonGroup *YRadioButton::buttonGroup( )
 
 void YRadioButton::saveUserInput( YMacroRecorder *macroRecorder )
 {
-    YCPBoolean isChecked = getValue( );
+    YCPBoolean isChecked = getValue();
 
-    if ( isChecked->value( ) )
+    if ( isChecked->value() )
     {
 	// Only record if this radio button is on. By definition one radio
 	// button of the radio box _must_ be on if the user did anything, so we
-	// don't record a lot of redundant "ChangeWidget( ..., `Value, false)"
+	// don't record a lot of redundant "ChangeWidget( ..., `Value, false )"
 	// calls.
 
 	macroRecorder->recordWidgetProperty( this, YUIProperty_Value );

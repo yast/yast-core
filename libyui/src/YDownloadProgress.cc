@@ -31,13 +31,13 @@ YDownloadProgress::YDownloadProgress( YWidgetOpt &	opt,
 				      const YCPString &	label,
 				      const YCPString &	filename,
 				      int		expectedSize )
-    : YWidget( opt)
-    , _label( label)
-    , _filename( filename)
-    , _expectedSize( expectedSize)
+    : YWidget( opt )
+    , _label( label )
+    , _filename( filename )
+    , _expectedSize( expectedSize )
 {
-    setDefaultStretchable( YD_HORIZ, true);
-    setStretchable( YD_VERT, false);
+    setDefaultStretchable( YD_HORIZ, true );
+    setStretchable( YD_VERT, false );
 }
 
 
@@ -62,44 +62,44 @@ void YDownloadProgress::setExpectedSize( int newExpectedSize )
 YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 					  const YCPValue  & newValue )
 {
-    string sym = property->symbol( );
+    string sym = property->symbol();
 
     /**
      * @property string Label the label above the progress indicator
      */
-    if ( sym == YUIProperty_Label)
+    if ( sym == YUIProperty_Label )
     {
-	if ( newValue->isString())
+	if ( newValue->isString() )
 	{
-	    setLabel( newValue->asString( ) );
-	    return YCPBoolean( true);
+	    setLabel( newValue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YDownloadProgress::changeWidget(`Value): "
+	    y2error( "YDownloadProgress::changeWidget( `Value ): "
 		    "Error: Expecting string, not %s",
-		    newValue->toString( ).c_str() );
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
     /**
      * @property string Filename file name with full path of the file to poll
      */
-    else if ( sym == YUIProperty_Filename)
+    else if ( sym == YUIProperty_Filename )
     {
-	if ( newValue->isString())
+	if ( newValue->isString() )
 	{
-	    setFilename( newValue->asString( ) );
-	    return YCPBoolean( true);
+	    setFilename( newValue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YDownloadProgress::changeWidget(`Filename): "
+	    y2error( "YDownloadProgress::changeWidget( `Filename ): "
 		    "Error: Expecting string, not %s",
-		    newValue->toString( ).c_str() );
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
     /**
@@ -107,14 +107,14 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
      */
     else if ( sym == YUIProperty_ExpectedSize )
     {
-	if ( newValue->isInteger( ) )
+	if ( newValue->isInteger() )
 	{
-	    int val = newValue->asInteger( )->value();
+	    int val = newValue->asInteger()->value();
 
 	    if ( val < 1 )
 	    {
-		y2warning( "YDownloadProgress::changeWidget(`expectedSize): "
-			  "Warning: New value %d below minValue ( %d)",
+		y2warning( "YDownloadProgress::changeWidget( `expectedSize ): "
+			  "Warning: New value %d below minValue ( %d )",
 			  val, 0 );
 		setExpectedSize( 0 );
 	    }
@@ -123,38 +123,38 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 		setExpectedSize( val );
 	    }
 
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YDownloadProgress::changeWidget(`expectedSize): "
+	    y2error( "YDownloadProgress::changeWidget( `expectedSize ): "
 		    "Error: Expecting integer value, not %s",
-		    newValue->toString( ).c_str() );
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
 
-YCPValue YDownloadProgress::queryWidget( const YCPSymbol & property)
+YCPValue YDownloadProgress::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if 		( s == YUIProperty_ExpectedSize)	return YCPInteger( expectedSize( ) );
-    else if	( s == YUIProperty_Label) 	return label( );
-    else if	( s == YUIProperty_Filename) 	return filename( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if 		( s == YUIProperty_ExpectedSize )	return YCPInteger( expectedSize() );
+    else if	( s == YUIProperty_Label ) 	return label();
+    else if	( s == YUIProperty_Filename ) 	return filename();
+    else return YWidget::queryWidget( property );
 }
 
 
-long YDownloadProgress::currentFileSize( )
+long YDownloadProgress::currentFileSize()
 {
     struct stat stat_info;
 
-    if ( stat( filename( )->value().c_str(), & stat_info ) == 0 )
-	return ( long) stat_info.st_size;
+    if ( stat( filename()->value().c_str(), & stat_info ) == 0 )
+	return ( long ) stat_info.st_size;
     else
 	return 0L;
 }

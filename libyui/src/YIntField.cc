@@ -32,14 +32,14 @@ YIntField::YIntField( YWidgetOpt & opt,
 		      int minValue,
 		      int maxValue,
 		      int initialValue )
-    : YWidget( opt)
-    , _label( label)
-    , _minValue( minValue)
-    , _maxValue( maxValue)
-    , _value( initialValue)
+    : YWidget( opt )
+    , _label( label )
+    , _minValue( minValue )
+    , _maxValue( maxValue )
+    , _value( initialValue )
 {
-    setDefaultStretchable( YD_HORIZ, true);
-    setStretchable( YD_VERT, false);
+    setDefaultStretchable( YD_HORIZ, true );
+    setStretchable( YD_VERT, false );
 }
 
 
@@ -57,77 +57,77 @@ void YIntField::setValue( int newValue )
 YCPValue YIntField::changeWidget( const YCPSymbol & property,
 				  const YCPValue  & newValue )
 {
-    string sym = property->symbol( );
+    string sym = property->symbol();
 
     /**
      * @property integer Value the numerical value
      */
     if ( sym == YUIProperty_Value )
     {
-	if ( newValue->isInteger( ) )
+	if ( newValue->isInteger() )
 	{
-	    int val = newValue->asInteger( )->value();
+	    int val = newValue->asInteger()->value();
 
-	    if ( val < minValue( ) )
+	    if ( val < minValue() )
 	    {
-		y2warning( "YIntField::changeWidget(`Value): "
-			  "Warning: New value %d below minValue ( %d)",
-			  val, minValue( ) );
-		setValue( minValue( ) );
+		y2warning( "YIntField::changeWidget( `Value ): "
+			  "Warning: New value %d below minValue ( %d )",
+			  val, minValue() );
+		setValue( minValue() );
 	    }
-	    else if ( val > maxValue( ) )
+	    else if ( val > maxValue() )
 	    {
-		y2warning( "YIntField::changeWidget(`Value): "
-			  "Warning: New value %d above maxValue ( %d)",
-			  val, maxValue( ) );
-		setValue( maxValue( ) );
+		y2warning( "YIntField::changeWidget( `Value ): "
+			  "Warning: New value %d above maxValue ( %d )",
+			  val, maxValue() );
+		setValue( maxValue() );
 	    }
 	    else
 	    {
 		setValue( val );
 	    }
 
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YIntField::changeWidget(`Value): "
+	    y2error( "YIntField::changeWidget( `Value ): "
 		    "Error: Expecting integer value, not %s",
-		    newValue->toString( ).c_str() );
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
     /**
      * @property string Label the slider label
      */
-    else if ( sym == YUIProperty_Label)
+    else if ( sym == YUIProperty_Label )
     {
-	if ( newValue->isString())
+	if ( newValue->isString() )
 	{
-	    setLabel( newValue->asString( ) );
-	    return YCPBoolean( true);
+	    setLabel( newValue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YIntField::changeWidget(`Value): "
+	    y2error( "YIntField::changeWidget( `Value ): "
 		    "Error: Expecting string, not %s",
-		    newValue->toString( ).c_str() );
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
 
-YCPValue YIntField::queryWidget( const YCPSymbol & property)
+YCPValue YIntField::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if 		( s == YUIProperty_Value)	return YCPInteger( value( ) );
-    else if	( s == YUIProperty_Label) 	return label( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if 		( s == YUIProperty_Value )	return YCPInteger( value() );
+    else if	( s == YUIProperty_Label ) 	return label();
+    else return YWidget::queryWidget( property );
 }
 
 

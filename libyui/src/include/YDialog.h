@@ -37,53 +37,53 @@ public:
     /**
      * Constructor
      */
-    YDialog( YWidgetOpt & opt);
+    YDialog( YWidgetOpt & opt );
 
     /**
      * Cleanup
      */
-    virtual ~YDialog( );
+    virtual ~YDialog();
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YDialog"; }
+    virtual char *widgetClass() { return "YDialog"; }
 
     /**
      * Returns true, since this is a dialog widget.
      */
-    bool isDialog( ) const;
+    bool isDialog() const;
 
     /**
      * Sets the initial dialog size. Honors the `defaultsize option
      * and -geometry
      */
-    void setInitialSize( );
+    void setInitialSize();
 
     /**
      * Returns true if the dialog has the `defaultsize option set.
      */
-    bool hasDefaultSize( ) { return _hasDefaultSize.value( ); }
+    bool hasDefaultSize() { return _hasDefaultSize.value(); }
 
     /**
      * Returns true if the dialog has the `warncolor option set.
      */
-    bool hasWarnColor( ) { return _hasWarnColor.value( ); }
+    bool hasWarnColor() { return _hasWarnColor.value(); }
 
     /**
      * Returns true if the dialog has the `infocolor option set.
      */
-    bool hasInfoColor( ) { return _hasInfoColor.value( ); }
+    bool hasInfoColor() { return _hasInfoColor.value(); }
 
     /**
      * Returns true if the dialog has the `decorated option set.
      */
-    bool isDecorated( ) { return _isDecorated.value( ); }
+    bool isDecorated() { return _isDecorated.value(); }
 
     /**
      * Checks the keyboard shortcuts of all children of this dialog
-     * ( not for sub-dialogs!) unless shortcut checks are postponed or 'force'
+     * ( not for sub-dialogs! ) unless shortcut checks are postponed or 'force'
      * is 'true'.
      *
      * A forced shortcut check resets postponed checking.
@@ -92,21 +92,21 @@ public:
 
     /**
      * From now on, postpone keyboard shortcut checks -
-     * i.e. normal ( not forced) checkKeyboardShortcuts( ) will do nothing.
+     * i.e. normal ( not forced ) checkKeyboardShortcuts() will do nothing.
      * Reset this mode by forcing a shortcut check with 
      * checkKeyboardShortcuts( true ).
      **/
-    void postponeShortcutCheck( ) { _shortcutCheckPostponed = true; }
+    void postponeShortcutCheck() { _shortcutCheckPostponed = true; }
 
     /**
      * Return whether or not shortcut checking is currently postponed.
      **/
-    bool shortcutCheckPostponed( ) const { return _shortcutCheckPostponed; }
+    bool shortcutCheckPostponed() const { return _shortcutCheckPostponed; }
 
     /**
      * Return a list of all widgets that belong to this dialog.
      **/
-    YWidgetList widgets( ) const;
+    YWidgetList widgets() const;
     
     
 protected:

@@ -12,7 +12,7 @@
 
   File:		YUIInterpreter_widgets.cc
 
-		Standard ( mandatory) widgets
+		Standard ( mandatory ) widgets
 
 
   Authors:	Mathias Kettner <kettner@suse.de>
@@ -51,7 +51,7 @@ using std::string;
 
 /**
  * The true core of the UI interpreter: Recursively create a widget tree from
- * the contents of "term". Most create???( ) functions that create container
+ * the contents of "term". Most create???() functions that create container
  * widgets will recurse to this function.
  *
  * Note: There is also an overloaded version without YWidgetOpt - see below.
@@ -64,12 +64,12 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 {
     // Extract optional widget ID, if present
     int n;
-    YCPValue id = getWidgetId( term, & n);
+    YCPValue id = getWidgetId( term, & n );
 
 
-    // Extract optional widget options `opt( `xyz)
+    // Extract optional widget options `opt( `xyz )
 
-    YCPList rawopt = getWidgetOptions( term, & n);
+    YCPList rawopt = getWidgetOptions( term, & n );
 
     // Handle generic options
 
@@ -80,16 +80,16 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      * @short	Generic options for all widgets
      * @class	YWidget
      *
-     * @option	notify		Make UserInput( ) return on any action in this widget.
-     *				Normally UserInput( ) returns only when a button is clicked;
+     * @option	notify		Make UserInput() return on any action in this widget.
+     *				Normally UserInput() returns only when a button is clicked;
      *				with this option on you can make it return for other events, too,
      *				e.g. when the user selects an item in a SelectionBox
-     *				( if `opt( `notify) is set for that SelectionBox).
+     *				( if `opt( `notify ) is set for that SelectionBox ).
      *				Only widgets with this option set are affected.
      *
      * @option	disabled	Set this widget insensitive, i.e. disable any user interaction.
      *				The widget will show this state by being greyed out
-     *				( depending on the specific UI).
+     *				( depending on the specific UI ).
      *
      * @option	hstretch	Make this widget stretchable in the horizontal dimension.
      *				<br>See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
@@ -108,11 +108,11 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      *				<br>This option is intended used for automatically generated data, e.g., RadioButtons
      *				for software selections that come from file or from some other data base.
      *
-     * @option	key_F1  	( NCurses only) activate this widget with the F1 key
-     * @option	key_F2  	( NCurses only) activate this widget with the F2 key
-     * @option  key_Fxx 	( NCurses only) activate this widget with the Fxx key
-     * @option	key_F24 	( NCurses only) activate this widget with the F24 key
-     * @option	key_none	( NCurses only) no function key for this widget
+     * @option	key_F1  	( NCurses only ) activate this widget with the F1 key
+     * @option	key_F2  	( NCurses only ) activate this widget with the F2 key
+     * @option  key_Fxx 	( NCurses only ) activate this widget with the Fxx key
+     * @option	key_F24 	( NCurses only ) activate this widget with the F24 key
+     * @option	key_none	( NCurses only ) no function key for this widget
      *
      * @description
      *
@@ -126,19 +126,19 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 
     YCPList ol;
 
-    for ( int o=0; o<rawopt->size( ); o++)
+    for ( int o=0; o<rawopt->size(); o++ )
     {
-	if ( rawopt->value(o)->isSymbol())
+	if ( rawopt->value( o )->isSymbol() )
 	{
-	    string sym = rawopt->value( o)->asSymbol()->symbol();
-	    if	    ( sym == YUIOpt_notify	) opt.notifyMode.setValue( true);
-	    else if ( sym == YUIOpt_disabled	) opt.isDisabled.setValue( true);
-	    else if ( sym == YUIOpt_hstretch	) opt.isHStretchable.setValue( true);
-	    else if ( sym == YUIOpt_vstretch	) opt.isVStretchable.setValue( true);
-	    else if ( sym == YUIOpt_hvstretch	) { opt.isHStretchable.setValue( true); opt.isVStretchable.setValue( true); }
-	    else if ( sym == YUIOpt_autoShortcut) opt.autoShortcut.setValue( true);
-	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue( true);
-	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue( true);
+	    string sym = rawopt->value( o )->asSymbol()->symbol();
+	    if	    ( sym == YUIOpt_notify	) opt.notifyMode.setValue( true );
+	    else if ( sym == YUIOpt_disabled	) opt.isDisabled.setValue( true );
+	    else if ( sym == YUIOpt_hstretch	) opt.isHStretchable.setValue( true );
+	    else if ( sym == YUIOpt_vstretch	) opt.isVStretchable.setValue( true );
+	    else if ( sym == YUIOpt_hvstretch	) { opt.isHStretchable.setValue( true ); opt.isVStretchable.setValue( true ); }
+	    else if ( sym == YUIOpt_autoShortcut ) opt.autoShortcut.setValue( true );
+	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue( true );
+	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue( true );
 	    else if ( sym == YUIOpt_key_F1	) opt.key_Fxx.setValue( 1 );
 	    else if ( sym == YUIOpt_key_F2	) opt.key_Fxx.setValue( 2 );
 	    else if ( sym == YUIOpt_key_F3	) opt.key_Fxx.setValue( 3 );
@@ -164,14 +164,14 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_key_F23	) opt.key_Fxx.setValue( 23 );
 	    else if ( sym == YUIOpt_key_F24	) opt.key_Fxx.setValue( 24 );
 	    else if ( sym == YUIOpt_key_none	) opt.key_Fxx.setValue( -1 );
-	    else ol->add( rawopt->value(o));
+	    else ol->add( rawopt->value( o ) );
 	}
-	else if ( !rawopt->value(o)->isTerm())
+	else if ( !rawopt->value( o )->isTerm() )
 	{
 	    y2warning( "Invalid widget option %s. Options must be symbols or terms",
-		      rawopt->value( o)->toString().c_str());
+		      rawopt->value( o )->toString().c_str() );
 	}
-	else ol->add( rawopt->value(o));
+	else ol->add( rawopt->value( o ) );
     }
 
 
@@ -180,100 +180,100 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
     //
 
     YWidget *w	= 0;
-    string   s	= term->symbol( )->symbol();
+    string   s	= term->symbol()->symbol();
 
     // Container widgets
 
     if      ( s == YUIWidget_Bottom	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged, YAlignEnd	    );
-    else if ( s == YUIWidget_Frame	)	w = createFrame			( p, opt, term, ol, n, rbg);
-    else if ( s == YUIWidget_HBox	)	w = createLBox			( p, opt, term, ol, n, rbg, YD_HORIZ);
+    else if ( s == YUIWidget_Frame	)	w = createFrame			( p, opt, term, ol, n, rbg );
+    else if ( s == YUIWidget_HBox	)	w = createLBox			( p, opt, term, ol, n, rbg, YD_HORIZ );
     else if ( s == YUIWidget_HCenter	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignCenter,    YAlignUnchanged );
-    else if ( s == YUIWidget_HSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, true,  false);
+    else if ( s == YUIWidget_HSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, true,  false );
     else if ( s == YUIWidget_HVCenter	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignCenter,    YAlignCenter    );
-    else if ( s == YUIWidget_HVSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, true,  true);
-    else if ( s == YUIWidget_HWeight	)	w = createWeight		( p, opt, term, ol, n, rbg, YD_HORIZ);
+    else if ( s == YUIWidget_HVSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, true,  true );
+    else if ( s == YUIWidget_HWeight	)	w = createWeight		( p, opt, term, ol, n, rbg, YD_HORIZ );
     else if ( s == YUIWidget_Left	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignBegin,	    YAlignUnchanged );
-    else if ( s == YUIWidget_RadioButtonGroup)	w = createRadioButtonGroup	( p, opt, term, ol, n, rbg);
+    else if ( s == YUIWidget_RadioButtonGroup )	w = createRadioButtonGroup	( p, opt, term, ol, n, rbg );
     else if ( s == YUIWidget_Right	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignEnd,	    YAlignUnchanged );
     else if ( s == YUIWidget_Top		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged, YAlignBegin	    );
-    else if ( s == YUIWidget_VBox	)	w = createLBox			( p, opt, term, ol, n, rbg, YD_VERT);
+    else if ( s == YUIWidget_VBox	)	w = createLBox			( p, opt, term, ol, n, rbg, YD_VERT );
     else if ( s == YUIWidget_VCenter	)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged, YAlignCenter    );
-    else if ( s == YUIWidget_VSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, false, true);
-    else if ( s == YUIWidget_VWeight	)	w = createWeight		( p, opt, term, ol, n, rbg, YD_VERT);
-    else if ( s == YUIWidget_ReplacePoint)	w = createReplacePoint		( p, opt, term, ol, n, rbg);
+    else if ( s == YUIWidget_VSquash	)	w = createSquash		( p, opt, term, ol, n, rbg, false, true );
+    else if ( s == YUIWidget_VWeight	)	w = createWeight		( p, opt, term, ol, n, rbg, YD_VERT );
+    else if ( s == YUIWidget_ReplacePoint )	w = createReplacePoint		( p, opt, term, ol, n, rbg );
 
     // Leaf widgets
 
-    else if ( s == YUIWidget_CheckBox	)	w = createCheckBox		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_ComboBox	)	w = createComboBox		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_Empty	)	w = createEmpty			( p, opt, term, ol, n, false, false);
-    else if ( s == YUIWidget_HSpacing	)	w = createSpacing		( p, opt, term, ol, n, true,  false);
-    else if ( s == YUIWidget_HStretch	)	w = createEmpty			( p, opt, term, ol, n, true,  false);
-    else if ( s == YUIWidget_HVStretch	)	w = createEmpty			( p, opt, term, ol, n, true,  true);
-    else if ( s == YUIWidget_Heading	)	w = createLabel			( p, opt, term, ol, n, true);
-    else if ( s == YUIWidget_Image	)	w = createImage			( p, opt, term, ol, n);
-    else if ( s == YUIWidget_IntField	)	w = createIntField		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_Label	)	w = createLabel			( p, opt, term, ol, n, false);
-    else if ( s == YUIWidget_LogView	)	w = createLogView		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_MultiLineEdit)	w = createMultiLineEdit		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_MultiSelectionBox)	w = createMultiSelectionBox	( p, opt, term, ol, n);
-    else if ( s == YUIWidget_Password	)	w = createTextEntry		( p, opt, term, ol, n, true);
-    else if ( s == YUIWidget_ProgressBar	)	w = createProgressBar		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_PackageSelector)	w = createPackageSelector	( p, opt, term, ol, n);
-    else if ( s == YUIWidget_PushButton	)	w = createPushButton		( p, opt, term, ol, n, false);
+    else if ( s == YUIWidget_CheckBox	)	w = createCheckBox		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_ComboBox	)	w = createComboBox		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Empty	)	w = createEmpty			( p, opt, term, ol, n, false, false );
+    else if ( s == YUIWidget_HSpacing	)	w = createSpacing		( p, opt, term, ol, n, true,  false );
+    else if ( s == YUIWidget_HStretch	)	w = createEmpty			( p, opt, term, ol, n, true,  false );
+    else if ( s == YUIWidget_HVStretch	)	w = createEmpty			( p, opt, term, ol, n, true,  true );
+    else if ( s == YUIWidget_Heading	)	w = createLabel			( p, opt, term, ol, n, true );
+    else if ( s == YUIWidget_Image	)	w = createImage			( p, opt, term, ol, n );
+    else if ( s == YUIWidget_IntField	)	w = createIntField		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Label	)	w = createLabel			( p, opt, term, ol, n, false );
+    else if ( s == YUIWidget_LogView	)	w = createLogView		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_MultiLineEdit )	w = createMultiLineEdit		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_MultiSelectionBox )	w = createMultiSelectionBox	( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Password	)	w = createTextEntry		( p, opt, term, ol, n, true );
+    else if ( s == YUIWidget_ProgressBar	)	w = createProgressBar		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_PackageSelector )	w = createPackageSelector	( p, opt, term, ol, n );
+    else if ( s == YUIWidget_PushButton	)	w = createPushButton		( p, opt, term, ol, n, false );
     else if ( s == YUIWidget_IconButton	)	w = createPushButton		( p, opt, term, ol, n, true );
-    else if ( s == YUIWidget_MenuButton	)	w = createMenuButton		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_RadioButton	)	w = createRadioButton		( p, opt, term, ol, n, rbg);
-    else if ( s == YUIWidget_RichText	)	w = createRichText		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_SelectionBox)	w = createSelectionBox		( p, opt, term, ol, n);
-    else if ( s == YUIWidget_Table	)	w = createTable			( p, opt, term, ol, n);
-    else if ( s == YUIWidget_TextEntry	)	w = createTextEntry		( p, opt, term, ol, n, false);
-    else if ( s == YUIWidget_Tree	)	w = createTree			( p, opt, term, ol, n);
-    else if ( s == YUIWidget_VSpacing	)	w = createSpacing		( p, opt, term, ol, n, false, true);
-    else if ( s == YUIWidget_VStretch	)	w = createEmpty			( p, opt, term, ol, n, false, true);
-    else if ( s == YUIWidget_PkgSpecial	)	w = createPkgSpecial		( p, opt, term, ol, n);
+    else if ( s == YUIWidget_MenuButton	)	w = createMenuButton		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_RadioButton	)	w = createRadioButton		( p, opt, term, ol, n, rbg );
+    else if ( s == YUIWidget_RichText	)	w = createRichText		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_SelectionBox )	w = createSelectionBox		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Table	)	w = createTable			( p, opt, term, ol, n );
+    else if ( s == YUIWidget_TextEntry	)	w = createTextEntry		( p, opt, term, ol, n, false );
+    else if ( s == YUIWidget_Tree	)	w = createTree			( p, opt, term, ol, n );
+    else if ( s == YUIWidget_VSpacing	)	w = createSpacing		( p, opt, term, ol, n, false, true );
+    else if ( s == YUIWidget_VStretch	)	w = createEmpty			( p, opt, term, ol, n, false, true );
+    else if ( s == YUIWidget_PkgSpecial	)	w = createPkgSpecial		( p, opt, term, ol, n );
 
     // Special widgets - may or may not be supported by the specific UI.
-    // The YCP application should ask for presence of such a widget with Has???Widget( ) prior to creating one.
+    // The YCP application should ask for presence of such a widget with Has???Widget() prior to creating one.
 
-    else if ( s == YUISpecialWidget_DummySpecialWidget)	w = createDummySpecialWidget	( p, opt, term, ol, n);
-    else if ( s == YUISpecialWidget_DownloadProgress  )	w = createDownloadProgress	( p, opt, term, ol, n);
-    else if ( s == YUISpecialWidget_BarGraph	)	w = createBarGraph		( p, opt, term, ol, n);
-    else if ( s == YUISpecialWidget_ColoredLabel	)	w = createColoredLabel		( p, opt, term, ol, n);
-    else if ( s == YUISpecialWidget_Slider	)	w = createSlider		( p, opt, term, ol, n);
-    else if ( s == YUISpecialWidget_PartitionSplitter)	w = createPartitionSplitter	( p, opt, term, ol, n);
+    else if ( s == YUISpecialWidget_DummySpecialWidget )	w = createDummySpecialWidget	( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_DownloadProgress  )	w = createDownloadProgress	( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_BarGraph	)	w = createBarGraph		( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_ColoredLabel	)	w = createColoredLabel		( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_Slider	)	w = createSlider		( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_PartitionSplitter )	w = createPartitionSplitter	( p, opt, term, ol, n );
     else
     {
-	y2error( "Unknown widget type %s", s.c_str( ));
+	y2error( "Unknown widget type %s", s.c_str() );
 	return 0;
     }
 
 
     // Post-process the newly created widget
 
-    if ( w)
+    if ( w )
     {
-	if ( ! id.isNull( )  &&	// ID specified for this widget
-	     ! id->isVoid( ) &&
-	     ! w->hasId( ) )	// widget doesn't have an ID yet
+	if ( ! id.isNull()  &&	// ID specified for this widget
+	     ! id->isVoid() &&
+	     ! w->hasId() )	// widget doesn't have an ID yet
 	{
-	    w->setId( id);
+	    w->setId( id );
 
 	    /*
 	     * Note: Don't set the ID if it is already set!
-	     * This is important for createXy( ) functions that don't really create
-	     * anything immediately but recursively call createWidgetTree( )
-	     * internally - e.g. createWeight( ). In this case, the widget might
+	     * This is important for createXy() functions that don't really create
+	     * anything immediately but recursively call createWidgetTree()
+	     * internally - e.g. createWeight(). In this case, the widget might
 	     * already have an ID, so leave it alone.
 	     */
 	}
 
-	if ( opt.isDisabled.value( ) )
+	if ( opt.isDisabled.value() )
 	{
-	    w->setEnabling( false);
+	    w->setEnabling( false );
 	}
 
-	w->setParent( p);
+	w->setParent( p );
     }
 
     return w;
@@ -286,19 +286,19 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
  * version will pass through an empty set of widget options.
  */
 
-YWidget *YUIInterpreter::createWidgetTree( YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm & term)
+YWidget *YUIInterpreter::createWidgetTree( YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm & term )
 {
     YWidgetOpt opt;
 
-    return createWidgetTree( parent, opt, rbg, term);
+    return createWidgetTree( parent, opt, rbg, term );
 }
 
 
 
 //
 // =============================================================================
-// High level ( abstract libyui layer) widget creation functions.
-// Most call a corresponding low level ( specific UI) widget creation function.
+// High level ( abstract libyui layer ) widget creation functions.
+// Most call a corresponding low level ( specific UI ) widget creation function.
 // =============================================================================
 //
 
@@ -308,38 +308,38 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *parent, YRadioButtonGroup *r
  * @short	Pseudo widget to replace parts of a dialog
  * @class	YReplacePoint
  * @arg		term child the child widget
- * @usage	`ReplacePoint( `id(`rp), `Empty( ))
+ * @usage	`ReplacePoint( `id( `rp ), `Empty() )
  * @example	ReplacePoint1.ycp
  *
  * @description
  *
  * A ReplacePoint can be used to dynamically change parts of a dialog.
  * It contains one widget. This widget can be replaced by another widget
- * by calling <tt>ReplaceWidget( `id(id), newchild)</tt>, where <tt>id</tt> is the
+ * by calling <tt>ReplaceWidget( `id( id ), newchild )</tt>, where <tt>id</tt> is the
  * the id of the new child widget of the replace point. The ReplacePoint widget
  * itself has no further effect and no optical representation.
  */
 
 YWidget *YUIInterpreter::createReplacePoint( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-					    int argnr, YRadioButtonGroup *rbg)
+					    int argnr, YRadioButtonGroup *rbg )
 {
-    if ( term->size( ) != argnr+1 ||
-	 term->value( argnr ).isNull( ) ||
-	 term->value( argnr )->isVoid( )  )
+    if ( term->size() != argnr+1 ||
+	 term->value( argnr ).isNull() ||
+	 term->value( argnr )->isVoid()  )
     {
 	y2error( "Invalid arguments for the ReplacePoint widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YContainerWidget *replacePoint = createReplacePoint( parent, opt);
+    rejectAllOptions( term,optList );
+    YContainerWidget *replacePoint = createReplacePoint( parent, opt );
 
-    if ( replacePoint)
+    if ( replacePoint )
     {
 	replacePoint->setParent( parent );
-	YWidget *child = createWidgetTree( replacePoint, rbg, term->value( argnr)->asTerm());
-	if ( child) replacePoint->addChild( child);
+	YWidget *child = createWidgetTree( replacePoint, rbg, term->value( argnr )->asTerm() );
+	if ( child ) replacePoint->addChild( child );
 	else
 	{
 	    delete replacePoint;
@@ -354,7 +354,7 @@ YWidget *YUIInterpreter::createReplacePoint( YWidget *parent, YWidgetOpt & opt, 
  * @widgets	Empty HStretch VStretch HVStretch
  * @short	Stretchable space for layout
  * @class	YEmpty
- * @usage	`HStretch( )
+ * @usage	`HStretch()
  * @example	HStretch1.ycp Layout-Buttons-Equal-Even-Spaced1.ycp
  *
  * @description
@@ -371,20 +371,20 @@ YWidget *YUIInterpreter::createReplacePoint( YWidget *parent, YWidgetOpt & opt, 
  */
 
 YWidget *YUIInterpreter::createEmpty( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-				     int argnr, bool hstretchable, bool vstretchable)
+				     int argnr, bool hstretchable, bool vstretchable )
 {
-    if ( term->size() != argnr)
+    if ( term->size() != argnr )
     {
 	y2error( "Invalid arguments for the %s widget: %s",
-		term->symbol( )->symbol().c_str(),term->toString().c_str());
+		term->symbol()->symbol().c_str(),term->toString().c_str() );
 	return 0;
     }
-    rejectAllOptions( term,optList);
+    rejectAllOptions( term,optList );
 
-    if ( hstretchable ) opt.isHStretchable.setValue( true);
-    if ( vstretchable ) opt.isVStretchable.setValue( true);
+    if ( hstretchable ) opt.isHStretchable.setValue( true );
+    if ( vstretchable ) opt.isVStretchable.setValue( true );
 
-    return createEmpty( parent, opt);
+    return createEmpty( parent, opt );
 }
 
 
@@ -394,7 +394,7 @@ YWidget *YUIInterpreter::createEmpty( YWidget *parent, YWidgetOpt & opt, const Y
  * @short	Fixed size empty space for layout
  * @class	YSpacing
  * @optarg	integer|float size
- * @usage	`HSpacing( 0.3)
+ * @usage	`HSpacing( 0.3 )
  * @example	Spacing1.ycp Layout-Buttons-Equal-Even-Spaced2.ycp
  *		Table2.ycp Table3.ycp
  *
@@ -423,36 +423,36 @@ YWidget *YUIInterpreter::createEmpty( YWidget *parent, YWidgetOpt & opt, const Y
  * will at least take the amount of space specified with
  * <tt>size</tt>, but it will be stretchable in the respective
  * dimension. Thus,
- * <p><tt>`HSpacing( `opt(`hstretch)</tt>
+ * <p><tt>`HSpacing( `opt( `hstretch )</tt>
  * <p>is equivalent to
- * <p>`HBox( `HSpacing( 0.5), `HSpacing( 0.5) )</tt>
+ * <p>`HBox( `HSpacing( 0.5 ), `HSpacing( 0.5 ) )</tt>
  * <br>
  * <p>
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
 YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-					 int argnr, bool horizontal, bool vertical)
+					 int argnr, bool horizontal, bool vertical )
 {
     // Process parameters
 
     float size	  = 1.0;
     bool	 param_ok = false;
 
-    if ( term->size( ) == argnr )			// no parameter
+    if ( term->size() == argnr )			// no parameter
     {
 	param_ok = true;
     }
-    else if ( term->size( ) == argnr + 1 )	// one parameter
+    else if ( term->size() == argnr + 1 )	// one parameter
     {
-	if ( term->value( argnr)->isInteger() )
+	if ( term->value( argnr )->isInteger() )
 	{
-	    size	= ( float) term->value( argnr)->asInteger()->value();
+	    size	= ( float ) term->value( argnr )->asInteger()->value();
 	    param_ok	= true;
 	}
-	else if ( term->value( argnr)->isFloat() )
+	else if ( term->value( argnr )->isFloat() )
 	{
-	    size	= term->value( argnr)->asFloat()->value();
+	    size	= term->value( argnr )->asFloat()->value();
 	    param_ok	= true;
 	}
     }
@@ -460,13 +460,13 @@ YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, cons
     if ( ! param_ok )
     {
 	y2error( "Invalid arguments for the %s widget: %s",
-		term->symbol( )->symbol().c_str(),term->toString().c_str());
+		term->symbol()->symbol().c_str(),term->toString().c_str() );
 	return 0;
     }
 
 
-    rejectAllOptions( term,optList);
-    return createSpacing( parent, opt, size, horizontal, vertical);
+    rejectAllOptions( term,optList );
+    return createSpacing( parent, opt, size, horizontal, vertical );
 }
 
 
@@ -477,7 +477,7 @@ YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, cons
  * @class	YAlignment
  * @arg		term child The contained child widget
  * @optarg	boolean enabled true if ...
- * @usage	`Left( `CheckBox("Crash every five minutes"))
+ * @usage	`Left( `CheckBox( "Crash every five minutes" ) )
  * @example	HCenter1.ycp HCenter2.ycp HCenter3.ycp Alignment1.ycp
  *
  * @description
@@ -486,7 +486,7 @@ YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, cons
  * useful in situations, where to a widget is assigned more space than it can
  * use. For example if you have a VBox containing four CheckBoxes, the width of
  * the VBox is determined by the CheckBox with the longest label. The other
- * CheckBoxes are centered per default. With <tt>`Left( widget)</tt> you tell
+ * CheckBoxes are centered per default. With <tt>`Left( widget )</tt> you tell
  * widget that it should be layouted leftmost of the space that is available to
  * it. <tt>Right, Top</tt> and <tt>Bottom</tt> are working accordingly.	 The
  * other three widgets center their child widget horizontally, vertically or in
@@ -498,24 +498,24 @@ YWidget *YUIInterpreter::createSpacing ( YWidget *parent, YWidgetOpt & opt, cons
 
 YWidget *YUIInterpreter::createAlignment( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					 int argnr, YRadioButtonGroup *rbg,
-					 YAlignmentType halign, YAlignmentType valign)
+					 YAlignmentType halign, YAlignmentType valign )
 {
-    if ( term->size() != argnr+1)
+    if ( term->size() != argnr+1 )
     {
 	y2error( "%s: The alignment widgets take one widget as argument",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YAlignment *alignment = dynamic_cast <YAlignment *> ( createAlignment( parent, opt, halign, valign) );
-    assert( alignment);
+    rejectAllOptions( term,optList );
+    YAlignment *alignment = dynamic_cast <YAlignment *> ( createAlignment( parent, opt, halign, valign ) );
+    assert( alignment );
 
-    if ( alignment)
+    if ( alignment )
     {
 	alignment->setParent( parent );
-	YWidget *child = createWidgetTree( alignment, rbg, term->value( argnr)->asTerm());
-	if ( child) alignment->addChild( child);
+	YWidget *child = createWidgetTree( alignment, rbg, term->value( argnr )->asTerm() );
+	if ( child ) alignment->addChild( child );
 	else
 	{
 	    delete alignment;
@@ -533,7 +533,7 @@ YWidget *YUIInterpreter::createAlignment( YWidget *parent, YWidgetOpt & opt, con
  * @class	YFrame
  * @arg		string label title to be displayed on the top left edge
  * @arg		term child the contained child widget
- * @usage	`Frame( `RadioButtonGroup(`id(rb), `VBox( ...)));
+ * @usage	`Frame( `RadioButtonGroup( `id( rb ), `VBox( ... ) ) );
  * @examples	Frame1.ycp Frame2.ycp TextEntry5.ycp
  *
  * @description
@@ -550,24 +550,24 @@ YWidget *YUIInterpreter::createFrame ( YWidget *parent, YWidgetOpt & opt, const 
 				       const YCPList & optList, int argnr, YRadioButtonGroup *rbg )
 {
 
-    int s = term->size( ) - argnr;
+    int s = term->size() - argnr;
     if ( s != 2
 	|| ! term->value( argnr )->isString()
 	|| ! term->value( argnr+1 )->isTerm() )
     {
 	y2error( "Invalid arguments for the Frame widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YCPString label = term->value( argnr++ )->asString( );
+    rejectAllOptions( term,optList );
+    YCPString label = term->value( argnr++ )->asString();
     YContainerWidget *frame = createFrame( parent, opt, label );
 
     if ( frame )
     {
 	frame->setParent( parent );
-	YWidget *child = createWidgetTree( frame, rbg, term->value( argnr)->asTerm() );
+	YWidget *child = createWidgetTree( frame, rbg, term->value( argnr )->asTerm() );
 
 	if ( child )
 	{
@@ -590,7 +590,7 @@ YWidget *YUIInterpreter::createFrame ( YWidget *parent, YWidgetOpt & opt, const 
  * @short	Layout aid: Minimize widget to its nice size
  * @class	YSquash
  * @arg		term child the child widget
- * @usage	HSquash( `TextEntry("Name:"))
+ * @usage	HSquash( `TextEntry( "Name:" ) )
  * @example	HSquash1.ycp
  *
  * @description
@@ -602,30 +602,30 @@ YWidget *YUIInterpreter::createFrame ( YWidget *parent, YWidgetOpt & opt, const 
  * <tt>`Left</tt> making a widget stretchable. If you want to make a VBox
  * containing for left aligned CheckBoxes, but want the VBox itself to be
  * nonstretchable and centered, than you enclose each CheckBox with a
- * <tt>`Left( ..)</tt> and the whole VBox with a <tt>HSquash( ...)</tt>.
+ * <tt>`Left( .. )</tt> and the whole VBox with a <tt>HSquash( ... )</tt>.
  * <p>
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
 YWidget *YUIInterpreter::createSquash( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				      int argnr, YRadioButtonGroup *rbg,
-				      bool hsquash, bool vsquash)
+				      bool hsquash, bool vsquash )
 {
-    if ( term->size() != argnr+1)
+    if ( term->size() != argnr+1 )
     {
 	y2error( "%s: The squash widgets take one widget as argument",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YContainerWidget *squash = createSquash( parent, opt, hsquash, vsquash);
+    rejectAllOptions( term,optList );
+    YContainerWidget *squash = createSquash( parent, opt, hsquash, vsquash );
 
-    if ( squash)
+    if ( squash )
     {
 	squash->setParent( parent );
-	YWidget *child = createWidgetTree( squash, rbg, term->value( argnr)->asTerm());
-	if ( child) squash->addChild( child);
+	YWidget *child = createWidgetTree( squash, rbg, term->value( argnr )->asTerm() );
+	if ( child ) squash->addChild( child );
 	else
 	{
 	    delete squash;
@@ -640,10 +640,10 @@ YWidget *YUIInterpreter::createSquash( YWidget *parent, YWidgetOpt & opt, const 
 /**
  * @widgets	HWeight VWeight
  * @short	Control relative size of layouts
- * @class	( YWeight)
+ * @class	( YWeight )
  * @arg		integer weight the new weight of the child widget
  * @arg		term child the child widget
- * @usage	`HWeight( 2, `SelectionBox( "Language"))
+ * @usage	`HWeight( 2, `SelectionBox( "Language" ) )
  * @examples	Weight1.ycp
  *		Layout-Buttons-Equal-Even-Spaced1.ycp
  *		Layout-Buttons-Equal-Even-Spaced2.ycp
@@ -662,25 +662,25 @@ YWidget *YUIInterpreter::createSquash( YWidget *parent, YWidgetOpt & opt, const 
  * use <tt>HVWeight</tt>, the weight in both dimensions is set to the same
  * value.
  * <p>
- * <b>Note:</b> No real widget is created ( any more), just the weight value is
+ * <b>Note:</b> No real widget is created ( any more ), just the weight value is
  * passed to the child widget.
  * <p>
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
 YWidget *YUIInterpreter::createWeight( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-				      int argnr, YRadioButtonGroup *rbg, YUIDimension dim)
+				      int argnr, YRadioButtonGroup *rbg, YUIDimension dim )
 {
     if ( term->size() != argnr + 2
 	|| !term->value(argnr)->isInteger()
 	|| !term->value(argnr+1)->isTerm())
     {
 	y2error( "Invalid arguments for the Weight widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
-    rejectAllOptions( term,optList);
-    long weightValue = ( long)(term->value(argnr)->asInteger()->value());
+    rejectAllOptions( term,optList );
+    long weightValue = ( long)( term->value( argnr )->asInteger()->value() );
 
     /**
      * This is an exception from the general rule: No YWeight widget is created,
@@ -690,10 +690,10 @@ YWidget *YUIInterpreter::createWeight( YWidget *parent, YWidgetOpt & opt, const 
 
     YWidgetOpt childOpt;
 
-    if ( dim == YD_HORIZ)	childOpt.hWeight.setValue( weightValue);
-    else			childOpt.vWeight.setValue( weightValue);
+    if ( dim == YD_HORIZ )	childOpt.hWeight.setValue( weightValue );
+    else			childOpt.vWeight.setValue( weightValue );
 
-    return createWidgetTree( parent, childOpt,rbg, term->value( argnr+1)->asTerm());
+    return createWidgetTree( parent, childOpt,rbg, term->value( argnr+1 )->asTerm() );
 }
 
 
@@ -701,13 +701,13 @@ YWidget *YUIInterpreter::createWeight( YWidget *parent, YWidgetOpt & opt, const 
 /**
  * @widgets	HBox VBox
  * @short	Generic layout: Arrange widgets horizontally or vertically
- * @class	( Box)
+ * @class	( Box )
  * @optarg	term child1 the first child widget
  * @optarg	term child2 the second child widget
  * @optarg	term child3 the third child widget
- * @optarg	term child4 the fourth child widget ( and so on...)
+ * @optarg	term child4 the fourth child widget ( and so on... )
  * @option	debugLayout verbose logging
- * @usage	HBox( `PushButton(`id(`ok), "OK"), `PushButton( `id(`cancel), "Cancel"))
+ * @usage	HBox( `PushButton( `id( `ok ), "OK" ), `PushButton( `id( `cancel ), "Cancel" ) )
  *
  * @examples	VBox1.ycp HBox1.ycp
  *		Layout-Buttons-Equal-Growing.ycp
@@ -717,41 +717,41 @@ YWidget *YUIInterpreter::createWeight( YWidget *parent, YWidgetOpt & opt, const 
  * @description
  *
  * The layout boxes are used to split up the dialog and layout a number of
- * widgets horizontally ( <tt>HBox</tt>) or vertically ( <tt>VBox</tt>).
+ * widgets horizontally ( <tt>HBox</tt> ) or vertically ( <tt>VBox</tt> ).
  * <p>
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
 YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-				    int argnr, YRadioButtonGroup *rbg, YUIDimension dim)
+				    int argnr, YRadioButtonGroup *rbg, YUIDimension dim )
 {
     // Parse options
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if   ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_debugLayout)	opt.debugLayoutMode.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if   ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_debugLayout )	opt.debugLayoutMode.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    YContainerWidget *split = createSplit( parent, opt, dim);
+    YContainerWidget *split = createSplit( parent, opt, dim );
 
-    if ( split)
+    if ( split )
     {
-	split->setParent( parent);
+	split->setParent( parent );
 
-	for ( int w=argnr; w<term->size( ); w++)
+	for ( int w=argnr; w<term->size(); w++ )
 	{
 	    // Create and add the next child widget.
 
-	    if ( !term->value(w)->isTerm())
+	    if ( !term->value( w )->isTerm() )
 	    {
 		y2error( "%s: Should be a widget specification",
-			term->value( w)->toString().c_str());
+			term->value( w )->toString().c_str() );
 		delete split;
 		return 0;
 	    }
 
-	    YWidget *child = createWidgetTree( split, rbg, term->value( w)->asTerm());
+	    YWidget *child = createWidgetTree( split, rbg, term->value( w )->asTerm() );
 
 	    if ( !child )
 	    {
@@ -759,7 +759,7 @@ YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YC
 		return 0;
 	    }
 
-	    split->addChild( child);
+	    split->addChild( child );
 	}
     }
     return split;
@@ -773,7 +773,7 @@ YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YC
  * @class	YLabel
  * @arg		string label
  * @option	outputField make the label look like an input field in read-only mode
- * @usage	`Label( "Here goes some text\nsecond line")
+ * @usage	`Label( "Here goes some text\nsecond line" )
  *
  * @examples	Label1.ycp Label2.ycp Label3.ycp
  *		Heading1.ycp Heading2.ycp Heading3.ycp
@@ -786,28 +786,28 @@ YWidget *YUIInterpreter::createLBox( YWidget *parent, YWidgetOpt & opt, const YC
  */
 
 YWidget *YUIInterpreter::createLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-				     const YCPList & optList, int argnr, bool heading)
+				     const YCPList & optList, int argnr, bool heading )
 {
     if ( term->size() - argnr != 1
 	|| !term->value(argnr)->isString())
     {
 	y2error( "Invalid arguments for the Label widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
 
     // Parse options
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_outputField) opt.isOutputField.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_outputField ) opt.isOutputField.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    if( heading) opt.isHeading.setValue( true);
+    if( heading ) opt.isHeading.setValue( true );
 
-    return createLabel( parent, opt, term->value( argnr)->asString());
+    return createLabel( parent, opt, term->value( argnr )->asString() );
 }
 
 
@@ -820,7 +820,7 @@ YWidget *YUIInterpreter::createLabel( YWidget *parent, YWidgetOpt & opt, const Y
  * @option	plainText don't interpret text as HTML
  * @option	autoScrollDown automatically scroll down for each text change
  * @option	shrinkable make the widget very small
- * @usage	`RichText( "This is a <b>bold</b> text")
+ * @usage	`RichText( "This is a <b>bold</b> text" )
  * @example	RichText1.ycp
  *
  * @description
@@ -833,31 +833,31 @@ YWidget *YUIInterpreter::createLabel( YWidget *parent, YWidgetOpt & opt, const Y
  * Refer to the <a href="../YCP-UI-richtext.html">YaST2 RichText specification</a> for details.
  */
 
-YWidget *YUIInterpreter::createRichText( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createRichText( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 1
 	|| !term->value(argnr)->isString())
     {
 	y2error( "Invalid arguments for the Label RichText: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() )
+	if ( optList->value( o )->isSymbol() )
 	{
-	    string sym = optList->value( o)->asSymbol()->symbol();
+	    string sym = optList->value( o )->asSymbol()->symbol();
 
-	    if      ( sym  == YUIOpt_plainText      ) opt.plainTextMode.setValue( true);
-	    else if ( sym  == YUIOpt_autoScrollDown ) opt.autoScrollDown.setValue( true);
-	    else if ( sym  == YUIOpt_shrinkable     ) opt.isShrinkable.setValue( true);
-	    else    logUnknownOption( term, optList->value( o));
+	    if      ( sym  == YUIOpt_plainText      ) opt.plainTextMode.setValue( true );
+	    else if ( sym  == YUIOpt_autoScrollDown ) opt.autoScrollDown.setValue( true );
+	    else if ( sym  == YUIOpt_shrinkable     ) opt.isShrinkable.setValue( true );
+	    else    logUnknownOption( term, optList->value( o ) );
 	}
-	else logUnknownOption( term, optList->value( o));
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    return createRichText( parent, opt, term->value( argnr)->asString());
+    return createRichText( parent, opt, term->value( argnr )->asString() );
 }
 
 
@@ -866,10 +866,10 @@ YWidget *YUIInterpreter::createRichText( YWidget *parent, YWidgetOpt & opt, cons
  * @widget	LogView
  * @short	scrollable log lines like "tail -f"
  * @class	YLogView
- * @arg		string label ( above the log lines)
- * @arg		integer visibleLines number of visible lines ( without scrolling)
- * @arg		integer maxLines number of log lines to store ( use 0 for "all")
- * @usage	`LogView( "Log file", 4, 200);
+ * @arg		string label ( above the log lines )
+ * @arg		integer visibleLines number of visible lines ( without scrolling )
+ * @arg		integer maxLines number of log lines to store ( use 0 for "all" )
+ * @usage	`LogView( "Log file", 4, 200 );
  * @example	LogView1.ycp
  *
  * @description
@@ -880,19 +880,19 @@ YWidget *YUIInterpreter::createRichText( YWidget *parent, YWidgetOpt & opt, cons
  * The LogView will keep up to "maxLines" of output, discarding the oldest
  * lines if there are more. If "maxLines" is set to 0, all lines will be kept.
  * <p>
- * "visibleLines" lines will be visible by default ( without scrolling) unless
+ * "visibleLines" lines will be visible by default ( without scrolling ) unless
  * you stretch the widget in the layout.
  * <p>
- * Use <tt>ChangeWidget( `id(`log), `LastLine, "bla blurb...\n")</tt> to append
- * one or several line( s) to the output. Notice the newline at the end of each line!
+ * Use <tt>ChangeWidget( `id( `log ), `LastLine, "bla blurb...\n" )</tt> to append
+ * one or several line( s ) to the output. Notice the newline at the end of each line!
  * <p>
- * Use <tt>ChangeWidget( `id(`log), `Value, "bla blurb...\n")</tt> to replace
+ * Use <tt>ChangeWidget( `id( `log ), `Value, "bla blurb...\n" )</tt> to replace
  * the entire contents of the LogView.
  * <p>
- * Use <tt>ChangeWidget( `id(`log), `Value, "")</tt> to clear the contents.
+ * Use <tt>ChangeWidget( `id( `log ), `Value, "" )</tt> to clear the contents.
  */
 
-YWidget *YUIInterpreter::createLogView( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createLogView( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 3
 	|| ! term->value(argnr  )->isString()
@@ -900,17 +900,17 @@ YWidget *YUIInterpreter::createLogView( YWidget *parent, YWidgetOpt & opt, const
 	|| ! term->value(argnr+2)->isInteger())
     {
 	y2error( "Invalid arguments for the LogView widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
+    rejectAllOptions( term,optList );
 
-    YCPString label	= term->value( argnr)->asString();
-    int visibleLines	= term->value( argnr+1)->asInteger()->value();
-    int maxLines	= term->value( argnr+2)->asInteger()->value();
+    YCPString label	= term->value( argnr )->asString();
+    int visibleLines	= term->value( argnr+1 )->asInteger()->value();
+    int maxLines	= term->value( argnr+2 )->asInteger()->value();
 
-    return createLogView( parent, opt, label, visibleLines, maxLines);
+    return createLogView( parent, opt, label, visibleLines, maxLines );
 }
 
 
@@ -919,20 +919,20 @@ YWidget *YUIInterpreter::createLogView( YWidget *parent, YWidgetOpt & opt, const
  * @widget	PushButton IconButton
  * @short	Perform action on click
  * @class	YPushButton
- * @arg		string iconName ( IconButton only)
+ * @arg		string iconName ( IconButton only )
  * @arg		string label
  * @option	default makes this button the dialogs default button
- * @usage	`PushButton( `id(`click), `opt( `default, `hstretch), "Click me")
+ * @usage	`PushButton( `id( `click ), `opt( `default, `hstretch ), "Click me" )
  * @examples	PushButton1.ycp PushButton2.ycp IconButton1.ycp
  *
  * @description
  *
  * A <tt>PushButton</tt> is a button with a text label the user can
- * press in order to activate some action. If you call <tt>UserInput( )</tt> and
- * the user presses the button, <tt>UserInput( )</tt> returns with the id of the
+ * press in order to activate some action. If you call <tt>UserInput()</tt> and
+ * the user presses the button, <tt>UserInput()</tt> returns with the id of the
  * pressed button.
  * <p>
- * You can ( and should) provide keybord shortcuts along with the button
+ * You can ( and should ) provide keybord shortcuts along with the button
  * label. For example "& Apply" as a button label will allow the user to
  * activate the button with Alt-A, even if it currently doesn't have keyboard
  * focus. This is important for UIs that don't support using a mouse.
@@ -941,7 +941,7 @@ YWidget *YUIInterpreter::createLogView( YWidget *parent, YWidgetOpt & opt, const
  * addition to the text. If the UI cannot handle icons, it displays only the
  * text, and the icon is silently omitted.
  * <p>
- * Icons are ( at the time of this writing) loaded from the <i>theme</i>
+ * Icons are ( at the time of this writing ) loaded from the <i>theme</i>
  * directory, <tt>/usr/share/YaST2/theme/current</tt>.
  */
 
@@ -954,49 +954,49 @@ YWidget *YUIInterpreter::createPushButton( YWidget *parent, YWidgetOpt & opt, co
 
     if ( isIconButton )
     {
-	if ( term->size( ) - argnr != 2
+	if ( term->size() - argnr != 2
 	     || ! term->value(argnr)->isString()
 	     || ! term->value(argnr+1)->isString() )
 	{
 	    y2error( "Invalid arguments for the IconButton widget: %s",
-		    term->toString( ).c_str());
+		    term->toString().c_str() );
 	    return 0;
 	}
 
-	iconName = term->value( argnr   )->asString( );
-	label    = term->value( argnr+1 )->asString( );
+	iconName = term->value( argnr   )->asString();
+	label    = term->value( argnr+1 )->asString();
     }
     else
     {
-	if ( term->size( ) - argnr != 1
+	if ( term->size() - argnr != 1
 	     || !term->value(argnr)->isString() )
 	{
 	    y2error( "Invalid arguments for the PushButton widget: %s",
-		    term->toString( ).c_str());
+		    term->toString().c_str() );
 	    return 0;
 	}
 
-	label = term->value( argnr )->asString( );
+	label = term->value( argnr )->asString();
     }
 
     // Parse options
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() )
+	if ( optList->value( o )->isSymbol() )
 	{
-	    string sym = optList->value( o)->asSymbol()->symbol();
+	    string sym = optList->value( o )->asSymbol()->symbol();
 
 	    if   ( sym == YUIOpt_default ) opt.isDefaultButton.setValue( true );
-	    else logUnknownOption( term, optList->value( o));
+	    else logUnknownOption( term, optList->value( o ) );
 	}
-	else logUnknownOption( term, optList->value( o));
+	else logUnknownOption( term, optList->value( o ) );
     }
 
 
     // Look up default function keys unless explicitly set
 
-    if ( opt.key_Fxx.value( ) == 0 )
+    if ( opt.key_Fxx.value() == 0 )
 	opt.key_Fxx.setValue( defaultFunctionKey( label ) );
 
 
@@ -1016,7 +1016,7 @@ YWidget *YUIInterpreter::createPushButton( YWidget *parent, YWidgetOpt & opt, co
  * @class	YMenuButton
  * @arg		string		label
  * @arg		itemList	menu items
- * @usage	`MenuButton( "button label", [ `item( `id(`doit), "& Do it"), `item( `id(`something), "& Something") ] );
+ * @usage	`MenuButton( "button label", [ `item( `id( `doit ), "& Do it" ), `item( `id( `something ), "& Something" ) ] );
  * @examples	MenuButton1.ycp MenuButton2.ycp
  *
  * @description
@@ -1026,44 +1026,44 @@ YWidget *YUIInterpreter::createPushButton( YWidget *parent, YWidgetOpt & opt, co
  * popup menu from where the user can select an item that starts an action. Any
  * item may in turn open a submenu etc.
  * <p>
- * <tt>UserInput( )</tt> returns the ID of a menu item if one was activated. It
+ * <tt>UserInput()</tt> returns the ID of a menu item if one was activated. It
  * will never return the ID of the <tt>MenuButton</tt> itself.
  * <p>
  * <b>Style guide hint:</b> Don't overuse this widget. Use it for dialogs that
  * provide lots of actions. Make the most frequently used actions accessible
  * via normal <tt>PushButtons</tt>. Move less frequently used actions
- * ( e.g. "expert" actions) into one or more <tt>MenuButtons</tt>. Don't nest
+ * ( e.g. "expert" actions ) into one or more <tt>MenuButtons</tt>. Don't nest
  * the popup menus too deep - the deeper the nesting, the more awkward the user
  * interface will be.
  * <p>
- * You can ( and should) provide keybord shortcuts along with the button
+ * You can ( and should ) provide keybord shortcuts along with the button
  * label as well as for any menu item.
  */
 
-YWidget *YUIInterpreter::createMenuButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createMenuButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    if ( term->size( ) - argnr != 2
+    if ( term->size() - argnr != 2
 	 || ! term->value(argnr  )->isString()
 	 || ! term->value(argnr+1)->isList()  )
     {
 	y2error( "Invalid arguments for the MenuButton widget: "
-		"expected \"label\", [ `item( ), `item( ), ...], not %s",
-		term->toString( ).c_str());
+		"expected \"label\", [ `item(), `item(), ...], not %s",
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
+    rejectAllOptions( term,optList );
 
     YMenuButton *menu_button = dynamic_cast <YMenuButton *>
-	( createMenuButton( parent, opt, term->value( argnr)->asString() ) );
+	( createMenuButton( parent, opt, term->value( argnr )->asString() ) );
 
     if ( ! menu_button ||
-	 parseMenuItemList( term->value( argnr+1 )->asList( ), menu_button ) == -1 )
+	 parseMenuItemList( term->value( argnr+1 )->asList(), menu_button ) == -1 )
     {
 	return 0;
     }
 
-    menu_button->createMenu( );	// actually create the specific UI's menu hierarchy
+    menu_button->createMenu();	// actually create the specific UI's menu hierarchy
 
     return menu_button;
 }
@@ -1075,80 +1075,80 @@ YUIInterpreter::parseMenuItemList( const YCPList &	itemList,
 				   YMenuButton *	menu_button,
 				   YMenu *		parent_menu )	// 0 if top level
 {
-    for ( int i=0; i < itemList->size( ); i++ )
+    for ( int i=0; i < itemList->size(); i++ )
     {
-	YCPValue item = itemList->value( i);
+	YCPValue item = itemList->value( i );
 
-	if ( item->isTerm( ) && item->asTerm( )->symbol()->symbol() == YUISymbol_item )
+	if ( item->isTerm() && item->asTerm()->symbol()->symbol() == YUISymbol_item )
 	{
-	    // found `item( )
+	    // found `item()
 
-	    YCPTerm iterm = item->asTerm( );
+	    YCPTerm iterm = item->asTerm();
 
-	    if ( iterm->size( ) != 2 ||
-		 ! iterm->value( 0 )->isTerm( )	||	// `id( ...)
-		 ! iterm->value( 1 )->isString( )  )	// "menu item label"
+	    if ( iterm->size() != 2 ||
+		 ! iterm->value( 0 )->isTerm()	||	// `id( ... )
+		 ! iterm->value( 1 )->isString()  )	// "menu item label"
 	    {
-		y2error( "MenuButton: Invalid menu item - expected `item( `id(...), \"label\"), not %s",
-			iterm->toString( ).c_str() );
+		y2error( "MenuButton: Invalid menu item - expected `item( `id( ... ), \"label\" ), not %s",
+			iterm->toString().c_str() );
 
 		return -1;
 	    }
 
 
-	    // check for item `id( ) ( mandatory)
+	    // check for item `id() ( mandatory )
 
-	    YCPValue item_id = YCPNull( );
+	    YCPValue item_id = YCPNull();
 
 	    if ( checkId ( iterm->value( 0 ), true ) )
 	    {
 		item_id = getId ( iterm->value( 0 ) );
 	    }
-	    else	// no `id( )
+	    else	// no `id()
 	    {
-		y2error( "MenuButton: Invalid menu item - no `id( ) specified: %s",
-			 item->toString( ).c_str() );
+		y2error( "MenuButton: Invalid menu item - no `id() specified: %s",
+			 item->toString().c_str() );
 
 		return -1;
 	    }
 
 
-	    // extract item label ( mandatory) and create the item
+	    // extract item label ( mandatory ) and create the item
 
-	    YCPString item_label = iterm->value( 1 )->asString( );
+	    YCPString item_label = iterm->value( 1 )->asString();
 	    menu_button->addMenuItem( item_label, item_id, parent_menu );
-	    // y2debug( "Inserted menu entry '%s'", item_label->value( ).c_str() );
+	    // y2debug( "Inserted menu entry '%s'", item_label->value().c_str() );
 	}
-	else if ( item->isTerm( ) && item->asTerm( )->symbol()->symbol() == YUISymbol_menu )
+	else if ( item->isTerm() && item->asTerm()->symbol()->symbol() == YUISymbol_menu )
 	{
-	    // found `menu( )
+	    // found `menu()
 
-	    YCPTerm iterm = item->asTerm( );
+	    YCPTerm iterm = item->asTerm();
 
-	    if ( iterm->size( ) != 2 ||
-		 ! iterm->value( 0 )->isString( ) &&	// "submenu label"
-		 ! iterm->value( 1 )->isList( )     )	// [ `item( ...), `item( ...) ] )
+	    if ( iterm->size() != 2 ||
+		 ! iterm->value( 0 )->isString() &&	// "submenu label"
+		 ! iterm->value( 1 )->isList()     )	// [ `item( ... ), `item( ... ) ] )
 	    {
 		y2error( "MenuButton: Invalid submenu specification: "
-			 "expected `menu( \"submenu label\", [ `item( ), `item( ), ...] ), not %s",
-			 item->toString( ).c_str() );
+			 "expected `menu( \"submenu label\", [ `item(), `item(), ...] ), not %s",
+			 item->toString().c_str() );
 
 		return -1;
 	    }
 
-	    YCPString	sub_menu_label	= iterm->value( 0 )->asString( );
+	    YCPString	sub_menu_label	= iterm->value( 0 )->asString();
 	    YMenu *	sub_menu	= menu_button->addSubMenu( sub_menu_label, parent_menu );
-	    // y2debug( "Inserted sub menu '%s'", sub_menu_label->value( ).c_str() );
+	    // y2debug( "Inserted sub menu '%s'", sub_menu_label->value().c_str() );
 
-	    if ( parseMenuItemList( iterm->value( 1 )->asList( ), menu_button, sub_menu ) == -1 )
+	    if ( parseMenuItemList( iterm->value( 1 )->asList(), menu_button, sub_menu ) == -1 )
 	    {
 		return -1;
 	    }
 	}
 	else
 	{
-	    y2error( "MenuButton: Invalid menu item - use either `item( ) or `menu( ), not %s",
-		    item->toString( ).c_str() );
+	    y2error( "MenuButton: Invalid menu item - use either `item() or `menu(), not %s",
+		    item->toString().c_str() );
 	    return -1;
 	}
     }
@@ -1165,7 +1165,7 @@ YUIInterpreter::parseMenuItemList( const YCPList &	itemList,
  * @arg		string label the text describing the check box
  * @optarg	boolean|nil checked whether the check box should start checked -
  *		nil means tristate condition, i.e. neither on nor off
- * @usage	`CheckBox( `id(`cheese), "& Extra cheese")
+ * @usage	`CheckBox( `id( `cheese ), "& Extra cheese" )
  * @examples	CheckBox1.ycp CheckBox2.ycp CheckBox3.ycp
  *
  * @description
@@ -1175,21 +1175,21 @@ YUIInterpreter::parseMenuItemList( const YCPList &	itemList,
  * property.
  */
 
-YWidget *YUIInterpreter::createCheckBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createCheckBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int s = term->size( ) - argnr;
+    int s = term->size() - argnr;
     if ( s < 1 || s > 2
 	|| !term->value(argnr)->isString()
 	|| (s == 2 && !term->value(argnr+1)->isBoolean()))
     {
 	y2error( "Invalid arguments for the CheckBox widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
-    rejectAllOptions( term,optList);
-    YCPBoolean checked( false);
-    if ( s == 2) checked = term->value( argnr+1)->asBoolean();
-    return createCheckBox( parent, opt, term->value( argnr)->asString(), checked->value( ));
+    rejectAllOptions( term,optList );
+    YCPBoolean checked( false );
+    if ( s == 2 ) checked = term->value( argnr+1 )->asBoolean();
+    return createCheckBox( parent, opt, term->value( argnr )->asString(), checked->value() );
 }
 
 
@@ -1200,7 +1200,7 @@ YWidget *YUIInterpreter::createCheckBox( YWidget *parent, YWidgetOpt & opt, cons
  * @class	YRadioButton
  * @arg		string label
  * @optarg	boolean selected
- * @usage	`RadioButton( `id(`now), "Crash now", true)
+ * @usage	`RadioButton( `id( `now ), "Crash now", true )
  * @examples	RadioButton1.ycp RadioButton2.ycp Frame2.ycp
  *
  * @description
@@ -1212,38 +1212,38 @@ YWidget *YUIInterpreter::createCheckBox( YWidget *parent, YWidgetOpt & opt, cons
  */
 
 YWidget *YUIInterpreter::createRadioButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-					   int argnr, YRadioButtonGroup *rbg)
+					   int argnr, YRadioButtonGroup *rbg )
 {
 
-    int s = term->size( ) - argnr;
+    int s = term->size() - argnr;
     if ( s < 1 || s > 2
 	|| !term->value(argnr)->isString()
 	|| (s == 2 && !term->value(argnr+1)->isBoolean()))
     {
 	y2error( "Invalid arguments for the RadioButton widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YCPBoolean checked( false);
-    if ( s == 2) checked = term->value( argnr+1)->asBoolean();
+    rejectAllOptions( term,optList );
+    YCPBoolean checked( false );
+    if ( s == 2 ) checked = term->value( argnr+1 )->asBoolean();
 
-    if ( !rbg)
+    if ( !rbg )
     {
 	y2error( "%s: must be inside a RadioButtonGroup",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    YRadioButton *radioButton = dynamic_cast <YRadioButton *> ( createRadioButton( parent, opt, rbg, term->value( argnr)->asString(), checked->value( ) ) );
-    assert( radioButton);
+    YRadioButton *radioButton = dynamic_cast <YRadioButton *> ( createRadioButton( parent, opt, rbg, term->value( argnr )->asString(), checked->value() ) );
+    assert( radioButton );
 
     // Add to radiobutton group. This can _not_ be done in the
     // constructor of YRadioButton, since the ui specific widget is not yet
     // constructed yet at this stage.
 
-    rbg->addRadioButton( radioButton);
+    rbg->addRadioButton( radioButton );
 
     return radioButton;
 }
@@ -1255,7 +1255,7 @@ YWidget *YUIInterpreter::createRadioButton( YWidget *parent, YWidgetOpt & opt, c
  * @short	Radio box - select one of many radio buttons
  * @class	YRadioButtonGroup
  * @arg		term child the child widget
- * @usage	`RadioButtonGroup( `id(rb), `VBox( ...))
+ * @usage	`RadioButtonGroup( `id( rb ), `VBox( ... ) )
  * @examples	RadioButton1.ycp Frame2.ycp
  *
  * @description
@@ -1274,24 +1274,24 @@ YWidget *YUIInterpreter::createRadioButton( YWidget *parent, YWidgetOpt & opt, c
  */
 
 YWidget *YUIInterpreter::createRadioButtonGroup( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
-						int argnr, YRadioButtonGroup *)
+						int argnr, YRadioButtonGroup * )
 {
     if ( term->size() != argnr+1
 	|| !term->value(argnr)->isTerm())
     {
 	y2error( "Invalid arguments for the RadioButtonGroup widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YRadioButtonGroup *rbg = dynamic_cast <YRadioButtonGroup *> ( createRadioButtonGroup( parent, opt) );
-    assert( rbg);
+    rejectAllOptions( term,optList );
+    YRadioButtonGroup *rbg = dynamic_cast <YRadioButtonGroup *> ( createRadioButtonGroup( parent, opt ) );
+    assert( rbg );
 
     rbg->setParent( parent );
-    YWidget *child = createWidgetTree( rbg, rbg, term->value( argnr)->asTerm());
+    YWidget *child = createWidgetTree( rbg, rbg, term->value( argnr )->asTerm() );
 
-    if ( child) rbg->addChild( child);
+    if ( child ) rbg->addChild( child );
     else
     {
 	delete rbg;
@@ -1310,7 +1310,7 @@ YWidget *YUIInterpreter::createRadioButtonGroup( YWidget *parent, YWidgetOpt & o
  * @arg		string label the label describing the meaning of the entry
  * @optarg	string defaulttext The text contained in the text entry
  * @option	shrinkable make the input field very small
- * @usage	`TextEntry( `id(`name), "Enter your name:", "Kilroy")
+ * @usage	`TextEntry( `id( `name ), "Enter your name:", "Kilroy" )
  *
  * @examples	TextEntry1.ycp TextEntry2.ycp TextEntry3.ycp TextEntry4.ycp
  *		TextEntry5.ycp TextEntry6.ycp
@@ -1328,30 +1328,30 @@ YWidget *YUIInterpreter::createRadioButtonGroup( YWidget *parent, YWidgetOpt & o
 
 YWidget *YUIInterpreter::createTextEntry( YWidget *parent, YWidgetOpt & opt,
 					 const YCPTerm & term, const YCPList & optList, int argnr,
-					 bool passwordMode)
+					 bool passwordMode )
 {
 
-    if ( term->size() - argnr < 1 || term->size( ) - argnr > 2
+    if ( term->size() - argnr < 1 || term->size() - argnr > 2
 	|| !term->value(argnr)->isString()
 	|| (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
 	y2error( "Invalid arguments for the %s widget: %s",
 		passwordMode ? "Password" : "TextEntry",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
-    YCPString initial_text( "");
-    if ( term->size() >= argnr + 2) initial_text = term->value( argnr+1)->asString();
+    YCPString initial_text( "" );
+    if ( term->size() >= argnr + 2 ) initial_text = term->value( argnr+1 )->asString();
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_shrinkable) opt.isShrinkable.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    if ( passwordMode ) opt.passwordMode.setValue( true);
+    if ( passwordMode ) opt.passwordMode.setValue( true );
 
-    return createTextEntry( parent, opt, term->value( argnr)->asString(), initial_text);
+    return createTextEntry( parent, opt, term->value( argnr )->asString(), initial_text );
 }
 
 
@@ -1361,7 +1361,7 @@ YWidget *YUIInterpreter::createTextEntry( YWidget *parent, YWidgetOpt & opt,
  * @class	YMultiLineEdit
  * @arg		string label label above the field
  * @optarg	string initialText the initial contents of the field
- * @usage	`MultiLineEdit( `id(`descr), "Enter problem & description:", "No problem here.")
+ * @usage	`MultiLineEdit( `id( `descr ), "Enter problem & description:", "No problem here." )
  *
  * @examples	MultiLineEdit1.ycp MultiLineEdit2.ycp MultiLineEdit3.ycp
  *
@@ -1376,23 +1376,23 @@ YWidget *YUIInterpreter::createTextEntry( YWidget *parent, YWidgetOpt & opt,
  */
 
 YWidget *YUIInterpreter::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
-					     const YCPTerm & term, const YCPList & optList, int argnr)
+					     const YCPTerm & term, const YCPList & optList, int argnr )
 {
 
-    if ( term->size() - argnr < 1 || term->size( ) - argnr > 2
+    if ( term->size() - argnr < 1 || term->size() - argnr > 2
 	|| !term->value(argnr)->isString()
 	|| (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
 	y2error( "Invalid arguments for the MultiLineEdit widget: %s",
-		term->toString( ).c_str() );
+		term->toString().c_str() );
 	return 0;
     }
 
-    YCPString initial_text( "");
-    if ( term->size() >= argnr + 2) initial_text = term->value( argnr+1)->asString();
+    YCPString initial_text( "" );
+    if ( term->size() >= argnr + 2 ) initial_text = term->value( argnr+1 )->asString();
 
-    rejectAllOptions( term,optList);
-    return createMultiLineEdit( parent, opt, term->value( argnr)->asString(), initial_text);
+    rejectAllOptions( term,optList );
+    return createMultiLineEdit( parent, opt, term->value( argnr )->asString(), initial_text );
 }
 
 
@@ -1405,7 +1405,7 @@ YWidget *YUIInterpreter::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
  * @optarg	list items the items contained in the selection box
  * @option	shrinkable make the widget very small
  * @option	immediate	make `notify trigger immediately when the selected item changes
- * @usage	`SelectionBox( `id(`pizza), "select your Pizza:", [ "Margarita", `item( `id(`na), "Napoli") ])
+ * @usage	`SelectionBox( `id( `pizza ), "select your Pizza:", [ "Margarita", `item( `id( `na ), "Napoli" ) ] )
  * @examples	SelectionBox1.ycp SelectionBox2.ycp SelectionBox3.ycp SelectionBox4.ycp
  *
  * @description
@@ -1414,88 +1414,88 @@ YWidget *YUIInterpreter::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
  * has a label and an optional id. When constructing the list of items, you
  * have two way of specifying an item. Either you give a plain string, in which
  * case the string is used both for the id and the label of the item. Or you
- * specify a term <tt>`item( term id, string label)</tt> or <tt>`item( term id,
- * string label, boolean selected)</tt>, where you give an id of the form
- * <tt>`id( any v)</tt> where you can store an aribtrary value as id. The third
+ * specify a term <tt>`item( term id, string label )</tt> or <tt>`item( term id,
+ * string label, boolean selected )</tt>, where you give an id of the form
+ * <tt>`id( any v )</tt> where you can store an aribtrary value as id. The third
  * argument controls whether the item is the selected item.
  */
 
-YWidget *YUIInterpreter::createSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int numargs = term->size( ) - argnr;
+    int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
 	|| !term->value(argnr)->isString()
 	|| (numargs == 2 && !term->value(argnr+1)->isList()))
     {
 	y2error( "Invalid arguments for the SelectionBox widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if      ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_immediate  )
+	if      ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_immediate  )
 	{
-	    opt.notifyMode.setValue( true);
-	    opt.immediateMode.setValue( true);
+	    opt.notifyMode.setValue( true );
+	    opt.immediateMode.setValue( true );
 	}
-	else logUnknownOption( term, optList->value( o));
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    YSelectionBox *selbox = dynamic_cast <YSelectionBox *> ( createSelectionBox( parent, opt, term->value( argnr)->asString()) );
-    assert( selbox);
-    if ( numargs == 2)
+    YSelectionBox *selbox = dynamic_cast <YSelectionBox *> ( createSelectionBox( parent, opt, term->value( argnr )->asString() ) );
+    assert( selbox );
+    if ( numargs == 2 )
     {
-	YCPList itemlist = term->value( argnr+1)->asList();
-	for ( int i=0; i<itemlist->size( ); i++)
+	YCPList itemlist = term->value( argnr+1 )->asList();
+	for ( int i=0; i<itemlist->size(); i++ )
 	{
-	    YCPValue item = itemlist->value( i);
-	    if ( item->isString())
+	    YCPValue item = itemlist->value( i );
+	    if ( item->isString() )
 	    {
-		selbox->addItem( YCPNull(), item->asString( ), false);
+		selbox->addItem( YCPNull(), item->asString(), false );
 	    }
 	    else if ( item->isTerm()
-		     && item->asTerm( )->symbol()->symbol() == YUISymbol_item)
+		     && item->asTerm()->symbol()->symbol() == YUISymbol_item )
 	    {
-		YCPTerm iterm = item->asTerm( );
-		if ( iterm->size() < 1 || iterm->size( ) > 3)
+		YCPTerm iterm = item->asTerm();
+		if ( iterm->size() < 1 || iterm->size() > 3 )
 		{
 		    y2error( "SelectionBox: Invalid argument number in %s",
-			    iterm->toString( ).c_str());
+			    iterm->toString().c_str() );
 		}
 		else
 		{
-		    int argnr = checkId( iterm->value(0)) ? 1 : 0;
-		    if ( iterm->size() <= argnr || !iterm->value( argnr)->isString())
+		    int argnr = checkId( iterm->value( 0 ) ) ? 1 : 0;
+		    if ( iterm->size() <= argnr || !iterm->value( argnr )->isString() )
 			y2error( "SelectionBox: Invalid item arguments in %s",
-				iterm->toString( ).c_str());
+				iterm->toString().c_str() );
 		    else
 		    {
-			YCPValue item_id = YCPNull( );
-			if ( argnr == 1) item_id = getId( iterm->value(0));
-			YCPString item_label = iterm->value( argnr)->asString();
+			YCPValue item_id = YCPNull();
+			if ( argnr == 1 ) item_id = getId( iterm->value( 0 ) );
+			YCPString item_label = iterm->value( argnr )->asString();
 			bool item_selected = false;
-			if ( iterm->size() >= argnr + 2)
+			if ( iterm->size() >= argnr + 2 )
 			{
-			    if ( iterm->value(argnr+1)->isBoolean())
-				item_selected = iterm->value( argnr+1)->asBoolean()->value();
+			    if ( iterm->value( argnr+1 )->isBoolean() )
+				item_selected = iterm->value( argnr+1 )->asBoolean()->value();
 			    else
 			    {
 				y2error( "SelectionBox: Invalid item arguments in %s",
-					iterm->toString( ).c_str());
+					iterm->toString().c_str() );
 			    }
 			}
 
-			// UFF! It's made. All arguments checked and gathered :-)
-			selbox->addItem( item_id, item_label, item_selected);
+			// UFF! It's made. All arguments checked and gathered :- )
+			selbox->addItem( item_id, item_label, item_selected );
 		    }
 		}
 	    }
 	    else
 	    {
 		y2error( "Invalid item %s: SelectionBox items must be strings or specified with `"
-			YUISymbol_item "( )", item->toString( ).c_str());
+			YUISymbol_item "()", item->toString().c_str() );
 	    }
 	    // `item
 	} // loop over items
@@ -1511,48 +1511,48 @@ YWidget *YUIInterpreter::createSelectionBox( YWidget *parent, YWidgetOpt & opt, 
  * @arg		string	label
  * @arg		list	items	the items initially contained in the selection box
  * @option	shrinkable make the widget very small
- * @usage	`MultiSelectionBox( `id(`topping), "select pizza toppings:", [ "Salami", `item( `id(`cheese), "Cheese", true) ])
+ * @usage	`MultiSelectionBox( `id( `topping ), "select pizza toppings:", [ "Salami", `item( `id( `cheese ), "Cheese", true ) ] )
  * @examples	MultiSelectionBox1.ycp MultiSelectionBox2.ycp MultiSelectionBox3.ycp
  *
  * @description
  *
- * The MultiSelectionBox displays a ( scrollable) list of items from which any
- * number ( even nothing!) can be selected. Use the MultiSelectionBox's
+ * The MultiSelectionBox displays a ( scrollable ) list of items from which any
+ * number ( even nothing! ) can be selected. Use the MultiSelectionBox's
  * <tt>SelectedItems</tt> property to find out which.
  * <p>
  * Each item can be specified either as a simple string or as
- * <tt>`item( ...)</tt> which includes an ( optional) ID and an ( optional)
+ * <tt>`item( ... )</tt> which includes an ( optional ) ID and an ( optional )
  * 'selected' flag that specifies the initial selected state ( 'not selected',
- * i.e. 'false', is default).
+ * i.e. 'false', is default ).
  */
 
-YWidget *YUIInterpreter::createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int term_size = term->size( ) - argnr;
+    int term_size = term->size() - argnr;
 
     if ( term_size != 2
 	 || ! term->value( argnr   )->isString()
 	 || ! term->value( argnr+1 )->isList() )
     {
 	y2error( "Invalid arguments for the MultiSelectionBox widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 
 	return 0;
     }
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_shrinkable) opt.isShrinkable.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
     YMultiSelectionBox *multi_sel_box = dynamic_cast <YMultiSelectionBox *>
-	( createMultiSelectionBox( parent, opt, term->value( argnr)->asString() ) );
+	( createMultiSelectionBox( parent, opt, term->value( argnr )->asString() ) );
     assert( multi_sel_box );
 
 
     if ( ! multi_sel_box ||
-	 parseMultiSelectionBoxItemList( term->value ( argnr+1 )->asList( ), multi_sel_box ) < 0 )
+	 parseMultiSelectionBoxItemList( term->value ( argnr+1 )->asList(), multi_sel_box ) < 0 )
     {
 	return 0;
     }
@@ -1565,28 +1565,28 @@ int
 YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 						YMultiSelectionBox *	multi_sel_box )
 {
-    multi_sel_box->deleteAllItems( );
+    multi_sel_box->deleteAllItems();
 
-    for ( int i=0; i < item_list->size( ); i++ )
+    for ( int i=0; i < item_list->size(); i++ )
     {
-	YCPValue item = item_list->value( i);
+	YCPValue item = item_list->value( i );
 
-	if ( item->isString( ) )
+	if ( item->isString() )
 	{
 	    // Simple case: string
 
-	    multi_sel_box->addItem( item->asString( ) );
+	    multi_sel_box->addItem( item->asString() );
 	}
-	else if ( item->isTerm( ) && item->asTerm( )->symbol()->symbol() == YUISymbol_item )
+	else if ( item->isTerm() && item->asTerm()->symbol()->symbol() == YUISymbol_item )
 	{
-	    // Found `item( )
+	    // Found `item()
 
-	    YCPTerm iterm = item->asTerm( );
+	    YCPTerm iterm = item->asTerm();
 
-	    if ( iterm->size( ) < 1 || iterm->size( ) > 3 )	// `item( `id( ...), "label", true )
+	    if ( iterm->size() < 1 || iterm->size() > 3 )	// `item( `id( ... ), "label", true )
 	    {
 		y2error( "MultiSelectionBox: Invalid argument number in %s",
-			 iterm->toString( ).c_str() );
+			 iterm->toString().c_str() );
 
 		return -1;
 	    }
@@ -1594,9 +1594,9 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 	    int argnr = 0;
 
 
-	    // check for item `id( ) ( optional)
+	    // check for item `id() ( optional )
 
-	    YCPValue item_id = YCPNull( );
+	    YCPValue item_id = YCPNull();
 
 	    if ( checkId ( iterm->value( argnr ), false ) )
 	    {
@@ -1604,38 +1604,38 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 	    }
 
 
-	    // extract item label ( mandatory)
+	    // extract item label ( mandatory )
 
-	    if ( iterm->size( ) <= argnr || ! iterm->value( argnr)->isString() )
+	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
 	    {
 		y2error( "MultiSelectionBox: Expected item label string, not %s",
-			 iterm->toString( ).c_str() );
+			 iterm->toString().c_str() );
 
 		return -1;
 	    }
 
-	    YCPString item_label = iterm->value( argnr++ )->asString( );
+	    YCPString item_label = iterm->value( argnr++ )->asString();
 
 
 	    bool item_selected = false;
 
-	    if ( argnr < iterm->size( ) )
+	    if ( argnr < iterm->size() )
 	    {
-		// check for 'selected' flag ( true/false) ( optional)
+		// check for 'selected' flag ( true/false ) ( optional )
 
-		if ( iterm->value( argnr )->isBoolean( ) )
+		if ( iterm->value( argnr )->isBoolean() )
 		{
-		    item_selected = iterm->value( argnr++ )->asBoolean( )->value();
+		    item_selected = iterm->value( argnr++ )->asBoolean()->value();
 		}
 	    }
 
 
 	    // Anything left over must be an error.
 
-	    if ( argnr != iterm->size( ) )
+	    if ( argnr != iterm->size() )
 	    {
 		y2error( "MultiSelectinBox: Wrong number of arguments in %s",
-			item->toString( ).c_str() );
+			item->toString().c_str() );
 
 		return -1;
 	    }
@@ -1645,8 +1645,8 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 	else
 	{
 	    y2error( "MultiSelectionBox: Invalid item - use either a "
-		    "simple string or `item( `opt(...), \"label\", true/false), not %s",
-		    item->toString( ).c_str() );
+		    "simple string or `item( `opt( ... ), \"label\", true/false ), not %s",
+		    item->toString().c_str() );
 	    return -1;
 	}
     }
@@ -1657,23 +1657,23 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 
 /**
  * @widget	ComboBox
- * @short	drop-down list selection ( optionally editable)
+ * @short	drop-down list selection ( optionally editable )
  * @class	YComboBox
  * @arg		string label
  * @optarg	list items the items contained in the combo box
  * @option	editable the user can enter any value.
- * @usage	`ComboBox( `id(`pizza), "select your Pizza:", [ "Margarita", `item( `id(`na), "Napoli") ])
+ * @usage	`ComboBox( `id( `pizza ), "select your Pizza:", [ "Margarita", `item( `id( `na ), "Napoli" ) ] )
  * @examples	ComboBox1.ycp ComboBox2.ycp ComboBox3.ycp ComboBox4.ycp
  *
  * @description
  *
  * A combo box is a combination of a selection box and an input field. It gives
  * the user a one-out-of-many choice from a list of items.  Each item has a
- * ( mandatory) label and an ( optional) id.  When the 'editable' option is set,
+ * ( mandatory ) label and an ( optional ) id.  When the 'editable' option is set,
  * the user can also freely enter any value. By default, the user can only
  * select an item already present in the list.
  * <p>
- * The items are very much like SelectionBox items: They can have an ( optional)
+ * The items are very much like SelectionBox items: They can have an ( optional )
  * ID, they have a mandatory text to be displayed and an optional boolean
  * parameter indicating the selected state. Only one of the items may have this
  * parameter set to "true"; this will be the default selection on startup.
@@ -1683,77 +1683,77 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
  * focus.
  */
 
-YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int numargs = term->size( ) - argnr;
+    int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
 	|| !term->value(argnr)->isString()
 	|| (numargs == 2 && !term->value(argnr+1)->isList()))
     {
 	y2error( "Invalid arguments for the ComboBox widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_editable) opt.isEditable.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_editable ) opt.isEditable.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    YComboBox *cbox = dynamic_cast <YComboBox *> ( createComboBox( parent, opt, term->value( argnr)->asString()) );
-    assert( cbox);
-    if ( numargs == 2)
+    YComboBox *cbox = dynamic_cast <YComboBox *> ( createComboBox( parent, opt, term->value( argnr )->asString() ) );
+    assert( cbox );
+    if ( numargs == 2 )
     {
-	YCPList itemlist = term->value( argnr+1)->asList();
-	for ( int i=0; i<itemlist->size( ); i++)
+	YCPList itemlist = term->value( argnr+1 )->asList();
+	for ( int i=0; i<itemlist->size(); i++ )
 	{
-	    YCPValue item = itemlist->value( i);
-	    if ( item->isString())
+	    YCPValue item = itemlist->value( i );
+	    if ( item->isString() )
 	    {
-		cbox->addItem( YCPNull(), item->asString( ), false);
+		cbox->addItem( YCPNull(), item->asString(), false );
 	    }
 	    else if ( item->isTerm()
-		     && item->asTerm( )->symbol()->symbol() == YUISymbol_item)
+		     && item->asTerm()->symbol()->symbol() == YUISymbol_item )
 	    {
-		YCPTerm iterm = item->asTerm( );
-		if ( iterm->size() < 1 || iterm->size( ) > 3)
+		YCPTerm iterm = item->asTerm();
+		if ( iterm->size() < 1 || iterm->size() > 3 )
 		{
 		    y2error( "ComboBox: Invalid argument number in %s",
-			    iterm->toString( ).c_str());
+			    iterm->toString().c_str() );
 		}
 		else
 		{
-		    int argnr = checkId( iterm->value(0)) ? 1 : 0;
-		    if ( iterm->size() <= argnr || !iterm->value( argnr)->isString())
+		    int argnr = checkId( iterm->value( 0 ) ) ? 1 : 0;
+		    if ( iterm->size() <= argnr || !iterm->value( argnr )->isString() )
 			y2error( "ComboBox: Invalid item arguments in %s",
-				iterm->toString( ).c_str());
+				iterm->toString().c_str() );
 		    else
 		    {
-			YCPValue item_id = YCPNull( );
-			if ( argnr == 1) item_id = getId( iterm->value(0));
-			YCPString item_label = iterm->value( argnr)->asString();
+			YCPValue item_id = YCPNull();
+			if ( argnr == 1 ) item_id = getId( iterm->value( 0 ) );
+			YCPString item_label = iterm->value( argnr )->asString();
 			bool item_selected = false;
-			if ( iterm->size() >= argnr + 2)
+			if ( iterm->size() >= argnr + 2 )
 			{
-			    if ( iterm->value(argnr+1)->isBoolean())
-				item_selected = iterm->value( argnr+1)->asBoolean()->value();
+			    if ( iterm->value( argnr+1 )->isBoolean() )
+				item_selected = iterm->value( argnr+1 )->asBoolean()->value();
 			    else
 			    {
 				y2error( "ComboBox: Invalid item arguments in %s",
-					iterm->toString( ).c_str());
+					iterm->toString().c_str() );
 			    }
 			}
 
 			// We're all set - all arguments checked and gathered.
-			cbox->addItem( item_id, item_label, item_selected);
+			cbox->addItem( item_id, item_label, item_selected );
 		    }
 		}
 	    }
 	    else
 	    {
 		y2error( "Invalid item %s: ComboBox items must be strings or specified with `"
-			YUISymbol_item "( )", item->toString( ).c_str());
+			YUISymbol_item "()", item->toString().c_str() );
 	    }
 	    // `item
 	} // loop over items
@@ -1787,21 +1787,21 @@ YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, cons
  *			string |		<br>
  *			<tt><b>`item( </b></tt>	<br>
  *			<blockquote>
- *				[ <tt><b>`id( </b></tt> string <tt><b>),</b></tt> ] <br>
+ *				[ <tt><b>`id( </b></tt> string <tt><b> ),</b></tt> ] <br>
  *				string			<br>
  *				[ , true | false ]	<br>
  *				[ , itemList ]		<br>
  *			</blockquote>
- *			<tt><b>)</b></tt>		<br>
+ *			<tt><b> )</b></tt>		<br>
  *		</blockquote>
  *		<br>
- *		The boolean parameter inside `item( ) indicates whether or not
+ *		The boolean parameter inside `item() indicates whether or not
  *		the respective tree item should be opened by default - if it
  *		has any subitems and if the respective UI is capable of closing
  *		and opening subtrees. If the UI cannot handle this, all
  *		subtrees will always be open.
  *
- * @usage	`Tree( `id(`treeID), "treeLabel", [ "top1", "top2", "top3" ] );
+ * @usage	`Tree( `id( `treeID ), "treeLabel", [ "top1", "top2", "top3" ] );
  * @examples	Tree1.ycp Tree2.ycp
  *
  * @description
@@ -1819,39 +1819,39 @@ YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, cons
  * itself, if desired.
  */
 
-YWidget *YUIInterpreter::createTree ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createTree ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int termSize = term->size( ) - argnr;
+    int termSize = term->size() - argnr;
 
     if ( termSize < 1 || termSize > 2
 	 || ! term->value( argnr )->isString() )
     {
 	y2error( "Invalid arguments for the Tree widget: %s",
-		term->toString( ).c_str() );
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YTree *tree = dynamic_cast <YTree *> ( createTree ( parent, opt, term->value ( argnr )->asString( ) ) );
-    assert( tree);
+    rejectAllOptions( term,optList );
+    YTree *tree = dynamic_cast <YTree *> ( createTree ( parent, opt, term->value ( argnr )->asString() ) );
+    assert( tree );
 
     if ( tree && termSize > 1 )
     {
-	if ( ! term->value( argnr+1 )->isList( ) )
+	if ( ! term->value( argnr+1 )->isList() )
 	{
 	    y2error( "Expecting tree item list instead of: %s",
-		    term->value( argnr+1 )->toString( ).c_str() );
+		    term->value( argnr+1 )->toString().c_str() );
 
 	    return 0;
 	}
 
-	if ( parseTreeItemList ( term->value ( argnr+1 )->asList( ), tree ) == -1 )
+	if ( parseTreeItemList ( term->value ( argnr+1 )->asList(), tree ) == -1 )
 	    return 0;
     }
 
     if ( tree )
     {
-	tree->rebuildTree( );
+	tree->rebuildTree();
     }
 
     return tree;
@@ -1863,26 +1863,26 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
 				    YTree *		tree,
 				    YTreeItem *		parentItem )
 {
-    for ( int i=0; i < itemList->size( ); i++ )
+    for ( int i=0; i < itemList->size(); i++ )
     {
-	YCPValue item = itemList->value( i);
+	YCPValue item = itemList->value( i );
 
-	if ( item->isString( ) )
+	if ( item->isString() )
 	{
 	    // The simplest case: just a string, nothing else
 
-	    ( void) tree->addItem ( parentItem, YCPNull( ), item->asString( ), false );
+	    ( void ) tree->addItem ( parentItem, YCPNull(), item->asString(), false );
 	}
-	else if ( item->isTerm( ) && item->asTerm( )->symbol()->symbol() == YUISymbol_item )
+	else if ( item->isTerm() && item->asTerm()->symbol()->symbol() == YUISymbol_item )
 	{
-	    // found `item( )
+	    // found `item()
 
-	    YCPTerm iterm = item->asTerm( );
+	    YCPTerm iterm = item->asTerm();
 
-	    if ( iterm->size( ) < 1 || iterm->size( ) > 4 )
+	    if ( iterm->size() < 1 || iterm->size() > 4 )
 	    {
 		y2error( "Tree: Invalid argument number in %s",
-			iterm->toString( ).c_str() );
+			iterm->toString().c_str() );
 
 		return -1;
 	    }
@@ -1890,9 +1890,9 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
 	    int argnr = 0;
 
 
-	    // check for item `id( ) ( optional)
+	    // check for item `id() ( optional )
 
-	    YCPValue item_id = YCPNull( );
+	    YCPValue item_id = YCPNull();
 
 	    if ( checkId ( iterm->value( argnr ), false ) )
 	    {
@@ -1900,46 +1900,46 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
 	    }
 
 
-	    // extract item label ( mandatory)
+	    // extract item label ( mandatory )
 
-	    if ( iterm->size( ) <= argnr || ! iterm->value( argnr)->isString() )
+	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
 	    {
 		y2error( "Tree: Invalid item arguments in %s",
-			iterm->toString( ).c_str() );
+			iterm->toString().c_str() );
 
 		return -1;
 	    }
 
-	    YCPString item_label = iterm->value( argnr++ )->asString( );
+	    YCPString item_label = iterm->value( argnr++ )->asString();
 
 
 	    bool item_open = false;
 
-	    if ( argnr < iterm->size( ) )
+	    if ( argnr < iterm->size() )
 	    {
-		// check for 'open' flag ( true/false) ( optional)
+		// check for 'open' flag ( true/false ) ( optional )
 
-		if ( iterm->value( argnr )->isBoolean( ) )
+		if ( iterm->value( argnr )->isBoolean() )
 		{
-		    item_open = iterm->value( argnr++ )->asBoolean( )->value();
+		    item_open = iterm->value( argnr++ )->asBoolean()->value();
 		}
 	    }
 
 	    YTreeItem * treeItem = tree->addItem ( parentItem, item_id, item_label, item_open );
 
-	    if ( argnr < iterm->size( ) )
+	    if ( argnr < iterm->size() )
 	    {
-		// check for sub-item list ( optional)
+		// check for sub-item list ( optional )
 
-		if ( ! iterm->value( argnr )->isList( ) )
+		if ( ! iterm->value( argnr )->isList() )
 		{
 		    y2error( "Expecting tree item list instead of: %s",
-			    iterm->value( argnr )->toString( ).c_str() );
+			    iterm->value( argnr )->toString().c_str() );
 
 		    return -1;
 		}
 
-		if ( parseTreeItemList ( iterm->value ( argnr++ )->asList( ), tree, treeItem ) == -1 )
+		if ( parseTreeItemList ( iterm->value ( argnr++ )->asList(), tree, treeItem ) == -1 )
 		{
 		    return -1;
 		}
@@ -1948,15 +1948,15 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
 
 	    // Anything left over must be an error.
 
-	    if ( argnr != iterm->size( ) )
+	    if ( argnr != iterm->size() )
 	    {
-		y2error( "Tree: Wrong number of arguments in %s", item->toString( ).c_str() );
+		y2error( "Tree: Wrong number of arguments in %s", item->toString().c_str() );
 	    }
 	}
 	else
 	{
 	    y2error( "Invalid item %s: Tree items must be strings or specified with `"
-		    YUISymbol_item "( )", item->toString( ).c_str() );
+		    YUISymbol_item "()", item->toString().c_str() );
 	}
     }
 
@@ -1973,7 +1973,7 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
  * @optarg	list items the items contained in the selection box
  * @option	immediate make `notify trigger immediately when the selected item changes
  * @option	keepSorting keep the insertion order - don't let the user sort manually by clicking
- * @usage	`Table( `header("Game", "Highscore"), [ `item( `id(1), "xkobo", "1708") ])
+ * @usage	`Table( `header( "Game", "Highscore" ), [ `item( `id( 1 ), "xkobo", "1708" ) ] )
  * @examples	Table1.ycp Table2.ycp Table3.ycp Table4.ycp Table5.ycp
  *
  * @description
@@ -1982,37 +1982,37 @@ YUIInterpreter::parseTreeItemList ( const YCPList &	itemList,
  * displayed in a number of columns. Each column has a header.	The number of
  * columns and their titles are described by the first argument, which is a
  * term with the symbol <tt>header</tt>. For each column you add a string
- * specifying its title. For example <tt>`header( "Name", "Price")</tt> creates
+ * specifying its title. For example <tt>`header( "Name", "Price" )</tt> creates
  * the two columns "Name" and "Price".
  * <p>
- * The second argument is an optional list of items ( rows) that are inserted in
- * the table. Each item has the form <tt>`item( `id(</tt> id <tt>), first
- * column, second column, ...)</tt>. For each column one argument has to be
+ * The second argument is an optional list of items ( rows ) that are inserted in
+ * the table. Each item has the form <tt>`item( `id( </tt> id <tt> ), first
+ * column, second column, ... )</tt>. For each column one argument has to be
  * specified, which must be of type void, string or integer. Strings are being
  * left justified, integer right and a nil denote an empty cell, just as the
  * empty string.
  */
 
-YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int numargs = term->size( ) - argnr;
+    int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
 	|| !term->value(argnr)->isTerm()
 	|| term->value(argnr)->asTerm()->symbol()->symbol() != YUISymbol_header
 	|| (numargs == 2 && !term->value(argnr+1)->isList()))
     {
 	y2error( "Invalid arguments for the Table widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
     // Parse options
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if      ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_immediate  ) opt.immediateMode.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_keepSorting) opt.keepSorting.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if      ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_immediate  ) opt.immediateMode.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_keepSorting ) opt.keepSorting.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
     // Build header. The header is a vector of strings, each defining
@@ -2020,64 +2020,64 @@ YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const Y
     // denoting left, right or center justification, resp.
 
     vector<string> header;
-    YCPTerm headerterm = term->value( argnr)->asTerm();
-    for ( int i=0; i< headerterm->size( ); i++)
+    YCPTerm headerterm = term->value( argnr )->asTerm();
+    for ( int i=0; i< headerterm->size(); i++ )
     {
-	YCPValue v = headerterm->value( i);
+	YCPValue v = headerterm->value( i );
 	string this_column;
 
-	if ( v->isString())
-	    this_column = "L" + v->asString( )->value(); // left justified per default
+	if ( v->isString() )
+	    this_column = "L" + v->asString()->value(); // left justified per default
 
-	else if ( v->isTerm())
+	else if ( v->isTerm() )
 	{
-	    YCPTerm t=v->asTerm( );
+	    YCPTerm t=v->asTerm();
 	    if ( t->size() != 1 ||
-		!t->value( 0)->isString())
+		!t->value( 0 )->isString() )
 	    {
 		y2error( "Invalid Table column specification %s",
-			t->toString( ).c_str());
+			t->toString().c_str() );
 		return 0;
 	    }
 
-	    string s = t->symbol( )->symbol();
+	    string s = t->symbol()->symbol();
 	    string just;
-	    if	 ( s == "Left")	 just = "L";
-	    else if ( s == "Right")	 just = "R";
-	    else if ( s == "Center") just = "C";
+	    if	 ( s == "Left" )	 just = "L";
+	    else if ( s == "Right" )	 just = "R";
+	    else if ( s == "Center" ) just = "C";
 	    else
 	    {
 		y2error( "Invalid Table column specification %s",
-			t->toString( ).c_str());
+			t->toString().c_str() );
 		return 0;
 	    }
-	    this_column = just + t->value( 0)->asString()->value();
+	    this_column = just + t->value( 0 )->asString()->value();
 	}
 	else
 	{
 	    y2error( "Invalid header declaration in Table widget: %s",
-		    headerterm->toString( ).c_str());
+		    headerterm->toString().c_str() );
 	    return 0;
 	}
-	header.push_back( this_column);
+	header.push_back( this_column );
     }
 
 
     // Empty header not allowed!
-    if ( header.size() == 0)
+    if ( header.size() == 0 )
     {
-	y2error( "empty header in Table widget not allowed");
+	y2error( "empty header in Table widget not allowed" );
 	return 0;
     }
 
 
-    YTable *table = dynamic_cast <YTable *> ( createTable( parent, opt, header) );
-    assert( table);
+    YTable *table = dynamic_cast <YTable *> ( createTable( parent, opt, header ) );
+    assert( table );
 
-    if ( table && numargs == 2) // Fill table with items, if item list is specified
+    if ( table && numargs == 2 ) // Fill table with items, if item list is specified
     {
-	YCPList itemlist = term->value( argnr+1)->asList();
-	table->addItems( itemlist);
+	YCPList itemlist = term->value( argnr+1 )->asList();
+	table->addItems( itemlist );
     }
     return table;
 }
@@ -2091,7 +2091,7 @@ YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const Y
  * @arg		string label the label describing the bar
  * @optarg	integer maxvalue the maximum value of the bar
  * @optarg	integer progress the current progress value of the bar
- * @usage	`ProgressBar( `id(`pb), "17 of 42 Packages installed", 42, 17)
+ * @usage	`ProgressBar( `id( `pb ), "17 of 42 Packages installed", 42, 17 )
  * @examples	ProgressBar1.ycp ProgressBar2.ycp
  *
  * @description
@@ -2102,9 +2102,9 @@ YWidget *YUIInterpreter::createTable( YWidget *parent, YWidgetOpt & opt, const Y
  * progress bar will set to 0 initially.
  */
 
-YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int s = term->size( ) - argnr;
+    int s = term->size() - argnr;
     if ( s < 1
 	|| s > 3
 	|| (s >= 1 && !term->value(argnr)->isString())
@@ -2112,27 +2112,27 @@ YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, c
 	|| (s >= 3 && !term->value(argnr+2)->isInteger()))
     {
 	y2error( "Invalid arguments for the ProgressBar widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    YCPString  label	  = term->value( argnr)->asString();
-    YCPInteger maxprogress( 100);
-    if ( s >= 2) maxprogress = term->value( argnr+1)->asInteger();
-    YCPInteger progress( 0LL);
-    if ( s >= 3) progress = term->value( argnr+2)->asInteger();
+    YCPString  label	  = term->value( argnr )->asString();
+    YCPInteger maxprogress( 100 );
+    if ( s >= 2 ) maxprogress = term->value( argnr+1 )->asInteger();
+    YCPInteger progress( 0LL );
+    if ( s >= 3 ) progress = term->value( argnr+2 )->asInteger();
 
     if ( maxprogress->value() < 0
 	|| progress->value() < 0
 	|| progress->value() > maxprogress->value())
     {
 	y2error( "Invalid maxprogress/progress value for the ProgressBar widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    return createProgressBar( parent, opt, label, maxprogress, progress);
+    rejectAllOptions( term,optList );
+    return createProgressBar( parent, opt, label, maxprogress, progress );
 }
 
 
@@ -2147,15 +2147,15 @@ YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, c
  * @option	scaleToFit scale the pixmap so it fits the available space: zoom in or out as needed
  * @option	zeroWidth make widget report a nice width of 0
  * @option	zeroHeight make widget report a nice height of 0
- * @option	animated image data contain an animated image ( e.g. MNG)
- * @usage	`Image( `suseheader, "SuSE Linux 7.0")
+ * @option	animated image data contain an animated image ( e.g. MNG )
+ * @usage	`Image( `suseheader, "SuSE Linux 7.0" )
  * @example	Image1.ycp Image-animated.ycp Image-local.ycp Image-scaled.ycp Image-tiled.ycp
  *
  * @description
  *
  * Displays an image - if the respective UI is capable of that. If not, it is
  * up to the UI to decide whether or not to display the specified default text
- * instead ( e.g. with the NCurses UI).
+ * instead ( e.g. with the NCurses UI ).
  * <p>
  * The image is specified as any of:
  * <ul>
@@ -2174,7 +2174,7 @@ YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, c
  *     system. This can <b>not</b> always be safely assumed.
  * </ul>
  * <p>
- * Use `opt( `zeroWidth) and / or `opt( `zeroHeight) if the real size of the
+ * Use `opt( `zeroWidth ) and / or `opt( `zeroHeight ) if the real size of the
  * image widget is determined by outside factors, e.g. by the size of
  * neighboring widgets. With those options you can override the default "nice
  * size" of the image widget and make it show just a part of the image.
@@ -2183,66 +2183,66 @@ YWidget *YUIInterpreter::createProgressBar( YWidget *parent, YWidgetOpt & opt, c
  * available, more of the image is shown, if not, the layout engine doesn't
  * complain about the image widget not getting its nice size.
  * <p>
- * `opt( `tiled) will make the image repeat endlessly in both dimensions to fill
- * up any available space. You might want to add `opt( `zeroWidth) or
- * `opt( `zeroHeight) ( or both), too to make use of this feature.
+ * `opt( `tiled ) will make the image repeat endlessly in both dimensions to fill
+ * up any available space. You might want to add `opt( `zeroWidth ) or
+ * `opt( `zeroHeight ) ( or both ), too to make use of this feature.
  * <p>
- * `opt( `scaleToFit) scales the image to fit into the available space, i.e. the
+ * `opt( `scaleToFit ) scales the image to fit into the available space, i.e. the
  * image will be zoomed in or out as needed.
  * <p>
- * This option implicitly sets `opt( `zeroWidth) and `opt( zeroHeight),
+ * This option implicitly sets `opt( `zeroWidth ) and `opt( zeroHeight ),
  * too since there is no useful default size for such an image.
  * <p>
- * Please note that setting both `opt( `tiled) and `opt( `scaleToFit) at once
+ * Please note that setting both `opt( `tiled ) and `opt( `scaleToFit ) at once
  * doesn't make any sense.
  */
 
-YWidget *YUIInterpreter::createImage( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr)
+YWidget *YUIInterpreter::createImage( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    if ( term->size( ) - argnr != 2
+    if ( term->size() - argnr != 2
 	|| ( ! term->value( argnr )->isSymbol() &&
-	     ! term->value( argnr )->isString( ) &&
-	     ! term->value( argnr )->isByteblock( ) )
+	     ! term->value( argnr )->isString() &&
+	     ! term->value( argnr )->isByteblock() )
 	|| ! term->value( argnr+1 )->isString())
     {
 	y2error( "Invalid arguments for the Image widget: %s",
-		term->toString( ).c_str());
+		term->toString().c_str() );
 	return 0;
     }
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if      ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_zeroWidth	)  opt.zeroWidth.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_zeroHeight	)  opt.zeroHeight.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_animated	)  opt.animated.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_tiled	)  opt.tiled.setValue( true);
-	else if ( optList->value(o)->isSymbol() && optList->value( o)->asSymbol()->symbol() == YUIOpt_scaleToFit	)  opt.scaleToFit.setValue( true);
-	else logUnknownOption( term, optList->value( o));
+	if      ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_zeroWidth	)  opt.zeroWidth.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_zeroHeight	)  opt.zeroHeight.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_animated	)  opt.animated.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_tiled	)  opt.tiled.setValue( true );
+	else if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_scaleToFit	)  opt.scaleToFit.setValue( true );
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    if ( opt.scaleToFit.value( ) )
+    if ( opt.scaleToFit.value() )
     {
 	opt.zeroWidth.setValue( true );
 	opt.zeroHeight.setValue( true );
     }
 
-    if ( term->value( argnr)->isByteblock() )
-	return createImage( parent, opt, term->value( argnr )->asByteblock( ), term->value( argnr+1)->asString() );
+    if ( term->value( argnr )->isByteblock() )
+	return createImage( parent, opt, term->value( argnr )->asByteblock(), term->value( argnr+1 )->asString() );
 
-    if ( term->value( argnr)->isString() )
-	return createImage( parent, opt, term->value( argnr )->asString( ), term->value( argnr+1)->asString() );
+    if ( term->value( argnr )->isString() )
+	return createImage( parent, opt, term->value( argnr )->asString(), term->value( argnr+1 )->asString() );
 
     ImageType img;
-    string symbol = term->value( argnr)->asSymbol()->symbol();
-    if	   ( symbol == "suseheader") img = IT_SUSEHEADER;
-    else if ( symbol == "yast2")	    img = IT_YAST2;
+    string symbol = term->value( argnr )->asSymbol()->symbol();
+    if	   ( symbol == "suseheader" ) img = IT_SUSEHEADER;
+    else if ( symbol == "yast2" )	    img = IT_YAST2;
     else
     {
-	y2error( "Unknown predefined image %s", symbol.c_str( ));
+	y2error( "Unknown predefined image %s", symbol.c_str() );
 	return 0;
     }
 
-    return createImage( parent, opt, img, term->value( argnr+1)->asString());
+    return createImage( parent, opt, img, term->value( argnr+1 )->asString() );
 }
 
 
@@ -2255,7 +2255,7 @@ YWidget *YUIInterpreter::createImage( YWidget *parent, YWidgetOpt & opt, const Y
  * @arg		integer minValue	minimum value
  * @arg		integer maxValue	maximum value
  * @arg		integer initialValue	initial value
- * @usage	`IntField( "Percentage", 1, 100, 50)
+ * @usage	`IntField( "Percentage", 1, 100, 50 )
  *
  * @examples	IntField1.ycp IntField2.ycp
  *
@@ -2266,15 +2266,15 @@ YWidget *YUIInterpreter::createImage( YWidget *parent, YWidgetOpt & opt, const Y
  * <a href="YSlider-widget.html">Slider</a> widget, even as a replacement for
  * this when the specific UI doesn't support the Slider.
  * Remember it always makes sense to specify limits for numeric input, even if
- * those limits are very large ( e.g. +/- MAXINT).
+ * those limits are very large ( e.g. +/- MAXINT ).
  * <p>
  * Fractional numbers are currently not supported.
  */
 
 YWidget *YUIInterpreter::createIntField( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					const YCPList & optList, int argnr)
+					const YCPList & optList, int argnr )
 {
-    int numArgs = term->size( ) - argnr;
+    int numArgs = term->size() - argnr;
 
     if ( numArgs != 4
 	 || ! term->value(argnr)->isString()
@@ -2284,18 +2284,18 @@ YWidget *YUIInterpreter::createIntField( YWidget *parent, YWidgetOpt & opt, cons
 	 )
     {
 	y2error( "Invalid arguments for the IntField widget: %s",
-		 term->toString( ).c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
+    rejectAllOptions( term,optList );
 
-    YCPString label	= term->value( argnr)->asString();
-    int minValue	= term->value( argnr+1)->asInteger()->value();
-    int maxValue	= term->value( argnr+2)->asInteger()->value();
-    int initialValue	= term->value( argnr+3)->asInteger()->value();
+    YCPString label	= term->value( argnr )->asString();
+    int minValue	= term->value( argnr+1 )->asInteger()->value();
+    int maxValue	= term->value( argnr+2 )->asInteger()->value();
+    int initialValue	= term->value( argnr+3 )->asInteger()->value();
 
-    return createIntField( parent, opt, label, minValue, maxValue, initialValue);
+    return createIntField( parent, opt, label, minValue, maxValue, initialValue );
 }
 
 
@@ -2305,7 +2305,7 @@ YWidget *YUIInterpreter::createIntField( YWidget *parent, YWidgetOpt & opt, cons
  * @short	Complete software package selection
  * @class	YPackageSelector
  * @optarg	string floppyDevice
- * @option	youMode start in YOU ( YaST Online Update) mode
+ * @option	youMode start in YOU ( YaST Online Update ) mode
  * @option	updateMode start in update Mode
  * @usage	`PackageSelector( "/dev/fd0" )
  *
@@ -2314,50 +2314,50 @@ YWidget *YUIInterpreter::createIntField( YWidget *parent, YWidgetOpt & opt, cons
  * @description
  *
  * A very complex widget that handles software package selection completely
- * transparently. Set up the package manager ( the backend) before creating this
+ * transparently. Set up the package manager ( the backend ) before creating this
  * widget and let the package manager and the package selector handle all the
  * rest. The result of all this are the data stored in the package manager.
  * <p>
- * Use UI::RunPkgSelection( ) after creating a dialog with this widget.
- * The result of UI::UserInput( ) in a dialog with such a widget is undefined -
+ * Use UI::RunPkgSelection() after creating a dialog with this widget.
+ * The result of UI::UserInput() in a dialog with such a widget is undefined -
  * it may or may not return.
  * <p>
- * This widget gets the ( best) floppy device as a parameter since the UI has no
+ * This widget gets the ( best ) floppy device as a parameter since the UI has no
  * general way of finding out by itself what device can be used for saving or
  * loading pacakge lists etc. - this is best done outside and passed here as a
  * parameter.
  */
 
 YWidget *YUIInterpreter::createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					       const YCPList & optList, int argnr)
+					       const YCPList & optList, int argnr )
 {
-    int numArgs = term->size( ) - argnr;
+    int numArgs = term->size() - argnr;
 
     if ( numArgs > 1 ||
-	 ( numArgs == 1 && ! term->value( argnr )->isString( ) ) )
+	 ( numArgs == 1 && ! term->value( argnr )->isString() ) )
     {
 	y2error( "Invalid arguments for the PackageSelector widget: %s",
-		 term->toString( ).c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
 
     // Parse options
 
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value(o)->isSymbol() )
+	if ( optList->value( o )->isSymbol() )
 	{
-	    string sym = optList->value( o)->asSymbol()->symbol();
+	    string sym = optList->value( o )->asSymbol()->symbol();
 
 	    if      ( sym == YUIOpt_youMode    ) opt.youMode.setValue( true );
 	    else if ( sym == YUIOpt_updateMode ) opt.updateMode.setValue( true );
-	    else logUnknownOption( term, optList->value( o));
+	    else logUnknownOption( term, optList->value( o ) );
 	}
-	else logUnknownOption( term, optList->value( o));
+	else logUnknownOption( term, optList->value( o ) );
     }
 
-    YCPString floppyDevice = numArgs > 0 ? term->value( argnr )->asString( ) : YCPString( "");
+    YCPString floppyDevice = numArgs > 0 ? term->value( argnr )->asString() : YCPString( "" );
 
     return createPackageSelector( parent, opt, floppyDevice );
 }
@@ -2377,20 +2377,20 @@ YWidget *YUIInterpreter::createPackageSelector( YWidget *parent, YWidgetOpt & op
  */
 
 YWidget *YUIInterpreter::createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					       const YCPList & optList, int argnr)
+					       const YCPList & optList, int argnr )
 {
-    int numArgs = term->size( ) - argnr;
+    int numArgs = term->size() - argnr;
 
     if ( numArgs != 1
 	 || ! term->value( argnr )->isString() )
     {
 	y2error( "Invalid arguments for the PkgSpecial widget: %s",
-		 term->toString( ).c_str() );
+		 term->toString().c_str() );
 	return 0;
     }
 
-    rejectAllOptions( term,optList);
-    YCPString subwidget = term->value( argnr )->asString( );
+    rejectAllOptions( term,optList );
+    YCPString subwidget = term->value( argnr )->asString();
 
     return createPkgSpecial( parent, opt, subwidget );
 }
@@ -2401,61 +2401,61 @@ YWidget *YUIInterpreter::createPkgSpecial( YWidget *parent, YWidgetOpt & opt, co
 
 
 
-YWidget *YUIInterpreter::widgetWithId( const YCPValue & id, bool log_error)
+YWidget *YUIInterpreter::widgetWithId( const YCPValue & id, bool log_error )
 {
-    if ( currentDialog())
+    if ( currentDialog() )
     {
-	YWidget *widget = currentDialog( )->findWidget(id);
-	if ( widget) return widget;
-	if ( log_error)
-	    y2error( "No widget with `" YUISymbol_id "( %s)", id->toString( ).c_str() );
+	YWidget *widget = currentDialog()->findWidget( id );
+	if ( widget ) return widget;
+	if ( log_error )
+	    y2error( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
     }
-    else if ( log_error)
-	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s)",
-		id->toString( ).c_str());
+    else if ( log_error )
+	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
+		id->toString().c_str() );
 
     return 0;
 }
 
-YWidget *YUIInterpreter::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error)
+YWidget *YUIInterpreter::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error )
 {
-    if ( widgetRoot)
+    if ( widgetRoot )
     {
-	YWidget *widget = widgetRoot->findWidget( id);
-	if ( widget) return widget;
-	if ( log_error)
-	    y2error( "No widget with `" YUISymbol_id "( %s)", id->toString( ).c_str() );
+	YWidget *widget = widgetRoot->findWidget( id );
+	if ( widget ) return widget;
+	if ( log_error )
+	    y2error( "No widget with `" YUISymbol_id "( %s )", id->toString().c_str() );
     }
-    else if ( log_error)
-	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s)",
-		id->toString( ).c_str());
+    else if ( log_error )
+	y2error( "No dialog existing, therefore no widget with `" YUISymbol_id "( %s )",
+		id->toString().c_str() );
 
     return 0;
 }
 
-bool YUIInterpreter::checkId( const YCPValue & v, bool complain) const
+bool YUIInterpreter::checkId( const YCPValue & v, bool complain ) const
 {
     if ( v->isTerm()
-	&& v->asTerm( )->size() == 1
-	&& v->asTerm( )->symbol()->symbol() == YUISymbol_id) return true;
+	&& v->asTerm()->size() == 1
+	&& v->asTerm()->symbol()->symbol() == YUISymbol_id ) return true;
     else
     {
 	if ( complain )
 	{
-	    y2error( "Expected `" YUISymbol_id "( any v), you gave me %s", v->toString( ).c_str());
+	    y2error( "Expected `" YUISymbol_id "( any v ), you gave me %s", v->toString().c_str() );
 	}
 	return false;
     }
 }
 
 
-YCPValue YUIInterpreter::getId( const YCPValue & v) const
+YCPValue YUIInterpreter::getId( const YCPValue & v ) const
 {
-    return v->asTerm( )->value(0);
+    return v->asTerm()->value( 0 );
 }
 
 
-bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complain)
+bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complain )
 {
     if ( ! color )
     {
@@ -2463,26 +2463,26 @@ bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complai
 	return false;
     }
 
-    bool ok = val->isTerm( );
+    bool ok = val->isTerm();
 
     if ( ok )
     {
-	YCPTerm term = val->asTerm( );
+	YCPTerm term = val->asTerm();
 
-	ok = term->size( ) == 3 && term->symbol( )->symbol() == YUISymbol_rgb;
+	ok = term->size() == 3 && term->symbol()->symbol() == YUISymbol_rgb;
 
 	if ( ok )
 	{
-	    ok =   term->value( 0)->isInteger()
-		&& term->value( 1)->isInteger()
-		&& term->value( 2)->isInteger();
+	    ok =   term->value( 0 )->isInteger()
+		&& term->value( 1 )->isInteger()
+		&& term->value( 2 )->isInteger();
 	}
 
 	if ( ok )
 	{
-	    color->red   = term->value( 0)->asInteger()->value();
-	    color->green = term->value( 1)->asInteger()->value();
-	    color->blue  = term->value( 2)->asInteger()->value();
+	    color->red   = term->value( 0 )->asInteger()->value();
+	    color->green = term->value( 1 )->asInteger()->value();
+	    color->blue  = term->value( 2 )->asInteger()->value();
 	}
 
 	if ( ok )
@@ -2491,7 +2491,7 @@ bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complai
 		 || color->green < 0 || color->green > 255
 		 || color->blue  < 0 || color->blue  > 255 )
 	    {
-		y2error( "RGB value out of range! ( 0..255)" );
+		y2error( "RGB value out of range! ( 0..255 )" );
 		return false;
 	    }
 	}
@@ -2500,34 +2500,34 @@ bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complai
 
     if ( ! ok && complain )
     {
-	y2error( "Expected `" YUISymbol_rgb "( integer red, blue, green), you gave me %s",
-		val->toString( ).c_str());
+	y2error( "Expected `" YUISymbol_rgb "( integer red, blue, green ), you gave me %s",
+		val->toString().c_str() );
     }
 
     return ok;
 }
 
 
-YCPValue YUIInterpreter::getWidgetId( const YCPTerm & term, int *argnr)
+YCPValue YUIInterpreter::getWidgetId( const YCPTerm & term, int *argnr )
 {
     if ( term->size() > 0
-	&& term->value( 0)->isTerm()
-	&& term->value( 0)->asTerm()->symbol()->symbol() == YUISymbol_id)
+	&& term->value( 0 )->isTerm()
+	&& term->value( 0 )->asTerm()->symbol()->symbol() == YUISymbol_id )
     {
-	YCPTerm idterm = term->value( 0)->asTerm();
-	if ( idterm->size() != 1)
+	YCPTerm idterm = term->value( 0 )->asTerm();
+	if ( idterm->size() != 1 )
 	{
-	    y2error( "Widget id `" YUISymbol_id "( ) must have exactly one argument. You gave %s",
-		    idterm->toString( ).c_str());
-	    return YCPNull( );
+	    y2error( "Widget id `" YUISymbol_id "() must have exactly one argument. You gave %s",
+		    idterm->toString().c_str() );
+	    return YCPNull();
 	}
 
-	YCPValue id = idterm->value( 0);
+	YCPValue id = idterm->value( 0 );
 	// unique?
-	if ( widgetWithId(id))
+	if ( widgetWithId( id ) )
 	{
-	    y2error( "Widget id %s is not unique", id->toString( ).c_str());
-	    return YCPNull( );
+	    y2error( "Widget id %s is not unique", id->toString().c_str() );
+	    return YCPNull();
 	}
 
 	*argnr = 1;
@@ -2536,37 +2536,37 @@ YCPValue YUIInterpreter::getWidgetId( const YCPTerm & term, int *argnr)
     else
     {
 	*argnr = 0;
-	return YCPVoid( );	// no `id( ) specified -> use "nil"
+	return YCPVoid();	// no `id() specified -> use "nil"
     }
 }
 
 
-YCPList YUIInterpreter::getWidgetOptions( const YCPTerm & term, int *argnr)
+YCPList YUIInterpreter::getWidgetOptions( const YCPTerm & term, int *argnr )
 {
     if ( term->size() > *argnr
-	&& term->value( *argnr)->isTerm()
-	&& term->value( *argnr)->asTerm()->symbol()->symbol() == YUISymbol_opt)
+	&& term->value( *argnr )->isTerm()
+	&& term->value( *argnr )->asTerm()->symbol()->symbol() == YUISymbol_opt )
     {
-	YCPTerm optterm = term->value( *argnr)->asTerm();
+	YCPTerm optterm = term->value( *argnr )->asTerm();
 	*argnr = *argnr + 1;
-	return optterm->args( );
+	return optterm->args();
     }
-    else return YCPList( );
+    else return YCPList();
 }
 
 
-void YUIInterpreter::logUnknownOption( const YCPTerm & term, const YCPValue & option)
+void YUIInterpreter::logUnknownOption( const YCPTerm & term, const YCPValue & option )
 {
     y2warning( "Unknown option %s in %s widget",
-	      option->toString( ).c_str(), term->symbol( )->symbol().c_str());
+	      option->toString().c_str(), term->symbol()->symbol().c_str() );
 }
 
 
-void YUIInterpreter::rejectAllOptions( const YCPTerm & term, const YCPList & optList)
+void YUIInterpreter::rejectAllOptions( const YCPTerm & term, const YCPList & optList )
 {
-    for ( int o=0; o < optList->size( ); o++)
+    for ( int o=0; o < optList->size(); o++ )
     {
-	logUnknownOption( term, optList->value( o));
+	logUnknownOption( term, optList->value( o ) );
     }
 }
 

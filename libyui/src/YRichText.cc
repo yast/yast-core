@@ -27,61 +27,61 @@
 #include "YRichText.h"
 
 
-YRichText::YRichText( YWidgetOpt & opt, YCPString text)
-    : YWidget( opt)
-    , text( text)
+YRichText::YRichText( YWidgetOpt & opt, YCPString text )
+    : YWidget( opt )
+    , text( text )
     , autoScrollDown( false )
 {
     // Derived classes need to check opt.plainTextMode and opt.shrinkable!
 
-    if ( opt.autoScrollDown.value( ) )
+    if ( opt.autoScrollDown.value() )
 	autoScrollDown = true;
     
-    setDefaultStretchable( YD_HORIZ, true);
-    setDefaultStretchable( YD_VERT,  true);
+    setDefaultStretchable( YD_HORIZ, true );
+    setDefaultStretchable( YD_VERT,  true );
 }
 
 
-YCPValue YRichText::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YRichText::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
     /*
      * @property string Value the RichText's text contents
      */
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setText( newvalue->asString());
-	    return YCPBoolean( true);
+	    setText( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "RichText: Invalid parameter %s for Value property. Must be string",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newvalue);
+    else return YWidget::changeWidget( property, newvalue );
 }
 
 
 
-YCPValue YRichText::queryWidget( const YCPSymbol & property)
+YCPValue YRichText::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if ( s == YUIProperty_Value) return getText( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if ( s == YUIProperty_Value ) return getText();
+    else return YWidget::queryWidget( property );
 }
 
 
-void YRichText::setText( const YCPString & RichText)
+void YRichText::setText( const YCPString & RichText )
 {
     text = RichText;
 }
 
 
-YCPString YRichText::getText( )
+YCPString YRichText::getText()
 {
     return text;
 }

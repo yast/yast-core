@@ -47,20 +47,20 @@ public:
      * @param opt the widget options
      * @param text the initial text of the label
      */
-    YTree( YWidgetOpt & opt, YCPString label);
+    YTree( YWidgetOpt & opt, YCPString label );
 
 
     /**
      * Destructor. Frees all tree items.
      **/
-    virtual ~YTree( );
+    virtual ~YTree();
 
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YTree"; }
+    virtual char *widgetClass() { return "YTree"; }
 
 
     /**
@@ -68,7 +68,7 @@ public:
      *
      * Overload this to fill the ui specific widget with items.
      */
-    virtual void rebuildTree( );
+    virtual void rebuildTree();
 
     /**
      * Adds an item to the selection box.
@@ -81,7 +81,7 @@ public:
     /**
      * Adds an item to the selection box.
      *
-     * Uses an opaque data pointer for application use. Use YTreeItem::data( )
+     * Uses an opaque data pointer for application use. Use YTreeItem::data()
      * to retrieve this kind of data. The application is responsible for
      * the data contents - and of course for avoiding dangling pointers.
      */
@@ -93,18 +93,18 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command queryWidget.
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Change the label text. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel( const YCPString & label);
+    virtual void setLabel( const YCPString & label );
 
     /**
      * Get the current label text. This method cannot be overidden.
@@ -113,13 +113,13 @@ public:
      * setLabel, i.e. not by the ui. Therefore setLabel stores the
      * current label in #label.
      */
-    YCPString getLabel( );
+    YCPString getLabel();
     
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty( ) { return YUIProperty_Label; }
+    const char *shortcutProperty() { return YUIProperty_Label; }
     
 
 protected:
@@ -128,7 +128,7 @@ protected:
      * Returns the index of the currently
      * selected item or -1 if no item is selected.
      */
-    virtual const YTreeItem * getCurrentItem( ) const = 0;
+    virtual const YTreeItem * getCurrentItem() const = 0;
 
     /**
      * Selects an item.
@@ -162,7 +162,7 @@ private:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue & id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error );
 #endif
 
     /**
@@ -201,7 +201,7 @@ public:
      * Special constructor for root items that take an opaque data pointer for
      * application use: This kind of root item can be used to reference to
      * external objects that are connected with this tree item.
-     * Use YTreeItem::data( ) to retrieve this pointer. Casting will be
+     * Use YTreeItem::data() to retrieve this pointer. Casting will be
      * necessary to make any use of it.
      **/
     YTreeItem ( YTree *	    parent, YCPString text, void * data, bool open = false );
@@ -211,7 +211,7 @@ public:
      * Special constructor for deeper level items that take an opaque data pointer for
      * application use: This kind of root item can be used to reference to
      * external objects that are connected with this tree item. 
-     * Use YTreeItem::data( ) to retrieve this pointer. Casting will be
+     * Use YTreeItem::data() to retrieve this pointer. Casting will be
      * necessary to make any use of it.
      **/
     YTreeItem ( YTreeItem * parent, YCPString text, void * data, bool open = false );
@@ -220,12 +220,12 @@ public:
     /**
      * Destructor.
      **/
-    virtual ~YTreeItem( );
+    virtual ~YTreeItem();
 
-    const YCPString &		getText( )		const { return text;	}
-    const YCPValue &		getId( )			const { return id;	}
-    const YTreeItemList &	itemList( )		const { return items;	}
-    bool			isOpenByDefault( )	const { return openByDefault; }
+    const YCPString &		getText()		const { return text;	}
+    const YCPValue &		getId()			const { return id;	}
+    const YTreeItemList &	itemList()		const { return items;	}
+    bool			isOpenByDefault()	const { return openByDefault; }
 
     /**
      * Recursively search for an item with a given ID.
@@ -242,7 +242,7 @@ public:
     /**
      * Returns the opaque data pointer for applicaton use.
      **/
-    void * data( ) const { return _data; }
+    void * data() const { return _data; }
 
     /**
      * Set the opaque data pointer. The application may choose to store

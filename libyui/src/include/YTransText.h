@@ -25,7 +25,7 @@
 
 /**
  * Helper class for translated strings: Stores a message in the original
- * ( untranslated) version along with the translation into the current locale.
+ * ( untranslated ) version along with the translation into the current locale.
  **/
 class YTransText
 {
@@ -43,7 +43,7 @@ public:
      **/
     YTransText( const std::string & orig ) : _orig( orig )
     {
-	_translation = gettext( _orig.c_str( ) );
+	_translation = gettext( _orig.c_str() );
     }
 
     /**
@@ -51,8 +51,8 @@ public:
      **/
     YTransText( const YTransText & src )
     {
-	_orig		= src.orig( );
-	_translation	= src.translation( );
+	_orig		= src.orig();
+	_translation	= src.translation();
     }
 
     /**
@@ -60,8 +60,8 @@ public:
      **/
     YTransText & operator= ( const YTransText & src )
     {
-	_orig		= src.orig( );
-	_translation	= src.translation( );
+	_orig		= src.orig();
+	_translation	= src.translation();
 
 	return *this;
     }
@@ -69,18 +69,18 @@ public:
     /**
      * Return the original message.
      **/
-    const std::string & orig( )		const { return _orig;		}
+    const std::string & orig()		const { return _orig;		}
 
     /**
      * Return the translation.
      **/
-    const std::string & translation( )	const { return _translation;	}
+    const std::string & translation()	const { return _translation;	}
     
     /**
      * Return the translation.
-     * ( alias, just as a shortcut)
+     * ( alias, just as a shortcut )
      **/
-    const std::string & trans( )		const { return _translation;	}
+    const std::string & trans()		const { return _translation;	}
 
     /**
      * Set the original message. Does not touch the translation, so make sure
@@ -97,19 +97,19 @@ public:
      * operator< : Compares translations.
      **/
     bool operator< ( const YTransText & other ) const
-	{ return _translation < other.translation( ); }
+	{ return _translation < other.translation(); }
 
     /**
      * operator> : Compares translations.
      **/
     bool operator> ( const YTransText & other ) const
-	{ return _translation > other.translation( ); }
+	{ return _translation > other.translation(); }
     
     /**
      * operator== : Compares translations.
      **/
     bool operator== ( const YTransText & other ) const
-	{ return _translation == other.translation( ); }
+	{ return _translation == other.translation(); }
     
     
 private:

@@ -42,7 +42,7 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YPackageSelector"; }
+    virtual char *widgetClass() { return "YPackageSelector"; }
 
 
 };

@@ -35,31 +35,31 @@ public:
      * @param label the button label
      * @param opt widget options
      */
-    YPushButton( YWidgetOpt & opt, YCPString label);
+    YPushButton( YWidgetOpt & opt, YCPString label );
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YPushButton"; }
+    virtual char *widgetClass() { return "YPushButton"; }
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * change the label of the push button. Overload this, but call
      * YPushButton::setLabel at the end of your own function.
      */
-    virtual void setLabel( const YCPString & label);
+    virtual void setLabel( const YCPString & label );
 
     /**
      * Get the current label of the text entry. This method cannot be overidden.
@@ -67,7 +67,7 @@ public:
      * i.e. not by the ui. Therefore setLabel stores the current label in
      * #label.
      */
-    YCPString getLabel( );
+    YCPString getLabel();
     
     /**
      * Set this button's icon from an icon file in the UI's default icon directory.
@@ -82,7 +82,7 @@ public:
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty( ) { return YUIProperty_Label; }
+    const char *shortcutProperty() { return YUIProperty_Label; }
 
 
 protected:

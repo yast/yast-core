@@ -30,103 +30,103 @@
 YProgressBar::YProgressBar( YWidgetOpt & opt,
 			   const YCPString & label,
 			   const YCPInteger & maxProgress,
-			   const YCPInteger & progress)
-    : YWidget( opt)
-    , label( label)
-    , maxProgress( maxProgress)
-    , progress( progress)
+			   const YCPInteger & progress )
+    : YWidget( opt )
+    , label( label )
+    , maxProgress( maxProgress )
+    , progress( progress )
 {
-    setDefaultStretchable( YD_HORIZ, true);
-    setStretchable( YD_VERT, false);
+    setDefaultStretchable( YD_HORIZ, true );
+    setStretchable( YD_VERT, false );
 }
 
 
-void YProgressBar::setLabel( const YCPString & label)
+void YProgressBar::setLabel( const YCPString & label )
 {
     this->label = label;
 }
 
 
-void YProgressBar::setProgress( const YCPInteger & progress)
+void YProgressBar::setProgress( const YCPInteger & progress )
 {
     this->progress = progress;
 }
 
 
-YCPString YProgressBar::getLabel( )
+YCPString YProgressBar::getLabel()
 {
     return label;
 }
 
 
-YCPInteger YProgressBar::getProgress( )
+YCPInteger YProgressBar::getProgress()
 {
     return progress;
 }
 
 
-YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
     /**
      * @property integer Value the current progress
      */
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if ( newvalue->isInteger())
+	if ( newvalue->isInteger() )
 	{
-	    YCPInteger p = newvalue->asInteger( );
-	    if ( p->value() < 0)
+	    YCPInteger p = newvalue->asInteger();
+	    if ( p->value() < 0 )
 	    {
-		y2warning( "Negative value %s for progress bar", p->toString( ).c_str());
-		p = YCPInteger( 0LL);
+		y2warning( "Negative value %s for progress bar", p->toString().c_str() );
+		p = YCPInteger( 0LL );
 	    }
-	    else if ( p->value() > maxProgress->value( ))
+	    else if ( p->value() > maxProgress->value() )
 	    {
-		y2warning( "Too big value %s for progress bar ( max is %s)",
-			  p->toString( ).c_str(), maxProgress->toString( ).c_str());
+		y2warning( "Too big value %s for progress bar ( max is %s )",
+			  p->toString().c_str(), maxProgress->toString().c_str() );
 		p = maxProgress;
 	    }
-	    setProgress( p);
+	    setProgress( p );
 	    this->progress = p;
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "ProgressBar: Invalid parameter %s for Value property. Must be integer",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
 
     /**
      * @property string Label the label above the progress bar
      */
-    else if ( s == YUIProperty_Label)
+    else if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setLabel( newvalue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "ProgressBar: Invalid parameter %s for Label property. Must be string",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newvalue);
+    else return YWidget::changeWidget( property, newvalue );
 }
 
 
 
-YCPValue YProgressBar::queryWidget( const YCPSymbol & property)
+YCPValue YProgressBar::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if      ( s == YUIProperty_Value) return getProgress( );
-    else if ( s == YUIProperty_Label) return getLabel( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if      ( s == YUIProperty_Value ) return getProgress();
+    else if ( s == YUIProperty_Label ) return getLabel();
+    else return YWidget::queryWidget( property );
 }
 

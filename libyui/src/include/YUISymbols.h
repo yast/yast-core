@@ -114,7 +114,7 @@
 #define YUIWidget_PkgSpecial			"PkgSpecial"
 
 
-// Special ( optional) widgets
+// Special ( optional ) widgets
 
 #define YUISpecialWidget_BarGraph		"BarGraph"
 #define YUISpecialWidget_ColoredLabel		"ColoredLabel"
@@ -204,7 +204,7 @@
 #define YUIOpt_key_none				"key_none"
 
 
-// Predefined glyphs for builtin Glyph( )
+// Predefined glyphs for builtin Glyph()
 //
 // - remember there must be a substitute that can be displayed in plain ASCII,
 // so don't include just everything here that is included in Unicode / UTF-8!
@@ -221,7 +221,7 @@
 
 
 
-// Display capabilities for GetDisplayInfo( )
+// Display capabilities for GetDisplayInfo()
 
 #define YUICap_Width				"Width"
 #define YUICap_Height				"Height"

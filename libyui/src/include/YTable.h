@@ -34,14 +34,14 @@ class YTableRow
 {
     YCPValue id;
     vector<string> elements;
-    YTableRow( YCPValue id, vector<string> elements)
-	: id( id), elements( elements) {};
+    YTableRow( YCPValue id, vector<string> elements )
+	: id( id ), elements( elements ) {};
     friend class YTable;
 
     /**
-     * Construct a `item( `id(..), "asdf", "asdf", ...) term
+     * Construct a `item( `id( .. ), "asdf", "asdf", ... ) term
      */
-    YCPTerm makeTerm( ) const;
+    YCPTerm makeTerm() const;
 };
 
 
@@ -57,87 +57,87 @@ public:
      * Creates a new and empty Table
      * @param num_cols The number of columns of the table
      */
-    YTable( YWidgetOpt & opt, int num_cols);
+    YTable( YWidgetOpt & opt, int num_cols );
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YTable"; }
+    virtual char *widgetClass() { return "YTable"; }
 
     /**
      * Adds an item to the table that is given as term
      * yet to be parsed.
      */
-    bool addItem( const YCPValue & item);
+    bool addItem( const YCPValue & item );
 
     /**
      * Adds a list of items to the table. The list
      * contains item specifications yet to be parsed.
      */
-    virtual bool addItems( const YCPList & itemlist);
+    virtual bool addItems( const YCPList & itemlist );
 
     /**
      * Adds an item to the table.
      */
-    void addItem( const YCPValue & id, vector<string> elements);
+    void addItem( const YCPValue & id, vector<string> elements );
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command changeWidget with property given as term.
      */
-    YCPValue changeWidget( const YCPTerm & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPTerm & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Implements the ui command queryWidget with property given as term.
      */
-    YCPValue queryWidget( const YCPTerm & property);
+    YCPValue queryWidget( const YCPTerm & property );
 
     /**
      * Returns the number of columns of the table.
      */
-    int numCols( ) const;
+    int numCols() const;
 
 protected:
     /**
-     * Is called, when an item ( a row) has been added. Overload this to
+     * Is called, when an item ( a row ) has been added. Overload this to
      * fill the ui specific widget with items.
      * @param elements the strings of the elements, one for each column.
      * @param index index of the new item.
      */
-    virtual void itemAdded( vector<string> elements, int index);
+    virtual void itemAdded( vector<string> elements, int index );
 
     /**
      * Is called, when all items have been cleared. Overload this
      * and clear the ui specific table.
      */
-    virtual void itemsCleared( ) = 0;
+    virtual void itemsCleared() = 0;
 
     /**
      * Is called, when the contents of a cell has been changed. Overload
      * this and change the cell text.
      */
-    virtual void cellChanged( int index, int colnum, const YCPString & newtext) = 0;
+    virtual void cellChanged( int index, int colnum, const YCPString & newtext ) = 0;
 
     /**
      * Returns the index of the currently
      * selected item or -1 if no item is selected.
      */
-    virtual int getCurrentItem( ) = 0;
+    virtual int getCurrentItem() = 0;
 
     /**
      * Makes another item the selected one.
      */
-    virtual void setCurrentItem( int index) = 0;
+    virtual void setCurrentItem( int index ) = 0;
 
 
 protected:
@@ -154,7 +154,7 @@ protected:
     /**
      * Returns the current number of items
      */
-    int numItems( ) const;
+    int numItems() const;
 
     /**
      * Searches for an item with a certain id or a certain label.
@@ -162,7 +162,7 @@ protected:
      * @param report_error set this to true, if you want me to
      * report an error if non item can be found.
      */
-    int itemWithId( const YCPValue & id, bool report_error);
+    int itemWithId( const YCPValue & id, bool report_error );
 
 
 private:

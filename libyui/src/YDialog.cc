@@ -24,33 +24,33 @@
 #include "YShortcutManager.h"
 
 
-YDialog::YDialog( YWidgetOpt & opt)
-    : YContainerWidget( opt)
+YDialog::YDialog( YWidgetOpt & opt )
+    : YContainerWidget( opt )
 {
-    _hasDefaultSize.setValue( opt.hasDefaultSize.value());
-    _hasWarnColor.setValue( opt.hasWarnColor.value());
-    _hasInfoColor.setValue( opt.hasInfoColor.value());
-    _isDecorated.setValue( opt.isDecorated.value());
+    _hasDefaultSize.setValue( opt.hasDefaultSize.value() );
+    _hasWarnColor.setValue( opt.hasWarnColor.value() );
+    _hasInfoColor.setValue( opt.hasInfoColor.value() );
+    _isDecorated.setValue( opt.isDecorated.value() );
     _shortcutCheckPostponed = false;
 }
 
 
-YDialog::~YDialog( )
+YDialog::~YDialog()
 {
 }
 
 
-bool YDialog::isDialog( ) const
+bool YDialog::isDialog() const
 {
     return true;
 }
 
 
-void YDialog::setInitialSize( )
+void YDialog::setInitialSize()
 {
-    y2debug( "Setting initial dialog size");
-    setSize( nicesize(YD_HORIZ), nicesize( YD_VERT));
-    y2debug( "Initial dialog size done");
+    y2debug( "Setting initial dialog size" );
+    setSize( nicesize( YD_HORIZ ), nicesize( YD_VERT ) );
+    y2debug( "Initial dialog size done" );
 }
 
 
@@ -63,13 +63,13 @@ void YDialog::checkShortcuts( bool force )
     }
 
     YShortcutManager shortcutManager( this );
-    shortcutManager.checkShortcuts( );
+    shortcutManager.checkShortcuts();
 	
     _shortcutCheckPostponed	= false;
 }
 
 
-YWidgetList YDialog::widgets( ) const
+YWidgetList YDialog::widgets() const
 {
     YWidgetList widgetList;
     fillWidgetList( widgetList, this );
@@ -84,21 +84,21 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
     if ( ! parent )
 	return;
     
-    for ( int i = 0; i < parent->numChildren( ); i++ )
+    for ( int i = 0; i < parent->numChildren(); i++ )
     {
 	YWidget * child = parent->child( i );
 
-	if ( ! child->isDialog( ) )
+	if ( ! child->isDialog() )
 	{
 	    widgetList.push_back( child );
-	    YContainerWidget * container = dynamic_cast<YContainerWidget *> ( child);
+	    YContainerWidget * container = dynamic_cast<YContainerWidget *> ( child );
 
 	    if ( container )
 		fillWidgetList( widgetList, container );
 	}
 	else
 	{
-	    y2milestone( "Found dialog: %s", child->widgetClass( ) );
+	    y2milestone( "Found dialog: %s", child->widgetClass() );
 	}
     }
 }

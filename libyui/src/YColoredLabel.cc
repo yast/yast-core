@@ -26,55 +26,55 @@
 #include "YColoredLabel.h"
 
 
-YColoredLabel::YColoredLabel( YWidgetOpt & opt, YCPString text)
-    : YWidget( opt)
-    , text( text)
+YColoredLabel::YColoredLabel( YWidgetOpt & opt, YCPString text )
+    : YWidget( opt )
+    , text( text )
 {
-    y2debug( "YColoredLabel(%s)", text->value_cstr( ));
+    y2debug( "YColoredLabel( %s )", text->value_cstr() );
 }
 
 
-YCPValue YColoredLabel::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YColoredLabel::changeWidget( const YCPSymbol & property, const YCPValue & newValue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
     /**
      * @property string Value the label text
      */
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if ( newValue->isString())
+	if ( newValue->isString() )
 	{
-	    setLabel( newValue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newValue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "Label: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newValue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
 
-YCPValue YColoredLabel::queryWidget( const YCPSymbol & property)
+YCPValue YColoredLabel::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if ( s == YUIProperty_Value)	return getLabel( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if ( s == YUIProperty_Value )	return getLabel();
+    else return YWidget::queryWidget( property );
 }
 
 
-void YColoredLabel::setLabel( const YCPString & label)
+void YColoredLabel::setLabel( const YCPString & label )
 {
     text = label;
 }
 
 
-YCPString YColoredLabel::getLabel( )
+YCPString YColoredLabel::getLabel()
 {
     return text;
 }

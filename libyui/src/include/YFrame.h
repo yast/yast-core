@@ -38,28 +38,28 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YFrame"; }
+    virtual char *widgetClass() { return "YFrame"; }
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
     
     /**
      * Change the Frame label. Overload this, but call
      * YFrame::setLabel at the end of your own function.
      */
-    virtual void setLabel( const YCPString & label);
+    virtual void setLabel( const YCPString & label );
 
     /**
      * Get the current label.
      */
-    YCPString getLabel( );
+    YCPString getLabel();
 
 
 protected:

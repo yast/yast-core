@@ -28,108 +28,108 @@
 #include "YTextEntry.h"
 
 
-YTextEntry::YTextEntry( YWidgetOpt & opt, const YCPString & label)
-    : YWidget( opt)
-    , label( label)
-    , validChars( "")
+YTextEntry::YTextEntry( YWidgetOpt & opt, const YCPString & label )
+    : YWidget( opt )
+    , label( label )
+    , validChars( "" )
 {
     // Derived classes need to check opt.passwordMode!
 
-    setDefaultStretchable( YD_HORIZ, true);
-    setDefaultStretchable( YD_VERT,  false);
+    setDefaultStretchable( YD_HORIZ, true );
+    setDefaultStretchable( YD_VERT,  false );
 }
 
 
-void YTextEntry::setLabel( const YCPString & label)
+void YTextEntry::setLabel( const YCPString & label )
 {
     this->label = label;
 }
 
 
-YCPString YTextEntry::getLabel( )
+YCPString YTextEntry::getLabel()
 {
     return label;
 }
 
 
-void YTextEntry::setValidChars( const YCPString & newValidChars)
+void YTextEntry::setValidChars( const YCPString & newValidChars )
 {
     this->validChars= newValidChars;
 }
 
 
-YCPString YTextEntry::getValidChars( )
+YCPString YTextEntry::getValidChars()
 {
     return validChars;
 }
 
 
-YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
     /**
-     * @property string Value the field's contents ( the user input)
+     * @property string Value the field's contents ( the user input )
      */
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setText( newvalue->asString());
-	    return YCPBoolean( true);
+	    setText( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for Value property. Must be string.",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
     /**
      * @property string Label label above the field
      */
-    else if ( s == YUIProperty_Label)
+    else if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setLabel( newvalue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for Label property. Must be string.",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
     /**
      * @property string ValidChars valid input characters
      */
-    else if ( s == YUIProperty_ValidChars)
+    else if ( s == YUIProperty_ValidChars )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setValidChars( newvalue->asString());
-	    return YCPBoolean( true);
+	    setValidChars( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "TextEntry: Invalid parameter %s for ValidChars property. Must be string.",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newvalue);
+    else return YWidget::changeWidget( property, newvalue );
 }
 
 
 
-YCPValue YTextEntry::queryWidget( const YCPSymbol & property)
+YCPValue YTextEntry::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if      ( s == YUIProperty_Value) 		return getText( );
-    else if ( s == YUIProperty_Label) 		return getLabel( );
-    else if ( s == YUIProperty_ValidChars)	return getValidChars( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if      ( s == YUIProperty_Value ) 		return getText();
+    else if ( s == YUIProperty_Label ) 		return getLabel();
+    else if ( s == YUIProperty_ValidChars )	return getValidChars();
+    else return YWidget::queryWidget( property );
 }
 
 

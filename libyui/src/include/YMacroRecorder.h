@@ -39,7 +39,7 @@ public:
     /**
      * Destructor
      */
-    virtual ~YMacroRecorder( );
+    virtual ~YMacroRecorder();
 
 
     /**
@@ -57,12 +57,12 @@ public:
     /**
      * Begin a macro block that will be executed as a whole.
      */
-    void beginBlock( );
+    void beginBlock();
 
     /**
      * End a macro block that will be executed as a whole.
      */
-    void endBlock( );
+    void endBlock();
 
 protected:
 
@@ -78,17 +78,17 @@ protected:
     /**
      * Close the internally used macro file.
      */
-    void closeMacroFile( );
+    void closeMacroFile();
 
     /**
      * Write a standardized macro file header.
      */
-    void writeMacroFileHeader( );
+    void writeMacroFileHeader();
 
     /**
      * Write a standardized macro file footer.
      */
-    void writeMacroFileFooter( );
+    void writeMacroFileFooter();
 
 
     /**

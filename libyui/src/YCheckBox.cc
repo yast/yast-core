@@ -28,69 +28,69 @@
 #include "YCheckBox.h"
 
 
-YCheckBox::YCheckBox( YWidgetOpt & opt, const YCPString & label)
-    : YWidget( opt)
-    , label( label)
+YCheckBox::YCheckBox( YWidgetOpt & opt, const YCPString & label )
+    : YWidget( opt )
+    , label( label )
 {
 }
 
 
-void YCheckBox::setLabel( const YCPString & label)
+void YCheckBox::setLabel( const YCPString & label )
 {
     this->label = label;
 }
 
 
-YCPString YCheckBox::getLabel( )
+YCPString YCheckBox::getLabel()
 {
     return label;
 }
 
 
-YCPValue YCheckBox::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YCheckBox::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
-    if ( s == YUIProperty_Value)
+    if ( s == YUIProperty_Value )
     {
 	if ( newvalue->isBoolean() ||
-	    newvalue->isVoid( )      ) // -> tri-state - neither on nor off
+	    newvalue->isVoid()      ) // -> tri-state - neither on nor off
 	{
-	    setValue( newvalue);
-	    return YCPBoolean( true);
+	    setValue( newvalue );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "CheckBox: Invalid parameter %s for property `Value. Must be boolean or nil.",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else if ( s == YUIProperty_Label)
+    else if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setLabel( newvalue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "CheckBox: Invalid parameter %s for property `Label. Must be string.",
-		    newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newvalue);
+    else return YWidget::changeWidget( property, newvalue );
 }
 
 
 
-YCPValue YCheckBox::queryWidget( const YCPSymbol & property)
+YCPValue YCheckBox::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if	   ( s == YUIProperty_Value) return getValue( );
-    else if ( s == YUIProperty_Label) return getLabel( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if	   ( s == YUIProperty_Value ) return getValue();
+    else if ( s == YUIProperty_Label ) return getLabel();
+    else return YWidget::queryWidget( property );
 }
 
 

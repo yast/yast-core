@@ -32,13 +32,13 @@
 #include "YRadioButtonGroup.h"
 
 
-YRadioButtonGroup::YRadioButtonGroup( YWidgetOpt & opt)
-    : YContainerWidget( opt)
+YRadioButtonGroup::YRadioButtonGroup( YWidgetOpt & opt )
+    : YContainerWidget( opt )
 {
 }
 
 
-YRadioButtonGroup::~YRadioButtonGroup( )
+YRadioButtonGroup::~YRadioButtonGroup()
 {
     /*
      * When a YRadioButtonGroup is destroyed, the destructors
@@ -60,99 +60,99 @@ YRadioButtonGroup::~YRadioButtonGroup( )
     * please tell me.
     */
 
-    for ( unsigned i=0; i<buttonlist.size( ); i++)
-	buttonlist[i]->buttonGroupIsDead( );
+    for ( unsigned i=0; i<buttonlist.size(); i++ )
+	buttonlist[i]->buttonGroupIsDead();
 }
 
 
-bool YRadioButtonGroup::isRadioButtonGroup( ) const
+bool YRadioButtonGroup::isRadioButtonGroup() const
 {
     return true;
 }
 
 
-void YRadioButtonGroup::addRadioButton( YRadioButton *button)
+void YRadioButtonGroup::addRadioButton( YRadioButton *button )
 {
 #ifdef VERBOSE_ADD_RADIO_BUTTON
-    y2debug( "this=%p, addRadioButton( YRadioButton *%p)",
-	    this, button);
+    y2debug( "this=%p, addRadioButton( YRadioButton *%p )",
+	    this, button );
 #endif
-    buttonlist.push_back( button);
+    buttonlist.push_back( button );
 }
 
 
-void YRadioButtonGroup::removeRadioButton( YRadioButton *button)
+void YRadioButtonGroup::removeRadioButton( YRadioButton *button )
 {
-    buttonlist_type::iterator pos = find( buttonlist.begin(), buttonlist.end( ), button);
-    if ( pos != buttonlist.end( )) buttonlist.erase( pos);
+    buttonlist_type::iterator pos = find( buttonlist.begin(), buttonlist.end(), button );
+    if ( pos != buttonlist.end() ) buttonlist.erase( pos );
     else
     {
 	y2internal( "ButtonGroup %s contains no RadioButton %s",
-		   id( )->toString().c_str(), button->id( )->toString().c_str());
+		   id()->toString().c_str(), button->id()->toString().c_str() );
     }
 }
 
 
-YCPValue YRadioButtonGroup::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YCPValue YRadioButtonGroup::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
     /**
      * @property any CurrentButton
      * The id of the currently selected radio button belonging to this group. If
      * no button is selected, CurrentButton is nil.
      */
-    if ( s == YUIProperty_CurrentButton) return YCPBoolean( setCurrentButton(newvalue));
-    return YWidget::changeWidget( property, newvalue);
+    if ( s == YUIProperty_CurrentButton ) return YCPBoolean( setCurrentButton( newvalue ) );
+    return YWidget::changeWidget( property, newvalue );
 }
 
 
-YCPValue YRadioButtonGroup::queryWidget( const YCPSymbol & property)
+YCPValue YRadioButtonGroup::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if ( s == YUIProperty_CurrentButton)
+    string s = property->symbol();
+    if ( s == YUIProperty_CurrentButton )
     {
-	YRadioButton *cb = currentButton( );
-	if ( cb) return cb->id( );
-	else return YCPVoid( );
+	YRadioButton *cb = currentButton();
+	if ( cb ) return cb->id();
+	else return YCPVoid();
     }
-    return YWidget::queryWidget( property);
+    return YWidget::queryWidget( property );
 }
 
 
-YRadioButton *YRadioButtonGroup::currentButton( ) const
+YRadioButton *YRadioButtonGroup::currentButton() const
 {
-    for ( unsigned i=0; i<buttonlist.size( ); i++)
-	if ( buttonlist[i]->getValue()->value()) return buttonlist[i];
+    for ( unsigned i=0; i<buttonlist.size(); i++ )
+	if ( buttonlist[i]->getValue()->value() ) return buttonlist[i];
     return 0;
 }
 
 
-bool YRadioButtonGroup::setCurrentButton( const YCPValue & id)
+bool YRadioButtonGroup::setCurrentButton( const YCPValue & id )
 {
     bool found = false;
-    for ( unsigned i=0; i<buttonlist.size( ); i++)
+    for ( unsigned i=0; i<buttonlist.size(); i++ )
     {
-	if ( buttonlist[i]->id()->equal(id))
+	if ( buttonlist[i]->id()->equal( id ) )
 	{
-	    buttonlist[i]->setValue( YCPBoolean(true));
+	    buttonlist[i]->setValue( YCPBoolean( true ) );
 	    found = true;
 	}
-	else buttonlist[i]->setValue( YCPBoolean(false));
+	else buttonlist[i]->setValue( YCPBoolean( false ) );
     }
-    if ( !found && !id->isVoid( ))
+    if ( !found && !id->isVoid() )
     {
-	y2warning( "CurrentButton: no RadioButton with id %s belongs to RadioButtonGroup( `id(%s))",
-		  id->toString( ).c_str(), this->id( )->toString().c_str());
+	y2warning( "CurrentButton: no RadioButton with id %s belongs to RadioButtonGroup( `id( %s ) )",
+		  id->toString().c_str(), this->id()->toString().c_str() );
 	return false;
     }
     else return true;
 }
 
 
-void YRadioButtonGroup::uncheckOtherButtons( const YRadioButton *radiobutton)
+void YRadioButtonGroup::uncheckOtherButtons( const YRadioButton *radiobutton )
 {
-    for ( unsigned i=0; i<buttonlist.size( ); i++)
+    for ( unsigned i=0; i<buttonlist.size(); i++ )
     {
-	if ( buttonlist[i] != radiobutton ) buttonlist[i]->setValue( YCPBoolean(false));
+	if ( buttonlist[i] != radiobutton ) buttonlist[i]->setValue( YCPBoolean( false ) );
     }
 }

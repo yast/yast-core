@@ -29,7 +29,7 @@ public:
     /**
      * Constructor
      */
-    YAnyOpt( )			{ _defined = false; }
+    YAnyOpt()			{ _defined = false; }
 
     /**
      * Set the value.
@@ -40,19 +40,19 @@ public:
      * Invalidate the value, i.e. make it undefined - just like at
      * object creation time.
      */
-    void undef( )		{ _defined = false;	}
+    void undef()		{ _defined = false;	}
 
     /**
      * Return whether or not the value is defined, i.e. whether or not
      * a value has been set before.
      */
-    bool defined( )		{ return _defined;	}
+    bool defined()		{ return _defined;	}
 
     /**
      * Returns the value of this option, if any has been defined,
      * or the default value otherwise.
      */
-    T value( )			{ return _defined ? _value : defaultValue( ); }
+    T value()			{ return _defined ? _value : defaultValue(); }
 
 protected:
 
@@ -61,7 +61,7 @@ protected:
      * been explicitly set.
      * Overwrite this method with the class specific default value.
      */
-    virtual T defaultValue( ) = 0;
+    virtual T defaultValue() = 0;
 
     bool _defined;
     T	_value;
@@ -73,7 +73,7 @@ protected:
  */
 class YBoolOpt: public YAnyOpt<bool>
 {
-    virtual bool defaultValue( ) { return false; }
+    virtual bool defaultValue() { return false; }
 };
 
 
@@ -82,7 +82,7 @@ class YBoolOpt: public YAnyOpt<bool>
  */
 class YLongOpt: public YAnyOpt<long>
 {
-    virtual long defaultValue( ) { return 0L; }
+    virtual long defaultValue() { return 0L; }
 };
 
 
@@ -101,8 +101,8 @@ class YLongOpt: public YAnyOpt<long>
  * it here, and everything will be fine.
  *
  * This struct is transparently passed from
- * YUIInterpreter::createWidget( ) through the
- * YUInterpreter::create???( ) and Y??UI::create???( ) methods down to
+ * YUIInterpreter::createWidget() through the
+ * YUInterpreter::create???() and Y??UI::create???() methods down to
  * the YWidget derived constructors and the YWidget constructor
  * itself.  The general idea is to have a container for such widget
  * options from where any of those layers can read whatever they are
@@ -111,7 +111,7 @@ class YLongOpt: public YAnyOpt<long>
 struct YWidgetOpt
 {
     // Common options for all widgets.
-    // See the inline doc in YUIInterpreter::createWidget( ) for details
+    // See the inline doc in YUIInterpreter::createWidget() for details
     // or ../../doc/autodocs/YWidget-widget.html
 
     YBoolOpt isDisabled;
@@ -122,13 +122,13 @@ struct YWidgetOpt
     YBoolOpt easterEgg;
     YBoolOpt testMode;
 
-    YLongOpt hWeight;		// from YUIInterpreter::createWeight( )
-    YLongOpt vWeight;		// from YUIInterpreter::createWeight( )
+    YLongOpt hWeight;		// from YUIInterpreter::createWeight()
+    YLongOpt vWeight;		// from YUIInterpreter::createWeight()
 
 
     // Widget-specific options
     //
-    // See the respective widget doc in YUIInterpreter::create???( )
+    // See the respective widget doc in YUIInterpreter::create???()
     // or ../../doc/autodocs/???-widget.html
 
     YBoolOpt isDefaultButton;	// YPushButton
@@ -148,7 +148,7 @@ struct YWidgetOpt
     YBoolOpt tiled;		// YImage
     YBoolOpt scaleToFit;	// YImage
     YBoolOpt countShowDelta;	// YPartitionSplitter
-    YLongOpt key_Fxx;		// YPushButton: No. of F-Key ( 1..24), 0 if none
+    YLongOpt key_Fxx;		// YPushButton: No. of F-Key ( 1..24 ), 0 if none
 
     YBoolOpt youMode;		// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector

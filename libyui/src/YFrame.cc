@@ -26,9 +26,9 @@
 #include "YShortcut.h"
 
 
-YFrame::YFrame( YWidgetOpt & opt, const YCPString & newLabel)
-    : YContainerWidget( opt)
-    , label( YCPString( YShortcut::cleanShortcutString( newLabel->value( ) ) ) )
+YFrame::YFrame( YWidgetOpt & opt, const YCPString & newLabel )
+    : YContainerWidget( opt )
+    , label( YCPString( YShortcut::cleanShortcutString( newLabel->value() ) ) )
 {
 }
 
@@ -39,24 +39,24 @@ void YFrame::setLabel( const YCPString & newLabel )
 }
 
 
-YCPString YFrame::getLabel( )
+YCPString YFrame::getLabel()
 {
     return label;
 }
 
 
-YCPValue YFrame::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YFrame::changeWidget( const YCPSymbol & property, const YCPValue & newValue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
    
     /**
      * @property string Value the label text
      */
     if ( s == YUIProperty_Value )
     {
-	if ( newValue->isString( ) )
+	if ( newValue->isString() )
 	{
-	    string new_label = newValue->asString( )->value();
+	    string new_label = newValue->asString()->value();
 	    new_label = YShortcut::cleanShortcutString( new_label );
 	    setLabel( YCPString( new_label ) );
 	    return YCPBoolean( true );
@@ -64,17 +64,17 @@ YCPValue YFrame::changeWidget( const YCPSymbol & property, const YCPValue & newV
 	else
 	{
 	    y2error( "Frame: Invalid parameter %s for Value property. Must be string",
-		    newValue->toString( ).c_str());
-	    return YCPBoolean( false);
+		    newValue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
-YCPValue YFrame::queryWidget( const YCPSymbol & property)
+YCPValue YFrame::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
-    if ( s == YUIProperty_Label) return getLabel( );
-    else return YWidget::queryWidget( property);
+    string s = property->symbol();
+    if ( s == YUIProperty_Label ) return getLabel();
+    else return YWidget::queryWidget( property );
 }

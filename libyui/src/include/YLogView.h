@@ -43,40 +43,40 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YLogView"; }
+    virtual char *widgetClass() { return "YLogView"; }
 
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command changeWidget for the widget specific properties.
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
 
 
     /**
      * Set the log text.
      */
-    virtual void setLogText( const YCPString & text) = 0;
+    virtual void setLogText( const YCPString & text ) = 0;
 
     /**
      * Get the label above the log lines.
      */
-    YCPString 	label( ) 	const { return _label; }
+    YCPString 	label() 	const { return _label; }
 
     /**
      * Get the number of visible lines.
      */
-    int		visibleLines( )	const { return _visibleLines; }
+    int		visibleLines()	const { return _visibleLines; }
 
     /**
      * Get the maximum number of lines to store.
      */
-    int		maxLines( )	const { return _maxLines; }
+    int		maxLines()	const { return _maxLines; }
 
     /**
      * Set the label above the log lines. Overload this, but call
@@ -88,7 +88,7 @@ public:
      * Retrieve the entire log text as one large string of concatenated lines
      * delimited with newlines.
      */
-    string	logText( );
+    string	logText();
 
     /**
      * Append one or more lines to the log text.
@@ -104,12 +104,12 @@ public:
     /**
      * Clear the log text.
      */
-    void clearText( );
+    void clearText();
 
     /**
      * Return the current number of lines.
      */
-    int lines( ) const { return _logText.size( ); }
+    int lines() const { return _logText.size(); }
 
 
 private:

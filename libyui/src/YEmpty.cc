@@ -20,13 +20,13 @@
 
 #include "YEmpty.h"
 
-YEmpty::YEmpty( YWidgetOpt & opt)
-    :YWidget( opt)
+YEmpty::YEmpty( YWidgetOpt & opt )
+    :YWidget( opt )
 {
 }
 
 
-long YEmpty::nicesize( YUIDimension dim)
+long YEmpty::nicesize( YUIDimension dim )
 {
     return 0;
 }
@@ -34,6 +34,6 @@ long YEmpty::nicesize( YUIDimension dim)
 
 bool YEmpty::isLayoutStretch( YUIDimension dim )
 {
-    return stretchable( dim);
+    return stretchable( dim );
 }
 

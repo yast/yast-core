@@ -31,36 +31,36 @@
 #include "YBarGraph.h"
 
 
-YBarGraph::YBarGraph( YWidgetOpt & opt)
-    :YWidget( opt)
+YBarGraph::YBarGraph( YWidgetOpt & opt )
+    :YWidget( opt )
 {
-    setDefaultStretchable( YD_HORIZ, true);
+    setDefaultStretchable( YD_HORIZ, true );
 }
 
 
-YCPValue YBarGraph::changeWidget( const YCPSymbol & property, const YCPValue & newValue)
+YCPValue YBarGraph::changeWidget( const YCPSymbol & property, const YCPValue & newValue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
     /**
      * @property integer-list Values
      * The numerical values of each segment.
      */
-    if ( s == YUIProperty_Values)
+    if ( s == YUIProperty_Values )
     {
-	if ( newValue->isList( ) )
+	if ( newValue->isList() )
 	{
-	    parseValuesList ( newValue->asList( ) );
-	    doUpdate( );
+	    parseValuesList ( newValue->asList() );
+	    doUpdate();
 
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YBarGraph::changeWidget(`Values): list of integers expected, not %s",
-		    newValue->toString( ).c_str());
+	    y2error( "YBarGraph::changeWidget( `Values ): list of integers expected, not %s",
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
     /**
@@ -68,58 +68,58 @@ YCPValue YBarGraph::changeWidget( const YCPSymbol & property, const YCPValue & n
      * The labels for each segment. "\n" allowed.
      * Use "%1" as a placeholder for the current value.
      */
-    if ( s == YUIProperty_Labels)
+    if ( s == YUIProperty_Labels )
     {
-	if ( newValue->isList( ) )
+	if ( newValue->isList() )
 	{
-	    parseLabelsList ( newValue->asList( ) );
-	    doUpdate( );
+	    parseLabelsList ( newValue->asList() );
+	    doUpdate();
 
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 	}
 	else
 	{
-	    y2error( "YBarGraph::changeWidget(`Labels): list of strings expected, not %s",
-		    newValue->toString( ).c_str());
+	    y2error( "YBarGraph::changeWidget( `Labels ): list of strings expected, not %s",
+		    newValue->toString().c_str() );
 
-	    return YCPBoolean( false);
+	    return YCPBoolean( false );
 	}
     }
-    else return YWidget::changeWidget( property, newValue);
+    else return YWidget::changeWidget( property, newValue );
 }
 
 
-int YBarGraph::segments( )
+int YBarGraph::segments()
 {
-    return _values.size( );
+    return _values.size();
 }
 
 
-int YBarGraph::value( int n)
+int YBarGraph::value( int n )
 {
-    if ( n >= 0 && n < ( int) _values.size( ) )
+    if ( n >= 0 && n < ( int ) _values.size() )
     {
 	return _values[n];
     }
     else
     {
-	y2error( "YBarGraph::value( ): Invalid index %d ( 0 <= n <= %zd",
-		 n, _values.size( ) );
+	y2error( "YBarGraph::value(): Invalid index %d ( 0 <= n <= %zd",
+		 n, _values.size() );
 
 	return -1;
     }
 }
 
 
-string YBarGraph::label( int n)
+string YBarGraph::label( int n )
 {
-    if ( n >= 0 && n < ( int) _labels.size( ) )
+    if ( n >= 0 && n < ( int ) _labels.size() )
     {
 	return _labels[n];
     }
     else
     {
-	if ( n >= 0 && n < ( int) _values.size( ) )
+	if ( n >= 0 && n < ( int ) _values.size() )
 	{
 	    // If an existing segment doesn't have a label, use its value
 	    // as fallback
@@ -131,11 +131,11 @@ string YBarGraph::label( int n)
 	}
 	else
 	{
-	    y2error( "YBarGraph::label( ): Invalid index %d ( 0 <= n <= %zd",
-		     n, _labels.size( ) );
+	    y2error( "YBarGraph::label(): Invalid index %d ( 0 <= n <= %zd",
+		     n, _labels.size() );
 	}
 
-	return string( );
+	return string();
     }
 }
 
@@ -143,21 +143,21 @@ string YBarGraph::label( int n)
 
 void YBarGraph::parseValuesList( const YCPList & newVal )
 {
-    _values.clear( );
+    _values.clear();
 
-    for ( int i=0; i < newVal->size( ); i++ )
+    for ( int i=0; i < newVal->size(); i++ )
     {
-	YCPValue val( newVal->value( i) );
+	YCPValue val( newVal->value( i ) );
 
-	if ( val->isInteger( ) )
+	if ( val->isInteger() )
 	{
-	    _values.push_back( val->asInteger( )->value() );
+	    _values.push_back( val->asInteger()->value() );
 	}
 	else
 	{
-	    y2error( "YBarGraph::parseValueList( ): Syntax error: "
+	    y2error( "YBarGraph::parseValueList(): Syntax error: "
 		     "Expecting integer, you passed \"%s\"",
-		     val->toString( ).c_str() );
+		     val->toString().c_str() );
 
 	    _values.push_back( 0 );
 	}
@@ -167,40 +167,40 @@ void YBarGraph::parseValuesList( const YCPList & newVal )
 
 void YBarGraph::parseLabelsList( const YCPList & newLabels )
 {
-    _labels.clear( );
+    _labels.clear();
 
-    if ( newLabels->size( ) != segments( ) )
+    if ( newLabels->size() != segments() )
     {
 	y2warning( "YBarGraph::parseLabelsList(): Warning: "
-		  "The number of labels ( %d) is not equal "
-		  "to the number of values ( %d)!",
-		  segments( ), newLabels->size( ) );
+		  "The number of labels ( %d ) is not equal "
+		  "to the number of values ( %d )!",
+		  segments(), newLabels->size() );
     }
 
-    for ( int i=0; i < newLabels->size( ); i++ )
+    for ( int i=0; i < newLabels->size(); i++ )
     {
-	YCPValue val( newLabels->value( i) );
+	YCPValue val( newLabels->value( i ) );
 
-	if ( i < segments( ) )
+	if ( i < segments() )
 	{
-	    if ( val->isString( ) )
+	    if ( val->isString() )
 	    {
-		_labels.push_back( val->asString( )->value() );
+		_labels.push_back( val->asString()->value() );
 	    }
 	    else
 	    {
-		y2error( "YBarGraph::parseLabelsList( ): Syntax error: "
+		y2error( "YBarGraph::parseLabelsList(): Syntax error: "
 			 "Expecting string, you passed \"%s\"",
-			 val->toString( ).c_str() );
+			 val->toString().c_str() );
 
 		_labels.push_back( "" );
 	    }
 	}
 	else
 	{
-	    y2error( "YBarGraph::parseLabelsList( ): Warning: "
+	    y2error( "YBarGraph::parseLabelsList(): Warning: "
 		     "Ignoring excess label \"%s\"",
-		     val->toString( ).c_str() );
+		     val->toString().c_str() );
 	}
     }
 }
@@ -211,7 +211,7 @@ void YBarGraph::parseLabelsList( const YCPList & newLabels )
  * Overwrite this to do the actual visual update.
  */
 
-void YBarGraph::doUpdate( )
+void YBarGraph::doUpdate()
 {
     // NOP
 }

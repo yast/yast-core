@@ -13,7 +13,7 @@
   File:		YSplit.h
 
   Author:	Stefan Hundhammer <sh@suse.de>
-		( complete rewrite 09/2000)
+		( complete rewrite 09/2000 )
 
 /-*/
 
@@ -41,14 +41,14 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YSplit"; }
+    virtual char *widgetClass() { return "YSplit"; }
 
     /**
      * Returns the dimensions.
      */
-    YUIDimension dimension( ) const		{ return primary; }
-    YUIDimension primaryDimension( ) const	{ return primary; }
-    YUIDimension secondaryDimension( ) const	{ return secondary; }
+    YUIDimension dimension() const		{ return primary; }
+    YUIDimension primaryDimension() const	{ return primary; }
+    YUIDimension secondaryDimension() const	{ return secondary; }
 
     /**
      * Minimum size the widget should have to make it look and feel
@@ -78,12 +78,12 @@ public:
      * is implemented. The ui specific widget must call this
      * method at the end of it's own setSize method.
      */
-    void setSize( long newwidth, long newheight);
+    void setSize( long newwidth, long newheight );
 
     /**
      * Moves a child to a new position
      */
-    virtual void moveChild( YWidget *child, long newx, long newy) = 0;
+    virtual void moveChild( YWidget *child, long newx, long newy ) = 0;
 
 
 protected:
@@ -109,7 +109,7 @@ protected:
     int countNonWeightedChildren( YUIDimension dimension );
 
     /**
-     * Count the number of stretchable ( non-weighted) children.
+     * Count the number of stretchable ( non-weighted ) children.
      * Note: Weighted children are _always_ considered stretchable.
      */
     int countStretchableChildren( YUIDimension dimension );
@@ -117,7 +117,7 @@ protected:
     /**
      * Count the number of "rubber bands", i.e. the number of
      * stretchable layout spacings ( e.g. {H|V}Weight,
-     * {H|V}Spacing). Only those without a weight are counted.
+     * {H|V}Spacing ). Only those without a weight are counted.
      */
     int countLayoutStretchChildren( YUIDimension dimension );
 
@@ -127,7 +127,7 @@ protected:
      * Returns -1 if there is no boss, i.e. none of the children has a
      * weight specified.
      */
-    int bossChild( );
+    int bossChild();
 
     /**
      * Calculate the sizes and positions of all children in the primary
@@ -150,7 +150,7 @@ protected:
      * appropriate position.
      *
      * The vectors passed are the sizes previously calculated by
-     * calcPrimaryGeometry( ) and calcSecondaryGeometry( ).
+     * calcPrimaryGeometry() and calcSecondaryGeometry().
      */
     void doResize( sizeVector & width,
 		   sizeVector & height,

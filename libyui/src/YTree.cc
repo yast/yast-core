@@ -33,113 +33,113 @@ YTree::YTree( YWidgetOpt & opt, YCPString newLabel )
     : YWidget( opt )
     , label( newLabel )
 {
-    y2debug( "YTree(%s)", newLabel->value_cstr( ));
-    setDefaultStretchable( YD_HORIZ, true);
-    setDefaultStretchable( YD_VERT,  true);
+    y2debug( "YTree( %s )", newLabel->value_cstr() );
+    setDefaultStretchable( YD_HORIZ, true );
+    setDefaultStretchable( YD_VERT,  true );
 }
 
 
-YTree::~YTree( )
+YTree::~YTree()
 {
     // Get rid of all children.
     //
     // Unfortuanately, STL iterators are doo dumb to modify their
     // container - so we really need to do this manually.
 
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	delete items[i];
     }
 
-    items.clear( );
+    items.clear();
 }
 
 
 YCPValue
-YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue)
+YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
     /*
      * @property string Label the label above the Tree
      */
-    if ( s == YUIProperty_Label)
+    if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString())
+	if ( newvalue->isString() )
 	{
-	    setLabel( newvalue->asString());
-	    return YCPBoolean( true);
+	    setLabel( newvalue->asString() );
+	    return YCPBoolean( true );
 	}
 	else
 	{
 	    y2error( "Tree: Invalid parameter %s for Label property - must be string.",
-		    newvalue->toString( ).c_str() );
-	    return YCPBoolean( false);
+		    newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
 
     /*
      * @property itemId CurrentItem the currently selected item
      */
-    else if ( s == YUIProperty_CurrentItem)
+    else if ( s == YUIProperty_CurrentItem )
     {
 	YTreeItem *it = findItemWithId ( newvalue );
 
 	if ( ! it )
-	    it = findItemWithText ( newvalue->asString( ) );
+	    it = findItemWithText ( newvalue->asString() );
 
 	if ( it )
 	{
 	    setCurrentItem ( it );
-	    return YCPBoolean( true);
+	    return YCPBoolean( true );
 
 	}
 	else // no such item found
 	{
-	    y2error( "Tree: No item %s existing", newvalue->toString( ).c_str());
-	    return YCPBoolean( false);
+	    y2error( "Tree: No item %s existing", newvalue->toString().c_str() );
+	    return YCPBoolean( false );
 	}
     }
     else
     {
-	return YWidget::changeWidget( property, newvalue);
+	return YWidget::changeWidget( property, newvalue );
     }
 }
 
 
 
-YCPValue YTree::queryWidget( const YCPSymbol & property)
+YCPValue YTree::queryWidget( const YCPSymbol & property )
 {
-    string s = property->symbol( );
+    string s = property->symbol();
 
-    if ( s == YUIProperty_Label)
+    if ( s == YUIProperty_Label )
     {
-	return getLabel( );
+	return getLabel();
     }
-    else if ( s == YUIProperty_CurrentItem)
+    else if ( s == YUIProperty_CurrentItem )
     {
-	const YTreeItem *it = getCurrentItem( );
+	const YTreeItem *it = getCurrentItem();
 
 	if ( it )
-	    return it->getId( ).isNull() ? it->getText( ) : it->getId( );
+	    return it->getId().isNull() ? it->getText() : it->getId();
 	else
-	    return YCPVoid( );
+	    return YCPVoid();
     }
     else
-	return YWidget::queryWidget( property);
+	return YWidget::queryWidget( property );
 
-    return YCPVoid( );
+    return YCPVoid();
 }
 
 
 void
-YTree::setLabel( const YCPString & label)
+YTree::setLabel( const YCPString & label )
 {
     this->label = label;
 }
 
 
-YCPString YTree::getLabel( )
+YCPString YTree::getLabel()
 {
     return label;
 }
@@ -180,7 +180,7 @@ YTree::addItem ( YTreeItem *		parentItem,
 
 
 void
-YTree::rebuildTree( )
+YTree::rebuildTree()
 {
     // NOP
 }
@@ -190,7 +190,7 @@ YTree::rebuildTree( )
 YTreeItem *
 YTree::findItemWithId ( const YCPValue & id )
 {
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	YTreeItem *it = items[i]->findItemWithId ( id );
 
@@ -198,14 +198,14 @@ YTree::findItemWithId ( const YCPValue & id )
 	    return it;
     }
 
-    return ( YTreeItem *) 0;
+    return ( YTreeItem * ) 0;
 }
 
 
 YTreeItem *
 YTree::findItemWithText	( const YCPString & text )
 {
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	YTreeItem *it = items[i]->findItemWithText ( text );
 
@@ -213,7 +213,7 @@ YTree::findItemWithText	( const YCPString & text )
 	    return it;
     }
 
-    return ( YTreeItem *) 0;
+    return ( YTreeItem * ) 0;
 }
 
 
@@ -231,7 +231,7 @@ YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool o
     , _data( 0 )
     , text ( newText )
     , parentTree ( parent )
-    , parentItem ( ( YTreeItem *) 0 )
+    , parentItem ( ( YTreeItem * ) 0 )
     , openByDefault ( open )
 {
     parent->items.push_back ( this );
@@ -242,7 +242,7 @@ YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bo
     : id ( newId )
     , _data( 0 )
     , text ( newText )
-    , parentTree ( ( YTree *) 0 )
+    , parentTree ( ( YTree * ) 0 )
     , parentItem ( parent )
     , openByDefault ( open )
 {
@@ -251,11 +251,11 @@ YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bo
 
 
 YTreeItem::YTreeItem ( YTree * parent, YCPString newText, void * data, bool open )
-    : id( YCPNull( ) )
+    : id( YCPNull() )
     , _data( data )
     , text ( newText )
     , parentTree ( parent )
-    , parentItem ( ( YTreeItem *) 0 )
+    , parentItem ( ( YTreeItem * ) 0 )
     , openByDefault ( open )
 {
     parent->items.push_back ( this );
@@ -263,10 +263,10 @@ YTreeItem::YTreeItem ( YTree * parent, YCPString newText, void * data, bool open
 
 
 YTreeItem::YTreeItem ( YTreeItem * parent, YCPString newText, void * data, bool open )
-    : id( YCPNull( ) )
+    : id( YCPNull() )
     , _data( data )
     , text ( newText )
-    , parentTree ( ( YTree *) 0 )
+    , parentTree ( ( YTree * ) 0 )
     , parentItem ( parent )
     , openByDefault ( open )
 {
@@ -274,29 +274,29 @@ YTreeItem::YTreeItem ( YTreeItem * parent, YCPString newText, void * data, bool 
 }
 
 
-YTreeItem::~YTreeItem( )
+YTreeItem::~YTreeItem()
 {
     // Get rid of all children.
     //
     // Unfortuanately, STL iterators are doo dumb to modify their
     // container - so we really need to do this manually.
 
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	delete items[i];
     }
 
-    items.clear( );
+    items.clear();
 }
 
 
 YTreeItem *
 YTreeItem::findItemWithId ( const YCPValue & id )
 {
-    if ( ! getId( ).isNull() && getId( )->equal( id ) )
+    if ( ! getId().isNull() && getId()->equal( id ) )
 	return this;
 
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	YTreeItem *it = items[i]->findItemWithId ( id );
 
@@ -304,17 +304,17 @@ YTreeItem::findItemWithId ( const YCPValue & id )
 	    return it;
     }
 
-    return ( YTreeItem *) 0;
+    return ( YTreeItem * ) 0;
 }
 
 
 YTreeItem *
 YTreeItem::findItemWithText ( const YCPString & text )
 {
-    if ( getText( )->equal( text ) )
+    if ( getText()->equal( text ) )
 	return this;
 
-    for ( unsigned i=0; i < items.size( ); i++ )
+    for ( unsigned i=0; i < items.size(); i++ )
     {
 	YTreeItem *it = items[i]->findItemWithText ( text );
 
@@ -322,6 +322,6 @@ YTreeItem::findItemWithText ( const YCPString & text )
 	    return it;
     }
 
-    return ( YTreeItem *) 0;
+    return ( YTreeItem * ) 0;
 }
 

@@ -42,19 +42,19 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YMultiLineEdit"; }
+    virtual char *widgetClass() { return "YMultiLineEdit"; }
 
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command changeWidget for the widget specific properties.
      */
-    YCPValue queryWidget( const YCPSymbol & property);
+    YCPValue queryWidget( const YCPSymbol & property );
 
 
     /**
@@ -66,23 +66,23 @@ public:
     /**
      * Set the edited text.
      */
-    virtual void setText( const YCPString & text) = 0;
+    virtual void setText( const YCPString & text ) = 0;
 
     /**
      * Get the edited text.
      */
-    virtual YCPString text( ) = 0;
+    virtual YCPString text() = 0;
 
     /**
      * Get the label above the log lines.
      */
-    YCPString label( ) const { return _label; }
+    YCPString label() const { return _label; }
 
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
-    const char *shortcutProperty( ) { return YUIProperty_Label; }
+    const char *shortcutProperty() { return YUIProperty_Label; }
     
 
 private:

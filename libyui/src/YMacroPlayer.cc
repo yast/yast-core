@@ -33,14 +33,14 @@
 
 
 YMacroPlayer::YMacroPlayer( const string & macroFileName )
-    : _macro( YCPNull( ) )
+    : _macro( YCPNull() )
 {
     _nextBlockNo = -1;
     readMacroFile( macroFileName );
 }
 
 
-YMacroPlayer::~YMacroPlayer( )
+YMacroPlayer::~YMacroPlayer()
 {
     y2debug( "Deleting macro player." );
 }
@@ -49,91 +49,91 @@ YMacroPlayer::~YMacroPlayer( )
 
 void YMacroPlayer::readMacroFile( const string & macroFileName )
 {
-    clearError( );
-    FILE * macroFile = fopen( macroFileName.c_str( ), "r" );
+    clearError();
+    FILE * macroFile = fopen( macroFileName.c_str(), "r" );
 
     if ( ! macroFile )
     {
-	setError( );
-	y2error( "Can't open macro file %s", macroFileName.c_str( ) );
+	setError();
+	y2error( "Can't open macro file %s", macroFileName.c_str() );
 	return ;
     }
 
-    y2milestone( "Loading macro file %s", macroFileName.c_str( ) );
+    y2milestone( "Loading macro file %s", macroFileName.c_str() );
 
-    YCPParser parser( macroFile, macroFileName.c_str( ) );
-    _macro = parser.parse( );
+    YCPParser parser( macroFile, macroFileName.c_str() );
+    _macro = parser.parse();
 
-    if ( _macro.isNull( ) )
+    if ( _macro.isNull() )
     {
-	setError( );
+	setError();
 	y2error( "Error parsing macro file %s - macro execution aborted",
-		 macroFileName.c_str( ) );
+		 macroFileName.c_str() );
 	return;
     }
 
-    if ( ! _macro->isBlock( ) )
+    if ( ! _macro->isBlock() )
     {
-	setError( );
+	setError();
 	y2error( "Macro syntax error in file %s - expected YCP block",
-		 macroFileName.c_str( ) );
+		 macroFileName.c_str() );
 	return;
     }
 
     y2debug( "Playing macro from file %s - %d macro blocks",
-	     macroFileName.c_str( ), _macro->asBlock( )->size() );
+	     macroFileName.c_str(), _macro->asBlock()->size() );
     _nextBlockNo = 0;
 
     fclose( macroFile );
 }
 
 
-bool YMacroPlayer::finished( )
+bool YMacroPlayer::finished()
 {
-    if ( error( ) || _macro.isNull( ) || _nextBlockNo < 0 )
+    if ( error() || _macro.isNull() || _nextBlockNo < 0 )
     {
-	y2warning( "Test for error( ) first before testing finished( ) !" );
+	y2warning( "Test for error() first before testing finished() !" );
 	return true;
     }
     else
     {
-	y2debug( "_nextBlockNo: %d, size: %d, finished( ): %s",
-		 _nextBlockNo ,_macro->asBlock( )->size(),
-		 _nextBlockNo >= _macro->asBlock( )->size() ? "true" : "false" );
+	y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
+		 _nextBlockNo ,_macro->asBlock()->size(),
+		 _nextBlockNo >= _macro->asBlock()->size() ? "true" : "false" );
 
-	return _nextBlockNo >= _macro->asBlock( )->size();
+	return _nextBlockNo >= _macro->asBlock()->size();
     }
 }
 
 
-YCPBlock YMacroPlayer::nextBlock( )
+YCPBlock YMacroPlayer::nextBlock()
 {
-    if ( error( ) || finished( ) )
+    if ( error() || finished() )
     {
-	return YCPNull( );
+	return YCPNull();
     }
 
-    YCPStatement macroBlock = _macro->asBlock( )->statement( _nextBlockNo++ );
+    YCPStatement macroBlock = _macro->asBlock()->statement( _nextBlockNo++ );
 
-    if ( ! macroBlock->isNestedStatement( ) )
+    if ( ! macroBlock->isNestedStatement() )
     {
-	setError( );
+	setError();
 	y2error( "Invalid macro syntax - block expected, not\n%s",
-		 macroBlock->toString( ).c_str() );
+		 macroBlock->toString().c_str() );
 
-	return YCPNull( );
+	return YCPNull();
     }
     else
     {
 	y2debug( "Next macro block to execute:\n%s",
-		 macroBlock->toString( ).c_str() );
+		 macroBlock->toString().c_str() );
     }
 
-    return macroBlock->asNestedStatement( )->value();
+    return macroBlock->asNestedStatement()->value();
 }
 
 
-void YMacroPlayer::rewind( )
+void YMacroPlayer::rewind()
 {
     _nextBlockNo = 0;
 }

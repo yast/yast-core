@@ -26,7 +26,7 @@
 #include "YWidgetOpt.h"
 #include "YUISymbols.h"
 
-#define YWIDGET_MAGIC		42	// what else? ;-)
+#define YWIDGET_MAGIC		42	// what else? ;- )
 
 class YCPSymbol;
 class YMacroRecorder;
@@ -51,61 +51,61 @@ public:
     /**
      * Constructor
      */
-    YWidget( YWidgetOpt & opt);
+    YWidget( YWidgetOpt & opt );
 
     /**
      * Destructor
      */
-    virtual ~YWidget( );
+    virtual ~YWidget();
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YWidget"; }
+    virtual char *widgetClass() { return "YWidget"; }
 
     /**
      * Checks whether or not this object is valid. This is to enable
      * dangling pointer error checking ( i.e. this object is already
-     * deallocated, but a pointer to it is still in use).
+     * deallocated, but a pointer to it is still in use ).
      */
-    bool isValid( ) const 	{ return magic == YWIDGET_MAGIC; }
+    bool isValid() const 	{ return magic == YWIDGET_MAGIC; }
 
     /**
-     * Return the widget serial number ( the internal widget ID).
+     * Return the widget serial number ( the internal widget ID ).
      */
-    int internalId( ) const	{ return internal_widget_id; }
+    int internalId() const	{ return internal_widget_id; }
 
     /**
      * Sets the id of the widget
      */
-    void setId( const YCPValue & id);
+    void setId( const YCPValue & id );
 
     /**
      * Checks whether or not the widget has an ID
      */
-    bool hasId( ) const;
+    bool hasId() const;
 
     /**
      * Gets the id of the widget
      */
-    YCPValue id( ) const;
+    YCPValue id() const;
 
     /**
      * Set the parent YWidget of this widget.
      */
-    void setParent( YWidget *parent);
+    void setParent( YWidget *parent );
 
     /**
      * Return the parent YWidget of this widget.
      */
-    YWidget * YWidget::yParent( ) const;
+    YWidget * YWidget::yParent() const;
 
     /**
      * Return the YDialog this widget belongs to.
      * Returns 0 if there is no dialog parent.
      */
-    YWidget * yDialog( );
+    YWidget * yDialog();
 
     /**
      * Notify a widget that can have children that a child has been deleted.
@@ -113,35 +113,35 @@ public:
      * All container widgets should overwrite this function and update
      * any internal pointers accordingly.
      *
-     * Background: Qt widgets ( and objects inherited from them)
+     * Background: Qt widgets ( and objects inherited from them )
      * automatically delete any child widgets if they are deleted
      * themselves. This conflicts with destructors that delete child widgets.
      */
-    virtual void childDeleted( YWidget *child) {}
+    virtual void childDeleted( YWidget *child ) {}
 
     /**
      * Returns true if this is a dialog widget.
      * The default implementation returns 'false'.
      */
-    virtual bool isDialog( ) const;
+    virtual bool isDialog() const;
 
     /**
      * Returns true if this is a container widget. The default implementation
      * returns false.
      */
-    virtual bool isContainer( ) const;
+    virtual bool isContainer() const;
 
     /**
      * Returns true if this is a replace point widget. The default implementation
      * returns false.
      */
-    virtual bool isReplacePoint( ) const;
+    virtual bool isReplacePoint() const;
 
     /**
      * Returns true if this is a button group widget. The default implementation
      * return false.
      */
-    virtual bool isRadioButtonGroup( ) const;
+    virtual bool isRadioButtonGroup() const;
 
     /**
      * Returns true if this is a layout stretch space in dimension "dim".
@@ -157,7 +157,7 @@ public:
      *
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    virtual long nicesize( YUIDimension dim) = 0;
+    virtual long nicesize( YUIDimension dim ) = 0;
 
     /**
      * This is a boolean value that determines whether the widget is resizable
@@ -169,19 +169,19 @@ public:
      *
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    virtual bool stretchable( YUIDimension dim);
+    virtual bool stretchable( YUIDimension dim );
 
     /**
      * Set the stretchable state to "newStretch" regardless of any `hstretch or
      * `vstretch options.
      */
-    void setStretchable( YUIDimension dim, bool newStretch);
+    void setStretchable( YUIDimension dim, bool newStretch );
 
     /**
      * Set the stretchable state to "newStretch".
      * `hstretch or `vstretch options may override this.
      */
-    void setDefaultStretchable( YUIDimension dim, bool newStretch);
+    void setDefaultStretchable( YUIDimension dim, bool newStretch );
 
 
     /**
@@ -193,52 +193,52 @@ public:
      *
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    virtual long weight( YUIDimension dim);
+    virtual long weight( YUIDimension dim );
 
     /**
      * Return whether or not the widget has a weight.
      */
-    virtual bool hasWeight( YUIDimension dim);
+    virtual bool hasWeight( YUIDimension dim );
 
     /**
      * Sets the new size of the widget. If you overload this function make the
      * underlying ui specific widget have exactly that size. You should _not_
      * change the nicesize, of course. The unit is according to and
-     * nicesize( ). This function is called from the layout algorithm, which has
-     * decides ( using the layout properties) how large the widget now actually
+     * nicesize(). This function is called from the layout algorithm, which has
+     * decides ( using the layout properties ) how large the widget now actually
      * should be.
      *
      * The default implementation does nothing.
      */
-    virtual void setSize( long newwidth, long newheight);
+    virtual void setSize( long newwidth, long newheight );
 
     /**
      * Sets the enabled state of the widget. All new widgets are enabled per
      * definition. Only enabled widgets can take user input.
      */
-    virtual void setEnabling( bool enabled);
+    virtual void setEnabling( bool enabled );
 
     /**
      * Queries the enabled of a widget.
      */
-    bool getEnabling( ) const;
+    bool getEnabling() const;
 
     /**
      * Sets the Notify property
      */
-    void setNotify( bool notify);
+    void setNotify( bool notify );
 
     /**
      * Returns whether the widget will notify, i.e. will case UserInput to
      * return.
      */
-    bool getNotify( ) const;
+    bool getNotify() const;
 
     /**
      * Returns 'true' if a keyboard shortcut should automatically be assigned
      * to this widget - without complaints in the log file.
      **/
-    bool autoShortcut( ) const { return _autoShortcut; }
+    bool autoShortcut() const { return _autoShortcut; }
 
     /**
      * Sets the 'autoShortcut' flag.
@@ -250,7 +250,7 @@ public:
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::changeWidget
      */
-    virtual YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue);
+    virtual YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command ChangeWidget in the incarnation, where the
@@ -260,14 +260,14 @@ public:
      *
      * If you encounter an unknown property, call YWidget::changeWidget
      */
-    virtual YCPValue changeWidget( const YCPTerm & property, const YCPValue & newvalue);
+    virtual YCPValue changeWidget( const YCPTerm & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command QueryWidget. Implement this method in your
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::queryWidget
      */
-    virtual YCPValue queryWidget( const YCPSymbol & property);
+    virtual YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Implements the ui command QueryWidget in the incarnation, where the property
@@ -275,17 +275,17 @@ public:
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::queryWidget
      */
-    virtual YCPValue queryWidget( const YCPTerm & property);
+    virtual YCPValue queryWidget( const YCPTerm & property );
 
     /**
      * Returns a pointer to the ui specific widget implementation.
      */
-    void *widgetRep( );
+    void *widgetRep();
 
     /**
      * Sets the pointer to the ui specific widget implementation.
      */
-    void setWidgetRep( void *);
+    void setWidgetRep( void * );
 
     /**
      * Set the keyboard focus to this widget.
@@ -296,7 +296,7 @@ public:
      * This function returns true if the widget did accept the
      * keyboard focus, and false if not.
      */
-    virtual bool setKeyboardFocus( );
+    virtual bool setKeyboardFocus();
 
 
     /**
@@ -305,7 +305,7 @@ public:
      *
      * This default implementation does nothing. Overwrite this method in any
      * derived class that has user input to save, e.g. TextEntry etc. and call
-     * YMacroRecorder::recordWidgetProperty( ) in the overwritten method.
+     * YMacroRecorder::recordWidgetProperty() in the overwritten method.
      */
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
@@ -314,7 +314,7 @@ public:
      * The name of the widget property that holds the keyboard shortcut, if any.
      * Overwrite this for widgets that can have keyboard shortcuts.
      */
-    virtual const char *shortcutProperty( ) { return ( const char *) 0; }
+    virtual const char *shortcutProperty() { return ( const char * ) 0; }
 
 
 protected:
@@ -322,11 +322,11 @@ protected:
     /**
      * Make this widget invalid. This operation cannot be reversed.
      */
-    void invalidate( ) { magic=0;}
+    void invalidate() { magic=0;}
 
     /**
      * This object is only valid if this magic number is
-     * YWIDGET_MAGIC. Use YWidget::isValid( ) to check this.
+     * YWIDGET_MAGIC. Use YWidget::isValid() to check this.
      */
     int magic;
 
@@ -400,30 +400,30 @@ public:
 
     /**
      * In some UIs updating the screen content is an expensive operation. Use
-     * startMultipleChanges( ) to tell the ui that you're going to perform multiple
+     * startMultipleChanges() to tell the ui that you're going to perform multiple
      * chages to the widget.
-     * The UI may delay any screen updates until doneMultipleChanges( ) is called.
+     * The UI may delay any screen updates until doneMultipleChanges() is called.
      */
-    virtual void startMultipleChanges( ) {}
+    virtual void startMultipleChanges() {}
 
     /**
      * In some UIs updating the screen content is an expensive operation. Use
-     * startMultipleChanges( ) to tell the ui that you're going to perform multiple
+     * startMultipleChanges() to tell the ui that you're going to perform multiple
      * chages to the widget.
-     * The UI may delay any screen updates until doneMultipleChanges( ) is called.
+     * The UI may delay any screen updates until doneMultipleChanges() is called.
      */
-    virtual void doneMultipleChanges( ) {}
+    virtual void doneMultipleChanges() {}
 
     /**
-     * A little helperclass that calls startMultipleChanges( ) in it's constructor
-     * and cares about the necessary call to doneMultipleChanges( ) when it goes
+     * A little helperclass that calls startMultipleChanges() in it's constructor
+     * and cares about the necessary call to doneMultipleChanges() when it goes
      * out of scope.
      */
     class OptimizeChanges
     {
     public:
-	OptimizeChanges( YWidget & w ) : yw( w ) { yw.startMultipleChanges( ); }
-	~OptimizeChanges( )                       { yw.doneMultipleChanges( ); }
+	OptimizeChanges( YWidget & w ) : yw( w ) { yw.startMultipleChanges(); }
+	~OptimizeChanges()                       { yw.doneMultipleChanges(); }
     private:
 	OptimizeChanges( const OptimizeChanges & ); // no copy
 	void operator=( const OptimizeChanges & );  // no assign

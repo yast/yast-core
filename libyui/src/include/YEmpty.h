@@ -33,20 +33,20 @@ public:
     /**
      * Constructor
      */
-    YEmpty( YWidgetOpt & opt);
+    YEmpty( YWidgetOpt & opt );
 
     /**
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass( ) { return "YEmpty"; }
+    virtual char *widgetClass() { return "YEmpty"; }
 
     /**
      * Minimum size the widget should have to make it look and feel
      * nice. This is 0 for the empty widget.
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
-    long nicesize( YUIDimension dim);
+    long nicesize( YUIDimension dim );
 
     /**
      * Returns true if this is a layout stretch space in dimension "dim".
