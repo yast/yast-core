@@ -19,7 +19,7 @@ install-data-local:
 
 CLEANFILES = .made_mod
 clean-local:
-	if test -f Makefile.perl; then $(MAKE) -f Makefile.perl realclean; fi
+	-$(MAKE) -f Makefile.perl realclean
 	rm -f Makefile.perl Makefile.perl.old
 
 TESTS = ycp.test
