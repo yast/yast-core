@@ -33,6 +33,7 @@ $Id$
 #include "ycp/YExpression.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Scanner.h"
 
 #include "ycp/y2log.h"
 #include "ExecutionEnvironment.h"
@@ -267,7 +268,7 @@ YBlock::newNamespace (const string & name, Y2Namespace *name_space, int line)
     y2debug ("YBlock[%p]::newNamespace ('%s' namespace@<%p>):%d", this, name.c_str(), name_space, line);
 #endif
 
-    TableEntry *tentry = newEntry (strdup (name.c_str()), SymbolEntry::c_module, Type::Unspec, line);
+    TableEntry *tentry = newEntry (Scanner::doStrdup (name.c_str()), SymbolEntry::c_module, Type::Unspec, line);
     tentry->sentry()->setPayloadNamespace (name_space);
 
 #if DO_DEBUG
