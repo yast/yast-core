@@ -62,6 +62,11 @@ public:
      * be used. 
      **/
     void recordMakeScreenShot( bool enabled=false, const char * filename=0 );
+
+    /**
+     * Record a text as a comment.
+     **/
+    void recordComment( string comment_text );
     
     /**
      * Begin a macro block that will be executed as a whole.

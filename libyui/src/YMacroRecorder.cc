@@ -177,6 +177,14 @@ void YMacroRecorder::recordDialogDebugLabel()
 }
 
 
+void YMacroRecorder::recordComment( string text )
+{
+    fprintf( _macroFile, "%s%s// %s\n",
+	     YMACRO_INDENT, YMACRO_INDENT,
+	     text.c_str() );
+}
+
+
 void YMacroRecorder::beginBlock()
 {
     if ( ! _macroFile )

@@ -97,7 +97,13 @@ public:
      * Inherited from YWidget.
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
-    
+
+    /**
+     * Returns 'true' if this text entry is in password mode, i.e. there should
+     * be no on-screen echo or only a '*' for each character typed 
+     **/
+    bool passwordMode() const { return _passwordMode; }
+
     
 protected:
 
@@ -110,6 +116,11 @@ protected:
      * Valid input characters
      */
     YCPString validChars;
+
+    /**
+     * Flag: password mode (-> true) or plain text entry?
+     **/
+    bool _passwordMode;
 
 
 private:

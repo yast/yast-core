@@ -33,8 +33,7 @@ YTextEntry::YTextEntry( const YWidgetOpt & opt, const YCPString & label )
     , label( label )
     , validChars( "" )
 {
-    // Derived classes need to check opt.passwordMode!
-
+    _passwordMode = opt.passwordMode.value();
     setDefaultStretchable( YD_HORIZ, true );
     setDefaultStretchable( YD_VERT,  false );
 }
@@ -135,6 +134,24 @@ YCPValue YTextEntry::queryWidget( const YCPSymbol & property )
 
 void YTextEntry::saveUserInput( YMacroRecorder *macroRecorder )
 {
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
+    if ( passwordMode() )
+    {
+	if ( hasId() )
+	{
+	    string text = "UI::";
+	    text += YUIBuiltin_ChangeWidget;
+	    text += "( " + id()->toString() + ", \t`";
+	    text += YUIProperty_Value;
+	    text += ", \"<not recording password in plain text>\" );\t// ";
+	    text += widgetClass();
+	    text += " \"" + debugLabel() + "\"";
+	    
+	    macroRecorder->recordComment( text );
+	}
+    }
+    else
+    {
+	macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
+    }
 }
 

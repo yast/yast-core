@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jan 28 19:02:51 CET 2005 - sh@suse.de
+
+- Suppressing plain text passwords in recorded macros 
+
+-------------------------------------------------------------------
 Tue Jan 11 19:18:32 CET 2005 - mvidner@suse.cz
 
 - Added .probe.dsl
