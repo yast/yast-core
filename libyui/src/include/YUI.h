@@ -141,7 +141,7 @@ public:
      * functions from the underlying Y2{Qt,Ncurses,whatever}Component
      * up to the interpreter.
      */
-    Y2Component *getCallback( void );
+    Y2Component *getCallback( void ) const;
     void setCallback( Y2Component *callback );
 
     /**

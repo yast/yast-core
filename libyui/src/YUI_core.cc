@@ -108,7 +108,7 @@ void YUI::setCurrentInstance()
 
 
 Y2Component *
-YUI::getCallback( void )
+YUI::getCallback( void ) const
 {
     // y2debug ( "YUI[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
