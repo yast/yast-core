@@ -967,7 +967,7 @@ processfile (const char *infname, const char *outfname)
 
     if (read_n_print)
     {
-	progress ("Reading:\n", 0);
+	progress ("Reading: %s\n", infname);
 	YCodePtr c = Bytecode::readFile (infname);
 	if (c == 0)
 	{
@@ -1282,6 +1282,7 @@ int main(int argc, char *argv[])
     {
 	YCPPathSearch::addPath (YCPPathSearch::Module, pathit->c_str());
     }
+
     // register builtins
     SCR scr;
     WFM wfm;
