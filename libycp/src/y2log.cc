@@ -45,13 +45,18 @@ static YCPValue	y2logconf = YCPVoid();
 bool
 shouldBeLogged (int loglevel, string componentname)
 {
+    static bool logging_initialized = false;
+
     /* Everything should be logged */
     if (getenv(Y2LOG_VAR_ALL))
 	return true;
 
     /* Prepare the logfile name */
-    if (!Y2Logging::loggingInitialized())
+    if (!logging_initialized)
+    {
+	logging_initialized = true;
 	y2setLogfileName (""); /* The default */
+    }
 
     if( !y2logconf.isNull() ) {
 
@@ -107,14 +112,12 @@ y2setLogfileName (string filename)
 	FILE *file = fopen (logconfname.c_str (), "r");
 	if (file && (Y2Logging::loggingInitialized() < 1))
 	{
-//	    y2log_initialized = 1;
 	    YCPParser parser (file, logconfname.c_str ());
 	    y2logconf = parser.parse ();
 	    fclose (file);
 	}
 
 	errno = save_errno;
-
     }
     else
     {
