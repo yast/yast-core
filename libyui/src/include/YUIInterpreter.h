@@ -31,6 +31,7 @@
 
 
 using std::deque;
+using std::string;
 
 class YContainerWidget;
 class YEvent;
@@ -232,6 +233,12 @@ public:
      * contained in 'label' are stripped away before any comparison.
      **/
     int defaultFunctionKey( YCPString label );
+    
+    /**
+     * Returns the current product name
+     * ("SuSE Linux", "SuSE Linux Enterprise Server", "United Linux", etc.).
+     **/
+    string productName() const;
 
     /**
      * Returns 'true' if widget geometry should be reversed for languages that
@@ -674,7 +681,7 @@ protected:
      * UI-specific makeScreenShot function.
      * This default implementation does nothing.
      */
-    virtual void makeScreenShot( std::string filename );
+    virtual void makeScreenShot( string filename );
 
 
     /**

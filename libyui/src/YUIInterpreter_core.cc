@@ -491,6 +491,12 @@ string YUIInterpreter::getTextdomain( void )
 }
 
 
+string YUIInterpreter::productName() const
+{
+#warning TODO: Get product name from some config file
+    return "SuSE Linux";
+}
+
 
 // ----------------------------------------------------------------------
 // Default implementations for the virtual methods the deal with
