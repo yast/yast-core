@@ -4,4 +4,6 @@ Makefile.in
 *.auto
 *~
 YUI_builtins.xml
+YUI_*widgets*.xml
 output.xml
+html
