@@ -296,7 +296,12 @@ YCPValue YCPBasicInterpreter::evaluateMap(const YCPMap& map)
 	{
 	    return v;
 	}
-	newmap->add( pos.key(), v);
+	YCPValue k = evaluate(pos.key());
+	if (k.isNull())
+	{
+	    return k;
+	}
+	newmap->add( k, v);
     }
 
     return newmap;
