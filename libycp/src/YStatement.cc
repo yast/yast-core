@@ -242,7 +242,13 @@ YSReturn::evaluate (bool cse)
     y2debug ("YSReturn::evaluate (%s)\n", m_value ? m_value->toString().c_str() : "");
     if (m_value != 0)
     {
-	return m_value->evaluate (cse);
+	YCPValue val = m_value->evaluate (cse);
+
+	if (!val.isNull()
+	    && !val->isVoid())		// treat 'return nil;' as 'return;'
+	{
+	    return val;
+	}
     }
     // don't return YCPVoid() here since YBlock() needs YCPReturn to distinguish
     // a normal statement (returning YCPVoid) from the 'return' statement which
