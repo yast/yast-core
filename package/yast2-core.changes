@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb  2 16:28:17 CET 2004 - msvec@suse.cz
+
+- fixed resolver agent creation
+
+-------------------------------------------------------------------
 Fri Jan 30 16:37:48 CET 2004 - visnov@suse.cz
 
 - for lookup use the same code as for bracket
