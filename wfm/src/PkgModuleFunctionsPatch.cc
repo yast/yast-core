@@ -178,8 +178,6 @@ PkgModuleFunctions::YouSelectPatches (YCPList args)
 
     _y2pm.youPatchManager().instYou().selectPatches( kinds );
 
-    _y2pm.youPatchManager().instYou().filterPatchSelection();
-
     return YCPVoid();
 }
 
