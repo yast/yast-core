@@ -128,3 +128,21 @@ Parsed:
     return (ls == nil);
 }
 ----------------------------------------------------------------------
+[Scanner] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment does not have a value
+[Scanner] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression does not have a value
+Parsed:
+----------------------------------------------------------------------
+{
+    // void fun ()
+    // integer a
+    // map m
+    // filename: "tests/statements/VoidAssign.ycp"
+    void fun ()
+{
+    return nil;
+}
+    integer a = fun ();
+    map m = $[0:0];
+    return /* any -> any */m[0]:m[0]:fun ();
+}
+----------------------------------------------------------------------

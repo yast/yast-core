@@ -444,6 +444,7 @@ bracket_expression:
 		}
 		else
 		{
+		    check_void_assign (0, &($5));
 		    $$.c = new YEBracket ($1.c, $3.c, $5.c, $$.t);
 		    $$.l = $1.l;
 		    if (! $5.t->isVoid ()			// default is not 'nil'
@@ -566,6 +567,7 @@ compact_expression:
 		    $$.t = 0;
 		}
 
+		check_void_assign (0, &($7));
 		$$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $7.t);
 		$$.t = $7.t;
 		$$.l = $1.l;
@@ -3812,8 +3814,8 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
 /*
   check assign operator for 'void' on rhs
 
-  lhs = left hand side
-  rhs = righ hand side
+  lhs = left hand side (might be NULL)
+  rhs = right hand side
 
 */
 
@@ -3826,15 +3828,27 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 	return;
     }
 
-    if (lhs->t->isVoid()			// lhs accepts void
-	|| lhs->t->isAny())			//   or any
+    if (lhs
+	&& (lhs->t->isVoid()			// lhs accepts void
+	    || lhs->t->isAny()))		//   or any
     {
 	return;
     }
 
-    if (rhs->c->kind() == YCode::yeBracket)	// bracket operator checked void before
+    if (rhs->c->kind() == YCode::yeBracket)
     {
-	return;
+	if (lhs != 0)				// bracket operator checked void before
+	{
+	    return;
+	}
+	YEBracketPtr b = rhs->c;
+	if (b == 0)
+	{
+	    yyerror_with_lineinfo (parser, rhs->l, "rhs isn't yeBracket but pretends to be");
+	    return;
+	}
+	YYSTYPE bracket_default_as_yystype = { b->def(), 0, 0, rhs->l };
+	return i_check_void_assign (0, &bracket_default_as_yystype, parser);
     }
 
     if (rhs->c->kind() == YCode::yeBuiltin)
@@ -3852,7 +3866,14 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 	}
     }
 
-    yywarning_with_lineinfo (parser, rhs->l, "rhs of assignment does not have a value");
+    if (lhs == 0)
+    {
+	yywarning_with_lineinfo (parser, rhs->l, "default of bracket expression does not have a value");
+    }
+    else
+    {
+	yywarning_with_lineinfo (parser, rhs->l, "rhs of assignment does not have a value");
+    }
 
     return;
 }

@@ -91,3 +91,13 @@
   // testing for nil is allowed
   return (ls == nil);
 }
+
+{
+  void fun () { return nil; }
+
+  integer a = fun();
+
+  map m = $[0:0];
+
+  return m[0]:m[0]:fun();
+}

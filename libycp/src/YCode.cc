@@ -540,7 +540,7 @@ YLocale::ensureBindDomain (const string& domain)
 	|| ! domains[domain.c_str ()])
     {
 #if DO_DEBUG
-	y2debug ("going to bind a domain %s", m_domain->c_str() );
+	y2debug ("going to bind a domain %s", domain.c_str() );
 #endif
 	bindtextdomain (domain.c_str (), LOCALEDIR);
 	bind_textdomain_codeset (domain.c_str (), "UTF-8");

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 29 22:18:45 CEST 2004 - kkaempf@suse.de
+
+- improve checking if default of bracket operator is void (#36922)
+
+-------------------------------------------------------------------
 Mon Mar 29 20:31:12 CEST 2004 - arvin@suse.de
 
 - fixed uml detection
@@ -16,7 +21,7 @@ Mon Mar 29 14:37:13 CEST 2004 - visnov@suse.cz
 -------------------------------------------------------------------
 Mon Mar 29 12:00:42 CEST 2004 - kkaempf@suse.de
 
-- improve checking if rhs in assignment is void (36922)
+- improve checking if rhs in assignment is void (#36922)
 
 -------------------------------------------------------------------
 Fri Mar 26 19:27:12 CET 2004 - arvin@suse.de

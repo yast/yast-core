@@ -346,6 +346,7 @@ public:
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const { return m_resultType; }
+    YCodePtr def () const { return m_def; }
 };
 
 
