@@ -14,8 +14,7 @@ INCLUDES =					\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
 	-I$(srcdir)/../src			\
-	-I$(includedir)				\
-	-I$(includedir)/y2util/qt
+	-I$(includedir)
 
 noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc

@@ -38,6 +38,5 @@ INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)				\
-	-I$(includedir)/y2util/qt
+	-I$(includedir)
 
