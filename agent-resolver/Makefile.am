@@ -1,3 +1,3 @@
 # Makefile.am for core/agent-resolver
 
-SUBDIRS = conf doc src # testsuite
+SUBDIRS = conf doc src testsuite
