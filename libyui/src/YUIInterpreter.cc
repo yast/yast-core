@@ -23,6 +23,7 @@
 #define noVERBOSE_FIND_RADIO_BUTTON_GROUP
 #define VERBOSE_REPLACE_WIDGET
 
+#include <stdio.h>
 #include <unistd.h> // pipe()
 #include <fcntl.h>  // fcntl()
 #include <errno.h>  // strerror()

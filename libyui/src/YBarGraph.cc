@@ -18,6 +18,7 @@
 
 
 #define y2log_component "ui"
+#include <stdio.h>
 #include <ycp/y2log.h>
 #include <ycp/YCPInteger.h>
 #include <ycp/YCPList.h>

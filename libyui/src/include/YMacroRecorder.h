@@ -19,6 +19,7 @@
 #ifndef YMacroRecorder_h
 #define YMacroRecorder_h
 
+#include <stdio.h>
 #include <string>
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPTerm.h>
