@@ -150,14 +150,19 @@ static YCPSymbol mediaChangeCallbackSymbol("",false);
  *
  * see packagemanager/src/inst/include/y2pm/InstSrc:_mediachangefunc
  *
+ * return "" -> ok, retry
+ * return "C" -> cancel
+ * return "S" -> skip
+ * return "E" -> eject
+ * else url
  */
 static std::string
-mediaChangeCallbackFunc (const std::string& product, const std::string& error, int expected, int current, void *_wfm)
+mediaChangeCallbackFunc (const std::string& error, const std::string& url, const std::string& product, int expected, int current, void *_wfm)
 {
-y2milestone ("mediaChangeCallbackFunc(%s,%s,%d,%d)", product.c_str(), error.c_str(), expected, current);
     YCPTerm callback = YCPTerm (mediaChangeCallbackSymbol, mediaChangeCallbackModule);
-    callback->add(YCPString (product));
     callback->add(YCPString (error));
+    callback->add(YCPString (url));
+    callback->add(YCPString (product));
     callback->add(YCPInteger (expected));
     callback->add(YCPInteger (current));
     YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
