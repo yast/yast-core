@@ -1,0 +1,26 @@
+/* This must produce a error in the log */
+{
+    return Read (.ycp, "not-here.ycp");
+}
+
+/* This must not produce a error in the log */
+{
+    return Read (.ycp, ["not-here.ycp", "never mind"]);
+}
+
+/* Test Write and Read */
+{
+    return Write (.ycp, "tmp.write.ycp", nil );
+}
+
+{
+    return Read (.ycp, "tmp.write.ycp" );
+}
+
+{
+    return Write (.ycp, "tmp.write.ycp", ["a", "b"] );
+}
+
+{
+    return Read (.ycp, "tmp.write.ycp" );
+}

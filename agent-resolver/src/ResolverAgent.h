@@ -1,4 +1,13 @@
-// -*- c++ -*-
+/* ResolverAgent.h
+ *
+ * Classes for reading the resolv.conf configuration file.
+ *
+ * Author: Klaus Kaempf <kkaempf@suse.de>
+ *         Daniel Vesely <dan@suse.cz>
+ *         Michal Svec <msvec@suse.cz>
+ *
+ * $Id$
+ */
 
 #ifndef ResolverAgent_h
 #define ResolverAgent_h
@@ -10,8 +19,6 @@
 /**
  * @short SCR Agent for Resolver commands
  */
-
-
 class ResolverAgent : public SCRAgent
 {
 private:
@@ -64,4 +71,4 @@ public:
     Y2Component *create(const char *name) const;
 };
 
-#endif // ResolverAgent_h
+#endif /* ResolverAgent_h */

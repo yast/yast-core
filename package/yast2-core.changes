@@ -1,4 +1,18 @@
 -------------------------------------------------------------------
+Fri Nov 22 14:24:41 CET 2002 - msvec@suse.cz
+
+- system agent:
+    * background logging
+    * nice mode for written ycp values
+    * updated testsuite
+- modules agent:
+    * use paths for the modules specs
+- dumpto agent:
+    * drop (obsoleted by system agent)
+- runtime agent:
+    * drop (obsoleted by system agent)
+
+-------------------------------------------------------------------
 Wed Nov 20 17:38:06 CET 2002 - sh@suse.de
 
 - UI::MakeScreenShot() now takes a string argument

@@ -1,14 +1,18 @@
 #!/bin/bash
 
+# File:		ag_hostnames
+# Package:	Network configuration
+# Summary:	Agent for reading hostnames from local network
+# Authors:	Michal Svec, Martin Vidner
 #
-# agent for reading
+# $Id$
+#
+# Agent for reading
 # - hostnames from local network
 # - hostnames of hosts that have opened port 515
 # - hostnames of samba servers
 #
-# they are not sorted
-
-# rewritten by Martin Vidner <mvidner@suse.cz>
+# Note: hostnames are not sorted.
 
 if [ x$1 = x-d ]; then
     set -x
@@ -16,7 +20,7 @@ else
     exec 2>/dev/null
 fi
 
-# we want to parse English output
+# We want to parse English output
 export LC_ALL=C
 
 # RETVAL convention avoids passing return values as stdout
@@ -117,3 +121,5 @@ while true ; do
 	    echo nil
     esac
 done
+
+# EOF

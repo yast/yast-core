@@ -1,18 +1,40 @@
-[YCP] tests/read1.ycp:2 ["", "alias", "keep", "options", "post-install", "post-remove", "pre-install", "pre-remove"]
-[YCP] tests/read1.ycp:3 alias ["al1", "al2"]
-[YCP] tests/read1.ycp:4 options ["op1", "op2"]
-[YCP] tests/read1.ycp:5 pre-install ["pri1", "pri2"]
-[YCP] tests/read1.ycp:6 post-install ["poi1", "poi2"]
-[YCP] tests/read1.ycp:7 pre-remove ["prr1", "prr2"]
-[YCP] tests/read1.ycp:8 post-remove ["por1", "por2"]
-[YCP] tests/read1.ycp:10 alias.al1 a1
-[YCP] tests/read1.ycp:11 options.op1 $["o1":"o1val"]
-[YCP] tests/read1.ycp:12 options.op2 $["o2":"o2val", "o2a":""]
-[YCP] tests/read1.ycp:14 pre-install.pri1 prin1
-[YCP] tests/read1.ycp:15 pre-install.pri2 prin2 prin2a prin2b
-[YCP] tests/read1.ycp:16 post-install.poi1 poin1
-[YCP] tests/read1.ycp:17 post-install.poi2 poin2 poin2a poin2b
-[YCP] tests/read1.ycp:18 pre-remove.prr1 prre1
-[YCP] tests/read1.ycp:19 pre-remove.prr2 prre2 prre2a
-[YCP] tests/read1.ycp:20 post-remove.por1 pore1
-[YCP] tests/read1.ycp:21 post-remove.por2 pore2 porte2a
+[YCP] tests/read1.ycp:3 ["alias", "keep", "options", "post-install", "post-remove", "pre-install", "pre-remove"]
+[YCP] tests/read1.ycp:4 alias ["al1", "al2"]
+[YCP] tests/read1.ycp:5 options ["op1", "op2"]
+[YCP] tests/read1.ycp:6 pre-install ["pri1", "pri2"]
+[YCP] tests/read1.ycp:7 post-install ["poi1", "poi2"]
+[YCP] tests/read1.ycp:8 pre-remove ["prr1", "prr2"]
+[YCP] tests/read1.ycp:9 post-remove ["por1", "por2"]
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:11 alias.al1 a1
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:12 options.op1 $["o1":"o1val"]
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:13 options.op2 $["o2":"o2val", "o2a":""]
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:15 pre-install.pri1 prin1
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:16 pre-install.pri2 prin2 prin2a prin2b
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:17 post-install.poi1 poin1
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:18 post-install.poi2 poin2 poin2a poin2b
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:19 pre-remove.prr1 prre1
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:20 pre-remove.prr2 prre2 prre2a
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:21 post-remove.por1 pore1
+[ag_modules] ModulesAgent.cc(Read):158 Obsolete interface, don't use any more!
+[YCP] tests/read1.ycp:22 post-remove.por2 pore2 porte2a
+[YCP] tests/read1.ycp:24 alias.al1 a1
+[YCP] tests/read1.ycp:25 options.op1 $["o1":"o1val"]
+[YCP] tests/read1.ycp:26 options.op2 $["o2":"o2val", "o2a":""]
+[YCP] tests/read1.ycp:28 pre-install.pri1 prin1
+[YCP] tests/read1.ycp:29 pre-install.pri2 prin2 prin2a prin2b
+[YCP] tests/read1.ycp:30 post-install.poi1 poin1
+[YCP] tests/read1.ycp:31 post-install.poi2 poin2 poin2a poin2b
+[YCP] tests/read1.ycp:32 pre-remove.prr1 prre1
+[YCP] tests/read1.ycp:33 pre-remove.prr2 prre2 prre2a
+[YCP] tests/read1.ycp:34 post-remove.por1 pore1
+[YCP] tests/read1.ycp:35 post-remove.por2 pore2 porte2a

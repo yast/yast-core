@@ -1,28 +1,21 @@
-/*---------------------------------------------------------------------\
-|								       |
-|		       __   __	  ____ _____ ____		       |
-|		       \ \ / /_ _/ ___|_   _|___ \		       |
-|			\ V / _` \___ \ | |   __) |		       |
-|			 | | (_| |___) || |  / __/		       |
-|			 |_|\__,_|____/ |_| |_____|		       |
-|								       |
-|				core system			       |
-|							 (C) SuSE GmbH |
-\----------------------------------------------------------------------/
+/* ResolverAgent.cc
+ *
+ * Classes for reading the resolv.conf configuration file.
+ *
+ * Author: Klaus Kaempf <kkaempf@suse.de>
+ *         Daniel Vesely <dan@suse.cz>
+ *         Michal Svec <msvec@suse.cz>
+ *
+ * $Id$
+ */
 
-   File:       ResolverAgent.cc
-
-   Author:     Klaus Kaempf <kkaempf@suse.de>
-               Dan Vesely (dan@suse.cz)
-   Maintainer: Klaus Kaempf <kkaempf@suse.de>
-
-/-*/
-
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
 #include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
 #include <sys/stat.h>
 
 #include <string>
@@ -132,7 +125,7 @@ static int fillCache (const char *filename)
 
     f = fopen (filename, "r");
     if (f == 0) {
-	y2error ("Can't access %s", filename);
+	y2error ("Can't access %s: %s", filename, strerror(errno));
 	return -1;
     }
 

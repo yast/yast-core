@@ -1,4 +1,8 @@
+[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:2 alias.al1 true
-[YCP] tests/write2.ycp:3 alias.al1 true
+[ag_modules] ModulesAgent.cc(Write):288 Obsolete interface, don't use any more!
+[YCP] tests/write2.ycp:3 alias.al1.comment true
+[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:4 options.op1 true
-[YCP] tests/write2.ycp:5 pre-install.pri1 true
+[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[YCP] tests/write2.ycp:5 keep true

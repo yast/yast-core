@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib ag_system.test tests
 
+CLEANFILES = $(wildcard tmp.out.* tmp.err.* tmp.write.* *.sum *.log)
+
 AM_CXXFLAGS = -DY2LOG=\"agent-system\"
 
 PACKAGE = ag_system

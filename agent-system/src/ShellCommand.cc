@@ -8,11 +8,12 @@
  * $Id$
  */
 
+#include <errno.h>
 #include <stdio.h>
+#include <string>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <string>
 
 #define y2log_component "bash"
 #include "ycp/y2log.h"
@@ -178,12 +179,31 @@ shellcommand (const string &command, const string &tempdir)
 int
 shellcommand_background (const string &command)
 {
-    int ret = system (string (command + " >/dev/null 2>&1 &").c_str ());
 
-    if (WIFEXITED (ret))
-	return WEXITSTATUS (ret);
+    if (!getenv ("Y2DEBUGSHELL") && !getenv ("Y2DEBUGALL"))
+    {
+	system (string (command + " >/dev/null 2>&1 &").c_str ());
+	// FIXME execl ("/bin/sh", "-c", command.c_str(), NULL);
+	return 0;
+    }
 
-    return WTERMSIG (ret) + 128;
+    /* fork the child */
+    pid_t child = fork ();
+    if (child == -1)
+    {
+	y2error("fork failed: %s", strerror(errno));
+	return -1;
+    }
+
+    /* child process */
+    if (!child)
+    {
+	shellcommand (command, "");
+	_exit (0);
+    }
+
+    /* return success */
+    return 0;
 }
 
 

@@ -1,4 +1,4 @@
 {
-    y2warning("alias.al1 %1",Write(.alias,"A3","al3"));
-    y2warning("alias.al1 %1",Write(.alias.comment,"# new alias comment", "al3"));
+    y2warning("alias.al3 %1",Write(.alias,"A3","al3"));
+    y2warning("alias.al3.comment %1",Write(.alias.comment,"# new alias comment", "al3"));
 }

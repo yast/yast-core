@@ -8,7 +8,6 @@
  * $Id$
  */
 
-
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -73,7 +72,7 @@ bool ModuleEntry::setOptions(const EntryArg &arg, Mode m) {
 
     if(!Set (m)) return false;
     if(arg.empty())
-        Y2_RETURN_FALSE("setOptions:Empty map")
+        Y2_RETURN_FALSE("setOptions:Empty map");
     argument = arg;
     return true;
 }
@@ -143,7 +142,7 @@ ModulesConf::ModuleEntryMap ModulesConf::getModules(const string directive) {
 string ModulesConf::getArgument(const string directive, const string module) {
     updateIfModified ();
     if(!isModule(directive,module))
-	Y2_RETURN_STR("Bad directive or module: %s, %s", directive.c_str(), module.c_str())
+	Y2_RETURN_STR("Bad directive or module: %s, %s", directive.c_str(), module.c_str());
 
     ModuleEntry::EntryArg ea = modules_conf_map[directive][module].getArgument();
     y2debug("getArgument(%s,%s) %p",directive.c_str(),module.c_str(), this);
@@ -158,7 +157,7 @@ string ModulesConf::getArgument(const string directive, const string module) {
 string ModulesConf::getComment(const string directive, const string module) {
     updateIfModified ();
     if(!isModule(directive,module))
-	Y2_RETURN_STR("Bad directive or module: %s, %s", directive.c_str(), module.c_str())
+	Y2_RETURN_STR("Bad directive or module: %s, %s", directive.c_str(), module.c_str());
 
     return modules_conf_map[directive][module].getComment();
 }
@@ -187,12 +186,12 @@ ModuleEntry::EntryArg ModulesConf::getOptions(const string module) {
 string ModulesConf::getOption(const string module, const string option) {
     updateIfModified ();
     if(!isOption(module,option))
-	Y2_RETURN_STR("Bad module or option: %s, %s", module.c_str(), option.c_str())
+	Y2_RETURN_STR("Bad module or option: %s, %s", module.c_str(), option.c_str());
     ModuleEntry::EntryArg ea = modules_conf_map["options"][module].getArgument();
     if(ea.find(MAGIC_ENTRY)!=ea.end())
-	Y2_RETURN_STR("Bad request for option while there is a string (%s, %s).", module.c_str(), option.c_str())
+	Y2_RETURN_STR("Bad request for option while there is a string (%s, %s).", module.c_str(), option.c_str());
     if(ea.find(option)==ea.end())
-	Y2_RETURN_STR("Bad request for option %s (%s).", option.c_str(), module.c_str())
+	Y2_RETURN_STR("Bad request for option %s (%s).", option.c_str(), module.c_str());
     y2debug("OPTION: %s", ea[option].c_str());
     return ea[option];
 }
@@ -229,7 +228,7 @@ bool ModulesConf::setOption(const string module, const string option, const stri
 bool ModulesConf::setOptions(const string module, const ModuleEntry::EntryArg arg, ModuleEntry::Mode m) {
     modified |= (m == ModuleEntry::SET);
     if(arg.empty())
-        Y2_RETURN_FALSE("setOptions:Empty map")
+        Y2_RETURN_FALSE("setOptions:Empty map");
     updateIndex("options",module);
     modules_conf_map["options"][module].setOptions(arg, m);
     return true;
@@ -271,7 +270,7 @@ bool ModulesConf::updateIfModified() {
     if (time_stamp != getTimeStamp(file_name)) {
 	y2warning("Config file has been changed by an external program.");
 	if(!parseFile(file_name, ModuleEntry::REINIT))
-	    Y2_RETURN_FALSE("updateIfModified: parseFile failed")
+	    Y2_RETURN_FALSE("updateIfModified: parseFile failed");
     }
     return true;
 }
@@ -443,8 +442,8 @@ bool ModulesConf::parseFile(const string &fname, ModuleEntry::Mode m, const bool
                                 // keep the final comment
     if (comment.length () && with_comment)
     {
-        setArgument("", "", "", m);
-        setComment("", "",comment, m);
+        setArgument("YaST2_final_modules_conf_comment", "", "", m);
+        setComment("YaST2_final_modules_conf_comment", "", comment, m);
     }
 
     return updateTimeStamp();
@@ -460,11 +459,11 @@ bool ModulesConf::removeEntry(const string directive, const string module) {
         y2warning("removeEntry: no such directive or module (%s,%s)",directive.c_str(),module.c_str());
 	return false;
     }
-    if(!modules_conf_map[directive].erase(module))
-        Y2_RETURN_FALSE("removeEntry: erase failed (%s,%s)",directive.c_str(),module.c_str())
+    if(modules_conf_map[directive].erase(module) < 1)
+        Y2_RETURN_FALSE("removeEntry: erase failed (%s,%s)",directive.c_str(),module.c_str());
     if(modules_conf_map[directive].empty())
-        if(modules_conf_map.erase(directive))
-            Y2_RETURN_FALSE("removeEntry: erase failed (%s)",directive.c_str())
+        if(modules_conf_map.erase(directive) < 1)
+            Y2_RETURN_FALSE("removeEntry: erase failed (%s)",directive.c_str());
     modules_conf_index.remove("."+directive+"."+module);
     return true;
 }
@@ -484,7 +483,7 @@ bool ModulesConf::writeFile(const string fname) {
 	ofstream of(temp_name.c_str ());
 
 	if (!of.good())
-	    Y2_RETURN_FALSE("Unable to write '%s'.", temp_name.c_str ())
+	    Y2_RETURN_FALSE("Unable to write '%s'.", temp_name.c_str ());
 
 	ModulesConfIndex::iterator it = modules_conf_index.begin ();
 
@@ -501,7 +500,7 @@ bool ModulesConf::writeFile(const string fname) {
 		    of << getComment(dir,mod) << dir + " " + mod + getOptionsAsString(mod) << endl;
 		else if(dir == "keep")	/* no arguments */
 		    of << getComment(dir,mod) << dir << endl;
-		else if(dir == "")	/* comment at EOF */
+		else if(dir == "YaST2_final_modules_conf_comment") /* comment at EOF */
 		    of << getComment(dir,mod); // << endl;
 		else			/* normal directive */
 		    of << getComment(dir,mod) << dir + " " + mod + " " + getArgument(dir,mod) << endl;
@@ -509,7 +508,7 @@ bool ModulesConf::writeFile(const string fname) {
                 if (of.fail ())
 		{
 		    of.close ();
-		    Y2_RETURN_FALSE ("Unable to write '%s'.", temp_name.c_str ())
+		    Y2_RETURN_FALSE ("Unable to write '%s'.", temp_name.c_str ());
                 }
 
 		modules_conf_map[dir][mod].Set(ModuleEntry::INIT);
@@ -534,12 +533,12 @@ bool ModulesConf::writeFile(const string fname) {
 	if (rename (temp_name.c_str (), dest_name.c_str()) < 0)
         {
             rename (backup_name.c_str (), dest_name.c_str ());
-	    Y2_RETURN_FALSE ("Error while moving file in writeFile (): %s", strerror(errno))
+	    Y2_RETURN_FALSE ("Error while moving file in writeFile (): %s", strerror(errno));
         }
 
 	dr = system ("/sbin/depmod -a -F /boot/System.map-`uname -r` `uname -r` 2> /dev/null");
 	if (dr < 0 || dr == 127)
-	    Y2_RETURN_FALSE ("Error while calling depmod in writeFile ()")
+	    Y2_RETURN_FALSE ("Error while calling depmod in writeFile ()");
 
 	modified = false;
     }

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File:		ag_xauth
-# Package:	Configuration of network
+# Package:	Network configuration
 # Summary:	Agent for reading|writing X11 authority information
 # Authors:	Dan Vesely, Michal Svec <msvec@suse.cz>,
 #		Werner Fink, Martin Vidner
@@ -20,8 +20,11 @@
 # the key data to avoid disclosing the key via ps.
 # Old ycp code will still work.
 
-# if there's no DISPLAY, xauth and sux complain
+# If there's no DISPLAY, xauth and sux complain
 exec 2>/dev/null
+
+# We want to parse English output
+export LC_ALL=C
 
 while true ; do
     IFS=
@@ -66,3 +69,5 @@ while true ; do
 	    echo nil
     esac
 done
+
+# EOF

@@ -68,7 +68,7 @@ remove_directory (const string& path, int depth)
 	return;
     if (lstat (path.c_str(), &buf)) // we do not want to follow symlinks
     {
-	y2error ("Can't stat (error %d): %s", errno, path.c_str());
+	y2error ("Can't stat %s: %s", path.c_str(), strerror(errno));
 	return;
     }
     if (S_ISDIR (buf.st_mode))
@@ -84,12 +84,12 @@ remove_directory (const string& path, int depth)
 	    for (i = 0; i < len; i++)
 	    {
 		filename = path + '/' + eps[i]->d_name;
-		remove_directory (filename,depth-1);
+		remove_directory (filename, depth-1);
 	    }
 	}
 	else
 	{
-	    y2error ("Can't scandir (error %d): %s", errno, path.c_str());
+	    y2error ("Can't scandir %s: %s", path.c_str(), strerror(errno));
 	}
     }
     // remove file
@@ -112,7 +112,7 @@ SystemAgent::SystemAgent ()
     const char* tmp2 = mkdtemp (tmp1);
     if (!tmp2)
     {
-	y2error ("can't create tmp directory: %m");
+	y2error ("Can't create tmp directory: %m");
 	exit (EXIT_FAILURE);
     }
 
@@ -220,6 +220,74 @@ shellcommand_output (const string& script, const string& tempdir)
     return result;
 }
 
+
+/**
+ * indent output by level
+ */
+string
+indent_output (int level)
+{
+    string ret = "";
+    while (level-- > 0)
+	ret += "  ";
+    return ret;
+}
+
+/**
+ * recursively dump value to file
+ */
+string
+dump_value (int level, const YCPValue& value)
+{
+    string ret = "";
+
+    if (value.isNull())
+	return "";
+
+    y2debug ( "%s\n", value->toString ().c_str ());
+
+    switch (value->valuetype()) {
+	case YT_LIST:
+	    {
+	    YCPList list = value->asList ();
+	    ret += "[";
+	    for (int i = 0; i < list->size (); i++) {
+		ret += "\n";
+		ret += indent_output (level+1);
+		ret += dump_value (level+1, list->value (i));
+		if ( i != list->size()-1)
+		    ret += ",";
+	    }
+	    ret += "\n";
+	    ret += indent_output (level);
+	    ret += "]";
+	    }
+	    break;
+	case YT_MAP:
+	    {
+	    YCPMap map = value->asMap ();
+	    ret += "$[";
+	    for (YCPMapIterator i = map->begin (); i != map->end (); i++) {
+		if ( i != map->begin () )
+		    ret += ",";
+		ret += "\n";
+		ret += indent_output (level+1);
+		ret += dump_value (level+1, i.key ());
+		ret += " : ";
+		ret += dump_value (level+1, i.value ());
+	    }
+	    ret += "\n";
+	    ret += indent_output (level);
+	    ret += "]";
+	    }
+	    break;
+	default:
+	    ret = value->toString ().c_str ();
+	    break;
+    }
+
+    return ret;
+}
 
 /**
  * Read function
@@ -753,7 +821,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 			     YCPBoolean (false));
 	}
 
-	string contents = (arg.isNull() ? "" : arg->toString());
+	// string contents = (arg.isNull() ? "" : arg->toString());
+	string contents = (arg.isNull() ? "" : dump_value(0, arg));
 	ssize_t size = contents.length();
 	if (size == write(fd, contents.c_str(), size)
 	    && write(fd, "\n", 1) == 1)

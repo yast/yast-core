@@ -1,15 +1,10 @@
 /**
- * File:
- *   xauth.scr
- * Summary:
- *   SCR Agent for reading/writing xauthority information
- * Access:
- *   read/write
- * Authors:
- *   Michal Svec <msvec@suse.cz>
- * See:
- *   libscr
- *   man xauth
+ * File:	xauth.scr
+ * Summary:	Agent for reading|writing xauthority information
+ * Access:	read / write
+ * Authors:	Michal Svec <msvec@suse.cz>
+ * See:		xauth(1)
+ *
  * Example:
  *   Read(.xauth.key)
  *   ("/root/.Xauthority-2cmyRF")
@@ -19,10 +14,11 @@
  *
  * $Id$
  *
- * <p>Script that reads key number of $USER from xauthority
- * used for correct changing hostname
- * Read the key BEFORE changing hostname
- * Write key AFTER changing hostname</p>
+ * <p>Script that reads key number of $USER from xauthority,
+ * used for correct changing hostname.</p>
+ *
+ * <p>Read the key BEFORE changing hostname,
+ * Write key AFTER changing hostname!</p>
  */
 .xauth
 
