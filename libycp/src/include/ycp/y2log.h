@@ -43,14 +43,11 @@ void y2_vlogger (loglevel_t level, const char *component, const char *file,
 /* Logging defines */
 
 #ifndef y2log_component
-
-#ifdef Y2LOG
-#define y2log_component Y2LOG
-#else
-#error Y2LOG not defined
-#define y2log_component ""
-#endif
-
+#  ifdef Y2LOG
+#    define y2log_component Y2LOG
+#  else
+#    error neither y2log_component nor Y2LOG defined
+#  endif
 #endif
 
 #define y2_logger_func(level,comp,file,line,function,format,args...)	\
