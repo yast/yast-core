@@ -729,7 +729,7 @@ YSIf::evaluate (bool cse)
     
     if (!bval->isBoolean())
     {
-	ycp2error ("'if (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
+	ycp2error ("'if (%s)' evaluates to non-boolean '%s' (valuetype %d).", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype());
     }
     else if ((bval->asBoolean()->value() == true)
 	     && (m_true != 0))
@@ -1321,6 +1321,7 @@ YSImport::evaluate (bool cse)
 	&& (nameSpace () != NULL)
 	&& !m_module->second.activated)
     {
+	y2debug ("Evaluating namespace '%s'", m_name.c_str());
 	// init all definitions
 
 	nameSpace()->evaluate (cse);
