@@ -34,23 +34,12 @@ extern StaticDeclaration static_declarations;
 static YCPInteger 
 WFMSCROpen (const YCPString& name, const YCPBoolean &check_version)
 {
-    /**
-     * @builtin SCROpen (string name, bool check_version) -> integer
-     * Create a new scr instance. The name must be a valid y2component name
-     * (e.g. "scr", "chroot=/mnt:scr"). The component is created immediately.
-     * The parameter check_version determined whether the SuSE Version should
-     * be checked. On error a negative value is returned.
-     */
     return Y2WFMComponent::instance ()->SCROpen (name, check_version);
 }
 
 static YCPValue 
 WFMSCRClose (const YCPInteger& handle)
 {
-    /**
-     * @builtin SCRClose (integer handle) -> void
-     * Close a scr instance.
-     */
     Y2WFMComponent::instance ()->SCRClose (handle);
     
     return YCPVoid ();
@@ -60,10 +49,6 @@ WFMSCRClose (const YCPInteger& handle)
 static YCPString 
 WFMSCRGetName (const YCPInteger &handle)
 {
-    /**
-     * @builtin SCRGetName (integer handle) -> string
-     * Get the name of a scr instance.
-     */
     return Y2WFMComponent::instance ()->SCRGetName (handle);
 }
 
@@ -71,10 +56,6 @@ WFMSCRGetName (const YCPInteger &handle)
 static YCPValue 
 WFMSCRSetDefault (const YCPInteger &handle)
 {
-    /**
-     * @builtin SCRSetDefault (integer handle) -> void
-     * Set's the default scr instance.
-     */
     Y2WFMComponent::instance ()->SCRSetDefault (handle);
     return YCPVoid ();
 }
@@ -83,10 +64,6 @@ WFMSCRSetDefault (const YCPInteger &handle)
 static YCPInteger 
 WFMSCRGetDefault ()
 {
-    /**
-     * @builtin SCRGetDefault () -> integer
-     * Get's the default scr instance.
-     */
     return Y2WFMComponent::instance ()->SCRGetDefault ();
 }
 
@@ -100,57 +77,18 @@ WFMCallFunction (const YCPString& name)
 static YCPValue 
 WFMCallFunction1 (const YCPString& name, const YCPList& args)
 {
-    /**
-     * @builtin CallFunction(string name, list arguments) -> any
-     * This is much like CallModule, but it differs in the way how the
-     * module is called. The module call does not make use of the Y2 component
-     * system. CallFunction simply looks for a YCP script residing in
-     * YAST2HOME or one of the other directories in the Y2 search path.
-     * You can't call arbitrary client components, just YCP scripts.
-     * The YCP script then is not executed in an own workflow manager,
-     * but is just called as a function.
-     *
-     * This implies, that the called YCP code has full access to
-     * all symbol definitions of the YCP code is was called from!
-     * A new scope is opened for each block of the YCP code. Since most
-     * YCP scripts are implemented as blocks (starting with {) // keep emacs happy }
-     * so any symbol declarations inside the called code are dropped
-     * when the code is left.
-     *
-     * What CallFunction has in common with CallModule is that
-     * the modulename is temporarily changed to the name of the
-     * called function. This has an impact on the translator, that
-     * always needs to know, which module as currently being executed.
-     *
-     * @example CallFunction ("inst_mouse", [true, false]) -> ....
-     *
-     * In the example, WFM looks for the file YAST2HOME/clients/inst_mouse.ycp
-     * and executes it.
-     */
     return Y2WFMComponent::instance ()->CallFunction (name, args);
 }
 
 static YCPValue 
 WFMGetClientName(const YCPInteger& filedescriptor)
 {
-    /**
-     * @builtin GetClientName(integer filedescriptor) -> string
-     * This builtin read the clientname from a pipe
-     */
     return Y2WFMComponent::instance ()->GetClientName (filedescriptor);
 }
 
 static YCPValue 
 WFMArgs ()
 {
-    /**
-     * @builtin Args() -> list
-     * Returns the arguments with which the module was called.
-     * It is a list whose
-     * arguments are the module's arguments. If the module
-     * was called with <tt>CallModule("my_mod",&nbsp;[17,&nbsp;true])</tt>,
-     * &nbsp;<tt>Args()</tt> will return <tt>[ 17, true ]</tt>.
-     */
     return Y2WFMComponent::instance ()->Args ();
 }
 
@@ -163,10 +101,6 @@ WFMArgs2 (const YCPInteger& index)
 static YCPString 
 WFMGetLanguage ()
 {
-    /**
-     * @builtin GetLanguage() -> string
-     * Returns the current language code (without modifiers !)
-     */
     return Y2WFMComponent::instance ()->GetLanguage ();
 }
 
@@ -174,10 +108,6 @@ WFMGetLanguage ()
 static YCPString 
 WFMGetEncoding ()
 {
-    /**
-     * @builtin GetEncoding() -> string
-     * Returns the current encoding code
-     */
     return Y2WFMComponent::instance ()->GetEncoding ();
 }
 
@@ -185,10 +115,6 @@ WFMGetEncoding ()
 static YCPString 
 WFMGetEnvironmentEncoding ()
 {
-    /**
-     * @builtin GetEncoding() -> string
-     * Returns the current encoding code
-     */
     return Y2WFMComponent::instance ()->GetEnvironmentEncoding ();
 }
 
@@ -196,15 +122,6 @@ WFMGetEnvironmentEncoding ()
 static YCPString 
 WFMSetLanguage (const YCPString& language)
 {
-    /**
-     * @builtin SetLanguage("de_DE" [, encoding]) -> "<proposed encoding>"
-     * Selects the language for translate()
-     * @example SetLanguage("de_DE@euro", "ISO-8859-1") -> ""
-     * @example SetLanguage("de_DE@euro") -> "ISO-8859-15"
-     * if the encoding isn't specified, it's set to "UTF-8"
-     * The "<proposed encoding>" is the output of 'nl_langinfo (CODESET)'
-     * and only given if SetLanguage() is called with a single argument.
-     */
     return Y2WFMComponent::instance ()->SetLanguage (language);
 }
 

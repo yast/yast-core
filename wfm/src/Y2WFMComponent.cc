@@ -191,6 +191,14 @@ Y2WFMComponent::get_env_lang () const
 YCPInteger
 Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversion)
 {
+    /**
+     * @builtin SCROpen (string name, bool check_version) -> integer
+     * Create a new scr instance. The name must be a valid y2component name
+     * (e.g. "scr", "chroot=/mnt:scr"). The component is created immediately.
+     * The parameter check_version determined whether the SuSE Version should
+     * be checked. On error a negative value is returned.
+     */
+
     string name = scrname->value ();
     bool check_version = checkversion->value ();
 
@@ -214,6 +222,11 @@ Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversio
 void
 Y2WFMComponent::SCRClose (const YCPInteger& h)
 {
+    /**
+     * @builtin SCRClose (integer handle) -> void
+     * Close a scr instance.
+     */
+
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
     delete *it;
@@ -224,6 +237,11 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 YCPString
 Y2WFMComponent::SCRGetName (const YCPInteger &h)
 {
+    /**
+     * @builtin SCRGetName (integer handle) -> string
+     * Get the name of a scr instance.
+     */
+
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
     return YCPString (it != scrs.end () ? (*it)->get_name () : "");
@@ -233,6 +251,11 @@ Y2WFMComponent::SCRGetName (const YCPInteger &h)
 void
 Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
 {
+    /**
+     * @builtin SCRSetDefault (integer handle) -> void
+     * Set's the default scr instance.
+     */
+
     default_handle = handle->value ();
     WFMSubAgents::iterator it = find_handle (default_handle);
     if (it != scrs.end ())
@@ -246,12 +269,22 @@ Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
 YCPInteger
 Y2WFMComponent::SCRGetDefault () const
 {
+    /**
+     * @builtin SCRGetDefault () -> integer
+     * Get's the default scr instance.
+     */
+
     return YCPInteger (default_handle);
 }
 
 YCPValue 
 Y2WFMComponent::GetClientName(const YCPInteger& filedescriptor)
 {
+    /**
+     * @builtin GetClientName(integer filedescriptor) -> string
+     * This builtin read the clientname from a pipe
+     */
+
     YCPList arglist = argumentlist;
     long long index = filedescriptor->value ();
     if (index < 0)
@@ -310,6 +343,15 @@ Y2WFMComponent::GetClientName(const YCPInteger& filedescriptor)
 YCPValue
 Y2WFMComponent::Args (const YCPInteger& i) const
 {
+    /**
+     * @builtin Args() -> list
+     * Returns the arguments with which the module was called.
+     * It is a list whose
+     * arguments are the module's arguments. If the module
+     * was called with <tt>CallModule("my_mod",&nbsp;[17,&nbsp;true])</tt>,
+     * &nbsp;<tt>Args()</tt> will return <tt>[ 17, true ]</tt>.
+     */
+
     if (i.isNull ())
     {
 	return argumentlist;
@@ -339,6 +381,11 @@ Y2WFMComponent::Args (const YCPInteger& i) const
 YCPString
 Y2WFMComponent::GetLanguage () const
 {
+    /**
+     * @builtin GetLanguage() -> string
+     * Returns the current language code (without modifiers !)
+     */
+
     return YCPString(currentLanguage);
 }
 
@@ -346,6 +393,11 @@ Y2WFMComponent::GetLanguage () const
 YCPString
 Y2WFMComponent::GetEncoding () const
 {
+    /**
+     * @builtin GetEncoding() -> string
+     * Returns the current encoding code
+     */
+
     return YCPString(currentEncoding);
 }
 
@@ -495,31 +547,19 @@ YCPValue
 Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 {
     /**
-     * @builtin CallFunction(string name, list arguments) -> any
-     * This is much like CallModule, but it differs in the way how the
-     * module is called. The module call does not make use of the Y2 component
-     * system. CallFunction simply looks for a YCP script residing in
-     * YAST2HOME or one of the other directories in the Y2 search path.
-     * You can't call arbitrary client components, just YCP scripts.
-     * The YCP script then is not executed in an own workflow manager,
-     * but is just called as a function.
+     * @builtin call(string name, list arguments) -> any
+     * Executes a YCP client or a Y2 client component. This implies
+     * that the called YCP code has full access to
+     * all module status in the currently running YaST.
      *
-     * This implies, that the called YCP code has full access to
-     * all symbol definitions of the YCP code is was called from!
-     * A new scope is opened for each block of the YCP code. Since most
-     * YCP scripts are implemented as blocks (starting with {) // keep emacs happy }
-     * so any symbol declarations inside the called code are dropped
-     * when the code is left.
+     * The modulename is temporarily changed to the name of the
+     * called script or a component. 
      *
-     * What CallFunction has in common with CallModule is that
-     * the modulename is temporarily changed to the name of the
-     * called function. This has an impact on the translator, that
-     * always needs to know, which module as currently being executed.
-     *
-     * @example CallFunction ("inst_mouse", [true, false]) -> ....
+     * @example call ("inst_mouse", [true, false]) -> ....
      *
      * In the example, WFM looks for the file YAST2HOME/clients/inst_mouse.ycp
-     * and executes it.
+     * and executes it. If the client is not found, a Y2 client component
+     * is tried to be created.
      */
 
     string new_modulename = client->value ();
