@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 19 18:24:01 CEST 2003 - arvin@suse.de
+
+- license now GPL
+
+-------------------------------------------------------------------
 Fri Sep 19 15:43:08 CEST 2003 - ma@suse.de
 
 - If SourceStartCache(enabled==true) is requested, check InstSrcManager
