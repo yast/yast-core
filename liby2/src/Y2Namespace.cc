@@ -28,8 +28,6 @@
 #include "Y2Namespace.h"
 #include "Y2NamespaceCPP.h"
 
-#include "md5.h"
-
 Y2Namespace::Y2Namespace ()
     : m_table ( new SymbolTable(-1) )
     , m_symbolcount (0)
