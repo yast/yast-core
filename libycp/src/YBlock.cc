@@ -25,7 +25,7 @@
 #include <stack>
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 // needed for YBlock
@@ -59,7 +59,9 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
     , m_point (0)
     , m_statements (0)
     , m_last_statement (0)
+    , m_includes (0)
     , m_type (Type::Unspec)
+    , m_running (false)
 {
 #if DO_DEBUG
     y2debug ("YBlock::YBlock [%p] (%s)", this, filename.c_str());
@@ -82,7 +84,9 @@ YBlock::YBlock (const Point *point)
     , m_point (point)
     , m_statements (0)
     , m_last_statement (0)
+    , m_includes (0)
     , m_type (Type::Unspec)
+    , m_running (false)
 {
 }
 
@@ -113,6 +117,9 @@ YBlock::~YBlock ()
 	delete tp;
 	tp = next;
     }
+    
+    if (m_includes)
+	delete m_includes;
 }
 
 
@@ -477,10 +484,13 @@ YBlock::evaluate (bool cse)
 #endif
 
     // recursion handling - not used for modules
-    if (! isModule ())
+    if (! isModule () && m_running)
     {
 	pushToStack ();
     }
+    
+    bool old_m_running = m_running;
+    m_running = true;
 
     string restore_name;
     if (!filename().empty())
@@ -517,8 +527,10 @@ YBlock::evaluate (bool cse)
 	ee.setFilename (restore_name);
     }
     
+    m_running = old_m_running;
+    
     // recursion handling - not used for modules
-    if (! isModule ())
+    if (! isModule () && m_running)
     {
 	popFromStack ();
     }
@@ -817,16 +829,24 @@ YBlock::toStream (std::ostream & str) const
 bool
 YBlock::isIncluded (string includefile) const
 {
-    return find (m_includes.begin (), m_includes.end (), includefile) != m_includes.end ();
+    if (! m_includes)
+	return false;
+
+    return find (m_includes->begin (), m_includes->end (), includefile) != m_includes->end ();
 }
 
 
 void
 YBlock::addIncluded (string includefile)
 {
-    if (find (m_includes.begin (), m_includes.end (), includefile) == m_includes.end ())
+    if (! m_includes)
     {
-	m_includes.push_back (includefile);
+	m_includes = new stringlist_t;
+    }
+    
+    if (find (m_includes->begin (), m_includes->end (), includefile) == m_includes->end ())
+    {
+	m_includes->push_back (includefile);
     }
 }
 

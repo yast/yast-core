@@ -57,7 +57,7 @@ class Bytecode {
     static int m_namespace_tare_level;
     typedef struct { const Y2Namespace *name_space; bool with_xrefs; } namespaceentry_t;
     static namespaceentry_t *m_namespace_nesting_array;
-    static map<string, YBlockPtr> m_bytecodeCache;
+    static map<string, YBlockPtr>* m_bytecodeCache;
 
     public:
 	// bool I/O

@@ -1062,7 +1062,7 @@ Bytecode::readCode (bytecodeistream & str)
 // File I/O
 
 // static member
-map <string, YBlockPtr> Bytecode::m_bytecodeCache;
+map <string, YBlockPtr>* Bytecode::m_bytecodeCache = NULL;
 
 // read file from module path
 
@@ -1083,15 +1083,20 @@ Bytecode::readModule (const string & mname)
 	ycperror ("Module '%s' not found", mname.c_str());
 	return 0;
     }
+    
+    if (! m_bytecodeCache)
+    {
+	m_bytecodeCache = new map <string, YBlockPtr>;
+    }
 
     // check the cache
-    if (m_bytecodeCache.find (mname) != m_bytecodeCache.end ())
+    if (m_bytecodeCache->find (mname) != m_bytecodeCache->end ())
     {
 #if DO_DEBUG
 //	y2debug ("Bytecode cache hit: %s", mname.c_str ());
 #endif
 
-	return m_bytecodeCache.find (mname)->second;
+	return m_bytecodeCache->find (mname)->second;
     }
 
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
@@ -1110,7 +1115,7 @@ Bytecode::readModule (const string & mname)
 	return NULL;
     }
 
-    m_bytecodeCache.insert (std::make_pair (mname, block));
+    m_bytecodeCache->insert (std::make_pair (mname, block));
 
     return block;
 }

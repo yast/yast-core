@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Oct 11 18:22:57 CEST 2004 - visnov@suse.cz
+
+- Make recursion lighter on memory (allocate stack
+  only when needed) 
+
+-------------------------------------------------------------------
 Fri Oct  8 12:47:59 CEST 2004 - visnov@suse.cz
 
 - Split Pkg as a standalone component, don't link against it.

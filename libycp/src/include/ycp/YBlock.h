@@ -122,9 +122,12 @@ private:
     /**
      * List of all included files so far.
      */
-    std::list<std::string> m_includes;
+    typedef std::list<std::string> stringlist_t;
+    stringlist_t* m_includes;
     
     constTypePtr m_type;
+    
+    bool m_running;
 
 public:
     //---------------------------------------------------------------

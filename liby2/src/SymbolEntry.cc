@@ -57,6 +57,7 @@ SymbolEntry::SymbolEntry (const Y2Namespace* name_space, unsigned int position, 
     , m_category ((cat == c_filename) ? cat : (m_global ? c_unspec : cat))
     , m_type (type)
     , m_value (YCPNull())
+    , m_recurse_stack (NULL)
 {
 }
 
@@ -148,14 +149,21 @@ SymbolEntry::value () const
 void
 SymbolEntry::push ()
 {
-    m_recurse_stack.push (m_value);
+    if (! m_recurse_stack)
+    {
+	m_recurse_stack = new valuestack_t;
+    }
+    m_recurse_stack->push (m_value);
 }
 
 void
 SymbolEntry::pop ()
 {
-    m_value = m_recurse_stack.top ();
-    m_recurse_stack.pop ();
+    if (! m_recurse_stack)
+	return;
+
+    m_value = m_recurse_stack->top ();
+    m_recurse_stack->pop ();
 }
 
 const char *

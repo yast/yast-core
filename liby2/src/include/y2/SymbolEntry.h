@@ -101,7 +101,8 @@ protected:
     /*	the current (actual) value of the entry c_const  */
     YCPValue m_value;
     
-    std::stack<YCPValue> m_recurse_stack;
+    typedef std::stack<YCPValue> valuestack_t;
+    valuestack_t* m_recurse_stack;
 
 public:
     // create symbol beloging to namespace (at position)

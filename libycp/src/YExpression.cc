@@ -2911,7 +2911,7 @@ Y2YCPFunction::evaluateCall ()
 
     if (definition->isBlock())
     {
-       ((YBlockPtr)definition)->pushToStack ();
+//       ((YBlockPtr)definition)->pushToStack ();
     }
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)
@@ -2950,7 +2950,7 @@ Y2YCPFunction::evaluateCall ()
     if (definition->isBlock())
     {
        // pop also local parameters
-       ((YBlockPtr)definition)->popFromStack ();
+//       ((YBlockPtr)definition)->popFromStack ();
     }
 
     // restore the context info
