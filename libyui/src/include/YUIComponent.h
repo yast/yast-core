@@ -69,6 +69,13 @@ public:
     static YUI * ui() { return _ui; }
 
     /**
+     * Create a UI instance. The UI component normally handles that all by
+     * itself when the first UI builtin is called, but under very rare
+     * circumstances (e.g., in kyast) the UI needs to be created upon demand.
+     **/
+    void createUI();
+
+    /**
      * YUIComponent level call handler; this creates the actual UI instance
      * upon its first call and then hands over the function to be called to the
      * UI's call handler. Weird, huh? ;-)
@@ -114,8 +121,7 @@ private:
     char **		_argv;
     const char *	_macro_file;
     bool		_with_threads;
-
-    
+    bool		_have_server_options;
 };
 
 #endif // YUI_h

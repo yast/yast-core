@@ -30,20 +30,23 @@
 #include "YUI.h"
 
 
-YUI * YUIComponent::_ui = 0;
-YUIComponent * YUIComponent::_uiComponent = 0;
+// Most class variables are static so they can be accessed from static methods.
+
+YUI *		YUIComponent::_ui			= 0;
+YUIComponent *	YUIComponent::_uiComponent		= 0;
 
 
 YUIComponent::YUIComponent()
 {
-    _argc		= 0;
-    _argv		= 0;
-    _macro_file 	= 0;
-    _with_threads	= false;
+    _argc			= 0;
+    _argv			= 0;
+    _macro_file			= 0;
+    _with_threads		= false;
+    _have_server_options	= false;
 
     if ( _uiComponent )
     {
-	y2error( "Multiple instances of UI component!" );
+	y2error( "Can't create multiple instances of UI component!" );
 	return;
     }
     
@@ -64,12 +67,31 @@ YUIComponent * YUIComponent::uiComponent()
 }
 
 
+void YUIComponent::createUI()
+{
+    if ( ! _have_server_options )
+    {
+	y2error( "createUI() called before setServerOptions() !" );
+	return;
+    }
+
+    if ( _ui )
+    {
+	y2error( "can't create multiple UIs!" );
+	return;
+    }
+
+    y2debug( "Creating UI" );
+    _ui = createUI( _argc, _argv, _with_threads, _macro_file );
+}
+
+
 YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] )
 {
     if ( ! _ui )
     {
 	y2debug( "Late creation of UI instance" );
-	_ui = createUI( _argc, _argv, _with_threads, _macro_file );
+	createUI();
     }
 
     if ( _ui )
@@ -77,7 +99,6 @@ YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_ar
     else
 	return YCPVoid();
 }
-
 
 
 void YUIComponent::setServerOptions( int argc, char **argv )
@@ -112,6 +133,7 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 
     _argc = argc;
     _argv = argv;
+    _have_server_options = true;
 
     // We only save those values for now. The UI gets instantiated upon the
     // first call to YUIComponent::ui() which will usually happen when the
