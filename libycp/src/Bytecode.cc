@@ -18,7 +18,7 @@
 $Id$
 /-*/
 
-// MAJOR and MINOR number must the the same in header, RELEASE is assumed to 
+// MAJOR and MINOR number must the the same in header, RELEASE is assumed to
 // provide a backward compatibility
 #define YaST_BYTECODE_HEADER "YaST bytecode "
 #define YaST_BYTECODE_MAJOR "1"
@@ -50,7 +50,7 @@ Bytecode::namespaceentry_t *Bytecode::m_namespace_nesting_array = 0;
 // ------------------------------------------------------------------
 // bool I/O
 
-std::ostream & 
+std::ostream &
 Bytecode::writeBool (std::ostream & str, const bool value)
 {
     return str.put ((char)(value?'\x01':'\x00'));
@@ -75,7 +75,7 @@ Bytecode::readBool (std::istream & str)
 // ------------------------------------------------------------------
 // u_int32_t I/O
 
-std::ostream & 
+std::ostream &
 Bytecode::writeInt32 (std::ostream & str, const u_int32_t value)
 {
     str.put ((char)4);
@@ -107,7 +107,7 @@ Bytecode::readInt32 (std::istream & str)
 // ------------------------------------------------------------------
 // string I/O
 
-std::ostream & 
+std::ostream &
 Bytecode::writeString (std::ostream & streamref, const string & stringref)
 {
     u_int32_t len = stringref.size();
@@ -141,7 +141,7 @@ Bytecode::readString (std::istream & streamref, string & stringref)
 // ------------------------------------------------------------------
 // char * I/O
 
-std::ostream & 
+std::ostream &
 Bytecode::writeCharp (std::ostream & str, const char * charp)
 {
     u_int32_t len = strlen (charp);
@@ -607,7 +607,7 @@ Bytecode::readEntry (std::istream & str)
     // read reference to namespaces (namespace_id) symbol table (position)
     int namespace_id = Bytecode::readInt32 (str);
     int position = Bytecode::readInt32 (str);
-    
+
     if (namespace_id == -1)
     {
 	y2debug( "Special entry without namespace" );
@@ -674,7 +674,7 @@ Bytecode::readCode (std::istream & str)
     {
 	case YCode::ycConstant:
 	{
-	    // this constant is a placeholder, typically used by 
+	    // this constant is a placeholder, typically used by
 	    // language bindings that cannot provide type information
 	    y2error ("Unable to read constant, check the compilation of the module");
 	    return 0;
@@ -889,7 +889,7 @@ Bytecode::readModule (const string & mname)
 	ycperror ("Module '%s' not found", mname.c_str());
 	return 0;
     }
-    
+
     // check the cache
     if (m_bytecodeCache.find (mname) != m_bytecodeCache.end ())
     {
@@ -900,14 +900,14 @@ Bytecode::readModule (const string & mname)
 
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
     YBlock *block = (YBlock *)Bytecode::readFile (filename);
-    
+
     if (block == NULL)
     {
 	return NULL;
     }
-    
+
     Bytecode::untareStack (tare_id);
-    
+
     if (!block->isModule())
     {
 	y2error ("'%s' is no module", filename.c_str());
@@ -988,7 +988,7 @@ Bytecode::writeFile (const YCode *code, const string & filename)
 {
     // clear errno first
     errno = 0;
-    
+
 //    y2debug ("Bytecode::writeFile (%s)", filename.c_str());
     std::ofstream outstream (filename.c_str());
     if (!outstream.is_open ())
@@ -996,10 +996,10 @@ Bytecode::writeFile (const YCode *code, const string & filename)
 	y2error ("Failed to write '%s': %s", filename.c_str(), strerror (errno));
 	return errno;
     }
-    
+
     string header =  string (YaST_BYTECODE_HEADER YaST_BYTECODE_MAJOR "." YaST_BYTECODE_MINOR "." YaST_BYTECODE_RELEASE);
     outstream.write (header.c_str(), header.size() + 1);	// including trailing \0
-    
+
     code->toStream (outstream);
 
     return outstream.fail ();
