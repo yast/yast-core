@@ -52,6 +52,24 @@ PkgModuleFunctions::~PkgModuleFunctions ()
 // general
 
 /**
+ * @builtin Pkg::InstSysMode () -> void
+ *
+ * Set packagemanager to "inst-sys" mode
+ * - dont use local caches (ramdisk!)
+ *
+ * !!!!!!!!!! CAUTION !!!!!!!!!!!
+ * Can only be called ONCE
+ * MUST be called before any other function
+ * !!!!!!!!!! CAUTION !!!!!!!!!!!
+ */
+YCPValue
+PkgModuleFunctions::InstSysMode (YCPList args)
+{
+    _y2pm.setNotRunningFromSystem();
+    return YCPVoid();
+}
+
+/**
  * @builtin Pkg::CheckSpace (list partitions) -> list usage
  *
  * checks current space usage across partitions
@@ -477,3 +495,29 @@ PkgModuleFunctions::SourceProvide (YCPList args)
     }
     return YCPString (media->localPath (filename).asString());
 }
+
+
+/**
+ * @builtin Pkg::SourceCacheCopyTo (string dir) -> bool
+ *
+ * copy cache data of all installation sources to 'dir'
+ * to be called at end of initial installation with
+ * the target root dir.
+ */
+YCPValue
+PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SourceCacheCopyTo");
+    }
+    Pathname path (args->value(0)->asString()->value());
+    PMError err = _y2pm.instSrcManager().cacheCopyTo (path);
+    if (err != PMError::E_ok)
+    {
+	return YCPError (string ("SourceCacheCopyTo failed: ")+err.errstr(), YCPBoolean (false));
+    }
+    return YCPBoolean (true);
+}
+

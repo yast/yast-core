@@ -62,7 +62,8 @@ PkgModule::evaluate (string function, YCPList args)
 //    y2milestone ("PkgModule::evaluate (%s, %s)", function.c_str(), args->toString().c_str());
 
     // general functions
-    if (function == "CheckSpace")		return CheckSpace (args);
+    if (function == "InstSysMode")		return InstSysMode (args);
+    else if (function == "CheckSpace")		return CheckSpace (args);
     else if (function == "SetLocale")		return SetLocale (args);
     else if (function == "GetLocale")		return GetLocale (args);
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
@@ -121,5 +122,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvide")	return SourceProvide (args);
+    else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
     return YCPError ("Undefined Pkg:: function");
 }

@@ -53,6 +53,7 @@ class PkgModuleFunctions
 
     public:
 	// general
+	YCPValue InstSysMode (YCPList args);
 	YCPValue CheckSpace (YCPList args);
 	YCPValue SetLocale (YCPList args);
 	YCPValue GetLocale (YCPList args);
@@ -66,6 +67,7 @@ class PkgModuleFunctions
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvide (YCPList args);
+	YCPValue SourceCacheCopyTo (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
