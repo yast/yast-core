@@ -149,7 +149,6 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
      **/
     void setCallback( CBid id_r, const string & name_r ) {
       y2debug ("Registering callback %s", name_r.c_str ());
-      // FIXME: possible memory leak on repeated setting of a callback
       string::size_type colonpos = name_r.find("::");
       if ( colonpos != string::npos ) {
 
