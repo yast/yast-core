@@ -385,7 +385,7 @@ YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const 
  * <p>
  * <b>Technical Usage Note:</b>
  * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget( `DownloadProgress )</tt> before
+ * for availability with <tt>HasSpecialWidget( `DumbTab )</tt> before
  * using it.
  */
 
