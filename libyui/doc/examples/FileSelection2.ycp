@@ -14,7 +14,7 @@
 				`HWeight( 1,
 					  `VBox(
 						`PushButton(`id(`askDir), `opt(`hstretch), "Select &Directory..." ),
-						`PushButton(`id(`dir), `opt(`hstretch), "&Current Directory..." ),
+						`PushButton(`id(`dir), `opt(`hstretch), "&Select File..." ),
 						`PushButton(`id(`load ),  `opt(`hstretch), "&Load File..." ),
 						`PushButton(`id(`saveAs), `opt(`hstretch), "Save &As..." )
 						)
@@ -45,18 +45,18 @@
 	}
 	else if ( button == `dir )
 	{
-	    name = PopupDir( "" );
+	    name = PopupFile( "" );
 	}
 	else if ( button == `load )
 	{
-	    name = PopupFileWithMask( "/tmp", [ "*" ] );
+	    name = PopupFileWithMask( "/tmp", [ "*png" ] );
 	}
 	else if ( button == `saveAs )
 	{
 	    name = SaveFileAs( "/tmp" );
 	}
 
-	if ( name == nil )
+	if ( name == "" )
 	    name = "<canceled>";
 
 	if ( name != "" )	// Label update necessary?
