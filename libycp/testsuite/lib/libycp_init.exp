@@ -50,7 +50,7 @@ proc ycp-run { src dir } {
   set tmpout_name "tmp.out.$base_name"
   set tmperr_name "tmp.err.$base_name"
 
-  puts -nonewline "Running $srcdirname/$base_name...       \r"
+  puts "Running $srcdirname/$base_name..."
 
   # run the test
 
@@ -154,7 +154,7 @@ proc bytecode-run { src dir } {
 
 #  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
 #  flush stdout
-  puts -nonewline "Testing $base_name ...                             \r"
+  puts "Testing $base_name ..."
 #  flush stdout
 
   # compile the test
