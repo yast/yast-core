@@ -182,7 +182,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressRebuildDB ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent() ) {
+	if ( _pc.updateIfNewPercent( 5 ) ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
@@ -223,7 +223,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent(5) ) {
+	if ( _pc.updateIfNewPercent( 5 ) ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
@@ -272,7 +272,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressPackage ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent(5) ) {
+	if ( _pc.updateIfNewPercent( 5 ) ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
@@ -405,10 +405,10 @@ namespace Y2PMRecipients {
       _isRemote = pkg->isRemote();
       if ( sourcepkg ) {
 	_name = pkg->nameEd() + ".src";
-	_size = pkg->sourcesize();
+	_size = pkg->sourcesize(); // download size
       } else {
 	_name = pkg->nameEdArch();
-	_size = pkg->archivesize();
+	_size = pkg->archivesize(); // download size
       }
     }
     virtual CBSuggest attempt( unsigned cnt ) {
@@ -466,11 +466,10 @@ namespace Y2PMRecipients {
       // remember values to send on attempt
       if ( sourcepkg ) {
 	_name = pkg->nameEd() + ".src";
-	_size = pkg->sourcesize();
       } else {
 	_name = pkg->nameEdArch();
-	_size = pkg->archivesize();
       }
+      _size = pkg->size(); // content size
       _summary = pkg->summary();
     }
     virtual CBSuggest attempt( unsigned cnt ) {
@@ -519,7 +518,7 @@ namespace Y2PMRecipients {
     virtual void start( constPMPackagePtr pkg ) {
       // remember values to send on attempt
       _name = pkg->nameEdArch();
-      _size = pkg->archivesize();
+      _size = pkg->size(); // content size
       _summary = pkg->summary();
     }
     virtual CBSuggest attempt( unsigned cnt ) {
