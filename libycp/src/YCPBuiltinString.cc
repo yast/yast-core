@@ -42,6 +42,7 @@ using std::string;
 #include "ycp/YCPString.h"
 #include "ycp/YCPInteger.h"
 #include "ycp/YCPPath.h"
+#include "ycp/YCPSymbol.h"
 #include "ycp/YCPBoolean.h"
 #include "ycp/YCPVoid.h"
 #include "ycp/y2log.h"
@@ -130,6 +131,27 @@ s_plus3 (const YCPString &s1, const YCPPath &p2)
 	return YCPNull ();
 
     return YCPString (s1->value () + p2->toString ());
+}
+
+
+static YCPValue
+s_plus4 (const YCPString &s1, const YCPSymbol &s2)
+{
+    /**
+     * @builtin string s1 + symbol s2 -> string
+     * Returns concatenation of <tt>s1</tt> and <tt>s2</tt> after
+     * transforming <tt>s2</tt> to a string AND stripping the leading
+     * backquote.
+     *
+     * Example: <pre>
+     * "YaST" + `two -> "YaSTtwo"
+     * </pre>
+     */
+
+    if (s1.isNull () || s2.isNull ())
+	return YCPNull ();
+
+    return YCPString (s1->value () + s2->symbol());
 }
 
 
@@ -995,6 +1017,7 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "+",		   "string (string, string)",		(void *)s_plus1 },
 	{ "+",		   "string (string, integer)",		(void *)s_plus2 },
 	{ "+",		   "string (string, path)",		(void *)s_plus3 },
+	{ "+",		   "string (string, symbol)",		(void *)s_plus4 },
 	{ "issubstring",   "boolean (string, string)",		(void *)s_issubstring },
 	{ "tostring",	   "string (any)",			(void *)s_tostring },
 	{ "tohexstring",   "string (integer)",			(void *)s_tohexstring },
