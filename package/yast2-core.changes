@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 30 17:18:52 CEST 2004 - sh@suse.de
+
+- Fixed bug #37534: MultiSelectionBox returns [nil] without item IDs
+
+-------------------------------------------------------------------
 Tue Mar 30 16:51:24 CEST 2004 - sh@suse.de
 
 - added `opt(`treeEnabled) for wizard widget 

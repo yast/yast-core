@@ -145,7 +145,8 @@ YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property )
 	{
 	    if ( itemIsSelected(i) )	// ask specific UI for selection state
 	    {
-		selected_items->add( item_ids->value(i).isNull() ?
+		selected_items->add( item_ids->value(i).isNull() ||
+				     item_ids->value(i)->isVoid() ?
 				     item_labels->value(i) : item_ids->value(i) );
 	    }
 	}
