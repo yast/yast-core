@@ -1042,7 +1042,7 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
     }
     
-    if (! res->valid())
+    if (!res || ! res->valid())
 	return 0;
 
     return res;
