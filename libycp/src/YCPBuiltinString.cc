@@ -696,8 +696,8 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
  * @builtin regexpsub( string input, string pattern, string match ) -> string
  *
  * Example <pre>
- * regexpsub( "aaabbb", "(.*ab).*",  "s_\\1_e" ) -> "s_aaab_e"
- * regexpsub( "aaabbb", "(.*ba).*",  "s_\\1_e" ) -> nil
+ * regexpsub( "aaabbb", "(.*ab).*",  "s_\\0_e" ) -> "s_aaab_e"
+ * regexpsub( "aaabbb", "(.*ba).*",  "s_\\0_e" ) -> nil
  * </pre>
  *
  */
@@ -734,7 +734,7 @@ YCPValue evaluateRegexpSub(YCPInterpreter *interpreter, const YCPList& args)
 
 
 /**
- * @builtin regexptokenize( string input, string pattern ) -> list handle
+ * @builtin regexptokenize( string input, string pattern ) -> list
  *
  * !Attention pattern have to include parenthesize "(" ")"
  * If you need no parenthesize, use regexp_match
@@ -748,45 +748,10 @@ YCPValue evaluateRegexpSub(YCPInterpreter *interpreter, const YCPList& args)
  * or regexp_error
  *
  * Example <pre>
- * list e = regexptokenize( "aaabbBb", "(.*[A-Z]).*")
- *
- * // e ==  [ "aaabbB" ]
- *
- *
- * list h = regexptokenize( "aaabbb", "(.*ab)(.*)");
- *
- * // h == [ "aaab", "bb" ]
- *
- * include "wizard/common_functions.ycp"
- * token1(h)         -> "aaab"
- * token2(h)         -> "bb"
- *   ...
- * token9(h)         -> ""
- * regexp_matched(h) -> true
- * regexp_error(h)   -> false
- *
- * list h = regexptokenize( "aaabbb", "(.*ba).*");
- *
- * // h == []
- *
- * token1(h)         ->  ""
- * token2(h)         ->  ""
- *   ...
- * token9(h)         ->  ""
- * regexp_matched(h) ->  false
- * regexp_error(h)   ->  false
- *
- *
- * list h = regexptokenize( "aaabbb", "(.*ba).*(");
- *
- * // h == nil
- *
- * token1(h)         ->  ""
- * token2(h)         ->  ""
- *   ...
- * token9(h)         ->  ""
- * regexp_matched(h) ->  nil
- * regexp_error(h)   ->  true
+ * regexptokenize( "aaabbBb", "(.*[A-Z]).*") -> [ "aaabbB" ]
+ * regexptokenize( "aaabbb", "(.*ab)(.*)") -> [ "aaab", "bb" ]
+ * regexptokenize( "aaabbb", "(.*ba).*") -> []
+ * regexptokenize( "aaabbb", "(.*ba).*(") -> nil
  * </pre>
  */
 YCPValue evaluateRegexpTokenize(YCPInterpreter *interpreter, const YCPList& args)

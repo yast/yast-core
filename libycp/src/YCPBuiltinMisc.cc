@@ -38,7 +38,8 @@ YCPValue evaluateRemove(YCPInterpreter *interpreter, const YCPList& args)
    * The call remove([1,2,3], 1) thus returns [1,3]. Returns nil if the
    * index is invalid.
    *
-   * Example <pre> remove([1,2], 0) -> [2]
+   * Example <pre>
+   * remove([1,2], 0) -> [2]
    * remove(`fun(3,7), 0) -> [3,7];
    * remove(`fun(3,7), 1) -> `fun(7);
    * </pre>
@@ -47,7 +48,8 @@ YCPValue evaluateRemove(YCPInterpreter *interpreter, const YCPList& args)
    * Remove the key k and a corresponding value from a map m.
    * Returns nil if the key k is not found in m.
    *
-   * Example <pre> remove($[1:2], 0) -> $[]
+   * Example <pre>
+   * remove($[1:2], 0) -> $[]
    * remove ($[1:2, 3:4], 1) -> $[3:4]
    * </pre>
    */
