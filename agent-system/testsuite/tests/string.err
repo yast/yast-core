@@ -1,0 +1,1 @@
+[Interpreter] tests/string.ycp:16 Read (.string, "not-here.txt") failed: No such file or directory

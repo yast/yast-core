@@ -1,7 +1,8 @@
 {
+    // this must produce a error in the log
     return Read (.yast2, "not-here.ycp");
 }
 {
-    // this syntax is sick
+    // this must not produce a error in the log
     return Read (.yast2, ["not-here.ycp", "never mind"]);
 }

@@ -142,7 +142,6 @@ static int read_file_to_string (const char* filename, string& output)
     output = "";
     if (fd < 0)
     {
-	y2error ("open for %s failed: %m", filename);
 	return errno;
     }
 
@@ -196,15 +195,24 @@ stat2map (const struct stat& sb)
 /**
  * Run shell command and returns its output.
  */
-static YCPMap shellcommand_output (const string &script, const string &tempdir)
+static YCPMap
+shellcommand_output (const string& script, const string& tempdir)
 {
-    string output_stdout;
-    string output_stderr;
-
     int ret = shellcommand (script, tempdir);
 
-    read_file_to_string (string(tempdir+"/stdout").c_str(), output_stdout);
-    read_file_to_string (string(tempdir+"/stderr").c_str(), output_stderr);
+    string output_stdout;
+    int ret1 = read_file_to_string (string (tempdir + "/stdout").c_str (), output_stdout);
+    if (ret1 != 0)
+    {
+	y2error ("open for %s failed: %s/stdout", tempdir.c_str (), strerror (ret1));
+    }
+
+    string output_stderr;
+    int ret2 = read_file_to_string (string (tempdir + "/stderr").c_str (), output_stderr);
+    if (ret2 != 0)
+    {
+	y2error ("open for %s failed: %s/stderr", tempdir.c_str (), strerror (ret2));
+    }
 
     YCPMap result;
     result->add (YCPString ("exit"), YCPInteger (ret));
@@ -289,8 +297,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 	 */
 
 	string output;
-	int ret;
-	if ((ret = read_file_to_string (filename.c_str(),output)) == 0)
+	int ret = read_file_to_string (filename.c_str (), output);
+	if (ret == 0)
 	{
 	    return YCPString (output);
 	}

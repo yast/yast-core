@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Aug 08 12:51:44 CEST 2002 - arvin@suse.de
+
+- fixed error logging for .string command of system agent and
+  added testsuite for that
+
+-------------------------------------------------------------------
 Wed Aug 07 19:28:50 CEST 2002 - arvin@suse.de
 
 - adaption for libhd changes

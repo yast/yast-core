@@ -1,0 +1,22 @@
+{
+    return Read (.string, "tests/data1.read");
+}
+
+{
+    return Read (.string, "tests/data2.read");
+}
+
+{
+    string data = Read (.string, "tests/data2.read");
+    return Write (.string, "tmp.write.string", data);
+}
+
+{
+    // this must produce a error in the log
+    return Read (.string, "not-here.txt");
+}
+
+{
+    // this must not produce a error in the log
+    return Read (.string, ["not-here.txt", "never mind"]);
+}

@@ -12,11 +12,11 @@
 }
 
 {
-    # this must produce a error in the log
+    // this must produce a error in the log
     return Read (.byte, "tests/not-here.data");
 }
 
 {
-    # this must not produce a error in the log
+    // this must not produce a error in the log
     return Read (.byte, [ "tests/not-here.data", #[ff] ]);
 }
