@@ -7,6 +7,7 @@ Thu Apr 15 09:34:42 CEST 2004 - kkaempf@suse.de
 Thu Apr 15 09:17:22 CEST 2004 - visnov@suse.cz
 
 - show nil warning even for builtins (#32738)
+- handle incorrect function redefinition gracefully (#37366)
 
 -------------------------------------------------------------------
 Wed Apr 14 13:18:43 CEST 2004 - visnov@suse.cz

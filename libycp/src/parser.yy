@@ -1820,7 +1820,7 @@ definition:
 	    }
 |	function_start ';'		/* function declaration */
 	    {
-		if ($1.t == 0)
+		if ($1.t == 0)	// error in declaration, parameter block not on stack
 		{
 		    $$.t = 0;
 		    break;
@@ -1852,6 +1852,8 @@ definition:
 		if ($1.t == 0)			// error in function_start, parameter block not on stack
 		{
 		    $$.t = 0;
+		    declared_return_type = Type::Unspec;
+		    y2debug ("error in function_start, parameter block not on stack");
 		    break;
 		}
 
@@ -2112,6 +2114,9 @@ function_start:
 			{
 			    yyTerror ("Redeclaration with different type", $1.l, $1.v.tval);
 			    yyTypeMismatch ("", prototype, ftype, $1.l);
+			    blockstack_pop (p_parser->m_block_stack);
+			    parameter_block->detachEnvironment (p_parser->scanner()->localTable());
+			    fentry->setCategory (SymbolEntry::c_unspec);
 			    $$.t = 0;
 			    break;
 			}
