@@ -444,7 +444,8 @@ YCPBoolean
 ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
 		      const YCPValue& arg)
 {
-    y2debug ("Write (.resolver%s)", path->toString().c_str());
+    y2debug ("Write (.resolver%s, %s)", path->toString().c_str(),
+	    value->toString().c_str());
 
     fillCache (file_name.c_str ());
 
