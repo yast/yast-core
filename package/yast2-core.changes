@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr  5 22:43:53 CEST 2004 - ma@suse.de
+
+- Send correct size of source packages to install
+  in callbacks.
+
+-------------------------------------------------------------------
 Mon Apr  5 21:49:56 CEST 2004 - ma@suse.de
 
 - Include source packages to install in disk usage

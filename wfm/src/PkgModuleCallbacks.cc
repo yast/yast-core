@@ -532,10 +532,11 @@ namespace Y2PMRecipients {
       // remember values to send on attempt
       if ( sourcepkg ) {
 	_name = pkg->nameEd() + ".src";
+	_size = pkg->sourcesize(); // don't have the contentsize
       } else {
 	_name = pkg->nameEdArch();
+	_size = pkg->size(); // content size
       }
-      _size = pkg->size(); // content size
       _summary = pkg->summary();
     }
     virtual CBSuggest attempt( unsigned cnt ) {
