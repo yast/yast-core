@@ -105,6 +105,10 @@ YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
 {
     y2debug( "Starting evaluation" );
+    
+    // store the old arguments and module name to preserve reentrancy
+    YCPList old_arguments = argumentlist;
+    string old_modulename = modulename;
 
     // wfm always gets three arguments:
     // 0: any script:        script to execute
@@ -145,6 +149,10 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     YCPValue v = script->asCode ()->evaluate ();
 
     y2debug( "Evaluation finished" );
+
+    // restore the old arguments and module name to preserve reentrancy
+    argumentlist = old_arguments;
+    modulename = old_modulename;
 
     return v;
 }

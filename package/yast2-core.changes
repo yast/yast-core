@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar  9 13:43:35 CET 2004 - visnov@suse.cz
+
+- save/restore argument list in WFM:Call (in doActualWork actually) 
+
+-------------------------------------------------------------------
 Mon Mar  8 18:00:42 CET 2004 - kkaempf@suse.de
 
 - haskey() should accept any key (#35465)
