@@ -10,21 +10,21 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUIInterpreter.h
+  File:		Y2UIComponent.h
 
   Author:	Mathias Kettner <kettner@suse.de>
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
-#ifndef YUIInterpreter_h
-#define YUIInterpreter_h
+#ifndef Y2UIComponent_h
+#define Y2UIComponent_h
 
 #include <pthread.h>
 #include <deque>
-#include <ycp/YCPInterpreter.h>
 #include <ycp/YCPMap.h>
-#include <y2/Y2Component.h>
+
+#include <Y2.h>
 
 #include "YWidget.h"
 #include "YAlignment.h"
@@ -59,7 +59,7 @@ typedef struct
  * The implementation of a YaST2 user interface such as qt and ncurses
  * constists in subclassing YUI.
  *
- * We have to handle to cases slightly different: The case with and without
+ * We have to handle two cases slightly different: The case with and without
  * a seperate UI thread.
  *
  * You have two alternatives how to implement event handling in your UI.
@@ -67,7 +67,7 @@ typedef struct
  * or override @ref #pollInput and @ref #waitForEvent, whichever is
  * easier for you.
  */
-class YUIInterpreter : public YCPInterpreter
+class Y2UIComponent : public Y2Component
 {
 public:
     /**
@@ -76,15 +76,15 @@ public:
     YDialog *currentDialog() const;
 
     /**
-     * Creates a YUIInterpreter.
+     * Creates a Y2UIComponent.
      * @param with_threads Set this to true if you want a seperate ui thread
      */
-    YUIInterpreter( bool with_threads, Y2Component *callback );
+    Y2UIComponent( bool with_threads, Y2Component *callback );
 
     /**
      * Cleans up, terminates the ui thread.
      */
-    virtual ~YUIInterpreter();
+    virtual ~Y2UIComponent();
 
 
     /**
@@ -141,9 +141,9 @@ public:
     };
 
     /**
-     * Name of interpreter, returns "ui".
+     * Name of component, returns "ui".
      */
-    string interpreter_name() const;
+    string name() const;
 
     /**
      * Issue an internal error. Derived UIs should overwrite this to display
@@ -154,6 +154,9 @@ public:
      * Notice: This function does _not_ abort the program.
      */
     virtual void internalError( const char *msg );
+    
+    static Y2UIComponent* instance() { return current_ui; }
+    void setCurrentInstance();
 
     /**
      * Might be handy if you have to recode strings from/to utf-8
@@ -183,7 +186,7 @@ public:
     /**
      * Parse an `rgb() value
      **/
-    bool YUIInterpreter::parseRgb( const YCPValue & val, YColor *color, bool complain );
+    bool Y2UIComponent::parseRgb( const YCPValue & val, YColor *color, bool complain );
 
     /**
      * Creates a new widget tree.
@@ -225,7 +228,7 @@ public:
     /**
      * Implements the UI command ReplaceWidget.
      */
-    YCPValue evaluateReplaceWidget( const YCPTerm & term );
+    YCPBoolean evaluateReplaceWidget( const YCPValue & value_id, const YCPTerm & term );
 
     /**
      * Returns the default function key number for a widget with the specified
@@ -253,6 +256,56 @@ public:
      * Set reverse layout for Arabic / Hebrew support
      **/
     static void setReverseLayout( bool rev ) { _reverseLayout = rev; }
+
+    /**
+     * Implementations for most UI builtins.
+     * Each method corresponds directly to one UI builtin.
+     **/
+    YCPValue evaluateAskForExistingDirectory		( const YCPString& startDir, const YCPString& headline );
+    YCPValue evaluateAskForExistingFile			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
+    YCPValue evaluateAskForSaveFileName			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
+    void evaluateBusyCursor				();
+    YCPValue evaluateChangeWidget			( const YCPValue & value_id, const YCPValue & property, const YCPValue & new_value );
+    void evaluateCheckShortcuts				();
+    YCPValue evaluateCloseDialog			();
+    void evaluateDumpWidgetTree				();
+    void evaluateFakeUserInput				( const YCPValue & next_input );
+    YCPMap evaluateGetDisplayInfo			();
+    YCPString evaluateGetLanguage			( const YCPBoolean & strip_encoding );
+    YCPValue evaluateGetModulename			( const YCPTerm & term );
+    YCPString evaluateGetProductName			();
+    YCPString evaluateGlyph				( const YCPSymbol & symbol );
+    YCPValue evaluateHasSpecialWidget			( const YCPSymbol & widget );
+    void evaluateMakeScreenShot				( const YCPString & filename );
+    void evaluateNormalCursor				();
+    YCPBoolean evaluateOpenDialog			( const YCPTerm & term, const YCPTerm & term = YCPNull() );
+    void evaluatePlayMacro				( const YCPString & filename );
+    void evaluatePostponeShortcutCheck			();
+    YCPValue evaluateQueryWidget			( const YCPValue& value_id, const YCPValue& property );
+    void evaluateRecalcLayout				();
+    YCPValue evaluateRecode				( const YCPString & from, const YCPString & to, const YCPString & text );
+    void evaluateRecordMacro				( const YCPString & filename );
+    void evaluateRedrawScreen				();
+    YCPValue evaluateRunPkgSelection			( const YCPValue & value_id );
+    void evaluateSetConsoleFont				( 
+	const YCPString& magic, 
+	const YCPString& font,
+	const YCPString& screen_map, 
+	const YCPString& unicode_map, 
+	const YCPString& encoding );
+    void evaluateSetKeyboard				();
+    YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
+    void evaluateSetFunctionKeys			( const YCPMap & new_keys );
+    void evaluateSetLanguage				( const YCPString& lang, const YCPString& encoding = YCPNull() );
+    void evaluateSetModulename				( const YCPString & name );
+    void evaluateSetProductName				( const YCPString & name );
+    void evaluateStopRecordMacro			();
+    YCPBoolean evaluateWidgetExists			( const YCPValue & value_id );
+
+    YCPValue evaluateUserInput				();
+    YCPValue evaluateTimeoutUserInput			( const YCPInteger & timeout );
+    YCPValue evaluateWaitForEvent			( const YCPInteger & timeout = YCPNull() );
+    YCPValue evaluatePollInput				();
 
 
 protected:
@@ -290,7 +343,7 @@ protected:
      * case it should return the pointer to a YTimeoutEvent).
      *
      * This method is to return a pointer to an event created with the "new"
-     * operator. The generic UI interpreter assumes ownership of this newly
+     * operator. The generic UI component assumes ownership of this newly
      * created object and destroys it when appropriate.
      *
      * The caller will gracefully handle if this method returns 0, albeit this
@@ -309,7 +362,7 @@ protected:
      * events - if there is no pending event, it returns 0.
      *
      * If there is a pending event, a pointer to that event (newly created with
-     * the "new" operator) is returned. The generic UI interpreter assumes
+     * the "new" operator) is returned. The generic UI component assumes
      * ownership of this newly created object and destroys it when appropriate.
      *
      * Derived UIs are required to implement this method.
@@ -754,27 +807,7 @@ protected:
 
 
 
-    /**
-     * This function is inherited from YCPInterpreter. It checks
-     * if the given term is a command the UI understands. If no,
-     * it returns 0 and to interpreter will look at it's builtin
-     * functions instead.
-     *
-     * If it is a valid UI command, executes, tt checks the parameters
-     * and decodes the command. If it is invalid, it logs an error
-     * to y2log and immediatly returns YCPVoid. If it is valid,
-     * it executes it, which may involve calling a virtual method that
-     * is overridden by some actual UI, such as @ref #userInput or
-     * @ref #pollInput.
-     */
-    YCPValue evaluateInstantiatedTerm( const YCPTerm & term );
-
     YCPValue callback		( const YCPValue & value );
-    YCPValue evaluateUI		( const YCPValue & value );
-    YCPValue evaluateWFM	( const YCPValue & value );
-    YCPValue evaluateSCR	( const YCPValue & value );
-    YCPValue setTextdomain	( const string & textdomain ) ;
-    string getTextdomain( void );
 
     /**
      * Evaluates a locale. Evaluate _( "string" ) to "string".
@@ -810,6 +843,7 @@ protected:
      */
     bool playingMacro()		{ return macroPlayer != 0;	}
 
+
 protected:
     /**
      * Tells the ui thread that it should terminate and waits
@@ -827,7 +861,7 @@ protected:
     /**
      * This method implements the UI thread in case it is existing.
      * The loop consists of calling @ref #idleLoop, getting the next
-     * command from the @ref YCPUIInterpreter, evaluating it, which
+     * command from the @ref YCPUIComponent, evaluating it, which
      * possibly invovles calling @ref #userInput() or @ref #pollInput()
      * and writes the answer back to the other thread where the request
      * came from.
@@ -868,51 +902,6 @@ protected:
      */
     YCPValue executeUICommand			( const YCPTerm & term );
 
-
-    /**
-     * Implementations for most UI builtins.
-     * Each method corresponds directly to one UI builtin.
-     **/
-    YCPValue evaluateAskForExistingDirectory		( const YCPTerm & term );
-    YCPValue evaluateAskForExistingFile			( const YCPTerm & term );
-    YCPValue evaluateAskForSaveFileName			( const YCPTerm & term );
-    YCPValue evaluateBusyCursor				( const YCPTerm & term );
-    YCPValue evaluateChangeWidget			( const YCPTerm & term );
-    YCPValue evaluateCheckShortcuts			( const YCPTerm & term );
-    YCPValue evaluateCloseDialog			( const YCPTerm & term );
-    YCPValue evaluateDumpWidgetTree			( const YCPTerm & term );
-    YCPValue evaluateFakeUserInput			( const YCPTerm & term );
-    YCPValue evaluateGetDisplayInfo			( const YCPTerm & term );
-    YCPValue evaluateGetLanguage			( const YCPTerm & term );
-    YCPValue evaluateGetModulename			( const YCPTerm & term );
-    YCPValue evaluateGetProductName			( const YCPTerm & term );
-    YCPValue evaluateGlyph				( const YCPTerm & term );
-    YCPValue evaluateHasSpecialWidget			( const YCPTerm & term );
-    YCPValue evaluateMakeScreenShot			( const YCPTerm & term );
-    YCPValue evaluateNormalCursor			( const YCPTerm & term );
-    YCPValue evaluateOpenDialog				( const YCPTerm & term );
-    YCPValue evaluatePlayMacro				( const YCPTerm & term );
-    YCPValue evaluatePostponeShortcutCheck		( const YCPTerm & term );
-    YCPValue evaluateQueryWidget			( const YCPTerm & term );
-    YCPValue evaluateRecalcLayout			( const YCPTerm & term );
-    YCPValue evaluateRecode				( const YCPTerm & term );
-    YCPValue evaluateRecordMacro			( const YCPTerm & term );
-    YCPValue evaluateRedrawScreen			( const YCPTerm & term );
-    YCPValue evaluateRunPkgSelection			( const YCPTerm & term );
-    YCPValue evaluateSetConsoleFont			( const YCPTerm & term );
-    YCPValue evaluateSetKeyboard			( const YCPTerm & term );
-    YCPValue evaluateSetFocus				( const YCPTerm & term );
-    YCPValue evaluateSetFunctionKeys			( const YCPTerm & term );
-    YCPValue evaluateSetLanguage			( const YCPTerm & term );
-    YCPValue evaluateSetModulename			( const YCPTerm & term );
-    YCPValue evaluateSetProductName			( const YCPTerm & term );
-    YCPValue evaluateStopRecordMacro			( const YCPTerm & term );
-    YCPValue evaluateWidgetExists			( const YCPTerm & term );
-
-    YCPValue evaluateUserInput				( const YCPTerm & term );
-    YCPValue evaluateTimeoutUserInput			( const YCPTerm & term );
-    YCPValue evaluateWaitForEvent			( const YCPTerm & term );
-    YCPValue evaluatePollInput				( const YCPTerm & term );
 
     /**
      * Mid-level handler for the user input related UI commands:
@@ -1420,6 +1409,9 @@ protected:
      * have right-to-left writing direction (Arabic, Hebrew).
      **/
     static bool _reverseLayout;
+    
+private:
+    static Y2UIComponent* current_ui;
 };
 
-#endif // YUIInterpreter_h
+#endif // Y2UIComponent_h
