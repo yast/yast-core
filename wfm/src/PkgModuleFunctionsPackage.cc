@@ -179,7 +179,7 @@ static SelQueryResult queryProvides( PMSelectablePtr sel_r, const string & tag_r
  *
  *  - symbol onSystem: Tells which instance of the package would be available
  *    on the system, if PkgCommit was called right now. That way you're able to
- *    tell wheter the tag will be available on the system after PkgCommit.
+ *    tell whether the tag will be available on the system after PkgCommit.
  *    (e.g. if onSystem != 'NONE && ( onSystem == instance || instance == 'BOTH ))
  *      'NONE stays uninstalled or is deleted
  *      'INST the installed one remains untouched
