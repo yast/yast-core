@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 17 13:02:14 CET 2004 - visnov@suse.cz
+
+- don't pass YCPNull to UI builtins 
+
+-------------------------------------------------------------------
 Tue Mar 16 23:57:59 CET 2004 - ma@suse.de
 
 - Added Pkg::CallbackStartDownload, Pkg::CallbackProgressDownload

@@ -209,6 +209,15 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	return YCPNull();
     }
     
+    // ensure YCPNull will be passed as YCPVoid
+    for (int i = 0; i < argc ; i++)
+    {
+	if (argv[i].isNull ())
+	{
+	    argv[i] = YCPVoid ();
+	}
+    }
+    
     YCPValue ret = YCPVoid();
 
     switch ( argc )
