@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 20 15:34:06 CET 2004 - arvin@suse.de
+
+- fix Pkg::SourceEditGet, Pkg::SourceEditSet and Pkg::SourceScan
+
+-------------------------------------------------------------------
 Fri Feb 20 13:45:30 CET 2004 - visnov@suse.cz
 
 - more memory fixes:
@@ -11,7 +16,7 @@ Fri Feb 20 13:45:30 CET 2004 - visnov@suse.cz
 Thu Feb 19 18:14:32 CET 2004 - visnov@suse.cz
 
 - memory fixes:
- lazy initialization of a symbol table 
+ lazy initialization of a symbol table
  free function declarations/definitions in client calls
 
 -------------------------------------------------------------------
@@ -31,7 +36,7 @@ Wed Feb 18 17:40:45 CET 2004 - mvidner@suse.cz
 -------------------------------------------------------------------
 Wed Feb 18 14:41:58 CET 2004 - visnov@suse.cz
 
-- drop unused md5 implementation 
+- drop unused md5 implementation
 - fix memory leak in reading bytecode header
 
 -------------------------------------------------------------------
@@ -77,7 +82,7 @@ Fri Feb 13 12:15:45 CET 2004 - sh@suse.de
 - Late creation of UI: UI is only created when the first UI
   builtin is actually used, so for command line YCP scripts
   no UI is needed any longer and thus no X connection (for Qt)
-  or controlling tty (for NCurses) 
+  or controlling tty (for NCurses)
 
 -------------------------------------------------------------------
 Thu Feb 12 15:59:09 CET 2004 - arvin@suse.de
