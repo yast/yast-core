@@ -23,6 +23,7 @@
 
 #include <iosfwd>
 #include <vector>
+#include <list>
 #include <string>
 
 #include <YCP.h>
@@ -216,6 +217,23 @@ inline bool YcpArgLoad::Value<YT_STRING, Url>::assign( const YCPValue & arg_r )
   _value = arg_r->asString()->value();
   return true;
 }
+
+///////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+//
+// Common asYCP... functions
+//
+///////////////////////////////////////////////////////////////////
+
+inline YCPList asYCPList( const std::list<std::string> & lst ) {
+  YCPList ret;
+  for ( std::list<std::string>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+    ret->add( YCPString( *it ) );
+  }
+  return ret;
+}
+
 
 ///////////////////////////////////////////////////////////////////
 

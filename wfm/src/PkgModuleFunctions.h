@@ -235,6 +235,7 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgGroup (const YCPString& package);
 	YCPValue PkgLocation (const YCPString& package);
 	YCPValue PkgProperties (const YCPString& package);
+	YCPList  PkgGetFilelist (const YCPString& package, const YCPSymbol& which);
 	YCPValue IsManualSelection ();
 	YCPValue ClearSaveState ();
 	YCPValue SaveState ();
@@ -249,7 +250,8 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgDelete (const YCPString& p);
 	YCPValue PkgNeutral (const YCPString& p);
 	YCPValue PkgReset ();
-	YCPValue PkgSolve (const YCPBoolean& filter);
+	YCPBoolean PkgSolve (const YCPBoolean& filter);
+	YCPBoolean PkgSolveCheckTargetOnly ();
 	YCPValue PkgSolveErrors ();
 	YCPValue PkgCommit (const YCPInteger& medianr);
 
@@ -374,6 +376,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, PkgGroup, 		"string (string)",String,		PkgModuleFunctions, PkgGroup);
 	Y2FUNCTIONCALL1 ( Pkg, PkgLocation, 		"string (string)",String,		PkgModuleFunctions, PkgLocation);
 	Y2FUNCTIONCALL1 ( Pkg, PkgProperties,		"map<string,any> (string)",String,		PkgModuleFunctions, PkgProperties);
+	Y2FUNCTIONCALL2 ( Pkg, PkgGetFilelist,	        "list<string> (string,symbol)",String,Symbol,		PkgModuleFunctions, PkgGetFilelist);
 	Y2FUNCTIONCALL  ( Pkg, IsManualSelection, 	"boolean ()",		PkgModuleFunctions, IsManualSelection);
 	Y2FUNCTIONCALL  ( Pkg, ClearSaveState, 		"boolean ()",		PkgModuleFunctions, ClearSaveState);
 	Y2FUNCTIONCALL  ( Pkg, SaveState, 		"boolean ()",		PkgModuleFunctions, SaveState);
@@ -388,7 +391,8 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, PkgNeutral, 		"boolean (string)",String,		PkgModuleFunctions, PkgNeutral);
 	Y2FUNCTIONCALL  ( Pkg, PkgReset, 		"boolean ()",		PkgModuleFunctions, PkgReset);
 	Y2FUNCTIONCALL1 ( Pkg, PkgSolve, 		"boolean (boolean)",Boolean,	PkgModuleFunctions, PkgSolve);
-	Y2FUNCTIONCALL  ( Pkg, PkgSolveErrors, 		"integer ()",		PkgModuleFunctions, PkgSolveErrors);
+	Y2FUNCTIONCALL  ( Pkg, PkgSolveCheckTargetOnly, "boolean ()",			PkgModuleFunctions, PkgSolveCheckTargetOnly);
+	Y2FUNCTIONCALL  ( Pkg, PkgSolveErrors, 		"integer ()",			PkgModuleFunctions, PkgSolveErrors);
 	Y2FUNCTIONCALL1 ( Pkg, PkgCommit, 		"list<any> (integer)",Integer,	PkgModuleFunctions, PkgCommit);
 
 	Y2FUNCTIONCALL  ( Pkg, PkgMediaSizes, 		"list<list<integer>> ()",		PkgModuleFunctions, PkgMediaSizes);

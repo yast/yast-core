@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 11 22:29:27 CET 2004 - ma@suse.de
+
+- Added: Pkg::PkgSolveCheckTargetOnly and Pkg::PkgGetFilelist
+
+-------------------------------------------------------------------
 Thu Mar 11 12:52:46 CET 2004 - visnov@suse.cz
 
 - don't load libpy2remote for "remote" component (#35536)
@@ -23,12 +28,12 @@ Wed Mar 10 15:26:28 CET 2004 - kkaempf@suse.de
 Wed Mar 10 01:44:15 CET 2004 - sh@suse.de
 
 - V 2.9.57
-- Suppressed UI::WizardCommand() complaints if no wizard present 
+- Suppressed UI::WizardCommand() complaints if no wizard present
 
 -------------------------------------------------------------------
 Tue Mar  9 13:43:35 CET 2004 - visnov@suse.cz
 
-- save/restore argument list in WFM:Call (in doActualWork actually) 
+- save/restore argument list in WFM:Call (in doActualWork actually)
 
 -------------------------------------------------------------------
 Mon Mar  8 18:00:42 CET 2004 - kkaempf@suse.de
@@ -1547,4 +1552,4 @@ Sat Jun 22 01:37:40 CEST 2002 - arvin@suse.de
   yast2-core-wfm, yast2-agent-any, yast2-agent-probe,
   yast2-agent-ini, yast2-agent-modules, yast2-agent-system
   and yast2-base into new package yast2-core
-
+ 

@@ -48,6 +48,12 @@
 
 using std::string;
 
+/******************************************************************
+**
+**
+**	FUNCTION NAME : join
+**	FUNCTION TYPE : string
+*/
 inline string join( const list<string> & lines_r, const string & sep_r = "\n" )
 {
   string ret;
@@ -61,6 +67,99 @@ inline string join( const list<string> & lines_r, const string & sep_r = "\n" )
   }
 
   return ret;
+}
+
+/******************************************************************
+**
+**
+**	FUNCTION NAME : lookupSelectable
+**	FUNCTION TYPE : PMSelectablePtr
+*/
+inline PMSelectablePtr lookupSelectable( const string & name_r )
+{
+  return Y2PM::packageManager()[name_r];
+}
+inline PMSelectablePtr lookupSelectable( const YCPString & name_r )
+{
+  return lookupSelectable( name_r->value() );
+}
+
+/******************************************************************
+**
+**
+**	FUNCTION NAME : lookupInstalledPackage
+**	FUNCTION TYPE : PMPackagePtr
+*/
+inline PMPackagePtr lookupInstalledPackage( const string & name_r )
+{
+  PMSelectablePtr sel( lookupSelectable( name_r ) );
+  if ( sel ) {
+    return sel->installedObj();
+  }
+  return 0;
+}
+inline PMPackagePtr lookupInstalledPackage( const YCPString & name_r )
+{
+  return lookupInstalledPackage( name_r->value() );
+}
+
+/******************************************************************
+**
+**
+**	FUNCTION NAME : lookupCandidatePackage
+**	FUNCTION TYPE : PMPackagePtr
+*/
+inline PMPackagePtr lookupCandidatePackage( const string & name_r )
+{
+  PMSelectablePtr sel( lookupSelectable( name_r ) );
+  if ( sel ) {
+    return sel->candidateObj();
+  }
+  return 0;
+}
+inline PMPackagePtr lookupCandidatePackage( const YCPString & name_r )
+{
+  return lookupCandidatePackage( name_r->value() );
+}
+
+/******************************************************************
+**
+**
+**	FUNCTION NAME : lookupPackage
+**	FUNCTION TYPE : PMPackagePtr
+*/
+inline PMPackagePtr lookupPackage( const string & name_r )
+{
+  PMSelectablePtr sel( lookupSelectable( name_r ) );
+  if ( sel ) {
+    return sel->theObject();
+  }
+  return 0;
+}
+inline PMPackagePtr lookupPackage( const YCPString & name_r )
+{
+  return lookupPackage( name_r->value() );
+}
+
+/******************************************************************
+**
+**
+**	FUNCTION NAME : lookupPackage
+**	FUNCTION TYPE : PMPackagePtr
+*/
+inline PMPackagePtr lookupPackage( const YCPString & name_r, const YCPSymbol & which_r )
+{
+  string which = which_r->symbol();
+  if (        which == "installed" ) {
+    return lookupInstalledPackage( name_r );
+  } else if ( which == "candidate" ) {
+    return lookupCandidatePackage( name_r );
+  } else if ( which == "any" ) {
+    return lookupPackage( name_r );
+  } else {
+    y2error( "Unknown YCPSymbol '%s'", which.c_str() );
+  }
+  return 0;
 }
 
 /**
@@ -95,6 +194,9 @@ getTheObject (PMSelectablePtr selectable)
     }
     return package;
 }
+
+
+
 
 
 // ------------------------
@@ -563,6 +665,29 @@ PkgModuleFunctions::PkgLocation (const YCPString& p)
     return YCPString (package->location());
 }
 
+
+
+
+/**
+ *  @builtin Pkg::PkgGetFilelist(string name, symbol which) -> list<string>
+ *
+ *  Return, if available, the filelist of package 'name'. Symbol 'which'
+ *  specifies the package instance to query:
+ *
+ *  `installed	query the installed package
+ *  `candidate	query the candidate package
+ *  `any	query the candidate or the installed package (dependent on what's available)
+ *
+ **/
+YCPList PkgModuleFunctions::PkgGetFilelist( const YCPString & package, const YCPSymbol & which )
+{
+  constPMPackagePtr pkg = lookupPackage( package, which );
+  if ( pkg ) {
+    return asYCPList( pkg->filenames() );
+  }
+  return YCPList();
+}
+
 // ------------------------
 /**
    @builtin Pkg::SaveState() -> bool
@@ -915,7 +1040,7 @@ PkgModuleFunctions::PkgReset ()
    Solve current package dependencies
 
 */
-YCPValue
+YCPBoolean
 PkgModuleFunctions::PkgSolve (const YCPBoolean& filter)
 {
     bool filter_conflicts_with_installed = false;
@@ -932,7 +1057,7 @@ PkgModuleFunctions::PkgSolve (const YCPBoolean& filter)
     if (!_y2pm.packageManager().solveInstall(good, bad, filter_conflicts_with_installed))
     {
 	_solve_errors = bad.size();
-	y2error ("%zd packages failed:", bad.size());
+	y2error ("Solve: %zd packages failed (see /var/log/YaST2/badlist)", bad.size());
 
 	std::ofstream out ("/var/log/YaST2/badlist");
 	out << bad.size() << " packages failed" << std::endl;
@@ -949,8 +1074,39 @@ PkgModuleFunctions::PkgSolve (const YCPBoolean& filter)
 
 
 /**
+   @builtin Pkg::PkgSolveCheckTargetOnly () -> boolean
+
+   Solve packages currently installed on target system. Packages status
+   remains unchanged, i.e. does not select/deselect any packages to
+   resolve failed dependencies.
+*/
+YCPBoolean
+PkgModuleFunctions::PkgSolveCheckTargetOnly()
+{
+  PkgDep::ErrorResultList bad;
+
+  if ( ! _y2pm.packageManager().solveConsistent( bad ) )
+  {
+    _solve_errors = bad.size();
+    y2error ("SolveCheckTarget: %zd packages failed (see /var/log/YaST2/badlist)", bad.size());
+
+    std::ofstream out ("/var/log/YaST2/badlist");
+    out << bad.size() << " packages failed" << std::endl;
+    for( PkgDep::ErrorResultList::const_iterator p = bad.begin();
+	 p != bad.end(); ++p )
+    {
+      out << *p << std::endl;
+    }
+
+    return YCPBoolean (false);
+  }
+  return YCPBoolean (true);
+}
+
+
+/**
    @builtin Pkg::PkgSolveErrors() -> integer
-   only valid after a call of PkgSolve that returned false
+   only valid after a call of PkgSolve/PkgSolveCheckTargetOnly that returned false
    return number of fails
 */
 YCPValue
