@@ -1559,10 +1559,20 @@ control_statement:
 		{
 		    constTypePtr thentype = $5.t;
 		    constTypePtr elsetype = $6.t;
-
+		    
 		    //There used to be a Type::Unspec -> Type::Void conversion here. It was wrong.
 		    // See the comment about types at the "expression" rule.
-		    $$.t = thentype->commontype (elsetype);
+		    
+		    // if one of types is void (=nil), use the other one 
+		    if (thentype->isNil ())
+		    {
+			$$.t = elsetype;
+		    }
+		    else if (elsetype->isNil ())
+		    {
+			$$.t = thentype;
+		    }
+		    else $$.t = thentype->commontype (elsetype);
 
 		    if (false) ;					// FIXME
 		    else if (($6.c->kind() == YCode::ysVariable)

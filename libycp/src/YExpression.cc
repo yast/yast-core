@@ -2254,10 +2254,20 @@ YEFunction::attachParameter (YCodePtr code, constTypePtr type)
     {
 	return Type::Error;
     }
-
+    
     // ok, check whether types match
 
     expected_type = ftype->parameterType (actual_count);
+
+    // if the parameter type is block, find out the type for the actual param
+    if (expected_type->isBlock ())
+    {
+	if (code->isBlock ())
+	{
+	    type = new BlockType(type->isUnspec () ? Type::Void : type);
+	}
+    }
+
 #if DO_DEBUG
     y2debug ("checking parameter type: expected '%s', given '%s'", expected_type->toString().c_str(), type->toString().c_str());
 #endif

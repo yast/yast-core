@@ -1,0 +1,14 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // string pokus ()
+    // filename: "tests/statements/IfThenElse5.ycp"
+    string pokus ()
+{
+    if (false)
+    return "OK";
+else
+    return nil;
+}
+}
+----------------------------------------------------------------------
