@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Feb 19 14:38:58 CET 2003 - sh@suse.de
+
+- Fixed bug #23781: YCPthread problems during SuSEconfig
+
+-------------------------------------------------------------------
 Mon Feb 17 17:49:27 CET 2003 - gs@suse.de
 
 - don't call nl_langinfo in WMFInterpreter setLanguage
