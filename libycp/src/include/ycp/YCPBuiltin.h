@@ -24,7 +24,7 @@
 // ***** WARNING *****
 // changes here _must_ be reflected in YCPBuiltin::toString()
 //
-enum ycp_builtin {
+enum builtin_t {
 	YCPB_UNKNOWN = 0,
 	YCPB_DEEPQUOTE,		/*  1 */
 	YCPB_LOCALDOMAIN,	/*  2 */
@@ -88,7 +88,6 @@ enum ycp_builtin {
 	/* assign must be last here, see YCPBuiltin.cc  */
 	YCPB_ASSIGN		/* 60 */
 };
-typedef ycp_builtin builtin_t;
 
 
 #include <ycp/YCPList.h>
