@@ -79,8 +79,8 @@ my $src_dir		= "../../src";
 my $example_dir		= "examples";
 my $screenshot_dir	= $example_dir . "/screenshots";
 my $html_dir		= ".";
-my $generic_class_name  = "widget000";	# if no '@class' specified
-my $toc_file_name       = "widgets.xml";
+my $generic_class_name  = "ref000";	# if no '@class' specified
+my $toc_file_name       = "refenteries.xml";
 
 
 # The following keywords are recognized by this script.
@@ -177,8 +177,8 @@ sub main()
 
     my $ent_file = FileHandle->new();
     my $ent_file_call = FileHandle->new();
-    open ( $ent_file, "> widgets.ent"  ) or die "FATAL: Can't open widgets.ent";
-    open ( $ent_file_call, "> allwidgets.xml"  ) or die "FATAL: Can't open allwidgets.xml";
+    open ( $ent_file, "> refenteries.ent"  ) or die "FATAL: Can't open refenteries.ent";
+    open ( $ent_file_call, "> refenteries.xml"  ) or die "FATAL: Can't open refenteries.xml";
     foreach $main_file_name ( @main_file_names )
     {
 	logf( "Reading $main_file_name" );
