@@ -131,17 +131,14 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property )
     {
 	int current = getCurrentItem();
 
-	if ( current < 0 )
-	    return YCPVoid();
-
-	YCPString origLabel = current < item_labels->size() ?
+	YCPString origLabel = current >= 0 && current < item_labels->size() ?
 	    item_labels->value( current )->asString() : YCPString( "" );
 
 	if ( _editable )
 	{
 	    YCPString val = getValue();
 	    
-	    if ( val->value() != origLabel->value() )
+	    if ( current < 0 || val->value() != origLabel->value() )
 	    {
 		// If the user edited the text (if he can do that),
 		// return the user's input.
@@ -149,6 +146,9 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property )
 		return val;
 	    }
 	}
+
+	if ( current < 0 )
+	    return YCPVoid();
 	
 	if ( current < item_ids->size() )
 	{
