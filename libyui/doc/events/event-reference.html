@@ -46,7 +46,6 @@ Author: Stefan Hundhammer
     <li><a href="#CancelEvent">CancelEvent</a>
     <li><a href="#DebugEvent">DebugEvent</a>
     </ul>
-<li><a href="#events_by_widget_class">Events by Widget Class</a>
 </ul>
 
 
@@ -396,6 +395,26 @@ which can send both events, depending on what the user did.
 	<td>Enter text.</td>
     </tr>
     <tr>
+	<td><a href="../widgets/YComboBox-widget.html">ComboBox</a></td>
+	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td>
+	    <ul>
+	    <li>Select another value from the drop-down list:
+	        <ul>
+	        <li>Open the drop-down list and click on one of its items (Qt).
+		<li>Open the drop-down list, use the cursor keys to move the
+		selection and press <i>space</i> or <i>return</i> to actually
+		accept that item.
+		<p>
+			    Simply opening the drop-down list and moving the
+			    cursor around in it (i.e. changing its selection)
+			    does <b>not</b> trigger this event. 
+		</ul>
+	    <li>Enter text (with <a href="../widgets/YComboBox-widget.html">`opt(`editable )</a> ).
+	    </ul>
+	</td>
+    </tr>
+    <tr>
 	<td><a href="../widgets/YIntField-widget.html">IntField</a></td>
 	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
 	<td>
@@ -453,6 +472,111 @@ which can send both events, depending on what the user did.
 	<td class="map-type">string</td>
 	<td class="map-value">SelectionChanged</td>
 	<td>(constant)</td>
+    </tr>
+</table>
+
+<p>
+A <i>SelectionChanged</i> 
+<a href="#SelectionChanged">WidgetEvent</a>
+is sent by most widgets that have the concept of a "selected item" like
+<a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>,
+<a href="../widgets/YTable-widget.html">Table</a>, or
+<a href="../widgets/YTree-widget.html">Tree</a>
+when the selected item changes.
+<p>
+Note that the 
+<a href="../widgets/YMultiSelectionBox-widget.html">MultiSelectionBox</a>
+widget can send a <i>SelectionChanged</i> event, but also a
+<a href="#ValueChanged">ValueChanged WidgetEvent</a>
+depending on what the user did.
+This is one reason to keep <i>SelectionChanged</i> and 
+<a href="#ValueChanged">ValueChanged</a> two distinct events:
+Widgets can have both concepts which may be equally important, depending on the
+YCP application. 
+
+<p>
+The <a href="../widgets/YComboBox-widget.html">ComboBox</a>
+never sends a <i>SelectionChanged</i> event. It only sends
+<a href="#ValueChanged">ValueChanged WidgetEvents</a>.
+<p>
+The rationale behind this is that merely opening the drop-down list without
+actually accepting one of its items is just a temporary operation in a separate
+pop-up window (the drop-down list) that should not affect the YCP application
+or other widgets in the same dialog until the user actually accepts a value
+- upon which event a 
+<a href="#ValueChanged">ValueChanged WidgetEvent</a> is sent.
+	
+
+<table border="1">
+    <thead>
+        <th>Widget Type</th>
+	<th>Widget Options</t>
+	<th>Action to Trigger the Event</th>
+    </thead>
+    <tr>
+	<td>
+	    <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a><br>
+	</td>
+	<td>
+	    <table>
+	        <tr>
+		    <td>Qt:</td>
+		    <td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+		</tr>
+	        <tr>
+		    <td>NCurses:</td>
+		    <td>`opt(<a href="events-general.html#notify">`notify</a>,&nbsp;`immediate&nbsp;)</td>
+		</tr>
+	    </table>
+	</td>
+	<td>
+	    Select another item:
+	    <ul>
+	    <li>Click on an item (Qt).
+	    <li>Press <i>cursor up</i> in the widget.
+	    <li>Press <i>cursor down</i> in the widget.
+	    </ul>
+	</td>
+    </tr>
+    <tr>
+	<td>
+	    <a href="../widgets/YTable-widget.html">Table</a><br>
+	</td>
+	<td><a href="events-general.html#notify">`opt(`notify,&nbsp;`immediate&nbsp;)</a></td>
+	<td>
+	    Select another item:
+	    <ul>
+	    <li>Click on an item (Qt).
+	    <li>Press <i>cursor up</i> in the widget.
+	    <li>Press <i>cursor down</i> in the widget.
+	    </ul>
+	</td>
+    </tr>
+    <tr>
+	<td>
+	    <a href="../widgets/YTree-widget.html">Tree</a><br>
+	</td>
+	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td>
+	    Select another item:
+	    <ul>
+	    <li>Click on an item (Qt).
+	    <li>Press <i>cursor up</i> in the widget.
+	    <li>Press <i>cursor down</i> in the widget.
+	    </ul>
+	</td>
+    </tr>
+    <tr>
+	<td><a href="../widgets/YMultiSelectionBox-widget.html">MultiSelectionBox</a></td>
+	<td><a href="events-general.html#notify">`opt(`notify&nbsp;)</a></td>
+	<td>
+	    Select another item:
+	    <ul>
+	    <li>Click on an item's text (not on the checkbox) (Qt).
+	    <li>Press <i>cursor up</i> in the widget.
+	    <li>Press <i>cursor down</i> in the widget.
+	    </ul>
+	</td>
     </tr>
 </table>
 
@@ -636,13 +760,10 @@ debugging popup dialogs - but <b>never</b> do anything with it that might turn
 out to be a security hazard. Remember, even though the key combination is
 really awkward, sooner or later some users will get to know it, and they will
 experiment.
+</p>
 
 
-
-<h1><a name="events_by_widget_class">Events by Widget Class</h1>
-
-
-
+<br><br><br>
 
 <table class="navigation-bar" width=100%>
     <tr>
