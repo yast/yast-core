@@ -61,7 +61,7 @@ UI::{
     OpenDialog(
 	       `VBox(
 		     `LogView(`id(`log),
-			      "Excerpt from \"The Hunting Of The Snark\" by Lewis Carroll",
+			      "&Excerpt from \"The Hunting Of The Snark\" by Lewis Carroll",
 			      5,	// visible lines
 			      10),	// lines to store
 		     `PushButton(`opt(`default), "&OK")
