@@ -237,3 +237,16 @@ PkgModuleFunctions::YouInstallPatches (YCPList args)
     if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
+
+/**
+   @builtin Pkg::YouRemovePackages () -> bool
+
+   remove downloaded packages.
+*/
+YCPValue
+PkgModuleFunctions::YouRemovePackages (YCPList args)
+{
+    PMError err = _y2pm.youPatchManager().instYou().removePackages();
+    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
+}

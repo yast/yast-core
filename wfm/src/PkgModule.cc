@@ -101,6 +101,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "YouGetCurrentPatch")	return f.YouGetCurrentPatch (args);
     else if (function == "YouInstallCurrentPatch")	return f.YouInstallCurrentPatch (args);
     else if (function == "YouInstallPatches")	return f.YouInstallPatches (args);
+    else if (function == "YouRemovePackages")	return f.YouRemovePackages (args);
     // target related functions
     else if (function == "TargetInit")		return f.TargetInit (args);
     else if (function == "TargetFinish")	return f.TargetFinish (args);
