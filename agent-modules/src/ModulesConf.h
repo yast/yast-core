@@ -30,7 +30,6 @@ using std::map;
  * @short One entry in the modules.conf file.
  * @author Michal Svec <msvec@suse.cz>
  * @author Dan Vesely <dan@suse.cz>
- * @version $Id$
  * @see ModulesConf
  *
  */
@@ -115,7 +114,6 @@ private:
  * @short The modules.conf file
  * @author Michal Svec <msvec@suse.cz>
  * @author Dan Vesely <dan@suse.cz>
- * @version $Id$
  * @see ModuleEntry
  *
  */

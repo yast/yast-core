@@ -1,13 +1,13 @@
 /**
  * File:	modules.scr
- * Summary:	SCR agent for /etc/modules.conf
+ * Summary:	SCR agent for /etc/modprobe.conf
  * Authors:	Michal Svec <msvec@suse.cz>, Daniel Vesely <dan@suse.cz>
  * Access:	read / write
- * See:		modules.conf(5), modules.html
+ * See:		modprobe.conf(5), modules.html
  *
  * Examples:
  *   Read(.modules)
- *   (["alias", "options", "post-install", "pre-install", "pre-remove"])
+ *   (["alias", "options", "include", "install", "remove"])
  **
  *   Read(.modules.options)
  *   (["agpgart", "cipcb", "dummy0", "dummy1", "parport_pc", "vtx"])
@@ -20,7 +20,7 @@
  *
  * $Id$
  *
- * <p>Reads/writes <tt>/etc/modules.conf</tt>. For more detail see its
+ * <p>Reads/writes <tt>/etc/modprobe.conf</tt>. For more detail see its
  * own documentation.</p>
  */
 .modules

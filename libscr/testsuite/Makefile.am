@@ -8,11 +8,12 @@ INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
 	-I$(srcdir)/../src/include			\
-	-I$(includedir)
+	-I$(includedir)					\
+	-I/usr/include/YaST2
 
 noinst_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
-runscr_LDADD = ../src/libscr.la -lycp -ly2util
+runscr_LDADD = ../src/libscr.la ../../liby2/src/liby2.la -lycp -ly2util
 runscr_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
 
 PACKAGE = libscr

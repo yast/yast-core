@@ -104,12 +104,14 @@ ModuleEntry::EntryArg ycpmap2map (const YCPMap &m) {
 /**
  * Dir
  */
-YCPValue ModulesAgent::Dir(const YCPPath& path) {
+YCPList ModulesAgent::Dir(const YCPPath& path) {
     YCPList list;
     string elem;
 
-    if (modules_conf == NULL)
-	Y2_RETURN_VOID("Can't execute Dir before being mounted.");
+    if (modules_conf == NULL) {
+	ycp2error("Can't execute Dir before being mounted.");
+	return YCPNull();
+    }
 
     switch (path->length ()) {
 
@@ -138,7 +140,7 @@ YCPValue ModulesAgent::Dir(const YCPPath& path) {
 /**
  * Read
  */
-YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg) {
+YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPValue& optarg) {
 	    
     if (modules_conf == NULL)
 	Y2_RETURN_VOID("Can't execute Read before being mounted.");
@@ -225,7 +227,7 @@ YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg) {
 /**
  * Write
  */
-YCPValue ModulesAgent::Write(const YCPPath &path, const YCPValue& value, const YCPValue& arg) {
+YCPBoolean ModulesAgent::Write(const YCPPath &path, const YCPValue& value, const YCPValue& arg) {
 
     if (modules_conf == NULL)
 	Y2_RETURN_VOID("Can't execute Write before being mounted.");
@@ -341,7 +343,7 @@ YCPValue ModulesAgent::Write(const YCPPath &path, const YCPValue& value, const Y
  * otherCommand
  */
 YCPValue ModulesAgent::otherCommand(const YCPTerm& term) {
-    string sym = term->symbol()->symbol();
+    string sym = term->name();
 
     if (sym == "ModulesConf" && term->size() == 1) {
 	if (term->value(0)->isString()) {

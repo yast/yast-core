@@ -6,9 +6,11 @@ pkgincludedir = $(includedir)/scr
 
 # these go to $(pkgincludedir)
 
-pkginclude_HEADERS =				\
-	SCRAgent.h SCRInterpreter.h		\
-	Y2AgentComponent.h Y2CCAgentComponent.h	\
+pkginclude_HEADERS =		\
+	SCRAgent.h 		\
+	Y2AgentComponent.h 	\
+	Y2CCAgentComponent.h	\
+	SCR.h			\
 	run_agent.h
 
 #<INSTALL-HEADER-TARGET>

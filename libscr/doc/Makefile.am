@@ -1,8 +1,4 @@
-#
 # Makefile.am for core/libscr/doc
-#
-
-SUBDIRS =
 
 htmldir = $(docdir)/libscr
 

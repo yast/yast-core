@@ -20,25 +20,38 @@
 #include <ycp/y2log.h>
 
 #include "include/scr/SCRAgent.h"
+#include "include/scr/SCR.h"
 
+#include "ycp/Parser.h"
+#include "ycp/YCode.h"
+
+SCRAgent* SCRAgent::current_scr = 0;
 
 SCRAgent::SCRAgent ()
     : mainscragent (0)
 {
+    if( current_scr == 0 ) current_scr = this;
 }
 
 
 SCRAgent::~SCRAgent ()
 {
+    if( current_scr == this ) current_scr = 0;
 }
 
+SCRAgent* SCRAgent::instance()
+{
+    return current_scr;
+}
 
+#if 0
 YCPValue
 SCRAgent::Execute (const YCPPath& path, const YCPValue& value,
 		   const YCPValue& arg)
 {
     return YCPNull();
 }
+#endif
 
 
 YCPValue
@@ -54,8 +67,8 @@ SCRAgent::readconf (const char *filename)
     FILE *file = fopen (filename, "r");
     if (!file)
     {
-	return YCPError (string ("Can't open '") + string (filename) +
-			 "' for reading.", YCPNull());
+	ycp2error ("Can't open %s for reading.", filename);
+	return YCPNull ();
     }
 
     // find first line starting with "."
@@ -68,16 +81,18 @@ SCRAgent::readconf (const char *filename)
     }
     while ((fgets_result != 0) && (line[0] != '.'));
 
-    YCPParser parser (file, filename);
-    YCPValue tmpvalue = parser.parse ();
+    Parser parser (file, filename);
+    YCode* tmpvalue = parser.parse ();
     fclose (file);
 
-    if (tmpvalue.isNull () || !tmpvalue->isTerm ())
+    y2debug( "Parsed value (%p): %s", tmpvalue, tmpvalue != 0 ? tmpvalue->toString().c_str() : "not available" );
+    if (tmpvalue == 0 || tmpvalue->kind () != YCode::yeTerm )
     {
-	return YCPError (string ("Not a term in scr file '") +
-			 string (filename) + string ("'."), YCPNull());
+	ycp2error ("Not a term in scr file '%s'.", filename);
+	return YCPNull();
     }
 
-    return tmpvalue;
+    // it is a term, generate YCPValue through its evaluation
+    return tmpvalue->evaluate();
 }
 

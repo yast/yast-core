@@ -15,12 +15,12 @@ liby2ag_modules_la_LDFLAGS = -version-info 2:0
 
 libpy2ag_modules_la_SOURCES =				\
 	$(liby2ag_modules_la_SOURCES)			\
-	Y2CCModulesAgent.cc         Y2CCModulesAgent.h	\
-	Y2ModulesAgentComponent.cc  Y2ModulesAgentComponent.h
+	Y2CCModulesAgent.cc
 libpy2ag_modules_la_LDFLAGS = -version-info 2:0
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+	-I$(includedir)				\
+	-I/usr/include/YaST2

@@ -1,8 +1,4 @@
-#
 # Makefile.am for core/agent-modules/doc
-#
-
-SUBDIRS =
 
 htmldir = $(docdir)/agent-modules
 

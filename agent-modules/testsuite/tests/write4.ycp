@@ -1,6 +1,8 @@
 {
-    y2warning("alias.al1 %1",Write(.alias."al3","A3"));
-    y2warning("alias.al1.comment %1",Write(.alias."al3".comment,"# new alias comment"));
-    y2warning("options.op1 %1",Write(.options."op3",$["OP1":"1","OP1b":""]));
-    y2warning("keep %1",Write(.keep."",""));
+    y2warning("alias.al1 %1", SCR::Write(.alias."al3","A3"));
+    y2warning("alias.al1.comment %1", SCR::Write(.alias."al3".comment,"# new alias comment"));
+    y2warning("options.op1 %1", SCR::Write(.options."op3",$["OP1":"1","OP1b":""]));
+    y2warning("keep %1", SCR::Write(.keep."",""));
+
+    return true;
 }

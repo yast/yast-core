@@ -13,7 +13,8 @@ INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+	-I$(includedir)				\
+	-I/usr/include/YaST2
 
 noinst_PROGRAMS = runmodules
 
@@ -26,7 +27,6 @@ runmodules_LDFLAGS = 					\
 	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../src/libpy2ag_modules.la		\
 	-Xlinker --no-whole-archive
 

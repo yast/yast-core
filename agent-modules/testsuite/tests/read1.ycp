@@ -1,37 +1,38 @@
 {
 
-y2warning("%1",Read(.));
-y2warning("alias %1",Read(.alias));
-y2warning("options %1",Read(.options));
-y2warning("pre-install %1",Read(.pre-install));
-y2warning("post-install %1",Read(.post-install));
-y2warning("pre-remove %1",Read(.pre-remove));
-y2warning("post-remove %1",Read(.post-remove));
+y2warning("%1",SCR::Read(.));
+y2warning("alias %1",SCR::Read(.alias));
+y2warning("options %1",SCR::Read(.options));
+y2warning("pre-install %1",SCR::Read(.pre-install));
+y2warning("post-install %1",SCR::Read(.post-install));
+y2warning("pre-remove %1",SCR::Read(.pre-remove));
+y2warning("post-remove %1",SCR::Read(.post-remove));
 
-y2warning("alias.al1 %1",Read(.alias."al1"));
-y2warning("options.op1 %1",Read(.options."op1"));
-y2warning("options.op2 %1",Read(.options."op2"));
+y2warning("alias.al1 %1",SCR::Read(.alias."al1"));
+y2warning("options.op1 %1",SCR::Read(.options."op1"));
+y2warning("options.op2 %1",SCR::Read(.options."op2"));
 
-y2warning("pre-install.pri1 %1",Read(.pre-install."pri1"));
-y2warning("pre-install.pri2 %1",Read(.pre-install."pri2"));
-y2warning("post-install.poi1 %1",Read(.post-install."poi1"));
-y2warning("post-install.poi2 %1",Read(.post-install."poi2"));
-y2warning("pre-remove.prr1 %1",Read(.pre-remove."prr1"));
-y2warning("pre-remove.prr2 %1",Read(.pre-remove."prr2"));
-y2warning("post-remove.por1 %1",Read(.post-remove."por1"));
-y2warning("post-remove.por2 %1",Read(.post-remove."por2"));
+y2warning("pre-install.pri1 %1",SCR::Read(.pre-install."pri1"));
+y2warning("pre-install.pri2 %1",SCR::Read(.pre-install."pri2"));
+y2warning("post-install.poi1 %1",SCR::Read(.post-install."poi1"));
+y2warning("post-install.poi2 %1",SCR::Read(.post-install."poi2"));
+y2warning("pre-remove.prr1 %1",SCR::Read(.pre-remove."prr1"));
+y2warning("pre-remove.prr2 %1",SCR::Read(.pre-remove."prr2"));
+y2warning("post-remove.por1 %1",SCR::Read(.post-remove."por1"));
+y2warning("post-remove.por2 %1",SCR::Read(.post-remove."por2"));
 
-y2warning("alias.al1 %1",Read(.alias.al1));
-y2warning("options.op1 %1",Read(.options.op1));
-y2warning("options.op2 %1",Read(.options.op2));
+y2warning("alias.al1 %1",SCR::Read(.alias.al1));
+y2warning("options.op1 %1",SCR::Read(.options.op1));
+y2warning("options.op2 %1",SCR::Read(.options.op2));
 
-y2warning("pre-install.pri1 %1",Read(.pre-install.pri1));
-y2warning("pre-install.pri2 %1",Read(.pre-install.pri2));
-y2warning("post-install.poi1 %1",Read(.post-install.poi1));
-y2warning("post-install.poi2 %1",Read(.post-install.poi2));
-y2warning("pre-remove.prr1 %1",Read(.pre-remove.prr1));
-y2warning("pre-remove.prr2 %1",Read(.pre-remove.prr2));
-y2warning("post-remove.por1 %1",Read(.post-remove.por1));
-y2warning("post-remove.por2 %1",Read(.post-remove.por2));
+y2warning("pre-install.pri1 %1",SCR::Read(.pre-install.pri1));
+y2warning("pre-install.pri2 %1",SCR::Read(.pre-install.pri2));
+y2warning("post-install.poi1 %1",SCR::Read(.post-install.poi1));
+y2warning("post-install.poi2 %1",SCR::Read(.post-install.poi2));
+y2warning("pre-remove.prr1 %1",SCR::Read(.pre-remove.prr1));
+y2warning("pre-remove.prr2 %1",SCR::Read(.pre-remove.prr2));
+y2warning("post-remove.por1 %1",SCR::Read(.post-remove.por1));
+y2warning("post-remove.por2 %1",SCR::Read(.post-remove.por2));
 
+return true;
 }

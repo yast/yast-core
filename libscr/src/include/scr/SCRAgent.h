@@ -23,8 +23,7 @@
 
 
 #include <YCP.h>
-#include <ycp/YCPParser.h>
-
+#include <ycp/y2log.h>
 
 /**
  * @short SuSE Configuration Repository Agent
@@ -54,24 +53,65 @@ public:
      * @param path Specifies what part of the subtree should
      * be read. The path is specified _relatively_ to Root()!
      */
-    virtual YCPValue Read (const YCPPath& path, const YCPValue& arg = YCPNull()) = 0;
+    virtual YCPValue Read (const YCPPath& path, const YCPValue& arg = YCPNull(), const YCPValue& opt = YCPNull()) = 0;
 
     /**
      * Writes data. Destroy the result after use.
      */
-    virtual YCPValue Write (const YCPPath& path, const YCPValue& value,
+    virtual YCPBoolean Write (const YCPPath& path, const YCPValue& value,
 			    const YCPValue& arg = YCPNull()) = 0;
 
     /**
      * Get a list of all subtrees.
      */
-    virtual YCPValue Dir (const YCPPath& path) = 0;
+    virtual YCPList Dir (const YCPPath& path) = 0;
 
     /**
      * Execute a command
      */
     virtual YCPValue Execute (const YCPPath& path, const YCPValue& value = YCPNull(),
-			      const YCPValue& arg = YCPNull());
+			      const YCPValue& arg = YCPNull()) {
+	ycp2error( "Unimplemented Execute called for path %s", path-> toString ().c_str () );
+	return YCPNull ();
+    }
+
+    /**
+     * Register an agent
+     */
+    virtual YCPBoolean RegisterAgent (const YCPPath& path, const YCPValue& value) {
+	ycp2error( "Unimplemented RegisterAgent called for path %s", path-> toString ().c_str () );
+	return YCPBoolean( false );
+    }
+
+    /**
+     * Unregister an agent
+     */
+    virtual YCPBoolean UnregisterAgent (const YCPPath& path) {
+	ycp2error( "Unimplemented UnregisterAgent called for path %s", path-> toString ().c_str () );
+	return YCPBoolean( false );
+    }
+
+    /**
+     * Unregister all agents
+     */
+    virtual YCPBoolean UnregisterAllAgents () {
+	ycp2error( "Unimplemented UnregisterAllAgents called" );
+	return YCPBoolean( false );
+    }
+
+    /**
+     * Unregister an agent
+     */
+    virtual YCPBoolean RegisterAgent (const YCPPath& path) {
+	return RegisterAgent (path, YCPNull ());
+    }
+
+    /**
+     * Unmount an agent
+     */
+    virtual YCPBoolean UnmountAgent (const YCPPath& path) {
+	return YCPBoolean( false );
+    }
 
     /**
      * Execute other commands. Return 0 if the command is
@@ -92,7 +132,15 @@ public:
      * where the agant gets mounted (by the ScriptingAgent).
      */
     static YCPValue readconf (const char *filename);
-
+    
+    static SCRAgent* instance();
+    
+    void setAsCurrentSCR() {
+	current_scr = this;
+    }
+    
+private:
+    static SCRAgent* current_scr;
 };
 
 

@@ -1,36 +1,17 @@
-/* Y2CCModulesAgent.cc
- *
- * An agent for reading the modules.conf configuration file.
- *
- * Author: Michal Svec <msvec@suse.cz>
- *         Daniel Vesely <dan@suse.cz>
- *
- * $Id$
- *
+
+
+/*
+ *  Author: Arvin Schnell <arvin@suse.de>
  */
 
-#include "Y2CCModulesAgent.h"
-#include "Y2ModulesAgentComponent.h"
 
-Y2CCModulesAgent::Y2CCModulesAgent()
-    : Y2ComponentCreator(Y2ComponentBroker::BUILTIN)
-{
-}
+#include <scr/Y2AgentComponent.h>
+#include <scr/Y2CCAgentComponent.h>
+
+#include "ModulesAgent.h"
 
 
-bool
-Y2CCModulesAgent::isServerCreator() const
-{
-    return true;
-}
+typedef Y2AgentComp <ModulesAgent> Y2ModulesAgentComp;
 
+Y2CCAgentComp <Y2ModulesAgentComp> g_y2ccag_modules ("ag_modules");
 
-Y2Component *
-Y2CCModulesAgent::create(const char *name) const
-{
-    if (!strcmp(name, "ag_modules")) return new Y2ModulesAgentComponent();
-    else return 0;
-}
-
-
-Y2CCModulesAgent g_y2ccag_modules;

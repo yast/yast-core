@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <SCR.h>
 #include <ycp/y2log.h>
+#include <ycp/ExecutionEnvironment.h>
 
 extern int yydebug;
 

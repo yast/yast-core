@@ -1,9 +1,11 @@
 {
-    y2warning("%1",Dir(.));
-    y2warning("alias %1",Dir(.alias));
-    y2warning("options %1",Dir(.options));
-    y2warning("pre-install %1",Dir(.pre-install));
-    y2warning("post-install %1",Dir(.post-install));
-    y2warning("pre-remove %1",Dir(.pre-remove));
-    y2warning("post-remove %1",Dir(.post-remove));
+    y2warning("%1", SCR::Dir(.));
+    y2warning("alias %1", SCR::Dir(.alias));
+    y2warning("options %1", SCR::Dir(.options));
+    y2warning("pre-install %1", SCR::Dir(.pre-install));
+    y2warning("post-install %1", SCR::Dir(.post-install));
+    y2warning("pre-remove %1", SCR::Dir(.pre-remove));
+    y2warning("post-remove %1", SCR::Dir(.post-remove));
+
+    return true;
 }

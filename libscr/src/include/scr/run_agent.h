@@ -9,10 +9,10 @@
 #include <unistd.h>
 
 #include <ycp/y2log.h>
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 #include <y2/Y2StdioComponent.h>
-#include <scr/SCRInterpreter.h>
 #include <scr/SCRAgent.h>
+#include <scr/SCR.h>
 
 
 /**
@@ -21,6 +21,26 @@
 
 template <class Agent> inline void
 run_agent (int argc, char* argv[], bool load_scr)
+{
+    // create Agent
+    SCRAgent* agent = new Agent ();
+    if (!agent)
+    {
+	fprintf (stderr, "Failed to create Agent\n");
+	exit (EXIT_FAILURE);
+    }
+
+    run_agent_instance (argc, argv, load_scr, agent);
+
+    delete agent;
+    exit (EXIT_SUCCESS);
+}
+
+/**
+ * finds filename, sets logging
+ */
+const char*
+process_options (int argc, char* argv[])
 {
     const char* fname = 0;
 
@@ -43,35 +63,35 @@ run_agent (int argc, char* argv[], bool load_scr)
 	}
     }
 
+    return fname;
+}
+
+// alternate entry point, useful for testing eg. ag_ini where
+// we need to use the ScriptingAgent and pass its constructor a parameter
+void
+run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
+{
+    const char* fname = process_options (argc, argv);
+    
+    // fill in SCR builtins
+    SCR scr;
+
     // create parser
-    YCPParser* parser = new YCPParser ();
+    Parser* parser = new Parser ();
     if (!parser)
     {
-	fprintf (stderr, "Failed to create YCPParser\n");
+	fprintf (stderr, "Failed to create Parser\n");
 	exit (EXIT_FAILURE);
     }
+    
+    // do not try to load implicit imports, like Pkg
+    parser->setPreloadNamespaces (false);
 
     // create stdio as UI component, disable textdomain calls
     Y2Component* user_interface = new Y2StdioComponent (false, true);
     if (!user_interface)
     {
 	fprintf (stderr, "Failed to create Y2StdioComponent\n");
-	exit (EXIT_FAILURE);
-    }
-
-    // create Agent
-    SCRAgent* agent = new Agent ();
-    if (!agent)
-    {
-	fprintf (stderr, "Failed to create Agent\n");
-	exit (EXIT_FAILURE);
-    }
-
-    // create interpreter
-    SCRInterpreter* interpreter = new SCRInterpreter (agent);
-    if (!interpreter)
-    {
-	fprintf (stderr, "Failed to create SCRInterpreter\n");
 	exit (EXIT_FAILURE);
     }
 
@@ -86,25 +106,12 @@ run_agent (int argc, char* argv[], bool load_scr)
 		YCPValue confval = SCRAgent::readconf (cname);
 		if (confval.isNull () || !confval->isTerm ()) {
 		    fprintf (stderr, "Failed to read '%s'\n", cname);
+		    fprintf (stderr, "Read result: %s\n", confval->toString().c_str());
 		    exit (EXIT_FAILURE);
 		}
 		YCPTerm term = confval->asTerm();
 		for (int i = 0; i < term->size (); i++)
-		{
-        	    YCPValue arg = term->value (i);
-
-        	    // WORKAROUND/HACK: adapting the old SCR files to the new interpreter
-        	    // new interpreter requires every argument of an agent to
-        	    // be quoted - but this will not work in the old interpter
-        	    // =>strip quote if exists
-        	    if (arg->isTerm ())
-        	    {
-            		arg = YCPTerm ( YCPSymbol( arg->asTerm ()->symbol ()->symbol (), false ),
-                	arg->asTerm ()->args () );
-        	    }
-
-		    interpreter->evaluate (arg);
-		}
+		    agent->otherCommand (term->value (i)->asTerm ());
 	    }
 	}
     }
@@ -127,24 +134,23 @@ run_agent (int argc, char* argv[], bool load_scr)
     // evaluate ycp script
     parser->setInput (infile, fname);
     parser->setBuffered ();
-    YCPValue value = YCPVoid ();
+    YCode* value = 0;
     while (true)
     {
 	value = parser->parse ();
-	if (value.isNull ())
+	if (value == 0)
 	    break;
-	value = interpreter->evaluate (value);
-	printf ("(%s)\n", value->toString ().c_str ());
+	YCPValue result = value->evaluate ();
+	printf ("(%s)\n", result->toString ().c_str ());
 	fflush (0);
+	delete value;
     }
 
     if (infile != stdin)
 	fclose (infile);
 
-    delete interpreter;
-    delete agent;
+    if( value != 0 ) delete value;
     delete user_interface;
     delete parser;
 
-    exit (EXIT_SUCCESS);
 }

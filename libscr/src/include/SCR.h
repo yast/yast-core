@@ -37,7 +37,7 @@
 #define SCR_H
 
 #include <YCP.h>
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 
 enum SCRMode { A_CREATE, A_READ, A_WRITE, A_APPEND };
 
@@ -77,7 +77,7 @@ public:
     
 protected:
     string rootPath;			// current path
-    static YCPParser *parser;
+    static Parser *parser;
 
 private:
     static int refcount;

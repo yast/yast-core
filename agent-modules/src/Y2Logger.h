@@ -29,15 +29,15 @@
  * Log the error and return ...
  */
 #define Y2_RETURN_FALSE(format,args...) \
-  do { y2error(format,##args); return false; } while(0)
+  do { ycp2error(format,##args); return false; } while(0)
 
 #define Y2_RETURN_VOID(format,args...) \
-  do { y2error(format,##args); return YCPVoid(); } while(0)
+  do { ycp2error(format,##args); return YCPNull(); } while(0)
 
 #define Y2_RETURN_STR(format,args...) \
-  do { y2error(format,##args); return ""; } while(0)
+  do { ycp2error(format,##args); return ""; } while(0)
 
 #define Y2_RETURN_YCP_FALSE(format,args...) \
-  do { y2error(format,##args); return YCPBoolean(false); } while(0)
+  do { ycp2error(format,##args); return YCPBoolean(false); } while(0)
 
 #endif /* Y2Logger_h */
