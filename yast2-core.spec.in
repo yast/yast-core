@@ -106,5 +106,6 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @plugindir@/lib*.so
 @plugindir@/lib*.la
 @includedir@
+@pkgconfigdir@/@RPMNAME@.pc
 %doc @docdir@
 @ydatadir@/devtools/bin/generateYCPWrappers

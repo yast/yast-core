@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Oct 29 14:32:44 CEST 2004 - mvidner@suse.cz
+
+- Added pkgconfig support.
+- 2.11.7
+
+-------------------------------------------------------------------
 Thu Oct 28 18:15:15 CEST 2004 - kkaempf@suse.de
 
 - 'any' has more type information than 'void' (#47659)
