@@ -300,7 +300,7 @@ Y2RemoteComponent::askPassword (bool& ok)
     // Ask password
     YCPValue password = callModule (string ("password"), YCPList (),
 				    user_interface);
-    if (password->isString ())
+    if (!password.isNull () && password->isString ())
     {
 	ok = true;
 	return password->asString ()->value ();

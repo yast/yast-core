@@ -15,7 +15,8 @@ if test "$YACC" = false; then
 	AC_MSG_ERROR([bison not installed])
 fi
 
-SUSEVERSION=`grep ^VERSION /etc/SuSE-release | cut "-d " -f 3`
+# for historic reasons this value is called SUSEVERSION
+SUSEVERSION=`echo $VERSION | cut -d . -f 1,2`
 AC_SUBST(SUSEVERSION)
 
 ## some common checks

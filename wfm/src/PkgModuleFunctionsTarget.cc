@@ -63,13 +63,21 @@ PkgModuleFunctions::TargetInit (YCPList args)
 
     bool newdb = args->value(1)->asBoolean()->value();		// used again below
 
-    _last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
+    if (newdb)
+    {
+	// create empty rpmdb
+	_last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
+    }
+    else
+    {
+	_last_error = PMError::E_ok;
+	// use existing rpmdb (and seldb !)
+	_y2pm.instTarget(true, Pathname (args->value(0)->asString()->value()));
+    }
+
     if (_last_error)
 	return YCPError (_last_error.errstr().c_str(), YCPBoolean (false));
 
-    // propagate installed packages if not newly created
-    if (!newdb)
-	_y2pm.packageManager().poolSetInstalled (_y2pm.instTarget().getPackages () );
 
     return YCPBoolean (true);
 }
@@ -307,7 +315,7 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::InitDU (list(map)) -> void
+ * @builtin Pkg::TagetInitDU (list(map)) -> void
  *
  * init DU calculation for given directories
  * parameter: [ $["name":"dir-without-leading-slash", "free":int_free, "used": int_used]
@@ -392,7 +400,7 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::GetDU (void) -> map
+ * @builtin Pkg::TargetGetDU (void) -> map
  *
  * return current DU calculations
  * $[ "dir" : [ total, used, pkgusage ], .... ]
@@ -410,9 +418,9 @@ PkgModuleFunctions::TargetGetDU (YCPList args)
 	 it != mountpoints.end(); ++it)
     {
 	YCPList sizelist;
-	sizelist->add (YCPInteger ((long long)(it->_total)));
-	sizelist->add (YCPInteger ((long long)(it->_used)));
-	sizelist->add (YCPInteger ((long long)(it->_pkgusage)));
+	sizelist->add (YCPInteger ((long long)(it->total())));
+	sizelist->add (YCPInteger ((long long)(it->initial_used())));
+	sizelist->add (YCPInteger ((long long)(it->pkg_used())));
 
 	dirmap->add (YCPString (it->_mountpoint), sizelist);
     }

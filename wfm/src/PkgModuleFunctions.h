@@ -32,6 +32,7 @@
 #include <ycp/YCPInterpreter.h>
 
 #include <y2pm/InstSrcDescrPtr.h>
+#include <y2pm/InstSrcManager.h>
 
 /**
  * A simple class for package management access
@@ -63,6 +64,7 @@ class PkgModuleFunctions
 
 	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
 	void startCachedSources (bool enabled_only, bool force = false);
+	void addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable);
 
 	bool SetSelectionString (std::string name, bool recursive = false);
 	bool DoProvideString (std::string name);
@@ -72,6 +74,10 @@ class PkgModuleFunctions
 
 	// if startCachedSources was called already
 	bool _cache_started;
+
+	// priority list, set by Pkg::SourceInstallOrder()
+	// used by Pkg::PkgCommit()
+	InstSrcManager::ISrcIdList _inst_order;
 
     public:
 	// general
@@ -92,6 +98,7 @@ class PkgModuleFunctions
 	YCPValue CallbackDonePackage (YCPList args);
 	YCPValue CallbackMediaChange (YCPList args);
 	YCPValue CallbackProgressRebuildDB (YCPList args);
+	YCPValue CallbackSourceChange (YCPList args);
 
 	// source related
         YCPValue SourceStartManager (YCPList args);
@@ -104,7 +111,9 @@ class PkgModuleFunctions
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
 	YCPValue SourceProvideFile (YCPList args);
+	YCPValue SourceProvideDir (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
+	YCPValue SourceSetRamCache (YCPList args);
 	YCPValue SourceProduct (YCPList args);
         YCPValue SourceSetEnabled (YCPList args);
         YCPValue SourceDelete (YCPList args);
@@ -112,6 +121,7 @@ class PkgModuleFunctions
         YCPValue SourceLowerPriority (YCPList args);
         YCPValue SourceSaveRanks (YCPList args);
         YCPValue SourceChangeUrl (YCPList args);
+	YCPValue SourceInstallOrder (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
@@ -167,6 +177,7 @@ class PkgModuleFunctions
 
 	YCPValue PkgPrepareOrder (YCPList args);
 	YCPValue PkgMediaSizes (YCPList args);
+	YCPValue PkgMediaNames (YCPList args);
 
 	// you patch related
         YCPValue YouStatus (YCPList args);

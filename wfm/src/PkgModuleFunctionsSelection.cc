@@ -193,11 +193,11 @@ PkgModuleFunctions::SelectionData (YCPList args)
 
     std::list<std::string> recommends = selection->recommends();
     YCPList recommendslist;
-    for (std::list<std::string>::iterator sugIt = recommends.begin();
-	sugIt != recommends.end(); ++sugIt)
+    for (std::list<std::string>::iterator recIt = recommends.begin();
+	recIt != recommends.end(); ++recIt)
     {
-	if (!((*sugIt).empty()))
-	    recommendslist->add (YCPString (*sugIt));
+	if (!((*recIt).empty()))
+	    recommendslist->add (YCPString (*recIt));
     }
     data->add (YCPString ("recommends"), recommendslist);
 
@@ -236,6 +236,7 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 	    {
 		y2milestone ("Changing base selection, re-setting manager");
 		_y2pm.selectionManager().setNothingSelected();
+		_y2pm.packageManager().setNothingSelected();
 	    }
 	    else if (selectable->status() == PMSelectable::S_Install)
 	    {
@@ -269,11 +270,20 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 
 	if (!_y2pm.selectionManager().solveInstall(good, bad))
 	{
-	    y2error ("%d elections failed", bad.size());
+	    std::ofstream out ("/var/log/YaST2/badselections");
+	    out << bad.size() << " selections failed" << std::endl;
+	    for (PkgDep::ErrorResultList::const_iterator p = bad.begin();
+		 p != bad.end(); ++p )
+	    {
+		out << *p << std::endl;
+	    }
+
+	    y2error ("%d selections failed", bad.size());
 	    return false;
 	}
 	return true;
     }
+    y2warning ("Unknown selection '%s'", name.c_str());
     return false;
 }
 
@@ -324,11 +334,13 @@ PkgModuleFunctions::ClearSelection (YCPList args)
     if (selectable)
     {
 	// if base selection -> clear everything
+	// only happens during install, no change of base selection during runtime
 	PMSelectionPtr candidate = selectable->candidateObj();
 	if (candidate
 	    && candidate->isBase())
 	{
 	    _y2pm.selectionManager().setNothingSelected();
+	    _y2pm.packageManager().setNothingSelected();
 	}
 
 	bool ret = true;

@@ -198,6 +198,18 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
     map->add (YCPString ("product"), YCPString ((const std::string &)(descr->content_product().name) + " " + descr->content_product().edition.version()));
     map->add (YCPString ("vendor"), YCPString (descr->content_vendor()));
     map->add (YCPString ("requires"), YCPString (descr->content_requires().asString()));
+
+    // for installation/modules/Product.ycp
+    map->add (YCPString ("name"), YCPString ((const std::string &)(descr->content_product().name)));
+    map->add (YCPString ("version"), YCPString (descr->content_product().edition.version()));
+
+    // vendor already in map
+
+    map->add (YCPString ("distproduct"), YCPString ((const std::string &)(descr->content_distproduct().name)));
+    map->add (YCPString ("distversion"), YCPString ((const std::string &)(descr->content_distproduct().edition.version())));
+
+    map->add (YCPString ("baseproduct"), YCPString ((const std::string &)(descr->content_baseproduct().name)));
+    map->add (YCPString ("baseversion"), YCPString ((const std::string &)(descr->content_baseproduct().edition.version())));
     return map;
 }
 

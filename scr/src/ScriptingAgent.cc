@@ -205,8 +205,9 @@ ScriptingAgent::otherCommand (const YCPTerm &term)
     {
 	return UnmountAllAgents ();
     }
-    else if (sym == "SuSEVersion")
+    else if (sym == "YaST2Version" || sym == "SuSEVersion")
     {
+	// SuSEVersion is the older name (for historic reasons)
 	// yes: ignore all arguments
 	return YCPString (SUSEVERSION);
     }

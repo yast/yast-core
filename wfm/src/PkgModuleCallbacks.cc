@@ -176,6 +176,63 @@ mediaChangeCallbackFunc (const std::string& error, const std::string& url, const
 }
 
 //-------------------------------------------------------------------
+// for source change
+static std::string sourceChangeCallbackModule;
+static YCPSymbol sourceChangeCallbackSymbol("",false);
+// pointer to _sources vector in PkgModuleFunctions.h, set by CallbackSourceChange
+// used in callback to translate the (internal) InstSrcPtr to
+// an (external) vector index
+static vector<InstSrcManager::ISrcId> * sourcesptr;
+static InstSrcManager::ISrcIdList * instorderptr;
+
+/**
+ * source change callback
+ *
+ * see packagemanager/src/include/Y2PM:_source_change_func
+ *
+ * calls <sourcechangecallback> (int source, int medianr)
+ *
+ * return void
+ */
+static void
+sourceChangeCallbackFunc (constInstSrcPtr source, int medianr, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (sourceChangeCallbackSymbol, sourceChangeCallbackModule);
+
+    int sourceid = -1;					// search vector index for the source pointer
+
+    if (instorderptr == 0
+	|| instorderptr->empty())
+    {
+	for (unsigned int i = 0; i < sourcesptr->size(); ++i)
+	{
+	    if ((*sourcesptr)[i] == source)
+	    {
+		sourceid = i;
+		break;
+	    }
+	}
+    }
+    else						// we have an install order, use this
+    {
+	sourceid = 0;
+	for (InstSrcManager::ISrcIdList::const_iterator it = instorderptr->begin(); it != instorderptr->end(); ++it)
+	{
+	    if (*it == source)
+	    {
+		break;
+	    }
+	    sourceid = sourceid + 1;
+	}
+    }
+
+    callback->add(YCPInteger (sourceid));
+    callback->add(YCPInteger (medianr));
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+//-------------------------------------------------------------------
 // during rpm rebuild db (rpm progress)
 static std::string progressRebuildDBCallbackModule;
 static YCPSymbol progressRebuildDBCallbackSymbol("",false);
@@ -416,6 +473,43 @@ PkgModuleFunctions::CallbackMediaChange (YCPList args)
 	mediaChangeCallbackSymbol = YCPSymbol (name, false);
     }
     (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+
+/**
+ * @builtin Pkg::CallbackSourceChange (string fun) -> nil
+ *
+ * set source change callback function
+ */
+YCPValue
+PkgModuleFunctions::CallbackSourceChange (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackSourceChange");
+    }
+
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	sourceChangeCallbackModule = name.substr (0, colonpos);
+	sourceChangeCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	sourceChangeCallbackModule = "";
+	sourceChangeCallbackSymbol = YCPSymbol (name, false);
+    }
+
+    // setup pointers to member variables so the static callback
+    // function can access them
+    sourcesptr = &_sources;
+    instorderptr = &_inst_order;
+
+    _y2pm.setSourceChangeCallback (sourceChangeCallbackFunc, _wfm);
     return YCPVoid();
 }
 

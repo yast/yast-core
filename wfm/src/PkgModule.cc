@@ -79,6 +79,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "CallbackDonePackage")		return CallbackDonePackage (args);
     else if (function == "CallbackMediaChange")		return CallbackMediaChange (args);
     else if (function == "CallbackProgressRebuildDB")	return CallbackProgressRebuildDB (args);
+    else if (function == "CallbackSourceChange")	return CallbackSourceChange (args);
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);
@@ -110,6 +111,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgCommit")		return PkgCommit (args);
 
     else if (function == "PkgMediaSizes")	return PkgMediaSizes (args);
+    else if (function == "PkgMediaNames")	return PkgMediaNames (args);
+
     // selection related
     else if (function == "GetSelections")	return GetSelections (args);
     else if (function == "SelectionData")	return SelectionData (args);
@@ -156,7 +159,9 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
+    else if (function == "SourceProvideDir")	return SourceProvideDir (args);
     else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
+    else if (function == "SourceSetRamCache")	return SourceSetRamCache (args);
     else if (function == "SourceProduct")	return SourceProduct (args);
     else if (function == "SourceSetEnabled")	return SourceSetEnabled (args);
     else if (function == "SourceDelete")	return SourceDelete (args);
@@ -164,5 +169,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceLowerPriority")	return SourceLowerPriority (args);
     else if (function == "SourceSaveRanks")	return SourceSaveRanks (args);
     else if (function == "SourceChangeUrl")	return SourceChangeUrl(args);
+    else if (function == "SourceInstallOrder")	return SourceInstallOrder(args);
     return YCPError (string ("Undefined Pkg::")+function);
 }
