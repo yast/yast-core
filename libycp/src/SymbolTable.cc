@@ -151,7 +151,7 @@ string
 TableEntry::toString() const
 {
     static char lbuf[16];
-    if (m_point) sprintf (lbuf, "%d", m_point->line());
+    if (m_point) snprintf (lbuf, 16, "%d", m_point->line());
     else strcpy (lbuf, "<nil>");
     string s = string ("TEntry (") + m_key
 	+ "@" + lbuf
@@ -534,7 +534,6 @@ SymbolTable::enter (TableEntry *entry)
 		
 		{
 #if DO_DEBUG
-//		    printf ("overloading for '%s'\n", entry->sentry()->toString().c_str());
 		    if (SymbolTableDebug) y2debug ("overloading");
 #endif		    
 		    // put entry at end of the overloaded entries
@@ -779,7 +778,7 @@ string
 SymbolTable::toString() const
 {
     string s = "SymbolTable(";
-    char buf[32]; sprintf (buf, "%p", this); s += string(buf) + ")";
+    char buf[32]; snprintf (buf, 32, "%p", this); s += string(buf) + ")";
     int i;
     // for each entry in hashtable
 
@@ -788,7 +787,7 @@ SymbolTable::toString() const
 	TableEntry *current = m_table[i];
 	if (current != 0)
 	{
-	    char buf[32]; sprintf (buf, "[%d:%p]", i, current); s += buf;
+	    char buf[32]; snprintf (buf, 32, "[%d:%p]", i, current); s += buf;
 	}
 
 	if (current != 0)
@@ -879,7 +878,7 @@ SymbolTable::toStringSymbols() const
 		s += " ";
 		s += current->key();
 		// add also SymbolEntry::position() to catch reordering in source
-		char buf[32]; sprintf (buf, "[%d]", current->sentry()->position()); s += buf;
+		char buf[32]; snprintf (buf, 32, "[%d]", current->sentry()->position()); s += buf;
 		s += "'";
 
 		TableEntry *next = current->m_next;
@@ -896,7 +895,7 @@ SymbolTable::toStringSymbols() const
 			s += " ";
 			s += current->key();
 			// add also SymbolEntry::position() to catch reordering in source
-			char buf[32]; sprintf (buf, "[%d]", current->sentry()->position()); s += buf;
+			char buf[32]; snprintf (buf, 32, "[%d]", current->sentry()->position()); s += buf;
 			s += "'";
 			outer = outer->m_outer;
 			if (outer == 0)

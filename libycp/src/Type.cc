@@ -618,7 +618,7 @@ string
 NFlexType::toString () const
 {
     static char numbuf[8];
-    sprintf (numbuf, "%d", m_number);
+    snprintf (numbuf, 8, "%d", m_number);
 
     return preToString() + "<T" + string (numbuf) + ">" + postToString();
 }

@@ -271,7 +271,7 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 
 	// Set component level for new program
 	char levelstring[32];
-	sprintf(levelstring, "%d", level);
+	snprintf(levelstring, 32, "%d", level);
 	setenv("Y2LEVEL", levelstring, 1); // 1: overwrite, if variable exists
 
 	// child input
