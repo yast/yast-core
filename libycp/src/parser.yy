@@ -500,10 +500,14 @@ compact_expression:
 		/*
 		 * we also must make sure that an empty block is treated as 'nil'
 		 */
-		if ($$.c == 0)				// empty block
+		if ($$.t != 0					// not an error
+		    && $$.c == 0)				// empty block
 		{
 		    $$.c = new YConst (YCode::ycVoid, YCPVoid());
+
+		    yywarning ("Empty block is treated as 'nil'", $1.l);
 		}
+
 	    }
 |	LOOKUP '(' expression ',' expression ',' expression ')'
 	    {
@@ -2810,13 +2814,6 @@ parameters:
 		if ($1.t == 0)			// parameter 'expression' is bad
 		{
 		    y2debug ("parameter 'expression' is bad");
-		    $$.t = 0;
-		    break;
-		}
-
-		if ($1.c == 0)
-		{
-		    yyLerror ("Empty expression (block) as a parameter", $1.l);
 		    $$.t = 0;
 		    break;
 		}

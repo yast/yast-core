@@ -1,14 +1,22 @@
-tests/expressions/nocode-parameters.ycp:4:Empty expression (block) as a parameter
-[Parser] tests/expressions/nocode-parameters.ycp:4 Empty expression (block) as a parameter
+[Scanner] tests/expressions/nocode-parameters.ycp:4 Warning: Empty block is treated as 'nil'
 Parsed:
 ----------------------------------------------------------------------
-Parser error
+{
+    // filename: "tests/expressions/nocode-parameters.ycp"
+    foreach (any a, ["foo"], nil);
+}
 ----------------------------------------------------------------------
-[Interpreter] tests/expressions/nocode-parameters.ycp:3 Parser error
-tests/expressions/nocode-parameters.ycp:13:Empty expression (block) as a parameter
-[Parser] tests/expressions/nocode-parameters.ycp:13 Empty expression (block) as a parameter
+[Interpreter] tests/expressions/nocode-parameters.ycp:4 Argument (nil) to foreach(...) is nil
+[Scanner] tests/expressions/nocode-parameters.ycp:13 Warning: Empty block is treated as 'nil'
 Parsed:
 ----------------------------------------------------------------------
-Parser error
+{
+    // void foo (block <any> b)
+    // filename: "tests/expressions/nocode-parameters.ycp"
+    void foo (block <any> b)
+{
+    b = b;
+}
+    foo (nil);
+}
 ----------------------------------------------------------------------
-[Interpreter] tests/expressions/nocode-parameters.ycp:7 Parser error
