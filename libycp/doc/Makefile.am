@@ -20,8 +20,8 @@ builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 YCP-builtins.html: $(builtin)
 	@ybindir@/makebuiltindocs $(builtin) > $@.new && mv $@.new $@
 
-ycp/book1.html: ycp.xml $(wildcard sections/*.xml)
-	db2html ycp.xml -o ycp
+ycp/book1.html: ycp.xml $(wildcard $(srcdir)/sections/*.xml)
+	db2html $< -o ycp
 
 EXTRA_DIST = *.xml $(html_DATA)
 
