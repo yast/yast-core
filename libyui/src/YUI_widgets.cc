@@ -249,7 +249,9 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUISpecialWidget_DownloadProgress	)	w = createDownloadProgress	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_BarGraph		)	w = createBarGraph		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_ColoredLabel	)	w = createColoredLabel		( p, opt, term, ol, n );
-    else if ( s == YUISpecialWidget_DumbTab		)	w = createDumbTab		( p, opt, term, ol, n, rbg );
+    else if ( s == YUISpecialWidget_DumbTab		)	w = createDumbTab		( p, opt, term, ol, n, rbg   );
+    else if ( s == YUISpecialWidget_HMultiProgressMeter	)	w = createMultiProgressMeter	( p, opt, term, ol, n, true  );
+    else if ( s == YUISpecialWidget_VMultiProgressMeter	)	w = createMultiProgressMeter	( p, opt, term, ol, n, false );
     else if ( s == YUISpecialWidget_Slider		)	w = createSlider		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_PartitionSplitter	)	w = createPartitionSplitter	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );

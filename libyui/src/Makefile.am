@@ -36,6 +36,7 @@ libyui_la_SOURCES =				\
 	YMacroRecorder.cc			\
 	YMenuButton.cc				\
 	YMultiLineEdit.cc			\
+	YMultiProgressMeter.cc			\
 	YMultiSelectionBox.cc			\
 	YPackageSelector.cc			\
 	YPartitionSplitter.cc			\

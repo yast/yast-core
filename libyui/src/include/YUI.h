@@ -678,6 +678,18 @@ protected:
 
 
     /**
+     * Creates a (horizontal or vertical) MultiProgressMeter.
+     *
+     * This is a special widget that the UI may or may not support.
+     * Overwrite this method at your own discretion.
+     * If you do, remember to overwrite the has...() method as well!
+     */
+    virtual YWidget *	createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt,
+						  bool horizontal, const YCPList & maxValues );
+    virtual bool	hasMultiProgressMeter() { return false; }
+
+
+    /**
      * Creates a Slider widget.
      *
      * This is a special widget that the UI may or may not support.
@@ -1270,6 +1282,12 @@ protected:
     YWidget *createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 			    const YCPList & optList, int argnr, YRadioButtonGroup * rbg );
 
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a MultiProgressMeter.
+     */
+    YWidget * createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					const YCPList & optList, int argnr, bool horizontal );
     /**
      * Helper function of createWidgetTree.
      * Creates a Slider.

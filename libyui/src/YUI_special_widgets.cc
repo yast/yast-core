@@ -62,6 +62,8 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_ColoredLabel		)	hasWidget = hasColoredLabel();
     else if ( symbol == YUISpecialWidget_DumbTab		)	hasWidget = hasDumbTab();
     else if ( symbol == YUISpecialWidget_DownloadProgress	)	hasWidget = hasDownloadProgress();
+    else if ( symbol == YUISpecialWidget_HMultiProgressMeter	)	hasWidget = hasMultiProgressMeter();
+    else if ( symbol == YUISpecialWidget_VMultiProgressMeter	)	hasWidget = hasMultiProgressMeter();
     else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
     else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
     else if ( symbol == YUISpecialWidget_Wizard			)	hasWidget = hasWizard();
@@ -129,7 +131,7 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
 
 /*
  * @widget	BarGraph
- * @short	Horizontal bar graph ( optional widget )
+ * @short	Horizontal bar graph (optional widget)
  * @class	YBarGraph
  * @arg		list values the initial values ( integer numbers )
  * @optarg	list labels the labels for each part; use "%1" to include the
@@ -256,7 +258,7 @@ YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPT
 
 /*
  * @widget	DownloadProgress
- * @short	Self-polling file growth progress indicator ( optional widget )
+ * @short	Self-polling file growth progress indicator (optional widget)
  * @class	YDownloadProgress
  * @arg		string label label above the indicator
  * @arg		string filename file name with full path of the file to poll
@@ -423,7 +425,7 @@ YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
     if ( dumbTab )
     {
 	dumbTab->setParent( parent );
-	
+
 	//
 	// Parse item (tab header) list
 	//
@@ -472,9 +474,9 @@ YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
 			error = true;
 		}
 
-		
+
 		// check for leftover arguments
-		
+
 		if ( itemTerm->size() != n )
 		    error = true;
 
@@ -488,7 +490,7 @@ YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
 	    if ( error )
 	    {
 		y2error( "Invalid DumbTab item: %s", item->toString().c_str() );
-		
+
 		delete dumbTab;
 		return 0;
 	    }
@@ -520,8 +522,91 @@ YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
 
 
 /*
+ * @widget	VMultiProgressMeter HMultiProgressMeter
+ * @short	Progress bar with multiple segments (optional widget)
+ * @class	YMultiProgressMeter
+ * @arg		List<integer> maxValues		maximum values
+ * @usage	if ( HasSpecialWidget( `MultiProgressMeter ) {...
+ *		`MultiProgressMeter( "Percentage", 1, 100, 50 )
+ *
+ * @examples	MultiProgressMeter1.ycp MultiProgressMeter2.ycp
+ *
+ * @description
+ *
+
+ * A vertical (VMultiProgressMeter) or horizontal (HMultiProgressMeter)
+ * progress display with multiple segments. The numbers passed on widget
+ * creation are the maximum numbers of each individual segment. Segments sizes
+ * will be displayed proportionally to these numbers.
+ * <p>
+ * This widget is intended for applications like showing the progress of
+ * installing from multiple CDs while giving the user a hint how much will be
+ * installed from each individual CD.
+ * <p>
+ * Set actual values later with
+ * UI::ChangeWidget(`id(...), `Values, [ 1, 2, ...] );
+ * <p>
+ * The widget may choose to reserve a minimum amount of space for each segment
+ * even if that means that some segments will be shown slightly out of
+ * proportion.
+ * <p>
+ * <b>Note:</b>
+ * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * for availability with <tt>HasSpecialWidget( `MultiProgressMeter )</tt> before using it.
+ */
+
+YWidget * YUI::createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					 const YCPList & optList, int argnr, bool horizontal )
+{
+    int numArgs = term->size() - argnr;
+
+    if ( numArgs != 1 || ! term->value(argnr)->isList() )
+    {
+	y2error( "Invalid arguments for the MultiProgressMeter widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    YCPList maxValues = term->value( argnr )->asList();
+
+    if ( maxValues->size() < 1 )
+    {
+	y2error( "Empty MultiProgressMeter maxValues list" );
+	return 0;
+    }
+
+    for ( int i=0; i < maxValues->size(); i++ )
+    {
+	if ( ! maxValues->value( i )->isInteger() )
+	{
+	    y2error( "MultiProgressMeter maxValues list should contain integer values, not %s",
+		     maxValues->value( i )->toString().c_str() );
+	    return 0;
+	}
+    }
+
+
+    rejectAllOptions( term,optList );
+    YWidget *multiProgressMeter;
+
+    if ( hasMultiProgressMeter() )
+    {
+	multiProgressMeter = createMultiProgressMeter( parent, opt, horizontal, maxValues );
+    }
+    else
+    {
+	y2error( "This UI does not support the MultiProgressMeter widget." );
+	return 0;
+    }
+
+    return multiProgressMeter;
+}
+
+
+
+/*
  * @widget	Slider
- * @short	Numeric limited range input ( optional widget )
+ * @short	Numeric limited range input (optional widget)
  * @class	YSlider
  * @arg		string	label		Explanatory label above the slider
  * @arg		integer minValue	minimum value
@@ -587,7 +672,7 @@ YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & 
 
 /*
  * @widget	PartitionSplitter
- * @short	Hard disk partition splitter tool ( optional widget )
+ * @short	Hard disk partition splitter tool (optional widget)
  * @class	YPartitionSplitter
  *
  * @arg integer	usedSize		size of the used part of the partition
@@ -804,6 +889,16 @@ YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createDumbTab() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
+
+
+YWidget * YUI::createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt,
+					 bool horizontal, const YCPList & maxValues )
+{
+    y2error( "Default createMultiProgressMeter() method called - "
 	     "forgot to call HasSpecialWidget()?" );
 
     return 0;

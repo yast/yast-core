@@ -123,10 +123,12 @@
 // Special ( optional ) widgets
 
 #define YUISpecialWidget_BarGraph		"BarGraph"
-#define YUISpecialWidget_DumbTab		"DumbTab"
 #define YUISpecialWidget_ColoredLabel		"ColoredLabel"
 #define YUISpecialWidget_DownloadProgress	"DownloadProgress"
+#define YUISpecialWidget_DumbTab		"DumbTab"
 #define YUISpecialWidget_DummySpecialWidget	"DummySpecialWidget"
+#define YUISpecialWidget_HMultiProgressMeter	"HMultiProgressMeter"
+#define YUISpecialWidget_VMultiProgressMeter	"VMultiProgressMeter"
 #define YUISpecialWidget_PartitionSplitter	"PartitionSplitter"
 #define YUISpecialWidget_Slider			"Slider"
 #define YUISpecialWidget_Wizard			"Wizard"
@@ -136,6 +138,7 @@
 
 #define YUIProperty_CurrentButton		"CurrentButton"
 #define YUIProperty_CurrentItem			"CurrentItem"
+#define YUIProperty_EasterEgg			"EasterEgg"
 #define YUIProperty_Enabled			"Enabled"
 #define YUIProperty_ExpectedSize		"ExpectedSize"
 #define YUIProperty_Filename			"Filename"
@@ -150,7 +153,6 @@
 #define YUIProperty_Value			"Value"
 #define YUIProperty_Values			"Values"
 #define YUIProperty_WindowID			"WindowID"
-#define YUIProperty_EasterEgg			"EasterEgg"
 
 
 // Widget and dialog options

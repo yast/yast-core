@@ -30,6 +30,7 @@ pkginclude_HEADERS =				\
 	YMacroRecorder.h			\
 	YMenuButton.h				\
 	YMultiLineEdit.h			\
+	YMultiProgressMeter.h			\
 	YMultiSelectionBox.h			\
 	YPackageSelector.h			\
 	YPartitionSplitter.h			\
