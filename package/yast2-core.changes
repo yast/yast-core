@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb  3 17:12:21 CET 2004 - visnov@suse.cz
+
+- Fix memory corruption on duplicate function parameters.
+- 2.9.24 
+
+-------------------------------------------------------------------
 Tue Feb  3 15:06:49 CET 2004 - visnov@suse.cz
 
 - Fix UI::queryWidget for terms in `Table 

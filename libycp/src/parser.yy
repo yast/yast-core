@@ -1873,9 +1873,14 @@ function_start:
 		    if (tentry == 0)
 		    {
 			yyLerror ("Duplicate parameter", formalp->line);
+			blockstack_pop (p_parser->blockStack);
 			parameter_block->detachEnvironment (p_parser->scanner()->localTable());
 			$$.t = 0;
+			
+			// to properly delete a function, also the corresponding SymbolEntry must be
+			// adapted (so it does not try to access the YFunction anymore
 			delete func;
+			fentry->setCategory (SymbolEntry::c_unspec);
 			func = 0;
 			break;
 		    }
