@@ -63,13 +63,13 @@ sub SetError {
     %__error = @_;
     if( !$__error{package} && !$__error{file} && !$__error{line})
     {
-        @__error{'package','file','line'} = caller();
+	@__error{'package','file','line'} = caller();
     }
     if ( defined $__error{summary} )
     {
-        y2error($__error{code}." ".$__error{summary});
+	y2error($__error{code}." ".$__error{summary});
     } else {
-        y2error($__error{code});
+	y2error($__error{code});
     }
     return undef;
 }
@@ -237,9 +237,9 @@ sub Run ()
 
 	if ($command eq "result")
 	{
-	    return;
+	    last;
 	}
-	elsif ($command =~ m/^Read|Write|Dir|Execute|Error$/)
+	elsif ($command =~ m/^(Read|Write|Dir|Execute|Error)$/)
 	{
 	    # Standard commands, they have a path as the first argument
 	    # Convert it to a string
@@ -253,12 +253,14 @@ sub Run ()
 	    if (!defined $pathref)
 	    {
 		y2error ("Missing path argument to $command");
+		ycp::Return (undef);
 	    }
 	    else
 	    {
 		if (ref($pathref) ne "SCALAR" || $$pathref !~ /^\./)
 		{
 		    y2error ("The first argument is not a path. ('$pathref')");
+		    ycp::Return (undef);
 		}
 		else
 		{
