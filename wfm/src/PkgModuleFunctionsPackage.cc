@@ -1019,12 +1019,14 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 
 	return YCPBoolean (false);
     }
+
     return YCPBoolean (true);
 }
 
 
 /**
    @builtin Pkg::PkgSolveErrors() -> integer
+   only valid after a call of PkgSolve that returned false
    return number of fails
 */
 YCPValue
