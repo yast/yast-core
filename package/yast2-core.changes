@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun 27 16:18:36 CEST 2002 - arvin@suse.de
+
+- the Read (.yast2, ...) of the system agent appends "data/" the
+  the filename
+- removed function Write (.yast2, ...) from system agent
+
+-------------------------------------------------------------------
 Tue Jun 25 12:12:23 CEST 2002 - kkaempf@suse.de
 
 - Evaluate keys in map constants (#16701).

@@ -330,7 +330,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     {
 	/**
 	 * @builtin Read (.target.ycp, string filename) -> any
-	 * @builtin Read (.target.ycp, [string filename, any default = nil]) -> any
+	 * @builtin Read (.target.ycp, string filename, [any default = nil]) -> any
 	 * Opens a file that must be in YCP syntax and contain exactly
 	 * one value, parses that file and returns the parsed value.
 	 * Returns 'default', if the file didn't exist, was not readable or
@@ -340,20 +340,22 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 
 	/**
 	 * @builtin Read (.target.yast2, string filename) -> any
-	 * @builtin Read (.target.yast2, [string filename, any default = nil]) -> any
+	 * @builtin Read (.target.yast2, string filename, [any default = nil]) -> any
 	 * Opens a file that must be in YCP syntax and contain exactly
 	 * one value, parses that file and returns the parsed value.
 	 * Returns default, if the file didn't exist, was not readable or
 	 * did not contain a valid YCP value.
-	 * This function looks for the file in different directories.
-	 * The filename must be relative. The following directories
-	 * are scanned:
-	 * have a look source/liby2/src/pathsearch.cc
+	 *
+	 * The purpose of this function is to load data located in
+	 * ydatadir. The data may also be located in any of the paths in
+	 * source/core/liby2/src/pathsearch.cc appended by "data/".
+	 * The filename must be relative to one of those paths.
+	 *
 	 * A warning in the log is omitted if a default value is given.
 	 */
 
 	if (cmd == "yast2")
-	    filename = Y2PathSearch::findy2 (filename);
+	    filename = Y2PathSearch::findy2 ("data/" + filename); // FIXME use ydatadir
 
 	int fd = open (filename.c_str (), O_RDONLY);
 	if (fd < 0)
@@ -597,38 +599,12 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	 */
 
 	/**
-	 * @builtin Write (.ycp, [ string filename, integer mode],  any value) -> boolean
+	 * @builtin Write (.ycp, [ string filename, integer mode], any value) -> boolean
 	 * Opens a file for writing and prints the value <tt>value</tt> in
 	 * YCP syntax to that file. Returns true, if the file has
 	 * been written, false otherwise. The newly created file gets
 	 * the mode mode minus umask. Furthermore any missing directory in the
 	 * pathname <tt>filename</tt> is created automatically.
-	 */
-
-	/**
-	 * @builtin Write (.yast2, string filename, any value) -> boolean
-	 * Opens a file for writing and prints the value <tt>value</tt> in
-	 * YCP syntax to that file. Returns true, if the file has
-	 * been written, false otherwise. The newly created file gets
-	 * the mode 0644 minus umask. Furthermore any missing directory in the
-	 * pathname <tt>filename</tt> is created automatically.
-	 *
-	 * The file is
-	 * written to the user specific yast2 directory. This is /var/lib/YaST2
-	 * for root and $HOME/.yast2 for the normal user.
-	 */
-
-	/**
-	 * @builtin Write (.yast2, [ string filename, integer mode], any value) -> boolean
-	 * Opens a file for writing and prints the value <tt>value</tt> in
-	 * YCP syntax to that file. Returns true, if the file has
-	 * been written, false otherwise. The newly created file gets
-	 * the mode mode minus umask. Furthermore any missing directory in the
-	 * pathname <tt>filename</tt> is created automatically.
-	 *
-	 * The file is
-	 * written to the user specific yast2 directory. This is /var/lib/YaST2
-	 * for root and $HOME/.yast2 for the normal user.
 	 */
 
 	// either string or list
@@ -665,27 +641,6 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	{
 	    return YCPError ("Invalid empty filename in Write (" + cmd + ", ...)",
 			     YCPBoolean (false));
-	}
-
-	// Create Y2 filename.
-	if (cmd == "yast2")
-	{
-	    if (filename[0] == '/')
-	    {
-		filename = filename.substr(1);
-	    }
-	    if (geteuid() == 0)
-	    {
-		filename = "/var/lib/YaST2/" + filename;
-	    }
-	    else
-	    {
-		const char *home = getenv("HOME");
-		if (home)
-		    filename = string(home) + "/.yast2/" + filename;
-		else
-		    filename = "/var/lib/YaST2/" + filename;
-	    }
 	}
 
 	// Create directory, if missing
