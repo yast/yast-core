@@ -7,12 +7,11 @@ AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
 serversdir = $(execcompdir)/servers
 servers_PROGRAMS = scr
 
-scr_SOURCES =					\
-	Y2CCSCR.cc				\
-	ScriptingAgent.cc ScriptingAgent.h	\
-	SCRSubAgent.cc SCRSubAgent.h
+scr_SOURCES =
 
 scr_LDADD = -L$(libdir) -lscr -ly2 -lycp
+
+scr_DEPENDENCIES = libpy2scr.la
 
 scr_LDFLAGS =						\
 	-L$(srcdir)/../../libycp/src			\
@@ -23,6 +22,7 @@ scr_LDFLAGS =						\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../../liby2/src/libpy2program.la	\
+	$(srcdir)/libpy2scr.la				\
 	-Xlinker --no-whole-archive
 
 plugin_LTLIBRARIES = libpy2scr.la
