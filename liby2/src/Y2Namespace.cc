@@ -109,9 +109,6 @@ SymbolEntry* Y2CPPFunction::sentry(unsigned int position)
     SymbolEntry* morefun = new SymbolEntry (m_parent, position, strdup(m_name.c_str()), SymbolEntry::c_global, 
             Type::fromSignature ( m_impl->m_signature ), this );
     morefun->setCategory (SymbolEntry::c_function); 
-    
-    y2debug ("Created builtin signature (signature %s):", m_impl->m_signature.c_str());
-    y2debug (morefun->toString ().c_str ());
     return morefun;
 }
 
