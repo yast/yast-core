@@ -92,6 +92,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgSummary")		return PkgSummary (args);
     else if (function == "PkgVersion")		return PkgVersion (args);
     else if (function == "PkgSize")		return PkgSize (args);
+    else if (function == "PkgGroup")		return PkgGroup (args);
     else if (function == "IsManualSelection")	return IsManualSelection (args);
     else if (function == "SaveState")		return SaveState (args);
     else if (function == "RestoreState")	return RestoreState (args);

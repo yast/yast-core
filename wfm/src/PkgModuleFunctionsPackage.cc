@@ -397,6 +397,28 @@ PkgModuleFunctions::PkgSize (YCPList args)
 
 // ------------------------
 /**
+   @builtin Pkg::PkgGroup (string package) -> string
+
+   Get rpm group of a package
+
+*/
+YCPValue
+PkgModuleFunctions::PkgGroup (YCPList args)
+{
+    _y2pm.packageManager ();
+    startCachedSources (true);
+
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    if (!package)
+    {
+	return YCPVoid();
+    }
+
+    return YCPString (package->group());
+}
+
+// ------------------------
+/**
    @builtin Pkg::SaveState() -> bool
 
    save the current package selection status for later

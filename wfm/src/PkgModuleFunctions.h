@@ -133,6 +133,7 @@ class PkgModuleFunctions
 	YCPValue PkgSummary (YCPList args);
 	YCPValue PkgVersion (YCPList args);
 	YCPValue PkgSize (YCPList args);
+	YCPValue PkgGroup (YCPList args);
 	YCPValue IsManualSelection (YCPList args);
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);
