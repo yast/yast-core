@@ -514,7 +514,8 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
     string n = decl->name;
 
     const declaration_t *d = decl;
-    while( d->name_space != 0 ) {
+    while( d->name_space != 0 )
+    {
         d = d->name_space;
 	n = std::string(d->name) + "::" + n;
     }
