@@ -100,7 +100,7 @@ PkgModuleFunctions::TargetInstall(YCPList args)
     {
 	return YCPError ("Bad args to Pkg::TargetInstall");
     }
-    PMError err = _y2pm.instTarget().installPackage (args->value(0)->asString()->value());
+    PMError err = _y2pm.installFile (args->value(0)->asString()->value());
     return YCPBoolean (!err);
 }
 
@@ -114,6 +114,7 @@ PkgModuleFunctions::TargetInstall(YCPList args)
 YCPValue
 PkgModuleFunctions::TargetRemove(YCPList args)
 {
+    _y2pm.removePackage (args->value(0)->asString()->value());
     return YCPBoolean (true);
 }
 

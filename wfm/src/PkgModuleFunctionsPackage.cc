@@ -106,7 +106,7 @@ getTheCandidate (PMSelectablePtr selectable)
 }
 #endif
 // ------------------------
-/**   
+/**
    @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
      return cumulated sizes (in kb !) to be installed from different media
 
@@ -147,7 +147,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::IsProvided (string tag) -> boolean
 
    returns a 'true' if the tag is provided in the installed system
@@ -165,7 +165,7 @@ PkgModuleFunctions::IsProvided (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::IsSelected (string tag) -> boolean
 
    returns a 'true' if the tag is selected for installation
@@ -188,7 +188,7 @@ PkgModuleFunctions::IsSelected (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::IsAvailable (string tag) -> boolean
 
    returns a 'true' if the tag is available on any of the currently
@@ -228,7 +228,7 @@ PkgModuleFunctions::DoProvideString (std::string name)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::DoProvide (list tags) -> $["failed1":"reason", ...]
 
    Provides (read: installs) a list of tags to the system
@@ -288,7 +288,7 @@ PkgModuleFunctions::DoRemoveString (std::string name)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::DoRemove (list tags) -> ["failed1", ...]
 
    Removes a list of tags from the system
@@ -334,7 +334,7 @@ PkgModuleFunctions::DoRemove (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::PkgSummary (string package) -> "This is a nice package"
 
    Get summary (aka label) of a package
@@ -356,7 +356,7 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::PkgVersion (string package) -> "1.42-39"
 
    Get version (better: edition) of a package
@@ -374,11 +374,11 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 	return YCPVoid();
     }
 
-    return YCPString (package->edition().as_string());
+    return YCPString (package->edition().toString());
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::PkgSize (string package) -> 12345678
 
    Get (installed) size of a package
@@ -400,7 +400,7 @@ PkgModuleFunctions::PkgSize (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::SaveState() -> bool
 
    save the current package selection status for later
@@ -415,7 +415,7 @@ PkgModuleFunctions::SaveState (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::RestoreState() -> bool
 
    restore the package selection status from a former
@@ -432,7 +432,7 @@ PkgModuleFunctions::RestoreState (YCPList args)
 }
 
 // ------------------------
-/**   
+/**
    @builtin Pkg::IsManualSelection () -> bool
 
    return true if the original list of packages (since the
@@ -466,7 +466,7 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
     return;
 }
 
-/**   
+/**
    @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
 
    return list of packages (["pkg1", "pkg2", ..."] if names_only==true,
@@ -581,7 +581,7 @@ PkgModuleFunctions::PkgUpdateAll (YCPList args)
 }
 
 
-/**   
+/**
    @builtin Pkg::PkgInstall (string package) -> boolean
 
    Select package for installation
@@ -599,7 +599,7 @@ PkgModuleFunctions::PkgInstall (YCPList args)
 }
 
 
-/**   
+/**
    @builtin Pkg::PkgDelete (string package) -> boolean
 
    Select package for deletion
@@ -617,7 +617,7 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 }
 
 
-/**   
+/**
    @builtin Pkg::PkgSolve () -> boolean
 
    Solve package dependencies
@@ -630,10 +630,10 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 }
 
 
-/**   
+/**
    @builtin Pkg::PkgCommit (integer medianr) -> [ int successful, list failed, list remaining ]
 
-   Commit package changes (actually install/delete packages) 
+   Commit package changes (actually install/delete packages)
 
    if medianr == 0, all packages regardless of media are installed
    if medianr > 0, only packages from this media are installed
@@ -672,7 +672,7 @@ PkgModuleFunctions::PkgCommit (YCPList args)
     return ret;
 }
 
-/**   
+/**
    @builtin Pkg::GetBackupPath () -> string
 
    get current path for update backup of rpm config files
@@ -684,7 +684,7 @@ PkgModuleFunctions::GetBackupPath (YCPList args)
     return YCPString (_y2pm.instTarget().getBackupPath().asString());
 }
 
-/**   
+/**
    @builtin Pkg::SetBackupPath (string path) -> void
 
    set current path for update backup of rpm config files
