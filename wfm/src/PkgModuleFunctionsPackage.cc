@@ -621,24 +621,33 @@ PkgModuleFunctions::PkgGroup (YCPList args)
 YCPValue
 PkgModuleFunctions::SaveState (YCPList args)
 {
-    _y2pm.packageManager().SaveState();
+    _y2pm.packageSelectionSaveState();
     return YCPBoolean (true);
 }
 
 // ------------------------
 /**
-   @builtin Pkg::RestoreState() -> bool
+   @builtin Pkg::RestoreState(bool check_only = false) -> bool
 
    restore the package selection status from a former
    call to Pkg::SaveState()
    Returns false if there is no saved state (no Pkg::SaveState()
    called before)
 
+   If called with argument (true), it only checks the saved
+   against the current status and returns true if they differ.
+
 */
 YCPValue
 PkgModuleFunctions::RestoreState (YCPList args)
 {
-    return YCPBoolean (_y2pm.packageManager().RestoreState());
+    if ((args->size() > 0)
+	&& (args->value(0)->isBoolean())
+	&& (args->value(0)->asBoolean()->value() == true))
+    {
+	return YCPBoolean (_y2pm.packageSelectionDiffState());
+    }
+    return YCPBoolean (_y2pm.packageSelectionRestoreState());
 }
 
 // ------------------------
@@ -651,7 +660,7 @@ PkgModuleFunctions::RestoreState (YCPList args)
 YCPValue
 PkgModuleFunctions::ClearSaveState (YCPList args)
 {
-    _y2pm.packageManager().ClearSaveState();
+    _y2pm.packageSelectionClearSaveState();
     return YCPBoolean (true);
 }
 
