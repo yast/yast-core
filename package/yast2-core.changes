@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov  2 13:55:18 CET 2004 - nashif@suse.de
+
+- Added new widgets: YDate / YTime 
+
+-------------------------------------------------------------------
 Tue Nov  2 13:50:23 CET 2004 - kkaempf@suse.de
 
 - check for proper return statement in definition of non-void
