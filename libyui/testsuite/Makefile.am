@@ -2,6 +2,8 @@
 # Makefile.am for core/libyui/testsuite
 #
 
+AM_CXXFLAGS = -DY2LOG=\"libyui\"
+
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\

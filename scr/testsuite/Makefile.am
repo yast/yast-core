@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib scr.test tests
 
+AM_CXXFLAGS = -DY2LOG=\"scr\"
+
 PACKAGE = scr
 AUTOMAKE_OPTIONS = dejagnu
 

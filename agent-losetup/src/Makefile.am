@@ -2,6 +2,8 @@
 # Makefile.am for core/agent-losetup/src
 #
 
+AM_CXXFLAGS = -DY2LOG=\"agent-losetup\"
+
 plugin_LTLIBRARIES = libpy2ag_losetup.la
 
 libpy2ag_losetup_la_SOURCES =		\

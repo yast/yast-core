@@ -47,7 +47,7 @@ void y2_vlogger (loglevel_t level, const char *component, const char *file,
 #ifdef Y2LOG
 #define y2log_component Y2LOG
 #else
-#warning Y2LOG not defined
+#error Y2LOG not defined
 #define y2log_component ""
 #endif
 

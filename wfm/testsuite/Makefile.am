@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib wfm.test tests
 
+AM_CXXFLAGS = -DY2LOG=\"wfm\"
+
 PACKAGE = wfm
 AUTOMAKE_OPTIONS = dejagnu
 

@@ -2,6 +2,8 @@
 # Makefile.am for core/agent-dummy/src
 #
 
+AM_CXXFLAGS = -DY2LOG=\"agent-dummy\"
+
 plugin_LTLIBRARIES = libpy2ag_dummy.la
 
 libpy2ag_dummy_la_SOURCES =			\

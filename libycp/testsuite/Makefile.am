@@ -1,8 +1,10 @@
 #
-# Makefile.am for libycp/testsuite
+# Makefile.am for core/libycp/testsuite
 #
 
 SUBDIRS = config lib libycp.test tests
+
+AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
 INCLUDES = -I$(srcdir)/../src/include
 
@@ -18,7 +20,8 @@ PACKAGE = libycp
 AUTOMAKE_OPTIONS = dejagnu
 
 clean-local:
-	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp libycp.log libycp.sum site.bak
+	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp	\
+	libycp.log libycp.sum site.bak
 	rm -f runycp parseycp testscope
 
 EXTRA_DIST = README

@@ -2,6 +2,8 @@
 # Makefile.am for core/agent-dumpto/testsuite
 #
 
+AM_CXXFLAGS = -DY2LOG=\"agent-dumpto\"
+
 AUTOMAKE_OPTIONS = dejagnu
 
 INCLUDES =

@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib ag_anyagent.test tests
 
+AM_CXXFLAGS = -DY2LOG=\"agent-any\"
+
 PACKAGE = ag_anyagent
 AUTOMAKE_OPTIONS = dejagnu
 

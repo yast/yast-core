@@ -2,6 +2,8 @@
 # Makefile.am for core/agent-resolver/src
 #
 
+AM_CXXFLAGS = -DY2LOG=\"agent-resolver\"
+
 plugin_LTLIBRARIES = libpy2ag_resolver.la
 
 libpy2ag_resolver_la_SOURCES = \

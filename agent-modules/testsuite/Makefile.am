@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib ag_modules.test tests
 
+AM_CXXFLAGS = -DY2LOG=\"agent-modules\"
+
 PACKAGE = ag_modules
 AUTOMAKE_OPTIONS = dejagnu
 

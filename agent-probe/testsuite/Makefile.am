@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib ag_hwprobe.test tests
 
+AM_CXXFLAGS = -DY2LOG=\"agent-probe\"
+
 PACKAGE = ag_hwprobe
 AUTOMAKE_OPTIONS = dejagnu
 

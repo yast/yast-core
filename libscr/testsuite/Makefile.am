@@ -2,6 +2,8 @@
 # Makefile.am for core/libscr/testsuite
 #
 
+AM_CXXFLAGS = -DY2LOG=\"libscr\"
+
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\

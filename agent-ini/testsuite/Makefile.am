@@ -4,6 +4,8 @@
 
 SUBDIRS = config lib ag_ini.test tests ag_ini.debug debug ag_ini.multi multi
 
+AM_CXXFLAGS = -DY2LOG=\"agent-ini\"
+
 PACKAGE = ag_ini
 AUTOMAKE_OPTIONS = dejagnu
 

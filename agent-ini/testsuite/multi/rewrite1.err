@@ -1,10 +1,10 @@
-[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.1.test to 1
-[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.2.test to 2
-[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.3.test to 3
-[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.4.test to 4
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.1.test to 1
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.2.test to 2
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.3.test to 3
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite1.in.4.test to 4
 [YCP] multi/rewrite1.ycp:XXX ["1", "2", "3", "4"]
 [YCP] multi/rewrite1.ycp:XXX 1: ["iqnet_praha", "fortech_litomysl", "apexnet_plzen"]
 [YCP] multi/rewrite1.ycp:XXX 2: ["arcor", "mobilcom"]
 [YCP] multi/rewrite1.ycp:XXX 3: ["Totalise", "force9"]
 [YCP] multi/rewrite1.ycp:XXX 4: ["m3_company", "juno_online_services_inc_", "earthlink_network"]
-[yast2-agent-ini] IniParser.cc(write):XXX File multi/rewrite1.in.*.test did not change. Not saving.
+[agent-ini] IniParser.cc(write):XXX File multi/rewrite1.in.*.test did not change. Not saving.

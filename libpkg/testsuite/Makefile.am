@@ -2,6 +2,8 @@
 # Makefile.am for core/libpkg/testsuite
 #
 
+AM_CXXFLAGS = -DY2LOG=\"libpkg\"
+
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
