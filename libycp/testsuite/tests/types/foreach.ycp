@@ -1,0 +1,6 @@
+{
+    map m = $[];
+    foreach(any key, map val, m, { return; });
+    return;
+}
+

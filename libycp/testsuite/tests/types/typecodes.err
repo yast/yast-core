@@ -30,7 +30,7 @@
 [Parser] tests/types/typecodes.ycp:26 type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:26 Expected 'map', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:27 type mismatch in variable definition
-[Parser] tests/types/typecodes.ycp:27 Expected 'map', seen 'const float'.
+[Parser] tests/types/typecodes.ycp:27 Expected 'map <any, float>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:28 type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:28 Expected 'block <any>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:29 type mismatch in variable definition

@@ -794,9 +794,10 @@ MapType::toString () const
     string ret = preToString() + "map";
 
     // map <any, <unspec>> -> map
-
+    // map <any, any> -> map
     if (!m_keytype->isAny()
-	&& !m_valuetype->isUnspec())
+	 || (!m_valuetype->isUnspec()
+	     && !m_valuetype->isAny()))
     {
 	ret += " <";
 	ret += m_keytype->toString();
