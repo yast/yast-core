@@ -144,11 +144,11 @@ PkgModuleFunctions::YouGetPackages (YCPList args)
 YCPValue
 PkgModuleFunctions::YouSelectPatches (YCPList args)
 {
-    _y2pm.youPatchManager().instYou().filterPatchSelection();
-
     int kinds = PMYouPatch::kind_security | PMYouPatch::kind_recommended;
 
     _y2pm.youPatchManager().instYou().selectPatches( kinds );
+
+    _y2pm.youPatchManager().instYou().filterPatchSelection();
 
     return YCPVoid();
 }
