@@ -8,7 +8,7 @@ AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
 # to look for the packagemanager in the prefix first (really first?)
 AM_LDFLAGS = -L${libdir}
 
-plugin_LTLIBRARIES = libpy2wfm.la libpy2Pkg.la
+plugin_LTLIBRARIES = libpy2wfm.la
 noinst_LTLIBRARIES = liby2wfm.la
 
 liby2wfm_la_SOURCES =				\
@@ -16,25 +16,6 @@ liby2wfm_la_SOURCES =				\
 	Y2CCWFM.cc Y2CCWFM.h			\
 	WFM.cc WFM.h				\
 	WFMSubAgent.cc WFMSubAgent.h
-
-
-libpy2Pkg_la_SOURCES =				\
-	Y2PkgComponent.cc Y2PkgComponent.h	\
-	Y2CCPkg.cc Y2CCPkg.h			\
-	ycpTools.cc ycpTools.h			\
-	PkgModule.cc PkgModule.h		\
-	PkgModuleError.cc PkgModuleError.h	\
-	PkgModuleFunctions.h			\
-	PkgModuleFunctions.cc			\
-	PkgModuleFunctionsPackage.cc		\
-	PkgModuleFunctionsPatch.cc		\
-	PkgModuleFunctionsSelection.cc		\
-	PkgModuleFunctionsTarget.cc		\
-	PkgModuleFunctionsSource.cc		\
-	PkgModuleCallbacks.h			\
-	PkgModuleCallbacks.YCP.h		\
-	PkgModuleCallbacks.cc
-
 
 liby2wfm_la_LDFLAGS = -version-info 2:0
 liby2wfm_la_LIBADD = \
@@ -45,12 +26,6 @@ liby2wfm_la_LIBADD = \
 	../../liby2/src/libpy2stdio.la		\
 	../../liby2/src/liby2.la		\
 	-ly2util
-
-libpy2Pkg_la_LDFLAGS = -version-info 2:0
-libpy2Pkg_la_LIBADD = \
-	../../libycp/src/libycp.la		\
-	../../liby2/src/liby2.la		\
-	-ly2pm -ly2util
 
 libpy2wfm_la_SOURCES =				\
 	Y2ScriptComponent.cc Y2ScriptComponent.h\
@@ -66,43 +41,4 @@ INCLUDES =					\
 	-I$(srcdir)/../../libyui/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
 	-I$(includedir)
-
-pkgincludedir = $(includedir)/wfm
-
-pkginclude_HEADERS =				\
-	Y2WFMComponent.h			\
-	WFMSubAgent.h
-
-#<INSTALL-HEADER-TARGET>
-
-# Automatically inserted by insert_install_target
-# DO NOT REMOVE THE TAGS!
-
-# Install header files only if different to version already installed -
-# prevent unnecessary installations to keep make dependency changes
-# and thus rebuilds for dependent packages as low as possible.
-
-install-pkgincludeHEADERS: $(pkginclude_HEADERS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(pkgincludedir)
-	@list='$(pkginclude_HEADERS)';							\
-	for p in $$list; do								\
-		if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; 			\
-		if ! cmp -s $$d$$p $(DESTDIR)$(pkgincludedir)/$$p; then			\
-			echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincludedir)/$$p";	\
-			$(INSTALL_DATA) $$d$$p $(DESTDIR)$(pkgincludedir)/$$p;		\
-	  	fi									\
-	done
-
-BUILT_SOURCES = PkgBuiltinTable.h PkgBuiltinCalls.h
-
-PkgBuiltinTable.h : PkgModuleFunctions.h
-	$(top_srcdir)/base/tools/devtools/generateYCPWrappers PkgModuleFunctions.h PkgBuiltinCalls.h PkgBuiltinTable.h
-
-PkgBuiltinCalls.h : PkgModuleFunctions.h
-	$(top_srcdir)/base/tools/devtools/generateYCPWrappers PkgModuleFunctions.h PkgBuiltinCalls.h PkgBuiltinTable.h
-
-CLEANFILES = $(BUILT_SOURCES)
-
-#</INSTALL-HEADER-TARGET>
 
