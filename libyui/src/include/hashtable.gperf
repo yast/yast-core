@@ -30,6 +30,7 @@ SCR
 SetConsoleFont
 SetFocus
 SetFunctionKeys
+SetKeyboard
 SetLanguage
 SetModulename
 SetProductName

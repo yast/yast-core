@@ -644,6 +644,7 @@ protected:
 				     const YCPString & unicode_map,
 				     const YCPString & encoding );
 
+    virtual YCPValue setKeyboard();
 
     /**
      * UI-specific getDisplayInfo() functions.
@@ -899,6 +900,7 @@ protected:
     YCPValue evaluateRedrawScreen			( const YCPTerm & term );
     YCPValue evaluateRunPkgSelection			( const YCPTerm & term );
     YCPValue evaluateSetConsoleFont			( const YCPTerm & term );
+    YCPValue evaluateSetKeyboard			( const YCPTerm & term );
     YCPValue evaluateSetFocus				( const YCPTerm & term );
     YCPValue evaluateSetFunctionKeys			( const YCPTerm & term );
     YCPValue evaluateSetLanguage			( const YCPTerm & term );

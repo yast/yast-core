@@ -46,6 +46,7 @@
 #define YUIBuiltin_ReplaceWidget		"ReplaceWidget"
 #define YUIBuiltin_RunPkgSelection		"RunPkgSelection"
 #define YUIBuiltin_SetConsoleFont		"SetConsoleFont"
+#define YUIBuiltin_SetKeyboard			"SetKeyboard"
 #define YUIBuiltin_SetFocus			"SetFocus"
 #define YUIBuiltin_SetFunctionKeys		"SetFunctionKeys"
 #define YUIBuiltin_SetLanguage			"SetLanguage"

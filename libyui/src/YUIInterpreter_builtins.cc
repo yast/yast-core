@@ -94,6 +94,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_RunPkgSelection		) ret = evaluateRunPkgSelection		( term );
     else if ( symbol == YUIBuiltin_SCR				) ret = evaluateCallback		( term, false );
     else if ( symbol == YUIBuiltin_SetConsoleFont		) ret = evaluateSetConsoleFont		( term );
+    else if ( symbol == YUIBuiltin_SetKeyboard			) ret = evaluateSetKeyboard		( term );
     else if ( symbol == YUIBuiltin_SetFocus			) ret = evaluateSetFocus		( term );
     else if ( symbol == YUIBuiltin_SetFunctionKeys		) ret = evaluateSetFunctionKeys		( term );
     else if ( symbol == YUIBuiltin_SetLanguage			) ret = evaluateSetLanguage		( term );
@@ -304,6 +305,32 @@ YCPValue YUIInterpreter::evaluateSetConsoleFont( const YCPTerm & term )
     else return YCPNull();
 }
 
+/**
+ * @builtin SetKeyboard
+ *
+ *
+ * @example SetKeyboard( )
+ */
+
+YCPValue YUIInterpreter::evaluateSetKeyboard( const YCPTerm & term )
+{
+    if ( term->size() != 0 )
+	return YCPNull();
+
+    return setKeyboard( );
+}
+
+/*
+ * Default UI-specific setKeyboard()
+ * Returns OK ( YCPVoid() )
+ */
+
+YCPValue YUIInterpreter::setKeyboard(  )
+{
+    // NOP
+
+    return YCPVoid();	// OK ( YCPNull() would mean error )
+}
 
 /*
  * Default UI-specific setConsoleFont()
