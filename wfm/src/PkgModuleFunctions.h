@@ -86,6 +86,7 @@ class PkgModuleFunctions
 	YCPValue CallbackDonePackage (YCPList args);
 	YCPValue CallbackMediaChange (YCPList args);
 	YCPValue CallbackMediaError (YCPList args);
+	YCPValue CallbackProgressRebuildDB (YCPList args);
 
 	// source related
 	YCPValue SourceCreate (YCPList args);
@@ -115,6 +116,7 @@ class PkgModuleFunctions
 	YCPValue GetSelections (YCPList args);
 	YCPValue GetBackupPath (YCPList args);
 	YCPValue SetBackupPath (YCPList args);
+	YCPValue CreateBackups (YCPList args);
 	YCPValue SelectionData (YCPList args);
 	YCPValue SetSelection (YCPList args);
 	YCPValue ClearSelection (YCPList args);

@@ -77,11 +77,13 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "CallbackDonePackage")		return CallbackDonePackage (args);
     else if (function == "CallbackMediaChange")		return CallbackMediaChange (args);
     else if (function == "CallbackMediaError")		return CallbackMediaError (args);
+    else if (function == "CallbackProgressRebuildDB")	return CallbackProgressRebuildDB (args);
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);
     else if (function == "GetBackupPath")	return GetBackupPath (args);
     else if (function == "SetBackupPath")	return SetBackupPath (args);
+    else if (function == "CreateBackups")	return CreateBackups (args);
     else if (function == "IsProvided")		return IsProvided (args);
     else if (function == "IsAvailable")		return IsAvailable (args);
     else if (function == "IsSelected")		return IsSelected (args);

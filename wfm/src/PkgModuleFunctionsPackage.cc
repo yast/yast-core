@@ -651,9 +651,18 @@ PkgModuleFunctions::PkgSolve (YCPList args)
     PkgDep::ResultList good;
     PkgDep::ErrorResultList bad;
 
-    if (!_y2pm._y2pm.packageManager().solveInstall(good, bad))
+    if (!_y2pm.packageManager().solveInstall(good, bad))
     {
-	ERR << bad.size() << " packages failed" << endl;
+	y2error ("%d packages failed:", bad.size());
+
+	std::ofstream out ("/var/log/YaST2/badlist");
+	out << bad.size() << " packages failed" << std::endl;
+	for( PkgDep::ErrorResultList::const_iterator p = bad.begin();
+	     p != bad.end(); ++p )
+	{
+	    out << *p << std::endl;
+	}
+
 	return YCPBoolean (false);
     }
     return YCPBoolean (true);
@@ -731,4 +740,23 @@ PkgModuleFunctions::SetBackupPath (YCPList args)
     _y2pm.instTarget().setBackupPath (path);
     return YCPVoid();
 }
+
+
+/**
+   @builtin Pkg::CreateBackups  (boolean flag) -> void
+
+   whether to create package backups during install or removal
+*/
+YCPValue
+PkgModuleFunctions::CreateBackups (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::CreateBackups");
+    }
+    _y2pm.instTarget().createPackageBackups(args->value(0)->asBoolean()->value());
+    return YCPVoid();
+}
+
 

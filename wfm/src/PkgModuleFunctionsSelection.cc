@@ -270,9 +270,9 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
 	PkgDep::ResultList good;
 	PkgDep::ErrorResultList bad;
 
-	if (!_y2pm._y2pm.selectionManager().solveInstall(good, bad))
+	if (!_y2pm.selectionManager().solveInstall(good, bad))
 	{
-	    ERR << bad.size() << " selections failed" << endl;
+	    y2error ("%d elections failed", bad.size());
 	    return false;
 	}
 	return true;

@@ -184,6 +184,21 @@ y2milestone ("mediaErrorCallbackFunc(%d)", (int)error);
 }
 
 
+//-------------------------------------------------------------------
+// during rpm rebuild db (rpm progress)
+static std::string progressRebuildDBCallbackModule;
+static YCPSymbol progressRebuildDBCallbackSymbol("",false);
+
+static void
+progressRebuildDBCallbackFunc (int percent, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (progressRebuildDBCallbackSymbol, progressRebuildDBCallbackModule);
+    callback->add(YCPInteger (percent));
+    ((YCPInterpreter *)_wfm)->evaluate (callback);
+    return;
+}
+
+
 //*****************************************************************************
 //*****************************************************************************
 //
@@ -318,7 +333,7 @@ PkgModuleFunctions::CallbackStartPackage(YCPList args)
 
 
 /**
- * @builtin Pkg::CallbackProgress (string fun) -> nil
+ * @builtin Pkg::CallbackProgressPackage (string fun) -> nil
  *
  * set progress callback function
  * will call 'fun (integer percent)' during rpm installation
@@ -446,5 +461,37 @@ PkgModuleFunctions::CallbackMediaError (YCPList args)
     (InstSrcPtr::cast_away_const(source_id))->setMediaErrorCallback(mediaErrorCallbackFunc, _wfm);
     return YCPVoid();
 }
+
+
+/**
+ * @builtin Pkg::CallbackProgressRebuildDB (string fun) -> nil
+ *
+ * set progress callback function
+ * will call 'fun (integer percent)' during rpm installation
+ */
+YCPValue
+PkgModuleFunctions::CallbackProgressRebuildDB (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::CallbackProgressRebuildDB");
+    }
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	progressRebuildDBCallbackModule = name.substr (0, colonpos);
+	progressRebuildDBCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	progressRebuildDBCallbackModule = "";
+	progressRebuildDBCallbackSymbol = YCPSymbol (name, false);
+    }
+    _y2pm.setRebuildDBProgressCallback(progressRebuildDBCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
 
 
