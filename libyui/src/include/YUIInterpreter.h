@@ -671,7 +671,7 @@ protected:
      * UI-specific makeScreenShot function.
      * This default implementation does nothing.
      */
-    virtual void makeScreenShot();
+    virtual void makeScreenShot( std::string filename );
 
 
     /**

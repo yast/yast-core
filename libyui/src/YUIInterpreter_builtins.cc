@@ -293,7 +293,7 @@ void YUIInterpreter::redrawScreen()
 /**
  * Default UI-specific makeScreenShot() - does nothing
  */
-void YUIInterpreter::makeScreenShot()
+void YUIInterpreter::makeScreenShot( std::string filename )
 {
     // NOP
 }
@@ -913,18 +913,18 @@ YCPValue YUIInterpreter::evaluateNormalCursor(const YCPTerm & term)
 
 
 /**
- * @builtin MakeScreenShot() -> void
+ * @builtin MakeScreenShot( string filename ) -> void
  *
- * Make a screen shot if the specific UI supports that.	 The Qt UI creates PNG
- * files in the /tmp directory.
+ * Make a screen shot if the specific UI supports that.
+ * The Qt UI opens a file selection box if filename is empty.
  */
 
 YCPValue YUIInterpreter::evaluateMakeScreenShot(const YCPTerm & term)
 {
-    if (term->size() != 0 )
+    if (term->size() != 1 || ! term->value(0)->isString() )
 	return YCPNull();
 
-    makeScreenShot();
+    makeScreenShot( term->value(0)->asString()->value() );
     return YCPVoid();
 }
 
