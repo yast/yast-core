@@ -2,6 +2,7 @@
 Tue Nov  2 08:10:35 CET 2004 - visnov@suse.cz
 
 - Use shared representation for booleans and nils
+- consider only single digit arguments
 - 2.11.9 
 
 -------------------------------------------------------------------

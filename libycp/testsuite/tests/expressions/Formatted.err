@@ -54,3 +54,12 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Formatted.ycp:19 Parser error
+[Interpreter] tests/expressions/Formatted.ycp:23 Format string is not constant, no parameter checking possible
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/expressions/Formatted.ycp"
+    y2milestone (sformat ("HAHA %11 %21", "A", 42));
+}
+----------------------------------------------------------------------
+[YCP] tests/expressions/Formatted.ycp:23 HAHA A1 421

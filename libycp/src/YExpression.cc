@@ -1885,7 +1885,13 @@ YEBuiltin::finalize ()
 	    if (*cptr == '%')
 	    {
 		cptr++;
-		int number = atoi (cptr);
+		
+		int number = 0;
+		
+		if ( (*cptr) > '0' && (*cptr) <= '9' )
+		{
+		    number = (*cptr)-'0'; // for more digits use atoi (cptr);
+		}
 		if (number > 0)
 		{
 		    if (number >= bits)
