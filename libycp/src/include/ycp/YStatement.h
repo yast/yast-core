@@ -141,7 +141,7 @@ public:
 class YSTypedef : public YStatement
 {
     REP_BODY(YSTypedef);
-    string m_name;		// name
+    Ustring m_name;		// name
     constTypePtr m_type;	// type
 public:
     YSTypedef (const string &name, constTypePtr type, int line = 0);	// Typedef
@@ -327,7 +327,7 @@ public:
 class YSTextdomain : public YStatement
 {
     REP_BODY(YSTextdomain);
-    string m_domain;
+    Ustring m_domain;
 public:
     YSTextdomain (const string &textdomain, int line = 0);
     YSTextdomain (std::istream & str);
@@ -349,7 +349,7 @@ private:
 class YSInclude : public YStatement
 {
     REP_BODY(YSInclude);
-    string m_filename;
+    Ustring m_filename;
     bool m_skipped;
 public:
     YSInclude (const string &filename, int line = 0, bool skipped = false);
@@ -392,7 +392,7 @@ public:
 class YSFilename : public YStatement
 {
     REP_BODY(YSFilename);
-    string m_filename;
+    Ustring m_filename;
 public:
     YSFilename (const string &filename, int line = 0);
     YSFilename (std::istream & str);

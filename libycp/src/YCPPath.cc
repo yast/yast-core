@@ -106,7 +106,7 @@ void
 YCPPathRep::append(string c)
 {
     Component added;
-    added.component = c;
+    added.component = Ustring (SymbolEntry::_nameHash, c);
     added.complex = true;  //it would be nicer if we checked if it is really complex, but this is faster
     components.push_back(added);
 }
@@ -151,7 +151,7 @@ YCPPathRep::at(long index) const
 string
 YCPPathRep::component_str(long index) const
 {
-    return components[index].component;
+    return components[index].component.asString();
 }
 
 
@@ -192,12 +192,14 @@ YCPPathRep::valuetype() const
 
 
 YCPPathRep::Component::Component(string s)
+    : component (SymbolEntry::emptyUstring)
 {
+    string comp;
     if (s[0] == '"')
     {
 	char num;
 	complex = true;
-	component.erase();
+	comp.erase();
 	for (const char*c = s.c_str()+1;*c;c++)
 	{
 	    if ('\\' == *c)
@@ -209,15 +211,15 @@ YCPPathRep::Component::Component(string s)
 			case '\0':
 			    // this should never happen because scanner gives us
 			    // value that ends up with " (not with \)
-			    component+= '\\';
+			    comp+= '\\';
 			    return;
-			case '\\':   component+= '\\';   break;
-			case 'n':    component+= '\n';   break;
-			case 't':    component+= '\t';   break;
-			case 'r':    component+= '\r';   break;
-			case 'b':    component+= '\b';   break;
-			case 'f':    component+= '\f';   break;
-			case '"':    component+= '"';    break;
+			case '\\':   comp+= '\\';   break;
+			case 'n':    comp+= '\n';   break;
+			case 't':    comp+= '\t';   break;
+			case 'r':    comp+= '\r';   break;
+			case 'b':    comp+= '\b';   break;
+			case 'f':    comp+= '\f';   break;
+			case '"':    comp+= '"';    break;
 			case 'x':
 			    // there must be at least one number
 			    // we know that there is at least " and \0 so this is safe
@@ -240,10 +242,10 @@ YCPPathRep::Component::Component(string s)
 				}
 			    if (!num)
 				ycp2error("\\x00 not allowed in path constant. Skipping.");
-			    component+= num;
+			    comp+= num;
 			    break;
 			default:
-			    component+= *c;
+			    comp+= *c;
 			}
 	    }
 	    else if ('"' == *c)
@@ -251,14 +253,15 @@ YCPPathRep::Component::Component(string s)
 		break;
 	    }
 	    else
-		component+= *c;
+		comp+= *c;
 	}
     }
     else
     {
-	component = s;
-	complex = string::npos == component.find_first_not_of ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") ? false : true;
+	comp = s;
+	complex = string::npos == comp.find_first_not_of ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") ? false : true;
     }
+    component = Ustring (SymbolEntry::_nameHash, comp);
 }
 
 
@@ -266,9 +269,9 @@ string
 YCPPathRep::Component::toString() const
 {
     if (!complex)
-	return component;
+	return component.asString();
     string s = "\"";
-    for (const char*c = component.c_str();*c;c++)
+    for (const char*c = component->c_str();*c;c++)
     {
 	switch (*c)
 	{
@@ -304,12 +307,13 @@ YCPPathRep::Component::toString() const
 
 
 YCPPathRep::Component::Component(std::istream & str)
+    : component (SymbolEntry::emptyUstring)
 {
     char v;
     if (str.get (v))
     {
 	complex = (v != '\x00');
-	Bytecode::readString (str, component);
+	component = Bytecode::readUstring (str);
     }
 }
 
@@ -322,7 +326,7 @@ std::ostream &
 YCPPathRep::Component::toStream (std::ostream & str) const
 {
     str.put (complex ? '\x01' : '\x00');
-    return Bytecode::writeString (str, component);
+    return Bytecode::writeUstring (str, component);
 }
 
 std::ostream &

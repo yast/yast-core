@@ -22,7 +22,7 @@
 #include "ycp/Bytecode.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 #endif
 
 #include <ctype.h>
@@ -254,10 +254,6 @@ Type::basematch (constTypePtr expected) const
 int
 Type::match (constTypePtr expected) const
 {
-    if (m_nocheck)
-    {
-	return 0;
-    }
 #if DO_DEBUG
     y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 #endif
@@ -327,9 +323,6 @@ Type::canCast (constTypePtr to) const
 bool
 Type::equals (constTypePtr expected) const
 {
-    if (m_nocheck)
-	return true;
-
 #if DO_DEBUG
 //    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 #endif
@@ -769,7 +762,8 @@ ListType::commontype (constTypePtr type) const
 #if DO_DEBUG
     y2debug ("commontype '%s', '%s'", toString().c_str(), type->toString().c_str());
 #endif
-    if (type->isVoid())
+    if (type->isVoid()
+	|| type->isUnspec())
     {
 	return constListTypePtr (this);
     }
@@ -928,7 +922,8 @@ MapType::commontype (constTypePtr type) const
 #if DO_DEBUG
     y2debug ("commontype '%s', '%s'", toString().c_str(), type->toString().c_str());
 #endif
-    if (type->isVoid())
+    if (type->isVoid()
+	|| type->isUnspec())
     {
 	return constMapTypePtr (this);
     }

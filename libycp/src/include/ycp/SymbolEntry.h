@@ -43,9 +43,10 @@ class SymbolEntry : public Rep, public MemUsage
 {
     REP_BODY (SymbolEntry);
 
-private:
+public:
     // hash for unique strings
     static UstringHash _nameHash;
+    static Ustring emptyUstring;
 
 public:
     typedef enum {

@@ -25,6 +25,7 @@
 
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPList.h>
+#include <y2util/Ustring.h>
 
 /**
  * @short YCPValueRep representing a term.
@@ -37,7 +38,7 @@ class YCPTermRep : public YCPValueRep
     /**
      * The terms name
      */
-    string s;
+    Ustring s;
 
     /**
      * YCP list representing the term's arguments

@@ -23,7 +23,9 @@
 
 
 #include "YCPValue.h"
+#include <y2util/Ustring.h>
 
+#include "ycp/SymbolEntry.h"
 
 /**
  * @short YCPValueRep representing a data path
@@ -39,13 +41,13 @@ class YCPPathRep : public YCPValueRep
 {
     struct Component
     {
-        string component; // component string
+        Ustring component; // component string
         bool complex;     // true if component is quoted by " in source. false otherwise (component contains only a-zA-Z0-9-_)
-        Component() : component (), complex (false) {}
+        Component() : component (SymbolEntry::emptyUstring), complex (false) {}
         Component(string s);  // for initial creation. Unquotes and unescapes
         Component(std::istream & str);  // for initial creation
         int compare(const Component&to) const {
-            return component.compare(to.component);
+            return component.asString().compare(to.component.asString());
         }
         string toString() const;
 	std::ostream & toStream (std::ostream & str) const;

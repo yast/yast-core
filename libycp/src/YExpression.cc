@@ -223,7 +223,6 @@ YETerm::YETerm (const char *name)
     : YCode (yeTerm)
     , m_name (name)
     , m_parameters (0)
-    , m_last (0)
 {
 }
 
@@ -231,12 +230,11 @@ YETerm::YETerm (const char *name)
 YETerm::YETerm (std::istream & str)
     : YCode (yeTerm)
     , m_parameters (0)
-    , m_last (0)
 {
     m_name = Bytecode::readCharp (str);
     if (m_name)
     {
-	if (!Bytecode::readYCodelist (str, &m_parameters, &m_last))
+	if (!Bytecode::readYCodelist (str, &m_parameters))
 	{
 	    delete [] m_name;
 	    m_name = 0;
@@ -301,9 +299,10 @@ YETerm::attachParameter (YCodePtr code, constTypePtr dummy)
     }
     else
     {
-	m_last->next = element;
+	ycodelist_t *ptr = m_parameters;
+	while (ptr->next) ptr = ptr->next;
+	ptr->next = element;
     }
-    m_last = element;
 
     return 0;
 }
@@ -595,16 +594,14 @@ YEList::YEList (YCodePtr code)
     m_first = new ycodelist_t;
     m_first->code = code;
     m_first->next = 0;
-    m_last = m_first;
 }
 
 
 YEList::YEList (std::istream & str)
     : YCode (yeList)
     , m_first (0)
-    , m_last (0)
 {
-    Bytecode::readYCodelist (str, &m_first, &m_last);
+    Bytecode::readYCodelist (str, &m_first);
 }
 
 
@@ -627,8 +624,16 @@ YEList::attach (YCodePtr code)
     ycodelist_t *element = new ycodelist_t;
     element->code = code;
     element->next = 0;
-    m_last->next = element;
-    m_last = element;
+    if (m_first == 0)
+    {
+	m_first = element;
+    }
+    else
+    {
+	ycodelist_t *ptr = m_first;
+	while (ptr->next) ptr = ptr->next;
+	ptr->next = element;
+    }
 }
 
 
@@ -719,7 +724,6 @@ YEList::toStream (std::ostream & str) const
 YEMap::YEMap (YCodePtr key, YCodePtr value)
     : YCode (yeMap)
     , m_first (0)
-    , m_last (0)
 {
     attach (key, value);
 }
@@ -728,7 +732,6 @@ YEMap::YEMap (YCodePtr key, YCodePtr value)
 YEMap::YEMap (std::istream & str)
     : YCode (yeMap)
     , m_first (0)
-    , m_last (0)
 {
     u_int32_t count = Bytecode::readInt32 (str);
     while (count-- > 0)
@@ -761,15 +764,16 @@ YEMap::attach (YCodePtr key, YCodePtr value)
     element->value = value;
     element->next = 0;
 
-    if (m_last == 0)
+    if (m_first == 0)
     {
 	m_first = element;
     }
     else
     {
-	m_last->next = element;
+	mapval_t *ptr = m_first;
+	while (ptr->next) ptr = ptr->next;
+	ptr->next = element;
     }
-    m_last = element;
 }
 
 
@@ -1435,10 +1439,9 @@ YEBracket::YEBracket (std::istream & str)
     m_var = Bytecode::readCode (str);
     m_arg = Bytecode::readCode (str);
     m_def = Bytecode::readCode (str);
-    
     // throw away the type info
     Bytecode::readType (str);
-    m_resultType = Type::Void;	
+    m_resultType = Type::Void;
 }
 
 
@@ -1584,7 +1587,6 @@ YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePt
     , m_type (type==0 ? Type::Function(Type::Unspec) : (constFunctionTypePtr)type)
     , m_parameterblock (parameterblock)
     , m_parameters (0)
-    , m_last (0)
 {
 }
 
@@ -1593,7 +1595,6 @@ YEBuiltin::YEBuiltin (std::istream & str)
     : YCode (yeBuiltin)
     , m_parameterblock (0)
     , m_parameters (0)
-    , m_last (0)
 {
     m_type = FunctionTypePtr (Bytecode::readType (str));
     extern StaticDeclaration static_declarations;
@@ -1606,7 +1607,7 @@ YEBuiltin::YEBuiltin (std::istream & str)
 	m_parameterblock = (YBlockPtr)Bytecode::readCode (str);
 	Bytecode::pushNamespace (m_parameterblock->nameSpace());
     }
-    Bytecode::readYCodelist (str, &m_parameters, &m_last);
+    Bytecode::readYCodelist (str, &m_parameters);
     if (m_parameterblock != 0)
     {
 	Bytecode::popNamespace (m_parameterblock->nameSpace());
@@ -1615,10 +1616,10 @@ YEBuiltin::YEBuiltin (std::istream & str)
 	|| m_type->isError ())
     {
 	ycp2error ("Can't find builtin '%s'", m_decl ? StaticDeclaration::Decl2String (m_decl, true).c_str() : m_type->toString().c_str());
+	str.setstate (ios::failbit);
     }
-
     // throw away type info
-    m_type = Type::Void;    
+    m_type = Type::Void;
 }
 
 
@@ -1645,7 +1646,6 @@ YEBuiltin::toStream (std::ostream & str) const
     {
 	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
-    
     return str;
 }
 
@@ -1742,6 +1742,29 @@ YEBuiltin::finalize ()
 }
 
 
+// check if m_parameterblock is really needed, drop if not
+//  the m_parameterblock is of course needed for DECL_SYMBOL but
+//  parser.yy will also open one for overloaded builtins.
+void
+YEBuiltin::closeParameters ()
+{
+#if DO_DEBUG
+    y2debug ("YEBuiltin::closeParameters (m_parameterblock %s)", m_parameterblock ? "SET" : "CLEAR");
+#endif
+    if (m_parameterblock != 0)
+    {
+	if (m_parameterblock->symbolCount() == 0)
+	{
+#if DO_DEBUG
+	    y2debug ("YEBuiltin has no symbolic parameters");
+#endif
+	    m_parameterblock = 0;
+	}
+    }
+
+}
+
+
 constTypePtr
 YEBuiltin::returnType () const
 {
@@ -1834,9 +1857,10 @@ YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
     }
     else
     {
-	m_last->next = element;
+	ycodelist_t *ptr = m_parameters;
+	while (ptr->next != 0) ptr = ptr->next;
+	ptr->next = element;
     }
-    m_last = element;
 
     return 0;
 }
@@ -2127,8 +2151,7 @@ YEFunction::YEFunction (std::istream & str)
     , m_entry (Bytecode::readEntry (str))
     , m_parameters (0)
 {
-    ycodelist_t *last = 0;
-    Bytecode::readYCodelist (str, &m_parameters, &last);
+    Bytecode::readYCodelist (str, &m_parameters);
 #if DO_DEBUG
     y2debug ("YEFunction (fromStream): %s", toString().c_str());
 #endif
@@ -2419,7 +2442,7 @@ YEFunction::evaluate (bool cse)
     }
 
     // push also local parameters
-    YBlockPtr definition = func->definition ();
+    YCodePtr definition = func->definition ();
 
     if (definition == 0)
     {
@@ -2427,7 +2450,10 @@ YEFunction::evaluate (bool cse)
 	return YCPNull();
     }
 
-    definition->pushToStack ();
+    if (definition->isBlock())
+    {
+	((YBlockPtr)definition)->pushToStack ();
+    }
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)
     {
@@ -2464,8 +2490,11 @@ YEFunction::evaluate (bool cse)
 
     YCPValue value = definition->evaluate ();
 
-    // pop also local parameters
-    definition->popFromStack ();
+    if (definition->isBlock())
+    {
+	// pop also local parameters
+	((YBlockPtr)definition)->popFromStack ();
+    }
 
     // pop parameter values for recursion
     for (unsigned int p = 0; p < func->parameterCount(); p++)

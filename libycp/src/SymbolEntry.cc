@@ -38,6 +38,12 @@ using std::string;
 IMPL_BASE_POINTER(SymbolEntry);
 
 UstringHash SymbolEntry::_nameHash;
+Ustring SymbolEntry::emptyUstring = Ustring (SymbolEntry::_nameHash, "");
+
+void __UUsage ()
+{
+    fprintf (stderr, "%d Ustrings using %ld bytes\n", SymbolEntry::_nameHash.size(), SymbolEntry::_nameHash.sum());
+}
 
 /**
  * constructor

@@ -53,6 +53,10 @@ class Bytecode {
 	static std::ostream & writeString (std::ostream & streamref, const std::string & stringref);
 	static bool readString (std::istream & streamref, std::string & stringref);
 
+	// Ustring I/O
+	static std::ostream & writeUstring (std::ostream & streamref, const Ustring ustringref);
+	static Ustring readUstring (std::istream & streamref);
+
 	// char * I/O
 	static std::ostream & writeCharp (std::ostream & streamref, const char * charp);
 	static char * readCharp (std::istream & streamref);
@@ -75,7 +79,7 @@ class Bytecode {
 
 	// ycodelist_t * I/O
 	static std::ostream & writeYCodelist (std::ostream & str, const ycodelist_t *codelist);
-	static bool readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t **last);
+	static bool readYCodelist (std::istream & str, ycodelist_t **anchor);
 
 	//-----------------------------------------------------------
 	// block nesting handling

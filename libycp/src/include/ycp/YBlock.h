@@ -48,9 +48,6 @@ class YSImport;
 class YBlock : public YCode, public Y2Namespace
 {
     REP_BODY (YBlock);
-private:
-    // hash for unique strings, used for filenames
-    static UstringHash m_filenameHash;
 
 public:
     // block kinds

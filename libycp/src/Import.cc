@@ -40,15 +40,17 @@
 Import::module_map Import::m_active_modules;
 
 Import::Import ()
+    : m_name (SymbolEntry::emptyUstring)
 {
 }
 
 
 Import::Import (const string &name, Y2Namespace *preloaded_namespace)
+    : m_name (SymbolEntry::emptyUstring)
 {
     if (import (name, preloaded_namespace) != 0)
     {
-	m_name = "";			// mark as failed import
+	m_name = SymbolEntry::emptyUstring;			// mark as failed import
     }
 }
 
@@ -61,9 +63,9 @@ Import::~Import ()
 int
 Import::import (const string &name, Y2Namespace *preloaded_namespace)
 {
-    if (!m_name.empty())
+    if (!m_name->empty())
     {
-	ycp2error ("Import::import(%s) called again but already initialized with '%s'", name.c_str(), m_name.c_str());
+	ycp2error ("Import::import(%s) called again but already initialized with '%s'", name.c_str(), m_name->c_str());
 	return -1;
     }
 
@@ -71,7 +73,7 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
     y2debug ("Import::import (%s), preloaded_namespace %p", name.c_str(), preloaded_namespace);
 #endif
 
-    m_name = name;
+    m_name = Ustring (SymbolEntry::_nameHash, name);
 
     m_module = m_active_modules.find (m_name);
 
@@ -124,11 +126,11 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
     {
 	table = m_module->second->table();
 #if DO_DEBUG
-	y2debug ("Module '%s' already loaded, name_space %p, table %p", m_name.c_str(), m_module->second, table);
+	y2debug ("Module '%s' already loaded, name_space %p, table %p", m_name->c_str(), m_module->second, table);
 #endif
 	if (table == 0)
 	{
-	    fprintf (stderr, "Oops, no table for already loaded module '%s'\n", m_name.c_str());
+	    fprintf (stderr, "Oops, no table for already loaded module '%s'\n", m_name->c_str());
 	    exit (1);
 	}
     }

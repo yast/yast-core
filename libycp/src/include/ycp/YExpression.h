@@ -95,7 +95,6 @@ class YETerm : public YCode
     REP_BODY(YETerm);
     const char *m_name;
     ycodelist_t *m_parameters;
-    ycodelist_t *m_last;
 public:
     YETerm (const char *name);
     YETerm (std::istream & str);
@@ -167,7 +166,6 @@ class YEList : public YCode
 {
     REP_BODY(YEList);
     ycodelist_t *m_first;
-    ycodelist_t *m_last;
 public:
     YEList (YCodePtr code);
     YEList (std::istream & str);
@@ -191,7 +189,6 @@ class YEMap : public YCode
     REP_BODY(YEMap);
     typedef struct mapval { YCodePtr key; YCodePtr value; struct mapval *next; } mapval_t;
     mapval_t *m_first;
-    mapval_t *m_last;
 public:
     YEMap (YCodePtr key, YCodePtr value);
     YEMap (std::istream & str);
@@ -365,7 +362,6 @@ class YEBuiltin : public YCode
     YBlockPtr m_parameterblock;
 
     ycodelist_t *m_parameters;
-    ycodelist_t *m_last;
 public:
     YEBuiltin (declaration_t *decl, YBlockPtr parameterblock = 0, constTypePtr type = 0);
     YEBuiltin (std::istream & str);
@@ -380,6 +376,8 @@ public:
      *   (wrong type was already reported in attachParameter())
      */
     constTypePtr finalize ();
+    // check if m_parameterblock is really needed, drop if not
+    void closeParameters ();
     constTypePtr returnType () const;
     // see YEFunction::attachParameter
     constTypePtr attachParameter (YCodePtr code, constTypePtr type = Type::Unspec);
@@ -400,7 +398,6 @@ class YEFunction : public YCode, public Y2Function
     REP_BODY(YEFunction);
     const SymbolEntryPtr m_entry;
     ycodelist_t *m_parameters;
-    // no need for m_last since we're counting the parameters anyway in attachParameter()
     string qualifiedName () const;
 public:
     YEFunction (const SymbolEntryPtr entry);

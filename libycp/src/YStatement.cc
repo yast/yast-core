@@ -416,7 +416,7 @@ YSFunction::toStream (std::ostream & str) const
 
 YSTypedef::YSTypedef (const string &name, constTypePtr type, int line)
     : YStatement (ysTypedef, line)
-    , m_name (name)
+    , m_name (Ustring (SymbolEntry::_nameHash, name))
     , m_type (type)
 {
 }
@@ -424,8 +424,8 @@ YSTypedef::YSTypedef (const string &name, constTypePtr type, int line)
 
 YSTypedef::YSTypedef (std::istream & str)
     : YStatement (ysTypedef, str)
+    , m_name (Bytecode::readUstring (str))
 {
-    Bytecode::readString (str, m_name);
     m_type = Bytecode::readType (str);
 }
 
@@ -433,7 +433,7 @@ YSTypedef::YSTypedef (std::istream & str)
 string
 YSTypedef::toString() const
 {
-    string s = string ("typedef ") + m_type->toString() + " " + m_name + ";";
+    string s = string ("typedef ") + m_type->toString() + " " + m_name.asString() + ";";
     return s;
 }
 
@@ -442,7 +442,7 @@ std::ostream &
 YSTypedef::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
-    Bytecode::writeString (str, m_name);
+    Bytecode::writeUstring (str, m_name);
     return m_type->toStream (str);
 }
 
@@ -1250,7 +1250,7 @@ YSDo::evaluate (bool cse)
 
 YSTextdomain::YSTextdomain (const string &textdomain, int line)
     : YStatement (ysTextdomain, line)
-    , m_domain (textdomain)
+    , m_domain (Ustring (SymbolEntry::_nameHash, textdomain))
 {
     bind ();
 }
@@ -1264,16 +1264,15 @@ YSTextdomain::~YSTextdomain ()
 string
 YSTextdomain::toString() const
 {
-    string s = string ("textdomain \"") + m_domain + "\";";
+    string s = string ("textdomain \"") + m_domain.asString() + "\";";
     return s;
 }
 
 
 YSTextdomain::YSTextdomain (std::istream & str)
     : YStatement (ysTextdomain, str)
+    , m_domain (Bytecode::readUstring (str))
 {
-    Bytecode::readString (str, m_domain);
-    
     bind ();
 }
 
@@ -1282,7 +1281,7 @@ std::ostream &
 YSTextdomain::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
-    return Bytecode::writeString (str, m_domain);
+    return Bytecode::writeUstring (str, m_domain);
 }
 
 
@@ -1298,8 +1297,8 @@ YSTextdomain::bind ()
 #if DO_DEBUG
     y2debug ("going to bind a domain %s", m_domain.c_str() );
 #endif
-    bindtextdomain (m_domain.c_str (), LOCALEDIR);
-    bind_textdomain_codeset (m_domain.c_str (), "UTF-8");
+    bindtextdomain (m_domain->c_str (), LOCALEDIR);
+    bind_textdomain_codeset (m_domain->c_str (), "UTF-8");
 }
 
 // ------------------------------------------------------------------
@@ -1307,7 +1306,7 @@ YSTextdomain::bind ()
 
 YSInclude::YSInclude (const string &filename, int line, bool skipped)
     : YStatement (ysInclude, line)
-    , m_filename (filename)
+    , m_filename (Ustring (SymbolEntry::_nameHash, filename))
     , m_skipped (skipped)
 {
 }
@@ -1321,17 +1320,15 @@ YSInclude::~YSInclude ()
 string
 YSInclude::toString() const
 {
-    string s = string ("// include \"") + m_filename + "\";";
+    string s = string ("// include \"") + m_filename.asString() + "\";";
     return s;
 }
 
 
 YSInclude::YSInclude (std::istream & str)
     : YStatement (ysInclude, str)
+    , m_filename (Bytecode::readUstring (str))
 {
-    char *name = Bytecode::readCharp (str);
-    m_filename = string (name);
-    delete [] name;
     m_skipped = Bytecode::readBool (str);
 }
 
@@ -1340,7 +1337,7 @@ std::ostream &
 YSInclude::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
-    Bytecode::writeCharp (str, m_filename.c_str());
+    Bytecode::writeUstring (str, m_filename);
     return Bytecode::writeBool (str, m_skipped);
 }
 
@@ -1367,7 +1364,6 @@ YSImport::YSImport (const string &name, int line)
 #if DO_DEBUG
 	y2debug ("import '%s' failed", name.c_str());	// debug only, import() already logged the error
 #endif
-	m_name = "";
     }
 
     Import::enableTracking();				// continue tracking in .ycp
@@ -1391,14 +1387,14 @@ YSImport::~YSImport ()
 string
 YSImport::name () const
 {
-    return m_name;
+    return m_name.asString();
 }
 
 
 string
 YSImport::toString() const
 {
-    string s = string ("import \"") + m_name + "\";";
+    string s = string ("import \"") + m_name.asString() + "\";";
     return s;
 }
 
@@ -1418,7 +1414,6 @@ YSImport::YSImport (std::istream & str)
     if (nameSpace() == 0)
     {
 	fprintf (stderr, "Import '%s' failed\n", name().c_str());
-	m_name = "";		// Pass error about failed import to top
 	return;
     }
 
@@ -1431,9 +1426,9 @@ YSImport::YSImport (std::istream & str)
 
     int xrefcount = Bytecode::readInt32 (str);
 
-    if (xref_debug) y2milestone ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+    if (xref_debug) y2milestone ("Resolving %d symbols from module %s\n", xrefcount, m_name->c_str());
 #if DO_DEBUG
-    else y2debug ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+    else y2debug ("Resolving %d symbols from module %s\n", xrefcount, m_name->c_str());
 #endif
 
     if (xrefcount != 0)
@@ -1458,13 +1453,13 @@ YSImport::YSImport (std::istream & str)
 
 	    if (tentry == 0)
 	    {
-		ycp2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
-		m_name = "";						// mark as error
+		ycp2error ("Unresolved xref to %s::%s\n", m_name->c_str(), sname);
+		m_name = SymbolEntry::emptyUstring;			// mark as error
 	    }
 	    else if (tentry->sentry()->type()->match (stype) != 0)
 	    {
-		ycp2error ("Xref to '%s::%s' expects type <%s> but module provides type <%s>\n", m_name.c_str(), sname, stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
-		m_name = "";
+		ycp2error ("Xref to '%s::%s' expects type <%s> but module provides type <%s>\n", m_name->c_str(), sname, stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
+		m_name = SymbolEntry::emptyUstring;
 	    }
 	    delete [] sname;
 	}
@@ -1476,13 +1471,13 @@ std::ostream &
 YSImport::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
-    Bytecode::writeCharp (str, m_name.c_str());
+    Bytecode::writeUstring (str, m_name);
 
     SymbolTable *table = m_module->second->table();
     table->writeUsage (str);
 
 #if DO_DEBUG
-    y2debug ("pushNamespace import '%s'", m_name.c_str());
+    y2debug ("pushNamespace import '%s'", m_name->c_str());
 #endif
     Bytecode::pushNamespace (nameSpace());				// see YBlock::toStream(str) for popUptoNamespace()
 
@@ -1496,7 +1491,7 @@ YSImport::evaluate (bool cse)
     if (!cse && (nameSpace () != NULL))
     {
 #if DO_DEBUG
-	y2debug ("Evaluating namespace '%s'", m_name.c_str());
+	y2debug ("Evaluating namespace '%s'", m_name->c_str());
 #endif
 	
 	nameSpace()->initialize ();
@@ -1513,7 +1508,7 @@ YSImport::evaluate (bool cse)
 
 YSFilename::YSFilename (const string &filename, int line)
     : YStatement (ysFilename, line)
-    , m_filename (filename)
+    , m_filename (Ustring (SymbolEntry::_nameHash, filename))
 {
 }
 
@@ -1526,17 +1521,15 @@ YSFilename::~YSFilename ()
 string
 YSFilename::toString() const
 {
-    string s = string ("// force filename: \"") + m_filename + "\"";
+    string s = string ("// force filename: \"") + m_filename.asString() + "\"";
     return s;
 }
 
 
 YSFilename::YSFilename (std::istream & str)
     : YStatement (ysFilename, str)
+    , m_filename (Bytecode::readUstring (str))
 {
-    char *name = Bytecode::readCharp (str);
-    m_filename = string (name);
-    delete [] name;
 }
 
 
@@ -1544,7 +1537,7 @@ std::ostream &
 YSFilename::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
-    return Bytecode::writeCharp (str, m_filename.c_str());
+    return Bytecode::writeUstring (str, m_filename);
 }
 
 
@@ -1552,9 +1545,9 @@ YCPValue
 YSFilename::evaluate (bool cse)
 {
 #if DO_DEBUG
-    y2debug( "YSFilename to set %s", m_filename.c_str ());
+    y2debug( "YSFilename to set %s", m_filename->c_str ());
 #endif
-    if (! cse) ee.setFilename (m_filename);
+    if (! cse) ee.setFilename (m_filename.asString());
 
     return YCPNull ();
 }

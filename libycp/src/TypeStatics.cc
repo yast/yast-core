@@ -24,16 +24,7 @@
 
 #include <ctype.h>
 
-bool Type::m_nocheck = false;
-
 //----------------------------------------------------------------
-
-void
-Type::setNocheck (bool nocheck)
-{
-    m_nocheck = nocheck;
-}
-
 
 constTypePtr
 Type::vt2type (enum YCPValueType vt)

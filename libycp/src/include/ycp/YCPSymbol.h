@@ -23,6 +23,7 @@
 
 
 #include "YCPValue.h"
+#include <y2util/Ustring.h>
 
 
 /**
@@ -38,7 +39,7 @@
  */
 class YCPSymbolRep : public YCPValueRep
 {
-    string v;
+    Ustring v;
 
 protected:
     friend class YCPSymbol;

@@ -25,13 +25,13 @@
 // YCPSymbolRep
 
 YCPSymbolRep::YCPSymbolRep(const char *s)
-    : v(s)
+    : v(Ustring (SymbolEntry::_nameHash, s))
 {
 }
 
 
 YCPSymbolRep::YCPSymbolRep(string s)
-    : v(s)
+    : v(Ustring (SymbolEntry::_nameHash, s))
 {
 }
 
@@ -39,14 +39,14 @@ YCPSymbolRep::YCPSymbolRep(string s)
 string
 YCPSymbolRep::symbol() const
 {
-    return v;
+    return v.asString();
 }
 
 
 const char *
 YCPSymbolRep::symbol_cstr() const
 {
-    return v.c_str();
+    return v.asString().c_str();
 }
 
 
@@ -61,7 +61,7 @@ YCPSymbolRep::compare(const YCPSymbol& s) const
 string
 YCPSymbolRep::toString() const
 {
-    return string("`") + v;
+    return string("`") + v.asString();
 }
 
 
@@ -78,7 +78,7 @@ YCPSymbolRep::valuetype() const
 std::ostream &
 YCPSymbolRep::toStream (std::ostream & str) const
 {
-    return Bytecode::writeString (str, v);
+    return Bytecode::writeUstring (str, v);
 }
 
 

@@ -1340,21 +1340,18 @@ statement:
 
 		    ee.setLinenumber ($1.l);			// if YSImport logs an error
 		    string module = name;
-		    YSImport *imp = new YSImport (module, $1.l);
+		    YSImportPtr imp = new YSImport (module, $1.l);
 		    if (imp->name().empty())
 		    {
 			yyNoModule (name, $1.l);
-			delete imp;
 			$$.t = 0;
 			break;
 		    }
-		    $$.c = imp;
 
-		    Y2Namespace *name_space = ((YSImportPtr)$$.c)->nameSpace();
+		    Y2Namespace *name_space = imp->nameSpace();
 		    if (name_space == 0)
 		    {
 			yyNoModule (name, $1.l);
-			delete imp;
 			$$.t = 0;
 			break;
 		    }
@@ -1363,11 +1360,11 @@ statement:
 		    if (tentry == 0)
 		    {
 			yyNoModule (name, $1.l);
-			delete imp;
 			$$.t = 0;
 			break;
 		    }
 		    p_parser->scanner()->localTable()->enter (tentry);
+		    $$.c = imp;
 		}
 
 	    }
@@ -2866,7 +2863,8 @@ function_call:
 
 		    // check if symfunc parameter block must be popped from stack
 		    
-		    if ($3.t != 0 && ($3.c->kind() == YCode::yeBuiltin)
+		    if (($3.t != 0)
+			&& ($3.c->kind() == YCode::yeBuiltin)
 			&& (((YEBuiltinPtr)$3.c)->parameterBlock() != NULL))
 		    {
 			// end block for possible symbol parameters
@@ -2877,6 +2875,7 @@ function_call:
 #if DO_DEBUG
 			y2debug ("closing parameter scope block for %s", bf->decl() ? bf->decl()->name : "<err>");
 #endif
+			bf->closeParameters();			// delete parameter block if not needed
 		    }
 		    break;
 		}
@@ -3027,6 +3026,7 @@ function_call:
 #if DO_DEBUG
 		    y2debug ("closing parameter scope block for %s", bf->decl() ? bf->decl()->name : "<err>");
 #endif
+		    bf->closeParameters();			// delete parameter block if not needed
 		}
 
 		if ($$.t == 0)

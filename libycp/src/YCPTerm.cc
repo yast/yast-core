@@ -25,13 +25,13 @@
 
 // YCPTermRep
 YCPTermRep::YCPTermRep(const string& s)
-    : s(s)
+    : s(Ustring (SymbolEntry::_nameHash, s))
 {
 }
 
 
 YCPTermRep::YCPTermRep(const string& s, const YCPList& l)
-    : s(s)
+    : s(Ustring (SymbolEntry::_nameHash, s))
     , l(l) 
 {
 }
@@ -41,7 +41,7 @@ YCPTermRep::YCPTermRep(const string& s, const YCPList& l)
 string
 YCPTermRep::name() const
 {
-    return s;
+    return s.asString();
 }
 
 
@@ -49,7 +49,7 @@ YCPTermRep::name() const
 void
 YCPTermRep::setName(string name)
 {
-    s = name;
+    s = Ustring (SymbolEntry::_nameHash, name);
 }
 
 
@@ -65,10 +65,10 @@ YCPTermRep::args() const
 YCPOrder
 YCPTermRep::compare (const YCPTerm& t) const
 {
-    if (s == t->name())
+    if (name() == t->name())
 	return l->compare (t->args ());
 
-    return (s < t->name())?YO_LESS:YO_GREATER;
+    return (name() < t->name())?YO_LESS:YO_GREATER;
 }
 
 
@@ -76,7 +76,7 @@ YCPTermRep::compare (const YCPTerm& t) const
 const YCPElementRep*
 YCPTermRep::shallowCopy() const
 {
-   return new YCPTermRep (s, l);
+   return new YCPTermRep (s.asString(), l);
 }
 
 
@@ -84,7 +84,7 @@ YCPTermRep::shallowCopy() const
 YCPTerm
 YCPTermRep::functionalAdd (const YCPValue& val) const
 {
-   return YCPTerm (s, l->functionalAdd(val));
+   return YCPTerm (s.asString(), l->functionalAdd(val));
 }
 
 
@@ -92,7 +92,7 @@ YCPTermRep::functionalAdd (const YCPValue& val) const
 string
 YCPTermRep::toString() const
 {
-    return "`" + s + " (" + l->commaList() + ")";   // comma separated list
+    return "`" + s.asString() + " (" + l->commaList() + ")";   // comma separated list
 }
 
 
@@ -159,7 +159,7 @@ std::ostream &
 YCPTermRep::toStream (std::ostream & str) const
 {
     y2debug ("Writing a term");
-    Bytecode::writeString (str, s);
+    Bytecode::writeUstring (str, s);
     return l->toStream (str);
 }
 

@@ -31,8 +31,6 @@ class FunctionType;
 class Type : public Rep, public MemUsage
 {
     REP_BODY(Type);
-private:
-    static bool m_nocheck;
 
 public:
     // type codes for basic types

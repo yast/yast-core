@@ -27,6 +27,7 @@ using std::string;
 
 #include "ycp/YCode.h"
 #include "ycp/SymbolTable.h"
+#include "ycp/SymbolEntry.h"
 
 class SymbolEntry;
 class Y2Namespace;
@@ -49,7 +50,7 @@ public:
 protected:
     static module_map m_active_modules;
 
-    string m_name;
+    Ustring m_name;
 
     // iterator to share the module state on multiple imports
     module_map::iterator m_module;

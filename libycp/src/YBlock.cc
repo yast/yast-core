@@ -41,8 +41,6 @@ extern ExecutionEnvironment ee;
 
 // ------------------------------------------------------------------
 
-UstringHash YBlock::m_filenameHash;
-
 IMPL_DERIVED_POINTER(YBlock, YCode);
 
 // ------------------------------------------------------------------

@@ -161,6 +161,37 @@ Bytecode::readString (std::istream & streamref, string & stringref)
 
 
 // ------------------------------------------------------------------
+// Ustring I/O
+
+std::ostream &
+Bytecode::writeUstring (std::ostream & streamref, const Ustring ustringref)
+{
+    u_int32_t len = ustringref->size();
+
+    writeInt32 (streamref, len);
+    return streamref.write (ustringref->c_str(), len);
+}
+
+
+Ustring
+Bytecode::readUstring (std::istream & streamref)
+{
+    u_int32_t len = readInt32 (streamref);
+    Ustring ret = Ustring (SymbolEntry::_nameHash, "");
+    if (len > 0)
+    {
+	char *buf = new char [len+1];
+	if (streamref.read (buf, len))
+	{
+	    buf[len] = 0;
+	    ret = Ustring (SymbolEntry::_nameHash, buf);
+	}
+	delete [] buf;
+    }
+    return ret;
+}
+
+// ------------------------------------------------------------------
 // char * I/O
 
 std::ostream &
@@ -420,13 +451,15 @@ Bytecode::writeYCodelist (std::ostream & str, const ycodelist_t *codelist)
 
 
 bool
-Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t **last)
+Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor)
 {
     u_int32_t count = readInt32 (str);
 
 #if DO_DEBUG
     y2debug ("Bytecode::readYCodelist %d entries", count);
 #endif
+
+    ycodelist_t *last = 0;
 
     while (count-- > 0)
     {
@@ -446,15 +479,12 @@ Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t *
 	{
 	    *anchor = element;
 	}
-	else if (last != 0)		// last given
+	else
 	{
-	    (*last)->next = element;
+	    last->next = element;
 	}
 
-	if (last != 0)
-	{
-	    *last = element;
-	}
+	last = element;
     }
 
     return str.good();
