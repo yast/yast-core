@@ -628,6 +628,19 @@ YCPValue YCPCallbacks::evaluate( const YCPTerm &callback )
   return _interpreter->evaluate( callback );
 }
 
+bool YCPCallbacks::evaluateBool( const YCPTerm &callback )
+{
+  YCPValue ret = evaluate( callback );
+
+  if ( !ret->isBoolean() ) {
+    ERR << "Wrong return type." << endl;
+    return false;
+  } else {
+    bool value = ret->asBoolean()->value();
+    return value;
+  }
+}
+
 class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
 {
   public:
@@ -639,13 +652,7 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
 
       YCPTerm callback = createCallback( "progress" );
       callback->add( YCPInteger ( percent ) );
-      YCPValue ret = evaluate( callback );
-      if ( !ret->isBoolean() ) {
-        ERR << "Wrong return type." << endl;
-        return false;
-      } else {
-        return ret->asBoolean()->value();
-      }
+      return evaluateBool( callback );
     }
 
     bool patchProgress( int percent, const string &pkg )
@@ -655,13 +662,16 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
       YCPTerm callback = createCallback( "patchProgress" );
       callback->add( YCPInteger ( percent ) );
       callback->add( YCPString ( pkg ) );
-      YCPValue ret = evaluate( callback );
-      if ( !ret->isBoolean() ) {
-        ERR << "Wrong return type." << endl;
-        return false;
-      } else {
-        return ret->asBoolean()->value();
-      }
+      return evaluateBool( callback );
+    }
+
+    bool executeYcpScript( const string &script )
+    {
+      D__ << "you execute YCP script" << endl;
+
+      YCPTerm callback = createCallback( "executeYcpScript" );
+      callback->add( YCPString ( script ) );
+      return evaluateBool( callback );
     }
 };
 
@@ -682,4 +692,10 @@ YCPValue
 PkgModuleFunctions::CallbackYouPatchProgress( YCPList args )
 {
     return _youCallbacks->setCallback( "patchProgress", args );
+}
+
+YCPValue
+PkgModuleFunctions::CallbackYouExecuteYcpScript( YCPList args )
+{
+    return _youCallbacks->setCallback( "executeYcpScript", args );
 }

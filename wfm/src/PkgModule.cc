@@ -83,6 +83,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "CallbackSourceChange")	return CallbackSourceChange (args);
     else if (function == "CallbackYouProgress")		return CallbackYouProgress (args);
     else if (function == "CallbackYouPatchProgress")	return CallbackYouPatchProgress (args);
+    else if (function == "CallbackYouExecuteYcpScript")	return CallbackYouExecuteYcpScript(args);
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);

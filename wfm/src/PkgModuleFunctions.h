@@ -45,6 +45,7 @@ class YCPCallbacks
     YCPTerm createCallback( const string &func );
 
     YCPValue evaluate( const YCPTerm &callback );
+    bool evaluateBool( const YCPTerm &callback );
 
   private:
     map<string, string> mModules;
@@ -126,6 +127,7 @@ class PkgModuleFunctions
 	YCPValue CallbackSourceChange (YCPList args);
 	YCPValue CallbackYouProgress (YCPList args);
 	YCPValue CallbackYouPatchProgress (YCPList args);
+	YCPValue CallbackYouExecuteYcpScript (YCPList args);
 	void SetMediaCallback (InstSrcManager::ISrcId source_id);
 
 	// source related
