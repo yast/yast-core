@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 29 12:00:42 CEST 2004 - kkaempf@suse.de
+
+- improve checking if rhs in assignment is void (36922)
+
+-------------------------------------------------------------------
 Fri Mar 26 19:27:12 CET 2004 - arvin@suse.de
 
 - added uml detection

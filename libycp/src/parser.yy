@@ -146,10 +146,12 @@ int yylex (YYSTYPE *, void *);
 
 static void i_check_unary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, Parser* parser);
 static void i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Parser* parser);
-static void i_check_compare_op(YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e2, Parser *parser);
+static void i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e2, Parser *parser);
+static void i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser);
 #define check_unary_op(result,e1,op) i_check_unary_op (result, e1, op, p_parser)
 #define check_binary_op(result,e1,op,e2) i_check_binary_op (result, e1, op, e2, p_parser)
 #define check_compare_op(result,e1,op,e2) i_check_compare_op (result, e1, op, e2, p_parser)
+#define check_void_assign(lhs,rhs) i_check_void_assign (lhs, rhs, p_parser)
 
 // for unary and binary operators
 extern StaticDeclaration static_declarations;
@@ -1910,13 +1912,7 @@ definition:
 		    break;
 		}
 
-		if ($3.t->isVoid()			// rhs is void
-		    && !$1.t->isVoid()			// but lhs is not void
-		    && !$1.t->isAny()			//   or any
-		    && !$3.c->isConstant())		// and rhs is not 'nil' (but a void expression)
-		{
-		    yywarning ("rhs of assignment does not have a value", $3.l);
-		}
+		check_void_assign (&($1), &($3));
 
 		TableEntry *tentry = $1.v.tval;
 
@@ -2408,13 +2404,7 @@ assignment:
 		    break;
 		}
 
-		if ($3.t->isVoid()			// rhs is void
-		    && !$1.t->isVoid()			// but lhs is not void
-		    && !$1.t->isAny()			//   or any
-		    && !$3.c->isConstant())		// and rhs is not 'nil' (but a void expression)
-		{
-		    yywarning ("rhs of assignment does not have a value", $3.l);
-		}
+		check_void_assign (&($1), &($3));
 
 		int match = $3.t->match ($1.t);
 
@@ -2482,13 +2472,7 @@ assignment:
 		    break;
 		}
 
-		if ($6.t->isVoid()			// rhs is void
-		    && !$1.t->isVoid()			// but lhs is not void
-		    && !$1.t->isAny()			//   or any
-		    && !$6.c->isConstant())		// and rhs is not 'nil' (but a void expression)
-		{
-		    yywarning ("rhs of assignment does not have a value", $3.l);
-		}
+		check_void_assign (&($1), &($6));
 
 		if (!$1.t->isList()
 		     && !$1.t->isMap()
@@ -3821,6 +3805,55 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
 #if DO_DEBUG
     y2debug ("check_compare_op '%s'", result->c->toString().c_str());
 #endif
+    return;
+}
+
+
+/*
+  check assign operator for 'void' on rhs
+
+  lhs = left hand side
+  rhs = righ hand side
+
+*/
+
+static void
+i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
+{
+    if (!rhs->t->isVoid()			// rhs isn't void
+	|| rhs->c->isConstant())		//   or is the 'nil' constant
+    {
+	return;
+    }
+
+    if (lhs->t->isVoid()			// lhs accepts void
+	|| lhs->t->isAny())			//   or any
+    {
+	return;
+    }
+
+    if (rhs->c->kind() == YCode::yeBracket)	// bracket operator checked void before
+    {
+	return;
+    }
+
+    if (rhs->c->kind() == YCode::yeBuiltin)
+    {
+	YEBuiltinPtr b = rhs->c;
+	if (b == 0)
+	{
+	    yyerror_with_lineinfo (parser, rhs->l, "rhs isn't yeBuiltin but pretends to be");
+	    return;
+	}
+
+	if (b->decl()->flags & DECL_FLEX)	// the 'void' is a deduced type
+	{
+	    return;
+	}
+    }
+
+    yywarning_with_lineinfo (parser, rhs->l, "rhs of assignment does not have a value");
+
     return;
 }
 
