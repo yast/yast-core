@@ -8,8 +8,8 @@ No match for '+ : <unspec> (boolean, integer)':
 +:string (string, path)
 +:path (path, path)
 +:path (path, string)
-+:list <<flex> > (const list <<flex> >, const list <<flex> >)
-+:list <<flex> > (const list <<flex> >, const <flex> )
++:list <<T>> (const list <<T>>, const list <<T>>)
++:list <<T>> (const list <<T>>, const <T>)
 +:list (const list, any)
 +:map (const map, const map)
 Parsed:

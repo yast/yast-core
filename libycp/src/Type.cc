@@ -22,7 +22,9 @@ $Id$
 #include "ycp/Type.h"
 #include "ycp/Bytecode.h"
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 1
+#endif
 
 #include <ctype.h>
 
@@ -31,6 +33,7 @@ $Id$
 
 IMPL_BASE_POINTER(Type);
 IMPL_DERIVED_POINTER(FlexType, Type);
+IMPL_DERIVED_POINTER(NFlexType, Type);
 IMPL_DERIVED_POINTER(VariableType, Type);
 IMPL_DERIVED_POINTER(ListType, Type);
 IMPL_DERIVED_POINTER(MapType, Type);
@@ -134,7 +137,7 @@ Type::Type (tkind kind, std::istream & str)
     , m_const (Bytecode::readBool (str))
     , m_reference (Bytecode::readBool (str))
 {
-//y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_reference);
+    y2debug ("Type::fromStream (kind %d, const %d, ref %d)", m_kind, m_const, m_reference);
 }
 
 
@@ -145,7 +148,7 @@ Type::Type (tkind kind, std::istream & str)
 std::ostream &
 Type::toStream (std::ostream & str) const
 {
-//y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
+    y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
     Bytecode::writeInt32 (str, m_kind);
     Bytecode::writeBool (str, m_const);
     Bytecode::writeBool (str, m_reference);
@@ -176,7 +179,7 @@ Type::toString () const
 	case VoidT:	ret = "void"; break;
 	case WildcardT: ret = "..."; break;
 
-	case FlexT:	ret = "<FLEX>"; break;
+	case FlexT:	ret = "<T>"; break;
 	case VariableT:	ret = "<VARIABLE>"; break;
 	case BlockT:	ret = "<BLOCK>"; break;
 	case ListT:	ret = "<LIST>"; break;
@@ -185,6 +188,7 @@ Type::toString () const
 	case FunctionT:	ret = "<FUNCTION>"; break;
 
 	case NilT:	ret = "<nil>"; break;
+	case NFlexT:	ret = "<Tx>"; break;
 	// no default:, let gcc warn
     }
     if (ret.empty()) ret = "<UNHANDLED>";
@@ -222,6 +226,7 @@ Type::basematch (constTypePtr expected) const
 
     if (ek == AnyT
 	|| ek == FlexT
+	|| ek == NFlexT
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
@@ -247,7 +252,9 @@ int
 Type::match (constTypePtr expected) const
 {
     if (m_nocheck)
+    {
 	return 0;
+    }
 
 //    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
     if (basematch (expected) < 0)
@@ -260,6 +267,7 @@ Type::match (constTypePtr expected) const
 
     if (ek == AnyT
 	|| ek == FlexT
+	|| ek == NFlexT
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
@@ -323,18 +331,16 @@ Type::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // FlexType
 
-FlexType::FlexType (unsigned int number)
+FlexType::FlexType ()
     : Type (FlexT)
-    , m_number (number)
 {
 }
 
 
 FlexType::FlexType (std::istream & str)
     : Type (FlexT, str)
-    , m_number (Bytecode::readInt32 (str))
 {
-//    fprintf( stderr, "Flex number: %d\n", m_number);
+    y2debug ("FlexType::FlexType");
 }
 
 
@@ -347,7 +353,6 @@ std::ostream &
 FlexType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
-//    Bytecode::writeInt32 (str, m_number);
     return str;
 }
 
@@ -355,29 +360,20 @@ FlexType::toStream (std::ostream & str) const
 string
 FlexType::toString () const
 {
-    static char numbuf[8];
-    if (m_number == 0)
-    {
-	numbuf[0] = 0;
-    }
-    else
-    {
-	sprintf (numbuf, "%d", m_number);
-    }
-    return preToString() + "<flex" + string (numbuf) + "> " + postToString();
+    return preToString() + "<T>" + postToString();
 }
 
 
 constTypePtr
 FlexType::matchFlex (constTypePtr type, unsigned int number) const
 {
-    if (number != m_number)
-    {
-	return 0;
-    }
 #if DO_DEBUG
     y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
 #endif
+    if (number != 0)
+    {
+	return 0;
+    }
     if (type->isUnspec ())
     {
 	return Type::Any;
@@ -389,9 +385,9 @@ FlexType::matchFlex (constTypePtr type, unsigned int number) const
 int
 FlexType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+    y2debug ("FlexType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
-    return -1;
+    return (expected->isFlex() ? 0 : -1);
 }
 
 
@@ -408,6 +404,107 @@ FlexType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp;
     if (m_kind == FlexT
+	&& number == 0)
+    {
+	tp = type->clone();
+	if (isConst()) tp->asConst();		// keep qualifiers from flex
+	if (isReference()) tp->asReference();
+    }
+    else
+    {
+	tp = clone();
+    }
+#if DO_DEBUG
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
+#endif
+    return tp;
+}
+
+//----------------------------------------------------------------
+// NFlexType
+
+NFlexType::NFlexType (unsigned int number)
+    : Type (NFlexT)
+    , m_number (number)
+{
+    if (number == 0) ycp2error ("NFlexType::NFlexType (0)");
+}
+
+
+NFlexType::NFlexType (std::istream & str)
+    : Type (NFlexT, str)
+    , m_number (Bytecode::readInt32 (str))
+{
+    y2debug ("NFlexType::NFlexType(stream: %d)", m_number);
+}
+
+
+NFlexType::~NFlexType ()
+{
+}
+
+
+std::ostream &
+NFlexType::toStream (std::ostream & str) const
+{
+    y2debug ("NFlexType::toStream (%d)", m_number);
+    Type::toStream (str);
+    Bytecode::writeInt32 (str, m_number);
+    return str;
+}
+
+
+string
+NFlexType::toString () const
+{
+    static char numbuf[8];
+    sprintf (numbuf, "%d", m_number);
+
+    return preToString() + "<T" + string (numbuf) + ">" + postToString();
+}
+
+
+constTypePtr
+NFlexType::matchFlex (constTypePtr type, unsigned int number) const
+{
+#if DO_DEBUG
+    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+#endif
+    if (number != 0
+	&& number != m_number)
+    {
+	return 0;
+    }
+    if (type->isUnspec ())
+    {
+	return Type::Any;
+    }
+    return type;
+}
+
+
+int
+NFlexType::match (constTypePtr expected) const
+{
+    y2debug ("NFlexType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+
+    return (expected->isFlex() ? 0 : -1);
+}
+
+
+TypePtr
+NFlexType::clone () const
+{
+    NFlexTypePtr tp = NFlexTypePtr (new NFlexType (m_number));
+    return tp;
+}
+
+
+TypePtr
+NFlexType::unflex (constTypePtr type, unsigned int number) const
+{
+    TypePtr tp;
+    if (m_kind == NFlexT
 	&& m_number == number)
     {
 	tp = type->clone();
@@ -419,7 +516,7 @@ FlexType::unflex (constTypePtr type, unsigned int number) const
 	tp = clone();
     }
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -520,7 +617,7 @@ VariableType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = VariableTypePtr (new VariableType (m_type->unflex (type, number)));
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -638,7 +735,7 @@ ListType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = ListTypePtr (new ListType (m_type->unflex (type, number)));
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -787,7 +884,7 @@ MapType::unflex (constTypePtr type, unsigned int number) const
     }
 
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -897,7 +994,7 @@ BlockType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = BlockTypePtr (new BlockType (m_type->unflex (type, number)));
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -916,11 +1013,16 @@ TupleType::TupleType (std::istream & str)
     : Type (TupleT, str)
 {
     u_int32_t count = Bytecode::readInt32 (str);
-
+#if DO_DEBUG
+    y2debug ("TupleType::TupleType %d elements", count);
+#endif
     for (unsigned index = 0; index < count; index++)
     {
 	m_types.push_back (Bytecode::readType (str));
     }
+#if DO_DEBUG
+    y2debug ("TupleType::TupleType done");
+#endif
 }
 
 
@@ -1116,7 +1218,7 @@ TupleType::unflex (constTypePtr type, unsigned int number) const
 	tp->concat (m_types[index]->unflex (type, number));
     }
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -1144,12 +1246,16 @@ FunctionType::FunctionType (std::istream & str)
     : Type (FunctionT, str)
     , m_returntype (Bytecode::readType (str))
 {
-//y2debug ("FunctionType::FunctionType (stream)");
+#if DO_DEBUG
+    y2debug ("FunctionType::FunctionType (stream)");
+#endif
     if (Bytecode::readBool (str))
     {
 	m_arguments = Bytecode::readType (str);
     }
-//y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p)", (const void *)m_returntype, (const void *)m_arguments);
+#if DO_DEBUG
+    y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p)", (const void *)m_returntype, (const void *)m_arguments);
+#endif
 }
 
 
@@ -1157,7 +1263,9 @@ std::ostream &
 FunctionType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
-//y2debug ("FunctionType::toStream (m_returntype %p, m_arguments %p", (const void *)m_returntype, (const void *)m_arguments);
+#if DO_DEBUG
+    y2debug ("FunctionType::toStream (m_returntype %p, m_arguments %p", (const void *)m_returntype, (const void *)m_arguments);
+#endif
     Bytecode::writeType (str, m_returntype);
     if (m_arguments)
     {
@@ -1380,7 +1488,7 @@ FunctionType::unflex (constTypePtr type, unsigned int number) const
 	}
     }
 #if DO_DEBUG
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+    y2debug ("unflex '%s'%d -%s-> '%s'", toString().c_str(), number, type->toString().c_str(), tp->toString().c_str());
 #endif
     return tp;
 }
@@ -1407,6 +1515,7 @@ Type::valueType () const
 	case LocaleT:	return YT_STRING;
 	case WildcardT: return YT_ERROR;
 	case FlexT:	return YT_ERROR;
+	case NFlexT:	return YT_ERROR;
 
 	case VariableT: return YT_ENTRY;
 	case BlockT:	return YT_CODE;
@@ -1432,16 +1541,22 @@ Type::commontype (constTypePtr type) const
 {
     if (match (type) >= 0)
     {
+#if DO_DEBUG
 //y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+#endif
 	return this;
     }
     else if (!isAny()
 	     && type->match (this) >= 0)
     {
+#if DO_DEBUG
 //y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+#endif
 	return type;
     }
+#if DO_DEBUG
 //y2debug ("commontype '%s' ('%s') any", toString().c_str(), type->toString().c_str());
+#endif
     return Type::Any;
 }
 

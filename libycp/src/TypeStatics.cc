@@ -66,7 +66,7 @@ Type::vt2type (enum YCPValueType vt)
  * signature parser, get next token
  * >= 0 -> tkind
  * -1 -> const
- * -100 (-x) -> Flex
+ * -100  (-x) -> NFlex
  * '&' -> reference
  *  '<'
  *  '>'
@@ -145,7 +145,14 @@ Type::nextToken (const char **signature)
 		    k += (**signature - '0');
 		    *signature += 1;
 		}
-		k = -100 - k;
+		if (k == 0)
+		{
+		    k = FlexT;
+		}
+		else
+		{
+		    k = -100 - k;
+		}
 	    }
 	}
 	break;
@@ -319,6 +326,7 @@ Type::fromSignature (const char ** signature)
 	case BooleanT:		t = TypePtr (new Type (BooleanT)); break;
 	case ByteblockT:	t = TypePtr (new Type (ByteblockT)); break;
 	case ErrorT:		t = TypePtr (new Type (ErrorT)); break;
+	case FlexT:		t = FlexTypePtr (new FlexType ()); break;
 	case FloatT:		t = TypePtr (new Type (FloatT)); break;
 	case IntegerT:		t = TypePtr (new Type (IntegerT)); break;
 	case LocaleT:		t = TypePtr (new Type (LocaleT)); break;
@@ -339,9 +347,9 @@ Type::fromSignature (const char ** signature)
 	case MapT:		k = MapT; next = '<'; break;
 	case TupleT:		k = TupleT; next = '<'; break;
 	default:
-	    if (k <= -100)
+	    if (k < -100)
 	    {
-		t = FlexTypePtr (new FlexType (-(k+100)));
+		t = NFlexTypePtr (new NFlexType (-(k+100)));
 	    }
 	    else
 	    {
@@ -526,7 +534,7 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 
     if (declared->parameterCount() <= 0)
     {
-	y2error ("declared->parameterCount() <= 0");
+	ycp2error ("declared->parameterCount() <= 0");
 	return Type::Error->clone();
     }
 
@@ -551,7 +559,13 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 	}
     }
     while ((flexnumber++ == 0) || (flextype != 0));
-
+#if 0
+    if (actual->match (result) != 0)
+    {
+	ycp2error ("'%s' does not match '%s'", actual->toString().c_str(), result->toString().c_str());
+	result = Type::Error->clone();
+    }
+#endif
     y2debug ("determineFlexType returns '%s'", result->toString().c_str());
     return result;
 }

@@ -431,12 +431,12 @@ YLocale::YLocale (const char *locale, const char *textdomain)
 YLocale::YLocale (std::istream & str)
     : YCode (ycLocale)
 {
-    m_locale = Bytecode::readCharp (str);
-    
+    m_locale = Bytecode::readCharp (str);		// the string to be translated
+
     const char * dom = Bytecode::readCharp (str);
-    
+
     std::pair <YLocale::t_uniquedomains::iterator, bool> res = domains.insert (dom);
-    
+
     // the textdomain was already there, we can free the memory allocated in readCharp
     if (! res.second)
     {
@@ -613,7 +613,7 @@ YFunction::parameterCount (void) const
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 YFunction::parameter (unsigned int position) const
 {
     return (m_declaration ? m_declaration->symbolEntry (position) : 0);

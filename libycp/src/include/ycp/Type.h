@@ -60,7 +60,8 @@ public:
 	TupleT,			// 19 tuple <kind, kind, kind, ...>
 	FunctionT,		// 20 function <ret_kind, kind, kind, ...>
 
-	NilT			// 21 only for "return;" (void) vs. "return nil;" (nil)
+	NilT,			// 21 only for "return;" (void) vs. "return nil;" (nil)
+	NFlexT			// 22 multiple Flex
     } tkind;
 
 protected:
@@ -101,7 +102,7 @@ public:
     static TypePtr fromSignature (const string & signature) { const char *s = signature.c_str(); return Type::fromSignature (&s); }
 
     /**
-     * determine actual type if declared type contains 'flex'
+     * determine actual type if declared type contains 'flex' or 'flexN'
      * Returns actual - unchanged or fixed
      * @param symbol type of a symbol parameter for YESymFunc, isUnspec for YEBuiltin
      */
@@ -172,7 +173,7 @@ public:
     virtual bool isBasetype () const { return true; }
 
     /*
-     * match <flex> to type, return type if <flex> matches
+     * match <flex<number>> to type, return type if <flex<number>> matches
      */
     virtual constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const { return 0; }
 
@@ -194,7 +195,7 @@ public:
     virtual TypePtr clone () const;
 
     /**
-     * replace any 'FlexT' with 'type'
+     * replace any 'FlexT' (number == 0) or 'NFlexT' (number != 0) with 'type'
      */
     virtual TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
 
@@ -257,7 +258,7 @@ public:
     bool isTerm () const	{ return m_kind == TermT; }
     bool isVoid () const	{ return m_kind == VoidT; }
     bool isWildcard () const	{ return m_kind == WildcardT; }
-    bool isFlex () const	{ return m_kind == FlexT; }
+    bool isFlex () const	{ return ((m_kind == FlexT) || (m_kind == NFlexT)); }
 
     bool isVariable () const	{ return m_kind == VariableT; }
     bool isList () const	{ return m_kind == ListT; }
@@ -280,6 +281,25 @@ public:
 class FlexType : public Type
 {
     REP_BODY(FlexType);
+public:
+    string toString () const;
+    std::ostream & toStream (std::ostream & str) const;
+    bool isBasetype () const { return false; }
+    constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
+    int match (constTypePtr expected) const;
+    TypePtr clone () const;
+    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    FlexType ();
+    FlexType (std::istream & str);
+    ~FlexType ();
+};
+
+
+// <flexN>
+
+class NFlexType : public Type
+{
+    REP_BODY(NFlexType);
     unsigned int m_number;		// there can be more than one flex
 public:
     string toString () const;
@@ -289,9 +309,9 @@ public:
     int match (constTypePtr expected) const;
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
-    FlexType (unsigned int number = 0);
-    FlexType (std::istream & str);
-    ~FlexType ();
+    NFlexType (unsigned int number);
+    NFlexType (std::istream & str);
+    ~NFlexType ();
 };
 
 

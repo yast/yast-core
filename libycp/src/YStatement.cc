@@ -1266,7 +1266,9 @@ YSInclude::toString() const
 YSInclude::YSInclude (std::istream & str)
     : YStatement (ysInclude, str)
 {
-    m_filename = Bytecode::readCharp (str);
+    char *name = Bytecode::readCharp (str);
+    m_filename = string (name);
+    delete [] name;
     m_skipped = Bytecode::readBool (str);
 }
 
@@ -1342,8 +1344,11 @@ YSImport::toString() const
 //
 YSImport::YSImport (std::istream & str)
     : YStatement (ysImport, str)
-    , Import (Bytecode::readCharp (str))	// <=== this does the importing
 {
+    char *mname = Bytecode::readCharp (str);
+    import (mname);				// <=== this does the importing
+    delete [] mname;
+
     if (nameSpace() == 0)
     {
 	fprintf (stderr, "Import '%s' failed\n", name().c_str());
@@ -1457,7 +1462,9 @@ YSFilename::toString() const
 YSFilename::YSFilename (std::istream & str)
     : YStatement (ysFilename, str)
 {
-    m_filename = Bytecode::readCharp (str);
+    char *name = Bytecode::readCharp (str);
+    m_filename = string (name);
+    delete [] name;
 }
 
 

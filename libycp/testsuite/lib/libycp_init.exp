@@ -307,7 +307,7 @@ proc bytecode-compile { src dir } {
   set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-c" "-l" "$tmperr_name" "-o" "$ybc_name" "$test_input" ] } catched]
 
   if {$oops != 0} {
-    fail "compilation failed for module $srcdirname/$base_name: $catched"
+    fail "compilation failed for module $srcdirname/$base_name: $oops: $catched"
     return -1
   }
 

@@ -3479,6 +3479,11 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	if (decl->flags & DECL_FLEX)
 	{
 	    ft = Type::determineFlexType (ft, decl->type, Type::Unspec);
+	    if (ft->isError())
+	    {
+		result->t = 0;
+		return;
+	    }
 	}
 	else
 	{

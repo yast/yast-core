@@ -894,16 +894,16 @@ YCPBuiltinList::YCPBuiltinList ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "find",	"flex (variable <any>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX },
-	{ "prepend",	"list <flex> (const list <any>, const flex)",						(void *)l_prepend,	DECL_FLEX },
+	{ "find",	"flex (variable <flex>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX },
+	{ "prepend",	"list <flex> (const list <flex>, const flex)",						(void *)l_prepend,	DECL_FLEX },
 	{ "contains",	"boolean (const list <flex>, const flex)",						(void *)l_contains,	DECL_FLEX },
 	{ "setcontains","boolean (list <flex>, const flex)",							(void *)l_setcontains,	DECL_FLEX },
 	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist	},
 	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX },
 	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist	},
 	{ "filter",	"list <flex> (variable <flex>, const list <flex>, const block <boolean>)",		(void *)l_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "maplist",	"list <flex> (variable <any>, const list <any>, const block <flex>)",			(void *)l_maplist,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "listmap",	"map <any,any> (variable <any>, const list <any>, const block <map <any,any>>)",	(void *)l_listmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "maplist",	"list <flex1> (variable <flex2>, const list <flex2>, const block <flex1>)",		(void *)l_maplist,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "listmap",	"map <flex1,flex2> (variable <flex3>, const list <flex3>, const block <map <flex1,flex2>>)",	(void *)l_listmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "flatten",	"list <flex> (const list <list <flex>>)",						(void *)l_flatten,	DECL_FLEX },
 	{ "toset",	"list <flex> (const list <flex>)",							(void *)l_toset,	DECL_FLEX },
 	{ "sort",	"list <flex> (const list <flex>)",							(void *)l_sortlist,	DECL_FLEX },
@@ -917,7 +917,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "size",	"integer (const list <any>)",								(void *)l_size		},
 	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
 	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },
-	{ "foreach",    "flex (variable <any>, const list <any>, const block <flex>)",				(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "tolist",	"list <any> (const any)",								(void *)l_tolist	},
 	{ 0 }
     };

@@ -8,8 +8,8 @@ Parsed:
 }
 ----------------------------------------------------------------------
 No match for 'filter : <unspec> (variable <string>, list, block <string>)':
-filter:list <<flex> > (variable <<flex> >, const list <<flex> >, const block <boolean>)
-filter:map (variable <any>, variable <<flex> >, const map, const block <boolean>)
+filter:list <<T>> (variable <<T>>, const list <<T>>, const block <boolean>)
+filter:map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)
 tests/builtin/Builtin-Return.ycp:10:Bad parameter '<string> { return v; }'
 [Parser] tests/builtin/Builtin-Return.ycp:10 Bad parameter '<string> { return v; }'
 Parsed:

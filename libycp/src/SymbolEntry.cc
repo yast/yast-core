@@ -477,16 +477,27 @@ SymbolEntry::toString (bool with_type) const
 }
 
 
+// bytecode constructor
+
 SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
     : m_global (Bytecode::readBool (str))
     , m_namespace (name_space)
     , m_position (Bytecode::readInt32 (str))
-    , m_name (Ustring (_nameHash, Bytecode::readCharp (str)))
-    , m_category ((category_t)Bytecode::readInt32 (str))
-    , m_type (Bytecode::readType (str))
+    , m_name (Ustring (_nameHash, ""))		// no default constructor for Ustring available
     , m_code (0)
-    , m_value (YCPNull())    // value stays NULL to enforce re-initialization from payload
+    , m_value (YCPNull())			// value stays NULL to enforce re-initialization from payload
 {
+    // read name, put to Ustring, delete name
+    //  thats the only way to preserve the argument to Ustring
+    //  without breaking existing bytecode
+
+    char *mname = Bytecode::readCharp (str);
+    m_name = Ustring (_nameHash, mname);
+    delete [] mname;
+
+    m_category  = (category_t)Bytecode::readInt32 (str);
+    m_type = Bytecode::readType (str);
+
     y2debug ("SymbolEntry::fromStream (%s)", toString().c_str());
 
     if (m_category == c_builtin)

@@ -225,7 +225,7 @@ TypePtr
 Bytecode::readType (std::istream & str)
 {
     int kind = readInt32 (str);
-
+y2debug ("Bytecode::readType(%d)", kind);
     switch ((Type::tkind)kind)
     {
 	case Type::UnspecT:
@@ -247,6 +247,7 @@ Bytecode::readType (std::istream & str)
 	    return TypePtr ( new Type ((Type::tkind)kind, str) );
 	break;
 
+	case Type::NFlexT:	return TypePtr ( new NFlexType (str) ); break;
 	case Type::VariableT:	return TypePtr ( new VariableType (str) ); break;
 	case Type::BlockT:	return TypePtr ( new BlockType (str) ); break;
 	case Type::ListT:	return TypePtr ( new ListType (str) ); break;

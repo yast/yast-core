@@ -39,7 +39,9 @@ $Id$
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 1
+#endif
 
 typedef YCPValue (*v2) ();
 typedef YCPValue (*v2v) (const YCPValue &);
@@ -237,7 +239,7 @@ YETerm::YETerm (std::istream & str)
     {
 	if (!Bytecode::readYCodelist (str, &m_parameters, &m_last))
 	{
-	    delete m_name;
+	    delete [] m_name;
 	    m_name = 0;
 	}
     }
@@ -253,6 +255,7 @@ YETerm::~YETerm ()
 	delete parm;
 	parm = next;
     }
+    delete [] m_name;
 }
 
 
@@ -499,8 +502,8 @@ YELocale::YELocale (const char *singular, const char *plural, YCodePtr count, co
 YELocale::YELocale (std::istream & str)
     : YCode (yeLocale)
 {
-    m_singular = Bytecode::readCharp (str);
-    m_plural = Bytecode::readCharp (str);
+    m_singular = Bytecode::readCharp (str);		// text for singular
+    m_plural = Bytecode::readCharp (str);		// text for plural
     m_count = Bytecode::readCode (str);
     const char * dom = Bytecode::readCharp (str);
 
@@ -1567,6 +1570,9 @@ YEBuiltin::YEBuiltin (std::istream & str)
     m_type = FunctionTypePtr (Bytecode::readType (str));
     extern StaticDeclaration static_declarations;
     m_decl = static_declarations.readDeclaration (str);
+#if DO_DEBUG
+    y2debug ("YEBuiltin::YEBuiltin(type '%s', decl '%s:%s')", (m_type == 0) ? "<NULL>" : m_type->toString().c_str(), (m_decl == 0) ? "<NULL>" : m_decl->name, (m_decl && m_decl->type) ? m_decl->type->toString().c_str() : "<NULL>");
+#endif
     if (Bytecode::readBool (str))
     {
 	m_parameterblock = (YBlockPtr)Bytecode::readCode (str);
@@ -1580,7 +1586,7 @@ YEBuiltin::YEBuiltin (std::istream & str)
     if (!m_decl
 	|| m_type->isError ())
     {
-	ycp2error ("Can't bind '%s'", StaticDeclaration::Decl2String (m_decl, true).c_str());
+	ycp2error ("Can't find builtin '%s'", m_decl ? StaticDeclaration::Decl2String (m_decl, true).c_str() : m_type->toString().c_str());
     }
 }
 
@@ -1666,6 +1672,15 @@ YEBuiltin::finalize ()
     if (decl->flags & DECL_FLEX)
     {
 	m_type = Type::determineFlexType (m_type, decl->type, Type::Unspec);
+	if (m_type == 0)
+	{
+	    ycp2error ("Type::determineFlexType returns NULL");
+	    return decl->type;
+	}
+	else if (m_type->isError())
+	{
+	    return m_type;
+	}
     }
     else
     {

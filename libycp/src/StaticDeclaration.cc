@@ -41,7 +41,9 @@ using namespace std;
 
 #define DECLSIZE 127
 
-#define DO_DEBUG 0
+#ifndef DO_DEBUG
+#define DO_DEBUG 1
+#endif
 
 //
 // list of namespace prefixes to mark as 'predefined'
@@ -383,6 +385,8 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 
     // now check all (overloaded) possibilities
 
+// FIXME: properly check Templates (FlexT and NFlexT)
+
     while (decl)
     {
 	constTypePtr dtype = decl->type;		// declaration type
@@ -435,7 +439,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 		    if (fatype->parameterType(i)->match (dt) != 0)		// parameters do not match
 		    {
 #if DO_DEBUG
-			y2debug ("parameters at %d do not match", i);
+			y2debug ("parameters at %d do not match: decl '%s', actual '%s'", i, dt->toString().c_str(), fatype->parameterType(i)->toString().c_str());
 #endif
 			error = true;
 			break;
@@ -452,7 +456,10 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 		// this was not the last argument in declared arguments
 		// and the next one is not wildcard (can be omited completely)
 		// it's an error
-		if (!partial && i != dcount && !dt->isWildcard () && !fdtype->parameterType(i)->isWildcard ())
+		if (!partial					// full match required
+		    && i != dcount				// not the last argument
+		    && !dt->isWildcard ()			// declared type is not wildcard
+		    && !fdtype->parameterType(i)->isWildcard ())
 		{
 #if DO_DEBUG
 		    y2debug ("missing parameters");
@@ -519,6 +526,7 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
         d = d->name_space;
 	n = std::string(d->name) + "::" + n;
     }
+    y2debug ("StaticDeclaration::writeDeclaration('%s':%s)", n.c_str(), decl->type->toString().c_str());
  
     Bytecode::writeCharp (str, n.c_str());
     decl->type->toStream (str);
@@ -532,14 +540,15 @@ StaticDeclaration::readDeclaration (std::istream & str) const
 {
     char *name = Bytecode::readCharp (str);
     constTypePtr type = Bytecode::readType (str);
-
+    y2debug ("StaticDeclaration::readDeclaration('%s':%s)", name, type->toString().c_str());
     declaration_t *decl = findDeclaration (name, type);
     if (decl == 0)
     {
 //	ycp2error ("No match for '%s (%s)'", name, type->toString().c_str());
-	fprintf (stderr, "No match for '%s (%s)'\n", name, type->toString().c_str());
+	fprintf (stderr, "No match for builtin '%s (%s)'\n", name, type->toString().c_str());
 	str.setstate (std::ostream::failbit);
     }
+    delete [] name;
     return decl;
 }
 
