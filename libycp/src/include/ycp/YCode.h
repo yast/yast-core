@@ -213,7 +213,7 @@ public:
     YError (int line=0, const char *msg=0);
     ~YError () {}
     YCPValue evaluate (bool cse = false);
-    string toString();
+    string toString() const;
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const { return Type::Error; }
 };

@@ -753,7 +753,7 @@ YError::evaluate (bool cse)
 
 
 string
-YError::toString()
+YError::toString() const
 {
     return (m_msg ? m_msg : "*** Error");
 }
