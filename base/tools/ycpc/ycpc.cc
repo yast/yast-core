@@ -1,10 +1,9 @@
-/* ycpc.cc
+/*
+ * ycpc.cc
  *
  * YCP standalone bytecode compiler
  *
  * Authors: Klaus Kaempf <kkaempf@suse.de>
- *
- * $Id$
  */
 
 #include <dirent.h>
@@ -596,7 +595,7 @@ makeDirList (const char *dir)
 // create solved dependency map
 //   @param dep	list of FileDep pathes
 //
-//   Parse all files listed in dep->path() and generate dependency map [name] -> list of FileDep 
+//   Parse all files listed in dep->path() and generate dependency map [name] -> list of FileDep
 //
 
 std::map <std::string, std::list <FileDep> >
@@ -822,7 +821,7 @@ parsefile (const char *infname)
 	fprintf (stderr, "No input file given\n");
 	return NULL;
     }
-    
+
     if (parser == NULL)
     {
 	parser = new Parser();
@@ -833,7 +832,7 @@ parsefile (const char *infname)
 	    return NULL;
 	}
     }
-    
+
     FILE *infile;
     if (!strcmp (infname, "-"))
     {
@@ -849,9 +848,9 @@ parsefile (const char *infname)
 	fprintf (stderr, "Can't read '%s'\n", infname);
 	return NULL;
     }
-    
+
     progress ("parsing '%s'\n", infname);
-    
+
     parser->setInput (infile, infname);
     parser->setBuffered();
 
@@ -862,7 +861,7 @@ parsefile (const char *infname)
     c = parser->parse ();
 
     fclose (infile);
-    
+
     if (c == NULL || c->isError ())
     {
 	progress ("Error\n", 0);
@@ -882,13 +881,13 @@ int
 compilefile (const char *infname, const char *outfname)
 {
     string ofname = infname;
-    
-    if (outfname != NULL) 
+
+    if (outfname != NULL)
     {
 	ofname = outfname;
 	progress ("compiling to '%s'\n", ofname.c_str ());
-    } 
-    else 
+    }
+    else
     {
 	int len = ofname.size ();
 	if (len > 4 && ofname.substr (len-4, 4) == ".ycp")
@@ -901,19 +900,19 @@ compilefile (const char *infname, const char *outfname)
 	}
 	progress ("compiling to '%s'\n", ofname.c_str ());
     }
-    
+
     YCodePtr c = parsefile (infname);
-    
+
     if (c != NULL )
     {
 	progress ("saving ...\n", 0);
 	return Bytecode::writeFile (c, ofname);
     }
-    
+
     return 1;
 }
 
- 
+
 /**
  * Process one file
  */
@@ -925,13 +924,13 @@ processfile (const char *infname, const char *outfname)
     {
 	return compilefile (infname, outfname);
     }
-    
+
     if (parse)
     {
 	YCodePtr c = parsefile (infname);
-	
+
 	if (c == NULL) return 1;
-	
+
 	if (quiet) return 0;
 
 	std::ofstream outstream;
@@ -1055,7 +1054,7 @@ processfile (const char *infname, const char *outfname)
 
 
 /**
- * Recurse through directories, processing 
+ * Recurse through directories, processing
  */
 
 int
@@ -1129,7 +1128,7 @@ void print_version()
 int main(int argc, char *argv[])
 {
     int i = 0, ret = 0;
-    
+
     bool log_set = false;
 
     YCPPathSearch::initialize ();
@@ -1262,7 +1261,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
     }
-    
+
     // setup log
     if (!log_set)
     {
@@ -1293,7 +1292,7 @@ int main(int argc, char *argv[])
 	&& (compile == read_n_print)
 	&& (compile == read_n_run))
     {
-	fprintf (stderr, "c-, -E, -f, or -p must be given\n");
+	fprintf (stderr, "-c, -E, -f, or -p must be given\n");
     }
 
     if (optind == argc)
@@ -1316,7 +1315,7 @@ int main(int argc, char *argv[])
 	    ui_name = UI_QT_NAME;
 	}
     }
-	
+
     std::list <FileDep> deplist;
 
     for (i = optind; i < argc;i++)
