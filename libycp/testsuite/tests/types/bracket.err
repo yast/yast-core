@@ -148,6 +148,22 @@ Parsed:
 Parsed:
 ----------------------------------------------------------------------
 {
+    // integer fce (string str)
+    // list <map> a
+    // map res
+    // filename: "tests/types/bracket.ycp"
+    integer fce (string str)
+{
+    return tointeger (str);
+}
+    list <map> a = [$["key":true]];
+    map res = a[fce ("0")]:$[];
+    return (res == $["key":true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
     // list a
     // boolean cond
     // string res

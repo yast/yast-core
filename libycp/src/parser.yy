@@ -342,16 +342,15 @@ expression:
 		    {
 			constTypePtr paramType = params->value (index)->type ();
 			
+			if (paramType->isFunction())
+			{
+			    paramType = ((constFunctionTypePtr)paramType)->returnType ();
+			}
+			
 			// for lists, only integer is acceptable
 			if (cur->isList ())
 			{
-			    if (paramType->isFunction() && ! ((constFunctionTypePtr)paramType)->returnType ()->isInteger ())
-			    {
-				yyTypeMismatch (Type::Integer, paramType, $1.l);
-				$$.t = 0;
-				break;
-			    }
-			    else if (! paramType->isInteger () && ! paramType->isFunction())
+			    if (! paramType->isInteger ())
 			    {
 				yyTypeMismatch (Type::Integer, paramType, $1.l);
 				$$.t = 0;

@@ -2301,15 +2301,8 @@ YEFunction::toStream (std::ostream & str) const
 
 constTypePtr
 YEFunction::type () const
-{
-    FunctionTypePtr f = Type::Function()->clone();
-    ycodelist_t *parm = m_parameters;
-    while (parm)
-    {
-	f->concat (parm->code->type());
-	parm = parm->next;
-    }
-    return f;
+{	
+    return m_entry->type ();
 }
 
 constTypePtr YEFunction::wantedParameterType () const

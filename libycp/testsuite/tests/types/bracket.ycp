@@ -102,8 +102,19 @@
 {
     list< map > a = [ $[ "key" : true ] ];
 
-    map res = a[0 + 1]:nil; // also test a function as a parameter type
+    map res = a[0 + 1]:nil; // also test a builtin as a parameter type
     return res == nil ; 
+}
+
+{
+    define integer fce(string str) ``{
+        return tointeger(str);
+    }
+
+    list<map> a = [ $[ "key" : true ] ];
+
+    map res = a[fce("0")]:$[];
+    return res == $[ "key" : true ];
 }
 
 {
