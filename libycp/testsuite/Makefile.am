@@ -11,8 +11,7 @@ INCLUDES = -I$(srcdir)/../src/include -I$(srcdir)/../../liby2/src/include -I$(in
 bindir = $(prefix)/bin
 libdir = ../src/.libs
 
-bin_PROGRAMS = runycp
-noinst_PROGRAMS = testSignature runc
+noinst_PROGRAMS = testSignature runc runycp
 
 runc_SOURCES = runc.cc
 runc_LDFLAGS = -L$(libdir)
@@ -20,7 +19,7 @@ runc_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util
 
 runycp_SOURCES = runycp.cc
 runycp_LDFLAGS = -L$(libdir)
-runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util
+runycp_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util # -lefence
 
 testSignature_SOURCES = testSignature.cc
 testSignature_LDFLAGS = -L$(libdir)
