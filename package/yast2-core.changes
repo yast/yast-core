@@ -13,8 +13,8 @@ Tue Jun 25 12:12:23 CEST 2002 - kkaempf@suse.de
 -------------------------------------------------------------------
 Sat Jun 22 01:37:40 CEST 2002 - arvin@suse.de
 
-- merged libycp, liby2, libyui, libscr, libpkg, yast2-core-scr,
+- merged libycp, liby2, libyui, libscr, yast2-core-scr,
   yast2-core-wfm, yast2-agent-ang, yast2-agent-probe,
-  yast2-agent-ini, yast2-agent-modules, yast2-agent-system,
-  yast2-core-clients and yast2-base into new package yast2-core
+  yast2-agent-ini, yast2-agent-modules, yast2-agent-system
+  and yast2-base into new package yast2-core
 
