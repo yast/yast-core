@@ -63,9 +63,9 @@ PkgModuleFunctions::TargetInit (YCPList args)
 
     bool newdb = args->value(1)->asBoolean()->value();		// used again below
 
-    PMError err = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
-    if (err)
-	return YCPError (err.errstr().c_str(), YCPBoolean (false));
+    _last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
+    if (_last_error)
+	return YCPError (_last_error.errstr().c_str(), YCPBoolean (false));
 
     // propagate installed packages if not newly created
     if (!newdb)
@@ -105,8 +105,8 @@ PkgModuleFunctions::TargetInstall(YCPList args)
     {
 	return YCPError ("Bad args to Pkg::TargetInstall");
     }
-    PMError err = _y2pm.installFile (Pathname (args->value(0)->asString()->value()));
-    return YCPBoolean (!err);
+    _last_error = _y2pm.installFile (Pathname (args->value(0)->asString()->value()));
+    return YCPBoolean (!_last_error);
 }
 
 

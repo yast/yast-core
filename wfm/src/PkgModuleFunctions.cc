@@ -153,6 +153,18 @@ PkgModuleFunctions::GetAdditionalLocales (YCPList args)
 }
 
 
+/**
+ * @builtin Pkg::Error
+ *
+ * get current error as string
+ */
+YCPValue
+PkgModuleFunctions::Error (YCPList args)
+{
+    return YCPString (_last_error.errstr());
+}
+
+
 /** ------------------------
    convert constInstSrcDescrPtr to YCPMap
  */

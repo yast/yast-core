@@ -49,6 +49,8 @@ class PkgModuleFunctions
 	 */
 	YCPInterpreter *_wfm;
 
+	PMError _last_error;
+
     private:
 	vector<InstSrcManager::ISrcId> _sources;
 	unsigned int _first_free_source_slot;
@@ -76,6 +78,7 @@ class PkgModuleFunctions
 	YCPValue GetLocale (YCPList args);
 	YCPValue SetAdditionalLocales (YCPList args);
 	YCPValue GetAdditionalLocales (YCPList args);
+	YCPValue Error (YCPList args);
 
 	// callbacks
 	YCPValue CallbackStartProvide (YCPList args);
@@ -85,7 +88,6 @@ class PkgModuleFunctions
 	YCPValue CallbackProgressPackage (YCPList args);
 	YCPValue CallbackDonePackage (YCPList args);
 	YCPValue CallbackMediaChange (YCPList args);
-	YCPValue CallbackMediaError (YCPList args);
 	YCPValue CallbackProgressRebuildDB (YCPList args);
 
 	// source related

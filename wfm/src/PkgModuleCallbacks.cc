@@ -173,24 +173,6 @@ mediaChangeCallbackFunc (const std::string& error, const std::string& url, const
 }
 
 //-------------------------------------------------------------------
-// for media error
-static std::string mediaErrorCallbackModule;
-static YCPSymbol mediaErrorCallbackSymbol("",false);
-
-static std::string
-mediaErrorCallbackFunc (PMError error, void *_wfm)
-{
-y2milestone ("mediaErrorCallbackFunc(%d)", (int)error);
-    YCPTerm callback = YCPTerm (mediaErrorCallbackSymbol, mediaErrorCallbackModule);
-    callback->add(YCPInteger (error));
-    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
-    if (!ret->isString())
-	return "";
-    return ret->asString()->value();
-}
-
-
-//-------------------------------------------------------------------
 // during rpm rebuild db (rpm progress)
 static std::string progressRebuildDBCallbackModule;
 static YCPSymbol progressRebuildDBCallbackSymbol("",false);
@@ -431,40 +413,6 @@ PkgModuleFunctions::CallbackMediaChange (YCPList args)
 	mediaChangeCallbackSymbol = YCPSymbol (name, false);
     }
     (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
-    return YCPVoid();
-}
-
-/**
- * @builtin Pkg::CallbackMediaError (integer source, string fun) -> nil
- *
- * set media error callback function
- * will call 'WFM::fun (string error)' from InstSrc
- */
-YCPValue
-PkgModuleFunctions::CallbackMediaError (YCPList args)
-{
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
-
-    if ((args->size() != 2)
-	|| !(args->value(1)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::CallbackMediaError");
-    }
-    string name = args->value(1)->asString()->value();
-    string::size_type colonpos = name.find("::");
-    if (colonpos != string::npos)
-    {
-	mediaErrorCallbackModule = name.substr (0, colonpos);
-	mediaErrorCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
-    }
-    else
-    {
-	mediaErrorCallbackModule = "";
-	mediaErrorCallbackSymbol = YCPSymbol (name, false);
-    }
-    (InstSrcPtr::cast_away_const(source_id))->setMediaErrorCallback(mediaErrorCallbackFunc, _wfm);
     return YCPVoid();
 }
 

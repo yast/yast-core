@@ -114,10 +114,10 @@ PkgModuleFunctions::YouCheckAuthorization (YCPList args)
     string regcode = args->value(1)->asString()->value_cstr();
     string password = args->value(2)->asString()->value_cstr();
 
-    PMError error = _y2pm.youPatchManager().instYou().checkAuthorization( url, regcode, password );
+    _last_error = _y2pm.youPatchManager().instYou().checkAuthorization( url, regcode, password );
 
-    if ( error ) {
-        if ( error == YouError::E_auth_failed ) return YCPString( "error_login" );
+    if ( _last_error ) {
+        if ( _last_error == YouError::E_auth_failed ) return YCPString( "error_login" );
         else return YCPString( "error" );
     }
 
@@ -146,10 +146,10 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     }
 
     std::list<Url> servers;
-    PMError err = _y2pm.youPatchManager().instYou().servers( servers );
-    if ( err ) {
-      if ( err == YouError::E_get_suseservers_failed ) return YCPString( "get" );
-      if ( err == YouError::E_read_suseservers_failed ) return YCPString( "read" );
+    _last_error = _y2pm.youPatchManager().instYou().servers( servers );
+    if ( _last_error ) {
+      if ( _last_error == YouError::E_get_suseservers_failed ) return YCPString( "get" );
+      if ( _last_error == YouError::E_read_suseservers_failed ) return YCPString( "read" );
       return YCPString( "Error getting you servers." );
     }
 
@@ -190,12 +190,12 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
 
     bool checkSig = args->value(1)->asBoolean()->value();
 
-    PMError err = _y2pm.youPatchManager().instYou().retrievePatchInfo( url,
+    _last_error = _y2pm.youPatchManager().instYou().retrievePatchInfo( url,
                                                                        checkSig );
-    if ( err ) {
-      if ( err.errClass() == PMError::C_MediaError ) return YCPString( "media" );
-      if ( err == YouError::E_bad_sig_file ) return YCPString( "sig" );
-      return YCPString( err.errstr() );
+    if ( _last_error ) {
+      if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
+      if ( _last_error == YouError::E_bad_sig_file ) return YCPString( "sig" );
+      return YCPString( _last_error.errstr() );
     }
 
     return YCPString( "" );
@@ -209,8 +209,8 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
 YCPValue
 PkgModuleFunctions::YouAttachSource (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().attachSource();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    _last_error = _y2pm.youPatchManager().instYou().attachSource();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
 
@@ -223,8 +223,8 @@ PkgModuleFunctions::YouAttachSource (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetPackages (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().retrievePatches();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    _last_error = _y2pm.youPatchManager().instYou().retrievePatches();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
 
@@ -321,12 +321,12 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 
     bool checkSig = args->value(0)->asBoolean()->value();
 
-    PMError err = _y2pm.youPatchManager().instYou().retrieveCurrentPatch( checkSig );
-    if ( err ) {
-      if ( err.errClass() == PMError::C_MediaError ) return YCPString( "media" );
-      if ( err == YouError::E_bad_sig_file ||
-           err == YouError::E_bad_sig_rpm ) return YCPString( "sig" );
-      return YCPString( err.errstr() );
+    _last_error = _y2pm.youPatchManager().instYou().retrieveCurrentPatch( checkSig );
+    if ( _last_error ) {
+      if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
+      if ( _last_error == YouError::E_bad_sig_file ||
+           _last_error == YouError::E_bad_sig_rpm ) return YCPString( "sig" );
+      return YCPString( _last_error.errstr() );
     }
     return YCPString( "" );
 }
@@ -339,8 +339,8 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 YCPValue
 PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().installCurrentPatch();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    _last_error = _y2pm.youPatchManager().instYou().installCurrentPatch();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
 
@@ -352,8 +352,8 @@ PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
 YCPValue
 PkgModuleFunctions::YouInstallPatches (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().installPatches();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    _last_error = _y2pm.youPatchManager().instYou().installPatches();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }
 
@@ -365,7 +365,7 @@ PkgModuleFunctions::YouInstallPatches (YCPList args)
 YCPValue
 PkgModuleFunctions::YouRemovePackages (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().removePackages();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    _last_error = _y2pm.youPatchManager().instYou().removePackages();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }

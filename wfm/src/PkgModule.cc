@@ -67,6 +67,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "GetLocale")		return GetLocale (args);
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
     else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
+    else if (function == "Error")		return Error (args);
 
     // callback functions
     else if (function == "CallbackStartProvide")	return CallbackStartProvide (args);
@@ -76,7 +77,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "CallbackProgressPackage")	return CallbackProgressPackage (args);
     else if (function == "CallbackDonePackage")		return CallbackDonePackage (args);
     else if (function == "CallbackMediaChange")		return CallbackMediaChange (args);
-    else if (function == "CallbackMediaError")		return CallbackMediaError (args);
     else if (function == "CallbackProgressRebuildDB")	return CallbackProgressRebuildDB (args);
 
     // package functions

@@ -163,7 +163,7 @@ PkgModuleFunctions::SourceCreate (YCPList args)
 
     // check url for products
 
-    PMError err = MGR.scanMedia( nids, url );
+    _last_error = MGR.scanMedia( nids, url );
 
     if ( nids.size() )
     {
@@ -190,9 +190,9 @@ PkgModuleFunctions::SourceCreate (YCPList args)
 	    _sources.push_back (source_id);
 	}
 
-	err = MGR.enableSource( source_id );
+	_last_error = MGR.enableSource( source_id );
 
-	y2milestone ("enable: %d: %s", new_slot, err.errstr().c_str());
+	y2milestone ("enable: %d: %s", new_slot, _last_error.errstr().c_str());
 	return YCPInteger (new_slot);
     }
     return YCPError ("No source data found");
@@ -267,11 +267,11 @@ PkgModuleFunctions::SourceFinish (YCPList args)
 	return YCPError ("Source not active", YCPBoolean (true));
     }
 
-    PMError err = _y2pm.instSrcManager().disableSource( _sources[source_slot]);
+    _last_error = _y2pm.instSrcManager().disableSource( _sources[source_slot]);
     _sources[source_slot] = 0;
     if (source_slot < _first_free_source_slot)
 	_first_free_source_slot = source_slot;
-    y2milestone ("disable: %d: %s", source_slot, err.errstr().c_str());
+    y2milestone ("disable: %d: %s", source_slot, _last_error.errstr().c_str());
     return YCPBoolean (true);
 }
 
@@ -438,10 +438,10 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
 
     Pathname file_r;
     Pathname path (args->value(2)->asString()->value());
-    PMError err = source_id->provideFile (args->value(1)->asInteger()->value(), path, file_r);
-    if (err)
+    _last_error = source_id->provideFile (args->value(1)->asInteger()->value(), path, file_r);
+    if (_last_error)
     {
-	y2error ("provideFile(%s) failed: %s", path.asString().c_str(), err.errstr().c_str());
+	y2error ("provideFile(%s) failed: %s", path.asString().c_str(), _last_error.errstr().c_str());
 	return YCPVoid();
     }
     return YCPString (file_r.asString());
@@ -464,10 +464,10 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceCacheCopyTo");
     }
     Pathname path (args->value(0)->asString()->value());
-    PMError err = _y2pm.instSrcManager().cacheCopyTo (path);
-    if (err != PMError::E_ok)
+    _last_error = _y2pm.instSrcManager().cacheCopyTo (path);
+    if (_last_error != PMError::E_ok)
     {
-	return YCPError (string ("SourceCacheCopyTo failed: ")+err.errstr(), YCPBoolean (false));
+	return YCPError (string ("SourceCacheCopyTo failed: ")+_last_error.errstr(), YCPBoolean (false));
     }
     return YCPBoolean (true);
 }
