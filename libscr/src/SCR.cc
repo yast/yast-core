@@ -153,7 +153,7 @@ SCR::SCR ()
 	{ "Execute",		"any (path)",			(void *)SCRExecute },
 	{ "Execute",		"any (path, any)",		(void *)SCRExecute2 },
 	{ "Execute",		"any (path, any, any)",		(void *)SCRExecute3 },
-	{ "Error",		"map (path)",			(void *)SCRError },
+	{ "Error",		"map<string,any> (path)",	(void *)SCRError },
 	{ "RegisterAgent",	"boolean (path, string)",	(void *)SCRRegisterAgentT },
 	{ "RegisterAgent",	"boolean (path, term)",		(void *)SCRRegisterAgentS },
 	{ "UnregisterAgent",	"boolean (path)",		(void *)SCRUnregisterAgent },
