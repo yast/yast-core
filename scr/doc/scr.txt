@@ -24,17 +24,12 @@ included in SCR.
 Current agents are:
 
 NAME	        SUBTREE			TYP	Files
-ag_rcconfig()   .etc.rcconfig		C++	RcConfigAgent.*
 ag_xf86config() .etc.xf86config		C++	Xf86ConfigAgent.*
 ag_password()   .etc.shadow		C++	PasswordAgent.*
 ag_hwprobe()    .probe			C++	HwProbe.*
-ag_dumpto()     .dumpto			C++	DumpTo.*
 ag_exec()       .exec			C++	Exec.*
-ag_instsource() .yast2.instsource);	script  YASTHOME/servers/ag_instsource
-ag_yast2rc()    .yast2.rc		script	YASTHOME/servers/ag_yast2rc
 ag_fdisk()      .disk			C++	FdiskAgent.*
 ag_hostnames()  .net.hostnames		script  YASTHOME/servers/ag_hostname
-ag_runtime()    .runtime		script  YASTHOME/servers/ag_runtime
 anyagent	shown in 		C++	AnyAgent*.*
                 YASTHOME/scrconf/
                 anyagent.ycp
