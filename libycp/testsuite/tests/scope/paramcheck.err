@@ -16,6 +16,6 @@ tests/scope/paramcheck.ycp:18:Bad parameter '<string> "one"'
 [Parser] tests/scope/paramcheck.ycp:18 Bad parameter '<string> "one"'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/paramcheck.ycp:3 Parser error

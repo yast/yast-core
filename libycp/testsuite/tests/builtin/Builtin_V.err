@@ -33,6 +33,6 @@ tests/builtin/Builtin_V.ycp:56:Expected 'string', seen 'integer'.
 [Parser] tests/builtin/Builtin_V.ycp:56 Expected 'string', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin_V.ycp:46 Parser error

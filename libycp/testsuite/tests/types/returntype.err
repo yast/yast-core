@@ -4,6 +4,6 @@ tests/types/returntype.ycp:5:Expected 'integer', seen 'string'.
 [Parser] tests/types/returntype.ycp:5 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/returntype.ycp:1 Parser error

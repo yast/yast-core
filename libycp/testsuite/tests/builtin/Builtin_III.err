@@ -50,7 +50,7 @@ tests/builtin/Builtin_III.ycp:51:Bad parameter '<const integer> 42'
 [Parser] tests/builtin/Builtin_III.ycp:51 Bad parameter '<const integer> 42'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin_III.ycp:51 Parser error
 Parsed:

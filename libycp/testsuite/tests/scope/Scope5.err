@@ -4,6 +4,6 @@ tests/scope/Scope5.ycp:28:Expected 'integer', seen 'string'.
 [Parser] tests/scope/Scope5.ycp:28 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Scope5.ycp:20 Parser error

@@ -14,6 +14,6 @@ tests/errors/termbug.ycp:10:Expected 'term', seen 'block <void>'.
 [Parser] tests/errors/termbug.ycp:10 Expected 'term', seen 'block <void>'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/termbug.ycp:9 Parser error

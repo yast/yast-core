@@ -4,6 +4,6 @@ tests/builtin/builtin_redeclared.ycp:3:Definition shadows builtin
 [Parser] <builtin>:0 'splitstring' defined here.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/builtin_redeclared.ycp:1 Parser error

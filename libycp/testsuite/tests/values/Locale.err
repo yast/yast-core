@@ -46,6 +46,6 @@ tests/values/Locale.ycp:35:No textdomain defined
 [Parser] tests/values/Locale.ycp:35 No textdomain defined
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/values/Locale.ycp:35 Parser error

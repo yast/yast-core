@@ -6,6 +6,6 @@ tests/types/reference1.ycp:3:Bad parameter '<const integer> 1'
 [Parser] tests/types/reference1.ycp:3 Bad parameter '<const integer> 1'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/reference1.ycp:1 Parser error

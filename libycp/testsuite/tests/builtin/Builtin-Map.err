@@ -133,7 +133,7 @@ tests/builtin/Builtin-Map.ycp:68:Undeclared identifier 'b'
 [Parser] tests/builtin/Builtin-Map.ycp:68 Undeclared identifier 'b'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-Map.ycp:68 Parser error
 Parsed:

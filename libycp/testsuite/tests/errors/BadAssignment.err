@@ -12,6 +12,6 @@ tests/errors/BadAssignment.ycp:11:Expected 'integer', seen 'boolean'.
 [Parser] tests/errors/BadAssignment.ycp:11 Expected 'integer', seen 'boolean'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/BadAssignment.ycp:5 Parser error

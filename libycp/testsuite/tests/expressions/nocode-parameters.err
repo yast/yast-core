@@ -2,13 +2,13 @@ tests/expressions/nocode-parameters.ycp:4:Empty expression (block) as a paramete
 [Parser] tests/expressions/nocode-parameters.ycp:4 Empty expression (block) as a parameter
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/nocode-parameters.ycp:3 Parser error
 tests/expressions/nocode-parameters.ycp:13:Empty expression (block) as a parameter
 [Parser] tests/expressions/nocode-parameters.ycp:13 Empty expression (block) as a parameter
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/nocode-parameters.ycp:7 Parser error

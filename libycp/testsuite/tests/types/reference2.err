@@ -14,7 +14,7 @@ tests/types/reference2.ycp:8:Expected 'map <integer, integer &>', seen 'map <con
 [Parser] tests/types/reference2.ycp:8 Expected 'map <integer, integer &>', seen 'map <const integer, const integer>'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/reference2.ycp:6 Parser error
 Parsed:
@@ -33,6 +33,6 @@ tests/types/reference2.ycp:18:Expected 'map <integer, integer &>', seen 'map <co
 [Parser] tests/types/reference2.ycp:18 Expected 'map <integer, integer &>', seen 'map <const integer, const integer>'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/reference2.ycp:16 Parser error

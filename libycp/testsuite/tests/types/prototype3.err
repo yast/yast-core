@@ -6,6 +6,6 @@ tests/types/prototype3.ycp:11:Expected 'integer (integer)', seen 'integer (float
 [Parser] tests/types/prototype3.ycp:11 Expected 'integer (integer)', seen 'integer (float)'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/prototype3.ycp:1 Parser error

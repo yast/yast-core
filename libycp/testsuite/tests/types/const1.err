@@ -4,6 +4,6 @@ tests/types/const1.ycp:6:Assignment to const identifier 'm'
 [Parser] tests/types/const1.ycp:6 Assignment to const identifier 'm'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/const1.ycp:1 Parser error

@@ -6,6 +6,6 @@ tests/types/prototype4.ycp:12:Expected 'integer (any)', seen 'integer (integer)'
 [Parser] tests/types/prototype4.ycp:12 Expected 'integer (any)', seen 'integer (integer)'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/prototype4.ycp:1 Parser error

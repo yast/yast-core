@@ -4,6 +4,6 @@ tests/includes/include.ycp:4:Undeclared identifier 'inc'
 [Parser] tests/includes/include.ycp:4 Undeclared identifier 'inc'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/includes/include.ycp:1 Parser error

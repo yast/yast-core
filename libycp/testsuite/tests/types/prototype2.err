@@ -6,6 +6,6 @@ tests/types/prototype2.ycp:11:Expected 'integer (integer)', seen 'integer (strin
 [Parser] tests/types/prototype2.ycp:11 Expected 'integer (integer)', seen 'integer (string)'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/prototype2.ycp:1 Parser error

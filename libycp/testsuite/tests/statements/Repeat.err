@@ -48,6 +48,6 @@ tests/statements/Repeat.ycp:38:Expected 'boolean', seen 'integer'.
 [Parser] tests/statements/Repeat.ycp:38 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/Repeat.ycp:33 Parser error

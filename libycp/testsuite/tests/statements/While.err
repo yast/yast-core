@@ -22,7 +22,7 @@ tests/statements/While.ycp:14:Expected 'boolean', seen 'integer'.
 [Parser] tests/statements/While.ycp:14 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/While.ycp:13 Parser error
 Parsed:

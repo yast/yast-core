@@ -6,7 +6,7 @@ tests/statements/Doublequote.ycp:18:Undeclared identifier 'name'
 [Parser] tests/statements/Doublequote.ycp:18 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/Doublequote.ycp:18 Parser error
 Parsed:

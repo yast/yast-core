@@ -114,6 +114,6 @@ tests/expressions/Triple.ycp:46:Expected 'boolean', seen 'const integer'.
 [Parser] tests/expressions/Triple.ycp:46 Expected 'boolean', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Triple.ycp:46 Parser error

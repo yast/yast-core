@@ -14,6 +14,6 @@ No match for '+ : <unspec> (boolean, integer)':
 +:map (const map, const map)
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/crash.ycp:1 Parser error

@@ -4,6 +4,6 @@ tests/statements/loop.ycp:9:Expected 'integer', seen 'void'.
 [Parser] tests/statements/loop.ycp:9 Expected 'integer', seen 'void'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/loop.ycp:1 Parser error

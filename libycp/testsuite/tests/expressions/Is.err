@@ -8,7 +8,7 @@ tests/expressions/Is.ycp:24:Undeclared identifier 'a'
 [Parser] tests/expressions/Is.ycp:24 Undeclared identifier 'a'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Is.ycp:24 Parser error
 [Scanner] tests/expressions/Is.ycp:25 Warning: Superfluous 'is()' expression, type is known:
@@ -193,7 +193,7 @@ tests/expressions/Is.ycp:76:Undeclared identifier 'name'
 [Parser] tests/expressions/Is.ycp:76 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Is.ycp:76 Parser error
 [Scanner] tests/expressions/Is.ycp:77 Warning: Superfluous 'is()' expression, type is known:
@@ -206,7 +206,7 @@ tests/expressions/Is.ycp:78:Undeclared identifier 'name'
 [Parser] tests/expressions/Is.ycp:78 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Is.ycp:78 Parser error
 [Scanner] tests/expressions/Is.ycp:79 Warning: Superfluous 'is()' expression, type is known:

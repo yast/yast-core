@@ -3,6 +3,6 @@ tests/modules/ImpSelf.ycp:6:Undeclared identifier 'x'
 [Parser] tests/modules/ImpSelf.ycp:6 Undeclared identifier 'x'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/modules/ImpSelf.ycp:1 Parser error

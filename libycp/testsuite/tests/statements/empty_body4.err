@@ -2,7 +2,7 @@ tests/statements/empty_body4.ycp:8:Empty function definition
 [Parser] tests/statements/empty_body4.ycp:8 Empty function definition
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/empty_body4.ycp:7 Parser error
 Parsed:
@@ -13,6 +13,6 @@ tests/statements/empty_body4.ycp:19:Empty function definition
 [Parser] tests/statements/empty_body4.ycp:19 Empty function definition
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/statements/empty_body4.ycp:18 Parser error

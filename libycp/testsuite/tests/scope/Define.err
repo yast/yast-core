@@ -42,6 +42,6 @@ tests/scope/Define.ycp:35:Undeclared identifier 'i'
 [Parser] tests/scope/Define.ycp:35 Undeclared identifier 'i'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Define.ycp:31 Parser error

@@ -91,6 +91,6 @@ No match for '+ : <unspec> (const symbol, const path)':
 +:map (const map, const map)
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/typecodes.ycp:5 Parser error

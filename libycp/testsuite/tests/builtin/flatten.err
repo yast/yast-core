@@ -13,6 +13,6 @@ tests/builtin/flatten.ycp:9:Bad parameter '<list <integer>> il'
 [Parser] tests/builtin/flatten.ycp:9 Bad parameter '<list <integer>> il'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/flatten.ycp:6 Parser error

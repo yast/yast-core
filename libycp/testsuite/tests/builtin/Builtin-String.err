@@ -118,7 +118,7 @@ tests/builtin/Builtin-String.ycp:57:Bad parameter '<list> [1, "a", 3]'
 [Parser] tests/builtin/Builtin-String.ycp:57 Bad parameter '<list> [1, "a", 3]'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-String.ycp:57 Parser error
 Parsed:

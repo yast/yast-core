@@ -2,6 +2,6 @@ tests/modules/emptyModule.ycp:1:Empty module
 [Parser] tests/modules/emptyModule.ycp:1 Empty module
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/modules/emptyModule.ycp:1 Parser error

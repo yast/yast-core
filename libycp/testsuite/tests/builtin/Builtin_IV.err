@@ -32,6 +32,6 @@ tests/builtin/Builtin_IV.ycp:67:Bad parameter '<list> [[1], 2, [3, 4]]'
 [Parser] tests/builtin/Builtin_IV.ycp:67 Bad parameter '<list> [[1], 2, [3, 4]]'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin_IV.ycp:67 Parser error

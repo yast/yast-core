@@ -24,6 +24,6 @@ tests/types/const_reference.ycp:16:Bad parameter '<const integer> ci'
 [Parser] tests/types/const_reference.ycp:16 Bad parameter '<const integer> ci'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/const_reference.ycp:3 Parser error

@@ -21,6 +21,6 @@ tests/values/Block.ycp:13:'i' defined here.
 [Parser] tests/values/Block.ycp:13 'i' defined here.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/values/Block.ycp:12 Parser error

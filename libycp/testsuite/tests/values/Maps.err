@@ -56,6 +56,6 @@ tests/values/Maps.ycp:41:Bad type for key
 [Parser] tests/values/Maps.ycp:41 Bad type for key
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/values/Maps.ycp:41 Parser error

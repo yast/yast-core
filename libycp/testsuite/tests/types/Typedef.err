@@ -35,6 +35,6 @@ tests/types/Typedef.ycp:25:Expected 'list <list <path>>', seen 'list <const path
 [Parser] tests/types/Typedef.ycp:25 Expected 'list <list <path>>', seen 'list <const path>'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/Typedef.ycp:22 Parser error

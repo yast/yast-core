@@ -11,7 +11,7 @@ tests/types/bracket.ycp:12:Expected 'integer', seen 'string'.
 [Parser] tests/types/bracket.ycp:12 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:10 Parser error
 Parsed:
@@ -40,7 +40,7 @@ tests/types/bracket.ycp:32:Expected 'string', seen 'const boolean'.
 [Parser] tests/types/bracket.ycp:32 Expected 'string', seen 'const boolean'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:30 Parser error
 Parsed:
@@ -69,14 +69,14 @@ tests/types/bracket.ycp:54:Expected 'boolean', seen 'string'.
 [Parser] tests/types/bracket.ycp:54 Expected 'boolean', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:51 Parser error
 tests/types/bracket.ycp:61:Expected 'string', seen 'integer'.
 [Parser] tests/types/bracket.ycp:61 Expected 'string', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:58 Parser error
 Parsed:

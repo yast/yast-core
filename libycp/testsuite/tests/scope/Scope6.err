@@ -8,6 +8,6 @@ tests/scope/Scope6.ycp:20:'first' defined here.
 [Parser] tests/scope/Scope6.ycp:20 'first' defined here.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Scope6.ycp:19 Parser error

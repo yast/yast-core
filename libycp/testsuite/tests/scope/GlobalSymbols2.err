@@ -7,6 +7,6 @@ tests/scope/GlobalSymbols2.ycp:10:Undeclared identifier 'i'
 [Parser] tests/scope/GlobalSymbols2.ycp:10 Undeclared identifier 'i'
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/GlobalSymbols2.ycp:2 Parser error

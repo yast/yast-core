@@ -4,6 +4,6 @@ tests/modules/BadModule.ycp:8:Block not allowed in a module
 [Parser] tests/modules/BadModule.ycp:8 Block not allowed in a module
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/modules/BadModule.ycp:1 Parser error

@@ -4,6 +4,6 @@ tests/modules/y-impself.ycp:2:Can't load module 'ImpSelf'.
 [Parser] tests/modules/y-impself.ycp:2 Can't load module 'ImpSelf'.
 Parsed:
 ----------------------------------------------------------------------
-YError
+Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/modules/y-impself.ycp:1 Parser error
