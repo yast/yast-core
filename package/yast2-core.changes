@@ -2,6 +2,7 @@
 Thu Feb  5 13:38:23 CET 2004 - msvec@suse.cz
 
 - log YCP file and line in dummy agent to limit testsuites output
+- 2.9.25
 
 -------------------------------------------------------------------
 Tue Feb  3 17:12:21 CET 2004 - visnov@suse.cz
