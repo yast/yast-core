@@ -10,15 +10,15 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUI_special_widgets.cc
-  
-		Special (optional) widgets
+File:		YUI_special_widgets.cc
+
+Special (optional) widgets
 
 		
-  Authors:	Mathias Kettner <kettner@suse.de>
-		Stefan Hundhammer <sh@suse.de>
+Authors:	Mathias Kettner <kettner@suse.de>
+Stefan Hundhammer <sh@suse.de>
 		
-  Maintainer:	Stefan Hundhammer <sh@suse.de>
+Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
@@ -84,8 +84,8 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
 //
 
 
-YWidget *YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						   const YCPList & optList, int argnr )
+YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					 const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr > 0 )
     {
@@ -120,7 +120,7 @@ bool YUI::hasDummySpecialWidget()
  * Normally, the implementation within the libyui returns 0.
  */
 
-YWidget *YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
+YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
 {
     opt.isHeading.setValue( true );
     opt.isOutputField.setValue( true );
@@ -157,8 +157,8 @@ YWidget *YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
  *
  */
 
-YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					 const YCPList & optList, int argnr )
+YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			       const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -223,8 +223,8 @@ YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
  * for availability with <tt>HasSpecialWidget( `ColoredLabel )</tt> before using it.
  */
 
-YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-					     const YCPList & optList, int argnr )
+YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				   const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 4
 	 || ! term->value( argnr   )->isString()		// label
@@ -286,8 +286,8 @@ YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTe
  *
  */
 
-YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						 const YCPList & optList, int argnr )
+YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				       const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -352,8 +352,8 @@ YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const Y
  *
  */
 
-YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-				       const YCPList & optList, int argnr )
+YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			     const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -432,8 +432,8 @@ YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & t
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  * */
 
-YWidget *YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
-						  const YCPList & optList, int argnr )
+YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
 
@@ -532,10 +532,10 @@ bool YUI::hasPartitionSplitter()
  * has...() method as well!
  */
 
-YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
-						 const YCPString & label,
-						 const YCPString & filename,
-						 int expectedSize )
+YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
+				       const YCPString & label,
+				       const YCPString & filename,
+				       int expectedSize )
 {
     y2error( "Default createDownloadProgress() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -543,7 +543,7 @@ YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
     return 0;
 }
 
-YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
+YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createBarGraph() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -551,9 +551,9 @@ YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
     return 0;
 }
 
-YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
-					     YCPString label,
-					     YColor fg, YColor bg, int margin )
+YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
+				   YCPString label,
+				   YColor fg, YColor bg, int margin )
 {
     y2error( "Default createColoredLabel() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -561,9 +561,9 @@ YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
     return 0;
 }
 
-YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt,
-				       const YCPString & label,
-				       int minValue, int maxValue, int initialValue )
+YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt,
+			     const YCPString & label,
+			     int minValue, int maxValue, int initialValue )
 {
     y2error( "Default createSlider() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -572,18 +572,18 @@ YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt,
 }
 
 
-YWidget *YUI::createPartitionSplitter( YWidget *		parent,
-						  YWidgetOpt &		opt,
-						  int 			usedSize,
-						  int 			totalFreeSize,
-						  int 			newPartSize,
-						  int 			minNewPartSize,
-						  int 			minFreeSize,
-						  const YCPString &	usedLabel,
-						  const YCPString &	freeLabel,
-						  const YCPString &	newPartLabel,
-						  const YCPString &	freeFieldLabel,
-						  const YCPString &	newPartFieldLabel )
+YWidget * YUI::createPartitionSplitter( YWidget *		parent,
+					YWidgetOpt &		opt,
+					int 			usedSize,
+					int 			totalFreeSize,
+					int 			newPartSize,
+					int 			minNewPartSize,
+					int 			minFreeSize,
+					const YCPString &	usedLabel,
+					const YCPString &	freeLabel,
+					const YCPString &	newPartLabel,
+					const YCPString &	freeFieldLabel,
+					const YCPString &	newPartFieldLabel )
 {
     y2error( "Default createPartitionSplitter() method called - "
 	     "forgot to call HasSpecialWidget()?" );
