@@ -15,4 +15,4 @@ Parsed:
 [YCP] tests/Module/Rec.ycp:28 Level 1, Returning `HBox (`HStretch ())
 [YCP] tests/Module/Rec.ycp:22 Level 0: Ret after: `VBox ()
 [YCP] tests/Module/Rec.ycp:28 Level 0, Returning `VBox (`HBox (`HStretch ()))
-[YCP] tests/modules/rec.ycp:29 return: `VBox (`HBox (`HStretch ()))
+[YCP] tests/modules/rec.ycp:7 return: `VBox (`HBox (`HStretch ()))

@@ -2487,6 +2487,12 @@ YEFunction::evaluate (bool cse)
 	formalp->setValue (value);
 	actualp = actualp->next;
     }
+    
+    extern ExecutionEnvironment ee;
+
+    // save the context info
+    int linenumber = ee.linenumber ();
+    string filename = ee.filename ();
 
     YCPValue value = definition->evaluate ();
 
@@ -2495,6 +2501,10 @@ YEFunction::evaluate (bool cse)
 	// pop also local parameters
 	((YBlockPtr)definition)->popFromStack ();
     }
+    
+    // restore the context info
+    ee.setLinenumber (linenumber);
+    ee.setFilename (filename);
 
     // pop parameter values for recursion
     for (unsigned int p = 0; p < func->parameterCount(); p++)
