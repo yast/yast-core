@@ -1,0 +1,74 @@
+/**
+ * File:
+ *	Installation.ycp
+ *
+ * Module:
+ *	Installation
+ *
+ * Summary:
+ *	provide installation related information
+ *
+ * $Id$
+ *
+ * Author:
+ *	Klaus Kaempf <kkaempf@suse.de>
+ *
+ */
+
+{
+    module "Installation";
+
+    import "Mode";
+
+    // current scr handle
+    // used in installation.ycp and inst_finish.ycp
+
+    global integer scrHandle		= 0;
+
+    // usual mountpoint for the destination
+
+    global string destdir		= "/";
+
+    // usual mountpoint for the source (i.e. CD)
+
+    global string sourcedir		= "/var/adm/mount";
+
+    global string yast2dir		= "/var/lib/YaST2";
+
+    global string mountlog		= "/var/log/YaST2/y2logMount";
+
+    // see installation.ycp
+    global boolean immediate_prepdisk	= false;
+
+    // default language for the installation (from installation source)
+    global string defaultLanguage	= "en_US";
+
+    // encoding for the language
+    global string encoding		= "ISO-8859-1";
+
+    // remember if user was informed about text fallback
+    // see general/installation.ycp
+    global boolean shown_text_mode_warning = false;
+
+
+    //---------------------------------------------------------------
+    // constructor
+
+    global define void Installation ()
+    ``{
+
+	// get setup data from linuxrc
+	// check setup/descr/info for CD type
+
+	if (Mode::cont)
+	{
+	    destdir    = "/";
+	}
+	else if (Mode::initial)
+	{
+	    destdir = "/mnt";
+	}
+
+	defaultLanguage = Pkg::GetLocale();
+    }
+}
