@@ -889,15 +889,7 @@ PkgModuleFunctions::PkgUpdateAll (YCPList args)
 
     YCPList ret;
     ret->add (YCPInteger ((long long)stats.totalToInstall()));
-    if (stats.delete_unmaintained)
-    {
-	ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize() - stats.chk_dropped));
-    }
-    else
-    {
-	ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize()));
-    }
-
+    ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize()));
     return ret;
 }
 
