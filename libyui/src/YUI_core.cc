@@ -173,6 +173,10 @@ void YUI::topmostConstructorHasFinished()
 	    createUIThread();
 	}
     }
+    else
+    {
+	y2milestone( "Running without threads" );
+    }
 }
 
 
@@ -360,10 +364,14 @@ YRadioButtonGroup *YUI::findRadioButtonGroup( YContainerWidget * root, YWidget *
 // ----------------------------------------------------------------------
 
 
-void *start_ui_thread( void *ui_int )
+void *start_ui_thread( void * yui )
 {
-    YUI *ui_interpreter = ( YUI * ) ui_int;
-    ui_interpreter->uiThreadMainLoop();
+    YUI * ui= (YUI *) yui;
+
+    y2debug( "Starting UI thread" );
+    
+    if ( ui )
+	ui->uiThreadMainLoop();
     return 0;
 }
 

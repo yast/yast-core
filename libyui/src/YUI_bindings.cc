@@ -81,10 +81,10 @@ UISetConsoleFont( const YCPString & console_magic,
 {
     if ( YUI::instance() )
 	YUI::instance()->evaluateSetConsoleFont( console_magic,
-							   font,
-							   screen_map,
-							   unicode_map,
-							   encoding );
+						 font,
+						 screen_map,
+						 unicode_map,
+						 encoding );
     return YCPVoid();
 }
 
