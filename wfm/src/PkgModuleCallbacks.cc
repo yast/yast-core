@@ -47,24 +47,35 @@ using std::string;
 //-------------------------------------------------------------------
 // PkgModuleCallbacks
 
-static YCPSymbol progressCallback("",false);
-static YCPSymbol mediaChangeCallback("",false);
-static YCPSymbol mediaErrorCallback("",false);
+static std::string progressCallbackModule;
+static YCPSymbol progressCallbackSymbol("",false);
+static std::string mediaChangeCallbackModule;
+static YCPSymbol mediaChangeCallbackSymbol("",false);
+static std::string mediaErrorCallbackModule;
+static YCPSymbol mediaErrorCallbackSymbol("",false);
 
 void
 progressCallbackFunc (int percent, void *_wfm)
 {
-    YCPTerm callback = YCPTerm (progressCallback);
+    YCPTerm callback = YCPTerm (progressCallbackSymbol, progressCallbackModule);
     callback->add(YCPInteger (percent));
     ((YCPInterpreter *)_wfm)->evaluate (callback);
     return;
 }
 
-int
-mediaChangeCallbackFunc (int code, int expected, int current, void *_wfm)
+/**
+ * media change callback
+ *
+ * see packagemanager/src/inst/include/y2pm/InstSrc:_mediachangefunc
+ *
+ */
+static int
+mediaChangeCallbackFunc (const std::string& product, Url& url, int expected, int current, void *_wfm)
 {
-    YCPTerm callback = YCPTerm (mediaChangeCallback);
-    callback->add(YCPInteger (code));
+y2milestone ("mediaChangeCallbackFunc(%s,%s,%d,%d)", product.c_str(), url.asString().c_str(), expected, current);
+    YCPTerm callback = YCPTerm (mediaChangeCallbackSymbol, mediaChangeCallbackModule);
+    callback->add(YCPString (product));
+    callback->add(YCPString (url.asString()));
     callback->add(YCPInteger (expected));
     callback->add(YCPInteger (current));
     YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
@@ -73,11 +84,12 @@ mediaChangeCallbackFunc (int code, int expected, int current, void *_wfm)
     return ret->asInteger()->value();
 }
 
-int
-mediaErrorCallbackFunc (const std::string& error, void *_wfm)
+static int
+mediaErrorCallbackFunc (PMError error, void *_wfm)
 {
-    YCPTerm callback = YCPTerm (mediaErrorCallback);
-    callback->add(YCPString (error));
+y2milestone ("mediaErrorCallbackFunc(%d)", (int)error);
+    YCPTerm callback = YCPTerm (mediaErrorCallbackSymbol, mediaErrorCallbackModule);
+    callback->add(YCPInteger (error));
     YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
     if (!ret->isInteger())
 	return 0;
@@ -98,7 +110,19 @@ PkgModuleFunctions::SetProgressCallback(YCPList args)
     {
 	return YCPError ("Bad args to Pkg::SetProgressCallback");
     }
-    progressCallback = YCPSymbol (args->value(0)->asString()->value(), false);
+    string name = args->value(0)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	progressCallbackModule = name.substr (0, colonpos);
+	progressCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	progressCallbackModule = "";
+	progressCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("progressCallback (%s::%s)", progressCallbackModule.c_str(), progressCallbackSymbol->symbol().c_str());
     _y2pm.instTarget().setPackageInstallProgressCallback (progressCallbackFunc, _wfm);
     return YCPVoid();
 }
@@ -108,7 +132,6 @@ PkgModuleFunctions::SetProgressCallback(YCPList args)
  * @builtin Pkg::SourceSetMediaChangeCallback (integer source, string fun) -> nil
  *
  * set media change callback function
- * will call 'WFM::fun (int code, int currentnr, int expectednr)' from InstSrc
  */
 YCPValue
 PkgModuleFunctions::SourceSetMediaChangeCallback (YCPList args)
@@ -122,7 +145,19 @@ PkgModuleFunctions::SourceSetMediaChangeCallback (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::SourceSetMediaChangeCallback");
     }
-    mediaChangeCallback = YCPSymbol (args->value(1)->asString()->value(), false);
+    string name = args->value(1)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	mediaChangeCallbackModule = name.substr (0, colonpos);
+	mediaChangeCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	mediaChangeCallbackModule = "";
+	mediaChangeCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("mediaChangeCallback (%s::%s)", mediaChangeCallbackModule.c_str(), mediaChangeCallbackSymbol->symbol().c_str());
     (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
     return YCPVoid();
 }
@@ -145,7 +180,19 @@ PkgModuleFunctions::SourceSetMediaErrorCallback (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::SourceSetMediaErrorCallback");
     }
-    mediaErrorCallback = YCPSymbol (args->value(1)->asString()->value(), false);
+    string name = args->value(1)->asString()->value();
+    string::size_type colonpos = name.find("::");
+    if (colonpos != string::npos)
+    {
+	mediaErrorCallbackModule = name.substr (0, colonpos);
+	mediaErrorCallbackSymbol = YCPSymbol (name.substr (colonpos+2), false);
+    }
+    else
+    {
+	mediaErrorCallbackModule = "";
+	mediaErrorCallbackSymbol = YCPSymbol (name, false);
+    }
+y2milestone ("mediaErrorCallback (%s::%s)", mediaErrorCallbackModule.c_str(), mediaErrorCallbackSymbol->symbol().c_str());
     (InstSrcPtr::cast_away_const(source_id))->setMediaErrorCallback(mediaErrorCallbackFunc, _wfm);
     return YCPVoid();
 }
