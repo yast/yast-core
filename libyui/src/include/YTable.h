@@ -90,7 +90,7 @@ public:
     /**
      * Implements the ui command changeWidget with property given as term.
      */
-    YCPValue changeWidget( const YCPTerm & property, const YCPValue & newvalue );
+    YCPValue changeWidgetTerm( const YCPTerm & property, const YCPValue & newvalue );
 
     /**
      * Implements the ui command queryWidget

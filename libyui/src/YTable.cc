@@ -80,7 +80,7 @@ YCPValue YTable::changeWidget( const YCPSymbol & property,
 
 
 
-YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newvalue )
+YCPValue YTable::changeWidgetTerm( const YCPTerm & property, const YCPValue & newvalue )
 {
     string s = property->name();
     /*

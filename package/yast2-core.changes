@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb  6 08:27:01 CET 2004 - visnov@suse.cz
+
+- Fix UI::changeWidget for terms in `Table 
+
+-------------------------------------------------------------------
 Thu Feb  5 13:38:23 CET 2004 - msvec@suse.cz
 
 - log YCP file and line in dummy agent to limit testsuites output
