@@ -1,6 +1,6 @@
 @HEADER-COMMENT@
 
-# neededforbuild curl curl-devel dejagnu expect gpp hwinfo hwinfo-devel doxygen libpng libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel tcl yast2-devtools udev ElectricFence openslp openslp-devel perl-XML-Writer libxml2 libxslt libgcrypt libgpg-error pkgconfig docbook-xsl-stylesheets docbook_4 sgml-skel
+# neededforbuild curl curl-devel dejagnu expect gpp hwinfo hwinfo-devel doxygen libpng libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel tcl yast2-devtools udev wireless-tools ElectricFence openslp openslp-devel perl-XML-Writer libxml2 libxslt libgcrypt libgpg-error pkgconfig docbook-xsl-stylesheets docbook_4 sgml-skel
 
 @HEADER@
 Summary:	-
@@ -46,7 +46,7 @@ Provides:	yast2-core-translator-devel
 Obsoletes:	yast2-core-translator-devel
 Provides:	yast2-core-scr-soho-devel
 Obsoletes:	yast2-core-scr-soho-devel
-Requires:	liby2util-devel 
+Requires:	liby2util-devel
 Requires:	libxcrypt-devel hwinfo-devel ncurses-devel
 
 %description devel
