@@ -7,7 +7,7 @@ AM_CXXFLAGS = -DY2LOG=\"agent-losetup\"
 plugin_LTLIBRARIES = libpy2ag_losetup.la
 
 libpy2ag_losetup_la_SOURCES =		\
-	LosetupAgent.cc	LosetupAgent.h Y2CCLosetupAgent.h LosetupIO.c LosetupIO.h rmd160.h	\
+	LosetupAgent.cc	LosetupAgent.h Y2CCLosetupAgent.cc LosetupIO.c LosetupIO.h rmd160.h	\
 	rmd160.c y2loop.h loop.h y2lomount.h
 
 libpy2ag_losetup_la_LDFLAGS = -version-info 2:0
