@@ -573,6 +573,11 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("dvdram"), YCPBoolean (true));
     }
 
+    if (hd->is.pppoe)
+    {
+	out->add (YCPString ("pppoe"), YCPBoolean (true));
+    }
+
     // hd detail
 
     if (hd->detail)

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 20 11:03:13 CET 2003 - arvin@suse.de
+
+- added dsl modem (pppoe) detection to probe-agent (bug #23662)
+
+-------------------------------------------------------------------
 Wed Feb 19 14:38:58 CET 2003 - sh@suse.de
 
 - Fixed bug #23781: YCPthread problems during SuSEconfig
@@ -17,7 +22,7 @@ Mon Feb 17 17:14:36 CET 2003 - sh@suse.de
 -------------------------------------------------------------------
 Thu Feb 13 13:17:31 CET 2003 - sh@suse.de
 
-- Reduced log severity for UI shortcut conflicts 
+- Reduced log severity for UI shortcut conflicts
 
 -------------------------------------------------------------------
 Wed Feb 12 16:04:19 CET 2003 - kkaempf@suse.de
@@ -28,7 +33,7 @@ Wed Feb 12 16:04:19 CET 2003 - kkaempf@suse.de
 Tue Feb 11 16:07:55 CET 2003 - sh@suse.de
 
 - New generic way to find widgets belonging to a dialog, excluding
-  sub-dialogs: YDialog::widgets() 
+  sub-dialogs: YDialog::widgets()
 
 -------------------------------------------------------------------
 Fri Feb  7 13:07:35 CET 2003 - kkaempf@suse.de
@@ -40,7 +45,7 @@ Fri Feb  7 13:07:35 CET 2003 - kkaempf@suse.de
 Mon Feb  3 18:09:11 CET 2003 - sh@suse.de
 
 - V 2.7.11
-- New UI builtin: SetFunctionKeys() 
+- New UI builtin: SetFunctionKeys()
 
 -------------------------------------------------------------------
 Mon Jan 27 15:42:15 CET 2003 - arvin@suse.de
