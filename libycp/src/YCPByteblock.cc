@@ -91,20 +91,28 @@ tohex(int n)
 string
 YCPByteblockRep::toString() const
 {
-    const int bytes_per_line = 32;
+    // Actually we do not separate the parts by newlines but by spaces.
+    // It is because external agents want every command on a single line.
+    // (Yes, they are stupid.)
+    const long bytes_per_line = 32L;
     char line[bytes_per_line * 2 + 1];
 
     string ret = "#[";
-    for (long i = 0; i < len; i += 32)
+    // avoid reallocation, we know the exact size beforehand
+    ret.reserve (2 +
+		 (len / bytes_per_line) * (bytes_per_line * 2 + 1) +
+		 (len % bytes_per_line) * (bytes_per_line * 2) +
+		 1);
+    for (long i = 0; i < len; i += bytes_per_line)
     {
-	int bytes_this_line = min (32L, len-i);
+	int bytes_this_line = min (bytes_per_line, len-i);
 	for (int j = 0; j < bytes_this_line; j++) {
 	    line[j*2]   = tohex (bytes[i+j] >> 4);
 	    line[j*2+1] = tohex (bytes[i+j] & 0x0f);
 	}
 	line[bytes_this_line * 2]=0;
 	ret += line;
-	if (bytes_this_line == 32) ret += "\n";
+	if (bytes_this_line == bytes_per_line) ret += " ";
     }
     ret += "]";
     return ret;

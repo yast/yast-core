@@ -317,6 +317,10 @@ sub ParseYcp ($)
     {
 	return ParseYcpMap ($ycp_value);
     }
+    elsif ($ycp_value =~ /^\#\[/)
+    {
+	return ParseYcpByteblock ($ycp_value);
+    }
     elsif ($ycp_value =~ /^$/)
     {
 	return ("", "Unexpected end of input.", $ycp_value);
@@ -516,6 +520,33 @@ sub ParseYcpMap ($)
     return ($ret, "", $ycp_value);
 }
 
+# Internal
+# Parses a YCP byteblock. The input must start with "#["
+# Returns PerlYCPParserResult.
+sub ParseYcpByteblock ($)
+{
+    my $ycp_value = shift;
+    my $ret = "";
+    my $err;
+
+    #remove leading hash-bracket and whitespace;
+    $ycp_value =~ s/^\#\[\s*//;
+
+    # if there's a bracket, eat it and return
+    until ($ycp_value =~ s/^\]\s*//)
+    {
+	if ($ycp_value =~ s/^(([[:xdigit:]][[:xdigit:]])+)(\s|\n)*//)
+	{
+	    $ret .= pack ('H*', $1);
+	}
+	else
+	{
+	    return ("", "Unexpected characters in byteblock",$ycp_value);
+	}
+    }
+    return ($ret, "", $ycp_value);
+}
+
 
 ################################################################################
 #                         R E T U R N                                          #
@@ -535,10 +566,12 @@ C<Return (["arbitrarily", "complex", "data"]);>
 
 Sends a L</PerlYCPValue> to the partner YCP component.
 
-If a second argument exists and is true, all scalars are written as strings.
-Otherwise, scalars are interpreted this way: "true" or "false" are sent as
+If there's just one argment, scalars are interpreted this way:
+"true" or "false" are sent as
 booleans, integers or strings of digits are sent as integers, otherwise as
 strings.
+If a second argument exists and is true, all scalars are written as strings.
+If a second argument exists and is false, all scalars are written as byteblocks.
 
 To send a list, call Return(\@list), not Return(@list).
 Similarly for a map. You can use references to anonymous lists [] and hashes {}.
@@ -560,13 +593,24 @@ sub Return ($;$)
     }
     elsif (! $reftype)
     {
-	if (! $quote_everything && $val =~ /^(true|false|\s*-?\d+\s*)$/)
+	if (! defined $quote_everything)
 	{
-	    print "($val)";
+	    if ($val =~ /^(true|false|\s*-?\d+\s*)$/)
+	    {
+		print "($val)";
+	    }
+	    else
+	    {
+		print WriteYcpString($val);
+	    }
+	}
+	elsif ($quote_everything)
+	{
+	    print WriteYcpString($val);
 	}
 	else
 	{
-	    print WriteYcpString($val);
+	    print WriteYcpByteblock($val);
 	}
     }
     elsif ($reftype eq "SCALAR")
@@ -622,10 +666,19 @@ sub WriteYcpString ($)
     return '"'. join ("\\\\", @substrings) .'"';
 }
 
+# Internal
+# Returns a byteblock.
+sub WriteYcpByteblock ($)
+{
+    my $bb = shift;
+    return "#[". unpack ("H*", $bb) ."] ";
+}
+
 
 ################################################################################
 #                         L O G G I N G                                        #
 ################################################################################
+
 =head1 LOGGING
 
 If you are running in the main yast process and thus can afford to import

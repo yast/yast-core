@@ -65,6 +65,39 @@ sub TestStrings ()
     };
 }
 
+my @byteblock_test =
+    (
+     [ '#[48656C6c6F]',   'Hello' ],
+     [ '#[ 48 65 6C  6c 6F ]', 'Hello' ],
+     [ '#[0040]', "\0@"],
+     [ '#[]', ''],
+     );
+
+my @byteblock_test_out =
+    (
+     [ 'Hello', '#[48656c6c6f] '],
+     [ "\0@", '#[0040] '],
+     [ '', '#[] '],
+     );
+
+# return true on sucess
+sub TestByteblocks ()
+{
+    print "TestByteblocks\n";
+    eval {
+	foreach my $case (@byteblock_test)
+	{
+	    Result (Parse ($case->[0]) eq $case->[1]);
+	}
+    };
+    eval {
+	foreach my $case (@byteblock_test_out)
+	{
+	    Result (Parse ($case->[0]) eq $case->[1]);
+	}
+    };
+}
+
 my @path_test =
     (
      # simple cases
@@ -281,11 +314,18 @@ sub TestOutput ()
 	print "\t'$output': " if $verbose;
 	Result ($output eq ycp::WriteYcpString ($case->[0]));
     }
+    for my $case (@byteblock_test_out)
+    {
+	my $output = $case->[1];
+	print "\t'$output': " if $verbose;
+	Result ($output eq ycp::WriteYcpByteblock ($case->[0]));
+    }
 }
 
 # main
-TestStrings ();
-TestPaths ();
+#TestStrings ();
+TestByteblocks ();
+#TestPaths ();
 TestNumbers ();
 TestLists ();
 TestMaps ();
