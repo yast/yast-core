@@ -51,6 +51,10 @@ class PkgModuleFunctions
 	vector<InstSrcManager::ISrcId> _sources;
 	unsigned int _first_free_source_slot;
 
+	PMSelectablePtr getPackageSelectable (const std::string& name);
+	PMSelectablePtr getSelectionSelectable (const std::string& name);
+	PMSelectablePtr getPatchSelectable (const std::string& name);
+
     public:
 	// general
 	YCPValue InstSysMode (YCPList args);
@@ -86,6 +90,7 @@ class PkgModuleFunctions
 	bool SetSelectionString (std::string name);	// internal
 	YCPValue ClearSelection (YCPList args);
 	YCPValue ActivateSelections (YCPList args);
+	YCPValue SelectionsUpdateAll (YCPList args);
 
 	// package related
 	YCPValue GetPackages (YCPList args);
@@ -104,6 +109,12 @@ class PkgModuleFunctions
 	YCPValue IsManualSelection (YCPList args);
 	YCPValue SaveState (YCPList args);
 	YCPValue RestoreState (YCPList args);
+	YCPValue PkgUpdateAll (YCPList args);
+
+	YCPValue PkgInstall (YCPList args);
+	YCPValue PkgDelete (YCPList args);
+	YCPValue PkgSolve (YCPList args);
+	YCPValue PkgCommit (YCPList args);
 
 	YCPValue PkgPrepareOrder (YCPList args);
 	YCPValue PkgMediaSizes (YCPList args);

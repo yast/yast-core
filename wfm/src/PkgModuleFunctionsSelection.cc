@@ -39,6 +39,25 @@
 
 using std::string;
 
+
+/**
+ * helper function, get selectable by name
+ */
+
+PMSelectablePtr
+PkgModuleFunctions::getSelectionSelectable (const std::string& name)
+{
+    PMSelectablePtr selectable;
+    if (!name.empty())
+	selectable = _y2pm.selectionManager().getItem(name);
+    if (!selectable)
+    {
+	y2error ("Selection '%s' not found", name.c_str());
+    }
+    return selectable;
+}
+
+
 // ------------------------
 /**
    @builtin Pkg::GetSelections (symbol status, string category) -> ["sel1", "sel2", ...]
@@ -337,3 +356,31 @@ PkgModuleFunctions::ActivateSelections (YCPList args)
 
     return YCPBoolean (true);
 }
+
+/**
+ * @builtin PkgUpdateAll (bool only_newer) -> count
+ *
+ * mark all packages for installation which are installed and have
+ * an available candidate. if 'only_newer' == true, only affect
+ * packages which are newer, else affect all packages
+ *
+ * @return number of packages affected
+ *
+ * This will mark packages for installation *and* for deletion (if a
+ * package provides/obsoletes another package)
+ */
+
+YCPValue
+PkgModuleFunctions::SelectionsUpdateAll (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::SelectionsUpdateAll");
+    }
+
+    bool only_newer = args->value(0)->asBoolean()->value();
+
+    return YCPInteger (_y2pm.selectionManager().updateAllInstalled(only_newer));
+}
+

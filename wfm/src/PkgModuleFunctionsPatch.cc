@@ -39,6 +39,26 @@
 
 using std::string;
 
+
+/**
+ * helper function, get selectable by name
+ */
+
+PMSelectablePtr
+PkgModuleFunctions::getPatchSelectable (const std::string& name)
+{
+    PMSelectablePtr selectable;
+    if (!name.empty())
+	selectable = _y2pm.youPatchManager().getItem(name);
+    if (!selectable)
+    {
+	y2error ("Patch '%s' not found", name.c_str());
+    }
+    return selectable;
+}
+
+
+//-------------------------------------------------------------
 /**   
    @builtin Pkg::YouStatus() -> map
 

@@ -83,6 +83,13 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "IsManualSelection")	return IsManualSelection (args);
     else if (function == "SaveState")		return SaveState (args);
     else if (function == "RestoreState")	return RestoreState (args);
+    else if (function == "PkgUpdateAll")	return PkgUpdateAll (args);
+
+    else if (function == "PkgInstall")		return PkgInstall (args);
+    else if (function == "PkgDelete")		return PkgDelete (args);
+    else if (function == "PkgSolve")		return PkgSolve (args);
+    else if (function == "PkgCommit")		return PkgCommit (args);
+
     else if (function == "PkgPrepareOrder")	return PkgPrepareOrder (args);
     else if (function == "PkgMediaSizes")	return PkgMediaSizes (args);
     else if (function == "PkgNextDelete")	return PkgNextDelete (args);
@@ -93,6 +100,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SetSelection")	return SetSelection (args);
     else if (function == "ClearSelection")	return ClearSelection (args);
     else if (function == "ActivateSelections")	return ActivateSelections (args);
+    else if (function == "SelectionsUpdateAll")	return SelectionsUpdateAll (args);
     // patch related functions
     else if (function == "YouStatus")		return YouStatus (args);
     else if (function == "YouGetServers")	return YouGetServers (args);

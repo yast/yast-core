@@ -48,6 +48,53 @@ static std::list<PMPackagePtr>::const_iterator deleteIt;
 static std::list<PMPackagePtr> packs_to_install;
 static std::list<PMPackagePtr>::const_iterator installIt;
 
+/**
+ * helper function, get name from args
+ */
+static std::string
+getName (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return "";
+    }
+    return args->value(0)->asString()->value();
+}
+
+/**
+ * helper function, get selectable by name
+ */
+
+PMSelectablePtr
+PkgModuleFunctions::getPackageSelectable (const std::string& name)
+{
+    PMSelectablePtr selectable;
+    if (!name.empty())
+	selectable = _y2pm.packageManager().getItem(name);
+    if (!selectable)
+    {
+	y2error ("Package '%s' not found", name.c_str());
+    }
+    return selectable;
+}
+
+
+static PMPackagePtr
+getTheObject (PMSelectablePtr selectable)
+{
+    PMPackagePtr package;
+    if (selectable)
+    {
+	package = selectable->theObject();
+	if (!package)
+	{
+	    y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
+	}
+    }
+    return package;
+}
+
 // ------------------------
 /**   
    @builtin Pkg::PkgPrepareOrder () -> [ delcount, inscount ]
@@ -158,13 +205,8 @@ PkgModuleFunctions::PkgNextInstall (YCPList args)
 YCPValue
 PkgModuleFunctions::IsProvided (YCPList args)
 {
-    if ((args->size() != 1)
-        || !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::IsProvided");
-    }
 #warning must check tags, not package names
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
     if (!selectable)
 	return YCPBoolean (false);
     if (selectable->installedObj() == 0)
@@ -184,13 +226,8 @@ PkgModuleFunctions::IsProvided (YCPList args)
 YCPValue
 PkgModuleFunctions::IsSelected (YCPList args)
 {
-    if ((args->size() != 1)
-        || !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::IsSelected");
-    }
 #warning must check tags, not package names
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
     if (!selectable)
 	return YCPBoolean (false);
     if (selectable->to_install())
@@ -213,13 +250,8 @@ PkgModuleFunctions::IsSelected (YCPList args)
 YCPValue
 PkgModuleFunctions::IsAvailable (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::IsAvailable");
-    }
 #warning must check tags, not package names
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
     if (!selectable)
 	return YCPBoolean (false);
     if (selectable->candidateObj() == 0)
@@ -232,7 +264,7 @@ PkgModuleFunctions::IsAvailable (YCPList args)
 bool
 PkgModuleFunctions::DoProvideString (std::string name)
 {
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    PMSelectablePtr selectable = getPackageSelectable(name);
     if (!selectable)
     {
 	//y2error ("Provide: package '%s' not found", name.c_str());
@@ -289,7 +321,7 @@ PkgModuleFunctions::DoProvide (YCPList args)
 bool
 PkgModuleFunctions::DoRemoveString (std::string name)
 {
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
+    PMSelectablePtr selectable = getPackageSelectable(name);
     if (!selectable)
     {
 	y2error ("Remove: package '%s' not found", name.c_str());
@@ -352,21 +384,10 @@ PkgModuleFunctions::DoRemove (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSummary (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::PkgSummary");
-    }
-    string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	return YCPError ("Package '"+name+"' not found");
-    }
-    PMPackagePtr package = selectable->theObject();
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
-	return YCPError ("Package '"+name+"' no object");
+	return YCPVoid();
     }
 
     return YCPString (package->summary());
@@ -382,21 +403,10 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgVersion (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::PkgSummary");
-    }
-    string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	return YCPError ("Package '"+name+"' not found");
-    }
-    PMPackagePtr package = selectable->theObject();
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
-	return YCPError ("Package '"+name+"' no object");
+	return YCPVoid();
     }
 
     return YCPString (package->edition().as_string());
@@ -412,21 +422,10 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSize (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::PkgSize");
-    }
-    string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	return YCPError ("Package '"+name+"' not found");
-    }
-    PMPackagePtr package = selectable->theObject();
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
-	return YCPError ("Package '"+name+"' no object");
+	return YCPVoid();
     }
 
     return YCPInteger ((long long)(package->size()));
@@ -442,21 +441,10 @@ PkgModuleFunctions::PkgSize (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgLocation (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::PkgLocation");
-    }
-    string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	return YCPError ("Package '"+name+"' not found");
-    }
-    PMPackagePtr package = selectable->theObject();
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
-	return YCPError ("Package '"+name+"' no object");
+	return YCPVoid();
     }
     const std::string location = package->location();
     string::size_type archpos = location.find(' ');
@@ -484,21 +472,9 @@ PkgModuleFunctions::PkgLocation (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgMediaNr (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     {
-	return YCPError ("Bad args to Pkg::PkgMediaNr");
-    }
-    string name = args->value(0)->asString()->value();
-    PMSelectablePtr selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	return YCPError ("Package '"+name+"' not found");
-    }
-    PMPackagePtr package = selectable->theObject();
-    if (!package)
-    {
-	return YCPError ("Package '"+name+"' no object");
+	return YCPVoid();
     }
     return YCPInteger (package->medianr());
 }
@@ -551,20 +527,7 @@ PkgModuleFunctions::IsManualSelection (YCPList args)
 }
 
 // ------------------------
-/**   
-   @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
 
-   return list of packages (["pkg1", "pkg2", ..."] if names_only==true,
-    ["pkg1 version release arch", "pkg1 version release arch", ... if
-    names_only == false]
-
-   'which' defines which packages are returned:
-
-   `installed	all installed packages
-   `selected	all selected but not yet installed packages
-   `available	all available packeges (from the installation source)
-
-*/
 /* helper functions */
 static void
 pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
@@ -583,6 +546,21 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
     }
     return;
 }
+
+/**   
+   @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
+
+   return list of packages (["pkg1", "pkg2", ..."] if names_only==true,
+    ["pkg1 version release arch", "pkg1 version release arch", ... if
+    names_only == false]
+
+   'which' defines which packages are returned:
+
+   `installed	all installed packages
+   `selected	all selected but not yet installed packages
+   `available	all available packeges (from the installation source)
+
+*/
 
 YCPValue
 PkgModuleFunctions::GetPackages(YCPList args)
@@ -636,3 +614,94 @@ PkgModuleFunctions::GetPackages(YCPList args)
 
     return packages;
 }
+
+
+/**
+ * @builtin PkgUpdateAll (bool only_newer) -> count
+ *
+ * mark all packages for installation which are installed and have
+ * an available candidate. if 'only_newer' == true, only affect
+ * packages which are newer, else affect all packages
+ *
+ * @return number of packages affected
+ *
+ * This will mark packages for installation *and* for deletion (if a
+ * package provides/obsoletes another package)
+ */
+
+YCPValue
+PkgModuleFunctions::PkgUpdateAll (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::PkgUpdateAll");
+    }
+
+    bool only_newer = args->value(0)->asBoolean()->value();
+
+    return YCPInteger (_y2pm.packageManager().updateAllInstalled(only_newer));
+}
+
+
+/**   
+   @builtin Pkg::PkgInstall (string package) -> boolean
+
+   Select package for installation
+
+*/
+YCPValue
+PkgModuleFunctions::PkgInstall (YCPList args)
+{
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    if (!selectable)
+    {
+	return YCPBoolean (false);
+    }
+    return YCPBoolean (selectable->user_set_install());
+}
+
+
+/**   
+   @builtin Pkg::PkgDelete (string package) -> boolean
+
+   Select package for deletion
+
+*/
+YCPValue
+PkgModuleFunctions::PkgDelete (YCPList args)
+{
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    if (!selectable)
+    {
+	return YCPBoolean (false);
+    }
+    return YCPBoolean (selectable->user_set_delete());
+}
+
+
+/**   
+   @builtin Pkg::PkgSolve () -> boolean
+
+   Solve package dependencies
+
+*/
+YCPValue
+PkgModuleFunctions::PkgSolve (YCPList args)
+{
+    return YCPBoolean (true);
+}
+
+
+/**   
+   @builtin Pkg::PkgCommit () -> boolean
+
+   Commit package changes (actually install/delete packages) 
+
+*/
+YCPValue
+PkgModuleFunctions::PkgCommit (YCPList args)
+{
+    return YCPBoolean (false);
+}
+
