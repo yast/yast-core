@@ -242,6 +242,12 @@ YCPValueRep::equal (const YCPValue& v) const
 YCPOrder
 YCPValueRep::compare (const YCPValue& v, bool rl) const
 {
+    if (v.isNull())
+    {
+	ycp2error ("Internal error: YCPValueRep::compare(NULL)");
+	return YO_EQUAL;
+    }
+
     if (valuetype() == v->valuetype())
     {
 	switch (valuetype()) {
