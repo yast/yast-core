@@ -12,8 +12,8 @@
 
    File:       parser.yy
 
-   Author:     Klaus K�pf <kkaempf@suse.de>
-   Maintainer: Klaus K�pf <kkaempf@suse.de>
+   Author:     Klaus Kämpf <kkaempf@suse.de>
+   Maintainer: Klaus Kämpf <kkaempf@suse.de>
 
 
    Implementation rules
@@ -1195,20 +1195,22 @@ statement:
 	    {
 		start_block (p_parser, Type::Unspec);
 
-		SymbolTable *globalTable = p_parser->scanner()->globalTable();
-		SymbolTable *localTable = p_parser->scanner()->localTable();
+		SymbolTable **saved_table = new SymbolTable *[2];
+		saved_table[0] = p_parser->scanner()->globalTable();
+		saved_table[1] = p_parser->scanner()->localTable();
 		// evaluate following block in different name space
 		p_parser->scanner()->initTables ($1.v.tval->sentry()->table(), 0);
 
 		y2warning ("Using incompatible coversion");
 		// save environment tables for later restore
-		$2.l = (int)localTable;
-		$2.v.val = (void *)globalTable;
+		$2.v.val = (void *)saved_table;
 	    }
 	block_end
 	    {
 		// restore environment
-		p_parser->scanner()->initTables ((SymbolTable *)($2.v.val), (SymbolTable *)($2.l));
+		SymbolTable **saved_table = (SymbolTable **)$2.v.val;
+		p_parser->scanner()->initTables (saved_table[0], saved_table[1]);
+		delete[] saved_table;
 
 		if ($4.t == 0)
 		{
