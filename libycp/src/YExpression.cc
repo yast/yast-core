@@ -893,9 +893,6 @@ YEPropagate::YEPropagate (std::istream & str)
     , m_to (Bytecode::readType (str))
 {
     m_value = Bytecode::readCode (str);
-    
-    // throw away type info
-    m_from = Type::Void;
 }
 
 
