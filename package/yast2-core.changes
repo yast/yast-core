@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 24 17:28:42 CET 2003 - gs@suse.de
+
+- setLanguage: call nl_langinfo (bug #23348) 
+
+-------------------------------------------------------------------
 Mon Feb 24 17:06:26 CET 2003 - kkaempf@suse.de
 
 - finally fix Pkg:: functions to act upon tag string
