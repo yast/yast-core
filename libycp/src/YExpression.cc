@@ -2720,7 +2720,7 @@ YEFunctionPointer::evaluate (bool cse)
 	ycp2error ("Function pointer (%s) is %s"
 	    , m_sentry->toString().c_str()
 	    , ptr.isNull () ? "NULL" : ptr->toString ().c_str ());
-	return YCPNull();
+	return YCPVoid ();
     }
     
     SymbolEntryPtr ptr_sentry = ptr->asReference ()->entry ();

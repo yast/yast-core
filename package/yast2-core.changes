@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 16 18:38:07 CEST 2004 - visnov@suse.cz
+
+- return 'nil' if function pointer cannot be used instead of NULL (#42330)
+
+-------------------------------------------------------------------
 Mon Aug 16 18:14:53 CEST 2004 - visnov@suse.cz
 
 - fix is() for function pointers (#43848) 
