@@ -6,8 +6,6 @@
     Creator:	kkaempf@suse.de
     Maintainer:	kkaempf@suse.de
 
-    Version 1.1, 18-01-2000, changed for new libhd api
-
     $Id$
 */
 
