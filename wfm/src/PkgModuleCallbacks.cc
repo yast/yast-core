@@ -47,13 +47,12 @@ using std::string;
 //-------------------------------------------------------------------
 // PkgModuleCallbacks
 
-static YCPTerm progressCallbackTerm("",false);
+static YCPSymbol progressCallback("",false);
 
 void
 progressCallbackFunc (int percent, void *_wfm)
 {
-    y2milestone ("progressCallbackFunc(%d)", percent);
-    YCPTerm callback = progressCallbackTerm;
+    YCPTerm callback = YCPTerm (progressCallback);
     callback->add(YCPInteger (percent));
     ((YCPInterpreter *)_wfm)->evaluate (callback);
     return;
@@ -68,13 +67,12 @@ progressCallbackFunc (int percent, void *_wfm)
 YCPValue
 PkgModuleFunctions::SetProgressCallback(YCPList args)
 {
-    y2milestone ("SetProgressCallback");
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
     {
 	return YCPError ("Bad args to Pkg::SetProgressCallback");
     }
-    progressCallbackTerm = YCPTerm (args->value(0)->asString()->value(), false);
+    progressCallback = YCPSymbol (args->value(0)->asString()->value(), false);
     _y2pm.instTarget().setPackageInstallProgressCallback (progressCallbackFunc, _wfm);
     return YCPVoid();
 }
