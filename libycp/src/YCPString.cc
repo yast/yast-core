@@ -10,10 +10,10 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPString.cc
+   File:	YCPString.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 /*
@@ -30,8 +30,14 @@
 
 // YCPStringRep
 
-YCPStringRep::YCPStringRep(string s)
-    : v(s)
+YCPStringRep::YCPStringRep (string s)
+    : v (s)
+{
+}
+
+
+YCPStringRep::YCPStringRep (const char* s)
+    : v (s ? s : "")
 {
 }
 
@@ -42,16 +48,16 @@ string YCPStringRep::value() const
 }
 
 
+const char* YCPStringRep::value_cstr() const
+{
+    return v.c_str();
+}
+
+
 YCPOrder YCPStringRep::compare(const YCPString& s) const
 {
     if (v == s->v) return YO_EQUAL;
     else return v < s->v ? YO_LESS : YO_GREATER;
-}
-
-
-const char *YCPStringRep::value_cstr() const
-{
-    return v.c_str();
 }
 
 
