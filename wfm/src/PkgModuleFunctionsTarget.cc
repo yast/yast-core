@@ -88,9 +88,12 @@ PkgModuleFunctions::TargetFinish (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::TargetInstall(string name) -> bool
+ * @builtin Pkg::TargetInstall(string filename) -> bool
  *
- * install package by name
+ * install rpm package by filename
+ * the filename must be an absolute path to a file which can
+ * be accessed by the package manager.
+ *
  * !! uses callbacks !! 
  * You should do an 'import "PackageCallbacks"' before !
  */

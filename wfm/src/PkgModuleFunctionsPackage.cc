@@ -103,10 +103,10 @@ getTheCandidate (PMSelectablePtr selectable)
 #endif
 // ------------------------
 /**
-   @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
-     return cumulated sizes (in kb !) to be installed from different media
-
-     Returns the install size per media, not the archivesize !!
+ *  @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
+ *    return cumulated sizes (in kb !) to be installed from different media
+ *
+ *   Returns the install size per media, not the archivesize !!
  */
 YCPValue
 PkgModuleFunctions::PkgMediaSizes (YCPList args)
