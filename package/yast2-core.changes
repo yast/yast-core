@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb  6 18:46:00 CET 2004 - sh@suse.de
+
+- Re-enabled macro player with new interpreter  
+
+-------------------------------------------------------------------
 Fri Feb  6 08:27:01 CET 2004 - visnov@suse.cz
 
 - Fix UI::changeWidget for terms in `Table 
