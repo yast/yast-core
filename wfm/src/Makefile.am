@@ -5,9 +5,6 @@
 AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
 	-DLOCALEDIR=\"${localedir}\"  -fno-inline
 
-# to look for the packagemanager in the prefix first (really first?)
-AM_LDFLAGS = -L${libdir}
-
 plugin_LTLIBRARIES = libpy2wfm.la
 noinst_LTLIBRARIES = liby2wfm.la
 
@@ -16,6 +13,7 @@ liby2wfm_la_SOURCES =				\
 	Y2CCWFM.cc Y2CCWFM.h			\
 	WFM.cc WFM.h				\
 	WFMSubAgent.cc WFMSubAgent.h
+
 
 liby2wfm_la_LDFLAGS = -version-info 2:0
 liby2wfm_la_LIBADD = \
@@ -41,4 +39,11 @@ INCLUDES =					\
 	-I$(srcdir)/../../libyui/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
 	-I$(includedir)
+
+wfmincludedir = $(includedir)/wfm
+
+wfminclude_HEADERS =				\
+	Y2WFMComponent.h			\
+	WFMSubAgent.h
+
 
