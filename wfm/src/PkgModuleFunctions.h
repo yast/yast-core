@@ -34,6 +34,7 @@
 #include <y2pm/PMSelectablePtr.h>
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstSrcManager.h>
+#include <y2pm/PMYouServers.h>
 
 class YCPCallbacks
 {
@@ -247,6 +248,6 @@ class PkgModuleFunctions
 
     protected:
         YCPMap YouPatch( const PMYouPatchPtr &patch );
-
+        PMYouServer convertServerObject( const YCPMap &serverMap );
 };
 #endif // PkgModuleFunctions_h

@@ -168,7 +168,12 @@ PkgModuleFunctions::YouSetUserPassword (YCPList args)
 
    get urls of patch servers
 
-   @param list(string)  list of strings where results are stored.
+   @param list(map)  list of maps where results are stored. The maps have the following fields
+                     set:
+
+                       "url"        URL of server.
+                       "name"       Descriptive name of server.
+                       "directory"  Directory file used to get list of patches. 
 
    @return ""      success
            "args"  bad args
@@ -196,12 +201,37 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     YCPList result = YCPList( args->value( 0 )->asList() );
     std::list<PMYouServer>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
-      result->add ( YCPString( (*it).url ) );
+      YCPMap serverMap;
+      serverMap->add( YCPString( "url" ), YCPString( (*it).url().asString() ) );
+      serverMap->add( YCPString( "name" ), YCPString( (*it).name() ) );
+      serverMap->add( YCPString( "directory" ), YCPString( (*it).directory() ) );
+      result->add( serverMap );
     }
 
     return YCPString( "" );
 }
 
+
+PMYouServer
+PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
+{
+    string url;
+    string name;
+    string dir;
+
+    YCPValue urlValue = serverMap->value( YCPString( "url" ) );
+    if ( !urlValue.isNull() ) url = urlValue->asString()->value();
+    
+    YCPValue nameValue = serverMap->value( YCPString( "name" ) );
+    if ( !nameValue.isNull() ) name = nameValue->asString()->value();
+
+    YCPValue dirValue = serverMap->value( YCPString( "directory" ) );
+    if ( !dirValue.isNull() ) dir = dirValue->asString()->value();
+
+    INT << "SERVER: " << url << " " << dir << endl;
+
+    return PMYouServer( Url( url ), name, dir );
+}
 
 
 /**
@@ -209,7 +239,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 
   retrieve directory file listing all available patches
   
-  @param string  url of patch server.
+  @param string  you server map as returned from YouGetServers.
   
   @return ""       success
           "url"    url not valid
@@ -219,15 +249,12 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetDirectory (YCPList args)
 {
-    if ( ( args->size() != 1) || !args->value(0)->isString() )
+    if ( ( args->size() != 1) || !args->value(0)->isMap() )
     {
 	return YCPString ("args");
     }
-    string urlstr = args->value(0)->asString()->value_cstr();
-    if ( !Url( urlstr ).isValid() ) return YCPString( "url" );
 
-    PMYouServer server;
-    server.url = urlstr;
+    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
 
     _last_error =
         _y2pm.youPatchManager().instYou().retrievePatchDirectory( server );
@@ -259,16 +286,13 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
-    if ( ( args->size() != 3) || !args->value(0)->isString() ||
+    if ( ( args->size() != 3) || !args->value(0)->isMap() ||
          !args->value(1)->isBoolean() || !args->value(2)->isBoolean() )
     {
 	return YCPString ("args");
     }
-    string urlstr = args->value(0)->asString()->value_cstr();
-    if ( !Url( urlstr ).isValid() ) return YCPString( "url" );
 
-    PMYouServer server;
-    server.url = urlstr;
+    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
 
     bool reload = args->value(1)->asBoolean()->value();
     bool checkSig = args->value(2)->asBoolean()->value();
