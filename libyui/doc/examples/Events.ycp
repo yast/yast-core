@@ -209,20 +209,20 @@
 
 	if ( event != nil )
 	{
-	    UI::ChangeWidget(`id(`event_display), `Value, formatEvent( event ) );
+	    UI::ChangeWidget(`event_display, `Value, formatEvent( event ) );
 	}
 
 	if ( event["ID"]:nil == `bill )
 	{
-	    if ( ! UI::QueryWidget(`id(`send_mafioso), `Value ) )
-		UI::ChangeWidget(`id(`send_mafioso), `Value, true );
+	    if ( ! UI::QueryWidget(`send_mafioso, `Value ) )
+		UI::ChangeWidget(`send_mafioso, `Value, true );
 	}
 	else if ( event["ID"]:nil == `send_mafioso )
 	{
-	    if ( UI::QueryWidget(`id(`bill ), `Value ) &&
-		 ! UI::QueryWidget(`id(`send_mafioso), `Value ) )
+	    if ( UI::QueryWidget(`bill, `Value ) &&
+		 ! UI::QueryWidget(`send_mafioso, `Value ) )
 	    {
-		UI::ChangeWidget(`id(`cash), `Value, true );
+		UI::ChangeWidget(`cash, `Value, true );
 	    }
 	}
 
