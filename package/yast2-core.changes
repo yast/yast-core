@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug 15 12:01:15 CEST 2002 - arvin@suse.de
+
+- added handling of hotplug entry to probe agent (bug #13571)
+
+-------------------------------------------------------------------
 Tue Aug 13 17:59:52 CEST 2002 - arvin@suse.de
 
 - fixed return value of regexpsub for case of no match

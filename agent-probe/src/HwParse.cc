@@ -71,6 +71,25 @@ boot2string (hd_boot_arch_t boot_arch)
     return s;
 }
 
+// hd_hotplug_t -> string
+//
+static char*
+hotplug2string (hd_hotplug_t hotplug)
+{
+    char* s;
+    switch (hotplug)
+    {
+	case hp_none:     s = 0; break;
+	case hp_pcmcia:   s = "pcmcia"; break;
+	case hp_cardbus:  s = "cardbus"; break;
+	case hp_pci:      s = "pci"; break;
+	case hp_usb:      s = "usb"; break;
+	case hp_ieee1394: s = "ieee1394"; break;
+	default: s = "unknown";
+    }
+    return s;
+}
+
 // enum access_type to YCPString
 //
 static YCPString
@@ -87,6 +106,7 @@ access2string (unsigned int acc)
     }
     return YCPString (s);
 }
+
 
 /* --------------------------------------------------------------------------------------------------*/
 /* Now the member functions  */
@@ -638,6 +658,13 @@ HwProbe::hd2value (hd_t *hd)
 	{
 	    out->add (YCPString ("func_id"), YCPInteger (hd->func));
 	}
+    }
+
+    // hotplug
+    s = hotplug2string (hd->hotplug);
+    if (s)
+    {
+	out->add (YCPString ("hotplug"), YCPString (s));
     }
 
     // device name
