@@ -1,0 +1,18 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean a
+    // list <string> NL
+    // list <string> N
+    // list <string> L1
+    // list <string> L2
+    // list <string> L3
+    // filename: "tests/types/nillist.ycp"
+    boolean a = true;
+    list <string> NL = [nil];
+    list <string> N = nil;
+    list <string> L1 = a ? NL : N;
+    list <string> L2 = a ? [nil] : N;
+    list <string> L3 = a ? [nil] : nil;
+}
+----------------------------------------------------------------------
