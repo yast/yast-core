@@ -26,9 +26,9 @@ Parsed:
 ----------------------------------------------------------------------
 (flatten ([[1, [2, [3, [4]]]]]) == [1, [2, [3, [4]]]])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_IV.ycp:67 No match for 'flatten : <unspec> (list)'
-[Interpreter] tests/builtin/Builtin_IV.ycp:67 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin_IV.ycp:67 'flatten : list <<T>> (const list <list <<T>>>)' 
+[Parser] tests/builtin/Builtin_IV.ycp:67 No match for 'flatten : <unspec> (list)'
+[Parser] tests/builtin/Builtin_IV.ycp:67 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin_IV.ycp:67 'flatten : list <<T>> (const list <list <<T>>>)'
 [Parser] tests/builtin/Builtin_IV.ycp:67 Wrong parameters in call to flatten(...)
 [Parser] tests/builtin/Builtin_IV.ycp:67 Expected '(const list <list <<T>>>)', seen '(list)'.
 Parsed:

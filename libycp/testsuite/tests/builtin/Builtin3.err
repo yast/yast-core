@@ -1,9 +1,9 @@
-[Scanner] tests/builtin/Builtin3.ycp:19 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:19 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 ([1, 2, 3][1]:nil == 2)
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin3.ycp:29 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:29 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -33,8 +33,8 @@ Parsed:
 ----------------------------------------------------------------------
 true
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin3.ycp:44 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:44 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:44 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:44 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -56,9 +56,9 @@ Parsed:
     return (/* any -> list */node7[0]:nil[1]:nil == node4);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:56 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -80,10 +80,10 @@ Parsed:
     return (/* any -> list *//* any -> list */node7[0]:nil[1]:nil[0]:nil == node2);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin3.ycp:68 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov  4 15:03:36 CET 2004 - visnov@suse.cz
+
+- report file and line number for builtins (#43830) 
+
+-------------------------------------------------------------------
 Wed Nov  3 18:01:15 CET 2004 - visnov@suse.cz
 
 - create libycpvalues library 

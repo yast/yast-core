@@ -75,9 +75,9 @@ Parsed:
 ----------------------------------------------------------------------
 prepend ([], 8)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List.ycp:48 No match for 'prepend : <unspec> (list <const integer>)'
-[Interpreter] tests/builtin/Builtin-List.ycp:48 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin-List.ycp:48 'prepend : list <<T>> (const list <<T>>, const <T>)' 
+[Parser] tests/builtin/Builtin-List.ycp:48 No match for 'prepend : <unspec> (list <const integer>)'
+[Parser] tests/builtin/Builtin-List.ycp:48 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-List.ycp:48 'prepend : list <<T>> (const list <<T>>, const <T>)'
 [Parser] tests/builtin/Builtin-List.ycp:48 Wrong parameters in call to prepend(...)
 [Parser] tests/builtin/Builtin-List.ycp:48 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>)'.
 Parsed:
@@ -85,9 +85,9 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-List.ycp:48 Parser error
-[Interpreter] tests/builtin/Builtin-List.ycp:50 No match for 'prepend : <unspec> (list <const integer>, const integer, const integer)'
-[Interpreter] tests/builtin/Builtin-List.ycp:50 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin-List.ycp:50 'prepend : list <<T>> (const list <<T>>, const <T>)' 
+[Parser] tests/builtin/Builtin-List.ycp:50 No match for 'prepend : <unspec> (list <const integer>, const integer, const integer)'
+[Parser] tests/builtin/Builtin-List.ycp:50 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-List.ycp:50 'prepend : list <<T>> (const list <<T>>, const <T>)'
 [Parser] tests/builtin/Builtin-List.ycp:50 Wrong parameters in call to prepend(...)
 [Parser] tests/builtin/Builtin-List.ycp:50 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>, const integer, const integer)'.
 Parsed:
@@ -245,7 +245,7 @@ Parsed:
 ----------------------------------------------------------------------
 "** change **"
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:124 Warning: change(...) is deprecated, please fix
+[Parser] tests/builtin/Builtin-List.ycp:124 Warning: change(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 change ([1, 4], 8)
@@ -268,27 +268,27 @@ Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:135 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List.ycp:135 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][-1]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:136 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List.ycp:136 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][0]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:137 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List.ycp:137 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][1]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:138 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List.ycp:138 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][3]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-List.ycp:139 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List.ycp:139 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> string */[1, "two"][0]:"wrong type"

@@ -1,4 +1,4 @@
-[Scanner] tests/expressions/uninitialized.ycp:2 Warning: Identifier 'label' might be used uninitialized
+[Parser] tests/expressions/uninitialized.ycp:2 Warning: Identifier 'label' might be used uninitialized
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -83,7 +83,7 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:68 Parser error
-[Scanner] tests/errors/Notifications.ycp:81 Warning: 'select ()' is deprecated
+[Parser] tests/errors/Notifications.ycp:81 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -116,9 +116,9 @@ Parsed:
 ----------------------------------------------------------------------
 mergestring (["abc", "dev", "ghi", ""], "/")
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:58 No match for 'mergestring : <unspec> (list, string)'
-[Interpreter] tests/builtin/Builtin-String.ycp:58 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin-String.ycp:58 'mergestring : string (const list <string>, string)' 
+[Parser] tests/builtin/Builtin-String.ycp:58 No match for 'mergestring : <unspec> (list, string)'
+[Parser] tests/builtin/Builtin-String.ycp:58 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-String.ycp:58 'mergestring : string (const list <string>, string)'
 [Parser] tests/builtin/Builtin-String.ycp:58 Wrong parameters in call to mergestring(...)
 [Parser] tests/builtin/Builtin-String.ycp:58 Expected '(const list <string>, string)', seen '(list, string)'.
 Parsed:

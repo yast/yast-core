@@ -1,4 +1,4 @@
-[Scanner] tests/errors/BadCode.ycp:2 Warning: Empty statement after 'if'
+[Parser] tests/errors/BadCode.ycp:2 Warning: Empty statement after 'if'
 Parsed:
 ----------------------------------------------------------------------
 {

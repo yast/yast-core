@@ -9,11 +9,11 @@ Parsed:
     return MyTerm;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin11.ycp:30 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin11.ycp:31 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin11.ycp:32 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin11.ycp:33 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin11.ycp:34 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:30 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:31 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:32 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:33 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:34 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -26,8 +26,8 @@ Parsed:
     return (((((/* any -> symbol */MyTerm[0]:nil == `Austria) && (/* any -> symbol */MyTerm[1]:nil == `Belgium)) && (/* any -> symbol */NewTerm[0]:nil == `Austria)) && (/* any -> symbol */NewTerm[1]:nil == `Belgium)) && (/* any -> symbol */NewTerm[size (MyTerm)]:nil == `China));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin11.ycp:46 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin11.ycp:47 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:46 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin11.ycp:47 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

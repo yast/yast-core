@@ -1,4 +1,4 @@
-[Scanner] impinc.inc:2 Warning: Ignoring self-import
+[Parser] impinc.inc:2 Warning: Ignoring self-import
 Parsed:
 ----------------------------------------------------------------------
 {

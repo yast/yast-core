@@ -1,4 +1,4 @@
-[Scanner] tests/errors/Notifications_II.ycp:42 Warning: 'select ()' is deprecated
+[Parser] tests/errors/Notifications_II.ycp:42 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -20,7 +20,7 @@ Parsed:
     return (node7[2]:nil == nil);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/errors/Notifications_II.ycp:54 Warning: 'select ()' is deprecated
+[Parser] tests/errors/Notifications_II.ycp:54 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

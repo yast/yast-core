@@ -30,9 +30,9 @@ Parsed:
 ----------------------------------------------------------------------
 (sformat ("I'll go th the event %1 today", sformat ("Abi %1", 99)) == "I'll go th the event Abi 99 today")
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:66 No match for 'sformat : <unspec> (const integer)'
-[Interpreter] tests/builtin/Builtin_III.ycp:66 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin_III.ycp:66 'sformat : string (string, ...)' 
+[Parser] tests/builtin/Builtin_III.ycp:66 No match for 'sformat : <unspec> (const integer)'
+[Parser] tests/builtin/Builtin_III.ycp:66 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin_III.ycp:66 'sformat : string (string, ...)'
 [Parser] tests/builtin/Builtin_III.ycp:66 Wrong parameters in call to sformat(...)
 [Parser] tests/builtin/Builtin_III.ycp:66 Expected '(string, ...)', seen '(const integer)'.
 Parsed:

@@ -1,4 +1,4 @@
-[Scanner] tests/types/parameter.ycp:4 Warning: Empty function definition
+[Parser] tests/types/parameter.ycp:4 Warning: Empty function definition
 Parsed:
 ----------------------------------------------------------------------
 {

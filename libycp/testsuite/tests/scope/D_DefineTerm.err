@@ -76,7 +76,7 @@ else
     return false;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/scope/D_DefineTerm.ycp:64 Warning: Useless 'global' outside of module
+[Parser] tests/scope/D_DefineTerm.ycp:64 Warning: Useless 'global' outside of module
 Parsed:
 ----------------------------------------------------------------------
 {

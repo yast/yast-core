@@ -1,5 +1,5 @@
-[Scanner] tests/types/complex.ycp:4 Warning: Useless 'global' outside of module
-[Scanner] tests/types/complex.ycp:63 Warning: Useless 'global' outside of module
+[Parser] tests/types/complex.ycp:4 Warning: Useless 'global' outside of module
+[Parser] tests/types/complex.ycp:63 Warning: Useless 'global' outside of module
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -30,6 +30,8 @@ using std::string;
 #include "ycp/YCode.h"
 #include "y2/Y2Function.h"
 
+class Logger;
+
 //---------------------------------------------------------
 
 DEFINE_DERIVED_POINTER(YEVariable, YCode);
@@ -378,7 +380,7 @@ public:
      * if undefined, return Type::Error
      *   (wrong type was already reported in attachParameter())
      */
-    constTypePtr finalize ();
+    constTypePtr finalize (Logger* problem_logger);
     // check if m_parameterblock is really needed, drop if not
     void closeParameters ();
     // see YEFunction::attachParameter

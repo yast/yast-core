@@ -35,7 +35,7 @@ Parsed:
     return m;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/values/Maps.ycp:34 Warning: 'lookup()' is deprecated
+[Parser] tests/values/Maps.ycp:34 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

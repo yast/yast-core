@@ -1,4 +1,4 @@
-[Scanner] tests/expressions/Select_Term.ycp:23 Warning: 'select ()' is deprecated
+[Parser] tests/expressions/Select_Term.ycp:23 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -20,7 +20,7 @@ Parsed:
     return (node1[0]:nil == `Austria);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/expressions/Select_Term.ycp:35 Warning: 'select ()' is deprecated
+[Parser] tests/expressions/Select_Term.ycp:35 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

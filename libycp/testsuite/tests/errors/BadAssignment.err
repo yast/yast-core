@@ -2,7 +2,7 @@
 [Parser] tests/errors/BadAssignment.ycp:9 Expected 'integer', seen 'const boolean'.
 [Parser] tests/errors/BadAssignment.ycp:10 type mismatch in variable definition
 [Parser] tests/errors/BadAssignment.ycp:10 Expected 'boolean', seen 'string'.
-[Scanner] tests/errors/BadAssignment.ycp:11 Warning: Identifier 'b' might be used uninitialized
+[Parser] tests/errors/BadAssignment.ycp:11 Warning: Identifier 'b' might be used uninitialized
 [Parser] tests/errors/BadAssignment.ycp:11 type mismatch in assignment
 [Parser] tests/errors/BadAssignment.ycp:11 Expected 'integer', seen 'boolean'.
 Parsed:

@@ -1,4 +1,4 @@
-[Scanner] tests/errors/pathbug.ycp:4 Warning: Useless 'global' outside of module
+[Parser] tests/errors/pathbug.ycp:4 Warning: Useless 'global' outside of module
 Parsed:
 ----------------------------------------------------------------------
 {

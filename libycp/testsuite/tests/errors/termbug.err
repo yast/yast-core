@@ -10,7 +10,7 @@ Parsed:
 ----------------------------------------------------------------------
 [Parser] tests/errors/termbug.ycp:10 type mismatch in variable definition
 [Parser] tests/errors/termbug.ycp:10 Expected 'term', seen 'block <void>'.
-[Scanner] tests/errors/termbug.ycp:12 Warning: Identifier 'a' might be used uninitialized
+[Parser] tests/errors/termbug.ycp:12 Warning: Identifier 'a' might be used uninitialized
 Parsed:
 ----------------------------------------------------------------------
 Parser error

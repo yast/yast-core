@@ -1,4 +1,4 @@
-[Scanner] tests/builtin/Builtin10.ycp:30 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin10.ycp:30 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

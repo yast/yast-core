@@ -1,5 +1,5 @@
-[Scanner] tests/bytecode/Module/Identifier.ycp:29 Warning: Definition shadows global symbol
-[Scanner] tests/bytecode/Module/Identifier.ycp:29 Warning: 'a' defined in tests/bytecode/Module/Identifier.ycp:19.
+[Parser] tests/bytecode/Module/Identifier.ycp:29 Warning: Definition shadows global symbol
+[Parser] tests/bytecode/Module/Identifier.ycp:29 Warning: 'a' defined in tests/bytecode/Module/Identifier.ycp:19.
 Parsed:
 ----------------------------------------------------------------------
 {

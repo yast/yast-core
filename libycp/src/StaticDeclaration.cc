@@ -362,10 +362,6 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	return 0;
     }
 
-    // remember start values for error reporting
-
-    declaration_t *first_decl = decl;
-
     // now check all (overloaded) possibilities
 
 // FIXME: properly check Templates (FlexT and NFlexT)
@@ -472,25 +468,6 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 #if DO_DEBUG
 	y2debug ("findDecl failed");
 #endif
-	if (!partial)
-	{
-	    ycp2error ("No match for '%s : %s'", first_decl->name, type->toString().c_str());
-	    ycp2error ("Please fix parameter types to match one of:");
-	    while (first_decl)
-	    {
-		ycp2error ("'%s' ", Decl2String (first_decl,true).c_str());
-		
-		if (first_decl->tentry->next_overloaded () != 0)
-		{
-		    first_decl = ((YSymbolEntryPtr)first_decl->tentry->next_overloaded ()->sentry ())->declaration ();
-		}
-		else
-		{
-		    // done
-		    break;
-		}
-	    }
-	}
     }
     else
     {
@@ -556,5 +533,25 @@ StaticDeclaration::readDeclaration (bytecodeistream & str) const
     return decl;
 }
 
+
+void
+StaticDeclaration::errorNoMatch (Logger* problem_logger, constFunctionTypePtr orig, declaration_t* first_decl)
+{
+    problem_logger->error (string("No match for '")+first_decl->name+" : "+orig->toString ()+"'");
+    problem_logger->error ("Please fix parameter types to match one of:");
+    while (first_decl)
+    {
+        problem_logger->error (string("'")+StaticDeclaration::Decl2String (first_decl,true)+"'");
+
+        if (first_decl->tentry->next_overloaded () != 0)
+        {
+            first_decl = ((YSymbolEntryPtr)first_decl->tentry->next_overloaded ()->sentry ())->declaration ();
+        }
+        else
+        {
+	    return;
+        }
+    }
+}
 
 // EOF

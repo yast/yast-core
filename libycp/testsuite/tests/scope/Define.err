@@ -36,7 +36,7 @@ Parsed:
     return 2;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/scope/Define.ycp:33 Warning: Identifier 'plus' might be used uninitialized
+[Parser] tests/scope/Define.ycp:33 Warning: Identifier 'plus' might be used uninitialized
 [Parser] tests/scope/Define.ycp:33 Parameter 'plus' shadows function name
 [Parser] tests/scope/Define.ycp:35 Undeclared identifier 'i'
 Parsed:

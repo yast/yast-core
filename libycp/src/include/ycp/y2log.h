@@ -21,6 +21,8 @@
     y2_logger(LOG_ERROR,"Scanner",file,line,"",format,##args)
 #define syn2error(file,line,format,args...) \
     y2_logger(LOG_ERROR,"Parser",file,line,"",format,##args)
+#define syn2warning(file,line,format,args...) \
+    y2_logger(LOG_WARNING,"Parser",file,line,"",format,##args)
 #define sem2error(file,line,format,args...) \
     y2_logger(LOG_ERROR,"Runtime",file,line,"",format,##args)
 
@@ -73,5 +75,12 @@
 
 #define ycpmilestone(format,args...) 		\
     ycp_log(LOG_MILESTONE, format, ##args)
+
+// c++ interface for logging
+class Logger {
+public:
+    virtual void error(string error) = 0;
+    virtual void warning(string warning) = 0;
+};
 
 #endif /* _y2log_ycp_h */

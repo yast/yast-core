@@ -1,4 +1,4 @@
-[Scanner] tests/expressions/nocode-parameters.ycp:4 Warning: Empty block is treated as 'nil'
+[Parser] tests/expressions/nocode-parameters.ycp:4 Warning: Empty block is treated as 'nil'
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -7,7 +7,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/nocode-parameters.ycp:4 Argument (nil) to foreach(...) is nil
-[Scanner] tests/expressions/nocode-parameters.ycp:13 Warning: Empty block is treated as 'nil'
+[Parser] tests/expressions/nocode-parameters.ycp:13 Warning: Empty block is treated as 'nil'
 Parsed:
 ----------------------------------------------------------------------
 {

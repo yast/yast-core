@@ -1,4 +1,4 @@
-[Scanner] impinc.inc:4 Warning: Useless 'global' outside of module
+[Parser] impinc.inc:4 Warning: Useless 'global' outside of module
 Parsed:
 ----------------------------------------------------------------------
 {

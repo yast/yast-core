@@ -1,6 +1,6 @@
-[Scanner] tests/values/List.ycp:18 Warning: 'select ()' is deprecated
-[Scanner] tests/values/List.ycp:25 Warning: 'select ()' is deprecated
-[Scanner] tests/values/List.ycp:26 Warning: 'select ()' is deprecated
+[Parser] tests/values/List.ycp:18 Warning: 'select ()' is deprecated
+[Parser] tests/values/List.ycp:25 Warning: 'select ()' is deprecated
+[Parser] tests/values/List.ycp:26 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

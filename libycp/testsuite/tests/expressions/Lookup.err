@@ -1,4 +1,4 @@
-[Scanner] tests/expressions/Lookup.ycp:26 Warning: 'lookup()' is deprecated
+[Parser] tests/expressions/Lookup.ycp:26 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -41,7 +41,7 @@ Parsed:
     return node5;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/expressions/Lookup.ycp:54 Warning: 'lookup()' is deprecated
+[Parser] tests/expressions/Lookup.ycp:54 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -63,7 +63,7 @@ Parsed:
     return (/* any -> string */node7[14]:"abc" == "abc");
 }
 ----------------------------------------------------------------------
-[Scanner] tests/expressions/Lookup.ycp:66 Warning: 'lookup()' is deprecated
+[Parser] tests/expressions/Lookup.ycp:66 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

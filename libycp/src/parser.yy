@@ -3099,7 +3099,7 @@ function_call:
 			    p_parser->m_loop_count--;
 			}
 
-			constTypePtr finalT = builtin->finalize ();
+			constTypePtr finalT = builtin->finalize (p_parser->scanner ());
 			if (finalT != 0)
 			{
 			    constFunctionTypePtr bt = 0;
@@ -3744,6 +3744,10 @@ i_check_unary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, Parser* p)
     {
 	yyerror_with_lineinfo (p, e1->l, "Operator not defined for this type");
 	result->t = 0;
+
+	declaration_t* first_decl = static_declarations.findDeclaration(op);
+	StaticDeclaration::errorNoMatch (p->scanner (), ft, first_decl);
+
 	return;
     }
 
@@ -3823,7 +3827,9 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	{
 	    yyerror_with_lineinfo (p, e1->l, "Binary operator not defined for this type");
 	    result->t = 0;
-	    static_declarations.findDeclaration (op, ft);	// trigger error output
+
+	    declaration_t* first_decl = static_declarations.findDeclaration(op);
+	    StaticDeclaration::errorNoMatch (p->scanner (), ft, first_decl);
 	}
     }
 

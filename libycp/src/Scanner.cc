@@ -257,7 +257,6 @@ Scanner::logError (const char *loginfo, int lineno, ...)
     else if (m_filename.empty())filename = "YCP stream";
     else			filename = m_filename.c_str();
 
-//    fprintf (stderr, "%s:%d:%s\n", filename, lineno, logtext);
     syn2error(filename, lineno, "%s\n", logtext);
     return;
 }
@@ -280,8 +279,21 @@ Scanner::logWarning (const char *loginfo, int lineno, ...)
     else if (m_filename.empty())filename = "YCP stream";
     else			filename = m_filename.c_str();
 
-//    fprintf (stderr, "%s:%d: Warning: %s\n", filename, lineno, logtext);
-    y2scanner (filename, lineno, "Warning: %s", logtext);
+    syn2warning (filename, lineno, "Warning: %s", logtext);
+}
+
+
+void
+Scanner::error (string error_message)
+{
+    logError ("%s", m_lineNumber, error_message.c_str());
+}
+
+
+void
+Scanner::warning (string warning_message)
+{
+    logWarning ("%s", m_lineNumber, warning_message.c_str());
 }
 
 

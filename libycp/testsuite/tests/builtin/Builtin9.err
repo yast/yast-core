@@ -9,7 +9,7 @@ Parsed:
     return MyList;
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin9.ycp:43 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin9.ycp:43 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -22,7 +22,7 @@ Parsed:
     return ((size (MyList) == 7) && (/* any -> path */NewList[size (MyList)]:nil == .Hungary));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin9.ycp:61 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin9.ycp:61 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

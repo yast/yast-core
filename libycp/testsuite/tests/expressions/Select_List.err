@@ -1,4 +1,4 @@
-[Scanner] tests/expressions/Select_List.ycp:19 Warning: 'select ()' is deprecated
+[Parser] tests/expressions/Select_List.ycp:19 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 ([1, 2, 3][1]:nil == 2)

@@ -1,4 +1,4 @@
-[Scanner] tests/statements/if_empty.ycp:4 Warning: Empty statement after 'if'
+[Parser] tests/statements/if_empty.ycp:4 Warning: Empty statement after 'if'
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -37,7 +37,6 @@
 #include "ycp/Bytecode.h"
 
 #include "ycp/y2log.h"
-#include "ycp/ExecutionEnvironment.h"
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
@@ -1030,7 +1029,6 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
     {
 	YCodePtr c = value->asCode ()->code ();
 	constFunctionTypePtr t = (constFunctionTypePtr)to_type;
-#warning Function type cannot be checked at runtime, because of the return type
 	return c->kind () == ycFunction;
     }
 
@@ -1799,7 +1797,7 @@ YEBuiltin::parameterBlock () const
  */
 
 constTypePtr
-YEBuiltin::finalize ()
+YEBuiltin::finalize (Logger* problem_logger)
 {
     extern StaticDeclaration static_declarations;
     
@@ -1812,6 +1810,7 @@ YEBuiltin::finalize ()
     declaration_t *decl = static_declarations.findDeclaration (m_decl, m_type, false);
     if (decl == 0)
     {
+	StaticDeclaration::errorNoMatch (problem_logger, m_type, m_decl);
 	return Type::Error;
     }
     m_decl = decl;					// remember matching declaration
@@ -1856,7 +1855,7 @@ YEBuiltin::finalize ()
 	YCodePtr formatcode = m_parameters ? m_parameters->code : 0;
 	if (formatcode == 0)
 	{
-	    ycp2error ("First parameter should be format string");
+	    problem_logger->error ("First parameter should be format string");
 	    return Type::Error;
 	}
 	
@@ -1869,8 +1868,7 @@ YEBuiltin::finalize ()
 	else if (formatcode->kind() != YCode::ycString)
 	{
 	    // otherwise accept only strings
-	    extern ExecutionEnvironment ee;
-	    ycp2warning (ee.filename().c_str(), ee.linenumber(), "Format string is not constant, no parameter checking possible");
+	    problem_logger->warning ("Format string is not constant, no parameter checking possible");
 	    return 0;
 	}
 	cptr = formatcode->evaluate()->asString()->value_cstr();
@@ -1896,8 +1894,8 @@ YEBuiltin::finalize ()
 		{
 		    if (number >= bits)
 		    {
-			extern ExecutionEnvironment ee;
-			ycp2warning (ee.filename().c_str(), ee.linenumber(), "Numeric value after %% too large (%d), cant check validity", number);
+			problem_logger->warning (string ("Numeric value after %% too large (")
+			    + *cptr + "), cant check validity");
 		    }
 		    else
 		    {
@@ -1907,7 +1905,8 @@ YEBuiltin::finalize ()
 		else if ((number == 0)			// no digit following %
 			 && (*cptr != '%'))		// %% is allowed
 		{
-		    ycp2error ("Bad '%%' selector in format string at '%s', use '%%n' (n=1,2,...) instead ", cptr-1);
+		    problem_logger->error (string("Bad '%%' selector in format string at '")
+			+(cptr-1)+"', use '%%n' (n=1,2,...) instead ");
 		    return Type::Error;
 		}
 	    }
@@ -1933,7 +1932,7 @@ YEBuiltin::finalize ()
 	}
 	if (count != 0)
 	{
-	    ycp2error ("Format string doesn't match number of parameters");
+	    problem_logger->error ("Format string doesn't match number of parameters");
 	    return Type::Error;
 	}
     } // if DECL_FORMATTED

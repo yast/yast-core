@@ -1,4 +1,4 @@
-[Scanner] tests/statements/empty_body4.ycp:8 Warning: Empty function definition
+[Parser] tests/statements/empty_body4.ycp:8 Warning: Empty function definition
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -16,7 +16,7 @@ Parsed:
 ----------------------------------------------------------------------
 "we are ok"
 ----------------------------------------------------------------------
-[Scanner] tests/statements/empty_body4.ycp:19 Warning: Empty function definition
+[Parser] tests/statements/empty_body4.ycp:19 Warning: Empty function definition
 Parsed:
 ----------------------------------------------------------------------
 {

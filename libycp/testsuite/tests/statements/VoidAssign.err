@@ -48,7 +48,7 @@ Parsed:
     return ([(v_string == ""), (v_string == nil), is (v_string, void), is (v_string, string)] == [false, true, true, true]);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:61 Warning: Empty locale constant
+[Parser] tests/statements/VoidAssign.ycp:61 Warning: Empty locale constant
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -80,7 +80,7 @@ Parsed:
     return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), is (v_map, void), is (v_map, map)] == [false, true, true, true, true]);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment is undefined
+[Parser] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment is undefined
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -96,8 +96,8 @@ Parsed:
     return (ls == nil);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment is undefined
-[Scanner] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression is undefined
+[Parser] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment is undefined
+[Parser] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression is undefined
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -114,7 +114,7 @@ Parsed:
     return m[0]:m[0]:fun ();
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment is undefined
+[Parser] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment is undefined
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -1,4 +1,4 @@
-[Scanner] tests/builtin/Builtin12.ycp:22 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:22 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -17,7 +17,7 @@ Parsed:
     return (ResultSet == SetOne);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin12.ycp:33 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:33 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -36,8 +36,8 @@ Parsed:
     return ((ResultSet == SetOne) && (ResultSet != SetEqual));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin12.ycp:45 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin12.ycp:51 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:45 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:51 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -56,8 +56,8 @@ Parsed:
     return (ResultSet == add (SetOne, SetTwo[0]:nil));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin12.ycp:56 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin12.ycp:62 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:56 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:62 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -76,8 +76,8 @@ Parsed:
     return (ResultSet == add (SetOne, SetDifferent[0]:nil));
 }
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin12.ycp:67 Warning: 'select ()' is deprecated
-[Scanner] tests/builtin/Builtin12.ycp:73 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:67 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin12.ycp:73 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

@@ -38,27 +38,27 @@ Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-Term.ycp:34 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:34 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[-1]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-Term.ycp:35 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:35 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[0]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-Term.ycp:36 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:36 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[1]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-Term.ycp:37 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:37 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[2]:42
 ----------------------------------------------------------------------
-[Scanner] tests/builtin/Builtin-Term.ycp:39 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:39 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> string */`hirn (1, 2)[0]:"wrong type"

@@ -14,7 +14,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/expressions/Formatted.ycp:5 HAHA A A
-[Interpreter] tests/expressions/Formatted.ycp:8 Format string doesn't match number of parameters
+[Parser] tests/expressions/Formatted.ycp:8 Format string doesn't match number of parameters
 [Parser] tests/expressions/Formatted.ycp:8 Wrong parameters in call to y2milestone(...)
 [Parser] tests/expressions/Formatted.ycp:8 Expected '(string, ...)', seen '(string, ...)'.
 Parsed:
@@ -30,7 +30,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/expressions/Formatted.ycp:11 HAHA A B
-[Interpreter] tests/expressions/Formatted.ycp:14 Format string doesn't match number of parameters
+[Parser] tests/expressions/Formatted.ycp:14 Format string doesn't match number of parameters
 [Parser] tests/expressions/Formatted.ycp:14 Wrong parameters in call to y2milestone(...)
 [Parser] tests/expressions/Formatted.ycp:14 Expected '(string, ...)', seen '(string, ...)'.
 Parsed:
@@ -46,7 +46,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/expressions/Formatted.ycp:17 HAHA A B A
-[Interpreter] tests/expressions/Formatted.ycp:20 Bad '%' selector in format string at '%s %d', use '%n' (n=1,2,...) instead 
+[Parser] tests/expressions/Formatted.ycp:20 Bad '%%' selector in format string at '%s %d', use '%%n' (n=1,2,...) instead 
 [Parser] tests/expressions/Formatted.ycp:20 Wrong parameters in call to y2milestone(...)
 [Parser] tests/expressions/Formatted.ycp:20 Expected '(string, ...)', seen '(string, ...)'.
 Parsed:
@@ -54,7 +54,7 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Formatted.ycp:19 Parser error
-[Interpreter] tests/expressions/Formatted.ycp:23 Format string is not constant, no parameter checking possible
+[Parser] tests/expressions/Formatted.ycp:23 Warning: Format string is not constant, no parameter checking possible
 Parsed:
 ----------------------------------------------------------------------
 {

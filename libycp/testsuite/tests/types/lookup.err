@@ -1,4 +1,4 @@
-[Scanner] tests/types/lookup.ycp:5 Warning: 'lookup()' is deprecated
+[Parser] tests/types/lookup.ycp:5 Warning: 'lookup()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {

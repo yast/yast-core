@@ -34,6 +34,7 @@ class SymbolEntry;
 class SymbolTable;
 class TableEntry;
 class bytecodeistream;
+class Logger;
 
 // Only use BUILTIN_STATISTICS for testing. It will create three files
 // /tmp/builtin-X.txt which list all builtins registered, looked up
@@ -114,6 +115,8 @@ public:
     // show a declaration
     // @param full if false, just show the name; if true, show name and signatur
     static string Decl2String (const declaration_t *declaration, bool full = false);
+    
+    static void errorNoMatch (Logger* problem_logger, constFunctionTypePtr orig, declaration_t* first_decl);
 };
 
 #endif // StaticDeclaration_h
