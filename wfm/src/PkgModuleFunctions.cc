@@ -261,16 +261,10 @@ PkgModuleFunctions::GetLocale ()
  * set list of
  */
 YCPValue
-PkgModuleFunctions::SetAdditionalLocales (YCPList args)
+PkgModuleFunctions::SetAdditionalLocales (YCPList langycplist)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isList()))
-    {
-	return YCPError ("Bad args to Pkg::SetAdditionalLocales");
-    }
     Y2PM::LocaleSet langcodelist;
     int i = 0;
-    YCPList langycplist = args->value(0)->asList();
     while (i < langycplist->size())
     {
 	if (langycplist->value (i)->isString())
