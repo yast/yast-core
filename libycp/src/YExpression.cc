@@ -39,7 +39,7 @@ $Id$
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
 
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 
 typedef YCPValue (*v2) ();
 typedef YCPValue (*v2v) (const YCPValue &);
@@ -858,18 +858,25 @@ YEPropagate::toString() const
 bool
 YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 {
-    if (to_type->isAny () || to_type->isUnspec () || ( to_type->isBasetype () && value->valuetype () == to_type->valueType ()))
-	return true;
+    if (value->isVoid()						// value is nil, this is allowed everywhere
+	|| to_type->isAny ()					// casting to any
+	|| to_type->isUnspec ()					// casting to unspec
+	|| ( to_type->isBasetype ()				// casting to equivalent base type
+	     && value->valuetype () == to_type->valueType ()))
+    {
+	return true;						// this is all ok
+    }
 
 #if DO_DEBUG
     y2debug ("to type: %s", to_type->toString ().c_str () );
 #endif
-    if (to_type->isList () && value->isList ())
+    if (to_type->isList ()					// casting to a list
+	&& value->isList ())
     {
 	// check types of all elements
 	constTypePtr elem = ((constListTypePtr)to_type)->type ();
 	if (elem->isAny ()) return true;
-	if (elem->isUnspec ()) return true;
+	if (elem->isUnspec ()) return true;			// untyped list
 
 	YCPList v = value->asList ();
 
@@ -879,18 +886,21 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 	    y2debug ("testing %s", v->value (i)->toString ().c_str ());
 #endif
 	    if (! canPropagate (v->value (i), elem) )
+	    {
 		return false;
+	    }
 	}
 	return true;
     }
 
-    if (to_type->isMap () && value->isMap ())
+    if (to_type->isMap ()					// casting to a map
+	&& value->isMap ())
     {
 	// check types of all elements
 	constTypePtr key = ((constMapTypePtr)to_type)->keytype ();
 	constTypePtr elem = ((constMapTypePtr)to_type)->valuetype ();
 
-	if (elem->isAny () && key->isAny ()) return true;
+	if (elem->isAny () && key->isAny ()) return true;	// map<any,any>
 
 	// not typed maps
 	if (elem->isUnspec () && key->isUnspec ()) return true;
@@ -900,14 +910,19 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 	for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
 	{
 	    if (! canPropagate (pos.key (), key) )
+	    {
 		return false;
+	    }
 	    if (! canPropagate (pos.value (), elem) )
+	    {
 		return false;
+	    }
 	}
 	return true;
     }
 
-    if (to_type->isFunction () && value->isCode ())
+    if (to_type->isFunction ()
+	&& value->isCode ())
     {
 	YCode* c = value->asCode ()->code ();
 	constFunctionTypePtr t = (constFunctionTypePtr)to_type;
