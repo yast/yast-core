@@ -5,7 +5,7 @@
 
 {
     UI::OpenDialog( `Wizard( `back,  "&Back",
-			     `abort, "A&bort",
+			     `abort, "Ab&ort",
 			     `next,  "&Next" ) );
 
     while( true )
