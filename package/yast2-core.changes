@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 29 14:37:13 CEST 2004 - visnov@suse.cz
+
+- properly initialize domain (#36711) 
+
+-------------------------------------------------------------------
 Mon Mar 29 12:00:42 CEST 2004 - kkaempf@suse.de
 
 - improve checking if rhs in assignment is void (36922)

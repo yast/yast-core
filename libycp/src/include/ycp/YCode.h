@@ -238,7 +238,7 @@ public:
     constTypePtr type() const;
 };
 
-#include <ext/hash_set>
+#include <ext/hash_map>
 #include <string>
 #include <cstddef>
 
@@ -263,15 +263,13 @@ class YLocale : public YCode
 	}
     };
 
-    typedef __gnu_cxx::hash_set<const char*, __gnu_cxx::hash<const char*>, eqstr> t_uniquedomains;
+public:
+    typedef __gnu_cxx::hash_map<const char*, bool, __gnu_cxx::hash<const char*>, eqstr> t_uniquedomains;
 
     static t_uniquedomains domains;	// keep every textdomain only once
+    static t_uniquedomains::const_iterator setDomainStatus (const string& domain, bool status);
+    static void ensureBindDomain (const string& domain);
 
-    t_uniquedomains::const_iterator m_domain;
-
-    friend class YELocale;
-
-public:
     YLocale (const char *locale, const char *textdomain);
     YLocale (std::istream & str);
     ~YLocale ();
@@ -281,6 +279,11 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type() const { return Type::Locale; }
+    
+private:
+
+    t_uniquedomains::const_iterator m_domain;
+
 };
 
 /**

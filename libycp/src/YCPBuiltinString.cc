@@ -1014,13 +1014,43 @@ s_cryptblowfish(const YCPString& original)
 static YCPValue
 s_dgettext (const YCPString& domain, const YCPString& text)
 {
-    return YCPString (dgettext (domain->value().c_str(), text->value().c_str()));
+    if (domain.isNull () || domain->isVoid ()) 
+    {
+	return YCPNull ();
+    }
+
+    // initialize text domain if not done so
+    string dom = domain->value ();    
+    YLocale::ensureBindDomain (dom);
+    
+    if (text.isNull () || text->isVoid ())
+    {
+	return YCPNull ();
+    }
+    
+    return YCPString (dgettext (dom.c_str(), text->value().c_str()));
 }
 
 
 static YCPValue
 s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString& plural, const YCPInteger& count)
 {
+    if (domain.isNull () || domain->isVoid ()) 
+    {
+	return YCPNull ();
+    }
+
+    // initialize text domain if not done so
+    string dom = domain->value ();    
+    YLocale::ensureBindDomain (dom);
+    
+    if (singular.isNull () || singular->isVoid ()
+	|| plural.isNull () || plural->isVoid ()
+	|| count.isNull () || count->isVoid ())
+    {
+	return YCPNull ();
+    }
+    
     return YCPString (dngettext (domain->value().c_str(), singular->value().c_str(), plural->value().c_str(), count->value()));
 }
 

@@ -1299,8 +1299,7 @@ YSTextdomain::bind ()
 #if DO_DEBUG
     y2debug ("going to bind a domain %s", m_domain->c_str() );
 #endif
-    bindtextdomain (m_domain->c_str (), LOCALEDIR);
-    bind_textdomain_codeset (m_domain->c_str (), "UTF-8");
+    YLocale::ensureBindDomain (m_domain);
 }
 
 // ------------------------------------------------------------------

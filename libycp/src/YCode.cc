@@ -440,7 +440,12 @@ YLocale::YLocale (const char *locale, const char *textdomain)
     : YCode (ycLocale)
     , m_locale (locale)
 {
-    m_domain = domains.insert (textdomain).first;
+    if (domains.find (textdomain) == domains.end ())
+    {
+	domains.insert (std::make_pair(textdomain,false));
+    }
+
+    m_domain = domains.find (textdomain);
 }
 
 
@@ -451,14 +456,17 @@ YLocale::YLocale (std::istream & str)
 
     const char * dom = Bytecode::readCharp (str);
 
-    std::pair <YLocale::t_uniquedomains::iterator, bool> res = domains.insert (dom);
-
-    // the textdomain was already there, we can free the memory allocated in readCharp
-    if (! res.second)
+    if (domains.find (dom) != domains.end ())
     {
+	m_domain = domains.find (dom);
+	// the textdomain was already there, we can free the memory allocated in readCharp
 	delete[] dom;
     }
-    m_domain = res.first;
+    else
+    {
+	domains.insert (std::make_pair(dom,false));
+	m_domain = domains.find (dom);
+    }    
 }
 
 
@@ -478,7 +486,7 @@ YLocale::value () const
 const char *
 YLocale::domain () const
 {
-    return (*m_domain);
+    return m_domain->first;
 }
 
 
@@ -487,7 +495,7 @@ YLocale::toStream (std::ostream & str) const
 {
     YCode::toStream (str);
     Bytecode::writeCharp (str, m_locale);
-    return Bytecode::writeCharp (str, *m_domain);
+    return Bytecode::writeCharp (str, m_domain->first);
 }
 
 string
@@ -502,13 +510,43 @@ YLocale::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
-    const char *ret = dgettext (*m_domain, m_locale);
+    const char *ret = dgettext (m_domain->first, m_locale);
 #if DO_DEBUG
     y2debug ("localize <%s> to <%s>", m_locale, ret);
 #endif
     return YCPString (ret);
 }
 
+
+YLocale::t_uniquedomains::const_iterator
+YLocale::setDomainStatus (const string& domain, bool status)
+{
+    if (domains.find (domain.c_str ()) == domains.end ())
+    {
+	domains.insert (std::make_pair(strdup (domain.c_str ()),status));
+    }
+    else
+    {
+	domains [domain.c_str ()] = status;
+    }
+    return domains.find (domain.c_str ());
+}
+
+
+void 
+YLocale::ensureBindDomain (const string& domain)
+{
+    if (domains.find (domain.c_str ()) == domains.end () 
+	|| ! domains[domain.c_str ()])
+    {
+#if DO_DEBUG
+	y2debug ("going to bind a domain %s", m_domain->c_str() );
+#endif
+	bindtextdomain (domain.c_str (), LOCALEDIR);
+	bind_textdomain_codeset (domain.c_str (), "UTF-8");
+	setDomainStatus (domain, true);
+    }
+}
 
 // ------------------------------------------------------------------
 // declaration (-> declaration_t)
