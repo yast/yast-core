@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov  3 18:01:15 CET 2004 - visnov@suse.cz
+
+- create libycpvalues library 
+
+-------------------------------------------------------------------
 Wed Nov  3 17:02:45 CET 2004 - kkaempf@suse.de
 
 - warn about using uninitialized variables (#42648)
