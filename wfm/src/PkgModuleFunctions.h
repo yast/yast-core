@@ -98,7 +98,7 @@ class PkgModuleFunctions : public Y2Namespace
     private: // source related
 
       bool sourceStartManager( bool autoEnable );
-      
+
       // builtin handling
       void registerFunctions ();
       vector<string> _registered_functions;
@@ -332,7 +332,7 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgAnyToInstall ();
 	// FIXME: is this needed?
 	YCPValue PkgFileHasOwner (YCPList args);
-	/* TYPEINFO: list<list<any>>(string) */ 
+	/* TYPEINFO: list<list<any>>(string) */
 	YCPList  PkgQueryProvides(const YCPString& tag);
 
 	/* TYPEINFO: boolean(string)*/
@@ -371,6 +371,9 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPMap    PkgGetLicensesToConfirm( const YCPList & packages );
 	/* TYPEINFO: string(string)*/
 	YCPBoolean PkgMarkLicenseConfirmed (const YCPString & package);
+
+	/* TYPEINFO: boolean(string)*/
+	YCPBoolean RpmChecksig( const YCPString & filename );
 
 	// you patch related
 	/* TYPEINFO: map<any,any>()*/

@@ -37,6 +37,7 @@
 #include <y2pm/PMPackageManager.h>
 #include <y2pm/PMSelectionManager.h>
 #include <y2pm/InstSrcManager.h>
+#include <y2pm/RpmHeader.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -507,7 +508,7 @@ PkgModuleFunctions::PkgMediaCount()
 	continue;
 
       PMPackagePtr package = (*pkg)->candidateObj();
-      
+
       if (!package)
 	continue;
 
@@ -1550,3 +1551,12 @@ YCPBoolean PkgModuleFunctions::PkgMarkLicenseConfirmed (const YCPString & packag
 
 }
 
+/****************************************************************************************
+ * @builtin Pkg::RpmChecksig( string filename ) -> boolean
+ *
+ * @return True if filename is a rpm package with valid signature.
+ **/
+YCPBoolean PkgModuleFunctions::RpmChecksig( const YCPString & filename )
+{
+  return YCPBoolean( RpmHeader::readPackage( filename->value(), RpmHeader::VERIFY ) );
+}
