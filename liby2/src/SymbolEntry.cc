@@ -203,6 +203,13 @@ SymbolEntry::setType (constTypePtr type)
 }
 
 
+void
+SymbolEntry::setGlobal (bool global)
+{
+    m_global = global;
+}
+
+
 string 
 SymbolEntry::catString () const
 {
@@ -275,9 +282,35 @@ SymbolEntry::toString (bool with_type) const
 	case c_variable:
 	case c_reference:
 	case c_function:
+	{
 #if DO_DEBUG
 	    y2debug ("m_namespace %p[%s], m_global %d, with_type %d", m_namespace, m_namespace ? m_namespace->name().c_str() : "", m_global, with_type);
 #endif
+	    if (with_type)
+	    {
+		constFunctionTypePtr ftype = m_type;
+		s += (((m_category == c_variable)||(m_category ==c_reference)) ? m_type->toString() : ftype->returnType()->toString()) + " ";
+		
+		if (m_global
+		    && m_namespace != 0
+		    && !m_namespace->name().empty())
+		{
+		    s += (m_namespace->name() + "::");
+		}
+		s += m_name.asString();
+		if (m_category == c_function)
+		{
+		    constFunctionTypePtr type = (constFunctionTypePtr)m_type;
+		    s += " " + type->parameters ()->toString ();
+		}
+		return s;
+	    }
+	    else
+	    {
+		string s = string ((m_global && (m_namespace!=0)) ? (m_namespace->name() + "::") : "") + m_name.asString();
+		return s;
+	    }
+	}
 	case c_typedef:
 	{
 	    return s + catString() + " " + m_type->toString() + " " + m_name.asString() + ";";

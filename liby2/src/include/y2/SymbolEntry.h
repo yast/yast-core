@@ -125,6 +125,7 @@ public:
     void setPosition (unsigned int position);
 
     bool isGlobal () const;
+    void setGlobal (bool global);
 
     bool isModule () const { return m_category == c_module; }
     bool isVariable () const { return m_category == c_variable; }

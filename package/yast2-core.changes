@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov  5 09:59:18 CET 2004 - visnov@suse.cz
+
+- Show parameters for all function symbol entries (#47078)
+- Allow to set symbol entry global 
+
+-------------------------------------------------------------------
 Thu Nov  4 15:03:36 CET 2004 - visnov@suse.cz
 
 - report file and line number for builtins (#43830) 
