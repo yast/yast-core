@@ -61,6 +61,7 @@ LETTER	[a-z][A-Z]
 ODIGIT	[0-7]
 DIGIT	[0-9]
 HDIGIT	[0-9][a-f][A-F]
+ /* [[:alnum:]_-]+ | ["] (any-except-bkls-quot* (bksl any)*)+ ["] */
 PATHSEGMENT [[:alnum:]_-]+|\"([^\\"]*(\\.)*)+\"
 SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 
