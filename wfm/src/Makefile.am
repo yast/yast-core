@@ -34,12 +34,12 @@ liby2wfm_la_SOURCES =				\
 
 liby2wfm_la_LDFLAGS = -version-info 2:0
 liby2wfm_la_LIBADD = \
-	$(srcdir)/../../scr/src/libpy2scr.la		\
-	$(srcdir)/../../libyui/src/libyui.la		\
-	$(srcdir)/../../libscr/src/libscr.la		\
-	$(srcdir)/../../libycp/src/libycp.la		\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/liby2.la		\
+	../../scr/src/libpy2scr.la		\
+	../../libyui/src/libyui.la		\
+	../../libscr/src/libscr.la		\
+	../../libycp/src/libycp.la		\
+	../../liby2/src/libpy2stdio.la		\
+	../../liby2/src/liby2.la		\
 	-ly2pm -ly2util
 
 libpy2wfm_la_SOURCES =				\

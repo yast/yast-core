@@ -22,7 +22,7 @@ noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc
 
 runwfm_LDADD = \
-	$(srcdir)/../src/libpy2wfm.la
+	../src/libpy2wfm.la
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp	\

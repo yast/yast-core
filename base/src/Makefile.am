@@ -8,16 +8,16 @@ ybin_PROGRAMS = y2base
 
 y2base_SOURCES = y2base.cc
 
-YAST2CORE =						\
-	$(srcdir)/../../liby2/src/libpy2plugin.la	\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2program.la	\
-	$(srcdir)/../../wfm/src/libpy2wfm.la		\
-	$(srcdir)/../../scr/src/libpy2scr.la		\
-	$(srcdir)/../../libycp/src/libycp.la		\
-	$(srcdir)/../../liby2/src/liby2.la		\
-	$(srcdir)/../../libyui/src/libyui.la		\
-	$(srcdir)/../../libscr/src/libscr.la		
+YAST2CORE =					\
+	../../liby2/src/libpy2plugin.la		\
+	../../liby2/src/libpy2stdio.la		\
+	../../liby2/src/libpy2program.la	\
+	../../wfm/src/libpy2wfm.la		\
+	../../scr/src/libpy2scr.la		\
+	../../libycp/src/libycp.la		\
+	../../liby2/src/liby2.la		\
+	../../libyui/src/libyui.la		\
+	../../libscr/src/libscr.la		
 
 
 y2base_DEPENDENCIES = $(YAST2CORE)
