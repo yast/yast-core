@@ -1,0 +1,10 @@
+{
+    integer i = 0;
+    do
+    {
+	i = i + 1;
+	if( i<15 ) redo;
+    }
+    while( i <= 10 );
+    return i == 15;
+}

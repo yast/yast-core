@@ -84,6 +84,7 @@ YStatement::toString () const
     {
 	case ysBreak:	 return "break;"; break;
 	case ysContinue: return "continue;"; break;
+	case ysRedo:	 return "redo;"; break;
 	default:
 	    break;
     }
@@ -99,6 +100,7 @@ YStatement::evaluate (bool cse)
     {
 	case ysBreak:	    return YCPBreak();
 	case ysContinue:    return YCPVoid();
+	case ysRedo: y2debug("YCPRedo");	    return YCPRedo();
 	default:	    break;
     }
     return YCPNull();
@@ -903,7 +905,7 @@ YSWhile::evaluate (bool cse)
 	{
 	    continue;
 	}
-
+redo:
 	YCPValue lval = YCPNull();
 
 	if (m_loop->isBlock())
@@ -916,26 +918,36 @@ YSWhile::evaluate (bool cse)
 	    lval = m_loop->evaluate ();
 	}
 
-	y2debug ("YSWhile::evaluate lval (%s)", lval.isNull()?"NULL":lval->toString().c_str());
+	y2debug ("YSWhile::evaluate lval (%s)", lval.isNull() ? "NULL" : lval->toString().c_str());
 
 	if (lval.isNull())
 	{
+	    y2debug ("isNull");
 	    continue;
 	}
 	else if (lval->isBreak())	// executed 'break'
 	{
+	    y2debug ("isBreak");
 	    break;
+	}
+	else if (lval->isRedo())	// executed 'redo'
+	{
+	    y2debug ("isRedo");
+	    goto redo;
 	}
 	else if (lval->isReturn())	// executed 'return;' - YCPReturn is also YCPVoid, keep the order of tests!
 	{
+	    y2debug ("isReturn");
 	    return lval;
 	}
 	else if (lval->isVoid())	// normal block/statement or 'continue'
 	{
+	    y2debug ("isVoid");
 	    continue;
 	}
 	else
 	{
+	    y2debug ("return <expr>;");
 	    return lval;		// executed 'return <expr>;'
 	}
     }
@@ -1049,6 +1061,11 @@ YSRepeat::evaluate (bool cse)
 	else if (lval->isBreak())	// executed 'break'
 	{
 	    break;
+	}
+	else if (lval->isRedo())	// executed 'redo'
+	{
+	    y2debug ("REDO");
+	    continue;
 	}
 	else if (lval->isReturn())	// executed 'return;'
 	{
@@ -1169,6 +1186,11 @@ YSDo::evaluate (bool cse)
 	else if (lval->isBreak())	// executed 'break'
 	{
 	    break;
+	}
+	else if (lval->isRedo())	// executed 'redo'
+	{
+	    y2debug ("REDO");
+	    continue;
 	}
 	else if (lval->isReturn())	// executed 'return;'
 	{

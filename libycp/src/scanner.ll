@@ -364,6 +364,7 @@ return		{ return RETURN;	};
 define		{ return DEFINE;	};
 undefine	{ return UNDEFINE;	};
 continue	{ return CONTINUE;	};
+redo		{ return REDO;		};
 break		{ return BREAK;		};
 if		{ return IF;		};
 is		{ return IS;		};

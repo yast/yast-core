@@ -55,6 +55,7 @@ bool YCPValueRep::isTerm()        const { return valuetype() == YT_TERM; }
 bool YCPValueRep::isMap()         const { return valuetype() == YT_MAP; }
 bool YCPValueRep::isCode()	  const { return valuetype() == YT_CODE; }
 bool YCPValueRep::isBreak()	  const { return valuetype() == YT_BREAK; }
+bool YCPValueRep::isRedo()	  const { return valuetype() == YT_REDO; }
 bool YCPValueRep::isReturn()	  const { return valuetype() == YT_RETURN; }
 bool YCPValueRep::isEntry()	  const { return valuetype() == YT_ENTRY; }
 bool YCPValueRep::isReference()	  const { return valuetype() == YT_REFERENCE; }

@@ -1,0 +1,17 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // filename: "tests/statements/Do-While-Continue.ycp"
+    integer i = 0;
+    do
+{
+    i = (i + 1);
+    if ((i < 5))
+    continue;
+    break;
+}
+while ((i <= 10));
+    return (i == 5);
+}
+----------------------------------------------------------------------
