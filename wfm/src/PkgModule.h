@@ -24,6 +24,9 @@
 #define PkgModule_h
 
 #include <string>
+
+#include <Y2PM.h>
+
 #include <ycp/YCPValue.h>
 #include <ycp/YCPList.h>
 
@@ -32,7 +35,6 @@
  */
 class PkgModule
 {
-
 public:
 
     /**
