@@ -255,8 +255,6 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
     YCPValue dirValue = serverMap->value( YCPString( "directory" ) );
     if ( !dirValue.isNull() ) dir = dirValue->asString()->value();
 
-    INT << "SERVER: " << url << " " << dir << endl;
-
     return PMYouServer( Url( url ), name, dir );
 }
 
