@@ -13,10 +13,10 @@ safely skip this chapter.
 </para>
 
 &design;		<!-- &design;		- general design -->
-&scopes;		<!-- &scopes;		- scope implementation -->
+<!-- &scopes;		- scope implementation -->
 &typesystem;		<!-- &typesystem;	- typesystem implementation -->
-&builtins;		<!-- &builtins;		- builtins implementation -->
-&functions;		<!-- &functions;	- functions implementation -->
+<!-- &builtins;		- builtins implementation -->
+<!-- &functions;	- functions implementation -->
 &bytecode;		<!-- &bytecode;		- bytecode implementation -->
 &todo;			<!-- &todo;		- things left to do -->
 

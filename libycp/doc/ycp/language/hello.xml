@@ -20,7 +20,7 @@
     UI::OpenDialog(
 	       `VBox( 
 		     `Label("Hello, world!"),
-		     `PushButton(`opt(`default), "&Ok")
+		     `PushButton(`opt(`default), "&amp;Ok")
 		     )
 	       );
     UI::UserInput();

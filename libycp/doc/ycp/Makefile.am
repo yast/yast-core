@@ -6,7 +6,7 @@ htmldir = $(docdir)/libycp
 validate:
 	xmllint --valid --noout ycp.xml
 
-ycp.fo: ycp.xml data customize-fo.xsl
+ycp.fo: ycp.xml customize-fo.xsl
 	xsltproc -o ycp.fo customize-fo.xsl ycp.xml
 
 ycp.pdf: ycp.fo
