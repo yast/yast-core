@@ -172,7 +172,7 @@ YCPValue evaluateSformat(YCPInterpreter *interpreter, const YCPList& args)
 		int num = *read-'0';
 		if (args->size() <= num)
 		{
-		    y2warning ("Illegal argument number %%%d in formatstring %s",
+		    y2error ("Illegal argument number %%%d in formatstring %s",
 			       num, args->value(0)->asString()->toString().c_str());
 		}
 		else if (args->value(num)->isString())
@@ -182,7 +182,7 @@ YCPValue evaluateSformat(YCPInterpreter *interpreter, const YCPList& args)
 	    }
 	    else
 	    {
-		y2warning ("%% in formatstring %s missing a number",
+		y2error ("%% in formatstring %s missing a number",
 			   args->value(0)->asString()->toString().c_str());
 	    }
 	    read++;
