@@ -86,7 +86,7 @@
 					 `item(`id(`funghi 	), "Funghi"		),
 					 `item(`id(`salami 	), "Salami"       	),
 					 `item(`id(`prociutto	), "Prosciutto"		),
-					 `item(`id(`stagioni	), "Quattro Stagioni"	),
+					 `item(`id(`stagioni	), "Quattro Stagioni (a pizza devided into 4 parts)"	),
 					 `item(`id(`chef   	), "A la Chef", true	)
 					 ]
 					);
