@@ -1,26 +1,24 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPLocale.cc
+   File:	YCPLocale.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-               Arvin Schnell <arvin@suse.de>
-   Maintainer: Arvin Schnell <arvin@suse.de>
+   Authors:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 /*
  * YCPLocale data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
  */
 
 
@@ -60,18 +58,18 @@ YCPString YCPLocaleRep::value () const
 
 YCPString YCPLocaleRep::translate (const char *textdomain) const
 {
-    string ret;
+    const char* ret;
 
     if (!has_msg2) {
-	const char *s = msg1->value ().c_str ();
+	const char* s = msg1->value_cstr ();
 	ret = dgettext (textdomain, s);
-	y2debug ("localize <%s> to <%s>", s, ret.c_str ());
+	y2debug ("localize <%s> to <%s>", s, ret);
     } else {
-	const char *s = msg1->value ().c_str ();
-	const char *p = msg2->value ().c_str ();
+	const char* s = msg1->value_cstr ();
+	const char* p = msg2->value_cstr ();
 	const int n = num->value ();
 	ret = dngettext (textdomain, s, p, n);
-	y2debug ("localize <%s, %s, %d> to <%s>", s, p, n, ret.c_str ());
+	y2debug ("localize <%s, %s, %d> to <%s>", s, p, n, ret);
     }
 
     return YCPString (ret);
@@ -98,4 +96,3 @@ YCPValueType YCPLocaleRep::valuetype () const
 {
     return YT_LOCALE;
 }
-
