@@ -343,7 +343,7 @@ PkgModuleFunctions::YouSelectPatches ()
 /**
   @builtin Pkg::YouFirstPatch (bool) -> map
 
-  @param bool If true progress is reset, if false or missing it isn't touched.
+  @param bool If true progress is reset, if false it isn't touched.
 
   get information about first selected patch.
 */
