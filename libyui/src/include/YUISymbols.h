@@ -139,6 +139,7 @@
 // Widget and dialog options
 
 #define YUIOpt_animated				"animated"
+#define YUIOpt_autoScrollDown			"autoScrollDown"
 #define YUIOpt_autoShortcut			"autoShortcut"
 #define YUIOpt_countShowDelta			"countShowDelta"
 #define YUIOpt_debugLayout			"debugLayout"

@@ -808,6 +808,7 @@ YWidget *YUIInterpreter::createLabel(YWidget *parent, YWidgetOpt &opt, const YCP
  * @class	YRichText
  * @arg		string text
  * @option	plainText don't interpret text as HTML
+ * @option	autoScrollDown automatically scroll down for each text change
  * @option	shrinkable make the widget very small
  * @usage	`RichText("This is a <b>bold</b> text")
  * @example	RichText1.ycp
@@ -834,8 +835,15 @@ YWidget *YUIInterpreter::createRichText(YWidget *parent, YWidgetOpt &opt, const 
 
     for (int o=0; o < optList->size(); o++)
     {
-	if      (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_plainText ) opt.plainTextMode.setValue(true);
-	else if (optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_shrinkable) opt.isShrinkable.setValue(true);
+	if (optList->value(o)->isSymbol() )
+	{
+	    std::string sym = optList->value(o)->asSymbol()->symbol();
+	
+	    if      ( sym  == YUIOpt_plainText      ) opt.plainTextMode.setValue(true);
+	    else if ( sym  == YUIOpt_autoScrollDown ) opt.autoScrollDown.setValue(true);
+	    else if ( sym  == YUIOpt_shrinkable     ) opt.isShrinkable.setValue(true);
+	    else    logUnknownOption(term, optList->value(o));
+	}
 	else logUnknownOption(term, optList->value(o));
     }
 

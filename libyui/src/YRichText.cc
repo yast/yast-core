@@ -30,9 +30,13 @@
 YRichText::YRichText(YWidgetOpt &opt, YCPString text)
     : YWidget(opt)
     , text(text)
+    , autoScrollDown( false )
 {
     // Derived classes need to check opt.plainTextMode and opt.shrinkable!
 
+    if ( opt.autoScrollDown.value() )
+	autoScrollDown = true;
+    
     setDefaultStretchable(YD_HORIZ, true);
     setDefaultStretchable(YD_VERT,  true);
 }

@@ -134,6 +134,7 @@ struct YWidgetOpt
     YBoolOpt isDefaultButton;	// YPushButton
     YBoolOpt isOutputField;	// YLabel
     YBoolOpt isHeading;		// YLabel
+    YBoolOpt autoScrollDown;	// YRichText
     YBoolOpt plainTextMode;	// YRichText
     YBoolOpt passwordMode;	// YTextEntry
     YBoolOpt isShrinkable;	// YTextEntry

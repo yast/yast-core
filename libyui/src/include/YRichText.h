@@ -73,6 +73,12 @@ protected:
      * Current text of the RichText
      */
     YCPString text;
+
+
+    /**
+     * Flag: Should the text automatically scroll all the way down upon text change?
+     **/
+    bool autoScrollDown;
 };
 
 
