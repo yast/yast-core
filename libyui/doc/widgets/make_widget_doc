@@ -12,7 +12,7 @@
 # Author: Stefan Hundhammer <sh@suse.de>
 #
 #
-# The UI Interpreter main file (YUIInterpreter.cc) is read and scanned
+# The UI Interpreter main file (*widgets.cc) is read and scanned
 # for keywords like
 #
 #	@keyword contents (may be a multi line string)
@@ -109,7 +109,7 @@ my %normalized_keyword =
 );
 
 # Notice: "@properties" or "@property" are not allowed in the main
-# file (YUIInterpreter.cc), just in the class file
+# file (*widgets.cc), just in the class file
 # (e.g. YLabel.cc). Thus, those keywords are not mentioned here.
 
 
@@ -164,7 +164,7 @@ sub main()
     $src_dir    = $opt_s if $opt_s;
 
     print "src_dir: $src_dir\n";
-    my @main_file_names	= glob( $src_dir . "/YUIInterpreter*widgets*.cc" );
+    my @main_file_names	= glob( $src_dir . "/*widgets.cc" );
 
     # Check for other (undesired) command line parameters.
 
