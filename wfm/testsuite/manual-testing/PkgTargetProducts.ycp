@@ -12,5 +12,7 @@
 # ---------------------------------------------------------
 
 {
+    Pkg::TargetInit ("/", false);
+    Pkg::SourceStartCache (true);
     return Pkg::TargetProducts ();
 }
