@@ -31,6 +31,7 @@
 #include <y2pm/Y2PMCallbacks.h>
 #include <y2pm/InstSrc.h>
 #include <y2pm/InstSrcDescr.h>
+#include <y2pm/InstSrcManager.h>
 
 #include <y2pm/PMPackage.h>
 #include <y2pm/PMYouPatchManager.h>
@@ -645,7 +646,7 @@ namespace Y2PMRecipients {
       CB callback( ycpcb( YCPCallbacks::CB_YouMessage ) );
       if ( callback._set ) {
 	callback.addStr( type );
-        
+
         YCPList patchesArg;
         list<PMYouPatchPtr>::const_iterator it;
         for( it = patches.begin(); it != patches.end(); ++it ) {
@@ -654,7 +655,7 @@ namespace Y2PMRecipients {
         }
 
         callback._func->appendParameter( patchesArg );
-        
+
         string result = callback.evaluateStr();
         if ( result == "" ) return PMError();
         if ( result == "abort" ) return YouError::E_user_abort;

@@ -26,8 +26,6 @@
 #include "PkgModuleCallbacks.h"
 
 #include <y2pm/InstSrcDescr.h>
-#include <y2pm/InstSrcManager.h>
-#include <y2pm/InstSrcDescr.h>
 #include <ycp/YCPInteger.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPBoolean.h>
@@ -192,7 +190,10 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 123,	Pkg, CallbackYouError);
     REGISTERFUNCTIONCALL1 ( 124,	Pkg, CallbackYouLog);
     REGISTERFUNCTIONCALL1 ( 125,	Pkg, CallbackYouMessage);
- }
+
+    REGISTERFUNCTIONCALL1 ( 126,	Pkg, PkgGetLicenseToConfirm);
+    REGISTERFUNCTIONCALL1 ( 127,	Pkg, PkgGetLicensesToConfirm);
+}
 
 ///////////////////////////////////////////////////////////////////
 //

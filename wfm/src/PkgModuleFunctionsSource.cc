@@ -35,6 +35,7 @@
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstTarget.h>
 #include <y2pm/PMSelectionManager.h>
+#include <y2pm/InstSrcManager.h>
 
 #include <ycpTools.h>
 #include <PkgModule.h>

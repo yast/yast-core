@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar  4 21:07:24 CET 2004 - ma@suse.de
+
+- WFM: Added Pkg::PkgGetLicenseToConfirm and Pkg::PkgGetLicensesToConfirm
+- 2.9.52
+
+-------------------------------------------------------------------
 Thu Mar  4 00:42:27 CET 2004 - kkaempf@suse.de
 
 - implement stricter type checking for builtin functions and
@@ -20,7 +26,7 @@ Tue Mar  2 11:20:28 CET 2004 - msvec@suse.cz
 -------------------------------------------------------------------
 Mon Mar  1 18:38:40 CET 2004 - sh@suse.de
 
-- Enable saving of screen shot name if recording macro 
+- Enable saving of screen shot name if recording macro
 
 -------------------------------------------------------------------
 Mon Mar  1 18:08:42 CET 2004 - mvidner@suse.cz
@@ -75,7 +81,7 @@ Fri Feb 27 13:31:18 CET 2004 - visnov@suse.cz
   - counted pointers for YCode and SymbolEntry
   - allow to start bytecode clients
   - initialization of namespaces now in Y2Namespace
-  - improved flex type matching 
+  - improved flex type matching
 
 -------------------------------------------------------------------
 Wed Feb 25 12:51:33 CET 2004 - ma@suse.de

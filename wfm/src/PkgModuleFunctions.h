@@ -44,8 +44,8 @@
 
 #include <y2pm/PMSelectablePtr.h>
 #include <y2pm/InstSrcDescrPtr.h>
-#include <y2pm/InstSrcManager.h>
 #include <y2pm/PMYouServers.h>
+#include <y2pm/PMYouPatchPtr.h>
 
 #define Y2REFFUNCTIONCALL1(namespace, name, signature, param1type, impl_class, impl_func)  \
 class namespace##name##Function1 : public Y2CPPFunctionCall <impl_class> {      \
@@ -165,7 +165,7 @@ class PkgModuleFunctions : public Y2Namespace
         YCPValue CallbackProgressConvertDb (const YCPString& func);
         YCPValue CallbackNotifyConvertDb (const YCPString& func);
         YCPValue CallbackStopConvertDb (const YCPString& func);
-	void SetMediaCallback (InstSrcManager::ISrcId source_id);
+	void SetMediaCallback (PM::ISrcId source_id);
 
 
 	// source related
@@ -256,6 +256,9 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgPrepareOrder (YCPList args);
 	YCPValue PkgMediaSizes ();
 	YCPValue PkgMediaNames ();
+
+	YCPString PkgGetLicenseToConfirm( const YCPString & package );
+	YCPMap    PkgGetLicensesToConfirm( const YCPList & packages );
 
 	// you patch related
         YCPMap YouStatus ();
@@ -390,6 +393,9 @@ class PkgModuleFunctions : public Y2Namespace
 
 	Y2FUNCTIONCALL  ( Pkg, PkgMediaSizes, 		"list<list<integer>> ()",		PkgModuleFunctions, PkgMediaSizes);
 	Y2FUNCTIONCALL  ( Pkg, PkgMediaNames, 		"list<string> ()",		PkgModuleFunctions, PkgMediaNames);
+
+	Y2FUNCTIONCALL1 ( Pkg, PkgGetLicenseToConfirm,  "string (string)",                   String, PkgModuleFunctions, PkgGetLicenseToConfirm );
+	Y2FUNCTIONCALL1 ( Pkg, PkgGetLicensesToConfirm, "map<string,string> (list<string>)", List,   PkgModuleFunctions, PkgGetLicensesToConfirm );
 
 	// you patch related
         Y2FUNCTIONCALL  ( Pkg, YouStatus, 		"map<any,any> ()",		PkgModuleFunctions, YouStatus);

@@ -36,6 +36,7 @@
 #include <y2pm/PMSelectable.h>
 #include <y2pm/PMPackageManager.h>
 #include <y2pm/PMSelectionManager.h>
+#include <y2pm/InstSrcManager.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -46,6 +47,21 @@
 #include <ycp/YCPMap.h>
 
 using std::string;
+
+inline string join( const list<string> & lines_r, const string & sep_r = "\n" )
+{
+  string ret;
+  list<string>::const_iterator it = lines_r.begin();
+
+  if ( it != lines_r.end() ) {
+    ret = *it;
+    for( ++it; it != lines_r.end(); ++it ) {
+      ret += sep_r + *it;
+    }
+  }
+
+  return ret;
+}
 
 /**
  * helper function, get selectable by name
@@ -1030,3 +1046,52 @@ PkgModuleFunctions::CreateBackups (const YCPBoolean& flag)
     _y2pm.instTarget ().createPackageBackups (flag->value ());
     return YCPVoid ();
 }
+
+
+/**
+   @builtin Pkg::PkgGetLicenseToConfirm  (string package) -> string
+
+   Return the candidate packages license text. Returns an empty string if
+   package is unknown or has no license.
+*/
+YCPString PkgModuleFunctions::PkgGetLicenseToConfirm( const YCPString & package )
+{
+  PMSelectablePtr selectable = getPackageSelectable( package->value() );
+
+  if ( ! ( selectable && selectable->candidateObj() ) ) {
+    // unknown or no candidate package
+    return YCPString("");
+  }
+
+  string text( join( PMPackagePtr(selectable->candidateObj())->licenseToConfirm() ) );
+  return YCPString( text );
+}
+
+/**
+   @builtin Pkg::PkgGetLicensesToConfirm  (list<string> packages) -> map<string,string>
+
+   Return a map<package,license> for all candidate packages in list, which do have a
+   license. Unknown packages and those without license text are not returned.
+
+*/
+YCPMap PkgModuleFunctions::PkgGetLicensesToConfirm( const YCPList & packages )
+{
+  YCPMap ret;
+
+  for ( int i = 0; i < packages->size(); ++i ) {
+    PMSelectablePtr selectable = getPackageSelectable( packages->value(i)->asString()->value() );
+
+    if ( ! ( selectable && selectable->candidateObj() ) ) {
+      // unknown or no candidate package
+      continue;
+    }
+
+    string text( join( PMPackagePtr(selectable->candidateObj())->licenseToConfirm() ) );
+    if ( text.length() ) {
+      ret->add( packages->value(i), YCPString( text ) );
+    }
+  }
+
+  return ret;
+}
+
