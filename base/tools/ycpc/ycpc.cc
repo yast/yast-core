@@ -41,7 +41,7 @@ static int parse = 0;		// just parse source code
 static int compile = 0;		// just compile source to bytecode
 static int no_implicit_namespaces = 0;	// don't preload implicit namespaces
 
-#define progress(text,param)	{ if (!quiet) printf ((text),(param)); }
+#define progress(text,param)	{ if (!quiet) fprintf (stderr,(text),(param)); }
 
 /**
  * parse file and return corresponding YCode or NULL for error
@@ -66,7 +66,16 @@ parsefile (const char *infname)
 	}
     }
     
-    FILE *infile = fopen (infname, "r");
+    FILE *infile;
+    if (!strcmp (infname, "-"))
+    {
+	infile = stdin;
+    }
+    else
+    {
+	infile = fopen (infname, "r");
+    }
+
     if (infile == NULL)
     {
 	fprintf (stderr, "Can't read '%s'\n", infname);
@@ -268,7 +277,7 @@ void print_help (const char *name)
     printf ("Usage:\n");
     printf ("  %s [-h] [--help]\n", name);
     printf ("  %s [-v] [--version]\n", name);
-    printf ("  %s [-q] [-R] {-d} {-I include-path} {-M module-path} {-l logfile} {-c|-E|-p} {-o output} <filename>\n", name);
+    printf ("  %s [-q] [-R] {-d} {-I include-path} {-M module-path} {-l logfile} {-c|-E} {-o output} <filename>\n", name);
 }
 
 /**
