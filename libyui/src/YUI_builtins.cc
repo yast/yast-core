@@ -449,7 +449,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
     if ( ! dialog )
     {
-	y2error( "%s(): No dialog existing", builtin_name );
+	ycperror( "%s(): No dialog existing", builtin_name );
 	internalError( "No dialog existing during UserInput().\n"
 		       "\n"
 		       "Please check the log file!" );
