@@ -60,6 +60,7 @@ boot2string (hd_boot_arch_t boot_arch)
     switch (boot_arch)
     {
 	case boot_lilo:  s = "lilo"; break;
+	case boot_grub:  s = "grub"; break;
 	case boot_milo:  s = "milo"; break;
 	case boot_aboot: s = "aboot"; break;
 	case boot_silo:  s = "silo"; break;
@@ -913,7 +914,7 @@ HwProbe::ihwData (void)
     y2debug ("IHW_VERSION %4x", hd_ihw_get_version());
     y2debug ("IHW_DATA VERSION %x",hd_ihw_get_db_version());
     y2debug ("IHW_DATA DATE %s", hd_ihw_get_db_date());
-    
+
     card = 0;
     while ((icp = hd_ihw_get_card(card++)))
     {
@@ -928,11 +929,11 @@ HwProbe::ihwData (void)
 
 	/* temporary until libhd update */
 #if (IHW_VERSION == 0x0203)
-	isdnEntry->add (YCPString ("features"), YCPInteger (1)); 
-	isdnEntry->add (YCPString ("lines"), YCPInteger (1)); 
+	isdnEntry->add (YCPString ("features"), YCPInteger (1));
+	isdnEntry->add (YCPString ("lines"), YCPInteger (1));
 #else
-	isdnEntry->add (YCPString ("features"), YCPInteger (icp->features)); 
-	isdnEntry->add (YCPString ("lines"), YCPInteger (icp->line_cnt)); 
+	isdnEntry->add (YCPString ("features"), YCPInteger (icp->features));
+	isdnEntry->add (YCPString ("lines"), YCPInteger (icp->line_cnt));
 #endif
 	drv = icp->driver;
 	while ((idp = hd_ihw_get_driver(drv))) {

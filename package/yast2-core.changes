@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jul 22 12:32:34 CEST 2002 - arvin@suse.de
+
+- agent-probe recognizes boot mechanism grub from hwinfo
+
+-------------------------------------------------------------------
 Wed Jul 17 16:07:43 CEST 2002 - arvin@suse.de
 
 - provide full directory structure
