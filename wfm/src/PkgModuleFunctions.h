@@ -25,51 +25,35 @@
 
 #include <string>
 
-#include <Y2PM.h>
-
 #include <ycp/YCPValue.h>
 #include <ycp/YCPList.h>
-#include <ycp/YCPInterpreter.h>
 
+#include <Y2PM.h>
 #include <y2pm/PMSelectablePtr.h>
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstSrcManager.h>
 #include <y2pm/PMYouServers.h>
 
-class YCPCallbacks
-{
-  public:
-    YCPCallbacks( YCPInterpreter *interpreter );
-
-    YCPValue setCallback( string func, YCPList args );
-
-    YCPTerm createCallback( const string &func );
-
-    YCPValue evaluate( const YCPTerm &callback );
-    bool evaluateBool( const YCPTerm &callback );
-
-  private:
-    map<string, string> mModules;
-    map<string, string> mSymbols;
-    
-    YCPInterpreter *_interpreter;    
-};
+class YCPInterpreter;
 
 /**
  * A simple class for package management access
  */
 class PkgModuleFunctions
 {
+  public:
+
+	/**
+	 * Handler for YCPCallbacks received or triggered.
+	 * Needs access to WFM.
+	 **/
+	class CallbackHandler;
+
   protected:
 	/**
 	 * access to packagemanager
 	 */
 	Y2PM _y2pm;
-
-	/**
-	 * access to WFM for callbacks
-	 */
-	YCPInterpreter *_wfm;
 
 	PMError _last_error;
 
@@ -101,11 +85,13 @@ class PkgModuleFunctions
 	// used by Pkg::PkgCommit()
 	InstSrcManager::ISrcIdList _inst_order;
 
-        YCPCallbacks *_youCallbacks;
-        YCPCallbacks *_instTargetCallbacks;
+    private:
 
-        void initYouCallbacks();
-        void initInstTargetCallbacks();
+      /**
+       * Handler for YCPCallbacks received or triggered.
+       * Needs access to WFM.
+       **/
+      CallbackHandler & _callbackHandler;
 
     public:
 	// general
@@ -118,7 +104,7 @@ class PkgModuleFunctions
 	YCPValue ErrorDetails (YCPList args);
 	YCPValue ErrorId (YCPList args);
 
-	// callbacks
+	// callbacks (see PkgModuleCallbacks.h)
 	YCPValue CallbackStartProvide (YCPList args);
 	YCPValue CallbackProgressProvide (YCPList args);
 	YCPValue CallbackDoneProvide (YCPList args);
@@ -132,7 +118,10 @@ class PkgModuleFunctions
 	YCPValue CallbackYouPatchProgress (YCPList args);
 	YCPValue CallbackYouExecuteYcpScript (YCPList args);
         YCPValue CallbackYouScriptProgress (YCPList args);
-	void SetMediaCallback (InstSrcManager::ISrcId source_id);
+        YCPValue CallbackStartConvertDb (YCPList args);
+        YCPValue CallbackProgressConvertDb (YCPList args);
+        YCPValue CallbackNotifyConvertDb (YCPList args);
+        YCPValue CallbackStopConvertDb (YCPList args);
 
 	// source related
         YCPValue SourceStartManager (YCPList args);
@@ -251,5 +240,6 @@ class PkgModuleFunctions
     protected:
         YCPMap YouPatch( const PMYouPatchPtr &patch );
         PMYouServer convertServerObject( const YCPMap &serverMap );
+
 };
 #endif // PkgModuleFunctions_h

@@ -732,7 +732,7 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
 /**
    @builtin Pkg::FilterPackages(bool byAuto, bool byApp, bool byUser,  bool names_only) -> list of strings
 
-   return list of filtered packages (["pkg1", "pkg2", ..."] if names_only==true,
+   return list of filtered packages (["pkg1", "pkg2", ...] if names_only==true,
     ["pkg1 version release arch", "pkg1 version release arch", ... if
     names_only == false]
 
@@ -766,9 +766,9 @@ PkgModuleFunctions::FilterPackages(YCPList args)
     bool names_only = args->value(3)->asBoolean()->value();
 
     YCPList packages;
-    PMManager::PMSelectableVec::const_iterator it = Y2PM::packageManager().begin();
+    PMManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
 
-    while ( it != Y2PM::packageManager().end() )
+    while ( it != _y2pm.packageManager().end() )
     {
         PMSelectablePtr selectable = *it;
 
@@ -791,7 +791,7 @@ PkgModuleFunctions::FilterPackages(YCPList args)
 /**
    @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
 
-   return list of packages (["pkg1", "pkg2", ..."] if names_only==true,
+   return list of packages (["pkg1", "pkg2", ...] if names_only==true,
     ["pkg1 version release arch", "pkg1 version release arch", ... if
     names_only == false]
 

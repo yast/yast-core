@@ -21,6 +21,7 @@
 
 #include <ycp/y2log.h>
 #include <PkgModuleFunctions.h>
+#include <PkgModuleCallbacks.h>
 
 #include <y2pm/InstSrcDescr.h>
 #include <y2pm/InstSrcManager.h>
@@ -35,14 +36,14 @@
  * Constructor.
  */
 PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
-    : _wfm (wfmInterpreter)
-    , _first_free_source_slot(0)
+    : _first_free_source_slot(0)
     , _cache_started(false)
+    , _callbackHandler( *new CallbackHandler( wfmInterpreter,
+					      // get rid of this ASAP:
+					      CallbackHandler::ReferencesNeeded( _sources,
+										 _inst_order ) ) )
 {
     _y2pm.packageManager();
-
-    initYouCallbacks();
-    initInstTargetCallbacks();
 }
 
 /**
@@ -52,6 +53,7 @@ PkgModuleFunctions::~PkgModuleFunctions ()
 {
     SourceFinishAll (YCPList());
     TargetFinish (YCPList());
+    delete &_callbackHandler;
 }
 
 

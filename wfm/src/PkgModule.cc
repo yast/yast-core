@@ -85,6 +85,10 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "CallbackYouPatchProgress")	return CallbackYouPatchProgress (args);
     else if (function == "CallbackYouExecuteYcpScript")	return CallbackYouExecuteYcpScript(args);
     else if (function == "CallbackYouScriptProgress")   return CallbackYouScriptProgress(args);
+    else if (function == "CallbackStartConvertDb")      return CallbackStartConvertDb(args);
+    else if (function == "CallbackProgressConvertDb")   return CallbackProgressConvertDb(args);
+    else if (function == "CallbackNotifyConvertDb")     return CallbackNotifyConvertDb(args);
+    else if (function == "CallbackStopConvertDb")       return CallbackStopConvertDb(args);
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);

@@ -20,6 +20,8 @@ liby2wfm_la_SOURCES =				\
 	PkgModuleFunctionsSelection.cc		\
 	PkgModuleFunctionsTarget.cc		\
 	PkgModuleFunctionsSource.cc		\
+	PkgModuleCallbacks.h			\
+	PkgModuleCallbacks.YCP.h		\
 	PkgModuleCallbacks.cc
 liby2wfm_la_LDFLAGS = -version-info 2:0
 

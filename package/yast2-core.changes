@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Aug 29 01:45:25 CEST 2003 - ma@suse.de
+
+- Adapted PKG module to new packagemanager callbacks.
+- Introduced CallbackStartConvertDb, CallbackProgressConvertDb,
+  CallbackNotifyConvertDb, CallbackStopConvertDb. (#29484 as far as
+  PKG module is affected).
+- 2.8.22
+
+-------------------------------------------------------------------
 Mon Aug 25 16:26:38 CEST 2003 - kkeil@suse.de
 
 - new ISDN interface for agent-probe, data is now based on CDB
