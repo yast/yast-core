@@ -78,7 +78,7 @@ PkgModuleFunctions::YouStatus ()
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
     InstYou &you = _y2pm.youPatchManager().instYou();
-    PMYouProductPtr product = you.paths()->primaryProduct();
+    PMYouProductPtr product = you.settings()->primaryProduct();
 
     if ( product )
     {
@@ -112,7 +112,7 @@ PkgModuleFunctions::YouSetServer (const YCPMap& servers)
 
     InstYou &you = _y2pm.youPatchManager().instYou();
 
-    you.paths()->setPatchServer( server );
+    you.settings()->setPatchServer( server );
 
     return YCPString( "" );
 }
@@ -290,7 +290,10 @@ PkgModuleFunctions::YouGetPatches (const YCPBoolean& download, const YCPBoolean&
 
     InstYou &you = _y2pm.youPatchManager().instYou();
 
-    _last_error = you.retrievePatchInfo( reload, checkSig );
+    you.settings()->setReloadPatches( reload );
+    you.settings()->setCheckSignatures( checkSig );
+    
+    _last_error = you.retrievePatchInfo();
     if ( _last_error ) {
       if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
@@ -442,8 +445,13 @@ PkgModuleFunctions::YouGetCurrentPatch (const YCPBoolean& download, const YCPBoo
     bool reload = download->value();
     bool checkSig = sig->value();
 
+    InstYou &you = _y2pm.youPatchManager().instYou();
+    
+    you.settings()->setReloadPatches( reload );
+    you.settings()->setCheckSignatures( checkSig );
+
     _last_error =
-        _y2pm.youPatchManager().instYou().retrieveCurrentPatch( reload, checkSig );
+        you.retrieveCurrentPatch();
     if ( _last_error ) {
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ||
