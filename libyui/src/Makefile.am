@@ -20,6 +20,7 @@ libyui_la_SOURCES =				\
 	YBarGraph.cc				\
 	YCheckBox.cc				\
 	YColoredLabel.cc			\
+	YDate.cc				\
 	YDumbTab.cc				\
 	YComboBox.cc				\
 	YContainerWidget.cc			\
@@ -56,6 +57,7 @@ libyui_la_SOURCES =				\
 	YSquash.cc				\
 	YTable.cc				\
 	YTextEntry.cc				\
+	YTime.cc				\
 	YTree.cc				\
 	YWidget.cc				\
 	YWizard.cc

@@ -5,3 +5,4 @@ Makefile.in
 *.la
 .libs
 .deps
+YUI_widgets.loT

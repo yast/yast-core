@@ -76,6 +76,7 @@
 #define YUIWidget_Bottom			"Bottom"
 #define YUIWidget_CheckBox			"CheckBox"
 #define YUIWidget_ComboBox			"ComboBox"
+#define YUIWidget_Date			        "Date"
 #define YUIWidget_Empty				"Empty"
 #define YUIWidget_Frame				"Frame"
 #define YUIWidget_HBox				"HBox"
@@ -109,6 +110,7 @@
 #define YUIWidget_SelectionBox			"SelectionBox"
 #define YUIWidget_Table				"Table"
 #define YUIWidget_TextEntry			"TextEntry"
+#define YUIWidget_Time			        "Time"
 #define YUIWidget_Top				"Top"
 #define YUIWidget_Tree				"Tree"
 #define YUIWidget_VBox				"VBox"
@@ -160,6 +162,7 @@
 
 #define YUIOpt_animated				"animated"
 #define YUIOpt_autoScrollDown			"autoScrollDown"
+#define YUIOpt_autoAdvance			"autoAdvance"
 #define YUIOpt_autoShortcut			"autoShortcut"
 #define YUIOpt_countShowDelta			"countShowDelta"
 #define YUIOpt_centered				"centered"

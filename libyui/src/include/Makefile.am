@@ -17,6 +17,7 @@ pkginclude_HEADERS =				\
 	YDumbTab.h				\
 	YComboBox.h				\
 	YContainerWidget.h			\
+	YDate.h					\
 	YDialog.h				\
 	YDownloadProgress.h			\
 	YEmpty.h				\
@@ -50,6 +51,7 @@ pkginclude_HEADERS =				\
 	YSquash.h				\
 	YTable.h				\
 	YTextEntry.h				\
+	YTime.h					\
 	YTransText.h				\
 	YTree.h					\
 	YWidget.h				\

@@ -491,6 +491,16 @@ protected:
     virtual YWidget *createLabel( YWidget *parent, YWidgetOpt & opt, const YCPString & text ) = 0;
 
     /**
+     * Creates a Time input filed
+     */
+    virtual YWidget *createTime( YWidget *parent, YWidgetOpt & opt, const YCPString & label,  const YCPString & time ) = 0;
+
+    /**
+     * Creates a Date input filed
+     */
+    virtual YWidget *createDate( YWidget *parent, YWidgetOpt & opt, const YCPString & label,  const YCPString & date ) = 0;
+
+    /**
      * Creates a rich text widget
      * @param text Initial text of the label
      */
@@ -1086,6 +1096,12 @@ protected:
     YWidget *createLabel( YWidget *parent, YWidgetOpt & opt,
 			  const YCPTerm & term, const YCPList & optList, int argnr,
 			  bool heading );
+
+    YWidget *createDate( YWidget *parent, YWidgetOpt & opt,
+			  const YCPTerm & term, const YCPList & optList, int argnr);
+    
+    YWidget *createTime( YWidget *parent, YWidgetOpt & opt,
+			  const YCPTerm & term, const YCPList & optList, int argnr);
 
     /**
      * Helper function of createWidgetTree.

@@ -212,6 +212,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
 
     else if ( s == YUIWidget_CheckBox		)	w = createCheckBox		( p, opt, term, ol, n );
     else if ( s == YUIWidget_ComboBox		)	w = createComboBox		( p, opt, term, ol, n );
+    else if ( s == YUIWidget_Date		)	w = createDate			( p, opt, term, ol, n );
     else if ( s == YUIWidget_Empty		)	w = createEmpty			( p, opt, term, ol, n, false, false );
     else if ( s == YUIWidget_HSpacing		)	w = createSpacing		( p, opt, term, ol, n, true,  false );
     else if ( s == YUIWidget_HStretch		)	w = createEmpty			( p, opt, term, ol, n, true,  false );
@@ -235,6 +236,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_SelectionBox	)	w = createSelectionBox		( p, opt, term, ol, n );
     else if ( s == YUIWidget_Table		)	w = createTable			( p, opt, term, ol, n );
     else if ( s == YUIWidget_TextEntry		)	w = createTextEntry		( p, opt, term, ol, n, false );
+    else if ( s == YUIWidget_Time		)	w = createTime			( p, opt, term, ol, n );
     else if ( s == YUIWidget_Tree		)	w = createTree			( p, opt, term, ol, n );
     else if ( s == YUIWidget_VSpacing		)	w = createSpacing		( p, opt, term, ol, n, false, true );
     else if ( s == YUIWidget_VStretch		)	w = createEmpty			( p, opt, term, ol, n, false, true );
@@ -833,6 +835,88 @@ YWidget * YUI::createLabel( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
     return createLabel( parent, opt, term->value( argnr )->asString() );
 }
 
+
+/**
+ * @widgets	Time
+ * @short	Simple static text
+ * @class	YTime
+ * @arg		string label
+ * @option	outputField make the label look like an input field in read-only mode
+ * @usage	`Time( "Time:" , "20:20:20" )
+ *
+ *
+ * @description
+ *
+ * TODO
+ */
+
+YWidget * YUI::createTime( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr )
+{
+
+    if ( term->size() - argnr < 1 || term->size() - argnr > 2
+	 || !term->value(argnr)->isString()
+	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
+    {
+	y2error( "Invalid arguments for the Time widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+    YCPString initial_time( "2000-01-01" );
+    if ( term->size() >= argnr + 2 ) initial_time = term->value( argnr+1 )->asString();
+
+    for ( int o=0; o < optList->size(); o++ )
+    {
+	if ( optList->value(o)->isSymbol() )
+	{
+	    string sym = optList->value(o)->asSymbol()->symbol();
+
+	    if	    ( sym  == YUIOpt_autoAdvance    ) opt.autoAdvance.setValue( true );
+	    else    logUnknownOption( term, optList->value(o) );
+	}
+	else logUnknownOption( term, optList->value(o) );
+    }
+
+    return createTime( parent, opt, term->value( argnr )->asString(), initial_time );
+}
+
+/**
+ * @widgets	Date
+ * @short	Simple static text
+ * @class	YDate
+ * @arg		string label
+ * @usage	`Date( "Date:", "2004-10-12" )
+ *
+ * @description
+ *
+ * TODO
+ */
+
+YWidget * YUI::createDate( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr )
+{
+
+    if ( term->size() - argnr < 1 || term->size() - argnr > 2
+	 || !term->value(argnr)->isString()
+	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
+    {
+	y2error( "Invalid arguments for the Date widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+    YCPString initial_date( "2000-01-01" );
+    if ( term->size() >= argnr + 2 ) initial_date = term->value( argnr+1 )->asString();
+
+    /*
+    for ( int o=0; o < optList->size(); o++ )
+    {
+	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_shrinkable ) opt.isShrinkable.setValue( true );
+	else logUnknownOption( term, optList->value(o) );
+    }
+    */
+
+    return createDate( parent, opt, term->value( argnr )->asString(), initial_date );
+}
 
 
 /**
