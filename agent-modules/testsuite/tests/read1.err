@@ -5,27 +5,16 @@
 [YCP] tests/read1.ycp:7 post-install ["poi1", "poi2"]
 [YCP] tests/read1.ycp:8 pre-remove ["prr1", "prr2"]
 [YCP] tests/read1.ycp:9 post-remove ["por1", "por2"]
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:11 alias.al1 a1
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:12 options.op1 $["o1":"o1val"]
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:13 options.op2 $["o2":"o2val", "o2a":""]
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:15 pre-install.pri1 prin1
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:16 pre-install.pri2 prin2 prin2a prin2b
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:17 post-install.poi1 poin1
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:18 post-install.poi2 poin2 poin2a poin2b
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:19 pre-remove.prr1 prre1
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:20 pre-remove.prr2 prre2 prre2a
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:21 post-remove.por1 pore1
-[agent-modules] ModulesAgent.cc(Read):157 Obsolete interface, don't use any more!
 [YCP] tests/read1.ycp:22 post-remove.por2 pore2 porte2a
 [YCP] tests/read1.ycp:24 alias.al1 a1
 [YCP] tests/read1.ycp:25 options.op1 $["o1":"o1val"]

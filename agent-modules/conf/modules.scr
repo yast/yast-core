@@ -3,7 +3,7 @@
  * Summary:	SCR agent for /etc/modules.conf
  * Authors:	Michal Svec <msvec@suse.cz>, Daniel Vesely <dan@suse.cz>
  * Access:	read / write
- * See:		modules.conf(5), y2a_mods/modules.html
+ * See:		modules.conf(5), modules.html
  *
  * Examples:
  *   Read(.modules)

@@ -26,6 +26,7 @@ using std::endl;
 #include "Y2Logger.h"
 
 #define BACKUP_EXTENSION ".-"
+#define FINAL_COMMENT "YaST2_final_modules_conf_comment"
 
 /**
  * Destrucutor
@@ -442,8 +443,8 @@ bool ModulesConf::parseFile(const string &fname, ModuleEntry::Mode m, const bool
                                 // keep the final comment
     if (comment.length () && with_comment)
     {
-        setArgument("YaST2_final_modules_conf_comment", "", "", m);
-        setComment("YaST2_final_modules_conf_comment", "", comment, m);
+        setArgument(FINAL_COMMENT, "", "", m);
+        setComment(FINAL_COMMENT, "", comment, m);
     }
 
     return updateTimeStamp();
@@ -487,6 +488,7 @@ bool ModulesConf::writeFile(const string fname) {
 
 	ModulesConfIndex::iterator it = modules_conf_index.begin ();
 
+	string localinclude = "";
 	string dir, mod, arg, com;
 	for (; it != modules_conf_index.end (); ++it)
         {
@@ -496,13 +498,20 @@ bool ModulesConf::writeFile(const string fname) {
 
 	    if (isModule (dir, mod))
             {
-		if (dir == "options")	/* options directiove */
+		/* options directiove */
+		if (dir == "options")
 		    of << getComment(dir,mod) << dir + " " + mod + getOptionsAsString(mod) << endl;
-		else if(dir == "keep")	/* no arguments */
+		/* no arguments */
+		else if(dir == "keep")
 		    of << getComment(dir,mod) << dir << endl;
-		else if(dir == "YaST2_final_modules_conf_comment") /* comment at EOF */
+		/* comment at EOF */
+		else if(dir == FINAL_COMMENT)
 		    of << getComment(dir,mod); // << endl;
-		else			/* normal directive */
+		/* postpone directive */
+		else if(dir == "include" && mod == "/etc/modules.conf.local")
+		    localinclude = getComment(dir,mod) + dir + " " + mod + " " + getArgument(dir,mod) + "\n";
+		/* normal directive */
+		else
 		    of << getComment(dir,mod) << dir + " " + mod + " " + getArgument(dir,mod) << endl;
 
                 if (of.fail ())
@@ -519,6 +528,11 @@ bool ModulesConf::writeFile(const string fname) {
 		y2error("Wrong path in index '%s'.", it->c_str ());
             }
         }
+
+	if(localinclude != "") {
+	    y2debug("Include last: %s", localinclude.c_str());
+	    of << localinclude;
+	}
 
 	if (fname == "")
 	    dest_name = file_name;

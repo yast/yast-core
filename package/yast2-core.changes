@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Jul  4 16:24:11 CEST 2003 - msvec@suse.de
+
+- keep the include modules.conf.local at the end (#27681)
+- dropped unused modules paths
+- updated testsuite
+- 2.8.5
+
+-------------------------------------------------------------------
 Wed Jul  2 08:49:49 CEST 2003 - visnov@suse.de
 
 - return boolean value from client as exit code

@@ -1,8 +1,4 @@
-[agent-modules] ModulesAgent.cc(Write):241 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:2 alias.al1 true
-[agent-modules] ModulesAgent.cc(Write):287 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:3 alias.al1.comment true
-[agent-modules] ModulesAgent.cc(Write):241 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:4 options.op1 true
-[agent-modules] ModulesAgent.cc(Write):241 Obsolete interface, don't use any more!
 [YCP] tests/write2.ycp:5 keep true

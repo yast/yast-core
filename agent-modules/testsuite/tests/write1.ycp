@@ -1,10 +1,10 @@
 {
-    y2warning("alias.al1 %1",Write(.alias,"A1","al1"));
+    y2warning("alias.al1 %1",Write(.alias."al1","A1"));
 
-    y2warning("options.op1 %1",Write(.options,$["OP1":"1","OP1b":""],"op1"));
+    y2warning("options.op1 %1",Write(.options."op1",$["OP1":"1","OP1b":""]));
 
-    y2warning("pre-install.pri1 %1",Write(.pre-install,"PRI1 PRI1b","pri1"));
-    y2warning("post-install.poi1 %1",Write(.post-install,"POI1 POI1b","poi1"));
-    y2warning("pre-remove.prr1 %1",Write(.pre-remove,"PRR1 PRR1b","prr1"));
-    y2warning("post-remove.por1 %1",Write(.post-remove,"POR1 POR1b","por1"));
+    y2warning("pre-install.pri1 %1",Write(.pre-install."pri1","PRI1 PRI1b"));
+    y2warning("post-install.poi1 %1",Write(.post-install."poi1","POI1 POI1b"));
+    y2warning("pre-remove.prr1 %1",Write(.pre-remove."prr1","PRR1 PRR1b"));
+    y2warning("post-remove.por1 %1",Write(.post-remove."por1","POR1 POR1b"));
 }
