@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-*.log
-*.sum
-site.exp
-.libs
-.deps
-y2packager
