@@ -13,7 +13,7 @@
   File:		YSplit.cc
 
   Author:	Stefan Hundhammer <sh@suse.de>
-		( complete rewrite 09/2000 )
+		(complete rewrite 09/2000)
 
 /-*/
 
@@ -256,13 +256,13 @@ void YSplit::setSize( long newWidth, long newHeight )
 
     if ( primary == YD_HORIZ )
     {
-	calcPrimaryGeometry  ( newWidth,	widths,	 x_pos );
+	calcPrimaryGeometry  ( newWidth,  widths,  x_pos );
 	calcSecondaryGeometry( newHeight, heights, y_pos );
     }
     else
     {
 	calcPrimaryGeometry  ( newHeight, heights, y_pos );
-	calcSecondaryGeometry( newWidth,	widths,	 x_pos );
+	calcSecondaryGeometry( newWidth,  widths,  x_pos );
     }
 
     doResize( widths, heights, x_pos, y_pos );
