@@ -340,6 +340,8 @@ class PkgModuleFunctions : public Y2Namespace
 	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgDelete (const YCPString& p);
 	/* TYPEINFO: boolean(string)*/
+	YCPValue PkgTaboo (const YCPString& p);
+	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgNeutral (const YCPString& p);
 	/* TYPEINFO: boolean()*/
 	YCPValue PkgReset ();

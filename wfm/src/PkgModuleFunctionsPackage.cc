@@ -1013,6 +1013,23 @@ PkgModuleFunctions::PkgDelete (const YCPString& p)
 
 
 /**
+   @builtin Pkg::PkgTabll (string package) -> boolean
+
+   Set package to taboo
+
+*/
+YCPValue
+PkgModuleFunctions::PkgTaboo (const YCPString& p)
+{
+    PMSelectablePtr selectable = getPackageSelectable (p->value ());
+    if (!selectable)
+    {
+	return YCPBoolean (false);
+    }
+    return YCPBoolean (selectable->user_set_taboo());
+}
+
+/**
    @builtin Pkg::PkgNeutral (string package) -> boolean
 
    Set package to neutral (drop install/delete flags)
