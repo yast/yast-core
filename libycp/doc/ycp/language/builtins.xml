@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="builtins"><title>Builtins</title>
+ <section><title>bool</title>
+ <para>
+ </para>
+ </section>
+ <section><title>integer</title>
+ <para>
+ </para>
+ </section>
+ <section><title>string</title>
+ <para>
+ </para>
+ </section>
+ <section><title>list</title>
+ <para>
+ </para>
+ </section>
+ <section><title>map</title>
+ <para>
+ </para>
+ </section>
+</section>
+
+

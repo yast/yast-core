@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="hello"><title>Hello, world</title>
+  <para>
+  YCP is used in the YaST environment which always provides a user interface
+  for interaction with the user. YCP therefore does not implement the standard
+  I/O channels like <literal>stdin</literal> and <literal>stdout</literal>. Instead
+  the user interface or logging is used.</para>
+  <para>However, running a YCP program from command line will output the final
+  return value of the program. This is useful for prototyping and testing only.</para>
+
+  <section><title>Straightforward</title>
+  <para>
+  As mentioned above, the final return value is shown if a YCP program is run
+  from command line. The following example shows this.
+  <programlisting>
+  {
+     return "Hello, world !\n";
+  }
+  </programlisting>
+  </para>
+  </section>
+
+  <section><title>Using variables</title>
+  <para>
+  This example shows using a variable for the string. As you might have guessed, it's
+  otherwise identical to the first example.
+  <programlisting>
+  {
+     string h = "Hello, world !\n";
+     return h;
+  }
+  </programlisting>
+  </para>
+  </section>
+
+  <section><title>Using expressions</title>
+  <para>
+  This example shows how to construct the output from two strings.
+  <programlisting>
+  {
+     string h = "Hello";
+     string w = ", world !\n";
+     return h + w;
+  }
+  </programlisting>
+  </para>
+  </section>
+
+  <section><title>Using functions</title>
+  <para>
+  The last introductory example shows using a function.
+  <programlisting>
+  {
+     string hw ()
+     {
+	return "Hello, world !\n";
+     }
+
+     return hw ();
+  }
+  </programlisting>
+  </para>
+  </section>
+
+  <section><title>Summary</title>
+  <para>
+  If you're somewhat familiar with the C programming language, the above
+  examples should not contain any surprises. As with any language, learning
+  the basic syntax is easy but getting used to the various built-in functions
+  is somewhat time-consuming.
+  </para>
+  </section>
+</section>
+

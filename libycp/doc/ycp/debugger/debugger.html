@@ -1,0 +1,341 @@
+<html>
+
+<head>
+  <!-- $Id$ -->
+  <title>The YCP Debugger</title>
+</head>
+
+<body>
+
+<h3>Usage</h3>
+
+<ul>
+
+<li>The debugger is part of libycp. To use it, you must set the environment
+variable <tt>Y2DEBUGGER</tt>. With a value of 1, the debugger opens the port
+19473 and continues execution of the program. With a value of 2, the debugger
+waits for the frontend to connect.</li>
+
+<li>The debugger will also open the port and wait for a frontend if the
+process receives SIGUSR2.</li>
+
+<li>You can use <tt>telnet</tt> (<tt>telnet machine 19473</tt>) as a very
+simple frontend or the ycpdebugger, a full features graphical qt frontend with
+syntax highlighting.</li>
+
+</ul>
+
+<h3>Commands</h3>
+
+<p>(Some gdb-compatible aliases have been added.)</p>
+
+<dl>
+
+<dt>interrupt</dt>
+<dt>I</dt>
+<dt>^C</dt>
+<dd>Interrupts the program. You can only interrupt the interpreter while it is
+working. For example, you can not interrupt while the interpreter is waiting
+for the return of a UserInput ().</dd>
+
+<spacer type=vertical size=20>
+
+<dt>continue</dt>
+<dt>c</dt>
+<dt>fg</dt>
+<dd>Resume program execution.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>single</dt>
+<dt>stepi</dt>
+<dt>si</dt>
+<dd>Execute a single YCP instruction.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>step</dt>
+<dt>s</dt>
+<dd>Continues program execution until the current source line is left.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>next</dt>
+<dt>n</dt>
+<dd>Continues program execution until the next YCP instruction on the same
+level.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>up</dt>
+<dd>Continues program execution until the next YCP instruction on the next
+higher level.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>detach</dt>
+<dd>Disconnect from the interpreter.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>token</dt>
+<dd>Prints the token the current interpreter is working on.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>scope [#n] [MODULE]</dt>
+<dd>Prints the entire definition scope of the current interpreter or
+the interpreter with the unique number #n.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>scopes [#n]</dt>
+<dd>Prints some low level info about scopes, mainly known Modules.
+Optionally, an interpreter can be specified.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>print [#n] [MODULE::]VARIABLE</dt>
+<dt>p ...</dt>
+<dd>Prints the value of the variable in the current interpreter or
+the interpreter with the unique number #n.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>break FILENAME LINENUM</dt>
+<dt>b FILENAME LINENUM</dt>
+<dd>Set a breakpoint at line LINENUM in source file FILENAME.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>clear FILENAME LINENUM</dt>
+<dd>Delete breakpoint at line LINENUM in source file FILENAME.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>list breakpoints</dt>
+<dt>l b</dt>
+<dd>Prints a list of all breakpoints.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>list interpreters</dt>
+<dt>l i</dt>
+<dd>Prints a list of all interpreters.</dd>
+
+<spacer type=vertical size=20>
+
+<dt>set/unset option</dt>
+<dd>Set or unset the option. Options are:
+<spacer type=vertical size=5>
+<dl>
+<dt>ignorescr</dt>
+<dd>Don't debug calls to the scr interpreters. (on by default)</dd>
+<dt>printtoken</dt>
+<dd>Print the token at every stop. (off by default)</dd>
+</dl>
+</dd>
+
+</dl>
+
+<h3>Example Session</h3>
+
+<p>
+Suppose you want to debug the following short program:
+</p>
+
+<pre>
+
+# ./y2base test2.ycp qt
+
+{
+    list cpu = SCR(`Read(.probe.cpu));
+    list hosts = SCR(`Read(.etc.hosts));
+
+    UI(``{
+
+        OpenDialog(`PushButton(&quot;Hello World!&quot;));
+	UserInput();
+	CloseDialog();
+
+    });
+
+    float pi = 3.141;
+}
+
+</pre>
+
+<p>
+So first we have to set Y2DEBUGGER and start y2base:
+</p>
+
+<pre>
+-&gt; export Y2DEBUGGER 2
+-&gt; y2base test2.ycp qt
+waiting for debugger frontend to connect
+</pre>
+
+<p>
+As you can see, the interpreter is waiting for the frontend to connect. We
+will use telnet as a frontend:
+</p>
+
+<pre>
+-&gt; telnet localhost 19473
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+Welcome to the YCP debugger.
+interpreter: #0 wfm 0
+position: /suse/arvin/yast2/debugger/test2.ycp 0
+</pre>
+
+<p>
+We are connected to the ycp debugger. The last line shows us the position in
+the source code: filename and linenumber. Don't wonder about the linenumber of
+0, it hasn't been initialized yet. The line above tells us which interpreter
+is currently active: It is the wfm interpreter with the unique number 0.
+</p>
+
+<p>
+First we want to get a listing of the source code:
+</p>
+
+<pre>
+list source
+BEGIN SOURCE
+
+# ./y2base test2.ycp qt
+
+{
+    list cpu = SCR(`Read(.probe.cpu));
+    list hosts = SCR(`Read(.etc.hosts));
+
+    UI(``{
+
+        OpenDialog(`PushButton(&quot;Hello World!&quot;));
+        UserInput();
+        CloseDialog();
+
+    });
+
+    float pi = 3.141;
+}
+
+END SOURCE
+</pre>
+
+The source code is surrounded by <tt>BEGIN SOURCE</tt> / <tt>END SOURCE</tt>
+lines. This is mainly to simplify parsing for (intelligent?) frontends. Now we
+can step a bit through the code:
+
+<pre>
+step
+interpreter: #0 wfm 1
+position: /suse/arvin/yast2/debugger/test2.ycp 5
+step
+interpreter: #0 wfm 1
+position: /suse/arvin/yast2/debugger/test2.ycp 6
+</pre>
+
+<p>
+In the qt frontend a green arrow points to the current line. Well, it's time
+to see some variables:
+</p>
+
+<pre>
+scope
+BEGIN SCOPE
+1 list cpu = [$[&quot;architecture&quot;:&quot;i386&quot;, &quot;baseclass&quot;:&quot;Internally Used Clas
+END SCOPE
+</pre>
+
+<p>
+The interpreter only knows about the variable <tt>cpu</tt>. The first number
+tells us the level in which the variable is located. You can also see that the
+output is truncated. This is done since those list can get very long. If you
+want to see the complete variable, use the print command:
+</p>
+
+<pre>
+print cpu
+BEGIN VARIABLE
+[$[&quot;architecture&quot;:&quot;i386&quot;, &quot;baseclass&quot;:&quot;Internally Used Class&quot;, &quot;bus&quot;:&quot;None&quot;, &quot;family&quot;:6, &quot;model&quot;:3, &quot;subclass&quot;:&quot;CPU&quot;, &quot;unique_key&quot;:&quot;9zuE.j8NaKXDZtZ6&quot;]]
+END VARIABLE
+</pre>
+
+<p>
+In the qt frontend, the variable is displayed in a separate window in a more
+human readable style and with syntax highlighting.
+</p>
+
+<p>
+Let's go on:
+</p>
+
+<pre>
+step
+interpreter: #0 wfm 1
+position: /suse/arvin/yast2/debugger/test2.ycp 12
+step
+interpreter: #4 ui 0
+position: /suse/arvin/yast2/debugger/test2.ycp 0
+</pre>
+
+<p>
+Now the ui interpreter is active. It has the unique number 4. You can get a
+list of all interpreters:
+</p>
+
+<pre>
+list interpreters
+BEGIN INTERPRETERS
+#0 wfm
+#1 scr
+#2 scr
+#3 scr
+#4 ui
+END INTERPRETERS
+</pre>
+
+<p>
+Well, quite a lot of scr interpreters. But it's correct: Every scr path has
+one interpreter (after it has been used) plus one interpreter for the main
+ScriptingAgent.
+</p>
+
+<p>
+Now let's set a breakpoint at line 16 and continue until it is reached:
+</p>
+
+<pre>
+break /suse/arvin/yast2/debugger/test2.ycp 16
+BEGIN BREAKPOINTS
+/suse/arvin/yast2/debugger/test2.ycp 16
+END BREAKPOINTS
+continue
+breakpoint reached
+interpreter: #0 wfm 1
+position: /suse/arvin/yast2/debugger/test2.ycp 16
+</pre>
+
+<p>
+Setting breakpoints is much easier in the qt frontend: Just click with the
+left mousebutton onto a line. Breakpoints are also marked with a red
+sign. Note: If you set a breakpoint at a empty line, it will never be reached.
+</p>
+
+<pre>
+continue
+All interpreters finished, bye.
+Connection closed by foreign host.
+-&gt;
+</pre>
+
+<p>
+That's all folks.
+</p>
+
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<!ENTITY motivation SYSTEM "motivation.xml">
+<!ENTITY hello SYSTEM "hello.xml">
+
+<!ENTITY types SYSTEM "types.xml">
+<!ENTITY expressions SYSTEM "expressions.xml">
+<!ENTITY bracket SYSTEM "bracket.xml">
+<!ENTITY statements SYSTEM "statements.xml">
+
+<!ENTITY scopes SYSTEM "scopes.xml">
+<!ENTITY namespaces SYSTEM "namespaces.xml">
+
+<!ENTITY builtins SYSTEM "builtins.xml">
+<!ENTITY functions SYSTEM "functions.xml">
+
+<!ENTITY predefined SYSTEM "predefined.xml">
+
+<!ENTITY grammar SYSTEM "grammar.xml">

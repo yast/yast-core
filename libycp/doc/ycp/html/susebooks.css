@@ -1,0 +1,185 @@
+/*
+ Author: Ken Wimer
+*/
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	/*font-size: small;*/
+	color: #333333;
+}
+body div.chapter, body div.sect1, body div.sect2, body div.sect3 {
+	padding:20px;
+	text-align:justify;
+}
+div.chapter div.sect1, div.sect1 div.sect2, div.sect2 div.sect3 {
+	padding:0px;
+	}
+div.book div.titlepage h1.title {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #6a9d00;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 300%;
+}
+div.book div.titlepage h2.subtitle {
+	font-family: Arial, Helvetica, sans-serif;
+	color:#6a9d00;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 200%;
+
+}
+div.chapter div.titlepage h2.title {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #6a9d00;
+	font-size: 150%;
+}
+div.part div.titlepage h1.title {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #6a9d00;
+	font-size: 300%;
+}
+div.abstract {
+	margin-left:5ex;
+	margin-right:5ex;
+}
+div.sect1 div.titlepage h2.title, div.sect2 div.titlepage h2.title, div.sect3 div.titlepage h2.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: large;
+	color: #6a9d00;
+	font-style: normal;
+	font-weight: bold;
+}
+div.sect1 div.titlepage h3.title, div.sect2 div.titlepage h3.title, div.sect3 div.titlepage h3.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: medium;
+	color: #6a9d00;
+	font-style: normal;
+	font-weight: bold;
+}
+div.sect1 div.titlepage h4.title, div.sect2 div.titlepage h4.title, div.sect3 div.titlepage h4.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: medium;
+	color: #6a9d00;
+}
+div.figure p.title, div.table p.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-style: oblique;
+	color: #000000;
+	font-weight:bolder;
+	border-style: none;
+}
+div.example {
+	background-color: #efefef;
+	padding:5px;
+}
+div.userheadercontent { 
+        font-style: oblique;
+        text-align: center;
+}
+h2.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: large;
+	font-style: normal;
+	font-weight: bold;
+}
+h1.title {
+	font-size: x-large;
+	text-align: center;
+	font-style: normal;
+	font-weight: bold;
+}
+h2.subtitle {
+	font-size: large;
+	text-align: center;
+}
+div.authorgroup {
+	color: black;
+}
+div p.edition {
+	color: black;
+}
+div.important, div.warning, div.tip, div.caution {
+	border:1px solid #333333;
+	width:70%;
+	margin-left: 0.5in;
+   margin-top: 2ex;
+   margin-bottom: 2ex;
+}
+div.important h3.title {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: large;
+	font-style: oblique;
+	color: #ffffff;
+	background-color: #ff6600;
+	padding: 3px;
+}
+div.warning h3.title {
+	font-family: Arial, Helvetica, sans-serif;
+	/*font-size: large;*/
+	font-style: oblique;
+	color: #ffffff;
+	background-color: #C00000;
+	padding: 3px;
+}
+div.warning table tr.head td,
+div.warning table tr.head th {
+   vertical-align: middle;
+   color: #ffffff;
+   background-color: #ff6600;
+   padding: 3px;
+   /*text-align: center;*/
+}
+div.important table tr.head td,
+div.important table tr.head th {
+   vertical-align: middle;
+   color: #ffffff;
+   background-color: #ff8000;
+   padding: 3px;
+   /*text-align: center;*/
+}
+div.tip table tr.head td,
+div.tip table tr.head th {
+   vertical-align: middle;
+   color: #ffffff;
+   background-color: #669900;
+   padding: 3px;
+   /*text-align: center;*/
+}
+td img {/* special rule for Mozilla */
+   border: 0px;
+}
+p.boxtext {
+	margin: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+/* Keycaps */
+b.keycap, .keycap {
+  background-color: #eeeee6;
+  padding: 1px 5px;
+  border: 1px solid #999999;
+  margin: 0;
+  font-size:small;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Navigation */
+.navheader {
+	font-family: Arial, Helvetica, sans-serif;
+	border: 2px groove #ffffff;
+	background-color:#efefef;
+}
+.navfooter {
+	font-family: Arial, Helvetica, sans-serif;
+	border: 2px groove #ffffff;
+	background-color:#efefef;
+}
+:link {
+	color:#6a9d00;
+}
+:visited {
+	color:#444444;
+}
+p {
+	font-family: Arial, Helvetica, sans-serif;
+}
+/* EOF */

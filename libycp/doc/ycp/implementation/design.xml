@@ -1,0 +1,330 @@
+<section id="general_design"><title>General design</title>
+<para>
+The YCP interpreter can be divided in two parts:
+<itemizedlist>
+<listitem><para>lexical and syntactical analysis</para>
+<para>(translating the .ycp program to an internal representation)</para>
+<para> </para>
+</listitem>
+
+<listitem><para>evaluation</para>
+<para>(running the code)</para>
+<para> </para>
+</listitem>
+</itemizedlist>
+
+Both parts can be used independant from one another. The YCP interpreter
+has a means to dump it's internal representation to disk and read it later
+for evaluation. The on-disk format is called <xref linkend="bytecode"/>.
+</para>
+<para>
+The bytecode is the abstract syntax tree with most of the typing information removed.
+The in-memory representation is based on the <literal>YCode</literal> class, which
+can represent everything from a single constant up to a complete ycp file.</para>
+<para>
+Each language element (constants, expressions, statements, and blocks) is implemented
+as a separate C++ class. These elements are self-contained, all their knowledge
+about syntax and semantics is in their class.<footnote><para>Well, not quite. Syntax
+recognition is done in the scanner (<literal>scanner.ll</literal>) and parser (<literal>parser.yy</literal>)
+and some bytecode I/O is also handled separately (<literal>Bytecode.cc</literal>).</para></footnote>
+</para>
+
+
+<section><title>About Filenames</title>
+<para>
+Files starting with <literal>YCP...</literal> are from the old interpreter
+implementation, adapted where necessary. Files starting with <literal>Y...</literal>
+and written from scratch for the new interpreter.</para>
+<para>Please keep this in mind when looking at files :-)</para>
+</section>
+
+
+<section><title>Data structures</title>
+<para>
+The YCP interpreter has two class hierachies. One for Constants (<literal>YCPValue</literal>)
+and one for the rest (Expressions, Statements, Blocks).
+</para>
+<para>Since a lot of additional code is based on the (old) YCPValue implementation,
+it was left as-is and the new <literal>YCode</literal> hierachy written from scratch.
+</para>
+
+<para>The class <literal>YConst</literal> can be used to represent a <literal>YCPValue</literal> as a
+<literal>YCode</literal>.</para>
+<para>The class <literal>YCPCode</literal> can be used to represent a <literal>YCode</literal> as a
+<literal>YCPValue</literal>.</para>
+<para>In the source, speaking of <emphasis>code</emphasis> means any <literal>YCode</literal>. The test function
+<literal>isCode()</literal> checks a <literal>YCPValue</literal> for type <literal>YCode</literal>.</para>
+<para>However, in YCP type syntax, <literal>code</literal> refers to a <literal>YBlock</literal> passed
+as a parameter to a function. In the source, this is checked by <literal>isBlock()</literal>.</para>
+</section>
+
+<section><title>YCode</title>
+<para>
+<literal>YCode</literal> is the base class for all internal data representing the abstract syntax tree inside the new
+interpreter.</para><para>It carries an element type code (see <literal>enum ycode</literal> in <literal>include/ycp/YCode.h</literal>)
+and some (virtual) functions available in every derived class. These are
+<itemizedlist>
+<listitem><para>ycode code()</para><para>returns the typecode of the element</para><para> </para></listitem>
+<listitem><para>string toString()</para><para>returns the lexical representation of the element</para><para> </para></listitem>
+<listitem><para>std::ostream &amp; toStream (std::ostream &amp; str)</para><para>writes the bytecode representation to a stream</para><para> </para></listitem>
+<listitem><para>YCPValue evaluate (bool cse = false)</para><para>Evaluates the element to a constant. cse stands for constant subexpression
+elimination and is used to evaluate constant expressions during the parser phase.</para></listitem>
+</itemizedlist>
+</para>
+<section><title>YCode elements</title>
+<para><literal>enum ycode</literal> in <literal>include/ycp/YCode.h</literal> lists the codes
+for all currently defined YCode elements. The ycode prefix can be used to distinguish between
+constants (prefix <literal>yc...</literal>), expression (prefix <literal>ye...</literal>),
+and statements (prefix <literal>ys...</literal>).
+</para>
+<itemizedlist>
+<listitem><para>Codes for constants
+  <itemizedlist>
+  <listitem><para><literal>ycVoid</literal> YCPVoid</para></listitem>
+  <listitem><para><literal>ycBoolean</literal>  YCPBoolean</para></listitem>
+  <listitem><para><literal>ycInteger</literal>  YCPInteger</para></listitem>
+  <listitem><para><literal>ycFloat</literal>  YCPFloat</para></listitem>
+  <listitem><para><literal>ycString</literal>  YCPString</para></listitem>
+  <listitem><para><literal>ycByteblock</literal>  YCPByteblock</para></listitem>
+  <listitem><para><literal>ycPath</literal>  YCPPath</para></listitem>
+  <listitem><para><literal>ycSymbol</literal>  YCPSymbol</para></listitem>
+  <listitem><para><literal>ycList</literal>  YCPList</para></listitem>
+  <listitem><para><literal>ycMap</literal>  YCPMap</para></listitem>
+  <listitem><para><literal>ycEntry</literal> Internally used if a function call parameter is a variable reference </para></listitem>
+  <listitem><para><literal>ycLocale</literal> a translatable string (together with it's textdomain)</para></listitem>
+  <listitem><para><literal>ycFunction</literal> a function definition</para></listitem>
+  </itemizedlist></para>
+<para> </para>
+<para> </para>
+</listitem>
+
+<listitem><para>Codes for expressions
+  <itemizedlist>
+  <listitem><para><literal>yePropagate</literal> type propagation (value, type)</para></listitem>
+  <listitem><para><literal>yeUnary</literal> unary (prefix) operator</para></listitem>
+  <listitem><para><literal>yeBinary</literal> binary (infix) operator</para></listitem>
+  <listitem><para><literal>yeTriple</literal> exp ? exp : exp</para></listitem>
+  <listitem><para><literal>yeCompare</literal> comparison</para></listitem>
+  <listitem><para><literal>yeLocale</literal> locale expression (ngettext)</para></listitem>
+  <listitem><para><literal>yeList</literal> list expression</para></listitem>
+  <listitem><para><literal>yeMap</literal> map expression</para></listitem>
+  <listitem><para><literal>yeTerm</literal> symbol (...)</para></listitem>
+  <listitem><para><literal>yeLookup</literal> lookup (...)</para></listitem>
+  <listitem><para><literal>yeIs</literal> is (...)</para></listitem>
+  <listitem><para><literal>yeBracket</literal> list_or_map [ expr, ... ] : expr</para></listitem>
+  <listitem><para><literal>yeBlock</literal> { statement; statement; ...; return value; }</para></listitem>
+  <listitem><para><literal>yeReturn</literal> quoted expression</para></listitem>
+  <listitem><para><literal>yeVariable</literal> reference to variable</para></listitem>
+  <listitem><para><literal>yeBuiltin</literal> reference to builtin function</para></listitem>
+  <listitem><para><literal>yeSymFunc</literal> reference to builtin function with local environment</para></listitem>
+  <listitem><para><literal>yeFunction</literal> reference to defined function</para></listitem>
+  </itemizedlist></para>
+<para> </para>
+<para> </para></listitem>
+<listitem><para>Codes for statements
+  <itemizedlist>
+  <listitem><para><literal>ysTypedef</literal>	// typedef</para></listitem>
+  <listitem><para><literal>ysVariable</literal>	// variable definition</para></listitem>
+  <listitem><para><literal>ysFunction</literal>	// function definition</para></listitem>
+  <listitem><para><literal>ysAssign</literal>	// variable assignment</para></listitem>
+  <listitem><para><literal>ysBracket</literal>	// name [ expr, ... ] = expr</para></listitem>
+  <listitem><para><literal>ysIf</literal>	// if, then, else</para></listitem>
+  <listitem><para><literal>ysWhile</literal>	// while () do ...</para></listitem>
+  <listitem><para><literal>ysDo</literal>	// do ... while ()</para></listitem>
+  <listitem><para><literal>ysRepeat</literal>	// repeat ... until ()</para></listitem>
+  <listitem><para><literal>ysExpression</literal>// any expression (function call)</para></listitem>
+  <listitem><para><literal>ysReturn</literal></para></listitem>
+  <listitem><para><literal>ysBreak</literal></para></listitem>
+  <listitem><para><literal>ysContinue</literal></para></listitem>
+  <listitem><para><literal>ysTextdomain</literal></para></listitem>
+  <listitem><para><literal>ysInclude</literal></para></listitem>
+  <listitem><para><literal>ysFilename</literal></para></listitem>
+</itemizedlist>
+</para></listitem>
+</itemizedlist>
+</section>
+</section>
+
+<section><title>Constants</title>
+<para>
+Constants are language elements which need no further evaluation.
+</para>
+<para>
+Constants are represented as <literal>YCPValue</literal>, carry a typecode and
+a reference count for automatic garbage collection.</para>
+<para><literal>YCPValue</literal> is derived from <literal>YCPElement</literal> which
+does the reference handling. See <literal>include/ycp/YCPValue.h</literal> and
+<literal>include/ycp/YCPElement.h</literal> respectively.
+</para>
+<para>There are three exceptions from this 'a constant is a YCPValue' rule:
+<itemizedlist>
+  <listitem><para><literal>ycEntry</literal></para>
+<para><literal>ycEntry</literal> is used to wrap a variable reference into a <literal>YCPValue</literal>
+so it can be passed to a builtin function. Some functions build up a local environment and bind
+variables at runtime. A typical example is <literal>foreach</literal>:
+<screen>
+integer sum = 0;
+foreach (value, [1,2,3,4], { sum = sum + value; });
+</screen>
+The variable <literal>value</literal> is created (memory allocated) at parse time and passed
+to <literal>foreach</literal> at execution time. Because all builtins only accept <literal>YCPValue</literal>
+objects, the variable reference is wrapped.</para>
+<para> </para></listitem>
+  <listitem><para><literal>ycLocale</literal></para>
+<para>This constant doesn't have <literal>YCPValue</literal> representation since it must be (kind of) evaluated.
+It is a translatable string and carries also it's corresponding textdomain. At runtime, the textdomain is
+used to initialize <literal>gettext</literal> properly and value of this constant is the translated string
+as <literal>YCPString</literal>.
+<screen>
+...
+textdomain "whatever";
+...
+string s = _("This text will be translated");
+</screen>
+</para>
+    <para> </para></listitem>
+  <listitem><para><literal>ycFunction</literal></para>
+<para>A function declaration is stored as a constant since it can't be evaluated any further by itself. A function
+evaluation only takes place when the function is called and it's formal parameters are bound to actual values.
+However, this evaluation does not change the declared function, it therefore remains constant.</para>
+    <para> </para></listitem>
+</itemizedlist>
+</para>
+
+</section>
+<section><title>Expressions</title>
+<para>
+Expressions are handled in <literal>include/ycp/YExpression.h</literal> and
+<literal>src/YExpression.cc</literal>
+</para>
+
+  <section><title><literal>yePropagate</literal></title>
+  <para>A type propagation or cast. See <xref linkend="type_system"/> for allowed propagations.</para>
+  <para>It carries the expression (as YCode), the type of the expression and the type of the cast. It
+can be used as a run-time type check since the expression is checked to be of the expected type.</para></section>
+  <section><title><literal>yeUnary</literal></title>
+  <para>An unary (prefix) builtin function</para></section>
+  <section><title><literal>yeBinary</literal></title>
+  <para>A binary (infix) builtin function</para></section>
+  <section><title><literal>yeTriple</literal></title>
+  <para>A (C style) conditional expression of the form 'expr ? expr : expr'</para></section>
+  <section><title><literal>yeCompare</literal></title>
+  <para>A comparison builtin function</para></section>
+  <section><title><literal>yeLocale</literal></title>
+  <para>A locale expression for use with ngettext. This supports different translations
+  for singular and plural texts.</para></section>
+  <section><title><literal>yeList</literal></title>
+  <para>A list expression. This represents a list 'constant' which has non-constants as it's
+  elements.</para></section>
+  <section><title><literal>yeMap</literal></title>
+  <para>A map expression. This represents a map 'constant' which has non-constants as it's
+  elements.</para></section>
+  <section><title><literal>yeTerm</literal></title>
+  <para>A symbol with parameters, i.e. <literal>`sym ("foo", "bar")</literal>. This evaluates
+  to a <literal>YCPTerm</literal> after it's parameters are evaluated.</para></section>
+  <section><title><literal>yeLookup</literal></title>
+  <para>A <literal>lookup (...)</literal> expression. This is deprecated and should be replaced by <literal>yeBracket</literal></para></section>
+  <section><title><literal>yeIs</literal></title>
+  <para>An <literal>is (...)</literal> expression for type checking. This is needed if a function can
+  return several types of values and therefore is declared as <literal>any</literal>.</para></section>
+  <section><title><literal>yeBracket</literal></title>
+  <para>A <literal>list_or_map [ expr, ... ] : expr</literal></para></section>
+  <section><title><literal>yeBlock</literal></title>
+  <para>A sequence of statements</para></section>
+  <section><title><literal>yeReturn</literal></title>
+  <para>The old YCP language had 'quoted expression' written as <literal>``(</literal>expr<literal>)</literal> which
+  could be passed to functions for evaluation in the functions context.</para>
+  <para>This kind of 'delayed' evaluation is still possible but implemented as <literal>code</literal>
+  type parameters. In order to accept the old syntax, quoted expressions are internally
+  converted to <literal>{ return </literal>expr<literal>; }</literal> and represented as <literal>yeReturn</literal>
+  (an expression consisting of a single return)</para></section>
+  <section><title><literal>yeVariable</literal></title>
+  <para>A reference to a variable. This is a normal appereance of a variable in an expression</para></section>
+  <section><title><literal>yeBuiltin</literal></title>
+  <para>A reference to builtin function. Needed since the internal representation of builtin (pre-declared) functions
+  is a bit different from that of runtime declared functions.</para></section>
+  <section><title><literal>yeSymFunc</literal></title>
+  <para>A reference to builtin function with local environment. See the <literal>foreach</literal> example
+  above in the explanation for <literal>ycEntry</literal>. Such functions need special treatment internally.</para></section>
+  <section><title><literal>yeFunction</literal></title>
+  <para>A reference to a defined function. This is a normal appereance of a (runtime) defined function
+  in an expression.</para></section>
+
+</section>
+<section><title>Statements</title>
+<para>
+Statements are handled in <literal>include/ycp/YStatement.h</literal> and
+<literal>src/YStatement.cc</literal>
+</para>
+<para>All statements carry the line number of their appearance in the source
+file. This is used at runtime for reporting errors.</para>
+  <section><title><literal>ysTypedef</literal></title>
+  <para>A <literal>typedef</literal> statement.</para>
+  <para>It carries the name of the defined type and the type it represents.</para></section>
+  <section><title><literal>ysVariable</literal></title>
+  <para>A variable definition</para>
+  <para>It carries the variable type, a reference to the variable, and it's initial value.</para></section>
+  <section><title><literal>ysFunction</literal></title>
+  <para>A function definition</para>
+  <para>It carries the reference to the symbol entry defining the function. All the function
+  'data' (it's formal parameters and it's defining block) are stored as <literal>ycFunction</literal>.
+  The function statement just references the symbol entry whose value is the <literal>ycFunction</literal> code.
+  </para>
+  <para>This allows defining recursive functions whose defining statement is constructed after
+  parsing the defining block. The recursive usage of the function inside the block requires
+  the existance of the element representing the function. This element is the symbol entry mentioned
+  above.</para></section>
+  <section><title><literal>ysAssign</literal></title>
+  <para>A variable assignment.</para>
+  <para>It carries a reference to the assigned variable and the expression.</para></section>
+  <section><title><literal>ysBracket</literal></title>
+  <para>A bracket assigment of the form <literal>name[expr,...]=expr</literal></para></section>
+  <section><title><literal>ysIf</literal></title>
+  <para>An if-then-else statement</para></section>
+  <section><title><literal>ysWhile</literal></title>
+  <para>A while-do statement</para></section>
+  <section><title><literal>ysDo</literal></title>
+  <para>A do-while statement</para></section>
+  <section><title><literal>ysRepeat</literal></title>
+  <para>A repeat-until statement</para></section>
+  <section><title><literal>ysExpression</literal></title>
+  <para>An arbitrary expression whose value is ignored. Typically a function call as a statement.</para></section>
+  <section><title><literal>ysReturn</literal></title>
+  <para>A <literal>return</literal> statement.</para></section>
+  <section><title><literal>ysBreak</literal></title>
+  <para>A <literal>break</literal> statement.</para></section>
+  <section><title><literal>ysContinue</literal></title>
+  <para>A <literal>continue</literal> statement.</para></section>
+  <section><title><literal>ysTextdomain</literal></title>
+  <para>A <literal>textdomain</literal> statement</para></section>
+  <section><title><literal>ysInclude</literal></title>
+  <para>An <literal>include</literal> statement.</para></section>
+  <section><title><literal>ysFilename</literal></title>
+  <para>An internal statement used to store the current filename of the ycp source. It
+  is used in error reporting.</para></section>
+</section>
+<section><title>Blocks</title>
+<para>
+Blocks are handled in <literal>include/ycp/YBlock.h</literal> and
+<literal>src/YBlock.cc</literal>
+</para>
+<para>
+A block represents a sequence of statements and a scope for variable and function definitions.</para>
+<para>This scope definition feature of a block is pretty important since any name
+representing a variable or function belongs to a specific block. It is the innermost
+block enclosing the definition.</para>
+<para>Therefore a block defines its own environment, either extending or overlaying
+definitions from outer blocks. The exact implementation of name lookup is described elsewhere.</para>
+<para>It is important to understand that storage for variables is handled by blocks
+and variables can only appear inside blocks.</para>
+<para> </para>
+<para>
+This 'variables belong to a block' feature is also used in handling formal arguments
+of a function. The formal arguments define variables which must be available when
+parsing the functions definition block, but they don't belong to the definition block
+but to the function declaration part.</para>
+<para>This is solved by giving a function a separate block for formal arguments, the
+<literal>parameter block</literal>.</para>
+</section>
+</section>
+

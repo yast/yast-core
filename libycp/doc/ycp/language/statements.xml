@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="statements"><title>Statements</title>
+ <para>
+ Statements can only appear inside a block and do not have a value.
+ </para>
+ <section><title>if-then-else</title>
+ <para>
+ </para>
+ </section>
+ <section><title>while</title>
+ <para>
+ </para>
+ </section>
+ <section><title>block</title>
+ <para>
+ A block is an ordered sequence of statements.
+ </para>
+ <para>
+ Blocks are enclosed in curly braces (<literal>{</literal> and <literal>}</literal>).
+ </para>
+ <para>
+ Blocks can also be evaluated and therefore have a value. The default value of
+ a block is of type <literal>void</literal>. Other values can be specified with
+ the <literal>return</literal> statement.
+ </para>
+ </section>
+ <section><title>return</title>
+ <para>
+ The <literal>return</literal> statement defines the value of the innermost block.
+ </para>
+ </section>
+ <section><title>textdomain</title>
+ <para>
+ The <literal>textdomain</literal> statement is used in conjunction with locales.
+ It defines the translation domain for the locale string. Before using a locale expression,
+ a textdomain must be defined with the <literal>textdomain</literal> statement.
+ </para>
+ </section>
+</section>
+
+
