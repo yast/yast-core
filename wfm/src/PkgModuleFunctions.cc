@@ -60,7 +60,7 @@ Y2Function* PkgModuleFunctions::createFunctionCall (const string name)
     TableEntry *func_te = table ()->find (name.c_str (), SymbolEntry::c_function);
     if (func_te)
     {
-        return new YEFunction (func_te->sentry ());
+        return new YEFunction (func_te);
     }
     y2error ("No such function %s", name.c_str ());
     return NULL;
