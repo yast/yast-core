@@ -339,7 +339,7 @@ YCPPathSearch::addPath (Kind kind, const string& path)
 
 
 void
-YCPPathSearch::clearPathes (Kind kind)
+YCPPathSearch::clearPaths (Kind kind)
 {
     searchList[kind].clear();
 }

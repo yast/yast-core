@@ -1238,10 +1238,10 @@ int main(int argc, char *argv[])
 	switch (c)
 	{
 	    case 142:
-		YCPPathSearch::clearPathes (YCPPathSearch::Include);
+		YCPPathSearch::clearPaths (YCPPathSearch::Include);
 	    break;
 	    case 143:
-		YCPPathSearch::clearPathes (YCPPathSearch::Module);
+		YCPPathSearch::clearPaths (YCPPathSearch::Module);
 	    break;
 	    case 'h':
 	    case '?':

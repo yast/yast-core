@@ -148,7 +148,7 @@ public:
      * @param kind, kind fo pathes to clear
      * used for '--nostdmodules' and '--nostdincludes' in ycpc
      */
-    static void clearPathes (Kind kind);
+    static void clearPaths (Kind kind);
 
     /**
      * Initializes the search paths if not done already.
