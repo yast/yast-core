@@ -519,30 +519,46 @@ PkgModuleFunctions::GetPackages(YCPList args)
 
 
 /**
- * @builtin PkgUpdateAll (bool only_newer) -> count
+ * @builtin PkgUpdateAll () -> count
  *
  * mark all packages for installation which are installed and have
- * an available candidate. if 'only_newer' == true, only affect
- * packages which are newer, else affect all packages
+ * an available candidate.
  *
- * @return number of packages affected
+ * @return [ integer affected, list of not installed packages, list of not deleted packages ]
  *
  * This will mark packages for installation *and* for deletion (if a
  * package provides/obsoletes another package)
+ *
+ * !!! DOES NOT SOLVE !!
  */
 
 YCPValue
 PkgModuleFunctions::PkgUpdateAll (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
+    std::list<PMPackagePtr> noinstall;
+    std::list<PMPackagePtr> nodelete;
+
+    int count = _y2pm.packageManager().doUpdate (noinstall, nodelete);
+
+    YCPList ret;
+    ret->add (YCPInteger (count));
+
+    YCPList noinslist;
+    YCPList nodellist;
+
+    for (std::list<PMPackagePtr>::iterator it = noinstall.begin(); it != noinstall.end(); ++it)
     {
-	return YCPError ("Bad args to Pkg::PkgUpdateAll");
+	noinslist->add (YCPString ((*it)->name()));
     }
+    ret->add (noinslist);
 
-    bool only_newer = args->value(0)->asBoolean()->value();
+    for (std::list<PMPackagePtr>::iterator it = nodelete.begin(); it != nodelete.end(); ++it)
+    {
+	nodellist->add (YCPString ((*it)->name()));
+    }
+    ret->add (nodellist);
 
-    return YCPInteger (_y2pm.packageManager().updateAllInstalled(only_newer));
+    return ret;
 }
 
 
@@ -632,3 +648,34 @@ PkgModuleFunctions::PkgCommit (YCPList args)
     ret->add (remlist);
     return ret;
 }
+
+/**   
+   @builtin Pkg::GetBackupPath () -> string
+
+   get current path for update backup of rpm config files
+*/
+
+YCPValue
+PkgModuleFunctions::GetBackupPath (YCPList args)
+{
+    return YCPString (_y2pm.instTarget().getBackupPath().asString());
+}
+
+/**   
+   @builtin Pkg::SetBackupPath (string path) -> void
+
+   set current path for update backup of rpm config files
+*/
+YCPValue
+PkgModuleFunctions::SetBackupPath (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SetBackupPath");
+    }
+    Pathname path (args->value(0)->asString()->value());
+    _y2pm.instTarget().setBackupPath (path);
+    return YCPVoid();
+}
+

@@ -89,6 +89,8 @@ class PkgModuleFunctions
 
 	// selection related
 	YCPValue GetSelections (YCPList args);
+	YCPValue GetBackupPath (YCPList args);
+	YCPValue SetBackupPath (YCPList args);
 	YCPValue SelectionData (YCPList args);
 	YCPValue SetSelection (YCPList args);
 	bool SetSelectionString (std::string name);	// internal

@@ -69,6 +69,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);
+    else if (function == "GetBackupPath")	return GetBackupPath (args);
+    else if (function == "SetBackupPath")	return SetBackupPath (args);
     else if (function == "IsProvided")		return IsProvided (args);
     else if (function == "IsAvailable")		return IsAvailable (args);
     else if (function == "IsSelected")		return IsSelected (args);
