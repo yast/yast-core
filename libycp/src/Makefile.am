@@ -31,10 +31,11 @@ libycp_la_SOURCES = 								\
 $(srcdir)/scanner.cc: scanner.ll $(srcdir)/parser.h
 	flex++ -o$@ $<
 
-$(srcdir)/parser.h $(srcdir)/parser.cc: parser.yy
+# we need a pattern rule - otherwise bison may be run twice in parallel
+$(srcdir)/%.h $(srcdir)/%.cc: %.yy
 	bison -y -d -v $<
-	mv -f y.tab.c $(srcdir)/parser.cc
-	mv -f y.tab.h $(srcdir)/parser.h
+	mv -f y.tab.c $(srcdir)/$*.cc
+	mv -f y.tab.h $(srcdir)/$*.h
 
 $(srcdir)/hashtable.h: hashtable.gperf
 	gperf -k 3,5,7 -L ANSI-C -C -E -I -t <$< >$@.new
