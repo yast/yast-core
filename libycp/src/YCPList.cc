@@ -24,6 +24,7 @@ $Id$
 #include "ycp/YCPList.h"
 #include <algorithm>
 #include "ycp/Bytecode.h"
+#include "ycp/YCPCodeCompare.h"
 
 // YCPListRep
 
@@ -132,6 +133,11 @@ void YCPListRep::lsortlist()
     std::sort (elements.begin (), elements.end (), lcompareYCP);
 }
 
+void
+YCPListRep::fsortlist(const YCPCodeCompare& cmp)
+{
+    std::sort (elements.begin (), elements.end (), cmp);
+}
 
 const YCPElementRep*
 YCPListRep::shallowCopy() const
@@ -283,3 +289,4 @@ YCPList::YCPList(std::istream & str)
 	}
     }
 }
+

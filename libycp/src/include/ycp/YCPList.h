@@ -26,6 +26,7 @@
 
 
 
+class YCPCodeCompare;
 
 /**
  * @short List of YCPValues that is a value itself
@@ -111,6 +112,12 @@ public:
      * Sorts the list according to the locale. This function changes the list.
      */
     void lsortlist();
+
+    /**
+     * Sorts the list according to a comparison function.
+     * This function changes the list.
+     */
+    void fsortlist(const YCPCodeCompare& cmp);
 
     /**
      * Creates a copy of this list, i.e. creates a new list with
@@ -204,6 +211,8 @@ public:
     bool contains (const YCPValue& value) const { return CONST_ELEMENT->contains (value); }
     void sortlist() { ELEMENT->sortlist (); }
     void lsortlist() { ELEMENT->lsortlist (); }
+    void fsortlist(const YCPCodeCompare& cmp) { ELEMENT->fsortlist (cmp); }
+
     YCPList functionalAdd(const YCPValue& value, bool prepend = false) const
 	{ return CONST_ELEMENT->functionalAdd (value, prepend); }
     YCPValue value(int n) const { return CONST_ELEMENT->value (n); }

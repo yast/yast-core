@@ -20,6 +20,7 @@ $Id$
 /-*/
 
 #include <set>			// for toset
+#include <algorithm>		// sort
 
 using std::set;
 
@@ -32,6 +33,7 @@ using std::set;
 #include "ycp/YCPInteger.h"
 #include "ycp/YCPVoid.h"
 #include "ycp/YCPCode.h"
+#include "ycp/YCPCodeCompare.h"
 #include "ycp/YCPTerm.h"
 #include "ycp/StaticDeclaration.h"
 
@@ -528,7 +530,7 @@ l_sortlist (const YCPList &list)
 {
     /**
      * @builtin sort (list l) -> list
-     * Sort the list l according to the YCP builtin predicate <=.
+     * Sort the list l according to the YCP builtin predicate <.
      * Duplicates are not removed.
      *
      * Example: <pre>
@@ -546,22 +548,30 @@ l_sortlist (const YCPList &list)
     return ret;
 }
 
-
 static YCPValue
 l_sort (const YCPValue &sym1, const YCPValue &sym2,
 	 const YCPList &list, const YCPCode &order)
 {
     /**
-     * @builtin sort (symbol x, symbol y, list l, bool order) -> list
+     * @builtin sort (symbol x, symbol y, list l, block< boolean > order) -> list
      * Sorts the list l. You have to specify an order on the
      * list elements by naming to formal variables x und y and
      * specify an expression order, that evaluates to a boolean
-     * value depending on x and y. Return true, if x <= y to
+     * value depending on x and y. Return true, if x < y to
      * sort the list ascending.
      *
+     * <strong>
+     * The comparison must be an irreflexive one,
+     * that is "<" instead of "<=".
+     * </strong>
+     *
+     * It is because we no longer use bubblesort (yuck) but std::sort
+     * which requires a <a
+     * href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">strict
+     * weak ordering</a>.
+     *
      * Examples: <pre>
-     * sort (`x, `y, [ 3,6,2,8 ], ``(x<=y)) -> [ 2, 3, 6, 8 ]
-     * sort (`x, `y, [1, 2], false) -> endless loop!
+     * sort (integer x, integer y, [ 3,6,2,8 ], ``(x < y)) -> [ 2, 3, 6, 8 ]
      * </pre>
      */
 
@@ -570,52 +580,8 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
 	return YCPNull ();
     }
 
-    if (list->size () < 2)
-	return list;
-
-    // First make a copy of the list, than make a
-    // destructive sort. Sorry, we implement a bubble sort
-    // here that has an awful complexity. Feel free so
-    // send a patch with a better implementation ;-)
-
     YCPList result = list;
-
-    SymbolEntry *s1 = sym1->asEntry()->entry();
-    SymbolEntry *s2 = sym2->asEntry()->entry();
-
-    bool sorted;
-    do
-    {
-	sorted = true;
-	for (int i = 0; i < result->size () - 1; i++)
-	{
-	    // Compare two items
-
-	    s1->setValue (result->value (i));
-	    s2->setValue (result->value (i+1));
-
-	    YCPValue ret = order->evaluate ();
-	    if (ret.isNull ())
-	    {
-		ycp2error ("Bad sort order %s", order->toString ().c_str ());
-		return YCPNull ();
-	    }
-
-	    if (!ret->isBoolean ())
-	    {
-		ycp2error ("sort(): order %s evaluates to %s, which is not a boolean", order->toString ().c_str () 
-			, ret->toString ().c_str ());
-		return YCPNull ();
-	    }
-	    else if (!ret->asBoolean ()->value ())
-	    {
-		result->swap (i, i + 1);
-		sorted = false;
-	    }
-
-	}
-    }
-    while (!sorted);
+    result->fsortlist (YCPCodeCompare (sym1, sym2, order));
 
     return result;
 }

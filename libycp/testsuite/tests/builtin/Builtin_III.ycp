@@ -13,25 +13,40 @@
 
 # ---------------- added 1999/11/24 ---------------
 
-//
-// sort(symbol x, symbol y, list l, bool order) -> list
-//
-// Sorts the list l. You have to specify an order on the
-// list elements by naming to formal variables x und y and
-// specify an expression order, that evaluates to a boolean
-// value depending on x and y. Return true, if x <= y to
-// sort the list ascending.
-//
-//       sort(`x, `y, [1, 2], false) -> endless loop!
-//
+    /**
+     * sort (symbol x, symbol y, list l, block< boolean > order) -> list
+     *
+     * Sorts the list l. You have to specify an order on the
+     * list elements by naming to formal variables x und y and
+     * specify an expression order, that evaluates to a boolean
+     * value depending on x and y. Return true, if x < y to
+     * sort the list ascending.
+     *
+     * <strong>
+     * The comparison must be an irreflexive one,
+     * that is "<" instead of "<=".
+     * </strong>
+     *
+     * It is because we no longer use bubblesort (yuck) but std::sort
+     * which requires a <a
+     * href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">strict
+     * weak ordering</a>.
+     *
+     * Examples: <pre>
+     * sort (integer x, integer y, [ 3,6,2,8 ], ``(x < y)) -> [ 2, 3, 6, 8 ]
+     * </pre>
+     */
 
-( sort(integer x, integer y, [ 3,6,2,8 ], ``(x<=y)) == [ 2, 3, 6, 8 ] )
-( sort(`x, `y, [1, 2, 1, 2], { return true;}) == [ 1, 2, 1, 2] )
-( sort(`x, `y, [1, 2, 1, 2], ``(x<=y)) == [ 1, 1, 2, 2] )
+( sort(integer x, integer y, [ 3,6,2,8 ], ``(x < y)) == [ 2, 3, 6, 8 ] )
 
-( sort(`x, `y, [1], ``(x<=y)) == [1] )
-( sort(`x, `y, [1, 1, 1, 1, (2-1), (1*1), ((-1) * (-1))], ``(x<=y)) == [1,1,1,1,1,1,1] )
-( sort(`x, `y, [], ``(x<=y)) == [] )
+// undefined by the STL
+// ( sort(`x, `y, [1, 2, 1, 2], { return true;}) == [ 1, 2, 1, 2] )
+
+( sort(`x, `y, [1, 2, 1, 2], ``(x < y)) == [ 1, 1, 2, 2] )
+
+( sort(`x, `y, [1], ``(x < y)) == [1] )
+( sort(`x, `y, [1, 1, 1, 1, (2-1), (1*1), ((-1) * (-1))], ``(x < y)) == [1,1,1,1,1,1,1] )
+( sort(`x, `y, [], ``(x < y)) == [] )
 
 
 
