@@ -11,6 +11,4 @@ faq_DATA =						\
 
 EXTRA_DIST = $(faq_DATA)
 
-CLEANFILES = $(faq_DATA)
-
 
