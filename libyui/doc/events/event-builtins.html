@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Event Handling in the YaST2 User Interfaces</title>
+    <title>YaST2 UI Event Handling - Event-related UI builtins</title>
     <link rel="stylesheet" type="text/css" href="events.css">
 </head>
 
@@ -56,7 +56,8 @@ Author: Stefan Hundhammer
 	    <a href="#WaitForEvent">WaitForEvent</a> (&nbsp;int&nbsp;timeout&nbsp;)
 	</td>
 	<td>
-	    Waits for user input and returns an event map.
+	    Waits for user input and returns an 
+	    <a href="event-reference.html">event map</a>.
 	    Returns ID <i>`timeout</i> if no input is available for
 	    <i>timeout</i> milliseconds.
 	</td>
@@ -364,7 +365,8 @@ WaitForEvent() is an extended combination of
 <a href="#UserInput">UserInput()</a> and 
 <a href="#TimeoutUserInput">TimeoutUserInput()</a>: It waits until user input
 is available or until the (millisecond) timeout is expired. 
-It  returns an event map rather than just a simple ID.
+It  returns an <a href="event-reference.html">event map</a> 
+rather than just a simple ID.
 <p>
 In the case of timeout, it returns a map with a
 <a href="event-reference.html#TimeoutEvent">timeout event</a>.

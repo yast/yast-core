@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+    <title>YaST2 UI Event Handling - Event Reference</title>
+    <link rel="stylesheet" type="text/css" href="events.css">
+</head>
+
+<body>
+
+
+<h1 class="doc-title">Event Handling in the YaST2 UI</h1>
+
+<p align=center>
+Author: Stefan Hundhammer
+&lt;<a href="mailto:sh@suse.de?subject=YaST2 Event Handling">sh@suse.de</a>&gt;
+</p>
+
+<h1>Event Reference</h1>
+
+<table class="navigation-bar" width=100%>
+    <tr>
+	<td width="33%" align="left">Prev: <a href="event-builtins.html">Event-related UI builtins</a></td>
+	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
+	<td width="33%" align="right">Next: (none)</a></td>
+</table>
+
+
+
+
+<h2><a name="contents">Contents</a></h2>
+
+<ul>
+<li><a href="#event_map">Event Maps in General</a>
+<li><a href="#event_types">Event Types</a>
+    <ul>
+    <li><a href="#WidgetEvent">WidgetEvent</a>
+        <ul>
+        <li><a href="#Activated">Activated</a>
+        <li><a href="#ValueChanged">ValueChanged</a>
+        <li><a href="#SelectionChanged">SelectionChanged</a>
+        </ul>
+    <li><a href="#MenuEvent">MenuEvent</a>
+    <li><a href="#TimeoutEvent">TimeoutEvent</a>
+    <li><a href="#CancelEvent">CancelEvent</a>
+    <li><a href="#DebugEvent">DebugEvent</a>
+    </ul>
+<li><a href="#events_by_widget_class">Events by Widget Class</a>
+</ul>
+
+
+<h1><a name="event_map">Event Maps in General</h1>
+
+<p>
+Use <a href="event-builtins.html#WaitForEvent">WaitForEvent()</a> to get
+full information about a YaST2 UI event.
+<a href="event-builtins.html#UserInput">UserInput()</a> only returns a
+small part of that information, the <a href="#ID">ID</a> field of the event
+map.
+<p>
+The event map returned by
+<a href="event-builtins.html#WaitForEvent">WaitForEvent()</a> always contains
+at least the following elements:
+
+<table border="1">
+    <thead>
+	<th>Map Key</td>
+	<th>Value Type</th>
+	<th>Valid Values</th>
+	<th>Description</th>
+    </thead>
+    <tr>
+	<td class="map-key">EventType</tt></td>
+	<td class="map-type">string</td>
+	<td class="map-value">
+	    <a href="#WidgetEvent">WidgetEvent</a><br>
+	    <a href="#MenuEvent">MenuEvent</a><br>
+	    <a href="#TimeoutEvent">TimeoutEvent</a><br>
+	    <a href="#CancelEvent">CancelEvent</a><br>
+	    <a href="#DebugEvent">DebugEvent</a>
+	</td>
+	<td>
+	    <p>The type of this event.
+	    <p>Use this for general event classification.
+	</td>
+    <tr>
+    <tr>
+	<td class="map-key">ID</td>
+	<td class="map-type">any</td>
+	<td></td>
+	<td>
+	The ID (a widget ID for <a href="#WidgetEvent">WidgetEvents</a>)
+	that caused the event.<br>
+	This is what
+	<a href="event-builtins.html#UserInput">UserInput()</a> returns.
+    </tr>
+    <tr>
+	<td class="map-key">EventSerialNo</td>
+	<td class="map-type">integer</td>
+	<td>&gt;= 0</td>
+	<td>
+	    The serial number of this event.<br>
+	    Intended for debugging.
+    </tr>
+</table>
+
+
+<h1><a name="event_types">Event Types</h1>
+
+<h2><a name="WidgetEvent">WidgetEvent</h2>
+
+<h3><a name="Activated">Activated</h3>
+<h3><a name="ValueChanged">ValueChanged</h3>
+<h3><a name="SelectionChanged">SelectionChanged</h3>
+
+<h2><a name="MenuEvent">MenuEvent</h2>
+<h2><a name="TimeoutEvent">TimeoutEvent</h2>
+
+<table border="1">
+    <thead>
+	<th>Map Key</td>
+	<th>Value Type</th>
+	<th>Valid Values</th>
+	<th>Description</th>
+    </thead>
+    <tr>
+	<td class="map-key">EventType</tt></td>
+	<td class="map-type">string</td>
+	<td class="map-value">TimeoutEvent</td>
+	<td>(constant)</td>
+    <tr>
+    <tr>
+	<td class="map-key">ID</tt></td>
+	<td class="map-type">symbol</td>
+	<td class="map-value">`timeout</td>
+	<td>(constant)</td>
+    <tr>
+</table>
+
+
+<h2><a name="CancelEvent">CancelEvent</h2>
+
+
+
+<table border="1">
+    <thead>
+	<th>Map Key</td>
+	<th>Value Type</th>
+	<th>Valid Values</th>
+	<th>Description</th>
+    </thead>
+    <tr>
+	<td class="map-key">EventType</tt></td>
+	<td class="map-type">string</td>
+	<td class="map-value">CancelEvent</td>
+	<td>(constant)</td>
+    <tr>
+    <tr>
+	<td class="map-key">ID</tt></td>
+	<td class="map-type">symbol</td>
+	<td class="map-value">`cancel</td>
+	<td>(constant)</td>
+    <tr>
+</table>
+
+<p>
+A CancelEvent is an event that is sent when the user performs a general
+"cancel" action that is usually not part of the YCP application.
+<p>
+For the <b>Qt UI</b>, this means he used the window manager close button or a special
+key combination like Alt-F4 to close the active dialog's window.
+For the <b>NCurses UI</b>, this means he hit the ESC key.
+
+<p class="info-box">
+<b>User interface style hint:</b>
+It is usually a good idea for each dialog to provide some kind of "safe exit"
+anyway. Most popup dialogs (at least those that have more than just a simple
+"OK" button) should provide a "Cancel" button. If you use the widget ID `cancel
+for that button, CancelEvents integrate seamlessly into your YCP application.
+<br><br>
+"Main window" type dialogs should have an "Abort" button or something
+similar. If you don't use the widget ID `cancel for that button, don't forget
+to handle `cancel or "CancelEvent" like that "Abort" button. The user should
+always have a safe way out of a dialog - preferably one that doesn't change
+anything. Don't forget to add a confirmation popup before you really exit if
+there are unsaved data that might get lost!
+
+
+
+<h2><a name="DebugEvent">DebugEvent</h2>
+
+
+<table border="1">
+    <thead>
+	<th>Map Key</td>
+	<th>Value Type</th>
+	<th>Valid Values</th>
+	<th>Description</th>
+    </thead>
+    <tr>
+	<td class="map-key">EventType</tt></td>
+	<td class="map-type">string</td>
+	<td class="map-value">DebugEvent</td>
+	<td>(constant)</td>
+    <tr>
+    <tr>
+	<td class="map-key">ID</tt></td>
+	<td class="map-type">symbol</td>
+	<td class="map-value">`debugHotkey</td>
+	<td>(constant)</td>
+    <tr>
+</table>
+
+<p>
+A DebugEvent is an event type especially intended for debugging YCP code. It is
+sent when the user presses a special key combination.
+<p>
+For the <b>Qt UI</b>, this event is sent upon pressing Alt-Ctrl-Shift-D. There is
+currently no such key combination in the <b>NCurses UI</b>.
+
+<p class="info-box">
+Use DebugEvents event to dump additional data to the log file or to open special
+debugging popup dialogs - but <b>never</b> do anything with it that might turn
+out to be a security hazard. Remember, even though the key combination is
+really awkward, sooner or later some users will get to know it, and they will
+experiment. 
+
+
+
+<h1><a name="events_by_widget_class">Events by Widget Class</h1>
+
+
+
+
+<table class="navigation-bar" width=100%>
+    <tr>
+	<td width="33%" align="left">Prev: <a href="event-builtins.html">Event-related UI builtins</a></td>
+	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
+	<td width="33%" align="right">Next: (none)</a></td>
+</table>
+
+</body>
+</html>
+

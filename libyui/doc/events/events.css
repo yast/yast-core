@@ -38,6 +38,10 @@ h2
 td
 {
     vertical-align:top;
+    padding-left:5;
+    padding-right:5;
+    padding-top:3;
+    padding-bottom:3;
 }
 
 
@@ -87,3 +91,17 @@ td
     background-color:#E0E0ED;
 }
 
+.map-key
+{
+    font-family:monospace;
+}
+
+.map-type
+{
+    font-style:italic;
+}
+
+.map-value
+{
+    font-family:monospace;
+}
