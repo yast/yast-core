@@ -223,7 +223,7 @@ YCPList YTree::itemsTermList( YTreeItemList items )
 	YCPString itemText = item->getText();
 	itemTerm->add( itemText );
 
-	if ( item->isOpen() || item->isOpenByDefault() )
+	if ( item->isOpen() )
 	{
 	    // y2milestone( "Open item: %s", itemText->value().c_str() );
 	    itemTerm->add( YCPBoolean( true ) );
@@ -234,11 +234,7 @@ YCPList YTree::itemsTermList( YTreeItemList items )
 	if ( childrenList->size() > 0 )
 	    itemTerm->add( childrenList );
 
-	if ( itemTerm->size() > 1 )
-	    list->add( itemTerm );
-	else
-	    list->add( itemText );
-	    
+	list->add( itemTerm );
     }
 
     return list;
@@ -254,7 +250,7 @@ void YTree::findOpenItems( YCPMap & openItems, YTreeItemList items )
     {
 	YTreeItem * item = *it;
 	
-	if ( item->isOpen() || item->isOpenByDefault() )
+	if ( item->isOpen() )
 	{
 	    YCPValue id = item->getId();
 
