@@ -176,7 +176,7 @@ PkgModuleFunctions::Error (YCPList args)
 YCPValue
 PkgModuleFunctions::ErrorDetails (YCPList args)
 {
-    return YCPString (_last_error.errDetails());
+    return YCPString (_last_error.details());
 }
 
 /**

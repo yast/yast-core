@@ -592,7 +592,7 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
   
     bool progress( int percent )
     {
-      DBG << "you progress: " << percent << endl;
+      D__ << "you progress: " << percent << endl;
 
       YCPTerm callback = createCallback( "progress" );
       callback->add( YCPInteger ( percent ) );
@@ -601,16 +601,13 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
         ERR << "Wrong return type." << endl;
         return false;
       } else {
-        INT << "Got boolean." << endl;
-        bool result = ret->asBoolean()->value();
-        INT << "Result: " << result << endl;
-        return result;
+        return ret->asBoolean()->value();
       }
     }
 
     bool patchProgress( int percent, const string &pkg )
     {
-      DBG << "you patch progress: " << percent << endl;
+      D__ << "you patch progress: " << percent << endl;
 
       YCPTerm callback = createCallback( "patchProgress" );
       callback->add( YCPInteger ( percent ) );
@@ -620,10 +617,7 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
         ERR << "Wrong return type." << endl;
         return false;
       } else {
-        INT << "Got boolean." << endl;
-        bool result = ret->asBoolean()->value();
-        INT << "Result: " << result << endl;
-        return result;
+        return ret->asBoolean()->value();
       }
     }
 };
