@@ -939,18 +939,15 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
 	return YCPBoolean( false );
 
     // A wizard widget always has ID `wizard
-    YWidget * widget = widgetWithId( YCPSymbol( YWizardID ), true );
+    YWidget * widget = widgetWithId( YCPSymbol( YWizardID ), false );
 
     if ( ! widget )
-	return YCPNull();
+	return YCPBoolean( false );
 
     YWizard * wizard = dynamic_cast<YWizard *>( widget );
 
     if ( ! wizard )
-    {
-	y2error( "Widget with ID %s is not a wizard widget!", YWizardID );
-	return YCPNull();
-    }
+	return YCPBoolean( false );
 
     blockEvents();	// Avoid self-generated events from builtins
     YCPValue ret = wizard->command( command );
