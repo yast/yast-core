@@ -3116,6 +3116,9 @@ function_call:
 			    if (finalT != 0)				// error not shown yet
 			    {
 				constTypePtr seen = bt ? (constTypePtr)(bt->parameters()) : builtin->type();
+				if (! seen)
+				    seen = new FunctionType();
+
 				constTypePtr expected;
 				if (finalT->isError())
 				{
@@ -3676,23 +3679,25 @@ yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 static void
 yyerror_type_mismatch (Parser *parser, int lineno, const char *s, constTypePtr expected_type, constTypePtr seen_type)
 {
+    int linenumber = (lineno > 0) ? lineno : parser->m_lineno;
+    
     parser->m_parser_errors++;
     if (s && *s)
     {
-	parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->m_lineno);
+	parser->scanner()->logError (s, linenumber);
     }
 
     if (expected_type->isUnspec())
     {
-	parser->scanner()->logError ("No matching function", lineno);
+	parser->scanner()->logError ("No matching function", linenumber);
     }
     else if (expected_type->isError())
     {
-	parser->scanner()->logError ("Bad parameter type '%s'.", lineno, seen_type->toString().c_str());
+	parser->scanner()->logError ("Bad parameter type '%s'.", linenumber, seen_type->toString().c_str());
     }
     else
     {
-	parser->scanner()->logError ("Expected '%s', seen '%s'.", lineno, expected_type->toString().c_str(), seen_type->toString().c_str());
+	parser->scanner()->logError ("Expected '%s', seen '%s'.", linenumber, expected_type->toString().c_str(), seen_type->toString().c_str());
     }
 }
 

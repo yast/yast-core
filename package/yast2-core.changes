@@ -3,6 +3,7 @@ Thu Nov  4 15:03:36 CET 2004 - visnov@suse.cz
 
 - report file and line number for builtins (#43830) 
 - report correct line number of wrong function calls (#47077)
+- don't crash on builtins without parameters when they require one
 
 -------------------------------------------------------------------
 Wed Nov  3 18:01:15 CET 2004 - visnov@suse.cz
