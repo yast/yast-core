@@ -21,7 +21,9 @@
  * main function common to all Y2 components
  */
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE		// needed for vasprintf below
+#endif
 
 #include <stdarg.h>
 #include <unistd.h>
@@ -96,6 +98,11 @@ main (int argc, char **argv)
     }
 
     y2milestone ("Launched YaST2 component '%s'", progname);
+
+    for (int arg = 1; arg < argc; arg++)
+    {
+	y2debug ("arg %d: %s", arg, argv[arg]);
+    }
 
     // The environment variable YAST_IS_RUNNING is checked in rpm
     // post install scripts. Might be useful for other scripts as
