@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar  1 18:38:40 CET 2004 - sh@suse.de
+
+- Enable saving of screen shot name if recording macro 
+
+-------------------------------------------------------------------
 Mon Mar  1 18:08:42 CET 2004 - mvidner@suse.cz
 
 - ycp.pm: implemented byteblocks
