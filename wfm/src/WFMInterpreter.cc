@@ -660,10 +660,12 @@ WFMInterpreter::evaluateSCROpen (const YCPTerm& term)
 	int error;
 	if (!agent->start_and_check (check_version, &error))
 	{
+	    y2error ("SCROpen failed, error is %d", error);
 	    delete agent;
 	    return YCPInteger (error);
 	}
 
+	y2debug ("SCROpen succeeded, handle is %d", handle);
 	scrs.push_back (agent);
 	return YCPInteger (handle);
     }
