@@ -66,10 +66,6 @@ PkgModuleFunctions::getPackageSelectable (const std::string& name)
     PMSelectablePtr selectable;
     if (!name.empty())
 	selectable = _y2pm.packageManager().getItem(name);
-    if (!selectable)
-    {
-	y2error ("Package '%s' not found", name.c_str());
-    }
     return selectable;
 }
 
