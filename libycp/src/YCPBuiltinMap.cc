@@ -476,6 +476,23 @@ m_remove (const YCPMap &map, const YCPValue &key)
     return ret;
 }
 
+// just put here the lookup builtin docs
+    /**
+     * @builtin lookup
+     * @short Select a map element
+     * @param map MAP
+     * @param any KEY
+     * @param any DEFAULT
+     * @return any
+     * @description
+     * Gets the <tt>KEY</tt>'s value of a map. 
+     * Returns <tt>DEFAULT</tt>
+     * if the key does not exist. Returns nil if the found 
+     * entry has a different type than the default value.
+     *
+     * @usage lookup ($["a":42], "b", 0) -> 0
+     */
+
 
 YCPBuiltinMap::YCPBuiltinMap ()
 {
