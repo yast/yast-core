@@ -813,6 +813,7 @@ recompileAll (const std::list<std::string> & deplist, const char *depend)
 
 /**
  * parse file and return corresponding YCode or NULL for error
+ * "-" is stdin
  */
 YCodePtr
 parsefile (const char *infname)
@@ -876,6 +877,12 @@ parsefile (const char *infname)
 
 /**
  * Compile one file
+ * infname: "-" is stdin
+ * outfname: if NULL it is created from infname by replacing .ycp by .ybc
+ * return:
+ * 0 - success
+ * 1 - writing failed
+ * 2 - parsing failed
  */
 
 int
@@ -886,7 +893,6 @@ compilefile (const char *infname, const char *outfname)
     if (outfname != NULL)
     {
 	ofname = outfname;
-	progress ("compiling to '%s'\n", ofname.c_str ());
     }
     else
     {
@@ -899,8 +905,8 @@ compilefile (const char *infname, const char *outfname)
 	{
 	    ofname += ".ybc";
 	}
-	progress ("compiling to '%s'\n", ofname.c_str ());
     }
+    progress ("compiling to '%s'\n", ofname.c_str ());
 
     YCodePtr c = parsefile (infname);
 
@@ -913,9 +919,50 @@ compilefile (const char *infname, const char *outfname)
     return 2;
 }
 
+// this is a template function just because I couldn't look at the
+// copy & paste programming
 
 /**
- * Process one file
+ * Print the code to the given file
+ * 0 is success
+ */
+template <typename toStringAble>
+int printcode (const char *outfname, const toStringAble & c)
+{
+    std::ofstream outstream;
+
+    // print out the result
+    if (outfname != NULL
+	&& *outfname != '-')
+    {
+	outstream.open (outfname, std::ios::out);
+    }
+
+    if (!outstream.is_open ())
+    {
+	if ((outfname != NULL) && (*outfname != '-'))
+	{
+	    fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
+	    return 1;
+	}
+    }
+
+    progress ("Parsed:\n", 0);
+    if (outstream.is_open())
+    {
+	outstream << c->toString() << endl;
+    }
+    else
+    {
+	std::cout << c->toString() << endl;
+    }
+
+    return 0;
+}
+
+/**
+ * Process one file according to the command:
+ * compile, check syntax
  */
 
 int
@@ -934,35 +981,7 @@ processfile (const char *infname, const char *outfname)
 
 	if (quiet) return 0;
 
-	std::ofstream outstream;
-
-	// print out the result
-	if (outfname != NULL
-	    && *outfname != '-')
-	{
-	    outstream.open (outfname, std::ios::out);
-	}
-
-	if (!outstream.is_open ())
-	{
-	    if ((outfname != NULL) && (*outfname != '-'))
-	    {
-		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
-		return 1;
-	    }
-	}
-
-	progress ("Parsed:\n");
-	if (outstream.is_open())
-	{
-	    outstream << c->toString() << endl;
-	}
-	else
-	{
-	    std::cout << c->toString() << endl;
-	}
-
-	return 0;
+	return printcode (outfname, c);
     }
 
     if (read_n_print)
@@ -977,33 +996,7 @@ processfile (const char *infname, const char *outfname)
 
 	progress ("Result:\n");
 
-	std::ofstream outstream;
-
-	// print out the result
-	if (outfname != NULL
-	    && *outfname != '-')
-	{
-	    outstream.open (outfname, std::ios::out);
-	}
-
-	if (!outstream.is_open ())
-	{
-	    if ((outfname != NULL) && (*outfname != '-'))
-	    {
-		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
-		return 1;
-	    }
-	}
-
-	if (outstream.is_open())
-	{
-	    outstream << c->toString() << endl;
-	}
-	else
-	{
-	    std::cout << c->toString() << endl;
-	}
-
+	return printcode (outfname, c);
     }
 
     if (read_n_run)
@@ -1021,33 +1014,8 @@ processfile (const char *infname, const char *outfname)
 
 	YCPValue result = c->evaluate();
 	progress ("Result:\n");
-	std::ofstream outstream;
 
-	// print out the result
-	if (outfname != NULL
-	    && *outfname != '-')
-	{
-	    outstream.open (outfname, std::ios::out);
-	}
-
-	if (!outstream.is_open ())
-	{
-	    if ((outfname != NULL) && (*outfname != '-'))
-	    {
-		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
-		return 1;
-	    }
-	}
-
-	if (outstream.is_open())
-	{
-	    outstream << result->toString() << endl;
-	}
-	else
-	{
-	    std::cout << result->toString() << endl;
-	}
-
+	return printcode (outfname, result);
     }
 
     return 0;
@@ -1108,10 +1076,33 @@ recurse (const char *path)
  */
 void print_help (const char *name)
 {
+    char * opt_fmt = "\t%-25s %s\n";
     printf ("Usage:\n");
     printf ("  %s [-h] [--help]\n", name);
     printf ("  %s [-v] [--version]\n", name);
-    printf ("  %s [-q] [-R] {-d} {-I include-path} {-M module-path} {-l logfile} {-c|-E|-C} {-o output} <filename>\n", name);
+    printf ("  %s <command> [<option>]... <filename>...\n", name);
+    printf ("  %s\n", "Commands:");
+    printf (opt_fmt, "-c, --compile", "compile to bytecode");
+    printf (opt_fmt, "-E, --fsyntax-only", "check syntax and print (unless -q)");
+    printf (opt_fmt, "-f, --freshen", "freshen .ybc files");
+    printf (opt_fmt, "-p, --print", "read and print bytecode");
+    printf (opt_fmt, "-r, --run", "read and run bytecode");
+    printf ("  Options:\n");
+    printf (opt_fmt, "-l, --log-file <name>", "log file, - means stderr");	// common
+    printf (opt_fmt, "-q, --quiet", "no output");
+    printf (opt_fmt, "-t, --test", "more output (-tt, -ttt)");
+    printf ("\n");
+    printf (opt_fmt, "-d, --no-implicit-imports", "don't preload implicit namespaces");
+    printf (opt_fmt, "-F, --Force", "force recompilation of all dependant files");
+    printf (opt_fmt, "-I, --include-path", "where to find include files");
+    printf (opt_fmt, "-M, --module-path", "where to find module files");
+    printf (opt_fmt, "--no-std-includes", "drop all built-in include paths");
+    printf (opt_fmt, "--no-std-modules", "drop all built-in include paths");
+    printf (opt_fmt, "-n, --no-std-paths", "no standard paths");
+    printf (opt_fmt, "-o, --output", "output file for -c, -E, -p, -r");
+    printf (opt_fmt, "-R, --recursive", "operate recursively");
+    printf (opt_fmt, "-u, --ui {ncurses|qt}", "UI to start in combination with 'r'");
+//    printf (opt_fmt, "-, --", "");
 }
 
 /**
@@ -1154,10 +1145,14 @@ int main(int argc, char *argv[])
 	    {"help", 0, 0, 'h'},			// show help and exit
 	    {"include-path", 1, 0, 'I'},		// where to find include files
 	    {"module-path", 1, 0, 'M'},			// where to find module files
+	    {"no-std-includes", 0, 0, 257},		// drop all built-in include pathes
+	    {"no-std-modules", 0, 0, 258},		// drop all built-in module pathes
 	    {"nostdincludes", 0, 0, 257},		// drop all built-in include pathes
 	    {"nostdmodules", 0, 0, 258},		// drop all built-in module pathes
+	    {"log-file", 1, 0, 'l'},			// specify log file
 	    {"logfile", 1, 0, 'l'},			// specify log file
 	    {"no-std-path", 0, 0, 'n'},			// no standard pathes
+	    {"no-std-paths", 0, 0, 'n'},		// no standard pathes
 	    {"output", 1, 0, 'o'},			// output file
 	    {"print", 0, 0, 'p'},			// read & print bytecode
 	    {"run", 0, 0, 'r'},				// read & run bytecode
@@ -1293,7 +1288,8 @@ int main(int argc, char *argv[])
 	&& (compile == read_n_print)
 	&& (compile == read_n_run))
     {
-	fprintf (stderr, "-c, -E, -f, or -p must be given\n");
+	fprintf (stderr, "-c, -E, -f, -p or -r must be given\n");
+	exit (1);
     }
 
     if (optind == argc)
