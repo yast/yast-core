@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sat Feb 21 02:41:23 CET 2004 - ma@suse.de
+
+- Reimplemented counted pointer classes
+- 2.9.39
+
+-------------------------------------------------------------------
 Fri Feb 20 17:17:17 CET 2004 - visnov@suse.cz
 
 - correctly free code in YEBinary and YETriple

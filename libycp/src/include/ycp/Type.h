@@ -28,7 +28,7 @@
 
 class FunctionType;
 
-class Type : virtual public Rep, public MemUsage
+class Type : public Rep, public MemUsage
 {
     REP_BODY(Type);
 private:
@@ -436,7 +436,7 @@ public:
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type) const;
     std::ostream & toStream (std::ostream & str) const;
-    FunctionType (constTypePtr returntype = Type::Unspec); 
+    FunctionType (constTypePtr returntype = Type::Unspec);
     FunctionType (std::istream & str);
     ~FunctionType ();
     constTypePtr returnType () const { return m_returntype; }

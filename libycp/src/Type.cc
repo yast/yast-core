@@ -28,13 +28,13 @@ $Id$
 // pointers
 
 IMPL_BASE_POINTER(Type);
-IMPL_DERIVED_POINTER(FlexType, Type, Type);
-IMPL_DERIVED_POINTER(VariableType, Type, Type);
-IMPL_DERIVED_POINTER(ListType, Type, Type);
-IMPL_DERIVED_POINTER(MapType, Type, Type);
-IMPL_DERIVED_POINTER(BlockType, Type, Type);
-IMPL_DERIVED_POINTER(TupleType, Type, Type);
-IMPL_DERIVED_POINTER(FunctionType, Type, Type);
+IMPL_DERIVED_POINTER(FlexType, Type);
+IMPL_DERIVED_POINTER(VariableType, Type);
+IMPL_DERIVED_POINTER(ListType, Type);
+IMPL_DERIVED_POINTER(MapType, Type);
+IMPL_DERIVED_POINTER(BlockType, Type);
+IMPL_DERIVED_POINTER(TupleType, Type);
+IMPL_DERIVED_POINTER(FunctionType, Type);
 
 
 //----------------------------------------------------------------...
@@ -140,7 +140,7 @@ Type::Type (tkind kind, std::istream & str)
  * write out to stream
  */
 
-std::ostream & 
+std::ostream &
 Type::toStream (std::ostream & str) const
 {
 //y2debug ("Type::toStream ([%d]%s)", m_kind, toString().c_str());
@@ -338,7 +338,7 @@ FlexType::~FlexType ()
 }
 
 
-std::ostream & 
+std::ostream &
 FlexType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -422,7 +422,7 @@ VariableType::~VariableType ()
 }
 
 
-std::ostream & 
+std::ostream &
 VariableType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -518,7 +518,7 @@ ListType::~ListType ()
 }
 
 
-std::ostream & 
+std::ostream &
 ListType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -632,7 +632,7 @@ MapType::~MapType ()
 }
 
 
-std::ostream & 
+std::ostream &
 MapType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -716,7 +716,7 @@ MapType::canCast (constTypePtr to) const
 {
 //    y2debug ("canCast '%s' to '%s'", toString().c_str(), to->toString().c_str());
 
-    if (to->isMap ()) 
+    if (to->isMap ())
 	return (m_keytype->canCast (((constMapTypePtr)to)->m_keytype))
 	    && (m_valuetype->canCast (((constMapTypePtr)to)->m_valuetype));
     return false;
@@ -761,7 +761,7 @@ BlockType::~BlockType ()
 }
 
 
-std::ostream & 
+std::ostream &
 BlockType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -872,7 +872,7 @@ TupleType::~TupleType()
 }
 
 
-std::ostream & 
+std::ostream &
 TupleType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -954,10 +954,10 @@ TupleType::match (constTypePtr expected) const
 //    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
-    
+
     if (bm == 1)
 	return 0;
-	
+
     if (bm == 0
 	    && expected->isTuple())
     {
@@ -991,7 +991,7 @@ TupleType::equals (constTypePtr expected) const
     {
 	const TupleType & tt = (const TupleType)expected;
 	unsigned int esize = tt.m_types.size();
-	
+
 	if (esize != m_types.size ())
 	{
 	    return false;
@@ -1092,7 +1092,7 @@ FunctionType::FunctionType (std::istream & str)
 }
 
 
-std::ostream & 
+std::ostream &
 FunctionType::toStream (std::ostream & str) const
 {
     Type::toStream (str);
@@ -1200,9 +1200,9 @@ FunctionType::match (constTypePtr expected) const
 //    y2debug ("FunctionType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
-    
+
     if (bm == 1) return 0;		// any or wildcard match
-    
+
     if ((bm == 0
 	    && expected->isFunction()))
     {

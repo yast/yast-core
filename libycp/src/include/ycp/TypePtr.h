@@ -26,12 +26,12 @@
 // constTypePtr
 
 DEFINE_BASE_POINTER(Type);
-DEFINE_DERIVED_POINTER(FlexType, Type, Type);
-DEFINE_DERIVED_POINTER(VariableType, Type, Type);
-DEFINE_DERIVED_POINTER(ListType, Type, Type);
-DEFINE_DERIVED_POINTER(MapType, Type, Type);
-DEFINE_DERIVED_POINTER(BlockType, Type, Type);
-DEFINE_DERIVED_POINTER(TupleType, Type, Type);
-DEFINE_DERIVED_POINTER(FunctionType, Type, Type);
+DEFINE_DERIVED_POINTER(FlexType, Type);
+DEFINE_DERIVED_POINTER(VariableType, Type);
+DEFINE_DERIVED_POINTER(ListType, Type);
+DEFINE_DERIVED_POINTER(MapType, Type);
+DEFINE_DERIVED_POINTER(BlockType, Type);
+DEFINE_DERIVED_POINTER(TupleType, Type);
+DEFINE_DERIVED_POINTER(FunctionType, Type);
 
 #endif   // TypePtr_h
