@@ -17,7 +17,7 @@
 	integer index = 0;
 	while (index < args)
 	{
-	    any arg = select (t, index, nil);
+	    any arg = t[index]:nil;
 	    if (is (arg, term) && arg != nil)
 	    {
 		term targ = toterm (arg);

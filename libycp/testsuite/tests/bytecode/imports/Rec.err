@@ -6,4 +6,3 @@
     term dialog = `VBox (`HBox (`HStretch (), "w2"));
     y2error ("%1", Rec::ProcessTerm (dialog, $[], 0));
 }
-2004-11-02 15:35:28 <3> heron(29938) [Scanner] tests/Module/Rec.ycp:13 Warning: 'select ()' is deprecated

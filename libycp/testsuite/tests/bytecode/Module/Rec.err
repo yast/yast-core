@@ -24,7 +24,7 @@ Parsed:
     while ((index < args))
     {
     // any arg
-    any arg = select (t, index, nil);
+    any arg = t[index]:nil;
     if ((is (arg, term) && (arg != nil)))
     {
     // term targ
