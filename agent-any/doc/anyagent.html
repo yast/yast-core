@@ -1,0 +1,716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!-- $Id$ -->
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<title>Any-Agent Reference</title>
+<style type="text/css">
+dt {font-weight: bold}
+.old {color: maroon}
+</style>
+</head>
+<body bgcolor="white">
+<h1>Any-Agent Reference</h1>
+
+<a name="top"></a>
+<p>AnyAgent is a generalized agent handler for handling system files
+   from /proc and /etc.
+
+<p>AnyAgent  loads syntax description at startup to read and write
+  system file, loads complete file (incl. comments) to internal
+  YCPListRep and  provides valid (i.e. non-comment) lines in another
+  data structure defined by syntax.
+
+<!--================================================================-->
+<hr>
+<h2 id=commands>Commands</h2>
+
+<dl>
+<dt>Read
+<dd>Has the usual meaning.
+<dt>Write
+<dd>Before version 2.6.2 it returned <b>0</b> on success
+and <b>nil</b> on error!<br />
+Since 2.6.2, it returns <b>true</b> or <b>false</b>.
+</dl>
+
+<!--================================================================-->
+<hr>
+<h2 id=description>Syntax Description</h2>
+
+<p>The syntax description is usually included in YCP-scripts and has
+following body:
+
+<p>FIXME: the quoting varies widely. What is necessary and why?
+
+<pre>
+`ag_anyagent (
+    Description (
+	<i>source</i>,
+	<i>comment-chars</i>,
+	<i>is-read-only</i>,
+	<i>syntax</i>,
+	<i>header</i><sub>opt</sub>
+    )
+)
+</pre>
+
+<p>Where
+<dl>
+<dt><i>source</i>
+<dd>is File ( <i>string</i> ) or Run ( <i>string</i> )<br>FIXME:
+explain arg(n)
+<dt><i>comment-chars</i>
+<dd>is a <i>string</i> of comment characters. Lines beginning with any of
+these characters are discarded. If Fillup ( <i>string</i> ) is
+specified... FIXME, see <a href="#Fillup">Fillup</a>.
+<dt><i>is-read-only</i>
+<dd>a <i>boolean</i>. Some agents read from /proc, some syntax elements are read-only...
+<dt><i>syntax</i><dd>Syntax specification, see <a href="#syntax">below</a>.
+<dt><i>header</i>
+<dd>FIXME: not implemented?
+</dl>
+
+<div class=old>
+<pre>
+  `anyagent(
+    ``Description (
+      ``< source >,
+      "< comment >",    // Comment like "#\n"
+      < false|true >,   // read-only
+      ``
+
+	.... AnyAgent-commands....
+
+      )
+    )
+  ), < path >);
+</pre>
+<p>description:
+<p><b> < source > </b>
+The source from which the information is read or in which it is written.
+It could be a filename or a command ( program or shell-script ).
+<ul>
+<li>File("< filename >")  </li>
+<li>Run("< command >") </li>
+</ul>
+<p><b> < path > </b>
+<i>Path</i> is the internal pathname of the script.
+
+<p>example: FIXME: old, fix quoting
+<pre>
+  `anyagent(
+    ``Description (
+      ``File("/etc/hosts"),     // real file name
+      "#\n",                    // Comment
+      false,                    // read-only
+      ``List (
+	Tuple (
+	  `ip4 (Ip4Number()),
+	  Separator ("\t "),
+	  `hostnamess (List (Hostname(), Whitespace()))
+	),
+	"\n"
+      )
+    )
+  ), .etc.hosts);
+
+</pre>
+<p>This example reads or writes the file /etc/hosts.
+</div>
+
+<!--================================================================-->
+<hr>
+<h2 id=syntax>Syntax Elements</h2>
+<p>Alphabetically:
+<a href="#name">name</a>
+<a href="#string">string</a>
+<a href="#Boolean">Boolean</a>
+<a href="#Choice">Choice</a>
+<a href="#Continue">Continue</a>
+<a href="#Fillup">Fillup</a>
+<a href="#Float">Float</a>
+<a href="#Hexval">Hexval</a>
+<a href="#Hostname">Hostname</a>
+<a href="#Ip4Number">Ip4Number</a>
+<a href="#List">List</a>
+<a href="#Match">Match</a>
+<a href="#Name">Name</a>
+<a href="#Number">Number</a>
+<a href="#Optional">Optional</a>
+<a href="#Or">Or</a>
+<a href="#Separator">Separator</a>
+<a href="#Sequence">Sequence</a>
+<a href="#Skip">Skip</a>
+<a href="#String">String</a>
+<a href="#Tuple">Tuple</a>
+<a href="#Username">Username</a>
+<a href="#Value">Value</a>
+<a href="#Var">Var</a>
+<a href="#Whitespace">Whitespace</a>
+
+<p>Basic elements:
+<a href="#Float">Float</a>
+<a href="#Hexval">Hexval</a>
+<a href="#Hostname">Hostname</a>
+<a href="#Ip4Number">Ip4Number</a>
+<a href="#Number">Number</a>
+<a href="#String">String</a>
+<a href="#Username">Username</a>
+
+<p>Other elements:
+<a href="#name">name</a>
+<a href="#string">string</a>
+<a href="#Choice">Choice</a>
+<a href="#Continue">Continue</a>
+<a href="#Fillup">Fillup</a>
+<a href="#List">List</a>
+<a href="#Match">Match</a>
+<a href="#Name">Name</a>
+<a href="#Optional">Optional</a>
+<a href="#Or">Or</a>
+<a href="#Separator">Separator</a>
+<a href="#Sequence">Sequence</a>
+<a href="#Skip">Skip</a>
+<a href="#String">String</a>
+<a href="#Tuple">Tuple</a>
+<a href="#Value">Value</a>
+<a href="#Var">Var</a>
+<a href="#Whitespace">Whitespace</a>
+
+
+
+
+<!--================================================================-->
+<hr>
+<h3 id="name">name</h3>
+
+<p>name ( <i>syntax</i> )
+<p>a term beginning with a lowercase letter means a map key
+
+<dl>
+<dt>Read:
+<dd><i>syntax</i> is read and stored in the current <a
+href="#Tuple">Tuple</a> as <i>name</i>
+
+<dt>Write:
+<dd>the map value keyed by <i>name</i> is written using <i>syntax</i>.
+
+<dt>See also:
+<dd><a href="#Tuple">Tuple</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="string">string</h3>
+
+<p>a string
+
+<dl>
+<dt>Read, Write:
+<dd>Match or write the literal string.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Boolean">Boolean</h3>
+
+<p>Boolean ( )
+
+<dl>
+<dt>Read, Write:
+<dd>"yes" or "no", represented as a YCP boolean.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Choice">Choice</h3>
+
+<p>Choice ( <i>choice</i>, ... )<br>
+Where each <i>choice</i> is a list: [ <i>syntax1</i>,
+<i>syntax2</i><sub>opt</sub> ]</p>
+
+<dl>
+<dt>Read only:</dt>
+
+<dd>Like switch in C, tries to match <i>syntax1</i> of each
+<i>choice</i>. If a match is found, it is saved for use by Match and <i>syntax2</i> is matched, if
+it is provided.</dd>
+
+<dt>See also:</dt>
+<dd><a href="#Match">Match</a>
+
+<dt>Examples:</dt>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Continue">Continue</h3>
+
+<p>Continue ( <i>syntax</i> )</p>
+
+<dl>
+<dt>Read:</dt>
+
+<dd>If used as a last element of Tuple, match <i>syntax</i> and
+continue matching the same tuple, adding to the same map</dd>
+
+<dt>Write:</dt>
+
+<dd>??? errorneous implementation, never used for writing.</dd>
+
+<dt>See also:</dt>
+
+<dd><a href="#Tuple">Tuple</a></dd>
+
+<dt>Examples:</dt>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Fillup">Fillup</h3>
+
+<p>Fillup ( )
+
+<p>Currently unused, probably intended for rc.config parsing?
+
+<dl>
+<dt>Read:
+<dd>A block of lines beginning with a comment character are assigned
+to the current Tuple with a key FILLUP.
+
+<dt>Write:
+<dd>Within a Tuple, Fillup is written before the first "real" key.
+
+<dt>See also:
+<dd><a href="#Tuple">Tuple</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Float">Float</h3>
+
+<p>Float ( )
+
+<dl>
+<dt>Read, Write
+<dd>An floating point number of the form /\d*\.?\d*/, represented as a
+YCP float.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Hexval">Hexval</h3>
+
+<p>Hexval ( )
+
+<dl>
+<dt>Read, Write
+<dd>A hexadecimal integer, represented as a YCP integer. When reading, 0x
+or 0X can be prepended.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Hostname">Hostname</h3>
+
+<p>Hostname ( )
+
+<dl>
+<dt>Read, Write
+<dd>A hostname, with or without a domain, represented as a YCP
+string. Approximately [[:alpha:]][[:alnum:]_.]*
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Ip4Number">Ip4Number</h3>
+
+<p>Ip4Number ( )
+
+<dl>
+<dt>Read, Write:
+<dd>IP4 address as nnn.nnn.nnn.nnn, represented as a YCP integer.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="List">List</h3>
+
+<p>List ( <i>element-syntax</i>, <i>separator-syntax</i> )</p>
+
+<dl>
+<dt>Read:</dt>
+
+<dd>Match a list of <i>element-syntax</i>, separated by
+<i>separator-syntax</i>. <i>Separator-syntax</i> must be a
+terminal(?) (naturally). Return a YCP list of matches.</dd>
+
+<dt>Write:</dt>
+
+<dd>Write the provided list, properly separated. ??? Skip,
+Fillup.</dd>
+
+<dt>See also:</dt>
+
+<dt>Examples:</dt>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Match">Match</h3>
+
+<p>Match ( )
+
+<dl>
+<dt>Read only:
+<dd>Provides the match of the current Choice. Useful in a Name.
+
+<dt>See also:
+<dd><a href="#Choice">Choice</a>, <a href="#Name">Name</a>, <a href="#Tuple">Tuple</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Name">Name</h3>
+
+<p>Name ( <i>syntax</i> )
+
+<dl>
+<dt>Read only:
+<dd>Match <i>syntax</i> and use it as a map key in the current Tuple.
+
+<dt>See also:
+<dd><a href="#Value">Value</a>, <a href="#Tuple">Tuple</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Number">Number</h3>
+
+<p>Number ( )
+
+<dl>
+<dt>Read, Write
+<dd>An integer, represented as a YCP integer.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Optional">Optional</h3>
+
+<p>Optional ( <i>syntax</i> )
+
+<dl>
+<dt>Read:
+<dd>Matches <i>syntax</i>, optionally.
+
+<dt>Write:
+<dd>Writes <i>syntax</i>, always.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Or">Or</h3>
+
+<p>Or ( <i>syntax</i>, ... )</p>
+
+<dl>
+<dt>Read:
+<dd>Try to match <i>syntax</i> in given order, succeeds when the first
+syntax matches.
+
+<dt>Write:
+<dd>Only for two alternatives (!?): write the first, or the second, if
+the first results in an empty string.
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Separator">Separator</h3>
+
+<p>Separator ( <i>string</i> )
+
+<dl>
+<dt>Read:
+<dd>Match any characters contained in <i>string</i>.
+
+<dt>Write:
+<dd>Write the first character in <i>string</i>.
+
+<dt>See also:
+<dd><a href="#Whitespace">Whitespace</a>, <a
+href="#String">String</a>, <a href="#string">string</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Sequence">Sequence</h3>
+
+<p>Sequence ( <i>syntax</i>, ... )</p>
+
+<dl>
+<dt>Read only:</dt>
+
+<dd>Match a sequence of syntaxes, return the string that
+matched</dd>
+
+<dt>See also:</dt>
+
+<dt>Examples:</dt>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Skip">Skip</h3>
+
+<p>Skip ( )
+
+<p>A dummy element. Probably obsolete, used before Choice made the second
+argument optional.
+
+<dl>
+<dt>Read:
+<dd>Read nothing
+
+<dt>Write:
+<dd>Write nothing
+
+<dt>See also:
+<dd><a href="#Choice">Choice</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="String">String</h3>
+
+<p>String ( <i>charset-string</i>, <i>strip-string</i><sub>opt</sub> )
+
+<dl>
+<dt>Read:
+<dd>Match a string consisting of characters from charset-string and
+return it as a YCP string. If
+charset-string starts with a "^", match characters <i>not</i>
+in charset-string.<br>
+If strip-string is given (as a string constant !), these
+characters are stripped from the match if they're found as leading
+or trailing characters.
+I.e. given the string " xxx xxx " matches String(" x") completely
+and results in " xxx xxx ". With String(" x", " "), leading and
+trailing blanks are stripped. So " xxx xxx " is still matched but
+the result is "xxx xxx".
+<p>
+Empty matches are not allowed. If you want to match an empty string,
+use <code>Or (String ("^\n"), "")</code>
+instead of <code>String ("^\n")</code>.
+</dd>
+<dt>Write:
+<dd>When writing such values, stripping is also performed. So writing
+" xxx xxx " results in the output of "xxx xxx"
+
+<dt>See also:
+<dd><a href="#Or">Or</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Tuple">Tuple</h3>
+
+<p>Tuple ( <i>syntax</i>, ..., Continue<sub>opt</sub> )</p>
+
+<dl>
+<dt>Read:</dt>
+
+<dd>Match a tuple of syntax descriptions. The matched data are
+assigned to a map.<br>
+Tuples can be nested.<br>
+</dd>
+
+<dt>Write:</dt>
+
+<dd>??? (Skip, Fillup)</dd>
+
+<dt>See also:</dt>
+
+<dd><a href="#name">name</a>, <a href="#Name">Name</a>, <a
+href="#Value">Value</a>, <a href="#Match">Match</a>, <a
+href="#Continue">Continue</a>, <a href="#Choice">Choice</a></dd>
+
+<dt>Examples:</dt>
+
+<dd>descr_info.scr</dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Username">Username</h3>
+
+<p>Username ( )
+
+<dl>
+<dt>Read, Write
+<dd>A user name, represented as a YCP
+string. Approximately [[:alpha:]][[:alnum:]]*
+
+<dt>See also:
+<dd>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Value">Value</h3>
+
+<p>Value ( <i>syntax</i> )
+
+<dl>
+<dt>Read only:
+<dd>Match <i>syntax</i> and use it as a map value in the current Tuple.
+
+<dt>See also:
+<dd><a href="#Name">Name</a>, <a href="#Tuple">Tuple</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Var">Var</h3>
+
+<p>Var ( <i>syntax</i>, ... )
+
+<dl>
+<dt>Read:
+<dd>Match a sequence of syntaxes, ??? stopping in the middle
+
+<dt>Write:
+<dd>Write a sequence of syntaxes, ??? stopping in the middle
+
+<dt>See also:
+<dd><a href="#Name">Name</a>, <a href="#Value">Value</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<hr>
+<h3 id="Whitespace">Whitespace</h3>
+
+<p>Whitespace ( )
+
+
+<dl>
+<dt>Read, Write:
+<dd>The same as Separator (" \t")
+
+<dt>See also:
+<dd><a href="#Separator">Separator</a>
+
+<dt>Examples:
+<dd>
+</dl>
+
+<!--================================================================-->
+<!-- template:
+<hr>
+<h3 id=""></h3>
+
+<p></p>
+
+<dl>
+<dt>Read:</dt>
+
+<dt>Write:</dt>
+
+<dt>See also:</dt>
+
+<dt>Examples:</dt>
+</dl>
+-->
+<!--================================================================-->
+<hr>
+<a href="mailto:mvidner@suse.cz">Martin Vidner</a>, based on original
+documentation by <a href="mailto:kkaempf@suse.de">Klaus K&auml;mpf</a>
+
+
+</body>
+</html>
