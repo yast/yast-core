@@ -2969,14 +2969,18 @@ YEFunctionPointer::evaluate (bool cse)
 Y2YCPFunction::Y2YCPFunction (YSymbolEntryPtr entry)
     : Y2Function ()
     , m_sentry (entry)
-    , m_parameters (0)
+    , m_parameters (NULL)
 {
 #if DO_DEBUG
     y2debug ("Y2YCPFunction[%p] (%s)", this, entry->toString().c_str());
 #endif
-    // allocate an array for the parameters
-    m_parameters = new YCPValue[((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ()];
-    for (int i=0; i<((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
+    // cleanup an array for the parameters
+    
+    uint count = ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ();
+    
+    m_parameters = new YCPValue[count];
+    
+    for (int i=0; i < count; i++)
     {
 	m_parameters[i] = YCPNull ();
     }
