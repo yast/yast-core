@@ -484,7 +484,7 @@ compact_expression:
 	block
 	    {
 		$$ = $1;
-
+		y2debug ("compact_expression: block");
 		/*
 		 * If a block is used as an expression, we must make
 		 * sure it does have a type. It is either provided by
@@ -495,6 +495,14 @@ compact_expression:
 		    && $$.t->isUnspec ())
 		{
 		    $$.t = Type::Void;
+		}
+
+		/*
+		 * we also must make sure that an empty block is treated as 'nil'
+		 */
+		if ($$.c == 0)				// empty block
+		{
+		    $$.c = new YConst (YCode::ycVoid, YCPVoid());
 		}
 	    }
 |	LOOKUP '(' expression ',' expression ',' expression ')'

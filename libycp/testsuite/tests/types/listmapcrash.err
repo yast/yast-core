@@ -1,0 +1,9 @@
+tests/types/listmapcrash.ycp:2:type mismatch in variable definition
+[Parser] tests/types/listmapcrash.ycp:2 type mismatch in variable definition
+tests/types/listmapcrash.ycp:2:Expected 'list (map)', seen 'list <void>'.
+[Parser] tests/types/listmapcrash.ycp:2 Expected 'list (map)', seen 'list <void>'.
+Parsed:
+----------------------------------------------------------------------
+Parser error
+----------------------------------------------------------------------
+[Interpreter] tests/types/listmapcrash.ycp:1 Parser error
