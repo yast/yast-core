@@ -211,15 +211,15 @@ YCPValue YWidget::queryWidget( const YCPSymbol & property )
     if ( symbol == YUIProperty_Enabled 		) 	return YCPBoolean( getEnabling() );
     if ( symbol == YUIProperty_Notify 		)	return YCPBoolean( getNotify()   );
     if ( symbol == YUIProperty_WindowID		) 	return YCPInteger( windowID      );
-    /*
+    /**
      * @property string WidgetClass the widget class of this widget (YLabel, YPushButton, ...)
      */ 
     if ( symbol == YUIProperty_WidgetClass 	) 	return YCPString( widgetClass() );
-    /*
+    /**
      * @property string DebugLabel a (possibly translated) text describing this widget for debugging
      */ 
     if ( symbol == YUIProperty_DebugLabel	) 	return YCPString( debugLabel() );
-    /*
+    /**
      * @property string DialogDebugLabel 	a (possibly translated) text describing this dialog for debugging
      */ 
     if ( symbol == YUIProperty_DialogDebugLabel ) 
