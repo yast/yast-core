@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 15 17:29:21 CEST 2004 - visnov@suse.cz
+
+- log also arguments when doing WFM::call (#39002) 
+
+-------------------------------------------------------------------
 Thu Apr 15 15:08:21 CEST 2004 - mvidner@suse.cz
 
 - ensure that there's only one WFM (#37338)

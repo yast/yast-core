@@ -553,7 +553,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 	string filename = ee.filename ();
 	int linenumber = ee.linenumber ();
 	ycp2milestone (filename.c_str(), linenumber,
-		       "Calling YaST client %s", new_modulename.c_str ());
+		       "Calling YaST client %s (arguments: %s)", new_modulename.c_str (), args->toString ().c_str ());
 	YCPValue result = client_comp->doActualWork (args, NULL);
 	ee.setFilename (filename);
 	ee.setLinenumber (linenumber);
