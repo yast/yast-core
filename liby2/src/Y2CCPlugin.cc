@@ -79,6 +79,10 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 
     // Some components need special care, because their name and the name
     // of their plugin differ.
+    
+    // remote plugin can't handle "remote" component
+    if (strcmp (name, "remote") == 0)
+	return 0;
 
     extern int _nl_msg_cat_cntr;
     if (_nl_msg_cat_cntr != my_nl_msg_cat_cntr)
