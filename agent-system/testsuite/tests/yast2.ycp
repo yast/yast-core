@@ -1,0 +1,7 @@
+{
+    return Read (.yast2, "not-here.ycp");
+}
+{
+    // this syntax is sick
+    return Read (.yast2, ["not-here.ycp", "never mind"]);
+}

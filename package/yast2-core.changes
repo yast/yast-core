@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 24 14:58:06 CEST 2002 - arvin@suse.de
+
+- fixed error messages for Read (.yast2, ...) (bug #17170)
+
+-------------------------------------------------------------------
 Mon Jul 22 16:52:45 CEST 2002 - arvin@suse.de
 
 - implemented stat and lstat functions in agent-system

@@ -388,7 +388,24 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 	 */
 
 	if (cmd == "yast2")
-	    filename = Y2PathSearch::findy2 ("data/" + filename); // FIXME use ydatadir
+	{
+	    string tmp = Y2PathSearch::findy2 ("data/" + filename); // FIXME use ydatadir
+	    if (!tmp.empty ())
+	    {
+		filename = tmp;
+	    }
+	    else
+	    {
+		if (!default_value.isNull ())
+		{
+		    return default_value;
+		}
+		else
+		{
+		    return YCPError ("can't find '" + filename + "'");
+		}
+	    }
+	}
 
 	int fd = open (filename.c_str (), O_RDONLY);
 	if (fd < 0)
