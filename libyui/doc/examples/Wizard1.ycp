@@ -3,14 +3,14 @@
 // Note: YCP applications are discouraged from using the Wizard widget directly.
 // Use the Wizard module instead.
 
-UI::{
-    OpenDialog( `Wizard( `back,  "&Back",
-			`abort, "A&bort",
-			`next,  "&Next" ) );
+{
+    UI::OpenDialog( `Wizard( `back,  "&Back",
+			     `abort, "A&bort",
+			     `next,  "&Next" ) );
 
     while( true )
     {
-	map event = WaitForEvent();
+	map event = UI::WaitForEvent();
 
 	y2milestone( "Got event: %1", event );
 
@@ -18,6 +18,6 @@ UI::{
 	    break;
     }
     
-    CloseDialog();
+    UI::CloseDialog();
     
 }
