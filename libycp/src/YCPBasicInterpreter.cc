@@ -642,18 +642,14 @@ YCPValue YCPBasicInterpreter::evaluateTerm(const YCPTerm& term)
 
     YCPValue ret = evaluateDefinition(evalterm);
 
-    if (ret.isNull())
+    if (ret.isNull()
+	&& evalterm->name_space().empty())
     {
-	// Give subclassed Interpreter a chance
-	ret = evaluateInstantiatedTerm(evalterm);
-	if (ret.isNull())
-	{
-	    // Give subclassed YCPInterpreter a chance to know the term
-	    // It is very important, that the parent interpreter handles
-	    // the evaluation, since YCPInterpreter is subclassed from that.
+	// Give subclassed YCPInterpreter a chance to know the term
+	// It is very important, that the parent interpreter handles
+	// the evaluation, since YCPInterpreter is subclassed from that.
 
-	    ret = evaluateBuiltinTerm(evalterm);
-	}
+	ret = evaluateBuiltinTerm(evalterm);
     }
 
     if (ret.isNull())

@@ -106,9 +106,15 @@ WFMInterpreter::interpreter_name () const
 YCPValue
 WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 {
-    string sym = term->symbol()->symbol();
-
     y2debug ("%s", term->toString().c_str());
+
+    if (!term->name_space().empty())
+    {
+	y2error ("Bad namespace for WFM");
+	return YCPVoid();
+    }
+
+    string sym = term->symbol()->symbol();
 
     if	    (sym == "UI")		return evaluateWFM_UI (term);
 
@@ -184,17 +190,17 @@ WFMInterpreter::evaluateWFM (const YCPValue& value)
 	    return evaluate (b->value(0));
 	}
     }
-    else if (value->isTerm() && value->asTerm()->isQuoted())
+    else if (value->isTerm())
     {
 	YCPTerm vt = value->asTerm();
 	YCPTerm t(YCPSymbol(vt->symbol()->symbol(), false), vt->name_space());
 	for (int i=0; i<vt->size(); i++)
 	{
-	    t->add(vt->value(i));
+	    t->add (evaluate (vt->value(i)));
 	}
-	return evaluate (t);
+	return evaluateInstantiatedTerm (t);
     }
-    return evaluate (value);
+    return YCPError ("Unknown WFM:: operation");
 }
 
 

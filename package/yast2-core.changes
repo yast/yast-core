@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 10 16:40:18 CEST 2002 - kkaempf@suse.de
+
+- Don't default to "WFM" namespace (#16776)
+
+-------------------------------------------------------------------
 Mon Jul  8 16:20:15 CEST 2002 - mvidner@suse.cz
 
 - completed the Provides/Obsoletes list for the devel subpackage
