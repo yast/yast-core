@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 22 16:45:10 CEST 2003 - visnov@suse.cz
+
+- implemented mapmap and listmap accepting also $[] as a result
+  of the block. 
+
+-------------------------------------------------------------------
 Wed Oct 22 10:36:10 CEST 2003 - visnov@suse.cz
 
 - workaround to allow quotes in scrfiles

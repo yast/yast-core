@@ -486,9 +486,23 @@ YCPValue evaluateMapmap(YCPInterpreter *interpreter, const YCPList& args)
 	       }
 	       else
 	       {
-		  y2error("mapmap() expression has to deliver a list with two entrys! You have produced this list %s",
+		  y2error("mapmap() expression has to deliver a list with two entries or a map! You have produced this list %s",
 			curr_list->toString().c_str());
 	       }
+	    }
+	    else if (curr_value->isMap() )
+	    {
+		curr_map = curr_value->asMap();
+		if ( curr_map->size() > 1 )
+		{
+		    YCPMapIterator it = curr_map->begin();
+        	    ret->add (it.key(), it.value());
+		}
+		else		
+		{
+		    y2error("mapmap() expression has to deliver a list with two entries or a map! You have produced this map %s",
+			curr_map->toString().c_str());
+		}
 	    }
 	    else
 	    {
@@ -559,6 +573,20 @@ YCPValue evaluateListmap(YCPInterpreter *interpreter, const YCPList& args)
 		  y2error("listmap() expression has to deliver a list with two entrys! You have produced this list %s",
 			curr_list->toString().c_str());
 	       }
+	    }
+	    else if (curr_value->isMap() )
+	    {
+		curr_map = curr_value->asMap();
+		if ( curr_map->size() > 1 )
+		{
+		    YCPMapIterator it = curr_map->begin();
+        	    ret->add (it.key(), it.value());
+		}
+		else		
+		{
+		    y2error("listmap() expression has to deliver a list with two entries or a map! You have produced this map %s",
+			curr_map->toString().c_str());
+		}
 	    }
 	    else
 	    {
