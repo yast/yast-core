@@ -1,6 +1,7 @@
 #!/bin/bash
 
-export Y2DEBUG=1
+#export Y2DEBUG=1
+# in the NI, Y2DEBUG is awfully verbose.
 unset Y2DEBUGGER
 
 IN_FILE=${1%.*}".in.*.test"

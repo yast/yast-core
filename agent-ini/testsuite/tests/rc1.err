@@ -1,2 +1,2 @@
-[Interpreter] tests/rc1.ycp:XXX Wrong value for path .INVALID: 4.50000000000000
+tests/rc1.ycp:6: Wrong value for path .INVALID: 4.5
 [YCP] tests/rc1.ycp:XXX english

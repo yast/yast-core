@@ -26,6 +26,11 @@ runag_ini_LDFLAGS = 					\
 	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2script.la	\
+	$(srcdir)/../../scr/src/libpy2scr.la		\
+	$(srcdir)/../../agent-system/src/libpy2ag_system.la	\
 	$(srcdir)/../src/libpy2ag_ini.la		\
 	-Xlinker --no-whole-archive
+
+# was after py2stdio
+#	$(srcdir)/../../liby2/src/libpy2script.la	\
+#

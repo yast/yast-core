@@ -7,16 +7,17 @@
 
 
 {
-    Write (.s."multi/async.in.2.test", "# other comment for 2\n");
-    Write (.s."multi/async.in.3.test", nil);
-    Write (.s."multi/async.in.4.test", "# New file 4\n");
-    Write (.s."multi/async.in.4.test".xxx, "# section xxx in file 4\n");
-    Write (.v."multi/async.in.4.test".xxx.homepage, "http://xxx.suse.de/");
-    INI ("[Dialer other]\nhomepage = http://www.other.dom\nProduct = \n", "multi/async.in.4.test");
-    list l = Dir (.s);
+    SCR::Write (.s."multi/async.in.2.test", "# other comment for 2\n");
+    SCR::Write (.s."multi/async.in.3.test", nil);
+    SCR::Write (.s."multi/async.in.4.test", "# New file 4\n");
+    SCR::Write (.s."multi/async.in.4.test".xxx, "# section xxx in file 4\n");
+    SCR::Write (.v."multi/async.in.4.test".xxx.homepage, "http://xxx.suse.de/");
+    SCR::RegisterAgent (.target, `ag_system ());
+    SCR::Execute (.target.bash, "echo -en \"[Dialer other]\nhomepage = http://www.other.dom\nProduct = \n\" >> multi/async.in.4.test");
+    list l = SCR::Dir (.s);
     y2milestone ("%1", l);
-    foreach (`i, l, ``{
-	y2milestone ("%2: %1", Dir (add (.s, i)), i);
+    foreach (string i, l, ``{
+	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
     });
     return nil;
 }

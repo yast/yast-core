@@ -3,7 +3,7 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    Write (.s.Section, "");
-    Write (., "force");
+    SCR::Write (.s.Section, "");
+    SCR::Write (., "force");
 
 }

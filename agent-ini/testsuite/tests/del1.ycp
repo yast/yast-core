@@ -3,11 +3,11 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    Write (.v.Section1.Sub1.Vals1, nil);
-    Write (.s.Section1.Sub2, nil);
-    Write (.s.Section2, nil);
-    Write (.s.Section0, nil);
+    SCR::Write (.v.Section1.Sub1.Vals1, nil);
+    SCR::Write (.s.Section1.Sub2, nil);
+    SCR::Write (.s.Section2, nil);
+    SCR::Write (.s.Section0, nil);
 
-    Write (., "force");
+    SCR::Write (., "force");
 
 }

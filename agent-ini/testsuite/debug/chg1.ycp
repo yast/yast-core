@@ -1,9 +1,11 @@
+//
 {
     // test of adding values, sections, subsections
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    y2error (Read (.v.Val1));
-    INI ("Val1=value12");
-    y2error (Read (.v.Val1));
+    y2error ("%1", SCR::Read (.ini.v.Val1));
+    SCR::RegisterAgent (.target, `ag_system ());
+    SCR::Execute (.target.bash, "echo \"Val1=value12\" >> debug/chg1.in.test");
+    y2error ("%1", SCR::Read (.ini.v.Val1));
 }

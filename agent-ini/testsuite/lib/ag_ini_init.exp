@@ -67,17 +67,17 @@ proc ycp-run { dir src } {
     return -1
   }
 
-  # check stderr
-
-  if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
-    fail "Wrong stderr for $base_name"
-    return -1
-  }
-
   # check stdout
 
   if {[diff $stdout_name "tmp.out.$base_name"] != 1} {
     fail "Wrong stdout for $base_name"
+    return -1
+  }
+
+  # check stderr
+
+  if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
+    fail "Wrong stderr for $base_name"
     return -1
   }
 

@@ -1,8 +1,8 @@
-// Dir on leaves should not return Dir of their parent directory!
+// SCR::Dir on leaves should not return Dir of their parent directory!
 // #21574
 {
-    y2error ("%1", Dir (.));
-    y2error ("%1", Read (.DEFAULT_LANGUAGE));
-    y2error ("%1", Dir  (.DEFAULT_LANGUAGE));
-    return Dir (.);
+    y2error ("%1", SCR::Dir (.));
+    y2error ("%1", SCR::Read (.DEFAULT_LANGUAGE));
+    y2error ("%1", SCR::Dir  (.DEFAULT_LANGUAGE));
+    return SCR::Dir (.);
 }

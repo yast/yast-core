@@ -1,9 +1,9 @@
 {
-    Write (.NEW_KEY, "value of the new key");
-    Write (.NEW_KEY.comment, "\n#comment of the new key\n#\n");
-    Write (.ENABLE_SUSECONFIG, nil);
-    Write (.NUMERIC, 5);
-    Write (.INVALID, 4.5);
-    y2error ("%1", Read (.DEFAULT_LANGUAGE));
-    return Dir (.);
+    SCR::Write (.NEW_KEY, "value of the new key");
+    SCR::Write (.NEW_KEY.comment, "\n#comment of the new key\n#\n");
+    SCR::Write (.ENABLE_SUSECONFIG, nil);
+    SCR::Write (.NUMERIC, 5);
+    SCR::Write (.INVALID, 4.5);
+    y2error ("%1", SCR::Read (.DEFAULT_LANGUAGE));
+    return SCR::Dir (.);
 }
