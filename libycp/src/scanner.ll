@@ -435,7 +435,8 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
   /* -- symbols  */
 
   /* qualified symbol  */
-{SYMBOL}:: {
+  /* originally there was {SYMBOL}:: here but it did not work */
+({SYMBOL}::)+ {
 	yytext[yyleng-2] = 0;
 
 	TableEntry *tentry = builtinTable->find (yytext);	// check for builtin/namespace
@@ -531,7 +532,11 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
     }
 
 
-<namespace>{SYMBOL}(::{SYMBOL})* {
+  /* <namespace>{SYMBOL}(::{SYMBOL})* { */
+  /* We don't need hierarchical namespaces yet, just hierarchical names
+   * The colon handling code is dead for now
+   */
+<namespace>{SYMBOL} {
 
 	BEGIN (INITIAL);
 

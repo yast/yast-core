@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar  5 15:58:20 CET 2004 - mvidner@suse.cz
+
+- enabled nested::namespaces in the scanner
+
+-------------------------------------------------------------------
 Thu Mar  4 21:07:24 CET 2004 - ma@suse.de
 
 - WFM: Added Pkg::PkgGetLicenseToConfirm and Pkg::PkgGetLicensesToConfirm
