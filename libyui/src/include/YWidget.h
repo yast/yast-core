@@ -419,14 +419,15 @@ public:
      * and cares about the necessary call to doneMultipleChanges() when it goes
      * out of scope.
      */
-    friend class OptimizeChanges {
-      private:
+    class OptimizeChanges
+    {
+    public:
+	OptimizeChanges( YWidget & w ) : yw( w ) { yw.startMultipleChanges(); }
+	~OptimizeChanges()                       { yw.doneMultipleChanges(); }
+    private:
 	OptimizeChanges( const OptimizeChanges & ); // no copy
 	void operator=( const OptimizeChanges & );  // no assign
 	YWidget & yw;
-      public:
-	OptimizeChanges( YWidget & w ) : yw( w ) { yw.startMultipleChanges(); }
-	~OptimizeChanges()                       { yw.doneMultipleChanges(); }
     };
 
 };
