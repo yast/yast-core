@@ -72,7 +72,7 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 	const char* a = value_cstr ();
 	const char* b = s->value_cstr ();
 
-	wstring wa, wb;
+	std::wstring wa, wb;
 
 	if (utf82wchar (a, &wa) && utf82wchar (b, &wb))
 	    tmp = wcscoll (wa.c_str (), wb.c_str ());
