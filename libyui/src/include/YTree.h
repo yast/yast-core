@@ -79,6 +79,18 @@ public:
 			  bool			open );
 
     /**
+     * Adds an item to the selection box.
+     *
+     * Uses an opaque data pointer for application use. Use YTreeItem::data()
+     * to retrieve this kind of data. The application is responsible for
+     * the data contents - and of course for avoiding dangling pointers.
+     */
+    YTreeItem *	addItem ( YTreeItem *		parentItem,
+			  const YCPString&	text,
+			  void *		data,
+			  bool			open );
+
+    /**
      * Implements the ui command changeWidget.
      */
     YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
@@ -174,8 +186,40 @@ class YTreeItem
 
 public:
 
+    /**
+     * Regular constructor for root level items.
+     **/
     YTreeItem ( YTree *	    parent, YCPValue id, YCPString text, bool open = false );
+    
+    /**
+     * Regular constructor for items in deeper tree levels.
+     **/
     YTreeItem ( YTreeItem * parent, YCPValue id, YCPString text, bool open = false );
+
+
+    /**
+     * Special constructor for root items that take an opaque data pointer for
+     * application use: This kind of root item can be used to reference to
+     * external objects that are connected with this tree item.
+     * Use YTreeItem::data() to retrieve this pointer. Casting will be
+     * necessary to make any use of it.
+     **/
+    YTreeItem ( YTree *	    parent, YCPString text, void * data, bool open = false );
+
+
+    /**
+     * Special constructor for deeper level items that take an opaque data pointer for
+     * application use: This kind of root item can be used to reference to
+     * external objects that are connected with this tree item. 
+     * Use YTreeItem::data() to retrieve this pointer. Casting will be
+     * necessary to make any use of it.
+     **/
+    YTreeItem ( YTreeItem * parent, YCPString text, void * data, bool open = false );
+
+
+    /**
+     * Destructor.
+     **/
     virtual ~YTreeItem();
 
     const YCPString &		getText()		const { return text;	}
@@ -195,10 +239,22 @@ public:
      */
     YTreeItem *findItemWithText	( const YCPString &text );
 
+    /**
+     * Returns the opaque data pointer for applicaton use.
+     **/
+    void * data() const { return _data; }
+
+    /**
+     * Set the opaque data pointer. The application may choose to store
+     * internal data here. Watch for dangling pointers!
+     **/
+    void setData( void * newData ) { _data = newData; }
+
 
 protected:
 
     YCPValue		id;
+    void *		_data;
     YCPString		text;
     YTree *		parentTree;
     YTreeItem *		parentItem;

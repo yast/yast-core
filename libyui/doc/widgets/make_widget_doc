@@ -75,10 +75,10 @@ use vars qw( $opt_v $opt_d $opt_s );
 
 my $verbose		= 0;
 my $debug		= 0;
+my $src_dir		= "../../src";
 my $example_dir		= "../examples";
 my $screenshot_dir	= $example_dir . "/screenshots";
 my $html_dir		= ".";
-my $src_dir		= "../../src";
 my $generic_class_name  = "widget000";	# if no '@class' specified
 my $toc_file_name       = "index.html";
 
@@ -150,7 +150,6 @@ exit 0;
 
 sub main()
 {
-    my $main_file_name	= "YUIInterpreter.cc";
     my $html_file_name	= "widgets.html";
     my $html_toc_name	= "widgets-index.html";
 
@@ -164,7 +163,8 @@ sub main()
     $debug	= 1 if $opt_d;
     $src_dir    = $opt_s if $opt_s;
 
-    $main_file_name	= $src_dir . "/" . $main_file_name unless $src_dir eq "";
+    print "src_dir: $src_dir\n";
+    my @main_file_names	= glob( $src_dir . "/YUIInterpreter*widgets*.cc" );
 
     # Check for other (undesired) command line parameters.
 
@@ -173,7 +173,13 @@ sub main()
 
     # Process the source files, generate HTML output and write TOC.
 
-    read_main_file( $main_file_name );
+    my $main_file_name;
+
+    foreach $main_file_name ( @main_file_names )
+    {
+	logf( "Reading $main_file_name" );
+	read_main_file( $main_file_name );
+    }
     write_toc();
 }
 
@@ -283,36 +289,23 @@ sub read_main_file()
 		    @prop = ();
 		}
 
-		my $html_file_name = $widget{'class'} . "-widget.html";
-
 
 		# Add every single widget from the list of widgets to the TOC.
 
 		my $single_widget;
+		my $toc_target = $widget{'class'} . "-widget.html";
 
 		foreach $single_widget ( split ( '\s', $widget{'widget'} ) )
 		{
 		    my $short = "";
 		    $short = $widget{'short'} if defined $widget{'short'};
 
-		    $toc_target     { $single_widget } = $html_file_name;
+		    $toc_target     { $single_widget } = $toc_target;
 		    $toc_description{ $single_widget } = $short;
 		}
 
-
-		# Write collected info into a HTML file.
-
-		my $html_file = FileHandle->new();
-		open ( $html_file, ">". $html_file_name ) or die "FATAL: Can't open $html_file_name";
-		print "Generating $html_file_name\n";
-
-		write_html_header( $html_file, "YCP UI Widget Reference" );
-		format_widget ( $html_file, \%widget, \@prop );
-		write_html_footer( $html_file);
-
-		# Notice: $html_file will be closed automatically by its destructor.
-
-		undef %widget;				# clear old hash contents
+		write_widget_html_doc( \%widget, \@prop );
+		undef %widget; # clear old hash contents
 	    }
 
 
@@ -359,6 +352,13 @@ sub read_main_file()
 	    $line = <MAIN>;
 	    $line_no++;
         }
+    }
+
+
+    if ( defined( $widget{'widget'} ) )	# anything left over that isn't written yet?
+    {
+	deb( "Writing last widget (left over)" );
+	write_widget_html_doc( \%widget, \@prop );
     }
 
     close ( MAIN );
@@ -466,6 +466,31 @@ sub read_class_file()
 
 #-----------------------------------------------------------------------------
 
+# Write a html doc file for one widget.
+#
+# Parameters:
+#	%$w		Reference to widget hash to format.
+#	@$prop		Reference to widget properties list.
+
+sub write_widget_html_doc ()
+{
+    my ( $w_ref, $prop_ref ) = @_;
+
+    my $html_file_name = $w_ref->{'class'} . "-widget.html";
+    my $html_file = FileHandle->new();
+    open ( $html_file, ">". $html_file_name ) or die "FATAL: Can't open $html_file_name";
+    logf( "Generating $html_file_name" );
+
+    write_html_header( $html_file, "YCP UI Widget Reference" );
+    format_widget( $html_file, $w_ref, $prop_ref );
+    write_html_footer( $html_file);
+
+    # Notice: $html_file will be closed automatically by its destructor.
+    
+}
+
+#-----------------------------------------------------------------------------
+
 
 # Write TOC (table of contents).
 #
@@ -476,7 +501,7 @@ sub write_toc ()
 {
     my $toc_file = FileHandle->new();
     open ( $toc_file, ">". $toc_file_name ) or die "FATAL: Can't open $toc_file_name";
-    print "Generating $toc_file_name\n";
+    logf( "Generating $toc_file_name" );
 
     write_html_header( $toc_file, "YCP UI Widget Reference" );
 
@@ -642,7 +667,7 @@ sub format_widget()
     my $short_desc      = "";
 
 
-    logf ( "Formatting", $w{'widget'} );
+    deb( "Formatting", $w{'widget'} );
 
     $name = $w{'widget'};
 
@@ -1104,8 +1129,6 @@ sub deb()
 
     if ( $debug )
     {
-	print '   DEB> ';
-
 	foreach $msg ( @_ )
 	{
 	    print $msg . " ";

@@ -7,7 +7,10 @@ SUBDIRS = include
 lib_LTLIBRARIES = libyui.la
 
 libyui_la_SOURCES =				\
-	YUIInterpreter.cc			\
+	YUIInterpreter_core.cc			\
+	YUIInterpreter_builtins.cc		\
+	YUIInterpreter_widgets.cc		\
+	YUIInterpreter_special_widgets.cc	\
 	YMacroRecorder.cc			\
 	YMacroPlayer.cc				\
 	YShortcutManager.cc			\
@@ -15,8 +18,8 @@ libyui_la_SOURCES =				\
 	YAlignment.cc				\
 	YBarGraph.cc				\
 	YCheckBox.cc				\
-	YComboBox.cc				\
 	YColoredLabel.cc			\
+	YComboBox.cc				\
 	YContainerWidget.cc			\
 	YDialog.cc				\
 	YDownloadProgress.cc			\
@@ -29,6 +32,9 @@ libyui_la_SOURCES =				\
 	YMenuButton.cc				\
 	YMultiLineEdit.cc			\
 	YMultiSelectionBox.cc			\
+	YPackageSelector.cc			\
+	YPkgTreeFilterView.cc			\
+	YPkgRpmGroupTagsFilterView.cc		\
 	YPartitionSplitter.cc			\
 	YProgressBar.cc				\
 	YPushButton.cc				\
@@ -49,7 +55,8 @@ libyui_la_SOURCES =				\
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/include
+	-I$(srcdir)/include			\
+	-I$(includedir)
 
 libyui_la_LDFLAGS = -version-info 2:0
 libyui_la_LIBADD = -lpthread

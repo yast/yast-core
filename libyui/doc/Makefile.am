@@ -2,7 +2,7 @@
 # Makefile.am for core/libyui/doc
 #
 
-SUBDIRS = widgets autodocs examples
+SUBDIRS = widgets autodocs examples FAQs
 
 htmldir = $(docdir)/libyui
 
@@ -17,7 +17,7 @@ html_DATA =			\
 
 EXTRA_DIST = $(html_DATA)
 
-builtin	= $(srcdir)/../src/YUIInterpreter.cc
+builtin	= $(srcdir)/../src/YUIInterpreter_builtins.cc
 
 YCP-builtins-ui.html: $(builtin)
 	@ybindir@/makebuiltindocs -t "UI built-in functions" $(builtin) > $@.new

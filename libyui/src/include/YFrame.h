@@ -46,6 +46,11 @@ public:
     YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
 
     /**
+     * Implements the ui command changeWidget.
+     */
+    YCPValue queryWidget(const YCPSymbol& property);
+    
+    /**
      * Change the Frame label. Overload this, but call
      * YFrame::setLabel at the end of your own function.
      */
@@ -55,6 +60,12 @@ public:
      * Get the current label.
      */
     YCPString getLabel();
+
+    /**
+     * The name of the widget property that holds the keyboard shortcut.
+     * Inherited from YWidget.
+     */
+    const char *shortcutProperty() { return YUIProperty_Label; }
 
 
 protected:

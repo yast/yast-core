@@ -65,7 +65,11 @@ typedef struct
 class YUIInterpreter : public YCPInterpreter
 {
 public:
-
+    /**
+     * Looks up the topmost dialog
+     */
+    YDialog *currentDialog() const;
+    
     /**
      * Creates a YUIInterpreter.
      * @param with_threads Set this to true if you want a seperate ui thread
@@ -180,12 +184,52 @@ public:
      **/
     bool YUIInterpreter::parseRgb(const YCPValue & val, YColor *color, bool complain);
 
-protected:
+   /**
+     * Creates a new widget tree.
+     *
+     * @param parent the widget or dialog this widget is contained in
+     * @param term YCPTerm describing the widget
+     * @param rbg Pointer to the current radio button group
+     *
+     * @return pointer to the new widget or 0 if it was not successful.
+     * And error has been logged in this case
+     */
+    YWidget *createWidgetTree(YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg, const YCPTerm& term);
 
     /**
-     * Looks up the topmost dialog
+     * Overloaded version for convenience. Supplies empty widget options.
      */
-    YDialog *currentDialog() const;
+    YWidget *createWidgetTree(YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm& term);
+
+    /**
+     * Looks up a widget with a certain id. Returns 0 if no
+     * such exists. Only the topmost dialog ist searched for the id.
+     * @param id id without `id(..)
+     * @param log_error set to true if you want me to log an error if
+     * the id is not existing.
+     */
+    
+    YWidget *widgetWithId(const YCPValue &id, bool log_error=false);
+
+    /**
+     * Overloaded version of widgetWithId. Does not search for the widget id in the
+     * topmost dialog but in given widget tree.
+     * @param widgetRoot root of the widget tree
+     * @param id id without `id(..)
+     * @param log_error set to true if you want me to log an error if
+     * the id is not existing.
+     */
+    YWidget *widgetWithId(YContainerWidget *widgetRoot, const YCPValue &id, bool log_error=false);
+
+    /**
+     * Implements the UI command ReplaceWidget.
+     */
+    YCPValue evaluateReplaceWidget(const YCPTerm& term);
+
+    
+protected:
+
+
 
 
     const char *moduleName();
@@ -460,6 +504,16 @@ protected:
 				    const YCPString &label, int minValue, int maxValue, int initialValue) = 0;
 
     /**
+     * Creates a PackageSelector widget.
+     */
+    virtual YWidget *createPackageSelector(YWidget *parent, YWidgetOpt &opt ) = 0;
+
+    /**
+     * Creates a PkgSpecial widget, i.e. a specific subwidget.
+     */
+    virtual YWidget *createPkgSpecial(YWidget *parent, YWidgetOpt &opt, const YCPString &subwidget ) = 0;
+
+    /**
      * Creates a DummySpecialWidget.
      *
      * This is a special widget that the UI may or may not support.
@@ -618,6 +672,16 @@ protected:
      */
     virtual void makeScreenShot();
 
+
+    /**
+     * UI-specific runPkgSelection method.
+     * This default implementation does nothing.
+     * Use this to post-initialize widget stuff that cannot be done in the
+     * createPackageSelector() method. 
+     **/
+    virtual void runPkgSelection( YWidget * packageSelector ) {}
+
+    
     /**
      * This function is inherited from YCPInterpreter. It checks
      * if the given term is a command the UI understands. If no,
@@ -680,7 +744,6 @@ protected:
      */
     void terminateUIThread();
 
-private:
 
     /**
      * Creates and launches the ui thread.
@@ -811,11 +874,6 @@ private:
     YCPValue evaluateQueryWidget(const YCPTerm& term);
 
     /**
-     * Implements the UI command ReplaceWidget.
-     */
-    YCPValue evaluateReplaceWidget(const YCPTerm& term);
-
-    /**
      * Implements the UI command HasSpecialWidget.
      */
     YCPValue evaluateHasSpecialWidget(const YCPTerm& term);
@@ -881,6 +939,11 @@ private:
     YCPValue evaluateGlyph (const YCPTerm& term);
 
     /**
+     * Implements the UI command RunPkgSelection.
+     */
+    YCPValue evaluateRunPkgSelection(const YCPTerm& term);
+
+    /**
      * Implements the WFM or SCR callback command.
      */
     YCPValue evaluateCallback (const YCPTerm& term, bool to_wfm);
@@ -913,22 +976,7 @@ private:
      */
     YCPValue returnEvent(const YWidget *widget, EventType et);
 
-    /**
-     * Creates a new widget tree.
-     *
-     * @param parent the widget or dialog this widget is contained in
-     * @param term YCPTerm describing the widget
-     * @param rbg Pointer to the current radio button group
-     *
-     * @return pointer to the new widget or 0 if it was not successful.
-     * And error has been logged in this case
-     */
-    YWidget *createWidgetTree(YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg, const YCPTerm& term);
 
-    /**
-     * Overloaded version for convenience. Supplies empty widget options.
-     */
-    YWidget *createWidgetTree(YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm& term);
 
 
     /**
@@ -1150,6 +1198,20 @@ private:
 
     /**
      * Helper function of createWidgetTree.
+     * Creates a PackageSelector.
+     */
+    YWidget *createPackageSelector(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+				   const YCPList &optList, int argnr);
+
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a PkgSpecial subwidget.
+     */
+    YWidget *createPkgSpecial(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
+			      const YCPList &optList, int argnr);
+    
+    /**
+     * Helper function of createWidgetTree.
      * Creates a DummySpecialWidget.
      */
     YWidget *createDummySpecialWidget(YWidget *parent, YWidgetOpt &opt,
@@ -1190,14 +1252,7 @@ private:
     YWidget *createPartitionSplitter(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 				     const YCPList &optList, int argnr);
 
-    /**
-     * Looks up a widget with a certain id. Returns 0 if no
-     * such exists. Only the topmost dialog ist searched for the id.
-     * @param id id without `id(..)
-     * @param log_error set to true if you want me to log an error if
-     * the id is not existing.
-     */
-    YWidget *widgetWithId(const YCPValue &id, bool log_error=false);
+
 
     /**
      * Looks for a widget id in a widget term. If it finds one, returns

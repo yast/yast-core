@@ -21,6 +21,7 @@ widget_DATA =					\
 	YMenuButton-widget.html			\
 	YMultiLineEdit-widget.html		\
 	YMultiSelectionBox-widget.html		\
+	YPackageSelector-widget.html		\
 	YPartitionSplitter-widget.html		\
 	YProgressBar-widget.html		\
 	YPushButton-widget.html			\

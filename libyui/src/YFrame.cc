@@ -67,3 +67,11 @@ YCPValue YFrame::changeWidget(const YCPSymbol& property, const YCPValue& newValu
     }
     else return YWidget::changeWidget(property, newValue);
 }
+
+
+YCPValue YFrame::queryWidget(const YCPSymbol& property)
+{
+    string s = property->symbol();
+    if (s == YUIProperty_Label) return getLabel();
+    else return YWidget::queryWidget(property);
+}

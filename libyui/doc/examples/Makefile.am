@@ -47,11 +47,11 @@ examples_DATA =					\
 	Heading2.ycp				\
 	Heading3.ycp				\
 	HelloWorld.ycp				\
-	Image1.ycp				\
 	Image-animated.ycp			\
 	Image-local.ycp				\
 	Image-scaled.ycp			\
 	Image-tiled.ycp				\
+	Image1.ycp				\
 	InfoColor.ycp				\
 	IntField1.ycp				\
 	IntField2.ycp				\
@@ -76,10 +76,12 @@ examples_DATA =					\
 	MultiSelectionBox1.ycp			\
 	MultiSelectionBox2.ycp			\
 	MultiSelectionBox3.ycp			\
+	PackageSelector.ycp			\
 	PartitionSplitter1.ycp			\
 	PartitionSplitter2.ycp			\
 	Password1.ycp				\
 	Password2.ycp				\
+	PkgSpecial.ycp				\
 	PollInput1.ycp				\
 	ProgressBar1.ycp			\
 	ProgressBar2.ycp			\
@@ -128,6 +130,7 @@ examples_DATA =					\
 	memtest.ycp				\
 	win_resizer.ycp				\
 	win_resizer2.ycp
+
 
 EXTRA_DIST = $(examples_DATA)
 

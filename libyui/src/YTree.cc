@@ -151,16 +151,29 @@ YTree::addItem ( YTreeItem *		parentItem,
 		 const YCPString&	text,
 		 bool			open )
 {
-#if 0
-    item_ids->add(id);
-    item_labels->add(text);
-#endif
     YTreeItem *treeItem;
 
     if ( parentItem )
 	treeItem = new YTreeItem ( parentItem, id, text, open );
     else
 	treeItem = new YTreeItem ( this, id, text, open );
+
+    return treeItem;
+}
+
+
+YTreeItem *
+YTree::addItem ( YTreeItem *		parentItem,
+		 const YCPString&	text,
+		 void *			data,
+		 bool			open )
+{
+    YTreeItem *treeItem;
+
+    if ( parentItem )
+	treeItem = new YTreeItem ( parentItem, text, data, open );
+    else
+	treeItem = new YTreeItem ( this, text, data, open );
 
     return treeItem;
 }
@@ -215,6 +228,7 @@ void YTree::saveUserInput( YMacroRecorder *macroRecorder )
 
 YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
+    , _data( 0 )
     , text ( newText )
     , parentTree ( parent )
     , parentItem ( (YTreeItem *) 0 )
@@ -226,6 +240,31 @@ YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool o
 
 YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
+    , _data( 0 )
+    , text ( newText )
+    , parentTree ( (YTree *) 0 )
+    , parentItem ( parent )
+    , openByDefault ( open )
+{
+    parent->items.push_back ( this );
+}
+
+
+YTreeItem::YTreeItem ( YTree * parent, YCPString newText, void * data, bool open )
+    : id( YCPNull() )
+    , _data( data )
+    , text ( newText )
+    , parentTree ( parent )
+    , parentItem ( (YTreeItem *) 0 )
+    , openByDefault ( open )
+{
+    parent->items.push_back ( this );
+}
+
+
+YTreeItem::YTreeItem ( YTreeItem * parent, YCPString newText, void * data, bool open )
+    : id( YCPNull() )
+    , _data( data )
     , text ( newText )
     , parentTree ( (YTree *) 0 )
     , parentItem ( parent )

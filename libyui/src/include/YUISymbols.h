@@ -40,6 +40,7 @@
 #define YUIBuiltin_Recode			"Recode"
 #define YUIBuiltin_RedrawScreen			"RedrawScreen"
 #define YUIBuiltin_ReplaceWidget		"ReplaceWidget"
+#define YUIBuiltin_RunPkgSelection		"RunPkgSelection"
 #define YUIBuiltin_SetConsoleFont		"SetConsoleFont"
 #define YUIBuiltin_SetFocus			"SetFocus"
 #define YUIBuiltin_SetLanguage			"SetLanguage"
@@ -81,6 +82,7 @@
 #define YUIWidget_MenuButton			"MenuButton"
 #define YUIWidget_MultiLineEdit			"MultiLineEdit"
 #define YUIWidget_MultiSelectionBox		"MultiSelectionBox"
+#define YUIWidget_PackageSelector		"PackageSelector"
 #define YUIWidget_Password			"Password"
 #define YUIWidget_ProgressBar			"ProgressBar"
 #define YUIWidget_PushButton			"PushButton"
@@ -100,6 +102,7 @@
 #define YUIWidget_VSquash			"VSquash"
 #define YUIWidget_VStretch			"VStretch"
 #define YUIWidget_VWeight			"VWeight"
+#define YUIWidget_PkgSpecial			"PkgSpecial"
 
 
 // Special (optional) widgets
@@ -137,13 +140,14 @@
 
 #define YUIOpt_animated				"animated"
 #define YUIOpt_autoShortcut			"autoShortcut"
+#define YUIOpt_countShowDelta			"countShowDelta"
 #define YUIOpt_debugLayout			"debugLayout"
 #define YUIOpt_decorated			"decorated"
 #define YUIOpt_default				"default"
 #define YUIOpt_defaultsize			"defaultsize"
 #define YUIOpt_disabled				"disabled"
-#define YUIOpt_editable				"editable"
 #define YUIOpt_easterEgg			"easterEgg"
+#define YUIOpt_editable				"editable"
 #define YUIOpt_hstretch				"hstretch"
 #define YUIOpt_hvstretch			"hvstretch"
 #define YUIOpt_immediate			"immediate"
@@ -157,9 +161,8 @@
 #define YUIOpt_tiled				"tiled"
 #define YUIOpt_vstretch				"vstretch"
 #define YUIOpt_warncolor			"warncolor"
-#define YUIOpt_zeroWidth			"zeroWidth"
 #define YUIOpt_zeroHeight			"zeroHeight"
-#define YUIOpt_countShowDelta			"countShowDelta"
+#define YUIOpt_zeroWidth			"zeroWidth"
 
 
 // Predefined glyphs for builtin Glyph()

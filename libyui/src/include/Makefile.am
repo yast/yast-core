@@ -16,8 +16,8 @@ pkginclude_HEADERS =				\
 	YAlignment.h				\
 	YBarGraph.h				\
 	YCheckBox.h				\
-	YComboBox.h				\
 	YColoredLabel.h				\
+	YComboBox.h				\
 	YContainerWidget.h			\
 	YDialog.h				\
 	YDownloadProgress.h			\
@@ -30,6 +30,9 @@ pkginclude_HEADERS =				\
 	YMenuButton.h				\
 	YMultiLineEdit.h			\
 	YMultiSelectionBox.h			\
+	YPackageSelector.h			\
+	YPkgTreeFilterView.h			\
+	YPkgRpmGroupTagsFilterView.h		\
 	YPartitionSplitter.h			\
 	YProgressBar.h				\
 	YPushButton.h				\
@@ -44,9 +47,12 @@ pkginclude_HEADERS =				\
 	YSquash.h				\
 	YTable.h				\
 	YTextEntry.h				\
+	YTransText.h				\
 	YTree.h					\
 	YWidget.h				\
-	YWidgetOpt.h
+	YWidgetOpt.h				\
+	TreeItem.h
+
 
 hashtable.h: hashtable.gperf
 	gperf -k 1,7,9 -H YUIInterpreter_hash -N YUIInterpreter_in_word_set -L ANSI-C -C -E -I <$< > hashtable.out && mv hashtable.out $@ || (rm -f hashtable.out ; false)

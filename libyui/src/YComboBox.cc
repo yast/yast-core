@@ -71,7 +71,7 @@ YCPValue YComboBox::changeWidget(const YCPSymbol& property, const YCPValue& newv
      */
     else if (s == YUIProperty_Value)		// Select item with that id
     {
-	int index = itemWithId(newvalue, true);	// true: log error
+	int index = itemWithId(newvalue, ! editable() ); // true: log error
 
 	if ( index >= 0)			// Item already exists in list
 	{

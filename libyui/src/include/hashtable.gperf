@@ -19,6 +19,7 @@ Recode
 RecordMacro
 RedrawScreen
 ReplaceWidget
+RunPkgSelection
 SCR
 SetConsoleFont
 SetFocus

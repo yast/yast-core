@@ -16,6 +16,7 @@
 
 /-*/
 
+#include <stdio.h>
 
 #define y2log_component "ui"
 #include <stdio.h>
