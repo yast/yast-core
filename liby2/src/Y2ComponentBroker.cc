@@ -68,7 +68,7 @@ Y2ComponentBroker::createComponent (const char* name, bool look_for_clients)
 		     (!look_for_clients && creator->isServerCreator ()) )
 		{
 		    Y2Component *component =
-			creator->create (name, level,
+			creator->createInLevel (name, level,
 					 Y2PathSearch::currentComponentLevel ());
 
 		    if (component)

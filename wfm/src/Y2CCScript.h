@@ -62,7 +62,7 @@ public:
      * Tries to create a script module from the given name. See the
      * class description for details.
      */
-    virtual Y2Component *create(const char *name, int level, int current_level) const;
+    virtual Y2Component *createInLevel(const char *name, int level, int current_level) const;
 
     /**
      * Returns always true, since currently only client components

@@ -51,7 +51,7 @@ Y2Component *Y2ComponentCreator::provideNamespace(const char *name)
 }
 
 
-Y2Component *Y2ComponentCreator::create(const char *name, int level, int current_level) const
+Y2Component *Y2ComponentCreator::createInLevel(const char *name, int level, int current_level) const
 {
     if (level == current_level) return create(name);
     else return 0;

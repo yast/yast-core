@@ -72,7 +72,7 @@ Y2CCPlugin::free_rxs () const
 
 
 Y2Component*
-Y2CCPlugin::create (const char* name, int level, int current_level) const
+Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 {
     if (strlen (name) > 0 && name[0] == '/')
 	return 0;

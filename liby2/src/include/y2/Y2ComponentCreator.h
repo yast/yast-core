@@ -70,7 +70,7 @@ public:
      * that must be searched for in different directories. The default
      * implementation is to call create in case level == current_level.
      */
-    virtual Y2Component *create(const char *name, int level, int current_level) const;
+    virtual Y2Component *createInLevel(const char *name, int level, int current_level) const;
 
     /**
      * Override this method to implement providing a component for 

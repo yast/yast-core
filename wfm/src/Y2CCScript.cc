@@ -61,7 +61,7 @@ static void initializeBuiltins ()
 // FIXME: this must be now done dynamically    static Pkg pkg;
 }
 
-Y2Component *Y2CCScript::create(const char *name, int level, int) const
+Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 {
     y2debug ("Trying to create %s", name );
     if (name == 0)
