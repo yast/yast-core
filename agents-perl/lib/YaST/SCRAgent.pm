@@ -22,6 +22,7 @@ package YaST::SCRAgent;
 
 use strict;
 use ycp;
+#use Devel::Peek 'Dump';
 
 # used when Write directly modifies a variable
 our $modified = 0;
@@ -62,11 +63,140 @@ sub OtherCommand ()
     return undef;
 }
 
+# try if the sub $command_$path exists
+# returns ($ret, $ok)
+sub TryCommandPath ()
+{
+    my $class = shift;
+    my ($command, $path, @arguments) = @_;
+
+    my $sym = "$command$path";
+    $sym =~ s/\./_/g;
+
+    no strict;
+
+    # get the symbol table of the package
+    local *stash = *{"${class}::"};
+
+    if (exists $stash{$sym})
+    {
+	*symglob = $stash{$sym};
+	if (defined (&symglob))
+	{
+	    y2debug "TryCommandPath 1";
+	    return (&symglob (@arguments), 1);
+	}
+    }
+    y2debug "TryCommandPath 0";
+    return (undef, 0);
+}
+
+# try if the variable exists
+# returns ($ret, $ok)
+sub TryPathVariable ()
+{
+    my $class = shift;
+    my ($command, $path, @arguments) = @_;
+
+    my $sym = $path;
+    $sym =~ s/^\.//;
+    $sym =~ s/\./_/g;
+
+    my ($ret, $ok) = (undef, 0);
+    no strict;
+
+    # get the symbol table of the package
+    local *stash = *{"${class}::"};
+
+    if (exists $stash{$sym})
+    {
+	*symglob = $stash{$sym};
+	# try if we can Read/Write an "our" variable directly
+	# test if all this really works
+
+	if ($command eq "Read")
+	{
+#	    Dump *symglob;
+
+	    $ok = 1;
+	    # see *foo{THING} in perlref
+	    if (*symglob{HASH})
+	    {
+		$ret = *symglob{HASH};
+	    }
+	    elsif (*symglob{ARRAY})
+	    {
+		$ret = *symglob{ARRAY};
+	    }
+	    # for scalars, it _creates_ an anonymous one, can't use it
+	    elsif (*symglob{CODE} || *symglob{IO})  # GLOB also defined :(
+	    {
+		y2error ("Is a sub or a filehandle: $sym");
+		$ok = 0;
+	    }
+	    else #SCALAR
+	    {
+		$ret = $symglob;
+	    }
+	}
+	elsif ($command eq "Write")
+	{
+	    # todo test if arg exists
+	    my $arg = $arguments[0];
+
+	    if (*symglob{HASH})
+	    {
+		if (ref ($arg) eq "HASH")
+		{
+		    %symglob = %{$arg};
+		    $modified = $ok = 1;
+		}
+		else
+		{
+		    y2error ("Cannot assign this to a hash: ", ref ($arg) || $arg);
+		}
+	    }
+	    elsif (*symglob{ARRAY})
+	    {
+		if (ref ($arg) eq "ARRAY")
+		{
+		    @symglob = @{$arg};
+		    $modified = $ok = 1;
+		}
+		else
+		{
+		    y2error ("Cannot assign this to an array: ", ref ($arg) || $arg);
+		}
+	    }
+	    elsif (*symglob{CODE} || *symglob{IO}) # GLOB also defined :(
+	    {
+		y2error ("Is a sub or a filehandle: $sym");
+		$ok = 0;
+	    }
+	    else #SCALAR
+	    {
+		if (! ref ($arg))
+		{
+		    $symglob = $arg;
+		    $modified = $ok = 1;
+		}
+		else
+		{
+		    y2error ("Cannot assign this to a scalar: ", ref ($arg));
+		}
+	    }
+	    $ret = $ok;
+	}
+    }
+    y2debug "TryPathVariable $ok";
+    return ($ret, $ok);
+}
+
 sub Run ()
 {
     my $class = shift;
 
-    y2milestone ("Agent $class started");
+    y2debug ("Agent $class started");
     while ( <STDIN> )
     {
 	chomp;
@@ -108,87 +238,22 @@ sub Run ()
 		else
 		{
 		    my $path = $$pathref;
-		    # try if the sub $command_$path exists
-		    my $sym = "$command$path";
-		    $sym =~ s/\./_/g;
-		    # UNIVERSAL::can
-		    if ($class->can ($sym))
+		    my $ok;
+
+		    ($ret, $ok) = $class->TryCommandPath ($command, $path, @arguments);
+		    if (!$ok)
 		    {
-			# call it without the path
-			$ret = $class->{$sym}(@arguments);
-		    }
-		    else
-		    {
-			no strict; # fatal error otherwise about wrong types
-
-			# try if we can Read/Write an "our" variable directly
-			# test if all this really works
-			my $can_var = 0;
-
-			# get the symbol table of the package
-			*stash = *{"${class}::"};
-			if (exists $stash{$sym})
-			{
-			    *symglob = $stash{$sym};
-			    if ($command eq "Read")
-			    {
-				$can_var = 1;
-				if (defined (%symglob))
-				{
-				    $ret = \%symglob;
-				}
-				elsif (defined (@symglob))
-				{
-				    $ret = \@symglob;
-				}
-				elsif (defined ($symglob))
-				{
-				    $ret = $symglob;
-				}
-				else
-				{
-				    y2error ("Not a scalar/array/hash: $sym");
-				    $can_var = 0;
-				}
-			    }
-			    elsif ($command eq "Write")
-			    {
-				# todo test if arg exists
-				my $arg = $arguments[0];
-				$can_var = 1;
-
-				if (defined (%symglob))
-				{
-				    %symglob = %{$arg};
-				    $modified = 1;
-				}
-				elsif (defined (@symglob))
-				{
-				    @symglob = @{$arg};
-				    $modified = 1;
-				}
-				elsif (defined ($symglob))
-				{
-				    $symglob = $arg;
-				    $modified = 1;
-				}
-				else
-				{
-				    y2error ("Not a scalar/array/hash: $sym");
-				    $can_var = 0;
-				}
-			    }
-			}
-
-			if (!$can_var)
+			($ret, $ok) = $class->TryPathVariable ($command, $path, @arguments);
+			if (!$ok)
 			{
 			    # call it the ordinary way
 			    $ret = $class->$command($path, @arguments);
 			}
 		    }
+
 		    if ($command eq "Write")
 		    {
-			$ret = ycp::to_bool ($ret);
+			$ret = ($ret ? \ "true" : \ "false");
 		    }
 		    ycp::Return ($ret, 1);
 		}
@@ -202,7 +267,7 @@ sub Run ()
 
 	print "\n";
     }
-    y2milestone ("Agent $class finished");
+    y2debug ("Agent $class finished");
 }
 
 # indicate correct initialization
