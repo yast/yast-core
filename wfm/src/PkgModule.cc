@@ -67,9 +67,9 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "GetLocale")		return GetLocale (args);
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
     else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
-    else if (function == "Error")		return Error (args);
-    else if (function == "ErrorDetails")	return ErrorDetails (args);
-    else if (function == "ErrorId")		return ErrorId (args);
+    else if (function == "Error")		return LastError (args);
+    else if (function == "ErrorDetails")	return LastErrorDetails (args);
+    else if (function == "ErrorId")		return LastErrorId (args);
 
     // callback functions
     else if (function == "CallbackStartProvide")	return CallbackStartProvide (args);
@@ -172,6 +172,7 @@ PkgModule::evaluate (string function, YCPList args)
 
     // source related functions
     else if (function == "SourceStartManager")	return SourceStartManager(args);
+    else if (function == "SourceScan")		return SourceScan (args);
     else if (function == "SourceCreate")	return SourceCreate (args);
     else if (function == "SourceStartCache")	return SourceStartCache (args);
     else if (function == "SourceGetCurrent")	return SourceGetCurrent (args);

@@ -23,10 +23,8 @@
 #ifndef PkgModuleFunctions_h
 #define PkgModuleFunctions_h
 
-#include <string>
-
-#include <ycp/YCPValue.h>
-#include <ycp/YCPList.h>
+#include <ycpTools.h>
+#include <PkgModuleError.h>
 
 #include <Y2PM.h>
 #include <y2pm/PMSelectablePtr.h>
@@ -43,33 +41,40 @@ class PkgModuleFunctions
 {
   public:
 
-	/**
-	 * Handler for YCPCallbacks received or triggered.
-	 * Needs access to WFM.
-	 **/
-	class CallbackHandler;
+    /**
+     * default error class
+     **/
+    typedef PkgModuleError Error;
+
+    /**
+     * Handler for YCPCallbacks received or triggered.
+     * Needs access to WFM.
+     **/
+    class CallbackHandler;
 
   protected:
 	/**
-	 * access to packagemanager
-	 */
+	 * Access to packagemanager
+	 **/
 	Y2PM _y2pm;
 
+	/**
+	 * Remembered last error.
+	 **/
 	PMError _last_error;
+
+	/**
+	 * Return the provided YCPValue and on the fly remember _last_error.
+	 **/
+	YCPValue pkgError( PMError err_r, const YCPValue & ret_r = YCPVoid() );
 
 	int _solve_errors;
 
     private:
-	vector<InstSrcManager::ISrcId> _sources;
-	unsigned int _first_free_source_slot;
 
 	PMSelectablePtr getPackageSelectable (const std::string& name);
 	PMSelectablePtr getSelectionSelectable (const std::string& name);
 	PMSelectablePtr getPatchSelectable (const std::string& name);
-
-	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
-	void startCachedSources (bool enabled_only, bool force = false);
-	void addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable);
 
 	bool SetSelectionString (std::string name, bool recursive = false);
 	PMSelectablePtr WhoProvidesString (std::string tag);
@@ -78,12 +83,9 @@ class PkgModuleFunctions
 
 	YCPMap Descr2Map (constInstSrcDescrPtr descr);
 
-	// if startCachedSources was called already
-	bool _cache_started;
+    private: // source related
 
-	// priority list, set by Pkg::SourceInstallOrder()
-	// used by Pkg::PkgCommit()
-	InstSrcManager::ISrcIdList _inst_order;
+      bool sourceStartManager( bool autoEnable );
 
     private:
 
@@ -100,9 +102,9 @@ class PkgModuleFunctions
 	YCPValue GetLocale (YCPList args);
 	YCPValue SetAdditionalLocales (YCPList args);
 	YCPValue GetAdditionalLocales (YCPList args);
-	YCPValue Error (YCPList args);
-	YCPValue ErrorDetails (YCPList args);
-	YCPValue ErrorId (YCPList args);
+	YCPValue LastError (YCPList args);
+	YCPValue LastErrorDetails (YCPList args);
+	YCPValue LastErrorId (YCPList args);
 
 	// callbacks (see @ref CallbackHandler)
 	YCPValue CallbackStartProvide (YCPList args);
@@ -124,27 +126,29 @@ class PkgModuleFunctions
         YCPValue CallbackStopConvertDb (YCPList args);
 
 	// source related
+	YCPValue SourceSetRamCache (YCPList args);
         YCPValue SourceStartManager (YCPList args);
-	YCPValue SourceCreate (YCPList args);
 	YCPValue SourceStartCache (YCPList args);
 	YCPValue SourceGetCurrent (YCPList args);
-	YCPValue SourceFinish (YCPList args);
 	YCPValue SourceFinishAll (YCPList args);
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
+	YCPValue SourceProduct (YCPList args);
 	YCPValue SourceProvideFile (YCPList args);
 	YCPValue SourceProvideDir (YCPList args);
+        YCPValue SourceChangeUrl (YCPList args);
+	YCPValue SourceInstallOrder (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
-	YCPValue SourceSetRamCache (YCPList args);
-	YCPValue SourceProduct (YCPList args);
+	YCPValue SourceScan (YCPList args);
+	YCPValue SourceCreate (YCPList args);
         YCPValue SourceSetEnabled (YCPList args);
+	YCPValue SourceFinish (YCPList args);
         YCPValue SourceDelete (YCPList args);
+	// deprecated
         YCPValue SourceRaisePriority (YCPList args);
         YCPValue SourceLowerPriority (YCPList args);
         YCPValue SourceSaveRanks (YCPList args);
-        YCPValue SourceChangeUrl (YCPList args);
-	YCPValue SourceInstallOrder (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);

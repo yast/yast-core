@@ -12,7 +12,9 @@ liby2wfm_la_SOURCES =				\
 	WFMInterpreter.cc WFMInterpreter.h	\
 	WFMSubAgent.cc WFMSubAgent.h		\
 	PerlModule.cc PerlModule.h		\
+	ycpTools.cc ycpTools.h			\
 	PkgModule.cc PkgModule.h		\
+	PkgModuleError.cc PkgModuleError.h	\
 	PkgModuleFunctions.h			\
 	PkgModuleFunctions.cc			\
 	PkgModuleFunctionsPackage.cc		\

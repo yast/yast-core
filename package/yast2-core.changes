@@ -1,8 +1,15 @@
 -------------------------------------------------------------------
+Mon Nov 24 13:20:01 CET 2003 - ma@suse.de
+
+- Overworked Pkg::Source... functions. Removed internal InstSrc cache
+  and install order list (we've got an InstSrcManager for this).
+- 2.9.7
+
+-------------------------------------------------------------------
 Fri Nov 14 09:51:09 CET 2003 - visnov@suse.cz
 
 - allow map to specify its types like map<string,integer>
-- 2.9.6 
+- 2.9.6
 
 -------------------------------------------------------------------
 Thu Nov 13 13:51:49 CET 2003 - gs@suse.de
@@ -27,7 +34,7 @@ Thu Nov  6 15:49:52 CET 2003 - mvidner@suse.cz
 Wed Oct 22 16:45:10 CEST 2003 - visnov@suse.cz
 
 - implemented mapmap and listmap accepting also $[] as a result
-  of the block. 
+  of the block.
 
 -------------------------------------------------------------------
 Wed Oct 22 10:36:10 CEST 2003 - visnov@suse.cz
@@ -40,7 +47,7 @@ Thu Oct 16 16:30:46 CEST 2003 - visnov@suse.cz
 
 - added support for typecast syntax and list<type> syntax
   of typed lists.
-- 2.9.2 
+- 2.9.2
 
 -------------------------------------------------------------------
 Thu Oct 02 11:35:20 CEST 2003 - arvin@suse.de

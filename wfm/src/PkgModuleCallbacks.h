@@ -88,29 +88,10 @@ class PkgModuleFunctions::CallbackHandler {
   public:
 
     /**
-     * We don't like to, but need access to these data, until
-     * unique InstSrcId's and inst_order are handled within
-     * InstSrcManager. (InstSrcId's are pointer values, thus
-     * unique among existing sources, but reusable if sources
-     * vanish and appear);
-     *
-     * Without this no nedd to include PkgModuleFunctions.h.
-     **/
-    struct ReferencesNeeded {
-      const vector<InstSrcManager::ISrcId> & _sources;
-      const InstSrcManager::ISrcIdList &     _inst_order;
-      ReferencesNeeded( const vector<InstSrcManager::ISrcId> & sources_r,
-			const InstSrcManager::ISrcIdList &     inst_order_r )
-	: _sources( sources_r )
-	, _inst_order( inst_order_r )
-      {}
-    };
-
-    /**
      * Constructor. Setup handler and redirect Y2PMCallbacks
      * to the Y2PMReceiver.
      **/
-    CallbackHandler( YCPInterpreter *& wfm_r, ReferencesNeeded args_r );
+    CallbackHandler( YCPInterpreter *& wfm_r );
 
     /**
      * Destructor. Reset Y2PMCallbacks to it's defaults.

@@ -48,14 +48,11 @@ namespace Y2PMRecipients {
   ///////////////////////////////////////////////////////////////////
   struct RecipientCtl {
     const YCPCallbacks & _ycpcb;
-    PkgModuleFunctions::CallbackHandler::ReferencesNeeded _referencesNeeded;
     bool _inCommitInstall;
     bool _inCommitRemove;
     public:
-      RecipientCtl( const YCPCallbacks & ycpcb_r,
-		    PkgModuleFunctions::CallbackHandler::ReferencesNeeded & args_r )
+      RecipientCtl( const YCPCallbacks & ycpcb_r )
 	: _ycpcb( ycpcb_r )
-	, _referencesNeeded( args_r )
 	, _inCommitInstall( false )
 	, _inCommitRemove( false )
       {}
@@ -355,32 +352,8 @@ namespace Y2PMRecipients {
     virtual void advanceToMedia( constInstSrcPtr srcptr, unsigned mediaNr ) {
       CB callback( ycpcb( YCPCallbacks::CB_SourceChange ) );
       if ( callback._set ) {
-
-	// Translate the (internal) InstSrcPtr to an (external) vector index
-
-	const vector<InstSrcManager::ISrcId> & sources( _control._referencesNeeded._sources );
-	const InstSrcManager::ISrcIdList &     inst_order( _control._referencesNeeded._inst_order );
-
-	int sourceid = -1; // search vector index for the source pointer
-
-	if ( inst_order.empty() ) {
-	  for ( unsigned i = 0; i < sources.size(); ++i ) {
-	    if ( sources[i] == srcptr ) {
-	      sourceid = i;
-	      break;
-	    }
-	  }
-	} else { // we have an install order, use this
-	  sourceid = 0;
-	  for ( InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin();
-		it != inst_order.end(); ++it ) {
-	    if ( *it == srcptr )
-	      break;
-	    ++sourceid;
-	  }
-	}
-
-	callback.addInt( sourceid );
+	// Translate the (internal) InstSrcPtr to an (external) instOrder vector index
+	callback.addInt( Y2PM::instSrcManager().instOrderIndex( srcptr ) );
 	callback.addInt( mediaNr );
 	callback.evaluate();
       }
@@ -675,8 +648,8 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
 
   public:
 
-    Y2PMReceive( const YCPCallbacks & ycpcb_r, ReferencesNeeded & args_r )
-      : RecipientCtl( ycpcb_r, args_r )
+    Y2PMReceive( const YCPCallbacks & ycpcb_r )
+      : RecipientCtl( ycpcb_r )
       , _convertDbReceive( *this )
       , _rebuildDbReceive( *this )
       , _installPkgReceive( *this )
@@ -742,10 +715,9 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
 //	METHOD NAME : PkgModuleFunctions::CallbackHandler::CallbackHandler
 //	METHOD TYPE : Constructor
 //
-PkgModuleFunctions::CallbackHandler::CallbackHandler( YCPInterpreter *& wfm_r,
-						      ReferencesNeeded args_r )
+PkgModuleFunctions::CallbackHandler::CallbackHandler( YCPInterpreter *& wfm_r )
     : _ycpCallbacks( *new YCPCallbacks( wfm_r ) )
-    , _y2pmReceive( *new Y2PMReceive( _ycpCallbacks, args_r ) )
+    , _y2pmReceive( *new Y2PMReceive( _ycpCallbacks ) )
 {
 }
 

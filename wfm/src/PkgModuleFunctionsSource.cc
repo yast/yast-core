@@ -19,811 +19,975 @@
 		Handles source related Pkg::function (list_of_arguments) calls
 		from WFMInterpreter.
 /-*/
+//#include <unistd.h>
+//#include <sys/statvfs.h>
 
-
+#include <iostream>
 #include <ycp/y2log.h>
-#include <PkgModule.h>
-#include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
+#include <y2util/Pathname.h>
+
+#include <y2pm/PMError.h>
 #include <y2pm/InstSrc.h>
 #include <y2pm/InstSrcPtr.h>
 #include <y2pm/InstSrcDescr.h>
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstTarget.h>
-#include <y2pm/PMError.h>
 #include <y2pm/PMSelectionManager.h>
 
-#include <ycp/YCPVoid.h>
-#include <ycp/YCPBoolean.h>
-#include <ycp/YCPSymbol.h>
-#include <ycp/YCPString.h>
-#include <ycp/YCPList.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPError.h>
+#include <ycpTools.h>
+#include <PkgModule.h>
+#include <PkgModuleFunctions.h>
 
-#include <unistd.h>
-#include <sys/statvfs.h>
+using namespace std;
 
-using std::string;
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// Abbreviate some common pkgError calls:
+//
+/////////////////////////////////////////////////////////////////////////////////////////
 
-InstSrcManager::ISrcId
-PkgModuleFunctions::getSourceByArgs (YCPList args, int pos)
+#define pkgError_bad_args pkgError( Error::E_bad_args, YCPError( string("Bad args to Pkg::")+__FUNCTION__ ) )
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// Tools convetring data from/to YCP
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// InstSrcManager::ISrcId <-> YCPInteger
+/////////////////////////////////////////////////////////////////////////////////////////
+
+inline YCPInteger asYCPInteger( const InstSrcManager::ISrcId & id_r )
 {
-    InstSrcManager::ISrcId id;
-
-    if ((args->size() <= pos)
-	|| !(args->value(pos)->isInteger()))
-    {
-	y2error ("source id must be int");
-	return id;
-    }
-
-    unsigned int source_slot = args->value(pos)->asInteger()->value();
-    if (source_slot < 0
-	|| source_slot >= _sources.size()
-	|| _sources[source_slot] == 0)
-    {
-	y2error ("Source not active");
-	return id;
-    }
-
-    return _sources[source_slot];
+  return YCPInteger( id_r->srcID() );
 }
 
-/*
- * add source ids to _sources[]
- *
- */
-void
-PkgModuleFunctions::addSrcIds (InstSrcManager::ISrcIdList & nids, bool enable)
+inline bool YcpArgLoad::Value<YT_INTEGER, InstSrcManager::ISrcId>::assign( const YCPValue & arg_r )
 {
-    if (nids.size() > 0)						// if any sources
-    {
-	unsigned int number_of_known_sources = 0;
-	y2milestone ("addSrcIds %zd, known_sources %zd", nids.size(), _sources.size());
-	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();	// loop through all sources
-	     it != nids.end(); ++it)
-	{
-	    number_of_known_sources = _sources.size();
+  InstSrc::UniqueID srcID = arg_r->asInteger()->value(); // YT_INTEGER asserted
 
-	    if (_first_free_source_slot < number_of_known_sources)
-	    {
-		_sources[_first_free_source_slot] = *it;
-
-		// find next free slot
-		while (++_first_free_source_slot < number_of_known_sources)
-		{
-		    if (_sources[_first_free_source_slot] == 0)
-			break;
-		}
-	    }
-	    else		// add a new slot
-	    {
-		_sources.push_back (*it);
-                _first_free_source_slot = _sources.size();
-	    }
-
-	    if (enable)
-		_y2pm.instSrcManager().enableSource (*it);
-
-	} // loop over InstSrcManager
-
-
-    } // any sources at all
+  _value = Y2PM::instSrcManager().getSourceByID( srcID );
+  if ( !_value ) {
+    y2warning( "Unknown InstSrc ID %u", srcID );
+  }
+  return _value;
 }
 
-/*
- * start cached sources
- *
- * set _sources and _first_free_source_slot
- * If force is true, the _sources is recreated even if it already existed.
- * This invalidates all source_ids used by the caller.
- */
-void
-PkgModuleFunctions::startCachedSources (bool enabled_only, bool force)
+/////////////////////////////////////////////////////////////////////////////////////////
+// InstSrcManager::ISrcIdList -> YCPList of YCPInteger
+/////////////////////////////////////////////////////////////////////////////////////////
+
+inline YCPList asYCPList( const InstSrcManager::ISrcIdList & ids_r )
 {
-    if ( enabled_only ) {
-      // (ma) If enabled requested, check instSrcManager in case
-      // sources are not yet enabled!
-      InstSrcManager::ISrcIdList ids;
-      _y2pm.instSrcManager().getSources( ids );
-      for ( InstSrcManager::ISrcIdList::const_iterator it = ids.begin(); it != ids.end(); ++it ) {
-	bool shouldBeEnabled = (*it)->descr()->default_activate();
-	if ( shouldBeEnabled && ! (*it)->enabled() ) {
-	  _y2pm.instSrcManager().enableSource( *it );
-	}
-      }
-    }
-
-    if (_cache_started && !force)
-	return;
-
-    if ( force )
-    {
-        _sources.clear();
-        _first_free_source_slot = 0;
-    }
-
-    InstSrcManager::ISrcIdList nids;
-
-    _y2pm.instSrcManager().getSources (nids, enabled_only);		// get all sources from manager
-
-    addSrcIds (nids, false);
-
-    _cache_started = true;
-
-    return;
+  YCPList ret;
+  for ( InstSrcManager::ISrcIdList::const_iterator it = ids_r.begin(); it != ids_r.end(); ++it ) {
+    ret->add( asYCPInteger( *it ) );
+  }
+  return ret;
 }
 
-// ------------------------------------------------------------------
-// source related
+/////////////////////////////////////////////////////////////////////////////////////////
+// YCPMap <-> YCPMap
+/////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * @builtin Pkg::SourceStartManager (boolean autoEnable) -> boolean
+inline bool YcpArgLoad::Value<YT_MAP, YCPMap>::assign( const YCPValue & arg_r )
+{
+  _value = arg_r->asMap(); // YT_MAP asserted
+  return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// YCP interface functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceSetRamCache (boolean allow) -> true
  *
- * Starts the InstSrcManager.
- * @param
- */
+ * In InstSys: Allow/prevent InstSrces from caching package metadata on ramdisk.
+ * If no cache is used the media cannot be unmounted, i.e. no CD change possible.
+ **/
+YCPValue
+PkgModuleFunctions::SourceSetRamCache (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  bool & allow( decl.arg<YT_BOOLEAN, bool>( true ) );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  _y2pm.setCacheToRamdisk( allow );
+  return YCPBoolean( true );
+}
+
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceStartManager (boolean autoEnable = true) -> true
+ *
+ * Make shure the InstSrcManager is up and knows all available InstSrces.
+ * Dependent on the value of autoEnable, InstSources may be enabled on the
+ * fly. It's save to call this multiple times, and once the InstSources are
+ * actually enabled, it's even cheap (enabling an InstSrc is expensive).
+ *
+ * @param autoEnable If true, all InstSrces are enabled according to their default.
+ * If false, InstSrces will be created in disbaled state, and remain unchanged if
+ * the InstSrcManager is already up.
+ *
+ * @return true
+ **/
 YCPValue
 PkgModuleFunctions::SourceStartManager (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::SourceStartManager");
-    }
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    bool enable = args->value(0)->asBoolean()->value();
+  bool & autoEnable( decl.arg<YT_BOOLEAN, bool>( true ) );
 
-    if ( enable ) {
-        _y2pm.instSrcManager();
-        return YCPBoolean( true );
-    } else {
-        if ( _y2pm.noAutoInstSrcManager() ) return YCPBoolean( true );
-        else return YCPBoolean( false );
-    }
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  sourceStartManager( autoEnable );
+  return YCPBoolean( true );
 }
 
-
-/**
- * @builtin Pkg::SourceCreate (string url [, string product_dir]) -> integer
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceStartCache (boolean enabled_only = true) -> list of SrcIds (integer)
  *
- * creates a *NEW* package source under the given url
+ * Make shure the InstSrcManager is up, and return the list of SrcIds.
+ * In fact nothing more than:
+ * <PRE>
+ *   SourceStartManager( enabled_only );
+ *   return SourceGetCurrent( enabled_only );
+ * </PRE>
  *
- * if product_dir is _not_ given or empty, creates sources for all products
- * and returns the id of the first product source
+ * @param enabled_only If true, make shure all InstSrces are enabled according to
+ * their default, and return the Ids of enabled InstSrces only. If false, return
+ * the Ids of all known InstSrces.
  *
- * This is only needed at initial installation or in
- * the source manager. Normal code should rely on the
- * cached sources.
- * @see SourceStartCache
- */
-YCPValue
-PkgModuleFunctions::SourceCreate (YCPList args)
-{
-    if ((args->size() < 1)
-	|| !(args->value(0)->isString())
-	|| ((args->size() == 2)
-	    && (!(args->value(1)->isString()))))
-    {
-	return YCPError ("Bad args to Pkg::SourceCreate");
-    }
-
-    const Url url( args->value(0)->asString()->value() );
-    Pathname dir;
-    if (args->size() == 2)
-	dir = Pathname (args->value(1)->asString()->value());
-
-    unsigned int new_slot = _first_free_source_slot;
-
-    InstSrcManager::ISrcIdList nids;
-
-    // check url for products
-
-    _last_error = _y2pm.instSrcManager().scanMedia (nids, url);
-
-    if (nids.size() == 0)
-	return YCPError ("No source data found");
-
-    addSrcIds (nids, true);
-
-    return YCPInteger (new_slot);
-}
-
-
-/**
- * @builtin Pkg::SourceStartCache (boolean enabled_only) -> list of integer
- *
- * Start cached sources
- *
- * return list of known (and enabled) source id's
- * This starts the packagemanager from it's cache of known
- * sources
- */
+ * @return list of SrcIds (integer)
+ **/
 YCPValue
 PkgModuleFunctions::SourceStartCache (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::SourceStartCache");
-    }
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    startCachedSources (args->value(0)->asBoolean()->value());
-    return SourceGetCurrent (YCPList());
+  bool & enabled_only( decl.arg<YT_BOOLEAN, bool>( true ) );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  sourceStartManager( enabled_only );
+  return asYCPList( _y2pm.instSrcManager().getSources( enabled_only ) );
 }
 
-
-/**
- * @builtin Pkg::SourceGetCurrent (void) -> list of source ids
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceGetCurrent (boolean enabled_only = true) -> list of SrcIds (integer)
  *
- * return all currently known and enabled sources
+ * Return the list of all enabled InstSrc Ids.
  *
- */
+ * @param enabled_only If true, or omitted, return the Ids of all enabled InstSrces.
+ * If false, return the Ids of all known InstSrces.
+ *
+ * @return list of SrcIds (integer)
+ **/
 YCPValue
 PkgModuleFunctions::SourceGetCurrent (YCPList args)
 {
-    YCPList sources;
-    for (unsigned int i = 0; i < _sources.size(); ++i)
-    {
-	sources->add (YCPInteger (i));
-    }
-    return sources;
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  bool & enabled_only( decl.arg<YT_BOOLEAN, bool>( true ) );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  return asYCPList( _y2pm.instSrcManager().getSources( enabled_only ) );
 }
 
-
-/**
- * @builtin Pkg::SourceFinish (integer id) -> bool
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceFinishAll () -> true
  *
- * disables source
+ * Disable all InstSrces.
  *
- */
-YCPValue
-PkgModuleFunctions::SourceFinish (YCPList args)
-{
-    if ((args->size() != 1)
-	|| !(args->value(0)->isInteger()))
-    {
-	return YCPError ("Bad args to Pkg::SourceFinish");
-    }
-
-    unsigned int source_slot = args->value(0)->asInteger()->value();
-    if ((source_slot < 0)
-	|| source_slot >= _sources.size())
-    {
-	return YCPError ("Bad source id", YCPBoolean (false));
-    }
-
-    if (_sources[source_slot] == 0)
-    {
-	return YCPError ("Source not active", YCPBoolean (true));
-    }
-
-    _last_error = _y2pm.instSrcManager().disableSource( _sources[source_slot]);
-    _sources[source_slot] = 0;
-    if (source_slot < _first_free_source_slot)
-	_first_free_source_slot = source_slot;
-    y2milestone ("disable: %d: %s", source_slot, _last_error.errstr().c_str());
-    return YCPBoolean (true);
-}
-
-
-/**
- * @builtin Pkg::SourceFinishAll () -> bool
- *
- * disables all known sources
- *
- */
+ * @return true
+ **/
 YCPValue
 PkgModuleFunctions::SourceFinishAll (YCPList args)
 {
-    for (unsigned int source_slot = 0; source_slot < _sources.size(); ++source_slot)
-    {
-	if (_sources[source_slot] != 0)
-	{
-	    _last_error = _y2pm.instSrcManager().disableSource( _sources[source_slot]);
-	    y2milestone ("disable: %d: %s", source_slot, _last_error.errstr().c_str());
-	    _sources[source_slot] = 0;
-	}
-    }
-    _first_free_source_slot = 0;
-    return YCPBoolean (true);
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( _y2pm.hasInstSrcManager() ) {
+    _y2pm.instSrcManager().disableAllSources();
+  }
+  return YCPBoolean( true );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////
+// Query individual sources
+/////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * @builtin Pkg::SourceGeneralData (integer id) -> map
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceGeneralData (integer SrcId) -> map
  *
- * returns general data about the source as a map:
- *   $[ "default_activate" : bool,
- *	"product_dir" : string,
- *	"url" : string,			// also in SourceMediaData
- *	"type" : string
- * ];
+ * @param SrcId Specifies the InstSrc to query.
  *
- */
+ * @return General data about the source as a map:
+ * <TABLE>
+ * <TR><TD>$[<TD>"enabled"	<TD>: YCPBoolean
+ * <TR><TD>,<TD>"product_dir"	<TD>: YCPString
+ * <TR><TD>,<TD>"type"		<TD>: YCPString
+ * <TR><TD>,<TD>"url"		<TD>: YCPString
+ * <TR><TD>];
+ * </TABLE>
+ **/
 YCPValue
 PkgModuleFunctions::SourceGeneralData (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    YCPMap data;
-    constInstSrcDescrPtr source_descr = source_id->descr();
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    if (!source_descr)
-	return YCPError ("No description for source", data);
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    data->add (YCPString ("default_activate"), YCPBoolean (source_descr->default_activate()));
-    data->add (YCPString ("product_dir"), YCPString (source_descr->product_dir().asString()));
-    data->add (YCPString ("type"), YCPString (InstSrc::toString (source_descr->type())));
-    data->add (YCPString ("url"), YCPString (source_descr->url().asString ()));
-    data->add (YCPString ("enabled"), YCPBoolean(source_descr->default_activate()));
-    return data;
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  constInstSrcDescrPtr descr = source_id->descr();
+
+  YCPMap data;
+  data->add( YCPString("enabled"),	YCPBoolean( descr->default_activate() ) );
+  data->add( YCPString("product_dir"),	YCPString( descr->product_dir().asString() ) );
+  data->add( YCPString("type"),		YCPString( InstSrc::toString( descr->type() ) ) );
+  data->add( YCPString("url"),		YCPString( descr->url().asString() ) );
+  return data;
 }
 
-
-/**
- * @builtin Pkg::SourceMediaData (integer id) -> map
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceMediaData (integer SrcId) -> map
  *
- * returns media data about the source as a map:
- *   $[ "media_count" : string,
- *	"media_id" : bool,
- *	"media_vendor" : string,
- *	"url" : string			// also in SourceGeneralData
- * ];
+ * @param SrcId Specifies the InstSrc to query.
  *
- */
+ * @return Media data about the source as a map:
+ * <TABLE>
+ * <TR><TD>$[<TD>"media_count"	<TD>: YCPInteger
+ * <TR><TD>,<TD>"media_id"	<TD>: YCPString
+ * <TR><TD>,<TD>"media_vendor"	<TD>: YCPString
+ * <TR><TD>,<TD>"url"		<TD>: YCPString
+ * <TR><TD>];
+ * </TABLE>
+ **/
 YCPValue
 PkgModuleFunctions::SourceMediaData (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    YCPMap data;
-    constInstSrcDescrPtr source_descr = source_id->descr();
-    if (!source_descr)
-	return YCPError ("No description for source", data);
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    data->add (YCPString ("media_count"), YCPInteger (source_descr->media_count()));
-    data->add (YCPString ("media_id"), YCPString (source_descr->media_id()));
-    data->add (YCPString ("media_vendor"), YCPString (source_descr->media_vendor()));
-    data->add (YCPString ("url"), YCPString (source_descr->url().asString ()));
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    return data;
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  constInstSrcDescrPtr descr = source_id->descr();
+
+  YCPMap data;
+  data->add( YCPString("media_count"),		YCPInteger( descr->media_count() ) );
+  data->add( YCPString("media_id"),		YCPString( descr->media_id() ) );
+  data->add( YCPString("media_vendor"),		YCPString( descr->media_vendor() ) );
+  data->add( YCPString("url"),			YCPString( descr->url().asString() ) );
+  return data;
 }
 
-
-/**
- * @builtin Pkg::SourceProductData (integer id) -> map
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceProductData (integer SrcId) -> map
  *
- * returns product data about the source as a map:
- *   $[ "productname" : string,
- *	"productversion" : string,
- *	"baseproductname" : string,
- *	"baseproductversion" : string,
- *	"vendor" : string,
- *	"defaultbase" : string,
- *	"architectures" : list (string),
- *	"requires" : string,
- *	"linguas" : list (string),
- *	"label" : string,
- *	"labelmap" : map (string lang, string label),
- *	"language" : string,
- *	"timezone" : string,
- *	"descrdir" : string,
- *	"datadir" : string
- * ];
+ * @param SrcId Specifies the InstSrc to query.
  *
- */
+ * @return Product data about the source as a map:
+ * <TABLE>
+ * <TR><TD>$[<TD>"productname"		<TD>: YCPString
+ * <TR><TD>,<TD>"productversion"	<TD>: YCPString
+ * <TR><TD>,<TD>"baseproductname"	<TD>: YCPString
+ * <TR><TD>,<TD>"baseproductversion"	<TD>: YCPString
+ * <TR><TD>,<TD>"vendor"		<TD>: YCPString
+ * <TR><TD>,<TD>"defaultbase"		<TD>: YCPString
+ * <TR><TD>,<TD>"architectures"		<TD>: YCPList(YCPString)
+ * <TR><TD>,<TD>"requires"		<TD>: YCPString
+ * <TR><TD>,<TD>"linguas"		<TD>: YCPList(YCPString)
+ * <TR><TD>,<TD>"label"			<TD>: YCPString
+ * <TR><TD>,<TD>"labelmap"		<TD>: YCPMap(YCPString lang,YCPString label)
+ * <TR><TD>,<TD>"language"		<TD>: YCPString
+ * <TR><TD>,<TD>"timezone"		<TD>: YCPString
+ * <TR><TD>,<TD>"descrdir"		<TD>: YCPString
+ * <TR><TD>,<TD>"datadir"		<TD>: YCPString
+ * <TR><TD>];
+ * </TABLE>
+ **/
 YCPValue
 PkgModuleFunctions::SourceProductData (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    YCPMap data;
-    constInstSrcDescrPtr source_descr = source_id->descr();
-    if (!source_descr)
-	return YCPError ("No description for source", data);
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    data->add (YCPString ("productname"), YCPString ((const std::string &)(source_descr->content_product().name)));
-    data->add (YCPString ("productversion"), YCPString (source_descr->content_product().edition.version()));
-    data->add (YCPString ("baseproductname"), YCPString ((const std::string &)(source_descr->content_baseproduct().name)));
-    data->add (YCPString ("baseproductversion"), YCPString (source_descr->content_baseproduct().edition.version()));
-    data->add (YCPString ("vendor"), YCPString (source_descr->content_vendor ()));
-    data->add (YCPString ("defaultbase"), YCPString (source_descr->content_defaultbase ()));
-    InstSrcDescr::ArchMap::const_iterator it1 = source_descr->content_archmap().find (_y2pm.baseArch());
-    if (it1 != source_descr->content_archmap().end())
-    {
-	YCPList architectures;
-	for (std::list<PkgArch>::const_iterator it2 = it1->second.begin();
-	     it2 != it1->second.end(); ++it2)
-	{
-	    architectures->add (YCPString ((const std::string &)(*it2)));
-	}
-	data->add (YCPString ("architectures"), architectures);
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  constInstSrcDescrPtr descr = source_id->descr();
+
+  YCPMap data;
+  data->add( YCPString("productname"),		YCPString( descr->content_product().name ) );
+  data->add( YCPString("productversion"),	YCPString( descr->content_product().edition.version() ) );
+  data->add( YCPString("baseproductname"),	YCPString( descr->content_baseproduct().name ) );
+  data->add( YCPString("baseproductversion"),	YCPString( descr->content_baseproduct().edition.version() ) );
+  data->add( YCPString("vendor"),		YCPString( descr->content_vendor() ) );
+  data->add( YCPString("defaultbase"),		YCPString( descr->content_defaultbase() ) );
+
+  InstSrcDescr::ArchMap::const_iterator it1 = descr->content_archmap().find ( _y2pm.baseArch() );
+  if ( it1 != descr->content_archmap().end() ) {
+    YCPList architectures;
+    for ( std::list<PkgArch>::const_iterator it2 = it1->second.begin(); it2 != it1->second.end(); ++it2 ) {
+      architectures->add ( YCPString( *it2 ) );
     }
-    data->add (YCPString ("requires"), YCPString (source_descr->content_requires().asString()));
-    YCPList linguas;
-    for (InstSrcDescr::LinguasList::const_iterator it = source_descr->content_linguas().begin();
-	it != source_descr->content_linguas().end(); ++it)
-    {
-	linguas->add (YCPString (*it));
-    }
-    data->add (YCPString ("linguas"), linguas);
-    data->add (YCPString ("label"), YCPString (source_descr->content_label ()));
-    YCPMap labelmap;
-    for (InstSrcDescr::LabelMap::const_iterator it = source_descr->content_labelmap().begin();
-	it != source_descr->content_labelmap().end(); ++it)
-    {
-	labelmap->add (YCPString ((const std::string &)(it->first)), YCPString (it->second));
-    }
-    data->add (YCPString ("labelmap"), labelmap);
-    data->add (YCPString ("language"), YCPString (source_descr->content_language ()));
-    data->add (YCPString ("timezone"), YCPString (source_descr->content_timezone ()));
-    data->add (YCPString ("descrdir"), YCPString (source_descr->content_descrdir().asString()));
-    data->add (YCPString ("datadir"), YCPString (source_descr->content_datadir().asString()));
-    return data;
+    data->add( YCPString("architectures"),	architectures );
+  }
+
+  data->add( YCPString("requires"),		YCPString( descr->content_requires().asString() ) );
+
+  YCPList linguas;
+  for ( InstSrcDescr::LinguasList::const_iterator it = descr->content_linguas().begin();
+	it != descr->content_linguas().end(); ++it ) {
+    linguas->add( YCPString( *it ) );
+  }
+  data->add( YCPString("linguas"),		linguas );
+
+  data->add( YCPString("label"),		YCPString( descr->content_label() ) );
+
+  YCPMap labelmap;
+  for ( InstSrcDescr::LabelMap::const_iterator it = descr->content_labelmap().begin();
+	it != descr->content_labelmap().end(); ++it ) {
+    labelmap->add( YCPString( it->first ), YCPString( it->second ) );
+  }
+  data->add( YCPString("labelmap"),		labelmap );
+
+  data->add( YCPString("language"),		YCPString( descr->content_language() ) );
+  data->add( YCPString("timezone"),		YCPString( descr->content_timezone() ) );
+  data->add( YCPString("descrdir"),		YCPString( descr->content_descrdir().asString() ) );
+  data->add( YCPString("datadir"),		YCPString( descr->content_datadir().asString() ) );
+  return data;
 }
 
+/****************************************************************************************
+ *
+ * <b>Builtin:</b> Pkg::SourceProduct (integer SrcId) -> map
+ *
+ * @param SrcId Specifies the InstSrc to query.
+ *
+ * @return Product info as a map. See @ref Descr2Map
+ **/
+YCPValue
+PkgModuleFunctions::SourceProduct (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-/**
- * @builtin Pkg::SourceProvideFile (integer source, integer medianr, string file) -> string path
- * provide file from source to local path
- * @param source	source id from SourceStartCache()
- * @param medianr	should be 0 (let the packagemanager decide about the media)
- * @param file		filename relative to source (i.e. CD) root path
- */
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  return Descr2Map( source_id->descr() );
+}
+
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceProvideFile (integer SrcId, integer medianr, string file) -> string path
+ *
+ * Let an InstSrc provide some file (make it available at the local filesystem).
+ *
+ * @param SrcId	Specifies the InstSrc .
+ *
+ * @param medianr Number of the media the file is located on ('1' for the 1st media).
+ *
+ * @param file Filename relative to the media root.
+ *
+ * @return local path as string
+ **/
 YCPValue
 PkgModuleFunctions::SourceProvideFile (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    if ((args->size() != 3)
-	|| !(args->value(1)->isInteger())
-	|| !(args->value(2)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SourceProvideFile");
-    }
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+  int &                    medianr  ( decl.arg<YT_INTEGER, int>() );
+  Pathname &               file     ( decl.arg<YT_STRING,  Pathname>() );
 
-    Pathname file_r;
-    Pathname path (args->value(2)->asString()->value());
-    _last_error = source_id->provideFile (args->value(1)->asInteger()->value(), path, file_r);
-    if (_last_error)
-    {
-	y2error ("provideFile(%s) failed: %s", path.asString().c_str(), _last_error.errstr().c_str());
-	return YCPVoid();
-    }
-    return YCPString (file_r.asString());
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  Pathname localpath;
+  PMError err = source_id->provideFile( medianr, file, localpath );
+
+  if ( err )
+    return pkgError( err );
+
+  return YCPString( localpath.asString() );
 }
 
-
-/**
- * @builtin Pkg::SourceProvideDir (integer source, integer medianr, string path) -> string path
- * provide directory from source to local path
- * @param source	source id from SourceStartCache()
- * @param medianr	should be 0 (let the packagemanager decide about the media)
- * @param dir		pathname relative to source (i.e. CD) root path
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceProvideDir (integer SrcId, integer medianr, string dir) -> string path
+ *
+ * Let an InstSrc provide some directory (make it available at the local filesystem) and
+ * all the files within it (non recursive).
+ *
+ * @param SrcId	Specifies the InstSrc .
+ *
+ * @param medianr Number of the media the file is located on ('1' for the 1st media).
+ *
+ * @param dir Directoryname relative to the media root.
+ *
+ * @return local path as string
  */
 YCPValue
 PkgModuleFunctions::SourceProvideDir (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    if ((args->size() != 3)
-	|| !(args->value(1)->isInteger())
-	|| !(args->value(2)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SourceProvideDir");
-    }
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+  int &                    medianr  ( decl.arg<YT_INTEGER, int>() );
+  Pathname &               dir     ( decl.arg<YT_STRING,  Pathname>() );
 
-    Pathname dir_r;
-    Pathname path (args->value(2)->asString()->value());
-    _last_error = source_id->provideDir (args->value(1)->asInteger()->value(), path, dir_r);
-    if (_last_error)
-    {
-	y2error ("provideDir(%s) failed: %s", path.asString().c_str(), _last_error.errstr().c_str());
-	return YCPVoid();
-    }
-    return YCPString (dir_r.asString());
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  Pathname localpath;
+  PMError err = source_id->provideDir( medianr, dir, localpath );
+
+  if ( err )
+    return pkgError( err );
+
+  return YCPString( localpath.asString() );
 }
 
-
-/**
- * @builtin Pkg::SourceCacheCopyTo (string dir) -> bool
+/****************************************************************************************
  *
- * copy cache data of all installation sources to 'dir'
- * to be called at end of initial installation with
- * the target root dir.
- */
+ * <b>Builtin:</b> Pkg::SourceChangeUrl (integer SrcId, string url ) -> true
+ *
+ * Change url of an InstSrc. Used primarely when re-starting during installation
+ * and a cd-device changed from hdX to srX since ide-scsi was activated.
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @param url The new url to use.
+ *
+ * @return true
+ **/
+YCPValue
+PkgModuleFunctions::SourceChangeUrl (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+  Url &                    url      ( decl.arg<YT_STRING, Url>() );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  PMError err = _y2pm.instSrcManager().rewriteUrl( source_id, url );
+
+  if ( err )
+    return pkgError( err );
+
+  return YCPBoolean( true );
+}
+
+/****************************************************************************************
+ *
+ * <b>Builtin:</b> Pkg::SourceInstallOrder (map order_map) -> true
+ *
+ * Explicitly set an install order.
+ *
+ * @param order_map A map of 'int order : int source_id'. source_ids are expected to
+ * denote known and enabled sources.
+ *
+ * @return true
+ **/
+YCPValue
+PkgModuleFunctions::SourceInstallOrder (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  YCPMap & order_map( decl.arg<YT_MAP, YCPMap>() );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  InstSrcManager::InstOrder order;
+  order.reserve( order_map->size() );
+  bool error = false;
+
+  for ( YCPMapIterator it = order_map->begin(); it != order_map->end(); ++it ) {
+
+    if ( it.value()->isInteger() ) {
+      InstSrc::UniqueID uId( it.value()->asInteger()->value() );
+      InstSrcManager::ISrcId source_id( _y2pm.instSrcManager().getSourceByID( uId ) );
+      if ( source_id ) {
+	if ( source_id->enabled() ) {
+	  order.push_back( uId );  // finaly ;)
+
+	} else {
+	  y2error ("order map entry '%s:%s': source not enabled",
+		    it.key()->toString().c_str(),
+		    it.value()->toString().c_str() );
+	  error = true;
+	}
+      } else {
+	y2error ("order map entry '%s:%s': bad source id",
+		  it.key()->toString().c_str(),
+		  it.value()->toString().c_str() );
+	error = true;
+      }
+    } else {
+      y2error ("order map entry '%s:%s': integer value expected",
+		it.key()->toString().c_str(),
+		it.value()->toString().c_str() );
+      error = true;
+    }
+  }
+  if ( error ) {
+    return pkgError( Error::E_bad_args );
+  }
+
+  // store new instorder
+  _y2pm.instSrcManager().setInstOrder( order );
+
+  return YCPBoolean( true );
+}
+
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceCacheCopyTo (string dir) -> true
+ *
+ * Copy cache data of all installation sources to the target located below 'dir'.
+ * To be called at end of initial installation.
+ *
+ * @param dir Root directory of target.
+ *
+ * @return true
+ **/
 YCPValue
 PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SourceCacheCopyTo");
-    }
-    Pathname path (args->value(0)->asString()->value());
-    _last_error = _y2pm.instSrcManager().cacheCopyTo (path);
-    if (_last_error != PMError::E_ok)
-    {
-	return YCPError (string ("SourceCacheCopyTo failed: ")+_last_error.errstr(), YCPBoolean (false));
-    }
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    // copy product data of all open sources
+  Pathname & nroot( decl.arg<YT_STRING, Pathname>() );
 
-    if (_inst_order.empty())
-    {
-	for (unsigned int i = 0; i < _sources.size(); ++i)
-	{
-	    if (_sources[i] != 0)
-	    {
-		_y2pm.instTarget().installProduct(_sources[i]->descr());
-	    }
-	}
-    }
-    else	// install products according to installation order
-    {
-	for (InstSrcManager::ISrcIdList::const_iterator it = _inst_order.begin(); it != _inst_order.end(); ++it)
-	{
-	    _y2pm.instTarget().installProduct((*it)->descr());
-	}
-    }
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    // copy selection data to target
-    for (PMManager::PMSelectableVec::const_iterator it = _y2pm.selectionManager().begin();
-	 it != _y2pm.selectionManager().end(); ++it)
-    {
-	if ((*it)->to_install())
-	{
-	    Pathname selfile;
-	    if ( PMSelectionPtr( (*it)->candidateObj() )->provideSelToInstall( selfile ) == PMError::E_ok )
-	    {
-		_y2pm.instTarget().installSelection( selfile );
-	    }
-	    else
-	    {
-		y2error ("provideSelToInstall failed for '%s'", (*it)->name().asString().c_str() );
-	    }
-	}
-    }
-    return YCPBoolean (true);
+  // Install InstSrces metadata in system
+  PMError err = _y2pm.instSrcManager().cacheCopyTo( nroot );
+  if ( err )
+    return pkgError( err );
+
+  // Install product data of all open sources according to installation order
+#warning Review product data install here and in PM.
+  InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
+
+  for ( InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it ) {
+    _y2pm.instTarget().installProduct( (*it)->descr() );
+  }
+
+  // Actually there should be no need to do this here, as Y2PM::commitPackages
+  // calls Y2PM::selectionManager().installOnTarget();
+  Y2PM::selectionManager().installOnTarget();
+
+  return YCPBoolean( true );
 }
 
-
-/**
- * @builtin Pkg::SourceSetRamCache (boolean) -> boolean
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceScan (string media_url [, string product_dir]) -> list of SrcIds (integer)
  *
- * enable/disable caching data on ramdisk (source is mounted, use
- * data directly from source instead)
- */
+ * Load all InstSrces found at media_url, i.e. all sources mentioned in /media.1/products.
+ * If no /media.1/products is available, InstSrc is expected to be located directly
+ * below media_url (product_dir: /).
+ *
+ * If a product_dir is provided, only the InstSrc located at media_url/product_dir is loaded.
+ *
+ * In contrary to @ref SourceCreate, InstSrces are loaded into the InstSrcManager,
+ * but not enabled (packages and selections are not provided to the PackageManager),
+ * and the SrcIds of <b>all<\b> InstSrces found are returned.
+ *
+ * @param url The media to scan.
+ *
+ * @param product_dir Restrict scan to a certain InstSrc located in media_url/product_dir.
+ *
+ * @return list of SrcIds (integer).
+ **/
 YCPValue
-PkgModuleFunctions::SourceSetRamCache (YCPList args)
+PkgModuleFunctions::SourceScan (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::SourceSetRamCache");
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  Url &      media_url  ( decl.arg<YT_STRING, Url>() );
+  Pathname & product_dir( decl.arg<YT_STRING, Pathname>( Pathname() ) ); // optional
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  PMError err;
+  InstSrcManager::ISrcIdList nids;
+
+  if ( product_dir.empty() ) {
+    // scan all sources
+    err = _y2pm.instSrcManager().scanMedia( nids, media_url );
+  } else {
+    // scan at product_dir
+    InstSrcManager::ISrcId nid;
+    err = _y2pm.instSrcManager().scanMedia( nid, media_url, product_dir );
+    if ( nid ) {
+      nids.push_back( nid );
     }
-    _y2pm.setCacheToRamdisk (args->value(0)->asBoolean()->value());
-    return YCPBoolean (true);
+  }
+
+  if ( nids.empty() )
+    return pkgError( err );
+
+  // return source_ids
+  return asYCPList( nids );
 }
 
-
-/** ------------------------
+/****************************************************************************************
+ * <b>Builtin:</b> Pkg::SourceCreate (string media_url [, string product_dir]) -> integer
  *
- * @builtin Pkg::SourceProduct (integer source_id) -> map
+ * Load and enable all InstSrces found at media_url, i.e. all sources mentioned in /media.1/products.
+ * If no /media.1/products is available, InstSrc is expected to be located directly below
+ * media_url (product_dir: /).
  *
- * return $["product" : string, "vendor" : string ]
- */
-
+ * If a product_dir is provided, only the InstSrc located at media_url/product_dir is loaded
+ * and enabled.
+ *
+ * @param url The media to scan.
+ *
+ * @param product_dir Restrict scan to a certain InstSrc located in media_url/product_dir.
+ *
+ * @return The source_id of the first InstSrc found on the media.
+ **/
 YCPValue
-PkgModuleFunctions::SourceProduct (YCPList args)
+PkgModuleFunctions::SourceCreate (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
-    return Descr2Map (source_id->descr());
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  Url &      media_url  ( decl.arg<YT_STRING, Url>() );
+  Pathname & product_dir( decl.arg<YT_STRING, Pathname>( Pathname() ) ); // optional
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  PMError err;
+  InstSrcManager::ISrcIdList nids;
+
+  if ( product_dir.empty() ) {
+    // scan all sources
+    err = _y2pm.instSrcManager().scanMedia( nids, media_url );
+  } else {
+    // scan at product_dir
+    InstSrcManager::ISrcId nid;
+    err = _y2pm.instSrcManager().scanMedia( nid, media_url, product_dir );
+    if ( nid ) {
+      nids.push_back( nid );
+    }
+  }
+
+  if ( nids.empty() )
+    return pkgError( err );
+
+  // enable the sources
+  for ( InstSrcManager::ISrcIdList::const_iterator it = nids.begin(); it != nids.end(); ++it ) {
+    _y2pm.instSrcManager().enableSource( *it );
+  }
+
+  // return 1st source_id
+  return asYCPInteger( *nids.begin() );
 }
 
-/** ------------------------
+/****************************************************************************************
  *
- * @builtin Pkg::SourceSetEnabled (integer source_id, boolean enabled) -> bool
+ * <b>Builtin:</b> Pkg::SourceSetEnabled (integer SrcId, boolean enabled) -> bool
  *
- * Set default activation state of source. Return true, if successful, false, if not.
- */
+ * Set the default activation state of an InsrSrc.
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @param enabled Default activation state of source.
+ *
+ * @return bool
+ **/
 YCPValue
 PkgModuleFunctions::SourceSetEnabled (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    if ((args->size() != 2)
-	|| !(args->value(1)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::SourceSetEnabled");
-    }
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+  bool &                   enabled  ( decl.arg<YT_BOOLEAN, bool>() );
 
-    bool enabled = args->value(1)->asBoolean()->value();
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    _last_error = _y2pm.instSrcManager().setAutoenable( source_id, enabled );
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
 
-    if ( _last_error ) return YCPBoolean( false );
-    else return YCPBoolean( true );
+  PMError err = _y2pm.instSrcManager().setAutoenable( source_id, enabled );
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
 }
 
-/** ------------------------
+/****************************************************************************************
  *
- * @builtin Pkg::SourceDelete (integer source_id ) -> bool
+ * <b>Builtin:</b> Pkg::SourceFinish (integer SrcId) -> bool
  *
- * Delete source. Return true, if successful, false, if not.
- * This function invalidates all source_ids. Use SourceGetCurrent to get
- * the new list of source_ids.
- */
+ * Disable an InsrSrc.
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @return bool
+ **/
+YCPValue
+PkgModuleFunctions::SourceFinish (YCPList args)
+{
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
+
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
+
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  PMError err = _y2pm.instSrcManager().disableSource( source_id );
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
+}
+
+/****************************************************************************************
+ *
+ * <b>Builtin:</b> Pkg::SourceDelete (integer SrcId) -> bool
+ *
+ * Delete an InsrSrc. The InsrSrc together with all metadata cached on disk
+ * is removed. The SrcId passed becomes invalid (other SrcIds stay valid).
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @return bool
+ **/
 YCPValue
 PkgModuleFunctions::SourceDelete (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    _last_error = _y2pm.instSrcManager().disableSource( source_id );
-    _last_error = _y2pm.instSrcManager().deleteSource( source_id );
-y2milestone ("deleteSource(): %s", _last_error.errstr().c_str());
-    if ( _last_error ) return YCPBoolean( false );
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    startCachedSources( false, true );		// re-create _sources[]
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    return YCPBoolean( true );
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  PMError err =_y2pm.instSrcManager().deleteSource( source_id );
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
 }
 
-/** ------------------------
+/****************************************************************************************
  *
- * @builtin Pkg::SourceRaisePriority (integer source_id ) -> bool
+ * <b>Builtin:</b> Pkg::SourceRaisePriority (integer SrcId) -> bool
  *
- * Raise priority of source. Return true on success, false on error.
- * This function invalidates all source_ids. Use SourceGetCurrent to get
- * the new list of source_ids.
+ * Raise priority of source.
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @return bool
  */
 YCPValue
 PkgModuleFunctions::SourceRaisePriority (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    _last_error = _y2pm.instSrcManager().rankUp( source_id );
-    if ( _last_error ) return YCPBoolean( false );
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    startCachedSources( false, true );
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    return YCPBoolean( true );
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  PMError err = _y2pm.instSrcManager().rankUp( source_id );
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
 }
 
-/** ------------------------
+/****************************************************************************************
  *
- * @builtin Pkg::SourceLowerPriority (integer source_id ) -> void
+ * <b>Builtin:</b> Pkg::SourceLowerPriority (integer SrcId) -> void
  *
- * Raise priority of source. Return true on success, false on error.
- * This function invalidates all source_ids. Use SourceGetCurrent to get
- * the new list of source_ids.
+ * Lower priority of source.
+ *
+ * @param SrcId Specifies the InstSrc.
+ *
+ * @return bool
  */
 YCPValue
 PkgModuleFunctions::SourceLowerPriority (YCPList args)
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
 
-    _last_error = _y2pm.instSrcManager().rankDown( source_id );
-    if ( _last_error ) return YCPBoolean( false );
+  InstSrcManager::ISrcId & source_id( decl.arg<YT_INTEGER, InstSrcManager::ISrcId>() );
 
-    startCachedSources( false, true );
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    return YCPBoolean( true );
+  if ( ! source_id )
+    return pkgError( InstSrcError::E_bad_id );
+
+  PMError err = _y2pm.instSrcManager().rankDown( source_id );
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
 }
 
-/** ------------------------
+/****************************************************************************************
  *
- * @builtin Pkg::SourceSaveRanks () -> boolean
+ * <b>Builtin:</b> Pkg::SourceSaveRanks () -> boolean
  *
  * Save ranks to disk. Return true on success, false on error.
  */
 YCPValue
 PkgModuleFunctions::SourceSaveRanks (YCPList args)
 {
-    _last_error = _y2pm.instSrcManager().setNewRanks();
-    if ( _last_error ) return YCPBoolean( false );
+  //-------------------------------------------------------------------------------------//
+  YcpArgLoad decl(__FUNCTION__);
+  if ( ! decl.load( args ) ) {
+    return pkgError_bad_args;
+  }
+  //-------------------------------------------------------------------------------------//
 
-    return YCPBoolean( true );
+  PMError err = _y2pm.instSrcManager().setNewRanks();
+  if ( err )
+    return pkgError( err, YCPBoolean( false ) );
+
+  return YCPBoolean( true );
 }
 
-/** ------------------------
- *
- * @builtin Pkg::SourceChangeUrl (integer source_id , string url ) -> bool
- *
- * change url of source
- * used primarely when re-starting during installation and a cd-device
- * changed from hdX to srX since ide-scsi was activated
- * returns false if source_id doesn't exists or the url is malformed
- */
-YCPValue
-PkgModuleFunctions::SourceChangeUrl (YCPList args)
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+// Helper functions
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////
+//
+//
+//	METHOD NAME : PkgModuleFunctions::sourceStartManager
+//	METHOD TYPE : bool
+//
+bool PkgModuleFunctions::sourceStartManager( bool autoEnable )
 {
-    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
-    if (!source_id)
-	return YCPVoid();
-
-    if ((args->size() != 2)
-	|| !(args->value(1)->isString()))
-    {
-	return YCPError ("Bad source to Pkg::SourceChangeUrl", YCPBoolean (false));
-    }
-
-    Url url (args->value(1)->asString()->value());
-    if (!url.isValid())
-    {
-	return YCPError ("Bad url to Pkg::SourceChangeUrl", YCPBoolean (false));
-    }
-
-    _last_error = _y2pm.instSrcManager().rewriteUrl ( source_id, url );
-    if ( _last_error ) return YCPBoolean( false );
-
-    return YCPBoolean( true );
-}
-
-
-
-/** ------------------------
- *
- * @builtin Pkg::SourceInstallOrder (map order_map) -> bool
- *
- * set installation order
- *   order_map = map of 'int order : int source_id',
- * 	with order 1 == highest
- */
-YCPValue
-PkgModuleFunctions::SourceInstallOrder (YCPList args)
-{
-    if ((args->size() != 1)
-	|| !(args->value(0)->isMap()))
-    {
-	return YCPError ("Bad args to Pkg::SourceInstallOrder");
-    }
-
-    _inst_order.clear ();
-    YCPMap map = args->value(0)->asMap();
-    for (YCPMapIterator it = map->begin(); it != map->end(); ++it)
-    {
-	unsigned int source_slot;
-	source_slot = _sources.size();	// preset with error value
-
-	if (it.value()->isInteger())	// check correctness of map
-	    source_slot = it.value()->asInteger()->value();	// use value from map
-
-	if (source_slot < _sources.size()
-	    && _sources[source_slot] != 0)
-	{
-	    _inst_order.push_back (_sources[source_slot]);
-	}
-	else
-	{
-	    y2error ("order map entry '%s:%s': no source existing", it.key()->toString().c_str(), it.value()->toString().c_str());
-	    _inst_order.clear ();
-	    return YCPVoid();
-	}
-    }
-    return YCPBoolean (true);
+  if ( autoEnable ) {
+    _y2pm.instSrcManager().enableDefaultSources();
+  } else {
+    _y2pm.noAutoInstSrcManager();
+  }
+  return true;
 }
 

@@ -29,62 +29,11 @@
 #include <y2util/Pathname.h>
 
 #include <ycp/YCPInterpreter.h>
-#include <ycp/YCPVoid.h>
-#include <ycp/YCPBoolean.h>
-#include <ycp/YCPSymbol.h>
-#include <ycp/YCPString.h>
-#include <ycp/YCPList.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPTerm.h>
-#include <ycp/YCPError.h>
 
+#include <ycpTools.h>
 #include <PkgModuleCallbacks.h>
 
 using namespace std;
-
-/******************************************************************
-**
-**
-**	FUNCTION NAME : operator<<
-**	FUNCTION TYPE : ostream &
-*/
-inline ostream & operator<<( ostream & str, const YCPValueType & obj )
-{
-  switch ( obj ) {
-#define ENUMOUT(V) case V: return str << #V; break
-    ENUMOUT( YT_UNDEFINED );
-    ENUMOUT( YT_VOID );
-    ENUMOUT( YT_BOOLEAN );
-    ENUMOUT( YT_INTEGER );
-    ENUMOUT( YT_FLOAT );
-    ENUMOUT( YT_STRING );
-    ENUMOUT( YT_BYTEBLOCK );
-    ENUMOUT( YT_PATH );
-    ENUMOUT( YT_SYMBOL );
-    ENUMOUT( YT_DECLARATION );
-    ENUMOUT( YT_LOCALE );
-    ENUMOUT( YT_LIST );
-    ENUMOUT( YT_TERM );
-    ENUMOUT( YT_MAP );
-    ENUMOUT( YT_BLOCK );
-    ENUMOUT( YT_BUILTIN );
-    ENUMOUT( YT_IDENTIFIER );
-    ENUMOUT( YT_ERROR );
-#undef ENUMOUT
-  }
-  return str << "UNKNOWN(YCPValueType)";
-}
-
-/******************************************************************
-**
-**
-**	FUNCTION NAME : operator<<
-**	FUNCTION TYPE : ostream &
-*/
-inline ostream & operator<<( ostream & str, const YCPValue & obj )
-{
-  return str << obj->valuetype();
-}
 
 ///////////////////////////////////////////////////////////////////
 //

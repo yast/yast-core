@@ -36,14 +36,10 @@
  * Constructor.
  */
 PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *& wfmInterpreter)
-    : _first_free_source_slot(0)
-    , _cache_started(false)
-    , _callbackHandler( *new CallbackHandler( wfmInterpreter,
-					      // get rid of this ASAP:
-					      CallbackHandler::ReferencesNeeded( _sources,
-										 _inst_order ) ) )
+    : _callbackHandler( *new CallbackHandler( wfmInterpreter ) )
 {
-    _y2pm.packageManager();
+  _y2pm.packageManager();
+  _y2pm.selectionManager();
 }
 
 /**
@@ -56,6 +52,17 @@ PkgModuleFunctions::~PkgModuleFunctions ()
     delete &_callbackHandler;
 }
 
+///////////////////////////////////////////////////////////////////
+//
+//
+//	METHOD NAME : PkgModuleFunctions::pkgError
+//	METHOD TYPE : YCPValue
+//
+YCPValue PkgModuleFunctions::pkgError( PMError err_r, const YCPValue & ret_r )
+{
+  _last_error = err_r;
+  return ret_r;
+}
 
 // ------------------------------------------------------------------
 // general
@@ -161,34 +168,34 @@ PkgModuleFunctions::GetAdditionalLocales (YCPList args)
 
 
 /**
- * @builtin Pkg::Error
+ * @builtin Pkg::LastError
  *
  * get current error as string
  */
 YCPValue
-PkgModuleFunctions::Error (YCPList args)
+PkgModuleFunctions::LastError (YCPList args)
 {
     return YCPString (_last_error.errstr());
 }
 
 /**
- * @builtin Pkg::ErrorDetails
+ * @builtin Pkg::LastErrorDetails
  *
  * get current error details as string
  */
 YCPValue
-PkgModuleFunctions::ErrorDetails (YCPList args)
+PkgModuleFunctions::LastErrorDetails (YCPList args)
 {
     return YCPString (_last_error.details());
 }
 
 /**
- * @builtin Pkg::ErrorId
+ * @builtin Pkg::LastErrorId
  *
  * get current error as id string
  */
 YCPValue
-PkgModuleFunctions::ErrorId (YCPList args)
+PkgModuleFunctions::LastErrorId (YCPList args)
 {
     int errorId = _last_error;
     switch ( errorId ) {
@@ -203,9 +210,22 @@ PkgModuleFunctions::ErrorId (YCPList args)
 
 
 /** ------------------------
-   convert constInstSrcDescrPtr to YCPMap
+ * Convert InstSrcDescr to product info YCPMap:
+ * <TABLE>
+ * <TR><TD>$[<TD>"product"		<TD>: YCPString (name' 'version)
+ * <TR><TD>,<TD>"vendor"		<TD>: YCPString
+ * <TR><TD>,<TD>"requires"		<TD>: YCPString
+ * <TR><TD>,<TD>"name"			<TD>: YCPString
+ * <TR><TD>,<TD>"version"		<TD>: YCPString
+ * <TR><TD>,<TD>"flags"			<TD>: YCPString
+ * <TR><TD>,<TD>"relnotesurl"		<TD>: YCPString
+ * <TR><TD>,<TD>"distproduct"		<TD>: YCPString
+ * <TR><TD>,<TD>"distversion"		<TD>: YCPString
+ * <TR><TD>,<TD>"baseproduct"		<TD>: YCPString
+ * <TR><TD>,<TD>"baseversion"		<TD>: YCPString
+ * <TR><TD>];
+ * </TABLE>
  */
-
 YCPMap
 PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
 {

@@ -48,6 +48,13 @@
 
 using std::string;
 
+inline void assertActiveSources() {
+#warning Actually we dont want to activate sources here
+  // the calling context should assert that target/sources are up,
+  // dependent on it's needs.
+  Y2PM::instSrcManager().enableDefaultSources();
+}
+
 /**
  * helper function, get name from args
  */
@@ -71,8 +78,7 @@ getName (YCPList args)
 PMSelectablePtr
 PkgModuleFunctions::getPackageSelectable (const std::string& name)
 {
-    _y2pm.packageManager ();
-    startCachedSources (true);
+    assertActiveSources();
 
     PMSelectablePtr selectable;
     if (!name.empty())
@@ -101,23 +107,6 @@ getTheObject (PMSelectablePtr selectable)
 }
 
 
-#if 0 // currently unused
-static PMPackagePtr
-getTheCandidate (PMSelectablePtr selectable)
-{
-    PMPackagePtr package;
-    if (selectable)
-    {
-	package = selectable->candidateObj();
-	if (!package)
-	{
-	    y2error ("Package '%s' not found", ((const std::string&)(selectable->name())).c_str());
-	}
-    }
-    return package;
-}
-#endif
-
 // ------------------------
 /**
  *  @builtin Pkg::PkgMediaNames () -> [ "source_1_name", "source_2_name", ...]
@@ -127,45 +116,15 @@ getTheCandidate (PMSelectablePtr selectable)
 YCPValue
 PkgModuleFunctions::PkgMediaNames (YCPList args)
 {
-    // get sources in installation order
+  // get sources in installation order
+  InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
+  YCPList ycpnames;
 
-    // if installation order not given, compute it from rank
-    //   and set it to _inst_order, so the SourceChange callback
-    //   (see PkgModuleCallbacks.cc) gets it right
+  for ( InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it ) {
+    ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().name)));
+  }
 
-    if (_inst_order.empty())
-    {
-	// map of <rank-of-installation-source, vector<FSize> >
-	map <unsigned int, InstSrcManager::ISrcId> rankedsources;
-
-	for (vector<InstSrcManager::ISrcId>::const_iterator it = _sources.begin(); it != _sources.end(); ++it)
-	{
-	    if (*it == 0)
-		continue;
-
-	    map <unsigned int, InstSrcManager::ISrcId>::iterator media_it = rankedsources.find ((*it)->descr()->default_rank());
-
-	    if (media_it != rankedsources.end())
-	    {
-		y2error("Duplicate rank %d", (*it)->descr()->default_rank());
-		continue;
-	    }
-	    rankedsources[(*it)->descr()->default_rank()] = *it;
-	}
-
-	for (map <unsigned int, InstSrcManager::ISrcId>::const_iterator it = rankedsources.begin(); it != rankedsources.end(); ++it)
-	{
-	    _inst_order.push_back (it->second);
-	}
-    }
-
-    YCPList ycpnames;
-
-    for (InstSrcManager::ISrcIdList::const_iterator it = _inst_order.begin(); it != _inst_order.end(); ++it)
-    {
-	ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().name)));
-    }
-    return ycpnames;
+  return ycpnames;
 }
 
 // ------------------------
@@ -180,36 +139,7 @@ YCPValue
 PkgModuleFunctions::PkgMediaSizes (YCPList args)
 {
     // get sources in installation order
-
-    InstSrcManager::ISrcIdList sources = _inst_order;
-
-    // if installation order not given, compute it from rank
-
-    if (sources.empty())
-    {
-	// map of <rank-of-installation-source, vector<FSize> >
-	map <unsigned int, InstSrcManager::ISrcId> rankedsources;
-
-	for (vector<InstSrcManager::ISrcId>::const_iterator it = _sources.begin(); it != _sources.end(); ++it)
-	{
-	    if (*it == 0)
-		continue;
-
-	    map <unsigned int, InstSrcManager::ISrcId>::iterator media_it = rankedsources.find ((*it)->descr()->default_rank());
-
-	    if (media_it != rankedsources.end())
-	    {
-		y2error("Duplicate rank %d", (*it)->descr()->default_rank());
-		continue;
-	    }
-	    rankedsources[(*it)->descr()->default_rank()] = *it;
-	}
-
-	for (map <unsigned int, InstSrcManager::ISrcId>::const_iterator it = rankedsources.begin(); it != rankedsources.end(); ++it)
-	{
-	    sources.push_back (it->second);
-	}
-    }
+    InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
 
     // compute max number of media across all sources
     // need a source rank map here since the package reveals the source rank as
@@ -221,7 +151,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
     map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > > mediasizes;
 
-    for (InstSrcManager::ISrcIdList::const_iterator it = sources.begin(); it != sources.end(); ++it)
+    for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
     {
 	vector<FSize> vf ((*it)->descr()->media_count(), FSize (0));
 	mediasizes[(*it)->descr()->default_rank()] = std::make_pair (*it, vf);
@@ -259,7 +189,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
 
     YCPList ycpsizes;
 
-    for (InstSrcManager::ISrcIdList::const_iterator it = sources.begin(); it != sources.end(); ++it)
+    for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
     {
 	for (map <unsigned int, pair <InstSrcManager::ISrcId, vector<FSize> > >::iterator mediapair = mediasizes.begin();
 	     mediapair != mediasizes.end(); ++mediapair)
@@ -350,8 +280,6 @@ PkgModuleFunctions::IsSelected (YCPList args)
 YCPValue
 PkgModuleFunctions::IsAvailable (YCPList args)
 {
-    startCachedSources (true);		// start cached sources
-
     std::string name = getName(args);
     if (name.empty())
 	return YCPBoolean (false);
@@ -443,8 +371,6 @@ PkgModuleFunctions::DoProvide (YCPList args)
 	return YCPError ("Bad args to Pkg::DoProvide");
     }
 
-    startCachedSources (true);
-
     YCPMap ret;
     YCPList tags = args->value(0)->asList();
     if (tags->size() > 0)
@@ -534,9 +460,6 @@ PkgModuleFunctions::DoRemove (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSummary (YCPList args)
 {
-    _y2pm.packageManager ();
-    startCachedSources (true);
-
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -556,9 +479,6 @@ PkgModuleFunctions::PkgSummary (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgVersion (YCPList args)
 {
-    _y2pm.packageManager ();
-    startCachedSources (true);
-
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -578,9 +498,6 @@ PkgModuleFunctions::PkgVersion (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSize (YCPList args)
 {
-    _y2pm.packageManager ();
-    startCachedSources (true);
-
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -600,9 +517,6 @@ PkgModuleFunctions::PkgSize (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgGroup (YCPList args)
 {
-    _y2pm.packageManager ();
-    startCachedSources (true);
-
     PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
     if (!package)
     {
@@ -757,9 +671,6 @@ PkgModuleFunctions::FilterPackages(YCPList args)
 	return YCPError ("Bad args to Pkg::FilterPackages");
     }
 
-    // _y2pm.packageManager ();
-    // startCachedSources (true);
-
     bool byAuto = args->value(0)->asBoolean()->value();
     bool byApp  = args->value(1)->asBoolean()->value();
     bool byUser = args->value(2)->asBoolean()->value();
@@ -813,8 +724,7 @@ PkgModuleFunctions::GetPackages(YCPList args)
 	return YCPError ("Bad args to Pkg::GetPackages");
     }
 
-    _y2pm.packageManager ();
-    startCachedSources (true);
+    assertActiveSources();
 
     string which = args->value(0)->asSymbol()->symbol();
     bool names_only = args->value(1)->asBoolean()->value();
@@ -1069,7 +979,7 @@ PkgModuleFunctions::PkgCommit (YCPList args)
     std::list<std::string> errors;
     std::list<std::string> remaining;
     std::list<std::string> srcremaining;
-    int count = _y2pm.commitPackages (medianr, errors, remaining, srcremaining, _inst_order);
+    int count = _y2pm.commitPackages (medianr, errors, remaining, srcremaining );
 
     YCPList ret;
     ret->add (YCPInteger (count));
