@@ -64,6 +64,7 @@ protected:
     friend class SymbolTable;
 
 public:
+    virtual size_t mem_size () const { return sizeof (TableEntry); }
     TableEntry (const char *key, SymbolEntryPtr entry, const Point *point, SymbolTable *table = 0);
     TableEntry (std::istream & str);
     ~TableEntry ();
@@ -113,6 +114,7 @@ private:
     std::stack <std::vector<TableEntry *> *> m_xrefs;
 
 public:
+    virtual size_t mem_size () const { return sizeof (SymbolTable); }
     //---------------------------------------------------------------
     // Constructor/Destructor
 

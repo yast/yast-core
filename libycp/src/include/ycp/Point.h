@@ -58,6 +58,7 @@ class Point : public MemUsage
     int m_line;				// line of definition / inclusion
     const Point *m_point;		// points to toplevel point for include files
   public:
+    virtual size_t mem_size () const { return sizeof (Point); }
     Point (std::string filename, int line = 0, const Point *point = 0);
     Point (SymbolEntryPtr sentry, int line = 0, const Point *point = 0);
     Point (std::istream & str);

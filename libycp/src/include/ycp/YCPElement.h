@@ -73,6 +73,7 @@ private:							\
     DEF_OPS(name)						\
     friend class YCP##base##Rep;				\
 public:								\
+    virtual size_t mem_size () const { return sizeof (YCP##name); } \
     YCP##name(const YCPNull &n) : YCP##base(n) {}		\
 protected:							\
     YCP##name (const YCP##name##Rep *x) : YCP##base(x) {}
