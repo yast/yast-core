@@ -54,7 +54,7 @@ public:
      */
     virtual YCPValue doActualWork(const YCPList& arglist, Y2Component *displayserver);
 
-    static Y2WFMComponent* instance() { return current_wfm; }
+    static Y2WFMComponent* instance();
 
     YCPInteger SCROpen (const YCPString& name, const YCPBoolean &check_version);
     void SCRClose (const YCPInteger& handle);
@@ -72,6 +72,16 @@ public:
     YCPString GetEnvironmentEncoding ();
 
     virtual Y2Namespace* import (const char* name_space);
+
+   /**
+     * Setups this script component.
+     * @param the name of the component that is realized be the script.
+     * @param script the script. This component clones it, so you can
+     * destroy the script after the constructor call.
+     */
+    void setupComponent (string client_name, string fullname,
+                       const YCPValue& script);
+
 private:
 
     bool createDefaultSCR ();
@@ -134,6 +144,21 @@ private:
 
 
     static Y2WFMComponent* current_wfm;
+    
+       /**
+     * The script that implements the component.
+     */
+    YCPValue script;
+
+    /**
+     * The name of the client that is implemented by the script.
+     */
+    string client_name;
+
+    /**
+     * The fullname of the script file.
+     */
+    string fullname;
 };
 
 

@@ -21,11 +21,11 @@
 
 #include <y2/Y2StdioComponent.h>
 #include <y2/Y2ComponentBroker.h>
+#include "Y2WFMComponent.h"
 #include <ycp/Parser.h>
 #include <ycp/YCPCode.h>
 #include <ycp/y2log.h>
 #include <WFM.h>
-#include <Y2ScriptComponent.h>
 
 extern int yydebug;
 
@@ -79,7 +79,7 @@ main (int argc, char *argv[])
     }
 
     // create the component "wfm", the Workflowmanager to do the work.
-    Y2Component *workflowmanager = Y2ComponentBroker::createClient("wfm");
+    Y2WFMComponent *workflowmanager = dynamic_cast<Y2WFMComponent*>(Y2ComponentBroker::createClient("wfm"));
 
     if (!workflowmanager)
     {
@@ -124,9 +124,12 @@ main (int argc, char *argv[])
 	wfm_arglist->add (YCPString ("testing"));
 	wfm_arglist->add (YCPString ("testing-fullname"));
 	wfm_arglist->add (YCPList());
+	
+	workflowmanager->setupComponent ( "testing", "testing-fullname:"
+	    , YCPCode (value));
 
 	// Let the wfm do the work
-	YCPValue res = workflowmanager->doActualWork(wfm_arglist, user_interface);
+	YCPValue res = workflowmanager->doActualWork(YCPList(), user_interface);
 
 	printf ("(%s)\n", res.isNull()?"nil":res->toString().c_str());
     }

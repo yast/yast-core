@@ -42,7 +42,10 @@ Y2WFMComponent::Y2WFMComponent ():
       handle_cnt (1),
       local ("ag_system", -1),
       modulename (""),
-      argumentlist (YCPList())
+      argumentlist (YCPList()),
+script (YCPNull()),
+      client_name (""),
+      fullname ("")
 {
     y2debug ("Initialized Y2WFMComponent instance");
 
@@ -85,6 +88,11 @@ Y2WFMComponent::~Y2WFMComponent ()
     // delete all SCRs
     for (WFMSubAgents::iterator it = scrs.begin (); it != scrs.end (); it++)
         delete *it;
+	
+    if (current_wfm == this)
+    {
+	current_wfm = NULL;
+    }
 }
 
 
@@ -122,6 +130,13 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
 {
     y2debug( "Starting evaluation" );
     
+    // Prepare the arguments. It has the form [script, [clientargs...]]
+    YCPList wfm_arglist;
+    wfm_arglist->add(script);
+    wfm_arglist->add(YCPString(name()));
+    wfm_arglist->add (YCPString (fullname));
+    wfm_arglist->add(arglist);
+    
     // store the old arguments and module name to preserve reentrancy
     YCPList old_arguments = argumentlist;
     string old_modulename = modulename;
@@ -136,21 +151,23 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     string current_file = "unknown";
     YCPList  args_for_the_script;
 
-    if (arglist->size() != 4
-	|| !arglist->value(1)->isString()
-	|| !arglist->value(2)->isString()
-	|| !arglist->value(3)->isList())
+    if (wfm_arglist->size() != 4
+	|| !wfm_arglist->value(1)->isString()
+	|| !wfm_arglist->value(2)->isString()
+	|| !wfm_arglist->value(3)->isList())
     {
-	y2error ("Incorrect arguments %s", arglist->toString().c_str());
+	y2error ("Incorrect arguments %s", wfm_arglist->toString().c_str());
     }
     else
     {
-	script		    = arglist->value(0);
-	modulename	    = arglist->value(1)->asString()->value();
-	current_file	    = arglist->value(2)->asString()->value();
-	argumentlist	    = arglist->value(3)->asList();
+	script		    = wfm_arglist->value(0);
+	modulename	    = wfm_arglist->value(1)->asString()->value();
+	current_file	    = wfm_arglist->value(2)->asString()->value();
+	argumentlist	    = wfm_arglist->value(3)->asList();
     }
 
+    y2debug ("Script is: %s", script->toString().c_str());
+        
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
 
     YCPValue v = script->asCode ()->evaluate ();
@@ -581,4 +598,22 @@ Y2WFMComponent::import (const char* name_space)
 	return 0;
     }
     return block->nameSpace();
+}
+
+void Y2WFMComponent::setupComponent (string cn, string fn,
+				      const YCPValue& sc)
+{
+    script = sc;
+    client_name = cn;
+    fullname = fn;
+}
+
+Y2WFMComponent* Y2WFMComponent::instance()
+{
+    if (! current_wfm)
+    {
+	current_wfm = new Y2WFMComponent();
+    }
+    
+    return current_wfm;
 }
