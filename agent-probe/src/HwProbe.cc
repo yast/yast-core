@@ -352,7 +352,8 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 
 	if (path_desc[i].feature != 0)
 	{
-	    hd_free_hd_data (hd_base); // free data of last scan
+	    // free and use afterwards is a bad idea (see bug#44855)
+	    // hd_free_hd_data (hd_base); // free data of last scan
 	    hd_set_probe_feature (hd_base, path_desc[i].feature);
 	    hd_scan (hd_base);
 	}

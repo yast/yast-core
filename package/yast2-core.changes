@@ -1,7 +1,12 @@
 -------------------------------------------------------------------
+Mon Sep 13 14:49:39 CEST 2004 - arvin@suse.de
+
+- don't use hd_base after freeing (bug #44855)
+
+-------------------------------------------------------------------
 Mon Sep 13 13:11:19 CEST 2004 - arvin@suse.de
 
-- fixed TargetInitDU for missing readonly
+- fixed TargetInitDU for missing readonly key
 - 2.10.14
 
 -------------------------------------------------------------------
