@@ -1066,12 +1066,17 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
     // call 'our' scanner through the parser
     int token = pr->scanner->yylex();
 
-    if (token != YYEOF) {
-	// store the value of the lexical token
-	YCPValue *store_here = (YCPValue *) &(lvalp_void->e);
-	*store_here = pr->scanner->getScannedValue();
-	pr->lineno = pr->scanner->getLineNumber();
+    if (token == YYEOF)
+    {
+	yyeof_reached = 1;
+	return token;
     }
+
+    // store the value of the lexical token
+    YCPValue *store_here = (YCPValue *) &(lvalp_void->e);
+    *store_here = pr->scanner->getScannedValue();
+    pr->lineno = pr->scanner->getLineNumber();
+
     return token;
 }
 } // extern "C"

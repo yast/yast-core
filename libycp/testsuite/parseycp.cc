@@ -34,7 +34,7 @@ int recursive = 0;
 int
 parsefile (const char *fname)
 {
-    int ret = -1;
+    int ret = 0;
     FILE *infile = stdin;
 
     if (fname)
@@ -57,13 +57,13 @@ parsefile (const char *fname)
     {
 	if (yyeof_reached)
 	{
-	    fprintf (stderr, "yyeof before parse\n");
+//	    fprintf (stderr, "yyeof before parse\n");
 	    break;
 	}
 	v = parser.parse();
 	if (yyeof_reached)
 	{
-	    fprintf (stderr, "yyeof after parse\n");
+//	    fprintf (stderr, "yyeof after parse\n");
 	    break;
 	}
 
@@ -73,7 +73,7 @@ parsefile (const char *fname)
 	    {
 		printf("NULL\n");
 	    }
-	    if (ret == -1)
+	    if (ret == 0)
 	    {
 		if (quiet)
 		{
@@ -101,7 +101,6 @@ parsefile (const char *fname)
 		}
 	    }
 	}
-	ret = 0;
     }
 
     if (infile
@@ -166,8 +165,12 @@ recurse(const char *path)
 	    snprintf(name,sizeof(name),"%s/%s", path, dent->d_name);
 	    if (strlen(name) > 4
 		&& !strcmp(name+strlen(name)-4, ".ycp"))
-		if (parsefile(name))
+	    {
+		if (parsefile(name) != 0)
+		{
 		    ret = 1;
+		}
+	    }
 	}
 	free(pp);
     }

@@ -2,7 +2,8 @@
 Tue Mar 11 10:07:56 CET 2003 - kkaempf@suse.de
 
 - fix parseycp syntax checker to detect trailing errors
-  after a successful parse (#24994)
+  after a successful parse. Also fixes detection and
+  handling of EOF in parser. (#24994)
 
 -------------------------------------------------------------------
 Sat Mar 08 21:55:04 CET 2003 - arvin@suse.de
