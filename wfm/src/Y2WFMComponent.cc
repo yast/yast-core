@@ -90,11 +90,11 @@ bool Y2WFMComponent::createDefaultSCR ()
 
     // create default scr
     WFMSubAgent* scr = new WFMSubAgent ("scr", 0);
-    
+
     if (!scr->start ()) {
 	return false;
     }
-    
+
     scrs.push_back (scr);
     default_handle = 0;
     scr->agent()->setAsCurrentSCR();
@@ -106,7 +106,7 @@ YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
 {
     y2debug( "Starting evaluation" );
-    
+
     // wfm always gets three arguments:
     // 0: any script:        script to execute
     // 1: string modulename: name of the module to realize
@@ -133,18 +133,18 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     }
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
-    
+
     if (scrs.empty ())
     {
 	// problems with creation of default SCR in constructor
 	return YCPVoid ();
     }
-    
+
     current_wfm = this;
 
 
     YCPValue v = script->asCode ()->evaluate ();
-    
+
     y2debug( "Evaluation finished" );
 
     return v;
@@ -277,68 +277,6 @@ Y2WFMComponent::SCRGetDefault () const
     return YCPInteger (default_handle);
 }
 
-YCPValue 
-Y2WFMComponent::GetClientName(const YCPInteger& filedescriptor)
-{
-    /**
-     * @builtin GetClientName(integer filedescriptor) -> string
-     * This builtin read the clientname from a pipe
-     */
-
-    YCPList arglist = argumentlist;
-    long long index = filedescriptor->value ();
-    if (index < 0)
-    {
-	return YCPError ("Invalid negative index to Args(). Only values >= 0 are allowed");
-    }
-    else
-    {
-	int   clnamefd;
-	int   readgood, red;
-	char  readstr[MAX_CLIENT_NAME_LEN+2] = "";
-
-	// char debug_buffer[100];
-	// sprintf( debug_buffer, "NB. %lld", index);
-	// y2debug( debug_buffer);
-
-	clnamefd = index;
-
-	readgood = 0;
-	do {
-	    red = read( clnamefd, readstr + readgood, MAX_CLIENT_NAME_LEN - 1 - readgood);
-
-	    // sprintf( debug_buffer, "READ %d -- %s", red, readstr);
-	    // y2error( debug_buffer);
-
-	    if (red == 0)
-		break;
-	    if (red < 0)
-	    {
-		YCPError(" Can't read secret from fd\n");
-		y2error( " Can't read secret from fd\n");
-		readgood = -1;
-		break;
-	    }
-	    readgood += red;
-
-	} while (readgood < MAX_CLIENT_NAME_LEN - 1);
-
-	if ( readgood > 0 )
-	{
-	    readstr[readgood] = 0;
-
-	    // sprintf( debug_buffer, "READ %s", readstr);
-	    // y2debug( debug_buffer);
-	    y2debug ("Client: %s", readstr);
-	    return YCPString( readstr );
-	}
-	else
-	{
-	    y2error( "Can't read from pipe. readgood <= 0");
-	    return YCPNull();
-	}
-    }
-}
 
 YCPValue
 Y2WFMComponent::Args (const YCPInteger& i) const
@@ -489,7 +427,7 @@ YCPValue Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
     {
         return local.agent ()->Read (p);
     }
-    else 
+    else
     {
         return local.agent ()->Read (p, arg);
     }
@@ -553,7 +491,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
      * all module status in the currently running YaST.
      *
      * The modulename is temporarily changed to the name of the
-     * called script or a component. 
+     * called script or a component.
      *
      * @example call ("inst_mouse", [true, false]) -> ....
      *
@@ -565,7 +503,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
     string new_modulename = client->value ();
     string filename = "clients/" + new_modulename + ".ycp";
     string fullname = Y2PathSearch::findy2 (filename);
-    
+
     int fd = -1;
     if (!fullname.empty ())
     {
@@ -581,7 +519,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 	    ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
 		       "Calling YaST client %s", new_modulename.c_str ());
 	    YCPValue result = client->doActualWork (args, NULL);
-	    
+
 	    ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
 		       "Called YaST client returned: %s", result.isNull () ? "nil" : result->toString ().c_str ());
 	    return result;
@@ -630,6 +568,6 @@ Y2Namespace* Y2WFMComponent::import (const char* name_space, const char* timesta
     // maybe this failed, but it does not mean any problems, block () will simply return 0
     y2debug ("Timestamp requested: %s", timestamp);
     Y2Namespace *ns = Bytecode::readModule (name_space, timestamp != NULL ? timestamp : "" );
-    
+
     return ns;
 }

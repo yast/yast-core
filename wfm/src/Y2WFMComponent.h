@@ -56,7 +56,7 @@ public:
      *   already exists in the Y2Component class
      */
     virtual YCPValue evaluate(const YCPValue& command);
-    
+
     static Y2WFMComponent* instance() { return current_wfm; }
 
     YCPInteger SCROpen (const YCPString& name, const YCPBoolean &check_version);
@@ -64,7 +64,6 @@ public:
     YCPString SCRGetName (const YCPInteger &handle);
     void SCRSetDefault (const YCPInteger &handle);
     YCPInteger SCRGetDefault () const;
-    YCPValue GetClientName(const YCPInteger& filedescriptor);
     YCPValue Args (const YCPInteger& index = YCPNull ()) const;
     YCPString GetLanguage () const;
     YCPString GetEncoding () const;
@@ -74,7 +73,7 @@ public:
     YCPValue Execute (const YCPPath &path, const YCPValue& arg1);
     YCPValue CallFunction (const YCPString& client, const YCPList& args = YCPList ());
     YCPString GetEnvironmentEncoding ();
-    
+
     virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
 private:
 

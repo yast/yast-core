@@ -1,3 +1,3 @@
-[wfm] Y2WFMComponent.cc(SetLanguage):404 GET encoding for de_DE@euro:  ISO-8859-15
-[wfm] Y2WFMComponent.cc(SetLanguage):383 SET encoding to: UTF-8
-[wfm] Y2WFMComponent.cc(SetLanguage):404 GET encoding for cs_CZ:  ISO-8859-2
+[wfm] Y2WFMComponent.cc(SetLanguage):394 GET encoding for de_DE@euro:  ISO-8859-15
+[wfm] Y2WFMComponent.cc(SetLanguage):373 SET encoding to: UTF-8
+[wfm] Y2WFMComponent.cc(SetLanguage):394 GET encoding for cs_CZ:  ISO-8859-2

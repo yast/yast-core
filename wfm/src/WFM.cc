@@ -31,29 +31,29 @@ $Id$
 
 extern StaticDeclaration static_declarations;
 
-static YCPInteger 
+static YCPInteger
 WFMSCROpen (const YCPString& name, const YCPBoolean &check_version)
 {
     return Y2WFMComponent::instance ()->SCROpen (name, check_version);
 }
 
-static YCPValue 
+static YCPValue
 WFMSCRClose (const YCPInteger& handle)
 {
     Y2WFMComponent::instance ()->SCRClose (handle);
-    
+
     return YCPVoid ();
 }
 
 
-static YCPString 
+static YCPString
 WFMSCRGetName (const YCPInteger &handle)
 {
     return Y2WFMComponent::instance ()->SCRGetName (handle);
 }
 
 
-static YCPValue 
+static YCPValue
 WFMSCRSetDefault (const YCPInteger &handle)
 {
     Y2WFMComponent::instance ()->SCRSetDefault (handle);
@@ -61,97 +61,91 @@ WFMSCRSetDefault (const YCPInteger &handle)
 }
 
 
-static YCPInteger 
+static YCPInteger
 WFMSCRGetDefault ()
 {
     return Y2WFMComponent::instance ()->SCRGetDefault ();
 }
 
 
-static YCPValue 
+static YCPValue
 WFMCallFunction (const YCPString& name)
 {
     return Y2WFMComponent::instance ()->CallFunction (name);
 }
 
-static YCPValue 
+static YCPValue
 WFMCallFunction1 (const YCPString& name, const YCPList& args)
 {
     return Y2WFMComponent::instance ()->CallFunction (name, args);
 }
 
-static YCPValue 
-WFMGetClientName(const YCPInteger& filedescriptor)
-{
-    return Y2WFMComponent::instance ()->GetClientName (filedescriptor);
-}
-
-static YCPValue 
+static YCPValue
 WFMArgs ()
 {
     return Y2WFMComponent::instance ()->Args ();
 }
 
-static YCPValue 
+static YCPValue
 WFMArgs2 (const YCPInteger& index)
 {
     return Y2WFMComponent::instance ()->Args (index);
 }
 
-static YCPString 
+static YCPString
 WFMGetLanguage ()
 {
     return Y2WFMComponent::instance ()->GetLanguage ();
 }
 
 
-static YCPString 
+static YCPString
 WFMGetEncoding ()
 {
     return Y2WFMComponent::instance ()->GetEncoding ();
 }
 
 
-static YCPString 
+static YCPString
 WFMGetEnvironmentEncoding ()
 {
     return Y2WFMComponent::instance ()->GetEnvironmentEncoding ();
 }
 
 
-static YCPString 
+static YCPString
 WFMSetLanguage (const YCPString& language)
 {
     return Y2WFMComponent::instance ()->SetLanguage (language);
 }
 
-static YCPString 
+static YCPString
 WFMSetLanguage2 (const YCPString& language, const YCPString& encoding)
 {
     return Y2WFMComponent::instance ()->SetLanguage (language, encoding);
 }
 
 
-static YCPValue 
+static YCPValue
 WFMRead (const YCPPath& p, const YCPValue& arg)
 {
     return Y2WFMComponent::instance ()->Read (p, arg);
 }
 
 
-static YCPValue 
+static YCPValue
 WFMWrite3 (const YCPPath& p, const YCPValue& arg1, const YCPValue& arg2 = YCPNull ())
 {
     return Y2WFMComponent::instance ()->Write (p, arg1, arg2);
 }
 
-static YCPValue 
+static YCPValue
 WFMWrite2 (const YCPPath& p, const YCPValue& arg)
 {
     return WFMWrite3 (p, arg);
 }
 
-static YCPValue 
+static YCPValue
 WFMExecute (const YCPPath& p, const YCPValue& arg)
 {
     return Y2WFMComponent::instance ()->Execute (p, arg);
@@ -174,7 +168,6 @@ WFM::WFM ()
 	{ "CallFunction",	"any (string)",			(void*)WFMCallFunction },
 	{ "call",		"any (string, list <any>)",	(void*)WFMCallFunction1 },
 	{ "call",		"any (string)",			(void*)WFMCallFunction },
-	{ "GetClientName",	"string (integer)",		(void*)WFMGetClientName },
 	{ "Args",		"list <any> ()",		(void*)WFMArgs },
 	{ "Args",		"any (integer)",		(void*)WFMArgs2 },
 	{ "GetLanguage",	"string ()",			(void*)WFMGetLanguage },
