@@ -1,0 +1,18 @@
+// from #16129
+{
+    module "Im";
+    global define F(block b) ``{
+	y2milestone ("F (%1)", b);
+	return eval (b);
+    }
+
+}
+
+{
+    import "Im";
+    global define G() ``{
+	y2milestone ("G()");
+	return "result is G()";
+    }
+    return Im::F(G);
+}
