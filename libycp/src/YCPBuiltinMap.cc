@@ -219,7 +219,7 @@ m_unionmap (const YCPMap &map1, const YCPMap &map2)
     /**
      * @builtin union (map m1, map m2) -> map
      * Interprets two maps as sets and returns a new map that has all
-     * elements of the first map <tt>m1>/tt>and all of the second map
+     * elements of the first map <tt>m1</tt>and all of the second map
      * <tt>m2</tt>. If elements have identical keys, values from
      * <tt>m2</tt> overwrite elements from <tt>m1</tt>.
      */
