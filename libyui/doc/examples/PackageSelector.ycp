@@ -1,8 +1,7 @@
 UI(``{
     Pkg::TargetInit( "/",	// installed system
 		     false ); 	// don't create a new RPM database
-    // OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`testMode), "/dev/fd0" ) );
-    OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`testMode) ) );
+    OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`testMode), "/dev/fd0" ) );
     symbol input = RunPkgSelection(`id(`selector) );
     CloseDialog();
 
