@@ -36,9 +36,12 @@ YMultiProgressMeter::YMultiProgressMeter( const YWidgetOpt & 	opt,
 {
     for ( int i=0; i < maxValues->size(); i++ )
     {
-	_maxValues.push_back( maxValues->value( i )->asInteger()->value() );
-	_currentValues.push_back( -1 );
+	int val = maxValues->value( i )->asInteger()->value();
+	_maxValues.push_back( val );
+	_currentValues.push_back( val );
     }
+
+    y2milestone( "maxValues: %s", maxValues->toString().c_str() );
 
     setDefaultStretchable( YD_HORIZ, _horizontal   );
     setDefaultStretchable( YD_VERT,  ! _horizontal );
@@ -65,6 +68,7 @@ YCPValue YMultiProgressMeter::changeWidget( const YCPSymbol & property, const YC
 		    setCurrentValue( i, valList->value( i )->asInteger()->value() );
 		}
 
+		y2debug( "Setting values: %s", valList->toString().c_str() );
 		doUpdate();	// notify derived classes
 		return YCPBoolean( true );
 	    }
@@ -144,7 +148,7 @@ void YMultiProgressMeter::setCurrentValue( int segment, int value )
 	}
 
 	_currentValues[ segment ] = value;
-	y2debug( "Segment[ %d ]: %d", segment, value );
+	// y2debug( "Segment[ %d ]: %d", segment, value );
     }
     else
     {
