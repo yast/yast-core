@@ -75,7 +75,7 @@ sub ErrorPath($)
 {
     my ($p) = @_;
 
-    y2debug("Bad path: $p");
+    y2error("Bad path: $p");
     ycp::Return("");
 }
 
@@ -83,7 +83,7 @@ sub ErrorCommand($)
 {
     my ($c) = @_;
     
-    y2debug("Bad command: $c");
+    y2error("Bad command: $c");
     ycp::Return("");
 }
 
@@ -146,6 +146,7 @@ while (1)
 		# another process is already running
 		if ($child_running)
 		{
+		    y2error('A subprocess is already running');
 		    ycp::Return('false');
 		}
 		elsif (defined $arg)
@@ -273,11 +274,12 @@ while (1)
 		ErrorPath($path);
 	    }
 	}
-	elsif ($command eq 'Result')
+	elsif ($command eq 'result')
 	{
 	    if ($child_running)
 	    {
 		KillSubprocess();
+		y2warning('Subprocess was killed at \'result\' command');
 	    }
 	    exit(0);
 	}
