@@ -3,6 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<!-- tidy -m ini.html -->
 <meta name="generator"
 content="HTML Tidy for Linux/x86 (vers 1st April 2002), see www.w3.org" />
 <title>Ini agent description</title>
@@ -17,7 +18,11 @@ content="HTML Tidy for Linux/x86 (vers 1st April 2002), see www.w3.org" />
 <body>
 <h1>Ini agent description</h1>
 
-<p>Ini agent description<br />
+<p><!-- 
+How to generate the TOC in Emacs:
+Mark the TOC, then C-w, C-u M-| ~mvidner/bin/htmltoc ini.html RET
+-->
+Ini agent description<br />
 &nbsp;&nbsp;Purpose<br />
 &nbsp;&nbsp;Specification<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Ini file entities<br />
@@ -39,23 +44,24 @@ href="#options">Options:</a><br />
 href="#rewrite">rewrite</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;Configuration file for sysconfig files
 (former rc files)<br />
-&nbsp;&nbsp;Interface for ini-agent<br />
+&nbsp;&nbsp;<a href="#ycp-interface">Interface for
+ini-agent</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;Accessing keys<br />
 &nbsp;&nbsp;&nbsp;&nbsp;SysConfig/flat mode<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Final write<br />
-&nbsp;&nbsp;TODO<br />
+&nbsp;&nbsp;<a href="#TODOs">TODOs</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;Flag repeat_names<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Allowed section names and key names<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Browser<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Re-ordering<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Section renaming<br />
 &nbsp;&nbsp;&nbsp;&nbsp;I am the highest authority!<br />
-&nbsp;&nbsp;Examples<br />
+&nbsp;&nbsp;<a href="#examples">Examples</a><br />
 &nbsp;&nbsp;&nbsp;&nbsp;Dialup providers (package providers)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;smb.conf<br />
 &nbsp;&nbsp;&nbsp;&nbsp;/etc/lilo.conf<br />
 &nbsp;&nbsp;&nbsp;&nbsp;Rewrite rules<br />
-&nbsp;&nbsp;Implementation<br />
+&nbsp;&nbsp;<a href="#implementation">Implementation</a><br />
 &nbsp;&nbsp;Changes<br />
 </p>
 
@@ -180,7 +186,7 @@ delimiters). But I believe we do not need it.</blockquote>
 <br />
 <br />
  
-<h3>Configuration file for ini files</h3>
+<h3 id="config">Configuration file for ini files</h3>
 
 <p>Example:</p>
 
@@ -478,7 +484,7 @@ IniAgent (filename,
 ])
 </pre>
 
-<h2>Interface for ini-agent</h2>
+<h2 id="ycp-interface">Interface for ini-agent</h2>
 
 Assume, agent is mounted on path .ini 
 <h3>Accessing keys</h3>
@@ -577,7 +583,7 @@ agent).<br />
 When write is unable to open some file for writting, it returns
 false. True is returned otherwise.</p>
 
-<h2>TODO</h2>
+<h2 id="TODOs">TODOs</h2>
 
 I am going to implement following features when someone requests
 them. I do not want to fill the agent with features that will be
@@ -612,7 +618,7 @@ changed file. Sometimes, when client completly re-creates file, its
 re-read could cause big mess. <br />
 <br />
  
-<h2>Examples</h2>
+<h2 id="examples">Examples</h2>
 
 Each features should be tested in testsuite. Look for an
 inspiration there. Here are some most common or interesting
@@ -706,7 +712,7 @@ examples:<br />
 <p>See testsuites, <tt>multi/rewrite*</tt>. TODO FIXME: insert an
 example here.</p>
 
-<h2>Implementation</h2>
+<h2 id="implementation">Implementation</h2>
 
 <pre>
 Modes:
