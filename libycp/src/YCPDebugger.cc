@@ -353,32 +353,60 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 	return false;
     }
 
-    if (nargs == 1 && args[0] == "scope") {
-	print_scope (inter);
-	return false;
-    }
+    // scope [#<interp_no>] [<namespace>]
+    if (nargs >= 1 && args[0] == "scope") {
+	Interpreter * tmp = inter;
+	int scopearg = 1;
+	string scopename = "";
 
-    if (nargs == 2 && args[0] == "scope" && args[1][0] == '#') {
-	int unique_id = atoi (args[1].substr (1).c_str ());
-	Interpreter * tmp = find_inter (unique_id);
+	if (nargs == 2 && args[1][0] == '#') {	
+	    int unique_id = atoi (args[1].substr (1).c_str ());
+	    tmp = find_inter (unique_id);
+	    scopearg = 2;
+	}
+
+	if (nargs > scopearg) {
+	    scopename = args[scopearg];
+	}
+
 	if (tmp)
-	    print_scope (tmp);
+	    print_scope (tmp, scopename);
 	else
 	    write_line ("unknown interpreter");
 	return false;
     }
 
-    if (nargs == 2 && (args[0] == "print" || args[0] == "p")) {
-	print_variable (inter, args[1]);
-	return false;
-    }
+    // {p|print} [#<interp_no>] [<namespace>::]<variable>
+    if (nargs >= 2 && (args[0] == "print" || args[0] == "p")) {
+	Interpreter * tmp = inter;
+	int vararg = 1;
+	string varname;
+	string scopename = "";
 
-    if (nargs == 3 && (args[0] == "print" || args[0] == "p") &&
-	args[1][0] == '#') {
-	int unique_id = atoi (args[1].substr (1).c_str ());
-	Interpreter * tmp = find_inter (unique_id);
+	if (args[1][0] == '#') {
+	    int unique_id = atoi (args[1].substr (1).c_str ());
+	    tmp = find_inter (unique_id);
+	    vararg = 2;
+	}
+
+	if (nargs > vararg) {
+	    varname = args[vararg];
+	}
+	else {
+	    write_line ("missing variable name");
+	    return false;
+	}
+
+	string::size_type dcpos = varname.find ("::");
+	if (dcpos != string::npos) {
+	    scopename = varname.substr (0, dcpos);
+	    varname = varname.substr (dcpos + 2);
+	    if (scopename.empty ())
+		scopename = "_"; // explicit global namespace
+	}
+
 	if (tmp)
-	    print_variable (tmp, args[2]);
+	    print_variable (tmp, varname, scopename);
 	else
 	    write_line ("unknown interpreter");
 	return false;
@@ -420,16 +448,9 @@ YCPDebugger::handle_command (Interpreter *inter, const string &command,
 
 
 bool
-YCPDebugger::print_variable (Interpreter *inter, const string &name)
+YCPDebugger::print_variable (Interpreter *inter, const string &name, const string& scopename)
 {
-    YCPScopeInstance *instance = inter->interpreter->scopeTop;
-
-    if (!instance) {
-	write_line ("variable not found");
-	return false;
-    }
-
-    YCPValue value = instance->lookupValue (name);
+    YCPValue value = inter->interpreter->lookupValue (name, scopename);
     if (value.isNull ()) {
 	write_line ("variable not found");
 	return false;
@@ -443,9 +464,17 @@ YCPDebugger::print_variable (Interpreter *inter, const string &name)
 
 
 void
-YCPDebugger::print_scope (Interpreter *inter)
+YCPDebugger::print_scope (Interpreter *inter, const string& scopename)
 {
-    YCPScopeInstance *instance = inter->interpreter->scopeTop;
+    const YCPScopeInstance *instance = inter->interpreter->scopeTop;
+
+    if (!scopename.empty())
+    {
+	if (scopename == "_")
+	    instance = inter->interpreter->scopeGlobal;
+	else
+	    instance = inter->interpreter->lookupInstance (scopename);
+    }
 
     write_line ("BEGIN SCOPE");
 

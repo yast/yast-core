@@ -271,12 +271,12 @@ private:
     /**
      * Prints a single variable of the interpreter.
      */
-    bool print_variable (Interpreter *, const string &);
+    bool print_variable (Interpreter *, const string &, const string& scopename = "");
 
     /**
      * Prints the entire variable scope of the interpreter.
      */
-    void print_scope (Interpreter *);
+    void print_scope (Interpreter *, const string& scopename = "");
 
     /**
      * Used to ignore the calls to "_fullname", which the user does not
