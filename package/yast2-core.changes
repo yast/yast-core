@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 07 19:28:50 CEST 2002 - arvin@suse.de
+
+- adaption for libhd changes
+
+-------------------------------------------------------------------
 Mon Aug 05 17:07:35 CEST 2002 - arvin@suse.de
 
 - fixed cpu and boot detection on S390
