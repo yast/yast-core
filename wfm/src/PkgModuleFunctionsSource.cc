@@ -557,14 +557,17 @@ PkgModuleFunctions::SourceDelete (YCPList args)
     if (!source_id)
 	return YCPVoid();
 
-    return YCPBoolean( false );
+    _last_error = _y2pm.instSrcManager().deleteSource( source_id );
+    if ( _last_error ) return YCPBoolean( false );
+
+    return YCPBoolean( true );
 }
 
 /** ------------------------
  * 
- * @builtin Pkg::SourceRaisePriority (integer source_id ) -> void
+ * @builtin Pkg::SourceRaisePriority (integer source_id ) -> bool
  *
- * Raise priority of source.
+ * Raise priority of source. Return true on success, false on error.
  */ 
 YCPValue
 PkgModuleFunctions::SourceRaisePriority (YCPList args)
@@ -573,14 +576,17 @@ PkgModuleFunctions::SourceRaisePriority (YCPList args)
     if (!source_id)
 	return YCPVoid();
 
-    return YCPVoid();
+    _last_error = _y2pm.instSrcManager().rankUp( source_id );
+    if ( _last_error ) return YCPBoolean( false );
+
+    return YCPBoolean( true );
 }
 
 /** ------------------------
  * 
  * @builtin Pkg::SourceLowerPriority (integer source_id ) -> void
  *
- * Raise priority of source.
+ * Raise priority of source. Return true on success, false on error.
  */ 
 YCPValue
 PkgModuleFunctions::SourceLowerPriority (YCPList args)
@@ -589,5 +595,8 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
     if (!source_id)
 	return YCPVoid();
 
-    return YCPVoid();
+    _last_error = _y2pm.instSrcManager().rankDown( source_id );
+    if ( _last_error ) return YCPBoolean( false );
+
+    return YCPBoolean( true );
 }
