@@ -87,7 +87,7 @@ YUIInterpreter::~YUIInterpreter()
 Y2Component *
 YUIInterpreter::getCallback ( void )
 {
-    y2debug ( "YUIInterpreter[ %p ]::getCallback() = %p", this, callbackComponent );
+    y2debug ( "YUIInterpreter[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
 }
 
@@ -95,7 +95,7 @@ YUIInterpreter::getCallback ( void )
 void
 YUIInterpreter::setCallback ( Y2Component *callback )
 {
-    y2debug ( "YUIInterpreter[ %p ]::setCallback( %p )", this, callback );
+    y2debug ( "YUIInterpreter[%p]::setCallback( %p )", this, callback );
     callbackComponent = callback;
     return;
 }
@@ -375,7 +375,7 @@ YCPValue YUIInterpreter::evaluateUI( const YCPValue & value )
 
 YCPValue YUIInterpreter::evaluateWFM( const YCPValue & value )
 {
-    y2debug ( "YUIInterpreter[ %p]::evaluateWFM[%p ]( %s )\n", this, callbackComponent, value->toString().c_str() );
+    y2debug ( "YUIInterpreter[%p]::evaluateWFM[%p]( %s )\n", this, callbackComponent, value->toString().c_str() );
     if ( callbackComponent )
     {
 	if ( value->isBuiltin() )
@@ -403,7 +403,7 @@ YCPValue YUIInterpreter::evaluateWFM( const YCPValue & value )
 	}
 	return callbackComponent->evaluate ( value );
     }
-    y2error ( "YUIInterpreter[ %p ]: No callbackComponent", this );
+    y2error ( "YUIInterpreter[%p]: No callbackComponent", this );
     return YCPError ( "YUIInterpreter::evaluateWFM: No callback component WFM existing.", YCPNull() );
 }
 
