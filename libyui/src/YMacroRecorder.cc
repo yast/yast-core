@@ -127,14 +127,14 @@ void YMacroRecorder::recordYcpCodeLocation()
 	{
 	    if ( functionName.empty() )
 	    {
-		fprintf( _macroFile, "%s%s//   %s:%d\n",
+		fprintf( _macroFile, "%s%s// Source: %s:%d\n",
 			 YMACRO_INDENT, YMACRO_INDENT,
 			 frame->filename.c_str(),
 			 frame->linenumber );
 	    }
 	    else
 	    {
-		fprintf( _macroFile, "%s%s//   %s(%s):%d\n",
+		fprintf( _macroFile, "%s%s// Source: %s(%s):%d\n",
 			 YMACRO_INDENT, YMACRO_INDENT,
 			 frame->filename.c_str(),
 			 functionName.c_str(),
@@ -167,6 +167,7 @@ void YMacroRecorder::beginBlock()
 
     fprintf( _macroFile, "%s{\n", YMACRO_INDENT );
     recordDialogDebugLabel();
+    fprintf( _macroFile, "%s%s//\n", YMACRO_INDENT, YMACRO_INDENT );
     recordYcpCodeLocation();
 }
 
