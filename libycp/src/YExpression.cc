@@ -2130,9 +2130,6 @@ YEFunction::YEFunction (std::istream & str)
 
 YEFunction::~YEFunction ()
 {
-#if DO_DEBUG
-    y2debug ("YEFunction::~YEFunction[%p] (%s)", this, m_entry->toString().c_str());
-#endif
     ycodelist_t *parm = m_parameters;
     while (parm)
     {
