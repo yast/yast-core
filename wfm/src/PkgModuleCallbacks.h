@@ -34,7 +34,34 @@ class YCPInterpreter;
  * @short Handler for Callbacks received or triggered. Needs access to WFM.
  *
  * <B>NOTE:</B> Public references to YCPCallbacks and Y2PMReceive are not
- * usable outside PkgModuleCallbacks.cc
+ * usable outside PkgModuleCallbacks.cc because both class definitions reside
+ * within the implementation file.
+ *
+ * <H5>How to introduce new YCP callbacks</H5>
+ * <OL>
+ * <LI>Consult PkgModuleCallbacks.YCP.h and introduce a new value in enum CBid
+ *     (and adjust switch in cbName). This enum value is used to set and access
+ *     the YCP callbacks data.
+ * <LI>Consult PkgModuleCallbacks.cc and implement PkgModuleFunctions::CallbackWhateverName,
+ *     to set the calbacks module and symbol.
+ * </OL>
+ * <H5>How to introduce new recipient which triggers the YCP callbacks</H5>
+ * <OL>
+ * <LI>Consult PkgModuleCallbacks.cc
+ * <LI>Within namespace Y2PMRecipients define the new recipient class, which is
+ *     usg. derived from Recipient and some calback interface class provided
+ *     by Y2PM or some of it's components.
+ * <LI>In class Y2PMReceive create an instance of your recipient, and adjust
+ *     constructor and destructor to setup and clear the redirection of the
+ *     Report (also provided by Y2PM or some of it's components) you want to
+ *     receive.
+ * </OL>
+ * Sounds more complicated than it actually is. Take an existing recipient as
+ * example. Consider class RecipientCtl, which is inherited by Y2PMReceive and
+ * shared among the recipient classes, if you need to exchage data or coordinate
+ * different recipients.
+ *
+ * See also class @ref Report (in libutil).
  **/
 class PkgModuleFunctions::CallbackHandler {
   CallbackHandler & operator=( const CallbackHandler & );

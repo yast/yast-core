@@ -89,7 +89,7 @@ class PkgModuleFunctions
 
       /**
        * Handler for YCPCallbacks received or triggered.
-       * Needs access to WFM.
+       * Needs access to WFM. See @ref CallbackHandler.
        **/
       CallbackHandler & _callbackHandler;
 
@@ -104,7 +104,7 @@ class PkgModuleFunctions
 	YCPValue ErrorDetails (YCPList args);
 	YCPValue ErrorId (YCPList args);
 
-	// callbacks (see PkgModuleCallbacks.h)
+	// callbacks (see @ref CallbackHandler)
 	YCPValue CallbackStartProvide (YCPList args);
 	YCPValue CallbackProgressProvide (YCPList args);
 	YCPValue CallbackDoneProvide (YCPList args);
