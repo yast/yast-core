@@ -107,6 +107,7 @@ examples_DATA =					\
 	ShortcutConflict1.ycp			\
 	ShortcutConflict2.ycp			\
 	ShortcutConflict3.ycp			\
+	ShortcutCheckPostponed.ycp		\
 	Slider1.ycp				\
 	Slider2.ycp				\
 	Spacing1.ycp				\
