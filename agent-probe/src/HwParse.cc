@@ -579,25 +579,6 @@ HwProbe::hd2value (hd_t *hd)
     {
 	switch (hd->detail->type)
 	{
-	    /* cdtype entry is obsoleted by is stuff above */
-	    case hd_detail_cdrom: {
-		string cdtype = "cdrom";
-		if (hd->detail->cdrom.data->dvdram)
-		    cdtype = "dvdram";
-		else if (hd->detail->cdrom.data->cdrw)
-		    cdtype = "cdrw";
-		else if (hd->detail->cdrom.data->dvdr)
-		    cdtype = "dvdr";
-		else if (hd->detail->cdrom.data->cdr)
-		    cdtype = "cdr";
-		else if (hd->detail->cdrom.data->dvd)
-		    cdtype = "dvd";
-		out->add (YCPString ("cdtype"), YCPString (cdtype));
-	    }
-	    break;
-	    case hd_detail_floppy: {
-	    }
-	    break;
 	    case hd_detail_bios: {
 		bios_info_t *info = hd->detail->bios.data;
 		out->add (YCPString ("apm_supported"), YCPBoolean ((info->apm_supported)?true:false));
