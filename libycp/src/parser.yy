@@ -3348,6 +3348,7 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
     if ((e1_match_e2 < 0)						// not comparable types
 	&& (e2_match_e1 < 0))
     {
+	yyerror_with_lineinfo (parser, e2->l, "Types are not comparable");
 	yyerror_type_mismatch (parser, e2->l, e1->t, e2->t);
 	result->t = 0;
 	return;

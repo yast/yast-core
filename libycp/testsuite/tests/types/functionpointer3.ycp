@@ -1,0 +1,21 @@
+{
+  boolean modified = false;
+
+  boolean Modified()
+  {
+    y2debug("modified=%1",modified);
+    return modified;
+  }
+
+  boolean() AbortFunction = Modified;
+
+  boolean Abort()
+  {
+     if (AbortFunction != nil)
+	return eval (AbortFunction) == true;	// thats wrong anyway,
+						// should be 'AbortFunction()'
+						// instead of 'eval (AbortFunction)'
+     return false;
+  }
+
+}
