@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep  3 22:52:27 CEST 2002 - kkaempf@suse.de
+
+- enhanced callback handling for Pkg::
+- product data access functions
+- 2.6.26
+
+-------------------------------------------------------------------
 Tue Sep  3 16:48:12 CEST 2002 - mvidner@suse.cz
 
 - kdoc cleanup: better cross references and fixed some parsing issues.
