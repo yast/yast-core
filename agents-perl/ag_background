@@ -334,7 +334,7 @@ while (1)
 	    
     if ($output_avail) 	# script output available
     {
-	if ($newlines >= $buffer_size)
+	if (@out >= $buffer_size)
 	{
 	    # too many lines in input buffer - wait for STDIN command
 	    select(my $watch_out = $stdin_set, undef, undef, undef);
@@ -383,7 +383,7 @@ while (1)
 
     if ($err_avail) 	# error output available
     {
-	if ($newlines_err >= $buffer_size_err)
+	if (@err >= $buffer_size_err)
 	{
 	    # too many lines in input buffer - wait for STDIN command
 	    select(my $watch_out = $stdin_set, undef, undef, undef);
