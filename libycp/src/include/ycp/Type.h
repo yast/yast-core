@@ -93,13 +93,13 @@ public:
     /**
      * Construct from a string literal type code
      */
-    static TypePtr fromSignature (const char **signature);
+    static constTypePtr fromSignature (const char **signature);
 
     /**
      * Construct from a string literal type code
      * @param s eg. string("list <string>")
      */
-    static TypePtr fromSignature (const string & signature) { const char *s = signature.c_str(); return Type::fromSignature (&s); }
+    static constTypePtr fromSignature (const string & signature) { const char *s = signature.c_str(); return Type::fromSignature (&s); }
 
     /**
      * determine actual type if declared type contains 'flex' or 'flexN'
@@ -124,7 +124,9 @@ public:
     static const constTypePtr String;	/* string type  */
     static const constTypePtr Symbol;	/* symbol type  */
     static const constTypePtr Term;	/* term type  */
+    static const constTypePtr Wildcard;	/* wildcard (...) type  */
 
+    static const constTypePtr ConstAny;		/* any type  */
     static const constTypePtr ConstVoid;	/* void type  */
     static const constTypePtr ConstBoolean;	/* boolean type  */
     static const constTypePtr ConstByteblock;	/* byteblock type  */
@@ -135,8 +137,20 @@ public:
     static const constTypePtr ConstString;	/* string type  */
     static const constTypePtr ConstSymbol;	/* symbol type  */
     static const constTypePtr ConstTerm;	/* term type  */
+
     static const constTypePtr ConstList;	/* list type  */
     static const constTypePtr ConstMap;		/* map type  */
+
+    static const constTypePtr Flex;
+    static const constTypePtr ConstFlex;
+    static const constTypePtr NFlex1;
+    static const constTypePtr ConstNFlex1;
+    static const constTypePtr NFlex2;
+    static const constTypePtr ConstNFlex2;
+    static const constTypePtr NFlex3;
+    static const constTypePtr ConstNFlex3;
+    static const constTypePtr NFlex4;
+    static const constTypePtr ConstNFlex4;
 
     static VariableTypePtr Variable();
     static ListTypePtr     List();
@@ -289,7 +303,7 @@ public:
     int match (constTypePtr expected) const;
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
-    FlexType ();
+    FlexType (bool as_const = false);
     FlexType (std::istream & str);
     ~FlexType ();
 };
@@ -309,7 +323,7 @@ public:
     int match (constTypePtr expected) const;
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
-    NFlexType (unsigned int number);
+    NFlexType (unsigned int number, bool as_const = false);
     NFlexType (std::istream & str);
     ~NFlexType ();
 };
@@ -332,7 +346,7 @@ public:
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
-    VariableType (constTypePtr type = Type::Unspec);
+    VariableType (constTypePtr type = Type::Unspec, bool as_const = false);
     VariableType (std::istream & str);
     ~VariableType ();
 };
@@ -356,7 +370,7 @@ public:
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
-    ListType (constTypePtr type = Type::Unspec);
+    ListType (constTypePtr type = Type::Unspec, bool as_const = false);
     ListType (std::istream & str);
     ~ListType ();
 };
@@ -382,7 +396,7 @@ public:
     constTypePtr keytype () const { return m_keytype; }
     constTypePtr valuetype () const { return m_valuetype; }
     std::ostream & toStream (std::ostream & str) const;
-    MapType (constTypePtr key = Type::Unspec, constTypePtr value = Type::Unspec);
+    MapType (constTypePtr key = Type::Unspec, constTypePtr value = Type::Unspec, bool as_const = false);
     MapType (std::istream & str);
     ~MapType ();
 };
@@ -406,7 +420,7 @@ public:
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr returnType () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
-    BlockType (constTypePtr type);
+    BlockType (constTypePtr type, bool as_const = false);
     BlockType (std::istream & str);
     ~BlockType ();
 };
@@ -429,7 +443,7 @@ public:
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
-    TupleType (constTypePtr type);
+    TupleType (constTypePtr type, bool as_const = false);
     TupleType (std::istream & str);
     void concat (constTypePtr t);
     unsigned int parameterCount () const { return m_types.size(); }
@@ -457,7 +471,7 @@ public:
     TypePtr clone () const;
     TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
-    FunctionType (constTypePtr returntype = Type::Unspec);
+    FunctionType (constTypePtr returntype = Type::Unspec, bool as_const = false);
     FunctionType (std::istream & str);
     ~FunctionType ();
     constTypePtr returnType () const { return m_returntype; }

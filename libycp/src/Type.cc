@@ -58,7 +58,15 @@ const constTypePtr Type::Symbol		= TypePtr ( new Type (SymbolT));
 const constTypePtr Type::Term		= TypePtr ( new Type (TermT));
 const constTypePtr Type::Locale		= TypePtr ( new Type (LocaleT));
 const constTypePtr Type::Path		= TypePtr ( new Type (PathT));
+const constTypePtr Type::Wildcard	= TypePtr ( new Type (WildcardT));
 
+const constTypePtr Type::Flex		= TypePtr ( new FlexType());
+const constTypePtr Type::NFlex1		= TypePtr ( new NFlexType(1));
+const constTypePtr Type::NFlex2		= TypePtr ( new NFlexType(2));
+const constTypePtr Type::NFlex3		= TypePtr ( new NFlexType(3));
+const constTypePtr Type::NFlex4		= TypePtr ( new NFlexType(4));
+
+const constTypePtr Type::ConstAny	= TypePtr ( new Type (AnyT, true));
 const constTypePtr Type::ConstVoid	= TypePtr ( new Type (VoidT, true));
 const constTypePtr Type::ConstBoolean	= TypePtr ( new Type (BooleanT, true));
 const constTypePtr Type::ConstByteblock	= TypePtr ( new Type (ByteblockT, true));
@@ -71,6 +79,12 @@ const constTypePtr Type::ConstList	= TypePtr ( new Type (ListT, true));
 const constTypePtr Type::ConstMap	= TypePtr ( new Type (MapT, true));
 const constTypePtr Type::ConstLocale	= TypePtr ( new Type (LocaleT, true));
 const constTypePtr Type::ConstPath	= TypePtr ( new Type (PathT, true));
+
+const constTypePtr Type::ConstFlex	= TypePtr ( new FlexType (true));
+const constTypePtr Type::ConstNFlex1	= TypePtr ( new NFlexType (1, true));
+const constTypePtr Type::ConstNFlex2	= TypePtr ( new NFlexType (2, true));
+const constTypePtr Type::ConstNFlex3	= TypePtr ( new NFlexType (3, true));
+const constTypePtr Type::ConstNFlex4	= TypePtr ( new NFlexType (4, true));
 
 const constTypePtr Type::Error		= TypePtr ( new Type (ErrorT));
 
@@ -331,8 +345,8 @@ Type::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // FlexType
 
-FlexType::FlexType ()
-    : Type (FlexT)
+FlexType::FlexType (bool as_const)
+    : Type (FlexT, as_const)
 {
 }
 
@@ -423,8 +437,8 @@ FlexType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // NFlexType
 
-NFlexType::NFlexType (unsigned int number)
-    : Type (NFlexT)
+NFlexType::NFlexType (unsigned int number, bool as_const)
+    : Type (NFlexT, as_const)
     , m_number (number)
 {
     if (number == 0) ycp2error ("NFlexType::NFlexType (0)");
@@ -524,8 +538,8 @@ NFlexType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // VariableType
 
-VariableType::VariableType (constTypePtr type)
-    : Type (VariableT)
+VariableType::VariableType (constTypePtr type, bool as_const)
+    : Type (VariableT, as_const)
     , m_type (type)
 {
 }
@@ -626,8 +640,8 @@ VariableType::unflex (constTypePtr type, unsigned int number) const
 // ListType
 
 
-ListType::ListType (constTypePtr type)
-    : Type (ListT)
+ListType::ListType (constTypePtr type, bool as_const)
+    : Type (ListT, as_const)
     , m_type (type)
 {
 }
@@ -742,8 +756,8 @@ ListType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // MapType
 
-MapType::MapType (constTypePtr key, constTypePtr value)
-    : Type (MapT)
+MapType::MapType (constTypePtr key, constTypePtr value, bool as_const)
+    : Type (MapT, as_const)
     , m_keytype (key)
     , m_valuetype (value)
 {
@@ -892,8 +906,8 @@ MapType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // BlockType
 
-BlockType::BlockType (constTypePtr type)
-    : Type (BlockT)
+BlockType::BlockType (constTypePtr type, bool as_const)
+    : Type (BlockT, as_const)
     , m_type (type)
 {
 }
@@ -1002,8 +1016,8 @@ BlockType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // TupleType
 
-TupleType::TupleType (constTypePtr type)
-    : Type (TupleT)
+TupleType::TupleType (constTypePtr type, bool as_const)
+    : Type (TupleT, as_const)
 {
     concat (type);
 }
@@ -1226,8 +1240,8 @@ TupleType::unflex (constTypePtr type, unsigned int number) const
 //----------------------------------------------------------------
 // Function <returntype, arg1type, arg2type, ...>
 
-FunctionType::FunctionType (constTypePtr returntype)
-    : Type (FunctionT)
+FunctionType::FunctionType (constTypePtr returntype, bool as_const)
+    : Type (FunctionT, as_const)
     , m_returntype (returntype)
 {
 }

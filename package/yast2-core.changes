@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Sat Feb 28 13:42:42 CET 2004 - kkaempf@suse.de
+
+- use 'new' to allocate char buffer for SymbolEntry, so it can
+  be safely 'delete'd
+- share type pointers instead of creating new ones.
+
+-------------------------------------------------------------------
 Sat Feb 28 11:42:42 CET 2004 - kkaempf@suse.de
 
 - improve usage of existing type information for builtin

@@ -20,7 +20,7 @@ ExecutionEnvironment ee;
 void
 fromSig (const char *s, constTypePtr t, string ts)
 {
-    TypePtr i = Type::fromSignature (s);
+    constTypePtr i = Type::fromSignature (s);
 
     if (ts.empty()) ts = t->toString();
 

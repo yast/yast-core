@@ -286,7 +286,7 @@ Type::nextToken (const char **signature)
  * @param s eg. "list <string>"
  */
 
-TypePtr
+constTypePtr
 Type::fromSignature (const char ** signature)
 {
     if ((signature == 0)
@@ -296,10 +296,10 @@ Type::fromSignature (const char ** signature)
     }
     if (**signature == 0)
     {
-	return TypePtr (new Type(UnspecT));
+	return Type::Unspec;
     }
 
-    TypePtr t = 0;
+    constTypePtr t = 0;
 
     bool as_const = false;
 
@@ -322,20 +322,20 @@ Type::fromSignature (const char ** signature)
 
     switch (k)
     {
-	case AnyT:		t = TypePtr (new Type (AnyT)); break;
-	case BooleanT:		t = TypePtr (new Type (BooleanT)); break;
-	case ByteblockT:	t = TypePtr (new Type (ByteblockT)); break;
-	case ErrorT:		t = TypePtr (new Type (ErrorT)); break;
-	case FlexT:		t = FlexTypePtr (new FlexType ()); break;
-	case FloatT:		t = TypePtr (new Type (FloatT)); break;
-	case IntegerT:		t = TypePtr (new Type (IntegerT)); break;
-	case LocaleT:		t = TypePtr (new Type (LocaleT)); break;
-	case PathT:		t = TypePtr (new Type (PathT)); break;
-	case StringT:		t = TypePtr (new Type (StringT)); break;
-	case SymbolT:		t = TypePtr (new Type (SymbolT)); break;
-	case TermT:		t = TypePtr (new Type (TermT)); break;
-	case VoidT:		t = TypePtr (new Type (VoidT)); break;
-	case WildcardT:		t = TypePtr (new Type (WildcardT)); break;
+	case AnyT:		t = (as_const) ? Type::ConstAny : Type::Any; break;
+	case BooleanT:		t = (as_const) ? Type::ConstBoolean : Type::Boolean; break;
+	case ByteblockT:	t = (as_const) ? Type::ConstByteblock : Type::Byteblock; break;
+	case ErrorT:		t = Type::Error; break;
+	case FlexT:		t = (as_const) ? Type::ConstFlex : Type::Flex; break;
+	case FloatT:		t = (as_const) ? Type::ConstFloat : Type::Float; break;
+	case IntegerT:		t = (as_const) ? Type::ConstInteger : Type::Integer; break;
+	case LocaleT:		t = (as_const) ? Type::ConstLocale : Type::Locale; break;
+	case PathT:		t = (as_const) ? Type::ConstPath : Type::Path; break;
+	case StringT:		t = (as_const) ? Type::ConstString : Type::String; break;
+	case SymbolT:		t = (as_const) ? Type::ConstSymbol : Type::Symbol; break;
+	case TermT:		t = (as_const) ? Type::ConstTerm : Type::Term; break;
+	case VoidT:		t = (as_const) ? Type::ConstVoid : Type::Void; break;
+	case WildcardT:		t = Type::Wildcard; break;
 
 	// codes
 	case VariableT:		k = VariableT; next = '<'; break;
@@ -349,7 +349,14 @@ Type::fromSignature (const char ** signature)
 	default:
 	    if (k < -100)
 	    {
-		t = NFlexTypePtr (new NFlexType (-(k+100)));
+		switch (k)
+		{
+		    case -101:	t = (as_const) ? Type::ConstNFlex1 : Type::NFlex1; break;
+		    case -102:	t = (as_const) ? Type::ConstNFlex2 : Type::NFlex2; break;
+		    case -103:	t = (as_const) ? Type::ConstNFlex3 : Type::NFlex3; break;
+		    case -104:	t = (as_const) ? Type::ConstNFlex4 : Type::NFlex4; break;
+		    default:	t = NFlexTypePtr (new NFlexType (-(k+100))); break;
+		}
 	    }
 	    else
 	    {
@@ -379,7 +386,7 @@ Type::fromSignature (const char ** signature)
 	}
 
 	signature_copy = *signature;
-	TypePtr t1 = fromSignature (signature);
+	constTypePtr t1 = fromSignature (signature);
 
 	if (t1 == 0)
 	{
@@ -390,9 +397,9 @@ Type::fromSignature (const char ** signature)
 
 	switch (k)
 	{
-	    case VariableT: t = VariableTypePtr (new VariableType (t1)); next = '>'; break;
-	    case BlockT:    t = BlockTypePtr (new BlockType (t1)); next = '>'; break;
-	    case ListT:	    t = ListTypePtr (new ListType (t1)); next = '>'; break;
+	    case VariableT: t = VariableTypePtr (new VariableType (t1, as_const)); next = '>'; break;
+	    case BlockT:    t = BlockTypePtr (new BlockType (t1, as_const)); next = '>'; break;
+	    case ListT:	    t = ListTypePtr (new ListType (t1, as_const)); next = '>'; break;
 	    case MapT:
 	    {
 		signature_copy = *signature;
@@ -403,19 +410,19 @@ Type::fromSignature (const char ** signature)
 		    return 0;
 		}
 
-		TypePtr t2 = fromSignature (signature);
+		constTypePtr t2 = fromSignature (signature);
 		if (t2 == 0)
 		{
 		    y2debug ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
 		    return 0;
 		}
 
-		t = MapTypePtr (new MapType (t1, t2));
+		t = MapTypePtr (new MapType (t1, t2, as_const));
 		next = '>'; 
 	    }
 	    break;
-	    case TupleT:    t = TupleTypePtr (new TupleType (t1)); next = 0; break;
-	    case FunctionT: t = FunctionTypePtr (new FunctionType (t1)); next = 0; break;
+	    case TupleT:    t = TupleTypePtr (new TupleType (t1, as_const)); next = 0; break;
+	    case FunctionT: t = FunctionTypePtr (new FunctionType (t1, as_const)); next = 0; break;
 	    default:
 		y2error ("Post-Kind '%d'[%c] not handled\n", k, isprint (k) ? k : '?');
 		return 0;
@@ -439,12 +446,12 @@ Type::fromSignature (const char ** signature)
 
 //    y2debug ("t '%s', signature '%s', k %d", t->toString().c_str(), *signature, k);
 
-    if (as_const) t->asConst();
-
     signature_copy = *signature;
     if (**signature == '&')
     {
-	t->asReference();
+	TypePtr tr = t->clone();
+	tr->asReference();
+	t = tr;
 	do { (*signature)++; } while (isspace (**signature));
     }
 
@@ -453,7 +460,7 @@ Type::fromSignature (const char ** signature)
     if (**signature == '(')
     {
 //	y2debug ("function!");
-	FunctionTypePtr f (new FunctionType (t));
+	FunctionTypePtr f (new FunctionType (t, as_const));
 
 	do
 	{
@@ -463,7 +470,7 @@ Type::fromSignature (const char ** signature)
 		break;
 	    }
 	    signature_copy = *signature;
-	    TypePtr t1 = fromSignature (signature);
+	    constTypePtr t1 = fromSignature (signature);
 	    if (t1 == 0)
 	    {
 		*signature = signature_copy;
@@ -485,13 +492,13 @@ Type::fromSignature (const char ** signature)
     }
     else if (k == TupleT)
     {
-	TupleTypePtr tt = t;
+	TupleTypePtr tt = t->clone();
 //	y2debug ("tuple! '%s', signature '%s'", tt->toString().c_str(), *signature);
 	while (**signature == ',')
 	{
 	    (*signature)++;
 	    signature_copy = *signature;
-	    TypePtr t1 = fromSignature (signature);
+	    constTypePtr t1 = fromSignature (signature);
 	    if (t1 == 0)
 	    {
 		y2error ("Unknown type at '%s' [Complete signature is '%s']!\n", signature_copy, signature_start);
