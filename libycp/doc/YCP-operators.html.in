@@ -20,6 +20,7 @@ YCP knows the following operators:<br>
 <a href="#triple">triple operator</a>.
 
 <p>Operators <a href="#precedence">precedence</a>.
+- <b>Important!</b>
 
 <p><hr><p>
 
@@ -113,15 +114,22 @@ YCP knows the following operators:<br>
                 <tr><td align="center">left</td><td>?:</td></tr>
                 <tr><td align="center">left</td><td>||</td></tr>
                 <tr><td align="center">left</td><td>&amp;&amp;</td></tr>
-                <tr><td align="center">left</td><td>|</td></tr>
-                <tr><td align="center">left</td><td>&amp;</td></tr>
                 <tr><td align="center">left</td><td>== !=</td></tr>
                 <tr><td align="center">left</td><td>&lt; &lt;= &gt; &gt;=</td></tr>
-                <tr><td align="center">left</td><td>&lt;&lt; &gt;&gt;</td></tr>
                 <tr><td align="center">left</td><td>+ -</td></tr>
                 <tr><td align="center">left</td><td>* / %</td></tr>
+                <tr><td align="center">left</td><td><font color="red">&lt;&lt; &gt;&gt;</font></td></tr>
+                <tr><td align="center">left</td><td><font color="red">|</font></td></tr>
+                <tr><td align="center">left</td><td><font color="red">&amp;</font></td></tr>
                 <tr><td align="center">prefix</td><td>! ~ -</td></tr>
         </table>
+
+	<p><b>Note:</b> The <font color="red">marked</font> operators'
+	precedence is different from those of the C language. This is
+	a bug (#21251, #21260) which will be fixed in the future so
+	you should always use parentheses in expressions involving
+	&lt;&lt;, &gt;&gt;, &amp; and |.</p>
+
 </ul>
 
 </body></html>
