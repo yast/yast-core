@@ -20,6 +20,7 @@
 		from WFMInterpreter.
 /-*/
 
+#include <fstream>
 
 #include <ycp/y2log.h>
 #include <PkgModule.h>
@@ -27,6 +28,7 @@
 
 #include <y2util/Url.h>
 #include <y2pm/InstData.h>
+#include <y2pm/PMSelectionManager.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>

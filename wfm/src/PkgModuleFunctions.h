@@ -31,6 +31,7 @@
 #include <ycp/YCPList.h>
 #include <ycp/YCPInterpreter.h>
 
+#include <y2pm/PMSelectablePtr.h>
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstSrcManager.h>
 

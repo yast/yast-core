@@ -28,7 +28,7 @@
 #include <y2util/Url.h>
 #include <y2pm/InstTarget.h>
 #include <y2pm/UpdateInfParser.h>
-
+#include <y2pm/PMPackageManager.h>
 #include <y2pm/PMError.h>
 
 #include <ycp/YCPVoid.h>

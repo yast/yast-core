@@ -30,7 +30,9 @@
 #include <y2pm/InstSrcPtr.h>
 #include <y2pm/InstSrcDescr.h>
 #include <y2pm/InstSrcDescrPtr.h>
+#include <y2pm/InstTarget.h>
 #include <y2pm/PMError.h>
+#include <y2pm/PMSelectionManager.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>

@@ -29,6 +29,8 @@
 #include <y2util/Y2SLog.h>
 #include <y2pm/InstData.h>
 #include <y2pm/YouError.h>
+#include <y2pm/PMYouPatchManager.h>
+#include <y2pm/InstYou.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>

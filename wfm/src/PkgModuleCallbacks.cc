@@ -33,6 +33,9 @@ All callbacks have a common interface:
 #include <PkgModule.h>
 #include <PkgModuleFunctions.h>
 
+#include <y2pm/PMYouPatchManager.h>
+#include <y2pm/InstYou.h>
+
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
 #include <ycp/YCPSymbol.h>

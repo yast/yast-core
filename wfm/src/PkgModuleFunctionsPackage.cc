@@ -29,8 +29,11 @@
 #include <y2util/FSize.h>
 #include <y2pm/InstData.h>
 #include <y2pm/InstSrcDescr.h>
+#include <y2pm/InstTarget.h>
 #include <y2pm/PMObject.h>
 #include <y2pm/PMSelectable.h>
+#include <y2pm/PMPackageManager.h>
+#include <y2pm/PMSelectionManager.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
