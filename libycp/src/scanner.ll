@@ -735,8 +735,9 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 		RESULT (tentry->sentry()->type(), SYM_NAMESPACE);
 	    }
 	    break;
-	    case SymbolEntry::c_global:
 	    case SymbolEntry::c_unspec:
+		logWarning ("Identifier '%s' might be used uninitialized", LINE_VAR, yytext);
+	    case SymbolEntry::c_global:
 	    case SymbolEntry::c_variable:
 	    case SymbolEntry::c_reference:
 	    case SymbolEntry::c_function:

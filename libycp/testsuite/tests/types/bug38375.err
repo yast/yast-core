@@ -1,5 +1,7 @@
 [Parser] tests/types/bug38375.ycp:4 type mismatch in variable definition
 [Parser] tests/types/bug38375.ycp:4 Expected 'list <string>', seen 'list <list <string>>'.
+[Scanner] tests/types/bug38375.ycp:6 Warning: Identifier 'tmp2' might be used uninitialized
+[Scanner] tests/types/bug38375.ycp:8 Warning: Identifier 'tmp2' might be used uninitialized
 Parsed:
 ----------------------------------------------------------------------
 Parser error

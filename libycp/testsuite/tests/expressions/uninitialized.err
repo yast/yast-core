@@ -1,0 +1,12 @@
+[Scanner] tests/expressions/uninitialized.ycp:2 Warning: Identifier 'label' might be used uninitialized
+Parsed:
+----------------------------------------------------------------------
+{
+    // string label
+    // filename: "tests/expressions/uninitialized.ycp"
+    string label = (label + " ");
+    return label;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/uninitialized.ycp:2 YEVariable::evaluate (label) is not initialized
+[Interpreter] tests/expressions/uninitialized.ycp:2 Argument (label) to +(...) evaluates to nil
