@@ -302,11 +302,20 @@ PkgModuleFunctions::ClearSelection (YCPList args)
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (selectable)
     {
+	// if base selection -> clear everything
+	PMSelectionPtr candidate = selectable->candidateObj();
+	if (candidate
+	    && candidate->isBase())
+	{
+	    _y2pm.selectionManager().setNothingSelected();
+	}
+
 	bool ret = true;
 	if (selectable->status() == PMSelectable::S_Install)
 	    ret = selectable->set_status (PMSelectable::S_NoInst);
 	else if (selectable->status() == PMSelectable::S_Update)
 	    ret = selectable->set_status (PMSelectable::S_KeepInstalled);
+
 	return YCPBoolean (ret);
     }
     return YCPError ("No selectable found", YCPBoolean (false));
