@@ -271,14 +271,14 @@ PkgModuleFunctions::SetAdditionalLocales (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::SetAdditionalLocales");
     }
-    std::list<LangCode> langcodelist;
+    Y2PM::LocaleSet langcodelist;
     int i = 0;
     YCPList langycplist = args->value(0)->asList();
     while (i < langycplist->size())
     {
 	if (langycplist->value (i)->isString())
 	{
-	    langcodelist.push_back (LangCode (langycplist->value (i)->asString()->value()));
+	    langcodelist.insert (LangCode (langycplist->value (i)->asString()->value()));
 	}
 	else
 	{
@@ -299,8 +299,8 @@ YCPValue
 PkgModuleFunctions::GetAdditionalLocales ()
 {
     YCPList langycplist;
-    const std::list<LangCode> langcodelist = _y2pm.getRequestedLocales();
-    for (std::list<LangCode>::const_iterator it = langcodelist.begin();
+    const Y2PM::LocaleSet & langcodelist = _y2pm.getRequestedLocales();
+    for (Y2PM::LocaleSet::const_iterator it = langcodelist.begin();
 	 it != langcodelist.end(); ++it)
     {
 	langycplist->add (YCPString ((const std::string &)(*it)));
