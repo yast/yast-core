@@ -3,6 +3,7 @@
 /*
  *  Authors:	Arvin Schnell <arvin@suse.de>
  *		Klaus Kaempf <kkaempf@suse.de>
+ *		Stanislav Visnovsky <visnov@suse.cz>
  *  Maintainer: Arvin Schnell <arvin@suse.de>
  */
 
@@ -26,6 +27,13 @@ public:
     ScriptingAgent ();
 
     /**
+     * Constructor. Load only a single SCR.
+     * 
+     * @param file	SCR configuration file to be registered.
+     */
+    ScriptingAgent (const string& file);
+
+    /**
      * Destructor. Also deletes subagents.
      */
     ~ScriptingAgent ();
@@ -35,27 +43,27 @@ public:
      * @param path Specifies what part of the subtree should
      * be read. The path is specified _relatively_ to Root()!
      */
-    YCPValue Read (const YCPPath &path, const YCPValue &arg = YCPNull ());
+    virtual YCPValue Read (const YCPPath &path, const YCPValue &arg = YCPNull (), const YCPValue &opt = YCPNull ());
 
     /**
      * Writes data. Destroy the result after use.
      */
-    YCPValue Write (const YCPPath &path, const YCPValue &value,
+    virtual YCPBoolean Write (const YCPPath &path, const YCPValue &value,
 		    const YCPValue &arg = YCPNull ());
 
     /**
      * Get a list of all subtrees.
      */
-    YCPValue Dir (const YCPPath &path);
+    virtual YCPList Dir (const YCPPath &path);
 
     /**
      * Executes a command.
      */
-    YCPValue Execute (const YCPPath &path, const YCPValue &value =
+    virtual YCPValue Execute (const YCPPath &path, const YCPValue &value =
 		      YCPNull (), const YCPValue &arg = YCPNull ());
 
     /**
-     * Handle the commands 'RegisterAgent', 'UnregisterAgent',
+     * Handle the commands 'UnregisterAgent',
      * 'UnregisterAllAgents', 'MountAgent', 'MountAllAgents',
      * 'UnmountAgent' and 'UnmountAllAgents'.
      */
@@ -66,7 +74,22 @@ public:
      * it's definition or the term with the definition. The preferred way
      * is to specify the filename.
      */
-    YCPValue RegisterAgent (const YCPPath &path, const YCPValue &value);
+    virtual YCPBoolean RegisterAgent (const YCPPath &path, const YCPValue &value);
+
+    /**
+     * Unregister a agent.
+     */
+    virtual YCPBoolean UnregisterAgent (const YCPPath &path);
+
+    /**
+     * Unregister all agents.
+     */
+    virtual YCPBoolean UnregisterAllAgents ();
+
+    /**
+     * Unmount the agent handling path.
+     */
+    virtual YCPBoolean UnmountAgent (const YCPPath &path);
 
 private:
 
@@ -76,15 +99,6 @@ private:
     typedef vector<SCRSubAgent*> SubAgents;
     SubAgents agents;
 
-    /**
-     * Unregister a agent.
-     */
-    YCPValue UnregisterAgent (const YCPPath &path);
-
-    /**
-     * Unregister all agents.
-     */
-    YCPValue UnregisterAllAgents ();
 
     /**
      * Mount the agent handling path. This function is called
@@ -96,11 +110,6 @@ private:
      * Mount all agents.
      */
     YCPValue MountAllAgents ();
-
-    /**
-     * Unmount the agent handling path.
-     */
-    YCPValue UnmountAgent (const YCPPath &path);
 
     /**
      * Unmount all agents.
@@ -134,6 +143,12 @@ private:
      * interpreter.
      */
     void parseConfigFiles (const string &directory);
+
+    /**
+     * Parses a single SCR configuration file and evaluates them with the SCR
+     * interpreter.
+     */
+    void parseSingleConfigFile (const string &file);
 
 };
 

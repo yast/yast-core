@@ -7,6 +7,7 @@
  *
  *  Authors:	Arvin Schnell <arvin@suse.de>
  *		Klaus Kaempf <kkaempf@suse.de>
+ *		Stanislav Visnovsky <visnov@suse.cz>
  *  Maintainer:	Arvin Schnell <arvin@suse.de>
  *
  *  $Id$
@@ -21,7 +22,7 @@
 #include <algorithm>
 
 #include <ycp/y2log.h>
-#include <y2/pathsearch.h>
+#include <ycp/pathsearch.h>
 #include <y2/Y2ComponentBroker.h>
 #include "ScriptingAgent.h"
 
@@ -31,9 +32,19 @@ ScriptingAgent::ScriptingAgent ()
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 	 level++)
     {
+	y2debug( "Scripting agent searching SCRs in %s", (Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level)
+			  + "/scrconf" ).c_str() );
 	parseConfigFiles (Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level)
 			  + "/scrconf");
     }
+}
+
+
+ScriptingAgent::ScriptingAgent (const string& file)
+{
+    y2debug( "Scripting agent using only SCR %s", file.c_str () );
+    
+    parseSingleConfigFile (file);
 }
 
 
@@ -67,82 +78,93 @@ ScriptingAgent::parseConfigFiles (const string &directory)
 	    continue;
 
 	const string filename = directory + "/" + entry->d_name;
-
-	struct stat st;
-	if (stat (filename.c_str (), &st) != 0)
-	{
-	    y2debug ("Can't read dir entry file %s: %m", filename.c_str ());
-	    continue;
-	}
-
-	if (!S_ISREG (st.st_mode) && !S_ISLNK (st.st_mode))
-	    continue;
-
-	FILE *file = fopen (filename.c_str (), "r");
-	if (!file)
-	{
-	    y2debug ("Can't open %s for reading: %m", filename.c_str ());
-	    continue;
-	}
-
-	const int size = 250;
-	char line[size];
-
-	while (fgets (line, size, file))
-	{
-	    // delete last char (newline)
-	    const int l = strlen (line);
-	    if (l > 0)
-		line[l - 1] = '\0';
-
-	    if (line[0] == '.')
-	    {
-		RegisterAgent (YCPPath (line), YCPString (filename));
-		break;
-	    }
-	}
-
-	fclose (file);
+	
+	parseSingleConfigFile (filename);
     }
 
     closedir (dir);
 }
 
 
-YCPValue
-ScriptingAgent::Read (const YCPPath &path, const YCPValue &arg)
+void
+ScriptingAgent::parseSingleConfigFile (const string &filename)
 {
-    YCPValue v = executeSubagentCommand ("Read", path, arg);
+    struct stat st;
+    if (stat (filename.c_str (), &st) != 0)
+    {
+	y2debug ("Can't read dir entry file %s: %m", filename.c_str ());
+	return;
+    }
+
+    if (!S_ISREG (st.st_mode) && !S_ISLNK (st.st_mode))
+	return;
+
+    FILE *file = fopen (filename.c_str (), "r");
+    if (!file)
+    {
+	y2debug ("Can't open %s for reading: %m", filename.c_str ());
+	return;
+    }
+
+    const int size = 250;
+    char line[size];
+
+    while (fgets (line, size, file))
+    {
+	// delete last char (newline)
+	const int l = strlen (line);
+	if (l > 0)
+	    line[l - 1] = '\0';
+
+	if (line[0] == '.')
+	{
+	    RegisterAgent (YCPPath (line), YCPString (filename));
+	    break;
+	}
+    }
+
+    fclose (file);
+}
+
+
+YCPValue
+ScriptingAgent::Read (const YCPPath &path, const YCPValue &arg, const YCPValue &opt)
+{
+    y2debug( "This is ScriptingAgent(%p)::Read", this );
+    y2debug( "opt: %s", opt.isNull() ? "null" : opt->toString().c_str ());
+    YCPValue v = executeSubagentCommand ("Read", path, arg, opt);
     if (v.isNull())
     {
-	v = YCPError ("SCR::Read() failed", v);
+	ycp2error ("SCR::Read() failed");
     }
     return v;
 }
 
 
-YCPValue
+YCPBoolean
 ScriptingAgent::Write (const YCPPath &path, const YCPValue &value,
 		       const YCPValue &arg)
 {
     YCPValue v = executeSubagentCommand ("Write", path, value, arg);
     if (v.isNull())
     {
-	v = YCPError ("SCR::Write() failed", v);
+	ycp2error ("SCR::Write() failed");
+	return YCPNull ();
     }
-    return v;
+    return v->asBoolean ();
 }
 
 
-YCPValue
+YCPList
 ScriptingAgent::Dir (const YCPPath &path)
 {
     YCPValue v = executeSubagentCommand ("Dir", path);
     if (v.isNull())
     {
-	v = YCPError ("SCR::Dir() failed", v);
+	ycp2error ("SCR::Dir() failed");
+	return YCPNull ();
     }
-    return v;
+    return v->asList ();
 }
 
 
@@ -150,10 +172,11 @@ YCPValue
 ScriptingAgent::Execute (const YCPPath &path, const YCPValue &value,
 			 const YCPValue &arg)
 {
+    y2debug( "This is ScriptingAgent::Execute" );
     YCPValue v =  executeSubagentCommand ("Execute", path, value, arg);
     if (v.isNull())
     {
-	v = YCPError ("SCR::Execute() failed", v);
+	ycp2error ("SCR::Execute() failed");
     }
     return v;
 }
@@ -162,28 +185,10 @@ ScriptingAgent::Execute (const YCPPath &path, const YCPValue &value,
 YCPValue
 ScriptingAgent::otherCommand (const YCPTerm &term)
 {
-    const string sym = term->symbol ()->symbol ();
+    // FIXME: convert to proper builtins
+    const string sym = term->name ();
 
-    if (sym == "RegisterAgent"
-	&& term->size () == 2
-	&& term->value (0)->isPath ()
-	&& (term->value (1)->isString ()
-	    || term->value (1)->isTerm ()))
-    {
-	return RegisterAgent (term->value (0)->asPath (), term->value (1));
-    }
-    else if (sym == "UnregisterAgent"
-	     && term->size () == 1
-	     && term->value (0)->isPath ())
-    {
-	return UnregisterAgent (term->value (0)->asPath ());
-    }
-    else if (sym == "UnregisterAllAgents"
-	     && term->size () == 0)
-    {
-	return UnregisterAllAgents ();
-    }
-    else if (sym == "MountAgent"
+    if (sym == "MountAgent"
 	     && term->size () == 1
 	     && term->value (0)->isPath ())
     {
@@ -193,12 +198,6 @@ ScriptingAgent::otherCommand (const YCPTerm &term)
 	     && term->size () == 0)
     {
 	return MountAllAgents ();
-    }
-    else if (sym == "UnmountAgent"
-	     && term->size () == 1
-	     && term->value (0)->isPath ())
-    {
-	return UnmountAgent (term->value (0)->asPath ());
     }
     else if (sym == "UnmountAllAgents"
 	     && term->size () == 0)
@@ -216,7 +215,7 @@ ScriptingAgent::otherCommand (const YCPTerm &term)
 }
 
 
-YCPValue
+YCPBoolean
 ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 {
     SubAgents::iterator agent = findByPath (path);
@@ -248,7 +247,7 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 }
 
 
-YCPValue
+YCPBoolean
 ScriptingAgent::UnregisterAgent (const YCPPath &path)
 {
     SubAgents::iterator agent = findByPath (path);
@@ -265,7 +264,7 @@ ScriptingAgent::UnregisterAgent (const YCPPath &path)
 }
 
 
-YCPValue
+YCPBoolean
 ScriptingAgent::UnregisterAllAgents ()
 {
     for (SubAgents::iterator agent = agents.begin (); agent != agents.end ();
@@ -301,7 +300,7 @@ ScriptingAgent::MountAllAgents ()
          agent != agents.end (); agent++)
     {
 	v = (*agent)->mount (this);
-	if (!v.isNull () && v->isError ())
+	if (v.isNull ())
 	{
 	    return v;
 	}
@@ -310,7 +309,7 @@ ScriptingAgent::MountAllAgents ()
 }
 
 
-YCPValue
+YCPBoolean
 ScriptingAgent::UnmountAgent (const YCPPath &path)
 {
     SubAgents::iterator agent = findByPath (path);
@@ -341,6 +340,11 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 					const YCPValue &arg,
 					const YCPValue &optpar)
 {
+    y2debug( "ScriptingAgent::executeSubagentCommand: %s", command );
+    y2debug( "path: %s", path->toString ().c_str ());
+    y2debug( "arg: %s", arg.isNull() ? "null" : arg->toString().c_str ());
+    y2debug( "opt: %s", optpar.isNull() ? "null" : optpar->toString().c_str ());
+    
     /**
      *  Find the agent where the agent's path and the given path have
      *  the longest match. Example:
@@ -390,18 +394,10 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 	    if (path->isPrefixOf (it_path))
 	    {
 		YCPString str = YCPString (it_path->component_str (path_length));
-		// do not add duplicates (when would they occur?)
 		const int size = dir_list->size ();
 		if (size == 0 || !dir_list->value (size - 1)->equal (str))
 		    dir_list->add (str);
 	    }
-	}
-
-	// Catch Dir (.yast2.nosuchpath)
-	if (dir_list->size () == 0)
-	{
-	    return YCPError ("Path '" + path->toString () +
-			     "' does not exist and cannot be dirred", dir_list);
 	}
 
 	return dir_list;
@@ -411,11 +407,11 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 
     if (!(*agent)->get_comp ())
     {
-	return YCPError ("Couldn't mount agent to handle '"
-			 + path->toString() + "'");
+	ycp2error ("Couldn't mount agent to handle '%s'", path->toString().c_str ());
+	return YCPNull ();
     }
-
-    YCPTerm commandterm (command, false);
+    
+    YCPTerm commandterm (command);
     commandterm->add (path->at ((*agent)->get_path ()->length ())); // relative path
 
     if (!arg.isNull ())

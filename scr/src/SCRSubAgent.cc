@@ -7,6 +7,7 @@
  *
  *  Authors:	Arvin Schnell <arvin@suse.de>
  *		Klaus Kaempf <kkaempf@suse.de>
+ *		Stanislav Visnovsky <visnov@suse.cz>
  *  Maintainer:	Arvin Schnell <arvin@suse.de>
  *
  *  $Id$
@@ -16,7 +17,6 @@
 #include <ycp/y2log.h>
 #include <y2/Y2ComponentBroker.h>
 #include "SCRSubAgent.h"
-
 
 int
 operator < (const SCRSubAgent *a, const YCPPath &p)
@@ -53,12 +53,6 @@ SCRSubAgent::mount (SCRAgent *parent)
 	    YCPValue confval = parent->readconf (my_value->asString ()->value_cstr ());
 	    if (confval.isNull () || !confval->isTerm ())
 	    {
-		if (!confval.isNull () && confval->isError ())
-		{
-		    YCPError err = confval->asError ();
-		    ycp2error ("", 0, "%s\n", err->message ().c_str ());
-		    confval = err->value ();
-		}
 		return confval;
 	    }
 	    term = confval->asTerm ();
@@ -69,21 +63,23 @@ SCRSubAgent::mount (SCRAgent *parent)
 	}
 	else
 	{
-	    return YCPError ("value has wrong type", YCPBoolean (false));
+	    ycp2error ("value has wrong type");
+	    return YCPBoolean (false);
 	}
 
 	if (term.isNull ())
 	{
-	    return YCPError ("term is null", YCPBoolean (false));
+	    ycp2error ("term is null");
+	    return YCPBoolean (false);
 	}
 
-	string componentname = term->symbol ()->symbol ();
+	string componentname = term->name ();
 	my_comp = Y2ComponentBroker::createServer (componentname.c_str ());
 
 	if (!my_comp)
 	{
-	    return YCPError ("Can't find component '" + componentname + "'",
-			     YCPBoolean (false));
+	    ycp2error ("Can't find component '%s'", componentname.c_str ());
+	    return YCPBoolean (false);
 	}
 
 	// set mainscragent of new agent
@@ -96,18 +92,7 @@ SCRSubAgent::mount (SCRAgent *parent)
 	// term's arguments are preloaded into the server component
 	for (int i = 0; i < term->size (); i++)
 	{
-	    YCPValue arg = term->value (i);
-
-	    // WORKAROUND/HACK: adapting the old SCR files to the new interpreter
-	    // new interpreter requires every argument of an agent to
-	    // be quoted - but this will not work in the old interpter
-	    // =>strip quote if exists
-	    if (arg->isTerm ())
-	    {
-		arg = YCPTerm ( YCPSymbol( arg->asTerm ()->symbol ()->symbol (), false ),
-		    arg->asTerm ()->args () );
-	    }
-	    my_comp->evaluate (arg);
+	    my_comp->evaluate (term->value (i));
 	}
     }
 

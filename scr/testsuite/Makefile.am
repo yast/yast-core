@@ -40,6 +40,5 @@ y2scr_LDFLAGS =							\
 	-Xlinker --whole-archive				\
 	$(srcdir)/../../agent-dummy/src/libpy2ag_dummy.la	\
 	$(srcdir)/../../liby2/src/libpy2stdio.la		\
-	$(srcdir)/../../liby2/src/libpy2script.la		\
 	$(srcdir)/../src/libpy2scr.la				\
 	-Xlinker --no-whole-archive
