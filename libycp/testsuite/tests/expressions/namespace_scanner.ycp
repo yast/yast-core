@@ -1,3 +1,5 @@
+# testcase for 38327
+
 {
 	import "NestedA";
 

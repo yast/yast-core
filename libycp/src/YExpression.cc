@@ -2102,6 +2102,8 @@ YEBuiltin::evaluate (bool cse)
     }
     else
     {
+	if (m_parameterblock) m_parameterblock->pushToStack ();
+	
 	switch (type->parameterCount ())
 	{
 	    case 0:
@@ -2129,6 +2131,7 @@ YEBuiltin::evaluate (bool cse)
 	    }
 	    break;
 	}
+	if (m_parameterblock) m_parameterblock->popFromStack ();
     }
 
 #ifdef BUILTIN_STATISTICS
@@ -2474,7 +2477,7 @@ YEFunction::evaluate (bool cse)
 
     if (definition->isBlock())
     {
-	((YBlockPtr)definition)->pushToStack ();
+       ((YBlockPtr)definition)->pushToStack ();
     }
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)
@@ -2520,10 +2523,10 @@ YEFunction::evaluate (bool cse)
 
     if (definition->isBlock())
     {
-	// pop also local parameters
-	((YBlockPtr)definition)->popFromStack ();
+       // pop also local parameters
+       ((YBlockPtr)definition)->popFromStack ();
     }
-    
+
     // restore the context info
     ee.setLinenumber (linenumber);
     ee.setFilename (filename);

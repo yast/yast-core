@@ -1,0 +1,15 @@
+# testcase for 38596 (including local variables)
+
+{ 
+    list test(list<map> tree) { 
+        list<string> b =maplist(map a, tree, ``{ 
+                map abak = a; 
+                test(a["items"]:[]); 
+                a = abak; 
+                return (a["name"]:""); 
+                }); 
+        return b; 
+    } 
+ 
+    return test([$["name":"aaa", "items":[ $["name":"bbb", "items" : [$["name":"aaa"]] ] ]  ]]); 
+}

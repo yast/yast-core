@@ -472,6 +472,12 @@ YBlock::evaluate (bool cse)
     y2debug ("YBlock::evaluate([%d]%s)\n", (int)m_kind, toString().c_str());
 #endif
 
+    // recursion handling - not used for modules
+    if (! isModule ())
+    {
+	pushToStack ();
+    }
+
     string restore_name;
     if (!filename().empty())
     {
@@ -505,6 +511,12 @@ YBlock::evaluate (bool cse)
     if (!restore_name.empty())
     {
 	ee.setFilename (restore_name);
+    }
+    
+    // recursion handling - not used for modules
+    if (! isModule ())
+    {
+	popFromStack ();
     }
 
 #if DO_DEBUG
