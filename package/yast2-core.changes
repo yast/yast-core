@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed Sep 11 00:32:15 CEST 2002 - kkaempf@suse.de
+
+- correctly release sources
+- pass flag to solver to prefer installed packages in
+  case of conflict during update
+- products don't have a release, just a version
+- 2.6.39
+
+-------------------------------------------------------------------
 Tue Sep 10 15:53:55 CEST 2002 - arvin@suse.de
 
 - provide/obsolete yast2-lib64-compat (bug #19325)
