@@ -360,6 +360,8 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgPrepareOrder (YCPList args);
 	/* TYPEINFO: list<list<integer>>()*/
 	YCPValue PkgMediaSizes ();
+	/* TYPEINFO: list<list<integer>>()*/
+	YCPValue PkgMediaCount();
 	/* TYPEINFO: list<string>()*/
 	YCPValue PkgMediaNames ();
 

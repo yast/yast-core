@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep  2 18:20:02 CEST 2004 - sh@suse.de
+
+- Added Pkg::PkgMediaCount()
+- V 2.10.10 
+
+-------------------------------------------------------------------
 Wed Sep  1 18:22:15 CEST 2004 - sh@suse.de
 
 - Fixed bug #44579: YMultiProgressBar integer overflow 

@@ -365,6 +365,8 @@ PkgModuleFunctions::PkgMediaNames ()
     return ycpnames;
 }
 
+
+
 // ------------------------
 /**
  *  @builtin Pkg::PkgMediaSizes () ->
@@ -464,6 +466,106 @@ PkgModuleFunctions::PkgMediaSizes ()
 
     return ycpsizes;
 }
+
+
+// ------------------------
+/**
+ *  @builtin Pkg::PkgMediaCount() ->
+ *    [ [src1_media_1_count, src1_media_2_count, ...], [src2_media_1_count, src2_media_2_count, ...], ...]
+ *    return number of packages to be installed from different sources and media
+ *
+ *  list <list <integer> >
+ */
+YCPValue
+PkgModuleFunctions::PkgMediaCount()
+{
+    // get sources in installation order
+    InstSrcManager::ISrcIdList inst_order( _y2pm.instSrcManager().instOrderSources() );
+
+    // compute max number of media across all sources
+    // need a source rank map here since the package reveals the source rank as
+    // a nonambiguous id for its source.
+    // we will later re-map it back to the installation order. This is why InstSrcManager::ISrcId
+    // is included.
+
+    // map of < source rank, < src id, vector of package counts>
+
+    map <unsigned int, pair <InstSrcManager::ISrcId, vector<int> > > media_counts;
+
+    for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
+    {
+        vector<int> vf ((*it)->descr()->media_count(), 0);
+        media_counts[(*it)->descr()->default_rank()] = std::make_pair (*it, vf);
+    }
+
+    // scan over all packages
+
+    for (PMPackageManager::PMSelectableVec::const_iterator pkg = _y2pm.packageManager().begin();
+         pkg != _y2pm.packageManager().end(); ++pkg)
+    {
+      if ( ! ( (*pkg)->to_install() || (*pkg)->source_install() ) )
+	continue;
+
+      PMPackagePtr package = (*pkg)->candidateObj();
+      
+      if (!package)
+	continue;
+
+      map <unsigned int, pair <InstSrcManager::ISrcId, vector<int> > >::iterator mediapair = media_counts.find (package->instSrcRank());
+      if (mediapair == media_counts.end())
+      {
+	y2error ("Unknown rank %d for '%s'", package->instSrcRank(), ((std::string)(*pkg)->name()).c_str());
+	continue;
+      }
+
+      if ( (*pkg)->to_install() )
+      {
+	unsigned int medianr = package->medianr();
+	if (medianr > mediapair->second.second.size())
+        {
+	  y2error ("resize needed %d", medianr);
+	  mediapair->second.second.resize (medianr);
+	}
+	mediapair->second.second[medianr-1] += 1;
+      }
+
+      if ( (*pkg)->source_install() ) {
+	unsigned int medianr = atoi( package->sourceloc().c_str() );
+	FSize size = package->sourcesize();
+	if (medianr > mediapair->second.second.size())
+        {
+	  y2error ("resize needed %d", medianr);
+	  mediapair->second.second.resize (medianr);
+	}
+	mediapair->second.second[medianr-1] += 1;
+      }
+    }
+
+    // now convert back to list of lists in installation order
+
+    YCPList ycpsizes;
+
+    for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
+    {
+        for (map <unsigned int, pair <InstSrcManager::ISrcId, vector<int> > >::iterator mediapair = media_counts.begin();
+             mediapair != media_counts.end(); ++mediapair)
+        {
+            if (mediapair->second.first == *it)
+            {
+                YCPList msizes;
+
+                for (unsigned int i = 0; i < mediapair->second.second.size(); ++i)
+                {
+                    msizes->add (YCPInteger (((long long)(mediapair->second.second[i]))));
+                }
+                ycpsizes->add (msizes);
+            }
+        }
+    }
+
+    return ycpsizes;
+}
+
 
 // ------------------------
 /**
