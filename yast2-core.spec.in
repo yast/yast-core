@@ -1,6 +1,6 @@
 @HEADER-COMMENT@
 
-# neededforbuild  dejagnu expect gperf gpp hwinfo hwinfo-devel kdoc libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools liby2util liby2util-devel yast2-packagemanager yast2-packagemanager-devel curl curl-devel openssl openssl-devel
+# neededforbuild  curl curl-devel dejagnu expect gperf gpp hwinfo hwinfo-devel kdoc libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel rpm-devel tcl yast2-devtools yast2-packagemanager yast2-packagemanager-devel
 
 @HEADER@
 Summary:	-

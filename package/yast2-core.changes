@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan 27 15:42:15 CET 2003 - arvin@suse.de
+
+- added rpm-devel, popt and popt-devel to neededforbuild
+
+-------------------------------------------------------------------
 Thu Jan 23 10:41:54 CET 2003 - mvidner@suse.de
 
 - Activate the debugger on receiving SIGUSR2.
