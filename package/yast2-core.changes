@@ -3,6 +3,7 @@ Tue Aug 27 11:46:39 CEST 2002 - arvin@suse.de
 
 - added support for firewire controllers in probe agent
   (bug #18379)
+- fixed initialization of logging
 
 -------------------------------------------------------------------
 Wed Aug 21 16:24:20 CEST 2002 - kkaempf@suse.de

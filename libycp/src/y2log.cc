@@ -8,6 +8,7 @@
  *   Mathias Kettner <kettner@suse.de>
  *   Thomas Roelz <tom@suse.de>
  *   Michal Svec <msvec@suse.cz>
+ *   Arvin Schnell <arvin@suse.de>
  *
  * $Id$
  */
@@ -38,69 +39,35 @@
 #define Y2LOG_VAR_SIZE	"Y2MAXLOGSIZE"
 #define Y2LOG_VAR_NUM	"Y2MAXLOGNUM"
 
-static YCPValue	y2logconf = YCPVoid();
+static YCPValue	y2logconf = YCPVoid ();
 
-/* Check if logging is advised (logconf.ycp) */
-
-bool
-shouldBeLogged (int loglevel, string componentname)
-{
-    static bool logging_initialized = false;
-
-    /* Everything should be logged */
-    if (getenv(Y2LOG_VAR_ALL))
-	return true;
-
-    /* Prepare the logfile name */
-    if (!logging_initialized)
-    {
-	logging_initialized = true;
-	y2setLogfileName (""); /* The default */
-    }
-
-    if( !y2logconf.isNull() ) {
-
-	/* Logconf is a list of entries. One entry is for one component */
-	if( y2logconf->isList() ) {
-	    YCPList l = y2logconf->asList();
-
-	    for ( int i = 0; i < l->size(); i++ ) {
-
-		/* Entry is a tuple (list) of component name and list of enablings */
-		if( l->value(i)->isList() ) {
-		    YCPList entry = l->value(i)->asList();
-
-		    /* Check if it is valid. */
-		    if( entry->value(0)->isString() && entry->value(1)->isList() )
-		    {
-			if( componentname == entry->value(0)->asString()->value() )
-			{
-			    YCPList enabling = entry->value(1)->asList();
-			    if( loglevel < enabling->size() )
-			    {
-				if( enabling->value(loglevel)->isBoolean() )
-				    return enabling->value(loglevel)->asBoolean()->value();
-				else
-				    return true; /* Default is to turn on. */
-			    }
-			    else
-				return true; /* Default is to turn on. */
-			}
-		    }
-		}
-	    }
-	}
-    }
-
-    return ( loglevel != LOG_DEBUG || getenv(Y2LOG_VAR_DEBUG) );
-}
+static bool did_set_logname = false;
+static bool did_read_logconf = false;
 
 
 void
 y2setLogfileName (string filename)
 {
+    did_set_logname = true;
+
+    Y2Logging::setLogfileName (filename.c_str ());
+}
+
+
+std::string
+y2getLogfileName ()
+{
+    return Y2Logging::getLogfileName ();
+}
+
+
+static void
+read_logconf ()
+{
+    did_read_logconf = true;
+
     /* Read the logconf.ycp */
-    struct passwd *pw = getpwuid( geteuid() );
+    struct passwd *pw = getpwuid (geteuid ());
     if (pw)
     {
 	string logconfname = string (pw->pw_dir) + Y2LOG_CONF;
@@ -121,35 +88,63 @@ y2setLogfileName (string filename)
     }
     else
     {
-	fprintf (Y2Logging::getY2LogStderr(), "Cannot read pwd entry for user id %d. No "
-		 "logconf, using defaults.\n", geteuid ());
+	fprintf (Y2Logging::getY2LogStderr (), "Cannot read pwd entry for user "
+		 "id %d. No logconf, using defaults.\n", geteuid ());
     }
-    Y2Logging::setLogfileName(filename.c_str());
 }
 
-std::string
-y2getLogfileName()
+
+bool
+shouldBeLogged (int loglevel, string componentname)
 {
-    return Y2Logging::getLogfileName();
+    /* Everything should be logged */
+    if (getenv(Y2LOG_VAR_ALL))
+	return true;
+
+    /* Prepare the logfile name. */
+    if (!did_set_logname)
+    {
+	y2setLogfileName (""); /* The default */
+    }
+
+    /* Read log configuration. */
+    if (!did_read_logconf)
+    {
+	read_logconf ();
+    }
+
+    /* Logconf is a list of entries. One entry is for one component */
+    if (!y2logconf.isNull () && y2logconf->isList ())
+    {
+	YCPList l = y2logconf->asList();
+
+	for ( int i = 0; i < l->size(); i++ )
+	{
+	    /* Entry is a tuple (list) of component name and list of enablings */
+	    if( l->value(i)->isList() )
+	    {
+		YCPList entry = l->value(i)->asList();
+
+		/* Check if it is valid. */
+		if( entry->value(0)->isString() && entry->value(1)->isList() )
+		{
+		    if( componentname == entry->value(0)->asString()->value() )
+		    {
+			YCPList enabling = entry->value(1)->asList();
+			if( loglevel < enabling->size() )
+			{
+			    if( enabling->value(loglevel)->isBoolean() )
+				return enabling->value(loglevel)->asBoolean()->value();
+			    else
+				return true; /* Default is to turn on. */
+			}
+			else
+			    return true; /* Default is to turn on. */
+		    }
+		}
+	    }
+	}
+    }
+
+    return loglevel != LOG_DEBUG || getenv (Y2LOG_VAR_DEBUG);
 }
-
-/* Testing main() */
-
-#ifdef _MAIN
-int
-main()
-{
-    y2setLogfileName("-");
-    y2debug("D: %s","1");
-    y2error("E: %d\n",3);
-    y2error("\n");
-    y2error("");
-    y2debug("D: %s","2");
-    ycp2debug("File.ycp",13,"Debug: %d",7);
-    ycp2error("File.ycp",14,"Error: %d",8);
-    syn2error("File.ycp",14,"Parser error: %d",8);
-    return 0;
-}
-#endif
-
-/* EOF */
