@@ -22,7 +22,7 @@ liby2_la_SOURCES = \
 	Y2Namespace.cc					\
 	Y2LanguageLoader.cc                             \
 	genericfrontend.cc				\
-	md5c.cc
+	md5c.cc md5.h
 liby2_la_LDFLAGS = -version-info 2:0
 liby2_la_LIBADD = -ly2util -lutil -ldl
 
