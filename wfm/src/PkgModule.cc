@@ -123,6 +123,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "ClearSelection")	return ClearSelection (args);
     else if (function == "ActivateSelections")	return ActivateSelections (args);
     else if (function == "SelectionsUpdateAll")	return SelectionsUpdateAll (args);
+
     // patch related functions
     else if (function == "YouStatus")		return YouStatus (args);
     else if (function == "YouCheckAuthorization")	return YouCheckAuthorization (args);
@@ -138,6 +139,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "YouInstallPatches")	return YouInstallPatches (args);
     else if (function == "YouRemovePackages")	return YouRemovePackages (args);
     else if (function == "YouFinish")		return YouFinish (args);
+
     // target related functions
     else if (function == "TargetInit")		return TargetInit (args);
     else if (function == "TargetFinish")	return TargetFinish (args);
@@ -152,6 +154,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetRebuildDB")	return TargetRebuildDB (args);
     else if (function == "TargetInitDU")	return TargetInitDU (args);
     else if (function == "TargetGetDU")		return TargetGetDU (args);
+    else if (function == "TargetFileHasOwner")	return TargetFileHasOwner (args);
+
     // source related functions
     else if (function == "SourceStartManager")	return SourceStartManager(args);
     else if (function == "SourceCreate")	return SourceCreate (args);

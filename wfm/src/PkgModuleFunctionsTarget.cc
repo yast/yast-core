@@ -429,3 +429,20 @@ PkgModuleFunctions::TargetGetDU (YCPList args)
 
 
 
+/**
+   @builtin Pkg::TargetFileHasOwner  (string filepath) -> bool
+
+   returns the (first) package 
+*/
+
+YCPValue
+PkgModuleFunctions::PkgFileHasOwner (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetFileHasOwner");
+    }
+    return YCPBoolean (_y2pm.instTarget().hasFile(args->value(0)->asString()->value()));
+}
+

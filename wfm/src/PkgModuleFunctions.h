@@ -193,6 +193,7 @@ class PkgModuleFunctions
 	YCPValue PkgUpdateAll (YCPList args);
 	YCPValue PkgAnyToDelete (YCPList args);
 	YCPValue PkgAnyToInstall (YCPList args);
+	YCPValue PkgFileHasOwner (YCPList args);
 
 	YCPValue PkgInstall (YCPList args);
 	YCPValue PkgDelete (YCPList args);

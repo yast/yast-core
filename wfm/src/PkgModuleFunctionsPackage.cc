@@ -976,5 +976,3 @@ PkgModuleFunctions::CreateBackups (YCPList args)
     _y2pm.instTarget().createPackageBackups(args->value(0)->asBoolean()->value());
     return YCPVoid();
 }
-
-
