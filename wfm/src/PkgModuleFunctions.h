@@ -163,6 +163,7 @@ class PkgModuleFunctions
 	YCPValue TargetRebuildDB (YCPList args);
 	YCPValue TargetInitDU (YCPList args);
 	YCPValue TargetGetDU (YCPList args);
+	YCPValue TargetFileHasOwner (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);

@@ -436,7 +436,7 @@ PkgModuleFunctions::TargetGetDU (YCPList args)
 */
 
 YCPValue
-PkgModuleFunctions::PkgFileHasOwner (YCPList args)
+PkgModuleFunctions::TargetFileHasOwner (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isString()))
