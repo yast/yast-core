@@ -9,12 +9,12 @@
 	y2error( "This works only with UIs that provide the wizard widget!" );
 	return;
     }
-    
+
     string help_text =
-	"<p>This is a help text.</p>" 
+	"<p>This is a help text.</p>"
 	+ "<p>It should be helpful.</p>"
 	+ "<p>If it isn't helpful, it should rather not be called a <i>help text</i>.</p>";
-	
+
     UI::OpenDialog(`opt(`defaultsize ),
 		   `Wizard(`opt(`stepsEnabled),
 			   `back,  "&Back",
@@ -27,12 +27,12 @@
     UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/images/user_add.png" ) );
     UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
     UI::WizardCommand(`SetHelpText( help_text ) );
-    
+
     UI::WizardCommand(`AddStepHeading( "Base Installation" ) );
     UI::WizardCommand(`AddStep( "Language", 			"lang" 		) );
     UI::WizardCommand(`AddStep( "Installation Settings", 	"proposal" 	) );
     UI::WizardCommand(`AddStep( "Perform Installation",		"doit"		) );
-		      
+
     UI::WizardCommand(`AddStepHeading( "Configuration" ) );
     UI::WizardCommand(`AddStep( "Root Password",		"root_pw"	) );
     UI::WizardCommand(`AddStep( "Network",			"net"		) );
@@ -41,6 +41,7 @@
     UI::WizardCommand(`AddStep( "Clean Up",			"suse_config"	) );
     UI::WizardCommand(`AddStep( "Release Notes",		"rel_notes"	) );
     UI::WizardCommand(`AddStep( "Device Configuration",		"hw_proposal"	) );
+    UI::WizardCommand(`UpdateSteps() );
 
     if ( false )
     {
@@ -48,7 +49,9 @@
 	UI::WizardCommand(`SetBackButtonLabel( "" ) );
 	UI::WizardCommand(`SetNextButtonLabel( "&Accept" ) );
     }
-    
+
+    UI::WizardCommand(`SetCurrentStep( "net" ) );
+	
     while( true )
     {
 	map event = UI::WaitForEvent();
@@ -62,7 +65,7 @@
 	string	type	= (string)  event[ "EventType"     ]:"";
 	symbol	id	= (symbol)  event[ "ID"            ]:`nil;
 
-	
+
 	UI::ReplaceWidget(`id(`contents),
 			  `VBox(
 				`Heading( "Caught event:" ),
@@ -72,7 +75,7 @@
 				`Label( "ID: "		+ tostring( id ) )
 				) );
     }
-    
+
     UI::CloseDialog();
-    
+
 }
