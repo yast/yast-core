@@ -29,8 +29,4 @@ Parsed:
 [Parser] tests/builtin/Builtin_V.ycp:47 Warning: Useless 'global' outside of module
 [Parser] tests/builtin/Builtin_V.ycp:56 Mismatched return type in block
 [Parser] tests/builtin/Builtin_V.ycp:56 Expected 'string', seen 'integer'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_V.ycp:46 Parser error
+runycp: parser error

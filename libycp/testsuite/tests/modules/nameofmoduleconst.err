@@ -1,6 +1,2 @@
 [Parser] tests/modules/nameofmoduleconst.ycp:4 Assignment to const identifier 'cag'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/modules/nameofmoduleconst.ycp:1 Parser error
+runycp: parser error

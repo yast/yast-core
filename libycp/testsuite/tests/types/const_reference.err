@@ -14,8 +14,4 @@
 [Parser] tests/types/const_reference.ycp:16 cinc (ci)
 [Parser] tests/types/const_reference.ycp:16 Candidates are:
 [Parser] tests/types/const_reference.ycp:16 void cinc (integer & i)
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/const_reference.ycp:3 Parser error
+runycp: parser error

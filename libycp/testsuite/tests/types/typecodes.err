@@ -52,8 +52,4 @@
 [Parser] tests/types/typecodes.ycp:39 '+ : list <<T>> (const list <<T>>, const <T>)'
 [Parser] tests/types/typecodes.ycp:39 '+ : list (const list, any)'
 [Parser] tests/types/typecodes.ycp:39 '+ : map (const map, const map)'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/typecodes.ycp:5 Parser error
+runycp: parser error

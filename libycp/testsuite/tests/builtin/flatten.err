@@ -12,8 +12,4 @@ Parsed:
 [Parser] tests/builtin/flatten.ycp:9 'flatten : list <<T>> (const list <list <<T>>>)'
 [Parser] tests/builtin/flatten.ycp:9 Wrong parameters in call to flatten(...)
 [Parser] tests/builtin/flatten.ycp:9 Expected '(const list <list <<T>>>)', seen '(list <integer>)'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/builtin/flatten.ycp:6 Parser error
+runycp: parser error

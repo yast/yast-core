@@ -19,6 +19,3 @@
 
 ( ``( 1+2 ))
 ( ``(name) )	// error
-( ``(`name) )
-( ``{ return 3 + 4; } )
-( { return 7; } )

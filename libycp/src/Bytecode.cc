@@ -1121,7 +1121,7 @@ Bytecode::readModule (const string & mname)
 }
 
 
-// read YCode from file, return YCode (YError in case of failure)
+// read YCode from file, return YCode (0 in case of failure)
 YCodePtr
 Bytecode::readFile (const string & filename)
 {

@@ -1,0 +1,9 @@
+[Parser] tests/values/Locale1.ycp:20 Warning: Empty locale constant
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale1.ycp"
+    textdomain "textdomain";
+    return ("" == "");
+}
+----------------------------------------------------------------------

@@ -1,7 +1,3 @@
 [Parser] tests/types/returntype.ycp:5 Mismatched return type in block
 [Parser] tests/types/returntype.ycp:5 Expected 'integer', seen 'string'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/returntype.ycp:1 Parser error
+runycp: parser error

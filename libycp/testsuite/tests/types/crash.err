@@ -13,8 +13,4 @@
 [Parser] tests/types/crash.ycp:6 '+ : list <<T>> (const list <<T>>, const <T>)'
 [Parser] tests/types/crash.ycp:6 '+ : list (const list, any)'
 [Parser] tests/types/crash.ycp:6 '+ : map (const map, const map)'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/crash.ycp:1 Parser error
+runycp: parser error

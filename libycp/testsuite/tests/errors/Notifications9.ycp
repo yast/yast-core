@@ -1,0 +1,15 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// term not tested
+{ if( $[ "true": true ] ) return "Condition is map"; }

@@ -8,27 +8,3 @@ Parsed:
     map <integer, integer &> m = $[1:i1];
 }
 ----------------------------------------------------------------------
-[Parser] tests/types/reference2.ycp:8 type mismatch in variable definition
-[Parser] tests/types/reference2.ycp:8 Expected 'map <integer, integer &>', seen 'map <const integer, const integer>'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/reference2.ycp:6 Parser error
-Parsed:
-----------------------------------------------------------------------
-{
-    // integer i1
-    // map <integer, integer &> m
-    // filename: "tests/types/reference2.ycp"
-    integer i1 = 1;
-    map <integer, integer &> m = $[1:i1];
-}
-----------------------------------------------------------------------
-[Parser] tests/types/reference2.ycp:18 type mismatch in variable definition
-[Parser] tests/types/reference2.ycp:18 Expected 'map <integer, integer &>', seen 'map <const integer, const integer>'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/reference2.ycp:16 Parser error

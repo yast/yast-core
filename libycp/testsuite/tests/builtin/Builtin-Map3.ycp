@@ -1,0 +1,27 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Map.ycp
+#
+#  Purpose:	test cases for all map builtins
+#
+# ---------------------------------------------------------
+
+(add ($[`a: 17, `b: 11], `b, nil))
+
+
+("** size **")
+
+(size ($[]))
+(size ($[1:"a", 2:"b"]))
+
+("** remove **")
+
+(remove($[1:2], 0))
+(remove($[1:2], 1))
+(remove ($[1:2, 3:4], 1))
+
+("** change **")
+
+# deprecated
+(change ($["a":true], "a", false))

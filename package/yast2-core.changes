@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  8 12:58:22 CET 2004 - visnov@suse.cz
+
+- Don't crash on wrong nested import (#47357)
+- Cleanup parse error handling (return NULL always)
+- 2.11.12
+
+-------------------------------------------------------------------
 Fri Nov  5 09:59:18 CET 2004 - visnov@suse.cz
 
 - Show parameters for all function symbol entries (#47078)

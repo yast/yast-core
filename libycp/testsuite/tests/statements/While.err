@@ -18,19 +18,4 @@ Parsed:
 ----------------------------------------------------------------------
 [Parser] tests/statements/While.ycp:14 'while' expression not boolean
 [Parser] tests/statements/While.ycp:14 Expected 'boolean', seen 'integer'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/While.ycp:13 Parser error
-Parsed:
-----------------------------------------------------------------------
-{
-    // integer i
-    // filename: "tests/statements/While.ycp"
-    integer i = 1;
-    while ((i < 10))
-    i = (i + 1);
-    return i;
-}
-----------------------------------------------------------------------
+runycp: parser error

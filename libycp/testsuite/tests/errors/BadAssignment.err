@@ -5,8 +5,4 @@
 [Parser] tests/errors/BadAssignment.ycp:11 Warning: Identifier 'b' might be used uninitialized
 [Parser] tests/errors/BadAssignment.ycp:11 type mismatch in assignment
 [Parser] tests/errors/BadAssignment.ycp:11 Expected 'integer', seen 'boolean'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/errors/BadAssignment.ycp:5 Parser error
+runycp: parser error

@@ -21,23 +21,3 @@
     string foo = "foo";
     return (integer)foo; // fail at compile time
 }
-
-{
-    any foo = [ "foo" ];
-    return (list<string>)foo; // OK
-}
-
-{
-    any foo = [ "foo", 1 ];
-    return (list<string>)foo; // fail at runtime
-}
-
-{
-    any foo = $[ "foo" : 1 ];
-    return (map<string, integer>)foo; // OK
-}
-
-{
-    map<string,any> foo = $[ "foo" : 1, "bar" : "bar" ];
-    return (map<string, integer>)foo; // fail at runtime
-}

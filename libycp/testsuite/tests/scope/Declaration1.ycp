@@ -1,0 +1,9 @@
+{
+    map hallo (integer x, list st)
+    {
+	y2milestone ("%1 %2", x, st);
+	return (map)select (st, 1, $[]);
+    };
+    return hallo (18, [ false, 1, $[] ] ) == 1;	// compare map <-> integer
+}
+

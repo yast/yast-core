@@ -1,0 +1,20 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Deep_Quote.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+# --------- DEEP_QUOTE
+
+( ``( 8 + 5 ) )
+( ``( `Time ) )
+( ``( ``(Time) ) )
+

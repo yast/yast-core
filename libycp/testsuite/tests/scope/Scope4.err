@@ -1,8 +1,4 @@
 [Interpreter] tests/scope/Scope4.ycp:36 Implicit float conversion will loose accuracy
 [Parser] tests/scope/Scope4.ycp:40 Mismatched return type in block
 [Parser] tests/scope/Scope4.ycp:40 Expected 'string', seen 'integer'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/scope/Scope4.ycp:18 Parser error
+runycp: parser error

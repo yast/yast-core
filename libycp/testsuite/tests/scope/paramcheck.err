@@ -10,8 +10,4 @@
 [Parser] tests/scope/paramcheck.ycp:18 Add (1, "one")
 [Parser] tests/scope/paramcheck.ycp:18 Candidates are:
 [Parser] tests/scope/paramcheck.ycp:18 integer Add (integer a, integer b)
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/scope/paramcheck.ycp:3 Parser error
+runycp: parser error

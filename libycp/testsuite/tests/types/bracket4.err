@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map> a
+    // any res
+    // filename: "tests/types/bracket4.ycp"
+    list <map> a = [$["key":true]];
+    any res = a[0, 0]:nil;
+    return (res == nil);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map> a
+    // boolean res
+    // filename: "tests/types/bracket4.ycp"
+    list <map> a = [$["key":true]];
+    boolean res = /* any -> const boolean */a[0, 0]:false;
+    return (res == false);
+}
+----------------------------------------------------------------------

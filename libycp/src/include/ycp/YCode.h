@@ -204,26 +204,6 @@ public:
 
 
 /**
- * YError
- * represents an error state as a YCode object
- *
- */
-
-class YError : public YCode
-{
-    REP_BODY(YError);
-    int m_line;
-    const char *m_msg;
-public:
-    YError (int line=0, const char *msg=0);
-    ~YError () {}
-    YCPValue evaluate (bool cse = false);
-    string toString() const;
-    std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return Type::Error; }
-};
-
-/**
  * constant (-> YCPValue)
  */
 

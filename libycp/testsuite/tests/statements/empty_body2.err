@@ -1,6 +1,2 @@
 [Parser] tests/statements/empty_body2.ycp:5 Empty function definition for function not returning void
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/empty_body2.ycp:4 Parser error
+runycp: parser error

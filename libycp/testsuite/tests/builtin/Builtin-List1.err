@@ -1,0 +1,6 @@
+[Parser] tests/builtin/Builtin-List1.ycp:11 No match for 'prepend : <unspec> (list <const integer>, const integer, const integer)'
+[Parser] tests/builtin/Builtin-List1.ycp:11 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-List1.ycp:11 'prepend : list <<T>> (const list <<T>>, const <T>)'
+[Parser] tests/builtin/Builtin-List1.ycp:11 Wrong parameters in call to prepend(...)
+[Parser] tests/builtin/Builtin-List1.ycp:11 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>, const integer, const integer)'.
+runycp: parser error

@@ -1,0 +1,8 @@
+{
+    list withnil (integer a, boolean b)
+    {
+	return [a,b];
+    }
+    // should return [42, nil]
+    return withnil (42, nil);
+}

@@ -2,8 +2,4 @@
 [Parser] tests/types/bug38375.ycp:4 Expected 'list <string>', seen 'list <list <string>>'.
 [Parser] tests/types/bug38375.ycp:6 Warning: Identifier 'tmp2' might be used uninitialized
 [Parser] tests/types/bug38375.ycp:8 Warning: Identifier 'tmp2' might be used uninitialized
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/bug38375.ycp:1 Parser error
+runycp: parser error

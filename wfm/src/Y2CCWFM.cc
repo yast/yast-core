@@ -163,7 +163,7 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
     kuntrace ();
 #endif
 
-    if (script->code () != 0)
+    if (script->code () != 0 && !script->code ()->isError ())
     {
 	Y2WFMComponent *s = Y2WFMComponent::instance ();
 	s->setupComponent (modulename, fullname, script);

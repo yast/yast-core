@@ -1,6 +1,2 @@
 [Parser] tests/types/no-return.ycp:4 No return statement in non-void function definition
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/no-return.ycp:2 Parser error
+runycp: parser error

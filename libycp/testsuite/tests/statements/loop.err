@@ -1,7 +1,3 @@
 [Parser] tests/statements/loop.ycp:9 Mismatched return type in block
 [Parser] tests/statements/loop.ycp:9 Expected 'integer', seen 'void'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/loop.ycp:1 Parser error
+runycp: parser error

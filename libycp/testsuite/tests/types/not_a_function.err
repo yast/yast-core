@@ -2,8 +2,4 @@
 [Parser] tests/types/not_a_function.ycp:4 'can_convert' defined in tests/types/not_a_function.ycp:2.
 [Parser] tests/types/not_a_function.ycp:4 Excessive parameter
 [Parser] tests/types/not_a_function.ycp:4 Bad parameter '<const boolean> false'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/not_a_function.ycp:1 Parser error
+runycp: parser error

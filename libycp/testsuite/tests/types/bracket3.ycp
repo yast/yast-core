@@ -1,0 +1,11 @@
+# author: visnov@suse.cz
+#
+# check deep bracket type checking
+
+{
+    list< map <string, boolean> > a = [ $[ "key" : true ] ];
+
+    boolean res = a[0, 0]:false; // parse error, second index should be string
+    return ( res == true ); 
+}
+

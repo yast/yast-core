@@ -1,6 +1,2 @@
 [Parser] tests/modules/emptyModule.ycp:1 Empty module
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/modules/emptyModule.ycp:1 Parser error
+runycp: parser error

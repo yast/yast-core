@@ -1,0 +1,3 @@
+[Parser] tests/types/reference5.ycp:3 type mismatch in variable definition
+[Parser] tests/types/reference5.ycp:3 Expected 'map <integer, integer &>', seen 'map <const integer, const integer>'.
+runycp: parser error

@@ -1,0 +1,3 @@
+[Parser] tests/errors/Notifications7.ycp:15 'if' expression not boolean
+[Parser] tests/errors/Notifications7.ycp:15 Expected 'boolean', seen 'const path'.
+runycp: parser error

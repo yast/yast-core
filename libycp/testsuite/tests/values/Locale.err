@@ -39,17 +39,4 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [Parser] tests/values/Locale.ycp:33 No textdomain defined
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/values/Locale.ycp:33 Parser error
-[Parser] tests/values/Locale.ycp:38 Warning: Empty locale constant
-Parsed:
-----------------------------------------------------------------------
-{
-    // filename: "tests/values/Locale.ycp"
-    textdomain "textdomain";
-    return ("" == "");
-}
-----------------------------------------------------------------------
+runycp: parser error

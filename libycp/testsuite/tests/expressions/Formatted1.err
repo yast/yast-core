@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/expressions/Formatted1.ycp"
+    y2milestone ("HAHA %1 %2", "A", "B");
+}
+----------------------------------------------------------------------
+[YCP] tests/expressions/Formatted1.ycp:2 HAHA A B
+[Parser] tests/expressions/Formatted1.ycp:5 Format string doesn't match number of parameters
+[Parser] tests/expressions/Formatted1.ycp:5 Wrong parameters in call to y2milestone(...)
+[Parser] tests/expressions/Formatted1.ycp:5 Expected '(string, ...)', seen '(string, ...)'.
+runycp: parser error

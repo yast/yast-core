@@ -1,0 +1,20 @@
+
+libycp[10] Cannot evaluate unknown term Symbol0002()
+libycp[2] Equality on declaration types not yet implemented
+libycp[10] Cannot evaluate unknown term ([5] + [6])
+libycp[6] Equality on maps not yet implemented
+libycp[6] Equality on maps not yet implemented
+libycp[10] Cannot evaluate unknown term ($[1:"Paris"] + $[2:"London"])
+libycp[16] Assignment not possible: variable ComposedString is not declared
+libycp[9] Undeclared variable d
+libycp[10] Cannot evaluate unknown term (nil + " string")
+libycp[9] Undeclared variable InnerString
+libycp[27] condition nil in if statement evaluates to nil, but only true and false are allowed
+libycp[27] condition any in if statement evaluates to any, but only true and false are allowed
+libycp[27] condition (7 + 5) in if statement evaluates to 12, but only true and false are allowed
+libycp[27] condition 7.50000000000000 in if statement evaluates to 7.50000000000000, but only true and false are allowed
+libycp[27] condition "true" in if statement evaluates to "true", but only true and false are allowed
+libycp[27] condition . in if statement evaluates to ., but only true and false are allowed
+libycp[27] condition [true] in if statement evaluates to [true], but only true and false are allowed
+libycp[27] condition $[true:true] in if statement evaluates to $[true:true], but only true and false are allowed
+YCPInterpreter[1] Index -1 out of range

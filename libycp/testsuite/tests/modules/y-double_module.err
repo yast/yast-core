@@ -1,6 +1,2 @@
 [Parser] tests/modules/y-double_module.ycp:5 module statement in sub-block
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/modules/y-double_module.ycp:1 Parser error
+runycp: parser error

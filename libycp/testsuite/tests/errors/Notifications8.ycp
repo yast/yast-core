@@ -1,0 +1,15 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// time not tested
+{ if( [ true ] ) return "Condition is list"; }

@@ -1,0 +1,5 @@
+// infix expressions
+
+(
+[true]
+?"a":1)

@@ -15,20 +15,3 @@
     if (true)
 	break;
 }
-
-{
-    if (1)
-	return;
-}
-
-{
-    if (false)
-	integer i = 1;
-}
-
-{
-    if (false)
-	return 1;
-    else
-	integer i = 1;
-}

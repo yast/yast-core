@@ -17,8 +17,4 @@ Parsed:
 ----------------------------------------------------------------------
 [Parser] tests/values/Block.ycp:15 Redefinition of local symbol
 [Parser] tests/values/Block.ycp:15 'i' defined in tests/values/Block.ycp:13.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/values/Block.ycp:12 Parser error
+runycp: parser error

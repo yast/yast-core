@@ -1,7 +1,3 @@
 [Parser] tests/includes/include.ycp:2 Bad or unknown file 'tests/include.inc'
 [Parser] tests/includes/include.ycp:4 Undeclared identifier 'inc'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/includes/include.ycp:1 Parser error
+runycp: parser error

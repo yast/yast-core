@@ -1,7 +1,3 @@
 [Parser] tests/scope/Scope2.ycp:30 type mismatch in assignment
 [Parser] tests/scope/Scope2.ycp:30 Expected 'integer', seen 'string'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/scope/Scope2.ycp:19 Parser error
+runycp: parser error

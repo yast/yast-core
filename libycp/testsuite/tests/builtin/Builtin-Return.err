@@ -13,8 +13,4 @@ Parsed:
 [Parser] tests/builtin/Builtin-Return.ycp:10 'filter : map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)'
 [Parser] tests/builtin/Builtin-Return.ycp:10 Wrong parameters in call to filter(...)
 [Parser] tests/builtin/Builtin-Return.ycp:10 Expected '(variable <<T>>, const list <<T>>, const block <boolean>)', seen '(variable <string>, list <string>, block <string>)'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-Return.ycp:8 Parser error
+runycp: parser error

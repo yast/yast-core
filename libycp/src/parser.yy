@@ -281,7 +281,7 @@ ycp:	compact_expression
 		if (p_parser->m_parser_errors > 0)
 		{
 		    p_parser->m_parser_errors = 0;
-		    p_parser->m_result = new YError ($1.l, "Parser error");
+		    p_parser->m_result = 0;
 		    YYABORT;
 		}
 		y2debug ("\n------------------------------------------- accept -------------------------------------------\n");
@@ -296,7 +296,7 @@ ycp:	compact_expression
 		{
 		    p_parser->m_parser_errors = 0;
 		    // yyerror ("EOF");
-		    p_parser->m_result = new YError ($1.l, "EOF");
+		    p_parser->m_result = 0;
 		    YYABORT;
 		}
 		y2debug ("\n-------------------------------------------- EOF --------------------------------------------\n");

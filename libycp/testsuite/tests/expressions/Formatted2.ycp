@@ -1,0 +1,6 @@
+{
+    y2milestone ("HAHA %1 %2 %1", "A", "B");	// ok
+}
+{
+    y2milestone ("HAHA %s %d", "A", 42);	// ouch !
+}

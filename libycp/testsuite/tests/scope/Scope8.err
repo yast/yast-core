@@ -2,8 +2,4 @@
 [Parser] tests/scope/Scope8.ycp:7 'Modified' defined in Scope7.inc:10.
 [Parser] tests/scope/Scope8.ycp:7 Included from Scope8.inc:5.
 [Parser] tests/scope/Scope8.ycp:7 Included from tests/scope/Scope8.ycp:3.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/scope/Scope8.ycp:2 Parser error
+runycp: parser error

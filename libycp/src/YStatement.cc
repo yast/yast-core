@@ -1367,6 +1367,7 @@ YSImport::YSImport (const string &name, int line)
 #if DO_DEBUG
 	y2debug ("import '%s' failed", name.c_str());	// debug only, import() already logged the error
 #endif
+        m_valid = false;
     }
 
     Import::enableTracking();				// continue tracking in .ycp
@@ -1459,6 +1460,7 @@ YSImport::YSImport (bytecodeistream & str)
 		ycp2error ("Import '%s' failed\n", m_name->c_str());
 		ycp2error ("Symbol '%s::%s' does not exist.\n", m_name->c_str(), sname);
 		m_name = SymbolEntry::emptyUstring;			// mark as error
+		m_valid = false;
 		break;
 	    }
 	    else if (tentry->sentry()->type()->match (stype) != 0)
@@ -1468,6 +1470,7 @@ YSImport::YSImport (bytecodeistream & str)
 			m_name->c_str(), sname,
 			stype->toString().c_str(), tentry->sentry()->type()->toString().c_str());
 		m_name = SymbolEntry::emptyUstring;
+		m_valid = false;
 		break;
 	    }
 	    delete [] sname;

@@ -7,18 +7,3 @@
 {
     y2milestone ("HAHA %1", "A", "B");		// error, two args, one %
 }
-{
-    y2milestone ("HAHA %1 %2", "A", "B");	// ok
-}
-{
-    y2milestone ("HAHA %1 %2 %3", "A", "B");	// error, two args, three %
-}
-{
-    y2milestone ("HAHA %1 %2 %1", "A", "B");	// ok
-}
-{
-    y2milestone ("HAHA %s %d", "A", 42);	// ouch !
-}
-{
-    y2milestone (sformat ("HAHA %11 %21", "A", 42));	// only single digit numbers are replaced
-}

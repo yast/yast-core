@@ -176,7 +176,12 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 
     m_result = 0;
 
-    yyparse ((void *) this);
+    if (yyparse ((void *) this))
+    {
+	// syntax error occured
+        m_parser_errors = 0;
+        m_result = 0;
+    }
     
     if (m_lineno == -1)
     {

@@ -1,0 +1,6 @@
+{
+    y2milestone ("HAHA %1 %2", "A", "B");	// ok
+}
+{
+    y2milestone ("HAHA %1 %2 %3", "A", "B");	// error, two args, three %
+}

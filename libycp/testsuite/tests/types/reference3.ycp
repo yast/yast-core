@@ -1,0 +1,4 @@
+{
+  const integer i1 = 1;
+  map <integer, integer &> m = $[ 1:i1];	// Err, i1 is const
+}

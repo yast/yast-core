@@ -1,0 +1,2 @@
+[Parser] tests/errors/Notifications2.ycp:27 Undeclared identifier 'InnerString'
+runycp: parser error

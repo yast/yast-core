@@ -1,8 +1,4 @@
 [Parser] tests/scope/Scope7.ycp:9 Redefinition of local symbol
 [Parser] tests/scope/Scope7.ycp:9 'Modified' defined in Scope7.inc:10.
 [Parser] tests/scope/Scope7.ycp:9 Included from tests/scope/Scope7.ycp:5.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/scope/Scope7.ycp:4 Parser error
+runycp: parser error

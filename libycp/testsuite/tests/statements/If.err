@@ -18,27 +18,4 @@ else
 }
 ----------------------------------------------------------------------
 [Parser] tests/statements/If.ycp:16 'break' outside of loop.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/If.ycp:14 Parser error
-[Parser] tests/statements/If.ycp:20 'if' expression not boolean
-[Parser] tests/statements/If.ycp:20 Expected 'boolean', seen 'const integer'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/If.ycp:19 Parser error
-[Parser] tests/statements/If.ycp:26 Declaration must be inside block
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/If.ycp:24 Parser error
-[Parser] tests/statements/If.ycp:33 Declaration must be inside block
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/statements/If.ycp:29 Parser error
+runycp: parser error

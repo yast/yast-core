@@ -1,6 +1,2 @@
 [Parser] tests/types/functionassign.ycp:6 Assignment to function
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/functionassign.ycp:1 Parser error
+runycp: parser error

@@ -1,0 +1,23 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Locale2.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+# --------- YCP_Locale
+
+{ // empty locale
+  textdomain "textdomain";
+
+  return _("") == "";
+}
+
+

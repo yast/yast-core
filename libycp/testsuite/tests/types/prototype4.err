@@ -2,8 +2,4 @@
 [Parser] tests/types/prototype4.ycp:12 'f1' defined in tests/types/prototype4.ycp:12.
 [Parser] tests/types/prototype4.ycp:12 Expected 'integer (any)', seen 'integer (integer)'.
 [Parser] tests/types/prototype4.ycp:14 Undeclared identifier 'p'
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/prototype4.ycp:1 Parser error
+runycp: parser error

@@ -1,0 +1,5 @@
+// infix expressions
+
+(
+$[1:true]
+?"a":1)

@@ -1,0 +1,10 @@
+{
+  const map <integer, integer> m = $[ 1:1, 2:2, 3:3];
+
+  m = m + $[0 : 42];	// Error, m itself is const
+
+  return m[0]:0;
+}
+
+
+

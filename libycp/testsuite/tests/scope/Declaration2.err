@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list withnil (integer a, boolean b)
+    // filename: "tests/scope/Declaration2.ycp"
+    list withnil (integer a, boolean b)
+{
+    return [a, b];
+}
+    return withnil (42, nil);
+}
+----------------------------------------------------------------------

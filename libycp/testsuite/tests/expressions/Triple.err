@@ -110,8 +110,4 @@ Parsed:
 [YCP] tests/expressions/Triple.ycp:45 false
 [Parser] tests/expressions/Triple.ycp:46 Expression before '?' must be boolean
 [Parser] tests/expressions/Triple.ycp:46 Expected 'boolean', seen 'const integer'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/expressions/Triple.ycp:46 Parser error
+runycp: parser error

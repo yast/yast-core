@@ -1,0 +1,6 @@
+{
+    if (false)
+	return 1;
+    else
+	integer i = 1;
+}

@@ -1,7 +1,3 @@
 [Parser] tests/types/Bracket-symbol.ycp:3 type mismatch in bracket assignment
 [Parser] tests/types/Bracket-symbol.ycp:3 Expected 'string', seen 'const symbol'.
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/Bracket-symbol.ycp:1 Parser error
+runycp: parser error

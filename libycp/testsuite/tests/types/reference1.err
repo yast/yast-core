@@ -2,8 +2,4 @@
 [Parser] tests/types/reference1.ycp:3 increment (1)
 [Parser] tests/types/reference1.ycp:3 Candidates are:
 [Parser] tests/types/reference1.ycp:3 integer increment (integer & i)
-Parsed:
-----------------------------------------------------------------------
-Parser error
-----------------------------------------------------------------------
-[Interpreter] tests/types/reference1.ycp:1 Parser error
+runycp: parser error

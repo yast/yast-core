@@ -41,28 +41,3 @@
 
    return MultipleUsedVariable;				// mismatched return integer
 }
-
-// the variable is declared multiple
-// the integer variable is assigned a 'string block'
-{
-
-   integer MultipleUsedVariable = 0;
-
-   if( true )
-   {
-       integer MultipleUsedVariable = 1;
-
-       MultipleUsedVariable = 				// block assignment !
-       {
-	   while( true )
-	   {
-	       string MultipleUsedVariable = "";
-
-	       MultipleUsedVariable = "I am a string";
-	       return MultipleUsedVariable;
-	   }
-       };
-   }
-
-   return MultipleUsedVariable;
-}

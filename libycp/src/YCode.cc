@@ -47,7 +47,6 @@
 // ------------------------------------------------------------------
 
 IMPL_BASE_POINTER(YCode);
-IMPL_DERIVED_POINTER(YError, YCode);
 IMPL_DERIVED_POINTER(YConst, YCode);
 IMPL_DERIVED_POINTER(YLocale, YCode);
 IMPL_DERIVED_POINTER(YDeclaration, YCode);
@@ -199,10 +198,6 @@ YCode::toString (ykind kind)
 string
 YCode::toString() const
 {
-    if (isError())
-    {
-	return "YError";
-    }
     return toString (m_kind);
 }
 
@@ -830,52 +825,6 @@ YFunction::type () const
 	f->concat (parameter(p)->type());
     }
     return f;
-}
-
-// ------------------------------------------------------------------
-//
-// error
-//
-
-YError::YError (int line, const char *msg)
-    : YCode (yxError)
-    , m_line (line)
-    , m_msg (msg)
-{
-#if DO_DEBUG
-    y2debug ("YError::YError %p: m_line %d, msg %s", this, m_line, m_msg);
-#endif
-}
-
-
-YCPValue
-YError::evaluate (bool cse)
-{
-#if DO_DEBUG
-    y2debug ("YError::evaluate %p: m_line %d, msg %s", this, m_line, m_msg);
-#endif
-    if (m_line > 0)
-    {
-	extern ExecutionEnvironment ee;
-	ee.setLinenumber (m_line);
-    }
-    ycp2error (toString ().c_str ());
-    return YCPNull ();
-}
-
-
-string
-YError::toString() const
-{
-    return (m_msg ? m_msg : "*** Error");
-}
-
-
-std::ostream &
-YError::toStream (std::ostream & str) const
-{
-    y2warning ("oops?!");
-    return str;
 }
 
 // EOF

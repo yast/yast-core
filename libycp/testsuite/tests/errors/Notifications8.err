@@ -1,0 +1,3 @@
+[Parser] tests/errors/Notifications8.ycp:15 'if' expression not boolean
+[Parser] tests/errors/Notifications8.ycp:15 Expected 'boolean', seen 'list <const boolean>'.
+runycp: parser error
