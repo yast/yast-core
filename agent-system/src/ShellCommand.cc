@@ -60,7 +60,11 @@ int shellcommand(const string &command, const string &tempdir)
 
 	while(fgets(s1,1024,stream1)) {
 	    if(err) fprintf(err, "%s", s1);
-	    y2error("%s", s1);
+	    // yes, this should be y2error but some external
+	    // programs print normal messages via stderr
+	    // bug reports are filed but who knows if such programs
+	    // ever get fixed.
+	    y2warning("%s", s1);
 	}
 
 	fclose(stream1);
