@@ -1,0 +1,12 @@
+{
+    UI::OpenDialog(
+	       `VBox( 
+		     `Time(`id(`zeit), "Time:", "10:10:00"),
+		     `PushButton("&OK")
+		     )
+	       );
+    UI::UserInput();
+    UI::ChangeWidget(`id(`zeit),`Value, "10:10:00");
+    UI::UserInput();
+    UI::CloseDialog();
+}
