@@ -45,7 +45,7 @@
 using std::string;
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetInit(string root, bool new) -> bool
  *
  * initialized target system with root-directory
@@ -94,7 +94,7 @@ PkgModuleFunctions::TargetInit (const YCPString& root, const YCPBoolean& n)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetFinish() -> bool
  *
  * finish target usage
@@ -107,14 +107,14 @@ PkgModuleFunctions::TargetFinish ()
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetInstall(string filename) -> bool
  *
  * install rpm package by filename
  * the filename must be an absolute path to a file which can
  * be accessed by the package manager.
  *
- * !! uses callbacks !! 
+ * !! uses callbacks !!
  * You should do an 'import "PackageCallbacks"' before !
  */
 YCPBoolean
@@ -126,11 +126,11 @@ PkgModuleFunctions::TargetInstall(const YCPString& filename)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetRemove(string name) -> bool
  *
  * install package by name
- * !! uses callbacks !! 
+ * !! uses callbacks !!
  * You should do an 'import "PackageCallbacks"' before !
  */
 YCPBoolean
@@ -142,7 +142,7 @@ PkgModuleFunctions::TargetRemove(const YCPString& name)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetLogfile (string name) -> bool
  *
  * init logfile for target
@@ -176,7 +176,7 @@ get_disk_stats (const char *fs, long long *used, long long *size, long long *bsi
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetCapacity (string dir) -> integer
  *
  * return capacity of partition at directory
@@ -191,7 +191,7 @@ PkgModuleFunctions::TargetCapacity (const YCPString& dir)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetUsed (string dir) -> integer
  *
  * return usage of partition at directory
@@ -206,7 +206,7 @@ PkgModuleFunctions::TargetUsed (const YCPString& dir)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetBlockSize (string dir) -> integer
  *
  * return block size of partition at directory
@@ -221,7 +221,7 @@ PkgModuleFunctions::TargetBlockSize (const YCPString& dir)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetUpdateInf (string filename) -> map
  *
  * return content of update.inf (usually <destdir>/var/lib/YaST/update.inf)
@@ -257,7 +257,7 @@ PkgModuleFunctions::TargetUpdateInf (const YCPString& filename)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetProducts () -> list
  *
  * return list of maps of all installed products in reverse
@@ -278,7 +278,7 @@ PkgModuleFunctions::TargetProducts ()
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetRebuildDB () -> bool
  *
  * call "rpm --rebuilddb"
@@ -293,11 +293,14 @@ PkgModuleFunctions::TargetRebuildDB ()
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetInitDU (list(map)) -> void
  *
  * init DU calculation for given directories
- * parameter: [ $["name":"dir-without-leading-slash", "free":int_free, "used": int_used]
+ * parameter: [ $["name":"dir-without-leading-slash",
+                  "free":int_free,
+		  "used":int_used,
+		  "readonly":bool]
  */
 YCPValue
 PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
@@ -316,6 +319,7 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 	std::string dname;
 	long long dfree = 0LL;
 	long long dused = 0LL;
+	bool readonly = false;
 
 	if (dirlist->value(i)->isMap())
 	{
@@ -358,6 +362,16 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 	    good = false;
 	}
 
+	if (good
+	    && partmap->value(YCPString("readonly"))->isBoolean())
+	{
+	    readonly = partmap->value(YCPString("readonly"))->asBoolean()->value();
+	}
+	else
+	{
+	    good = false;
+	}
+
 	if (!good)
 	{
 	    y2error ("TargetDUInit: bad item %d: %s", i, dirlist->value(i)->toString().c_str());
@@ -366,7 +380,7 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 
 	long long dirsize = dfree + dused;
 
-	PkgDuMaster::MountPoint point (dname, FSize (4096), FSize (dirsize), FSize (dused));
+	PkgDuMaster::MountPoint point (dname, FSize (4096), FSize (dirsize), FSize (dused), readonly);
 	mountpoints.insert (point);
     }
     _y2pm.packageManager().setMountPoints(mountpoints);
@@ -375,14 +389,15 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetGetDU (void) -> map<string, list<integer> >
  *
  * return current DU calculations
- * $[ "dir" : [ total, used, pkgusage ], .... ]
+ * $[ "dir" : [ total, used, pkgusage, readonly ], .... ]
  * total == total size for this partition
  * used == current used size on target
  * pkgusage == future used size on target based on current package selection
+ * readonly == true/false telling whether the partition is mounted readonly
  */
 YCPValue
 PkgModuleFunctions::TargetGetDU ()
@@ -397,7 +412,7 @@ PkgModuleFunctions::TargetGetDU ()
 	sizelist->add (YCPInteger ((long long)(it->total())));
 	sizelist->add (YCPInteger ((long long)(it->initial_used())));
 	sizelist->add (YCPInteger ((long long)(it->pkg_used())));
-
+	sizelist->add (YCPInteger (it->readonly() ? 1 : 0));
 	dirmap->add (YCPString (it->_mountpoint), sizelist);
     }
     return dirmap;
@@ -408,7 +423,7 @@ PkgModuleFunctions::TargetGetDU ()
 /**
    @builtin Pkg::TargetFileHasOwner  (string filepath) -> bool
 
-   returns the (first) package 
+   returns the (first) package
 */
 
 YCPBoolean

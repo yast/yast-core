@@ -1,13 +1,18 @@
 -------------------------------------------------------------------
+Fri Sep 10 12:16:55 CEST 2004 - ma@suse.de
+
+- Pass information about readonly mounted partitions in Pkg::TargetGetDU.
+
+-------------------------------------------------------------------
 Wed Sep  8 16:13:03 CEST 2004 - visnov@suse.cz
 
-- reverted the flex patch for now 
+- reverted the flex patch for now
 
 -------------------------------------------------------------------
 Tue Sep  7 10:41:47 CEST 2004 - visnov@suse.cz
 
 - support newer flex (patch by tcrhak)
-- 2.10.12 
+- 2.10.12
 
 -------------------------------------------------------------------
 Mon Sep  6 09:04:58 CEST 2004 - jsrain@suse.cz
@@ -22,12 +27,12 @@ Mon Sep  6 09:04:58 CEST 2004 - jsrain@suse.cz
 Thu Sep  2 18:20:02 CEST 2004 - sh@suse.de
 
 - Added Pkg::PkgMediaCount()
-- V 2.10.10 
+- V 2.10.10
 
 -------------------------------------------------------------------
 Wed Sep  1 18:22:15 CEST 2004 - sh@suse.de
 
-- Fixed bug #44579: YMultiProgressBar integer overflow 
+- Fixed bug #44579: YMultiProgressBar integer overflow
 - V 2.10.9
 
 -------------------------------------------------------------------
@@ -47,7 +52,7 @@ Mon Aug 30 12:56:12 CEST 2004 - jsrain@suse.cz
 Wed Aug 18 15:41:45 CEST 2004 - visnov@suse.cz
 
 - support also bytecode from SLES9/9.1 (#43881)
-- 2.10.7 
+- 2.10.7
 
 -------------------------------------------------------------------
 Wed Aug 18 13:08:02 CEST 2004 - mvidner@suse.cz
@@ -62,13 +67,13 @@ Mon Aug 16 18:38:07 CEST 2004 - visnov@suse.cz
 -------------------------------------------------------------------
 Mon Aug 16 18:14:53 CEST 2004 - visnov@suse.cz
 
-- fix is() for function pointers (#43848) 
- 
+- fix is() for function pointers (#43848)
+
 -------------------------------------------------------------------
 Mon Aug 16 15:41:18 CEST 2004 - visnov@suse.cz
 
 - fix function pointers from perl-bindings (#43606)
-- 2.10.5 
+- 2.10.5
 
 -------------------------------------------------------------------
 Thu Aug 12 11:36:02 CEST 2004 - jsrain@suse.cz
@@ -80,14 +85,14 @@ Thu Aug 12 11:36:02 CEST 2004 - jsrain@suse.cz
 Tue Aug  3 10:01:16 CEST 2004 - visnov@suse.cz
 
 - fix handling of 'import "Summary"' testcase in symbol tables
-- 2.10.3 
+- 2.10.3
 
 -------------------------------------------------------------------
 Mon Aug  2 12:41:29 CEST 2004 - visnov@suse.cz
 
 - better split of YCP interpreter and rest of YaST (use Y2Function only)
 - type of builtin parameters are checked at the end of all parameters
-- YCode::type () is cleaned up - now it always returns the type of the 
+- YCode::type () is cleaned up - now it always returns the type of the
   code after its evaluation, determined as good as possible
 - split of function call and function call via function pointer (Bytecode change)
 - 2.10.2
@@ -96,7 +101,7 @@ Mon Aug  2 12:41:29 CEST 2004 - visnov@suse.cz
 Fri Jul 16 18:55:53 CEST 2004 - sh@suse.de
 
 - YTree widget can now return `Item property
-- YTree widget can now return new `OpenItems property 
+- YTree widget can now return new `OpenItems property
 
 -------------------------------------------------------------------
 Wed Jun 23 11:32:09 CEST 2004 - visnov@suse.cz
