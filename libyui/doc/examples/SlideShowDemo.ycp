@@ -48,7 +48,7 @@
 	UI::CloseDialog();
     }
 
-    
+
     define list<integer> subtract( list<integer> valueList, integer delta )
     {
 	boolean subtracted = false;
@@ -60,7 +60,7 @@
 	foreach ( integer val, valueList, ``{
 	    cdNo = cdNo + 1;
 	    total = total + val;
-	    
+
 	    if ( val > 0 && ! subtracted )
 	    {
 		val = val - delta;
@@ -88,7 +88,7 @@
 	    newList = initialRpms;
 	    y2milestone( "Resetting to %1", rpms );
 	}
-	
+
 	return newList;
     }
 
@@ -109,9 +109,10 @@
     }
 
 
-    if ( ! UI::HasSpecialWidget(`Wizard) )
+    if ( ! UI::HasSpecialWidget(`Wizard) ||
+	 ! UI::HasSpecialWidget(`DumbTab ) )
     {
-	y2error( "This works only with UIs that provide the wizard widget!" );
+	y2error( "This works only with UIs that provide the Wizard and the DumbTab widget!" );
 	return;
     }
 
@@ -144,26 +145,44 @@
     });
 
     UI::WizardCommand(`SetCurrentStep( "rpmcopy" ) );
-    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "Start" ) );
+    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "&Start" ) );
     UI::WizardCommand(`SetBackButtonLabel( "S&tep" ) );
 
+    term slideShowPage =
+	`HBox(
+	      `VBox(
+		    `VWeight( 4, `HVCenter(
+					   `Image(`opt(`scaleToFit),
+						  "/usr/share/doc/susetour/img/office0.png", "Games" )
+					   )
+			      ),
+		    `VWeight( 1, `RichText( "<p>Thank you for buying this product!</p>"    ) )
+		    ),
+	      `HSpacing( 0.5 ),
+	      `VBox(
+		    `Label(`id(`time), remainingTime( rpms ) ),
+		    `VMultiProgressMeter(`id(`progress), rpms )
+		    )
+	      );
+
     UI::ReplaceWidget(`id(`contents),
-		      `HBox(
-			    `VBox(
-				  `VWeight( 4, `HVCenter(
-							 `Image(`opt(`scaleToFit),
-								"/usr/share/doc/susetour/img/office0.png", "Games" )
-							 )
+		      `DumbTab( [ `item(`id(`showSlideShow), "Slide Sho&w" ),
+				  `item(`id(`showDetails  ), "&Details"    ) ],
+				`VBox(
+				      `VSpacing( 1 ),
+				      `HBox(
+					    `HSpacing( 0.5 ),
+					    `ColoredLabel(`opt(`hstretch, `vstretch),
+							   "Test",
+							   `rgb( 200, 200, 200 ),
+							   `rgb( 0, 0, 200 ),
+							   5 ),
+					    // `ReplacePoint(`id(`tabContents), slideShowPage ),
+					    `HSpacing( 0.5 )
 					    ),
-				  `VWeight( 1, `RichText( "<p>Thank you for buying this product!</p>"    ) )
-				  ),
-			    `HSpacing( 0.5 ),
-			    `VBox(
-				  `Label(`id(`time), remainingTime( rpms ) ),
-				  `VMultiProgressMeter(`id(`progress), rpms ),
-				  `PushButton(`id(`details), "&Details..." )
-				  )
-			    )
+				      `VSpacing( 0.2 )
+				      )
+				)
 		      );
 
     while( true )
