@@ -301,7 +301,11 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "joystick",		ITEM(hw_joystick),	pr_null,	0},
 	{ "bios",		ITEM(hw_bios),		pr_null,	0},
 	{ "pppoe",		ITEM(hw_pppoe),		pr_null,	0},
+	{ "wlan",		ITEM(hw_wlan),		pr_null,	0},
 	{ "redasd",		ITEM(hw_redasd),	pr_null,	0},
+	{ "block",		ITEM(hw_block),		pr_null,	0},
+	{ "tape",		ITEM(hw_tape),		pr_null,	0},
+//not-yet-in-hwinfo	{ "vbe",		ITEM(hw_vbe),		pr_null,	0},
 	{ 0, 0, pr_null, 0 }
     };
 

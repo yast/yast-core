@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar 30 13:45:04 CEST 2004 - kkaempf@suse.de
+
+- sync agent-probe with current hwinfo, add wlan, block, and tape
+  probing flags.
+
+-------------------------------------------------------------------
 Mon Mar 29 22:18:45 CEST 2004 - kkaempf@suse.de
 
 - improve checking if default of bracket operator is void (#36922)
