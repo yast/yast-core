@@ -32,10 +32,10 @@
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
 [YCP] multi/rewrite2.ycp:XXX ["sun_litomysl"]
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."1.test"."iqnet_praha"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."2.test"."arcor"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."3.test"."Totalise"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."4.test"."juno_online_services_inc_"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."1.test"."iqnet_praha"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2.test"."arcor"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."3.test"."Totalise"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."4.test"."juno_online_services_inc_"."Brand_new" = "New value"
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test

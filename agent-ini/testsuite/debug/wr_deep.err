@@ -1,6 +1,6 @@
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Sub1 to .v.Main.Sub1.Sub2.Key2
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Sub2 to .v.Main.Sub1.Sub2.Key2
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v.Main.Sub1.Sub2.Key2 = "new"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v.Main.Sub1.Sub2.Key2 = "new"
 [YCP] debug/wr_deep.ycp:XXX Writting:
 [YCP] debug/wr_deep.ycp:XXX Destructor:
 [agent-ini] IniParser.cc(write):XXX File debug/wr_deep.in.test did not change. Not saving.

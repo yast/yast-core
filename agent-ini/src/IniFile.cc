@@ -14,8 +14,10 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <set>
+#include <cassert>
 
 #include "IniFile.h"
+#include "IniParser.h"
 
 /**
  * Converts ycp value to string. Returns empty string if ycp value isn't
@@ -33,199 +35,318 @@ string to_string (const YCPValue&v)
     return s;
 }
 
-/**
- * change case of string
- * @param str string to change
- * @param do_it 
- * @param style
- * @return changed string
- */
-string change_case (const string&str, bool do_it, int style)
-{
-    string tmp = str;
-    if (!do_it)
-      return tmp;
-    switch (style)
-    {
-	case 1:
-	    for (string::iterator it = tmp.begin(); it != tmp.end(); ++it)
-	      *it = toupper (*it);
-	    break;
-	default:
-	    for (string::iterator it = tmp.begin(); it != tmp.end(); ++it)
-	      *it = tolower (*it);
-	    break;
-	 ;
-    }
-    if (2 == style)
-    {
-	string::iterator it = tmp.begin ();
-	if (it != tmp.end ())
-	    *it = toupper (*it);
-    }
-    return tmp;
-}
-
 void IniSection::initValue (const string&key,const string&val,const string&comment,int rb)
 {
-    string k = change_case (key, ignore_case, ignore_style);
-    IniEntryMapIterator v = values.find(k);
-    if (v != values.end())
+    string k = ip->changeCase (key);
+    IniEntry e;
+    IniEntryIdxIterator exi;
+    if (!ip->repeatNames () && (exi = ivalues.find (k)) != ivalues.end ())
 	{
-	    // update value
-	    v->second.init(k, comment, rb, val);
-	    index.remove(IniName (k, IniName::VALUE));
+	    IniIterator ei = exi->second;
+	    // update existing value
+	    // copy the old value
+	    e = ei->e ();
+	    // remove and unindex the old value
+	    // This means that container needs to be a list, not vector,
+	    // so that iterators kept in ivalues are still valid
+	    container.erase (ei);
+	    ivalues.erase (exi);
 	}
     else
 	{
-	    // create new value
-	    IniEntry e;
-	    e.init (k, comment, rb, val);
-	    values[k] = e;
+	    // nothing
 	}
-    index.push_back(IniName (k,IniName::VALUE));
+    // create new value
+    e.init (k, comment, rb, val);
+    // insert it
+    IniContainerElement ce (e);
+    container.push_back (ce);
+    // index it
+    ivalues.insert (IniEntryIndex::value_type (k, --container.end ()));
+
 }
 void IniSection::initSection (const string&name,const string&comment,int rb, int wb)
 {
-    string k = change_case (name, ignore_case, ignore_style);
-    map<const string,IniSection>::iterator v = sections.find(k);
-    if (v != sections.end())
+    string k = ip->changeCase (name);
+    
+    IniSection s (ip);
+    IniSectionIdxIterator sxi;
+    if (!ip->repeatNames () && (sxi = isections.find (k)) != isections.end ())
 	{
-	    if (!v->second.dirty)
+	    IniIterator si = sxi->second;
+	    s = si->s ();
+	    if (!s.dirty)
 		{
-		    v->second.comment = comment;
-		    v->second.read_by = rb;
-		    if (wb != -2) v->second.rewrite_by = wb;
-		    v->second.name = k;
+		    s.comment = comment;
+		    s.read_by = rb;
+		    if (wb != -2) s.rewrite_by = wb;
+		    s.name = k;
 		}
-	    index.remove(IniName (k,IniName::SECTION));
+
+	    // remove and unindex the old section
+	    container.erase (si);
+	    isections.erase (sxi);
 	}
     else
-	{
-	    IniSection s;
+	{			// new section
 	    s.dirty = false;
 	    s.comment = comment;
 	    s.read_by = rb;
 	    if (wb != -2) s.rewrite_by = wb;
 	    s.name = k;
-	    s.setIgnoreCase (ignore_case, ignore_style);
-	    s.allow_sections = s.allow_subsub = allow_subsub;
-	    sections[k] = s;
+	    s.ip = ip;
 	}
-    index.push_back(IniName (k,IniName::SECTION));
+    // insert it
+    IniContainerElement ce (s);
+    container.push_back (ce);
+    // index it
+    isections.insert (IniSectionIndex::value_type (k, --container.end ()));
 }
-IniSectionMapIterator IniSection::findSection(const vector<string>&path, int from)
+
+IniSection& IniSection::findSection(const vector<string>&path, int from)
 {
-    string k = change_case (path[from], ignore_case, ignore_style);
-    IniSectionMapIterator v = sections.find(k);
-    if (v == sections.end ())
+    string k = ip->changeCase (path[from]);
+    IniSectionIdxIterator v = isections.find(k);
+    if (v == isections.end ())
 	{
 	    y2error ("Internal error. Section %s not found. This can't happen.\n", k.c_str());
 	    abort();
 	}
-    return from+1>=(int)path.size() ? v : (*v).second.findSection(path, from+1);
+    IniSection &s = v->second->s ();
+    return from+1 >= (int)path.size() ? s : s.findSection (path, from+1);
 }
+
 int IniSection::findEndFromUp (const vector<string>&path, int wanted, int found, int from)
 {
+/*
+    y2internal ("read_by (mine: %d, wanted %d) found: %d from: %d "
+		"path[from]: %s iam: %s",
+		read_by, wanted, found, from,
+		(from < (int)path.size()) ? path[from].c_str() : "*NONE*", name.c_str());
+*/
+
     if (read_by == wanted)
+    {
 	found = from;
+//	y2internal ("%s", " match");
+    }
+
     if (from < (int)path.size())
     {
-	string k = change_case (path[from], ignore_case, ignore_style);
-	IniSectionMapIterator v = sections.find(k);
-	if (sections.end () == v)
+	string k = ip->changeCase (path[from]);
+	// find the _last_ section with key k
+	pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	    isections.equal_range (k);
+	if (r.first == r.second) // empty range = not found
 	{
 	    y2error ("Internal error. Value %s not found. This can't happen.\n", path[from].c_str());
 	    abort ();
 	}
-	found = (*v).second.findEndFromUp (path, wanted, found, from + 1);
+	IniSection&  s = (--r.second)->second->s ();
+	found = s.findEndFromUp (path, wanted, found, from + 1);
     }
+//    y2internal ("return %d", found);
     return found;
 }
+
 void IniSection::Dump ()
 {
-    IniFileIndex::iterator i = index.begin();
-
     printf("%s<%s>\n", comment.c_str(), name.c_str());
-    for (;i!=index.end();i++)
+
+    printf ("{Natural order}\n");
+    IniIterator
+	ci = getContainerBegin (),
+	ce = getContainerEnd ();
+
+    for (;ci != ce; ++ci)
+    {
+	printf ("{@%p}\n", &*ci);
+	IniType t = ci->t ();
+	if (t == VALUE)
 	{
-	    if (IniName::VALUE==(*i).type)
-		{
-		    IniEntryMapIterator it = values.find((*i).name);
-		    if (it == values.end())
-			{
-			    printf ("Internal error. Value %s not found. This can't happen.\n", (*i).name.c_str());
-			    abort ();
-			}
-		    printf ("%s%s = %s\n",(*it).second.getComment(), (*i).name.c_str(), (*it).second.getValue());
-		}
-	    else
-		{
-		    IniSectionMapIterator it = sections.find((*i).name);
-		    if (it == sections.end())
-			{
-			    printf ("Internal error. Section %s not found. This can't happen.\n", (*i).name.c_str());
-			    abort ();
-			}
-		    (*it).second.Dump();
-		}
+	    IniEntry &v = ci->e ();
+	    printf ("%s%s = %s\n", v.getComment (), v.getName (), v.getValue ());
 	}
+	else if (t == SECTION)
+	{
+	    ci->s ().Dump ();
+	}
+	else
+	{
+	    printf ("{Unknown type %u}\n", t);
+	}
+    }
+
+    printf ("{Sections}\n");
+    IniSectionIdxIterator
+	sxi = isections.begin (),
+	sxe = isections.end ();
+
+    for (; sxi != sxe; ++sxi)
+    {
+	printf ("{%s @%p}\n", sxi->first.c_str (), &*sxi->second);	
+    }
+
+    printf ("{Values}\n");
+    IniEntryIdxIterator
+	exi = ivalues.begin (),
+	exe = ivalues.end ();
+
+    for (; exi != exe; ++exi)
+    {
+	printf ("{%s @%p}\n", exi->first.c_str (), &*exi->second);	
+    }
+
     printf("</%s>\n", name.c_str());
+}
+
+void IniSection::reindex ()
+{
+    IniIterator
+	ci = getContainerBegin (),
+	ce = getContainerEnd ();
+
+    ivalues.clear ();
+    isections.clear ();
+
+    for (;ci != ce; ++ci)
+    {
+
+	if (ci->t () == VALUE)
+	{
+	    string k = ip->changeCase (ci->e ().getName ());
+	    ivalues.insert (IniEntryIndex::value_type (k, ci));
+	}
+	else
+	{
+	    string k = ip->changeCase (ci->s ().getName ());
+	    isections.insert (IniSectionIndex::value_type (k, ci));
+	}
+    }    
+}
+
+int IniSection::getMyValue (const YCPPath &p, YCPValue &out, int what, int depth)
+{
+    string k = ip->changeCase (p->component_str (depth));
+    // Find all values and return them according to repeat_names
+    YCPList results;
+    bool found = false;
+    pair <IniEntryIdxIterator, IniEntryIdxIterator> r =
+	ivalues.equal_range (k);
+    IniEntryIdxIterator xi = r.first, xe = r.second;
+    for (; xi != xe; ++xi)
+    {
+	found = true;
+	IniEntry& e = xi->second-> e ();
+	switch (what)
+	{
+	    case 0:  out = YCPString (e.getValue ());  break;
+	    case 1:  out = YCPString (e.getComment()); break;
+	    default: out = YCPInteger(e.getReadBy ()); break;
+	}
+	results->add (out);
+    }
+
+    if (ip->repeatNames ())
+    {
+	out = results;
+	return 0;
+    }
+    else if (found)
+    {
+	// nonempty range, the cycle ran once, out has the right value
+	return 0;
+    }
+    // empty range, no such key
+
+    y2debug ("Read: Invalid path %s [%d]", p->toString ().c_str(), depth);
+    return -1;
 }
 
 int IniSection::getValue (const YCPPath&p, YCPValue&out,int what, int depth)
 {
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    if (depth+1>=p->length())
-	{   //We are in THE section. Find value here
-	    IniEntryMapIterator it = values.find (k);
-	    if (it == values.end())
-		{
-		    y2debug ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
-		    return -1;
-		}
-	    switch (what)
-	    {
-	    case 0:	out = YCPString ((*it).second.getValue ());   break;
-	    case 1:	out = YCPString ((*it).second.getComment());  break;
-	    default:	out = YCPInteger((*it).second.getReadBy ());  break;
-	    }
-	    return 0;
-	}
-    // Otherwise it must be section
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+    string k = ip->changeCase (p->component_str (depth));
+    if (depth + 1 < p->length())
+    {
+	// it must be a section
+	// Get any section of that name
+	IniSectionIdxIterator sxi = isections.find (k);
+	if (sxi != isections.end())
 	{
-	    y2debug ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
-	    return -1;
+	    return sxi->second->s ().getValue (p, out, what, depth+1);
 	}
-    return (*it).second.getValue (p, out, what, depth+1);
+	// else error
+    }
+    else
+	{   //We are in THE section. Find value here
+	    return getMyValue (p, out, what, depth);
+	}
+
+    y2debug ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
+    return -1;
 }
+
+// Read calls us with the path length >= 2
 int IniSection::getSectionProp (const YCPPath&p, YCPValue&out, int what, int depth)
 {
-    if (depth>=p->length())
-	{   //We are in THE section. Find the comment here 
+    string k = ip->changeCase (p->component_str (depth));
+    // Find the matching sections.
+    // If we need to recurse, choose one
+    // Otherwise gather properties of all of the leaf sections
+
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (k);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (depth + 1 < p->length())
+    {
+	// recurse
+	if (xi != xe)
+	{
+	    // there's something
+	    IniSection& s = (--xe)->second->s ();
+	    return s.getSectionProp (p, out, what, depth+1);
+	}
+	//error
+    }
+    else
+    {
+	// bottom level, take all
+	YCPList results;
+	bool found = false;
+	for (; xi != xe; ++xi)
+	{
+	    found = true;
+	    IniSection& s = xi->second->s ();
 	    if (what == 0)
-		out = YCPString (comment);
+		out = YCPString (s.comment);
 	    else if (what == 1)
-		out = YCPInteger (rewrite_by);
+		out = YCPInteger (s.rewrite_by);
 	    else
-		out = YCPInteger (read_by);
+		out = YCPInteger (s.read_by);
+	    results->add (out);
+	}
+
+	if (ip->repeatNames ())
+	{
+	    out = results;
 	    return 0;
 	}
-    // Otherwise it must be section
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+	else if (found)
 	{
-	    y2debug ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
-	    return -1;
+	    // nonempty range, the cycle ran once, out has the right value
+	    return 0;
 	}
-    return (*it).second.getSectionProp (p, out, what, depth+1);
+	// empty range, no such key
+    }
+
+    y2debug ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
+    return -1;
 }
+
 int IniSection::Delete (const YCPPath&p)
 {
-    if (flat)
+    if (ip->isFlat ())
 	return delValueFlat (p);
     if (p->length() < 2)
     {
@@ -239,9 +360,10 @@ int IniSection::Delete (const YCPPath&p)
       return delSection (p, 1);
     return -1;
 }
+
 int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
 {
-    if (flat)
+    if (ip->isFlat ())
 	return setValueFlat (p, v);
     if (p->length() < 2)
     {
@@ -261,153 +383,358 @@ int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
       return setSectionProp (p, v, rewrite? 1:2, 1);
     return -1;
 }
+
 int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int depth)
 {
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    if (depth+1>=p->length())
-	{   //We are in THE section. Find value here
-	    IniSectionMapIterator it = sections.find (k);
-	    if (it == sections.end())
-		{
-		    y2debug ("Adding section %s", p->toString().c_str());
-		    IniSection s;	
-		    s.comment = "";
-		    s.read_by = 0;
-		    s.rewrite_by = 0;
-		    if (what == 0)
-		    {
-			s.comment = in->asString()->value();
-		    }
-		    else if (what == 1)
-		    {
-			s.rewrite_by = in->asInteger()->value();
-		    }
-		    else
-		    {
-			s.read_by = in->asInteger()->value();
-		    }
-		    s.name = k;
-		    s.setIgnoreCase (ignore_case, ignore_style);
-		    s.allow_sections = s.allow_subsub = allow_subsub;
-		    s.dirty = true;
-		    sections[k] = s;
-		    index.push_back (IniName (k, IniName::SECTION));
-		    dirty = true;
-		}
-	    else
-		if (what == 0)
-		    (*it).second.setComment (in->asString()->value_cstr());
-		else if (what == 1)
-		    (*it).second.setRewriteBy (in->asInteger()->value());
-		else
-		    (*it).second.setReadBy (in->asInteger()->value());
-	    return 0;
-	}
-    // Otherwise it must be section
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+    string k = ip->changeCase (p->component_str (depth));
+    // Find the matching sections.
+    // If we need to recurse, choose one, creating if necessary
+    // Otherwise set properties of all of the leaf sections,
+    //  creating and deleting if the number of them does not match
+
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (k);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (depth + 1 < p->length())
+    {
+	// recurse
+	IniIterator si;
+	if (xi == xe)
 	{
-	    // section not found, add it. (Recursive section addition)
-	    IniSection s (ignore_case, ignore_style, allow_subsub, k);
-	    sections[k] = s;
-	    index.push_back (IniName (k, IniName::SECTION));
+	    // not found, need to add it;
 	    y2debug ("Write: adding recursively %s to %s", k.c_str (), p->toString().c_str());
-	    it = sections.find (k);
-	}
-    return (*it).second.setSectionProp (p, in, what, depth+1);
-}
-int IniSection::delSection(const YCPPath&p, int depth)
-{
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    if (depth+1>=p->length())
-    {   //We are in THE section. Find section to delete here
-	if (sections.end () != sections.find (k))
-	{
-	    sections.erase (k);
-	    dirty = true;
-	    index.remove (IniName (k,IniName::SECTION));
+
+	    IniSection s (ip, k);
+	    container.push_back (IniContainerElement (s));
+	    isections.insert (IniSectionIndex::value_type (k, --container.end ()));
+
+	    si = --container.end ();
 	}
 	else
-	    y2debug ("Can not delete %s. Key does not exist.", p->toString().c_str());
+	{
+	    // there's something, choose last
+	    si = (--xe)->second;
+	}
+	return si->s ().setSectionProp (p, in, what, depth+1);
+    }
+    else
+    {
+	// bottom level
+
+	// make sure we have a list of values
+	YCPList props;
+	if (ip->repeatNames ())
+	{
+	    props = in->asList ();	// TODO check it in the agent
+	}
+	else
+	{
+	    props->add (in);
+	}
+	int pi = 0, pe = props->size ();
+
+	// Go simultaneously through the found sections
+	// and the list of parameters, while _either_ lasts
+	// Fewer sections-> add them, more sections-> delete them
+
+	while (pi != pe || xi != xe)
+	{
+	    // watch out for validity of iterators!
+
+	    if (pi == pe)
+	    {
+		// deleting a section
+		delSection1 (xi++);
+		// no ++pi
+	    }
+	    else
+	    {
+		YCPValue prop = props->value (pi);
+		IniIterator si;
+		if (xi == xe)
+		{
+		    ///need to add a section ...
+		    y2debug ("Adding section %s", p->toString().c_str());
+		    // prepare it to have its property set
+		    // create it
+		    IniSection s (ip, k);
+		    s.dirty = true;
+		    // insert and index
+		    container.push_back (IniContainerElement (s));
+		    isections.insert (IniSectionIndex::value_type (k, --container.end ()));
+		    si = --container.end ();
+		}
+		else
+		{
+		    si = xi->second;
+		}
+
+		// set a section's property
+		IniSection & s = si->s ();
+		if (what == 0)
+		    s.setComment (prop->asString()->value_cstr());
+		else if (what == 1)
+		    s.setRewriteBy (prop->asInteger()->value());
+		else
+		    s.setReadBy (prop->asInteger()->value());
+
+		if (xi != xe)
+		{
+		    ++xi;
+		}
+		++pi;
+	    }
+	    // iterators have been advanced already
+	}
 	return 0;
     }
-    // Otherwise it must be section
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+}
+
+void IniSection::delSection1 (IniSectionIdxIterator sxi)
+{
+    dirty = true;
+    IniIterator si = sxi->second;
+    container.erase (si);
+    isections.erase (sxi);
+}
+
+int IniSection::delSection(const YCPPath&p, int depth)
+{
+    string k = ip->changeCase (p->component_str (depth));
+
+    // Find the matching sections.
+    // If we need to recurse, choose one
+    // Otherwise kill them all
+
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (k);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (depth + 1 < p->length())
     {
+	// recurse
+	if (xi != xe)
+	{
+	    // there's something
+	    IniSection& s = (--xe)->second->s ();
+	    return s.delSection (p, depth+1);
+	}
+	//error
 	y2error ("Delete: Invalid path %s [%d]", p->toString().c_str(), depth);
 	return -1;
     }
-    return (*it).second.delSection (p, depth+1);
+    else
+    {
+	// bottom level, massacre begins
+	if (xi == xe)
+	{
+	    y2debug ("Can not delete %s. Key does not exist.", p->toString().c_str());
+	}
+	while (xi != xe)
+	{
+	    delSection1 (xi++);
+	}
+    }
+    return 0;
+}
+
+int IniSection::setMyValue (const YCPPath &p, const YCPValue&in, int what, int depth)
+{
+    // assert (depth == p->length ()); //not, it can have a .comment suffix
+    string k = ip->changeCase (p->component_str (depth));
+    pair <IniEntryIdxIterator, IniEntryIdxIterator> r =
+	ivalues.equal_range (k);
+    IniEntryIdxIterator xi = r.first, xe = r.second;
+
+    // make sure we have a list of values
+    YCPList props;
+    if (ip->repeatNames ())
+    {
+	props = in->asList ();	// TODO check it in the agent
+    }
+    else
+    {
+	props->add (in);
+    }
+    int pi = 0, pe = props->size ();
+
+    // Go simultaneously through the found values
+    // and the list of parameters, while _either_ lasts
+    // Fewer values-> add them, more values-> delete them
+    while (pi != pe || xi != xe)
+    {
+	// watch out for validity of iterators!
+
+	if (pi == pe)
+	{
+	    // deleting a value
+	    delValue1 (xi++);
+	    // no ++pi
+	}
+	else
+	{
+	    YCPValue prop = props->value (pi);
+	    IniIterator ei;
+	    if (xi == xe)
+	    {
+		///need to add a value ...
+		y2debug ("Adding value %s = %s",
+			 p->toString ().c_str (), prop->toString().c_str ());
+		if (what)
+		{
+		    y2error ("You must add value before changing comment/type. %s",
+			     p->toString ().c_str ());
+		    return -1;
+		}
+		// prepare it to have its property set
+		// create it
+		IniEntry e;
+		// need to set its name
+		e.setName (k);
+
+		// insert and index
+		container.push_back (IniContainerElement (e));
+		ivalues.insert (IniEntryIndex::value_type (k, --container.end ()));
+		ei = --container.end ();
+	    }
+	    else
+	    {
+		ei = xi->second;
+	    }
+
+	    // set a value's property
+	    IniEntry & e = ei->e ();
+	    switch (what)
+	    {
+		case 0:	e.setValue   (to_string (prop));		 break;
+		case 1:	e.setComment (prop->asString()->value()); break;
+		default:	e.setReadBy  (prop->asInteger()->value());break;
+	    }
+
+	    if (xi != xe)
+	    {
+		++xi;
+	    }
+	    ++pi;
+	}
+	// iterators have been advanced already
+    }
+    dirty = true;
+    return 0;
 }
 
 int IniSection::setValue (const YCPPath&p,const YCPValue&in,int what, int depth)
 {
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    if (depth+1>=p->length())
-	{   //We are in THE section. Find value here
-	    IniEntryMapIterator it = values.find (k);
-	    if (it == values.end())
-		{
-		    y2debug ("Adding value %s = %s", p->toString().c_str(), in->toString().c_str ());
-		    if (what)
-			{
-			    y2error ("You must add value before changing comment/type. %s", p->toString().c_str());
-			    return -1;
-			}
-		    IniEntry e;
-		    e.setValue (to_string (in));
-		    values[k] = e;
-		    index.push_back (IniName (k, IniName::VALUE));
-		}
-	    else
-		{
-		    switch (what)
-		    {
-		    case 0:	it->second.setValue   (to_string (in));		 break;
-		    case 1:	it->second.setComment (in->asString()->value()); break;
-		    default:	it->second.setReadBy  (in->asInteger()->value());break;
-		    }
-		}
-	    dirty = true;
-	    return 0;
-	}
-    // Otherwise it must be section
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+    string k = ip->changeCase (p->component_str (depth));
+    // Find the matching sections.
+    // If we need to recurse, choose one, creating if necessary
+    // Otherwise set all the matching values
+    //  creating and deleting if the number of them does not match
+
+    if (depth + 1 < p->length())
+    {
+	// recurse
+	pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	    isections.equal_range (k);
+	IniSectionIdxIterator xi = r.first, xe = r.second;
+
+	IniIterator si;
+	if (xi == xe)
 	{
-	    // section not found, add it. (Recursive section addition)
-	    IniSection s (ignore_case, ignore_style, allow_subsub, k);
-	    sections[k] = s;
-	    index.push_back (IniName (k, IniName::SECTION));
+	    // not found, need to add it;
 	    y2debug ("Write: adding recursively %s to %s", k.c_str (), p->toString().c_str());
-	    it = sections.find (k);
+
+	    IniSection s (ip, k);
+	    container.push_back (IniContainerElement (s));
+	    isections.insert (IniSectionIndex::value_type (k, --container.end ()));
+
+	    si = --container.end ();
 	}
-    return (*it).second.setValue (p, in, what, depth+1);
+	else
+	{
+	    // there's something, choose last
+	    si = (--xe)->second;
+	}
+	return si->s ().setValue (p, in, what, depth+1);
+    }
+    else
+    {
+	// bottom level
+	return setMyValue (p, in, what, depth);
+    }
 }
+
+void IniSection::delValue1 (IniEntryIdxIterator exi)
+{
+    dirty = true;
+    IniIterator ei = exi->second;
+    container.erase (ei);
+    ivalues.erase (exi);
+}
+
+void IniSection::delMyValue (const string &k)
+{
+    pair <IniEntryIdxIterator, IniEntryIdxIterator> r =
+	ivalues.equal_range (k);
+    IniEntryIdxIterator xi = r.first, xe = r.second;
+
+    if (xi == xe)
+    {
+	y2debug ("Can not delete %s. Key does not exist.", k.c_str());
+    }
+    while (xi != xe)
+    {
+	delValue1 (xi++);
+    }
+}
+
 int IniSection::delValue (const YCPPath&p, int depth)
 {
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    if (depth+1>=p->length())
-	{   //We are in THE section. Find value here
-	    if (values.end () != values.find (k))
-		{
-		    values.erase (k);
-		    dirty = true;
-		    index.remove (IniName (k,IniName::VALUE));
-		}
-	    else
-		y2debug ("Can not delete %s. Key does not exist.", p->toString().c_str());
-	    return 0;
-	}
-    // Otherwise it must be section
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
+    string k = ip->changeCase (p->component_str (depth));
+    // Find the matching sections.
+    // If we need to recurse, choose one
+    // Otherwise kill all values of the name
+
+    if (depth + 1 < p->length())
+    {
+	// recurse
+	pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	    isections.equal_range (k);
+	IniSectionIdxIterator xi = r.first, xe = r.second;
+
+	if (xi != xe)
 	{
-	    y2error ("Delete: Invalid path %s [%d]", p->toString().c_str(), depth);
-	    return -1;
+	    // there's something
+	    IniSection& s = (--xe)->second->s ();
+	    return s.delValue (p, depth+1);
 	}
-    return (*it).second.delValue (p, depth+1);
+	//error
+	y2error ("Delete: Invalid path %s [%d]", p->toString().c_str(), depth);
+	return -1;
+    }
+    else
+    {
+	// bottom level, massacre begins
+	delMyValue (k);
+    }
+    return 0;
+}
+
+int IniSection::myDir (YCPList& l, IniType what)
+{
+    IniIterator i = container.begin (), e = container.end ();
+    for (; i != e; ++i)
+    {
+	if (i->t () == what)
+	{
+	    string n = (what == SECTION) ?
+		i->s ().getName () :
+		i->e ().getName ();
+	    l->add (YCPString (n));
+	}
+    }
+    return 0;
 }
 
 int IniSection::dirValueFlat (const YCPPath&p, YCPList&l)
@@ -422,76 +749,42 @@ int IniSection::dirValueFlat (const YCPPath&p, YCPList&l)
 	return 0;
     }
 
-    IniFileIndex::iterator i = index.begin ();
-    for (;i!=index.end();i++)
-	if (!(*i).isSection ())
-	    l->add(YCPString((*i).name));
-    return 0;
+    return myDir (l, VALUE);
 }
 
 int IniSection::getValueFlat (const YCPPath&p, YCPValue&out)
 {
     if (!p->length ())
 	return -1;
-    string k = change_case (p->component_str (0), ignore_case, ignore_style);
-    IniEntryMapIterator i = values.find(k);
-    if (values.end() != i)
-    {
-	out = (p->length()>1 && p->component_str(1)=="comment")
-	    ? YCPString ((*i).second.getComment ()) :
-	      YCPString ((*i).second.getValue ());
-	return 0;
-    }
-    return -1;
+    string k = ip->changeCase (p->component_str (0));
+    bool want_comment = p->length()>1 && p->component_str(1)=="comment";
+
+    return getMyValue (p, out, want_comment, 0);
 }
 
 int IniSection::delValueFlat (const YCPPath&p)
 {
     if (!p->length ())
 	return -1;
-    string k = change_case (p->component_str (0), ignore_case, ignore_style);
-    IniEntryMapIterator i = values.find(k);
-    if (values.end() != i)
-    {
-	values.erase (k);
-	dirty = true;
-	index.remove (IniName (k,IniName::VALUE));
-    }
+    string k = ip->changeCase (p->component_str (0));
+
+    delMyValue (k);
     return 0;
 }
 
-int IniSection::setValueFlat (const YCPPath&p, const YCPValue&out)
+int IniSection::setValueFlat (const YCPPath&p, const YCPValue &in)
 {
     if (!p->length ())
 	return -1;
-    string k = change_case (p->component_str (0), ignore_case, ignore_style);
-    IniEntryMapIterator i = values.find(k);
-    int type = 0;
-    if (p->length()>1 && p->component_str(1)=="comment")
-	type = 1;
-    if (values.end() != i)
-    {
-	if (type)
-	   (*i).second.setComment (to_string (out));
-	else
-	   (*i).second.setValue (to_string (out));
-    }
-    else
-    {
-	if (type)
-	    return -1;
-	IniEntry e;
-	e.setValue (to_string (out));
-	values[k] = e;
-	index.push_back (IniName (k, IniName::VALUE));
-    }
-    dirty = true;
-    return 0;
+    string k = ip->changeCase (p->component_str (0));
+    bool want_comment = p->length()>1 && p->component_str(1)=="comment";
+
+    return setMyValue (p, in, want_comment, 0);
 }
 
 int IniSection::Read (const YCPPath&p, YCPValue&out, bool rewrite)
 {
-    if (flat)
+    if (ip->isFlat ())
 	return getValueFlat (p, out);
     if (p->length()<2)
 	{
@@ -515,7 +808,7 @@ int IniSection::Read (const YCPPath&p, YCPValue&out, bool rewrite)
 }
 int IniSection::Dir (const YCPPath&p, YCPList&l)
 {
-    if (flat)
+    if (ip->isFlat ())
 	return dirValueFlat (p, l);
     if (p->length()<1)
 	{
@@ -534,26 +827,30 @@ int IniSection::Dir (const YCPPath&p, YCPList&l)
 }
 int IniSection::dirHelper (const YCPPath&p, YCPList&out,int get_sect,int depth)
 {
-    if (depth>=p->length())
-	{   //We are in THE section. Find the comment here
-	    IniFileIndex::iterator i = index.begin();
-	    for (;i!=index.end();i++)
-		if (get_sect && (*i).isSection())
-		    out->add(YCPString ((*i).name));
-		else if (!get_sect && !(*i).isSection())
-		    out->add(YCPString ((*i).name));
-	    return 0;
-	}
-    // Otherwise it must be section
-    string k = change_case (p->component_str (depth), ignore_case, ignore_style);
-    IniSectionMapIterator it = sections.find (k);
-    if (it == sections.end())
-	{
-	    y2debug ("Dir: Invalid path %s [%d]", p->toString().c_str(), depth);
-	    return -1;
-	}
-    return (*it).second.dirHelper (p, out, get_sect, depth+1);
+    if (depth >= p->length())
+    {
+	return myDir (out, get_sect? SECTION: VALUE);
+    }
+
+    // recurse
+    string k = ip->changeCase (p->component_str (depth));
+
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (k);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (xi != xe)
+    {
+	// there's something
+	IniSection& s = (--xe)->second->s ();
+	return s.dirHelper (p, out, get_sect, depth+1);
+    }
+    //error
+    y2debug ("Dir: Invalid path %s [%d]", p->toString().c_str(), depth);
+    return -1;
 }
+
+/*
 IniEntry&IniSection::getEntry (const char*n)
 {
     IniEntryMapIterator i = values.find(n);
@@ -564,63 +861,79 @@ IniEntry&IniSection::getEntry (const char*n)
 	}
     return (*i).second;
 }
+*/
 
 int IniSection::getSubSectionRewriteBy (const char*name)
 {
-    IniSectionMapIterator i = sections.find(name);
-    if (i == sections.end())
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (name);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (xi == xe)
+    {
 	return -1;
-    return (*i).second.getRewriteBy ();
-}
-IniSection&IniSection::getSection (const char*n)
-{
-    IniSectionMapIterator i = sections.find(n);
-    if (i == sections.end())
-	{
-	    y2error ("Internal error. Section %s not found in section %s", n, name.c_str());
-	    abort();
-	}
-    return (*i).second;
-}
-void IniSection::setIgnoreCase (bool ic, int style)
-{
-    ignore_case = ic;
-    ignore_style = style;
+    }
+    return (--xe)->second->s ().getRewriteBy ();
 }
 
-void IniSection::setNesting (bool no_sub_sec, bool global_val)
+IniSection&IniSection::getSection (const char*n)
 {
-    allow_subsub = !no_sub_sec;
-    allow_sections = true;
-    allow_values = global_val;
+    pair <IniSectionIdxIterator, IniSectionIdxIterator> r =
+	isections.equal_range (n);
+    IniSectionIdxIterator xi = r.first, xe = r.second;
+
+    if (xi == xe)
+    {
+	y2error ("Internal error. Section %s not found in section %s", n, name.c_str());
+	abort();
+    }
+    return (--xe)->second->s ();
 }
-void IniSection::setEndComment (const char*c)   
-{ 
-    if (comment.empty () && !values.size () && !sections.size ())
+
+void IniSection::setEndComment (const char*c)
+{
+    if (comment.empty () && container.empty ())
 	comment = c;
     else
 	end_comment = c;
 }
-bool IniSection::isDirty ()  
+bool IniSection::isDirty ()
 {
     if (dirty)
-        return true;
+	return true;
     // every write dirtyfies not only value but section too
     // so it is enough for us to find the first dirty section
-    IniSectionMapIterator i = sections.begin ();
-    for (;i != sections.end ();i++)
-	if ((*i).second.isDirty ())
+    IniSectionIdxIterator xi = isections.begin (), xe = isections. end ();
+    for (; xi != xe; ++xi)
+    {
+	if (xi->second->s ().isDirty ())
 	  return true;
+    }
     return false;
 }
-void IniSection::clean() 
+void IniSection::clean()
 {
-    dirty = false; 
-    IniSectionMapIterator i = sections.begin ();
-    for (;i != sections.end ();i++)
-	(*i).second.clean ();
-    IniEntryMapIterator e = values.begin ();
-    for (;e != values.end ();e++)
-	(*e).second.clean ();
+    dirty = false;
+    IniIterator i = container.begin (), e = container.end ();
+    for (; i != e; ++i)
+    {
+	if (i->t () == SECTION)
+	{
+	    i->s ().clean ();
+	}
+	else
+	{
+	    i->e ().clean ();
+	}
+    }
 }
 
+IniIterator IniSection::getContainerBegin ()
+{
+    return container.begin ();
+}
+
+IniIterator IniSection::getContainerEnd ()
+{
+    return container.end ();
+}

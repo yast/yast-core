@@ -1,4 +1,4 @@
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v.Main.Sub.Sub.Key2 = "new"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v.Main.Sub.Sub.Key2 = "new"
 [YCP] debug/wr_add.ycp:XXX Writting:
 [YCP] debug/wr_add.ycp:XXX Destructor:
 [agent-ini] IniParser.cc(write):XXX File debug/wr_add.in.test did not change. Not saving.

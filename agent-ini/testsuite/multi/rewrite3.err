@@ -32,25 +32,25 @@
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite3.in.3.test to 3.test
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite3.in.4.test to 4.test
 [YCP] multi/rewrite3.ycp:XXX ["sun_litomysl"]
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."1"."iqnet_praha"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."2"."arcor"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."3.test"."Totalise"."Brand_new" = "New value"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."4.test"."juno_online_services_inc_"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."1"."iqnet_praha"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2"."arcor"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."3.test"."Totalise"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."4.test"."juno_online_services_inc_"."Brand_new" = "New value"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 5.test to .v."5.test"."newsection"."Brand_new"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively newsection to .v."5.test"."newsection"."Brand_new"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."5.test"."newsection"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."5.test"."newsection"."Brand_new" = "New value"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 6 to .v."6"."newsection"."Brand_new"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively newsection to .v."6"."newsection"."Brand_new"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."6"."newsection"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."6"."newsection"."Brand_new" = "New value"
 [agent-ini] IniParser.cc(getFileName):XXX Rewriting 1 to multi/rewrite3.in.1.test
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 7 to .v."7"."newsection"."Brand_new"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively newsection to .v."7"."newsection"."Brand_new"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."7"."newsection"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."7"."newsection"."Brand_new" = "New value"
 [agent-ini] IniParser.cc(getFileName):XXX Rewriting 7 to multi/rewrite3.in.7.test
 [agent-ini] IniParser.cc(getFileName):XXX Rewriting 2 to multi/rewrite3.in.2.test
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 2 to .v."2"."fresh"."Brand_new"
 [agent-ini] IniFile.cc(setValue):XXX Write: adding recursively fresh to .v."2"."fresh"."Brand_new"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."2"."fresh"."Brand_new" = "New value"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2"."fresh"."Brand_new" = "New value"
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite3.in.1.test to 1
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite3.in.2.test to 2
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite3.in.3.test to 3.test

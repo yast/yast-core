@@ -1,0 +1,11 @@
+#! /bin/bash
+# clone a test case: copy files, adjust the scr file to refer to the copy
+
+# $1: old case
+# $2: new case
+
+for ext in in out err ycp; do
+    cp -a $1.$ext $2.$ext
+done
+
+sed "s/$1.in.test/$2.in.test/" <$1.scr >$2.scr

@@ -1,4 +1,4 @@
-/**
+/**							-*- c++ -*-
  * YaST2: Core system
  *
  * Description:
@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <regex.h>
 
+#include <y2util/RepDef.h>
 #include <YCP.h>
 
 #include <iostream>
@@ -34,37 +35,160 @@ using std::ifstream;
 using std::ofstream;
 using std::set;
 
+DEFINE_BASE_POINTER (Regex_t);
+
+/**
+ * Wrapper to manage regex_t *
+ * Must not be copied because regex_t is opaque
+ */
+class Regex_t : virtual public Rep
+{
+    REP_BODY (Regex_t); //! prohibits copying and assignment just like we want
+private:
+    friend class Regex;
+
+    regex_t regex;		//! glibc regex buffer
+    bool live; //! has regex been regcomp'd and should it be regfree'd?
+
+public:
+    Regex_t ():
+	live (false) {}
+    ~Regex_t () {
+	if (live)
+	{
+	    regfree (&regex);
+	}
+    }
+    /**
+     * Initialize the regex
+     * Can be called only once
+     * @param pattern a pattern (REG_EXTENDED)
+     * @bool ignore_case REG_ICASE?
+     * @return 0 for success
+     */
+    int compile (const string& pattern, bool ignore_case) {
+	int ret = -1;
+	if (live)
+	{
+	    y2error ("Regex_t @%p already compiled", this);
+	}
+	else
+	{
+	    ret = regcomp (&regex, pattern.c_str (),
+			   REG_EXTENDED | (ignore_case ? REG_ICASE : 0));
+	    if (ret)
+	    {
+		char error[256];
+		regerror (ret, &regex, error, 256);
+		y2error ("Regex_t %s error: %s", pattern.c_str (), error);
+	    }
+	    else
+	    {
+		live = true;
+	    }
+	}
+	return ret;
+    }
+};
+
+/**
+ * Manages references to a regex buffer
+ */
+class Regex
+{
+    Regex_tPtr rxtp;
+public:
+    Regex (): rxtp (0) {}
+    /**
+     * Initialize the regex
+     * @param pattern a pattern (REG_EXTENDED)
+     * @bool ignore_case REG_ICASE?
+     * @return 0 for success
+     */
+    int compile (const string& pattern, bool ignore_case) {
+	if (rxtp)
+	{
+	    y2error ("Regex_t @%p already compiled", this);
+	    return -1;
+	}
+	else
+	{
+	    rxtp = new Regex_t;
+	    return rxtp->compile (pattern, ignore_case);
+	}
+    }
+    const regex_t * regex () const { return & rxtp->regex; }
+};
+
+/**
+ * Tries to match a string against a regex and holds results
+ */
+class RegexMatch
+{
+public:
+    /** Matched subexpressions (0 - the whole regex) */
+    vector<string> matches;
+    /** The unmatched part of the string */
+    string rest;
+
+    /** @return i-th match */
+    const string& operator[] (size_t i) { return matches[i]; }
+    /** did the string match */
+    operator bool () { return matches.size () > 0; }
+
+    /**
+     * @param rx a compiled regex
+     * @param s  a string to match
+     * @param nmatch how many rm_matches to reserve
+     */
+    RegexMatch (const Regex& rx, const string& s, size_t nmatch = 20) {
+	// allocate at least for the whole match
+	if (nmatch == 0)
+	{
+	    nmatch = 1;
+	}
+	regmatch_t rm_matches[nmatch];
+	if (0 == regexec (rx.regex (), s.c_str (), nmatch, rm_matches, 0))
+	{
+	    // match
+	    matches.reserve (nmatch);
+	    rest = s.substr (0, rm_matches[0].rm_so) +
+		s.substr (rm_matches[0].rm_eo);
+	}
+	else
+	{
+	    // no match
+	    rm_matches[0].rm_so = -1;
+	    rest = s;
+	}
+
+	size_t i;
+	for (i = 0; i < nmatch && rm_matches[i].rm_so != -1; ++i)
+	{
+	    matches.push_back (s.substr (rm_matches[i].rm_so,
+					 rm_matches[i].rm_eo - rm_matches[i].rm_so));
+	}
+    }
+    
+};
+
+/**
+ * Eg. rx: "^ *Section +(.*)$", out: "Section %s"
+ */
+struct IoPattern
+{
+    Regex rx;
+    string out;
+};
+
 /**
  * section description
  */
 struct section
 {
-    section ()
-	: begin (0), end (0), begin_out(0), end_out(0)
-	    {
-	    }
-    ~section ()
-	    {
-		if (begin)
-		    {
-			regfree (begin);
-			delete begin;
-		    }
-		if (end)
-		    {
-			regfree (end);
-			delete end;
-		    }
-		if (begin_out)
-		    delete [] begin_out;
-		if (end_out)
-		    delete [] end_out;
-	    }
-    regex_t* begin;
+    IoPattern begin;
+    IoPattern end;
     bool end_valid;
-    regex_t* end;
-    char* begin_out;
-    char* end_out;
 };
 
 /**
@@ -72,52 +196,14 @@ struct section
  */
 struct param
 {
-    param ()
-	: line (0), begin (0), end (0), out (0) 
-	    {
-	    }
-    ~param ()
-	    {
-		if (line)
-		    {
-			regfree (line);
-			delete line;
-		    }
-		if (begin)
-		    {
-			regfree (begin);
-			delete begin;
-		    }
-		if (end)
-		    {
-			regfree (end);
-			delete end;
-		    }
-		if (out)
-		    delete [] out;
-	    }
-    regex_t* line;
+    /** single-line values, the normal case */
+    IoPattern line;
+    /** multiline begin */
+    Regex begin;
+    /** multiline end */
+    Regex end;
+    /** was multiline specified*/
     bool multiline_valid;
-    regex_t* begin;
-    regex_t* end;
-    char* out;
-};
-
-struct rewrite
-{
-    rewrite () : in (0), out (0) {}
-    ~rewrite ()
-    {
-	if (in)
-	{
-	    regfree (in);
-	    delete in;
-	}
-	if (out)
-	    delete [] out;
-    }
-    regex_t* in;
-    char* out;
 };
 
 struct FileDescr
@@ -179,6 +265,8 @@ private:
     bool no_nested_sections;
     /** values at the top level(not in section) are allowed */
     bool global_values;
+    /** more values or sections of the same name are allowed */
+    bool repeat_names;
     /** lines are parsed for comments after they are parsed for values */
     bool comments_last;
     /** multiline values are connected into one */
@@ -193,49 +281,25 @@ private:
     /** this string is printed before each line in subsections */
     string subindent;
     /**
-     * Number of regular expressions for comments over whole line.
-     */
-    int linecomment_len;
-    /**
      * Regular expression for comments over whole line.
      */
-    regex_t** linecomments;
-
-    /**
-     * Number of regular expressions for comments over part of the line.
-     */
-    int comment_len;
+    vector<Regex> linecomments;
     /**
      * Regular expressions for comments over part of the line.
      */
-    regex_t** comments;
-
-    /**
-     * Number of regular expressions for sections.
-     */
-    int section_len;
+    vector<Regex> comments;
     /**
      * Regular expressions for sections.
      */
-    section* sections;
-
-    /**
-     * Number of regular expressions for parameters (keys/values).
-     */
-    int param_len;
+    vector<section> sections;
     /**
      * Regular expressions for parameters (keys/values).
      */
-    param* params;
-
-    /**
-     * Number of regular expressions for rewrite rules.
-     */
-    int rewrite_len;
+    vector<param> params;
     /**
      * Regular expressions for rewrite rules.
      */
-    rewrite* rewrites;
+    vector<IoPattern> rewrites;
 
     /**
      * opened file for scanner
@@ -260,7 +324,7 @@ private:
      * Vector of globe-expressions.
      */
     vector<string> files;
-    
+
     /**
      * Open ini file.
      */
@@ -282,10 +346,6 @@ private:
      * Write one ini file.
      */
     int write_helper(IniSection&ini, ofstream&of,int depth);
-    /**
-     * Helper function to compile a regular expression.
-     */
-    int CompileRegex (regex_t**comp,const char*pattern);
 public:
     /**
      * If Write (.s.section_name, nil) was called in multiple files mode,
@@ -302,11 +362,14 @@ public:
      * Toplevel ini section.
      */
     IniSection inifile;
+    // apparently the uninitialized members are filled in
+    // by the grammar definition
     IniParser () :
-	linecomment_len (0), linecomments (0), comment_len (0), comments (0),
-	section_len (0), sections (0),
-	param_len (0), params (0), rewrite_len (0), rewrites (0),
-	started (false), multiple_files (false)
+	linecomments (), comments (),
+	sections (), params (), rewrites (),
+	started (false), multiple_files (false),
+//	inifile ("toplevel")
+	inifile (this)
 	    {}
     ~IniParser ();
     /**
@@ -361,7 +424,19 @@ public:
     /**
      * Using file name rewriting?
      */
-    bool HaveRewrites () { return rewrite_len > 0; }
+    bool HaveRewrites () const { return rewrites.size () > 0; }
+
+    //! accessor method
+    bool repeatNames () const { return repeat_names; }
+    //! accessor method
+    bool isFlat () const { return flat; }
+
+    /**
+     * change case of string
+     * @param str string to change
+     * @return changed string
+     */
+    string changeCase (const string&str) const;
 };
 
 #endif//__IniParser_h__

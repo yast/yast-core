@@ -1,0 +1,24 @@
+//
+{
+    // (originally cloned off add1)
+    // test type and range checks for a file without repeat_names
+
+    y2milestone ("%1", Read  (.));
+    // these two do the same as Write (., nil), FIXME
+    y2milestone ("%1", Write (., 42));		// bad type
+    y2milestone ("%1", Write (., "badstring"));
+
+    y2milestone ("%1", Read  (.nosuchtoppath));
+    y2milestone ("%1", Write (.nosuchtoppath, "whatever"));
+
+
+
+    y2milestone ("%1", Write (.v.Section1.Val1,  42.0)); // bad type
+    y2milestone ("%1", Write (.v.Section1.Val1,  42));   // uses toString
+    y2milestone ("%1", Write (.vc.Section1.Val1, 42.0)); // bad type
+    // returns false but no error in the log
+    y2milestone ("%1", Write (.vc.Section1.Val1, 42));   // bad type
+    y2milestone ("%1", Write (.vt.Section1.Val1, 42.0)); // bad type
+    // valuetype out of range! FIXME
+//    y2milestone ("%1", Write (.vt.Section1.Val1, 42));
+}

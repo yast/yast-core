@@ -80,6 +80,7 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
     }
     // no need to update if modified, we are changing value
     bool ok = false;
+    // return value
     YCPBoolean b (true);
 
     if (0 == path->length ())
@@ -94,7 +95,8 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
     }
     else
     {
-	if (value->isString () || value->isInteger())
+	if (parser.repeatNames () && value->isList () ||
+	    !parser.repeatNames () &&  (value->isString () || value->isInteger()))
 	    {
 		ok = true;
 		if (parser.inifile.Write (path, value, parser.HaveRewrites ()))
@@ -150,7 +152,6 @@ YCPValue IniAgent::otherCommand(const YCPTerm& term)
 	string file_name;
 	file_name = term->value(0)->asString()->value();
 	YCPTerm tt = generateSysConfigTemplate (file_name);
-	parser.inifile.setFlat ();
 	return otherCommand (tt);
     }
     if (sym == "IniAgent") 
@@ -184,6 +185,7 @@ YCPTerm IniAgent::generateSysConfigTemplate (string fn)
     // file name
     t->add (YCPString (fn));
 
+    l->add (YCPString ("flat"));
     l->add (YCPString ("line_can_continue"));
     l->add (YCPString ("global_values"));
     l->add (YCPString ("join_multiline"));

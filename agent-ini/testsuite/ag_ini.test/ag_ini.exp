@@ -3,10 +3,6 @@
 # 'main' file for all ag_ini.tests
 #
 
-# get all files matching tests/*.ycp
-
-set filenames [glob $srcdir/tests/*.ycp]
-
 # foreach file, call ycp-run (from testsuite/lib)
 
-foreach file $filenames { ycp-run tests $file }
+foreach file [get-files "$srcdir/tests" ycp] { ycp-run tests $file }

@@ -1,6 +1,6 @@
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test"
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test".xxx
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."multi/async.in.4.test".xxx.homepage = "http://xxx.suse.de/"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."multi/async.in.4.test".xxx.homepage = "http://xxx.suse.de/"
 [agent-ini] runag_ini.cc(evaluateInstantiatedTerm):XXX Added at the end of multi/async.in.4.test: [Dialer other]
 homepage = http://www.other.dom
 Product = 

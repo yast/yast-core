@@ -6,6 +6,7 @@
  *
  * Authors:
  *   Petr Blahos <pblahos@suse.cz>
+ *   Martin Vidner <mvidner@suse.cz>
  *
  * $Id$
  */
@@ -21,6 +22,7 @@
 #include <YCP.h>
 
 using std::map;
+using std::multimap;
 using std::list;
 using std::vector;
 using std::string;
@@ -49,7 +51,6 @@ protected:
     /** Used by another IniSection ctor */
     IniBase (const string &n)
 	: name (n), comment (), read_by (0), dirty (true) {}
-
 public:
     virtual ~IniBase () {}
 
@@ -99,6 +100,9 @@ private:
 public:
     IniEntry ()
 	: IniBase (0), val () {}
+    /** explicit uninitialized constructor */
+    IniEntry (const char *u): IniBase (u) {}
+
     const char* getValue()   const { return val.c_str();     }
 
     void setValue(const string&c)   { dirty = true; val = c;     }
@@ -119,33 +123,30 @@ public:
 	    }
 };
 
-/**
- * Used in list of entris. Each entry may be 
- * key/value pair or section.
- */
-struct IniName
-{
-    /**
-     * name of key or section?
-     */
-    string name;
-    /**
-     * is it a section or key?
-     */
-    enum IniType { VALUE, SECTION,} type;
-    IniName (const string&s,const IniType t) : name (s), type (t) {}
-    bool operator ==(const IniName& x) { return name == x.name && type == x.type; }
-    bool isSection() {  return type == SECTION; }
-};
-
-typedef list<IniName> IniFileIndex;
-
 class IniSection;
-typedef map<const string,IniSection> IniSectionMap;
-typedef map<const string,IniSection>::iterator IniSectionMapIterator;
 
-typedef map<const string,IniEntry> IniEntryMap;
-typedef map<const string,IniEntry>::iterator IniEntryMapIterator;
+
+enum IniType { VALUE, SECTION,};
+struct IniContainerElement;
+
+typedef list<IniContainerElement> IniContainer;
+typedef IniContainer::iterator IniIterator;
+
+/** indices */
+typedef multimap<string, IniIterator> IniEntryIndex;
+typedef multimap<string, IniIterator> IniSectionIndex;
+/**
+  Watch it, "find" finds an iterator pointing at an iterator (which is
+  in a pair with the key, uninteresting).
+  Usage:
+    IniSectionIdxIterator sxi = isections.find (key);
+    if (sxi != isections.end ())
+      IniSectionIterator si = sxi->second;
+ */
+typedef IniEntryIndex::iterator IniEntryIdxIterator;
+typedef IniSectionIndex::iterator IniSectionIdxIterator;
+
+class IniParser;
 
 /**
  * Section definition.
@@ -153,28 +154,11 @@ typedef map<const string,IniEntry>::iterator IniEntryMapIterator;
 class IniSection : public IniBase
 {
 private:
-    /** ignore case (in key names and section names) */
-    bool ignore_case;
-    /** 
-     * style of case ignoration: 0 prefere lower case, 2: prefere upper
-     * case, 2: first upper, other lower
-     */
-    int ignore_style;
-    /** section may contain values */
-    bool allow_values;
-    /** section may contain sections */
-    bool allow_sections;
-    /* may sub-sections of this section have subsections? */
-    bool allow_subsub;
-    /* special flat mode for RcFile mode */
-    bool flat;
+    // huh??? allow_values, allow_sections and allow_subsub
+    // were never actuially used
 
-    /**
-     * Index of all values and sections. 
-     * Values and sections appear in file in the 
-     * same order as are in this file
-     */
-    IniFileIndex index;
+    /** The parser, queried about global settings */
+    const IniParser *ip;
 
     /**
      * if this is global section, there may be comment at the end
@@ -189,17 +173,38 @@ private:
     int rewrite_by;
 
     /**
-     * values contained by this section
-     */
-    IniEntryMap values;
-    /**
+     * What entries of cvalues and csections are valid
+     * Values contained by this section
      * Sections contained by this section
      */
-    IniSectionMap sections;
+    IniContainer container;
+    // these must be kept up to date!
+    /**
+     * Index of values
+     */
+    IniEntryIndex ivalues;
+    /**
+     * Index of sections
+     */
+    IniSectionIndex isections;
+
+    /** build ivalues and isections */
+    void reindex ();
 
     /**
+     * Get a value (or list of them if repeat_names) in this section
+     * It would be enough to pass only k instead of p and depth,
+     * but then the error messages would not know the whole path
+     * @param p path
+     * @param out output is placed here as YCPString or YCPInteger
+     * @param what 0 - value, 1 - comment, other - read-by
+     * @param depth path index
+     * @return 0 in case of success
+     */
+    int getMyValue (const YCPPath &p, YCPValue &out, int what, int depth);
+    /**
      * Get a value on a path
-     * @param p path to value
+     * @param p path to value: .value.sec1.sec2.key
      * @param out output is placed here as YCPString or YCPInteger
      * @param what 0 - value, 1 - comment, other - read-by
      * @param depth Index of current path component. This function is
@@ -210,7 +215,7 @@ private:
     int getValue (const YCPPath&p, YCPValue&out,int what, int depth = 0);
     /**
      * Get section property -- comment or read-by
-     * @param p path to value
+     * @param p path to value: .section_commment.sec1.sec2.sec3
      * @param out output is placed here as YCPString or YCPInteger
      * @param what 0 - comment, 1 - rewrite_by, other - read-by
      * @param depth Index of current path component. This function is
@@ -219,6 +224,15 @@ private:
      * @return 0 in case of success
      */
     int getSectionProp (const YCPPath&p, YCPValue&out,int what, int depth = 0);
+
+    /**
+     * Get directory of this section
+     * @param l result list
+     * @param what VALUE or SECTION
+     * @return 0 in case of success
+     */
+    int myDir (YCPList& l, IniType what);
+
     /**
      * Recursive function to find the one section we want to dir
      * and at last to do dir.
@@ -229,6 +243,17 @@ private:
      * @return 0 in case of success
      */
     int dirHelper (const YCPPath&p, YCPList&out,int sections,int depth = 0);
+    /**
+     * Set a value (or list of them if repeat_names) in this section
+     * It would be enough to pass only k instead of p and depth,
+     * but then the error messages would not know the whole path
+     * @param p path
+     * @param in value to set (YCPString or YCPInteger) (or YCPList)
+     * @param what 0 -- value, 1 -- comment, other -- read-by.
+     * @param depth path index
+     * @return 0
+     */
+    int setMyValue (const YCPPath &p, const YCPValue&in, int what, int depth);
     /**
      * Set value on path. Creates recursively all non-existing subsections.
      * @param p path to set value on
@@ -261,6 +286,21 @@ private:
      * @return 0 in case of success
      */
     int delSection (const YCPPath&p, int depth);
+
+    /**
+     * deletes all values of this name we own
+     * @param k normalized key
+     */
+    void delMyValue (const string &k);
+    /**
+     * deletes a section we own
+     */
+    void delValue1 (IniEntryIdxIterator exi);
+    /**
+     * deletes a section we own
+     */
+    void delSection1 (IniSectionIdxIterator sxi);
+
     /**
      * Get value in flat mode.
      * @param p path to value
@@ -274,7 +314,7 @@ private:
      * @param out input
      * @return 0 in case of success
      */
-    int setValueFlat (const YCPPath&p, const YCPValue&out);
+    int setValueFlat (const YCPPath&p, const YCPValue& in);
     /**
      * Delete value in flat mode
      */
@@ -283,31 +323,56 @@ private:
      * Get list of values in flat mode.
      */
     int dirValueFlat (const YCPPath&p, YCPList&l);
+//    IniSection ();
 public:
-    IniSection ()
+    /** explicit uninitialized constructor */
+    IniSection (const char *u): IniBase (u) {}
+
+    IniSection (const IniParser *p)
 	: IniBase (-1),
-	  ignore_case (false), ignore_style (0), allow_values (true), 
-	  allow_sections (true), allow_subsub (true), flat (false),
-	  index (), end_comment (), 
-	  rewrite_by(-1), values(), sections()
+	  ip (p),
+	  end_comment (), rewrite_by(-1),
+	  container (), ivalues (), isections ()
 	    {}
+
+    /**
+     * Must define an own copy constructor
+     * so that the indices point to the copy, not the original
+     */
+    IniSection (const IniSection &s) :
+	IniBase (s),
+	  ip (s.ip),
+	  end_comment (s.end_comment), rewrite_by (s.rewrite_by),
+	  container (s.container)
+	{ reindex (); }
+
+    void operator = (const IniSection &s)
+	{
+	    if (&s == this)
+	    {
+		return;
+	    } 
+	    IniBase::operator = (s);
+	    ip = s.ip;
+	    end_comment = s.end_comment; rewrite_by = s.rewrite_by;
+	    container = s.container;
+
+	    reindex ();
+	}
+
     virtual ~IniSection () {}
 
     /** 
      * this is a constructor for newly added sections --> sets dirty 
-     * @param ic ignore case
-     * @param is ignore style
-     * @param allow_ss allow sub sections
+     * @param ip parser to take options from
      * @param n name of section
      */
-    IniSection (bool ic, int is, bool allow_ss, string n)
+    IniSection (const IniParser *p, string n)
 	: IniBase (n),
-	  ignore_case (ic), ignore_style (is), allow_values (true), 
-	  allow_sections (allow_ss), allow_subsub (allow_ss), flat (false),
-	  index (), end_comment (),
-	  rewrite_by(0), values(), sections()
+	  ip (p),
+	  end_comment (), rewrite_by(0),
+	  container(), ivalues (), isections ()
 	    {}
-
     /**
      * If value doesn't exist, creates new, otherwise calls method init of
      * the existing one.
@@ -334,6 +399,13 @@ public:
 
     /** sets dirty flag also */
     void setRewriteBy (int c) 	     	{ dirty = true; rewrite_by = c; }
+    int getRewriteBy() { return rewrite_by; }
+    /**
+     * @param name name of a section
+     * @return rewrite-by of section or -1 if the section wasn't found
+     */
+    int getSubSectionRewriteBy (const char*name);
+
     /** 
      * If there is no comment at the beginning and no values and no
      * sections, it is better to set is as comment at the beginning.
@@ -341,36 +413,32 @@ public:
      * @param c comment
      */
     void setEndComment (const char*c);
+    const char* getEndComment() const { return end_comment.c_str(); }
 
-    /**
-     * Set ignore case and style.
-     */
-    void setIgnoreCase (bool ic, int style);
-    /**
-     * Set nesting style.
-     */
-    void setNesting (bool no_sub_sec, bool global_val);
-    
-    int getRewriteBy() { return rewrite_by; }
+    bool isDirty ();
+    /** set all subsection and values to clean */
+    virtual void clean();
+
     /**
      * Gets section on a path. Recursive. Attention! This function
      * aborts when it doesn't find the section! Use with care!
+     * (Used only by IniParser::parse_helper)
      * @param path path to the section
      * @param from recursion depth
      * @return Found ini section iterator
      */
-    IniSectionMapIterator findSection(const vector<string>&path, int from = 0);
+    IniSection& findSection(const vector<string>&path, int from = 0);
     /**
      * If currently parsed end-section-tag hasn't matched currently
-     * processed section, we need to find the best possible match. Hence we
+     * processed section by name, we need to find the best possible match
+     * by type (read_by). Hence we
      * look for a section on current path which can be closed by found
-     * end-section-tag. We look from end (the most recently open section)
-     * up (to the tree root). Note: this function can abort if the path
+     * end-section-tag. Note: this function can abort if the path
      * passed in invalid.
      * @param path stack of the sections
      * @param wanted read-by we want to find
-     * @param found let unset
-     * @param from let unset
+     * @param found let unset, last path index that matched
+     * @param from let unset, current path index
      * @return index to path
      */
     int findEndFromUp(const vector<string>&path, int wanted, int found = -1, int from = 0);
@@ -401,34 +469,65 @@ public:
      */
     int Delete (const YCPPath&p);
 
-    /**
-     * return index of all subsections and keys
-     */
-    IniFileIndex& getIndex () { return index; }
+    // used by IniParser::write
+    IniIterator getContainerBegin ();
+    IniIterator getContainerEnd ();
+
     /**
      * Aborts if entry doesn't exist!
      * @param name name of the entry to get
      * @return entry
      */
-    IniEntry& getEntry (const char*name);
+//unused
+//    IniEntry& getEntry (const char*name);
     /**
      * Aborts if section doesn't exist!
+     * TODO gets any of multiple sections
      * @param name name of the section to get
      * @return section
      */
     IniSection& getSection (const char*name);
-    /**
-     * @param name name of a section
-     * @return rewrite-by of section or -1 if the section wasn't found
-     */
-    int getSubSectionRewriteBy (const char*name);
-
-    bool isDirty ();
-    /** set all subsection and values to clean */
-    virtual void clean();
-    void setFlat ()  { flat  = true; }
-
-    const char* getEndComment() const { return end_comment.c_str(); }
 };
+
+/**
+ * A single container 
+ */
+class IniContainerElement
+{
+    IniType	_t;
+    IniEntry	_e;
+    IniSection	_s;
+
+public:
+    /// accessors
+    IniType t () const { return _t; }
+    const IniEntry& e () const { return _e; }
+          IniEntry& e ()       { return _e; }
+    const IniSection& s () const { return _s; }
+          IniSection& s ()       { return _s; }
+
+    /// construct from a value
+    IniContainerElement (const IniEntry& e) :
+	_t (VALUE),
+	_e (e),
+//	_s (IniSection ("uninitialized"))
+	_s (IniSection ((const IniParser *)NULL))
+	{}
+
+    /// construct from a section
+    IniContainerElement (const IniSection& s) :
+	_t (SECTION),
+//	_e (IniEntry ("uninitialized")),
+	_e (IniEntry ()),
+	_s (s)
+	{}
+
+    IniContainerElement (const IniContainerElement& c) :
+	_t (c._t),
+	_e (c._e),
+	_s (c._s)
+	{}
+};
+
 
 #endif//__IniFile_h__

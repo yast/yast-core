@@ -1,6 +1,6 @@
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/write.in.4.test"
 [agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/write.in.4.test"."added"
-[agent-ini] IniFile.cc(setValue):XXX Adding value .v."multi/write.in.4.test"."added".Number = "0609 112 777"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."multi/write.in.4.test"."added".Number = "0609 112 777"
 [YCP] multi/write.ycp:XXX ["multi/write.in.1.test", "multi/write.in.2.test", "multi/write.in.4.test"]
 [YCP] multi/write.ycp:XXX multi/write.in.1.test: ["iqnet_praha", "fortech_litomysl", "apexnet_plzen"]
 [YCP] multi/write.ycp:XXX multi/write.in.2.test: ["arcor", "mobilcom"]

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 16 09:39:28 CET 2003 - mvidner@suse.cz
+
+- ini agent: allow multiple values for the same key
+- 2.9.13
+
+-------------------------------------------------------------------
 Fri Dec 12 20:46:22 CET 2003 - msvec@suse.cz
 
 - adapted for the logging changes in liby2util

@@ -1,3 +1,16 @@
+# gets dir/*.ext, sorted
+# but if CASE is defined, just get dir/CASE.ext
+# useful for running "runtest foo.exp CASE=mycase"
+proc get-files { dir ext } {
+    global CASE
+    # there must be a space before the closing brace!
+    if [catch {set pattern $CASE }] {
+	# CASE undefined, do a glob
+	set pattern "*"
+    }
+    return [lsort [glob -nocomplain "$dir/$pattern.$ext"]]
+}
+
 #
 # run a ycp file
 #

@@ -17,38 +17,16 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <glob.h>
+#include <cassert>
 
 #include "IniParser.h"
 #include "IniFile.h"
 
+IMPL_BASE_POINTER (Regex_t);
+
 IniParser::~IniParser ()
 {
-    int i;
-    if (linecomments)
-    {
-	for (i = 0;i<linecomment_len;i++)
-	{
-	    regfree (linecomments[i]);
-	    delete linecomments[i];
-	}
-        delete [] linecomments;
-    }
-
-    if (comments)
-    {
-	for (i = 0;i<comment_len;i++)
-	{
-	    regfree (comments[i]);
-	    delete comments[i];
-	}
-	delete [] comments;
-    }
-    if (sections)
-       delete [] sections;
-    if (params)
-	delete [] params;
-    if (rewrites)
-	delete [] rewrites;
+    // regex deallocation used to be here
 }
 /**
  * Debugging.
@@ -83,14 +61,16 @@ bool onlySpaces (const char*str)
     return true;
 }
 
-/**
- * Makes a duplicate of s using new char[] and strcpy
- */
-char * newstrdup (const char *s)
+bool isYCPStringPair (const YCPValue &v)
 {
-    char *ns = new char[strlen (s) + 1];
-    strcpy (ns, s);
-    return ns;
+    if (!v->isList ())
+	return false;
+    YCPList l = v->asList ();
+    if (l->size () != 2)
+	return false;
+    return
+	l->value (0)->isString () &&
+	l->value (1)->isString ();
 }
 
 /**
@@ -105,31 +85,14 @@ int getBeginEndType (const YCPMap&m)
 {
     if (m->value(YCPString("begin")).isNull())
 	return -1;
-    if (!m->value(YCPString("begin"))->isList())
-	// must have begin
+    if (!isYCPStringPair (m->value (YCPString ("begin"))))
 	return -1;
-    // we know that begin list is present
-    if (2!=m->value(YCPString("begin"))->asList()->size())
-	// there must be 2 string arguments in begin list
-	return -1;
-    if (!m->value(YCPString("begin"))->asList()->value(0)->isString() ||
-	!m->value(YCPString("begin"))->asList()->value(1)->isString())
-	// there must be 2 strings
-	return -1;
-    // Begin is OK. Now end.
     
     if (m->value(YCPString("end")).isNull())
 	return 1;
-    if (!m->value(YCPString("end"))->isList())
+    if (!isYCPStringPair (m->value (YCPString ("end"))))
 	return 1;
-    // we know that end list is present
-    if (2!=m->value(YCPString("end"))->asList()->size())
-	// there must be 2 string arguments in end list
-	return 1;
-    if (!m->value(YCPString("end"))->asList()->value(0)->isString() ||
-	!m->value(YCPString("end"))->asList()->value(1)->isString())
-	// there must be 2 strings
-	return 1;
+
     return 0;
 }
 
@@ -146,45 +109,17 @@ int getParamsType (const YCPMap&m)
 {
     if (m->value(YCPString("match")).isNull())
 	return -1;
-    if (!m->value(YCPString("match"))->isList())
+    if (!isYCPStringPair (m->value (YCPString ("match"))))
 	return -1;
-    if (2!=m->value(YCPString("match"))->asList()->size())
-	return -1;
-    if (!m->value(YCPString("match"))->asList()->value(0)->isString() ||
-	!m->value(YCPString("match"))->asList()->value(1)->isString())
-	return -1;
-
+    
     if (m->value(YCPString("multiline")).isNull())
 	return 1;
-    if (!m->value(YCPString("multiline"))->isList())
+    if (!isYCPStringPair (m->value (YCPString ("multiline"))))
 	return 1;
-    if (2!=m->value(YCPString("multiline"))->asList()->size())
-	return 1;
-    if (!m->value(YCPString("multiline"))->asList()->value(0)->isString() ||
-	!m->value(YCPString("multiline"))->asList()->value(1)->isString())
-	return 1;
+
     return 0;
 }
 
-/**
- * just calls regcomp but if it returns error, it logs the
- * error
- */
-int IniParser::CompileRegex (regex_t**comp,const char*pattern)
-{
-    *comp = new regex_t;
-    int ret = regcomp (*comp, pattern, REG_EXTENDED | (ignore_case_regexps ? REG_ICASE : 0));
-    if (ret)
-	{
-	    char error[256];
-	    regerror (ret, *comp, error, 256);
-	    y2error ("Regex %s error: %s", pattern, error);
-	    regfree (*comp);
-	    delete *comp;
-	    *comp = 0;
-	}
-    return ret;
-}
 void IniParser::initFiles (const YCPList&f)
 {
     multiple_files = true;
@@ -210,8 +145,8 @@ int IniParser::initMachine (const YCPMap&scr)
     // now process the script
     //
     ignore_case_regexps = ignore_case = prefer_uppercase = first_upper = line_can_continue = no_nested_sections =
-	global_values = comments_last = join_multiline = no_finalcomment_kill = read_only = flat = false;
-    linecomment_len = comment_len = section_len = param_len = 0;
+	global_values = repeat_names = comments_last = join_multiline =
+	no_finalcomment_kill = read_only = flat = false;
 
     // read the options
     YCPValue v = scr->value(YCPString("options"));
@@ -228,6 +163,7 @@ int IniParser::initMachine (const YCPMap&scr)
 		    COMPARE_OPTION (line_can_continue)
 		    COMPARE_OPTION (no_nested_sections)
 		    COMPARE_OPTION (global_values)
+		    COMPARE_OPTION (repeat_names)
 		    COMPARE_OPTION (comments_last)
 		    COMPARE_OPTION (join_multiline)
 		    COMPARE_OPTION (no_finalcomment_kill)
@@ -236,98 +172,98 @@ int IniParser::initMachine (const YCPMap&scr)
 			y2error ("Option not implemented yet: %s", v->asList()->value(i)->toString().c_str());
 		}
 #undef  COMPARE_OPTION
-	    inifile.setIgnoreCase (ignore_case, prefer_uppercase ? 1 : first_upper ? 2 : 0);
-	    inifile.setNesting (no_nested_sections, global_values);
-	    if (flat)	inifile.setFlat ();
 	}
+
     v = scr->value(YCPString("rewrite"));
     if (!v.isNull() && v->isList())
     {
 	int len = v->asList()->size();
-	rewrite_len = 0;
-	rewrites = new rewrite[len];
-	for (int i = 0;i<len;i++)
-	    if (v->asList()->value(i)->isList() && 
-		2 == v->asList()->value(i)->asList()->size() && 
-		v->asList()->value(i)->asList()->value(0)->isString() &&
-		v->asList()->value(i)->asList()->value(1)->isString())
+	rewrites.clear ();
+	rewrites.reserve (len);
+	for (int i = 0; i<len;i++)
+	{
+	    YCPValue ival = v->asList()->value(i);
+	    if (ival->isList() && 
+		2 == ival->asList()->size() && 
+		ival->asList()->value(0)->isString() &&
+		ival->asList()->value(1)->isString())
 	    {
-		if (!CompileRegex (&rewrites[rewrite_len].in,v->asList()->value(i)->asList()->value(0)->asString()->value_cstr()))
+		IoPattern p;
+		if (!p.rx.compile (ival->asList()->value(0)->asString()->value(), ignore_case_regexps))
 		{
-		    const char*out = v->asList()->value(i)->asList()->value(1)->asString()->value_cstr();
-		    rewrites[rewrite_len].out = newstrdup (out);
-		    rewrite_len++;
+		    p.out = ival->asList()->value(1)->asString()->value();
+		    rewrites.push_back (p);
 		}
 	    }
+	}
     }
+
     v = scr->value(YCPString("subindent"));
     if (!v.isNull() && v->isString())
 	subindent = v->asString()->value();
+
     // read comments
     v = scr->value(YCPString("comments"));
     if (!v.isNull() && v->isList ())
 	{
 	    int len = v->asList()->size();
-	    comment_len = 0;
-	    comments = new regex_t*[len];
-	    linecomment_len = 0;
-	    linecomments = new regex_t*[len];
-	    for (int i = 0;i<len;i++)
+	    linecomments.clear ();
+	    comments.clear ();
+	    linecomments.reserve (len);
+	    comments.reserve (len);
+	    for (int i = 0;  i < len; i++)
+	    {
+		YCPString s = v->asList()->value(i)->asString();
+		vector <Regex> & regexes = ('^' == s->value_cstr()[0]) ?
+		    linecomments : comments;
+		Regex r;
+		if (!r.compile (s->value (), ignore_case_regexps))
 		{
-		    if ('^' == v->asList()->value(i)->asString()->value_cstr()[0])
-			{
-			    if (!CompileRegex (&linecomments[linecomment_len], v->asList()->value(i)->asString()->value_cstr()))
-				linecomment_len++;
-			}
-		    else
-			{
-			    if (!CompileRegex (&comments[comment_len], v->asList()->value(i)->asString()->value_cstr()))
-				comment_len++;
-			}
+		    regexes.push_back (r);
 		}
+	    }
 	}
+
     // read sections
     v = scr->value(YCPString("sections"));
     if (!v.isNull() && v->isList ())
 	{
 	    int len = v->asList()->size();
 	    // compile them to regex_t
-	    sections = new section[len];
-	    section_len = 0;
-	    for (int i = 0;i<len;i++)
+	    sections.clear ();
+	    sections.reserve (len);
+	    for (int i = 0;  i < len; i++)
 		{
 		    if (v->asList()->value(i)->isMap())
 			{
+			    section s;
 			    YCPMap m = v->asList()->value(i)->asMap ();
-			    sections[section_len].end_valid = false;
+			    s.end_valid = false;
 			    YCPList p;
 			    switch (getBeginEndType (m))
 				{
 				case 0:
 				    p = m->value(YCPString("end"))->asList();
-				    if (CompileRegex (&sections[section_len].end,
-						      p->value(0)->asString()->value_cstr()))
+				    if (s.end.rx.compile (
+					    p->value(0)->asString()->value (),
+					    ignore_case_regexps))
 					break;
-				    sections[section_len].end_out = newstrdup (
-					p->value(1)->asString()->value_cstr());
-				    sections[section_len].end_valid = true;
+				    s.end.out =
+					p->value(1)->asString()->value ();
+				    s.end_valid = true;
 				    // Fall through
 				case 1:
 				    p = m->value(YCPString("begin"))->asList();
-				    if (CompileRegex (&sections[section_len].begin,
-						      p->value(0)->asString()->value_cstr()))
+				    if (s.begin.rx.compile (
+					    p->value(0)->asString()->value (),
+					    ignore_case_regexps))
 					{
-					    if (sections[section_len].end_out)
-						{
-						    regfree (sections[section_len].end);
-						    delete sections[section_len].end;
-						    delete sections[section_len].end_out;
-						}
+					    // compile failed
 					    break;
 					}
-				    sections[section_len].begin_out =newstrdup(
-					p->value(1)->asString()->value_cstr());
-				    section_len++;
+				    s.begin.out =
+					p->value(1)->asString()->value ();
+				    sections.push_back (s);
 				    break;
 				case -1:
 				default:
@@ -336,58 +272,60 @@ int IniParser::initMachine (const YCPMap&scr)
 			}
 		}
 	}
-    // read sections
+
+    // read parameters
     v = scr->value(YCPString("params"));
     if (!v.isNull() && v->isList ())
 	{
 	    int len = v->asList()->size();
 	    // compile them to regex_t
-	    params = new param[len];
-	    param_len = 0;
-	    for (int i = 0;i<len;i++)
+	    params.clear ();
+	    params.reserve (len);
+	    for (int i = 0; i < len; i++)
 		{
 		    if (v->asList()->value(i)->isMap())
 			{
 			    YCPMap m = v->asList()->value(i)->asMap ();
-			    params[param_len].multiline_valid = false;
+			    param pa;
+			    pa.multiline_valid = false;
 			    YCPList p;
 			    switch (getParamsType (m))
 				{
 				case 0:
 				    p = m->value(YCPString("multiline"))->asList();
-				    if (!CompileRegex (&params[param_len].begin,
-					  p->value(0)->asString()->value_cstr()))
-					if (!CompileRegex (&params[param_len].end,
-					      p->value(1)->asString()->value_cstr()))
-					{
-					    params[param_len].multiline_valid = true;
-					}
+				    if (!pa.begin.compile (
+					    p->value(0)->asString()->value (),
+					    ignore_case_regexps))
+					if (!pa.end.compile (
+						p->value(1)->asString()->value (),
+						ignore_case_regexps))
+					    {
+						pa.multiline_valid = true;
+					    }
 					else
 					{
 					    y2error ("Bad regexp(multiline): %s",
 						p->value(1)->asString()->value_cstr());
-					    regfree (params[param_len].begin);
 					}
 				    else
 					  y2error ("Bad regexp(multiline): %s",
 					      p->value(0)->asString()->value_cstr());
 				case 1:
 				    p = m->value(YCPString("match"))->asList();
-				    if (CompileRegex (&params[param_len].line,
-					  p->value(0)->asString()->value_cstr()))
+				    if (pa.line.rx.compile (
+					    p->value(0)->asString()->value (),
+					    ignore_case_regexps))
 				    {
-					if (params[param_len].multiline_valid)
+					if (pa.multiline_valid)
 					{
 					    y2error ("Bad regexp(match): %s",
 						p->value(0)->asString()->value_cstr());
-					    regfree (params[param_len].begin);
-					    regfree (params[param_len].end);
 					}
 					break;
 				    }
-				    params[param_len].out = newstrdup (
-					p->value(1)->asString()->value_cstr());
-				    param_len++;
+				    pa.line.out =
+					p->value(1)->asString()->value ();
+				    params.push_back (pa);
 				    break;
 				case -1:
 				default:
@@ -488,20 +426,17 @@ int IniParser::parse()
 	    string section_name = *f;
 	    //FIXME: create function out of it.
 	    // do we have name rewrite rules?
-	    if (rewrite_len)
-	    {
-		for (int j = 0;j<rewrite_len;j++)
+	    for (size_t j = 0; j < rewrites.size (); j++)
 		{
-		    regmatch_t matched[5];
-		    if (!regexec (rewrites[j].in, section_name.c_str(), 5, matched, 0))
+		    RegexMatch m (rewrites[j].rx, section_name);
+		    if (m)
 		    {
 			section_index = j;
-			section_name = section_name.substr(matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so);
+			section_name = m[1];
 			y2debug ("Rewriting %s to %s", *f, section_name.c_str());
 			break;
 		    }
 		}
-	    }
 
 	    // do we know about the file?
 	    map<string,FileDescr>::iterator ff = multi_files.find (*f);
@@ -557,16 +492,14 @@ int IniParser::parse_helper(IniSection&ini)
     string comment = "";
     string key = "";
     string val = "";
-    int state = 0;
+    int state = 0;		// 1: precessing a multiline value
     int matched_by = -1;
 
-    regmatch_t matched[20];
     string line;
-    int i;
+    size_t i;
 
     // stack of section names
     vector<string>path;
-    regex_t**walk;
 
     //
     // read line
@@ -576,33 +509,33 @@ int IniParser::parse_helper(IniSection&ini)
 	    //
 	    // check for whole-line comment (always as the first stage)
 	    //
-	    for (walk = linecomments, i = 0;i<linecomment_len;i++,walk++)
+	    for (i = 0;i<linecomments.size (); i++)
 		{
-		    if (!regexec (*walk, line.c_str (), 0, NULL, 0))
+		    if (RegexMatch (linecomments[i], line, 0))
 			{
 			    // we have it !!!
 			    comment = comment + line + "\n";
 			    break;
 			}
 		}
-	    if (i<linecomment_len) // found? -> next line
+	    if (i<linecomments.size ()) // found? -> next line
 		continue;
 
 	    //
 	    // check for comments on line
 	    //
-	    if (!comments_last && comments)
+	    if (!comments_last)
 		{
-		    for (walk = comments, i = 0;i<comment_len;i++,walk++)
+		    for (i = 0;i<comments.size (); i++)
 			{
-			    if (!regexec (*walk, line.c_str (), 20, matched, 0))
-				{
-				    
-				    // we have it !!!
-				    comment = comment + line.substr(matched[0].rm_so,matched[0].rm_eo-matched[0].rm_so) + "\n";
-				    StripLine(line, matched[0]);
-				    break;
-				}
+			    RegexMatch m (comments[i], line);
+			    if (m)
+			    {
+				// we have it !!!
+				comment = comment + m[0] + "\n";
+				line = m.rest;
+				break;
+			    }
 			}
 		}
 
@@ -611,12 +544,13 @@ int IniParser::parse_helper(IniSection&ini)
 	    //
 	    if (state)
 		{
-		    if (!regexec (params[matched_by].end, line.c_str(), 20, matched, 0))
+		    RegexMatch m (params[matched_by].end, line);
+		    if (m)
 		    {    
 			// it is the end of broken line
 			state = 0;
-			val = val + (join_multiline ? "" : "\n") + line.substr (matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so);
-			StripLine (line, matched[0]);
+			val = val + (join_multiline ? "" : "\n") + m[1];
+			line = m.rest;
 			if (!path.size())
 			    {   // we are in toplevel section, going deeper
 				// check for toplevel values allowance
@@ -627,8 +561,7 @@ int IniParser::parse_helper(IniSection&ini)
 			    }
 			else
 			    {
-				IniSectionMapIterator sec = ini.findSection(path);
-				(*sec).second.initValue(key, val, comment, matched_by);
+				ini.findSection(path).initValue(key, val, comment, matched_by);
 			    }
 			comment = "";
 		    }
@@ -642,24 +575,24 @@ int IniParser::parse_helper(IniSection&ini)
 		    //
 		    {
 			string found;
-			section*walk;
-			for (walk = sections, i = 0;i<section_len;i++,walk++)
+
+			for (i = 0; i < sections.size (); i++)
 			    {
-				if (!regexec (walk->begin, line.c_str (), 20, matched, 0))
-				    {
-					found = line.substr(matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so);
-					StripLine(line, matched[0]);
-					break;
-				    }
+				RegexMatch m (sections[i].begin.rx, line);
+				if (m)
+				{
+				    found = m[1];
+				    line = m.rest;
+				    break;
+				}
 			    }
-			if (i<section_len)
+			if (i < sections.size ())
 			    {
 				// section begin found !!! check conditions
 				if (path.size())
 				    {   // there were some sections
 					// is there need to close previous section?
-					IniSectionMapIterator sec = ini.findSection(path);
-					if (sectionNeedsEnd((*sec).second.getReadBy()))
+					if (sectionNeedsEnd(ini.findSection(path).getReadBy()))
 					    {
 						if(no_nested_sections)
 						    {
@@ -683,33 +616,33 @@ int IniParser::parse_helper(IniSection&ini)
 					    y2error ("%d: Attempt to create nested section %s.", scanner_line, found.c_str ());
 					else
 					{
-					    IniSectionMapIterator sec = ini.findSection(path);
-					    (*sec).second.initSection(found, comment, i);
+					    ini.findSection(path).initSection(found, comment, i);
 					}
 				    }
 				comment = "";
 				path.push_back(found);
 			    }
-		    }
+		    } // check for section begin
 
 		    //
 		    // check for section end
 		    //
 		    {
 			string found;
-			section*walk;
-			for (walk = sections, i = 0;i<section_len;i++,walk++)
+
+			for (i = 0; i < sections.size (); i++)
 			    {
-				if (!walk->end_valid)
+				if (!sections[i].end_valid)
 				    continue;
-				if (!regexec (walk->end, line.c_str (), 20, matched, 0))
-				    {
-					found = walk->end->re_nsub ? line.substr(matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so) : "";
-					StripLine(line, matched[0]);
-					break;
-				    }
+				RegexMatch m (sections[i].end.rx, line);
+				if (m)
+				{
+				    found = 1 < m.matches.size () ? m[1]: "";
+				    line = m.rest;
+				    break;
+				}
 			    }
-			if (i<section_len)
+			if (i < sections.size ())
 			    {
 				// we found new section enclosing which
 				// means that we can save possible trailing
@@ -720,14 +653,13 @@ int IniParser::parse_helper(IniSection&ini)
 					    ini.setEndComment (comment.c_str ());
 					else
 					    {
-						IniSectionMapIterator sec = ini.findSection(path);
-						(*sec).second.setEndComment (comment.c_str ());
+						ini.findSection(path).setEndComment (comment.c_str ());
 					    }
 					comment = "";
 				    }
 				if (!path.size ())
 				    y2error ("%d: Nothing to close.", scanner_line);
-				else if (walk->end->re_nsub && found.length())
+				else if (!found.empty ())
 				    {   // there is a subexpression
 					int len = path.size ();
 					int j;
@@ -741,16 +673,13 @@ int IniParser::parse_helper(IniSection&ini)
 				    	if (j == -1)
 					{   // we did not find, so close the first that needs it
 					    int m = ini.findEndFromUp (path, i);
+					    int toclose = len - 1;
 					    if (-1 != m)
 					    {
-						y2error ("%d: Unexpected closing %s. Closing section %s.", scanner_line, found.c_str(), path[m-1].c_str());
-						path.resize (m - 1);
+						toclose = m - 1;
 					    }
-					    else
-					    {
-						y2error ("%d: Unexpected closing %s. Closing section %s.", scanner_line, found.c_str(), path[len - 1].c_str());
-						path.resize (len - 1);
-					    }
+					    y2error ("%d: Unexpected closing %s. Closing section %s.", scanner_line, found.c_str(), path[toclose].c_str());
+					    path.resize (toclose);
 					}
 				    }
 				else
@@ -773,18 +702,18 @@ int IniParser::parse_helper(IniSection&ini)
 		    //
 		    {
 			string key,val;
-			param*walk;
-			for (walk = params, i = 0;i<param_len;i++,walk++)
+			for (i = 0; i < params.size (); i++)
+			{
+			    RegexMatch m (params[i].line.rx, line);
+			    if (m)
 			    {
-				if (!regexec (walk->line, line.c_str (), 20, matched, 0))
-				    {
-					key = line.substr(matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so);
-					val = line.substr(matched[2].rm_so,matched[2].rm_eo-matched[2].rm_so);
-					StripLine(line, matched[0]);
-					break;
-				    }				
-			    }
-			if (i!=param_len)
+				key = m[1];
+				val = m[2];
+				line = m.rest;
+				break;
+			    }				
+			}
+			if (i != params.size ())
 			    {
 				if (!path.size())
 				    {   // we are in toplevel section, going deeper
@@ -796,8 +725,7 @@ int IniParser::parse_helper(IniSection&ini)
 				    }
 				else
 				    {
-					IniSectionMapIterator sec = ini.findSection(path);
-					(*sec).second.initValue(key, val, comment, i);
+					ini.findSection(path).initValue(key, val, comment, i);
 				    }
 				comment = "";
 			    }
@@ -807,17 +735,17 @@ int IniParser::parse_helper(IniSection&ini)
 		    // check for broken line
 		    //
 		    {
-			param*walk;
-			for (walk = params, i = 0;i<param_len;i++, walk++)
+			for (i = 0; i < params.size (); i++)
 			{
-			    if (!walk->multiline_valid)
+			    if (!params[i].multiline_valid)
 				continue;
-			    if (!regexec (walk->begin, line.c_str (), 20, matched, 0))
+			    RegexMatch m (params[i].begin, line);
+			    if (m)
 			    {
 				// broken line
-				key = line.substr(matched[1].rm_so,matched[1].rm_eo-matched[1].rm_so);
-				val = line.substr(matched[2].rm_so,matched[2].rm_eo-matched[2].rm_so);
-				StripLine(line, matched[0]);
+				key = m[1];
+				val = m[2];
+				line = m.rest;
 				matched_by = i;
 				state = 1;
 				break;
@@ -828,20 +756,20 @@ int IniParser::parse_helper(IniSection&ini)
 		    //
 		    // check for comments on line
 		    //
-		    if (comments_last && comments)
+		    if (comments_last && !comments.empty ())
+		    {
+			for (i = 0; i < comments.size (); i++)
 			{
-			    for (walk = comments, i = 0;i<comment_len;i++,walk++)
-				{
-				    if (!regexec (*walk, line.c_str (), 20, matched, 0))
-					{
-					    
-					    // we have it !!!
-					    comment = comment + line.substr(matched[0].rm_so,matched[0].rm_eo-matched[0].rm_so) + "\n";
-					    StripLine(line, matched[0]);
-					    break;
-					}
-				}
+			    RegexMatch m (comments[i], line);
+			    if (m)
+			    {
+				// we have it !!!
+				comment = comment + m[0] + "\n";
+				line = m.rest;
+				break;
+			    }
 			}
+		    }
 		    //
 		    // if line is not empty, report it
 		    //
@@ -924,16 +852,17 @@ int IniParser::write()
 
     if (multiple_files)
     {
-	IniFileIndex&index = inifile.getIndex();
-	IniFileIndex::iterator i = index.begin();
-	for (;i!=index.end();i++)
+	IniIterator
+	    ci = inifile.getContainerBegin (),
+	    ce = inifile.getContainerEnd ();
+
+	for (;ci != ce; ++ci)
 	    {
-		const char * iname =  (*i).name.c_str();
-		if ((*i).isSection())
+		if (ci->t () == SECTION)
 		    {
-			IniSection&s = inifile.getSection (iname);
+			IniSection&s = ci->s ();
 			int wb = s.getRewriteBy (); // bug #19066 
-			string filename = getFileName (iname, wb);
+			string filename = getFileName (s.getName (), wb);
 
 			deleted_sections.erase (filename);
 			if (!s.isDirty ()) {
@@ -952,7 +881,13 @@ int IniParser::write()
 			s.clean();
 			of.close ();
 		    }
+		else
+		    {
+			y2error ("Value %s encountered at multifile top level",
+				 ci->e ().getName ());
+		    }
 	    }
+
 	// FIXME: update time stamps of files...
 
 	// erase removed files...
@@ -982,8 +917,6 @@ int IniParser::write()
 int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 {
     char out_buffer[2048];
-    IniFileIndex&index = ini.getIndex();
-    IniFileIndex::iterator i = index.begin();
     string indent;
     string indent2;
     int readby = ini.getReadBy ();
@@ -997,27 +930,30 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 
     if (ini.getComment ()[0])
         of << indent << ini.getComment();
-    if (readby>=0 && readby<section_len)
+    if (readby>=0 && readby < (int)sections.size ())
 	{
-	    snprintf (out_buffer, 2048, sections[readby].begin_out, ini.getName());
+	    snprintf (out_buffer, 2048, sections[readby].begin.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
 	}
     
-    for (;i!=index.end();i++)
+    IniIterator
+	ci = ini.getContainerBegin (),
+	ce = ini.getContainerEnd ();
+
+    for (;ci != ce; ++ci)
 	{
-	    if ((*i).isSection())
+	    if (ci->t () == SECTION)
 		{
-		    IniSection&s = ini.getSection ((*i).name.c_str());
-		    write_helper (s, of, depth + 1);
-		    s.clean();
+		    write_helper (ci->s (), of, depth + 1);
+		    ci->s ().clean();
 		}
 	    else
 		{
-		    IniEntry&e = ini.getEntry ((*i).name.c_str());
+		    IniEntry&e = ci->e ();
 		    if (e.getComment ()[0])
 			of << indent2 << e.getComment();
-		    if (e.getReadBy()>=0 && e.getReadBy()<param_len)
-			snprintf (out_buffer, 2048, params[e.getReadBy ()].out, (*i).name.c_str(), e.getValue());
+		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ())
+			snprintf (out_buffer, 2048, params[e.getReadBy ()].line.out.c_str (), e.getName(), e.getValue());
 		    of << indent2 << out_buffer << "\n";
 		    e.clean();
 		}
@@ -1025,9 +961,9 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 
     if (ini.getEndComment ()[0])
         of << indent << ini.getEndComment();
-    if (readby>=0 && readby<section_len && sections[readby].end_valid)
+    if (readby>=0 && readby < (int) sections.size () && sections[readby].end_valid)
 	{
-	    snprintf (out_buffer, 2048, sections[readby].end_out, ini.getName());
+	    snprintf (out_buffer, 2048, sections[readby].end.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
 	}
     ini.clean();
@@ -1036,14 +972,44 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 string IniParser::getFileName (const string&sec, int rb)
 {
     string file = sec;
-    if (-1 != rb && rewrite_len > rb)
+    if (-1 != rb && (int) rewrites.size () > rb)
     {
-	int max = strlen(rewrites[rb].out) + sec.length () + 1;
+	int max = rewrites[rb].out.length () + sec.length () + 1;
 	char*buf = new char[max + 1];
-	snprintf (buf, max, rewrites[rb].out, sec.c_str());
+	snprintf (buf, max, rewrites[rb].out.c_str (), sec.c_str());
 	y2debug ("Rewriting %s to %s", sec.c_str(), buf);
 	file = buf;
 	delete [] buf;
     }
     return file;
 }
+
+/**
+ * change case of string
+ * @param str string to change
+ * @return changed string
+ */
+string IniParser::changeCase (const string&str) const
+{
+    string tmp = str;
+    if (!ignore_case)
+      return tmp;
+    if (prefer_uppercase)
+    {
+	for (string::iterator it = tmp.begin(); it != tmp.end(); ++it)
+	    *it = toupper (*it);
+    }
+    else
+    {
+	for (string::iterator it = tmp.begin(); it != tmp.end(); ++it)
+	    *it = tolower (*it);
+	if (first_upper)
+	{
+	string::iterator it = tmp.begin ();
+	if (it != tmp.end ())
+	    *it = toupper (*it);
+	}	    
+    }
+    return tmp;
+}
+
