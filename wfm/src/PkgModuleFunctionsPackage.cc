@@ -1260,7 +1260,7 @@ PkgModuleFunctions::PkgDelete (const YCPString& p)
 
 
 /**
-   @builtin Pkg::PkgTabll (string package) -> boolean
+   @builtin Pkg::PkgTaboo (string package) -> boolean
 
    Set package to taboo
 
