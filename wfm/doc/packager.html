@@ -1,0 +1,110 @@
+<HTML>
+<HEAD>
+<TITLE>
+Using the package manager
+</TITLE>
+</HEAD>
+<BODY>
+<H1>Using the package manager</H1>
+<H2>Intro</H2>
+This is a short introduction into using the package manager
+interface from within YCP code.<br>
+It describes the required <tt>Pkg::</tt> calls and
+how to use them in actual code.<br>
+<br>
+<H2>Implementation</H2>
+The new package manager does all package related handling
+inside C++ code and uses callbacks for user interaction.<br>
+This reduces the amount of ycp code needed for package installation
+(or removal) to a few lines.<br>
+The package manager keeps a list of installed (on the system)
+and available (on the CD or other installation media) packages
+and their status (install, delete, no change). YCP code
+can query the package manager for installed or available
+packages and set their status. The actual package installation
+or deletion takes place with a final commit call.<br>
+This call goes through the package list and deletes all
+packages marked as such. Then it orderes the packages marked
+for installation according to their "PreRequires" rpm tag
+and the media number (so you usually install CDs in ascending
+order).<br>
+All user interaction is done via callbacks from inside the
+package manager. If no callback is defined, the user doesn't
+see anything and also isn't requested to change CDs. Especially
+the latter case makes it important to set up appropriate callbacks.<br>
+<br>
+<H2>Querying the package manager</H2>
+<h3>Checking an installed package</h3>
+<tt>boolean Pkg::IsProvided (string)</tt> checks if a rpm tag (a package name
+or any other symbolic name provided by a package) is installed.<br>
+It does a '<tt>rpm -q</tt>' and if this fails a '<tt>rpm -q --whatprovides</tt>'
+for the given tag.<br>
+It does <b>not</b> start the complete package manager.<br>
+<br>
+<h3>Checking the installation sources</h3>
+<tt>boolean Pkg::IsAvailable(string)</tt> checks if a rpm package is available for installation.<br>
+(It currently does not check for other tags provided, this will be implemented
+in a future version.)<br>
+It starts the package manager if it isn't running already. Starting the package manager
+may take some time since it must read all it's caches about the installation
+sources and set up the internal data structures.<br>
+<br>
+<h3>Deleting a package</h3>
+<tt>boolean Pkg::PkgDelete (string)</tt> marks an installed package for
+deletion. It does <b>not</b> immediately run '<tt>rpm -e</tt>' but
+just sets the internal status of the package in the package manager.<br>
+The actual deletion must be triggered with <tt>Pkg::PkgCommit()</tt><br>.
+<br>
+<h3>Installing a package</h3>
+<tt>boolean Pkg::PkgInstall (string)</tt> marks an available package for
+installation. It does <b>not</b> immediately run '<tt>rpm -Uhv</tt>' but
+just sets the internal status of the package in the package manager.<br>
+The actual installation must be triggered with <tt>Pkg::PkgCommit()</tt><br>.
+<br>
+<h3>Solving dependencies</h3>
+<tt>boolean Pkg::PkgSolve()<tt> tries to solve open package dependencies
+and marks other (dependant) packages for installation/deletion.<br>
+(It currently does an automatic solving without user interaction. Callbacks
+for user interaction will be added later.)<br>
+<br>
+<H3>Committing the changes</h3>
+<tt>list Pkg::PkgCommit (integer)</tt> does the '<tt>rpm</tt>' calls
+needed to install or delete packages.<br>
+It sorts the packages according to their pre-requires and their
+location on the media (CD order), handles mouting/unmounting of
+the media, does the package download (if the media is an ftp or
+http server), and calls rpm.<br>
+All these actions might trigger callbacks for user information
+or user actions (i.e. media change).<br>
+The module <tt>PackageCallbacks</tt> from <tt>yast2-packager.rpm</tt>
+defined default callbacks for all these actions and should be
+imported by any code using <tt>Pkg::PkgCommit(0)</tt>.<br>
+The integer parameter given to <tt>Pkg::PkgCommit(0)</tt> must
+be zero for the normal usage. Non-zero values are only allowed
+during system installation when no media change is possible.<br>
+<br>
+<h2>Example code</h2>
+<pre>
+{
+    import "PackageCallbacks";
+
+    // installing netscape and cups
+
+    Pkg::PkgInstall ("netscape");
+    Pkg::PkgInstall ("cups");
+
+    // deleting lprng if it is installed
+
+    if (Pkg::IsProvided ("lprng"))
+	Pkg::PkgDelete ("lprng");
+
+    // fill open dependencies
+    Pkg::PkgSolve();
+
+    // do the rpm calls
+    Pkg::PkgCommit();
+
+}
+</pre>
+</BODY>
+</HTML>
