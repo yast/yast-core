@@ -1,0 +1,16 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgTargetUpdateInf.ycp
+#
+#  Purpose:     test "Pkg::TargetUpdateInf" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    return Pkg::TargetUpdateInf ("/var/lib/YaST/update.inf");
+}

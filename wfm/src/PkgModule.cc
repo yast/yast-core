@@ -119,6 +119,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SetProgressCallback")	return SetProgressCallback (args);
     else if (function == "TargetCapacity")	return TargetCapacity (args);
     else if (function == "TargetUsed")		return TargetUsed (args);
+    else if (function == "TargetUpdateInf")	return TargetUpdateInf (args);
     // source related functions
     else if (function == "SourceInit")		return SourceInit (args);
     else if (function == "SourceList")		return SourceList (args);

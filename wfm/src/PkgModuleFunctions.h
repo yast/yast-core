@@ -86,6 +86,7 @@ class PkgModuleFunctions
 	YCPValue SetProgressCallback (YCPList args);
 	YCPValue TargetCapacity (YCPList args);
 	YCPValue TargetUsed (YCPList args);
+	YCPValue TargetUpdateInf (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);

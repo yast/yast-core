@@ -27,6 +27,8 @@
 
 #include <y2util/Url.h>
 #include <y2pm/InstTarget.h>
+#include <y2pm/UpdateInfParser.h>
+
 #include <y2pm/PMError.h>
 
 #include <ycp/YCPVoid.h>
@@ -193,5 +195,46 @@ PkgModuleFunctions::TargetUsed (YCPList args)
     get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size);
 
     return YCPInteger (used);
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetUpdateInf (string filename) -> map
+ *
+ * return content of update.inf (usually <destdir>/var/lib/YaST/update.inf)
+ * as $[ "basesystem" : "blah", "distname" : "foo", "distversion" : "bar",
+ *   "distrelease" : "baz", "ftppatch" : "ftp.suse.com:/pub/suse/i386/update/8.0.99",
+ *   "ftpsources" : [ "ftp.suse.com:/pub/suse/i386/current", ... ]]
+ */
+YCPValue
+PkgModuleFunctions::TargetUpdateInf (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetUpdateInf");
+    }
+    UpdateInfParser parser;
+
+    if (parser.fromPath (Pathname (args->value(0)->asString()->value())))
+    {
+	return YCPVoid();
+    }
+
+    YCPMap retmap;
+    retmap->add (YCPString ("basesystem"), YCPString (parser.basesystem()));
+    retmap->add (YCPString ("distname"), YCPString (parser.distversion()));
+    retmap->add (YCPString ("distversion"), YCPString (parser.distversion()));
+    retmap->add (YCPString ("distrelease"), YCPString (parser.distrelease()));
+    retmap->add (YCPString ("ftppatch"), YCPString (parser.ftppatch()));
+    YCPList ftplist;
+    std::list<std::string> sources = parser.ftpsources();
+    for (std::list<std::string>::iterator it = sources.begin();
+	 it != sources.end(); ++it)
+    {
+	ftplist->add (YCPString(*it));
+    }
+    retmap->add (YCPString ("ftpsources"), ftplist);
+    return retmap;
 }
 
