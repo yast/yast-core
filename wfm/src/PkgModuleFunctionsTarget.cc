@@ -45,7 +45,7 @@
 using std::string;
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetInit(string root, bool new) -> bool
  *
  * initialized target system with root-directory
@@ -61,18 +61,35 @@ PkgModuleFunctions::TargetInit (YCPList args)
 	return YCPError ("Bad args to Pkg::TargetInit");
     }
 
-    bool newdb = args->value(1)->asBoolean()->value();		// used again below
+#warning TargetInit: newdb flag is obsolete! Check!
+    bool newdb = args->value(1)->asBoolean()->value();
+    Pathname newRoot = args->value(0)->asString()->value();
 
     if (newdb)
     {
-	// create empty rpmdb
-	_last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
+#if 0
+        // create empty rpmdb
+        _last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
+#endif
+        // Initialize target. If package/selecion manager do already exist
+	// data are loaded, otherwise when the manager is created.
+        _last_error = _y2pm.instTargetInit( newRoot );
     }
     else
     {
+#if 0
 	_last_error = PMError::E_ok;
 	// use existing rpmdb (and seldb !)
 	_y2pm.instTarget(true, Pathname (args->value(0)->asString()->value()));
+#endif
+        // initialize target
+	_last_error = _y2pm.instTargetInit( newRoot );
+
+	if ( !_last_error ) {
+	  // assert package/selecion managers exist and are up to date.
+	  _last_error = _y2pm.instTargetUpdate();
+	}
+
     }
 
     if (_last_error)
@@ -83,7 +100,7 @@ PkgModuleFunctions::TargetInit (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetFinish() -> bool
  *
  * finish target usage
@@ -91,19 +108,19 @@ PkgModuleFunctions::TargetInit (YCPList args)
 YCPValue
 PkgModuleFunctions::TargetFinish (YCPList args)
 {
-    _y2pm.instTarget().setInstallationLogfile ("");	// close logfile
+    _y2pm.instTargetClose();
     return YCPBoolean (true);
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetInstall(string filename) -> bool
  *
  * install rpm package by filename
  * the filename must be an absolute path to a file which can
  * be accessed by the package manager.
  *
- * !! uses callbacks !! 
+ * !! uses callbacks !!
  * You should do an 'import "PackageCallbacks"' before !
  */
 YCPValue
@@ -120,11 +137,11 @@ PkgModuleFunctions::TargetInstall(YCPList args)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetRemove(string name) -> bool
  *
  * install package by name
- * !! uses callbacks !! 
+ * !! uses callbacks !!
  * You should do an 'import "PackageCallbacks"' before !
  */
 YCPValue
@@ -136,7 +153,7 @@ PkgModuleFunctions::TargetRemove(YCPList args)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetLogfile (string name) -> bool
  *
  * init logfile for target
@@ -175,7 +192,7 @@ get_disk_stats (const char *fs, long long *used, long long *size, long long *bsi
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetCapacity (string dir) -> integer
  *
  * return capacity of partition at directory
@@ -196,7 +213,7 @@ PkgModuleFunctions::TargetCapacity (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetUsed (string dir) -> integer
  *
  * return usage of partition at directory
@@ -217,7 +234,7 @@ PkgModuleFunctions::TargetUsed (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetBlockSize (string dir) -> integer
  *
  * return block size of partition at directory
@@ -238,7 +255,7 @@ PkgModuleFunctions::TargetBlockSize (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetUpdateInf (string filename) -> map
  *
  * return content of update.inf (usually <destdir>/var/lib/YaST/update.inf)
@@ -279,7 +296,7 @@ PkgModuleFunctions::TargetUpdateInf (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetProducts () -> list
  *
  * return list of maps of all installed products in reverse
@@ -300,7 +317,7 @@ PkgModuleFunctions::TargetProducts (YCPList args)
 }
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetRebuildDB () -> bool
  *
  * call "rpm --rebuilddb"
@@ -315,7 +332,7 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TagetInitDU (list(map)) -> void
  *
  * init DU calculation for given directories
@@ -400,7 +417,7 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
 
 
 /** ------------------------
- * 
+ *
  * @builtin Pkg::TargetGetDU (void) -> map
  *
  * return current DU calculations
@@ -433,7 +450,7 @@ PkgModuleFunctions::TargetGetDU (YCPList args)
 /**
    @builtin Pkg::TargetFileHasOwner  (string filepath) -> bool
 
-   returns the (first) package 
+   returns the (first) package
 */
 
 YCPValue

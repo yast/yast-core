@@ -1,22 +1,29 @@
 -------------------------------------------------------------------
+Sun Sep  7 13:22:21 CEST 2003 - ma@suse.de
+
+- Fixed TargetInit and TargetFinish calls.
+  (#29679 as far as PKG module is affected)
+- 2.8.26
+
+-------------------------------------------------------------------
 Fri Sep  5 17:00:29 CEST 2003 - sh@suse.de
 
 - V 2.8.25
 - Fixed bug #30151: Enable starting pkg mgr in search mode
-  by default in the installed system 
+  by default in the installed system
 
 -------------------------------------------------------------------
 Fri Sep  5 10:20:18 CEST 2003 - gs@suse.de
 
 - testsuite adapted (language.err)
-- 2.8.24 
+- 2.8.24
 
 -------------------------------------------------------------------
 Thu Sep  4 15:30:04 CEST 2003 - gs@suse.de
 
-- WFMInterpreter: get correct encoding in SetLanguage() 
+- WFMInterpreter: get correct encoding in SetLanguage()
 - 2.8.23
-  
+
 -------------------------------------------------------------------
 Fri Aug 29 01:45:25 CEST 2003 - ma@suse.de
 
