@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jan 27 09:21:28 CET 2004 - visnov@suse.cz
+
+- always bind textdomain (even in bytecode)
+- set textdomain codeset to UTF-8 
+
+-------------------------------------------------------------------
 Mon Jan 26 15:02:50 CET 2004 - visnov@suse.cz
 
 - fix "return nil;" endless loop
