@@ -233,12 +233,15 @@ public:
      * contained in 'label' are stripped away before any comparison.
      **/
     int defaultFunctionKey( YCPString label );
-    
+
     /**
      * Returns the current product name
      * ("SuSE Linux", "SuSE Linux Enterprise Server", "United Linux", etc.).
+     *
+     * This can be set with the UI::SetProductName() builtin.
+     * UI::GetProductName is the YCP equivalent to this function.
      **/
-    string productName() const;
+    string productName() const { return _productName; }
 
     /**
      * Returns 'true' if widget geometry should be reversed for languages that
@@ -881,6 +884,7 @@ protected:
     YCPValue evaluateGetDisplayInfo			( const YCPTerm & term );
     YCPValue evaluateGetLanguage			( const YCPTerm & term );
     YCPValue evaluateGetModulename			( const YCPTerm & term );
+    YCPValue evaluateGetProductName			( const YCPTerm & term );
     YCPValue evaluateGlyph				( const YCPTerm & term );
     YCPValue evaluateHasSpecialWidget			( const YCPTerm & term );
     YCPValue evaluateMakeScreenShot			( const YCPTerm & term );
@@ -899,6 +903,7 @@ protected:
     YCPValue evaluateSetFunctionKeys			( const YCPTerm & term );
     YCPValue evaluateSetLanguage			( const YCPTerm & term );
     YCPValue evaluateSetModulename			( const YCPTerm & term );
+    YCPValue evaluateSetProductName			( const YCPTerm & term );
     YCPValue evaluateStopRecordMacro			( const YCPTerm & term );
     YCPValue evaluateWidgetExists			( const YCPTerm & term );
 
@@ -1371,6 +1376,11 @@ protected:
      * The current module name as set by the SetModuleName UI command.
      */
     string _moduleName;
+
+    /**
+     * The current product name ("SuSE Linux", "United Linux", ...).
+     **/
+    string _productName;
 
     /**
      * The current macro recorder.

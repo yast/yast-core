@@ -10,6 +10,7 @@ FakeUserInput
 GetDisplayInfo
 GetLanguage
 GetModulename
+GetProductName
 Glyph
 HasSpecialWidget
 MakeScreenShot
@@ -31,6 +32,7 @@ SetFocus
 SetFunctionKeys
 SetLanguage
 SetModulename
+SetProductName
 StopRecordMacro
 TimeoutUserInput
 UserInput

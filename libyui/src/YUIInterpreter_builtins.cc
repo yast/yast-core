@@ -76,6 +76,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_GetDisplayInfo		) ret = evaluateGetDisplayInfo		( term );
     else if ( symbol == YUIBuiltin_GetLanguage			) ret = evaluateGetLanguage		( term );
     else if ( symbol == YUIBuiltin_GetModulename		) ret = evaluateGetModulename		( term );
+    else if ( symbol == YUIBuiltin_GetProductName		) ret = evaluateGetProductName		( term );
     else if ( symbol == YUIBuiltin_Glyph			) ret = evaluateGlyph			( term );
     else if ( symbol == YUIBuiltin_HasSpecialWidget		) ret = evaluateHasSpecialWidget	( term );
     else if ( symbol == YUIBuiltin_MakeScreenShot		) ret = evaluateMakeScreenShot		( term );
@@ -97,11 +98,12 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_SetFunctionKeys		) ret = evaluateSetFunctionKeys		( term );
     else if ( symbol == YUIBuiltin_SetLanguage			) ret = evaluateSetLanguage		( term );
     else if ( symbol == YUIBuiltin_SetModulename		) ret = evaluateSetModulename		( term );
+    else if ( symbol == YUIBuiltin_SetProductName		) ret = evaluateSetProductName		( term );
     else if ( symbol == YUIBuiltin_StopRecordMacro		) ret = evaluateStopRecordMacro		( term );
-    else if ( symbol == YUIBuiltin_UserInput			) ret = evaluateUserInput		( term );
     else if ( symbol == YUIBuiltin_TimeoutUserInput		) ret = evaluateTimeoutUserInput	( term );
-    else if ( symbol == YUIBuiltin_WaitForEvent			) ret = evaluateWaitForEvent		( term );
+    else if ( symbol == YUIBuiltin_UserInput			) ret = evaluateUserInput		( term );
     else if ( symbol == YUIBuiltin_WFM				) ret = evaluateCallback		( term, true );
+    else if ( symbol == YUIBuiltin_WaitForEvent			) ret = evaluateWaitForEvent		( term );
     else if ( symbol == YUIBuiltin_WidgetExists			) ret = evaluateWidgetExists		( term );
     else
     {
@@ -216,11 +218,57 @@ YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
 }
 
 
+/**
+ * @builtin GetProductName() -> string
+ *
+ * Returns the current product name ("SuSE Linux", "United Linux", etc.) for
+ * display in dialogs. This can be set with SetProductName().
+ * <p>
+ * Note: In help texts in RichText widgets, a predefined macro &amp;product;
+ * can be used for the same purpose.
+ *
+ * @example sformat( "Welcome to %1", GetProductName() );
+ **/
+YCPValue YUIInterpreter::evaluateGetProductName( const YCPTerm & term )
+{
+    if ( term->size() != 0 )
+	return YCPNull();
+
+    return YCPString( _productName );
+}
+
+
+/**
+ * @builtin SetProductName( string prod ) -> void
+ *
+ * Set the current product name ("SuSE Linux", "United Linux", etc.) for
+ * display in dialogs and in RichText widgets (for help text) with the RichText
+ * &amp;product; macro.
+ * <p>
+ * This product name should be concise and meaningful to the user and not
+ * cluttered with detailed version information. Don't use something like
+ * "SuSE Linux 12.3-i786 Professional". Use something like "SuSE Linux"
+ * instead. 
+ * <p>
+ * This information can be retrieved with the GetProductName() builtin.
+ * 
+ * @example SetProductName( "SuSE HyperWall" );
+ **/
+YCPValue YUIInterpreter::evaluateSetProductName( const YCPTerm & term )
+{
+    if ( term->size() == 1 && term->value(0)->isString() )
+    {
+	_productName = term->value(0)->asString()->value();
+	return YCPVoid();
+    }
+    else return YCPNull();
+}
+
+
 /*
  * Default UI-specific setLanguage()
  * Returns OK (YCPVoid() )
  */
-
 YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
 {
     // NOP

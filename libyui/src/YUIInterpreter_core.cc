@@ -57,6 +57,7 @@ YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
     , with_threads( with_threads )
     , box_in_the_middle( YCPNull() )
     , _moduleName( "yast2" )
+    , _productName( "SuSE Linux" )
     , macroRecorder(0)
     , macroPlayer(0)
     , callbackComponent( callback )
@@ -488,13 +489,6 @@ string YUIInterpreter::getTextdomain( void )
     if ( ! v.isNull() && v->isString() )
 	return v->asString()->value();
     return "ui";
-}
-
-
-string YUIInterpreter::productName() const
-{
-#warning TODO: Get product name from some config file
-    return "SuSE Linux";
 }
 
 
