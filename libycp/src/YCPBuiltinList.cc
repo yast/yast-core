@@ -860,6 +860,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 	ret = expr->evaluate ();
 	if (ret.isNull())
 	{
+	    ycp2error ("Bad foreach expression %s", expr->toString ().c_str ());
 	    continue;
 	}
 	else if (ret->isBreak())
