@@ -3,9 +3,9 @@
 "/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
 
 
-<!ENTITY % all_widgets SYSTEM "widgets/widgets.ent">
+<!ENTITY % all_widgets SYSTEM "widgets/refenteries.ent">
 %all_widgets;
-<!ENTITY  All-Widgets  SYSTEM "widgets/allwidgets.xml">
+<!ENTITY  All-Widgets  SYSTEM "widgets/refenteries.xml">
 
 
 
