@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb  3 14:09:56 CET 2004 - visnov@suse.cz
+
+- Fix some Pkg builtins 
+
+-------------------------------------------------------------------
 Tue Feb  3 12:44:48 CET 2004 - visnov@suse.cz
 
 - Don't do fancy testsuite presentation 
