@@ -249,7 +249,7 @@ PkgModuleFunctions::TargetUpdateInf (YCPList args)
 
     if (parser.fromPath (Pathname (args->value(0)->asString()->value())))
     {
-	return YCPVoid();
+	return YCPVoid();			// return nil on error
     }
 
     YCPMap retmap;
