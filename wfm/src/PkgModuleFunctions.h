@@ -240,7 +240,7 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue YouSetServer (const YCPMap& strings);
 	YCPValue YouGetUserPassword ();
 	YCPValue YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& persistent);
-	YCPValue YouGetPatches (const YCPString& u, const YCPBoolean& download, const YCPBoolean& sign);
+	YCPValue YouGetPatches (const YCPBoolean& download, const YCPBoolean& sign);
 	YCPValue YouAttachSource ();
 	YCPValue YouGetPackages ();
 	YCPValue YouGetDirectory ();
@@ -378,7 +378,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1	( Pkg, YouSetServer,		"string (map<any,any>)",Map, PkgModuleFunctions, YouSetServer);
 	Y2FUNCTIONCALL 	( Pkg, YouGetUserPassword,	"map<any,any> ()",	PkgModuleFunctions, YouGetUserPassword);
 	Y2FUNCTIONCALL3	( Pkg, YouSetUserPassword,	"string (string, string, boolean)", String, String, Boolean, PkgModuleFunctions, YouSetUserPassword);
-	Y2FUNCTIONCALL3 ( Pkg, YouGetPatches, 		"string (string, boolean, boolean)",String, Boolean, Boolean, PkgModuleFunctions, YouGetPatches);
+	Y2FUNCTIONCALL2 ( Pkg, YouGetPatches, 		"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouGetPatches);
 	Y2FUNCTIONCALL  ( Pkg, YouAttachSource,		"boolean ()",		PkgModuleFunctions, YouAttachSource);
 	Y2FUNCTIONCALL  ( Pkg, YouGetPackages, 		"boolean ()",		PkgModuleFunctions, YouGetPackages);
 	Y2FUNCTIONCALL  ( Pkg, YouGetDirectory, 	"string ()",		PkgModuleFunctions, YouGetDirectory);

@@ -153,7 +153,7 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL2 ( 80,	Pkg, YouGetCurrentPatch);
     REGISTERFUNCTIONCALL  ( 81,	Pkg, YouGetDirectory);
     REGISTERFUNCTIONCALL  ( 82,	Pkg, YouGetPackages);
-    REGISTERFUNCTIONCALL3 ( 83,	Pkg, YouGetPatches);
+    REGISTERFUNCTIONCALL2 ( 83,	Pkg, YouGetPatches);
     REGISTERFUNCTIONCALL  ( 84,	Pkg, YouInstallCurrentPatch);
     REGISTERFUNCTIONCALL  ( 85,	Pkg, YouInstallPatches);
     REGISTERFUNCTIONCALL  ( 86,	Pkg, YouNextPatch);

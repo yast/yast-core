@@ -262,11 +262,10 @@ PkgModuleFunctions::YouGetDirectory ()
 }
 
 /**   
-  @builtin Pkg::YouGetPatches( string url, boolean download_again, boolean check_signatures ) -> error string
+  @builtin Pkg::YouGetPatches( boolean download_again, boolean check_signatures ) -> error string
 
   retrieve patches
   
-  @param string  url of patch server.
   @param bool    true if patches should be downloaded again
   @param bool    true if signatures should be checked.
   
@@ -279,12 +278,8 @@ PkgModuleFunctions::YouGetDirectory ()
           "login" login failed
 */
 YCPValue
-PkgModuleFunctions::YouGetPatches (const YCPString& u, const YCPBoolean& download, const YCPBoolean& sig)
+PkgModuleFunctions::YouGetPatches (const YCPBoolean& download, const YCPBoolean& sig)
 {
-    string urlstr = u->value_cstr();
-    Url url( urlstr );
-    if ( !url.isValid() ) return YCPString( "url" );
-
     bool reload = download->value();
     bool checkSig = sig->value();
 
