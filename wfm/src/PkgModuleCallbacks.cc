@@ -86,14 +86,17 @@ provideProgressCallbackFunc (int percent, void *_wfm)
 static std::string provideDoneCallbackModule;
 static YCPSymbol provideDoneCallbackSymbol("",false);
 
-static void
-provideDoneCallbackFunc (PMError error, const std::string& reason, void *_wfm)
+static std::string
+provideDoneCallbackFunc (PMError error, const std::string& reason, const std::string& name, void *_wfm)
 {
     YCPTerm callback = YCPTerm (provideDoneCallbackSymbol, provideDoneCallbackModule);
     callback->add(YCPInteger (error));
     callback->add(YCPString (reason));
-    ((YCPInterpreter *)_wfm)->evaluate (callback);
-    return;
+    callback->add(YCPString (name));
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    if (!ret->isString())
+	return "";
+    return ret->asString()->value();
 }
 
 //-------------------------------------------------------------------
@@ -136,14 +139,16 @@ progressPackageCallbackFunc (int percent, void *_wfm)
 static std::string donePackageCallbackModule;
 static YCPSymbol donePackageCallbackSymbol("",false);
 
-static void
+static std::string
 donePackageCallbackFunc (PMError err, const std::string& reason, void *_wfm)
 {
     YCPTerm callback = YCPTerm (donePackageCallbackSymbol, donePackageCallbackModule);
     callback->add(YCPInteger (err));
     callback->add(YCPString (reason));
-    ((YCPInterpreter *)_wfm)->evaluate (callback);
-    return;
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    if (!ret->isString())
+	return "";
+    return ret->asString()->value();
 }
 
 

@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Wed Mar  5 18:55:48 CET 2003 - kkaempf@suse.de
+
+- enhance provideDone and packageDone callbacks to return a
+  string in order to control retry/abort/ignore on package
+  errors (#23780)
+- 2.7.29
+
+-------------------------------------------------------------------
 Tue Mar 04 21:09:30 CET 2003 - arvin@suse.de
 
 - handle InstSrcDescr::content_flags (bug #21561)
