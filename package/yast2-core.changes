@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Apr  2 22:09:36 CEST 2004 - msvec@suse.cz
+
+- fixed agent-probe to report correct requires (#37335)
+- 2.9.75
+
+-------------------------------------------------------------------
 Fri Apr  2 16:14:59 CEST 2004 - visnov@suse.cz
 
 - YaST is now GPL

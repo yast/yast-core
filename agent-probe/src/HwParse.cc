@@ -348,7 +348,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
  *  and value. Does nothing if strlist is 0.
  */
 static void
-strlist2ycplist (const str_list_t* strlist, YCPMap map, const char* key)
+strlist2ycplist (const str_list_t* strlist, YCPMap *map, const char* key)
 {
     if (!strlist)
 	return;
@@ -364,7 +364,7 @@ strlist2ycplist (const str_list_t* strlist, YCPMap map, const char* key)
 	strlist = strlist->next;
     }
 
-    map->add (YCPString (key), ycplist);
+    (*map)->add (YCPString (key), ycplist);
 }
 
 
@@ -471,9 +471,9 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 		map->add (YCPString ("dacspeed"), YCPInteger (d->dacspeed));
 	    }
 
-	    strlist2ycplist (d->extensions, map, "extensions");
-	    strlist2ycplist (d->options, map, "options");
-	    strlist2ycplist (d->raw, map, "raw");
+	    strlist2ycplist (d->extensions, &map, "extensions");
+	    strlist2ycplist (d->options, &map, "options");
+	    strlist2ycplist (d->raw, &map, "raw");
 	    if (d->script && *(d->script))
 	    {
 		map->add (YCPString ("script3d"), YCPString (d->script));
@@ -1402,7 +1402,7 @@ HwProbe::hd2value (hd_t *hd)
     }
 
     // requires
-    strlist2ycplist (hd->requires, out, "requires");
+    strlist2ycplist (hd->requires, &out, "requires");
 
     // map of resources
 
