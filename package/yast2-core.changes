@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jul 15 11:59:50 CEST 2003 - gs@suse.de
+
+- 2.8.6 
+- advanced event handling in libyui 
+
+-------------------------------------------------------------------
 Tue Jul 15 10:21:48 CEST 2003 - mvidner@suse.cz
 
 - Moved ycp.pm to %perl_vendorlib.
