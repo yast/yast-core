@@ -199,7 +199,7 @@ you'll discover another good reason not to hard-code coordinates.
 In addition to that, always keep in mind that
 <b>the same dialog might require a different amount of space in a different UI</b>.
 Overcrowded dialogs don't look good in the Qt UI. In the NCurses UI, they will
-very likely break completely: There simply isn't as much space available (25x80
+very likely break completely: There simply isn't as much space available (80x25
 characters vs. 640x480 pixels).
 
 
@@ -238,7 +238,7 @@ supply a <a href="#weights">weight</a> for such widgets or
 
 <p>
 By default, all dialogs will be as large as they need to be - up to full screen
-size (which is UI dependent - 640x480 pixels for Qt, 25x80 characters for
+size (which is UI dependent - 640x480 pixels for Qt, 80x25 characters for
 NCurses): The outermost widget is asked what size it would like to have,
 i.e. its <a href="#nice_size">nice size</a>. If that outermost widget has any
 children, for example because it is a <a href="#layout_boxes">layout box</a>,
@@ -268,7 +268,7 @@ OpenDialog(
 
 
 <p>
-This will create a dialog of 640x480 pixels (<i>y2qt</i>) or 25x80 characters
+This will create a dialog of 640x480 pixels (<i>y2qt</i>) or 80x25 characters
 (<i>y2ncurses</i>) - regardless of its contents.
 
 
