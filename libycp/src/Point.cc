@@ -56,7 +56,8 @@ using std::string;
 // If point == 0 then its a toplevel file (and the line should be 0)
 
 Point::Point (std::string filename, int line, const Point *point)
-    : m_entry (new YSymbolEntry (Scanner::doStrdup (filename.c_str())))
+    // the argument is converted to string in SymbolEntry constructor
+    : m_entry (new YSymbolEntry (filename.c_str()))	
     , m_line (line)
     , m_point (point)
 {
@@ -116,7 +117,7 @@ Point::point (void) const
 std::string
 Point::toString (void) const
 {
-    char numbuf[8]; sprintf (numbuf, "%d", m_line);
+    char numbuf[8]; snprintf (numbuf, 8, "%d", m_line);
     string s = "Point <";
     s += m_entry->name();
     s += ">";

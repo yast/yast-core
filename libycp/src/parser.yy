@@ -772,6 +772,7 @@ compact_expression:
 		if ($1.t == 0
 		    || $1.t->isUnspec ())		// new (undeclared) identifier
 		{
+		    // FIXME: we should free the identifier memory
 		    yyVerror ($1.v.nval, $1.l);
 		    $$.t = 0;
 		}
@@ -1363,6 +1364,8 @@ statement:
 #endif
 
 		inside_module = true;
+		
+		delete[] name; // SymbolEntry uses Ustring
 
 		$$.c = 0;
 		$$.t = Type::Unspec;
@@ -1372,6 +1375,8 @@ statement:
 	    
 		// check, if it is not included yet in the current block
 		
+		// FIXME: where is the $2.v.sval freed?
+		
 		if (p_parser->m_block_stack->theBlock->isIncluded ($2.v.sval)) 
 		{
 #if DO_DEBUG
@@ -1380,6 +1385,9 @@ statement:
 		    $$.c = new YSInclude ($2.v.sval, $2.l, true);
 		    $$.l = $1.l;
 		    $$.t = Type::Unspec;
+		    
+		    delete[] $2.v.sval;
+
 		    break;
 		}
 
@@ -1423,7 +1431,8 @@ statement:
 #endif
 		p_parser->m_block_stack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
 
-		p_parser->setScanner (new Scanner (fd, $2.v.sval));
+		// we duplicate the value, so scanner gets its own instance
+		p_parser->setScanner (new Scanner (fd, Scanner::doStrdup($2.v.sval)));
 
 		// pass the outer scanner's tables
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
@@ -1435,6 +1444,8 @@ statement:
 		p_parser->m_block_stack->theBlock->addIncluded ($2.v.sval);
 		$$.l = $1.l;
 		$$.t = Type::Unspec;
+		
+		delete[] $2.v.sval;
 	    }
 |	IMPORT STRING ';'
 	    {
@@ -4286,7 +4297,7 @@ start_block (Parser *parser, constTypePtr type)
 
     // start new block
     // push block on block stack
-    blockstack_t *top = new (blockstack_t);
+    blockstack_t *top = new blockstack_t;
 
     if (parser->m_blockstack_depth == 0)	// initial block
     {

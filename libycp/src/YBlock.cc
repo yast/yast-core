@@ -137,7 +137,7 @@ unsigned int
 YBlock::newValue (constTypePtr type, YCodePtr code)
 {
     static char name[8];
-    sprintf (name, "_%d", symbolCount());		// create 'fake' name
+    snprintf (name, 8, "_%d", symbolCount());		// create 'fake' name
 
 #if DO_DEBUG
     y2debug ("YBlock::newValue (%s %s)", type->toString().c_str(), name);
@@ -278,7 +278,8 @@ YBlock::newNamespace (const string & name, Y2Namespace *name_space, int line)
     y2debug ("YBlock[%p]::newNamespace ('%s' namespace@<%p>):%d", this, name.c_str(), name_space, line);
 #endif
 
-    TableEntry *tentry = newEntry (Scanner::doStrdup (name.c_str()), SymbolEntry::c_module, Type::Unspec, line);
+    // symbol entry uses string
+    TableEntry *tentry = newEntry (name.c_str(), SymbolEntry::c_module, Type::Unspec, line);
     ((YSymbolEntryPtr)tentry->sentry())->setPayloadNamespace (name_space);
 
 #if DO_DEBUG
