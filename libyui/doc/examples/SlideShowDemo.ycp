@@ -39,17 +39,17 @@
     integer megaBytesPerSecond	= 2;
 
 
-    define string mediumName( integer mediumNo )
+    define string mediaName( integer mediaNo )
     {
-	return sformat( "SuSE Linux Professional CD %1", mediumNo );
+	return sformat( "SuSE Linux Professional CD %1", mediaNo );
     }
 
     
     define void mediaChange( integer cdNo )
     {
-	UI::ChangeWidget(`nextMedium, `Value, "" );
+	UI::ChangeWidget(`nextMedia, `Value, "" );
 	UI::OpenDialog( `VBox(
-			      `Label( sformat( "Please insert \n%1", mediumName( cdNo ) ) ),
+			      `Label( sformat( "Please insert \n%1", mediaName( cdNo ) ) ),
 			      `PushButton( `opt(`default), "&OK" )
 			      )
 			);
@@ -97,6 +97,7 @@
 	    useTimeout = false;
 	    UI::WizardCommand(`SetNextButtonLabel( "&Start" ) );
 	    newList = initialRpms;
+	    currentCd = -1;
 	    y2milestone( "Resetting to %1", rpms );
 	}
 
@@ -133,16 +134,17 @@
     }
 
 
-    define string nextMedium()
+    define string nextMedia()
     {
 	string remaining = "";
 	string mediaType = "CD";
 
-	if ( size( rpms ) > currentCd )
+	if ( currentCd > 0 && size( rpms ) > currentCd )
 	{
 	    integer seconds = rpms[ currentCd-1 ]:0 * megaBytesPerSecond;
-	    remaining = sformat( "Next: %1  --  %2",
-				 mediumName( currentCd+1 ),
+	    remaining = sformat( "Next %1: %2  --  %3",
+				 mediaType,
+				 mediaName( currentCd+1 ),
 				 formatTime( seconds ) );
 	}
 
@@ -225,7 +227,7 @@ the respective function to display the list.</p>					\
 			  )
 		    ),
 	      `VSpacing( 0.3 ),
-	      `Label(`id(`nextMedium ), `opt( `hstretch), "" )
+	      `Label(`id(`nextMedia ), `opt( `hstretch), "" )
 	      );
 
     UI::ReplaceWidget(`id(`contents),
@@ -257,6 +259,9 @@ the respective function to display the list.</p>					\
 	{
 	    useTimeout = ! useTimeout;
 	    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "&Start" ) );
+	    
+	    if ( currentCd < 0 )
+		currentCd = 1;
 	}
 	if ( button == `back 	)	delta = 10;
 	if ( button == `timeout	)	delta = 100;
@@ -265,7 +270,7 @@ the respective function to display the list.</p>					\
 	{
 	    rpms = subtract( rpms, 10 );
 	    UI::ChangeWidget(`totalRemaining, `Value, totalRemainingTime() );
-	    UI::ChangeWidget(`nextMedium, `Value, nextMedium() );
+	    UI::ChangeWidget(`nextMedia, `Value, nextMedia() );
 	    UI::RecalcLayout();
 	}
     }
