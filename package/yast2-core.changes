@@ -14,7 +14,7 @@ Wed Jul  9 11:16:30 CEST 2003 - cschum@suse.de
 Mon Jul  7 15:48:24 CEST 2003 - gs@suse.de
 
 - WFMInterpreter: call setlocale(LC_ALL, "") in constructor;
-  remove it in setLanguage() and changeToModuleLanguage() 
+  remove it in setLanguage() and changeToModuleLanguage()
 
 -------------------------------------------------------------------
 Fri Jul  4 16:24:11 CEST 2003 - msvec@suse.de
