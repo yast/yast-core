@@ -297,7 +297,6 @@ YShortcutManager::findShortcutWidgets()
     }
 
     YWidgetList widgetList = _dialog->widgets();
-    y2debug( "widget list: %d elements", (int) widgetList.size() );
 
     for ( YWidgetListIterator it = widgetList.begin(); it != widgetList.end(); ++it )
     {
@@ -305,7 +304,6 @@ YShortcutManager::findShortcutWidgets()
 	{
 	    YShortcut * shortcut = new YShortcut( *it );
 	    _shortcutList.push_back( shortcut );
-	    y2debug( "found shortcut widget %s", shortcut->cleanShortcutString().c_str() );
 	}
     }
 }
