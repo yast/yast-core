@@ -1,0 +1,118 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Pkg.ycp
+#
+#  Purpose:     test "Pkg::" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    // Pkg::DoProvide (list tags) -> $["failed1":"reason", ...]
+    map fails = Pkg::DoProvide (["a", "b"]);
+    if (fails == 0)
+	return 1;
+    if (size (fails) > 0)
+	return 2;
+    return 0;
+}
+
+{
+    // Pkg::DoRemove (list tags) -> $["failed1":"reason", ...]
+    map fails = Pkg::DoRemove (["a", "b"]);
+    if (fails == 0)
+	return 1;
+    if (size (fails) > 0)
+	return 2;
+    return 0;
+}
+
+{
+    // Pkg::GetGroups("") -> ["group1", "group2", ...]
+
+    list groups = Pkg::GetGroups("");
+    if (groups == nil)
+	return 1;
+    if (size (groups) <= 0)
+	return 2;
+    return 0;
+}
+
+{
+    // Pkg::GetSelections(`all) -> ["sel1", "sel2", ...]
+
+    list selections = Pkg::GetSelections(`all);
+    if (selections == nil)
+	return 1;
+    if (size (selections) <= 0)
+	return 2;
+    return 0;
+}
+
+{
+    // Pkg::GetSelections(`avail_base) -> ["sel1"]
+
+    list selections = Pkg::GetSelections(`avail_base);
+    if (selections == nil)
+	return 1;
+    if (size (selections) <= 0)
+	return 2;
+    return 0;
+}
+
+
+{
+    // Pkg::GetSelections(`avail_addon) -> ["sel1"]
+
+    list selections = Pkg::GetSelections(`avail_addon);
+    if (selections == nil)
+	return 1;
+    if (size (selections) <= 0)
+	return 2;
+    return 0;
+}
+
+
+{
+    // Pkg::GetSelections(`inst_base) -> ["sel1"]
+
+    list selections = Pkg::GetSelections(`inst_base);
+    if (selections == nil)
+	return 1;
+    if (size (selections) != 1)		// only 1
+	return 2;
+    return 0;
+}
+
+
+{
+    // Pkg::GetSelections(`inst_addon) -> ["sel1"]
+
+    list selections = Pkg::GetSelections(`inst_addon);
+    if (selections == nil)
+	return 1;
+    if (size (selections) <= 0)
+	return 2;
+    return 0;
+}
+
+{
+    // Pkg::IsAvailable (string tag) -> boolean
+    boolean result = Pkg::IsAvailable ("a");
+    if (result == nil)
+	return 1;
+    return 0;
+}
+
+{
+    // Pkg::IsProvided (string tag) -> boolean
+    boolean result = Pkg::IsProvided ("b");
+    if (result == nil)
+	return 1;
+    return 0;
+}
+

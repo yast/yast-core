@@ -8,13 +8,22 @@ htmldir = $(docdir)/wfm
 
 html_DATA = YCP-builtins-wfm.html
 
-builtin = $(srcdir)/../src/WFMInterpreter.cc \
+CLEANFILES = YCP-builtins-wfm.html YCP-builtins-pkg.html
+
+all: $(CLEANFILES)
+
+builtin_wfm = $(srcdir)/../src/WFMInterpreter.cc \
         $(srcdir)/../src/Y2WFMComponent.cc \
         $(srcdir)/../src/Y2CCWFM.cc
 
-YCP-builtins-wfm.html: $(builtin)
-	@ybindir@/makebuiltindocs -t "WFM built-in functions" $(builtin) > $@.new
+builtin_pkg = $(srcdir)/../src/PkgModule.cc
+
+YCP-builtins-wfm.html: $(builtin_wfm)
+	@ybindir@/makebuiltindocs -t "WFM built-in functions" $^ > $@.new
 	mv $@.new $@
 
-CLEANFILES = YCP-builtins-wfm.html
+YCP-builtins-pkg.html: $(builtin_pkg)
+	@ybindir@/makebuiltindocs -t "Pkg:: built-in functions" $^ > $@.new
+	mv $@.new $@
+
 EXTRA_DIST = $(html_DATA)
