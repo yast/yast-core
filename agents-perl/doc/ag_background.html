@@ -18,6 +18,7 @@ Changes:
 </P>
 
 <UL>
+  <LI><B>2003-06-09:</B> Reading stderr, writing to stdin, read/write characters instead of lines</LI>
   <LI><B>2003-03-28:</B> Added .buffer_size description</LI>
   <LI><B>2001-10-23:</B> Initial version</LI>
 </UL>
@@ -36,8 +37,18 @@ started and YCP code can continue. Agent stores data from STDOUT until they
 are read from YCP, which should parse data and refresh status in dialog.</P>
 
 <P>When input buffer in background agent reaches defined value subprocess is
-stopped until buffer is read. Default buffer size is 500 lines (see
-.buffer_size path).</P>
+stopped until buffer is read. Default buffer size is 500 lines for STDOUT and
+200 lines for STDERR output (see .buffer_size or .buffer_size_err paths).</P>
+
+<P>STDERR output can be also read, use .run_output_err command to also store
+error messages.</P>
+
+<P>Outputs are read by character so it is possible to read output which is not
+terminated by the new line character. This is usefull if the subprocess uses
+prompt with. Use .buffer or .buffer_err subpaths for direct access to the
+internal line buffer. Use this feature carefully - input buffers are cleared
+after reading!</P>
+
 
 <H2>Limitations</H2>
 
@@ -45,10 +56,8 @@ stopped until buffer is read. Default buffer size is 500 lines (see
 Background agent has these limitations:
 <UL>
   <LI>only one subprocess can be handled by agent</LI>
-  <LI>communication with subprocess through STDIN and STDERR is not possible, only STDOUT can be read</LI>
 </UL>
 
-But these limitations can be removed...
 </P>
 
 <H2>Background agent interface</H2>
@@ -65,14 +74,21 @@ But these limitations can be removed...
 </THEAD>
 
 <TBODY>
-<TR><TD>lines</TD><TD>none</TD><TD>integer</TD><TD>total number of lines produced by subprocess</TD></TR>
-<TR><TD>newlines</TD><TD>none</TD><TD>integer</TD><TD>number of new lines since last reading</TD></TR>
-<TR><TD>store</TD><TD>none</TD><TD>boolean</TD><TD>true if subprocess was started by <EM>run_output</EM> command</TD></TR>
+<TR><TD>lines</TD><TD>none</TD><TD>integer</TD><TD>total number of stdout lines produced by subprocess</TD></TR>
+<TR><TD>newlines</TD><TD>none</TD><TD>integer</TD><TD>number of new stdout lines since last reading</TD></TR>
+<TR><TD>lines_err</TD><TD>none</TD><TD>integer</TD><TD>total number of stderr lines produced by subprocess</TD></TR>
+<TR><TD>newlines_err</TD><TD>none</TD><TD>integer</TD><TD>number of new stderr lines since last reading</TD></TR>
+<TR><TD>store</TD><TD>none</TD><TD>boolean</TD><TD>true if subprocess was started by <EM>run_output</EM> or <EM>run_output_err</EM>command</TD></TR>
 <TR><TD>isrunning</TD><TD>none</TD><TD>boolean</TD><TD>true if subprocess is running</TD></TR>
 <TR><TD>status</TD><TD>none</TD><TD>integer</TD><TD>subprocess exit status</TD></TR>
-<TR><TD>newout</TD><TD>none</TD><TD>list of strings</TD><TD>return output since last reading.</TD></TR>
-<TR><TD>output_open</TD><TD>none</TD><TD>boolean</TD><TD>true if pipe from subprocess is open</TD></TR>
-<TR><TD>buffer_size</TD><TD>none</TD><TD>integer</TD><TD>size of input buffer</TD></TR>
+<TR><TD>newout</TD><TD>none</TD><TD>list of strings</TD><TD>return stdout output since last reading</TD></TR>
+<TR><TD>newerr</TD><TD>none</TD><TD>list of strings</TD><TD>return stderr output since last reading</TD></TR>
+<TR><TD>output_open</TD><TD>none</TD><TD>boolean</TD><TD>true if stdout pipe from subprocess is open</TD></TR>
+<TR><TD>output_open_err</TD><TD>none</TD><TD>boolean</TD><TD>true if stderr pipe from subprocess is open</TD></TR>
+<TR><TD>buffer_size</TD><TD>none</TD><TD>integer</TD><TD>the size of stdout input buffer (number of lines)</TD></TR>
+<TR><TD>buffer_size_err</TD><TD>none</TD><TD>integer</TD><TD>the size of stderr input buffer (number of lines)</TD></TR>
+<TR><TD>buffer</TD><TD>none</TD><TD>string</TD><TD>read the internal stdout buffer, (note: buffer is cleared after reading!)</TD></TR>
+<TR><TD>buffer_err</TD><TD>none</TD><TD>string</TD><TD>read the internal stderr buffer (note: buffer is cleared after reading!)</TD></TR>
 </TBODY>
 
 </TABLE>
@@ -80,11 +96,11 @@ But these limitations can be removed...
 
 <P>Example: <TT>SCR::Read(.background.newlines) -&gt; 5</TT></P>
 
-<P>Note: if <EM>isrunning</EM> is false and <EM>output_open</EM> is true then
-subprocess exited, but some data can be available in buffer.
-<EM>Isrunning</EM> can be used for example to check whether program is running
-before sending signal, <EM>output_open</EM> and <EM>newlines</EM> are used in
-loop tests.</P>
+<P>Note: if <EM>isrunning</EM> is false and <EM>output_open</EM> or
+<EM>output_open_err</EM> is true then subprocess exited, but some data are
+available in the buffer. <EM>Isrunning</EM> can be used for example to check
+whether program is running before sending a signal, <EM>output_open</EM> and
+<EM>newlines</EM> are used in loop tests.</P>
 
 <H3>Execute subpaths:</H3>
 
@@ -97,11 +113,19 @@ loop tests.</P>
 </THEAD>
 
 <TBODY>
+<TR><TD>run</TD><TD>string command</TD><TD>boolean</TD>
+<TD>start subprocess, do not store output from STDOUT or STDERR, only count number of
+lines</TD></TR>
+
 <TR><TD>run_output</TD><TD>string command</TD><TD>boolean</TD>
-<TD>start subprocess, store output from STDOUT. On success returns
-true.</TD></TR> <TR><TD>run</TD><TD>string command</TD><TD>boolean</TD>
-<TD>start subprocess, do not store output from STDOUT, only count number of
-lines</TD></TR> <TR><TD>kill</TD><TD>nil</TD><TD>boolean</TD><TD>kill
+<TD>start subprocess, store output from STDOUT, count output from STDERR. On success returns
+true.</TD></TR>
+
+<TR><TD>run_output_err</TD><TD>string command</TD><TD>boolean</TD>
+<TD>start subprocess, store output from STDOUT and STDERR. On success returns
+true.</TD></TR>
+
+<TR><TD>kill</TD><TD>nil</TD><TD>boolean</TD><TD>kill
 subprocess with signal SIGTERM, then with SIGKILL signal, on success returns
 true</TD></TR>
 </TBODY>
@@ -122,16 +146,27 @@ true</TD></TR>
 </THEAD>
 
 <TBODY>
+
 <TR><TD>buffer_size</TD><TD>integer lines</TD><TD>boolean</TD> <TD>Set maximum
-number of stored lines (input buffer size). When this limit is reached
+number of stored lines (input buffer size) for STDOUT. When this limit is reached
 subprocess will be stopped until new lines are read. Parameter <EM>lines</EM>
 has to be greater than 0. Returns true if new value was set.</TD></TR>
+
+<TR><TD>buffer_size_err</TD><TD>integer lines</TD><TD>boolean</TD> <TD>Same as
+buffer_size, but for STDERR output. </TD></TR>
+
+<TR><TD>stdin</TD><TD>string input</TD><TD>integer</TD> <TD>Write input string
+to STDIN of the process. Input string can contain multiple lines. Returns
+number of the written characters. Don't forget to append the new line character at
+the end of the string, usually it is required.</TD></TR>
+
 </TBODY>
 
 </TABLE>
 </P>
  
-<P>Example: Set buffer size to 100 lines: <TT>SCR::Write(.background.buffer_size, 100) -&gt; true</TT></P>
+<P>Example: Set STDOUT buffer size to 100 lines:
+<TT>SCR::Write(.background.buffer_size, 100) -&gt; true</TT></P>
 
 <H2>How to use background agent?</H2>
 

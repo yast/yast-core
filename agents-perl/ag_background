@@ -71,7 +71,7 @@ sub ErrorPath($)
     my ($p) = @_;
 
     y2debug("Bad path: $p");
-    ycpReturnSkalarAsString("");
+    ycp::Return("");
 }
 
 sub ErrorCommand($)
@@ -79,15 +79,7 @@ sub ErrorCommand($)
     my ($c) = @_;
     
     y2debug("Bad command: $c");
-    ycpReturnSkalarAsString("");
-}
-
-sub ErrorArg($)
-{
-    my ($a) = @_;
-    
-    y2debug("Bad argument type: $a");
-    ycpReturnSkalarAsString("");
+    ycp::Return("");
 }
 
 # install SIGCHLD handler
@@ -140,23 +132,19 @@ while (1)
 	
 	chomp($line);
 
-	ycpInit($line);
-	
-	my $path = ycpGetPath();
+	my ($command, $path, $arg) = ycp::ParseCommand($line);
 
-	if (ycpCommandIsExecute())
+	if ($command eq 'Execute')
 	{
 	    if ($path eq '.run' || $path eq '.run_output' || $path eq '.run_output_err')
 	    {
 		# another process is already running
 		if ($child_running)
 		{
-		    ycpReturnSkalarAsBoolean(0);
+		    ycp::Return('false');
 		}
-		elsif (ycpArgIsString())
+		elsif (defined $arg)
 		{
-		    my $param = ycpGetArgString();
-		
 		    $store_out = ($path eq '.run') ? 0 : 1;
 		    $store_err = ($path eq '.run_output_err') ? 1 : 0;
 
@@ -174,7 +162,7 @@ while (1)
 		    my $start_error = 0;
 
 		    # start subprocess
-		    $child_pid = open3(*WRT, *RD, *ERR, "$param")
+		    $child_pid = open3(*WRT, *RD, *ERR, "$arg")
 			or $start_error = 1;
 
 		    # if child is running or 
@@ -193,94 +181,90 @@ while (1)
 		    use Fcntl;
 		    fcntl(WRT, F_SETFL, O_NONBLOCK);
 
-		    ycpReturnSkalarAsBoolean(!$start_error);
-		}
-		else
-		{
-		    ErrorArg(ycpGetArgType());
+		    ycp::Return(!$start_error ? 'true' : 'false');
 		}
 	    }
 	    elsif ($path eq '.kill')
 	    {
-    		ycpReturnSkalarAsBoolean(KillSubprocess());
+    		ycp::Return(KillSubprocess() ? 'true' : 'false');
 	    }
 	    else
 	    {
 		ErrorPath($path);
 	    }
 	}
-	elsif (ycpCommandIsRead())
+	elsif ($command eq 'Read')
 	{
 	    if ($path eq '.lines')
 	    {
-		ycpReturnSkalarAsInt($total_lines);
+		ycp::Return($total_lines);
 	    }
 	    elsif ($path eq '.newlines')
 	    {
-		ycpReturnSkalarAsInt($newlines);
+		ycp::Return($newlines);
 	    }
 	    elsif ($path eq '.newlines_err')
 	    {
-		ycpReturnSkalarAsInt($newlines_err);
+		ycp::Return($newlines_err);
 	    }
 	    elsif ($path eq '.lines_err')
 	    {
-		ycpReturnSkalarAsInt($total_lines_err);
+		ycp::Return($total_lines_err);
 	    }
 	    elsif ($path eq '.store')
 	    {
-		ycpReturnSkalarAsBoolean($store_out);
+		ycp::Return($store_out == 1 ? 'true' : 'false');
 	    }
 	    elsif ($path eq '.isrunning')
 	    {
-		ycpReturnSkalarAsBoolean($child_running);
+		ycp::Return($child_running == 1 ? 'true' : 'false');
 	    }
 	    elsif ($path eq '.status')
 	    {
-		ycpReturnSkalarAsInt($exit);
+		ycp::Return($exit);
 	    }
 	    elsif ($path eq '.newout')
 	    {
-		ycpReturnArrayAsList(@out);
+		ycp::Return(\@out);
 		
 		$newlines = 0;
 		@out = ();
 	    }
 	    elsif ($path eq '.newerr')
 	    {
-		ycpReturnArrayAsList(@err);
+		ycp::Return(\@err);
 		
 		$newlines_err = 0;
 		@err = ();
 	    }
 	    elsif ($path eq '.buffer_out')
 	    {
-		ycpReturnSkalarAsString($input1);
+		ycp::Return($input1);
 		$input1 = '';
 	    }
 	    elsif ($path eq '.buffer_err')
 	    {
-		ycpReturnSkalarAsString($input2);
+		ycp::Return($input2);
 		$input2 = '';
 	    }
 	    elsif ($path eq '.output_open')
 	    {
-		ycpReturnSkalarAsBoolean($pipe_defined);
+		ycp::Return(defined($pipe_defined) ? 'true' : 'false');
 	    }
 	    elsif ($path eq '.buffer_size')
 	    {
-		ycpReturnSkalarAsInt($buffer_size);
+		ycp::Return($buffer_size);
 	    }
 	    elsif ($path eq '.buffer_size_err')
 	    {
-		ycpReturnSkalarAsInt($buffer_size_err);
+		ycp::Return($buffer_size_err);
 	    }
 	    else
 	    {
 		ErrorPath($path);
 	    }
 	}
-	elsif (ycpCommandIsResult)
+	elsif ($command eq 'Result')
 	{
 	    if ($child_running)
 	    {
@@ -288,46 +272,40 @@ while (1)
 	    }
 	    exit(0);
 	}
-	elsif (ycpCommandIsWrite())
+	elsif ($command eq 'Write')
 	{
 	    if ($path eq '.buffer_size' || $path eq '.buffer_size_err')
 	    {
-		if (ycpArgIsInteger())
+		if (defined $arg)
 		{
-		    my $param = ycpGetArgInteger();
-
-		    if ($param >= 1)
+		    if ($arg >= 1)
 		    {
 			if ($path eq '.buffer_size')
 			{
-			    $buffer_size = $param;
+			    $buffer_size = $arg;
 			}
 			else
 			{
-			    $buffer_size_err = $param;
+			    $buffer_size_err = $arg;
 			}
 
-			ycpReturnSkalarAsBoolean(1);
+			ycp::Return('true');
 		    }
 		    else
 		    {
-			ycpReturnSkalarAsBoolean(0);
+			ycp::Return('false');
 		    }
-		}
-		else
-		{
-		    ErrorArg(ycpGetArgType());
 		}
 	    }
 	    elsif ($path eq '.stdin')
 	    {
-		if ($child_running)
+		if ($child_running && defined $arg)
 		{
-		    ycpReturnSkalarAsInt(syswrite(WRT, ycpGetArgString()."\n"));	# add new line char
+		    ycp::Return(syswrite(WRT, $arg));	# add new line char
 		}
 		else
 		{
-		    ycpReturnSkalarAsInt(-1);
+		    ycp::Return(-1);
 		}
 	    }
 	    else
@@ -337,7 +315,7 @@ while (1)
 	}
 	else
 	{
-	    ErrorCommand(ycpGetCommand());
+	    ErrorCommand($command);
 	}
     }
 	    
