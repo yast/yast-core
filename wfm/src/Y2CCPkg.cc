@@ -59,4 +59,4 @@ Y2Component* Y2CCPkg::provideNamespace(const char* name)
 
 // Create global variable to register this component creator
 
-Y2CCPkg g_y2ccpkg;
+Y2CCPkg g_y2ccPkg;

@@ -8,16 +8,19 @@ AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
 # to look for the packagemanager in the prefix first (really first?)
 AM_LDFLAGS = -L${libdir}
 
-plugin_LTLIBRARIES = libpy2wfm.la
+plugin_LTLIBRARIES = libpy2wfm.la libpy2Pkg.la
 noinst_LTLIBRARIES = liby2wfm.la
 
 liby2wfm_la_SOURCES =				\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h			\
+	WFM.cc WFM.h				\
+	WFMSubAgent.cc WFMSubAgent.h
+
+
+libpy2Pkg_la_SOURCES =				\
 	Y2PkgComponent.cc Y2PkgComponent.h	\
 	Y2CCPkg.cc Y2CCPkg.h			\
-	WFM.cc WFM.h				\
-	WFMSubAgent.cc WFMSubAgent.h		\
 	ycpTools.cc ycpTools.h			\
 	PkgModule.cc PkgModule.h		\
 	PkgModuleError.cc PkgModuleError.h	\
@@ -40,6 +43,12 @@ liby2wfm_la_LIBADD = \
 	../../libscr/src/libscr.la		\
 	../../libycp/src/libycp.la		\
 	../../liby2/src/libpy2stdio.la		\
+	../../liby2/src/liby2.la		\
+	-ly2util
+
+libpy2Pkg_la_LDFLAGS = -version-info 2:0
+libpy2Pkg_la_LIBADD = \
+	../../libycp/src/libycp.la		\
 	../../liby2/src/liby2.la		\
 	-ly2pm -ly2util
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Oct  8 12:47:59 CEST 2004 - visnov@suse.cz
+
+- Split Pkg as a standalone component, don't link against it.
+
+-------------------------------------------------------------------
 Wed Oct  6 16:48:38 CEST 2004 - sh@suse.de
 
 - UI: Dropped support for hardcoded images "suseheader" and "yast2"

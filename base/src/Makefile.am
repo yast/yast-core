@@ -13,11 +13,12 @@ YAST2CORE =					\
 	../../liby2/src/libpy2stdio.la		\
 	../../liby2/src/libpy2program.la	\
 	../../wfm/src/libpy2wfm.la		\
-	../../scr/src/libpy2scr.la		\
 	../../libycp/src/libycp.la		\
 	../../liby2/src/liby2.la		\
 	../../libyui/src/libyui.la		\
 	../../libscr/src/libscr.la		
+
+#	../../scr/src/libpy2scr.la		
 
 
 y2base_DEPENDENCIES = $(YAST2CORE)
@@ -27,7 +28,7 @@ y2base_DEPENDENCIES = $(YAST2CORE)
 # link the plugin against any special library.
 #
 
-y2base_LDADD = -L$(libdir) -ly2pm -ly2util
+y2base_LDADD = -L$(libdir) -ly2util
 
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\
