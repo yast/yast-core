@@ -1,0 +1,35 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgTargetSpace.ycp
+#
+#  Purpose:     test "Pkg::TargetCapacity and Pkg::TargetUsed" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    list mounts = SCR::Read (.proc.mounts);
+    y2milestone ("mounts %1", mounts);
+    list partitions = [];
+    foreach (`mpoint, mounts,
+    ``{
+	string dir = mpoint["file"]:"";
+	y2milestone ("dir %1:%2", dir, substring (dir, 0, 1));
+	if ((substring (dir, 0, 1) == "/")
+	    && (substring (dir, 0, 5) != "/dev/")
+	    && (mpoint["vfstype"]:"" != "rootfs"))
+	{
+	    integer capacity = Pkg::TargetCapacity (dir);
+	    if (capacity != 0)		// dont look at pseudo-devices (proc, shmfs, ...)
+	    {
+		integer used = Pkg::TargetUsed (dir);
+		partitions = add (partitions, $["dir" : dir, "capacity" : capacity, "used" : used]);
+	    }
+	}
+    });
+    return partitions;
+}
