@@ -542,7 +542,8 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
 	 it != _y2pm.selectionManager().end();
 	 ++it)
     {
-	_y2pm.instTarget().installSelection(Pathname((const std::string &)((*it)->name())+".sel"));
+	if ((*it)->to_install())
+	    _y2pm.instTarget().installSelection(Pathname((const std::string &)((*it)->name())+".sel"));
     }
     return YCPBoolean (true);
 }

@@ -51,6 +51,8 @@ class PkgModuleFunctions
 
 	PMError _last_error;
 
+	int _solve_errors;
+
     private:
 	vector<InstSrcManager::ISrcId> _sources;
 	unsigned int _first_free_source_slot;
@@ -157,7 +159,9 @@ class PkgModuleFunctions
 
 	YCPValue PkgInstall (YCPList args);
 	YCPValue PkgDelete (YCPList args);
+	YCPValue PkgNeutral (YCPList args);
 	YCPValue PkgSolve (YCPList args);
+	YCPValue PkgSolveErrors (YCPList args);
 	YCPValue PkgCommit (YCPList args);
 
 	YCPValue PkgPrepareOrder (YCPList args);

@@ -683,6 +683,25 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 
 
 /**
+   @builtin Pkg::PkgNeutral (string package) -> boolean
+
+   Set package to neutral (drop install/delete flags)
+
+*/
+YCPValue
+PkgModuleFunctions::PkgNeutral (YCPList args)
+{
+    PMSelectablePtr selectable = getPackageSelectable (getName(args));
+    if (!selectable)
+    {
+	return YCPBoolean (false);
+    }
+    selectable->setNothingSelected();
+    return YCPBoolean (true);
+}
+
+
+/**
    @builtin Pkg::PkgSolve () -> boolean
    Optional: Pkg::PkgSolve (true) to filter all conflicts with installed packages
 	(installed packages will be preferred)
@@ -711,6 +730,7 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 
     if (!_y2pm.packageManager().solveInstall(good, bad, filter_conflicts_with_installed))
     {
+	_solve_errors = bad.size();
 	y2error ("%d packages failed:", bad.size());
 
 	std::ofstream out ("/var/log/YaST2/badlist");
@@ -726,6 +746,16 @@ PkgModuleFunctions::PkgSolve (YCPList args)
     return YCPBoolean (true);
 }
 
+
+/**
+   @builtin Pkg::PkgSolveErrors() -> integer
+   return number of fails
+*/
+YCPValue
+PkgModuleFunctions::PkgSolveErrors(YCPList args)
+{
+    return YCPInteger (_solve_errors);
+}
 
 /**
    @builtin Pkg::PkgCommit (integer medianr) -> [ int successful, list failed, list remaining, list srcremaining ]
