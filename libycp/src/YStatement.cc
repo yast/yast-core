@@ -1253,7 +1253,7 @@ YSImport::YSImport (std::istream & str)
     if (nameSpace() == 0)
     {
 	fprintf (stderr, "Import '%s' failed\n", name().c_str());
-#warning Pass error about failed import to top properly
+	m_name = "";		// Pass error about failed import to top
 	return;
     }
 
