@@ -715,8 +715,8 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
 //	METHOD NAME : PkgModuleFunctions::CallbackHandler::CallbackHandler
 //	METHOD TYPE : Constructor
 //
-PkgModuleFunctions::CallbackHandler::CallbackHandler( YCPInterpreter *& wfm_r )
-    : _ycpCallbacks( *new YCPCallbacks( wfm_r ) )
+PkgModuleFunctions::CallbackHandler::CallbackHandler(  )
+    : _ycpCallbacks( *new YCPCallbacks() )
     , _y2pmReceive( *new Y2PMReceive( _ycpCallbacks ) )
 {
 }
@@ -743,76 +743,65 @@ PkgModuleFunctions::CallbackHandler::~CallbackHandler()
 
 #define SET_YCP_CB(E,A) _callbackHandler._ycpCallbacks.setYCPCallback( CallbackHandler::YCPCallbacks::E, A );
 
-YCPValue PkgModuleFunctions::CallbackStartProvide( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackStartProvide( const YCPString& args ) {
   return SET_YCP_CB( CB_StartProvide, args );
 }
-YCPValue PkgModuleFunctions::CallbackProgressProvide( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackProgressProvide( const YCPString& args ) {
   return SET_YCP_CB( CB_ProgressProvide, args );
 }
-YCPValue PkgModuleFunctions::CallbackDoneProvide( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackDoneProvide( const YCPString& args ) {
   return SET_YCP_CB( CB_DoneProvide, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackStartPackage( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackStartPackage( const YCPString& args ) {
   return SET_YCP_CB( CB_StartPackage, args );
 }
-YCPValue PkgModuleFunctions::CallbackProgressPackage( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackProgressPackage( const YCPString& args ) {
   return SET_YCP_CB( CB_ProgressPackage, args );
 }
-YCPValue PkgModuleFunctions::CallbackDonePackage( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackDonePackage( const YCPString& args ) {
   return SET_YCP_CB( CB_DonePackage, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackMediaChange( YCPList args ) {
-  string name;
-  // Allow omission of 'src' argument in 'src, name'. Since we can
+YCPValue PkgModuleFunctions::CallbackMediaChange( const YCPString& args ) {
+  // FIXME: Allow omission of 'src' argument in 'src, name'. Since we can
   // handle one callback function at most, passing a src argument
   // implies a per-source callback which isn't implemented anyway.
-  if ( args->size() == 1 && args->value(0)->isString() ) {
-    name = args->value(0)->asString()->value();
-  } else if ( args->size() == 2
-	      && args->value(0)->isInteger()
-	      && args->value(1)->isString() ) {
-    name = args->value(1)->asString()->value();
-  } else {
-    return YCPError( "Bad args to Pkg::CallbackMediaChange" );
-  }
-  _callbackHandler._ycpCallbacks.setCallback( CallbackHandler::YCPCallbacks::CB_MediaChange, name );
-  return YCPVoid();
+  return SET_YCP_CB( CB_MediaChange, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackProgressRebuildDB( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackProgressRebuildDB( const YCPString& args ) {
   return SET_YCP_CB( CB_ProgressRebuildDB, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackSourceChange( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackSourceChange( const YCPString& args ) {
   return SET_YCP_CB( CB_SourceChange, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackYouProgress( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackYouProgress( const YCPString& args ) {
   return SET_YCP_CB( CB_YouProgress, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackYouPatchProgress( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackYouPatchProgress( const YCPString& args ) {
   return SET_YCP_CB( CB_YouPatchProgress, args );
 }
-YCPValue PkgModuleFunctions::CallbackYouExecuteYcpScript( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackYouExecuteYcpScript( const YCPString& args ) {
   return SET_YCP_CB( CB_YouExecuteYcpScript, args );
 }
-YCPValue PkgModuleFunctions::CallbackYouScriptProgress( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackYouScriptProgress( const YCPString& args ) {
   return SET_YCP_CB( CB_YouScriptProgress, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackStartConvertDb( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackStartConvertDb( const YCPString& args ) {
   return SET_YCP_CB( CB_StartConvertDb, args );
 }
-YCPValue PkgModuleFunctions::CallbackProgressConvertDb( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackProgressConvertDb( const YCPString& args ) {
   return SET_YCP_CB( CB_ProgressConvertDb, args );
 }
-YCPValue PkgModuleFunctions::CallbackNotifyConvertDb( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackNotifyConvertDb( const YCPString& args ) {
   return SET_YCP_CB( CB_NotifyConvertDb, args );
 }
-YCPValue PkgModuleFunctions::CallbackStopConvertDb( YCPList args ) {
+YCPValue PkgModuleFunctions::CallbackStopConvertDb( const YCPString& args ) {
   return SET_YCP_CB( CB_StopConvertDb, args );
 }
 

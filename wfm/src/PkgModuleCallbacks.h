@@ -25,8 +25,6 @@
 
 #include <PkgModuleFunctions.h>
 
-class YCPInterpreter;
-
 ///////////////////////////////////////////////////////////////////
 //
 //	CLASS NAME : PkgModuleFunctions::CallbackHandler
@@ -91,7 +89,7 @@ class PkgModuleFunctions::CallbackHandler {
      * Constructor. Setup handler and redirect Y2PMCallbacks
      * to the Y2PMReceiver.
      **/
-    CallbackHandler( YCPInterpreter *& wfm_r );
+    CallbackHandler();
 
     /**
      * Destructor. Reset Y2PMCallbacks to it's defaults.
