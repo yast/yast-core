@@ -1,0 +1,32 @@
+.
+
+`ag_ini(
+  IniAgent("tests/type1.in.test",
+  $[
+    "options" : [ "global_values", ],
+    "comments": [ "^[ \t]*$" ],
+    "sections" : [
+        $[
+	"begin" : ["1[ \t]+([a-zA-Z0-9]+)[ \t]*$", "1 %s", ]
+        ],
+        $[
+	"begin" : ["2[ \t]+([a-zA-Z0-9]+)[ \t]*$", "2 %s", ]
+        ],
+        $[
+	"begin" : ["3[ \t]+([a-zA-Z0-9]+)[ \t]*$", "3 %s", ]
+        ],
+    ],
+    "params" : [
+	$[
+	"match" : [ "^V1 ([a-zA-Z0-9]+) = (.*)$", "V1 %s = %s" ],
+	],
+	$[
+	"match" : [ "^V2 ([a-zA-Z0-9]+) # (.*)$", "V2 %s # %s" ],
+	],
+	$[
+	"match" : [ "^V3 ([a-zA-Z0-9]+) % (.*)$", "V3 %s %% %s" ],
+	],
+    ],
+  ]
+  )
+)

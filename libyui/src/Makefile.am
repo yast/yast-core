@@ -1,0 +1,52 @@
+#
+# Makefile.am for libyui/src
+
+SUBDIRS = include
+
+lib_LTLIBRARIES = libyui.la
+
+libyui_la_SOURCES =				\
+	YUIInterpreter.cc			\
+	YMacroRecorder.cc			\
+	YMacroPlayer.cc				\
+	YShortcutManager.cc			\
+	YShortcut.cc				\
+	YAlignment.cc				\
+	YBarGraph.cc				\
+	YCheckBox.cc				\
+	YComboBox.cc				\
+	YColoredLabel.cc			\
+	YContainerWidget.cc			\
+	YDialog.cc				\
+	YDownloadProgress.cc			\
+	YEmpty.cc				\
+	YFrame.cc				\
+	YImage.cc				\
+	YIntField.cc				\
+	YLabel.cc				\
+	YLogView.cc				\
+	YMenuButton.cc				\
+	YMultiLineEdit.cc			\
+	YMultiSelectionBox.cc			\
+	YPartitionSplitter.cc			\
+	YProgressBar.cc				\
+	YPushButton.cc				\
+	YRadioButton.cc				\
+	YRadioButtonGroup.cc			\
+	YReplacePoint.cc			\
+	YRichText.cc				\
+	YSelectionBox.cc			\
+	YSlider.cc				\
+	YSpacing.cc				\
+	YSplit.cc				\
+	YSquash.cc				\
+	YTable.cc				\
+	YTextEntry.cc				\
+	YTree.cc				\
+	YWidget.cc
+
+INCLUDES = -I$(srcdir)/include -I$(includedir)
+
+libyui_la_LDFLAGS = -version-info 2:0
+
+CLEANFILES = libyui.kdoc

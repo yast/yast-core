@@ -1,0 +1,28 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `Label("Select your extras"),
+		     `Left(`CheckBox(`id(`cheese), "Extra Cheese")),
+		     `Left(`CheckBox(`id(`pepr),   "Pepperoni", true)),
+		     `PushButton("&OK")
+		     )
+	       );
+    UserInput();
+    boolean cheese = QueryWidget(`id(`cheese), `Value);
+    boolean pepr   = QueryWidget(`id(`pepr),   `Value);
+    CloseDialog();
+
+    define yesno(boolean b) ``{ if (b) return "yes"; else return "no"; };
+
+    OpenDialog(
+	       `VBox(
+		     `Left(`Label("Extra Cheese: " + yesno(cheese))),
+		     `Left(`Label("Pepperoni: "    + yesno(pepr))),
+		     `PushButton("&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})
+
+	       

@@ -1,0 +1,45 @@
+.
+
+`ag_anyagent (
+    Description (
+      ``(File ("tests/etc_passwd.in")),	// real file name
+      "#",			// Comment
+      true,
+      ``(List (
+	Or (
+	  Tuple (
+	  `username (String("+")),
+	  ":",
+	  `password (String ("")),
+	  ":",
+	  `uid (String ("")),
+	  ":",
+	  `gid (String ("")),
+	  ":",
+	  `fullname (String ("")),
+	  ":",
+	  `home (String ("")),
+	  ":",
+	  `shell (String (""))
+	),
+
+	Tuple (
+	  `username (Username()),
+	  ":",
+	  `password (Or (String ("^:"), "")),
+	  ":",
+	  `uid (Number ()),
+	  ":",
+	  `gid (Number ()),
+	  ":",
+	  `fullname (Or (String ("^:"), "")),
+	  ":",
+	  `home (String ("^:")),
+	  ":",
+	  `shell (String ("^\n"))
+	)),
+	"\n"
+      )
+    ))
+)
+

@@ -1,0 +1,23 @@
++Section0
+   v = xxx
+   u = zzz
+-Section0
++Section1
+  Val1 = value11
+  Val2 = value12
+  +Sub1
+    Vals1 = vals1
+    Vals2 = vals2
+  -Sub1
+  +Sub2
+    Vals3 = vals3
+    Vals4 = vals4
+  -Sub2
+  Val3 = value13
+-Section1
+
++Section2
+  Val1 = value21
+  Val2 = value22
+  Val3 = value23
+-Section2

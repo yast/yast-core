@@ -1,0 +1,10 @@
+{
+    // test of adding values, sections, subsections
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    y2error (Read (.v.Sub.Val1));
+    INI ("+Sub\nVal1=value12\n-Sub\n");
+    y2error (Read (.v.Sub.Val1));
+    Write (., "force");
+}

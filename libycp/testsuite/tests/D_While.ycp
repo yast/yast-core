@@ -1,0 +1,91 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    D_While.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+"NON-TERMINAL while"
+# NON-TERMINAL while
+#
+# parsevalue -> YCP_Block -> { statement_list } ->
+#                         -> { statement_list YCP_Statement } ->
+#                         -> { statement_list YCP_Statement YCP_Statement } ->
+#                         -> { YCP_Statement YCP_Statement YCP_Statement } ->
+#                         -> { YCP_Statement while YCP_Statement }
+#
+#        while -> WHILE ( expression ) statement_or_block
+#
+
+// test of continue within a while-loop
+{
+  integer Symbol0032 = 0;
+
+  while( Symbol0032 < 10 )
+  {
+     if( Symbol0032 == 6 ) 
+     {
+         Symbol0032 = Symbol0032 + 1;
+         continue;
+     }
+     else if( Symbol0032 == 7 ) break;
+
+     Symbol0032 = Symbol0032 + 1;
+  }
+
+  return Symbol0032 ; 
+}
+
+// break jumps up one while block
+{
+  integer Symbol0033 = 0;
+  integer Symbol0034 = 0;
+
+  while( Symbol0033 < 10 )
+  {
+     while( Symbol0034 < 10 )
+     {
+         if( Symbol0034 == 0 ) break;
+         Symbol0033 = 20 ;   // this place is never reached because of the break
+
+         Symbol0034 = Symbol0034 + 1;
+     }
+     if( Symbol0033 == 7 ) break;
+
+     Symbol0033 = Symbol0033 + 1;
+  }
+
+  return Symbol0033 ;
+}
+
+// return of the inner loop assigns a value, therefore this result gets
+// also squared !
+{
+  integer Symbol0037 = 0;
+  integer Symbol0038 = 0;
+
+  while( Symbol0037 < 10 )
+  {
+      Symbol0037 = {
+                       while( Symbol0038 < 10 )
+                       {
+                           if( Symbol0038 == 7 ) return Symbol0038 ;
+                           Symbol0038 = Symbol0038 + 1;
+                       }
+                       return Symbol0038 ;
+                   };
+
+      if( Symbol0037 == 7 ) return Symbol0037 * Symbol0037;
+
+      Symbol0037 = Symbol0037 + 1;       // to avoid infinite loops
+  }
+
+  return Symbol0037 ;
+}
+

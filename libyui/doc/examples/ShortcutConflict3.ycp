@@ -1,0 +1,26 @@
+UI(``{
+    // Demo for shortcut checking:
+    // Deliberately generate a shortcut conflict.
+
+    OpenDialog(
+	       `VBox(
+		     `RadioButtonGroup(
+				       `VBox(
+					     `Left( `RadioButton( "Instant &Play", true ) ),
+					     `Left( `RadioButton( "Demo &Only" ) )
+					     )
+				       ),
+		     `Left( `ComboBox( "Game &Type:",
+				       [ "Boring", "Full automatic", "Unplayable" ] ) ),
+		     `TextEntry( "Nickname for &Player 1:" ),
+		     `TextEntry( "Nickname for &Player 2:" ),
+		     `IntField( "Maximum &Time:", 0, 100, 20 ),
+		     
+		     `PushButton( "&OK" )
+		     )
+	       );
+
+    UserInput();
+    CloseDialog();
+})
+

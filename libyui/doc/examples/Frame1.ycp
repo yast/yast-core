@@ -1,0 +1,12 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `Frame ( "Important",
+			      `Label("Hello, World!")
+			      ),
+		     `PushButton("&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

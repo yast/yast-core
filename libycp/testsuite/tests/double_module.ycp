@@ -1,0 +1,9 @@
+{
+    module "NameOfModule";
+
+    global define f() ``{
+	module "Again";
+
+	return 0;
+    }
+}

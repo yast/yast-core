@@ -1,0 +1,5 @@
+{
+    RegisterAgent (.foo, "tests/error.scr");
+
+    return (Read (.foo));
+}

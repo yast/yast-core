@@ -1,0 +1,12 @@
+(["sec1", "sec2"])
+
+;
+; comment before 2nd instance of sec1
+;
+Section=sec1
+Value=val1=value1
+Value=val2=value3
+
+Section=sec2
+Value=val1=value21
+Value=val2=value23

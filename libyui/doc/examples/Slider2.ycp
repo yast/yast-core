@@ -1,0 +1,78 @@
+// Advanced Slider + BarGraph example:
+//
+// Display a dialog with a bar graph for RGB color percentages
+// and 3 sliders for the RGB percentage.
+// Update the bar graph while the user adjusts the RGB values.
+//
+// Unfortunately the colors don't match any more in the BarGraph widget - they
+// used to be red, blue and green. You need to use a bit of imagination
+// here. ;-)
+
+UI(``{
+    // Check for availability of required widgets
+    
+    if ( ! HasSpecialWidget(`Slider) ||
+	 ! HasSpecialWidget(`BarGraph ) )
+    {
+	OpenDialog(
+		   `VBox( 
+			 `Label("Error: This UI doesn't support the required special widgets!"),
+			 `PushButton(`opt(`default), "&OK")
+			 )
+		   );
+	UserInput();
+	CloseDialog();
+	
+	return;
+    }
+
+    
+    // Initialize RGB values
+    
+    integer red   = 128;
+    integer blue  = 128;
+    integer green = 128;
+
+
+    // Create the dialog
+    
+    OpenDialog(
+	       `VBox(
+		     `HSpacing(50),	// force width
+		     `BarGraph( `id(`graph),
+				[ red, green, blue ],
+				[ "Red\n%1", "Green\n%1", "Blue\n%1" ] ),
+		     `Slider( `id(`red),   `opt(`notify), "Red",   0, 255, red   ),
+		     `Slider( `id(`green), `opt(`notify), "Green", 0, 255, green ),
+		     `Slider( `id(`blue),  `opt(`notify), "Blue",  0, 255, blue  ),
+		     `PushButton(`id(`close), `opt(`default), "&Close")
+		     )
+	       );
+
+    
+    // Event processing loop - left only via the "close" button
+    // or the window manager close button / function.
+    do
+    {
+	any widget = UserInput();
+
+	if ( widget == `red   ||	// any of the sliders?
+	     widget == `blue  ||
+	     widget == `green   )
+	{
+	    // Get all slider values
+	    
+	    red   = QueryWidget(`id(`red),   `Value );
+	    green = QueryWidget(`id(`green), `Value );
+	    blue  = QueryWidget(`id(`blue),  `Value );
+
+	    
+	    // Update bar graph
+	    
+	    ChangeWidget(`id(`graph), `Values, [ red, green, blue ] );
+	}
+    } while ( widget != `close &&	// the real "Close" button
+	      widget != `cancel );	// the window manager close function/button
+	
+    CloseDialog();
+})

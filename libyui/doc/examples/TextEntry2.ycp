@@ -1,0 +1,34 @@
+UI(``{
+    // Build dialog with one text entry field and an OK button.
+    OpenDialog(
+	       `VBox( 
+		     `TextEntry(`id(`name), "Name:"),
+		     `PushButton("&OK")
+		     )
+	       );
+
+    // Wait for user input.
+    UserInput();
+
+    // Get the input from the text entry field.
+    //
+    // Notice: The return value of UserInput() does NOT return this value!
+    // Rather, it returns the ID of the widget (normally the PushButton)
+    // that caused UserInput() to return.
+    string name=QueryWidget(`id(`name), `Value);
+    
+    // Close the dialog.
+    // Remember to read values from the dialog's widgets BEFORE closing it!
+    CloseDialog();
+
+    // Pop up a new dialog to echo the input.
+    OpenDialog(
+	       `VBox(
+		     `Label("You entered:"),
+		     `Label(name),
+		     `PushButton("&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

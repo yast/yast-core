@@ -1,0 +1,253 @@
+#!/usr/bin/perl -w
+#
+# $Id$
+#
+# Test suite for ycp.pm
+# Author: Martin Vidner <mvidner@suse.cz>
+#
+use lib ".";
+use ycp;
+use strict;
+
+my $verbose = defined $ARGV[0] && $ARGV[0] =~ /-v|--verbose/;
+my $failures = 0;
+
+# Parse and Result use:
+# eval { Result (Parse ('"Foo"') eq "Foo"); };
+sub Parse ($)
+{
+    my $input = shift;
+    print "\t'$input': " if $verbose;
+    my ($result, $error, undef) = ycp::ParseYcp ($input);
+    if ($error)
+    {
+	print "FAIL, parse error: $error\n" if $verbose;
+	++$failures;
+	die;
+    }
+    return $result;
+}
+
+sub Result ($)
+{
+    if (shift)
+    {
+	print "PASS\n" if $verbose;
+    }
+    else
+    {
+	print "FAIL\n" if $verbose;
+	++$failures;
+    }
+}
+
+my @string_test =
+    (
+     [ '"a boring string", more_ycp', 'a boring string' ],
+     # all characters 33-127 except backslash and quote.
+     [ '"\'!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"',
+	'\'!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~' ],
+     [ "\"newline\nin a string\"", "newline\nin a string" ],
+     [ '"\n\t\r\f\b\\\\"', "\n\t\r\f\b\\" ],
+     [ '"octal \012,\101,\1411"', "octal \n,A,a1" ],
+     [ '""', ''],
+     );
+
+# return true on sucess
+sub TestStrings ()
+{
+    print "TestStrings\n";
+    eval {
+	foreach my $case (@string_test)
+	{
+	    Result (Parse ($case->[0]) eq $case->[1]);
+	}
+    };
+}
+
+# empty
+my @list_test1 = ('[]', '[   ]');
+my @list_test2 =
+    (
+     # simple
+     '["foo",true,42]',
+     # with whitespace
+     '[ "foo" , true , 42 ]',
+     # trailing comma
+     '["foo",true,42,]',
+     # with whitespace
+     '[ "foo" , true , 42 , ]',
+     );
+
+
+sub TestLists ()
+{
+    print "TestLists\n";
+
+    eval {
+	foreach my $input (@list_test1)
+	{
+	    my $result = Parse ($input);
+	    Result (ref ($result) eq "ARRAY" && @$result == 0);
+	}
+
+	foreach my $input (@list_test2)
+	{
+	    my $result = Parse ($input);
+	    Result (ref ($result) eq "ARRAY" &&
+		    $result->[0] eq "foo" &&
+		    $result->[1] &&
+		    $result->[2] == 42);
+	}
+    };
+}
+
+# empty
+my @map_test1 = ('$[]', '$[   ]');
+my @map_test2 =
+    (
+     # simple
+     '$["foo":true,"bar":42,"baz":"qux"]',
+     # with whitespace
+     '$[ "foo" : true , "bar" : 42 , "baz" : "qux" ]',
+     # trailing comma
+     '$["foo":true,"bar":42,"baz":"qux",]',
+     # with whitespace
+     '$[ "foo" : true , "bar" : 42 , "baz" : "qux" , ]',
+     );
+
+
+sub TestMaps ()
+{
+    print "TestMaps\n";
+
+    eval {
+	foreach my $input (@map_test1)
+	{
+	    my $result = Parse ($input);
+	    Result (ref ($result) eq "HASH" && not %$result);
+	}
+
+	foreach my $input (@map_test2)
+	{
+	    my $result = Parse ($input);
+	    Result (ref ($result) eq "HASH" &&
+		    keys (%$result) == 3 &&
+		    $result->{"foo"} &&
+		    $result->{"bar"} == 42 &&
+		    $result->{"baz"} eq "qux");
+	}
+    };
+}
+
+sub TestMisc ()
+{
+    print "TestMisc\n";
+
+    eval {
+	Result (! defined (Parse ('nil')));
+	Result (! Parse ('false'));
+	Result (Parse ('true'));
+	Result (42 == Parse ('42'));
+	Result (-42 == Parse ('-42'));
+	Result (127 == Parse ('0177'));
+	# expected failures: hex numbers, float numbers
+	my $path = ".a-path.that_rules";
+	my $p = Parse ($path);
+	Result (ref($p) eq "SCALAR" && $$p eq $path);
+    };
+}
+
+# here we test just the structure, assuming the individual components ar OK
+sub TestComplex ()
+{
+    print "TestComplex\n";
+
+    eval {
+	my $r = Parse (' [ nil, $[1:2,3:4], [5,], .path ], etc ');
+	Result (
+		ref ($r) eq "ARRAY" && @$r == 4 &&
+		ref ($r->[1]) eq "HASH" &&
+		ref ($r->[2]) eq "ARRAY" &&
+		ref ($r->[3]) eq "SCALAR"
+		);
+    };
+}
+
+sub TestCommand ()
+{
+    print "TestCommand\n";
+
+    {
+	my $input = ' Foo ( nil, 2, "three") ';
+	print "\t'$input': " if $verbose;
+	my @r = ycp::ParseTerm ($input);
+	Result (
+		@r == 4 &&
+		$r[0] eq "Foo" &&
+		! defined ($r[1]) &&
+		$r[2] == 2 &&
+		$r[3] eq "three"
+		);
+    }
+
+    {
+	my $input = 'DoIt (.whatever)';
+	print "\t'$input': " if $verbose;
+	my ($c, $p, $a) = ycp::ParseCommand ($input);
+	Result ($c eq "DoIt" && $p eq ".whatever" && !defined ($a));
+    }
+
+    {
+	my $input = 'DontDoIt (.anything, "anytime")';
+	print "\t'$input': " if $verbose;
+	my ($c, $p, $a) = ycp::ParseCommand ($input);
+	Result ($c eq "DontDoIt" && $p eq ".anything" && $a eq "anytime");
+    }
+
+    {
+	my $input = 'result (nil)';
+	print "\t'$input': " if $verbose;
+	my ($c, $p, $a) = ycp::ParseCommand ($input);
+	Result ($c eq "result");
+    }
+}
+
+my @output_string =
+    (
+     [ "", '""' ],
+     [ "Foo", '"Foo"' ],
+     [ "new\nline", "\"new\nline\"" ],
+     [ "tab\there", '"tab\011here"' ],
+     [ "a backslash \\ and two \" quotes \".", '"a backslash \\\\ and two \\" quotes \\"."' ],
+     [ "a trailing backslash\\", '"a trailing backslash\\\\"' ],
+     );
+
+sub TestOutput ()
+{
+    print "TestOutput\n";
+
+    for my $case (@output_string)
+    {
+	my $output = $case->[1];
+	print "\t'$output': " if $verbose;
+	Result ($output eq ycp::WriteYcpString ($case->[0]));
+    }
+}
+
+# main
+TestStrings ();
+TestLists ();
+TestMaps ();
+TestMisc ();
+TestComplex ();
+TestCommand ();
+
+TestOutput ();
+# TODO: test Return (it writes to stdout)
+
+if ($failures)
+{
+    print "Run $0 with --verbose to see what failed.\n" if !$verbose;
+    exit 1;
+}

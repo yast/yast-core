@@ -1,0 +1,13 @@
+{
+    // deleting of values
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    Write (.v.Section1.Sub1.Vals1, nil);
+    Write (.s.Section1.Sub2, nil);
+    Write (.s.Section2, nil);
+    Write (.s.Section0, nil);
+
+    Write (., "force");
+
+}

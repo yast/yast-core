@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<TITLE>Dataflow in WFM</TITLE>
+</HEAD>
+<BODY>
+<H1>Dataflow in WFM</H1>
+<H2>How UI() finds it's way and back</H2>
+
+<OL>
+<LI>WFMInterpreter::evaluateInstantiatedTerm<BR>
+checks for "UI" -> evaluateUI()</LI>
+<LI>WFMInterpreter::evaluateUI<BR>
+sends YCPB_FULLNAME to UI, then the term -> sendUnquoted()</LI>
+<LI>WFMInterpreter::sendUnquoted<BR>
+check if arguments need to be unquoted -> server->evaluate()<BR>
+server is the 'Y2Component *user_interface' as passed to the
+WFMInterpreter constructor</LI>
+<LI>server->evaluate() == component->evaluate()<BR>
+The liby2 component broker and creator ensure proper setup of the
+user_interface pointer. It points to the (in this case client) side
+of the UI server component. For plugin component, this goes directly
+to the server side (e.g. Y2PluginComponent::evaluate() calls comp->evaluate ()
+which equals Y2QtComponent::evaluate()).<BR>
+For serial components, this is handled by
+sendTo() and reveiceFrom().</LI>
+</OL>
+
+
+<BR>
+<P>&nbsp;</P>
+<H2>WFM Initialization</H2>
+
+<UL>
+<LI>liby2: Y2ScriptComponent.cc<BR>
+loads and initializes the WFM by Y2ComponentBroker::createClient("wfm")<BR>
+see Y2ScriptComponent::doActualWork</LI>
+<LI>liby2: Y2ComponentBroker.cc<BR>
+Y2ComponentBroker::createClient == createComponent (name, true)</LI>
+<LI>liby2: Y2ComponentBroker::createComponent<BR>
+this searches through all orders and levels for a matching server</LI>
+<LI>liby2: Y2XXXComponent.cc<BR>
+XXX is one of Plugin,Program,Remote,Script,Serial, or Stdio<BR>
+createComponent only loads the component and initializes the component
+class (interface), not the component 'core' itself. E.g. for the WFM case,
+Y2WFMComponent::doActualWork() initializes the WFMInterpreter.</LI>
+</UL>
+</BODY>
+</HTML>
+

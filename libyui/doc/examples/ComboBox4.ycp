@@ -1,0 +1,46 @@
+UI(``{
+    // Create an editable combo box with restricted input character set.
+    OpenDialog(
+	       `VBox(
+		     `ComboBox(`id(`addr), `opt(`editable),
+				    "Enter hex address:",
+				    [
+				     "0cff",
+				     "8080",
+				     "D0C0",
+				     "ffff"
+				    ] ),
+		     `PushButton("&OK")
+		     )
+	       );
+    // Set the valid input characters.
+    ChangeWidget(`id(`addr), `ValidChars, "0123456789abcdefABCDEF" );
+
+    
+    // Wait for user input.
+    UserInput();
+
+
+    // Get the input from the selection box.
+    //
+    // Notice: The return value of UserInput() does NOT return this value!
+    // Rather, it returns the ID of the widget (normally the PushButton)
+    // that caused UserInput() to return.
+    any val=QueryWidget(`id(`addr), `Value);
+    
+    // Close the dialog.
+    // Remember to read values from the dialog's widgets BEFORE closing it!
+    CloseDialog();
+
+    
+    // Pop up a new dialog to echo the input.
+    OpenDialog(
+	       `VBox(
+		     `Label("You entered:"),
+		     `Label(val),
+		     `PushButton("&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

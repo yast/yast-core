@@ -1,0 +1,338 @@
+-------------------------------------------------------------------
+Wed Jun 12 16:56:23 CEST 2002 - arvin@suse.de
+
+- removed calls to .probe.bybus and .probe.byclass
+
+-------------------------------------------------------------------
+Mon May  6 15:05:28 CEST 2002 - msvec@suse.cz
+
+- add "model" field (partially fixes #15359)
+- unify netdev with hwinfo (netcard)
+- 2.6.2
+
+-------------------------------------------------------------------
+Thu Apr 25 17:42:58 CEST 2002 - arvin@suse.de
+
+- fixed libdir on x86-64
+
+-------------------------------------------------------------------
+Tue Mar 26 17:39:47 CET 2002 - kkaempf@suse.de
+
+- add all supported hw_xxx calls.
+
+-------------------------------------------------------------------
+Mon Mar 25 15:49:10 CET 2002 - kkaempf@suse.de
+
+- support hw_usb and hw_usb_ctrl from libhd (#15483).
+- adapt testsuite.
+
+-------------------------------------------------------------------
+Fri Mar 22 17:22:36 CET 2002 - kkaempf@suse.de
+
+- devices probed by yast2 are never "new" and therefore will never
+  trigger the hwkicker applet (#15102).
+
+-------------------------------------------------------------------
+Wed Mar 20 10:44:41 CET 2002 - kkaempf@suse.de
+
+- create lock file to prevent hw-scan while running (#15217).
+
+-------------------------------------------------------------------
+Tue Mar 19 18:20:48 CET 2002 - kkaempf@suse.de
+
+- add "fbdev" in order to get full framebuffer info (#15195).
+
+-------------------------------------------------------------------
+Tue Mar 19 16:56:04 CET 2002 - kkaempf@suse.de
+
+- only provide own .scr file(s) (#14530).
+
+-------------------------------------------------------------------
+Fri Mar 15 12:12:37 CET 2002 - kkaempf@suse.de
+
+- adapt testsuite to added probing flags.
+
+-------------------------------------------------------------------
+Thu Mar 14 12:07:49 CET 2002 - kkaempf@suse.de
+
+- support hw_hub, hw_scsi, hw_ide, hw_memory probing flags from libhd.
+
+-------------------------------------------------------------------
+Wed Mar  6 15:54:01 CET 2002 - kkaempf@suse.de
+
+- allow path suffix ".manual" to force libhd to return the saved
+  configuration data instead of doing a 'real' probe.
+
+-------------------------------------------------------------------
+Mon Feb 18 16:52:22 CET 2002 - kkeil@suse.de
+
+- new field for driver name in ISDN driver struct
+
+-------------------------------------------------------------------
+Mon Feb 11 17:52:22 CET 2002 - kkaempf@suse.de
+
+- all ihw_* functions are hd_ihw_* now.
+
+-------------------------------------------------------------------
+Mon Feb 11 15:54:15 CET 2002 - arvin@suse.de
+
+- renamed some functions to avoid conflict with libhd
+
+-------------------------------------------------------------------
+Fri Feb  8 15:05:21 CET 2002 - kkaempf@suse.de
+
+- report non-existing key in .probe.status as `unknown.
+
+-------------------------------------------------------------------
+Tue Feb  5 10:48:30 CET 2002 - kkaempf@suse.de
+
+- Implement access path to .probe.status.info to save
+  a string along with the configuration status.
+
+-------------------------------------------------------------------
+Mon Feb  4 16:19:10 CET 2002 - kkaempf@suse.de
+
+- Implement access paths to .probe.status.configured,
+  .probe.status.available, and .probe.status.needed.
+
+-------------------------------------------------------------------
+Mon Feb  4 14:15:17 CET 2002 - kkaempf@suse.de
+
+- add configuration status handling from libhd.
+- new pathes Read(.probe.status, ...), Write(.probe.status, ...)
+
+-------------------------------------------------------------------
+Fri Jan 25 14:47:37 CET 2002 - kkaempf@suse.de
+
+- report "model" for ppc64 also (#12115).
+
+-------------------------------------------------------------------
+Mon Jan 14 13:11:07 CET 2002 - kkaempf@suse.de
+
+- .probe.usb now reports all usb controllers.
+
+-------------------------------------------------------------------
+Wed Jan  9 16:24:51 CET 2002 - kkaempf@suse.de
+
+- pass driver info from libhd.
+- add "mips" and "arm" as recognized architectures
+- use "alpha" instead of "axp"
+- recognize bootloaders for s390 and mips
+
+-------------------------------------------------------------------
+Tue Dec 04 15:33:56 CET 2001 - arvin@suse.de
+
+- added tiny testsuite
+
+-------------------------------------------------------------------
+Sat Nov 17 21:24:10 CET 2001 - arvin@suse.de
+
+- use template classes Y2AgentComponent and Y2CCAgentComponent
+
+-------------------------------------------------------------------
+Tue Nov 06 12:00:30 CET 2001 - arvin@suse.de
+
+- fixed for automake 1.5
+
+-------------------------------------------------------------------
+Thu Sep 20 15:52:40 CEST 2001 - kkaempf@suse.de
+
+- add "old_unique_id" if different from "unique_id", needed
+  to recognize configured devices after update (10931, 10941).
+- add bus, slot, and function ids to PCI device, needed by vmware
+  X11 setup.
+
+-------------------------------------------------------------------
+Thu Aug 16 12:22:30 CEST 2001 - kkaempf@suse.de
+
+- recognize ppc64, s390_32, and s390_64.
+
+-------------------------------------------------------------------
+Wed Aug  8 11:37:43 CEST 2001 - kkaempf@suse.de
+
+- keep module information in list, not map
+
+-------------------------------------------------------------------
+Fri Jul 27 19:50:35 CEST 2001 - kkaempf@suse.de
+
+- add .framebuffer, .camera, .chipcard, and .joystick paths
+
+-------------------------------------------------------------------
+Fri Jul 27 13:35:56 CEST 2001 - kkaempf@suse.de
+
+- check all string pointers coming from libhd
+
+-------------------------------------------------------------------
+Tue Jul 24 11:26:48 CEST 2001 - kkaempf@suse.de
+
+- adaption to libhd 3.0
+  each device might have several modules now, changed "module" key
+  to "drivers" key to reflect this change.
+
+-------------------------------------------------------------------
+Fri Jun 22 11:42:35 CEST 2001 - kkaempf@suse.de
+
+- fix for new autoconf/automake
+- version 2.4.0
+
+-------------------------------------------------------------------
+Thu May 31 11:23:30 CEST 2001 - schwab@suse.de
+
+- Include revision in .probe.cpu for ia64.
+
+-------------------------------------------------------------------
+Wed May 16 12:30:37 CEST 2001 - kkaempf@suse.de
+
+- dont pass interlaced monitor resolutions (#8460)
+
+-------------------------------------------------------------------
+Thu May 10 11:12:21 CEST 2001 - schwab@suse.de
+
+- Remove unneeded configure check for X.
+
+-------------------------------------------------------------------
+Tue May  8 17:57:43 CEST 2001 - kkaempf@suse.de
+
+- recognize if removable device has medium inserted (e.g. MO drives)
+
+-------------------------------------------------------------------
+Wed Apr 25 17:31:00 CEST 2001 - schwab@suse.de
+
+- Recognize boot_elilo.
+
+-------------------------------------------------------------------
+Wed Apr 18 15:54:17 CEST 2001 - kkaempf@suse.de
+
+- recognize wheel mice
+
+-------------------------------------------------------------------
+Wed Apr 11 11:00:56 CEST 2001 - kkaempf@suse.de
+
+- disable "baseclass", "subclass", and "attached_to" information
+
+-------------------------------------------------------------------
+Mon Apr  9 10:59:26 CEST 2001 - kkaempf@suse.de
+
+- report "cardtype" for "AGP", "PnP", "cardbus", and "pcmcia"
+
+-------------------------------------------------------------------
+Thu Mar 29 08:40:51 CEST 2001 - kkaempf@suse.de
+
+- dont install lib, only plugin is needed
+
+-------------------------------------------------------------------
+Fri Mar 23 11:35:36 CET 2001 - arvin@suse.de
+
+- moved documentation to packages/yast2-agent-probe
+
+-------------------------------------------------------------------
+Mon Mar  5 17:10:29 CET 2001 - kkaempf@suse.de
+
+- package rename y2a_hwpb -> yast2-agent-probe
+
+-------------------------------------------------------------------
+Sat Jan 27 18:39:37 CET 2001 - arvin@suse.de
+
+- package split y2a_hwpb / y2a_hwpb-devel
+
+-------------------------------------------------------------------
+Thu Jan 11 13:56:36 CET 2001 - arvin@suse.de
+
+- changed name of new pppd option (also bug #5448)
+
+-------------------------------------------------------------------
+Wed Jan 10 17:18:26 CET 2001 - kkaempf@suse.de
+
+- add pppd options (bug 5448)
+
+-------------------------------------------------------------------
+Fri Dec 29 13:01:06 CET 2000 - smid@suse.cz
+
+- added support for modem init strings
+- 'pr_misc_par' feature, not 'pr_parallel'... (kendy@suse.cz)
+
+-------------------------------------------------------------------
+Mon Dec 18 12:37:05 CET 2000 - kkaempf@suse.de
+
+- recognize "ia64" as architecture
+
+-------------------------------------------------------------------
+Wed Dec 13 16:29:29 CET 2000 - arvin@suse.de
+
+- added hwinfo to neededforbuild, so we link against shared libhd
+
+-------------------------------------------------------------------
+Tue Dec 12 17:49:39 CET 2000 - kkaempf@suse.de
+
+- report lba_support from probe.bios
+
+-------------------------------------------------------------------
+Tue Dec 12 11:08:06 PST 2000 - arvin@suse.de
+
+- enabled call to libhd destructor again
+
+-------------------------------------------------------------------
+Sun Dec 10 14:41:38 CET 2000 - kkaempf@suse.de
+
+- convert to new logging format
+
+-------------------------------------------------------------------
+Sat Dec  9 17:08:27 CET 2000 - kkaempf@suse.de
+
+- recognize DVD, CD/RW etc. properly
+
+-------------------------------------------------------------------
+Sat Dec  9 15:07:51 CET 2000 - kkaempf@suse.de
+
+- dont call libhd destructor
+
+-------------------------------------------------------------------
+Thu Dec  7 21:53:36 CET 2000 - kkaempf@suse.de
+
+- decrease size of default output to save memory
+
+-------------------------------------------------------------------
+Thu Dec  7 16:35:06 CET 2000 - kkaempf@suse.de
+
+- pass "script3d" from hwinfo-devel > 1.55
+
+-------------------------------------------------------------------
+Wed Dec  6 11:08:55 CET 2000 - kkaempf@suse.de
+
+- package rename libhddev -> hwinfo-devel
+
+-------------------------------------------------------------------
+Mon Dec  4 16:46:26 CET 2000 - kkaempf@suse.de
+
+- dont check for EIDE special any more, its in k_deflt now
+
+-------------------------------------------------------------------
+Thu Nov 16 16:43:06 CET 2000 - kkaempf@suse.de
+
+- split library and plugin
+
+-------------------------------------------------------------------
+Wed Nov  8 17:25:04 CET 2000 - kkaempf@suse.de
+
+- static plugin only
+
+-------------------------------------------------------------------
+Thu Oct 26 15:47:47 CEST 2000 - kkaempf@suse.de
+
+- add programming interface for each device (device dependant value)
+
+-------------------------------------------------------------------
+Thu Oct 26 13:24:56 CEST 2000 - kkaempf@suse.de
+
+- add s390 architecture
+
+-------------------------------------------------------------------
+Wed Oct 25 18:10:47 CEST 2000 - kkaempf@suse.de
+
+- Group set
+
+-------------------------------------------------------------------
+Fri Sep 29 13:52:59 CEST 2000 - kkaempf@suse.de
+
+- initial version, split off from y2scr 2.1.1
+

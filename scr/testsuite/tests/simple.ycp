@@ -1,0 +1,7 @@
+{
+    RegisterAgent (., "tests/simple.scr");
+    
+    any tmp = Read (.a);
+    
+    return tmp;
+}

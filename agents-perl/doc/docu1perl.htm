@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+docu2
+
+<b>Write a Perl script as SCR agent:</b>
+<hr  color="red" align="left" size="1"></hr><br>
+
+First let us have a look at a complete perl agent script. <br>
+In the next steps, we will walk line by line through this script.
+<p>The script gets as argument a list of server,<br>
+and returns their reachability, which is checked via <em>ping</em>
+<br>
+<br>
+<table cellpadding=10 cellspacing=10 width=95% >
+<tr>
+<td bgcolor=#dddddd >
+<pre ><font  face="Courier" color="Black">#!/usr/bin/perl
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+use Net::Ping;
+use diagnostics;
+use strict;
+
+my $result;
+
+while ( &lt;STDIN&gt; ) 
+{
+   ycpInit( $_ );
+
+   #  Check the Command 
+   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]); 
+
+   if ( ycpCommandIsExecute &&  ycpArgIsList )
+   {
+       y2debug( "Now we check with ping the hosts:", ycpGetArgList );
+
+       
+       ##########################################
+       #           OUR PERL MAIN
+
+       # get the list of hosts
+       my    @host_array    =  ycpGetArgList;
+
+       my    %result;
+       my    $host;
+
+       # send a ping to all hosts
+       my $p = Net::Ping->new("icmp");
+       foreach $host (@host_array)
+       {
+	   if ( $p->ping($host, 1) )
+	   {
+	       $result{$host} = "    alive";
+	   }
+           else
+	   {         
+	       $result{$host} = "NOT alive";
+	   }
+       }
+       $p->close();
+
+       # for debug purpose: print a result list to /var/log/y2log 
+       while (( $host, my $alive) = each(%result))
+       {
+	  y2debug( $alive, ": Host", $host);       
+       }
+
+       #        END of PERL MAIN
+       ##########################################
+
+       ycpReturnHashAsMap( %result );
+   }
+   else
+   {
+       my $return_value = sprintf( "Unknown instruction %s or argument: %s", 
+                                    ycpGetCommand, ycpGetArgType);
+       ycpReturnSkalarAsString( $return_value );   
+   }
+}
+</font></pre>
+</td>
+</tr>
+</table>
+
+Now we go into the details ...
+<br>
+
+
+<div align="center"><a href="docu0perl.htm" ><b><font color="Red"><< Previous</font></b></a>&nbsp;&nbsp;<a href="docu2perl.htm" ><b><font color="Red">Next >></font></b></a></div>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+0000-001f : dma1
+0020-003f : pic1
+0040-005f : timer
+0060-006f : keyboard
+0080-008f : dma page reg
+00a0-00bf : pic2
+00c0-00df : dma2
+00f0-00ff : fpu
+03c0-03df : vga+
+b800-b87f : eth0
+d000-d0be : aic7xxx

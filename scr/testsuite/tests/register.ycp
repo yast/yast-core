@@ -1,0 +1,17 @@
+{
+    list ret = [];
+    
+    RegisterAgent (.foo, "tests/haha.scr");
+    
+    ret = add (ret, Read (.foo.a));
+    
+    UnregisterAgent (.foo);
+    
+    ret = add (ret, Read (.foo.a));
+    
+    RegisterAgent (.foo, "tests/hihi.scr");
+    
+    ret = add (ret, Read (.foo.a));
+    
+    return ret;
+}

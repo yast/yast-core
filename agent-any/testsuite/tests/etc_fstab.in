@@ -1,0 +1,16 @@
+/dev/sda2       swap                      swap            defaults   0   0
+/dev/sda1       /                         ext2            defaults   1   1
+/dev/sda3       /usr                      reiserfs        defaults   1   2
+
+/dev/scd0       /cdrom                    iso9660         ro,noauto,user 0   0
+
+/dev/fd0        /floppy                   auto            noauto,user 0   0
+wotan:/real-home        /home/dhs                 nfs     rw,hard,bg,intr,rsize=8192,wsize=8192
+
+galois:/real-home	/home/alex	nfs	rw,hard,bg,intr,rsize=8192,wsize=8192
+euklid:/mirror		/mirror		nfs	rw,intr,noauto,user,exec,rsize=8192,wsize=819:
+#hilbert2:/work2		/work		nfs	defaults 0 0
+schnell:/cdrom		/schnell	nfs	rw,intr,noauto,user,exec,rsize=8192,wsize=819:
+none            /proc                     proc            defaults   0   0
+# End of YaST-generated fstab lines
+

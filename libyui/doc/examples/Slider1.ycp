@@ -1,0 +1,24 @@
+UI(``{
+    if ( ! HasSpecialWidget(`Slider) )
+    {
+	OpenDialog(
+		   `VBox( 
+			 `Label("Error: This UI doesn't support the Slider widget!"),
+			 `PushButton(`opt(`default), "&OK")
+			 )
+		   );
+	UserInput();
+	CloseDialog();
+	
+	return;
+    }
+    
+    OpenDialog(
+	       `VBox(
+		     `Slider( "Percentage", 0, 100, 50),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

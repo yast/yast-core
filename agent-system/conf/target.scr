@@ -1,0 +1,53 @@
+/**
+ * File:
+ *   target.scr
+ * Summary:
+ *   SCR Agent for interfacing with (shell) commands of the target system
+ *   and reading/writing files.
+ * Access:
+ *   read/write/execute
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ *   man bash
+ *   source/y2a_system/doc/systemagent.txt
+ * Example:
+ *   Execute (.target.bash, "uname -a")
+ *   (0)
+ **
+ *   Execute (.target.bash_output, "uname -a")
+ *   (
+ *     $[
+ *       "exit":0,
+ *       "stderr":"",
+ *       "stdout":"Linux steiner 2.2.18 #1 Fri Jan 19 22:10:35 GMT 2001 i686 unknown\n"
+ *     ]
+ *   )
+ **
+ *   Read(.target.dir, "/")
+ *   (["usr", "tmp", "floppy", "var", "root", "opt", "home", "etc", ...])
+ **
+ *   Write(.target.string, "/tmp/target.1", "Some Test\n")
+ *   (true)
+ **
+ *   Read(.target.string, "/tmp/target.1")
+ *   ("Some Test\n")
+ *
+ * $Id$
+ *
+ * <p>The target-agent is used for various actions on the target system.</p>
+ *
+ * <p>The Execute Interface can be used to execute some predefined commands
+ * like mount, umount, mkdir, remove, modprobe ... or arbitrary commands
+ * using the bash, bash_output or bash_background.</p>
+ *
+ * <p>The Read and Write interface can be used to access the target
+ * filesystem, most prominent reading or writing whole files using the
+ * "string" subpath.</p>
+ *
+ * <p>For more information see the agent's own documentation.</p>
+ */
+.target
+
+`ag_system ()

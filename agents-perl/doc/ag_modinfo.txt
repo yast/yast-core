@@ -1,0 +1,24 @@
+Agent for accessing modinfo of kernel modules (ag_modinfo)
+==========================================================
+
+Author: Jan Holesovsky <kendy@suse.cz>
+~~~~~~~
+
+Description:
+~~~~~~~~~~~~
+This agent accesses /lib/modules/`uname -r`/...
+Returns either a list of the available kernel modules or information
+about particular kernel module.
+
+Interface:
+~~~~~~~~~~
+Dir(.modinfo.kernel.drivers.media.video)
+-> returns a list of kernel modules in
+   /lib/modules/`uname -r`/kernel/drivers/media/video
+
+Read(.modinfo.kernel.drivers.media.video.bttv)
+-> returns a map with the parameters of module
+   /lib/modules/`uname -r`/kernel/drivers/media/video/bttv.o
+   
+   Author, description and filename are stored using special keys
+   "module_author", "module_description", "module_filename"

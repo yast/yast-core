@@ -1,0 +1,21 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `PushButton("This is a very long button - it reserves extra space for the label."),
+		     `HBox(
+			   `PushButton(`opt(`hstretch), "Stretchable button"),
+			   `ReplacePoint(`id(`rp), `Label("Label"))
+			   )
+		     )
+	       );
+    UserInput();
+    
+    ReplaceWidget(`id(`rp), `Left(`Label("Left")));
+    UserInput();
+    
+    ReplaceWidget(`id(`rp), `Right(`Label("Right")));
+    UserInput();
+    
+    ReplaceWidget(`id(`rp), `HCenter(`Label("HCenter")));
+    UserInput();
+})

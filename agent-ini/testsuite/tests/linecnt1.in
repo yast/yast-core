@@ -1,0 +1,8 @@
+;
+; line can continue test
+;
+[Section]
+Value=value value \
+that continues on the\
+ next line
+

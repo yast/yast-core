@@ -1,0 +1,8 @@
+[yast2-agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s.new
+[YCP] multi/ro.ycp:XXX ["multi/ro.in.1.test", "multi/ro.in.2.test", "multi/ro.in.3.test", "multi/ro.in.4.test", "new"]
+[YCP] multi/ro.ycp:XXX multi/ro.in.1.test: ["iqnet_praha", "fortech_litomysl", "apexnet_plzen"]
+[YCP] multi/ro.ycp:XXX multi/ro.in.2.test: ["arcor", "mobilcom"]
+[YCP] multi/ro.ycp:XXX multi/ro.in.3.test: ["Totalise", "force9"]
+[YCP] multi/ro.ycp:XXX multi/ro.in.4.test: ["m3_company", "juno_online_services_inc_", "earthlink_network"]
+[YCP] multi/ro.ycp:XXX new: []
+[yast2-agent-ini] IniParser.cc(write):XXX Attempt to write file multi/ro.in.*.test that was mounted read-only. Not saving.

@@ -1,0 +1,5 @@
+#
+# Makefile.am for libycp/testsuite/libycp.test
+#
+
+EXTRA_DIST = ycp.exp

@@ -1,0 +1,37 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    D_VarDeclaration.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+"NON-TERMINAL var_declaration"
+# NON-TERMINAL var_declaration
+#
+# parsevalue -> YCP_Block -> { statement_list } ->
+#                         -> { YCP_Statement } ->
+#                         -> { var_declaration ; }
+#
+#        var_declaration -> nb_expression YCP_Symbol ASSIGN expression
+#
+#        nb_expression -> compact_value ->
+#                      -> YCP_Declaration ->
+#                      -> YCP_DECLTYPE
+#
+{ any	Symbol = nil; return Symbol; }
+{ void    Symbol0018 = nil ; }
+{ boolean Symbol0019 = false ; }
+{ boolean Symbol0020 = ( ( true != false ) || ( true && false ) ) ; }
+{ integer Symbol0021 = (-5); }
+{ integer Symbol0022 = ( ( (-5) * 1700 ) % 100 ) / 5 - 16; }
+{ float   Symbol0023 = 4.25 * 0.4e2 - 150.00 ; }
+{ string  Symbol0024 = "Current path: " + .current.path ; }
+# time not tested
+{ symbol  Symbol0025 = `Literally_taken_symbol ; }
+

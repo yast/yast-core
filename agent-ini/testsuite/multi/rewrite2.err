@@ -1,0 +1,46 @@
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX ["1.test", "2.test", "3.test", "4.test"]
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX 1.test: ["iqnet_praha", "fortech_litomysl", "apexnet_plzen"]
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX 2.test: ["arcor", "mobilcom"]
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX 3.test: ["Totalise", "force9"]
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX 4.test: ["m3_company", "juno_online_services_inc_", "earthlink_network"]
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[YCP] multi/rewrite2.ycp:XXX ["sun_litomysl"]
+[yast2-agent-ini] IniFile.cc(setValue):XXX Adding value .v."1.test"."iqnet_praha"."Brand_new" = "New value"
+[yast2-agent-ini] IniFile.cc(setValue):XXX Adding value .v."2.test"."arcor"."Brand_new" = "New value"
+[yast2-agent-ini] IniFile.cc(setValue):XXX Adding value .v."3.test"."Totalise"."Brand_new" = "New value"
+[yast2-agent-ini] IniFile.cc(setValue):XXX Adding value .v."4.test"."juno_online_services_inc_"."Brand_new" = "New value"
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.1.test to 1.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.2.test to 2.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.3.test to 3.test
+[yast2-agent-ini] IniParser.cc(parse):XXX Rewriting multi/rewrite2.in.4.test to 4.test
+[yast2-agent-ini] IniParser.cc(getFileName):XXX Rewriting 1.test to multi/rewrite2.in.1.test
+[yast2-agent-ini] IniParser.cc(getFileName):XXX Rewriting 2.test to multi/rewrite2.in.2.test
+[yast2-agent-ini] IniParser.cc(getFileName):XXX Rewriting 3.test to multi/rewrite2.in.3.test
+[yast2-agent-ini] IniParser.cc(getFileName):XXX Rewriting 4.test to multi/rewrite2.in.4.test

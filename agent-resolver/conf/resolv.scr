@@ -1,0 +1,44 @@
+/**
+ * File:
+ *   resolv.scr
+ * Summary:
+ *   SCR Agent for interfacing accessing /etc/resolv.conf, 
+ *   the resolver (name server) configuration file.
+ * Access:
+ *   read/write
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ *   man resolv.conf
+ *   man resolver
+ *   source/y2scr/ag_resolver/doc/resolveragent.txt
+ *   http://w3.suse.de/~poeml/resolv.conf-modification-howto.txt
+ * Example:
+ *   Read(.resolver.domain)
+ *   ("suse.de")
+ **
+ *   Read(.resolver.nameserver)
+ *   (["10.10.0.1", "10.10.10.1", "10.10.11.1"])
+ **
+ *   Write(.resolver.domain, "suse.de")
+ *   (true)
+ * 
+ * $Id$
+ *
+ * <p>The target agent is the SCR interface to /etc/resolv.conf,
+ * the resolver (name server) configuration file.</p>
+ *
+ * <p>Using "search, "nameserver", "domain", "sortlist" and "options" 
+ * as subpaths, the respective values can be read/written.</p>
+ * 
+ * <p>Info paths can be read/written using "modified", "backup", "process", 
+ * "process_id", "script" and "info" as subpaths of .resolver.</p>
+ *
+ * <p>For more information see the agent's own documentation.</p>
+ */
+.resolver
+
+`ag_resolver (
+    ResolverAgent ("/etc/resolv.conf")
+)

@@ -1,0 +1,267 @@
+<HTML>
+<HEAD>
+<TITLE>Modules agent description</TITLE>
+<!-- $Id$ -->
+</HEAD>
+<BODY>
+<H1>Modules agent description</H1>
+<HR>
+<H2>Purpose</H2> 
+The modules agent (<TT>ag_modules</TT>) is used to access <TT>'/etc/modules.conf'</TT>
+file. It is part of YaST2 SCR, the system configuration repository,
+used to access configuration data on the target system.  The general
+SCR API allows <TT>Read()</TT> and <TT>Write()</TT> access to get and change data. The
+modules agent implements an abstract view onto the modules.conf file.
+
+<P>
+<H2>Implementation</H2>
+The agent reads the file into its own structures in the initialization
+time. If the file is modified externally than the file is re-read and
+all the structures change, except those that have been already set-up
+by the agent.  
+<P>
+<B>WARNING!</B> The whole syntax of <TT>'/etc/modules.conf'</TT>
+(<TT>modules.conf(5)</TT>) is NOT covered by current implementation of
+the agent. There are just four directives that are accepted (all other
+will be ignored): <TT>alias</TT>, <TT>post-install</TT>,
+<TT>pre-install</TT> and <TT>options</TT>. 
+
+<P>
+<I><B>Note:</B> The complete development documentation is available in the
+<A HREF="autodocs/index.html"><TT>autodocs/</TT></A> directory.</I>
+
+<P>
+<H2>Interface for modules-agent</H2>
+The interface is implemented as a SCR agent with the usual <TT>Read()</TT>,
+<TT>Write()</TT> and <TT>Dir()</TT> interface. The path prefix used is
+
+<UL><TT>.modules</TT></UL>
+
+A list of possible sub-paths can be retrieved with
+
+<UL><TT>Dir(.modules)</TT></UL>
+
+which currently results in sublist of the list:
+
+<UL><TT>["alias", "pre-install", "post-install", "options"]</TT></UL>
+
+These strings (which are called directives in the following text) can
+be rolled out into the paths. For all these directives <TT>Dir()</TT>
+can be used as well, thus
+
+<UL><TT>Dir(.modules.alias)</TT></UL>
+
+results in the list with all alias names, and similarly for other directives.
+
+<P>
+<H3>"alias" directive</H3>
+
+<DL>
+<DT>Path<DD>
+	<pre>.modules.alias</pre>
+<DT>Read<DD>
+         <pre>Read(.modules.alias, &lt;alias_name&gt;)
+         -&gt; string</pre>
+	 return value is &lt;real_name&gt; or "null" or "off"
+<DT>Write<DD>
+	<pre>Write(.modules.alias, &lt;real_name&gt; | "null" | "off", &lt;alias_name&gt;)
+         -&gt; boolean</pre>
+<DT>Example<DD>
+	<pre>Read(.modules.alias, "eth0")
+        -&gt; "de4x5"</pre>
+	<pre>Write(.modules.alias, "off", "eth0")
+	-&gt; true</pre>
+
+	writes "alias eth0 off" to 'modules.conf', possibly replacing
+	an already existing entry for "alias eth0"
+</DL>
+
+<P>
+<H3>"options" directive</H3>
+
+<DL>
+<DT>Path<DD>
+	<pre>.modules.options
+.modules.options.&lt;option&gt;</pre>
+<DT>Read<DD>
+	<pre>Read(.modules.options, &lt;module&gt;)
+	-&gt; map</pre>
+	<pre>Read(.modules.options.&lt;option&gt;, &lt;module&gt;)
+	-&gt; string</pre>
+<DT>Write<DD>
+	<pre>Write(.modules.options, &lt;map&gt;, &lt;module&gt;)
+	-&gt; boolean</pre>
+	<pre>Write(.modules.options.&lt;option&gt;, &lt;value&gt;, &lt;module&gt;)
+	-&gt; boolean</pre>
+<DT>Example<DD>
+	<pre>Read(.modules.options, "mpu401")
+	-&gt; $["io" : "0x0330", "irq" : "9"])</pre>
+	<pre>Read(.modules.options.io, "mpu401")
+	-&gt; "0x330"</pre>
+	<pre>Write(.modules.options, $["io" : "0x0330", "irq" : "9"], "mpu401")
+	-&gt; true</pre>
+	<pre>Write(.modules.options.io, "0x0330", "mpu401")
+	-&gt; true</pre>
+</DL>
+
+<P>
+<I><B>Note:</B> The map elements while writing options must be pairs string : string!</I>
+<P>
+<H3>"pre-install" directive</H3>
+
+<DL>
+<DT>Path<DD>	
+	<pre>.modules.pre-install</pre>
+<DT>Read<DD>
+	<pre>Read(.modules.pre-install, &lt;module&gt;)
+	-&gt; string</pre>
+<DT>Write<DD>
+	<pre>Write(.modules.pre-install, &lt;string&gt;, &lt;module&gt;)
+	-&gt; boolean</pre>
+<DT>Example<DD>
+	<pre>Read(.modules.pre-install, "ad1816")
+	-&gt; "modprobe -k opl3"</pre>
+	<pre>Write(.modules.pre-install, "modprobe -k opl3", "ad1816")
+	-&gt; true</pre>
+
+</DL>
+
+<P>
+<H3>"post-install" directive</H3>
+
+<DL>
+<DT>Path<DD>	
+	<pre>.modules.post-install</pre>
+<DT>Read<DD>
+	<pre>Read(.modules.post-install, &lt;module&gt;)
+	-&gt; string</pre>
+<DT>Write<DD>
+	<pre>Write(.modules.post-install, &lt;string&gt;, &lt;module&gt;)
+	-&gt; boolean</pre>
+<DT>Example<DD>
+	<pre>Read(.modules.post-install, "ad1816")
+	-&gt; "modprobe -k mpu401"</pre>
+	<pre>Write(.modules.post-install, "modprobe -k mpu401", "ad1816")
+	-&gt; true</pre>
+
+</DL>
+
+<P>
+<H3>Comments</H3>
+There also exist possibility to read/write comment that belongs to
+some directive. The comment that belongs to a directive is always
+assumed to be a comment BEFORE the directive (and while reading on the
+same line just after the directive, but during writing this comment
+goes in front of the directive).
+
+<DL>
+<DT>Path<DD>
+	<pre>.modules.&lt;directive&gt;.comment</pre>
+<DT>Read<DD>
+	<pre>Read(.modules.&lt;directive&gt;.comment, &lt;name&gt;)
+	-&gt; string</pre>
+<DT>Write<DD>
+	<pre>Write(.modules.&lt;directive&gt;.comment, &lt;comment sring&gt;, &lt;name&gt;)
+	-&gt; boolean</pre>
+<DT>Example<DD>
+	<pre>Read(.modules.alias.comment, "eth0")
+	-&gt; "# YaST2: Network card\n"</pre>
+	<pre>Write(.modules.alias.comment, "# YaST2: Network card\n", "eth0")
+	-&gt; true</pre>
+</DL>
+
+<P>
+<H3>Deleting</H3>
+It might be useful to delete some '/etc/modules.conf' entry
+(directive) from the file. Therefore this operation was included into
+the agent implementation (any path of length 2 and parameter nil to
+Write()).
+
+<P>
+<I><B>Note:</B> It is not possible to delete only one option, only whole 'options' entry!</I>
+<P>
+
+<DL>
+<DT>Example<DD>
+	<pre>Write(.modules.alias, nil, "eth0")
+	-&gt; true</pre>
+</DL>
+
+This example shows, how to delete <TT>alias eth0
+&lt;something&gt;</TT>. Note that comment attached to the directive is
+deleted as well (comment as defined above).
+<P>
+<H3>Final saving</H3>
+The final saving of the '/etc/modules.conf' file is done
+
+<DL>
+<DT><DD><pre>Write(.modules, nil)</pre>
+</DL>
+
+The final saving also triggers a
+<DL>
+<DT><DD><pre>/sbin/depmod -a -F /boot/System.map-`uname -r` `uname -r`</pre>
+</DL>
+
+in the installed system to re-initialize the modprobe/insmod database.
+
+<P>
+<H2>Restrictions, limits and future enhancements</H2>
+The options with aliases are conflicting with options with modules. The Modules
+Agent doesn't solve this conflicts, so you should better avoid usage of options
+with aliases.
+<P>
+Not all directives are supported. See the <A HREF="TODO.txt">TODO.txt</A> file
+for the current status of support and also for the list of possible future
+enhancements.
+
+<P>
+<H2>Complete Read paths table</H2>
+The complete <TT>Write()</TT> paths table is similar to this except for the paths
+to which YCPList is returned.
+
+<TABLE>
+	<TR><TH WIDTH="30%" ALIGN="left">Path</TH><TH WIDTH="20%" ALIGN="left">Type</TH><TH ALIGN="left">Result</TH></TR>
+	<TR><TD><TT>.modules</TD><TD ALIGN="left">YCPList</TD>
+	<TD>list with all available directives (currently sublist of ["alias", "pre-install", "post-install", "options"]</TD></TR>
+	<TR><TD><TT>.modules.alias</TD><TD ALIGN="left">YCPList</TD>
+	<TD>list with all "alias" directives</TD></TR>
+	<TR><TD><TT>.modules.pre-install</TD><TD ALIGN="left">YCPList</TD>
+	<TD>list with all "pre-install" directives</TD></TR>
+	<TR><TD><TT>.modules.post-install</TD><TD ALIGN="left">YCPList</TD>
+	<TD>list with all "post-install" directives</TD></TR>
+	<TR><TD><TT>.modules.options</TD><TD ALIGN="left">YCPList</TD>
+	<TD>list with all "options" directives</TD></TR>
+	<TR><TD><TT>.modules.options.&lt;option&gt;</TD><TD ALIGN="left">YCPString</TD>
+	<TD>one particular option</TD></TR>
+	<TR><TD><TT>.modules.&lt;directive&gt;.comment</TD><TD ALIGN="left">YCPString</TD>
+	<TD>string (with hashes ('#') and new-lines ('\n') that belongs to the directive</TD></TR>
+</TABLE>
+
+<P>
+<H2>Complete Dir paths table</H2>
+The return type of the <TT>Dir()</TT> is always YCPList.
+
+<TABLE>
+	<TR><TH WIDTH="40%" ALIGN="left">Path</TH><TH ALIGN="left">Result</TH></TR>
+	<TR><TD><TT>.modules</TD>
+	<TD>list with all available directives (currently sublist of ["alias", "pre-install", "post-install", "options"]</TD></TR>
+	<TR><TD><TT>.modules.alias</TD>
+	<TD>list with all "alias" directives</TD></TR>
+	<TR><TD><TT>.modules.pre-install</TD>
+	<TD>list with all "pre-install" directives</TD></TR>
+	<TR><TD><TT>.modules.post-install</TD>
+	<TD>list with all "post-install" directives</TD></TR>
+	<TR><TD><TT>.modules.options</TD>
+	<TD>list with all "options" directives</TD></TR>
+</TABLE>
+
+<P>
+<ADDRESS>
+Michal Svec &lt;msvec@suse.cz&gt;<BR>
+Daniel Vesely &lt;dan@suse.cz&gt;
+</ADDRESS>
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+<body  bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font  color="Navy">
+page6
+
+<b><font size="+2">Pass Arguments to your Perlscript</font></b>
+<hr  color="red" align="left" size="2"></hr><br><br>
+Like every other SCR agent your perl script gets three arguments:<br>
+Have a look to <a href="df">SCR main page</a> for additional details.<br><br><br>
+
+<b>1.The function type: Dir, Read, Write or Execute</b>
+<hr  color="red" align="left" size="1"></hr>
+Your Script should support <tt>Dir</tt> if it supports subpaths!<br>
+Your working procedures should support <tt>Read/Write</tt> if your task is
+typical Read/Write operation. Otherwise use <tt>Execute</tt>. You can write 
+a agent, which supports all function types! <br><br>
+
+Using the <em>right</em> function type, only increases the
+usabilty of your agent. For the functionality the choosen type it is not relevant.<br> 
+Technically you can write a <i>Read</i> agent, that <i>writes</i> something.<br><br>
+
+<b>The following functions check the Command:</b>
+<hr  color="red" align="left" size="1"></hr><br>
+<font  face="Courier" color="Black">
+<a href="to_be_done">ycpGetCommand</a><br><br>
+ycpCommandIsRead<br>
+ycpCommandIsWrite<br>
+ycpCommandIsExecute);<br>
+</font><br><br><br>
+
+<b>The subpath:  </b>
+<hr  color="red" align="left" size="1"></hr><br>
+
+The subpath is important for complex agents, which do something
+in different <i>regions</i> <br><br>
+
+Typically the agent is called with .<em><a
+href="../libycp/YCP-datatypes.html#path">&lt;mount point&gt;</a></em> and you get only . for the subpath<br><br>
+
+If your agent is mounted e.g. on <tt>.disks</tt> and the calling function 
+sends <tt>.disks.hda</tt> you get only the <tt>.hda</tt> .<br><br>
+
+The following functions you can get the current path:<br><br>
+<font  face="Courier" color="Black">ycpGetPath</font><br><br><br>
+ 
+
+<b>optional: The value:</b>
+<hr  color="red" align="left" size="1"></hr><br><br>
+
+Here you can pass any YCP value to the perl script.<br>
+The current convenience functions support a <tt>list</tt>, a <tt>map</tt>,
+a <tt>string</tt> or an <tt>integer</tt> as value.<br><br>
+
+This value is typically <i>the argument</i> for your script.<br><br>
+
+Check the type of the argument with the following functions:<br><br>
+<font  face="Courier" color="Black">
+ycpGetArgType<br>
+ycpArgIsMap<br>
+ycpArgIsList<br>
+ycpArgIsInteger<br>
+ycpArgIsString<br>
+ycpArgIsNil<br>
+ycpArgIsNone<br><br><br>
+</font>
+Read the argument:<br><br>
+<font  face="Courier" color="Black">
+ycpGetArgMap<br>
+ycpGetArgList<br>
+ycpGetArgString<br>
+ycpGetArgInteger<br><br><br>
+</font>
+
+
+
+
+<div align="center"><a href="docu5perl.htm" ><b><<
+Previous</font></b></a>&nbsp;&nbsp;<a href="docu7perl.htm" ><b><font
+color="Red">Next >></font></b></a></div>
+
+
+</font>
+
+</body>
+</html>

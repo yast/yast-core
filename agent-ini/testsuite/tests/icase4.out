@@ -1,0 +1,16 @@
+(["sec1", "sec2", "sEc1", "SEC2"])
+;
+; ignore case example
+;
+[sec1]
+val1=0
+val2=1
+[sec2]
+val1=10
+val2=20
+[sEc1]
+VAL1=2
+vaL2=3
+[SEC2]
+VAL1=30
+val2=40

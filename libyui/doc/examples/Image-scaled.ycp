@@ -1,0 +1,31 @@
+/**
+ * Advanced Image widget features:
+ * Load image from local file and scale it to fit the available space.
+ **/
+UI(``{
+
+    if ( ! lookup( GetDisplayInfo(), "HasLocalImageSupport", false ) )
+    {
+	OpenDialog(
+		   `VBox( 
+			 `Label("Loading images from local files not supported!"),
+			 `PushButton(`opt(`default), "&OK")
+			 )
+		   );
+	UserInput();
+	CloseDialog();
+	
+	return;
+    }
+
+    
+    OpenDialog( `opt(`defaultsize), 
+	       `VBox(
+		     `Image( `opt(`scaleToFit), "/usr/share/doc/susetour/img/games0.png", "Games" ),
+		     `Right( `Label( "Resize the window to scale the image" ) ),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

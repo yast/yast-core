@@ -1,0 +1,6 @@
+[YCP] multi/provs.ycp:XXX ["multi/provs.in.1.test", "multi/provs.in.2.test", "multi/provs.in.3.test", "multi/provs.in.4.test"]
+[YCP] multi/provs.ycp:XXX multi/provs.in.1.test: ["iqnet_praha", "fortech_litomysl", "apexnet_plzen"]
+[YCP] multi/provs.ycp:XXX multi/provs.in.2.test: ["arcor", "mobilcom"]
+[YCP] multi/provs.ycp:XXX multi/provs.in.3.test: ["Totalise", "force9"]
+[YCP] multi/provs.ycp:XXX multi/provs.in.4.test: ["m3_company", "juno_online_services_inc_", "earthlink_network"]
+[yast2-agent-ini] IniParser.cc(write):XXX File multi/provs.in.*.test did not change. Not saving.

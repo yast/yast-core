@@ -1,0 +1,4 @@
+Disk geometry for /dev/sdb: 0.000-2063.830 megabytes
+Disk label type: msdos
+Minor    Start       End     Type      Filesystem  Flags
+1          0.031   2063.034  primary   FAT         

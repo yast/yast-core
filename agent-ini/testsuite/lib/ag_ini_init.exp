@@ -1,0 +1,78 @@
+#
+# run a ycp file
+#
+proc ycp-run { dir src } {
+
+  set path [split $src "/"]
+  set filename [lindex $path [expr [llength $path]-1]]
+
+  # extract basename and check extension
+
+  set fname [split $filename "."]
+
+  if {[llength $fname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return -1
+  }
+  if {[lindex $fname [expr [llength $fname]-1]] != "ycp"} {
+    fail "Not .ycp extension '$src'"
+    return -1
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # $dir/$filename is the name of the original testfile with relative path,
+  #                 relative to the $diruite directory
+  set test_input  "$dir/$filename"
+
+  set base_name [lindex $fname 0]
+
+  set stdout_name "$dir/$base_name.out"
+  set stderr_name "$dir/$base_name.err"
+  set log_name    "$dir/$base_name.log"
+  set tmpout_name "tmp.out.$base_name"
+  set tmperr_name "tmp.err.$base_name"
+  set tmplog_name "tmp.log.$base_name"
+
+  puts "Running $base_name..."
+
+  # run the test
+
+  set result ""
+  set oops [catch { set result [exec "$dir/runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
+
+  if {$oops != 0} {
+    fail "test case failed for $base_name: $catched"
+    return -1
+  }
+
+  # check return code from runycp
+
+  if {$result != ""} {
+    warning "Compilation of $base_name results in '$result'"
+    return -1
+  }
+
+  # check stderr
+
+  if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
+    fail "Wrong stderr for $base_name"
+    return -1
+  }
+
+  # check stdout
+
+  if {[diff $stdout_name "tmp.out.$base_name"] != 1} {
+    fail "Wrong stdout for $base_name"
+    return -1
+  }
+
+  # ok, all is fine
+
+  pass $base_name
+
+  return 0
+}
+
+

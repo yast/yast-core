@@ -1,0 +1,109 @@
+// Advanced Slider + BarGraph example:
+//
+// Windows partition splitter,
+// this time with two sliders
+
+UI(``{
+    // Check for availability of required widgets
+    
+    if ( ! HasSpecialWidget(`Slider) ||
+	 ! HasSpecialWidget(`BarGraph ) )
+    {
+	OpenDialog(
+		   `VBox( 
+			 `Label("Error: This UI doesn't support the required special widgets!"),
+			 `PushButton(`opt(`default), "&OK")
+			 )
+		   );
+	UserInput();
+	CloseDialog();
+	
+	return;
+    }
+
+    
+    // Initialize values
+    
+    string  unit			= "MB";
+    integer win_used			= 350;
+    integer total_free			= 1500;
+    integer min_free			= 50;
+    integer linux_min			= 300;
+    integer suggested_linux_size	= 800;
+    integer linux_size			= suggested_linux_size;
+    integer win_free			= total_free - linux_size;
+
+
+    // Create the dialog
+    
+    OpenDialog(
+	       `VSquash(
+			`VBox(
+			      `HSpacing(50),		// force width
+			      `Left( `Label( _("Now:") ) ),
+			      `BarGraph( `opt(`vstretch),
+					 [ win_used, total_free ],
+					 [
+					  _("Windows\nused\n%1 ") + unit,
+					  _("Windows\nfree\n%1 ") + unit
+					 ]
+					 ),
+			      `VSpacing(2),
+		     
+			      `Left( `Label( _("After installation:") ) ),
+			      `BarGraph( `id(`graph), `opt(`vstretch),
+					 [ win_used, win_free, linux_size ],
+					 [
+					  _("Windows\nused\n%1 ") + unit,
+					  _("Windows\nfree\n%1 ") + unit,
+					  _("Linux\n%1 ") + unit
+					 ]
+					 ),
+			      `VSpacing(0.5),
+			      `Slider( `id(`win_free),   `opt(`notify),
+				       _("Windows free (") + unit + ")",
+				       min_free, total_free - linux_min, win_free ),
+			      `VSpacing(0.5),
+			      `Slider( `id(`linux_size),   `opt(`notify),
+				       _("Linux (") + unit + ")",
+				       linux_min, total_free - min_free, linux_size ),
+			      `VSpacing(0.5),
+			      `HBox(
+				    `HCenter(`PushButton(`id(`suggest), _("&Default") ) ),
+				    `PushButton(`id(`close), `opt(`default), _("&Close") )
+				    )
+			      )
+			)
+	       );
+
+    // Event processing loop - left only via the "close" button
+    // or the window manager close button / function.
+    do
+    {
+	any widget = UserInput();
+
+	if ( widget == `linux_size )
+	{
+	    linux_size = QueryWidget(`id(`linux_size), `Value );
+	    win_free = total_free - linux_size;
+	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    ChangeWidget(`id(`win_free), `Value, win_free );
+	} else if ( widget == `win_free )
+	{
+	    win_free = QueryWidget(`id(`win_free ), `Value );
+	    linux_size = total_free - win_free;
+	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    ChangeWidget(`id(`linux_size), `Value, linux_size );
+	}
+	else if ( widget == `suggest )
+	{
+	    linux_size	= suggested_linux_size;
+	    win_free	= total_free - linux_size;
+	    ChangeWidget(`id(`graph), `Values, [ win_used, win_free, linux_size ] );
+	    ChangeWidget(`id(`linux_size), `Value, linux_size );
+	    ChangeWidget(`id(`win_free), `Value, win_free );
+	}
+    } while ( widget != `close && widget != `cancel );
+	
+    CloseDialog();
+})

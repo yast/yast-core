@@ -1,0 +1,6 @@
+	ext2
+nodev	proc
+nodev	nfs
+	iso9660
+nodev	autofs
+nodev	devpts

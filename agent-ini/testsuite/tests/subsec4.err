@@ -1,0 +1,2 @@
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 5: key2: values at the top level not allowed.
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 6: Nothing to close.

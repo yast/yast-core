@@ -1,0 +1,9 @@
+/*
+ * Section names/key names are not unique.
+ * Sections with the same names are merged.
+ * The last value is used in case of non-unique keys.
+ */
+{
+    Write (., "force");
+    return Dir (.s);
+}

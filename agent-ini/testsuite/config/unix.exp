@@ -1,0 +1,5 @@
+load_lib "ag_ini_init.exp"
+
+proc ag_ini_exit {} {}
+proc ag_ini_version {} {}
+

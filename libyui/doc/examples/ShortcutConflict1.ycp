@@ -1,0 +1,18 @@
+UI(``{
+    // Demo for shortcut checking:
+    // Deliberately generate a shortcut conflict.
+    
+    OpenDialog(
+	       `HBox(
+		     `PushButton( "&OK" ),
+		     `PushButton( "Also &OK" ),
+		     `PushButton( "Do Something" ),
+		     `PushButton( "Quick && Dirty" ),
+		     `PushButton( "&Cancel" )
+		     )
+	       );
+
+    UserInput();
+    CloseDialog();
+})
+

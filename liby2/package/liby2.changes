@@ -1,0 +1,309 @@
+-------------------------------------------------------------------
+Thu Jun 20 16:56:24 CEST 2002 - arvin@suse.de
+
+- set environment variable YAST_IS_RUNNING to 1
+
+-------------------------------------------------------------------
+Tue Apr 23 17:49:07 CEST 2002 - arvin@suse.de
+
+- use new path definitions in search functions
+
+-------------------------------------------------------------------
+Tue Apr 23 12:03:03 CEST 2002 - arvin@suse.de
+
+- use %{_libdir} for libraries
+
+-------------------------------------------------------------------
+Sun Mar 24 12:16:04 CET 2002 - kkaempf@suse.de
+
+- Restore old callback pointer properly (#15311).
+
+-------------------------------------------------------------------
+Fri Mar 22 15:04:00 CET 2002 - kkaempf@suse.de
+
+- properly pass callback information for delayed (plugin) component
+  creation (#15311).
+
+-------------------------------------------------------------------
+Mon Mar 18 11:44:12 CET 2002 - kkaempf@suse.de
+
+- don't mention "y2base" in normal help text (15095).
+
+-------------------------------------------------------------------
+Sun Feb 17 02:25:32 CET 2002 - arvin@suse.de
+
+- use RTLD_LAZY and RTLD_GLOBAL in dlopen
+- fixed tiny memory leak
+
+-------------------------------------------------------------------
+Tue Feb 05 13:40:02 CET 2002 - arvin@suse.de
+
+- the class ExternalProgram can now redirect stderr to a file
+  descriptor
+
+-------------------------------------------------------------------
+Fri Jan 25 15:41:48 CET 2002 - arvin@suse.de
+
+- fixed handling of invalid data from external program (bug #12087)
+
+-------------------------------------------------------------------
+Wed Dec 19 19:49:42 CET 2001 - arvin@suse.de
+
+- use RTLD_GLOBAL instead of RTLD_LAZY in dlopen to prevent
+  problems with alsa 0.9 lib
+
+-------------------------------------------------------------------
+Mon Dec 17 14:06:02 CET 2001 - arvin@suse.de
+
+- implemented remote server components (including callbacks)
+
+-------------------------------------------------------------------
+Wed Nov 14 21:36:45 CET 2001 - arvin@suse.de
+
+- pathsearch function moved to class Y2PathSearch
+
+-------------------------------------------------------------------
+Tue Nov 13 16:54:53 CET 2001 - arvin@suse.de
+
+- handle environment variable Y2DIR in pathsearch
+
+-------------------------------------------------------------------
+Thu Sep 13 12:51:39 CEST 2001 - arvin@suse.de
+
+- recompile regex after changing locale (workaround for strange
+  glibc behavior)
+
+-------------------------------------------------------------------
+Tue Sep 11 12:06:07 CEST 2001 - arvin@suse.de
+
+- don't handle callbacks in stdio component in batchmode
+
+-------------------------------------------------------------------
+Fri Sep 07 17:21:06 CEST 2001 - arvin@suse.de
+
+- implemented callback mechanism for remote components
+
+-------------------------------------------------------------------
+Tue Sep 04 12:25:21 CEST 2001 - arvin@suse.de
+
+- fixed callback mechanism for external components
+
+-------------------------------------------------------------------
+Mon Sep 03 19:12:10 CEST 2001 - arvin@suse.de
+
+- implemented callback mechanism for external components
+
+-------------------------------------------------------------------
+Wed Aug 29 19:53:55 CEST 2001 - arvin@suse.de
+
+- simplified functions findy2, openy2 and fopeny2 not to take a
+  root path as extra argument
+
+-------------------------------------------------------------------
+Tue Aug 21 17:30:17 CEST 2001 - kkaempf@suse.de
+
+- drop old translator calls from Y2Component.
+
+-------------------------------------------------------------------
+Sat Aug 18 16:52:41 CEST 2001 - arvin@suse.de
+
+- program component can execute a program in a chroot environment
+
+-------------------------------------------------------------------
+Fri Aug 10 11:21:06 CEST 2001 - arvin@suse.de
+
+- enhanced functions findy2, openy2 and fopeny2 to take a root
+  path as extra argument
+
+-------------------------------------------------------------------
+Thu Jul 26 10:28:22 CEST 2001 - kkaempf@suse.de
+
+- disable read calls if stdio component is called in batchmode
+
+-------------------------------------------------------------------
+Wed Jul 25 17:32:39 CEST 2001 - kkaempf@suse.de
+
+- properly handle YCPNull() in stdio component
+
+-------------------------------------------------------------------
+Thu Jul 05 11:43:53 CEST 2001 - arvin@suse.de
+
+- remove calling of translator
+
+-------------------------------------------------------------------
+Fri Jun 22 17:24:45 CEST 2001 - arvin@suse.de
+
+- fixed to compile with gcc 3.0
+
+-------------------------------------------------------------------
+Tue Jun 19 14:04:56 CEST 2001 - kkaempf@suse.de
+
+- implement callback mechanism
+- adapt CXXFLAGS for s390x
+- automake/libtool fixes in %build section
+
+-------------------------------------------------------------------
+Tue May 15 17:24:07 CEST 2001 - kkaempf@suse.de
+
+- use /media/floppy instead of /floppy (#8398)
+
+-------------------------------------------------------------------
+Mon May  7 19:11:34 CEST 2001 - msvec@suse.cz
+
+- fix the translation blocker (new GetLanguge)
+- version 2.3.8
+
+-------------------------------------------------------------------
+Fri Apr 20 13:36:35 CEST 2001 - kkaempf@suse.de
+
+- added split alias for -devel package
+
+-------------------------------------------------------------------
+Wed Apr  4 11:06:54 CEST 2001 - kkaempf@suse.de
+
+- handle "testsuite" server in Y2StdioComponent.cc
+  instead of genericfrontend.cc
+
+-------------------------------------------------------------------
+Tue Apr  3 17:58:55 CEST 2001 - kkaempf@suse.de
+
+- allow "testsuite" as server argument to genericfrontend
+  (equals stdio server, suppresses textdomain negotiation)
+
+-------------------------------------------------------------------
+Mon Mar 12 18:16:41 CET 2001 - arvin@suse.de
+
+- Pass fullname from ScriptComponent to WFM.
+
+-------------------------------------------------------------------
+Thu Mar  8 12:29:00 CET 2001 - arvin@suse.de
+
+- Strip debugging information from libraries in package.
+
+-------------------------------------------------------------------
+Wed Mar  7 19:00:03 CET 2001 - kkaempf@suse.de
+
+- implement filename completion in pathsearch.cc
+
+-------------------------------------------------------------------
+Tue Mar  6 19:01:49 CET 2001 - kkaempf@suse.de
+
+- allow disable of textdomain calls, needed for testsuites
+
+-------------------------------------------------------------------
+Tue Mar  6 13:54:31 CET 2001 - kkaempf@suse.de
+
+- install libraries to /usr/lib
+- use RPM_OPT_FLAGS, dont set CXXFLAGS in configure.in
+
+-------------------------------------------------------------------
+Fri Mar  2 10:42:14 CET 2001 - kkaempf@suse.de
+
+- prepare for inter-agent calls in C++
+
+-------------------------------------------------------------------
+Thu Jan 25 10:36:38 CET 2001 - kkaempf@suse.de
+
+- Version 2.3.0: package split liby2 / liby2-devel
+- install C++ includes in /usr/include/YaST2
+
+-------------------------------------------------------------------
+Fri Jan  5 11:12:16 CET 2001 - arvin@suse.de
+
+- changed one log message from milestone to debug
+
+-------------------------------------------------------------------
+Fri Dec 15 15:48:23 CET 2000 - arvin@suse.de
+
+- changed name of remote program from y2gf to y2bignfat in all
+  remote protocols components
+
+-------------------------------------------------------------------
+Fri Dec  8 17:22:42 CET 2000 - arvin@suse.de
+
+- avoid static strings inside functions
+
+-------------------------------------------------------------------
+Fri Dec  1 13:35:49 CET 2000 - kkaempf@suse.de
+
+- fix genericfrontend to check argc before accessing argv[]
+  report error, not usage on error
+  report help on "-h" or "--help"
+
+-------------------------------------------------------------------
+Fri Nov 24 15:33:42 CET 2000 - kkaempf@suse.de
+
+- only load .so.2 plugins
+
+-------------------------------------------------------------------
+Wed Nov 15 20:24:35 CET 2000 - kkaempf@suse.de
+
+- split off plugin components
+
+-------------------------------------------------------------------
+Wed Nov 15 19:52:54 CET 2000 - kkaempf@suse.de
+
+- link test program with complete library
+
+-------------------------------------------------------------------
+Thu Nov  9 12:29:10 CET 2000 - kkaempf@suse.de
+
+- static plugin only
+
+-------------------------------------------------------------------
+Tue Nov  7 11:27:09 CET 2000 - kkaempf@suse.de
+
+- allow unloading of components
+  move targetroot to scr
+
+-------------------------------------------------------------------
+Tue Oct 31 18:09:35 CET 2000 - kkaempf@suse.de
+
+- translations based on textdomain
+
+-------------------------------------------------------------------
+Wed Oct 25 17:59:29 CEST 2000 - kkaempf@suse.de
+
+- "Group" set
+
+-------------------------------------------------------------------
+Fri Sep 29 11:02:19 CEST 2000 - kkaempf@suse.de
+
+- cleaned up version 2.1.0
+
+-------------------------------------------------------------------
+Wed Jun  7 16:09:40 CEST 2000 - schwab@suse.de
+
+- Add %{suse_update_config}.
+
+-------------------------------------------------------------------
+Wed May 24 21:27:53 CEST 2000 - kkaempf@suse.de
+
+- remove old package dependencies
+
+-------------------------------------------------------------------
+Thu May 18 10:00:05 CEST 2000 - kkaempf@suse.de
+
+- join development package
+  bump version to 2.0.1
+
+-------------------------------------------------------------------
+Fri May 12 13:37:23 CEST 2000 - kkaempf@suse.de
+
+- patch for libtool
+
+-------------------------------------------------------------------
+Thu May 11 17:23:47 CEST 2000 - kkaempf@suse.de
+
+- update automake for IA64
+
+-------------------------------------------------------------------
+Thu May 11 11:56:35 CEST 2000 - kkaempf@suse.de
+
+- more debug
+
+-------------------------------------------------------------------
+Fri May 5 12:15:42 CEST 2000 - kkaempf@suse.de
+
+- Initial version based on yast2 from SuSE 6.4
+

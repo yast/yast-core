@@ -1,0 +1,12 @@
+[yast2-agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test"
+[yast2-agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test".xxx
+[yast2-agent-ini] IniFile.cc(setValue):XXX Adding value .v."multi/async.in.4.test".xxx.homepage = "http://xxx.suse.de/"
+[yast2-agent-ini] runag_ini.cc(evaluateInstantiatedTerm):XXX Added at the end of multi/async.in.4.test: [Dialer other]
+homepage = http://www.other.dom
+Product = 
+[YCP] multi/async.ycp:XXX ["multi/async.in.1.test", "multi/async.in.2.test", "multi/async.in.4.test"]
+[YCP] multi/async.ycp:XXX multi/async.in.1.test: ["iqnet_praha", "fortech_litomysl"]
+[YCP] multi/async.ycp:XXX multi/async.in.2.test: ["apexnet_plzen"]
+[YCP] multi/async.ycp:XXX multi/async.in.4.test: ["xxx", "other"]
+[yast2-agent-ini] IniParser.cc(write):XXX Skipping file multi/async.in.1.test that was not changed.
+[yast2-agent-ini] IniParser.cc(write):XXX Removing file multi/async.in.3.test

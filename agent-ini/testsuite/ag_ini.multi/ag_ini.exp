@@ -1,0 +1,12 @@
+#
+# ag_ini.exp
+# 'main' file for all ag_ini.multi
+#
+
+# get all files matching multi/*.ycp
+
+set filenames [glob $srcdir/multi/*.ycp]
+
+# foreach file, call ycp-run (from testsuite/lib)
+
+foreach file $filenames { ycp-run multi $file }

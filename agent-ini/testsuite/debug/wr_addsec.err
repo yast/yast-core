@@ -1,0 +1,4 @@
+[yast2-agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s.Main.Sub.Sub.Sub
+[YCP] debug/wr_addsec.ycp:XXX Writting:
+[YCP] debug/wr_addsec.ycp:XXX Destructor:
+[yast2-agent-ini] IniParser.cc(write):XXX File debug/wr_addsec.in.test did not change. Not saving.

@@ -1,0 +1,43 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `Label("Today's menu"),
+		     `HSpacing(40),	// make the table and thus the dialog wider
+		     `HBox(
+			   `VSpacing(10),	// make the table higher
+			   `Table(`id(`table),
+				  `header("Name", "Price"),
+				  [
+				   `item(`id(1), "Chili",	    6),
+				   `item(`id(2), "Salami Baguette", nil),
+				   `item(`id(3), "Spaghetti",	    8),
+				   `item(`id(4), "Steak Sandwich",  12)
+				  ]
+				  )
+			   ),
+		     `HBox(
+			   `HCenter(`PushButton("&Lookup")),
+			   `PushButton(`id(`cancel), "&Close" )
+			   )
+		     )
+	       );
+
+    while (UserInput() != `cancel)
+    {
+	any id = QueryWidget(`id(`table), `CurrentItem);
+	if (is(id, integer)) {
+	    string text = sformat("Line: %1", QueryWidget(`id(`table), `Item(id)));
+	    OpenDialog(
+		       `VBox(
+			     `Label(text),
+			     `PushButton("&OK")
+			     )
+		       );
+	    UserInput();
+	    CloseDialog();
+	}
+    }
+
+    CloseDialog();
+})
+

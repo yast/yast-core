@@ -1,0 +1,7 @@
+{
+    RegisterAgent (., `ag_dummy (``(DataMap ($["a":"hihi"], 0))));
+    
+    any tmp = Read (.a);
+    
+    return tmp;
+}

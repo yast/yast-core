@@ -1,0 +1,7 @@
+[yast2-agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/del.in.2.test"
+[YCP] multi/del.ycp:XXX ["multi/del.in.4.test", "multi/del.in.2.test"]
+[YCP] multi/del.ycp:XXX multi/del.in.4.test: ["mobilcom"]
+[YCP] multi/del.ycp:XXX multi/del.in.2.test: []
+[yast2-agent-ini] IniParser.cc(write):XXX Skipping file multi/del.in.4.test that was not changed.
+[yast2-agent-ini] IniParser.cc(write):XXX Removing file multi/del.in.1.test
+[yast2-agent-ini] IniParser.cc(write):XXX Removing file multi/del.in.3.test

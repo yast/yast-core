@@ -1,0 +1,20 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `IntField( `id(`perc), "Percentage:", 0, 100, 50),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UserInput();
+    
+    integer percentage = QueryWidget(`id(`perc), `Value);
+    CloseDialog();
+    
+    OpenDialog(
+	       `VBox(
+		     `Label( sformat( "You entered: %1%%", percentage) ),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UserInput();
+})

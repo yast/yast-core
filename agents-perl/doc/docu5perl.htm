@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+page6&nbsp;&nbsp;
+
+<b>Test your perlscript:</b>
+<hr  color="red" align="left" size="1"></hr><br><br>
+
+First create a file which contains one test call of your agent/script. Be sure, to insert only the subpath, generally ., not the mount-point.<br><br><br>
+
+<font  face="Courier" color="Black">
+<pre>
+euklid:/# cat test_input
+Read( ., [ "www.suse.de", "abcde", "213.95.15.200" ]) 
+
+eukild:/#
+</pre></font>
+<br>
+<p>
+In our example you have to replace the <tt>"[ "www.suse.de", "abcde", "213.95.15.200" ]"</tt> with an
+argument, your script expects. The start your script as user <b>root</b>:<br><br>
+
+Input:&nbsp;&nbsp;&nbsp;<font  face="Courier" color="Black">/usr/lib/YaST2/servers_non_y2/ag_ping <font color="black">&lt;test_input</font></font><br>
+Output:&nbsp;&nbsp;<font  face="Courier" color="Black">"ok"</font><br><br>
+
+<b>Notice:</b>
+<p>If there is <b>any</b> debug output, your script would not work!
+The output on stdout <b>has to be one</b> and only one YCP-Value
+i.e. a <tt>string</tt>, a <tt>list</tt>, a<tt> map</tt> ...<br><br>
+
+<div align="center"><a href="docu4perl.htm" ><b><font color="Red"><< Previous</font></b></a>&nbsp;&nbsp;<a href="docu6perl.htm" ><b><font color="Red">Next >></font></b></a></div>
+
+
+</font>
+</body>
+</html>

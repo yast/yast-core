@@ -1,0 +1,250 @@
+#!/usr/bin/perl -w
+
+#
+# File:
+#   ag_background 
+#
+# Authors:
+#   Ladislav Slezak <lslezak@suse.cz>
+#
+# Description:
+#   Background process agent 
+#
+# $Id$
+#
+
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+use strict;
+
+
+# child running flag
+our $child_running = 0;
+our $child_pid = 0;
+    
+
+# SIGCHLD handler
+sub Handler()
+{
+    if ($child_running)
+    {
+        $child_running = 0;
+    }
+}
+
+# send SIGTERM (and then SIGKILL) to running subprocess
+sub KillSubprocess()
+{
+    if ($child_running)
+    {
+	kill(15, $child_pid);       # send SIGTERM
+
+	sleep 1;                    # wait a little bit
+
+	if ($child_running)         # child process still running?
+	{
+	    kill(9, $child_pid);    # send SIGKILL
+	}
+	return 1;
+    }
+    else
+    {
+	return 0;
+    }
+}
+
+sub ErrorPath($)
+{
+    my ($p) = @_;
+
+    y2debug("Bad path: $p");
+    ycpReturnSkalarAsString("");
+}
+
+sub ErrorCommand($)
+{
+    my ($c) = @_;
+    
+    y2debug("Bad command: $c");
+    ycpReturnSkalarAsString("");
+}
+
+sub ErrorArg($)
+{
+    my ($a) = @_;
+    
+    y2debug("Bad argument type: $a");
+    ycpReturnSkalarAsString("");
+}
+
+# install SIGCHLD handler
+$SIG{CHLD} = \&Handler;
+
+my $stdin_set = my $pipe_set = '';
+vec($stdin_set, fileno(STDIN), 1) = 1;
+
+my $watch = $stdin_set;	# watch STDIN
+
+my $total_lines = 0;	# total number of lines from script
+my $newlines = 0;	# number of new lines since last reading output
+
+my $store_out = 0;
+my @out = ();		# new lines since last reading
+my $pipe_defined = 0;
+
+my $exit = 0;
+
+$| = 1;
+
+# main loop
+while (1) 
+{
+    # wait until some data can be read
+    select(my $watch_out = $watch, undef, undef, undef);
+
+    # get status
+    my $stdin_avail = vec($watch_out, fileno(STDIN), 1);
+    my $output_avail = ($pipe_defined == 1) ? vec($watch_out, fileno(PIPE), 1) : 0;
+    my $line;
+
+    if ($stdin_avail)	# STDIN data available
+    {
+	$line = <STDIN>;
+
+	if (!defined $line)
+	{
+	    exit;
+	}
+	
+	chomp($line);
+
+	ycpInit($line);
+	
+	my $path = ycpGetPath();
+
+	if (ycpCommandIsExecute())
+	{
+	    if ($path eq '.run' || $path eq '.run_output')
+	    {
+		if (ycpArgIsString())
+		{
+		    my $param = ycpGetArgString();
+		
+		    $store_out = ($path eq '.run_output') ? 1 : 0;
+
+		    #reset counters
+		    $total_lines = 0;
+		    $newlines = 0;
+		    @out = ();
+
+		    $child_running = 1;
+
+		    # start subprocess
+		    $child_pid = open(PIPE, "$param |")
+			or $child_running = 0;
+
+		    if ($child_running)
+		    {
+			$pipe_set = '';
+			vec($pipe_set, fileno(PIPE), 1) = 1;
+
+			$watch = $stdin_set | $pipe_set;       # watch both files
+			$pipe_defined = 1;
+		    }
+
+		    ycpReturnSkalarAsBoolean($child_running);
+		}
+		else
+		{
+		    ErrorArg(ycpGetArgType());
+		}
+	    }
+	    elsif ($path eq '.kill')
+	    {
+    		ycpReturnSkalarAsBoolean(KillSubprocess());
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
+	elsif (ycpCommandIsRead())
+	{
+	    if ($path eq '.lines')
+	    {
+		ycpReturnSkalarAsInt($total_lines);
+	    }
+	    elsif ($path eq '.newlines')
+	    {
+		ycpReturnSkalarAsInt($newlines);
+	    }
+	    elsif ($path eq '.store')
+	    {
+		ycpReturnSkalarAsBoolean($store_out);
+	    }
+	    elsif ($path eq '.isrunning')
+	    {
+		ycpReturnSkalarAsBoolean($child_running);
+	    }
+	    elsif ($path eq '.status')
+	    {
+		ycpReturnSkalarAsInt($exit);
+	    }
+	    elsif ($path eq '.newout')
+	    {
+		ycpReturnArrayAsList(@out);
+		
+		$newlines = 0;
+		@out = ();
+	    }
+	    elsif ($path eq '.output_open')
+	    {
+		ycpReturnSkalarAsBoolean($pipe_defined);
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
+	elsif (ycpCommandIsResult)
+	{
+	    if ($child_running)
+	    {
+		KillSubprocess();
+	    }
+	    exit(0);
+	}
+	else
+	{
+	    ErrorCommand(ycpGetCommand());
+	}
+    }
+	    
+    if ($output_avail) 	# script output available
+    {
+	$line = <PIPE>;
+ 
+	if (!defined $line)	
+	{
+	    $pipe_defined = 0;
+    	    $watch = $stdin_set;	# now watch only STDIN
+    	    close(PIPE);
+	    $exit = $? >> 8;		# high 8 bits are exit value
+	}
+	else
+	{
+	    chomp($line);
+	    
+	    if ($store_out)
+	    {
+		push(@out, $line);
+	    }
+	    
+	    $newlines++;
+	    $total_lines++;
+	}
+    }
+}
+
+

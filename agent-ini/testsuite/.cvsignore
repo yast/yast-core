@@ -1,0 +1,11 @@
+Makefile
+Makefile.in
+.deps
+.libs
+runag_ini
+site.*
+*.log
+*.sum
+tmp.*
+runini
+.*.swp

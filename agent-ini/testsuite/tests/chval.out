@@ -1,0 +1,16 @@
+(nil)
+; first line comment
+; second line comment
+[Section1]
+Val1=value11
+; Comment to s1, v2
+Val2=New_value12
+Val3=value13
+
+; Comment to s2
+[Section2]
+Val1=New_value21
+; Comment to s2, v2
+Val2=value22
+; Comment to s2, v3
+Val3=value23

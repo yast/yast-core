@@ -1,0 +1,12 @@
+Makefile
+Makefile.in
+*.log
+*.sum
+site.exp
+.deps
+.libs
+y2wfm
+runwfm
+tmp.*
+differr
+diffout

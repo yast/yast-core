@@ -1,0 +1,5 @@
+load_lib "scr_init.exp"
+
+proc scr_exit {} {}
+proc scr_version {} {}
+

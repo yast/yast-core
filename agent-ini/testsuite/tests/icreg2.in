@@ -1,0 +1,22 @@
+;
+; ignore case in regular expressions example
+;
+Section=sec1
+Value=val1=value1
+Value=val2=value2
+
+Section=sec2
+Value=val1=value21
+Value=val2=value22
+
+;
+; comment before 2nd instance of sec1
+;
+seCTIon=sec1
+VaLUe=val1=value1
+ValuE=val2=value3
+
+SECTION=sec2
+VALUE=val1=value21
+value=val2=value23
+

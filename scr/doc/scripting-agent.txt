@@ -1,0 +1,44 @@
+ScriptingAgent takes care of the mapping of paths to their respective agents.
+It provides these commands:
+
+* RegisterAgent (path, string|term)
+
+Normally RegisterAgent is called for each *.scr file found in scrconf.
+The second argument is the scr file.
+Returns true.
+
+* UnregisterAgent (path)
+
+The agent is unmounted and unregistered.
+Returns false if path not found, otherwise true.
+
+* UnregisterAllAgents ()
+
+All agents are unmounted and unregistered.
+Useful for agent test suites.
+Returns true.
+
+* MountAgent (path)
+
+Mounting an agent means reading its configuration term, loading the
+component and passing it the term arguments as commands.
+If the agent is mounted already, it is unmounted first.
+Returns true on success.
+
+* MountAllAgents ()
+
+Mounts all registered agents.
+Returns true.
+
+* UnmountAgent (path)
+
+Sends the agent a "result" command and removes the component form memory.
+Returns false if path not found, otherwise true.
+
+* UnmountAllAgents ()
+
+Unmounts all mounted agents.
+Returns true.
+
+-- 
+Martin Vidner <mvidner@suse.cz>, 2001-11-21.

@@ -1,0 +1,488 @@
+-------------------------------------------------------------------
+Tue Apr 23 12:03:03 CEST 2002 - arvin@suse.de
+
+- use %{_libdir} for libraries
+
+-------------------------------------------------------------------
+Fri Mar 22 15:56:27 CET 2002 - kkaempf@suse.de
+
+- allow changing the callback pointer after creation (#15311).
+
+-------------------------------------------------------------------
+Mon Mar 18 10:46:10 CET 2002 - kkaempf@suse.de
+
+- Recode::iconv: adapt output_len when moving outbuf ptr
+- coding style adaption
+- drop "Resizing"/"Not enough space" warnings.
+
+-------------------------------------------------------------------
+Thu Mar 14 11:32:18 CET 2002 - pblahos@suse.cz
+
+- V 2.5.15
+- YUIInterpreter::Recode: Return from iconv was incorrectly processed,
+  when an unconvertible character appeared in a string to convert, all
+  subsequent calls would have ? appended. (#14209)
+
+-------------------------------------------------------------------
+Thu Mar  7 18:26:07 CET 2002 - ma@suse.de
+
+- V 2.5.14
+- Made YWidget::OptimizeChanges public available. Use it in
+  YUIInterpreter::evaluateReplaceWidget to tell the concrete UI,
+  that screen updates may be suppressed while a ReplacePoints
+  content is exchanged.
+
+-------------------------------------------------------------------
+Fri Feb 15 17:48:19 CET 2002 - kkaempf@suse.de
+
+- pass name space qualifier to other module on callback (#13381).
+
+-------------------------------------------------------------------
+Fri Feb 15 13:59:41 CET 2002 - ma@suse.de
+
+- Extend YUIInterpreter::Recode to recode between arbitrary encodings,
+  not just from/to UTF-8.
+
+-------------------------------------------------------------------
+Fri Feb 15 13:01:59 CET 2002 - kkaempf@suse.de
+
+- iconv only accepts upper case encoding names now (#13276).
+
+-------------------------------------------------------------------
+Mon Feb 11 18:13:28 CET 2002 - sh@suse.de
+
+- V 2.5.11
+- No longer force `opt(`zeroWidth, `zeroHeight) on YImage
+  with `opt(`tiled)
+
+-------------------------------------------------------------------
+Fri Feb  8 17:05:25 CET 2002 - sh@suse.de
+
+- V 2.5.10
+- New YImage options: tiled, scaleToFit
+- Allow loading images from local files from the UI
+
+-------------------------------------------------------------------
+Mon Jan 28 11:23:07 CET 2002 - ma@suse.de
+
+- V 2.5.9
+- Performance improvement for changing large tables
+
+-------------------------------------------------------------------
+Fri Jan 25 17:47:38 CET 2002 - sh@suse.de
+
+- V 2.5.8
+- Animated MNG animation support: New widget option `animated
+
+-------------------------------------------------------------------
+Thu Jan 24 20:27:08 CET 2002 - sh@suse.de
+
+- V 2.5.7
+- New optional widget: ColoredLabel
+
+-------------------------------------------------------------------
+Tue Jan 22 18:32:59 CET 2002 - sh@suse.de
+
+- V 2.5.6
+- New `opt(`keepSorting) for YTable widget
+
+-------------------------------------------------------------------
+Wed Jan  9 13:49:03 CET 2002 - sh@suse.de
+
+- V 2.5.6
+- Suppress complaints about widgets that have become invalid -
+  this may legitimately happen.
+
+-------------------------------------------------------------------
+Tue Dec 18 16:20:19 CET 2001 - kkaempf@suse.de
+
+- Use "y2base" binary for tests.
+
+-------------------------------------------------------------------
+Tue Dec 11 17:18:22 CET 2001 - kkaempf@suse.de
+
+- use YCPB_GETTEXTDOMAIN.
+
+-------------------------------------------------------------------
+Wed Dec  5 14:45:36 CET 2001 - sh@suse.de
+
+- V 2.5.3
+- Fixed bug #12556: Discard events from non-toplevel dialog widgets
+
+-------------------------------------------------------------------
+Thu Nov 15 13:58:04 CET 2001 - sh@suse.de
+
+- V 2.5.2
+- added proper #include for tolower()
+
+-------------------------------------------------------------------
+Tue Nov  6 18:20:43 CET 2001 - sh@suse.de
+
+- V 2.5.1
+- Automatic keyboard shortcut check
+- Automatic shortcut conflict resolver
+- New widget option `autoShortcut
+
+-------------------------------------------------------------------
+Thu Sep 27 11:31:10 CEST 2001 - ma@suse.de
+
+- version to 2.4.18
+- fixed YUIInterpreter::Recode(). Only the first ~8K of an input
+  string were actually recoded, and it's not advisable to allocate
+  the output buffer on stack, as it might be up to 6 times larger
+  than the input string (#11329).
+
+-------------------------------------------------------------------
+Wed Sep 19 18:15:27 CEST 2001 - sh@suse.de
+
+- V 2.4.17
+- Fixed bug #10378: Explicit UI::RecalcLayout()
+- New UI builtin: RecalcLayout()
+- New UI builtin: WidgetExists()
+
+-------------------------------------------------------------------
+Tue Sep 18 12:58:04 CEST 2001 - kkaempf@suse.de
+
+- allow passing of encoding via SetLanguage(lang, encoding) (#10807).
+
+-------------------------------------------------------------------
+Thu Sep 13 11:52:07 CEST 2001 - sh@suse.de
+
+- Removed setlocale( LC_ALL ) call - translator is now in WFM
+
+-------------------------------------------------------------------
+Thu Sep  6 18:24:30 CEST 2001 - sh@suse.de
+
+- V 2.4.15
+  New UI builtin: GetDisplayInfo()
+
+-------------------------------------------------------------------
+Tue Sep  4 16:30:02 CEST 2001 - sh@suse.de
+
+- Fixed bug #8650: Segfault when passing "nil" to ReplacePoint
+  V 2.4.14
+
+-------------------------------------------------------------------
+Tue Sep  4 16:09:52 CEST 2001 - sh@suse.de
+
+- Fixed bug #9401: Segfault in YMultiSelBox debug logging
+
+-------------------------------------------------------------------
+Thu Aug 30 16:57:00 CEST 2001 - kkaempf@suse.de
+
+- overload {set/get}Textdomain, implement via WFM
+
+-------------------------------------------------------------------
+Sat Jul 28 08:53:12 CEST 2001 - kkaempf@suse.de
+
+- evaluate locale via evaluateWFM()
+  drop const from evaluateLocale()
+
+-------------------------------------------------------------------
+Thu Jul 26 19:58:28 CEST 2001 - kkaempf@suse.de
+
+- evaluate all arguments of a term, reporting errors
+  never expect YCPError from evaluate()
+
+-------------------------------------------------------------------
+Thu Jul 26 18:01:14 CEST 2001 - msvec@suse.cz
+
+- penguins inside the yast2 window
+
+-------------------------------------------------------------------
+Thu Jul 26 13:02:31 CEST 2001 - kkaempf@suse.de
+
+- evaluate parameters locally before sending term to WFM
+- evaluate parameters locally before sending term to SCR
+
+-------------------------------------------------------------------
+Wed Jul 25 18:45:35 CEST 2001 - kkaempf@suse.de
+
+- implement evaluate{WFM,UI,SCR}() functions properly
+
+-------------------------------------------------------------------
+Wed Jul 11 13:23:50 CEST 2001 - sh@suse.de
+
+- V 2.4.6
+  New builtin: Glyph()
+
+-------------------------------------------------------------------
+Wed Jun 27 18:05:48 CEST 2001 - sh@suse.de
+
+- V 2.4.5
+  New widget: MultiSelectionBox
+
+-------------------------------------------------------------------
+Tue Jun 26 19:25:02 CEST 2001 - sh@suse.de
+
+- V 2.4.4
+  New widget: MenuButton
+
+-------------------------------------------------------------------
+Fri Jun 22 18:01:57 CEST 2001 - arvin@suse.de
+
+- fixed to compile with gcc 3.0
+
+-------------------------------------------------------------------
+Wed Jun 20 13:58:51 CEST 2001 - kkaempf@suse.de
+
+- fix for new automake
+- adapt CXXFLAGS for s390x
+
+-------------------------------------------------------------------
+Tue Jun 19 16:44:37 CEST 2001 - sh@suse.de
+
+- Implemented wish #8357: Restrict input characters
+  new widget property `ValidChars for TextEntry, ComboBox
+
+-------------------------------------------------------------------
+Tue Jun 19 14:07:21 CEST 2001 - kkaempf@suse.de
+
+- implement WFM() and SCR() callback mechanism
+
+-------------------------------------------------------------------
+Tue Jun 12 14:47:42 CEST 2001 - sh@suse.de
+
+- V 2.4.1
+  Changed BarGraph variable substitution from "%d" to "%1"
+  to become sformat() compatible
+
+-------------------------------------------------------------------
+Fri Jun  8 14:49:24 CEST 2001 - sh@suse.de
+
+- V 2.4.0
+  Macro recorder
+
+-------------------------------------------------------------------
+Mon May  7 15:43:18 CEST 2001 - sh@suse.de
+
+- V 2.3.9: New parameter "strip_ecoding" for GetLanguage() builtin
+  avoid clashes with new GLIBC locale behaviour / UTF-8 locales
+
+-------------------------------------------------------------------
+Fri Apr 20 13:53:44 CEST 2001 - kkaempf@suse.de
+
+- add split-alias for -devel package
+
+-------------------------------------------------------------------
+Thu Apr  5 19:51:05 CEST 2001 - sh@suse.de
+
+- new options zeroWidth, zeroHeight for image widget
+  to avoid complaints about title graphics not getting their
+  "nice size" of 2000 pixels wide
+- V 2.3.7
+
+-------------------------------------------------------------------
+Tue Mar 27 18:17:43 CEST 2001 - kkaempf@suse.de
+
+- implement "Recode"
+
+-------------------------------------------------------------------
+Thu Mar 15 12:32:42 CET 2001 - arvin@suse.de
+
+- don't include <minmax.h>
+
+-------------------------------------------------------------------
+Thu Mar  8 12:29:00 CET 2001 - arvin@suse.de
+
+- Strip debugging information from libraries in package.
+
+-------------------------------------------------------------------
+Wed Mar  7 20:24:04 CET 2001 - arvin@suse.de
+
+- moved libraries to /usr/lib
+
+-------------------------------------------------------------------
+Fri Feb 23 13:50:59 CET 2001 - ma@suse.de
+
+- version to 2.3.1
+- moved NCstring back to y2curses. recode interface moved to
+  YUIInterpreter.
+
+-------------------------------------------------------------------
+Thu Jan 25 11:24:12 CET 2001 - kkaempf@suse.de
+
+- Version 2.3.0: package split libyui / libyui-devel
+- install C++ includes in /usr/include/YaST2
+
+-------------------------------------------------------------------
+Mon Jan 22 17:09:58 CET 2001 - sh@suse.de
+
+- V2.2.13
+- Fix for bug #6062: Complaints about SetConsoleFont() params:
+  Correct checking of number of parameters for SetConsoleFont()
+
+-------------------------------------------------------------------
+Fri Jan 19 17:20:50 CET 2001 - ma@suse.de
+
+- V2.2.12
+- Pass encoding as argument to NCstring::setDefaultEncoding()
+
+-------------------------------------------------------------------
+Fri Jan 19 11:50:46 CET 2001 - arvin@suse.de
+
+- Fixed communication between threads. Possible fix for bug #5239.
+
+-------------------------------------------------------------------
+Thu Jan 18 17:33:06 CET 2001 - sh@suse.de
+
+- V2.2.10
+- Better handling for locale specific encodings:
+  Add "encoding" parameter to SetConsoleFont() and pass this through
+- Fix for bug 5290: Broadcast message corrupts YaST2 NCurses screen
+  Added new UI builtin RedrawScreen()
+
+-------------------------------------------------------------------
+Tue Jan 16 18:14:47 CET 2001 - kkaempf@suse.de
+
+- check for isNull() also (bug 5239)
+
+-------------------------------------------------------------------
+Tue Jan 16 17:56:04 CET 2001 - kkaempf@suse.de
+
+- better error reports (bug 5239)
+
+-------------------------------------------------------------------
+Thu Jan  4 10:57:51 CET 2001 - kkaempf@suse.de
+
+- V2.2.7: add NCstring (coming from y2curses)
+
+-------------------------------------------------------------------
+Tue Dec 19 14:58:33 CET 2000 - ma@suse.de
+
+- V2.2.6
+- pass YCPstrings to ui specific widgets
+
+-------------------------------------------------------------------
+Mon Dec 18 19:34:01 CET 2000 - sh@suse.de
+
+- New optional widget: DownloadProgress
+- V2.2.5
+
+-------------------------------------------------------------------
+Sat Dec  9 16:00:04 CET 2000 - kkaempf@suse.de
+
+- fix setlocale() for glibc 2.2
+
+-------------------------------------------------------------------
+Tue Dec  5 16:55:57 CET 2000 - sh@suse.de
+
+- New widget: MultiLineEdit
+- V2.2.3
+
+-------------------------------------------------------------------
+Thu Nov 30 19:08:30 CET 2000 - sh@suse.de
+
+- Improved layout algorithm: Handle Michel's pathological cases well
+
+-------------------------------------------------------------------
+Fri Nov 24 15:36:19 CET 2000 - kkaempf@suse.de
+
+- fix BarGraph widget
+
+-------------------------------------------------------------------
+Thu Nov 16 16:23:52 CET 2000 - kkaempf@suse.de
+
+- back to shared libs, support for dynamic plugins
+
+-------------------------------------------------------------------
+Thu Nov  9 12:31:59 CET 2000 - kkaempf@suse.de
+
+- link with crypt
+
+-------------------------------------------------------------------
+Tue Nov  7 18:39:10 CET 2000 - sh@suse.de
+
+- re-enabled static libs
+  new widgets: LogView, IntField
+  moved completely to new logging
+  version 2.1.5
+
+-------------------------------------------------------------------
+Tue Oct 31 14:31:02 CET 2000 - sh@suse.de
+
+- increased gcc warning level
+  resolved minor warnings
+  disabled static libs (speed up compilation)
+  version 2.1.4
+
+-------------------------------------------------------------------
+Fri Oct 27 10:06:34 CEST 2000 - sh@suse.de
+
+- Added gperf to neededforbuild
+  version 2.1.3
+
+-------------------------------------------------------------------
+Wed Oct 25 18:03:41 CEST 2000 - kkaempf@suse.de
+
+- Group set
+
+-------------------------------------------------------------------
+Wed Oct 25 13:53:24 CEST 2000 - sh@suse.de
+
+- Infrastructure for special widgets
+  special widgets BarGraph, Slider, PartitionSplitter
+  version 2.1.2
+
+-------------------------------------------------------------------
+Fri Sep 22 16:42:32 CEST 2000 - sh@suse.de
+
+- New layout engine
+  added Layout-HowTo doc
+  added screen shots for important examples
+  removed redundant examples dir (now: doc/examples)
+  version 2.1.1
+
+-------------------------------------------------------------------
+Thu Jul  6 15:43:21 CEST 2000 - sh@suse.de
+
+- proper `cancel handling (e.g. X11 window close event)
+  version 2.0.4
+
+-------------------------------------------------------------------
+Tue Jun 13 15:41:50 CEST 2000 - kkaempf@suse.de
+
+- added "GetModulename()" to get Hans more quiet.
+  version 2.0.3
+
+-------------------------------------------------------------------
+Wed Jun  7 16:15:56 CEST 2000 - schwab@suse.de
+
+- Add %{suse_update_config}.
+
+-------------------------------------------------------------------
+Mon Jun  5 15:24:48 CEST 2000 - sh@suse.de
+
+- fixed PollInput() core
+
+-------------------------------------------------------------------
+Mon May 29 13:51:08 CEST 2000 - kkaempf@suse.de
+
+- correct filelist in spec file
+
+-------------------------------------------------------------------
+Thu May 18 10:06:59 CEST 2000 - kkaempf@suse.de
+
+- join development package
+  bump version to 2.0.1
+
+-------------------------------------------------------------------
+Mon May 15 15:59:50 CEST 2000 - sh@suse.de
+
+- New widget: ComboBox
+
+-------------------------------------------------------------------
+Fri May 12 13:43:49 CEST 2000 - kkaempf@suse.de
+
+- patches to automake/libtool for IA64
+
+-------------------------------------------------------------------
+Thu May 11 09:04:20 CEST 2000 - kkaempf@suse.de
+
+- add ycp and y2 to neededforbuild
+
+-------------------------------------------------------------------
+Wed Apr 26 16:25:39 CEST 2000 - kkaempf@suse.de
+
+- Initial version based on yast2 from SuSE 6.4
+

@@ -1,0 +1,3 @@
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 3: Section s2 started but section s1 is not finished
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 6: Val2: values at the top level not allowed.
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 7: Nothing to close.

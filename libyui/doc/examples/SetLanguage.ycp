@@ -1,0 +1,47 @@
+UI(``{
+    // Example for SetLanguage() GetLanguage()
+    
+    OpenDialog(
+	       `VBox(
+		     `TextEntry(`id(`lang_field), "&Language:"),
+		     `HBox(
+			   `Label("Current language:"),
+			   `Label(`id(`lang_label), `opt(`outputField, `hstretch), GetLanguage(false))
+			   ),
+		     `HBox(
+			   `PushButton(`id(`set),		"&SetLanguage()\n"),
+			   `PushButton(`id(`get_strip),		"&GetLanguage()\nstrip encoding"),
+			   `PushButton(`id(`get_nostrip),	"&GetLanguage()\nwith encoding"),
+			   `HSpacing(3),
+			   `PushButton(`id(`close), "&Close" )
+			   )
+		     )
+	       );
+
+    SetFocus(`id(`lang_field));
+	     
+    while(true)
+    {
+	any id = UserInput();
+
+	if ( id == `close )
+	{
+	    CloseDialog();
+	    return;
+	}
+	else if ( id == `get_strip )
+	{
+	    ChangeWidget(`id(`lang_field), `Value, GetLanguage(true));
+	}
+	else if ( id == `get_nostrip )
+	{
+	    ChangeWidget(`id(`lang_field), `Value, GetLanguage(false));
+	}
+	else if ( id == `set )
+	{
+	    SetLanguage(QueryWidget(`id(`lang_field), `Value));
+	    ChangeWidget(`id(`lang_label), `Value, GetLanguage(false));
+	}
+    }
+})
+

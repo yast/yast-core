@@ -1,0 +1,10 @@
+/**
+ * This checks if log entries made by function defined in
+ * included file have correct filename/linenumber.
+ */
+{
+    include "./tests/empty.ycp";
+    y2milestone ("back in IncludeLog.ycp");
+
+    do_log ();
+}

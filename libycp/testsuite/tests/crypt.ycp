@@ -1,0 +1,13 @@
+
+//
+// various password encryption functions
+//
+
+( size (crypt ("John")) )
+
+( size (cryptmd5 ("Paul")) )
+
+( size (cryptbigcrypt ("George")) )
+
+( size (cryptblowfish ("Ringo")) )
+

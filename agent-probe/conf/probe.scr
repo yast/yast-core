@@ -1,0 +1,61 @@
+/**
+ * File:
+ *   probe.scr
+ * Summary:
+ *   SCR Agent for reading probing information.
+ * Access:
+ *   read-only
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ *   y2a_hwpb/hwprobe.html
+ * Example:
+ *   Read(.probe)
+ *   ($["architecture":"i386", 
+ *      "bios_video":[$["attached_to":$["baseclass":"Bridge", 
+ *                                      "bus":"PCI", 
+ *                                      ...
+ *                                    ], 
+ *                      "baseclass":"Display controller", 
+ *                      "bus":"PCI", 
+ *                      "cardtype":"AGP", 
+ *                      ...
+ *                    ]
+ *                    ...
+ *                   ]
+ *      ...
+ *    ]
+ *   )
+ **
+ *   Read(.probe.cdrom)
+ *   (
+ *    [
+ *     $["attached_to":$["baseclass":"Mass storage controller", 
+ *                       "bus":"PCI", 
+ *                       "device":"AHA-2940U2/W / 7890", 
+ *                       "device_id":65567, 
+ *                       "module":[ $["active":true, ... ] ],
+ *                       "resource":$["io":[ $["active":true, ... ] ], 
+ *                                    "irq":[ $["count":0, ...  ] ], 
+ *                                    "mem":[ $["active":true, ... ] ]
+ *                                  ], 
+ *                       "sub_device":"2940U2W SCSI Controller", 
+ *                       ...
+ *                       ], 
+ *       "baseclass":"Mass Storage Device", 
+ *       "bus":"SCSI", 
+ *       "cdtype":"dvd", 
+ *       ...
+ *       ]
+ *     ]
+ *    )
+ * 
+ * $Id$
+ *
+ * This agent allows access to the libhd hardware autoprobe library.
+ * See its own documentation for more details.
+ */
+.probe
+
+`ag_hwprobe ()

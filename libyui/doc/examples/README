@@ -1,0 +1,7 @@
+Run the examples by typing:
+
+   y2base <test>.ycp qt
+
+for example:
+
+   y2base ProgressBar1.ycp qt

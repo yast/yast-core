@@ -1,0 +1,74 @@
+This is a Modules Agent TODO file.
+----------------------------------
+$Id$
+
+TODO:
+-----
+
+- don't interpret "\\$" in comments (#5267)
+- other directives [see bottom] (keep,path,...)
+- replace calling WriteFile() in ModulesConf destructor with warning message 
+  when the structure was modified and final Writing was not called
+- some directives may crash the module (keep?)
+  - 0-<inf> params
+- writing comments after the line #like this
+- writing of '\\'?
+- if the line is too long, write '\\\n'
+- [add] prefix
+- multiple usage of one directive should make comments from all but last
+- deletion should also make a comment
+- document (and separate?) the Y2Logger.h
+- examples [see bottom]
+
+
+Directives:
+-----------
+Supported:
+  alias, options, pre-install, post-install
+Unsupported, but probably safe:
+  above, bellow, install, remove, probe, probe-all, post-install, post-remove
+Don't know and probably dangerous:
+  define, depfile, include, else, if, endif, elseif, insmod_opt, path,
+  path[TAG], keep, include, [add] prefix
+
+
+Examples:
+---------
+- "pre-install", "post-install" behave as "alias"
+- "options" is special
+- Write() same as Read()
+
+Dir(.modules)
+
+Dir(.modules.alias)
+Dir(.modules.options)
+...
+
+Dir(.modules.options.opl3)
+...
+
+-Dir(.modules.options.opl3.io)
+-Dir(.modules.alias.eth0)
+
+Read(.modules)
+Read(.modules.alias)
+Read(.modules.options)
+...
+
+Read(.modules.alias.eth0)
+Read(.modules.options.opl3)
+Read(.modules.options.opl3.io)
+
+Read(.modules.alias.eth0.comment)
+
+
+Additional YCP module:
+----------------------
+
+Insmod(String module) {
+  String insmod = SCR(Read(.modules.install));
+  if (insmod == "")
+    insmod = "/sbin/insmod";
+  return Exec(insmod,module);
+}
+

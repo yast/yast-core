@@ -1,0 +1,30 @@
+/**
+ * File:
+ *   net_hostnames.scr
+ * Summary:
+ *   SCR Agent for reading hostnames that are reachable on the local net,
+ *   samba servers, servers with some port opened
+ * Access:
+ *   read-only
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ *   man ping
+ *   man nslookup
+ * Example:
+ *   Read(.net.hostnames)
+ *   (["Snell.suse.de", "Steiner.suse.de", "Mandelbrot.suse.de", ...])
+ *   Read(.net.hostnames.515)
+ *   Read(.net.hostnames.631)
+ *   Read(.net.hostnames.samba)
+ *
+ * $Id$
+ *
+ * <p>Script that reads a list of host reachable on the local network
+ * by pinging the broadcast address and then doing a nslookup of the
+ * addresses found.</p>
+ */
+.net.hostnames
+
+`ag_hostnames ()

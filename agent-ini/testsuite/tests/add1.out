@@ -1,0 +1,29 @@
+(nil)
+; first line comment
+; second line comment
++Section1
+  Val1=value11
+  Val2=value12
+  Val3=value13
+
+; Comment to Sub1
++Sub1
+
+; Comment to SubSub1
++SubSub1
+  ournicekey=Our nice value
+-SubSub1
+-Sub1
+-Section1
+
+; Comment to Section2
++Section2
+  Val1=value21
+  Val2=value22
+  Val3=value23
+-Section2
+
+; New section
++Section3
+  Val1="Value1 in Section3"
+-Section3

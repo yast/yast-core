@@ -1,0 +1,350 @@
+<HTML>
+<BODY>
+YCP language reference: Blocks and Statements
+
+Author: Mathias Kettner <a href="mailto:kettner@suse.de">kettner@suse.de</a>
+
+<a name="top">
+<p>A YCP <i>block</i> is a sequence of <i>statements</i>. 
+A block can be evaluated (or call it executed, if you want).
+For execution of the block, the statements are executed one
+by one. The following code sample shows a block with some
+statements. It prints the numbers one to ten to stderr.
+The <i>result</i> of this block, i.e. what the block 
+is <i>evaluated to</i> is define with the <tt>return</tt>
+statement. In this case it is 11.
+
+<pre>
+{
+  integer n = 1;
+  while (n <= 10) {
+	_debug(n);
+	n = n + 1;
+  }
+  return n;
+}
+</pre>
+
+<p>YCP knows the following kinds of statements:</p>
+<ul>
+<li><a href="#expressionevaluation">expression evaluation</a>
+<li><a href="#variabledeclaration">variable declaration</a>
+<li><a href="#variableassignment">variable assignment</a>
+<li><a href="#conditional">conditional</a>
+<li><a href="#while"><tt>while</tt> loop</a>
+<li><a href="#dowhile"><tt>do ... while</tt> loop</a>
+<li><a href="#repeatuntil"><tt>repeat ... until</tt> loop</a>
+<li><a href="#break"><tt>break</tt></a>
+<li><a href="#continue"><tt>continue</tt></a>
+<li><a href="#return"><tt>return</tt></a>
+</ul>
+
+<a name="expressionevaluation">
+<h2>Expression evaluations</h2>
+<p>Any YCP value is an expression. What the <i>evaluation</i> of an expression
+means, depends on the data type of the expression. If it is a term structure,
+it will be evaluated by looking up a function definition and calling that function.
+For example the builtin function <tt>_debug()</tt> prints some values to the standard
+error output. It <i>evaluates</i> always to <tt>nil</tt>. The following block prints a
+hello world message:
+<pre>
+{
+  _debug("Hello World!");
+}
+</pre>
+
+<p>Note, that evaluation statements always end with a semicolon. The return value of
+<tt>_debug()</tt> is ignored in this example. If you want to see it, just use another
+call to <tt>debug</tt>:
+<pre>
+{
+  _debug(_debug("Hello World!"));
+}
+</pre>
+<p>Now you will get the following output:
+<pre>
+Hello World!
+nil
+</pre>
+
+<p>Most of the YCP data types can't be evaluated, or in other words, evaluate to
+themselves. This holds for the types <tt>void</tt>, <tt>boolean</tt>,
+<tt>integer</tt>, <tt>float</tt>, <tt>string</tt>, <tt>locale</tt>,
+<tt>path</tt> and <tt>declaration</tt>.
+
+<p><ul>
+<li><tt><b>symbol</b></tt>s are considered as <i>variable names</i>. They are evaluated
+to the current value of the variable the name. Very obvious, as one would expect. In
+YCP you have the possibility to <i>quote</i> a symbol. A quoted symbol is evaluated to
+itself. Try this one:
+<pre>
+{
+  integer n = 8;
+  _debug(n);
+  _debug(`n);
+}
+</pre>
+<p>You will get the following output:
+<pre>
+8
+`n
+</pre>
+
+<li><tt><b>term</b></tt>s are looked up as functions</tt>. But before the function call,
+the terms <i>arguments</i> are evaluated. So if you write <tt>foo(7+8)</tt>, the YCP
+interpreter will first form the term <tt>foo(15)</tt> and then evaluate that.
+<p>If you prefix a term with a single
+backquote <tt>`</tt>, it is <i>not</i> evaluated, only its arguments are evaluated.
+Thus <tt>`foo(7+8)</tt> will evaluate to <tt>foo(15)</tt>. You can try the following
+piece of code to try it out:
+<pre>
+{ 
+  _debug(`foo(7+8));
+}
+</pre></li>
+
+<li><tt><b>list</b></tt>s are evaluated by evaluating the lists elements and forming
+a new list. For example the list
+<tt>[ 1+1, true || false]</tt> evaluates to <tt>[ 2, true ] </tt>
+</li>
+
+<li><tt><b>map</b></tt>s are handled similar to lists. The keys and values are evaluated
+to form a new map. But other than with lists, the number of elements of the map can be
+reduced, since pairs with identical keys may be appearing. On the last key/value pair makes
+it into the  mapping than. Consider <tt>$[ 2: "two", 1+1: "one'n'one" ]</tt>. This map
+evaluates to <tt>$[ 2: "one'n'one" ]</tt></li>
+
+<li><tt><b>block</b></tt>s are evaluated by executing the statements of the block and
+by honoring the <tt>return</tt> statement. See <a href="#top">here</a> for a more
+detailed description of how blocks are executed.</li>
+
+</ul>
+
+<a name="quoting">
+<h2>Quoting</h2>
+<p>The <i>evaluation</i> of an expression within YCP can be avoided by <i>quoting</i> it.
+This makes sense in a context where a YCP expression should be handed over to another
+component that will evaluate that expression for itself. There are two different kinds of
+quoting called <i>single quoting</i> <b>(`)</b> and <i>deep quoting</i> <b>(``)</b>. In
+the following example a YCP expression is handed over to SCR with meanings:
+
+<pre>
+--YCP--> There is something left for YCP to evaluate.
+--SCR--> There is nothing left for YCP to evaluate, hand expression
+         over to SCR after removing all quotes.
+</pre>
+
+<p>The <i>single quote</i> <b>(`)</b> applies only to the expression it is attached to. It
+<u>does not</u> apply to expressions contained therein. Furthermore it stays in place until
+YCP evaluation has finished.
+
+<pre>
+integer value = 5;
+SCR(`term(value)) --YCP--> SCR(`term(5)) --SCR--> term(5)
+</pre>
+
+<p>The <i>deep quote</i> <b>(``)</b> <u>does</u> apply to <u>all expressions</u> contained in the
+expression it is attached to. The deep quoted expression is evaluated to itself and evaluation of
+this expression stops thereafter.
+
+<pre>
+integer value = 5;
+SCR(``term(value)) --SCR--> term(value)
+</pre>
+
+<p>This is the same as:
+
+<pre>
+SCR(`term(`value)) --SCR--> term(value)
+</pre>
+
+</ul>
+
+<a name="variabledeclaration">
+<h2>Variable declarations</h2>
+<p>Variable declarations in YCP are simliar to C. Before you use a variable,
+you must declare it. The variable declaration statement looks like this:
+<i>declaration</i> <i>variablename</i> <tt>=</tt> <i>initialvalue</i> <tt>;</tt>.
+The initial value is <i>mandatory</i>. The declaration nails down, which values the
+variable is allowed to hold. You can write a datatype here, like <tt>integer</tt>, 
+<tt>list</tt> or <tt>boolean</tt> or you simple write <tt>any</tt>, which is considered
+bad style. More complex declarations are available, but are discussed in another
+chapter, namely <a href="YCP-declarations.html">YCP declarations</a>.
+
+<p>If you try to assign a value to a variable that is not allowed by the declaration,
+you will get a runtime error. Examples of variable declarations:
+<pre>
+{
+  integer num = 42;
+  float num420 = 42.0;
+  string hirn = "This is a string constant";
+  integer sum = 4 * (num + 8);
+}
+</pre>
+
+<a name="variableassignment">
+<h2>Variable assignments</h2>
+<p>
+  An assignment statement is almost the same as a declaration statement. Just
+  leave out the declaration. It is an error to assign a value to a variable,
+<ul>
+<li>that is not declared</li>
+<li>that's declaration does not fit the value to be assigned</li>
+</ul>
+Examples:
+<pre>
+{
+  integer num = 0;
+  num = num + 1;
+  num = 2 * num;
+  hugo = 18; // THIS IS AN ERROR!
+  num = ">:-P"; // THIS IS AN ERROR!
+  string s = ":-)"; // this is ok.
+}
+</pre>
+
+<a name="conditional">
+<h2>Conditionals</h2>
+<p>A conditional statement has the form <tt><b>if</b> (</tt> <i>condition</i> <tt><b>)</b></tt>
+<i>thenpart</i> 
+<b><tt>else</tt></b> <i>elsepart</i>. The <tt>else</tt> <i>elsepart</i> may be omitted.
+<i>thenpart</i> and <i>elsepart</i> may either be single statements or a list of statements
+enclosed in curly bracket, i.e a block. The <i>thenpart</i> is executed only in the case,
+<i>condition</i> evaluates to <tt>true</tt>, the <i>elsepart</i> otherwise. It is an error,
+if <i>condition</i> evaluates to something other than <tt>true</tt> or <tt>false</tt>.
+<pre>
+{ 
+  integer a = 10;
+  if (a > 10) 
+	_debug("a greater than 10");
+  else {
+	a = a + 10;
+	_debug("More statements than one require a block");
+  }
+}
+</pre>
+
+<a name="while">
+<h2>The <tt>while</tt> loop</h2>
+<p>The <tt>while</tt> statement executes a block as long as a condition
+holds. The form is <tt><b>while (</tt></b> <i>condition</i> <tt><b>)</b></tt> <i>body</i>. 
+<i>condition</i> must evaluate to <tt>true</tt> or <tt>false</tt>. The body
+may either be one statement or a block of statements.
+<pre>
+{
+  integer a = 0;
+  while (a < 10) a = a + 1;
+  while (a >= 0) {
+	_debug(a);
+	a = a - 1;
+  }
+}
+</pre>
+
+<a name="dowhile">
+<h2>The <tt>do ... while</tt> statement</h2>
+<p>This statement defines a loop where the condition is checked at the
+end of the body. Thus the body is executed at least once. The form 
+is <tt><b>do</b></tt> <i>block</i> <b><tt>while (</tt></b> <i>condition</i><tt><b>)</b></tt>.
+This example prints the numbers from 0 to 10.
+<pre>
+{
+  integer a = 0;
+  do {
+    _debug(a);
+    a = a + 1;
+  } while (a <= 10);
+}
+</pre>
+
+<a name="repeatuntil">
+<h2>The <tt>repeat ... until</tt> statement</h2>
+<p>This is similar to the <tt>do ... while</tt> statement, only the condition
+is logically negated. Here is the upper example converted to <tt>repeat ... until</tt>.
+<pre>
+{
+  integer a = 0;
+  repeat {
+    _debug(a);
+    a = a + 1;
+  } until (a > 10);
+}
+</pre>
+
+
+<a name="break">
+<h2>The <tt>break</tt> statement</h2>
+<p>The break statement is used to immediately leave a loop. The execution
+is resumed in the first statement after the end of the loop.
+<pre>
+{
+   integer a = 0;
+   repeat {
+     _debug(a);
+     a = a + 1;
+     if (a == 7) break; // Don't like seven. Stop the loop here
+  } until (a>10); // a will never be 10
+  _debug(a); // This prints 7
+} 
+</pre>
+
+<a name="continue">
+<h2>The <tt>continue</tt> statement</h2>
+<p>The continue statement is used to immediately begin the next turn of a loop.
+For a <tt>while</tt> loop, it jumps to the beginning of the loop and checks the
+condition. For a <tt>do ... while</tt> or <tt>repeat ... until</tt> loop, it
+goes to the end of the loop end checks the condition.
+<pre>
+{
+   integer a = 0;
+   while (a < 10)
+   { 
+      a = a + 1;
+      if (a % 2 == 1) continue;
+      _debug("This is an even number:" + a);
+   }
+}
+</pre>
+
+<a name="return">
+<h2>The <tt>return</tt> statement</h2>
+<p>With the return statement you do two things: 
+<ul>
+<li>Leave the current block</li>
+<li>Define the value of that block</li>
+</ul>
+<p>The following block evaluates to 42;
+<pre>
+{
+  return 42;
+  _debug("This command will never be executed");
+}
+</pre>
+
+<p>If blocks are <i>nested</i>, i.e. if a block is contained in another
+block in form of a <i>statement</i>, the return statement leaves all nested
+blocks and defines the value of the outermost block. If a block is used in
+an expression other than a block, and that expression is contained in an
+outer block, the return statement of the inner block won't leave the outer
+block but define the value of the inner one. Examples:
+
+This program evaluates to 18:
+<pre>
+{
+   while (true)
+   {
+      return 18;
+   }
+}
+</pre>
+
+This program evaluates to 3:
+<pre>
+{ 
+   integer a = 1 + { return 2; };
+   return a;
+}
+</pre>
+</BODY>
+</HTML>
+

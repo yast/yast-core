@@ -1,0 +1,4 @@
+("First Unix style comments are checked ...")
+("Second C style comments are checked ...")
+("Third C++ style comments are checked ...")
+(true)

@@ -1,0 +1,6 @@
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 30: Extra characters: <aaa>
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 31: Extra characters: <bbb>
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 32: Extra characters: <ccc>
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 39: Extra characters: </ccc>
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 40: Extra characters: </bbb>
+[yast2-agent-ini] IniParser.cc(parse_helper):XXX 41: Extra characters: </aaa>

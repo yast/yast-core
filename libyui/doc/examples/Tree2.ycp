@@ -1,0 +1,97 @@
+UI(``{
+    // Build a dialog with a tree for directory selection, three
+    // buttons with common values and a label that directly echoes any
+    // selected directory.
+    //
+    // The tree in this example uses the `notify option that makes
+    // UserInput() return immediately as soon as the user selects a
+    // tree item rather than the default behaviour which waits for the
+    // user to activate a button.
+    
+    OpenDialog(
+	       `VBox(
+		     `Tree(`id(`dest_dir),
+			   `opt(`notify),
+				   "Select destination directory:",
+				   [
+				    `item(`id(`root), "/" , true,
+					  [
+					   `item(`id(`etc), "etc",
+						 [
+						  `item("opt"),
+						  `item("SuSEconfig"),
+						  `item("X11")
+						 ]
+						 ),
+					   `item("usr", false, 
+						 [
+						  "bin",
+						  "lib",
+						  `item("share",
+						       [
+							"man",
+							"info",
+							"emacs"
+							]
+						       ),
+						  `item(`id(`usr_local),"local"),
+						  `item("X11R6",
+							[
+							 "bin",
+							 "lib",
+							 "share",
+							 "man",
+							 "etc"
+							 ]
+							)
+						  ]
+						 ),
+					   `item(`id(`opt), "opt", true,
+						 [
+						  "kde",
+						  "netscape",
+						  "Office51"
+						  ]
+						 ),
+					   `item("home"),
+					   "work",
+					   `item(`id(`other), "<other>")
+					   ]
+					  )
+				   ] ),
+		     `HBox(
+			   `PushButton(`id(`sel_opt),		`opt(`hstretch), "/&opt" ),
+			   `PushButton(`id(`sel_usr),		`opt(`hstretch), "/&usr" ),
+			   `PushButton(`id(`sel_usr_local),	`opt(`hstretch), "/usr/&local" )
+			   ),
+		     `HBox(
+			   `Label("Current Value:"),
+			   `Label(`id(`echo), `opt(`outputField), "?????????")
+			   ),
+		     `PushButton(`id(`ok), `opt(`default), "&OK")
+		     )
+	       );
+
+    any id = nil;
+
+    repeat
+	{
+	    id = UserInput();
+
+	    if      ( id == `sel_usr)		ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
+	    else if ( id == `sel_usr_local)	ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
+	    else if ( id == `sel_opt) 		ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
+	    else if ( id == `dest_dir)
+	    {
+		ChangeWidget( `id( `echo ), `Value, "hello");
+		symbol current_dir = QueryWidget(`id(`dest_dir), `CurrentItem);
+		ChangeWidget( `id( `echo ), `Value, current_dir);
+	    }
+	} until ( id == `ok );
+
+
+    // Close the dialog.
+    // Remember to read values from the dialog's widgets BEFORE closing it!
+    CloseDialog();
+
+})

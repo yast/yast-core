@@ -1,0 +1,103 @@
+#!/bin/bash
+
+#
+# agent for reading
+# - hostnames from local network
+# - hostnames of hosts that have opened port 515
+# - hostnames of samba servers
+#
+
+export LC_ALL=C
+exec 2>/dev/null
+
+while true ; do
+    IFS=
+    read COMMAND || exit
+    unset IFS
+
+    case "$COMMAND" in
+	"result ("*)
+	    exit
+	    ;;
+	'Read (.interface,'*)
+	    INTERFACE=$(echo "$COMMAND" | sed 's/^Read (.interface, *"\(.*\)")/\1/')
+            BADLOOKUP=0
+	    BROADCAST=$(/sbin/ifconfig $INTERFACE | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
+	    if [ "$BROADCAST" ] ; then
+		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+		ANSWER=
+		for ip in $IPS ; do
+                    if [ $BADLOOKUP != 4 ] ; then
+                        NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
+                        if [ -z $NAME ] ; then
+                            BADLOOKUP=$(expr $BADLOOKUP + 1)
+                        fi
+                        NAME=${NAME:-$ip}
+                    else
+                        NAME=$ip
+                    fi
+		    ANSWER="$ANSWER\"$NAME\", "
+		done
+		echo '[' "$ANSWER" ']'
+	    else
+		echo '[]'
+	    fi
+	    ;;
+	'Read (.)')
+            BADLOOKUP=0
+	    BROADCAST=$(/sbin/ifconfig | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
+	    if [ "$BROADCAST" ] ; then
+		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+		ANSWER=
+		for ip in $IPS ; do
+                    if [ $BADLOOKUP != 4 ] ; then
+                        NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
+                        if [ -z $NAME ] ; then
+                            BADLOOKUP=$(expr $BADLOOKUP + 1)
+                        fi
+                        NAME=${NAME:-$ip}
+                    else
+                        NAME=$ip
+                    fi
+		    ANSWER="$ANSWER\"$NAME\", "
+		done
+		echo '[' "$ANSWER" ']'
+	    else
+		echo '[]'
+	    fi
+	    ;;
+	'Read (.,'*)
+            rootpart=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
+            BADLOOKUP=0
+	    BROADCAST=$(/sbin/ifconfig | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
+	    if [ "$BROADCAST" ] ; then
+		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+		ANSWER=
+		for ip in $IPS ; do
+		    if /usr/bin/netcat -w 1 -z $ip $rootpart ; then
+			if [ $BADLOOKUP != 4 ] ; then
+			    NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
+			    if [ -z $NAME ] ; then
+				BADLOOKUP=$(expr $BADLOOKUP + 1)
+			    fi
+			    NAME=${NAME:-$ip}
+			else
+			    NAME=$ip
+			fi
+			ANSWER="$ANSWER\"$NAME\", "
+		    fi
+		done
+		echo '[' "$ANSWER" ']'
+	    else
+		echo '[]'
+	    fi
+	    ;;
+	'Read (.samba)')
+	    echo -n [
+		nmblookup -M -T - | awk -F '[, \t]+' '/<01>/ { printf "\"%s\", ", $1; }'
+	    echo ]
+	    ;;
+	*)
+	    echo nil
+    esac
+done

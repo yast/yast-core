@@ -1,0 +1,3 @@
+[YCP] debug/wr_chg.ycp:XXX Writting:
+[YCP] debug/wr_chg.ycp:XXX Destructor:
+[yast2-agent-ini] IniParser.cc(write):XXX File debug/wr_chg.in.test did not change. Not saving.

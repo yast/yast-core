@@ -1,0 +1,8 @@
+/*
+ * Here ignore_case is and prefer_uppercase is on
+ */
+{
+    // ignore case in values and preffer uppercase
+    Write (., "force");
+    return Dir (.s);
+}

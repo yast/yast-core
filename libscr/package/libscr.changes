@@ -1,0 +1,148 @@
+-------------------------------------------------------------------
+Tue Apr 23 12:03:03 CEST 2002 - arvin@suse.de
+
+- use %{_libdir} for libraries
+
+-------------------------------------------------------------------
+Thu Jan 31 13:48:17 CET 2002 - arvin@suse.de
+
+- fixed calling of Execute with single argument
+- report YCPError if number of arguments to Read, Write, Execute
+  or Dir is wrong
+
+-------------------------------------------------------------------
+Tue Dec 18 16:33:37 CET 2001 - arvin@suse.de
+
+- use DOCDIR and some cleanup
+
+-------------------------------------------------------------------
+Sat Nov 24 20:21:50 CET 2001 - arvin@suse.de
+
+- provide template function run_agent for testsuites of agents
+
+-------------------------------------------------------------------
+Sat Nov 17 21:18:01 CET 2001 - arvin@suse.de
+
+- provide template classes Y2AgentComponent and Y2CCAgentComponent
+
+-------------------------------------------------------------------
+Wed Aug 29 19:41:30 CEST 2001 - arvin@suse.de
+
+- removed obsolete targetroot functions
+
+-------------------------------------------------------------------
+Fri Aug 10 11:24:14 CEST 2001 - arvin@suse.de
+
+- renamed functions get_targetroot and prepend_targetroot to
+  just get_root and prepend_root
+
+-------------------------------------------------------------------
+Thu Aug  9 09:50:50 CEST 2001 - kkaempf@suse.de
+
+- readconf() return YCPValue now (for proper YCPError() handling)
+
+-------------------------------------------------------------------
+Wed Aug 08 17:59:47 CEST 2001 - arvin@suse.de
+
+- implemented functions get_targetroot and prepend_targetroot
+
+-------------------------------------------------------------------
+Mon Jul 16 13:01:22 CEST 2001 - arvin@suse.de
+
+- fixed rpm group tag (bug #9400)
+
+-------------------------------------------------------------------
+Fri Jun 29 14:45:41 CEST 2001 - arvin@suse.de
+
+- added function readconf to class SCRAgent
+
+-------------------------------------------------------------------
+Wed Jun 20 13:54:55 CEST 2001 - kkaempf@suse.de
+
+- adapt %build section to new automake
+- fix CXXFLAGS for s390x
+
+-------------------------------------------------------------------
+Fri Apr 20 13:43:29 CEST 2001 - kkaempf@suse.de
+
+- provide split alias for -devel package
+
+-------------------------------------------------------------------
+Thu Mar  8 12:29:00 CET 2001 - arvin@suse.de
+
+- Strip debugging information from libraries in package.
+
+-------------------------------------------------------------------
+Wed Mar  7 20:20:44 CET 2001 - arvin@suse.de
+
+- moved libraries to /usr/lib
+
+-------------------------------------------------------------------
+Fri Jan 26 20:39:43 CET 2001 - arvin@suse.de
+
+- package split libscr / libscr-devel
+- install C++ includes in /usr/include/YaST2
+
+-------------------------------------------------------------------
+Wed Dec  6 11:06:59 CET 2000 - kkaempf@suse.de
+
+- fix neededforbuild
+
+-------------------------------------------------------------------
+Thu Nov 16 16:29:33 CET 2000 - kkaempf@suse.de
+
+- enable shared libs for dynamic plugins
+
+-------------------------------------------------------------------
+Wed Nov  8 13:53:39 CET 2000 - kkaempf@suse.de
+
+- link binary with libcrypt
+
+-------------------------------------------------------------------
+Tue Nov  7 12:14:39 CET 2000 - kkaempf@suse.de
+
+- support unloading of agents
+
+-------------------------------------------------------------------
+Wed Oct 25 18:01:14 CEST 2000 - kkaempf@suse.de
+
+- Group defined
+
+-------------------------------------------------------------------
+Fri Sep 29 11:04:00 CEST 2000 - kkaempf@suse.de
+
+- delayed agent activation to save memory
+  version 2.1.0
+
+-------------------------------------------------------------------
+Wed Jun  7 16:12:44 CEST 2000 - schwab@suse.de
+
+- Add %{suse_update_config}.
+
+-------------------------------------------------------------------
+Wed May 31 17:17:51 CEST 2000 - kkaempf@suse.de
+
+- better internal checks
+
+-------------------------------------------------------------------
+Thu May 18 12:03:51 CEST 2000 - kkaempf@suse.de
+
+- fix specfile
+  join developer package
+
+-------------------------------------------------------------------
+Tue May 16 09:48:59 CEST 2000 - kkaempf@suse.de
+
+- fix agent subclassing
+  bump version to 2.0.1
+
+-------------------------------------------------------------------
+Fri May 12 14:01:25 CEST 2000 - kkaempf@suse.de
+
+- patches for automake/libtool IA64
+
+-------------------------------------------------------------------
+Wed May 10 11:42:42 CEST 2000 - kkaempf@suse.de
+
+- Initial version based on yast2 from SuSE 6.4
+

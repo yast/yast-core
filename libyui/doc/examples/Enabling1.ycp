@@ -1,0 +1,22 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `PushButton(`id(`test),   `opt(`hstretch, `disabled), "Disabled"),
+		     `PushButton(`id(`change), `opt(`hstretch), "&Change")
+		     )
+	       );
+
+    boolean enabled = false;
+    
+    while (UserInput() != `cancel)
+    {
+	enabled = !enabled;
+	ChangeWidget(`id(`test), `Enabled, enabled);
+	
+	if (enabled) 
+	    ChangeWidget(`id(`test), `Label, "Enabled");
+	else 
+	    ChangeWidget(`id(`test), `Label, "Disabled");
+    }
+})
+

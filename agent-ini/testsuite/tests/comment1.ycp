@@ -1,0 +1,8 @@
+{
+    // comment on line, has bigger priority then value parsing
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    Write (., "force");
+    return Dir (.s);
+}

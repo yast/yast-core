@@ -1,0 +1,20 @@
+/**
+ * File:
+ *   ping.scr TODO
+ * Summary:
+ *   SCR Agent for doing a ping
+ * Access:
+ *   read/write
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ * Example:
+ *   Read(.ping,["www.suse.de"])
+ * 
+ * $Id$
+ *
+ */
+.ping
+
+`ag_ping ()

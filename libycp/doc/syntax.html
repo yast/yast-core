@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>BNF Grammar of YCP</title>
+  </head>
+
+  <body bgcolor="white">
+    <h1>BNF Grammar of YCP</h1>
+
+<h2>Lexical elements</h2>
+
+<table>
+<tr><td>
+		letter
+
+</td><td>::=</td><td>
+
+			<tt><b>a</b></tt>
+		|	<tt><b>b</b></tt>
+		|	. . .
+		|	<tt><b>z</b></tt>
+		|	<tt><b>A</b></tt>
+		|	<tt><b>B</b></tt>
+		|	. . .
+		|	<tt><b>Z</b></tt>
+</td></tr>
+<tr><td>
+	odigit
+
+</td><td>::=</td><td>
+
+			<tt><b>0</b></tt>
+		|	<tt><b>1</b></tt>
+		|	. . .
+		|	<tt><b>7</b></tt>
+
+<tr><td>
+	digit
+
+</td><td>::=</td><td>
+			odigit
+		|	<tt><b>8</b></tt>
+		|	<tt><b>9</b></tt>
+
+<tr><td>
+	hdigit
+
+</td><td>::=</td><td>
+			digit
+		|	<tt><b>a</b></tt>
+		|	. . .
+		|	<tt><b>f</b></tt>
+		|	<tt><b>A</b></tt>
+		|	. . .
+		|	<tt><b>F</b></tt>
+
+<tr><td>
+		whitespace
+
+</td><td>::=</td><td>
+			<i>blank</i>
+		|	<i>tab</i>
+		|	<i>newline</i>
+</td></tr>
+
+<tr><td>symbol</td><td>::=</td><td>
+	  letter symtail
+</td></tr><tr><td></td><td>|</td><td>
+	<tt><b>_</b></tt> symtail
+
+<tr><td>symtail</td><td>::=</td><td>
+	  letter symtail
+</td></tr><tr><td></td><td>|</td><td>
+	digit symtail
+</td></tr><tr><td></td><td>|</td><td>
+	<tt><b>_</b></tt> symtail
+</td>
+</tr>
+</table>
+<p><small>NB: a symbol constisting only of underline characters is not allowed</small>
+<br><small>NB: a symbol without a letter is not allowed</small>
+<p>
+<hr>
+<h2>Lexical Constants</h2>
+
+<table>
+<tr><td>
+		boolean
+
+</td><td>::=</td><td>
+			<tt><b>true</b></tt> | <tt><b>false</b></tt>
+</td></tr>
+<tr><td>
+                void
+</td><td>::=</td><td>
+                        <tt><b>nil</b></tt>
+</td></tr>
+<tr><td><br></td></tr>
+<tr><td>
+                integer
+</td><td>::=</td><td>
+			[ <tt><b>-</b></tt> ] numeric
+</td></tr><tr><td>
+</td><td>|</td><td>	[ <tt><b>-</b></tt> ] <tt><b>0</b></tt> octeric
+</td></tr><tr><td>
+</td><td>|</td><td>	[ <tt><b>-</b></tt> ] <tt><b>0x</b></tt> hexeric
+</td></tr>
+<tr><td>
+                float
+</td><td>::=</td><td>
+                        integer [ . numeric ] [ <tt><b>e</b></tt>|<tt><b>E</b></tt> integer ]
+</td></tr>
+<tr><td><br></td></tr>
+<tr><td>
+		numeric
+</td><td>::=</td><td>
+			digit
+</td></tr>
+<tr><td></td>
+<td>|</td><td>
+			digit numeric
+</td></tr>
+
+<tr><td>
+		hexeric
+</td><td>::=</td><td>
+			hdigit
+<tr><td></td>
+<td>|</td><td>		hdigit hexeric
+</td></tr>
+
+<tr><td>
+		octeric
+</td><td>::=</td><td>
+			odigit
+<tr><td></td>
+<td>|</td><td>		odigit octeric
+
+<tr><td><br></td></tr>
+<tr><td>
+                string
+</td><td>::=</td><td>
+                        <tt><b>"</b></tt> [ stringvalue ] <tt><b>"</b></tt>
+</td></tr>
+<tr><td>
+		stringvalue
+</td><td>::=</td><td>
+			stringchar stringvalue
+<tr><td>
+		stringchar
+</td><td>::=</td><td>
+			<i>any character except "</i>
+</td></tr>
+<tr><td></td><td>|</td><td>
+			<tt><b>\</b></tt> escapechar 
+<tr><td>
+		escapechar
+
+</td><td>::=</td><td>
+			<tt><b>\</b></tt>
+		|	<tt><b>b</b></tt>
+		|	<tt><b>r</b></tt>
+		|	<tt><b>n</b></tt>
+		|	<tt><b>f</b></tt>
+		|	<tt><b>t</b></tt>
+</td></tr><tr><td></td><td>
+		|</td><td>
+			<tt><b>0</b></tt> octeric
+</td></tr><tr><td></td><td>
+		|</td><td>
+			<i>newline</i>
+</td></tr>
+
+<tr><td><br></td></tr>
+<tr><td>
+                path
+</td><td>::=</td><td>
+			<tt><b>.</b></tt> pathtail
+</td></tr>
+<tr><td>
+		pathtail
+
+</td><td>::=</td><td>
+			symbol
+</td></tr><tr><td></td>
+<td>|</td><td>
+			numeric
+</td></tr><tr><td></td>
+<td>|</td><td>
+			path
+</td></tr>
+
+<tr><td><br></td></tr>
+
+<tr><td>
+			identifier
+</td><td>::=</td><td>
+				symbol [ <tt><b>::</b></tt> identifier ]
+</td></tr>
+<tr><td><br></td></tr>
+<tr><td>
+		byteconst
+</td><td>::=</td><td>
+			<tt><b>#[</b></tt> [ byteelements ] <tt><b>]</b></tt>
+</td></tr>
+<tr><td>
+		byteelements
+</td><td>::=</td><td>
+	hdigit hdigit [ byteelements ]
+</td></tr>
+
+<tr><td><br></td></tr>
+
+<tr><td>
+		constant
+</td><td>::=</td><td>
+			boolean
+		|	void
+		|	integer
+		|	float
+		|	string
+		|	byteblock
+</td></tr>
+</table>
+<p><small>NB: inside a path symbol, dashes are allowed.</small>
+
+<p>
+<hr>
+<h2>Data Types</h2>
+
+<table>
+<tr><td>
+		decltype
+
+</td><td>::=</td><td>
+			<tt><b>any</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>void</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>boolean</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>integer</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>float</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>string</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>byteblock</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>map</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>locale</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>identifier</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>term</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>path</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>block</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>declaration</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>
+			<tt><b>symbol</b></tt>
+</td></tr>
+</table>
+
+<p>
+<hr>
+<h2>Expressions</h2>
+
+<table>
+<tr><td>
+			expression
+</td>
+<td>::=</td><td>		constant
+</td></tr>
+<tr><td></td><td>|</td><td>	tuple
+</td></tr>
+<tr><td></td><td>|</td><td>	map
+</td></tr>
+<tr><td></td><td>|</td><td>	identifier
+</td></tr>
+<tr><td></td><td>|</td><td>	term
+</td></tr>
+<tr><td></td><td>|</td><td>	block
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>``</b></tt> block
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>(</b></tt> expression <tt><b>)</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>``(</b></tt> expression <tt><b>)</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	prefixop expression
+</td></tr>
+<tr><td></td><td>|</td><td>	expression infixop expression
+
+</td></tr>
+
+
+<tr><td><br></td></tr>
+
+<tr><td>
+			block
+</td><td>::=</td><td>
+				<tt><b>{</b></tt> <tt><b>}</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	
+				<tt><b>{</b></tt> statements <tt><b>}</b></tt>
+</td></tr>
+
+<tr><td><br></td></tr>
+
+<tr><td>
+			tuple
+</td><td>::=</td><td>
+				<tt><b>[</b></tt> [ tupleelements ] <tt><b>]</b></tt>
+</td></tr>
+<tr><td>		tupleelements
+</td><td>::=</td><td>
+				expression [ <tt><b>,</b></tt> tupleelements ]
+</td></tr>
+<tr><td>		map
+</td><td>::=</td><td>
+				<tt><b>$[</b></tt> [ mapelements] <tt><b>]</b></tt>
+</td></tr>
+<tr><td>		mapelements
+</td><td>::=</td><td>
+				expression <tt><b>:</b></tt> expression [ <tt><b>,</b></tt> mapelements ]
+</td></tr>
+
+<tr><td><br></td></tr>
+
+<tr><td>		term
+</td><td>::=</td><td>
+				[ <tt><b>``</b></tt> ] identifier <tt><b>(</b></tt> [ tupleelements ] <tt><b>)</b></tt>
+</td></tr>
+
+<tr><td><br></td></tr>
+
+<tr><td>		prefixop
+</td><td>::=</td><td>
+				<tt><b>-</b></tt>
+</td></tr><tr>
+<td></td><td>|</td><td>
+				<tt><b>!</b></tt>
+<tr><td>
+			infixop
+
+</td><td>::=</td><td>
+				<tt><b>+</b></tt>
+			|	<tt><b>-</b></tt>
+			|	<tt><b>*</b></tt>
+			|	<tt><b>/</b></tt>
+			|	<tt><b>%</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>&amp;</b></tt>
+			|	<tt><b>|</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>&amp;&amp;</b></tt>
+			|	<tt><b>||</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>==</b></tt>
+			|	<tt><b>!=</b></tt>
+			|	<tt><b>&lt;</b></tt>
+			|	<tt><b>&gt;</b></tt>
+			|	<tt><b>&lt;=</b></tt>
+			|	<tt><b>&gt;=</b></tt>
+</td></tr>
+</table>
+
+<p><small>NB: if all expressions of a tuple have the same type, it is called a <tt>list</tt></small><br>
+<br>
+
+<p>
+<hr>
+<h2>Statements</h2>
+
+<table>
+<tr><td>
+			statements
+</td><td>::=</td><td>
+				statement [ statements ]
+</td></tr>
+<tr><td>
+			statement
+</td><td>::=</td><td>
+				vardecl <tt><b>;</b></tt> 
+</td></tr><tr><td></td>
+<td>|</td><td>			assignment <tt><b>;</b></tt> 
+</td></tr><tr><td></td>
+<td>|</td><td>			block
+</td></tr><tr><td></td>
+<td>|</td><td>			term <tt><b>;</b></tt> 
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>if</b></tt> <tt><b>(</b></tt> expression <tt><b>)</b></tt> statement [ <tt><b>else</b></tt> statement ]
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>while</b></tt> <tt><b>(</b></tt> expression <tt><b>)</b></tt> statement
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>do</b></tt> block <tt><b>while</b></tt> <tt><b>(</b></tt> expression <tt><b>)</b></tt> <tt><b>;</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>repeat</b></tt> block <tt><b>until</b></tt> <tt><b>(</b></tt> expression <tt><b>)</b></tt> <tt><b>;</b></tt> 
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>break</b></tt> <tt><b>;</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>continue</b></tt> <tt><b>;</b></tt>
+</td></tr><tr><td></td>
+<td>|</td><td>			<tt><b>return</b></tt> [ expression ] <tt><b>;</b></tt>
+</td></tr>
+</table>
+
+<p>
+<hr>
+<h2>Declarations</h2>
+
+<table>
+<tr><td>
+			typedecl
+</td><td>::=</td><td>
+				<tt><b>any</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	decltype
+</td></tr>
+<tr><td></td><td>|</td><td>	typedecl <tt><b>|</b></tt> typedecl
+</td></tr>
+<tr><td></td><td>|</td><td>	typedecl <tt><b>&amp;</b></tt> typedecl
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>(</b></tt> typedecl <tt><b>)</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>list</b></tt> [ <tt><b>(</b></tt> typedecl <tt><b>)</b></tt> ]
+</td></tr>
+<tr><td></td><td>|</td><td>	<tt><b>[</b></tt> tupledecl <tt><b>]</b></tt>
+</td></tr>
+<tr><td><br></td></tr>
+<tr><td>
+			tupledecl
+</td><td>::=</td><td>
+				<tt><b>empty</b></tt>
+</td></tr>
+<tr><td></td><td>|</td><td>	typedecl [ <tt><b>,</b></tt> tupledecl ]
+
+<tr><td><br></td></tr>
+<tr><td>
+			vardecl
+</td><td>::=</td><td>
+				typedecl assignment
+</td></tr>
+
+</table>
+
+<p><small>NB: <tt>empty</tt> in a tuple declaration might only stand for itself</small>
+<br>
+
+<p>
+<hr>
+<h2>Assignments</h2>
+
+<table>
+<tr><td>
+			assignment
+</td><td>::=</td><td>
+				identifier <tt><b>=</b></tt> expression
+</td></tr>
+</table>
+
+<p>
+<hr>
+<h2>Macro Definition</h2>
+
+<table>
+<tr><td>
+			definition
+</td><td>::=</td><td>
+				<tt><b>define</b></tt> symbol <tt><b>(</b></tt> [ argdecl ] <tt><b>)</b></tt> defblock
+</td></tr>
+<tr><td>
+			defblock
+</td><td>::=</td><td>
+				block
+</td></tr>
+<tr><td></td><td>|</td><td>	qblock
+</td></tr>
+<tr><td>
+			argdecl
+</td><td>::=</td><td>
+				typedecl symbol [ <tt><b>,</b></tt> argdecl ]
+</td></tr>
+</table>
+
+<p>
+<hr>
+<address><a href="mailto:kkaempf@suse.de">Klaus K&auml;mpf</a></address>
+Last modified: Thu May 11 09:55:42 MEST 2000
+</body>
+</html>

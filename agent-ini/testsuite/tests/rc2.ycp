@@ -1,0 +1,4 @@
+{
+    Write (., "force");
+    return Dir (.);
+}

@@ -1,0 +1,3 @@
+#!/bin/bash
+# diffout
+diff -u tests/$1.out tmp.out.$1 | less

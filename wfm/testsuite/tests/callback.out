@@ -1,0 +1,13 @@
+({
+  integer `a = 13;
+  return WFM::``{
+  return a;
+}
+;
+}
+)
+({
+  return SCR::`Read (.probe.architecture);
+}
+)
+([false, true])

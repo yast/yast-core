@@ -1,0 +1,150 @@
+(nil)
+multi/ro.in.1.test  -------------------------------
+[Dialer iqnet_praha]
+Country = Czech Republic
+ISDN supported = 1
+Provider = IQNET (Praha)
+Product = WWW Registrace
+Homepage = http://registrace.iqnet.cz
+Phone = 0971101711
+Qualifiedphone = +420971101711
+Username = iqnet
+Password = registrace
+
+[Dialer fortech_litomysl]
+Country = Czech Republic
+ISDN supported = 1
+Provider = Fortech (Litomy≈°l, Svitavy, Poliƒ215ka, Moravsk√° T≈231ebov√°)
+Product =
+Homepage = http://www.lit.cz
+Phone = 0971202311
+Qualifiedphone = +420464616999
+Username =
+Password =
+
+[Dialer apexnet_plzen]
+Country = Czech Republic
+ISDN supported = 1
+Provider = ApexNet (Plze≈210)
+Product = Internet Super
+Homepage = http://www.apexnet.cz
+Phone = 0971206911
+Qualifiedphone =
+Username =
+Password =
+
+multi/ro.in.2.test  -------------------------------
+[Dialer arcor]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+Country = Germany
+Provider = Arcor
+Product = Internet-by-Call
+Priority = 0
+Homepage = www.arcor.de
+Phone = 010700192070
+Username = arcor
+Password = internet
+Ask Password = 0
+DialMessage1 = 
+DialMessage2 = 
+WVDialMon Exec = 
+
+[Dialer mobilcom]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+Country = Germany
+Provider = Mobilcom
+Product = 01019Freenet
+Priority = 0
+Homepage = www.mobilcom.de
+Phone = 0101901929
+Username = anything
+Password = anything
+Ask Password = 0
+DialMessage1 = 
+DialMessage2 = 
+WVDialMon Exec = 
+
+multi/ro.in.3.test  -------------------------------
+
+#[Dialer mailbox.net.uk]
+#Compuserve = 0
+#Stupid Mode = 1
+#ISDN supported = 0
+#DialMessage1 = For information on registering your Mailbox Internet
+#DialMessage2 = account, please connect to http://www.mailbox.net.uk
+#Country = UK
+#Provider = Mailbox Internet
+#Product = 100 Dynamic Dialup
+#Homepage = www.mailbox.net.uk
+#Phone = 08453506250
+#Username = suseuser
+#Password = gecko
+#WVDialMon Exec = xterm -e /usr/share/wvdial/mailbox-internet
+#Ask Password = 0
+
+[Dialer Totalise]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+DialMessage1 = Totalise - Internet Connection for SuSE
+DialMessage2 = Get your own FREE account http://www.totalise.net/suse
+Country = UK
+Provider = Totalise
+Product = Totalise Internet Access
+Priority = 0
+Homepage = www.totalise.net
+Phone = 08453001470
+Username = suselinux
+Password = suselinux
+WVDialMon Exec = netscape http://www.totalise.net/suse/signup
+
+[Dialer force9]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+DialMessage1 = For information on registering for Force 9 services,
+DialMessage2 = please connect to http://portal.f9.net.uk
+Country = UK
+Provider = Force9
+Product = F9 Free
+Homepage = www.f9.net.uk
+Phone = 08451424000
+Username = signup
+Password = signup
+
+
+multi/ro.in.4.test  -------------------------------
+[Dialer m3_company]
+Country = USA
+ISDN supported = 1
+Provider = M3 Company
+Homepage = http://www.m3net.net/
+Phone = 
+Username = 
+Password = 
+Hotline = +1-888-242-3850
+
+[Dialer juno_online_services_inc_]
+Country = USA
+ISDN supported = 0
+Provider = Juno Online Services, Inc.
+Homepage = http://www.juno.com/
+Phone = 
+Username = 
+Password = 
+Hotline = +1-800-654-5866
+
+[Dialer earthlink_network]
+Country = USA
+ISDN supported = 0
+Provider = EarthLink Network
+Homepage = http://cgi.earthlink.net/joinnow/ng/index.jhtml?RN=400039709
+Phone = 
+Username = 
+Password = 
+Hotline = +1-800-395-8425
+

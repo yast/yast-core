@@ -1,0 +1,5 @@
+load_lib "libycp_init.exp"
+
+proc libycp_exit {} {}
+proc libycp_version {} {}
+

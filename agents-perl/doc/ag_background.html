@@ -1,0 +1,143 @@
+<!-- $Id$ -->
+<HTML>
+<HEAD>
+  <TITLE>Background agent description</TITLE>
+</HEAD>
+
+<BODY BGCOLOR=#FFFFFF>
+
+<H1>Background agent description</H1>
+
+<P>
+<EM>Author: Ladislav Slezak &lt;<A HREF="mailto:lslezak@suse.cz">
+lslezak@suse.cz</A>&gt;</EM>
+</P>
+
+<P>
+Changes:
+</P>
+
+<UL>
+  <LI><B>2001-10-23:</B> Initial version</LI>
+</UL>
+
+<HR>
+
+
+<H2>Why was background agent (ag_background) created?</H2>
+
+<P>If you need to run program and display progress of its work you can
+not use <EM>target</EM> agent, because it waits until subprocess is
+finished.</P>
+
+<P>Background agent returns result of execution just after subprocess is
+started and YCP code can continue. Agent stores data from STDOUT until they
+are read from YCP, which should parse data and refresh status in dialog.</P>
+
+
+<H2>Limitations</H2>
+
+<P>
+Background agent has these limitations:
+<UL>
+  <LI>only one subprocess can be handled by agent</LI>
+  <LI>communication with subprocess through STDIN and STDERR is not possible, only STDOUT can be read</LI>
+</UL>
+
+But these limitations can be removed...
+</P>
+
+<H2>Background agent interface</H2>
+
+<P>Background agent uses <EM>.background</EM> root path, subpath determines command.</P>
+
+<H3>Read subpaths:</H3>
+
+<P>
+<TABLE cellspacing="5">
+
+<THEAD>
+<TR><TD><B>Path name</B></TD><TD><B>Paramenters</B></TD><TD><B>Result type</B></TD><TD><B>Description</B></TD></TR>
+</THEAD>
+
+<TBODY>
+<TR><TD>lines</TD><TD>none</TD><TD>integer</TD><TD>total number of lines produced by subprocess</TD></TR>
+<TR><TD>newlines</TD><TD>none</TD><TD>integer</TD><TD>number of new lines since last reading</TD></TR>
+<TR><TD>store</TD><TD>none</TD><TD>boolean</TD><TD>true if subprocess was started by <EM>run_output</EM> command</TD></TR>
+<TR><TD>isrunning</TD><TD>none</TD><TD>boolean</TD><TD>true if subprocess is running</TD></TR>
+<TR><TD>status</TD><TD>none</TD><TD>integer</TD><TD>subprocess exit status</TD></TR>
+<TR><TD>newout</TD><TD>none</TD><TD>list of strings</TD><TD>return output since last reading.</TD></TR>
+<TR><TD>output_open</TD><TD>none</TD><TD>boolean</TD><TD>true if pipe from subprocess is open</TD></TR>
+</TBODY>
+
+</TABLE>
+</P>
+
+<P>Example: <TT>SCR::Read(.background.newlines) -&gt; 5</TT></P>
+
+<P>Note: if <EM>isrunning</EM> is false and <EM>output_open</EM> is true then
+subprocess exited, but some data can be available in buffer.
+<EM>Isrunning</EM> can be used for example to check whether program is running
+before sending signal, <EM>output_open</EM> and <EM>newlines</EM> are used in
+loop tests.</P>
+
+<H3>Execute subpaths:</H3>
+
+
+<P>
+<TABLE cellspacing="5">
+
+<THEAD>
+<TR><TD><B>Path name</B></TD><TD><B>Paramenters</B></TD><TD><B>Result type</B></TD><TD><B>Description</B></TD></TR>
+</THEAD>
+
+<TBODY>
+<TR><TD>run_output</TD><TD>string command</TD><TD>boolean</TD>
+<TD>start subprocess, store output from STDOUT. On success returns
+true.</TD></TR> <TR><TD>run</TD><TD>string command</TD><TD>boolean</TD>
+<TD>start subprocess, do not store output from STDOUT, only count number of
+lines</TD></TR> <TR><TD>kill</TD><TD>nil</TD><TD>boolean</TD><TD>kill
+subprocess with signal SIGTERM, then with SIGKILL signal, on success returns
+true</TD></TR>
+</TBODY>
+
+</TABLE>
+</P>
+ 
+<P>Example: <TT>SCR::Execute(.background.run_output, "/bin/rpm -qa") -&gt; true</TT></P>
+
+
+<H2>How to use background agent?</H2>
+
+<P>
+Here is YCP code skeleton:<BR>
+<PRE>
+SCR::Read(.background.run_output, "command with parameters");
+
+while(SCR::Read(.background.output_open) || (SCR::Read(.background.newlines) &gt; 0))
+{
+    list script_out = SCR::Read(.background.newout);
+
+    /* parse lines in script_out and update progress in dialog accordingly */
+    
+    while (SCR::Read(.background.newlines) == 0 &amp;&amp; SCR::Read(.background.output_open))
+    {
+        sleep(wait_time);
+
+        symbol ret = UI::PollInput();
+
+        /* check if abort button was pressed */
+    }
+}
+</PRE>
+</P>
+
+
+<P> You can try example <A HREF="ag_background_example.ycp">ag_background_example.ycp</A>
+or YaST2 Backup module which uses background agent too.</P>
+
+
+</BODY>
+</HTML>
+
+

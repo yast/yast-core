@@ -1,0 +1,314 @@
+<HTML>
+<BODY>
+YCP language Reference: Data types
+
+Author: Mathias Kettner <a href="mailto:kettner@suse.de">kettner@suse.de</a>
+
+<p>YCP knows the following data types:</p>
+<p><a href="#void">void</a>,
+<a href="#boolean">boolean</a>,
+<a href="#integer">integer</a>,
+<a href="#float">float</a>,
+<a href="#string">string</a>,
+<a href="#locale">locale</a>,
+<a href="#byteblock">byteblock</a>
+<a href="#symbol">symbol</a>,
+<a href="#list">list</a>,
+<a href="#map">map</a>,
+<a href="#term">term</a>,
+<a href="#path">path</a>,
+<a href="#block">block</a>,
+<a href="#declaration">declaration</a>
+</p>
+<hr>
+<p>
+
+<tt><b>void</tt></b>
+<ul>
+	This is the most simple data type. It has only one possible value: <tt><b>nil</b></tt>.
+	Nevertheless this is very useful, as you will learn. </ul>
+
+<a name="boolean"><tt><b>boolean</tt></b>
+<ul>
+	Possible values are <tt><b>true</tt></b> and <tt><b>false</b></tt>.
+	Unless in C/C++, an YCP boolean is a real data type. Comparison operations
+	like &lt; or == evaluate to a boolean value. The <tt>if</tt> statement
+	expects a boolean value.</ul>
+
+<a name="integer"><tt><b>integer</tt></b>
+<ul>
+	Machine independent signed integer value that is represented by a 64 bit value.
+	The valid range is from -2^63 to 2^63-1. Integer constants are written like you
+	would expect it. You can write it either decimal, or hexadecimal by prefixing them
+	with <tt><b>0x</b></tt>, or octal by prefixing them with <tt>0</tt>. Examples:
+	<pre>
+1
+-17049349
+0x9fa0
+0xDEADBEEF
+0233
+</pre>
+</ul>
+
+<a name="float"><tt><b>float</tt></b>
+<ul>
+	Floating point number. The valid range is machine dependent (it is internally
+	represented with the C datatype <tt>double</tt>). Constants are like you would expect
+	them. The decimal point is <i>mandatory</i> only if no exponent follows.
+	Then there must be at least one digit before
+	the decimal point. The exponent symbol may be <tt>e</tt> or <tt>E</tt>. Examples:
+	<pre>
+1.0
+-0.0035
+1e30
+-0.128e-17
+</pre>
+</ul>
+
+<a name="string"><tt><b>string</tt></b>
+<ul>
+	Represents a character string of arbitrary length (well, it cannot exceed your address
+	space). String constants consist of UNICODE characters encoded in UTF8. The are enclosed
+	in double quotes. The backslash can be used to mark special characters:
+	<table>
+	<tr><td><tt>\n</tt></td><td>newline (ASCII 10)</td></tr>
+	<tr><td><tt>\t</tt></td><td>tabulator</td></tr>
+	<tr><td><tt>\r</tt></td><td>carriage return (ASCII 13)</td></tr>
+	<tr><td><tt>\b</tt></td><td>backspace</td></tr>
+	<tr><td><tt>\f</tt></td><td>formfeed</td></tr>
+	<tr><td><tt>\<i>abc</i></tt></td><td>ASCII character represented by the octal value <i>abc</i>.
+	Note that unlike in C, there must be exactly 3 octal digits!</td></tr>
+	<tr><td><tt>\</tt><i>X</i></td><td>The character <i>X</i> itself</td></tr>
+	</table>
+	A backslash followed by a newline makes both the backslash and the newline
+	being ignored. Thus you can split a string constant over multiple lines. Examples:
+	<pre>
+"This string end with a newline character.\n"
+"This string has \
+no newline character in it."
+"This is also a newline: \012"
+</pre></ul>
+
+<a name="locale"><tt><b>locale</b></tt>
+<ul>
+	A string that is localized by YaST2. You write <tt>_(</tt><i>some
+	string constant</i><tt>)</tt> for a simple text or <tt>_(</tt><i>some
+	string constant1</i>, <i>some string constant2</i>,
+	<i>number</i><tt>)</tt> for a text with plural (see gettext and
+	ngettext in libc for more informations). It is not possible to write
+	something other than a string constant within the brackets. Examples:
+<pre>
+_("Everybody likes Linux!")
+_("%d m$-windows system deleted", "%d m$-windows systems deleted", 42)
+_("%d linux system installed", "%d linux systems installed", 42+n)
+</pre>
+</ul>
+
+<a name="byteblock"><tt><b>byteblock</b></tt>
+<ul>
+	A byteblock simply is a sequence of zero or more bytes. The ASCII
+	syntax for a byteblock is <tt><b>#[</b></tt><i>hexstring</i><b><tt>]</b></tt>.
+	<i>hexstring</i> is a sequence of hexadecimal values, lower and upper case letters
+	are both allowed. A byte block consisting of the three bytes 1, 17 and 254 can
+	thus be written <tt><b>#[0111fE]</b></tt>
+	<p>In most cases, however, you won't write a byteblock constant in
+	  one of your scripts directly. You can use the wfm builtin <tt>ReadByteblock</tt>
+	  to read a complete file into a byteblock.
+</ul>
+
+<a name="symbol"><tt><b>symbol</b></tt>
+<ul>
+	A symbol is a word that is a placeholder for something else.
+	All variable names are symbols. But symbols can be used for different
+	purposes. A symbol is denoted by a letter or underscore optionally followed
+	by further letters, underscores or digits. Symbols can be taken either literally
+	or being considered as variables. If you want a symbol to be taken literally,
+	prefix it with a signle backquote. This means, that it shouldn't be looked up
+	as a variable but simply stands for itself. Examples:
+	<pre>
+Variable
+_17
+_this_IS_also_a_symbol
+`literally_taken
+</pre></ul>
+
+<a name="list"><tt><b>list</b></tt>
+<ul>
+	A list is a finite sequence of values. These values need not neccessarily be
+	of the same datatypes. A tuple (Pascal: record, C: struct) is nothing else,
+	it is also a sequence of values. Thus in YCP there is only one data type for
+	lists and tuples and it is called list. List constants are denoted with square
+	brackets. Unless in C it is possible to use complex expressions as members
+	of the list when defining a list constant. The empty list is denoted <b><tt>[]</tt></b>.
+	Examples:
+<pre>
+[ 1, 2, true ]
+[ variable, 17 + 38, some_function(x, y) ]
+[ ]
+[ "list", "of", "strings" ]
+</pre>
+</ul>
+
+<a name="map"><tt><b>map</b></tt>
+<ul>
+	A map is an associative array. It is a list of (key, value) pairs with the
+	property, that no two equal keys are contained in the mapping. You can use
+	values of any type as keys, even mixed. This is very conveniant. Mappings are
+	denoted with <tt><b>$[ </b></tt> <i>key</i> <tt><b>:</b></tt> <i>value</i><tt><b>,
+	</tt></b> <i>key</i> <tt><b>:</b></tt> <i>value</i><tt><b>, </b></tt>...<b><tt>]</tt></b>.
+	The empty mapping is denoted <tt><b>$[]</b></tt>. Examples:
+<pre>
+$[ ]
+$[ "/usr": 560, "/home" : 3200 ]
+$[ 1: true, 2: [ true, false ], "string" : 8+9 ]
+</pre>
+</ul>
+
+<a name="term"><tt><b>term</b></tt>
+<ul>
+	<p>A term is something you won't find in C, Perl, Pascal or Lisp. You will find
+	  it in Prolog for example. It ist a list plus a symbol, with the list written
+	  in normal brackets. The term <tt><b>alpha(17, true)</b></tt> has the symbol
+	  <tt><b>alpha</b></tt> and the list <tt><b>[ 17, true ]</b></tt> as <i>arguments</i>.
+	  This look pretty like a function call, and in fact that is it's most common use.
+	  If you write <tt><b>alpha(17, true)</b></tt> the YCP interpreter will look
+	  for a function definition of <tt><b>alpha</b></tt>.
+	<p>However, you can also use the term as a normal value, for example to specify
+	  how a user dialog should look like. In this case you need to quote the term's
+	  symbol with the single backquote. Examples:
+<pre>
+functioncall(17, true)
+`HBox(`Pushbutton(`Id(.ok), "OK"), Textentry(`Id(.name), "Name"))
+_emptyterm()
+</pre>
+</ul>
+
+<a name="path"><tt><b>path</b></tt>
+<ul>
+	A path is something special to YCP (ok, it is stolen from TCL). It is
+	a sequence of path elements separated by dots. Path elements can contain
+	any character except of \x00, but if it contains something else than a-zA-Z0-9_-,
+	it must be enclosed in ". Enclosing " are not part of path element.
+	You may start or finish your path element with - if you
+	enclose it between ". You may create empty path element by using .""<br>
+	The empty path or <i>root path</i> is denoted by a single dot. Paths
+	can be used for multiple purposes. One of their main tasks is the selection
+	of data from complex data structures like lists or terms.
+	The backslash can be used to mark a special characters:
+	<table>
+	<tr><td><tt>\n</tt></td><td>newline (ASCII 10)</td></tr>
+	<tr><td><tt>\t</tt></td><td>tabulator</td></tr>
+	<tr><td><tt>\r</tt></td><td>carriage return (ASCII 13)</td></tr>
+	<tr><td><tt>\b</tt></td><td>backspace</td></tr>
+	<tr><td><tt>\f</tt></td><td>formfeed</td></tr>
+	<tr><td><tt>\<i>xXX</i></tt></td><td>ASCII character represented by the hexadecimal value <i>XX</i></i></td></tr>
+	<tr><td><tt>\</tt><i>"</i></td><td><i>"</i></td></tr>
+	<tr><td><tt>\</tt><i>X</i></td><td>The character <i>X</i> itself</td></tr>
+	</table>
+	Examples:
+<pre>
+.
+.17
+.etc.fstab
+.etc.fstab.entries.4
+.""
+."\"Hello !\n\"".World
+."\xFF\xff"."-aaa-"
+
+."abc" == .abc
+."\xFF" == ."\xff"
+."\x41" == .A
+."" != .
+</pre></ul>
+
+<a name="block"><tt><b>block</b></tt>
+<ul>
+	A block is a sequence of YPC statements enclosed in curly brackets. This
+	can be a whole YCP program. It is really useful to have these blocks as
+	values. Of course the syntactical structure of a block is somewhat more
+	complex. Its description is the description of the whole language itself.
+	So we put this into an own chapter: <a href="YCP-blocks.html">Blocks and statements</a>.
+	Examples:
+<pre>
+{ return 17; }
+{
+   integer a = 5;
+   return a + 8;
+}
+</pre></ul>
+
+<a name="declaration"><tt><b>declaration</b></tt>
+<ul>
+	<p>Maybe you know what variable declarations are. For example in C you write
+	<tt>float a</tt> to declare a variable <tt>a</tt> of type float. The keyword
+	<tt>float</tt> tells the compiler, that only floating point values are
+	a legal value for the variable <tt>a</tt>.
+
+	<p>A YCP declaration is somewhat more general. It is a <i>restriction</i> on
+	  the values some variable or function parameter can hold. For example with:
+	  <pre>
+integer a = 0;
+</pre>
+	<p>you declare a variable that can hold only integer values. The interpreter
+	  will check and warn you, if some mismatched value is assigned to a.
+
+	<p>The most general declaration is <tt><b>any</b></tt>. It matches any value.
+	  The declarations <tt><b>boolean, integer, float, void, ...</b></tt> match
+	  values of a certain type.
+
+	  <p>Declarations can be combined with the <tt><b>|</b></tt> and <tt><b>&</b></tt>
+	  to form more precise or more general restrictions on values.
+	  <tt><b>|</b></tt> denotes a logical <i>or</i>, <tt><b>&</b></tt> a logical <i>and</i>.
+<pre>
+integer|float b = 0;
+	</pre>
+	<p>This statement declares a variable b. You can't say that the variable b has
+	  the type "integer or float", since this is no type. The statement says:
+	  "b can hold values of type integer or float". As you can see, declarations
+	  are properties of variables, types are properties of values.
+
+	<p>For lists and terms there are three declaration constructors:
+	<ul>
+	  <p><li><tt><b>list(</b></tt><i>declaration</i><tt><b>)</b></tt> allows
+	    lists whose elements match a given declarations. <tt>list(boolean)</tt>
+	    ist matched by all lists containing no other values than booleans.
+	    The list <tt>[ 18, true, 2, false ]</tt> matches <tt>list(integer | boolean)</tt>
+	  </li>.
+
+
+	<p><li>The syntax
+	<tt><b>[ </b></tt> <i>declaration1 symbol1</i><b><tt>,</b></tt> <i>declaration1 symbol1</i>
+	    <b><tt>, ...]</b></tt> can be used to impose restrictions upon tuples. For example
+	    <tt>[ integer a, boolean b ]</tt> matches this list <tt>[ 18, false ]</tt>.
+	You have to write <tt><b>[ empty ]</b></tt> for the declaration that allows empty lists,
+	since <tt><b>[]</b></tt> denotes an empty list itself, which is something different.</li>.
+
+    <p><li>The term declaration is very similar. It's syntax is this:
+      <i>symbol</i><tt><b>( </b></tt> <i>declaration1
+	symbol1</i><b><tt>,</b></tt> <i>declaration1 symbol1</i>
+      <b><tt>, ...)</b></tt>. A term that matches such a declaration must both match in
+      the symbol and in the argument list. Terms declarations are used to define macros.
+      The term <tt>hello(18238, "Hello world!")</tt> matches the declaration
+      <tt>hello(integer a, string x)</tt>. You have to write <i>symbol</i><tt><b>( empty )</b></tt>
+      in order to denote an empty term declarations.
+      </li>
+    </ul>
+
+    <p>In YCP a declaration can be used as a value itself. With the <tt><b>is</b></tt>
+      you can check, if a value matches a declaration. If you want to check, whether
+      the value contained in a is a number, you can write:
+    <pre>
+   if (is(a, integer|float)) ...
+    </pre>
+    Or you can store it into a variable and write something like this:
+    <pre>
+   declaration number = integer|float;
+   if (is(a, number)) ...
+    </pre>
+    However, when declarations appear at variable declarations, function
+    definitions or declaration constructors, you have to write literal
+    declarations. It is <i>not</i>
+    possible to substitute <tt>a(integer|float x)</tt> with
+    <tt>a(number x).</tt>.
+</BODY>
+</HTML>

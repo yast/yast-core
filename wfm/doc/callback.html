@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<TITLE>Callback in WFM</TITLE>
+</HEAD>
+<BODY>
+<H1>Callback in WFM</H1>
+<H2>Implementation issues for callbacks</H2>
+
+<H3>Purpose</H3>
+Get access to WFM and SCR functionality in UI code.<BR>
+Read and write WFM scope variables.<BR>
+Call WFM defined functions.<BR>
+Use SCR agents.<BR>
+<BR>
+<H3>Restrictions</H3>
+Ensure proper return of original UI() call.<BR>
+Check for (or block ?) reentrancy.<BR>
+Don't use WFM if it can be done in UI().<BR>
+Keep overhead (e.g. serial connection) in mind.<BR>
+<BR>
+<H3>Implementation options</H3>
+<UL>
+<LI>return YCPCallback() value<BR>
+will be tricky since we must re-enter UI after evaluating the
+callback. Where and how do we re-enter at the correct point in code ?<BR>
+mayba a __callback and __continue builtin could be used.</LI>
+<LI>intercept component->evaluate()<BR>
+This is basically the same.</LI>
+<LI>open separate communication channel<BR>
+might be cleanest solution but breaks horribly with the current
+stdin/stdout concept.</LI>
+<LI>_callback() builtin<BR>
+similar to YCPCallback() value (with similar problems ...)<BR>
+we need a 'backlink' in the component concept to pass values
+back and forth between components. It is a <i>virtual</i> communication
+channel.<BR>
+Practically, this complete solution isn't needed since SCR does not
+have an interpreter of it's own. So it is incapabable of issuing a callback.<BR>
+This is only needed between UI (server) and WFM (client).<BR>
+So only y2component::evaluate() is affected, not y2component::doActualWork() !!</LI>
+<LI><b>callback() slot in Y2Component</b><br>
+This is the only viable solution as it allows a transparent callback across
+the component interface.</LI>
+</UL>
+<BR>
+<H3>Syntactical issues</H3>
+First approach <TT>WFM(<i>wfm-code</i>)</TT> is bad because it will
+lead to <TT>WFM(SCR(...))</TT>. Having WFM() is a good idea, but we
+also need SCR() to make it transparent.<BR>
+
+</BODY>
+</HTML>
+

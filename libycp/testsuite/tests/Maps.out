@@ -1,0 +1,8 @@
+($[])
+($[])
+($["/home":3200, "/usr":560])
+($[1:true, "string":17])
+($[1:true, 2:[true, false], "string":17])
+($[`x:true, `y:false])
+($[i:1, s:"s"])
+(true)

@@ -1,0 +1,10 @@
+(nil)
++Main
+  Key=Val
+  +Sub
+    Key=Val
+    +Sub
+      Key=changed
+    -Sub
+  -Sub
+-Main

@@ -1,0 +1,12 @@
+#
+# wfm.exp
+# 'main' file for all wfm tests
+#
+
+# get all files matching tests/*.ycp
+
+set filenames [glob $srcdir/tests/*.ycp]
+
+# foreach file, call ycp-run (from testsuite/lib)
+
+foreach file $filenames { ycp-run $file }

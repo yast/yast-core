@@ -1,0 +1,30 @@
+/**
+ * File:	modules.scr
+ * Summary:	SCR agent for /etc/modules.conf
+ * Authors:	Michal Svec <msvec@suse.cz>, Daniel Vesely <dan@suse.cz>
+ * Access:	read / write
+ * See:		modules.conf(5), y2a_mods/modules.html
+ *
+ * Examples:
+ *   Read(.modules)
+ *   (["alias", "options", "post-install", "pre-install", "pre-remove"])
+ **
+ *   Read(.modules.options)
+ *   (["agpgart", "cipcb", "dummy0", "dummy1", "parport_pc", "vtx"])
+ **
+ *   Read(.modules.options, "agpgart")
+ *   ($["agp_try_unsupported":"1"])
+ **
+ *   Write(.modules.options, $["agp_try_unsupported":"0"], "agpgart")
+ *   (true)
+ *
+ * $Id$
+ *
+ * <p>Reads/writes <tt>/etc/modules.conf</tt>. For more detail see its
+ * own documentation.</p>
+ */
+.modules
+
+`ag_modules(
+    ModulesConf("/etc/modules.conf")
+)

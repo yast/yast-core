@@ -1,0 +1,17 @@
+ag_anyagent testsuite
+
+The ag_anyagent testsuite test the anyagent by running
+all ".ycp" files in the tests directory ("tests/*.ycp")
+through runag_anyagent. The program runag_anyagent also
+looks for a file with the same name but the ending
+".scr" and passes its contents to the agent.
+
+Every run results in a stdout and stderr output which
+is checked agains ".out" and ".err" respectively.
+
+The file lib/ag_anyagent_init.exp defines a function
+which runs all tests contained in tests (i.e. makes a
+'glob' on "tests/*.ycp").
+
+For every ".ycp" file you put in tests, you must create
+the proper ".out" and ".err" files.

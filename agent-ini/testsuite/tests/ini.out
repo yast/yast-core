@@ -1,0 +1,38 @@
+(["ODBC Data Sources", "OpenLink", "Default", "Huhu", "Haha"])
+;
+;  odbc.ini
+;
+; comment on line with section
+[ODBC Data Sources]
+OpenLink=OpenLink (MT)
+
+[OpenLink]
+Driver=/home/openlink/lib/oplodbc.so.1
+Description=Sample OpenLink MT DSN
+; comment on some other line
+Host=localhost
+ServerType=Oracle 8
+FetchBufferSize=99
+UserName=
+Password=
+Database=
+ServerOptions=
+ConnectOptions=
+Options=
+ReadOnly=no
+
+[Default]
+Driver=/home/openlink/lib/oplodbc.so.1
+
+{comment}
+Value=AAABBB
+
+;; huhu hoho hehe
+;; huuuu huuuu
+;; Buuu buuu
+Name=Name aaa
+[Huhu]
+[Haha]
+aa=bb
+
+habakuk=aaa

@@ -1,0 +1,8 @@
+{
+    // subsections are forbidden
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    Write (., "force");
+    return Dir (.s);
+}

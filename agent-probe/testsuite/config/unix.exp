@@ -1,0 +1,5 @@
+load_lib "ag_hwprobe_init.exp"
+
+proc ag_hwprobe_exit {} {}
+proc ag_hwprobe_version {} {}
+

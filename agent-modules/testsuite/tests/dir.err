@@ -1,0 +1,7 @@
+[YCP] tests/dir.ycp:2 ["", "alias", "keep", "options", "post-install", "post-remove", "pre-install", "pre-remove"]
+[YCP] tests/dir.ycp:3 alias ["al1", "al2"]
+[YCP] tests/dir.ycp:4 options ["op1", "op2"]
+[YCP] tests/dir.ycp:5 pre-install ["pri1", "pri2"]
+[YCP] tests/dir.ycp:6 post-install ["poi1", "poi2"]
+[YCP] tests/dir.ycp:7 pre-remove ["prr1", "prr2"]
+[YCP] tests/dir.ycp:8 post-remove ["por1", "por2"]

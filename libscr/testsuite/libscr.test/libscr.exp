@@ -1,0 +1,12 @@
+#
+# libscr.exp
+# 'main' file for all scr tests
+#
+
+# get all files matching tests/*.scr
+
+set filenames [glob $srcdir/tests/*.scr]
+
+# foreach file, call scr-run (from testsuite/lib)
+
+foreach file $filenames { scr-run $file }

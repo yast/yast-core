@@ -1,0 +1,23 @@
+UI(``{
+    OpenDialog(
+	       `VBox(
+		     `Heading( "Glyphs" ),
+		     `Left( `Label( Glyph(`ArrowLeft		) + " ArrowLeft"	) ),
+		     `Left( `Label( Glyph(`ArrowRight		) + " ArrowRight"	) ),
+		     `Left( `Label( Glyph(`ArrowUp		) + " ArrowUp"		) ),
+		     `Left( `Label( Glyph(`ArrowDown		) + " ArrowDown"	) ),
+		     `Left( `Label( Glyph(`CheckMark		) + " CheckMark"	) ),
+		     `Left( `Label( Glyph(`BulletArrowRight	) + " BulletArrowRight"	) ),
+		     `Left( `Label( Glyph(`BulletCircle		) + " BulletCircle"	) ),
+		     `Left( `Label( Glyph(`BulletSquare		) + " BulletSquare"	) ),
+		     `VSpacing(),
+		     `Left( `Label( "If you see only question marks,\n"+
+				    "maybe you forgot to start this example\n" +
+				    "with the correct font -\n" +
+				    "use the 'start_glyphs' script!" ) ),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UserInput();
+    CloseDialog();
+})

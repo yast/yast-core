@@ -1,0 +1,370 @@
+-------------------------------------------------------------------
+Mon May 27 15:44:51 CEST 2002 - arvin@suse.de
+
+- fixed return value of Write function (bug #14089)
+
+-------------------------------------------------------------------
+Tue Apr 23 17:01:16 CEST 2002 - arvin@suse.de
+
+- use %{_libdir} in path for plugins
+
+-------------------------------------------------------------------
+
+Wed Feb 13 15:30:36 CET 2002 - kkaempf@suse.de
+
+- Drop all .scr files, they're part of the packages using them.
+
+-------------------------------------------------------------------
+Fri Feb  8 20:03:44 MET 2002 - tom@suse.de
+
+- Added new scr file for users module.
+
+-------------------------------------------------------------------
+Thu Jan 31 08:47:21 CET 2002 - pblahos@suse.cz
+
+- etc_printcap.scr removed
+- 2.5.7
+
+-------------------------------------------------------------------
+Wed Jan 30 10:04:17 CET 2002 - mvidner@suse.cz
+
+- Removed usbmgr_preload.scr (usbmgr was replaced by hotplug)
+- Dropped unneeded lib_* files
+- Moved boot_* and proc_* files to ycp/kernel/agents
+- etc_exports.scr moved to yast2-config-nfs-server.
+- yast_unique.scr moved to yast2-lib-hardware.
+- 2.5.6
+
+-------------------------------------------------------------------
+Wed Jan 16 10:23:34 CET 2002 - pblahos@suse.cz
+
+- proc_parport_devices.scr, proc_serial_devices.scr,
+  proc_usblp_devices.scr moved to y2l_printer
+- proc_parport_autoprobe.scr removed
+
+-------------------------------------------------------------------
+Tue Jan 15 12:37:56 CET 2002 - fehr@suse.de
+
+- moved etc_cryptotab.scr, etc_fstab.scr, proc_meminfo.scr
+  proc_swaps.scr run_parted_check.scr run_parted_print.scr
+  run_pdisk.scr run_swapon_s.scr to y2m_inst/ycp/partitioning/agents
+
+-------------------------------------------------------------------
+Wed Jan  9 21:38:14 CET 2002 - nashif@suse.de
+
+- use /bin/sed instead of /usr/bin/sed (for inst-sys)
+
+-------------------------------------------------------------------
+Tue Dec 18 16:31:04 CET 2001 - kkaempf@suse.de
+
+- use "devtools" for generating Makefiles.
+- use standard yast copyright files.
+
+-------------------------------------------------------------------
+Sat Nov 17 21:24:34 CET 2001 - arvin@suse.de
+
+- use template classes Y2AgentComponent and Y2CCAgentComponent
+
+-------------------------------------------------------------------
+Tue Nov 06 11:59:34 CET 2001 - arvin@suse.de
+
+- fixed for automake 1.5
+
+-------------------------------------------------------------------
+Tue Sep 18 15:41:12 CEST 2001 - kkaempf@suse.de
+
+- drop /bin/cat call, scr is properly chrooted now (#10818).
+
+-------------------------------------------------------------------
+Tue Sep 11 15:20:28 CEST 2001 - kkaempf@suse.de
+
+- added "Chandev" to etc_installinf.scr.
+
+-------------------------------------------------------------------
+Tue Sep  4 16:51:10 CEST 2001 - kkaempf@suse.de
+
+- dont fail on empty files (#10161).
+
+-------------------------------------------------------------------
+Fri Aug 31 10:47:46 CEST 2001 - kkaempf@suse.de
+
+- recognize SMB mount options in install.inf
+
+-------------------------------------------------------------------
+Thu Aug 30 14:37:04 CEST 2001 - kkaempf@suse.de
+
+- use YCPError() to report errors.
+
+-------------------------------------------------------------------
+Wed Aug 29 20:10:44 CEST 2001 - arvin@suse.de
+
+- removed obsolete targetroot functions
+
+-------------------------------------------------------------------
+Tue Aug 28 11:10:03 CEST 2001 - kkaempf@suse.de
+
+- recognize "Reboot:" in /etc/install.inf
+
+-------------------------------------------------------------------
+Wed Aug 22 16:39:32 CEST 2001 - kkaempf@suse.de
+
+- restart scan if Choice() match fails.
+
+-------------------------------------------------------------------
+Wed Aug 22 15:47:50 CEST 2001 - kukuk@suse.de
+
+- Remove ldap.conf and nsswitch.conf, implemented now with
+  rc.config agent.
+
+-------------------------------------------------------------------
+Thu Aug 16 16:07:21 CEST 2001 - kkaempf@suse.de
+
+- cast size_type to long to make gcc happy.
+
+-------------------------------------------------------------------
+Sun Aug 19 20:52:23 CEST 2001 - kukuk@suse.de
+
+- Add etc_ldap_conf.scr and etc_nsswitch_conf.scr
+
+-------------------------------------------------------------------
+Mon Aug 13 13:16:42 CEST 2001 - mvidner@suse.cz
+
+- Moved specialized agents to yast2-config-nis-server. (2.4.12)
+
+-------------------------------------------------------------------
+Fri Aug 10 16:45:34 CEST 2001 - kkaempf@suse.de
+
+- add localdescr_info.scr and localetc_install_inf.scr
+
+-------------------------------------------------------------------
+Fri Aug 10 14:04:48 CEST 2001 - kkaempf@suse.de
+
+- add localproc_cpuinfo to read /proc/cpuinfo in WFM context.
+
+-------------------------------------------------------------------
+Thu Aug  9 17:44:59 CEST 2001 - kkaempf@suse.de
+
+- add localproc_modules to read /proc/modules in WFM context.
+
+-------------------------------------------------------------------
+Thu Aug 09 12:18:35 CEST 2001 - arvin@suse.de
+
+- fixed call of readconf
+
+-------------------------------------------------------------------
+Wed Aug  8 17:18:20 CEST 2001 - kkaempf@suse.de
+
+- honor Y2_TARGET_ROOT for File() (but not for Run())
+
+-------------------------------------------------------------------
+Tue Aug  7 16:31:51 CEST 2001 - kkaempf@suse.de
+
+- drop all accesses to /mnt (yast_systeminf.scr, yast_installinf.scr,
+  mnt_etc_fstab.scr)
+
+-------------------------------------------------------------------
+Thu Jul 26 17:59:39 CEST 2001 - kkaempf@suse.de
+
+- recognize X11 keywords in /etc/install.inf
+
+-------------------------------------------------------------------
+Wed Jul 25 21:27:52 CEST 2001 - kkaempf@suse.de
+
+- add *.in to EXTRA_DIST in testsuite
+
+-------------------------------------------------------------------
+Fri Jul  6 17:24:46 CEST 2001 - sh@suse.de
+
+- New agent: run_get_suseconfig_modules
+
+-------------------------------------------------------------------
+Mon Jul  2 16:49:09 CEST 2001 - kkaempf@suse.de
+
+- ppc_fix: more than 9 pdisk partitions
+- pdisk partition labels are enclosed in ' (#6317)
+
+-------------------------------------------------------------------
+Fri Jun 29 15:07:11 CEST 2001 - arvin@suse.de
+
+- reanimate testsuite
+
+-------------------------------------------------------------------
+Sat Jun 23 18:34:52 CEST 2001 - arvin@suse.de
+
+- fix to compile with gcc 3.0
+
+-------------------------------------------------------------------
+Fri Jun 22 11:37:42 CEST 2001 - kkaempf@suse.de
+
+- fix for new autoconf/automake
+- version 2.4.0
+
+-------------------------------------------------------------------
+Thu May 10 18:24:03 CEST 2001 - jbuch@suse.de
+
+- don't using "" in anyagent like 2001/05/02
+
+-------------------------------------------------------------------
+Thu May 10 11:12:40 CEST 2001 - schwab@suse.de
+
+- Remove unneeded configure check for X.
+
+-------------------------------------------------------------------
+Mon May  7 16:47:29 CEST 2001 - msvec@suse.cz
+
+- fixed chap|pap-secrets parsing
+- version 2.3.10
+
+-------------------------------------------------------------------
+Fri May  4 10:11:58 CEST 2001 - msvec@suse.cz
+
+- fix locales for the run command
+- version 2.3.9
+
+-------------------------------------------------------------------
+Thu May  3 16:52:08 CEST 2001 - jbuch@suse.de
+
+- using "" like suggested in bug 7373
+
+-------------------------------------------------------------------
+Thu Apr 26 21:12:58 CEST 2001 - jbuch@suse.de
+
+- add etc_gshadow
+
+-------------------------------------------------------------------
+Tue Apr 24 17:42:58 CEST 2001 - kkaempf@suse.de
+
+- "Framebuffer:" in /etc/install.inf is a Hexval
+
+-------------------------------------------------------------------
+Mon Apr 23 18:32:43 CEST 2001 - jbuch@suse.de
+
+- add etc_shells agent
+
+-------------------------------------------------------------------
+Wed Apr 18 17:40:43 CEST 2001 - kkaempf@suse.de
+
+- fix parsing of /etc/install.inf, Framebuffer: is a number
+
+-------------------------------------------------------------------
+Thu Apr  5 12:39:36 CEST 2001 - pblahos@suse.cz
+
+- proc_parport_devices works for 2.4 kernels too.
+- add script for reading and writing /etc/usbmgr/preload.conf
+
+-------------------------------------------------------------------
+Thu Mar 29 08:31:01 CEST 2001 - kkaempf@suse.de
+
+- dont install lib in base package, only plugin needed
+
+-------------------------------------------------------------------
+Fri Mar 23 11:24:27 CET 2001 - arvin@suse.de
+
+- move documentation to packages/yast2-agent-any
+
+-------------------------------------------------------------------
+Mon Mar  5 16:22:18 CET 2001 - kkaempf@suse.de
+
+- rename y2a_any -> yast2-agent-any
+
+-------------------------------------------------------------------
+Sat Jan 27 18:37:34 CET 2001 - arvin@suse.de
+
+- package split y2a_any / y2a_any-devel
+
+-------------------------------------------------------------------
+Tue Jan 16 09:52:52 CET 2001 - dan@suse.cz
+
+- description for '/etc/route.conf' file
+
+-------------------------------------------------------------------
+Wed Jan 10 00:42:38 CET 2001 - smid@suse.cz
+
+- config file ippp_options.scr changed
+
+-------------------------------------------------------------------
+Tue Dec 19 14:59:08 CET 2000 - kkaempf@suse.de
+
+- run parted in script (non-interactive) mode
+
+-------------------------------------------------------------------
+Mon Dec 18 18:06:02 CET 2000 - kkaempf@suse.de
+
+- use /sbin/get_kernel_version to determine version of kernel image
+
+-------------------------------------------------------------------
+Mon Dec 11 09:04:01 CET 2000 - kkaempf@suse.de
+
+- new agent to read kernel version from /boot/vmlinuz.version.h
+
+-------------------------------------------------------------------
+Fri Dec  8 12:53:05 CET 2000 - arvin@suse.de
+
+- fix double quoted symbol
+
+-------------------------------------------------------------------
+Thu Dec  7 18:53:44 CET 2000 - kkaempf@suse.de
+
+- read soundcards from /proc
+
+-------------------------------------------------------------------
+Wed Nov 29 11:35:34 CET 2000 - kkaempf@suse.de
+
+- recognize all descr/info keywords
+
+-------------------------------------------------------------------
+Tue Nov 28 17:11:50 CET 2000 - arvin@suse.de
+
+- modify wvdial.scr to handle multiply files
+
+-------------------------------------------------------------------
+Mon Nov 27 09:44:44 CET 2000 - kkaempf@suse.de
+
+- recognize autoinstall extensions in config files (descr/info)
+
+-------------------------------------------------------------------
+Sat Nov 25 15:48:28 CET 2000 - kkaempf@suse.de
+
+- extend Choice() with Match()
+  fix return value of Sequence()
+
+-------------------------------------------------------------------
+Wed Nov 15 21:28:22 CET 2000 - kkaempf@suse.de
+
+- separate library and plugin component
+
+-------------------------------------------------------------------
+Fri Nov 10 15:12:10 CET 2000 - kkaempf@suse.de
+
+- fix .scr syntax error
+
+-------------------------------------------------------------------
+Fri Nov 10 12:25:10 CET 2000 - kkaempf@suse.de
+
+- recognize "Console:" in install.inf
+
+-------------------------------------------------------------------
+Thu Nov  9 12:22:25 CET 2000 - kkaempf@suse.de
+
+- provide static only
+
+-------------------------------------------------------------------
+Thu Oct 26 19:30:15 CEST 2000 - kkaempf@suse.de
+
+- add agents for parted
+
+-------------------------------------------------------------------
+Thu Oct 26 13:09:41 CEST 2000 - kkaempf@suse.de
+
+- new anyagent for suse/setup/descr/info
+
+-------------------------------------------------------------------
+Wed Oct 25 18:05:58 CEST 2000 - kkaempf@suse.de
+
+- Group set
+
+-------------------------------------------------------------------
+Thu Sep 28 17:50:03 CEST 2000 - kkaempf@suse.de
+
+- initial from y2scr 2.1.1
+

@@ -1,0 +1,41 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Maps.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+# maps as associative arrays
+
+$[ ]
+$[]
+$[ "/usr": 560, "/home":3200 ]
+$[1: true, "string": 8+9 ]
+$[1: true, 2: [ true, false ], "string": 8+9 ]
+$[`x : true, `y : false ]
+
+{ string s = "s"; integer i = 1; map m = $[ s:s, i:i ]; return m; }
+
+{
+    map m1 = $[1:"1", 2:"2", 3:"3"];
+    map m2 = $[3:"4", 4:"4", 5:"5"];
+
+    map m = union (m1, m2);
+
+    if (size (m) != 5)
+	return false;
+    if (lookup (m, 3, nil) != "4")
+	return false;
+    return true;
+}
+
+# wrong examples, must be at end of file !!
+
+$[ true: false, nil : "" ]

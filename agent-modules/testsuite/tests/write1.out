@@ -1,0 +1,29 @@
+# dir test
+
+alias al1 A1
+alias al2 a2
+
+# options
+options op1 OP1=1 OP1b
+options op2 o2=o2val o2a
+
+# install
+pre-install pri1 PRI1 PRI1b
+pre-install pri2 prin2 prin2a prin2b
+
+post-install poi1 POI1 POI1b
+post-install poi2 poin2 poin2a poin2b
+
+# remove
+# directives
+pre-remove prr1 PRR1 PRR1b
+pre-remove prr2 prre2 prre2a
+
+post-remove por1 POR1 POR1b
+post-remove por2 pore2 porte2a
+
+# keep
+keep
+
+# eof comment
+

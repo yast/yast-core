@@ -1,0 +1,32 @@
+I implemented and checked in a new strategy Y2 looks for its components .
+It scans in a sequential manner in
+
+level path
+ 0    /floppy
+ 1    /y2update
+ 2    HOME                     --> means: $HOME/.yast2/
+ 3    /usr/local/lib/YaST2
+ 4    /usr/lib/YaST2
+ 5    /lib/YaST2
+ 6    /var/lib/YaST2
+ 7    YASTHOME
+
+Lower leves are preferred. The search applies for scripts, config files
+and binaries.
+
+Now you can put an updated component on a floppy disk and that component
+will be used preferrably.
+
+You can update _each_ component, even cat, stdio and logger.
+
+Only the generic frontend main function, the ComponentBroker and the
+ComponentCreators contained in bignfat can't be replaced. They
+must at least be able to find the first component on floppy.
+
+Executable components are searched for in the above mentioned manner,
+the paths being extended with one of the following directories:
+
+.../servers/:        Y2 servers like compiled programs using liby2
+.../servers_non_y2:  NonY2 servers like shell scripts and such like
+.../clients:         Y2 clients like compiled programs using liby2
+.../clients_non_y2:  NonY2 clients like shell scripts and such like

@@ -1,0 +1,57 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    D_Expression.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+"NON-TERMINAL expression"
+# NON-TERMINAL expression     
+#
+# parsevalue -> ( expression ) -> nb_expression
+#
+#        nb_expression -> compact_value ->
+#                      -> YCP_Declaration ->
+#                      -> YCP_DECLTYPE
+#
+#        nb_expression -> base_value
+#
+#
+#( any )
+#( void )
+#( nil )
+#( boolean )
+( true )
+( false )
+#( void | boolean )
+#( integer )
+( -5 )
+( 5 )
+#( boolean | integer | any )
+#( float )
+( -1.20 )
+( 3.0e10 )
+( 500.0e-2 )
+#( float | void )
+#( string )
+( "Hello world" )
+#( string | void )
+#( string | void | boolean | integer | any )
+# YCP_Time not tested
+( . )
+( .current.path )
+#( path )
+#( string | path )
+# YCP_Locale not tested
+#( string | locale )
+( [ 1 , [ 2 , nil ] ] )
+#( void | list )
+#( map )
+( $[ "Hallo" : `Greetings , 2 : [ nil, ( 4 + 5 ) ] ] )
+

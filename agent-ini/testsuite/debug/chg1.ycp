@@ -1,0 +1,9 @@
+{
+    // test of adding values, sections, subsections
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    y2error (Read (.v.Val1));
+    INI ("Val1=value12");
+    y2error (Read (.v.Val1));
+}

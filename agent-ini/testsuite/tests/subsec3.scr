@@ -1,0 +1,25 @@
+.
+
+`ag_ini(
+  IniAgent("tests/subsec3.in.test",
+    $[
+      "options" : [ ],
+      "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "^[ \t]*start[ \t]+(.*[^ \t])", "start %s" ],
+        "end" :   [ "^[ \t]*end[ \t]+(.*[^ \t])", "end %s" ],
+	],
+	$[
+        "begin" : [ "^[ \t]*sec[ \t]+(.*[^ \t])", "sec %s" ],
+        "end" :   [ "^[ \t]*endsec[ \t]+(.*[^ \t])", "endsec %s" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

@@ -1,0 +1,10 @@
+Makefile
+Makefile.in
+y2base
+yast2qt
+yast2ncurses
+*.o
+*.lo
+*.la
+.deps
+.libs

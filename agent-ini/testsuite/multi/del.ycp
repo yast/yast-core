@@ -1,0 +1,20 @@
+//
+// Multiple files test
+//
+// providers.rpm
+//
+// delete test.
+
+
+{
+    Write (.s."multi/del.in.1.test", nil);
+    Write (.s."multi/del.in.2.test", nil);
+    Write (.s."multi/del.in.3.test", nil);
+    Write (.s."multi/del.in.2.test", "#Comment for 2\n");
+    list l = Dir (.s);
+    y2milestone ("%1", l);
+    foreach (`i, l, ``{
+	y2milestone ("%2: %1", Dir (add (.s, i)), i);
+    });
+    return nil;
+}

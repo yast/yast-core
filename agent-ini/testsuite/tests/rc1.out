@@ -1,0 +1,19 @@
+(["DEFAULT_LANGUAGE", "SEPARATED", "SEP2", "ALSO", "NEW_KEY", "NUMERIC"])
+#
+# This language is used in YaST. This is also the default
+# for local users, if RC_LANG and RC_LC_ALL are not set. Root
+# uses this language if ROOT_USES_LANG is set to "YES"
+#
+DEFAULT_LANGUAGE="english"
+#
+# ...
+SEPARATED="abc abc abccba cba cba"
+SEP2="huhu \
+      hoho \
+      hehe "
+ALSO=' apostrophes are allowed '
+
+#comment of the new key
+#
+NEW_KEY="value of the new key"
+NUMERIC="5"

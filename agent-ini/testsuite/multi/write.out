@@ -1,0 +1,73 @@
+(nil)
+multi/write.in.1.test  -------------------------------
+[Dialer iqnet_praha]
+Country = Czech Republic
+ISDN supported = 1
+Provider = IQNET (Praha)
+Product = WWW Registrace
+Homepage = http://registrace.iqnet.cz
+Phone = 0971101711
+Qualifiedphone = +420971101711
+Username = iqnet
+Password = registrace
+
+[Dialer fortech_litomysl]
+Country = Czech Republic
+ISDN supported = 1
+Provider = Fortech (Litomy≈°l, Svitavy, Poliƒ215ka, Moravsk√° T≈231ebov√°)
+Product = 
+Homepage = http://www.lit.cz
+Phone = 0971202311
+Qualifiedphone = +420464616999
+Username = fakeuser
+Password = 
+
+[Dialer apexnet_plzen]
+Country = Czech Republic
+ISDN supported = 1
+Provider = ApexNet (Plze≈210)
+Product = Internet Super
+Homepage = http://www.apexnet.cz
+Phone = 0971206911
+Qualifiedphone = 
+Username = 
+Password = 
+multi/write.in.2.test  -------------------------------
+[Dialer arcor]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+Country = Germany
+Provider = Arcor
+Product = Internet-by-Call
+Priority = 0
+Homepage = www.arcor.de
+Phone = 010700192070
+Username = arcor
+Password = internet
+Ask Password = 0
+DialMessage1 = 
+DialMessage2 = 
+WVDialMon Exec = 
+
+[Dialer mobilcom]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+Country = Germany
+Provider = Mobilcom
+Product = 01019Freenet
+Priority = 0
+Homepage = www.mobilcom.de
+Phone = 0101901929
+Username = anything
+Password = anything
+Ask Password = 0
+DialMessage1 = 
+DialMessage2 = 
+WVDialMon Exec = 
+
+multi/write.in.4.test  -------------------------------
+#comment
+[Dialer added]
+Number = 0609 112 777

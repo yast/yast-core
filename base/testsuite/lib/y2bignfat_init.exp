@@ -1,0 +1,54 @@
+#
+# run a wfm file
+#
+proc wfm-run { src } {
+
+  set path [split $src "/"]
+  set filename [lindex $path [expr [llength $path]-1]]
+
+  # extract basename and check extension
+
+  set fname [split $filename "."]
+
+  if {[llength $fname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return
+  }
+  if {[lindex $fname [expr [llength $fname]-1]] != "wfm"} {
+    fail "Not .wfm extension '$src'"
+    return
+  }
+
+  # setup filenames
+
+  set base_name [lindex $fname 0]
+
+  set stdout_name "tests/$base_name.out"
+  set stderr_name "tests/$base_name.err"
+
+  # run the test
+
+  set result [exec "../wfm" "<$src" ">tmp.out" "2>tmp.err"]
+
+  # check return code from y2wfm
+
+  if {$result != ""} {
+    warning "Compilation of $base_name results in '$result'"
+  }
+
+  # check stdout
+
+  if {[diff $stdout_name "tmp.out"] != 1} {
+    fail "Wrong stdout for $base_name"
+  }
+
+  # check stderr
+
+  if {[diff $stderr_name "tmp.err"] != 1} {
+    fail "Wrong stderr for $base_name"
+  }
+
+  # ok, all is fine
+
+  pass $base_name
+}

@@ -1,0 +1,9 @@
+{
+    Write (.NEW_KEY, "value of the new key");
+    Write (.NEW_KEY.comment, "\n#comment of the new key\n#\n");
+    Write (.ENABLE_SUSECONFIG, nil);
+    Write (.NUMERIC, 5);
+    Write (.INVALID, 4.5);
+    y2error ("%1", Read (.DEFAULT_LANGUAGE));
+    return Dir (.);
+}

@@ -1,0 +1,81 @@
+#
+# run a ycp file
+#
+proc ycp-run { src } {
+
+  set path [split $src "/"]
+  set filename [lindex $path [expr [llength $path]-1]]
+
+  # extract basename and check extension
+
+  set fname [split $filename "."]
+
+  if {[llength $fname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return
+  }
+  if {[lindex $fname [expr [llength $fname]-1]] != "ycp"} {
+    fail "Not .ycp extension '$src'"
+    return
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # tests/$filename is the name of the original testfile with relative path,
+  #                 relative to the testsuite directory 
+  set test_input  "tests/$filename"
+
+  set base_name [lindex $fname 0]
+
+  set stdout_name "tests/$base_name.out"
+  set stderr_name "tests/$base_name.err"
+  set log_name    "tests/$base_name.log"
+  set tmpout_name "tmp.out.$base_name"
+  set tmperr_name "tmp.err.$base_name"
+  set tmplog_name "tmp.log.$base_name"
+
+  puts "Running $base_name..."
+
+  # run the test
+
+  set result ""
+  set oops [catch { set result [exec "tests/runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
+
+  if {$oops != 0} {
+    fail "test case failed for $base_name: $catched"
+    return
+  }
+
+  # check return code from runycp
+
+  if {$result != ""} {
+    warning "Compilation of $base_name results in '$result'"
+    return
+  }
+
+  # check stdout
+
+  if {[diff $stdout_name "tmp.out.$base_name"] != 1} {
+    fail "Wrong stdout for $base_name"
+    return
+  }
+
+  # check stderr
+
+  if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
+    fail "Wrong stderr for $base_name"
+    return
+  }
+
+  # ok, all is fine
+
+  pass $base_name
+
+  return
+}
+
+
+proc liby2_exit {} {}
+proc liby2_version {} {}
+

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Changes in the YCP grammar</title>
+  </head>
+
+  <body bgcolor="white">
+    <h1>Changes in the YCP grammar</h1>
+
+In order to make the YCP syntax clearer and to reduce ambiguities in
+the Yacc-grammar, some syntactical rules have been refined. This reduced
+the number of conflicts reported by the parser generator from 146 to 2 (!)<br>
+<p>
+
+<h2>Double qoutes</h2>
+
+The use of double qoutes (<tt><b>``</b></tt>) is somewhat restricted
+now but does not reduce functionality as used by now.<br>
+<p>
+Double qoutes are only allowed for blocks (<tt><b>``{</b></tt> ... <tt><b>}</b></tt>),
+expressions (<tt><b>``(</b></tt> ... <tt><b>)</b></tt>)
+and terms (<tt><b>``</b><i>identifier</i><b>(</b></tt>  ... <tt><b>)</b></tt>).
+<br>
+There is no space allowed between the double qoute and the following symbol.
+<br>
+
+<p>
+<h2>Map expressions</h2>
+
+Map expressions are still defined by (<tt><b>$[</b></tt> ... <tt><b>]</b></tt>),
+but <tt><b>$[</b></tt> is a single token now and must be written without space
+inbetween.<br>
+
+<p>
+<h2>Expressions are no statements</h2>
+
+There is a clear destinction now between expressions (having a value) and
+statements (having a semantical meaning). In the old syntax expressions
+could be used as statements. Since this make the syntax ambiguous and is
+useless anyway, statements like <tt><b>1 + 1;</b></tt> are not allowed.<br>
+
+<p>
+<h2>Declaration is no value</h2>
+
+The old syntax allowed declarations (type definitions) as values. However
+this made the syntax highly ambiguous and accounted for most of the conflicts
+reported by the parser generator. In fact this feature of a functional
+language wasn't used, ycp usage is imperative.<br>
+If values like <tt><b>[ integer, float ]</b></tt> (list of declarations) are
+really needed, the syntax can be re-introduced into the grammar with some
+'syntactical sugar' (a special keyword).
+<p>
+<hr>
+<address><a href="mailto:kkaempf@suse.de">Klaus K&auml;mpf</a></address>
+Last modified: Thu May 11 09:21:42 MEST 2000
+</body>
+</html>

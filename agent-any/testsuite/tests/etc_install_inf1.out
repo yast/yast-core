@@ -1,0 +1,1 @@
+($["bootmode":"CD", "cdrom":"hdc", "display":"Color", "floppy_disk":"1", "framebuffer":"0x0301", "mouse_device":"/dev/psaux", "mouse_type":"ps/2", "smp":"0", "sourcemounted":"0", "textmode":"0", "yast2_update":"0"])

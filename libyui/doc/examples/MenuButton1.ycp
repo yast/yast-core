@@ -1,0 +1,23 @@
+UI(``{
+    // Build a dialog with one menu button.
+    // Wait the user selects a menu entry, 
+    // then close the dialog and terminate.
+
+    // Please note it's pretty pointless to create menu entries without an ID -
+    // you'd never know what entry the user selected.
+
+    OpenDialog( 
+	       `MenuButton( "&Create",
+			    [
+			     `item(`id(`folder), "&Folder" 	),
+			     `item(`id(`text),   "&Text File"	),
+			     `item(`id(`image),  "&Image"	)
+			     ]
+			    )
+	       );
+
+    any id = UserInput();
+    CloseDialog();
+
+    y2milestone( "Selected: %1", id );
+})

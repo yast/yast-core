@@ -1,0 +1,18 @@
+/**
+ * Example for an animated image
+ **/
+{
+    UI (``{
+	global define void MovieDemo(byteblock movie) ``{
+	    OpenDialog(
+		       `VBox(
+			     `Image(`opt(`animated), movie, "Movie"), 
+			     `PushButton("&OK")));
+	    UserInput();
+	    CloseDialog();
+	};
+    });
+    
+    byteblock movie = SCR::Read( .target.byte, "/usr/share/splash/keys.mng" );
+    UI::MovieDemo( movie );
+}

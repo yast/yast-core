@@ -1,0 +1,1 @@
+[Interpreter] tests/register.ycp:10 Couldn't find an agent to handle '.foo.a'

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+<body  bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font  color="Navy">
+docu6
+
+<b><font size="+1">Pass Output of the script to the calling modul</font></b>
+<hr  color="red" align="left" size="2"></hr><br><br>
+
+The output of the script <b>have to be one</b> ycp value.<br>
+A YCP value can be string an integer, a list or a map
+<a href="../libycp/YCP-datatypes.html">see YCP-datatype for detail</a><br><br>
+
+To do this you have to call on of the following functions:<br>
+<pre><font  face="Courier" color="Black">
+ycpReturnSkalarAsInt
+you send a                  1 
+and get in YCP String:     "1"
+
+ycpReturnSkalarAsBoolean
+you send a                  1 
+and get in YCP String:     true
+
+ycpReturnSkalarAsString
+you send a                 "abc" 
+and get a YCP String:      "abc"
+
+ycpReturnArrayAsList
+you send a                 @aa = ( "aa",  1,   33.3 )
+and get  in YCP List             [ "aa", "1", "33.3" ]
+
+
+ycpReturnHashAsMap
+you send a                 %yx; 
+                           $yx{"aa"} = 1;
+                           $yx{"bb"} = 2;
+                           ycpReturnHashAsMap( %yx) 
+
+
+and get  in YCP Map        $[ "aa":"1", "bb":"2" ]<br><br><br>
+</pre>
+
+
+
+<div align="center"><a href="docu6perl.htm" ><b><font color="Red"><<
+Back</font></b></a>&nbsp;&nbsp;<a href="docu1perl.htm" ><b><font
+color="Red">to page 1</font></b></a></div>
+
+
+</font>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+.
+
+`ag_dummy (
+    DataMap ($["a":"haha"], 0)
+)

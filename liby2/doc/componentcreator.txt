@@ -1,0 +1,30 @@
+How components are created
+
+-> include/y2/Y2ComponentCreator.h
+
+The Y2ComponentCreator class is the interface between
+a component and the component broker (Y2ComponentBroker.cc).
+It is used to find and intialize a component, it is not used
+for communication with a component.
+
+The component broker keeps a global list of all known components.
+
+Y2ComponentCreator(Y2ComponentBroker::order_t order);
+  enters the component to the broker's list in the given order.
+
+Y2Component *create(const char *name) const
+  create the component and return a handle for communication
+  (see interface.txt)
+  name is used to identify components based on the same code
+  (e.g. stdio and stderr)
+
+Y2Component *create(const char *name, int level, int current_level)
+  same as above, but for external components which may reside
+  in different directories. The level identifies the directory prefix
+  from the list defined in pathsearch.cc
+
+bool isServerCreator() const
+  return true for servers, false for clients.
+
+bool isClientCreator()
+  return false for servers, true for clients.
