@@ -180,7 +180,7 @@ bool YTable::addItem(const YCPValue &item)
 {
     if (!item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item)
     {
-	y2warning("Invalid item specification %s: Must be `" YUISymbol_item "() term",
+	y2error("Invalid item specification %s: Must be `" YUISymbol_item "() term",
 		  item->toString().c_str());
 	return false;
     }
@@ -188,7 +188,7 @@ bool YTable::addItem(const YCPValue &item)
     YCPList collist = item->asTerm()->args();
     if (collist->size() != numCols() + 1)
     {
-	y2warning("Invalid item specification %s: Wrong number of elements",
+	y2error("Invalid item specification %s: Wrong number of elements",
 		  item->toString().c_str());
 	return false;
     }
@@ -197,7 +197,7 @@ bool YTable::addItem(const YCPValue &item)
 	|| collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
 	|| collist->value(0)->asTerm()->size() != 1)
     {
-	y2warning("Invalid item specification %s: Must begin with `" YUISymbol_id "() term",
+	y2error("Invalid item specification %s: Must begin with `" YUISymbol_id "() term",
 		  item->toString().c_str());
 	return false;
     }
@@ -214,7 +214,7 @@ bool YTable::addItem(const YCPValue &item)
 	else if (value->isVoid()) row.push_back("");
 	else
 	{
-	    y2warning("Invalid value %s in item. Must be string, integer or void",
+	    y2error("Invalid value %s in item. Must be string, integer or void",
 		      value->toString().c_str());
 	    row.push_back("");
 	}
