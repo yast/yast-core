@@ -1029,7 +1029,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
 	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },
 	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "tolist",	"list <any> (const any)",								(void *)l_tolist,	DECL_DEPRECATED},
+	{ "tolist",	"list <any> (const any)",								(void *)l_tolist },
 	{ 0 }
     };
 
