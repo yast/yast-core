@@ -127,7 +127,8 @@ private:
 
     // stack of external references, needed during bytecode I/O by YSImport
     //  (triggered by openReferences())
-    std::stack <std::vector<TableEntry *> *> m_xrefs;
+    typedef std::stack <std::vector<TableEntry *> *> xrefs_t;
+    xrefs_t* m_xrefs;
 
 public:
     size_t mem_size () const { return sizeof (SymbolTable); }

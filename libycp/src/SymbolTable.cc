@@ -223,6 +223,7 @@ SymbolTable::SymbolTable (int prime)
     : m_prime ((prime <= 0) ? 31 : prime)
     , m_track_usage (true)
     , m_used (0)
+    , m_xrefs (0)
 {
     m_table = (TableEntry **)calloc (m_prime, sizeof (TableEntry *));
 
@@ -234,10 +235,15 @@ SymbolTable::~SymbolTable()
 {
 //    y2debug ("SymbolTable::~SymbolTable %p", this);
 
-    while (!m_xrefs.empty())
+    if (m_xrefs)
     {
-	delete m_xrefs.top();
-	m_xrefs.pop();
+	while (!m_xrefs->empty())
+	{
+	    delete m_xrefs->top();
+	    m_xrefs->pop();
+	}
+	
+	delete m_xrefs;
     }
 
     endUsage ();
@@ -309,7 +315,12 @@ SymbolTable::openXRefs ()
 #if DO_DEBUG
     y2debug ("SymbolTable[%p]::openXRefs()", this);
 #endif
-    m_xrefs.push (new (std::vector<TableEntry *>));
+    if (! m_xrefs)
+    {
+	m_xrefs = new xrefs_t;
+    }
+
+    m_xrefs->push (new (std::vector<TableEntry *>));
 
     return;
 }
@@ -321,13 +332,13 @@ SymbolTable::closeXRefs ()
 #if DO_DEBUG
     y2debug ("SymbolTable[%p]::closeXRefs()", this);
 #endif
-    if (m_xrefs.empty())
+    if (!m_xrefs || m_xrefs->empty ())
     {
 	y2error ("SymbolTable[%p]::closeXRefs without openXRefs", this);
 	return;
     }
-    delete m_xrefs.top();
-    m_xrefs.pop();
+    delete m_xrefs->top();
+    m_xrefs->pop();
 
     return;
 }
@@ -336,12 +347,12 @@ SymbolTable::closeXRefs ()
 SymbolEntryPtr 
 SymbolTable::getXRef (unsigned int position) const
 {
-    if (m_xrefs.empty())
+    if (!m_xrefs || m_xrefs->empty())
     {
 	y2error ("SymbolTable[%p]::getXRefs empty !", this);
 	return 0;
     }
-    std::vector<TableEntry *> *refs = m_xrefs.top();
+    std::vector<TableEntry *> *refs = m_xrefs->top();
     if (position >= refs->size())
     {
 	y2error ("SymbolTable[%p]::getXRefs position %u >= size %zu !", this, position, refs->size());
@@ -651,7 +662,12 @@ SymbolTable::xref (const char *key)
     TableEntry *tentry = find (key, SymbolEntry::c_unspec);
     if (tentry != 0)
     {
-	m_xrefs.top()->push_back (tentry);
+	if (!m_xrefs)
+	{
+	    m_xrefs = new xrefs_t;
+	}
+	
+	m_xrefs->top()->push_back (tentry);
     }
     return tentry;
 }
