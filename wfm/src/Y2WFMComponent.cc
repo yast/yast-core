@@ -336,7 +336,7 @@ Y2WFMComponent::GetEncoding () const
      * Returns the current encoding code
      */
 
-    return YCPString(currentEncoding);
+    return YCPString(systemEncoding);
 }
 
 
