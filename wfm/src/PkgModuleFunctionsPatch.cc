@@ -27,6 +27,7 @@
 
 #include <y2util/Url.h>
 #include <y2pm/InstData.h>
+#include <y2pm/YouError.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -61,51 +62,80 @@ PkgModuleFunctions::YouStatus (YCPList args)
 }
 
 // ------------------------
-/**   
-   @builtin Pkg::YouGetServers() -> list(string)
+/**
+   @builtin Pkg::YouGetServers() -> error string
 
    get urls of patch servers
 
+   @param list(string)  list of strings where results are stored.
+
+   @return ""     success
+           "args" bad args
+           "get"  error getting file from server
+           "read" error reading file after download
 */
 YCPValue
 PkgModuleFunctions::YouGetServers (YCPList args)
 {
+    if ((args->size() != 1) || !(args->value(0)->isList()))
+    {
+	return YCPString( "args" );
+    }
+
     std::list<Url> servers;
     PMError err = _y2pm.youPatchManager().instYou().servers( servers );
     if ( err ) {
-      return YCPError( "Error getting you servers.", YCPList() );
+      if ( err == YouError::E_get_suseservers_failed ) return YCPString( "get" );
+      if ( err == YouError::E_read_suseservers_failed ) return YCPString( "read" );
+      return YCPString( "Error getting you servers." );
     }
 
-    YCPList result;
+    YCPList result = YCPList( args->value( 0 )->asList() );
     std::list<Url>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
       result->add ( YCPString( (*it).asString() ) );
     }
-    return result;
+
+    return YCPString( "" );
 }
 
 /**   
-   @builtin Pkg::YouGetPatches() -> bool
+  @builtin Pkg::YouGetPatches() -> error string
 
-   retrieve patches
-
+  retrieve patches
+  
+  @param string  url of patch server.
+  @param bool    true if signatures should be checked.
+  
+  @return ""      success
+          "args"  bad args
+          "media" media error
+          "sig"   signature check failed 
+          "url"   url not valid
 */
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
+    if ( ( args->size() != 2) || !args->value(0)->isString() ||
+         !args->value(1)->isBoolean() )
     {
-	return YCPError ("Bad args to Pkg::YouGetPatches", YCPBoolean( false ) );
+	return YCPString ("args");
     }
     string urlstr = args->value(0)->asString()->value_cstr();
     Url url( urlstr );
-    if ( !url.isValid() ) return YCPError( "Url not valid", YCPBoolean( false ) );    
+    if ( !url.isValid() ) return YCPString( "url" );
 
-    PMError err = _y2pm.youPatchManager().instYou().retrievePatchInfo( url );
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    bool checkSig = args->value(1)->asBoolean()->value();
 
-    return YCPBoolean( true );
+    PMError err = _y2pm.youPatchManager().instYou().retrievePatchInfo( url,
+                                                                       checkSig );
+    if ( err ) {
+      if ( err.errClass() == PMError::C_MediaError ) return YCPString( "media" );
+      if ( err == YouError::E_bad_sig_file ) return YCPString( "sig" );
+      return YCPString( err.errstr() );
+    }
+
+    return YCPString( "" );
 }
 
 /**
@@ -209,16 +239,35 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
 }
 
 /**
-  @builtin Pkg::YouGetCurrentPatch () -> bool
+  @builtin Pkg::YouGetCurrentPatch () -> error string
 
   download current patch.
+
+  @param bool true if signatures should be checked.
+
+  @return ""      success
+          "args"  bad args
+          "media" media error
+          "sig"   signature check failed
 */
 YCPValue
 PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
 {
-    PMError err = _y2pm.youPatchManager().instYou().retrieveCurrentPatch();
-    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
+    if ((args->size() != 1) || !(args->value(0)->isBoolean()))
+    {
+	return YCPString( "args" );
+    }
+
+    bool checkSig = args->value(0)->asBoolean()->value();
+
+    PMError err = _y2pm.youPatchManager().instYou().retrieveCurrentPatch( checkSig );
+    if ( err ) {
+      if ( err.errClass() == PMError::C_MediaError ) return YCPString( "media" );
+      if ( err == YouError::E_bad_sig_file ||
+           err == YouError::E_bad_sig_rpm ) return YCPString( "sig" );
+      return YCPString( err.errstr() );
+    }
+    return YCPString( "" );
 }
 
 /**
