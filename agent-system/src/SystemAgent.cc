@@ -837,11 +837,12 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
 	/* shell command must have rooted path */
 	string bashcommand = value->asString()->value();
+#if 0
 	if (bashcommand[0] != '/')
 	{
 	    ycp2warning ("", 0, "Execute (.bash, ...) without full path !");
 	}
-
+#endif
 	/* check for and construct shell enviroment */
 	YCPMap variables;
 	if (environment->isMap())
