@@ -171,7 +171,7 @@ PkgModuleFunctions::GetAdditionalLocales (YCPList args)
 // source related
 
 /**
- * @builtin Pkg::SourceInit (string url) -> int
+ * @builtin Pkg::SourceInit (string url) -> integer
  *
  * initializes a package source under the given url
  *
@@ -241,6 +241,68 @@ PkgModuleFunctions::SourceInit (YCPList args)
 	return YCPInteger (new_slot);
     }
     return YCPError ("No source data found");
+}
+
+
+/**
+ * @builtin Pkg::SourceList (boolean enabled_only) -> list of integer
+ *
+ * return list of known (and enabled) source id's
+ *
+ */
+YCPValue
+PkgModuleFunctions::SourceList (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::SourceList");
+    }
+
+    YCPList sources;
+    bool enabled_only ( args->value(0)->asBoolean()->value() );
+
+    InstSrcManager::ISrcIdList nids;
+
+    _y2pm.instSrcManager().getSources (nids, enabled_only);
+    if (nids.size() > 0)
+    {
+	unsigned int number_of_known_sources = _sources.size();
+	int new_slot = -1;
+
+	for (InstSrcManager::ISrcIdList::const_iterator it = nids.begin();
+	     it != nids.end(); ++it)
+	{
+	    number_of_known_sources = _sources.size();
+
+	    if (_first_free_source_slot < number_of_known_sources)
+	    {
+		new_slot = _first_free_source_slot;
+		_sources[_first_free_source_slot] = *it;
+
+		// find next free slot
+		while (++_first_free_source_slot < number_of_known_sources)
+		{
+		    if (_sources[_first_free_source_slot] == 0)
+			break;
+		}
+	    }
+	    else		// add a new slot
+	    {
+		new_slot = _sources.size();
+		_sources.push_back (*it);
+	    }
+	}
+
+	for (unsigned int i = 0; i < _sources.size(); ++i)
+	{
+	    sources->add (YCPInteger (i));
+	}
+	return sources;
+
+    } // nids > 0
+
+    return YCPError ("No source data found", sources);
 }
 
 /**

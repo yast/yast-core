@@ -125,6 +125,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "TargetUsed")		return TargetUsed (args);
     // source related functions
     else if (function == "SourceInit")		return SourceInit (args);
+    else if (function == "SourceList")		return SourceList (args);
     else if (function == "SourceFinish")	return SourceFinish (args);
     else if (function == "SourceGeneralData")	return SourceGeneralData (args);
     else if (function == "SourceMediaData")	return SourceMediaData (args);

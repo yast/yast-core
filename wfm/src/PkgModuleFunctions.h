@@ -66,6 +66,7 @@ class PkgModuleFunctions
 
 	// source related
 	YCPValue SourceInit (YCPList args);
+	YCPValue SourceList (YCPList args);
 	YCPValue SourceFinish (YCPList args);
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
