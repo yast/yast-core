@@ -642,12 +642,20 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 /**
    @builtin Pkg::PkgSolve () -> boolean
 
-   Solve package dependencies
+   Solve current package dependencies
 
 */
 YCPValue
 PkgModuleFunctions::PkgSolve (YCPList args)
 {
+    PkgDep::ResultList good;
+    PkgDep::ErrorResultList bad;
+
+    if (!_y2pm._y2pm.packageManager().solveInstall(good, bad))
+    {
+	ERR << bad.size() << " packages failed" << endl;
+	return YCPBoolean (false);
+    }
     return YCPBoolean (true);
 }
 
