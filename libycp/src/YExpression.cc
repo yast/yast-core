@@ -1022,7 +1022,7 @@ YEPropagate::evaluate (bool cse)
 	return v;
     }
 
-    ycp2error ("Can't convert '%s' to '%s': '%s'", m_from->toString().c_str(), m_to->toString().c_str(), v->toString().c_str());
+    ycp2error ("Can't convert value '%s' from type '%s' to '%s'", v->toString().c_str(), m_from->toString().c_str(), m_to->toString().c_str());
 
     return YCPNull ();
 }
