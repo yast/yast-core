@@ -18,8 +18,12 @@ INCLUDES =						\
 noinst_PROGRAMS = runag_anyagent
 
 runag_anyagent_SOURCES = runag_anyagent.cc
-runag_anyagent_LDADD = -lscr -ly2 -lycp -ly2util
+runag_anyagent_LDADD = -ly2util
+# why is whole-archive necessary?
 runag_anyagent_LDFLAGS = -L$(libdir)			\
+	$(srcdir)/../../libscr/src/libscr.la		\
+	$(srcdir)/../../liby2/src/liby2.la		\
+	$(srcdir)/../../libycp/src/libycp.la		\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../src/libpy2ag_anyagent.la		\
