@@ -153,6 +153,7 @@ struct YWidgetOpt
     YLongOpt key_Fxx;		// YPushButton: No. of F-Key (1..24), 0 if none
 
     YBoolOpt searchMode;	// YPackageSelector
+    YBoolOpt summaryMode;	// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector
     YBoolOpt youMode;		// YPackageSelector
     YBoolOpt stepsEnabled;	// YWizard

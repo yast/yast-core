@@ -187,6 +187,7 @@
 #define YUIOpt_plainText			"plainText"
 #define YUIOpt_scaleToFit			"scaleToFit"
 #define YUIOpt_searchMode			"searchMode"
+#define YUIOpt_summaryMode			"summaryMode"
 #define YUIOpt_shrinkable			"shrinkable"
 #define YUIOpt_smallDecorations			"smallDecorations"
 #define YUIOpt_stepsEnabled			"stepsEnabled"

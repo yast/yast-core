@@ -14,9 +14,7 @@ File:		YUI_special_widgets.cc
 
 Summary: Special (optional) widgets
 
-
-Authors:	Mathias Kettner <kettner@suse.de>
-Stefan Hundhammer <sh@suse.de>
+Author:		Stefan Hundhammer <sh@suse.de>
 
 Maintainer:	Stefan Hundhammer <sh@suse.de>
 

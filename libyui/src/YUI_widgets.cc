@@ -2310,7 +2310,9 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @class	YPackageSelector
  * @optarg	string floppyDevice
  * @option	youMode start in YOU ( YaST Online Update ) mode
- * @option	updateMode start in update Mode
+ * @option	updateMode start in update mode
+ * @option	searchMode start with the "search" filter view 
+ * @option	summaryMode start with the "installation summary" filter view
  * @usage	`PackageSelector( "/dev/fd0" )
  *
  * @examples	PackageSelector.ycp
@@ -2326,7 +2328,7 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * The result of UI::UserInput() in a dialog with such a widget is undefined -
  * it may or may not return.
  * 
- * This widget gets the ( best ) floppy device as a parameter since the UI has no
+ * This widget gets the (best) floppy device as a parameter since the UI has no
  * general way of finding out by itself what device can be used for saving or
  * loading pacakge lists etc. - this is best done outside and passed here as a
  * parameter.
@@ -2355,9 +2357,10 @@ YWidget * YUI::createPackageSelector( YWidget * parent, YWidgetOpt & opt, const 
 	{
 	    string sym = optList->value(o)->asSymbol()->symbol();
 
-	    if	    ( sym == YUIOpt_youMode    ) opt.youMode.setValue( true );
-	    else if ( sym == YUIOpt_updateMode ) opt.updateMode.setValue( true );
-	    else if ( sym == YUIOpt_searchMode ) opt.searchMode.setValue( true );
+	    if	    ( sym == YUIOpt_youMode     ) opt.youMode.setValue( true );
+	    else if ( sym == YUIOpt_updateMode  ) opt.updateMode.setValue( true );
+	    else if ( sym == YUIOpt_searchMode  ) opt.searchMode.setValue( true );
+	    else if ( sym == YUIOpt_summaryMode ) opt.summaryMode.setValue( true );
 	    else logUnknownOption( term, optList->value(o) );
 	}
 	else logUnknownOption( term, optList->value(o) );
