@@ -96,7 +96,9 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
     else
     {
 	if (parser.repeatNames () && value->isList () ||
-	    !parser.repeatNames () &&  (value->isString () || value->isInteger()))
+	    !parser.repeatNames () &&  (value->isString () || value->isInteger()) ||
+	    path->component_str(0) == "all"
+	    )
 	    {
 		ok = true;
 		if (parser.inifile.Write (path, value, parser.HaveRewrites ()))

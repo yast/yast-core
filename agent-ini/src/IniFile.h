@@ -87,6 +87,53 @@ public:
 			read_by = rb;
 		    }
 	    }
+
+protected:
+    /**
+     * Constructs a map of the fields, for Read (.all...)
+     */
+    virtual YCPMap getAllDoIt () {
+	YCPMap m;
+
+	m->add (YCPString ("name"), YCPString (name));
+	m->add (YCPString ("type"), YCPInteger (read_by));
+	m->add (YCPString ("comment"), YCPString (comment));
+	return m;
+    }
+
+    //! helper for setAllDoIt
+    bool getMapString (const YCPMap &in, const string &k, string &s) {
+	YCPValue v = in->value (YCPString (k));
+	if (v.isNull () || !v->isString ())
+	{
+	    y2error ("Missing in Write (.all): %s", k.c_str ());
+	    return false;
+	}
+	s = v->asString ()->value ();
+	return true;
+    }
+
+    //! helper for setAllDoIt
+    bool getMapInteger (const YCPMap &in, const string &k, int &i) {
+	YCPValue v = in->value (YCPString (k));
+	if (v.isNull () || !v->isInteger ())
+	{
+	    y2error ("Missing in Write (.all): %s", k.c_str ());
+	    return false;
+	}
+	i = v->asInteger ()->value ();
+	return true;
+    }
+
+    virtual int setAllDoIt (const YCPMap &in) {
+	dirty = true;
+
+	bool ok = true;
+	ok = ok && getMapString (in, "name", name);
+	ok = ok && getMapInteger (in, "type", read_by);
+	ok = ok && getMapString (in, "comment", comment);
+	return ok? 0: -1;
+    }
 };
 
 /**
@@ -121,6 +168,32 @@ public:
 			IniBase::init (n, c, rb);
 		    }
 	    }
+
+    YCPMap getAllDoIt () {
+	YCPMap m = IniBase::getAllDoIt ();
+	m->add (YCPString ("kind"), YCPString ("value"));
+	m->add (YCPString ("value"), YCPString (val));
+	return m;
+    }
+
+    int setAllDoIt (const YCPMap &in) {
+	int ret = IniBase::setAllDoIt (in);
+	if (ret == 0)
+	{
+	    string kind;
+	    if (!getMapString (in, "kind", kind) || kind != "value")
+	    {
+		y2error ("Kind should be 'value'");
+		return -1;
+	    }
+
+	    if (!getMapString (in, "value", val))
+	    {
+		return -1;
+	    }
+	}
+	return ret;
+    }
 };
 
 class IniSection;
@@ -224,6 +297,20 @@ private:
      * @return 0 in case of success
      */
     int getSectionProp (const YCPPath&p, YCPValue&out,int what, int depth = 0);
+    /**
+     * Get a complete subtree
+     * @param p path : .all or .all.sec1.sec2
+     * @param out output is placed here
+     * @param depth Index of current path component. This function is
+     * recursive and depth marks the depth of recursion. We look for
+     * path[depth] in current "scope"
+     * @return 0 in case of success
+     */
+    int getAll (const YCPPath&p, YCPValue&out, int depth);
+    /**
+     * Gets data for this section and all its values and subsections
+     */
+    YCPMap getAllDoIt ();
 
     /**
      * Get directory of this section
@@ -272,6 +359,21 @@ private:
      * @return 0
      */
     int setSectionProp (const YCPPath&p,const YCPValue&in, int what, int depth);
+    /**
+     * Set all properties and values for a section.
+     * No recursive creation of the specified path.
+     * @param p path where to start
+     * @param in value to set
+     * @param depth see getSectionProp
+     * @return 0 in case of success
+     */
+    int setAll (const YCPPath&p, const YCPValue& in, int depth);
+    /**
+     * Set all properties and values for a section.
+     * @param in value to set
+     * @return 0 in case of success
+     */
+    int setAllDoIt (const YCPMap &in);
     /**
      * Delete value on path
      * @param p path to delete value at

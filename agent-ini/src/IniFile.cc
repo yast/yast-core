@@ -344,6 +344,63 @@ int IniSection::getSectionProp (const YCPPath&p, YCPValue&out, int what, int dep
     return -1;
 }
 
+int IniSection::getAll (const YCPPath&p, YCPValue&out, int depth)
+{
+    if (depth < p->length ())
+    {
+	// recurse to find the starting section
+	// Get any section of that name
+	string k = ip->changeCase (p->component_str (depth));
+	IniSectionIdxIterator sxi = isections.find (k);
+	if (sxi != isections.end())
+	{
+	    return sxi->second->s ().getAll (p, out, depth+1);
+	}
+	// else error
+    }
+    else
+    {
+	out = getAllDoIt ();
+	return 0;
+    }
+
+    y2error ("Read: Invalid path %s [%d]", p->toString().c_str(), depth);
+    return -1;
+}
+
+YCPMap IniSection::getAllDoIt ()
+{
+    YCPMap m = IniBase::getAllDoIt ();
+
+    m->add (YCPString ("kind"), YCPString ("section"));
+    m->add (YCPString ("file"), YCPInteger (rewrite_by));
+
+    YCPList v;
+    IniIterator
+	ci = getContainerBegin (),
+	ce = getContainerEnd ();
+
+    for (;ci != ce; ++ci)
+    {
+	// the method is virtual,
+	// but the container does not exploit the polymorphism
+	YCPMap vm;
+	IniType t = ci->t ();
+	if (t == VALUE)
+	{
+	    vm = ci->e ().getAllDoIt ();
+	}
+	else //if (t == SECTION)
+	{
+	    vm = ci->s ().getAllDoIt ();
+	}
+	v->add (vm);
+    }
+
+    m->add (YCPString ("value"), v);
+    return m;
+}
+
 int IniSection::Delete (const YCPPath&p)
 {
     if (ip->isFlat ())
@@ -537,6 +594,109 @@ int IniSection::delSection(const YCPPath&p, int depth)
 	}
     }
     return 0;
+}
+
+int IniSection::setAll (const YCPPath&p, const YCPValue& in, int depth)
+{
+    if (depth < p->length ())
+    {
+	// recurse to find the starting section
+	// Get any section of that name
+	string k = ip->changeCase (p->component_str (depth));
+	IniSectionIdxIterator sxi = isections.find (k);
+	if (sxi != isections.end())
+	{
+	    return sxi->second->s ().setAll (p, in, depth+1);
+	}
+	// else error
+    }
+    else
+    {
+	return setAllDoIt (in->asMap ());
+    }
+
+    y2debug ("Write: Invalid path %s [%d]", p->toString().c_str(), depth);
+    return -1;
+}
+
+int IniSection::setAllDoIt (const YCPMap &in)
+{
+    int ret = IniBase::setAllDoIt (in);
+    if (ret != 0)
+    {
+	return ret;
+    }
+
+    string kind;
+    if (!getMapString (in, "kind", kind) || kind != "section")
+    {
+	y2error ("Kind should be 'section'");
+	return -1;
+    }
+
+    if (!getMapInteger (in, "file", rewrite_by))
+    {
+	return -1;
+    }
+
+    YCPValue v = in->value (YCPString ("value"));
+    if (v.isNull () || !v->isList ())
+    {
+	y2error ("Missing in Write (.all): %s", "value");
+	return -1;
+    }
+    YCPList l = v->asList ();
+
+    container.clear ();		// bye, old data
+    int i, len = l->size ();
+    for (i = 0; i < len; ++i)
+    {
+	YCPValue item = l->value (i);
+	if (!item->isMap ())
+	{
+	    y2error ("Item in Write (.all) not a map");
+	    ret = -1;
+	    break;
+	}
+	YCPMap mitem = item->asMap ();
+
+	if (!getMapString (mitem, "kind", kind))
+	{
+	    y2error ("Item in Write (.all) of unspecified kind");
+	    ret = -1;
+	    break;
+	}
+
+	if (kind == "section")
+	{
+	    IniSection s (ip);
+	    ret = s.setAllDoIt (mitem);
+	    if (ret != 0)
+	    {
+		break;
+	    }
+	    container.push_back (IniContainerElement (s));
+	}
+	else if (kind == "value")
+	{
+	    IniEntry e;
+	    e.setAllDoIt (mitem);
+	    if (ret != 0)
+	    {
+		break;
+	    }
+	    container.push_back (IniContainerElement (e));
+	}
+	else
+	{
+	    y2error ("Item in Write (.all) of unrecognized kind %s", kind.c_str ());
+	    ret = -1;
+	    break;
+	}
+    }
+
+    reindex ();
+    return ret;
 }
 
 int IniSection::setMyValue (const YCPPath &p, const YCPValue&in, int what, int depth)
@@ -786,6 +946,12 @@ int IniSection::Read (const YCPPath&p, YCPValue&out, bool rewrite)
 {
     if (ip->isFlat ())
 	return getValueFlat (p, out);
+
+    if (p->length() >= 1 && p->component_str (0) == "all")
+    {
+	return getAll (p, out, 1);
+    }
+
     if (p->length()<2)
 	{
 	    y2error ("I do not know what to read from %s.", p->toString().c_str());
