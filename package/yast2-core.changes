@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sat Mar 08 21:55:04 CET 2003 - arvin@suse.de
+
+- handle wlan flag from hwinfo (bug #23491)
+
+-------------------------------------------------------------------
 Fri Mar 07 15:42:48 CET 2003 - arvin@suse.de
 
 - make string compare function locale unaware again as it leads

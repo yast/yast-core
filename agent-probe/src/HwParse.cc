@@ -578,6 +578,11 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("pppoe"), YCPBoolean (true));
     }
 
+    if (hd->is.wlan)
+    {
+	out->add (YCPString ("wlan"), YCPBoolean (true));
+    }
+
     // hd detail
 
     if (hd->detail)
