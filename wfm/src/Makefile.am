@@ -14,6 +14,8 @@ noinst_LTLIBRARIES = liby2wfm.la
 liby2wfm_la_SOURCES =				\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h			\
+	Y2PkgComponent.cc Y2PkgComponent.h	\
+	Y2CCPkg.cc Y2CCPkg.h			\
 	WFM.cc WFM.h				\
 	WFMSubAgent.cc WFMSubAgent.h		\
 	ycpTools.cc ycpTools.h			\
