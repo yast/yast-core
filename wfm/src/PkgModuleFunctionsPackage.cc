@@ -632,7 +632,14 @@ PkgModuleFunctions::PkgUpdateAll (YCPList args)
 
     YCPList ret;
     ret->add (YCPInteger ((long long)stats.totalToInstall()));
-    ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize()));
+    if (stats.delete_unmaintained)
+    {
+	ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize() - stats.chk_dropped));
+    }
+    else
+    {
+	ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize()));
+    }
 
     return ret;
 }
@@ -677,6 +684,8 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 
 /**
    @builtin Pkg::PkgSolve () -> boolean
+   Optional: Pkg::PkgSolve (true) to filter all conflicts with installed packages
+	(installed packages will be preferred)
 
    Solve current package dependencies
 
@@ -684,10 +693,23 @@ PkgModuleFunctions::PkgDelete (YCPList args)
 YCPValue
 PkgModuleFunctions::PkgSolve (YCPList args)
 {
+    bool filter_conflicts_with_installed = false;
+    if (args->size() > 0)
+    {
+	if (args->value(0)->isBoolean())
+	{
+	    filter_conflicts_with_installed = args->value(0)->asBoolean()->value();
+	}
+	else
+	{
+	    return YCPError ("Bad args to Pkg::PkgSolve");
+	}
+    }
+
     PkgDep::ResultList good;
     PkgDep::ErrorResultList bad;
 
-    if (!_y2pm.packageManager().solveInstall(good, bad))
+    if (!_y2pm.packageManager().solveInstall(good, bad, filter_conflicts_with_installed))
     {
 	y2error ("%d packages failed:", bad.size());
 
