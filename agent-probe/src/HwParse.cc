@@ -870,7 +870,7 @@ HwProbe::filterManual (hd_hw_item_t item)
 // check boot architecture
 //
 YCPValue
-HwProbe::bootArch (void)
+HwProbe::bootArch ()
 {
     return YCPString (boot2string (hd_boot_arch (hd_base)));
 }
@@ -879,7 +879,7 @@ HwProbe::bootArch (void)
 // check system architecture
 //
 YCPValue
-HwProbe::cpuArch (void)
+HwProbe::cpuArch ()
 {
     return YCPString (cpu2string (hd_cpu_arch (hd_base)));
 }
@@ -888,7 +888,7 @@ HwProbe::cpuArch (void)
 // check boot disk
 //
 YCPValue
-HwProbe::bootDisk (void)
+HwProbe::bootDisk ()
 {
     int i;
     hd_t *hd = hd_get_device_by_idx (hd_base, hd_boot_disk (hd_base, &i));
@@ -902,7 +902,7 @@ HwProbe::bootDisk (void)
 // return isdn hardware data
 //
 YCPValue
-HwProbe::ihwData (void)
+HwProbe::ihwData ()
 {
     YCPList isdnList;
 
@@ -1001,7 +1001,7 @@ HwProbe::ihwData (void)
 //
 
 YCPValue
-HwProbe::biosVideo (void)
+HwProbe::biosVideo ()
 {
     hd_t *bios_video;
     YCPList result;
@@ -1020,7 +1020,7 @@ HwProbe::biosVideo (void)
 //
 
 YCPValue
-HwProbe::vesaFramebuffer (void)
+HwProbe::vesaFramebuffer ()
 {
     YCPList result;
 
