@@ -1,0 +1,4 @@
+[Parser] tests/statements/SymbolDeclaration.ycp:10 Newly declared symbol as a parameter allowed only for builtins
+[Parser] tests/statements/SymbolDeclaration.ycp:10 Bad parameter
+[Parser] tests/statements/SymbolDeclaration.ycp:10 Parameter error
+runycp: parser error

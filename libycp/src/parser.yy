@@ -4134,6 +4134,14 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 #if DO_DEBUG
 	    y2debug ("YCode::yeFunction:");
 #endif
+	    // parameter declaration is not allowed for functions
+	    if (parm1 != 0)
+	    {
+		yyerror_with_lineinfo (parser, parm->l
+		    , "Newly declared symbol as a parameter allowed only for builtins");
+		t = Type::Error;
+	    }
+	    
 	    YECallPtr func = (YECallPtr)code; 
 	    name = func->qualifiedName();
 #if DO_DEBUG
@@ -4148,6 +4156,14 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 #if DO_DEBUG
 	    y2debug ("YCode::yeTerm:");
 #endif
+	    // parameter declaration is not allowed for terms
+	    if (parm1 != 0)
+	    {
+		yyerror_with_lineinfo (parser, parm->l
+		    , "Newly declared symbol as a parameter allowed only for builtins");
+		t = Type::Error;
+	    }
+	    
 	    YETermPtr term = (YETermPtr)code; 
 	    name = term->name();
 #if DO_DEBUG

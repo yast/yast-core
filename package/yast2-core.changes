@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov  9 07:47:05 CET 2004 - visnov@suse.cz
+
+- don't allow variable declaration for functions and terms (#40441) 
+
+-------------------------------------------------------------------
 Mon Nov  8 17:13:20 CET 2004 - visnov@suse.cz
 
 - reintroduced YCP backtraces (#41841)

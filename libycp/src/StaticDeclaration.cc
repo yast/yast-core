@@ -42,7 +42,7 @@ using namespace std;
 #define DECLSIZE 127
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 //
