@@ -27,6 +27,7 @@ ReplaceWidget
 RunPkgSelection
 SCR
 SetConsoleFont
+SetFunctionKeys
 SetFocus
 SetLanguage
 SetModulename

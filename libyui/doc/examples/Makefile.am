@@ -33,6 +33,7 @@ examples_DATA =					\
 	Enabling1.ycp				\
 	Enabling2.ycp				\
 	FakeUserInput1.ycp			\
+	FKeys.ycp				\
 	Frame1.ycp				\
 	Frame2.ycp				\
 	GetDisplayInfo.ycp			\

@@ -48,6 +48,7 @@
 #include "YMacroRecorder.h"
 #include "YMacroPlayer.h"
 #include "YReplacePoint.h"
+#include "YShortcut.h"
 
 
 
@@ -89,6 +90,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_SCR				) ret = evaluateCallback		( term, false);
     else if ( symbol == YUIBuiltin_SetConsoleFont		) ret = evaluateSetConsoleFont		( term );
     else if ( symbol == YUIBuiltin_SetFocus			) ret = evaluateSetFocus		( term );
+    else if ( symbol == YUIBuiltin_SetFunctionKeys		) ret = evaluateSetFunctionKeys		( term );
     else if ( symbol == YUIBuiltin_SetLanguage			) ret = evaluateSetLanguage		( term );
     else if ( symbol == YUIBuiltin_SetModulename		) ret = evaluateSetModulename		( term );
     else if ( symbol == YUIBuiltin_StopRecordMacro		) ret = evaluateStopRecordMacro		( term );
@@ -1433,7 +1435,7 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
 	{
 	    y2warning( "Use UI::CheckShortcuts() only after UI::PostponeShortcutCheck() !" );
 	}
-	
+
 	dialog->checkShortcuts( true );
     }
 
@@ -1547,7 +1549,7 @@ YCPValue YUIInterpreter::evaluateAskForExistingFile( const YCPTerm & term )
 	return askForExistingFile( term->value(0)->asString(),
 				   term->value(1)->asString(),
 				   term->value(2)->asString() );
-	
+
     }
 
     return YCPNull();
@@ -1580,10 +1582,82 @@ YCPValue YUIInterpreter::evaluateAskForSaveFileName( const YCPTerm & term )
 	return askForSaveFileName( term->value(0)->asString(),
 				   term->value(1)->asString(),
 				   term->value(2)->asString() );
-	
+
     }
 
     return YCPNull();
+}
+
+
+/**
+ * @builtin SetFunctionKeys(map fkeys) -> void
+ *
+ * Set the (default) function keys for a number of buttons.
+ * <p>
+ * This function receives a map with button labels and the respective function
+ * key number that should be used if on other `opt(`key_F..) is specified.
+ * <p>
+ * Any keyboard shortcuts in those labels are silently ignored so this is safe
+ * to use even if the UI's internal shortcut manager rearranges shortcuts.
+ * <p>
+ * Each call to this function overwrites the data of any previous calls.
+ * <p>
+ * @example SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
+ */
+YCPValue YUIInterpreter::evaluateSetFunctionKeys( const YCPTerm & term )
+{
+    if ( term->size() == 1 && term->value(0)->isMap() )
+    {
+	YCPMap new_fkeys( term->value(0)->asMap() );
+	default_fkeys = YCPMap();
+
+	for ( YCPMapIterator it = new_fkeys->begin(); it != new_fkeys->end(); ++it )
+	{
+	    if ( it.key()->isString() && it.value()->isInteger() )
+	    {
+		std::string label = YShortcut::cleanShortcutString( it.key()->asString()->value() );
+		int fkey = it.value()->asInteger()->value();
+
+		if ( fkey > 0 && fkey <= 24 )
+		{
+		    y2milestone( "Mapping \"%s\"\t-> F%d", label.c_str(), fkey );
+		    default_fkeys->add( YCPString( label ), it.value()->asInteger() );
+		}
+		else
+		{
+		    y2error( "SetFunctionKeys(): Function key %d out of range for \"%s\"",
+			     fkey, label.c_str() );
+		}
+	    }
+	    else
+	    {
+		y2error( "SetFunctionKeys(): Invalid map element: "
+			 "Expected <string>: <integer>, not %s: %s",
+			 it.key()->toString().c_str(), it.value()->toString().c_str() );
+	    }
+	}
+	return YCPVoid();
+    }
+    else
+	return YCPNull();
+}
+
+
+int YUIInterpreter::defaultFunctionKey( YCPString ylabel )
+{
+    int fkey = 0;
+
+    std::string label = YShortcut::cleanShortcutString( ylabel->value() );
+
+    if ( label.size() > 0 )
+    {
+	YCPValue val = default_fkeys->value( YCPString( label ) );
+	
+	if ( ! val.isNull() && val->isInteger() )
+	    fkey = val->asInteger()->value();
+    }
+    
+    return fkey;
 }
 
 
@@ -1617,7 +1691,7 @@ YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
 	y2debug ("callback returns (%s)", v->toString().c_str());
 	return v;
     }
-    
+
     return YCPVoid();
 }
 

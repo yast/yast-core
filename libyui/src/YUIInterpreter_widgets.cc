@@ -110,6 +110,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      * @option	key_F2  	(NCurses only) activate this widget with the F2 key
      * @option  key_Fxx 	(NCurses only) activate this widget with the Fxx key
      * @option	key_F24 	(NCurses only) activate this widget with the F24 key
+     * @option	key_none	(NCurses only) no function key for this widget
      *
      * @description
      *
@@ -160,6 +161,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_key_F22	) opt.key_Fxx.setValue( 22 );
 	    else if ( sym == YUIOpt_key_F23	) opt.key_Fxx.setValue( 23 );
 	    else if ( sym == YUIOpt_key_F24	) opt.key_Fxx.setValue( 24 );
+	    else if ( sym == YUIOpt_key_none	) opt.key_Fxx.setValue( -1 );
 	    else ol->add(rawopt->value(o));
 	}
 	else if (!rawopt->value(o)->isTerm())
@@ -988,6 +990,12 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 	}
 	else logUnknownOption(term, optList->value(o));
     }
+
+
+    // Look up default function keys unless explicitly set
+    
+    if ( opt.key_Fxx.value() == 0 )
+	opt.key_Fxx.setValue( defaultFunctionKey( label ) );
 
 
     YPushButton * button = dynamic_cast<YPushButton *>

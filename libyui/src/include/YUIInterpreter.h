@@ -23,6 +23,7 @@
 #include <pthread.h>
 #include <deque>
 #include <ycp/YCPInterpreter.h>
+#include <ycp/YCPMap.h>
 #include <y2/Y2Component.h>
 #include "YWidget.h"
 #include "YAlignment.h"
@@ -226,7 +227,14 @@ public:
      */
     YCPValue evaluateReplaceWidget(const YCPTerm& term);
 
+    /**
+     * Returns the default function key number for a widget with the specified
+     * label or 0 if there is none. Any keyboard shortcuts that may be
+     * contained in 'label' are stripped away before any comparison.
+     **/
+    int defaultFunctionKey( YCPString label );
 
+    
 protected:
 
 
@@ -864,6 +872,7 @@ protected:
     YCPValue evaluateAskForSaveFileName			( const YCPTerm & term );
     YCPValue evaluateBusyCursor				( const YCPTerm & term );
     YCPValue evaluateChangeWidget			( const YCPTerm & term );
+    YCPValue evaluateCheckShortcuts			( const YCPTerm & term );
     YCPValue evaluateCloseDialog			( const YCPTerm & term );
     YCPValue evaluateDumpWidgetTree			( const YCPTerm & term );
     YCPValue evaluateFakeUserInput			( const YCPTerm & term );
@@ -876,6 +885,7 @@ protected:
     YCPValue evaluateNormalCursor			( const YCPTerm & term );
     YCPValue evaluateOpenDialog				( const YCPTerm & term );
     YCPValue evaluatePlayMacro				( const YCPTerm & term );
+    YCPValue evaluatePostponeShortcutCheck		( const YCPTerm & term );
     YCPValue evaluateQueryWidget			( const YCPTerm & term );
     YCPValue evaluateRecalcLayout			( const YCPTerm & term );
     YCPValue evaluateRecode				( const YCPTerm & term );
@@ -884,12 +894,11 @@ protected:
     YCPValue evaluateRunPkgSelection			( const YCPTerm & term );
     YCPValue evaluateSetConsoleFont			( const YCPTerm & term );
     YCPValue evaluateSetFocus				( const YCPTerm & term );
+    YCPValue evaluateSetFunctionKeys			( const YCPTerm & term );
     YCPValue evaluateSetLanguage			( const YCPTerm & term );
     YCPValue evaluateSetModulename			( const YCPTerm & term );
     YCPValue evaluateStopRecordMacro			( const YCPTerm & term );
     YCPValue evaluateWidgetExists			( const YCPTerm & term );
-    YCPValue evaluatePostponeShortcutCheck		( const YCPTerm & term );
-    YCPValue YUIInterpreter::evaluateCheckShortcuts	( const YCPTerm & term );
 
     /**
      * Implements the UserInput and PollInput() UI commands:
@@ -1368,6 +1377,11 @@ protected:
      * Only valid if userInput() or pollInput() returned ET_MENU.
      */
     YCPValue menuSelection;
+
+    /**
+     * The current mapping of widget labels to default function keys.
+     **/
+    YCPMap default_fkeys;
 };
 
 #endif // YUIInterpreter_h

@@ -45,6 +45,7 @@
 #define YUIBuiltin_ReplaceWidget		"ReplaceWidget"
 #define YUIBuiltin_RunPkgSelection		"RunPkgSelection"
 #define YUIBuiltin_SetConsoleFont		"SetConsoleFont"
+#define YUIBuiltin_SetFunctionKeys		"SetFunctionKeys"
 #define YUIBuiltin_SetFocus			"SetFocus"
 #define YUIBuiltin_SetLanguage			"SetLanguage"
 #define YUIBuiltin_SetModulename		"SetModulename"
@@ -200,6 +201,7 @@
 #define YUIOpt_key_F22				"key_F22"
 #define YUIOpt_key_F23				"key_F23"
 #define YUIOpt_key_F24				"key_F24"
+#define YUIOpt_key_none				"key_none"
 
 
 // Predefined glyphs for builtin Glyph()
