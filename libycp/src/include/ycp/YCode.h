@@ -112,8 +112,7 @@ public:
 	ysInclude,		// include
 	ysFilename,		//  restore filename after include
 	ysImport,		// import
-	ysBlock,		// a block as statement
-	ysRedo,			// [52] redo
+	ysBlock,		// [51] a block as statement
 	ysStatement		// -- placeholder --
     };
 

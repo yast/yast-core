@@ -176,7 +176,6 @@ YCode::toString (ykind kind)
 	"ysInclude",
 	"ysImport",
 	"ysBlock",		// a block
-	"ysRedo",
 
 	"ysStatement"		// -- placeholder --
     };

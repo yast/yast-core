@@ -219,7 +219,7 @@ static int do_while_count = 0;
   /* SCANNER_ERROR is returned when yylex does not have a valid token */
 %token  SCANNER_ERROR
 %token	END_OF_FILE
-%token  EMPTY LIST MAP STRUCT BLOCK DEFINE UNDEFINE I18N REDO
+%token  EMPTY LIST MAP STRUCT BLOCK DEFINE UNDEFINE I18N
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL DCSYMBOL
 %token  DCQUOTED_BLOCK QUOTED_BLOCK QUOTED_EXPRESSION
@@ -1673,18 +1673,6 @@ control_statement:
 		    break;
 		}
 		$$.c = new YStatement (YCode::ysBreak, $1.l);
-		$$.t = Type::Unspec;
-		$$.l = $1.l;
-	    }
-|	REDO ';'
-	    {
-		if (p_parser->m_loop_count <= 0)
-		{
-		    yyLerror ("'redo' outside of loop.", $1.l);
-		    $$.t = 0;
-		    break;
-		}
-		$$.c = new YStatement (YCode::ysRedo, $1.l);
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
 	    }

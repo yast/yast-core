@@ -88,7 +88,6 @@ YStatement::toString () const
     {
 	case ysBreak:	 return "break;"; break;
 	case ysContinue: return "continue;"; break;
-	case ysRedo:	 return "redo;"; break;
 	default:
 	    break;
     }
@@ -104,7 +103,6 @@ YStatement::evaluate (bool cse)
     {
 	case ysBreak:	    return YCPBreak();
 	case ysContinue:    return YCPVoid();
-	case ysRedo: y2debug("YCPRedo");	    return YCPRedo();
 	default:	    break;
     }
     return YCPNull();
@@ -921,7 +919,6 @@ YSWhile::evaluate (bool cse)
 	{
 	    continue;
 	}
-redo:
 	YCPValue lval = YCPNull();
 
 	if (m_loop->isBlock())
@@ -945,11 +942,6 @@ redo:
 	{
 	    y2debug ("isBreak");
 	    break;
-	}
-	else if (lval->isRedo())	// executed 'redo'
-	{
-	    y2debug ("isRedo");
-	    goto redo;
 	}
 	else if (lval->isReturn())	// executed 'return;' - YCPReturn is also YCPVoid, keep the order of tests!
 	{
@@ -1078,11 +1070,6 @@ YSRepeat::evaluate (bool cse)
 	{
 	    break;
 	}
-	else if (lval->isRedo())	// executed 'redo'
-	{
-	    y2debug ("REDO");
-	    continue;
-	}
 	else if (lval->isReturn())	// executed 'return;'
 	{
 	    return lval;
@@ -1202,11 +1189,6 @@ YSDo::evaluate (bool cse)
 	else if (lval->isBreak())	// executed 'break'
 	{
 	    break;
-	}
-	else if (lval->isRedo())	// executed 'redo'
-	{
-	    y2debug ("REDO");
-	    continue;
 	}
 	else if (lval->isReturn())	// executed 'return;'
 	{

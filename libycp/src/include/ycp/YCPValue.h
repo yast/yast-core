@@ -48,8 +48,7 @@ enum YCPValueType {
     YT_BREAK	   = 13,	// value of 'break;'
     YT_ENTRY	   = 14,	// just a placeholder for a SymbolEntry belonging to a function (i.e. foreach())
     YT_ERROR	   = 15,	// error value, will cause trouble
-    YT_REFERENCE   = 16,	// a reference to a variable
-    YT_REDO	   = 17,	// value of 'redo;'
+    YT_REFERENCE   = 16		// a reference to a variable
 };
 
 enum YCPOrder {
@@ -141,11 +140,6 @@ public:
      * Checks, if the type of this value is YT_BREAK.
      */
     bool isBreak() const;
-
-    /**
-     * Checks, if the type of this value is YT_REDO.
-     */
-    bool isRedo() const;
 
     /**
      * Checks, if the type of this value is YT_RETURN.
