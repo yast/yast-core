@@ -37,7 +37,7 @@ void YCPScope::scopeDebug(const char *message, ...) const
 	// Prepare info text
 	va_list ap;
 	va_start(ap, message);
-	Y2Logging::y2_vlogger (LOG_MILESTONE, "scope", current_file.c_str(), current_line,"", message, ap);
+	y2_vlogger (LOG_MILESTONE, "scope", current_file.c_str(), current_line,"", message, ap);
 	va_end(ap);
     }
     return;

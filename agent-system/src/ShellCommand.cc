@@ -235,7 +235,7 @@ main ()
     fprintf (stdout, "Oret=%d\n", r);
     fprintf (stderr, "Eret=%d\n", r);
 
-    y2setLogfileName ("-");
+    set_log_filename ("-");
     y2debug ("START");
 
     //r = shellcommand_background("sleep 5; echo x1x; echo y2y >&2; exit 3;");

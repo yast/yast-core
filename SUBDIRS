@@ -1,1 +1,1 @@
-autodocs libycp liby2 libyui libscr agent-any agent-dummy agent-ini agent-losetup agent-modules agent-probe agent-resolver agent-system agent-ypserv agents-non-y2 agents-perl scr wfm base
+libycp liby2 libyui libscr agent-any agent-dummy agent-ini agent-losetup agent-modules agent-probe agent-resolver agent-system agent-ypserv agents-non-y2 agents-perl scr wfm base autodocs

@@ -36,7 +36,7 @@ main (int argc, const char *argv[])
 	        && (argv[argp][1] == 'l')
 	        && (argp+1 < argc)) {
 		argp++;
-		y2setLogfileName (argv[argp]);
+		set_log_filename (argv[argp]);
 	    }
 	    else if (fname == 0) {
 		fname = argv[argp];

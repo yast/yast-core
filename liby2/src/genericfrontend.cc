@@ -94,7 +94,7 @@ main (int argc, char **argv)
 		exit(5);
 	    }
 
-	    y2setLogfileName( argv[arg] );   // set logfile given in command line
+	    set_log_filename( argv[arg] );   // set logfile given in command line
 	}
     }
 
