@@ -1,13 +1,18 @@
 -------------------------------------------------------------------
+Mon Sep 13 13:11:19 CEST 2004 - arvin@suse.de
+
+- fixed TargetInitDU for missing readonly
+
+-------------------------------------------------------------------
 Fri Sep 10 15:26:06 CEST 2004 - sh@suse.de
 
-- Implemented enhancement #44799: Log error for leftover dialogs 
+- Implemented enhancement #44799: Log error for leftover dialogs
 - V 2.10.13
 
 -------------------------------------------------------------------
 Fri Sep 10 15:09:45 CEST 2004 - sh@suse.de
 
-- Improved `opt(`debugLayout) UI logging 
+- Improved `opt(`debugLayout) UI logging
 
 -------------------------------------------------------------------
 Fri Sep 10 12:16:55 CEST 2004 - ma@suse.de
