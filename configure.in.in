@@ -6,10 +6,6 @@
 
 ## special stuff
 AM_PROG_LEX
-AC_PATH_PROG(GPERF, gperf, false)
-if test "$GPERF" = "false"; then
-	AC_MSG_ERROR([gperf not installed])
-fi
 AC_CHECK_PROGS(YACC, 'bison -y -d -v' byacc, false)
 if test "$YACC" = false; then
 	AC_MSG_ERROR([bison not installed])
