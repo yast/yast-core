@@ -153,10 +153,11 @@ int IniParser::initMachine (const YCPMap&scr)
     YCPValue v = scr->value(YCPString("options"));
     if (!v.isNull() && v->isList ())
 	{
-#define COMPARE_OPTION(X) if (v->asList()->value(i)->asString()->value() == #X) X = true; else 
 	    int len = v->asList()->size();
 	    for (int i = 0;i<len;i++)
 		{
+		    string sv = v->asList()->value(i)->asString()->value();
+#define COMPARE_OPTION(X) if (sv == #X) X = true; else 
 		    COMPARE_OPTION (ignore_case_regexps)
 		    COMPARE_OPTION (ignore_case)
 		    COMPARE_OPTION (prefer_uppercase)
@@ -170,9 +171,9 @@ int IniParser::initMachine (const YCPMap&scr)
 		    COMPARE_OPTION (no_finalcomment_kill)
 		    COMPARE_OPTION (read_only)
 		    COMPARE_OPTION (flat)
-			y2error ("Option not implemented yet: %s", v->asList()->value(i)->toString().c_str());
-		}
+			y2error ("Option not implemented yet: %s", sv.c_str());
 #undef  COMPARE_OPTION
+		}
 	}
 
     if (ignore_case && multiple_files)
