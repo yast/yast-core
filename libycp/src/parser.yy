@@ -1294,6 +1294,7 @@ statement:
 		if (fn.empty())
 		{
 		    yyFerror ($2.v.sval, $1.l);
+		    delete[] $2.v.sval;
 		    $$.t = 0;
 		    break;
 		}
@@ -1338,7 +1339,6 @@ statement:
 		p_parser->m_block_stack->theBlock->addIncluded ($2.v.sval);
 		$$.l = $1.l;
 		$$.t = Type::Unspec;
-
 	    }
 |	IMPORT STRING ';'
 	    {
