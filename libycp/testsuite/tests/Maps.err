@@ -46,4 +46,5 @@ Parsed:
   return true;
 }
 ----------------------------------------------------------------------
+[libycp] YCPMap.cc(add):52 Only integer, string, or symbol constant allowed as key in map
 [Scanner] tests/Maps.ycp:41 Syntax error: Wrong or missing element at start of map

@@ -49,7 +49,7 @@ YCPMapIterator YCPMapRep::end() const
 void YCPMapRep::add(const YCPValue& key, const YCPValue& value)
 {
     if (!key->isString() && !key->isInteger() && !key->isSymbol()) {
-	YCPError ("Only integer, string, or symbol constant allowed as key in map");
+	y2error ("Only integer, string, or symbol constant allowed as key in map");
 	return;
     }
     YCPValueYCPValueMap::iterator pos = stl_map.find( key );
@@ -65,7 +65,7 @@ void YCPMapRep::remove(const YCPValue& key)
 {
     if (!key->isString() && !key->isInteger() && !key->isSymbol())
     {
-	YCPError ("Only integer, string, or symbol constant allowed as key in map");
+	y2error ("Only integer, string, or symbol constant allowed as key in map");
 	return;
     }
 
@@ -87,7 +87,7 @@ YCPMap YCPMapRep::shallowCopy() const
 YCPMap YCPMapRep::functionalAdd(const YCPValue& key, const YCPValue& value) const
 {
     if (!key->isString() && !key->isInteger() && !key->isSymbol()) {
-	YCPError ("Only integer, string, or symbol constant allowed as key in map");
+	y2error ("Only integer, string, or symbol constant allowed as key in map");
 	return YCPNull ();
     }
 

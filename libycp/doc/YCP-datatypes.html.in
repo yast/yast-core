@@ -152,8 +152,10 @@ _this_IS_also_a_symbol
 <a name="map"><tt><b>map</b></tt>
 <ul>
 	A map is an associative array. It is a list of (key, value) pairs with the
-	property, that no two equal keys are contained in the mapping. You can use
-	values of any type as keys, even mixed. This is very conveniant. Mappings are
+	property, that no two equal keys are contained in the mapping.
+	Integers, strings and symbols are allowed as keys (even mixed, this is
+	very convenient).
+	Mappings are
 	denoted with <tt><b>$[ </b></tt> <i>key</i> <tt><b>:</b></tt> <i>value</i><tt><b>,
 	</tt></b> <i>key</i> <tt><b>:</b></tt> <i>value</i><tt><b>, </b></tt>...<b><tt>]</tt></b>.
 	The empty mapping is denoted <tt><b>$[]</b></tt>. Examples:
