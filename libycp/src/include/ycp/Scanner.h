@@ -27,10 +27,7 @@
 #ifndef Scanner_h
 #define Scanner_h
 
-#ifndef __FLEX_LEXER_H
 #include "FlexLexer.h"
-#endif
-
 #include "ycp/StaticDeclaration.h"
 #include <stdio.h>
 #include <string>

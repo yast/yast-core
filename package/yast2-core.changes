@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep  8 16:13:03 CEST 2004 - visnov@suse.cz
+
+- reverted the flex patch for now 
+
+-------------------------------------------------------------------
 Tue Sep  7 10:41:47 CEST 2004 - visnov@suse.cz
 
 - support newer flex (patch by tcrhak)
