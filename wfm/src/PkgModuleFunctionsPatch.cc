@@ -369,13 +369,19 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
   @builtin Pkg::YouInstallCurrentPatch () -> bool
 
   install current patch.
+
+  @return ""        success
+          "skipped" patch was been skipped during download
+          "error"   install error
 */
 YCPValue
 PkgModuleFunctions::YouInstallCurrentPatch (YCPList args)
 {
     _last_error = _y2pm.youPatchManager().instYou().installCurrentPatch();
-    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
+    if ( !_last_error ) return YCPString( "" );
+    if ( _last_error == YouError::E_empty_location ) return YCPString( "skipped" );
+    
+    return YCPString( "error" );
 }
 
 /**   
