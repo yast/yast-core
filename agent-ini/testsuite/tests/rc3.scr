@@ -1,0 +1,5 @@
+.
+
+`ag_ini(
+  SysConfigFile ("tests/rc3.in.test")
+)

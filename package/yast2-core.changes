@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov  6 09:06:36 CET 2002 - mvidner@suse.cz
+
+- Fixed recursive Dir in ini-agent flat mode (used for .sysconfig), #21574.
+
+-------------------------------------------------------------------
 Tue Oct 15 10:46:11 CEST 2002 - kkaempf@suse.de
 
 - fix 'sort' testcase

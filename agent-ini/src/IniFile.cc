@@ -412,6 +412,16 @@ int IniSection::delValue (const YCPPath&p, int depth)
 
 int IniSection::dirValueFlat (const YCPPath&p, YCPList&l)
 {
+    // This function used to discard p and always return Dir (.)
+    // #21574
+    if (p->length () != 0)
+    {
+	// Leave l empty.
+	// Maybe we should differentiate between Dir (.existing_value)
+	// and Dir (.bogus) ?
+	return 0;
+    }
+
     IniFileIndex::iterator i = index.begin ();
     for (;i!=index.end();i++)
 	if (!(*i).isSection ())
