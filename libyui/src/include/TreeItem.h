@@ -46,8 +46,8 @@ public:
 			TreeItem<PAYLOAD> * 	parent = 0 )
 	: _value( val )
 	, _parent( parent )
-	, _next( 0 )
-	, _firstChild( 0 )
+	, _next(0)
+	, _firstChild(0)
     {
 	if ( _parent )
 	    _parent->addChild( this );
@@ -67,8 +67,8 @@ protected:
 			TreeItem<PAYLOAD> * 	parent = 0 )
 	: _value( val )
 	, _parent( parent )
-	, _next( 0 )
-	, _firstChild( 0 )
+	, _next(0)
+	, _firstChild(0)
     {
 	if ( _parent && autoAddChild )
 	    _parent->addChild( this );

@@ -147,7 +147,7 @@ void YBarGraph::parseValuesList( const YCPList & newVal )
 
     for ( int i=0; i < newVal->size(); i++ )
     {
-	YCPValue val( newVal->value( i ) );
+	YCPValue val( newVal->value(i) );
 
 	if ( val->isInteger() )
 	{
@@ -159,7 +159,7 @@ void YBarGraph::parseValuesList( const YCPList & newVal )
 		     "Expecting integer, you passed \"%s\"",
 		     val->toString().c_str() );
 
-	    _values.push_back( 0 );
+	    _values.push_back(0);
 	}
     }
 }
@@ -179,7 +179,7 @@ void YBarGraph::parseLabelsList( const YCPList & newLabels )
 
     for ( int i=0; i < newLabels->size(); i++ )
     {
-	YCPValue val( newLabels->value( i ) );
+	YCPValue val( newLabels->value(i) );
 
 	if ( i < segments() )
 	{

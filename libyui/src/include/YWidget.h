@@ -422,7 +422,7 @@ public:
     class OptimizeChanges
     {
     public:
-	OptimizeChanges( YWidget & w ) : yw( w ) { yw.startMultipleChanges(); }
+	OptimizeChanges( YWidget & w ) : yw(w) { yw.startMultipleChanges(); }
 	~OptimizeChanges()                       { yw.doneMultipleChanges(); }
     private:
 	OptimizeChanges( const OptimizeChanges & ); // no copy

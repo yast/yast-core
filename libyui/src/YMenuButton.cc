@@ -29,7 +29,7 @@
 YMenuButton::YMenuButton( YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
-    , next_index( 0 )
+    , next_index(0)
 {
     toplevel_menu = new YMenu( YCPString( "" ) );
 }

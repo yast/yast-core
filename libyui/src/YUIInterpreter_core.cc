@@ -51,12 +51,12 @@
 
 
 YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
-    : id_counter( 0 )
+    : id_counter(0)
     , with_threads( with_threads )
     , box_in_the_middle( YCPNull() )
     , _moduleName( "yast2" )
-    , macroRecorder( 0 )
-    , macroPlayer( 0 )
+    , macroRecorder(0)
+    , macroPlayer(0)
     , callbackComponent( callback )
     , menuSelection( YCPVoid() )
 {
@@ -322,11 +322,11 @@ YCPValue YUIInterpreter::callback( const YCPValue & value )
     if ( value->isBuiltin() )
     {
 	YCPBuiltin b = value->asBuiltin();
-	YCPValue v = b->value ( 0 );
+	YCPValue v = b->value (0);
 
 	if ( b->builtin_code() == YCPB_UI )
 	{
-	    return evaluate ( v );
+	    return evaluate (v);
 	}
 
 	if ( callbackComponent )
@@ -334,7 +334,7 @@ YCPValue YUIInterpreter::callback( const YCPValue & value )
 	    YCPValue v = YCPNull();
 	    if ( b->builtin_code() == YCPB_WFM )		// if it goes to WFM, just send the value
 	    {
-		v = callbackComponent->evaluate ( v );
+		v = callbackComponent->evaluate (v);
 	    }
 	    else		// going to SCR, send the complete value
 	    {
@@ -356,7 +356,7 @@ YCPValue YUIInterpreter::evaluateUI( const YCPValue & value )
 	YCPBuiltin b = value->asBuiltin();
 	if ( b->builtin_code() == YCPB_DEEPQUOTE )
 	{
-	    return evaluate ( b->value( 0 ) );
+	    return evaluate ( b->value(0) );
 	}
     }
     else if ( value->isTerm() && value->asTerm()->isQuoted() )
@@ -365,9 +365,9 @@ YCPValue YUIInterpreter::evaluateUI( const YCPValue & value )
 	YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
 	for ( int i=0; i<vt->size(); i++ )
 	{
-	    t->add( vt->value( i ) );
+	    t->add( vt->value(i) );
 	}
-	return evaluate ( t );
+	return evaluate (t);
     }
     return evaluate ( value );
 }
@@ -383,7 +383,7 @@ YCPValue YUIInterpreter::evaluateWFM( const YCPValue & value )
 	    YCPBuiltin b = value->asBuiltin();
 	    if ( b->builtin_code() == YCPB_DEEPQUOTE )
 	    {
-		return callbackComponent->evaluate ( b->value( 0 ) );
+		return callbackComponent->evaluate ( b->value(0) );
 	    }
 	}
 	else if ( value->isTerm() )
@@ -392,14 +392,14 @@ YCPValue YUIInterpreter::evaluateWFM( const YCPValue & value )
 	    YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
 	    for ( int i=0; i<vt->size(); i++ )
 	    {
-		YCPValue v = evaluate ( vt->value( i ) );
+		YCPValue v = evaluate ( vt->value(i) );
 		if ( v.isNull() )
 		{
 		    return YCPError ( "WFM parameter is NULL\n", YCPNull() );
 		}
-		t->add( v );
+		t->add(v);
 	    }
-	    return callbackComponent->evaluate ( t );
+	    return callbackComponent->evaluate (t);
 	}
 	return callbackComponent->evaluate ( value );
     }
@@ -419,7 +419,7 @@ YCPValue YUIInterpreter::evaluateSCR( const YCPValue & value )
 	    YCPBuiltin b = value->asBuiltin();
 	    if ( b->builtin_code() == YCPB_DEEPQUOTE )
 	    {
-		return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, b->value( 0 ) ) );
+		return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, b->value(0) ) );
 	    }
 	}
 	else if ( value->isTerm() )
@@ -428,12 +428,12 @@ YCPValue YUIInterpreter::evaluateSCR( const YCPValue & value )
 	    YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
 	    for ( int i=0; i<vt->size(); i++ )
 	    {
-		YCPValue v = evaluate ( vt->value( i ) );
+		YCPValue v = evaluate ( vt->value(i) );
 		if ( v.isNull() )
 		{
 		    return YCPError ( "SCR parameter is NULL\n", YCPNull() );
 		}
-		t->add( v );
+		t->add(v);
 	    }
 	    return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, t ) );
 	}
@@ -452,7 +452,7 @@ YCPValue YUIInterpreter::evaluateLocale( const YCPLocale & l )
     // to show up here, send it back. evaluateWFM() might return
     // YCPNull() if no WFM is available. Handle this also.
 
-    YCPValue v = evaluateWFM( l );
+    YCPValue v = evaluateWFM(l);
     if ( v.isNull() )
     {
 	return l->value();  // return YCPString()
@@ -541,13 +541,13 @@ YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget *root,
     {
 	for ( int i=0; i<root->numChildren(); i++ )
 	{
-	    if ( root->child( i )->isContainer() )
+	    if ( root->child(i)->isContainer() )
 	    {
 		YRadioButtonGroup *rbg =
-		    findRadioButtonGroup( dynamic_cast <YContainerWidget *> ( root->child( i ) ), widget, contains );
+		    findRadioButtonGroup( dynamic_cast <YContainerWidget *> ( root->child(i) ), widget, contains );
 		if ( rbg ) return rbg; // Some other lower rbg is it.
 	    }
-	    else if ( root->child( i ) == widget ) *contains = true;
+	    else if ( root->child(i) == widget ) *contains = true;
 	}
     }
     if ( is_rbg && *contains ) return dynamic_cast <YRadioButtonGroup *> ( root );

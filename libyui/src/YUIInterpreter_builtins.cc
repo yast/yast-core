@@ -131,9 +131,9 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
 
 YCPValue YUIInterpreter::evaluateSetModulename( const YCPTerm & term )
 {
-    if ( term->size() == 1 && term->value( 0 )->isString() )
+    if ( term->size() == 1 && term->value(0)->isString() )
     {
-	_moduleName = term->value( 0 )->asString()->value();
+	_moduleName = term->value(0)->asString()->value();
 	return YCPVoid();
     }
     else return YCPNull();
@@ -163,9 +163,9 @@ const char *YUIInterpreter::moduleName()
 
 YCPValue YUIInterpreter::evaluateGetModulename( const YCPTerm & term )
 {
-    if ( ( term->size() == 1 ) && ( term->value( 0 )->isString() ) )
+    if ( ( term->size() == 1 ) && ( term->value(0)->isString() ) )
     {
-	return term->value( 0 );
+	return term->value(0);
     }
     else return YCPNull();
 }
@@ -188,13 +188,13 @@ YCPValue YUIInterpreter::evaluateGetModulename( const YCPTerm & term )
 
 YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
 {
-    if ( term->size() > 0 && term->value( 0 )->isString() )
+    if ( term->size() > 0 && term->value(0)->isString() )
     {
-	string lang = term->value( 0 )->asString()->value();
-	if ( term->size() > 1 && term->value( 1 )->isString() )
+	string lang = term->value(0)->asString()->value();
+	if ( term->size() > 1 && term->value(1)->isString() )
 	{
 	    lang += ".";
-	    lang += term->value( 1 )->asString()->value();
+	    lang += term->value(1)->asString()->value();
 	}
 
 	setenv( "LANG", lang.c_str(), 1 ); // 1 : replace
@@ -228,7 +228,7 @@ YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
  * @builtin SetConsoleFont( string console_magic, string font, string screen_map, string unicode_map, string encoding ) -> nil
  *
  * Switches the text console to the specified font.
- * See the setfont( 8 ) command and the console HowTo for details.
+ * See the setfont(8) command and the console HowTo for details.
  *
  * @example SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
@@ -236,17 +236,17 @@ YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateSetConsoleFont( const YCPTerm & term )
 {
     if ( term->size() == 5 &&
-	term->value( 0 )->isString() &&
-	term->value( 1 )->isString() &&
-	term->value( 2 )->isString() &&
-	term->value( 3 )->isString() &&
-	term->value( 4 )->isString()   )
+	term->value(0)->isString() &&
+	term->value(1)->isString() &&
+	term->value(2)->isString() &&
+	term->value(3)->isString() &&
+	term->value(4)->isString()   )
     {
-	return setConsoleFont( term->value( 0 )->asString(),	// console magic
-			       term->value( 1 )->asString(),	// font
-			       term->value( 2 )->asString(),	// screen_map
-			       term->value( 3 )->asString(),	// unicode_map
-			       term->value( 4 )->asString() );	// encoding
+	return setConsoleFont( term->value(0)->asString(),	// console magic
+			       term->value(1)->asString(),	// font
+			       term->value(2)->asString(),	// screen_map
+			       term->value(3)->asString(),	// unicode_map
+			       term->value(4)->asString() );	// encoding
     }
     else return YCPNull();
 }
@@ -324,9 +324,9 @@ void YUIInterpreter::makeScreenShot( string filename )
 
 YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
 {
-    if ( term->size() == 1 && term->value( 0 )->isBoolean() )
+    if ( term->size() == 1 && term->value(0)->isBoolean() )
     {
-	bool strip_encoding = term->value( 0 )->asBoolean()->value();
+	bool strip_encoding = term->value(0)->asBoolean()->value();
 	const char *lang_cstr = getenv( "LANG" );
 	string lang = "";		// Fallback if $LANG not set
 
@@ -548,21 +548,21 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
     int s = term->size();
     if ( ( s == 1 || s == 2 )
 	&& term->value( s-1 )->isTerm()
-	&& ( s == 1 || term->value( 0 )->isTerm() && term->value( 0 )->asTerm()->symbol()->symbol() == YUISymbol_opt ) )
+	&& ( s == 1 || term->value(0)->isTerm() && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt ) )
     {
 	YCPList optList;
-	if ( s == 2 ) optList = term->value( 0 )->asTerm()->args();
+	if ( s == 2 ) optList = term->value(0)->asTerm()->args();
 	YWidgetOpt opt;
 
 	for ( int o=0; o < optList->size(); o++ )
 	{
-	    if ( optList->value( o )->isSymbol() )
+	    if ( optList->value(o)->isSymbol() )
 	    {
-		if	( optList->value( o )->asSymbol()->symbol() == YUIOpt_defaultsize ) opt.hasDefaultSize.setValue( true );
-		else if ( optList->value( o )->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
-		else if ( optList->value( o )->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
-		else if ( optList->value( o )->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
-		else	y2warning( "Unknown option %s for OpenDialog", term->value( o )->toString().c_str() );
+		if	( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) opt.hasDefaultSize.setValue( true );
+		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
+		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
+		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
+		else	y2warning( "Unknown option %s for OpenDialog", term->value(o)->toString().c_str() );
 	    }
 	}
 
@@ -656,7 +656,7 @@ void YUIInterpreter::closeDialog( YDialog * )
  * be changed, <tt>newvalue</tt> gives the new value.
  * <p>
  * For example in order to change the label of a TextEntry with id 8 to
- * "anything", you write <tt>ChangeWidget( `id( 8 ), `Label, "anything" )</tt>.
+ * "anything", you write <tt>ChangeWidget( `id(8), `Label, "anything" )</tt>.
  * <p>
  * Returns true on success.
  */
@@ -666,19 +666,19 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
     if ( term->size() != 3
 	|| ! checkId( term->value(0) )
 	|| ( ! term->value(1)->isSymbol() &&
-	     ! term->value( 1 )->isTerm()	 ) )
+	     ! term->value(1)->isTerm()	 ) )
     {
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
 
     YWidget *widget = widgetWithId( id, true );
     if ( !widget ) return YCPVoid();
-    else if ( term->value( 1 )->isSymbol() )
+    else if ( term->value(1)->isSymbol() )
     {
-	YCPSymbol sym = term->value( 1 )->asSymbol();
-	YCPValue ret = widget->changeWidget( sym, term->value( 2 ) );
+	YCPSymbol sym = term->value(1)->asSymbol();
+	YCPValue ret = widget->changeWidget( sym, term->value(2) );
 
 	if ( widget->shortcutProperty()				// The widget has a shortcut property
 	     && sym->symbol() == widget->shortcutProperty()	// and this is what should be changed
@@ -694,7 +694,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
 	return ret;
     }
     else
-	return widget->changeWidget( term->value( 1 )->asTerm(), term->value( 2 ) );
+	return widget->changeWidget( term->value(1)->asTerm(), term->value(2) );
 }
 
 
@@ -704,7 +704,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
  *
  * Queries a property of a widget of the topmost dialog.  For example in order
  * to query the current text of a TextEntry with id 8, you write
- * <tt>QueryWidget( `id( 8 ), `Value )</tt>. In some cases the propery can be given
+ * <tt>QueryWidget( `id(8), `Value )</tt>. In some cases the propery can be given
  * as term in order to further specify it. An example is
  * <tt>QueryWidget( `id( `table ), `Item( 17 ) )</tt> for a table where you query a
  * certain item.
@@ -715,7 +715,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
  *
  * Queries a property of a widget of the topmost dialog. For example in order
  * to query the current text of a TextEntry with id 8, you write
- * <tt>QueryWidget( `id( 8 ), `Value )</tt>
+ * <tt>QueryWidget( `id(8), `Value )</tt>
  */
 
 YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
@@ -723,20 +723,20 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
     if ( term->size() != 2
 	 || !checkId(term->value(0) )
 	 || ( ! term->value(1)->isSymbol() &&
-	      ! term->value( 1 )->isTerm()     )
+	      ! term->value(1)->isTerm()     )
 	 )
     {
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
 
     YWidget *widget = widgetWithId( id, true ); // reports error
     if ( !widget ) return YCPVoid();
-    else if ( term->value( 1 )->isSymbol() )
-	return widget->queryWidget( term->value( 1 )->asSymbol() );
+    else if ( term->value(1)->isSymbol() )
+	return widget->queryWidget( term->value(1)->asSymbol() );
     else
-	return widget->queryWidget( term->value( 1 )->asTerm() );
+	return widget->queryWidget( term->value(1)->asTerm() );
 }
 
 
@@ -769,7 +769,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
     YWidget *replpoint = widgetWithId( id, true ); // reports error
     if ( !replpoint ) return YCPBoolean( false );
 
@@ -801,7 +801,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
     rp->removeChildren();
 
-    YWidget *widget = createWidgetTree( replpoint, rbg, term->value( 1 )->asTerm() );
+    YWidget *widget = createWidgetTree( replpoint, rbg, term->value(1)->asTerm() );
 
     if ( widget )
     {
@@ -843,10 +843,10 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
 YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
 {
-    if ( term->size() != 1 || ! checkId( term->value( 0 ) ) )
+    if ( term->size() != 1 || ! checkId( term->value(0) ) )
 	return YCPNull();
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
     YWidget *widget = widgetWithId( id, true );
 
     if ( !widget )
@@ -933,10 +933,10 @@ YCPValue YUIInterpreter::evaluateNormalCursor( const YCPTerm & term )
 
 YCPValue YUIInterpreter::evaluateMakeScreenShot( const YCPTerm & term )
 {
-    if ( term->size() != 1 || ! term->value( 0 )->isString() )
+    if ( term->size() != 1 || ! term->value(0)->isString() )
 	return YCPNull();
 
-    makeScreenShot( term->value( 0 )->asString()->value() );
+    makeScreenShot( term->value(0)->asString()->value() );
     return YCPVoid();
 }
 
@@ -975,9 +975,9 @@ YCPValue YUIInterpreter::evaluateDumpWidgetTree( const YCPTerm & term )
  */
 YCPValue YUIInterpreter::evaluateRecordMacro( const YCPTerm & term )
 {
-    if ( term->size() == 1 && term->value( 0 )->isString() )
+    if ( term->size() == 1 && term->value(0)->isString() )
     {
-	recordMacro( term->value( 0 )->asString()->value() );
+	recordMacro( term->value(0)->asString()->value() );
 
 	return YCPVoid();
     }
@@ -1038,9 +1038,9 @@ void YUIInterpreter::stopRecordMacro()
  */
 YCPValue YUIInterpreter::evaluatePlayMacro( const YCPTerm & term )
 {
-    if ( term->size() == 1 && term->value( 0 )->isString() )
+    if ( term->size() == 1 && term->value(0)->isString() )
     {
-	playMacro( term->value( 0 )->asString()->value() );
+	playMacro( term->value(0)->asString()->value() );
 
 	return YCPVoid();
     }
@@ -1119,7 +1119,7 @@ YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
 	return YCPNull();
     }
 
-    fakeUserInputQueue.push_back( term->value( 0 ) );
+    fakeUserInputQueue.push_back( term->value(0) );
 
     return YCPVoid();
 }
@@ -1168,13 +1168,13 @@ YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
  */
 YCPValue YUIInterpreter::evaluateGlyph( const YCPTerm & term )
 {
-    if ( term->size() != 1 || ! term->value( 0 )->isSymbol() )
+    if ( term->size() != 1 || ! term->value(0)->isSymbol() )
     {
 	y2error( "Expected symbol, not %s", term->toString().c_str() );
 	return YCPNull();
     }
 
-    YCPSymbol glyphSym = term->value( 0 )->asSymbol();
+    YCPSymbol glyphSym = term->value(0)->asSymbol();
 
 
     YCPString glyphText = glyph( glyphSym );	// ask specific UI
@@ -1457,7 +1457,7 @@ YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
     if ( term->size() != 1
 	|| ! checkId( term->value(0) ) ) return YCPNull();
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
     YWidget *widget = widgetWithId( id, false ); // reports error
     return widget ? YCPBoolean( true ) : YCPBoolean( false );
 }
@@ -1481,7 +1481,7 @@ YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value( 0 ) );
+    YCPValue id = getId( term->value(0) );
     YWidget * selector = widgetWithId( id, true );
 
     if ( ! selector )
@@ -1515,11 +1515,11 @@ YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateAskForExistingDirectory( const YCPTerm & term )
 {
     if ( term->size() == 2 &&
-	 term->value( 0 )->isString() &&
-	 term->value( 1 )->isString()   )
+	 term->value(0)->isString() &&
+	 term->value(1)->isString()   )
     {
-	return askForExistingDirectory( term->value( 0 )->asString(),
-					term->value( 1 )->asString() );
+	return askForExistingDirectory( term->value(0)->asString(),
+					term->value(1)->asString() );
     }
 
     return YCPNull();
@@ -1544,13 +1544,13 @@ YCPValue YUIInterpreter::evaluateAskForExistingDirectory( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateAskForExistingFile( const YCPTerm & term )
 {
     if ( term->size() == 3 &&
-	 term->value( 0 )->isString() &&
-	 term->value( 1 )->isString() &&
-	 term->value( 2 )->isString()   )
+	 term->value(0)->isString() &&
+	 term->value(1)->isString() &&
+	 term->value(2)->isString()   )
     {
-	return askForExistingFile( term->value( 0 )->asString(),
-				   term->value( 1 )->asString(),
-				   term->value( 2 )->asString() );
+	return askForExistingFile( term->value(0)->asString(),
+				   term->value(1)->asString(),
+				   term->value(2)->asString() );
 
     }
 
@@ -1577,13 +1577,13 @@ YCPValue YUIInterpreter::evaluateAskForExistingFile( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateAskForSaveFileName( const YCPTerm & term )
 {
     if ( term->size() == 3 &&
-	 term->value( 0 )->isString() &&
-	 term->value( 1 )->isString() &&
-	 term->value( 2 )->isString()   )
+	 term->value(0)->isString() &&
+	 term->value(1)->isString() &&
+	 term->value(2)->isString()   )
     {
-	return askForSaveFileName( term->value( 0 )->asString(),
-				   term->value( 1 )->asString(),
-				   term->value( 2 )->asString() );
+	return askForSaveFileName( term->value(0)->asString(),
+				   term->value(1)->asString(),
+				   term->value(2)->asString() );
 
     }
 
@@ -1608,9 +1608,9 @@ YCPValue YUIInterpreter::evaluateAskForSaveFileName( const YCPTerm & term )
  */
 YCPValue YUIInterpreter::evaluateSetFunctionKeys( const YCPTerm & term )
 {
-    if ( term->size() == 1 && term->value( 0 )->isMap() )
+    if ( term->size() == 1 && term->value(0)->isMap() )
     {
-	YCPMap new_fkeys( term->value( 0 )->asMap() );
+	YCPMap new_fkeys( term->value(0)->asMap() );
 	default_fkeys = YCPMap();
 
 	for ( YCPMapIterator it = new_fkeys->begin(); it != new_fkeys->end(); ++it )
@@ -1684,7 +1684,7 @@ YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
 	YCPValue v = YCPNull();
 	if ( to_wfm )		// if it goes to WFM, just send the value
 	{
-	    v = callbackComponent->evaluate ( term->value( 0 ) );
+	    v = callbackComponent->evaluate ( term->value(0) );
 	}
 	else		// going to SCR, send the complete term
 	{
@@ -1721,19 +1721,19 @@ YCPValue YUIInterpreter::evaluateRecode( const YCPTerm & term )
     }
 
     string outstr;
-    if ( Recode ( term->value( 2 )->asString()->value(),
-		term->value( 0 )->asString()->value(),
-		term->value( 1 )->asString()->value(),
+    if ( Recode ( term->value(2)->asString()->value(),
+		term->value(0)->asString()->value(),
+		term->value(1)->asString()->value(),
 		outstr ) != 0 )
     {
 	static bool warned_about_recode = false;
 	if ( !warned_about_recode )
 	{
-	    y2error ( "Recode ( %s, %s, ... )", term->value( 0 )->asString()->value().c_str(), term->value( 1)->asString()->value().c_str() );
+	    y2error ( "Recode ( %s, %s, ... )", term->value(0)->asString()->value().c_str(), term->value( 1)->asString()->value().c_str() );
 	    warned_about_recode = true;
 	}
 	// return text as-is
-	return ( term->value( 2 )->asString() );
+	return ( term->value(2)->asString() );
     }
     return YCPString ( outstr );
 }
@@ -1869,7 +1869,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
 	    }
 	}
 
-    } while ( inbuf_len != ( size_t )( 0 ) );
+    } while ( inbuf_len != ( size_t )(0) );
 
     *outptr = '\0';			// Terminate converted buffer contents
     outstr += recode_buf;		// Append buffer to output string

@@ -103,7 +103,7 @@ YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCP
 
 	for ( int i = 0; i < selected_items->size(); i++ )
 	{
-	    YCPValue id = selected_items->value( i );
+	    YCPValue id = selected_items->value(i);
 	    int index	= itemWithId( id, true ); // true: log error
 
 	    if ( index < 0 )			// No such item
@@ -143,10 +143,10 @@ YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property )
 
 	for ( int i = 0; i < numItems(); i++ )
 	{
-	    if ( itemIsSelected( i ) )	// ask specific UI for selection state
+	    if ( itemIsSelected(i) )	// ask specific UI for selection state
 	    {
-		selected_items->add( item_ids->value( i ).isNull() ?
-				     item_labels->value( i ) : item_ids->value( i ) );
+		selected_items->add( item_ids->value(i).isNull() ?
+				     item_labels->value(i) : item_ids->value(i) );
 	    }
 	}
 
@@ -197,8 +197,8 @@ int YMultiSelectionBox::itemWithId( const YCPValue & id, bool report_error )
 {
     for ( int i=0; i < numItems(); i++ )
     {
-	if ( ! item_ids->value( i ).isNull() && item_ids->value( i )->equal( id ) ) return i;
-	else if ( item_labels->value( i )->equal( id ) ) return i;
+	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal( id ) ) return i;
+	else if ( item_labels->value(i)->equal( id ) ) return i;
     }
     if ( report_error )
 	y2error( "MultiSelectionBox: No item %s existing", id->toString().c_str() );

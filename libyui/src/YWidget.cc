@@ -36,8 +36,8 @@ int YWidget::next_internal_widget_id = 0;
 YWidget::YWidget( YWidgetOpt & opt )
     : magic( YWIDGET_MAGIC )
     , user_widget_id( YCPNull() )
-    , yparent( 0 )
-    , rep( 0 )
+    , yparent(0)
+    , rep(0)
     , windowID( -1 )
 {
     internal_widget_id = next_internal_widget_id++;
@@ -148,7 +148,7 @@ YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & new
 	if ( newvalue->isBoolean() )
 	{
 	    bool e = newvalue->asBoolean()->value();
-	    setEnabling( e );
+	    setEnabling(e);
 	    enabled = e;
 	    return YCPBoolean( true );
 	}

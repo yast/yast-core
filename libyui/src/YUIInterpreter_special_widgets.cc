@@ -55,10 +55,10 @@ YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term )
 {
     bool hasWidget = false;
 
-    if ( term->size() != 1 || ! term->value( 0 )->isSymbol() )
+    if ( term->size() != 1 || ! term->value(0)->isSymbol() )
 	return YCPNull();
 
-    string symbol = term->value( 0 )->asSymbol()->symbol();
+    string symbol = term->value(0)->asSymbol()->symbol();
 
     if	    ( symbol == YUISpecialWidget_DummySpecialWidget	)	hasWidget = hasDummySpecialWidget();
     else if ( symbol == YUISpecialWidget_BarGraph		)	hasWidget = hasBarGraph();
@@ -461,8 +461,8 @@ YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & 
 
     for ( int o=0; o < optList->size(); o++ )
     {
-	if ( optList->value( o )->isSymbol() && optList->value( o )->asSymbol()->symbol() == YUIOpt_countShowDelta ) opt.countShowDelta.setValue( true );
-	else logUnknownOption( term, optList->value( o ) );
+	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_countShowDelta ) opt.countShowDelta.setValue( true );
+	else logUnknownOption( term, optList->value(o) );
     }
 
     YWidget *splitter;

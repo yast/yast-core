@@ -193,8 +193,8 @@ int YComboBox::itemWithId( const YCPValue & id, bool report_error )
 {
     for ( int i=0; i < numItems(); i++ )
     {
-	if ( ! item_ids->value( i ).isNull() && item_ids->value( i )->equal( id ) ) return i;
-	else if ( item_labels->value( i )->equal( id ) ) return i;
+	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal( id ) ) return i;
+	else if ( item_labels->value(i)->equal( id ) ) return i;
     }
     if ( report_error )
 	y2error( "ComboBox: No item %s existing", id->toString().c_str() );
@@ -207,8 +207,8 @@ YCPValue YComboBox::IdForValue( const YCPValue & val )
 {
     for ( int i=0; i < numItems(); i++ )
     {
-	if ( ! item_ids->value( i ).isNull() && item_labels->value( i )->equal( val ) )
-	    return item_ids->value( i );
+	if ( ! item_ids->value(i).isNull() && item_labels->value(i)->equal( val ) )
+	    return item_ids->value(i);
     }
 
     return YCPVoid();

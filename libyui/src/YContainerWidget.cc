@@ -168,19 +168,19 @@ bool YContainerWidget::isContainer() const
 
 long YContainerWidget::nicesize( YUIDimension dim )
 {
-    return child( 0 )->nicesize( dim );
+    return child(0)->nicesize( dim );
 }
 
 
 bool YContainerWidget::stretchable( YUIDimension dim )
 {
-    return child( 0 )->stretchable( dim );
+    return child(0)->stretchable( dim );
 }
 
 
 void YContainerWidget::setSize( long newwidth, long newheight )
 {
-    child( 0 )->setSize( newwidth, newheight );
+    child(0)->setSize( newwidth, newheight );
 }
 
 

@@ -228,7 +228,7 @@ void YTree::saveUserInput( YMacroRecorder *macroRecorder )
 
 YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
-    , _data( 0 )
+    , _data(0)
     , text ( newText )
     , parentTree ( parent )
     , parentItem ( ( YTreeItem * ) 0 )
@@ -240,7 +240,7 @@ YTreeItem::YTreeItem ( YTree * parent, YCPValue newId, YCPString newText, bool o
 
 YTreeItem::YTreeItem ( YTreeItem * parent, YCPValue newId, YCPString newText, bool open )
     : id ( newId )
-    , _data( 0 )
+    , _data(0)
     , text ( newText )
     , parentTree ( ( YTree * ) 0 )
     , parentItem ( parent )

@@ -207,7 +207,7 @@ YShortcutManager::resolveAllConflicts()
 
     if ( _conflictCount > 0 )
     {
-	y2debug( "%d shortcut conflict( s ) left", _conflictCount );
+	y2debug( "%d shortcut conflict(s) left", _conflictCount );
     }
 }
 
@@ -230,7 +230,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	    char c = YShortcut::normalized( str[ pos ] );
 	    // y2debug( "Checking #%d '%c'", ( int ) c, c );
 
-	    if ( YShortcut::isValid( c ) && ! _used[ ( int ) c ] ) 	// Could we use this character?
+	    if ( YShortcut::isValid(c) && ! _used[ ( int ) c ] ) 	// Could we use this character?
 	    {
 		if ( _wanted[ ( int ) c ] < _wanted[ ( int ) candidate ]	// Is this a better choice than what we already have -
 		     || ! YShortcut::isValid( candidate ) )		// or don't we have anything yet?

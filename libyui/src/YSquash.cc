@@ -28,6 +28,6 @@ YSquash::YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash )
 
 bool YSquash::stretchable( YUIDimension dim )
 {
-    return !squash[dim] && child( 0 )->stretchable( dim );
+    return !squash[dim] && child(0)->stretchable( dim );
 }
 

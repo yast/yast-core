@@ -37,7 +37,7 @@ YAlignment::YAlignment( YWidgetOpt & opt,
 
 bool YAlignment::stretchable( YUIDimension dim )
 {
-    if ( align[dim] == YAlignUnchanged ) return child( 0 )->stretchable( dim );
+    if ( align[dim] == YAlignUnchanged ) return child(0)->stretchable( dim );
     else return true;
 }
 
@@ -53,14 +53,14 @@ void YAlignment::setSize( long newwidth, long newheight )
 
     for ( YUIDimension dim = YD_HORIZ; dim <= YD_VERT; dim = ( YUIDimension )( dim + 1 ) )
     {
-	if ( child( 0 )->stretchable( dim ) )
+	if ( child(0)->stretchable( dim ) )
 	{
 	    newchildsize[dim] = newsize[dim];
 	    newchildpos [dim] = 0;
 	}
 	else
 	{
-	    newchildsize[dim] = min( newsize[dim], child( 0 )->nicesize( dim ) );
+	    newchildsize[dim] = min( newsize[dim], child(0)->nicesize( dim ) );
 	    switch ( align[dim] )
 	    {
 		case YAlignUnchanged:
@@ -79,7 +79,7 @@ void YAlignment::setSize( long newwidth, long newheight )
 	}
     }
 
-    child( 0 )->setSize( newchildsize[YD_HORIZ], newchildsize[YD_VERT] );
-    moveChild( child( 0 ), newchildpos[YD_HORIZ], newchildpos[YD_VERT] );
+    child(0)->setSize( newchildsize[YD_HORIZ], newchildsize[YD_VERT] );
+    moveChild( child(0), newchildpos[YD_HORIZ], newchildpos[YD_VERT] );
 }
 

@@ -133,7 +133,7 @@ YCPValue YLogView::changeWidget( const YCPSymbol & property, const YCPValue & ne
     }
     /**
      * @property string LastLine
-     * The last log line. Set this property to append one or more line( s ) to the log.
+     * The last log line. Set this property to append one or more line(s) to the log.
      * Can only be set, not queried.
      */
     if ( s == YUIProperty_LastLine )

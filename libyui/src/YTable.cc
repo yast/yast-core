@@ -89,17 +89,17 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
      */
     if ( s == YUIProperty_Item )
     {
-	if ( property->size() != 2 || !property->value( 1 )->isInteger() )
+	if ( property->size() != 2 || !property->value(1)->isInteger() )
 	{
 	    y2error( "Table %s: property `Item() needs two arguments: item id and column number",
 		    id()->toString().c_str() );
 	    return YCPBoolean( false );
 	}
-	YCPValue itemid = property->value( 0 );
+	YCPValue itemid = property->value(0);
 	int item_nr = itemWithId( itemid, true );
 	if ( item_nr < 0 ) return YCPBoolean( false );
 
-	int colnum = ( int)( property->value( 1 )->asInteger()->value() );
+	int colnum = ( int)( property->value(1)->asInteger()->value() );
 	if ( colnum >= numCols() || colnum < 0 )
 	{
 	    y2error( "Table %s: Invalid column number %d",
@@ -150,7 +150,7 @@ YCPValue YTable::queryWidget( const YCPTerm & property )
 		    id()->toString().c_str() );
 	    return YCPVoid();
 	}
-	int item_nr = itemWithId( property->value( 0 ), true );
+	int item_nr = itemWithId( property->value(0), true );
 	if ( item_nr < 0 ) return YCPVoid();
 	else	       return rows[item_nr].makeTerm();
     }
@@ -166,7 +166,7 @@ bool YTable::addItems( const YCPList & itemlist )
 {
     for ( int i = 0; i < itemlist->size(); i++ )
     {
-	YCPValue item = itemlist->value( i );
+	YCPValue item = itemlist->value(i);
 
 	if ( ! addItem( item ) )
 	    return false;	// Error
@@ -193,7 +193,7 @@ bool YTable::addItem( const YCPValue & item )
 	return false;
     }
 
-    if ( !collist->value( 0 )->isTerm()
+    if ( !collist->value(0)->isTerm()
 	|| collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
 	|| collist->value(0)->asTerm()->size() != 1)
     {
@@ -202,13 +202,13 @@ bool YTable::addItem( const YCPValue & item )
 	return false;
     }
 
-    YCPValue id = collist->value( 0 )->asTerm()->value( 0 );
+    YCPValue id = collist->value(0)->asTerm()->value(0);
 
     // Prepare stl vector of strings of the content
     vector<string> row;
     for ( int r=1; r< collist->size(); r++ )
     {
-	YCPValue value = collist->value( r );
+	YCPValue value = collist->value(r);
 	if      ( value->isString() ) row.push_back( value->asString()->value() );
 	else if ( value->isInteger() ) row.push_back( value->toString() );
 	else if ( value->isVoid() ) row.push_back( "" );

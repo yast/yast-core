@@ -88,7 +88,7 @@ YCPValue YProgressBar::changeWidget( const YCPSymbol & property, const YCPValue 
 			  p->toString().c_str(), maxProgress->toString().c_str() );
 		p = maxProgress;
 	    }
-	    setProgress( p );
+	    setProgress(p);
 	    this->progress = p;
 	    return YCPBoolean( true );
 	}

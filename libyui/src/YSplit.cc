@@ -27,7 +27,7 @@
 #ifdef max
 #undef max
 #endif
-#define max( a, b ) ( ( a ) >? ( b ) )
+#define max( a, b ) ( (a) >? (b) )
 
 
 YSplit::YSplit( YWidgetOpt & opt, YUIDimension dimension )
@@ -114,10 +114,10 @@ int YSplit::bossChild()
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( child( i )->weight( primary ) != 0 )	// avoid division by zero
+	if ( child(i)->weight( primary ) != 0 )	// avoid division by zero
 	{
-	    ratio = ( ( double ) child( i )->nicesize( primary ) )
-		/ child( i )->weight( primary );
+	    ratio = ( ( double ) child(i)->nicesize( primary ) )
+		/ child(i)->weight( primary );
 
 	    if ( ratio > bossRatio ) // we have a new boss
 	    {
@@ -155,7 +155,7 @@ long YSplit::childrenMaxNiceSize( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	maxNiceSize = max ( child( i )->nicesize( dimension ), maxNiceSize );
+	maxNiceSize = max ( child(i)->nicesize( dimension ), maxNiceSize );
     }
 
     return maxNiceSize;
@@ -168,7 +168,7 @@ long YSplit::childrenTotalWeight( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	totalWeight += child( i )->weight( dimension );
+	totalWeight += child(i)->weight( dimension );
     }
 
     return totalWeight;
@@ -181,8 +181,8 @@ long YSplit::totalNonWeightedChildrenNiceSize( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( ! child( i )->hasWeight( dimension ) ) // non-weighted children only
-	    size += child( i )->nicesize( dimension );
+	if ( ! child(i)->hasWeight( dimension ) ) // non-weighted children only
+	    size += child(i)->nicesize( dimension );
     }
 
     return size;
@@ -195,7 +195,7 @@ int YSplit::countNonWeightedChildren( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( ! child( i )->hasWeight( dimension ) )
+	if ( ! child(i)->hasWeight( dimension ) )
 	    count++;
     }
 
@@ -209,8 +209,8 @@ int YSplit::countStretchableChildren( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( ! child( i )->hasWeight( dimension ) &&
-	     child( i )->stretchable( dimension ) )
+	if ( ! child(i)->hasWeight( dimension ) &&
+	     child(i)->stretchable( dimension ) )
 	    count++;
     }
 
@@ -224,8 +224,8 @@ int YSplit::countLayoutStretchChildren( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( ! child( i )->hasWeight( dimension ) &&
-	     child( i )->isLayoutStretch( dimension ) )
+	if ( ! child(i)->hasWeight( dimension ) &&
+	     child(i)->isLayoutStretch( dimension ) )
 	    count++;
     }
 
@@ -237,8 +237,8 @@ bool YSplit::stretchable( YUIDimension dimension )
 {
     for ( int i = 0; i < numChildren(); i++ )
     {
-	if ( child( i )->stretchable( dimension ) ||
-	     child( i )->hasWeight( dimension ) )
+	if ( child(i)->stretchable( dimension ) ||
+	     child(i)->hasWeight( dimension ) )
 	    return true;
     }
 
@@ -337,27 +337,27 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 	for ( int i = 0; i < numChildren(); i++ )
 	{
-	    if ( child( i )->hasWeight( primary ) )
+	    if ( child(i)->hasWeight( primary ) )
 	    {
 		// Weighted children will get their share.
 
-		childSize[i] = distributableSize * child( i )->weight( primary ) / totalWeight;
+		childSize[i] = distributableSize * child(i)->weight( primary ) / totalWeight;
 
-		if ( childSize[i] < child( i )->nicesize( primary ) )
+		if ( childSize[i] < child(i)->nicesize( primary ) )
 		{
 		    y2debug ( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
 			      "- check the layout!",
-			      i, child( i )->widgetClass(), child( i )->nicesize( primary ), childSize[i] );
+			      i, child(i)->widgetClass(), child(i)->nicesize( primary ), childSize[i] );
 		}
 	    }
 	    else
 	    {
 		// Non-weighted children will get their nice size.
 
-		childSize[i] = child( i )->nicesize( primary );
+		childSize[i] = child(i)->nicesize( primary );
 
 
-		if ( child( i )->stretchable( primary ) )
+		if ( child(i)->stretchable( primary ) )
 		{
 		    // If there are only non-weighted children ( and only then ),
 		    // the stretchable children will get their fair share of the
@@ -366,7 +366,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 		    childSize[i] += nonWeightedExtra;
 		}
 
-		if ( child( i )->isLayoutStretch( primary ) )
+		if ( child(i)->isLayoutStretch( primary ) )
 		{
 		    // If there is more than the total nice size and there
 		    // are rubber bands, distribute surplus space among the
@@ -383,11 +383,11 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	    {
 		y2debug( "child #%d ( %s ) will get %ld "
 			"( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-			i, child( i )->widgetClass(),
+			i, child(i)->widgetClass(),
 			childSize[i],
-			child( i )->nicesize( primary ),
-			child( i )->weight( primary ),
-			child( i )->stretchable( primary ) ? "yes" : "no",
+			child(i)->nicesize( primary ),
+			child(i)->weight( primary ),
+			child(i)->stretchable( primary ) ? "yes" : "no",
 			childPos[i] );
 	    }
 	}
@@ -414,10 +414,10 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 	for ( int i = 0; i < numChildren(); i++ )
 	{
-	    if ( ! child( i )->hasWeight( primary ) )
+	    if ( ! child(i)->hasWeight( primary ) )
 	    {
 		loserCount++;
-		childSize[i] = child( i )->nicesize( primary );
+		childSize[i] = child(i)->nicesize( primary );
 	    }
 	    else
 	    {
@@ -470,12 +470,12 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 		{
 		    y2debug( "child #%d ( %s ) will get %ld - %ld too small "
 			    "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-			    i, child( i )->widgetClass(),
+			    i, child(i)->widgetClass(),
 			    childSize[i],
-			    child( i )->nicesize( primary ) - childSize[i],
-			    child( i )->nicesize( primary ),
-			    child( i )->weight( primary ),
-			    child( i )->stretchable( primary ) ? "yes" : "no",
+			    child(i)->nicesize( primary ) - childSize[i],
+			    child(i)->nicesize( primary ),
+			    child(i)->weight( primary ),
+			    child(i)->stretchable( primary ) ? "yes" : "no",
 			    childPos[i] );
 		}
 	    }
@@ -501,9 +501,9 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 {
     for ( int i = 0; i < numChildren(); i++ )
     {
-	long nice = child( i )->nicesize( secondary );
+	long nice = child(i)->nicesize( secondary );
 
-	if ( child( i )->stretchable( secondary ) || newSize < nice )
+	if ( child(i)->stretchable( secondary ) || newSize < nice )
 	{
 	    childSize[i] = newSize;
 	    childPos [i] = 0L;
@@ -518,18 +518,18 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 	{
 	    y2debug ( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
 		      "- check the layout!",
-		      i, child( i )->widgetClass(), nice, childSize[i] );
+		      i, child(i)->widgetClass(), nice, childSize[i] );
 	}
 
 	if ( debugLayout )
 	{
 	    y2debug( "child #%d ( %s ) will get %ld "
 		    "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-		    i, child( i )->widgetClass(),
+		    i, child(i)->widgetClass(),
 		    childSize[i],
 		    nice,
-		    child( i )->weight( secondary ),
-		    child( i )->stretchable( secondary ) ? "yes" : "no",
+		    child(i)->weight( secondary ),
+		    child(i)->stretchable( secondary ) ? "yes" : "no",
 		    childPos[i] );
 	}
     }
@@ -543,8 +543,8 @@ void YSplit::doResize( sizeVector & width,
 {
     for ( int i = 0; i < numChildren(); i++ )
     {
-	child( i )->setSize( width[i], height[i] );
-	moveChild( child( i ), x_pos[i], y_pos[i] );
+	child(i)->setSize( width[i], height[i] );
+	moveChild( child(i), x_pos[i], y_pos[i] );
     }
 }
 

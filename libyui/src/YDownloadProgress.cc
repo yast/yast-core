@@ -116,7 +116,7 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 		y2warning( "YDownloadProgress::changeWidget( `expectedSize ): "
 			  "Warning: New value %d below minValue ( %d )",
 			  val, 0 );
-		setExpectedSize( 0 );
+		setExpectedSize(0);
 	    }
 	    else
 	    {

@@ -86,7 +86,7 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
     
     for ( int i = 0; i < parent->numChildren(); i++ )
     {
-	YWidget * child = parent->child( i );
+	YWidget * child = parent->child(i);
 
 	if ( ! child->isDialog() )
 	{
