@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jul 12 16:20:10 CEST 2002 - kkeil@suse.de
+- agent-probe
+    * Additional fields for the ISDN database to identify DSL support and
+      supported protocols and architectures of the driver.
+-------------------------------------------------------------------
 Wed Jul 10 16:40:18 CEST 2002 - kkaempf@suse.de
 
 - Don't default to "WFM" namespace (#16776)
