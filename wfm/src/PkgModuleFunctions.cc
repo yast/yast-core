@@ -191,6 +191,7 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 115,	Pkg, YouSetServer);
     REGISTERFUNCTIONCALL  ( 116,	Pkg, YouGetUserPassword);
     REGISTERFUNCTIONCALL3 ( 117,	Pkg, YouSetUserPassword);
+    REGISTERFUNCTIONCALL1 ( 118,	Pkg, PkgProperties);
 }
 
 ///////////////////////////////////////////////////////////////////

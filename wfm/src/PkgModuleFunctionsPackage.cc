@@ -501,6 +501,43 @@ PkgModuleFunctions::PkgGroup (const YCPString& p)
 
 // ------------------------
 /**
+ * @builtin Pkg::PkgProperties (string package) -> map
+ * @param package name
+ *
+ * @return Data about package location, source and which
+ *  media contains the package
+ *
+ * <TABLE>
+ * <TR><TD>$[<TD>"srcid"  <TD>: YCPInteger
+ * <TR><TD>,<TD>"location"  <TD>: YCPString
+ * <TR><TD>,<TD>"medianr"  <TD>: YCPInteger
+ * <TR><TD>,<TD>"arch"       <TD>: YCPString
+ * <TR><TD>];
+ * </TABLE>
+ *
+ */
+YCPValue
+PkgModuleFunctions::PkgProperties (const YCPString& p)
+{
+    PMPackagePtr package = getTheObject (getPackageSelectable (p->value()));
+    if (!package)
+    {
+	return YCPVoid();
+    }
+
+    constInstSrcPtr source( package->source() );
+
+    YCPMap data;
+    data->add( YCPString("srcid"), YCPInteger(source->srcID() ));
+    data->add( YCPString("location"), YCPString (package->location() ));
+    data->add( YCPString("medianr"), YCPInteger (package->medianr() ));
+    data->add( YCPString("arch"), YCPString (package->arch() ));
+
+    return data;
+}
+
+// ------------------------
+/**
    @builtin Pkg::PkgLocation (string package) -> string
 
    Get file location of a package in the source
