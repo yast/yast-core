@@ -217,6 +217,7 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
     map->add (YCPString ("name"), YCPString ((const std::string &)(descr->content_product().name)));
     map->add (YCPString ("version"), YCPString (descr->content_product().edition.version()));
     map->add (YCPString ("flags"), YCPString (descr->content_flags()));
+    map->add (YCPString ("relnotesurl"), YCPString (descr->content_relnotesurl()));
 
     // vendor already in map
 
