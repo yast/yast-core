@@ -277,6 +277,13 @@ YCPValueRep::compare (const YCPValue& v, bool rl) const
     return valuetype() < v->valuetype() ? YO_LESS : YO_GREATER;
 }
 
+/**
+ * Default constructor, sets the value to YCPNull().
+ */
+YCPValue::YCPValue ()
+    : YCPElement ()
+{}
+
 // FIXME: remove this in the future
 YCPValue YCPError (string message, const YCPValue & ret)
 {

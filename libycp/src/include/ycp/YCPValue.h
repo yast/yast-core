@@ -262,7 +262,7 @@ public:
      * Default constructor to allow arrays of YCPValues. It will
      * initialize the value to YCPNull ().
      */
-    YCPValue () : YCPElement (YCPNull ()) {};
+    YCPValue ();
 };
 
 
