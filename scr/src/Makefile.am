@@ -12,24 +12,24 @@ servers_PROGRAMS = scr
 scr_SOURCES =						\
 	scr.cc
 
-scr_LDADD = -L$(libdir) -ly2util			\
-	$(srcdir)/../../libscr/src/libscr.la		\
-	$(srcdir)/../../libycp/src/libycp.la		\
-	$(srcdir)/../../liby2/src/liby2.la		\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2plugin.la
+scr_LDADD = -L$(libdir) -ly2util		\
+	../../libscr/src/libscr.la		\
+	../../libycp/src/libycp.la		\
+	../../liby2/src/liby2.la		\
+	../../liby2/src/libpy2stdio.la		\
+	../../liby2/src/libpy2plugin.la
 
 scr_DEPENDENCIES = libpy2scr.la
 
-scr_LDFLAGS =						\
-	-L$(srcdir)/../../libycp/src			\
-	-L$(srcdir)/../../liby2/src			\
-	-L$(srcdir)/../../libscr/src			\
-	-Xlinker --whole-archive			\
-	$(srcdir)/../../liby2/src/libpy2plugin.la	\
-	$(srcdir)/../../liby2/src/libpy2stdio.la	\
-	$(srcdir)/../../liby2/src/libpy2program.la	\
-	$(srcdir)/libpy2scr.la				\
+scr_LDFLAGS =					\
+	-L../../libycp/src			\
+	-L../../liby2/src			\
+	-L../../libscr/src			\
+	-Xlinker --whole-archive		\
+	../../liby2/src/libpy2plugin.la		\
+	../../liby2/src/libpy2stdio.la		\
+	../../liby2/src/libpy2program.la	\
+	libpy2scr.la				\
 	-Xlinker --no-whole-archive
 
 plugin_LTLIBRARIES = libpy2scr.la
