@@ -215,7 +215,7 @@ PkgModuleFunctions::YouGetServers (YCPReference strings)
       serverMap->add( YCPString( "url" ), YCPString( (*it).url().asString() ) );
       serverMap->add( YCPString( "name" ), YCPString( (*it).name() ) );
       serverMap->add( YCPString( "directory" ), YCPString( (*it).directory() ) );
-      serverMap->add( YCPString( "type" ),  YCPString( (*it).type() ) );
+      serverMap->add( YCPString( "type" ), YCPString( (*it).typeAsString() ) );
       result->add( serverMap );
     }
     
@@ -231,7 +231,7 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
     string url;
     string name;
     string dir;
-    string type;
+    string typeStr;
 
     YCPValue urlValue = serverMap->value( YCPString( "url" ) );
     if ( !urlValue.isNull() ) url = urlValue->asString()->value();
@@ -243,7 +243,9 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
     if ( !dirValue.isNull() ) dir = dirValue->asString()->value();
 
     YCPValue typeValue = serverMap->value( YCPString( "type" ) );
-    if ( !typeValue.isNull() ) type = typeValue->asString()->value();
+    if ( !typeValue.isNull() ) typeStr = typeValue->asString()->value();
+    
+    PMYouServer::Type type = PMYouServer::typeFromString( typeStr );
     
     return PMYouServer( Url( url ), name, dir, type );
 }
