@@ -18,6 +18,7 @@ use lib "/usr/lib/YaST2/agents_non_y2";
 use ycp;
 use strict;
 
+use IPC::Open3;
 
 # child running flag
 our $child_running = 0;
@@ -25,6 +26,15 @@ our $child_pid = 0;
 
 # max. size of input buffer (number of lines)
 my $buffer_size = 500;    
+
+# max. size of input buffer for error output
+my $buffer_size_err = 200;
+
+# input line buffer for stdin - store read part of the line
+my $input1 = '';
+
+# input line buffer for stderr - store read part of the line
+my $input2 = '';
 
 # SIGCHLD handler
 sub Handler()
@@ -90,10 +100,16 @@ my $watch = $stdin_set;	# watch STDIN
 
 my $total_lines = 0;	# total number of lines from script
 my $newlines = 0;	# number of new lines since last reading output
+my $total_lines_err = 0;	# total number of lines from script
+my $newlines_err = 0;	# number of new lines since last reading output
 
 my $store_out = 0;
+my $store_err = 0;
 my @out = ();		# new lines since last reading
+my @err = ();
+
 my $pipe_defined = 0;
+my $pipe_defined_err = 0;
 
 my $exit = 0;
 
@@ -107,8 +123,11 @@ while (1)
 
     # get status
     my $stdin_avail = vec($watch_out, fileno(STDIN), 1);
-    my $output_avail = ($pipe_defined == 1) ? vec($watch_out, fileno(PIPE), 1) : 0;
+    my $output_avail = ($pipe_defined == 1) ? vec($watch_out, fileno(RD), 1) : 0;
+    my $err_avail = ($pipe_defined_err == 1) ? vec($watch_out, fileno(ERR), 1) : 0;
     my $line;
+
+#    print "stdin_avail: $stdin_avail  output_avail: $output_avail   err_avail: $err_avail\n";
 
     if ($stdin_avail)	# STDIN data available
     {
@@ -127,35 +146,54 @@ while (1)
 
 	if (ycpCommandIsExecute())
 	{
-	    if ($path eq '.run' || $path eq '.run_output')
+	    if ($path eq '.run' || $path eq '.run_output' || $path eq '.run_output_err')
 	    {
-		if (ycpArgIsString())
+		# another process is already running
+		if ($child_running)
+		{
+		    ycpReturnSkalarAsBoolean(0);
+		}
+		elsif (ycpArgIsString())
 		{
 		    my $param = ycpGetArgString();
 		
-		    $store_out = ($path eq '.run_output') ? 1 : 0;
+		    $store_out = ($path eq '.run') ? 0 : 1;
+		    $store_err = ($path eq '.run_output_err') ? 1 : 0;
 
 		    #reset counters
 		    $total_lines = 0;
 		    $newlines = 0;
 		    @out = ();
 
+		    $total_lines_err = 0;
+		    $newlines_err = 0;
+		    @err = ();
+
 		    $child_running = 1;
 
-		    # start subprocess
-		    $child_pid = open(PIPE, "$param |")
-			or $child_running = 0;
+		    my $start_error = 0;
 
-		    if ($child_running)
+		    # start subprocess
+		    $child_pid = open3(*WRT, *RD, *ERR, "$param")
+			or $start_error = 1;
+
+		    # if child is running or 
+		    if ($start_error == 0)
 		    {
 			$pipe_set = '';
-			vec($pipe_set, fileno(PIPE), 1) = 1;
+			vec($pipe_set, fileno(RD), 1) = 1;
+			vec($pipe_set, fileno(ERR), 1) = 1;
 
-			$watch = $stdin_set | $pipe_set;       # watch both files
+			$watch = $stdin_set | $pipe_set;       # watch both sets
 			$pipe_defined = 1;
+			$pipe_defined_err = 1;
 		    }
 
-		    ycpReturnSkalarAsBoolean($child_running);
+		    # use non-blocking write
+		    use Fcntl;
+		    fcntl(WRT, F_SETFL, O_NONBLOCK);
+
+		    ycpReturnSkalarAsBoolean(!$start_error);
 		}
 		else
 		{
@@ -181,6 +219,14 @@ while (1)
 	    {
 		ycpReturnSkalarAsInt($newlines);
 	    }
+	    elsif ($path eq '.newlines_err')
+	    {
+		ycpReturnSkalarAsInt($newlines_err);
+	    }
+	    elsif ($path eq '.lines_err')
+	    {
+		ycpReturnSkalarAsInt($total_lines_err);
+	    }
 	    elsif ($path eq '.store')
 	    {
 		ycpReturnSkalarAsBoolean($store_out);
@@ -200,6 +246,23 @@ while (1)
 		$newlines = 0;
 		@out = ();
 	    }
+	    elsif ($path eq '.newerr')
+	    {
+		ycpReturnArrayAsList(@err);
+		
+		$newlines_err = 0;
+		@err = ();
+	    }
+	    elsif ($path eq '.buffer_out')
+	    {
+		ycpReturnSkalarAsString($input1);
+		$input1 = '';
+	    }
+	    elsif ($path eq '.buffer_err')
+	    {
+		ycpReturnSkalarAsString($input2);
+		$input2 = '';
+	    }
 	    elsif ($path eq '.output_open')
 	    {
 		ycpReturnSkalarAsBoolean($pipe_defined);
@@ -207,6 +270,10 @@ while (1)
 	    elsif ($path eq '.buffer_size')
 	    {
 		ycpReturnSkalarAsInt($buffer_size);
+	    }
+	    elsif ($path eq '.buffer_size_err')
+	    {
+		ycpReturnSkalarAsInt($buffer_size_err);
 	    }
 	    else
 	    {
@@ -223,7 +290,7 @@ while (1)
 	}
 	elsif (ycpCommandIsWrite())
 	{
-	    if ($path eq '.buffer_size')
+	    if ($path eq '.buffer_size' || $path eq '.buffer_size_err')
 	    {
 		if (ycpArgIsInteger())
 		{
@@ -231,7 +298,15 @@ while (1)
 
 		    if ($param >= 1)
 		    {
-			$buffer_size = ycpGetArgInteger();
+			if ($path eq '.buffer_size')
+			{
+			    $buffer_size = $param;
+			}
+			else
+			{
+			    $buffer_size_err = $param;
+			}
+
 			ycpReturnSkalarAsBoolean(1);
 		    }
 		    else
@@ -242,6 +317,17 @@ while (1)
 		else
 		{
 		    ErrorArg(ycpGetArgType());
+		}
+	    }
+	    elsif ($path eq '.stdin')
+	    {
+		if ($child_running)
+		{
+		    ycpReturnSkalarAsInt(syswrite(WRT, ycpGetArgString()."\n"));	# add new line char
+		}
+		else
+		{
+		    ycpReturnSkalarAsInt(-1);
 		}
 	    }
 	    else
@@ -264,26 +350,91 @@ while (1)
 	}
 	else
 	{
-	    $line = <PIPE>;
-     
-	    if (!defined $line)	
+	    my $len = sysread(RD, $line, 64);
+	    $input1 = "$input1$line";
+	    
+	    my $pos = index($input1, "\n");
+	    
+	    if ((defined $len) && $len == 0)
 	    {
 		$pipe_defined = 0;
 		$watch = $stdin_set;	# now watch only STDIN
-		close(PIPE);
-		$exit = $? >> 8;		# high 8 bits are exit value
+
+		# watch also stderr if it is still open
+		if ($pipe_defined_err)
+		{
+		    vec($watch, fileno(ERR), 1) = 1;
+		}
+
+		close(RD);
+		$exit = $? >> 8;	# high 8 bits are exit value
 	    }
 	    else
 	    {
-		chomp($line);
-		
-		if ($store_out)
+		while ($pos >= 0)
 		{
-		    push(@out, $line);
+		    $line = substr($input1, 0, $pos);
+		    $input1 = substr($input1, $pos + 1);
+
+		    if ($store_out)
+		    {
+			push(@out, $line);
+		    }
+		    
+		    $newlines++;
+		    $total_lines++;
+
+		    $pos = index($input1, "\n");
 		}
-		
-		$newlines++;
-		$total_lines++;
+	    }
+	}
+    }
+
+    if ($err_avail) 	# error output available
+    {
+	if ($newlines_err >= $buffer_size_err)
+	{
+	    # too many lines in input buffer - wait for STDIN command
+	    select(my $watch_out = $stdin_set, undef, undef, undef);
+	}
+	else
+	{
+	    my $len = sysread(ERR, $line, 64);
+	    $input2 = "$input2$line";
+	    
+	    my $pos = index($input2, "\n");
+	    
+	    if ($len == 0)
+	    {
+		$pipe_defined_err = 0;
+		$watch = $stdin_set;	# now watch only STDIN
+
+		# watch also stdout if it is still open
+		if ($pipe_defined)
+		{
+		    vec($watch, fileno(RD), 1) = 1;
+		}
+
+		close(ERR);
+		$exit = $? >> 8;	# high 8 bits are exit value
+	    }
+	    else
+	    {
+		while ($pos >= 0)
+		{
+		    $line = substr($input2, 0, $pos);
+		    $input2 = substr($input2, $pos + 1);
+
+		    if ($store_err)
+		    {
+			push(@err, $line);
+		    }
+		    
+		    $newlines_err++;
+		    $total_lines_err++;
+
+		    $pos = index($input2, "\n");
+		}
 	    }
 	}
     }
