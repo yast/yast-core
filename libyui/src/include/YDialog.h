@@ -103,7 +103,7 @@ public:
     /**
      * From now on, postpone keyboard shortcut checks -
      * i.e. normal ( not forced ) checkKeyboardShortcuts() will do nothing.
-     * Reset this mode by forcing a shortcut check with 
+     * Reset this mode by forcing a shortcut check with
      * checkKeyboardShortcuts( true ).
      **/
     void postponeShortcutCheck() { _shortcutCheckPostponed = true; }
@@ -115,33 +115,50 @@ public:
 
     /**
      * Implements the ui command queryWidget
-     */
+     **/
     YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Return a list of all widgets that belong to this dialog.
      **/
     YWidgetList widgets() const;
-    
+
+    /**
+     * Returns a (possibly translated) text describing this dialog for
+     * debugging.
+     **/
     virtual std::string dialogDebugLabel();
-    virtual std::string dialogDebugLabel1()	{ return dialogDebugLabel(); }
+
+    /**
+     * Alias for dialogDebugLabel();
+     **/
     virtual std::string debugLabel()		{ return dialogDebugLabel(); }
-    virtual std::string dialogDebugLabel2();
-    
-    
+
+    /**
+     * Reimplemented from YContainerwidget to keep track of new children
+     **/
+    virtual void addChild( YWidget *child );
+
+    /**
+     * Reimplemented from YContainerwidget to keep track of deleted children
+     **/
+    virtual void childDeleted( YWidget *child );
+
+
 protected:
 
     /**
      * Recursively fill a widgets list with all children and grandchildren of
-     * 'parent' that are in the same dialog.   
+     * 'parent' that are in the same dialog.
      **/
     void fillWidgetList( YWidgetList &			widgetList,
 			 const YContainerWidget * 	parent )	const;
 
-	
-    /*
-     * The dialog options
-     */
+
+    //
+    // Data members
+    //
+    
     YBoolOpt	_hasDefaultSize;
     YBoolOpt	_hasWarnColor;
     YBoolOpt	_hasInfoColor;
@@ -150,6 +167,7 @@ protected:
     YBoolOpt	_hasSmallDecorations;
 
     bool	_shortcutCheckPostponed;
+    YWidget *	_debugLabelWidget;
 };
 
 

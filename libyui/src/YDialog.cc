@@ -22,7 +22,12 @@
 #include <ycp/y2log.h>
 #include <ycp/YCPSymbol.h>
 #include "YDialog.h"
+#include "YWizard.h"
+#include "YLabel.h"
+#include "YMenuButton.h"
 #include "YShortcutManager.h"
+
+using std::string;
 
 
 YDialog::YDialog( const YWidgetOpt & opt )
@@ -35,6 +40,7 @@ YDialog::YDialog( const YWidgetOpt & opt )
     _isCentered.setValue( opt.isCentered.value() );
     _hasSmallDecorations.setValue( opt.hasSmallDecorations.value() );
     _shortcutCheckPostponed = false;
+    _debugLabelWidget = 0;
 }
 
 
@@ -65,19 +71,17 @@ void YDialog::checkShortcuts( bool force )
 
     YShortcutManager shortcutManager( this );
     shortcutManager.checkShortcuts();
-	
-    _shortcutCheckPostponed	= false;
+
+    _shortcutCheckPostponed = false;
 }
 
 
 YCPValue YDialog::queryWidget( const YCPSymbol & property )
 {
     string symbol = property->symbol();
-    
+
     if ( symbol == YUIProperty_DebugLabel ||
-	 symbol == YUIProperty_DialogDebugLabel ||
-	 symbol == YUIProperty_DialogDebugLabel1 )	return YCPString( dialogDebugLabel() );
-    if ( symbol == YUIProperty_DialogDebugLabel2 )	return YCPString( dialogDebugLabel2() );
+	 symbol == YUIProperty_DialogDebugLabel )	return YCPString( dialogDebugLabel() );
     else
     {
 	return YWidget::queryWidget( property );
@@ -99,7 +103,7 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
 {
     if ( ! parent )
 	return;
-    
+
     for ( int i = 0; i < parent->numChildren(); i++ )
     {
 	YWidget * child = parent->child(i);
@@ -120,13 +124,41 @@ void YDialog::fillWidgetList( YWidgetList &		widgetList,
 }
 
 
-std::string YDialog::dialogDebugLabel()
+string YDialog::dialogDebugLabel()
 {
-    return string( "<TO DO>" );
+    if ( _debugLabelWidget )
+    {
+	string label = _debugLabelWidget->debugLabel();
+	label = string( "Dialog \"" ) + label + string( "\"" );
+
+	return label;
+    }
+    else
+    {
+	return "Dialog";
+    }
 }
 
 
-std::string YDialog::dialogDebugLabel2()
+void YDialog::addChild( YWidget * newChild )
 {
-    return string( "<TO DO>" );
+    YContainerWidget::addChild( newChild );
+
+    if ( ! _debugLabelWidget )
+    {
+	if 	( dynamic_cast<YWizard  	*> (newChild ) )	_debugLabelWidget = newChild;
+	else if ( dynamic_cast<YLabel   	*> (newChild ) )	_debugLabelWidget = newChild;
+	else if ( dynamic_cast<YMenuButton 	*> (newChild ) )	_debugLabelWidget = newChild;
+    }
 }
+
+
+void YDialog::childDeleted( YWidget * deletedChild )
+{
+    if ( deletedChild == _debugLabelWidget )
+	_debugLabelWidget = 0;
+    
+    YContainerWidget::childDeleted( deletedChild );
+}
+
+

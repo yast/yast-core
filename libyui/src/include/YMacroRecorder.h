@@ -105,6 +105,11 @@ protected:
     void recordYcpCodeLocation();
 
     /**
+     * Record a human-readable identification of the dialog (its heading etc.)
+     **/
+    void recordDialogDebugLabel();
+
+    /**
      * The internally used macro file; valid if non-null.
      */
     FILE * _macroFile;

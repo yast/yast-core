@@ -221,12 +221,8 @@ YCPValue YWidget::queryWidget( const YCPSymbol & property )
     if ( symbol == YUIProperty_DebugLabel	) 	return YCPString( debugLabel() );
     /*
      * @property string DialogDebugLabel 	a (possibly translated) text describing this dialog for debugging
-     * @property string DialogDebugLabel1	alias for DialogDebugLabel
-     * @property string DialogDebugLabel2 	another (possibly translated) text describing this dialog for debugging
      */ 
-    if ( symbol == YUIProperty_DialogDebugLabel ||
-	 symbol == YUIProperty_DialogDebugLabel1 ||
-	 symbol == YUIProperty_DialogDebugLabel2 )
+    if ( symbol == YUIProperty_DialogDebugLabel ) 
     {
 	return YUIComponent::ui()->currentDialog()->queryWidget( property );
     }

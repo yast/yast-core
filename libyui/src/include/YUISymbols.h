@@ -142,8 +142,6 @@
 #define YUIProperty_CurrentItem			"CurrentItem"
 #define YUIProperty_DebugLabel			"DebugLabel"
 #define YUIProperty_DialogDebugLabel		"DialogDebugLabel"
-#define YUIProperty_DialogDebugLabel1		"DialogDebugLabel1"
-#define YUIProperty_DialogDebugLabel2		"DialogDebugLabel2"
 #define YUIProperty_EasterEgg			"EasterEgg"
 #define YUIProperty_Enabled			"Enabled"
 #define YUIProperty_ExpectedSize		"ExpectedSize"

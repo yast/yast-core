@@ -29,7 +29,10 @@
 
 #include "YUISymbols.h"
 #include "YWidget.h"
+#include "YDialog.h"
 #include "YMacroRecorder.h"
+#include "YUIComponent.h"
+#include "YUI.h"
 
 
 #define YMACRO_INDENT "    "	// 4 blanks
@@ -140,12 +143,26 @@ void YMacroRecorder::recordYcpCodeLocation()
 }
 
 
+void YMacroRecorder::recordDialogDebugLabel()
+{
+    YDialog * dialog = YUIComponent::ui()->currentDialog();
+
+    if ( dialog )
+    {
+	fprintf( _macroFile, "%s%s// %s\n",
+		 YMACRO_INDENT, YMACRO_INDENT,
+		 dialog->debugLabel().c_str() );
+    }
+}
+
+
 void YMacroRecorder::beginBlock()
 {
     if ( ! _macroFile )
 	return;
 
     fprintf( _macroFile, "%s{\n", YMACRO_INDENT );
+    recordDialogDebugLabel();
     recordYcpCodeLocation();
 }
 
