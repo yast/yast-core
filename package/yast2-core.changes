@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 30 16:51:24 CEST 2004 - sh@suse.de
+
+- added `opt(`treeEnabled) for wizard widget 
+
+-------------------------------------------------------------------
 Tue Mar 30 13:45:04 CEST 2004 - kkaempf@suse.de
 
 - sync agent-probe with current hwinfo, add wlan, block, and tape

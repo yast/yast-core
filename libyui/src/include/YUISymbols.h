@@ -182,6 +182,7 @@
 #define YUIOpt_stepsEnabled			"stepsEnabled"
 #define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
+#define YUIOpt_treeEnabled			"treeEnabled"
 #define YUIOpt_updateMode			"updateMode"
 #define YUIOpt_vstretch				"vstretch"
 #define YUIOpt_warncolor			"warncolor"

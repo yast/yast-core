@@ -155,6 +155,7 @@ struct YWidgetOpt
     YBoolOpt updateMode;	// YPackageSelector
     YBoolOpt youMode;		// YPackageSelector
     YBoolOpt stepsEnabled;	// YWizard
+    YBoolOpt treeEnabled;	// YWizard
     
     // YDialog-specific options
     //
