@@ -25,6 +25,7 @@
 #include <ycp/y2log.h>
 #include "Y2PluginComponent.h"
 
+#include <ycp/YCPVoid.h>
 
 // #define MEASURE_SPEED
 

@@ -22,19 +22,17 @@
  */
 
 
-#include <ycp/y2log.h>
+#include <y2util/y2log.h>
 #include <ycp/SymbolTable.h>
-#include <ycp/SymbolEntryPtr.h>
-#include <ycp/SymbolEntry.h>
-#include <ycp/Scanner.h>
+
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
 #endif
 
 #include "Y2Namespace.h"
-#include "Y2NamespaceCPP.h"
 #include "Y2Function.h"
+#include "SymbolEntry.h"
 
 Y2Namespace::Y2Namespace ()
     : m_table (0)
@@ -325,49 +323,3 @@ Y2Namespace::initialize ()
     }
 }
 
-// ************************** Y2NamespaceCPP.h helpers ***********************************
-
-Y2CPPFunction::Y2CPPFunction (Y2Namespace* parent, string name, Y2CPPFunctionCallBase* call_impl)
-    : YFunction (new YBlock ((Point *)0))
-    , m_name (name)
-    , m_parent (parent)
-    , m_impl (call_impl)
-{
-    call_impl->registerParameters (declaration ());
-    
-    setDefinition (call_impl);
-}
-
-SymbolEntryPtr
-Y2CPPFunction::sentry (unsigned int position)
-{
-    SymbolEntryPtr morefun = new SymbolEntry (m_parent, position, Scanner::doStrdup (m_name.c_str()), SymbolEntry::c_global, 
-            Type::fromSignature ( m_impl->m_signature ), this );
-    morefun->setCategory (SymbolEntry::c_function); 
-    return morefun;
-}
-
-void
-Y2CPPFunctionCallBase::newParameter (YBlockPtr decl, unsigned pos, constTypePtr type)
-{
-    string name;
-    
-    // FIXME: do it nicer
-    switch (pos)
-    {
-	case 1: name = "param1"; break;
-	case 2: name = "param2"; break;
-	case 3: name = "param3"; break;
-	case 4: name = "param4"; break;
-    }
-    SymbolEntryPtr param = decl->newEntry ( Scanner::doStrdup (name.c_str()), SymbolEntry::c_global, type, 0)->sentry ();
-    param->setCategory (SymbolEntry::c_variable);
-    
-    switch (pos)
-    {
-	case 1: m_param1 = param; break;
-	case 2: m_param2 = param; break;
-	case 3: m_param3 = param; break;
-	case 4: m_param4 = param; break;
-    }
-}

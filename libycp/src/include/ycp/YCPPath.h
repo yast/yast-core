@@ -25,7 +25,7 @@
 #include "YCPValue.h"
 #include <y2util/Ustring.h>
 
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 
 /**
  * @short YCPValueRep representing a data path

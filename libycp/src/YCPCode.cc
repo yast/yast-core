@@ -206,7 +206,8 @@ YCPReferenceRep::evaluate (bool cse) const
 std::ostream &
 YCPReferenceRep::toStream (std::ostream & str) const
 {
-    return m_entry->toStream (str);
+    // this is not used, instead YEVariable is used for bytecode
+    return str;
 }
 
 

@@ -106,7 +106,7 @@ void
 YCPPathRep::append(string c)
 {
     Component added;
-    added.component = Ustring (SymbolEntry::_nameHash, c);
+    added.component = Ustring (*SymbolEntry::_nameHash, c);
     added.complex = true;  //it would be nicer if we checked if it is really complex, but this is faster
     components.push_back(added);
 }
@@ -261,7 +261,7 @@ YCPPathRep::Component::Component(string s)
 	comp = s;
 	complex = string::npos == comp.find_first_not_of ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") ? false : true;
     }
-    component = Ustring (SymbolEntry::_nameHash, comp);
+    component = Ustring (*SymbolEntry::_nameHash, comp);
 }
 
 

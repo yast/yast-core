@@ -21,8 +21,9 @@
 #include <stdlib.h>
 #include "ycp/y2log.h"
 #include "ycp/SymbolTable.h"
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Point.h"
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
@@ -67,8 +68,9 @@ TableEntry::TableEntry (bytecodeistream & str)
     m_point = new Point (str);
     if (m_entry->category() == SymbolEntry::c_function)		// read function prototype
     {
-	m_entry->setCode(Bytecode::readCode (str));
-	if (m_entry->code()->kind() != YCode::ycFunction)
+	// FIXME: this is weird, why do we do this here???
+	((YSymbolEntryPtr)m_entry)->setCode(Bytecode::readCode (str));
+	if (((YSymbolEntryPtr)m_entry)->code()->kind() != YCode::ycFunction)
 	{
 	    y2error ("TableEntry::fromStream: bad prototype for global function %s", m_entry->toString().c_str());
 	}
@@ -170,7 +172,8 @@ TableEntry::toStream (std::ostream & str) const
     {
 //	y2debug ("TableEntry::toStream: write global function prototype");
 
-	((YFunctionPtr)(m_entry->code()))->toStream (str);
+	// FIXME: why do we this here???
+	((YFunctionPtr)(((YSymbolEntryPtr)m_entry)->code()))->toStream (str);
     }
     return str;
 }

@@ -26,7 +26,7 @@
 
 #include "ycp/YCPValue.h"
 #include "ycp/YCode.h"
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 
 //---------------------------------------------------------------------------
 // YCPCode
@@ -371,7 +371,6 @@ class YCPReference : public YCPValue
     DEF_COMMON(Reference, Value);
 public:
     YCPReference (SymbolEntryPtr entry) : YCPValue (new YCPReferenceRep (entry)) {}
-    YCPReference (bytecodeistream & str);
 };
 
 #endif   // YCPCode_h

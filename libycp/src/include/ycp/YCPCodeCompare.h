@@ -18,7 +18,7 @@
 #ifndef YCPCodeCompare_h
 #define YCPCodeCompare_h
 
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 #include "ycp/YCPCode.h"
 #include "ycp/y2log.h"
 

@@ -467,10 +467,10 @@ public:
 
 class Y2YCPFunction : public Y2Function
 {
-    SymbolEntryPtr m_sentry;
+    YSymbolEntryPtr m_sentry;
     YCPValue* m_parameters;
 public:
-    Y2YCPFunction (SymbolEntryPtr entry);
+    Y2YCPFunction (YSymbolEntryPtr entry);
     ~Y2YCPFunction ();
     
     string qualifiedName () const;

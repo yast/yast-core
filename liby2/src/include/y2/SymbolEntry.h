@@ -14,6 +14,7 @@
 		symbol entry class
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
@@ -27,14 +28,12 @@
 
 #include "ycp/YCPValue.h"
 #include "ycp/Type.h"
-#include "ycp/StaticDeclaration.h"
-#include "ycp/YCode.h"
 
 #include <stack>
 
-class YBlock;
 class Y2Namespace;
-class TableEntry;
+
+DEFINE_BASE_POINTER (SymbolEntry);
 
 /**
  */
@@ -48,7 +47,7 @@ class SymbolEntry : public Rep
 
 public:
     // hash for unique strings
-    static UstringHash _nameHash;
+    static UstringHash* _nameHash;
     static Ustring emptyUstring;
 
 public:
@@ -68,7 +67,7 @@ public:
 	c_filename		// 12 a filename (used in conjunction with TableEntry to store definition locations)
     } category_t;
 
-private:
+protected:
     /*
      * if it's global
      */
@@ -99,53 +98,14 @@ private:
      */
     constTypePtr m_type;
 
-    /**
-     * the default (initial) value ('payload') of the entry
-     * -> set by YSVariable and YSFunction
-     *
-     * It is grossly overloaded:
-     *	c_builtin:	declaration_t*
-     *  c_module:	Y2Namespace*
-     *  c_namespace:	SymbolTable *
-     *	c_self		n/a (just uses m_name)
-     *  c_predefined	n/a (just uses m_name)
-     *	c_filename	n/a (just uses m_name)
-     */
-    union payload {
-	Y2Namespace *m_namespace;
-	declaration_t *m_decl;
-	SymbolTable *m_table;
-    } m_payload;
-
-    /*
-     * Valid for
-     *  c_variable:	YCode* (any value)
-     *  c_reference:	YCode* (YEReference*)
-     *  c_function:	YCode* (YFunction* to be precise)
-     */
-
-    YCodePtr m_code;
-
     /*	the current (actual) value of the entry c_const  */
     YCPValue m_value;
     
-    stack<YCPValue> m_recurse_stack;
+    std::stack<YCPValue> m_recurse_stack;
 
 public:
-
     // create symbol beloging to namespace (at position)
-    SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCodePtr payload = 0);
-
-    // create builtin symbol (category == c_builtin), name_space != 0 for symbols inside namespace
-    SymbolEntry (const char *name, constTypePtr type, declaration_t *payload, const Y2Namespace *name_space = 0);
-
-    // create namespace symbol (category == c_namespace)
-    SymbolEntry (const char *name, constTypePtr type, SymbolTable *payload);
-
-    // create declaration point symbol (category == c_filename)
-    SymbolEntry (const char *filename);
-
-    SymbolEntry (bytecodeistream & str, const Y2Namespace *name_space = 0);
+    SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type);
 
     virtual ~SymbolEntry ();
 
@@ -156,23 +116,7 @@ public:
     // payload access
 
     // returns true for a declared symbol which isn't defined yet.
-    bool onlyDeclared () const;
-
-    // payload access for variables and functions
-    void setCode (YCodePtr code);
-    YCodePtr code () const;
-    
-    // payload access for builtins
-    void setDeclaration (declaration_t *decl);
-    declaration_t *declaration () const;
-
-    // payload access for namespace symbols
-    void setTable (SymbolTable *table);
-    SymbolTable *table() const;
-
-    // symbols' link to the defining namespace
-    Y2Namespace *payloadNamespace () const;
-    void setPayloadNamespace (Y2Namespace *name_space);
+    virtual bool onlyDeclared () const { return false; }
 
     // this is the position of the entry in the namespace (>= 0)
     //   or in the xref table (< 0), see YSImport()
@@ -205,9 +149,7 @@ public:
     void push ();
     void pop ();
 
-    string toString (bool with_type = true) const;
-    std::ostream & toStream (std::ostream & str) const;
+    virtual string toString (bool with_type = true) const;
 };
-
 
 #endif // SymbolEntry_h

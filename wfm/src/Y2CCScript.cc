@@ -37,6 +37,7 @@
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
 #include <ycp/Bytecode.h>
+#include <ycp/YCPCode.h>
 
 #if KMTRACE
 #include "/opt/kde3/include/ktrace.h"

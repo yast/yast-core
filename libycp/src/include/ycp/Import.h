@@ -27,7 +27,7 @@ using std::string;
 
 #include "ycp/YCode.h"
 #include "ycp/SymbolTable.h"
-#include "ycp/SymbolEntry.h"
+#include "ycp/YSymbolEntry.h"
 
 class SymbolEntry;
 class Y2Namespace;

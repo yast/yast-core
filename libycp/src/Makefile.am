@@ -40,7 +40,7 @@ libycp_la_SOURCES = 					\
 	YCPBuiltinString.cc YCPBuiltinTerm.cc		\
 	YCPBuiltinVoid.cc YCPBuiltinMap.cc		\
 	YCPBuiltinMisc.cc				\
-	SymbolEntry.cc					\
+	YSymbolEntry.cc					\
 	Type.cc TypeStatics.cc				\
 	y2string.cc y2string.h				\
 	y2crypt.cc y2crypt.h

@@ -28,8 +28,8 @@ pkginclude_HEADERS =					\
 	YCPCodeCompare.h				\
 	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
-	SymbolTable.h SymbolEntry.h Scanner.h Parser.h 	\
-	SymbolEntryPtr.h				\
+	SymbolTable.h Scanner.h Parser.h 		\
+	YSymbolEntry.h					\
 	y2log.h ycpless.h pathsearch.h			\
 	ExecutionEnvironment.h
 

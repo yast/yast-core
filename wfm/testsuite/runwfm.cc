@@ -22,6 +22,7 @@
 #include <y2/Y2StdioComponent.h>
 #include <y2/Y2ComponentBroker.h>
 #include <ycp/Parser.h>
+#include <ycp/YCPCode.h>
 #include <ycp/y2log.h>
 #include <WFM.h>
 #include <Y2ScriptComponent.h>

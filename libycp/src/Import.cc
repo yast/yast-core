@@ -73,7 +73,7 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
     y2debug ("Import::import (%s), preloaded_namespace %p", name.c_str(), preloaded_namespace);
 #endif
 
-    m_name = Ustring (SymbolEntry::_nameHash, name);
+    m_name = Ustring (*SymbolEntry::_nameHash, name);
 
     m_module = m_active_modules.find (m_name);
 

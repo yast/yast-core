@@ -28,7 +28,7 @@
 // YCPStringRep
 
 YCPStringRep::YCPStringRep(string s)
-    : v(Ustring (SymbolEntry::_nameHash, s))
+    : v(Ustring (*SymbolEntry::_nameHash, s))
 {
 }
 

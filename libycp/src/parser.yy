@@ -66,7 +66,8 @@
 #include "ycp/YStatement.h"
 #include "ycp/YBlock.h"
 #include "ycp/SymbolTable.h"
-#include "ycp/SymbolEntry.h"
+#include "ycp/YSymbolEntry.h"
+#include "ycp/Point.h"
 #include "ycp/Bytecode.h"
 
 #include "ycp/Parser.h"
@@ -1199,7 +1200,8 @@ statement:
 		saved_table[0] = p_parser->scanner()->globalTable();
 		saved_table[1] = p_parser->scanner()->localTable();
 		// evaluate following block in different name space
-		p_parser->scanner()->initTables ($1.v.tval->sentry()->table(), 0);
+		// FIXME: maybe the SymbolEntry is not correct
+		p_parser->scanner()->initTables (((YSymbolEntryPtr)$1.v.tval->sentry())->table(), 0);
 
 		y2warning ("Using incompatible coversion");
 		// save environment tables for later restore
@@ -1263,7 +1265,7 @@ statement:
 		p_parser->m_current_block->setName (name);
 
 		// enter 'self' entry so namespace references to current module get ignored
-		SymbolEntryPtr sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
+		SymbolEntryPtr sself = new YSymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
 		TableEntry *self = new TableEntry (sself->name(), sself, new Point (sself, $1.l, p_parser->m_current_block->point()));
 		p_parser->scanner()->localTable()->enter (self);
 
@@ -1919,7 +1921,7 @@ definition:
 		    }
 		}
 								// link the function entry with the function definition
-		SymbolEntryPtr entry = $1.v.tval->sentry();
+		YSymbolEntryPtr entry = (YSymbolEntryPtr)$1.v.tval->sentry();
 		YFunctionPtr func = (YFunctionPtr)(entry->code());
 		func->setDefinition ((YBlockPtr)$2.c);
 		$$.c = new YSFunction (entry, $1.l);
@@ -1991,15 +1993,17 @@ definition:
 			$3.c = new YEPropagate ($3.c, $3.t, $1.t);
 			match = 0;
 		    }
+		    
+		    YSymbolEntryPtr sentry = (YSymbolEntryPtr) tentry->sentry ();
 
 		    if (match == 0)		// type match ok
 		    {
 			$$.c = new YSAssign (true, tentry->sentry(), $3.c, $1.l);
-			tentry->sentry()->setCode($3.c);
+			sentry->setCode($3.c);
 		    }
-		    if (tentry->sentry()->category() == SymbolEntry::c_unspec)
+		    if (sentry->category() == SymbolEntry::c_unspec)
 		    {
-			tentry->sentry()->setCategory ($1.t->isReference() ? SymbolEntry::c_reference : SymbolEntry::c_variable);
+			sentry->setCategory ($1.t->isReference() ? SymbolEntry::c_reference : SymbolEntry::c_variable);
 		    }
 		}
 
@@ -2056,7 +2060,7 @@ function_start:
 		YBlockPtr parameter_block = start_block (p_parser, $1.t);
 
 		// get the functions symbol entry
-		SymbolEntryPtr fentry = $1.v.tval->sentry();
+		YSymbolEntryPtr fentry = (YSymbolEntryPtr) $1.v.tval->sentry();
 
 		// remember the prototype, if set for later checking
 		constTypePtr prototype = Type::Unspec;
@@ -2865,7 +2869,7 @@ function_call:
 			// for every parameter in order to match the
 			// type-correct declaration
 
-			declaration_t *decl = sentry->declaration();
+			declaration_t *decl = ((YSymbolEntryPtr)sentry)->declaration();
 
 #if DO_DEBUG
 //			y2debug ("Builtin! (%s)%s", sentry->toString().c_str(), (decl->next == 0) ? "!" : "?");

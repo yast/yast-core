@@ -28,6 +28,7 @@
 #define Y2ScriptComponent_h
 
 #include <y2/Y2Component.h>
+#include <ycp/YCPVoid.h>
 
 class Y2ScriptComponent : public Y2Component
 {

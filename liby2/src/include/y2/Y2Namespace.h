@@ -25,8 +25,9 @@
 using std::string;
 
 #include "ycp/YCPValue.h"
-#include "ycp/SymbolEntryPtr.h"
 #include "ycp/Type.h"
+
+#include "SymbolEntry.h"
 
 class SymbolTable;
 class Point;

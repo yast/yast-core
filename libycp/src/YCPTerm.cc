@@ -25,13 +25,13 @@
 
 // YCPTermRep
 YCPTermRep::YCPTermRep(const string& s)
-    : s(Ustring (SymbolEntry::_nameHash, s))
+    : s(Ustring (*SymbolEntry::_nameHash, s))
 {
 }
 
 
 YCPTermRep::YCPTermRep(const string& s, const YCPList& l)
-    : s(Ustring (SymbolEntry::_nameHash, s))
+    : s(Ustring (*SymbolEntry::_nameHash, s))
     , l(l) 
 {
 }
@@ -49,7 +49,7 @@ YCPTermRep::name() const
 void
 YCPTermRep::setName(string name)
 {
-    s = Ustring (SymbolEntry::_nameHash, name);
+    s = Ustring (*SymbolEntry::_nameHash, name);
 }
 
 

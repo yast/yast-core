@@ -40,6 +40,9 @@
 #include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
+#include <ycp/YCPTerm.h>
+#include <ycp/YCPVoid.h>
+#include <ycp/YCPCode.h>
 
 #define NUMSPACES 	16
 #define TIMEOUT		1000	// microseconds

@@ -23,10 +23,10 @@
 
 #include <stdio.h>
 
-#include <ycp/y2log.h>
+#include <y2util/y2log.h>
 #include "Y2Component.h"
 #include "Y2ComponentBroker.h"
-
+#include "ycp/YCPValue.h"
 
 Y2Component::Y2Component()
 {

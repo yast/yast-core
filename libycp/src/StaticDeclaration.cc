@@ -30,11 +30,12 @@ using namespace std;
 
 #include "ycp/StaticDeclaration.h"
 #include "ycp/SymbolTable.h"
-#include "ycp/SymbolEntry.h"
+#include "ycp/YSymbolEntry.h"
 #include "ycp/YBlock.h"
 
 #include "ycp/Bytecode.h"
 #include "ycp/Import.h"
+#include "ycp/Point.h"
 
 #include "ycp/y2log.h"
 
@@ -65,7 +66,7 @@ StaticDeclaration::StaticDeclaration()
     Point *point = new Point ("<predefined>");
     while (*pptr != 0)
     {
-	sentry = new SymbolEntry (0, 0, *pptr, SymbolEntry::c_predefined, Type::Unspec, 0);
+	sentry = new YSymbolEntry (0, 0, *pptr, SymbolEntry::c_predefined, Type::Unspec, 0);
 	m_declTable->enter (*pptr, sentry, new Point (sentry, 0, point));
 	pptr++;
     }
@@ -161,7 +162,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 		SymbolTable *namespaceTable = block->table();
 
 		// create SymbolEntry::c_namespace for the namespace to be entered into the global table
-		SymbolEntryPtr sentry = new SymbolEntry (name, Type::Unspec, namespaceTable);
+		SymbolEntryPtr sentry = new YSymbolEntry (name, Type::Unspec, namespaceTable);
 
 #if DO_DEBUG
 		y2debug ("Entered Namespace '%s' (block %p) into namespaceTable %p", name, block, namespaceTable);
@@ -211,7 +212,7 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 #endif
 	    declarations->type = type;
 
-	    SymbolEntryPtr sentry = new SymbolEntry (name, type, declarations, name_space);
+	    SymbolEntryPtr sentry = new YSymbolEntry (name, type, declarations, name_space);
 	    declarations->tentry = table->enter (name, sentry, new Point (sentry, 0, namespace_point));
 
 #ifdef BUILTIN_STATISTICS
@@ -305,7 +306,7 @@ StaticDeclaration::findDeclaration (const char *name) const
 #endif
 	*next = ':';
 	if (tentry != 0
-	   && tentry->sentry()->table() != 0)
+	   && ((YSymbolEntryPtr)(tentry->sentry()))->table() != 0)
 	{
 	    // continue recursively;
 	    // skip delimiter
@@ -313,13 +314,13 @@ StaticDeclaration::findDeclaration (const char *name) const
 #if DO_DEBUG
 	    y2debug( "Recursive search for %s", next );
 #endif
-	    tentry = tentry->sentry()->table()->find (next);
+	    tentry = ((YSymbolEntryPtr)(tentry->sentry()))->table()->find (next);
 	}
     }
 
     if (tentry != 0)
     {
-	return tentry->sentry()->declaration();
+	return ((YSymbolEntryPtr)tentry->sentry())->declaration();
     }
     return 0;
 }
@@ -458,7 +459,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	
 	if (decl->tentry->next_overloaded () != 0)
 	{
-	    decl = decl->tentry->next_overloaded ()->sentry ()->declaration ();
+	    decl = ((YSymbolEntryPtr)decl->tentry->next_overloaded ()->sentry ())->declaration ();
 	}
 	else
 	{
@@ -481,7 +482,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 		
 		if (first_decl->tentry->next_overloaded () != 0)
 		{
-		    first_decl = first_decl->tentry->next_overloaded ()->sentry ()->declaration ();
+		    first_decl = ((YSymbolEntryPtr)first_decl->tentry->next_overloaded ()->sentry ())->declaration ();
 		}
 		else
 		{

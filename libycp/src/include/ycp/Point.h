@@ -51,7 +51,7 @@ using std::string;
 
 // MemUsage.h defines/undefines D_MEMUSAGE
 #include <y2util/MemUsage.h>
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 
 class bytecodeistream;
 

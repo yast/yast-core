@@ -31,7 +31,7 @@ using std::string;
 #include "ycp/YCPValue.h"
 #include "ycp/YCPString.h"
 #include "ycp/Type.h"
-#include "ycp/SymbolEntry.h"
+#include "ycp/YSymbolEntry.h"
 
 /**
  * linked list of ycode pointers

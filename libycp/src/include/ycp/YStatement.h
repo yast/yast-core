@@ -26,6 +26,7 @@ using std::string;
 
 #include "ycp/YCode.h"
 #include "ycp/SymbolTable.h"
+#include "ycp/YSymbolEntry.h"
 #include "ycp/Import.h"
 
 class YBlock;		// forward declaration for YDo, YRepeat
@@ -163,10 +164,10 @@ class YSFunction : public YStatement
 {
     REP_BODY(YSFunction);
     // the functions' symbol, it's code is this YSFunction !
-    SymbolEntryPtr m_entry;
+    YSymbolEntryPtr m_entry;
 
 public:
-    YSFunction (SymbolEntryPtr entry, int line = 0);
+    YSFunction (YSymbolEntryPtr entry, int line = 0);
     YSFunction (bytecodeistream & str);
     ~YSFunction ();
 

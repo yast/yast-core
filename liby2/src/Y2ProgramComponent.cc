@@ -32,6 +32,9 @@
 #include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
+#include <ycp/YCPTerm.h>
+#include <ycp/YCPVoid.h>
+#include <ycp/YCPCode.h>
 
 Y2ProgramComponent::Y2ProgramComponent (string chroot_path, string bin_file,
 					const char *component_name, bool non_y2,

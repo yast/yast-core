@@ -25,7 +25,7 @@
 #include "Y2ComponentBroker.h"
 #include "Y2ComponentCreator.h"
 #include <ycp/pathsearch.h>
-#include <ycp/y2log.h>
+#include <y2util/y2log.h>
 
 
 vector<const Y2ComponentCreator *> *Y2ComponentBroker::creators[Y2ComponentBroker::MAX_ORDER]

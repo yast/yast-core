@@ -339,7 +339,7 @@ YSReturn::evaluate (bool cse)
 // ------------------------------------------------------------------
 // function definition
 
-YSFunction::YSFunction (SymbolEntryPtr entry, int line)
+YSFunction::YSFunction (YSymbolEntryPtr entry, int line)
     : YStatement (ysFunction, line)
     , m_entry (entry)
 {
@@ -416,7 +416,7 @@ YSFunction::toStream (std::ostream & str) const
 
 YSTypedef::YSTypedef (const string &name, constTypePtr type, int line)
     : YStatement (ysTypedef, line)
-    , m_name (Ustring (SymbolEntry::_nameHash, name))
+    , m_name (Ustring (*SymbolEntry::_nameHash, name))
     , m_type (type)
 {
 }
@@ -479,7 +479,7 @@ YSAssign::YSAssign (bool definition, bytecodeistream & str)
     if (definition)
     {
 	// setup default value
-	m_entry->setCode (m_code);
+	((YSymbolEntryPtr)m_entry)->setCode (m_code);
     }
 }
 
@@ -693,8 +693,10 @@ YSBracket::evaluate (bool cse)
     if (result.isNull())
     {
 	// initial assignment
-	m_entry->setValue (m_entry->code() ? m_entry->code()->evaluate () : YCPNull());
-	result = m_entry->value();
+	y2internal ("Initial assignment reached, not working ATM");
+	result = YCPVoid ();
+//FIXME:	m_entry->setValue (m_entry->code() ? m_entry->code()->evaluate () : YCPNull());
+//FIXME:	result = m_entry->value();
     }
 
     // evaluate other arguments _before_ error checking
@@ -1252,7 +1254,7 @@ YSDo::evaluate (bool cse)
 
 YSTextdomain::YSTextdomain (const string &textdomain, int line)
     : YStatement (ysTextdomain, line)
-    , m_domain (Ustring (SymbolEntry::_nameHash, textdomain))
+    , m_domain (Ustring (*SymbolEntry::_nameHash, textdomain))
 {
     bind ();
 }
@@ -1307,7 +1309,7 @@ YSTextdomain::bind ()
 
 YSInclude::YSInclude (const string &filename, int line, bool skipped)
     : YStatement (ysInclude, line)
-    , m_filename (Ustring (SymbolEntry::_nameHash, filename))
+    , m_filename (Ustring (*SymbolEntry::_nameHash, filename))
     , m_skipped (skipped)
 {
 }
@@ -1515,7 +1517,7 @@ YSImport::evaluate (bool cse)
 
 YSFilename::YSFilename (const string &filename, int line)
     : YStatement (ysFilename, line)
-    , m_filename (Ustring (SymbolEntry::_nameHash, filename))
+    , m_filename (Ustring (*SymbolEntry::_nameHash, filename))
 {
 }
 

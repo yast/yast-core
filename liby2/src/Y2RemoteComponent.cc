@@ -31,6 +31,10 @@
 #include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
+#include <ycp/YCPTerm.h>
+#include <ycp/YCPVoid.h>
+#include <ycp/YCPCode.h>
+
 #include "TelnetProtocol.h"
 #include "RloginProtocol.h"
 #include "RshProtocol.h"

@@ -21,6 +21,11 @@
 #define Y2WFMComponent_h
 
 #include <y2/Y2Component.h>
+
+#include <ycp/YCPInteger.h>
+#include <ycp/YCPList.h>
+#include <ycp/YCPString.h>
+
 #include "WFMSubAgent.h"
 
 #define MAX_CLIENT_NAME_LEN 160

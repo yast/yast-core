@@ -25,13 +25,13 @@
 // YCPSymbolRep
 
 YCPSymbolRep::YCPSymbolRep(const char *s)
-    : v(Ustring (SymbolEntry::_nameHash, s))
+    : v(Ustring (*SymbolEntry::_nameHash, s))
 {
 }
 
 
 YCPSymbolRep::YCPSymbolRep(string s)
-    : v(Ustring (SymbolEntry::_nameHash, s))
+    : v(Ustring (*SymbolEntry::_nameHash, s))
 {
 }
 

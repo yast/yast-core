@@ -30,9 +30,10 @@
 
 // needed for YBlock
 
-#include "ycp/SymbolEntry.h"
+#include "ycp/YSymbolEntry.h"
 #include "ycp/SymbolTable.h"
 #include "ycp/YExpression.h"
+#include "ycp/Point.h"
 
 #include "ycp/Bytecode.h"
 #include "ycp/Scanner.h"
@@ -64,7 +65,7 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
     y2debug ("YBlock::YBlock [%p] (%s)", this, filename.c_str());
 #endif
     // add filename as SymbolEntry:c_filename
-    SymbolEntryPtr sentry = new SymbolEntry (nameSpace(), 0, filename.c_str(), SymbolEntry::c_filename, Type::Unspec);
+    SymbolEntryPtr sentry = new YSymbolEntry (nameSpace(), 0, filename.c_str(), SymbolEntry::c_filename, Type::Unspec);
     addSymbol (sentry);
 
     m_point = new Point (sentry);
@@ -136,7 +137,7 @@ YBlock::newValue (constTypePtr type, YCodePtr code)
 #endif
 
 // FIXME: check duplicates
-    return addSymbol (new SymbolEntry (nameSpace(), symbolCount(), name, SymbolEntry::c_const, type, code));
+    return addSymbol (new YSymbolEntry (nameSpace(), symbolCount(), name, SymbolEntry::c_const, type, code));
 }
 
 
@@ -170,7 +171,7 @@ YBlock::newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr ty
 	return 0;
     }
 
-    SymbolEntryPtr sentry = new SymbolEntry (nameSpace(), symbolCount(), name, cat, type);
+    SymbolEntryPtr sentry = new YSymbolEntry (nameSpace(), symbolCount(), name, cat, type);
     addSymbol (sentry);
 
     // cat == SymbolEntry::c_filename: inclusion point, include file sentry included at line in (current file) m_point
@@ -271,7 +272,7 @@ YBlock::newNamespace (const string & name, Y2Namespace *name_space, int line)
 #endif
 
     TableEntry *tentry = newEntry (Scanner::doStrdup (name.c_str()), SymbolEntry::c_module, Type::Unspec, line);
-    tentry->sentry()->setPayloadNamespace (name_space);
+    ((YSymbolEntryPtr)tentry->sentry())->setPayloadNamespace (name_space);
 
 #if DO_DEBUG
     y2debug ("environment of %p after addNamespace (%s)", this, environmentToString().c_str());
@@ -630,7 +631,7 @@ YBlock::YBlock (bytecodeistream & str)
     {
 	for (unsigned int i = 0; i < scount; i++)
 	{
-	    SymbolEntryPtr sentry = new SymbolEntry (str, nameSpace());
+	    SymbolEntryPtr sentry = new YSymbolEntry (str, nameSpace());
 	    addSymbol (sentry);
 	}
 
@@ -755,7 +756,7 @@ YBlock::toStream (std::ostream & str) const
     {
 	for (unsigned int i = 0; i < symbolCount(); i++)
 	{
-	    SymbolEntryPtr entry = symbolEntry (i);
+	    YSymbolEntryPtr entry = (YSymbolEntryPtr)symbolEntry (i);
 	    entry->toStream (str);				// write SymbolEntry
 	}
 

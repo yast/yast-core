@@ -23,9 +23,14 @@
 #ifndef Y2Component_h
 #define Y2Component_h
 
-#include "YCP.h"
+#include <string>
+
+using std::string;
 
 class SCRAgent;
+class Y2Namespace;
+class YCPValue;
+class YCPList;
 
 /**
  * @short Communication handle to a YaST2 component.

@@ -24,6 +24,9 @@
 #include "Y2StdioComponent.h"
 #include <ycp/y2log.h>
 
+#include <ycp/YCPTerm.h>
+#include <ycp/YCPVoid.h>
+#include <ycp/YCPCode.h>
 
 Y2StdioComponent::Y2StdioComponent (bool is_server, bool to_stderr,
 				    bool in_batchmode)

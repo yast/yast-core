@@ -21,7 +21,9 @@ liby2_la_SOURCES = \
 	Y2ComponentBroker.cc Y2ComponentCreator.cc 	\
 	Y2Namespace.cc					\
 	Y2LanguageLoader.cc                             \
-	genericfrontend.cc
+	genericfrontend.cc				\
+	SymbolEntry.cc
+
 liby2_la_LDFLAGS = -version-info 2:0
 liby2_la_LIBADD = -ly2util -lutil -ldl
 

@@ -31,10 +31,11 @@ using std::string;
 
 // MemUsage.h defines/undefines D_MEMUSAGE
 #include <y2util/MemUsage.h>
-#include "ycp/SymbolEntryPtr.h"
-#include "ycp/Point.h"
+
+#include <y2/SymbolEntry.h>
 
 class SymbolTable;
+class Point;
 
 // TableEntry
 

@@ -21,7 +21,7 @@
 
 #include "Y2.h"
 
-#include "ycp/y2log.h"
+#include "y2util/y2log.h"
 
 Y2ComponentCreator::Y2ComponentCreator(Y2ComponentBroker::order_t order)
 {

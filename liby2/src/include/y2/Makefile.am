@@ -15,7 +15,7 @@ pkginclude_HEADERS =							\
 	Y2SerialComponent.h Y2StdioComponent.h				\
 	Y2PluginComponent.h Y2CCPlugin.h 				\
 	Y2Namespace.h Y2NamespaceCPP.h					\
-	Y2Function.h
+	Y2Function.h SymbolEntry.h
 
 #<INSTALL-HEADER-TARGET>
 

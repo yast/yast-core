@@ -264,14 +264,14 @@ Ustring
 Bytecode::readUstring (bytecodeistream & streamref)
 {
     u_int32_t len = readInt32 (streamref);
-    Ustring ret = Ustring (SymbolEntry::_nameHash, "");
+    Ustring ret = Ustring (*SymbolEntry::_nameHash, "");
     if (len > 0)
     {
 	char *buf = new char [len+1];
 	if (streamref.read (buf, len))
 	{
 	    buf[len] = 0;
-	    ret = Ustring (SymbolEntry::_nameHash, buf);
+	    ret = Ustring (*SymbolEntry::_nameHash, buf);
 	}
 	delete [] buf;
     }

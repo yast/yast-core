@@ -57,7 +57,7 @@ fromhex(char hex)
 #include "ycp/Type.h"
 #include "ycp/StaticDeclaration.h"
 #include "ycp/SymbolTable.h"
-#include "ycp/SymbolEntry.h"
+#include "y2/SymbolEntry.h"
 #include "ycp/YBlock.h"
 
 extern StaticDeclaration static_declarations;
@@ -443,8 +443,8 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	if (tentry != 0)
 	{
 	    y2debug ("found (%s)", tentry->toString().c_str());
-	    SymbolEntryPtr sentry = tentry->sentry();
-	    namespaceTable = tentry->sentry()->table();		// will be != if sentry is c_namespace
+	    YSymbolEntryPtr sentry = (YSymbolEntryPtr)tentry->sentry();
+	    namespaceTable = ((YSymbolEntryPtr)tentry->sentry())->table();	// will be != if sentry is c_namespace
 
 	    while (namespaceTable == 0)
 	    {
@@ -512,7 +512,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		    return SCANNER_ERROR;
 		}
 		
-		const Y2Namespace *name_space = tentry->sentry()->payloadNamespace();
+		const Y2Namespace *name_space = ((YSymbolEntryPtr)tentry->sentry())->payloadNamespace();
 
 		y2debug ("Going to get a table" );
 		// ok, this YCode defines it's own table of exported symbols

@@ -2862,7 +2862,7 @@ YEFunctionPointer::evaluate (bool cse)
 // ------------------------------------------------------------------
 // function call for outside of YCP (similar to YEFunction) (-> SymbolEntry + Parameters)
 
-Y2YCPFunction::Y2YCPFunction (SymbolEntryPtr entry)
+Y2YCPFunction::Y2YCPFunction (YSymbolEntryPtr entry)
     : Y2Function ()
     , m_sentry (entry)
     , m_parameters (0)
