@@ -168,6 +168,7 @@
 #define YUIOpt_immediate			"immediate"
 #define YUIOpt_infocolor			"infocolor"
 #define YUIOpt_keepSorting			"keepSorting"
+#define YUIOpt_keyEvents			"keyEvents"
 #define YUIOpt_notify				"notify"
 #define YUIOpt_outputField			"outputField"
 #define YUIOpt_plainText			"plainText"

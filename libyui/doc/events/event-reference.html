@@ -44,6 +44,7 @@ Author: Stefan Hundhammer
     <li><a href="#MenuEvent">MenuEvent</a>
     <li><a href="#TimeoutEvent">TimeoutEvent</a>
     <li><a href="#CancelEvent">CancelEvent</a>
+    <li><a href="#KeyEvent">KeyEvent</a>
     <li><a href="#DebugEvent">DebugEvent</a>
     </ul>
 </ul>
@@ -76,6 +77,7 @@ at least the following elements:
 	    <a href="#MenuEvent">MenuEvent</a><br>
 	    <a href="#TimeoutEvent">TimeoutEvent</a><br>
 	    <a href="#CancelEvent">CancelEvent</a><br>
+	    <a href="#KeyEvent">KeyEvent</a><br>
 	    <a href="#DebugEvent">DebugEvent</a>
 	</td>
 	<td>
@@ -319,10 +321,10 @@ Note that
 </table>
 
 <p>
-A <i>ValueChanged</i> 
+A <i>ValueChanged</i>
 <a href="#WidgetEvent">WidgetEvent</a>
 is sent by most interactive widgets that have a value that can be changed by
-the user. 
+the user.
 They all require the
 <a href="event-intro.html#notify">notify option</a>
 to be set to send this event.
@@ -378,7 +380,7 @@ which can send both events, depending on what the user did.
 	    <li>Press <i>space</i> on the widget.
 	    </ul>
 	    No event is sent when the button's status is set to <i>off</i>
-	    because another RadioButton of the same 
+	    because another RadioButton of the same
 	    <a href="../widgets/YRadioButtonGroup-widget.html">RadioButtonGroup</a>
 	    is set to <i>on</i> to avoid generating a lot of useless events:
 	    Only the <i>on</i> case is relevant for most YCP applications.
@@ -406,7 +408,7 @@ which can send both events, depending on what the user did.
 		<p>
 			    Simply opening the drop-down list and moving the
 			    cursor around in it (i.e. changing its selection)
-			    does <b>not</b> trigger this event. 
+			    does <b>not</b> trigger this event.
 		</ul>
 	    <li>Enter text (with <a href="../widgets/YComboBox-widget.html">`opt(`editable )</a> ).
 	    </ul>
@@ -474,7 +476,7 @@ which can send both events, depending on what the user did.
 </table>
 
 <p>
-A <i>SelectionChanged</i> 
+A <i>SelectionChanged</i>
 <a href="#SelectionChanged">WidgetEvent</a>
 is sent by most widgets that have the concept of a "selected item" like
 <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>,
@@ -482,15 +484,15 @@ is sent by most widgets that have the concept of a "selected item" like
 <a href="../widgets/YTree-widget.html">Tree</a>
 when the selected item changes.
 <p>
-Note that the 
+Note that the
 <a href="../widgets/YMultiSelectionBox-widget.html">MultiSelectionBox</a>
 widget can send a <i>SelectionChanged</i> event, but also a
 <a href="#ValueChanged">ValueChanged WidgetEvent</a>
 depending on what the user did.
-This is one reason to keep <i>SelectionChanged</i> and 
+This is one reason to keep <i>SelectionChanged</i> and
 <a href="#ValueChanged">ValueChanged</a> two distinct events:
 Widgets can have both concepts which may be equally important, depending on the
-YCP application. 
+YCP application.
 
 <p>
 The <a href="../widgets/YComboBox-widget.html">ComboBox</a>
@@ -501,9 +503,9 @@ The rationale behind this is that merely opening the drop-down list without
 actually accepting one of its items is just a temporary operation in a separate
 pop-up window (the drop-down list) that should not affect the YCP application
 or other widgets in the same dialog until the user actually accepts a value
-- upon which event a 
+- upon which event a
 <a href="#ValueChanged">ValueChanged WidgetEvent</a> is sent.
-	
+
 
 <table border="1">
     <thead>
@@ -718,6 +720,124 @@ to handle `cancel or "CancelEvent" like that "Abort" button. The user should
 always have a safe way out of a dialog - preferably one that doesn't change
 anything. Don't forget to add a confirmation popup before you really exit if
 there are unsaved data that might get lost!
+
+
+
+<h2><a name="KeyEvent">KeyEvent</h2>
+
+<p>
+KeyEvents are specific to the NCurses UI. They are not intended for general
+usage. The idea is to use them where the default keyboard focus
+handling is insufficient - for example, when the logical layout of a dialog is
+known and the keyboard focus should be moved to the logically right widget upon
+pressing the <i>cursor right</i> key.
+<p>
+Widgets deliver KeyEvents if they have <tt>`opt( keyEvent )</tt> set.
+This is independent of the <a href="event-intro.html#notify">notify option</a>.
+<p>
+It is completely up to the UI what key presses are delivered as key
+events. Never rely on each and every key press to be delivered.
+
+
+<table border="1">
+    <thead>
+	<th>Map Key</th>
+	<th>Value Type</th>
+	<th>Valid Values</th>
+	<th>Description</th>
+    </thead>
+    <tr>
+	<td class="map-key">EventType</tt></td>
+	<td class="map-type">string</td>
+	<td class="map-value">KeyEvent</td>
+	<td>(constant)</td>
+    </tr>
+    <tr>
+	<td class="map-key">ID</td>
+	<td class="map-type">string</td>
+	<td class="map-value">
+		CursorRight<br>
+		CursorDown<br>
+		F1<br>
+		a<br>
+		A<br>
+		...
+	</td>
+	<td>
+	The key symbol of this event in human readable form.<br>
+	This is what
+	<a href="event-builtins.html#UserInput">UserInput()</a> returns.
+    </tr>
+    <tr>
+	<td class="map-key">KeySymbol</td>
+	<td class="map-type">string</td>
+	<td class="map-value">
+		CursorRight<br>
+		CursorDown<br>
+		F1<br>
+		a<br>
+		A<br>
+		...
+	</td>
+	<td>
+	The key symbol of this event in human readable form.<br>
+	This is nothing but an alias for "ID", but with this alias you can
+	easily find out if this is a key event at the same time as you
+	retrieve the key symbol: No other events than KeyEvent have this
+	field.
+    </tr>
+    <tr>
+	<td class="map-key">FocusWidgetID</td>
+	<td class="map-type">any</td>
+	<td></td>
+	<td>
+	The ID of the widget that currently has the keyboard focus.<br>
+	Unlike a <a href="#WidgetEvent">WidgetEvent</a>, this is <b>not</b>
+	the same as "ID".
+    </tr>
+    <tr>
+	<td class="map-key">FocusWidgetClass</td>
+	<td class="map-type">string</td>
+	<td class="map-value">
+	TextEntry<br>
+	SelectionBox<br>
+	...
+	</td>
+	<td>The class (type) of the widget that has the keyboard focus.</td>
+    </tr>
+    <tr>
+	<td class="map-key">FocusWidgetDebugLabel</td>
+	<td class="map-type">string</td>
+	<td class="map-value"></td>
+	<td>
+	<p>
+	The label (more general: the widget's <i>shortcut property</i>) of the
+	focus widget - in human readable form without any
+	shortcut markers ("&amp;"), maybe abbreviated to a reasonable length.
+	<p>
+	This label is translated to the current locale (the current user's language).
+	<p>
+	This is intended for debugging so you can easily dump something into
+	the log file when you get an event.
+	<p>
+	Wigets that don't have a label don't add this field to the event map,
+	so make sure you use a reasonable default when using a map lookup for
+	this field: Don't use <i>nil</i>, use "" (the emtpy string) instead.
+	</td>
+    </tr>
+</table>
+
+<p>
+Even though at first glance the KeyEvent map looks very much like the
+<a href="#WidgetEvent">WidgetEvent</a>'s map, it is different in how the "ID"
+field is used: A KeyEvent uses it to return the key symbol, while a
+<a href="#WidgetEvent">WidgetEvent</a> returns the widget ID. This is intended
+to integrate more seamlessly with common usage of
+<a href="event-builtins.html#UserInput">UserInput()</a>: A YCP application can
+simply use
+<a href="event-builtins.html#UserInput">UserInput()</a> and check for a return
+value "CursorRight" etc. - which should not cause any trouble unless somebody
+uses this as a (badly chosen) widget ID.
 
 
 

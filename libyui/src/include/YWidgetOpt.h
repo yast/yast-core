@@ -119,6 +119,7 @@ struct YWidgetOpt
     YBoolOpt isHStretchable;
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
+    YBoolOpt keyEvents;	
     YBoolOpt easterEgg;
     YBoolOpt testMode;
 
@@ -148,7 +149,7 @@ struct YWidgetOpt
     YBoolOpt tiled;		// YImage
     YBoolOpt scaleToFit;	// YImage
     YBoolOpt countShowDelta;	// YPartitionSplitter
-    YLongOpt key_Fxx;		// YPushButton: No. of F-Key ( 1..24 ), 0 if none
+    YLongOpt key_Fxx;		// YPushButton: No. of F-Key (1..24), 0 if none
 
     YBoolOpt searchMode;	// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector

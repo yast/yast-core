@@ -25,6 +25,7 @@
 #include <ycp/YCPMap.h>
 #include <ycp/YCPSymbol.h>
 
+using std::string;
 class YWidget;
 
 
@@ -42,6 +43,7 @@ public:
 	UnknownEvent,
 	WidgetEvent,
 	MenuEvent,
+	KeyEvent,
 	CancelEvent,
 	TimeoutEvent,
 	DebugEvent
@@ -121,9 +123,6 @@ public:
     
     /**
      * Constructor.
-     *
-     * If this is a widget event, the widget that caused the event can be
-     * passed here. 
      **/
     YWidgetEvent( YWidget *	widget		= 0,
 		  EventReason	reason		= Activated, 
@@ -162,6 +161,56 @@ protected:
 };
 
 
+class YKeyEvent: public YEvent
+{
+public:
+    
+    /**
+     * Constructor.
+     *
+     * Create a key event with a specified key symbol (a text describing the
+     * key, such as "CursorLeft", "F1", etc.) and optionally the widget that
+     * currently has the keyboard focus.
+     **/
+    YKeyEvent( const string &	keySymbol,
+	       YWidget *	focusWidget = 0 );
+
+    /**
+     * Returns the key symbol - a text describing the
+     * key, such as "CursorLeft", "F1", "a", "A", etc.
+     **/
+    string keySymbol() const { return _keySymbol; }
+
+    /**
+     * Returns the widget that currently has the keyboard focus.
+     *
+     * This might as well be 0 if no widget has the focus or if the creator of 
+     * this event could not obtain that information.
+     **/
+    YWidget * focusWidget() const { return _focusWidget; }
+
+    /**
+     * Constructs a YCP map to be returned upon UI::WaitForEvent().
+     *
+     * Reimplemented from YEvent.
+     **/
+    virtual YCPMap ycpEvent();
+
+    /**
+     * Returns the ID to be returned upon UI::UserInput().
+     * This is the same as the "id" field of the ycpEvent() map.
+     *
+     * Reimplemented from YEvent.
+     **/
+    virtual YCPValue userInput();
+    
+protected:
+
+    string	_keySymbol;
+    YWidget * 	_focusWidget;
+};
+
+
 /**
  * @short abstract base class for events that just deal with an ID.
  **/
@@ -174,7 +223,7 @@ public:
      **/
     YSimpleEvent( EventType eventType, const YCPValue & 	id );
     YSimpleEvent( EventType eventType, const char * 		id );
-    YSimpleEvent( EventType eventType, const std::string	id );
+    YSimpleEvent( EventType eventType, const string &		id );
 
     /**
      * Returns the ID associated with this event.
@@ -212,7 +261,7 @@ public:
     
     YMenuEvent( const YCPValue & id )	: YSimpleEvent( MenuEvent, id )	{}
     YMenuEvent( const char *     id )	: YSimpleEvent( MenuEvent, id ) {}
-    YMenuEvent( std::string 	 id )	: YSimpleEvent( MenuEvent, id ) {}
+    YMenuEvent( const string & 	 id )	: YSimpleEvent( MenuEvent, id ) {}
 };
 
 

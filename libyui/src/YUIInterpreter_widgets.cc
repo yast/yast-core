@@ -108,11 +108,15 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
      *				<br>This option is intended used for automatically generated data, e.g., RadioButtons
      *				for software selections that come from file or from some other data base.
      *
-     * @option	key_F1		( NCurses only ) activate this widget with the F1 key
-     * @option	key_F2		( NCurses only ) activate this widget with the F2 key
-     * @option	key_Fxx		( NCurses only ) activate this widget with the Fxx key
-     * @option	key_F24		( NCurses only ) activate this widget with the F24 key
-     * @option	key_none	( NCurses only ) no function key for this widget
+     * @option	key_F1		(NCurses only) activate this widget with the F1 key
+     * @option	key_F2		(NCurses only) activate this widget with the F2 key
+     * @option	key_Fxx		(NCurses only) activate this widget with the Fxx key
+     * @option	key_F24		(NCurses only) activate this widget with the F24 key
+     * @option	key_none	(NCurses only) no function key for this widget
+     *
+     * @option	keyEvents	(NCurses only) Make UserInput() / WaitForEvent() return on keypresses within this widget.
+     *				Exactly which keys trigger such a key event is UI specific.
+     *				This is not for general use.
      *
      * @description
      *
@@ -139,6 +143,7 @@ YWidget *YUIInterpreter::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_autoShortcut ) opt.autoShortcut.setValue( true );
 	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue( true );
 	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue( true );
+	    else if ( sym == YUIOpt_keyEvents	) opt.keyEvents.setValue( true );
 	    else if ( sym == YUIOpt_key_F1	) opt.key_Fxx.setValue(	 1 );
 	    else if ( sym == YUIOpt_key_F2	) opt.key_Fxx.setValue(	 2 );
 	    else if ( sym == YUIOpt_key_F3	) opt.key_Fxx.setValue(	 3 );

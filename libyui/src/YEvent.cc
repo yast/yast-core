@@ -64,6 +64,7 @@ YEvent::toString( EventType eventType )
 	case UnknownEvent:		return "UnknownEvent";
 	case WidgetEvent:		return "WidgetEvent";
 	case MenuEvent:			return "MenuEvent";
+	case KeyEvent:			return "KeyEvent";
 	case CancelEvent:		return "CancelEvent";
 	case TimeoutEvent:		return "TimeoutEvent";
 	case DebugEvent:		return "DebugEvent";
@@ -177,6 +178,71 @@ YCPValue YWidgetEvent::userInput()
 
 
 
+YKeyEvent::YKeyEvent( const string &	keySymbol,
+		      YWidget *		focusWidget )
+    : YEvent( KeyEvent )
+    , _keySymbol( keySymbol )
+    , _focusWidget( focusWidget )
+{
+}
+
+
+YCPMap YKeyEvent::ycpEvent()
+{
+    // Use the generic YEvent's map as a base
+
+    YCPMap map = YEvent::ycpEvent();
+
+    if ( ! _keySymbol.empty() )
+    {
+	map->add( YCPString( "KeySymbol" ), YCPString( _keySymbol ) );
+	map->add( YCPString( "ID"	 ), YCPString( _keySymbol ) ); // just an alias
+    }
+
+    if ( _focusWidget )
+    {
+	// Add widget specific info:
+	// Add ID of the focus widget
+
+	map->add( YCPString( "FocusWidgetID" ), _focusWidget->id() ); // just an alias
+
+
+	// Add WidgetClass
+
+	const char * widgetClass = _focusWidget->widgetClass();
+
+	if ( widgetClass )
+	{
+	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YTextEntry, ...)
+		widgetClass++;
+
+	    map->add( YCPString( "FocusWidgetClass" ), YCPSymbol( widgetClass, true ) );
+	}
+
+
+	// Add the Widget's shortcut property.
+	// This is usually the label (translated to the user's locale).
+
+	string debugLabel = _focusWidget->debugLabel();
+
+	if ( ! debugLabel.empty() )
+	    map->add( YCPString( "FocusWidgetDebugLabel" ), YCPString( debugLabel ) );
+    }
+
+    return map;
+}
+
+
+YCPValue YKeyEvent::userInput()
+{
+    return YCPString( _keySymbol );
+}
+
+
+
+
+
+
 YSimpleEvent::YSimpleEvent( EventType 		eventType,
 			    const YCPValue &	id )
     : YEvent( eventType )
@@ -194,7 +260,7 @@ YSimpleEvent::YSimpleEvent( EventType 		eventType,
 
 
 YSimpleEvent::YSimpleEvent( EventType 		eventType,
-			    const string 	id )
+			    const string & 	id )
     : YEvent( eventType )
     , _id( YCPSymbol( id.c_str(), true ) )
 {
