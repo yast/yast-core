@@ -839,7 +839,7 @@ YBlock::createFunctionCall (const string name)
 #if DO_DEBUG
     y2debug ("allocating new YEFunction %s", name.c_str ());
 #endif
-    return new YEFunction (func_te->sentry ());
+    return new YEFunction (func_te);
 }
 
 // EOF

@@ -43,6 +43,7 @@ using std::string;
 struct ycodelist {
     struct ycodelist *next;
     YCodePtr code;
+    constTypePtr type;
 };
 typedef struct ycodelist ycodelist_t;
 

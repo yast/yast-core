@@ -26,7 +26,10 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/scope/Declaration.ycp:13 19 [true, $[1:2], #[DEADBEAF]]
-[Parser] tests/scope/Declaration.ycp:25 Missing 'list' parameter.
+[Parser] tests/scope/Declaration.ycp:25 Parameters don't match any declaration:
+[Parser] tests/scope/Declaration.ycp:25 hallo (120)
+[Parser] tests/scope/Declaration.ycp:25 Candidates are:
+[Parser] tests/scope/Declaration.ycp:25 map hallo (integer x, list st)
 Parsed:
 ----------------------------------------------------------------------
 Parser error

@@ -211,28 +211,8 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 #endif
 	    declarations->type = type;
 
-	    TableEntry *tentry = table->find (name);
-	    if (tentry != 0)			// check for overloading
-	    {
-		const SymbolEntryPtr entry = tentry->sentry();
-		declaration_t *decl = entry->declaration();
-		if (decl == 0)
-		{
-		    y2error ("table entry has wrong category");
-		    return;
-		}
-
-		while (decl->next != 0)
-		{
-		    decl = decl->next;
-		}
-		decl->next = declarations;
-	    }
-	    else		// first entry with that name
-	    {
-		SymbolEntryPtr sentry = new SymbolEntry (name, type, declarations, name_space);
-		table->enter (name, sentry, new Point (sentry, 0, namespace_point));
-	    }
+	    SymbolEntryPtr sentry = new SymbolEntry (name, type, declarations, name_space);
+	    declarations->tentry = table->enter (name, sentry, new Point (sentry, 0, namespace_point));
 
 #ifdef BUILTIN_STATISTICS
 	    FILE *fout = fopen ("/tmp/builtin-register.txt", "a");
@@ -475,8 +455,15 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    if (!error)		// full match
 		break;
 	}
-
-	decl = decl->next;
+	
+	if (decl->tentry->next_overloaded () != 0)
+	{
+	    decl = decl->tentry->next_overloaded ()->sentry ()->declaration ();
+	}
+	else
+	{
+	    decl = 0;
+	}
     }
 
     if (decl == 0)
@@ -491,7 +478,16 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    while (first_decl)
 	    {
 		ycp2error ("'%s' ", Decl2String (first_decl,true).c_str());
-		first_decl = first_decl->next;
+		
+		if (first_decl->tentry->next_overloaded () != 0)
+		{
+		    first_decl = first_decl->tentry->next_overloaded ()->sentry ()->declaration ();
+		}
+		else
+		{
+		    // done
+		    break;
+		}
 	    }
 	}
     }

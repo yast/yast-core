@@ -1,11 +1,19 @@
-[Parser] tests/scope/paramcheck.ycp:15 Excessive parameter in call to FortyTwo(...)
-[Parser] tests/scope/paramcheck.ycp:15 Bad parameter '<string> "nasty"'
-[Parser] tests/scope/paramcheck.ycp:16 Excessive parameter in call to Add(...)
-[Parser] tests/scope/paramcheck.ycp:16 Bad parameter '<const integer> 3'
-[Parser] tests/scope/paramcheck.ycp:17 Missing 'integer' parameter.
-[Parser] tests/scope/paramcheck.ycp:18 Parameter type mismatch in call to Add(...)
-[Parser] tests/scope/paramcheck.ycp:18 Expected 'integer', seen 'string'.
-[Parser] tests/scope/paramcheck.ycp:18 Bad parameter '<string> "one"'
+[Parser] tests/scope/paramcheck.ycp:15 Parameters don't match any declaration:
+[Parser] tests/scope/paramcheck.ycp:15 FortyTwo ("nasty")
+[Parser] tests/scope/paramcheck.ycp:15 Candidates are:
+[Parser] tests/scope/paramcheck.ycp:15 integer FortyTwo ()
+[Parser] tests/scope/paramcheck.ycp:16 Parameters don't match any declaration:
+[Parser] tests/scope/paramcheck.ycp:16 Add (1, 2, 3)
+[Parser] tests/scope/paramcheck.ycp:16 Candidates are:
+[Parser] tests/scope/paramcheck.ycp:16 integer Add (integer a, integer b)
+[Parser] tests/scope/paramcheck.ycp:17 Parameters don't match any declaration:
+[Parser] tests/scope/paramcheck.ycp:17 Add (17)
+[Parser] tests/scope/paramcheck.ycp:17 Candidates are:
+[Parser] tests/scope/paramcheck.ycp:17 integer Add (integer a, integer b)
+[Parser] tests/scope/paramcheck.ycp:18 Parameters don't match any declaration:
+[Parser] tests/scope/paramcheck.ycp:18 Add (1, "one")
+[Parser] tests/scope/paramcheck.ycp:18 Candidates are:
+[Parser] tests/scope/paramcheck.ycp:18 integer Add (integer a, integer b)
 Parsed:
 ----------------------------------------------------------------------
 Parser error

@@ -40,6 +40,8 @@ int SymbolTableDebug = 0;
 TableEntry::TableEntry (const char *key, SymbolEntryPtr entry, const Point *point, SymbolTable *table)
     : m_prev (0)
     , m_next (0)
+    , m_overloaded_prev (0)
+    , m_overloaded_next (0)
     , m_outer (0)
     , m_key (key)
     , m_entry (entry)
@@ -52,6 +54,8 @@ TableEntry::TableEntry (const char *key, SymbolEntryPtr entry, const Point *poin
 TableEntry::TableEntry (std::istream & str)
     : m_prev (0)
     , m_next (0)
+    , m_overloaded_prev (0)
+    , m_overloaded_next (0)
     , m_outer (0)
     , m_key (0)
     , m_entry (0)
@@ -112,6 +116,18 @@ const SymbolTable *
 TableEntry::table() const
 {
     return m_table;
+}
+
+TableEntry *
+TableEntry::next_overloaded () const
+{
+    return m_overloaded_next;
+}
+
+bool
+TableEntry::isOverloaded () const
+{
+    return m_overloaded_next != 0 || m_overloaded_prev != 0;
 }
 
 //-------------------------------------------------------------------
@@ -498,38 +514,60 @@ SymbolTable::enter (TableEntry *entry)
 #if DO_DEBUG
 		if (SymbolTableDebug) y2debug ("match, add as new scope");
 #endif
-		// put entry at start of scope chain
-
-		entry->m_outer = bucket;
-
-		// make entry new bucket list member
-
-		if (bucket->m_prev)
+		// first check, if the entry is from this table
+		if (bucket->sentry()->nameSpace() == entry->sentry()->nameSpace()
+		    && bucket->sentry()->category () == entry->sentry()->category ())
+		
 		{
 #if DO_DEBUG
-		    if (SymbolTableDebug) y2debug ("bucket->m_prev");
-#endif
-		    entry->m_prev = bucket->m_prev;
-		    bucket->m_prev->m_next = entry;
-		}
-		else		// bucket was first
-		{
-		    m_table[h] = entry;
-		    entry->m_prev = 0;
-		}
-
-		if (bucket->m_next)
-		{
-#if DO_DEBUG
-		    if (SymbolTableDebug) y2debug ("bucket->m_next");
-#endif
-		    entry->m_next = bucket->m_next;
-		    bucket->m_next->m_prev = entry;
+//		    printf ("overloading for '%s'\n", entry->sentry()->toString().c_str());
+		    if (SymbolTableDebug) y2debug ("overloading");
+#endif		    
+		    // put entry at end of the overloaded entries
+		    TableEntry *last = bucket;
+		    while (last->m_overloaded_next)
+		    {
+			last = last->m_overloaded_next;
+		    }
+		    
+		    last->m_overloaded_next = entry;
+		    entry->m_overloaded_prev = last;
 		}
 		else
-		    entry->m_next = 0;
+		{
+		    // put entry at start of scope chain
 
-		bucket->m_prev = bucket->m_next = 0;
+		    entry->m_outer = bucket;
+
+		    // make entry new bucket list member
+
+		    if (bucket->m_prev)
+		    {
+#if DO_DEBUG
+			if (SymbolTableDebug) y2debug ("bucket->m_prev");
+#endif
+			entry->m_prev = bucket->m_prev;
+			bucket->m_prev->m_next = entry;
+		    }
+		    else		// bucket was first
+		    {
+			m_table[h] = entry;
+			entry->m_prev = 0;
+		    }
+
+		    if (bucket->m_next)
+		    {
+#if DO_DEBUG
+			if (SymbolTableDebug) y2debug ("bucket->m_next");
+#endif
+			entry->m_next = bucket->m_next;
+			bucket->m_next->m_prev = entry;
+		    }
+		    else
+			entry->m_next = 0;
+
+		    bucket->m_prev = bucket->m_next = 0;
+		}
 
 		break;		// done
 	    }

@@ -2860,10 +2860,10 @@ function_call:
 			declaration_t *decl = sentry->declaration();
 
 #if DO_DEBUG
-			y2debug ("Builtin! (%s)%s", sentry->toString().c_str(), (decl->next == 0) ? "!" : "?");
+//			y2debug ("Builtin! (%s)%s", sentry->toString().c_str(), (decl->next == 0) ? "!" : "?");
 #endif
 			$$.v.val = decl;
-			if ((decl->next != 0)				// if overloaded
+			if ((decl->tentry->isOverloaded())				// if overloaded
 			    || (decl->flags & DECL_SYMBOL))		// or can have a symbol as parameter
 			{
 			    // start block for possible symbol parameters
@@ -2914,7 +2914,7 @@ function_call:
 #if DO_DEBUG
 			y2debug ("Doing function call, starting params");
 #endif
-			$$.c = new YEFunction (sentry);			// an extern function
+			$$.c = new YEFunction ($1.v.tval);			// an extern function
 			$$.t = sentry->type();
 #if DO_DEBUG
 			y2debug ("Function! (%s)", sentry->toString(true).c_str());
@@ -3062,16 +3062,16 @@ function_call:
 			constTypePtr finalT = function->finalize ();
 			if (finalT != 0)
 			{
-			    if (finalT->isError())
+			    yyLerror ("Parameters don't match any declaration:", $4.l);
+			    yyLerror (function->toString().c_str(), $4.l);
+        		    yyLerror ("Candidates are:", $4.l);
+
+			    // enumerate all possible calls
+			    TableEntry* tentry = $1.v.tval;
+			    while (tentry)
 			    {
-				yyLerror ("Parameters:", $4.l);
-				yyLerror (function->toString().c_str(), $4.l);
-				yyLerror ("  don't match declaration:", $4.l);
-				yyLerror (StaticDeclaration::Decl2String((declaration_t *)($3.v.val), true).c_str(), $4.l);
-			    }
-			    else
-			    {
-				yyMissingArgument (finalT, $1.l);
+				yyLerror (tentry->sentry ()->toString ().c_str (), $4.l);
+				tentry = tentry->next_overloaded ();
 			    }
 			    $$.t = 0;
 			}

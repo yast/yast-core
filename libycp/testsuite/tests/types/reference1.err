@@ -1,6 +1,7 @@
-[Parser] tests/types/reference1.ycp:3 Parameter type mismatch in call to increment(...)
-[Parser] tests/types/reference1.ycp:3 Expected 'integer &', seen 'const integer'.
-[Parser] tests/types/reference1.ycp:3 Bad parameter '<const integer> 1'
+[Parser] tests/types/reference1.ycp:3 Parameters don't match any declaration:
+[Parser] tests/types/reference1.ycp:3 increment (1)
+[Parser] tests/types/reference1.ycp:3 Candidates are:
+[Parser] tests/types/reference1.ycp:3 integer increment (integer & i)
 Parsed:
 ----------------------------------------------------------------------
 Parser error

@@ -32,6 +32,7 @@ using namespace std;
 
 class SymbolEntry;
 class SymbolTable;
+class TableEntry;
 
 // Only use BUILTIN_STATISTICS for testing. It will create three files
 // /tmp/builtin-X.txt which list all builtins registered, looked up
@@ -69,9 +70,9 @@ struct declaration {
     const char *signature;		// signature of variable/function/typedef (before registration)
     void *ptr;				// pointer to builtin value/function
     int flags;				// parameter acceptance, @ref DeclFlags
-    struct declaration *next;		// link to next overloaded declaration (internal use only)
     struct declaration *name_space;	// table of the namespace (internal use only)
     constTypePtr type;
+    TableEntry* tentry;
 };
 typedef struct declaration declaration_t;
 

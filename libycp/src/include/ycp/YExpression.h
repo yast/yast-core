@@ -397,10 +397,11 @@ public:
 class YEFunction : public YCode, public Y2Function
 {
     REP_BODY(YEFunction);
-    const SymbolEntryPtr m_entry;
+    TableEntry* m_entry;
+    SymbolEntryPtr m_sentry;
     ycodelist_t *m_parameters;
 public:
-    YEFunction (const SymbolEntryPtr entry);
+    YEFunction (TableEntry* entry);
     YEFunction (std::istream & str);
     ~YEFunction ();
     const SymbolEntryPtr entry () const;

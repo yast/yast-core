@@ -46,6 +46,11 @@ class TableEntry
     // hash bucket pointers (all TableEntries of a bucket have the same hash value)
     TableEntry *m_prev;
     TableEntry *m_next;
+    
+    // pointers to the next/prev entry with the same key and type -> overloaded
+    // entries. Only the first one has a valid m_outer pointer!!!
+    TableEntry *m_overloaded_prev;
+    TableEntry *m_overloaded_next;
 
     // nesting pointers, implements stacked environments (of nested blocks)
     //   when adding a new entry (via SymbolTable::enter())
@@ -75,6 +80,8 @@ public:
     ~TableEntry ();
     const char *key () const;
     TableEntry *next () const;
+    TableEntry *next_overloaded () const;
+    bool isOverloaded () const;
     const SymbolTable *table () const;
     SymbolEntryPtr sentry () const;
     const Point *point () const;
