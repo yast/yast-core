@@ -560,12 +560,12 @@ PkgModuleFunctions::GetPackages(YCPList args)
 
 
 /**
- * @builtin PkgUpdateAll () -> count
+ * @builtin PkgUpdateAll (bool delete_unmaintained) -> [ integer affected, integer unknown ]
  *
  * mark all packages for installation which are installed and have
  * an available candidate.
  *
- * @return [ integer affected, list of not installed packages, list of not deleted packages ]
+ * @return [ integer affected, integer unknown ]
  *
  * This will mark packages for installation *and* for deletion (if a
  * package provides/obsoletes another package)
@@ -576,28 +576,19 @@ PkgModuleFunctions::GetPackages(YCPList args)
 YCPValue
 PkgModuleFunctions::PkgUpdateAll (YCPList args)
 {
-    std::list<PMPackagePtr> noinstall;
-    std::list<PMPackagePtr> nodelete;
+    if ((args->size() != 1)
+	|| !(args->value(0)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::GetPackages");
+    }
 
-    int count = _y2pm.packageManager().doUpdate (noinstall, nodelete);
+    PMUpdateStats stats;
+    stats.delete_unmaintained = args->value(0)->asBoolean()->value();
+    _y2pm.packageManager().doUpdate (stats);
 
     YCPList ret;
-    ret->add (YCPInteger (count));
-
-    YCPList noinslist;
-    YCPList nodellist;
-
-    for (std::list<PMPackagePtr>::iterator it = noinstall.begin(); it != noinstall.end(); ++it)
-    {
-	noinslist->add (YCPString ((*it)->name()));
-    }
-    ret->add (noinslist);
-
-    for (std::list<PMPackagePtr>::iterator it = nodelete.begin(); it != nodelete.end(); ++it)
-    {
-	nodellist->add (YCPString ((*it)->name()));
-    }
-    ret->add (nodellist);
+    ret->add (YCPInteger ((long long)stats.totalToInstall()));
+    ret->add (YCPInteger ((long long)_y2pm.packageManager().updateSize()));
 
     return ret;
 }
