@@ -89,7 +89,10 @@ Parser::~Parser()
 void
 Parser::setInput(FILE *file, const char *filename)
 {
-    if (filename) file_name = filename;
+    if (filename)
+    {
+	setFilename (filename);
+    }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (file, filename);
     if (buffered) m_scanner->setBuffered ();
@@ -100,7 +103,7 @@ Parser::setInput(FILE *file, const char *filename)
 void
 Parser::setInput(const char *buf)
 {
-    file_name = "";
+    setFilename ("");
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (buf);
     if (buffered) m_scanner->setBuffered ();
@@ -111,7 +114,10 @@ Parser::setInput(const char *buf)
 void
 Parser::setInput(int fd, const char *filename)
 {
-    if (filename) file_name = filename;
+    if (filename)
+    {
+	setFilename (filename);
+    }
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (fd, filename);
     if (buffered) m_scanner->setBuffered ();
