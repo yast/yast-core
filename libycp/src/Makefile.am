@@ -10,8 +10,7 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
 	-DYAST2DIR=\"$(prefix)/share/YaST2\"	\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-DEXECCOMPDIR=\"${execcompdir}\"	\
-	-DLOCALEDIR=\"${localedir}\"		\
-	-DDO_DEBUG=$(DO_DEBUG)
+	-DLOCALEDIR=\"${localedir}\"
 
 lib_LTLIBRARIES = libycp.la
 
