@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov 27 16:01:36 CET 2003 - visnov@suse.cz
+
+- ignore function prototypes
+- ignore variable references from NI
+
+-------------------------------------------------------------------
 Mon Nov 24 13:20:01 CET 2003 - ma@suse.de
 
 - Overworked Pkg::Source... functions. Removed internal InstSrc cache

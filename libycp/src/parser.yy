@@ -547,14 +547,22 @@ statement_as_block:
 /* -------------------------------------------------------------- */
 /* Declarations. They have a small arithmetic themselves  */
 
+/* we ignore ampersand as a reference character in the new interpreter */
 typedecl:
+	typedecl_real		{ $$.e = $1.e ; }
+|	typedecl_real '&'	{ $$.e = $1.e ; }
+;
+
+typedecl_real:
 	ANY
 |	YCP_DECLTYPE
 |	BLOCK			{ $$.e = YCPDeclType(YT_BLOCK); } 
 |	BLOCK ST typedecl GT	{ $$.e = YCPDeclType(YT_BLOCK); } 
 |	MAP 			{ $$.e = YCPDeclType(YT_MAP); } 
+|	MAP '&'			{ $$.e = YCPDeclType(YT_MAP); } 
 |	MAP ST typedecl ',' typedecl GT	{ $$.e = YCPDeclType(YT_MAP); } 
 |	LIST			{ $$.e = YCPDeclType(YT_LIST); }
+|	LIST '&'		{ $$.e = YCPDeclType(YT_LIST); }
 |	LIST ST typedecl GT	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
 |	LIST '(' typedecl ')'	{ $$.e = YCPDeclList($3.e->asValue()->asDeclaration()); }
 |	'[' EMPTY ']'		{ $$.e = YCPDeclStruct(); }
@@ -658,7 +666,11 @@ assignment:
 /* Macro defintion */
 
 definition:
-	opt_global DEFINE opt_type definition_prefix ')' expression
+	opt_global DEFINE opt_type definition_prefix ')' ';' 
+	    {
+	    }
+
+|	opt_global DEFINE opt_type definition_prefix ')' expression
 	    {
 		YCPBuiltin b(($1.l == 1)?YCPB_GLOBALDEFINE:YCPB_LOCALDEFINE);
 		b->add($4.e->asValue());
