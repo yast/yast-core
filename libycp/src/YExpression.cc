@@ -1584,6 +1584,11 @@ YEBuiltin::~YEBuiltin ()
 	delete parm;
 	parm = next;
     }
+    
+    if (m_parameterblock)
+    {
+	delete m_parameterblock;
+    }
 }
 
 
