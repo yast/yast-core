@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Thu Jan 15 16:54:50 CET 2004 - mvidner@suse.cz
+
+- agents-perl: added YaST::SCRAgent
+- agent-probe: return also SMBIOS info for .bios subpath (lslezak)
+- dropped WFM::GetClientName (arvin)
+- 2.9.17
+
+-------------------------------------------------------------------
 Thu Jan  8 12:56:44 CET 2004 - mvidner@suse.cz
 
 - ini agent: Read/Write (.all)
