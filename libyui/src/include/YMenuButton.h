@@ -167,13 +167,22 @@ public:
     virtual ~YMenuItem() {}
 
 
-    const YMenu *			getParent()	const 	{ return parent;	}
-    const YCPValue &			getId()		const 	{ return id;	}
-    int					getIndex()	const 	{ return index;	}
-    const YCPString &			getLabel()	const 	{ return label;	}
-    virtual bool			hasChildren()	const	{ return false;	}
-    YMenuItemList &			itemList()		{ return items; }
-    virtual bool			isMenu()	const	{ return false; }
+    const YMenu *	getParent()	const 	{ return parent;	}
+    const YCPValue &	getId()		const 	{ return id;	}
+    int			getIndex()	const 	{ return index;	}
+    const YCPString &	getLabel()	const 	{ return label;	}
+    virtual bool	hasChildren()	const	{ return false;	}
+    YMenuItemList &	itemList()		{ return items; }
+    virtual bool	isMenu()	const	{ return false; }
+
+    /**
+     * Set this menu item's label. This will NOT have any immediate
+     * visual effect with this base class method - it only stores the new label
+     * for later retrieval. If a visual effect is desired, derived classes
+     * should overwrite this method. Don't forget to call this base class
+     * method in that case!
+     **/
+    virtual void	setLabel( YCPString newLabel ) { label = newLabel; }
 
     
 protected:
