@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb  3 15:06:49 CET 2004 - visnov@suse.cz
+
+- Fix UI::queryWidget for terms in `Table 
+
+-------------------------------------------------------------------
 Tue Feb  3 14:09:56 CET 2004 - visnov@suse.cz
 
 - Fix some Pkg builtins 
