@@ -1,5 +1,5 @@
 [YCP] tests/read2.ycp:2 .resolver ["search", "nameserver", "domain", "sortlist", "options"]
-[YCP] tests/read2.ycp:3 .resolver.search suse.de
+[YCP] tests/read2.ycp:3 .resolver.search ["suse.de"]
 [YCP] tests/read2.ycp:4 .resolver.nameserver ["10.10.0.1", "10.10.128.1"]
 [YCP] tests/read2.ycp:5 .resolver.domain suse.de
 [YCP] tests/read2.ycp:6 .resolver.sortlist nil

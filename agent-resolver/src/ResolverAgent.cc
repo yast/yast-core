@@ -217,7 +217,7 @@ static int fillCache (const char *filename)
 	*lptr++ = 0;
 
 	YCPValue value = YCPNull();
-	char *vptr = lptr;
+	char *vptr = eatWhitespaces (lptr);
 
 	y2debug ("key(%s)", lbuf);
 
@@ -236,7 +236,6 @@ static int fillCache (const char *filename)
 
 	    for (;;)
 	    {
-		vptr = lptr;
 		lptr = nextWhitespace (vptr);
 		if ((lptr == 0)
 		    || (lptr == vptr))
@@ -245,6 +244,7 @@ static int fillCache (const char *filename)
 		}
 		*lptr++ = 0;
 		ret->add (YCPString (vptr));
+		vptr = eatWhitespaces (lptr);
 	    }
 
 	    value = ret;
