@@ -82,7 +82,7 @@ while ( <STDIN> )
 	    }
 	}
 
-	ycp::Return ( \%mod );
+	ycp::Return ( \%mod, 1 );
 
     }
 
