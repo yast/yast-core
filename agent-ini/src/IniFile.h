@@ -147,6 +147,11 @@ private:
     string comment;
     /** index to IniParser::sections using which this section was found */
     int read_by;
+    /** index to IniParser::rewrites for filename - section name mapping
+     * It appears that read_by was used for both purposes,
+     * causing bug (#19066).
+     */
+    int rewrite_by;
 
     /** dirty flag */
     bool dirty;
@@ -175,7 +180,7 @@ private:
      * Get section property -- comment or read-by
      * @param p path to value
      * @param out output is placed here as YCPString or YCPInteger
-     * @param what 0 - comment, other - read-by
+     * @param what 0 - comment, 1 - rewrite_by, other - read-by
      * @param depth Index of current path component. This function is
      * recursive and depth marks the depth of recursion. We look for
      * path[depth] in current "scope"
@@ -205,7 +210,7 @@ private:
      * Set section comment or read-by. Creates recursively all non-existing subsections.
      * @param p path to set value on
      * @param in value to set (YCPString or YCPInteger)
-     * @param what 0 -- comment, other -- read-by.
+     * @param what 0 -- comment, 1 - rewrite_by, other -- read-by.
      * @param depth see getSectionProp
      * @return 0
      */
@@ -251,7 +256,7 @@ public:
 	: ignore_case (false), ignore_style (0), allow_values (true), 
 	  allow_sections (true), allow_subsub (true), flat (false),
 	  index (), name (), end_comment (), comment (), 
-	  read_by(-1), dirty (false), values(), sections()
+	  read_by(-1), rewrite_by(-1), dirty (false), values(), sections()
 	    {}
     ~IniSection () {}
 
@@ -266,7 +271,7 @@ public:
 	: ignore_case (ic), ignore_style (is), allow_values (true), 
 	  allow_sections (allow_ss), allow_subsub (allow_ss), flat (false),
 	  index (), name (n), end_comment (), comment (), 
-	  read_by(0), dirty (true), values(), sections()
+	  read_by(0), rewrite_by(0), dirty (true), values(), sections()
 	    {}
 
     /**
@@ -284,8 +289,9 @@ public:
      * @param name section name
      * @param comment comment
      * @param rb read-by
+     * @param wb rewrite-by. if -2 (default), it is not changed
      */
-    void initSection (const string&name,const string&comment,int rb);
+    void initSection (const string&name,const string&comment,int rb, int wb=-2);
     /**
      * This function has very special purpose, it ensures that top-section
      * delimiter is not written when saving multiple files.
@@ -296,6 +302,8 @@ public:
     void setComment (const char*c)      { dirty = true; comment = c; }
     /** sets dirty flag also */
     void setReadBy (int c) 	     	{ dirty = true; read_by = c; }
+    /** sets dirty flag also */
+    void setRewriteBy (int c) 	     	{ dirty = true; rewrite_by = c; }
     /** 
      * If there is no comment at the beginning and no values and no
      * sections, it is better to set is as comment at the beginning.
@@ -314,6 +322,7 @@ public:
     void setNesting (bool no_sub_sec, bool global_val);
     
     int getReadBy() { return read_by; }
+    int getRewriteBy() { return rewrite_by; }
     /**
      * Gets section on a path. Recursive. Attention! This function
      * aborts when it doesn't find the section! Use with care!
@@ -344,16 +353,18 @@ public:
 
     /**
      * Generic interface to SCR::Read
+     * @param rewrite a #19066 hack - if rewriting is active, .st accesses rewrite_by
      */
-    int Read (const YCPPath&p, YCPValue&out);
+    int Read (const YCPPath&p, YCPValue&out, bool rewrite);
     /**
      * Generic interface to SCR::Dir
      */
     int Dir (const YCPPath&p, YCPList&out);
     /**
      * Generic interface to SCR::Write
+     * @param rewrite a #19066 hack - if rewriting is active, .st accesses rewrite_by
      */
-    int Write (const YCPPath&p, const YCPValue&v);
+    int Write (const YCPPath&p, const YCPValue&v, bool rewrite);
     /**
      * Generic delete for values, sections.
      * @param p path to delete
@@ -379,9 +390,9 @@ public:
     IniSection& getSection (const char*name);
     /**
      * @param name name of a section
-     * @return read-by of section or -1 if the section wasn't found
+     * @return rewrite-by of section or -1 if the section wasn't found
      */
-    int getSubSectionReadBy (const char*name);
+    int getSubSectionRewriteBy (const char*name);
 
     bool isDirty ();
     /** set all subsection and values to clean */

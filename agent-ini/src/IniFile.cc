@@ -85,7 +85,7 @@ void IniSection::initValue (const string&key,const string&val,const string&comme
 	}
     index.push_back(IniName (k,IniName::VALUE));
 }
-void IniSection::initSection (const string&name,const string&comment,int rb)
+void IniSection::initSection (const string&name,const string&comment,int rb, int wb)
 {
     string k = change_case (name, ignore_case, ignore_style);
     map<const string,IniSection>::iterator v = sections.find(k);
@@ -95,6 +95,7 @@ void IniSection::initSection (const string&name,const string&comment,int rb)
 		{
 		    v->second.comment = comment;
 		    v->second.read_by = rb;
+		    if (wb != -2) v->second.rewrite_by = wb;
 		    v->second.name = k;
 		}
 	    index.remove(IniName (k,IniName::SECTION));
@@ -105,6 +106,7 @@ void IniSection::initSection (const string&name,const string&comment,int rb)
 	    s.dirty = false;
 	    s.comment = comment;
 	    s.read_by = rb;
+	    if (wb != -2) s.rewrite_by = wb;
 	    s.name = k;
 	    s.setIgnoreCase (ignore_case, ignore_style);
 	    s.allow_sections = s.allow_subsub = allow_subsub;
@@ -203,10 +205,12 @@ int IniSection::getSectionProp (const YCPPath&p, YCPValue&out, int what, int dep
 {
     if (depth>=p->length())
 	{   //We are in THE section. Find the comment here 
-	    if (what)
-		out = YCPInteger (read_by);
-	    else
+	    if (what == 0)
 		out = YCPString (comment);
+	    else if (what == 1)
+		out = YCPInteger (rewrite_by);
+	    else
+		out = YCPInteger (read_by);
 	    return 0;
 	}
     // Otherwise it must be section
@@ -235,7 +239,7 @@ int IniSection::Delete (const YCPPath&p)
       return delSection (p, 1);
     return -1;
 }
-int IniSection::Write (const YCPPath&p, const YCPValue&v)
+int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
 {
     if (flat)
 	return setValueFlat (p, v);
@@ -254,7 +258,7 @@ int IniSection::Write (const YCPPath&p, const YCPValue&v)
     if ((s == "s" || s == "section" || s == "sc" || s == "section_comment" || s == "sectioncomment") && v->isString ())
       return setSectionProp (p, v, 0, 1);
     if ((s == "st" || s == "section_type" || s == "sectiontype") && v->isInteger ())
-      return setSectionProp (p, v, 1, 1);
+      return setSectionProp (p, v, rewrite? 1:2, 1);
     return -1;
 }
 int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int depth)
@@ -267,15 +271,20 @@ int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int
 		{
 		    y2debug ("Adding section %s", p->toString().c_str());
 		    IniSection s;	
-		    if (what)
+		    s.comment = "";
+		    s.read_by = 0;
+		    s.rewrite_by = 0;
+		    if (what == 0)
 		    {
-			s.read_by = in->asInteger()->value();
-			s.comment = "";
+			s.comment = in->asString()->value();
+		    }
+		    else if (what == 1)
+		    {
+			s.rewrite_by = in->asInteger()->value();
 		    }
 		    else
 		    {
-			s.comment = in->asString()->value();
-			s.read_by = 0;
+			s.read_by = in->asInteger()->value();
 		    }
 		    s.name = k;
 		    s.setIgnoreCase (ignore_case, ignore_style);
@@ -286,10 +295,12 @@ int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int
 		    dirty = true;
 		}
 	    else
-		if (what)
-		    (*it).second.setReadBy (in->asInteger()->value());
-		else
+		if (what == 0)
 		    (*it).second.setComment (in->asString()->value_cstr());
+		else if (what == 1)
+		    (*it).second.setRewriteBy (in->asInteger()->value());
+		else
+		    (*it).second.setReadBy (in->asInteger()->value());
 	    return 0;
 	}
     // Otherwise it must be section
@@ -468,7 +479,7 @@ int IniSection::setValueFlat (const YCPPath&p, const YCPValue&out)
     return 0;
 }
 
-int IniSection::Read (const YCPPath&p, YCPValue&out)
+int IniSection::Read (const YCPPath&p, YCPValue&out, bool rewrite)
 {
     if (flat)
 	return getValueFlat (p, out);
@@ -487,7 +498,7 @@ int IniSection::Read (const YCPPath&p, YCPValue&out)
     else if (s == "sc" || s == "section_comment" || s == "sectioncomment")
 	return getSectionProp (p, out, 0, 1);
     else if (s == "st" || s == "section_type" || s == "sectiontype")
-	return getSectionProp (p, out, 1, 1);
+	return getSectionProp (p, out, rewrite? 1:2, 1);
 
     y2error ("I do not know what to read from %s.", p->toString().c_str());
     return -1;
@@ -544,12 +555,12 @@ IniEntry&IniSection::getEntry (const char*n)
     return (*i).second;
 }
 
-int IniSection::getSubSectionReadBy (const char*name)
+int IniSection::getSubSectionRewriteBy (const char*name)
 {
     IniSectionMapIterator i = sections.find(name);
     if (i == sections.end())
 	return -1;
-    return (*i).second.getReadBy ();
+    return (*i).second.getRewriteBy ();
 }
 IniSection&IniSection::getSection (const char*n)
 {

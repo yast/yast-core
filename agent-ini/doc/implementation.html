@@ -37,6 +37,16 @@ information if it is a value or a section. It is necessary to keep the
 information about order. Maps <b>values</b> and <b>sections</b> contain all
 sub values and sub sections.
 </p>
+<p>
+When the multiple file feature was added, we got another
+set of rules - a mapping between section name and file name. But guess
+what, the member read_by was used for both value rules and name
+rewrite rules. It is a mess, causing bug #19066.<br>
+So rewrite_by was added, but there are kludges: .section_type accesses
+read_by or rewrite_by depending on whether there are none or any
+rewrite rules, respectively. This information is passed as an extra
+parameter to IniSection::{Read,Write}.
+</p>
 <h3>IniParser</h3>
 <p>
 IniParser does parsing of the ini file according to the control file. IniAgent

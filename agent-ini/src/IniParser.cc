@@ -504,7 +504,7 @@ int IniParser::parse()
 		{
 		    FileDescr fdsc (*f);
 		    multi_files[*f] = fdsc;
-		    inifile.initSection (section_name, "", section_index);
+		    inifile.initSection (section_name, "", -1, section_index);
 		    parse_helper(inifile.getSection(section_name.c_str()));
 		    scanner_stop();
 		}
@@ -520,7 +520,7 @@ int IniParser::parse()
 			y2debug ("File %s changed. Reloading.", *f);
 			FileDescr fdsc (*f);
 			multi_files [*f] = fdsc;
-			inifile.initSection (section_name, "", section_index);
+			inifile.initSection (section_name, "", -1, section_index);
 			parse_helper(inifile.getSection(section_name.c_str()));
 			scanner_stop();
 		    }
@@ -918,12 +918,12 @@ int IniParser::write()
 	IniFileIndex::iterator i = index.begin();
 	for (;i!=index.end();i++)
 	    {
+		const char * iname =  (*i).name.c_str();
 		if ((*i).isSection())
 		    {
-			IniSection&s = inifile.getSection ((*i).name.c_str());
-			string filename = (*i).name.c_str();
-			int wb = s.getReadBy ();
-			filename = getFileName (filename, wb);
+			IniSection&s = inifile.getSection (iname);
+			int wb = s.getRewriteBy (); // bug #19066 
+			string filename = getFileName (iname, wb);
 
 			deleted_sections.erase (filename);
 			if (!s.isDirty ()) {

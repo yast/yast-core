@@ -358,6 +358,10 @@ public:
      * @return rewritten file name
      */
     string getFileName (const string&sec, int rb);
+    /**
+     * Using file name rewriting?
+     */
+    bool HaveRewrites () { return rewrite_len > 0; }
 };
 
 #endif//__IniParser_h__

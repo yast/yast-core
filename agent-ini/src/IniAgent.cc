@@ -62,7 +62,7 @@ YCPValue IniAgent::Read(const YCPPath &path, const YCPValue& arg)
     parser.UpdateIfModif ();
 
     YCPValue out = YCPVoid ();
-    if (!parser.inifile.Read (path, out))
+    if (!parser.inifile.Read (path, out, parser.HaveRewrites ()))
 	return out;
 
     return YCPVoid();
@@ -97,12 +97,12 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
 	if (value->isString () || value->isInteger())
 	    {
 		ok = true;
-		if (parser.inifile.Write (path, value))
+		if (parser.inifile.Write (path, value, parser.HaveRewrites ()))
 		    b = false;
 	    }
         else if (value->isVoid ())
 	    {
-		int rb  = -1;
+		int wb  = -1;
 		string del_sec = "";
 		ok = true;
 		if (2 == path->length ())
@@ -111,14 +111,14 @@ YCPValue IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCPVa
 		    if ("s" == pc || "section" == pc)
 		    {	// request to delete section. Find the file name
 			del_sec = path->component_str (1);
-			rb = parser.inifile.getSubSectionReadBy (del_sec.c_str());
+			wb = parser.inifile.getSubSectionRewriteBy (del_sec.c_str());
 		    }
 		}
 		if (parser.inifile.Delete (path))
 		    b = false;
 		else if (del_sec != "")
 		{
-		    parser.deleted_sections.insert (parser.getFileName (del_sec, rb));
+		    parser.deleted_sections.insert (parser.getFileName (del_sec, wb));
 		}
 	    }
 	else
