@@ -324,7 +324,7 @@ PkgModuleFunctions::SourceFinish (YCPList args)
 /**
  * @builtin Pkg::SourceFinishAll () -> bool
  *
- * disables all known source
+ * disables all known sources
  *
  */
 YCPValue
