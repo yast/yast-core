@@ -279,34 +279,34 @@ static int flushCache (const char *filename)
     if (!cacheDirty)
 	return 0;
 
-    FILE *f;
-
-    f = fopen (filename, "w+");
+    FILE* f = fopen (filename, "w+");
     if (f == 0) {
 	y2error ("Can't open %s for writing", filename);
 	return -1;
     }
 
+    fchmod (fileno (f), 0644);
+
     // first fill the info header, if needed
-    if (writeHeader) {
+    if (writeHeader)
+    {
         int i = 0;
         YCPValue info = YCPNull ();
         fprintf (f, "### BEGIN INFO\n#\n");
         while (headers[i].key != 0)
-            {
-                info = localCache->asMap ()->value (YCPString (headers[i].key));
-                if (info.isNull () || info->isVoid ())
-                    y2warning ("Info key %s not found!", headers[i].key);
-                else
-                    {
-                        if (info->isString ())
-                            fprintf (f, "%s %s\n", headers[i].tag, info->asString ()->value_cstr ());
-            else
-                y2error ("Wrong type for info key %s!", headers[i].tag);
-                    }
-                i = i + 1;
-            }
-
+	{
+	    info = localCache->asMap ()->value (YCPString (headers[i].key));
+	    if (info.isNull () || info->isVoid ())
+		y2warning ("Info key %s not found!", headers[i].key);
+	    else
+	    {
+		if (info->isString ())
+		    fprintf (f, "%s %s\n", headers[i].tag, info->asString ()->value_cstr ());
+		else
+		    y2error ("Wrong type for info key %s!", headers[i].tag);
+	    }
+	    i = i + 1;
+	}
         fprintf (f, "#\n### END INFO\n#\n");
     }
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Sep 09 16:11:26 CEST 2002 - arvin@suse.de
+
+- explicit set permissions of /etc/resolv.conf to 0644 (bug #19188)
+
+-------------------------------------------------------------------
 Mon Sep  9 14:03:32 CEST 2002 - kkaempf@suse.de
 
 - reduce logging
