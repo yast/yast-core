@@ -1575,25 +1575,25 @@ YCPValue
 YEBracket::evaluate (bool cse)
 {
     YCPValue var_value = m_var->evaluate (cse);
-    YCPValue def_value = m_def->evaluate (cse);
 
     // parse time?
     if (cse
-	&& (var_value.isNull ()
-	    || def_value.isNull ()) )
+	&& var_value.isNull ())
     {
 	return YCPNull ();
     }
+
     if (var_value.isNull()
 	|| var_value->isVoid())
     {
-	return def_value;
+	return m_def->evaluate (cse);
     }
 
     YCPValue arg_value = m_arg->evaluate (cse);
 
     // parse time?
-    if (cse && arg_value.isNull () )
+    if (cse
+	&& arg_value.isNull () )
     {
 	return YCPNull ();
     }
@@ -1602,7 +1602,7 @@ YEBracket::evaluate (bool cse)
 	|| arg_value->isVoid()
 	|| !arg_value->isList())
     {
-	return def_value;
+	return m_def->evaluate (cse);
     }
 
     YCPValue result = var_value;
@@ -1613,7 +1613,7 @@ YEBracket::evaluate (bool cse)
 	YCPValue v = indices->value(i);
 	if (v.isNull())
 	{
-	    result = def_value;
+	    result = YCPNull();
 	    ycp2error ("Invalid bracket parameter nil");
 	    break;
 	}
@@ -1622,7 +1622,7 @@ YEBracket::evaluate (bool cse)
 	    YCPList l = result->asList();
 	    if (!v->isInteger())
 	    {
-		result = def_value;
+		result = YCPNull();
 		ycp2error ("Invalid bracket parameter for list");
 		break;
 	    }
@@ -1631,7 +1631,7 @@ YEBracket::evaluate (bool cse)
 	    if ((idx < 0)
 		|| (idx >= l->size()))
 	    {
-		result = def_value;
+		result = YCPNull();
 		break;
 	    }
 	    result = l->value (idx);
@@ -1641,7 +1641,7 @@ YEBracket::evaluate (bool cse)
 	    YCPTerm t = result->asTerm();
 	    if (!v->isInteger())
 	    {
-		result = def_value;
+		result = YCPNull();
 		ycp2error ("Invalid bracket parameter for term");
 		break;
 	    }
@@ -1650,7 +1650,7 @@ YEBracket::evaluate (bool cse)
 	    if ((idx < 0)
 		|| (idx >= t->size()))
 	    {
-		result = def_value;
+		result = YCPNull();
 		break;
 	    }
 	    result = t->value (idx);
@@ -1663,17 +1663,21 @@ YEBracket::evaluate (bool cse)
 	else
 	{
 	    ycp2error ("Bracket expression for '%s' does not evaluate to a list or a map.", result->toString ().c_str ());
-	    result = def_value;
+	    result = YCPNull();
 	    break;
 	}
 
 	if (result.isNull())
 	{
-	    result = def_value;
 	    break;
 	}
 
     } // while bracket indices
+
+    if (result.isNull())
+    {
+	result = m_def->evaluate (cse);
+    }
 
     return result;
 }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov 18 21:17:16 CET 2004 - kkaempf@suse.de
+
+- increase bison stack limit (#45509)
+- evaluate bracket default expression only if required (#48337)
+
+-------------------------------------------------------------------
 Wed Nov 17 12:22:53 CET 2004 - nashif@suse.de
 
 - Fixed nfb for docbook
