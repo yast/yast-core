@@ -448,7 +448,7 @@ YLocale::YLocale (std::istream & str)
 
 YLocale::~YLocale ()
 {
-    free ((void *)m_locale);
+    delete[] m_locale;
 }
 
 

@@ -526,8 +526,8 @@ YELocale::YELocale (std::istream & str)
 
 YELocale::~YELocale ()
 {
-    free ((void *)m_singular);
-    free ((void *)m_plural);
+    delete[] m_singular;
+    delete[] m_plural;
 }
 
 

@@ -141,7 +141,7 @@ YCPListRep::fsortlist(const YCPCodeCompare& cmp)
 const YCPElementRep*
 YCPListRep::shallowCopy() const
 {
-    y2debug ("YCPListRep::shallowCopy" );
+    y2debug ("YCPListRep::shallowCopy for %s", toString().c_str() );
     YCPListRep* newlist = new YCPListRep ();
     newlist->reserve (size());
     for (int i=0; i<size(); i++)

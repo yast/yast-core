@@ -390,6 +390,7 @@ string
 SymbolEntry::toString (bool with_type) const
 {
     string s = (with_type && m_global) ? "global " : "";
+    y2debug ("SymbolEntry::toString %p: name '%s'", this, m_name.asString().c_str());
 #if DO_DEBUG
     y2debug ("SymbolEntry::toString %p: with_type %d, cat %s, name '%s'", this, with_type, catString().c_str(), m_name.asString().c_str());
 #endif
