@@ -124,7 +124,7 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 Y2Component*
 Y2CCPlugin::provideNamespace(const char* name_space)
 {
-    y2milestone ("Y2PluginComponent tries to locate namespace '%s'", name_space);
+    y2debug ("Y2PluginComponent tries to locate namespace '%s'", name_space);
     Y2PluginComponent* comp = NULL;
     // try to load the library
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
@@ -134,7 +134,7 @@ Y2CCPlugin::provideNamespace(const char* name_space)
 	if (filename.empty ())
 	    continue;
 
-	y2milestone ("Trying file '%s'", filename.c_str ());
+	y2debug ("Trying file '%s'", filename.c_str ());
     
 	comp = new Y2PluginComponent (filename, name_space, name_space, name_space);
 	if (comp) break;
