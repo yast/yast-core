@@ -31,7 +31,7 @@
  *
  */
 
-static enum hd_status_value_t
+static hd_status_value_t
 sym_to_status (const YCPSymbol& symbol)
 {
     hd_status_value_t status = status_unknown;
@@ -58,7 +58,7 @@ sym_to_status (const YCPSymbol& symbol)
  */
 
 static const YCPSymbol
-status_to_sym (enum hd_status_value_t status)
+status_to_sym (hd_status_value_t status)
 {
     switch (status)
     {
@@ -100,11 +100,11 @@ readStatus (hd_data_t *hd_data, int which, const YCPValue& arg)
     switch (which)
     {
 	case 0:		// configured
-	    return status_to_sym ((enum hd_status_value_t)hd->status.configured);
+	    return status_to_sym ((hd_status_value_t)hd->status.configured);
 	case 1:		// available
-	    return status_to_sym ((enum hd_status_value_t)hd->status.available);
+	    return status_to_sym ((hd_status_value_t)hd->status.available);
 	case 2:		// needed
-	    return status_to_sym ((enum hd_status_value_t)hd->status.needed);
+	    return status_to_sym ((hd_status_value_t)hd->status.needed);
 	case 3:		// config_string
 	    return YCPString ((hd->config_string == NULL) ? "" : hd->config_string);
 	default:
@@ -495,7 +495,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    return YCPError ("Argument must be symbol", YCPBoolean (false));
 		}
 
-		enum hd_status_value_t status_value = sym_to_status (writeval->asSymbol());
+		hd_status_value_t status_value = sym_to_status (writeval->asSymbol());
 
 		switch (typelist[1])
 		{

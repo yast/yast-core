@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 25 09:51:34 CEST 2003 - arvin@suse.de
+
+- correct C++ syntax in HwProbe.cc
+
+-------------------------------------------------------------------
 Tue Jun 24 11:34:22 CEST 2003 - cschum@suse.de
 
 - Removed classes ExternalProgram and ExternalDataSource from
