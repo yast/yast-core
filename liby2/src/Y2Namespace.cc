@@ -332,8 +332,6 @@ Y2CPPFunction::Y2CPPFunction (Y2Namespace* parent, string name, Y2CPPFunctionCal
     , m_impl (call_impl)
 {
     call_impl->registerParameters (declaration ());
-    
-    setDefinition (call_impl);
 }
 
 SymbolEntryPtr
