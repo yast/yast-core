@@ -51,10 +51,17 @@ machine_name (void)
 	case EM_X86_64:	return "x86_64";
 	case EM_PPC:	return "ppc";
 	case EM_PPC64:	return "ppc64";
-	case EM_S390:	return "s390";
 	case EM_SPARC:	return "sparc";
 	case EM_ALPHA:	return "axp";
 	case EM_ARM:	return "arm";
+
+	case EM_S390:
+	    switch (e_class)
+	    {
+		case ELFCLASS32: return "s390";
+		case ELFCLASS64: return "s390x";
+	    }
+	    break;
     }
 
     return "unknown";
