@@ -1,0 +1,18 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgIsAvailable.ycp
+#
+#  Purpose:     test "Pkg::IsAvailable" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    // Pkg::IsAvailable (string tag) -> boolean
+    boolean aaa_base = Pkg::IsAvailable ("aaa_base");
+    return aaa_base;
+}

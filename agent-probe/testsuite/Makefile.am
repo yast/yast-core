@@ -12,12 +12,13 @@ AUTOMAKE_OPTIONS = dejagnu
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(includedir)
 
 noinst_PROGRAMS = runag_hwprobe
 
 runag_hwprobe_SOURCES = runag_hwprobe.cc
-runag_hwprobe_LDADD = -ly2 -lycp -lscr
+runag_hwprobe_LDADD = -ly2 -lycp -lscr -ly2util
 runag_hwprobe_LDFLAGS = -L$(libdir)			\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

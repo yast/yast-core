@@ -39,12 +39,13 @@
 
 using std::string;
 
-// ------------------------
-/** 
-   @builtin Pkg::TargetInit(string root, bool new) -> bool
-
-   initialized pa
-*/
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetInit(string root, bool new) -> bool
+ *
+ * initialized target system with root-directory
+ * if new == true, initialize new rpm database
+ */
 YCPValue
 PkgModuleFunctions::TargetInit (YCPList args)
 {
@@ -54,18 +55,24 @@ PkgModuleFunctions::TargetInit (YCPList args)
     {
 	return YCPError ("Bad args to Pkg::TargetInit");
     }
-    PMError err = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), args->value(1)->asBoolean()->value());
+    bool newdb = args->value(1)->asBoolean()->value();
+    PMError err = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
     if (err)
 	return YCPError (err.errstr().c_str(), YCPBoolean (false));
+
+    // propagate installed packages if not newly created
+    if (!newdb)
+	_y2pm.packageManager().poolSetInstalled (_y2pm.instTarget().getPackages () );
+
     return YCPBoolean (true);
 }
 
-// ------------------------
-/** 
-   @builtin Pkg::TargetFinish() -> bool
-
-   finish target usage
-*/
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetFinish() -> bool
+ *
+ * finish target usage
+ */
 YCPValue
 PkgModuleFunctions::TargetFinish (YCPList args)
 {

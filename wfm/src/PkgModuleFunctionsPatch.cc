@@ -39,53 +39,152 @@
 using std::string;
 
 // ------------------------
-/** 
-   @builtin Pkg::YouGetServers() -> list(string)
+// 
+// @builtin Pkg::YouStatus() -> map
+//
+// get map with status information
+//
+YCPValue
+PkgModuleFunctions::YouStatus (YCPList args)
+{
+    YCPMap result;
 
-   get urls of patch servers
-*/
+    result->add( YCPString( "error" ), YCPBoolean( false ) );
+    
+    PMYouPatchPathsPtr paths = _y2pm.youPatchManager().instYou().paths();
+    
+    result->add( YCPString( "product" ), YCPString( paths->product() ) );
+    result->add( YCPString( "version" ), YCPString( paths->version() ) );
+    result->add( YCPString( "basearch" ), YCPString( paths->baseArch() ) );
+    
+    return result;
+}
+
+// ------------------------
+// 
+// @builtin Pkg::YouGetServers() -> list(string)
+//
+// get urls of patch servers
+//
 YCPValue
 PkgModuleFunctions::YouGetServers (YCPList args)
 {
-//    std::list<Url> servers;
-//    PMError err = _y2pm.youPatchManager();
-    YCPList servers;
-    servers->add (YCPString("ftp://you.suse.com"));
-    return servers;
+    std::list<Url> servers;
+    PMError err = _y2pm.youPatchManager().instYou().servers( servers );
+    if ( err ) {
+      return YCPError( "Error getting you servers.", YCPList() );
+    }
+
+    YCPList result;
+    std::list<Url>::const_iterator it;
+    for( it = servers.begin(); it != servers.end(); ++it ) {
+      result->add ( YCPString( (*it).asString() ) );
+    }
+    return result;
 }
 
 // ------------------------
-/** 
-   @builtin Pkg::YouGetPatches() -> bool
-
-   retrieve patches
-*/
+// 
+// @builtin Pkg::YouGetPatches() -> bool
+//
+// retrieve patches
+//
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
-    return YCPVoid();
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::YouGetPatches", YCPBoolean( false ) );
+    }
+    string urlstr = args->value(0)->asString()->value_cstr();
+    Url url( urlstr );
+    if ( !url.isValid() ) return YCPError( "Url not valid", YCPBoolean( false ) );    
+
+    PMError err = _y2pm.youPatchManager().instYou().retrievePatches( url );
+    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+
+    return YCPBoolean( true );
 }
 
 // ------------------------
-/** 
-   @builtin Pkg::YouGetPackages () -> bool
-
-   retrieve package data belonging to patches
-*/
+// 
+// @builtin Pkg::YouGetPackages () -> bool
+//
+// retrieve package data belonging to patches
+//
 YCPValue
 PkgModuleFunctions::YouGetPackages (YCPList args)
 {
+    PMError err = _y2pm.youPatchManager().instYou().retrievePackages();
+    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
+}
+
+// ------------------------
+// 
+// @builtin Pkg::YouSelectPatches () -> void
+//
+// select patches based on types.
+//
+YCPValue
+PkgModuleFunctions::YouSelectPatches (YCPList args)
+{
+    int kinds = PMYouPatch::kind_security | PMYouPatch::kind_recommended;
+
+    _y2pm.youPatchManager().instYou().selectPatches( kinds );
+
     return YCPVoid();
 }
 
 // ------------------------
-/** 
-   @builtin Pkg::YouInstallPatches () -> bool
+// 
+// @builtin Pkg::YouNextPatch () -> map
+//
+// get information about next patch to be installed.
+//
+YCPValue
+PkgModuleFunctions::YouNextPatch (YCPList args)
+{
+    YCPMap result;
 
-   install retrieved patches
-*/
+    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().nextPatch();
+    if ( patch ) {
+      result->add( YCPString( "name" ),
+                   YCPString( patch->name() ) );
+      result->add( YCPString( "summary" ),
+                   YCPString( patch->shortDescription() ) );
+    } else {
+      y2debug("No more patches.");
+    }
+
+    return result;
+}
+
+// ------------------------
+// 
+// @builtin Pkg::YouInstallNextPatch () -> bool
+//
+// get information about next patch to be installed.
+//
+YCPValue
+PkgModuleFunctions::YouInstallNextPatch (YCPList args)
+{
+    PMError err = _y2pm.youPatchManager().instYou().installNextPatch();
+    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
+}
+
+// ------------------------
+// 
+// @builtin Pkg::YouInstallPatches () -> bool
+//
+// install retrieved patches
+//
 YCPValue
 PkgModuleFunctions::YouInstallPatches (YCPList args)
 {
-    return YCPVoid();
+    PMError err = _y2pm.youPatchManager().instYou().installPatches();
+    if ( err ) return YCPError( err.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
 }

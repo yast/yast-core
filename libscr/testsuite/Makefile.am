@@ -7,11 +7,12 @@ AM_CXXFLAGS = -DY2LOG=\"libscr\"
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
-	-I$(srcdir)/../src/include
+	-I$(srcdir)/../src/include			\
+	-I$(includedir)
 
 bin_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
-runscr_LDADD = ../src/libscr.la -lycp
+runscr_LDADD = ../src/libscr.la -lycp -ly2util
 runscr_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src
 
 PACKAGE = libscr

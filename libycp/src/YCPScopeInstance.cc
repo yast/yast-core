@@ -39,7 +39,7 @@ static void scopeDebug(const char *message, ...)
 	// Prepare info text
 	va_list ap;
 	va_start(ap, message);
-	y2_vlogger (LOG_MILESTONE, "instance", "",0,"", message, ap);
+	Y2Logging::y2_vlogger (LOG_MILESTONE, "instance", "",0,"", message, ap);
 	va_end(ap);
     }
     return;

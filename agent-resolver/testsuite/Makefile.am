@@ -7,12 +7,13 @@ AUTOMAKE_OPTIONS = dejagnu
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(includedir)
 
 noinst_PROGRAMS = y2ag_resolver
 y2ag_resolver_SOURCES = y2ag_resolver.cc
 
-y2ag_resolver_LDADD = -lscr -ly2 -lycp
+y2ag_resolver_LDADD = -lscr -ly2 -lycp -ly2util
 y2ag_resolver_LDFLAGS = -L$(libdir)			\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

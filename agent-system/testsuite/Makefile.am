@@ -12,12 +12,13 @@ AUTOMAKE_OPTIONS = dejagnu
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(includedir)
 
 noinst_PROGRAMS = runag_system
 
 runag_system_SOURCES = runag_system.cc
-runag_system_LDADD = -ly2 -lycp -lscr
+runag_system_LDADD = -ly2 -lycp -lscr -ly2util
 runag_system_LDFLAGS = -L$(libdir)			\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

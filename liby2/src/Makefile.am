@@ -17,7 +17,7 @@ plugin_LTLIBRARIES = 	\
 	libpy2plugin.la
 
 liby2_la_SOURCES = \
-	ExternalDataSource.cc ExternalProgram.cc	\
+	ExternalProgram.cc	\
 	Y2Component.cc					\
 	Y2ComponentBroker.cc Y2ComponentCreator.cc 	\
 	genericfrontend.cc pathsearch.cc
@@ -56,4 +56,6 @@ libpy2plugin_la_LDFLAGS = -version-info 2:0
 
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
-	-I$(srcdir)/include -I$(srcdir)/include/y2
+	-I$(srcdir)/include				\
+	-I$(srcdir)/include/y2				\
+	-I$(includedir)

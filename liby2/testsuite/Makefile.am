@@ -6,13 +6,14 @@ AUTOMAKE_OPTIONS = dejagnu
 
 INCLUDES =							\
 	-I$(srcdir)/../../libycp/src/include			\
-	-I$(srcdir)/../src/include
+	-I$(srcdir)/../src/include				\
+	-I$(includedir)
 
 noinst_PROGRAMS = rungeneric runplugin runprogram runremote \
 	runscript runserial runstdio
 
 rungeneric_SOURCES = runy2.cc
-rungeneric_LDADD = -lycp
+rungeneric_LDADD = -lycp -ly2util
 rungeneric_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src	\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\

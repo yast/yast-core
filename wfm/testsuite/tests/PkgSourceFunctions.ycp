@@ -1,0 +1,12 @@
+{
+    integer source = Pkg::SourceInit("dir:///dist/7.3-i386");
+    if (source == nil)
+	return 1;
+    y2milestone ("General %1", Pkg::SourceGeneralData (source));
+    y2milestone ("Media %1", Pkg::SourceMediaData (source));
+    y2milestone ("Product %1", Pkg::SourceProductData (source));
+
+    if (!Pkg::SourceFinish (source))
+	return 2;
+    return 0;
+}

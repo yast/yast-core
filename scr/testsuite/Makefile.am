@@ -12,12 +12,13 @@ AUTOMAKE_OPTIONS = dejagnu
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(includedir)
 
 noinst_PROGRAMS = runscr y2scr
 
 runscr_SOURCES = runscr.cc
-runscr_LDADD = -ly2 -lycp -lscr
+runscr_LDADD = -ly2 -lycp -lscr -ly2util
 runscr_LDFLAGS = -L$(libdir)					\
 	-L$(srcdir)/../../libycp/src				\
 	-L$(srcdir)/../../liby2/src				\

@@ -1207,6 +1207,6 @@ void YCPBasicInterpreter::reportError (enum loglevel_t severity, const char *mes
     // Prepare info text
     va_list ap;
     va_start(ap, message);
-    y2_vlogger (severity, interpreter_name().c_str(), current_file.c_str(), current_line, "", message, ap);
+    Y2Logging::y2_vlogger (severity, interpreter_name().c_str(), current_file.c_str(), current_line, "", message, ap);
     va_end(ap);
 }

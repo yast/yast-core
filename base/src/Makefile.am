@@ -25,7 +25,7 @@ y2base_DEPENDENCIES = $(YAST2CORE)
 # link the plugin against any special library.
 #
 
-y2base_LDADD = -ly2pm
+y2base_LDADD = -ly2pm -ly2util
 
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\

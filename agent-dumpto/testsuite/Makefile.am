@@ -6,12 +6,13 @@ AM_CXXFLAGS = -DY2LOG=\"agent-dumpto\"
 
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES =
+INCLUDES =		\
+	-I$(includedir)
 
 noinst_PROGRAMS = y2ag_dumpto
 
 y2ag_dumpto_SOURCES = y2ag_dumpto.cc
-y2ag_dumpto_LDADD = -lscr -ly2 -lycp
+y2ag_dumpto_LDADD = -lscr -ly2 -lycp -ly2util
 y2ag_dumpto_LDFLAGS = -L$(libdir)			\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\

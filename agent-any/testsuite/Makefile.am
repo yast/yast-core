@@ -12,12 +12,13 @@ AUTOMAKE_OPTIONS = dejagnu
 INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
-	-I$(srcdir)/../../libscr/src/include
+	-I$(srcdir)/../../libscr/src/include		\
+	-I$(includedir)
 
 noinst_PROGRAMS = runag_anyagent
 
 runag_anyagent_SOURCES = runag_anyagent.cc
-runag_anyagent_LDADD = -lscr -ly2 -lycp
+runag_anyagent_LDADD = -lscr -ly2 -lycp -ly2util
 runag_anyagent_LDFLAGS = -L$(libdir)			\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\

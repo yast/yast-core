@@ -42,11 +42,11 @@ $(srcdir)/hashtable.h: hashtable.gperf
 
 BUILT_SOURCES = parser.cc scanner.cc parser.h hashtable.h
 
-INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp
+INCLUDES = -I.. -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(includedir)
 
 libycp_la_LDFLAGS = -version-info 2:0:0
 
-libycp_la_LIBADD = -lxcrypt
+libycp_la_LIBADD = -lxcrypt -ly2util
 
 EXTRA_DIST = scanner.ll parser.yy bison.simple hashtable.gperf
 
