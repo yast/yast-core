@@ -63,8 +63,7 @@ WFMInterpreter::get_env_lang () const
     return 0;
 }
 
-// encoding for gettext() is always UTF-8
-const string textEncoding = "UTF-8";
+
 
 WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 				Y2Component *user_interface,
@@ -374,6 +373,8 @@ WFMInterpreter::evaluateBuiltinBuiltin (builtin_t code, const YCPList& args)
     return YCPInterpreter::evaluateBuiltinBuiltin (code, args);
 }
 
+// encoding for gettext() is always UTF-8
+const string textEncoding = "UTF-8";
 
 void
 WFMInterpreter::changeToModuleLanguage () const
@@ -1299,7 +1300,7 @@ WFMInterpreter::evaluateGetEncoding (const YCPTerm& term)
      * @builtin GetEncoding() -> string
      * Returns the current encoding code
      */
-    return YCPString(currentEncoding);
+    return YCPString(systemEncoding);
 }
 
 
@@ -1309,9 +1310,8 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
     /**
      * @builtin SetLanguage("de_DE" [, encoding]) -> "<proposed encoding>"
      * Selects the language for translate()
-     * @example SetLanguage("de_DE@euro", "ISO-8859-1") -> ""
+     * @example SetLanguage("de_DE", "UTF-8") -> ""
      * @example SetLanguage("de_DE@euro") -> "ISO-8859-15"
-     * if the encoding isn't specified, it's set to "UTF-8"
      * The "<proposed encoding>" is the output of 'nl_langinfo (CODESET)'
      * and only given if SetLanguage() is called with a single argument.
      */
@@ -1322,34 +1322,41 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
 	currentLanguage = term->value(0)->asString()->value();
 
-#warning FIXME: the currentEncoding (resp. proposedEncoding) is not set correctly (unused in ncurses)
-
 	if (term->size() > 1 && term->value(1)->isString())
 	{
-	    currentEncoding = term->value(1)->asString()->value();
+	    systemEncoding = term->value(1)->asString()->value();
+	    y2milestone( "SET encoding to: %s", systemEncoding.c_str() );
 	}
 	else
 	{
-	    // Don't call setlocale( LC_ALL, lang) because lang is (mostly) set wrong.
-	    // For ncurses LC_CTYPE has to be set according the terminal encoding and NOT e.g.
-	    // to de_DE for an UTF-8 terminal or de_DE.UTF-8 if it's not an UTF-8 terminal).
-	    // setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
+	    // get current LC_CTYPE
+	    string locale = setlocale( LC_CTYPE, NULL );
 
-	    // TO DO: get the correct encoding !!!
+            // prepare for nl_langinfo (set LC_CTYPE)
+	    setlocale ( LC_CTYPE, currentLanguage.c_str());
+
+	    // get the proposed encoding from nl_langinfo()
 	    proposedEncoding = nl_langinfo (CODESET);
 	    if (proposedEncoding.empty())
 	    {
 	       y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
 	    }
-	    y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
-	    currentEncoding = "UTF-8";                        // default encoding
+	    else
+	    {
+		systemEncoding = proposedEncoding;
+	    }
+
+	    y2milestone ( "GET encoding for %s:  %s", currentLanguage.c_str(), proposedEncoding.c_str() );
+
+	    // reset LC_CTYPE !!! (for ncurses)
+	    setlocale( LC_CTYPE, locale.c_str() ); 
 	}
 
 	textdomainOrLanguageHasChanged = true;
 
 	ycp2debug (current_file.c_str (), current_line,
 		       "WFM SetLanguage(\"%s\"), Encoding(\"%s\")",
-		       currentLanguage.c_str(), currentEncoding.c_str());
+		       currentLanguage.c_str(), systemEncoding.c_str());
 	return YCPString (proposedEncoding);
     }
 

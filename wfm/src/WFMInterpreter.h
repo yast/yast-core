@@ -153,8 +153,12 @@ private:
      */
     string 	    currentTextdomain;
     string 	    currentLanguage;
-    string 	    currentEncoding;
     mutable bool    textdomainOrLanguageHasChanged;
+
+    /**
+     * system encoding
+     */ 
+    string 	    systemEncoding;	 
 
     /**
      * Implements the builtin UI
