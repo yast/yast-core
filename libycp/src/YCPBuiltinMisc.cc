@@ -354,7 +354,7 @@ YCPBuiltinMisc::YCPBuiltinMisc ()
 	{ "srandom",	"integer ()",			(void *)Srandom1	},
 	{ "srandom",	"void (integer)",		(void *)Srandom2	},
 	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
-	{ "eval",	"any (const any)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
+	{ "eval",	"flex (const flex)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
 	{ "sformat",	"string (string, ...)",		(void *)s_sformat,	DECL_NIL|DECL_WILD },
 	// ordinary logging
 	{ "y2debug",	"void (string, ...)",		(void *)Y2Debug,	DECL_NIL|DECL_WILD },
