@@ -24,7 +24,7 @@
 #endif
 
 #define ERR_MAX 80              // for regexp
-#define SUB_MAX 10              // for regexp
+#define SUB_MAX 9              // for regexp
 
 #include <unistd.h>
 #include <ctype.h>
@@ -695,9 +695,11 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
 /**
  * @builtin regexpsub( string input, string pattern, string match ) -> string
  *
+ * Maximum tokens referenced to could be 9: \1 ... \9.
+ *
  * Example <pre>
- * regexpsub( "aaabbb", "(.*ab).*",  "s_\\0_e" ) -> "s_aaab_e"
- * regexpsub( "aaabbb", "(.*ba).*",  "s_\\0_e" ) -> nil
+ * regexpsub( "aaabbb", "(.*ab).*",  "s_\\1_e" ) -> "s_aaab_e"
+ * regexpsub( "aaabbb", "(.*ba).*",  "s_\\1_e" ) -> nil
  * </pre>
  *
  */
@@ -736,16 +738,14 @@ YCPValue evaluateRegexpSub(YCPInterpreter *interpreter, const YCPList& args)
 /**
  * @builtin regexptokenize( string input, string pattern ) -> list
  *
- * !Attention pattern have to include parenthesize "(" ")"
- * If you need no parenthesize, use regexp_match
+ * Attention! Pattern have to include parenthesize "(" ")".
+ * If you need no parenthesize, use regexpmatch.
  *
  * If the pattern does not not match, the list ist empty.
  * Otherwise the list contains then matchted subexpressions for each pair
  * of parenthesize in pattern.
  *
  * If pattern does not contain a valid pattern, nil is returned.
- * In the include "common_functions, there are some convinience function, like tokenX
- * or regexp_error
  *
  * Example <pre>
  * regexptokenize( "aaabbBb", "(.*[A-Z]).*") -> [ "aaabbB" ]
@@ -822,7 +822,7 @@ Reg_Ret solve_regular_expression( const char        *input,
 
     static const char *index[SUB_MAX+1] = {
         NULL, /* not used */
-	"\\0", "\\1", "\\2", "\\3", "\\4",
+	"\\1", "\\2", "\\3", "\\4",
 	"\\5", "\\6", "\\7", "\\8", "\\9"
     };
 
