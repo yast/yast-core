@@ -146,3 +146,22 @@ Parsed:
     return /* any -> any */m[0]:m[0]:fun ();
 }
 ----------------------------------------------------------------------
+[Scanner] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment does not have a value
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <string> l
+    // boolean b
+    // filename: "tests/statements/VoidAssign.ycp"
+    list <string> l = ["S.u.S.E.", "SuSE", "SUSE", "Novell", "IBM"];
+    boolean b = foreach (string s, l, {
+    if ((s == "IBM"))
+    {
+    y2milestone ("not yet");
+}
+}
+);
+    return (b == nil);
+}
+----------------------------------------------------------------------
+[YCP] tests/statements/VoidAssign.ycp:114 not yet

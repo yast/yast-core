@@ -93,7 +93,7 @@
 }
 
 {
-  void fun () { return nil; }
+	  void fun () { return nil; }
 
   integer a = fun();
 
@@ -101,3 +101,21 @@
 
   return m[0]:m[0]:fun();
 }
+
+// #38568 
+{
+    list <string> l = [ "S.u.S.E.", "SuSE", "SUSE", "Novell", "IBM" ];
+
+    // this should produce a warning, because the value is always nil
+    boolean b = foreach (string s, l,
+    {
+        if (s == "IBM")
+        {
+            y2milestone ("not yet");
+            // return false;
+        }
+    });
+
+    return (b == nil);
+}
+

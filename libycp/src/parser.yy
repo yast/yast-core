@@ -3864,11 +3864,6 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 	    yyerror_with_lineinfo (parser, rhs->l, "rhs isn't yeBuiltin but pretends to be");
 	    return;
 	}
-
-	if (b->decl()->flags & DECL_FLEX)	// the 'void' is a deduced type
-	{
-	    return;
-	}
     }
 
     if (lhs == 0)
