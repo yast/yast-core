@@ -626,17 +626,15 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::SourceSaveList () -> boolean
+ * @builtin Pkg::SourceSaveRanks () -> boolean
  *
- * Save list of sources to disk. Return true on success, false on error.
+ * Save ranks to disk. Return true on success, false on error.
  */ 
 YCPValue
-PkgModuleFunctions::SourceSaveList (YCPList args)
+PkgModuleFunctions::SourceSaveRanks (YCPList args)
 {
-#if 0
-    _last_error = _y2pm.instSrcManager().sync();
+    _last_error = _y2pm.instSrcManager().setNewRanks();
     if ( _last_error ) return YCPBoolean( false );
-#endif
 
     return YCPBoolean( true );
 }
