@@ -23,7 +23,9 @@
 #include <string>
 using std::string;
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #include "ycp/y2log.h"
 #include "ycp/SymbolEntry.h"
