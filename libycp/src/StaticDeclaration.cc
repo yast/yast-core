@@ -285,7 +285,7 @@ StaticDeclaration::Decl2String (const declaration_t *declaration, bool full)
 	return "<NULL>";
     }
 
-    return string (name) + ":" + declaration->type->toString();
+    return string (name) + " : " + declaration->type->toString();
 }
 
 
@@ -483,10 +483,11 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 #endif
 	if (!partial)
 	{
-	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
+	    ycp2error ("No match for '%s : %s'", first_decl->name, type->toString().c_str());
+	    ycp2error ("Please fix parameter types to match one of:");
 	    while (first_decl)
 	    {
-		ycp2error ("have '%s' ", Decl2String (first_decl,true).c_str());
+		ycp2error ("'%s' ", Decl2String (first_decl,true).c_str());
 		first_decl = first_decl->next;
 	    }
 	}

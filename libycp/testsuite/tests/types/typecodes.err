@@ -38,18 +38,19 @@
 [Parser] tests/types/typecodes.ycp:30 type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:30 Expected 'block <block <float>>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:39 Binary operator not defined for this type
-[Interpreter] tests/types/typecodes.ycp:13 No match for '+ : <unspec> (const symbol, const path)':
-[Interpreter] tests/types/typecodes.ycp:13 +:integer (integer, integer)
-[Interpreter] tests/types/typecodes.ycp:13 +:float (float, float)
-[Interpreter] tests/types/typecodes.ycp:13 +:string (string, string)
-[Interpreter] tests/types/typecodes.ycp:13 +:string (string, integer)
-[Interpreter] tests/types/typecodes.ycp:13 +:string (string, path)
-[Interpreter] tests/types/typecodes.ycp:13 +:path (path, path)
-[Interpreter] tests/types/typecodes.ycp:13 +:path (path, string)
-[Interpreter] tests/types/typecodes.ycp:13 +:list <<T>> (const list <<T>>, const list <<T>>)
-[Interpreter] tests/types/typecodes.ycp:13 +:list <<T>> (const list <<T>>, const <T>)
-[Interpreter] tests/types/typecodes.ycp:13 +:list (const list, any)
-[Interpreter] tests/types/typecodes.ycp:13 +:map (const map, const map)
+[Interpreter] tests/types/typecodes.ycp:13 No match for '+ : <unspec> (const symbol, const path)'
+[Interpreter] tests/types/typecodes.ycp:13 Please fix parameter types to match one of:
+[Interpreter] tests/types/typecodes.ycp:13 '+ : integer (integer, integer)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : float (float, float)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, string)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, integer)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, path)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : path (path, path)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : path (path, string)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : list <<T>> (const list <<T>>, const list <<T>>)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : list <<T>> (const list <<T>>, const <T>)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : list (const list, any)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : map (const map, const map)' 
 Parsed:
 ----------------------------------------------------------------------
 Parser error

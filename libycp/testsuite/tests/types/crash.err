@@ -1,16 +1,17 @@
 [Parser] tests/types/crash.ycp:6 Binary operator not defined for this type
-[Interpreter] tests/types/crash.ycp:0 No match for '+ : <unspec> (boolean, integer)':
-[Interpreter] tests/types/crash.ycp:0 +:integer (integer, integer)
-[Interpreter] tests/types/crash.ycp:0 +:float (float, float)
-[Interpreter] tests/types/crash.ycp:0 +:string (string, string)
-[Interpreter] tests/types/crash.ycp:0 +:string (string, integer)
-[Interpreter] tests/types/crash.ycp:0 +:string (string, path)
-[Interpreter] tests/types/crash.ycp:0 +:path (path, path)
-[Interpreter] tests/types/crash.ycp:0 +:path (path, string)
-[Interpreter] tests/types/crash.ycp:0 +:list <<T>> (const list <<T>>, const list <<T>>)
-[Interpreter] tests/types/crash.ycp:0 +:list <<T>> (const list <<T>>, const <T>)
-[Interpreter] tests/types/crash.ycp:0 +:list (const list, any)
-[Interpreter] tests/types/crash.ycp:0 +:map (const map, const map)
+[Interpreter] tests/types/crash.ycp:0 No match for '+ : <unspec> (boolean, integer)'
+[Interpreter] tests/types/crash.ycp:0 Please fix parameter types to match one of:
+[Interpreter] tests/types/crash.ycp:0 '+ : integer (integer, integer)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : float (float, float)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : string (string, string)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : string (string, integer)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : string (string, path)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : path (path, path)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : path (path, string)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : list <<T>> (const list <<T>>, const list <<T>>)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : list <<T>> (const list <<T>>, const <T>)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : list (const list, any)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : map (const map, const map)' 
 Parsed:
 ----------------------------------------------------------------------
 Parser error

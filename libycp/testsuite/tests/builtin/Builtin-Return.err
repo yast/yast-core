@@ -7,9 +7,10 @@ Parsed:
     return (filter (string v, l, { return (v != "foo"); }) == ["bar"]);
 }
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-Return.ycp:10 No match for 'filter : <unspec> (variable <string>, list <string>, block <string>)':
-[Interpreter] tests/builtin/Builtin-Return.ycp:10 filter:list <<T>> (variable <<T>>, const list <<T>>, const block <boolean>)
-[Interpreter] tests/builtin/Builtin-Return.ycp:10 filter:map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 No match for 'filter : <unspec> (variable <string>, list <string>, block <string>)'
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 Please fix parameter types to match one of:
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 'filter : list <<T>> (variable <<T>>, const list <<T>>, const block <boolean>)' 
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 'filter : map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)' 
 [Parser] tests/builtin/Builtin-Return.ycp:10 Bad parameter '<string> { return v; }'
 Parsed:
 ----------------------------------------------------------------------
