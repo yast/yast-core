@@ -23,6 +23,7 @@ Author: Stefan Hundhammer
 	<td width="33%" align="left">Prev: (none)</td>
 	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
 	<td width="33%" align="right">Next: <a href="event-reference.html">Event Reference</a></td>
+    </tr>
 </table>
 
 
@@ -56,7 +57,7 @@ Author: Stefan Hundhammer
 	    <a href="#WaitForEvent">WaitForEvent</a> (&nbsp;int&nbsp;timeout&nbsp;)
 	</td>
 	<td>
-	    Waits for user input and returns an 
+	    Waits for user input and returns an
 	    <a href="event-reference.html">event map</a>.
 	    Returns ID <i>`timeout</i> if no input is available for
 	    <i>timeout</i> milliseconds.
@@ -354,6 +355,7 @@ any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 
     <b>UI::CloseDialog()</b>;
 }
+
 </pre>
 
 
@@ -361,17 +363,17 @@ any widget_id = <b>UI::TimeoutUserInput</b>( integer timeout_millisec );
 <h2><a name="WaitForEvent">WaitForEvent()</a></h2>
 
 <p>
-WaitForEvent() is an extended combination of 
-<a href="#UserInput">UserInput()</a> and 
+WaitForEvent() is an extended combination of
+<a href="#UserInput">UserInput()</a> and
 <a href="#TimeoutUserInput">TimeoutUserInput()</a>: It waits until user input
-is available or until the (millisecond) timeout is expired. 
-It  returns an <a href="event-reference.html">event map</a> 
+is available or until the (millisecond) timeout is expired.
+It  returns an <a href="event-reference.html">event map</a>
 rather than just a simple ID.
 <p>
 In the case of timeout, it returns a map with a
 <a href="event-reference.html#TimeoutEvent">timeout event</a>.
 <p>
-The timeout argument is optional. If it isn't specified, WaitForEvent() 
+The timeout argument is optional. If it isn't specified, WaitForEvent()
 (like <a href="#UserInput">UserInput()</a>)
 keeps waiting until user input is available.
 <p>
@@ -380,7 +382,7 @@ primarily to tell the difference between different types of events of the same
 widget - for example, if different actions should be performed upon selecting
 an item in a <a href="../widgets/YSelectionBox-widget.html">SelectionBox</a>
 or a <a href="../widgets/YTable-widget.html">Table</a> widget.
-Notice that you still need the 
+Notice that you still need the
 <a href="events-general.html#notify">notify option</a>
 to get those events in the first place.
 <p>
@@ -396,7 +398,7 @@ wouldn't help too much.
 <b>Important:</b> Don't blindly rely on getting each and every individual event
 that you think should come. The UI keeps track of only one pending event (which
 is usually the last one that occured). If many events occur between individual
-WaitForEvent() calls, all but the last will be lost. 
+WaitForEvent() calls, all but the last will be lost.
 Read <a href="events-general.html#pending_events">here</a> why.
 It is relatively easy to programm defensively in a way that losing individual
 events doesn't matter: Also use QueryWidget() to get the status of all your
@@ -425,9 +427,9 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
     //
     // Output goes to the log file: ~/.y2log for normal users
     // or /var/log/YaST2/y2log for root.
-    
+
     integer timeout_millisec = 20 * 1000;
-    
+
     <b>UI::OpenDialog</b>(
 		   `VBox(
 			 `SelectionBox(`id(`pizza ), `opt(`notify, `immediate ),
@@ -454,7 +456,7 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
     any id    = nil;
 
     // Event loop
-    
+
     repeat
     {
 	event = <em>UI::WaitForEvent</em>( timeout_millisec );
@@ -465,15 +467,15 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 	    if ( <b>event["EventReason"]</b>:nil == "Activated" )
 	    {
 		// Handle pizza "activate" (double click or space pressed)
-		
+
 		y2milestone( "Pizza activated" );
 		id = `details;	// Handle as if "Details" button were clicked
-		
+
 	    }
 	    else if ( <b>event["EventReason"]</b>:nil == "SelectionChanged" )
 	    {
 		// Handle pizza selection change
-		
+
 		y2milestone( "Pizza selected" );
 	    }
 	}
@@ -486,33 +488,34 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 	if ( id == <b>`timeout</b> )
 	{
 	    // Handle timeout
-	    
+
 	    y2milestone( "Timeout detected by ID" );
 	}
 
 	if ( <b>event["EventType"]</b>:nil == "TimeoutEvent" ) // Equivalent
 	{
 	    // Handle timeout
-	    
+
 	    y2milestone( "Timeout detected by event type" );
 
 	    // Open a popup dialog
-	    
+
 	    <b>UI::OpenDialog</b>( `VBox(
 				  `Label( "Not hungry?" ),
-				  `PushButton(`opt(`default ), "&OK" ) 
+				  `PushButton(`opt(`default ), "&OK" )
 				  )
 			    );
 	    <b>UI::TimeoutUserInput</b>( 10 * 1000 ); // Automatically close after 10 seconds
 	    <b>UI::CloseDialog()</b>;
 	}
 
-	
+
     } until ( id == `ok || id == `cancel );
 
-	
+
     <b>UI::CloseDialog()</b>;
 }
+
 </pre>
 
 
@@ -521,6 +524,7 @@ map event = <b>UI::WaitForEvent</b>( integer timeout_millisec );
 	<td width="33%" align="left">Prev: (none)</td>
 	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
 	<td width="33%" align="right">Next: <a href="event-reference.html">Event Reference</a></td>
+    </tr>
 </table>
 
 </body>
