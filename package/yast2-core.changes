@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Oct  6 16:36:48 CEST 2004 - visnov@suse.cz
+
+- Read whole u32 at once from bytecode to speed it up 
+
+-------------------------------------------------------------------
 Tue Oct  5 17:15:13 CEST 2004 - visnov@suse.cz
 
 - Allow namespaces to be located in libraries, so we don't

@@ -189,17 +189,26 @@ Bytecode::writeInt32 (std::ostream & str, const u_int32_t value)
 u_int32_t
 Bytecode::readInt32 (bytecodeistream & str)
 {
-    char c;
-    str.get (c);
-    if (c != 4)
+//    char c;
+//    str.get (c);
+//    if (c != 4)
+//    {
+//	return false;
+//    }
+
+    char v[5];
+
+    str.read (v, 5);
+    if (v[0] != 4)
     {
 	return false;
     }
+
     u_int32_t cv, value = 0;
-    str.get (c); cv = (unsigned char)c; value = cv;
-    str.get (c); cv = (unsigned char)c; cv <<= 8; value |= cv;
-    str.get (c); cv = (unsigned char)c; cv <<= 16; value |= cv;
-    str.get (c); cv = (unsigned char)c; cv <<= 24; value |= cv;
+    cv = (unsigned char)v[1]; value = cv;
+    cv = (unsigned char)v[2]; cv <<= 8; value |= cv;
+    cv = (unsigned char)v[3]; cv <<= 16; value |= cv;
+    cv = (unsigned char)v[4]; cv <<= 24; value |= cv;
     return value;
 }
 
