@@ -775,6 +775,8 @@ PkgModuleFunctions::PkgSolveErrors(YCPList args)
 
    Commit package changes (actually install/delete packages)
 
+   the 'successful' value will be negative, if installation was aborted !
+
    if medianr == 0, all packages regardless of media are installed
    if medianr > 0, only packages from this media are installed
 
