@@ -35,7 +35,7 @@ public:
     /**
      * Constructor
      */
-    YCheckBox( YWidgetOpt & opt, const YCPString & label );
+    YCheckBox( const YWidgetOpt & opt, const YCPString & label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

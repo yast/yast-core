@@ -25,7 +25,7 @@
 using std::min;
 
 
-YAlignment::YAlignment( YWidgetOpt & opt,
+YAlignment::YAlignment( const YWidgetOpt & opt,
 			YAlignmentType halign,
 			YAlignmentType valign )
     : YContainerWidget( opt )

@@ -49,7 +49,7 @@ public:
      * @param valign How the child widget is aligned vertically
      * @param opt the widget options
      */
-    YAlignment( YWidgetOpt & opt, YAlignmentType halign, YAlignmentType valign );
+    YAlignment( const YWidgetOpt & opt, YAlignmentType halign, YAlignmentType valign );
 
     /**
      * Returns a descriptive name of this widget class for logging,

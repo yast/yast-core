@@ -40,7 +40,7 @@ using std::string;
 int YWidget::next_internal_widget_id = 0;
 
 
-YWidget::YWidget( YWidgetOpt & opt )
+YWidget::YWidget( const YWidgetOpt & opt )
     : magic( YWIDGET_MAGIC )
     , user_widget_id( YCPNull() )
     , yparent(0)

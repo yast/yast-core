@@ -19,7 +19,7 @@
 
 #include "YSquash.h"
 
-YSquash::YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash )
+YSquash::YSquash( const YWidgetOpt & opt, bool hsquash, bool vsquash )
     : YContainerWidget( opt )
 {
     squash[ YD_HORIZ ] = hsquash;

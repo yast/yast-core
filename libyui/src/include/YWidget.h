@@ -51,7 +51,7 @@ public:
     /**
      * Constructor
      */
-    YWidget( YWidgetOpt & opt );
+    YWidget( const YWidgetOpt & opt );
 
     /**
      * Destructor

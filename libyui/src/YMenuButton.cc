@@ -26,7 +26,7 @@
 #include "YMenuButton.h"
 
 
-YMenuButton::YMenuButton( YWidgetOpt & opt, YCPString label )
+YMenuButton::YMenuButton( const YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
     , next_index(0)

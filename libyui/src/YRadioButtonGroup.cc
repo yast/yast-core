@@ -31,7 +31,7 @@
 #include "YRadioButtonGroup.h"
 
 
-YRadioButtonGroup::YRadioButtonGroup( YWidgetOpt & opt )
+YRadioButtonGroup::YRadioButtonGroup( const YWidgetOpt & opt )
     : YContainerWidget( opt )
 {
 }

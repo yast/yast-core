@@ -27,7 +27,7 @@
 #include "YLabel.h"
 
 
-YLabel::YLabel( YWidgetOpt & opt, YCPString text )
+YLabel::YLabel( const YWidgetOpt & opt, YCPString text )
     : YWidget( opt )
     , text( text )
 {

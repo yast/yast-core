@@ -38,7 +38,7 @@ public:
      * @param text the initial text of the SelectionBox label
      * @param opt the widget options
      */
-    YSelectionBox( YWidgetOpt & opt, YCPString label );
+    YSelectionBox( const YWidgetOpt & opt, YCPString label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

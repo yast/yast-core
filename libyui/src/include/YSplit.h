@@ -35,7 +35,7 @@ public:
     /**
      * Creates a new YSplit
      */
-    YSplit( YWidgetOpt & opt, YUIDimension newPrimaryDimension );
+    YSplit( const YWidgetOpt & opt, YUIDimension newPrimaryDimension );
 
     /**
      * Returns a descriptive name of this widget class for logging,

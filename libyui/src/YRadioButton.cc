@@ -29,7 +29,7 @@
 #include "YRadioButton.h"
 
 
-YRadioButton::YRadioButton( YWidgetOpt & 	opt,
+YRadioButton::YRadioButton( const YWidgetOpt & 	opt,
 			    const YCPString & 	label,
 			    YRadioButtonGroup *	radiobuttongroup )
     : YWidget( opt )

@@ -31,7 +31,7 @@
 #include "YTable.h"
 
 
-YTable::YTable( YWidgetOpt & opt, int num_cols )
+YTable::YTable( const YWidgetOpt & opt, int num_cols )
     : YWidget( opt )
     , num_cols( num_cols )
 {

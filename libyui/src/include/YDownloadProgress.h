@@ -33,7 +33,7 @@ public:
     /**
      * Constructor
      */
-    YDownloadProgress( YWidgetOpt &		opt,
+    YDownloadProgress( const YWidgetOpt &	opt,
 		       const YCPString &	label,
 		       const YCPString &	filename,
 		       int			expectedSize );

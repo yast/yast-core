@@ -23,7 +23,7 @@
 #include "YPackageSelector.h"
 
 
-YPackageSelector::YPackageSelector( YWidgetOpt & opt )
+YPackageSelector::YPackageSelector( const YWidgetOpt & opt )
     : YWidget( opt )
 {
     // y2debug( "YPackageSelector" );

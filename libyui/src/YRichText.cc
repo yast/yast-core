@@ -27,7 +27,7 @@
 #include "YRichText.h"
 
 
-YRichText::YRichText( YWidgetOpt & opt, YCPString text )
+YRichText::YRichText( const YWidgetOpt & opt, YCPString text )
     : YWidget( opt )
     , text( text )
     , autoScrollDown( false )

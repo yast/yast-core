@@ -29,7 +29,7 @@
 #include "YTree.h"
 
 
-YTree::YTree( YWidgetOpt & opt, YCPString newLabel )
+YTree::YTree( const YWidgetOpt & opt, YCPString newLabel )
     : YWidget( opt )
     , label( newLabel )
 {

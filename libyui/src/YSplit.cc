@@ -31,7 +31,7 @@
 #define max( a, b ) ( (a) >? (b) )
 
 
-YSplit::YSplit( YWidgetOpt & opt, YUIDimension dimension )
+YSplit::YSplit( const YWidgetOpt & opt, YUIDimension dimension )
     : YContainerWidget( opt )
     , primary( dimension )
     , secondary( dimension == YD_HORIZ ? YD_VERT : YD_HORIZ )

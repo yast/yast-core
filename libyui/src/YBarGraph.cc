@@ -32,7 +32,7 @@
 #include "YBarGraph.h"
 
 
-YBarGraph::YBarGraph( YWidgetOpt & opt )
+YBarGraph::YBarGraph( const YWidgetOpt & opt )
     :YWidget( opt )
 {
     setDefaultStretchable( YD_HORIZ, true );

@@ -28,7 +28,7 @@
 #include "YCheckBox.h"
 
 
-YCheckBox::YCheckBox( YWidgetOpt & opt, const YCPString & label )
+YCheckBox::YCheckBox( const YWidgetOpt & opt, const YCPString & label )
     : YWidget( opt )
     , label( label )
 {

@@ -37,7 +37,7 @@ public:
     /**
      * Constructor
      */
-    YContainerWidget( YWidgetOpt & opt );
+    YContainerWidget( const YWidgetOpt & opt );
 
     /**
      * Cleans up: Deletes all child widgets.

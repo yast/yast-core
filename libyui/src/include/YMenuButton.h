@@ -42,7 +42,7 @@ public:
      * @param opt widget options
      * @param label the button label
      */
-    YMenuButton( YWidgetOpt & opt, YCPString label );
+    YMenuButton( const YWidgetOpt & opt, YCPString label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

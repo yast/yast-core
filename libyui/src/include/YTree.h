@@ -47,7 +47,7 @@ public:
      * @param opt the widget options
      * @param text the initial text of the label
      */
-    YTree( YWidgetOpt & opt, YCPString label );
+    YTree( const YWidgetOpt & opt, YCPString label );
 
 
     /**

@@ -38,7 +38,7 @@ public:
      * @param text the initial text of the MultiSelectionBox label
      * @param opt the widget options
      */
-    YMultiSelectionBox( YWidgetOpt & opt, YCPString label );
+    YMultiSelectionBox( const YWidgetOpt & opt, YCPString label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

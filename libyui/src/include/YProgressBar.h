@@ -34,7 +34,7 @@ public:
     /**
      * Constructor.
      */
-    YProgressBar( YWidgetOpt & 		opt,
+    YProgressBar( const YWidgetOpt & 	opt,
 		  const YCPString & 	label,
 		  const YCPInteger & 	maxProgress,
 		  const YCPInteger & 	initialProgress );

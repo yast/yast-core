@@ -33,7 +33,7 @@ public:
     /**
      * Constructor
      */
-    YBarGraph( YWidgetOpt & opt );
+    YBarGraph( const YWidgetOpt & opt );
 
 
     /**

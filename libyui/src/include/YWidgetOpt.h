@@ -46,13 +46,13 @@ public:
      * Return whether or not the value is defined, i.e. whether or not
      * a value has been set before.
      */
-    bool defined()		{ return _defined;	}
+    bool defined() const	{ return _defined;	}
 
     /**
      * Returns the value of this option, if any has been defined,
      * or the default value otherwise.
      */
-    T value()			{ return _defined ? _value : defaultValue(); }
+    T value() const		{ return _defined ? _value : defaultValue(); }
 
 protected:
 
@@ -61,7 +61,7 @@ protected:
      * been explicitly set.
      * Overwrite this method with the class specific default value.
      */
-    virtual T defaultValue() = 0;
+    virtual T defaultValue() const = 0;
 
     bool _defined;
     T	_value;
@@ -73,7 +73,7 @@ protected:
  */
 class YBoolOpt: public YAnyOpt<bool>
 {
-    virtual bool defaultValue() { return false; }
+    virtual bool defaultValue() const { return false; }
 };
 
 
@@ -82,7 +82,7 @@ class YBoolOpt: public YAnyOpt<bool>
  */
 class YLongOpt: public YAnyOpt<long>
 {
-    virtual long defaultValue() { return 0L; }
+    virtual long defaultValue() const { return 0L; }
 };
 
 

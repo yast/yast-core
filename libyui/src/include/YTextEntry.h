@@ -35,7 +35,7 @@ public:
     /**
      * Creates a new text entry with a label and an initial text.
      */
-    YTextEntry( YWidgetOpt & opt, const YCPString & label );
+    YTextEntry( const YWidgetOpt & opt, const YCPString & label );
 
     /**
      * Returns a descriptive name of this widget class for logging,

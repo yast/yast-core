@@ -27,7 +27,7 @@
 #include "YProgressBar.h"
 
 
-YProgressBar::YProgressBar( YWidgetOpt & 	opt,
+YProgressBar::YProgressBar( const YWidgetOpt & 	opt,
 			    const YCPString & 	label,
 			    const YCPInteger & 	maxProgress,
 			    const YCPInteger &	progress )

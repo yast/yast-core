@@ -27,7 +27,7 @@
 #include "YPartitionSplitter.h"
 
 
-YPartitionSplitter::YPartitionSplitter( YWidgetOpt &		opt,
+YPartitionSplitter::YPartitionSplitter( const YWidgetOpt &	opt,
 					int 			usedSize,
 					int 			totalFreeSize,
 					int 			newPartSize,

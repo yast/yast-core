@@ -33,11 +33,11 @@ public:
     /**
      * Constructor
      */
-    YIntField( YWidgetOpt &	opt,
-	       const YCPString & label,
-	       int 		minValue,
-	       int 		maxValue,
-	       int 		initialValue );
+    YIntField( const YWidgetOpt &	opt,
+	       const YCPString & 	label,
+	       int 			minValue,
+	       int 			maxValue,
+	       int 			initialValue );
 
     /**
      * Returns a descriptive name of this widget class for logging,

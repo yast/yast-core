@@ -31,7 +31,7 @@ public:
     /**
      * Constructor
      */
-    YReplacePoint( YWidgetOpt & opt );
+    YReplacePoint( const YWidgetOpt & opt );
 
     /**
      * Returns a descriptive name of this widget class for logging,

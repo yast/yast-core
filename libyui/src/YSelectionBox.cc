@@ -29,7 +29,7 @@
 #include "YSelectionBox.h"
 
 
-YSelectionBox::YSelectionBox( YWidgetOpt & opt, YCPString label )
+YSelectionBox::YSelectionBox( const YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
 {

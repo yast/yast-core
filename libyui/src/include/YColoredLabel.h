@@ -33,7 +33,7 @@ public:
      * Creates a new new label
      * @param text the initial text of the label
      */
-    YColoredLabel( YWidgetOpt & opt, YCPString text );
+    YColoredLabel( const YWidgetOpt & opt, YCPString text );
 
     /**
      * Returns a descriptive name of this widget class for logging,

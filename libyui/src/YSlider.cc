@@ -27,7 +27,7 @@
 #include "YSlider.h"
 
 
-YSlider::YSlider( YWidgetOpt &		opt,
+YSlider::YSlider( const YWidgetOpt &	opt,
 		  const YCPString & 	label,
 		  int 			minValue,
 		  int 			maxValue,

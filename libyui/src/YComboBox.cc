@@ -28,7 +28,7 @@
 #include "YComboBox.h"
 
 
-YComboBox::YComboBox( YWidgetOpt & opt, YCPString label )
+YComboBox::YComboBox( const YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
     , validChars( "" )

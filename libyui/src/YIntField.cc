@@ -27,7 +27,7 @@
 #include "YIntField.h"
 
 
-YIntField::YIntField( YWidgetOpt & opt,
+YIntField::YIntField( const YWidgetOpt & opt,
 		      const YCPString & label,
 		      int minValue,
 		      int maxValue,

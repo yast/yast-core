@@ -57,7 +57,7 @@ public:
      * Creates a new and empty Table
      * @param num_cols The number of columns of the table
      */
-    YTable( YWidgetOpt & opt, int num_cols );
+    YTable( const YWidgetOpt & opt, int num_cols );
 
     /**
      * Returns a descriptive name of this widget class for logging,

@@ -32,7 +32,7 @@ public:
     /**
      * Constructor
      */
-    YSquash( YWidgetOpt & opt, bool hsquash, bool vsquash );
+    YSquash( const YWidgetOpt & opt, bool hsquash, bool vsquash );
 
     /**
      * Returns a descriptive name of this widget class for logging,

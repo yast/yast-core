@@ -34,10 +34,10 @@ public:
     /**
      * Constructor.
      */
-    YLogView( YWidgetOpt &	opt,
-	      const YCPString &	label,
-	      int 		visibleLines,
-	      int 		maxLines );
+    YLogView( const YWidgetOpt &	opt,
+	      const YCPString &		label,
+	      int 			visibleLines,
+	      int 			maxLines );
 
     /**
      * Returns a descriptive name of this widget class for logging,

@@ -26,7 +26,7 @@
 #include "YColoredLabel.h"
 
 
-YColoredLabel::YColoredLabel( YWidgetOpt & opt, YCPString text )
+YColoredLabel::YColoredLabel( const YWidgetOpt & opt, YCPString text )
     : YWidget( opt )
     , text( text )
 {

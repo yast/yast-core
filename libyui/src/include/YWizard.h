@@ -38,7 +38,7 @@ public:
     /**
      * Constructor
      */
-    YWizard( YWidgetOpt & opt,
+    YWizard( const YWidgetOpt & opt,
 	     const YCPValue & backButtonId,	const YCPString & backButtonLabel,
 	     const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
 	     const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  );

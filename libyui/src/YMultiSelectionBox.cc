@@ -28,7 +28,7 @@
 #include "YMultiSelectionBox.h"
 
 
-YMultiSelectionBox::YMultiSelectionBox( YWidgetOpt & opt, YCPString label )
+YMultiSelectionBox::YMultiSelectionBox( const YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
 {

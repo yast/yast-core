@@ -37,7 +37,7 @@ public:
     /**
      * Constructor
      */
-    YDialog( YWidgetOpt & opt );
+    YDialog( const YWidgetOpt & opt );
 
     /**
      * Cleanup

@@ -26,7 +26,7 @@
 #include "YLogView.h"
 
 
-YLogView::YLogView( YWidgetOpt & opt, const YCPString & label, int visibleLines, int maxLines )
+YLogView::YLogView( const YWidgetOpt & opt, const YCPString & label, int visibleLines, int maxLines )
     : YWidget( opt )
     , _label( label )
     , _visibleLines( visibleLines )

@@ -36,7 +36,7 @@ public:
     /**
      * Constructor
      */
-    YPartitionSplitter( YWidgetOpt &		opt,
+    YPartitionSplitter( const YWidgetOpt &	opt,
 			int 			usedSize,
 			int 			totalFreeSize,
 			int 			newPartSize,

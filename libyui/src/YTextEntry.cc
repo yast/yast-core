@@ -28,7 +28,7 @@
 #include "YTextEntry.h"
 
 
-YTextEntry::YTextEntry( YWidgetOpt & opt, const YCPString & label )
+YTextEntry::YTextEntry( const YWidgetOpt & opt, const YCPString & label )
     : YWidget( opt )
     , label( label )
     , validChars( "" )

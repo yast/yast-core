@@ -35,7 +35,7 @@ public:
     /**
      * Constructor.
      */
-    YMultiLineEdit( YWidgetOpt &	opt,
+    YMultiLineEdit( const YWidgetOpt &	opt,
 		    const YCPString &	label );
 
     /**

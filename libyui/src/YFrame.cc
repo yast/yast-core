@@ -27,7 +27,7 @@
 #include "YShortcut.h"
 
 
-YFrame::YFrame( YWidgetOpt & opt, const YCPString & newLabel )
+YFrame::YFrame( const YWidgetOpt & opt, const YCPString & newLabel )
     : YContainerWidget( opt )
     , label( YCPString( YShortcut::cleanShortcutString( newLabel->value() ) ) )
 {

@@ -35,7 +35,7 @@ public:
     /**
      * Constructor
      */
-    YSlider( YWidgetOpt &	opt,
+    YSlider( const YWidgetOpt &	opt,
 	     const YCPString &	label,
 	     int 		minValue,
 	     int 		maxValue,

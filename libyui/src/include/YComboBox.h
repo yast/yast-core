@@ -34,7 +34,7 @@ public:
     /**
      * Constructor
      */
-    YComboBox( YWidgetOpt & opt, YCPString label );
+    YComboBox( const YWidgetOpt & opt, YCPString label );
 
     /**
      * Returns whether or not any value ( not only from the list ) can be

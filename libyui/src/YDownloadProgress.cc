@@ -27,10 +27,10 @@
 #include "YDownloadProgress.h"
 
 
-YDownloadProgress::YDownloadProgress( YWidgetOpt &	opt,
-				      const YCPString &	label,
-				      const YCPString &	filename,
-				      int		expectedSize )
+YDownloadProgress::YDownloadProgress( const YWidgetOpt &	opt,
+				      const YCPString &		label,
+				      const YCPString &		filename,
+				      int			expectedSize )
     : YWidget( opt )
     , _label( label )
     , _filename( filename )

@@ -20,7 +20,7 @@
 
 #include "YReplacePoint.h"
 
-YReplacePoint::YReplacePoint( YWidgetOpt & opt )
+YReplacePoint::YReplacePoint( const YWidgetOpt & opt )
     : YContainerWidget( opt )
 {
     // NOP
