@@ -98,7 +98,7 @@ int YBarGraph::segments()
 
 int YBarGraph::value( int n )
 {
-    if ( n >= 0 && n < ( int ) _values.size() )
+    if ( n >= 0 && n < (int) _values.size() )
     {
 	return _values[n];
     }
@@ -114,13 +114,13 @@ int YBarGraph::value( int n )
 
 string YBarGraph::label( int n )
 {
-    if ( n >= 0 && n < ( int ) _labels.size() )
+    if ( n >= 0 && n < (int) _labels.size() )
     {
 	return _labels[n];
     }
     else
     {
-	if ( n >= 0 && n < ( int ) _values.size() )
+	if ( n >= 0 && n < (int) _values.size() )
 	{
 	    // If an existing segment doesn't have a label, use its value
 	    // as fallback

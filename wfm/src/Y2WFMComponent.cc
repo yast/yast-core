@@ -427,6 +427,8 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
 	setlocale( LC_CTYPE, locale.c_str() );
     }
     
+    setlocale (LC_NUMERIC, "C");       // always format numbers with "."
+    
     /* Change language. see info:gettext: */
     setenv ("LANGUAGE", currentLanguage.c_str(), 1);
 

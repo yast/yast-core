@@ -1837,7 +1837,7 @@ int YUI::Recode( const string & instr, const string & from,
     size_t outbuf_len = recode_buf_size-1;
     char * outbuf = recode_buf;
 
-    char * inptr  = ( char * ) instr.c_str();
+    char * inptr  = (char *) instr.c_str();
     char * outptr = outbuf;
     char * l	  = NULL;
 

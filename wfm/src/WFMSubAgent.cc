@@ -59,12 +59,16 @@ WFMSubAgent::start ()
 	my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
 
 	if (!my_comp)
-	    ycp2error ("Can't create component '%s'", my_name.c_str ());
-
-	if (my_comp->getSCRAgent () == NULL)
 	{
-	    // the component does not have a SCR agent, better try to push over stdio
-	    my_agent = new StdioSCRAgent (my_comp);
+	    ycp2error ("Can't create component '%s'", my_name.c_str ());
+	}
+	else
+	{
+	    if (my_comp->getSCRAgent () == NULL)
+	    {
+		// the component does not have a SCR agent, better try to push over stdio
+		my_agent = new StdioSCRAgent (my_comp);
+	    }
 	}
     }
 

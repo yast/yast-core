@@ -20,6 +20,7 @@ libyui_la_SOURCES =				\
 	YBarGraph.cc				\
 	YCheckBox.cc				\
 	YColoredLabel.cc			\
+	YDumbTab.cc				\
 	YComboBox.cc				\
 	YContainerWidget.cc			\
 	YDialog.cc				\

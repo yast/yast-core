@@ -23,7 +23,7 @@
 #include "YShortcutManager.h"
 
 // Return the number of elements of an array of any type
-#define DIM( ARRAY )	( ( int ) ( sizeof( ARRAY)/( sizeof( ARRAY[0] ) ) ) )
+#define DIM( ARRAY )	( (int) ( sizeof( ARRAY)/( sizeof( ARRAY[0] ) ) ) )
 
 
 YShortcutManager::YShortcutManager( YDialog *dialog )
@@ -59,7 +59,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
     // Count wanted shortcuts
     for ( unsigned i=0; i < _shortcutList.size(); i++ )
-	_wanted[ ( int ) _shortcutList[i]->preferred() ]++;
+	_wanted[ (int) _shortcutList[i]->preferred() ]++;
 
 
     // Report errors
@@ -72,7 +72,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 	if ( YShortcut::isValid( shortcut->preferred() ) )
 	{
-	    if ( _wanted[ ( int ) shortcut->preferred() ] > 1 )	// shortcut char used more than once
+	    if ( _wanted[ (int) shortcut->preferred() ] > 1 )	// shortcut char used more than once
 	    {
 		shortcut->setConflict();
 		_conflictCount++;
@@ -100,7 +100,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 	if ( ! shortcut->conflict() )
 	{
-	    _used[ ( int ) shortcut->preferred() ] = true;
+	    _used[ (int) shortcut->preferred() ] = true;
 	}
     }
 
@@ -228,17 +228,17 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	for ( string::size_type pos = 0; pos < str.length(); pos++ )	// Search all the shortcut string.
 	{
 	    char c = YShortcut::normalized( str[ pos ] );
-	    // y2debug( "Checking #%d '%c'", ( int ) c, c );
+	    // y2debug( "Checking #%d '%c'", (int) c, c );
 
-	    if ( YShortcut::isValid(c) && ! _used[ ( int ) c ] ) 	// Could we use this character?
+	    if ( YShortcut::isValid(c) && ! _used[ (int) c ] ) 	// Could we use this character?
 	    {
-		if ( _wanted[ ( int ) c ] < _wanted[ ( int ) candidate ]	// Is this a better choice than what we already have -
+		if ( _wanted[ (int) c ] < _wanted[ (int) candidate ]	// Is this a better choice than what we already have -
 		     || ! YShortcut::isValid( candidate ) )		// or don't we have anything yet?
 		{
 		    candidate = c;			// Use this one.
 		    // y2debug( "Picking %c", c );
 
-		    if ( _wanted[ ( int ) c ] == 0 )	// It doesn't get any better than this:
+		    if ( _wanted[ (int) c ] == 0 )	// It doesn't get any better than this:
 			break;				// Nobody wants this shortcut anyway.
 		}
 	    }
@@ -267,7 +267,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 		     candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
 	}
 
-	_used[ ( int ) candidate ] = true;
+	_used[ (int) candidate ] = true;
 	shortcut->setConflict( false );
 	_conflictCount--;
     }

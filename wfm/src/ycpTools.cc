@@ -71,9 +71,7 @@ bool YcpArgLoad::load( const YCPList & args_r )
   }
 
   if ( !ret ) {
-    INT << *this << ": " << errstr << ": '" << args_r->toString() << "'" << endl;
-  } else {
-    DBG << *this << ": " << args_r->toString() << endl;
+    INT << *this << ": " << errstr << endl;
   }
   return ret;
 }

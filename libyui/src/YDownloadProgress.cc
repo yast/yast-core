@@ -154,7 +154,7 @@ long YDownloadProgress::currentFileSize()
     struct stat stat_info;
 
     if ( stat( filename()->value().c_str(), & stat_info ) == 0 )
-	return ( long ) stat_info.st_size;
+	return (long) stat_info.st_size;
     else
 	return 0L;
 }

@@ -45,6 +45,6 @@ bool YSpacing::isLayoutStretch( YUIDimension dim ) const
  */
 long YSpacing::absoluteSize( YUIDimension dim, float relativeSize )
 {
-    return ( long ) ( relativeSize + 0.5 );
+    return (long) ( relativeSize + 0.5 );
 }
 

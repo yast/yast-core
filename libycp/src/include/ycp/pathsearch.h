@@ -159,6 +159,11 @@ public:
      */
     static void initialize ();
     
+    //! Perl needs to synchronize its search paths with ours (#39512)
+    static std::list<string>::const_iterator searchListBegin (Kind kind);
+    //! Perl needs to synchronize its search paths with ours (#39512)
+    static std::list<string>::const_iterator searchListEnd (Kind kind);
+
     /**
      * Search for a YBC file corresponding to the given YCP file. It also
      * checks, if the YBC file is newer than the YCP.

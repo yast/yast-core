@@ -97,7 +97,7 @@ YShortcut::preferred()
 	_preferred = normalized( findShortcut( shortcutString() ) );
     }
 
-    return ( char ) _preferred;
+    return (char) _preferred;
 }
 
 
@@ -109,7 +109,7 @@ YShortcut::shortcut()
 	_shortcut = preferred();
     }
 
-    return ( char ) _shortcut;
+    return (char) _shortcut;
 }
 
 
@@ -149,7 +149,7 @@ YShortcut::distinctShortcutChars()
 	// Create and initiazlize "contained" array - what possible shortcut
 	// characters are contained in that string?
 
-	bool contained[ sizeof( char ) << 8 ];
+	bool contained[ sizeof(char) << 8 ];
 
 	for ( int i=0; i < DIM( contained ); i++ )
 	    contained[i] = false;
@@ -162,7 +162,7 @@ YShortcut::distinctShortcutChars()
 	for ( string::size_type pos=0; pos < clean.length(); pos++ )
 	{
 	    if ( YShortcut::isValid( clean[ pos ] ) )
-		contained[ ( int ) clean[ pos ] ] = true;
+		contained[ (int) clean[ pos ] ] = true;
 	}
 
 
@@ -241,7 +241,7 @@ YShortcut::findShortcut( const string & str, string::size_type pos )
 {
     pos = findShortcutPos( str, pos );
 
-    return pos == string::npos ? ( char ) 0 : str[ pos+1 ];
+    return pos == string::npos ? (char) 0 : str[ pos+1 ];
 }
 
 
@@ -261,6 +261,6 @@ YShortcut::normalized( char c )
     if ( c >= 'a' && c <= 'z' )	return c - 'a' + 'A';
     if ( c >= 'A' && c <= 'Z' )	return c;
     if ( c >= '0' && c <= '9' )	return c;
-    return ( char ) 0;
+    return (char) 0;
 }
 

@@ -14,10 +14,10 @@ File:		YUI_special_widgets.cc
 
 Special (optional) widgets
 
-		
+
 Authors:	Mathias Kettner <kettner@suse.de>
 Stefan Hundhammer <sh@suse.de>
-		
+
 Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
@@ -35,6 +35,7 @@ Maintainer:	Stefan Hundhammer <sh@suse.de>
 #include "YMacroPlayer.h"
 
 #include "YBarGraph.h"
+#include "YDumbTab.h"
 
 #include <assert.h>
 
@@ -59,6 +60,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     if	    ( symbol == YUISpecialWidget_DummySpecialWidget	)	hasWidget = hasDummySpecialWidget();
     else if ( symbol == YUISpecialWidget_BarGraph		)	hasWidget = hasBarGraph();
     else if ( symbol == YUISpecialWidget_ColoredLabel		)	hasWidget = hasColoredLabel();
+    else if ( symbol == YUISpecialWidget_DumbTab		)	hasWidget = hasDumbTab();
     else if ( symbol == YUISpecialWidget_DownloadProgress	)	hasWidget = hasDownloadProgress();
     else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
     else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
@@ -319,6 +321,204 @@ YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const 
 
 
 
+// ----------------------------------------------------------------------
+
+/*
+ * @widget	DumbTab
+ * @short	Simplistic tab widget that behaves like push buttons
+ * @class	YDumbTab
+ * @arg		list tabs page headers
+ * @arg		term contents page contents - usually a ReplacePoint
+ * @usage	if ( HasSpecialWidget( `DumbTab) {...
+ *		`DumbTab( [ `item(`id(`page1), "Page &1" ), `item(`id(`page2), "Page &2" ) ], contents; }
+ *
+ * @examples	DumbTab1.ycp DumbTab2.ycp
+ *
+ * @description
+ *
+ * This is a very simplistic approach to tabbed dialogs: The application
+ * specifies a number of tab headers and the page contents and takes care of
+ * most other things all by itself, in particular page switching. Each tab
+ * header behaves very much like a PushButton - as the user activates a tab
+ * header, the DumbTab widget simply returns the ID of that tab (or its text if
+ * it has no ID). The application should then take care of changing the page
+ * contents accordingly - call UI::ReplaceWidget() on the ReplacePoint
+ * specified as tab contents or similar actions (it might even just replace
+ * data in a Table or RichText widget if this is the tab contents). Hence the
+ * name <i>Dumb</i>Tab.
+ * <p>
+ * The items in the item list can either be simple strings or `item() terms
+ * with an optional ID for each individual item (which will be returned upon
+ * UI::UserInput() and related when the user selects this tab), a (mandatory)
+ * user-visible label and an (optional) flag that indicates that this tab is
+ * initially selected. If you specify only a string, UI::UserInput() will
+ * return this string.
+ * <p>
+ * <b>Style Guide Note:</b>
+ * <p>
+ * Please notice that using this kind of widget more often than not is the
+ * result of <b>poor dialog or workflow design</b>.
+ * <p>
+ * Using tabs only hides complexity, but the complexity remains there. They do
+ * little to make problems simpler. This however should be the approach of
+ * choice for good user interfaces.
+ * <p>
+ * It is very common for tabs to be overlooked by users if there are just two
+ * tabs to select from, so in this case better use an "Expert..." or
+ * "Details..." button - this gives much more clue to the user that there is
+ * more information  available while at the same time clearly indicating that
+ * those other options are much less commonly used.
+ * <p>
+ * If there are very many different views on data or if there are lots and lots
+ * of settings, you might consider using a tree for much better navigation. The
+ * Qt UI's wizard even has a built-in tree that can be used instead of the help
+ * panel.
+ * <p>
+ * If you use a tree for navigation, unter all circumstances avoid using tabs
+ * at the same time - there is no way for the user to tell which tree nodes
+ * have tabs and which have not, making navigation even more difficult.
+ * KDE's control center or Mozilla's settings are very good examples
+ * how <b>not</b> to do that - you become bogged down for sure in all those
+ * tree nodes and tabs hidden within so many of them.
+ * <p>
+ * <b>Technical Usage Note:</b>
+ * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * for availability with <tt>HasSpecialWidget( `DownloadProgress )</tt> before
+ * using it.
+ */
+
+YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			      const YCPList & optList, int argnr, YRadioButtonGroup * rbg )
+{
+    int numArgs = term->size() - argnr;
+
+    if ( numArgs != 2
+	 || ! term->value( argnr   )->isList()
+	 || ! term->value( argnr+1 )->isTerm()
+	 )
+    {
+	y2error( "Invalid arguments for the DumbTab widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    YCPList itemList = term->value( argnr   )->asList();
+    YCPTerm contents = term->value( argnr+1 )->asTerm();
+
+    rejectAllOptions( term,optList );
+
+    if ( ! hasDumbTab() )
+    {
+	y2error( "This UI does not support the DumbTab widget." );
+	return 0;
+    }
+
+
+    //
+    // Create the DumbTab itself
+    //
+
+    YDumbTab * dumbTab = dynamic_cast<YDumbTab *> ( createDumbTab( parent, opt ) );
+
+    if ( dumbTab )
+    {
+	dumbTab->setParent( parent );
+	
+	//
+	// Parse item (tab header) list
+	//
+
+	for ( int i=0; i < itemList->size(); i++ )
+	{
+	    bool error = false;
+	    YCPValue item = itemList->value(i);
+
+	    if ( item->isString() )
+	    {
+		// Simple case: The list element is just a string. Use it as the tab label.
+
+		dumbTab->addTab( YCPNull(), item->asString(), false );
+	    }
+	    else if ( item->isTerm () && item->asTerm()->name() == YUISymbol_item )
+	    {
+		// Complex case: `item( `id( item_id ), label, selected )
+		// "item_id" and the "selected" flag are optional, "label" is mandatory.
+
+		YCPTerm		itemTerm( item->asTerm() );
+		YCPValue 	id = YCPNull();
+		YCPString	label( "" );
+		bool	  	selected = false;
+		int 		n 	 = 0;
+
+		// get (optional) tab ID
+
+		if ( checkId( itemTerm->value(n) ) )	// check for `id(...)
+		    id = getId( itemTerm->value( n++ ) );
+
+		// get (mandatory) tab label
+
+		if ( itemTerm->size() > n && itemTerm->value(n)->isString() )
+		    label = itemTerm->value( n++ )->asString();
+		else
+		    error = true;
+
+		// get (optional) tab selected state
+
+		if ( itemTerm->size() > n )
+		{
+		    if ( itemTerm->value(n)->isBoolean() )
+			selected = itemTerm->value( n++ )->asBoolean()->value();
+		    else
+			error = true;
+		}
+
+		
+		// check for leftover arguments
+		
+		if ( itemTerm->size() != n )
+		    error = true;
+
+		if ( ! error )
+		    dumbTab->addTab( id, label, selected );
+	    }
+	    else
+		error = true;
+
+
+	    if ( error )
+	    {
+		y2error( "Invalid DumbTab item: %s", item->toString().c_str() );
+		
+		delete dumbTab;
+		return 0;
+	    }
+	}
+
+	//
+	// Create child (page contents)
+	//
+
+	YWidget * child = createWidgetTree( dumbTab, rbg, contents );
+
+	if ( child )
+	{
+	    dumbTab->addChild( child );
+	}
+	else
+	{
+	    y2error( "Couldn't create DumbTab children" );
+
+	    delete dumbTab;
+	    return 0;
+	}
+
+    }
+
+    return dumbTab;
+}
+
+
+
 /*
  * @widget	Slider
  * @short	Numeric limited range input ( optional widget )
@@ -535,7 +735,7 @@ YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 		 term->toString().c_str() );
 	return 0;
     }
-    
+
 
     // Parse options
 
@@ -548,10 +748,10 @@ YWidget * YUI::createWizard( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 
     YCPValue	backButtonId		= getId( term->value( argnr ) );
     YCPString 	backButtonLabel 	= term->value( argnr+1 )->asString();
-    
+
     YCPValue	abortButtonId		= getId( term->value( argnr+2 ) );
     YCPString 	abortButtonLabel	= term->value( argnr+3 )->asString();
-    
+
     YCPValue	nextButtonId		= getId( term->value( argnr+4 ) );
     YCPString 	nextButtonLabel		= term->value( argnr+5 )->asString();
 
@@ -580,6 +780,7 @@ YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
     return 0;
 }
 
+
 YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createBarGraph() method called - "
@@ -587,6 +788,7 @@ YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 
     return 0;
 }
+
 
 YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 				   YCPString label,
@@ -597,6 +799,16 @@ YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 
     return 0;
 }
+
+
+YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt )
+{
+    y2error( "Default createDumbTab() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
+
 
 YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt,
 			     const YCPString & label,
@@ -629,14 +841,10 @@ YWidget * YUI::createPartitionSplitter( YWidget *		parent,
 }
 
 
-
-    /**
-     * Creates a Wizard frame.
-     */
-YWidget *YUI::createWizard( YWidget *parent, YWidgetOpt & opt,
-			    const YCPValue & backButtonId,	const YCPString & backButtonLabel,
-			    const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
-			    const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  )
+YWidget * YUI::createWizard( YWidget *parent, YWidgetOpt & opt,
+			     const YCPValue & backButtonId,	const YCPString & backButtonLabel,
+			     const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
+			     const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  )
 {
     y2error( "Default createWizard() method called - "
 	     "forgot to call HasSpecialWidget()?" );

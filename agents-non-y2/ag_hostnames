@@ -81,7 +81,8 @@ function broadcast_addr() {
 
 # uses RETVAL
 function broadcast_ping() {
-    RETVAL=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+    # wait long enough to gather as many hosts as possible, #40582
+    RETVAL=$(ping -b -w 10 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
 }
 
 # uses exit status

@@ -249,6 +249,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUISpecialWidget_DownloadProgress	)	w = createDownloadProgress	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_BarGraph		)	w = createBarGraph		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_ColoredLabel	)	w = createColoredLabel		( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_DumbTab		)	w = createDumbTab		( p, opt, term, ol, n, rbg );
     else if ( s == YUISpecialWidget_Slider		)	w = createSlider		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_PartitionSplitter	)	w = createPartitionSplitter	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );
@@ -455,7 +456,7 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
     {
 	if ( term->value( argnr )->isInteger() )
 	{
-	    size	= ( float ) term->value( argnr )->asInteger()->value();
+	    size	= (float) term->value( argnr )->asInteger()->value();
 	    param_ok	= true;
 	}
 	else if ( term->value( argnr )->isFloat() )
@@ -1501,7 +1502,6 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
 			    }
 			}
 
-			// UFF! It's made. All arguments checked and gathered :- )
 			selbox->addItem( item_id, item_label, item_selected );
 		    }
 		}

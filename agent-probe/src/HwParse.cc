@@ -1219,6 +1219,12 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("bus"), YCPString (s));
     }
 
+    s = hd_busid_to_hwcfg (hd->bus.id);
+    if (s)
+    {
+	out->add (YCPString ("bus_hwcfg"), YCPString (s));
+    }
+
     if (hd->bus.id == bus_pci)
     {
 	int i = hd->slot >> 8;

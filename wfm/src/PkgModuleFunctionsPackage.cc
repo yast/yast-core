@@ -215,7 +215,7 @@ PkgModuleFunctions::PkgMediaNames ()
 
     for (InstSrcManager::ISrcIdList::const_iterator it = inst_order.begin(); it != inst_order.end(); ++it)
     {
-	ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().name)));
+	ycpnames->add (YCPString ((const std::string &)((*it)->descr()->content_product().asPkgNameEd().name)));
     }
     return ycpnames;
 }

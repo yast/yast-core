@@ -461,10 +461,10 @@ PkgModuleFunctions::SourceProductData (const YCPInteger& id)
   constInstSrcDescrPtr descr = source_id->descr();
 
   YCPMap data;
-  data->add( YCPString("productname"),		YCPString( descr->content_product().name ) );
-  data->add( YCPString("productversion"),	YCPString( descr->content_product().edition.version() ) );
-  data->add( YCPString("baseproductname"),	YCPString( descr->content_baseproduct().name ) );
-  data->add( YCPString("baseproductversion"),	YCPString( descr->content_baseproduct().edition.version() ) );
+  data->add( YCPString("productname"),		YCPString( descr->content_product().asPkgNameEd().name ) );
+  data->add( YCPString("productversion"),	YCPString( descr->content_product().asPkgNameEd().edition.version() ) );
+  data->add( YCPString("baseproductname"),	YCPString( descr->content_baseproduct().asPkgNameEd().name ) );
+  data->add( YCPString("baseproductversion"),	YCPString( descr->content_baseproduct().asPkgNameEd().edition.version() ) );
   data->add( YCPString("vendor"),		YCPString( descr->content_vendor() ) );
   data->add( YCPString("defaultbase"),		YCPString( descr->content_defaultbase() ) );
 

@@ -144,6 +144,17 @@ PkgModuleFunctions::GetSelections (const YCPSymbol& stat, const YCPString& cat)
 }
 
 
+static void
+tiny_helper_no1 (YCPMap* m, const char* k, const PMSolvable::PkgRelList_type& l)
+{
+    const list <string> t1 = PMSolvable::PkgRelList2StringList (l);
+    YCPList t2;
+    for (list <string>::const_iterator it = t1.begin (); it != t1.end (); it++)
+	t2->add (YCPString (*it));
+    m->add (YCPString (k), t2);
+}
+
+
 // ------------------------
 /**
    @builtin Pkg::SelectionData (string selection) -> map
@@ -153,10 +164,15 @@ PkgModuleFunctions::GetSelections (const YCPSymbol& stat, const YCPString& cat)
   		"recommends" : ["sel1", "sel2", ...],
   		"suggests" : ["sel1", "sel2", ...],
   		"archivesize" : 12345678
-  		"order" : "042"]
+  		"order" : "042",
+		"requires" : ["a", "b"],
+		"conflicts" : ["c"],
+		"provides" : ["d"],
+		"obsoletes" : ["e", "f"],
+		]
 
    Get summary (aka label), category, visible, recommends, suggests, archivesize,
-  	and order attributes of a selection
+  	order attributes of a selection, requires, conflicts, provides and obsoletes.
    Returns an empty list if no selection found
    Returns nil if called with wrong arguments
 
@@ -205,6 +221,11 @@ PkgModuleFunctions::SelectionData (const YCPString& sel)
 
     data->add (YCPString ("archivesize"), YCPInteger ((long long) (selection->archivesize())));
     data->add (YCPString ("order"), YCPString (selection->order()));
+
+    tiny_helper_no1 (&data, "requires", selection->requires ());
+    tiny_helper_no1 (&data, "conflicts", selection->conflicts ());
+    tiny_helper_no1 (&data, "provides", selection->provides ());
+    tiny_helper_no1 (&data, "obsoletes", selection->obsoletes ());
 
     return data;
 }

@@ -85,7 +85,7 @@ public:
     bool isValid() const 	{ return magic == YWIDGET_MAGIC; }
 
     /**
-     * Return the widget serial number ( the internal widget ID ).
+     * Return the widget serial number (the internal widget ID).
      */
     int internalId() const	{ return internal_widget_id; }
 
@@ -126,7 +126,7 @@ public:
      * All container widgets should overwrite this function and update
      * any internal pointers accordingly.
      *
-     * Background: Qt widgets ( and objects inherited from them )
+     * Background: Qt widgets (and objects inherited from them)
      * automatically delete any child widgets if they are deleted
      * themselves. This conflicts with destructors that delete child widgets.
      */

@@ -21,7 +21,7 @@
 #define Y2WFMComponent_h
 
 #include <y2/Y2Component.h>
-#include <WFMSubAgent.h>
+#include "WFMSubAgent.h"
 
 #define MAX_CLIENT_NAME_LEN 160
 

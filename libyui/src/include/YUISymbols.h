@@ -123,6 +123,7 @@
 // Special ( optional ) widgets
 
 #define YUISpecialWidget_BarGraph		"BarGraph"
+#define YUISpecialWidget_DumbTab		"DumbTab"
 #define YUISpecialWidget_ColoredLabel		"ColoredLabel"
 #define YUISpecialWidget_DownloadProgress	"DownloadProgress"
 #define YUISpecialWidget_DummySpecialWidget	"DummySpecialWidget"

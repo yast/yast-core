@@ -118,7 +118,16 @@ ScriptingAgent::parseSingleConfigFile (const string &filename)
 
 	if (line[0] == '.')
 	{
-	    RegisterAgent (YCPPath (line), YCPString (filename));
+	    YCPPath path (line);
+	    SubAgents::iterator agent = findByPath (path);
+	    if (agent != agents.end ())
+	    {
+    		y2debug ("Ignoring re-registration of path '%s'", path->toString ().c_str ());
+	    }
+	    else
+	    {
+		RegisterAgent (path, YCPString (filename));
+	    }
 	    break;
 	}
     }

@@ -667,6 +667,17 @@ protected:
 
 
     /**
+     * Creates a DumbTab.
+     *
+     * This is a special widget that the UI may or may not support.
+     * Overwrite this method at your own discretion.
+     * If you do, remember to overwrite the has...() method as well!
+     */
+    virtual YWidget *	createDumbTab( YWidget *parent, YWidgetOpt & opt );
+    virtual bool	hasDumbTab() { return false; }
+
+
+    /**
      * Creates a Slider widget.
      *
      * This is a special widget that the UI may or may not support.
@@ -1251,6 +1262,13 @@ protected:
      */
     YWidget *createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				 const YCPList & optList, int argnr );
+
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a DumbTab.
+     */
+    YWidget *createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+			    const YCPList & optList, int argnr, YRadioButtonGroup * rbg );
 
     /**
      * Helper function of createWidgetTree.

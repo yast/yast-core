@@ -12,8 +12,8 @@
 
    File:       parser.yy
 
-   Author:     Klaus Kämpf <kkaempf@suse.de>
-   Maintainer: Klaus Kämpf <kkaempf@suse.de>
+   Author:     Klaus Kï¿½pf <kkaempf@suse.de>
+   Maintainer: Klaus Kï¿½pf <kkaempf@suse.de>
 
 
    Implementation rules

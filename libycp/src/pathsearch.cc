@@ -16,6 +16,7 @@
 
    Authors:	Mathias Kettner <kettner@suse.de>
 		Arvin Schnell <arvin@suse.de>
+		Martin Vidner <mvidner@suse.cz>
    Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
@@ -276,6 +277,7 @@ YCPPathSearch::initialize (Kind kind, const char *suffix)
     {
 	addPath (kind, string (y2dir) + suffix);
     }
+    addPath (kind, string ("/y2update") + suffix);
 }
 
 
@@ -367,6 +369,17 @@ YCPPathSearch::clearPaths (Kind kind)
     searchList[kind].clear();
 }
 
+std::list<string>::const_iterator
+YCPPathSearch:: searchListBegin (Kind kind)
+{
+    return searchList[kind].begin ();
+}
+
+std::list<string>::const_iterator
+YCPPathSearch:: searchListEnd (Kind kind)
+{
+    return searchList[kind].end ();
+}
 
 string
 YCPPathSearch::bytecodeForFile (string filename)

@@ -89,7 +89,7 @@ public:
      * Adds a new child widget. The YContainerwidget assumes ownership and
      * takes care of deleting the child.
      */
-    void addChild( YWidget *child );
+    virtual void addChild( YWidget *child );
 
     /**
      * Removes and deletes all child widgets. Calls childRemoved()

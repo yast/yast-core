@@ -70,7 +70,7 @@ long YSplit::nicesize( YUIDimension dimension )
 	// Search for the boss
 	int boss = bossChild();
 
-	if ( boss > -1 )	// is there a boss child? ( 0 would be valid! )
+	if ( boss > -1 )	// is there a boss child? (0 would be valid!)
 	{
 	    // Calculate size of all weighted widgets.
 	    // The boss decides this size - that's why he is called the boss.
@@ -288,7 +288,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
     if ( distributableSize >= 0L )
     {
-	// The ( hopefully ) normal case: There is enough space.
+	// The (hopefully) normal case: There is enough space.
 	// The non-weighted children will get their nice sizes,
 	// the rest will be distributed among the weighted children
 	// according to their respective weight ratios.
@@ -301,7 +301,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	if ( totalWeight <= 0 )
 	{
 	    // If there are no weighted children, equally divide the
-	    // extra space among the stretchable children ( if any ).
+	    // extra space among the stretchable children (if any).
 	    // This includes any layout stretch spaces.
 
 	    int stretchableChildren = countStretchableChildren( primary );
@@ -312,13 +312,13 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	else
 	{
 	    // If there are weighted children and there are rubber band
-	    // widgets, equally divide any surplus space ( i.e. space that
+	    // widgets, equally divide any surplus space (i.e. space that
 	    // exceeds the weighted children's nice sizes with respect to
-	    // their weights ) between the rubber bands.
+	    // their weights) between the rubber bands.
 	    //
 	    // This offers an easy way to make nice even spaced buttons
 	    // of equal size: Give all buttons a weight of 1 and insert a
-	    // stretch ( without weight! ) between each.
+	    // stretch (without weight!) between each.
 
 	    long surplusSize = newSize - nicesize( primary );
 
@@ -369,7 +369,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 		if ( child(i)->stretchable( primary ) )
 		{
-		    // If there are only non-weighted children ( and only then ),
+		    // If there are only non-weighted children (and only then),
 		    // the stretchable children will get their fair share of the
 		    // extra space.
 

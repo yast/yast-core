@@ -44,7 +44,7 @@ YCPByteblockRep::YCPByteblockRep (std::istream & str, long len)
 
 YCPByteblockRep::~YCPByteblockRep()
 {
-    delete bytes;
+    delete[] bytes;
 }
 
 

@@ -370,13 +370,13 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
 {
     YCPMap map;
 
-    map->add (YCPString ("product"), YCPString ((const std::string &)(descr->content_product().name) + " " + descr->content_product().edition.version()));
+    map->add (YCPString ("product"), YCPString ((const std::string &)(descr->content_product().asPkgNameEd().name) + " " + descr->content_product().asPkgNameEd().edition.version()));
     map->add (YCPString ("vendor"), YCPString (descr->content_vendor()));
     map->add (YCPString ("requires"), YCPString (descr->content_requires().asString()));
 
     // for installation/modules/Product.ycp
-    map->add (YCPString ("name"), YCPString ((const std::string &)(descr->content_product().name)));
-    map->add (YCPString ("version"), YCPString (descr->content_product().edition.version()));
+    map->add (YCPString ("name"), YCPString ((const std::string &)(descr->content_product().asPkgNameEd().name)));
+    map->add (YCPString ("version"), YCPString (descr->content_product().asPkgNameEd().edition.version()));
     map->add (YCPString ("flags"), YCPString (descr->content_flags()));
     map->add (YCPString ("relnotesurl"), YCPString (descr->content_relnotesurl()));
 
@@ -385,8 +385,11 @@ PkgModuleFunctions::Descr2Map (constInstSrcDescrPtr descr)
     map->add (YCPString ("distproduct"), YCPString ((const std::string &)(descr->content_distproduct().name)));
     map->add (YCPString ("distversion"), YCPString ((const std::string &)(descr->content_distproduct().edition.version())));
 
-    map->add (YCPString ("baseproduct"), YCPString ((const std::string &)(descr->content_baseproduct().name)));
-    map->add (YCPString ("baseversion"), YCPString ((const std::string &)(descr->content_baseproduct().edition.version())));
+    map->add (YCPString ("baseproduct"), YCPString ((const std::string &)(descr->content_baseproduct().asPkgNameEd().name)));
+    map->add (YCPString ("baseversion"), YCPString ((const std::string &)(descr->content_baseproduct().asPkgNameEd().edition.version())));
+
+    map->add (YCPString ("defaultbase"), YCPString (descr->content_defaultbase()));
+
     return map;
 }
 
