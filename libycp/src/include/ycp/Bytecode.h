@@ -127,8 +127,8 @@ class Bytecode {
 	// read YCode from file, return YCode (YError in case of failure)
 	static YCodePtr readFile (const string & filename);
 
-	// write YCode to file, return errno (i.e. file not existing)
-	static int writeFile (const YCodePtr code, const string & filename);
+	// write YCode to file, return true on success (check errno for errors)
+	static bool writeFile (const YCodePtr code, const string & filename);
 };
 
 #endif // Bytecode_h

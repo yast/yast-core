@@ -1082,8 +1082,8 @@ Bytecode::readFile (const string & filename)
 }
 
 
-// write YCode to file, return errno (i.e. file not existing)
-int
+// write YCode to file, return false on error (i.e. file not existing - see errno)
+bool
 Bytecode::writeFile (const YCodePtr code, const string & filename)
 {
     // clear errno first
@@ -1104,5 +1104,5 @@ Bytecode::writeFile (const YCodePtr code, const string & filename)
 
     code->toStream (outstream);
 
-    return outstream.fail ();
+    return ! outstream.fail ();
 }
