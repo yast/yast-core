@@ -404,7 +404,7 @@ YCPValue
 PkgModuleFunctions::TargetGetDU (YCPList args)
 {
     YCPMap dirmap;
-    std::set<PkgDuMaster::MountPoint> mountpoints = _y2pm.packageManager().currentDu();
+    std::set<PkgDuMaster::MountPoint> mountpoints = _y2pm.packageManager().updateDu().mountpoints();
 
     for (std::set<PkgDuMaster::MountPoint>::iterator it = mountpoints.begin();
 	 it != mountpoints.end(); ++it)
