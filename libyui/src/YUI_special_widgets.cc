@@ -30,7 +30,6 @@
 
 #include "YUI.h"
 #include "YUISymbols.h"
-#include "hashtable.h"
 #include "YWidget.h"
 #include "YMacroRecorder.h"
 #include "YMacroPlayer.h"

@@ -45,7 +45,6 @@
 #include "YUI.h"
 #include "YEvent.h"
 #include "YUISymbols.h"
-#include "hashtable.h"
 #include "YDialog.h"
 #include "YWidget.h"
 #include "YMacroRecorder.h"

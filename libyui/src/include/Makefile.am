@@ -8,8 +8,6 @@ pkginclude_HEADERS =				\
 	YUI.h					\
 	UI.h					\
 	YUISymbols.h				\
-	hashtable.gperf				\
-	hashtable.h 				\
 						\
 	YAlignment.h				\
 	YBarGraph.h				\
@@ -55,9 +53,6 @@ pkginclude_HEADERS =				\
 	YWidgetOpt.h				\
 	TreeItem.h
 
-
-hashtable.h: hashtable.gperf
-	gperf -k 1,7,9 -H Y2UIComponent_hash -N Y2UICompoent_in_word_set -L ANSI-C -C -E -I <$< > hashtable.out && mv hashtable.out $@ || (rm -f hashtable.out ; false)
 
 CLEANFILES = libyui.kdoc
 

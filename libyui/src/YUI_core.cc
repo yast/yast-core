@@ -42,7 +42,6 @@
 
 #include "YUI.h"
 #include "YUISymbols.h"
-#include "hashtable.h"
 #include "YWidget.h"
 
 #include "YDialog.h"
