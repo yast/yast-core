@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Feb 22 12:25:41 CET 2004 - kkaempf@suse.de
+
+- don't delete YConst code
+- 2.9.40
+
+-------------------------------------------------------------------
 Sat Feb 21 02:41:23 CET 2004 - ma@suse.de
 
 - Reimplemented counted pointer classes
