@@ -623,3 +623,41 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
 
     return YCPBoolean( true );
 }
+
+
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceChangeUrl (integer source_id , string url ) -> bool
+ *
+ * change url of source
+ * used primarely when re-starting during installation and a cd-device
+ * changed from hdX to srX since ide-scsi was activated
+ * returns false if source_id doesn't exists or the url is malformed
+ */ 
+YCPValue
+PkgModuleFunctions::SourceChangeUrl (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    if ((args->size() != 2)
+	|| !(args->value(1)->isString()))
+    {
+	return YCPError ("Bad source to Pkg::SourceChangeUrl", YCPBoolean (false));
+    }
+
+    Url url (args->value(1)->asString()->value());
+    if (!url.isValid())
+    {
+	return YCPError ("Bad url to Pkg::SourceChangeUrl", YCPBoolean (false));
+    }
+
+    _last_error = _y2pm.instSrcManager().rewriteUrl ( source_id, url );
+    if ( _last_error ) return YCPBoolean( false );
+
+    return YCPBoolean( true );
+}
+
+
+

@@ -159,5 +159,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceDelete")	return SourceDelete (args);
     else if (function == "SourceRaisePriority")	return SourceRaisePriority (args);
     else if (function == "SourceLowerPriority")	return SourceLowerPriority (args);
+    else if (function == "SourceChangeUrl")	return SourceChangeUrl(args);
     return YCPError (string ("Undefined Pkg::")+function);
 }

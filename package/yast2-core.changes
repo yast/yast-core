@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Sep 11 13:00:13 CEST 2002 - kkaempf@suse.de
+
+- allow rewrite of url if cdrom device changed due
+  to ide-scsi (#19185)
+- 2.6.40
+
+-------------------------------------------------------------------
 Wed Sep 11 00:32:15 CEST 2002 - kkaempf@suse.de
 
 - correctly release sources
