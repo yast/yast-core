@@ -37,7 +37,6 @@ int SymbolTableDebug = 0;
 TableEntry::TableEntry (const char *key, SymbolEntry *entry, const Point *point, SymbolTable *table)
     : m_prev (0)
     , m_next (0)
-    , m_inner (0)
     , m_outer (0)
     , m_key (key)
     , m_entry (entry)
@@ -50,7 +49,6 @@ TableEntry::TableEntry (const char *key, SymbolEntry *entry, const Point *point,
 TableEntry::TableEntry (std::istream & str)
     : m_prev (0)
     , m_next (0)
-    , m_inner (0)
     , m_outer (0)
     , m_key (0)
     , m_entry (0)
@@ -459,8 +457,6 @@ SymbolTable::enter (TableEntry *entry)
 		// put entry at start of scope chain
 
 		entry->m_outer = bucket;
-		entry->m_inner = 0;
-		bucket->m_inner = entry;
 
 		// make entry new bucket list member
 
@@ -584,7 +580,6 @@ SymbolTable::remove (TableEntry *entry)
     if (candidate != 0)						// have an outer entry with equal key
     {
 	//y2debug ("SymbolTable: Pop scope\n");
-	candidate->m_inner = 0;					// the innermost is being deleted
 
 	candidate->m_prev = entry->m_prev;			// link into hash chain
 	candidate->m_next = entry->m_next;
@@ -696,7 +691,7 @@ SymbolTable::toString() const
 	} // table entry used
     }
 
-    return s;    
+    return s;
 }
 
 string
@@ -766,7 +761,7 @@ SymbolTable::toStringSymbols() const
 	} // table entry used
     }
 
-    return s;    
+    return s;
 }
 
 // EOF

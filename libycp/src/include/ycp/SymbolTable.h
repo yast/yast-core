@@ -52,7 +52,6 @@ class TableEntry : public MemUsage
     //   represents the 'most recent' definition
     // when removing a key, only the innermost entry is removed.
 
-    TableEntry *m_inner;
     TableEntry *m_outer;
 
     const char *m_key;			// search key, usually the symbol name
@@ -96,9 +95,9 @@ private:
     // a bucket is a (doubly) linked list of TableEntries
     // (via m_prev/m_next) each having the same hash value
     // (standard hash table implementation)
-    // Additionally, scopes are represented by doubly linking
+    // Additionally, scopes are represented by linking
     // TableEntries with equal key values (and naturally the
-    // same hash value) via m_inner/m_outer. The start of
+    // same hash value) via m_outer. The start of
     // this chain always represents the innermost (most
     // recent) definition of a symbol.
 
