@@ -1,6 +1,6 @@
 @HEADER-COMMENT@
 
-# neededforbuild  autoconf automake dejagnu expect gperf gpp hwinfo hwinfo-devel libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools ydoc
+# neededforbuild  autoconf automake dejagnu expect gperf gpp hwinfo hwinfo-devel libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools
 
 @HEADER@
 Summary:	-
