@@ -369,46 +369,52 @@ Y2WFMComponent::GetEnvironmentEncoding ()
 YCPString
 Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encoding)
 {
+    /**
+     * @builtin SetLanguage("de_DE" [, encoding]) -> "<proposed encoding>"
+     * Selects the language for translate()
+     * @example SetLanguage("de_DE", "UTF-8") -> ""
+     * @example SetLanguage("de_DE@euro") -> "ISO-8859-15"
+     * The "<proposed encoding>" is the output of 'nl_langinfo (CODESET)'
+     * and only given if SetLanguage() is called with a single argument.
+     */
+
     string proposedEncoding;
 
-    currentLanguage = language-> value();
-    if (encoding.isNull ()) {
-	setlocale (LC_ALL, currentLanguage.c_str ());	// prepare for nl_langinfo
+    currentLanguage = language->value ();
+
+    if (! encoding.isNull ())
+    {
+	systemEncoding = encoding->value();
+	y2milestone( "SET encoding to: %s", systemEncoding.c_str() );
+    }
+    else
+    {
+	// get current LC_CTYPE
+	string locale = setlocale( LC_CTYPE, NULL );
+
+        // prepare for nl_langinfo (set LC_CTYPE)
+	setlocale ( LC_CTYPE, currentLanguage.c_str());
+
+	// get the proposed encoding from nl_langinfo()
 	proposedEncoding = nl_langinfo (CODESET);
 	if (proposedEncoding.empty())
 	{
 	    y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
 	}
-	y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
-	currentEncoding = "UTF-8";				// default encoding
-    }
-    else 
-    {
-	currentEncoding = encoding->value ();
-    }
-    
-    setlocale (LC_NUMERIC, "C");        // always format numbers with "."
+	else
+	{
+	    systemEncoding = proposedEncoding;
+	}
 
-    bindtextdomain ("base", LOCALEDIR);
-    
-    y2debug ("Codeset will be %s", currentEncoding.c_str());
+	y2milestone ( "GET encoding for %s:  %s", currentLanguage.c_str(), proposedEncoding.c_str() );
 
-    bind_textdomain_codeset ("base", currentEncoding.c_str());
-
-    /* Change language. see info:gettext: */
-    setenv ("LANGUAGE", currentLanguage.c_str(), 1);
-    setenv ("LC_MESSAGES", currentLanguage.c_str(), 1);
-
-    /* Make change known.  */
-    {
-        extern int _nl_msg_cat_cntr;
-        ++_nl_msg_cat_cntr;
+	// reset LC_CTYPE !!! (for ncurses)
+	setlocale( LC_CTYPE, locale.c_str() );
     }
 
-    y2debug ("language '%s', text encoding '%s', textdomain '%s'",
-             currentLanguage.c_str(), currentEncoding.c_str(),
-             "base");
-
+    // FIXME: should be ycp2debug
+    y2debug ( "WFM SetLanguage(\"%s\"), Encoding(\"%s\")",
+	       currentLanguage.c_str(), systemEncoding.c_str());
     return YCPString (proposedEncoding);
 }
 
