@@ -449,7 +449,7 @@ PkgModuleFunctions::PkgGroup (YCPList args)
 YCPValue
 PkgModuleFunctions::SaveState (YCPList args)
 {
-
+    _y2pm.packageManager().SaveState();
     return YCPBoolean (true);
 }
 
@@ -466,7 +466,20 @@ PkgModuleFunctions::SaveState (YCPList args)
 YCPValue
 PkgModuleFunctions::RestoreState (YCPList args)
 {
+    return YCPBoolean (_y2pm.packageManager().RestoreState());
+}
 
+// ------------------------
+/**
+   @builtin Pkg::ClearSaveState() -> bool
+
+   clear a saved state (to reduce memory consumption)
+
+*/
+YCPValue
+PkgModuleFunctions::ClearSaveState (YCPList args)
+{
+    _y2pm.packageManager().ClearSaveState();
     return YCPBoolean (true);
 }
 

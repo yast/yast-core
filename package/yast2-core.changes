@@ -3,6 +3,8 @@ Wed Sep 11 20:39:42 CEST 2002 - kkaempf@suse.de
 
 - implement "PkgNeutral" to neutralize the status of
   a package (#19475)
+- implement status save/restore (#19328)
+- fix abort during install (#18954)
 - 2.6.42
 
 -------------------------------------------------------------------

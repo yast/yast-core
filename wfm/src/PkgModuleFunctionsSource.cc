@@ -543,8 +543,7 @@ PkgModuleFunctions::SourceCacheCopyTo (YCPList args)
 
     if (first_source)
     {
-	Pathname descrdir = first_source->cache_descr_dir();
-
+	Pathname descrdir = first_source->cache_media_dir() + first_source->descr()->descrdir();
 	// copy selection data to target
 	for (PMManager::PMSelectableVec::const_iterator it = _y2pm.selectionManager().begin();
 	     it != _y2pm.selectionManager().end(); ++it)

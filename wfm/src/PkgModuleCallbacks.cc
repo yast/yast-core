@@ -97,7 +97,8 @@ provideDoneCallbackFunc (PMError error, const std::string& reason, void *_wfm)
 static std::string startPackageCallbackModule;
 static YCPSymbol startPackageCallbackSymbol("",false);
 
-static void
+// return "true" to continue, "false" to stop
+static bool
 startPackageCallbackFunc (const std::string& name, const std::string& summary, const FSize& size, bool is_delete, void *_wfm)
 {
     YCPTerm callback = YCPTerm (startPackageCallbackSymbol, startPackageCallbackModule);
@@ -105,8 +106,10 @@ startPackageCallbackFunc (const std::string& name, const std::string& summary, c
     callback->add(YCPString (summary));		// package summary
     callback->add(YCPInteger((long long)size));	// package size
     callback->add(YCPBoolean(is_delete));	// package is being deleted
-    ((YCPInterpreter *)_wfm)->evaluate (callback);
-    return;
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    if (!ret.isNull() && ret->isBoolean())
+	return ret->asBoolean()->value();
+    return true;
 }
 
 
