@@ -38,9 +38,7 @@ static char *outname = NULL;
 static int quiet = 0;		// no output
 static int recursive = 0;	// recursively all files
 static int parse = 0;		// just parse source code
-static int print = 0;		// just read and print bytecode
 static int compile = 0;		// just compile source to bytecode
-static int run = 0;		// just read and print bytecode
 static int no_implicit_namespaces = 0;	// don't preload implicit namespaces
 
 #define progress(text,param)	{ if (!quiet) printf ((text),(param)); }
@@ -155,6 +153,8 @@ processfile (const char *infname, const char *outfname)
 	YCode *c = parsefile (infname);
 	
 	if (c == NULL) return 1;
+	
+	if (quiet) return 0;
 
 	std::ofstream outstream;
 
@@ -187,50 +187,6 @@ processfile (const char *infname, const char *outfname)
 	return 0;
     }
     
-    if (run) {
-	// FIXME: load bytecode: c = Bytecode::readCode (instream);
-	YCode *res = parsefile (infname);
-	
-	if (res == NULL) return 1;
-
-	std::ofstream outstream;
-
-	progress ("running '%s'\n", infname);
-
-    	// run
-	YCPValue value = res->evaluate ();
-
-	string result = value.isNull() ? "nil" : value->toString();
-
-	// print out the result
-	if (outfname != NULL
-	    && *outfname != '-'
-	    && !outstream.is_open ())
-	{
-	    outstream.open (outfname, std::ios::out);
-	}
-
-	if (!outstream.is_open ())
-	{
-	    if ((outfname != NULL) && (*outfname != '-'))
-	    {
-		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
-		return 1;
-	    }
-	}
-
-	if (outstream.is_open())
-	{
-	    outstream << result << std::endl;
-	}
-	else
-	{
-	    std::cout << result << std::endl;
-	}
-	
-	return 0;
-    }
-
     return 0;
 }
 
@@ -348,7 +304,6 @@ int main(int argc, char *argv[])
 	    {"fsyntax-only", 0, 0, 'E'},		// parse only
 	    {"output", 1, 0, 'o'},			// output file
 	    {"compile", 0, 0, 'c'},			// compile to bytecode
-	    {"print", 0, 0, 'p'},			// print bytecode
 	    {"logfile", 1, 0, 'l'},			// specify log file
 	    {"no-implicit-imports", 0, 0, 'd'},		// don't preload implicit namespaces
 	    {0, 0, 0, 0}
@@ -375,9 +330,6 @@ int main(int argc, char *argv[])
 		    exit (1);
 		}
 		recursive = 1;
-		break;
-	    case 'p':
-		print = 1;
 		break;
 	    case 'q':
 		quiet = 1;
@@ -427,12 +379,12 @@ int main(int argc, char *argv[])
     // register builtins
     SCR scr;
     WFM wfm;
-// FIXME: this needs to be done dynamically now    Pkg pkg;
     UI ui;
 
-    if (compile == parse)		// both are zero -> run
+    if (compile == parse)		// both are zero
     {
-	run = 1;
+	// FIXME: what about -p only
+	fprintf (stderr, "-E or -c must be given\n");
     }
 
     if (optind == argc)
