@@ -47,7 +47,7 @@ Obsoletes:	yast2-core-translator-devel
 Provides:	yast2-core-scr-soho-devel
 Obsoletes:	yast2-core-scr-soho-devel
 Requires:	liby2util-devel yast2-packagemanager-devel
-Requires:	libxcrypt-devel hwinfo-devel
+Requires:	libxcrypt-devel hwinfo-devel ncurses-devel
 
 %description devel
 -
