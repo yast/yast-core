@@ -77,11 +77,12 @@ public:
     /**
      * Compares two YCPStrings for equality, greaterness or smallerness.
      * @param v value to compare against
+     * @param rl respect locale
      * @return YO_LESS,    if this is smaller than v,
      *         YO_EQUAL,   if this is equal to v,
      *         YO_GREATER, if this is greater to v
      */
-    YCPOrder compare(const YCPString &v) const;
+    YCPOrder compare(const YCPString &v, bool rl = false) const;
 
     /**
      * Returns a string representation of the value of this

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr 22 14:24:28 CEST 2003 - arvin@suse.de
+
+- added ycp function lsort to sort lists of strings with
+  respect to the current locale (bug #23850)
+
+-------------------------------------------------------------------
 Fri Mar 28 13:34:57 CET 2003 - mvidner@suse.de
 
 - ag_hostnames: added scanning for RPC servers

@@ -86,9 +86,9 @@ string YCPLocaleRep::toString () const
 }
 
 
-YCPOrder YCPLocaleRep::compare (const YCPLocale& l) const
+YCPOrder YCPLocaleRep::compare (const YCPLocale& l, bool rl) const
 {
-    return msg1->compare (l->msg1);
+    return msg1->compare (l->msg1, rl);
 }
 
 

@@ -77,7 +77,7 @@ static string current_textdomain;
 %token	YCP_VOID YCP_BOOLEAN YCP_INTEGER YCP_FLOAT YCP_STRING YCP_TIME YCP_BYTEBLOCK YCP_PATH
 %token  ANY YCP_DECLTYPE MODULE IMPORT EXPORT MAPEXPR INCLUDE GLOBAL TEXTDOMAIN
 %token	DUMPSCOPE MEMINFO SIZE LOOKUP SELECT REMOVE FOREACH EVAL SYMBOLOF
-%token  CONST FULLNAME CALLBACK UNION MERGE ADD CHANGE SORT CLOSEBRACKET
+%token  CONST FULLNAME CALLBACK UNION MERGE ADD CHANGE SORT LSORT CLOSEBRACKET
 
  /* bindings in order of precedence, lowest first  */
 
@@ -907,6 +907,15 @@ term:
 			yyerror ("sort () only accepts 1 or 4 arguments"); YYERROR;
 		}
 		$$.e = YCPBuiltin (YCPB_SORT, e);
+		$$.l = LINE_NOW;
+	}
+|	LSORT '(' tuple_elements ')'	{
+		YCPList e = $3.e->asValue()->asList();
+		if (e->size() != 1)
+		{
+			yyerror ("lsort () only accepts 1 argument"); YYERROR;
+		}
+		$$.e = YCPBuiltin (YCPB_LSORT, e);
 		$$.l = LINE_NOW;
 	}
 |	UI other_builtin {

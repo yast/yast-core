@@ -107,6 +107,12 @@ YCPValue YCPInterpreter::evaluateBuiltinBuiltin (builtin_t code, const YCPList& 
 	}
 	break;
 
+	case YCPB_LSORT:
+	{
+	    ret = evaluateLSort(this, args);
+	}
+	break;
+
 	case YCPB_NLOCALE:
 	{
 	    if (args->size() == 3 && args->value(0)->isString() &&

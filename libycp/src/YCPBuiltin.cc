@@ -154,7 +154,8 @@ string YCPBuiltinRep::toString() const
 	{ "[]=", 102 },		/* 57 YCPB_BASSIGN */
 	{ "//gettextdomain", 0 },/* 58 YCPB_TEXTDOMAIN */
 	{ "sort", 0 },		/* 59 YCPB_SORT */
-	{ "", 2 } 		/* 60 YCPB_ASSIGN */
+	{ "lsort", 0 },		/* 60 YCPB_LSORT */
+	{ "", 2 } 		/* 61 YCPB_ASSIGN */
     };
 
     if (code > YCPB_ASSIGN)
@@ -196,7 +197,7 @@ string YCPBuiltinRep::toString() const
 		    && value(0)->asBuiltin()->builtin_code() == YCPB_GLOBALDEFINE)
 		{
 		    return "UI::{ " + value(0)->toString() + "}";
-		} 
+		}
 		return sb2sp + value(0)->toString();
 	    }
 	    break;

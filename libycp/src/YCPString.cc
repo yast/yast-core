@@ -54,12 +54,24 @@ const char* YCPStringRep::value_cstr() const
 }
 
 
-YCPOrder YCPStringRep::compare(const YCPString& s) const
+YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 {
-    // This function must not be locale aware otherwise bad
-    // things happen when changing the locale.
+    // This function must not be locale aware per default otherwise
+    // extraordinary bad things happen when changing the locale at
+    // runtime.
 
-    const int tmp = v.compare (s->v);
+    int tmp = 0;
+
+    if (!rl)
+    {
+	tmp = v.compare (s->v);
+    }
+    else
+    {
+	// FIXME: What encoding do our strings have? Always UTF-8?
+	// Likely we need iconv here.
+	tmp = strcoll (v.c_str (), s->v.c_str ());
+    }
 
     if (tmp == 0)
 	return YO_EQUAL;

@@ -1,20 +1,20 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPLocale.h
+   File:	YCPLocale.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-               Arvin Schnell <arvin@suse.de>
-   Maintainer: Arvin Schnell <arvin@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -83,11 +83,12 @@ public:
     /**
      * Compares two YCPLocales for equality, greaterness or smallerness.
      * @param v value to compare against
+     * @param rl respect locale
      * @return YO_LESS,    if this is smaller than v,
      *         YO_EQUAL,   if this is equal to v,
      *         YO_GREATER, if this is greater to v
      */
-    YCPOrder compare (const YCPLocale& v) const;
+    YCPOrder compare (const YCPLocale& v, bool rl = false) const;
 
     /**
      * Returns a string representation of this objects value.

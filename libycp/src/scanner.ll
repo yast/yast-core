@@ -304,6 +304,7 @@ merge		{ return MERGE;		};
 add		{ return ADD;		};
 change		{ return CHANGE;	};
 sort		{ return SORT;		};
+lsort		{ return LSORT;		};
 
   /* -- basetype  */
 

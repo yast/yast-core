@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPBasicInterpreter.cc
+   File:	YCPBasicInterpreter.cc
 
    Author:	Mathias Kettner <kettner@suse.de>
 		Klaus Kaempf <kkaempf@suse.de>

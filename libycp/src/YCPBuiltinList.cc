@@ -14,6 +14,7 @@
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
 		Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
  $Id$
@@ -733,6 +734,30 @@ YCPValue evaluateSort(YCPInterpreter *interpreter, const YCPList& args)
 	return result;
     }
     return YCPError("Wrong arguments to sort()");
+}
+
+
+YCPValue evaluateLSort(YCPInterpreter *interpreter, const YCPList& args)
+{
+    /**
+     * @builtin lsort(list l) -> list
+     * Sort the list l according to the current locale.
+     * Duplicates are not removed.
+     *
+     * Example <pre>
+     * lsort (["a", "b", "ä"]) -> ["a", "ä", "b"]
+     * </pre>
+     */
+    if (args->size() == 1 && args->value(0)->isList())
+    {
+	YCPList result = args->value(0)->asList()->shallowCopy();
+
+	result->lsortlist();
+
+	return result;
+    }
+
+    return YCPError("Wrong arguments to lsort()");
 }
 
 

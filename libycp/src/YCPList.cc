@@ -10,10 +10,11 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPList.cc
+   File:	YCPList.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 /*
@@ -94,13 +95,25 @@ void YCPListRep::swap(int x, int y)
 
 static bool compareYCP( const YCPValue& y1, const YCPValue& y2 )
 {
-    return (y1->compare(y2)) == YO_LESS;
+    return y1->compare(y2) == YO_LESS;
 }
 
 
 void YCPListRep::sortlist()
 {
     std::sort (elements.begin (), elements.end (), compareYCP);
+}
+
+
+static bool lcompareYCP( const YCPValue& y1, const YCPValue& y2 )
+{
+    return y1->compare(y2, true) == YO_LESS;
+}
+
+
+void YCPListRep::lsortlist()
+{
+    std::sort (elements.begin (), elements.end (), lcompareYCP);
 }
 
 

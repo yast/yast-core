@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       YCPInterpreter.h
+   File:	YCPInterpreter.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -275,6 +275,11 @@ YCPValue evaluateSformat(YCPInterpreter *interpreter, const YCPList& args);
  * Implements the builtin sort
  */
 YCPValue evaluateSort(YCPInterpreter *interpreter, const YCPList& args);
+
+/**
+ * Implements the builtin lsort
+ */
+YCPValue evaluateLSort(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
  * Implements the builtin find

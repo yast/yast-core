@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|							 (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       YCPValue.h
 
@@ -30,7 +30,7 @@
  * Defines constants for the Value types. The Value type specifies the class
  * the YCPValueRep object belongs to.
  */
-enum YCPValueType { 
+enum YCPValueType {
     YT_VOID        = 0,
     YT_BOOLEAN     = 1,
     YT_INTEGER     = 2,
@@ -164,7 +164,7 @@ public:
      * Casts this value into a pointer of type const YCPVoidRep *.
      */
     YCPVoid asVoid() const;
-    
+
     /**
      * Casts this value into a pointer of type const YCPBooleanRep *.
      */
@@ -255,11 +255,12 @@ public:
      * Compares two YCP values for equality, greaterness or smallerness.
      * You should not compare values of different types.
      * @param v value to compare against
+     * @param rl respect locale
      * @return YO_LESS, if this is smaller than v,
      *         YO_EQUAL,   if this is equal to v,
      *         YO_GREATER, if this is greater to v
      */
-    YCPOrder compare(const YCPValue &v) const;
+    YCPOrder compare(const YCPValue &v, bool rl = false) const;
 };
 
 

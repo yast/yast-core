@@ -85,8 +85,9 @@ enum builtin_t {
 	YCPB_BASSIGN,		/* 57 */
 	YCPB_GETTEXTDOMAIN,	/* 58 */
 	YCPB_SORT,		/* 59 */
+	YCPB_LSORT,		/* 60 */
 	/* assign must be last here, see YCPBuiltin.cc  */
-	YCPB_ASSIGN		/* 60 */
+	YCPB_ASSIGN		/* 61 */
 };
 
 
