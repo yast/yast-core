@@ -501,7 +501,7 @@ PkgModuleFunctions::PkgGroup (const YCPString& p)
 
 // ------------------------
 /**
-   @builtin Pkg::PkgSrcLocation (string package) -> string
+   @builtin Pkg::PkgLocation (string package) -> string
 
    Get file location of a package in the source
 
