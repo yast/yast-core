@@ -135,6 +135,15 @@ YCPValue YTable::queryWidget( const YCPSymbol & property )
 	if ( index >= 0 ) return rows[ index ].id;
 	else	      return YCPVoid();
     }
+    else if ( s == YUIProperty_Items )
+    {
+	YCPList result;
+	for ( int i = 0 ; i < numItems () ; i ++ )
+	{
+	    result->add ( rows[ i ].makeTerm () );
+	}
+	return result;
+    }
     else return YWidget::queryWidget( property );
 }
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 15 18:09:08 CEST 2004 - visnov@suse.cz
+
+- implemented QueryWidget ( `Items ) for `Table (#38909)
+
+-------------------------------------------------------------------
 Thu Apr 15 17:29:21 CEST 2004 - visnov@suse.cz
 
 - log also arguments when doing WFM::call (#39002) 
