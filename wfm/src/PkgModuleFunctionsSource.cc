@@ -74,8 +74,11 @@ PkgModuleFunctions::getSourceByArgs (YCPList args, int pos)
 /**
  * @builtin Pkg::SourceInit (string url) -> integer
  *
- * initializes a package source under the given url
- *
+ * initializes a *NEW* package source under the given url
+ * This is only needed at initial installation or in
+ * the source manager. Normal code should rely on the
+ * cached sources.
+ * @see SourceList
  */
 YCPValue
 PkgModuleFunctions::SourceInit (YCPList args)
@@ -149,7 +152,8 @@ PkgModuleFunctions::SourceInit (YCPList args)
  * @builtin Pkg::SourceList (boolean enabled_only) -> list of integer
  *
  * return list of known (and enabled) source id's
- *
+ * This starts the packagemanager from it's cache of known
+ * sources
  */
 YCPValue
 PkgModuleFunctions::SourceList (YCPList args)
@@ -385,8 +389,11 @@ PkgModuleFunctions::SourceProductData (YCPList args)
 
 
 /**
- * @builtin Pkg::SourceProvideFile (integer source, string file) -> string path
+ * @builtin Pkg::SourceProvideFile (integer source, integer medianr, string file) -> string path
  * provide file from source to local path
+ * @param source	source id from SourceList()
+ * @param medianr	should be 0 (let the packagemanager decide about the media)
+ * @param file		filename relative to source (i.e. CD) root path
  */
 YCPValue
 PkgModuleFunctions::SourceProvideFile (YCPList args)
@@ -395,8 +402,9 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
     if (!source_id)
 	return YCPVoid();
 
-    if ((args->size() != 2)
-	|| !(args->value(1)->isString()))
+    if ((args->size() != 3)
+	|| !(args->value(1)->isInteger())
+	|| !(args->value(2)->isString()))
     {
 	return YCPError ("Bad args to Pkg::SourceProvideFile");
     }
