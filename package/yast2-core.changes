@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Aug 28 22:47:48 CEST 2002 - kkaempf@suse.de
+
+- more Pkg:: functions for media change via packagemanager
+  callbacks
+- 2.6.23
+
+-------------------------------------------------------------------
 Tue Aug 27 11:46:39 CEST 2002 - arvin@suse.de
 
 - added support for firewire controllers in probe agent
