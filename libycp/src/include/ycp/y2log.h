@@ -1,13 +1,11 @@
-/*
+/* y2log.h
+ *
  * YaST2: Core system
  *
- * Description:
- *   YaST2 logging implementation
+ * YaST2 logging implementation
  *
- * Authors:
- *   Mathias Kettner <kettner@suse.de>
- *   Thomas Roelz <tom@suse.de>
- *   Michal Svec <msvec@suse.cz>
+ * Authors: Mathias Kettner <kettner@suse.de>
+ *          Michal Svec <msvec@suse.cz>
  *
  * $Id$
  */
