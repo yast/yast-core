@@ -26,5 +26,5 @@
 .modules
 
 `ag_modules(
-    ModulesConf("/etc/modules.conf")
+    ModulesConf("/etc/modprobe.conf")
 )

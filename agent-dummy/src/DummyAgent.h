@@ -16,7 +16,6 @@
 #define DummyAgent_h
 
 #include <scr/SCRAgent.h>
-#include <scr/SCRInterpreter.h>
 #include <Y2.h>
 
 /**

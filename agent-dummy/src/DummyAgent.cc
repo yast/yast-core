@@ -16,12 +16,12 @@
 #include <sys/types.h>
 #include <string>
 
-#define y2log_component "ag_dummy"
 #include <YCP.h>
 #include <ycp/YCPParser.h>
 #include <ycp/y2log.h>
 
 #include "DummyAgent.h"
+#define DUMMY_LOG_STRING "LOGTHIS_SECRET_314 "
 
 /**
  * Constructor
@@ -51,8 +51,9 @@ DummyAgent::Read (const YCPPath& path, const YCPValue& arg)
 	v = checkPath(path, defaultMap, deflt);
     }
 
-    y2debug("Read	%s", (path->toString() + (arg.isNull()?"":(" "+arg->toString())) +
-			      (v.isNull()?"":(" "+v->toString())) ).c_str());
+    y2debug("%sRead	%s", DUMMY_LOG_STRING,
+	    (path->toString() + (arg.isNull()?"":(" "+arg->toString())) +
+	     (v.isNull()?"":(" "+v->toString())) ).c_str());
 
     return v;
 }
@@ -77,9 +78,12 @@ DummyAgent::Write (const YCPPath& path, const YCPValue& value,
     {
 	v = checkPath(path, defaultMap, deflt);
     }
-    y2debug("Write	%s", (path->toString() + " " + value->toString() +
-			      (arg.isNull()?"":(" "+arg->toString())) +
-			      (v.isNull()?"":(" "+v->toString())) ).c_str());
+
+    y2debug("%sWrite	%s", DUMMY_LOG_STRING,
+	    (path->toString() + " " + value->toString() +
+	     (arg.isNull()?"":(" "+arg->toString())) +
+	     (v.isNull()?"":(" "+v->toString())) ).c_str());
+
     return v;
 }
 
@@ -103,9 +107,12 @@ DummyAgent::Execute (const YCPPath& path, const YCPValue& value,
     {
 	v = checkPath(path, defaultMap, deflt);
     }
-    y2debug("Execute	%s", (path->toString() + " " + value->toString() +
-			      (arg.isNull()?"":(" "+arg->toString())) +
-			      (v.isNull()?"":(" "+v->toString())) ).c_str());
+    
+    y2debug("%sExecute	%s", DUMMY_LOG_STRING,
+	    (path->toString() + " " + value->toString() +
+	     (arg.isNull()?"":(" "+arg->toString())) +
+	     (v.isNull()?"":(" "+v->toString())) ).c_str());
+
     return v;
 }
 
@@ -130,7 +137,8 @@ YCPValue DummyAgent::Dir(const YCPPath& path)
 	}
     }
 
-    y2debug("Dir	%s: %s", path->toString().c_str(), l->toString ().c_str ());
+    y2debug("%sDir	%s: %s", DUMMY_LOG_STRING,
+	    path->toString().c_str(), l->toString ().c_str ());
 
     return l;
 }
