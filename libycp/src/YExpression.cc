@@ -1859,13 +1859,21 @@ YEBuiltin::finalize ()
 	    ycp2error ("First parameter should be format string");
 	    return Type::Error;
 	}
-	if (formatcode->kind() != YCode::ycString)
+	
+	const char *cptr = NULL;
+	if (formatcode->kind() == YCode::ycLocale)
 	{
+	    // use the locale string (avoids warning for sformat)
+	    cptr = ((YLocalePtr)formatcode)->value();
+	}
+	else if (formatcode->kind() != YCode::ycString)
+	{
+	    // otherwise accept only strings
 	    extern ExecutionEnvironment ee;
 	    ycp2warning (ee.filename().c_str(), ee.linenumber(), "Format string is not constant, no parameter checking possible");
 	    return 0;
 	}
-	const char *cptr = formatcode->evaluate()->asString()->value_cstr();
+	cptr = formatcode->evaluate()->asString()->value_cstr();
 
 	// check %n values and set bits in 'mask' for every n
 	// dont simply count the number of %n occurences, since they might be duplicate
