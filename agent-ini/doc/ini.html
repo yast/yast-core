@@ -234,7 +234,7 @@ href="#options">options</a>"  : [ "option1", "option2", ... ]],
 <dd>In most cases you will specify single file here as a
 string.</dd>
 
-<dt>Multiple files mode</dt>
+<dt id="multiple-files">Multiple files mode</dt>
 
 <dd>If you specify list of file specifications (that may contain
 wildcards), these filenames are used as section names and content
@@ -362,7 +362,8 @@ you want to have indented subsections, use this.</p>
 
 <dt id="ignore_case">"ignore_case":</dt>
 
-<dd>case is not significant when reading keys/section names.</dd>
+<dd>case is not significant when reading keys/section names.
+Does not work with <a href="#multiple-files">multiple files</a>.</dd>
 
 <dt id="first_upper">"first_upper"</dt>
 

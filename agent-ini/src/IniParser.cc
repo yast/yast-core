@@ -175,6 +175,12 @@ int IniParser::initMachine (const YCPMap&scr)
 #undef  COMPARE_OPTION
 	}
 
+    if (ignore_case && multiple_files)
+    {
+       y2error ("When using multiple files, ignore_case does not work");
+       ignore_case = false;
+    }
+
     v = scr->value(YCPString("rewrite"));
     if (!v.isNull() && v->isList())
     {
