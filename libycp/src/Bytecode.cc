@@ -976,6 +976,7 @@ Bytecode::writeFile (const YCode *code, const string & filename)
     return outstream.fail ();
 }
 
+
 string
 Bytecode::fileTimestamp (const string & filename)
 {
