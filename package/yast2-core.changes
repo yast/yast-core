@@ -1,9 +1,15 @@
 -------------------------------------------------------------------
+Mon Feb  9 16:24:08 CET 2004 - visnov@suse.cz
+
+- Revert y2error -> y2warning for UI builtin without an instance. 
+
+-------------------------------------------------------------------
 Mon Feb 09 14:34:36 CET 2004 - arvin@suse.de
 
 - fixed building on s390
 
 -------------------------------------------------------------------
+>>>>>>> 1.217
 Fri Feb  6 18:46:00 CET 2004 - sh@suse.de
 
 - Re-enabled macro player with new interpreter
