@@ -61,8 +61,9 @@ bool YcpArgLoad::load( const YCPList & args_r )
 	ret = false;
 	break;
       case YcpArg::badformat:
-	errstr = stringutil::form( "arg%d: malformed %s", i,
-				   ::asString( _proto[i]->type() ).c_str() );
+	errstr = stringutil::form( "arg%d: malformed %s : '%s'", i,
+				   ::asString( _proto[i]->type() ).c_str(),
+				   args_r->value(i)->toString().c_str() );
 	ret = false;
 	break;
       }
@@ -70,7 +71,7 @@ bool YcpArgLoad::load( const YCPList & args_r )
   }
 
   if ( !ret ) {
-    INT << *this << ": " << errstr << ": " << args_r->toString() << endl;
+    INT << *this << ": " << errstr << ": '" << args_r->toString() << "'" << endl;
   } else {
     DBG << *this << ": " << args_r->toString() << endl;
   }
