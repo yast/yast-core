@@ -235,26 +235,26 @@ while (1)
 	    }
 	    elsif ($path eq '.newout')
 	    {
-		ycp::Return(\@out);
+		ycp::Return(\@out, 1);
 		
 		$newlines = 0;
 		@out = ();
 	    }
 	    elsif ($path eq '.newerr')
 	    {
-		ycp::Return(\@err);
+		ycp::Return(\@err, 1);
 		
 		$newlines_err = 0;
 		@err = ();
 	    }
 	    elsif ($path eq '.buffer_out')
 	    {
-		ycp::Return($input1);
+		ycp::Return($input1, 1);
 		$input1 = '';
 	    }
 	    elsif ($path eq '.buffer_err')
 	    {
-		ycp::Return($input2);
+		ycp::Return($input2, 1);
 		$input2 = '';
 	    }
 	    elsif ($path eq '.output_open')
