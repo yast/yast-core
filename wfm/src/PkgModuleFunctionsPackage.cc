@@ -520,8 +520,8 @@ PkgModuleFunctions::GetPackages(YCPList args)
 
     YCPList packages;
 
-    for (PMManager::PMSelectableVec::const_iterator it = Y2PM::packageManager().begin();
-	 it != Y2PM::packageManager().end();
+    for (PMManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
+	 it != _y2pm.packageManager().end();
 	 ++it)
     {
 	PMObjectPtr package;
