@@ -1,6 +1,6 @@
 @HEADER-COMMENT@
 
-# neededforbuild  dejagnu expect gperf gpp hwinfo hwinfo-devel kdoc libgpp libtool libxcrypt libxcrypt-devel tcl yast2-devtools
+# neededforbuild  dejagnu expect gperf gpp hwinfo hwinfo-devel kdoc libgpp libtool libxcrypt libxcrypt-devel tcl liby2util yast2-devtools
 
 @HEADER@
 Summary:	-
