@@ -79,7 +79,7 @@ public:
      * Is 0 if start () was not called or failed or the Y2Component does not
      * support the getSCRAgent () function.
      */
-    SCRAgent* agent () { return my_comp ? my_comp->getSCRAgent () : 0; }
+    SCRAgent* agent () { return my_agent ? my_agent : (my_comp ? my_comp->getSCRAgent () : 0); }
 
 private:
 
@@ -97,6 +97,11 @@ private:
      * The component.
      */
     Y2Component* my_comp;
+    
+    /**
+     * The agent if component does not provide one
+     */
+    SCRAgent* my_agent;
 
     WFMSubAgent (const WFMSubAgent&);		// disallow
     void operator = (const WFMSubAgent&);	// disallow

@@ -21,13 +21,15 @@
 #include <ycp/y2log.h>
 #include <y2/Y2ComponentBroker.h>
 #include <scr/SCRAgent.h>
+#include "../../scr/src/StdioSCRAgent.h"
 #include <WFMSubAgent.h>
 
 
 WFMSubAgent::WFMSubAgent (const string& name, int handle)
     : my_name (name),
       my_handle (handle),
-      my_comp (0)
+      my_comp (0),
+      my_agent (0)
 {
 }
 
@@ -39,6 +41,11 @@ WFMSubAgent::~WFMSubAgent ()
 	y2debug ("Deleting SubAgent: %d %s", my_handle, my_name.c_str ());
 	my_comp->result (YCPVoid ());	// tell server to terminate
 	delete my_comp;
+    }
+    
+    if (my_agent)
+    {
+	delete my_agent;
     }
 }
 
@@ -53,6 +60,12 @@ WFMSubAgent::start ()
 
 	if (!my_comp)
 	    ycp2error ("", -1, "Can't create component '%s'", my_name.c_str ());
+	    
+	if (my_comp->getSCRAgent () == NULL)
+	{
+	    // the component does not have a SCR agent, better try to push over stdio
+	    my_agent = new StdioSCRAgent (my_comp);
+	}
     }
 
     return my_comp != 0;
@@ -68,18 +81,14 @@ WFMSubAgent::start_and_check (bool check_version, int* error)
 	return false;
     }
 
-    YCPValue q1 = YCPTerm (YCPSymbol ("SuSEVersion", false));
+    YCPValue q1 = YCPTerm ("SuSEVersion");
     YCPValue q2 = YCPVoid ();
 
     YCPValue a = my_comp->evaluate (check_version ? q1 : q2);
 
-    if (a->isError ())
+    if (a.isNull ())
     {
-	YCPValue e = a->asError ()->value ();
-	if (e->isInteger ())
-	    *error = -3 - (int)(e->asInteger ()->value ());
-	else
-	    *error = -3;
+	*error = -1;
 	return false;
     }
 
