@@ -71,11 +71,12 @@ PkgModule::evaluate (string function, YCPList args)
     // callback functions
     else if (function == "CallbackStartProvide")	return CallbackStartProvide (args);
     else if (function == "CallbackProgressProvide")	return CallbackProgressProvide (args);
-    else if (function == "CallbackStartInstall")	return CallbackStartInstall (args);
-    else if (function == "CallbackProgress")	return CallbackProgress (args);
-    else if (function == "CallbackDoneInstall")	return CallbackDoneInstall (args);
-    else if (function == "CallbackMediaChange")	return CallbackMediaChange (args);
-    else if (function == "CallbackMediaError")	return CallbackMediaError (args);
+    else if (function == "CallbackDoneProvide")		return CallbackDoneProvide (args);
+    else if (function == "CallbackStartPackage")	return CallbackStartPackage (args);
+    else if (function == "CallbackProgressPackage")	return CallbackProgressPackage (args);
+    else if (function == "CallbackDonePackage")		return CallbackDonePackage (args);
+    else if (function == "CallbackMediaChange")		return CallbackMediaChange (args);
+    else if (function == "CallbackMediaError")		return CallbackMediaError (args);
 
     // package functions
     else if (function == "GetPackages")		return GetPackages (args);

@@ -76,9 +76,10 @@ class PkgModuleFunctions
 	// callbacks
 	YCPValue CallbackStartProvide (YCPList args);
 	YCPValue CallbackProgressProvide (YCPList args);
-	YCPValue CallbackStartInstall (YCPList args);
-	YCPValue CallbackProgress (YCPList args);
-	YCPValue CallbackDoneInstall (YCPList args);
+	YCPValue CallbackDoneProvide (YCPList args);
+	YCPValue CallbackStartPackage (YCPList args);
+	YCPValue CallbackProgressPackage (YCPList args);
+	YCPValue CallbackDonePackage (YCPList args);
 	YCPValue CallbackMediaChange (YCPList args);
 	YCPValue CallbackMediaError (YCPList args);
 

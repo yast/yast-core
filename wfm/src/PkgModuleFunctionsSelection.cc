@@ -256,16 +256,23 @@ PkgModuleFunctions::SetSelectionString (std::string name)
 
 	if (selection->isBase())
 	{
-	    y2milestone ("Base ! Selecting all recommends");
+	    y2milestone ("Base ! Selecting all required and recommends");
 	    const std::list<std::string> recommends = selection->recommends();
-	    if (recommends.size() == 0)
-		return true;
 	    for (std::list<std::string>::const_iterator it = recommends.begin();
 		 it != recommends.end(); ++it)
 	    {
 		y2milestone ("Selecting recommends '%s'", it->c_str());
 		SetSelectionString (*it);
 	    }
+	}
+#warning Solve selections
+	y2milestone ("Selecting all required");
+	const PMSolvable::PkgRelList_type& requires = selection->requires();
+	for (PMSolvable::PkgRelList_type::const_iterator it = requires.begin();
+	     it != requires.end(); ++it)
+	{
+	    y2milestone ("Selecting requires '%s'", ((const std::string &)(it->name())).c_str());
+	    SetSelectionString ((const std::string &)(it->name()));
 	}
 	return true;
     }

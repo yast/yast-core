@@ -436,15 +436,15 @@ PkgModuleFunctions::SourceProvideFile (YCPList args)
 	return YCPError ("Bad args to Pkg::SourceProvideFile");
     }
 
-    constMediaAccessPtr media = source_id->media();
-    std::string filename = args->value(1)->asString()->value();
-    PMError err = media->provideFile (Pathname (filename));
+    Pathname file_r;
+    Pathname path (args->value(2)->asString()->value());
+    PMError err = source_id->provideFile (args->value(1)->asInteger()->value(), path, file_r);
     if (err)
     {
-	y2error ("provideFile(%s) failed: %s", filename.c_str(), err.errstr().c_str());
+	y2error ("provideFile(%s) failed: %s", path.asString().c_str(), err.errstr().c_str());
 	return YCPVoid();
     }
-    return YCPString (media->localPath (filename).asString());
+    return YCPString (file_r.asString());
 }
 
 
