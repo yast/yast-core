@@ -1,0 +1,23 @@
+/**
+ * File:
+ *   ypserv.scr
+ * Summary:
+ *   SCR Agent for finding NIS servers.
+ * Access:
+ *   read
+ * Authors:
+ *   Martin Vidner <mvidner@suse.cz>
+ * Example:
+ *   Read (.net.ypserv.find.mydomain)
+ *   (
+ *     [
+ *       "192.168.1.1",
+ *       "192.168.1.11",
+ *     ]
+ *   )
+ * $Id$
+ *
+ */
+.net.ypserv
+
+`ag_ypserv ()
