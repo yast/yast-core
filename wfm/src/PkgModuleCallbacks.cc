@@ -176,19 +176,36 @@ namespace Y2PMRecipients {
     virtual void reportend()   {
     }
     virtual void start() {
+      CB callback( ycpcb( YCPCallbacks::CB_StartRebuildDb ) );
+      if ( callback._set ) {
+	callback.evaluate();
+      }
     }
     virtual void progress( const ProgressData & prg ) {
       CB callback( ycpcb( YCPCallbacks::CB_ProgressRebuildDb ) );
       if ( callback._set ) {
 	_pc = prg;
-	if ( _pc.updateIfNewPercent( 5 ) ) {
+	if ( _pc.updateIfNewPercent() ) {
 	  // report changed values
 	  callback.addInt( _pc.percent() );
 	  callback.evaluate();
 	}
       }
     }
+    virtual void notify( const std::string & msg ) {
+      CB callback( ycpcb( YCPCallbacks::CB_NotifyRebuildDb ) );
+      if ( callback._set ) {
+	callback.addStr( msg );
+	callback.evaluate();
+      }
+    }
     virtual void stop( PMError error ) {
+      CB callback( ycpcb( YCPCallbacks::CB_StopRebuildDb ) );
+      if ( callback._set ) {
+	callback.addInt( error );
+	callback.addStr( error.errstr() );
+	callback.evaluate();
+      }
     }
   };
 
