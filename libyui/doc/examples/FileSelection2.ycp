@@ -1,0 +1,66 @@
+// Example for the file selection builtins
+{
+    include "ui/file_popups.ycp";
+    
+    UI::OpenDialog( `opt(`defaultsize),
+		    `VBox(
+			  `Image(`suseheader, "SuSE" ),
+			  `VSpacing( 0.5 ),
+			  `Heading( "YaST2 File Selector Demo" ),
+			  `VStretch(),
+
+			  `HBox(
+				`HStretch(),
+				`HWeight( 1,
+					  `VBox(
+						`PushButton(`id(`askDir), `opt(`hstretch), "Select &Directory..." ),
+						`PushButton(`id(`load ),  `opt(`hstretch), "&Load File..." ),
+						`PushButton(`id(`saveAs), `opt(`hstretch), "Save &As..." )
+						)
+					  ),
+				`HSpacing( 2 )
+				),
+			  `VSpacing(),
+			  `HBox(
+				`Label( "Selected: " ),
+				`Label(`id(`name), `opt(`outputField, `hstretch), "<nothing selected>" )
+				),
+			  `VSpacing(),
+			  `Right( `PushButton(`id(`close), "&Close" ) )
+			  )
+		    );
+
+    symbol button = nil;
+    string name = "";
+
+    repeat
+    {
+	boolean update = false;
+	button = UI::UserInput();
+
+	if ( button == `askDir )
+	{
+	    name = PopupDir( "/tmp" );
+	}
+	else if ( button == `load )
+	{
+	    name = PopupFileWithMask( "/tmp", [ "*" ] );
+	}
+	else if ( button == `saveAs )
+	{
+	    name = SaveFileAs( "/tmp" );
+	}
+
+	if ( name == nil )
+	    name = "<canceled>";
+
+	if ( name != "" )	// Label update necessary?
+	{
+	    UI::ChangeWidget(`id(`name), `Value, name );
+	    UI::RecalcLayout();
+	    name = "";
+	}
+    } until ( button == `close || button == `cancel );
+
+    UI::CloseDialog();
+}
