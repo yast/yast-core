@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 19 14:57:00 CET 2004 - mvidner@suse.cz
+
+- added AGENT_LIBADD so that agents work from standalone Perl
+
+-------------------------------------------------------------------
 Thu Mar 18 20:29:56 CET 2004 - ma@suse.de
 
 - Let Pkg::CommitProvide Callback report progress, if package is
