@@ -20,6 +20,8 @@
 		from WFMInterpreter.
 /-*/
 
+#include <iostream>
+#include <fstream>
 #include <utility>
 
 #include <ycp/y2log.h>
