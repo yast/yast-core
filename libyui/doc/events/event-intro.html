@@ -20,9 +20,9 @@ Author: Stefan Hundhammer
 
 <table class="navigation-bar" width=100%>
     <tr>
-	<td width="33%" align="left">Prev: (none)</a></td>
-	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
-	<td width="33%" align="right">Next: <a href="event-builtins.html">Event-related UI builtins</a></td>
+        <td width="33%" align="left">Prev: (none)</a></td>
+        <td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
+        <td width="33%" align="right">Next: <a href="event-builtins.html">Event-related UI builtins</a></td>
     </tr>
 </table>
 
@@ -37,6 +37,7 @@ Author: Stefan Hundhammer
     <li><a href="#y2_approach">The YaST2 Approach</a>
     <li><a href="#simplicity">Simplicity vs. Features</a>
     <li><a href="#notify">The <i>notify</i> Option</a>
+    <li><a href="#downsides">Downsides and Discussions</a>
     <li><a href="#design_alternatives">Design Alternatives</a>
     </ul>
 <br>
@@ -54,13 +55,400 @@ Author: Stefan Hundhammer
 
 <h2><a name="classic_gui">Classic GUI Event Loops</a></h2>
 
+<p>
+Classic graphical user interface (GUI) programming is almost always
+event-driven: The application initializes, creates its dialog(s) and then
+spends most of its time in one central event loop.
+<p>
+When the user clicks on a button or enters text in an input field, he generates
+<i>events</i>. The underlying GUI toolkit provides mechanisms so the
+application can react to those events - perform an action upon button click,
+store the characters the user typed etc.; all this is done from <i>callback</i>
+functions of one kind or the other (whatever they may be called in the
+respective GUI toolkit).
+<p>
+In any case, it all comes down to one single event loop in the application from
+where small functions (let's call them <i>callbacks</i> for the sake of
+simplicity) are called when events occur. Those callbacks each contain a small
+amount of the application's GUI logic to do whatever is to be done when the
+respective event occurs. The overall application logic is split amongst them
+all.
+<p>
+This approach is called <i>event-driven</i>. Most GUI toolkits have adopted it.
+<p>
+Depending on the primary goal of a GUI application, this event-driven approach
+may or may not be appropriate. It is perfectly suitable for example for word
+processor applications, for web browsers or for most other GUI applications
+that have one central main window the user works with most of his time: The
+user is the driving force behind those kinds of applications; only he knows
+what he next wishes to do. The application has no workflow in itself.
+<p>
+Thus the event-driven application model fits perfectly here: The callbacks can
+easily be self-contained; there is little context information, and there are
+limited application-wide data.
+
+
+
 <h2><a name="y2_approach">The YaST2 Approach</a></h2>
+
+<p>
+Applications like YaST2 with all its installation and configuration workflows,
+however, are radically different. The driving force here is the application
+workflow, the sequence of dialogs the user is presented with.
+<p>
+Of course this can be modeled with a traditional event loop, but doing that
+considerably adds to the complexity of the application: Either the application
+needs a lot more callbacks, or the callbacks need to keep track of a lot of
+status information (workflow step etc.) - or both.
+<p>
+For the YaST2 UI, a different approach was chosen: Rather than having one
+central event loop and lots of callbacks, the flow control remains in the
+interpreted YCP code. User input is requested on demand - very much like in
+simplistic programming languages like the first versions of BASIC.
+<p>
+This of course means that there is no single one central "waiting point" in the
+program (like the event loop in the event-driven model), but rather lots of such
+waiting points spread all over the YCP code within each
+<a href="event-builtins.html#UserInput">UserInput()</a> or
+<a href="event-builtins.html#WaitForEvent">WaitForEvent()</a>
+statement.
+
+<p class="info-box">
+Side note: Of course a graphical UI like the YaST2 Qt UI still has to be
+prepared to perform screen redraws whenever the underlying window system
+requires that - i.e. whenever X11 sends an <i>Expose</i> (or similar)
+event. For this purpose the Qt UI is multi-threaded: One thread takes care of
+X event handling, one thread is the actual YCP UI interpreter. This instant
+screen redraw is what you lose when you invoke <i>y2base</i> with the
+"--nothreads" command line option.
+</p>
+
+<p>
+YCP was meant to be an easy-to-understand programming language for developers
+who specialize in a particular aspect of system configuration or
+installation, not in GUI programming.
+<p>
+Practical experience with all the YaST2 modules developed so far has shown that
+application developers tend to adopt this concept of
+<a href="event-builtins.html#UserInput">UserInput()</a>
+very easily. On the other hand it is a widely known fact that event-driven GUI
+programming means a steep learning curve because (as mentioned before) it requires
+splitting up the application logic into tiny pieces for all the callbacks.
+<p>
+Thus, this design decision of YaST2 seems to have proven right much more often
+than there are problems with its downsides (which of course also exist).
+
 
 <h2><a name="simplicity">Simplicity vs. Features</a></h2>
 
+<p>
+The basic idea of YaST2 UI programming is to create a dialog asking the user
+for some data and then continue with the next such dialog - meaning that most
+of those dialogs are basically forms to be filled in with an "OK" (or "Next")
+and a "Cancel" (or "Back") button. The YCP application is usually interested
+only in those button presses, not in each individual keystroke the user
+performs.
+<p>
+This is why by default
+<a href="event-builtins.html#UserInput">UserInput()</a>
+and related functions react to little more than button presses - i.e. they
+ignore all other events, in particular low-level events the widgets handle all
+by themselves like keystrokes (this is the input fields' job) or selecting
+items in selection boxes, tables or similar. Most YCP applications simply don't
+need or even want to know anything about that.
+<p>
+This makes YCP UI programming pretty simple. The basic principle looks like this:
+
+<pre class="code">
+<b>UI::OpenDialog</b>(
+               `VBox(
+                     ... // Some input fields etc.
+                     `HBox(
+                           `PushButton(`id(`back ), "Back" ),
+                           `PushButton(`id(`next ), "Next" )
+                          )
+                     )
+              );
+
+symbol button_id = <b>UI::UserInput()</b>;
+
+if ( button_id == `next )
+{
+    // Handle "Next" button
+}
+else if ( button_id == `back )
+{
+    // Handle "Back" button
+}
+
+<b>UI::CloseDialog()</b>;
+
+</pre>
+
+<p>
+Strictly spoken, you don't even require a loop around that - even though this
+is very useful and thus strongly advised.
+<p>
+All that can make
+<a href="event-builtins.html#UserInput">UserInput()</a>
+return in this example are the two buttons. Other widgets like input fields (
+<a href="../widgets/YTextEntry-widget.html">TextEntry</a>), selection boxes
+etc. by do not do anything that makes
+<a href="event-builtins.html#UserInput">UserInput()</a>
+return - unless explicitly requested.
+
+
+
 <h2><a name="notify">The <i>notify</i> Option</a></h2>
 
+<p>
+If a YCP application is interested in events that occur in a widget other than
+a button, the <i>notify</i>
+<a href="../widgets/YWidget-widget.html">widget option</a>
+can be used when creating it with UI::OpenDialog().
+
+<h3>Example:</h3>
+
+<pre class="code">
+<b>UI::OpenDialog</b>(...
+               `SelectionBox(`id(`pizza ), <em>`opt(`notify )</em>, ... ),
+               ...
+               `Table(`id(`toppings), <em>`opt(`notify, `immediate )</em>, ... ),
+               ...
+               )
+</pre>
+
+<p>
+In general, the <i>notify</i> options makes
+<a href="event-builtins.html#UserInput">UserInput()</a>
+return when something "important" happens to that widget.
+The <i>immediate</i> option (always in combination with <i>notify</i>!)
+makes the widget even more "verbose".
+
+<p class="info-box">
+<b>Note:</b>
+<a href="event-builtins.html#UserInput">UserInput()</a>
+always returns the ID of the widget that caused an event. You cannot tell the
+difference when many different types of event could have occured. This is why
+there are different levels of verbosity with <i>`opt(`notify&nbsp;)</i> or
+<i>`opt(`notify,&nbsp;`immediate&nbsp;)</i> and the new
+<a href="event-builtins.html#WaitForEvent">WaitForEvent()</a> UI builtin
+function which returns more detailed information. A
+<a href="../widgets/YTable-widget.html">Table</a>
+widget for example can generate both
+<a href="event-reference.html#Activated">Activated</a> and
+<a href="event-reference.html#SelectionChanged">SelectionChanged</a>
+<a href="event-reference.html#WidgetEvent">WidgetEvents</a>.
+</p>
+
+<p>
+Exactly what makes
+<a href="event-builtins.html#UserInput">UserInput()</a>
+return for each widget class is described in full detail in the
+<a href="event-reference.html">YaST2 event reference</a>.
+
+
+
+<h2><a name="downsides">Downsides and Discussions</a></h2>
+
+<p>
+The YaST2 event handling model has been (and will probably always remain) a
+subject of neverending discussions. Each and every new team member and
+everybody who casually writes a YaST2 module to configure the subsystem that is
+his real responsibility feels compelled to restart this discussion.
+<p>
+The idea of having a function called <i>UserInput()</i> seems to conjure up
+ghastly memories of horrible times that we hoped to have overcome: The days of
+home-computer era BASIC programming or university Pascal lectures (remember
+Pascal's <i>readln()</i>?) or even low-tech primitive C programs (<i>gets()</i>
+or <i>scanf()</i> are not better, either).
+<p>
+But it's not quite like that. Even though the function name is similar, the
+concept is radically different: It's not just one single value that is being
+read, it's a whole dialog full of whatever widgets you see fit to put
+there. All the widgets take care of themselves; they all handle their values
+automatically. You just have to ask them
+(<a href="../YCP-builtins-ui.html">UI::QueryWidget()</a>)
+for the values when you need them (leave them alone as long as you don't).
+<p>
+The similarity with computing stone age remains, however, in that you have to
+explicitly call
+<a href="event-builtins.html#UserInput">UserInput()</a>
+or related when you need user input. If you don't, you open your dialog, and a
+moment later when you continue in your code it closes again - with little
+chance for the user to enter anything.
+<p>
+Thus, the YaST2 approach has its intrinsic formalisms in that sequence:
+
+<pre class="code">
+OpenDialog(...);
+
+UserInput();
+QueryWidget(...);
+QueryWidget(...);
+QueryWidget(...);
+...
+
+CloseDialog();
+
+</pre>
+
+<p>
+This is the price to pay for this level of simplicity.
+
+
+
 <h2><a name="design_alternatives">Design Alternatives</a></h2>
+
+<p>
+In the course of those
+<a href="#downsides">discussions</a>
+some design alternatives began to emerge:
+
+<ol>
+
+<li>
+Use the single-event-loop and callback model like most other toolkits.
+</li>
+
+<li>
+Keep multiple event loops (like
+<a href="event-builtins.html#UserInput">UserInput()</a>),
+but add callbacks to individual widget events when
+needed so the YCP application can do some more fine-grained control of
+individual events.
+</li>
+
+<li>
+Keep multiple event loops, but return more information than this simplistic
+<a href="event-builtins.html#UserInput">UserInput()</a>
+that can return no more than one single ID.
+</li>
+
+</ol>
+
+<p>
+Having just a single event loop would not really solve any problem, but create
+a lot of new ones: A sequence of <i>wizard</i> style dialogs would be really
+hard to program. Switching back and forth between individual wizard dialogs
+would have to be moved into some callbacks, and a lot of status data for them
+all to share (which dialog, widget status etc.) would have to be made global.
+<p>
+What a mess. We certainly don't want that.
+<p>
+All the callback-driven models have one thing in common: Most of the
+application logic would have to be split up and moved into the callbacks. The
+sequence of operations would be pretty much invisible to the application
+developer, thus the logical workflow would be pretty much lost.
+<p>
+Most who discussed that agreed that we don't want that, too.
+<p>
+Add to that the formalisms that would be required for having callbacks: Either
+add a piece of callback code (at least a function name) to
+<i>UI::OpenDialog()</i> for each widget that should get callbacks or provide a
+new UI builtin function like, say, <i>UI::SetCallback()</i> or
+<i>UI::AddCallback()</i> that gets a YCP map that specifies at least the widget
+to add the callback to, the event to react to and the code (or at least a function
+name) to execute and some transparent <i>client data</i> where the application
+can pass arbitrary data to the callback to keep the amount of required global
+data down.
+</p>
+While we are at it, add some logical counterparts like
+<i>UI::RemoveCallback()</i>.
+<p>
+It might look about like this:
+
+<pre class="code">
+
+define void selectionChanged( any widgetID, map event, any clientData ) ``{
+    ...
+    // Handle SelectionChanged event
+    ...
+};
+
+define void activated( any widgetID, map event, any clientData ) ``{
+    ...
+    // Handle Activated event
+    ...
+};
+
+...
+UI::OpenDialog(
+               ...
+               `Table(`id(`devices ), ... ),
+               ...
+              )
+...
+UI::AddCallback(`id(`devices ), `SelectionChanged, nil );
+UI::AddCallback(`id(`devices ), `Activated, nil );
+
+</pre>
+
+<p>
+If you think "oh, that doesn't look all too bad", think twice. This example is
+trivial, yet there are already three separate places that address similar
+things:
+
+<ul>
+
+<li>
+The callback definitions. Agreed, you'll need some kind of code that actually
+does the application's business somewhere anyway.
+But chances are that the callbacks are no more than mere wrappers that call
+the functions that actually do the application's operations. You don't want to
+mix up all the back engine code with the UI related stuff.
+
+<li>Widget creation with <i>UI::OpenDialog()</i>
+
+<li>Adding callbacks with <i>UI::AddCallback()</i>
+
+</ul>
+
+<p>
+A lot of GUI toolkits do it very much this way - most Xt based toolkits for
+example (OSF/Motif, Athena widgets, ...). But this used to be a source of
+constant trouble: Change a few things here and be sure that revenge will come
+upon you shortly. It simply adds to the overall complexity of something that is
+already complex enough - way enough.
+<p>
+Bottom line: Having callbacks is not really an improvement.
+
+<br>
+<br>
+<br>
+
+<p>
+What remains is to stick to the general model of YaST2 but return more
+information - of course while remaining compatible with existing YCP code.
+We don't want (neither can we economically afford to) break all existing YCP
+code. So the existing UI builtin functions like
+<a href="event-builtins.html#UserInput">UserInput()</a> or
+<a href="event-builtins.html#PollInput">PollInput()</a>
+have to remain exactly the same. But of course we can easily add a completely
+new UI builtin function that does return more information.
+<p>
+This is what we did. This is how
+<a href="event-builtins.html#WaitForEvent">WaitForEvent()</a>
+came into existence. It behaves like
+<a href="event-builtins.html#UserInput">UserInput()</a>,
+but it returns more information about what really happened - in the form of an
+event <i>map</i> rather than just a single ID. That map contains that ID (of
+course) plus
+<a href="event-reference.html#event_map">additional data</a> depending on the
+event that occured.
+<p>
+One charming advantage of just adding another UI builtin is that existing code
+does not need to be touched at all. Only if you want to take advantage of the
+additional information returned by
+<a href="event-builtins.html#WaitForEvent">WaitForEvent()</a>
+you need to do anything at all.
+<p>
+So let's all hope with this approach we found a compromise we all can live
+with. While that probably will not prevent
+<a href="#downsides">those discussions</a>
+by new team members, maybe it will calm down the current team members'
+discussion a bit. ;-)
+
 
 
 
@@ -78,9 +466,9 @@ Author: Stefan Hundhammer
 
 <table class="navigation-bar" width=100%>
     <tr>
-	<td width="33%" align="left">Prev: (none)</a></td>
-	<td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
-	<td width="33%" align="right">Next: <a href="event-builtins.html">Event-related UI builtins</a></td>
+        <td width="33%" align="left">Prev: (none)</a></td>
+        <td width="33%" align="center">Top: <a href="index.html">Event Handling Index</a></td>
+        <td width="33%" align="right">Next: <a href="event-builtins.html">Event-related UI builtins</a></td>
     </tr>
 </table>
 
