@@ -60,6 +60,7 @@ YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
     , macroRecorder(0)
     , macroPlayer(0)
     , callbackComponent( callback )
+    , _events_blocked( false )
 {
 }
 
@@ -534,13 +535,6 @@ YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget * root
     }
     if ( is_rbg && *contains ) return dynamic_cast <YRadioButtonGroup *> ( root );
     else return 0;
-}
-
-
-
-YCPValue YUIInterpreter::returnEvent( const YWidget *widget, EventType et )
-{
-    return YCPVoid();
 }
 
 

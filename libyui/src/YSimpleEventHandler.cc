@@ -27,9 +27,13 @@
 using std::string;
 
 
+#define VERBOSE_BLOCK	0
+
+
 YSimpleEventHandler::YSimpleEventHandler()
 {
-    _pending_event = 0;
+    _pending_event	= 0;
+    _events_blocked	= false;
 }
 
 
@@ -63,13 +67,25 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
 	return;
     }
 
+    if ( eventsBlocked() )
+    {
+#if VERBOSE_BLOCK
+	y2milestone( "Blocking %s event", YEvent::toString( event->eventType() ) );
+#endif
+	// Avoid memory leak: The event handler assumes ownership of the newly
+	// created event, so we have to clean it up here.
+	delete event;
+	
+	return;
+    }
+    
     if ( _pending_event )
     {
 	/**
 	 * This simple event handler keeps track of only the latest user event.
 	 * If there is more than one, older events are automatically discarded.
-	 * Since Events are created on the heap with the "new" operator, discarded
-	 * events need to be deleted.
+	 * Since Events are created on the heap with the "new" operator,
+	 * discarded events need to be deleted.
 	 *
 	 * Events that are not discarded are deleted later (after they are
 	 * processed) by the generic UI.
@@ -93,3 +109,13 @@ YSimpleEventHandler::eventPendingFor( YWidget * widget ) const
     return event->widget() == widget;
 }
 
+
+void YSimpleEventHandler::blockEvents( bool block )
+{
+#if VERBOSE_BLOCK
+    if ( block )	y2milestone( "Blocking events"   );
+    else		y2milestone( "Unblocking events" );
+#endif
+    
+    _events_blocked = block;
+}

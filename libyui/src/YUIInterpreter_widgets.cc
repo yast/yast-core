@@ -1100,13 +1100,13 @@ YUIInterpreter::parseMenuItemList( const YCPList &	itemList,
 	    }
 
 
-	    // check for item `id() ( mandatory )
+	    // check for item `id() (mandatory)
 
 	    YCPValue item_id = YCPNull();
 
 	    if ( checkId ( iterm->value(0), true ) )
 	    {
-		item_id = getId ( iterm->value(0) );
+		item_id = getId( iterm->value(0) );
 	    }
 	    else	// no `id()
 	    {
@@ -1598,11 +1598,11 @@ YUIInterpreter::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 	    int argnr = 0;
 
 
-	    // check for item `id() ( optional )
+	    // check for item `id() (optional)
 
 	    YCPValue item_id = YCPNull();
 
-	    if ( checkId ( iterm->value( argnr ), false ) )
+	    if ( checkId( iterm->value( argnr ), false ) )
 	    {
 		item_id = getId ( iterm->value ( argnr++ ) );
 	    }
@@ -2437,6 +2437,7 @@ YWidget *YUIInterpreter::widgetWithId( YContainerWidget *widgetRoot, const YCPVa
     return 0;
 }
 
+
 bool YUIInterpreter::checkId( const YCPValue & v, bool complain ) const
 {
     if ( v->isTerm()
@@ -2453,9 +2454,24 @@ bool YUIInterpreter::checkId( const YCPValue & v, bool complain ) const
 }
 
 
-YCPValue YUIInterpreter::getId( const YCPValue & v ) const
+bool YUIInterpreter::isSymbolOrId( const YCPValue & val ) const
 {
-    return v->asTerm()->value(0);
+    if ( val->isTerm()
+	 && val->asTerm()->symbol()->symbol() == YUISymbol_id )
+    {
+	return ( val->asTerm()->size() == 1 );
+    }
+
+    return val->isSymbol();
+}
+
+
+YCPValue YUIInterpreter::getId( const YCPValue & val ) const
+{
+    if ( val->isTerm() && val->asTerm()->symbol()->symbol() == YUISymbol_id )
+	return val->asTerm()->value(0);
+
+    return val;
 }
 
 

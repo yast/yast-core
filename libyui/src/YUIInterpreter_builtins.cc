@@ -209,6 +209,7 @@ YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
 	YCPTerm newTerm = YCPTerm( term->symbol() );
 	newTerm->add ( YCPString( lang ) );
 	y2milestone ( "ui specific setLanguage( %s )", newTerm->toString().c_str() );
+
 	return setLanguage( newTerm );	// UI-specific setLanguage: returns YCPVoid() if OK, YCPNull() if error
     }
     else return YCPNull();
@@ -217,14 +218,14 @@ YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
 
 /*
  * Default UI-specific setLanguage()
- * Returns OK ( YCPVoid() )
+ * Returns OK (YCPVoid() )
  */
 
 YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
 {
     // NOP
 
-    return YCPVoid();	// OK ( YCPNull() would mean error )
+    return YCPVoid();	// OK (YCPNull() would mean error)
 }
 
 
@@ -520,7 +521,7 @@ YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
 	    do
 	    {
 		// Get an event from the specific UI. Wait if there is none.
-		
+
 		event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
 
 		// If there was no event or if filterInvalidEvents() discarded
@@ -530,7 +531,7 @@ YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
 	else
 	{
 	    // Get an event from the specific UI. Don't wait if there is none.
-	    
+
 	    event = filterInvalidEvents( pollInput() );
 
 	    // Nevermind if filterInvalidEvents() discarded an invalid event.
@@ -550,7 +551,7 @@ YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
     else // fakeUserInputQueue contains elements -> use the first one
     {
 	// Handle macro playing
-	
+
 	input = fakeUserInputQueue.front();
 	fakeUserInputQueue.pop_front();
     }
@@ -670,32 +671,40 @@ YUIInterpreter::filterInvalidEvents( YEvent * event )
 
 YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
 {
-    int s = term->size();
-    if ( ( s == 1 || s == 2 )
-	 && term->value( s-1 )->isTerm()
-	 && ( s == 1 || term->value(0)->isTerm() && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt ) )
+    int argc = term->size();
+
+    if ( ( argc == 1 && term->value(0)->isTerm() ) ||	// Trivial case: No `opt(), only the dialog description term
+	 ( argc == 2
+	   && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt	// `opt(...)
+	   && term->value(1)->isTerm() ) )					// The actual dialog
     {
-	YCPList optList;
-	if ( s == 2 ) optList = term->value(0)->asTerm()->args();
 	YWidgetOpt opt;
 
-	for ( int o=0; o < optList->size(); o++ )
+	if ( argc == 2 ) // evaluate `opt() contents
 	{
-	    if ( optList->value(o)->isSymbol() )
+	    YCPList optList = term->value(0)->asTerm()->args();
+
+	    for ( int o=0; o < optList->size(); o++ )
 	    {
-		if	( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) opt.hasDefaultSize.setValue( true );
-		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
-		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
-		else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
-		else	y2warning( "Unknown option %s for OpenDialog", term->value(o)->toString().c_str() );
+		if ( optList->value(o)->isSymbol() )
+		{
+		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) 	opt.hasDefaultSize.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
+		    else
+			y2warning( "Unknown option %s for OpenDialog", term->value(o)->toString().c_str() );
+		}
 	    }
 	}
 
+	blockEvents();	// We don't want self-generated events from UI builtins.
 	YDialog *dialog = createDialog( opt );
+
 	if ( dialog )
 	{
 	    registerDialog( dialog ); // must be done first!
-	    YWidget *widget = createWidgetTree( dialog, 0, term->value( s-1 )->asTerm() );
+	    YWidget *widget = createWidgetTree( dialog, 0, term->value( argc-1 )->asTerm() );
 
 	    if ( widget )
 	    {
@@ -703,13 +712,21 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
 		dialog->setInitialSize();
 		dialog->checkShortcuts();
 		showDialog( dialog );
+
+		unblockEvents();
 		return YCPBoolean( true );
 	    }
 	    else removeDialog();
 	}
+
+	unblockEvents();
 	return YCPBoolean( false );
     }
-    else return YCPNull();
+    else
+    {
+	y2error( "Bad arguments for UI::OpenDialog()." );
+	return YCPNull();
+    }
 }
 
 
@@ -727,13 +744,16 @@ YCPValue YUIInterpreter::evaluateCloseDialog( const YCPTerm & term )
 {
     if ( term->size() == 0 )
     {
+	blockEvents();	// We don't want self-generated events from UI builtins.
 	YDialog *dialog = currentDialog();
+
 	if ( ! dialog )
-	{
 	    return YCPError ( "Can't CloseDialog: No dialog existing.", YCPBoolean( false ) );
-	}
+
 	closeDialog( dialog );
 	removeDialog();
+	unblockEvents();
+
 	return YCPBoolean( true );
     }
     else return YCPNull();
@@ -774,14 +794,15 @@ void YUIInterpreter::closeDialog( YDialog * )
 
 
 /**
- * @builtin ChangeWidget( `id( any id ), symbol property, any newvalue ) -> boolean
+ * @builtin ChangeWidget( `id( any widgetId ), symbol property, any newValue ) -> boolean
+ * @builtin ChangeWidget( symbol widgetId, symbol property, any newValue ) -> boolean
  *
  * Changes a property of a widget of the topmost dialog. <tt>id</tt> specified
  * the widget to change, <tt>property</tt> specifies the property that should
  * be changed, <tt>newvalue</tt> gives the new value.
  * <p>
- * For example in order to change the label of a TextEntry with id 8 to
- * "anything", you write <tt>ChangeWidget( `id(8), `Label, "anything" )</tt>.
+ * For example in order to change the label of a TextEntry with id `name to
+ * "anything", you write <tt>ChangeWidget( `id(`name), `Label, "anything" )</tt>.
  * <p>
  * Returns true on success.
  */
@@ -789,19 +810,22 @@ void YUIInterpreter::closeDialog( YDialog * )
 YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
 {
     if ( term->size() != 3
-	 || ! checkId( term->value(0) )
+	 || ( ! isSymbolOrId( term->value(0) ) )
 	 || ( ! term->value(1)->isSymbol() &&
-	      ! term->value(1)->isTerm()	 ) )
+	      ! term->value(1)->isTerm()	) )
     {
 	return YCPNull();
     }
 
     YCPValue id = getId( term->value(0) );
-
     YWidget *widget = widgetWithId( id, true );
-    if ( ! widget ) return YCPVoid();
-    else if ( term->value(1)->isSymbol() )
+
+    if ( ! widget )
+	return YCPVoid();
+
+    if ( term->value(1)->isSymbol() )
     {
+	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
 	YCPSymbol sym = term->value(1)->asSymbol();
 	YCPValue ret = widget->changeWidget( sym, term->value(2) );
 
@@ -816,49 +840,50 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
 	    currentDialog()->checkShortcuts();
 	}
 
+	unblockEvents();
 	return ret;
     }
     else
-	return widget->changeWidget( term->value(1)->asTerm(), term->value(2) );
+    {
+	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
+	YCPValue result = widget->changeWidget( term->value(1)->asTerm(), term->value(2) );
+	unblockEvents();
+
+	return result;
+    }
 }
 
 
 
 /**
- * @builtin QueryWidget( `id( any id ), symbol|term property ) -> any
+ * @builtin QueryWidget( `id( any id ), symbol | term property ) -> any
+ * @builtin QueryWidget( symbol widgetId ), symbol | term property ) -> any
  *
  * Queries a property of a widget of the topmost dialog.  For example in order
- * to query the current text of a TextEntry with id 8, you write
- * <tt>QueryWidget( `id(8), `Value )</tt>. In some cases the propery can be given
+ * to query the current text of a TextEntry with id `name, you write
+ * <tt>QueryWidget( `id(`name), `Value )</tt>. In some cases the propery can be given
  * as term in order to further specify it. An example is
  * <tt>QueryWidget( `id( `table ), `Item( 17 ) )</tt> for a table where you query a
  * certain item.
  */
 
-/**
- * @builtin QueryWidget( `id( any id ), term property ) -> any
- *
- * Queries a property of a widget of the topmost dialog. For example in order
- * to query the current text of a TextEntry with id 8, you write
- * <tt>QueryWidget( `id(8), `Value )</tt>
- */
-
 YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
 {
     if ( term->size() != 2
-	 || !checkId(term->value(0) )
+	 || ( ! isSymbolOrId( term->value(0) )
 	 || ( ! term->value(1)->isSymbol() &&
-	      ! term->value(1)->isTerm()     )
-	 )
+	      ! term->value(1)->isTerm()     ) ) )
     {
 	return YCPNull();
     }
 
     YCPValue id = getId( term->value(0) );
-
     YWidget *widget = widgetWithId( id, true ); // reports error
-    if ( ! widget ) return YCPVoid();
-    else if ( term->value(1)->isSymbol() )
+
+    if ( ! widget )
+	return YCPVoid();
+
+    if ( term->value(1)->isSymbol() )
 	return widget->queryWidget( term->value(1)->asSymbol() );
     else
 	return widget->queryWidget( term->value(1)->asTerm() );
@@ -867,7 +892,8 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
 
 
 /**
- * @builtin ReplaceWidget( `id( any id ), term newwidget ) -> boolean
+ * @builtin ReplaceWidget( `id( any id ), term newWidget ) -> boolean
+ * @builtin ReplaceWidget( symbol id, term newWidget ) -> boolean
  *
  * Replaces a complete widget (or widget subtree) with an other widget
  * (or widget tree). You can only replace the widget contained in
@@ -885,7 +911,7 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 {
     if ( term->size() != 2
-	 || ! checkId(term->value(0) )
+	 || ! isSymbolOrId( term->value(0) )
 	 || ! term->value(1)->isTerm()
 	 )
     {
@@ -928,14 +954,20 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
     if ( widget )
     {
+	blockEvents();	// We don't want self-generated events from UI builtins.
 	rp->addChild( widget );
 	currentDialog()->setInitialSize();
 	currentDialog()->checkShortcuts();
+	unblockEvents();
+
 	return YCPBoolean( true );
     }
     else
     {
+	blockEvents();	// We don't want self-generated events from UI builtins.
+
 	widget = createWidgetTree( replpoint, rbg, YCPTerm( YCPSymbol( YUIWidget_Empty, true ), YCPList() ) );
+
 	if ( widget )
 	{
 	    rp->addChild( widget );
@@ -944,6 +976,9 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 	}
 	else // Something bad will happen
 	    y2error( "Severe problem: can't create Empty widget" );
+
+	unblockEvents();
+
 	return YCPBoolean( false );
     }
 }
@@ -952,7 +987,8 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
 
 /**
- * @builtin SetFocus( `id( any id ) ) -> boolean
+ * @builtin SetFocus( `id( any widgetId ) ) -> boolean
+ * @builtin SetFocus( symbol widgetId ) ) -> boolean
  *
  * Sets the keyboard focus to the specified widget.  Notice that not all
  * widgets can accept the keyboard focus; this is limited to interactive
@@ -966,7 +1002,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
 YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
 {
-    if ( term->size() != 1 || ! checkId( term->value(0) ) )
+    if ( term->size() != 1 || ! isSymbolOrId( term->value(0) ) )
 	return YCPNull();
 
     YCPValue id = getId( term->value(0) );
@@ -1568,6 +1604,7 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
 
 /**
  * @builtin WidgetExists( `id( any widgetId ) ) -> boolean
+ * @builtin WidgetExists( symbol widgetId ) ) -> boolean
  *
  * Check whether or not a widget with the given ID currently exists in the
  * current dialog. Use this to avoid errors in the log file before changing the
@@ -1576,7 +1613,7 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
 {
     if ( term->size() != 1
-	 || ! checkId( term->value(0) ) ) return YCPNull();
+	 || ! isSymbolOrId( term->value(0) ) ) return YCPNull();
 
     YCPValue id = getId( term->value(0) );
     YWidget *widget = widgetWithId( id, false ); // reports error
@@ -1596,7 +1633,7 @@ YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
 YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
 {
     if ( term->size() != 1
-	 || ! checkId( term->value( 0 ) ) )	// check for `id()
+	 || ! isSymbolOrId( term->value( 0 ) ) )
     {
 	y2error( "RunPkgSelection(): expecting `id( ... ), not '%s'", term->toString().c_str() );
 	return YCPNull();

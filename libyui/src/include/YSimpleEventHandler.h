@@ -27,7 +27,7 @@ class YWidget;
 /**
  * @short Simple event handler suitable for most UIs.
  * This event handler keeps track of one single event that gets overwritten
- * when a new one arrives. 
+ * when a new one arrives.
  **/
 class YSimpleEventHandler
 {
@@ -45,14 +45,16 @@ public:
      **/
     virtual ~YSimpleEventHandler();
 
-
     /**
      * Widget event handlers call this when an event occured that
      * should be the answer to a UserInput() / PollInput() (etc.) call.
      *
-     * The UI assumes ownership of the event object that 'event' points to.
-     * In particular, it has to take care to delete that object when it is
-     * processed. 
+     * The UI assumes ownership of the event object that 'event' points to, so
+     * the event MUST be created with new(). The UI is to take care to delete
+     * the event after it has been processed. 
+     *
+     * If events are blocked (see blockEvents() ), the event sent with this
+     * function will be ignored (but safely deleted - no memory leak).
      *
      * It is an error to pass 0 for 'event'.
      **/
@@ -69,7 +71,7 @@ public:
      * This event handler keeps track of only one single (the last one) event.
      **/
     YEvent * pendingEvent() const { return _pending_event; }
-    
+
     /**
      * Consumes the pending event. Sets the internal pending event to 0.
      * Does NOT delete the internal consuming event.
@@ -86,12 +88,32 @@ public:
      * Clears any pending event (deletes the corresponding object).
      **/
     void clear();
-    
+
+    /**
+     * Block (or unblock) events. If events are blocked, any event sent with
+     * sendEvent() from now on is ignored (and will get lost) until events are
+     * unblocked again.
+     **/
+    void blockEvents( bool block = true );
+
+    /**
+     * Unblock events previously blocked. This is just an alias for
+     * blockEvents( false) for better readability.
+     **/
+    void unblockEvents() { blockEvents( false ); }
+
+    /**
+     * Returns 'true' if events are currently blocked.
+     **/
+    bool eventsBlocked() const { return _events_blocked; }
+
+
 protected:
 
     // Data members
-    
-    YEvent * _pending_event;
+
+    YEvent * 	_pending_event;
+    bool	_events_blocked;
 };
 
 

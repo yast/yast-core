@@ -25,8 +25,10 @@
 #include <ycp/YCPInterpreter.h>
 #include <ycp/YCPMap.h>
 #include <y2/Y2Component.h>
+
 #include "YWidget.h"
 #include "YAlignment.h"
+
 
 using std::deque;
 
@@ -83,6 +85,33 @@ public:
      */
     virtual ~YUIInterpreter();
 
+
+    /**
+     * Block (or unblock) events. If events are blocked, any event sent
+     * should be ignored until events are unblocked again.
+     *
+     * This default implementation keeps track of a simple internal flag that
+     * can be queried with eventsBlocked(), so if you reimplement
+     * blockEvents(), be sure to reimplement eventsBlocked() as well.
+     **/
+    virtual void blockEvents( bool block = true ) { _events_blocked = block; }
+
+    /**
+     * Unblock events previously blocked. This is just an alias for
+     * blockEvents( false) for better readability.
+     *
+     * Note: This method is intentionally not virtual.
+     **/
+    void unblockEvents() { blockEvents( false ); }
+
+    /**
+     * Returns 'true' if events are currently blocked.
+     *
+     * Reimplent this if you reimplement blockEvents().
+     **/
+    virtual bool eventsBlocked() const { return _events_blocked; }
+
+
     /**
      * switch callback pointer
      * used for CallModule() implementation which creates a new
@@ -100,22 +129,6 @@ public:
      * is ready. Starts the ui thread.
      */
     void topmostConstructorHasFinished();
-
-    /**
-     * Constants for different user input events.
-     * The ET_CHANGED event is currently not implemented. It should
-     * render it possible for the module the react to a event like
-     * the changement of the selected item in a list box. Widgets must be
-     * tagged in a special way in order to return ET_CHANGED events.
-     */
-    enum EventType
-    {
-	ET_NONE,
-	ET_WIDGET,
-	ET_MENU,
-	ET_CANCEL,
-	ET_DEBUG
-    };
 
     /**
      * Constants for different predifined images
@@ -898,7 +911,7 @@ protected:
      * the correct name in the log file).
      *
      * 'timeout_millisec' is the timeout in milliseconds to use (0 for "wait
-     * forever"). 
+     * forever").
      *
      * 'wait' specifies if this should wait until an event is available if
      * there is none yet.
@@ -932,20 +945,6 @@ protected:
      * contains the widget w. Otherwise it is kept unchanged.
      */
     YRadioButtonGroup *findRadioButtonGroup( YContainerWidget *root, YWidget *w, bool *contains );
-
-    /**
-     * Creates a ycp return value for the client component. If the event
-     * has been triggered by a widget, the return value is the id of that
-     * widget.
-     *
-     * @param widget that triggered the event or 0 if it was
-     * not triggered by a special widget
-     *
-     * @param et type of the event
-     */
-    YCPValue returnEvent( const YWidget *widget, EventType et );
-
-
 
 
     /**
@@ -1274,9 +1273,17 @@ protected:
     /**
      * Checks if the given value is a term with the symbol 'id and
      * size one. Logs an error if this is not so and 'complain' is set.
-     * @return true if this is so
+     *
+     * @return 'true' if 'val' is a valid `id().
      */
-    bool checkId( const YCPValue & v, bool complain = true ) const;
+    bool checkId( const YCPValue & val, bool complain = true ) const;
+
+    /**
+     * Checks if the given value is either a symbol or a term `id().
+     *
+     * @return 'true' if 'val' is a symbol or a valid `id().
+     */
+    bool isSymbolOrId( const YCPValue & val ) const;
 
     /**
      * Assumes that the value v is of the form `id( any i ) and returns
@@ -1382,6 +1389,12 @@ protected:
      * The current mapping of widget labels to default function keys.
      **/
     YCPMap default_fkeys;
+
+    /**
+     * Flag that keeps track of blocked events.
+     * Never query this directly, use eventsBlocked() instead.
+     **/
+    bool _events_blocked;
 
     /**
      * Returns 'true' if widget geometry should be reversed for languages that
