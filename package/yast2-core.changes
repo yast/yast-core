@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Feb 15 12:43:22 CET 2005 - sh@suse.de
+
+- PackageSelector now supports `opt(`summaryMode) to get installation
+  summary right away (-> Anas)
+- V 2.11.21 
+
+-------------------------------------------------------------------
 Mon Feb  7 16:02:11 CET 2005 - lslezak@suse.cz
 
 - modules agent - use .YaST2save suffix for backup files (#50517)
