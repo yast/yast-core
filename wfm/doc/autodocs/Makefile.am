@@ -17,5 +17,5 @@ CLEANFILES = $(html_DATA)
 
 $(filter-out index.html, $(html_DATA)): index.html
 index.html: $(srcdir)/../../src/*.h
-	cd $(srcdir)/../../src && @ybindir@/ydoc -p @RPMNAME@ *.h
+	cd $(srcdir)/../../src && @ybindir@/ydoc -p wfm *.h
 	mv -f $(srcdir)/../../src/*.html .
