@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 23 14:45:29 CET 2004 - visnov@suse.cz
+
+- reinitialize preloaded namespaces before new parsing, not after the
+  last one 
+
+-------------------------------------------------------------------
 Sun Feb 22 16:50:35 CET 2004 - kkaempf@suse.de
 
 - restore filename at end of parser, adapt testcases

@@ -993,8 +993,6 @@ block_end:
 			    y2debug ("active_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
 			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
-			name_space->table()->endUsage();
-			name_space->table()->startUsage();
 		    }
 		    const std::list<std::pair<std::string, Y2Namespace *> > & autoimport_predefined= p_parser->scanner()->autoimport_predefined();
 		    for (it = autoimport_predefined.begin(); it != autoimport_predefined.end(); it++)
@@ -1005,8 +1003,6 @@ block_end:
 			    y2debug ("autoimport_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
 			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
 			}
-			name_space->table()->endUsage();
-			name_space->table()->startUsage();
 		    }
 		}
 

@@ -26,11 +26,12 @@ $Id$
 #include "ycp/Scanner.h"
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
-
-class SymbolTable;
+#include "ycp/StaticDeclaration.h"
+#include "ycp/SymbolTable.h"
 
 // for logging
 extern ExecutionEnvironment ee;
+extern StaticDeclaration static_declarations;
 
 int yyparse (void *parser);
 
@@ -225,5 +226,15 @@ Parser::init ()
     scannerStack = 0;
     current_block = 0;
     blockstack_depth = 0;
+
+    // initialize preloaded namespaces
+    const std::list<std::pair<std::string, Y2Namespace *> > & active_predefined = static_declarations.active_predefined();
+    std::list<std::pair<std::string, Y2Namespace *> >::const_iterator it;
+    for (it = active_predefined.begin(); it != active_predefined.end(); it++)
+    {
+        Y2Namespace *name_space = it->second;
+        name_space->table()->endUsage();
+        name_space->table()->startUsage();
+    }
 }
 
