@@ -194,6 +194,11 @@ private:
     YCPValue evaluateCallFunction(const YCPTerm&);
 
     /**
+     * Implements the builtin CallFile
+     */
+    YCPValue evaluateCallFile(const YCPTerm&);
+
+    /**
      * Implements the builtin GetClientName
      */
     YCPValue evaluateGetClientName(const YCPTerm& term);

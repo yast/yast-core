@@ -165,6 +165,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 
     else if (sym == "CallModule")	return evaluateCallModule (term);
     else if (sym == "CallFunction")	return evaluateCallFunction (term);
+    else if (sym == "CallFile")	        return evaluateCallFile (term);
     else if (sym == "GetClientName")	return evaluateGetClientName (term);
 
     else if (sym == "Args")		return evaluateArgs (term);
@@ -942,6 +943,59 @@ WFMInterpreter::evaluateCallFunction (const YCPTerm& term)
 
     return result;
 }
+
+
+YCPValue
+WFMInterpreter::evaluateCallFile (const YCPTerm& term)
+{
+    /**
+      @builtin CallFile(string file, list arguments) -> any
+      
+      Call a file as YCP script. The script will be executed in an own
+      environment. The <tt>file</tt> specifies the path and name of the file to
+      call and <tt>arguments</tt> are the arguments to the file call. The
+      function evaluates the script and returns the value returned by the
+      script or an error, if the script couldn't be found.
+     
+      @example CallFile("/path/to/my/script.ycp", [true, false, user_settings])
+    */
+
+    if ( ( term->size() != 2 || !term->value(0)->isString() ||
+           !term->value(1)->isList() ) )
+    {
+        return YCPError("Bad parameters for CallFile()");
+    }
+    
+    string filename = term->value(0)->asString()->value();
+
+    ycp2milestone ( current_file.c_str(), current_line,
+                    "Calling YCP file %s (%s)", filename.c_str(),
+		    term->value(1)->asList()->toString().c_str() );
+
+    int fd = -1;
+    if (!filename.empty ())
+    {
+	fd = open (filename.c_str (), O_RDONLY, 0644);
+    }
+    if (fd < 0)
+    {
+	return YCPError ("Can't find YCP file " + filename + ": " + strerror (errno));
+    }
+
+    YCPParser parser(fd, filename.c_str());
+    parser.setBuffered(); // Read from file. Buffering is always possible here
+    YCPValue ycpscript = parser.parse();
+
+    close(fd);
+
+    WFMInterpreter interpreter ( wfm_component, user_interface, "",
+                                 filename, term->value(1)->asList() );
+    
+    YCPValue result = interpreter.evaluate( ycpscript );
+
+    return result;
+}
+
 
 YCPValue WFMInterpreter::evaluateGetClientName(const YCPTerm& term)
 {

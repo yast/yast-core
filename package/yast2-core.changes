@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed May 28 11:47:39 CEST 2003 - cschum@suse.de
+
+- Added WFM builtin CallFile needed by YOU.
+
+-------------------------------------------------------------------
 Tue Apr 22 14:24:28 CEST 2003 - arvin@suse.de
 
 - added ycp function lsort to sort lists of strings with
