@@ -61,11 +61,6 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
     addSymbol (sentry);
 
     m_point = new Point (sentry);
-
-    TableEntry *tentry = new TableEntry (sentry->name(), sentry, m_point);
-    attachEntry (tentry);
-
-    y2debug ("filename: sentry %p, tentry %p", sentry, tentry);
 }
 
 

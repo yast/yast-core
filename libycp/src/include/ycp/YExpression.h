@@ -220,7 +220,7 @@ class YEBinary : public YCode {
 public:
     YEBinary (declaration_t *decl, YCode *arg1, YCode *arg2);
     YEBinary (std::istream & str);
-    ~YEBinary () {};
+    ~YEBinary ();
     declaration_t *decl ();
 //    YCode *arg1 () const;
 //    YCode *arg2 () const;
@@ -241,7 +241,7 @@ class YETriple : public YCode {
 public:
     YETriple (YCode *a_expr, YCode *a_true, YCode *a_false);
     YETriple (std::istream & str);
-    ~YETriple () {};
+    ~YETriple ();
 //    YCode *expr () const;
 //    YCode *iftrue () const;
 //    YCode *iffalse () const;

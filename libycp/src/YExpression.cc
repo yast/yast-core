@@ -1102,6 +1102,13 @@ YEBinary::YEBinary (std::istream & str)
 }
 
 
+YEBinary::~YEBinary ()
+{
+    delete m_arg1;
+    delete m_arg2;
+}
+
+
 declaration_t *
 YEBinary::decl()
 {
@@ -1192,6 +1199,14 @@ YETriple::YETriple (std::istream & str)
     m_expr = Bytecode::readCode (str);
     m_true = Bytecode::readCode (str);
     m_false = Bytecode::readCode (str);
+}
+
+
+YETriple::~YETriple ()
+{
+    delete m_expr;
+    delete m_true;
+    delete m_false;
 }
 
 
