@@ -8,7 +8,7 @@ CLEANFILES = $(html_DATA) doxygen.log doxygen.conf installdox
 
 DOC=/usr/share/doc/packages
 index.html: $(wildcard $(top_srcdir)/*/*.cc $(top_srcdir)/*/*/*.cc)
-	@ybindir@/ydoxygen -d PROJECT_NAME=@RPMNAME@ \
+	@ybindir@/ydoxygen PROJECT_NAME=@RPMNAME@ \
 		INPUT=.. \
 		"TAGFILES=\
 		\"$(DOC)/liby2util/autodocs/liby2util.tag = \
