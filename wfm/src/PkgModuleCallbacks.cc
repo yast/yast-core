@@ -559,21 +559,20 @@ namespace Y2PMRecipients {
     virtual bool isSet() {
       return _control._ycpcb.isSet( YCPCallbacks::CB_MediaChange );
     }
-    /** media change callback
-     * - product name (i.e "SuSE Linux Professional 8.1")
-     * - product error
-     * - media type (0=CD, 1=DVD, ...)
-     * - expected media number
-     * - found media number (0 == none)
-     * return "": retry, "S": skip, "C" cancel, "I" ignore, "E" eject, else new url
+    /**
+     *
      **/
-    virtual string changeMedia( const string & error,
+    virtual string changeMedia( constInstSrcPtr instSrc,
+				const string & error,
 				const string & url,
 				const string & product,
 				int expected,
 				int current ) {
       CB callback( ycpcb( YCPCallbacks::CB_MediaChange ) );
       if ( callback._set ) {
+	// doublesided media: bool instSrc->descr()->media_doublesided()
+	// may require: #include <y2pm/InstSrc.h>
+	//              #include <y2pm/InstSrcDescr.h>
 	callback.addStr( error );
 	callback.addStr( url );
 	callback.addStr( product );
@@ -581,7 +580,7 @@ namespace Y2PMRecipients {
 	callback.addInt( current );
 	return callback.evaluateStr();
       }
-      return MediaChangeCallback::changeMedia( error, url, product, expected, current );
+      return MediaChangeCallback::changeMedia( instSrc, error, url, product, expected, current );
     }
   };
 
