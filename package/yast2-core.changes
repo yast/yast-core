@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Mon Aug  2 12:41:29 CEST 2004 - visnov@suse.cz
+
+- better split of YCP interpreter and rest of YaST (use Y2Function only)
+- type of builtin parameters are checked at the end of all parameters
+- YCode::type () is cleaned up - now it always returns the type of the 
+  code after its evaluation, determined as good as possible
+- split of function call and function call via function pointer (Bytecode change)
+
+-------------------------------------------------------------------
 Fri Jul 16 18:55:53 CEST 2004 - sh@suse.de
 
 - YTree widget can now return `Item property
