@@ -1,46 +1,100 @@
-<HTML>
-<HEAD>
-<TITLE>Ini agent description</TITLE>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator"
+content="HTML Tidy for Linux/x86 (vers 1st April 2002), see www.w3.org" />
+<title>Ini agent description</title>
 <!-- $Id$ -->
-</HEAD>
-<BODY>
-<H1>Ini agent description</H1>
-<HR>
 
-<H2>Purpose</H2> 
-<P>
-Ini agent is common agent to read variety of ini files. Main purpose for this 
-agent were configuration files for samba (/etc/samba.conf).
-</P>
+<style type="text/css">
+/*<![CDATA[*/
+ .notimpl {color: brown}
+/*]]>*/
+</style>
+</head>
+<body>
+<h1>Ini agent description</h1>
+
+<p>Ini agent description<br />
+&nbsp;&nbsp;Purpose<br />
+&nbsp;&nbsp;Specification<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Ini file entities<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Patterns<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Configuration file for ini files<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File Specification:<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Configuration map<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#params">Params:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#comments">Comments:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#sections">Sections:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#subindent">Subindent:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#options">Options:</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+href="#rewrite">rewrite</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;Configuration file for sysconfig files
+(former rc files)<br />
+&nbsp;&nbsp;Interface for ini-agent<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Accessing keys<br />
+&nbsp;&nbsp;&nbsp;&nbsp;SysConfig/flat mode<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Final write<br />
+&nbsp;&nbsp;TODO<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Flag repeat_names<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Allowed section names and key names<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Browser<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Re-ordering<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Section renaming<br />
+&nbsp;&nbsp;&nbsp;&nbsp;I am the highest authority!<br />
+&nbsp;&nbsp;Examples<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Dialup providers (package providers)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;smb.conf<br />
+&nbsp;&nbsp;&nbsp;&nbsp;/etc/lilo.conf<br />
+&nbsp;&nbsp;&nbsp;&nbsp;Rewrite rules<br />
+&nbsp;&nbsp;Implementation<br />
+&nbsp;&nbsp;Changes<br />
+</p>
+
+<hr />
+<h2>Purpose</h2>
+
+<p>The ini agent is a common agent to read a variety of ini files.
+The main purpose for this agent were configuration files for samba
+(/etc/samba.conf).</p>
 
 <h2>Specification</h2>
-<font color="red">Texts in red color mean that described feature will be
-implemented later. (That means when all non-red features are
-implemented.)</font>
-<p>
-Ini file agent is line-oriented. It means that it reads input line-by-line and
-each line is processed separately. If it is required, line may
-continue to the next line using \ as the last character of the line. Such lines
-are read at once and combined into one string before further processing. 
-</p>
 
-<h3>Patterns</h3>
-<p>
-Lets use regular expressions to find out what kind of line we are processing. We
-need regular expression to read and recognize line and a pattern-string
-to write anything back to file. Example:<br>
-To recognize section beginning we may use:<br>
-<tt>	     ^\[\([a-zA-Z0-9\-_]+\)\]</tt><br>
-Such section delimiter must start at the first column. Its name may contain
-<tt>[a-zA-Z0-9\-_]</tt>. No spaces are allowes. Pattern for write may be:<br>
-<tt>	     [%s]</tt><br>
-There is no need to \n at the end of pattern. As mentioned above, agent is
-line-oriented so it writes \n automaticaly after each line shipped out.<br>
-</p>
+<p class="notimpl">Texts like this mean that described feature will
+be implemented later. (That means when all other features are
+implemented.)</p>
 
 <h3>Ini file entities</h3>
-<p>
-Generalized ini file may look like this:<pre>
+
+<p>The agent sees an ini file as containing these basic entities:
+entries, sections and comments. <b>Entries</b> have a name and a
+value and an optional comment. <b>Sections</b> have a name and can
+contain entries or other sections (TODO comments?). Entries and
+Sections may be of multiple kinds. (Different kinds of sections are
+useful for lilo.conf which distinguishes "image" and "other"
+sections. Different kinds of entries are currently used as a kludge
+to cope with single quoted, double quoted and unquoted values.)
+This general view can be restricted by some options (TODO
+link).</p>
+
+<p>Ini file agent is line-oriented. It means that it reads input
+line-by-line and each line is processed separately. If it is
+required, line may continue to the next line using \ as the last
+character of the line. Such lines are read at once and combined
+into one string before further processing. See also the option <a
+href="#line_can_continue">line_can_continue</a>.</p>
+
+<p>Generalized ini file may look like this:</p>
+
+<pre>
 Comment
 Key=Value
 Key=Value
@@ -54,372 +108,518 @@ Begin-section-delimiter name
   End-sub-section-delimiter name
 End-section-delimiter name
 </pre>
-In most ini files there are no subsections. Classical ini file has no
-End-section-delimiter (and therefore it may have no subsections). In most ini
-files there are no Key/Values at the top-level. Definitely section name may be
-the same as key name. But maybe for some ini files, there may be more keys with
-the same name or more sections with the same name.</p>
-<p>
-Comments in ini files must occupy whole line by default. When they do not we
-have a small problem. Should we remove comments at first or process value at
-first? Example:<br>
-Values must be quoted by " and comments are delimited by #<br> 
-Key = "Value    # anything"<br>
-How will we understand this? Anyway it is solvable. There will be option that
-switches between 3 states:<ul>
-<li>(Default) At first, comments are stripped of, then [key, value] are
-parsed.</li>
-<li>At first, [key, value] then comments are parsed.</li>
-<li>Comments may be single on line only.</li></ul>
-Note: Comments starting from the beginning of line always have the top
-priority.</p>
-<p>
-There may be Begin-section and End-section delimiter. Section end delimiter is
-not mandatory, but when there are no section delimiters, then there are no
-nested sections. We must specify, whether nested sections may be used. Default
-is: autodetect (which means, subsections are allowed if End-section delimiter is
-defined). We must say if toplevel values (not belonging to any section) are
-allowed. We might have more types of section delimiters.</p>
-<p>
-There is only one problem with values. They may be by accident divided to more
-lines (without usage of backslash). Then we must detect if this is value that
-will continue on the next line. We will restrict this feature only to values
-that are quoted.<ul>
-  Of course it is possible to detect separated lines also in case no delimiters 
-  are used. It would mean to define regexp that detects that current line is not
-  continuing line (so it would detect comments, empty lines, key=value pairs and
-  section delimiters). But I believe we do not need it.</ul>
+
+<p>In most ini files there are no subsections. Classical ini file
+has no End-section-delimiter (and therefore it may have no
+subsections). In most ini files there are no Key/Values at the
+top-level. Definitely section name may be the same as key name. But
+maybe for some ini files, there may be more keys with the same name
+or more sections with the same name.</p>
+
+<h3>Patterns</h3>
+
+<p>Lets use regular expressions to find out what kind of line we
+are processing. We need regular expression to read and recognize
+line and a pattern-string to write anything back to file.
+Example:<br />
+To recognize section beginning we may use:<br />
+<tt>^\[([a-zA-Z0-9\-_]+)\]</tt><br />
+Such section delimiter must start at the first column. Its name may
+contain <tt>[a-zA-Z0-9\-_]</tt>. No spaces are allowes. Pattern for
+write may be:<br />
+ <tt>[%s]</tt><br />
+There is no need to \n at the end of pattern. As mentioned above,
+agent is line-oriented so it writes \n automaticaly after each line
+shipped out.<br />
 </p>
+
+<p>Comments in ini files must occupy whole line by default. When
+they do not we have a small problem. Should we remove comments at
+first or process value at first? Example:<br />
+Values must be quoted by " and comments are delimited by #<br />
+ Key = "Value # anything"<br />
+How will we understand this? Anyway it is solvable. There will be
+option that switches between 3 states:</p>
+
+<p>See also the option <a
+href="#comments_last">comments_last</a>.</p>
+
+<ul>
+<li>(Default) At first, comments are stripped of, then [key, value]
+are parsed.</li>
+
+<li>At first, [key, value] then comments are parsed.</li>
+
+<li>Comments may be single on line only.</li>
+</ul>
+
+Note: Comments starting from the beginning of line always have the
+top priority.<br />
+<br />
+ 
+<p>There may be Begin-section and End-section delimiter. Section
+end delimiter is not mandatory, but when there are no section
+delimiters, then there are no nested sections. We must specify,
+whether nested sections may be used. Default is: autodetect (which
+means, subsections are allowed if End-section delimiter is
+defined). We must say if toplevel values (not belonging to any
+section) are allowed. We might have more types of section
+delimiters.</p>
+
+<p>There is only one problem with values. They may be by accident
+divided to more lines (without usage of backslash). Then we must
+detect if this is value that will continue on the next line. We
+will restrict this feature only to values that are quoted.</p>
+
+<blockquote>Of course it is possible to detect separated lines also
+in case no delimiters are used. It would mean to define regexp that
+detects that current line is not continuing line (so it would
+detect comments, empty lines, key=value pairs and section
+delimiters). But I believe we do not need it.</blockquote>
+
+<br />
+<br />
+ 
 <h3>Configuration file for ini files</h3>
-<p>
-Example:
+
+<p>Example:</p>
+
 <pre>
-IniAgent (File Specification,
+IniAgent ("/file/name",
 $[
-  "options"  : [ "option1", "option2", ..., $["optionX": "valueX", ... ]],
-  "rewrite" : [ [ "regexp", "pattern", ], [ "regexp", "pattern", ], ... ],
-  "subindent": "string",
-  "comments" : [ "regexp", "regexp", ... ],
-  "sections" : [
+  "<a href="#params">params</a>" : [
+    $[
+      "<a href="#match">match</a>" :     [ "regexp", "pattern" ],
+      "<a
+href="#multiline">multiline</a>" : [ "regexp", "regexp" ],
+    ],
+  "<a href="#comments">comments</a>" : [ "regexp", "regexp", ... ],
+  "<a href="#sections">sections</a>" : [
     $[
       "begin" : [ "regexp", "pattern" ],
       "end"   : [ "regexp", "pattern" ],
     ],
     ...
   ],
-  "params" : [
-    $[
-      "match" :     [ "regexp", "pattern" ],
-      "multiline" : [ "regexp", "regexp" ],
-    ],
+  "<a href="#subindent">subindent</a>": "string",
+  "<a href="#rewrite">rewrite</a>" : [
+        [ "regexp", "pattern", ],
+        [ "regexp", "pattern", ],
+         ...
+  ],
+  "<a
+href="#options">options</a>"  : [ "option1", "option2", ... ]],
     ...
-  ]  
+  ]
 ]
 </pre>
-<h4>File Specification:</h4><p><ul>
-<li>"Single file mode": 
-In most cases you will specify single file here as a string.</li>
-<li>"Multiple files mode": 
-If you specify list of file specifications (that may contain wildcards), 
-these filenames are used as section names and content is read "into" 
-corresponding sections. Please keep in mind, that in this mode you may
-create files as well! If you do <tt>Write (.....s.new_section, "#comment\n");</tt>
-then when saving new file <tt>new_section</tt> is created. 
-</li></ul>
-You should use absolute paths or you will have to take extereme care not
-to cd in your program :-)
-</p>
-<h4>Options:</h4><p><ul>
-<li>"ignore_case_regexps":
-  - case is not significant when processing regexps.</li>
-<li>"ignore_case":
-  - case is not significant when reading keys/section names.</li>
-<li>"first_upper"
-  - if `ignore_case, save first letter upper and the other lower in keys and sections</li>
-<li>"prefer_uppercase"
-  - if `ignore_case, save keys and sections in upper case </li>
-<li>"line_can_continue"
-  - if line ends with backslash it continues on the next line</li>
-<li>"no_nested_sections"
-  - nested sections are forbidden and reported as error in log file</li>
-<li>"global_values"
-  - values at the top level are allowed</li>
-<li><font color="red">"repeat_names"
-  - there may be more keys with the same name and more sections with the
-    same name. Note that sections with the same name as keys are allowed</font>
-    </li> 
-<li>"comments_last"
-  - line is parsed first for single-line comments, then for [key,value] and
-    finally for additional comment. This comment is moved above the [key,value]
-    pair</li>
-<li>"join_multiline"
-  - multiline values (parsed by "params":"multiline") are connected into one.</li>
-<li>"no_finalcomment_kill"
-  - do not kill empty spaces at the end of last comment</li>
-<li>"read_only"
-  - does not write file at the end</li>
-<li>"flat"
-  - special mode for files with flat structure -- only values without sections.
-  Read/Write/Dir commands work without need to specify what to read (key/section)
-  because everything is key.</li>
-</ul>
-</p>
-<h4>rewrite</h4><p>
-This list takes in effect only if multiple files are specified. There are rules 
-for rewriting file name to section name and pattern back from the section name 
-to file name. Example:<pre>
+
+<pre>
+IniAgent (<i>File specification</i>, <i>Configuration map</i>)
+</pre>
+
+<h4>File Specification:</h4>
+
+<dl>
+<dt>Single file mode</dt>
+
+<dd>In most cases you will specify single file here as a
+string.</dd>
+
+<dt>Multiple files mode</dt>
+
+<dd>If you specify list of file specifications (that may contain
+wildcards), these filenames are used as section names and content
+is read "into" corresponding sections. Please keep in mind, that in
+this mode you may create files as well! If you do <tt>Write
+(.....s.new_section, "#comment\n");</tt> then when saving new file
+<tt>new_section</tt> is created.</dd>
+</dl>
+
+<p>You should use absolute paths or you will have to take extereme
+care not to cd in your program :-)</p>
+
+<p>See also the option <a href="#read_only">read_only</a>.</p>
+
+<h4>Configuration map</h4>
+
+<h4 id="params">Params:</h4>
+
+<p>The most important item in the configuratin map is
+<b>params</b>. It specifies how entries are parsed and written.
+Recall that there may be several kinds of entries, so params is a
+list. Each param is a map with a mandatory "match" item and an
+optional "multiline" item.</p>
+
+<p id="match">"<b>match</b>" items are input-output pairs: The
+first pair item is an extended regular expression contatining two
+subexpressions ("...(...)...(...)..."), the name and the value of
+the entry. It is used at parse time. The second pair item is a
+printf format string containing two %s placeholders for the name
+and the value. (TODO check how integers are handled. Misquote on
+output?)</p>
+
+<p>Format of regexps: glibc regexps will be used. Hence the regexp
+format must be understood by glibc. (try man 7 regex). See also the
+option <a href="#ignore_case_regexps">ignore_case_regexps</a>.</p>
+
+<p>See also the options <a
+href="#prefer_uppercase">prefer_uppercase</a> and <a
+href="#first_upper">first_upper</a>.</p>
+
+<p id="multiline">"<b>multiline</b>" : [ "begin_re", "end_re"
+]<br />
+ - if there may be values spread over more than one line this
+should define its parsing. Please note that main purpose for this
+are lines broken by accident, for example if some editor breaks
+longer lines. Example:</p>
+
+<pre>
+      Key="value value
+      still value
+      still value"
+</pre>
+
+<p>Then begin regexp is: ([^=]+)="([^"]*) and end regexp is
+([^"]"). These are compared at the end so they are the last
+possibility. But once we get into this "divided line" by accident,
+it becomes greedy, so be carefull to forgotten ". If "multiline" is
+not present, this mechanism does not take in effect of course.</p>
+
+<p>See also the option <a
+href="#join_multiline">join_multiline</a>.</p>
+
+<div class="notimpl">"names" : [list]<br />
+- list of allowed names<br />
+- now list may contain only strings. Maybe it will be enriched to
+regexps too.</div>
+
+<p>See also the option <a
+href="#global_values">global_values</a>.</p>
+
+<h4 id="comments">Comments:</h4>
+
+<p>A list of regular expressions to check. Note that if you combine
+all expressions that identify string into one, you will have faster
+processing. If you allow comments not starting at the first colunm,
+you must add "[ \t]*" before comment regexp. If you want to allow
+only comments on single line, prepend ^ before regexp.</p>
+
+<p>See also the option <a
+href="#no_finalcomment_kill">no_finalcomment_kill</a>.</p>
+
+<p>See also the option <a
+href="#comments_last">comments_last</a>.</p>
+
+<h4 id="sections">Sections:</h4>
+
+<p>There may be more sections defined under the key "sections" to
+allow more types of section beginnings/ends, so this is a list.
+Each list item is a map with a mandatory "begin" pair and an
+optional "end" pair.</p>
+
+<p>"begin": ["regexp", "pattern"]<br />
+ - regexp to find section begin and pattern to write section
+begin</p>
+
+<p>"end" : ["regexp", "pattern"]<br />
+ - ...</p>
+
+<p>See also the options <a
+href="#prefer_uppercase">prefer_uppercase</a> and <a
+href="#first_upper">first_upper</a>.</p>
+
+<div class="notimpl">"names" : [list]<br />
+- list of allowed names<br />
+- now list may contain only strings. Maybe it will be enriched to
+regexps too.<br />
+</div>
+
+<p>See also the option <a
+href="#no_nested_sections">no_nested_sections</a>.</p>
+
+<h4 id="subindent">Subindent:</h4>
+
+<p>This string will be added before each line in subsections. If
+you want to have indented subsections, use this.</p>
+
+<p>Example: "subindent" : " ", or "subindent" : "\t".</p>
+
+<h4 id="options">Options:</h4>
+
+<dl>
+<dt id="ignore_case_regexps">"ignore_case_regexps":</dt>
+
+<dd>case is not significant when processing regexps.</dd>
+
+<dt id="ignore_case">"ignore_case":</dt>
+
+<dd>case is not significant when reading keys/section names.</dd>
+
+<dt id="first_upper">"first_upper"</dt>
+
+<dd>if "ignore_case", save first letter upper and the other lower
+in keys and sections</dd>
+
+<dt id="prefer_uppercase">"prefer_uppercase"</dt>
+
+<dd>if "ignore_case", save keys and sections in upper case</dd>
+
+<dt id="line_can_continue">"line_can_continue"</dt>
+
+<dd>if line ends with backslash it continues on the next line</dd>
+
+<dt id="no_nested_sections">"no_nested_sections"</dt>
+
+<dd>nested sections are forbidden and reported as error in log
+file</dd>
+
+<dt id="global_values">"global_values"</dt>
+
+<dd>values at the top level are allowed</dd>
+
+<dt id="repeat_names" class="notimpl">"repeat_names"</dt>
+
+<dd>there may be more keys with the same name and more sections
+with the same name. Note that sections with the same name as keys
+are allowed</dd>
+
+<dt id="comments_last">"comments_last"</dt>
+
+<dd>line is parsed first for single-line comments, then for
+[key,value] and finally for additional comment. This comment is
+moved above the [key,value] pair</dd>
+
+<dt id="join_multiline">"join_multiline"</dt>
+
+<dd>multiline values (parsed by "params":"multiline") are connected
+into one.</dd>
+
+<dt id="no_finalcomment_kill">"no_finalcomment_kill"</dt>
+
+<dd>do not kill empty spaces at the end of last comment</dd>
+
+<dt id="read_only">"read_only"</dt>
+
+<dd>does not write file at the end</dd>
+
+<dt id="flat">"flat"</dt>
+
+<dd>special mode for files with flat structure -- only values
+without sections. Read/Write/Dir commands work without need to
+specify what to read (key/section) because everything is key.</dd>
+</dl>
+
+<h4 id="rewrite">rewrite</h4>
+
+<p>This list takes in effect only if multiple files are specified.
+There are rules for rewriting file name to section name and pattern
+back from the section name to file name. Example:</p>
+
+<pre>
 "rewrite" : [
     [ "/etc/sysconfig/network/isdn/(*)$",  "/etc/sysconfig/network/isdn/%s", ],
     [ "/etc/sysconfig/network/modem/(*)$", "/etc/sysconfig/network/modem/%s", ],
 ],
 </pre>
-If filename of the processed file matches to the pattern, its first subpattern is 
-taken as a section name. When saving the section, filename is created as 
-<tt>printf(pattern, section_name)</tt>. First rewrite rule that matches is used 
-for file name to section name mapping. If file name doesn't match to any rule
-it is let untouched.<br>
-Be extremly careful when using rewrite rules. There are 2 possible caveats.
-<ul>
-<li>Write pattern doesn't correspond to regular expression. In this case you
-will have a new file you didn't wish after write.</li>
-<li>When creating new top-level section, specify also index of rewrite rule
-that should be used for writting the section. If you do not specify it, it
-will default to 0, which could be OK but needn't.</li>
-</ul>
-</p>
-<h4>subindent</h4><p>
-This string will be added before each line in subsections. If you want to have 
-indented subsections, use this. Example: "subindent" : "  ", or "subindent" : "\t".
-</p>
-<h4>Comments:</h4><p>
-List of regular expressions to check. Note that if you combine all expressions
-that identify string into one, you will have faster processing. If you allow
-comments not starting at the first colunm, you must add "[ \t]*" before comment
-regexp. If you want to allow only comments on single line, prepend ^ before
-regexp. 
-</p>
 
-<h4>Sections:</h4>
-There may be more sections defined under key "sections" to allow more types of
-section beginnings/ends.<br>
-"begin": ["regexp", "pattern"]<br>
-  - regexp to find section begin and pattern to write section begin<br>
-"end" :  ["regexp", "pattern"]<br>
-  - ...<br>
-<font color="red">"names" : [list] <br>
-  - list of allowed names<br>
-  - now list may contain only strings. Maybe it will be enriched to regexps
-  too.<br></font>
-</p>
-<h4>Params:</h4><p>
-There may be more types of params defined under key "params" to allow more
-types of section beginnings/ends.<br>
-"match": ["regexp", "out" ]<br>
-  - used to find the key, value line and for output<br>
-"multiline" : [ "begin", "end" ]<br>
-  - if there may be values spread over more than one line this should define its
-    parsing. Please note that main purpose for this are lines broken by accident, 
-    for example if some editor breaks longer lines. Example:<pre>
-      Key="value value
-      still value
-      still value"</pre>
-    Then begin regexp is: ([^=]+)="([^"]*) and end regexp is ([^"]").
-    These are compared at the end so they are the last possibility. But once we
-    get into this "divided line" by accident, it becomes greedy, so be carefull
-    to forgotten ". 
-    If `multiline is not present, this mechanism does not take in effect of
-    course.<br>
-<font color="red">"names" : [list] <br>
-  - list of allowed names<br>
-  - now list may contain only strings. Maybe it will be enriched to regexps too.<br></font>
-</p>
-Format of regexps: glibc regexps will be used. Hence the regexp format must be 
-understood by glibc. (try man 7 regex).<br>
-Format of pattern: string understood by printf.<br></p>
+<p>If filename of the processed file matches the pattern, its first
+subpattern is taken as a section name. When saving the section,
+filename is created as <tt>printf(pattern, section_name)</tt>.
+First rewrite rule that matches is used for file name to section
+name mapping. If file name doesn't match to any rule it is let
+untouched.<br />
+Be extremly careful when using rewrite rules. There are 2 possible
+caveats.</p>
+
+<ul>
+<li>Write pattern doesn't correspond to regular expression. In this
+case you will have a new file you didn't wish after write.</li>
+
+<li>When creating new top-level section, specify also index of
+rewrite rule that should be used for writting the section. If you
+do not specify it, it will default to 0, which could be OK but
+needn't.</li>
+</ul>
 
 <h3>Configuration file for sysconfig files (former rc files)</h3>
-<p>
-Ini agent may be easily used for parsing files in sysconfig directory, but
-care must be taken to keep the files clean. No such mess as in rc.config
-is allowed. Please do not place bash code into sysconfig files. Only
-key="value". Nothing else.<pre>
+
+<p>Ini agent may be easily used for parsing files in sysconfig
+directory, but care must be taken to keep the files clean. No such
+mess as in rc.config is allowed. Please do not place bash code into
+sysconfig files. Only key="value". Nothing else.</p>
+
+<pre>
 # comment
 
 .mount.path
 `ag_ini(
-	SysConfigFile (filename)
-)</pre>
-SysConfigFile call is just a shortcut to IniAgent call. Equivalent IniAgent
-would be:
+        SysConfigFile (filename)
+)
+</pre>
+
+<p>A SysConfigFile call is just a shortcut to an IniAgent call. The
+equivalent IniAgent is:</p>
+
 <pre>
-IniAgent ("filename",
+IniAgent (filename,
     $[
-	"options" : [ "line_can_continue", "global_values", "join_multiline", "comments_last", ],
-	"comments": [ "^[ \t]*#.*$", "#.*", "^[ \t]*$", ],
-	"params" : [
-	    $[
-	    	"match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)\"", "%s=\"%s\"" ],
-		"multiline" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)", "([^\"]*)\"", ],
-	    ],
-	    $[
-	    	"match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*([^\"]*[^ \t\"]|)[ \t]*$", "%s=\"%s\"",],
-	    ],
-	],
+        "options" : [ "line_can_continue", "global_values", "join_multiline", "comments_last", "flat", ],
+        "comments": [ "^[ \t]*#.*$", "#.*", "^[ \t]*$", ],
+        "params" : [
+            $[
+                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)\"", "%s=\"%s\"" ],
+                "multiline" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)", "([^\"]*)\"", ],
+            ],
+            $[
+                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*([^\"]*[^ \t\"]|)[ \t]*$", "%s=\"%s\"",],
+            ],
+        ],
 ])
 </pre>
 
-In sysconfig mode, flat mode is used to access values.
-</p>
-<H2>Implementation</H2>
-<pre>
-Modes:
-  normal
-  in-multiline
+<h2>Interface for ini-agent</h2>
 
-read line
-if comment matches to line
-  -- add this line to last comment
-
-if comments-first
-  if line contains comment
-    -- add comment to last comment
-    -- strip comment off the line
-
-if in-multiline mode
-  if line matches params::current::multiline[1] (end)
-    -- add value to last param-&gt;value
-    -- set param-&gt;shipout = 1
-  else
-    -- add value to last param-&gt;value
-
-else we are in normal mode
-  if line matches to section[*]-&gt;begin
-    if !in-section
-      -- create new sub-section and recursively-call parser
-    if in-section && !defined (section[current_section]-&gt;end)
-      -- unget line
-      return
-    if in-section && defined (section[current_section]-&gt;end) && subsections-allowed
-      -- create new sub-section and recursively-call parser
-    if in-section && defined (section[current_section]-&gt;end) && !subsections-allowed
-      -- syntax error
-      
-  if line matches to section[current_section]-&gt;end
-    -- close section and return from recursive function 
-    next
-
-  if line matches params[*]::match
-    -- add pair key, value
-    -- set param-&gt;shipout = 1
-
-  if line matches params[*]::multiline[0]
-    -- create pair key, value
-    -- set param-&gt;shipout = 0
-
-  if comments-last && contains line, comment
-    -- add comment to last comment
-
-  if param-&gt;shipout
-    -- add last param to section
-
-</pre>
-
-<I><B>Note:</B> The complete development documentation is available in the
-<A HREF="autodocs/index.html"><TT>autodocs/</TT></A> directory.</I>
-
-
-<H2>Interface for ini-agent</H2>
-Assume, agent is mounted on path .ini
+Assume, agent is mounted on path .ini 
 <h3>Accessing keys</h3>
-<P>Because ini file structure may be hierarchical and there can be sections and
-keys with any name, we must use some keyword to distinquish between
-key/sections/comments. Paths will look like this:<br>
-<table border="1">
-<tr><td><tt>.ini.value.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
-	<td>identifies value that belongs to key.</td></tr>
-<tr><td><tt>.ini.value_comment.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
-	<td>identifies comment that belongs to key.</td></tr>
-<tr><td><tt>.ini.value_type.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
-	<td>identifies type of the key, which is the index of rule this key was read by.</td></tr>
-<tr><td><tt>.ini.section.<i>sectionname</i>.<i>sectionname</i></tt></td>
-	<td>identifies section key.</td></tr>
-<tr><td><tt>.ini.section_comment.<i>sectionname</i>.<i>sectionname</i></tt></td>
-	<td>identifies comment that belongs to section key.</td></tr>
-<tr><td><tt>.ini.section_type.<i>sectionname</i>.<i>sectionname</i></tt></td>
-	<td>identifies type of the section, which is the index of rule this section was read by.</td></tr>
+
+<p>Because ini file structure may be hierarchical and there can be
+sections and keys with any name, we must use some keyword to
+distinquish between key/sections/comments. Paths will look like
+this:<br />
+</p>
+
+<table border="1" summary="ini paths">
+<tr>
+<td>
+<tt>.ini.value.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
+<td>identifies value that belongs to key.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.value_comment.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
+<td>identifies comment that belongs to key.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.value_type.<i>sectionname</i>.<i>sectionname</i>.<i>key</i></tt></td>
+<td>identifies type of the key, which is the index of rule this key
+was read by.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.section.<i>sectionname</i>.<i>sectionname</i></tt></td>
+<td>identifies section key.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.section_comment.<i>sectionname</i>.<i>sectionname</i></tt></td>
+<td>identifies comment that belongs to section key.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.section_type.<i>sectionname</i>.<i>sectionname</i></tt></td>
+<td>identifies type of the section, which is the index of rule this
+section was read by.</td>
+</tr>
 </table>
-Abbreviations <tt>v,s,vc,sc,vt,st</tt> are allowed. Imagine what happens if we decide
-not to use these prefixed indentifiers. If there is section S1 with subsection
-comment, then we would not know what .ini.S1.comment means. <br>
-These paths work with <b>Read</b> and <b>Dir</b>. <b>Write</b> is a special
-case. You may write new values and their comments. You may write new 
-sections and their comments. But when you write section, section name 
-is encoded in path, so parameter passed to <b>Write</b> is always 
-understood as comment.<br>
-All Reads return strings. All Writes expect strings or nil as parameter. 
-If nil is passed to Write, value or section is removed. All Dirs return 
-list of strings.<br>
-In write, only strings can be section names and only strings or integers may
-be values. Integers are converted to strings when writting and are read back
-as strings.<br>
-If Write is requested to write (create) key or section on non-existing path,
-the sections on path are created (like in recursive mkdir).
-</p>
+
+Abbreviations <tt>v,s,vc,sc,vt,st</tt> are allowed. Imagine what
+happens if we decide not to use these prefixed indentifiers. If
+there is section S1 with subsection comment, then we would not know
+what .ini.S1.comment means. <br />
+These paths work with <b>Read</b> and <b>Dir</b>. <b>Write</b> is a
+special case. You may write new values and their comments. You may
+write new sections and their comments. But when you write section,
+section name is encoded in path, so parameter passed to
+<b>Write</b> is always understood as comment.<br />
+All Reads return strings. All Writes expect strings or nil as
+parameter. If nil is passed to Write, value or section is removed.
+All Dirs return list of strings.<br />
+In write, only strings can be section names and only strings or
+integers may be values. Integers are converted to strings when
+writting and are read back as strings.<br />
+If Write is requested to write (create) key or section on
+non-existing path, the sections on path are created (like in
+recursive mkdir). <br />
+<br />
+ 
 <h3>SysConfig/flat mode</h3>
-<p>
-This mode is used for reading sysconfig-files and is compatibile with rc-agent. 
-So values are accessible under <tt>.ini.<i>key</i></tt> and their comments are
-accessible under <tt>.ini.<i>key</i>.comment</tt>. Value may be removed by storing
-<tt>nil</tt> into it. If you specify unexisting key when writting value,
-new value will be created. You may not create value by writting its comment.
-</p>
+
+<p>This mode is used for reading sysconfig-files and is compatibile
+with rc-agent. So values are accessible under
+<tt>.ini.<i>key</i></tt> and their comments are accessible under
+<tt>.ini.<i>key</i>.comment</tt>. Value may be removed by storing
+<tt>nil</tt> into it. If you specify unexisting key when writting
+value, new value will be created. You may not create value by
+writting its comment.</p>
+
 <h3>Final write</h3>
-<p>
-Changes are written to disk when Write (.ini, nil) is called or in agent
-destructor. Agent handles external change of ini file, in other words, 
-it writes only changed values. If you do not call Write at the end, agent 
-writes changed data to disk in the destructor.<br>
-By default file is written only if something changed. File may be 
-forced to be written by calling <tt>Write (.ini, "force");</tt><br>
-If you do not want agent to write changed data, call 
-<tt>Write (.ini, "clean");</tt>. It will set dirty flag to false. Use with 
-care! It does not revert data to their original values! Most save is using 
-it just before leaving module (and destroying the agent).<br>
-When write is unable to open some file for writting, it returns false. True 
-is returned otherwise.
-</p>
-<p>
+
+<p>Changes are written to disk when Write (.ini, nil) is called or
+in agent destructor. Agent handles external change of ini file, in
+other words, it writes only changed values. If you do not call
+Write at the end, agent writes changed data to disk in the
+destructor.<br />
+By default file is written only if something changed. File may be
+forced to be written by calling <tt>Write (.ini,
+"force");</tt><br />
+If you do not want agent to write changed data, call <tt>Write
+(.ini, "clean");</tt>. It will set dirty flag to false. Use with
+care! It does not revert data to their original values! Most save
+is using it just before leaving module (and destroying the
+agent).<br />
+When write is unable to open some file for writting, it returns
+false. True is returned otherwise.</p>
+
 <h2>TODO</h2>
-I am going to implement following features when someone requests them.
-I do not want to fill the agent with features that will be never used.<br>
+
+I am going to implement following features when someone requests
+them. I do not want to fill the agent with features that will be
+never used.<br />
 <h3>Flag repeat_names</h3>
-This apparently requests new aproach to keys/sections storing and 
+
+This apparently requests new aproach to keys/sections storing and
 accessing. I doubt we will need it and I would prefere if it would
-be solved by separate agent if needed. I want to keep this simple as it
-is now.
+be solved by separate agent if needed. I want to keep this simple
+as it is now. 
 <h3>Allowed section names and key names</h3>
-There can be list of allowed names for sections/keys. No problem to implement, 
-just tell if you need it. But do you really need it?
+
+There can be list of allowed names for sections/keys. No problem to
+implement, just tell if you need it. But do you really need it? 
 <h3>Browser</h3>
-There could be some Read function that would return structure that could 
-be passed to tree widget. It is really the fastest way to create it in C++
-but I am not sure if it is possible to do it enough versatile. Another 
-problem is with changes. 
+
+There could be some Read function that would return structure that
+could be passed to tree widget. It is really the fastest way to
+create it in C++ but I am not sure if it is possible to do it
+enough versatile. Another problem is with changes. 
 <h3>Re-ordering</h3>
-We should be able to change order of values/sections.
+
+We should be able to change order of values/sections. 
 <h3>Section renaming</h3>
-We should be able to rename section. Easy to implement. Does anybody need
-it?
+
+We should be able to rename section. Easy to implement. Does
+anybody need it? 
 <h3>I am the highest authority!</h3>
-Client should be able to tell agent not to re-read externally changed file.
-Sometimes, when client completly re-creates file, its re-read could cause
-big mess.
-</p>
-<P>
+
+Client should be able to tell agent not to re-read externally
+changed file. Sometimes, when client completly re-creates file, its
+re-read could cause big mess. <br />
+<br />
+ 
 <h2>Examples</h2>
-Each features should be tested in testsuite. Look for an inspiration there.
-Here are some most common or interesting examples:<br>
-<h3>Dialup providers (package providers)</h3><pre>
+
+Each features should be tested in testsuite. Look for an
+inspiration there. Here are some most common or interesting
+examples:<br />
+<h3>Dialup providers (package providers)</h3>
+
+<pre>
 .ini
 
 `ag_ini(
@@ -439,14 +639,17 @@ Here are some most common or interesting examples:<br>
   )
 )
 </pre>
-<h3>smb.conf</h3><pre>
+
+<h3>smb.conf</h3>
+
+<pre>
 .ini
 
 `ag_ini(
   IniAgent("/etc/smb.conf",
     $[
       "options" : [ "no_nested_sections", "ignore_case",
-                    "line_can_continue", 
+                    "line_can_continue",
                 ],
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
       "sections" : [
@@ -463,7 +666,9 @@ Here are some most common or interesting examples:<br>
   )
 )
 </pre>
+
 <h3>/etc/lilo.conf</h3>
+
 <pre>
 .ini
 
@@ -495,23 +700,91 @@ Here are some most common or interesting examples:<br>
   )
 )
 </pre>
+
 <h3>Rewrite rules</h3>
-See testsuites, <tt>multi/rewrite*</tt>. <font color="red">FIXME: insert an example here.</font>
-</p>
-<p>
+
+<p>See testsuites, <tt>multi/rewrite*</tt>. TODO FIXME: insert an
+example here.</p>
+
+<h2>Implementation</h2>
+
+<pre>
+Modes:
+  normal
+  in-multiline
+
+read line
+if comment matches line
+  -- add this line to last comment
+
+if comments-first
+  if line contains comment
+    -- add comment to last comment
+    -- strip comment off the line
+
+if in-multiline mode
+  if line matches params::current::multiline[1] (end)
+    -- add value to last param-&gt;value
+    -- set param-&gt;shipout = 1
+  else
+    -- add value to last param-&gt;value
+
+else we are in normal mode
+  if line matches section[*]-&gt;begin
+    if !in-section
+      -- create new sub-section and recursively-call parser
+    if in-section &amp;&amp; !defined (section[current_section]-&gt;end)
+      -- unget line
+      return
+    if in-section &amp;&amp; defined (section[current_section]-&gt;end) &amp;&amp; subsections-allowed
+      -- create new sub-section and recursively-call parser
+    if in-section &amp;&amp; defined (section[current_section]-&gt;end) &amp;&amp; !subsections-allowed
+      -- syntax error
+
+  if line matches section[current_section]-&gt;end
+    -- close section and return from recursive function
+    next
+
+  if line matches params[*]::match
+    -- add pair key, value
+    -- set param-&gt;shipout = 1
+
+  if line matches params[*]::multiline[0]
+    -- create pair key, value
+    -- set param-&gt;shipout = 0
+
+  if comments-last &amp;&amp; contains line, comment
+    -- add comment to last comment
+
+  if param-&gt;shipout
+    -- add last param to section
+</pre>
+
+<i><b>Note:</b> The complete development documentation is available
+in the <a href="autodocs/index.html"><tt>autodocs/</tt></a>
+directory.</i> 
 <h2>Changes</h2>
+
 <ul>
-<li><b>2001/10/09:</b> Forced final write changed from Write (.ini.write_force, nil) to Write (.ini, "force").</li>
-<li><b>2001/10/09:</b> RcAgent interface described.</li>
-<li><b>2002/01/09:</b> Write (.ini, "clean") to clean changes implemented and described.</li>
-<li><b>2002/01/09:</b> When writtig new value or section, non existing sections on path are created.</li>
-<li><b>2002/01/15:</b> RcFile replaced by SysConfigFile. Functionality changed too.</li>
+<li><b>2001-10-09:</b> Forced final write changed from Write
+(.ini.write_force, nil) to Write (.ini, "force").</li>
+
+<li><b>2001/10-09:</b> RcAgent interface described.</li>
+
+<li><b>2002-01-09:</b> Write (.ini, "clean") to clean changes
+implemented and described.</li>
+
+<li><b>2002-01-09:</b> When writtig new value or section, non
+existing sections on path are created.</li>
+
+<li><b>2002-01-15:</b> RcFile replaced by SysConfigFile.
+Functionality changed too.</li>
+
+<li><b>2002-11-29:</b> A rewrite of the docs.</li>
 </ul>
-</p>
-<P>
-<ADDRESS>
-Petr Blahos &lt;pblahos@suse.cz&gt;<BR>
-</ADDRESS>
-</p>
-</BODY>
-</HTML>
+
+<address>Martin Vidner &lt;mvidner@suse.cz&gt;,<br />
+based on original docs by Petr Blahos</address>
+</body>
+</html>
+
