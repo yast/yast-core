@@ -19,7 +19,9 @@
 /-*/
 
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE		// for asprintf
+#endif
 
 #define ERR_MAX 80              // for regexp
 #define SUB_MAX 10              // for regexp
@@ -701,22 +703,33 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
  */
 YCPValue evaluateRegexpSub(YCPInterpreter *interpreter, const YCPList& args)
 {
-    if( args->size() != 3 || !args->value(0)->isString() || !args->value(1)->isString() || !args->value(2)->isString() )
-	return YCPError("Wrong Arguments to regexpsub( string input, string pattern, string match )");
+    if (args->size() != 3 || !args->value(0)->isString() ||
+	!args->value(1)->isString() || !args->value(2)->isString())
+    {
+	return YCPError ("Wrong Arguments to regexpsub (string input, "
+			 "string pattern, string match)");
+    }
 
     const char *input   = args->value(0)->asString()->value().c_str();
     const char *pattern = args->value(1)->asString()->value().c_str();
     const char *match   = args->value(2)->asString()->value().c_str();
 
-    Reg_Ret result = solve_regular_expression( input, pattern, match );
+    Reg_Ret result = solve_regular_expression (input, pattern, match);
 
-    if(result.error)
-	y2error("Error in regexp <%s> <%s> <%s>: %s", input, pattern, match, result.error_str.c_str());
+    if (result.error)
+    {
+	y2error ("Error in regexp <%s> <%s> <%s>: %s", input, pattern,
+		 match, result.error_str.c_str());
+    }
+
+    if (result.solved)
+    {
+	return YCPString (result.result_str.c_str());
+    }
     else
-	if(result.solved)
-	    return YCPString(result.result_str.c_str());
-
-    return YCPNull();
+    {
+	return YCPVoid ();
+    }
 }
 
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug 13 17:59:52 CEST 2002 - arvin@suse.de
+
+- fixed return value of regexpsub for case of no match
+
+-------------------------------------------------------------------
 Mon Aug 12 16:48:08 CEST 2002 - kkaempf@suse.de
 
 - add "vendor" and "name" keys to .probe.cpu map
