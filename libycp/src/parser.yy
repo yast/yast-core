@@ -1397,9 +1397,11 @@ statement:
 |	FULLNAME STRING ';'
 |	TEXTDOMAIN STRING ';'
 	    {
-		p_parser->m_block_stack->textdomain = $2.v.sval;
 		$$.t = Type::Unspec;
-		$$.c = new YSTextdomain (p_parser->m_block_stack->textdomain, $1.l);
+		YSTextdomainPtr c = new YSTextdomain ($2.v.sval, $1.l);		// YSTextdomain will copy $2.v.sval into an Ustring
+		delete [] $2.v.sval;
+		p_parser->m_block_stack->textdomain = c->domain();		// get the Ustring char pointer
+		$$.c = c;
 		$$.l = $1.l;
 	    }
 |	EXPORT identifier_list ';'
