@@ -434,7 +434,12 @@ namespace Y2PMRecipients {
 	if ( callback._set ) {
 	  callback.addInt( error );
 	  callback.addStr( error.errstr() );
-	  callback.addStr( localpath );
+	  if ( error ) {
+	    // localpath is empty, send the name instead
+	    callback.addStr( _name );
+	  } else {
+	    callback.addStr( localpath );
+	  }
 	  return CBSuggest( callback.evaluateStr() );
 	}
       }

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep  9 13:23:15 CEST 2003 - ma@suse.de
+
+- Fixed DoneProvide callback to send package name as third arg
+  on error (#29922)
+- 2.8.27
+
+-------------------------------------------------------------------
 Sun Sep  7 13:22:21 CEST 2003 - ma@suse.de
 
 - Fixed TargetInit and TargetFinish calls.
