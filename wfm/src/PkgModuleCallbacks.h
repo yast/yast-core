@@ -106,7 +106,7 @@ class PkgModuleFunctions::CallbackHandler {
      * Constructor. Setup handler and redirect Y2PMCallbacks
      * to the Y2PMReceiver.
      **/
-    CallbackHandler( YCPInterpreter *const wfm_r, ReferencesNeeded args_r );
+    CallbackHandler( YCPInterpreter *& wfm_r, ReferencesNeeded args_r );
 
     /**
      * Destructor. Reset Y2PMCallbacks to it's defaults.

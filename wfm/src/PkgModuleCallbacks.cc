@@ -739,7 +739,7 @@ class PkgModuleFunctions::CallbackHandler::Y2PMReceive : public Y2PMRecipients::
 //	METHOD NAME : PkgModuleFunctions::CallbackHandler::CallbackHandler
 //	METHOD TYPE : Constructor
 //
-PkgModuleFunctions::CallbackHandler::CallbackHandler( YCPInterpreter *const wfm_r,
+PkgModuleFunctions::CallbackHandler::CallbackHandler( YCPInterpreter *& wfm_r,
 						      ReferencesNeeded args_r )
     : _ycpCallbacks( *new YCPCallbacks( wfm_r ) )
     , _y2pmReceive( *new Y2PMReceive( _ycpCallbacks, args_r ) )

@@ -35,7 +35,7 @@
 /**
  * Constructor.
  */
-PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
+PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *& wfmInterpreter)
     : _first_free_source_slot(0)
     , _cache_started(false)
     , _callbackHandler( *new CallbackHandler( wfmInterpreter,

@@ -47,6 +47,47 @@
 #include <PerlModule.h>
 #include <WFMInterpreter.h>
 
+/**
+ * Hack to share a refcounted PkgModule between multiple
+ * WFMInterpreter instances.
+ *
+ * Refcounting applies to all WFMInterpreter instances. According
+ * to Klaus it's sufficient to remember the last WFMInterpreter
+ * created for callback evaluation. Thus no interprete list is
+ * maintained.
+ **/
+///////////////////////////////////////////////////////////////////
+namespace PkgModuleCtrl {
+///////////////////////////////////////////////////////////////////
+#warning Hack to share refcounted PkgModule between WFMInterpreter instances
+
+  static YCPInterpreter * interpreter = 0; // pointer reference passed to PkgModule
+  static PkgModule *      pkgmodule = 0;
+  static unsigned         refcnt = 0;
+
+  PkgModule * ref( YCPInterpreter & from ) {
+    ++refcnt;
+    interpreter = &from;
+    if ( ! pkgmodule ) {
+      pkgmodule = new PkgModule( interpreter ); // pointer reference passed!
+    }
+    return pkgmodule;
+  }
+
+  void unref( YCPInterpreter & from ) {
+    --refcnt;
+    if ( interpreter == &from ) {
+      interpreter = 0;
+    }
+    if ( refcnt == 0 ) {
+      delete pkgmodule;
+      pkgmodule = 0;
+    }
+  }
+
+///////////////////////////////////////////////////////////////////
+}; // namespace PkgModuleCtrl
+///////////////////////////////////////////////////////////////////
 
 const char*
 WFMInterpreter::get_env_lang () const
@@ -106,7 +147,7 @@ WFMInterpreter::~WFMInterpreter ()
         delete *it;
 
     if (pkgmodule != 0)
-	delete pkgmodule;
+	PkgModuleCtrl::unref(*this);
 }
 
 
@@ -141,7 +182,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
     {
 	if (pkgmodule == 0)
 	{
-	    pkgmodule = new PkgModule (this);
+	    pkgmodule = PkgModuleCtrl::ref(*this);
 	    if (pkgmodule == 0)
 	    {
 		return YCPError ("Can't create PkgModule", YCPVoid());
@@ -1349,7 +1390,7 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	    y2milestone ( "GET encoding for %s:  %s", currentLanguage.c_str(), proposedEncoding.c_str() );
 
 	    // reset LC_CTYPE !!! (for ncurses)
-	    setlocale( LC_CTYPE, locale.c_str() ); 
+	    setlocale( LC_CTYPE, locale.c_str() );
 	}
 
 	textdomainOrLanguageHasChanged = true;

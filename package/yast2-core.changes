@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Sep 10 16:43:34 CEST 2003 - ma@suse.de
+
+- Share PkgModule between multiple WFM interpreter instance.
+  (#29324)
+- 2.8.28
+
+-------------------------------------------------------------------
 Tue Sep  9 13:23:15 CEST 2003 - ma@suse.de
 
 - Fixed DoneProvide callback to send package name as third arg

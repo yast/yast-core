@@ -230,7 +230,7 @@ class PkgModuleFunctions
 	/**
 	 * Constructor.
 	 */
-	PkgModuleFunctions (YCPInterpreter *wfmInterpreter);
+	PkgModuleFunctions (YCPInterpreter *& wfmInterpreter);
 
 	/**
 	 * Destructor.

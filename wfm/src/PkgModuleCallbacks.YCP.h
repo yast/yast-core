@@ -166,14 +166,15 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
     mutable map<CBid,string> _mModules;
     mutable map<CBid,string> _mSymbols;
 
-    YCPInterpreter *const _interpreter;
+#warning Hack to share refcounted PkgModule between WFMInterpreter instances
+    YCPInterpreter *& _interpreter; // pointer reference to PkgModuleCtrl
 
   public:
 
     /**
      * Constructor.
      **/
-    YCPCallbacks( YCPInterpreter *const interpreter )
+    YCPCallbacks( YCPInterpreter *& interpreter )
       : _interpreter( interpreter )
     {
       if ( !_interpreter ) {

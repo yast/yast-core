@@ -40,7 +40,7 @@ using std::string;
 //-------------------------------------------------------------------
 // PkgModule
 
-PkgModule::PkgModule (YCPInterpreter *wfmInterpreter)
+PkgModule::PkgModule (YCPInterpreter *& wfmInterpreter)
     : PkgModuleFunctions (wfmInterpreter)
 {
 }

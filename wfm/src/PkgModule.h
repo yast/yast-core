@@ -41,7 +41,7 @@ class PkgModule : public PkgModuleFunctions
     /**
      * Constructor.
      */
-    PkgModule (YCPInterpreter *wfmInterpreter);
+    PkgModule (YCPInterpreter *& wfmInterpreter);
 
     /**
      * Destructor.
