@@ -77,7 +77,9 @@ YStatement::YStatement (ykind kind, std::istream & str)
     : YCode (kind)
 {
     m_line = Bytecode::readInt32 (str);
+#if DO_DEBUG
     y2debug ("YStatement::YStatement([%d]:%d)", (int)kind, m_line);
+#endif
 }
 
 
@@ -98,7 +100,9 @@ YStatement::toString () const
 YCPValue
 YStatement::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YStatement::evaluate(%s)\n", toString().c_str());
+#endif
     switch (kind())
     {
 	case ysBreak:	    return YCPBreak();
@@ -112,7 +116,9 @@ YStatement::evaluate (bool cse)
 std::ostream &
 YStatement::toStream (std::ostream & str) const
 {
+#if DO_DEBUG
     y2debug ("YStatement::toStream ([%d]:%d)", (int)kind(), m_line);
+#endif
     YCode::toStream (str);
     return Bytecode::writeInt32 (str, m_line);
 }
@@ -162,7 +168,9 @@ YSExpression::toStream (std::ostream & str) const
 YCPValue
 YSExpression::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YSExpression::evaluate(%s:%d)\n", toString().c_str(), line());
+#endif
     m_expr->evaluate (cse);
     return YCPNull();
 }
@@ -210,7 +218,9 @@ YSBlock::toStream (std::ostream & str) const
 YCPValue
 YSBlock::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YSBlock::evaluate(%s:%d)\n", toString().c_str(), line());
+#endif
     return m_block->evaluate (cse);
 }
 
@@ -281,12 +291,10 @@ YSReturn::toString() const
     string s = "return";
     if (m_value != 0)
     {
-//y2debug ("YSReturn::toString value kind %d", m_value->kind());
 	s += " ";
 	s += m_value->toString();
     }
     s += ";";
-//y2debug ("s %s", s.c_str());
     return s;
 }
 
@@ -308,7 +316,9 @@ YCPValue
 YSReturn::evaluate (bool cse)
 {
     if (cse) return YCPNull();
+#if DO_DEBUG
     y2debug ("YSReturn::evaluate (%s)\n", m_value ? m_value->toString().c_str() : "");
+#endif
     if (m_value != 0)
     {
 	YCPValue val = m_value->evaluate (cse);
@@ -366,7 +376,9 @@ YSFunction::toString() const
 YCPValue
 YSFunction::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YSFunction::evaluate(%s)\n", toString().c_str());
+#endif
     // there's nothing to evaluate for a function _definition_
     // its all in the function call.
     return YCPNull();
@@ -440,7 +452,9 @@ YSTypedef::toStream (std::ostream & str) const
 YCPValue
 YSTypedef::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug("evaluate(%s) = nil", toString().c_str());
+#endif
     return YCPNull();
 }
 
@@ -500,10 +514,14 @@ YCPValue
 YSAssign::evaluate (bool cse)
 {
     if (cse) return YCPNull();
+#if DO_DEBUG
     y2debug ("YSAssign::evaluate(%s)\n", toString().c_str());
+#endif
     YCPValue value = m_code->evaluate ();
     m_entry->setValue (value.isNull() ? YCPVoid() : value);
+#if DO_DEBUG
     y2debug ("YSAssign::evaluate (%s) = '%s'\n", m_code->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
+#endif
 
     return YCPNull();
 }
@@ -578,7 +596,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	return YCPNull ();
     }
 #if DO_DEBUG	
-y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toString().c_str(), value.isNull () ? "nil" : value->toString().c_str());
+    y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toString().c_str(), value.isNull () ? "nil" : value->toString().c_str());
 #endif
     YCPValue argval = arg->value (idx);
     if (argval.isNull())
@@ -612,7 +630,7 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
 	
 	list->set (argint, val.isNull() ? YCPVoid() : val);
 #if DO_DEBUG	
-y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString().c_str());
+    y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString().c_str());
 #endif
 	return list;
     }
@@ -632,7 +650,7 @@ y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString(
 	}
 	map = map->functionalAdd (argval, val.isNull() ? YCPVoid() : val);
 #if DO_DEBUG	
-y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str(), map->toString().c_str());
+    y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str(), map->toString().c_str());
 #endif
 	return map;
     }
@@ -701,7 +719,9 @@ YSBracket::evaluate (bool cse)
     if (!result.isNull())
     {
 	m_entry->setValue (result);
+#if DO_DEBUG
 y2debug ("%s = %s", m_entry->name(), result->toString().c_str());
+#endif
 	result = YCPNull();
     }
 
@@ -793,7 +813,9 @@ YSIf::toStream (std::ostream & str) const
 YCPValue
 YSIf::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug ("YSIf::evaluate(%s)\n", toString().c_str());
+#endif
     YCPValue bval = m_condition->evaluate (cse);
     
     if (bval.isNull ())
@@ -892,7 +914,9 @@ YSWhile::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
+#if DO_DEBUG
     y2debug ("YSWhile::evaluate(%s)\n", toString().c_str());
+#endif
 
     bool first_iteration = true;
 
@@ -931,31 +955,43 @@ YSWhile::evaluate (bool cse)
 	    lval = m_loop->evaluate ();
 	}
 
+#if DO_DEBUG
 	y2debug ("YSWhile::evaluate lval (%s)", lval.isNull() ? "NULL" : lval->toString().c_str());
+#endif
 
 	if (lval.isNull())
 	{
+#if DO_DEBUG
 	    y2debug ("isNull");
+#endif
 	    continue;
 	}
 	else if (lval->isBreak())	// executed 'break'
 	{
+#if DO_DEBUG
 	    y2debug ("isBreak");
+#endif
 	    break;
 	}
 	else if (lval->isReturn())	// executed 'return;' - YCPReturn is also YCPVoid, keep the order of tests!
 	{
+#if DO_DEBUG
 	    y2debug ("isReturn");
+#endif
 	    return lval;
 	}
 	else if (lval->isVoid())	// normal block/statement or 'continue'
 	{
+#if DO_DEBUG
 	    y2debug ("isVoid");
+#endif
 	    continue;
 	}
 	else
 	{
+#if DO_DEBUG
 	    y2debug ("return <expr>;");
+#endif
 	    return lval;		// executed 'return <expr>;'
 	}
     }
@@ -1026,7 +1062,9 @@ YSRepeat::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
+#if DO_DEBUG
     y2debug ("YSRepeat::evaluate(%s)\n", toString().c_str());
+#endif
 
     bool first_iteration = true;
 
@@ -1147,7 +1185,9 @@ YSDo::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
+#if DO_DEBUG
     y2debug ("YSDo::evaluate(%s)\n", toString().c_str());
+#endif
 
     bool first_iteration = true;
 
@@ -1253,7 +1293,9 @@ YSTextdomain::evaluate (bool cse)
 void
 YSTextdomain::bind ()
 {
+#if DO_DEBUG
     y2debug ("going to bind a domain %s", m_domain.c_str() );
+#endif
     bindtextdomain (m_domain.c_str (), LOCALEDIR);
     bind_textdomain_codeset (m_domain.c_str (), "UTF-8");
 }
@@ -1320,7 +1362,9 @@ YSImport::YSImport (const string &name, int line)
 
     if (import (name) != 0)
     {
+#if DO_DEBUG
 	y2debug ("import '%s' failed", name.c_str());	// debug only, import() already logged the error
+#endif
 	m_name = "";
     }
 
@@ -1386,7 +1430,9 @@ YSImport::YSImport (std::istream & str)
     int xrefcount = Bytecode::readInt32 (str);
 
     if (xref_debug) y2milestone ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+#if DO_DEBUG
     else y2debug ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+#endif
 
     if (xrefcount != 0)
     {
@@ -1402,7 +1448,9 @@ YSImport::YSImport (std::istream & str)
 	    stype = Bytecode::readType (str);
 
 	    if (xref_debug) y2milestone ("Xref -------------------------------- '%s' <%s>\n", sname, stype->toString().c_str());
+#if DO_DEBUG
 	    else y2debug ("Xref -------------------------------- '%s' <%s>\n", sname, stype->toString().c_str());
+#endif
 
 	    tentry = table->xref (sname);				// look for match in table
 
@@ -1431,7 +1479,9 @@ YSImport::toStream (std::ostream & str) const
     SymbolTable *table = m_module->second->table();
     table->writeUsage (str);
 
+#if DO_DEBUG
     y2debug ("pushNamespace import '%s'", m_name.c_str());
+#endif
     Bytecode::pushNamespace (nameSpace());				// see YBlock::toStream(str) for popUptoNamespace()
 
     return str;
@@ -1443,7 +1493,9 @@ YSImport::evaluate (bool cse)
 {
     if (!cse && (nameSpace () != NULL))
     {
+#if DO_DEBUG
 	y2debug ("Evaluating namespace '%s'", m_name.c_str());
+#endif
 	
 	nameSpace()->initialize ();
     }
@@ -1497,7 +1549,9 @@ YSFilename::toStream (std::ostream & str) const
 YCPValue
 YSFilename::evaluate (bool cse)
 {
+#if DO_DEBUG
     y2debug( "YSFilename to set %s", m_filename.c_str ());
+#endif
     if (! cse) ee.setFilename (m_filename);
 
     return YCPNull ();
