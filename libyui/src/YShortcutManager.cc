@@ -76,10 +76,10 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 	    {
 		shortcut->setConflict();
 		_conflictCount++;
-		y2error( "Shortcut conflict: '%c' used for %s \"%s\"",
-			 shortcut->preferred(),
-			 shortcut->widgetClass(),
-			 shortcut->shortcutString().c_str() );
+		y2milestone( "Shortcut conflict: '%c' used for %s \"%s\"",
+			     shortcut->preferred(),
+			     shortcut->widgetClass(),
+			     shortcut->shortcutString().c_str() );
 	    }
 	}
 	else	// No or invalid shortcut
@@ -91,9 +91,9 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 		if ( ! shortcut->widget()->autoShortcut() )
 		{
-		    y2error( "No valid shortcut for %s \"%s\"",
-			     shortcut->widgetClass(),
-			     shortcut->cleanShortcutString().c_str() );
+		    y2milestone( "No valid shortcut for %s \"%s\"",
+				 shortcut->widgetClass(),
+				 shortcut->cleanShortcutString().c_str() );
 		}
 	    }
 	}
@@ -136,11 +136,11 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 void
 YShortcutManager::resolveAllConflicts()
 {
-    y2milestone( "Resolving shortcut conflicts" );
+    y2debug( "Resolving shortcut conflicts" );
 
     if ( ! _did_check )
     {
-	y2error( "Call checkShortcuts() first!" );
+	y2milestone( "Call checkShortcuts() first!" );
 	return;
     }
 
@@ -194,8 +194,8 @@ YShortcutManager::resolveAllConflicts()
 
 	if ( shortcut->conflict() )
 	{
-	    y2error( "Couldn't resolve shortcut conflict for %s \"%s\"",
-		     shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+	    y2milestone( "Couldn't resolve shortcut conflict for %s \"%s\"",
+			 shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
 
 	}
 
@@ -207,7 +207,7 @@ YShortcutManager::resolveAllConflicts()
 
     if ( _conflictCount > 0 )
     {
-	y2warning( "%d shortcut conflict(s) left", _conflictCount );
+	y2debug( "%d shortcut conflict(s) left", _conflictCount );
     }
 }
 
@@ -251,13 +251,13 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	{
 	    if ( shortcut->widget()->autoShortcut() )
 	    {
-		y2milestone( "Automatically assigning shortcut '%c' to %s(`opt(`autoShortcut), \"%s\")",
-			     candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+		y2debug( "Automatically assigning shortcut '%c' to %s(`opt(`autoShortcut), \"%s\")",
+			 candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
 	    }
 	    else
 	    {
-		y2warning( "Reassigning shortcut '%c' for %s \"%s\"",
-			   candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+		y2debug( "Reassigning shortcut '%c' for %s \"%s\"",
+			 candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
 	    }
 	    shortcut->setShortcut( candidate );
 	}
