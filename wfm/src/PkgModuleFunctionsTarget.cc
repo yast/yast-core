@@ -33,11 +33,11 @@
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
+#include <ycp/YCPInteger.h>
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPList.h>
 #include <ycp/YCPMap.h>
-#include <ycp/YCPError.h>
 
 #include <unistd.h>
 #include <sys/statvfs.h>
@@ -45,25 +45,19 @@
 using std::string;
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetInit(string root, bool new) -> bool
  *
  * initialized target system with root-directory
  * if new == true, initialize new rpm database
  */
 YCPValue
-PkgModuleFunctions::TargetInit (YCPList args)
+PkgModuleFunctions::TargetInit (const YCPString& root, const YCPBoolean& n)
 {
-    if ((args->size() != 2)
-	|| !(args->value(0)->isString())
-	|| !(args->value(1)->isBoolean()))
-    {
-	return YCPError ("Bad args to Pkg::TargetInit");
-    }
-
 #warning TargetInit: newdb flag is obsolete! Check!
-    bool newdb = args->value(1)->asBoolean()->value();
-    Pathname newRoot = args->value(0)->asString()->value();
+    bool newdb = n->value();		// used again below
+
+    Pathname newRoot = root->value();
 
     if (newdb)
     {
@@ -72,101 +66,91 @@ PkgModuleFunctions::TargetInit (YCPList args)
         _last_error = _y2pm.instTarget().init (Pathname (args->value(0)->asString()->value()), newdb);
 #endif
         // Initialize target. If package/selecion manager do already exist
-	// data are loaded, otherwise when the manager is created.
+        // data are loaded, otherwise when the manager is created.
         _last_error = _y2pm.instTargetInit( newRoot );
     }
     else
     {
 #if 0
-	_last_error = PMError::E_ok;
-	// use existing rpmdb (and seldb !)
-	_y2pm.instTarget(true, Pathname (args->value(0)->asString()->value()));
+        _last_error = PMError::E_ok;
+        // use existing rpmdb (and seldb !)
+        _y2pm.instTarget(true, Pathname (args->value(0)->asString()->value()));
 #endif
         // initialize target
-	_last_error = _y2pm.instTargetInit( newRoot );
+        _last_error = _y2pm.instTargetInit( newRoot );
 
-	if ( !_last_error ) {
-	  // assert package/selecion managers exist and are up to date.
-	  _last_error = _y2pm.instTargetUpdate();
-	}
+        if ( !_last_error ) {
+          // assert package/selecion managers exist and are up to date.
+          _last_error = _y2pm.instTargetUpdate();
+        }
 
     }
 
     if (_last_error)
-	return YCPError (_last_error.errstr().c_str(), YCPBoolean (false));
+        return YCPError (_last_error.errstr().c_str(), YCPBoolean (false));
 
 
     return YCPBoolean (true);
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetFinish() -> bool
  *
  * finish target usage
  */
-YCPValue
-PkgModuleFunctions::TargetFinish (YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetFinish ()
 {
     _y2pm.instTargetClose();
     return YCPBoolean (true);
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetInstall(string filename) -> bool
  *
  * install rpm package by filename
  * the filename must be an absolute path to a file which can
  * be accessed by the package manager.
  *
- * !! uses callbacks !!
+ * !! uses callbacks !! 
  * You should do an 'import "PackageCallbacks"' before !
  */
-YCPValue
-PkgModuleFunctions::TargetInstall(YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetInstall(const YCPString& filename)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetInstall");
-    }
-    _last_error = _y2pm.installFile (Pathname (args->value(0)->asString()->value()));
+    _last_error = _y2pm.installFile (Pathname (filename->value()));
     return YCPBoolean (!_last_error);
 }
 
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetRemove(string name) -> bool
  *
  * install package by name
- * !! uses callbacks !!
+ * !! uses callbacks !! 
  * You should do an 'import "PackageCallbacks"' before !
  */
-YCPValue
-PkgModuleFunctions::TargetRemove(YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetRemove(const YCPString& name)
 {
-    _y2pm.removePackage (args->value(0)->asString()->value());
+    _y2pm.removePackage (name->value());
     return YCPBoolean (true);
 }
 
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetLogfile (string name) -> bool
  *
  * init logfile for target
  */
-YCPValue
-PkgModuleFunctions::TargetLogfile (YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetLogfile (const YCPString& name)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetLogfile");
-    }
-    return YCPBoolean (_y2pm.instTarget().setInstallationLogfile (args->value(0)->asString()->value()));
+    return YCPBoolean (_y2pm.instTarget().setInstallationLogfile (name->value()));
 }
 
 
@@ -192,70 +176,52 @@ get_disk_stats (const char *fs, long long *used, long long *size, long long *bsi
 
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetCapacity (string dir) -> integer
  *
  * return capacity of partition at directory
  */
-YCPValue
-PkgModuleFunctions::TargetCapacity (YCPList args)
+YCPInteger
+PkgModuleFunctions::TargetCapacity (const YCPString& dir)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetCapacity");
-    }
-
     long long used, size, bsize;
-    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
+    get_disk_stats (dir->value().c_str(), &used, &size, &bsize);
 
     return YCPInteger (size);
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetUsed (string dir) -> integer
  *
  * return usage of partition at directory
  */
-YCPValue
-PkgModuleFunctions::TargetUsed (YCPList args)
+YCPInteger
+PkgModuleFunctions::TargetUsed (const YCPString& dir)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetUsed");
-    }
-
     long long used, size, bsize;
-    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
+    get_disk_stats (dir->value().c_str(), &used, &size, &bsize);
 
     return YCPInteger (used);
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetBlockSize (string dir) -> integer
  *
  * return block size of partition at directory
  */
-YCPValue
-PkgModuleFunctions::TargetBlockSize (YCPList args)
+YCPInteger
+PkgModuleFunctions::TargetBlockSize (const YCPString& dir)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetBlockSize");
-    }
-
     long long used, size, bsize;
-    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size, &bsize);
+    get_disk_stats (dir->value().c_str(), &used, &size, &bsize);
 
     return YCPInteger (bsize);
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetUpdateInf (string filename) -> map
  *
  * return content of update.inf (usually <destdir>/var/lib/YaST/update.inf)
@@ -264,16 +230,11 @@ PkgModuleFunctions::TargetBlockSize (YCPList args)
  *   "ftpsources" : [ "ftp.suse.com:/pub/suse/i386/current", ... ]]
  */
 YCPValue
-PkgModuleFunctions::TargetUpdateInf (YCPList args)
+PkgModuleFunctions::TargetUpdateInf (const YCPString& filename)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetUpdateInf");
-    }
     UpdateInfParser parser;
 
-    if (parser.fromPath (Pathname (args->value(0)->asString()->value())))
+    if (parser.fromPath (Pathname (filename->value())))
     {
 	return YCPVoid();			// return nil on error
     }
@@ -296,15 +257,15 @@ PkgModuleFunctions::TargetUpdateInf (YCPList args)
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetProducts () -> list
  *
  * return list of maps of all installed products in reverse
  * installation order (product installed last comes first)
  */
 
-YCPValue
-PkgModuleFunctions::TargetProducts (YCPList args)
+YCPList
+PkgModuleFunctions::TargetProducts ()
 {
     YCPList prdlist;
     std::list<constInstSrcDescrPtr> products = _y2pm.instTarget().getProducts();
@@ -317,14 +278,14 @@ PkgModuleFunctions::TargetProducts (YCPList args)
 }
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetRebuildDB () -> bool
  *
  * call "rpm --rebuilddb"
  */
 
-YCPValue
-PkgModuleFunctions::TargetRebuildDB (YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetRebuildDB ()
 {
     _y2pm.instTarget().bringIntoCleanState();
     return YCPBoolean (true);
@@ -332,25 +293,22 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
 
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TagetInitDU (list(map)) -> void
  *
  * init DU calculation for given directories
  * parameter: [ $["name":"dir-without-leading-slash", "free":int_free, "used": int_used]
  */
 YCPValue
-PkgModuleFunctions::TargetInitDU (YCPList args)
+PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isList())
-	|| (args->value(0)->asList()->size() == 0))
+    if (dirlist->size() == 0)
     {
 	return YCPError ("Bad args to Pkg::TargetInitDU");
     }
 
     std::set<PkgDuMaster::MountPoint> mountpoints;
 
-    YCPList dirlist = args->value(0)->asList();
     for (int i = 0; i < dirlist->size(); ++i)
     {
 	bool good = true;
@@ -417,7 +375,7 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
 
 
 /** ------------------------
- *
+ * 
  * @builtin Pkg::TargetGetDU (void) -> map
  *
  * return current DU calculations
@@ -427,7 +385,7 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
  * pkgusage == future used size on target based on current package selection
  */
 YCPValue
-PkgModuleFunctions::TargetGetDU (YCPList args)
+PkgModuleFunctions::TargetGetDU ()
 {
     YCPMap dirmap;
     std::set<PkgDuMaster::MountPoint> mountpoints = _y2pm.packageManager().updateDu().mountpoints();
@@ -450,17 +408,12 @@ PkgModuleFunctions::TargetGetDU (YCPList args)
 /**
    @builtin Pkg::TargetFileHasOwner  (string filepath) -> bool
 
-   returns the (first) package
+   returns the (first) package 
 */
 
-YCPValue
-PkgModuleFunctions::TargetFileHasOwner (YCPList args)
+YCPBoolean
+PkgModuleFunctions::TargetFileHasOwner (const YCPString& filepath)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::TargetFileHasOwner");
-    }
-    return YCPBoolean (_y2pm.instTarget().hasFile(args->value(0)->asString()->value()));
+    return YCPBoolean (_y2pm.instTarget().hasFile(filepath->value()));
 }
 
