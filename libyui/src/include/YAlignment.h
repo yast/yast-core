@@ -81,7 +81,7 @@ protected:
     /**
      * Alignment of the contained widget in each dimension
      */
-    YAlignmentType align[YUIAllDimensions];
+    YAlignmentType align[ YUIAllDimensions ];
 };
 
 

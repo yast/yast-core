@@ -22,20 +22,20 @@
 YSpacing::YSpacing( YWidgetOpt & opt, float size, bool horizontal, bool vertical )
     : YWidget( opt )
 {
-    relativeSize[YD_HORIZ] = horizontal ? size : 0.0;
-    relativeSize[YD_VERT ] = vertical   ? size : 0.0;
+    relativeSize[ YD_HORIZ ] = horizontal ? size : 0.0;
+    relativeSize[ YD_VERT ] = vertical   ? size : 0.0;
 }
 
 
 long YSpacing::nicesize( YUIDimension dim )
 {
-    return absoluteSize( dim, relativeSize[dim] );
+    return absoluteSize( dim, relativeSize[ dim ] );
 }
 
 
 bool YSpacing::isLayoutStretch( YUIDimension dim ) const
 {
-    return _stretch[dim];
+    return _stretch[ dim ];
 }
 
 

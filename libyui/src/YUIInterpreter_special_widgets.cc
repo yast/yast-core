@@ -142,7 +142,7 @@ YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &
  * @optarg	list labels the labels for each part; use "%1" to include the
  *		current numeric value. May include newlines.
  * @usage	if ( HasSpecialWidget( `BarGraph ) {...
- *		`BarGraph( [450, 100, 700],
+ *		`BarGraph( [ 450, 100, 700 ],
  *		[ "Windows used\n%1 MB", "Windows free\n%1 MB", "Linux\n%1 MB" ] )
  *
  * @examples	BarGraph1.ycp BarGraph2.ycp BarGraph3.ycp

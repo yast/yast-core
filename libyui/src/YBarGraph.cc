@@ -124,7 +124,7 @@ string YBarGraph::label( int n )
 	    // If an existing segment doesn't have a label, use its value
 	    // as fallback
 
-	    char buffer[20];
+	    char buffer[ 20 ];
 	    sprintf( buffer, "%d", _values[n] );
 
 	    return string( buffer );

@@ -173,7 +173,7 @@ YCPValue YUIInterpreter::evaluateGetModulename( const YCPTerm & term )
 
 
 /**
- * @builtin SetLanguage( string lang, [string encoding] ) -> nil
+ * @builtin SetLanguage( string lang, [ string encoding ] ) -> nil
  *
  * Tells the ui that the user has selected another language.
  * If the ui has any language dependend output that language
@@ -1751,7 +1751,7 @@ static string  from_name     = "";
 static string  to_name	     = "";
 
 static const unsigned recode_buf_size = 1024;
-static char	      recode_buf[recode_buf_size];
+static char	      recode_buf[ recode_buf_size ];
 
 int YUIInterpreter::Recode( const string & instr, const string & from,
 			    const string & to, string & outstr )

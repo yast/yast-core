@@ -76,7 +76,7 @@ protected:
      * method is used in order to determine the real size in units used
      * by the UI.
      */
-    float relativeSize[YUIAllDimensions];
+    float relativeSize[ YUIAllDimensions ];
 };
 
 

@@ -45,10 +45,10 @@ YWidget::YWidget( YWidgetOpt & opt )
     enabled		= ! opt.isDisabled.value();
     notify		= opt.notifyMode.value();
     _autoShortcut	= opt.autoShortcut.value();
-    _stretch[YD_HORIZ]	= opt.isHStretchable.value();
-    _stretch[YD_VERT]	= opt.isVStretchable.value();
-    _weight[YD_HORIZ]	= opt.hWeight.value();
-    _weight[YD_VERT]	= opt.vWeight.value();
+    _stretch[ YD_HORIZ ]	= opt.isHStretchable.value();
+    _stretch[ YD_VERT ]	= opt.isVStretchable.value();
+    _weight[ YD_HORIZ ]	= opt.hWeight.value();
+    _weight[ YD_VERT ]	= opt.vWeight.value();
 
     if ( ! enabled )	setEnabling( false );
     if ( notify )	setNotify( notify );
@@ -234,31 +234,31 @@ long YWidget::nicesize( YUIDimension dim )
 
 void YWidget::setStretchable( YUIDimension dim, bool newStretch )
 {
-    _stretch[dim] = newStretch;
+    _stretch[ dim ] = newStretch;
 }
 
 
 void YWidget::setDefaultStretchable( YUIDimension dim, bool newStretch )
 {
-    _stretch[dim] |= newStretch;
+    _stretch[ dim ] |= newStretch;
 }
 
 
 bool YWidget::stretchable( YUIDimension dim )
 {
-    return _stretch[dim];
+    return _stretch[ dim ];
 }
 
 
 long YWidget::weight( YUIDimension dim )
 {
-    return _weight[dim];
+    return _weight[ dim ];
 }
 
 
 bool YWidget::hasWeight( YUIDimension dim )
 {
-    // DO NOT simply return _weight[dim] here
+    // DO NOT simply return _weight[ dim ] here
     // since weight() might be overwritten in derived classes!
 
     return weight( dim ) > 0;

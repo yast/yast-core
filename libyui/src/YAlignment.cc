@@ -30,14 +30,14 @@ YAlignment::YAlignment( YWidgetOpt & opt,
 		       YAlignmentType valign )
     : YContainerWidget( opt )
 {
-    align[YD_HORIZ] = halign;
-    align[YD_VERT]  = valign;
+    align[ YD_HORIZ ] = halign;
+    align[ YD_VERT ]  = valign;
 }
 
 
 bool YAlignment::stretchable( YUIDimension dim )
 {
-    if ( align[dim] == YAlignUnchanged ) return child(0)->stretchable( dim );
+    if ( align[ dim ] == YAlignUnchanged ) return child(0)->stretchable( dim );
     else return true;
 }
 
@@ -45,8 +45,8 @@ bool YAlignment::stretchable( YUIDimension dim )
 void YAlignment::setSize( long newwidth, long newheight )
 {
     long newsize[2];
-    newsize[YD_HORIZ]  = newwidth;
-    newsize[YD_VERT]   = newheight;
+    newsize[ YD_HORIZ ]  = newwidth;
+    newsize[ YD_VERT ]   = newheight;
 
     long newchildsize[2];
     long newchildpos[2];
@@ -55,31 +55,31 @@ void YAlignment::setSize( long newwidth, long newheight )
     {
 	if ( child(0)->stretchable( dim ) )
 	{
-	    newchildsize[dim] = newsize[dim];
-	    newchildpos [dim] = 0;
+	    newchildsize[ dim ] = newsize[ dim ];
+	    newchildpos [ dim ] = 0;
 	}
 	else
 	{
-	    newchildsize[dim] = min( newsize[dim], child(0)->nicesize( dim ) );
-	    switch ( align[dim] )
+	    newchildsize[ dim ] = min( newsize[ dim ], child(0)->nicesize( dim ) );
+	    switch ( align[ dim ] )
 	    {
 		case YAlignUnchanged:
 		case YAlignCenter:
-		    newchildpos[dim] = ( newsize[dim] - newchildsize[dim] ) / 2;
+		    newchildpos[ dim ] = ( newsize[ dim ] - newchildsize[ dim ] ) / 2;
 		    break;
 
 		case YAlignBegin:
-		    newchildpos[dim] = 0;
+		    newchildpos[ dim ] = 0;
 		    break;
 
 		case YAlignEnd:
-		    newchildpos[dim] = newsize[dim] - newchildsize[dim];
+		    newchildpos[ dim ] = newsize[ dim ] - newchildsize[ dim ];
 		    break;
 	    }
 	}
     }
 
-    child(0)->setSize( newchildsize[YD_HORIZ], newchildsize[YD_VERT] );
-    moveChild( child(0), newchildpos[YD_HORIZ], newchildpos[YD_VERT] );
+    child(0)->setSize( newchildsize[ YD_HORIZ ], newchildsize[ YD_VERT ] );
+    moveChild( child(0), newchildpos[ YD_HORIZ ], newchildpos[ YD_VERT ] );
 }
 

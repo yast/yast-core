@@ -1047,7 +1047,7 @@ YWidget *YUIInterpreter::createMenuButton( YWidget *parent, YWidgetOpt & opt, co
 	 || ! term->value(argnr+1)->isList()  )
     {
 	y2error( "Invalid arguments for the MenuButton widget: "
-		"expected \"label\", [ `item(), `item(), ...], not %s",
+		"expected \"label\", [ `item(), `item(), ... ], not %s",
 		term->toString().c_str() );
 	return 0;
     }
@@ -1130,7 +1130,7 @@ YUIInterpreter::parseMenuItemList( const YCPList &	itemList,
 		 ! iterm->value(1)->isList()     )	// [ `item( ... ), `item( ... ) ] )
 	    {
 		y2error( "MenuButton: Invalid submenu specification: "
-			 "expected `menu( \"submenu label\", [ `item(), `item(), ...] ), not %s",
+			 "expected `menu( \"submenu label\", [ `item(), `item(), ... ] ), not %s",
 			 item->toString().c_str() );
 
 		return -1;
@@ -1772,14 +1772,14 @@ YWidget *YUIInterpreter::createComboBox( YWidget *parent, YWidgetOpt & opt, cons
  *		<br>
  *		itemList ::= <br>
  *		<blockquote>
- *			<tt><b>[</b></tt>		<br>
+ *			<tt><b>[ </b></tt>		<br>
  *			<blockquote>
  *				item			<br>
  *				[ , item ]		<br>
  *				[ , item ]		<br>
  *				...			<br>
  *			</blockquote>
- *			<tt><b>]</b></tt> <br>
+ *			<tt><b> ]</b></tt> <br>
  *		</blockquote>
  *		<br>
  *		item ::= <br>

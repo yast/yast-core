@@ -117,7 +117,7 @@ YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newval
 	    return YCPBoolean( false );
 	}
 
-	rows[item_nr].elements[colnum] = newtext;
+	rows[ item_nr].elements[colnum ] = newtext;
 	cellChanged( item_nr, colnum, YCPString( newtext ) );
 	return YCPBoolean( true );
     }
@@ -132,7 +132,7 @@ YCPValue YTable::queryWidget( const YCPSymbol & property )
     {
 	int index = getCurrentItem();
 	y2debug( "current item: %d", index );
-	if ( index >= 0 ) return rows[index].id;
+	if ( index >= 0 ) return rows[ index ].id;
 	else	      return YCPVoid();
     }
     else return YWidget::queryWidget( property );
@@ -152,7 +152,7 @@ YCPValue YTable::queryWidget( const YCPTerm & property )
 	}
 	int item_nr = itemWithId( property->value(0), true );
 	if ( item_nr < 0 ) return YCPVoid();
-	else	       return rows[item_nr].makeTerm();
+	else	       return rows[ item_nr ].makeTerm();
     }
     else return YWidget::queryWidget( property );
 }

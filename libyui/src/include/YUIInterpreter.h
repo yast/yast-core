@@ -1235,7 +1235,7 @@ protected:
      * of options if available, otherwise an empty list.
      * Increases argnr by 1 if options are found.
      * For example PushButton( `id( 17 ), `opt( `hirn, `color( `red ) )
-     * has the option list [`hirn, `color( `red )]
+     * has the option list [ `hirn, `color( `red ) ]
      * @param term the Widgetterm
      * @param argnr in/out: The number of the first non-id argument.
      * Returns the number of the first non-id and non-opt argument.

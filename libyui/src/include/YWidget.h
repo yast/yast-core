@@ -384,12 +384,12 @@ protected:
     /**
      * Stretchability in both dimensions.
      */
-    bool _stretch [YUIAllDimensions];
+    bool _stretch [ YUIAllDimensions ];
 
     /**
      * Weight in both dimensions.
      */
-    long _weight [YUIAllDimensions];
+    long _weight [ YUIAllDimensions ];
 
     /**
      * window ID of the current widget

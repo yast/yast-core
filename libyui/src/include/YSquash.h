@@ -52,7 +52,7 @@ protected:
     /**
      * In which dimensions to squash the contained widget.
      */
-    bool squash[YUIAllDimensions];
+    bool squash[ YUIAllDimensions ];
 };
 
 
