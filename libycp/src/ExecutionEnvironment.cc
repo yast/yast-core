@@ -47,7 +47,7 @@ ExecutionEnvironment::setLinenumber (int line)
 const string 
 ExecutionEnvironment::filename () const
 {
-    return (m_forced_filename) || ! block() ? m_filename : block()->filename();
+    return (m_forced_filename || ! block()) ? m_filename : block()->filename();
 }
 
 
@@ -83,7 +83,9 @@ YBlock*
 ExecutionEnvironment::block () const
 {
     if (m_blocks.empty())
+    {
 	return NULL;
+    }
     return m_blocks.top ();
 }
 
@@ -91,7 +93,15 @@ void
 ExecutionEnvironment::pushBlock (YBlock* b)
 {
     m_blocks.push (b);
-    m_forced_filename = false;
+    if (b->isFile()
+	|| b->isModule())
+    {
+	setFilename (b->filename());
+    }
+    else
+    {
+	m_forced_filename = false;
+    }
     return;
 }
 
@@ -99,7 +109,9 @@ void
 ExecutionEnvironment::popBlock ()
 {
     if (!m_blocks.empty())
+    {
 	m_blocks.pop ();
+    }
     m_forced_filename = false;
     return;
 }
