@@ -40,22 +40,22 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::GetSelections (symbol status, string category) -> ["sel1", "sel2", ...]
-//
-// returns a list of selection names matching the status symbol
-//   and the category.
-// If category == "base", base selections are returned
-// If category == "", addon selections are returned
-// else selections matching the given category are returned
-//
-// status can be:<br>
-// `all		: all known selections<br>
-// `available	: available selections<br>
-// `selected	: selected but not yet installed selections<br>
-// `installed	: installed selection<br>
-// 
+/**   
+   @builtin Pkg::GetSelections (symbol status, string category) -> ["sel1", "sel2", ...]
 
+   returns a list of selection names matching the status symbol
+     and the category.
+   If category == "base", base selections are returned
+   If category == "", addon selections are returned
+   else selections matching the given category are returned
+
+   status can be:<br>
+   `all		: all known selections<br>
+   `available	: available selections<br>
+   `selected	: selected but not yet installed selections<br>
+   `installed	: installed selection<br>
+   
+*/
 YCPValue
 PkgModuleFunctions::GetSelections (YCPList args)
 {
@@ -130,20 +130,21 @@ PkgModuleFunctions::GetSelections (YCPList args)
 
 
 // ------------------------
-// 
-// @builtin Pkg::SelectionData (string selection)
-//	->	$["summary" : "This is a nice selection",
-//		"category" : "Network",
-//		"visible" : true,
-//		"suggests" : ["sel1", "sel2", ...],
-//		"archivesize" : 12345678
-//		"order" : "042"]
-//
-// Get summary (aka label), category, visible, suggests, archivesize,
-//	and order attributes of a selection
-// Returns an empty list if no selection found
-// Returns nil if called with wrong arguments
-//
+/**   
+   @builtin Pkg::SelectionData (string selection)
+  	->	$["summary" : "This is a nice selection",
+  		"category" : "Network",
+  		"visible" : true,
+  		"suggests" : ["sel1", "sel2", ...],
+  		"archivesize" : 12345678
+  		"order" : "042"]
+
+   Get summary (aka label), category, visible, suggests, archivesize,
+  	and order attributes of a selection
+   Returns an empty list if no selection found
+   Returns nil if called with wrong arguments
+
+*/
 YCPValue
 PkgModuleFunctions::SelectionData (YCPList args)
 {
@@ -189,18 +190,19 @@ PkgModuleFunctions::SelectionData (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::SetSelection (string selection) -> bool
-//
-// Set a new selection
-//
-// If the selection is a base selection,
-// this effetively resets the current package selection to
-// the packages of the newly selected base selection
-// Usually returns true
-// Returns false if the given string does not match
-// a known selection.
-//
+/**   
+   @builtin Pkg::SetSelection (string selection) -> bool
+
+   Set a new selection
+
+   If the selection is a base selection,
+   this effetively resets the current package selection to
+   the packages of the newly selected base selection
+   Usually returns true
+   Returns false if the given string does not match
+   a known selection.
+
+*/
 YCPValue
 PkgModuleFunctions::SetSelection (YCPList args)
 {
@@ -219,12 +221,13 @@ PkgModuleFunctions::SetSelection (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::ClearSelection (string selection) -> bool
-//
-// Clear a selected selection
-//
-//
+/**   
+   @builtin Pkg::ClearSelection (string selection) -> bool
+
+   Clear a selected selection
+
+
+*/
 YCPValue
 PkgModuleFunctions::ClearSelection (YCPList args)
 {

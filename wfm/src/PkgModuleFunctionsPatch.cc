@@ -39,11 +39,12 @@
 using std::string;
 
 // ------------------------
-// 
-// @builtin Pkg::YouStatus() -> map
-//
-// get map with status information
-//
+/**   
+   @builtin Pkg::YouStatus() -> map
+
+   get map with status information
+
+*/
 YCPValue
 PkgModuleFunctions::YouStatus (YCPList args)
 {
@@ -61,11 +62,12 @@ PkgModuleFunctions::YouStatus (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetServers() -> list(string)
-//
-// get urls of patch servers
-//
+/**   
+   @builtin Pkg::YouGetServers() -> list(string)
+
+   get urls of patch servers
+
+*/
 YCPValue
 PkgModuleFunctions::YouGetServers (YCPList args)
 {
@@ -84,11 +86,12 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetPatches() -> bool
-//
-// retrieve patches
-//
+/**   
+   @builtin Pkg::YouGetPatches() -> bool
+
+   retrieve patches
+
+*/
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
@@ -108,11 +111,12 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouGetPackages () -> bool
-//
-// retrieve package data belonging to patches
-//
+/**   
+   @builtin Pkg::YouGetPackages () -> bool
+
+   retrieve package data belonging to patches
+
+*/
 YCPValue
 PkgModuleFunctions::YouGetPackages (YCPList args)
 {
@@ -122,11 +126,12 @@ PkgModuleFunctions::YouGetPackages (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouSelectPatches () -> void
-//
-// select patches based on types.
-//
+/**   
+   @builtin Pkg::YouSelectPatches () -> void
+
+   select patches based on types.
+
+*/
 YCPValue
 PkgModuleFunctions::YouSelectPatches (YCPList args)
 {
@@ -138,11 +143,12 @@ PkgModuleFunctions::YouSelectPatches (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouNextPatch () -> map
-//
-// get information about next patch to be installed.
-//
+/**   
+   @builtin Pkg::YouNextPatch () -> map
+
+   get information about next patch to be installed.
+
+*/
 YCPValue
 PkgModuleFunctions::YouNextPatch (YCPList args)
 {
@@ -162,11 +168,12 @@ PkgModuleFunctions::YouNextPatch (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouInstallNextPatch () -> bool
-//
-// get information about next patch to be installed.
-//
+/**   
+   @builtin Pkg::YouInstallNextPatch () -> bool
+
+   get information about next patch to be installed.
+
+*/
 YCPValue
 PkgModuleFunctions::YouInstallNextPatch (YCPList args)
 {
@@ -176,11 +183,12 @@ PkgModuleFunctions::YouInstallNextPatch (YCPList args)
 }
 
 // ------------------------
-// 
-// @builtin Pkg::YouInstallPatches () -> bool
-//
-// install retrieved patches
-//
+/**   
+   @builtin Pkg::YouInstallPatches () -> bool
+
+   install retrieved patches
+
+*/
 YCPValue
 PkgModuleFunctions::YouInstallPatches (YCPList args)
 {
