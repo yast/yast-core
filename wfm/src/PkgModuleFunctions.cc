@@ -233,7 +233,7 @@ PkgModuleFunctions::GetLocale ()
 
 
 /**
- * @builtin Pkg::SetAdditionalLocales (list of string) -> void
+ * @builtin Pkg::SetAdditionalLocales (list <string>) -> void
  *
  * set list of
  */
@@ -259,7 +259,7 @@ PkgModuleFunctions::SetAdditionalLocales (YCPList langycplist)
 }
 
 /**
- * @builtin Pkg::GetAdditionalLocales -> list
+ * @builtin Pkg::GetAdditionalLocales -> list <string>
  *
  * return list of additional locales
  */
