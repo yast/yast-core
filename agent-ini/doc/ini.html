@@ -545,12 +545,11 @@ href="#rewrite">rewrite</a> rule this section was read by.<br />
 rules. Yuck.)</td>
 </tr>
 
-<tr class="notimpl">
+<tr>
 <td><tt>.ini.all.<i>sectionname</i>.<i>sectionname</i></tt><br />
 <tt>.ini.all</tt></td>
 <td>Accesses all the contents of a section or the whole file at
-once.<br />
-TODO</td>
+once.</td>
 </tr>
 </table>
 
@@ -584,16 +583,9 @@ name is not possible. All of them are deleted by <tt>Write
 
 <h4>All-at-once Read/Write</h4>
 
-<pre class="notimpl">
-Read (.ini.all.<i>sectionname</i>.<i>sectionname</i>) or simply Read (.ini.all)
-  returns a list of maps as follows:
-    $[
-      "kind": "value",
-      "name": "Foo",
-      "type": 0,                        /* value_type */
-      "comment": "blah",
-      "value": "Bar",
-    ],
+<tt>Read (.ini.all.<i>sectionname</i>.<i>sectionname</i>)</tt> or
+simply <tt>Read (.ini.all)</tt> returns a map as follows: 
+<pre>
     $[
       "kind": "section",
       "name": "Foo",
@@ -602,8 +594,27 @@ Read (.ini.all.<i>sectionname</i>.<i>sectionname</i>) or simply Read (.ini.all)
       "comment": "huhly",
       "value": [ /*recursion*/ ],
     ],
-  Multiple names of the same kind are allowed.
 </pre>
+
+where the <tt>"value"</tt> list contains maps describing
+subsections (see above) or values: 
+<pre>
+    $[
+      "kind": "value",
+      "name": "Foo",
+      "type": 0,                        /* value_type */
+      "comment": "blah",
+      "value": "Bar",
+    ],
+</pre>
+
+<tt>Write (.ini.all.<i>section1</i>.<i>section2</i>,
+<i>new_section2_map</i>)</tt> replaces section2 with new_section2.
+<tt>Write (.ini.all, <i>new_map</i>)</tt> replaces all the data. 
+<p>Multiple names of the same kind are allowed.</p>
+
+<p>TODO: how does it interact with multiple-files support? Erasing
+a file this way probably does not work.</p>
 
 <h3>SysConfig/flat mode</h3>
 
