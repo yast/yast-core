@@ -52,6 +52,7 @@
 	boolean subtracted = false;
 	list<integer> newList = [];
 	integer cdNo = 1;
+	integer newCd = -1;
 
 	foreach ( integer val, valueList, ``{
 	    cdNo = cdNo + 1;
@@ -64,13 +65,18 @@
 		if ( val <= 0 )
 		{
 		    val = 0;
-		    mediaChange( cdNo );
+		    newCd = cdNo;
 		}
 	    }
 
 	    newList = add( newList, val );
 	});
 
+	UI::ChangeWidget(`progress, `Values, newList );
+
+	if ( newCd > 0 )
+	    mediaChange( newCd );
+	
 	return newList;
     }
 
@@ -167,7 +173,6 @@
 	if ( delta > 0 )
 	{
 	    rpms = subtract( rpms, 10 );
-	    UI::ChangeWidget(`progress, `Values, rpms );
 	    UI::ChangeWidget(`time, `Value, remainingTime( rpms ) );
 	    UI::RecalcLayout();
 	}
