@@ -2,7 +2,7 @@
 # Makefile.am for core/scr/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/scr
 

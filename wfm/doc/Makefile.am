@@ -2,7 +2,7 @@
 # Makefile.am for core/wfm/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/wfm
 

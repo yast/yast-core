@@ -2,7 +2,7 @@
 # Makefile.am for core/agent-probe/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/agent-probe
 

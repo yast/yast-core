@@ -2,7 +2,7 @@
 # Makefile.am for core/agent-losetup/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/agent-losetup
 

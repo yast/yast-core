@@ -2,7 +2,7 @@
 # Makefile.am for core/agent-resolver/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/agent-resolver
 

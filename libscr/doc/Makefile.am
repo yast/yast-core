@@ -2,7 +2,7 @@
 # Makefile.am for core/libscr/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/libscr
 

@@ -2,7 +2,7 @@
 # Makefile.am for core/libycp/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/libycp
 

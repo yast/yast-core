@@ -2,7 +2,7 @@
 # Makefile.am for core/agent-ypserv/doc
 #
 
-SUBDIRS = autodocs
+SUBDIRS =
 
 htmldir = $(docdir)/agent-ypserv
 
