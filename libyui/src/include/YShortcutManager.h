@@ -100,7 +100,7 @@ public:
      **/
     YDialog *dialog() { return _dialog; }
 
-    
+
 protected:
 
     /**
@@ -109,12 +109,11 @@ protected:
     void clearShortcutList();
 
     /**
-     * Recursively search all children of this dialog (not sub-dialogs!) for
-     * child widgets that could accept a keyboard shortcut and add these to
-     * _widgetList.
+     * Search all children of _dialog (not those of any sub-dialogs!) for child
+     * widgets that could accept a keyboard shortcut and add these to
+     * _shortcutList.
      **/
-    void findShortcutWidgets( YContainerWidget *container );
-
+    void findShortcutWidgets();
 
     /**
      * Pick a new shortcut character for 'shortcut' - one that isn't marked as
@@ -126,7 +125,7 @@ protected:
      * The dialog this shortcut manager works on.
      **/
     YDialog *_dialog;
-    
+
     /**
      * List of all the shortcuts in this dialog.
      **/
@@ -149,7 +148,7 @@ protected:
      **/
     int _conflictCount;
 
-    
+
 private:
 
     bool _did_check;

@@ -46,7 +46,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
     y2debug( "Checking keyboard shortcuts" );
 
     clearShortcutList();
-    findShortcutWidgets( dialog() );
+    findShortcutWidgets();
 
 
     // Initialize wanted character counters
@@ -288,36 +288,24 @@ YShortcutManager::clearShortcutList()
 
 
 void
-YShortcutManager::findShortcutWidgets( YContainerWidget * container )
+YShortcutManager::findShortcutWidgets()
 {
-    if ( ! container )
+    if ( ! _dialog )
     {
-	y2error( "NULL YContainerWidget" );
+	y2error( "NULL YDialog" );
 	return;
     }
 
-    for ( int i=0; i < container->numChildren(); i++ )
+    YWidgetList widgetList = _dialog->widgets();
+    y2debug( "widget list: %d elements", (int) widgetList.size() );
+
+    for ( YWidgetListIterator it = widgetList.begin(); it != widgetList.end(); ++it )
     {
-	YWidget *w = container->child(i);
-
-	if ( w->shortcutProperty() )
+	if ( (*it)->shortcutProperty() )
 	{
-	    YShortcut * shortcut = new YShortcut( w );
+	    YShortcut * shortcut = new YShortcut( *it );
 	    _shortcutList.push_back( shortcut );
-	}
-
-	if ( w->isContainer() && ! w->isDialog() )
-	{
-	    YContainerWidget *subtree = dynamic_cast<YContainerWidget *>(w);
-
-	    if ( subtree )
-	    {
-		findShortcutWidgets( subtree );
-	    }
-	    else
-	    {
-		y2error( "Dynamic cast to YContainerWidget failed" );
-	    }
+	    y2debug( "found shortcut widget %s", shortcut->cleanShortcutString().c_str() );
 	}
     }
 }

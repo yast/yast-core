@@ -21,6 +21,7 @@
 #define YWidget_h
 
 #include <string>
+#include <list>
 #include <ycp/YCPValue.h>
 #include "YWidgetOpt.h"
 #include "YUISymbols.h"
@@ -33,6 +34,12 @@ class YMacroRecorder;
 #define YUIAllDimensions	2
 
 enum YUIDimension { YD_HORIZ, YD_VERT };
+
+
+class YWidget;
+typedef std::list<YWidget *>			YWidgetList;
+typedef std::list<YWidget *>::iterator		YWidgetListIterator;
+typedef std::list<YWidget *>::const_iterator	YWidgetListConstIterator;
 
 
 /**

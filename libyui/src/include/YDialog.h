@@ -21,7 +21,6 @@
 #ifndef YDialog_h
 #define YDialog_h
 
-#include <list>
 #include "YContainerWidget.h"
 
 class YMacroRecorder;
@@ -107,7 +106,7 @@ public:
     /**
      * Return a list of all widgets that belong to this dialog.
      **/
-    std::list<YWidget *> widgets() const;
+    YWidgetList widgets() const;
     
     
 protected:
@@ -116,7 +115,7 @@ protected:
      * Recursively fill a widgets list with all children and grandchildren of
      * 'parent' that are in the same dialog.   
      **/
-    void fillWidgetList( std::list<YWidget *> 		widgetList,
+    void fillWidgetList( YWidgetList &			widgetList,
 			 const YContainerWidget * 	parent )	const;
 
 	

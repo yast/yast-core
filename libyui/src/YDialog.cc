@@ -69,16 +69,16 @@ void YDialog::checkShortcuts( bool force )
 }
 
 
-std::list<YWidget *> YDialog::widgets() const
+YWidgetList YDialog::widgets() const
 {
-    std::list<YWidget *> widgetList;
+    YWidgetList widgetList;
     fillWidgetList( widgetList, this );
 
     return widgetList;
 }
 
 
-void YDialog::fillWidgetList( std::list<YWidget *> 	widgetList,
+void YDialog::fillWidgetList( YWidgetList &		widgetList,
 			      const YContainerWidget *	parent 		) const
 {
     if ( ! parent )
@@ -95,6 +95,10 @@ void YDialog::fillWidgetList( std::list<YWidget *> 	widgetList,
 
 	    if ( container )
 		fillWidgetList( widgetList, container );
+	}
+	else
+	{
+	    y2milestone( "Found dialog: %s", child->widgetClass() );
 	}
     }
 }
