@@ -1,8 +1,13 @@
 -------------------------------------------------------------------
+Wed Jun 16 17:57:03 CEST 2004 - arvin@suse.de
+
+- set current directory to / for chrooted programs
+
+-------------------------------------------------------------------
 Thu May 27 10:41:36 CEST 2004 - visnov@suse.cz
 
 - do not reregister scrconf files on startup (#40833)
-- 2.9.94 
+- 2.9.94
 
 -------------------------------------------------------------------
 Tue May 25 11:32:15 CEST 2004 - arvin@suse.de

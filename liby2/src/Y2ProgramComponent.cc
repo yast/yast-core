@@ -295,6 +295,8 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 			 strerror (errno));
 		_exit (5);
 	    }
+
+	    chdir ("/");
 	}
 
 	execv (bin_file.c_str (), argv);	// execute program
