@@ -35,6 +35,11 @@ public:
      * provided in the constructor.
      */
     Y2Component* create (const char*) const;
+    
+    /**
+     * Agent components do not provide any namespaces.
+     */
+    Y2Component* provideNamespace (const char*) { return NULL; }
 
 private:
 

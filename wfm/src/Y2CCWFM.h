@@ -41,7 +41,11 @@ public:
      * returns false: WFM is a client component.
      */
     bool isServerCreator () const;
-
+    
+    /**
+     * WFM does not provide the namespaces itself, Y2CCScript does that.
+     */
+    Y2Component* provideNamespace (const char*) { return NULL; }
 };
 
 
