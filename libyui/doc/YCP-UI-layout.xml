@@ -60,13 +60,13 @@ There is the <ulink url="http://www.trolltech.com/products/index.html">Qt</ulink
 (<emphasis role="i">y2qt</emphasis>) as a graphical frontend which requires the X Window
 System; this is what most people know as the "normal" YaST2 UI. But
 there is also a NCurses based UI (<emphasis role="i">y2ncurses</emphasis>) for text
-terminals or consoles. A web UI (<emphasis role="i">y2web</emphasis>) is being developed
-at the time of this writing.</para>
+terminals or consoles. <!-- A web UI (<emphasis role="i">y2web</emphasis>) is being developed
+at the time of this writing.--></para>
       <para>That means, of course, that all YaST2 dialogs need to be written
 in a way that is compatible with each of those UIs. This is why
 <emphasis role="i">libyui</emphasis> was introduced as an intermediate abstract layer
 between the YCP application and the UI. You do not communicate
-directly with either <emphasis role="i">y2qt</emphasis>, <emphasis role="i">y2ncurses</emphasis> or <emphasis role="i">y2web</emphasis>
+directly with either <emphasis role="i">y2qt</emphasis>, <emphasis role="i">y2ncurses</emphasis>
 - you communicate with the libyui.</para>
       <para>Thus, YaST2 dialogs need to be described logically rather than
 in terms of pixel sizes and positions: You specify some buttons to
