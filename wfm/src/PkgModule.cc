@@ -132,7 +132,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceProductData")	return SourceProductData (args);
     else if (function == "SourceProvideFile")	return SourceProvideFile (args);
     else if (function == "SourceProvideLocation")return SourceProvideLocation (args);
-    else if (function == "SourceSetMediaChangeCallback")return SourceSetMediaChangeCallback(args);
-    else if (function == "SourceSetMediaErrorCallback")	return SourceSetMediaErrorCallback(args);
+    else if (function == "SourceSetMediaChangeCallback")return SourceSetMediaChangeCallback (args);
+    else if (function == "SourceSetMediaErrorCallback")	return SourceSetMediaErrorCallback (args);
+    else if (function == "SourceCacheCopyTo") return SourceCacheCopyTo (args);
     return YCPError ("Undefined Pkg:: function");
 }
