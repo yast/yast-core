@@ -89,6 +89,7 @@ getTheObject (PMSelectablePtr selectable)
     return package;
 }
 
+#if 0 // currently unused
 static PMPackagePtr
 getTheCandidate (PMSelectablePtr selectable)
 {
@@ -103,7 +104,7 @@ getTheCandidate (PMSelectablePtr selectable)
     }
     return package;
 }
-
+#endif
 // ------------------------
 /**   
    @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
