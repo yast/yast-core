@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug 27 11:46:39 CEST 2002 - arvin@suse.de
+
+- added support for firewire controllers in probe agent
+  (bug #18379)
+
+-------------------------------------------------------------------
 Wed Aug 21 16:24:20 CEST 2002 - kkaempf@suse.de
 
 - furter connections to packagemanager
@@ -8,7 +14,7 @@ Wed Aug 21 16:24:20 CEST 2002 - kkaempf@suse.de
 Mon Aug 19 19:01:40 CEST 2002 - sh@suse.de
 
 - V 2.6.20
-- New package management in UI 
+- New package management in UI
 
 -------------------------------------------------------------------
 Fri Aug 16 15:43:56 CEST 2002 - arvin@suse.de

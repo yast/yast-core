@@ -284,6 +284,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "camera",		ITEM(hw_camera),	pr_null,	0},
 	{ "chipcard",		ITEM(hw_chipcard),	pr_null,	0},
 	{ "usbctrl",		ITEM(hw_usb_ctrl),	pr_null,	0},
+	{ "ieee1394ctrl",	ITEM(hw_ieee1394_ctrl),	pr_null,	0}, // aka firewire
 	{ "hub",		ITEM(hw_hub),		pr_null,	0},
 	{ "scsi",		ITEM(hw_scsi),		pr_null,	0},
 	{ "ide",		ITEM(hw_ide),		pr_null,	0},
