@@ -4,59 +4,6 @@
 // Use the Wizard module instead.
 
 {
-
-    import "ProductControl";
-    /*
-    list<map> base_installation_steps =
-	[
-	  $[ "id": "language",		"label": "Language"			],
-	  $[ "id": "proposal",		"label": "Installation Settings"	],
-	  $[ "id": "do_resize",		"label": "Perform Installation"		],
-	  $[ "id": "prepdisk",		"label": "Perform Installation"		],
-	  $[ "id": "kickoff",		"label": "Perform Installation"		],
-	  $[ "id": "rpmcopy",		"label": "Perform Installation"		],
-	  $[ "id": "finish",		"label": "Perform Installation"		]
-	];
-
-    list<map> config_steps =
-	[
-	  $[ "id": "root",		"label": "Root Password"		],
-	  $[ "id": "proposal_net",	"label": "Network"			],
-          $[ "id": "ask_net_test",	"label": "Network"			],
-	  $[ "id": "do_net_test",	"label": "Network"			],
-	  $[ "id": "you",		"label": "Online Update"		],
-	  $[ "id": "auth",		"label": "Users"			],
-	  $[ "id": "user",		"label": "Users"			],
-	  $[ "id": "suseconfig",	"label": "Clean Up"			],
-	  $[ "id": "release_notes",	"label": "Release Notes"		],
-	  $[ "id": "proposal_hw",	"label": "Device Configuration"		]
-	];
-
-    list<map> steps = flatten( [ base_installation_steps, config_steps ] );
-    */
-
-    string mode = "installation";
-    list<map> steps = flatten( [ ProductControl::getModules("initial", mode) , ProductControl::getModules("continue", mode) ] );
-    steps = filter(map s, steps, ``(s["label"]:""!=""));
-
-    define void show_step( integer no )
-    ``{
-	string current_id = lookup( steps[ no ]:nil, "id", "");
-	string command  = lookup( steps[ no ]:nil, "name", "");
-	command  = command +  "  " + lookup( steps[ no ]:nil, "arguments", "");
-
-	UI::ReplaceWidget(`id(`contents),
-			  `VBox(
-				`Heading( "Current workflow step:" ),
-				`VSpacing(0.5),
-				`Label( "ID: " +  current_id ),
-                                `Label( "Command: " + command),
-                                `PushButton(`id(`switch), "Switch Test")
-				) );
-	UI::WizardCommand(`SetCurrentStep( current_id ) );
-        ProductControl::CurrentWizardStep = current_id;
-    };
-
     if ( ! UI::HasSpecialWidget(`Wizard) )
     {
 	y2error( "This works only with UIs that provide the wizard widget!" );
@@ -69,11 +16,11 @@
 	+ "<p>If it isn't helpful, it should rather not be called a <i>help text</i>.</p>";
 
     UI::OpenDialog(`opt(`defaultsize ),
-		   `Wizard(`opt(`stepsEnabled),
+		   `Wizard(`opt(`treeEnabled),
 			   `back,  "&Back",
 			   `abort, "Ab&ort",
 			   `next,  "&Next" ) );
-
+    
     // UI::DumpWidgetTree();
 
     // UI::WizardCommand(`SetVerboseCommands( true ) );
@@ -81,36 +28,13 @@
     UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
     UI::WizardCommand(`SetHelpText( help_text ) );
 
-    list<map> stagemode = [$["stage":"initial","mode":mode], $["stage":"continue","mode":mode]];
-    string switchmode = "update";
-    list<map> stagemode2 = [$["stage":"initial","mode":switchmode], $["stage":"continue","mode":switchmode]];
-    ProductControl::AddWizardSteps(stagemode);
-
-
-    integer current_step = 0;
-    show_step( 0 );
 
     while( true )
     {
 	symbol button = (symbol) UI::UserInput();
 
-        if (button == `switch )
-        {
-            ProductControl::UpdateWizardSteps(stagemode2);
-        }
 	if ( button == `abort )
 	    break;
-
-	if ( button == `next || button == `back )
-	{
-	    if ( button == `next && current_step+1 < size( steps ) )
-		current_step = current_step+1;
-
-	    if ( button == `back && current_step > 0 )
-		current_step = current_step-1;
-
-	     show_step( current_step );
-	}
     }
 
     UI::CloseDialog();
