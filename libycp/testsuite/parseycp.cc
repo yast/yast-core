@@ -34,7 +34,7 @@ int recursive = 0;
 int
 parsefile (const char *fname)
 {
-    int ret;
+    int ret = -1;
     FILE *infile = stdin;
 
     if (fname)
@@ -55,7 +55,6 @@ parsefile (const char *fname)
 
     for (;;)
     {
-	ret = -1;
 	if (yyeof_reached)
 	{
 	    fprintf (stderr, "yyeof before parse\n");
