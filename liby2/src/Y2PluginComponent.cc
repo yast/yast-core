@@ -207,6 +207,10 @@ Y2PluginComponent::loadPlugin ()
 
     y2debug ("loadPlugin (%s)", filename.c_str());
 
+    // it's too late to the change the malloc implementation
+    setenv ("QT_FAST_MALLOC", "0", 1);
+    setenv ("KDE_MALLOC", "0", 1);
+
     // First dlopen the library.
 
     // Note: Calls the global contructors in the library. That's the reason

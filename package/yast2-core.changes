@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jul 29 16:35:19 CEST 2002 - arvin@suse.de
+
+- disable Qt/KDE's own malloc implementation (it's too late to
+  activated them from dlopen)
+
+-------------------------------------------------------------------
 Wed Jul 24 21:06:49 CEST 2002 - kkaempf@suse.de
 
 - Allow empty nameserver list in agent-resolver (#17178)
