@@ -4,7 +4,7 @@ UI::{
     // then close the dialog and terminate.
 
     OpenDialog(
-	       `IconButton( "button_active.png", "&OK" )
+	       `IconButton( "topRow_right.png", "&OK" )
 	       );
 
     UserInput();
