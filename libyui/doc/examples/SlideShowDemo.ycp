@@ -35,20 +35,37 @@
     list<integer> rpms = [ 600, 150, 30, 100 ];
 
 
+    define void mediaChange( integer cdNo )
+    {
+	UI::OpenDialog( `VBox(
+			      `Label( sformat( "Please insert CD #%1", cdNo ) ),
+			      `PushButton( `opt(`default), "&OK" )
+			      )
+			);
+	UI::TimeoutUserInput( 10 * 1000 );
+	UI::CloseDialog();
+    }
+
     define list<integer> subtract( list<integer> valueList, integer delta )
     {
 	boolean subtracted = false;
 	list<integer> newList = [];
+	integer cdNo = 1;
 
 	foreach ( integer val, valueList, ``{
+	    cdNo = cdNo + 1;
+	    
 	    if ( val > 0 && ! subtracted )
 	    {
 		val = val - delta;
 		subtracted = true;
-	    }
 
-	    if ( val < 0 )
-		val = 0;
+		if ( val <= 0 )
+		{
+		    val = 0;
+		    mediaChange( cdNo );
+		}
+	    }
 
 	    newList = add( newList, val );
 	});
@@ -56,17 +73,17 @@
 	return newList;
     }
 
-    
+
     define string remainingTime( list<integer> rpms )
     {
 	integer left = 0;
-	
+
 	foreach ( integer val, rpms, ``{
 	    left = left + val;
 	});
 
 	integer minutes = left / 30;
-	
+
 	return minutes < 10 ?
 	    sformat( "Remaining:\n0:0%1:17", minutes ) :
 	    sformat( "Remaining:\n0:%1:37" , minutes );
@@ -130,14 +147,15 @@
 
     while( true )
     {
-	symbol button = (symbol) UI::UserInput();
+	symbol button = (symbol) UI::TimeoutUserInput( 100 );
 
 	if ( button == `abort )
 	    break;
 
 	integer delta = 0;
-	if ( button == `next )	delta = 10;
-	if ( button == `back )	delta = 100;
+	if ( button == `next 	)	delta = 10;
+	if ( button == `back 	)	delta = 100;
+	if ( button == `timeout	)	delta = 100;
 
 	if ( delta > 0 )
 	{
