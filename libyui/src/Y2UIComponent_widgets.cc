@@ -815,7 +815,7 @@ YWidget *Y2UIComponent::createLabel( YWidget *parent, YWidgetOpt & opt, const YC
 	else logUnknownOption( term, optList->value(o) );
     }
 
-    if( heading ) opt.isHeading.setValue( true );
+    if ( heading ) opt.isHeading.setValue( true );
 
     return createLabel( parent, opt, term->value( argnr )->asString() );
 }

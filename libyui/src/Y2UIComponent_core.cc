@@ -64,7 +64,8 @@ Y2UIComponent::Y2UIComponent( bool with_threads, Y2Component *callback )
     , callbackComponent( callback )
     , _events_blocked( false )
 {
-    if( current_ui == 0 ) current_ui = this;
+    if ( ! current_ui )
+	current_ui = this;
 }
 
 
@@ -87,7 +88,8 @@ Y2UIComponent::~Y2UIComponent()
     deleteMacroRecorder();
     deleteMacroPlayer();
     
-    if( current_ui == this ) current_ui = 0;
+    if ( current_ui == this )
+	current_ui = 0;
 }
 
 
