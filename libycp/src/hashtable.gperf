@@ -64,4 +64,3 @@ y2security,	evaluateY2Security
 y2internal,	evaluateY2Internal
 regexptokenize, evaluateRegexpTokenize
 tohexstring,	evaluateToHexString
-getyast2dir,	evaluateGetYAST2DIR

@@ -53,7 +53,12 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 %files
 %defattr(-,root,root)
-%{_libdir}/lib*.so.*
+
+%dir %{_libdir}/YaST2
+%if "%_lib" == "lib64"
+%dir /usr/lib/YaST2
+%endif
+%dir /usr/share/YaST2
 
 %dir %attr(0700,root,root) @logdir@
 %dir @ybindir@
@@ -62,6 +67,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 %dir @execcompdir@/servers
 %dir @execcompdir@/servers_non_y2
 
+%{_libdir}/lib*.so.*
 @ybindir@/y2base
 @ybindir@/startshell
 @ybindir@/md_autorun
@@ -77,7 +83,5 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 /usr/bin/runycp
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
-@plugindir@/lib*.so
-@plugindir@/lib*.la
 @includedir@
 %doc @docdir@

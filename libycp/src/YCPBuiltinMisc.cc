@@ -228,21 +228,6 @@ YCPValue evaluateSrandom(YCPInterpreter *interpreter, const YCPList& args)
 }
 
 
-YCPValue evaluateGetYAST2DIR (YCPInterpreter *interpreter, const YCPList& args)
-{
-    /**
-     * @builtin getyast2dir () -> string
-     * Returns the YAST2DIR.
-     */
-    if (args->size() == 0)
-    {
-	return YCPString (YAST2DIR);
-    }
-
-    return YCPError ("getyast2dir takes no argument");
-}
-
-
 /**
  * @builtin y2debug(string format, ...) -> void
  * @builtin y2milestone(string format, ...) -> void

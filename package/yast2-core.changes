@@ -1,3 +1,9 @@
+-------------------------------------------------------------------
+Wed Jul 17 16:07:43 CEST 2002 - arvin@suse.de
+
+- provide full directory structure
+- removed obsolete getyast2dir function from libycp
+
 ------------------------------------------------------------------
 Fri Jul 12 16:20:10 CEST 2002 - kkeil@suse.de
 
@@ -19,7 +25,6 @@ Thu Jul 04 13:05:44 CEST 2002 - arvin@suse.de
 Tue Jul  2 13:40:43 CEST 2002 - msvec@suse.cz
 
 - y2log dir is /var/log/YaST2 (#16712)
-- 2.6.2
 
 -------------------------------------------------------------------
 Tue Jul 02 12:45:55 CEST 2002 - arvin@suse.de

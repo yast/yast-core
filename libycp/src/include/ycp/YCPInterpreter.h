@@ -137,11 +137,6 @@ YCPValue evaluateRandom(YCPInterpreter *interpreter, const YCPList& args);
 YCPValue evaluateSrandom(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
- * Implements the builtin getyast2dir
- */
-YCPValue evaluateGetYAST2DIR (YCPInterpreter *interpreter, const YCPList& args);
-
-/**
  * Implements the builtin crypt
  */
 YCPValue evaluateCrypt(YCPInterpreter *interpreter, const YCPList& args);
