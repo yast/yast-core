@@ -49,7 +49,9 @@
 #include <string>
 #include <list>
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #include "YCP.h"
 #include "ycp/Scanner.h"
