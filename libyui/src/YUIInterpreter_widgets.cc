@@ -25,6 +25,7 @@
 
 #define VERBOSE_REPLACE_WIDGET
 
+#include <assert.h>
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
@@ -994,7 +995,7 @@ YWidget *YUIInterpreter::createPushButton(YWidget *parent, YWidgetOpt &opt, cons
 
 
     // Look up default function keys unless explicitly set
-    
+
     if ( opt.key_Fxx.value() == 0 )
 	opt.key_Fxx.setValue( defaultFunctionKey( label ) );
 
