@@ -28,6 +28,10 @@ Parsed:
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
+("YaST" + `two)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
 {
     // filename: "tests/builtin/Builtin-String.ycp"
     textdomain "base";
@@ -90,7 +94,7 @@ Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 42)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:47 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:48 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 5, 2)
@@ -99,7 +103,7 @@ Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 42, 2)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:50 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:51 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 "** mergestring **"
@@ -112,15 +116,15 @@ Parsed:
 ----------------------------------------------------------------------
 mergestring (["abc", "dev", "ghi", ""], "/")
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:57 No match for 'mergestring : <unspec> (list)'
-[Interpreter] tests/builtin/Builtin-String.ycp:57 Please fix parameter types to match one of:
-[Interpreter] tests/builtin/Builtin-String.ycp:57 'mergestring : string (const list <string>, string)' 
-[Parser] tests/builtin/Builtin-String.ycp:57 Bad parameter '<list> [1, "a", 3]'
+[Interpreter] tests/builtin/Builtin-String.ycp:58 No match for 'mergestring : <unspec> (list)'
+[Interpreter] tests/builtin/Builtin-String.ycp:58 Please fix parameter types to match one of:
+[Interpreter] tests/builtin/Builtin-String.ycp:58 'mergestring : string (const list <string>, string)' 
+[Parser] tests/builtin/Builtin-String.ycp:58 Bad parameter '<list> [1, "a", 3]'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:57 Parser error
+[Interpreter] tests/builtin/Builtin-String.ycp:58 Parser error
 Parsed:
 ----------------------------------------------------------------------
 mergestring ([], ".")

@@ -19,6 +19,7 @@
 ("YaST" + "2")
 ("YaST" + 2)
 ("YaST" + .two)
+("YaST" + `two)
 {textdomain "base" ; return _("YaST") + "2" ; }
 {textdomain "base" ; return "The " + _("YaST") ; }
 

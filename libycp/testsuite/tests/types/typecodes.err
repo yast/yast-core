@@ -45,6 +45,7 @@
 [Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, string)' 
 [Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, integer)' 
 [Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, path)' 
+[Interpreter] tests/types/typecodes.ycp:13 '+ : string (string, symbol)' 
 [Interpreter] tests/types/typecodes.ycp:13 '+ : path (path, path)' 
 [Interpreter] tests/types/typecodes.ycp:13 '+ : path (path, string)' 
 [Interpreter] tests/types/typecodes.ycp:13 '+ : list <<T>> (const list <<T>>, const list <<T>>)' 

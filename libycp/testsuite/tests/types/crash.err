@@ -6,6 +6,7 @@
 [Interpreter] tests/types/crash.ycp:0 '+ : string (string, string)' 
 [Interpreter] tests/types/crash.ycp:0 '+ : string (string, integer)' 
 [Interpreter] tests/types/crash.ycp:0 '+ : string (string, path)' 
+[Interpreter] tests/types/crash.ycp:0 '+ : string (string, symbol)' 
 [Interpreter] tests/types/crash.ycp:0 '+ : path (path, path)' 
 [Interpreter] tests/types/crash.ycp:0 '+ : path (path, string)' 
 [Interpreter] tests/types/crash.ycp:0 '+ : list <<T>> (const list <<T>>, const list <<T>>)' 
