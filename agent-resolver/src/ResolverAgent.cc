@@ -325,8 +325,11 @@ static int flushCache (const char *filename)
 		break;
 	    }
 	    YCPList list = value->asList();
-	    if (list->size() <= 0) {
+	    if (list->size() < 0) {
 		y2error ("Bad list size for key '%s'", skey.c_str());
+		break;
+	    }
+	    if (list->size() == 0) {
 		break;
 	    }
 	    fprintf (f, skey.c_str());

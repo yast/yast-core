@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 20 15:56:00 CET 2003 - arvin@suse.de
+
+- resolver agent doesn't complain about empty lists (bug #23797)
+
+-------------------------------------------------------------------
 Thu Feb 20 11:03:13 CET 2003 - arvin@suse.de
 
 - added dsl modem (pppoe) detection to probe-agent (bug #23662)
