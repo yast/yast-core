@@ -30,10 +30,15 @@
 #include <y2util/FSize.h>
 #include <y2util/Pathname.h>
 
-#include <ycp/YCPInterpreter.h>
+#include <y2/Y2ComponentBroker.h>
+#include <y2/Y2Component.h>
+#include <y2/Y2Namespace.h>
+#include <y2/Y2Function.h>
 
 #include <ycpTools.h>
 #include <PkgModuleCallbacks.h>
+
+#include <ycp/y2log.h>
 
 using namespace std;
 
@@ -41,7 +46,7 @@ using namespace std;
 //
 //	CLASS NAME : PkgModuleFunctions::CallbackHandler::YCPCallbacks
 /**
- * @short Stores YCPCallback related data and communicates with YCPInterpreter
+ * @short Stores YCPCallback related data and communicates with Y2ComponentBroker
  *
  * For each YCPCallback it's data, identified by a <CODE>@ref CBid</CODE>,
  * are stored in maps.
@@ -110,67 +115,89 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 
     struct CBdata
     {
-	CBdata (string module, string symbol)
-	    : module (module), symbol (symbol)
-	    { }
+       CBdata (string module, string symbol, Y2Namespace* component)
+           : module (module), symbol (symbol), component (component)
+           { }
 
-	const string module, symbol;
+       const string module, symbol;
+       Y2Namespace* component;
     };
 
     typedef map <CBid, stack <CBdata> > _cbdata_t;
     _cbdata_t _cbdata;
-
-
-#warning Hack to share refcounted PkgModule between WFMInterpreter instances
-    YCPInterpreter *& _interpreter; // pointer reference to PkgModuleCtrl
 
   public:
 
     /**
      * Constructor.
      **/
-    YCPCallbacks( YCPInterpreter *& interpreter )
-      : _interpreter( interpreter )
-    {
-      if ( !_interpreter ) {
-	INT << "NULL YCPInterpreter: can't send callbacks" << endl;
-      }
+    YCPCallbacks( )
+    {}
+
+
+    void popCallback( CBid id_r ) {
+       _cbdata_t::iterator tmp1 = _cbdata.find(id_r);
+       if (tmp1 != _cbdata.end() && !tmp1->second.empty())
+           tmp1->second.pop();
     }
 
     /**
-     * Set a YCPCallbacks data from string "module::symbol" or "symbol"
+     * Set a YCPCallbacks data from string "module::symbol"
      **/
     void setCallback( CBid id_r, const string & name_r ) {
-	string::size_type colonpos = name_r.find("::");
-	if ( colonpos != string::npos )
-	    _cbdata[id_r].push (CBdata (name_r.substr(0, colonpos),
-					name_r.substr(colonpos + 2)));
-	else
-	    _cbdata[id_r].push (CBdata ("", name_r));
-    }
+      y2debug ("Registering callback %s", name_r.c_str ());
+      // FIXME: possible memory leak on repeated setting of a callback
+      string::size_type colonpos = name_r.find("::");
+      if ( colonpos != string::npos ) {
+      
+        string module = name_r.substr ( 0, colonpos );
+	string symbol = name_r.substr ( colonpos + 2 );
 
+        Y2Component *c = Y2ComponentBroker::getNamespaceComponent (module.c_str());
+        if (c == NULL)
+        {
+          ycp2error ("No component can provide namespace %s for a callback of %s (callback id %d)",
+                 module.c_str (), symbol.c_str (), id_r);
+          return;
+        }
+
+        Y2Namespace *ns = c->import (module.c_str ());
+        if (ns == NULL)
+        {
+          y2error ("Component %p could not provide namespace %s for a callback of %s",
+                 c, module.c_str (), symbol.c_str ());
+	  return;
+        }
+
+        _cbdata[id_r].push (CBdata (module, symbol, ns));
+      } else {
+	ycp2error ("Callback must be a part of a namespace");
+      }
+    }
     /**
-     * Pops the YCPCallbacks with id_r.
-     */
-    void popCallback( CBid id_r ) {
-	_cbdata_t::iterator tmp1 = _cbdata.find(id_r);
-	if (tmp1 != _cbdata.end() && !tmp1->second.empty())
-	    tmp1->second.pop();
+     * Set a YCPCallbacks data according to args_r.
+     **/
+    bool setCallback( CBid id_r, const YCPString & args ) {
+      string name = args->value();
+      setCallback( id_r, name );
+      return true;
     }
-
     /**
      * Set the YCPCallback according to args_r.
      * @return YCPVoid on success, otherwise YCPError.
      **/
-    YCPValue setYCPCallback( CBid id_r, const YCPList & args ) {
-	if ( ! ( args->size() == 1 && args->value(0)->isString() ) )
-	    return YCPError( string("Bad args to Pkg::Callback") + cbName( id_r ) );
-	string name = args->value(0)->asString()->value();
-	if (!name.empty ())
-	    setCallback( id_r, name );
-	else
-	    popCallback( id_r );
-	return YCPVoid();
+    YCPValue setYCPCallback( CBid id_r, const YCPString & args_r ) {
+       if (!args_r->value().empty ())
+       {
+    	   if ( ! setCallback( id_r, args_r ) ) {
+		return YCPError( string("Bad args to Pkg::Callback") + cbName( id_r ) );
+	    }
+       }
+       else
+       {
+           popCallback( id_r );
+       }
+       return YCPVoid();
     }
 
     /**
@@ -178,10 +205,8 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
      * no need to create and evaluate it.
      **/
     bool isSet( CBid id_r ) const {
-	if (!_interpreter)
-	    return false;
-	const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
-	return tmp1 != _cbdata.end() && !tmp1->second.empty();
+       const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
+       return tmp1 != _cbdata.end() && !tmp1->second.empty();
     }
 
   public:
@@ -189,22 +214,29 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
     /**
      * @return The YCPCallback term, ready to append any arguments.
      **/
-    YCPTerm createCallback( CBid id_r ) const {
-	const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
-	if (tmp1 == _cbdata.end() || tmp1->second.empty())
-	    return YCPTerm (YCPSymbol ("", false), "");
-	const CBdata& tmp2 = tmp1->second.top();
-	return YCPTerm (YCPSymbol (tmp2.symbol, false), tmp2.module);
-    }
+    Y2Function* createCallback( CBid id_r ) const {
+       const _cbdata_t::const_iterator tmp1 = _cbdata.find(id_r);
+       if (tmp1 == _cbdata.end() || tmp1->second.empty())
+           return NULL;
+       const CBdata& tmp2 = tmp1->second.top();
 
-    /**
-     * @return Evaluated YCPCallback term.
-     **/
-    YCPValue evaluate( const YCPTerm & callback ) const {
-      if ( !_interpreter ) {
-	return YCPVoid();
+      string module = tmp2.module;
+      string name = tmp2.symbol;
+      Y2Namespace *ns = tmp2.component;
+      if (ns == NULL)
+      {
+          y2error ("No namespace %s for a callback of %s", module.c_str (), name.c_str ());
+	  return NULL;
       }
-      return _interpreter->evaluate( callback );
+      
+      Y2Function* func = ns->createFunctionCall (name);
+      if (func == NULL)
+      {
+          ycp2error ("Cannot find function %s in module %s as a callback", name.c_str (), module.c_str());
+	  return NULL;
+      }
+
+      return func;
     }
 
   public:
@@ -228,22 +260,29 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	 **/
 	struct CB {
 	  const Send & _send;
+	  CBid _id;
 	  bool     _set;
-	  YCPTerm  _term;
+	  Y2Function* _func;
 	  YCPValue _result;
 	  CB( const Send & send_r, CBid func )
 	    : _send( send_r )
+	    , _id( func )
 	    , _set( _send.ycpcb().isSet( func ) )
-	    , _term( _send.ycpcb().createCallback( func ) )
+	    , _func( _send.ycpcb().createCallback( func ) )
 	    , _result( YCPVoid() )
 	  {}
+	  
+	  ~CB ()
+	  {
+	    if (_func) delete _func;
+	  }
 
-	  CB & addStr( const string & arg ) { _term->add( YCPString( arg ) ); return *this; }
+	  CB & addStr( const string & arg ) { if (_func != NULL) _func->appendParameter( YCPString( arg ) ); return *this; }
 	  CB & addStr( const Pathname & arg ) { return addStr( arg.asString() ); }
 
-	  CB & addInt( long long arg ) { _term->add( YCPInteger( arg ) ); return *this; }
+	  CB & addInt( long long arg ) { if (_func != NULL) _func->appendParameter( YCPInteger( arg ) ); return *this; }
 
-	  CB & addBool( bool arg ) { _term->add( YCPBoolean( arg ) ); return *this; }
+	  CB & addBool( bool arg ) { if (_func != NULL) _func->appendParameter( YCPBoolean( arg ) ); return *this; }
 
 	  bool isStr() const { return _result->isString(); }
 	  bool isInt() const { return _result->isInteger(); }
@@ -257,8 +296,12 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	  }
 
 	  bool evaluate() {
-	    if ( _set ) {
-	      _result = _send.ycpcb().evaluate( _term );
+	    if ( _set && _func ) {
+	      y2debug ("Evaluating callback");
+	      _result = _func->evaluateCall ();
+	      
+	      delete _func;
+	      _func = _send.ycpcb().createCallback( _id );
 	      return true;
 	    }
 	    return false;
