@@ -71,7 +71,7 @@ private:
 
 
 template <class Agent>
-Y2AgentComp <Agent>::Y2AgentComp (const char* my_name)
+Y2AgentComp<Agent>::Y2AgentComp (const char* my_name)
     : my_name (my_name),
       agent (0),
       interpreter (0)
@@ -80,7 +80,7 @@ Y2AgentComp <Agent>::Y2AgentComp (const char* my_name)
 
 
 template <class Agent>
-Y2AgentComp <Agent>::~Y2AgentComp ()
+Y2AgentComp<Agent>::~Y2AgentComp ()
 {
     if (interpreter)
     {
@@ -91,7 +91,7 @@ Y2AgentComp <Agent>::~Y2AgentComp ()
 
 
 template <class Agent> YCPValue
-Y2AgentComp <Agent>::evaluate (const YCPValue& value)
+Y2AgentComp<Agent>::evaluate (const YCPValue& value)
 {
     y2debug ("evaluate (%s)", value->toString ().c_str ());
 
@@ -103,7 +103,7 @@ Y2AgentComp <Agent>::evaluate (const YCPValue& value)
 
 
 template <class Agent> SCRAgent*
-Y2AgentComp <Agent>::getSCRAgent ()
+Y2AgentComp<Agent>::getSCRAgent ()
 {
     if (!interpreter)
     {

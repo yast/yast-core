@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep  3 16:48:12 CEST 2002 - mvidner@suse.cz
+
+- kdoc cleanup: better cross references and fixed some parsing issues.
+
+-------------------------------------------------------------------
 Fri Aug 30 12:30:08 CEST 2002 - mvidner@suse.cz
 
 - ag_hostnames: fixed ip to host name translation (#18638).

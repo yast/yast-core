@@ -60,11 +60,11 @@ struct section
 		if (end_out)
 		    delete [] end_out;
 	    }
-    regex_t*begin;
+    regex_t* begin;
     bool end_valid;
-    regex_t*end;
-    char*begin_out;
-    char*end_out;
+    regex_t* end;
+    char* begin_out;
+    char* end_out;
 };
 
 /**
@@ -96,11 +96,11 @@ struct param
 		if (out)
 		    delete [] out;
 	    }
-    regex_t*line;
+    regex_t* line;
     bool multiline_valid;
-    regex_t*begin;
-    regex_t*end;
-    char*out;
+    regex_t* begin;
+    regex_t* end;
+    char* out;
 };
 
 struct rewrite
@@ -116,8 +116,8 @@ struct rewrite
 	if (out)
 	    delete [] out;
     }
-    regex_t*in;
-    char*out;
+    regex_t* in;
+    char* out;
 };
 
 struct FileDescr
@@ -153,7 +153,7 @@ private:
      * Times of last modification of read files, used in multiple files
      * mode.
      */
-    map<string,FileDescr>multi_files;
+    map<string,FileDescr> multi_files;
     /**
      * File name of the ini file -- single file mode only.
      */
@@ -199,7 +199,7 @@ private:
     /**
      * Regular expression for comments over whole line.
      */
-    regex_t**linecomments;
+    regex_t** linecomments;
 
     /**
      * Number of regular expressions for comments over part of the line.
@@ -208,7 +208,7 @@ private:
     /**
      * Regular expressions for comments over part of the line.
      */
-    regex_t**comments;
+    regex_t** comments;
 
     /**
      * Number of regular expressions for sections.
@@ -217,7 +217,7 @@ private:
     /**
      * Regular expressions for sections.
      */
-    section*sections;
+    section* sections;
 
     /**
      * Number of regular expressions for parameters (keys/values).
@@ -226,7 +226,7 @@ private:
     /**
      * Regular expressions for parameters (keys/values).
      */
-    param*params;
+    param* params;
 
     /**
      * Number of regular expressions for rewrite rules.
@@ -235,7 +235,7 @@ private:
     /**
      * Regular expressions for rewrite rules.
      */
-    rewrite*rewrites;
+    rewrite* rewrites;
 
     /**
      * opened file for scanner
@@ -259,7 +259,7 @@ private:
     /**
      * Vector of globe-expressions.
      */
-    vector<string>files;
+    vector<string> files;
     
     /**
      * Open ini file.
@@ -297,7 +297,7 @@ public:
      * means that section is deleted at first and created again later. In
      * this case file isn't removed!
      */
-    set<string>deleted_sections;
+    set<string> deleted_sections;
     /**
      * Toplevel ini section.
      */

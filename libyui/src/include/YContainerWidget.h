@@ -70,7 +70,7 @@ public:
     /**
      * Default implementation, that assumes exactly one child.
      * Returns, whether the child is stretchable
-     * @parm dim Dimension, either YD_HORIZ or YD_VERT
+     * @param dim Dimension, either YD_HORIZ or YD_VERT
      */
     bool stretchable(YUIDimension dim);
 
@@ -163,7 +163,7 @@ protected:
     /**
      * Storage for all child widgets.
      */
-    vector<YWidget *>children;
+    vector<YWidget *> children;
 };
 
 

@@ -181,7 +181,7 @@ class YCPNull {};
  *  cout << term->symbol()->toString(); </pre>
  *
  * If you want to keep the result beyond the scope of the object whose
- * method you called, use @ref YCPElementRep@clone that create a valid
+ * method you called, use @ref YCPElementRep#clone that create a valid
  * reference to the returned object.
  *
  * The fourth rule is: Pointers to YCPElementRep are always const with
@@ -215,7 +215,7 @@ protected:
     friend class YCPElement;
 
     /**
-     * Initializes this object. Sets the @ref @reference_counter to 1.
+     * Initializes this object. Sets the @ref #reference_counter to 1.
      */
     YCPElementRep();
 

@@ -8,6 +8,6 @@ html_DATA = index.html $(wildcard *.html)
 
 CLEANFILES = $(html_DATA)
 
-index.html: $(srcdir)/../../src/include/*.h $(srcdir)/../../src/include/ycp/*.h
-	cd $(srcdir)/../../src/include && @ybindir@/ydoc -p libycp *.h ycp/*.h
-	mv -f $(srcdir)/../../src/include/*.html .
+header_dir = $(srcdir)/../../src/include
+index.html: $(header_dir)/*.h $(header_dir)/ycp/*.h
+	@ybindir@/ydoc libycp --private --url $(htmldir) $^

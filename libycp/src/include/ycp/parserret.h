@@ -35,7 +35,7 @@ struct parserret
     YCPScanner *scanner;
     YCPValue result;
     int lineno;
-    const char*filename;
+    const char *filename;
     parserret() : result(YCPNull()), lineno (0) { }
 };
 

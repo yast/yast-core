@@ -2,6 +2,8 @@
 # Makefile.am for core/scr/doc
 #
 
+SUBDIRS = autodocs
+
 htmldir = $(docdir)/scr
 
 html_DATA = SCR.html intro_to_scr.html \

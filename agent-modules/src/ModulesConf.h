@@ -203,7 +203,7 @@ public:
 	 * @param directive A directive for which the argument is set.
 	 * @param module A module for which the argument is set.
 	 * @param m Indicates if the option is set during (re)initialization or by an agent.
-         * @arg An entry argument.
+         * @param arg An entry argument.
 	 * @return if the operation was successful
 	 */
     bool setArgument(const string directive, const string module, const string arg, ModuleEntry::Mode m);
@@ -212,7 +212,7 @@ public:
 	 * @param directive A directive for which the comment is set.
 	 * @param module A module for which the comment is set.
 	 * @param m Indicates if the option is set during (re)initialization or by an agent.
-         * @arg An entry comment.
+         * @param arg An entry comment.
 	 * @return if the operation was successful
 	 */
     bool setComment(const string directive, const string module, const string arg, ModuleEntry::Mode m);

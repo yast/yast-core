@@ -44,9 +44,9 @@ private:
 public:
     IniEntry () 
 	: comment (), val (), read_by (0), dirty (false) {}
-    const char*getComment() const { return comment.c_str(); }
-    const char*getValue()   const { return val.c_str();     }
-    int getReadBy()         const { return read_by;   }
+    const char* getComment() const { return comment.c_str(); }
+    const char* getValue()   const { return val.c_str();     }
+    int getReadBy()          const { return read_by;   }
 
     /** set dirty flag to false */
     void clean() { dirty = false; }
@@ -96,7 +96,7 @@ struct IniName
     bool isSection() {  return type == SECTION; }
 };
 
-typedef list<IniName>IniFileIndex;
+typedef list<IniName> IniFileIndex;
 
 class IniSection;
 typedef map<const string,IniSection> IniSectionMap;
@@ -370,13 +370,13 @@ public:
      * @param name name of the entry to get
      * @return entry
      */
-    IniEntry&getEntry (const char*name);
+    IniEntry& getEntry (const char*name);
     /**
      * Aborts if section doesn't exist!
      * @param name name of the section to get
      * @return section
      */
-    IniSection&getSection (const char*name);
+    IniSection& getSection (const char*name);
     /**
      * @param name name of a section
      * @return read-by of section or -1 if the section wasn't found
@@ -389,9 +389,9 @@ public:
     void setDirty () { dirty = true; }
     void setFlat ()  { flat  = true; }
 
-    const char*getName() const { return name.c_str(); }
-    const char*getComment() const { return comment.c_str(); }
-    const char*getEndComment() const { return end_comment.c_str(); }
+    const char* getName() const { return name.c_str(); }
+    const char* getComment() const { return comment.c_str(); }
+    const char* getEndComment() const { return end_comment.c_str(); }
 };
 
 #endif//__IniFile_h__

@@ -47,7 +47,7 @@ private:
 
 
 template <class AgentComp>
-Y2CCAgentComp <AgentComp>::Y2CCAgentComp (const char* my_name)
+Y2CCAgentComp<AgentComp>::Y2CCAgentComp (const char* my_name)
     : Y2ComponentCreator (Y2ComponentBroker::BUILTIN),
       my_name (my_name)
 {
@@ -55,7 +55,7 @@ Y2CCAgentComp <AgentComp>::Y2CCAgentComp (const char* my_name)
 
 
 template <class AgentComp> Y2Component*
-Y2CCAgentComp <AgentComp>::create (const char* name) const
+Y2CCAgentComp<AgentComp>::create (const char* name) const
 {
     if (strcmp (name, my_name) == 0)
 	return new AgentComp (my_name);
