@@ -24,7 +24,9 @@
 #include <string>
 using std::string;
 
+#ifdef D_MEMUSAGE
 #include <y2util/MemUsage.h>
+#endif
 #include "ycp/YCodePtr.h"
 
 #include "ycp/YCPValue.h"
@@ -48,7 +50,10 @@ typedef struct ycodelist ycodelist_t;
 /**
  * @short YCode for precompiled ycp code
  */
-class YCode : public Rep, public MemUsage
+class YCode : public Rep
+#ifdef D_MEMUSAGE
+  , public MemUsage
+#endif
 {
     REP_BODY(YCode);
 public:

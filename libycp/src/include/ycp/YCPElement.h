@@ -21,7 +21,9 @@
 #ifndef YCPElement_h
 #define YCPElement_h
 
+#ifdef D_MEMUSAGE
 #include <y2util/MemUsage.h>
+#endif
 
 // include only forward declarations of iostream
 #include <iosfwd>
@@ -205,7 +207,10 @@ class YCPNull {};
  * and @ref YCPBlockRep who have an add member function that allows the
  * parser to construct those objects element by element.
  */
-class YCPElementRep : public MemUsage
+class YCPElementRep
+#ifdef D_MEMUSAGE
+ : public MemUsage
+#endif
 {
     /**
      * Prevent implicite definition of assignment. Assignment of
@@ -296,7 +301,10 @@ private:
  * via @ref YCPElement. Access the functionality of YCPElementRep
  * with the arrow operator. See @ref YCPElementRep.
  */
-class YCPElement : public MemUsage
+class YCPElement
+#ifdef D_MEMUSAGE
+ : public MemUsage
+#endif
 {
     DEF_OPS(Element);
 protected:

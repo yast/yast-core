@@ -39,7 +39,10 @@ class TableEntry;
 /**
  */
 
-class SymbolEntry : public Rep, public MemUsage
+class SymbolEntry : public Rep
+#ifdef D_MEMUSAGE
+  , public MemUsage
+#endif
 {
     REP_BODY (SymbolEntry);
 

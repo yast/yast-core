@@ -28,7 +28,10 @@
 
 class FunctionType;
 
-class Type : public Rep, public MemUsage
+class Type : public Rep
+#ifdef D_MEMUSAGE
+  , public MemUsage
+#endif
 {
     REP_BODY(Type);
 
