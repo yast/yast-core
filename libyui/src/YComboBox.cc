@@ -80,7 +80,7 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	}
 	else					// Item not in list
 	{
-	    if ( editable() )
+	    if ( editable() && newvalue->isString() )
 	    {
 		setValue( newvalue->asString() );
 		return YCPBoolean( true );	// OK
