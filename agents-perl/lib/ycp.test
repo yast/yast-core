@@ -65,18 +65,38 @@ sub TestStrings ()
     };
 }
 
+my @number_test =
+    (
+     [ '42', 42 ],
+     [ '042', 34 ],
+     [ '-42', -42 ],
+     [ '0', 0 ],
+    );
+
+# return true on sucess
+sub TestNumbers ()
+{
+    print "TestNumbers\n";
+    eval {
+	foreach my $case (@number_test)
+	{
+	    Result (Parse ($case->[0]) eq $case->[1]);
+	}
+    };
+}
+
 # empty
 my @list_test1 = ('[]', '[   ]');
 my @list_test2 =
     (
      # simple
-     '["foo",true,42]',
+     '["foo",42,true]',
      # with whitespace
-     '[ "foo" , true , 42 ]',
+     '[ "foo" , 42 , true ]',
      # trailing comma
-     '["foo",true,42,]',
+     '["foo",42,true,]',
      # with whitespace
-     '[ "foo" , true , 42 , ]',
+     '[ "foo" , 052 , true , ]',
      );
 
 
@@ -96,8 +116,8 @@ sub TestLists ()
 	    my $result = Parse ($input);
 	    Result (ref ($result) eq "ARRAY" &&
 		    $result->[0] eq "foo" &&
-		    $result->[1] &&
-		    $result->[2] == 42);
+		    $result->[2] &&
+		    $result->[1] == 42);
 	}
     };
 }
@@ -237,6 +257,7 @@ sub TestOutput ()
 
 # main
 TestStrings ();
+TestNumbers ();
 TestLists ();
 TestMaps ();
 TestMisc ();

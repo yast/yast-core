@@ -277,8 +277,9 @@ sub ParseYcp ($)
     elsif ($ycp_value =~ /^(-?\d+)(.*)/)
     {
 	my $num = $1;
+	my $rest = $2;
 	$num = oct ($num) if $num =~ /^0/;
-	return ($num, "", $2);
+	return ($num, "", $rest);
     }
     elsif ($ycp_value =~ /^\"/) #"
     {
