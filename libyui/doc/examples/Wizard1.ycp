@@ -18,7 +18,8 @@
 	if ( event[ "ID" ]:nil == `abort )
 	    break;
     }
-    
+
+    UI::DumpWidgetTree();
     UI::CloseDialog();
     
 }
