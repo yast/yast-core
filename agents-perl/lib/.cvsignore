@@ -1,2 +1,6 @@
 Makefile
 Makefile.in
+Makefile.perl
+pm_to_blib
+blib
+.made_mod

@@ -2,12 +2,26 @@
 # Makefile.am for core/agents-perl/lib
 #
 
-# now using vendorlib instead of /usr/lib/perl5/site_perl
+# google: automake makemaker
+# http://sources.redhat.com/ml/automake/2001-03/msg00395.html
+PERL=perl
+Makefile.perl: Makefile.PL
+	$(PERL) $< MAKEFILE=$@ PREFIX=$(prefix)
+
+noinst_DATA = .made_mod
+# a flag file meaning that perl's make was run
+.made_mod: Makefile.perl
+	$(MAKE) -f Makefile.perl
+	touch $@
+
 install-data-local:
-	VL=`perl -V:vendorlib | sed "s!.*='!!;s!'.*!!"`; \
-	$(INSTALL) -d $(DESTDIR)/$$VL; \
-	$(INSTALL_DATA) ycp.pm $(DESTDIR)/$$VL
+	$(MAKE) -f Makefile.perl install_vendor
+
+CLEANFILES = .made_mod
+clean-local:
+	if test -f Makefile.perl; then $(MAKE) -f Makefile.perl realclean; fi
+	rm -f Makefile.perl Makefile.perl.old
 
 TESTS = ycp.test
 
-EXTRA_DIST = ycp.pm $(TESTS)
+EXTRA_DIST = Makefile.PL MANIFEST ycp.pm YaST/SCRAgent.pm $(TESTS)
