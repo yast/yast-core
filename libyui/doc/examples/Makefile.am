@@ -139,6 +139,7 @@ examples_DATA =					\
 	WidgetExists.ycp			\
 	WindowID.ycp				\
 	Wizard1.ycp				\
+	Wizard2.ycp				\
 	memtest.ycp				\
 	win_resizer.ycp				\
 	win_resizer2.ycp

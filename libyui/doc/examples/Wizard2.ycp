@@ -1,0 +1,40 @@
+// Basic example of using the Wizard widget.
+//
+// Note: YCP applications are discouraged from using the Wizard widget directly.
+// Use the Wizard module instead.
+
+{
+    UI::OpenDialog(`opt(`defaultsize ),
+		   `Wizard( `back,  "&Back",
+			     `abort, "Ab&ort",
+			     `next,  "&Next" ) );
+
+    // UI::DumpWidgetTree();
+    
+    while( true )
+    {
+	map event = UI::WaitForEvent();
+
+	y2milestone( "Got event: %1", event );
+
+	if ( event[ "ID" ]:nil == `abort )
+	    break;
+
+	integer	serial	= (integer) event[ "EventSerialNo" ]:0;
+	string	type	= (string)  event[ "EventType"     ]:"";
+	symbol	id	= (symbol)  event[ "ID"            ]:`nil;
+
+	
+	UI::ReplaceWidget(`id(`contents),
+			  `VBox(
+				`Heading( "Caught event:" ),
+				`VSpacing(0.5),
+				`Label( "Serial No: "	+ tostring( serial ) ),
+				`Label( "Type: "	+ type   ),
+				`Label( "ID: "		+ tostring( id ) )
+				) );
+    }
+    
+    UI::CloseDialog();
+    
+}
