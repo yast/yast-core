@@ -47,6 +47,30 @@
     UI::WizardCommand(`AddTreeItem( "1-2", "Item without ID"   , "" ) );
 
     UI::WizardCommand(`SelectTreeItem( "3rd 1" ) );
+
+
+    
+    UI::WizardCommand(`AddMenu( "&File",	"file-menu" ) );
+    UI::WizardCommand(`AddMenu( "&Edit",	"edit-menu" ) );
+    UI::WizardCommand(`AddMenu( "&Options",	"opt-menu"  ) );
+    
+    UI::WizardCommand(`AddMenuEntry	( "file-menu", "&New", 		"file-new" 	) );
+    UI::WizardCommand(`AddMenuEntry	( "file-menu", "&Open", 	"file-open" 	) );
+    UI::WizardCommand(`AddSubMenu	( "file-menu", "Open &Recent", 	"file-recent"  	) );
+    UI::WizardCommand(`AddMenuEntry	( "file-menu", "&Save", 	"file-save" 	) );
+    UI::WizardCommand(`AddMenuEntry	( "file-menu", "Save &As", 	"file-save-as" 	) );
+		      
+    UI::WizardCommand(`AddMenuEntry	( "file-recent", "/tmp/test1", 	"recent-test1" 	) );
+    UI::WizardCommand(`AddMenuEntry	( "file-recent", "/tmp/test2", 	"recent-test2" 	) );
+		      
+    UI::WizardCommand(`AddMenuEntry	( "edit-menu", "C&ut",		"edit-cut"	) );
+    UI::WizardCommand(`AddMenuEntry	( "edit-menu", "C&opy",		"edit-copy"	) );
+    UI::WizardCommand(`AddMenuEntry	( "edit-menu", "&Paste",	"edit-paste"	) );
+		      
+    UI::WizardCommand(`AddMenuEntry	( "opt-menu", 	"&Settings",	"opt-settings"	) );
+    UI::WizardCommand(`AddMenuSeparator	( "opt-menu" ) );
+    UI::WizardCommand(`AddMenuEntry	( "opt-menu", 	"Activate &Hypersonic Transducer", "frank-n-furter" ) );
+
     
 
     while ( true )
