@@ -279,7 +279,7 @@ bool ModulesConf::updateIfModified() {
 ModulesConf::TimeStamp ModulesConf::getTimeStamp(const string &fname) {
     struct stat st;
     if (stat(fname.c_str(), &st)) {
-	y2error("Failed stat on %s: %s", fname.c_str(), strerror(errno));
+	y2error("Failed to stat %s: %s", fname.c_str(), strerror(errno));
 	return 0;
     }
     return st.st_mtime;
@@ -556,6 +556,9 @@ bool ModulesConf::writeFile(const string fname) {
 
 	modified = false;
     }
+    else
+	y2milestone("Modules not modified, not writing");
+
     return updateTimeStamp ();
 }
 
