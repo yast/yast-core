@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 10 15:26:06 CEST 2004 - sh@suse.de
+
+- Implemented enhancement #44799: Log error for leftover dialogs 
+
+-------------------------------------------------------------------
 Fri Sep 10 15:09:45 CEST 2004 - sh@suse.de
 
 - Improved `opt(`debugLayout) UI logging 

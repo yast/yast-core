@@ -122,13 +122,13 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 
     if ( descr.empty() )
     {
-	y2debug( "Widget tree: %s%s #%d at %p",
-		 indentation.c_str(), w->widgetClass(), w->internalId(), w );
+	y2milestone( "Widget tree: %s%s #%d at %p",
+		     indentation.c_str(), w->widgetClass(), w->internalId(), w );
     }
     else
     {
-	y2debug( "Widget tree: %s%s %s at %p",
-		 indentation.c_str(), w->widgetClass(), descr.c_str(), w );
+	y2milestone( "Widget tree: %s%s %s at %p",
+		     indentation.c_str(), w->widgetClass(), descr.c_str(), w );
     }
 }
 

@@ -87,6 +87,14 @@ YUI::~YUI()
 
     while ( dialogstack.size() > 0 )
     {
+	YDialog * dialog = currentDialog();
+
+	if ( dialog )
+	{
+	    y2error( "Missing UI::CloseDialog() for" );
+	    dialog->dumpWidgetTree();
+	}
+	
 	removeDialog();
     }
 
