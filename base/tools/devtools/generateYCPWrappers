@@ -1,0 +1,96 @@
+#!/usr/bin/perl -w
+
+my $header_file = shift;
+my $call_file = shift;
+my $register_file = shift;
+
+if ( ! defined $header_file || ! defined $call_file ||
+    ! defined $register_file )
+{
+    die "Required parameters: <header-file> <call-file> <register-file>";
+}
+
+use strict;
+use integer;
+
+use Data::Dumper;
+
+my @exports = ();
+
+open ( HEADER, $header_file ) 
+	or die "Cannot open input header file";
+
+while (my $line = <HEADER>)
+{
+	chomp ($line);
+	if ($line =~ /\/\*\s*TYPEINFO: (\S+)\s*\*\//)
+	{
+		# get C++ declaration
+		my $typeinfo = $1;
+		$line = <HEADER>;
+		chomp ($line);
+		# get the parts of the declaration
+		$line =~ /\s*(YCP\w+)\s+(\w+)\s*\(([^\)]*)\)/;
+		my $func_returntype = $1 || "";
+		my $func_name = $2 || "";
+		my $func_params = $3 || "";
+
+		my %data = ( "raw" => $line,
+			"signature" => $typeinfo,
+                        "name" => $func_name,
+                        "returntype" => $func_returntype,
+                        "params" => $func_params,
+                );
+
+		# store the data
+		push ( @exports, \%data );
+	}
+}
+
+open ( CALL, "> $call_file" ) or die "Cannot open output file";
+open ( REGISTER, "> $register_file" ) or die "Cannot open output file";
+
+my $position = 0;
+
+while (@exports)
+{
+	my %rec = %{ shift (@exports) } ;
+	my $func_name = $rec { "name" };
+	my $signature = $rec { "signature" };
+
+	# handle parameters
+	my @params = split /,\s*/, $rec { "params" };
+
+	print CALL "\t\tcase $position: return m_instance->$func_name (" ;
+
+	my $paramcount = 1;
+
+	my @cppparams = ();
+	while (@params)
+	{
+		my @par = split (" ", shift (@params) );
+		my $type = $par [0];
+		if ( $type =~ /const/ )
+		{
+			$type = $par [1];
+		}
+		$type =~ s/^YCP(\w+)&?/as$1/;
+		$type = "m_param" . $paramcount . "->" . $type . "()" ;
+		push @cppparams, $type;
+		$paramcount++;
+	}
+	print CALL join (", ", @cppparams) . "); \n" ;
+
+	print REGISTER "\tenterSymbol (new SymbolEntry (this, $position, " ;
+	print REGISTER "\"$func_name\", SymbolEntry::c_function, Type::fromSignature (\"$signature\") ) );\n";
+	print REGISTER "\t_registered_functions.push_back (\"$func_name\");\n";
+
+	$position += 1;
+}
+
+close ( CALL );
+close ( REGISTER );
+
+
+0
+
