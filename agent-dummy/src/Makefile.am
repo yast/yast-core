@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_dummy/src
+# Makefile.am for core/agent-dummy/src
 #
 
 plugin_LTLIBRARIES = libpy2ag_dummy.la
@@ -10,4 +10,7 @@ libpy2ag_dummy_la_SOURCES =			\
 
 libpy2ag_dummy_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include

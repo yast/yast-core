@@ -4,7 +4,7 @@
 
 SUBDIRS = include
 
-AM_CXXFLAGS = -DYAST2DIR=\"${yast2dir}\"
+AM_CXXFLAGS = -DY2LOG=\"libycp\" -DYAST2DIR=\"${yast2dir}\"
 
 lib_LTLIBRARIES = libycp.la
 

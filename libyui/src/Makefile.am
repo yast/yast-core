@@ -1,5 +1,6 @@
 #
-# Makefile.am for libyui/src
+# Makefile.am for core/libyui/src
+#
 
 SUBDIRS = include
 
@@ -45,7 +46,10 @@ libyui_la_SOURCES =				\
 	YTree.cc				\
 	YWidget.cc
 
-INCLUDES = -I$(srcdir)/include -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/include
 
 libyui_la_LDFLAGS = -version-info 2:0
 

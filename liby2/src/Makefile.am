@@ -1,11 +1,11 @@
 #
-# Makefile.am for liby2/src
+# Makefile.am for core/liby2/src
 #
 
 SUBDIRS = include
 
-AM_CXXFLAGS = -DYAST2DIR=\"${yast2dir}\" -DPLUGINDIR=\"${plugindir}\" 	\
-	 -DEXECCOMPDIR=\"${execcompdir}\"
+AM_CXXFLAGS = -DY2LOG=\"liby2\" -DYAST2DIR=\"${yast2dir}\"		\
+	-DPLUGINDIR=\"${plugindir}\" -DEXECCOMPDIR=\"${execcompdir}\"
 
 lib_LTLIBRARIES = liby2.la
 plugin_LTLIBRARIES = 	\
@@ -54,4 +54,6 @@ libpy2plugin_la_SOURCES =	\
 	Y2PluginComponent.cc Y2CCPlugin.cc
 libpy2plugin_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(srcdir)/include -I$(srcdir)/include/y2 -I$(includedir)
+INCLUDES =						\
+	-I$(srcdir)/../../libycp/src/include		\
+	-I$(srcdir)/include -I$(srcdir)/include/y2

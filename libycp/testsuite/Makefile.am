@@ -14,6 +14,7 @@ parseycp_LDADD = ../src/libycp.la
 testscope_SOURCES = testscope.cc
 testscope_LDADD = ../src/libycp.la
 
+PACKAGE = libycp
 AUTOMAKE_OPTIONS = dejagnu
 
 clean-local:

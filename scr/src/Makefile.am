@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2scr/src
+# Makefile.am for core/scr/src
 #
 
-AM_CXXFLAGS = -DSUSEVERSION=\"${SUSEVERSION}\"
+AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
 
 serversdir = $(execcompdir)/servers
 servers_PROGRAMS = scr
@@ -15,6 +15,9 @@ scr_SOURCES =					\
 scr_LDADD = -L$(libdir) -lscr -ly2 -lycp
 
 scr_LDFLAGS =					\
+	-L$(srcdir)/../../libycp/src		\
+	-L$(srcdir)/../../liby2/src		\
+	-L$(srcdir)/../../libscr/src		\
 	-Xlinker --whole-archive		\
 	$(plugindir)/libpy2plugin.la		\
 	$(plugindir)/libpy2stdio.la		\
@@ -31,4 +34,7 @@ libpy2scr_la_SOURCES =				\
 
 libpy2scr_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include

@@ -1,5 +1,5 @@
 #
-# Makefile.am for yast2-base/src
+# Makefile.am for core/base/src
 #
 
 ybin_PROGRAMS = y2base
@@ -13,10 +13,10 @@ YAST2CORE =				\
 	$(plugindir)/libpy2program.la	\
 	$(plugindir)/libpy2wfm.la	\
 	$(plugindir)/libpy2scr.la	\
-	$(libdir)/libscr.la		\
-	$(libdir)/liby2.la		\
-	$(libdir)/libyui.la		\
-	$(libdir)/libycp.la
+	$(srcdir)/../../libycp/src/libycp.la		\
+	$(srcdir)/../../liby2/src/liby2.la		\
+	$(srcdir)/../../libyui/src/libyui.la		\
+	$(srcdir)/../../libscr/src/libscr.la
 
 y2base_DEPENDENCIES = $(YAST2CORE)
 
@@ -33,4 +33,3 @@ y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\
 	$(YAST2CORE)			\
 	-Xlinker --no-whole-archive
-

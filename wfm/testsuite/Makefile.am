@@ -1,17 +1,24 @@
 #
-# Makefile.am for y2wfm/testsuite
+# Makefile.am for core/wfm/testsuite
 #
+
+SUBDIRS = config lib wfm.test tests
 
 PACKAGE = wfm
 AUTOMAKE_OPTIONS = dejagnu
-SUBDIRS = config lib wfm.test tests
 
-INCLUDES= -I$(srcdir)/../src/include/wfm -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(srcdir)/../src/include/wfm
 
 noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc
 runwfm_LDADD = ../src/liby2wfm.la -ly2 -lycp -lutil
-runwfm_LDFLAGS = -L$(libdir)	\
+runwfm_LDFLAGS = -L$(libdir)			\
+	-L$(srcdir)/../../libycp/src		\
+	-L$(srcdir)/../../liby2/src		\
 	-Xlinker --whole-archive		\
 	$(plugindir)/libpy2stdio.la		\
 	../src/liby2wfm.la			\
@@ -21,6 +28,8 @@ bin_PROGRAMS = y2wfm
 y2wfm_SOURCES = y2wfm.cc
 y2wfm_LDADD = -ly2 -lycp -lutil
 y2wfm_LDFLAGS = -L$(libdir)			\
+	-L$(srcdir)/../../libycp/src		\
+	-L$(srcdir)/../../liby2/src		\
 	-Xlinker --whole-archive		\
 	$(plugindir)/libpy2stdio.la		\
 	$(plugindir)/libpy2script.la		\
@@ -28,6 +37,7 @@ y2wfm_LDFLAGS = -L$(libdir)			\
 	-Xlinker --no-whole-archive
 
 clean-local:
-	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp libycp.log libycp.sum site.bak
+	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp	\
+	libycp.log libycp.sum site.bak
 
 EXTRA_DIST = README

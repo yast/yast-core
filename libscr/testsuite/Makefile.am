@@ -1,14 +1,18 @@
 #
-# Makefile.am for libscr/testsuite
+# Makefile.am for core/libscr/testsuite
 #
 
-INCLUDES = -I../src/include -I$(includedir)
+INCLUDES =						\
+	-I$(srcdir)/../../libycp/src/include		\
+	-I$(srcdir)/../../liby2/src/include		\
+	-I$(srcdir)/../src/include
 
 bin_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
 runscr_LDADD = ../src/libscr.la -lycp
-runscr_LDFLAGS = -L$(libdir)
+runscr_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src
 
+PACKAGE = libscr
 AUTOMAKE_OPTIONS = dejagnu
 
 clean-local:

@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2a_ini/src
+# Makefile.am for core/agent-ini/src
 #
 
-AM_CXXFLAGS = -Wall # -g # -pedantic # -W
+AM_CXXFLAGS = -DY2LOG=\"agent-ini\"
 
 plugin_LTLIBRARIES = libpy2ag_ini.la
 noinst_LTLIBRARIES = liby2ag_ini.la
@@ -23,5 +23,7 @@ libpy2ag_ini_la_SOURCES =                           \
         Y2IniAgentComponent.cc  Y2IniAgentComponent.h
 libpy2ag_ini_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(includedir)
-
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include

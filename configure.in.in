@@ -1,0 +1,37 @@
+## core configure.in.in
+
+## initialize
+@YAST2-INIT-COMMON@
+@YAST2-INIT-PROGRAM@
+
+## special stuff
+AM_PROG_LEX
+AC_PATH_PROG(GPERF, gperf, false)
+if test "$GPERF" = "false"; then
+	AC_MSG_ERROR([gperf not installed])
+	exit
+fi
+AC_CHECK_PROGS(YACC, 'bison -y -d -v' byacc, false)
+if test "$YACC" = false; then
+	AC_MSG_ERROR([bison not installed])
+fi
+
+SUSEVERSION=`grep ^VERSION /etc/SuSE-release | cut "-d " -f 3`
+AC_SUBST(SUSEVERSION)
+
+## some common checks
+@YAST2-CHECKS-COMMON@
+@YAST2-CHECKS-PROGRAM@
+
+## and generate the output
+AC_OUTPUT(
+	libycp/doc/YCP-quoting.html
+	libycp/doc/YCP-statements.html
+	libycp/doc/YCP-datatypes.html
+	libycp/doc/YCP-operators.html
+	liby2/doc/Y2-access.html
+	liby2/doc/Y2-components.html
+	scr/doc/SCR.html
+	scr/doc/intro_to_scr.html
+)
+@YAST2-OUTPUT@

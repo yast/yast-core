@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_anyagent/testsuite
+# Makefile.am for core/agent-any/testsuite
 #
 
 SUBDIRS = config lib ag_anyagent.test tests
@@ -7,7 +7,10 @@ SUBDIRS = config lib ag_anyagent.test tests
 PACKAGE = ag_anyagent
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES = -I$(includedir)
+INCLUDES =						\
+	-I$(srcdir)/../../libycp/src/include		\
+	-I$(srcdir)/../../liby2/src/include		\
+	-I$(srcdir)/../../libscr/src/include
 
 noinst_PROGRAMS = runag_anyagent
 

@@ -1,24 +1,26 @@
 #
-# Makefile.am for liby2/testsuite
+# Makefile.am for core/liby2/testsuite
 #
 
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES= -I../src/include -I$(includedir)
+INCLUDES =							\
+	-I$(srcdir)/../../libycp/src/include			\
+	-I$(srcdir)/../src/include
 
 noinst_PROGRAMS = rungeneric runplugin runprogram runremote \
 	runscript runserial runstdio
 
 rungeneric_SOURCES = runy2.cc
 rungeneric_LDADD = -lycp
-rungeneric_LDFLAGS = -L$(libdir)	\
+rungeneric_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src	\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	-Xlinker --no-whole-archive
 
 runplugin_SOURCES = $(rungeneric_SOURCES)
 runplugin_LDADD = -lycp
-runplugin_LDFLAGS = -L$(libdir)		\
+runplugin_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2plugin.la\
@@ -27,7 +29,7 @@ runplugin_LDFLAGS = -L$(libdir)		\
 
 runprogram_SOURCES = $(rungeneric_SOURCES)
 runprogram_LDADD = -lycp
-runprogram_LDFLAGS = -L$(libdir)	\
+runprogram_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src	\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2program.la	\
@@ -36,7 +38,7 @@ runprogram_LDFLAGS = -L$(libdir)	\
 
 runremote_SOURCES = $(rungeneric_SOURCES)
 runremote_LDADD = -lycp
-runremote_LDFLAGS = -L$(libdir)		\
+runremote_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2remote.la	\
@@ -45,7 +47,7 @@ runremote_LDFLAGS = -L$(libdir)		\
 
 runscript_SOURCES = $(rungeneric_SOURCES)
 runscript_LDADD = -lycp
-runscript_LDFLAGS = -L$(libdir)		\
+runscript_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2script.la	\
@@ -54,7 +56,7 @@ runscript_LDFLAGS = -L$(libdir)		\
 
 runserial_SOURCES = $(rungeneric_SOURCES)
 runserial_LDADD = -lycp
-runserial_LDFLAGS = -L$(libdir)		\
+runserial_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2serial.la	\
@@ -63,7 +65,7 @@ runserial_LDFLAGS = -L$(libdir)		\
 
 runstdio_SOURCES = $(rungeneric_SOURCES)
 runstdio_LDADD = -lycp
-runstdio_LDFLAGS = -L$(libdir)		\
+runstdio_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2stdio.la	\

@@ -1,13 +1,16 @@
 #
-# Makefile.am for libyui/testsuite
+# Makefile.am for core/libyui/testsuite
 #
 
-INCLUDES = -I../src/include -I$(includedir)
+INCLUDES =						\
+	-I$(srcdir)/../../libycp/src/include		\
+	-I$(srcdir)/../../liby2/src/include		\
+	-I$(srcdir)/../src/include
 
 bin_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
 runyui_LDADD = ../src/libyui.la -lycp -lpthread
-runyui_LDFLAGS = -L$(libdir)
+runyui_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src
 
 AUTOMAKE_OPTIONS = dejagnu
 

@@ -1,10 +1,11 @@
 #
-# Makefile.am for y2wfm/scr
+# Makefile.am for core/wfm/scr
 #
 
 SUBDIRS = include
 
-AM_CXXFLAGS = -DSUSEVERSION=\"${SUSEVERSION}\" -DLOCALEDIR=\"${localedir}\"
+AM_CXXFLAGS = -DY2LOG=\"wfm\" -DSUSEVERSION=\"${SUSEVERSION}\"	\
+	-DLOCALEDIR=\"${localedir}\"
 
 plugin_LTLIBRARIES = libpy2wfm.la
 noinst_LTLIBRARIES = liby2wfm.la
@@ -18,4 +19,8 @@ libpy2wfm_la_SOURCES =				\
 	Y2WFMComponent.cc Y2CCWFM.cc
 libpy2wfm_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(srcdir)/include -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include	\
+	-I$(srcdir)/include

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_resolver/src
+# Makefile.am for core/agent-resolver/src
 #
 
 plugin_LTLIBRARIES = libpy2ag_resolver.la
@@ -9,4 +9,7 @@ libpy2ag_resolver_la_SOURCES = \
 
 libpy2ag_resolver_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(top_srcdir) -I$(includedir)
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include

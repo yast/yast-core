@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2a_mods/src
+# Makefile.am for core/agent-modules/src
 #
 
-AM_CXXFLAGS = -Wall #-g # -pedantic # -W
+AM_CXXFLAGS = -DY2LOG=\"agent-modules\"
 
 plugin_LTLIBRARIES = libpy2ag_modules.la
 noinst_LTLIBRARIES = liby2ag_modules.la
@@ -19,5 +19,7 @@ libpy2ag_modules_la_SOURCES =				\
 	Y2ModulesAgentComponent.cc  Y2ModulesAgentComponent.h
 libpy2ag_modules_la_LDFLAGS = -version-info 2:0
 
-INCLUDES = -I$(includedir)
-
+INCLUDES =					\
+	-I$(srcdir)/../../libycp/src/include	\
+	-I$(srcdir)/../../liby2/src/include	\
+	-I$(srcdir)/../../libscr/src/include
