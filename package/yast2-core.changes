@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 14 15:52:42 CET 2003 - arvin@suse.de
+
+- probe agent handles capability flags of libhd (bug #20068)
+
+-------------------------------------------------------------------
 Fri Dec 20 16:57:46 CET 2002 - arvin@suse.de
 
 - merged from 8.1 branch:

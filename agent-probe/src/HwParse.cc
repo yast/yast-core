@@ -134,7 +134,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	  map->add (YCPString ("start"), YCPInteger (r->base));
 	  if (r->range > 0)
 	      map->add (YCPString ("length"), YCPInteger (r->range));
-	  map->add (YCPString ("active"), 	YCPBoolean ((r->enabled)?true:false));
+	  map->add (YCPString ("active"), YCPBoolean ((r->enabled)?true:false));
 	}
 	break;
     case res_phys_mem: {
@@ -329,7 +329,7 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 	    map->add (YCPString ("modprobe"), YCPBoolean (d->modprobe?true:false));
 	    if (d->conf)
 	    {
-	        map->add (YCPString ("conf"), YCPString (d->conf));
+		map->add (YCPString ("conf"), YCPString (d->conf));
 	    }
 	}
 	break;
@@ -393,7 +393,7 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 	    {
 		map->add (YCPString ("script3d"), YCPString (d->script));
 	    }
- 	}
+	}
 	break;
 
 	case di_display:
@@ -438,8 +438,8 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 			    i = ip->alt_values;
 			    while (i-- > 0)
 			    {
-			        pList->add (YCPInteger (*vp));
-			        vp++;
+				pList->add (YCPInteger (*vp));
+				vp++;
 			    }
 			    pMap->add (YCPString(ip->name), pList);
 			    if (ip->conflict)
@@ -525,15 +525,61 @@ HwProbe::hd2value (hd_t *hd)
     {
 	out->add (YCPString ("cardtype"), YCPString ("pcmcia"));
     }
-    else if (hd->is.notready)
+
+    // misc entries in is structure
+
+    if (hd->is.notready)
     {
 	out->add (YCPString ("notready"), YCPBoolean (true));
     }
+
+    if (hd->is.manual)
+    {
+	out->add (YCPString ("manual"), YCPBoolean (true));
+    }
+
+    if (hd->is.softraiddisk)
+    {
+	out->add (YCPString ("softraiddisk"), YCPBoolean (true));
+    }
+
+    if (hd->is.zip)
+    {
+	out->add (YCPString ("zip"), YCPBoolean (true));
+    }
+
+    if (hd->is.cdr)
+    {
+	out->add (YCPString ("cdr"), YCPBoolean (true));
+    }
+
+    if (hd->is.cdrw)
+    {
+	out->add (YCPString ("cdrw"), YCPBoolean (true));
+    }
+
+    if (hd->is.dvd)
+    {
+	out->add (YCPString ("dvd"), YCPBoolean (true));
+    }
+
+    if (hd->is.dvdr)
+    {
+	out->add (YCPString ("dvdr"), YCPBoolean (true));
+    }
+
+    if (hd->is.dvdram)
+    {
+	out->add (YCPString ("dvdram"), YCPBoolean (true));
+    }
+
+    // hd detail
 
     if (hd->detail)
     {
 	switch (hd->detail->type)
 	{
+	    /* cdtype entry is obsoleted by is stuff above */
 	    case hd_detail_cdrom: {
 		string cdtype = "cdrom";
 		if (hd->detail->cdrom.data->dvdram)
