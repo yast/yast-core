@@ -157,5 +157,6 @@ SCRInterpreter::evaluateSCR (const YCPValue& value)
 	}
 	return evaluateInstantiatedTerm (t);
     }
+    y2error ("SCR::%s\n", value->toString().c_str());
     return YCPError ("Unknown SCR:: operation");
 }
