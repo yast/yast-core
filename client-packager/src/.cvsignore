@@ -1,0 +1,9 @@
+Makefile.in
+Makefile
+*.o
+*.lo
+*.la
+.deps
+.libs
+packager       
+*.kdoc
