@@ -220,7 +220,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
     int start = i1->value ();
 
     if ((start < 0)
-	|| (start > ss.size ()))
+	|| ((size_t)start > ss.size ()))
     {
 	ycp2error("Substring index out of range");
 	return YCPString ("");
