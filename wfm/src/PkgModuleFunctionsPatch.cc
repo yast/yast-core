@@ -272,7 +272,7 @@ PkgModuleFunctions::YouGetDirectory ()
 }
 
 /**   
-  @builtin Pkg::YouGetPatches( boolean download_again, boolean check_signatures ) -> error string
+  @builtin Pkg::YouRetrievePatchInfo( boolean download_again, boolean check_signatures ) -> error string
 
   retrieve patches
   
@@ -288,7 +288,7 @@ PkgModuleFunctions::YouGetDirectory ()
           "login" login failed
 */
 YCPValue
-PkgModuleFunctions::YouGetPatches (const YCPBoolean& download, const YCPBoolean& sig)
+PkgModuleFunctions::YouRetrievePatchInfo (const YCPBoolean& download, const YCPBoolean& sig)
 {
     bool reload = download->value();
     bool checkSig = sig->value();
@@ -310,27 +310,14 @@ PkgModuleFunctions::YouGetPatches (const YCPBoolean& download, const YCPBoolean&
     return YCPString( "" );
 }
 
-/**
-  @builtin Pkg::YouAttachSource () -> bool
-
-  attach source of patches
-*/
-YCPValue
-PkgModuleFunctions::YouAttachSource ()
-{
-    _last_error = _y2pm.youPatchManager().instYou().attachSource();
-    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
-}
-
 /**   
-   @builtin Pkg::YouGetPackages () -> bool
+   @builtin Pkg::YouRetrievePatches () -> bool
 
-   retrieve package data belonging to patches
+   Retrieve patches.
 
 */
 YCPValue
-PkgModuleFunctions::YouGetPackages ()
+PkgModuleFunctions::YouRetrievePatches ()
 {
     _last_error = _y2pm.youPatchManager().instYou().retrievePatches();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
@@ -351,58 +338,6 @@ PkgModuleFunctions::YouSelectPatches ()
     _y2pm.youPatchManager().instYou().selectPatches( kinds );
     
     return YCPVoid ();
-}
-
-/**
-  @builtin Pkg::YouFirstPatch (bool) -> map
-
-  @param bool If true progress is reset, if false it isn't touched.
-
-  get information about first selected patch.
-*/
-YCPMap
-PkgModuleFunctions::YouFirstPatch (const YCPBoolean& reset)
-{
-    bool resetProgress = true;
-    
-    if( !reset.isNull() ) resetProgress = reset->value();
-
-    YCPMap result;
-
-    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().firstPatch( resetProgress );
-    if ( patch ) {
-      result = YouPatch( patch );
-    } else {
-      y2debug("No more patches.");
-    }
-
-    return result;
-}
-
-/**
-   @builtin Pkg::YouNextPatch () -> map
-
-   get information about next patch to be installed.
-*/
-YCPMap
-PkgModuleFunctions::YouNextPatch ()
-{
-    YCPMap result;
-
-    bool ok;
-
-    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().nextPatch( &ok );
-    if ( patch ) {
-      result = YouPatch( patch );
-    } else {
-      y2debug("No more patches.");
-    }
-
-    if ( !ok ) {
-      result->add( YCPString( "error" ), YCPString( "abort" ) );
-    }
-
-    return result;
 }
 
 YCPMap
@@ -430,75 +365,18 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
     return result;
 }
 
-/**
-  @builtin Pkg::YouGetCurrentPatch ( boolean reload, boolean check_signature ) -> error string
-
-  download current patch.
-
-  @param bool true if patch should be reloaded from the server.
-  @param bool true if signatures should be checked.
-
-  @return ""      success
-          "args"  bad args
-          "media" media error
-          "sig"   signature check failed
-          "abort" user aborted operation
-*/
-YCPValue
-PkgModuleFunctions::YouGetCurrentPatch (const YCPBoolean& download, const YCPBoolean& sig)
-{
-    bool reload = download->value();
-    bool checkSig = sig->value();
-
-    InstYou &you = _y2pm.youPatchManager().instYou();
-    
-    you.settings()->setReloadPatches( reload );
-    you.settings()->setCheckSignatures( checkSig );
-
-    _last_error =
-        you.retrieveCurrentPatch();
-    if ( _last_error ) {
-      if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
-      if ( _last_error == YouError::E_bad_sig_file ||
-           _last_error == YouError::E_bad_sig_rpm ) return YCPString( "sig" );
-      if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
-      return YCPString( _last_error.errstr() );
-    }
-    return YCPString( "" );
-}
-
-/**
-  @builtin Pkg::YouInstallCurrentPatch () -> string
-
-  install current patch.
-
-  @return ""        success
-          "skipped" patch was been skipped during download
-	  "abort"   user aborted installation of patch
-          "error"   install error
-*/
-YCPString
-PkgModuleFunctions::YouInstallCurrentPatch ()
-{
-    _last_error = _y2pm.youPatchManager().instYou().installCurrentPatch();
-    if ( !_last_error ) return YCPString( "" );
-    if ( _last_error == YouError::E_empty_location ) return YCPString( "skipped" );
-    else if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
-    
-    return YCPString( "error" );
-}
-
 /**   
    @builtin Pkg::YouInstallPatches () -> bool
 
-   install retrieved patches
+   install retrieved patches.
+   
+   Returns true, if patches have been installed, and false if no patches have
+   been installed.
 */
 YCPValue
 PkgModuleFunctions::YouInstallPatches ()
 {
-    _last_error = _y2pm.youPatchManager().instYou().installPatches();
-    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
+    return YCPBoolean( _y2pm.youPatchManager().instYou().installPatches() );
 }
 
 /**
@@ -510,32 +388,6 @@ YCPValue
 PkgModuleFunctions::YouRemovePackages ()
 {
     _last_error = _y2pm.youPatchManager().instYou().removePackages();
-    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
-}
-
-/**
-  @builtin Pkg::YouDisconnect () -> bool
-
-  Disconnect YOU from server.
-*/
-YCPValue
-PkgModuleFunctions::YouDisconnect ()
-{
-    _last_error = _y2pm.youPatchManager().instYou().disconnect();
-    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
-    return YCPBoolean( true );
-}
-
-/**
-   @builtin Pkg::YouFinish () -> bool
-
-   finish update. Writes date of last update.
-*/
-YCPValue
-PkgModuleFunctions::YouFinish ()
-{
-    _last_error = _y2pm.youPatchManager().instYou().writeLastUpdate();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }

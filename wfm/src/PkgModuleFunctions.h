@@ -263,19 +263,12 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue YouSetServer (const YCPMap& strings);
 	YCPValue YouGetUserPassword ();
 	YCPValue YouSetUserPassword (const YCPString& user, const YCPString& passwd, const YCPBoolean& persistent);
-	YCPValue YouGetPatches (const YCPBoolean& download, const YCPBoolean& sign);
-	YCPValue YouAttachSource ();
-	YCPValue YouGetPackages ();
+	YCPValue YouRetrievePatchInfo (const YCPBoolean& download, const YCPBoolean& sign);
+	YCPValue YouRetrievePatches ();
 	YCPValue YouGetDirectory ();
 	YCPValue YouSelectPatches ();
-	YCPMap YouFirstPatch (const YCPBoolean& reset);
-	YCPMap YouNextPatch ();
-	YCPValue YouGetCurrentPatch (const YCPBoolean& download, const YCPBoolean& sig);
-	YCPString YouInstallCurrentPatch ();
 	YCPValue YouInstallPatches ();
         YCPValue YouRemovePackages ();
-	YCPValue YouDisconnect ();
-        YCPValue YouFinish ();
 
 	// function call definitions
 	Y2FUNCTIONCALL  ( Pkg, InstSysMode, 		"void ()",		PkgModuleFunctions, InstSysMode);
@@ -405,19 +398,12 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1	( Pkg, YouSetServer,		"string (map<any,any>)",Map, PkgModuleFunctions, YouSetServer);
 	Y2FUNCTIONCALL 	( Pkg, YouGetUserPassword,	"map<any,any> ()",	PkgModuleFunctions, YouGetUserPassword);
 	Y2FUNCTIONCALL3	( Pkg, YouSetUserPassword,	"string (string, string, boolean)", String, String, Boolean, PkgModuleFunctions, YouSetUserPassword);
-	Y2FUNCTIONCALL2 ( Pkg, YouGetPatches, 		"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouGetPatches);
-	Y2FUNCTIONCALL  ( Pkg, YouAttachSource,		"boolean ()",		PkgModuleFunctions, YouAttachSource);
-	Y2FUNCTIONCALL  ( Pkg, YouGetPackages, 		"boolean ()",		PkgModuleFunctions, YouGetPackages);
+	Y2FUNCTIONCALL2 ( Pkg, YouRetrievePatchInfo, 	"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouRetrievePatchInfo);
+	Y2FUNCTIONCALL  ( Pkg, YouRetrievePatches, 	"boolean ()",		PkgModuleFunctions, YouRetrievePatches);
 	Y2FUNCTIONCALL  ( Pkg, YouGetDirectory, 	"string ()",		PkgModuleFunctions, YouGetDirectory);
 	Y2FUNCTIONCALL  ( Pkg, YouSelectPatches, 	"void ()",		PkgModuleFunctions, YouSelectPatches);
-	Y2FUNCTIONCALL1 ( Pkg, YouFirstPatch, 		"map<any,any> (boolean)",Boolean, 	PkgModuleFunctions, YouFirstPatch);
-	Y2FUNCTIONCALL  ( Pkg, YouNextPatch, 		"map<any,any> ()",		PkgModuleFunctions, YouNextPatch);
-	Y2FUNCTIONCALL2 ( Pkg, YouGetCurrentPatch, 	"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouGetCurrentPatch);
-	Y2FUNCTIONCALL  ( Pkg, YouInstallCurrentPatch, 	"string ()",		PkgModuleFunctions, YouInstallCurrentPatch);
 	Y2FUNCTIONCALL  ( Pkg, YouInstallPatches, 	"boolean ()",		PkgModuleFunctions, YouInstallPatches);
         Y2FUNCTIONCALL  ( Pkg, YouRemovePackages, 	"boolean ()",		PkgModuleFunctions, YouRemovePackages);
-	Y2FUNCTIONCALL  ( Pkg, YouDisconnect, 		"boolean ()",		PkgModuleFunctions, YouDisconnect);
-        Y2FUNCTIONCALL  ( Pkg, YouFinish, 		"boolean ()",		PkgModuleFunctions, YouFinish);
 
 
 	/**
