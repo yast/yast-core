@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Dec 15 12:33:48 CET 2003 - ma@suse.de
+
+- Removed outdated Pkg::SelectionsUpdateAll
+- 2.9.11
+
+-------------------------------------------------------------------
 Fri Dec  5 09:12:50 CET 2003 - mvidner@suse.cz
 
 - ycp.pm: accept `Command(...) as well as Command(...)

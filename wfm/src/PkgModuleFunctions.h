@@ -178,7 +178,6 @@ class PkgModuleFunctions
 	YCPValue SetSelection (YCPList args);
 	YCPValue ClearSelection (YCPList args);
 	YCPValue ActivateSelections (YCPList args);
-	YCPValue SelectionsUpdateAll (YCPList args);
 
 	// package related
 	YCPValue GetPackages (YCPList args);

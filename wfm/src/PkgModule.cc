@@ -132,7 +132,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SetSelection")	return SetSelection (args);
     else if (function == "ClearSelection")	return ClearSelection (args);
     else if (function == "ActivateSelections")	return ActivateSelections (args);
-    else if (function == "SelectionsUpdateAll")	return SelectionsUpdateAll (args);
 
     // patch related functions
     else if (function == "YouStatus")		return YouStatus (args);
