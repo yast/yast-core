@@ -60,7 +60,7 @@ YCPValue YTable::changeWidget( const YCPSymbol & property,
     }
 
     /*
-     * @property list( item ) Items a list of all table items
+     * @property list(item) Items a list of all table items
      */
     else if ( s == YUIProperty_Items ) // Change whole selection box!
     {
@@ -84,8 +84,8 @@ YCPValue YTable::changeWidgetTerm( const YCPTerm & property, const YCPValue & ne
 {
     string s = property->name();
     /*
-     * @property item		Item( id )	read: a single item ( string or term )
-     * @property integer|string	Item( id,column ) write: replacement for one specific cell ( see example )
+     * @property item		Item(id)	read: a single item ( string or term )
+     * @property integer|string	Item(id,column) write: replacement for one specific cell ( see example )
      */
     if ( s == YUIProperty_Item )
     {
