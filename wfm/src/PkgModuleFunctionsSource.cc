@@ -304,6 +304,29 @@ PkgModuleFunctions::SourceFinish (YCPList args)
 
 
 /**
+ * @builtin Pkg::SourceFinishAll () -> bool
+ *
+ * disables all known source
+ *
+ */
+YCPValue
+PkgModuleFunctions::SourceFinishAll (YCPList args)
+{
+    for (unsigned int source_slot = 0; source_slot < _sources.size(); ++source_slot)
+    {
+	if (_sources[source_slot] != 0)
+	{
+	    _last_error = _y2pm.instSrcManager().disableSource( _sources[source_slot]);
+	    y2milestone ("disable: %d: %s", source_slot, _last_error.errstr().c_str());
+	    _sources[source_slot] = 0;
+	}
+    }
+    _first_free_source_slot = 0;
+    return YCPBoolean (true);
+}
+
+
+/**
  * @builtin Pkg::SourceGeneralData (integer id) -> map
  *
  * returns general data about the source as a map:
@@ -403,9 +426,9 @@ PkgModuleFunctions::SourceProductData (YCPList args)
 	return YCPError ("No description for source", data);
 
     data->add (YCPString ("productname"), YCPString ((const std::string &)(source_descr->content_product().name)));
-    data->add (YCPString ("productversion"), YCPString (PkgEdition::toString (source_descr->content_product().edition)));
+    data->add (YCPString ("productversion"), YCPString (PkgEdition::toString (source_descr->content_product().edition.version())));
     data->add (YCPString ("baseproductname"), YCPString ((const std::string &)(source_descr->content_baseproduct().name)));
-    data->add (YCPString ("baseproductversion"), YCPString (PkgEdition::toString (source_descr->content_baseproduct().edition)));
+    data->add (YCPString ("baseproductversion"), YCPString (PkgEdition::toString (source_descr->content_baseproduct().edition.version())));
     data->add (YCPString ("vendor"), YCPString (source_descr->content_vendor ()));
     data->add (YCPString ("defaultbase"), YCPString (source_descr->content_defaultbase ()));
     InstSrcDescr::ArchMap::const_iterator it1 = source_descr->content_archmap().find (_y2pm.baseArch());
