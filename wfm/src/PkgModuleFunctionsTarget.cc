@@ -169,7 +169,7 @@ get_disk_stats (const char *fs, long long *used, long long *size, long long *bsi
     }
     *bsize = sb.f_frsize ? : sb.f_bsize;		// block size
     *size = sb.f_blocks * *bsize;			// total size
-    *used = (sb.f_blocks - sb.f_bfree) * *bsize;	// free size
+    *used = (sb.f_blocks - sb.f_bfree) * *bsize;	// used size
 }
 
 
