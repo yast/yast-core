@@ -616,6 +616,60 @@ YCPValue evaluateMergeString(YCPInterpreter *interpreter, const YCPList& args)
 }
 
 
+YCPValue evaluateFindFirstOf(YCPInterpreter *interpreter, const YCPList& args)
+{
+    /**
+     * @builtin findfirstof( string s_1, string s_2 ) -> integer
+     * Returns the position of the first character in <tt>s_1</tt> that is
+     * contained in <tt>s_2</tt>.
+     *
+     * Example <pre>
+     * findfirstof( "abcdefghi", "cxdv" ) -> 2 ('c')
+     * findfirstof("aaaaa", "z") -> nil
+     * </pre>
+     */
+
+    if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
+    {
+	string s1 = args->value(0)->asString()->value();
+	string s2 = args->value(1)->asString()->value();
+
+	string::size_type pos = s1.find_first_of ( s2 );
+
+	if ( pos == string::npos ) return YCPVoid();	// not found
+	else return YCPInteger( pos );			// found
+    }
+    return YCPError ("bad arguments for findfirstof()", YCPNull());
+}
+
+
+YCPValue evaluateFindLastOf(YCPInterpreter *interpreter, const YCPList& args)
+{
+    /**
+     * @builtin findlastof( string s_1, string s_2 ) -> integer
+     * Returns the position of the last character in <tt>s_1</tt> that is
+     * contained in <tt>s_2</tt>.
+     *
+     * Example <pre>
+     * findlastof( "abcdecfghi", "cxdv" ) -> 5 ('c')
+     * findlastof("aaaaa", "z") -> nil
+     * </pre>
+     */
+
+    if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
+    {
+	string s1 = args->value(0)->asString()->value();
+	string s2 = args->value(1)->asString()->value();
+
+	string::size_type pos = s1.find_last_of( s2 );
+
+	if ( pos == string::npos ) return YCPVoid();	// not found
+	else return YCPInteger( pos );			// found
+    }
+    return YCPError ("bad arguments for findlastof()", YCPNull());
+}
+
+
 YCPValue evaluateFindFirstNotOf(YCPInterpreter *interpreter, const YCPList& args)
 {
     /**
@@ -631,68 +685,42 @@ YCPValue evaluateFindFirstNotOf(YCPInterpreter *interpreter, const YCPList& args
 
     if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
     {
-	// this is needed on gcc 3.0. gcc 2.95 was wrong.
-	if (args->value(1)->asString()->value().empty ())
-	    return YCPInteger ((long long int) 0);
+	string s1 = args->value(0)->asString()->value();
+	string s2 = args->value(1)->asString()->value();
 
-	string s = args->value(0)->asString()->value();
-	string::size_type pos = s.find_first_not_of( args->value(1)->asString()->value() );
+	string::size_type pos = s1.find_first_not_of( s2 );
 
-	if ( pos == s.npos ) return YCPVoid();	// not found
-	else return YCPInteger( pos );		// found
+	if ( pos == string::npos ) return YCPVoid();	// not found
+	else return YCPInteger( pos );			// found
     }
     return YCPError ("bad arguments for findfirstnotof()", YCPNull());
 }
 
 
-YCPValue evaluateFindFirstOf(YCPInterpreter *interpreter, const YCPList& args)
+YCPValue evaluateFindLastNotOf(YCPInterpreter *interpreter, const YCPList& args)
 {
-   /**
-    * @builtin findfirstof( string s_1, string s_2 ) -> integer
-    * Returns the position of the first character in <tt>s_1</tt> that is
-    * contained in <tt>s_2</tt>.
-    *
-    * Example <pre>
-    * findfirstof( "abcdefghi", "cxdv" ) -> 2 ('c')
-    * findfirstof("aaaaa", "z") -> nil
-    * </pre>
-    */
+    /**
+     * @builtin findlastnotof( string s_1, string s_2 ) -> integer
+     * Returns the position of the last character in <tt>s_1</tt> that is
+     * NOT contained in <tt>s_2</tt>.
+     *
+     * Example <pre>
+     * findlastnotof( "abcdefghi", "abcefghi" ) -> 3 ('d')
+     * findlastnotof("aaaaa", "a") -> nil
+     * </pre>
+     */
 
-   if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
-   {
-      string s = args->value(0)->asString()->value();
-      string::size_type pos = s.find_first_of( args->value(1)->asString()->value() );
+    if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
+    {
+	string s1 = args->value(0)->asString()->value();
+	string s2 = args->value(1)->asString()->value();
 
-      if ( pos == s.npos ) return YCPVoid();	// not found
-      else return YCPInteger( pos );		// found
-   }
-    return YCPError ("bad arguments for findfirstof()", YCPNull());
-}
+	string::size_type pos = s1.find_last_not_of( s2 );
 
-
-
-YCPValue evaluateFindLastOf(YCPInterpreter *interpreter, const YCPList& args)
-{
-   /**
-    * @builtin findlastof( string s_1, string s_2 ) -> integer
-    * Returns the position of the last character in <tt>s_1</tt> that is
-    * contained in <tt>s_2</tt>.
-    *
-    * Example <pre>
-    * findlastof( "abcdecfghi", "cxdv" ) -> 5 ('c')
-    * findlastof("aaaaa", "z") -> nil
-    * </pre>
-    */
-
-   if ( args->size() == 2 && args->value(0)->isString() && args->value(1)->isString() )
-   {
-      string s = args->value(0)->asString()->value();
-      string::size_type pos = s.find_last_of( args->value(1)->asString()->value() );
-
-      if ( pos == s.npos ) return YCPVoid();	// not found
-      else return YCPInteger( pos );		// found
-   }
-    return YCPError ("bad arguments for findlastof()", YCPNull());
+	if ( pos == string::npos ) return YCPVoid();	// not found
+	else return YCPInteger( pos );			// found
+    }
+    return YCPError ("bad arguments for findlastnotof()", YCPNull());
 }
 
 
@@ -725,7 +753,7 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
 /**
  * @builtin regexppos( string input, string pattern ) -> [ pos, len ]
  * Returns a list with position and lenth of the first match, if no match
- * is found it returns an empty list. 
+ * is found it returns an empty list.
 
  * The regexp in <tt>pattern</tt> must not contain brackets.
  *

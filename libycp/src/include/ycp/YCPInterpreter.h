@@ -202,11 +202,6 @@ YCPValue evaluateSubString(YCPInterpreter *interpreter, const YCPList& args);
 YCPValue evaluateIsSubString(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
- * Implements the builtin findfirstnotof
- */
-YCPValue evaluateFindFirstNotOf(YCPInterpreter *interpreter, const YCPList& args);
-
-/**
  * Implements the builtin findfirstof
  */
 YCPValue evaluateFindFirstOf(YCPInterpreter *interpreter, const YCPList& args);
@@ -215,6 +210,16 @@ YCPValue evaluateFindFirstOf(YCPInterpreter *interpreter, const YCPList& args);
  * Implements the builtin findlastof
  */
 YCPValue evaluateFindLastOf(YCPInterpreter *interpreter, const YCPList& args);
+
+/**
+ * Implements the builtin findfirstnotof
+ */
+YCPValue evaluateFindFirstNotOf(YCPInterpreter *interpreter, const YCPList& args);
+
+/**
+ * Implements the builtin findlastnotof
+ */
+YCPValue evaluateFindLastNotOf(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
  * Implements the builtin tolower

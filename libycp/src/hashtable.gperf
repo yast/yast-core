@@ -36,7 +36,10 @@ cryptbigcrypt,	evaluateCryptBigcrypt
 cryptblowfish,	evaluateCryptBlowfish
 timestring,	evaluateTimeString
 substring,	evaluateSubString
+findfirstof,	evaluateFindFirstOf
+findlastof,	evaluateFindLastOf
 findfirstnotof,	evaluateFindFirstNotOf
+findlastnotof,	evaluateFindLastNotOf
 tolower,	evaluateToLower
 toupper,	evaluateToUpper
 toascii,	evaluateToASCII
@@ -48,7 +51,6 @@ random,		evaluateRandom
 srandom,	evaluateSrandom
 sformat,	evaluateSformat
 issubstring,	evaluateIsSubString
-findfirstof,	evaluateFindFirstOf
 regexpmatch,    evaluateRegexpMatch
 regexppos,      evaluateRegexpPos
 splitstring,	evaluateSplitString
@@ -56,7 +58,6 @@ mergestring,	evaluateMergeString
 mapmap,		evaluateMapmap
 prepend,	evaluatePrepend
 listmap,	evaluateListmap
-findlastof,	evaluateFindLastOf
 y2debug,	evaluateY2Debug
 y2milestone,	evaluateY2Milestone
 y2warning,	evaluateY2Warning
