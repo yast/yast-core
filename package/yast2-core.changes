@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 27 14:05:40 CET 2004 - visnov@suse.cz
+
+- remove url parameter from Pkg::YouGetPatches
+
+-------------------------------------------------------------------
 Tue Jan 27 10:16:00 CET 2004 - kkaempf@suse.de
 
 - fix cast vs. bracket precedence (#34156)
