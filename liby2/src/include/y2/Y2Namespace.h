@@ -38,9 +38,11 @@ class StaticDeclaration;
  */
 class Y2Namespace {
 protected:
+    typedef vector<SymbolEntryPtr> symbols_t;
+    
     SymbolTable* m_table;
     unsigned int m_symbolcount;
-    map<unsigned int, SymbolEntryPtr> m_symbols;
+    symbols_t m_symbols;
 
     // add symbol to namespace, it now belongs here
     // returns the index into m_symbols
@@ -58,12 +60,12 @@ protected:
 
     // find symbol by pointer
     // return index if found, -1 if not found
-    int findSymbol (const SymbolEntryPtr sentry) const;
+//    int findSymbol (const SymbolEntryPtr sentry) const;
 
     // release symbol from m_symbols
     //   it's no longer owned by this block but by a ysFunction()
     void releaseSymbol (unsigned int position);
-    void releaseSymbol (SymbolEntryPtr sentry);
+//    void releaseSymbol (SymbolEntryPtr sentry);
     
     bool m_initialized;
 

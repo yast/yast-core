@@ -48,6 +48,12 @@ Y2Namespace::~Y2Namespace ()
 #endif
     if (m_table)
     {
+	// reset namespace of the symbol
+	symbols_t::const_iterator it;
+	for (it = m_symbols.begin(); it != m_symbols.end(); it++)
+	{
+	    (*it)->setNamespace(0);
+	}
 	delete m_table;
     }
 }
@@ -87,16 +93,15 @@ Y2Namespace::symbolsToString () const
 {
     string s;
 
-    map<unsigned int, SymbolEntryPtr>::const_iterator it;
+    symbols_t::const_iterator it;
     for (unsigned int p = 0; p < m_symbolcount; p++)
     {
-	it = m_symbols.find (p);
-	if (it != m_symbols.end())
+	if ( m_symbols[p] )
 	{
-	    if (!it->second->isFilename())
+	    if (!m_symbols[p]->isFilename ())
 	    {
 		s += "\n    // ";
-		s += it->second->toString();
+		s += m_symbols[p]->toString();
 	    }
 	}
 	else
@@ -113,29 +118,11 @@ Y2Namespace::symbolsToString () const
 SymbolEntryPtr 
 Y2Namespace::symbolEntry (unsigned int position) const
 {
-    map<unsigned int, SymbolEntryPtr>::const_iterator it = m_symbols.find (position);
-    if (it == m_symbols.end())
+    if (position >= m_symbolcount)
     {
 	return 0;
     }
-    return it->second;
-}
-
-
-// find symbol by pointer
-// return index if found, -1 if not found
-int
-Y2Namespace::findSymbol (const SymbolEntryPtr sentry) const
-{
-    map<unsigned int, SymbolEntryPtr>::const_iterator it;
-    for (it = m_symbols.begin(); it != m_symbols.end(); it++)
-    {
-	if (it->second == sentry)
-	{
-	    return it->first;
-	}
-    }
-    return -1;
+    return m_symbols[position];
 }
 
 
@@ -149,7 +136,7 @@ Y2Namespace::addSymbol (SymbolEntryPtr sentry)
 #if DO_DEBUG
     y2debug ("addSymbol #%d:'%s'", m_symbolcount, sentry->toString().c_str());
 #endif
-    m_symbols[m_symbolcount] = sentry;
+    m_symbols.push_back(sentry);
     return m_symbolcount++;
 }
 
@@ -158,16 +145,15 @@ Y2Namespace::addSymbol (SymbolEntryPtr sentry)
 SymbolEntryPtr
 Y2Namespace::lookupSymbol (const char *name) const
 {
-    // check duplicates
-    map<unsigned int, SymbolEntryPtr>::const_iterator it;
-    for (it = m_symbols.begin(); it != m_symbols.end(); it++)
+    for (unsigned int p = 0; p < m_symbolcount; p++)
     {
-	if ((strcmp (it->second->name(), name) == 0)
-            && !it->second->likeNamespace())			// allow symbol if namespace of same name already declared
+	if ( m_symbols[p] && (strcmp (m_symbols[p]->name(), name) == 0)
+            && !m_symbols[p]->likeNamespace())			// allow symbol if namespace of same name already declared
         {
-            return it->second;
+            return m_symbols[p];
         }
     }
+
     return 0;
 }
 
@@ -194,16 +180,15 @@ Y2Namespace::enterSymbol (SymbolEntryPtr sentry, Point *point )
 void
 Y2Namespace::releaseSymbol (unsigned int position)
 {
-    map<unsigned int, SymbolEntryPtr>::iterator it = m_symbols.find (position);
-    if (it != m_symbols.end())
+    if (position < m_symbolcount)
     {
-	it->second->setNamespace (0);
-	m_symbols.erase (it);
+	m_symbols[position]->setNamespace (0);
+	m_symbols[position] = 0;
     }
-    return;
 }
 
 
+#if 0
 void
 Y2Namespace::releaseSymbol (SymbolEntryPtr sentry)
 {
@@ -214,6 +199,7 @@ Y2Namespace::releaseSymbol (SymbolEntryPtr sentry)
     }
     return;
 }
+#endif
 
 
 void
@@ -268,30 +254,26 @@ Y2Namespace::finish ()
 void
 Y2Namespace::pushToStack ()
 {
-    map<unsigned int, SymbolEntryPtr>::const_iterator it;
-    for (it = m_symbols.begin(); it != m_symbols.end(); it++)
+    for (unsigned int p = 0; p < m_symbolcount; p++)
     {
-	if (it->second->isVariable())
-	{
-	    it->second->push();
-	}
+	if ( m_symbols[p] && m_symbols[p]->isVariable() )
+        {
+            m_symbols[p]->push ();
+        }
     }
-    return;
 }
 
 
 void
 Y2Namespace::popFromStack ()
 {
-    map<unsigned int, SymbolEntryPtr>::const_iterator it;
-    for (it = m_symbols.begin(); it != m_symbols.end(); it++)
+    for (unsigned int p = 0; p < m_symbolcount; p++)
     {
-	if (it->second->isVariable())
-	{
-	    it->second->pop();
-	}
+	if ( m_symbols[p] && m_symbols[p]->isVariable() )
+        {
+            m_symbols[p]->pop ();
+        }
     }
-    return;
 }
 
 
@@ -335,6 +317,7 @@ Y2Namespace::initialize ()
 	    {
 		c->evaluateCall ();
 	    }
+	    delete c;
 	}
 	t->enableUsage ();
     }

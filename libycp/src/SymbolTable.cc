@@ -74,7 +74,7 @@ TableEntry::TableEntry (std::istream & str)
 
 TableEntry::~TableEntry ()
 {
-    delete m_point;
+    delete m_point;    
 }
 
 
