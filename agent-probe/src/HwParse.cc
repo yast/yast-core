@@ -910,8 +910,11 @@ HwProbe::ihwData (void)
     ihw_para_info *para_p;
     int card, drv, pnr;
 
+    y2debug ("IHW_VERSION %4x", hd_ihw_get_version());
+    y2debug ("IHW_DATA VERSION %x",hd_ihw_get_db_version());
+    y2debug ("IHW_DATA DATE %s", hd_ihw_get_db_date());
+    
     card = 0;
-
     while ((icp = hd_ihw_get_card(card++)))
     {
 	YCPMap  isdnEntry;
@@ -923,21 +926,31 @@ HwProbe::ihwData (void)
 	    isdnEntry->add (YCPString ("name"), YCPString (icp->name));
 	}
 
+	/* temporary until libhd update */
+#if (IHW_VERSION == 0x0203)
+	isdnEntry->add (YCPString ("features"), YCPInteger (1)); 
+	isdnEntry->add (YCPString ("lines"), YCPInteger (1)); 
+#else
+	isdnEntry->add (YCPString ("features"), YCPInteger (icp->features)); 
+	isdnEntry->add (YCPString ("lines"), YCPInteger (icp->line_cnt)); 
+#endif
 	drv = icp->driver;
 	while ((idp = hd_ihw_get_driver(drv))) {
 	    YCPMap  isdnDrvEntry;
-	    /* temporary until libhd update */
-#if (IHW_VERSION == 0x0202)
-	    isdnDrvEntry->add (YCPString ("name"), YCPString(idp->mod_name));
-#else
 	    isdnDrvEntry->add (YCPString ("name"), YCPString(idp->name));
-#endif
 	    isdnDrvEntry->add (YCPString ("mod_name"), YCPString(idp->mod_name));
 	    isdnDrvEntry->add (YCPString ("type"), YCPInteger (idp->typ));
 	    isdnDrvEntry->add (YCPString ("subtype"), YCPInteger (idp->subtyp));
 	    isdnDrvEntry->add (YCPString ("drvid"), YCPInteger (idp->drvid));
+	    isdnDrvEntry->add (YCPString ("features"), YCPInteger (idp->features));
+	    isdnDrvEntry->add (YCPString ("arch"), YCPInteger (idp->arch));
 	    if (idp->description)
 		isdnDrvEntry->add (YCPString ("description"), YCPString(idp->description));
+	    /* temporary until libhd update */
+#if (IHW_VERSION == 0x0204)
+	    if (idp->need_pkg)
+		    isdnDrvEntry->add (YCPString ("need_pkg"), YCPString(idp->need_pkg));
+#endif
 	    isdnDriver->add (isdnDrvEntry);
 	    drv = idp->next_drv;
 	}
