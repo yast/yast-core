@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Feb 13 22:55:44 CET 2004 - kkaempf@suse.de
+
+- replace module timestamps with import lists checking the
+  actually used signatures with the provided ones.
+- enhance parsetime and runtime error information with better
+  file/line tracking
+- enhance 'ycpc' with a dependency checker
+
+-------------------------------------------------------------------
 Fri Feb 13 12:15:45 CET 2004 - sh@suse.de
 
 - Late creation of UI: UI is only created when the first UI
