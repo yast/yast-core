@@ -1,0 +1,10 @@
+{
+  any a = $["foo": ["bar"]];
+
+  boolean checkmap (any a)
+  {
+      return is (a, map<string, list<string> >);
+  }
+
+  return checkmap (a);
+}

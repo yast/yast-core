@@ -1,0 +1,17 @@
+{
+    define integer Foo (string s) {
+	return 42;
+    }
+
+    integer (string) f = Foo;
+
+    define boolean Check (any fp) {
+	y2milestone ("Checking %1", fp);
+	return is (fp, integer (string));
+    }
+
+    y2milestone ("Checking %1", f);
+    y2milestone (is (f, integer (string))? "GOOD": "BAD");
+    y2milestone (Check (f)?                "GOOD": "BAD");
+}
+

@@ -1,0 +1,34 @@
+[Scanner] tests/types/funptr_is.ycp:14 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/types/funptr_is.ycp:14 Warning: integer (string)
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Foo (string s)
+    // integer (string) f
+    // boolean Check (any fp)
+    // filename: "tests/types/funptr_is.ycp"
+    integer Foo (string s)
+{
+    return 42;
+}
+    integer (string) f = Foo;
+    boolean Check (any fp)
+{
+    y2milestone ("Checking %1", fp);
+    return is (fp, integer (string));
+}
+    y2milestone ("Checking %1", f);
+    y2milestone ("GOOD");
+    y2milestone (Check (f) ? "GOOD" : "BAD");
+}
+----------------------------------------------------------------------
+[YCP] tests/types/funptr_is.ycp:13 Checking  (string s)
+{
+    return 42;
+}
+[YCP] tests/types/funptr_is.ycp:14 GOOD
+[YCP] tests/types/funptr_is.ycp:9 Checking  (string s)
+{
+    return 42;
+}
+[YCP] tests/types/funptr_is.ycp:15 GOOD

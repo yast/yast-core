@@ -1,0 +1,14 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any a
+    // boolean checkmap (any a)
+    // filename: "tests/types/map_is.ycp"
+    any a = $["foo":["bar"]];
+    boolean checkmap (any a)
+{
+    return is (a, map <string, list <string>>);
+}
+    return checkmap (a);
+}
+----------------------------------------------------------------------

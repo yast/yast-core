@@ -39,7 +39,7 @@
 #include "ycp/ExecutionEnvironment.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 #endif
 
 typedef YCPValue (*v2) ();
@@ -1353,13 +1353,27 @@ YEIs::toString () const
 YCPValue
 YEIs::evaluate (bool cse)
 {
+#if DO_DEBUG
+    y2debug ("YEIs::evaluate (%s)", toString().c_str());
+#endif
     YCPValue value = m_expr->evaluate (cse);
     if (value.isNull())
     {
 	ycp2error ("'is()' expression evaluates to nil.");
 	return YCPBoolean (false);
     }
-    constTypePtr expected_type = Type::vt2type (value->valuetype());
+    constTypePtr expected_type;
+    if (value->isCode())
+    {
+	expected_type = value->asCode()->code()->type();
+    }
+    else
+    {
+	expected_type = Type::vt2type (value->valuetype());
+    }
+#if DO_DEBUG
+    y2debug ("YEIs::evaluate (value '%s', value->valuetype() %d, expected_type '%s')", toString().c_str(), value->valuetype(), expected_type->toString().c_str());
+#endif
     return YCPBoolean (m_type->match (expected_type) >= 0);
 }
 
