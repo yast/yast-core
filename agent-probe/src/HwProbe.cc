@@ -63,13 +63,13 @@ status_to_sym (hd_status_value_t status)
     switch (status)
     {
 	case status_no:
-	    return YCPSymbol("no", true);
+	    return YCPSymbol("no");
 	case status_yes:
-	    return YCPSymbol("yes", true);
+	    return YCPSymbol("yes");
 	case status_new:
-	    return YCPSymbol("new", true);
+	    return YCPSymbol("new");
 	default:
-	    return YCPSymbol("unknown", true);
+	    return YCPSymbol("unknown");
     }
 }
 
@@ -82,7 +82,7 @@ status_to_sym (hd_status_value_t status)
 static const YCPValue
 readStatus (hd_data_t *hd_data, int which, const YCPValue& arg)
 {
-    static YCPValue unknown = YCPSymbol ("unknown", true);
+    static YCPValue unknown = YCPSymbol ("unknown");
     y2debug ("readStatus (%p, %d, %s)", hd_data, which, arg.isNull()?"NULL":arg->toString().c_str());
     if (arg.isNull()
 	|| !arg->isString())
@@ -158,7 +158,7 @@ HwProbe::~HwProbe()
  */
 
 YCPValue
-HwProbe::Read(const YCPPath& path, const YCPValue& arg)
+HwProbe::Read(const YCPPath& path, const YCPValue& arg, const YCPValue& optarg)
 {
     if (hd_base == 0)
     {
@@ -180,7 +180,7 @@ HwProbe::Read(const YCPPath& path, const YCPValue& arg)
  * @example SCR::Write (.probe.status.configured, "unique_key", `yes);
  */
 
-YCPValue
+YCPBoolean
 HwProbe::Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg)
 {
     y2debug ("Write (%s:%s)", path->toString().c_str(), value->toString().c_str());
@@ -190,11 +190,12 @@ HwProbe::Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg)
 	|| arg.isNull()
 	|| !value->isString())
     {
-	return YCPError ("Bad parameters for Write(.probe.status...)",
-			 YCPBoolean (false));
+	ycp2error ("Bad parameters for Write(.probe.status...)");
+	return YCPBoolean (false);
     }
 
-    return checkPath (path, value, arg, 1);
+    YCPValue v = checkPath (path, value, arg, 1);
+    return v.isNull () ? YCPNull () : v->asBoolean ();
 }
 
 
@@ -204,10 +205,11 @@ HwProbe::Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg)
  * show subtree possibilities
  */
 
-YCPValue
+YCPList
 HwProbe::Dir(const YCPPath& path)
 {
-    return checkPath (path, YCPNull(), YCPNull(), 2);
+    YCPValue v = checkPath (path, YCPNull(), YCPNull(), 2);
+    return v.isNull () ? YCPNull () : v->asList ();
 }
 
 
@@ -391,11 +393,6 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		if (!(result.isNull() || result->isVoid()
 		    || (result->isList() && result->asList()->isEmpty())))
 		{
-		    if (result->isError ())
-		    {
-			y2error (result->asError()->message().c_str());
-			result = result->asError()->value();
-		    }
 		    map->add (YCPString (path_desc[i].pathname), result);
 		}
 	    }

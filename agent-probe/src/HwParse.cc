@@ -1256,7 +1256,7 @@ HwProbe::hd2value (hd_t *hd)
     // since model may already be inserted by the cpu stuff above we have
     // to check for it's present first (kind of weird)
     s = hd->model;
-    if (s && !out->haskey (YCPString ("model")))
+    if (s && out->value (YCPString ("model")).isNull())
 	out->add (YCPString ("model"), YCPString (s));
 
     // driver info

@@ -21,7 +21,7 @@
 #include <hd.h>		// libhd
 
 #include <scr/SCRAgent.h>
-#include <scr/SCRInterpreter.h>
+
 #include "Y2.h"
 
 /**
@@ -45,17 +45,17 @@ public:
      * @param path Specifies what part of the subtree should
      * be read. The path is specified _relatively_ to Root()!
      */
-    YCPValue Read(const YCPPath& path, const YCPValue& arg = YCPNull());
+    YCPValue Read(const YCPPath& path, const YCPValue& arg = YCPNull(), const YCPValue& optarg = YCPNull());
 
     /**
      * Writes data. Destroy the result after use.
      */
-    YCPValue Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg = YCPNull());
+    YCPBoolean Write(const YCPPath& path, const YCPValue& value, const YCPValue& arg = YCPNull());
 
     /**
      * Get a list of all subtrees.
      */
-    YCPValue Dir(const YCPPath& path);
+    YCPList Dir(const YCPPath& path);
 
     // ----------------------------------------
 
