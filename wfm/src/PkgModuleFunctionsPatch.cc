@@ -77,6 +77,7 @@ PkgModuleFunctions::YouStatus (YCPList args)
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
     InstYou &you = _y2pm.youPatchManager().instYou();
+
     PMYouPatchPathsPtr paths = you.paths();
     
     result->add( YCPString( "product" ), YCPString( paths->product() ) );
@@ -92,45 +93,73 @@ PkgModuleFunctions::YouStatus (YCPList args)
 }
 
 /**
-   @builtin Pkg::YouCheckAuthorization() -> error string
+   @builtin Pkg::YouGetUserPassword()
 
-   Try to login to update server.
+   Get username and password needed for access to server.
 
-   @param string server url
-   @param string registration code
-   @param string password
-
-   @return "ok"     success
-           "args" bad args
-           "error_login"  authorization failed
-           "url_invalid" invalid url
-           "url_not_found" url not found
-           "error" other error
+   @return map "username" success
+               "password" password
 */
 YCPValue
-PkgModuleFunctions::YouCheckAuthorization (YCPList args)
+PkgModuleFunctions::YouGetUserPassword (YCPList args)
 {
-    if ( ( args->size() != 3 ) || !( args->value( 0 )->isString() ) ||
-         !( args->value( 1 )->isString() ) || !( args->value( 2 )->isString() ) )
+    if ( args->size() != 0 )
     {
 	return YCPString( "args" );
     }
 
-    string u = args->value(0)->asString()->value_cstr();
-    Url url( u );
-    if ( !url.isValid() ) return YCPString( "url_invalid" );
+    YCPMap result;
 
-    string regcode = args->value(1)->asString()->value_cstr();
-    string password = args->value(2)->asString()->value_cstr();
+    InstYou &you = _y2pm.youPatchManager().instYou();
 
-    _last_error = _y2pm.youPatchManager().instYou().checkAuthorization( url, regcode, password );
+    you.readUserPassword();
 
-    if ( _last_error ) {
-        if ( _last_error == YouError::E_auth_failed ) return YCPString( "error_login" );
-        else return YCPString( "error" );
+    string username = you.username();
+    string password = you.password();
+
+    result->add( YCPString( "username" ), YCPString( username ) );
+    result->add( YCPString( "password" ), YCPString( password ) );
+
+    return result;
+}
+
+/**
+   @builtin Pkg::YouSetUserPassword()
+
+   Set username and password needed for access to server.
+
+   @param string  username
+   @param string  password
+   @param boolean true, if username/password should be saved to disk
+
+   @return ""      success
+           "args"  wrong arguments
+           "error" other error
+*/
+YCPValue
+PkgModuleFunctions::YouSetUserPassword (YCPList args)
+{
+    if ( ( args->size() != 3 ) || !( args->value( 0 )->isString() ) ||
+         !( args->value( 1 )->isString() ) ||
+         !( args->value( 2 )->isBoolean() ) )
+    {
+	return YCPString( "args" );
     }
 
-    return YCPString( "" );
+    string username = args->value(0)->asString()->value_cstr();
+    string password = args->value(1)->asString()->value_cstr();
+    bool persistent = args->value(2)->asBoolean()->value();
+
+    _last_error =
+        _y2pm.youPatchManager().instYou().setUserPassword( username,
+                                                           password,
+                                                           persistent );
+
+    if ( _last_error ) {
+        return YCPString( "error" );
+    }
+
+    return YCPString("");
 }
 
 // ------------------------
@@ -168,6 +197,41 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     std::list<Url>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
       result->add ( YCPString( (*it).asString() ) );
+    }
+
+    return YCPString( "" );
+}
+
+
+
+/**
+  @builtin Pkg::YouGetDirectory() -> error string
+
+  retrieve directory file listing all available patches
+  
+  @param string  url of patch server.
+  
+  @return ""       success
+          "url"    url not valid
+          "login"  login failed
+          "error"  other error
+*/
+YCPValue
+PkgModuleFunctions::YouGetDirectory (YCPList args)
+{
+    if ( ( args->size() != 1) || !args->value(0)->isString() )
+    {
+	return YCPString ("args");
+    }
+    string urlstr = args->value(0)->asString()->value_cstr();
+    Url url( urlstr );
+    if ( !url.isValid() ) return YCPString( "url" );
+
+    _last_error =
+        _y2pm.youPatchManager().instYou().retrievePatchDirectory( url );
+    if ( _last_error ) {
+      if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
+      return YCPString( "error" );
     }
 
     return YCPString( "" );

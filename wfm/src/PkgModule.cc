@@ -129,8 +129,10 @@ PkgModule::evaluate (string function, YCPList args)
 
     // patch related functions
     else if (function == "YouStatus")		return YouStatus (args);
-    else if (function == "YouCheckAuthorization")	return YouCheckAuthorization (args);
+    else if (function == "YouGetUserPassword")  return YouGetUserPassword (args);
+    else if (function == "YouSetUserPassword")  return YouSetUserPassword (args);
     else if (function == "YouGetServers")	return YouGetServers (args);
+    else if (function == "YouGetDirectory")     return YouGetDirectory (args);
     else if (function == "YouGetPatches")	return YouGetPatches (args);
     else if (function == "YouAttachSource")	return YouAttachSource (args);
     else if (function == "YouGetPackages")	return YouGetPackages (args);

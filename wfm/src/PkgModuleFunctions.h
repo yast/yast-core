@@ -214,9 +214,11 @@ class PkgModuleFunctions
 
 	// you patch related
         YCPValue YouStatus (YCPList args);
-        YCPValue YouCheckAuthorization(YCPList args);
+        YCPValue YouGetUserPassword (YCPList args);
+        YCPValue YouSetUserPassword (YCPList args);
 	YCPValue YouGetServers (YCPList args);
 	YCPValue YouGetPatches (YCPList args);
+	YCPValue YouGetDirectory (YCPList args);
 	YCPValue YouAttachSource (YCPList args);
 	YCPValue YouGetPackages (YCPList args);
 	YCPValue YouSelectPatches (YCPList args);
