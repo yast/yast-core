@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Oct 27 10:12:59 CEST 2004 - arvin@suse.de
+
+- removed has_apm from probe agent
+
+-------------------------------------------------------------------
 Wed Oct 27 09:57:38 CEST 2004 - lslezak@suse.cz
 
 - ag_modinfo: modinfo output was incorrectly parsed when it
@@ -19,7 +24,7 @@ Tue Oct 19 16:38:08 CEST 2004 - kkaempf@suse.de
 -------------------------------------------------------------------
 Tue Oct 19 14:47:29 CEST 2004 - visnov@suse.de
 
-- Y2ScriptComponent removed 
+- Y2ScriptComponent removed
 
 -------------------------------------------------------------------
 Fri Oct 15 15:46:45 CEST 2004 - visnov@suse.de
@@ -37,7 +42,7 @@ Fri Oct 15 14:28:06 CEST 2004 - kkaempf@suse.de
 Fri Oct 15 09:06:15 CEST 2004 - visnov@suse.de
 
 - Move Pkg namespace to the pkg-bindings package
-- 2.11.1 
+- 2.11.1
 
 -------------------------------------------------------------------
 Thu Oct 14 17:36:09 CEST 2004 - kkaempf@suse.de
@@ -49,7 +54,7 @@ Thu Oct 14 17:36:09 CEST 2004 - kkaempf@suse.de
 Mon Oct 11 18:22:57 CEST 2004 - visnov@suse.cz
 
 - Make recursion lighter on memory (allocate stack
-  only when needed) 
+  only when needed)
 
 -------------------------------------------------------------------
 Fri Oct  8 12:47:59 CEST 2004 - visnov@suse.cz
@@ -65,18 +70,18 @@ Wed Oct  6 16:48:38 CEST 2004 - sh@suse.de
 -------------------------------------------------------------------
 Wed Oct  6 16:36:48 CEST 2004 - visnov@suse.cz
 
-- Read whole u32 at once from bytecode to speed it up 
+- Read whole u32 at once from bytecode to speed it up
 
 -------------------------------------------------------------------
 Tue Oct  5 17:15:13 CEST 2004 - visnov@suse.cz
 
 - Allow namespaces to be located in libraries, so we don't
-  need to link them (using Y2PluginComponent) 
+  need to link them (using Y2PluginComponent)
 
 -------------------------------------------------------------------
 Thu Sep 30 10:01:27 CEST 2004 - visnov@suse.cz
 
-- log non-existent directory in .target.dir as a milestone only (bug #45573) 
+- log non-existent directory in .target.dir as a milestone only (bug #45573)
 
 -------------------------------------------------------------------
 Thu Sep 23 18:21:23 CEST 2004 - arvin@suse.de
