@@ -173,6 +173,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
   retrieve patches
   
   @param string  url of patch server.
+  @param bool    true if patches should be downloaded again
   @param bool    true if signatures should be checked.
   
   @return ""      success
@@ -185,8 +186,8 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
-    if ( ( args->size() != 2) || !args->value(0)->isString() ||
-         !args->value(1)->isBoolean() )
+    if ( ( args->size() != 3) || !args->value(0)->isString() ||
+         !args->value(1)->isBoolean() || !args->value(2)->isBoolean() )
     {
 	return YCPString ("args");
     }
@@ -194,10 +195,11 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
     Url url( urlstr );
     if ( !url.isValid() ) return YCPString( "url" );
 
-    bool checkSig = args->value(1)->asBoolean()->value();
+    bool reload = args->value(1)->asBoolean()->value();
+    bool checkSig = args->value(2)->asBoolean()->value();
 
-    _last_error = _y2pm.youPatchManager().instYou().retrievePatchInfo( url,
-                                                                       checkSig );
+    _last_error =
+        _y2pm.youPatchManager().instYou().retrievePatchInfo( url, reload, checkSig );
     if ( _last_error ) {
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ) return YCPString( "sig" );
