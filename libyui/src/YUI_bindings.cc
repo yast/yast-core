@@ -551,7 +551,8 @@ UICallHandler( void * ptr, int argc, YCPValue argv[] )
     }
     else
     {
-	y2error( "No UI instance available yet!" );
+	// FIXME: this is an error in fact
+	y2warning( "No UI instance available yet!" );
 	return YCPVoid();
     }
 }
