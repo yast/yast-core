@@ -132,7 +132,7 @@ PkgModuleFunctions::SourceStartManager (YCPList args)
     if ((args->size() != 1)
 	|| !(args->value(0)->isBoolean()))
     {
-	return YCPError ("Bad args to Pkg::SourceCreate");
+	return YCPError ("Bad args to Pkg::SourceStartManager");
     }
 
     bool enable = args->value(0)->asBoolean()->value();
@@ -556,7 +556,7 @@ PkgModuleFunctions::SourceSetEnabled (YCPList args)
     if ((args->size() != 2)
 	|| !(args->value(1)->isBoolean()))
     {
-	return YCPError ("Bad args to Pkg::SourceProvideFile");
+	return YCPError ("Bad args to Pkg::SourceSetEnabled");
     }
 
     bool enabled = args->value(1)->asBoolean()->value();
@@ -624,6 +624,22 @@ PkgModuleFunctions::SourceLowerPriority (YCPList args)
     return YCPBoolean( true );
 }
 
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceSaveList () -> boolean
+ *
+ * Save list of sources to disk. Return true on success, false on error.
+ */ 
+YCPValue
+PkgModuleFunctions::SourceSaveList (YCPList args)
+{
+#if 0
+    _last_error = _y2pm.instSrcManager().sync();
+    if ( _last_error ) return YCPBoolean( false );
+#endif
+
+    return YCPBoolean( true );
+}
 
 /** ------------------------
  * 

@@ -108,6 +108,7 @@ class PkgModuleFunctions
         YCPValue SourceDelete (YCPList args);
         YCPValue SourceRaisePriority (YCPList args);
         YCPValue SourceLowerPriority (YCPList args);
+        YCPValue SourceSaveList (YCPList args);
         YCPValue SourceChangeUrl (YCPList args);
 
 	// target related
