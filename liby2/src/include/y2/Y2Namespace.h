@@ -28,6 +28,7 @@ using std::string;
 
 class SymbolEntry;
 class SymbolTable;
+class Point;
 class Y2Function;
 
 /**
@@ -38,10 +39,10 @@ class Y2Namespace {
 
 protected:
     SymbolTable* m_table;
-    int m_symbolcount;
-    map<int, SymbolEntry*> m_symbols;
+    unsigned int m_symbolcount;
+    map<unsigned int, SymbolEntry *> m_symbols;
 
-    void enterSymbol( string name, SymbolEntry* entry, int lineno = 0 );
+    void enterSymbol (string name, SymbolEntry* entry, Point *point = 0);
 public:
     
     Y2Namespace ();
@@ -53,21 +54,12 @@ public:
     //! used for error reporting
     virtual const string filename () const = 0;
     
-    /**
-     * A method to get a unique timestamp for the file (for example MD5), from which
-     * was this namespace loaded/created. The interpreter will
-     * request exactly the same timestamp when reloading the file
-     * next time
-     * @return a string value containing the unique timestamp
-     */
-    virtual const string timestamp ();
-
     //! somehow needed for function declarations ?!
-    virtual unsigned int symbolCount ();
+    virtual unsigned int symbolCount () const;
 
     //! function parameters ??
     // bytecode uses unsigneds
-    virtual SymbolEntry* symbolEntry (unsigned int position);
+    virtual SymbolEntry* symbolEntry (unsigned int position) const;
 
     //! unparse. useful  only for YCP namespaces??
     virtual string toString () const;
@@ -76,7 +68,7 @@ public:
     virtual YCPValue evaluate (bool cse = false) = 0;
 
     //! get our whole symbol table?
-    virtual SymbolTable* table ();
+    virtual SymbolTable* table () const;
     
     /**
      * Creates a function call instance, which can be used to call a 

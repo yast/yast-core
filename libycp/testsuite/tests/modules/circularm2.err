@@ -1,4 +1,4 @@
-[libycp] Bytecode.cc(readModule):826 Module 'CircularM2' not found
+[libycp] tests/modules/circularm2.ycp:0 Module 'CircularM2' not found
 [Interpreter] tests/modules/circularm2.ycp:0 Loading module 'CircularM2' failed
 tests/modules/circularm2.ycp:2:Can't load module 'CircularM2'.
 [Parser] tests/modules/circularm2.ycp:2 Can't load module 'CircularM2'.

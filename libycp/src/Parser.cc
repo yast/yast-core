@@ -25,16 +25,21 @@ $Id$
 #include "ycp/Parser.h"
 #include "ycp/Scanner.h"
 #include "ycp/y2log.h"
+#include "ycp/ExecutionEnvironment.h"
 
 class SymbolTable;
 
+// for logging
+extern ExecutionEnvironment ee;
+
 int yyparse (void *parser);
+
+//-------------------------------------------------------------------
 
 Parser::Parser()
     : m_scanner(0)
     , buffered(false)
     , m_depends (false)
-    , preload_namespaces (true)
 {
     init ();
     at_eof = false;
@@ -45,7 +50,6 @@ Parser::Parser(FILE *file, const char *filename)
     : m_scanner(0)
     , buffered(false)
     , m_depends (false)
-    , preload_namespaces (true)
 {
     setInput(file, filename);
     init ();
@@ -58,7 +62,6 @@ Parser::Parser(const char *buf)
     : m_scanner (0)
     , buffered (false)
     , m_depends (false)
-    , preload_namespaces (true)
 {
     setInput(buf);
     init ();
@@ -71,7 +74,6 @@ Parser::Parser(int fd, const char *filename)
     : m_scanner (0)
     , buffered (false)
     , m_depends (false)
-    , preload_namespaces (true)
 {
     setInput(fd, filename);
     init ();
@@ -133,13 +135,6 @@ Parser::setDepends()
 }
 
 
-void
-Parser::setPreloadNamespaces (bool on)
-{
-    preload_namespaces = on;
-}
-
-
 bool
 Parser::atEOF()
 {
@@ -195,9 +190,10 @@ Parser::filename () const
 }
 
 void
-Parser::SetFilename (const string f)
+Parser::setFilename (const string f)
 {
     file_name = f;
+    ee.setFilename (f);
 }
 
 void

@@ -129,10 +129,12 @@ public:
     static string findInclude (const string& name);
 
     /**
-     * @param name if it does not end with ".ycp", it will be appended
+     * @param name, name of module to find
+     * @param the_source, if false and name does not end with ".ybc", it will be appended
+     *                  , if true and name does not end with ".ycp", it will be appended
      * TODO module nesting (:: -> /)
      */
-    static string findModule (string name);
+    static string findModule (string name, bool the_source = false);
 
     /**
      * prepends a path to the search list

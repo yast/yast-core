@@ -22,7 +22,7 @@ lib_LTLIBRARIES = libycp.la
 libycp_la_SOURCES = 					\
 	pathsearch.cc					\
 	ExecutionEnvironment.cc				\
-	Bytecode.cc					\
+	Bytecode.cc Import.cc Point.cc			\
 	StaticDeclaration.cc YCode.cc YCPCode.cc	\
 	YExpression.cc YStatement.cc YBlock.cc		\
 	SymbolTable.cc					\

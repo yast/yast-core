@@ -12,9 +12,8 @@
 
    File:       Y2ScriptComponent.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-	       Stanislav Visnovsky <visnov@suse.cz>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:     Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer: Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 /*
@@ -99,11 +98,11 @@ YCPValue Y2ScriptComponent::doActualWork(const YCPList& arglist, Y2Component *us
     return result;
 }
 
-Y2Namespace* Y2ScriptComponent::import (const char *name_space, const char* timestamp)
+Y2Namespace* Y2ScriptComponent::import (const char *name_space)
 {
     if (! wfm_instance ()) return 0;
     
-    return wfm_instance()->import (name_space, timestamp);
+    return wfm_instance()->import (name_space);
 }
 
 Y2ScriptComponent* Y2ScriptComponent::m_instance = NULL;

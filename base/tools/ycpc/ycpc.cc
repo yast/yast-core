@@ -21,8 +21,11 @@
 #include <ycp/YCode.h>
 #include <ycp/Parser.h>
 #include <ycp/Bytecode.h>
+#include <ycp/Import.h>
 #include <ycp/y2log.h>
 #include <ycp/pathsearch.h>
+#include <y2/Y2Component.h>
+#include <y2/Y2ComponentBroker.h>
 
 #include <UI.h>
 #include <scr/SCR.h>
@@ -43,11 +46,18 @@ static Parser *parser = NULL;
 static char *outname = NULL;
 
 static int quiet = 0;		// no output
+static int verbose = 0;		// much output
+static int no_std_path = 0;	// dont use builtin pathes
 static int recursive = 0;	// recursively all files
 static int parse = 0;		// just parse source code
 static int compile = 0;		// just compile source to bytecode
-static int force = 0;		// force recompilation
+static int read_n_print = 0;	// read and print bytecode
+static int read_n_run = 0;	// read and run bytecode
+static int freshen = 0;		// freshen recompilation
 static int no_implicit_namespaces = 0;	// don't preload implicit namespaces
+static char *ui_name = 0;
+#define UI_QT_NAME "qt"
+#define UI_NCURSES_NAME "ncurses"
 
 #define progress(text,param)	{ if (!quiet) fprintf (stderr,(text),(param)); }
 
@@ -80,18 +90,21 @@ recurseStart (const char *path)
 {
     y2debug ("recurseStart(%s)", path);
     int pathlen = strlen (path);
-    if (pathlen > MAXPATHLEN-2) {	// save 2 chars for trailing slash and 0
+    if (pathlen > MAXPATHLEN-2)			// save 2 chars for trailing slash and 0
+    {
 	fprintf (stderr, "Path too long (%d chars, max %d chars allowed\n", pathlen, MAXPATHLEN-2);
 	return 0;
     }
 
     recurseT *handle = (recurseT *)malloc (sizeof (recurseT));
-    if (handle == 0) {
+    if (handle == 0)
+    {
 	perror ("malloc");
 	return 0;
     }
     handle->path = (char *)malloc (MAXPATHLEN);
-    if (handle->path == 0) {
+    if (handle->path == 0)
+    {
 	perror ("malloc");
 	free (handle);
 	return 0;
@@ -108,7 +121,8 @@ recurseStart (const char *path)
 	return 0;
     }
 
-    if (handle->path[pathlen-1] != '/') {
+    if (handle->path[pathlen-1] != '/')
+    {
 	handle->path[pathlen++] = '/';
 	handle->path[pathlen] = 0;
     }
@@ -159,7 +173,8 @@ recurseNext (recurseT *handle, struct stat *st)
 
 	y2debug ("recurseNext(%s:%s)", handle->path, dent->d_name);
 	dlength = strlen (dent->d_name);
-	if (handle->length + dlength >= MAXPATHLEN-1) {
+	if (handle->length + dlength >= MAXPATHLEN-1)
+	{
 	    handle->path[handle->length] = 0;
 	    fprintf (stderr, "Path too long [%s/%s]\n", handle->path, dent->d_name);
 	    continue;
@@ -185,7 +200,8 @@ recurseNext (recurseT *handle, struct stat *st)
 	if (S_ISDIR (st->st_mode))
 	{
 	    recurseT *next = (recurseT *)malloc (sizeof (recurseT));
-	    if (next == 0) {
+	    if (next == 0)
+	    {
 		perror ("malloc");
 		return 0;
 	    }
@@ -239,7 +255,8 @@ char *
 dependCheck (const char *path)
 {
     char *name = (char *)malloc (strlen (path) + strlen (STAMPNAME) + 1);
-    if (name == 0) {
+    if (name == 0)
+    {
 	perror ("malloc");
 	return NULL;
     }
@@ -249,7 +266,8 @@ dependCheck (const char *path)
     struct stat st;
     time_t dependtime;
 
-    if (lstat (name, &st) != 0) {			// check existance of .depend
+    if (lstat (name, &st) != 0)				// check existance of .depend
+    {
 	printf ("No .depend found, recompiling\n");
 	return name;					// -> must recompile
     }
@@ -259,14 +277,16 @@ dependCheck (const char *path)
     recurseT *handle, *next;
 
     handle = recurseStart (path);
-    if (handle == 0) {
+    if (handle == 0)
+    {
 	return NULL;
     }
 
     int ret = 0;
     int extpos;
 
-    while (handle) {
+    while (handle)
+    {
 	next = recurseNext (handle, &st);
 	if (next == 0)
 	{
@@ -308,7 +328,8 @@ dependCheck (const char *path)
 		st.st_mtime = dependtime;					// don't care about any other files
 	    }
 
-	    if (dependtime < st.st_mtime) {
+	    if (dependtime < st.st_mtime)
+	    {
 		printf ("%s.ycp newer than .depend\n", handle->path);
 		ret = 1;
 	        break;
@@ -326,227 +347,291 @@ dependCheck (const char *path)
 }
 
 //-----------------------------------------------------------------------------
+
+class FileDep {
+    private:
+	std::string m_name;
+	std::string m_path;
+	bool m_is_module;
+	bool m_have_source;
+	time_t mtime_source;
+	time_t mtime_binary;
+    public:
+	FileDep () {};
+	FileDep (const std::string & name, const std::string & path, bool is_module);
+	const std::string & name () const;
+	const std::string & path () const;
+	void setPath (const std::string &path);
+	bool is_module () const;
+	std::string toString() const;
+};
+
+
+FileDep::FileDep (const std::string & name, const std::string & path, bool is_module, bool have_source = true)
+    : m_name (name)
+    , m_path (path)
+    , m_is_module (is_module)
+    , m_have_source (have_source)
+{
+}
+
+
+const std::string &
+FileDep::name () const
+{
+    return m_name;
+}
+
+
+const std::string &
+FileDep::path () const
+{
+    return m_path;
+}
+
+
+void
+FileDep::setPath (const std::string & path)
+{
+    m_path = path;
+}
+
+
+bool
+FileDep::is_module () const
+{
+    return m_is_module;
+}
+
+
+std::string
+FileDep::toString () const
+{
+    return string (m_is_module ? "module \"" : "include \"") + m_name + string ("\" at '") + m_path + string ("'");
+}
+
+//-----------------------------------------------------------------------------
+
+// try to resolve dependency to module/include file
+// return false if name not found
+
+FileDep
+resolveDep (const char *name, bool as_module)
+{
+    if (verbose > 1) printf ("resolveDep (%s %s)", as_module ? "import" : "include", name);
+    std::string path;
+    bool have_source = true;
+    if (as_module)
+    {
+	path = YCPPathSearch::findModule (name, true);	// find source code for module
+	if (path.empty())
+	{
+	    have_source = false;
+	    path = YCPPathSearch::findModule (name);	// find binary code for module
+	}
+    }
+    else
+    {
+	path = YCPPathSearch::findInclude (name);
+    }
+
+    if (verbose > 1) printf (" -> '%s'\n", path.c_str());
+
+    return FileDep (name, path, as_module, have_source);
+}
+
+//-----------------------------------------------------------------------------
 // compute dependencies of file
 //
-// return list as 'module', 'import1', 'import2', ...
-// the first list element is always the name of the module. 
-// if the list is empty, the file is not a module
-// if the list only has a single entry, the module is at the leaf of
-// the dependency tree (does not import any other module)
+// return list of FileDep.
+//  First list entry is the file itself,
+//  further list entries are the dependencies (import or include) in order of appearance.
+//
+// if the list has a single entry only, the file is at the leaf of
+// the dependency tree (does not import/include any other module/file)
+//
+// return empty list on error
 //
 
-std::list<std::string>
-checkDependFile (char *file)
+std::list <FileDep>
+parseFile (const char *path, const char *expected)
 {
-//    printf ("Compute dependencies for '%s'\n", file);
+    if (verbose > 1) printf ("List dependencies for '%s'\n", path);
 
 #define LBUFSIZE 8192
     char lbuf[LBUFSIZE];
 
-    std::list<std::string> deplist;
+    std::list <FileDep> deplist;
 
-    FILE *f = fopen (file, "r");
+    FILE *f = fopen (path, "r");
     if (f == 0)
     {
-	perror (file);
+	perror (path);
 	return deplist;
     }
 
     char *lptr;
+    int lcount = 0;
+
+    bool have_module = false;
 
     while (fgets (lbuf, LBUFSIZE-1, f) != 0)
     {
+	lcount++;
 	lptr = lbuf;
 	while (isblank (*lptr)) lptr++;
 
-	    if (deplist.empty())		// nothing yet, look for 'module' first
+	if ((*lptr == 'm')
+	    && (strncmp (lptr + 1, "odule", 5) == 0))		// module
+	{
+	    lptr += 6;
+	    while (isblank (*lptr)) lptr++;
+	    if (*lptr++ != '"') continue;
+	    char *name = lptr;
+	    while (*lptr)
 	    {
-		if ((*lptr == 'm')
-		    && (strncmp (lptr + 1, "odule", 5) == 0))		// module
-		{
-		    lptr += 6;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr++ != '"') break;
-		    char *name = lptr;
-		    while (*lptr)
-		    {
-			if (*lptr == '"')
-			    break;
-			lptr++;
-		    }
-		    *lptr++ = 0;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr != ';') break;
+		if (*lptr == '"')
+		    break;
+		lptr++;
+	    }
+	    *lptr++ = 0;
+	    while (isblank (*lptr)) lptr++;
+	    if (*lptr != ';') continue;
 
-		    deplist.push_back (name);
+	    if (!deplist.empty())
+	    {
+		fprintf (stderr, "Bad file '%s':\nmodule statement at wrong postion\nLine %d:[%s]", path, lcount, lbuf);
+		fprintf (stderr, "Have already: %s\n", deplist.front().toString().c_str());
+		deplist.clear();
+		return deplist;
+	    }
+
+	    if (*expected
+		&& strcmp (name, expected) != 0)
+	    {
+		fprintf (stderr, "Module file %s does not have expected name '%s' but '%s'\n", path, expected, name);
+		return deplist;
+	    }
+	    have_module = true;
+	    deplist.push_back (FileDep (name, path, true));
+	}
+	else if (*lptr == 'i')
+	{
+	    if (strncmp (lptr + 1, "mport", 5) == 0)		// import
+	    {
+		lptr += 6;
+		while (isblank (*lptr)) lptr++;
+		if (*lptr++ != '"') continue;
+		char *name = lptr;
+		while (*lptr)
+		{
+		    if (*lptr == '"')
+			break;
+		    lptr++;
+		}
+		*lptr++ = 0;
+		while (isblank (*lptr)) lptr++;
+		if (*lptr != ';') continue;
+
+		FileDep fd = resolveDep (name, true);
+		if (fd.path().empty())
+		{
+		    fprintf (stderr, "*** Error: Can't find module %s\n", name);
+		}
+		else
+		{
+		    deplist.push_back (fd);
 		}
 	    }
-	    else
+	    else if (strncmp (lptr + 1, "nclude", 6) == 0)		// include
 	    {
-		if (*lptr == 'i')
+		lptr += 7;
+		while (isblank (*lptr)) lptr++;
+		if (*lptr++ != '"') continue;
+		char *name = lptr;
+		while (*lptr)
 		{
-		    if (strncmp (lptr + 1, "mport", 5) == 0)		// import
-		{
-		    lptr += 6;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr++ != '"') break;
-		    char *name = lptr;
-		    while (*lptr)
-		    {
-			if (*lptr == '"')
-			    break;
-			lptr++;
-		    }
-		    *lptr++ = 0;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr != ';') break;
-
-		    deplist.push_back (name);
+		    if (*lptr == '"')
+			break;
+		    lptr++;
 		}
-		else if (strncmp (lptr + 1, "nclude", 6) == 0)		// include
-		{
-		    lptr += 7;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr++ != '"') break;
-//		    char *name = lptr;
-		    while (*lptr)
-		    {
-			if (*lptr == '"')
-			    break;
-			lptr++;
-		    }
-		    *lptr++ = 0;
-		    while (isblank (*lptr)) lptr++;
-		    if (*lptr != ';') break;
+		*lptr++ = 0;
+		while (isblank (*lptr)) lptr++;
+		if (*lptr != ';') continue;
 
-		    // deplist.push_back (name);
+		FileDep fd = resolveDep (name, false);
+		if (fd.path().empty())
+		{
+		    fprintf (stderr, "*** Error: Can't find include %s\n", name);
 		}
+		else
+		{
+		    deplist.push_back (fd);
 		}
 	    }
+	} // 'i'include / 'i'mport
     }
 
     fclose (f);
+
+    // if no 'module' found -> generate fake include FileDep
+    if (!have_module)
+    {
+	if (*expected == 0)
+	{
+	    fprintf (stderr, "%s is not a module\n", path);
+	    exit (1);
+	}
+	deplist.push_front (FileDep (expected, path, false));
+    }
+
+    if (verbose > 1) printf ("parseFile (%s) done\n", path);
     return deplist;
 }
 
 
+//-----------------------------------------------------------------------------
+// List all files in dir
+//  @param path of directory
+//  returns list of FileDep with path() filled for each .ycp file found
 //
-// compute dependency tree from dependency map
-// start at module, return list of 
-// if module empty, start at depmap.begin()
 
-std::list<std::string>
-depTree (std::string module, const std::map<std::string, std::list<std::string> > & depmap)
+std::list <FileDep>
+makeDirList (const char *dir)
 {
-    static std::map<std::string, int> seenmap;
-    std::list<std::string> ret;
+    std::list <FileDep> deplist;
 
-    if (module.empty())
+    struct stat st;
+
+    if (lstat (dir, &st) == -1)				// not existant, not accessible
     {
-	seenmap.clear();
-	if (depmap.empty())
-	{
-	    fprintf (stderr, "No dependencies found\n");
-	    return ret;
-	}
+	perror (dir);
+	return deplist;
     }
 
-    if (seenmap.find (module) != seenmap.end())		// already seen this module
+    if (S_ISREG (st.st_mode))				// a single file
     {
-//	printf ("-- already seen %s\n", module.c_str());
-	return ret;
+	deplist.push_back (FileDep ("", dir, false));
+	return deplist;
     }
 
-    seenmap[module] = 1;
-
-    std::map<std::string, std::list<std::string> >::const_iterator it = depmap.find (module);
-
-    if (it == depmap.end())
+    if (!S_ISDIR (st.st_mode))
     {
-	fprintf (stderr, "Can't find module '%s' in dependency map\n", module.c_str());
-	return ret;
+	fprintf (stderr, "Not a file or directory: %s\n", dir);
+	return deplist;
     }
 
-//    printf ("\nCheck %s: ", module.c_str()); fflush (stdout);
-
-    std::list<std::string> dl = it->second;		// get <mod> <imp> <imp> <imp> list
-
-    if (dl.size() == 0)
-    {
-	fprintf (stderr, "%s not a module ?\n", module.c_str());
-	return ret;
-    }
-    else if (dl.size() < 2)				// no further dependencies
-    {
-//	printf ("-- leaf\n");
-	ret.push_front (module);
-	return ret;
-    }
-
-
-    // recurse dependencies
-
-    std::list<std::string>::iterator dli = dl.begin();
-    dli++;						// skip initial module
-
-    while (dli != dl.end())
-    {
-	std::list<std::string> l = depTree (*dli, depmap);
-	std::list<std::string>::iterator it;
-	for (it = l.begin(); it != l.end(); it++)
-	{
-	    ret.push_back (*it);
-	}
-	dli++;
-    }
-
-    if (!module.empty())
-	ret.push_back (module);
-
-//    printf ("(%s:", module.c_str()); fflush (stdout);
-//	    std::list<std::string>::iterator rit;
-//	    for (rit = ret.begin(); rit != ret.end(); rit++)
-//	    {
-//		printf (" %s", rit->c_str());
-//	    }
-//    printf (")\n");
-    return ret;
-}
-
-
-// compute dependencies of all files in dir
-
-std::list<std::string>
-makeDependDir (char *dir)
-{
-    std::list<std::string> deplist;
-
-    printf ("Compute dependencies below '%s'\n", dir);
+    if (verbose) printf ("List files below '%s'\n", dir);
 
     recurseT *handle, *next;
 
     handle = recurseStart (dir);
-    if (handle == 0) {
-	return deplist;
-    }
-
-    string depname (dir);
-    depname += DEPENDNAME;
-
-    FILE *depend = fopen (depname.c_str(), "w+");
-    if (depend == 0)
+    if (handle == 0)
     {
-	fprintf (stderr, "Can't open %s: %s\n", depname.c_str(), strerror (errno));
-	recurseEnd (handle);
 	return deplist;
     }
 
     int extpos;
-    struct stat st;
-
-    std::map<std::string, std::list<std::string> > depmap;
-    std::list<std::string> all;
-    all.push_back ("*");
 
     while (handle)
     {
@@ -558,43 +643,219 @@ makeDependDir (char *dir)
 	    break;
 	}
 	handle = next;
+
 	extpos = handle->length + strlen (handle->path + handle->length) - 4;
 	if (strcmp (handle->path + extpos, ".ycp") == 0)
 	{
-	    deplist = checkDependFile (handle->path);
-	    if (deplist.empty())
-	    {
-		fprintf (stderr, "Not a module: %s\n", handle->path);
-	    }
-	    else
-	    {
-		std::list<std::string>::iterator it = deplist.begin();
-		depmap[*it] = deplist;
-		all.push_back (*it);
-		fprintf (depend, "%s:", it->c_str());
-		while (++it != deplist.end())
-		{
-		    fprintf (depend, " %s", it->c_str());
-		}
-		fprintf (depend, "\n");
-	    }
+	    deplist.push_back (FileDep ("", handle->path, false));
+	    if (verbose) printf ("%s\n", handle->path);
 	}
     }
 
-    depmap[""] = all;
+    if (verbose) printf ("directory %s listed, %d files\n", dir, deplist.size());
+    return deplist;
+}
 
-    if (handle)
+//-----------------------------------------------------------------------------
+// create solved dependency map
+//   @param dep	list of FileDep pathes
+//
+//   Parse all files listed in dep->path() and generate dependency map [name] -> list of FileDep 
+//
+
+std::map <std::string, std::list <FileDep> >
+makeDependMap (const std::list<FileDep> & dep)
+{
+    if (verbose) printf ("makeDependMap (), %d files\n", dep.size());
+
+    std::map <std::string, std::list <FileDep> > depmap;
+
+    if (dep.empty())
     {
-	recurseEnd (handle);
+	fprintf (stderr, "makeDependMap, empty input!\n");
+	return depmap;
     }
 
-    deplist.clear();
+    std::list<FileDep>::const_iterator depit;
+    std::list<FileDep> resolved;
 
-    // now compute list from depmap
+    for (depit = dep.begin(); depit != dep.end(); depit++)
+    {
+	resolved = parseFile (depit->path().c_str(), depit->name().c_str());
+	if (resolved.empty())
+	{
+	    fprintf (stderr, "Couldn't parse file '%s'\n", depit->path().c_str());
+	    continue;
+	}
 
-    deplist = depTree ("", depmap);
+	depmap[resolved.front().name()] = resolved;
 
-    return deplist;
+	if (verbose > 2)
+	{
+	    printf ("Map %s: %d entries\n", resolved.front().name().c_str(), resolved.size());
+	}
+
+	if (verbose > 1)
+	{
+	    std::list<FileDep>::iterator resit = resolved.begin();
+	    printf ("%s needs ", resit->toString().c_str());
+	    resit++;
+	    if (resit == resolved.end())
+	    {
+		printf ("nothing");
+	    }
+	    else while (resit != resolved.end())
+	    {
+		printf ("\n\t%s", resit->toString().c_str());
+		resit++;
+	    }
+	    printf ("\n");
+	}
+    }
+
+    // now go through all map entries and resolve them
+    std::map <std::string, std::list <FileDep> >::iterator mapit;
+    bool found_unsolved = true;
+    while (found_unsolved)
+    {
+	std::list<FileDep>::iterator depit;
+
+	found_unsolved = false;
+
+	if (depmap.empty())
+	{
+	    fprintf (stderr, "Empty map ?!\n");
+	    break;
+	}
+
+	for (mapit = depmap.begin(); mapit != depmap.end(); mapit++)
+	{
+	    if (mapit->second.empty())
+	    {
+		fprintf (stderr, "Map entry %s empty !\n", mapit->first.c_str());
+		break;
+	    }
+	    for (depit = mapit->second.begin(); depit != mapit->second.end(); depit++)
+	    {
+		if (depmap.find (depit->name()) == depmap.end())
+		{
+		    resolved = parseFile (depit->path().c_str(), depit->name().c_str());
+		    if (resolved.empty())
+		    {
+			fprintf (stderr, "Couldn't parse file '%s'\n", depit->path().c_str());
+			continue;
+		    }
+		    if (verbose > 1) printf ("Solved %s as %s\n", depit->name().c_str(), resolved.front().name().c_str());
+		    depmap[resolved.front().name()] = resolved;
+		    found_unsolved = true;
+		    break;
+		}
+	    }
+	    if (found_unsolved) break;
+	}
+    }
+
+    return depmap;
+}
+
+
+//-----------------------------------------------------------------------------
+//
+// compute dependency tree from dependency map
+// start at module, return list of dependencies
+// if module empty, build tree over all module entries in depmap
+
+std::list<FileDep>
+depTree (std::string module, const std::map<std::string, std::list<FileDep> > & depmap)
+{
+    static std::map<std::string, int> seenmap;
+    std::list<FileDep> ret;
+
+    if (verbose > 1) printf ("depTree (%s)\n", module.c_str());
+
+    if (module.empty())
+    {
+	if (verbose > 1) printf ("initialize\n");
+	seenmap.clear();
+	if (depmap.empty())
+	{
+	    fprintf (stderr, "No dependencies found\n");
+	}
+	return ret;
+    }
+
+    if (seenmap.find (module) != seenmap.end())		// already seen this module
+    {
+	if (verbose > 1) printf ("-- already seen %s\n", module.c_str());
+	return ret;
+    }
+
+    seenmap[module] = 1;
+
+    std::map<std::string, std::list<FileDep> >::const_iterator it = depmap.find (module);
+
+    if (it == depmap.end())
+    {
+	fprintf (stderr, "Can't find '%s' in dependency map\n", module.c_str());
+	return ret;
+    }
+
+    if (verbose < 1) printf ("\nCheck '%s': ", module.c_str()); fflush (stdout);
+
+    std::list<FileDep> dl = it->second;		// get <mod> <imp> <imp> <imp> list
+
+    if (dl.size() == 0)
+    {
+	fprintf (stderr, "%s not a module ?\n", module.c_str());
+	return ret;
+    }
+    else if (dl.size() < 2)				// no further dependencies
+    {
+	if (verbose > 1) printf ("-- leaf\n");
+	return ret;
+    }
+
+    // recurse dependencies
+
+    // first push all dependencies for the current module
+
+    std::list<FileDep>::iterator dli = dl.begin();
+    dli++;						// skip initial module
+
+    while (dli != dl.end())
+    {
+	std::string name = dli->name();
+	if (seenmap.find (name) == seenmap.end())		// not seen this name before
+	{
+	    if (verbose > 1) printf ("%s -> %s: ", module.c_str(), name.c_str());
+	    std::list<FileDep> l = depTree (name, depmap);	// recusion point
+	    if (verbose > 1) printf ("%s -> %s done\n", module.c_str(), name.c_str());
+
+	    std::list<FileDep>::iterator it;
+	    for (it = l.begin(); it != l.end(); it++)
+	    {
+		ret.push_back (*it);
+	    }
+
+	    // then push the current name
+
+	    ret.push_back (*dli);
+	}
+
+	dli++;
+    }
+
+    if (verbose > 1)
+    {
+	printf ("(%s:", module.c_str()); fflush (stdout);
+	std::list<FileDep>::iterator rit;
+	for (rit = ret.begin(); rit != ret.end(); rit++)
+	{
+	    printf (" %s", rit->name().c_str());
+	}
+	printf (")\n");
+    }
+    return ret;
 }
 
 
@@ -653,14 +914,12 @@ parsefile (const char *infname)
 	return NULL;
     }
     
-    YSImport::flushActiveModules ();
-
     progress ("parsing '%s'\n", infname);
     
     parser->setInput (infile, infname);
     parser->setBuffered();
-    parser->setPreloadNamespaces (no_implicit_namespaces == 0);
-    SymbolTableDebug = 1;
+
+    if (verbose > 2) SymbolTableDebug = 1;
 
     YCode *c = NULL;
 
@@ -709,7 +968,8 @@ compilefile (const char *infname, const char *outfname)
     
     YCode *c = parsefile (infname);
     
-    if (c != NULL ) {
+    if (c != NULL )
+    {
 	progress ("saving ...\n", 0);
 	return Bytecode::writeFile (c, ofname);
     }
@@ -725,11 +985,13 @@ compilefile (const char *infname, const char *outfname)
 int
 processfile (const char *infname, const char *outfname)
 {
-    if (compile) {
+    if (compile)
+    {
 	return compilefile (infname, outfname);
     }
     
-    if (parse) {
+    if (parse)
+    {
 	YCode *c = parsefile (infname);
 	
 	if (c == NULL) return 1;
@@ -757,16 +1019,101 @@ processfile (const char *infname, const char *outfname)
 	progress ("Parsed:\n", 0);
 	if (outstream.is_open())
 	{
-	    outstream << c->toString() << endl;
+	    outstream << c->toString();
 	}
 	else
 	{
-	    std::cout << c->toString() << endl;
+	    std::cout << c->toString();
 	}
 
 	return 0;
     }
-    
+
+    if (read_n_print)
+    {
+	progress ("Reading:\n", 0);
+	YCode *c = Bytecode::readFile (infname);
+	if (c == 0)
+	{
+	    progress ("Bytecode read failed\n", 0);
+	    return 1;
+	}
+
+	progress ("Result:\n", 0);
+
+	std::ofstream outstream;
+
+	// print out the result
+	if (outfname != NULL
+	    && *outfname != '-')
+	{
+	    outstream.open (outfname, std::ios::out);
+	}
+
+	if (!outstream.is_open ())
+	{
+	    if ((outfname != NULL) && (*outfname != '-'))
+	    {
+		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
+		return 1;
+	    }
+	}
+
+	if (outstream.is_open())
+	{
+	    outstream << c->toString();
+	}
+	else
+	{
+	    std::cout << c->toString();
+	}
+
+    }
+
+    if (read_n_run)
+    {
+	progress ("Reading:\n", 0);
+	YCode *c = Bytecode::readFile (infname);
+	progress ("Running:\n", 0);
+
+	Y2Component *server = Y2ComponentBroker::createServer (ui_name);
+	if (!server)
+	{
+	    fprintf (stderr, "Can't start UI component '%s'", ui_name);
+	    return 1;
+	}
+
+	YCPValue result = c->evaluate();
+	progress ("Result:\n", 0);
+	std::ofstream outstream;
+
+	// print out the result
+	if (outfname != NULL
+	    && *outfname != '-')
+	{
+	    outstream.open (outfname, std::ios::out);
+	}
+
+	if (!outstream.is_open ())
+	{
+	    if ((outfname != NULL) && (*outfname != '-'))
+	    {
+		fprintf (stderr, "Can't write ''%s''\n", (outfname==0)?"<unknown>":outfname);
+		return 1;
+	    }
+	}
+
+	if (outstream.is_open())
+	{
+	    outstream << result->toString();
+	}
+	else
+	{
+	    std::cout << result->toString();
+	}
+
+    }
+
     return 0;
 }
 
@@ -781,7 +1128,8 @@ recurse (const char *path)
     recurseT *handle, *next;
 
     handle = recurseStart (path);
-    if (handle == 0) {
+    if (handle == 0)
+    {
 	return -1;
     }
 
@@ -850,28 +1198,39 @@ int main(int argc, char *argv[])
 
     YCPPathSearch::initialize ();
 
+    // list of -I / -M pathes
+    //   will be pushed to YCPPathSearch later to keep correct order
+    //   (the last added path to YCPPathSearch will be searched first)
+    std::list<std::string> modpathes;
+    std::list<std::string> incpathes;
+
     for(;;)
     {
 	int option_index = 0;
 
 	static struct option options[] =
 	{
+	    {"compile", 0, 0, 'c'},			// compile to bytecode
+	    {"no-implicit-imports", 0, 0, 'd'},		// don't preload implicit namespaces
+	    {"fsyntax-only", 0, 0, 'E'},		// parse only
+	    {"freshen", 0, 0, 'f'},			// freshen .ybc files
 	    {"help", 0, 0, 'h'},			// show help and exit
-	    {"version", 0, 0, 'v'},			// show version and exit
-	    {"recursive", 0, 0, 'R'},			// recursively
-	    {"quiet", 0, 0, 'q'},			// no output
 	    {"include-path", 1, 0, 'I'},		// where to find include files
 	    {"module-path", 1, 0, 'M'},			// where to find module files
-	    {"fsyntax-only", 0, 0, 'E'},		// parse only
-	    {"output", 1, 0, 'o'},			// output file
-	    {"compile", 0, 0, 'c'},			// compile to bytecode
-	    {"force", 0, 0, 'f'},			// force recompilation
 	    {"logfile", 1, 0, 'l'},			// specify log file
-	    {"no-implicit-imports", 0, 0, 'd'},		// don't preload implicit namespaces
+	    {"no-std-path", 0, 0, 'n'},			// no standard pathes
+	    {"output", 1, 0, 'o'},			// output file
+	    {"print", 0, 0, 'p'},			// read & print bytecode
+	    {"run", 0, 0, 'r'},				// read & run bytecode
+	    {"quiet", 0, 0, 'q'},			// no output
+	    {"recursive", 0, 0, 'R'},			// recursively
+	    {"test", 0, 0, 't'},			// lots of output
+	    {"ui", 1, 0, 'u' },				// UI to start in combination with 'r'
+	    {"version", 0, 0, 'v'},			// show version and exit
 	    {0, 0, 0, 0}
 	};
 
-	int c = getopt_long (argc, argv, "h?vVpqrRdEcfI:M:o:l:", options, &option_index);
+	int c = getopt_long (argc, argv, "h?vVnpqrtRdEcfI:M:o:l:u:", options, &option_index);
 	if (c == EOF) break;
 
 	switch (c)
@@ -885,6 +1244,8 @@ int main(int argc, char *argv[])
 		print_version ();
 		exit (0);
 	    case 'r':
+		read_n_run = 1;
+		break;
 	    case 'R':
 		if (outname != NULL)
 		{
@@ -913,23 +1274,13 @@ int main(int argc, char *argv[])
 		}
 		break;
 	    case 'f':
-		force = 1;
+		freshen = 1;
 		break;
 	    case 'I':
-		YCPPathSearch::addPath (YCPPathSearch::Include, optarg);
+		incpathes.push_front (string (optarg));		// push to front so first one is last in list
 		break;
-	    case 'M': {
-		YCPPathSearch::addPath (YCPPathSearch::Module, optarg);
-#if 0
-		char *depend = dependCheck (optarg);
-		if (depend || *depend != 0)
-		{
-		    list<string> deplist = makeDependDir (optarg);
-		    recompileAll (deplist, depend);
-		    free (depend);
-		}
-#endif
-	    }
+	    case 'M':
+		modpathes.push_front (string (optarg));		// dito
 		break;
 	    case 'l':
 		set_log_filename (optarg);
@@ -946,8 +1297,20 @@ int main(int argc, char *argv[])
 	    case 'd':
 		no_implicit_namespaces = 1;
 		break;
+	    case 'n':
+		no_std_path = 1;
+		break;
+	    case 't':
+		verbose += 1;
+		break;
+	    case 'p':
+		read_n_print = 1;
+		break;
+	    case 'u':
+		ui_name = strdup (optarg);
+		break;
 	    default:
-		fprintf (stderr,"Try `%s -h' for more information.\n",argv[0]);
+		fprintf (stderr, "Try `%s -h' for more information.\n", argv[0]);
 		exit(1);
 	}
     }
@@ -960,15 +1323,28 @@ int main(int argc, char *argv[])
     }
     set_simple (true);
 
+    // add include and module pathes to YCPPathSearch so that the argument order is kept
+
+    std::list<std::string>::iterator pathit;
+    for (pathit = incpathes.begin(); pathit != incpathes.end(); pathit++)
+    {
+	YCPPathSearch::addPath (YCPPathSearch::Include, pathit->c_str());
+    }
+    for (pathit = modpathes.begin(); pathit != modpathes.end(); pathit++)
+    {
+	YCPPathSearch::addPath (YCPPathSearch::Module, pathit->c_str());
+    }
     // register builtins
     SCR scr;
     WFM wfm;
     UI ui;
 
-    if (compile == parse)		// both are zero
+    if ((compile == parse)		// both are zero
+	&& (compile == freshen)
+	&& (compile == read_n_print)
+	&& (compile == read_n_run))
     {
-	// FIXME: what about -p only
-	fprintf (stderr, "-E or -c must be given\n");
+	fprintf (stderr, "-E, -p, or -c must be given\n");
     }
 
     if (optind == argc)
@@ -976,10 +1352,45 @@ int main(int argc, char *argv[])
 	fprintf (stderr, "No input file or directory given\n");
 	exit (1);
     }
+
+    if (read_n_run			// if no explicit UI name given for run
+	&& ui_name == 0)		//   try to determine one according to $DISPLAY
+    {
+	char *display = getenv ("DISPLAY");
+	if (display == 0
+	    || *display == 0)
+	{
+	    ui_name = UI_NCURSES_NAME;
+	}
+	else
+	{
+	    ui_name = UI_QT_NAME;
+	}
+    }
 	
+    std::list <FileDep> deplist;
+
     for (i = optind; i < argc;i++)
     {
-	if (recursive)
+	if (freshen)
+	{
+	    std::list <FileDep> depdir = makeDirList (argv[i]);
+
+	    if (depdir.empty())
+	    {
+		fprintf (stderr, "Can't check dependencies below %s\nNot a directory ?\n", argv[i]);
+		return 1;
+	    }
+
+	    std::list<FileDep>::iterator it;
+
+	    for (it = depdir.begin(); it != depdir.end(); it++)
+	    {
+		if (verbose > 1) printf ("Add %s to deplist\n", it->path().c_str());
+		deplist.push_back (*it);
+	    }
+	}
+	else if (recursive)
 	{
 	    if (!compile)
 	    {
@@ -990,36 +1401,10 @@ int main(int argc, char *argv[])
 	        continue;
 	    }
 
-	    // recursively compile
-
-	    if (!force)
+	    if (compilefile (argv[i], 0))
 	    {
-		continue;
-	    }
-
-	    char *depend = dependCheck (argv[i]);
-	    if (depend != 0
-		&& *depend == 0)
-	    {
-		continue;
-	    }
-
-	    list<string> deplist = makeDependDir (argv[i]);
-	    if (deplist.empty())
-	    {
-		fprintf (stderr, "Can't check dependencies below %s\nNot a directory ?\n", argv[i]);
-		return 1;
-	    }
-
-	    std::list<std::string>::iterator it;
-
-	    for (it = deplist.begin(); it != deplist.end(); it++)
-	    {
-		string path = (string)argv[i] + (string)"/" + *it + (string)".ycp";
-		if (compilefile (path.c_str(), 0))
-		{
-		    fprintf (stderr, "Compilation of '%s' failed: %s\n", it->c_str(), strerror (errno));
-		}
+		fprintf (stderr, "Compilation of '%s' failed: %s\n", argv[i], strerror (errno));
+		break;
 	    }
 	    ret = 0;
 	}
@@ -1030,6 +1415,73 @@ int main(int argc, char *argv[])
 		ret = 1;
 	    }
 	}
+    }
+
+    if (freshen)
+    {
+	std::map <std::string, std::list <FileDep> > depmap = makeDependMap (deplist);
+
+	if (verbose) printf ("Map generated, %d entries, computing order\n", depmap.size());
+
+	if (depmap.empty())
+	{
+	    fprintf (stderr, "No files or dependencies found\n");
+	    return 1;
+	}
+
+	// loop over all modules and generated a fake module "*" which depends on all other modules
+
+	std::map <std::string, std::list <FileDep> >::iterator modit;
+	deplist.clear();
+	for (modit = depmap.begin(); modit != depmap.end(); modit++)
+	{
+	    if (verbose > 2) printf ("Entry %s ", modit->first.c_str());
+	    if (modit->second.empty())
+	    {
+		fprintf (stderr, "Entry '%s' has no description\n", modit->first.c_str());
+		continue;
+	    }
+	    if (verbose > 2) printf (" -> %s\n", modit->second.front().toString().c_str());
+	    if (modit->second.front().is_module())
+	    {
+		deplist.push_back (modit->second.front());
+		if (verbose > 1) printf ("Module %s\n", modit->first.c_str());
+	    }
+	}
+	depmap["*"] = deplist;
+
+	deplist = depTree ("*", depmap);
+
+	if (deplist.empty())
+	{
+	    fprintf (stderr, "No depencies found\n");
+	    exit (1);
+	}
+	std::list <FileDep>::iterator depit;
+	for (depit = deplist.begin(); depit != deplist.end(); depit++)
+	{
+	    if (!depit->is_module())
+	    {
+		continue;
+	    }
+	    if (compile)
+	    {
+		errno = 0;
+		if (compilefile (depit->path().c_str(), NULL))
+		{
+		    fprintf (stderr, "Compilation failed for %s: %s\n", depit->path().c_str(), strerror (errno));
+		    break;
+		}
+	    }
+	    else
+	    {
+		printf ("%s\n", depit->name().c_str());
+	    }
+	}
+    }
+    else
+    {
+        if (verbose) printf ("Done\n");
     }
     return ret;
 }

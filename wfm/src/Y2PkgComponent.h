@@ -4,7 +4,7 @@
 
 class Y2PkgComponent : public Y2Component {
 public:
-    virtual Y2Namespace *import (const char* name, const char* timestamp);
+    virtual Y2Namespace *import (const char* name);
 
     virtual string name () const { return "Pkg";}
     

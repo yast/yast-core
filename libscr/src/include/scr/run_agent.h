@@ -89,9 +89,6 @@ run_agent_instance (int argc, char* argv[], bool load_scr, SCRAgent* agent)
 	exit (EXIT_FAILURE);
     }
     
-    // do not try to load implicit imports, like Pkg
-    parser->setPreloadNamespaces (false);
-
     // create stdio as UI component, disable textdomain calls
     Y2Component* user_interface = new Y2StdioComponent (false, true);
     if (!user_interface)

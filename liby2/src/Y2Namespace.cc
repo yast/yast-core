@@ -40,30 +40,14 @@ Y2Namespace::~Y2Namespace ()
     delete m_table;
 }
 
-const string Y2Namespace::timestamp ()
-{
-    // this function uses SymbolTable::toStringSymbols() to get a string representation
-    // of a global symbols. This representation must be unique
-    // against reordering, type and name changes
-
-    MD5Context md5;
-    MD5Init (&md5);
-    MD5Update (&md5, (unsigned char*)(table()->toStringSymbols ().c_str ()), table()->toStringSymbols ().length ());
-    
-    char res[17];
-    res[16] = 0;
-    
-    MD5Final ((unsigned char*)res, &md5);
-    
-    return string(res);
-}
-
-unsigned int Y2Namespace::symbolCount ()
+unsigned int
+Y2Namespace::symbolCount () const
 {
     return m_symbolcount;
 }
 
-string Y2Namespace::toString () const
+string
+Y2Namespace::toString () const
 {
     SymbolTable* t = m_table;
     string s = t->toString ();
@@ -71,29 +55,35 @@ string Y2Namespace::toString () const
     return s;
 }
 
-SymbolEntry* Y2Namespace::symbolEntry (unsigned int position)
+SymbolEntry *
+Y2Namespace::symbolEntry (unsigned int position) const
 {
-    return m_symbols[position];
+    map<unsigned int, SymbolEntry *>::const_iterator it = m_symbols.find (position);
+    if (it == m_symbols.end())
+	return 0;
+
+    return it->second;
 }
 
 
-void Y2Namespace::enterSymbol( string name, SymbolEntry* symbol, int lineno )
+void
+Y2Namespace::enterSymbol (string name, SymbolEntry* symbol, Point *point )
 {
     // FIXME: that strdup can hurt
-    m_table->enter ( strdup(name.c_str ()), symbol, lineno);
+    m_table->enter ( strdup(name.c_str ()), symbol, point);
     m_symbols[symbol->position ()] = symbol;
     m_symbolcount++;
 }
 
-SymbolTable* Y2Namespace::table ()
+SymbolTable* Y2Namespace::table () const
 {
     return m_table;
 }
 
 // ************************** Y2NamespaceCPP.h helpers ***********************************
 
-Y2CPPFunction::Y2CPPFunction(Y2Namespace* parent, string name, Y2CPPFunctionCallBase* call_impl)
-    : YFunction (new YBlock (parent->name (), YBlock::b_unknown))
+Y2CPPFunction::Y2CPPFunction (Y2Namespace* parent, string name, Y2CPPFunctionCallBase* call_impl)
+    : YFunction (new YBlock ((Point *)0))
     , m_name (name)
     , m_parent (parent)
     , m_impl (call_impl)
@@ -103,7 +93,8 @@ Y2CPPFunction::Y2CPPFunction(Y2Namespace* parent, string name, Y2CPPFunctionCall
     setDefinition (call_impl);
 }
 
-SymbolEntry* Y2CPPFunction::sentry(unsigned int position)
+SymbolEntry*
+Y2CPPFunction::sentry (unsigned int position)
 {
     // FIXME: strdup
     SymbolEntry* morefun = new SymbolEntry (m_parent, position, strdup(m_name.c_str()), SymbolEntry::c_global, 
@@ -112,7 +103,8 @@ SymbolEntry* Y2CPPFunction::sentry(unsigned int position)
     return morefun;
 }
 
-void Y2CPPFunctionCallBase::newParameter (YBlock* decl, unsigned pos, constTypePtr type)
+void
+Y2CPPFunctionCallBase::newParameter (YBlock* decl, unsigned pos, constTypePtr type)
 {
     string name;
     

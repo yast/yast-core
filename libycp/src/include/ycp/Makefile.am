@@ -24,7 +24,7 @@ pkginclude_HEADERS =					\
 	YCPBuiltinTerm.h YCPBuiltinVoid.h		\
 	StaticDeclaration.h YCode.h			\
 	YCPCode.h					\
-	Bytecode.h					\
+	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
 	SymbolTable.h SymbolEntry.h Scanner.h Parser.h 	\
 	y2log.h ycpless.h pathsearch.h			\

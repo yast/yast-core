@@ -46,6 +46,8 @@
 #include <unistd.h>
 
 #include <fstream>
+#include <string>
+#include <list>
 
 #include "YCP.h"
 #include "ycp/Scanner.h"
@@ -121,7 +123,6 @@ static void yyerror_no_module		(Parser *parser, int lineno, const char *module);
 #define yyDeclMismatch(decl,type,lineno)	yyerror_decl_mismatch (p_parser, lineno, decl, type)
 #define yyCantCast(from,to,lineno)		yyerror_cant_cast (p_parser, lineno, from, to)
 #define yyNoModule(module,lineno)		yyerror_no_module (p_parser, lineno, module)
-#include "ycp/StaticDeclaration.h"
 
 // attach a new parameter (parm) to a function call (code)
 //   if the parameter is 'type symbol', type is passed in parm, symbol in parm1
@@ -157,6 +158,10 @@ extern ExecutionEnvironment ee;
  * DO NOT USE static or global variables!
  * They make the parser non-reentrant. You need to put them into class Parser.
  */ 
+
+/*
+ * this parser does not have to be reentrant
+ */
 
 //! general stack handling
 //
@@ -198,6 +203,8 @@ struct scannerstack_t : stack_t {
 #define scannerstack_pop(s) (scannerstack_t *)stack_pop ((stack_t **)&(s))
 #define scannerstack_empty() (p_parser->scannerStack == 0)
 
+// mark here if we're parsing a module
+static bool inside_module = false;
 //----------------------------------------------------------------------------
 %}
 
@@ -211,7 +218,6 @@ struct scannerstack_t : stack_t {
 %token  EMPTY LIST MAP STRUCT BLOCK DEFINE UNDEFINE I18N
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL DCSYMBOL
-%token  UI WFM SCR
 %token  DCQUOTED_BLOCK QUOTED_BLOCK QUOTED_EXPRESSION
 %token  CLOSEBRACKET
 %token  TYPEDEF
@@ -256,6 +262,7 @@ struct scannerstack_t : stack_t {
 
 ycp:	compact_expression
 	    {
+		inside_module = false; 		// reset for next call
 		p_parser->result = ($1.t == 0) ? 0 : $1.c;
 		p_parser->current_block = 0;
 		p_parser->lineno = $1.l;
@@ -328,8 +335,8 @@ bracket_expression:
 		}
 		else if ($1.t->isTerm ())
 		{
-			// cannot find out anything
-			$$.t = Type::Any;
+		    // cannot find out anything
+		    $$.t = Type::Any;
 		}
 		else
 		{
@@ -347,10 +354,12 @@ bracket_expression:
 		    do
 		    {
 			constTypePtr paramType = params->value (index)->type ();	// type of bracket parameter at index
-
+//			y2debug ("paramvalue (%d) '%s'", index, params->value(index)->toString().c_str());
+//			y2debug ("paramType '%s'", paramType->toString().c_str());
 			if (paramType->isFunction())
 			{
 			    paramType = ((constFunctionTypePtr)paramType)->returnType ();
+			    y2debug ("paramType is function returning '%s'", paramType->toString().c_str());
 			}
 			
 			// for lists, only integer is acceptable
@@ -404,6 +413,7 @@ bracket_expression:
 		if (! $5.t->isVoid ()				// default is not 'nil'
 		    && $5.t->match ($$.t) == -1)		// and it doesn't match the determined type
 		{
+		    y2debug ("default type '%s', determined type '%s'", $5.t->toString().c_str(), $$.t->toString().c_str());
 		    yyTypeMismatch ($$.t, $5.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
@@ -529,7 +539,6 @@ compact_expression:
 |	function_call
 	    {
 		$$ = $1;
-		y2debug ("expression: function call");
 	    }
 |	'(' expression ')'
 	    {
@@ -892,7 +901,7 @@ block:
 block_end:
 	statements '}'
 	    {
-		// end of file block
+		// end of block
 		//
 		// pop block from block stack
 		// unlink local symbols from symbol table
@@ -913,7 +922,7 @@ block_end:
 		y2debug ("blockStack %p", p_parser->blockStack);
 
 		SymbolTable *localTable = p_parser->scanner()->localTable();
-		y2debug ("table before (%s)", localTable->toString().c_str());
+//		y2debug ("table before (%s)", localTable->toString().c_str());
 
 		if (top->self != 0)
 		{
@@ -927,9 +936,42 @@ block_end:
 		else
 		{
 		    top->includeDepth--;			// end of include block
+		    b->endInclude ();
 		}
 
-		y2debug ("table after (%s)", localTable->toString().c_str());
+		if (b->isModule()
+		    || b->isFile())
+		{
+		    // end of topleve 'module' or 'file' block
+		    // check if any predefined namespace where activated in StaticDeclaration
+		    //   or auto-imported by the scanner
+		    // add import statements for such namespaces
+		    Y2Namespace *name_space;
+
+		    const std::list<std::pair<std::string, Y2Namespace *> > & active_predefined = static_declarations.active_predefined();
+		    std::list<std::pair<std::string, Y2Namespace *> >::const_iterator it;
+		    for (it = active_predefined.begin(); it != active_predefined.end(); it++)
+		    {
+			name_space = it->second;
+			if (name_space->table()->countUsage() > 0)
+			{
+			    y2debug ("active_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
+			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
+			}
+		    }
+		    const std::list<std::pair<std::string, Y2Namespace *> > & autoimport_predefined= p_parser->scanner()->autoimport_predefined();
+		    for (it = autoimport_predefined.begin(); it != autoimport_predefined.end(); it++)
+		    {
+			name_space = it->second;
+			if (name_space->table()->countUsage() > 0)
+			{
+			    y2debug ("autoimport_predefined: import '%s', %d symbols needed", it->first.c_str(), name_space->table()->countUsage());
+			    p_parser->current_block->pretachStatement (new YSImport (it->first, name_space));
+			}
+		    }
+		}
+
+//		y2debug ("table after (%s)", localTable->toString().c_str());
 
 		if ($1.t == 0)			// error block
 		{
@@ -1110,6 +1152,7 @@ statement:
 		    $$.t = 0;
 		    break;
 		}
+
 		if (p_parser->current_block->isModule())
 		{
 		    yyLerror ("duplicate module statement", $1.l);
@@ -1135,7 +1178,7 @@ statement:
 
 		// enter 'self' entry so namespace references to current module get ignored
 		SymbolEntry *sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
-		TableEntry *self = new TableEntry (name, sself, $1.l);
+		TableEntry *self = new TableEntry (name, sself, new Point (sself, $1.l, p_parser->current_block->point()));
 		p_parser->scanner()->localTable()->enter (self);
 
 		// module has private global table
@@ -1146,6 +1189,8 @@ statement:
 		globalTable = p_parser->current_block->table ();
 		p_parser->scanner()->initTables (globalTable, 0);
 		y2debug ("overlaying globalTable %p", globalTable);
+
+		inside_module = true;
 
 		$$.c = 0;
 		$$.t = Type::Unspec;
@@ -1195,8 +1240,11 @@ statement:
 
 		scannerstack_push (p_parser->scannerStack, scanner);
 
+		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
+		p_parser->blockStack->theBlock->newEntry ($2.v.sval, SymbolEntry::c_filename, Type::Unspec, $1.l);
+
 		p_parser->setScanner (new Scanner (fd, $2.v.sval));
-		p_parser->SetFilename ($2.v.sval);
+		p_parser->setFilename ($2.v.sval);
 
 		// pass the outer scanner's tables
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
@@ -1232,15 +1280,15 @@ statement:
 		    string module = name;
 		    $$.c = new YSImport (module, $1.l);
 		    
-		    Y2Namespace *block = ((YSImport *)$$.c)->block();
-		    if (block == 0)
+		    Y2Namespace *name_space = ((YSImport *)$$.c)->nameSpace();
+		    if (name_space == 0)
 		    {
 			yyNoModule (name, $1.l);
 			$$.t = 0;
 			break;
 		    }
 		    
-		    tentry = p_parser->blockStack->theBlock->newNamespace (module, ((YSImport *)$$.c), $1.l);
+		    tentry = p_parser->blockStack->theBlock->newNamespace (module, name_space, $1.l);
 		    if (tentry == 0)
 		    {
 			yyLerror ("Import failed", $1.l);
@@ -1878,7 +1926,7 @@ function_start:
 			$$.t = 0;
 			
 			// to properly delete a function, also the corresponding SymbolEntry must be
-			// adapted (so it does not try to access the YFunction anymore
+			// adapted (so it does not try to access the YFunction anymore)
 			delete func;
 			fentry->setCategory (SymbolEntry::c_unspec);
 			func = 0;
@@ -1961,7 +2009,7 @@ opt_global_identifier:
 			break;
 		    }
 
-		    $4.v.tval->setLine ($4.l);
+		    $4.v.tval->makeDefinition ($4.l);
 		    $$.v.tval = $4.v.tval;
 
 		    break;					// don't re-enter it to the table !
@@ -1998,7 +2046,7 @@ opt_global_identifier:
 			    $$.v.tval = p_parser->blockStack->theBlock->newEntry ($4.v.tval->key(), SymbolEntry::c_unspec, $3.t, $4.l);
 			}
 		    }
-		    else if ($4.v.tval->sentry()->block() == p_parser->blockStack->theBlock)
+		    else if ($4.v.tval->sentry()->nameSpace() == p_parser->blockStack->theBlock)
 		    {
 			yyTerror ("Redefinition of local symbol", $4.l, $4.v.tval);
 			$$.t = 0;
@@ -2747,6 +2795,7 @@ parameters:
 
 		if ($1.t == 0)			// parameter 'expression' is bad
 		{
+		    y2debug ("parameter 'expression' is bad");
 		    $$.t = 0;
 		    break;
 		}
@@ -2759,13 +2808,15 @@ parameters:
 		}
 
 		/* if the function was not found, better fail now */
-		if ($0.t != 0 ) {
+		if ($0.t != 0 )
+		{
 		    // attach parameter ($1) to function ($0), checking types
 
 		    constTypePtr t = attach_parameter (p_parser, $0.c, &($1));
 
 		    if (t != 0)
 		    {
+			y2debug ("attach_parameter failed");
 			$$.t = 0;
 			break;
 		    }
@@ -2921,7 +2972,7 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 	y2debug ("EOF, back to %s:%d\n", top->filename.c_str(), top->linenumber);
 	currentScanner = top->scanner;
 	pr->setScanner (currentScanner);
-	pr->SetFilename (top->filename);
+	pr->setFilename (top->filename);
 	
 	YSFilename* fn = new YSFilename (top->filename);
 	pr->current_block->attachStatement (fn);
@@ -3036,18 +3087,63 @@ yyerror_with_file (Parser *parser, int lineno, const char *name)
 
 
 static void
-yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *entry)
+yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *tentry)
 {
     parser->parserErrors++;
-    parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->lineno);
-    parser->scanner()->logError ("'%s' defined here.", entry->line(), entry->key());
+    int line = (lineno > 0) ? lineno : parser->lineno;
+    parser->scanner()->logError (s, line);
+    const Point *point = tentry->point();
+    bool start = true;
+    while (point != 0)
+    {
+	const Point *next = point->point();
+	if (start)
+	{
+	    if (next == 0)
+	    {
+		parser->scanner()->logError ("Definition point (%s:%d) without parent\n", line, point->filename().c_str(), point->line());
+	    }
+	    // definition point
+	    else if (point->line() == 0)
+	    {
+		parser->scanner()->logError ("'%s' defined as %s.", line, tentry->key(), next->filename().c_str());
+	    }
+	    else
+	    {
+		parser->scanner()->logError ("'%s' defined in %s:%d.", line, tentry->key(), next->filename().c_str(), point->line());
+	    }
+	}
+	else if (point->line() != 0)
+	{
+	    if (next == 0)
+	    {
+		parser->scanner()->logError ("Inclusion point (%s:%d) without parent\n", line, point->filename().c_str(), point->line());
+	    }
+	    else
+	    {
+		// inclusion point
+		parser->scanner()->logError ("Included from %s:%d.", line, next->filename().c_str(), point->line());
+	    }
+	}
+	point = next;
+	start = false;
+    }
+    return;
 }
 
 
 static void
-yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *entry)
+yywarning_with_tableentry (Parser *parser, int lineno, TableEntry *tentry)
 {
-    parser->scanner()->logWarning ("'%s' defined here.", entry->line(), entry->key());
+    const Point *point = tentry->point();
+    char *s = "'%s' defined in %s:%d.";
+    while (point != 0)
+    {
+	parser->scanner()->logWarning (s, lineno, tentry->key(), point->filename().c_str(), point->line());
+	point = point->point();
+	s = "Included from %s:%d.";
+    }
+    return;
 }
 
 
@@ -3151,7 +3247,7 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
     }
 
     FunctionTypePtr ft = Type::Function (Type::Unspec);		// the declaration determines the return type
-y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
+//y2debug ("check_binary_op %p, e1 %p, e2 %p", &ft, &(e1->t), &(e2->t));
     ft->concat (e1->t);
     ft->concat (e2->t);
     declaration_t *decl = static_declarations.findDeclaration (op, ft, true);
@@ -3493,38 +3589,17 @@ start_block (Parser *parser, constTypePtr type)
     // start new block
     // push block on block stack
     blockstack_t *top = new (blockstack_t);
-    top->theBlock = new YBlock (parser->filename(), parser->blockstack_depth == 0 ? YBlock::b_file : YBlock::b_unknown);
 
     if (parser->blockstack_depth == 0)		// initial block
     {
+	top->theBlock = new YBlock (parser->filename(), YBlock::b_file);
 	parser->current_block = top->theBlock;
-	
-	if (parser->preload_namespaces)
-	{
-	    // implicit Pkg import
-	    YSImport* pkg = new YSImport ("Pkg", 0);
-		    
-	    Y2Namespace *block = pkg->block();
-	    if (block == 0)
-	    {
-		yyerror_no_module (parser, 0, "Pkg");
-	    }
-	    else
-	    {	    
-		TableEntry* tentry = top->theBlock->newNamespace ("Pkg", pkg, 0);
-		if (tentry == 0)
-		{
-		    y2error ("Import Pkg failed");
-		}
-		else
-		{
-		    parser->scanner()->localTable()->enter (tentry);
-		    top->theBlock->attachStatement (pkg);
-		}
-	    }
-	}
     }
-
+    else					// intermediate block
+    {
+	top->theBlock = new YBlock (parser->current_block->point());
+    }
+	
     // inherit textdomain from outer block
     top->textdomain = (parser->blockStack ? parser->blockStack->textdomain : 0);
     top->type = type;

@@ -1,1 +1,3 @@
 *.ybc
+Makefile
+Makefile.in

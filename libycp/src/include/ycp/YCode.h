@@ -96,7 +96,7 @@ public:
 
 	// [27] Block (-> linked list of statements)
 	yeBlock,		// block expression
-	yeReturn,		// quoted expression
+	yeReturn,		// quoted expression, e.g. "``(<exp>)" which really is "{ return <exp>; }"
 
 	// [29] Symbolref (-> SymbolEntry)
 	yeVariable,		// variable ref

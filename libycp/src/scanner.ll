@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include "ycp/y2log.h"
+#include "ycp/Import.h"
 #include "parser.h"
 
 // We handle the line counting using a define
@@ -440,16 +441,40 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	if (tentry != 0)
 	{
 	    y2debug ("found (%s)", tentry->toString().c_str());
-	    namespaceTable = tentry->sentry()->table();			// is a predefined namespace ?
-	    if (namespaceTable == 0)
+	    SymbolEntry *sentry = tentry->sentry();
+	    namespaceTable = tentry->sentry()->table();		// will be != if sentry is c_namespace
+
+	    while (namespaceTable == 0)
 	    {
+		if (sentry->isPredefined())				// is a predefined namespace ?
+		{
+		    Import import (yytext);				// load bytecode/plugin/perl file for module
+
+		    Y2Namespace *name_space = import.nameSpace();	// NULL if import failed
+		    y2debug ("Import (%s).nameSpace = %p", yytext, name_space);
+		    if (name_space != 0)
+		    {
+			namespaceTable = name_space->table();
+			y2debug ("namespaceTable = %p", namespaceTable);
+		    }
+
+		    if (namespaceTable != 0)
+		    {
+			m_autoimport_predefined.push_back (std::make_pair (string(yytext), name_space));
+			y2debug ("'%s' is a namespace, table %p, name_space %p", yytext, namespaceTable, name_space);
+			sentry->setCategory (SymbolEntry::c_namespace);
+			sentry->setTable (namespaceTable);
+			break;
+		    }
+		    logError ("Auto-Import '%s' failed", LINE_VAR, yytext);
+		}
 		logError ("Prefix '%s' is not a namespace", LINE_VAR, yytext);
 		return SCANNER_ERROR;
 	    }
-	    y2debug ("predefined namespace (%s) -> table %p", yytext, namespaceTable);
+	    if (getenv (XREFDEBUG) != 0) y2milestone ("Autoimported (%s), table %p", yytext, namespaceTable);
+	    else y2debug ("builtin namespace (%s) -> table %p", yytext, namespaceTable);
 
 	    namespace_prefix = strdup (yytext);
-
 	    BEGIN (namespace);
 	}
 	else
@@ -485,11 +510,11 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		    return SCANNER_ERROR;
 		}
 		
-		Y2Namespace *block = tentry->sentry()->name_space();
+		const Y2Namespace *name_space = tentry->sentry()->payloadNamespace();
 
 		y2debug ("Going to get a table" );
 		// ok, this YCode defines it's own table of exported symbols
-		namespaceTable = block->table();
+		namespaceTable = name_space->table();
 		if (namespaceTable == 0)
 		{
 		    logError ("Module table is empty", LINE_VAR);
@@ -554,10 +579,10 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		    return SCANNER_ERROR;
 		}
 		
-		Y2Namespace *block = tentry->sentry()->name_space();
+		const Y2Namespace *name_space = tentry->sentry()->nameSpace();
 
 		// ok, this YCode defines it's own table of exported symbols
-		namespaceTable = block->table();
+		namespaceTable = name_space->table();
 		if (namespaceTable == 0)
 		{
 		    logError ("Module table is empty", LINE_VAR);
@@ -598,6 +623,8 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    case SymbolEntry::c_module:
 	    case SymbolEntry::c_namespace:
 	    case SymbolEntry::c_self:
+	    case SymbolEntry::c_filename:
+	    case SymbolEntry::c_predefined:
 	    {
 		logError ("Module/Namespace name '%s' after '::' ?!", LINE_VAR, yytext);
 		return SCANNER_ERROR;
@@ -655,6 +682,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	{
 	    case SymbolEntry::c_module:
 	    case SymbolEntry::c_self:
+	    case SymbolEntry::c_predefined:
 	    {
 		y2debug ("<Symbol equals module(%s@%p)>", yytext, tentry);
 		token_value.nval = strdup (yytext);
@@ -694,6 +722,8 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 		RESULT (tentry->sentry()->type(), IDENTIFIER);
 	    }
 	    break;
+	    case SymbolEntry::c_filename:
+	    break;
 	}
 	logError ("Identifier of unknown category '%s'", LINE_VAR, yytext);
 	return SCANNER_ERROR;
@@ -720,6 +750,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    case SymbolEntry::c_unspec:
 	    case SymbolEntry::c_namespace:	// can't happen since it's in builtinTable only
 	    case SymbolEntry::c_self:
+	    case SymbolEntry::c_predefined:
 	    break;
 	    case SymbolEntry::c_module:
 	    {
@@ -747,6 +778,8 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 		token_value.sval = strdup (name);
 		RESULT (Type::ConstString, STRING);
 	    }
+	    break;
+	    case SymbolEntry::c_filename:
 	    break;
 	}
 	logError ("Global identifier of unknown category '%s'", LINE_VAR, name);

@@ -39,12 +39,12 @@ UstringHash SymbolEntry::_nameHash;
  * constructor
  */
 
-SymbolEntry::SymbolEntry (const Y2Namespace* block, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *code)
-    : m_global (cat == c_global)
-    , m_block (block)
+SymbolEntry::SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *code)
+    : m_global ((cat == c_global)||(cat == c_filename))
+    , m_namespace (name_space)
     , m_position (position)
     , m_name (Ustring (_nameHash, name))
-    , m_category (m_global ? c_unspec : cat)
+    , m_category ((cat == c_filename) ? cat : (m_global ? c_unspec : cat))
     , m_type (type)
     , m_value (YCPNull())
 {
@@ -52,9 +52,9 @@ SymbolEntry::SymbolEntry (const Y2Namespace* block, unsigned int position, const
 }
 
 // builtin
-SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *decl)
+SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *decl, const Y2Namespace* name_space)
     : m_global (true)
-    , m_block (0)
+    , m_namespace (name_space)
     , m_position (0)
     , m_name (Ustring (_nameHash, name))
     , m_category (c_builtin)
@@ -68,7 +68,7 @@ SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *de
 // namespace
 SymbolEntry::SymbolEntry (const char *name, constTypePtr type, SymbolTable *table)
     : m_global (true)
-    , m_block (0)
+    , m_namespace (0)
     , m_position (0)
     , m_name (Ustring (_nameHash, name))
     , m_category (c_namespace)
@@ -79,10 +79,30 @@ SymbolEntry::SymbolEntry (const char *name, constTypePtr type, SymbolTable *tabl
 }
 
 
-const Y2Namespace *
-SymbolEntry::block () const
+// filename
+SymbolEntry::SymbolEntry (const char *filename)
+    : m_global (true)
+    , m_namespace (0)
+    , m_position (0)
+    , m_name (Ustring (_nameHash, filename))
+    , m_category (c_filename)
+    , m_type (Type::Unspec)
+    , m_value (YCPNull())
 {
-    return m_block;
+}
+
+
+const Y2Namespace *
+SymbolEntry::nameSpace () const
+{
+    return m_namespace;
+}
+
+
+void
+SymbolEntry::setNamespace (const Y2Namespace *name_space)
+{
+    m_namespace = name_space;
 }
 
 
@@ -99,12 +119,6 @@ SymbolEntry::onlyDeclared () const
 y2debug ("onlyDeclared '%s', category %d, payload %p", name(), category(), code());
     return (m_category == c_function)			// only functions may be 'only declared'
 	   && (((YFunction *)(m_payload.m_code))->definition() == 0);
-}
-
-void
-SymbolEntry::setBlock (const Y2Namespace *block)
-{
-    m_block = block;
 }
 
 
@@ -147,7 +161,7 @@ SymbolEntry::code () const
 
 
 Y2Namespace *
-SymbolEntry::name_space () const
+SymbolEntry::payloadNamespace () const
 {
     if (m_category != c_module)
     {
@@ -158,14 +172,14 @@ SymbolEntry::name_space () const
 
 
 void
-SymbolEntry::setNamespace (Y2Namespace *code)
+SymbolEntry::setPayloadNamespace (Y2Namespace *name_space)
 {
     if (m_category != c_module)
     {
-	y2error ("setNamespace: Wrong category (%s)", toString().c_str());
+	y2error ("setPayloadNamespace: Wrong category (%s)", toString().c_str());
 	return;
     }
-    m_payload.m_namespace = code;
+    m_payload.m_namespace = name_space;
 }
 
 
@@ -346,6 +360,12 @@ SymbolEntry::catString () const
 	case c_self:
 	    return "self";
 	break;
+	case c_filename:
+	    return "filename";
+	break;
+	case c_predefined:
+	    return "predefined";
+	break;
 	default:
 	break;
     }
@@ -380,7 +400,7 @@ SymbolEntry::toString (bool with_type) const
 	case c_variable:
 	case c_reference:
 	case c_function:
-//	    y2debug ("m_block %p[%s], m_global %d, with_type %d", m_block, m_block?m_block->name().c_str():"", m_global, with_type);
+//	    y2debug ("m_namespace %p[%s], m_global %d, with_type %d", m_namespace, m_namespace ? m_namespace->name().c_str() : "", m_global, with_type);
 	case c_builtin:
 	{
 	    if (with_type)
@@ -388,10 +408,10 @@ SymbolEntry::toString (bool with_type) const
 		constFunctionTypePtr ftype = m_type;
 		s += (((m_category == c_variable)||(m_category ==c_reference)) ? m_type->toString() : ftype->returnType()->toString()) + " ";
 		if (m_global
-		    && m_block != 0
-		    && !m_block->name().empty())
+		    && m_namespace != 0
+		    && !m_namespace->name().empty())
 		{
-		    s += (m_block->name() + "::");
+		    s += (m_namespace->name() + "::");
 		}
 		s += m_name.asString();
 		if ((m_category == c_builtin)
@@ -408,7 +428,7 @@ SymbolEntry::toString (bool with_type) const
 	    }
 	    else
 	    {
-		return string ((m_global && (m_block!=0)) ? (m_block->name() + "::") : "") + m_name.asString();
+		return string ((m_global && (m_namespace!=0)) ? (m_namespace->name() + "::") : "") + m_name.asString();
 	    }
 	}
 	break;
@@ -423,11 +443,9 @@ SymbolEntry::toString (bool with_type) const
 	}
 	break;
 	case c_namespace:
-	{
-	    return s + catString() + " '" + m_name.asString() + "'";
-	}
-	break;
 	case c_self:
+	case c_filename:
+	case c_predefined:
 	{
 	    return s + catString() + " '" + m_name.asString() + "'";
 	}
@@ -443,9 +461,9 @@ SymbolEntry::toString (bool with_type) const
 }
 
 
-SymbolEntry::SymbolEntry (std::istream & str, const YBlock *block)
+SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
     : m_global (Bytecode::readBool (str))
-    , m_block (block)
+    , m_namespace (name_space)
     , m_position (Bytecode::readInt32 (str))
     , m_name (Ustring (_nameHash, Bytecode::readCharp (str)))
     , m_category ((category_t)Bytecode::readInt32 (str))
@@ -474,14 +492,14 @@ SymbolEntry::SymbolEntry (std::istream & str, const YBlock *block)
 	}
     }
 #endif
-    y2debug ("SymbolEntry::fromStream (%s) done", toString().c_str());
+//    y2debug ("SymbolEntry::fromStream (%s) done", toString().c_str());
 }
 
 
 std::ostream &
 SymbolEntry::toStream (std::ostream & str) const
 {
-    y2debug ("SymbolEntry::toStream (%s)", toString().c_str());
+    y2debug ("SymbolEntry::toStream (%p:%s)", this, toString().c_str());
     Bytecode::writeBool (str, m_global);
     Bytecode::writeInt32 (str, m_position);
     Bytecode::writeCharp (str, m_name.asString().c_str());

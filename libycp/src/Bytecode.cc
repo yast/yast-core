@@ -22,7 +22,7 @@ $Id$
 // provide a backward compatibility
 #define YaST_BYTECODE_HEADER "YaST bytecode "
 #define YaST_BYTECODE_MAJOR "1"
-#define YaST_BYTECODE_MINOR "2"
+#define YaST_BYTECODE_MINOR "3"
 #define YaST_BYTECODE_RELEASE "1"
 
 #include "ycp/Bytecode.h"
@@ -42,10 +42,10 @@ $Id$
 #include <string.h>
 #include <ctype.h>
 
-int Bytecode::m_block_nesting_level = -1;
-int Bytecode::m_block_nesting_array_size = 0;
-int Bytecode::m_block_tare_level = 0;
-const Y2Namespace **Bytecode::m_block_nesting_array = 0;
+int Bytecode::m_namespace_nesting_level = -1;
+int Bytecode::m_namespace_nesting_array_size = 0;
+int Bytecode::m_namespace_tare_level = 0;
+const Y2Namespace **Bytecode::m_namespace_nesting_array = 0;
 
 // ------------------------------------------------------------------
 // bool I/O
@@ -260,7 +260,7 @@ Bytecode::writeValue (std::ostream & str, const YCPValue value)
 	y2error ("writeValue (NULL)");
 	str.setstate (std::ostream::failbit);
     }
-    else if (str.put ((char)value->valuetype()))
+    else if (str.put ((char)(value->valuetype())))
     {
 	return value->toStream (str);
     }
@@ -433,100 +433,129 @@ Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t *
 
 
 // ------------------------------------------------------------------
-// block stack handling
+// namespace stack handling
 
-// find Id matching block
+// find Id matching namespace
 int
-Bytecode::blockId (const Y2Namespace *block)
+Bytecode::namespaceId (const Y2Namespace *name_space)
 {
-    for (int i = m_block_tare_level; i <= m_block_nesting_level; i++)
+    for (int i = m_namespace_tare_level; i <= m_namespace_nesting_level; i++)
     {
-	if (m_block_nesting_array[i] == block)
+	if (m_namespace_nesting_array[i] == name_space)
 	{
-	    return i - m_block_tare_level;
+	    return i - m_namespace_tare_level;
 	}
     }
-    y2debug ("No ID for %p, level %d", block, m_block_nesting_level);
+    y2debug ("No ID for %p, level %d", name_space, m_namespace_nesting_level);
     return -1;
 }
 
 
-// retrieve block for ID
+// retrieve namespace for ID
 const Y2Namespace *
-Bytecode::blockPtr (int block_id)
+Bytecode::namespacePtr (int namespace_id)
 {
-    // for entries without a block (foreach)
-    if (block_id < 0) return 0;
+    // for entries without a name_space (foreach)
+    if (namespace_id < 0) return 0;
 
-    block_id += m_block_tare_level;
-    if (block_id <= m_block_nesting_level)	// local block
+    namespace_id += m_namespace_tare_level;
+    if (namespace_id <= m_namespace_nesting_level)	// local namespace
     {
-	return m_block_nesting_array[block_id];
+	return m_namespace_nesting_array[namespace_id];
     }
-    y2error ("Block id %d > nesting_level %d", block_id - m_block_tare_level, m_block_nesting_level - m_block_tare_level);
+    y2error ("Block id %d > nesting_level %d", namespace_id - m_namespace_tare_level, m_namespace_nesting_level - m_namespace_tare_level);
     return 0;
 }
 
 
-// push block to stack
-//  the stack resembles the nesting of blocks
+// push namespace to stack
+//  the stack resembles the nesting of namespaces
 int
-Bytecode::pushBlock (const Y2Namespace *block)
+Bytecode::pushNamespace (const Y2Namespace *name_space)
 {
-    if (block == 0)
+    if (name_space == 0)
     {
-	y2error ("Bytecode::pushBlock (%p) NULL", block);
+	y2error ("Bytecode::pushNamespace (%p) NULL", name_space);
 	return -1;
     }
 
-    m_block_nesting_level++;
-    if (m_block_nesting_array_size <= m_block_nesting_level)
+    m_namespace_nesting_level++;
+    if (m_namespace_nesting_array_size <= m_namespace_nesting_level)
     {
-	m_block_nesting_array_size++;
-	m_block_nesting_array = (const Y2Namespace **)realloc (m_block_nesting_array, sizeof (Y2Namespace *) * m_block_nesting_array_size);
+	m_namespace_nesting_array_size++;
+	m_namespace_nesting_array = (const Y2Namespace **)realloc (m_namespace_nesting_array, sizeof (Y2Namespace *) * m_namespace_nesting_array_size);
     }
-    y2debug ("Bytecode::pushBlock (%p), level %d, size %d, tare %d", block, m_block_nesting_level, m_block_nesting_array_size, m_block_tare_level);
-    m_block_nesting_array[m_block_nesting_level] = block;
-    return m_block_nesting_level-m_block_tare_level;
+    y2debug ("Bytecode::pushNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+    m_namespace_nesting_array[m_namespace_nesting_level] = name_space;
+
+    name_space->table()->openXRefs();
+
+    return m_namespace_nesting_level-m_namespace_tare_level;
 }
 
 
-// pop block from stack
-//  the stack resembles the nesting of blocks
+// pop namespace from stack
+//  the stack resembles the nesting of namespaces
 int
-Bytecode::popBlock (const Y2Namespace *block)
+Bytecode::popNamespace (const Y2Namespace *name_space)
 {
-    y2debug ("Bytecode::popBlock (%p), level %d, size %d, tare %d", block, m_block_nesting_level, m_block_nesting_array_size, m_block_tare_level);
-    if (block == 0)
+    y2debug ("Bytecode::popNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+    if (name_space == 0)
     {
-	y2error ("Bytecode::popBlock (%p) NULL", block);
+	y2error ("Bytecode::popNamespace (%p) NULL", name_space);
 	return -1;
     }
 
-    if (m_block_nesting_level-m_block_tare_level < 0)
+    if (m_namespace_nesting_level < m_namespace_tare_level)
     {
-	y2error ("Bytecode::popBlock (%p) empty stack", block);
+	y2error ("Bytecode::popNamespace (%p) empty stack", name_space);
     }
-    else if (m_block_nesting_array[m_block_nesting_level] != block)
+    else if (m_namespace_nesting_array[m_namespace_nesting_level] != name_space)
     {
-	y2error ("Bytecode::popBlock (%p) not top of stack [%d]%p", block, m_block_nesting_level, m_block_nesting_array[m_block_nesting_level]);
+	y2error ("Bytecode::popNamespace (%p) not top of stack [%d]%p", name_space, m_namespace_nesting_level, m_namespace_nesting_array[m_namespace_nesting_level]);
     }
     else
     {
-	m_block_nesting_level--;
+	m_namespace_nesting_level--;
+	name_space->table()->closeXRefs();
     }
     return 0;
 }
 
 
-// reset current block stack to 'empty' for module loading
+// pop all from id stack until given namespace is reached and popped too
+void
+Bytecode::popUptoNamespace (const Y2Namespace *name_space)
+{
+    y2debug ("Bytecode::popUptoNamespace (%p), level %d, size %d, tare %d", name_space, m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level);
+    if (name_space == 0)
+    {
+	y2error ("Bytecode::popUptoNamespace (%p) NULL", name_space);
+	return;
+    }
+
+    while (m_namespace_nesting_level >= m_namespace_tare_level)
+    {
+	const Y2Namespace *top_space = m_namespace_nesting_array[m_namespace_nesting_level--];
+	top_space->table()->closeXRefs();
+	if (top_space == name_space)
+	{
+	    return;
+	}
+    }
+    y2error ("Bytecode::popUptoNamespace (%p) empty stack", name_space);
+    return;
+}
+
+
+// reset current namespace stack to 'empty' for module loading
 //   returns a tare id needed later
 int
 Bytecode::tareStack ()
 {
-    int tare = m_block_nesting_level - m_block_tare_level + 1;
-    y2debug ("Bytecode::tareStack() level %d, size %d, current tare %d, tare_id %d", m_block_nesting_level, m_block_nesting_array_size, m_block_tare_level, tare);
-    m_block_tare_level = m_block_nesting_level + 1;
+    int tare = m_namespace_nesting_level - m_namespace_tare_level + 1;
+//    y2debug ("Bytecode::tareStack() level %d, size %d, current tare %d, tare_id %d", m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level, tare);
+    m_namespace_tare_level = m_namespace_nesting_level + 1;
     return tare;
 }
 
@@ -534,8 +563,8 @@ Bytecode::tareStack ()
 void
 Bytecode::untareStack (int tare_id)
 {
-    y2debug ("Bytecode::untareStack() level %d, size %d, current tare %d, tare_id %d", m_block_nesting_level, m_block_nesting_array_size, m_block_tare_level, tare_id);
-    m_block_tare_level -= tare_id;
+//    y2debug ("Bytecode::untareStack() level %d, size %d, current tare %d, tare_id %d", m_namespace_nesting_level, m_namespace_nesting_array_size, m_namespace_tare_level, tare_id);
+    m_namespace_tare_level -= tare_id;
     return;
 }
 
@@ -543,46 +572,72 @@ Bytecode::untareStack (int tare_id)
 // SymbolEntry pointer (!) handling
 //   the SymbolEntries itself are 'owned' by YBlock and referenced via pointers
 //   to SymbolEntry. These functions handle stream I/O for SymbolEntry pointers.
-
+//
+//  position is the index in namespace's m_senvironment[] for _local_ symbols
+//  position is the index in module table's m_xrefs[] for _external_ symbols, see YSImport
+//
 std::ostream &
-Bytecode::writeEntry (std::ostream & str, const SymbolEntry *entry)
+Bytecode::writeEntry (std::ostream & str, const SymbolEntry *sentry)
 {
-    y2debug ("Bytecode::writeEntry (%s: blk %d, pos %d)", entry->toString().c_str(), Bytecode::blockId (entry->block()), entry->position());
-    Bytecode::writeInt32 (str, Bytecode::blockId (entry->block()));
-    return Bytecode::writeInt32 (str, entry->position());
+    int id = Bytecode::namespaceId (sentry->nameSpace());
+    if (id < 0)
+    {
+	y2error ("No id for entry (%p:%s)", sentry, sentry->toString().c_str());
+	abort ();
+    }
+//    y2debug ("Bytecode::writeEntry (%p:%s: id %d, pos %d)", sentry, sentry->toString().c_str(), id, sentry->position());
+    Bytecode::writeInt32 (str, id);
+    return Bytecode::writeInt32 (str, sentry->position());
 }
 
 
 SymbolEntry *
 Bytecode::readEntry (std::istream & str)
 {
-    // read reference to blocks (block_id) symbol table (position)
-    int block_id = Bytecode::readInt32 (str);
+    // read reference to namespaces (namespace_id) symbol table (position)
+    int namespace_id = Bytecode::readInt32 (str);
     int position = Bytecode::readInt32 (str);
-    y2debug ("Bytecode::readEntry (blk %d, pos %d)", block_id, position);
     
-    if (block_id == -1)
+    if (namespace_id == -1)
     {
-	y2debug( "Special entry without block" );
+	y2debug( "Special entry without namespace" );
 	// FIXME: this may be wrong
 	return 0;
     }
 
-    // get block pointer and SymbolEntry within block
-    Y2Namespace *block = const_cast<Y2Namespace*>(Bytecode::blockPtr (block_id));
-    if (block == 0)
+    // get namespace pointer and SymbolEntry within namespace
+    const Y2Namespace *name_space = Bytecode::namespacePtr (namespace_id);
+    if (name_space == 0)
     {
-	y2error ("invalid block %d for entry", block_id);
+	y2error ("invalid namespace %d for entry", namespace_id);
 	return 0;
     }
-    SymbolEntry *entry = block->symbolEntry (position);
-    if (entry == 0)
+
+    SymbolEntry *sentry;
+    if (position < 0)				// it's an Xref !
     {
-	y2error ("invalid entry %d for block (%s)", position, block->toString().c_str());
+	SymbolTable *table = name_space->table();
+	if (table == 0)
+	{
+	    fprintf (stderr, "No table associated to xref namespace\n");
+	    exit (1);
+	}
+	position = -position - 1;		// -1 .. -n  --> 0 .. n-1
+	y2debug ("get reference %d from table %p", position, table);
+	sentry = table->getXRef(position);
+    }
+    else
+    {
+	sentry = name_space->symbolEntry (position);
+    }
+
+    if (sentry == 0)
+    {
+	y2error ("invalid entry %d for namespace (%s)", position, name_space->toString().c_str());
 	return 0;
     }
-    y2debug ("entry <blk %p[%s]> (%s)", block, block->name().c_str(), entry->toString().c_str());
-    return entry;
+    y2debug ("entry <namespace id %d @ %p[%s]> pos %d = (%s)", namespace_id, name_space, name_space->name().c_str(), position, sentry->toString().c_str());
+    return sentry;
 }
 
 // ------------------------------------------------------------------
@@ -599,7 +654,7 @@ Bytecode::readCode (std::istream & str)
 	y2error ("Can't read from stream");
 	return 0;
     }
-    y2debug ("Bytecode::readCode (%d:%s)", code, YCode::toString ((YCode::ykind)code).c_str());
+//    y2debug ("Bytecode::readCode (%d:%s)", code, YCode::toString ((YCode::ykind)code).c_str());
     if (code < YCode::ycConstant)
     {
 	return new YConst ((YCode::ykind)code, str);
@@ -788,9 +843,7 @@ Bytecode::readCode (std::istream & str)
 	}
 	case YCode::ysImport:
 	{
-	    // check, if the import did not fail
-	    YSImport* st = new YSImport (str);
-	    if (st->block () != NULL) return st;
+	    return new YSImport (str);
 	}
 	break;
 	default:
@@ -806,15 +859,15 @@ Bytecode::readCode (std::istream & str)
 // ------------------------------------------------------------------
 // File I/O
 
-
-map <string, YBlock*> Bytecode::bytecodeCache;
+// static member
+map <string, YBlock*> Bytecode::m_bytecodeCache;
 
 // read file from module path
 
 YBlock *
-Bytecode::readModule (const string & mname, const string & timestamp)
+Bytecode::readModule (const string & mname)
 {
-    y2debug ("Bytecode::readModule (%s, timestamp %s) ", mname.c_str (), timestamp.c_str ());
+//    y2debug ("Bytecode::readModule (%s) ", mname.c_str ());
 
     // TODO better error reporting?
     // like: could not find foo.ycp in /modules, /a/modules.
@@ -823,18 +876,16 @@ Bytecode::readModule (const string & mname, const string & timestamp)
     string filename = YCPPathSearch::findModule (mname);
     if (filename.empty())
     {
-	y2error ("Module '%s' not found", mname.c_str());
+	ycperror ("Module '%s' not found", mname.c_str());
 	return 0;
     }
     
     // check the cache
-    if (bytecodeCache.find (mname) != bytecodeCache.end ())
+    if (m_bytecodeCache.find (mname) != m_bytecodeCache.end ())
     {
-	y2debug ("Bytecode cache hit: %s", mname.c_str ());
+//	y2debug ("Bytecode cache hit: %s", mname.c_str ());
 
-	// FIXME: check timestamp first
-
-	return bytecodeCache.find (mname)->second;
+	return m_bytecodeCache.find (mname)->second;
     }
 
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
@@ -854,15 +905,7 @@ Bytecode::readModule (const string & mname, const string & timestamp)
 	return NULL;
     }
 
-    // check the timestamp
-    // FIXME: this could be done earlier    
-    if (!timestamp.empty () && block->timestamp () != timestamp)
-    {
-	return NULL;
-    }
-    y2debug ("Timestamp match for file %s", filename.c_str ());
-
-    bytecodeCache.insert (std::make_pair (mname, block));
+    m_bytecodeCache.insert (std::make_pair (mname, block));
 
     return block;
 }
@@ -892,7 +935,7 @@ readInt (std::istream & str)
 YCode *
 Bytecode::readFile (const string & filename)
 {
-    y2debug ("Bytecode::readFile (%s)", filename.c_str());
+//    y2debug ("Bytecode::readFile (%s)", filename.c_str());
     std::ifstream instream (filename.c_str());
     if (!instream.is_open ())
     {
@@ -919,11 +962,8 @@ Bytecode::readFile (const string & filename)
 	&& (minor == atoi (YaST_BYTECODE_MINOR))
 	&& (release <= atoi (YaST_BYTECODE_RELEASE)))
     {
-	y2debug ("Header accepted");
+//	y2debug ("Header accepted");
 	
-	// FIXME: we should check the timestamp and issue a warning on problems
-	string timestamp;
-	readString (instream, timestamp);
 	return readCode (instream);
     }
 
@@ -939,7 +979,7 @@ Bytecode::writeFile (const YCode *code, const string & filename)
     // clear errno first
     errno = 0;
     
-    y2debug ("Bytecode::writeFile (%s)", filename.c_str());
+//    y2debug ("Bytecode::writeFile (%s)", filename.c_str());
     std::ofstream outstream (filename.c_str());
     if (!outstream.is_open ())
     {
@@ -950,39 +990,7 @@ Bytecode::writeFile (const YCode *code, const string & filename)
     string header =  string (YaST_BYTECODE_HEADER YaST_BYTECODE_MAJOR "." YaST_BYTECODE_MINOR "." YaST_BYTECODE_RELEASE);
     outstream.write (header.c_str(), header.size() + 1);	// including trailing \0
     
-    
-    if (code->isBlock ())
-    {
-	// for block use its timestamp
-	writeString (outstream, ((YBlock *)code)-> timestamp ());
-	y2debug ("Written timestamp %s", ((YBlock *)code)-> timestamp ().c_str());
-    }
-    else
-    {
-	// get the original file name based on the ybc name
-	string ycp_filename = filename;
-	ycp_filename.replace ( filename.size ()-2, 2, "cp" );
-	string ts = fileTimestamp (ycp_filename);
-	writeString (outstream, ts);
-    }
-
     code->toStream (outstream);
 
     return outstream.fail ();
-}
-
-
-string
-Bytecode::fileTimestamp (const string & filename)
-{
-    struct stat s;
-    if (stat (filename.c_str(), &s) == 0 )
-    {
-        struct tm *tm_v = localtime ( & s.st_mtime );
-        char buf[100];
-        strftime (buf, 100, "%s", tm_v);
-        return buf;
-    }
-
-    return "unknown timestamp";
 }

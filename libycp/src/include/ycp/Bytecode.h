@@ -37,11 +37,11 @@ class YBlock;
 #include <map>
 
 class Bytecode {
-    static int m_block_nesting_level;
-    static int m_block_nesting_array_size;
-    static int m_block_tare_level;
-    static const Y2Namespace **m_block_nesting_array;
-    static map<string, YBlock*> bytecodeCache;
+    static int m_namespace_nesting_level;
+    static int m_namespace_nesting_array_size;
+    static int m_namespace_tare_level;
+    static const Y2Namespace **m_namespace_nesting_array;
+    static map<string, YBlock*> m_bytecodeCache;
 
     public:
 	// bool I/O
@@ -76,27 +76,36 @@ class Bytecode {
 	static std::ostream & writeYCodelist (std::ostream & str, const ycodelist_t *codelist);
 	static bool readYCodelist (std::istream & str, ycodelist_t **anchor, ycodelist_t **last);
 
+	//-----------------------------------------------------------
 	// block nesting handling
 	//
-	// retrieve ID (nesting level) for block
-	static int blockId (const Y2Namespace *block);
-	// retrieve block for ID
-	static const Y2Namespace *blockPtr (int block_id);
-	// push given block to id stack, return new id, -1 on error
-	static int pushBlock (const Y2Namespace *block);
-	// pop given block from id stack, return block id, -1 on error
-	static int popBlock (const Y2Namespace *block);
-	// reset current block stack to 'empty' for module loading
+	// retrieve ID (nesting level) for namespace
+	static int namespaceId (const Y2Namespace *name_space);
+	// retrieve namespace for ID
+	static const Y2Namespace *namespacePtr (int namespace_id);
+
+	// push given namespace to id stack, return new id, -1 on error
+	static int pushNamespace (const Y2Namespace *name_space);
+
+	// pop given namespace from id stack, return namespace id, -1 on error
+	static int popNamespace (const Y2Namespace *name_space);
+
+	// pop all from id stack until given namespace is reached and popped too
+	static void popUptoNamespace (const Y2Namespace *name_space);
+
+	// reset current namespace stack to 'empty' for module loading
 	//   returns a tare id needed later
 	static int tareStack ();
 	static void untareStack (int tare_id);
 
+	//-----------------------------------------------------------
 	// SymbolEntry pointer (!) handling
 	//   the SymbolEntries itself are 'owned' by Y2Namespace (YBlock in YCP) and referenced via pointers
 	//   to SymbolEntry. These functions handle stream I/O for SymbolEntry pointers.
 	static std::ostream &writeEntry (std::ostream & str, const SymbolEntry *entry);
 	static SymbolEntry *readEntry (std::istream & str);
 
+	//-----------------------------------------------------------
 	// YCode read.
 	// Must be implemented outside of YCode since we have derived classes to allocate...
 	// see YCode for write
@@ -107,16 +116,13 @@ class Bytecode {
 	// which add/check a 'magic value' header denoting "YCode" and its version.
 
 	// read YCode from file in Module path, return YBlock (NULL in case of error)
-	static YBlock *readModule (const string & mname, const string & timestamp);
+	static YBlock *readModule (const string & mname);
 
 	// read YCode from file, return YCode (YError in case of failure)
 	static YCode *readFile (const string & filename);
 
 	// write YCode to file, return errno (i.e. file not existing)
 	static int writeFile (const YCode *code, const string & filename);
-	
-	// compute a timestamp for a given file name
-	static string fileTimestamp (const string & filename);
 };
 
 #endif // Bytecode_h

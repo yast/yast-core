@@ -12,9 +12,8 @@
 
    File:	Y2WFMComponent.cc
 
-   Author:	Mathias Kettner <kettner@suse.de>
-		Stanislav Visnovsky <visnov@suse.cz>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Author:	Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 
@@ -406,6 +405,15 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
         ++_nl_msg_cat_cntr;
     }
 
+    /* Change language. see info:gettext: */
+    setenv ("LANGUAGE", currentLanguage.c_str(), 1);
+
+    /* Make change known.  */
+    {
+        extern int _nl_msg_cat_cntr;
+        ++_nl_msg_cat_cntr;
+    }
+
     // FIXME: should be ycp2debug
     y2debug ( "WFM SetLanguage(\"%s\"), Encoding(\"%s\")",
 	       currentLanguage.c_str(), systemEncoding.c_str());
@@ -571,12 +579,11 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
     return result;
 }
 
-Y2Namespace* Y2WFMComponent::import (const char* name_space, const char* timestamp)
+Y2Namespace* Y2WFMComponent::import (const char* name_space)
 {
     // create the namespace
     // maybe this failed, but it does not mean any problems, block () will simply return 0
-    y2debug ("Timestamp requested: %s", timestamp);
-    Y2Namespace *ns = Bytecode::readModule (name_space, timestamp != NULL ? timestamp : "" );
+    Y2Namespace *ns = Bytecode::readModule (name_space);
 
     return ns;
 }

@@ -38,11 +38,13 @@ ExecutionEnvironment::linenumber () const
     return m_linenumber;
 }
 
+
 void
 ExecutionEnvironment::setLinenumber (int line)
 {
     m_linenumber = line;
 }
+
 
 const string 
 ExecutionEnvironment::filename () const
@@ -66,6 +68,7 @@ ExecutionEnvironment::statement () const
     return m_statement;
 }
 
+
 void
 ExecutionEnvironment::setStatement (YStatement* s)
 {
@@ -79,6 +82,7 @@ ExecutionEnvironment::setStatement (YStatement* s)
     return;
 }
 
+
 YBlock* 
 ExecutionEnvironment::block () const
 {
@@ -88,6 +92,7 @@ ExecutionEnvironment::block () const
     }
     return m_blocks.top ();
 }
+
 
 void
 ExecutionEnvironment::pushBlock (YBlock* b)
@@ -105,16 +110,19 @@ ExecutionEnvironment::pushBlock (YBlock* b)
     return;
 }
 
+
 void
 ExecutionEnvironment::popBlock ()
 {
     if (!m_blocks.empty())
     {
+	y2debug ("ExecutionEnvironment::popBlock ()");
 	m_blocks.pop ();
     }
     m_forced_filename = false;
     return;
 }
+
 
 void
 ExecutionEnvironment::pushframe (string called_function)
@@ -123,6 +131,7 @@ ExecutionEnvironment::pushframe (string called_function)
     m_backtrace.push (new CallFrame (filename(), linenumber (), called_function));
 }
 
+
 void
 ExecutionEnvironment::popframe ()
 {
@@ -130,6 +139,7 @@ ExecutionEnvironment::popframe ()
     delete m_backtrace.top ();
     m_backtrace.pop ();
 }
+
 
 string
 ExecutionEnvironment::backtrace (uint omit)

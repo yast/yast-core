@@ -63,7 +63,6 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
     y2milestone( "Loading macro file %s", macroFileName.c_str() );
 
     Parser parser( macroFile, macroFileName.c_str() );
-    parser.setPreloadNamespaces (false);
     YCode *parsed = parser.parse();
 
     if ( !parsed || parsed->isError() )

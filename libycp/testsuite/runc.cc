@@ -28,9 +28,9 @@
 #include "config.h"
 
 class TestY2Component : public Y2Component {
-    virtual Y2Namespace *import (const char* name, const char* timestamp = NULL)
+    virtual Y2Namespace *import (const char* name)
     {
-	Y2Namespace* block = Bytecode::readModule (name, timestamp != NULL ? timestamp : "");
+	Y2Namespace* block = Bytecode::readModule (name);
 	if (block == 0 ) 
 	{
 	    y2debug ("Cannot import module");
@@ -135,7 +135,6 @@ processfile (const char *infname, char *outfname)
 	}
 	parser->setInput (infile, infname);
 	parser->setBuffered();
-	parser->setPreloadNamespaces (false);
 	SymbolTableDebug = 1;
     }
 

@@ -339,15 +339,15 @@ public:
 // Function ref (-> SymbolEntry ( param, param, ...) )
 
 class YEFunction : public YCode, public Y2Function {
-    SymbolEntry *m_entry;
+    const SymbolEntry *m_entry;
     ycodelist_t *m_parameters;
     // no need for m_last since we're counting the parameters anyway in attachParameter()
     string qualifiedName () const;
 public:
-    YEFunction (SymbolEntry *entry);
+    YEFunction (const SymbolEntry *entry);
     YEFunction (std::istream & str);
     ~YEFunction ();
-    SymbolEntry *entry () const;
+    const SymbolEntry *entry () const;
     /**
      * Attach parameter to external function call
      * @param code: parameter code

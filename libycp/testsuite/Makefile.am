@@ -14,7 +14,7 @@ libdir = ../src/.libs
 noinst_PROGRAMS = testSignature runc runycp
 
 runc_SOURCES = runc.cc
-runc_LDFLAGS = -L$(libdir)
+runc_LDFLAGS = -L$(libdir) 
 runc_LDADD = ../src/libycp.la ../../liby2/src/liby2.la -ly2util
 
 runycp_SOURCES = runycp.cc

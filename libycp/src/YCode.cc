@@ -550,7 +550,7 @@ YFunction::setDefinition (std::istream & str)
 
 	if (m_declaration != 0)
 	{
-	    Bytecode::pushBlock (m_declaration);
+	    Bytecode::pushNamespace ((Y2Namespace *)m_declaration);
 	}
 
 	m_definition = (YBlock *)Bytecode::readCode (str);
@@ -558,7 +558,7 @@ YFunction::setDefinition (std::istream & str)
 
 	if (m_declaration != 0)
 	{
-	    Bytecode::popBlock (m_declaration);
+	    Bytecode::popNamespace ((Y2Namespace *)m_declaration);
 	}
 
 	if ((m_definition == 0)
@@ -652,10 +652,6 @@ YFunction::YFunction (std::istream & str)
 	    y2error ("Error reading declaration");
 	}
     }
-    else
-    {
-	y2debug ("YFunction::YFunction: no declaration !");
-    }
     // read of definition block is done in YSFunction(str)
 }
 
@@ -677,12 +673,12 @@ YFunction::toStreamDefinition (std::ostream & str) const
     {
 	if (need_declaration)
 	{
-	    Bytecode::pushBlock (m_declaration);		// keep the declaration accessible during definition write
+	    Bytecode::pushNamespace ((Y2Namespace *)m_declaration);	// keep the declaration accessible during definition write
 	}
 	m_definition->toStream (str);
 	if (need_declaration)
 	{
-	    Bytecode::popBlock (m_declaration);
+	    Bytecode::popNamespace ((Y2Namespace *)m_declaration);
 	}
     }
 

@@ -35,24 +35,42 @@ using namespace std;
 #include "ycp/YBlock.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Import.h"
 
 #include "ycp/y2log.h"
 
 #define DECLSIZE 127
 
+//
+// list of namespace prefixes to mark as 'predefined'
+// They will be auto-loaded by the scanner on first appearance
+//
+static char *predefined[] = {
+  "UI", "WFM", "SCR", "Pkg", 0
+};
 //------------------------------------------------------------------------
 // constructor / destructor
 
 StaticDeclaration::StaticDeclaration()
 {
-    declTable = new SymbolTable(211);
-    y2debug ("declTable %p", declTable);
+    m_declTable = new SymbolTable(211);
+//    y2debug ("m_declTable %p", m_declTable);
+
+    char **pptr = predefined;
+    SymbolEntry *sentry;
+    Point *point = new Point ("<predefined>");
+    while (*pptr != 0)
+    {
+	sentry = new SymbolEntry (0, 0, *pptr, SymbolEntry::c_predefined, Type::Unspec, 0);
+	m_declTable->enter (*pptr, sentry, new Point (sentry, 0, point));
+	pptr++;
+    }
 }
 
 
 StaticDeclaration::~StaticDeclaration ()
 {
-    delete declTable;
+    delete m_declTable;
 }
 
 
@@ -68,9 +86,13 @@ StaticDeclaration::registerDeclarations (const char *filename,
 	return;
     }
 
-    SymbolTable *table = declTable;
-    const Y2Namespace *namespace_block = 0;
+    SymbolTable *table = m_declTable;
+    const Y2Namespace *name_space = 0;
+    static const Point *builtin_point = new Point ("<builtin>");
+    const Point *namespace_point = builtin_point;		// declarations default to builtin
     declaration_t *namespace_decl = 0;
+
+    std::pair <std::string, Y2Namespace *> *track_info = 0;
 
     while (declarations->name != 0)
     {
@@ -86,33 +108,68 @@ StaticDeclaration::registerDeclarations (const char *filename,
 	}
 	else if ((declarations->flags & DECL_NAMESPACE) != 0)		// switch namespace
 	{
-	    y2debug ("NAMESPACE (%s)", name);
+	    // new namespace, clear possibly old track_info
+	    if (track_info != 0)
+	    {
+		new Import (track_info->first, track_info->second);	// remember which predefined got activated
+		m_active_predefined.push_back (*track_info);
+		track_info = 0;
+	    }
+//	    y2debug ("NAMESPACE (%s)", name);
             declarations->name_space = namespace_decl;
 
 	    TableEntry *tentry = table->find (name);
-	    if (tentry != 0)						// name already exists
+	    if (tentry != 0						// name already exists
+		&& tentry->sentry()->isNamespace())			//   as namespace
 	    {
-		namespace_block = tentry->sentry()->block();
+		name_space = tentry->sentry()->nameSpace();
 	    }
 	    else if (*name == 0)					// reset namespace
 	    {
-		table = declTable;
-		namespace_block = 0;
+		table = m_declTable;
+		name_space = 0;
+		namespace_point = builtin_point;
 	    }
 	    else							// open up new namespace
 	    {
-		YBlock * block = new YBlock (filename, YBlock::b_namespace);
+		bool is_predefined = false;
+
+		if (tentry != 0
+		    && tentry->sentry()->isPredefined())		//   replace predefined
+		{
+		    table->remove (tentry);
+		    is_predefined = true;
+		}
+
+		// create definition container for namespace
+		YBlock *block = new YBlock (filename, YBlock::b_namespace);
 		block->setName (string (name));
-		SymbolTable *namespaceTable = new SymbolTable (211);
-		SymbolEntry *entry = new SymbolEntry (name, Type::Unspec, namespaceTable);
-		entry->setBlock (block);
-		table->enter (name, entry, 0);
-		table = namespaceTable;					// enter all further decls to new namespace
-		namespace_block = block;
+
+		Y2Namespace *namespaceNamespace = (Y2Namespace *)block;
+		SymbolTable *namespaceTable = block->table();
+
+		// create SymbolEntry::c_namespace for the namespace to be entered into the global table
+		SymbolEntry *sentry = new SymbolEntry (name, Type::Unspec, namespaceTable);
+
+//		y2debug ("Entered Namespace '%s' (block %p) into namespaceTable %p", name, block, namespaceTable);
+
+		// enter into global table
+		namespace_point = new Point (filename);
+		table->enter (name, sentry, namespace_point);
+
+		// all further definitions go into this namespace
+		//   -> make it the new global table
+		table = namespaceTable;
 		namespace_decl = declarations;
+
+		if (is_predefined)
+		{
+		    // save tracking info, trigger 'Import' _after_ all symbols have been added
+		    track_info = new std::pair<std::string, Y2Namespace *> (name, namespaceNamespace);
+		}
 	    }
 	}
-	else
+	else	// normal entry, not namespace
 	{
 	    declarations->name_space = namespace_decl;
 	    string signature = declarations->signature;
@@ -155,12 +212,8 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 	    }
 	    else		// first entry with that name
 	    {
-		SymbolEntry *entry = new SymbolEntry (name, type, declarations);
-		table->enter (name, entry, 0);
-		if (namespace_block)
-		{
-		    entry->setBlock (namespace_block);
-		}
+		SymbolEntry *sentry = new SymbolEntry (name, type, declarations, name_space);
+		table->enter (name, sentry, new Point (sentry, 0, namespace_point));
 	    }
 
 #ifdef BUILTIN_STATISTICS
@@ -173,6 +226,14 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
 	    declarations->type = type;
 	}
 	declarations++;
+    }
+
+    // clear possibly old track_info
+    if (track_info != 0)
+    {
+	new Import (track_info->first, track_info->second);	// remember which predefined got activated
+	m_active_predefined.push_back (*track_info);
+	track_info = 0;
     }
 
     return;
@@ -197,11 +258,12 @@ StaticDeclaration::Decl2String (const declaration_t *declaration, bool full)
 	return "(NULL)";
     }
 
+    const declaration_t *name_space = declaration->name_space;
     const char *name = declaration->name;
 
     if (!full)
     {
-	return string (name);
+	return (name_space ? string (name_space->name) + "::" + string (name) : string (name));
     }
 
     if (name == 0)
@@ -218,34 +280,37 @@ StaticDeclaration::Decl2String (const declaration_t *declaration, bool full)
 declaration_t *
 StaticDeclaration::findDeclaration (const char *name) const
 {
-    y2debug ("StaticDeclaration::findDeclaration '%s'", name);
+//    y2debug ("StaticDeclaration::findDeclaration '%s'", name);
 
     // split the name by the namespace
     char *next = strstr (name, "::");
-    y2debug( "Next is %p", next );
-    TableEntry *entry = 0;
-    if (next == NULL) {
-       entry = declTable->find (name);
-       y2debug( "No namespace, found %p", entry );
+//    y2debug( "Next is %p", next );
+    TableEntry *tentry = 0;
+    if (next == NULL)
+    {
+   	tentry = m_declTable->find (name);
+//	y2debug( "No namespace, found %p", tentry );
     }
     else
     {
-       *next = '\0';
-       entry = declTable->find (name);
-       y2debug( "Namespace found: %p", entry );
-       *next = ':';
-       if (entry != 0 && entry->sentry()->table() != 0) {
-           // continue recursively;
-           // skip delimiter
-           next += 2;
-    	    y2debug( "Recursive search for %s", next );
-           entry = entry->sentry()->table()->find (next);
-       }
+	*next = '\0';
+	tentry = m_declTable->find (name);
+//	y2debug( "Namespace found: %p", tentry );
+	*next = ':';
+	if (tentry != 0
+	   && tentry->sentry()->table() != 0)
+	{
+	    // continue recursively;
+	    // skip delimiter
+	    next += 2;
+//	    y2debug( "Recursive search for %s", next );
+	    tentry = tentry->sentry()->table()->find (next);
+	}
     }
 
-    if (entry != 0)
+    if (tentry != 0)
     {
-	return entry->sentry()->declaration();
+	return tentry->sentry()->declaration();
     }
     return 0;
 }
@@ -257,7 +322,7 @@ StaticDeclaration::findDeclaration (const char *name) const
 declaration_t *
 StaticDeclaration::findDeclaration (const char *name, constTypePtr type, bool partial) const
 {
-    y2debug ("StaticDeclaration::findDeclaration '%s':%s <%s>", name, type->toString().c_str (), partial?"partial":"full");
+//    y2debug ("StaticDeclaration::findDeclaration '%s':%s <%s>", name, type->toString().c_str (), partial?"partial":"full");
 
     declaration_t *decl = findDeclaration (name);
     if (decl == 0)
@@ -277,7 +342,7 @@ StaticDeclaration::findDeclaration (const char *name, constTypePtr type, bool pa
 declaration_t *
 StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool partial) const
 {
-    y2debug ("StaticDeclaration::findDeclaration (%p, %s, %s)", decl, type->toString().c_str (), partial ? "partial" : "full");
+//    y2debug ("StaticDeclaration::findDeclaration (%p, %s, %s)", decl, type->toString().c_str (), partial ? "partial" : "full");
     if (decl == 0)
     {
 	return 0;
@@ -294,7 +359,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	constTypePtr dtype = decl->type;		// declaration type
 	constTypePtr atype = type;			// argument type
 
-	y2debug ("decl check: declared '%s', actual '%s'", dtype->toString().c_str(), atype->toString().c_str());
+//	y2debug ("decl check: declared '%s', actual '%s'", dtype->toString().c_str(), atype->toString().c_str());
 
 	// if only argument types are given, skip the
 	// return type in type checking
@@ -308,7 +373,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    constFunctionTypePtr fatype = atype;
 	    int dcount = fdtype->parameterCount();		// declaration count
 	    int acount = fatype->parameterCount();		// actual count
-	    y2debug ("dcount %d, acout %d", dcount, acount);
+//	    y2debug ("dcount %d, acout %d", dcount, acount);
 	    int i;
 	    
 	    if (acount == 0) 
@@ -327,14 +392,14 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 		{
 		    if (i >= dcount)					// no more parameters in current declaration
 		    {
-			y2debug ("too few parameters");
+//			y2debug ("too few parameters");
 			error = true;
 			break;
 		    }
 		    dt = fdtype->parameterType (i);
 		    if (fatype->parameterType(i)->match (dt) != 0)		// parameters do not match
 		    {
-			y2debug ("parameters at %d do not match", i);
+//			y2debug ("parameters at %d do not match", i);
 			error = true;
 			break;
 		    }
@@ -343,14 +408,14 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 			break;
 		    }
 		}
-		y2debug ("loop exit %d", i);
+//		y2debug ("loop exit %d", i);
 	    
 		// this was not the last argument in declared arguments
 		// and the next one is not wildcard (can be omited completely)
 		// it's an error
 		if (!partial && i != dcount && !dt->isWildcard () && !fdtype->parameterType(i)->isWildcard ())
 		{
-		    y2debug ("missing parameters");
+//		    y2debug ("missing parameters");
 		    error = true;
 		}
 	    }
@@ -364,7 +429,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 
     if (decl == 0)
     {
-	y2debug ("findDecl failed");
+//	y2debug ("findDecl failed");
 	if (!partial)
 	{
 //	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
@@ -379,7 +444,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
     }
     else
     {
-	y2debug ("match for decl '%s'", Decl2String (decl, true).c_str());
+//	y2debug ("match for decl '%s'", Decl2String (decl, true).c_str());
 #ifdef BUILTIN_STATISTICS
 	FILE *fout = fopen ("/tmp/builtin-lookup.txt", "a");
 	if (fout) {

@@ -60,6 +60,11 @@ Y2LanguageLoader::Y2LanguageLoader ()
 {
     glob_t glob_buf;
     int glob_flags = 0;
+    if (YCPPathSearch::numberOfComponentLevels() == 0)
+    {
+	y2milestone ("No language components");
+	memset (&glob_buf, 0, sizeof (glob_t));
+    }
     for (int i = 0; i < YCPPathSearch::numberOfComponentLevels (); ++i)
     {
 	string pattern = YCPPathSearch::searchPath (YCPPathSearch::PLUGIN, i)
@@ -79,7 +84,7 @@ Y2LanguageLoader::Y2LanguageLoader ()
     for (size_t i = 0; i < glob_buf.gl_pathc; ++i)
     {
 	char *p = glob_buf.gl_pathv[i];
-//	y2debug ("Loading language plugin %s", p);
+	y2debug ("Loading language plugin %s", p);
 	void *handle = dlopen (p, RTLD_LAZY | RTLD_GLOBAL);
 	if (handle)
 	{
@@ -92,5 +97,6 @@ Y2LanguageLoader::Y2LanguageLoader ()
 	}
     }
 
-    globfree (&glob_buf);
+    if (glob_flags != 0)
+	globfree (&glob_buf);
 }

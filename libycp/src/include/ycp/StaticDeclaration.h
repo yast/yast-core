@@ -22,11 +22,13 @@
 #define StaticDeclaration_h
 
 #include <string>
+#include <list>
 using namespace std;
 
 #include "ycp/YCPValue.h"
 #include "ycp/YCPList.h"
 #include "ycp/Type.h"
+#include "y2/Y2Namespace.h"
 
 class SymbolEntry;
 class SymbolTable;
@@ -74,14 +76,19 @@ typedef struct declaration declaration_t;
 
 class StaticDeclaration {
 private:
-    SymbolTable *declTable;
-
+    // toplevel table for all static declaration
+    SymbolTable *m_declTable;
+    // list of predefined namespaces which are already active, Y2Namespace is non-const since it might get evaluated
+    std::list<std::pair<std::string, Y2Namespace *> > m_active_predefined;
 public:
     // constructor
     StaticDeclaration ();
     ~StaticDeclaration ();
 
-    SymbolTable *symbolTable() { return declTable; };
+    SymbolTable *symbolTable() { return m_declTable; };
+
+    // list of registered namespaces which were predefined
+    const std::list<std::pair<std::string, Y2Namespace *> > & active_predefined() const { return m_active_predefined; };
 
     // register declarations
     void registerDeclarations (const char *filename, declaration_t *declarations);

@@ -1,0 +1,17 @@
+{
+//    module "Embedded";
+
+    import "Identifier";
+
+    integer f ()
+    {
+	return Identifier::this_is_global;//String::Pad("",0);
+	{
+	    import "Identifier1";
+	    return Identifier1::a;
+	}
+    }
+
+    return f();
+/* EOF */
+}

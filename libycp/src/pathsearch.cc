@@ -137,10 +137,13 @@ Y2PathSearch::findy2exe (string root, string compname, bool server,
 {
     string subdir;
     if (server)
+    {
 	subdir = (non_y2 ? "/servers_non_y2/" : "/servers/");
+    }
     else
+    {
 	subdir = (non_y2 ? "/clients_non_y2/" : "/clients/");
-
+    }
     string pathname = root + searchPath (EXECCOMP, level) + subdir + compname;
     
     y2debug ("Trying file %s", pathname.c_str ());
@@ -169,9 +172,10 @@ Y2PathSearch::findy2plugin (string name, int level)
     // Check if it is a regular file.
     struct stat buf;
     if (stat (filename.c_str (), &buf) == 0)
+    {
 	if (S_ISREG (buf.st_mode))
 	    return filename;
-
+    }
     return "";
 }
 
@@ -211,11 +215,10 @@ YCPPathSearch::initialize (Kind kind, const char *suffix)
     const char *home = getenv ("HOME");
     const char *y2dir = getenv ("Y2DIR");
 
-    string homey2 = string (getenv ("HOME")) + "/.yast2"; //TODO what if unset?
-
     addPath (kind, string (YAST2DIR) + suffix);
     if (home)
     {
+	string homey2 = string (home) + "/.yast2";
 	addPath (kind, homey2 + suffix);
     }
     if (y2dir)
@@ -277,12 +280,13 @@ YCPPathSearch::findInclude (const string& name)
 
 
 string
-YCPPathSearch::findModule (string name)
+YCPPathSearch::findModule (string name, bool the_source)
 {
-    // TODO: more efficiently, do not search the whole string
-    if (name.rfind (".ybc") == string::npos)
+    // TODO: more efficiently, do not search the whole string#
+    string extension = (the_source ? ".ycp" : ".ybc");
+    if (name.rfind (extension) == string::npos)
     {
-	name += ".ybc";
+	name += extension;
     }
     return find (Module, name);
 }

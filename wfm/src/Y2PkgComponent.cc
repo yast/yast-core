@@ -8,10 +8,9 @@
 
 #include "PkgModule.h"
 
-Y2Namespace *Y2PkgComponent::import (const char* name, const char* timestamp)
+Y2Namespace *Y2PkgComponent::import (const char* name)
 {
-    // FIXME: for internal components, we don't have to compare the timestamps
-    // ... well, we should track changes in symbol numbering
+    // FIXME: for internal components, we should track changes in symbol numbering
     if ( strcmp (name, "Pkg") == 0)
     {
 	return PkgModule::instance ();

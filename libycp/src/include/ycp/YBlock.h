@@ -63,6 +63,9 @@ public:
     } blockkind_t;
 
 private:
+    // --------------------------------
+    // general block data
+
     // Block kind,
     // b_statement == implict return YCPNull() (block is statement, default)
     // else YCPVoid () (treat block as expression)
@@ -72,11 +75,7 @@ private:
     //   normaly empty, non-empty for b_module and b_namespace
     string m_name;
 
-    // Filename of source file
-    string m_filename;
-    // Timestamp of this block
-    string m_timestamp;
-
+    // --------------------------------
     // Environment
 
     struct yTElist {
@@ -102,6 +101,15 @@ private:
     // add symbol to m_senvironment
     unsigned int addSymbol (SymbolEntry *entry);
 
+    // --------------------------------
+    // source file, needs environment
+
+    // Point (Filename) of source file (global SymbolEntry:c_filename)
+    // always points to the current file. During include, it points to
+    // a chain <include file> -> <toplevel file>. See Point.h
+    const Point *m_point;
+
+    // --------------------------------
     // Block content
 
     struct stmtlist {
@@ -115,64 +123,60 @@ private:
 
     // pointer to last statement for easier append
     stmtlist_t *m_last_statement;
-    
+
     /**
      * List of all included files so far.
      */
-    list<string> m_includes;
+    std::list<std::string> m_includes;
 
 public:
+    //---------------------------------------------------------------
+    // Constructor / Destructor
+   
+    // toplevel block
     YBlock (const std::string & filename, blockkind_t kind = b_unknown);
+    // midlevel block
+    YBlock (const Point *point);
     YBlock (std::istream & str);
     ~YBlock ();
 
+    //---------------------------------------------------------------
+    // YCode
+
+    constTypePtr type () const { return Type::Any; }
+
+    // the whole block is parsed, do final changes
+    void finishBlock ();
+
+    // evaluate the complete block
+    virtual YCPValue evaluate (bool cse = false);
+
+    // evaluate a single statement
+    // this is a special purpose interface for macro player
+    // does not handle break, return
+    YCPValue evaluate (int statement_index);
+    
+    //---------------------------------------------------------------
+    // member access
+
     // return name of source file
     virtual const std::string filename () const;
-    virtual const std::string timestamp ();
-    
-    virtual Y2Function* createFunctionCall (const string name);
-
-    // add new value code to this block
-    //   (used for functions which accept either symbolic variables or values, e.g. foreach())
-    // returns position
-    unsigned int newValue (constTypePtr type, YCode *code);
 
     // SymbolTable for global module environment (m_kind == b_module)
-    virtual SymbolTable *table ();
+    //   non-const return since we must be able to find() which tracks references
+    virtual SymbolTable *table () const;
 
-    // add a new table entry to this block
-    //  and attach it to m_tenvironment
-    //   return NULL if symbol of same name already declared in this block
-    TableEntry *newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr type, unsigned int line);
+    virtual Y2Function* createFunctionCall (const string name);
 
-    // add a new namespace entry to this block
-    //  and attach it to m_tenvironment
-    //   return NULL if symbol of same name already declared in this block
-    TableEntry *newNamespace (const string & name, YSImport *block, int line);
+    // returns the current parse file as Point
+    const Point *point () const;
 
-    // find symbol in m_senvironment, return -1 if not found
-    virtual int findSymbol (const SymbolEntry *entry);
+    // returns the name of the block
+    const string name () const;
+    void setName (const string & name);
 
-    // release symbol entry from m_senvironment
-    //   it's no longer owned by this block but by a ysFunction()
-    void releaseSymbol (unsigned int position);
-    void releaseSymbol (SymbolEntry *entry);
-
-    // number of local variables (environment entries)
-    virtual unsigned int symbolCount ();
-
-    // get entry by position
-    virtual SymbolEntry *symbolEntry (unsigned int position);
-
-    // Attach entry (variable, typedef, ...) to local environment
-    void attachEntry (TableEntry *entry);
-
-    // Attach statement to block
-    void attachStatement (YStatement *statement);
-
-    // Detach local environment from symbol table
-    //  convert m_tenvironment to m_senvironment
-    void detachEnvironment (SymbolTable *table);
+    //---------------------------------------------------------------
+    // block kind
 
     // set block kind
     void setKind (blockkind_t kind);
@@ -188,43 +192,99 @@ public:
     bool isValue () const	{ return (m_kind == b_value); }			// used as value (intermediate block)
     bool isNamespace () const	{ return (m_kind == b_namespace); }		// block defines a namespace
 
+    //---------------------------------------------------------------
+    // Value / Entry
+
+    // add new value code to this block
+    //   (used for functions which accept either symbolic variables or values, e.g. foreach())
+    // returns position
+    unsigned int newValue (constTypePtr type, YCode *code);
+
+    // add a new table entry to this block
+    //  and attach it to m_tenvironment
+    //   return NULL if symbol of same name already declared in this block
+    TableEntry *newEntry (const char *name, SymbolEntry::category_t cat, constTypePtr type, unsigned int line);
+
+    //---------------------------------------------------------------
+    // Namespace
+
+    // add a new namespace entry to this block
+    //  and attach it to m_tenvironment
+    //   return NULL if symbol of same name already declared in this block
+    TableEntry *newNamespace (const string & name, Y2Namespace *name_space, int line);
+
+    //---------------------------------------------------------------
+    // symbol handling
+
+    // find symbol in m_senvironment, return -1 if not found
+    virtual int findSymbol (const SymbolEntry *entry) const;
+
+    // release symbol entry from m_senvironment
+    //   it's no longer owned by this block but by a ysFunction()
+    void releaseSymbol (unsigned int position);
+    void releaseSymbol (SymbolEntry *entry);
+
+    // number of local variables (environment entries)
+    virtual unsigned int symbolCount () const;
+
+    // get entry by position
+    virtual SymbolEntry *symbolEntry (unsigned int position) const;
+
+    // Attach entry (variable, typedef, ...) to local environment
+    void attachEntry (TableEntry *entry);
+
+    // Detach local environment from symbol table
+    //  convert m_tenvironment to m_senvironment
+    void detachEnvironment (SymbolTable *table);
+
+    // push all local variables to stack, uses SymbolEntry::push()
+    void push_to_stack ();
+
+    // pop all local variables from stack, uses SymbolEntry::pop()
+    void pop_from_stack ();
+
+    //---------------------------------------------------------------
+    // statement handling
+
+    // Attach statement to end of block
+    void attachStatement (YStatement *statement);
+
+    // Pretach statement to beginning block
+    void pretachStatement (YStatement *statement);
+
+    // count the statements in this block
+    int statementCount () const;
+
+    //---------------------------------------------------------------
+    // return
+
     // returns the return statement if the block just consists of a single return
     YSReturn *justReturn () const;
 
-    // returns the name of the block
-    const string name () const;
-    void setName (const string & name);
+    //---------------------------------------------------------------
+    // include
 
-    string toString () const;
-    string environmentToString () const;
+    // end of include block, 'pop' head of m_point chain
+    void endInclude ();
 
-    // write block to stream
-    std::ostream & toStream (std::ostream & str) const;
-
-    virtual YCPValue evaluate (bool cse = false);
-    
-    // evaluate a single statement
-    // this is a special purpose interface for macro player
-    // does not handle break, return
-    YCPValue evaluate (int statement_index);
-    
-    int statementCount () const;
-    
-    // push all local variables to stack, uses SymbolEntry::push()
-    void push_to_stack ();
-    // pop all local variables from stack, uses SymbolEntry::pop()
-    void pop_from_stack ();
-    
-    // the whole block is parsed, do final changes
-    void finishBlock ();
-
-    constTypePtr type () const { return Type::Any; }
-    
     /**
      *  Checks, if the given include name is already included in the current block.
      */
     bool isIncluded (string includename) const;
     void addIncluded (string includename);
+
+    //---------------------------------------------------------------
+    // string output
+
+    string toString () const;
+    string environmentToString () const;
+
+    //---------------------------------------------------------------
+    // stream output
+
+    // write block to stream
+    std::ostream & toStream (std::ostream & str) const;
+
 };
 
 

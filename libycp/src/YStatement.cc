@@ -212,12 +212,12 @@ YSReturn::toString() const
     string s = "return";
     if (m_value != 0)
     {
-y2debug ("YSReturn::toString value kind %d", m_value->kind());
+//y2debug ("YSReturn::toString value kind %d", m_value->kind());
 	s += " ";
 	s += m_value->toString();
     }
     s += ";";
-y2debug ("s %s", s.c_str());
+//y2debug ("s %s", s.c_str());
     return s;
 }
 
@@ -411,7 +411,7 @@ YSAssign::~YSAssign ()
 string
 YSAssign::toString () const
 {
-    return (((kind() == ysVariable) && (m_entry->block() == 0)) ? "global " : "")
+    return (((kind() == ysVariable) && (m_entry->nameSpace() == 0)) ? "global " : "")
 	+ m_entry->toString (kind() == ysVariable)
     	+ " = "
 	+ m_code->toString()
@@ -505,7 +505,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	
     if (current.isNull ())
     {
-	ycp2error ("Non-existent bracket parameter");
+	y2error ("Non-existent bracket parameter");
 	return YCPNull ();
     }
 	
@@ -514,7 +514,7 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
     YCPValue argval = arg->value (idx);
     if (argval.isNull())
     {
-	ycp2error ("Invalid bracket parameter");
+	y2error ("Invalid bracket parameter");
 	return YCPNull ();
     }
 
@@ -522,7 +522,7 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
     {
 	if (!argval->isInteger())
 	{
-	    ycp2error ("Invalid bracket parameter for list");
+	    y2error ("Invalid bracket parameter for list");
 	    return YCPNull ();
 	}
 	YCPList list = current->asList();
@@ -562,7 +562,7 @@ y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str
     {
 	if (!argval->isInteger())
 	{
-	    ycp2error ("Invalid bracket parameter for term");
+	    y2error ("Invalid bracket parameter for term");
 	    return YCPNull ();
 	}
 	YCPTerm term = current->asTerm();
@@ -580,7 +580,7 @@ y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str
 	term->set (argval->asInteger()->value(), val);
 	return term;
     }
-    ycp2error ("Bracket assignment not list, map, or term");
+    y2error ("Bracket assignment not list, map, or term");
     return YCPNull ();
 }
 
@@ -853,7 +853,7 @@ YSWhile::evaluate (bool cse)
 	{
 	    return lval;
 	}
-	else if (lval->isVoid())		// normal block/statement or 'continue'
+	else if (lval->isVoid())	// normal block/statement or 'continue'
 	{
 	    continue;
 	}
@@ -952,7 +952,7 @@ YSRepeat::evaluate (bool cse)
 	}
 
 	if (lval.isNull()
-	    || lval->isVoid())	// normal block/statement or 'continue'
+	    || lval->isVoid())		// normal block/statement or 'continue'
 	{
 	    YCPValue bval = m_condition->evaluate ();
 	    if (!bval->isBoolean())
@@ -1068,7 +1068,7 @@ YSDo::evaluate (bool cse)
 	    }
 	}
 	if (lval.isNull()
-	    || lval->isVoid())	// normal block/statement or 'continue'
+	    || lval->isVoid())		// normal block/statement or 'continue'
 	{
 	    YCPValue bval = m_condition->evaluate ();
 	    if (!bval->isBoolean())
@@ -1204,62 +1204,33 @@ YSInclude::evaluate (bool cse)
 //-------------------------------------------------------------------
 // import
 
-// static YSImport member
-YSImport::module_map YSImport::m_active_modules;
+// normal 'import' statement
 
-YSImport::YSImport ()
-    : YStatement (ysImport, 0)
-    , m_name ("")
-{
-    m_module = m_active_modules.end ();
-}
-    
 YSImport::YSImport (const string &name, int line)
     : YStatement (ysImport, line)
-    , m_name (name)
+    , Import (name)
 {
-    m_module = m_active_modules.find (m_name);
-    
-    if (m_module == m_active_modules.end())
-    {
-	y2debug ("Loading module '%s'", m_name.c_str());
-        Y2Component* comp = Y2ComponentBroker::getNamespaceComponent (name.c_str());
+}
 
-        if (comp == 0)
-        {
 
-	    ycp2error ("Loading module '%s' failed", m_name.c_str());
-	    return;
-        }
+// 'pre'tached 'import' statement for preloaded namespaces (see parser.yy)
 
-        Y2Namespace* block = comp->import (name.c_str ());
-        if (block == NULL)
-        {
-	    ycp2error ("Loading module '%s' failed", m_name.c_str());
-	    return;
-        }
-
-	SymbolEntry *constructor = 0;
-	TableEntry *tentry = block->table()->find (m_name.c_str(), SymbolEntry::c_function);
-	if (tentry != 0)
-	{
-	    constructor = tentry->sentry();
-	}
-	module_entry me = { block, constructor, false };
-	m_active_modules.insert (std::make_pair (m_name, me));
-	y2debug ("Module '%s' loaded, block @%p, constructor @%p", m_name.c_str(), block, constructor);
-
-	m_module = m_active_modules.find (m_name);
-    }
-    else
-    {
-	y2debug ("Module '%s' already loaded", m_name.c_str());
-    }
+YSImport::YSImport (const string &name, Y2Namespace *name_space)
+    : YStatement (ysImport, 0)
+    , Import (name, name_space)
+{
 }
 
 
 YSImport::~YSImport ()
 {
+}
+
+
+string
+YSImport::name () const
+{
+    return m_name;
 }
 
 
@@ -1273,54 +1244,56 @@ YSImport::toString() const
 
 YSImport::YSImport (std::istream & str)
     : YStatement (ysImport, str)
+    , Import (Bytecode::readCharp (str), 0, true)			// don't open references in Import()
 {
-    m_name = Bytecode::readCharp (str);
-    string timestamp = Bytecode::readCharp (str);
-    
-    m_module = m_active_modules.find (m_name);
-    
-    if (m_module == m_active_modules.end())
+    if (nameSpace() == 0)
     {
-	y2debug ("Loading module '%s' with timestamp %s", m_name.c_str(), timestamp.c_str ());
-        Y2Component* comp = Y2ComponentBroker::getNamespaceComponent (m_name.c_str());
+	fprintf (stderr, "Import '%s' failed\n", name().c_str());
+#warning Pass error about failed import to top properly
+	return;
+    }
 
-        if (comp == 0)
-        {
+    Bytecode::pushNamespace (nameSpace ());				// see YBlock::YBlock(str) for popUptoNamespace()
 
-	    ycp2error ("Loading module '%s' failed", m_name.c_str());
-	    y2error ("No component to provide the module");
-	    return;
-        }
+    bool xref_debug = (getenv (XREFDEBUG) != 0);
 
-        Y2Namespace* block = comp->import (m_name.c_str (), timestamp.empty() ? NULL : timestamp.c_str ());
-        if (block == NULL)
-        {
-	    ycp2error ("Loading module '%s' failed", m_name.c_str());
-	    y2error ("Component failed to provide the module");
-	    return;
-        }
+    int xrefcount = Bytecode::readInt32 (str);
 
-	SymbolEntry *constructor = 0;
-	TableEntry *tentry = block->table()->find (m_name.c_str(), SymbolEntry::c_function);
-	if (tentry != 0)
+    if (xref_debug) y2milestone ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+    else y2debug ("Resolving %d symbols from module %s\n", xrefcount, m_name.c_str());
+
+    if (xrefcount != 0)
+    {
+	SymbolTable *table = m_module->second.name_space->table();
+
+	const char *sname;
+	TypePtr stype;
+	TableEntry *tentry;
+
+	while (xrefcount-- > 0)						// build up xref vector in table
 	{
-	    constructor = tentry->sentry();
-	}
-	module_entry me = { block, constructor, false };
-	m_active_modules.insert (std::make_pair (m_name, me));
-	y2debug ("Module '%s' loaded, block @%p, constructor @%p", m_name.c_str(), block, constructor);
+	    sname = Bytecode::readCharp (str);
+	    stype = Bytecode::readType (str);
 
-	m_module = m_active_modules.find (m_name);
-    }
-    else if (m_module->second.block->timestamp () != timestamp)
-    {
-	ycp2error ("Loading module '%s' failed", m_name.c_str());
-	y2error ("Module already loaded, but timestamp does not match");
-	m_module = m_active_modules.end();
-    }
-    else
-    {
-	y2debug ("Module '%s' already loaded", m_name.c_str());
+	    if (xref_debug) y2milestone ("Xref -------- '%s' <%s>\n", sname, stype->toString().c_str());
+	    else y2debug ("Xref -------- '%s' <%s>\n", sname, stype->toString().c_str());
+
+	    tentry = table->xref (sname);				// look for match in table
+
+	    if (tentry == 0)
+	    {
+		y2error ("Unresolved xref to %s::%s\n", m_name.c_str(), sname);
+		fprintf (stderr, "Unresolved xref to %s::%s\n", m_name.c_str(), sname);
+		m_name = "";
+	    }
+	    if (tentry->sentry()->type()->match (stype) != 0)
+	    {
+		y2error ("Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
+		fprintf (stderr, "Symbol '%s::%s' <%s> does not match xref type <%s>\n", m_name.c_str(), sname, tentry->sentry()->type()->toString().c_str(), stype->toString().c_str());
+		m_name = "";
+	    }
+	    delete [] sname;
+	}
     }
 }
 
@@ -1330,8 +1303,14 @@ YSImport::toStream (std::ostream & str) const
 {
     YStatement::toStream (str);
     Bytecode::writeCharp (str, m_name.c_str());
-    y2debug ("Storing timestamp %s for file %s", m_module->second.block->timestamp ().c_str (), m_name.c_str());
-    return Bytecode::writeCharp (str, m_module->second.block->timestamp ().c_str ());
+
+    SymbolTable *table = m_module->second.name_space->table();
+    table->writeUsage (str);
+
+    y2debug ("pushNamespace import '%s'", m_name.c_str());
+    Bytecode::pushNamespace (nameSpace());				// see YBlock::toStream(str) for popUptoNamespace()
+
+    return str;
 }
 
 
@@ -1339,12 +1318,12 @@ YCPValue
 YSImport::evaluate (bool cse)
 {
     if (!cse
-	&& (block () != NULL)
+	&& (nameSpace () != NULL)
 	&& !m_module->second.activated)
     {
 	// init all definitions
 
-	block()->evaluate (cse);
+	nameSpace()->evaluate (cse);
 
 	// run constructor
 
@@ -1362,14 +1341,6 @@ YSImport::evaluate (bool cse)
     return YCPNull();
 }
 
-Y2Namespace *
-YSImport::block () const
-{
-    if (m_module == m_active_modules.end ())
-	return NULL;
-    else
-	return m_module->second.block;
-}
 
 //-------------------------------------------------------------------
 /**

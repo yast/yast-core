@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "NestedB"
+    // module "NestedC"
+    // filename: "tests/modules/nested.ycp"
+    import "NestedB";
+    import "NestedC";
+    return (NestedB::b1 + NestedC::c1);
+}
+----------------------------------------------------------------------

@@ -1,0 +1,8 @@
+{
+    module "NestedA";
+
+    global string a1 = "a1";
+    global string a2 = "a2";
+    global string a3 = "a3";
+    global string a4 = "a4";
+}

@@ -46,17 +46,19 @@ private:
 
 public:
     typedef enum {
-	c_unspec = 0,		// unspecified local symbol (sets m_global = false)
-	c_global,		// unspecified global symbol (translates to c_unspec, sets m_global = true)
-	c_module,		// a module identifier
-	c_variable,		// a variable
-	c_reference,		// a reference to a variable
-	c_function,		// a defined function
-	c_builtin,		// a builtin function
-	c_typedef,		// a type
-	c_const,		// a constant (a read-only c_variable)
-	c_namespace,		// a namespace identifier
-	c_self			// the current namespace (namespace prefix used in namespace definition)
+	c_unspec = 0,		//  0 unspecified local symbol (sets m_global = false)
+	c_global,		//  1 unspecified global symbol (translates to c_unspec, sets m_global = true)
+	c_module,		//  2 a module identifier
+	c_variable,		//  3 a variable
+	c_reference,		//  4 a reference to a variable
+	c_function,		//  5 a defined function
+	c_builtin,		//  6 a builtin function
+	c_typedef,		//  7 a type
+	c_const,		//  8 a constant (a read-only c_variable)
+	c_namespace,		//  9 a namespace identifier
+	c_self,			// 10 the current namespace (namespace prefix used in namespace definition)
+	c_predefined,		// 11 a predefined namespace identifier
+	c_filename		// 12 a filename (used in conjunction with TableEntry to store definition locations)
     } category_t;
 
 private:
@@ -66,12 +68,12 @@ private:
     bool m_global;
 
     /*
-     * the block this entry belongs to
+     * the namespace this entry belongs to
      */
-    const Y2Namespace *m_block;
+    const Y2Namespace *m_namespace;
 
     /*
-     * position in the block
+     * position in the namespace
      */
     unsigned int m_position;
 
@@ -101,6 +103,9 @@ private:
      *	c_builtin:	declaration_t*
      *  c_module:	Y2Namespace*
      *  c_namespace:	SymbolTable *
+     *	c_self		n/a (just uses m_name)
+     *  c_predefined	n/a (just uses m_name)
+     *	c_filename	n/a (just uses m_name)
      */
     union payload {
 	YCode *m_code;
@@ -116,14 +121,24 @@ private:
 
 public:
 
-    // create symbol beloging to block (at position)
-    SymbolEntry (const Y2Namespace* block, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *payload = 0);
-    // create builtin symbol (category == c_builtin)
-    SymbolEntry (const char *name, constTypePtr type, declaration_t *payload);
+    // create symbol beloging to namespace (at position)
+    SymbolEntry (const Y2Namespace* name_space, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *payload = 0);
+
+    // create builtin symbol (category == c_builtin), name_space != 0 for symbols inside namespace
+    SymbolEntry (const char *name, constTypePtr type, declaration_t *payload, const Y2Namespace *name_space = 0);
+
     // create namespace symbol (category == c_namespace)
     SymbolEntry (const char *name, constTypePtr type, SymbolTable *payload);
 
-    SymbolEntry (std::istream & str, const YBlock *block = 0);
+    // create declaration point symbol (category == c_filename)
+    SymbolEntry (const char *filename);
+
+    SymbolEntry (std::istream & str, const Y2Namespace *name_space = 0);
+
+
+    // symbols' link to the defining namespace
+    const Y2Namespace *nameSpace () const;
+    void setNamespace (const Y2Namespace *name_space);
 
     // payload access
 
@@ -134,9 +149,6 @@ public:
     void setCode (YCode *code);
     YCode *code () const;
     
-    Y2Namespace *name_space () const;
-    void setNamespace (Y2Namespace *ns);
-    
     // payload access for builtins
     void setDeclaration (declaration_t *decl);
     declaration_t *declaration () const;
@@ -145,9 +157,12 @@ public:
     void setTable (SymbolTable *table);
     SymbolTable *table() const;
 
-    // symbols' link to the defining block
-    const Y2Namespace *block () const;
-    void setBlock (const Y2Namespace *block);
+    // symbols' link to the defining namespace
+    Y2Namespace *payloadNamespace () const;
+    void setPayloadNamespace (Y2Namespace *name_space);
+
+    // this is the position of the entry in the namespace (>= 0)
+    //   or in the xref table (< 0), see YSImport()
     unsigned int position () const;
     void setPosition (unsigned int position);
 
@@ -160,6 +175,8 @@ public:
     bool isBuiltin () const { return m_category == c_builtin; }
     bool isNamespace () const { return m_category == c_namespace; }
     bool isSelf () const { return m_category == c_self; }
+    bool isFilename () const { return m_category == c_filename; }
+    bool isPredefined () const { return m_category == c_predefined; }
 
     bool likeNamespace () const { return isModule() || isNamespace() || isSelf(); }
 

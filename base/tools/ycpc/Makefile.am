@@ -6,6 +6,7 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"
 AM_LDFLAGS = -L$(libdir)
 
 INCLUDES = -I$(srcdir)/../../../libycp/src/include \
+	-I$(srcdir)/../../../liby2/src/include \
 	-I$(srcdir)/../../../libyui/src/include \
 	-I$(srcdir)/../../../libscr/src/include \
 	-I$(srcdir)/../../../wfm/src		\
@@ -19,6 +20,7 @@ ycpc_LDADD = ../../../libycp/src/libycp.la \
 	../../../wfm/src/libpy2wfm.la \
 	../../../liby2/src/liby2.la \
 	../../../libscr/src/libscr.la \
+	../../../scr/src/libpy2scr.la \
 	-ly2pm -ly2util
 
 PACKAGE=ycpc

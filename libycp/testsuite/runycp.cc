@@ -32,9 +32,9 @@
 extern ExecutionEnvironment ee;
 
 class TestY2Component : public Y2Component {
-    virtual Y2Namespace *import (const char* name, const char* timestamp = NULL)
+    virtual Y2Namespace *import (const char* name)
     {
-        Y2Namespace *block = Bytecode::readModule (name, timestamp != NULL ? timestamp : "");
+        Y2Namespace *block = Bytecode::readModule (name);
         if (block == 0 )
         {
             y2debug ("Cannot import module");
@@ -171,8 +171,6 @@ main (int argc, const char *argv[])
     if (make_depends)
 	parser->setDepends();
 	
-    parser->setPreloadNamespaces (false);
-
     ee.setFilename (string (fname));
 
     YCode *code = 0;

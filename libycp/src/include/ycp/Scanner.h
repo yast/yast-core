@@ -154,6 +154,12 @@ private:
     bool m_owningGlobal;
     bool m_owningLocal;
 
+    /**
+     * list of predefined namespace which have been auto-imported
+     *   Y2Namespace is non-const since the block might get evaluated (constructor)
+     */
+    std::list<std::pair<std::string, Y2Namespace *> > m_autoimport_predefined;
+
 public:
     /**
      * Creates a new scanner that scans from an open clib-level
@@ -272,6 +278,11 @@ public:
      * logs a warning.
      */
     void logWarning (const char *loginfo, int lineno, ...) __attribute__ ((format (printf, 2, 4)));
+
+    /**
+     * get list of predefined namespaces which have been autoloaded by the scanner
+     */
+    const std::list<std::pair<std::string, Y2Namespace *> > & autoimport_predefined() const { return m_autoimport_predefined; };
 
 private:
     /**

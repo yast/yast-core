@@ -245,7 +245,7 @@ YETerm::attachParameter (YCode *code, constTypePtr dummy)
 	return Type::Unspec;
     }
 
-    y2debug ("YETerm::attachParameter (%s)", code->toString().c_str());
+//    y2debug ("YETerm::attachParameter (%s)", code->toString().c_str());
 
     ycodelist_t *element = new ycodelist_t;
     element->code = code;
@@ -1473,12 +1473,12 @@ YEBuiltin::YEBuiltin (std::istream & str)
     if (Bytecode::readBool (str))
     {
 	m_parameterblock = (YBlock *)Bytecode::readCode (str);
-	Bytecode::pushBlock (m_parameterblock);
+	Bytecode::pushNamespace ((Y2Namespace *)m_parameterblock);
     }
     Bytecode::readYCodelist (str, &m_parameters, &m_last);
     if (m_parameterblock != 0)
     {
-	Bytecode::popBlock (m_parameterblock);
+	Bytecode::popNamespace ((Y2Namespace *)m_parameterblock);
     }
     if (!m_decl
 	|| m_type->isError ())
@@ -1504,12 +1504,12 @@ YEBuiltin::toStream (std::ostream & str) const
     {
 	Bytecode::writeBool (str, true);
 	m_parameterblock->toStream (str);
-	Bytecode::pushBlock (m_parameterblock);
+	Bytecode::pushNamespace ((Y2Namespace *)m_parameterblock);
     }
     Bytecode::writeYCodelist (str, m_parameters);
     if (m_parameterblock != 0)
     {
-	Bytecode::popBlock (m_parameterblock);
+	Bytecode::popNamespace ((Y2Namespace *)m_parameterblock);
     }
     return str;
 }
@@ -1620,7 +1620,7 @@ YEBuiltin::attachParameter (YCode *code, constTypePtr type)
 {
     extern StaticDeclaration static_declarations;
 
-    y2debug ("YEBuiltin::attachParameter (%s:%s)", code ? code->toString().c_str() : "<NULL>", type->toString().c_str());
+//    y2debug ("YEBuiltin::attachParameter (%s:%s)", code ? code->toString().c_str() : "<NULL>", type->toString().c_str());
 
     if ((code == 0)
 	|| (code->isError()))
@@ -1634,7 +1634,7 @@ YEBuiltin::attachParameter (YCode *code, constTypePtr type)
     if (!type->isUnspec ())
     {
 	m_type->concat (type);
-	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), m_type->toString().c_str());
+//	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), m_type->toString().c_str());
 
 	decl = static_declarations.findDeclaration (m_decl, m_type, true);
 	if (decl == 0)
@@ -1682,7 +1682,7 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
     FunctionTypePtr matchedType;
     constTypePtr addedType;
 
-    y2debug ("YEBuiltin::attachSymVariable (%s:%s @%d, to %s:%s", name, type->toString().c_str(), line, m_decl->name, m_type->toString().c_str());
+//    y2debug ("YEBuiltin::attachSymVariable (%s:%s @%d, to %s:%s", name, type->toString().c_str(), line, m_decl->name, m_type->toString().c_str());
 
     if (type->isUnspec())							// no type given, might be symbol or untyped variable
     {
@@ -1693,7 +1693,7 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
 	declaration_t *decl = static_declarations.findDeclaration (m_decl, matchedType, true);
 	if (decl != 0)
 	{
-	    y2debug ("YEBuiltin::attachSymVariable() symbol constant matched");
+//	    y2debug ("YEBuiltin::attachSymVariable() symbol constant matched");
 	    return attachParameter (new YConst (YCode::ycSymbol, YCPSymbol (name)), addedType);
 	}
 
@@ -1837,7 +1837,7 @@ YEBuiltin::evaluate (bool cse)
     // call builtin function
 
     y2debug ("YEBuiltin::evaluate [%s (%d args)]", StaticDeclaration::Decl2String (m_decl, false).c_str(), i);
-    y2debug ("parameter 1: %s", i > 0 ? args[0]->toString ().c_str (): "nil" );
+    y2debug ("parameter 1: %s", i > 0 ? args[0]->toString().c_str() : "nil" );
     YCPValue ret = YCPNull();
     if (m_decl->ptr == 0)
     {
@@ -1930,7 +1930,7 @@ YEBuiltin::type () const
 // ------------------------------------------------------------------
 // function ref (-> SymbolEntry + Parameters)
 
-YEFunction::YEFunction (SymbolEntry *entry)
+YEFunction::YEFunction (const SymbolEntry *entry)
     : YCode (yeFunction)
     , m_entry (entry)
     , m_parameters (0)
@@ -1962,7 +1962,7 @@ YEFunction::~YEFunction ()
 }
 
 
-SymbolEntry *
+const SymbolEntry *
 YEFunction::entry() const
 {
     return m_entry;
@@ -1982,7 +1982,7 @@ YEFunction::entry() const
 constTypePtr
 YEFunction::attachParameter (YCode *code, constTypePtr type)
 {
-    y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
+//    y2debug ("YEFunction::attachParameter (%s:%s)", code ? code->toString().c_str() : "(NULL)", type->toString().c_str());
 
     if (code == 0 || code->isError())
     {
@@ -2330,8 +2330,8 @@ bool YEFunction::finishParameters ()
 
 string YEFunction::qualifiedName () const
 {
-    string n = m_entry->block () ?
-	(m_entry->block ()->name () + string ("::")) :
+    string n = m_entry->nameSpace () ?
+	(m_entry->nameSpace ()->name () + string ("::")) :
 	"";
     return n + m_entry->name ();
 }

@@ -26,8 +26,11 @@
 
 #include <string>
 using std::string;
+#include <list>
+#include <stack>
 
 #include "ycp/SymbolEntry.h"
+#include "ycp/Point.h"
 
 class SymbolTable;
 
@@ -53,7 +56,7 @@ class TableEntry {
 
     const char *m_key;			// search key, usually the symbol name
     SymbolEntry *m_entry;		// complete symbol data, cannot be const since category might change
-    int m_line;				// line number in defining file
+    const Point *m_point;		// definition point (file, line)
 
     SymbolTable *m_table;		// backpointer to table
 
@@ -61,17 +64,17 @@ protected:
     friend class SymbolTable;
 
 public:
-    TableEntry (const char *key, SymbolEntry *entry, int line, SymbolTable *table = 0);
+    TableEntry (const char *key, SymbolEntry *entry, const Point *point, SymbolTable *table = 0);
     TableEntry (std::istream & str);
     ~TableEntry ();
-    const char *key() const;
-    TableEntry *next() const;
-    const SymbolTable *table() const;
-    SymbolEntry *sentry() const;
-    int line() const;
-    void setLine (int line);
-    string toString() const;
-    string toStringSymbols() const;
+    const char *key () const;
+    TableEntry *next () const;
+    const SymbolTable *table () const;
+    SymbolEntry *sentry () const;
+    const Point *point () const;
+    string toString () const;
+    string toStringSymbols () const;
+    void makeDefinition (int line);	// convert declaration to definition (exchanges m_point)
     std::ostream & toStream (std::ostream & str) const;
 
     // remove yourself from the SymbolTable.
@@ -99,11 +102,24 @@ private:
 
     TableEntry **m_table;
 
+    // these are the actually used entries of this table
+    // they are only stored if needed
+    std::map<const char *, TableEntry *> *m_used;
+
+    // stack of external references, needed during bytecode I/O by YSImport
+    //  (triggered by openReferences())
+    std::stack <std::vector<TableEntry *> *> m_xrefs;
 
 public:
+    //---------------------------------------------------------------
+    // Constructor/Destructor
+
     // create SymbolTable with hashsize prime
-    SymbolTable(int prime);
+    SymbolTable (int prime);
     ~SymbolTable();
+
+    //---------------------------------------------------------------
+    // Table access
 
     // access table (for traversal)
     const TableEntry **table() const;
@@ -111,17 +127,53 @@ public:
     // return size of hash table
     int size() const;
 
+    //---------------------------------------------------------------
+    // enter/find/remove
+
     // enter SymbolEntry to table as innermost definition
-    TableEntry *enter (const char *key, SymbolEntry *entry, int line);
+    TableEntry *enter (const char *key, SymbolEntry *entry, const Point *point);
 
     // enter TableEntry to table as innermost definition
     TableEntry *enter (TableEntry *entry);
 
-    // find (innermost) TableEntry by key
+    // find (innermost) TableEntry by key and add to m_used
     TableEntry *find (const char *key, SymbolEntry::category_t category = SymbolEntry::c_unspec);
+
+    // find (innermost) TableEntry by key and add to m_xrefs
+    TableEntry *xref (const char *key);
 
     // remove the entry from table
     void remove (TableEntry *entry);
+
+    //---------------------------------------------------------------
+    // xref tracking
+
+    // push empty list of references on top of m_references
+    // start tracking references, keep a list of actually referenced (-> find()) entries
+    void openXRefs ();
+
+    // pop current list of references from top of m_references
+    void closeXRefs ();
+
+    // return the vector of references from to of m_references
+    SymbolEntry *getXRef (unsigned int position) const;
+
+    //---------------------------------------------------------------
+    // usage tracking
+
+    void startUsage ();
+
+    int countUsage ();
+
+    void endUsage ();
+
+    //---------------------------------------------------------------
+    // write usage to stream, see YSImport
+
+    std::ostream &SymbolTable::writeUsage (std::ostream & str) const;
+
+    //---------------------------------------------------------------
+    // string
 
     string toString() const;
     string toStringSymbols() const;

@@ -137,10 +137,6 @@ public:
      * and it is available from the first import
      * until the end of YaST run.
      * @param name_space the name of the required namespace
-     * @param timestamp a string containing unique timestamp
-     * if only the given timestamp is requested. If not NULL,
-     * component must provide a namespace with exactly the
-     * same timestamp.
      * @return on errors, NULL should be returned. The
      * error reporting must be done by the component itself
      * (typically using y2log). On success, the method
@@ -149,7 +145,7 @@ public:
      * by the component, any other part of YaST will try to
      * free it. Thus, it's possible to share the instance.
      */
-    virtual Y2Namespace* import(const char* name_space, const char* timestamp = NULL);
+    virtual Y2Namespace* import(const char* name_space);
 
     /* ================ client ================ */
 

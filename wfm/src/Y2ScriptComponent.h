@@ -12,9 +12,8 @@
 
    File:       Y2ScriptComponent.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-	       Stanislav Visnovsky <visnov@suse.cz>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:     Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer: Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 // -*- c++ -*-
@@ -87,7 +86,7 @@ public:
      */
     virtual YCPValue doActualWork(const YCPList& arglist, Y2Component *user_interface);
     
-    virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
+    virtual Y2Namespace* import (const char* name_space);
     
     static Y2ScriptComponent* instance();
 

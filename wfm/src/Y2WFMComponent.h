@@ -12,8 +12,8 @@
 
    File:	Y2WFMComponent.h
 
-   Author:	Mathias Kettner <kettner@suse.de>
-   Maintainer:	Mathias Kettner <kettner@suse.de>
+   Author:	Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 
@@ -74,7 +74,7 @@ public:
     YCPValue CallFunction (const YCPString& client, const YCPList& args = YCPList ());
     YCPString GetEnvironmentEncoding ();
 
-    virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
+    virtual Y2Namespace* import (const char* name_space);
 private:
 
     bool createDefaultSCR ();

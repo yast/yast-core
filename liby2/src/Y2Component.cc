@@ -85,9 +85,9 @@ YCPValue Y2Component::doActualWork(const YCPList&, Y2Component *)
     return YCPNull();
 }
 
-Y2Namespace* Y2Component::import (const char* name_space, const char* timestamp)
+Y2Namespace* Y2Component::import (const char* name_space)
 {
-    y2internal ("default import (%s, %s) called, should not happen", name_space, timestamp);
+    y2internal ("default import (%s) called, should not happen", name_space);
     return NULL;
 }
 

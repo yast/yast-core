@@ -103,7 +103,6 @@ main (int argc, char *argv[])
 
     parser->setInput (infile, fname);
     parser->setBuffered();
-    parser->setPreloadNamespaces (false);
     
     // register builtins;
     WFM wfm;

@@ -62,10 +62,9 @@ public:
 
 class Y2ExampleComponent : public Y2Component {
 public:
-    virtual Y2Namespace *import (const char* name, const char* timestamp)
+    virtual Y2Namespace *import (const char* name)
     {
-	// for internal components, we don't have to compare the timestamps
-	// ... well, we should track changes in symbol numbering
+	// for internal components, we should track changes in symbol numbering
 	if ( strcmp (name, "Example") == 0)
 	{
 	    return new ExampleNamespace ();

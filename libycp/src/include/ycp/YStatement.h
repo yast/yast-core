@@ -26,6 +26,7 @@ using std::string;
 
 #include "ycp/YCode.h"
 #include "ycp/SymbolTable.h"
+#include "ycp/Import.h"
 
 class SymbolEntry;
 
@@ -304,39 +305,17 @@ public:
  * import
  */
 
-class YSImport : public YStatement {
+class YSImport : public YStatement, public Import {
 public:
-    // module block pointer, pointer to constructor
-    typedef struct {
-	Y2Namespace *block;			// block defining the module
-	SymbolEntry *constructor;	// pointer to constructor (NULL if no constructor)
-	bool activated;			// true if block already evaluated
-    } module_entry;
-
-    // map of name : module_entry
-    typedef std::map<std::string, module_entry> module_map;
-
-private:
-    static module_map m_active_modules;
-
-protected:
-    string m_name;
-    
-    // iterator to share the module state on multiple imports
-    module_map::iterator m_module;
-
-public:
-    YSImport ();
     YSImport (const string &name, int line = 0);
+    YSImport (const string &name, Y2Namespace *name_space);
     YSImport (std::istream & str);
     ~YSImport ();
+    string name () const;
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
-    Y2Namespace *block () const;
     constTypePtr type () const { return Type::Void; };
-    
-    static void flushActiveModules () { m_active_modules.clear (); }
 };
 
 

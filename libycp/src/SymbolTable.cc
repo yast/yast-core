@@ -34,14 +34,14 @@ int SymbolTableDebug = 0;
 //--------------------------------------------------------------
 // TableEntry
 
-TableEntry::TableEntry (const char *key, SymbolEntry *entry, int line, SymbolTable *table)
+TableEntry::TableEntry (const char *key, SymbolEntry *entry, const Point *point, SymbolTable *table)
     : m_prev (0)
     , m_next (0)
     , m_inner (0)
     , m_outer (0)
     , m_key (key)
     , m_entry (entry)
-    , m_line (line)
+    , m_point (point)
     , m_table (table)
 {
 }
@@ -54,12 +54,12 @@ TableEntry::TableEntry (std::istream & str)
     , m_outer (0)
     , m_key (0)
     , m_entry (0)
-    , m_line (0)
+    , m_point (0)
     , m_table (0)
 {
     m_entry = Bytecode::readEntry (str);
     m_key = m_entry->name();
-    m_line = Bytecode::readInt32 (str);
+    m_point = new Point (str);
     if (m_entry->category() == SymbolEntry::c_function)		// read function prototype
     {
 	m_entry->setCode(Bytecode::readCode (str));
@@ -73,8 +73,11 @@ TableEntry::TableEntry (std::istream & str)
 
 TableEntry::~TableEntry ()
 {
+    delete m_point;
 }
 
+
+//-------------------------------------------------------------------
 
 const char *
 TableEntry::key() const
@@ -90,25 +93,17 @@ TableEntry::sentry() const
 }
 
 
+const Point *
+TableEntry::point() const
+{
+    return m_point;
+}
+
+
 TableEntry *
 TableEntry::next() const
 {
     return m_next;
-}
-
-
-int
-TableEntry::line() const
-{
-    return m_line;
-}
-
-
-void
-TableEntry::setLine (int line)
-{
-    m_line = line;
-    return;
 }
 
 
@@ -118,12 +113,25 @@ TableEntry::table() const
     return m_table;
 }
 
+//-------------------------------------------------------------------
+
+// convert declaration to definition (exchanges m_point)
+void
+TableEntry::makeDefinition (int line)
+{
+    Point *point = new Point (m_point->sentry(), line, m_point->point());	// duplicate current m_point, replacing line
+//    y2debug ("TableEntry::makeDefinition (%s -> %s)", m_point->toString().c_str(), point->toString().c_str());
+    delete m_point;
+    m_point = point;
+}
+
 
 string
 TableEntry::toString() const
 {
     static char lbuf[16];
-    sprintf (lbuf, "%d", m_line);
+    if (m_point) sprintf (lbuf, "%d", m_point->line());
+    else strcpy (lbuf, "<nil>");
     string s = string ("TEntry (") + m_key
 	+ "@" + lbuf
 	+ ":" + m_entry->toString()
@@ -135,13 +143,13 @@ TableEntry::toString() const
 std::ostream &
 TableEntry::toStream (std::ostream & str) const
 {
-    y2debug ("TableEntry::toStream (%s:%d)", m_entry->toString().c_str(), m_line);
+//    y2debug ("TableEntry::toStream (%s:%s)", m_entry->toString().c_str(), m_point->toString().c_str());
     Bytecode::writeEntry (str, m_entry);
-    Bytecode::writeInt32 (str, m_line);
+    m_point->toStream (str);
     if ((m_entry->category() == SymbolEntry::c_function)		// write function prototype if it's global
 	&& m_entry->isGlobal())
     {
-	y2debug ("TableEntry::toStream: write global function prototype");
+//	y2debug ("TableEntry::toStream: write global function prototype");
 
 	((YFunction *)(m_entry->code()))->toStream (str);
     }
@@ -159,7 +167,10 @@ TableEntry::remove ()
     }
 }
 
-//--------------------------------------------------------------
+//-------------------------------------------------------------------
+
+//-------------------------------------------------------------------
+
 // SymbolTable
 
 int
@@ -183,19 +194,27 @@ SymbolTable::hash (const char *s)
 
 
 SymbolTable::SymbolTable (int prime)
+    : m_prime ((prime <= 0) ? 211 : prime)
+    , m_used (0)
 {
-    if (prime <= 0) 
-	prime = 211;
+    m_table = (TableEntry **)calloc (m_prime, sizeof (TableEntry *));
 
-    m_prime = prime;
-    m_table = (TableEntry **)calloc (prime, sizeof (TableEntry *));
 //    y2debug ("New table @ %p", this);
 }
 
 
 SymbolTable::~SymbolTable()
 {
-    y2debug ("SymbolTable::~SymbolTable %p", this);
+//    y2debug ("SymbolTable::~SymbolTable %p", this);
+
+    while (!m_xrefs.empty())
+    {
+	delete m_xrefs.top();
+	m_xrefs.pop();
+    }
+
+    endUsage ();
+
     int i;
     int count = 0;
     int used = 0;
@@ -255,6 +274,141 @@ SymbolTable::~SymbolTable()
 }
 
 
+//-------------------------------------------------------------------
+
+void
+SymbolTable::openXRefs ()
+{
+    y2debug ("SymbolTable[%p]::openXRefs()", this);
+    m_xrefs.push (new (std::vector<TableEntry *>));
+
+    return;
+}
+
+
+void
+SymbolTable::closeXRefs ()
+{
+    y2debug ("SymbolTable[%p]::closeXRefs()", this);
+    if (m_xrefs.empty())
+    {
+	y2error ("SymbolTable[%p]::closeXRefs without openXRefs", this);
+	return;
+    }
+    delete m_xrefs.top();
+    m_xrefs.pop();
+
+    return;
+}
+
+
+SymbolEntry *
+SymbolTable::getXRef (unsigned int position) const
+{
+    if (m_xrefs.empty())
+    {
+	y2error ("SymbolTable[%p]::getXRefs empty !", this);
+	return 0;
+    }
+    std::vector<TableEntry *> *refs = m_xrefs.top();
+    if (position >= refs->size())
+    {
+	y2error ("SymbolTable[%p]::getXRefs position %d >= size %d !", this, position, refs->size());
+	return 0;
+    }
+    return (*refs)[position]->sentry();
+}
+
+//-------------------------------------------------------------------
+
+void
+SymbolTable::startUsage ()
+{
+    y2debug ("SymbolTable[%p]::startUsage", this);
+    if (m_used == 0)
+    {
+	m_used = new (std::map<const char *, TableEntry *>);
+    }
+    return;
+}
+
+
+int
+SymbolTable::countUsage ()
+{
+    if (m_used != 0)
+    {
+	return m_used->size();
+    }
+    return 0;
+}
+
+
+void
+SymbolTable::endUsage ()
+{
+    y2debug ("SymbolTable[%p]::endUsage", this);
+    if (m_used)
+    {
+	delete m_used;
+	m_used = 0;
+    }
+    return;
+}
+
+
+std::ostream &
+SymbolTable::writeUsage (std::ostream & str) const
+{
+    y2debug ("SymbolTable[%p]::convertUsage2XRef", this);
+
+    if (m_used == 0)
+    {
+	Bytecode::writeInt32 (str, 0);
+	y2debug ("Unused !");
+	return str;
+    }
+
+    std::vector<TableEntry *> xrefs;
+
+    std::map<const char *, TableEntry *>::iterator it;
+
+    for (it = m_used->begin(); it != m_used->end(); it++)
+    {
+	TableEntry *tentry = it->second;
+	tentry->sentry()->setPosition (xrefs.size());
+	y2debug ("%d -> %s", xrefs.size(), tentry->sentry()->toString().c_str());
+	xrefs.push_back (tentry);
+    }
+
+    bool xref_debug = (getenv (XREFDEBUG) != 0);
+
+    int rsize = xrefs.size();
+
+    if (xref_debug) y2milestone ("Need %d symbols from table %p\n", rsize, this);
+    else y2debug ("Need %d symbols from table %p\n", rsize, this);
+
+    Bytecode::writeInt32 (str, rsize);
+
+    int position = 0;
+    while (position < rsize)
+    {
+	SymbolEntry *sentry = xrefs[position]->sentry();
+
+	if (xref_debug) y2milestone("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+	else y2debug("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+
+	Bytecode::writeCharp (str, sentry->name());
+	sentry->type()->toStream (str);
+	sentry->setPosition (-position - 1);			// negative position -> Xref
+	position++;
+    }
+
+    return str;
+}
+
+//-------------------------------------------------------------------
+
 int
 SymbolTable::size() const
 {
@@ -263,9 +417,9 @@ SymbolTable::size() const
 
 
 TableEntry *
-SymbolTable::enter (const char *key, SymbolEntry *entry, int line)
+SymbolTable::enter (const char *key, SymbolEntry *entry, const Point *point)
 {
-    return enter (new TableEntry (key, entry, line, this));
+    return enter (new TableEntry (key, entry, point, this));
 }
 
 
@@ -351,28 +505,36 @@ SymbolTable::enter (TableEntry *entry)
 }
 
 
+// find (innermost) TableEntry by key and add to m_used
+
 TableEntry *
 SymbolTable::find (const char *key, SymbolEntry::category_t category)
 {
-    TableEntry *entry;
+    TableEntry *tentry;
 
     // Not ready during initial __ctor__    y2debug ("SymbolTable::find (%s)\n", key);
 
     int h = hash (key);			// compute hash
-    entry = m_table[h];
+    tentry = m_table[h];
 
-    while (entry != 0)			// search in hash chain
+    while (tentry != 0)			// search in hash chain
     {
-	if (strcmp (key, entry->m_key) == 0)
+	if (strcmp (key, tentry->m_key) == 0)
 	{
 	    if ((category == SymbolEntry::c_unspec)		// wildcard
-		|| (entry->sentry()->category() == category))	// or matching
+		|| (tentry->sentry()->category() == category))	// or matching
 	    {
-		return entry;
+		if (m_used
+		    && m_used->find (tentry->m_key) == m_used->end())
+		{
+		    tentry->sentry()->setPosition (m_used->size());	// store the position in the sentry
+		    (*m_used)[tentry->m_key] = tentry;			// create the position in the usage list
+		}
+		return tentry;
 	    }
 	    if (category != SymbolEntry::c_unspec)
 	    {
-		entry = entry->m_outer;		// continue category match in scope chain
+		tentry = tentry->m_outer;			// continue category match in scope chain
 	    }
 	    else
 	    {
@@ -381,18 +543,32 @@ SymbolTable::find (const char *key, SymbolEntry::category_t category)
 	}
 	else
 	{
-	    entry = entry->m_next;		// continue search in hash chain
+	    tentry = tentry->m_next;				// continue search in hash chain
 	}
     }
     return 0;
 }
 
 
+// find (innermost) TableEntry by key and add to m_xrefs
+
+TableEntry *
+SymbolTable::xref (const char *key)
+{
+    TableEntry *tentry = find (key, SymbolEntry::c_unspec);
+    if (tentry != 0)
+    {
+	m_xrefs.top()->push_back (tentry);
+    }
+    return tentry;
+}
+
+
 void
 SymbolTable::remove (TableEntry *entry)
 {
-    y2debug ("SymbolTable(%p)::remove (%p)[%s]\n", this, entry, entry->m_key);
-    y2debug ("before remove (%s)", toString().c_str());
+//    y2debug ("SymbolTable(%p)::remove (%p)[%s]\n", this, entry, entry->m_key);
+//    y2debug ("before remove (%s)", toString().c_str());
 
     // unlink from bucket stack
     // pop up bucket stack
@@ -401,12 +577,12 @@ SymbolTable::remove (TableEntry *entry)
 
     TableEntry *candidate = entry->m_outer;
 
-    if (candidate != 0)			// have an outer entry with equal key
+    if (candidate != 0)						// have an outer entry with equal key
     {
-	y2debug ("SymbolTable: Pop scope\n");
-	candidate->m_inner = 0;		// the innermost is being deleted
+	//y2debug ("SymbolTable: Pop scope\n");
+	candidate->m_inner = 0;					// the innermost is being deleted
 
-	candidate->m_prev = entry->m_prev;	// link into hash chain
+	candidate->m_prev = entry->m_prev;			// link into hash chain
 	candidate->m_next = entry->m_next;
 
 	if (entry->m_next != 0)
@@ -431,7 +607,7 @@ SymbolTable::remove (TableEntry *entry)
     }
     else					// first in bucket list
     {
-	y2debug ("SymbolTable: First in bucket\n");
+	//y2debug ("SymbolTable: First in bucket\n");
 	int h = hash (entry->m_key);
 	m_table[h] = entry->m_next;	// next is new first
 	if (entry->m_next != 0)
@@ -440,9 +616,12 @@ SymbolTable::remove (TableEntry *entry)
 
     delete entry;
 
-    y2debug ("after remove (%s)", toString().c_str());
+//    y2debug ("after remove (%s)", toString().c_str());
     return;
 }
+
+
+    void convertUsage2XRef ();
 
 string
 SymbolTable::toString() const
@@ -457,8 +636,7 @@ SymbolTable::toString() const
 	TableEntry *current = m_table[i];
 	if (current != 0)
 	{
-	char buf[32]; sprintf (buf, "[%d:%p]", i, current); s += buf;
-if (SymbolTableDebug) y2debug ("<%s>", s.c_str());
+	    char buf[32]; sprintf (buf, "[%d:%p]", i, current); s += buf;
 	}
 
 	if (current != 0)

@@ -76,9 +76,13 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 
 	bool try_it = false;
 
-	if (strlen(name) > 4 && !strcmp(name + strlen(name) - 4, ".ycp"))
+	if (strlen(name) > 4
+	    && !strcmp(name + strlen(name) - 4, ".ycp"))
+	{
 	    try_it = true;
-	else {
+	}
+	else
+	{
 	    struct stat buf;
 	    if (0 == stat(name, &buf))
 	    {
@@ -88,7 +92,8 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 	    }
 	    else {
 		char line[512];
-		if (line == fgets(line, 512, file)) {
+		if (line == fgets(line, 512, file))
+		{
 		    if (0 == regexec(&rx1, line, 0, 0, 0))
 			try_it = true;
 		}
@@ -108,7 +113,7 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 	if (!file)
 	    return 0;	// shouldn't happen since findy2() already checked
     }
-
+#warning FIXME: check for bytecode too
     // Parse Script
     YCPParser parser(file, fullname.c_str());
     parser.setBuffered();

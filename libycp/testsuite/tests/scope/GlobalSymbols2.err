@@ -1,8 +1,8 @@
 [Scanner] tests/scope/GlobalSymbols2.ycp:8 Warning: Useless 'global' outside of module
 tests/scope/GlobalSymbols2.ycp:9:Redefinition of local symbol
 [Parser] tests/scope/GlobalSymbols2.ycp:9 Redefinition of local symbol
-tests/scope/GlobalSymbols2.ycp:3:'func2' defined here.
-[Parser] tests/scope/GlobalSymbols2.ycp:3 'func2' defined here.
+tests/scope/GlobalSymbols2.ycp:9:'func2' defined in tests/scope/GlobalSymbols2.ycp:3.
+[Parser] tests/scope/GlobalSymbols2.ycp:9 'func2' defined in tests/scope/GlobalSymbols2.ycp:3.
 tests/scope/GlobalSymbols2.ycp:10:Undeclared identifier 'i'
 [Parser] tests/scope/GlobalSymbols2.ycp:10 Undeclared identifier 'i'
 Parsed:

@@ -1,7 +1,7 @@
 tests/types/prototype4.ycp:12:Redeclaration with different type
 [Parser] tests/types/prototype4.ycp:12 Redeclaration with different type
-tests/types/prototype4.ycp:12:'f1' defined here.
-[Parser] tests/types/prototype4.ycp:12 'f1' defined here.
+tests/types/prototype4.ycp:12:'f1' defined in tests/types/prototype4.ycp:12.
+[Parser] tests/types/prototype4.ycp:12 'f1' defined in tests/types/prototype4.ycp:12.
 tests/types/prototype4.ycp:12:Expected 'integer (any)', seen 'integer (integer)'.
 [Parser] tests/types/prototype4.ycp:12 Expected 'integer (any)', seen 'integer (integer)'.
 Parsed:

@@ -1,4 +1,4 @@
-[libycp] Bytecode.cc(readModule):826 Module 'ImpSelf' not found
+[libycp] tests/modules/y-impself.ycp:0 Module 'ImpSelf' not found
 [Interpreter] tests/modules/y-impself.ycp:0 Loading module 'ImpSelf' failed
 tests/modules/y-impself.ycp:2:Can't load module 'ImpSelf'.
 [Parser] tests/modules/y-impself.ycp:2 Can't load module 'ImpSelf'.

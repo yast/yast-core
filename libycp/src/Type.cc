@@ -201,7 +201,7 @@ Type::basematch (constTypePtr expected) const
 {
     tkind ek = expected->m_kind;
 
-    y2debug ("basematch '%s', expected '%s'[%d]", toString().c_str(), expected->toString().c_str(), ek);
+//    y2debug ("basematch '%s', expected '%s'[%d]", toString().c_str(), expected->toString().c_str(), ek);
 
     if (m_kind == ErrorT
 	|| ek == ErrorT)
@@ -223,7 +223,7 @@ Type::basematch (constTypePtr expected) const
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
-	y2debug ("free match");
+//	y2debug ("free match");
 	return 1;
     }
 
@@ -247,10 +247,10 @@ Type::match (constTypePtr expected) const
     if (m_nocheck)
 	return 0;
 
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
     if (basematch (expected) < 0)
     {
-	y2debug ("basematch failed");
+//	y2debug ("basematch failed");
 	return -1;
     }
 
@@ -261,7 +261,7 @@ Type::match (constTypePtr expected) const
 	|| ek == WildcardT
 	|| ek == UnspecT)			// list == list<unspec>
     {
-	y2debug ("free match");
+//	y2debug ("free match");
 	return 0;
     }
 
@@ -298,7 +298,7 @@ Type::equals (constTypePtr expected) const
     if (m_nocheck)
 	return true;
 
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     return (isBasetype() == expected->isBasetype()) && (expected->m_kind == m_kind);
 }
@@ -356,7 +356,7 @@ FlexType::toString () const
 constTypePtr
 FlexType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (type->isUnspec ())
     {
 	return Type::Any;
@@ -368,7 +368,7 @@ FlexType::matchFlex (constTypePtr type) const
 int
 FlexType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     return -1;
 }
@@ -396,7 +396,7 @@ FlexType::unflex (constTypePtr type) const
     {
 	tp = clone();
     }
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -441,7 +441,7 @@ VariableType::toString () const
 constTypePtr
 VariableType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (m_kind == FlexT)
 	return type;
     return 0;
@@ -451,7 +451,7 @@ VariableType::matchFlex (constTypePtr type) const
 int
 VariableType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     if (bm == 1
@@ -468,7 +468,7 @@ VariableType::match (constTypePtr expected) const
 bool
 VariableType::equals (constTypePtr expected) const
 {
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isVariable()
 	    && m_type->equals (((constVariableTypePtr)expected)->m_type))
@@ -491,7 +491,7 @@ TypePtr
 VariableType::unflex (constTypePtr type) const
 {
     TypePtr tp = VariableTypePtr (new VariableType (m_type->unflex(type)));
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -546,7 +546,7 @@ ListType::toString () const
 constTypePtr
 ListType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (type->isList())
     {
 	return m_type->matchFlex (((constListTypePtr)type)->m_type);
@@ -558,7 +558,7 @@ ListType::matchFlex (constTypePtr type) const
 int
 ListType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     if (bm == 1
@@ -575,7 +575,7 @@ ListType::match (constTypePtr expected) const
 bool
 ListType::equals (constTypePtr expected) const
 {
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isList()
 	    && m_type->equals (((constListTypePtr)expected)->m_type))
@@ -605,7 +605,7 @@ TypePtr
 ListType::unflex (constTypePtr type) const
 {
     TypePtr tp = ListTypePtr (new ListType (m_type->unflex(type)));
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 //----------------------------------------------------------------
@@ -666,7 +666,7 @@ MapType::toString () const
 constTypePtr
 MapType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (!type->isMap())
     {
 	return 0;
@@ -681,7 +681,7 @@ MapType::matchFlex (constTypePtr type) const
 int
 MapType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     if (bm == 1
@@ -699,7 +699,7 @@ MapType::match (constTypePtr expected) const
 bool
 MapType::equals (constTypePtr expected) const
 {
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isMap()
 	    && m_valuetype->equals (((constMapTypePtr)expected)->m_valuetype)
@@ -714,7 +714,7 @@ MapType::equals (constTypePtr expected) const
 bool
 MapType::canCast (constTypePtr to) const
 {
-    y2debug ("canCast '%s' to '%s'", toString().c_str(), to->toString().c_str());
+//    y2debug ("canCast '%s' to '%s'", toString().c_str(), to->toString().c_str());
 
     if (to->isMap ()) 
 	return (m_keytype->canCast (((constMapTypePtr)to)->m_keytype))
@@ -735,7 +735,7 @@ TypePtr
 MapType::unflex (constTypePtr type) const
 {
     TypePtr tp = MapTypePtr (new MapType (Type::Any, m_valuetype->unflex(type)));
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -782,7 +782,7 @@ BlockType::toString () const
 constTypePtr
 BlockType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (type->isBlock())
     {
 	return m_type->matchFlex (((constBlockTypePtr)type)->m_type);
@@ -794,7 +794,7 @@ BlockType::matchFlex (constTypePtr type) const
 int
 BlockType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     if (bm == 1
@@ -811,7 +811,7 @@ BlockType::match (constTypePtr expected) const
 bool
 BlockType::equals (constTypePtr expected) const
 {
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isBlock()
 	    && m_type->equals (((constBlockTypePtr)expected)->m_type) )
@@ -841,7 +841,7 @@ TypePtr
 BlockType::unflex (constTypePtr type) const
 {
     TypePtr tp = BlockTypePtr (new BlockType (m_type->unflex(type)));
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -924,7 +924,7 @@ TupleType::toString () const
 constTypePtr
 TupleType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (!type->isTuple())
     {
 	return 0;
@@ -951,7 +951,7 @@ TupleType::matchFlex (constTypePtr type) const
 int
 TupleType::match (constTypePtr expected) const
 {
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     
@@ -985,7 +985,7 @@ TupleType::match (constTypePtr expected) const
 bool
 TupleType::equals (constTypePtr expected) const
 {
-    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isTuple())
     {
@@ -1056,7 +1056,7 @@ TupleType::unflex (constTypePtr type) const
     {
 	tp->concat (m_types[index]->unflex (type));
     }
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -1083,12 +1083,12 @@ FunctionType::FunctionType (std::istream & str)
     : Type (FunctionT, str)
     , m_returntype (Bytecode::readType (str))
 {
-y2debug ("FunctionType::FunctionType (stream)");
+//y2debug ("FunctionType::FunctionType (stream)");
     if (Bytecode::readBool (str))
     {
 	m_arguments = Bytecode::readType (str);
     }
-y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p)", (const void *)m_returntype, (const void *)m_arguments);
+//y2debug ("FunctionType::fromStream (m_returntype %p, m_arguments %p)", (const void *)m_returntype, (const void *)m_arguments);
 }
 
 
@@ -1179,7 +1179,7 @@ FunctionType::toString () const
 constTypePtr
 FunctionType::matchFlex (constTypePtr type) const
 {
-    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
+//    y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
     if (!type->isFunction())
 	return 0;
 
@@ -1197,7 +1197,7 @@ FunctionType::matchFlex (constTypePtr type) const
 int
 FunctionType::match (constTypePtr expected) const
 {
-    y2debug ("FunctionType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("FunctionType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     int bm = basematch (expected);
     
@@ -1209,7 +1209,7 @@ FunctionType::match (constTypePtr expected) const
 	constFunctionTypePtr ft (expected);
 	if (m_returntype->match (ft->m_returntype) < 0)
 	{
-	    y2debug ("return type mismatch");
+//	    y2debug ("return type mismatch");
 	    return -1;
 	}
 
@@ -1227,7 +1227,7 @@ FunctionType::match (constTypePtr expected) const
 	{
 	    if ((esize != 0 && m_arguments == NULL) || (esize != m_arguments->parameterCount()))
 	    {
-		y2debug ("parameter count mismatch");
+//		y2debug ("parameter count mismatch");
 		return -1;
 	    }
 	}
@@ -1253,14 +1253,14 @@ FunctionType::match (constTypePtr expected) const
 bool
 FunctionType::equals (constTypePtr expected) const
 {
-    y2debug ("FunctionType::equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+//    y2debug ("FunctionType::equals '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
 
     if (expected->isFunction())
     {
 	constFunctionTypePtr ft (expected);
 	if (! m_returntype->equals (ft->m_returntype))
 	{
-	    y2debug ("return type mismatch");
+//	    y2debug ("return type mismatch");
 	    return false;
 	}
 
@@ -1277,7 +1277,7 @@ FunctionType::equals (constTypePtr expected) const
 	{
 	    if (! m_arguments->parameterType(index)->equals (ft->parameterType(index)))
 	    {
-		y2debug ("parameter %d type mismatch", index);
+//		y2debug ("parameter %d type mismatch", index);
 		return false;
 	    }
 	}
@@ -1313,7 +1313,7 @@ FunctionType::unflex (constTypePtr type) const
 	    tp->concat (m_arguments->parameterType(index)->unflex(type));
 	}
     }
-    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
+//    y2debug ("unflex '%s' -%s-> '%s'", toString().c_str(), type->toString().c_str(), tp->toString().c_str());
     return tp;
 }
 
@@ -1364,16 +1364,16 @@ Type::commontype (constTypePtr type) const
 {
     if (match (type) >= 0)
     {
-y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+//y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
 	return this;
     }
     else if (!isAny()
 	     && type->match (this) >= 0)
     {
-y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+//y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
 	return type;
     }
-y2debug ("commontype '%s' ('%s') any", toString().c_str(), type->toString().c_str());
+//y2debug ("commontype '%s' ('%s') any", toString().c_str(), type->toString().c_str());
     return Type::Any;
 }
 

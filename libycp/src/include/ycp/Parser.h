@@ -137,11 +137,6 @@ public:
     int blockstack_depth;
     
     /**
-     * if true, parser will import standard namespaces before starting parse
-     */
-    bool preload_namespaces;
-    
-    /**
      * Initialize the internal state of the parser.
      */ 
     void init ();
@@ -256,13 +251,8 @@ public:
     /**
      * Sets file_name
      */
-    void SetFilename (const string f);
+    void setFilename (const string f);
     
-    /**
-     * Whether should parser import implicit namespaces before parsing
-     */
-    void setPreloadNamespaces (bool on);
-
     /**
      * Resets the parser. Use this call before you parse from
      * a new source. It resets the line numbers in the scanner.

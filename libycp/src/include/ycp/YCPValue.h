@@ -22,6 +22,7 @@
 #ifndef YCPValue_h
 #define YCPValue_h
 
+#define XREFDEBUG "Y2XREFDEBUG"
 
 #include "YCPElement.h"
 

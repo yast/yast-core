@@ -1,0 +1,9 @@
+{
+    module "NestedC";
+
+    import "NestedA";
+    global string c4 = "c" + NestedA::a4;
+    global string c3 = "c" + NestedA::a3;
+    global string c2 = "c" + NestedA::a2;
+    global string c1 = "c" + NestedA::a1;
+}
