@@ -1,0 +1,26 @@
+# testcase for redeclaration with a wrong type (#37336)
+
+{
+
+    module "foo";
+    
+global void SSLInit (string key);
+
+global void SSLInit (any widget)
+{
+    return;
+}
+
+global void SSLTypeInit ()
+{
+    return;
+}
+
+
+global void SSLTypeStore (any widget)
+{
+    return;
+}
+
+}
+

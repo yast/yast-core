@@ -1,0 +1,8 @@
+[Parser] tests/types/prototype6.ycp:9 Redeclaration with different type
+[Parser] tests/types/prototype6.ycp:9 'SSLInit' defined in tests/types/prototype6.ycp:9.
+[Parser] tests/types/prototype6.ycp:9 Expected 'void (string)', seen 'void (any)'.
+Parsed:
+----------------------------------------------------------------------
+Parser error
+----------------------------------------------------------------------
+[Interpreter] tests/types/prototype6.ycp:3 Parser error
