@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 29 18:07:41 CET 2004 - visnov@suse.cz
+
+- temporary fix bytecode testsuite for nonroot build 
+- UI emits only warning not error if no handler is available
+
+-------------------------------------------------------------------
 Thu Jan 29 17:49:41 CET 2004 - mvidner@suse.cz
 
 - ini agent: make parent directories when writing files
