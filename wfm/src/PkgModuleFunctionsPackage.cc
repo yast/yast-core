@@ -934,7 +934,7 @@ PkgModuleFunctions::PkgSrcInstall (YCPList args)
     {
 	return YCPBoolean (false);
     }
-    return YCPBoolean (selectable->set_source_install());
+    return YCPBoolean (selectable->set_source_install(true));
 }
 
 
