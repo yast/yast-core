@@ -3157,15 +3157,15 @@ function_call:
 			constTypePtr finalT = function->finalize ();
 			if (finalT != 0)
 			{
-			    yyLerror ("Parameters don't match any declaration:", $4.l);
-			    yyLerror (function->toString().c_str(), $4.l);
-        		    yyLerror ("Candidates are:", $4.l);
+			    yyLerror ("Parameters don't match any declaration:", $2.l);
+			    yyLerror (function->toString().c_str(), $2.l);
+        		    yyLerror ("Candidates are:", $2.l);
 
 			    // enumerate all possible calls
 			    TableEntry* tentry = $1.v.tval;
 			    while (tentry)
 			    {
-				yyLerror (tentry->sentry ()->toString ().c_str (), $4.l);
+				yyLerror (tentry->sentry ()->toString ().c_str (), $2.l);
 				tentry = tentry->next_overloaded ();
 			    }
 			    $$.t = 0;
