@@ -84,8 +84,9 @@ typedef enum ycp_builtin {
 	YCPB_BRACKET,		/* 56 */
 	YCPB_BASSIGN,		/* 57 */
 	YCPB_GETTEXTDOMAIN,	/* 58 */
+	YCPB_SORT,		/* 59 */
 	/* assign must be last here, see YCPBuiltin.cc  */
-	YCPB_ASSIGN		/* 59 */
+	YCPB_ASSIGN		/* 60 */
 } builtin_t;
 
 

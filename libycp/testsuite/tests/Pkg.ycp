@@ -1,0 +1,26 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Pkg.ycp
+#
+#  Purpose:     test "Pkg::" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+  integer a = Pkg::function();
+  integer b = Pkg::function(1,2,3);
+  return 0;
+}
+
+{
+  integer c = Pkg::variable;		// error
+  integer d = Pkg::{ return 42; };
+  integer e = WFM::Pkg::function();
+  integer f = Pkg::Foo::bar();
+  return 0;
+}

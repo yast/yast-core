@@ -303,6 +303,7 @@ union		{ return UNION;		};
 merge		{ return MERGE;		};
 add		{ return ADD;		};
 change		{ return CHANGE;	};
+sort		{ return SORT;		};
 
   /* -- basetype  */
 
@@ -329,6 +330,7 @@ bool	    { logError ("Seen 'bool', use 'boolean' instead", yylineno); return 0; 
 
 UI	{ return UI; }
 WFM	{ return WFM; }
+Pkg	{ return Pkg; }
 SCR	{ return SCR; }
 
  /* -- path  */

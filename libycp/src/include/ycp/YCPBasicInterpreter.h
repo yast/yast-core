@@ -88,14 +88,32 @@ public:
     virtual ~YCPBasicInterpreter();
 
     /**
-     * Evalutes a YCP value.
+     * Evaluates a YCP value.
      * @param value value to be evaluated
      * @return the evaluation
      */
     YCPValue evaluate(const YCPValue& value);
+
+    /**
+     * Evaluates a YCP value in UI context
+     * @param value value to be evaluated
+     * @return the evaluation
+     */
     virtual YCPValue evaluateUI(const YCPValue& value);
-    virtual YCPValue evaluateWFM(const YCPValue& value);
+
+    /**
+     * Evaluates a YCP value in SCR context
+     * @param value value to be evaluated
+     * @return the evaluation
+     */
     virtual YCPValue evaluateSCR(const YCPValue& value);
+
+    /**
+     * Evaluates a YCP value in WFM context
+     * @param value value to be evaluated
+     * @return the evaluation
+     */
+    virtual YCPValue evaluateWFM(const YCPValue& value);
 
     /**
      * Callback evaluate.

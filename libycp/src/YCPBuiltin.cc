@@ -153,7 +153,8 @@ string YCPBuiltinRep::toString() const
 	{ "[]", 101 },		/* 56 YCPB_BRACKET */
 	{ "[]=", 102 },		/* 57 YCPB_BASSIGN */
 	{ "//gettextdomain", 0 },/* 58 YCPB_TEXTDOMAIN */
-	{ "", 2 } 		/* 59 YCPB_ASSIGN */
+	{ "sort", 0 },		/* 59 YCPB_SORT */
+	{ "", 2 } 		/* 60 YCPB_ASSIGN */
     };
 
     if (code > YCPB_ASSIGN)

@@ -72,12 +72,12 @@ static string current_textdomain;
 %token  EMPTY LIST DEFINE UNDEFINE I18N
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL QUOTED_SYMBOL
-%token  DCOLON UI WFM SCR
+%token  DCOLON UI WFM Pkg SCR
 %token  QUOTED_BLOCK QUOTED_EXPRESSION
 %token	YCP_VOID YCP_BOOLEAN YCP_INTEGER YCP_FLOAT YCP_STRING YCP_TIME YCP_BYTEBLOCK YCP_PATH
 %token  ANY YCP_DECLTYPE MODULE IMPORT EXPORT MAPEXPR INCLUDE GLOBAL TEXTDOMAIN
 %token	DUMPSCOPE MEMINFO SIZE LOOKUP SELECT REMOVE FOREACH EVAL SYMBOLOF
-%token  CONST FULLNAME CALLBACK UNION MERGE ADD CHANGE CLOSEBRACKET
+%token  CONST FULLNAME CALLBACK UNION MERGE ADD CHANGE SORT CLOSEBRACKET
 
  /* bindings in order of precedence, lowest first  */
 
@@ -852,12 +852,13 @@ term:
 		  $$.e = YCPBuiltin (YCPB_SELECT, e);
 		  $$.l = LINE_NOW; }
 |	REMOVE '(' tuple_elements ')'	{
-		  YCPList e = $3.e->asValue()->asList();
-		  if (e->size() != 2) {
+		YCPList e = $3.e->asValue()->asList();
+		if (e->size() != 2) {
 			yyerror ("remove() only accepts 2 arguments"); YYERROR;
-		  }
-		  $$.e = YCPBuiltin (YCPB_REMOVE, e);
-		  $$.l = LINE_NOW; }
+		}
+		$$.e = YCPBuiltin (YCPB_REMOVE, e);
+		$$.l = LINE_NOW;
+	}
 |	FOREACH '(' tuple_elements ')'	{
 		  YCPList e = $3.e->asValue()->asList();
 		  if ((e->size() < 3) || (e->size() > 4)) {
@@ -898,6 +899,16 @@ term:
 		$$.e = YCPBuiltin (YCPB_CHANGE, $3.e->asValue()->asList());
 		$$.l = LINE_NOW;
 	}
+|	SORT '(' tuple_elements ')'	{
+		YCPList e = $3.e->asValue()->asList();
+		if ((e->size() != 1)
+		    && (e->size() != 4))
+		{
+			yyerror ("sort () only accepts 1 or 4 arguments"); YYERROR;
+		}
+		$$.e = YCPBuiltin (YCPB_SORT, e);
+		$$.l = LINE_NOW;
+	}
 |	UI other_builtin {
 		$$.e = YCPBuiltin (YCPB_UI, $2.e->asValue());
 		$$.l = LINE_NOW;
@@ -908,6 +919,25 @@ term:
 	}
 |	WFM other_builtin {
 		$$.e = YCPBuiltin (YCPB_WFM, $2.e->asValue());
+		$$.l = LINE_NOW;
+	}
+|	Pkg other_builtin {
+		if ($2.e->asValue()->isTerm())
+		{
+		    YCPTerm pkgterm = $2.e->asValue()->asTerm();
+		    if (pkgterm->name_space().empty())
+		    {
+			$$.e = YCPBuiltin (YCPB_WFM, YCPTerm (pkgterm->symbol(), "Pkg", pkgterm->args()));
+		    }
+		    else
+		    {
+			yyerror ("Namespace qualifier after Pkg::"); YYERROR;
+		    }
+		}
+		else
+		{
+		    yyerror ("Only Pkg::<func>(<args>...) allowed"); YYERROR;
+		}
 		$$.l = LINE_NOW;
 	}
 |	identifier '(' tuple_elements ')'	{

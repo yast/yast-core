@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+  integer `a = WFM::Pkg::function ();
+  integer `b = WFM::Pkg::function (1, 2, 3);
+  return 0;
+}
+----------------------------------------------------------------------
+[libycp] YCPBasicInterpreter.cc(evaluateWFM):90 dummy evaluateWFM (Pkg::function ())
+[libycp] YCPBasicInterpreter.cc(evaluateWFM):90 dummy evaluateWFM (Pkg::function (1, 2, 3))
+[Scanner] tests/Pkg.ycp:21 Syntax error: Only Pkg::<func>(<args>...) allowed

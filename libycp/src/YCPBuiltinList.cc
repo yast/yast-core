@@ -669,8 +669,10 @@ YCPValue evaluateSort(YCPInterpreter *interpreter, const YCPList& args)
      * sort(`x, `y, [1, 2], false) -> endless loop!
      * </pre>
      */
-    else if (args->size() == 4 && args->value(0)->isSymbol() &&
-	args->value(1)->isSymbol() && args->value(2)->isList())
+    else if (args->size() == 4
+	&& args->value(0)->isSymbol()
+	&& args->value(1)->isSymbol()
+	&& args->value(2)->isList())
     {
 	YCPSymbol      x           = args->value(0)->asSymbol();
 	YCPSymbol      y           = args->value(1)->asSymbol();
@@ -693,20 +695,25 @@ YCPValue evaluateSort(YCPInterpreter *interpreter, const YCPList& args)
 
 	YCPList result = l->shallowCopy();
 
+	interpreter->openScope();
+
+	const string xname = x->symbol();
+	const string yname = y->symbol();
+	interpreter->declareSymbol (xname, declaration, YCPVoid(), false, false, false);
+	interpreter->declareSymbol (yname, declaration, YCPVoid(), false, false, false);
+
 	bool sorted;
 	do {
 	    sorted = true;
 	    for (int i=0; i < result->size()-1; i++)
 	    {
 		// Compare two items
-		interpreter->openScope();
-		interpreter->declareSymbol (x->symbol(), declaration, result->value(i), false, false, false);
-		interpreter->declareSymbol (y->symbol(), declaration, result->value(i+1), false, false, false);
+		interpreter->assignSymbol (xname, result->value(i), "");
+		interpreter->assignSymbol (yname, result->value(i+1), "");
 		YCPValue ret = interpreter->evaluate(order);
 		if (ret.isNull())
 		{
 		    ret = YCPError ("Bad sort order " + order->toString());
-		    interpreter->closeScope ();
 		    sorted = true;
 		    break;
 		}
@@ -720,9 +727,9 @@ YCPValue evaluateSort(YCPInterpreter *interpreter, const YCPList& args)
 		    result->swap(i, i+1);
 		    sorted = false;
 		}
-		interpreter->closeScope ();
 	    }
 	} while (!sorted);
+	interpreter->closeScope ();
 	return result;
     }
     return YCPError("Wrong arguments to sort()");
