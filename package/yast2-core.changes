@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 12 12:20:54 CET 2004 - visnov@suse.cz
+
+- drop unneeded type info
+- 2.9.58 
+
+-------------------------------------------------------------------
 Thu Mar 11 22:29:27 CET 2004 - ma@suse.de
 
 - Added: Pkg::PkgSolveCheckTargetOnly and Pkg::PkgGetFilelist
