@@ -352,7 +352,7 @@ YSTypedef::YSTypedef (std::istream & str)
 string
 YSTypedef::toString() const
 {
-    string s = string ("typedef ") + m_name + " " + m_type->toString() + ";";
+    string s = string ("typedef ") + m_type->toString() + " " + m_name + ";";
     return s;
 }
 

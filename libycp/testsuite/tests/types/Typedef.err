@@ -1,10 +1,10 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // typedef myType list <string>;
+    // typedef list <string> myType;
     // list <string> mt
     // filename: "tests/types/Typedef.ycp"
-    typedef myType list <string>;
+    typedef list <string> myType;
     list <string> mt = ["a", "b"];
     return mt;
 }
@@ -12,20 +12,20 @@ Parsed:
 Parsed:
 ----------------------------------------------------------------------
 {
-    // typedef myType list <path>;
+    // typedef list <path> myType;
     // list <path> mt
     // filename: "tests/types/Typedef.ycp"
-    typedef myType list <path>;
+    typedef list <path> myType;
     list <path> mt = [.p.a.t.h];
 }
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
 {
-    // typedef myType list <list <path>>;
+    // typedef list <list <path>> myType;
     // list <list <path>> mt
     // filename: "tests/types/Typedef.ycp"
-    typedef myType list <list <path>>;
+    typedef list <list <path>> myType;
     list <list <path>> mt = [[.p.a.t.h]];
 }
 ----------------------------------------------------------------------

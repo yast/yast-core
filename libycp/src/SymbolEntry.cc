@@ -434,7 +434,7 @@ SymbolEntry::toString (bool with_type) const
 	break;
 	case c_typedef:
 	{
-	    return s + catString() + " " + m_name.asString() + " " + m_type->toString() + ";";
+	    return s + catString() + " " + m_type->toString() + " " + m_name.asString() + ";";
 	}
 	break;
 	case c_const:

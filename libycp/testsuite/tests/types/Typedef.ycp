@@ -1,27 +1,27 @@
 {
   // defined types
-  typedef myType list <string>;
+  typedef list <string> myType;
   myType mt = ["a","b"];
   return mt;
 }
 
 {
   // defined types
-  typedef myType list <path>;
+  typedef list <path> myType;
   myType mt = [.p.a.t.h];
   // implicit return; (void)
 }
 
 {
   // defined types
-  typedef myType list <list <path> >;
+  typedef list <list <path> > myType;
   myType mt = [[.p.a.t.h]];
 }
 
 
 {
   // defined types
-  typedef myType list <list <path> >;
+  typedef list <list <path> > myType;
   myType mt = [.p.a.t.h];	// error
 }
 

@@ -1,10 +1,10 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // typedef number integer;
+    // typedef integer number;
     // integer Inc (integer n)
     // filename: "tests/types/Typedef2.ycp"
-    typedef number integer;
+    typedef integer number;
     integer Inc (integer n)
 {
     return (n + 1);
@@ -15,10 +15,10 @@ Parsed:
 Parsed:
 ----------------------------------------------------------------------
 {
-    // typedef number float;
+    // typedef float number;
     // list <float> Singleton (float n)
     // filename: "tests/types/Typedef2.ycp"
-    typedef number float;
+    typedef float number;
     list <float> Singleton (float n)
 {
     return [n];

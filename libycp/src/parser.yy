@@ -1312,25 +1312,31 @@ statement:
 		$$.c = 0;
 		$$.t = Type::Unspec;
 	    }
-|	TYPEDEF identifier type ';'
+|	TYPEDEF type identifier ';'
 	    {
-		if (!($2.t)->isUnspec ())		// known identifier
+		if ($2.t->isUnspec())			// bad type
 		{
-		    yyLerror ("typedef symbol already declared", $2.l);
 		    $$.t = 0;
 		    break;
 		}
 
-		TableEntry *tentry = p_parser->blockStack->theBlock->newEntry ($2.v.nval, SymbolEntry::c_typedef, $3.t, $1.l);
+		if (!($3.t)->isUnspec ())		// known identifier
+		{
+		    yyLerror ("typedef symbol already declared", $3.l);
+		    $$.t = 0;
+		    break;
+		}
+
+		TableEntry *tentry = p_parser->blockStack->theBlock->newEntry ($3.v.nval, SymbolEntry::c_typedef, $2.t, $1.l);
 		if (tentry == 0)		/* can't happen ... */
 		{
-		    yyLerror ("typedef symbol duplicate", $2.l);
+		    yyLerror ("typedef symbol duplicate", $3.l);
 		    $$.t = 0;
 		    break;
 		}
 
 		p_parser->scanner()->localTable()->enter (tentry);
-		$$.c = new YSTypedef ($2.v.nval, $3.t, $1.l);
+		$$.c = new YSTypedef ($3.v.nval, $2.t, $1.l);
 		$$.t = Type::Unspec;
 	    }
 |	definition

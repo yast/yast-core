@@ -2,7 +2,7 @@
 
 // Parameter matching
 {
-    typedef number integer;
+    typedef integer number;
     number Inc (number n)
     {
 	return n + 1;
@@ -13,7 +13,7 @@
 
 // list(typedef)
 {
-    typedef number float;
+    typedef float number;
     list <number> Singleton (number n)
     {
 	return [n];
