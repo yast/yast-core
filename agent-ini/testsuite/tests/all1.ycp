@@ -1,0 +1,38 @@
+//
+{
+    // test .all
+    // cloned off subsec3
+
+    map a = Read (.all);
+    y2milestone (".all: %1",	a);
+    y2milestone (".all.z1: %1", Read (.all.z1));
+    y2milestone (".all.a1.a2: %1", Read (.all.a1.a2));
+
+    y2milestone (".all.nonono: %1", Read (.all.nonono));
+    y2milestone (".all.no.no.no: %1", Read (.all.no.no.no));
+
+    map v = $[
+	"kind": "value",
+	"name": "newkey",
+	"type": 0,
+	"comment": "",
+	"value": "newval",
+	];
+    map s = $[
+	"kind": "section",
+	"name": "newsec",
+	"type": 1,
+	"file": -1,
+	"comment": "",
+	"value": [v],
+	];
+    a["value", 2, "value", 0] = s;
+    Write (.all, a);
+/*
+	TODO test case with write .all.s1.t11
+	test cases with bad and missing values
+	todo solve integer overflows in read/write_by in general
+	- guard when using
+	- catch when setting (make functions)
+*/
+}

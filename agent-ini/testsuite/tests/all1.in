@@ -1,0 +1,23 @@
+start s1
+  start s11
+    key111=val111
+  end s11
+  key11 = val11
+  sec t11
+    key11=val11
+end s1
+
+start z1
+  sec z2
+  end z2
+endsec z1
+
+start a1
+  sec a2
+    v = a2
+    sec a3
+      v = a3
+  end a2
+  v = a1
+end a1
+

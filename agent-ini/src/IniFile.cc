@@ -422,6 +422,12 @@ int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
 {
     if (ip->isFlat ())
 	return setValueFlat (p, v);
+
+    if (p->length() >= 1 && p->component_str (0) == "all")
+    {
+	return setAll (p, v, 1);
+    }
+
     if (p->length() < 2)
     {
 	y2error ("I do not know what to write to %s.", p->toString().c_str());
