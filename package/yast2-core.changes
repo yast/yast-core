@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jun 26 13:53:00 CEST 2003 - msvec@suse.de
+
+- fixed regexpsub behavior
+- 2.8.3
+
+-------------------------------------------------------------------
 Wed Jun 25 10:49:31 CEST 2003 - cschum@suse.de
 
 - Removed WFM builtin CallFile as it isn't needed anymore by YOU.

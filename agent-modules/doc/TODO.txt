@@ -26,7 +26,7 @@ Directives:
 Supported:
   alias, options, pre-install, post-install
 Unsupported, but probably safe:
-  above, bellow, install, remove, probe, probe-all, post-install, post-remove
+  above, below, install, remove, probe, probe-all, post-install, post-remove
 Don't know and probably dangerous:
   define, depfile, include, else, if, endif, elseif, insmod_opt, path,
   path[TAG], keep, include, [add] prefix

@@ -178,7 +178,7 @@ ModuleEntry::EntryArg ModulesConf::getOptions(const string module) {
 
 /*
  * Move test for MAGIC_ENTRY to ModuleEntry _above_ AND
- * return modules_conf_map[][].getOption(option); _bellow
+ * return modules_conf_map[][].getOption(option); _below
  * has been planned, but probably remains here, because of
  * better possibility of error reporting.
  */

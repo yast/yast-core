@@ -51,7 +51,7 @@ working on extending libhd in this regard.
 > 
 > only reports devices which have an entry in the libhd database.
 > 
-> This applies to the following .probe pathes:
+> This applies to the following .probe paths:
 > cdrom, floppy, disk, netif, display, mouse, keyboard, sound, isdn, modem,
 > storage, netdev, monitor, printer, tv, scanner, system, camera, chipcard, and
 > usb.
