@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Oct 02 11:35:20 CEST 2003 - arvin@suse.de
+
+- fixed compiling of losetup agent
+
+-------------------------------------------------------------------
 Sun Sep 21 19:38:59 CEST 2003 - arvin@suse.de
 
 - extended MediaChange callback to support double sided media
