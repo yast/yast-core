@@ -63,6 +63,8 @@ WFMInterpreter::get_env_lang () const
     return 0;
 }
 
+// encoding for gettext() is always UTF-8
+const string textEncoding = "UTF-8";
 
 WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 				Y2Component *user_interface,
@@ -384,7 +386,7 @@ WFMInterpreter::changeToModuleLanguage () const
 
     bindtextdomain (currentTextdomain.c_str(), LOCALEDIR);
 
-    bind_textdomain_codeset (currentTextdomain.c_str(), currentEncoding.c_str());
+    bind_textdomain_codeset (currentTextdomain.c_str(), textEncoding.c_str());
 
     /* Change language. see info:gettext: */
     setenv ("LANGUAGE", currentLanguage.c_str(), 1);
@@ -397,8 +399,8 @@ WFMInterpreter::changeToModuleLanguage () const
 	++_nl_msg_cat_cntr;
     }
 
-    y2milestone ("language '%s', encoding '%s', textdomain '%s'",
-	     currentLanguage.c_str(), currentEncoding.c_str(),
+    y2milestone ("language '%s', text encoding '%s', textdomain '%s'",
+	     currentLanguage.c_str(), textEncoding.c_str(),
 	     currentTextdomain.c_str());
 
     textdomainOrLanguageHasChanged = false;
@@ -1319,7 +1321,7 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
 	currentLanguage = term->value(0)->asString()->value();
 
-#warning FIXME: No need to get the proposed encoding - what is the encoding in the argument good for? 
+#warning FIXME: the currentEncoding is not set correctly (unused in ncurses)
 
 	if (term->size() > 1 && term->value(1)->isString())
 	{
@@ -1327,19 +1329,19 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	}
 	else
 	{
-	    // To Do: remove this part - not needed any longer, encoding for gettext is always UTF-8.
+	    // Don't call setlocale( LC_ALL, lang) because lang is (mostly) set wrong.
+	    // For ncurses LC_CTYPE has to be set according the terminal encoding and NOT e.g.
+	    // to de_DE for an UTF-8 terminal or de_DE.UTF-8 if it's not an UTF-8 terminal).
+	    // TO DO: get the correct current encoding !!!
 	    
-	    // Don't call setlocale( LC_ALL, lang) because this mostly is wrong (for ncurses LC_CTYPE 
-	    // has to be set according the terminal encoding and NOT e.g. to de_DE or de_DE.UTF-8 if it's
-	    // not an UTF-8 terminal).
 	    // setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
-	    proposedEncoding = nl_langinfo (CODESET);
-	    if (proposedEncoding.empty())
-	    {
-		y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
-	    }
-	    y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
-	    currentEncoding = "UTF-8";				// default encoding
+	    // proposedEncoding = nl_langinfo (CODESET);
+	    // if (proposedEncoding.empty())
+	    // {
+	    //   y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
+	    // }
+	    // y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
+	    // currentEncoding = "UTF-8";                        // default encoding
 	}
 
 	textdomainOrLanguageHasChanged = true;
