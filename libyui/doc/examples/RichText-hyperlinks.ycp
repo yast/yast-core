@@ -8,7 +8,8 @@ UI::{
 				 + "<p>Clicking on a <a href=\"link\">link</a> will make "
 				 + "<a href=\"user_input\">UserInput()</a> return "
 				 + "with the <i>href</i> part of the hyperlink"
-				 + "as a (string) return value."
+				 + "as a (string) return value. The product is: &product; . 
+				 + 2 &gt; 1"
 				 ),
 		      `HBox(
 			    `Label( "You clicked: " ),
