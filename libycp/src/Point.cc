@@ -35,7 +35,6 @@
 
    Point is a linked list for definition points inside include files.
 
-$Id$
 /-*/
 // -*- c++ -*-
 

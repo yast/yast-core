@@ -17,7 +17,6 @@
 
    static member functions
 
-$Id$
 /-*/
 
 #include "ycp/y2log.h"

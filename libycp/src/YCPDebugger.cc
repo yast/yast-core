@@ -15,7 +15,6 @@
    Author:     Arvin Schnell <arvin@suse.de>
    Maintainer: Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
 
 #define _GNU_SOURCE

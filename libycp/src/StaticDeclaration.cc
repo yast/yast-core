@@ -19,7 +19,6 @@
    Import static declarations as 'builtins' to the global
    symbol table.
 
-$Id$
 /-*/
 
 

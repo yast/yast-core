@@ -17,7 +17,6 @@
 
    interface to the bison generated parser
 
-$Id$
 /-*/
 
 #include <stdlib.h>

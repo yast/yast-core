@@ -17,7 +17,6 @@
 
    Various wrappers for YCode elements as YCPValue
 
-$Id$
 /-*/
 
 #include "YCP.h"

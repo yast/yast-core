@@ -15,7 +15,6 @@
    Author:     Mathias Kettner <kettner@suse.de>
    Maintainer: Thomas Roelz <tom@suse.de>
 
-$Id$
 /-*/
 
 #include <ycp/y2log.h>

@@ -15,7 +15,6 @@
    Author:	Klaus Kaempf <kkaempf@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
-$Id$
 /-*/
 
 // MAJOR and MINOR number must the the same in header, RELEASE is assumed to

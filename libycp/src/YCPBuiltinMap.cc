@@ -16,7 +16,6 @@
 		Arvin Schnell <arvin@suse.de>
    Maintainer:	Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
 
 #include "ycp/YCPBuiltinMap.h"

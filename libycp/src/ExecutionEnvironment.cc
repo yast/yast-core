@@ -9,7 +9,7 @@
  *
  * Authors:
  *   Stanislav Visnovsky <visnov@suse.cz>
- * $Id$
+ *
  */
 
 #include "ycp/ExecutionEnvironment.h"

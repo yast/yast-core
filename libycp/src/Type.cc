@@ -15,7 +15,6 @@
    Author:	Klaus Kaempf <kkaempf@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
-$Id$
 /-*/
 
 #include "ycp/y2log.h"

@@ -16,7 +16,6 @@
    Author:	Klaus Kaempf <kkaempf@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
-$Id$
 /-*/
 // -*- c++ -*-
 #include <stdio.h>

@@ -18,7 +18,6 @@
 		Arvin Schnell <arvin@suse.de>
    Maintainer:	Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
 
 #ifndef _GNU_SOURCE

@@ -17,7 +17,6 @@
 		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Arvin Schnell <arvin@suse.de>
 
-$Id$
 /-*/
 
 #include "ycp/YCPBuiltinByteblock.h"

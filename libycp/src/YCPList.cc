@@ -16,7 +16,6 @@
 		Klaus Kaempf <kkaempf@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
-$Id$
 /-*/
 
 #include "YCP.h"
