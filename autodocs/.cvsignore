@@ -5,3 +5,5 @@ Makefile.in
 *.tag
 doxygen.css
 doxygen.log
+doxygen.conf
+installdox

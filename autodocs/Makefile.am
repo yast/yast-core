@@ -4,12 +4,11 @@
 htmldir = $(docdir)/autodocs
 
 html_DATA = index.html $(wildcard *.html *.png) doxygen.css @RPMNAME@.tag
-
-CLEANFILES = $(html_DATA) doxygen.log
+CLEANFILES = $(html_DATA) doxygen.log doxygen.conf installdox
 
 DOC=/usr/share/doc/packages
-index.html:
-	@ybindir@/ydoxygen PROJECT_NAME=@RPMNAME@ \
+index.html: $(wildcard $(top_srcdir)/*/*.cc $(top_srcdir)/*/*/*.cc)
+	@ybindir@/ydoxygen -d PROJECT_NAME=@RPMNAME@ \
 		INPUT=.. \
 		"TAGFILES=\
 		\"$(DOC)/liby2util/autodocs/liby2util.tag = \
