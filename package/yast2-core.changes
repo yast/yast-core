@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Apr  2 16:14:59 CEST 2004 - visnov@suse.cz
+
+- YaST is now GPL
+- 2.9.76 
+
+-------------------------------------------------------------------
 Thu Apr  1 18:01:55 CEST 2004 - visnov@suse.cz
 
 - restore textdomain at the end of included file (#36989) 
