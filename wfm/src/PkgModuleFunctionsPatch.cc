@@ -538,6 +538,19 @@ PkgModuleFunctions::YouRemovePackages (YCPList args)
 }
 
 /**
+  @builtin Pkg::YouDisconnect () -> bool
+
+  Disconnect YOU from server.
+*/
+YCPValue
+PkgModuleFunctions::YouDisconnect (YCPList args)
+{
+    _last_error = _y2pm.youPatchManager().instYou().disconnect();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
+}
+
+/**
    @builtin Pkg::YouFinish () -> bool
 
    finish update. Writes date of last update.

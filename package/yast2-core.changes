@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 29 13:24:08 CEST 2003 - cschum@suse.de
+
+- WFM: Added Pkg::YouDisconnect().
+
+-------------------------------------------------------------------
 Mon Jul 21 09:55:06 CEST 2003 - arvin@suse.de
 
 - handle new hwinfo-field unix_dev_name2 (bug #26121)
