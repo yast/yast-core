@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		Y2UIComponent_builtins.cc
+  File:		YUI_builtins.cc
 
 		UI builtin commands
 
@@ -42,7 +42,7 @@
 #include <ycp/YCPMap.h>
 #include <ycp/YCPVoid.h>
 
-#include "Y2UIComponent.h"
+#include "YUI.h"
 #include "YEvent.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
@@ -55,7 +55,7 @@
 
 using std::string;
 
-// builtin HasSpecialWidget() -> Y2UIComponent_special_widgets.cc
+// builtin HasSpecialWidget() -> YUI_special_widgets.cc
 
 
 /**
@@ -69,13 +69,13 @@ using std::string;
  * @example SetModulename( "inst_environment" )
  */
 
-void Y2UIComponent::evaluateSetModulename( const YCPString & name )
+void YUI::evaluateSetModulename( const YCPString & name )
 {
     _moduleName = name->value();
 }
 
 
-const char *Y2UIComponent::moduleName()
+const char *YUI::moduleName()
 {
     return _moduleName.c_str();
 }
@@ -96,7 +96,7 @@ const char *Y2UIComponent::moduleName()
  * @example GetModulename()
  */
 
-YCPValue Y2UIComponent::evaluateGetModulename( const YCPTerm & term )
+YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
 {
     if ( ( term->size() == 1 ) && ( term->value(0)->isString() ) )
     {
@@ -121,7 +121,7 @@ YCPValue Y2UIComponent::evaluateGetModulename( const YCPTerm & term )
  * @example SetLanguage( "en_GB" )
  */
 
-void Y2UIComponent::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
+void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
 {
     string lang = language->value();
     if ( !encoding.isNull() )
@@ -154,7 +154,7 @@ void Y2UIComponent::evaluateSetLanguage( const YCPString & language, const YCPSt
  *
  * @example sformat( "Welcome to %1", GetProductName() );
  **/
-YCPString Y2UIComponent::evaluateGetProductName()
+YCPString YUI::evaluateGetProductName()
 {
     return YCPString( _productName );
 }
@@ -176,7 +176,7 @@ YCPString Y2UIComponent::evaluateGetProductName()
  * 
  * @example SetProductName( "SuSE HyperWall" );
  **/
-void Y2UIComponent::evaluateSetProductName( const YCPString & name )
+void YUI::evaluateSetProductName( const YCPString & name )
 {
     _productName = name->value();
 }
@@ -186,7 +186,7 @@ void Y2UIComponent::evaluateSetProductName( const YCPString & name )
  * Default UI-specific setLanguage()
  * Returns OK (YCPVoid() )
  */
-YCPValue Y2UIComponent::setLanguage( const YCPTerm & term )
+YCPValue YUI::setLanguage( const YCPTerm & term )
 {
     // NOP
 
@@ -203,7 +203,7 @@ YCPValue Y2UIComponent::setLanguage( const YCPTerm & term )
  * @example SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
-void Y2UIComponent::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font, 
+void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font, 
     const YCPString & screen_map, const YCPString & unicode_map, const YCPString & encoding )
 {
     setConsoleFont( console_magic, font, screen_map, unicode_map, encoding );
@@ -216,7 +216,7 @@ void Y2UIComponent::evaluateSetConsoleFont( const YCPString & console_magic, con
  * @example SetKeyboard( )
  */
 
-void Y2UIComponent::evaluateSetKeyboard( )
+void YUI::evaluateSetKeyboard( )
 {
     setKeyboard( );
 }
@@ -226,7 +226,7 @@ void Y2UIComponent::evaluateSetKeyboard( )
  * Returns OK ( YCPVoid() )
  */
 
-YCPValue Y2UIComponent::setKeyboard(  )
+YCPValue YUI::setKeyboard(  )
 {
     // NOP
 
@@ -238,7 +238,7 @@ YCPValue Y2UIComponent::setKeyboard(  )
  * Returns OK ( YCPVoid() )
  */
 
-YCPValue Y2UIComponent::setConsoleFont( const YCPString & console_magic,
+YCPValue YUI::setConsoleFont( const YCPString & console_magic,
 					const YCPString & font,
 					const YCPString & screen_map,
 					const YCPString & unicode_map,
@@ -253,7 +253,7 @@ YCPValue Y2UIComponent::setConsoleFont( const YCPString & console_magic,
 /**
  * Default UI-specific busyCursor() - does nothing
  */
-void Y2UIComponent::busyCursor()
+void YUI::busyCursor()
 {
     // NOP
 }
@@ -262,7 +262,7 @@ void Y2UIComponent::busyCursor()
 /**
  * Default UI-specific normalCursor() - does nothing
  */
-void Y2UIComponent::normalCursor()
+void YUI::normalCursor()
 {
     // NOP
 }
@@ -271,7 +271,7 @@ void Y2UIComponent::normalCursor()
 /**
  * Default UI-specific redrawScreen() - does nothing
  */
-void Y2UIComponent::redrawScreen()
+void YUI::redrawScreen()
 {
     // NOP
 }
@@ -280,7 +280,7 @@ void Y2UIComponent::redrawScreen()
 /**
  * Default UI-specific makeScreenShot() - does nothing
  */
-void Y2UIComponent::makeScreenShot( string filename )
+void YUI::makeScreenShot( string filename )
 {
     // NOP
 }
@@ -303,7 +303,7 @@ void Y2UIComponent::makeScreenShot( string filename )
  * ends with ".UTF-8" since this is the encoding YaST2 uses internally).
  */
 
-YCPString Y2UIComponent::evaluateGetLanguage( const YCPBoolean & strip )
+YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
 {
     bool strip_encoding = strip->value();
     const char *lang_cstr = getenv( "LANG" );
@@ -343,7 +343,7 @@ YCPString Y2UIComponent::evaluateGetLanguage( const YCPBoolean & strip )
  * <a href="events/event-builtins.html#UserInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue Y2UIComponent::evaluateUserInput()
+YCPValue YUI::evaluateUserInput()
 {
     return doUserInput( YUIBuiltin_UserInput,
 			0,		// timeout_millisec
@@ -367,7 +367,7 @@ YCPValue Y2UIComponent::evaluateUserInput()
  * <a href="events/event-builtins.html#PollInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue Y2UIComponent::evaluatePollInput()
+YCPValue YUI::evaluatePollInput()
 {
     return doUserInput( YUIBuiltin_PollInput,
 			0,		// timeout_millisec
@@ -391,7 +391,7 @@ YCPValue Y2UIComponent::evaluatePollInput()
  * <a href="events/event-builtins.html#TimeoutUserInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue Y2UIComponent::evaluateTimeoutUserInput( const YCPInteger & timeout )
+YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 {
     long timeout_millisec = timeout->value();
 
@@ -413,7 +413,7 @@ YCPValue Y2UIComponent::evaluateTimeoutUserInput( const YCPInteger & timeout )
  * <a href="events/event-builtins.html#WaitForEvent">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue Y2UIComponent::evaluateWaitForEvent( const YCPInteger & timeout )
+YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 {
     long timeout_millisec = 0;
 
@@ -431,7 +431,7 @@ YCPValue Y2UIComponent::evaluateWaitForEvent( const YCPInteger & timeout )
 
 
 
-YCPValue Y2UIComponent::doUserInput( const char * 	builtin_name,
+YCPValue YUI::doUserInput( const char * 	builtin_name,
 				      long 		timeout_millisec,
 				      bool 		wait,
 				      bool 		detailed )
@@ -542,7 +542,7 @@ YCPValue Y2UIComponent::doUserInput( const char * 	builtin_name,
 
 
 YEvent *
-Y2UIComponent::filterInvalidEvents( YEvent * event )
+YUI::filterInvalidEvents( YEvent * event )
 {
     if ( ! event )
 	return 0;
@@ -629,7 +629,7 @@ Y2UIComponent::filterInvalidEvents( YEvent * event )
  * @example OpenDialog( `opt( `defaultsize ), `Label( "Hi" ) )
  */
 
-YCPBoolean Y2UIComponent::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
+YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
 {
     y2debug( "Evaluate open dialog" );
     y2debug( "term: %s", dialog_term->toString().c_str() );
@@ -695,7 +695,7 @@ YCPBoolean Y2UIComponent::evaluateOpenDialog( const YCPTerm & dialog_term, const
  * Returns true on success.
  */
 
-YCPValue Y2UIComponent::evaluateCloseDialog()
+YCPValue YUI::evaluateCloseDialog()
 {
     blockEvents();	// We don't want self-generated events from UI builtins.
     YDialog *dialog = currentDialog();
@@ -714,33 +714,33 @@ YCPValue Y2UIComponent::evaluateCloseDialog()
 }
 
 
-void Y2UIComponent::registerDialog( YDialog *dialog )
+void YUI::registerDialog( YDialog *dialog )
 {
     dialogstack.push_back( dialog );
 }
 
 
-void Y2UIComponent::removeDialog()
+void YUI::removeDialog()
 {
     delete currentDialog();
     dialogstack.pop_back();
 }
 
 
-YDialog *Y2UIComponent::currentDialog() const
+YDialog *YUI::currentDialog() const
 {
     if ( dialogstack.size() >= 1 ) return dialogstack.back();
     else return 0;
 }
 
 
-void Y2UIComponent::showDialog( YDialog * )
+void YUI::showDialog( YDialog * )
 {
     // dummy default implementation
 }
 
 
-void Y2UIComponent::closeDialog( YDialog * )
+void YUI::closeDialog( YDialog * )
 {
     // dummy default implementation
 }
@@ -761,7 +761,7 @@ void Y2UIComponent::closeDialog( YDialog * )
  * Returns true on success.
  */
 
-YCPValue Y2UIComponent::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & new_value )
+YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & new_value )
 {
     if ( ! isSymbolOrId( id_value ) )
     {
@@ -818,7 +818,7 @@ YCPValue Y2UIComponent::evaluateChangeWidget( const YCPValue & id_value, const Y
  * certain item.
  */
 
-YCPValue Y2UIComponent::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
+YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
 {
     if ( ! isSymbolOrId( id_value ) )
     {
@@ -856,7 +856,7 @@ YCPValue Y2UIComponent::evaluateQueryWidget( const YCPValue & id_value, const YC
  * </pre>
  */
 
-YCPBoolean Y2UIComponent::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm & new_widget )
+YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm & new_widget )
 {
     if ( ! isSymbolOrId( id_value ) )
     {
@@ -945,7 +945,7 @@ YCPBoolean Y2UIComponent::evaluateReplaceWidget( const YCPValue & id_value, cons
  * Returns true on success (i.e. the widget accepted the focus).
  */
 
-YCPBoolean Y2UIComponent::evaluateSetFocus( const YCPValue & id_value )
+YCPBoolean YUI::evaluateSetFocus( const YCPValue & id_value )
 {
     if ( ! isSymbolOrId( id_value ) )
 	return YCPNull();
@@ -972,7 +972,7 @@ YCPBoolean Y2UIComponent::evaluateSetFocus( const YCPValue & id_value )
  * own risk.
  */
 
-void Y2UIComponent::evaluateBusyCursor()
+void YUI::evaluateBusyCursor()
 {
     busyCursor();
 }
@@ -991,7 +991,7 @@ void Y2UIComponent::evaluateBusyCursor()
  * might make this necessary. Call this in the YCP code after such a command.
  */
 
-void Y2UIComponent::evaluateRedrawScreen()
+void YUI::evaluateRedrawScreen()
 {
     redrawScreen();
 }
@@ -1009,7 +1009,7 @@ void Y2UIComponent::evaluateRedrawScreen()
  * own risk.
  */
 
-void Y2UIComponent::evaluateNormalCursor()
+void YUI::evaluateNormalCursor()
 {
     normalCursor();
 }
@@ -1023,7 +1023,7 @@ void Y2UIComponent::evaluateNormalCursor()
  * The Qt UI opens a file selection box if filename is empty.
  */
 
-void Y2UIComponent::evaluateMakeScreenShot( const YCPString & filename )
+void YUI::evaluateMakeScreenShot( const YCPString & filename )
 {
     makeScreenShot( filename->value () );
 }
@@ -1037,7 +1037,7 @@ void Y2UIComponent::evaluateMakeScreenShot( const YCPString & filename )
  * file.
  */
 
-void Y2UIComponent::evaluateDumpWidgetTree()
+void YUI::evaluateDumpWidgetTree()
 {
     YDialog *dialog = currentDialog();
 
@@ -1056,20 +1056,20 @@ void Y2UIComponent::evaluateDumpWidgetTree()
  *
  * Begin recording a macro. Write the macro contents to file "macroFilename".
  */
-void Y2UIComponent::evaluateRecordMacro( const YCPString & filename )
+void YUI::evaluateRecordMacro( const YCPString & filename )
 {
     recordMacro( filename->value () );
 }
 
 
-void Y2UIComponent::recordMacro( string filename )
+void YUI::recordMacro( string filename )
 {
     deleteMacroRecorder();
     macroRecorder = new YMacroRecorder( filename );
 }
 
 
-void Y2UIComponent::deleteMacroRecorder()
+void YUI::deleteMacroRecorder()
 {
     if ( macroRecorder )
     {
@@ -1086,13 +1086,13 @@ void Y2UIComponent::deleteMacroRecorder()
  * Stop macro recording. This is only necessary if you don't wish to record
  * everything until the program terminates.
  */
-void Y2UIComponent::evaluateStopRecordMacro()
+void YUI::evaluateStopRecordMacro()
 {
     stopRecordMacro();
 }
 
 
-void Y2UIComponent::stopRecordMacro()
+void YUI::stopRecordMacro()
 {
     deleteMacroRecorder();
 }
@@ -1105,20 +1105,20 @@ void Y2UIComponent::stopRecordMacro()
  * Any errors are sent to the log file only.
  * The macro can be terminated only from within the macro file.
  */
-void Y2UIComponent::evaluatePlayMacro( const YCPString & filename )
+void YUI::evaluatePlayMacro( const YCPString & filename )
 {
     playMacro( filename->value() );
 }
 
 
-void Y2UIComponent::playMacro( string filename )
+void YUI::playMacro( string filename )
 {
     deleteMacroPlayer();
     macroPlayer = new YMacroPlayer( filename );
 }
 
 
-void Y2UIComponent::playNextMacroBlock()
+void YUI::playNextMacroBlock()
 {
 #if 0
 // FIXME:
@@ -1154,7 +1154,7 @@ void Y2UIComponent::playNextMacroBlock()
 }
 
 
-void Y2UIComponent::deleteMacroPlayer()
+void YUI::deleteMacroPlayer()
 {
     if ( macroPlayer )
     {
@@ -1175,7 +1175,7 @@ void Y2UIComponent::deleteMacroPlayer()
  * <p>
  * "nil" is a legal value.
  */
-void Y2UIComponent::evaluateFakeUserInput( const YCPValue & next_input )
+void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 {
     fakeUserInputQueue.push_back( next_input );
 }
@@ -1222,7 +1222,7 @@ void Y2UIComponent::evaluateFakeUserInput( const YCPValue & next_input )
  * <img src="examples/screenshots/Glyphs-ncurses.png">
  * <p><i>Glyphs in the NCurses UI</i>
  */
-YCPString Y2UIComponent::evaluateGlyph( const YCPSymbol & glyphSym )
+YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 {
     YCPString glyphText = glyph( glyphSym );	// ask specific UI
 
@@ -1339,7 +1339,7 @@ YCPString Y2UIComponent::evaluateGlyph( const YCPSymbol & glyphSym )
  * dialog.
  *
  */
-YCPMap Y2UIComponent::evaluateGetDisplayInfo()
+YCPMap YUI::evaluateGetDisplayInfo()
 {
     YCPMap info_map;
 
@@ -1371,7 +1371,7 @@ YCPMap Y2UIComponent::evaluateGetDisplayInfo()
  * like the a Label widget's value. Call this once ( ! ) after changing all such
  * widget properties.
  */
-void Y2UIComponent::evaluateRecalcLayout()
+void YUI::evaluateRecalcLayout()
 {
     YDialog *dialog = currentDialog();
 
@@ -1420,7 +1420,7 @@ void Y2UIComponent::evaluateRecalcLayout()
  * UserInput();
  * </pre>
  */
-void Y2UIComponent::evaluatePostponeShortcutCheck()
+void YUI::evaluatePostponeShortcutCheck()
 {
     YDialog *dialog = currentDialog();
 
@@ -1454,7 +1454,7 @@ void Y2UIComponent::evaluatePostponeShortcutCheck()
  * UserInput();
  * </pre>
  */
-void Y2UIComponent::evaluateCheckShortcuts()
+void YUI::evaluateCheckShortcuts()
 {
     YDialog *dialog = currentDialog();
 
@@ -1482,7 +1482,7 @@ void Y2UIComponent::evaluateCheckShortcuts()
  * current dialog. Use this to avoid errors in the log file before changing the
  * properties of widgets that might or might not be there.
  */
-YCPBoolean Y2UIComponent::evaluateWidgetExists( const YCPValue & id_value )
+YCPBoolean YUI::evaluateWidgetExists( const YCPValue & id_value )
 {
     if ( ! isSymbolOrId( id_value ) ) return YCPNull();
 
@@ -1501,7 +1501,7 @@ YCPBoolean Y2UIComponent::evaluateWidgetExists( const YCPValue & id_value )
  * <p>
  * Returns `cancel if the user wishes to cancel his selections.
  */
-YCPValue Y2UIComponent::evaluateRunPkgSelection( const YCPValue & value_id )
+YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 {
     if ( ! isSymbolOrId( value_id ) )
     {
@@ -1538,7 +1538,7 @@ YCPValue Y2UIComponent::evaluateRunPkgSelection( const YCPValue & value_id )
  * <p>
  * Returns the selected directory name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue Y2UIComponent::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
+YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
     return askForExistingDirectory( startDir, headline );
 }
@@ -1559,7 +1559,7 @@ YCPValue Y2UIComponent::evaluateAskForExistingDirectory( const YCPString & start
  * <p>
  * Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue Y2UIComponent::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
+YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     return askForExistingFile( startWith, filter, headline );
 }
@@ -1581,7 +1581,7 @@ YCPValue Y2UIComponent::evaluateAskForExistingFile( const YCPString & startWith,
  * <p>
  * Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue Y2UIComponent::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
+YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     return askForSaveFileName( startWith, filter, headline );
 }
@@ -1602,7 +1602,7 @@ YCPValue Y2UIComponent::evaluateAskForSaveFileName( const YCPString & startWith,
  * <p>
  * @example SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
  */
-void Y2UIComponent::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
+void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 {
 	default_fkeys = YCPMap();
 
@@ -1634,7 +1634,7 @@ void Y2UIComponent::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 }
 
 
-int Y2UIComponent::defaultFunctionKey( YCPString ylabel )
+int YUI::defaultFunctionKey( YCPString ylabel )
 {
     int fkey = 0;
 
@@ -1660,7 +1660,7 @@ int Y2UIComponent::defaultFunctionKey( YCPString ylabel )
  * USE WITH CAUTION.
  */
 
-YCPValue Y2UIComponent::evaluateCallback( const YCPTerm & term, bool to_wfm )
+YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 {
     y2debug ( "( %s ), callback @ %p", term->toString().c_str(), callbackComponent );
     if ( term->size() != 1 )	// must have 1 arg - anything allowed
@@ -1698,7 +1698,7 @@ YCPValue Y2UIComponent::evaluateCallback( const YCPTerm & term, bool to_wfm )
  * "ISO-8859-2" for eastern languages, etc. )
  */
 
-YCPValue Y2UIComponent::evaluateRecode( const YCPString & from, const YCPString & to, const YCPString & text )
+YCPValue YUI::evaluateRecode( const YCPString & from, const YCPString & to, const YCPString & text )
 {
     string outstr;
     if ( Recode ( text->value (), from->value (), to->value (), outstr ) != 0 )
@@ -1730,7 +1730,7 @@ static string  to_name	     = "";
 static const unsigned recode_buf_size = 1024;
 static char	      recode_buf[ recode_buf_size ];
 
-int Y2UIComponent::Recode( const string & instr, const string & from,
+int YUI::Recode( const string & instr, const string & from,
 			    const string & to, string & outstr )
 {
     if ( from == to

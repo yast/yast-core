@@ -5,7 +5,7 @@
 pkgincludedir = $(includedir)/yui
 
 pkginclude_HEADERS =				\
-	Y2UIComponent.h				\
+	YUI.h					\
 	UI.h					\
 	YUISymbols.h				\
 	hashtable.gperf				\

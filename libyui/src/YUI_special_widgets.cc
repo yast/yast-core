@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		Y2UIComponent_special_widgets.cc
+  File:		YUI_special_widgets.cc
   
 		Special ( optional ) widgets
 
@@ -28,7 +28,7 @@
 #include <ycp/y2log.h>
 #include <ycp/YCPMap.h>
 
-#include "Y2UIComponent.h"
+#include "YUI.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
 #include "YWidget.h"
@@ -51,7 +51,7 @@
  * Returns true if the UI supports the special widget and false if not.
  */
 
-YCPValue Y2UIComponent::evaluateHasSpecialWidget( const YCPSymbol & widget )
+YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
 {
     bool hasWidget = false;
 
@@ -85,7 +85,7 @@ YCPValue Y2UIComponent::evaluateHasSpecialWidget( const YCPSymbol & widget )
 //
 
 
-YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						   const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr > 0 )
@@ -109,7 +109,7 @@ YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & 
 }
 
 
-bool Y2UIComponent::hasDummySpecialWidget()
+bool YUI::hasDummySpecialWidget()
 {
     return true;
 }
@@ -121,7 +121,7 @@ bool Y2UIComponent::hasDummySpecialWidget()
  * Normally, the implementation within the libyui returns 0.
  */
 
-YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
+YWidget *YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
 {
     opt.isHeading.setValue( true );
     opt.isOutputField.setValue( true );
@@ -158,7 +158,7 @@ YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & 
  *
  */
 
-YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -224,7 +224,7 @@ YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt, const
  * for availability with <tt>HasSpecialWidget( `ColoredLabel )</tt> before using it.
  */
 
-YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					     const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 4
@@ -287,7 +287,7 @@ YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt, c
  *
  */
 
-YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -353,7 +353,7 @@ YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & op
  *
  */
 
-YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				       const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -433,7 +433,7 @@ YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt, const Y
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  * */
 
-YWidget *Y2UIComponent::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						  const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -500,27 +500,27 @@ YWidget *Y2UIComponent::createPartitionSplitter( YWidget *parent, YWidgetOpt & o
  * Overwrite if the specific UI provides the corresponding widget.
  */
 
-bool Y2UIComponent::hasDownloadProgress()
+bool YUI::hasDownloadProgress()
 {
     return false;
 }
 
-bool Y2UIComponent::hasBarGraph()
+bool YUI::hasBarGraph()
 {
     return false;
 }
 
-bool Y2UIComponent::hasColoredLabel()
+bool YUI::hasColoredLabel()
 {
     return false;
 }
 
-bool Y2UIComponent::hasSlider()
+bool YUI::hasSlider()
 {
     return false;
 }
 
-bool Y2UIComponent::hasPartitionSplitter()
+bool YUI::hasPartitionSplitter()
 {
     return false;
 }
@@ -533,7 +533,7 @@ bool Y2UIComponent::hasPartitionSplitter()
  * has...() method as well!
  */
 
-YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
+YWidget *YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
 						 const YCPString & label,
 						 const YCPString & filename,
 						 int expectedSize )
@@ -544,7 +544,7 @@ YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & op
     return 0;
 }
 
-YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt )
+YWidget *YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createBarGraph() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -552,7 +552,7 @@ YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt )
     return 0;
 }
 
-YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
+YWidget *YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 					     YCPString label,
 					     YColor fg, YColor bg, int margin )
 {
@@ -562,7 +562,7 @@ YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
     return 0;
 }
 
-YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt,
+YWidget *YUI::createSlider( YWidget *parent, YWidgetOpt & opt,
 				       const YCPString & label,
 				       int minValue, int maxValue, int initialValue )
 {
@@ -573,7 +573,7 @@ YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt,
 }
 
 
-YWidget *Y2UIComponent::createPartitionSplitter( YWidget *		parent,
+YWidget *YUI::createPartitionSplitter( YWidget *		parent,
 						  YWidgetOpt &		opt,
 						  int 			usedSize,
 						  int 			totalFreeSize,

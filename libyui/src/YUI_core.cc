@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		Y2UIComponent_core.cc
+  File:		YUI_core.cc
 
 		Core functions of the UI component
 		
@@ -39,7 +39,7 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
-#include "Y2UIComponent.h"
+#include "YUI.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
 #include "YWidget.h"
@@ -50,10 +50,10 @@
 #include "YReplacePoint.h"
 
 
-bool Y2UIComponent::_reverseLayout = false;
-Y2UIComponent* Y2UIComponent::current_ui = 0;
+bool YUI::_reverseLayout = false;
+YUI * YUI::current_ui = 0;
 
-Y2UIComponent::Y2UIComponent( bool with_threads, Y2Component *callback )
+YUI::YUI( bool with_threads, Y2Component *callback )
     : id_counter(0)
     , with_threads( with_threads )
     , box_in_the_middle( YCPNull() )
@@ -69,7 +69,7 @@ Y2UIComponent::Y2UIComponent( bool with_threads, Y2Component *callback )
 }
 
 
-Y2UIComponent::~Y2UIComponent()
+YUI::~YUI()
 {
     if ( with_threads )
     {
@@ -93,51 +93,51 @@ Y2UIComponent::~Y2UIComponent()
 }
 
 
-void Y2UIComponent::setCurrentInstance()
+void YUI::setCurrentInstance()
 {
     current_ui = this;
 }
 
 
 Y2Component *
-Y2UIComponent::getCallback( void )
+YUI::getCallback( void )
 {
-    y2debug ( "Y2UIComponent[%p]::getCallback() = %p", this, callbackComponent );
+    y2debug ( "YUI[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
 }
 
 
 void
-Y2UIComponent::setCallback( Y2Component *callback )
+YUI::setCallback( Y2Component *callback )
 {
-    y2debug ( "Y2UIComponent[%p]::setCallback( %p )", this, callback );
+    y2debug ( "YUI[%p]::setCallback( %p )", this, callback );
     callbackComponent = callback;
     return;
 }
 
 
 string
-Y2UIComponent::name() const
+YUI::name() const
 {
     return "UI";	// must be upper case
 }
 
 
 void
-Y2UIComponent::internalError( const char *msg )
+YUI::internalError( const char *msg )
 {
     fprintf( stderr, "YaST2 UI internal error: %s", msg );
 }
 
 
-YCPValue Y2UIComponent::executeUICommand( const YCPTerm &term )
+YCPValue YUI::executeUICommand( const YCPTerm &term )
 {
     y2error( "Running executeUICommand not supported: %s", term->toString ().c_str ());
     return YCPVoid();
 }
 
 
-void Y2UIComponent::topmostConstructorHasFinished()
+void YUI::topmostConstructorHasFinished()
 {
     // The ui thread must not be started before the constructor
     // of the actual user interface is finished. Otherwise there
@@ -176,7 +176,7 @@ void Y2UIComponent::topmostConstructorHasFinished()
 }
 
 
-void Y2UIComponent::createUIThread()
+void YUI::createUIThread()
 {
     pthread_attr_t attr;
     pthread_attr_init( & attr );
@@ -184,7 +184,7 @@ void Y2UIComponent::createUIThread()
 }
 
 
-void Y2UIComponent::terminateUIThread()
+void YUI::terminateUIThread()
 {
     y2debug( "Telling UI thread to shut down" );
     terminate_ui_thread = true;
@@ -194,7 +194,7 @@ void Y2UIComponent::terminateUIThread()
 }
 
 
-void Y2UIComponent::signalUIThread()
+void YUI::signalUIThread()
 {
     static char arbitrary = 42;
     write ( pipe_to_ui[1], & arbitrary, 1 );
@@ -205,7 +205,7 @@ void Y2UIComponent::signalUIThread()
 }
 
 
-bool Y2UIComponent::waitForUIThread()
+bool YUI::waitForUIThread()
 {
     char arbitrary;
     int res;
@@ -233,7 +233,7 @@ bool Y2UIComponent::waitForUIThread()
 }
 
 
-void Y2UIComponent::signalYCPThread()
+void YUI::signalYCPThread()
 {
     static char arbitrary;
     write( pipe_from_ui[1], & arbitrary, 1 );
@@ -244,7 +244,7 @@ void Y2UIComponent::signalYCPThread()
 }
 
 
-bool Y2UIComponent::waitForYCPThread()
+bool YUI::waitForYCPThread()
 {
     char arbitrary;
 
@@ -272,7 +272,7 @@ bool Y2UIComponent::waitForYCPThread()
 }
 
 
-void Y2UIComponent::uiThreadMainLoop()
+void YUI::uiThreadMainLoop()
 {
     while ( true )
     {
@@ -316,7 +316,7 @@ void Y2UIComponent::uiThreadMainLoop()
 // event processing
 
 
-void Y2UIComponent::idleLoop( int fd_ycp )
+void YUI::idleLoop( int fd_ycp )
 {
     // Just wait for fd_ycp to become readable
     fd_set fdset;
@@ -327,7 +327,7 @@ void Y2UIComponent::idleLoop( int fd_ycp )
 }
 
 
-YRadioButtonGroup *Y2UIComponent::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
+YRadioButtonGroup *YUI::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
 {
     YCPValue root_id = root->id();
 
@@ -362,7 +362,7 @@ YRadioButtonGroup *Y2UIComponent::findRadioButtonGroup( YContainerWidget * root,
 
 void *start_ui_thread( void *ui_int )
 {
-    Y2UIComponent *ui_interpreter = ( Y2UIComponent * ) ui_int;
+    YUI *ui_interpreter = ( YUI * ) ui_int;
     ui_interpreter->uiThreadMainLoop();
     return 0;
 }

@@ -22,7 +22,7 @@
 #include <ycp/y2log.h>
 
 #include "YSplit.h"
-#include "Y2UIComponent.h"
+#include "YUI.h"
 
 
 #ifdef max
@@ -266,7 +266,7 @@ void YSplit::setSize( long newWidth, long newHeight )
 	calcSecondaryGeometry( newWidth,  widths,  x_pos );
     }
 
-    if ( Y2UIComponent::reverseLayout() )
+    if ( YUI::reverseLayout() )
     {
 	// Mirror the widget X geometry for languages with left-to-right
 	// writing direction (Arabic, Hebrew).

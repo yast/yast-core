@@ -9,10 +9,11 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"
 lib_LTLIBRARIES = libyui.la
 
 libyui_la_SOURCES =				\
-	Y2UIComponent_core.cc			\
-	Y2UIComponent_builtins.cc		\
-	Y2UIComponent_widgets.cc		\
-	Y2UIComponent_special_widgets.cc	\
+	YUI_core.cc				\
+	YUI_builtins.cc				\
+	YUI_widgets.cc				\
+	YUI_special_widgets.cc			\
+	YUI_bindings.cc				\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\
@@ -53,8 +54,8 @@ libyui_la_SOURCES =				\
 	YTable.cc				\
 	YTextEntry.cc				\
 	YTree.cc				\
-	YWidget.cc				\
-	UI.cc
+	YWidget.cc
+
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\

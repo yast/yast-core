@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		Y2UIComponent_widgets.cc
+  File:		YUI_widgets.cc
 
 		Standard ( mandatory ) widgets
 
@@ -31,7 +31,7 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
-#include "Y2UIComponent.h"
+#include "YUI.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
 #include "YDialog.h"
@@ -58,7 +58,7 @@ using std::string;
  * Note: There is also an overloaded version without YWidgetOpt - see below.
  */
 
-YWidget *Y2UIComponent::createWidgetTree( YWidget *		p,
+YWidget *YUI::createWidgetTree( YWidget *		p,
 					   YWidgetOpt &		opt,
 					   YRadioButtonGroup *	rbg,
 					   const YCPTerm &	term )
@@ -290,7 +290,7 @@ YWidget *Y2UIComponent::createWidgetTree( YWidget *		p,
  * version will pass through an empty set of widget options.
  */
 
-YWidget *Y2UIComponent::createWidgetTree( YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm & term )
+YWidget *YUI::createWidgetTree( YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm & term )
 {
     YWidgetOpt opt;
 
@@ -324,7 +324,7 @@ YWidget *Y2UIComponent::createWidgetTree( YWidget *parent, YRadioButtonGroup *rb
  * itself has no further effect and no optical representation.
  */
 
-YWidget *Y2UIComponent::createReplacePoint( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createReplacePoint( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					     int argnr, YRadioButtonGroup *rbg )
 {
     if ( term->size() != argnr+1 ||
@@ -374,7 +374,7 @@ YWidget *Y2UIComponent::createReplacePoint( YWidget *parent, YWidgetOpt & opt, c
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createEmpty( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createEmpty( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				      int argnr, bool hstretchable, bool vstretchable )
 {
     if ( term->size() != argnr )
@@ -435,7 +435,7 @@ YWidget *Y2UIComponent::createEmpty( YWidget *parent, YWidgetOpt & opt, const YC
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createSpacing( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createSpacing( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					int argnr, bool horizontal, bool vertical )
 {
     // Process parameters
@@ -500,7 +500,7 @@ YWidget *Y2UIComponent::createSpacing( YWidget *parent, YWidgetOpt & opt, const 
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createAlignment( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createAlignment( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					  int argnr, YRadioButtonGroup *rbg,
 					  YAlignmentType halign, YAlignmentType valign )
 {
@@ -556,7 +556,7 @@ YWidget *Y2UIComponent::createAlignment( YWidget *parent, YWidgetOpt & opt, cons
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createFrame( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createFrame( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				      const YCPList & optList, int argnr, YRadioButtonGroup *rbg )
 {
 
@@ -617,7 +617,7 @@ YWidget *Y2UIComponent::createFrame( YWidget *parent, YWidgetOpt & opt, const YC
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createSquash( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createSquash( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				       int argnr, YRadioButtonGroup *rbg,
 				       bool hsquash, bool vsquash )
 {
@@ -678,7 +678,7 @@ YWidget *Y2UIComponent::createSquash( YWidget *parent, YWidgetOpt & opt, const Y
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createWeight( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createWeight( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				       int argnr, YRadioButtonGroup *rbg, YUIDimension dim )
 {
     if ( term->size() != argnr + 2
@@ -732,7 +732,7 @@ YWidget *Y2UIComponent::createWeight( YWidget *parent, YWidgetOpt & opt, const Y
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createLBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createLBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				     int argnr, YRadioButtonGroup *rbg, YUIDimension dim )
 {
     // Parse options
@@ -795,7 +795,7 @@ YWidget *Y2UIComponent::createLBox( YWidget *parent, YWidgetOpt & opt, const YCP
  * line, in which case line feed must be entered.
  */
 
-YWidget *Y2UIComponent::createLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				      const YCPList & optList, int argnr, bool heading )
 {
     if ( term->size() - argnr != 1
@@ -843,7 +843,7 @@ YWidget *Y2UIComponent::createLabel( YWidget *parent, YWidgetOpt & opt, const YC
  * Refer to the <a href="../YCP-UI-richtext.html">YaST2 RichText specification</a> for details.
  */
 
-YWidget *Y2UIComponent::createRichText( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createRichText( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 1
 	 || !term->value(argnr)->isString())
@@ -902,7 +902,7 @@ YWidget *Y2UIComponent::createRichText( YWidget *parent, YWidgetOpt & opt, const
  * Use <tt>ChangeWidget( `id( `log ), `Value, "" )</tt> to clear the contents.
  */
 
-YWidget *Y2UIComponent::createLogView( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createLogView( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 3
 	 || ! term->value(argnr	 )->isString()
@@ -955,7 +955,7 @@ YWidget *Y2UIComponent::createLogView( YWidget *parent, YWidgetOpt & opt, const 
  * directory, <tt>/usr/share/YaST2/theme/current</tt>.
  */
 
-YWidget *Y2UIComponent::createPushButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createPushButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					   const YCPList & optList, int argnr,
 					   bool isIconButton )
 {
@@ -1050,7 +1050,7 @@ YWidget *Y2UIComponent::createPushButton( YWidget *parent, YWidgetOpt & opt, con
  * label as well as for any menu item.
  */
 
-YWidget *Y2UIComponent::createMenuButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createMenuButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 2
 	 || ! term->value(argnr	 )->isString()
@@ -1081,7 +1081,7 @@ YWidget *Y2UIComponent::createMenuButton( YWidget *parent, YWidgetOpt & opt, con
 
 
 int
-Y2UIComponent::parseMenuItemList( const YCPList &	itemList,
+YUI::parseMenuItemList( const YCPList &	itemList,
 				   YMenuButton *	menu_button,
 				   YMenu *		parent_menu )	// 0 if top level
 {
@@ -1185,7 +1185,7 @@ Y2UIComponent::parseMenuItemList( const YCPList &	itemList,
  * property.
  */
 
-YWidget *Y2UIComponent::createCheckBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createCheckBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int s = term->size() - argnr;
     if ( s < 1 || s > 2
@@ -1221,7 +1221,7 @@ YWidget *Y2UIComponent::createCheckBox( YWidget *parent, YWidgetOpt & opt, const
  * be contained in a <tt>RadioButtonGroup</tt>.
  */
 
-YWidget *Y2UIComponent::createRadioButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createRadioButton( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 					    int argnr, YRadioButtonGroup *rbg )
 {
 
@@ -1283,7 +1283,7 @@ YWidget *Y2UIComponent::createRadioButton( YWidget *parent, YWidgetOpt & opt, co
  * See the <a href="../YCP-UI-layout.html">Layout HOWTO</a> for details.
  */
 
-YWidget *Y2UIComponent::createRadioButtonGroup( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+YWidget *YUI::createRadioButtonGroup( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 						 int argnr, YRadioButtonGroup * )
 {
     if ( term->size() != argnr+1
@@ -1336,7 +1336,7 @@ YWidget *Y2UIComponent::createRadioButtonGroup( YWidget *parent, YWidgetOpt & op
  * will get the keyboard focus.
  */
 
-YWidget *Y2UIComponent::createTextEntry( YWidget *parent, YWidgetOpt & opt,
+YWidget *YUI::createTextEntry( YWidget *parent, YWidgetOpt & opt,
 					  const YCPTerm & term, const YCPList & optList, int argnr,
 					  bool passwordMode )
 {
@@ -1385,7 +1385,7 @@ YWidget *Y2UIComponent::createTextEntry( YWidget *parent, YWidgetOpt & opt,
  * widget will get the keyboard focus.
  */
 
-YWidget *Y2UIComponent::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
+YWidget *YUI::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
 					      const YCPTerm & term, const YCPList & optList, int argnr )
 {
 
@@ -1430,7 +1430,7 @@ YWidget *Y2UIComponent::createMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
  * argument controls whether the item is the selected item.
  */
 
-YWidget *Y2UIComponent::createSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
@@ -1536,7 +1536,7 @@ YWidget *Y2UIComponent::createSelectionBox( YWidget *parent, YWidgetOpt & opt, c
  * i.e. 'false', is default ).
  */
 
-YWidget *Y2UIComponent::createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createMultiSelectionBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int term_size = term->size() - argnr;
 
@@ -1572,7 +1572,7 @@ YWidget *Y2UIComponent::createMultiSelectionBox( YWidget *parent, YWidgetOpt & o
 
 
 int
-Y2UIComponent::parseMultiSelectionBoxItemList( const YCPList &		item_list,
+YUI::parseMultiSelectionBoxItemList( const YCPList &		item_list,
 						YMultiSelectionBox *	multi_sel_box )
 {
     multi_sel_box->deleteAllItems();
@@ -1693,7 +1693,7 @@ Y2UIComponent::parseMultiSelectionBoxItemList( const YCPList &		item_list,
  * focus.
  */
 
-YWidget *Y2UIComponent::createComboBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createComboBox( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
@@ -1829,7 +1829,7 @@ YWidget *Y2UIComponent::createComboBox( YWidget *parent, YWidgetOpt & opt, const
  * itself, if desired.
  */
 
-YWidget *Y2UIComponent::createTree( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createTree( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int termSize = term->size() - argnr;
 
@@ -1869,7 +1869,7 @@ YWidget *Y2UIComponent::createTree( YWidget *parent, YWidgetOpt & opt, const YCP
 
 
 int
-Y2UIComponent::parseTreeItemList( const YCPList &	itemList,
+YUI::parseTreeItemList( const YCPList &	itemList,
 				   YTree *		tree,
 				   YTreeItem *		parentItem )
 {
@@ -2003,7 +2003,7 @@ Y2UIComponent::parseTreeItemList( const YCPList &	itemList,
  * empty string.
  */
 
-YWidget *Y2UIComponent::createTable( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createTable( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
@@ -2112,7 +2112,7 @@ YWidget *Y2UIComponent::createTable( YWidget *parent, YWidgetOpt & opt, const YC
  * progress bar will set to 0 initially.
  */
 
-YWidget *Y2UIComponent::createProgressBar( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createProgressBar( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     int s = term->size() - argnr;
     if ( s < 1
@@ -2207,7 +2207,7 @@ YWidget *Y2UIComponent::createProgressBar( YWidget *parent, YWidgetOpt & opt, co
  * doesn't make any sense.
  */
 
-YWidget *Y2UIComponent::createImage( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
+YWidget *YUI::createImage( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 2
 	 || ( ! term->value( argnr )->isSymbol() &&
@@ -2281,7 +2281,7 @@ YWidget *Y2UIComponent::createImage( YWidget *parent, YWidgetOpt & opt, const YC
  * Fractional numbers are currently not supported.
  */
 
-YWidget *Y2UIComponent::createIntField( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createIntField( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -2338,7 +2338,7 @@ YWidget *Y2UIComponent::createIntField( YWidget *parent, YWidgetOpt & opt, const
  * parameter.
  */
 
-YWidget *Y2UIComponent::createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createPackageSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -2387,7 +2387,7 @@ YWidget *Y2UIComponent::createPackageSelector( YWidget *parent, YWidgetOpt & opt
  * Use only if you know what you are doing - that is, DON'T USE IT.
  */
 
-YWidget *Y2UIComponent::createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *YUI::createPkgSpecial( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					   const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -2412,7 +2412,7 @@ YWidget *Y2UIComponent::createPkgSpecial( YWidget *parent, YWidgetOpt & opt, con
 
 
 
-YWidget *Y2UIComponent::widgetWithId( const YCPValue & id, bool log_error )
+YWidget *YUI::widgetWithId( const YCPValue & id, bool log_error )
 {
     if ( currentDialog() )
     {
@@ -2428,7 +2428,7 @@ YWidget *Y2UIComponent::widgetWithId( const YCPValue & id, bool log_error )
     return 0;
 }
 
-YWidget *Y2UIComponent::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error )
+YWidget *YUI::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error )
 {
     if ( widgetRoot )
     {
@@ -2445,7 +2445,7 @@ YWidget *Y2UIComponent::widgetWithId( YContainerWidget *widgetRoot, const YCPVal
 }
 
 
-bool Y2UIComponent::checkId( const YCPValue & v, bool complain ) const
+bool YUI::checkId( const YCPValue & v, bool complain ) const
 {
     if ( v->isTerm()
 	 && v->asTerm()->size() == 1
@@ -2461,7 +2461,7 @@ bool Y2UIComponent::checkId( const YCPValue & v, bool complain ) const
 }
 
 
-bool Y2UIComponent::isSymbolOrId( const YCPValue & val ) const
+bool YUI::isSymbolOrId( const YCPValue & val ) const
 {
     if ( val->isTerm()
 	 && val->asTerm()->name() == YUISymbol_id )
@@ -2473,7 +2473,7 @@ bool Y2UIComponent::isSymbolOrId( const YCPValue & val ) const
 }
 
 
-YCPValue Y2UIComponent::getId( const YCPValue & val ) const
+YCPValue YUI::getId( const YCPValue & val ) const
 {
     if ( val->isTerm() && val->asTerm()->name() == YUISymbol_id )
 	return val->asTerm()->value(0);
@@ -2482,7 +2482,7 @@ YCPValue Y2UIComponent::getId( const YCPValue & val ) const
 }
 
 
-bool Y2UIComponent::parseRgb( const YCPValue & val, YColor *color, bool complain )
+bool YUI::parseRgb( const YCPValue & val, YColor *color, bool complain )
 {
     if ( ! color )
     {
@@ -2535,7 +2535,7 @@ bool Y2UIComponent::parseRgb( const YCPValue & val, YColor *color, bool complain
 }
 
 
-YCPValue Y2UIComponent::getWidgetId( const YCPTerm & term, int *argnr )
+YCPValue YUI::getWidgetId( const YCPTerm & term, int *argnr )
 {
     if ( term->size() > 0
 	 && term->value(0)->isTerm()
@@ -2568,7 +2568,7 @@ YCPValue Y2UIComponent::getWidgetId( const YCPTerm & term, int *argnr )
 }
 
 
-YCPList Y2UIComponent::getWidgetOptions( const YCPTerm & term, int *argnr )
+YCPList YUI::getWidgetOptions( const YCPTerm & term, int *argnr )
 {
     if ( term->size() > *argnr
 	 && term->value( *argnr )->isTerm()
@@ -2582,14 +2582,14 @@ YCPList Y2UIComponent::getWidgetOptions( const YCPTerm & term, int *argnr )
 }
 
 
-void Y2UIComponent::logUnknownOption( const YCPTerm & term, const YCPValue & option )
+void YUI::logUnknownOption( const YCPTerm & term, const YCPValue & option )
 {
     y2warning( "Unknown option %s in %s widget",
 	       option->toString().c_str(), term->name().c_str() );
 }
 
 
-void Y2UIComponent::rejectAllOptions( const YCPTerm & term, const YCPList & optList )
+void YUI::rejectAllOptions( const YCPTerm & term, const YCPList & optList )
 {
     for ( int o=0; o < optList->size(); o++ )
     {

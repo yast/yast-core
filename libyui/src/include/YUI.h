@@ -10,15 +10,15 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		Y2UIComponent.h
+  File:		YUI.h
 
   Author:	Mathias Kettner <kettner@suse.de>
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
-#ifndef Y2UIComponent_h
-#define Y2UIComponent_h
+#ifndef YUI_h
+#define YUI_h
 
 #include <pthread.h>
 #include <deque>
@@ -67,7 +67,7 @@ typedef struct
  * or override @ref #pollInput and @ref #waitForEvent, whichever is
  * easier for you.
  */
-class Y2UIComponent : public Y2Component
+class YUI : public Y2Component
 {
 public:
     /**
@@ -76,15 +76,15 @@ public:
     YDialog *currentDialog() const;
 
     /**
-     * Creates a Y2UIComponent.
+     * Creates a YUI.
      * @param with_threads Set this to true if you want a seperate ui thread
      */
-    Y2UIComponent( bool with_threads, Y2Component *callback );
+    YUI( bool with_threads, Y2Component *callback );
 
     /**
      * Cleans up, terminates the ui thread.
      */
-    virtual ~Y2UIComponent();
+    virtual ~YUI();
 
 
     /**
@@ -155,7 +155,7 @@ public:
      */
     virtual void internalError( const char *msg );
     
-    static Y2UIComponent* instance() { return current_ui; }
+    static YUI * instance() { return current_ui; }
     void setCurrentInstance();
 
     /**
@@ -186,7 +186,7 @@ public:
     /**
      * Parse an `rgb() value
      **/
-    bool Y2UIComponent::parseRgb( const YCPValue & val, YColor *color, bool complain );
+    bool YUI::parseRgb( const YCPValue & val, YColor *color, bool complain );
 
     /**
      * Creates a new widget tree.
@@ -287,12 +287,11 @@ public:
     void evaluateRecordMacro				( const YCPString & filename );
     void evaluateRedrawScreen				();
     YCPValue evaluateRunPkgSelection			( const YCPValue & value_id );
-    void evaluateSetConsoleFont				( 
-	const YCPString& magic, 
-	const YCPString& font,
-	const YCPString& screen_map, 
-	const YCPString& unicode_map, 
-	const YCPString& encoding );
+    void evaluateSetConsoleFont				( const YCPString& magic, 
+							  const YCPString& font,
+							  const YCPString& screen_map, 
+							  const YCPString& unicode_map, 
+							  const YCPString& encoding );
     void evaluateSetKeyboard				();
     YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
     void evaluateSetFunctionKeys			( const YCPMap & new_keys );
@@ -1411,7 +1410,7 @@ protected:
     static bool _reverseLayout;
     
 private:
-    static Y2UIComponent* current_ui;
+    static YUI * current_ui;
 };
 
-#endif // Y2UIComponent_h
+#endif // YUI_h
