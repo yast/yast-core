@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Sep 18 16:52:13 CEST 2003 - kkaempf@suse.de
+
+- pass "family" and "model" for .probe.cpu also on x86_64 (#31305)
+
+-------------------------------------------------------------------
 Wed Sep 17 17:30:16 CEST 2003 - arvin@suse.de
 
 - better return value of PkgUpdateAll

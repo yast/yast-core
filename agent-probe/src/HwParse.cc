@@ -599,7 +599,8 @@ HwProbe::hd2value (hd_t *hd)
 		out->add (YCPString ("vendor"), YCPString (info->vend_name?info->vend_name:""));
 		out->add (YCPString ("name"), YCPString (info->model_name?info->model_name:""));
 
-		if (info->architecture == arch_intel)
+		if ((info->architecture == arch_intel)
+		   || (info->architecture == arch_x86_64))
 		{
 		    out->add (YCPString ("family"), YCPInteger (info->family));
 		    out->add (YCPString ("model"), YCPInteger (info->model));
