@@ -122,7 +122,7 @@ YCPValue YIntField::changeWidget( const YCPSymbol & property,
 
 
 
-YCPValue YIntField::queryWidget(const YCPSymbol& property)
+YCPValue YIntField::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if 		(s == YUIProperty_Value)	return YCPInteger( value() );

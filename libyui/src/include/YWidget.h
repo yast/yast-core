@@ -250,7 +250,7 @@ public:
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::changeWidget
      */
-    virtual YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    virtual YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command ChangeWidget in the incarnation, where the
@@ -260,14 +260,14 @@ public:
      *
      * If you encounter an unknown property, call YWidget::changeWidget
      */
-    virtual YCPValue changeWidget(const YCPTerm& property, const YCPValue& newvalue);
+    virtual YCPValue changeWidget(const YCPTerm & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command QueryWidget. Implement this method in your
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::queryWidget
      */
-    virtual YCPValue queryWidget(const YCPSymbol& property);
+    virtual YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Implements the ui command QueryWidget in the incarnation, where the property
@@ -275,7 +275,7 @@ public:
      * widget subclass and handle their all properties special to that widget.
      * If you encounter an unknown property, call YWidget::queryWidget
      */
-    virtual YCPValue queryWidget(const YCPTerm& property);
+    virtual YCPValue queryWidget(const YCPTerm & property);
 
     /**
      * Returns a pointer to the ui specific widget implementation.

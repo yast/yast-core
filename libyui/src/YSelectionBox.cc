@@ -43,7 +43,7 @@ YSelectionBox::YSelectionBox(YWidgetOpt &opt, YCPString label)
 }
 
 
-YCPValue YSelectionBox::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YSelectionBox::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -85,7 +85,7 @@ YCPValue YSelectionBox::changeWidget(const YCPSymbol& property, const YCPValue& 
 
 
 
-YCPValue YSelectionBox::queryWidget(const YCPSymbol& property)
+YCPValue YSelectionBox::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if      (s == YUIProperty_Label      ) return getLabel();
@@ -116,7 +116,7 @@ YCPString YSelectionBox::getLabel()
 }
 
 
-void YSelectionBox::addItem(const YCPValue &id, const YCPString& text, bool selected)
+void YSelectionBox::addItem(const YCPValue &id, const YCPString & text, bool selected)
 {
     item_ids->add(id);
     item_labels->add(text);
@@ -124,7 +124,7 @@ void YSelectionBox::addItem(const YCPValue &id, const YCPString& text, bool sele
 }
 
 
-void YSelectionBox::itemAdded(const YCPString&, int, bool)
+void YSelectionBox::itemAdded(const YCPString &, int, bool)
 {
     // default dummy implementation
 }

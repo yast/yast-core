@@ -35,7 +35,7 @@ YLabel::YLabel(YWidgetOpt &opt, YCPString text)
 }
 
 
-YCPValue YLabel::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YLabel::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -61,7 +61,7 @@ YCPValue YLabel::changeWidget(const YCPSymbol& property, const YCPValue& newValu
 
 
 
-YCPValue YLabel::queryWidget(const YCPSymbol& property)
+YCPValue YLabel::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Value)	return getLabel();

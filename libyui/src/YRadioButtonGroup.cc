@@ -93,7 +93,7 @@ void YRadioButtonGroup::removeRadioButton(YRadioButton *button)
 }
 
 
-YCPValue YRadioButtonGroup::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YRadioButtonGroup::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
     /**
@@ -106,7 +106,7 @@ YCPValue YRadioButtonGroup::changeWidget(const YCPSymbol& property, const YCPVal
 }
 
 
-YCPValue YRadioButtonGroup::queryWidget(const YCPSymbol& property)
+YCPValue YRadioButtonGroup::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_CurrentButton)
@@ -127,7 +127,7 @@ YRadioButton *YRadioButtonGroup::currentButton() const
 }
 
 
-bool YRadioButtonGroup::setCurrentButton(const YCPValue& id)
+bool YRadioButtonGroup::setCurrentButton(const YCPValue & id)
 {
     bool found = false;
     for (unsigned i=0; i<buttonlist.size(); i++)

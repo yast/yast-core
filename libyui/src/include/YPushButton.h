@@ -47,19 +47,19 @@ public:
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * change the label of the push button. Overload this, but call
      * YPushButton::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current label of the text entry. This method cannot be overidden.

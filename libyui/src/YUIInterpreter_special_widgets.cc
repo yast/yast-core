@@ -51,7 +51,7 @@
  * Returns true if the UI supports the special widget and false if not.
  */
 
-YCPValue YUIInterpreter::evaluateHasSpecialWidget(const YCPTerm& term)
+YCPValue YUIInterpreter::evaluateHasSpecialWidget(const YCPTerm & term)
 {
     bool hasWidget = false;
 

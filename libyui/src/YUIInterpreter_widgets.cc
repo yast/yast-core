@@ -2433,7 +2433,7 @@ YWidget *YUIInterpreter::widgetWithId(YContainerWidget *widgetRoot, const YCPVal
     return 0;
 }
 
-bool YUIInterpreter::checkId(const YCPValue& v, bool complain) const
+bool YUIInterpreter::checkId(const YCPValue & v, bool complain) const
 {
     if (v->isTerm()
 	&& v->asTerm()->size() == 1
@@ -2449,7 +2449,7 @@ bool YUIInterpreter::checkId(const YCPValue& v, bool complain) const
 }
 
 
-YCPValue YUIInterpreter::getId(const YCPValue& v) const
+YCPValue YUIInterpreter::getId(const YCPValue & v) const
 {
     return v->asTerm()->value(0);
 }

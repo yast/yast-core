@@ -98,7 +98,7 @@ public:
      * recursively.
      * @return A pointer to the found widget or 0 if non has been found
      */
-    YWidget *findWidget(const YCPValue& id) const;
+    YWidget *findWidget(const YCPValue & id) const;
 
     /**
      * Returns true, since this is a container widget.

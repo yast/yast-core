@@ -47,7 +47,7 @@ YCPString YCheckBox::getLabel()
 }
 
 
-YCPValue YCheckBox::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YCheckBox::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
 
@@ -85,7 +85,7 @@ YCPValue YCheckBox::changeWidget(const YCPSymbol& property, const YCPValue& newv
 
 
 
-YCPValue YCheckBox::queryWidget(const YCPSymbol& property)
+YCPValue YCheckBox::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if	   (s == YUIProperty_Value) return getValue();

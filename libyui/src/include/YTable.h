@@ -85,22 +85,22 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget with property given as term.
      */
-    YCPValue changeWidget(const YCPTerm& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPTerm & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Implements the ui command queryWidget with property given as term.
      */
-    YCPValue queryWidget(const YCPTerm& property);
+    YCPValue queryWidget(const YCPTerm & property);
 
     /**
      * Returns the number of columns of the table.

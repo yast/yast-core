@@ -28,9 +28,9 @@
 
 
 YProgressBar::YProgressBar(YWidgetOpt &opt,
-			   const YCPString& label,
-			   const YCPInteger& maxProgress,
-			   const YCPInteger& progress)
+			   const YCPString & label,
+			   const YCPInteger & maxProgress,
+			   const YCPInteger & progress)
     : YWidget(opt)
     , label(label)
     , maxProgress(maxProgress)
@@ -65,7 +65,7 @@ YCPInteger YProgressBar::getProgress()
 }
 
 
-YCPValue YProgressBar::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YProgressBar::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
 
@@ -122,7 +122,7 @@ YCPValue YProgressBar::changeWidget(const YCPSymbol& property, const YCPValue& n
 
 
 
-YCPValue YProgressBar::queryWidget(const YCPSymbol& property)
+YCPValue YProgressBar::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if      (s == YUIProperty_Value) return getProgress();

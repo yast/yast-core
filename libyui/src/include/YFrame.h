@@ -43,18 +43,18 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
     
     /**
      * Change the Frame label. Overload this, but call
      * YFrame::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current label.

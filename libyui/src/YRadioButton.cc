@@ -58,7 +58,7 @@ YCPString YRadioButton::getLabel()
 }
 
 
-YCPValue YRadioButton::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YRadioButton::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
     /*
@@ -101,7 +101,7 @@ YCPValue YRadioButton::changeWidget(const YCPSymbol& property, const YCPValue& n
 
 
 
-YCPValue YRadioButton::queryWidget(const YCPSymbol& property)
+YCPValue YRadioButton::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if	   (s == YUIProperty_Value) return getValue();

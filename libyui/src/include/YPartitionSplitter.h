@@ -63,7 +63,7 @@ public:
     /**
      * Implements the QueryWidget() UI command.
      */
-    YCPValue queryWidget( const YCPSymbol& property );
+    YCPValue queryWidget( const YCPSymbol & property );
 
 
     /**

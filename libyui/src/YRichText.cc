@@ -42,7 +42,7 @@ YRichText::YRichText(YWidgetOpt &opt, YCPString text)
 }
 
 
-YCPValue YRichText::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YRichText::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
     /*
@@ -67,7 +67,7 @@ YCPValue YRichText::changeWidget(const YCPSymbol& property, const YCPValue& newv
 
 
 
-YCPValue YRichText::queryWidget(const YCPSymbol& property)
+YCPValue YRichText::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Value) return getText();

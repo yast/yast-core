@@ -64,7 +64,7 @@ YCPString YTextEntry::getValidChars()
 }
 
 
-YCPValue YTextEntry::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YTextEntry::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
     /**
@@ -123,7 +123,7 @@ YCPValue YTextEntry::changeWidget(const YCPSymbol& property, const YCPValue& new
 
 
 
-YCPValue YTextEntry::queryWidget(const YCPSymbol& property)
+YCPValue YTextEntry::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if      (s == YUIProperty_Value) 		return getText();

@@ -75,7 +75,7 @@ public:
      */
     YTreeItem *	addItem ( YTreeItem *		parentItem,
 			  const YCPValue &	id,
-			  const YCPString&	text,
+			  const YCPString &	text,
 			  bool			open );
 
     /**
@@ -86,25 +86,25 @@ public:
      * the data contents - and of course for avoiding dangling pointers.
      */
     YTreeItem *	addItem ( YTreeItem *		parentItem,
-			  const YCPString&	text,
+			  const YCPString &	text,
 			  void *		data,
 			  bool			open );
 
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget.
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Change the label text. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current label text. This method cannot be overidden.

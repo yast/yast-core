@@ -53,7 +53,7 @@ public:
     /**
      * Implements the QueryWidget() UI command.
      */
-    YCPValue queryWidget( const YCPSymbol& property );
+    YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Change the label above the progress indicator.
@@ -61,7 +61,7 @@ public:
      * Overwrite this, but call YDownloadProgress::setLabel
      * at the end of your own method.
      */
-    virtual void setLabel( const YCPString& label );
+    virtual void setLabel( const YCPString & label );
 
     /**
      * Change the filename.

@@ -195,12 +195,12 @@ public:
      * @return pointer to the new widget or 0 if it was not successful.
      * And error has been logged in this case
      */
-    YWidget *createWidgetTree(YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg, const YCPTerm& term);
+    YWidget *createWidgetTree(YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg, const YCPTerm & term);
 
     /**
      * Overloaded version for convenience. Supplies empty widget options.
      */
-    YWidget *createWidgetTree(YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm& term);
+    YWidget *createWidgetTree(YWidget *parent, YRadioButtonGroup *rbg, const YCPTerm & term);
 
     /**
      * Looks up a widget with a certain id. Returns 0 if no
@@ -225,7 +225,7 @@ public:
     /**
      * Implements the UI command ReplaceWidget.
      */
-    YCPValue evaluateReplaceWidget(const YCPTerm& term);
+    YCPValue evaluateReplaceWidget(const YCPTerm & term);
 
     /**
      * Returns the default function key number for a widget with the specified
@@ -380,7 +380,7 @@ protected:
     /**
      * Creates a frame widget
      */
-    virtual YContainerWidget *createFrame(YWidget *parent, YWidgetOpt &opt, const YCPString& label) = 0;
+    virtual YContainerWidget *createFrame(YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
 
 
 
@@ -404,13 +404,13 @@ protected:
      * @param heading true if the label is a Heading()
      * @param output_field true if the label should look like an output field (3D look)
      */
-    virtual YWidget *createLabel(YWidget *parent, YWidgetOpt &opt, const YCPString& text) = 0;
+    virtual YWidget *createLabel(YWidget *parent, YWidgetOpt &opt, const YCPString & text) = 0;
 
     /**
      * Creates a rich text widget
      * @param text Initial text of the label
      */
-    virtual YWidget *createRichText(YWidget *parent, YWidgetOpt &opt, const YCPString& text) = 0;
+    virtual YWidget *createRichText(YWidget *parent, YWidgetOpt &opt, const YCPString & text) = 0;
 
 
     /**
@@ -420,19 +420,19 @@ protected:
      * @param maxLines number of lines to store (use 0 for "all")
      */
     virtual YWidget *createLogView(YWidget *parent, YWidgetOpt &opt,
-				   const YCPString& label, int visibleLines, int maxLines ) = 0;
+				   const YCPString & label, int visibleLines, int maxLines ) = 0;
 
     /**
      * Creates a push button.
      * @param label Label of the button
      */
-    virtual YWidget *createPushButton(YWidget *parent, YWidgetOpt &opt, const YCPString& label) = 0;
+    virtual YWidget *createPushButton(YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
 
     /**
      * Creates a menu button.
      * @param label Label of the button
      */
-    virtual YWidget *createMenuButton(YWidget *parent, YWidgetOpt &opt, const YCPString& label) = 0;
+    virtual YWidget *createMenuButton(YWidget *parent, YWidgetOpt &opt, const YCPString & label) = 0;
 
     /**
      * Creates a radio button and inserts it into a radio button group
@@ -440,24 +440,24 @@ protected:
      * @param rbg the radio button group the new button will belong to
      */
     virtual YWidget *createRadioButton(YWidget *parent, YWidgetOpt &opt, YRadioButtonGroup *rbg,
-				       const YCPString& label, bool checked) = 0;
+				       const YCPString & label, bool checked) = 0;
 
     /**
      * Creates a check box
      * @param label Label of the checkbox
      * @param true if it is checked
      */
-    virtual YWidget *createCheckBox(YWidget *parent, YWidgetOpt &opt, const YCPString& label, bool checked) = 0;
+    virtual YWidget *createCheckBox(YWidget *parent, YWidgetOpt &opt, const YCPString & label, bool checked) = 0;
 
     /**
      * Creates a text entry or password entry field.
      */
-    virtual YWidget *createTextEntry(YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString& text) = 0;
+    virtual YWidget *createTextEntry(YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString & text) = 0;
 
     /**
      * Creates a MultiLineEdit widget.
      */
-    virtual YWidget *createMultiLineEdit(YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString& text) = 0;
+    virtual YWidget *createMultiLineEdit(YWidget *parent, YWidgetOpt &opt, const YCPString &label, const YCPString & text) = 0;
 
     /**
      * Creates a selection box
@@ -488,7 +488,7 @@ protected:
      * Creates a progress bar
      */
     virtual YWidget *createProgressBar(YWidget *parent, YWidgetOpt &opt, const YCPString &label,
-				       const YCPInteger& maxprogress, const YCPInteger& progress) = 0;
+				       const YCPInteger & maxprogress, const YCPInteger & progress) = 0;
 
     /**
      * Creates an image widget from a YCP byteblock
@@ -776,7 +776,7 @@ protected:
     /**
      * Evaluates a locale. Evaluate _("string") to "string".
      */
-    YCPValue evaluateLocale(const YCPLocale&);
+    YCPValue evaluateLocale(const YCPLocale &);
 
     /**
      * Start macro recording to file "filename".
@@ -1273,13 +1273,13 @@ protected:
      * size one. Logs an error if this is not so and 'complain' is set.
      * @return true if this is so
      */
-    bool checkId(const YCPValue& v, bool complain = true ) const;
+    bool checkId(const YCPValue & v, bool complain = true ) const;
 
     /**
      * Assumes that the value v is of the form `id(any i) and returns
      * the contained i.
      */
-    YCPValue getId(const YCPValue& v) const;
+    YCPValue getId(const YCPValue & v) const;
 
     /**
      * Delete the internal macro recorder and set the pointer to 0.

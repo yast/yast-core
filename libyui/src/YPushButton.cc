@@ -48,7 +48,7 @@ YCPString YPushButton::getLabel()
 }
 
 
-YCPValue YPushButton::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YPushButton::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
 
@@ -74,7 +74,7 @@ YCPValue YPushButton::changeWidget(const YCPSymbol& property, const YCPValue& ne
 
 
 
-YCPValue YPushButton::queryWidget(const YCPSymbol& property)
+YCPValue YPushButton::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Label) return getLabel();

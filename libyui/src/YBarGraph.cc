@@ -38,7 +38,7 @@ YBarGraph::YBarGraph(YWidgetOpt &opt)
 }
 
 
-YCPValue YBarGraph::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YBarGraph::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 

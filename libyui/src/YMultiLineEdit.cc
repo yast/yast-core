@@ -43,7 +43,7 @@ void YMultiLineEdit::setLabel(const YCPString & newLabel)
 
 
 
-YCPValue YMultiLineEdit::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YMultiLineEdit::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -89,7 +89,7 @@ YCPValue YMultiLineEdit::changeWidget(const YCPSymbol& property, const YCPValue&
 
 
 
-YCPValue YMultiLineEdit::queryWidget(const YCPSymbol& property)
+YCPValue YMultiLineEdit::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if      (s == YUIProperty_Label) return label();

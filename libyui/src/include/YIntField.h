@@ -54,7 +54,7 @@ public:
     /**
      * Implements the QueryWidget() UI command.
      */
-    YCPValue queryWidget( const YCPSymbol& property );
+    YCPValue queryWidget( const YCPSymbol & property );
 
     /**
      * Change the IntField label.
@@ -62,7 +62,7 @@ public:
      * Overwrite this, but call YIntField::setLabel
      * at the end of your own method.
      */
-    virtual void setLabel( const YCPString& label );
+    virtual void setLabel( const YCPString & label );
 
     /**
      * Change the slider value.

@@ -45,7 +45,7 @@ YCPString YFrame::getLabel()
 }
 
 
-YCPValue YFrame::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YFrame::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
    
@@ -72,7 +72,7 @@ YCPValue YFrame::changeWidget(const YCPSymbol& property, const YCPValue& newValu
 }
 
 
-YCPValue YFrame::queryWidget(const YCPSymbol& property)
+YCPValue YFrame::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Label) return getLabel();

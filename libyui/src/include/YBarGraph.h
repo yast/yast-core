@@ -85,7 +85,7 @@ private:
      * Set specific widget properties.
      * Inherited from YWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newValue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newValue);
 
     vector<int>		_values;
     vector<string>	_labels;

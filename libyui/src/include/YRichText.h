@@ -46,18 +46,18 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Change the RichText text. Overload this, but call
      * YRichText::setRichText at the end of your own function.
      */
-    virtual void setText(const YCPString& RichText);
+    virtual void setText(const YCPString & RichText);
 
     /**
      * Get the current RichText text. This method cannot be overidden. The value

@@ -56,7 +56,7 @@ YTree::~YTree()
 
 
 YCPValue
-YTree::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YTree::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
 
@@ -108,7 +108,7 @@ YTree::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
 
 
 
-YCPValue YTree::queryWidget(const YCPSymbol& property)
+YCPValue YTree::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
 
@@ -148,7 +148,7 @@ YCPString YTree::getLabel()
 YTreeItem *
 YTree::addItem ( YTreeItem *		parentItem,
 		 const YCPValue &	id,
-		 const YCPString&	text,
+		 const YCPString &	text,
 		 bool			open )
 {
     YTreeItem *treeItem;
@@ -164,7 +164,7 @@ YTree::addItem ( YTreeItem *		parentItem,
 
 YTreeItem *
 YTree::addItem ( YTreeItem *		parentItem,
-		 const YCPString&	text,
+		 const YCPString &	text,
 		 void *			data,
 		 bool			open )
 {

@@ -106,7 +106,7 @@ string YLogView::logText()
 
 
 
-YCPValue YLogView::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YLogView::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -174,7 +174,7 @@ YCPValue YLogView::changeWidget(const YCPSymbol& property, const YCPValue& newVa
 
 
 
-YCPValue YLogView::queryWidget(const YCPSymbol& property)
+YCPValue YLogView::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Label) return label();

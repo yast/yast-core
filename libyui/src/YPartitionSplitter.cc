@@ -110,7 +110,7 @@ YCPValue YPartitionSplitter::changeWidget( const YCPSymbol & property,
 
 
 
-YCPValue YPartitionSplitter::queryWidget(const YCPSymbol& property)
+YCPValue YPartitionSplitter::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if 		(s == YUIProperty_Value)	return YCPInteger( newPartSize() );

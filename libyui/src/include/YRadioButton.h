@@ -36,7 +36,7 @@ public:
      * Creates a new text entry with a label and an initial text. Enters it into
      * the radio button group rbg.
      */
-    YRadioButton(YWidgetOpt &opt, const YCPString& label, YRadioButtonGroup *rbg);
+    YRadioButton(YWidgetOpt &opt, const YCPString & label, YRadioButtonGroup *rbg);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -52,17 +52,17 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Set the text in the entry to a new value
      */
-    virtual void setValue(const YCPBoolean& checked) = 0;
+    virtual void setValue(const YCPBoolean & checked) = 0;
 
     /**
      * get the text currently entered in the text entry
@@ -73,7 +73,7 @@ public:
      * change the label of the text entry. Overload this, but call
      * YRadioButton::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current label of the text entry. This method cannot be overidden.

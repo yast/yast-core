@@ -139,7 +139,7 @@ YCPValue YDownloadProgress::changeWidget( const YCPSymbol & property,
 
 
 
-YCPValue YDownloadProgress::queryWidget(const YCPSymbol& property)
+YCPValue YDownloadProgress::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if 		(s == YUIProperty_ExpectedSize)	return YCPInteger( expectedSize() );

@@ -162,7 +162,7 @@ YShortcut::distinctShortcutChars()
 	for ( string::size_type pos=0; pos < clean.length(); pos++ )
 	{
 	    if ( YShortcut::isValid( clean[ pos ] ) )
-		contained[ clean[ pos ] ] = true;
+		contained[ (int) clean[ pos ] ] = true;
 	}
 
 

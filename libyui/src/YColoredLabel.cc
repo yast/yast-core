@@ -34,7 +34,7 @@ YColoredLabel::YColoredLabel(YWidgetOpt &opt, YCPString text)
 }
 
 
-YCPValue YColoredLabel::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YColoredLabel::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -60,7 +60,7 @@ YCPValue YColoredLabel::changeWidget(const YCPSymbol& property, const YCPValue& 
 
 
 
-YCPValue YColoredLabel::queryWidget(const YCPSymbol& property)
+YCPValue YColoredLabel::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_Value)	return getLabel();

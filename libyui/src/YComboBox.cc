@@ -39,7 +39,7 @@ YComboBox::YComboBox(YWidgetOpt &opt, YCPString label)
 }
 
 
-YCPValue YComboBox::changeWidget(const YCPSymbol& property, const YCPValue& newvalue)
+YCPValue YComboBox::changeWidget(const YCPSymbol & property, const YCPValue & newvalue)
 {
     string s = property->symbol();
 
@@ -123,7 +123,7 @@ YCPValue YComboBox::changeWidget(const YCPSymbol& property, const YCPValue& newv
 
 
 
-YCPValue YComboBox::queryWidget(const YCPSymbol& property)
+YCPValue YComboBox::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if		(s == YUIProperty_Label) 	return getLabel();
@@ -164,7 +164,7 @@ YCPString YComboBox::getValidChars()
 }
 
 
-void YComboBox::addItem(const YCPValue &id, const YCPString& text, bool selected)
+void YComboBox::addItem(const YCPValue &id, const YCPString & text, bool selected)
 {
     item_ids->add(id);
     item_labels->add(text);
@@ -177,7 +177,7 @@ void YComboBox::addItem(const YCPValue &id, const YCPString& text, bool selected
 }
 
 
-void YComboBox::itemAdded(const YCPString&, int, bool)
+void YComboBox::itemAdded(const YCPString &, int, bool)
 {
     // default dummy implementaion
 }

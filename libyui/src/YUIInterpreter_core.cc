@@ -289,7 +289,7 @@ void YUIInterpreter::uiThreadMainLoop()
 }
 
 
-YCPValue YUIInterpreter::evaluateInstantiatedTerm(const YCPTerm& term)
+YCPValue YUIInterpreter::evaluateInstantiatedTerm(const YCPTerm & term)
 {
     string symbol = term->symbol()->symbol();
     y2debug("evaluateInstantiatedTerm(%s)", symbol.c_str());
@@ -316,7 +316,7 @@ YCPValue YUIInterpreter::evaluateInstantiatedTerm(const YCPTerm& term)
 }
 
 
-YCPValue YUIInterpreter::callback(const YCPValue& value)
+YCPValue YUIInterpreter::callback(const YCPValue & value)
 {
     y2debug ("YUIInterpreter::callback (%s)", value->toString().c_str());
     if (value->isBuiltin())
@@ -348,7 +348,7 @@ YCPValue YUIInterpreter::callback(const YCPValue& value)
 }
 
 
-YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
+YCPValue YUIInterpreter::evaluateUI(const YCPValue & value)
 {
     y2debug ("evaluateUI(%s)\n", value->toString().c_str());
     if (value->isBuiltin())
@@ -373,7 +373,7 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 }
 
 
-YCPValue YUIInterpreter::evaluateWFM(const YCPValue& value)
+YCPValue YUIInterpreter::evaluateWFM(const YCPValue & value)
 {
     y2debug ("YUIInterpreter[%p]::evaluateWFM[%p](%s)\n", this, callbackComponent, value->toString().c_str());
     if (callbackComponent)
@@ -409,7 +409,7 @@ YCPValue YUIInterpreter::evaluateWFM(const YCPValue& value)
 
 
 
-YCPValue YUIInterpreter::evaluateSCR(const YCPValue& value)
+YCPValue YUIInterpreter::evaluateSCR(const YCPValue & value)
 {
     y2debug ("evaluateSCR(%s)\n", value->toString().c_str());
     if (callbackComponent)
@@ -444,7 +444,7 @@ YCPValue YUIInterpreter::evaluateSCR(const YCPValue& value)
 
 
 
-YCPValue YUIInterpreter::evaluateLocale(const YCPLocale& l)
+YCPValue YUIInterpreter::evaluateLocale(const YCPLocale & l)
 {
     y2debug("evaluateLocale(%s)\n", l->value()->value().c_str());
 

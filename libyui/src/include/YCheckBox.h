@@ -35,7 +35,7 @@ public:
     /**
      * Constructor
      */
-    YCheckBox(YWidgetOpt &opt, const YCPString& label);
+    YCheckBox(YWidgetOpt &opt, const YCPString & label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -46,17 +46,17 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Set the text in the entry to a new value
      */
-    virtual void setValue(const YCPValue& checked) = 0;
+    virtual void setValue(const YCPValue & checked) = 0;
 
     /**
      * Returns whether the checkbox is checked.
@@ -68,7 +68,7 @@ public:
      * Change the check box label. Overload this, but call
      * YCheckBox::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current check box label. This method cannot be overidden.

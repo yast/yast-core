@@ -40,8 +40,8 @@ YTable::YTable(YWidgetOpt &opt, int num_cols)
 }
 
 
-YCPValue YTable::changeWidget(const YCPSymbol& property,
-			      const YCPValue& newValue)
+YCPValue YTable::changeWidget(const YCPSymbol & property,
+			      const YCPValue & newValue)
 {
     string s = property->symbol();
 
@@ -80,7 +80,7 @@ YCPValue YTable::changeWidget(const YCPSymbol& property,
 
 
 
-YCPValue YTable::changeWidget(const YCPTerm& property, const YCPValue& newvalue)
+YCPValue YTable::changeWidget(const YCPTerm & property, const YCPValue & newvalue)
 {
     string s = property->symbol()->symbol();
     /*
@@ -125,7 +125,7 @@ YCPValue YTable::changeWidget(const YCPTerm& property, const YCPValue& newvalue)
 }
 
 
-YCPValue YTable::queryWidget(const YCPSymbol& property)
+YCPValue YTable::queryWidget(const YCPSymbol & property)
 {
     string s = property->symbol();
     if (s == YUIProperty_CurrentItem)

@@ -70,12 +70,12 @@ public:
     /**
      * Implements the ui command changeWidget.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command queryWidget
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Unchecks all radio buttons except one. This method
@@ -94,7 +94,7 @@ protected:
     /**
      * Make another of the buttons currently selected
      */
-    bool setCurrentButton(const YCPValue& id);
+    bool setCurrentButton(const YCPValue & id);
 
 
     typedef vector <YRadioButton *> buttonlist_type;

@@ -35,7 +35,7 @@ public:
     /**
      * Creates a new text entry with a label and an initial text.
      */
-    YTextEntry(YWidgetOpt &opt, const YCPString& label);
+    YTextEntry(YWidgetOpt &opt, const YCPString & label);
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -48,17 +48,17 @@ public:
      * Implements the ui command changeWidget for the widget specific
      * properties.
      */
-    YCPValue changeWidget(const YCPSymbol& property, const YCPValue& newvalue);
+    YCPValue changeWidget(const YCPSymbol & property, const YCPValue & newvalue);
 
     /**
      * Implements the ui command changeWidget for the widget specific properties.
      */
-    YCPValue queryWidget(const YCPSymbol& property);
+    YCPValue queryWidget(const YCPSymbol & property);
 
     /**
      * Set the text in the entry to a new value
      */
-    virtual void setText(const YCPString& text) = 0;
+    virtual void setText(const YCPString & text) = 0;
 
     /**
      * get the text currently entered in the text entry
@@ -69,7 +69,7 @@ public:
      * change the label of the text entry. Overload this, but call
      * YTextEntry::setLabel at the end of your own function.
      */
-    virtual void setLabel(const YCPString& label);
+    virtual void setLabel(const YCPString & label);
 
     /**
      * Get the current label of the text entry. This method cannot be

@@ -42,7 +42,7 @@ YMultiSelectionBox::YMultiSelectionBox(YWidgetOpt &opt, YCPString label)
 }
 
 
-YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol& property, const YCPValue& newValue)
+YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol & property, const YCPValue & newValue)
 {
     string sym = property->symbol();
 
@@ -121,7 +121,7 @@ YCPValue YMultiSelectionBox::changeWidget(const YCPSymbol& property, const YCPVa
 
 
 
-YCPValue YMultiSelectionBox::queryWidget(const YCPSymbol& property)
+YCPValue YMultiSelectionBox::queryWidget(const YCPSymbol & property)
 {
     string sym = property->symbol();
     if      ( sym == YUIProperty_Label       ) return getLabel();

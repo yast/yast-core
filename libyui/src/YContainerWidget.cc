@@ -135,7 +135,7 @@ void YContainerWidget::removeChildren()
 }
 
 
-YWidget *YContainerWidget::findWidget(const YCPValue& id) const
+YWidget *YContainerWidget::findWidget(const YCPValue & id) const
 {
     for (int c=0; c<numChildren(); c++)
     {
