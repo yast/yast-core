@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jul 31 11:35:19 CEST 2003 - arvin@suse.de
+
+- support special plugins with several agents
+
+-------------------------------------------------------------------
 Wed Jul 30 09:15:36 CEST 2003 - arvin@suse.de
 
 - fixed build

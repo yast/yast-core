@@ -87,32 +87,33 @@ Y2CCPlugin::create (const char* name, int level, int current_level) const
 	make_rxs ();
     }
 
-    const char* tmp = name;
+    const char* tmp1 = name;	// for the filename
+    const char* tmp2 = name;	// for the creator name
 
-    if (strcmp (tmp, "stderr") == 0)
-	tmp = "stdio";
+    if (strcmp (name, "stderr") == 0)
+	tmp1 = tmp2 = "stdio";
 
     if (regexec (&rxs1, name, 0, 0, 0) == 0)
-	tmp = "serial";
+	tmp1 = tmp2 = "serial";
 
     if (regexec (&rxr1, name, 0, 0, 0) == 0 ||
 	regexec (&rxr2, name, 0, 0, 0) == 0 ||
 	regexec (&rxr3, name, 0, 0, 0) == 0)
-	tmp = "remote";
+	tmp1 = tmp2 = "remote";
 
-    if (strcmp (tmp, "ag_evms") == 0 ||
-	strcmp (tmp, "ag_fdisk") == 0 ||
-	strcmp (tmp, "ag_lvm") == 0 ||
-	strcmp (tmp, "ag_md") == 0)
-	tmp = "ag_storage";
+    if (strcmp (name, "ag_evms") == 0 ||
+	strcmp (name, "ag_fdisk") == 0 ||
+	strcmp (name, "ag_lvm") == 0 ||
+	strcmp (name, "ag_md") == 0)
+	tmp1 = "ag_storage";
 
     // Look for the plugin and create component.
 
-    string filename = Y2PathSearch::findy2plugin (tmp, level);
+    string filename = Y2PathSearch::findy2plugin (tmp1, level);
     if (filename.empty ())
 	return 0;
 
-    return new Y2PluginComponent (creates_servers, filename, tmp, name, level);
+    return new Y2PluginComponent (creates_servers, filename, tmp2, name, level);
 }
 
 
