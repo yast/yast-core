@@ -6,9 +6,87 @@
 # - hostnames of hosts that have opened port 515
 # - hostnames of samba servers
 #
+# they are not sorted
 
+# rewritten by Martin Vidner <mvidner@suse.cz>
+
+if [ x$1 = x-d ]; then
+    set -x
+else
+    exec 2>/dev/null
+fi
+
+# we want to parse English output
 export LC_ALL=C
-exec 2>/dev/null
+
+# RETVAL convention avoids passing return values as stdout
+# and thus spawning new processes
+
+# uses RETVAL
+function ycp_item() {
+    RETVAL="\"$1\", "
+}
+
+function lookup_ip() {
+    local ip=$1
+    if [ $BADLOOKUP != 4 ] ; then
+#	NAME=$(dig +short +tries=1 +time=1 -x $ip | sed -e 's/\.$//')
+#	NAME=$(dig +short -x $ip | sed -e 's/\.$//')
+	NAME=$(host -W1 $ip | sed -n '/.*domain name pointer \(.*\)\.$/s//\1/p')
+	if [ -z $NAME ] ; then
+	    BADLOOKUP=$(expr $BADLOOKUP + 1)
+	fi
+	NAME=${NAME:-$ip}
+    else
+	NAME=$ip
+    fi
+    RETVAL=$NAME
+}
+
+# uses RETVAL
+function broadcast_addr() {
+    # may be empty
+    local INTERFACE=$1
+    RETVAL=$(/sbin/ifconfig $INTERFACE | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
+}
+
+# uses RETVAL
+function broadcast_ping() {
+    RETVAL=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+}
+
+# uses exit status
+# is_port_open $ADDR $PORT
+function is_port_open() {
+    /usr/bin/netcat -w 1 -z $1 $2
+}
+
+# hostnames [-p portnum] [interface]
+# echoes the output
+function hostnames() {
+    local PORT
+    local INTERFACE
+    if [ x$1 = x-p ]; then
+	PORT=$2
+	shift 2
+    fi
+    INTERFACE=$1
+
+    BADLOOKUP=0
+    broadcast_addr $INTERFACE; BROADCAST=$RETVAL
+    if [ "$BROADCAST" ] ; then
+	broadcast_ping; IPS=$RETVAL
+	ANSWER=
+	for IP in $IPS ; do
+	    if [ -z "$PORT" ] || is_port_open $IP $PORT; then
+		lookup_ip $IP; ycp_item $RETVAL; ANSWER="$ANSWER $RETVAL"
+	    fi
+	done
+	echo '[' "$ANSWER" ']'
+    else
+	echo '[]'
+    fi
+}
 
 while true ; do
     IFS=
@@ -19,78 +97,16 @@ while true ; do
 	"result ("*)
 	    exit
 	    ;;
-	'Read (.interface,'*)
-	    INTERFACE=$(echo "$COMMAND" | sed 's/^Read (.interface, *"\(.*\)")/\1/')
-            BADLOOKUP=0
-	    BROADCAST=$(/sbin/ifconfig $INTERFACE | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
-	    if [ "$BROADCAST" ] ; then
-		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
-		ANSWER=
-		for ip in $IPS ; do
-                    if [ $BADLOOKUP != 4 ] ; then
-                        NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
-                        if [ -z $NAME ] ; then
-                            BADLOOKUP=$(expr $BADLOOKUP + 1)
-                        fi
-                        NAME=${NAME:-$ip}
-                    else
-                        NAME=$ip
-                    fi
-		    ANSWER="$ANSWER\"$NAME\", "
-		done
-		echo '[' "$ANSWER" ']'
-	    else
-		echo '[]'
-	    fi
-	    ;;
 	'Read (.)')
-            BADLOOKUP=0
-	    BROADCAST=$(/sbin/ifconfig | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
-	    if [ "$BROADCAST" ] ; then
-		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
-		ANSWER=
-		for ip in $IPS ; do
-                    if [ $BADLOOKUP != 4 ] ; then
-                        NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
-                        if [ -z $NAME ] ; then
-                            BADLOOKUP=$(expr $BADLOOKUP + 1)
-                        fi
-                        NAME=${NAME:-$ip}
-                    else
-                        NAME=$ip
-                    fi
-		    ANSWER="$ANSWER\"$NAME\", "
-		done
-		echo '[' "$ANSWER" ']'
-	    else
-		echo '[]'
-	    fi
+	    hostnames
 	    ;;
 	'Read (.,'*)
-            rootpart=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
-            BADLOOKUP=0
-	    BROADCAST=$(/sbin/ifconfig | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
-	    if [ "$BROADCAST" ] ; then
-		IPS=$(ping -b -c 2 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
-		ANSWER=
-		for ip in $IPS ; do
-		    if /usr/bin/netcat -w 1 -z $ip $rootpart ; then
-			if [ $BADLOOKUP != 4 ] ; then
-			    NAME=$(nslookup -retry=1 -timeout=1 $ip | sed -n 's/Name:[[:space:]]*//p')
-			    if [ -z $NAME ] ; then
-				BADLOOKUP=$(expr $BADLOOKUP + 1)
-			    fi
-			    NAME=${NAME:-$ip}
-			else
-			    NAME=$ip
-			fi
-			ANSWER="$ANSWER\"$NAME\", "
-		    fi
-		done
-		echo '[' "$ANSWER" ']'
-	    else
-		echo '[]'
-	    fi
+	    PORT=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
+	    hostnames -p $PORT
+	    ;;
+	'Read (.interface,'*)
+	    INTERFACE=$(echo "$COMMAND" | sed 's/^Read (.interface, *"\(.*\)")/\1/')
+	    hostnames $INTERFACE
 	    ;;
 	'Read (.samba)')
 	    echo -n [
