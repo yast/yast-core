@@ -32,22 +32,6 @@ using std::string;
 #include "ycp/SymbolEntry.h"
 
 /**
- * linked list of actual parameters
- *
- */
-
-typedef struct yparmlist {
-    struct yparmlist *next;
-    int kind;		// 0 = code, 1 = symbol, 2 = as Code, 3 = table
-    union {
-	YCode *c;
-	SymbolEntry *s;
-	TableEntry *t;
-    } parm;
-} yparmlist_t;
-
-
-/**
  * linked list of ycode pointers
  *
  * used in forming a block consisting of an ordered
