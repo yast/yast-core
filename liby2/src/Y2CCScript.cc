@@ -39,11 +39,12 @@ Y2CCScript::Y2CCScript()
 {
     // I don't bother freeing these regular expressions
 
-    regcomp(&rx1, "^#![[:space:]]*/bin/y2gf[[:space:]]\\+$", 0);
+    regcomp (&rx1, "^#![[:space:]]*/bin/y2gf[[:space:]]\\+$", 0);
 }
 
 
-Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
+Y2Component *
+Y2CCScript::createInLevel (const char *name, int level, int) const
 {
     if (name == 0)
     {
@@ -55,8 +56,7 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 
     // try to find clients/<name>.ycp
 
-    string fullname = Y2PathSearch::findy2 ("clients/" + filename, R_OK,
-					    level);
+    string fullname = Y2PathSearch::findy2 ("clients/" + filename, R_OK, level);
 
     if (fullname.empty())
     {
@@ -65,7 +65,9 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 
 	fullname = Y2PathSearch::completeFilename (string (name));
 	if (fullname.empty())
+	{
 	    return 0;
+	}
 
 	file = fopen (fullname.c_str(), "r");
 	if (!file) return 0; // Not found under the direct path either.
@@ -76,44 +78,62 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 
 	bool try_it = false;
 
-	if (strlen(name) > 4
-	    && !strcmp(name + strlen(name) - 4, ".ycp"))
+	if (strlen (name) > 4
+	    && !strcmp (name + strlen(name) - 4, ".ycp"))
 	{
 	    try_it = true;
 	}
 	else
 	{
 	    struct stat buf;
-	    if (0 == stat(name, &buf))
+	    if (0 == stat (name, &buf))
 	    {
 		// Try it, if it is not executable
-		if (S_ISREG(buf.st_mode) && buf.st_mode & S_IXOTH != S_IXOTH)
-		    try_it = true;
-	    }
-	    else {
-		char line[512];
-		if (line == fgets(line, 512, file))
+		if (S_ISREG (buf.st_mode)
+		    && (buf.st_mode & S_IXOTH != S_IXOTH))
 		{
-		    if (0 == regexec(&rx1, line, 0, 0, 0))
+		    try_it = true;
+		}
+	    }
+	    else
+	    {
+		char line[512];
+		if (line == fgets (line, 512, file))
+		{
+		    if (0 == regexec (&rx1, line, 0, 0, 0))
+		    {
 			try_it = true;
+		    }
 		}
 	    }
 	}
 	if (!try_it) return 0;
 
 	modulename = string(name);
+
 	string::size_type slashpos = modulename.rfind('/');
-	if (slashpos != string::npos) modulename = modulename.substr(slashpos + 1);
+	if (slashpos != string::npos)
+	{
+	    modulename = modulename.substr(slashpos + 1);
+	}
+
 	string::size_type dotpos = modulename.find('.');
-	if (dotpos != string::npos) modulename = modulename.substr(0, dotpos);
+	if (dotpos != string::npos)
+	{
+	    modulename = modulename.substr(0, dotpos);
+	}
     }
     else
     {
 	file = fopen (fullname.c_str(), "r");
 	if (!file)
+	{
 	    return 0;	// shouldn't happen since findy2() already checked
+	}
     }
+
 #warning FIXME: check for bytecode too
+
     // Parse Script
     YCPParser parser(file, fullname.c_str());
     parser.setBuffered();
@@ -121,12 +141,16 @@ Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
     fclose(file);
 
     if (!script.isNull ())
+    {
 	return new Y2ScriptComponent (modulename, fullname, script);
+    }
 
     return NULL;
 }
 
-bool Y2CCScript::isServerCreator() const
+
+bool
+Y2CCScript::isServerCreator() const
 {
     return false;
 }
