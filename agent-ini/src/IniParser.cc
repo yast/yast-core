@@ -177,7 +177,7 @@ int IniParser::initMachine (const YCPMap&scr)
 
     if (ignore_case && multiple_files)
     {
-       y2error ("When using multiple files, ignore_case does not work");
+       ycperror ("When using multiple files, ignore_case does not work");
        ignore_case = false;
     }
 
