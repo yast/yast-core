@@ -1533,7 +1533,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     }
 
     size_t inbuf_len  = instr.length();
-    size_t outbuf_len = inbuf_len * 6 + 1; // worst case
+    size_t outbuf_len = inbuf_len * MB_CUR_MAX + 1; // worst case
 
     char * outbuf = recode_buf;
     if (outbuf_len > recode_buf_size)
