@@ -517,14 +517,6 @@ HwProbe::hd2value (hd_t *hd)
     {
 	out->add (YCPString ("cardtype"), YCPString ("PnP"));
     }
-    else if (hd->is.cardbus)
-    {
-	out->add (YCPString ("cardtype"), YCPString ("cardbus"));
-    }
-    else if (hd->is.pcmcia)
-    {
-	out->add (YCPString ("cardtype"), YCPString ("pcmcia"));
-    }
 
     // misc entries in is structure
 
@@ -802,11 +794,15 @@ HwProbe::hd2value (hd_t *hd)
     if (s)
 	out->add (YCPString ("compat_device"), YCPString (s));
 
-    // linux device name
+    // linux device name and name2
 
     s = hd->unix_dev_name;
     if (s)
 	out->add (YCPString ("dev_name"), YCPString (s));
+
+    s = hd->unix_dev_name2;
+    if (s)
+	out->add (YCPString ("dev_name2"), YCPString (s));
 
     // BIOS id
     s = hd->rom_id;
