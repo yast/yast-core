@@ -81,11 +81,6 @@
     global boolean config		= false;
 
     /**
-     * Preparing live-eval cd installation
-     */
-    global boolean live_eval		= false;
-
-    /**
      * this is a beta-version
      */
     global boolean beta			= false;
@@ -235,8 +230,6 @@
 	    autoinst = SCR::Read (.etc.install_inf.AutoYaST) != nil;
 
 	    repair   = SCR::Read (.etc.install_inf.Repair )  != nil;
-
-	    live_eval = SCR::Read (.etc.install_inf.Demo) == "1";
 
 	    text = SCR::Read (.etc.install_inf.Textmode) == "1";
 
