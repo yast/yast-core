@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 31 14:19:11 CEST 2004 - sh@suse.de
+
+- implemented UI::QueryWidget() for wizard
+
+-------------------------------------------------------------------
 Tue Mar 30 19:58:27 CEST 2004 - arvin@suse.de
 
 - fixed setting of YAST_IS_RUNNING (bug #37536)
