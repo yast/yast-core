@@ -335,6 +335,16 @@ public:
     YCPValue evaluateWizardCommand			( const YCPTerm & command );
     YCPValue evaluatePollInput				();
 
+    /**
+     * This method implements the UI thread in case it is existing.
+     * The loop consists of calling @ref #idleLoop, getting the next
+     * command from the @ref YCPUIComponent, evaluating it, which
+     * possibly invovles calling @ref #userInput() or @ref #pollInput()
+     * and writes the answer back to the other thread where the request
+     * came from.
+     */
+    void uiThreadMainLoop();
+
 
 protected:
 
@@ -898,16 +908,6 @@ protected:
      */
     void createUIThread();
     friend void *start_ui_thread( void *ui_int );
-
-    /**
-     * This method implements the UI thread in case it is existing.
-     * The loop consists of calling @ref #idleLoop, getting the next
-     * command from the @ref YCPUIComponent, evaluating it, which
-     * possibly invovles calling @ref #userInput() or @ref #pollInput()
-     * and writes the answer back to the other thread where the request
-     * came from.
-     */
-    void uiThreadMainLoop();
 
     /**
      * Signals the ui thread by sending one byte through the pipe
