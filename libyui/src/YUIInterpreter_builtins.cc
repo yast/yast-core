@@ -1433,8 +1433,14 @@ YCPValue YUIInterpreter::evaluateRecode (const YCPTerm& term)
 		term->value(1)->asString()->value(),
 		outstr) != 0)
     {
-	y2error("Bad arguments for Recode");
-	return YCPVoid();
+	static bool warned_about_recode = false;
+	if (!warned_about_recode)
+	{
+	    y2error ("Recode (%s, %s, ...)", term->value(0)->asString()->value().c_str(), term->value(1)->asString()->value().c_str());
+	    warned_about_recode = true;
+	}
+	// return text as-is
+	return (term->value(2)->asString());
     }
     return YCPString (outstr);
 }
