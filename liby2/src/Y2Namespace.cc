@@ -37,8 +37,8 @@ Y2Namespace::~Y2Namespace ()
 {
     if (m_table)
     {
-    delete m_table;
-}
+	delete m_table;
+    }
 }
 
 unsigned int
