@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Sep 19 15:43:08 CEST 2003 - ma@suse.de
+
+- If SourceStartCache(enabled==true) is requested, check InstSrcManager
+  to see whether sources are realy enabled. 'Change source of installation'
+  for example starts the InstSrcManager without autoenabling the sources.
+ (#29324)
+- 2.8.34
+
+-------------------------------------------------------------------
 Thu Sep 18 16:52:13 CEST 2003 - kkaempf@suse.de
 
 - pass "family" and "model" for .probe.cpu also on x86_64 (#31305)
