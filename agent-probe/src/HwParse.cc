@@ -546,6 +546,8 @@ HwProbe::hd2value (hd_t *hd)
 		cpu_info_t *info = hd->detail->cpu.data;
 		s = cpu2string (info->architecture);
 		out->add (YCPString ("architecture"), YCPString (s));
+		out->add (YCPString ("vendor"), YCPString (info->vend_name?info->vend_name:""));
+		out->add (YCPString ("name"), YCPString (info->model_name?info->model_name:""));
 
 		if (info->architecture == arch_intel)
 		{

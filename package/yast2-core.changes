@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 12 16:48:08 CEST 2002 - kkaempf@suse.de
+
+- add "vendor" and "name" keys to .probe.cpu map
+
+-------------------------------------------------------------------
 Fri Aug 09 14:49:35 CEST 2002 - arvin@suse.de
 
 - added support for dvb cards to probe agent
