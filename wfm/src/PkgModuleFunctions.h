@@ -407,7 +407,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, YouFirstPatch, 		"map<any,any> (boolean)",Boolean, 	PkgModuleFunctions, YouFirstPatch);
 	Y2FUNCTIONCALL  ( Pkg, YouNextPatch, 		"map<any,any> ()",		PkgModuleFunctions, YouNextPatch);
 	Y2FUNCTIONCALL2 ( Pkg, YouGetCurrentPatch, 	"string (boolean, boolean)",Boolean, Boolean, PkgModuleFunctions, YouGetCurrentPatch);
-	Y2FUNCTIONCALL  ( Pkg, YouInstallCurrentPatch, 	"boolean ()",		PkgModuleFunctions, YouInstallCurrentPatch);
+	Y2FUNCTIONCALL  ( Pkg, YouInstallCurrentPatch, 	"string ()",		PkgModuleFunctions, YouInstallCurrentPatch);
 	Y2FUNCTIONCALL  ( Pkg, YouInstallPatches, 	"boolean ()",		PkgModuleFunctions, YouInstallPatches);
         Y2FUNCTIONCALL  ( Pkg, YouRemovePackages, 	"boolean ()",		PkgModuleFunctions, YouRemovePackages);
 	Y2FUNCTIONCALL  ( Pkg, YouDisconnect, 		"boolean ()",		PkgModuleFunctions, YouDisconnect);

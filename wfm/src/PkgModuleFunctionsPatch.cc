@@ -452,7 +452,7 @@ PkgModuleFunctions::YouGetCurrentPatch (const YCPBoolean& download, const YCPBoo
 }
 
 /**
-  @builtin Pkg::YouInstallCurrentPatch () -> bool
+  @builtin Pkg::YouInstallCurrentPatch () -> string
 
   install current patch.
 
