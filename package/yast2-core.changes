@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Aug 30 16:40:13 CEST 2004 - mvidner@suse.cz
+
+- substring: fixed an unlikely bug with offset signedness
+- bytecode: fixed m_release comparison in isVersionAtMost
+- updated builtin docs
+
+-------------------------------------------------------------------
 Mon Aug 30 12:56:12 CEST 2004 - jsrain@suse.cz
 
 - added Pkg::PkgTaboo builtin (#43499)
