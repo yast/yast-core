@@ -72,19 +72,19 @@
     UI::WizardCommand(`SetHelpText( help_text ) );
 
     UI::WizardCommand(`AddStepHeading( "Base Installation" ) );
-
+    
     foreach ( map step, base_installation_steps, ``{
 	UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
     });
     
 
     UI::WizardCommand(`AddStepHeading( "Configuration" ) );
+    
     foreach ( map step, config_steps, ``{
 	UI::WizardCommand(`AddStep( step["label"]:"", step["id"]:"" ) );
     });
 
 
-    UI::WizardCommand(`UpdateSteps() );
     integer current_step = 0;
     show_step( 0 );
 	
