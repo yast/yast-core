@@ -26,6 +26,7 @@
 #include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
+#include <y2util/Y2SLog.h>
 #include <y2pm/InstData.h>
 #include <y2pm/YouError.h>
 
@@ -38,7 +39,7 @@
 #include <ycp/YCPError.h>
 
 using std::string;
-
+using std::endl;
 
 /**
  * helper function, get selectable by name
@@ -176,6 +177,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
           "args"  bad args
           "media" media error
           "sig"   signature check failed 
+          "abort" user aborted operation
           "url"   url not valid
 */
 YCPValue
@@ -197,6 +199,7 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
     if ( _last_error ) {
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ) return YCPString( "sig" );
+      if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
       return YCPString( _last_error.errstr() );
     }
 
@@ -249,14 +252,22 @@ PkgModuleFunctions::YouSelectPatches (YCPList args)
 /**
   @builtin Pkg::YouFirstPatch () -> map
 
+  @param bool If true progress is reset, if false or missing it isn't touched.
+
   get information about first selected patch.
 */
 YCPValue
 PkgModuleFunctions::YouFirstPatch (YCPList args)
 {
+    bool resetProgress = true;
+    if ( ( args->size() == 1 ) && ( args->value(0)->isBoolean() ) )
+    {
+	resetProgress = args->value( 0 )->asBoolean()->value();
+    }
+
     YCPMap result;
 
-    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().firstPatch();
+    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().firstPatch( resetProgress );
     if ( patch ) {
       result = YouPatch( patch );
     } else {
@@ -276,11 +287,20 @@ PkgModuleFunctions::YouNextPatch (YCPList args)
 {
     YCPMap result;
 
-    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().nextPatch();
+    bool ok;
+
+    PMYouPatchPtr patch = _y2pm.youPatchManager().instYou().nextPatch( &ok );
     if ( patch ) {
       result = YouPatch( patch );
     } else {
       y2debug("No more patches.");
+    }
+
+    if ( !ok ) {
+      ERR << "YouNextPatch fail" << endl;
+      result->add( YCPString( "error" ), YCPString( "abort" ) );
+    } else {
+      ERR << "YouNextPatch ok" << endl;
     }
 
     return result;
@@ -312,6 +332,7 @@ PkgModuleFunctions::YouPatch( const PMYouPatchPtr &patch )
           "args"  bad args
           "media" media error
           "sig"   signature check failed
+          "abort" user aborted operation
 */
 YCPValue
 PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
@@ -328,6 +349,7 @@ PkgModuleFunctions::YouGetCurrentPatch (YCPList args)
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ||
            _last_error == YouError::E_bad_sig_rpm ) return YCPString( "sig" );
+      if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
       return YCPString( _last_error.errstr() );
     }
     return YCPString( "" );

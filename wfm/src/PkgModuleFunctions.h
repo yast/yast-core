@@ -34,6 +34,24 @@
 #include <y2pm/InstSrcDescrPtr.h>
 #include <y2pm/InstSrcManager.h>
 
+class YCPCallbacks
+{
+  public:
+    YCPCallbacks( YCPInterpreter *interpreter );
+
+    YCPValue setCallback( string func, YCPList args );
+
+    YCPTerm createCallback( const string &func );
+
+    YCPValue evaluate( const YCPTerm &callback );
+
+  private:
+    map<string, string> mModules;
+    map<string, string> mSymbols;
+    
+    YCPInterpreter *_interpreter;    
+};
+
 /**
  * A simple class for package management access
  */
@@ -79,6 +97,10 @@ class PkgModuleFunctions
 	// used by Pkg::PkgCommit()
 	InstSrcManager::ISrcIdList _inst_order;
 
+        YCPCallbacks *_youCallbacks;
+
+        void initYouCallbacks();
+
     public:
 	// general
 	YCPValue InstSysMode (YCPList args);
@@ -100,6 +122,8 @@ class PkgModuleFunctions
 	YCPValue CallbackMediaChange (YCPList args);
 	YCPValue CallbackProgressRebuildDB (YCPList args);
 	YCPValue CallbackSourceChange (YCPList args);
+	YCPValue CallbackYouProgress (YCPList args);
+	YCPValue CallbackYouPatchProgress (YCPList args);
 
 	// source related
         YCPValue SourceStartManager (YCPList args);

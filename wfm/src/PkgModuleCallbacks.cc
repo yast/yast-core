@@ -28,7 +28,7 @@ All callbacks have a common interface:
   string  <error>	error message from rpm (empty string if no error)
 /-*/
 
-
+#include <y2util/Y2SLog.h>
 #include <ycp/y2log.h>
 #include <PkgModule.h>
 #include <PkgModuleFunctions.h>
@@ -43,6 +43,7 @@ All callbacks have a common interface:
 #include <ycp/YCPError.h>
 
 using std::string;
+using std::endl;
 
 //-------------------------------------------------------------------
 // PkgModuleCallbacks
@@ -544,5 +545,101 @@ PkgModuleFunctions::CallbackProgressRebuildDB (YCPList args)
     return YCPVoid();
 }
 
+YCPCallbacks::YCPCallbacks( YCPInterpreter *interpreter ) :
+  _interpreter( interpreter )
+{
+}
 
+YCPValue YCPCallbacks::setCallback( string func, YCPList args )
+{
+  if ((args->size() != 1)
+      || !(args->value(0)->isString()))
+  {
+      return YCPError ("Bad args to Pkg::Callback");
+  }
+  string name = args->value(0)->asString()->value();
+  string::size_type colonpos = name.find("::");
+  if (colonpos != string::npos)
+  {
+      mModules[ func ] = name.substr ( 0, colonpos );
+      mSymbols[ func ] = name.substr ( colonpos + 2 );
+  }
+  else
+  {
+      mModules[ func ] = "";
+      mSymbols[ func ] = name;
+  }
+  return YCPVoid();
+}
 
+YCPTerm YCPCallbacks::createCallback( const string &func )
+{
+  return YCPTerm( YCPSymbol( mSymbols[ func ], false ), mModules[ func ] );
+}
+
+YCPValue YCPCallbacks::evaluate( const YCPTerm &callback )
+{
+  return _interpreter->evaluate( callback );
+}
+
+class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
+{
+  public:
+    YouCallbacks( YCPInterpreter *interpreter ) : YCPCallbacks( interpreter ) {}
+  
+    bool progress( int percent )
+    {
+      DBG << "you progress: " << percent << endl;
+
+      YCPTerm callback = createCallback( "progress" );
+      callback->add( YCPInteger ( percent ) );
+      YCPValue ret = evaluate( callback );
+      if ( !ret->isBoolean() ) {
+        ERR << "Wrong return type." << endl;
+        return false;
+      } else {
+        INT << "Got boolean." << endl;
+        bool result = ret->asBoolean()->value();
+        INT << "Result: " << result << endl;
+        return result;
+      }
+    }
+
+    bool patchProgress( int percent, const string &pkg )
+    {
+      DBG << "you patch progress: " << percent << endl;
+
+      YCPTerm callback = createCallback( "patchProgress" );
+      callback->add( YCPInteger ( percent ) );
+      callback->add( YCPString ( pkg ) );
+      YCPValue ret = evaluate( callback );
+      if ( !ret->isBoolean() ) {
+        ERR << "Wrong return type." << endl;
+        return false;
+      } else {
+        INT << "Got boolean." << endl;
+        bool result = ret->asBoolean()->value();
+        INT << "Result: " << result << endl;
+        return result;
+      }
+    }
+};
+
+void PkgModuleFunctions::initYouCallbacks()
+{
+  YouCallbacks *callbacks = new YouCallbacks( _wfm );
+  Y2PM::youPatchManager().instYou().setCallbacks( callbacks );
+  _youCallbacks = callbacks;
+}
+
+YCPValue
+PkgModuleFunctions::CallbackYouProgress( YCPList args )
+{
+    return _youCallbacks->setCallback( "progress", args );
+}
+
+YCPValue
+PkgModuleFunctions::CallbackYouPatchProgress( YCPList args )
+{
+    return _youCallbacks->setCallback( "patchProgress", args );
+}

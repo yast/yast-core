@@ -40,6 +40,8 @@ PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
     , _cache_started(false)
 {
     _y2pm.packageManager();
+
+    initYouCallbacks();
 }
 
 /**
