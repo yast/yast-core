@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 18 13:08:02 CEST 2004 - mvidner@suse.cz
+
+- ag_probe: parse carrier detection information from libhd (res_link)
+
+-------------------------------------------------------------------
 Mon Aug 16 18:38:07 CEST 2004 - visnov@suse.cz
 
 - return 'nil' if function pointer cannot be used instead of NULL (#42330)

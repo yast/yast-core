@@ -6,6 +6,8 @@
 Summary:	-
 Requires:	netcat
 Requires:	perl = %{perl_version}
+# hwinfo-9.1: res_link_t
+Requires:	hwinfo >= 9.1
 Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig

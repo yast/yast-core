@@ -331,6 +331,13 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	map->add (YCPString ("addr"), YCPString (r->addr));
     }
     break;
+    case res_link:
+    {
+	RES2TYPE (res_link_t);
+	*name = "link";
+	map->add (YCPString ("state"), YCPBoolean (r->state));
+    }
+    break;
     default:
 	map = YCPNull();
 	break;
