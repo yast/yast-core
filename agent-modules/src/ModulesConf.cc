@@ -279,7 +279,7 @@ bool ModulesConf::updateIfModified() {
 ModulesConf::TimeStamp ModulesConf::getTimeStamp(const string &fname) {
     struct stat st;
     if (stat(fname.c_str(), &st)) {
-	y2error(strerror(errno));
+	y2error("Failed stat on %s: %s", fname.c_str(), strerror(errno));
 	return 0;
     }
     return st.st_mtime;
