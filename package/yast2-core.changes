@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul 10 15:27:48 CEST 2003 - mvidner@suse.cz
+
+- perl library:
+  * parse paths with quoted components
+  * consider also negative integers in ycp::Return
+
+-------------------------------------------------------------------
 Wed Jul  9 11:16:30 CEST 2003 - cschum@suse.de
 
 - WFM: Added Pkg::YouSetServer().
@@ -35,7 +42,6 @@ Thu Jun 26 13:53:00 CEST 2003 - msvec@suse.de
 - 2.8.3
 
 -------------------------------------------------------------------
->>>>>>> 1.125
 Wed Jun 25 10:49:31 CEST 2003 - cschum@suse.de
 
 - Removed WFM builtin CallFile as it isn't needed anymore by YOU.

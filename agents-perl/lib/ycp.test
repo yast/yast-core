@@ -65,12 +65,47 @@ sub TestStrings ()
     };
 }
 
+my @path_test =
+    (
+     # simple cases
+     [ '.',
+       '.' ],
+     [ '.a-path.that_rules',
+       '.a-path.that_rules' ],
+     # quoted paths: so far libycp does not strip quotes even if possible
+     [ '."foo"',
+       '."foo"' ],
+     [ '.""',
+       '.""' ],
+     [ '.foo."bar"',
+       '.foo."bar"' ],
+     [ '."foo".bar',
+       '."foo".bar' ],
+     # nasty cases when we strip quotes
+     [ '."trailing-dash-"',
+       '."trailing-dash-"' ],
+     );
+
+# return true on sucess
+sub TestPaths ()
+{
+    print "TestPaths\n";
+    eval {
+	foreach my $case (@path_test)
+	{
+	    my $p = Parse ($case->[0]);
+	    Result (ref ($p) eq "SCALAR" && $$p eq $case->[1]);
+	}
+    };
+}
+
 my @number_test =
     (
      [ '42', 42 ],
      [ '042', 34 ],
      [ '-42', -42 ],
      [ '0', 0 ],
+	# expected failures: hex numbers, float numbers
     );
 
 # return true on sucess
@@ -168,13 +203,6 @@ sub TestMisc ()
 	Result (! defined (Parse ('nil')));
 	Result (! Parse ('false'));
 	Result (Parse ('true'));
-	Result (42 == Parse ('42'));
-	Result (-42 == Parse ('-42'));
-	Result (127 == Parse ('0177'));
-	# expected failures: hex numbers, float numbers
-	my $path = ".a-path.that_rules";
-	my $p = Parse ($path);
-	Result (ref($p) eq "SCALAR" && $$p eq $path);
     };
 }
 
@@ -257,6 +285,7 @@ sub TestOutput ()
 
 # main
 TestStrings ();
+TestPaths ();
 TestNumbers ();
 TestLists ();
 TestMaps ();

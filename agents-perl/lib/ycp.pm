@@ -250,6 +250,21 @@ sub ParseTerm ($)
 #   $rest_of_input is the unmatched part of the input.
 #        On success, parsing can go on, on error, the ofending input is there.
 
+# this is how it looks like in lex:
+# PATHSEGMENT [[:alnum:]_-]+|\"([^\\"]*(\\.)*)+\"
+my $lex_pathsegment = qr{
+		(?:				# outer group
+		[[:alnum:]_-]+			# ordinary segment
+		|
+		"
+		(?:
+		[^\\"]*				# any-except-bkls-quot
+		(?: \\ . )*			# bksl, any
+		)+
+		"
+		)
+		}x;		# enable whitespace and comments in regex
+
 # Internal
 # Parses a YCP value. See PerlYCPValue. Notably terms are not supported.
 # Returns PerlYCPParserResult.
@@ -285,7 +300,7 @@ sub ParseYcp ($)
     {
 	return ParseYcpString ($ycp_value);
     }
-    elsif ($ycp_value =~ /^(\.[[:alnum:]._-]*)(.*)/)
+    elsif ($ycp_value =~ /^((?:\.${lex_pathsegment})+|\.)(.*)/)
     {
 	my $path = $1; # must be a "my" variable, not \$1.
 	return (\$path, "", $2);
@@ -541,7 +556,7 @@ sub Return ($;$)
     }
     elsif (! $reftype)
     {
-	if (! $quote_everything && $val =~ /^(true|false|\s*\d+\s*)$/)
+	if (! $quote_everything && $val =~ /^(true|false|\s*-?\d+\s*)$/)
 	{
 	    print "($val)";
 	}
