@@ -13,10 +13,11 @@ noinst_PROGRAMS = y2ag_dummy
 
 y2ag_dummy_SOURCES = y2ag_dummy.cc
 y2ag_dummy_LDADD = -lscr -ly2 -lycp -ly2util
-y2ag_dummy_LDFLAGS = -L$(libdir)			\
+y2ag_dummy_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
 	-L$(srcdir)/../../libscr/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\

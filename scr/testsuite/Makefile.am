@@ -19,10 +19,11 @@ noinst_PROGRAMS = runscr y2scr
 
 runscr_SOURCES = runscr.cc
 runscr_LDADD = -ly2 -lycp -lscr -ly2util
-runscr_LDFLAGS = -L$(libdir)					\
+runscr_LDFLAGS = 						\
 	-L$(srcdir)/../../libycp/src				\
 	-L$(srcdir)/../../liby2/src				\
 	-L$(srcdir)/../../libscr/src				\
+	-L$(libdir)						\
 	-Xlinker --whole-archive				\
 	$(srcdir)/../../liby2/src/libpy2stdio.la		\
 	$(srcdir)/../../agent-dummy/src/libpy2ag_dummy.la	\
@@ -30,11 +31,12 @@ runscr_LDFLAGS = -L$(libdir)					\
 	-Xlinker --no-whole-archive
 
 y2scr_SOURCES = y2scr.cc
-y2scr_LDADD = -L$(libdir) -lscr -ly2 -lycp
+y2scr_LDADD = -lscr -ly2 -lycp
 y2scr_LDFLAGS =							\
 	-L$(srcdir)/../../libycp/src				\
 	-L$(srcdir)/../../liby2/src				\
 	-L$(srcdir)/../../libscr/src				\
+	-L$(libdir)						\
 	-Xlinker --whole-archive				\
 	$(srcdir)/../../agent-dummy/src/libpy2ag_dummy.la	\
 	$(srcdir)/../../agent-dumpto/src/libpy2ag_dumpto.la	\

@@ -19,10 +19,11 @@ noinst_PROGRAMS = runag_hwprobe
 
 runag_hwprobe_SOURCES = runag_hwprobe.cc
 runag_hwprobe_LDADD = -ly2 -lycp -lscr -ly2util
-runag_hwprobe_LDFLAGS = -L$(libdir)			\
+runag_hwprobe_LDFLAGS = 				\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
 	-L$(srcdir)/../../libscr/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../src/libpy2ag_hwprobe.la		\

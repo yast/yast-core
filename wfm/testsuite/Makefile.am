@@ -20,9 +20,10 @@ noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc
 runwfm_LDADD = -ly2 -lycp -ly2util -ly2pm
 
-runwfm_LDFLAGS = -L$(libdir)				\
+runwfm_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../src/libpy2wfm.la			\
@@ -32,9 +33,10 @@ bin_PROGRAMS = y2wfm
 y2wfm_SOURCES = y2wfm.cc
 y2wfm_LDADD = -ly2 -lycp -ly2util -ly2pm
 
-y2wfm_LDFLAGS = -L$(libdir)				\
+y2wfm_LDFLAGS = 					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\

@@ -19,10 +19,11 @@ noinst_PROGRAMS = runag_ini
 
 runag_ini_SOURCES = runag_ini.cc
 runag_ini_LDADD = -lscr -ly2 -lycp -ly2util
-runag_ini_LDFLAGS = -L$(libdir)				\
+runag_ini_LDFLAGS = 					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
 	-L$(srcdir)/../../libscr/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\

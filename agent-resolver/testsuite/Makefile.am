@@ -14,10 +14,11 @@ noinst_PROGRAMS = y2ag_resolver
 y2ag_resolver_SOURCES = y2ag_resolver.cc
 
 y2ag_resolver_LDADD = -lscr -ly2 -lycp -ly2util
-y2ag_resolver_LDFLAGS = -L$(libdir)			\
+y2ag_resolver_LDFLAGS =					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
 	-L$(srcdir)/../../libscr/src			\
+ 	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\

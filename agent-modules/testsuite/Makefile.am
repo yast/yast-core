@@ -19,10 +19,11 @@ noinst_PROGRAMS = runmodules
 
 runmodules_SOURCES = runmodules.cc
 runmodules_LDADD = -lscr -ly2 -lycp -ly2util
-runmodules_LDFLAGS = -L$(libdir)			\
+runmodules_LDFLAGS = 					\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
 	-L$(srcdir)/../../libscr/src			\
+	-L$(libdir)					\
 	-Xlinker --whole-archive			\
 	$(srcdir)/../../liby2/src/libpy2stdio.la	\
 	$(srcdir)/../../liby2/src/libpy2script.la	\

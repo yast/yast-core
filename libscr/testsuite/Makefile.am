@@ -13,7 +13,7 @@ INCLUDES =						\
 bin_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
 runscr_LDADD = ../src/libscr.la -lycp -ly2util
-runscr_LDFLAGS = -L$(libdir) -L$(srcdir)/../../libycp/src
+runscr_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
 
 PACKAGE = libscr
 AUTOMAKE_OPTIONS = dejagnu
