@@ -45,7 +45,7 @@ YCPIntegerRep::YCPIntegerRep(const char *r)
 	converted = sscanf(r, "%Ld", &v);
 
     if (converted != 1) {
-        y2warning("Cannot convert %s to an integer", r);
+        y2warning("Cannot convert '%s' to an integer", r);
         v = 0;
     }
 }
