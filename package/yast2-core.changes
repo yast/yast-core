@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jul 22 16:52:45 CEST 2002 - arvin@suse.de
+
+- implemented stat and lstat functions in agent-system
+
+-------------------------------------------------------------------
 Mon Jul 22 12:32:34 CEST 2002 - arvin@suse.de
 
 - agent-probe recognizes boot mechanism grub from hwinfo

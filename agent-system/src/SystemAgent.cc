@@ -161,6 +161,39 @@ static int read_file_to_string (const char* filename, string& output)
 
 
 /**
+ *  Fills a ycp map with informations of a stat structure.
+ */
+static YCPMap
+stat2map (const struct stat& sb)
+{
+    YCPMap result;
+
+    result->add (YCPString ("inode"), YCPInteger (sb.st_ino));
+
+    result->add (YCPString ("isreg"), YCPBoolean (S_ISREG (sb.st_mode)));
+    result->add (YCPString ("isdir"), YCPBoolean (S_ISDIR (sb.st_mode)));
+    result->add (YCPString ("ischr"), YCPBoolean (S_ISCHR (sb.st_mode)));
+    result->add (YCPString ("isblock"), YCPBoolean (S_ISBLK (sb.st_mode)));
+    result->add (YCPString ("isfifo"), YCPBoolean (S_ISFIFO (sb.st_mode)));
+    result->add (YCPString ("islink"), YCPBoolean (S_ISLNK (sb.st_mode)));
+    result->add (YCPString ("issock"), YCPBoolean (S_ISSOCK (sb.st_mode)));
+
+    result->add (YCPString ("nlink"), YCPInteger (sb.st_nlink));
+
+    result->add (YCPString ("uid"), YCPInteger (sb.st_uid));
+    result->add (YCPString ("gid"), YCPInteger (sb.st_gid));
+
+    result->add (YCPString ("size"), YCPInteger (sb.st_size));
+
+    result->add (YCPString ("atime"), YCPInteger (sb.st_atime));
+    result->add (YCPString ("mtime"), YCPInteger (sb.st_mtime));
+    result->add (YCPString ("ctime"), YCPInteger (sb.st_ctime));
+
+    return result;
+}
+
+
+/**
  * Run shell command and returns its output.
  */
 static YCPMap shellcommand_output (const string &script, const string &tempdir)
@@ -429,6 +462,44 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 	    retval = sb.st_size;
 	}
 	return YCPInteger (retval);
+    }
+
+    else if (cmd == "stat")
+    {
+	/**
+	 * @builtin Read (.target.stat, string filename) -> map
+	 * Return a map with file information (see stat(2)). If
+	 * the file does not exist return an empty map.
+	 */
+
+	YCPMap result;
+
+	struct stat sb;
+	if (stat (filename.c_str (), &sb) == 0)
+	{
+	    result = stat2map (sb);
+	}
+
+	return result;
+    }
+
+    else if (cmd == "lstat")
+    {
+	/**
+	 * @builtin Read (.target.lstat, string filename) -> map
+	 * Return a map with file information (see stat(2)). If
+	 * the file does not exist return an empty map.
+	 */
+
+	YCPMap result;
+
+	struct stat sb;
+	if (lstat (filename.c_str (), &sb) == 0)
+	{
+	    result = stat2map (sb);
+	}
+
+	return result;
     }
 
     else if (cmd == "symlink")

@@ -1,0 +1,24 @@
+{
+    map m = Read (.stat, "tests/data1.read");
+    return m["isreg"]:false;
+}
+
+{
+    map m = Read (.stat, "tests/data1.read");
+    return m["isdir"]:false;
+}
+
+{
+    map m = Read (.stat, "tests");
+    return m["isdir"]:false;
+}
+
+{
+    map m = Read (.stat, "tests/does-not-exist.read");
+    return m;
+}
+
+{
+    map m = Read (.stat, "tests/data1.read");
+    return m["size"]:0;
+}
