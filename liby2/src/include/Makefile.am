@@ -1,5 +1,5 @@
 #
-# Makefile.am for liby2/src/include
+# Makefile.am for core/liby2/src/include
 #
 
 SUBDIRS = y2

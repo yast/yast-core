@@ -1,5 +1,5 @@
 #
-# Makefile.am for libycp/testsuite/tests
+# Makefile.am for core/libycp/testsuite/tests
 #
 
 EXTRA_DIST = *.ycp *.out *.err runtest.sh

@@ -1,10 +1,8 @@
 #
-# Makefile.am for y2a_mods/doc/autodocs
-#
-# $Id$
+# Makefile.am for core/agent-modules/doc/autodocs
 #
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/agent-modules/autodocs
 
 html_DATA = index.html $(wildcard *.html)
 CLEANFILES = $(html_DATA)

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2wfm/testsuite/wfm.test
+# Makefile.am for core/wfm/testsuite/wfm.test
 #
 
 EXTRA_DIST = wfm.exp

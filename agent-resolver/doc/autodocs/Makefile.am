@@ -1,5 +1,8 @@
+#
+# Makefile.am for core/agent-resolver/doc/autodocs
+#
 
-htmldir = $(docdir)/ag_resolver/autodocs
+htmldir = $(docdir)/agent-resolver/autodocs
 
 html_DATA =				\
 	heir.html index.html		\

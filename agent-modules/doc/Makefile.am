@@ -1,13 +1,12 @@
 #
-# Makefile.am for y2a_mods/doc
-#
-# $Id$
+# Makefile.am for core/agent-modules/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/agent-modules
 
 html_DATA = modules.html TODO.txt
+
 EXTRA_DIST = $(html_DATA)
 

@@ -1,5 +1,8 @@
+#
+# Makefile.am for core/libyui/doc/autodocs
+#
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/libyui/autodocs
 
 html_DATA =					\
 	YAlignment.html				\

@@ -1,12 +1,11 @@
 #
-# Makefile.am for y2a_ini/doc
-#
-# $Id$
+# Makefile.am for core/agent-ini/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/agent-ini
 
 html_DATA = ini.html
+
 EXTRA_DIST = $(html_DATA)

@@ -1,9 +1,11 @@
 #
-# Makefile.am for y2scr/ag_resolver/doc
+# Makefile.am for core/agent-resolver/doc
 #
+
 SUBDIRS = autodocs
 
-htmldir = $(docdir)/ag_resolver
+htmldir = $(docdir)/agent-resolver
+
 html_DATA = ag_resolver-builtins.html resolveragent.txt
 
 builtin = $(srcdir)/../src/ResolverAgent.cc

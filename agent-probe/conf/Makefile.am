@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_hwpb/conf
+# Makefile.am for core/agent-probe/conf
 #
 
 scrconf_DATA = probe.scr

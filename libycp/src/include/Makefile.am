@@ -1,5 +1,5 @@
 #
-# Makefile.am for libycp/src/include
+# Makefile.am for core/libycp/src/include
 #
 
 SUBDIRS = ycp

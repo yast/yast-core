@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_ini/testsuite/debug
+# Makefile.am for core/agent-ini/testsuite/debug
 #
 
 EXTRA_DIST = *.in *.ycp *.scr *.out *.err runtest.sh

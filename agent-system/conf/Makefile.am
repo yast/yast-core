@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_system/conf
+# Makefile.am for core/agent-system/conf
 #
 
 scrconf_DATA = target.scr

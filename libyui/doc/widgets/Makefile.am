@@ -1,5 +1,8 @@
+#
+# Makefile.am for core/libyui/doc/widgets
+#
 
-widgetdir = $(docdir)/widgets
+widgetdir = $(docdir)/libyui/widgets
 
 widget_DATA =					\
 	Box-widget.html				\

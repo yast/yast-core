@@ -1,5 +1,5 @@
 #
-# Makefile.am for libyui/src/include
+# Makefile.am for core/libyui/src/include
 #
 
 pkgincludedir = $(includedir)/yui

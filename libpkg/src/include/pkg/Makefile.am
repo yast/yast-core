@@ -1,5 +1,5 @@
 #
-# Makefile.am for libscr/src/include/scr
+# Makefile.am for core/libpkg/src/include/pkg
 #
 
 pkgincludedir = $(includedir)/pkg

@@ -1,5 +1,5 @@
 #
-# Makefile.am for yast2-base/tools
+# Makefile.am for core/base/tools
 #
 
 SUBDIRS = startshell autorun

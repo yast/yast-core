@@ -1,10 +1,10 @@
 #
-# Makefile.am for y2wfm/doc
+# Makefile.am for core/wfm/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/wfm
 
 html_DATA = YCP-builtins-wfm.html
 

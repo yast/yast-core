@@ -1,5 +1,8 @@
+#
+# Makefile.am for core/libscr/doc/autodocs
+#
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/libscr/autodocs
 
 html_DATA =			\
 	SCRAgent.html		\

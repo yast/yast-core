@@ -1,19 +1,21 @@
 #
-# Makefile.am for libyui/doc
+# Makefile.am for core/libyui/doc
 #
 
-SUBDIRS =	widgets autodocs examples
+SUBDIRS = widgets autodocs examples
 
-doc_DATA =	\
-	ui-arch.jpg	\
-	ui-arch.html	\
+htmldir = $(docdir)/libyui
+
+html_DATA =			\
+	ui-arch.jpg		\
+	ui-arch.html		\
 	UI-additional.html	\
 	YCP-UI-layout.html	\
 	YCP-builtins-ui.html	\
 	YCP-UI-richtext.html	\
 	README.newapi
 
-EXTRA_DIST = $(doc_DATA)
+EXTRA_DIST = $(html_DATA)
 
 builtin	= $(srcdir)/../src/YUIInterpreter.cc
 
@@ -22,4 +24,3 @@ YCP-builtins-ui.html: $(builtin)
 	mv $@.new $@
 
 CLEANFILES = YCP-builtins-ui.html
-

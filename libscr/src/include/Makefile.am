@@ -1,5 +1,5 @@
 #
-# Makefile.am for libscr/src/include
+# Makefile.am for core/libscr/src/include
 #
 
 SUBDIRS = scr

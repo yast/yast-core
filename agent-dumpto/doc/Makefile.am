@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2scr/ag_dumpto/doc
+# Makefile.am for core/agent-dumpto/doc
 #
 
-htmldir = $(docdir)/ag_dumpto
+htmldir = $(docdir)/agent-dumpto
 
 html_DATA = dumpto.html
 

@@ -1,5 +1,5 @@
 #
-# Makefile.am for core/wfm/scr
+# Makefile.am for core/wfm/src
 #
 
 SUBDIRS = include

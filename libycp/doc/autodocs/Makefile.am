@@ -1,8 +1,8 @@
 #
-# Makefile.am for libycp/doc/autodocs
+# Makefile.am for core/libycp/doc/autodocs
 #
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/libycp/autodocs
 
 html_DATA =								\
 	YCPBasicInterpreter.html YCPBlock.html YCPBlockRep.html		\

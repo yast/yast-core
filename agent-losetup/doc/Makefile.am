@@ -1,9 +1,11 @@
 #
-# Makefile.am for y2scr/ag_losetup/doc
+# Makefile.am for core/agent-losetup/doc
 #
+
 SUBDIRS = autodocs
 
-htmldir = $(docdir)/ag_losetup
+htmldir = $(docdir)/agent-losetup
+
 html_DATA = ag_losetup-builtins.html
 
 builtin = $(srcdir)/../src/LosetupAgent.cc

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/agents_non_y2/conf
+# Makefile.am for core/agents-perl/conf
 #
 
 scrconf_DATA = $(wildcard $(srcdir)/*.scr)

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_hwpb/testsuite/config
+# Makefile.am for core/agent-probe/testsuite/config
 #
 
 EXTRA_DIST = default.exp unix.exp unknown.exp

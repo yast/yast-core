@@ -1,5 +1,5 @@
 #
-# Makefile.am for liby2/src/include/y2
+# Makefile.am for core/liby2/src/include/y2
 #
 
 pkgincludedir = $(includedir)/y2

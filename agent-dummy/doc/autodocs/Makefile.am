@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2scr/ag_dummy/doc/autodocs
+# Makefile.am for core/agent-dummy/doc/autodocs
 #
 
-htmldir = $(docdir)/ag_dummy/autodocs
+htmldir = $(docdir)/agent-dummy/autodocs
 
 html_DATA = index.html $(wildcard *.html)
 CLEANFILES = $(html_DATA)

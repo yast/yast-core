@@ -1,5 +1,5 @@
 #
-# Makefile.am for tools/startshell
+# Makefile.am for core/base/tools/startshell
 #
 
 ybin_PROGRAMS = startshell

@@ -1,8 +1,8 @@
 #
-# Makefile.am for libyui/examples/screenshots
+# Makefile.am for core/libyui/doc/examples/screenshots
 #
 
-screenshotsdir = 	$(docdir)/examples/screenshots
+screenshotsdir = 	$(docdir)/libyui/examples/screenshots
 
 SUBDIRS = 		resized-larger resized-smaller
 

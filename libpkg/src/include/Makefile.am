@@ -1,5 +1,5 @@
 #
-# Makefile.am for libpkg/src/include
+# Makefile.am for core/libpkg/src/include
 #
 
 SUBDIRS = pkg

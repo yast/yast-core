@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_hwprobe/testsuite/tests
+# Makefile.am for core/agent-probe/testsuite/tests
 #
 
 EXTRA_DIST = *.ycp *.out *.err runtest.sh

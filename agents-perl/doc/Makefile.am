@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2scr/agents_perl/doc
+# Makefile.am for core/agents-perl/doc
 #
 
-htmldir = $(docdir)/agents_perl
+htmldir = $(docdir)/agents-perl
 
 html_DATA =	ag_yp_makefile.txt \
 	  	ycp-pm.html \

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_resolv/conf
+# Makefile.am for core/agent-resolver/conf
 #
 
 scrconf_DATA = resolv.scr

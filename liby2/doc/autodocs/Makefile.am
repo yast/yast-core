@@ -1,8 +1,8 @@
 #
-# Makefile.am for liby2/doc
+# Makefile.am for core/liby2/doc/autodocs
 #
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/liby2/autodocs
 
 html_DATA =			\
 	ExternalDataSource.html	\

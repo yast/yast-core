@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_system/testsuite/ag_system.test
+# Makefile.am for core/agent-system/testsuite/ag_system.test
 #
 
 EXTRA_DIST = ag_system.exp

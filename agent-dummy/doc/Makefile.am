@@ -1,10 +1,11 @@
 #
-# Makefile.am for y2scr/ag_dummy/doc
+# Makefile.am for core/agent-dummy/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)/ag_dummy
+htmldir = $(docdir)/agent-dummy
 
 html_DATA = dummyagent.txt
+
 EXTRA_DIST = $(html_DATA)

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2wfm/testsuite/lib
+# Makefile.am for core/wfm/testsuite/lib
 #
 
 EXTRA_DIST = wfm_init.exp

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_any/testsuite/lib
+# Makefile.am for core/agent-any/testsuite/lib
 #
 
 EXTRA_DIST = ag_anyagent_init.exp

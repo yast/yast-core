@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2wfm/doc/autodocs
+# Makefile.am for core/wfm/doc/autodocs
 #
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/wfm/autodocs
 
 html_DATA =					\
 	WFMInterpreter.html			\

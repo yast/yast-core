@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/agents_non_y2
+# Makefile.am for core/agents-perl
 #
 
 SUBDIRS = conf lib doc

@@ -1,8 +1,8 @@
 #
-# Makefile.am for libyui/examples/screenshots/resized-larger
+# Makefile.am for core/libyui/doc/examples/screenshots/resized-larger
 #
 
-screenshotsdir = 	$(docdir)/examples/screenshots/resized-larger
+screenshotsdir = 	$(docdir)/libyui/examples/screenshots/resized-larger
 
 screenshots_DATA =				\
 	Layout-Buttons-Equal-Even-Spaced1.png	\

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_dummy/conf
+# Makefile.am for core/agent-dummy/conf
 #
 
 scrconf_DATA = dummy.scr

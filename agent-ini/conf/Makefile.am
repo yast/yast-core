@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_ini/conf
+# Makefile.am for core/agent-ini/conf
 #
 
 scrconf_DATA = 

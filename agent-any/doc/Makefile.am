@@ -1,13 +1,12 @@
 #
-# Makefile.am for y2a_any/doc
-#
-# $Id$
+# Makefile.am for core/agent-any/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/agent-any
 
 html_DATA = anyagent.html
+
 EXTRA_DIST = $(html_DATA)
 

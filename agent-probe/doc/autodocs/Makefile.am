@@ -1,10 +1,8 @@
 #
-# Makefile.am for y2a_hwpb/doc/autodocs
-#
-# $Id$
+# Makefile.am for core/agent-probe/doc/autodocs
 #
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/agent-probe/autodocs
 
 html_DATA = index.html $(wildcard *.html)
 CLEANFILES = $(html_DATA)

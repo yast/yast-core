@@ -1,10 +1,10 @@
 #
-# Makefile.am for libscr/doc
+# Makefile.am for core/libscr/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/libscr
 
 html_DATA = repository.png
 

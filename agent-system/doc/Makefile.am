@@ -1,12 +1,10 @@
 #
-# Makefile.am for y2a_system/doc
-#
-# $Id$
+# Makefile.am for core/agent-system/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/agent-system
 
 html_DATA = systemagent.txt passwdagent.txt ag_system-builtins.html
 EXTRA_DIST = $(html_DATA)

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_rcnf/testsuite/ag_rcconfig.test
+# Makefile.am for core/agent-ini/testsuite/ag_ini.debug
 #
 
 EXTRA_DIST = ag_ini.exp

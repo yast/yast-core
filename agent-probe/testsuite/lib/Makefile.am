@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2a_hwpb/testsuite/lib
+# Makefile.am for core/agent-probe/testsuite/lib
 #
 
 EXTRA_DIST = ag_hwprobe_init.exp

@@ -1,12 +1,10 @@
 #
-# Makefile.am for y2a_hwpb/doc
-#
-# $Id$
+# Makefile.am for core/agent-probe/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/agent-probe
 
 html_DATA = hwprobe.html
 EXTRA_DIST = $(html_DATA)

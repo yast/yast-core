@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_modules/conf
+# Makefile.am for core/agent-modules/conf
 #
 
 scrconf_DATA = modules.scr # mnt_modules.scr tmp_modules.scr

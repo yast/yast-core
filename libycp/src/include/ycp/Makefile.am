@@ -1,5 +1,5 @@
 #
-# Makefile.am for libycp/src/include/ycp
+# Makefile.am for core/libycp/src/include/ycp
 #
 
 pkgincludedir = $(includedir)/ycp

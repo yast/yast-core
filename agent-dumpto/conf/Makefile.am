@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_dumpto/conf
+# Makefile.am for core/agent-dumpto/conf
 #
 
 scrconf_DATA = dumpto.scr

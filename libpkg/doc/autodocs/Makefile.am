@@ -1,5 +1,8 @@
+#
+# Makefile.am for core/libpkg/doc/autodocs
+#
 
-htmldir = $(docdir)/autodocs
+htmldir = $(docdir)/libpkg/autodocs
 
 html_DATA =			\
 	ConfigFile.html		\

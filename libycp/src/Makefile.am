@@ -1,5 +1,5 @@
 #
-# Makefile.am for libycp
+# Makefile.am for core/libycp/src
 #
 
 SUBDIRS = include

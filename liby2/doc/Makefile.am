@@ -1,10 +1,10 @@
 #
-# Makefile.am for liby2/doc
+# Makefile.am for core/liby2/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/liby2
 
 html_DATA = \
 	Y2-access.html Y2-components.html	\

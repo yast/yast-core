@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/testsuite/lib
+# Makefile.am for core/scr/testsuite/lib
 #
 
 EXTRA_DIST = scr_init.exp

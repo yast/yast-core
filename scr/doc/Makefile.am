@@ -1,8 +1,8 @@
 #
-# Makefile.am for y2scr/doc
+# Makefile.am for core/scr/doc
 #
 
-htmldir = $(docdir)
+htmldir = $(docdir)/scr
 
 html_DATA = SCR.html intro_to_scr.html \
 	scripting-agent.txt \

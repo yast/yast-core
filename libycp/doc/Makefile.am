@@ -1,10 +1,10 @@
 #
-# Makefile.am for libycp/doc
+# Makefile.am for core/libycp/doc
 #
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(docdir)/libycp
 
 html_DATA =					\
 	changes.html syntax.html		\

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2scr/ag_losetup/conf
+# Makefile.am for core/agent-losetup/conf
 #
 
 scrconf_DATA = losetup.scr

@@ -1,5 +1,5 @@
 #
-# Makefile.am for y2wfm/src/include/wfm
+# Makefile.am for core/wfm/src/include/wfm
 #
 
 pkgincludedir = $(includedir)/wfm

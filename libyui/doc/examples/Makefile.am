@@ -1,8 +1,8 @@
 #
-# Makefile.am for libyui/doc/examples
+# Makefile.am for core/libyui/doc/examples
 #
 
-examplesdir = 	$(docdir)/examples
+examplesdir = 	$(docdir)/libyui/examples
 
 SUBDIRS = 	screenshots
 
