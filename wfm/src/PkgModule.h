@@ -29,7 +29,6 @@
 
 #include <ycp/YCPValue.h>
 #include <ycp/YCPList.h>
-#include <ycp/YCPInterpreter.h>
 
 /**
  * A simple class for package management access
@@ -41,18 +40,17 @@ class PkgModule : public PkgModuleFunctions
     /**
      * Constructor.
      */
-    PkgModule (YCPInterpreter *& wfmInterpreter);
+    PkgModule ();
 
     /**
      * Destructor.
      */
     ~PkgModule ();
 
-    /**
-     * evaluate 'function (list-of-arguments)'
-     * and return YCPValue
-     */
-    YCPValue evaluate (std::string function, YCPList arguments);
+    static PkgModule* instance ();
+
+  private:
+    static PkgModule* current_pkg;
 
 };
 #endif // PkgModule_h
