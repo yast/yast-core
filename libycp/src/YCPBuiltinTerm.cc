@@ -35,10 +35,12 @@ t_size (const YCPTerm &term)
 {
     /**
      * @builtin size
-     * @short Returns the number of arguments of the term <tt>t</tt>.
-     * @param term TERM 
-     * @return integer Size of the term
+     * @short Returns the number of arguments of the term <tt>TERM</tt>.
      *
+     * @param term TERM 
+     * @return integer Size of the <tt>TERM</tt>
+     *
+     * @usage size (`VBox(`Empty(),`Empty(),`Empty())) -> 3
      */
 
     if (term.isNull ())
@@ -61,7 +63,10 @@ t_add (const YCPTerm &term, const YCPValue &value)
      * @param term TERM 
      * @param any VALUE 
      * @return term
-     * @usage add (sym (a), b) -> sym (a, b)
+     *
+     * @see remove
+     * @usage add (`VBox(`Empty()), `Label("a")) -> `VBox (`Empty (), `Label ("a"))
+     * @usage add (`VBox(`Empty()), "a") -> `VBox (`Empty (), "a")
      */
 
     if (term.isNull () || value.isNull ())
@@ -76,10 +81,13 @@ t_symbolof (const YCPTerm &term)
 {
     /**
      * @builtin symbolof
-     * @short Returns the symbol of the term <tt>t</tt>.
+     * @short Returns the symbol of the term <tt>TERM</tt>.
+     *
      * @param term TERM
      * @return symbol
+     *
      * @usage symbolof (`hrombuch (18, false)) -> `hrombuch
+     * @usage symbolof (`Label("string")) -> `Label
      */
 
     if (term.isNull ())
@@ -95,13 +103,16 @@ YCPValue
 t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 {
     /**
-     * @builtin select
+     * @builtin select (deprecated)
      * @short Select item from term
      * @description
      * Gets the <tt>i</tt>'th value of the term <tt>t</tt>. The first value
      * has the index 0. The call <tt>select ([1, 2, 3], 1)</tt> thus returns
      * 2. Returns the <tt>default</tt> if the index is invalid or the found
      * value has a diffetent type that <tt>default</tt>.
+     * Functionality replaced with syntax: <code>term a = `VBox(`VSpacing(2), `Label("string"), `VSpacing(2));
+     * a[1]:`Empty() -> `Label ("string")
+     * a[9]:`Empty() -> `Empty ()</code>
      *
      * @param term TERM
      * @param integer ITEM
@@ -137,11 +148,13 @@ t_toterm (const YCPValue &v)
     /**
      * @builtin toterm
      * @short Converts a value to a term.
+     *
      * @description
      * If the value can't be converted to a term, nilterm is returned.
+     *
      * @param any VALUE
      * @return term
-     *
+     * @usage toterm ("VBox") -> `VBox ()
      */
 
     if (v.isNull())
@@ -166,16 +179,20 @@ t_remove (const YCPTerm &term, const YCPInteger &i)
     /**
      * @builtin remove
      * @short Remove item from term
+     *
      * @description
      * Remove the i'th value from a term. The first value has the index 1 (!).
      * (The index counting is for compatibility reasons with the 'old'
      * remove which allowed 'remove(`term(1,2,3), 0) = [1,2,3]'
      * Use 'argsof (term) -> list' for this kind of transformation.)
+     *
      * @param term TERM
      * @param integer i
      * @return term
-     *  
+     *
+     * @see add
      * @usage remove (`fun(1, 2), 1) -> `fun(2)
+     * @usage remove (`VBox(`Label("a"), `Label("b")), 2) -> `VBox (`Label ("a"))
      */
 
     if (term.isNull () || i.isNull ())
@@ -202,9 +219,12 @@ t_argsof (const YCPTerm &term)
     /**
      * @builtin argsof
      * @short Returns the arguments of a term.
+     *
      * @param term TERM
      * @return list
+     *
      * @usage argsof (`fun(1, 2)) -> [1, 2]
+     * @usage argsof(`TextEntry(`id("text"), "Label", "value")) -> [`id ("text"), "Label", "value"]
      */
 
     if (term.isNull ())

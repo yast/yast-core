@@ -47,7 +47,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin find
-     * @short Search for a certain element in a list
+     * @short Search for the first occurence of a certain element in a list
      * @param any VAR
      * @param list LIST
      * @param block EXPR
@@ -101,8 +101,8 @@ l_prepend (const YCPList &list, const YCPValue &value)
     /**
      * @builtin prepend 
      * @short Prepend a list with a new element
-     * @param any ELEMENT Element to prepend
      * @param list LIST List
+     * @param any ELEMENT Element to prepend
      * @return list
      * @description
      * Creates a new list that is identical to the list <tt>LIST</tt> but has
@@ -217,7 +217,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
      * @description
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
-     * elements are dropped. The order of the elements in the new list is
+     * elements are merged. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
      * 
      * WARNING: quadratic complexity so far
@@ -225,6 +225,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
      * @see merge
      * @usage union ([1, 2], [3, 4]) -> [1, 2, 3, 4]
      * @usage union ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 4]
+     * @usage union ([1, 3, 5], [1, 2, 4, 6]) -> [1, 3, 5, 2, 4, 6]
      */
 
     if (list1.isNull () || list2.isNull ())
@@ -273,13 +274,14 @@ l_mergelist (const YCPList &list1, const YCPList &list2)
      * @param list LIST1 First List
      * @param list LIST2 Second List
      * @return list 
+     *
      * @description
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
      * elements are preserved. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
-     * @see union
      *
+     * @see union
      * @usage merge ([1, 2], [3, 4]) -> [1, 2, 3, 4]
      * @usage merge ([1, 2, 3], [2, 3, 4]) -> [1, 2, 3, 2, 3, 4]
      */
@@ -418,7 +420,7 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      * @param any VAR
      * @param list LIST
      * @param block EXPR
-     * @return list
+     * @return map
      *
      * @description
      * For each element <tt>VAR</tt> of the list <tt>LIST</tt> in the expression
@@ -428,8 +430,8 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      * The result of each evaluation <i>must</i> be
      * a map with a single entry which will be added to the result map.
      *
-     * @usage listmap (integer k, [1,2,3], { return $[k, "xy"]; })  -> $[ 1:"xy", 2:"xy" ]
-     * @usage listmap (integer k, [1,2,3], { any a = k+10;  any b = sformat ("x%1", k);   map ret = $[a,b];   return ret; }) -> $[ 11:"x1", 12:"x2", 13:"x3" ]
+     * @usage listmap (integer k, [1,2,3], { return $[k:"xy"]; })  -> $[1:"xy", 2:"xy"]
+     * @usage listmap (integer k, [1,2,3], { integer a = k+10;  any b = sformat ("x%1", k); return $[a:b]; }) -> $[11:"x1", 12:"x2", 13:"x3"]
      */
 
 
@@ -495,11 +497,13 @@ l_flatten (const YCPList &list)
      * @short Flatten List
      * @param list<list> LIST
      * @return list
+     *
      * @description
      * Gets a list  of lists <tt>LIST</tt> and creates a single list that is
      * the concatenation of those lists in <tt>LIST</tt>.
      *
      * @usage flatten ([ [1, 2], [3, 4] ]) -> [1, 2, 3, 4]
+     * @usage flatten ([ [1, 2], [6, 7], [3, 4] ]) -> [1, 2, 6, 7, 3, 4]
      */
 
     if (list.isNull ())
@@ -570,11 +574,12 @@ l_sortlist (const YCPList &list)
     /**
      * @builtin sort
      * @id sort_1
-     * @short Sort A List according to the YCP builtin predicate <b>></b>
+     * @short Sort a List according to the YCP builtin predicate
      * @param list LIST
      * @return list Sorted list
+     *
      * @description
-     * Sort the list LIST according to the YCP builtin predicate <b>></b>.
+     * Sort the list LIST according to the YCP builtin predicate.
      * Duplicates are not removed.
      *
      * @usage sort ([2, 1, true, 1]) -> [true, 1, 1, 2]
@@ -604,6 +609,7 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
      * @param block EXPR
      * @return list
      * @description
+     *
      * Sorts the list <tt>LIST</tt>. You have to specify an order on the
      * list elements by naming formal variables <tt>x</tt> and <tt>y</tt> and
      * specify an expression <tt>EXPR</tt> that evaluates to a boolean
@@ -615,11 +621,12 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
      * that is ">" instead of ">=".
      *
      * It is because we no longer use bubblesort (yuck) but <b>std::sort</b>
-     * which requires a <a
-     * href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">strict
-     * weak ordering</a>.
+     * which requires a
+     * <ulink url="href="http://www.sgi.com/tech/stl/StrictWeakOrdering.html">strict
+     * weak ordering</ulink>.
      *
      * @usage sort (integer x, integer y, [ 3,6,2,8 ], ``(x < y)) -> [ 2, 3, 6, 8 ]
+     * @usage sort (string x, string y, [ "A","C","B" ], ``(x > y)) -> ["C", "B", "A"]
      */
 
     if (list.isNull ())
@@ -668,7 +675,7 @@ l_splitstring (const YCPString &s, const YCPString &c)
 {
     /**
      * @builtin splitstring
-     * @short Split a string
+     * @short Split a string by delimiter
      * @param string STR
      * @param string DELIM
      * @return list<string>
@@ -747,10 +754,12 @@ l_changelist (YCPList &list, const YCPValue &value)
      * @param list LIST
      * @param any value
      * @return list
+     *
      * @description
      * DO NOT use this yet. Its for a special requst, not for common use!!!
      * changes the list LIST adds a new element
      *
+     * @see add
      * @usage change ([1, 4], 8) -> [1, 4, 8]
      */
 
@@ -799,9 +808,12 @@ l_size (const YCPValue &list)
      * @builtin size 
      * @short Return size of list
      * @param list LIST
-     * @return integer size of the list.
+     * @return integer size of the list
+     *
      * @description
      * Returns the number of elements of the list <tt>LIST</tt>
+     *
+     * @usage size(["A", 1, true, "3", false]) -> 5
      */
 
     if (list.isNull ()
@@ -861,16 +873,20 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
      * @builtin select
-     * @short Selet a list element
+     * @short Selet a list element (deprecated)
      * @param list LIST
      * @param integer INDEX
      * @param any  DEFAULT
      * @return any
+     *
      * @description
      * Gets the <tt>INDEX</tt>'th value of a list. The first value has the
      * index 0. The call select([1,2,3], 1) thus returns 2. Returns <tt>DEFAULT</tt>
      * if the index is invalid or if the found entry has a different type
      * than the default value.
+     * Functionality replaced by syntax: <code>list numbers = [1, 2, 3, 4];
+     * numbers[2]:nil -> 3
+     * numbers[8]:5   -> 5</code>
      *
      * @usage select ([1, 2], 22, 0) -> 0
      * @usage select ([1, "two"], 0, "no") -> "no"
@@ -919,6 +935,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
      * @param any VAR
      * @param list LIST
      * @param block EXPR
+     *
      * @description
      * For each element of the list <tt>LIST</tt> the expression <tt>EXPR</tt>
      * is executed in a new context, where the variable <tt>VAR</tt> is
@@ -926,7 +943,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
      * <tt>EXPR</tt> is the value of the <tt>foreach</tt> construct.
      *
      * @return any return value of last execution of EXPR
-     * @usage foreach (integer v, [1,2,3], { return v; }) -> 3
+     * @usage foreach (integer v, [1,2,3], { return v + 10; }) -> 13
      */
 
     if (list.isNull ())
@@ -962,12 +979,14 @@ l_tolist (const YCPValue &v)
 {
     /**
      * @builtin tolist
-     * @short Converts a value to a list.
+     * @short Converts a value to a list (deprecated).
      * @param any VAR
      * @return list
+     *
      * @description
      * If the value can't be converted to a list, nillist is returned.
-     *
+     * Functionality replaced by retyping: <code>any l_1 = [1, 2, 3];
+     * list <integer> l_2 = (list<integer>) l_1;</code>
      */
 
     if (v.isNull())
@@ -1010,7 +1029,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
 	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },
 	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "tolist",	"list <any> (const any)",								(void *)l_tolist	},
+	{ "tolist",	"list <any> (const any)",								(void *)l_tolist,	DECL_DEPRECATED},
 	{ 0 }
     };
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar 15 09:44:18 CET 2005 - locilka@suse.cz
+
+- Checked, fixed and added YCP builtins description and examples
+- Mark tolist() as deprecated
+
+-------------------------------------------------------------------
 Thu Feb 24 10:03:56 CET 2005 - visnov@suse.cz
 
 - revert  YCP module import reporting change

@@ -46,6 +46,7 @@ Time ()
      * @builtin time
      * @short Return the number of seconds since 1.1.1970.
      * @return integer
+     * @usage time() -> 1111207439
      */
 
     return YCPInteger (time (0));
@@ -60,6 +61,7 @@ Sleep (const YCPInteger & ms)
      * @short Sleeps a number of milliseconds.
      * @param integer MILLISECONDS Time in milliseconds
      * @return void
+     * @usage sleep(3000) -> sleeps 3 sec.
      */
      
     if (ms.isNull ())
@@ -76,8 +78,13 @@ Random (const YCPInteger & max)
     /**
      * @builtin random
      * @short Random number generator.
+     * @description Returns random integer in the interval (0,MAX).
+     * <tt>srandom</tt> must be activated to get really random
+     * numbers.
      * @param integer MAX
      * @return integer Returns integer in the interval (0,MAX).
+     * @usage random(100) -> 82
+     * @usage random(100) -> 36
      */
 
     if (max.isNull ())
@@ -100,6 +107,7 @@ Srandom1 ()
      * time and returns the seed.
      * @return integer
      * @id srandom_1
+     * @usage srandom()
      */
 
     int ret = time (0);
@@ -117,6 +125,7 @@ Srandom2 (const YCPInteger & seed)
      * @param integer SEED
      * @return void
      * @id srandom_2
+     * @usage srandom(3355)
      */
 
     if (seed.isNull ())
@@ -140,7 +149,6 @@ Eval (const YCPValue & v)
      * See also the builtin ``, which is kind of the counterpart to eval.
      *
      * @usage eval (``(1+2)) -> 3
-     * @usage { term a = ``add(); a = add(a, [1]); a = add(a, 4); return eval(a); } -> [1,4]
      */
 
     if (v.isNull ())
@@ -260,12 +268,18 @@ Y2Debug (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2debug
      * @short Log a message to the y2log.
+     *
      * @description
      * Arguments are same as for sformat() builtin.
      * The y2log component is "YCP", so you can control these messages the
      * same way as other y2log messages.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
      *
      * @usage y2debug ("%1 is smaller than %2", 7, "13");
      */
@@ -279,8 +293,15 @@ Y2Milestone (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2milestone
      * @short Log a milestone to the y2log.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
+     *
+     * @usage y2milestone("%1 - Humans detected!", "2038-02-12") -> "2038-02-12 - Humans detected!"
      */
 
     return Y2Log (LOG_MILESTONE, format, args);
@@ -293,8 +314,16 @@ Y2Warning (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2warning
      * @short Log a warning to the y2log.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
+     *
+     * @usage y2warning ("Breakers don't work!") -> "Breakers don't work!"
+     * @usage y2warning ("%1 %2 packets have been lost", 12, "UDP") -> "12 UDP packets have been lost"
      */
 
     return Y2Log (LOG_WARNING, format, args);
@@ -307,8 +336,15 @@ Y2Error (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2error
      * @short Log an error to the y2log.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
+     *
+     * @usage y2error ("Invalid format of IPv4 '%1'.", "333.10.20.1") -> "Invalid format of IPv4 '333.10.20.1'"
      */
 
     return Y2Log (LOG_ERROR, format, args);
@@ -321,8 +357,15 @@ Y2Security (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2security
      * @short Log a security message to the y2log.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
+     *
+     * @usage y2security ("Users on vacations: %1", ["josh", "joe", "pete"]) -> "Users on vacations: ["josh", "joe", "pete"]"
      */
 
     return Y2Log (LOG_SECURITY, format, args);
@@ -335,8 +378,15 @@ Y2Internal (const YCPString & format, const YCPList & args)
     /**
      * @builtin y2internal
      * @short Log an internal message to the y2log.
+     *
      * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
      * @return void
+     * @see sformat
+     *
+     * @usage y2internal("This is a robbery!") -> "This is a robbery!"
      */
 
     return Y2Log (LOG_INTERNAL, format, args);
