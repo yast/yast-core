@@ -24,6 +24,29 @@ Summary:	-
 
 %files
 %defattr(-,root,root)
+%{_libdir}/lib*.so.*
+%dir @ybindir@
+@ybindir@/y2base
+@ybindir@/startshell
+@ybindir@/md_autorun
+%dir @plugindir@
+@plugindir@/lib*.so.*
+%dir @scrconfdir@
+@scrconfdir@/*.scr
+%dir @execcompdir@/servers
+@execcompdir@/servers/scr
+%dir @execcompdir@/servers_non_y2
+@execcompdir@/servers_non_y2/ag_*
+/usr/lib/perl5/site_perl/ycp.pm
 
 %files devel
 %defattr(-,root,root)
+/usr/bin/parseycp
+/usr/bin/runycp
+%{_libdir}/lib*.so
+%{_libdir}/lib*.la
+@plugindir@/lib*.so
+@plugindir@/lib*.la
+@includedir@
+%docdir @docdir@
+%doc @docdir@/*
