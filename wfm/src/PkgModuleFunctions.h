@@ -97,6 +97,7 @@ class PkgModuleFunctions
 	YCPValue SourceStartCache (YCPList args);
 	YCPValue SourceGetCurrent (YCPList args);
 	YCPValue SourceFinish (YCPList args);
+	YCPValue SourceFinishAll (YCPList args);
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);

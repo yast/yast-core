@@ -47,6 +47,8 @@ PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
  */
 PkgModuleFunctions::~PkgModuleFunctions ()
 {
+    SourceFinishAll (YCPList());
+    TargetFinish (YCPList());
 }
 
 

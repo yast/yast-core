@@ -148,6 +148,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceStartCache")	return SourceStartCache (args);
     else if (function == "SourceGetCurrent")	return SourceGetCurrent (args);
     else if (function == "SourceFinish")	return SourceFinish (args);
+    else if (function == "SourceFinishAll")	return SourceFinishAll (args);
     else if (function == "SourceGeneralData")	return SourceGeneralData (args);
     else if (function == "SourceMediaData")	return SourceMediaData (args);
     else if (function == "SourceProductData")	return SourceProductData (args);
