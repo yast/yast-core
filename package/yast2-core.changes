@@ -6,6 +6,7 @@ Tue Nov  9 07:47:05 CET 2004 - visnov@suse.cz
   on map/list/term assignment (#39236)
 - don't escape strings (#44461)
 - recoded testcases to UTF8
+- show warning on too many call frames (#40426)
 
 -------------------------------------------------------------------
 Mon Nov  8 17:13:20 CET 2004 - visnov@suse.cz

@@ -18,6 +18,9 @@
 
 #include "ycp/y2log.h"
 
+// the number of call frames to show warning at
+#define WARN_RECURSION 1000
+
 int
 ExecutionEnvironment::linenumber () const
 {
@@ -75,6 +78,11 @@ ExecutionEnvironment::pushframe (string called_function)
     y2debug ("Push frame %s", called_function.c_str ());
     CallFrame* frame = new CallFrame (filename(), linenumber (), called_function);
     m_backtrace.push_back (frame);
+    
+    if (m_backtrace.size () == WARN_RECURSION)
+    {
+	y2warning ("Too many call frames (%d). Endless recursion?", WARN_RECURSION);
+    }
 }
 
 
