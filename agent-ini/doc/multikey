@@ -1,0 +1,48 @@
+$Id$
+
+Hi hackers,
+
+due to popular demand by Jiri S and Jiri S, I will be extending the ini
+agent. Here's a specification of the new features. Please review them
+and send comments or tips for even more features.
+
+For your convenience, here's a link to the docs:
+file:///usr/share/doc/packages/yast2-core/agent-ini/ini.html
+
+1) Allow multiple keys of the same name in a section.
+
+This feature is controlled by the option repeat_names. If it is on:
+
+Read (.ini.value.<sectionname>.<sectionname>.<key>)
+  returns a list of strings instead of a string. That is
+  also true if there is only one such key or none. Similarly for Write.
+  Similarly for value_comment and value_type.
+
+It also works for sections (if they are not mapped to files).
+
+Deleting only one instance of many values/sections with the same name is
+not possible. All of them are deleted by
+Write (.ini.value|section.<foo>.<bar>, nil)
+(Workaround: use the following feature)
+
+2) Read whole sections at once
+That means whole ini files or sets of them, too.
+
+Read (.ini.all.<sectionname>.<sectionname>) or simply Read (.ini.all)
+  returns a list of maps as follows:
+    $[
+      "kind": "value",
+      "name": "Foo",
+      "type": 0,			/* value_type */
+      "comment": "blah",
+      "value": "Bar", 
+    ],
+    $[
+      "kind": "section",
+      "name": "Foo",
+      "type": 1,			/* section_type */
+      "file": -1,			/* "rewrite", section_file */
+      "comment": "huhly",
+      "value": [ /*recursion*/ ], 
+    ],
+  Multiple names of the same kind are allowed.
