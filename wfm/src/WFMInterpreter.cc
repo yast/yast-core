@@ -133,7 +133,10 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
 	args->add (YCPString (lang));
 
 	// set locale according to the language setting
-	setlocale( LC_ALL, "" );
+	setlocale (LC_ALL, "");
+	// get encoding of the environment where yast is started
+	environmentEncoding = nl_langinfo (CODESET);
+
 	evaluateSetLanguage (YCPTerm (YCPSymbol("SetLanguage", false), args));
     }
 }
@@ -221,6 +224,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
     else if (sym == "SetLanguage")	return evaluateSetLanguage (term);
     else if (sym == "GetLanguage")	return evaluateGetLanguage (term);
     else if (sym == "GetEncoding")	return evaluateGetEncoding (term);
+    else if (sym == "GetEnvironmentEncoding")	return evaluateGetEnvironmentEncoding (term );
 
     else if (sym == "CallModule")	return evaluateCallModule (term);
     else if (sym == "CallFunction" || sym == "call" )	return evaluateCallFunction (term);
@@ -414,7 +418,7 @@ WFMInterpreter::evaluateBuiltinBuiltin (builtin_t code, const YCPList& args)
     return YCPInterpreter::evaluateBuiltinBuiltin (code, args);
 }
 
-// encoding for gettext() is always UTF-8
+// encoding for gettext() output is always UTF-8
 const string textEncoding = "UTF-8";
 
 void
@@ -424,9 +428,8 @@ WFMInterpreter::changeToModuleLanguage () const
     // DON'T call setlocale( LC_ALL ) !!!
     // setlocale (LC_ALL, currentLanguage.c_str());
 
-    // change module and language
-    setlocale (LC_NUMERIC, "C");	// but always format numbers with "."
-
+    setlocale (LC_NUMERIC, "C");	// always format numbers with "."
+    
     bindtextdomain (currentTextdomain.c_str(), LOCALEDIR);
 
     bind_textdomain_codeset (currentTextdomain.c_str(), textEncoding.c_str());
@@ -434,7 +437,6 @@ WFMInterpreter::changeToModuleLanguage () const
     /* Change language. see info:gettext: */
     setenv ("LANGUAGE", currentLanguage.c_str(), 1);
     setenv ("LC_MESSAGES", currentLanguage.c_str(), 1);
-    setenv ("LANG", currentLanguage.c_str(), 1);
 
     /* Make change known.  */
     {
@@ -1339,11 +1341,22 @@ WFMInterpreter::evaluateGetEncoding (const YCPTerm& term)
 {
     /**
      * @builtin GetEncoding() -> string
-     * Returns the current encoding code
+     * Returns the system encoding code (corresponds to RC_LANG system variable) 
      */
+    y2milestone( "System: %s", systemEncoding.c_str() );
     return YCPString(systemEncoding);
 }
 
+YCPValue
+WFMInterpreter::evaluateGetEnvironmentEncoding (const YCPTerm& term)
+{
+    /**
+     * @builtin GetEnvironmentEncoding() -> string
+     * Returns the encoding code of the environment where yast is started 
+     */
+    y2milestone( "Environment: %s", environmentEncoding.c_str() );
+    return YCPString(environmentEncoding);
+}
 
 YCPValue
 WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)

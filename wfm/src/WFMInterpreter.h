@@ -160,6 +160,11 @@ private:
      */ 
     string 	    systemEncoding;	 
 
+   /**
+     * environment encoding
+     */ 
+    string	    environmentEncoding;
+    
     /**
      * Implements the builtin UI
      */
@@ -266,6 +271,11 @@ private:
      */
     YCPValue evaluateGetEncoding(const YCPTerm&);
 
+    /**
+     * Implements the builtin GetEnvironmentEncoding
+     */
+    YCPValue evaluateGetEnvironmentEncoding(const YCPTerm&);
+    
     /**
      * Sends a YCP value to a server component and gets the answer.
      * If the value is a quoted symbol or a quoted term, then
