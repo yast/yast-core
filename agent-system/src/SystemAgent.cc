@@ -960,6 +960,49 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    else if (cmd == "bash_input")
+    {
+	/**
+	 * @builtin Execute (.target.bash_input, string command, string input) -> integer
+	 *
+	 * Note: Function has only one used within YaST2 and is subject to
+	 * sudden change or removal.
+	 */
+
+	if (value.isNull() || !value->isString())
+	{
+	    return YCPError ("Bad command argument to Execute (.bash_input, string "
+			     "command, string stdin");
+	}
+
+	if (arg.isNull() || !arg->isString())
+	{
+	    return YCPError ("Bad command argument to Execute (.bash_input, string "
+			     "command, string stdin");
+	}
+
+	string command = value->asString ()->value ();
+	command += ">/dev/null 2>&1";
+
+	string input = arg->asString ()->value ();
+	input += "\n";
+
+	FILE* p = popen (command.c_str (), "w");
+	if (!p)
+	{
+	    return YCPError ("popen failed");
+	}
+
+	fwrite (input.c_str (), input.length (), 1, p);
+	int ret = pclose (p);
+
+	if (WIFEXITED (ret))
+	    return YCPInteger (WEXITSTATUS (ret));
+	return YCPInteger (WTERMSIG (ret) + 128);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     else if (cmd == "symlink")
     {
 	/**

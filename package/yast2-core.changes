@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 24 12:10:32 CET 2003 - arvin@suse.de
+
+- added command .bash_input to system agent
+
+-------------------------------------------------------------------
 Fri Feb 21 16:13:43 CET 2003 - kkaempf@suse.de
 
 - add Pkg::SelectionContent() function (#23589)
