@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul  9 11:16:30 CEST 2003 - cschum@suse.de
+
+- WFM: Added Pkg::YouSetServer().
+
+-------------------------------------------------------------------
 Mon Jul  7 15:48:24 CEST 2003 - gs@suse.de
 
 - WFMInterpreter: call setlocale(LC_ALL, "") in constructor;
@@ -30,6 +35,7 @@ Thu Jun 26 13:53:00 CEST 2003 - msvec@suse.de
 - 2.8.3
 
 -------------------------------------------------------------------
+>>>>>>> 1.125
 Wed Jun 25 10:49:31 CEST 2003 - cschum@suse.de
 
 - Removed WFM builtin CallFile as it isn't needed anymore by YOU.

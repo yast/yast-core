@@ -93,6 +93,34 @@ PkgModuleFunctions::YouStatus (YCPList args)
 }
 
 /**
+   @builtin Pkg::YouSetServer()
+
+   Set server to be used for getting patches.
+
+   @param map  you server map as returned from YouGetServers.
+   
+   @return ""      success
+           "args"  wrong arguments
+           "error" other error
+*/
+YCPValue
+PkgModuleFunctions::YouSetServer (YCPList args)
+{
+    if ( ( args->size() != 1) || !args->value(0)->isMap() )
+    {
+	return YCPString ("args");
+    }
+
+    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
+
+    InstYou &you = _y2pm.youPatchManager().instYou();
+
+    you.paths()->setPatchServer( server );
+
+    return YCPString( "" );
+}
+
+/**
    @builtin Pkg::YouGetUserPassword()
 
    Get username and password needed for access to server.
@@ -103,12 +131,10 @@ PkgModuleFunctions::YouStatus (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetUserPassword (YCPList args)
 {
-    if ( args->size() != 0 )
+    if ( ( args->size() != 0) )
     {
-	return YCPString( "args" );
+	return YCPString ("args");
     }
-
-    YCPMap result;
 
     InstYou &you = _y2pm.youPatchManager().instYou();
 
@@ -117,6 +143,7 @@ PkgModuleFunctions::YouGetUserPassword (YCPList args)
     string username = you.username();
     string password = you.password();
 
+    YCPMap result;
     result->add( YCPString( "username" ), YCPString( username ) );
     result->add( YCPString( "password" ), YCPString( password ) );
 
@@ -239,8 +266,6 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
 
   retrieve directory file listing all available patches
   
-  @param string  you server map as returned from YouGetServers.
-  
   @return ""       success
           "url"    url not valid
           "login"  login failed
@@ -249,16 +274,12 @@ PkgModuleFunctions::convertServerObject( const YCPMap &serverMap )
 YCPValue
 PkgModuleFunctions::YouGetDirectory (YCPList args)
 {
-    if ( ( args->size() != 1) || !args->value(0)->isMap() )
+    if ( ( args->size() != 0) )
     {
 	return YCPString ("args");
     }
 
-    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
-
     InstYou &you = _y2pm.youPatchManager().instYou();
-
-    you.paths()->setPatchServer( server );
 
     _last_error = you.retrievePatchDirectory();
     if ( _last_error ) {
@@ -274,7 +295,6 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 
   retrieve patches
   
-  @param string  url of patch server.
   @param bool    true if patches should be downloaded again
   @param bool    true if signatures should be checked.
   
@@ -289,20 +309,16 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
 {
-    if ( ( args->size() != 3) || !args->value(0)->isMap() ||
-         !args->value(1)->isBoolean() || !args->value(2)->isBoolean() )
+    if ( ( args->size() != 2) || 
+         !args->value( 0 )->isBoolean() || !args->value( 1 )->isBoolean() )
     {
 	return YCPString ("args");
     }
 
-    PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
-
-    bool reload = args->value(1)->asBoolean()->value();
-    bool checkSig = args->value(2)->asBoolean()->value();
+    bool reload = args->value( 0 )->asBoolean()->value();
+    bool checkSig = args->value( 1 )->asBoolean()->value();
 
     InstYou &you = _y2pm.youPatchManager().instYou();
-
-    you.paths()->setPatchServer( server );
 
     _last_error = you.retrievePatchInfo( reload, checkSig );
     if ( _last_error ) {
