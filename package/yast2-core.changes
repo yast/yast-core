@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb  3 12:03:32 CET 2004 - gs@suse.de
+
+- make language change known in Y2WFMComponent::SetLanguage 
+
+-------------------------------------------------------------------
 Tue Feb  3 10:34:17 CET 2004 - kkaempf@suse.de
 
 - Fix type for YEBuiltin (#34249)
