@@ -36,6 +36,7 @@
 #include <ycp/YCPParser.h>
 #include "pathsearch.h"
 
+static const int YCP_ERROR = 16;
 
 static const char *progname = "genericfrontend";
 
@@ -356,6 +357,9 @@ main (int argc, char **argv)
 
     // might be useful in tracking segmentation faults
     y2milestone ("Finished YaST2 component '%s'", progname);
+    
+    if( result->isBoolean() ) 
+	exit( result->asBoolean()->value() ? 0 : YCP_ERROR );
 
     exit (EXIT_SUCCESS);
 }
