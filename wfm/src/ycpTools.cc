@@ -116,7 +116,6 @@ string asString( YCPValueType obj )
 {
   switch ( obj ) {
 #define ENUMOUT(V) case V: return #V; break
-    ENUMOUT( YT_UNDEFINED );
     ENUMOUT( YT_VOID );
     ENUMOUT( YT_BOOLEAN );
     ENUMOUT( YT_INTEGER );
@@ -125,15 +124,15 @@ string asString( YCPValueType obj )
     ENUMOUT( YT_BYTEBLOCK );
     ENUMOUT( YT_PATH );
     ENUMOUT( YT_SYMBOL );
-    ENUMOUT( YT_DECLARATION );
-    ENUMOUT( YT_LOCALE );
     ENUMOUT( YT_LIST );
     ENUMOUT( YT_TERM );
     ENUMOUT( YT_MAP );
-    ENUMOUT( YT_BLOCK );
-    ENUMOUT( YT_BUILTIN );
-    ENUMOUT( YT_IDENTIFIER );
     ENUMOUT( YT_ERROR );
+    ENUMOUT( YT_CODE );
+    ENUMOUT( YT_RETURN );
+    ENUMOUT( YT_BREAK );
+    ENUMOUT( YT_ENTRY );
+    ENUMOUT( YT_REFERENCE );
 #undef ENUMOUT
   }
   return stringutil::form( "YCPValueType(%d)", obj );
@@ -159,9 +158,6 @@ ostream & operator<<( ostream & str, YCPValueType obj )
 std::string asString( const YCPValue & obj )
 {
   switch ( obj->valuetype() ) {
-  case YT_UNDEFINED:
-    return "YCPValue(YT_UNDEFINED)";
-    break;
 #define ENUMOUT(V,v) case YT_##V: return obj->as##v()->toString(); break
     ENUMOUT( VOID,	Void );
     ENUMOUT( BOOLEAN,	Boolean );
@@ -171,15 +167,15 @@ std::string asString( const YCPValue & obj )
     ENUMOUT( BYTEBLOCK,	Byteblock );
     ENUMOUT( PATH,	Path );
     ENUMOUT( SYMBOL,	Symbol );
-    ENUMOUT( DECLARATION,	Declaration );
-    ENUMOUT( LOCALE,	Locale );
     ENUMOUT( LIST,	List );
     ENUMOUT( TERM,	Term );
     ENUMOUT( MAP,	Map );
-    ENUMOUT( BLOCK,	Block );
-    ENUMOUT( BUILTIN,	Builtin );
-    ENUMOUT( IDENTIFIER,	Identifier );
-    ENUMOUT( ERROR,	Error );
+    case YT_ERROR: return "Error" ; break;
+    ENUMOUT( CODE, Code );
+    case YT_RETURN: return "Return" ; break;
+    case YT_BREAK: return "Break" ; break;
+    ENUMOUT( ENTRY, Entry );
+    ENUMOUT( REFERENCE, Reference );
 #undef ENUMOUT
   }
   return stringutil::form( "YCPValue(%s)", asString( obj->valuetype() ).c_str() );
