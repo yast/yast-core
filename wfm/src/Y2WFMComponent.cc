@@ -573,7 +573,9 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 	this->argumentlist = args; // YYYYYYYYYYY switch CallFunction from term to list
 
 	result = ycpscript->evaluate();
+
 	argumentlist = old_argumentlist;
+	delete ycpscript;
     }
 
     return result;

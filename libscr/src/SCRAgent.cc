@@ -93,6 +93,8 @@ SCRAgent::readconf (const char *filename)
     }
 
     // it is a term, generate YCPValue through its evaluation
-    return tmpvalue->evaluate();
+    YCPValue ret = tmpvalue->evaluate();
+    delete tmpvalue;
+    return ret;
 }
 

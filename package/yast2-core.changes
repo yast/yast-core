@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb 17 09:10:40 CET 2004 - mvidner@suse.cz
+
+- fixed memory leaks:
+  parsed code in Y2WFMComponent::CallFunction and SCRAgent::readconf
+
+-------------------------------------------------------------------
 Mon Feb 16 21:49:42 CET 2004 - kkaempf@suse.de
 
 - properly support indirect function calls via pointers (#34579)
