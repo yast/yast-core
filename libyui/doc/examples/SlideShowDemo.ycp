@@ -35,17 +35,28 @@
     list<integer> initialRpms = [ 600, 150, 30, 100 ];
     list<integer> rpms = initialRpms;
     boolean useTimeout = false;
+    integer currentCd = 1;
+    integer megaBytesPerSecond	= 2;
 
 
+    define string mediumName( integer mediumNo )
+    {
+	return sformat( "SuSE Linux Professional CD %1", mediumNo );
+    }
+
+    
     define void mediaChange( integer cdNo )
     {
+	UI::ChangeWidget(`nextMedium, `Value, "" );
 	UI::OpenDialog( `VBox(
-			      `Label( sformat( "Please insert CD #%1", cdNo ) ),
+			      `Label( sformat( "Please insert \n%1", mediumName( cdNo ) ) ),
 			      `PushButton( `opt(`default), "&OK" )
 			      )
 			);
-	UI::TimeoutUserInput( 5 * 1000 );
+	// UI::TimeoutUserInput( 5 * 1000 );
+	UI::UserInput();
 	UI::CloseDialog();
+	currentCd = cdNo;
     }
 
 
@@ -93,7 +104,22 @@
     }
 
 
-    define string remainingTime( list<integer> rpms )
+    define string twoDigits( integer n )
+    {
+	return n < 10 ? sformat( "0%1", n ) : sformat( "%1", n );
+    }
+
+
+    define string formatTime( integer seconds )
+    {
+	integer hours = seconds / 3600;
+	integer minutes = seconds / 60;
+	seconds = seconds % 60;
+	return sformat( "%1:%2:%3", hours, twoDigits( minutes), twoDigits( seconds ) );
+    }
+
+
+    define string totalRemainingTime()
     {
 	integer left = 0;
 
@@ -101,11 +127,27 @@
 	    left = left + val;
 	});
 
-	integer minutes = left / 30;
+	integer totalSeconds = left * megaBytesPerSecond;
 
-	return minutes < 10 ?
-	    sformat( "Remaining:\n0:0%1:17", minutes ) :
-	    sformat( "Remaining:\n0:%1:37" , minutes );
+	return sformat( "Remaining:\n%1", formatTime( totalSeconds ) );
+    }
+
+
+    define string nextMedium()
+    {
+	string remaining = "";
+	string mediaType = "CD";
+
+	if ( size( rpms ) > currentCd )
+	{
+	    integer seconds = rpms[ currentCd-1 ]:0 * megaBytesPerSecond;
+	    remaining = sformat( "Next %1 in %2: %3",
+				 mediaType,
+				 formatTime( seconds ),
+				 mediumName( currentCd+1 ) );
+	}
+
+	return remaining;
     }
 
 
@@ -117,6 +159,31 @@
     }
 
     string help_text = "<p>Please wait while packages are being installed.</p>";
+    string slide_text = "								\
+<table cellspacing=\"10\" cellpadding=\"5\">						\
+<tr>											\
+<td width =\"*\">									\
+<img src=\"/opt/kde3/share/icons/crystalsvg/128x128/apps/kscd.png\"  width=\"100\"	\
+align=\"left\">										\
+</td>											\
+											\
+<td width=\"*\">									\
+<p><font color=\"#00007f\"><b>XMMS and JuK - Powerful Jukeboxes</b></font></p>		\
+<p>XMMS is an excellent sound player for Linux. It is easy to use and supports		\
+various formats, including audio CDs. Test the many visualization plug-ins or		\
+download your favorite XMMS skins from the web.</p>					\
+<p>New in KDE: JuK, which classifies your MP3s and organizes your music			\
+collection.</p>										\
+<p><b>Want More?</b></p>								\
+<p>The SUSE distribution features a wide range of applications for playing		\
+your CDs and MP3 songs. For example, KsCD is a user-friendly CD player. The		\
+track information for most CDs is available on the Internet. Simply activate		\
+the respective function to display the list.</p>					\
+											\
+</td>											\
+</tr>											\
+</table>";
+
 
     UI::OpenDialog(`opt(`defaultsize ),
 		   `Wizard(`opt(`stepsEnabled),
@@ -149,33 +216,31 @@
     UI::WizardCommand(`SetBackButtonLabel( "S&tep" ) );
 
     term slideShowPage =
-	`HBox(
-	      `VBox(
-		    `VWeight( 4, `HVCenter(
-					   `Image(`opt(`scaleToFit),
-						  "/usr/share/doc/susetour/img/office0.png", "Games" )
-					   )
-			      ),
-		    `VWeight( 1, `RichText( "<p>Thank you for buying this product!</p>"    ) )
+	`VBox(
+	      `HBox(
+		    `RichText(`id(`slideText), slide_text ),
+		    `HSpacing( 0.5 ),
+		    `VBox(
+			  `Label(`id(`totalRemaining), totalRemainingTime() ),
+			  `VMultiProgressMeter(`id(`progress), rpms )
+			  )
 		    ),
-	      `HSpacing( 0.5 ),
-	      `VBox(
-		    `Label(`id(`time), remainingTime( rpms ) ),
-		    `VMultiProgressMeter(`id(`progress), rpms )
-		    )
+	      `Label(`id(`nextMedium ), `opt( `hstretch), "" )
 	      );
 
     UI::ReplaceWidget(`id(`contents),
 		      `DumbTab( [ `item(`id(`showSlideShow), "Slide Sho&w" ),
 				  `item(`id(`showDetails  ), "&Details"    ) ],
 				`VBox(
-				      `VSpacing( 0.5 ),
-				      `HBox(
-					    `HSpacing( 0.5 ),
-					    `ReplacePoint(`id(`tabContents), slideShowPage ),
-					    `HSpacing( 0.5 )
-					    ),
-				      `VSpacing( 0.5 )
+				      `VSpacing( 0.4 ),
+				      `VWeight( 1,	// lower layout priority
+						`HBox(
+						      `HSpacing( 1 ),
+						      `ReplacePoint(`id(`tabContents), slideShowPage ),
+						      `HSpacing( 0.5 )
+						      )
+						),
+				      `VSpacing( 0.4 )
 				      )
 				)
 		      );
@@ -199,7 +264,8 @@
 	if ( delta > 0 )
 	{
 	    rpms = subtract( rpms, 10 );
-	    UI::ChangeWidget(`time, `Value, remainingTime( rpms ) );
+	    UI::ChangeWidget(`totalRemaining, `Value, totalRemainingTime() );
+	    UI::ChangeWidget(`nextMedium, `Value, nextMedium() );
 	    UI::RecalcLayout();
 	}
     }
