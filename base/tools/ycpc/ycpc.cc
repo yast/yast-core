@@ -1329,7 +1329,7 @@ int main(int argc, char *argv[])
 	// user didn't setup log, use stdout
 	set_log_filename("-");
     }
-    set_simple (true);
+    set_log_simple_mode (true);
 
     // add include and module pathes to YCPPathSearch so that the argument order is kept
 
