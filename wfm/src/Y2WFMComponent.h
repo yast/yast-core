@@ -78,7 +78,10 @@ public:
     
     virtual Y2Namespace* import (const char* name_space, const char* timestamp = NULL);
 private:
-       /**
+
+    bool createDefaultSCR ();
+
+    /**
      * Type and list of SCR instances.
      */
     typedef vector <WFMSubAgent*> WFMSubAgents;

@@ -30,6 +30,7 @@
 #include <ycp/Bytecode.h>
 #include <ycp/YBlock.h>
 #include <scr/SCRAgent.h>
+#include <scr/SCR.h>
 
 #include "Y2WFMComponent.h"
 
@@ -51,6 +52,8 @@ Y2WFMComponent::Y2WFMComponent ():
     {
 	SetLanguage( YCPString(lang) );
     }
+    
+    createDefaultSCR ();
 }
 
 
@@ -68,6 +71,28 @@ Y2WFMComponent::name () const
     return "wfm";
 }
 
+
+bool Y2WFMComponent::createDefaultSCR ()
+{
+    // first, initialize builtin declarations if needed
+    if (! SCR::registered)
+    {
+	SCR scr;
+    }
+
+    // create default scr
+    WFMSubAgent* scr = new WFMSubAgent ("scr", 0);
+    
+    if (!scr->start ()) {
+	return false;
+    }
+    
+    scrs.push_back (scr);
+    default_handle = 0;
+    scr->agent()->setAsCurrentSCR();
+
+    return true;
+}
 
 YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
@@ -101,22 +126,17 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
     
-    // create default scr
-    WFMSubAgent* scr = new WFMSubAgent ("scr", 0);
-    scrs.push_back (scr);
-    default_handle = 0;
-    
-    if (!scr->start ()) {
+    if (scrs.empty ())
+    {
+	// problems with creation of default SCR in constructor
 	return YCPVoid ();
     }
-    
-    scr->agent()->setAsCurrentSCR();
+
 
     // preserve stack ordering of WFMs - callmodule
     Y2WFMComponent* old_wfm = current_wfm;
     current_wfm = this;
-
-
+    
     YCPValue v = script->asCode ()->evaluate ();
     
     current_wfm = old_wfm;
