@@ -69,4 +69,7 @@
 #define ycpdebug(format,args...) 		\
     ycp_log(LOG_DEBUG, format, ##args)
 
+#define ycpinternal(format,args...) 		\
+    ycp_log(LOG_INTERNAL, format, ##args)
+
 #endif /* _y2log_ycp_h */

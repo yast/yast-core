@@ -727,7 +727,7 @@ l_changelist (YCPList &list, const YCPValue &value)
 	return YCPNull ();
     }
 
-    y2internal ("Change does not work as expected! The argument is not passed by reference.");
+    ycpinternal ("Change does not work as expected! The argument is not passed by reference.");
 
     list->add (value);
     return list;

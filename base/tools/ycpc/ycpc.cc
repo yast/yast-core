@@ -845,6 +845,8 @@ void print_version()
 int main(int argc, char *argv[])
 {
     int i = 0, ret = 0;
+    
+    bool log_set = false;
 
     YCPPathSearch::initialize ();
 
@@ -931,6 +933,7 @@ int main(int argc, char *argv[])
 		break;
 	    case 'l':
 		set_log_filename (optarg);
+		log_set = true;
 		break;
 	    case 'o':
 		if (recursive)
@@ -948,6 +951,14 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
     }
+    
+    // setup log
+    if (!log_set)
+    {
+	// user didn't setup log, use stdout
+	set_log_filename("-");
+    }
+    set_simple (true);
 
     // register builtins
     SCR scr;
