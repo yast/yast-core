@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 27 16:43:07 CET 2004 - visnov@suse.cz
+
+- added openslp to neededforbuild
+
+-------------------------------------------------------------------
 Fri Feb 27 13:31:18 CET 2004 - visnov@suse.cz
 
 - ycodeptr branch merge:
