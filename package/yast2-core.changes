@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 24 21:06:49 CEST 2002 - kkaempf@suse.de
+
+- Allow empty nameserver list in agent-resolver (#17178)
+
+-------------------------------------------------------------------
 Wed Jul 24 18:01:00 CEST 2002 - arvin@suse.de
 
 - Execute (.target.remove, ...) is now quiet (bug #17177)

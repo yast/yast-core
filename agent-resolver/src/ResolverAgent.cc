@@ -355,18 +355,20 @@ static int flushCache (const char *filename)
 		break;
 	    }
 	    YCPList list = value->asList();
-	    if (list->size() <= 0) {
-		y2error ("Bad list size for key '%s'", skey.c_str());
-		break;
-	    }
-	    int i = 0;
-	    for (i = 0; i < list->size(); i++) {
-		if (list->value(i).isNull()
-		    || !list->value(i)->isString()) {
-		    y2error ("Skipping bad list element for key '%s'", skey.c_str());
-		}
-		else {
-		    fprintf (f, "%s %s\n", skey.c_str(), list->value(i)->asString()->value().c_str());
+	    if (list->size () > 0)
+	    {
+		int i;
+		for (i = 0; i < list->size(); i++)
+		{
+		    if (list->value(i).isNull()
+			|| !list->value(i)->isString())
+		    {
+			y2error ("Skipping bad list element for key '%s'", skey.c_str());
+		    }
+		    else
+		    {
+			fprintf (f, "%s %s\n", skey.c_str(), list->value(i)->asString()->value().c_str());
+		    }
 		}
 	    }
 	}
