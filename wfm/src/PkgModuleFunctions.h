@@ -328,9 +328,9 @@ class PkgModuleFunctions : public Y2Namespace
         Y2FUNCTIONCALL  ( Pkg, SourceSaveRanks, 	"boolean ()",		PkgModuleFunctions, SourceSaveRanks);
         Y2FUNCTIONCALL2 ( Pkg, SourceChangeUrl, 	"boolean (integer, string)",Integer, String,PkgModuleFunctions, SourceChangeUrl);
 	Y2FUNCTIONCALL1 ( Pkg, SourceInstallOrder, 	"boolean (map<integer,integer>)",Map,		PkgModuleFunctions, SourceInstallOrder);
-        Y2FUNCTIONCALL  ( Pkg, SourceEditGet, 		"map ()",		PkgModuleFunctions, SourceEditGet);
-        Y2FUNCTIONCALL1 ( Pkg, SourceEditSet, 		"boolean (list)",List, 		PkgModuleFunctions, SourceEditSet);
-        Y2FUNCTIONCALL2 ( Pkg, SourceScan, 		"integer (string, string)",String, String, PkgModuleFunctions, SourceScan);
+        Y2FUNCTIONCALL  ( Pkg, SourceEditGet, 		"list<map<string,any>> ()",		PkgModuleFunctions, SourceEditGet);
+        Y2FUNCTIONCALL1 ( Pkg, SourceEditSet, 		"boolean (list<map<string,any>>)",List, 		PkgModuleFunctions, SourceEditSet);
+        Y2FUNCTIONCALL2 ( Pkg, SourceScan, 		"list<integer> (string, string)",String, String, PkgModuleFunctions, SourceScan);
 
 	// target related
 	Y2FUNCTIONCALL2 ( Pkg, TargetInit, 		"boolean (string, boolean)",String, Boolean,PkgModuleFunctions, TargetInit);

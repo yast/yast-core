@@ -830,7 +830,7 @@ PkgModuleFunctions::SourceScan (const YCPString& media, const YCPString& pd)
   }
 
   if ( nids.empty() )
-    return pkgError( err );
+    return pkgError( err, YCPList() );
 
   // return source_ids
   return asYCPList( nids );
@@ -1066,7 +1066,7 @@ PkgModuleFunctions::SourceEditSet (const YCPList& states)
 
   PMError err = _y2pm.instSrcManager().editSet( source_states );
   if ( err )
-    return pkgError( err );
+    return pkgError( err, YCPBoolean( false ) );
 
   return YCPBoolean( true );
 }

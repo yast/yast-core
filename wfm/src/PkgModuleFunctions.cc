@@ -193,7 +193,10 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL3 ( 117,	Pkg, YouSetUserPassword);
     REGISTERFUNCTIONCALL1 ( 118,	Pkg, PkgProperties);
     REGISTERFUNCTIONCALL1 ( 119,	Pkg, YouGetServers);
-}
+    REGISTERFUNCTIONCALL  ( 120,        Pkg, SourceEditGet );
+    REGISTERFUNCTIONCALL1 ( 121,        Pkg, SourceEditSet );
+    REGISTERFUNCTIONCALL2 ( 122,        Pkg, SourceScan );
+ }
 
 ///////////////////////////////////////////////////////////////////
 //
