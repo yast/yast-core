@@ -382,55 +382,6 @@ PkgModuleFunctions::PkgSize (YCPList args)
 
 // ------------------------
 /**   
-   @builtin Pkg::PkgLocation (string package) -> string filename
-
-   Get location of package
-
-*/
-YCPValue
-PkgModuleFunctions::PkgLocation (YCPList args)
-{
-    PMPackagePtr package = getTheCandidate (getPackageSelectable (getName(args)));
-    if (!package)
-    {
-	return YCPVoid();
-    }
-    const std::string location = package->location();
-    string::size_type archpos = location.find(' ');
-    Pathname archpath;
-    if (archpos != string::npos)
-    {
-	archpath = string (location, archpos+1);
-	archpath = archpath + string (location, 0, archpos);
-    }
-    else
-    {
-	archpath = Pathname ((const std::string &)(package->arch()));
-	archpath = archpath + location;
-    }
-    return YCPString (archpath.asString());
-}
-
-// ------------------------
-/**   
-   @builtin Pkg::PkgMediaNr (string package) -> integer
-
-   Get media number of package location
-
-*/
-YCPValue
-PkgModuleFunctions::PkgMediaNr (YCPList args)
-{
-    PMPackagePtr package = getTheCandidate (getPackageSelectable (getName(args)));
-    if (!package)
-    {
-	return YCPVoid();
-    }
-    return YCPInteger (package->medianr());
-}
-
-// ------------------------
-/**   
    @builtin Pkg::SaveState() -> bool
 
    save the current package selection status for later
@@ -508,7 +459,7 @@ pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
 
    `installed	all installed packages
    `selected	all selected but not yet installed packages
-   `available	all available packeges (from the installation source)
+   `available	all available packages (from the installation source)
 
 */
 

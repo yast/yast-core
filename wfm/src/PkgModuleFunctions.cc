@@ -69,22 +69,6 @@ PkgModuleFunctions::InstSysMode (YCPList args)
     return YCPVoid();
 }
 
-/**
- * @builtin Pkg::CheckSpace (list partitions) -> list usage
- *
- * checks current space usage across partitions
- * @param partitions	list of used partitions
- * @return list of usage data
- *
- */
-YCPValue
-PkgModuleFunctions::CheckSpace (YCPList args)
-{
-#warning CheckSpace TBD
-    y2warning ("CheckSpace (%s)", args->toString().c_str());
-    return YCPList ();
-}
-
 
 /**
  * @builtin Pkg::SetLocale (string locale) -> void

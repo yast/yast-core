@@ -63,7 +63,6 @@ PkgModule::evaluate (string function, YCPList args)
 
     // general functions
     if (function == "InstSysMode")		return InstSysMode (args);
-    else if (function == "CheckSpace")		return CheckSpace (args);
     else if (function == "SetLocale")		return SetLocale (args);
     else if (function == "GetLocale")		return GetLocale (args);
     else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
@@ -78,8 +77,6 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "PkgSummary")		return PkgSummary (args);
     else if (function == "PkgVersion")		return PkgVersion (args);
     else if (function == "PkgSize")		return PkgSize (args);
-    else if (function == "PkgLocation")		return PkgLocation (args);
-    else if (function == "PkgMediaNr")		return PkgMediaNr (args);
     else if (function == "IsManualSelection")	return IsManualSelection (args);
     else if (function == "SaveState")		return SaveState (args);
     else if (function == "RestoreState")	return RestoreState (args);
