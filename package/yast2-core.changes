@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Mar  3 23:11:23 CET 2004 - kkaempf@suse.de
+
+- support new hwinfo fields "sysfs_bus_id" and "hwaddr"
+- 2.9.50
+
+-------------------------------------------------------------------
 Tue Mar  2 11:20:28 CET 2004 - msvec@suse.cz
 
 - disabled part of the agents-perl testsute (byteblock)

@@ -177,7 +177,9 @@ add_strlist (const str_list_t* strlist, YCPMap* m, const char* k)
 	while (strlist)
 	{
 	    if (strlist->str)
+	    {
 		l->add (YCPString (strlist->str));
+	    }
 	    strlist = strlist->next;
 	}
 	m->add (YCPString (k), l);
@@ -206,7 +208,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	  break;
 	case res_mem: {
 	  RES2TYPE (res_mem_t);
-	  *name ="mem";
+	  *name = "mem";
 	  map->add (YCPString ("start"), YCPInteger (r->base));
 	  if (r->range > 0)
 	      map->add (YCPString ("length"), YCPInteger (r->range));
@@ -215,14 +217,14 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	break;
     case res_phys_mem: {
 	RES2TYPE (res_phys_mem_t);
-	*name ="phys_mem";
+	*name = "phys_mem";
 	if (r->range > 0)
 	map->add (YCPString ("range"), YCPInteger (r->range));
     }
     break;
     case res_io: {
 	RES2TYPE (res_io_t);
-	*name ="io";
+	*name = "io";
 	map->add (YCPString ("start"), YCPInteger (r->base));
 	map->add (YCPString ("length"), YCPInteger (r->range));
 	map->add (YCPString ("mode"), access2string (r->access));
@@ -231,7 +233,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
     break;
     case res_irq: {
 	RES2TYPE (res_irq_t);
-	*name ="irq";
+	*name = "irq";
 	map->add (YCPString ("irq"), YCPInteger (r->base));
 	map->add (YCPString ("count"), YCPInteger (r->triggered));
 	map->add (YCPString ("enabled"),	YCPBoolean ((r->enabled)?true:false));
@@ -239,7 +241,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
     break;
     case res_dma: {
 	RES2TYPE (res_dma_t);
-	*name ="dma";
+	*name = "dma";
 	map->add (YCPString ("channel"), YCPInteger (r->base));
 	map->add (YCPString ("enabled"),	YCPBoolean ((r->enabled)?true:false));
     }
@@ -248,7 +250,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	RES2TYPE (res_monitor_t);
 	if (r->interlaced == 0)
 	{
-	*name ="monitor_resol";
+	*name = "monitor_resol";
 	map->add (YCPString ("width"), YCPInteger (r->width));
 	map->add (YCPString ("height"), YCPInteger (r->height));
 	map->add (YCPString ("vfreq"), YCPInteger (r->vfreq));
@@ -257,7 +259,7 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
     break;
     case res_size: {
 	RES2TYPE (res_size_t);
-	*name ="size";
+	*name = "size";
 	const char *s;
 	switch (r->unit) {
 	case size_unit_cm:	  s = "cm"; break;
@@ -286,42 +288,49 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
     break;
     case res_cache: {
 	RES2TYPE (res_cache_t);
-	*name ="cache";
+	*name = "cache";
 	map->add (YCPString ("size"), YCPInteger (r->size));
     }
     break;
     case res_baud: {
 	RES2TYPE (res_baud_t);
-	*name ="baud";
+	*name = "baud";
 	map->add (YCPString ("speed"), YCPInteger (r->speed));
     }
     break;
     case res_init_strings: {
 	RES2TYPE (res_init_strings_t);
-	*name ="init_strings";
+	*name = "init_strings";
 	if (r->init1 != 0)
-	map->add (YCPString ("init1"), YCPString (r->init1));
+	    map->add (YCPString ("init1"), YCPString (r->init1));
 	if (r->init2 != 0)
-	map->add (YCPString ("init2"), YCPString (r->init2));
+	    map->add (YCPString ("init2"), YCPString (r->init2));
     }
     break;
     case res_pppd_option: {
 	RES2TYPE (res_pppd_option_t);
-	*name ="pppd_option";
+	*name = "pppd_option";
 	if (r->option != 0)
-	map->add (YCPString ("option"), YCPString (r->option));
+	    map->add (YCPString ("option"), YCPString (r->option));
     }
     break;
-	case res_framebuffer:
-	{
-	    RES2TYPE (res_framebuffer_t);
-	    *name ="framebuffer";
-	    map->add (YCPString ("width"), YCPInteger (r->width));
-	    map->add (YCPString ("height"), YCPInteger (r->height));
-	    map->add (YCPString ("color"), YCPInteger (r->colorbits));
-	    map->add (YCPString ("mode"), YCPInteger (r->mode));
-	}
-	break;
+    case res_framebuffer:
+    {
+	RES2TYPE (res_framebuffer_t);
+	*name = "framebuffer";
+	map->add (YCPString ("width"), YCPInteger (r->width));
+	map->add (YCPString ("height"), YCPInteger (r->height));
+	map->add (YCPString ("color"), YCPInteger (r->colorbits));
+	map->add (YCPString ("mode"), YCPInteger (r->mode));
+    }
+    break;
+    case res_hwaddr:
+    {
+	RES2TYPE (res_hwaddr_t);
+	*name = "hwaddr";
+	map->add (YCPString ("addr"), YCPString (r->addr));
+    }
+    break;
     default:
 	map = YCPNull();
 	break;
@@ -1307,9 +1316,16 @@ HwProbe::hd2value (hd_t *hd)
     add_strlist (hd->unix_dev_names, &out, "dev_names");
     add_devnum (&hd->unix_dev_num, &out, "dev_num");
 
+// the sysfs path could be quite long but noone needs it, see sysfs_bus_id below
+#if 0
     // sysfs path
 
     add_str (hd->sysfs_id, &out, "sysfs_id");
+#endif
+
+    // sysfs bus id
+
+    add_str (hd->sysfs_bus_id, &out, "sysfs_bus_id");
 
     // BIOS id
     s = hd->rom_id;
@@ -1367,16 +1383,16 @@ HwProbe::hd2value (hd_t *hd)
 	{
 	  const char *name = 0;
 	  YCPMap res = resource_type2map ((res_any_t *)resource, &name);
-
 	  // add resource to map under name
 	  // if named value already exists, make it a list of maps
 
-	  if (!res.isNull() && name) {
-
+	  if (!res.isNull() && name)
+	  {
 	      YCPValue mapkey = YCPString (name);
 	      YCPValue mapval = map->value (mapkey);
 
-	      YCPList resList;		// new list of resource maps
+	      YCPList resList;				// new list of resource maps
+
 	      if ((!mapval.isNull())
 		  && (mapval->isList ()))	// mapkey existant
 	      {
@@ -1389,7 +1405,9 @@ HwProbe::hd2value (hd_t *hd)
 	} // loop over resources
 
 	if (map->size() > 0)
-	out->add (YCPString ("resource"), map);
+	{
+	    out->add (YCPString ("resource"), map);
+	}
     }
 
     if (!out.isNull() && out->size() == 0)
