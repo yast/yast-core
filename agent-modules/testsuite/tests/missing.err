@@ -1,6 +1,6 @@
 [agent-modules] ModulesConf.cc(getTimeStamp):282 Failed to stat tests/missing.in.test: No such file or directory
 [agent-modules] ModulesConf.cc(ModulesConf):95 ModulesConf: parseFile failed
-[Scanner] tests/missing.ycp:1 Warning: Empty block is treated as 'nil'
+[Parser] tests/missing.ycp:1 Warning: Empty block is treated as 'nil'
 [agent-modules] ModulesConf.cc(getTimeStamp):282 Failed to stat tests/missing.in.test: No such file or directory
 [agent-modules] ModulesConf.cc(writeFile):560 Modules not modified, not writing
 [agent-modules] ModulesConf.cc(getTimeStamp):282 Failed to stat tests/missing.in.test: No such file or directory
