@@ -79,6 +79,8 @@ public:
     Y2PluginComponent (bool is_server, string filename, const char* creator_name,
 		       const char* component_name, int level);
 
+    Y2PluginComponent (string filename, const char* creator_name,
+		       const char* component_name, const char* name_space);
     /**
      * Frees internal data.
      */
@@ -121,11 +123,17 @@ public:
      */
     YCPValue doActualWork (const YCPList& arglist, Y2Component* user_interface);
 
+    /**
+     * Return the already allocated component. It could be NULL, if there
+     * was a problem loading the component.
+     */    
+    Y2Component* component () { return comp; }
+
 private:
     /**
      * Does actually load the plugin.
      */
-    bool loadPlugin ();
+    bool loadPlugin (const char* name_space = NULL);
 
     /**
      * Tries to locate the global componentcreator via dlsym.

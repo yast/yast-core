@@ -22,6 +22,12 @@ ycpc_LDADD = ../../../libycp/src/libycp.la \
 	../../../libscr/src/libscr.la \
 	../../../scr/src/libpy2scr.la \
 	-ly2pm -ly2util
+	
+ycpc_LDFLAGS = \
+       -Xlinker --whole-archive        \
+        ../../../liby2/src/libpy2plugin.la         \
+       -Xlinker --no-whole-archive 
+
 
 PACKAGE=ycpc
 

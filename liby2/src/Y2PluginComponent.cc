@@ -47,6 +47,23 @@ Y2PluginComponent::Y2PluginComponent (bool is_server, string filename,
 }
 
 
+Y2PluginComponent::Y2PluginComponent (string filename, const char* creator_name,
+				      const char* component_name, const char* name_space)
+    : is_server (true),
+      filename (filename),
+      creator_name (creator_name),
+      component_name (component_name),
+      argc (0),
+      argv (0),
+      level (0),
+      handle (0),
+      comp (0)
+{
+    // load the plugin right-away now, there will be no evaluate prior builtins!!!
+    loadPlugin(name_space);
+}
+
+
 Y2PluginComponent::~Y2PluginComponent ()
 {
     if (comp)
@@ -169,14 +186,15 @@ exact_time ()
 
 
 bool
-Y2PluginComponent::loadPlugin ()
+Y2PluginComponent::loadPlugin (const char* name_space)
 {
     if (handle)
     {
 	return false;
     }
 
-    y2debug ("loadPlugin (%s)", filename.c_str());
+    y2debug ("loadPlugin (%s), namespace (%s)", filename.c_str(), name_space ?
+     name_space : "nil");
 
     // it's too late to the change the malloc implementation
     setenv ("QT_FAST_MALLOC", "0", 1);
@@ -211,6 +229,8 @@ Y2PluginComponent::loadPlugin ()
     for (int num = -1; ; num++)
     {
 	y2cc = locateSym (num);
+	
+	y2debug ("Component creator located; %p", y2cc);
 
 	if (!y2cc && num == -1)		// that's ok
 	{
@@ -220,6 +240,14 @@ Y2PluginComponent::loadPlugin ()
 	if (!y2cc)			// that's bad
 	{
 	    break;
+	}
+	
+	// let's try to lookup namespace if we are asked for it
+	if (name_space != NULL)
+	{
+	    y2debug ("Trying component creator to create namespace %s", name_space);
+	    comp = y2cc->provideNamespace (name_space);
+	    return comp != NULL;
 	}
 
 	if (is_server == y2cc->isServerCreator())	// perhaps that's it
@@ -262,12 +290,16 @@ Y2PluginComponent::locateSym (int num)
     {
 	snprintf (buffer, size, "g_y2cc%s%d", creator_name.c_str(), num);
     }
+    
 
     Y2ComponentCreator* y2cc = (Y2ComponentCreator*) dlsym (handle, buffer);
     if (dlerror() != 0)
     {
+	y2debug ("Not found symbol: %s", buffer);
 	return 0;
     }
+
+    y2debug ("Found symbol: %s", buffer);
 
     return y2cc;
 }

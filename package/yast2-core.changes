@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Oct  5 17:15:13 CEST 2004 - visnov@suse.cz
+
+- Allow namespaces to be located in libraries, so we don't
+  need to link them (using Y2PluginComponent) 
+
+-------------------------------------------------------------------
 Thu Sep 30 10:01:27 CEST 2004 - visnov@suse.cz
 
 - log non-existent directory in .target.dir as a milestone only (bug #45573) 

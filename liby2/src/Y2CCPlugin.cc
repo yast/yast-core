@@ -122,10 +122,26 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 
 
 Y2Component*
-Y2CCPlugin::provideNamespace(const char*)
+Y2CCPlugin::provideNamespace(const char* name_space)
 {
-//    y2debug ("Y2PluginComponent cannot import namespaces");
-    return NULL;
+    y2milestone ("Y2PluginComponent tries to locate namespace '%s'", name_space);
+    Y2PluginComponent* comp = NULL;
+    // try to load the library
+    for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
+         level++)
+    {
+	string filename = Y2PathSearch::findy2plugin (name_space, level);
+	if (filename.empty ())
+	    continue;
+
+	y2milestone ("Trying file '%s'", filename.c_str ());
+    
+	comp = new Y2PluginComponent (filename, name_space, name_space, name_space);
+	if (comp) break;
+    }
+
+    // return the internal component, that should provide the namespace
+    return comp ? comp->component () : NULL;
 }
 
 
