@@ -40,6 +40,7 @@ using std::string;
 #include "ycp/YCode.h"
 #include "ycp/YBlock.h"
 #include "ycp/SymbolEntryPtr.h"
+#include "ycp/y2log.h"
 
 class SymbolTable;
 class Y2Function;
@@ -166,7 +167,13 @@ public:							\
     virtual YCPValue evaluate (bool cse=false)		\
     {							\
 	if (cse) return YCPNull ();			\
-	return m_instance->impl_func (m_param1->value ()->as##param1type ());	\
+	YCPValue param1 = m_param1->value ();		\
+	if (param1.isNull () || param1->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	return m_instance->impl_func (param1->as##param1type ());	\
     }							\
 }
 
@@ -205,9 +212,21 @@ public:							\
     virtual YCPValue evaluate (bool cse=false)		\
     {							\
 	if (cse) return YCPNull ();			\
+	YCPValue param1 = m_param1->value ();		\
+	YCPValue param2 = m_param2->value ();		\
+	if (param1.isNull () || param1->isVoid ())	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param2.isNull () || param2->isVoid ())	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
 	return m_instance->impl_func (			\
-	    m_param1->value ()->as##param1type ()	\
-	    , m_param2->value ()->as##param2type ());	\
+	    param1->as##param1type ()			\
+	    , param2->as##param2type ());		\
     }							\
 }
 
@@ -249,9 +268,27 @@ public:							\
     virtual YCPValue evaluate (bool cse=false)		\
     {							\
 	if (cse) return YCPNull ();			\
-	return m_instance->impl_func ( m_param1->value ()->as##param1type ()	\
-	    ,m_param2->value ()->as##param2type ()	\
-	    ,m_param3->value ()->as##param3type ());	\
+	YCPValue param1 = m_param1->value ();		\
+	YCPValue param2 = m_param2->value ();		\
+	YCPValue param3 = m_param3->value ();		\
+	if (param1.isNull () || param1->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param2.isNull () || param2->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param3.isNull () || param3->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	return m_instance->impl_func ( param1->as##param1type ()	\
+	    ,param2->as##param2type ()			\
+	    ,param3->as##param3type ());		\
     }							\
 }
 
@@ -297,10 +334,34 @@ public:							\
     virtual YCPValue evaluate (bool cse=false)		\
     {							\
 	if (cse) return YCPNull ();			\
-	return m_instance->impl_func (m_param1->value ()->as##param1type ()	\
-	    ,m_param2->value ()->as##param2type ()	\
-	    ,m_param3->value ()->as##param3type ()	\
-	    ,m_param4->value ()->as##param4type ());	\
+	YCPValue param1 = m_param1->value ();		\
+	YCPValue param2 = m_param2->value ();		\
+	YCPValue param3 = m_param3->value ();		\
+	YCPValue param4 = m_param4->value ();		\
+	if (param1.isNull () || param1->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param2.isNull () || param2->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param3.isNull () || param3->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	if (param4.isNull () || param4->isVoid ()) 	\
+	{						\
+	    ycperror ("Passing 'nil' to %s::%s", #namespace, #name);	\
+	    return YCPNull (); 				\
+	}						\
+	return m_instance->impl_func (param1->as##param1type ()	\
+	    ,param2->as##param2type ()			\
+	    ,param3->as##param3type ()			\
+	    ,param4->as##param4type ());		\
     }							\
 }
 
