@@ -12,9 +12,6 @@ libpy2ag_system_la_SOURCES =			\
 	SystemAgent.cc SystemAgent.h
 
 libpy2ag_system_la_LDFLAGS = -version-info 2:0
+libpy2ag_system_la_LIBADD = @AGENT_LIBADD@
 
-INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)
+INCLUDES = @AGENT_INCLUDES@

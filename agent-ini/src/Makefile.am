@@ -17,6 +17,7 @@ liby2ag_ini_la_SOURCES =	\
 	IniFile.h
 
 liby2ag_ini_la_LDFLAGS = -version-info 2:0
+liby2ag_ini_la_LIBADD = @AGENT_LIBADD@
 
 libpy2ag_ini_la_SOURCES =			\
         $(liby2ag_ini_la_SOURCES)		\
@@ -24,12 +25,7 @@ libpy2ag_ini_la_SOURCES =			\
 
 libpy2ag_ini_la_LDFLAGS = -version-info 2:0
 libpy2ag_ini_la_LIBADD =			\
-	../../libscr/src/libscr.la		\
+	@AGENT_LIBADD@				\
 	-ly2util
 
-INCLUDES =					\
-	-I$(srcdir)/../../libycp/src/include	\
-	-I$(srcdir)/../../liby2/src/include	\
-	-I$(srcdir)/../../libscr/src/include	\
-	-I$(includedir)                         \
-        -I/usr/include/YaST2
+INCLUDES = @AGENT_INCLUDES@

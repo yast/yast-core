@@ -33,10 +33,21 @@ fi
 SUSEVERSION=`echo $VERSION | cut -d . -f 1,2`
 AC_SUBST(SUSEVERSION)
 
+AGENT_INCLUDES='dnl
+ -I$(top_srcdir)/libycp/src/include dnl
+ -I$(top_srcdir)/liby2/src/include dnl
+ -I$(top_srcdir)/libscr/src/include dnl
+ -I$(includedir)'
+AC_SUBST(AGENT_INCLUDES)
+
+# override AGENT_LIBADD which is AC_SUBSTed in YAST2-CHECKS-PROGRAM
+AGENT_LIBADD='$(top_srcdir)/libscr/src/libscr.la'
+
 ## some common checks
 @YAST2-CHECKS-COMMON@
 @YAST2-CHECKS-PROGRAM@
 @YAST2-CHECKS-TESTSUITE@
+
 
 ## and generate the output
 AC_OUTPUT(
