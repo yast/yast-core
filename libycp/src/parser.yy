@@ -537,7 +537,7 @@ compact_expression:
 		// if default is nil, the type can't be seen in a YCPValue
 		if (!$3.t->isMap())
 		{
-		    yyTypeMismatch (Type::Map(), $3.t, $3.l);
+		    yyTypeMismatch (Type::Map, $3.t, $3.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -1725,9 +1725,9 @@ opt_else:
 type:
 	C_TYPE				// type ($$.t) is set by scanner
 					// C_TYPE includes already expanded typedefs
-|	LIST				{ $$.t = ListTypePtr ( new ListType (Type::Any)); }
+|	LIST				{ $$.t = Type::List; }
 |	LIST '<' type '>'		{ $$.t = ListTypePtr ( new ListType ($3.t)); }
-|	MAP				{ $$.t = MapTypePtr ( new MapType (Type::Any, Type::Any)); }
+|	MAP				{ $$.t = Type::Map; }
 |	MAP '<' type ',' type '>'	{ $$.t = MapTypePtr ( new MapType ($3.t, $5.t)); }
 |	BLOCK '<' type '>'		{ $$.t = BlockTypePtr ( new BlockType ($3.t)); }
 |	CONST type			{ TypePtr t = $2.t->clone(); t->asConst();
@@ -2447,7 +2447,7 @@ list:
 	'[' ']'
 	    {
 		$$.c = new YConst (YCode::ycList, YCPList());
-		$$.t = ListTypePtr (new ListType (Type::Unspec));			// make it different from list(any) !
+		$$.t = Type::ListUnspec;			// make it different from list(any) !
 		$$.l = $1.l;
 	    }
 |	'[' list_elements opt_comma ']'
@@ -2524,7 +2524,7 @@ map:
 	MAPEXPR ']'					/* empty map */
 	    {
 		$$.c = new YConst (YCode::ycMap, YCPMap());
-		$$.t = MapTypePtr (new MapType (Type::Unspec, Type::Unspec));			// make it different from map<any,any> !
+		$$.t = Type::MapUnspec;			// make it different from map<any,any> !
 		$$.l = $1.l;
 	    }
 |	MAPEXPR map_elements opt_comma ']'

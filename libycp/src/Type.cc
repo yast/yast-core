@@ -89,34 +89,12 @@ const constTypePtr Type::Error		= TypePtr ( new Type (ErrorT));
 
 const constTypePtr Type::Nil		= TypePtr ( new Type (NilT));
 
-
-VariableTypePtr
-Type::Variable()
-{
-    return VariableTypePtr ( new VariableType (Type::Unspec) );
-}
-
-
-ListTypePtr
-Type::List()
-{
-    return ListTypePtr ( new ListType (Type::Unspec) );
-}
-
-
-MapTypePtr
-Type::Map()
-{
-    return MapTypePtr ( new MapType (Type::Any, Type::Unspec) );
-}
-
-
-BlockTypePtr
-Type::Block()
-{
-    return BlockTypePtr ( new BlockType (Type::Unspec) );
-}
-
+const constTypePtr Type::Variable	= new VariableType (Type::Any);
+const constTypePtr Type::Block 		= new BlockType (Type::Any);
+const constTypePtr Type::ListUnspec	= new ListType (Type::Unspec);
+const constTypePtr Type::List		= new ListType (Type::Any);
+const constTypePtr Type::MapUnspec	= new MapType (Type::Unspec, Type::Unspec);
+const constTypePtr Type::Map		= new MapType (Type::Any, Type::Any);
 
 FunctionTypePtr
 Type::Function(constTypePtr return_type)

@@ -176,7 +176,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return Type::List(); }
+    constTypePtr type() const { return Type::List; }
     int count () const;
     YCodePtr value (int index) const;
 };
@@ -201,7 +201,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
-    constTypePtr type() const { return Type::Map(); }
+    constTypePtr type() const { return Type::Map; }
 };
 
 

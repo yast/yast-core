@@ -395,19 +395,19 @@ YConst::type () const
 {
     switch (m_kind)
     {
-	case ycVoid:	return Type::Void; break;
-	case ycBoolean:	return Type::Boolean; break;
-	case ycInteger:	return Type::Integer; break;
-	case ycFloat:	return Type::Float; break;
-	case ycString:	return Type::String; break;
+	case ycVoid:		return Type::Void; break;
+	case ycBoolean:		return Type::Boolean; break;
+	case ycInteger:		return Type::Integer; break;
+	case ycFloat:		return Type::Float; break;
+	case ycString:		return Type::String; break;
 	case ycByteblock:	return Type::Byteblock; break;
-	case ycPath:	return Type::Path; break;
-	case ycSymbol:	return Type::Symbol; break;
-	case ycList:	return Type::List(); break;
-	case ycMap:	return Type::Map(); break;
-	case ycTerm:	return Type::Term; break;
-	case yeBlock:	return Type::Any; break;
-	case ycLocale:	return Type::Locale; break;
+	case ycPath:		return Type::Path; break;
+	case ycSymbol:		return Type::Symbol; break;
+	case ycList:		return Type::ListUnspec; break;
+	case ycMap:		return Type::MapUnspec; break;
+	case ycTerm:		return Type::Term; break;
+	case yeBlock:		return Type::Any; break;
+	case ycLocale:		return Type::Locale; break;
 	default:
 	    break;
     }

@@ -152,10 +152,13 @@ public:
     static const constTypePtr NFlex4;
     static const constTypePtr ConstNFlex4;
 
-    static VariableTypePtr Variable();
-    static ListTypePtr     List();
-    static MapTypePtr      Map();
-    static BlockTypePtr    Block();
+    static const constTypePtr ListUnspec;
+    static const constTypePtr List;
+    static const constTypePtr MapUnspec;
+    static const constTypePtr Map;
+    static const constTypePtr Variable;
+    static const constTypePtr Block;
+
     static FunctionTypePtr Function(constTypePtr return_type);
 
     static const constTypePtr Nil;	/* "return nil;" type */

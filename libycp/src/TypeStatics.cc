@@ -49,11 +49,11 @@ Type::vt2type (enum YCPValueType vt)
 	case YT_BYTEBLOCK:	return Type::Byteblock;
 	case YT_PATH:		return Type::Path;
 	case YT_SYMBOL:		return Type::Symbol;
-	case YT_LIST:		return Type::List();
+	case YT_LIST:		return Type::List;
 	case YT_TERM:		return Type::Term;
-	case YT_MAP:		return Type::Map();
-	case YT_CODE:		return Type::Block();
-	case YT_ENTRY:		return Type::Variable();
+	case YT_MAP:		return Type::Map;
+	case YT_CODE:		return Type::Block;
+	case YT_ENTRY:		return Type::Variable;
 	default:
 		return Type::Unspec;
     }
