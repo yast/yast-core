@@ -798,7 +798,7 @@ y2debug ("args(%s), newvalue (%s)", args->toString().c_str(), newvalue->toString
 	    else if (result->isList())
 	    {
 		YCPList l = result->asList();
-y2debug("isList(%s<%s>", l->toString().c_str(), v->toString().c_str());
+y2debug("isList(%s[%s]", l->toString().c_str(), v->toString().c_str());
 		i++;
 		if (!v->isInteger())
 		{
