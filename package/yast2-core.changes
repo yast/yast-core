@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec  2 17:42:09 CET 2003 - visnov@suse.cz
+
+- fix function prototypes 
+
+-------------------------------------------------------------------
 Thu Nov 27 16:01:36 CET 2003 - visnov@suse.cz
 
 - ignore function prototypes

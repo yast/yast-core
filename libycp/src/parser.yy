@@ -668,8 +668,19 @@ assignment:
 definition:
 	opt_global DEFINE opt_type definition_prefix ')' ';' 
 	    {
+		YCPBuiltin b(($1.l == 1)?YCPB_GLOBALDEFINE:YCPB_LOCALDEFINE);
+		YCPDeclTerm old_decl = $4.e->asValue()->asDeclaration()->asDeclTerm();
+		YCPDeclTerm new_decl = YCPDeclTerm (
+		    // create a new name
+		    YCPSymbol (((string)"__")+old_decl->symbol ()->symbol ()+"__prototype__", false));
+		b->add(new_decl);
+		b->add(YCPVoid ());
+		$$.e = b;
+		if (module_level > 1)
+		{
+		    module_level--;
+		}
 	    }
-
 |	opt_global DEFINE opt_type definition_prefix ')' expression
 	    {
 		YCPBuiltin b(($1.l == 1)?YCPB_GLOBALDEFINE:YCPB_LOCALDEFINE);
