@@ -165,7 +165,7 @@ add_str (const char* str, YCPMap* m, const char* k)
 
 
 /**
- *  Add the str_list_t* strlist to the YCPMap m with key k if strlist in
+ *  Add the str_list_t* strlist to the YCPMap m with key k if strlist is
  *  non-zero.
  */
 static void
@@ -338,6 +338,16 @@ HwProbe::resource_type2map (const res_any_t *res, const char **name)
 	RES2TYPE (res_link_t);
 	*name = "link";
 	map->add (YCPString ("state"), YCPBoolean (r->state));
+    }
+    case res_wlan:
+    {
+	RES2TYPE (res_wlan_t);
+	*name = "wlan";
+	add_strlist (r->channels,	&map, "channels");
+	add_strlist (r->frequencies,	&map, "frequencies");
+	add_strlist (r->bitrates,	&map, "bitrates");
+	add_strlist (r->auth_modes,	&map, "auth_modes");
+	add_strlist (r->enc_modes,	&map, "enc_modes");
     }
     break;
     default:

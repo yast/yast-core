@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Feb 22 16:17:49 CET 2005 - mvidner@suse.cz
+
+- Added wireles card features to agent-probe (#65391).
+- When renumbering file descriptors, check whether we already have
+  the desired number (#64797).
+- 2.11.23
+
+-------------------------------------------------------------------
 Tue Feb 22 00:48:31 CET 2005 - ro@suse.de
 
 - added wireless-tools to nfb (for libhd)
