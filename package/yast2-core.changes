@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 23 10:41:54 CET 2003 - mvidner@suse.de
+
+- Activate the debugger on receiving SIGUSR2.
+- 2.7.9
+
+-------------------------------------------------------------------
 Tue Jan 21 17:29:55 CET 2003 - arvin@suse.de
 
 - make it build with latest yast2-packagemanager
