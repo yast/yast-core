@@ -187,6 +187,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
           "sig"   signature check failed 
           "abort" user aborted operation
           "url"   url not valid
+          "login" login failed
 */
 YCPValue
 PkgModuleFunctions::YouGetPatches (YCPList args)
@@ -206,6 +207,7 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
     _last_error =
         _y2pm.youPatchManager().instYou().retrievePatchInfo( url, reload, checkSig );
     if ( _last_error ) {
+      if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
       if ( _last_error == YouError::E_bad_sig_file ) return YCPString( "sig" );
       if ( _last_error == YouError::E_user_abort ) return YCPString( "abort" );
