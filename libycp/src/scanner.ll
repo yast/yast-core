@@ -78,6 +78,7 @@ static tokenValue token_value;
 %}
 
 %option noyywrap
+%option nounput
 
 %option c++
 %option yyclass="Scanner"
