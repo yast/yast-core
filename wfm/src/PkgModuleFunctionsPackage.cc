@@ -139,8 +139,8 @@ inline list<SelQueryResult> queryString( queryStringFnc query_r, const string & 
 ///////////////////////////////////////////////////////////////////
 
 /**
- * Test whether a certain tag is provided by the selectables 
- * installed or candidate object, and return the query result. 
+ * Test whether a certain tag is provided by the selectables
+ * installed or candidate object, and return the query result.
  **/
 static SelQueryResult queryProvides( PMSelectablePtr sel_r, const string & tag_r ) {
   SelQueryResult ret( sel_r );
@@ -178,15 +178,15 @@ static SelQueryResult queryProvides( PMSelectablePtr sel_r, const string & tag_r
  *      'BOTH both packages
  *
  *  - symbol onSystem: Tells which instance of the package would be available
- *    on the system, if PkgCommit was called right now. That way you're able to 
+ *    on the system, if PkgCommit was called right now. That way you're able to
  *    tell wheter the tag will be available on the system after PkgCommit.
  *    (e.g. if onSystem != 'NONE && ( onSystem == instance || instance == 'BOTH ))
  *      'NONE stays uninstalled or is deleted
  *      'INST the installed one remains untouched
  *      'CAND the candidate package will be installed
  */
-YCPList  
-PkgQueryProvides( const YCPString& tag )
+YCPList
+PkgModuleFunctions::PkgQueryProvides( const YCPString& tag )
 {
   return asYCPList( queryString( queryProvides, tag->value() ) );
 }
