@@ -754,9 +754,7 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
  * @builtin regexppos( string input, string pattern ) -> [ pos, len ]
  * Returns a list with position and length of the first match, if no match
  * is found it returns an empty list.
-
- * The regexp in <tt>pattern</tt> must not contain round parentheses.
- *
+ * 
  * Example <pre>
  * regexppos( "abcd012efgh345", "[0-9]+" ) -> [4, 3]
  * regexppos( "aaabbb", "[0-9]+" ) -> []
@@ -768,21 +766,20 @@ YCPValue evaluateRegexpPos(YCPInterpreter *interpreter, const YCPList& args)
 	return YCPError("Wrong Arguments to regexpmatch( string input, string pattern )");
 
     const char *input   = args->value(0)->asString()->value().c_str();
-    string pattern = "(" + args->value(1)->asString()->value() + ")";
+    const char *pattern = args->value(1)->asString()->value().c_str();
 
-    Reg_Ret result = solve_regular_expression( input, pattern.c_str(), "" );
+    Reg_Ret result = solve_regular_expression( input, pattern, "" );
 
     if(result.error) {
-	y2error("Error in regexp <%s> <%s>: %s", input, pattern.c_str(), result.error_str.c_str());
+	y2error("Error in regexp <%s> <%s>: %s", input, pattern, result.error_str.c_str());
 	return YCPNull();
     }
 
     YCPList list;
-    if(result.solved)
-	{
-	list->add( YCPInteger( args->value(0)->asString()->value().find( result.match_str[1] )));
-	list->add( YCPInteger( result.match_str[1].length() ));
-	}
+    if(result.solved) {
+	list->add( YCPInteger( args->value(0)->asString()->value().find( result.match_str[0] )));
+	list->add( YCPInteger( result.match_str[0].length() ));
+    }
 
     return list;
 }
@@ -917,7 +914,7 @@ Reg_Ret solve_regular_expression( const char        *input,
     }
 
     static const char *index[SUB_MAX+1] = {
-        NULL, /* not used */
+	NULL, /* not used */
 	"\\1", "\\2", "\\3", "\\4",
 	"\\5", "\\6", "\\7", "\\8", "\\9"
     };
@@ -925,11 +922,12 @@ Reg_Ret solve_regular_expression( const char        *input,
     string input_str(input);
     string result_str(result);
 
-    for(unsigned int i=1; (i <= compiled.re_nsub) && (i <= SUB_MAX); i++) {
+    for(unsigned int i=0; (i <= compiled.re_nsub) && (i <= SUB_MAX); i++) {
 	reg_ret.match_str[i] = matchptr[i].rm_so >= 0 ? input_str.substr(matchptr[i].rm_so, matchptr[i].rm_eo - matchptr[i].rm_so) : "";
 	reg_ret.match_nb = i;
 
-	string::size_type col = result_str.find(index[i]);
+	string::size_type col = string::npos;
+	if(index[i] != NULL) col = result_str.find(index[i]);
 	while( col != string::npos ) {
 	    result_str.replace( col, 2, reg_ret.match_str[i]  );
 	    col = result_str.find(index[i], col + 1 );
