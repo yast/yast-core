@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb  3 12:44:48 CET 2004 - visnov@suse.cz
+
+- Don't do fancy testsuite presentation 
+
+-------------------------------------------------------------------
 Tue Feb  3 12:03:32 CET 2004 - gs@suse.de
 
 - make language change known in Y2WFMComponent::SetLanguage 

@@ -50,13 +50,13 @@ proc ycp-run { src dir } {
   set tmpout_name "tmp.out.$base_name"
   set tmperr_name "tmp.err.$base_name"
 
-#  puts "Running $srcdirname/$base_name..."
+  puts "Running $srcdirname/$base_name..."
 
   # run the test
 
   set result ""
-  puts -nonewline "Checking $base_name                    \r"
-  flush stdout
+#  puts -nonewline "Checking $base_name                    \r"
+#  flush stdout
   set oops [catch { set result [exec "./runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
 
   if {$oops != 0} {
@@ -152,9 +152,10 @@ proc bytecode-run { src dir } {
   set should_fail0 [grep "xfail" "^$base_name\$"]
   set should_fail [expr 0 == [string match $should_fail0 ""]]
 
-  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
-  flush stdout
-#  puts --nonewline "Module $dir/Module ...\r"
+#  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
+#  flush stdout
+  puts "Testing $base_name ..."
+#  flush stdout
 
   # compile the test
 
@@ -182,8 +183,8 @@ proc bytecode-run { src dir } {
     return 1
   }
 
-  puts -nonewline "Printing $srcdirname/$base_name                   \r"
-  flush stdout
+#  puts -nonewline "Printing $srcdirname/$base_name                   \r"
+#  flush stdout
 
   # print the test
 
@@ -213,8 +214,8 @@ proc bytecode-run { src dir } {
       return -1
   }
   
-  puts -nonewline "Interpreting $srcdirname/$base_name                   \r"
-  flush stdout
+#  puts -nonewline "Interpreting $srcdirname/$base_name                   \r"
+#  flush stdout
 
   # run the test
 
@@ -289,8 +290,8 @@ proc bytecode-compile { src dir } {
   set should_fail0 [grep "xfail" "^$base_name\$"]
   set should_fail [expr 0 == [string match $should_fail0 ""]]
 
-  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
-  flush stdout
+#  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
+#  flush stdout
 
   # compile the test
 
