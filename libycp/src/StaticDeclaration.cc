@@ -484,11 +484,9 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	if (!partial)
 	{
 	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
-//	    fprintf (stderr, "No match for '%s : %s':\n", first_decl->name, type->toString().c_str());
 	    while (first_decl)
 	    {
-		ycp2error (Decl2String (first_decl,true).c_str());
-//		fprintf (stderr, "%s\n", Decl2String (first_decl,true).c_str());
+		ycp2error ("have '%s' ", Decl2String (first_decl,true).c_str());
 		first_decl = first_decl->next;
 	    }
 	}
