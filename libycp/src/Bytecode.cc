@@ -114,7 +114,7 @@ bool bytecodeistream::isVersionAtMost (int major, int minor, int release)
 	    return false;
 	}
 	
-	if ( (m_minor == minor) && (m_release > m_release))
+	if ( (m_minor == minor) && (m_release > release))
 	{
 	    return false;
 	}
