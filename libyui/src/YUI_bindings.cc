@@ -46,7 +46,7 @@ UISetLanguage( const YCPString & language )
 
 
 static YCPValue
-UISetLanguage2( const YCPString & language, const YCPString & encoding )
+UISetLanguageAndEncoding( const YCPString & language, const YCPString & encoding )
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateSetLanguage( language, encoding );
@@ -153,7 +153,7 @@ UIWaitForEvent()
 
 
 static YCPValue
-UIWaitForEvent1( const YCPInteger & timeout )
+UIWaitForEventTimeout( const YCPInteger & timeout )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateWaitForEvent( timeout );
@@ -163,7 +163,7 @@ UIWaitForEvent1( const YCPInteger & timeout )
 
 
 static YCPValue
-UIOpenDialog2( const YCPTerm & opts, const YCPTerm & dialog_term )
+UIOpenDialogOpt( const YCPTerm & opts, const YCPTerm & dialog_term )
 {
     if ( YUIComponent::ui() )
 	// Notice: Parameter order is switched!
@@ -194,7 +194,7 @@ UICloseDialog()
 
 
 static YCPValue
-UIChangeWidget( const YCPSymbol & widget_id, const YCPValue & property, const YCPValue & new_value )
+UIChangeWidgetOld( const YCPSymbol & widget_id, const YCPValue & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
@@ -204,7 +204,7 @@ UIChangeWidget( const YCPSymbol & widget_id, const YCPValue & property, const YC
 
 
 static YCPValue
-UIChangeWidget1( const YCPTerm & widget_id, const YCPValue & property, const YCPValue & new_value )
+UIChangeWidget( const YCPTerm & widget_id, const YCPValue & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
@@ -214,7 +214,14 @@ UIChangeWidget1( const YCPTerm & widget_id, const YCPValue & property, const YCP
 
 
 static YCPValue
-UIQueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
+UIChangeWidgetTerm( const YCPTerm & widget_id, const YCPValue & property, const YCPValue & new_value )
+{
+    return UIChangeWidget( widget_id, property, new_value );
+}
+
+
+static YCPValue
+UIQueryWidgetOld( const YCPSymbol & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
@@ -224,7 +231,7 @@ UIQueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
 
 
 static YCPValue
-UIQueryWidget1( const YCPSymbol & widget_id, const YCPTerm & property )
+UIQueryWidgetOldTerm( const YCPSymbol & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
@@ -234,7 +241,7 @@ UIQueryWidget1( const YCPSymbol & widget_id, const YCPTerm & property )
 
 
 static YCPValue
-UIQueryWidget2( const YCPTerm & widget_id, const YCPSymbol & property )
+UIQueryWidget( const YCPTerm & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
@@ -244,7 +251,7 @@ UIQueryWidget2( const YCPTerm & widget_id, const YCPSymbol & property )
 
 
 static YCPValue
-UIQueryWidget3( const YCPTerm & widget_id, const YCPTerm & property )
+UIQueryWidgetTerm( const YCPTerm & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
@@ -254,7 +261,7 @@ UIQueryWidget3( const YCPTerm & widget_id, const YCPTerm & property )
 
 
 static YCPValue
-UIReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
+UIReplaceWidgetOld( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
@@ -264,7 +271,7 @@ UIReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 
 
 static YCPValue
-UIReplaceWidget1( const YCPTerm & widget_id, const YCPTerm & new_widget )
+UIReplaceWidget( const YCPTerm & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
@@ -274,7 +281,7 @@ UIReplaceWidget1( const YCPTerm & widget_id, const YCPTerm & new_widget )
 
 
 static YCPValue
-UISetFocus( const YCPSymbol & widget_id )
+UISetFocusOld( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateSetFocus( widget_id );
@@ -284,7 +291,7 @@ UISetFocus( const YCPSymbol & widget_id )
 
 
 static YCPValue
-UISetFocus1( const YCPTerm & widget_id )
+UISetFocus( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateSetFocus( widget_id );
@@ -324,7 +331,7 @@ UINormalCursor()
 
 
 static YCPValue
-UIMakeScreenshot1( const YCPString & filename )
+UIMakeScreenshotToFile( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateMakeScreenShot( filename );
@@ -337,7 +344,7 @@ static YCPValue
 UIMakeScreenshot()
 {
     if ( YUIComponent::ui() )
-	return UIMakeScreenshot1( YCPNull() );
+	return UIMakeScreenshotToFile( YCPNull() );
     else
 	return YCPVoid();
 }
@@ -383,7 +390,7 @@ UIPlayMacro( const YCPString & filename )
 }
 
 static YCPValue
-UIFakeUserInput1()
+UIFakeUserInputNil()
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateFakeUserInput( YCPVoid() );
@@ -393,7 +400,7 @@ UIFakeUserInput1()
 
 
 static YCPValue
-UIFakeUserInput2( const YCPValue & next_input )
+UIFakeUserInput( const YCPValue & next_input )
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateFakeUserInput( next_input );
@@ -453,7 +460,7 @@ UICheckShortcuts()
 
 
 static YCPValue
-UIWidgetExists( const YCPSymbol & widget_id )
+UIWidgetExistsOld( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
@@ -463,7 +470,7 @@ UIWidgetExists( const YCPSymbol & widget_id )
 
 
 static YCPValue
-UIWidgetExists1( const YCPTerm & widget_id )
+UIWidgetExists( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
@@ -583,19 +590,22 @@ UI::UI()
     // Declarations for UI builtins and mapping to the respective C++ function.
     // NOTE: This must be static, registerDeclarations saves a pointer to it!
 
+    // This table is also processed to a YCP stub that makes the builtins
+    // callable from other languages. To ease parsing, a type corresponding
+    // to a single value must not contain whitespace
     static declaration_t ui_builtins[] =
 	{
 	    { "UI",			"",			(void *) &UICallHandler, DECL_NAMESPACE | DECL_CALL_HANDLER 	},
 	    { "OpenDialog",		"void (term)",						(void*) UIOpenDialog 		},
-	    { "OpenDialog",		"void (term, term)",					(void*) UIOpenDialog2 		},
+	    { "OpenDialog",		"void (term, term)",					(void*) UIOpenDialogOpt		},
 	    { "CloseDialog",		"boolean ()",						(void*) UICloseDialog 		},
 	    { "UserInput",		"any ()",						(void*) UIUserInput 		},
 	    { "TimeoutUserInput",	"any (integer)",					(void*) UITimeoutUserInput 	},
-	    { "WaitForEvent",		"map<string,any> (integer)",				(void*) UIWaitForEvent1 	},
+	    { "WaitForEvent",		"map<string,any> (integer)",				(void*) UIWaitForEventTimeout 	},
 	    { "WaitForEvent",		"map<string,any> ()",					(void*) UIWaitForEvent 		},
 	    { "PollInput",		"any ()",						(void*) UIPollInput 		},
 	    { "SetLanguage",		"void (string)",					(void*) UISetLanguage 		},
-	    { "SetLanguage",		"void (string, string)",				(void*) UISetLanguage2 		},
+	    { "SetLanguage",		"void (string, string)",				(void*) UISetLanguageAndEncoding},
 	    { "GetLanguage",		"string (boolean)",					(void*) UIGetLanguage 		},
 	    { "GetProductName",		"string ()",						(void*) UIGetProductName	},
 	    { "SetProductName",		"void (string)",					(void*) UISetProductName 	},
@@ -609,28 +619,28 @@ UI::UI()
 	    { "PostponeShortcutCheck",	"void ()",						(void*) UIPostponeShortcutCheck },
 	    { "CheckShortcuts",		"void ()",						(void*) UICheckShortcuts 	},
 	    { "MakeScreenShot",		"void ()",						(void*) UIMakeScreenshot 	},
-	    { "MakeScreenShot",		"void (string)",					(void*) UIMakeScreenshot1 	},
+	    { "MakeScreenShot",		"void (string)",					(void*) UIMakeScreenshotToFile 	},
 	    { "RecordMacro",		"void (string)",					(void*) UIRecordMacro 		},
 	    { "PlayMacro",		"void (string)",					(void*) UIPlayMacro 		},
 	    { "StopRecordMacro",	"void ()",						(void*) UIStopRecordMacro 	},
-	    { "FakeUserInput",		"void ()",						(void*) UIFakeUserInput1 	},
-	    { "FakeUserInput",		"void (any)",						(void*) UIFakeUserInput2 	},
-	    { "SetFunctionKeys",	"void (map <string, integer>)",				(void*) UISetFunctionKeys 	},
-	    { "ChangeWidget",		"boolean (symbol, symbol, any)",			(void*) UIChangeWidget,		DECL_NIL },
-	    { "ChangeWidget",		"boolean (term, symbol, any)",				(void*) UIChangeWidget1,	DECL_NIL },
-	    { "ChangeWidget",		"boolean (term, term, any)",				(void*) UIChangeWidget1,	DECL_NIL },
-	    { "QueryWidget",		"any (symbol, symbol)",					(void*) UIQueryWidget 		},
-	    { "QueryWidget",		"any (symbol, term)",					(void*) UIQueryWidget1 		},
-	    { "QueryWidget",		"any (term, symbol)",					(void*) UIQueryWidget2 		},
-	    { "QueryWidget",		"any (term, term)",					(void*) UIQueryWidget3 		},
-	    { "ReplaceWidget",		"boolean (symbol, term)",				(void*) UIReplaceWidget 	},
-	    { "ReplaceWidget",		"boolean (term, term)",					(void*) UIReplaceWidget1 	},
-	    { "SetFocus",		"boolean (symbol)",					(void*) UISetFocus 		},
-	    { "SetFocus",		"boolean (term)",					(void*) UISetFocus1 		},
-	    { "WidgetExists"	,	"boolean (symbol)",					(void*) UIWidgetExists 		},
-	    { "WidgetExists",		"boolean (term)",					(void*) UIWidgetExists1 	},
+	    { "FakeUserInput",		"void ()",						(void*) UIFakeUserInputNil 	},
+	    { "FakeUserInput",		"void (any)",						(void*) UIFakeUserInput 	},
+	    { "SetFunctionKeys",	"void (map<string,integer>)",				(void*) UISetFunctionKeys 	},
+	    { "ChangeWidget",		"boolean (symbol, symbol, any)",			(void*) UIChangeWidgetOld,	DECL_NIL },
+	    { "ChangeWidget",		"boolean (term, symbol, any)",				(void*) UIChangeWidget,		DECL_NIL },
+	    { "ChangeWidget",		"boolean (term, term, any)",				(void*) UIChangeWidgetTerm,	DECL_NIL },
+	    { "QueryWidget",		"any (symbol, symbol)",					(void*) UIQueryWidgetOld	},
+	    { "QueryWidget",		"any (symbol, term)",					(void*) UIQueryWidgetOldTerm	},
+	    { "QueryWidget",		"any (term, symbol)",					(void*) UIQueryWidget 		},
+	    { "QueryWidget",		"any (term, term)",					(void*) UIQueryWidgetTerm	},
+	    { "ReplaceWidget",		"boolean (symbol, term)",				(void*) UIReplaceWidgetOld 	},
+	    { "ReplaceWidget",		"boolean (term, term)",					(void*) UIReplaceWidget 	},
+	    { "SetFocus",		"boolean (symbol)",					(void*) UISetFocusOld		},
+	    { "SetFocus",		"boolean (term)",					(void*) UISetFocus 		},
+	    { "WidgetExists"	,	"boolean (symbol)",					(void*) UIWidgetExistsOld	},
+	    { "WidgetExists",		"boolean (term)",					(void*) UIWidgetExists	 	},
 	    { "Glyph",			"string (symbol)",					(void*) UIGlyph 		},
-	    { "GetDisplayInfo",		"map <string, any> ()",					(void*) UIGetDisplayInfo 	},
+	    { "GetDisplayInfo",		"map<string,any> ()",					(void*) UIGetDisplayInfo 	},
 	    { "RunPkgSelection",	"any (term)",						(void*) UIRunPkgSelection 	},
 	    { "AskForExistingDirectory","string (string, string)",				(void*) UIAskForExistingDirectory },
 	    { "AskForExistingFile",	"string (string, string, string)",			(void*) UIAskForExistingFile 	},
