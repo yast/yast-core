@@ -25,8 +25,9 @@
 #include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
-#include <y2util/YRpmGroupsTree.h>
 #include <y2pm/InstData.h>
+#include <y2pm/PMObject.h>
+#include <y2pm/PMSelectable.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -103,27 +104,6 @@ PkgModuleFunctions::PkgNextInstall (YCPList args)
     ++installIt;
     return ret;
 }
-
-
-
-// ------------------------
-/**   
-   @builtin Pkg::GetGroups(string prefix) -> ["group1", "group2", ...]
-
-   returns a list of strings containing all known RPM groups
-   matching the given prefix<br>
-   If the prefix is the empty string, all groups are returned
-*/
-YCPValue
-PkgModuleFunctions::GetGroups (YCPList args)
-{
-    YCPList groups;
-#warning Pkg::GetGroups still needed ?
-//    const YRpmGroupsTree *groups_tree = _y2pm.packageManager().rpmGroupsTree();
-    
-    return groups;
-}
-
 
 // ------------------------
 /**   
@@ -531,3 +511,91 @@ PkgModuleFunctions::IsManualSelection (YCPList args)
     return YCPBoolean (false);
 }
 
+// ------------------------
+/**   
+   @builtin Pkg::GetPackages(symbol which, bool names_only) -> list of strings
+
+   return list of packages (["pkg1", "pkg2", ..."] if names_only==true,
+    ["pkg1 version release arch", "pkg1 version release arch", ... if
+    names_only == false]
+
+   'which' defines which packages are returned:
+
+   `installed	all installed packages
+   `selected	all selected but not yet installed packages
+   `available	all available packeges (from the installation source)
+
+*/
+/* helper functions */
+static void
+pgk2list (YCPList &list, const PMObjectPtr& package, bool names_only)
+{
+    if (names_only)
+    {
+	list->add (YCPString (package->name()));
+    }
+    else
+    {
+	string fullname = package->name();
+	fullname += (" " + package->version());
+	fullname += (" " + package->release());
+	fullname += (" " + (const std::string &)(package->arch()));
+	list->add (YCPString (fullname));
+    }
+    return;
+}
+
+YCPValue
+PkgModuleFunctions::GetPackages(YCPList args)
+{
+    if ((args->size() != 2)
+	|| !(args->value(0)->isSymbol())
+	|| !(args->value(1)->isBoolean()))
+    {
+	return YCPError ("Bad args to Pkg::GetPackages");
+    }
+
+    string which = args->value(0)->asSymbol()->symbol();
+    bool names_only = args->value(1)->asBoolean()->value();
+
+    YCPList packages;
+
+    for (PMManager::PMSelectableVec::const_iterator it = Y2PM::packageManager().begin();
+	 it != Y2PM::packageManager().end();
+	 ++it)
+    {
+	PMObjectPtr package;
+	if (which == "installed")
+	{
+	    package = (*it)->installedObj();
+	}
+	else if (which == "selected")
+	{
+	    if (((*it)->status() != PMSelectable::S_Install)
+		&& ((*it)->status() != PMSelectable::S_Update)
+		&& ((*it)->status() != PMSelectable::S_Auto))
+	    {
+		continue;
+	    }
+	    package = (*it)->candidateObj();
+	}
+	else if (which == "available")
+	{
+	    for (PMSelectable::PMObjectList::const_iterator ait = (*it)->av_begin();
+		 ait != (*it)->av_end(); ++ait)
+	    {
+		pgk2list (packages, (*ait), names_only);
+	    }
+	    continue;
+	}
+	else
+	{
+	    return YCPError ("Wrong parameter for Pkg::GetPackages");
+	}
+
+	if (package)
+	    pgk2list (packages, package, names_only);
+    }
+
+    return packages;
+}

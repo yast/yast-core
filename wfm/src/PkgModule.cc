@@ -64,9 +64,9 @@ PkgModule::evaluate (string function, YCPList args)
 //    y2milestone ("PkgModule::evaluate (%s, %s)", function.c_str(), args->toString().c_str());
 
     // general functions
-    if (function == "GetGroups")		return f.GetGroups (args);
-    else if (function == "CheckSpace")		return f.CheckSpace (args);
+    if (function == "CheckSpace")		return f.CheckSpace (args);
     // package functions
+    else if (function == "GetPackages")		return f.GetPackages (args);
     else if (function == "IsProvided")		return f.IsProvided (args);
     else if (function == "IsAvailable")		return f.IsAvailable (args);
     else if (function == "IsSelected")		return f.IsSelected (args);

@@ -69,7 +69,7 @@ class PkgModuleFunctions
 	bool ActivateSelectionPackages (PMSelectionPtr selection); // internal
 
 	// package related
-	YCPValue GetGroups (YCPList args);
+	YCPValue GetPackages (YCPList args);
 	YCPValue IsProvided (YCPList args);
 	YCPValue IsSelected (YCPList args);
 	YCPValue IsAvailable (YCPList args);
