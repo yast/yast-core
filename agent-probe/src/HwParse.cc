@@ -97,7 +97,7 @@ access2string (unsigned int acc)
 //
 
 YCPMap
-HwProbe::resource_type2map (res_any_t *res, const char **name)
+HwProbe::resource_type2map (const res_any_t *res, const char **name)
 {
     YCPMap map;
 
@@ -240,7 +240,7 @@ HwProbe::resource_type2map (res_any_t *res, const char **name)
 
 
 static void
-strlist2ycplist (str_list_t *strlist, YCPMap map, char *key)
+strlist2ycplist (const str_list_t *strlist, YCPMap map, char *key)
 {
     if (strlist == 0)
 	return;

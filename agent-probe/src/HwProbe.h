@@ -76,7 +76,7 @@ private:
     /**
      * convert res_t entry to map value
      */
-    YCPMap resource_type2map (res_any_t *res, const char **name);
+    YCPMap resource_type2map (const res_any_t *res, const char **name);
 
     /**
      * convert driver_info_t entry to map value
@@ -99,37 +99,37 @@ private:
      * lookup boot architecture
      * return YCPValue
      */
-    YCPValue bootArch (void);
+    YCPValue bootArch ();
 
     /**
      * lookup cpu architecture
      * return YCPValue
      */
-    YCPValue cpuArch (void);
+    YCPValue cpuArch ();
 
     /**
      * lookup boot disk
      * return YCPValue
      */
-    YCPValue bootDisk (void);
+    YCPValue bootDisk ();
 
     /**
      * lookup isdn hardware data
      * return YCPValue
      */
-    YCPValue ihwData (void);
+    YCPValue ihwData ();
 
     /**
      * lookup which video card is used by bios
      * return YCPValue
      */
-    YCPValue biosVideo (void);
+    YCPValue biosVideo ();
 
     /**
      * finds out framebuffer data
      * return YCPValue
      */
-    YCPValue vesaFramebuffer (void);
+    YCPValue vesaFramebuffer ();
 
     /**
      * check path for read, write, and dir
