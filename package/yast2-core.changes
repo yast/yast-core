@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jan 11 11:18:54 CET 2005 - visnov@suse.cz
+
+- remove fprintf calls, use logs instead
+- 2.11.17
+
+-------------------------------------------------------------------
 Tue Jan 04 10:32:32 CET 2005 - arvin@suse.de
 
 - fixed architecture detection (s390/s390x) during update (bug
