@@ -666,6 +666,17 @@ compact_expression:
 		    yyLerror ("No textdomain defined", $1.l);
 		    $$.t = 0;
 		}
+		else if (*($2.v.sval) == 0)		// empty string ?
+		{
+		    yywarning ("Empty locale constant", $1.l);
+
+		    // treat empty locale as normal string
+		    // else dgettext would return the complete .po file header !
+
+		    $$.c = new YConst (YCode::ycString, YCPString ($2.v.sval));
+		    delete[] $2.v.sval;
+		    $$.t = Type::String;
+		}
 		else
 		{
 		    $$.c = new YLocale ($2.v.sval, p_parser->m_block_stack->textdomain);
@@ -1848,7 +1859,7 @@ definition:
 		    constTypePtr type = $1.v.tval->sentry ()->type ();
 		    if (!type->isFunction () )
 		    {
-			y2internal ("Internal error: Expected function type, found %s", type->toString ());
+			y2internal ("Internal error: Expected function type, found %s", type->toString ().c_str());
 			$$.t = 0;
 			break;
 		    }

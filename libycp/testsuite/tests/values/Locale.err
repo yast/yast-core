@@ -48,3 +48,12 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/values/Locale.ycp:35 Parser error
+[Scanner] tests/values/Locale.ycp:40 Warning: Empty locale constant
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "textdomain";
+    return ("" == "");
+}
+----------------------------------------------------------------------

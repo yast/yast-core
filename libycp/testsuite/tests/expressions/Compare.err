@@ -343,12 +343,13 @@ Parsed:
     return (_("a") < _("aa"));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/expressions/Compare.ycp:119 Warning: Empty locale constant
 Parsed:
 ----------------------------------------------------------------------
 {
     // filename: "tests/expressions/Compare.ycp"
     textdomain "locale";
-    return (_("") < _("a"));
+    return ("" < _("a"));
 }
 ----------------------------------------------------------------------
 Parsed:

@@ -68,6 +68,7 @@ Parsed:
     return ([(v_string == ""), (v_string == nil), false, true] == [false, true, false, true]);
 }
 ----------------------------------------------------------------------
+[Scanner] tests/statements/VoidAssign.ycp:61 Warning: Empty locale constant
 [Scanner] tests/statements/VoidAssign.ycp:61 Warning: Superfluous 'is()' expression, type is known:
 [Scanner] tests/statements/VoidAssign.ycp:61 Warning: locale
 [Scanner] tests/statements/VoidAssign.ycp:61 Warning: Superfluous 'is()' expression, type is known:
@@ -80,7 +81,7 @@ Parsed:
     textdomain "dummy";
     locale v_locale = _("a locale");
     v_locale = nil;
-    return ([(v_locale == _("")), (v_locale == nil), false, true] == [false, true, false, true]);
+    return ([(v_locale == ""), (v_locale == nil), false, true] == [false, true, false, true]);
 }
 ----------------------------------------------------------------------
 [Scanner] tests/statements/VoidAssign.ycp:69 Warning: Superfluous 'is()' expression, type is known:
