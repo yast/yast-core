@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul  2 08:49:49 CEST 2003 - visnov@suse.de
+
+- return boolean value from client as exit code
+
+-------------------------------------------------------------------
 Fri Jun 27 12:38:06 CEST 2003 - msvec@suse.de
 
 - different fix for regexp*
