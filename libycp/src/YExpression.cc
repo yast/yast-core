@@ -2178,7 +2178,7 @@ YEFunction::evaluate (bool cse)
     // check for function or function pointer
     if (func->kind() != YCode::ycFunction)			// must be pointer
     {
-	// It's a YEVariable
+	// It's a YEVariable, a formal parameter of a function
 
 	YCPValue value = m_entry->value ();
 	if (value.isNull())
@@ -2204,8 +2204,16 @@ YEFunction::evaluate (bool cse)
     {
 	func->parameter (p)->push ();
     }
+
     // push also local parameters
     YBlock *definition = func->definition ();
+
+    if (definition == 0)
+    {
+	ycp2error ("Function '%s' is only declared, but not defined yet.", m_entry->toString().c_str());
+	return YCPNull();
+    }
+
     definition->push_to_stack ();
 
     for (unsigned int p = 0; p < func->parameterCount(); p++)

@@ -1,0 +1,9 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer f1 (integer p)
+    // filename: "tests/types/prototype5.ycp"
+    return f1 (0);
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/prototype5.ycp:6 Function 'integer f1 (integer p)' is only declared, but not defined yet.
