@@ -167,8 +167,6 @@ PkgModuleFunctions::SelectionData (YCPList args)
     {
 	return YCPError ("Selection '"+name+"' no object", data);
     }
-    y2milestone ("startRetrieval for (%s)", name.c_str());
-    selection->startRetrieval();
     y2milestone ("PkgModuleFunctions::SelectionData(%s)", name.c_str());
     data->add (YCPString ("summary"), YCPString (selection->summary("")));
     data->add (YCPString ("category"), YCPString (selection->category()));
@@ -198,8 +196,7 @@ PkgModuleFunctions::SelectionData (YCPList args)
 
     data->add (YCPString ("archivesize"), YCPInteger ((long long) (selection->archivesize())));
     data->add (YCPString ("order"), YCPString (selection->order()));
-    selection->stopRetrieval();
-    y2milestone (" data : %s", data->toString().c_str());
+
     return data;
 }
 
