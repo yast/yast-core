@@ -99,6 +99,10 @@ protected:
      */
     void writeMacroFileFooter();
 
+    /**
+     * Record file name and line number of current YCP code
+     **/
+    void recordYcpCodeLocation();
 
     /**
      * The internally used macro file; valid if non-null.

@@ -25,6 +25,7 @@
 
 #define y2log_component "ui-macro"
 #include <ycp/y2log.h>
+#include <ycp/ExecutionEnvironment.h>
 
 #include "YUISymbols.h"
 #include "YWidget.h"
@@ -106,12 +107,46 @@ void YMacroRecorder::writeMacroFileFooter()
 }
 
 
+void YMacroRecorder::recordYcpCodeLocation()
+{
+    extern ExecutionEnvironment ee;	// YCP interpreter status
+    ExecutionEnvironment::CallStack callStack( ee.callstack() );
+    const CallFrame * frame = callStack.back();
+    string functionName;
+
+    if ( frame && frame->called_function.find( "Wizard::UserInput" ) == string::npos  )
+	functionName = frame->called_function;
+
+    if ( frame )
+    {
+	if ( functionName.empty() )
+	{
+	    fprintf( _macroFile, "%s%s//   %s:%d\n",
+		     YMACRO_INDENT, YMACRO_INDENT,
+		     frame->filename.c_str(),
+		     frame->linenumber );
+	}
+	else
+	{
+	    fprintf( _macroFile, "%s%s//   %s(%s):%d\n",
+		     YMACRO_INDENT, YMACRO_INDENT,
+		     frame->filename.c_str(),
+		     functionName.c_str(),
+		     frame->linenumber );
+	}
+	
+	fprintf( _macroFile, "\n" );
+    }
+}
+
+
 void YMacroRecorder::beginBlock()
 {
     if ( ! _macroFile )
 	return;
 
     fprintf( _macroFile, "%s{\n", YMACRO_INDENT );
+    recordYcpCodeLocation();
 }
 
 
@@ -132,19 +167,19 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
 	return;
 
     fprintf( _macroFile, "\n" );
-    
+
     recordMakeScreenShot();
 
     if ( input->isVoid() )
     {
 	fprintf( _macroFile, "%s%sUI::%s();\n",
-		 YMACRO_INDENT, YMACRO_INDENT, 
+		 YMACRO_INDENT, YMACRO_INDENT,
 		 YUIBuiltin_FakeUserInput );
     }
     else
     {
 	fprintf( _macroFile, "%s%sUI::%s( %s );\n",
-		 YMACRO_INDENT, YMACRO_INDENT, 
+		 YMACRO_INDENT, YMACRO_INDENT,
 		 YUIBuiltin_FakeUserInput,
 		 input->toString().c_str() );
     }
@@ -178,13 +213,13 @@ void YMacroRecorder::recordMakeScreenShot( bool enabled, const char * filename )
     // End of discussion before it even starts. ;-)
 
     char buffer[256];
-    
+
     if ( ! filename )
     {
 	sprintf( buffer, "/tmp/yast2-%04d", _screenShotCount++ );
 	filename = buffer;
     }
-	
+
     fprintf( _macroFile, "%s%s%sUI::%s( \"%s\" );\n",
 	     YMACRO_INDENT, YMACRO_INDENT,
 	     enabled ? "" : "// ",
@@ -228,11 +263,11 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
 
     YCPTerm id( YUISymbol_id );		// `id()
     id->add( widget->id() );		// `id( `something )
-    
+
     YCPValue val = widget->queryWidget( YCPSymbol( propertyName ) );
-    
+
     fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s \"%s\"\n",
-	     // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget	     
+	     // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget
 	     YMACRO_INDENT, YMACRO_INDENT,
 	     YUIBuiltin_ChangeWidget,
 	     id->toString().c_str(),
