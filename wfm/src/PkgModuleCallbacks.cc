@@ -48,6 +48,8 @@ using std::string;
 // PkgModuleCallbacks
 
 static YCPSymbol progressCallback("",false);
+static YCPSymbol mediaChangeCallback("",false);
+static YCPSymbol mediaErrorCallback("",false);
 
 void
 progressCallbackFunc (int percent, void *_wfm)
@@ -56,6 +58,30 @@ progressCallbackFunc (int percent, void *_wfm)
     callback->add(YCPInteger (percent));
     ((YCPInterpreter *)_wfm)->evaluate (callback);
     return;
+}
+
+int
+mediaChangeCallbackFunc (int code, int expected, int current, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (mediaChangeCallback);
+    callback->add(YCPInteger (code));
+    callback->add(YCPInteger (expected));
+    callback->add(YCPInteger (current));
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    if (!ret->isInteger())
+	return 0;
+    return ret->asInteger()->value();
+}
+
+int
+mediaErrorCallbackFunc (const std::string& error, void *_wfm)
+{
+    YCPTerm callback = YCPTerm (mediaErrorCallback);
+    callback->add(YCPString (error));
+    YCPValue ret = ((YCPInterpreter *)_wfm)->evaluate (callback);
+    if (!ret->isInteger())
+	return 0;
+    return ret->asInteger()->value();
 }
 
 /**
@@ -76,4 +102,52 @@ PkgModuleFunctions::SetProgressCallback(YCPList args)
     _y2pm.instTarget().setPackageInstallProgressCallback (progressCallbackFunc, _wfm);
     return YCPVoid();
 }
+
+
+/**
+ * @builtin Pkg::SourceSetMediaChangeCallback (integer source, string fun) -> nil
+ *
+ * set media change callback function
+ * will call 'WFM::fun (int code, int currentnr, int expectednr)' from InstSrc
+ */
+YCPValue
+PkgModuleFunctions::SourceSetMediaChangeCallback (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    if ((args->size() != 2)
+	|| !(args->value(1)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SourceSetMediaChangeCallback");
+    }
+    mediaChangeCallback = YCPSymbol (args->value(1)->asString()->value(), false);
+    (InstSrcPtr::cast_away_const(source_id))->setMediaChangeCallback (mediaChangeCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
+/**
+ * @builtin Pkg::SourceSetMediaErrorCallback (integer source, string fun) -> nil
+ *
+ * set media error callback function
+ * will call 'WFM::fun (string error)' from InstSrc
+ */
+YCPValue
+PkgModuleFunctions::SourceSetMediaErrorCallback (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    if ((args->size() != 2)
+	|| !(args->value(1)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SourceSetMediaErrorCallback");
+    }
+    mediaErrorCallback = YCPSymbol (args->value(1)->asString()->value(), false);
+    (InstSrcPtr::cast_away_const(source_id))->setMediaErrorCallback(mediaErrorCallbackFunc, _wfm);
+    return YCPVoid();
+}
+
 

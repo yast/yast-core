@@ -18,6 +18,7 @@ liby2wfm_la_SOURCES =				\
 	PkgModuleFunctionsPatch.cc		\
 	PkgModuleFunctionsSelection.cc		\
 	PkgModuleFunctionsTarget.cc		\
+	PkgModuleFunctionsSource.cc		\
 	PkgModuleCallbacks.cc
 liby2wfm_la_LDFLAGS = -version-info 2:0
 
@@ -31,6 +32,7 @@ libpy2wfm_la_SOURCES =				\
 	PkgModuleFunctionsPatch.cc		\
 	PkgModuleFunctionsSelection.cc		\
 	PkgModuleFunctionsTarget.cc		\
+	PkgModuleFunctionsSource.cc		\
 	PkgModuleCallbacks.cc			\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h

@@ -55,6 +55,8 @@ class PkgModuleFunctions
 	PMSelectablePtr getSelectionSelectable (const std::string& name);
 	PMSelectablePtr getPatchSelectable (const std::string& name);
 
+	InstSrcManager::ISrcId getSourceByArgs (YCPList args, int pos);
+
     public:
 	// general
 	YCPValue InstSysMode (YCPList args);
@@ -71,11 +73,11 @@ class PkgModuleFunctions
 	YCPValue SourceGeneralData (YCPList args);
 	YCPValue SourceMediaData (YCPList args);
 	YCPValue SourceProductData (YCPList args);
-	YCPValue SourceProvide (YCPList args);
+	YCPValue SourceProvideFile (YCPList args);
+	YCPValue SourceProvideLocation (YCPList args);
 	YCPValue SourceCacheCopyTo (YCPList args);
-	YCPValue SourceAttach (YCPList args);
-	YCPValue SourceIsAttached (YCPList args);
-	YCPValue SourceRelease (YCPList args);
+	YCPValue SourceSetMediaChangeCallback (YCPList args);
+	YCPValue SourceSetMediaErrorCallback (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);
