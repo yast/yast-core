@@ -55,8 +55,22 @@ public:
      **/
     virtual YCPValue command( const YCPTerm & command );
 
+    /**
+     * Implements UI::QueryWidget() for this widget class.
+     */
+    YCPValue queryWidget( const YCPSymbol & property );
+
 
 protected:
+
+    /**
+     * Returns the current tree selection or an empty string if nothing is
+     * selected or there is no tree. 
+     **/
+    virtual YCPString currentTreeSelection() { return YCPString( "" ); }
+
+    
+    // Data members
 
     YCPValue 	_backButtonId;
     YCPString 	_backButtonLabel;

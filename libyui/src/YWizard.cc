@@ -51,3 +51,16 @@ YCPValue YWizard::command( const YCPTerm & command )
     return YCPNull();
 }
 
+
+
+YCPValue YWizard::queryWidget( const YCPSymbol & property )
+{
+    string sym = property->symbol();
+
+    if ( sym == YUIProperty_CurrentItem )
+    {
+	return currentTreeSelection();
+    }
+    else return YWidget::queryWidget( property );
+}
+
