@@ -12,8 +12,7 @@ CLEANFILES = YCP-builtins-wfm.html YCP-builtins-pkg.html
 
 all: $(CLEANFILES)
 
-builtin_wfm = $(srcdir)/../src/WFMInterpreter.cc \
-        $(srcdir)/../src/Y2WFMComponent.cc \
+builtin_wfm = $(srcdir)/../src/Y2WFMComponent.cc \
         $(srcdir)/../src/Y2CCWFM.cc
 
 builtin_pkg = $(srcdir)/../src/PkgModule*.cc
