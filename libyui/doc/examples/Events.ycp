@@ -231,7 +231,11 @@ y2milestone ("formatEvent(%1)", event);
 		UI::ChangeWidget(`cash, `Value, true );
 	    }
 	}
-
+	else if ( event["ID"]:nil == `order )
+	{
+	    UI::ChangeWidget(`send_mafioso, `Value, nil );
+	}
+	    
     } until ( event["ID"]:nil == `close );
 
 
