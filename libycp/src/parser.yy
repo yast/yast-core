@@ -653,7 +653,7 @@ compact_expression:
 		    $$.t = 0;
 		    break;
 		}
-
+		// don't free the .sval, YELocale keeps pointers
 		$$.c = new YELocale ($2.v.sval, $4.v.sval, $6.c, p_parser->m_block_stack->textdomain);
 		$$.t = Type::Locale;
 		$$.l = $1.l;
@@ -679,6 +679,7 @@ compact_expression:
 		}
 		else
 		{
+		    // don't free $2.v.sval, YLocale keeps the pointer
 		    $$.c = new YLocale ($2.v.sval, p_parser->m_block_stack->textdomain);
 		    $$.t = Type::Locale;
 		}
@@ -1249,7 +1250,7 @@ statement:
 
 		// enter 'self' entry so namespace references to current module get ignored
 		SymbolEntryPtr sself = new SymbolEntry (0, 0, name, SymbolEntry::c_self, Type::Unspec);
-		TableEntry *self = new TableEntry (name, sself, new Point (sself, $1.l, p_parser->m_current_block->point()));
+		TableEntry *self = new TableEntry (sself->name(), sself, new Point (sself, $1.l, p_parser->m_current_block->point()));
 		p_parser->scanner()->localTable()->enter (self);
 
 		// module has private global table
