@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 22 14:52:43 CET 2004 - visnov@suse.cz
+
+- 2.9.63 
+
+-------------------------------------------------------------------
 Fri Mar 19 17:21:06 CET 2004 - kkaempf@suse.de
 
 - add "dgettext" and "dngettext" builtins to support easy
