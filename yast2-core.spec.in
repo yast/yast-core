@@ -76,6 +76,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @ybindir@/y2base
 @ybindir@/startshell
 @ybindir@/md_autorun
+@ybindir@/elf-arch
 @plugindir@/lib*.so.*
 @scrconfdir@/*.scr
 @execcompdir@/servers/scr

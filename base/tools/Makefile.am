@@ -2,5 +2,5 @@
 # Makefile.am for core/base/tools
 #
 
-SUBDIRS = startshell autorun
+SUBDIRS = startshell autorun elf-arch
 

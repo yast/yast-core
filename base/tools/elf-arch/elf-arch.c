@@ -20,6 +20,8 @@ uint16_t e_data;
 uint16_t e_machine;
 
 
+uint16_t get_uint16 (uint16_t);
+
 uint16_t
 get_uint16 (uint16_t i)
 {
@@ -37,8 +39,10 @@ get_uint16 (uint16_t i)
 }
 
 
+char* machine_name (void);
+
 char*
-machine_name ()
+machine_name (void)
 {
     switch (e_machine)
     {
@@ -56,6 +60,8 @@ machine_name ()
     return "unknown";
 }
 
+
+int read_header (char*);
 
 int
 read_header (char* filename)
@@ -141,7 +147,7 @@ main (int argc, char **argv)
     if (!read_header (argv[1]))
 	exit (EXIT_FAILURE);
 
-    printf ("%s\n", machine_name (e_machine));
+    printf ("%s\n", machine_name ());
 
     exit (EXIT_SUCCESS);
 }
