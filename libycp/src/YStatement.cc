@@ -1424,7 +1424,8 @@ YSImport::YSImport (bytecodeistream & str)
 
     if (nameSpace() == 0)
     {
-	fprintf (stderr, "Import '%s' failed\n", name().c_str());
+	ycp2error ("Import '%s' failed\n", name().c_str());
+	ycp2error ("No namespace\n", name().c_str());
 	return;
     }
 
