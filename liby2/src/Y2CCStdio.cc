@@ -59,7 +59,7 @@ Y2Component *Y2CCStdio::create (const char *name) const
 Y2Component*
 Y2CCStdio::provideNamespace(const char*)
 {
-    y2debug ("Y2StdioComponent cannot import namespaces");
+//    y2debug ("Y2StdioComponent cannot import namespaces");
     return NULL;
 }
 
