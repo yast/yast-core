@@ -378,7 +378,7 @@ YCPValue YUIInterpreter::callback(const YCPValue& value)
 
 YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 {
-    y2debug ("evaluateUI(%s)\n", value->toString().c_str());
+    y2debug ("YUIInterpreter::evaluateUI(%s)\n", value->toString().c_str());
     if (value->isBuiltin())
     {
 	YCPBuiltin b = value->asBuiltin();
@@ -387,17 +387,22 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 	    return evaluate (b->value(0));
 	}
     }
-    else if (value->isTerm() && value->asTerm()->isQuoted())
+    else if (value->isTerm())
     {
 	YCPTerm vt = value->asTerm();
-	YCPTerm t(YCPSymbol(vt->symbol()->symbol(), false), vt->name_space());
-	for (int i=0; i<vt->size(); i++)
+	YCPTerm t (YCPSymbol (vt->symbol()->symbol(), false), vt->name_space());
+	for (int i = 0; i < vt->size(); i++)
 	{
-	    t->add(vt->value(i));
+	    YCPValue v = evaluate (vt->value (i));
+	    if (v.isNull ())
+	    {
+		return YCPError ("YUI parameter is NULL\n", YCPNull ());
+	    }
+	    t->add (v);
 	}
-	return evaluate (t);
+	return evaluateInstantiatedTerm (t);
     }
-    return evaluate (value);
+    return YCPError ("Unknown UI:: operation");
 }
 
 
