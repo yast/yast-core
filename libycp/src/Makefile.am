@@ -32,7 +32,7 @@ $(srcdir)/scanner.cc: scanner.ll $(srcdir)/parser.h
 	flex++ -o$@ $<
 
 $(srcdir)/parser.h $(srcdir)/parser.cc: parser.yy
-	BISON_SIMPLE=$(srcdir)/bison.simple bison -y -d -v $<
+	bison -y -d -v $<
 	mv -f y.tab.c $(srcdir)/parser.cc
 	mv -f y.tab.h $(srcdir)/parser.h
 
@@ -48,6 +48,6 @@ libycp_la_LDFLAGS = -version-info 2:0:0
 
 libycp_la_LIBADD = -lxcrypt -ly2util
 
-EXTRA_DIST = scanner.ll parser.yy bison.simple hashtable.gperf
+EXTRA_DIST = scanner.ll parser.yy hashtable.gperf
 
 CLEANFILES = y.output $(BUILT_SOURCES)

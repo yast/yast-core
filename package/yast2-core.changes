@@ -1,7 +1,13 @@
 -------------------------------------------------------------------
+Thu Nov 07 18:47:24 CET 2002 - arvin@suse.de
+
+- adaption of libycp for bison version 1.75
+
+-------------------------------------------------------------------
 Wed Nov  6 09:06:36 CET 2002 - mvidner@suse.cz
 
-- Fixed recursive Dir in ini-agent flat mode (used for .sysconfig), #21574.
+- Fixed recursive Dir in ini-agent flat mode (used for .sysconfig)
+  #21574
 
 -------------------------------------------------------------------
 Tue Oct 15 10:46:11 CEST 2002 - kkaempf@suse.de

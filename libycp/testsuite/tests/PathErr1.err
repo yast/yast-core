@@ -1,2 +1,2 @@
 [Scanner] tests/PathErr1.ycp:18 Syntax error: dash behind path constant not allowed
-[Scanner] tests/PathErr1.ycp:0 Syntax error: parse error, unexpected `$'
+[Scanner] tests/PathErr1.ycp:0 Syntax error: parse error, unexpected $end
