@@ -129,11 +129,40 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property )
     if		( s == YUIProperty_Label ) 	return getLabel();
     else if	( s == YUIProperty_Value )
     {
-	YCPString val = getValue();
-	YCPValue id = IdForValue( val );
+	int current = getCurrentItem();
 
-	if ( id->isVoid() )	return val;
-	else 			return id;
+	if ( current < 0 )
+	    return YCPVoid();
+
+	YCPString origLabel = current < item_labels->size() ?
+	    item_labels->value( current )->asString() : YCPString( "" );
+
+	if ( _editable )
+	{
+	    YCPString val = getValue();
+	    
+	    if ( val->value() != origLabel->value() )
+	    {
+		// If the user edited the text (if he can do that),
+		// return the user's input.
+	    
+		return val;
+	    }
+	}
+	
+	if ( current < item_ids->size() )
+	{
+	    // Try to find the corresponding ID.
+	    
+	    YCPValue id = item_ids->value( current );
+	    
+	    if ( ! id->isVoid() )
+		return id;
+	}
+
+	// As a last resort, fall back to the item's label text.
+	
+	return origLabel;
     }
     else if ( s == YUIProperty_ValidChars )	return getValidChars();
     else return YWidget::queryWidget( property );
@@ -185,7 +214,7 @@ void YComboBox::itemAdded( const YCPString & , int, bool )
 
 int YComboBox::numItems() const
 {
-    return item_ids->size();
+    return item_labels->size();
 }
 
 
@@ -201,19 +230,6 @@ int YComboBox::itemWithId( const YCPValue & id, bool report_error )
 
     return -1;
 }
-
-
-YCPValue YComboBox::IdForValue( const YCPValue & val )
-{
-    for ( int i=0; i < numItems(); i++ )
-    {
-	if ( ! item_ids->value(i).isNull() && item_labels->value(i)->equal( val ) )
-	    return item_ids->value(i);
-    }
-
-    return YCPVoid();
-}
-
 
 
 void YComboBox::saveUserInput( YMacroRecorder *macroRecorder )

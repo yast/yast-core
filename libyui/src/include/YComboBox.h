@@ -118,6 +118,12 @@ protected:
     virtual void setValue( const YCPString & new_value ) = 0;
 
     /**
+     * Returns the index of the currently selected item (from 0 on)
+     * or -1 if no item is selected.
+     **/
+    virtual int getCurrentItem() const = 0;
+
+    /**
      * Selects an item from the list. Notice there intentionally is no
      * corresponding getCurrentItem() method - use getValue() instead.
      */
@@ -137,11 +143,6 @@ private:
      * report an error if non item can be found.
      */
     int itemWithId( const YCPValue & id, bool report_error );
-
-    /**
-     * Looks up the ID of a given list item's value.
-     */
-    YCPValue IdForValue( const YCPValue & val );
 
     /**
      * Save the widget's user input to a macro recorder.
