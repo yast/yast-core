@@ -238,8 +238,10 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
     FILE* fout = fopen ("/tmp/scr-agents.txt", "w");
     for (SubAgents::const_iterator agent = agents.begin ();
 	 agent != agents.end (); ++agent)
+    {
 	fprintf (fout, "%ld %s\n", (*agent)->get_path ()->length (),
 		 (*agent)->get_path ()->toString ().c_str ());
+    }
     fclose (fout);
 #endif
 
