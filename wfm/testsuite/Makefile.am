@@ -13,11 +13,13 @@ INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/../../libscr/src/include	\
+	-I$(includedir)				\
+	-I$(includedir)/y2util/qt		\
 	-I$(srcdir)/../src
 
 noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc
-runwfm_LDADD = -ly2 -lycp
+runwfm_LDADD = -ly2 -lycp -ly2pm
 runwfm_LDFLAGS = -L$(libdir)				\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
@@ -28,7 +30,7 @@ runwfm_LDFLAGS = -L$(libdir)				\
 
 bin_PROGRAMS = y2wfm
 y2wfm_SOURCES = y2wfm.cc
-y2wfm_LDADD = -ly2 -lycp
+y2wfm_LDADD = -ly2 -lycp -ly2pm
 y2wfm_LDFLAGS = -L$(libdir)				\
 	-L$(srcdir)/../../libycp/src			\
 	-L$(srcdir)/../../liby2/src			\
