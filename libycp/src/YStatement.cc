@@ -38,6 +38,10 @@
 #include "y2/Y2Component.h"
 #include "y2/Y2ComponentBroker.h"
 
+#ifndef DO_DEBUG
+#define DO_DEBUG 0
+#endif
+
 extern ExecutionEnvironment ee;
 
 // ------------------------------------------------------------------
@@ -561,8 +565,11 @@ YSBracket::toStream (std::ostream & str) const
 YCPValue
 YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 {
-    if (idx > arg->size())
+    if (arg.isNull()
+	|| (idx > arg->size()))
+    {
 	return YCPNull();
+    }
 
     if (idx == arg->size())
 	return value;
@@ -572,9 +579,9 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	ycp2error ("Non-existent bracket parameter");
 	return YCPNull ();
     }
-	
+#if DO_DEBUG	
 y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toString().c_str(), value.isNull () ? "nil" : value->toString().c_str());
-
+#endif
     YCPValue argval = arg->value (idx);
     if (argval.isNull())
     {
@@ -589,21 +596,26 @@ y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toStr
 	    ycp2error ("Invalid bracket parameter for list");
 	    return YCPNull ();
 	}
+
 	YCPList list = current->asList();
 	int argint = argval->asInteger()->value();
 	
 	YCPValue val = value;
-	
+
 	//  not the end of the argument list, continue
 	if (idx < arg->size ()-1)
 	{
-	    val = commit (list->value (argint), idx+1, arg, value);
+	    val = commit (list->value (argint), idx+1, arg, value);		// recurse
 	    if (val.isNull ())
+	    {
 		return val;
+	    }
 	}
 	
-	list->set (argint, val);
+	list->set (argint, val.isNull() ? YCPVoid() : val);
+#if DO_DEBUG	
 y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString().c_str());
+#endif
 	return list;
     }
     else if (current->isMap())
@@ -614,12 +626,16 @@ y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString(
 	
 	if (idx < arg->size ()-1)
 	{
-	    val = commit (map->value (argval), idx+1, arg, value);
+	    val = commit (map->value (argval), idx+1, arg, value);		// recurse
 	    if (val.isNull ())
+	    {
 		return val;
+	    }
 	}
-	map = map->functionalAdd (argval, val);
+	map = map->functionalAdd (argval, val.isNull() ? YCPVoid() : val);
+#if DO_DEBUG	
 y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str(), map->toString().c_str());
+#endif
 	return map;
     }
     else if (current->isTerm())
@@ -641,7 +657,7 @@ y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str
 	    if (val.isNull ())
 		return val;
 	}
-	term->set (argval->asInteger()->value(), val);
+	term->set (argval->asInteger()->value(), val.isNull() ? YCPVoid() : val);
 	return term;
     }
     ycp2error ("Bracket assignment not list, map, or term");
@@ -682,7 +698,7 @@ YSBracket::evaluate (bool cse)
 	return YCPNull ();
     }
 
-    result = commit (result, 0, arg_value->asList(), newvalue);
+    result = commit (result, 0, arg_value->asList(), newvalue.isNull() ? YCPVoid() : newvalue);
 
     if (!result.isNull())
     {

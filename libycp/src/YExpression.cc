@@ -907,10 +907,12 @@ YEPropagate::toString() const
     return string ("/* ") + m_from->toString().c_str() + " -> " + m_to->toString().c_str() + " */" + m_value->toString();
 }
 
+
 bool
 YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 {
-    if (value->isVoid()						// value is nil, this is allowed everywhere
+    if (value.isNull()
+	|| value->isVoid()					// value is nil, this is allowed everywhere
 	|| to_type->isAny ()					// casting to any
 	|| to_type->isUnspec ()					// casting to unspec
 	|| ( to_type->isBasetype ()				// casting to equivalent base type
@@ -1092,6 +1094,13 @@ YEUnary::evaluate (bool cse)
 
     YCPValue arg = m_arg->evaluate ();
     const declaration_t *decl = m_decl;
+
+    if (arg.isNull()
+	&& (decl->flags & DECL_NIL == 0))
+    {
+	ycp2error ("Argument (%s) to %s(...) is nil", m_arg->toString().c_str(), m_decl->name);
+	return YCPNull ();
+    }
 
 #if DO_DEBUG
     y2debug ("func %s (%s)", decl->name, decl->type->toString().c_str());
@@ -1451,19 +1460,28 @@ YEBracket::evaluate (bool cse)
     YCPValue def_value = m_def->evaluate (cse);
 
     // parse time?
-    if (cse && (var_value.isNull () || def_value.isNull ()) )
+    if (cse
+	&& (var_value.isNull ()
+	    || def_value.isNull ()) )
+    {
 	return YCPNull ();
-
-    if (var_value.isNull() || var_value->isVoid())
+    }
+    if (var_value.isNull()
+	|| var_value->isVoid())
+    {
 	return def_value;
+    }
 
     YCPValue arg_value = m_arg->evaluate (cse);
 
     // parse time?
     if (cse && arg_value.isNull () )
+    {
 	return YCPNull ();
+    }
 
-    if (arg_value.isNull() || arg_value->isVoid()
+    if (arg_value.isNull()
+	|| arg_value->isVoid()
 	|| !arg_value->isList())
     {
 	return def_value;
@@ -2376,9 +2394,10 @@ YEFunction::evaluate (bool cse)
 	    y2debug ("m_entry value ([%d] %s)\n", m_entry->value()->valuetype(), m_entry->value()->toString().c_str());
 	}
 #endif
-	if (!value->isCode())
+	if (value.isNull()
+	    || !value->isCode())
 	{
-	    ycp2error ("Not a function pointer ('%s' is '%s')", m_entry->toString().c_str(), value->toString().c_str());
+	    ycp2error ("Not a function pointer ('%s' is '%s')", m_entry->toString().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
 	    return YCPNull();
 	}
 
@@ -2519,6 +2538,12 @@ YEFunction::attachParameter (const YCPValue& arg, int pos)
 bool
 YEFunction::appendParameter (const YCPValue& arg)
 {
+    if (arg.isNull())
+    {
+	ycp2error ("NULL parameter to %s", qualifiedName ().c_str ());
+	return false;
+    }
+
     // evil hack - pretend that the actual type is the expected type
     // FIXME
     constTypePtr param_tp = wantedParameterType ();
