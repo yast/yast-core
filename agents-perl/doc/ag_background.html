@@ -17,11 +17,15 @@ lslezak@suse.cz</A>&gt;</EM>
 Changes:
 </P>
 
+<FONT SIZE="-2">
 <UL>
+  <LI><B>2003-06-19:</B> Output buffering</LI>
   <LI><B>2003-06-09:</B> Reading stderr, writing to stdin, read/write characters instead of lines</LI>
   <LI><B>2003-03-28:</B> Added .buffer_size description</LI>
   <LI><B>2001-10-23:</B> Initial version</LI>
 </UL>
+
+</FONT>
 
 <HR>
 
@@ -59,6 +63,12 @@ Background agent has these limitations:
 </UL>
 
 </P>
+
+<H2>Note</H2>
+
+<P>Backround agent doesn't use virtual terminals, some programs buffer output
+when they detect no terminal device. In this case use option to disable
+buffering (e.g. grep --line-buffered).</P> 
 
 <H2>Background agent interface</H2>
 
