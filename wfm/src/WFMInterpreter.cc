@@ -1292,6 +1292,8 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
     if (term->size() > 0 && term->value(0)->isString())
     {
+	string proposedEncoding;
+
 	currentLanguage = term->value(0)->asString()->value();
 
 	if (term->size() > 1 && term->value(1)->isString())
@@ -1301,12 +1303,13 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	else
 	{
 	    setlocale (LC_ALL, currentLanguage.c_str());	// prepare for nl_langinfo
-	    currentEncoding = nl_langinfo (CODESET);
-	    if (currentEncoding.empty())
+	    proposedEncoding = nl_langinfo (CODESET);
+	    if (proposedEncoding.empty())
 	    {
 		y2warning ("nl_langinfo returns empty encoding for %s", currentLanguage.c_str());
-		currentEncoding = "UTF-8";	// default encoding
 	    }
+	    y2milestone ("LC_ALL = '%s', proposedEncoding %s", currentLanguage.c_str(), proposedEncoding.c_str());
+	    currentEncoding = "UTF-8";				// default encoding
 	}
 
 	textdomainOrLanguageHasChanged = true;
@@ -1314,7 +1317,7 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 	ycp2debug (current_file.c_str (), current_line,
 		       "WFM SetLanguage(\"%s\"), Encoding(\"%s\")",
 		       currentLanguage.c_str(), currentEncoding.c_str());
-	return YCPVoid();
+	return YCPString (proposedEncoding);
     }
 
     return YCPError ("Bad WFM::SetLanguage ("+term->toString()+")", YCPNull());
