@@ -463,8 +463,8 @@ Since the YaST2 UI doesn't have a single
 where the program spends most of its time, an indefinite period of time may
 pass between causing an event (e.g., the user clicks on a widget) and event
 <i>delivery</i> - the time where the (YCP) application actually receives the
-event and begins processing it. That time gap between depends on when the
-YCP code executes the next
+event and begins processing it. That time gap depends on exactly when the YCP
+code executes the next 
 <a href="event-builtins.html#UserInput">UserInput()</a>
 etc. statement.
 <p>
