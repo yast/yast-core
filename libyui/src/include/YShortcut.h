@@ -144,15 +144,21 @@ public:
      **/
     static char normalized( char c );
 
+    /**
+     * Obtain a widget's shortcut property - the string that contains "& " to
+     * designate a shortcut.
+     **/
+    static string getShortcutString( YWidget * widget );
+
     
 protected:
 
     /**
-     * Obtain the widget's shortcut property - the string that contains "& " to
-     * designate a shortcut.
+     * Obtain the the shortcut property of this shortcut's widget - the string
+     * that contains "& " to designate a shortcut.
      **/
     string getShortcutString();
-
+    
 
     // Data members
     

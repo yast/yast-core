@@ -39,8 +39,10 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 #include <ycp/YCPMap.h>
+#include <ycp/YCPVoid.h>
 
 #include "YUIInterpreter.h"
+#include "YEvent.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
 #include "YDialog.h"
@@ -80,7 +82,7 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_NormalCursor			) ret = evaluateNormalCursor		( term );
     else if ( symbol == YUIBuiltin_OpenDialog			) ret = evaluateOpenDialog		( term );
     else if ( symbol == YUIBuiltin_PlayMacro			) ret = evaluatePlayMacro		( term );
-    else if ( symbol == YUIBuiltin_PollInput			) ret = evaluateUserInput		( term, true );
+    else if ( symbol == YUIBuiltin_PollInput			) ret = evaluatePollInput		( term );
     else if ( symbol == YUIBuiltin_PostponeShortcutCheck	) ret = evaluatePostponeShortcutCheck	( term );
     else if ( symbol == YUIBuiltin_QueryWidget			) ret = evaluateQueryWidget		( term );
     else if ( symbol == YUIBuiltin_RecalcLayout			) ret = evaluateRecalcLayout		( term );
@@ -96,7 +98,9 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
     else if ( symbol == YUIBuiltin_SetLanguage			) ret = evaluateSetLanguage		( term );
     else if ( symbol == YUIBuiltin_SetModulename		) ret = evaluateSetModulename		( term );
     else if ( symbol == YUIBuiltin_StopRecordMacro		) ret = evaluateStopRecordMacro		( term );
-    else if ( symbol == YUIBuiltin_UserInput			) ret = evaluateUserInput		( term, false );
+    else if ( symbol == YUIBuiltin_UserInput			) ret = evaluateUserInput		( term );
+    else if ( symbol == YUIBuiltin_TimeoutUserInput		) ret = evaluateTimeoutUserInput	( term );
+    else if ( symbol == YUIBuiltin_WaitForEvent			) ret = evaluateWaitForEvent		( term );
     else if ( symbol == YUIBuiltin_WFM				) ret = evaluateCallback		( term, true );
     else if ( symbol == YUIBuiltin_WidgetExists			) ret = evaluateWidgetExists		( term );
     else
@@ -319,7 +323,7 @@ void YUIInterpreter::makeScreenShot( string filename )
  * If "strip_encoding" is set to "true", all encoding or similar information is
  * cut off, i.e. everything from the first "." or "@" on. Otherwise the current
  * contents of the "LANG" environment variable is returned ( which very likely
- * ends with ".UTF-8" since this is the encoding YaST2 uses internally ).
+ * ends with ".UTF-8" since this is the encoding YaST2 uses internally).
  */
 
 YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
@@ -360,8 +364,19 @@ YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
  * activate some widget that has the <tt>`notify</tt> option set.
  * The return value is the id of the widget that has been selected
  * or <tt>`cancel</tt> if the user selected the implicit cancel
- * button ( for example he closes the window ).
+ * button (for example he closes the window).
  */
+YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term )
+{
+    if ( term->size() != 0 )
+	return YCPNull();
+
+    return doUserInput( YUIBuiltin_UserInput,
+			0,		// timeout_millisec
+			true,		// wait
+			false );	// detailed
+}
+
 
 /**
  * @builtin PollInput() -> any
@@ -371,84 +386,163 @@ YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
  * some widget that has the <tt>`notify</tt> option set. Returns
  * the id of the widget that has been selected
  * or <tt>`cancel</tt> if the user selected the implicite cancel
- * button ( for example he closes the window ). Returns nil if no
+ * button ( for example he closes the window). Returns nil if no
  * user input has occured.
  */
-
-YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll )
+YCPValue YUIInterpreter::evaluatePollInput( const YCPTerm & term )
 {
     if ( term->size() != 0 )
 	return YCPNull();
 
-    YDialog *dialog = currentDialog();
+    return doUserInput( YUIBuiltin_PollInput,
+			0,		// timeout_millisec
+			false,		// wait
+			false );	// detailed
+}
+
+
+/**
+ * @builtin TimeoutUserInput( integer timeout_millisec ) -> any
+ *
+ * Waits for the user to click some button, close the window or
+ * activate some widget that has the <tt>`notify</tt> option set
+ * or until the specified timeout is expired.
+ * The return value is the id of the widget that has been selected
+ * or <tt>`cancel</tt> if the user selected the implicit cancel
+ * button (for example he closes the window).
+ * Upon timeout, <tt>`timeout</tt> is returned.
+ */
+YCPValue YUIInterpreter::evaluateTimeoutUserInput( const YCPTerm & term )
+{
+    if ( term->size() != 1 || ! term->value(0)->isInteger() )
+	return YCPNull();
+
+    long timeout_millisec = term->value(0)->asInteger()->value();
+
+    return doUserInput( YUIBuiltin_TimeoutUserInput,
+			timeout_millisec,
+			true,			// wait
+			false );		// detailed
+}
+
+
+/**
+ * @builtin WaitForEvent() -> map
+ * @builtin WaitForEvent( integer timeout_millisec ) -> map
+ *
+ * Extended event handling - very much like UserInput(), but returns much more
+ * detailed information about the event that occured in a map.
+ * <p>
+ * (More documentation follows)
+ */
+YCPValue YUIInterpreter::evaluateWaitForEvent( const YCPTerm & term )
+{
+    long timeout_millisec = 0;
+
+    if ( term->size() != 0 )
+    {
+	if ( term->size() != 1 || ! term->value(0)->isInteger() )
+	    return YCPNull();
+
+	timeout_millisec = term->value(0)->asInteger()->value();
+    }
+
+    return doUserInput( YUIBuiltin_WaitForEvent,
+			timeout_millisec,
+			true,			// wait
+			true );			// detailed
+}
+
+
+
+
+YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
+				      long 		timeout_millisec,
+				      bool 		wait,
+				      bool 		detailed )
+{
+    // Plausibility check for timeout
+
+    if ( timeout_millisec < 0 )
+    {
+	y2error( "%s(): Invalid value %ld for timeout - assuming 0",
+		 builtin_name, timeout_millisec );
+	timeout_millisec = 0;
+    }
+
+
+    // Check environment: Do we have a dialog to receive input from?
+
+    YDialog * dialog = currentDialog();
 
     if ( ! dialog )
     {
-	y2error( "%s(): No dialog existing",
-		 poll ? YUIBuiltin_PollInput : YUIBuiltin_UserInput );
+	y2error( "%s(): No dialog existing", builtin_name );
 	internalError( "No dialog existing during UserInput().\n"
 		       "\n"
 		       "Please check the log file!" );
 	return YCPNull();
     }
 
+
+    // Check for leftover postponed shortcut check
+
     if ( dialog->shortcutCheckPostponed() )
     {
-	y2error( "Missing CheckShortcuts() before UserInput() / PollInput() after PostponeShortcutCheck()!" );
+	y2error( "Missing CheckShortcuts() before %s() after PostponeShortcutCheck()!", builtin_name );
 	dialog->checkShortcuts( true );
     }
 
-    EventType event_type;
-    YWidget *event_widget = 0;
-    YCPValue input = YCPNull();
+
+    // Handle events
+
+    YEvent *	event = 0;
+    YCPValue 	input = YCPVoid();
 
     if ( fakeUserInputQueue.empty() )
     {
-	if ( poll )
-	{
-	    event_widget = filterInvalidEvents( pollInput( dialog, & event_type ) );
-	}
-	else
+	if ( wait )
 	{
 	    do
 	    {
-		event_widget = filterInvalidEvents( userInput( dialog, & event_type ) );
-	    } while ( event_type != ET_CANCEL &&
-		      event_type != ET_DEBUG  &&
-		      event_type != ET_MENU   &&
-		      ! event_widget );
+		// Get an event from the specific UI. Wait if there is none.
+		
+		event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
+
+		// If there was no event or if filterInvalidEvents() discarded
+		// an invalid event, go back and get the next one.
+	    } while ( ! event );
+	}
+	else
+	{
+	    // Get an event from the specific UI. Don't wait if there is none.
+	    
+	    event = filterInvalidEvents( pollInput() );
+
+	    // Nevermind if filterInvalidEvents() discarded an invalid event.
+	    // PollInput() is called very often (in a loop) anyway, and most of
+	    // the times it returns 'nil' anyway, so there is no need to care
+	    // for just another 'nil' that is returned in this exotic case.
 	}
 
-	switch ( event_type )
+	if ( event )
 	{
-	    case ET_CANCEL:
-		input = YCPSymbol( "cancel", true );
-		break;
-
-	    case ET_DEBUG:
-		input = YCPSymbol( "debugHotkey", true );
-		break;
-
-	    case ET_WIDGET:
-		input = event_widget ? event_widget->id() : YCPVoid();
-		break;
-
-	    case ET_MENU:
-		input = getMenuSelection();
-		setMenuSelection( YCPVoid() );
-		y2debug( "Menu selection: '%s'", input->toString().c_str() );
-		break;
-
-	    case ET_NONE:
-	    default:
-		input = YCPVoid();
+	    if ( detailed )
+		input = event->ycpEvent();	// The event map
+	    else
+		input = event->userInput();	// Only one single ID (or 'nil')
 	}
     }
     else // fakeUserInputQueue contains elements -> use the first one
     {
+	// Handle macro playing
+	
 	input = fakeUserInputQueue.front();
 	fakeUserInputQueue.pop_front();
     }
+
+
+    // Handle macro recording
 
     if ( macroRecorder )
     {
@@ -458,50 +552,67 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term, bool poll )
 	macroRecorder->endBlock();
     }
 
+
+    // Clean up.
+    //
+    // The generic UI interpreter assumes ownership of events delivered by
+    // userInput() / pollInput(), so now (after it is processed) is the time to
+    // delete that event.
+
+    if ( event )
+	delete event;
+
     return input;
 }
 
 
-YWidget *
-YUIInterpreter::filterInvalidEvents( YWidget *event_widget )
+YEvent *
+YUIInterpreter::filterInvalidEvents( YEvent * event )
 {
-    if ( ! event_widget )
+    if ( ! event )
 	return 0;
 
-    if ( ! event_widget->isValid() )
+    YWidgetEvent * widgetEvent = dynamic_cast<YWidgetEvent *> (event);
+
+    if ( widgetEvent && widgetEvent->widget() )
     {
-	/**
-	 * Silently discard events from widgets that have become invalid.
-	 *
-	 * This may legitimately happen if some widget triggered an event yet
-	 * nobody cared for that event ( i.e. called UserInput() or PollInput() )
-	 * and the widget has been destroyed meanwhile.
-	 **/
+	if ( ! widgetEvent->widget()->isValid() )
+	{
+	    /**
+	     * Silently discard events from widgets that have become invalid.
+	     *
+	     * This may legitimately happen if some widget triggered an event yet
+	     * nobody cared for that event (i.e. called UserInput() or PollInput() )
+	     * and the widget has been destroyed meanwhile.
+	     **/
 
-	// y2debug( "Discarding event for widget that has become invalid" );
+	    // y2debug( "Discarding event for widget that has become invalid" );
 
-	return 0;
+	    delete widgetEvent;
+	    return 0;
+	}
+
+	if ( widgetEvent->widget()->yDialog() != currentDialog() )
+	{
+	    /**
+	     * Silently discard events from all but the current ( topmost ) dialog.
+	     *
+	     * This may happen even here even though the specific UI should have
+	     * taken care about that: Events may still be in the queue. They might
+	     * have been valid (i.e. belonged to the topmost dialog ) when they
+	     * arrived, but maybe simply nobody has evaluated them.
+	     **/
+
+	    // Yes, really y2debug() - this may legitimately happen.
+	    y2debug( "Discarding event from widget from foreign dialog" );
+
+	    delete widgetEvent;
+	    return 0;
+	}
+
     }
 
-
-    if ( event_widget->yDialog() != currentDialog() )
-    {
-	/**
-	 * Silently discard events from all but the current ( topmost ) dialog.
-	 *
-	 * This may happen even here even though the specific UI should have
-	 * taken care about that: Events may still be in the queue. They might
-	 * have been valid ( i.e. belonged to the topmost dialog ) when they
-	 * arrived, but maybe simply nobody has evaluated them.
-	 **/
-
-	// Yes, really y2debug() - this may legitimately happen.
-	y2debug( "Discarding event from widget from foreign dialog" );
-	return 0;
-    }
-
-
-    return event_widget;
+    return event;
 }
 
 
@@ -744,16 +855,14 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
 /**
  * @builtin ReplaceWidget( `id( any id ), term newwidget ) -> boolean
  *
- * Replaces a complete widget ( or widget subtree ) with an other widget
- * ( or widget tree ). You can only replace the widget contained in
+ * Replaces a complete widget (or widget subtree) with an other widget
+ * (or widget tree). You can only replace the widget contained in
  * a <tt>ReplacePoint</tt>. As parameters to <tt>ReplaceWidget</tt>
  * specify the id of the ReplacePoint and the new widget.
  * <p>
  * This is an example:
  * <pre>
  * OpenDialog( `ReplacePoint( `id( `rp ), `PushButton( "OK" ) ) );
- * ...
- * // sometimes later...
  * ...
  * ReplaceWidget( `id( `rp ), `Label( "Label" ) )
  * </pre>
@@ -838,7 +947,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
  * propagate the keyboard focus to some child widget that accepts the
  * focus. Instead, an error message will be emitted into the log file.
  * <p>
- * Returns true on success ( i.e. the widget accepted the focus ).
+ * Returns true on success (i.e. the widget accepted the focus).
  */
 
 YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
@@ -863,7 +972,7 @@ YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
  * Sets the mouse cursor to the busy cursor, if the UI supports such a feature.
  * <p>
  * This should normally not be necessary. The UI handles mouse cursors itself:
- * When input is possible ( i.e. inside UserInput() ), there is automatically a
+ * When input is possible (i.e. inside UserInput() ), there is automatically a
  * normal cursor, otherwise, there is the busy cursor. Override this at your
  * own risk.
  */
@@ -908,7 +1017,7 @@ YCPValue YUIInterpreter::evaluateRedrawScreen( const YCPTerm & term )
  * supports such a feature.
  * <p>
  * This should normally not be necessary. The UI handles mouse cursors itself:
- * When input is possible ( i.e. inside UserInput() ), there is automatically a
+ * When input is possible (i.e. inside UserInput() ), there is automatically a
  * normal cursor, otherwise, there is the busy cursor. Override this at your
  * own risk.
  */
@@ -1115,9 +1224,7 @@ void YUIInterpreter::deleteMacroPlayer()
 YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
 {
     if ( term->size() != 1 )	// must have 1 arg - anything allowed
-    {
 	return YCPNull();
-    }
 
     fakeUserInputQueue.push_back( term->value(0) );
 
@@ -1140,7 +1247,7 @@ YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
  * some characters defined in Unicode / UTF-8.
  * <p>
  * Please note the value returned may consist of more than one character; for
- * example, Glyph( `ArrowRight ) may return something like "-& gt;".
+ * example, Glyph( `ArrowRight ) may return something like "-&gt;".
  * <p>
  * Predefined glyphs include:
  * <ul>
@@ -1654,11 +1761,11 @@ int YUIInterpreter::defaultFunctionKey( YCPString ylabel )
     if ( label.size() > 0 )
     {
 	YCPValue val = default_fkeys->value( YCPString( label ) );
-	
+
 	if ( ! val.isNull() && val->isInteger() )
 	    fkey = val->asInteger()->value();
     }
-    
+
     return fkey;
 }
 
@@ -1705,7 +1812,7 @@ YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
  *
  * Recode encoding of string from or to "UTF-8" encoding.
  * One of from/to must be "UTF-8", the other should be an
- * iso encoding specifier ( i.e. "ISO-8859-1" for western languages,
+ * iso encoding specifier (i.e. "ISO-8859-1" for western languages,
  * "ISO-8859-2" for eastern languages, etc. )
  */
 
@@ -1827,7 +1934,7 @@ int YUIInterpreter::Recode( const string & instr, const string & from,
     size_t inbuf_len  = instr.length();
     size_t outbuf_len = recode_buf_size-1;
     char * outbuf = recode_buf;
-    
+
     char * inptr  = ( char * ) instr.c_str();
     char * outptr = outbuf;
     char * l	  = NULL;

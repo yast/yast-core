@@ -47,6 +47,15 @@ public:
 	TimeoutEvent,
 	DebugEvent
     };
+
+
+    enum EventReason
+    {
+	UnknownReason = 0,
+	Activated,
+	SelectionChanged,
+	ValueChanged
+    };
     
 
     /**
@@ -58,7 +67,7 @@ public:
      * Virtual desctructor to force a polymorph object
      * so dynamic_cast can be used  
      **/
-    virtual ~YEvent() {}
+    virtual ~YEvent();
 
     /**
      * Returns the event type.
@@ -66,9 +75,20 @@ public:
     EventType eventType() const { return _eventType; }
 
     /**
+     * Returns the unique serial no. of this event.
+     * This is mainly useful for debugging.
+     **/
+    unsigned long serial() const { return _serial; }
+
+    /**
      * Returns the character representation of an event type.
      **/
-    static const char * format( EventType eventType );
+    static const char * toString( EventType eventType );
+    
+    /**
+     * Returns the character representation of an event reason.
+     **/
+    static const char * toString( EventReason reason );
     
     /**
      * Constructs a YCP map to be returned upon UI::WaitForEvent().
@@ -78,14 +98,20 @@ public:
     /**
      * Returns the ID to be returned upon UI::UserInput().
      *
-     * This is the same as the "id" field of the ycpEvent() map.
+     * This is the same as the "id" field of the ycpEvent() map
+     * (if this type of event has any such field in its map).
+     * It may also be YCPVoid() (nil).
      **/
     virtual YCPValue userInput();
 
     
 protected:
 
-    EventType _eventType;
+    EventType 			_eventType;
+    unsigned long		_serial;
+    
+    static unsigned long	_nextSerial;
+    static int			_activeEvents;
 };
 
 
@@ -100,7 +126,8 @@ public:
      * If this is a widget event, the widget that caused the event can be
      * passed here. 
      **/
-    YWidgetEvent( YWidget *	widget	= 0,
+    YWidgetEvent( YWidget *	widget		= 0,
+		  EventReason	reason		= Activated, 
 		  EventType 	eventType	= WidgetEvent );
 
     /**
@@ -108,6 +135,11 @@ public:
      * this is not a widget event.
      **/
     YWidget * widget() const { return _widget; }
+
+    /**
+     * Returns the reason for this event. This very much like an event sub-type.
+     **/
+    EventReason reason() const { return _reason; }
 
     /**
      * Constructs a YCP map to be returned upon UI::WaitForEvent().
@@ -126,7 +158,8 @@ public:
     
 protected:
 
-    YWidget * _widget;
+    YWidget * 	_widget;
+    EventReason	_reason;
 };
 
 
@@ -176,9 +209,11 @@ protected:
  **/
 class YMenuEvent: public YSimpleEvent
 {
-    YMenuEvent( const YCPValue & id )
-	: YSimpleEvent( MenuEvent, id )
-	{}
+public:
+    
+    YMenuEvent( const YCPValue & id )	: YSimpleEvent( MenuEvent, id )	{}
+    YMenuEvent( const char *     id )	: YSimpleEvent( MenuEvent, id ) {}
+    YMenuEvent( std::string 	 id )	: YSimpleEvent( MenuEvent, id ) {}
 };
 
 
@@ -188,9 +223,9 @@ class YMenuEvent: public YSimpleEvent
  **/
 class YCancelEvent: public YSimpleEvent
 {
-    YCancelEvent( const YCPValue & id ) 
-	: YSimpleEvent( CancelEvent, "cancel" )
-	{}
+public:
+    
+    YCancelEvent() : YSimpleEvent( CancelEvent, "cancel" ) {}
 };
 
 
@@ -200,9 +235,21 @@ class YCancelEvent: public YSimpleEvent
  **/
 class YDebugEvent: public YSimpleEvent
 {
-    YDebugEvent( const YCPValue & id ) 
-	: YSimpleEvent( CancelEvent, "debugHotkey" )
-	{}
+public:
+    
+    YDebugEvent() : YSimpleEvent( CancelEvent, "debugHotkey" ) {}
+};
+
+
+/**
+ * Event to be returned upon timeout
+ * (i.e. no event available in the specified timeout)
+ **/
+class YTimeoutEvent: public YSimpleEvent
+{
+public:
+    
+    YTimeoutEvent() : YSimpleEvent( TimeoutEvent, "timeout" ) {}
 };
 
 

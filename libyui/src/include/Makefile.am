@@ -41,6 +41,7 @@ pkginclude_HEADERS =				\
 	YSelectionBox.h				\
 	YShortcut.h				\
 	YShortcutManager.h			\
+	YSimpleEventHandler.h			\
 	YSlider.h				\
 	YSpacing.h				\
 	YSplit.h				\

@@ -294,19 +294,30 @@ YCPValue YUIInterpreter::evaluateInstantiatedTerm( const YCPTerm & term )
     string symbol = term->symbol()->symbol();
     y2debug( "evaluateInstantiatedTerm( %s )", symbol.c_str() );
 
-    if ( YUIInterpreter_in_word_set ( symbol.c_str(), symbol.length() ) )
+    if ( YUIInterpreter_in_word_set( symbol.c_str(), symbol.length() ) )
     {
-	if ( macroPlayer && term->symbol()->symbol() == YUIBuiltin_UserInput )
+	if ( macroPlayer )
 	{
-	    // This must be done in the YCP thread to keep the threads synchronized!
-	    playNextMacroBlock();
+	    string command = term->symbol()->symbol();
+	    
+	    if( command == YUIBuiltin_UserInput		||
+		command == YUIBuiltin_TimeoutUserInput	||
+		command == YUIBuiltin_WaitForEvent )
+	    {
+		// This must be done in the YCP thread to keep the threads synchronized!
+		playNextMacroBlock();
+	    }
 	}
 
 	if ( with_threads )
 	{
 	    box_in_the_middle = term;
 	    signalUIThread();
-	    while ( ! waitForUIThread() );
+	    
+	    while ( ! waitForUIThread() )
+	    {
+		// NOP
+	    }
 
 	    return box_in_the_middle;
 	}
@@ -495,37 +506,7 @@ void YUIInterpreter::idleLoop( int fd_ycp )
 }
 
 
-YWidget *YUIInterpreter::pollInput( YDialog *, EventType *event )
-{
-    y2internal( "default pollInput function called" );
-    // Default implementation: no input.
-    *event = ET_NONE;
-    return 0;
-}
-
-
-YWidget *YUIInterpreter::userInput( YDialog *, EventType *event )
-{
-    y2internal( "default userInput function called" );
-    // Default implementation: cancel
-    *event = ET_CANCEL;
-    return 0;
-}
-
-
-bool YUIInterpreter::waitForEvent( int fd_ycp )
-{
-    fd_set fdset;
-    FD_ZERO( & fdset );
-    FD_SET( fd_ycp, & fdset );
-    // FIXME: check for EINTR
-    select( fd_ycp+1, & fdset, 0, 0, 0 );
-    return false;
-}
-
-
-
-YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget *root, YWidget *widget, bool *contains )
+YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
 {
     YCPValue root_id = root->id();
 

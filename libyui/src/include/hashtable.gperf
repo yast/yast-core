@@ -27,11 +27,13 @@ ReplaceWidget
 RunPkgSelection
 SCR
 SetConsoleFont
-SetFunctionKeys
 SetFocus
+SetFunctionKeys
 SetLanguage
 SetModulename
 StopRecordMacro
+TimeoutUserInput
 UserInput
 WFM
+WaitForEvent
 WidgetExists

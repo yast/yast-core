@@ -32,6 +32,7 @@ examples_DATA =					\
 	DownloadProgress2.ycp			\
 	Enabling1.ycp				\
 	Enabling2.ycp				\
+	Events.ycp				\
 	FakeUserInput1.ycp			\
 	FKeys.ycp				\
 	Frame1.ycp				\

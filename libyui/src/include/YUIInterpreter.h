@@ -31,6 +31,7 @@
 using std::deque;
 
 class YContainerWidget;
+class YEvent;
 class YDialog;
 class YMacroPlayer;
 class YMacroRecorder;
@@ -156,7 +157,7 @@ public:
 
 
     /**
-     * Might be handy, if you have to recode strings from/to utf-8
+     * Might be handy if you have to recode strings from/to utf-8
      */
     static int Recode( const string & str,
 		       const string & from,
@@ -234,7 +235,7 @@ public:
      **/
     int defaultFunctionKey( YCPString label );
 
-    
+
 protected:
 
 
@@ -253,8 +254,6 @@ protected:
      * when it wants to react to user input or other external events such
      * as repaint requests from the X server.
      *
-     * The default implementation calls @ref #waitForEvent
-     *
      * @param fd_ycp filedescriptor that should be used to determine when
      * to leave the idle loop. As soon as it is readable, the loop must
      * be left. In order to avoid polling you can combine it with other
@@ -263,56 +262,40 @@ protected:
     virtual void idleLoop( int fd_ycp );
 
     /**
-     * This virtual method is called, when the YCPUIInterpreter evaluates
-     * the YCP command <tt>UserInput()</tt>. You should go into your
-     * event loop and return as soon as the user has pressed some widget that
-     * passes control back to the module. Currently this are push buttons and
-     * the window-close button.
+     * UI-specific UserInput() method.
      *
-     * The default implementation calls @ref #pollInput and @ref #waitForEvent
-     * until an event has happened.
+     * This is called upon evaluating the UI::UserInput() builtin command.
+     * This method should remain in its own event loop until an event for the
+     * topmost dialog (currentDialog() ) is  available or until the specified
+     * timeout (in milliseconds, 0 for "wait forever") is expired (in which
+     * case it should return the pointer to a YTimeoutEvent).
      *
-     * @param dialog the dialog that should receive user input. Only one dialog
-     * can be active at a time.
+     * This method is to return a pointer to an event created with the "new"
+     * operator. The generic UI interpreter assumes ownership of this newly
+     * created object and destroys it when appropriate.
      *
-     * @param event Return parameter. Put here which kind of event has happened.
+     * The caller will gracefully handle if this method returns 0, albeit this
+     * is always an error which may result in an error message in the log file.
      *
-     * @return the pressed or activated widget. Return 0 if the event is not
-     * related to any widget (such as close window).
-     */
-    virtual YWidget *userInput( YDialog *dialog, EventType *event );
+     * Derived UIs are required to implement this method.
+     **/
+    virtual YEvent * userInput( unsigned long timeout_millisec = 0 ) = 0;
 
     /**
-     * This virtual method is called, when the YCPUIInterpreter evaluates
-     * the YCP command <tt>PollInput()</tt>. You should <i>not</i> go into
-     * your event loop but just look whether there is pending user input.
+     * UI-specific PollInput() method.
      *
-     * The default implementation always returns immediatley with event == ET_NONE.
+     * This is called upon evaluating the UI::PollInput() builtin command.
+     * This method should just check if there are any pending events for the
+     * topmost dialog (currentDialog() ). This method never waits for any
+     * events - if there is no pending event, it returns 0.
      *
-     * @param dialog the dialog that should receive user input. Only one dialog
-     * can be active at a time.
-     * @param event Return parameter. Put here which kind of event has happened.
-     * Put ET_NONE if no event has happened.
-     * @return the pressed or activated widget. Return 0 if the event is not
-     * related to any widget (such as close window).
-     */
-    virtual YWidget *pollInput( YDialog *dialog, EventType *event );
-
-    /**
-     * Override this virtual method the specify how it can be determined whether either
-     * a user input event has happened or fd_ycp is readable. Each UI has it's own
-     * mechanism how events are received. If your UI gets events via one or more filedestriptors
-     * you can combine them together with fd_ycp into a </tt>select()</tt> call. This avoids
-     * polling.
+     * If there is a pending event, a pointer to that event (newly created with
+     * the "new" operator) is returned. The generic UI interpreter assumes
+     * ownership of this newly created object and destroys it when appropriate.
      *
-     * The default implementation makes a select() call on fd_ycp and returns false.
-     *
-     * @param fd_ycp filedescriptor you have to look at in addition to your own
-     * input. If it is -1 then ignore it.
-     * @return true if fd_ycp is readable. false if an event of your UI system is pending.
-     * Don't return until one of both has happened.
-     */
-    virtual bool waitForEvent( int fd_ycp );
+     * Derived UIs are required to implement this method.
+     **/
+    virtual YEvent * pollInput() = 0;
 
     /**
      * Shows and activates a previously created dialog. The default implementation does nothing.
@@ -858,7 +841,7 @@ protected:
     /**
      * Filter out invalid events.
      **/
-    YWidget * filterInvalidEvents( YWidget *event_widget );
+    YEvent * filterInvalidEvents( YEvent * event );
 
     /**
      * actually executes an ui command term. Never returns YCPNull.
@@ -903,11 +886,35 @@ protected:
     YCPValue evaluateStopRecordMacro			( const YCPTerm & term );
     YCPValue evaluateWidgetExists			( const YCPTerm & term );
 
+    YCPValue evaluateUserInput				( const YCPTerm & term );
+    YCPValue evaluateTimeoutUserInput			( const YCPTerm & term );
+    YCPValue evaluateWaitForEvent			( const YCPTerm & term );
+    YCPValue evaluatePollInput				( const YCPTerm & term );
+
     /**
-     * Implements the UserInput and PollInput() UI commands:
-     * @param poll set this to true if you want PollInput(), false for UserInput()
+     * Mid-level handler for the user input related UI commands:
+     *	   UserInput()
+     *	   TimeoutUserInput()
+     *	   WaitForEvent()
+     *	   PollInput()
+     *
+     * 'builtin_name' is the name of the specific UI builtin command (to use
+     * the correct name in the log file).
+     *
+     * 'timeout_millisec' is the timeout in milliseconds to use (0 for "wait
+     * forever"). 
+     *
+     * 'wait' specifies if this should wait until an event is available if
+     * there is none yet.
+     *
+     * 'detailed' specifies if a full-fledged event map is desired as return
+     * value (WaitForEvent()) or one simple YCPValue (an ID).
      */
-    YCPValue evaluateUserInput	( const YCPTerm & term, bool poll );
+    YCPValue doUserInput( const char *	builtin_name,
+			  long 		timeout_millisec,
+			  bool 		wait,
+			  bool 		detailed );
+
 
     /**
      * Implements the WFM or SCR callback command.

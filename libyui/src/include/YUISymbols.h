@@ -22,8 +22,8 @@
 
 // UI builtin functions
 
-#define YUIBuiltin_AskForExistingFile		"AskForExistingFile"
 #define YUIBuiltin_AskForExistingDirectory	"AskForExistingDirectory"
+#define YUIBuiltin_AskForExistingFile		"AskForExistingFile"
 #define YUIBuiltin_AskForSaveFileName		"AskForSaveFileName"
 #define YUIBuiltin_BusyCursor			"BusyCursor"
 #define YUIBuiltin_ChangeWidget			"ChangeWidget"
@@ -45,11 +45,13 @@
 #define YUIBuiltin_ReplaceWidget		"ReplaceWidget"
 #define YUIBuiltin_RunPkgSelection		"RunPkgSelection"
 #define YUIBuiltin_SetConsoleFont		"SetConsoleFont"
-#define YUIBuiltin_SetFunctionKeys		"SetFunctionKeys"
 #define YUIBuiltin_SetFocus			"SetFocus"
+#define YUIBuiltin_SetFunctionKeys		"SetFunctionKeys"
 #define YUIBuiltin_SetLanguage			"SetLanguage"
 #define YUIBuiltin_SetModulename		"SetModulename"
+#define YUIBuiltin_TimeoutUserInput		"TimeoutUserInput"
 #define YUIBuiltin_UserInput			"UserInput"
+#define YUIBuiltin_WaitForEvent			"WaitForEvent"
 #define YUIBuiltin_WidgetExists			"WidgetExists"
 
 #define YUIBuiltin_PostponeShortcutCheck	"PostponeShortcutCheck"

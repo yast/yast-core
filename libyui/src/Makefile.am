@@ -12,11 +12,6 @@ libyui_la_SOURCES =				\
 	YUIInterpreter_widgets.cc		\
 	YUIInterpreter_special_widgets.cc	\
 						\
-	YEvent.cc				\
-	YMacroRecorder.cc			\
-	YMacroPlayer.cc				\
-	YShortcutManager.cc			\
-	YShortcut.cc				\
 	YAlignment.cc				\
 	YBarGraph.cc				\
 	YCheckBox.cc				\
@@ -26,11 +21,14 @@ libyui_la_SOURCES =				\
 	YDialog.cc				\
 	YDownloadProgress.cc			\
 	YEmpty.cc				\
+	YEvent.cc				\
 	YFrame.cc				\
 	YImage.cc				\
 	YIntField.cc				\
 	YLabel.cc				\
 	YLogView.cc				\
+	YMacroPlayer.cc				\
+	YMacroRecorder.cc			\
 	YMenuButton.cc				\
 	YMultiLineEdit.cc			\
 	YMultiSelectionBox.cc			\
@@ -43,6 +41,9 @@ libyui_la_SOURCES =				\
 	YReplacePoint.cc			\
 	YRichText.cc				\
 	YSelectionBox.cc			\
+	YShortcut.cc				\
+	YShortcutManager.cc			\
+	YSimpleEventHandler.cc			\
 	YSlider.cc				\
 	YSpacing.cc				\
 	YSplit.cc				\

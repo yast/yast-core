@@ -28,7 +28,13 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
+#include "YShortcut.h"
 #include "YWidget.h"
+
+using std::string;
+
+#define MAX_DEBUG_LABEL_LEN	50
+
 
 
 int YWidget::next_internal_widget_id = 0;
@@ -68,6 +74,20 @@ YWidget::~YWidget()
 	yparent->childDeleted( this );
 
     invalidate();
+}
+
+
+string YWidget::debugLabel()
+{
+    string label = YShortcut::cleanShortcutString( YShortcut::getShortcutString( this ) );
+
+    if ( label.size() > MAX_DEBUG_LABEL_LEN )
+    {
+	label.resize( MAX_DEBUG_LABEL_LEN );
+	label.append( "..." );
+    }
+
+    return label;
 }
 
 
@@ -184,9 +204,9 @@ YCPValue YWidget::changeWidget( const YCPTerm & property, const YCPValue & newva
 YCPValue YWidget::queryWidget( const YCPSymbol & property )
 {
     string symbol = property->symbol();
-    if ( symbol == YUIProperty_Enabled ) 	return YCPBoolean( getEnabling() );
-    if ( symbol == YUIProperty_Notify )		return YCPBoolean( getNotify()   );
-    if ( symbol == YUIProperty_WindowID ) 	return YCPInteger( windowID      );
+    if ( symbol == YUIProperty_Enabled 	) 	return YCPBoolean( getEnabling() );
+    if ( symbol == YUIProperty_Notify 	)	return YCPBoolean( getNotify()   );
+    if ( symbol == YUIProperty_WindowID	) 	return YCPInteger( windowID      );
     else
     {
 	y2error( "Widget %s: Couldn't query unkown widget property %s",

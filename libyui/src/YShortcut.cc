@@ -192,8 +192,18 @@ YShortcut::getShortcutString()
 	return string( "" );
     }
 
-    YCPSymbol propertyName( widget()->shortcutProperty(), true );
-    YCPValue propertyValue = widget()->queryWidget( propertyName );
+    return getShortcutString( widget() );
+}
+
+
+string
+YShortcut::getShortcutString( YWidget * widget )
+{
+    if ( ! widget || ! widget->shortcutProperty() )
+	return string( "" );
+
+    YCPSymbol propertyName( widget->shortcutProperty(), true );
+    YCPValue  propertyValue = widget->queryWidget( propertyName );
 
     return propertyValue.isNull() || ! propertyValue->isString() ?
 	string( "" ) : propertyValue->asString()->value();

@@ -16,7 +16,7 @@ UI::{
 	itemlist = add( itemlist, `item(`id(i), "abcdefghijklm", 0, i ) );
 	i = i+1;
 	y2debug( "ITEM added: ", i );
-    } until( i > MAXVALUE );
+    } until( i > WFM::MAXVALUE );
 
     y2debug( "ITEMLIST done - open dialog" );
 

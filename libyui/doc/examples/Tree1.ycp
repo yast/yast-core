@@ -74,7 +74,7 @@ UI::{
     // Notice: The return value of UserInput() does NOT return this value!
     // Rather, it returns the ID of the widget (normally the PushButton)
     // that caused UserInput() to return.
-    symbol dest_dir = QueryWidget(`id(`dest_dir), `CurrentItem);
+    any dest_dir = QueryWidget(`id(`dest_dir), `CurrentItem);
 
     // Close the dialog.
     // Remember to read values from the dialog's widgets BEFORE closing it!

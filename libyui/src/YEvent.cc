@@ -21,17 +21,42 @@
 #define y2log_component "ui-events"
 #include <ycp/y2log.h>
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPString.h>
+#include <ycp/YCPInteger.h>
 #include "YWidget.h"
 #include "YEvent.h"
+
+using std::string;
+
+
+unsigned long 	YEvent::_nextSerial	= 0;
+int		YEvent::_activeEvents	= 0;
 
 
 YEvent::YEvent( EventType eventType )
 	: _eventType( eventType )
 {
+    _serial = _nextSerial++;
+
+    if ( ++_activeEvents > 3 )
+    {
+	y2error( "Memory leak? %d active events", _activeEvents );
+    }
 }
 
+
+YEvent::~YEvent()
+{
+    if ( --_activeEvents < 0 )
+    {
+	y2error( "FATAL: More events deleted than destroyed" );
+	abort();
+    }
+}
+
+
 const char *
-YEvent::format( EventType eventType )
+YEvent::toString( EventType eventType )
 {
     switch ( eventType )
     {
@@ -48,21 +73,42 @@ YEvent::format( EventType eventType )
 	// detect unhandled enums
     }
 
-    return "<Unknown - internal error>";
+    return "<Unknown event type - internal error>";
+}
+
+
+const char *
+YEvent::toString( EventReason reason )
+{
+    switch ( reason )
+    {
+	case UnknownReason:		return "Unknown";
+	case Activated:			return "Activated";
+	case SelectionChanged:		return "SelectionChanged";
+	case ValueChanged:		return "ValueChanged";
+
+	// Intentionally omitting "default" branch so the compiler can
+	// detect unhandled enums
+    }
+
+    return "<Unknown event reason - internal error>";
 }
 
 
 YCPValue YEvent::userInput()
 {
-    // TO DO
     return YCPVoid();
 }
 
 
 YCPMap YEvent::ycpEvent()
 {
-    // TO DO
-    return YCPMap();
+    YCPMap map;
+
+    map->add( YCPString( "EventType" 		), YCPString ( toString( eventType() )	) );
+    map->add( YCPString( "EventSerialNo" 	), YCPInteger( serial()			) );
+
+    return map;
 }
 
 
@@ -71,21 +117,60 @@ YCPMap YEvent::ycpEvent()
 
 
 YWidgetEvent::YWidgetEvent( YWidget *	widget,
-			    EventType 	eventType	)
+			    EventReason	reason, 
+			    EventType 	eventType )
     : YEvent( eventType )
     , _widget( widget )
+    , _reason( reason )
 {
 }
 
+
 YCPMap YWidgetEvent::ycpEvent()
 {
+    // Use the generic YEvent's map as a base
 
+    YCPMap map = YEvent::ycpEvent();
+    map->add( YCPString( "EventReason" ), YCPString ( toString( reason() )	) );
+
+    if ( _widget )
+    {
+	// Add widget specific info:
+	// Add WidgetID
+
+	map->add( YCPString( "ID"	), _widget->id() );
+	map->add( YCPString( "WidgetID"	), _widget->id() );	// This is just an alias
+
+
+	// Add WidgetClass
+
+	const char * widgetClass = _widget->widgetClass();
+
+	if ( widgetClass )
+	{
+	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YTextEntry, ...)
+		widgetClass++;
+
+	    map->add( YCPString( "WidgetClass" ), YCPSymbol( widgetClass, true ) );
+	}
+
+
+	// Add the Widget's shortcut property.
+	// This is usually the label (translated to the user's locale).
+
+	string debugLabel = _widget->debugLabel();
+
+	if ( ! debugLabel.empty() )
+	    map->add( YCPString( "WidgetDebugLabel" ), YCPString( debugLabel ) );
+    }
+
+    return map;
 }
 
 
 YCPValue YWidgetEvent::userInput()
 {
-
+    return _widget->id();
 }
 
 
@@ -98,7 +183,6 @@ YSimpleEvent::YSimpleEvent( EventType 		eventType,
     : YEvent( eventType )
     , _id( id )
 {
-
 }
 
 
@@ -107,28 +191,33 @@ YSimpleEvent::YSimpleEvent( EventType 		eventType,
     : YEvent( eventType )
     , _id( YCPSymbol( id, true ) )
 {
-
 }
 
 
 YSimpleEvent::YSimpleEvent( EventType 		eventType,
-			    const std::string 	id )
+			    const string 	id )
     : YEvent( eventType )
     , _id( YCPSymbol( id.c_str(), true ) )
 {
-
 }
 
 
 YCPMap YSimpleEvent::ycpEvent()
 {
+    // Use the generic YEvent's map as a base
 
+    YCPMap map = YEvent::ycpEvent();
+
+    // Add ID
+    map->add( YCPString( "ID" ), _id );
+
+    return map;
 }
 
 
 YCPValue YSimpleEvent::userInput()
 {
-
+    return _id;
 }
 
 

@@ -62,7 +62,20 @@ public:
      * Returns a descriptive name of this widget class for logging,
      * debugging etc.
      */
-    virtual char *widgetClass() { return "YWidget"; }
+    virtual char * widgetClass() { return "YWidget"; }
+
+    /**
+     * Returns a descriptive label of this widget instance.
+     *
+     * This default implementation returns this widget's "shortcut property"
+     * (possibly trunctated to avoid over-long texts) - the property that
+     * contains the keyboard shortcut used to activate this widget or to move
+     * the keyboard focus to it. In most cases this is this widget's label.
+     *
+     * Note: This is usually translated to the user's target language.
+     * This makes this useful for debugging only.
+     **/
+    virtual std::string debugLabel();
 
     /**
      * Checks whether or not this object is valid. This is to enable
