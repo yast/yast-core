@@ -3,6 +3,6 @@ Parsed:
 {
     // filename: "tests/types/propagation5.ycp"
     textdomain "a";
-    return sformat (_("a"), 1);
+    return size (_("a"));
 }
 ----------------------------------------------------------------------

@@ -55,7 +55,8 @@ enum DeclFlags
     DECL_FLEX =		0x00000100,	// function signature include 'flex' type
     DECL_NOEVAL =	0x00000200,	// function will evaluate its parameters on its own (boolean functions for shortcut eval)
     DECL_CALL_HANDLER =	0x00000400,	// ptr is a call handler (only together with DECL_NAMESPACE)
-    DECL_DEPRECATED =	0x00000800	// deprecated function
+    DECL_DEPRECATED =	0x00000800,	// deprecated function
+    DECL_FORMATTED =	0x00001000	// has format string with "%1" as first arg
 };
 
 // declaration::ptr is a function pointer of this type if the first entry of a StaticDeclaration

@@ -2,5 +2,5 @@
   textdomain "a";
   // type propagation locale->string in builtin
   
-  return sformat( _("a"), 1 );
+  return size ( _("a") );
 }

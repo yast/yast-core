@@ -1841,6 +1841,76 @@ YEBuiltin::finalize ()
     {
 	m_type = m_decl->type;
     }
+
+    // function has format string "%1 ..." as first arg, check number of %n against number of parameters
+
+    if (m_decl->flags & DECL_FORMATTED)
+    {
+	YCodePtr formatcode = m_parameters ? m_parameters->code : 0;
+	if (formatcode == 0)
+	{
+	    ycp2error ("First parameter should be format string");
+	    return Type::Error;
+	}
+	if (formatcode->kind() != YCode::ycString)
+	{
+	    extern ExecutionEnvironment ee;
+	    ycp2warning (ee.filename().c_str(), ee.linenumber(), "Format string is not constant, no parameter checking possible");
+	    return 0;
+	}
+	const char *cptr = formatcode->evaluate()->asString()->value_cstr();
+
+	// check %n values and set bits in 'mask' for every n
+	// dont simply count the number of %n occurences, since they might be duplicate
+
+	unsigned long long mask = 0;
+	int bits = sizeof (unsigned long long) * 8;
+	while (*cptr != 0)
+	{
+	    if (*cptr == '%')
+	    {
+		cptr++;
+		int number = atoi (cptr);
+		if (number > 0)
+		{
+		    if (number >= bits)
+		    {
+			extern ExecutionEnvironment ee;
+			ycp2warning (ee.filename().c_str(), ee.linenumber(), "Numeric value after %% too large (%d), cant check validity", number);
+		    }
+		    else
+		    {
+			mask |= 1LL << (number - 1);
+		    }
+		}
+	    }
+	    cptr++;
+	}
+
+	// now count the number of different %n's in the format string
+
+	int count = 0;
+	while (mask != 0)
+	{
+	    if (mask & 1) count++;
+	    mask >>= 1;
+	}
+
+	// now check the number of actual parameters
+
+	ycodelist_t *paramptr = m_parameters->next;	// we already know that at least one parameter (the format string) exists.
+	while (paramptr != 0)
+	{
+	    count--;
+	    paramptr = paramptr->next;
+	}
+	if (count != 0)
+	{
+	    ycp2error ("Format string doesn't match number of parameters");
+	    return Type::Error;
+	}
+    } // if DECL_FORMATTED
+
 #if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s : %s)", StaticDeclaration::Decl2String (m_decl, true).c_str(), m_type->toString().c_str());
 #endif

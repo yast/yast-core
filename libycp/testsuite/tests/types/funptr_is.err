@@ -18,11 +18,8 @@ Parsed:
     return is (fp, integer (string));
 }
     y2milestone ("Checking %1", f);
-    y2milestone ("GOOD");
-    y2milestone (Check (f) ? "GOOD" : "BAD");
+    return ([true, Check (f)] == [true, true]);
 }
 ----------------------------------------------------------------------
 [YCP] tests/types/funptr_is.ycp:13 Checking <YCPRef:integer Foo (string s)>
-[YCP] tests/types/funptr_is.ycp:14 GOOD
 [YCP] tests/types/funptr_is.ycp:9 Checking <YCPRef:integer Foo (string s)>
-[YCP] tests/types/funptr_is.ycp:15 GOOD

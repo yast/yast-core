@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 14 17:36:09 CEST 2004 - kkaempf@suse.de
+
+- check format string (in sformat() or y2milestone()) against
+  number of actual arguments (#35822)
+
+-------------------------------------------------------------------
 Mon Oct 11 18:22:57 CEST 2004 - visnov@suse.cz
 
 - Make recursion lighter on memory (allocate stack
