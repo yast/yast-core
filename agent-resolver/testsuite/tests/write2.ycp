@@ -1,2 +1,6 @@
-Write(.resolver, $["domain":"suse.de", "nameserver":["10.10.0.1", "10.10.128.1"],"search":["suse.de"]])
-
+{
+    // y2warning(".domain %1", SCR::Write(.domain, nil));
+    y2warning(".search %1", SCR::Write(.search, []));
+    y2warning(".nameservers %1", SCR::Write(.nameserver, ["10.10.0.2", "10.10.128.2"]));
+    y2warning(". %1", SCR::Write(., nil));
+}
