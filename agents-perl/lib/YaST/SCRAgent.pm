@@ -55,6 +55,31 @@ sub Execute ()
     return undef;
 }
 
+my %__error = ();
+
+# used by the agent
+sub SetError {
+    my $class = shift;
+    %__error = @_;
+    if( !$__error{package} && !$__error{file} && !$__error{line})
+    {
+        @__error{'package','file','line'} = caller();
+    }
+    if ( defined $__error{summary} )
+    {
+        y2error($__error{code}." ".$__error{summary});
+    } else {
+        y2error($__error{code});
+    }
+    return undef;
+}
+
+# SCR::Error
+sub Error {
+    my ($class, $path, @rest) = @_;
+    return \ %__error;
+}
+
 sub OtherCommand ()
 {
     my $class = shift;
@@ -214,7 +239,7 @@ sub Run ()
 	{
 	    return;
 	}
-	elsif ($command =~ m/^Read|Write|Dir|Execute$/)
+	elsif ($command =~ m/^Read|Write|Dir|Execute|Error$/)
 	{
 	    # Standard commands, they have a path as the first argument
 	    # Convert it to a string

@@ -119,6 +119,9 @@ Y2AgentComp<Agent>::evaluate (const YCPValue& v)
 	else if( command == "Dir" ) {
 	    return getSCRAgent ()-> Dir (args->value (0)->asPath ()) ;
 	}
+	else if( command == "Error" ) {
+	    return getSCRAgent ()-> Error (args->value (0)->asPath ()) ;
+	}
 	else if( command == "Execute" ) {
 	    y2debug( "Execute, arg size is %d", args->size() );
 	    switch( args->size() ) {

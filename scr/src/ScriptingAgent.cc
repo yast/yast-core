@@ -181,6 +181,17 @@ ScriptingAgent::Execute (const YCPPath &path, const YCPValue &value,
     return v;
 }
 
+YCPMap
+ScriptingAgent::Error (const YCPPath &path)
+{
+    YCPValue v = executeSubagentCommand ("Error", path);
+    if (v.isNull())
+    {
+	ycp2error ("SCR::Error() failed");
+	return YCPNull ();
+    }
+    return v->asMap ();
+}
 
 YCPValue
 ScriptingAgent::otherCommand (const YCPTerm &term)

@@ -76,6 +76,14 @@ SCRExecute (const YCPPath &path) {
 }
 
 static YCPValue 
+SCRError (const YCPPath &path) {
+    y2debug( "Running SCR::Error on SCR agent %p", SCRAgent::instance () );
+    y2debug( "path: %s", path->toString ().c_str () );
+    
+    return SCRAgent::instance ()->Error (path);
+}
+
+static YCPValue 
 SCRExecute2 (const YCPPath &path, const YCPValue &arg) {
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
@@ -145,6 +153,7 @@ SCR::SCR ()
 	{ "Execute",		"any (path)",			(void *)SCRExecute },
 	{ "Execute",		"any (path, any)",		(void *)SCRExecute2 },
 	{ "Execute",		"any (path, any, any)",		(void *)SCRExecute3 },
+	{ "Error",		"map (path)",			(void *)SCRError },
 	{ "RegisterAgent",	"boolean (path, string)",	(void *)SCRRegisterAgentT },
 	{ "RegisterAgent",	"boolean (path, term)",		(void *)SCRRegisterAgentS },
 	{ "UnregisterAgent",	"boolean (path)",		(void *)SCRUnregisterAgent },

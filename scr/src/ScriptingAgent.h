@@ -63,6 +63,11 @@ public:
 		      YCPNull (), const YCPValue &arg = YCPNull ());
 
     /**
+     * Get a detailed error description if a previous command failed
+     */
+    virtual YCPMap Error (const YCPPath &path);
+
+    /**
      * Handle the commands 'UnregisterAgent',
      * 'UnregisterAllAgents', 'MountAgent', 'MountAllAgents',
      * 'UnmountAgent' and 'UnmountAllAgents'.

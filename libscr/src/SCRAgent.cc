@@ -27,10 +27,19 @@
 
 SCRAgent* SCRAgent::current_scr = 0;
 
+YCPMap SCRAgent::unspecified_error;
+
 SCRAgent::SCRAgent ()
     : mainscragent (0)
 {
     if( current_scr == 0 ) current_scr = this;
+    if (unspecified_error.size () == 0)
+    {
+	unspecified_error->add (YCPString ("code"),
+				YCPString ("UNSPEC"));
+	unspecified_error->add (YCPString ("summary"),
+				YCPString ("Unspecified error"));
+    }
 }
 
 

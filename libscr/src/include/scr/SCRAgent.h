@@ -76,6 +76,13 @@ public:
     }
 
     /**
+     * Get a detailed error description if a previous command failed
+     */
+    virtual YCPMap Error (const YCPPath& path) {
+	return unspecified_error;
+    }
+
+    /**
      * Register an agent
      */
     virtual YCPBoolean RegisterAgent (const YCPPath& path, const YCPValue& value) {
@@ -97,13 +104,6 @@ public:
     virtual YCPBoolean UnregisterAllAgents () {
 	ycp2error( "Unimplemented UnregisterAllAgents called" );
 	return YCPBoolean( false );
-    }
-
-    /**
-     * Unregister an agent
-     */
-    virtual YCPBoolean RegisterAgent (const YCPPath& path) {
-	return RegisterAgent (path, YCPNull ());
     }
 
     /**
@@ -141,6 +141,8 @@ public:
     
 private:
     static SCRAgent* current_scr;
+    //! returned by Error
+    static YCPMap unspecified_error;
 };
 
 
