@@ -71,8 +71,8 @@ In any case, it all comes down to one single event loop in the application from
 where small functions (let's call them <i>callbacks</i> for the sake of
 simplicity) are called when events occur. Those callbacks each contain a small
 amount of the application's GUI logic to do whatever is to be done when the
-respective event occurs. The overall application logic is split amongst them
-all.
+respective event occurs. The overall application logic is scattered among
+them all.
 <p>
 This approach is called <i>event-driven</i>. Most GUI toolkits have adopted it.
 <p>
@@ -132,8 +132,9 @@ Practical experience with all the YaST2 modules developed so far has shown that
 application developers tend to adopt this concept of
 <a href="event-builtins.html#UserInput">UserInput()</a>
 very easily. On the other hand it is a widely known fact that event-driven GUI
-programming means a steep learning curve because (as mentioned before) it requires
-splitting up the application logic into tiny pieces for all the callbacks.
+programming means a steep learning curve because (as mentioned before) it
+requires splitting up the application logic into tiny pieces for all the
+callbacks. 
 <p>
 Thus, this design decision of YaST2 seems to have proven right much more often
 than there are problems with its downsides (which of course also exist).
@@ -348,10 +349,10 @@ add a piece of callback code (at least a function name) to
 <i>UI::OpenDialog()</i> for each widget that should get callbacks or provide a
 new UI builtin function like, say, <i>UI::SetCallback()</i> or
 <i>UI::AddCallback()</i> that gets a YCP map that specifies at least the widget
-to add the callback to, the event to react to and the code (or at least a function
-name) to execute and some transparent <i>client data</i> where the application
-can pass arbitrary data to the callback to keep the amount of required global
-data down.
+to add the callback to, the event to react to and the code (or at least a
+function name) to execute and some transparent <i>client data</i> where the
+application can pass arbitrary data to the callback to keep the amount of
+required global data down.
 </p>
 While we are at it, add some logical counterparts like
 <i>UI::RemoveCallback()</i>.
@@ -514,10 +515,10 @@ returns `ok.
 <li>
 The initialization code found out that something might be wrong with the
 partitioning or file systems. It might make sense to convert, say, the mounted
-<tt>/usr</tt> file system from <i>oldLameFs-3.0</i> to <i>newCoolFs-0.95Beta</i> -
-which usually works out allright, but of course you never know what disaster
-lies ahead when doing such things with file systems (and, even worse, with an
-experimental beta version).
+<tt>/usr</tt> file system from <i>oldLameFs-3.0</i> to
+<i>newCoolFs-0.95Beta</i> - which usually works out allright, but of course you
+never know what disaster lies ahead when doing such things with file systems
+(and, even worse, with an experimental beta version).
 
 <li>
 The initialization code opens a popup dialog with some text to informs the
