@@ -345,7 +345,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, PkgVersion, 		"string (string)",String,		PkgModuleFunctions, PkgVersion);
 	Y2FUNCTIONCALL1 ( Pkg, PkgSize, 		"Integer (string)",String,		PkgModuleFunctions, PkgSize);
 	Y2FUNCTIONCALL1 ( Pkg, PkgGroup, 		"string (string)",String,		PkgModuleFunctions, PkgGroup);
-	Y2FUNCTIONCALL1 ( Pkg, PkgSrcLocation, 		"string (string)",String,		PkgModuleFunctions, PkgLocation);
+	Y2FUNCTIONCALL1 ( Pkg, PkgLocation, 		"string (string)",String,		PkgModuleFunctions, PkgLocation);
 	Y2FUNCTIONCALL  ( Pkg, IsManualSelection, 	"boolean ()",		PkgModuleFunctions, IsManualSelection);
 	Y2FUNCTIONCALL  ( Pkg, ClearSaveState, 		"boolean ()",		PkgModuleFunctions, ClearSaveState);
 	Y2FUNCTIONCALL  ( Pkg, SaveState, 		"boolean ()",		PkgModuleFunctions, SaveState);

@@ -184,7 +184,7 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 109,	Pkg, CallbackNotifyConvertDb);
     REGISTERFUNCTIONCALL1 ( 110,	Pkg, CallbackStopConvertDb);
     
-    REGISTERFUNCTIONCALL1 ( 111,	Pkg, PkgSrcLocation);
+    REGISTERFUNCTIONCALL1 ( 111,	Pkg, PkgLocation);
     REGISTERFUNCTIONCALL1 ( 112,	Pkg, YouSetServer);
     REGISTERFUNCTIONCALL  ( 113,	Pkg, YouGetUserPassword);
     REGISTERFUNCTIONCALL3 ( 114,	Pkg, YouSetUserPassword);
