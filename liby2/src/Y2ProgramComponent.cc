@@ -350,7 +350,7 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	{
 	    y2error ("External program returned invalid data.");
 	    
-	    if (c->isError ()) 
+	    if (c != NULL) 
 		delete c;
 
 	    return YCPNull ();
