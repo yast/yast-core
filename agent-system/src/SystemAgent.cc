@@ -344,7 +344,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
 	 * Opens a file that must be in YCP syntax and contain exactly
 	 * one value, parses that file and returns the parsed value.
 	 * Returns default, if the file didn't exist, was not readable or
-	 * didn't not contain a valid YCP value.
+	 * did not contain a valid YCP value.
 	 * This function looks for the file in different directories.
 	 * The filename must be relative. The following directories
 	 * are scanned:
