@@ -132,5 +132,5 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceSetMediaChangeCallback")return SourceSetMediaChangeCallback (args);
     else if (function == "SourceSetMediaErrorCallback")	return SourceSetMediaErrorCallback (args);
     else if (function == "SourceCacheCopyTo") return SourceCacheCopyTo (args);
-    return YCPError ("Undefined Pkg:: function");
+    return YCPError (string ("Undefined Pkg::")+function);
 }

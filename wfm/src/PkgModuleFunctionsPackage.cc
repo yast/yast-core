@@ -631,7 +631,7 @@ PkgModuleFunctions::PkgSolve (YCPList args)
 
 
 /**   
-   @builtin Pkg::PkgCommit (integer medianr) -> [ list failed, list remaining ]
+   @builtin Pkg::PkgCommit (integer medianr) -> [ int successful, list failed, list remaining ]
 
    Commit package changes (actually install/delete packages) 
 
@@ -644,14 +644,19 @@ PkgModuleFunctions::PkgCommit (YCPList args)
 {
     if ((args->size() != 1)
 	|| !(args->value(0)->isInteger())
-	|| !(args->value(0)->asInteger()->value() < 0))
+	|| (args->value(0)->asInteger()->value() < 0))
     {
 	return YCPError ("Bad args to Pkg::PkgCommit");
     }
     unsigned medianr = args->value(0)->asInteger()->value();
+
     std::list<std::string> errors;
     std::list<std::string> remaining;
-    _y2pm.commitPackages (medianr, errors, remaining);
+    int count = _y2pm.commitPackages (medianr, errors, remaining);
+
+    YCPList ret;
+    ret->add (YCPInteger (count));
+
     YCPList errlist;
     for (std::list<std::string>::const_iterator it = errors.begin(); it != errors.end(); ++it)
     {
@@ -662,7 +667,6 @@ PkgModuleFunctions::PkgCommit (YCPList args)
     {
 	remlist->add (YCPString (*it));
     }
-    YCPList ret;
     ret->add (errlist);
     ret->add (remlist);
     return ret;
