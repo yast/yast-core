@@ -4,6 +4,6 @@
  * The last value is used in case of non-unique keys.
  */
 {
-    Write (., "force");
-    return Dir (.s);
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
 }

@@ -193,10 +193,15 @@ WFMInterpreter::evaluateWFM (const YCPValue& value)
     else if (value->isTerm())
     {
 	YCPTerm vt = value->asTerm();
-	YCPTerm t(YCPSymbol(vt->symbol()->symbol(), false), vt->name_space());
-	for (int i=0; i<vt->size(); i++)
+	YCPTerm t (YCPSymbol (vt->symbol()->symbol(), false), vt->name_space());
+	for (int i = 0; i < vt->size(); i++)
 	{
-	    t->add (evaluate (vt->value(i)));
+	    YCPValue v = evaluate (vt->value (i));
+	    if (v.isNull ())
+	    {
+		return YCPError ("WFM parameter is NULL\n", YCPNull ());
+	    }
+	    t->add (v);
 	}
 	return evaluateInstantiatedTerm (t);
     }

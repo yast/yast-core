@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/multiline2.in.test",
+  SCR::IniAgent("tests/multiline2.in.test",
     $[
       "options" : [ "global_values", "join_multiline" ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

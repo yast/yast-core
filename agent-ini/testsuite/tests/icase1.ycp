@@ -3,6 +3,6 @@
  */
 {
     // ignore_case in values
-    Write (., "force");
-    return Dir (.s);
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
 }

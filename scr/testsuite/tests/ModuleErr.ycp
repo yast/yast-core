@@ -1,0 +1,6 @@
+{ 
+    y2milestone ("%1", NoSuchModule::Read ()); 
+    y2milestone ("%1", NoSuchModule::Read (.target.size, "/etc"));
+    y2milestone ("%1", SCR::Read (.target.size, "/etc"));
+    y2milestone ("%1", SCR::NoSuchModule::Read (.target.size, "/etc"));
+} 

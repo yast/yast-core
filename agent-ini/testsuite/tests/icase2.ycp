@@ -3,6 +3,6 @@
  */
 {
     // ignore case in values and preffer uppercase
-    Write (., "force");
-    return Dir (.s);
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
 }

@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("debug/err1.in.test",
+  SCR::IniAgent("debug/err1.in.test",
     $[
       "options" : [ ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

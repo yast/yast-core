@@ -1,12 +1,12 @@
 {
-    return Read (.byte, "tests/data1.read");
+    return SCR::Read (.byte, "tests/data1.read");
 }
 
 {
-    return Read (.byte, "tests/data2.read");
+    return SCR::Read (.byte, "tests/data2.read");
 }
 
 {
-    byteblock data = Read (.byte, "tests/data2.read");
-    return Write (.byte, "tmp.write.byte", data);
+    byteblock data = SCR::Read (.byte, "tests/data2.read");
+    return SCR::Write (.byte, "tmp.write.byte", data);
 }

@@ -1,7 +1,7 @@
 .
 
 `anyagent(
-    Description (
+    SCR::AnyAgent (
     ``(File ("tests/proc_devices.in")),	// real file name
      "#\n",			// Comment
     true,				// read-only

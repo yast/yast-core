@@ -1,17 +1,17 @@
 {
     list ret = [];
     
-    RegisterAgent (.foo, "tests/haha.scr");
+    SCR::RegisterAgent (.foo, "tests/haha.scr");
     
-    ret = add (ret, Read (.foo.a));
+    ret = add (ret, SCR::Read (.foo.a));
     
-    UnregisterAgent (.foo);
+    SCR::UnregisterAgent (.foo);
     
-    ret = add (ret, Read (.foo.a));
+    ret = add (ret, SCR::Read (.foo.a));
     
-    RegisterAgent (.foo, "tests/hihi.scr");
+    SCR::RegisterAgent (.foo, "tests/hihi.scr");
     
-    ret = add (ret, Read (.foo.a));
+    ret = add (ret, SCR::Read (.foo.a));
     
     return ret;
 }

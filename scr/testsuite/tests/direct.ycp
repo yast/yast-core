@@ -1,7 +1,7 @@
 {
-    RegisterAgent (., `ag_dummy (``(DataMap ($["a":"hihi"], 0))));
+    SCR::RegisterAgent (., `ag_dummy (``(DataMap ($["a":"hihi"], 0))));
     
-    any tmp = Read (.a);
+    any tmp = SCR::Read (.a);
     
     return tmp;
 }

@@ -3,10 +3,10 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    // if file is not changed, then Write (., nil) makes log entry
-    // otherwise write is silent.
-    Write (.s.Main.Sub.Sub.Sub, "; Comment\n");
+    // if file is not changed, then SCR::Write (., nil) makes log entry
+    // otherwise SCR::Write is silent.
+    SCR::Write (.s.Main.Sub.Sub.Sub, "; Comment\n");
     y2error ("Writting:");
-    Write (., nil);
+    SCR::Write (., nil);
     y2error ("Destructor:");
 }

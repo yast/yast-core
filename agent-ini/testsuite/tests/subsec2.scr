@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/subsec2.in.test",
+  SCR::IniAgent("tests/subsec2.in.test",
     $[
       "options" : [ "no_nested_sections" ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

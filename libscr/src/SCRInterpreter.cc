@@ -48,6 +48,13 @@ YCPValue SCRInterpreter::evaluateInstantiatedTerm(const YCPTerm& term)
 {
     string sym = term->symbol()->symbol();
 
+    if (!term->name_space().empty())
+    {
+	y2error ("Bad namespace for SCR");
+	return YCPVoid();
+    }
+
+//   y2debug ("SCRInterpreter::evaluateInstantiatedTerm (%s)\n", term->toString().c_str());
     if (sym == "Read")
     {
 	if (term->size() > 0 && term->value(0)->isPath())
@@ -119,4 +126,36 @@ YCPValue SCRInterpreter::evaluateInstantiatedTerm(const YCPTerm& term)
     }
     else
 	return agent->otherCommand(term);
+}
+
+
+
+YCPValue
+SCRInterpreter::evaluateSCR (const YCPValue& value)
+{
+//    y2debug ("SCRInterpreter[%p]::evaluateSCR (%s)\n", this, value->toString().c_str());
+    if (value->isBuiltin())
+    {
+	YCPBuiltin b = value->asBuiltin();
+	if (b->builtin_code() == YCPB_DEEPQUOTE)
+	{
+	    return evaluate (b->value(0));
+	}
+    }
+    else if (value->isTerm())
+    {
+	YCPTerm vt = value->asTerm();
+	YCPTerm t (YCPSymbol (vt->symbol()->symbol(), false), vt->name_space());
+	for (int i = 0; i < vt->size(); i++)
+	{
+	    YCPValue v = evaluate (vt->value (i));
+	    if (v.isNull ())
+	    {
+		return YCPError ("SCR parameter is NULL\n", YCPNull ());
+	    }
+	    t->add (v);
+	}
+	return evaluateInstantiatedTerm (t);
+    }
+    return YCPError ("Unknown SCR:: operation");
 }

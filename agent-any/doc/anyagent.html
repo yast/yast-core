@@ -45,7 +45,7 @@ following body:
 
 <pre>
 `ag_anyagent (
-    Description (
+    SCR::AnyAgent (
 	<i>source</i>,
 	<i>comment-chars</i>,
 	<i>is-read-only</i>,
@@ -74,7 +74,7 @@ specified... FIXME, see <a href="#Fillup">Fillup</a>.
 <div class=old>
 <pre>
   `anyagent(
-    ``Description (
+    ``SCR::AnyAgent (
       ``< source >,
       "< comment >",    // Comment like "#\n"
       < false|true >,   // read-only
@@ -100,7 +100,7 @@ It could be a filename or a command ( program or shell-script ).
 <p>example: FIXME: old, fix quoting
 <pre>
   `anyagent(
-    ``Description (
+    ``SCR::AnyAgent (
       ``File("/etc/hosts"),     // real file name
       "#\n",                    // Comment
       false,                    // read-only

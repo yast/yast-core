@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/comment6.in.test",
+  SCR::IniAgent("tests/comment6.in.test",
     $[
       "options" : [ "global_values", "no_finalcomment_kill" ],
       "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],

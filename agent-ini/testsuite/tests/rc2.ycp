@@ -1,4 +1,4 @@
 {
-    Write (., "force");
-    return Dir (.);
+    SCR::Write (., "force");
+    return SCR::Dir (.);
 }

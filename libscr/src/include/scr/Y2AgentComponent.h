@@ -98,7 +98,7 @@ Y2AgentComp <Agent>::evaluate (const YCPValue& value)
     if (!interpreter)
 	getSCRAgent ();
 
-    return interpreter->evaluate (value);
+    return interpreter->evaluateSCR (value);
 }
 
 

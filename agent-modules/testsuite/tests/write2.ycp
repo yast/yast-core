@@ -1,6 +1,6 @@
 {
-    y2warning("alias.al1 %1",Write(.alias,"A3","al3"));
-    y2warning("alias.al1 %1",Write(.alias.comment,"# new alias comment", "al3"));
-    y2warning("options.op1 %1",Write(.options,$["OP1":"1","OP1b":""],"op3"));
-    y2warning("pre-install.pri1 %1",Write(.keep,"",""));
+    y2warning("alias.al1 %1",SCR::Write(.alias,"A3","al3"));
+    y2warning("alias.al1 %1",SCR::Write(.alias.comment,"# new alias comment", "al3"));
+    y2warning("options.op1 %1",SCR::Write(.options,$["OP1":"1","OP1b":""],"op3"));
+    y2warning("pre-install.pri1 %1",SCR::Write(.keep,"",""));
 }

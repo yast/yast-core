@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  IniAgent("tests/type.in.test",
+  SCR::IniAgent("tests/type.in.test",
   $[
     "options" : [ "no_nested_sections", "ignore_case", "global_values", ],
     "subindent" : "  ",

@@ -3,11 +3,11 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    Write (.v.Val1, "changed");
+    SCR::Write (.v.Val1, "changed");
     y2error ("First write:");
-    Write (., nil);
+    SCR::Write (., nil);
     y2error ("Written 1st time");
-    Write (., nil);
+    SCR::Write (., nil);
     y2error ("Written 2nd time");
     y2error ("Writting in destructor");
 }

@@ -1,7 +1,7 @@
 .
 
 `anyagent(
-    Description (
+    SCR::AnyAgent (
       ``(File("tests/etc_fstab.in")),	// real file name
       "#\n",			// Comment
       false,			// read-only
