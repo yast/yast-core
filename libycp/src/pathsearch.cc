@@ -34,10 +34,10 @@
 
 static const char *paths[] =
 {
-    // "/media/floppy",		// Was a substitute for broken /y2update
-    // "/y2update",		// Necessary during installation, but
+    "/y2update",		// Necessary during installation, but
 				// can be achieved using -I and -M in
 				// the yast2 start script
+				// And more unimplemented stuff for scrconf...
     "Y2DIR",			// replace with env. var. Y2DIR
     "HOME",			// replace with users home dir + /.yast2
     YAST2DIR
@@ -118,10 +118,33 @@ Y2PathSearch::searchPath (WHAT what, int level)
 }
 
 
+// globsubst ("YaST::Foo::UI", "::", "/") == "YaST/Foo/UI"
+string Y2PathSearch::globsubst (const string& where,
+				const string& oldstr, const string& newstr)
+{
+    string ret;
+    string::size_type olen = oldstr.length ();
+    string::size_type p = 0, q;	// interval between occurences of oldstr
+    for (;;)
+    {
+	q = where.find (oldstr, p); // find oldstr
+	ret.append (where, p, q - p); // copy what is before it
+	if (q == string::npos)
+	{
+	    break;
+	}
+	ret.append (newstr);
+	p = q + olen;
+    }
+    return ret;
+}
+
+
 string
 Y2PathSearch::completeFilename (const string& fname)
 {
-    char* cfn = canonicalize_file_name (fname.c_str ());
+    string slashes = globsubst (fname, "::", "/");
+    char* cfn = canonicalize_file_name (slashes.c_str ());
     string ret = cfn ? string (cfn) : fname;
     free (cfn);
     return ret;

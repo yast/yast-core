@@ -88,6 +88,9 @@ public:
      */
     static string findy2plugin (string name, int level);
 
+    //! globsubst ("YaST::Foo::UI", "::", "/") == "YaST/Foo/UI"
+    static string globsubst (const string& where,
+			     const string& oldstr, const string& newstr);
     /**
      * Complete filename to start with "/". Will take the current working
      * directory into account.
