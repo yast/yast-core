@@ -1,3 +1,2 @@
-[Parser] tests/types/type_bitshift.ycp:2 Missing blank between '>' and '>'
-[Parser] tests/types/type_bitshift.ycp:2 syntax error, unexpected SYMBOL, expecting '&' or '>' or RIGHT or '('
+[Parser] tests/types/type_bitshift.ycp:2 syntax error, unexpected RIGHT, expecting '&' or '>' or '('
 runycp: parser error
