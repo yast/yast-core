@@ -52,5 +52,6 @@ INCLUDES =					\
 	-I$(srcdir)/include
 
 libyui_la_LDFLAGS = -version-info 2:0
+libyui_la_LIBADD = -lpthread
 
 CLEANFILES = libyui.kdoc

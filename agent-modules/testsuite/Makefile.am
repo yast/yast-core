@@ -15,15 +15,15 @@ INCLUDES =					\
 	-I$(srcdir)/../../libscr/src/include
 
 noinst_PROGRAMS = runmodules
-runmodules_SOURCES = runmodules.cc
 
-runmodules_LDADD = -lscr -ly2 -lycp -lcrypt
-runmodules_LDFLAGS = -L$(libdir)	\
-	-L$(srcdir)/../../libycp/src	\
-	-L$(srcdir)/../../liby2/src	\
-	-L$(srcdir)/../../libscr/src	\
-	-Xlinker --whole-archive	\
-	$(plugindir)/libpy2stdio.la	\
-	$(plugindir)/libpy2script.la	\
-	../src/libpy2ag_modules.la	\
+runmodules_SOURCES = runmodules.cc
+runmodules_LDADD = -lscr -ly2 -lycp
+runmodules_LDFLAGS = -L$(libdir)			\
+	-L$(srcdir)/../../libycp/src			\
+	-L$(srcdir)/../../liby2/src			\
+	-L$(srcdir)/../../libscr/src			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../../liby2/src/libpy2script.la	\
+	$(srcdir)/../src/libpy2ag_modules.la		\
 	-Xlinker --no-whole-archive

@@ -17,27 +17,27 @@ INCLUDES =					\
 noinst_PROGRAMS = runscr y2scr
 
 runscr_SOURCES = runscr.cc
-runscr_LDADD = ../src/libpy2scr.la -ly2 -lycp -lscr -lutil
-runscr_LDFLAGS = -L$(libdir)			\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-L$(srcdir)/../../libscr/src		\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2stdio.la		\
-	$(plugindir)/libpy2ag_dummy.la		\
+runscr_LDADD = -ly2 -lycp -lscr
+runscr_LDFLAGS = -L$(libdir)					\
+	-L$(srcdir)/../../libycp/src				\
+	-L$(srcdir)/../../liby2/src				\
+	-L$(srcdir)/../../libscr/src				\
+	-Xlinker --whole-archive				\
+	$(srcdir)/../../liby2/src/libpy2stdio.la		\
+	$(srcdir)/../../agent-dummy/src/libpy2ag_dummy.la	\
+	$(srcdir)/../src/libpy2scr.la				\
 	-Xlinker --no-whole-archive
 
 y2scr_SOURCES = y2scr.cc
 y2scr_LDADD = -L$(libdir) -lscr -ly2 -lycp
-y2scr_LDFLAGS =					\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-L$(srcdir)/../../libscr/src		\
-	$(all_libraries)			\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2ag_dummy.la	\
-	$(plugindir)/libpy2ag_dumpto.la	\
-	../src/libpy2scr.la			\
-	$(plugindir)/libpy2stdio.la		\
-	$(plugindir)/libpy2script.la		\
+y2scr_LDFLAGS =							\
+	-L$(srcdir)/../../libycp/src				\
+	-L$(srcdir)/../../liby2/src				\
+	-L$(srcdir)/../../libscr/src				\
+	-Xlinker --whole-archive				\
+	$(srcdir)/../../agent-dummy/src/libpy2ag_dummy.la	\
+	$(srcdir)/../../agent-dumpto/src/libpy2ag_dumpto.la	\
+	$(srcdir)/../../liby2/src/libpy2stdio.la		\
+	$(srcdir)/../../liby2/src/libpy2script.la		\
+	$(srcdir)/../src/libpy2scr.la				\
 	-Xlinker --no-whole-archive

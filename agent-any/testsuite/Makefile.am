@@ -17,11 +17,11 @@ INCLUDES =						\
 noinst_PROGRAMS = runag_anyagent
 
 runag_anyagent_SOURCES = runag_anyagent.cc
-runag_anyagent_LDADD = -lscr -ly2 -lycp -lcrypt
-runag_anyagent_LDFLAGS = -L$(libdir)	\
-	-Xlinker --whole-archive	\
-	$(plugindir)/libpy2stdio.la	\
-	../src/libpy2ag_anyagent.la	\
+runag_anyagent_LDADD = -lscr -ly2 -lycp
+runag_anyagent_LDFLAGS = -L$(libdir)			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../src/libpy2ag_anyagent.la		\
 	-Xlinker --no-whole-archive
 
 clean-local:

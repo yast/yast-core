@@ -17,25 +17,25 @@ INCLUDES =					\
 
 noinst_PROGRAMS = runwfm
 runwfm_SOURCES = runwfm.cc
-runwfm_LDADD = ../src/liby2wfm.la -ly2 -lycp -lutil
-runwfm_LDFLAGS = -L$(libdir)			\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2stdio.la		\
-	../src/liby2wfm.la			\
+runwfm_LDADD = -ly2 -lycp
+runwfm_LDFLAGS = -L$(libdir)				\
+	-L$(srcdir)/../../libycp/src			\
+	-L$(srcdir)/../../liby2/src			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../src/libpy2wfm.la			\
 	-Xlinker --no-whole-archive
 
 bin_PROGRAMS = y2wfm
 y2wfm_SOURCES = y2wfm.cc
-y2wfm_LDADD = -ly2 -lycp -lutil
-y2wfm_LDFLAGS = -L$(libdir)			\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2stdio.la		\
-	$(plugindir)/libpy2script.la		\
-	../src/libpy2wfm.la			\
+y2wfm_LDADD = -ly2 -lycp
+y2wfm_LDFLAGS = -L$(libdir)				\
+	-L$(srcdir)/../../libycp/src			\
+	-L$(srcdir)/../../liby2/src			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../../liby2/src/libpy2script.la	\
+	$(srcdir)/../src/libpy2wfm.la			\
 	-Xlinker --no-whole-archive
 
 clean-local:

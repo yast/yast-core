@@ -14,15 +14,15 @@ scr_SOURCES =					\
 
 scr_LDADD = -L$(libdir) -lscr -ly2 -lycp
 
-scr_LDFLAGS =					\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-L$(srcdir)/../../libscr/src		\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2plugin.la		\
-	$(plugindir)/libpy2stdio.la		\
-	$(plugindir)/libpy2script.la		\
-	$(plugindir)/libpy2program.la		\
+scr_LDFLAGS =						\
+	-L$(srcdir)/../../libycp/src			\
+	-L$(srcdir)/../../liby2/src			\
+	-L$(srcdir)/../../libscr/src			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2plugin.la	\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../../liby2/src/libpy2script.la	\
+	$(srcdir)/../../liby2/src/libpy2program.la	\
 	-Xlinker --no-whole-archive
 
 plugin_LTLIBRARIES = libpy2scr.la

@@ -17,12 +17,12 @@ INCLUDES =					\
 noinst_PROGRAMS = runag_hwprobe
 
 runag_hwprobe_SOURCES = runag_hwprobe.cc
-runag_hwprobe_LDADD = -ly2 -lycp -lscr -lcrypt -lutil
-runag_hwprobe_LDFLAGS = -L$(libdir)		\
-	-L$(srcdir)/../../libycp/src		\
-	-L$(srcdir)/../../liby2/src		\
-	-L$(srcdir)/../../libscr/src		\
-	-Xlinker --whole-archive		\
-	$(plugindir)/libpy2stdio.la		\
-	../src/libpy2ag_hwprobe.la		\
+runag_hwprobe_LDADD = -ly2 -lycp -lscr
+runag_hwprobe_LDFLAGS = -L$(libdir)			\
+	-L$(srcdir)/../../libycp/src			\
+	-L$(srcdir)/../../liby2/src			\
+	-L$(srcdir)/../../libscr/src			\
+	-Xlinker --whole-archive			\
+	$(srcdir)/../../liby2/src/libpy2stdio.la	\
+	$(srcdir)/../src/libpy2ag_hwprobe.la		\
 	-Xlinker --no-whole-archive
