@@ -197,12 +197,12 @@ PkgModuleFunctions::SourceSetRamCache (YCPList args)
  * @builtin Pkg::SourceStartManager (boolean autoEnable = true) -> true
  *
  * Make sure the InstSrcManager is up and knows all available InstSrces.
- * Dependent on the value of autoEnable, InstSources may be enabled on the
- * fly. It's save to call this multiple times, and once the InstSources are
+ * Depending on the value of autoEnable, InstSources may be enabled on the
+ * fly. It's safe to call this multiple times, and once the InstSources are
  * actually enabled, it's even cheap (enabling an InstSrc is expensive).
  *
  * @param autoEnable If true, all InstSrces are enabled according to their default.
- * If false, InstSrces will be created in disbaled state, and remain unchanged if
+ * If false, InstSrces will be created in disabled state, and remain unchanged if
  * the InstSrcManager is already up.
  *
  * @return true

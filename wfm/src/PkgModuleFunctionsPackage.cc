@@ -526,6 +526,26 @@ PkgModuleFunctions::PkgGroup (YCPList args)
     return YCPString (package->group());
 }
 
+
+// ------------------------
+/**
+   @builtin Pkg::PkgSrcLocation (string package) -> string
+
+   Get file location of a package in the source
+
+*/
+YCPValue
+PkgModuleFunctions::PkgLocation (YCPList args)
+{
+    PMPackagePtr package = getTheObject (getPackageSelectable (getName(args)));
+    if (!package)
+    {
+	return YCPVoid();
+    }
+
+    return YCPString (package->location());
+}
+
 // ------------------------
 /**
    @builtin Pkg::SaveState() -> bool
