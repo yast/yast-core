@@ -625,7 +625,7 @@ class YouCallbacks : public InstYou::Callbacks, public YCPCallbacks
 void PkgModuleFunctions::initYouCallbacks()
 {
   YouCallbacks *callbacks = new YouCallbacks( _wfm );
-  Y2PM::youPatchManager().instYou().setCallbacks( callbacks );
+  InstYou::setCallbacks( callbacks );
   _youCallbacks = callbacks;
 }
 
