@@ -13,8 +13,8 @@ Provides:	yast2-agent-modules yast2-agent-probe yast2-agent-system
 Obsoletes:	yast2-agent-modules yast2-agent-probe yast2-agent-system
 Provides:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Obsoletes:	yast2-core-scr yast2-core-wfm yast2-core-translator
-Provides:	yast2-core-clients y2base yast2-base
-Obsoletes:	yast2-core-clients y2base yast2-base
+Provides:	y2base yast2-base
+Obsoletes:	y2base yast2-base
 
 %description
 -
@@ -25,8 +25,8 @@ Provides:	libycp:/usr/lib/YaST2/include/YCP.h
 Provides:	liby2:/usr/lib/YaST2/include/Y2.h
 Provides:	libyui:/usr/lib/YaST2/include/yui/YUIInterpreter.h
 Provides:	libscr:/usr/lib/YaST2/include/SCR.h
-Provides:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm y2clients
-Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm y2clients
+Provides:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
+Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
 
 %description devel
 -
