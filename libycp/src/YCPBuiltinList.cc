@@ -637,6 +637,21 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
 static YCPValue
 l_lsortlist (const YCPList &list)
 {
+    /**
+     * @builtin lsort
+     * @short Sort A List respecting locale
+     * @param list LIST
+     * @return list Sorted list
+     * @description
+     * Sort the list LIST according to the YCP builtin predicate
+     * <b>></b>.
+     * Strings are compared using the current locale.
+     * Duplicates are not removed.
+     *
+     * @usage lsort (["česky", "slovensky", "německy", 2, 1]) -> [1,
+     * 2, "česky", "německy", "slovensky"]
+     */
+
     if (list.isNull ())
     {
 	return YCPNull ();
