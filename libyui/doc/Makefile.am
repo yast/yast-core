@@ -2,7 +2,7 @@
 # Makefile.am for core/libyui/doc
 #
 
-SUBDIRS = events widgets autodocs examples FAQs
+SUBDIRS = events widgets examples FAQs
 
 htmldir = $(docdir)/libyui
 
