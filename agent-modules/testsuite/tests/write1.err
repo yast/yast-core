@@ -1,12 +1,12 @@
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:2 alias.al1 true
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:4 options.op1 true
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:6 pre-install.pri1 true
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:7 post-install.poi1 true
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:8 pre-remove.prr1 true
-[ag_modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
+[agent-modules] ModulesAgent.cc(Write):242 Obsolete interface, don't use any more!
 [YCP] tests/write1.ycp:9 post-remove.por1 true
