@@ -38,6 +38,7 @@
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
+#include <ycp/YCPVoid.h>
 
 #include "YUI.h"
 #include "YUISymbols.h"
@@ -50,13 +51,20 @@
 #include "YReplacePoint.h"
 
 
+typedef YCPValue (*v2) ();
+typedef YCPValue (*v2v)     (const YCPValue &);
+typedef YCPValue (*v2vv)    (const YCPValue &, const YCPValue &);
+typedef YCPValue (*v2vvv)   (const YCPValue &, const YCPValue &, const YCPValue &);
+typedef YCPValue (*v2vvvv)  (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
+typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
+
+
 bool YUI::_reverseLayout = false;
 YUI * YUI::current_ui = 0;
 
 YUI::YUI( bool with_threads, Y2Component *callback )
     : id_counter(0)
     , with_threads( with_threads )
-    , box_in_the_middle( YCPNull() )
     , _moduleName( "yast2" )
     , _productName( "SuSE Linux" )
     , macroRecorder (0)
@@ -102,7 +110,7 @@ void YUI::setCurrentInstance()
 Y2Component *
 YUI::getCallback( void )
 {
-    y2debug ( "YUI[%p]::getCallback() = %p", this, callbackComponent );
+    // y2debug ( "YUI[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
 }
 
@@ -110,7 +118,7 @@ YUI::getCallback( void )
 void
 YUI::setCallback( Y2Component *callback )
 {
-    y2debug ( "YUI[%p]::setCallback( %p )", this, callback );
+    // y2debug ( "YUI[%p]::setCallback( %p )", this, callback );
     callbackComponent = callback;
     return;
 }
@@ -127,13 +135,6 @@ void
 YUI::internalError( const char *msg )
 {
     fprintf( stderr, "YaST2 UI internal error: %s", msg );
-}
-
-
-YCPValue YUI::executeUICommand( const YCPTerm &term )
-{
-    y2error( "Running executeUICommand not supported: %s", term->toString ().c_str ());
-    return YCPVoid();
 }
 
 
@@ -195,6 +196,76 @@ void YUI::terminateUIThread()
     signalUIThread();
     pthread_join( ui_thread, 0 );
     y2debug( "UI thread shut down correctly" );
+}
+
+
+YCPValue YUI::callBuiltin( void * function, int argc, YCPValue argv[] )
+{
+    YCPValue ret = YCPVoid();
+    
+    if ( with_threads )
+    {
+	_builtinCallData.function	= function;
+	_builtinCallData.argc		= argc;
+	_builtinCallData.argv		= argv;
+	
+	signalUIThread();
+	
+	while ( ! waitForUIThread() )
+	{
+	    // NOP
+	}
+
+	ret = _builtinCallData.result;
+    }
+    else
+    {
+	ret = callFunction( function, argc, argv );
+    }
+
+    return ret;
+}
+
+
+YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
+{
+    if ( function == 0 )
+    {
+	y2error( "NULL function pointer!" );
+	return YCPNull();
+    }
+
+    YCPValue ret = YCPVoid();
+
+    switch ( argc )
+    {
+	case 0:
+	    ret = (*(v2) function) ();
+	    break;
+	case 1:
+	    ret = (*(v2v) function) (argv[0]);
+	    break;
+	case 2:
+	    ret = (*(v2vv) function) (argv[0], argv[1]);
+	    break;
+	case 3:
+	    ret = (*(v2vvv) function) (argv[0], argv[1], argv[2]);
+	    break;
+	case 4:
+	    ret = (*(v2vvvv) function) (argv[0], argv[1], argv[2], argv[3]);
+	    break;
+	case 5:
+	    ret = (*(v2vvvvv) function) (argv[0], argv[1], argv[2], argv[3], argv[4]);
+	    break;
+	default:
+	    {
+		y2error( "Bad builtin: Arg count %d", argc );
+		ret = YCPNull();
+	    }
+	    break;
+    }
+    
+    return ret;
 }
 
 
@@ -282,34 +353,23 @@ void YUI::uiThreadMainLoop()
     {
 	idleLoop ( pipe_to_ui[0] );
 
-	// The pipe is non-blocking, so we have to check if
-	// we really read a signal byte. Although idleLoop
-	// already makes a select, this seems to be necessary.
-	// Anyway: Why do we set the pipe to non-blocking if
-	// we wait in idleLoop for it to become readable? It
-	// is needed in YUIQt::idleLoop for QSocketNotifier.
+	// The pipe is non-blocking, so we have to check if we really read a
+	// signal byte. Although idleLoop already makes a select, this seems to
+	// be necessary.  Anyway: Why do we set the pipe to non-blocking if we
+	// wait in idleLoop for it to become readable? It is needed in
+	// YUIQt::idleLoop for QSocketNotifier.
+	
 	if ( ! waitForYCPThread () )
 	    continue;
 
-	if ( terminate_ui_thread ) return;
+	if ( terminate_ui_thread )
+	    return;
 
-	YCPValue command = box_in_the_middle;
-	if ( command.isNull() )
-	{
-	    y2error( "Command to ui is NULL" );
-	    box_in_the_middle = YCPVoid();
-	}
-	else if ( command->isTerm() )
-	{
-	    box_in_the_middle = executeUICommand( command->asTerm() );
-	}
-	else
-	{
-	    y2error( "Command to ui is not a term: '%s'",
-		     command->toString().c_str() );
-	    box_in_the_middle = YCPVoid();
-	}
+	// callFunction() checks for NULL function pointers
 
+	_builtinCallData.result = callFunction( _builtinCallData.function, 
+						_builtinCallData.argc, 
+						_builtinCallData.argv );
 	signalYCPThread();
     }
 }
@@ -368,7 +428,9 @@ void *start_ui_thread( void * yui )
 {
     YUI * ui= (YUI *) yui;
 
+#if VERBOSE_COMM
     y2debug( "Starting UI thread" );
+#endif
     
     if ( ui )
 	ui->uiThreadMainLoop();

@@ -19,6 +19,7 @@
 
 /-*/
 
+
 #include "UI.h"
 #include "ycp/YCPBoolean.h"
 #include "ycp/YCPInteger.h"
@@ -27,6 +28,7 @@
 #include "ycp/YCPCode.h"
 #include "ycp/StaticDeclaration.h"
 
+#define y2log_component "ui"
 #include "ycp/y2log.h"
 
 #include "YUI.h"
@@ -539,6 +541,22 @@ UIHasSpecialWidget( const YCPSymbol & widget )
 }
 
 
+static YCPValue
+UICallHandler( void * ptr, int argc, YCPValue argv[] )
+{
+    if ( YUI::instance() )
+    {
+	y2debug( "Calling builtin" );
+	return YUI::instance()->callBuiltin( ptr, argc, argv );
+    }
+    else
+    {
+	y2error( "No UI instance available yet!" );
+	return YCPVoid();
+    }
+}
+
+
 
 UI::UI()
 {
@@ -547,7 +565,7 @@ UI::UI()
     
     static declaration_t ui_builtins[] =
 	{
-	    { "UI",			"",				NULL, 			DECL_NAMESPACE 			},
+	    { "UI",			"",			(void *) &UICallHandler, DECL_NAMESPACE | DECL_CALL_HANDLER 	},
 	    { "OpenDialog",		"void (term)",						(void*) UIOpenDialog 		},
 	    { "OpenDialog",		"void (term, term)",					(void*) UIOpenDialog2 		},
 	    { "CloseDialog",		"boolean ()",						(void*) UICloseDialog 		},

@@ -53,9 +53,25 @@ typedef struct
     int blue;
 } YColor;
 
+struct  YUIBuiltinCallData
+{
+    void *	function;
+    int		argc;
+    YCPValue *	argv;
+    YCPValue	result;
+
+    YUIBuiltinCallData()
+	: result( YCPVoid() )
+    {
+	function	= 0;
+	argc		= 0;
+	argv		= 0;
+    }
+};
+
 
 /**
- * @short base class of a YaST2 user interface
+ * @short abstract base class of a YaST2 user interface
  * The implementation of a YaST2 user interface such as qt and ncurses
  * constists in subclassing YUI.
  *
@@ -66,25 +82,28 @@ typedef struct
  * Either override @ref #idleLoop, @ref #userInput and @ref #pollInput
  * or override @ref #pollInput and @ref #waitForEvent, whichever is
  * easier for you.
+ *
+ * This class is an abstract base class that contains pure virtuals.
+ * It is not intended for direct instantiation, only for inheritance.
  */
 class YUI : public Y2Component
 {
+protected:
+    /**
+     * Constructor.
+     */
+    YUI( bool with_threads, Y2Component *callback );
+
+    /**
+     * Destructor.
+     */
+    virtual ~YUI();
+
 public:
     /**
      * Looks up the topmost dialog
      */
     YDialog *currentDialog() const;
-
-    /**
-     * Creates a YUI.
-     * @param with_threads Set this to true if you want a seperate ui thread
-     */
-    YUI( bool with_threads, Y2Component *callback );
-
-    /**
-     * Cleans up, terminates the ui thread.
-     */
-    virtual ~YUI();
 
 
     /**
@@ -256,6 +275,19 @@ public:
      * Set reverse layout for Arabic / Hebrew support
      **/
     static void setReverseLayout( bool rev ) { _reverseLayout = rev; }
+
+    /**
+     * Call a UI builtin function in the correct thread (the UI thread).
+     * This is called from libycp/YExpression via the UI builtin declarations
+     * that call UICallHandler.
+     **/
+    YCPValue callBuiltin( void * function, int argc, YCPValue argv[] );
+
+    /**
+     * Call 'function' with 'argc' YCPValue parameters and return the result of
+     * 'function'. 
+     **/ 
+    static YCPValue callFunction( void * function, int argc, YCPValue argv[] );
 
     /**
      * Implementations for most UI builtins.
@@ -897,12 +929,6 @@ protected:
     YEvent * filterInvalidEvents( YEvent * event );
 
     /**
-     * actually executes an ui command term. Never returns YCPNull.
-     */
-    YCPValue executeUICommand			( const YCPTerm & term );
-
-
-    /**
      * Mid-level handler for the user input related UI commands:
      *	   UserInput()
      *	   TimeoutUserInput()
@@ -1335,10 +1361,13 @@ protected:
     pthread_t ui_thread;
 
     /**
-     * Used for communication with the ui thread. It is a box
-     * where one of the threads puts some YCP value for the other.
+     * Inter-thread communication between the YCP thread and the UI thread:
+     * The YCP thread supplies data here and signals the UI thread,
+     * the UI thread picks up the data, executes the function, puts
+     * the result here and signals the YCP thread that waits until
+     * the result is available.
      */
-    YCPValue box_in_the_middle;
+    YUIBuiltinCallData _builtinCallData;
 
     /**
      * Used to synchronize data transfer with the ui thread.
