@@ -588,7 +588,9 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     }
 
     if (idx == arg->size())
+    {
 	return value;
+    }
 	
     if (current.isNull ())
     {
@@ -676,7 +678,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	term->set (argval->asInteger()->value(), val.isNull() ? YCPVoid() : val);
 	return term;
     }
-    ycp2error ("Bracket assignment not list, map, or term");
+    ycp2error ("Bracket assignment '%s'['%s'] = '%s', not to list, map, or term", current->toString().c_str(), argval->toString().c_str(), value->toString().c_str());
     return YCPNull ();
 }
 
