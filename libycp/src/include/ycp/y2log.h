@@ -120,7 +120,7 @@ do {									\
  * Set an alternate logfile name for @ref y2log. If this is not done by the
  * application the first call to y2log sets the logfile name as follows:
  * users: $HOME/.y2log
- * root: /var/log/y2log
+ * root: /var/log/YaST2/y2log
  * The logname "-" is special: The log messages are written to stderr.
  */
 void y2setLogfileName (string filename);

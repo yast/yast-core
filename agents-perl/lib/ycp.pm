@@ -612,7 +612,7 @@ The log output can now be redirected, which will be useful for test suites.
 If the first command-line option is "-l", the second argument is taken as
 the log file. A hyphen "-" designates standard output.
 
-Otherwise, F</var/log/y2log> and F<$HOME/.y2log> are tried, in that order.
+Otherwise, F</var/log/YaST2/y2log> and F<$HOME/.y2log> are tried, in that order.
 
 =cut
 
@@ -625,7 +625,7 @@ sub BEGIN
 {
     $Y2DEBUG = $ENV{"Y2DEBUG"};
 
-    my @names = ( "/var/log/y2log", "$ENV{HOME}/.y2log" );
+    my @names = ( "/var/log/YaST2/y2log", "$ENV{HOME}/.y2log" );
     if (defined ($ARGV[0]) && $ARGV[0] =~ /^(-l|--log)$/)
     {
 	@names = ( $ARGV[1] );
@@ -654,9 +654,9 @@ sub END
 
 ##--------------------------------------
 # @perlapi y2debug
-# Logs debug messages to /var/log/y2log.
+# Logs debug messages to /var/log/YaST2/y2log.
 # Other then ycp-y2debug the output is <b>always</b> logt
-# to /var/log/y2log
+# to /var/log/YaST2/y2log
 # and usually you <b>have to root</b> to do this
 # @example ..;  y2debug( "In the script: param1:", myarray, " param2: ", hash2 );
 ##--------------------------------------
@@ -670,7 +670,7 @@ y2error,
 y2security,
 y2internal
 
-Logs debug messages to F</var/log/y2log> or F<$HOME/.y2log>
+Logs debug messages to F</var/log/YaST2/y2log> or F<$HOME/.y2log>
 
 Note a B<semantic change> in y2debug: now the environment variable
 Y2DEBUG is honored so y2debug will not produce output unless this
@@ -706,7 +706,7 @@ sub y2logger ($@)
 ##--------------------------------------
 # @perlapi ycpDoVerboseLog
 # Turns on verbose logging of this the perl interface lib
-# Logging output is ALWAYS send to /var/log/y2log
+# Logging output is ALWAYS send to /var/log/YaST2/y2log
 # and usually you <b>have to be root</b> to do this
 # @example ..;  ycpDoVerboseLog;
 ##--------------------------------------

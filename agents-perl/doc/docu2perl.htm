@@ -24,12 +24,12 @@ use ycp;
 In the next step we build the <i>main loop</i>
 Our new perlscript is loaded only once by the SCR, which controlls all
 agents.<br>
-For every request it reads the input from <tt>stdin</tt> an writes it output 
-to <tt>stdout</tt>. The protocol for stdin and stdout is YCP, and for perl 
+For every request it reads the input from <tt>stdin</tt> an writes it output
+to <tt>stdout</tt>. The protocol for stdin and stdout is YCP, and for perl
 you have some convenice functions.<br><br>
 
 <b>Let have a look at the simplest working script:</b><br><br>
-<pre><font  face="Courier" color="Black"> 
+<pre><font  face="Courier" color="Black">
  while ( <a href="dfs"><font color="black">&lt;STDIN&gt;</font></a> )
  {
    # ycpDoVerboseLog();
@@ -39,7 +39,7 @@ you have some convenice functions.<br><br>
    # read the arguments ...
    # do the work ...
 
-   ycpReturn&lt;<em>whatever</em>&gt;( <return_value> );   
+   ycpReturn&lt;<em>whatever</em>&gt;( <return_value> );
 }
 
 </font></pre><br><br><br>
@@ -47,9 +47,9 @@ you have some convenice functions.<br><br>
 <b>2. Read the Arguments</b>
 <hr  color="red" align="left" size="1"></hr><br>
 
-For a useable script we have to pass some arguments to this script. 
+For a useable script we have to pass some arguments to this script.
 In the YCP world for every call, we pass three types of
-arguments to the script. 
+arguments to the script.
 <br>
 <br><b>Pratical approach:</b> (for details see <a href="docu6perl.htm">the arguments</a>)<br><br>
 
@@ -63,12 +63,12 @@ choose a <tt>list</tt> as value, if we need a single string, we choose
 reading, writing a configfile use <i>Execute</i>. This is not in any way
 critical. A script can support more than one type!<br><br>
 
-3.The <b>subpath</b>: For a little agent don't use subpath. Call your agent 
+3.The <b>subpath</b>: For a little agent don't use subpath. Call your agent
 every time with the path you mount it on. (see example later on)<br><br>
 
 <pre>
 simple value:    <font  face="Courier" color="Black">"10.10.0.1"</font>   or 127
-complex value:    <font  face="Courier" color="Black">$[ "device":"eth0", "netmask":"255.255.255.0", "gateway":"0.0.0.0" ]</font> 
+complex value:    <font  face="Courier" color="Black">$[ "device":"eth0", "netmask":"255.255.255.0", "gateway":"0.0.0.0" ]</font>
 </pre>
 <br>
 
@@ -76,7 +76,7 @@ In our example, for agent which should test for a given list of server,
 if they are reachable via <i>ping</i> we have made the following decisions:<br><br>
 <pre>
  function type: <font  face="Courier" color="Black"><b>Execute</b></font>
- path:          <font  face="Courier" color="Black"><b>.ping</b> </font>       
+ path:          <font  face="Courier" color="Black"><b>.ping</b> </font>
  subpath:       <font  face="Courier" color="Black"><b>.</b>  </font>
  value:         <font  face="Courier" color="Black">a .<b>list.</b> of hosts, every host as string </font>
 </pre>
@@ -85,8 +85,8 @@ Now we look at our example. In first step we check the incoming data, if they ha
 values ;-). We use the suitable <tt>ycpCommandIs*</tt> and <tt>ycpArgIs*</tt> <br><br>
 <pre><font  face="Courier" color="Black">
    #----------------------------------------------------------
-   #  Check the Command 
-   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]); 
+   #  Check the Command
+   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]);
    #----------------------------------------------------------
 
    if ( ycpCommandIsExecute &&  ycpArgIsList )
@@ -95,7 +95,7 @@ values ;-). We use the suitable <tt>ycpCommandIs*</tt> and <tt>ycpArgIs*</tt> <b
 
 </font></pre><br><br>
 In the last line we have written debug line, with
-<tt>y2debug</tt>. The debug lines are written to <tt>/var/log/y2log</tt>
+<tt>y2debug</tt>. The debug lines are written to <tt>/var/log/YaST2/y2log</tt>
 <br><b>Note:</b> Be sure never to write debug messages or anything else via
 print to stdout. You will break the communication protokoll, and your
 server will stop working.<br>
@@ -133,7 +133,7 @@ all servers in the list.<br><br>
 		$result{$host} = "    alive";
 	    }
 	    else
-	    {         
+	    {
 		$result{$host} = "NOT alive";
 	    }
 	}
@@ -143,12 +143,12 @@ all servers in the list.<br><br>
 </font></pre><br><br>
 
 At the end we make <b>a debug output</b> of the result hash.<br><br>
- 
+
 <pre><font  face="Courier" color="Black">
-	# for debug purpose: print a result list to /var/log/y2log 
+	# for debug purpose: print a result list to /var/log/YaST2/y2log
 	while (( $host, my $alive) = each(%result))
 	{
-	   y2debug( $alive, ": Host", $host);       
+	   y2debug( $alive, ": Host", $host);
 	}
 </font></pre><br><br><br>
 
@@ -178,7 +178,7 @@ our <a href="reference.html">perl-ycp interface</a>.<br><br>
    {
 	my $return_value = sprintf( "Unknown instruction %s or argument: %s", ycpGetCommand, ycpGetArgType);
 
-	ycpReturnSkalarAsString( $return_value );   
+	ycpReturnSkalarAsString( $return_value );
    }
 }
 
@@ -186,15 +186,15 @@ our <a href="reference.html">perl-ycp interface</a>.<br><br>
 
 </font></pre><br><br><br>
 
-Now our script is ready to use. 
+Now our script is ready to use.
 In first step you should test your script
 see <a href="kjh">Test your script</a><br><br>
 
 To test it within a YCP module we have to
-copy it to /usr/lib/YaST2/servers_non_y2  
-a good name for our new file is ag_<path>, so we had 
+copy it to /usr/lib/YaST2/servers_non_y2
+a good name for our new file is ag_<path>, so we had
 choosen <i>ag_ping</i>.<br><br><br>
- 
+
 
 In the last step we have to define the mount point for our script, i.e
 the path:<br><br>

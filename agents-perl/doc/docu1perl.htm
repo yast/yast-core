@@ -31,18 +31,18 @@ use strict;
 
 my $result;
 
-while ( &lt;STDIN&gt; ) 
+while ( &lt;STDIN&gt; )
 {
    ycpInit( $_ );
 
-   #  Check the Command 
-   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]); 
+   #  Check the Command
+   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]);
 
    if ( ycpCommandIsExecute &&  ycpArgIsList )
    {
        y2debug( "Now we check with ping the hosts:", ycpGetArgList );
 
-       
+
        ##########################################
        #           OUR PERL MAIN
 
@@ -61,16 +61,16 @@ while ( &lt;STDIN&gt; )
 	       $result{$host} = "    alive";
 	   }
            else
-	   {         
+	   {
 	       $result{$host} = "NOT alive";
 	   }
        }
        $p->close();
 
-       # for debug purpose: print a result list to /var/log/y2log 
+       # for debug purpose: print a result list to /var/log/YaST2/y2log
        while (( $host, my $alive) = each(%result))
        {
-	  y2debug( $alive, ": Host", $host);       
+	  y2debug( $alive, ": Host", $host);
        }
 
        #        END of PERL MAIN
@@ -80,9 +80,9 @@ while ( &lt;STDIN&gt; )
    }
    else
    {
-       my $return_value = sprintf( "Unknown instruction %s or argument: %s", 
+       my $return_value = sprintf( "Unknown instruction %s or argument: %s",
                                     ycpGetCommand, ycpGetArgType);
-       ycpReturnSkalarAsString( $return_value );   
+       ycpReturnSkalarAsString( $return_value );
    }
 }
 </font></pre>

@@ -25,7 +25,7 @@
 #define SIZE(a)       (sizeof(a)/sizeof(a[0]))
 #define HASHLENGTH    20
 #define PASSWDBUFFLEN 130 /* getpass returns only max. 128 bytes, see man getpass */
-#define LOGFILE       "/var/log/y2log"
+#define LOGFILE       "/var/log/YaST2/y2log"
 #define LOGMAXLEN     1024
 
 
@@ -140,7 +140,7 @@ int xset_loop (const char *device,
    }
    loopinfo.lo_offset = offset;
 
-   
+
 #if 0
 #ifdef MCL_FUTURE
    /*
@@ -155,7 +155,7 @@ int xset_loop (const char *device,
    }
 #endif
 #endif
-   
+
 
    switch (loopinfo.lo_encrypt_type) {
       case LO_CRYPT_NONE:
@@ -196,7 +196,7 @@ int xset_loop (const char *device,
 	    }
 	 }
 	 loopinfo.lo_encrypt_key_size=keylength;
-		
+
 	 break;
       default:
 	 sprintf( logbuffer,"Don't know how to get key for encryption system %d",
@@ -219,7 +219,7 @@ int xset_loop (const char *device,
    sprintf( logbuffer, "set_loop(%s,%s,%d): success\n",
 			   device, file, offset);
    logy2( logbuffer );
-   
+
    return 0;
 }
 
