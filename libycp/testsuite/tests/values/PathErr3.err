@@ -1,4 +1,3 @@
 [Interpreter] tests/values/PathErr3.ycp:0 bad path constant: dash before/after dot not allowed
-tests/values/PathErr3.ycp:18:not a path constant
 [Parser] tests/values/PathErr3.ycp:18 not a path constant
 runycp: parser error

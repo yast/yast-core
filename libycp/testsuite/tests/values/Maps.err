@@ -52,7 +52,6 @@ Parsed:
     return true;
 }
 ----------------------------------------------------------------------
-tests/values/Maps.ycp:41:Bad type for key
 [Parser] tests/values/Maps.ycp:41 Bad type for key
 Parsed:
 ----------------------------------------------------------------------

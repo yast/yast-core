@@ -19,11 +19,9 @@ Parsed:
 }
 ) == $[11:"ax", 12:"bx"])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_IX.ycp:33 Parameter 'k' has unspecified type
-[Interpreter] tests/builtin/Builtin_IX.ycp:33 Parameter 'v' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(mapmap (any k, any v, $[1:"a", 2:"b"], { return $[10:"x"]; }) == $[10:"x"])
+(mapmap (integer k, string v, $[1:"a", 2:"b"], { return $[10:"x"]; }) == $[10:"x"])
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
@@ -61,21 +59,17 @@ Parsed:
 ----------------------------------------------------------------------
 (findfirstof ("", "a") == nil)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_IX.ycp:73 Parameter 'k' has unspecified type
-[Interpreter] tests/builtin/Builtin_IX.ycp:73 Parameter 'v' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(filter (any k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == v); }) == $[3:3, 5:5])
+(filter (integer k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == tointeger (v)); }) == $[3:3, 5:5])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_IX.ycp:74 Parameter 'k' has unspecified type
-[Interpreter] tests/builtin/Builtin_IX.ycp:74 Parameter 'v' has unspecified type
+[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert a to an integer
+[libycp] YCPInteger.cc(YCPIntegerRep):48 Cannot convert b to an integer
 Parsed:
 ----------------------------------------------------------------------
-(filter (any k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == 2); }) == $[2:"b"])
+(filter (integer k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (k == 2); }) == $[2:"b"])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_IX.ycp:75 Parameter 'k' has unspecified type
-[Interpreter] tests/builtin/Builtin_IX.ycp:75 Parameter 'v' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(filter (any k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (v == "b"); }) == $[2:"b"])
+(filter (integer k, any v, $[1:"a", 2:"b", 3:3, 5:5], { return (tostring (v) == "b"); }) == $[2:"b"])
 ----------------------------------------------------------------------

@@ -52,7 +52,8 @@ enum DeclFlags
     DECL_NAMESPACE =	0x00000080,	// name declares a namespace (switches registerDeclarations !)
     DECL_FLEX =		0x00000100,	// function signature include 'flex' type
     DECL_NOEVAL =	0x00000200,	// function will evaluate its parameters on its own (boolean functions for shortcut eval)
-    DECL_CALL_HANDLER =	0x00000400	// ptr is a call handler (only together with DECL_NAMESPACE)
+    DECL_CALL_HANDLER =	0x00000400,	// ptr is a call handler (only together with DECL_NAMESPACE)
+    DECL_DEPRECATED =	0x00000800	// deprecated function
 };
 
 // declaration::ptr is a function pointer of this type if the first entry of a StaticDeclaration
@@ -60,7 +61,7 @@ enum DeclFlags
 typedef YCPValue (*call_handler_t)(void * function, int argc, YCPValue args[] );
 
 /**
- * A declaration of a (builtin?) function
+ * A declaration of a builtin function
  */
 
 struct declaration {

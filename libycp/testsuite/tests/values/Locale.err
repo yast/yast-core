@@ -42,7 +42,6 @@ Parsed:
     return _("Ok");
 }
 ----------------------------------------------------------------------
-tests/values/Locale.ycp:35:No textdomain defined
 [Parser] tests/values/Locale.ycp:35 No textdomain defined
 Parsed:
 ----------------------------------------------------------------------

@@ -27,9 +27,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [Scanner] tests/builtin/Builtin_V.ycp:47 Warning: Useless 'global' outside of module
-tests/builtin/Builtin_V.ycp:56:Mismatched return type in block
 [Parser] tests/builtin/Builtin_V.ycp:56 Mismatched return type in block
-tests/builtin/Builtin_V.ycp:56:Expected 'string', seen 'integer'.
 [Parser] tests/builtin/Builtin_V.ycp:56 Expected 'string', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------

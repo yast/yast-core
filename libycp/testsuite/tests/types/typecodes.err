@@ -1,94 +1,55 @@
-tests/types/typecodes.ycp:8:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:8 type mismatch in variable definition
-tests/types/typecodes.ycp:8:Expected 'void', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:8 Expected 'void', seen 'const float'.
-tests/types/typecodes.ycp:12:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:12 type mismatch in variable definition
-tests/types/typecodes.ycp:12:Expected 'boolean', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:12 Expected 'boolean', seen 'const float'.
 [Interpreter] tests/types/typecodes.ycp:13 Implicit float conversion will loose accuracy
-tests/types/typecodes.ycp:14:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:14 type mismatch in variable definition
-tests/types/typecodes.ycp:14:Expected 'float', seen 'string'.
 [Parser] tests/types/typecodes.ycp:14 Expected 'float', seen 'string'.
-tests/types/typecodes.ycp:15:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:15 type mismatch in variable definition
-tests/types/typecodes.ycp:15:Expected 'byteblock', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:15 Expected 'byteblock', seen 'const float'.
-tests/types/typecodes.ycp:16:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:16 type mismatch in variable definition
-tests/types/typecodes.ycp:16:Expected 'string', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:16 Expected 'string', seen 'const float'.
-tests/types/typecodes.ycp:17:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:17 type mismatch in variable definition
-tests/types/typecodes.ycp:17:Expected 'locale', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:17 Expected 'locale', seen 'const float'.
-tests/types/typecodes.ycp:18:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:18 type mismatch in variable definition
-tests/types/typecodes.ycp:18:Expected 'symbol', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:18 Expected 'symbol', seen 'const float'.
-tests/types/typecodes.ycp:19:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:19 type mismatch in variable definition
-tests/types/typecodes.ycp:19:Expected 'term', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:19 Expected 'term', seen 'const float'.
-tests/types/typecodes.ycp:20:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:20 type mismatch in variable definition
-tests/types/typecodes.ycp:20:Expected 'path', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:20 Expected 'path', seen 'const float'.
-tests/types/typecodes.ycp:21:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:21 type mismatch in variable definition
-tests/types/typecodes.ycp:21:Expected 'list', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:21 Expected 'list', seen 'const float'.
-tests/types/typecodes.ycp:22:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:22 type mismatch in variable definition
-tests/types/typecodes.ycp:22:Expected 'list', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:22 Expected 'list', seen 'const float'.
-tests/types/typecodes.ycp:23:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:23 type mismatch in variable definition
-tests/types/typecodes.ycp:23:Expected 'list <float>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:23 Expected 'list <float>', seen 'const float'.
-tests/types/typecodes.ycp:24:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:24 type mismatch in variable definition
-tests/types/typecodes.ycp:24:Expected 'list <list <float>>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:24 Expected 'list <list <float>>', seen 'const float'.
-tests/types/typecodes.ycp:25:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:25 type mismatch in variable definition
-tests/types/typecodes.ycp:25:Expected 'map', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:25 Expected 'map', seen 'const float'.
-tests/types/typecodes.ycp:26:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:26 type mismatch in variable definition
-tests/types/typecodes.ycp:26:Expected 'map', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:26 Expected 'map', seen 'const float'.
-tests/types/typecodes.ycp:27:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:27 type mismatch in variable definition
-tests/types/typecodes.ycp:27:Expected 'map', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:27 Expected 'map', seen 'const float'.
-tests/types/typecodes.ycp:28:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:28 type mismatch in variable definition
-tests/types/typecodes.ycp:28:Expected 'block <any>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:28 Expected 'block <any>', seen 'const float'.
-tests/types/typecodes.ycp:29:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:29 type mismatch in variable definition
-tests/types/typecodes.ycp:29:Expected 'block <float>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:29 Expected 'block <float>', seen 'const float'.
-tests/types/typecodes.ycp:30:type mismatch in variable definition
 [Parser] tests/types/typecodes.ycp:30 type mismatch in variable definition
-tests/types/typecodes.ycp:30:Expected 'block <block <float>>', seen 'const float'.
 [Parser] tests/types/typecodes.ycp:30 Expected 'block <block <float>>', seen 'const float'.
-tests/types/typecodes.ycp:39:Binary operator not defined for this type
 [Parser] tests/types/typecodes.ycp:39 Binary operator not defined for this type
-No match for '+ : <unspec> (const symbol, const path)':
-+:integer (integer, integer)
-+:float (float, float)
-+:string (string, string)
-+:string (string, integer)
-+:string (string, path)
-+:path (path, path)
-+:path (path, string)
-+:list <<T>> (const list <<T>>, const list <<T>>)
-+:list <<T>> (const list <<T>>, const <T>)
-+:list (const list, any)
-+:map (const map, const map)
+[Interpreter] tests/types/typecodes.ycp:13 No match for '+ : <unspec> (const symbol, const path)':
+[Interpreter] tests/types/typecodes.ycp:13 +:integer (integer, integer)
+[Interpreter] tests/types/typecodes.ycp:13 +:float (float, float)
+[Interpreter] tests/types/typecodes.ycp:13 +:string (string, string)
+[Interpreter] tests/types/typecodes.ycp:13 +:string (string, integer)
+[Interpreter] tests/types/typecodes.ycp:13 +:string (string, path)
+[Interpreter] tests/types/typecodes.ycp:13 +:path (path, path)
+[Interpreter] tests/types/typecodes.ycp:13 +:path (path, string)
+[Interpreter] tests/types/typecodes.ycp:13 +:list <<T>> (const list <<T>>, const list <<T>>)
+[Interpreter] tests/types/typecodes.ycp:13 +:list <<T>> (const list <<T>>, const <T>)
+[Interpreter] tests/types/typecodes.ycp:13 +:list (const list, any)
+[Interpreter] tests/types/typecodes.ycp:13 +:map (const map, const map)
 Parsed:
 ----------------------------------------------------------------------
 Parser error

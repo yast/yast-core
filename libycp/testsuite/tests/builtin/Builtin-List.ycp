@@ -44,7 +44,10 @@
 
 (prepend ([1, 4], 8))
 (prepend ([], 8))
-
+# missing param
+(prepend ([1]))
+# excessive param
+(prepend ([1], 2, 3))
 
 ("** contains **")
 
@@ -92,6 +95,7 @@
 ("** sort **")
 
 (sort ([2, 1, true, 1]))
+(sort (integer x, integer y, [ 3, 6, 2, 8 ], ``(x>y)))
 (sort (`x, `y, [ 3, 6, 2, 8 ], ``(x>y)))
 
 
@@ -116,7 +120,8 @@
 
 ("** change **")
 
-#notimplemented for lists (change ([1, 4], 8))
+#deprecated for lists 
+(change ([1, 4], 8))
 
 
 ("** remove **")

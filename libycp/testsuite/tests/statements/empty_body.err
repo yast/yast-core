@@ -1,4 +1,3 @@
-tests/statements/empty_body.ycp:5:Empty function definition
 [Parser] tests/statements/empty_body.ycp:5 Empty function definition
 Parsed:
 ----------------------------------------------------------------------

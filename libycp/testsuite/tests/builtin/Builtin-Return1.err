@@ -1,18 +1,18 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // list l
+    // list <string> l
     // filename: "tests/builtin/Builtin-Return1.ycp"
-    list l = ["foo", "bar"];
+    list <string> l = ["foo", "bar"];
     return (maplist (string v, l, { return v; }) == ["foo", "bar"]);
 }
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
 {
-    // list l
+    // list <string> l
     // filename: "tests/builtin/Builtin-Return1.ycp"
-    list l = ["foo", "bar"];
+    list <string> l = ["foo", "bar"];
     return (maplist (string v, l, { return (v == "foo"); }) == [true, false]);
 }
 ----------------------------------------------------------------------

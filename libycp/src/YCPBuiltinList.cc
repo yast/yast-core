@@ -721,20 +721,21 @@ l_add (const YCPList &list, const YCPValue &value)
 }
 
 
+// parameter is YCPValue because we accept 'nil'
 static YCPValue
-l_size (const YCPList &list)
+l_size (const YCPValue &list)
 {
     /**
      * @builtin size (list l) -> integer
      * Returns the number of elements of the list <tt>l</tt>
      */
 
-    if (list.isNull ())
+    if (list.isNull ()
+	|| !list->isList ())
     {
-	return YCPNull ();
+	return YCPInteger (0LL);
     }
-
-    return YCPInteger (list->size ());
+    return YCPInteger (list->asList()->size ());
 }
 
 
@@ -778,8 +779,9 @@ l_remove (const YCPList &list, const YCPInteger &i)
 }
 
 
+// parameter is YCPValue because we accept 'nil'
 static YCPValue
-l_select (const YCPList &list, const YCPInteger &i, const YCPValue &def)
+l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
      * @builtin select (list l, integer i, any default) -> any
@@ -794,12 +796,15 @@ l_select (const YCPList &list, const YCPInteger &i, const YCPValue &def)
      * </pre>
      */
 
-    if (list.isNull() || i.isNull())
+    if (list.isNull()
+	|| !list->isList()
+	|| i.isNull()
+	|| !i->isInteger())
     {
 	return def;
     }
-    long idx = i->value ();
-    if (idx < 0 || idx >= list->size ())
+    long idx = i->asInteger()->value ();
+    if (idx < 0 || idx >= list->asList()->size ())
     {
 	return def;
     }
@@ -812,14 +817,14 @@ l_select (const YCPList &list, const YCPInteger &i, const YCPValue &def)
 	// for term, call the other builtin
 	if ( tmp->isTerm ())
 	{
-	    extern YCPValue t_select (const YCPTerm &list, const YCPInteger &i, const YCPValue &def);
-	    return t_select (tmp->asTerm (), i, def);
+	    extern YCPValue t_select (const YCPValue &list, const YCPValue &i, const YCPValue &def);
+	    return t_select (tmp->asTerm (), i->asInteger(), def);
 	}
 	ycp2error ("Incorrect builtin called, %s is not a list", tmp->toString ().c_str ());
 	return def;
     }
     
-    YCPValue v = list->value (idx);
+    YCPValue v = list->asList()->value (idx);
     
     return v;
 }
@@ -909,11 +914,11 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "sort",	"list <flex> (variable <flex>, variable <flex>, const list <flex>, const block <boolean>)", (void *)l_sort, 	DECL_SYMBOL|DECL_FLEX },
 	{ "lsort",	"list <flex> (const list <flex>)",							(void *)l_lsortlist,	DECL_FLEX },
 	{ "splitstring","list <string> (string, string)",							(void *)l_splitstring	},
-	{ "change", 	"list <flex> (const list <flex>, const flex)",						(void *)l_changelist,	DECL_FLEX },
+	{ "change", 	"list <flex> (const list <flex>, const flex)",						(void *)l_changelist,	DECL_FLEX|DECL_DEPRECATED },
 	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
 	{ "+",		"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
 	{ "+",		"list <any> (const list <any>, any)",							(void *)l_add		},
-	{ "size",	"integer (const list <any>)",								(void *)l_size		},
+	{ "size",	"integer (const list <any>)",								(void *)l_size,		DECL_NIL },
 	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
 	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },
 	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },

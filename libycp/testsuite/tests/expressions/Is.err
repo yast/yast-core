@@ -4,7 +4,6 @@ Parsed:
 ----------------------------------------------------------------------
 true
 ----------------------------------------------------------------------
-tests/expressions/Is.ycp:24:Undeclared identifier 'a'
 [Parser] tests/expressions/Is.ycp:24 Undeclared identifier 'a'
 Parsed:
 ----------------------------------------------------------------------
@@ -189,7 +188,6 @@ Parsed:
 ----------------------------------------------------------------------
 (false == false)
 ----------------------------------------------------------------------
-tests/expressions/Is.ycp:76:Undeclared identifier 'name'
 [Parser] tests/expressions/Is.ycp:76 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------
@@ -202,7 +200,6 @@ Parsed:
 ----------------------------------------------------------------------
 (false == true)
 ----------------------------------------------------------------------
-tests/expressions/Is.ycp:78:Undeclared identifier 'name'
 [Parser] tests/expressions/Is.ycp:78 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------

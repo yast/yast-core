@@ -1,12 +1,12 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // integer dummy (list list_var)
+    // integer dummy (list <integer> list_var)
     // integer i1
     // integer i2
     // integer i3
     // filename: "tests/statements/Break2.ycp"
-    integer dummy (list list_var)
+    integer dummy (list <integer> list_var)
 {
     // integer ret
     integer ret = 42;

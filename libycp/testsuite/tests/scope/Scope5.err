@@ -1,6 +1,4 @@
-tests/scope/Scope5.ycp:28:type mismatch in assignment
 [Parser] tests/scope/Scope5.ycp:28 type mismatch in assignment
-tests/scope/Scope5.ycp:28:Expected 'integer', seen 'string'.
 [Parser] tests/scope/Scope5.ycp:28 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------

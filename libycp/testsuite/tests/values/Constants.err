@@ -94,6 +94,5 @@ Parsed:
 ----------------------------------------------------------------------
 .a.b.cde.fgh
 ----------------------------------------------------------------------
-tests/values/Constants.ycp:49:syntax error, unexpected C_INTEGER
 [Parser] tests/values/Constants.ycp:49 syntax error, unexpected C_INTEGER
 runycp: parser error

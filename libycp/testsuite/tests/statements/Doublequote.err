@@ -2,7 +2,6 @@ Parsed:
 ----------------------------------------------------------------------
 { return (1 + 2); }
 ----------------------------------------------------------------------
-tests/statements/Doublequote.ycp:18:Undeclared identifier 'name'
 [Parser] tests/statements/Doublequote.ycp:18 Undeclared identifier 'name'
 Parsed:
 ----------------------------------------------------------------------

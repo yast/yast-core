@@ -1,8 +1,5 @@
-tests/types/prototype3.ycp:11:Redeclaration with different type
 [Parser] tests/types/prototype3.ycp:11 Redeclaration with different type
-tests/types/prototype3.ycp:11:'f1' defined in tests/types/prototype3.ycp:11.
 [Parser] tests/types/prototype3.ycp:11 'f1' defined in tests/types/prototype3.ycp:11.
-tests/types/prototype3.ycp:11:Expected 'integer (integer)', seen 'integer (float)'.
 [Parser] tests/types/prototype3.ycp:11 Expected 'integer (integer)', seen 'integer (float)'.
 Parsed:
 ----------------------------------------------------------------------

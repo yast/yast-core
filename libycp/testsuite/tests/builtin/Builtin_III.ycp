@@ -40,13 +40,13 @@
 ( sort(integer x, integer y, [ 3,6,2,8 ], ``(x < y)) == [ 2, 3, 6, 8 ] )
 
 // undefined by the STL
-// ( sort(`x, `y, [1, 2, 1, 2], { return true;}) == [ 1, 2, 1, 2] )
+// ( sort(integer x, integer y, [1, 2, 1, 2], { return true;}) == [ 1, 2, 1, 2] )
 
-( sort(`x, `y, [1, 2, 1, 2], ``(x < y)) == [ 1, 1, 2, 2] )
+( sort(integer x, integer y, [1, 2, 1, 2], ``(x < y)) == [ 1, 1, 2, 2] )
 
-( sort(`x, `y, [1], ``(x < y)) == [1] )
-( sort(`x, `y, [1, 1, 1, 1, (2-1), (1*1), ((-1) * (-1))], ``(x < y)) == [1,1,1,1,1,1,1] )
-( sort(`x, `y, [], ``(x < y)) == [] )
+( sort(integer x, integer y, [1], ``(x < y)) == [1] )
+( sort(integer x, integer y, [1, 1, 1, 1, (2-1), (1*1), ((-1) * (-1))], ``(x < y)) == [1,1,1,1,1,1,1] )
+( sort(integer x, integer y, [], ``(x < y)) == [] )
 
 
 

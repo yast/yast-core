@@ -1,4 +1,3 @@
-tests/types/const.ycp:4:Assignment to const identifier 'ic'
 [Parser] tests/types/const.ycp:4 Assignment to const identifier 'ic'
 Parsed:
 ----------------------------------------------------------------------

@@ -1,5 +1,5 @@
 {
-    define integer dummy (list list_var)
+    define integer dummy (list<integer> list_var)
     {
 	integer ret = 42;
 	return ret + foreach (integer entry, list_var, { if (entry == 3) break; if (entry == 4) return entry; });

@@ -303,15 +303,21 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 }
 
 
+// parameter is YCPValue because we accept 'nil'
 static YCPValue
-m_size (const YCPMap &map)
+m_size (const YCPValue &map)
 {
     /**
      * @builtin size (map m) -> integer
      * Returns the number of key/value pairs in the map <tt>m</tt>
      */
 
-    return YCPInteger (map->size ());
+    if (map.isNull ()
+	|| !map->isMap())
+    {
+	return YCPInteger (0LL);
+    }
+    return YCPInteger (map->asMap()->size ());
 }
 
 
@@ -427,8 +433,8 @@ YCPBuiltinMap::YCPBuiltinMap ()
 	{ "union",  "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
 	{ "+",	    "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
 	{ "add",    "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_addmap,	DECL_FLEX },
-	{ "change", "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_changemap,DECL_FLEX },
-	{ "size",   "integer (const map <any,any>)",									    (void *)m_size	},
+	{ "change", "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_changemap,DECL_FLEX|DECL_DEPRECATED },
+	{ "size",   "integer (const map <any,any>)",									    (void *)m_size,	DECL_NIL },
 	{ "foreach","flex1 (variable <flex2>, variable <flex3>, const map <flex2,flex3>, const block <flex1>)",		    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "tomap",  "map <any,any> (const any)",									    (void *)m_tomap,	DECL_FLEX },
         { "remove", "map <flex1,flex2> (const map <flex1,flex2>, const flex1)", 					    (void *)m_remove,	DECL_FLEX },

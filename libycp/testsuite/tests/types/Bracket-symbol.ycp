@@ -1,0 +1,4 @@
+{
+    list <string> a = [];
+    a[2] = `foo;
+}

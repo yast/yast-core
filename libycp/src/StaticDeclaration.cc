@@ -41,7 +41,7 @@ using namespace std;
 #define DECLSIZE 127
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 #endif
 
 //
@@ -412,10 +412,10 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 #endif
 	    int i;
 	    
-	    if (acount == 0) 
+	    if (acount == 0)
 	    {
 		// no arguments actual and declared
-		if (dcount==0) break;
+		if (dcount == 0) break;
 		
 		// no actual arguments allowed only if declared arguments are wildcard
 		error = ! (fdtype->parameterType (0)->isWildcard ());
@@ -424,9 +424,10 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    { 
 		// need to check all arguments one by one
 		constTypePtr dt = 0;
+
 		for (i = 0; i < acount; i++)
 		{
-		    if (i >= dcount)					// no more parameters in current declaration
+		    if (i >= dcount)				// no more parameters in current declaration
 		    {
 #if DO_DEBUG
 			y2debug ("too few parameters");
@@ -435,6 +436,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 			break;
 		    }
 		    dt = fdtype->parameterType (i);
+
 		    if (fatype->parameterType(i)->match (dt) != 0)		// parameters do not match
 		    {
 #if DO_DEBUG
@@ -481,12 +483,12 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 #endif
 	if (!partial)
 	{
-//	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
-	    fprintf (stderr, "No match for '%s : %s':\n", first_decl->name, type->toString().c_str());
+	    ycp2error ("No match for '%s : %s':", first_decl->name, type->toString().c_str());
+//	    fprintf (stderr, "No match for '%s : %s':\n", first_decl->name, type->toString().c_str());
 	    while (first_decl)
 	    {
-//		ycp2error (Decl2String (first_decl,true).c_str());
-		fprintf (stderr, "%s\n", Decl2String (first_decl,true).c_str());
+		ycp2error (Decl2String (first_decl,true).c_str());
+//		fprintf (stderr, "%s\n", Decl2String (first_decl,true).c_str());
 		first_decl = first_decl->next;
 	    }
 	}
@@ -543,8 +545,8 @@ StaticDeclaration::readDeclaration (std::istream & str) const
     declaration_t *decl = findDeclaration (name, type);
     if (decl == 0)
     {
-//	ycp2error ("No match for '%s (%s)'", name, type->toString().c_str());
-	fprintf (stderr, "No match for builtin '%s (%s)'\n", name, type->toString().c_str());
+	ycp2error ("No match for '%s (%s)'", name, type->toString().c_str());
+//	fprintf (stderr, "No match for builtin '%s (%s)'\n", name, type->toString().c_str());
 	str.setstate (std::ostream::failbit);
     }
     delete [] name;

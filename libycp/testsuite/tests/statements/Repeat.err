@@ -42,9 +42,7 @@ Parsed:
 while (false);
 }
 ----------------------------------------------------------------------
-tests/statements/Repeat.ycp:38:'repeat-until' expression not boolean
 [Parser] tests/statements/Repeat.ycp:38 'repeat-until' expression not boolean
-tests/statements/Repeat.ycp:38:Expected 'boolean', seen 'integer'.
 [Parser] tests/statements/Repeat.ycp:38 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------

@@ -1,4 +1,3 @@
-tests/statements/empty_body4.ycp:8:Empty function definition
 [Parser] tests/statements/empty_body4.ycp:8 Empty function definition
 Parsed:
 ----------------------------------------------------------------------
@@ -9,7 +8,6 @@ Parsed:
 ----------------------------------------------------------------------
 "we are ok"
 ----------------------------------------------------------------------
-tests/statements/empty_body4.ycp:19:Empty function definition
 [Parser] tests/statements/empty_body4.ycp:19 Empty function definition
 Parsed:
 ----------------------------------------------------------------------

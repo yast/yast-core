@@ -84,8 +84,9 @@ t_symbolof (const YCPTerm &term)
 
 
 // not static to get seen by l_select hack
+//  parameters are YCPValue because we accept nil
 YCPValue
-t_select (const YCPTerm &term, const YCPInteger &i, const YCPValue &def)
+t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 {
     /**
      * @builtin select (term t, integer i, any default) -> any
@@ -99,12 +100,17 @@ t_select (const YCPTerm &term, const YCPInteger &i, const YCPValue &def)
      * </pre>
      */
 
-    if (term.isNull () || i.isNull ())
+    if (term.isNull ()
+	|| !term->isTerm()
+	|| i.isNull ()
+	|| !i->isInteger ())
+    {
 	return YCPNull ();
+    }
 
-    long idx = i->value ();
+    long idx = i->asInteger()->value ();
 
-    YCPList list = term->args ();
+    YCPList list = term->asTerm()->args ();
 
     if (idx < 0 || idx >= list->size ())
     {

@@ -526,27 +526,28 @@ Type::fromSignature (const char ** signature)
 /**
  * determine actual type if declared type contains flex type
  * Returns actual - unchanged or fixed
+ *  or NULL on error
  * @param symbol type of a symbol parameter from YEBuiltin, else isUnspec
  */
-FunctionTypePtr
-Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr declared, constTypePtr symboltype)
+constTypePtr
+Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr declared)
 {
-    y2debug ("determineFlexType (actual %s, declared %s, symboltype %s)", actual->toString().c_str(), declared->toString().c_str(), symboltype->toString().c_str());
+    y2debug ("determineFlexType (actual %s, declared %s)", actual ? actual->toString().c_str() : "NULL", declared ? declared->toString().c_str() : "NULL");
 
     // if builtin decl returns 'flex', the parameter deduces the return type
 
-    FunctionTypePtr result;
-    y2debug ("ANY type check (declared '%s', actual '%s'!", declared->toString().c_str(), actual->toString().c_str());
+    constTypePtr result;
 
     if (declared->parameterCount() <= 0)
     {
 	ycp2error ("declared->parameterCount() <= 0");
-	return Type::Error->clone();
+	return 0;
     }
 
     unsigned int flexnumber = 0;
 
     constTypePtr flextype;
+
     do
     {
 	flextype = declared->matchFlex (actual, flexnumber);
@@ -555,7 +556,7 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 
 	if (flextype == 0)
 	{
-	    result = declared->clone();
+	    result = declared;
 	}
 	else
 	{
@@ -565,14 +566,8 @@ Type::determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr decla
 	}
     }
     while ((flexnumber++ == 0) || (flextype != 0));
-#if 0
-    if (actual->match (result) != 0)
-    {
-	ycp2error ("'%s' does not match '%s'", actual->toString().c_str(), result->toString().c_str());
-	result = Type::Error->clone();
-    }
-#endif
-    y2debug ("determineFlexType returns '%s'", result->toString().c_str());
+
+    y2debug ("determineFlexType returns '%s'", result ? result->toString().c_str() : "ERROR");
     return result;
 }
 

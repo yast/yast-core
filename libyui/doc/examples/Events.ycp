@@ -14,11 +14,11 @@
      * @param	event	The event map to format
      * @return	html	HTML code for the formatted event
      **/
-    define string formatEvent( map event ) ``{
+    define string formatEvent( map<string, any> event ) ``{
 	string html = "<h3>Event:</h3><p>";
 y2milestone ("formatEvent(%1)", event);
 	foreach (string key, any value, event, ``{
-	    html = html + "<font color=blue>" + key + "</font>: " + (is (value, string) ? (string)value : tostring (value)) + "<br>";
+	    html = html + "<font color=blue>" + key + "</font>: " + tostring (value) + "<br>";
 	});
 
 	html = html + "</p>";
@@ -207,7 +207,7 @@ y2milestone ("formatEvent(%1)", event);
     // Event loop
     //
 
-    map event = $[];
+    map <string, any> event = $[];
 
     repeat
     {

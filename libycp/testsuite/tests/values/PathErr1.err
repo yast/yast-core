@@ -1,5 +1,3 @@
-tests/values/PathErr1.ycp:18:dash behind path constant not allowed
 [Parser] tests/values/PathErr1.ycp:18 dash behind path constant not allowed
-tests/values/PathErr1.ycp:18:syntax error, unexpected SCANNER_ERROR
 [Parser] tests/values/PathErr1.ycp:18 syntax error, unexpected SCANNER_ERROR
 runycp: parser error

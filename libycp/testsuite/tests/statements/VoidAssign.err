@@ -94,10 +94,9 @@ Parsed:
     // filename: "tests/statements/VoidAssign.ycp"
     list v_list = [1, 2, 3];
     v_list = nil;
-    return ([(v_list == []), (v_list == nil), (size (v_list) == 0), false, true] == [false, true, false, false, true]);
+    return ([(v_list == []), (v_list == nil), (size (v_list) == 0), false, true] == [false, true, true, false, true]);
 }
 ----------------------------------------------------------------------
-[Interpreter] tests/statements/VoidAssign.ycp:69 Argument (v_list) to size(...) is nil
 [Scanner] tests/statements/VoidAssign.ycp:77 Warning: Superfluous 'is()' expression, type is known:
 [Scanner] tests/statements/VoidAssign.ycp:77 Warning: map
 [Scanner] tests/statements/VoidAssign.ycp:77 Warning: Superfluous 'is()' expression, type is known:
@@ -109,10 +108,9 @@ Parsed:
     // filename: "tests/statements/VoidAssign.ycp"
     map v_map = $[1:1, 2:2, 3:3];
     v_map = nil;
-    return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), false, true] == [false, true, false, false, true]);
+    return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), false, true] == [false, true, true, false, true]);
 }
 ----------------------------------------------------------------------
-[Interpreter] tests/statements/VoidAssign.ycp:77 Argument (v_map) to size(...) is nil
 Parsed:
 ----------------------------------------------------------------------
 {

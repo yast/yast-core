@@ -16,9 +16,7 @@ Parsed:
 }
 }
 ----------------------------------------------------------------------
-tests/statements/While.ycp:14:'while' expression not boolean
 [Parser] tests/statements/While.ycp:14 'while' expression not boolean
-tests/statements/While.ycp:14:Expected 'boolean', seen 'integer'.
 [Parser] tests/statements/While.ycp:14 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------

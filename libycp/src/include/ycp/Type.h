@@ -104,9 +104,8 @@ public:
     /**
      * determine actual type if declared type contains 'flex' or 'flexN'
      * Returns actual - unchanged or fixed
-     * @param symbol type of a symbol parameter for YESymFunc, isUnspec for YEBuiltin
      */
-    static FunctionTypePtr determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr declared, constTypePtr symbol);
+    static constTypePtr determineFlexType (constFunctionTypePtr actual, constFunctionTypePtr declared);
 
 public:
 
@@ -214,7 +213,7 @@ public:
     /**
      * replace any 'FlexT' (number == 0) or 'NFlexT' (number != 0) with 'type'
      */
-    virtual TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    virtual constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
 
     /**
      * prefix qualifier
@@ -276,6 +275,7 @@ public:
     bool isVoid () const	{ return m_kind == VoidT; }
     bool isWildcard () const	{ return m_kind == WildcardT; }
     bool isFlex () const	{ return ((m_kind == FlexT) || (m_kind == NFlexT)); }
+    bool isNFlex () const	{ return m_kind == NFlexT; }
 
     bool isVariable () const	{ return m_kind == VariableT; }
     bool isList () const	{ return m_kind == ListT; }
@@ -305,7 +305,7 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     FlexType (bool as_const = false);
     FlexType (std::istream & str);
     ~FlexType ();
@@ -325,7 +325,8 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    unsigned int number () const;
     NFlexType (unsigned int number, bool as_const = false);
     NFlexType (std::istream & str);
     ~NFlexType ();
@@ -347,7 +348,7 @@ public:
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     VariableType (constTypePtr type = Type::Unspec, bool as_const = false);
     VariableType (std::istream & str);
@@ -370,7 +371,7 @@ public:
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     ListType (constTypePtr type = Type::Unspec, bool as_const = false);
@@ -395,7 +396,7 @@ public:
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr keytype () const { return m_keytype; }
     constTypePtr valuetype () const { return m_valuetype; }
     std::ostream & toStream (std::ostream & str) const;
@@ -420,7 +421,7 @@ public:
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr returnType () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     BlockType (constTypePtr type, bool as_const = false);
@@ -444,7 +445,7 @@ public:
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     TupleType (constTypePtr type, bool as_const = false);
     TupleType (std::istream & str);
@@ -472,7 +473,7 @@ public:
     bool equals (constTypePtr expected) const;
     bool canCast (constTypePtr to) const { return false; }
     TypePtr clone () const;
-    TypePtr unflex (constTypePtr type, unsigned int number = 0) const;
+    constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     FunctionType (constTypePtr returntype = Type::Unspec, bool as_const = false);
     FunctionType (std::istream & str);
@@ -481,7 +482,7 @@ public:
     void concat (constTypePtr t);
     int parameterCount () const;
     constTypePtr parameterType (unsigned int parameter_number) const;
-    TupleTypePtr parameters () const;
+    constTupleTypePtr parameters () const;
 };
 
 

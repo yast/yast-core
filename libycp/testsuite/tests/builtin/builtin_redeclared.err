@@ -1,6 +1,4 @@
-tests/builtin/builtin_redeclared.ycp:3:Definition shadows builtin
 [Parser] tests/builtin/builtin_redeclared.ycp:3 Definition shadows builtin
-tests/builtin/builtin_redeclared.ycp:3:'splitstring' defined as <builtin>.
 [Parser] tests/builtin/builtin_redeclared.ycp:3 'splitstring' defined as <builtin>.
 Parsed:
 ----------------------------------------------------------------------

@@ -15,9 +15,7 @@ Parsed:
     return i;
 }
 ----------------------------------------------------------------------
-tests/values/Block.ycp:15:Redefinition of local symbol
 [Parser] tests/values/Block.ycp:15 Redefinition of local symbol
-tests/values/Block.ycp:15:'i' defined in tests/values/Block.ycp:13.
 [Parser] tests/values/Block.ycp:15 'i' defined in tests/values/Block.ycp:13.
 Parsed:
 ----------------------------------------------------------------------

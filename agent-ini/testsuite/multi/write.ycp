@@ -11,7 +11,7 @@
     SCR::Write (.s."multi/write.in.4.test"."added", "#comment\n");
     SCR::Write (.v."multi/write.in.4.test"."added".Number, "0609 112 777");
     SCR::Write (.v."multi/write.in.1.test".fortech_litomysl.Username, "fakeuser");
-    list l = SCR::Dir (.s);
+    list<string> l = SCR::Dir (.s);
     y2milestone ("%1", l);
     foreach (string i, l, ``{
 	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);

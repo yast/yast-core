@@ -1,10 +1,6 @@
-tests/scope/Scope6.ycp:21:Redefinition of local symbol
 [Parser] tests/scope/Scope6.ycp:21 Redefinition of local symbol
-tests/scope/Scope6.ycp:21:'first' defined in tests/scope/Scope6.ycp:20.
 [Parser] tests/scope/Scope6.ycp:21 'first' defined in tests/scope/Scope6.ycp:20.
-tests/scope/Scope6.ycp:22:Redefinition of local symbol
 [Parser] tests/scope/Scope6.ycp:22 Redefinition of local symbol
-tests/scope/Scope6.ycp:22:'first' defined in tests/scope/Scope6.ycp:20.
 [Parser] tests/scope/Scope6.ycp:22 'first' defined in tests/scope/Scope6.ycp:20.
 Parsed:
 ----------------------------------------------------------------------

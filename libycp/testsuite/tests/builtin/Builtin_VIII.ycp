@@ -38,7 +38,7 @@
 // to the key and value is bound to the value.
 // The return value of the last execution of exp is the value
 // of the foreach construct.
-( foreach(`k, `v, $[1:1,2:4,3:9], ``{ y2debug("v = %1", v); return v; }) == 9 )
+( foreach(integer k, integer v, $[1:1,2:4,3:9], ``{ y2debug("v = %1", v); return v; }) == 9 )
 
 
 

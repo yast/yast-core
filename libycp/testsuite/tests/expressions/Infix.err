@@ -86,27 +86,21 @@ Parsed:
 ----------------------------------------------------------------------
 (1 > 0) ? 1 : 0
 ----------------------------------------------------------------------
-tests/expressions/Infix.ycp:33:Expression before '?' must be boolean
 [Parser] tests/expressions/Infix.ycp:33 Expression before '?' must be boolean
-tests/expressions/Infix.ycp:33:Expected 'boolean', seen 'integer'.
 [Parser] tests/expressions/Infix.ycp:33 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Infix.ycp:33 Parser error
-tests/expressions/Infix.ycp:40:Expression before '?' must be boolean
 [Parser] tests/expressions/Infix.ycp:40 Expression before '?' must be boolean
-tests/expressions/Infix.ycp:40:Expected 'boolean', seen 'list <const boolean>'.
 [Parser] tests/expressions/Infix.ycp:40 Expected 'boolean', seen 'list <const boolean>'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/expressions/Infix.ycp:40 Parser error
-tests/expressions/Infix.ycp:43:Expression before '?' must be boolean
 [Parser] tests/expressions/Infix.ycp:43 Expression before '?' must be boolean
-tests/expressions/Infix.ycp:43:Expected 'boolean', seen 'map <const integer, const boolean>'.
 [Parser] tests/expressions/Infix.ycp:43 Expected 'boolean', seen 'map <const integer, const boolean>'.
 Parsed:
 ----------------------------------------------------------------------

@@ -50,7 +50,6 @@ Parsed:
 ----------------------------------------------------------------------
 $[1:"a", 2:"bc"][1]:"no"
 ----------------------------------------------------------------------
-tests/builtin/Builtin-Map.ycp:36:Expected 'string', seen 'const integer'.
 [Parser] tests/builtin/Builtin-Map.ycp:36 Expected 'string', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------
@@ -130,9 +129,7 @@ Parsed:
 ----------------------------------------------------------------------
 "** add **"
 ----------------------------------------------------------------------
-tests/builtin/Builtin-Map.ycp:68:Undeclared identifier 'a'
 [Parser] tests/builtin/Builtin-Map.ycp:68 Undeclared identifier 'a'
-tests/builtin/Builtin-Map.ycp:68:Undeclared identifier 'b'
 [Parser] tests/builtin/Builtin-Map.ycp:68 Undeclared identifier 'b'
 Parsed:
 ----------------------------------------------------------------------
@@ -173,3 +170,13 @@ Parsed:
 ----------------------------------------------------------------------
 remove ($[1:2, 3:4], 1)
 ----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"** change **"
+----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Map.ycp:86 Warning: change(...) is deprecated, please fix
+Parsed:
+----------------------------------------------------------------------
+change ($["a":true], "a", false)
+----------------------------------------------------------------------
+[libycp] tests/builtin/Builtin-Map.ycp:86 Change does not work as expected! The argument is not passed by reference.

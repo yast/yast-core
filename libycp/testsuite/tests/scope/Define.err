@@ -36,9 +36,7 @@ Parsed:
     return 2;
 }
 ----------------------------------------------------------------------
-tests/scope/Define.ycp:33:Parameter 'plus' shadows function name
 [Parser] tests/scope/Define.ycp:33 Parameter 'plus' shadows function name
-tests/scope/Define.ycp:35:Undeclared identifier 'i'
 [Parser] tests/scope/Define.ycp:35 Undeclared identifier 'i'
 Parsed:
 ----------------------------------------------------------------------

@@ -257,7 +257,7 @@ Scanner::logError (const char *loginfo, int lineno, ...)
     else if (m_filename.empty())filename = "YCP stream";
     else			filename = m_filename.c_str();
 
-    fprintf (stderr, "%s:%d:%s\n", filename, lineno, logtext);
+//    fprintf (stderr, "%s:%d:%s\n", filename, lineno, logtext);
     syn2error(filename, lineno, "%s\n", logtext);
     return;
 }

@@ -85,7 +85,7 @@ getTheObject (PMSelectablePtr selectable)
 /**
  *  @builtin Pkg::PkgMediaNames () -> [ "source_1_name", "source_2_name", ...]
  *    return names of sources in installation order
- *
+ *  list<string>
  */
 YCPValue
 PkgModuleFunctions::PkgMediaNames ()
@@ -109,6 +109,7 @@ PkgModuleFunctions::PkgMediaNames ()
  *    return cumulated sizes (in bytes !) to be installed from different sources and media
  *
  *   Returns the install size, not the archivesize !!
+ *  list <list <integer> >
  */
 YCPValue
 PkgModuleFunctions::PkgMediaSizes ()

@@ -11,7 +11,7 @@
     SCR::Write (.s."multi/del.in.2.test", nil);
     SCR::Write (.s."multi/del.in.3.test", nil);
     SCR::Write (.s."multi/del.in.2.test", "#Comment for 2\n");
-    list l = SCR::Dir (.s);
+    list<string> l = SCR::Dir (.s);
     y2milestone ("%1", l);
     foreach (string i, l, ``{
 	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);

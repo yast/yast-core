@@ -8,14 +8,12 @@ Parsed:
     return m[1]:0;
 }
 ----------------------------------------------------------------------
-tests/types/const2.ycp:15:Assignment to const identifier 'm'
 [Parser] tests/types/const2.ycp:15 Assignment to const identifier 'm'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/const2.ycp:12 Parser error
-tests/types/const2.ycp:24:Assignment to const identifier 'm'
 [Parser] tests/types/const2.ycp:24 Assignment to const identifier 'm'
 Parsed:
 ----------------------------------------------------------------------

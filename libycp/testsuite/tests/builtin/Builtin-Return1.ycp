@@ -1,11 +1,11 @@
 # test the type check of the return value
 
 {
-    list l = ["foo", "bar"];
+    list<string> l = ["foo", "bar"];
     return maplist (string v, l, ``{ return v; }) == ["foo", "bar"];
 }
 
 {
-    list l = ["foo", "bar"];
+    list<string> l = ["foo", "bar"];
     return maplist (string v, l, ``{ return v == "foo"; }) == [true, false];
 }

@@ -26,16 +26,13 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/scope/Declaration.ycp:13 19 [true, $[1:2], #[DEADBEAF]]
-tests/scope/Declaration.ycp:25:Missing 'list' parameter.
 [Parser] tests/scope/Declaration.ycp:25 Missing 'list' parameter.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Declaration.ycp:19 Parser error
-tests/scope/Declaration.ycp:34:Types are not comparable
 [Parser] tests/scope/Declaration.ycp:34 Types are not comparable
-tests/scope/Declaration.ycp:34:Expected 'map', seen 'const integer'.
 [Parser] tests/scope/Declaration.ycp:34 Expected 'map', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------

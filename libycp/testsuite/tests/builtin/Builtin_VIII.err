@@ -10,11 +10,9 @@ Parsed:
 ----------------------------------------------------------------------
 (size ($["key":`value]) == 1)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_VIII.ycp:41 Parameter 'k' has unspecified type
-[Interpreter] tests/builtin/Builtin_VIII.ycp:41 Parameter 'v' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(foreach (any k, any v, $[1:1, 2:4, 3:9], {
+(foreach (integer k, integer v, $[1:1, 2:4, 3:9], {
     y2debug ("v = %1", v);
     return v;
 }

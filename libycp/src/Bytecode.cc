@@ -658,7 +658,7 @@ Bytecode::readEntry (std::istream & str)
 
     if (sentry == 0)
     {
-	y2error ("invalid entry %d for namespace (%s)", position, name_space->toString().c_str());
+	y2error ("invalid entry %d for namespace (%s)", position, name_space->name().c_str());
 	return 0;
     }
     y2debug ("entry <namespace id %d @ %p[%s]> pos %d = (%s)", namespace_id, name_space, name_space->name().c_str(), position, sentry->toString().c_str());

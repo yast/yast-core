@@ -149,7 +149,7 @@ SCR::SCR ()
 	{ "Read",		"any (path, any, any)",		(void *)SCRRead3 },
 	{ "Write",		"boolean (path, any)",		(void *)SCRWrite2, DECL_NIL },
 	{ "Write",		"boolean (path, any, any)",	(void *)SCRWrite3 },
-	{ "Dir",		"list<any> (path)",		(void *)SCRDir },
+	{ "Dir",		"list<string> (path)",		(void *)SCRDir },
 	{ "Execute",		"any (path)",			(void *)SCRExecute },
 	{ "Execute",		"any (path, any)",		(void *)SCRExecute2 },
 	{ "Execute",		"any (path, any, any)",		(void *)SCRExecute3 },

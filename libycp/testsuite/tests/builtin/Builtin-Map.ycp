@@ -80,4 +80,7 @@
 (remove($[1:2], 1))
 (remove ($[1:2, 3:4], 1))
 
+("** change **")
 
+# deprecated
+(change ($["a":true], "a", false))

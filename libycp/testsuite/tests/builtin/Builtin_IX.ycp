@@ -30,7 +30,7 @@
 ( mapmap(integer k, string v, $[1:"a", 2:"b"], ``{ integer a = k+10; string b = v+"x"; map ret = $[a:b]; return(ret); }) == $[ 11:"ax",  12:"bx" ] )
 
 // the map is not related to the given symbols
-( mapmap(`k, `v, $[1:"a", 2:"b"], ``($[10: "x"])) == $[ 10:"x",  10:"x" ] )
+( mapmap(integer k, string v, $[1:"a", 2:"b"], ``($[10: "x"])) == $[ 10:"x",  10:"x" ] )
 
 // there is only an empty map
 ( mapmap(integer k, string v, $[ ], ``($[k+10: v+"x"])) == $[ ] )
@@ -70,7 +70,7 @@
 // is assigned to the key and <tt>v</tt> to the value of the pair.
 // If the expression evaluates to true,
 // the key/value pair is appended to the result map.
-( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(k == v)) == $[3:3,5:5] )
-( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(k == 2)) == $[2:"b"] )
-( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(v == "b")) == $[2:"b"] )
+( filter(integer k, any v, $[1:"a",2:"b",3:3,5:5], ``(k == tointeger(v))) == $[3:3,5:5] )
+( filter(integer k, any v, $[1:"a",2:"b",3:3,5:5], ``(k == 2)) == $[2:"b"] )
+( filter(integer k, any v, $[1:"a",2:"b",3:3,5:5], ``(tostring(v) == "b")) == $[2:"b"] )
 

@@ -2,14 +2,12 @@ Parsed:
 ----------------------------------------------------------------------
 "NON-TERMINAL YCP_DeclTerm"
 ----------------------------------------------------------------------
-tests/errors/Notifications.ycp:20:Undeclared identifier 'Symbol0002'
 [Parser] tests/errors/Notifications.ycp:20 Undeclared identifier 'Symbol0002'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:20 Parser error
-tests/errors/Notifications.ycp:24:bad octal constant
 [Parser] tests/errors/Notifications.ycp:24 bad octal constant
 Parsed:
 ----------------------------------------------------------------------
@@ -23,79 +21,62 @@ Parsed:
 ----------------------------------------------------------------------
 ((($[1:"Paris"] + $[2:"London"]) == $[1:"Paris", 2:"London"]) == true)
 ----------------------------------------------------------------------
-tests/errors/Notifications.ycp:39:Undeclared identifier 'ComposedString'
 [Parser] tests/errors/Notifications.ycp:39 Undeclared identifier 'ComposedString'
-tests/errors/Notifications.ycp:39:Undeclared identifier 'd'
 [Parser] tests/errors/Notifications.ycp:39 Undeclared identifier 'd'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:39 Parser error
-tests/errors/Notifications.ycp:54:Undeclared identifier 'InnerString'
 [Parser] tests/errors/Notifications.ycp:54 Undeclared identifier 'InnerString'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:43 Parser error
-tests/errors/Notifications.ycp:60:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:60 'if' expression not boolean
-tests/errors/Notifications.ycp:60:Expected 'boolean', seen 'const void'.
 [Parser] tests/errors/Notifications.ycp:60 Expected 'boolean', seen 'const void'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:60 Parser error
-tests/errors/Notifications.ycp:61:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:61 'if' expression not boolean
-tests/errors/Notifications.ycp:61:Expected 'boolean', seen 'integer'.
 [Parser] tests/errors/Notifications.ycp:61 Expected 'boolean', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:61 Parser error
-tests/errors/Notifications.ycp:62:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:62 'if' expression not boolean
-tests/errors/Notifications.ycp:62:Expected 'boolean', seen 'const float'.
 [Parser] tests/errors/Notifications.ycp:62 Expected 'boolean', seen 'const float'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:62 Parser error
-tests/errors/Notifications.ycp:63:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:63 'if' expression not boolean
-tests/errors/Notifications.ycp:63:Expected 'boolean', seen 'string'.
 [Parser] tests/errors/Notifications.ycp:63 Expected 'boolean', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:63 Parser error
-tests/errors/Notifications.ycp:65:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:65 'if' expression not boolean
-tests/errors/Notifications.ycp:65:Expected 'boolean', seen 'const path'.
 [Parser] tests/errors/Notifications.ycp:65 Expected 'boolean', seen 'const path'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:65 Parser error
-tests/errors/Notifications.ycp:66:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:66 'if' expression not boolean
-tests/errors/Notifications.ycp:66:Expected 'boolean', seen 'list <const boolean>'.
 [Parser] tests/errors/Notifications.ycp:66 Expected 'boolean', seen 'list <const boolean>'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:66 Parser error
-tests/errors/Notifications.ycp:68:'if' expression not boolean
 [Parser] tests/errors/Notifications.ycp:68 'if' expression not boolean
-tests/errors/Notifications.ycp:68:Expected 'boolean', seen 'map <string, const boolean>'.
 [Parser] tests/errors/Notifications.ycp:68 Expected 'boolean', seen 'map <string, const boolean>'.
 Parsed:
 ----------------------------------------------------------------------

@@ -67,7 +67,7 @@
   v_list = nil;
 
   return ([v_list == [], v_list == nil, size (v_list) == 0, is (v_list, void), is (v_list, list) ]
-	  == [false, true, false, false, true]);
+	  == [false, true, true, false, true]);
 }
 
 {
@@ -75,7 +75,7 @@
   v_map = nil;
 
   return ([v_map == $[], v_map == nil, size (v_map) == 0, is (v_map, void), is (v_map, map) ]
-	  == [false, true, false, false, true]);
+	  == [false, true, true, false, true]);
 }
 // #13263:
 {

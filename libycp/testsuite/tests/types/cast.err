@@ -26,7 +26,6 @@ Parsed:
     return foo;
 }
 ----------------------------------------------------------------------
-tests/types/cast.ycp:22:Can't cast from 'string' to 'integer'.
 [Parser] tests/types/cast.ycp:22 Can't cast from 'string' to 'integer'.
 Parsed:
 ----------------------------------------------------------------------

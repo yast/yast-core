@@ -122,7 +122,6 @@ static void yyerror_no_module		(Parser *parser, int lineno, const char *module);
 #define yyTwarning(tentry)			yywarning_with_tableentry (p_parser, 0, tentry)
 #define yyTypeMismatch(expected,seen,lineno)	yyerror_type_mismatch (p_parser, lineno, expected, seen)
 #define yyMissingArgument(type,lineno)		yyerror_missing_argument (p_parser, lineno, type)
-#define yyDeclMismatch(decl,type,lineno)	yyerror_decl_mismatch (p_parser, lineno, decl, type)
 #define yyCantCast(from,to,lineno)		yyerror_cant_cast (p_parser, lineno, from, to)
 #define yyNoModule(module,lineno)		yyerror_no_module (p_parser, lineno, module)
 
@@ -2415,6 +2414,106 @@ assignment:
 		    break;
 		}
 
+		    // try to determine the type as far as possible, following the list of arguments,
+		    // doing a type check as we go
+		    // come out with $$.t == 0 if error, else determined type
+
+		    // the currently tested structured type
+		    constTypePtr cur = $1.t;
+
+		    // index into YEList of bracket parameters, the list cannot be empty
+		    int index = 0;
+		    YEListPtr params = (YEListPtr)$3.c;
+
+		    do
+		    {
+			constTypePtr paramType = params->value (index)->type ();	// type of bracket parameter at index
+#if DO_DEBUG
+			y2debug ("paramvalue (%d) '%s'", index, params->value(index)->toString().c_str());
+			y2debug ("paramType '%s'", paramType->toString().c_str());
+#endif
+			if (paramType->isFunction())
+			{
+			    paramType = ((constFunctionTypePtr)paramType)->returnType ();
+#if DO_DEBUG
+			    y2debug ("paramType is function returning '%s'", paramType->toString().c_str());
+#endif
+			}
+			
+			// for lists, only integer is acceptable
+			if (cur->isList ())
+			{
+			    if (! paramType->isInteger ())
+			    {
+				yyTypeMismatch (Type::Integer, paramType, $1.l);
+				cur = 0;
+				break;
+			    }
+			    else
+			    {
+				cur = ((constListTypePtr)cur)->type ();
+			    }
+			}
+			else if (cur->isMap ())
+			{
+			    if (paramType->match (((constMapTypePtr)cur)->keytype ()) == -1)
+			    {
+				yyTypeMismatch (((constMapTypePtr)cur)->keytype (), paramType, $1.l);
+				cur = 0;
+				break;
+			    }
+			    else
+			    {
+				cur = ((constMapTypePtr)cur)->valuetype ();
+			    }
+			}
+			else if (cur->isTerm ())
+			{
+			    if (! paramType->isInteger ())
+			    {
+				yyTypeMismatch (Type::Integer, paramType, $1.l);
+				cur = 0;
+				break;
+			    }
+			    else
+			    {
+				cur = Type::Any;
+			    }
+			}
+
+			index++;
+
+		    } while (index < params->count ()
+			     && (cur->isList () || cur->isMap ()));
+
+		    // quit on error
+		    if (cur == 0)
+		    {
+			$$.t = 0;
+			break;
+		    }
+
+		    int match = $6.t->match (cur);
+		    if (match > 0)
+		    {
+			$6.c = new YEPropagate ($6.c, $6.t, cur);
+			match = 0;
+		    }
+		    if (match != 0)
+		    {
+			yyLerror ("type mismatch in bracket assignment", $1.l);
+			yyTypeMismatch(cur, $6.t, $1.l);
+		    }
+#if 0
+		    if (index < params->count ())		// we hit a non-list/non-map before end of bracket
+		    {
+			$$.t = Type::Any;			// we can't say anything about the resulting type, must propagate to default type
+		    }
+		    else 
+		    {
+			$$.t = cur;
+		    }
+#endif
 		$$.c = new YSBracket ($1.v.tval->sentry(), $3.c, $6.c, $1.l);
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
@@ -2693,6 +2792,11 @@ function_call:
 			    p_parser->m_loop_count++;
 			}
 			$$.t = decl->type;
+
+			if (decl->flags & DECL_DEPRECATED)
+			{
+			    yywarning ((string (decl->name) + "(...) is deprecated, please fix").c_str(), $1.l);
+			}
 		    }
 /*
 		    else if (sentry->type() == Type::Term) // a term
@@ -2786,16 +2890,49 @@ function_call:
 			constTypePtr finalT = builtin->finalize ();
 			if (finalT != 0)
 			{
-			    if (finalT->isError())
+			    constFunctionTypePtr bt;
+			    constFunctionTypePtr dt;
+			    if (builtin->type()->isFunction())
 			    {
-				yyLerror ("Parameters:", $4.l);
-				yyLerror (builtin->toString().c_str(), $4.l);
-				yyLerror ("  don't match declaration:", $4.l);
-				yyLerror (StaticDeclaration::Decl2String((declaration_t *)($3.v.val), true).c_str(), $4.l);
+				bt = builtin->type();
 			    }
-			    else
+			    if (builtin->decl()->type->isFunction())
 			    {
-				yyMissingArgument (finalT, $1.l);
+				dt = builtin->decl()->type;
+			    }
+			    if (finalT->isError()
+				&& bt != 0
+				&& dt != 0)
+			    {
+				if (bt->parameterCount() < dt->parameterCount())
+				{
+				    yyMissingArgument (dt->parameterType(bt->parameterCount()), $1.l);
+				    if (builtin->decl()->flags & DECL_FLEX == 0)
+				    {
+					finalT = 0;			// mark 'error shown'
+				    }
+				}
+			    }
+
+			    if (finalT != 0)				// error not shown yet
+			    {
+				yyLerror ((string ("Wrong parameters in call to ") + string (builtin->decl()->name) + string ("(...)")).c_str(), $4.l);
+				constTypePtr seen = bt ? (constTypePtr)(bt->parameters()) : builtin->type();
+				constTypePtr expected;
+				if (finalT->isError())
+				{
+				    expected = dt ? (constTypePtr)(dt->parameters()) : builtin->decl()->type;
+				}
+				else if (finalT->isFunction())
+				{
+				    dt = finalT;
+				    expected = dt->parameters();
+				}
+				else
+				{
+				    expected = finalT;
+				}
+				yyTypeMismatch (expected, seen, $4.l);
 			    }
 
 			    $$.t = 0;
@@ -3427,7 +3564,7 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 
     FunctionTypePtr ft = Type::Function (Type::Unspec);		// the declaration determines the return type
 #if DO_DEBUG
-    y2debug ("check_binary_op e1 %p, e2 %p", &(e1->t), &(e2->t));
+    y2debug ("i_check_binary_op e1 %p, e2 %p", &(e1->t), &(e2->t));
 #endif
     ft->concat (e1->t);
     ft->concat (e2->t);
@@ -3476,26 +3613,35 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 
     if (decl != 0)		// if plain or propagation matched
     {
+	constFunctionTypePtr cft = decl->type;
 	if (decl->flags & DECL_FLEX)
 	{
-	    ft = Type::determineFlexType (ft, decl->type, Type::Unspec);
-	    if (ft->isError())
+	    cft = Type::determineFlexType (ft, decl->type);
+	    if (cft == 0)
 	    {
 		result->t = 0;
 		return;
 	    }
-	}
-	else
-	{
-	    ft = decl->type->clone();
+	    else if (cft->isFunction()
+		     && ft->isFunction())
+	    {
+		if (ft->parameters()->match (cft->parameters()) != 0)		//  or realtype does not match actual type
+		{
+		    result->t = 0;
+		    return;
+		}
+	    }
+#if DO_DEBUG
+	    y2debug ("cft '%s', decl->type '%s'", cft ? cft->toString().c_str() : "NULL", decl->type->toString().c_str());
+#endif
 	}
 	result->c = new YEBinary (decl, e1->c, e2->c);
-	result->t = ft->returnType ();
+	result->t = cft->returnType ();
 	result->l = e1->l;
     }
 
 #if DO_DEBUG
-    y2debug ("check_binary_op (%s/%s/%s) good (ret = '%s')", e1->t->toString().c_str(), op, e2->t->toString().c_str(), result->t->toString().c_str());
+    y2debug ("i_check_binary_op (%s/%s/%s) good (ret = '%s')", e1->t->toString().c_str(), op, e2->t->toString().c_str(), result->t->toString().c_str());
 #endif
     return;
 }
@@ -3600,6 +3746,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
     ee.setLinenumber (parm->l);
 
     constTypePtr t;
+    string name;
 
     switch (code->kind())
     {
@@ -3609,6 +3756,8 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    y2debug ("YCode::yeBuiltin:");
 #endif
 	    YEBuiltinPtr builtin = (YEBuiltinPtr)code; 
+
+	    name = builtin->decl()->name;
 	    
 	    // FIXME: new symbol could be probably devised, but it is a debug, anyway
 #if DO_DEBUG
@@ -3652,7 +3801,6 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 #if DO_DEBUG
 		y2debug ("check for 'type name' or 'symbol' expression");
 #endif
-
 		// check for "type name" or "symbol" expression
 
 		if (parm1 != 0)						// 'type name' expression
@@ -3693,6 +3841,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    y2debug ("YCode::yeFunction:");
 #endif
 	    YEFunctionPtr func = (YEFunctionPtr)code; 
+	    name = func->entry()->name();
 #if DO_DEBUG
 	    y2debug ("attach_parameter func ([%s]%s:%s)", func->toString().c_str(), parm->c->toString().c_str(), parm->t->toString().c_str());
 #endif
@@ -3706,7 +3855,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    y2debug ("YCode::yeTerm:");
 #endif
 	    YETermPtr term = (YETermPtr)code; 
-
+	    name = term->name();
 #if DO_DEBUG
 	    y2debug ("attach_parameter term ([%s]%s)", term->toString().c_str(), parm->c->toString().c_str());
 #endif
@@ -3726,6 +3875,8 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 #if DO_DEBUG
 	y2debug ("attach_parameter error, t:%s", t->toString().c_str());
 #endif
+	name = string (" in call to ") + name + string ("(...)");
+
 	if (t->isUnspec())
 	{
 //	    yyerror_with_lineinfo (parser, parm->l, "No matching function");
@@ -3736,17 +3887,17 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
 	    if (parm->t->isSymbol()
 		&& parm->t->isConst())
 	    {
-		yyerror_with_lineinfo (parser, parm->l, "Duplicate symbol");
+		yyerror_with_lineinfo (parser, parm->l, (string ("Duplicate symbol") + name).c_str());
 	    }
 	    else
 	    {
-		yyerror_with_lineinfo (parser, parm->l, "Excessive parameter");
+		yyerror_with_lineinfo (parser, parm->l, (string ("Excessive parameter") + name).c_str());
 	    }
 	    yyerror_with_code (parser, parm->l, parm->c, parm->t);
 	}
 	else
 	{
-	    yyerror_with_lineinfo (parser, parm->l, "Parameter type mismatch");
+	    yyerror_with_lineinfo (parser, parm->l, (string ("Parameter type mismatch") + name).c_str());
 	    yyerror_type_mismatch (parser, parm->l, t, parm->t);
 	    yyerror_with_code (parser, parm->l, parm->c, parm->t);
 	}

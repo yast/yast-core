@@ -2,14 +2,14 @@ Parsed:
 ----------------------------------------------------------------------
 {
     // void dummy ()
-    // list list_var
+    // list <integer> list_var
     // any ret
     // filename: "tests/statements/Break1.ycp"
     void dummy ()
 {
     return;
 }
-    list list_var = [1, 2, 3];
+    list <integer> list_var = [1, 2, 3];
     any ret = foreach (integer entry, list_var, {
     if ((entry == 3))
     break;

@@ -1,6 +1,4 @@
-tests/statements/loop.ycp:9:Mismatched return type in block
 [Parser] tests/statements/loop.ycp:9 Mismatched return type in block
-tests/statements/loop.ycp:9:Expected 'integer', seen 'void'.
 [Parser] tests/statements/loop.ycp:9 Expected 'integer', seen 'void'.
 Parsed:
 ----------------------------------------------------------------------

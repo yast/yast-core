@@ -200,7 +200,7 @@ Type::basematch (constTypePtr expected) const
 
 //    y2debug ("basematch '%s', expected '%s'[%d]", toString().c_str(), expected->toString().c_str(), ek);
 
-    if (m_kind == ErrorT
+    if (isError()
 	|| ek == ErrorT)
     {
 	y2debug ("Error !");
@@ -225,7 +225,7 @@ Type::basematch (constTypePtr expected) const
 	return 1;
     }
 
-    if (m_kind == VoidT)			// nil matches everywhere
+    if (isVoid())				// nil matches everywhere
     {
 	return 0;
     }
@@ -246,8 +246,9 @@ Type::match (constTypePtr expected) const
     {
 	return 0;
     }
-
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     if (basematch (expected) < 0)
     {
 //	y2debug ("basematch failed");
@@ -271,21 +272,21 @@ Type::match (constTypePtr expected) const
 	return 0;
     }
 
-    if (m_kind == AnyT) return -1;		// any does not propagate
-    if (m_kind == VoidT) return 0;		// nil matches all
-    if (m_kind == IntegerT)			// int -> float
+    if (isAny()) return -1;		// any does not propagate
+    if (isVoid()) return 0;		// nil matches all
+    if (isInteger())			// int -> float
     {
 	return (ek == FloatT) ? 2 : -1;
     }
-    if (m_kind == FloatT)			// float -> int
+    if (isFloat())			// float -> int
     {
 	return (ek == IntegerT) ? 1 : -1;
     }
-    if (m_kind == LocaleT)			// locale -> string
+    if (isLocale())			// locale -> string
     {
 	return (ek == StringT) ? 0 : -1;
     }
-    if (m_kind== StringT)			// string -> locale
+    if (isString())			// string -> locale
     {
 	return (ek == LocaleT) ? 0 : -1;
     }
@@ -313,7 +314,7 @@ Type::clone () const
 }
 
 
-TypePtr
+constTypePtr
 Type::unflex (constTypePtr type, unsigned int number) const
 {
     return clone();
@@ -390,11 +391,11 @@ FlexType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 FlexType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp;
-    if (m_kind == FlexT
+    if (isFlex()
 	&& number == 0)
     {
 	tp = type->clone();
@@ -461,8 +462,8 @@ NFlexType::matchFlex (constTypePtr type, unsigned int number) const
 #if DO_DEBUG
     y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
 #endif
-    if (number != 0
-	&& number != m_number)
+    if (number == 0
+	|| number != m_number)
     {
 	return 0;
     }
@@ -491,11 +492,18 @@ NFlexType::clone () const
 }
 
 
-TypePtr
+unsigned int
+NFlexType::number () const
+{
+    return m_number;
+}
+
+
+constTypePtr
 NFlexType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp;
-    if (m_kind == NFlexT
+    if (isNFlex()
 	&& m_number == number)
     {
 	tp = type->clone();
@@ -556,9 +564,9 @@ VariableType::matchFlex (constTypePtr type, unsigned int number) const
 #if DO_DEBUG
     y2debug ("matchFlex '%s' (%s)", toString().c_str(), type->toString().c_str());
 #endif
-    if (m_kind == FlexT)
+    if (type->isVariable())
     {
-	return type;
+	return m_type->matchFlex (((constVariableTypePtr)type)->m_type, number);
     }
     return 0;
 }
@@ -567,8 +575,9 @@ VariableType::matchFlex (constTypePtr type, unsigned int number) const
 int
 VariableType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
     if (bm == 1
 	|| (bm == 0
@@ -603,7 +612,7 @@ VariableType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 VariableType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = VariableTypePtr (new VariableType (m_type->unflex (type, number)));
@@ -678,8 +687,9 @@ ListType::matchFlex (constTypePtr type, unsigned int number) const
 int
 ListType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
     if (bm == 1
 	|| (bm == 0
@@ -721,7 +731,7 @@ ListType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 ListType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = ListTypePtr (new ListType (m_type->unflex (type, number)));
@@ -807,8 +817,9 @@ MapType::matchFlex (constTypePtr type, unsigned int number) const
 int
 MapType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
     if (bm == 1
 	|| (bm == 0
@@ -857,7 +868,7 @@ MapType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 MapType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp;
@@ -937,8 +948,9 @@ BlockType::matchFlex (constTypePtr type, unsigned int number) const
 int
 BlockType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
     if (bm == 1
 	|| (bm == 0
@@ -980,7 +992,7 @@ BlockType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 BlockType::unflex (constTypePtr type, unsigned int number) const
 {
     TypePtr tp = BlockTypePtr (new BlockType (m_type->unflex (type, number)));
@@ -1058,14 +1070,14 @@ TupleType::parameterType (unsigned int parameter_number) const
 string
 TupleType::toString () const
 {
-    string ret = preToString() + "tuple <";
+    string ret = preToString() + "(";
 
     for (unsigned index = 0; index < m_types.size(); index++)
     {
 	if (index != 0) ret += ", ";
 	ret += m_types[index]->toString();
     }
-    ret += ">";
+    ret += ")";
     ret += postToString();
     return ret;
 }
@@ -1103,19 +1115,22 @@ TupleType::matchFlex (constTypePtr type, unsigned int number) const
 int
 TupleType::match (constTypePtr expected) const
 {
-//    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
 
     if (bm == 1)
+    {
 	return 0;
+    }
 
     if (bm == 0
 	    && expected->isTuple())
     {
-	const TupleType & tt = (const TupleType)expected;
-	unsigned int esize = tt.m_types.size();
-	bool wildcard = tt.m_types[esize-1]->isWildcard();
+	constTupleTypePtr tt = expected;
+	unsigned int esize = tt->m_types.size();
+	bool wildcard = tt->m_types[esize-1]->isWildcard();
 	for (unsigned index = 0; index < m_types.size(); index++)
 	{
 	    if (index > esize
@@ -1123,7 +1138,7 @@ TupleType::match (constTypePtr expected) const
 	    {
 		break;
 	    }
-	    if (m_types[index]->match (tt.m_types[index]) < 0)
+	    if (m_types[index]->match (tt->m_types[index]) < 0)
 	    {
 		return -1;
 	    }
@@ -1200,7 +1215,7 @@ TupleType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 TupleType::unflex (constTypePtr type, unsigned int number) const
 {
     TupleTypePtr tp = TupleTypePtr (new TupleType (m_types[0]->unflex (type, number)));
@@ -1313,6 +1328,13 @@ FunctionType::parameterType (unsigned int parameter_number) const
 }
 
 
+constTupleTypePtr
+FunctionType::parameters () const
+{
+    return m_arguments;
+}
+
+
 string
 FunctionType::toString () const
 {
@@ -1362,8 +1384,9 @@ FunctionType::matchFlex (constTypePtr type, unsigned int number) const
 int
 FunctionType::match (constTypePtr expected) const
 {
-//    y2debug ("FunctionType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-
+#if DO_DEBUG
+    y2debug ("FunctionType::match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
+#endif
     int bm = basematch (expected);
 
     if (bm == 1) return 0;		// any or wildcard match
@@ -1467,7 +1490,7 @@ FunctionType::clone () const
 }
 
 
-TypePtr
+constTypePtr
 FunctionType::unflex (constTypePtr type, unsigned int number) const
 {
     FunctionTypePtr tp = FunctionTypePtr (new FunctionType (m_returntype->unflex (type, number)));
@@ -1530,10 +1553,15 @@ Type::valueType () const
 constTypePtr
 Type::commontype (constTypePtr type) const
 {
+    if (isVoid())		// 'nil' does not influence the type
+    {
+	return type;
+    }
+
     if (match (type) >= 0)
     {
 #if DO_DEBUG
-//y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+//	y2debug ("commontype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
 #endif
 	return this;
     }
@@ -1541,12 +1569,12 @@ Type::commontype (constTypePtr type) const
 	     && type->match (this) >= 0)
     {
 #if DO_DEBUG
-//y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+//    y2debug ("commontype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
 #endif
 	return type;
     }
 #if DO_DEBUG
-//y2debug ("commontype '%s' ('%s') any", toString().c_str(), type->toString().c_str());
+//    y2debug ("commontype '%s' ('%s') -> any", toString().c_str(), type->toString().c_str());
 #endif
     return Type::Any;
 }

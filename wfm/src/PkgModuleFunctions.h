@@ -343,7 +343,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL  ( Pkg, TargetProducts, 		"list<any> ()",		PkgModuleFunctions, TargetProducts);
 	Y2FUNCTIONCALL  ( Pkg, TargetRebuildDB, 	"boolean ()",		PkgModuleFunctions, TargetRebuildDB);
 	Y2FUNCTIONCALL1 ( Pkg, TargetInitDU, 		"void (list<map<any,any> >)",List,		PkgModuleFunctions, TargetInitDU);
-	Y2FUNCTIONCALL  ( Pkg, TargetGetDU, 		"map<string,any> ()",		PkgModuleFunctions, TargetGetDU);
+	Y2FUNCTIONCALL  ( Pkg, TargetGetDU, 		"map<string,list<integer>> ()",		PkgModuleFunctions, TargetGetDU);
 	Y2FUNCTIONCALL1 ( Pkg, TargetFileHasOwner, 	"boolean (string)",String, 	PkgModuleFunctions, TargetFileHasOwner);
 
 	// selection related

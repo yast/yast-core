@@ -7,7 +7,6 @@ Parsed:
     return (a[0]:nil == "foo");
 }
 ----------------------------------------------------------------------
-tests/types/bracket.ycp:12:Expected 'integer', seen 'string'.
 [Parser] tests/types/bracket.ycp:12 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
@@ -36,7 +35,6 @@ Parsed:
     return (res == "foo");
 }
 ----------------------------------------------------------------------
-tests/types/bracket.ycp:32:Expected 'string', seen 'const boolean'.
 [Parser] tests/types/bracket.ycp:32 Expected 'string', seen 'const boolean'.
 Parsed:
 ----------------------------------------------------------------------
@@ -65,14 +63,12 @@ Parsed:
     return (res == true);
 }
 ----------------------------------------------------------------------
-tests/types/bracket.ycp:54:Expected 'boolean', seen 'string'.
 [Parser] tests/types/bracket.ycp:54 Expected 'boolean', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/types/bracket.ycp:51 Parser error
-tests/types/bracket.ycp:61:Expected 'string', seen 'integer'.
 [Parser] tests/types/bracket.ycp:61 Expected 'string', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------

@@ -1,7 +1,5 @@
 [Interpreter] tests/scope/Scope4.ycp:36 Implicit float conversion will loose accuracy
-tests/scope/Scope4.ycp:40:Mismatched return type in block
 [Parser] tests/scope/Scope4.ycp:40 Mismatched return type in block
-tests/scope/Scope4.ycp:40:Expected 'string', seen 'integer'.
 [Parser] tests/scope/Scope4.ycp:40 Expected 'string', seen 'integer'.
 Parsed:
 ----------------------------------------------------------------------

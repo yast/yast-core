@@ -1,10 +1,6 @@
-tests/scope/Scope8.ycp:7:Redefinition of local symbol
 [Parser] tests/scope/Scope8.ycp:7 Redefinition of local symbol
-tests/scope/Scope8.ycp:7:'Modified' defined in Scope7.inc:10.
 [Parser] tests/scope/Scope8.ycp:7 'Modified' defined in Scope7.inc:10.
-tests/scope/Scope8.ycp:7:Included from Scope8.inc:5.
 [Parser] tests/scope/Scope8.ycp:7 Included from Scope8.inc:5.
-tests/scope/Scope8.ycp:7:Included from tests/scope/Scope8.ycp:3.
 [Parser] tests/scope/Scope8.ycp:7 Included from tests/scope/Scope8.ycp:3.
 Parsed:
 ----------------------------------------------------------------------

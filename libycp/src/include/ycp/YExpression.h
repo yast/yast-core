@@ -103,6 +103,7 @@ public:
     // dummy is here just to make it similar to YEBuiltin and YEFunction
     constTypePtr attachParameter (YCodePtr code, constTypePtr dummy = Type::Unspec);
     string toString () const;
+    const char *name () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const { return Type::Term; }
@@ -358,7 +359,7 @@ class YEBuiltin : public YCode
 {
     REP_BODY(YEBuiltin);
     declaration_t *m_decl;
-    FunctionTypePtr m_type;
+    constFunctionTypePtr m_type;
 
     // symbol parameters (NULL, if no symbolic parameters)
     YBlockPtr m_parameterblock;
@@ -370,7 +371,14 @@ public:
     YEBuiltin (std::istream & str);
     ~YEBuiltin ();
     declaration_t *decl () const;
-    // see YEFunction::finalize
+    /**
+     * 'close' function, perform final parameter check
+     * if ok, return 0
+     * if wrong signature (wrong parameter count, template mismatch)
+     *   return expected signature
+     * if undefined, return Type::Error
+     *   (wrong type was already reported in attachParameter())
+     */
     constTypePtr finalize ();
     constTypePtr returnType () const;
     // see YEFunction::attachParameter

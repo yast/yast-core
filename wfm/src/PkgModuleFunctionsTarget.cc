@@ -376,7 +376,7 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 
 /** ------------------------
  * 
- * @builtin Pkg::TargetGetDU (void) -> map
+ * @builtin Pkg::TargetGetDU (void) -> map<string, list<integer> >
  *
  * return current DU calculations
  * $[ "dir" : [ total, used, pkgusage ], .... ]

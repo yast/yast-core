@@ -7,9 +7,8 @@ Parsed:
     return flatten ([il, il, il]);
 }
 ----------------------------------------------------------------------
-No match for 'flatten : <unspec> (list <integer>)':
-flatten:list <<T>> (const list <list <<T>>>)
-tests/builtin/flatten.ycp:9:Bad parameter '<list <integer>> il'
+[Interpreter] tests/builtin/flatten.ycp:9 No match for 'flatten : <unspec> (list <integer>)':
+[Interpreter] tests/builtin/flatten.ycp:9 flatten:list <<T>> (const list <list <<T>>>)
 [Parser] tests/builtin/flatten.ycp:9 Bad parameter '<list <integer>> il'
 Parsed:
 ----------------------------------------------------------------------

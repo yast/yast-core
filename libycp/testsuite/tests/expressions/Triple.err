@@ -108,9 +108,7 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/expressions/Triple.ycp:45 false
-tests/expressions/Triple.ycp:46:Expression before '?' must be boolean
 [Parser] tests/expressions/Triple.ycp:46 Expression before '?' must be boolean
-tests/expressions/Triple.ycp:46:Expected 'boolean', seen 'const integer'.
 [Parser] tests/expressions/Triple.ycp:46 Expected 'boolean', seen 'const integer'.
 Parsed:
 ----------------------------------------------------------------------

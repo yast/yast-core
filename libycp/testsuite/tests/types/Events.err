@@ -1,0 +1,7 @@
+[Parser] tests/types/Events.ycp:14 Wrong parameters in call to foreach(...)
+[Parser] tests/types/Events.ycp:14 Expected '(variable <string>, variable <string>, map <string, string>, block <void>)', seen '(variable <string>, variable <string>, map, block <void>)'.
+Parsed:
+----------------------------------------------------------------------
+Parser error
+----------------------------------------------------------------------
+[Interpreter] tests/types/Events.ycp:10 Parser error

@@ -1,6 +1,4 @@
-tests/types/returntype.ycp:5:Mismatched return type in block
 [Parser] tests/types/returntype.ycp:5 Mismatched return type in block
-tests/types/returntype.ycp:5:Expected 'integer', seen 'string'.
 [Parser] tests/types/returntype.ycp:5 Expected 'integer', seen 'string'.
 Parsed:
 ----------------------------------------------------------------------

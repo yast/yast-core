@@ -28,7 +28,7 @@
 ( maplist (integer k, string v, $[1:"a", 2:"b"], { return [k+10, v+"x"]; }) == 
          [ [11, "ax"], [ 12, "bx" ] ] )
 
-( maplist(`k, `v, $[1:"a", 2:"b"], ``{ return nil; }) == [ nil, nil ] )
+( maplist(integer k, string v, $[1:"a", 2:"b"], ``{ return nil; }) == [ nil, nil ] )
 
 // libycp[36] Sorry, comparison of { } with { } not yet implemented
 // ( maplist(`k, `v, $[1:"a", 2:"b"], ``(``{})) == ``[ {}, {} ] )

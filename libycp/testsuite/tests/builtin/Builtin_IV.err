@@ -26,9 +26,8 @@ Parsed:
 ----------------------------------------------------------------------
 (flatten ([[1, [2, [3, [4]]]]]) == [1, [2, [3, [4]]]])
 ----------------------------------------------------------------------
-No match for 'flatten : <unspec> (list)':
-flatten:list <<T>> (const list <list <<T>>>)
-tests/builtin/Builtin_IV.ycp:67:Bad parameter '<list> [[1], 2, [3, 4]]'
+[Interpreter] tests/builtin/Builtin_IV.ycp:67 No match for 'flatten : <unspec> (list)':
+[Interpreter] tests/builtin/Builtin_IV.ycp:67 flatten:list <<T>> (const list <list <<T>>>)
 [Parser] tests/builtin/Builtin_IV.ycp:67 Bad parameter '<list> [[1], 2, [3, 4]]'
 Parsed:
 ----------------------------------------------------------------------

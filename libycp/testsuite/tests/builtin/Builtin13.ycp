@@ -31,11 +31,11 @@
 {
    any   v = 0;
 
-   return foreach( `v, [ 1, 2, 3 ], ``{ return v; } ) == 3;
+   return foreach( integer v, [ 1, 2, 3 ], ``{ return v; } ) == 3;
 }
 
 {
-   return foreach( `v, [ 1, 2, 3 ], ``{ return v; } ) == 3;
+   return foreach( integer v, [ 1, 2, 3 ], ``{ return v; } ) == 3;
 }
 
 
@@ -46,15 +46,15 @@
 // this circumstances, the value is appended to the result list.
 
 {
-   return filter( `v, [ 1, 2, 3, 5 ], ``( v>2 ) ) == [ 3, 5 ];
+   return filter( integer v, [ 1, 2, 3, 5 ], ``( v>2 ) ) == [ 3, 5 ];
 }
 
 {
-   return filter( `v, [ 1, 2, 3, 5 ], ``{ return v>2; } ) == [ 3, 5 ];
+   return filter( integer v, [ 1, 2, 3, 5 ], ``{ return v>2; } ) == [ 3, 5 ];
 }
 
 {
-   list MyList = [ "Andreas", "Bert", "Charles", "Dean", "Eduard", "Fred" ];
+   list<string> MyList = [ "Andreas", "Bert", "Charles", "Dean", "Eduard", "Fred" ];
 
    return filter(string v, MyList, ``( size( v ) > 4 ) ) == [ "Andreas", "Charles", "Eduard" ];
 }

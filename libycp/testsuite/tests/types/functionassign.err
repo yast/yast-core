@@ -1,4 +1,3 @@
-tests/types/functionassign.ycp:6:Assignment to function
 [Parser] tests/types/functionassign.ycp:6 Assignment to function
 Parsed:
 ----------------------------------------------------------------------

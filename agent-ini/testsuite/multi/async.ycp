@@ -14,7 +14,7 @@
     SCR::Write (.v."multi/async.in.4.test".xxx.homepage, "http://xxx.suse.de/");
     SCR::RegisterAgent (.target, `ag_system ());
     SCR::Execute (.target.bash, "echo -en \"[Dialer other]\nhomepage = http://www.other.dom\nProduct = \n\" >> multi/async.in.4.test");
-    list l = SCR::Dir (.s);
+    list<string> l = SCR::Dir (.s);
     y2milestone ("%1", l);
     foreach (string i, l, ``{
 	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);

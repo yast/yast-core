@@ -1,16 +1,15 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // list l
+    // list <string> l
     // filename: "tests/builtin/Builtin-Return.ycp"
-    list l = ["foo", "bar"];
+    list <string> l = ["foo", "bar"];
     return (filter (string v, l, { return (v != "foo"); }) == ["bar"]);
 }
 ----------------------------------------------------------------------
-No match for 'filter : <unspec> (variable <string>, list, block <string>)':
-filter:list <<T>> (variable <<T>>, const list <<T>>, const block <boolean>)
-filter:map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)
-tests/builtin/Builtin-Return.ycp:10:Bad parameter '<string> { return v; }'
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 No match for 'filter : <unspec> (variable <string>, list <string>, block <string>)':
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 filter:list <<T>> (variable <<T>>, const list <<T>>, const block <boolean>)
+[Interpreter] tests/builtin/Builtin-Return.ycp:10 filter:map <<T1>, <T2>> (variable <<T1>>, variable <<T2>>, const map <<T1>, <T2>>, const block <boolean>)
 [Parser] tests/builtin/Builtin-Return.ycp:10 Bad parameter '<string> { return v; }'
 Parsed:
 ----------------------------------------------------------------------

@@ -1,10 +1,10 @@
 Parsed:
 ----------------------------------------------------------------------
 {
-    // list l
+    // list <string> l
     // list r
     // filename: "tests/statements/foreach_continue.ycp"
-    list l = ["1", "2", "3"];
+    list <string> l = ["1", "2", "3"];
     list r = [];
     foreach (string s, l, {
     if ((s == "2"))

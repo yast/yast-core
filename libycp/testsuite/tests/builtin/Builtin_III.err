@@ -2,29 +2,21 @@ Parsed:
 ----------------------------------------------------------------------
 (sort (integer x, integer y, [3, 6, 2, 8], { return (x < y); }) == [2, 3, 6, 8])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:45 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:45 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1, 2, 1, 2], { return (x < y); }) == [1, 1, 2, 2])
+(sort (integer x, integer y, [1, 2, 1, 2], { return (x < y); }) == [1, 1, 2, 2])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:47 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:47 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1], { return (x < y); }) == [1])
+(sort (integer x, integer y, [1], { return (x < y); }) == [1])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:48 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:48 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1, 1, 1, 1, (2 - 1), (1 * 1), (-1 * -1)], { return (x < y); }) == [1, 1, 1, 1, 1, 1, 1])
+(sort (integer x, integer y, [1, 1, 1, 1, (2 - 1), (1 * 1), (-1 * -1)], { return (x < y); }) == [1, 1, 1, 1, 1, 1, 1])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:49 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:49 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [], { return (x < y); }) == [])
+(sort (integer x, integer y, [], { return (x < y); }) == [])
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
@@ -38,9 +30,8 @@ Parsed:
 ----------------------------------------------------------------------
 (sformat ("I'll go th the event %1 today", sformat ("Abi %1", 99)) == "I'll go th the event Abi 99 today")
 ----------------------------------------------------------------------
-No match for 'sformat : <unspec> (const integer)':
-sformat:string (string, ...)
-tests/builtin/Builtin_III.ycp:66:Bad parameter '<const integer> 42'
+[Interpreter] tests/builtin/Builtin_III.ycp:66 No match for 'sformat : <unspec> (const integer)':
+[Interpreter] tests/builtin/Builtin_III.ycp:66 sformat:string (string, ...)
 [Parser] tests/builtin/Builtin_III.ycp:66 Bad parameter '<const integer> 42'
 Parsed:
 ----------------------------------------------------------------------

@@ -1,27 +1,22 @@
-[Interpreter] tests/builtin/Builtin_VI.ycp:26 Parameter 'n' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(find (any n, [3, 5, 6, 4], { return (n >= 5); }) == 5)
+(find (integer n, [3, 5, 6, 4], { return (n >= 5); }) == 5)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_VI.ycp:27 Parameter 'n' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(find (any n, [3, 6, 5, 4], { return (n >= 5); }) == 6)
+(find (integer n, [3, 6, 5, 4], { return (n >= 5); }) == 6)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_VI.ycp:28 Parameter 'n' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(find (any n, [3, 4, -5], { return (n >= 5); }) == nil)
+(find (integer n, [3, 4, -5], { return (n >= 5); }) == nil)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_VI.ycp:29 Parameter 'n' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(find (any n, [], { return (n >= 5); }) == nil)
+(find (integer n, [], { return (n >= 5); }) == nil)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_VI.ycp:30 Parameter 'n' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(find (any n, [], { return true; }) == nil)
+(find (integer n, [], { return true; }) == nil)
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------

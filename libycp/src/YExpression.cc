@@ -258,6 +258,13 @@ YETerm::~YETerm ()
 }
 
 
+const char *
+YETerm::name () const
+{
+    return m_name;
+}
+
+
     /**
      * Attach parameter to external function call
      * @param code: parameter code
@@ -1552,7 +1559,7 @@ YEBracket::toStream (std::ostream & str) const
 YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePtr type)
     : YCode (yeBuiltin)
     , m_decl (decl)
-    , m_type (type==0 ? Type::Function(Type::Unspec) : (FunctionTypePtr)(type->clone()))
+    , m_type (type==0 ? Type::Function(Type::Unspec) : (constFunctionTypePtr)type)
     , m_parameterblock (parameterblock)
     , m_parameters (0)
     , m_last (0)
@@ -1646,9 +1653,10 @@ YEBuiltin::parameterBlock () const
 /**
  * 'close' function, perform final parameter check
  * if ok, return 0
- * if missing parameter, return its type
- * if undefined, return Type::Error (wrong type was already
- *   reported in attachParameter()
+ * if bad signature, return expected signature
+ *   (i.e. if non-matching template)
+ * if undefined, return Type::Error
+ *   (wrong type was already reported in attachParameter())
  */
 
 constTypePtr
@@ -1664,28 +1672,42 @@ YEBuiltin::finalize ()
     declaration_t *decl = static_declarations.findDeclaration (m_decl, m_type, false);
     if (decl == 0)
     {
-	ycp2error ("YEBuiltin::finalize() FAILED");
 	return Type::Error;
     }
+    m_decl = decl;					// remember matching declaration
 
-    if (decl->flags & DECL_FLEX)
+#if DO_DEBUG
+    y2debug ("YEBuiltin::finalize found (%s : %s)", StaticDeclaration::Decl2String (m_decl, true).c_str(), m_type->toString().c_str());
+#endif
+
+    if (m_decl->flags & DECL_FLEX)
     {
-	m_type = Type::determineFlexType (m_type, decl->type, Type::Unspec);
-	if (m_type == 0)
+	// expand template type to real type
+
+	constTypePtr rtype = Type::determineFlexType (m_type, m_decl->type);
+	if (rtype == 0)					// error
 	{
-	    ycp2error ("Type::determineFlexType returns NULL");
-	    return decl->type;
+	    return m_decl->type;
 	}
-	else if (m_type->isError())
+	else if (m_type->isFunction()
+		 && rtype->isFunction())
 	{
-	    return m_type;
+	    constFunctionTypePtr mft = m_type;
+	    constFunctionTypePtr rft = rtype;
+	    if (mft->parameters()->match (rft->parameters()) != 0)		//  or realtype does not match actual type
+	    {
+#if DO_DEBUG
+    y2debug ("YEBuiltin::finalize (ERR : %s)", rtype ? rtype->toString().c_str() : "NULL");
+#endif
+		return rtype;
+	    }
 	}
+	m_type = rtype;
     }
     else
     {
-	m_type = decl->type->clone();
+	m_type = m_decl->type;
     }
-    m_decl = decl;
 #if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s : %s)", StaticDeclaration::Decl2String (m_decl, true).c_str(), m_type->toString().c_str());
 #endif
@@ -1753,19 +1775,22 @@ YEBuiltin::attachParameter (YCodePtr code, constTypePtr type)
 
     if (!type->isUnspec ())
     {
-	m_type->concat (type);
+	FunctionTypePtr ntype = m_type->clone();
+	ntype->concat (type);
+
 #if DO_DEBUG
-	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), m_type->toString().c_str());
+	y2debug ("YEBuiltin::attachParameter (%s:%s -> '%s')", type->toString().c_str(), code->toString().c_str(), ntype->toString().c_str());
 #endif
 
-	decl = static_declarations.findDeclaration (m_decl, m_type, true);
+	decl = static_declarations.findDeclaration (m_decl, ntype, true);
 	if (decl == 0)
 	{
 	    // FIXME: check for propagation
-	    static_declarations.findDeclaration (m_decl, m_type, false);	// force error output
+	    static_declarations.findDeclaration (m_decl, ntype, false);	// force error output
 	    // FIXME: return expected type
 	    return Type::Unspec;
 	}
+	m_type = ntype;
     }
 #if DO_DEBUG
     else
@@ -1814,8 +1839,10 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
     {
 	// try with symbol constant first
 	addedType = Type::Symbol;
+
 	matchedType = m_type->clone();
 	matchedType->concat (addedType);
+
 	declaration_t *decl = static_declarations.findDeclaration (m_decl, matchedType, true);
 	if (decl != 0)
 	{
@@ -1872,7 +1899,7 @@ YCPValue
 YEBuiltin::evaluate (bool cse)
 {
 #if DO_DEBUG
-    y2debug ("YEBuiltin::evaluate [%s]", YCode::toString (kind()).c_str());
+    y2debug ("YEBuiltin::evaluate [%s:%s]", YCode::toString (kind()).c_str(), m_decl->name);
 #endif
 
     if (cse)
@@ -1926,13 +1953,8 @@ YEBuiltin::evaluate (bool cse)
 	    return YCPNull ();
 	}
 
-	if (args[i].isNull ())
-	{
-	    args[i] = YCPVoid ();
-	}
-
 #if DO_DEBUG
-	y2debug ("==> (%s)", args[i]->toString().c_str());
+	y2debug ("==> (%s)", args[i].isNull() ? "NULL" : args[i]->toString().c_str());
 #endif
 
 	if ((typepos < 0)					// not at wildcard yet
@@ -1980,7 +2002,7 @@ YEBuiltin::evaluate (bool cse)
 
 #if DO_DEBUG
     y2debug ("YEBuiltin::evaluate [%s (%d args)]", StaticDeclaration::Decl2String (m_decl, false).c_str(), i);
-    y2debug ("parameter 1: %s", i > 0 ? args[0]->toString().c_str() : "nil" );
+    y2debug ("parameter 1: %s", i > 0 ? (args[0].isNull() ? "NULL" : args[0]->toString().c_str()) : "nil" );
 #endif
     YCPValue ret = YCPNull();
     if (m_decl->ptr == 0)
@@ -2057,22 +2079,7 @@ YEBuiltin::evaluate (bool cse)
 constTypePtr
 YEBuiltin::type () const
 {
-    constTypePtr return_type = returnType();
-    if (return_type->isError())
-    {
-#if DO_DEBUG
-	y2debug ("YEBuiltin::type() error !");
-#endif
-	return return_type;
-    }
-    FunctionTypePtr f = Type::Function(return_type)->clone();
-    ycodelist_t *parm = m_parameters;
-    while (parm)
-    {
-	f->concat(parm->code->type());
-	parm = parm->next;
-    }
-    return f;
+    return m_type;
 }
 
 // ------------------------------------------------------------------
@@ -2552,7 +2559,7 @@ YEFunction::finishParameters ()
     constTypePtr err_tp = finalize ();
     if (err_tp != NULL)
     {
-	ycp2error ("Missing %s parameter to %s",
+	ycp2error ("Missing '%s' parameter to %s",
 		 err_tp->toString ().c_str (), qualifiedName ().c_str ());
 	return false;
     }

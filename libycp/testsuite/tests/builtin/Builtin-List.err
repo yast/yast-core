@@ -75,6 +75,24 @@ Parsed:
 ----------------------------------------------------------------------
 prepend ([], 8)
 ----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List.ycp:48 No match for 'prepend : <unspec> (list <const integer>)':
+[Interpreter] tests/builtin/Builtin-List.ycp:48 prepend:list <<T>> (const list <<T>>, const <T>)
+[Parser] tests/builtin/Builtin-List.ycp:48 Missing 'const <T>' parameter.
+[Parser] tests/builtin/Builtin-List.ycp:48 Wrong parameters in call to prepend(...)
+[Parser] tests/builtin/Builtin-List.ycp:48 Expected '(const list <<T>>, const <T>)', seen '(list <const integer>)'.
+Parsed:
+----------------------------------------------------------------------
+Parser error
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List.ycp:48 Parser error
+[Interpreter] tests/builtin/Builtin-List.ycp:50 No match for 'prepend : <unspec> (list <const integer>, const integer, const integer)':
+[Interpreter] tests/builtin/Builtin-List.ycp:50 prepend:list <<T>> (const list <<T>>, const <T>)
+[Parser] tests/builtin/Builtin-List.ycp:50 Bad parameter '<const integer> 3'
+Parsed:
+----------------------------------------------------------------------
+Parser error
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List.ycp:50 Parser error
 Parsed:
 ----------------------------------------------------------------------
 "** contains **"
@@ -171,8 +189,12 @@ Parsed:
 ----------------------------------------------------------------------
 sort ([2, 1, true, 1])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List.ycp:95 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin-List.ycp:95 Parameter 'y' has unspecified type
+Parsed:
+----------------------------------------------------------------------
+sort (integer x, integer y, [3, 6, 2, 8], { return (x > y); })
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List.ycp:99 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin-List.ycp:99 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
 sort (any x, any y, [3, 6, 2, 8], { return (x > y); })
@@ -221,6 +243,12 @@ Parsed:
 ----------------------------------------------------------------------
 "** change **"
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-List.ycp:124 Warning: change(...) is deprecated, please fix
+Parsed:
+----------------------------------------------------------------------
+change ([1, 4], 8)
+----------------------------------------------------------------------
+[libycp] tests/builtin/Builtin-List.ycp:124 Change does not work as expected! The argument is not passed by reference.
 Parsed:
 ----------------------------------------------------------------------
 "** remove **"
@@ -233,7 +261,7 @@ Parsed:
 ----------------------------------------------------------------------
 remove ([], 0)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List.ycp:125 Index 0 for remove () out of range
+[Interpreter] tests/builtin/Builtin-List.ycp:130 Index 0 for remove () out of range
 Parsed:
 ----------------------------------------------------------------------
 "** select **"

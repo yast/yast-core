@@ -1,8 +1,6 @@
 [Interpreter] tests/errors/DuplParam.ycp:2 Parameter 'i' has unspecified type
 [Interpreter] tests/errors/DuplParam.ycp:2 Parameter 'i' has unspecified type
-tests/errors/DuplParam.ycp:2:Duplicate symbol
-[Parser] tests/errors/DuplParam.ycp:2 Duplicate symbol
-tests/errors/DuplParam.ycp:2:Bad parameter '<const symbol> `i'
+[Parser] tests/errors/DuplParam.ycp:2 Duplicate symbol in call to foreach(...)
 [Parser] tests/errors/DuplParam.ycp:2 Bad parameter '<const symbol> `i'
 Parsed:
 ----------------------------------------------------------------------

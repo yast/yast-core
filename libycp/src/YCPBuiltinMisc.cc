@@ -133,8 +133,9 @@ Eval (const YCPValue & v)
      */
 
     if (v.isNull ())
+    {
 	return YCPNull ();
-
+    }
     if (!v->isCode())
     {
 	return v;
@@ -144,7 +145,7 @@ Eval (const YCPValue & v)
 
 
 static YCPString
-s_sformat (const YCPString &format, const YCPList &argv)
+s_sformat (const YCPValue &format, const YCPValue &_argv)
 {
     /**
      * @builtin sformat (string form, any par1, any par2, ...) -> string
@@ -158,15 +159,19 @@ s_sformat (const YCPString &format, const YCPList &argv)
      * </pre>
      */
      
-    if (format.isNull ())
-	return YCPNull ();
-	
-    if (argv.isNull ())
+    if (format.isNull ()
+	|| !format->isString())
     {
-	return format;
+	return YCPNull ();
+    }	
+    if (_argv.isNull ()
+	|| !_argv->isList())
+    {
+	return format->asString();
     }
+    YCPList argv = _argv->asList();
 
-    const char *read = format->value ().c_str ();
+    const char *read = format->asString()->value ().c_str ();
 
     string result = "";
     while (*read)

@@ -1,4 +1,3 @@
-tests/expressions/Bracket-typeerror.ycp:3:Expected 'term', seen 'list'.
 [Parser] tests/expressions/Bracket-typeerror.ycp:3 Expected 'term', seen 'list'.
 Parsed:
 ----------------------------------------------------------------------
