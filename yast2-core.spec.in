@@ -80,7 +80,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @scrconfdir@/*.scr
 @execcompdir@/servers/scr
 @execcompdir@/servers_non_y2/ag_*
-/usr/lib/perl5/site_perl/ycp.pm
+%{perl_vendorlib}/ycp.pm
 
 %files devel
 %defattr(-,root,root)
