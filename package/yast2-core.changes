@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Mar  4 00:42:27 CET 2004 - kkaempf@suse.de
+
+- implement stricter type checking for builtin functions and
+  bracket assignment
+- 2.9.51
+
+-------------------------------------------------------------------
 Wed Mar  3 23:11:23 CET 2004 - kkaempf@suse.de
 
 - support new hwinfo fields "sysfs_bus_id" and "hwaddr"
