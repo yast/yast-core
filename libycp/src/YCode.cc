@@ -146,7 +146,7 @@ YCode::toString (ykind kind)
 	"ysVariable",		// variable definition (-> YSAssign)
 	"ysFunction",		// function definition
 	"ysAssign",		// variable assignment or definition
-	"ysBracket",		// <name> [ <expr>", ... ] = <expr>
+	"ysBracket",		// <name> [ <expr>, ... ] = <expr>
 	"ysIf",			// if", then", else
 	"ysWhile",		// while () do ...
 	"ysDo",			// do ... while ()
