@@ -742,6 +742,12 @@ YBlock::YBlock (bytecodeistream & str)
     }
 
     Bytecode::popUptoNamespace (this);
+    
+    // for modules ensure symbol table
+    if (isModule ())
+    {
+	createTable ();
+    }
 #if DO_DEBUG
     y2debug ("done");
 #endif
