@@ -373,10 +373,7 @@ main (int argc, char **argv)
     argv[argc] = NULL;
 
     // set the server options directly
-    if (arg < argc)
-    {
-	server->setServerOptions(argc-arg+1, server_argv);
-    }
+    server->setServerOptions(argc-arg+1, server_argv);
 
     // Preload server with scripts from -p and directly given YCPValues
     for (int i = 0; i < preload->size(); i++)
