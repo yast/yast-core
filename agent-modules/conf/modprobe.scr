@@ -1,0 +1,33 @@
+/**
+ * File:	modprobe.scr
+ * Summary:	SCR agent for /etc/modprobe.conf
+ * Authors:	Michal Svec <msvec@suse.cz>, Daniel Vesely <dan@suse.cz>
+ * Access:	read / write
+ * See:		modprobe.conf(5), modules.html
+ *
+ * Examples:
+ *   Read(.modprobe)
+ *   (["alias", "include", "install", "options", "remove"])
+ **
+ *   Read(.modprobe.options)
+ *   (["agpgart", "cipcb", "dummy0", "dummy1", "parport_pc", "vtx"])
+ **
+ *   Read(.modprobe.options.agpgart)
+ *   ($["agp_try_unsupported":"1"])
+ **
+ *   Write(.modprobe.options.agpgart, $["agp_try_unsupported":"0"])
+ *   (true)
+ **
+ *   Write(.modprobe, nil)
+ *   (true)
+ *
+ * $Id$
+ *
+ * <p>Reads/writes <tt>/etc/modprobe.conf</tt>. For more detail see its
+ * own documentation.</p>
+ */
+.modprobe
+
+`ag_modules(
+    ModulesConf("/etc/modprobe.conf")
+)

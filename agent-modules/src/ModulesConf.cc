@@ -508,7 +508,7 @@ bool ModulesConf::writeFile(const string fname) {
 		else if(dir == FINAL_COMMENT)
 		    of << getComment(dir,mod); // << endl;
 		/* postpone directive */
-		else if(dir == "include" && mod == "/etc/modules.conf.local")
+		else if(dir == "include" && (mod == "/etc/modules.conf.local" || mod == "/etc/modprobe.conf.local"))
 		    localinclude = getComment(dir,mod) + dir + " " + mod + " " + getArgument(dir,mod) + "\n";
 		/* normal directive */
 		else
