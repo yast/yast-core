@@ -1096,7 +1096,7 @@ Bytecode::writeFile (const YCodePtr code, const string & filename)
     if (!outstream.is_open ())
     {
 	y2error ("Failed to write '%s': %s", filename.c_str(), strerror (errno));
-	return errno;
+	return false;
     }
 
     string header =  string (YaST_BYTECODE_HEADER YaST_BYTECODE_MAJOR "." YaST_BYTECODE_MINOR "." YaST_BYTECODE_RELEASE);
