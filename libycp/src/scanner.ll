@@ -122,7 +122,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 
 \#\[    {
 	  if (scandata_buffer == 0) scandata_buffer = extend_scanbuffer (1);
-	  if (scandata_buffer == 0) return 0;
+	  if (scandata_buffer == 0) return SCANNER_ERROR;
 	  scandata_buffer_ptr = scandata_buffer;
 	  BEGIN (bybl);
         }
@@ -144,7 +144,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	  int offset = scandata_buffer_ptr - scandata_buffer;
 
 	  if (offset + ylen/2 >= scandata_buffer_size) {
-	    if (extend_scanbuffer (ylen) == 0) return 0;
+	    if (extend_scanbuffer (ylen) == 0) return SCANNER_ERROR;
 	    scandata_buffer_ptr = scandata_buffer + offset;
 	  }
 	  for (int i=0; i<ylen/2; i++) {
@@ -163,7 +163,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 
 <bybl>. {
           logError("bad character in byteblock constant", yylineno);
-          return 0;
+          return SCANNER_ERROR;
         }
 
         /* -- string  */
@@ -174,7 +174,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
           if (scandata_buffer == 0)
             scandata_buffer = extend_scanbuffer (1);
           if (scandata_buffer == 0)
-            return 0;
+            return SCANNER_ERROR;
 
           scandata_buffer_ptr = scandata_buffer;
           BEGIN (str);
@@ -198,7 +198,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
           int result = scandata_buffer_ptr - scandata_buffer;
           if (result >= scandata_buffer_size) {
               if (extend_scanbuffer (1) == 0)
-		  return 0;
+		  return SCANNER_ERROR;
 	      scandata_buffer_ptr = scandata_buffer + result;
 	  }
           (void) sscanf( yytext + 1, "%o", &result );
@@ -215,7 +215,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	  int offset = scandata_buffer_ptr - scandata_buffer;
 	  if (offset >= scandata_buffer_size) {
 	    if (extend_scanbuffer (1) == 0)
-	      return 0;
+	      return SCANNER_ERROR;
 	    scandata_buffer_ptr = scandata_buffer + offset;
 	  }
 	  switch (yytext[1]) {
@@ -237,7 +237,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	  int offset = scandata_buffer_ptr - scandata_buffer;
 	  if (offset + ylen >= scandata_buffer_size) {
 	    if (extend_scanbuffer (ylen) == 0)
-	      return 0;
+	      return SCANNER_ERROR;
 	    scandata_buffer_ptr = scandata_buffer + offset;
 	  }
 	  strcpy (scandata_buffer_ptr, yptr);
@@ -250,7 +250,7 @@ SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 	  int offset = scandata_buffer_ptr - scandata_buffer;
 	  if (offset >= scandata_buffer_size) {
 	    if (extend_scanbuffer (1) == 0)
-	      return 0;
+	      return SCANNER_ERROR;
 	    scandata_buffer_ptr = scandata_buffer + offset;
 	  }
           *scandata_buffer_ptr++ = '\n';
@@ -325,9 +325,9 @@ declaration { RESULT (YCPDeclType(YT_DECLARATION), YCP_DECLTYPE); };
 symbol      { RESULT (YCPDeclType(YT_SYMBOL), YCP_DECLTYPE);	};
 
  /* common mistyped names  */
-int	    { logError ("Seen 'int', use 'integer' instead", yylineno); return 0; };
-char	    { logError ("Seen 'char', use 'string' instead", yylineno); return 0; };
-bool	    { logError ("Seen 'bool', use 'boolean' instead", yylineno); return 0; };
+int	    { logError ("Seen 'int', use 'integer' instead", yylineno); return SCANNER_ERROR; };
+char	    { logError ("Seen 'char', use 'string' instead", yylineno); return SCANNER_ERROR; };
+bool	    { logError ("Seen 'bool', use 'boolean' instead", yylineno); return SCANNER_ERROR; };
 
 UI	{ return UI; }
 WFM	{ return WFM; }
@@ -344,12 +344,12 @@ SCR	{ return SCR; }
 	    else {
 		if (yytext[yyleng-1] == '-') {
 		    logError ("dash behind path constant not allowed", yylineno);
-		    return 0;
+		    return SCANNER_ERROR;
 		}
 		YCPPath p (yytext);
 		if (p->length() == 0) {
 		    logError ("not a path constant", yylineno);
-		    return 0;
+		    return SCANNER_ERROR;
 		}
 		RESULT (p, YCP_PATH);
 	    }
@@ -402,8 +402,8 @@ _\(	{ return I18N;		}
 
 \`\`\{	{ return QUOTED_BLOCK;		}
 \`\`\(	{ return QUOTED_EXPRESSION;	}
-\`\`	{ logError ("Lonely doubleqoute", yylineno); return 0; }
-\`	{ logError ("Lonely qoute", yylineno); return 0; }
+\`\`	{ logError ("Lonely doubleqoute", yylineno); return SCANNER_ERROR; }
+\`	{ logError ("Lonely qoute", yylineno); return SCANNER_ERROR; }
 
 
   /* -- bit operators  */
@@ -425,5 +425,5 @@ _\(	{ return I18N;		}
 .	{
 		debug_scanner("?%s?", yytext);
 	  	logError ("Unexpected char '%s'", yylineno, yytext);
-		return 0;
+		return SCANNER_ERROR;
 	}

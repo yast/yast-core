@@ -1,2 +1,3 @@
 [libycp] YCPPath.cc(YCPPathRep):54 bad path constant: dash before/after dot not allowed
 [Scanner] tests/PathErr3.ycp:18 Syntax error: not a path constant
+[Scanner] tests/PathErr3.ycp:0 Syntax error: parse error, unexpected SCANNER_ERROR, expecting $end

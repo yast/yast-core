@@ -69,6 +69,8 @@ static string current_textdomain;
 
 %pure_parser
 
+  /* SCANNER_ERROR is returned when yylex does not have a valid token */
+%token  SCANNER_ERROR
 %token  EMPTY LIST DEFINE UNDEFINE I18N
 %token  RETURN CONTINUE BREAK IF DO WHILE REPEAT UNTIL IS ISNIL
 %token  SYMBOL QUOTED_SYMBOL
