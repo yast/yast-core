@@ -539,7 +539,9 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	    {
 		return default_value;
 	    }
-	    return YCPError ("Can't access directory '" + filename + "': " + strerror (errno));
+	    y2milestone ("Can't access directory '%s': %s'"
+		, filename.c_str (), strerror (errno));
+	    return YCPVoid ();
 	}
 
 	YCPList dirlist;
