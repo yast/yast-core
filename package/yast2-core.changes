@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Sep 20 16:38:43 CEST 2004 - schwab@suse.de
+
+- Fix C++ syntax and format strings.
+
+-------------------------------------------------------------------
 Mon Sep 13 14:49:39 CEST 2004 - arvin@suse.de
 
 - don't use hd_base after freeing (bug #44855)
