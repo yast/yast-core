@@ -24,9 +24,8 @@
 #include <string>
 using std::string;
 
-#ifdef D_MEMUSAGE
+// MemUsage.h defines/undefines D_MEMUSAGE
 #include <y2util/MemUsage.h>
-#endif
 #include "ycp/YCodePtr.h"
 
 #include "ycp/YCPValue.h"

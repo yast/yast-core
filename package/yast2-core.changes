@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 17 13:51:41 CET 2004 - mvidner@suse.cz
+
+- include MemUsage.h unconditionally, let *it* (un)define D_MEMUSAGE
+
+-------------------------------------------------------------------
 Wed Mar 17 13:02:14 CET 2004 - visnov@suse.cz
 
 - don't pass YCPNull to UI builtins 

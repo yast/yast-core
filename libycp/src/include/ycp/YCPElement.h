@@ -21,9 +21,8 @@
 #ifndef YCPElement_h
 #define YCPElement_h
 
-#ifdef D_MEMUSAGE
+// MemUsage.h defines/undefines D_MEMUSAGE
 #include <y2util/MemUsage.h>
-#endif
 
 // include only forward declarations of iostream
 #include <iosfwd>

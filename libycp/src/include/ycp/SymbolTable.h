@@ -29,6 +29,8 @@ using std::string;
 #include <list>
 #include <stack>
 
+// MemUsage.h defines/undefines D_MEMUSAGE
+#include <y2util/MemUsage.h>
 #include "ycp/SymbolEntryPtr.h"
 #include "ycp/Point.h"
 

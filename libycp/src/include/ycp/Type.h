@@ -23,6 +23,8 @@
 #include <iosfwd>
 #include <vector>
 
+// MemUsage.h defines/undefines D_MEMUSAGE
+#include <y2util/MemUsage.h>
 #include "ycp/YCPValue.h"
 #include "ycp/TypePtr.h"
 
