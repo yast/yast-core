@@ -10,11 +10,10 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:	YCPList.h
+   File:       YCPList.h
 
-   Author:	Mathias Kettner <kettner@suse.de>
-		Arvin Schnell <arvin@suse.de>
-   Maintainer:	Arvin Schnell <arvin@suse.de>
+   Author:     Mathias Kettner <kettner@suse.de>
+   Maintainer: Thomas Roelz <tom@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -109,7 +108,7 @@ public:
     void sortlist();
 
     /**
-     * Sorts the list (locale aware). This function changes the list.
+     * Sorts the list according to the locale. This function changes the list.
      */
     void lsortlist();
 
@@ -118,7 +117,7 @@ public:
      * the same elements as this one. The elements themselves
      * are <b>not</b> copied, but only cloned!
      */
-    YCPList shallowCopy() const;
+    virtual const YCPElementRep* shallowCopy() const;
 
     /**
      * Creates a new list, that is identical to this one with but
@@ -162,6 +161,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_LIST. See @ref YCPValueRep#type.
      */
     YCPValueType valuetype() const;
@@ -174,6 +178,9 @@ public:
     string commaList() const;
 };
 
+#define CONST_ELEMENT (static_cast<const YCPListRep*>(element))
+#define ELEMENT (const_cast<YCPListRep*>(static_cast<const YCPListRep*>(this->writeCopy())))
+
 /**
  * @short Wrapper for YCPListRep
  * This class realizes an automatic memory management
@@ -182,9 +189,28 @@ public:
  */
 class YCPList : public YCPValue
 {
-    DEF_COMMON(List, Value);
+    DEF_COW_COMMON(List, Value);
 public:
     YCPList() : YCPValue(new YCPListRep()) {}
+    YCPList(std::istream & str);
+
+    int size() const { return CONST_ELEMENT->size (); }
+    void reserve (int size) { ELEMENT->reserve (size); }
+    bool isEmpty() const { return CONST_ELEMENT->isEmpty (); }
+    void add(const YCPValue& value) { ELEMENT->add (value);  }
+    void set(const int n, const YCPValue& value) { ELEMENT->set (n, value); }
+    void remove(const int n) { ELEMENT->remove (n); }
+    void swap(int x, int y) { ELEMENT->swap (x, y); }
+    bool contains (const YCPValue& value) const { return CONST_ELEMENT->contains (value); }
+    void sortlist() { ELEMENT->sortlist (); }
+    void lsortlist() { ELEMENT->lsortlist (); }
+    YCPList functionalAdd(const YCPValue& value, bool prepend = false) const
+	{ return CONST_ELEMENT->functionalAdd (value, prepend); }
+    YCPValue value(int n) const { return CONST_ELEMENT->value (n); }
+    string commaList() const { return CONST_ELEMENT->commaList (); }
 };
+
+#undef CONST_ELEMENT
+#undef ELEMENT
 
 #endif   // YCPList_h

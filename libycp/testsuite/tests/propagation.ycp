@@ -1,9 +1,0 @@
-{
-  // type propagation integer -> float
-
-  integer i = 5;
-  float fi = i;
-  float f = 5;
-  i = f;	// error !
-  return [f,fi];
-}

@@ -1,0 +1,11 @@
+// bug test case: mvidner@suse.cz, reported by jhumpol@suse.cz
+// return nil thinks it returns any
+// and it reports the line number of "if", not of "return"
+{
+    string pokus() {
+	if (false)
+	    return "OK";
+	else
+	    return nil;
+    }
+}

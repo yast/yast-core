@@ -1,0 +1,9 @@
+{
+   integer v = 1;
+
+   integer increment () { v = v + 1; return v; }
+
+   integer i = increment();
+
+   return [v, i];
+}

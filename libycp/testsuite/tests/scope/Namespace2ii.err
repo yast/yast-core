@@ -1,0 +1,9 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Namespace2"
+    // filename: "tests/scope/Namespace2ii.ycp"
+    import "Namespace2";
+    return (Namespace2::mixedFunction () == 4753);
+}
+----------------------------------------------------------------------

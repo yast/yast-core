@@ -10,7 +10,7 @@ INCLUDES =							\
 	-I$(includedir)
 
 noinst_PROGRAMS = rungeneric runplugin runprogram runremote \
-	runscript runserial runstdio
+	runserial runstdio
 
 rungeneric_SOURCES = runy2.cc
 rungeneric_LDADD = -lycp -ly2util
@@ -43,15 +43,6 @@ runremote_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2remote.la	\
-	../src/libpy2stdio.la	\
-	-Xlinker --no-whole-archive
-
-runscript_SOURCES = $(rungeneric_SOURCES)
-runscript_LDADD = -lycp
-runscript_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
-	-Xlinker --whole-archive	\
-	../src/liby2.la	\
-	../src/libpy2script.la	\
 	../src/libpy2stdio.la	\
 	-Xlinker --no-whole-archive
 

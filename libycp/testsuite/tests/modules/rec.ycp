@@ -1,0 +1,9 @@
+{
+//    include "testsuite.ycp";
+    import "Rec";
+
+    term dialog = `VBox (`HBox (`HStretch (), "w2"));
+
+    y2error ("return: %1", Rec::ProcessTerm (dialog, $[], 0));
+
+}

@@ -1,0 +1,9 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Identifier1"
+    // filename: "tests/modules/y-identifier1.ycp"
+    import "Identifier1";
+    return Identifier1::f ();
+}
+----------------------------------------------------------------------

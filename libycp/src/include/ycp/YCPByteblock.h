@@ -52,6 +52,12 @@ protected:
     YCPByteblockRep(const unsigned char *bytes, long len);
 
     /**
+     * Creates a new YCPByteblockRep object from a stream.
+     * See YCPByteblock (std::istream &) implementation.
+     */
+    YCPByteblockRep (std::istream & str, long len);
+
+    /**
      * Cleans up
      */
     ~YCPByteblockRep();
@@ -76,6 +82,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Compares two bytes blocks.
      */
     YCPOrder compare(const YCPByteblock& s) const;
@@ -98,6 +109,7 @@ class YCPByteblock : public YCPValue
     DEF_COMMON(Byteblock, Value);
 public:
     YCPByteblock(const unsigned char *r, long l) : YCPValue(new YCPByteblockRep(r, l)) {}
+    YCPByteblock(std::istream & str);
 };
 
    

@@ -21,6 +21,8 @@
 
 #include "Y2.h"
 
+#include "ycp/y2log.h"
+
 Y2ComponentCreator::Y2ComponentCreator(Y2ComponentBroker::order_t order)
 {
     Y2ComponentBroker::registerComponentCreator(this, order);
@@ -38,6 +40,13 @@ bool Y2ComponentCreator::isClientCreator() const
 
 Y2Component *Y2ComponentCreator::create(const char *name) const
 {
+    y2warning ("default create (%s), should not happen", name);
+    return 0;
+}
+
+Y2Component *Y2ComponentCreator::provideNamespace(const char *name)
+{
+    y2warning ("default provideNamespace (%s), should not happen", name);
     return 0;
 }
 

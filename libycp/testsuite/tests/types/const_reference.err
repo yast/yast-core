@@ -1,0 +1,29 @@
+tests/types/const_reference.ycp:7:Parameter type mismatch
+[Parser] tests/types/const_reference.ycp:7 Parameter type mismatch
+tests/types/const_reference.ycp:7:Expected 'integer &', seen 'const integer'.
+[Parser] tests/types/const_reference.ycp:7 Expected 'integer &', seen 'const integer'.
+tests/types/const_reference.ycp:7:Bad parameter '<const integer> 1'
+[Parser] tests/types/const_reference.ycp:7 Bad parameter '<const integer> 1'
+tests/types/const_reference.ycp:11:Parameter type mismatch
+[Parser] tests/types/const_reference.ycp:11 Parameter type mismatch
+tests/types/const_reference.ycp:11:Expected 'integer &', seen 'const integer'.
+[Parser] tests/types/const_reference.ycp:11 Expected 'integer &', seen 'const integer'.
+tests/types/const_reference.ycp:11:Bad parameter '<const integer> ci'
+[Parser] tests/types/const_reference.ycp:11 Bad parameter '<const integer> ci'
+tests/types/const_reference.ycp:14:Parameter type mismatch
+[Parser] tests/types/const_reference.ycp:14 Parameter type mismatch
+tests/types/const_reference.ycp:14:Expected 'integer &', seen 'const integer'.
+[Parser] tests/types/const_reference.ycp:14 Expected 'integer &', seen 'const integer'.
+tests/types/const_reference.ycp:14:Bad parameter '<const integer> 1'
+[Parser] tests/types/const_reference.ycp:14 Bad parameter '<const integer> 1'
+tests/types/const_reference.ycp:16:Parameter type mismatch
+[Parser] tests/types/const_reference.ycp:16 Parameter type mismatch
+tests/types/const_reference.ycp:16:Expected 'integer &', seen 'const integer'.
+[Parser] tests/types/const_reference.ycp:16 Expected 'integer &', seen 'const integer'.
+tests/types/const_reference.ycp:16:Bad parameter '<const integer> ci'
+[Parser] tests/types/const_reference.ycp:16 Bad parameter '<const integer> ci'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/const_reference.ycp:3 Parser error

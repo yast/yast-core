@@ -43,6 +43,8 @@ Y2PluginComponent::Y2PluginComponent (bool is_server, string filename,
       comp (0),
       m_callback (0)
 {
+    // load the plugin right-away now, there will be no evaluate prior builtins!!!
+    loadPlugin();
 }
 
 
@@ -66,6 +68,11 @@ Y2PluginComponent::setServerOptions (int argc, char** argv)
 {
     this->argc = argc;
     this->argv = argv;
+    
+    if (comp)
+    {
+	comp->setServerOptions (argc, argv);
+    }
 }
 
 
@@ -119,7 +126,8 @@ Y2PluginComponent::evaluate (const YCPValue& command)
 
     if (!comp)
     {
-	return YCPError ("Error loading plugin for " + component_name);
+	y2error ("Error loading plugin for %s", component_name.c_str ());
+	return YCPNull ();
     }
 
     return comp->evaluate (command);

@@ -1,0 +1,36 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Path.ycp
+#
+#  Purpose:	test cases for all path builtins
+#
+# ---------------------------------------------------------
+
+
+("** size **")
+
+(size (.hello.world))
+(size (.))
+
+
+("** add and + **")
+
+(add (.aaa, "anypath...\n\""))
+(.aaa + "anypath...\n\"")
+
+
+("** comparisons **")
+
+(.tmp == .var.tmp)
+(.linux == .windows)
+
+(.tmp != .var.tmp)
+(.linux != .windows)
+
+
+("** conversions ** ")
+
+(topath (.some.path))
+(topath (".some.path"))
+(topath ("some.path"))

@@ -1,0 +1,5 @@
+tests/modules/NestedImport.ycp:20:Unknown namespace 'Identifier'
+[Parser] tests/modules/NestedImport.ycp:20 Unknown namespace 'Identifier'
+tests/modules/NestedImport.ycp:20:syntax error, unexpected SCANNER_ERROR
+[Parser] tests/modules/NestedImport.ycp:20 syntax error, unexpected SCANNER_ERROR
+runycp: parser error

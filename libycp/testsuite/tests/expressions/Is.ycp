@@ -1,0 +1,81 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_is.ycp
+#
+#  Purpose:     test cases for YCP "is"
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// Checks if the value complies to a declaration .
+// A special case is to check for a certain type.
+
+// Added "--" not to get lost in the output diffs.
+// NOPT marks places which change if IS_IS_OPTIMIZED in parser.yy
+// is changed to false.
+// This needs to be thought out.
+
+( is( nil, void ) )
+( is( a, string ) )
+( is( true, boolean ) )
+( is( false, boolean ) )
+( is( 17, integer ) )
+    ("--")
+( is( -4, integer ) )
+( is( -0, integer ) )
+( is( ( 33 % 3 ), integer ) )
+( is( 8.0, float ) )
+( is( .a8, float) == false )
+    ("--")
+{ 
+  list x = [ 0 ];
+
+  return is( x, any ); 
+}
+{ 
+  list x = [ 0 ];
+
+  return is( x[0]:nil, integer ); 
+}
+( is( `x, symbol ) )
+( is( "string" + ., string ) )
+( is( [ true, 8 ], list ) )
+( is( [ true, 8 ], list <boolean> ) )
+    ("-line 44-")
+( is( [ true ], list <boolean> ) ) // true
+( is( $[ 8 : true ], map ) ) // true
+
+( is( { return; }, void ) ) // true
+// old version was: ( is( ``{ return; }, block <void> ) )
+// this was 'true' for the old interpreter which deduced the type from the expression
+// the new interpreter deduces the type from the environment (i.e. function prototype)
+// => ``{...} and {...} are identical (!)
+// Example:
+//
+// block <integer> b = { return 0; }; is (b, block <void> ) == true !
+// integer b = { return 0; }; is (b, block <integer> ) == false !
+//
+
+( is( ``{ return; }, void ) )
+
+( is( ., path ) )
+    ("-line 62-")
+( is( ._.i_, path ) )
+( is( $[ 8 : true ], map <integer,integer> ) )
+
+( is( false, void ) == false )
+( is( -0, string ) == false )
+( is( `name, symbol ) == true )
+    ("--")
+( is( ``(`name()), symbol ) == false )
+( is( ``(name()), term ) == true )
+( is( ``(`name()), term ) == true )
+( is( ``(name), any ) == true )
+( is( `string, string ) == false )
+( is( $[ 8 : true ], list <integer> )  == false )  // not a list
+

@@ -1,31 +1,26 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
+|								      |  
+|		      __   __    ____ _____ ____		      |  
+|		      \ \ / /_ _/ ___|_   _|___ \		     |  
+|		       \ V / _` \___ \ | |   __) |		    |  
+|			| | (_| |___) || |  / __/		     |  
+|			|_|\__,_|____/ |_| |_____|		    |  
+|								      |  
+|			       core system			    | 
+|							(C) SuSE GmbH |  
 \----------------------------------------------------------------------/ 
 
    File:       YCPPath.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPPath data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-#include <stdio.h>
-
-#include "y2log.h"
-#include "YCPPath.h"
+#include "ycp/y2log.h"
+#include "ycp/YCPPath.h"
+#include "ycp/Bytecode.h"
 #include <ctype.h>
 
 // YCPPathRep
@@ -37,63 +32,79 @@ YCPPathRep::YCPPathRep()
 
 YCPPathRep::YCPPathRep(const char *r)
 {
-    if (!strcmp(r, ".")) return; // Root path is empty
+    if (strcmp (r, ".") == 0)
+	return; // Root path is empty
 
     string p;
     enum { dot, simple, complex_first, complex } state = dot;
     const char*start = NULL;
-    for (const char*c = r;*c;c++) {
-        switch (state) {
-        case dot: // there must be ." or .[a-zA-Z0-9_]. Scanner guarantees this.
-            state = '"'==*(c+1) ? complex_first : simple;
-            start = c+1;
-            break;
-        case simple:
-            if ('.'==*(c+1) || '\0'==*(c+1)) {
-                if ('-' ==*start || '-'==*c) {
-                    y2error("bad path constant: dash before/after dot not allowed");
-                    components.clear();
-                    return;
-                }
-                p.assign(start,c-start+1);
-                components.push_back(Component(p));
-                state = dot;
-            }
-            break;
-        case complex_first:
-            state = complex;
-            break;
-        case complex:
-            if ('\\'==*c)
-                c++;
-            else if('"'==*c) { // end of component
-                p.assign(start,c-start+1);
-                components.push_back(Component(p));
-                state = dot;
-            }
-            break;
-        }
+    for (const char*c = r; *c; c++)
+    {
+	switch (state)
+	{
+	case dot: // there must be ." or .[a-zA-Z0-9_]. Scanner guarantees this.
+	    state = ('"' == *(c+1)) ? complex_first : simple;
+	    start = c+1;
+	    break;
+	case simple:
+	    if ('.' == *(c+1)
+		|| '\0' == *(c+1))
+	    {
+		if ('-' == *start
+		    || '-' == *c)
+		{
+		    y2error ("bad path constant: dash before/after dot not allowed");
+		    components.clear();
+		    return;
+		}
+		p.assign (start, c-start+1);
+		components.push_back (Component(p));
+		state = dot;
+	    }
+	    break;
+	case complex_first:
+	    state = complex;
+	    break;
+	case complex:
+	    if ('\\'==*c)
+		c++;
+	    else if ('"' == *c)
+	    {	// end of component
+		p.assign (start,c-start+1);
+		components.push_back (Component(p));
+		state = dot;
+	    }
+	    break;
+	}
     }
 }
 
-bool YCPPathRep::isRoot() const
+
+bool
+YCPPathRep::isRoot() const
 {
     return components.empty();
 }
 
-void YCPPathRep::append(const YCPPath&p)
+
+void
+YCPPathRep::append(const YCPPath&p)
 {
     int len = p->length();
-    for(int i = 0;i<len;i++)
-        components.push_back(p->components[i]);
+    for (int i = 0; i<len; i++)
+	components.push_back (p->components[i]);
 }
 
-void YCPPathRep::append(const Component&c)
+
+void
+YCPPathRep::append(const Component&c)
 {
     components.push_back(c);
 }
 
-void YCPPathRep::append(string c)
+
+void
+YCPPathRep::append(string c)
 {
     Component added;
     added.component = c;
@@ -101,20 +112,24 @@ void YCPPathRep::append(string c)
     components.push_back(added);
 }
 
-YCPValue YCPPathRep::select(const YCPValue& val)
+
+YCPValue
+YCPPathRep::select(const YCPValue& val)
 {
     return val; 
     // TODO: do real operation
 }
 
 
-long YCPPathRep::length() const
+long
+YCPPathRep::length() const
 {
     return components.size();
 }
 
 
-bool YCPPathRep::isPrefixOf(const YCPPath& path) const
+bool
+YCPPathRep::isPrefixOf(const YCPPath& path) const
 {
     if (length() > path->length()) return false;
 
@@ -124,7 +139,8 @@ bool YCPPathRep::isPrefixOf(const YCPPath& path) const
 }
 
 
-YCPPath YCPPathRep::at(long index) const
+YCPPath
+YCPPathRep::at(long index) const
 {
     YCPPath postfix;
     for (int i=index; i<length(); i++)
@@ -133,12 +149,15 @@ YCPPath YCPPathRep::at(long index) const
 }
 
 
-string YCPPathRep::component_str(long index) const
+string
+YCPPathRep::component_str(long index) const
 {
     return components[index].component;
 }
 
-YCPOrder YCPPathRep::compare(const YCPPath& p) const
+
+YCPOrder
+YCPPathRep::compare(const YCPPath& p) const
 {
     for (unsigned c=0; c<components.size(); c++)
     {
@@ -152,7 +171,8 @@ YCPOrder YCPPathRep::compare(const YCPPath& p) const
 }
 
 
-string YCPPathRep::toString() const
+string
+YCPPathRep::toString() const
 {
     if (components.empty()) return ".";
     string v;
@@ -165,109 +185,192 @@ string YCPPathRep::toString() const
 }
 
 
-YCPValueType YCPPathRep::valuetype() const
+YCPValueType
+YCPPathRep::valuetype() const
 {
     return YT_PATH;
 }
 
+
 YCPPathRep::Component::Component(string s)
 {
     if (s[0] == '"')
-        {
-            char num;
-            complex = true;
-            component.erase();
-            for (const char*c = s.c_str()+1;*c;c++)
-                {
-                    if ('\\' == *c)
-                        {
-                            // handles \\, \n, \t, \r, \b, \f, \x00, \"
-                            c++;
-                            switch (*c)
-                                {
-                                case '\0':
-                                    // this should never happen because scanner gives us
-                                    // value that ends up with " (not with \)
-                                    component+= '\\';
-                                    return;
-                                case '\\':   component+= '\\';   break;
-                                case 'n':    component+= '\n';   break;
-                                case 't':    component+= '\t';   break;
-                                case 'r':    component+= '\r';   break;
-                                case 'b':    component+= '\b';   break;
-                                case 'f':    component+= '\f';   break;
-                                case '"':    component+= '"';    break;
-                                case 'x':
-                                    // there must be at least one number
-                                    // we know that there is at least " and \0 so this is safe
-                                    num = 0;
-                                    if (isxdigit(*(c+1)) && isxdigit(*(c+2)))
-                                        {
-                                            num =
-                                                (isdigit(*(c+2)) ? *(c+2)-'0' : isupper(*(c+2)) ? *(c+2)-'A'+10 : *(c+2)-'a'+10)
-                                                |
-                                                ((isdigit(*(c+1)) ? *(c+1)-'0' : isupper(*(c+1)) ? *(c+1)-'A'+10 : *(c+1)-'a'+10) << 4)
-                                                ;
-                                            c+= 2;
-                                        }
-                                    else if (isxdigit(*(c+1)))
-                                        {
-                                            num =
-                                                isdigit(*(c+1)) ? *(c+1)-'0' : isupper(*(c+1)) ? *(c+1)-'A'+10 : *(c+1)-'a'+10
-                                                ;
-                                            c++;
-                                        }
-                                    if (!num)
-                                        y2error("\\x00 not allowed in path constant. Skipping.");
-                                    component+= num;
-                                    break;
-                                default:
-                                    component+= *c;
-                                }
-                        }
-                    else if ('"' == *c)
-                        {  // this must be " at the end. Return anyway to save some comparison
-                            break;
-                        }
-                    else
-                        component+= *c;
-                }
-        }
+    {
+	char num;
+	complex = true;
+	component.erase();
+	for (const char*c = s.c_str()+1;*c;c++)
+	{
+	    if ('\\' == *c)
+	    {
+		// handles \\, \n, \t, \r, \b, \f, \x00, \"
+		c++;
+		switch (*c)
+		{
+			case '\0':
+			    // this should never happen because scanner gives us
+			    // value that ends up with " (not with \)
+			    component+= '\\';
+			    return;
+			case '\\':   component+= '\\';   break;
+			case 'n':    component+= '\n';   break;
+			case 't':    component+= '\t';   break;
+			case 'r':    component+= '\r';   break;
+			case 'b':    component+= '\b';   break;
+			case 'f':    component+= '\f';   break;
+			case '"':    component+= '"';    break;
+			case 'x':
+			    // there must be at least one number
+			    // we know that there is at least " and \0 so this is safe
+			    num = 0;
+			    if (isxdigit(*(c+1)) && isxdigit(*(c+2)))
+				{
+				    num =
+					(isdigit(*(c+2)) ? *(c+2)-'0' : isupper(*(c+2)) ? *(c+2)-'A'+10 : *(c+2)-'a'+10)
+					|
+					((isdigit(*(c+1)) ? *(c+1)-'0' : isupper(*(c+1)) ? *(c+1)-'A'+10 : *(c+1)-'a'+10) << 4)
+					;
+				    c+= 2;
+				}
+			    else if (isxdigit(*(c+1)))
+				{
+				    num =
+					isdigit(*(c+1)) ? *(c+1)-'0' : isupper(*(c+1)) ? *(c+1)-'A'+10 : *(c+1)-'a'+10
+					;
+				    c++;
+				}
+			    if (!num)
+				y2error("\\x00 not allowed in path constant. Skipping.");
+			    component+= num;
+			    break;
+			default:
+			    component+= *c;
+			}
+	    }
+	    else if ('"' == *c)
+	    {  // this must be " at the end. Return anyway to save some comparison
+		break;
+	    }
+	    else
+		component+= *c;
+	}
+    }
     else
-        {
-            component = s;
-            complex = string::npos == component.find_first_not_of ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") ? false : true;
-        }
+    {
+	component = s;
+	complex = string::npos == component.find_first_not_of ("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-") ? false : true;
+    }
 }
 
-string YCPPathRep::Component::toString() const
+
+string
+YCPPathRep::Component::toString() const
 {
     if (!complex)
-        return component;
+	return component;
     string s = "\"";
-    for(const char*c = component.c_str();*c;c++)
-        {
-            switch (*c)
-                {
-                case '"': s+= "\\\""; break;
-                case '\\':    s+= "\\\\";  break;
-                case '\n':    s+= "\\n";   break;
-                case '\t':    s+= "\\t";   break;
-                case '\r':    s+= "\\r";   break;
-                case '\b':    s+= "\\b";   break;
-                case '\f':    s+= "\\f";   break;
-                default:{
-                    if (isprint (*c))
-                        s+= *c;
-                    else {
-                        char buf[5];
-                        snprintf(buf,4,"%02X",*(unsigned char*)c);
-                        s+= "\\x";
-                        s+= buf;
-                    }
-                }
-                }
-        }
+    for (const char*c = component.c_str();*c;c++)
+    {
+	switch (*c)
+	{
+	    case '"': s+= "\\\""; break;
+	    case '\\':    s+= "\\\\";  break;
+	    case '\n':    s+= "\\n";   break;
+	    case '\t':    s+= "\\t";   break;
+	    case '\r':    s+= "\\r";   break;
+	    case '\b':    s+= "\\b";   break;
+	    case '\f':    s+= "\\f";   break;
+	    default:
+	    {
+		if (isprint (*c))
+		    s+= *c;
+		else
+		{
+		    char buf[5];
+		    snprintf (buf, 4, "%02X", *(unsigned char*)c);
+		    s += "\\x";
+		    s += buf;
+		}
+	    }
+	}
+    }
     s+= '"';
     return s;
 }
+
+
+/**
+ * Input value as bytecode from stream
+ */
+
+
+YCPPathRep::Component::Component(std::istream & str)
+{
+    char v;
+    if (str.get (v))
+    {
+	complex = (v != '\x00');
+	Bytecode::readString (str, component);
+    }
+}
+
+
+/**
+ * Output value as bytecode to stream
+ */
+
+std::ostream &
+YCPPathRep::Component::toStream (std::ostream & str) const
+{
+    str.put (complex ? '\x01' : '\x00');
+    return Bytecode::writeString (str, component);
+}
+
+std::ostream &
+YCPPathRep::toStream (std::ostream & str) const
+{
+#if 0
+    if (Bytecode::writeInt32 (str, components.size()))
+    {
+	for (unsigned c = 0; c < components.size(); c++)
+	{
+	    if (!components[c].toStream (str))
+		break;
+	}
+    }
+    return str;
+#else
+    return Bytecode::writeString (str, toString());
+#endif
+}
+
+
+
+// --------------------------------------------------------
+
+static string
+fromStream (std::istream & str)
+{
+    string s;
+    Bytecode::readString (str, s);
+    return s;
+}
+
+YCPPath::YCPPath (std::istream & str)
+    : YCPValue (new YCPPathRep (fromStream(str).c_str()))
+{
+#if 0
+    u_int32_t count = Bytecode::readInt32 (str);
+    if (str.good())
+    {
+	YCPPathRep *p = new YCPPathRep ();
+	for (unsigned c = 0; c < count; c++)
+	{
+	    p->append (YCPPathRep::Component (str));
+	}
+	if (str.good())
+	    element = p;
+    }
+#endif
+}
+

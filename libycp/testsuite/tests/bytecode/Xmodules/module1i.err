@@ -1,0 +1,6 @@
+{
+    // module "module1"
+    // filename: "tests/bytecode/Xmodules/module1i.ycp"
+    import "module1";
+    return (module1::j + 1);
+}

@@ -3,14 +3,23 @@
 # 'main' file for all ycp tests
 #
 
-# get all files matching tests/*.ycp
+set directories { builtin errors expressions includes modules scope statements types values }
 
-set filenames [glob $srcdir/tests/*.ycp]
 
-# foreach file, call ycp-run (from testsuite/lib)
+# original line
+#set directories { builtin errors expressions includes modules scope statements types values }
 
-foreach file [lsort $filenames] {
-  if {[ycp-run $file] < 0} {
-	return
-  }
+# compile the modules first
+foreach file [get-files $srcdir/tests/ Module "ycp" ] {
+    bytecode-compile $file tests/Module
+}
+
+foreach dir $directories {
+    set filenames [get-files $srcdir tests/$dir "ycp" ]
+    foreach file $filenames {
+#	if {[ycp-run $file tests/$dir] != 0} {
+#	    return -1;
+#	} 
+	ycp-run $file tests/$dir
+    }
 }

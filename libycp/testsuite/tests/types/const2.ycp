@@ -1,0 +1,30 @@
+{
+  map <integer, const integer> m = $[ 1:1, 2:2, 3:3];	// bogus type, integer is always const
+
+  m[1] = 42;				// OK, even if elements of m are const
+	// the type system can't determine if an element is added to m (which is allowed)
+	// or an element is changed (which shouldn't because of 'const integer')
+	// But this is bogus anyway since elements of a map are _always_ (constant) values
+
+  return m[1]:0;
+}
+
+{
+  const map <integer, integer> m = $[ 1:1, 2:2, 3:3];
+
+  m[0] = 42;	// Error, m itself is const
+
+  return m[0]:0;
+}
+
+
+{
+  const map <integer, integer> m = $[ 1:1, 2:2, 3:3];
+
+  m = m + $[0 : 42];	// Error, m itself is const
+
+  return m[0]:0;
+}
+
+
+

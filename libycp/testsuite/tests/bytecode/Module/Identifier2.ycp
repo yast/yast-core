@@ -1,0 +1,29 @@
+#
+# ---------------------------------------------------------
+#
+#  Filename:    Identifier2.ycp
+#
+#  Purpose:     test identifier ycp type
+#
+#  Creator:     mvidner@suse.cz
+#
+#  Maintainer:  mvidner@suse.cz
+#
+# ---------------------------------------------------------
+
+
+{
+  module "Identifier2";
+
+  export this_is_global;
+
+  global integer a = 55;
+  global integer this_is_global = 2;
+  // implicit: return nil;
+
+  global list <integer> f ()
+  {
+    integer a = 42;
+    return [ this_is_global, ::a, a ];	// should be 2, 55, 42
+  }
+}

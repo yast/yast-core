@@ -1,0 +1,25 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Scope6.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for the scope of variables
+
+
+// double declaration
+{
+  integer first = 1;
+  string first = "";
+  float first = 0.0;
+
+  return first;
+}

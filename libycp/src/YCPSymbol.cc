@@ -12,68 +12,89 @@
 
    File:       YCPSymbol.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPSymbol data type
- */
 
-#include "y2log.h"
-#include "YCPSymbol.h"
-
+#include "ycp/y2log.h"
+#include "ycp/YCPSymbol.h"
+#include "ycp/Bytecode.h"
 
 
 // YCPSymbolRep
 
-YCPSymbolRep::YCPSymbolRep(const char *s, bool quoted)
+YCPSymbolRep::YCPSymbolRep(const char *s)
     : v(s)
-    , quoted(quoted)
 {
 }
 
 
-YCPSymbolRep::YCPSymbolRep(string s, bool quoted)
+YCPSymbolRep::YCPSymbolRep(string s)
     : v(s)
-    , quoted(quoted)
 {
 }
 
 
-string YCPSymbolRep::symbol() const
+string
+YCPSymbolRep::symbol() const
 {
     return v;
 }
 
 
-bool YCPSymbolRep::isQuoted() const
-{
-    return quoted;
-}
-
-const char *YCPSymbolRep::symbol_cstr() const
+const char *
+YCPSymbolRep::symbol_cstr() const
 {
     return v.c_str();
 }
 
 
-YCPOrder YCPSymbolRep::compare(const YCPSymbol& s) const
+YCPOrder
+YCPSymbolRep::compare(const YCPSymbol& s) const
 {
     if (v == s->v) return YO_EQUAL;
     else return v < s->v ? YO_LESS : YO_GREATER;
 }
 
 
-string YCPSymbolRep::toString() const
+string
+YCPSymbolRep::toString() const
 {
-    if (quoted) return string("`") + v;
-    else return v;
+    return string("`") + v;
 }
 
 
-YCPValueType YCPSymbolRep::valuetype() const
+YCPValueType
+YCPSymbolRep::valuetype() const
 {
     return YT_SYMBOL;
 }
 
+/**
+ * Output value as bytecode to stream
+ */
+
+std::ostream &
+YCPSymbolRep::toStream (std::ostream & str) const
+{
+    return Bytecode::writeString (str, v);
+}
+
+
+// --------------------------------------------------------
+
+static string
+fromStream (std::istream & str)
+{
+    string s;
+    Bytecode::readString (str, s);
+    return s;
+}
+
+
+YCPSymbol::YCPSymbol (std::istream & str)
+    : YCPValue (new YCPSymbolRep (fromStream (str)))
+{
+}

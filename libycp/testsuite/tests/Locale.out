@@ -1,4 +1,0 @@
-(_("Everybody likes Linux!"))
-(_("%d m$-windows system deleted", "%d m$-windows systems deleted", 42))
-(_("%d linux system installed", "%d linux systems installed", 42))
-(_("abc"))

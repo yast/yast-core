@@ -1,0 +1,54 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map hallo (integer x, list st)
+    // filename: "tests/scope/Declaration.ycp"
+    map hallo (integer x, list st)
+{
+    y2milestone ("%1 %2", x, st);
+    return /* any -> map */select (st, 1, $[]);
+}
+    return (hallo (17, [true, $[1:45], #[102A]]) == $[1:45]);
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:4 17 [true, $[1:45], #[102A]]
+Parsed:
+----------------------------------------------------------------------
+{
+    // map hallo (integer x, list st)
+    // filename: "tests/scope/Declaration.ycp"
+    map hallo (integer x, list st)
+{
+    y2milestone ("%1 %2", x, st);
+    return /* any -> map */select (st, 1, $[]);
+}
+    return (hallo (19, [true, $[1:2], #[DEADBEAF]]) == $[1:2]);
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:13 19 [true, $[1:2], #[DEADBEAF]]
+tests/scope/Declaration.ycp:25:Missing 'list' parameter.
+[Parser] tests/scope/Declaration.ycp:25 Missing 'list' parameter.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Declaration.ycp:19 Parser error
+tests/scope/Declaration.ycp:34:Expected 'map', seen 'const integer'.
+[Parser] tests/scope/Declaration.ycp:34 Expected 'map', seen 'const integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Declaration.ycp:28 Parser error
+Parsed:
+----------------------------------------------------------------------
+{
+    // list withnil (integer a, boolean b)
+    // filename: "tests/scope/Declaration.ycp"
+    list withnil (integer a, boolean b)
+{
+    return [a, b];
+}
+    return withnil (42, nil);
+}
+----------------------------------------------------------------------

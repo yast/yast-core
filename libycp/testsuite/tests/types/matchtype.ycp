@@ -1,0 +1,9 @@
+// $Id$
+// Martin Vidner <mvidner@suse.cz>
+// it seems I can't compare integer and float ;)
+// Hehe, it can now ;-)
+{
+    boolean it_works  = 3 < 3.14;
+    boolean it_works2 = 3.14 > 3;
+    return [it_works, it_works2];
+}

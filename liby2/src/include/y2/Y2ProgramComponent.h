@@ -26,7 +26,7 @@
 #define Y2ProgramComponent_h
 
 #include "Y2.h"
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 
 class Y2ProgramComponent : public Y2Component
 {
@@ -79,7 +79,7 @@ class Y2ProgramComponent : public Y2Component
     /**
      * Used to parse the values the external program sends
      */
-    YCPParser parser;
+    Parser parser;
 
     /**
      * The component level this program was started in. For example

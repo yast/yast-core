@@ -1,0 +1,7 @@
+// bug 12325
+// This parses ok but segfaults under valgrind when evaluating.
+{
+    map m1 = nil;
+    return haskey (m1, "huhu");
+}
+

@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/bool-false.ycp"
+    return false;
+}

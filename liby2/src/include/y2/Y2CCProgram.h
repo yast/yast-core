@@ -28,7 +28,6 @@
 #define Y2CCProgram_h
 
 #include "Y2ComponentCreator.h"
-#include <ycp/YCPParser.h>
 
 class Y2CCProgram : public Y2ComponentCreator
 {
@@ -41,11 +40,6 @@ class Y2CCProgram : public Y2ComponentCreator
      * Is true, if this creator only should create non_y2 programs.
      */
     bool creates_non_y2;
-
-    /**
-     * Parser used to parse the input of the external program.
-     */
-    YCPParser parser;
 
 public:
     /**

@@ -1,0 +1,18 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <integer> il
+    // filename: "tests/builtin/flatten.ycp"
+    list <integer> il = [1, 2, 3];
+    return flatten ([il, il, il]);
+}
+----------------------------------------------------------------------
+No match for 'flatten : <unspec> (list <integer>)':
+flatten:list <<flex>> (const list <list <<flex>>>)
+tests/builtin/flatten.ycp:9:Bad parameter '<list <integer>> il'
+[Parser] tests/builtin/flatten.ycp:9 Bad parameter '<list <integer>> il'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/flatten.ycp:6 Parser error

@@ -1,0 +1,29 @@
+// YEBuiltin::evaluate only allowed 6 parameters
+// but there are sformats that use all 9
+//
+// kkaempf:
+// *gggg*
+// the 6 parameter limit is only for fixed parameter functions
+// however, y2milestone (and similar logging functions) use
+// a variable number of arguments.
+{
+    y2milestone ("P0:");
+    y2milestone ("P1:%1",
+		 .);
+    y2milestone ("P2:%1%2",
+		 ., .);
+    y2milestone ("P3:%1%2%3",
+		 ., ., .);
+    y2milestone ("P4:%1%2%3%4",
+		 ., ., ., .);
+    y2milestone ("P5:%1%2%3%4%5",
+		 ., ., ., ., .);
+    y2milestone ("P6:%1%2%3%4%5%6",
+		 ., ., ., ., ., .);
+    y2milestone ("P7:%1%2%3%4%5%6%7",
+		 ., ., ., ., ., ., .);
+    y2milestone ("P8:%1%2%3%4%5%6%7%8",
+		 ., ., ., ., ., ., ., .);
+    y2milestone ("P9:%1%2%3%4%5%6%7%8%9",
+		 1, 2, 3, 4, 5, 6, 7, 8, 9);
+}

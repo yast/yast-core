@@ -1,0 +1,14 @@
+// Bug 12325
+/*
+ * Test how the builtins cope with nil.
+ */
+{
+    // this works ok
+    map m1 = nil;
+    return [ lookup (m1, "huhu", "hoho") ];
+}
+{
+    // this does not! why?
+    map m1 = nil;
+    return   lookup (m1, "huhu", "hoho")  ;
+}

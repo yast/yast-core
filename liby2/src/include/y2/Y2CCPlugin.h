@@ -24,7 +24,6 @@
 #include <regex.h>
 
 #include "Y2ComponentCreator.h"
-#include <ycp/YCPParser.h>
 
 
 class Y2CCPlugin : public Y2ComponentCreator

@@ -1,0 +1,12 @@
+{
+    // module "Summary"
+    // string Summary ()
+    // filename: "tests/bytecode/imports/Summary.ycp"
+    import "Summary";
+    string Summary ()
+{
+    return Summary::NotConfigured ();
+}
+
+    return Summary ();
+}

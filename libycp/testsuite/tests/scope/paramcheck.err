@@ -1,0 +1,21 @@
+tests/scope/paramcheck.ycp:15:Excessive parameter
+[Parser] tests/scope/paramcheck.ycp:15 Excessive parameter
+tests/scope/paramcheck.ycp:15:Bad parameter '<string> "nasty"'
+[Parser] tests/scope/paramcheck.ycp:15 Bad parameter '<string> "nasty"'
+tests/scope/paramcheck.ycp:16:Excessive parameter
+[Parser] tests/scope/paramcheck.ycp:16 Excessive parameter
+tests/scope/paramcheck.ycp:16:Bad parameter '<const integer> 3'
+[Parser] tests/scope/paramcheck.ycp:16 Bad parameter '<const integer> 3'
+tests/scope/paramcheck.ycp:17:Missing 'integer' parameter.
+[Parser] tests/scope/paramcheck.ycp:17 Missing 'integer' parameter.
+tests/scope/paramcheck.ycp:18:Parameter type mismatch
+[Parser] tests/scope/paramcheck.ycp:18 Parameter type mismatch
+tests/scope/paramcheck.ycp:18:Expected 'integer', seen 'string'.
+[Parser] tests/scope/paramcheck.ycp:18 Expected 'integer', seen 'string'.
+tests/scope/paramcheck.ycp:18:Bad parameter '<string> "one"'
+[Parser] tests/scope/paramcheck.ycp:18 Bad parameter '<string> "one"'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/paramcheck.ycp:3 Parser error

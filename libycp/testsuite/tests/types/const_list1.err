@@ -1,0 +1,7 @@
+tests/types/const_list1.ycp:4:Assignment to const identifier 'l'
+[Parser] tests/types/const_list1.ycp:4 Assignment to const identifier 'l'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/const_list1.ycp:1 Parser error

@@ -1,0 +1,19 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // filename: "tests/builtin/Builtin-Return.ycp"
+    list l = ["foo", "bar"];
+    return (filter (string v, l, { return (v != "foo"); }) == ["bar"]);
+}
+----------------------------------------------------------------------
+No match for 'filter : <unspec> (variable <string>, list, block <string>)':
+filter:list <<flex>> (variable <<flex>>, const list <<flex>>, const block <boolean>)
+filter:map (variable <any>, variable <<flex>>, const map, const block <boolean>)
+tests/builtin/Builtin-Return.ycp:10:Bad parameter '<string> { return v; }'
+[Parser] tests/builtin/Builtin-Return.ycp:10 Bad parameter '<string> { return v; }'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Return.ycp:8 Parser error

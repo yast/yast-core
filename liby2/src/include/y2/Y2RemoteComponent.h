@@ -31,7 +31,7 @@
 
 class RemoteProtocol;
 
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 
 #include "Y2Component.h"
 
@@ -129,7 +129,7 @@ private:
     /**
      * The parser.
      */
-    YCPParser parser;
+    Parser parser;
 
     /**
      * Sends a YCP value to the remote component.

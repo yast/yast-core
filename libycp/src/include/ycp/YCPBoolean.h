@@ -73,6 +73,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_BOOLEAN. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
@@ -90,6 +95,7 @@ class YCPBoolean : public YCPValue
 public:
     YCPBoolean(bool v) : YCPValue(new YCPBooleanRep(v)) {}
     YCPBoolean(const char *r) : YCPValue(new YCPBooleanRep(r)) {}
+    YCPBoolean(std::istream & str);
 };
 
 #endif	// YCPBoolean_h

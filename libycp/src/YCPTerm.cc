@@ -17,162 +17,158 @@
 		Mathias Kettner <kettner@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
+$Id$
 /-*/
 
-#include "y2log.h"
-#include "YCPTerm.h"
-
-
+#include "ycp/y2log.h"
+#include "ycp/YCPTerm.h"
+#include "ycp/Bytecode.h"
 
 // YCPTermRep
-YCPTermRep::YCPTermRep(const YCPSymbol& s)
+YCPTermRep::YCPTermRep(const string& s)
     : s(s)
 {
 }
 
 
-YCPTermRep::YCPTermRep(const YCPSymbol& s, const string& n)
-    : s(s)
-    , n(n)
-{
-}
-
-
-YCPTermRep::YCPTermRep(const YCPSymbol& s, const YCPList& l)
+YCPTermRep::YCPTermRep(const string& s, const YCPList& l)
     : s(s)
     , l(l) 
 {
 }
 
 
-YCPTermRep::YCPTermRep(const YCPSymbol& s, const string& n, const YCPList& l)
-    : s(s)
-    , n(n)
-    , l(l) 
-{
-}
-
-
-YCPTermRep::YCPTermRep(string s, bool quoted)
-    : s(s, quoted)
-{
-}
-
-
-// get symbol of term
-YCPSymbol YCPTermRep::symbol() const
+// get name of term
+string
+YCPTermRep::name() const
 {
     return s;
 }
 
 
-// get namespace of term
-string YCPTermRep::name_space () const
-{
-    return n;
-}
-
-
 // get list of term
-YCPList YCPTermRep::args() const
+YCPList
+YCPTermRep::args() const
 {
     return l;
 }
 
 
-bool YCPTermRep::isQuoted() const
-{
-    return s->isQuoted();
-}
-
-
 //compare terms
-YCPOrder YCPTermRep::compare(const YCPTerm& t) const
+YCPOrder
+YCPTermRep::compare (const YCPTerm& t) const
 {
-    YCPOrder order = YO_EQUAL;
+    if (s == t->name())
+	return l->compare (t->args ());
 
-    int ncomp = n.compare( t->n );
-    if (ncomp != 0)
-    {
-	order = (ncomp < 0) ? YO_LESS : YO_GREATER;
-    }
-    else
-    {
-	order = s->compare( t->s );
-
-	if ( order == YO_EQUAL )
-	{
-	    order = l->compare( t->l );
-	}
-    }
-
-    return order;
+    return (s < t->name())?YO_LESS:YO_GREATER;
 }
 
 
 // clone term
-YCPTerm YCPTermRep::shallowCopy() const
+const YCPElementRep*
+YCPTermRep::shallowCopy() const
 {
-   return YCPTerm (s, n, l->shallowCopy());
+   return new YCPTermRep (s, l);
 }
 
 
 // add value to term
-YCPTerm YCPTermRep::functionalAdd(const YCPValue& val) const
+YCPTerm
+YCPTermRep::functionalAdd (const YCPValue& val) const
 {
-   return YCPTerm (s, n, l->functionalAdd(val));
+   return YCPTerm (s, l->functionalAdd(val));
 }
 
 
 // get the term as string
-string YCPTermRep::toString() const
+string
+YCPTermRep::toString() const
 {
-    return (n.empty()
-	    ? n
-	    : ((n == GLOBALNAME)
-	       ? string ("::")
-	       : (n + "::")))
-	   + s->toString() + " (" + l->commaList() + ")";   // comma separated list
+    return "`" + s + " (" + l->commaList() + ")";   // comma separated list
 }
 
 
 // test if the term's list is empty
-bool YCPTermRep::isEmpty() const
+bool
+YCPTermRep::isEmpty() const
 {
   return l->isEmpty();
 }
 
 
 // get the size of the term's list
-int YCPTermRep::size() const
+int
+YCPTermRep::size() const
 {
     return l->size();
 }
 
 
 // Reserves a number of elements in the term's list.
-void YCPTermRep::reserve (int size)
+void
+YCPTermRep::reserve (int size)
 {
     l->reserve (size);
 }
 
 
 // get the n-th element of the term's list
-YCPValue YCPTermRep::value(int n) const
+YCPValue
+YCPTermRep::value (int n) const
 {
     return l->value(n);
 }
 
 
+// set the n-th element of the term's list
+void
+YCPTermRep::set (const int n, const YCPValue& value)
+{
+    return l->set (n, value);
+}
+
+
 // add an element to the term's list
-void YCPTermRep::add(const YCPValue& value)
+void
+YCPTermRep::add (const YCPValue& value)
 {
     l->add(value);
 }
 
 
-YCPValueType YCPTermRep::valuetype() const
+YCPValueType
+YCPTermRep::valuetype() const
 {
     return YT_TERM;
 }
 
+
+/**
+ * Output value as bytecode to stream
+ */
+
+std::ostream &
+YCPTermRep::toStream (std::ostream & str) const
+{
+    y2debug ("Writing a term");
+    Bytecode::writeString (str, s);
+    return l->toStream (str);
+}
+
+
+// --------------------------------------------------------
+
+YCPTerm::YCPTerm (std::istream & str)
+    : YCPValue (YCPNull())
+{
+    string s;
+    if (Bytecode::readString (str, s))
+    {
+	YCPList list (str);
+	if (!list.isNull())
+	{
+	    element = new YCPTermRep (s, list);
+	}
+    }
+}

@@ -1,0 +1,16 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Namespace1.ycp
+#
+#  Purpose:     test named scopes
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+{
+   import "Namespace";
+   return (Namespace::globalFunction() == 4711);
+}

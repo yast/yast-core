@@ -1,0 +1,4 @@
+{
+    list<term> l = [];
+    return l[0]:[] == 1;	// this must fail, list contains terms, not lists
+}

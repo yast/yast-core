@@ -1,0 +1,573 @@
+<!-- $Id -->
+
+<!---------------------------------------------------------------->
+<section id="bnf-grammar">
+<title>YCP grammar</title>
+
+<warning><para>This is out of date and needs fixing</para></warning>
+
+<section id="value-constants"><title>Value Constants</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+		letter
+
+</entry><entry>::=</entry><entry>
+
+			<literal>a</literal>
+		|	<literal>b</literal>
+		|	. . .
+		|	<literal>z</literal>
+		|	<literal>A</literal>
+		|	<literal>B</literal>
+		|	. . .
+		|	<literal>Z</literal>
+</entry></row>
+
+<row><entry>
+	odigit
+
+</entry><entry>::=</entry><entry>
+
+			<literal>0</literal>
+		|	<literal>1</literal>
+		|	. . .
+		|	<literal>7</literal>
+</entry></row>
+
+<row><entry>
+	digit
+
+</entry><entry>::=</entry><entry>
+			odigit
+		|	<literal>8</literal>
+		|	<literal>9</literal>
+</entry></row>
+
+<row><entry>
+	hdigit
+
+</entry><entry>::=</entry><entry>
+			digit
+		|	<literal>a</literal>
+		|	. . .
+		|	<literal>f</literal>
+		|	<literal>A</literal>
+		|	. . .
+		|	<literal>F</literal>
+</entry></row>
+
+<row><entry>
+		whitespace
+
+</entry><entry>::=</entry><entry>
+			<emphasis>blank</emphasis>
+		|	<emphasis>tab</emphasis>
+		|	<emphasis>newline</emphasis>
+</entry></row>
+
+<row><entry>symbol</entry><entry>::=</entry><entry>
+	  letter symtail
+</entry></row>
+
+<row><entry></entry><entry>|</entry><entry>
+	<literal>_</literal> symtail
+</entry></row>
+
+<row><entry>symtail</entry><entry>::=</entry><entry>
+	  letter symtail
+</entry></row>
+
+<row><entry></entry><entry>|</entry><entry>
+	digit symtail
+</entry></row>
+
+<row><entry></entry><entry>|</entry><entry>
+	<literal>_</literal> symtail
+</entry>
+</row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+<note>
+<para>a symbol constisting only of underline characters is not allowed</para>
+</note>
+
+<note>
+<para>a symbol without a letter is not allowed</para>
+</note>
+</section>
+
+<!---------------------------------------------------------------->
+
+<section id="lexical-constants"><title>Lexical Constants</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+		boolean
+
+</entry><entry>::=</entry><entry>
+			<literal>true</literal> | <literal>false</literal>
+</entry></row>
+<row><entry>
+                void
+</entry><entry>::=</entry><entry>
+                        <literal>nil</literal>
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+                integer
+</entry><entry>::=</entry><entry>
+			[ <literal>-</literal> ] numeric
+</entry></row><row><entry>
+</entry><entry>|</entry><entry>	[ <literal>-</literal> ] <literal>0</literal> octeric
+</entry></row><row><entry>
+</entry><entry>|</entry><entry>	[ <literal>-</literal> ] <literal>0x</literal> hexeric
+</entry></row>
+<row><entry>
+                float
+</entry><entry>::=</entry><entry>
+                        integer [ . numeric ] [ <literal>e</literal>|<literal>E</literal> integer ]
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+		numeric
+</entry><entry>::=</entry><entry>
+			digit
+</entry></row>
+<row><entry></entry>
+<entry>|</entry><entry>
+			digit numeric
+</entry></row>
+
+<row><entry>
+		hexeric
+</entry><entry>::=</entry><entry>
+			hdigit
+</entry></row>
+<row><entry></entry>
+<entry>|</entry><entry>		hdigit hexeric
+</entry></row>
+
+<row><entry>
+		octeric
+</entry><entry>::=</entry><entry>
+			odigit
+</entry></row>
+<row><entry></entry>
+<entry>|</entry><entry>		odigit octeric
+
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+                string
+</entry><entry>::=</entry><entry>
+                        <literal>"</literal> [ stringvalue ] <literal>"</literal>
+</entry></row>
+<row><entry>
+		stringvalue
+</entry><entry>::=</entry><entry>
+			stringchar stringvalue
+</entry></row>
+<row><entry>
+		stringchar
+</entry><entry>::=</entry><entry>
+			<emphasis>any character except "</emphasis>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>
+			<literal>\</literal> escapechar 
+</entry></row>
+<row><entry>
+		escapechar
+
+</entry><entry>::=</entry><entry>
+			<literal>\</literal>
+		|	<literal>b</literal>
+		|	<literal>r</literal>
+		|	<literal>n</literal>
+		|	<literal>f</literal>
+		|	<literal>t</literal>
+</entry></row><row><entry></entry><entry>
+		|</entry><entry>
+			<literal>0</literal> octeric
+</entry></row><row><entry></entry><entry>
+		|</entry><entry>
+			<emphasis>newline</emphasis>
+</entry></row>
+
+<row><entry><para></para></entry></row>
+<row><entry>
+                path
+</entry><entry>::=</entry><entry>
+			<literal>.</literal> pathtail
+</entry></row>
+<row><entry>
+		pathtail
+
+</entry><entry>::=</entry><entry>
+			symbol
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			numeric
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			path
+</entry></row>
+
+<row><entry><para></para></entry></row>
+
+<row><entry>
+			identifier
+</entry><entry>::=</entry><entry>
+				symbol [ <literal>::</literal> identifier ]
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+		byteconst
+</entry><entry>::=</entry><entry>
+			<literal>#[</literal> [ byteelements ] <literal>]</literal>
+</entry></row>
+<row><entry>
+		byteelements
+</entry><entry>::=</entry><entry>
+	hdigit hdigit [ byteelements ]
+</entry></row>
+
+<row><entry><para></para></entry></row>
+
+<row><entry>
+		constant
+</entry><entry>::=</entry><entry>
+			boolean
+		|	void
+		|	integer
+		|	float
+		|	string
+		|	byteblock
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+<note>
+<para>inside a path symbol, dashes are allowed.</para>
+</note>
+</section>
+
+<!---------------------------------------------------------------->
+
+<section id="data-types"><title>Data Types</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+		decltype
+
+</entry><entry>::=</entry><entry>
+			<literal>any</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>void</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>boolean</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>integer</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>float</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>string</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>byteblock</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>map</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>locale</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>identifier</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>term</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>path</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>
+			<literal>block</literal>
+</entry></row>
+<row><entry></entry>
+<entry>|</entry><entry>
+			<literal>symbol</literal>
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+</section>
+
+<!---------------------------------------------------------------->
+<section id="expressions"><title>Expressions</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+			expression
+</entry>
+<entry>::=</entry><entry>		constant
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	tuple
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	map
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	identifier
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	term
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	block
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	<literal>(</literal> expression <literal>)</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	prefixop expression
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	expression infixop expression
+
+</entry></row>
+
+
+<row><entry><para></para></entry></row>
+
+<row><entry>
+			block
+</entry><entry>::=</entry><entry>
+				<literal>{</literal> <literal>}</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	
+				<literal>{</literal> statements <literal>}</literal>
+</entry></row>
+
+<row><entry><para></para></entry></row>
+
+<row><entry>
+			tuple
+</entry><entry>::=</entry><entry>
+				<literal>[</literal> [ tupleelements ] <literal>]</literal>
+</entry></row>
+<row><entry>		tupleelements
+</entry><entry>::=</entry><entry>
+				expression [ <literal>,</literal> tupleelements ]
+</entry></row>
+<row><entry>		map
+</entry><entry>::=</entry><entry>
+				<literal>$[</literal> [ mapelements] <literal>]</literal>
+</entry></row>
+<row><entry>		mapelements
+</entry><entry>::=</entry><entry>
+				expression <literal>:</literal> expression [ <literal>,</literal> mapelements ]
+</entry></row>
+
+<row><entry><para></para></entry></row>
+
+<row><entry>		term
+</entry><entry>::=</entry><entry>
+				[ <literal>`</literal> ] identifier <literal>(</literal> [ tupleelements ] <literal>)</literal>
+</entry></row>
+
+<row><entry><para></para></entry></row>
+
+<row><entry>		prefixop
+</entry><entry>::=</entry><entry>
+				<literal>-</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>
+				<literal>!</literal>
+</entry></row>
+<row><entry>
+			infixop
+
+</entry><entry>::=</entry><entry>
+				<literal>+</literal>
+			|	<literal>-</literal>
+			|	<literal>*</literal>
+			|	<literal>/</literal>
+			|	<literal>%</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>&amp;</literal>
+			|	<literal>|</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>&amp;&amp;</literal>
+			|	<literal>||</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>==</literal>
+			|	<literal>!=</literal>
+			|	<literal>&lt;</literal>
+			|	<literal>&gt;</literal>
+			|	<literal>&lt;=</literal>
+			|	<literal>&gt;=</literal>
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+<note>
+<para>if all expressions of a tuple have the same type, it is called a <literal>list</literal></para>
+</note>
+
+</section>
+
+
+<!---------------------------------------------------------------->
+<section id="statements"><title>Statements</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+			statements
+</entry><entry>::=</entry><entry>
+				statement [ statements ]
+</entry></row>
+<row><entry>
+			statement
+</entry><entry>::=</entry><entry>
+				vardecl <literal>;</literal> 
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			assignment <literal>;</literal> 
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			block
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			term <literal>;</literal> 
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>if</literal> <literal>(</literal> expression <literal>)</literal> statement [ <literal>else</literal> statement ]
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>while</literal> <literal>(</literal> expression <literal>)</literal> statement
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>do</literal> block <literal>while</literal> <literal>(</literal> expression <literal>)</literal> <literal>;</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>repeat</literal> block <literal>until</literal> <literal>(</literal> expression <literal>)</literal> <literal>;</literal> 
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>break</literal> <literal>;</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>continue</literal> <literal>;</literal>
+</entry></row><row><entry></entry>
+<entry>|</entry><entry>			<literal>return</literal> [ expression ] <literal>;</literal>
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+</section>
+
+<!---------------------------------------------------------------->
+
+<section id="declarations"><title>Declarations</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+			typedecl
+</entry><entry>::=</entry><entry>
+				<literal>any</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	decltype
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	typedecl <literal>|</literal> typedecl
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	typedecl <literal>&amp;</literal> typedecl
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	<literal>(</literal> typedecl <literal>)</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	<literal>list</literal> [ <literal>(</literal> typedecl <literal>)</literal> ]
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	<literal>[</literal> tupledecl <literal>]</literal>
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+			tupledecl
+</entry><entry>::=</entry><entry>
+				<literal>empty</literal>
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	typedecl [ <literal>,</literal> tupledecl ]
+
+</entry></row>
+<row><entry><para></para></entry></row>
+<row><entry>
+			vardecl
+</entry><entry>::=</entry><entry>
+				typedecl assignment
+</entry></row>
+
+ </tbody>
+ </tgroup>
+</informaltable>
+
+<note>
+<para><literal>empty</literal> in a tuple declaration might only stand for itself</para>
+</note>
+</section>
+
+<!---------------------------------------------------------------->
+
+<section id="assignments"><title>Assignments</title>
+
+<informaltable frame="none">
+ <tgroup cols="3" align="left">
+ <tbody>
+<row><entry>
+			assignment
+</entry><entry>::=</entry><entry>
+				identifier <literal>=</literal> expression
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+</section>
+
+<!---------------------------------------------------------------->
+
+<section id="function-definitions"><title>Function Definition</title>
+
+<informaltable frame="none">
+<tgroup cols="3" align="left">
+ <tbody>
+ <row><entry>
+			definition
+</entry><entry>::=</entry><entry>
+				symbol <literal>(</literal> [ argdecl ] <literal>)</literal> defblock
+</entry></row>
+<row><entry>
+			defblock
+</entry><entry>::=</entry><entry>
+				block
+</entry></row>
+<row><entry></entry><entry>|</entry><entry>	qblock
+</entry></row>
+<row><entry>
+			argdecl
+</entry><entry>::=</entry><entry>
+				typedecl symbol [ <literal>,</literal> argdecl ]
+</entry></row>
+ </tbody>
+ </tgroup>
+</informaltable>
+
+</section>
+
+<!---------------------------------------------------------------->
+
+</section>

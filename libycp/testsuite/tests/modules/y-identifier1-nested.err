@@ -1,0 +1,14 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <integer> f ()
+    // filename: "tests/modules/y-identifier1-nested.ycp"
+    list <integer> f ()
+{
+    // module "Identifier1"
+    import "Identifier1";
+    return Identifier1::f ();
+}
+    return f ();
+}
+----------------------------------------------------------------------

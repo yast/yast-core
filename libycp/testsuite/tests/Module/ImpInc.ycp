@@ -1,0 +1,16 @@
+{
+    module "ImpInc";
+
+    include "impinc.inc";	// does an 'import "ImpInc"'
+
+    // import "ImpInc";
+    //
+    // global define integer ii () ``{
+    //     return 5;
+    // }
+
+    global void ImpInc ()	// constructor !
+    {
+	y2error ("In ImpInc: Function returned: %1", ii ());
+    }
+}

@@ -49,6 +49,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_VOID. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
@@ -71,6 +76,6 @@ class YCPVoid : public YCPValue
     DEF_COMMON(Void, Value);
 public:
     YCPVoid() : YCPValue(new YCPVoidRep()) {}
+    YCPVoid(std::istream & str);
 };
-
 #endif   // YCPVoid_h

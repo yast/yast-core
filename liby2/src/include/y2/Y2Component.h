@@ -128,6 +128,29 @@ public:
     virtual Y2Component *getCallback (void) const;
     virtual void setCallback (Y2Component *callback);
 
+    /**
+     * Try to import a given namespace. This method is used
+     * for transparent handling of namespaces (YCP modules)
+     * through whole YaST.
+     * NOTICE: there is no reverse operation to import.
+     * Semantics of YCP modules is there is a single instance
+     * and it is available from the first import
+     * until the end of YaST run.
+     * @param name_space the name of the required namespace
+     * @param timestamp a string containing unique timestamp
+     * if only the given timestamp is requested. If not NULL,
+     * component must provide a namespace with exactly the
+     * same timestamp.
+     * @return on errors, NULL should be returned. The
+     * error reporting must be done by the component itself
+     * (typically using y2log). On success, the method
+     * should return a proper instance of the imported namespace
+     * ready to be used. The returned instance is still owned
+     * by the component, any other part of YaST will try to
+     * free it. Thus, it's possible to share the instance.
+     */
+    virtual Y2Namespace* import(const char* name_space, const char* timestamp = NULL);
+
     /* ================ client ================ */
 
     /**
@@ -148,20 +171,8 @@ public:
      * This method is only defined, if the component is a client.
      */
     virtual YCPValue doActualWork(const YCPList& arglist, Y2Component *user_interface);
-
+    
     /* ================ misc ================ */
-
-    // protected: was formerly protected; abolished due to call in WFMInterpreter
-
-    /**
-     * Call a YaST2 client component with arguments.
-     * The current modulename is temporarily changed in the
-     * user_interface.
-     * Return YCPNull, if the component couldn't be called.
-     * Return the client component's return value otherwise.
-     */
-    YCPValue callModule (string modulename, const YCPList& arglist,
-			 Y2Component *user_interface);
 
     /**
      * Returns the SCRAgent of the Y2Component or NULL, if it doesn't have

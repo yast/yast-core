@@ -1,0 +1,24 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <integer, const integer> m
+    // filename: "tests/types/const2.ycp"
+    map <integer, const integer> m = $[1:1, 2:2, 3:3];
+    m[1] = 42;
+    return m[1]:0;
+}
+----------------------------------------------------------------------
+tests/types/const2.ycp:15:Assignment to const identifier 'm'
+[Parser] tests/types/const2.ycp:15 Assignment to const identifier 'm'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/const2.ycp:12 Parser error
+tests/types/const2.ycp:24:Assignment to const identifier 'm'
+[Parser] tests/types/const2.ycp:24 Assignment to const identifier 'm'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/const2.ycp:21 Parser error

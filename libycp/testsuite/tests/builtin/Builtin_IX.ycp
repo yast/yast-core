@@ -1,0 +1,76 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_IX.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 2000/10/06 ---------------
+
+//
+//         mapmap(symbol k, symbol v, map m, expression e) -> map
+//
+// Maps an operation onto all elements key/value pairs of a map and thus
+// creates a map.
+// For each key/value pair of the map <tt>m</tt> the expression <tt>e</tt> 
+// is evaluated in a new context, where the variable <tt>k</tt>
+// is assigned to the key and <tt>v</tt> to the value of the pair.
+// The result is the map of those evaluations.
+//
+// The result of each evaluation MUST be a map.
+//
+( mapmap(integer k, string v, $[1:"a", 2:"b"], ``($[k+10: v+"x"])) == $[ 11:"ax",  12:"bx" ] )
+( mapmap(integer k, string v, $[1:"a", 2:"b", 3:"c"], ``($[k+10: v+"x"])) == $[ 11:"ax",  12:"bx", 13:"cx" ] )
+( mapmap(integer k, string v, $[1:"a", 2:"b"], ``{ integer a = k+10; string b = v+"x"; map ret = $[a:b]; return(ret); }) == $[ 11:"ax",  12:"bx" ] )
+
+// the map is not related to the given symbols
+( mapmap(`k, `v, $[1:"a", 2:"b"], ``($[10: "x"])) == $[ 10:"x",  10:"x" ] )
+
+// there is only an empty map
+( mapmap(integer k, string v, $[ ], ``($[k+10: v+"x"])) == $[ ] )
+
+
+
+//
+//         issubstring(string s, string substring) -> bool
+//
+// true, if <tt>substring</tt> is a substring of <tt>s</tt>
+//
+( issubstring("some text", "tex") == true )
+( issubstring("", "tex") == false )
+"issubstring"
+( issubstring("some text", "") == true )
+
+
+
+//
+//         findfirstof( string s_1, string s_2 ) -> integer
+//
+// Returns the position of the first character in <tt>s_1</tt> that is
+// contained in <tt>s_2</tt>.
+//
+( findfirstof( "abcdefghi", "cxdv" ) == 2 )
+( findfirstof("aaaaa", "z") == nil )
+( findfirstof("", "") == nil )
+( findfirstof("", "a") == nil )
+
+
+
+//
+//         filter(key k, value v, map m, expression e) -> map
+//
+// For each key/value pair of the map <tt>m</tt> the expression <tt>e</tt>
+// is evaluated in a new context, where the variable <tt>k</tt>
+// is assigned to the key and <tt>v</tt> to the value of the pair.
+// If the expression evaluates to true,
+// the key/value pair is appended to the result map.
+( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(k == v)) == $[3:3,5:5] )
+( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(k == 2)) == $[2:"b"] )
+( filter(`k, `v, $[1:"a",2:"b",3:3,5:5], ``(v == "b")) == $[2:"b"] )
+

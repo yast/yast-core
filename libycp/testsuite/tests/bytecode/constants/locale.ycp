@@ -1,0 +1,4 @@
+{
+    textdomain "test";
+    return _("This is a test");
+}

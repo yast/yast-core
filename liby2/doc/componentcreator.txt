@@ -28,3 +28,55 @@ bool isServerCreator() const
 
 bool isClientCreator()
   return false for servers, true for clients.
+
+
+Catalog of component creators
+=============================
+(mvidner@suse.cz: I want to implement a simple system of path searching)
+
+ Y2CCScript:
+
+(in all levels)
+try Y2PathSearch::findy2 ("clients/" + name + ".ycp")
+try Y2PathSearch::completeFilename (name)
+  if it ends with .ycp, take it
+  if we can stat it and it is not executable, take it
+  if we can't stat it and its 1st line matches
+     ^#![[:space:]]*/bin/y2gf[[:space:]]\+$, take it
+
+ Y2CCWFM:
+
+"wfm", in current level only
+
+ Y2CCProgram:
+
+(in all levels)
+
+[ "chroot=" root ":" ] [ path "/" ] base
+
+if there's no slash
+  try Y2PathSearch::findy2exe (root, name, creates_servers,
+  creates_non_y2, level)
+else if creates_servers then fail
+
+if can stat it and is executable, create it
+
+ Y2CCStdio:
+
+"stdio"
+"stderr"
+"testsuite"
+
+ Y2CCPlugin:
+
+also acts as proxy for the stdio (stderr), serial and remote plugins:
+
+ Y2CCSerial:
+
+serial(bps):/device
+
+ Y2CCRemote:
+
+protocol://user:password@host/component		(telnet, .sh, rlogin)
+protocol://user@host/component			(telnet, .sh, rlogin)
+protocol://user/component			(su, sudo)

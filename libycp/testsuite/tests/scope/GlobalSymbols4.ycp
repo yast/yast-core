@@ -1,0 +1,35 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    GlobalSymbols.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+    void func2 (integer i)
+    {
+        y2error ("== toplevel func: %1", i);
+    }
+
+    if (true)
+    {
+	if (true)
+	{
+	    // nested
+	    void func2 (integer i)
+	    {
+	        y2error ("== nested func: %1", i);
+	    }
+	}
+    }
+    func2 (5);
+    return 0;
+}
+

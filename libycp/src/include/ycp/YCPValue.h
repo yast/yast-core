@@ -1,19 +1,20 @@
 /*---------------------------------------------------------------------\
-|								       |
-|		       __   __	  ____ _____ ____		       |
-|		       \ \ / /_ _/ ___|_   _|___ \		       |
-|			\ V / _` \___ \ | |   __) |		       |
-|			 | | (_| |___) || |  / __/		       |
-|			 |_|\__,_|____/ |_| |_____|		       |
-|								       |
-|				core system			       |
-|							 (C) SuSE GmbH |
-\----------------------------------------------------------------------/
+|                                                                      |  
+|                      __   __    ____ _____ ____                      |  
+|                      \ \ / /_ _/ ___|_   _|___ \                     |  
+|                       \ V / _` \___ \ | |   __) |                    |  
+|                        | | (_| |___) || |  / __/                     |  
+|                        |_|\__,_|____/ |_| |_____|                    |  
+|                                                                      |  
+|                               core system                            | 
+|                                                        (C) SuSE GmbH |  
+\----------------------------------------------------------------------/ 
 
    File:       YCPValue.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Klaus Kaempf <kkaempf@suse.de>
+   Authors:	Mathias Kettner <kettner@suse.de>
+		Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -24,14 +25,12 @@
 
 #include "YCPElement.h"
 
-
 /**
  * @short Value Type
  * Defines constants for the Value types. The Value type specifies the class
  * the YCPValueRep object belongs to.
  */
-enum YCPValueType {
-    YT_UNDEFINED   = -1,
+enum YCPValueType { 
     YT_VOID        = 0,
     YT_BOOLEAN     = 1,
     YT_INTEGER     = 2,
@@ -40,15 +39,15 @@ enum YCPValueType {
     YT_BYTEBLOCK   = 5,
     YT_PATH        = 6,
     YT_SYMBOL      = 7,
-    YT_DECLARATION = 8,
-    YT_LOCALE      = 9,
-    YT_LIST        = 10,
-    YT_TERM        = 11,
-    YT_MAP         = 12,
-    YT_BLOCK       = 13,
-    YT_BUILTIN	   = 14,
-    YT_IDENTIFIER  = 15,
-    YT_ERROR	   = 16
+    YT_LIST        = 8,
+    YT_TERM        = 9,
+    YT_MAP         = 10,
+    YT_CODE	   = 11,	// YCode as YCPValue
+    YT_RETURN	   = 12,	// value of 'return;'
+    YT_BREAK	   = 13,	// value of 'break;'
+    YT_ENTRY	   = 14,	// just a placeholder for a SymbolEntry belonging to a function (i.e. foreach())
+    YT_ERROR	   = 15,	// error value, will cause trouble
+    YT_REFERENCE   = 16		// a reference to a variable
 };
 
 enum YCPOrder {
@@ -76,7 +75,7 @@ public:
     virtual YCPValueType valuetype() const = 0;
 
     /**
-     * Checks, if the type of this value is YT_VOID.
+     * Checks, if the type of this value is YT_VOID or YT_RETURN (explicitly returned void).
      */
     bool isVoid() const;
 
@@ -116,16 +115,6 @@ public:
     bool isSymbol() const;
 
     /**
-     * Checks, if the type of this value is YT_DECLARATION.
-     */
-    bool isDeclaration() const;
-
-    /**
-     * Checks, if the type of this value is YT_LOCALE
-     */
-    bool isLocale() const;
-
-    /**
      * Checks, if the type of this value is YT_LIST
      */
     bool isList() const;
@@ -142,30 +131,35 @@ public:
     bool isMap() const;
 
     /**
-     * Checks, if the type of this value is YT_BLOCK.
+     * Checks, if the type of this value is YT_CODE.
      */
-    bool isBlock() const;
+    bool isCode() const;
 
     /**
-     * Checks, if the type of this value is YT_BUILTIN.
+     * Checks, if the type of this value is YT_BREAK.
      */
-    bool isBuiltin() const;
+    bool isBreak() const;
 
     /**
-     * Checks, if the type of this value is YT_IDENTIFIER.
+     * Checks, if the type of this value is YT_RETURN.
      */
-    bool isIdentifier() const;
+    bool isReturn() const;
 
     /**
-     * Checks, if the type of this value is YT_ERROR.
+     * Checks, if the type of this value is YT_ENTRY.
      */
-    bool isError() const;
+    bool isEntry() const;
+
+    /**
+     * Checks, if the type of this value is YT_REFERENCE.
+     */
+    bool isReference() const;
 
     /**
      * Casts this value into a pointer of type const YCPVoidRep *.
      */
     YCPVoid asVoid() const;
-
+    
     /**
      * Casts this value into a pointer of type const YCPBooleanRep *.
      */
@@ -202,16 +196,6 @@ public:
     YCPSymbol asSymbol() const;
 
     /**
-     * Casts this value into a pointer of type const YCPDeclaration .
-     */
-    YCPDeclaration asDeclaration() const;
-
-    /**
-     * Casts this value into a pointer of type const YCPLocale .
-     */
-    YCPLocale asLocale() const;
-
-    /**
      * Casts this value into a pointer of type const YCPList .
      */
     YCPList asList() const;
@@ -227,30 +211,25 @@ public:
     YCPMap asMap() const;
 
     /**
-     * Casts this value into a pointer of type const YCPBlock .
+     * Casts this value into a pointer of type const YCPCode.
      */
-    YCPBlock asBlock() const;
+    YCPCode asCode() const;
 
     /**
-     * Casts this value into a pointer of type const YCPBuiltin .
+     * Casts this value into a pointer of type const YCPEntry.
      */
-    YCPBuiltin asBuiltin() const;
+    YCPEntry asEntry() const;
 
     /**
-     * Casts this value into a pointer of type const YCPIdentifier .
+     * Casts this value into a pointer of type const YCPReference.
      */
-    YCPIdentifier asIdentifier() const;
-
-    /**
-     * Casts this value into a pointer of type const YCPError.
-     */
-    YCPError asError() const;
+    YCPReference asReference() const;
 
     /**
      * Compares two YCP values for equality. Two values are equal if
      * they have the same type and the same contents.
      */
-    bool equal(const YCPValue&) const;
+    bool equal (const YCPValue&) const;
 
     /**
      * Compares two YCP values for equality, greaterness or smallerness.
@@ -262,6 +241,7 @@ public:
      *         YO_GREATER, if this is greater to v
      */
     YCPOrder compare(const YCPValue &v, bool rl = false) const;
+
 };
 
 
@@ -276,5 +256,9 @@ class YCPValue : public YCPElement
     DEF_COMMON(Value, Element);
 public:
 };
+
+
+// FIXME: remove this in the future
+extern YCPValue YCPError ( string message, const YCPValue &ret = YCPNull ());
 
 #endif   // YCPValue_h

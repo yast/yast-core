@@ -1,0 +1,223 @@
+[Scanner] tests/expressions/Is.ycp:23 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:23 Warning: const void
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+tests/expressions/Is.ycp:24:Undeclared identifier 'a'
+[Parser] tests/expressions/Is.ycp:24 Undeclared identifier 'a'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/Is.ycp:24 Parser error
+[Scanner] tests/expressions/Is.ycp:25 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:25 Warning: const boolean
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:26 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:26 Warning: const boolean
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:27 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:27 Warning: const integer
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"--"
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:29 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:29 Warning: integer
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:30 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:30 Warning: integer
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:31 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:31 Warning: integer
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:32 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:32 Warning: const float
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:33 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:33 Warning: const path
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"--"
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:38 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:38 Warning: list
+Parsed:
+----------------------------------------------------------------------
+{
+    // list x
+    // filename: "tests/expressions/Is.ycp"
+    list x = [0];
+    return false;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list x
+    // filename: "tests/expressions/Is.ycp"
+    list x = [0];
+    return is (x[0]:nil, integer);
+}
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:45 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:45 Warning: const symbol
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:46 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:46 Warning: string
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:47 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:47 Warning: list
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:48 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:48 Warning: list
+Parsed:
+----------------------------------------------------------------------
+false
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"-line 44-"
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:50 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:50 Warning: list <const boolean>
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:51 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:51 Warning: map <const integer, const boolean>
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:53 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:53 Warning: void
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:64 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:64 Warning: void
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:66 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:66 Warning: const path
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"-line 62-"
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:68 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:68 Warning: const path
+Parsed:
+----------------------------------------------------------------------
+true
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:69 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:69 Warning: map <const integer, const boolean>
+Parsed:
+----------------------------------------------------------------------
+false
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:71 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:71 Warning: const boolean
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:72 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:72 Warning: integer
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:73 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:73 Warning: const symbol
+Parsed:
+----------------------------------------------------------------------
+(true == true)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+"--"
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:75 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:75 Warning: block <term>
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------
+tests/expressions/Is.ycp:76:Undeclared identifier 'name'
+[Parser] tests/expressions/Is.ycp:76 Undeclared identifier 'name'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/Is.ycp:76 Parser error
+[Scanner] tests/expressions/Is.ycp:77 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:77 Warning: block <term>
+Parsed:
+----------------------------------------------------------------------
+(false == true)
+----------------------------------------------------------------------
+tests/expressions/Is.ycp:78:Undeclared identifier 'name'
+[Parser] tests/expressions/Is.ycp:78 Undeclared identifier 'name'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/Is.ycp:78 Parser error
+[Scanner] tests/expressions/Is.ycp:79 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:79 Warning: const symbol
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------
+[Scanner] tests/expressions/Is.ycp:80 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/expressions/Is.ycp:80 Warning: map <const integer, const boolean>
+Parsed:
+----------------------------------------------------------------------
+(false == false)
+----------------------------------------------------------------------

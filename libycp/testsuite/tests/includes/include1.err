@@ -1,0 +1,14 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer inc (integer i)
+    // filename: "tests/includes/include1.ycp"
+    // include "include1.inc";
+    integer inc (integer i)
+{
+    return (i + 1);
+}
+    // force filename: "tests/includes/include1.ycp"
+    return inc (41);
+}
+----------------------------------------------------------------------

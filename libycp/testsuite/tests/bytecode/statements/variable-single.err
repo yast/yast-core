@@ -1,0 +1,6 @@
+{
+    // integer i
+    // filename: "tests/bytecode/statements/variable-single.ycp"
+    integer i = 0;
+    return i;
+}

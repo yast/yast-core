@@ -1,0 +1,63 @@
+// BracketAlias
+// testing for the bracket assign alias handling
+
+{
+    list l = [0, 1, 2, 3];		// the candidate
+    list lorig = [0, 1, 2, 3];		// the original contents
+    list lexpect = [4, 1, 2, 3];	// the expected contents after assign
+    list lalias = l;			// the alias victim
+
+    l[0] = 4;				// change l, check if lalias is affected
+
+    if (lalias != lorig)
+	return false;			// oops, alias bug
+    if (l != lexpect)
+	return false;
+    return true;
+}
+
+{
+    map m = $[0:0, 1:1, 2:2, 3:3];		// the candidate
+    map morig = $[0:0, 1:1, 2:2, 3:3];		// the original contents
+    map mexpect = $[0:4, 1:1, 2:2, 3:3];	// the expected contents after assign
+    map malias = m;				// the alias victim
+
+    m[0] = 4;				// change m, check if malias is affected
+
+    if (malias != morig)
+	return false;			// oops, alias bug
+    if (m != mexpect)
+	return false;
+    return true;
+}
+
+{
+    term l = `t(0, 1, 2, 3);		// the candidate
+    term lorig = `t(0, 1, 2, 3);		// the original contents
+    term lexpect = `t(4, 1, 2, 3);	// the expected contents after assign
+    term lalias = l;			// the alias victim
+
+    l[0] = 4;				// change l, check if lalias is affected
+
+    if (lalias != lorig)
+	return false;			// oops, alias bug
+    if (l != lexpect)
+	return false;
+    return true;
+}
+
+{
+    term l = `t(0, 1, `n( 2, 3));		// the candidate
+    term lorig = `t(0, 1, `n(2, 3));		// the original contents
+    term lexpect = `t(0, 1, `n(4, 3));	// the expected contents after assign
+    term lalias = l;			// the alias victim
+
+    l[2,0] = 4;				// change l, check if lalias is affected
+
+    if (lalias != lorig)
+	return false;			// oops, alias bug
+    if (l != lexpect)
+	return false;
+    return true;
+}
+

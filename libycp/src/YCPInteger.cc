@@ -12,22 +12,16 @@
 
    File:       YCPInteger.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+		Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPInteger data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-
-#include <stdio.h>
-
-#include "y2log.h"
-#include "YCPInteger.h"
-
+#include "ycp/y2log.h"
+#include "ycp/YCPInteger.h"
+#include "ycp/Bytecode.h"
 
 // YCPIntegerRep
 
@@ -42,10 +36,12 @@ YCPIntegerRep::YCPIntegerRep(const char *r)
     
     int converted;
     if (r && r[0] == '0')
+    {
 	if (r[1] == 'x')
 	    converted = sscanf(r, "%Lx", &v);
 	else
 	    converted = sscanf(r, "%Lo", &v);
+    }
     else
 	converted = sscanf(r, "%Ld", &v);
 
@@ -56,20 +52,23 @@ YCPIntegerRep::YCPIntegerRep(const char *r)
 }
 
 
-long long YCPIntegerRep::value() const
+long long
+YCPIntegerRep::value() const
 {
     return v;
 }
 
 
-YCPOrder YCPIntegerRep::compare(const YCPInteger& i) const
+YCPOrder
+YCPIntegerRep::compare(const YCPInteger& i) const
 {
     if (v == i->v) return YO_EQUAL;
     else return v < i->v ? YO_LESS : YO_GREATER;
 }
 
 
-string YCPIntegerRep::toString() const
+string
+YCPIntegerRep::toString() const
 {
     char s[64];
     snprintf (s, 64, "%Ld", v);
@@ -77,7 +76,53 @@ string YCPIntegerRep::toString() const
 }
 
 
-YCPValueType YCPIntegerRep::valuetype() const
+YCPValueType
+YCPIntegerRep::valuetype() const
 {
     return YT_INTEGER;
+}
+
+
+// bytecode
+std::ostream &
+YCPIntegerRep::toStream (std::ostream & str) const
+{
+    unsigned char c = sizeof (long long);
+    if (!str.put (c))
+	return str;
+    long long ll = v;
+    while (c-- > 0)				// write LSB first
+    {
+	if (!str.put ((unsigned char)(ll & 0xff)))
+	    return str;
+	ll >>= 8;
+    }
+    return str;
+}
+
+
+// ----------------------------------------------
+
+static long long fromStream (std::istream & str)
+{
+    char c;
+    long long ll = 0LL;
+    if (!str.get (c))
+	return ll;
+
+    while (c-- > 0)
+    {
+	char v;
+	if (!str.get (v))
+	    break;
+
+	long long lc = (unsigned char)v;
+	ll |= (lc << (sizeof (long long) - c - 1) * 8);
+    }
+    return ll;
+}
+
+YCPInteger::YCPInteger (std::istream & str)
+    : YCPValue (new YCPIntegerRep (fromStream (str)))
+{
 }

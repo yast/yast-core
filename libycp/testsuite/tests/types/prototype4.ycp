@@ -1,0 +1,18 @@
+{
+  // function prototype testcase
+
+  integer f1 (any p);
+
+  integer f2 (string s)
+  {
+    return f1(s);
+  }
+
+  // this shouldn't work, but it does
+  integer f1 (integer p)
+  {
+    return p + 42;
+  }
+
+  return f2("zero");
+}

@@ -1,0 +1,45 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_VII.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 1999/12/29 ---------------
+
+//
+// maplist(symbol k, symbol v, map m, expression e) -> list
+//
+// Maps an operation onto all elements key/value pairs of a map 
+// and thus creates a list.
+// For each key/value pair of the map <tt>m</tt> the expression 
+// <tt>e</tt> is evaluated in a new context, where the variable 
+// <tt>k</tt> is assigned to the key and <tt>v</tt> to the value 
+// of the pair.
+// The result is the list of those evaluations.
+//
+
+( maplist (integer k, string v, $[1:"a", 2:"b"], { return [k+10, v+"x"]; }) == 
+         [ [11, "ax"], [ 12, "bx" ] ] )
+
+( maplist(`k, `v, $[1:"a", 2:"b"], ``{ return nil; }) == [ nil, nil ] )
+
+// libycp[36] Sorry, comparison of { } with { } not yet implemented
+// ( maplist(`k, `v, $[1:"a", 2:"b"], ``(``{})) == ``[ {}, {} ] )
+
+( maplist(integer k, string v, $[], ``([k+10, v+"x"])) == [ ] )
+
+( maplist(integer k, string v, $[1:"a", 2:"b", 1:"c", 2:"d"], ``([k+10, v+"x"])) == 
+         [ [11, "cx"], [ 12, "dx" ] ] )
+
+( maplist(integer k, string v, $[1:"a", 2:"b", 2:"d", 1:"c"], ``([k+10, v+"x"])) == 
+         [ [11, "cx"], [ 12, "dx" ] ] )
+
+
+

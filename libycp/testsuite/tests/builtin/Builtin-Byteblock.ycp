@@ -1,0 +1,15 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Byteblock.ycp
+#
+#  Purpose:	test cases for all byteblock builtins
+#
+# ---------------------------------------------------------
+
+("** conversions **")
+
+(tobyteblock (4711.0))
+(tobyteblock (#[ff]))
+(tobyteblock ("42"))
+

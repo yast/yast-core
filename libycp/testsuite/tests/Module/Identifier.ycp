@@ -1,0 +1,20 @@
+#
+#  Filename:    Identifier.ycp
+#
+#  Purpose:     module for Identifier
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+  module "Identifier";
+
+  export this_is_global;
+
+  integer a = 1;
+  global integer this_is_global = 2;
+}

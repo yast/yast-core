@@ -1,0 +1,4 @@
+{
+  import "NameOfModule";
+  return NameOfModule::af() == 6;	// 6, if the constructor ran, else 3
+}

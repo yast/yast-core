@@ -1,0 +1,14 @@
+{
+   module "ErrModule";
+
+   integer a = 1;
+
+   // syntax error, only declarations allowed inside a "module" block
+   if (true)
+   {
+      integer b = 1;
+   }
+
+   return a + B::b;            // error B:: undefined
+}
+

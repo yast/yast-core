@@ -26,7 +26,7 @@
 
 #include "Y2CCProgram.h"
 #include "Y2ProgramComponent.h"
-#include "pathsearch.h"
+#include <ycp/pathsearch.h>
 
 
 Y2CCProgram::Y2CCProgram (bool server, bool non_y2)

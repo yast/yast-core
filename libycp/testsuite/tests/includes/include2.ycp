@@ -1,0 +1,11 @@
+{
+    // include inc
+
+    define integer inc (integer i)
+    ``{
+	return i + 1;
+    }
+
+
+    return inc (0);
+}

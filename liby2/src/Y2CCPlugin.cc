@@ -22,9 +22,9 @@
 #include <unistd.h>
 
 #include <ycp/y2log.h>
+#include <ycp/pathsearch.h>
 #include "Y2CCPlugin.h"
 #include "Y2PluginComponent.h"
-#include "pathsearch.h"
 
 
 Y2CCPlugin::Y2CCPlugin (bool creates_servers)

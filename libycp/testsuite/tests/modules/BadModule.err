@@ -1,0 +1,9 @@
+tests/modules/BadModule.ycp:7:Assignment not allowed in a module
+[Parser] tests/modules/BadModule.ycp:7 Assignment not allowed in a module
+tests/modules/BadModule.ycp:8:Block not allowed in a module
+[Parser] tests/modules/BadModule.ycp:8 Block not allowed in a module
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/modules/BadModule.ycp:1 Parser error

@@ -1,0 +1,9 @@
+{
+  textdomain "a";
+  // type propagation locale -> string
+  if (false)
+  {
+    return "a";
+  }
+  return _("a");
+}

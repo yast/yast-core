@@ -29,7 +29,7 @@
 #include <sys/wait.h>
 
 #include "Y2ProgramComponent.h"
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 
@@ -115,7 +115,8 @@ YCPValue Y2ProgramComponent::evaluate(const YCPValue& command)
 
 	    if (receiveFromExternal().isNull())
 	    {
-		return YCPError ("Couldn't launch external server " +  name());
+		y2error ("Couldn't launch external server %s", name().c_str ());
+		return YCPNull ();
 	    }
 
 	    if (argc < 1) free (l_argv[0]);
@@ -147,7 +148,7 @@ void Y2ProgramComponent::result(const YCPValue& result)
 
     if (pid != -1)
     {
-	YCPTerm resultterm("result", false);
+	YCPTerm resultterm("result");
 	resultterm->add(result);
 	sendToExternal(resultterm);
 	terminateExternalProgram();
@@ -236,7 +237,7 @@ YCPValue Y2ProgramComponent::doActualWork(const YCPList& arglist, Y2Component *u
     {
 	if (value->isTerm()
 	    && value->asTerm()->size() == 1
-	    && value->asTerm()->symbol()->symbol() == "result")
+	    && value->asTerm()->name() == "result")
 	{
 	    retval = value->asTerm()->value(0);
 	    y2debug ("Got result from client component %s: %s", name().c_str(), retval->toString().c_str());
@@ -343,31 +344,20 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	    return YCPNull ();
 	}
 
-	const YCPValue ret = parser.parse ();
-
-	if (ret.isNull ()) {
+	YCode* c = parser.parse ();
+	
+	if (c == NULL || c->isError())
+	{
 	    y2error ("External program returned invalid data.");
+	    
+	    if (c->isError ()) 
+		delete c;
+
 	    return YCPNull ();
 	}
-
-	if (ret->isBuiltin ())
-	{
-	    const YCPBuiltin builtin = ret->asBuiltin ();
-	    if (builtin->builtin_code () == YCPB_CALLBACK)
-	    {
-		if (!getCallback ())
-		{
-		    y2error ("fatal error: got callback code but don't "
-			     "have a callback component to evaluate");
-		    exit (5);
-		}
-
-		YCPValue tmp1 = builtin->value (0);
-		YCPValue tmp2 = getCallback ()->evaluate (builtin->value (0));
-		sendToExternal (tmp2);
-		continue;
-	    }
-	}
+	
+	YCPValue ret = c->evaluate (true);
+	delete c;
 
 	return ret;
     }

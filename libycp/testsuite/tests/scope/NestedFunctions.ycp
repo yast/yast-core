@@ -1,0 +1,13 @@
+{
+    integer nested1 (integer i)
+    {
+	integer nested2 (integer i)
+	{
+	    return i + 2;
+	}
+
+	return nested2 (i) + 1;
+   }
+
+   return nested1(42);
+}

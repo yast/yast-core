@@ -70,6 +70,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_INTEGER. See @ref YCPValueRep#type.
      */
     YCPValueType valuetype() const;
@@ -87,6 +92,7 @@ class YCPInteger : public YCPValue
 public:
     YCPInteger(long long v) : YCPValue(new YCPIntegerRep(v)) {}
     YCPInteger(const char *r) : YCPValue(new YCPIntegerRep(r)) {}
+    YCPInteger(std::istream & str);
 };
 
 #endif   // YCPInteger_h

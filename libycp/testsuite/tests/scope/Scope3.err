@@ -1,0 +1,27 @@
+[Interpreter] tests/scope/Scope3.ycp:39 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer MultipleUsedVariable
+    // filename: "tests/scope/Scope3.ycp"
+    integer MultipleUsedVariable = 0;
+    if (true)
+    {
+    // integer MultipleUsedVariable
+    integer MultipleUsedVariable = 1;
+    MultipleUsedVariable = (MultipleUsedVariable + 1);
+    if (true)
+    {
+    while (true)
+    {
+    // string MultipleUsedVariable
+    string MultipleUsedVariable = "";
+    MultipleUsedVariable = "I am a string";
+    break;
+}
+    MultipleUsedVariable = /* const float -> integer */1.2;
+}
+}
+    return MultipleUsedVariable;
+}
+----------------------------------------------------------------------

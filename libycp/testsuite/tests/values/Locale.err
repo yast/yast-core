@@ -1,0 +1,51 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("Everybody likes Linux!");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("%1 m$-windows system deleted", "%1 m$-windows systems deleted", 42);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("%1 linux system installed", "%1 linux systems installed", (40 + 2));
+}
+----------------------------------------------------------------------
+[Scanner] tests/values/Locale.ycp:27 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/values/Locale.ycp:27 Warning: locale
+[Scanner] tests/values/Locale.ycp:30 Warning: Superfluous 'is()' expression, type is known:
+[Scanner] tests/values/Locale.ycp:30 Warning: locale
+Parsed:
+----------------------------------------------------------------------
+{
+    // locale a
+    // locale b
+    // filename: "tests/values/Locale.ycp"
+    textdomain "textdomain";
+    locale a = _("abc");
+    if (false)
+    return a;
+    locale b = _("abc", "def", 42);
+    if (false)
+    return b;
+    return _("Ok");
+}
+----------------------------------------------------------------------
+tests/values/Locale.ycp:35:No textdomain defined
+[Parser] tests/values/Locale.ycp:35 No textdomain defined
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/values/Locale.ycp:35 Parser error

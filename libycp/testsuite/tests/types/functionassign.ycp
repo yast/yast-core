@@ -1,0 +1,7 @@
+{
+  integer one () { return 1; }
+
+  integer two () { return 2; }
+
+  one = two;	// error
+}

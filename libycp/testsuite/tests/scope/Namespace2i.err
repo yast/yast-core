@@ -1,0 +1,14 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Namespace2"
+    // filename: "tests/scope/Namespace2i.ycp"
+    import "Namespace2";
+    return (Namespace2::globalFunction () == 4711);
+}
+----------------------------------------------------------------------
+tests/scope/Namespace2i.ycp:21:Unknown identifier 'Namespace2::localFunction'
+[Parser] tests/scope/Namespace2i.ycp:21 Unknown identifier 'Namespace2::localFunction'
+tests/scope/Namespace2i.ycp:21:syntax error, unexpected SCANNER_ERROR
+[Parser] tests/scope/Namespace2i.ycp:21 syntax error, unexpected SCANNER_ERROR
+runycp: parser error

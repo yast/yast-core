@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/division.ycp"
+    return (96 / 42);
+}

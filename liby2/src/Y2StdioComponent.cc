@@ -22,7 +22,6 @@
 #include <unistd.h>
 
 #include "Y2StdioComponent.h"
-#include <ycp/YCPParser.h>
 #include <ycp/y2log.h>
 
 
@@ -52,8 +51,8 @@ string Y2StdioComponent::name() const
 YCPValue Y2StdioComponent::evaluate (const YCPValue& command)
 {
     if (!is_server && !batchmode) {
-	send (YCPBuiltin (YCPB_CALLBACK, command));
-	return receive ();
+	// FIXME:
+	return YCPVoid ();
     }
 
     send (command);
@@ -68,25 +67,6 @@ YCPValue Y2StdioComponent::evaluate (const YCPValue& command)
     {
 	YCPValue ret = receive ();
 
-	if (ret->isBuiltin ())
-	{
-	    const YCPBuiltin builtin = ret->asBuiltin ();
-	    if (builtin->builtin_code () == YCPB_CALLBACK)
-	    {
-		if (!getCallback ())
-		{
-		    y2error ("fatal error: got callback code but don't "
-			     "have a callback component to evaluate");
-		    exit (5);
-		}
-
-		YCPValue tmp1 = builtin->value (0);
-		YCPValue tmp2 = getCallback ()->evaluate (builtin->value (0));
-		send (tmp2);
-		continue;
-	    }
-	}
-
 	if (!ret.isNull ())
 	    return ret;
 
@@ -99,7 +79,7 @@ YCPValue Y2StdioComponent::evaluate (const YCPValue& command)
 
 void Y2StdioComponent::result (const YCPValue& result)
 {
-    YCPTerm resultterm ("result", false);
+    YCPTerm resultterm ("result");
     resultterm->add (result);
     send (resultterm);
 }
@@ -119,7 +99,7 @@ YCPValue Y2StdioComponent::doActualWork (const YCPList& arglist,
     while (!(value = receive()).isNull())
     {
 	if (value->isTerm() && value->asTerm()->size() == 1 &&
-	    value->asTerm()->symbol()->symbol() == "result")
+	    value->asTerm()->name () == "result")
 	{
 	    return value->asTerm()->value(0);
 	}
@@ -136,17 +116,22 @@ void
 Y2StdioComponent::send (const YCPValue& v) const
 {
     string s = "(" + (v.isNull () ? "(nil)" : v->toString ()) + ")\n";
-    // y2debug ("send begin %s", s.c_str ());
+    y2debug ("send begin %s", s.c_str ());
     write (to_stderr ? STDERR_FILENO : STDOUT_FILENO, s.c_str (), s.length ());
-    // y2debug ("send end %s", s.c_str ());
+    y2debug ("send end %s", s.c_str ());
 }
 
 
 YCPValue
 Y2StdioComponent::receive ()
 {
-    // y2debug ("receive begin");
-    YCPValue v = parser.parse ();
-    // y2debug ("receive end %s", v.isNull () ? "(nil)" : v->toString ().c_str ());
-    return v;
+    y2debug ("receive begin");
+    YCode* pc = parser.parse ();
+    if (pc)
+    {
+	y2debug ("receive end %s", pc->toString ().c_str ());
+	return YCPCode (pc);
+    }
+    y2debug ("receive end - parse error");
+    return YCPNull ();
 }

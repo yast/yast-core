@@ -1,0 +1,16 @@
+{
+  integer fun (integer i)
+  {
+    while (i < 5)
+    {
+	i = i + 1;
+	if (i % 2 == 0)
+	{
+	    return;		// error, must return integer
+	}
+    }
+    return i;
+  }
+
+  return fun (1);
+}

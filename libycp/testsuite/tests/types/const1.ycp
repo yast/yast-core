@@ -1,0 +1,9 @@
+{
+  const list <integer> m = [ 1, 2, 3];
+
+  m[0] = 42;		// error, m is const
+
+  m = [42, 42];		// error, m is const
+
+  return m[0]:0;
+}

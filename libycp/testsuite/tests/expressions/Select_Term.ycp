@@ -1,0 +1,85 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Select_Term.ycp
+#
+#  Purpose:     test cases for YCP 'select' on terms
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( select( node1, 0, nil) == `Austria );
+}
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( select( node2, 0, nil) == `China );
+}
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( node6[1]:nil == nil );
+}
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( node7[0, 1, 0]:`error() == node2 );
+}
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( node7[0, 1, 1, 1]:`error == `France );
+}
+
+{
+    term  node1 = `Termified( `Austria, `Belgium );
+    term  node2 = `Termified( `China, `D_Nation );
+    term  node3 = `Termified( `England, `France );
+    term  node4 = `Termified( node2, node3 );
+    term  node5 = `Termified( node1, node4 );
+    term  node6 = `Termified( `Greece, nil );
+    term  node7 = `Termified( node5, node6 );
+
+    return( node7 );
+}
+

@@ -1,0 +1,53 @@
+  This file lists cases known to fail that will be fixed later.
+  So this is the list of missing features.
+
+  Lines beginning with white space are ignored.
+
+
+  Each 'bug' starts with a header consisting of
+  - a number
+  - a short description, explaining the bug 'area'
+  - an optional "Assigned to" line, if someone is currently working
+    in this area
+  - a long description, characterizing the bug, explaining other failure
+    scenarious, explaining the testcase and the expected output.
+    optionally with fix suggestions or some (good ;-)) reasons for not fixing the bug.
+
+  There is an empty line before each header
+
+
+  14. Flatten nested lists
+  Currently not fully specified
+  The overload resolution code seems to have a minor bug in error reporting
+  Fixed 2002-11-22
+  flatten
+ #funcptr
+ #funcptr2
+
+  17. impself
+  Currently not fully specified
+ impself
+
+  19. 'is' optimization fails
+  Assigned to: mvidner
+  Needs turning off IS_IS_OPTIMIZED but that breaks other things
+ list
+
+  23. Module constructor
+  Using a constructor in a simple module does not work
+  even if the "module statement in sub-block" check is disabled.
+ moduleci
+
+  26. Single file module-and-import
+  This test case takes advantage of defining a module and importing it
+  in the same file. This only worked in runycp and was broken when #21
+  and 22 were fixed. foo2 and foo2i are equivalent replacements.
+  I consider it minor.
+ Namespace
+ Identifier
+
+    Assigned: kkaempf@suse.com
+Scope7
+
+IfThenElse5
+blocktype

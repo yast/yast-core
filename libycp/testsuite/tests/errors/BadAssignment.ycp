@@ -1,0 +1,12 @@
+//
+// BadAssignment.ycp
+//
+
+{
+  // simple types
+
+  integer i = 1;
+  i = true;
+  boolean b = "";
+  i = b;
+}

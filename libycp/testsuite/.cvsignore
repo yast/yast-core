@@ -11,3 +11,9 @@ tmp.log*
 runycp
 parseycp
 testscope
+hashcheck
+ycpc
+runc
+*.ycp
+*.ybc
+testSignature

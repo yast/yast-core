@@ -1,0 +1,38 @@
+{
+    module "Rec";
+
+    global define term ProcessTerm (term t, map widgets, integer level)
+    {
+	y2milestone ("term %1", t);
+	y2milestone ("widgets %1", widgets);
+	y2milestone ("level %1", level);
+
+	y2error ("Level %2, Processing %1", t, level);
+	integer args = size (t);
+	if (args == 0)
+	{
+	    return t;
+	}
+	term ret = toterm (substring (sformat ("%1", symbolof (t)), 1));
+	integer index = 0;
+	while (index < args)
+	{
+	    any arg = select (t, index, nil);
+	    if (is (arg, term) && arg != nil)
+	    {
+		term targ = toterm (arg);
+		symbol s = symbolof (targ);
+		if (contains ([ `VBox, `HBox, `Left, `Right], s))
+		{
+		    y2error ("Level %2: Ret before: %1", ret, level);
+		    targ = ProcessTerm (targ, widgets, level+1);
+		    y2error ("Level %2: Ret after: %1", ret, level);
+		}
+	 	ret = add (ret, targ);
+	    }
+	    index = index + 1;
+	}
+	y2error ("Level %2, Returning %1", ret, level);
+	return ret;
+    }
+}

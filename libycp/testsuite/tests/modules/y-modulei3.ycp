@@ -1,0 +1,8 @@
+{
+  import "YModule";
+
+  YModule::ag = 27;
+
+  return YModule::ag == 27;
+}
+

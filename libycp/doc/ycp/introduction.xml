@@ -1,0 +1,24 @@
+<!-- Maintainer: kkaempf@suse.de -->
+<!-- $Id$ -->
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<section id="about-yast">
+<title>About YaST</title>
+<para>
+What is YaST
+What are its components
+How does YCP fit there
+</para>
+</section>
+
+<!---------------------------------------------------------------------------->
+<section id="ycp-overview"><title>YCP overview</title>
+<para>
+About YCP
+</para>
+</section>
+
+
+</chapter>

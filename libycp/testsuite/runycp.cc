@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
-\----------------------------------------------------------------------/
+|                                                                      |  
+|                      __   __    ____ _____ ____                      |  
+|                      \ \ / /_ _/ ___|_   _|___ \                     |  
+|                       \ V / _` \___ \ | |   __) |                    |  
+|                        | | (_| |___) || |  / __/                     |  
+|                        |_|\__,_|____/ |_| |_____|                    |  
+|                                                                      |  
+|                               core system                            | 
+|                                                        (C) SuSE GmbH |  
+\----------------------------------------------------------------------/ 
 
    File:       runycp.cc
 
@@ -18,21 +18,59 @@
 /-*/
 
 #include <stdio.h>
-#include <locale.h>
-
-#include <ycp/YCPParser.h>
-#include <ycp/YCPInterpreter.h>
+#include <ycp/YCode.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
+#include <ycp/pathsearch.h>
+#include <ycp/YBlock.h>
+#include <ycp/Bytecode.h>
+#include <ycp/ExecutionEnvironment.h>
+
+#include <y2/Y2Component.h>
+#include <y2/Y2ComponentCreator.h>
+
+extern ExecutionEnvironment ee;
+
+class TestY2Component : public Y2Component {
+    virtual Y2Namespace *import (const char* name, const char* timestamp = NULL)
+    {
+        Y2Namespace *block = Bytecode::readModule (name, timestamp != NULL ? timestamp : "");
+        if (block == 0 )
+        {
+            y2debug ("Cannot import module");
+            return NULL;
+        }
+
+        return block;
+    }
+    virtual string name () const { return "test";}
+
+} TestComponent;
+
+
+class TestY2CC : public Y2ComponentCreator
+{
+public:
+    TestY2CC() : Y2ComponentCreator(Y2ComponentBroker::SCRIPT) {}
+    virtual  Y2Component *provideNamespace(const char *name)
+    {
+        y2debug ("Test can handle this" );
+        return &TestComponent;
+    }
+    virtual bool isServerCreator () const { return true;};
+} cc;
 
 extern int yydebug;
+extern int SymbolTableDebug;
 
 int
 main (int argc, const char *argv[])
 {
-    setlocale (LC_ALL, "");
-
     const char *fname = 0;
     FILE *infile = stdin;
+    bool make_depends = false;
+
+    YCPPathSearch::initialize ();
 
     if (argc > 1)
     {
@@ -46,35 +84,71 @@ main (int argc, const char *argv[])
 		argp++;
 		set_log_filename (argv[argp]);
 	    }
-	    else if (fname == 0)
+	    // TODO - this is getting messy, use getopt_long
+	    else if ((argv[argp][0] == '-')
+	        && (argv[argp][1] == 'I'))
+	    {
+		const char *path = argv[argp] + 2;
+		if ((*path == 0)
+		    && (argp+1 < argc))
+		{
+		    argp++;
+		    path = argv[argp];
+		}
+		if (*path == 0)
+		{
+		    fprintf (stderr, "missing argument to '-I'\n");
+		}
+		else
+		{
+		    YCPPathSearch::addPath (YCPPathSearch::Include, path);
+		}
+	    }
+	    else if ((argv[argp][0] == '-')
+	        && (argv[argp][1] == 'M'))
+	    {
+		const char *path = argv[argp] + 2;
+		if ((*path == 0)
+		    && (argp+1 < argc))
+		{
+		    argp++;
+		    path = argv[argp];
+		}
+		if (*path == 0)
+		{
+		    fprintf (stderr, "missing argument to '-M'\n");
+		}
+		else
+		{
+		    YCPPathSearch::addPath (YCPPathSearch::Module, path);
+		}
+	    }
+	    else if ((argv[argp][0] == '-')
+	        && (argv[argp][1] == '-')
+	        && (strcmp (argv[argp] + 2, "depends") == 0))
+	    {
+		make_depends = true;	
+	    }
+	    else if ((argv[argp][0] != '-')
+		     && fname == 0)
 	    {
 		fname = argv[argp];
 	    }
 	    else
 	    {
-		fprintf (stderr, "Bad argument '%s'\nUsage: runycp [ name.ycp ]\n", argv[argp]);
+		fprintf (stderr, "Bad argument '%s'\nUsage: runycp [-l log] {-I include-path} {-M module-path} [name.ycp]\n", argv[argp]);
+		return 1;
 	    }
 	    argp++;
 	}
     }
 
-
-    YCPParser *parser;
-    parser = new YCPParser ();
+    Parser *parser;
+    parser = new Parser ();
 
     if (!parser)
     {
-	fprintf (stderr, "Failed to create YCPParser\n");
-	return 1;
-    }
-
-    YCPInterpreter *interpreter;
-    interpreter = new YCPInterpreter();
-
-    if (!interpreter)
-    {
-	fprintf (stderr, "Failed to create YCPInterpreter\n");
-	delete parser;
+	fprintf (stderr, "Failed to create Parser\n");
 	return 1;
     }
 
@@ -91,41 +165,50 @@ main (int argc, const char *argv[])
     {
 	fname = "stdin";
     }
+
     parser->setInput (infile, fname);
     parser->setBuffered();
+    if (make_depends)
+	parser->setDepends();
+	
+    parser->setPreloadNamespaces (false);
 
-    interpreter->current_file = string (fname);
+    ee.setFilename (string (fname));
 
-    YCPValue value = YCPVoid();
+    YCode *code = 0;
+
+    SymbolTableDebug = 0;
 
     for (;;)
     {
-	value = parser->parse();
-	if (value.isNull())
+	y2debug ("\n------------------------------------------- parsing");
+	code = parser->parse ();
+	if (parser->atEOF())
 	{
 	    break;
 	}
-	fprintf (stderr,
-	    "Parsed:\n"
-	    "----------------------------------------------------------------------\n");
-	    // "%s\n"
-	    fputs( value->toString().c_str(),stderr);
-	    fprintf(stderr, "\n"
-	    "----------------------------------------------------------------------\n"); //,
-	    // value->toString().c_str());
 
-	value = interpreter->evaluate(value);
-
-	if (!value.isNull() && (value->isError()))
+	if (code == 0)
 	{
-	    // triggers error log in interpreter
-	    value = interpreter->evaluate(value);
+	    fprintf (stderr, "runycp: parser error\n");
+	    break;
 	}
-	printf ("(%s)\n", value.isNull()?"(NULL)":value->toString().c_str());
+
+	fprintf (stderr, 
+	    "Parsed:\n"
+	    "----------------------------------------------------------------------\n"
+	    "%s\n"
+	    "----------------------------------------------------------------------\n",
+	    code->toString().c_str());
+
+	y2debug ("\n------------------------------------------- running");
+	YCPValue value = code->evaluate ();
+
+	y2debug ("\n------------------------------------------- done");
+	printf ("(%s)\n", value.isNull() ? "nil" : value->toString().c_str());
 
     }
 
-    delete interpreter;
     delete parser;
 
     if (infile != stdin)

@@ -1,0 +1,14 @@
+{
+  integer v_integer = nil;
+  integer w_integer = 5;
+  return [(v_integer == nil),
+	  (v_integer != nil),
+	  (w_integer == nil),
+	  (w_integer != nil)
+	 ];
+}
+{
+  // allowed
+  integer v_integer = nil;
+  return [v_integer == nil, v_integer != nil];
+}

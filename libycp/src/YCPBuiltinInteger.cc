@@ -1,120 +1,325 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|						     (C) SuSE Linux AG |
 \----------------------------------------------------------------------/
 
-   File:       YCPBuiltinInteger.cc
+   File:	YCPBuiltinInteger.cc
 
-   Author:	Klaus Kaempf <kkaempf@suse.de>
-		Mathias Kettner <kettner@suse.de>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
+$Id$
 /-*/
 
-#include "YCPInterpreter.h"
+#include "ycp/YCPBuiltinInteger.h"
+#include "ycp/YCPInteger.h"
+#include "ycp/YCPString.h"
+#include "ycp/YCPFloat.h"
+
+#include "ycp/StaticDeclaration.h"
+#include "y2log.h"
+
+extern StaticDeclaration static_declarations;
 
 
-YCPValue evaluateIntegerOp (YCPInterpreter *interpreter, builtin_t code, const YCPList& args)
+static YCPValue
+i_plus (const YCPInteger &i1, const YCPInteger &i2)
 {
-    // YCPInterpreter guarantees args->value(0)->isInteger()
+    /**
+     * @builtin integer i1 + integer i2 -> integer
+     * Addition of integers.
+     *
+     * Example: <pre>
+     * 1 + 2 -> 3
+     * </pre>
+     */
+     
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
 
-    long long value1 = args->value(0)->asInteger()->value();
+    return YCPInteger (i1->value() + i2->value());
+}
 
-    switch (code) {
-        case YCPB_NEG:   return YCPInteger (-(value1));
-        case YCPB_BNOT:  return YCPInteger (~(value1));
-        default:	 break;
-    }
 
-    if (args->size() != 2)
-	return YCPError ("evaluateIntegerOp: wrong number of arguments");
+static YCPValue
+i_minus (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 - integer i2 -> integer
+     * Subtraction of integers.
+     *
+     * Example: <pre>
+     * 1 - 2 -> -1
+     * </pre>
+     */
 
-    if (!args->value(1)->isInteger())
-	return YCPError ("evaluateIntegerOp: second arg not integer");
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
 
-    long long value2 = args->value(1)->asInteger()->value();
+    return YCPInteger (i1->value() - i2->value());
+}
 
-    switch (code)
+
+static YCPValue
+i_mult (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 * integer i2 -> integer
+     * Multiplication of integers.
+     *
+     * Example: <pre>
+     * 2 * 3 -> 6
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() * i2->value());
+}
+
+
+static YCPValue
+i_div (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 / integer i2 -> integer
+     * Division of integers.
+     *
+     * Examples: <pre>
+     * 6 / 2 -> 3
+     * 42 / 0 -> nil
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    if (i2->value() == 0)
     {
-	case YCPB_PLUS:	 return YCPInteger (value1 +  value2);
-	case YCPB_MINUS: return YCPInteger (value1 -  value2);
-	case YCPB_MULT:	 return YCPInteger (value1 *  value2);
-	case YCPB_DIV:
-	    {
-		if (value2 == 0)
-		{
-		    ycp2error (interpreter->current_file.c_str(),
-			       interpreter->current_line, "division by zero");
-		    return YCPNull ();
-		}
-		return YCPInteger (value1 / value2);
-	    }
-	case YCPB_MOD:	 return YCPInteger (value1 %  value2);
-	case YCPB_AND:	 return YCPInteger (value1 &  value2);
-	case YCPB_OR:	 return YCPInteger (value1 |  value2);
-	case YCPB_LEFT:  return YCPInteger (value1 << value2);
-	case YCPB_RIGHT: return YCPInteger (value1 >> value2);
-	default:	 break;
+	ycp2error ("division by zero");
+	return YCPNull ();
     }
-    return YCPNull ();
+
+    return YCPInteger (i1->value() / i2->value());
 }
 
 
-YCPValue evaluateToInteger(YCPInterpreter *interpreter, const YCPList& args)
+static YCPValue
+i_mod (const YCPInteger &i1, const YCPInteger &i2)
 {
-    if (args->size() == 1) {
-	YCPValue value = args->value(0);
-	switch (value->valuetype()) {
-	    /**
-	     * @builtin tointeger(integer i) -> integer
-	     * Does convert an integer to itself. This is for consistency with
-	     * the other tointeger functions.
-	     *
-	     * Example <pre>
-	     * tointeger(7411) -> 7411
-	     * </pre>
-	     */
-	case YT_INTEGER: return value;
+    /**
+     * @builtin integer i1 % integer i2 -> integer
+     * Modulus of integers.
+     *
+     * Examples: <pre>
+     * 7 % 4 -> 3
+     * </pre>
+     */
 
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
 
-	    /**
-	     * @builtin tointeger(float f) -> integer
-	     * Converts a floating point number to an integer. Currently no checking
-	     * of bounds and no rounding is implemented.
-	     *
-	     * Example <pre>
-	     * tointeger(4.03) -> 4
-	     * </pre>
-	     */
-#warning TODO: correct rounding. But this is locale dependend >:-P
-
-	case YT_FLOAT:   return YCPInteger((long long)(value->asFloat()->value()));
-
-	    /**
-	     * @builtin tointeger(string s) -> integer
-	     * Converts a string to an integer. Currently no checking
-	     * of the syntax is performed and no warnings are printed.
-	     * '0x' prefix for hexadecimal and '0' for octal is also supported.
-	     *
-	     * Example <pre>
-	     * tointeger("42") -> 42
-	     * tointeger("0x42") -> 66
-	     * tointeger("042") -> 34
-	     * </pre>
-	     */
-
-	case YT_STRING:  return YCPInteger(value->asString()->value_cstr());
-	default: return YCPNull();
-	}
-    }
-    else return YCPNull();
+    return YCPInteger (i1->value() % i2->value());
 }
 
 
+static YCPValue
+i_and (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 & integer i2 -> integer
+     * Bitwise and of integers.
+     *
+     * Examples: <pre>
+     * 13 & 8 -> 8
+     * 13 & 7 -> 5
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() & i2->value());
+}
+
+
+static YCPValue
+i_xor (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 ^ integer i2 -> integer
+     * Bitwise exclusive or of integers.
+     *
+     * Examples: <pre>
+     * 2 ^ 7 -> 5
+     * 5 ^ 4 -> 1
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() ^ i2->value());
+}
+
+
+static YCPValue
+i_or (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 | integer i2 -> integer
+     * Bitwise or of integers.
+     *
+     * Examples: <pre>
+     * 2 | 2 -> 2
+     * 1 | 4 -> 5
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() | i2->value());
+}
+
+
+static YCPValue
+i_left (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 << integer i2 -> integer
+     * Bitwise shift left for integers.
+     *
+     * Example: <pre>
+     * 8 << 2 -> 32
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() << i2->value());
+}
+
+
+static YCPValue
+i_right (const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin integer i1 >> integer i2 -> integer
+     * Bitwise shift right for integers.
+     *
+     * Example: <pre>
+     * 8 >> 2 -> 2
+     * </pre>
+     */
+
+    if (i1.isNull () || i2.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (i1->value() >> i2->value());
+}
+
+
+static YCPValue
+i_neg (const YCPInteger &i1)
+{
+    /**
+     * @builtin - integer i -> integer
+     * Negative of integer.
+     */
+
+    if (i1.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (-(i1->value()));
+}
+
+
+static YCPValue
+i_bnot (const YCPInteger &i1)
+{
+    /**
+     * @builtin ~ integer i -> integer
+     * Bitwise not of integer.
+     *
+     * Example: <pre>
+     * ~42 = -43
+     * </pre>
+     */
+
+    if (i1.isNull ())
+	return YCPNull ();
+
+    return YCPInteger (~(i1->value()));
+}
+
+
+static YCPValue
+i_tointeger (const YCPValue &v)
+{
+    /**
+     * @builtin tointeger (any value) -> integer
+     * Converts a value to an integer.
+     * If the value can't be converted to an integer, nilinteger is returned.
+     *
+     * Example: <pre>
+     * tointeger (4.03) -> 4
+     * tointeger ("42") -> 42
+     * tointeger ("0x42") -> 66
+     * tointeger ("042") -> 34
+     * </pre>
+     */
+
+    if (v.isNull())
+	return v;
+    switch (v->valuetype())
+    {
+	case YT_INTEGER:
+	    return v->asInteger();
+	break;
+	case YT_FLOAT:
+	    return YCPInteger ((long long int) (v->asFloat()->value()));
+	break;
+	case YT_STRING:
+	    return YCPInteger (v->asString()->value_cstr ());
+	break;
+	default:
+	break;
+    }
+    return YCPNull();
+
+}
+
+
+YCPBuiltinInteger::YCPBuiltinInteger ()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+	{ "+",  "integer (integer, integer)",	(void *)i_plus },
+	{ "-",  "integer (integer, integer)",	(void *)i_minus },
+	{ "-",  "integer (integer)",		(void *)i_neg },
+	{ "*",  "integer (integer, integer)",	(void *)i_mult },
+	{ "/",  "integer (integer, integer)",	(void *)i_div },
+	{ "%",  "integer (integer, integer)",	(void *)i_mod },
+	{ "&",  "integer (integer, integer)",	(void *)i_and },
+	{ "^",  "integer (integer, integer)",	(void *)i_xor },
+	{ "|",  "integer (integer, integer)",	(void *)i_or },
+	{ "<<", "integer (integer, integer)",	(void *)i_left },
+	{ ">>", "integer (integer, integer)",	(void *)i_right },
+	{ "~",  "integer (integer)",		(void *)i_bnot },
+	{ "tointeger", "integer (const any)",	(void *)i_tointeger },
+	{ 0 }
+    };
+
+    static_declarations.registerDeclarations ("YCPBuiltinInteger", declarations);
+}

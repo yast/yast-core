@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/mapexpr.ycp"
+    return $[(1 + 1):("a" + "a"), (2 + 2):("b" + "b"), (3 + 3):("c" + "c")];
+}

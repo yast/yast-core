@@ -1,0 +1,6 @@
+//
+{
+    import "YModule1";
+
+    return YModule1::j + 1;
+}

@@ -1,0 +1,507 @@
+/*----------------------------------------------------------------------\
+|									|
+|		      __   __    ____ _____ ____			|
+|		      \ \ / /_ _/ ___|_   _|___ \			|
+|		       \ V / _` \___ \ | |   __) |			|
+|			| | (_| |___) || |  / __/			|
+|			|_|\__,_|____/ |_| |_____|			|
+|									|
+|				core system				|
+|							  (C) SuSE GmbH |
+\-----------------------------------------------------------------------/
+
+   File:	SymbolEntry.cc
+		symbol entry class
+
+   Author:	Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+
+$Id$
+/-*/
+// -*- c++ -*-
+#include <stdio.h>
+
+#include <string>
+using std::string;
+
+#include "ycp/y2log.h"
+#include "ycp/SymbolEntry.h"
+#include "ycp/SymbolTable.h"
+#include "ycp/StaticDeclaration.h"
+#include "ycp/YBlock.h"
+#include "ycp/YCPCode.h"
+#include "ycp/YCPVoid.h"
+#include "ycp/Bytecode.h"
+
+UstringHash SymbolEntry::_nameHash;
+
+/**
+ * constructor
+ */
+
+SymbolEntry::SymbolEntry (const Y2Namespace* block, unsigned int position, const char *name, category_t cat, constTypePtr type, YCode *code)
+    : m_global (cat == c_global)
+    , m_block (block)
+    , m_position (position)
+    , m_name (Ustring (_nameHash, name))
+    , m_category (m_global ? c_unspec : cat)
+    , m_type (type)
+    , m_value (YCPNull())
+{
+    m_payload.m_code = code;
+}
+
+// builtin
+SymbolEntry::SymbolEntry (const char *name, constTypePtr type, declaration_t *decl)
+    : m_global (true)
+    , m_block (0)
+    , m_position (0)
+    , m_name (Ustring (_nameHash, name))
+    , m_category (c_builtin)
+    , m_type (type)
+    , m_value (YCPNull())
+{
+    m_payload.m_decl = decl;
+}
+
+
+// namespace
+SymbolEntry::SymbolEntry (const char *name, constTypePtr type, SymbolTable *table)
+    : m_global (true)
+    , m_block (0)
+    , m_position (0)
+    , m_name (Ustring (_nameHash, name))
+    , m_category (c_namespace)
+    , m_type (type)
+    , m_value (YCPNull())
+{
+    m_payload.m_table = table;
+}
+
+
+const Y2Namespace *
+SymbolEntry::block () const
+{
+    return m_block;
+}
+
+
+bool
+SymbolEntry::isGlobal () const
+{
+    return m_global;
+}
+
+
+bool
+SymbolEntry::onlyDeclared () const
+{
+y2debug ("onlyDeclared '%s', category %d, payload %p", name(), category(), code());
+    return (m_category == c_function)			// only functions may be 'only declared'
+	   && (((YFunction *)(m_payload.m_code))->definition() == 0);
+}
+
+void
+SymbolEntry::setBlock (const Y2Namespace *block)
+{
+    m_block = block;
+}
+
+
+unsigned int
+SymbolEntry::position () const
+{
+    return m_position;
+}
+
+
+void
+SymbolEntry::setPosition (unsigned int position)
+{
+    m_position = position;
+    return;
+}
+
+
+void
+SymbolEntry::setCode (YCode *code)
+{
+    if (m_category == c_builtin || m_category == c_module)
+    {
+	y2error ("setDeclaration: Wrong category (%s)", toString().c_str());
+	return;
+    }
+    m_payload.m_code = code;
+}
+
+
+YCode *
+SymbolEntry::code () const
+{
+    if (m_category == c_builtin || m_category == c_module)
+    {
+	return 0;
+    }
+    return m_payload.m_code;
+}
+
+
+Y2Namespace *
+SymbolEntry::name_space () const
+{
+    if (m_category != c_module)
+    {
+	return 0;
+    }
+    return m_payload.m_namespace;
+}
+
+
+void
+SymbolEntry::setNamespace (Y2Namespace *code)
+{
+    if (m_category != c_module)
+    {
+	y2error ("setNamespace: Wrong category (%s)", toString().c_str());
+	return;
+    }
+    m_payload.m_namespace = code;
+}
+
+
+void
+SymbolEntry::setDeclaration (declaration_t *decl)
+{
+    if (m_category != c_builtin)
+    {
+	y2error ("setDeclaration: Wrong category (%s)", toString().c_str());
+	return;
+    }
+    m_payload.m_decl = decl;
+}
+
+
+declaration_t *
+SymbolEntry::declaration () const
+{
+    if (m_category != c_builtin)
+    {
+	return 0;
+    }
+    return m_payload.m_decl;
+}
+
+
+void
+SymbolEntry::setTable (SymbolTable *table)
+{
+    if (m_category != c_namespace)
+    {
+	y2error ("setTable: Wrong category (%s)", toString().c_str());
+    }
+    else
+    {
+	m_payload.m_table = table;
+    }
+    return;
+}
+
+
+SymbolTable *
+SymbolEntry::table() const
+{
+    if (m_category != c_namespace)
+    {
+	return 0;
+    }
+    return m_payload.m_table;
+}
+
+
+YCPValue
+SymbolEntry::setValue (YCPValue value)
+{
+    y2debug ("SymbolEntry::setValue (%s@%p = '%s')", m_name.asString().c_str(), this, value.isNull() ? "nil" : value->toString().c_str());
+    if (!value.isNull()
+	&& (m_category == c_reference))
+    {
+	y2debug ("C_REFERENCE");
+	if (value->isReference())
+	{
+	    return m_value = value;
+	}
+
+	if (m_value.isNull()
+	    || !m_value->isReference())
+	{
+	    y2error ("Setting uninitialized reference");
+	    return YCPNull ();
+	}
+	return m_value->asReference()->entry()->setValue (value);
+    }
+    
+    // use YCPVoid for nil to avoid problems with function references
+    if (value.isNull ())
+	value = YCPVoid ();
+	
+    return m_value = value;
+}
+
+
+YCPValue
+SymbolEntry::value () const
+{
+    if ((m_category == c_reference)
+	&& !m_value.isNull()
+	&& m_value->isReference())
+    {
+	y2debug ("DE-REFERENCE");
+	return m_value->asReference()->entry()->value();
+    }
+    return m_value;
+}
+
+void
+SymbolEntry::push ()
+{
+    m_recurse_stack.push (m_value);
+}
+
+void
+SymbolEntry::pop ()
+{
+    m_value = m_recurse_stack.top ();
+    m_recurse_stack.pop ();
+}
+
+const char *
+SymbolEntry::name () const
+{
+    return m_name.asString().c_str();
+}
+
+
+SymbolEntry::category_t 
+SymbolEntry::category () const
+{
+    return m_category;
+}
+
+
+void
+SymbolEntry::setCategory (SymbolEntry::category_t cat)
+{
+    m_category = cat;
+    return;
+}
+
+
+constTypePtr
+SymbolEntry::type () const
+{
+    return m_type;
+}
+
+
+void
+SymbolEntry::setType (constTypePtr type)
+{
+    m_type = type;
+    return;
+}
+
+
+string 
+SymbolEntry::catString () const
+{
+    switch (m_category)
+    {
+	case c_unspec:
+	    return "unspecified";
+	break;
+	case c_module:
+	    return "module";
+	break;
+	case c_variable:
+	    return "variable";
+	break;
+	case c_reference:
+	    return "reference";
+	break;
+	case c_function:
+	    return "function";
+	break;
+	case c_builtin:
+	    return "builtin";
+	break;
+	case c_typedef:
+	    return "typedef";
+	break;
+	case c_const:
+	    return "const";
+	break;
+	case c_namespace:
+	    return "namespace";
+	break;
+	case c_self:
+	    return "self";
+	break;
+	default:
+	break;
+    }
+
+    return "?cat?";
+}
+
+
+string 
+SymbolEntry::toString (bool with_type) const
+{
+    string s = (with_type && m_global) ? "global " : "";
+
+//y2debug ("SymbolEntry::toString %p: with_type %d, cat %s, name %s", this, with_type, catString().c_str(), m_name.asString().c_str());
+
+    switch (m_category)
+    {
+	case c_unspec:
+	{
+	    return s + catString() + " '" + m_type->toString() + " " + m_name.asString() + "'";
+	}
+	break;
+	case c_module:
+	{
+#if 1
+	    return s + catString() + " \"" + m_name.asString() + "\"";
+#else
+	    return s + catString() + " \"" + m_name.asString() + "\"/*" + ((with_type && m_payload.m_code) ? m_payload.m_code->toString() : "") + "*/";
+#endif
+	}
+	break;
+	case c_variable:
+	case c_reference:
+	case c_function:
+//	    y2debug ("m_block %p[%s], m_global %d, with_type %d", m_block, m_block?m_block->name().c_str():"", m_global, with_type);
+	case c_builtin:
+	{
+	    if (with_type)
+	    {
+		constFunctionTypePtr ftype = m_type;
+		s += (((m_category == c_variable)||(m_category ==c_reference)) ? m_type->toString() : ftype->returnType()->toString()) + " ";
+		if (m_global
+		    && m_block != 0
+		    && !m_block->name().empty())
+		{
+		    s += (m_block->name() + "::");
+		}
+		s += m_name.asString();
+		if ((m_category == c_builtin)
+		    && (m_payload.m_decl != 0))
+		{
+		    s += "(" + m_payload.m_decl->type->toString() + ")";
+		}
+		else if ((m_category == c_function)
+			 && (m_payload.m_code != 0))
+		{
+		    s += ((YFunction *)(m_payload.m_code))->toStringDeclaration();
+		}
+		return s;
+	    }
+	    else
+	    {
+		return string ((m_global && (m_block!=0)) ? (m_block->name() + "::") : "") + m_name.asString();
+	    }
+	}
+	break;
+	case c_typedef:
+	{
+	    return s + catString() + " " + m_name.asString() + " " + m_type->toString() + ";";
+	}
+	break;
+	case c_const:
+	{
+	    return s + m_type->toString() + " " + m_name.asString();
+	}
+	break;
+	case c_namespace:
+	{
+	    return s + catString() + " '" + m_name.asString() + "'";
+	}
+	break;
+	case c_self:
+	{
+	    return s + catString() + " '" + m_name.asString() + "'";
+	}
+	break;
+	default:
+	{
+	    y2error ("category %d ?", m_category);
+	}
+	break;
+    }
+
+    return "?SymbolEntry?";
+}
+
+
+SymbolEntry::SymbolEntry (std::istream & str, const YBlock *block)
+    : m_global (Bytecode::readBool (str))
+    , m_block (block)
+    , m_position (Bytecode::readInt32 (str))
+    , m_name (Ustring (_nameHash, Bytecode::readCharp (str)))
+    , m_category ((category_t)Bytecode::readInt32 (str))
+    , m_type (Bytecode::readType (str))
+    , m_value (YCPNull())    // value stays NULL to enforce re-initialization from payload
+{
+    m_payload.m_code = 0;
+    y2debug ("SymbolEntry::fromStream (%s)", toString().c_str());
+
+    if (m_category == c_builtin)
+    {
+	// re-create declaration from name and type
+	extern StaticDeclaration static_declarations;
+	m_payload.m_decl = static_declarations.findDeclaration (m_name.asString().c_str(), m_type);
+	if (m_payload.m_decl == 0)
+	{
+	    y2error ("Undefined builtin '%s (%s)'", m_name.asString().c_str(), m_type->toString().c_str());
+	}
+    }
+#if 0
+    else if (m_category == c_variable)		// variable might have payload (default value)
+    {
+	if (Bytecode::readBool (str))
+	{
+	    m_payload.m_code = Bytecode::readCode (str);
+	}
+    }
+#endif
+    y2debug ("SymbolEntry::fromStream (%s) done", toString().c_str());
+}
+
+
+std::ostream &
+SymbolEntry::toStream (std::ostream & str) const
+{
+    y2debug ("SymbolEntry::toStream (%s)", toString().c_str());
+    Bytecode::writeBool (str, m_global);
+    Bytecode::writeInt32 (str, m_position);
+    Bytecode::writeCharp (str, m_name.asString().c_str());
+    Bytecode::writeInt32 (str, m_category);
+    m_type->toStream (str);
+#if 0
+    if (m_category == c_variable)
+    {
+	if (m_payload.m_code != 0)		// formal arguments don't have a payload (a default value)
+	{
+	    Bytecode::writeBool (str, true);
+	    m_payload.m_code->toStream (str);
+	}
+	else
+	{
+	    Bytecode::writeBool (str, false);	// mark 'no payload'
+	}
+    }
+#endif
+    return str;
+    // value is never written
+}
+

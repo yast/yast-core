@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // string change_domain (string a)
+    // filename: "tests/statements/textdomain.ycp"
+    textdomain "first domain";
+    string change_domain (string a)
+{
+    // locale l
+    locale l = _("abc");
+    return "first domain";
+}
+    y2milestone ("first textdomain '%1'", "first domain");
+    textdomain "second domain";
+    y2milestone ("second textdomain '%1'", "second domain");
+    y2milestone ("change_domain '%1'", change_domain (""));
+    return "second domain";
+}
+----------------------------------------------------------------------
+[YCP] tests/statements/textdomain.ycp:9 first textdomain 'first domain'
+[YCP] tests/statements/textdomain.ycp:13 second textdomain 'second domain'
+[YCP] tests/statements/textdomain.ycp:6 change_domain 'first domain'

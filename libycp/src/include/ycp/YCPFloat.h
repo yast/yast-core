@@ -81,6 +81,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_FLOAT. See @ref YCPValueRep#type.
      */
     YCPValueType valuetype() const;
@@ -98,6 +103,7 @@ class YCPFloat : public YCPValue
 public:
     YCPFloat(double v) : YCPValue(new YCPFloatRep(v)) {}
     YCPFloat(const char *r) : YCPValue(new YCPFloatRep(r)) {}
+    YCPFloat(std::istream & str);
 };
 
 #endif   // YCPFloat_h

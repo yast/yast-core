@@ -21,9 +21,13 @@
 #ifndef Y2ComponentBroker_h
 #define Y2ComponentBroker_h
 
+#include <map>
 #include <vector>
+#include <string>
 
 using std::vector;
+using std::map;
+using std::string;
 
 class Y2ComponentCreator;
 class Y2Component;
@@ -61,6 +65,17 @@ public:
 		   MAX_ORDER        = 5 };
 
 private:
+
+    struct ltstr
+    {
+	bool operator()(const char* s1, const char* s2) const
+	{
+	    return strcmp(s1, s2) < 0;
+	}
+    };
+
+    static map<const char *, const Y2Component *, ltstr> namespaces;
+
     /**
      * Storage for the component creators.
      */
@@ -72,7 +87,14 @@ private:
      * library) is loaded!
      */
     static bool stop_register;
-
+    
+    /**
+     * A map containing a namespace exceptions. This will be honoured in
+     * getNamespaceComponent to give an explicit preference for a
+     * namespace to be created by a preffered component.
+     */
+    static map<string, string> namespace_exceptions;
+    
 public:
     /**
      * Enters a component creator into the list of
@@ -108,6 +130,23 @@ public:
      * Is a wrapper for @ref #createComponent, but only looks for servers.
      */
     static Y2Component *createServer(const char *name);
+    
+    /**
+     * Provide a component, which implements the given namespace.
+     *
+     * @param name	the name of the requested namespace
+     * @return 		a component instance or 0 if unsuccessful
+     */
+    static Y2Component *getNamespaceComponent(const char *name);
+    
+    /**
+     * Register a new namespace exception to be used by getNamespaceComponent.
+     * @param name_space	the namespace to be changed
+     * @param component_name	the component which should provide the namespace
+     * @return 	true on success, false on failure (for example, a namespace is already
+     * instantiated by another component.
+     */
+    static bool registerNamespaceException(const char* name_space, const char* component_name);
 
 private:
     /**

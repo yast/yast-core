@@ -1,0 +1,9 @@
+tests/scope/Define1.ycp:3:Duplicate parameter
+[Parser] tests/scope/Define1.ycp:3 Duplicate parameter
+tests/scope/Define1.ycp:5:Undeclared identifier 'i'
+[Parser] tests/scope/Define1.ycp:5 Undeclared identifier 'i'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Define1.ycp:1 Parser error

@@ -1,383 +1,377 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|						     (C) SuSE Linux AG |
 \----------------------------------------------------------------------/
 
-   File:       YCPBuiltinMisc.cc
+   File:	YCPBuiltinMisc.cc
 
-   Author:     Klaus Kaempf <kkaempf@suse.de>
-   Maintainer: Klaus Kaempf <kkaempf@suse.de>
+   Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
+$Id$
 /-*/
 
-#include <unistd.h>	// for usleep()
-
-#include "YCPInterpreter.h"
-#include "../config.h"
-
+#include <unistd.h>
 #include <sys/stat.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+#include "ycp/YCPBuiltinMisc.h"
+#include "ycp/YCPBoolean.h"
+#include "ycp/YCPInteger.h"
+#include "ycp/YCPVoid.h"
+#include "ycp/YCPString.h"
+#include "ycp/YCPCode.h"
+#include "ycp/StaticDeclaration.h"
+
+#include "ycp/y2log.h"
+#include "ycp/ExecutionEnvironment.h"
+
+extern StaticDeclaration static_declarations;
 
 
-YCPValue evaluateRemove(YCPInterpreter *interpreter, const YCPList& args)
-{
-    /**
-     * @builtin remove(list|term l, integer i) -> any
-     * Remove the i'th value from a list or a term. The first value has the index 0.
-     * The call remove([1,2,3], 1) thus returns [1,3]. Returns nil if the
-     * index is invalid.
-     *
-     * Example <pre>
-     * remove([1,2], 0) -> [2]
-     * remove(`fun(3,7), 0) -> [3,7];
-     * remove(`fun(3,7), 1) -> `fun(7);
-     * </pre>
-     *
-     * @builtin remove(map m, any k) -> map
-     * Remove the key k and a corresponding value from a map m.
-     * Returns nil if the key k is not found in m.
-     *
-     * Example <pre>
-     * remove($[1:2], 0) -> $[]
-     * remove ($[1:2, 3:4], 1) -> $[3:4]
-     * </pre>
-     */
-
-    if (args->value(0)->isMap())
-    {
-	YCPMap map = YCPMap();
-	map = args->value(0)->asMap()->shallowCopy();
-	YCPValue key = args->value(1);
-	if(map->value(key).isNull())
-	{
-	    interpreter->reportError(LOG_ERROR, "Key %s not found", key->toString().c_str());
-	    return YCPVoid();
-	}
-	map->remove(key);
-	return map;
-    }
-    else if (args->value(1)->isInteger())
-    {
-	long idx = args->value(1)->asInteger()->value();
-
-	YCPList list = YCPList();
-
-	if (args->value(0)->isList())
-	    list = args->value(0)->asList()->shallowCopy();
-	else if (args->value(0)->isTerm()) {
-	    list = args->value(0)->asTerm()->args()->shallowCopy();
-	    if(!idx)
-		return list;
-	    else
-		idx--;
-	}
-	else {
-	    interpreter->reportError(LOG_ERROR, "Wrong argument for remove()");
-	    return YCPVoid();
-	}
-
-	if (idx < 0 || idx >= list->size()) {
-	    interpreter->reportError(LOG_ERROR, "Index %ld for remove() out of range", idx);
-	    return YCPVoid();
-	}
-	else {
-	    list->remove(idx);
-	    if(args->value(0)->isList())
-		return list;
-	    else {
-		YCPTerm term = YCPTerm(args->value(0)->asTerm()->symbol(),list);
-		return term;
-	    }
-	}
-    }
-
-    return YCPNull();
-}
-
-
-YCPValue evaluateSelect(YCPInterpreter *interpreter, const YCPList& args)
-{
-    /**
-     * @builtin select(list|term l, integer i, any default = nil) -> any
-     * Gets the i'th value of a list or a term. The first value has the index 0.
-     * The call select([1,2,3], 1) thus returns 2.
-     * Returns default if the index is invalid.
-     *
-     * Example <pre>
-     * select([1,2], 0) -> 1
-     * select(`hirn(true, false), 1) -> false
-     * select(`hirn(true, false), 33, true) -> true
-     * </pre>
-     */
-
-    if (args->value(1)->isInteger())
-    {
-	long idx = args->value(1)->asInteger()->value();
-
-	YCPList list = YCPList();
-
-	if (args->value(0)->isList())
-	{
-	    list = args->value(0)->asList();
-	}
-	else if (args->value(0)->isTerm())
-	{
-	    list = args->value(0)->asTerm()->args();
-	}
-	else
-	{
-	    interpreter->reportError(LOG_ERROR, "Wrong argument for select()");
-	    return YCPVoid();
-	}
-
-	if (idx < 0 || idx >= list->size())
-	{
-	    if (args->size() == 3)
-	    {
-		return args->value(2);
-	    }
-	    else
-	    {
-		interpreter->reportError(LOG_ERROR, "Index %ld for select() out of range", idx);
-		return YCPVoid();
-	    }
-	}
-	else return list->value(idx);
-    }
-    else return YCPNull();
-}
-
-
-YCPValue evaluateTime (YCPInterpreter *interpreter, const YCPList& args)
+static YCPInteger
+Time ()
 {
     /**
      * @builtin time () -> integer
-     * Return the seconds since 1.1.1970
+     * Return the number of seconds since 1.1.1970.
      */
-    if (args->size () == 0)
-    {
-	return YCPInteger (time (NULL));
-    }
-    else return YCPNull ();
+
+    return YCPInteger (time (0));
 }
 
 
-YCPValue evaluateSleep(YCPInterpreter *interpreter, const YCPList& args)
+static YCPValue
+Sleep (const YCPInteger & ms)
 {
     /**
-     * @builtin sleep(integer ms) -> void
+     * @builtin sleep (integer ms) -> void
      * Sleeps a number of milliseconds.
      */
-    if (args->size() == 1 && args->value(0)->isInteger())
-    {
-	usleep(args->value(0)->asInteger()->value() * 1000);
-	return YCPVoid();
-    }
-    else return YCPNull();
+     
+    if (ms.isNull ())
+	return YCPNull ();
+
+    usleep (ms->value () * 1000);
+    return YCPVoid ();
 }
 
 
-YCPValue evaluateRandom(YCPInterpreter *interpreter, const YCPList& args)
+static YCPInteger
+Random (const YCPInteger & max)
 {
     /**
-     * @builtin random(integer max) -> integer
+     * @builtin random (integer max) -> integer
      * Random number generator.
      * Returns integer in the interval <0,max).
      */
-    if (args->size() == 1 && args->value(0)->isInteger())
-    {
-	// <1,10> 1+(int) (10.0*rand()/(RAND_MAX+1.0));
-	int ret = (int) (args->value(0)->asInteger()->value()*rand()/(RAND_MAX+1.0));
-	return YCPInteger(ret);
-    }
-    else return YCPNull();
+
+    if (max.isNull ())
+	return YCPNull ();
+
+    // <1,10> 1+(int) (10.0*rand()/(RAND_MAX+1.0));
+    int ret = (int) (max->value () * rand () / (RAND_MAX + 1.0));
+    return YCPInteger (ret);
 }
 
 
-YCPValue evaluateSrandom(YCPInterpreter *interpreter, const YCPList& args)
+static YCPInteger
+Srandom1 ()
 {
     /**
-     * @builtin srandom(integer seed) -> void
-     * @builtin srandom() -> integer
-     * Initialize random number generator.
-     * If no argument is given, initialize the generator
-     * with current date and time and return the seed.
+     * @builtin srandom () -> integer
+     * Initialize random number generator with current date and
+     * time and returns the seed.
      */
-    if (args->size() == 1 && args->value(0)->isInteger())
-    {
-	srand(args->value(0)->asInteger()->value());
-	return YCPVoid();
-    }
-    else if (args->size() == 0)
-    {
-	int ret = time(0);
-	srand(ret);
-	return YCPInteger(ret);
-    }
-    else return YCPNull();
+
+    int ret = time (0);
+    srand (ret);
+    return YCPInteger (ret);
 }
 
 
-/**
- * @builtin y2debug(string format, ...) -> void
- * @builtin y2milestone(string format, ...) -> void
- * @builtin y2warning(string format, ...) -> void
- * @builtin y2error(string format, ...) -> void
- * @builtin y2security(string format, ...) -> void
- * @builtin y2internal(string format, ...) -> void
- * Log a message to the y2log at different log levels.
- * Arguments are same as for sformat() builtin.
- * The y2log component is "YCP", so you can control these messages
- * same way as other y2log messages.
- *
- * Example <pre>
- * y2error("%1 is smaller than %2", 7, "13");
- * </pre>
- *
- * Normally, the file and line number of the calling YCP code is
- * included in the log message.  But if the first parameter is a
- * positive integer n, the location of its n-th calling function is
- * used.
- *
- * Example <pre>
- * define void Aargh() ``{
- *   y2error (1, "Aargh!");
- * }
- *
- * define divide (float a, float b) ``{
- *   if (b == 0) { Aargh(); }
- *   ...
- * }
- * </pre>
- */
-YCPValue evaluateY2TraceLog (loglevel_t level, YCPInterpreter *interpreter, YCPList args);
-
-YCPValue evaluateY2log(loglevel_t level, YCPInterpreter *interpreter, const YCPList &args)
+static YCPValue
+Srandom2 (const YCPInteger & seed)
 {
-    if (args->size () > 0 && args->value (0)->isInteger ())
-	return evaluateY2TraceLog (level, interpreter, args);
+    /**
+     * @builtin srandom (integer seed) -> void
+     * Initialize random number generator.
+     */
 
-    YCPValue arg = evaluateSformat(interpreter,args);
-    if(arg.isNull() || !arg->isString())
-	return YCPNull();
+    if (seed.isNull ())
+    {
+	ycp2error ("Cannot initialize random generator using 'nil'");
+	return YCPNull ();
+    }
 
-    int line = interpreter->current_line;
-    const char *file = interpreter->current_file.c_str();
-    const char *func = interpreter->current_func.c_str();
-    const char *message = arg->asString()->value().c_str();
-
-    ycp2log(level,file,line,func,"%s",message);
-    return YCPVoid();
+    srand (seed->value ());
+    return YCPVoid ();
 }
 
-YCPValue evaluateY2TraceLog (loglevel_t level, YCPInterpreter *interpreter, YCPList args)
+
+static YCPValue
+Eval (const YCPValue & v)
 {
-    // positive: pretend one of our callers invoked the log
-    // negative: print backtrace
-    int frame = args->value (0)->asInteger ()->value ();
-    const char *message = "";
-    string message_s;
-    if (args->size () == 1)
+    /**
+     * @builtin eval (any v) -> any
+     * Evaluate a YCP value. See also the builtin ``, which is
+     * kind of the counterpart to eval.
+     *
+     * Examples: <pre>
+     * eval (``(1+2)) -> 3
+     * { term a = ``add(); a = add(a, [1]); a = add(a, 4); return eval(a); } -> [1,4]
+     * </pre>
+     */
+
+    if (v.isNull ())
+	return YCPNull ();
+
+    if (!v->isCode())
     {
-	message = "frame 0";
+	return v;
     }
-    else
+    return v->asCode()->evaluate();
+}
+
+
+static YCPString
+s_sformat (const YCPString &format, const YCPList &argv)
+{
+    /**
+     * @builtin sformat (string form, any par1, any par2, ...) -> string
+     * form is a string that may contains placeholders %1, %2, ...
+     * Each placeholder is substituted with the argument converted
+     * to string whose number is after the %. Only 1-9 are allowed
+     * by now. The percentage sign is donated with %%.
+     *
+     * Example: <pre>
+     * sformat ("%2 is greater %% than %1", 3, "five") -> "five is greater % than 3"
+     * </pre>
+     */
+     
+    if (format.isNull ())
+	return YCPNull ();
+	
+    if (argv.isNull ())
     {
-	args->remove (0);
-	YCPValue arg = evaluateSformat (interpreter,args);
-	if (arg.isNull () || !arg->isString ())
+	return format;
+    }
+
+    const char *read = format->value ().c_str ();
+
+    string result = "";
+    while (*read)
+    {
+	if (*read == '%')
 	{
-	    return YCPNull ();
-	}
-	message_s = arg->asString ()->value ();
-	message = message_s.c_str ();
-	// if we did not use message_s, message would point to a
-	// temporary string that is destroyed at the end of the
-	// enclosing block, that is, here
-    }
-
-    if (frame <= 0)
-    {
-	int line = interpreter->current_line;
-	const char *file = interpreter->current_file.c_str();
-	const char *func = interpreter->current_func.c_str();
-	ycp2log(level,file,line,func,"%s",message);
-    }
-
-    if (frame != 0)
-    {
-	typedef vector<YCPInterpreter::CallFrame>::reverse_iterator ri;
-	ri i = interpreter->backtrace.rbegin ();
-	ri e = interpreter->backtrace.rend ();
-	int f = 1;
-	while (i != e)
-	{
-	    int line = i->line;
-	    const char *file = i->file.c_str ();
-	    const char *func = i->func.c_str ();
-
-	    if (frame > 0)
+	    read++;
+	    if (*read == '%')
 	    {
-		if (f == frame)
+		result += "%";
+	    }
+	    else if (*read >= '1' && *read <= '9')
+	    {
+		int num = *read - '0' - 1;
+		if (argv->size () <= num)
 		{
-		    ycp2log(level,file,line,func,"%s",message);
-		    break;
+		    y2warning ("Illegal argument number %%%d (max %d) in formatstring '%s'",
+			       num+1, argv->size (), format->asString ()->value ().c_str ());
+		}
+		else if (argv->value (num).isNull())
+		{
+		    result += "<NULL>";
+		}
+		else if (argv->value (num)->isString ())
+		{
+		    result += argv->value (num)->asString ()->value ();
+		}
+		else
+		{
+		    result += argv->value (num)->toString ();
 		}
 	    }
 	    else
 	    {
-		ycp2log(level,file,line,func,"frame %d",f);
+		y2warning ("%% in formatstring %s missing a number",
+			   format->asString ()->value ().c_str ());
 	    }
-	    ++f;
-	    ++i;
+	    read++;
+	}
+	else
+	{
+	    result += *read++;
 	}
     }
+
+    return YCPString (result);
+}
+
+static YCPValue
+Y2Log (loglevel_t level, const YCPString & format, const YCPList & args)
+{
+    YCPValue arg = s_sformat (format, args);
+    if (arg.isNull () || !arg->isString ())
+    {
+	return YCPNull ();
+    }
+
+    extern ExecutionEnvironment ee;
+
+    // The "" is a function name. TODO.  It will be useful but may
+    // break ycp testsuites. Maybe it's the right time to do it.
+    ycp2log (level, ee.filename().c_str(), ee.linenumber(), "", "%s", arg->asString ()->value ().c_str ());
     return YCPVoid ();
 }
 
-YCPValue evaluateY2Debug(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_DEBUG,interpreter,args);
-}
 
-YCPValue evaluateY2Milestone(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_MILESTONE,interpreter,args);
-}
-
-YCPValue evaluateY2Warning(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_WARNING,interpreter,args);
-}
-
-YCPValue evaluateY2Error(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_ERROR,interpreter,args);
-}
-
-YCPValue evaluateY2Security(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_SECURITY,interpreter,args);
-}
-
-YCPValue evaluateY2Internal(YCPInterpreter *interpreter, const YCPList& args) {
-    return evaluateY2log(LOG_INTERNAL,interpreter,args);
-}
-
-
-YCPValue evaluateBuiltinOp (YCPInterpreter *interpreter, builtin_t code, const YCPList& args)
+static YCPValue
+Y2Debug (const YCPString & format, const YCPList & args)
 {
-    switch (code)
-    {
-	case YCPB_ADD:
-	    if (args->size() == 2)
-		return args->value(0)->asBuiltin()->functionalAdd (args->value(1), false);
-	    break;
-	default:
-	    break;
-    }
+    /**
+     * @builtin y2debug (string format, ...) -> void
+     * Log a message to the y2log. Arguments are same as for sformat() builtin.
+     * The y2log component is "YCP", so you can control these messages the
+     * same way as other y2log messages.
+     *
+     * Example: <pre>
+     * y2debug ("%1 is smaller than %2", 7, "13");
+     * </pre>
+     */
 
-    ycp2warning (interpreter->current_file.c_str(), interpreter->current_line, "evaluateBuiltinOp unknown code %d", code);
-    return YCPNull();
+    return Y2Log (LOG_DEBUG, format, args);
+}
+
+static YCPValue
+Y2Milestone (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2milestone (string format, ...) -> void
+     */
+
+    return Y2Log (LOG_MILESTONE, format, args);
+}
+
+
+static YCPValue
+Y2Warning (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2warning (string format, ...) -> void
+     */
+
+    return Y2Log (LOG_WARNING, format, args);
+}
+
+
+static YCPValue
+Y2Error (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2error (string format, ...) -> void
+     */
+
+    return Y2Log (LOG_ERROR, format, args);
+}
+
+
+static YCPValue
+Y2Security (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2security (string format, ...) -> void
+     */
+
+    return Y2Log (LOG_SECURITY, format, args);
+}
+
+
+static YCPValue
+Y2Internal (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2internal (string format, ...) -> void
+     */
+
+    return Y2Log (LOG_INTERNAL, format, args);
+}
+
+
+// TODO: copy docs and implementatin from head
+static YCPValue
+Y2FDebug (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Debug (format, args);
+}
+
+static YCPValue
+Y2FMilestone (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Milestone (format, args);
+}
+
+static YCPValue
+Y2FWarning (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Warning (format, args);
+}
+
+static YCPValue
+Y2FError (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Error (format, args);
+}
+
+static YCPValue
+Y2FSecurity (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Security (format, args);
+}
+
+static YCPValue
+Y2FInternal (const YCPInteger & frame, const YCPString & format, const YCPList & args)
+{
+    return Y2Internal (format, args);
+}
+
+
+YCPBuiltinMisc::YCPBuiltinMisc ()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+	{ "time",	"integer ()",			(void *)Time		},
+	{ "sleep",	"void (integer)",		(void *)Sleep		},
+	{ "random",	"integer (integer)",		(void *)Random		},
+	{ "srandom",	"integer ()",			(void *)Srandom1	},
+	{ "srandom",	"void (integer)",		(void *)Srandom2	},
+	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
+	{ "eval",	"any (const any)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
+	{ "sformat",	"string (string, ...)",		(void *)s_sformat,	DECL_NIL|DECL_WILD },
+	// ordinary logging
+	{ "y2debug",	"void (string, ...)",		(void *)Y2Debug,	DECL_NIL|DECL_WILD },
+	{ "y2milestone","void (string, ...)",		(void *)Y2Milestone,	DECL_NIL|DECL_WILD },
+	{ "y2warning",	"void (string, ...)",		(void *)Y2Warning,	DECL_NIL|DECL_WILD },
+	{ "y2error",	"void (string, ...)",		(void *)Y2Error,	DECL_NIL|DECL_WILD },
+	{ "y2security", "void (string, ...)",		(void *)Y2Security,	DECL_NIL|DECL_WILD },
+	{ "y2internal", "void (string, ...)",		(void *)Y2Internal,	DECL_NIL|DECL_WILD },
+	// logging with a different call frame
+	{ "y2debug",	"void (integer, string, ...)",	(void *)Y2FDebug,	DECL_NIL|DECL_WILD },
+	{ "y2milestone","void (integer, string, ...)",	(void *)Y2FMilestone,	DECL_NIL|DECL_WILD },
+	{ "y2warning",	"void (integer, string, ...)",	(void *)Y2FWarning,	DECL_NIL|DECL_WILD },
+	{ "y2error",	"void (integer, string, ...)",	(void *)Y2FError,	DECL_NIL|DECL_WILD },
+	{ "y2security", "void (integer, string, ...)",	(void *)Y2FSecurity,	DECL_NIL|DECL_WILD },
+	{ "y2internal", "void (integer, string, ...)",	(void *)Y2FInternal,	DECL_NIL|DECL_WILD },
+	{ 0 }
+    };
+
+    static_declarations.registerDeclarations ("YCPBuiltinMisc", declarations);
 }

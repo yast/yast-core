@@ -26,7 +26,6 @@
 #define Y2PluginComponent_h
 
 #include "Y2.h"
-#include <ycp/YCPParser.h>
 
 class Y2PluginComponent : public Y2Component
 {

@@ -1,8 +1,0 @@
-//
-// conversion to human readable time format
-//
-
-(timestring ("%Y-%m-%d %H:%M:%S", 0, true))
-
-(timestring ("%Y-%m-%d %H:%M:%S", 1058253725, true))
-

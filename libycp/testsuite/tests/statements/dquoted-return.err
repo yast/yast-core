@@ -1,0 +1,24 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean PollAbort ()
+    // symbol ReadDialog ()
+    // filename: "tests/statements/dquoted-return.ycp"
+    boolean PollAbort ()
+{
+    return true;
+}
+    symbol ReadDialog ()
+{
+    // block <boolean> AbortFunction
+    // boolean ret
+    block <boolean> AbortFunction = { return {
+    return PollAbort ();
+}
+; };
+    boolean ret = true;
+    return ret ? `next : `abort;
+}
+    return true;
+}
+----------------------------------------------------------------------

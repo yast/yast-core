@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean it_works
+    // boolean it_works2
+    // filename: "tests/types/matchtype.ycp"
+    boolean it_works = (/* const integer -> const float */3 < 3.14);
+    boolean it_works2 = (3.14 > /* const integer -> const float */3);
+    return [it_works, it_works2];
+}
+----------------------------------------------------------------------

@@ -1,0 +1,9 @@
+{
+    define void dummy () { return; }
+
+    list list_var = [1,2,3];
+
+    any ret = foreach (integer entry, list_var, { if (entry == 3) break; dummy (); });
+
+    return ret;
+}

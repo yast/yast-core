@@ -1,0 +1,9 @@
+{
+    // filename: "tests/bytecode/Xmodules/identifier2i.ycp"
+    return {
+    // module "Identifier2"
+    import "Identifier2";
+    return Identifier2::f ();
+}
+;
+}

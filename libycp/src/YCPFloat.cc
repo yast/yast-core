@@ -15,20 +15,14 @@
    Author:     Mathias Kettner <kettner@suse.de>
    Maintainer: Thomas Roelz <tom@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPFloat data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-#include <stdio.h>
 #include <ctype.h>
 
-#include "y2log.h"
-#include "YCPFloat.h"
-
-
+#include "ycp/y2log.h"
+#include "ycp/YCPFloat.h"
+#include "ycp/Bytecode.h"
 
 // YCPFloatRep
 
@@ -58,29 +52,65 @@ YCPFloatRep::YCPFloatRep(const char *r)
 }
 
 
-double YCPFloatRep::value() const
+double
+YCPFloatRep::value() const
 {
     return v;
 }
 
 
-YCPOrder YCPFloatRep::compare(const YCPFloat& f) const
+YCPOrder
+YCPFloatRep::compare(const YCPFloat& f) const
 {
     if (v == f->v) return YO_EQUAL;
     else return v < f->v ? YO_LESS : YO_GREATER;
 }
 
 
-string YCPFloatRep::toString() const
+string
+YCPFloatRep::toString() const
 {
     char s[64];
-    snprintf (s, 64, "%#.15g", v);
+    if ((v == (long)v)				// force decimal point for integer value range
+	&& (v < 100000))
+    {
+	snprintf (s, 64, "%g.", v);
+    }
+    else
+    {
+	snprintf (s, 64, "%g", v);
+    }
     return string(s);
 }
 
 
-YCPValueType YCPFloatRep::valuetype() const
+YCPValueType
+YCPFloatRep::valuetype() const
 {
     return YT_FLOAT;
 }
 
+/**
+ * Output value as bytecode to stream
+ */
+std::ostream &
+YCPFloatRep::toStream (std::ostream & str) const
+{
+    return Bytecode::writeString (str, toString());
+}
+
+
+// --------------------------------------------------------
+
+static const string
+fromStream (std::istream & str)
+{
+    string v;
+    Bytecode::readString (str, v);
+    return v;
+}
+
+YCPFloat::YCPFloat (std::istream & str)
+    : YCPValue (new YCPFloatRep (fromStream (str).c_str()))
+{
+}

@@ -1,0 +1,6 @@
+// using a module with a constructor
+{
+    import "modulec";
+
+    y2milestone ("After importing the module.");
+}

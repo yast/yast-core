@@ -1,0 +1,25 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // void func2 (integer i)
+    // filename: "tests/scope/GlobalSymbols4.ycp"
+    void func2 (integer i)
+{
+    y2error ("== toplevel func: %1", i);
+}
+    if (true)
+    {
+    if (true)
+    {
+    // void func2 (integer i)
+    void func2 (integer i)
+{
+    y2error ("== nested func: %1", i);
+}
+}
+}
+    func2 (5);
+    return 0;
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/GlobalSymbols4.ycp:18 == toplevel func: 5

@@ -1,0 +1,6 @@
+// a simple module
+{
+    module "YModule1";
+
+    global integer j = 42;
+}

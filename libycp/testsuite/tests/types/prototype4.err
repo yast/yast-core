@@ -1,0 +1,11 @@
+tests/types/prototype4.ycp:12:Redeclaration with different type
+[Parser] tests/types/prototype4.ycp:12 Redeclaration with different type
+tests/types/prototype4.ycp:12:'f1' defined here.
+[Parser] tests/types/prototype4.ycp:12 'f1' defined here.
+tests/types/prototype4.ycp:12:Expected 'integer (any)', seen 'integer (integer)'.
+[Parser] tests/types/prototype4.ycp:12 Expected 'integer (any)', seen 'integer (integer)'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/prototype4.ycp:1 Parser error

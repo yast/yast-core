@@ -1,0 +1,27 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer DoubleUsedVariable
+    // integer Loop
+    // filename: "tests/scope/Scope1.ycp"
+    integer DoubleUsedVariable = 0;
+    integer Loop = 0;
+    while ((Loop < 5))
+    {
+    // integer DoubleUsedVariable
+    integer DoubleUsedVariable = 5;
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    Loop = (Loop + 1);
+}
+    DoubleUsedVariable = (DoubleUsedVariable - 2);
+    while ((Loop < 5))
+    {
+    // integer DoubleUsedVariable
+    integer DoubleUsedVariable = 5;
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    Loop = (Loop + 1);
+}
+    DoubleUsedVariable = (DoubleUsedVariable * DoubleUsedVariable);
+    return DoubleUsedVariable;
+}
+----------------------------------------------------------------------

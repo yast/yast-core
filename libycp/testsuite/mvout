@@ -1,3 +1,13 @@
 #!/bin/bash
 # mvout
-mv tmp.out.$1 tests/$1.out
+if [ -f tests/bytecode/*/$1.out ]; then
+  mv -f tmp.out.$1 tests/bytecode/*/$1.out
+  exit 0
+fi
+
+if [ -f tests/*/$1.out ]; then
+  mv -f tmp.out.$1 tests/*/$1.out
+  exit 0
+fi
+
+echo $1 not found

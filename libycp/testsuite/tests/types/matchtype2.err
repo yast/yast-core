@@ -1,0 +1,9 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer add1
+    // filename: "tests/types/matchtype2.ycp"
+    integer add1 = tointeger ((3. + 3.));
+    return [(/* integer -> const float */add1 == 6.)];
+}
+----------------------------------------------------------------------

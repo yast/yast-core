@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // float add1
+    // float add2
+    // filename: "tests/types/matchtype1.ycp"
+    float add1 = (/* const integer -> const float */3 + 3.);
+    float add2 = (3. + /* const integer -> const float */3);
+    return [(add1 == 6.), (add2 == /* const integer -> float */6)];
+}
+----------------------------------------------------------------------

@@ -1,0 +1,12 @@
+{
+    module "Symbolic";
+ 
+    global void func()
+    {
+	list l = [ 1, 2, 3];
+
+	foreach (integer element, l, {
+	    y2error( "Next value: %1", element);
+	});
+    }
+}

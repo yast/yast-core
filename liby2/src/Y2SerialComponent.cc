@@ -37,7 +37,7 @@
 
 
 #include "Y2SerialComponent.h"
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 
@@ -92,7 +92,7 @@ YCPValue Y2SerialComponent::evaluate(const YCPValue& command)
 
 void Y2SerialComponent::result(const YCPValue& result)
 {
-   YCPTerm resultterm("result", false);
+   YCPTerm resultterm("result");
    resultterm->add(result);
    sendToSerial(resultterm);
    close_tty();
@@ -153,7 +153,7 @@ YCPValue Y2SerialComponent::doActualWork(const YCPList& arglist, Y2Component *us
    {
       if (value->isTerm() 
 	  && value->asTerm()->size() == 1 
-	  && value->asTerm()->symbol()->symbol()=="result")
+	  && value->asTerm()->name ()=="result")
       {
 	 close_tty();
 	 return value; 
@@ -380,5 +380,5 @@ void Y2SerialComponent::sendToSerial(const YCPValue& v)
 
 YCPValue Y2SerialComponent::receiveFromSerial()
 {
-   return parser.parse();  // set to the serial line in initializeConnection()
+   return YCPCode (parser.parse ());  // set to the serial line in initializeConnection()
 }

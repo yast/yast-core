@@ -1,0 +1,15 @@
+//
+{
+    define void func2 (integer i) ``{
+        y2error ("== local  func: %1", i);
+    }
+
+    // should warn
+    global
+    define void func2 (integer i) ``{
+	y2error ("== global func: %1", i);
+    }
+
+    func2 (5);
+    return 0;
+}

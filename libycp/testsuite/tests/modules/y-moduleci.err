@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "YModuleC"
+    // filename: "tests/modules/y-moduleci.ycp"
+    import "YModuleC";
+    y2milestone ("After importing the module.");
+}
+----------------------------------------------------------------------
+[YCP] tests/Module/YModuleC.ycp:10 Nazdar!
+[YCP] tests/modules/y-moduleci.ycp:5 After importing the module.

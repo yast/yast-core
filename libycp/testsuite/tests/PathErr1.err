@@ -1,2 +1,0 @@
-[Scanner] tests/PathErr1.ycp:18 Syntax error: dash behind path constant not allowed
-[Scanner] tests/PathErr1.ycp:0 Syntax error: syntax error, unexpected SCANNER_ERROR

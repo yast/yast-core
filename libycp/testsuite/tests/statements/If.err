@@ -1,0 +1,49 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/If.ycp"
+    if (true)
+    return 1;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/If.ycp"
+    if (false)
+    return 1;
+else
+    return 2;
+    return 3;
+}
+----------------------------------------------------------------------
+tests/statements/If.ycp:16:'break' outside of loop.
+[Parser] tests/statements/If.ycp:16 'break' outside of loop.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If.ycp:14 Parser error
+tests/statements/If.ycp:20:'if' expression not boolean
+[Parser] tests/statements/If.ycp:20 'if' expression not boolean
+tests/statements/If.ycp:20:Expected 'boolean', seen 'const integer'.
+[Parser] tests/statements/If.ycp:20 Expected 'boolean', seen 'const integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If.ycp:19 Parser error
+tests/statements/If.ycp:26:Declaration must be inside block
+[Parser] tests/statements/If.ycp:26 Declaration must be inside block
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If.ycp:24 Parser error
+tests/statements/If.ycp:33:Declaration must be inside block
+[Parser] tests/statements/If.ycp:33 Declaration must be inside block
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If.ycp:29 Parser error

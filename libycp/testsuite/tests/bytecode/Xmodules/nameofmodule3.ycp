@@ -1,0 +1,7 @@
+{
+  import "NameOfModule";
+
+  NameOfModule::ag = 27;
+
+  return NameOfModule::ag == 27;
+}

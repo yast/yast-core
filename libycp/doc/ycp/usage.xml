@@ -1,0 +1,632 @@
+<!-- Maintainer: kkaempf@suse.de -->
+<!-- $Id$ -->
+
+<chapter id="usage">
+<title>Usage</title>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>Syntax checker</title>
+<para>
+Usage of
+
+- parseycp
+</para>
+</section>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>Bytecode execution</title>
+<para>
+<option>-I</option> <parameter>path-to-include</parameter>
+multiple <option>-I</option> options may be given
+</para>
+<para>
+<option>--nostd-includes</option>
+</para>
+<para>
+dont look in standard include directory
+TODO
+</para>
+<para>
+<option>-M</option> <parameter>path-to-module></parameter>
+</para>
+<para>
+multiple <option>-M</option> options may be given
+</para>
+<para>
+<option>--nostd-modules</option>
+</para>
+<para>
+dont look in standard module directory
+TODO
+</para>
+</section>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>Modules</title>
+    <para>Real modules in YCP</para>
+    <para>Towards classes and objects</para>
+<para>Didn't you miss 'real' classes and object like functions in YCP ?</para>
+<para>With a clear environment and parse-time binding ?</para>
+<para>Now you can have it !</para>
+<para></para>
+<section>
+<title>The old behaviour</title>
+<para>
+YCP, originally planned as a functional language, always did dynamic
+(i.e. runtime) binding of variables. Although useful in some cases,
+it's quite puzzling for everyone used to 'imperative' languages.</para><para>
+So you could well program the following block
+</para>
+<screen>
+{
+   integer x = 42;
+
+   define f() ``{ return x; }
+
+   ... // lots of lines
+
+   x = 55;
+
+   return f();	// will return 55 !
+}
+</screen>
+<para>
+and get an unexpected result.
+</para>
+<para>
+Another mis-used feature is <literal>include</literal> for special, global definitions.
+Without 'real' modules, there is no alternative to include, so it was widely
+accepted but
+<literallayout>
+include just does that, it executes a complete file every time the include
+is evaluated
+</literallayout>
+</para>
+<para>
+which is bad memory-wise and speed-wise.</para>
+</section>
+
+<section>
+<title>The new behaviour</title>
+<para>
+Modules help a lot since they do
+<itemizedlist>
+<listitem><para>Have definition-time bindings.</para></listitem>
+<listitem><para>One-time inclusion.</para></listitem>
+<listitem><para>Have their own namespace.</para></listitem>
+<listitem><para>Have a local environment.</para></listitem>
+</itemizedlist>
+</para>
+<para>
+Modules are a lot like include files, but they start with a <literal>module</literal>
+statement specifying their name.</para>
+<para>Example:</para>
+<screen>
+{
+   // This is a module called "Sample"
+   // It is stored in /usr/lib/YaST2/modules/Sample.ycp
+
+   module "Sample";
+
+   // this is a local declaration.
+   // it can only be 'seen' inside the module.
+
+   integer local_var = 42;
+
+   // this is a global declaration.
+   // it can be accessed from outside.
+
+   global integer global_var = 27;
+
+   // this is a global function
+   // it has access to global_var *and* local_var
+
+   global define sample_f () ``{ return local_var + global_var; }
+
+}
+</screen>
+<para>
+The above module can now be used with the <literal>import</literal> statement.</para>
+<para>
+<literal>import</literal> has a similar syntax for file names like <literal>include</literal>.
+The interpreter automatically appends <literal>".ycp"</literal> to the filename
+and searches below <literal>/usr/lib/YaST2/modules</literal>. If the filename
+starts with <literal>"./"</literal>, the file is loaded from the local directory.
+</para>
+<para>
+</para>
+<para>
+<command>Caution:</command> The file must have the same name as the module !</para>
+<para>
+</para>
+<para>
+Inside modules, only variable or function declaration statements are
+allowed. You can't have blocks or any kind of evaluation statements.</para>
+<para>
+</para>
+<para>
+The global declarations of the module are accessed with <literal>Sample::</literal>.</para>
+<para>
+Example:</para>
+<para>
+<screen>
+{
+    import "Sample";
+
+    integer i = Sample::sample_f();	// == 69
+
+    i = Sample::local_var;		// ERROR, no access possible !
+
+    i = Sample::global_var;		// == 27
+
+    Sample::global_var = 0;		// this variable is writable !!
+
+    return Sample::sample_f();		// == 42, since global_var is 0
+}
+</screen></para>
+<para>
+The statement <literal>import "Sample";</literal> triggers the loading of
+<literal>Sample.ycp</literal> when first encountered. Subsequent import
+statements are ignored, since "Sample" is already defined.</para>
+<para>
+So you can't replace a module during runtime !</para>
+<para>
+</para>
+<section>
+<title>Modules with constructors.</title>
+<para>
+If a global function with the same name as the module is defined, it
+is treated as a constructor. The constructor is called after the
+module is loaded and evaluated. So the constructor might be at the
+beginning of the module and use functions declared later in the file.</para>
+<para>
+Example:</para>
+<para>
+<screen>
+{
+   // This is a module called "Class" with a constructor
+   // It is stored in /usr/lib/YaST2/modules/Sample.ycp
+
+   module "Class";
+
+   global integer class_var = 42;
+
+   // this is the constructor
+
+   global define Class() ``{ class_var = 12345; }
+}
+
+{
+    import "Class";
+
+    return Class::class_var;		// will be 12345 !
+}
+</screen></para>
+<para>
+Constructors can't have any arguments. The result of calling the
+constructor is ignored.
+</para>
+<para>
+</para>
+<para>
+</para>
+</section>
+</section>
+</section>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>Changes</title>
+<para>
+
+In order to make the YCP syntax clearer and to reduce ambiguities in
+the Yacc-grammar, some syntactical rules have been refined. This reduced
+the number of conflicts reported by the parser generator from 146 to 2 (!)</para>
+
+<section><title>Double qoutes</title>
+<para>
+The use of double qoutes (<literal><command>``</command></literal>) is somewhat restricted
+now but does not reduce functionality as used by now.</para>
+<para>
+Double qoutes are only allowed for blocks (<command>``{</command><literal> ... </literal><command>}</command>),
+expressions (<command>``(</command><literal> ... </literal><command>)</command>)
+and terms (<command>``</command><emphasis>identifier</emphasis><command>(</command><literal>  ... </literal><command>)</command>).
+</para>
+<para>
+There is no space allowed between the double qoute and the following symbol.
+</para>
+</section>
+
+
+<section><title>Map expressions</title>
+<para>
+Map expressions are still defined by (<literal><command>$[</command></literal> ... <literal><command>]</command></literal>),
+but <literal><command>$[</command></literal> is a single token now and must be written without space
+inbetween.</para>
+</section>
+
+
+<section><title>Expressions are no statements</title>
+<para>
+There is a clear destinction now between expressions (having a value) and
+statements (having a semantical meaning). In the old syntax expressions
+could be used as statements. Since this make the syntax ambiguous and is
+useless anyway, statements like <literal><command>1 + 1;</command></literal> are not allowed.</para>
+</section>
+
+
+<section><title>Declaration is no value</title>
+<para>
+The old syntax allowed declarations (type definitions) as values. However
+this made the syntax highly ambiguous and accounted for most of the conflicts
+reported by the parser generator. In fact this feature of a functional
+language wasn't used, ycp usage is imperative.</para>
+<para>
+If values like <literal><command>[ integer, float ]</command></literal> (list of declarations) are
+really needed, the syntax can be re-introduced into the grammar with some
+'syntactical sugar' (a special keyword).
+</para>
+</section>
+</section>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>Logging</title>
+<para>
+This section describes how to use the <command>YaST2</command> logging.
+</para>
+<para>
+Contents:
+<itemizedlist>
+<listitem><para><link linkend="intro">Introduction</link></para></listitem>
+<listitem><para><link linkend="quick">Quick start</link></para></listitem>
+<listitem><para><link linkend="levels">Logging levels</link></para></listitem>
+<listitem><para><link linkend="logfunctions">Logging functions</link></para></listitem>
+<listitem><para><link linkend="addfun">Additional functions</link></para></listitem>
+<!--REMOVE li><link linkend="oldfun">Compatibility functions</a-->
+<listitem><para><link linkend="components">Components</link></para></listitem>
+<listitem><para><link linkend="logfiles">Logfiles</link></para></listitem>
+<listitem><para><link linkend="entries">Logfile entries</link></para></listitem>
+<listitem><para><link linkend="control">Logging control</link></para></listitem>
+<listitem><para><link linkend="env">Environment control</link></para></listitem>
+<listitem><para><link linkend="todo">YaST2 logging TODO</link></para></listitem>
+<!--li><link linkend=""/>
+<listitem><para><link linkend="quick">Quick start</link></para></listitem>
+<listitem><para><link linkend="impl">Implementation</link></a-->
+</itemizedlist>
+<!--
+FIXME: odkazy do zdrojaku
+-->
+</para>
+
+<section id="intro"><title>Introduction</title>
+<para>
+
+During execution <command>YaST2</command> components create log messages. The purpose
+is to inform the user or the programmer about errors and other incidents.
+</para>
+<para>
+The logging should be used instead of <literal>fprintf(stderr,...)</literal> to create
+logmessages of different types. It can be better controled, what to
+log and what not, where to log and how to log.
+</para>
+
+<section id="quick"><title>Quick start</title>
+<para>
+
+<itemizedlist>
+<listitem><para>Use <literal>y2debug()</literal> for debugging messages, <literal>y2warning()</literal>
+for warnings and <literal>y2error()</literal> for error messages, syntax is same
+as <literal>printf(3)</literal>.</para></listitem>
+<listitem><para>Set <literal>"export Y2DEBUG=1"</literal> in your <literal>.profile</literal> or run
+<literal>"Y2DEBUG=1 yast2"</literal>.</para></listitem>
+<listitem><para>If <literal>root</literal>, see <literal>/var/log/y2log</literal>, otherwise <literal>~/.y2log</literal>
+for the output.</para></listitem>
+<listitem><para>In the <literal>y2log</literal>, entries are uniquely identified by the filename and line number.</para></listitem>
+<listitem><para>Read the whole <link linkend="top">documentation</link>.</para></listitem>
+</itemizedlist>
+</para>
+</section>
+
+<section id="levels"><title>Logging levels</title>
+<para>
+
+There are existing six different log levels denoting incidents of
+different importance:
+</para>
+
+<para>
+<informaltable>
+<tgroup cols="3" align="left">
+<tbody>
+<row><entry>0: DEBUG</entry>
+	<entry> Debug messages, which help the programmers.</entry></row>
+<row><entry>1: MILESTONE</entry>
+	<entry>Normal log messages. Some important actions are logged.
+	For example each time a <command>YaST2</command> module is started, a log
+	entry is created.</entry></row>
+<row><entry>2: WARNING</entry>
+	<entry>Some error has occured, but the execution could be
+	continued.</entry></row>
+<row><entry>3: ERROR</entry>
+	<entry>Some major error has occured. The execution may be continued,
+	but probably more errors will occur.</entry></row>
+<row><entry>4: SECURITY</entry>
+	<entry>Some security relevant incident has occured.</entry></row>
+<row><entry>5: INTERNAL</entry>
+	<entry>Internal error. Please enter into Bugzilla or directly
+	contact the programmers.</entry></row>
+</tbody></tgroup></informaltable>
+</para>
+<para>
+
+In the default setting the level 1-5 are logged, level 0 (DEBUG) is
+switched off. See the <link linkend="control">Logging control</link> and
+<link linkend="env">Environment control</link> for more details how to
+control the logging and its levels.
+</para>
+</section>
+
+<section id="logfunctions"><title>Logging functions</title>
+<para>
+
+According to the <link linkend="levels">logging levels</link>, use the following
+logging functions:
+
+<screen>
+void y2debug(const char *format, ...);
+void y2milestone(const char *format, ...);
+void y2warning(const char *format, ...);
+void y2error(const char *format, ...);
+void y2security(const char *format, ...);
+void y2internal(const char *format, ...);
+</screen>
+
+The parameter <literal>format</literal> is the format string like the one for
+<literal>printf(3)</literal>.
+</para>
+</section>
+
+<section id="addfun"><title>Additional functions</title>
+<para>
+
+<!--There are some additional logging functions and some other.-->
+
+Setting the logfile name:
+<screen>
+void set_log_filename(const char *filename);
+</screen>
+
+This function sets the logfile name. If the name cannot be open for
+writing (append), it use the default <link linkend="logfiles">logfiles</link>.
+If you want to output the debug log the <literal>stderr</literal>, use <literal>"-"</literal>
+as the argument for the set_log_filename:
+<screen>
+set_log_filename("-");
+</screen>
+
+Universal logging functions:
+<screen>
+void y2logger(loglevel_t level, const char *format, ...);
+void y2vlogger(loglevel_t level, const char *format, va_list ap);
+</screen>
+
+These functions are provided probably only for those who don't want to use
+the regular <link linkend="functions">logging functions</link>. For example for
+setting the loglevel acording to some rule.
+</para>
+</section>
+
+<section id="oldfun"><title>Compatibility functions</title>
+<para>
+
+These functions are provided only for backward compatibility reasons,
+don't use them. After some time they will be removed.
+
+<screen>
+void y2log(loglevel_t level, const char *component, int id, const char *format, ...);
+void y2vlog(loglevel_t level, const char *component, int id, const char *format, va_list ap);
+</screen>
+</para>
+</section>
+
+<section id="components"><title>Components</title>
+<para>
+
+As the filenames are not unique over the whole <command>YaST2</command> source,
+you can specify the component name. Then the pair of the component
+name and the filename will uniquely identify the message.
+
+<command>Note:</command> I think that the filenames should be self explaining
+and thus unique overall the whole source. Then the component name
+can be removed, but as now the filename is not unique, you can
+optionally specify the component name.
+
+As the component is a more general property then filename, it should
+be same in all messages in one file. So for one source file it is defined
+only once, at the beginning of the file. And because of implementation
+purposes (just) before the inclusion of <literal><link linkend="y2log.h">y2log.h</link></literal>:
+
+<screen>
+#define y2log_component "y2a_mods"
+#include &lt;y2log.h&gt;
+</screen>
+</para>
+</section>
+
+<section id="logfiles"><title>Logfiles</title>
+<para>
+
+The <command>YaST2</command> log is written to a file. If you work as normal user,
+the default logfile is <literal>~/.y2log</literal>. If you work as root, the file
+is <literal>/var/log/y2log</literal>. The logfile is created with the permissions
+600, since it may contain secret data when the debug level is turned on.
+
+If the logfile cannot be open, the <literal>stderr</literal> is use instead.
+
+FIXME: logfiles size and number <link linkend="control">control</link> /
+<link linkend="env">env control</link>.
+</para>
+</section>
+
+<section id="entries"><title>Log entries</title>
+<para>
+Each log entry consist of these fields:
+</para>
+<para>
+<informaltable><tgroup cols="3" align="left">
+<tbody>
+<row><entry><literal>date</literal></entry>
+	<entry>The date when the log entry has been made.</entry></row>
+<row><entry><literal>time</literal></entry>
+	<entry>The time when the log entry has been made.</entry></row>
+<row><entry><literal>level</literal></entry>
+	<entry>The log entry level. See <link linkend="levels">Logging levels</link>.</entry></row>
+<row><entry><literal>hostname</literal></entry>
+	<entry>The hostname of host where the yast2 runs.</entry></row>
+<row><entry><literal>pid</literal></entry>
+	<entry>The process ID of the yast2 process.</entry></row>
+<row><entry><literal>component</literal></entry>
+	<entry>The name of the current component. Optional and probably obsolete.</entry></row>
+<row><entry><literal>filename</literal></entry>
+	<entry>The name of the source file where the log entry has been made.</entry></row>
+<row><entry><literal>function</literal></entry>
+	<entry>The name of the function where the log entry has been made.</entry></row>
+<row><entry><literal>line</literal></entry>
+	<entry>The line number where the log entry has been made.</entry></row>
+<row><entry><literal>message</literal></entry>
+	<entry>The text of the log message.</entry></row>
+</tbody></tgroup></informaltable>
+</para>
+<para>
+The output format:
+<screen>
+date time &lt;level&gt; hostname(pid) [component] filename(function):line message...
+date time &lt;level&gt; hostname(pid) filename(function):line message...
+</screen>
+
+Example:
+<screen>
+2000-10-13 15:35:36 &lt;3&gt; beholder(2971) [ag_modules] Modules.cc(quit):22 io=7
+2000-10-13 15:35:37 &lt;0&gt; beholder(2971) ModulesAgent.cc(main):23 irq=7
+</screen>
+</para>
+</section>
+
+<section id="control"><title>Logging control</title>
+<para>
+
+FIXME: As the logcontrol.ycp module is not functional for me, this section
+remains to be completed.
+
+<!--
+
+In order to fine-tune, which entries are logged and which are not, you
+can call the module logcontrol, for example
+y2qt logcontrol
+
+Now you can add component names and switch on and off levels for those
+components. All other components are handled via the Y2DEBUG
+environment variable. The mechanism of the logcontrol module is
+realized via the file <literal>~/.yast2/logconf.ycp</literal>.
+
+The logconf.ycp file controls, which component, which levels
+and which messages are to be logged.
+
+-->
+</para>
+</section>
+
+<section id="env"><title>Environment control</title>
+<para>
+Additionally to the usual <link linkend="control">logfile control</link>
+you can control some logging feature by the environment variables.
+</para>
+<para>
+<informaltable>
+<tgroup cols="3" align="left">
+<tbody>
+<row><entry>Y2DEBUG</entry>
+	<entry>By setting this variable to an arbitrary value you turn on
+	the debug log output on. But only when entry control is not
+	covered by the usual <link linkend="control">logfile control</link>.</entry></row>
+<row><entry>Y2DEBUGALL</entry>
+	<entry>By setting this variable to an arbitrary value you turn on
+	the debug log output on. Everything will be logged.</entry></row>
+<row><entry>Y2MAXLOGSIZE</entry>
+	<entry>By this variable you can control the size of logfiles.
+	See <link linkend="logfiles">Logfiles</link> for details.</entry></row>
+<row><entry>Y2MAXLOGNUM</entry>
+	<entry>By this variable you can control the number of logfiles.
+	See <link linkend="logfiles">Logfiles</link> for details.</entry></row>
+</tbody></tgroup></informaltable>
+</para>
+<para>
+Example: call the module <literal>password</literal> with <command>QT</command> interface
+and debugging messages set to on:
+<screen>
+bash$ Y2DEBUG=1 y2qt password
+</screen>
+</para>
+</section>
+
+<section id="impl"><title>Implementation</title>
+<para>
+Implementation:
+</para>
+<screen>
+  void y2_logger(loglevel_t level, const char *component, const char *file, const int line, const char *format, ...);
+</screen>
+</section>
+
+<section id="todo"><title>YaST2 logging TODO</title>
+<para>
+Source:
+<itemizedlist>
+<listitem><para>Filtering rules!</para></listitem>
+<listitem><para>Differentiate _debug output</para></listitem>
+<listitem><para>y2c_log (logcontrol.ycp)</para></listitem>
+<listitem><para>Y2DEBUG -&gt; logcontrol.ycp</para></listitem>
+<listitem><para>logging classes (y2ncurses) -- Michael Andres &lt;ma@suse.de&gt;</para></listitem>
+<listitem><para>Y2Translator... more levels of debug?</para></listitem>
+<listitem><para>check char* vs. string in the source</para></listitem>
+</itemizedlist>
+Documentation:
+<itemizedlist>
+<listitem><para>finish the <link linkend="control">Logging control</link> section</para></listitem>
+<listitem><para>finish the <link linkend="logfiles">Logfiles</link> section</para></listitem>
+<listitem><para>finish the <link linkend="quick">Quick start</link> section</para></listitem>
+<listitem><para>implementation document</para></listitem>
+<listitem><para>references to header: y2log.h (y2log.cc,logcontrol.ycp)</para></listitem>
+<listitem><para>example files: ~/.logconf.ycp, logs</para></listitem>
+</itemizedlist>
+</para>
+<para>
+Please, send your comments, suggestions and additions to
+<link linkend="top">author</link>.
+
+</para>
+</section>
+
+</section>
+
+</section>
+
+<!---------------------------------------------------------------------------->
+<section>
+<title>FAQ</title>
+<para>
+1. Why no break in foreach() ?
+
+foreach() returns a value, the last execution of tbe block. So the block determines
+the value.
+However, 'break' in the block has no value, so it is undefined.
+-> should we allow 'nil' here ?
+</para>
+</section>
+
+
+</chapter>

@@ -1,0 +1,58 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // float fi
+    // float f
+    // filename: "tests/types/propagation.ycp"
+    integer i = 5;
+    float fi = /* integer -> float */i;
+    float f = /* const integer -> float */5;
+    return [f, fi];
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/propagation.ycp:16 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // float fi
+    // float f
+    // filename: "tests/types/propagation.ycp"
+    integer i = 5;
+    float fi = /* integer -> float */i;
+    float f = /* const integer -> float */5;
+    i = /* float -> integer */f;
+    return [f, fi];
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/types/propagation.ycp"
+    if ((0.5 < /* const integer -> const float */1))
+    return true;
+    return false;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/types/propagation.ycp"
+    if ((/* const integer -> const float */1 < 0.5))
+    return false;
+    return true;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/propagation.ycp:33 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // float f
+    // filename: "tests/types/propagation.ycp"
+    integer i = /* const float -> integer */3.14;
+    float f = /* const integer -> float */3;
+    return [i, f];
+}
+----------------------------------------------------------------------

@@ -1,0 +1,99 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = nil;
+    return (/* any -> const integer */l[0]:1 == 1);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map m
+    // filename: "tests/expressions/Bracket.ycp"
+    map m = $[1:11, "a":"aa", `b:`bb];
+    return (m["a"]:nil == "aa");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map m
+    // filename: "tests/expressions/Bracket.ycp"
+    map m = $[1:11, "a":"aa", `b:`bb];
+    return (/* any -> const integer */m[2]:2 == 2);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = [1, "a", `b];
+    return (l[1]:nil == "a");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = [1, "a", `b];
+    return (/* any -> const integer */l[3]:42 == 42);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // map m
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+    return (m["a", 1]:nil == "a");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // map m
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+    return (m["a"]:nil == l);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list l
+    // map m
+    // filename: "tests/expressions/Bracket.ycp"
+    list l = [1, "a", `b];
+    map m = $[1:l, "a":l, `b:l];
+    return (/* any -> list */m["b"]:l == l);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, string> m
+    // filename: "tests/expressions/Bracket.ycp"
+    map <string, string> m = $["bus":"parallel", "dev_name":"/dev/lp0"];
+    m = /* map -> map <string, string> */add (m, "uri", (m["bus"]:"xxx" + m["dev_name"]:"yyy"));
+    return (m == $["bus":"parallel", "dev_name":"/dev/lp0", "uri":"parallel/dev/lp0"]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map s
+    // list l
+    // filename: "tests/expressions/Bracket.ycp"
+    map s = $["foo":"bar"];
+    list l = [/* any -> string */s["foo"]:"none", /* any -> string */s["not"]:"none2"];
+    return (["bar", "none2"] == l);
+}
+----------------------------------------------------------------------

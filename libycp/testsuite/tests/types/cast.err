@@ -1,0 +1,73 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = "foo";
+    return /* any -> string */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = "foo";
+    return /* any -> integer */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast.ycp:12 Can't convert 'any' to 'integer': "foo"
+Parsed:
+----------------------------------------------------------------------
+{
+    // string foo
+    // filename: "tests/types/cast.ycp"
+    string foo = "foo";
+    return foo;
+}
+----------------------------------------------------------------------
+tests/types/cast.ycp:22:Can't cast from 'string' to 'integer'.
+[Parser] tests/types/cast.ycp:22 Can't cast from 'string' to 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast.ycp:20 Parser error
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = ["foo"];
+    return /* any -> list <string> */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = ["foo", 1];
+    return /* any -> list <string> */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast.ycp:32 Can't convert 'any' to 'list <string>': ["foo", 1]
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = $["foo":1];
+    return /* any -> map <string, integer> */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, any> foo
+    // filename: "tests/types/cast.ycp"
+    map <string, any> foo = $["bar":"bar", "foo":1];
+    return /* map <string, any> -> map <string, integer> */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast.ycp:42 Can't convert 'map <string, any>' to 'map <string, integer>': $["bar":"bar", "foo":1]

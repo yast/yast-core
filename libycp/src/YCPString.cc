@@ -1,57 +1,42 @@
 /*---------------------------------------------------------------------\
-|								       |
-|		       __   __	  ____ _____ ____		       |
-|		       \ \ / /_ _/ ___|_   _|___ \		       |
-|			\ V / _` \___ \ | |   __) |		       |
-|			 | | (_| |___) || |  / __/		       |
-|			 |_|\__,_|____/ |_| |_____|		       |
-|								       |
-|				core system			       |
-|							 (C) SuSE GmbH |
-\----------------------------------------------------------------------/
+|                                                                      |  
+|                      __   __    ____ _____ ____                      |  
+|                      \ \ / /_ _/ ___|_   _|___ \                     |  
+|                       \ V / _` \___ \ | |   __) |                    |  
+|                        | | (_| |___) || |  / __/                     |  
+|                        |_|\__,_|____/ |_| |_____|                    |  
+|                                                                      |  
+|                               core system                            | 
+|                                                        (C) SuSE GmbH |  
+\----------------------------------------------------------------------/ 
 
-   File:	YCPString.cc
+   File:       YCPString.cc
 
    Author:	Mathias Kettner <kettner@suse.de>
-   Maintainer:	Arvin Schnell <arvin@suse.de>
+		Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPString data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-#include <stdio.h>
-
-#include "y2log.h"
 #include "y2string.h"
-#include "YCPString.h"
+
+#include "ycp/y2log.h"
+#include "ycp/YCPString.h"
+#include "ycp/Bytecode.h"
 
 
 // YCPStringRep
 
-YCPStringRep::YCPStringRep (string s)
-    : v (s)
+YCPStringRep::YCPStringRep(string s)
+    : v(s)
 {
 }
 
-
-YCPStringRep::YCPStringRep (const char* s)
-    : v (s ? s : "")
-{
-}
-
-
-string YCPStringRep::value() const
+string
+YCPStringRep::value() const
 {
     return v;
-}
-
-
-const char* YCPStringRep::value_cstr() const
-{
-    return v.c_str();
 }
 
 
@@ -65,29 +50,37 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 
     if (!rl)
     {
-	tmp = v.compare (s->v);
+        tmp = v.compare (s->v);
     }
     else
     {
-	const char* a = value_cstr ();
-	const char* b = s->value_cstr ();
+        const char* a = value_cstr ();
+        const char* b = s->value_cstr ();
 
-	std::wstring wa, wb;
+        std::wstring wa, wb;
 
-	if (utf82wchar (a, &wa) && utf82wchar (b, &wb))
-	    tmp = wcscoll (wa.c_str (), wb.c_str ());
-	else
-	    tmp = strcoll (a, b);
+        if (utf82wchar (a, &wa) && utf82wchar (b, &wb))
+            tmp = wcscoll (wa.c_str (), wb.c_str ());
+        else
+            tmp = strcoll (a, b);
     }
 
     if (tmp == 0)
-	return YO_EQUAL;
+        return YO_EQUAL;
     else
-	return tmp < 0 ? YO_LESS : YO_GREATER;
+        return tmp < 0 ? YO_LESS : YO_GREATER;
 }
 
 
-string YCPStringRep::toString() const
+const char *
+YCPStringRep::value_cstr() const
+{
+    return v.c_str();
+}
+
+
+string
+YCPStringRep::toString() const
 {
     string ret = "\"";
     const char *r = v.c_str();
@@ -97,10 +90,9 @@ string YCPStringRep::toString() const
 	else if (*r == '\r') ret += "\\r";
 	else if (*r == '\f') ret += "\\f";
 	else if (*r == '\b') ret += "\\b";
-	// char from 0..31 and 128..159 as octal
-	else if ((((unsigned char)(*r)) & 0x60) == 0) {
+	else if (*r < 32) {
 	    char s[8];
-	    snprintf (s, 8, "\\%03o", (unsigned char) *r);
+	    snprintf (s, 8, "\\%03o", (unsigned char)*r);
 	    ret += s;
 	}
 	else {
@@ -113,7 +105,37 @@ string YCPStringRep::toString() const
 }
 
 
-YCPValueType YCPStringRep::valuetype() const
+YCPValueType
+YCPStringRep::valuetype() const
 {
     return YT_STRING;
 }
+
+
+/**
+ * Output value as bytecode to stream
+ */
+
+std::ostream &
+YCPStringRep::toStream (std::ostream & str) const
+{
+    return Bytecode::writeString (str, v);
+}
+
+
+// --------------------------------------------------------
+
+static string
+fromStream (std::istream & str)
+{
+    string s;
+    Bytecode::readString (str, s);
+    return s;
+}
+
+
+YCPString::YCPString (std::istream & str)
+    : YCPValue (new YCPStringRep (fromStream (str)))
+{
+}
+

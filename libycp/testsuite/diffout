@@ -1,3 +1,13 @@
 #!/bin/bash
 # diffout
-diff -u tests/$1.out tmp.out.$1 | less
+if [ -f tests/bytecode/*/$1.out ]; then
+  diff -uN tests/bytecode/*/$1.out tmp.out.$1  | less
+  exit 0
+fi
+
+if [ -f tests/*/$1.out ]; then
+  diff -uN tests/*/$1.out tmp.out.$1  | less
+  exit 0
+fi
+
+echo $1 not found

@@ -1,94 +1,211 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|						     (C) SuSE Linux AG |
+\----------------------------------------------------------------------/
 
-   File:       YCPBuiltinFloat.cc
+   File:	YCPBuiltinFloat.cc
 
-   Author:	Klaus Kaempf <kkaempf@suse.de>
-		Mathias Kettner <kettner@suse.de>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Authors:	Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <arvin@suse.de>
+   Maintainer:	Arvin Schnell <arvin@suse.de>
 
+$Id$
 /-*/
 
+#include <unistd.h>
+#include <stdio.h>
 
-#include "YCPInterpreter.h"
+#include "ycp/YCPBuiltinFloat.h"
+#include "ycp/YCPFloat.h"
+#include "ycp/YCPString.h"
+#include "ycp/YCPInteger.h"
+#include "ycp/StaticDeclaration.h"
+
+#include "y2log.h"
+
+extern StaticDeclaration static_declarations;
 
 
-YCPValue evaluateFloatOp (YCPInterpreter *interpreter, builtin_t code, const YCPList& args)
+static YCPValue
+f_plus (const YCPFloat &f1, const YCPFloat &f2)
 {
-    double value1 = args->value(0)->asFloat()->value();
+    /**
+     * @builtin float f1 + float f2 -> float
+     * Addition of floats.
+     *
+     * Example: <pre>
+     * 1.5 + 2.5 -> 4.0
+     * </pre>
+     */
+     
+    if (f1.isNull () || f2.isNull ())
+	return YCPNull ();
 
-    if (code == YCPB_NEG)
-	return YCPFloat (-(value1));
+    return YCPFloat (f1->value () + f2->value ());
+}
 
-    if (args->size() != 2)
-	return YCPError ("evaluateFloatOp: wrong number of arguments");
 
-    if (!args->value(1)->isFloat())
-	return YCPError ("evaluateFloatOp: second arg not float");
+static YCPValue
+f_minus (const YCPFloat &f1, const YCPFloat &f2)
+{
+    /**
+     * @builtin float f1 - float f2 -> float
+     * Subtraction of floats.
+     *
+     * Example: <pre>
+     * 1.5 - 2.5 -> -1.0
+     * </pre>
+     */
 
-    double value2 = args->value(1)->asFloat()->value();
+    if (f1.isNull () || f2.isNull ())
+	return YCPNull ();
 
-    switch (code) {
-	case YCPB_PLUS:	 return YCPFloat(value1 + value2);
-	case YCPB_MINUS: return YCPFloat(value1 - value2);
-	case YCPB_MULT:	 return YCPFloat(value1 * value2);
-	case YCPB_DIV:	 return YCPFloat(value1 / value2);
-	default:	 break;
+    return YCPFloat (f1->value () - f2->value ());
+}
+
+
+static YCPValue
+f_mult (const YCPFloat &f1, const YCPFloat &f2)
+{
+    /**
+     * @builtin float f1 * float f2 -> float
+     * Multiplication of floats.
+     *
+     * Example: <pre>
+     * 1.5 * 2.5 -> 3.75
+     * </pre>
+     */
+
+    if (f1.isNull () || f2.isNull ())
+	return YCPNull ();
+
+    return YCPFloat (f1->value () * f2->value ());
+}
+
+
+static YCPValue
+f_div (const YCPFloat &f1, const YCPFloat &f2)
+{
+    /**
+     * @builtin float f1 * float f2 -> float
+     * Division of floats.
+     *
+     * Example: <pre>
+     * 1.5 / 2.5 -> 0.6
+     * </pre>
+     */
+
+    if (f1.isNull () || f2.isNull ())
+	return YCPNull ();
+
+    if (f2->value() == 0.0)
+    {
+	ycp2error ("division by zero");
+	return YCPNull ();
+    }
+
+    return YCPFloat (f1->value () / f2->value ());
+}
+
+
+static YCPValue
+f_neg (const YCPFloat &f1)
+{
+    /**
+     * @builtin - float i -> float
+     * Negative of float.
+     */
+
+    if (f1.isNull ())
+	return YCPNull ();
+
+    return YCPFloat (-(f1->value ()));
+}
+
+
+static YCPValue
+f_tostring (const YCPFloat &f, const YCPInteger &precision)
+{
+    /**
+     * @builtin tostring (float f, integer precision) -> string
+     * Converts a floating point number to a string, using the
+     * specified precision.
+     *
+     * Example: <pre>
+     * tostring (0.12345, 4) -> 0.1235
+     * </pre>
+     */
+
+    if (f.isNull () || precision.isNull ())
+	return YCPNull ();
+
+    char *buffer;
+
+    asprintf (&buffer, "%.*f", int (precision->value ()), f->value ());
+    YCPValue ret = YCPString (buffer);
+    free (buffer);
+    return ret;
+}
+
+
+static YCPValue
+f_tofloat (const YCPValue &v)
+{
+    /**
+     * @builtin tofloat (any value) -> float
+     * Converts a value to a floating point number.
+     * If the value can't be converted to a float, nilfloat is returned.
+     *
+     * Example: <pre>
+     * tofloat (4) -> 4.0
+     * tofloat ("42") -> 42.0
+     * tofloat ("3.14") -> 3.14
+     * </pre>
+     */
+
+    if (v.isNull())
+    {
+	return v;
+    }
+
+    switch (v->valuetype())
+    {
+	case YT_INTEGER:
+	    return YCPFloat (double (v->asInteger()->value ()));
+	break;
+	case YT_FLOAT:
+	    return v->asFloat();
+	break;
+	case YT_STRING:
+	    return YCPFloat (v->asString()->value_cstr ());
+	break;
+	default:
+	break;
     }
     return YCPNull();
 }
 
 
-YCPValue evaluateToFloat(YCPInterpreter *interpreter, const YCPList& args)
+YCPBuiltinFloat::YCPBuiltinFloat ()
 {
-    if (args->size() == 1) {
-	YCPValue value = args->value(0);
-	switch (value->valuetype()) {
-	    /**
-	     * @builtin tofloat(float i) -> float
-	     * Does convert a floating point number to itself. This is for
-	     * consistency with the other tofloat functions.
-	     * 
-	     * Example <pre>
-	     * tofloat(4711.0) -> 4711.0 
-	     * </pre>
-	     */
-	case YT_FLOAT: return value;
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+	{ "+",	     "float (float, float)",	(void *)f_plus },
+	{ "-",	     "float (float, float)",	(void *)f_minus },
+	{ "-",	     "float (float)",		(void *)f_neg },
+	{ "*",	     "float (float, float)",	(void *)f_mult },
+	{ "/",	     "float (float, float)",	(void *)f_div },
+	{ "tofloat", "float (const any)",	(void *)f_tofloat },
+	{ "tostring","string (float, integer)",	(void *)f_tostring },
+	{ 0 }
+    };
 
-
-	    /**
-	     * @builtin tofloat(integer i) -> float
-	     * Converts an integer to a floating point number.
-	     * 
-	     * Example <pre>
-	     * tofloat(4) -> 4.0 
-	     * </pre>
-	     */
-	case YT_INTEGER:  return YCPFloat(double(value->asInteger()->value()));
-
-	    /**
-	     * @builtin tofloat(string s) -> float
-	     * Converts a string to an integer. Currently no checking
-	     * of the syntax is performed and no warnings are printed.
-	     * 
-	     * Example <pre>
-	     * tofloat("42") -> 42.0 
-	     * </pre>
-	     */
-
-	case YT_STRING:  return YCPFloat(value->asString()->value_cstr());
-	default: return YCPNull();
-	}
-    }
-    else return YCPNull();
+    static_declarations.registerDeclarations ("YCPBuiltinFloat", declarations);
 }
-

@@ -1,0 +1,11 @@
+tests/scope/GlobalSymbols.ycp:22:Redefinition of local symbol
+[Parser] tests/scope/GlobalSymbols.ycp:22 Redefinition of local symbol
+tests/scope/GlobalSymbols.ycp:16:'func1' defined here.
+[Parser] tests/scope/GlobalSymbols.ycp:16 'func1' defined here.
+tests/scope/GlobalSymbols.ycp:23:Undeclared identifier 'i'
+[Parser] tests/scope/GlobalSymbols.ycp:23 Undeclared identifier 'i'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/GlobalSymbols.ycp:15 Parser error

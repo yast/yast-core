@@ -1,0 +1,14 @@
+# a parameter code cannot be empty, for example an empty block is not allowed
+
+{
+    foreach( any a, ["foo"], {} ); 	// fail, the block can't be empty
+}
+
+{
+    void foo (block<any> b)
+    {
+	b = b;
+    };
+    
+    foo ( {} );
+}

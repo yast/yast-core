@@ -1,5 +1,5 @@
 #
-# Makefile.am for core/libycp/testsuite/libycp.test
+# Makefile.am for libycp/testsuite/libycp.test
 #
 
-EXTRA_DIST = ycp.exp
+EXTRA_DIST = ycp.exp bytecode.exp

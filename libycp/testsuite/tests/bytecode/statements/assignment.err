@@ -1,0 +1,8 @@
+{
+    // boolean foo
+    // filename: "tests/bytecode/statements/assignment.ycp"
+    boolean foo = true;
+    y2milestone ("%1", foo);
+    foo = false;
+    return foo;
+}

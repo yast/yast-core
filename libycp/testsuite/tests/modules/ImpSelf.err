@@ -1,0 +1,8 @@
+[Scanner] tests/modules/ImpSelf.ycp:5 Warning: Ignoring self-import
+tests/modules/ImpSelf.ycp:6:Undeclared identifier 'x'
+[Parser] tests/modules/ImpSelf.ycp:6 Undeclared identifier 'x'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/modules/ImpSelf.ycp:1 Parser error

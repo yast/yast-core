@@ -1,0 +1,20 @@
+{
+    boolean foo () 
+    {
+	y2error ("Evaluating");
+	return false;
+    }
+    
+    return true || foo ();
+}
+
+{
+    boolean foo () 
+    {
+	y2error ("Evaluating");
+	return false;
+    }
+    
+    return false && foo ();
+}
+

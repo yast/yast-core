@@ -1,0 +1,35 @@
+// $Id$
+// Martin Vidner <mvidner@suse.cz>
+// Test how type propagation works with argument matching
+{
+    define integer int_fun (integer i) {
+	return i + 1;
+    }
+
+    define float float_fun (float f) {
+	return f + 1.0;
+    }
+
+    float a = float_fun (1);
+    float b = int_fun (2);
+    return [a, b];
+}
+{
+    define integer int_fun (integer i) {
+	return i + 1;
+    }
+
+    define float float_fun (float f) {
+	return f + 1.0;
+    }
+
+    // this should fail - parameter mismatch
+    // FIXME it should say that it is a parameter mismatch,
+    // and name the function and the parameter
+    // FIXME type mismatch in variable definition - name the variable
+    integer c = int_fun (3.0);
+    // this should fail - return type mismatch
+    // FIXME type mismatch in variable definition - name the variable
+    integer d = float_fun (4);
+    return [c, d];
+}

@@ -1,0 +1,19 @@
+[Scanner] impinc.inc:4 Warning: Useless 'global' outside of module
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "ImpInc"
+    // integer ii ()
+    // filename: "tests/modules/y-impinc1.ycp"
+    import "ImpInc";
+    // include "impinc.inc";
+    integer ii ()
+{
+    return 5;
+}
+    // force filename: "tests/modules/y-impinc1.ycp"
+    y2error ("In main: Function returned: %1", ii ());
+}
+----------------------------------------------------------------------
+[YCP] tests/Module/ImpInc.ycp:6 In ImpInc: Function returned: 5
+[YCP] tests/modules/y-impinc1.ycp:6 In main: Function returned: 5

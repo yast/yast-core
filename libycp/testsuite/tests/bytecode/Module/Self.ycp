@@ -1,0 +1,16 @@
+{
+    module "Self";
+
+    integer i = 1;
+
+    global integer get_i ()
+    {
+	return Self::i;
+    }
+
+    global void set_i (integer ii)
+    {
+	i = ii;
+	return;
+    }
+}

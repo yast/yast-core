@@ -14,6 +14,7 @@
 #define _y2log_ycp_h
 
 #include <y2util/y2log.h>
+#include "ExecutionEnvironment.h"
 
 /* YCP Errors */
 
@@ -36,8 +37,11 @@
     y2ycp(LOG_MILESTONE,file,line,format,##args)
 #define ycp2warning(file,line,format,args...) \
     y2ycp(LOG_WARNING,file,line,format,##args)
-#define ycp2error(file,line,format,args...) \
-    y2ycp(LOG_ERROR,file,line,format,##args)
+#define ycp2error(format,args...) 		\
+    do {					\
+	extern ExecutionEnvironment ee;		\
+	y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
+    } while (0)
 #define ycp2security(file,line,format,args...) \
     y2ycp(LOG_SECURITY,file,line,format,##args)
 #define ycp2internal(file,line,format,args...) \

@@ -85,27 +85,11 @@ YCPValue Y2Component::doActualWork(const YCPList&, Y2Component *)
     return YCPNull();
 }
 
-
-YCPValue Y2Component::callModule (string modulename, const YCPList& arglist,
-				  Y2Component *user_interface)
+Y2Namespace* Y2Component::import (const char* name_space, const char* timestamp)
 {
-    Y2Component *client = Y2ComponentBroker::createClient(modulename.c_str());
-
-    if (!client)
-    {
-	y2error ("Can't find client component %s", modulename.c_str());
-	return YCPNull();
-    }
-
-    y2debug ("Calling module %s", modulename.c_str ());
-
-    YCPValue result = client->doActualWork (arglist, user_interface);
-
-    delete client;
-
-    return result;
+    y2internal ("default import (%s, %s) called, should not happen", name_space, timestamp);
+    return NULL;
 }
-
 
 SCRAgent *
 Y2Component::getSCRAgent ()

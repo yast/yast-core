@@ -1,0 +1,41 @@
+How to specify a const function
+
+"const integer ()" does not work, since its a function returning a const integer
+
+"typedef ifun integer (); const ifun" does the trick
+
+
+-------
+
+passing const as references
+
+increment (integer & i) { }		// function modifies parameter
+
+increment (1)				// err, passing const as reference
+integer i = 1; increment (i)		// ok
+const integer i = 1; increment (i)	// err, passing const as reference
+
+func (const integer & i) { }		// functions does not modify parameter
+
+increment (1)				// ok
+integer i = 1; increment (i)		// ok
+const integer i = 1; increment (i)	// ok
+
+----
+
+implementation of references
+
+references must be 'YCPValue's so they can be passed to builtins
+
+references always reference 'SymbolEntry'
+
+one can't use (constant) expressions as references
+
+references to temporaries are not allowed
+
+we need 'static' for references to local variables
+
+
+-> YCPReference is a YCPValue which points to a SymbolEntry
+   evaluate() should return the value of the SymbolEntry
+   assignment should set the value of the SymbolEntry

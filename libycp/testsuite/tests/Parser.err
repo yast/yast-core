@@ -1,7 +1,0 @@
-Parsed:
-----------------------------------------------------------------------
-{
-  return 1;
-}
-----------------------------------------------------------------------
-[Scanner] tests/Parser.ycp:1 Syntax error: syntax error, unexpected '}', expecting $end

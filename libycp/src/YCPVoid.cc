@@ -12,20 +12,15 @@
 
    File:       YCPVoid.cc
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Klaus Kaempf <kkaempf@suse.com>
+   Maintainer:	
 
+$Id$
 /-*/
-/*
- * YCPVoid data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-#include "y2log.h"
-#include "YCPVoid.h"
-
-
+#include "ycp/y2log.h"
+#include "ycp/YCPVoid.h"
+#include "ycp/Bytecode.h"
 
 
 // YCPVoidRep
@@ -35,19 +30,39 @@ YCPVoidRep::YCPVoidRep()
 }
 
 
-string YCPVoidRep::toString() const
+string
+YCPVoidRep::toString() const
 {
     return "nil";
 }
 
 
-YCPValueType YCPVoidRep::valuetype() const
+YCPValueType
+YCPVoidRep::valuetype() const
 {
     return YT_VOID;
 }
 
 
-YCPOrder YCPVoidRep::compare(const YCPVoid &) const
+YCPOrder
+YCPVoidRep::compare(const YCPVoid &) const
 {
     return YO_EQUAL;
+}
+
+/**
+ * Output value as bytecode to stream
+ */
+std::ostream &
+YCPVoidRep::toStream (std::ostream & str) const
+{
+    return str;
+}
+
+
+// --------------------------------------------------------
+
+YCPVoid::YCPVoid (std::istream & str)
+    : YCPValue (new YCPVoidRep())
+{
 }

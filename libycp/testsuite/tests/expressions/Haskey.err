@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map m1
+    // filename: "tests/expressions/Haskey.ycp"
+    map m1 = nil;
+    return haskey (m1, "huhu");
+}
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/Haskey.ycp:5 Argument (m1) to haskey(...) is nil

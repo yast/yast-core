@@ -15,15 +15,12 @@
    Author:     Mathias Kettner <kettner@suse.de>
    Maintainer: Thomas Roelz <tom@suse.de>
 
+$Id$
 /-*/
-/*
- * YCPBoolean data type
- *
- * Author: Mathias Kettner <kettner@suse.de>
- */
 
-#include "y2log.h"
+#include <ycp/y2log.h>
 #include "YCPBoolean.h"
+#include "Bytecode.h"
 
 // YCPBooleanRep
 
@@ -39,26 +36,48 @@ YCPBooleanRep::YCPBooleanRep(const char *r)
 }
 
 
-bool YCPBooleanRep::value() const
+bool
+YCPBooleanRep::value() const
 {
     return v;
 }
 
 
-string YCPBooleanRep::toString() const
+string
+YCPBooleanRep::toString() const
 {
     return v ? "true" : "false";
 }
 
 
-YCPValueType YCPBooleanRep::valuetype() const
+/**
+ * Output value as bytecode to stream
+ */
+std::ostream &
+YCPBooleanRep::toStream (std::ostream & str) const
+{
+    return Bytecode::writeBool (str, v);
+}
+
+
+YCPValueType
+YCPBooleanRep::valuetype() const
 {
     return YT_BOOLEAN;
 }
 
 
-YCPOrder YCPBooleanRep::compare(const YCPBoolean& b) const
+YCPOrder
+YCPBooleanRep::compare(const YCPBoolean& b) const
 {
     if (v == b->v) return YO_EQUAL;
     else return v < b->v ? YO_LESS : YO_GREATER;
+}
+
+
+// --------------------------------------------------------
+
+YCPBoolean::YCPBoolean (std::istream & str)
+    : YCPValue (new YCPBooleanRep (Bytecode::readBool (str)))
+{
 }

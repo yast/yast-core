@@ -1,0 +1,54 @@
+Parsed:
+----------------------------------------------------------------------
+{ return (1 + 2); }
+----------------------------------------------------------------------
+tests/statements/Doublequote.ycp:18:Undeclared identifier 'name'
+[Parser] tests/statements/Doublequote.ycp:18 Undeclared identifier 'name'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/statements/Doublequote.ycp:18 Parser error
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Doublequote.ycp"
+    return (3 + 4);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/Doublequote.ycp"
+    return 7;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // block <integer> foo1
+    // filename: "tests/statements/Doublequote.ycp"
+    block <integer> foo1 = nil;
+    foo1 = { return {
+    return 42;
+}
+; };
+    return eval (foo1);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // block <integer> foo1
+    // integer foo2
+    // filename: "tests/statements/Doublequote.ycp"
+    block <integer> foo1 = nil;
+    integer foo2 = 55;
+    foo1 = { return {
+    return (foo2 + 1);
+}
+; };
+    foo2 = 41;
+    return eval (foo1);
+}
+----------------------------------------------------------------------

@@ -1,0 +1,26 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean foo ()
+    // filename: "tests/expressions/ShortEval.ycp"
+    boolean foo ()
+{
+    y2error ("Evaluating");
+    return false;
+}
+    return (true || foo ());
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean foo ()
+    // filename: "tests/expressions/ShortEval.ycp"
+    boolean foo ()
+{
+    y2error ("Evaluating");
+    return false;
+}
+    return (false && foo ());
+}
+----------------------------------------------------------------------

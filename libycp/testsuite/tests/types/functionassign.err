@@ -1,0 +1,7 @@
+tests/types/functionassign.ycp:6:Assignment to function
+[Parser] tests/types/functionassign.ycp:6 Assignment to function
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/types/functionassign.ycp:1 Parser error

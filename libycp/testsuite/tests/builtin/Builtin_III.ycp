@@ -1,0 +1,105 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_III.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 1999/11/24 ---------------
+
+//
+// sort(symbol x, symbol y, list l, bool order) -> list
+//
+// Sorts the list l. You have to specify an order on the
+// list elements by naming to formal variables x und y and
+// specify an expression order, that evaluates to a boolean
+// value depending on x and y. Return true, if x <= y to
+// sort the list ascending.
+//
+//       sort(`x, `y, [1, 2], false) -> endless loop!
+//
+
+( sort(integer x, integer y, [ 3,6,2,8 ], ``(x<=y)) == [ 2, 3, 6, 8 ] )
+( sort(`x, `y, [1, 2, 1, 2], { return true;}) == [ 1, 2, 1, 2] )
+( sort(`x, `y, [1, 2, 1, 2], ``(x<=y)) == [ 1, 1, 2, 2] )
+
+( sort(`x, `y, [1], ``(x<=y)) == [1] )
+( sort(`x, `y, [1, 1, 1, 1, (2-1), (1*1), ((-1) * (-1))], ``(x<=y)) == [1,1,1,1,1,1,1] )
+( sort(`x, `y, [], ``(x<=y)) == [] )
+
+
+
+//
+// sformat(string form, any par1, any par2, ...) -> string
+//
+// form is a string that may contains placeholders %1, %2, ...
+// Each placeholder is substituted with the argument converted
+// to string whose number is after the %. Only 1-9 are allowed
+// by now. The procent sign is donated with %%.
+
+( sformat("This is a text without placeholders") == "This is a text without placeholders" )
+( sformat("%2 is greater %% than %1", 3, "five") == "five is greater % than 3" )
+( sformat("I'll go th the event %1 today", sformat( "Abi %1", 99 )) ==
+          "I'll go th the event Abi 99 today" )
+
+( sformat (42) == nil )
+
+
+//
+// findfirstnotof( string s_1, string s_2 ) -> integer
+//
+// Returns the position of the first character in <tt>s_1</tt> that
+// is NOT contained in <tt>s_2</tt>.
+//
+
+( findfirstnotof( "abcdefghi", "abcefghi" ) == 3 )
+( findfirstnotof( "abcdefghi", "" ) == 0 )
+// ( findfirstnotof( "", "abcdefghi" ) == 0 )   --> nil
+
+
+
+//
+// crypt(string unencrypted) -> string
+//
+// Encrypt the string <tt>unencrypted</tt> using the standard
+// password encryption provided by the system.
+//
+// only the first 8 characters are encrypted ...
+//
+// NO check for crypt, since it has random salt()
+
+
+//
+// splitstring (s, c) -> list (string)
+//  split s at c resulting in a list of strings
+//  only consider first char of c
+
+( splitstring ("", "") == [] )
+( splitstring ("abc", "") == [] )
+( splitstring ("abc/def/ghi", "/") == ["abc", "def", "ghi"] )
+( splitstring ("/abc/def/ghi", "/") == ["", "abc", "def", "ghi"] )
+( splitstring ("abc/def/ghi/", "/") == ["abc", "def", "ghi", ""] )
+( splitstring ("abc/def/ghi/", "/a") == ["", "bc", "def", "ghi", ""] )
+( splitstring ("abc/def/ghi", ".") == ["abc/def/ghi" ] )
+( splitstring ("/", "/") == ["", ""] )
+
+//
+// mergestring (l, c) -> string
+//  merge list of strings to single string. Insert c between list elements
+//  considers all chars of c
+
+( mergestring ([], "") == "" )
+( mergestring ([], "abc") == "" )
+( mergestring (["abc", "def", "ghi"], "/") == "abc/def/ghi" )
+( mergestring (["", "abc", "def", "ghi"], "/") == "/abc/def/ghi" )
+( mergestring (["abc", "def", "ghi", ""], "/") == "abc/def/ghi/" )
+( mergestring (["abc", "def", "ghi", ""], "/a") == "abc/adef/aghi/a" )
+( mergestring (["", ""], "/") == "/" )
+
+

@@ -1,0 +1,18 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Rec"
+    // term dialog
+    // filename: "tests/modules/rec.ycp"
+    import "Rec";
+    term dialog = `VBox (`HBox (`HStretch (), "w2"));
+    y2error ("return: %1", Rec::ProcessTerm (dialog, $[], 0));
+}
+----------------------------------------------------------------------
+[YCP] tests/Module/Rec.ycp:5 Level 0, Processing `VBox (`HBox (`HStretch (), "w2"))
+[YCP] tests/Module/Rec.ycp:20 Level 0: Ret before: `VBox ()
+[YCP] tests/Module/Rec.ycp:5 Level 1, Processing `HBox (`HStretch (), "w2")
+[YCP] tests/Module/Rec.ycp:28 Level 1, Returning `HBox (`HStretch ())
+[YCP] tests/Module/Rec.ycp:22 Level 0: Ret after: `VBox ()
+[YCP] tests/Module/Rec.ycp:28 Level 0, Returning `VBox (`HBox (`HStretch ()))
+[YCP] tests/modules/rec.ycp:29 return: `VBox (`HBox (`HStretch ()))

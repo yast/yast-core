@@ -1,0 +1,18 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Namespace3.ycp
+#
+#  Purpose:     test named scopes
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+{
+   import "Namespace";
+   return (Namespace::mixedFunction() == 4753);
+}
+
+

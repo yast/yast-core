@@ -11,7 +11,6 @@ AM_CXXFLAGS = -DY2LOG=\"liby2\" -DYAST2DIR=\"${yast2dir}\"		\
 lib_LTLIBRARIES = liby2.la
 plugin_LTLIBRARIES = 	\
 	libpy2stdio.la		\
-	libpy2script.la		\
 	libpy2remote.la		\
 	libpy2serial.la		\
 	libpy2program.la	\
@@ -20,17 +19,15 @@ plugin_LTLIBRARIES = 	\
 liby2_la_SOURCES = \
 	Y2Component.cc					\
 	Y2ComponentBroker.cc Y2ComponentCreator.cc 	\
-	genericfrontend.cc pathsearch.cc
+	Y2Namespace.cc					\
+	genericfrontend.cc				\
+	md5c.cc
 liby2_la_LDFLAGS = -version-info 2:0
 liby2_la_LIBADD = -ly2util -lutil -ldl
 
 libpy2stdio_la_SOURCES =				\
 	Y2StdioComponent.cc Y2CCStdio.cc
 libpy2stdio_la_LDFLAGS = -version-info 2:0
-
-libpy2script_la_SOURCES =				\
-	Y2ScriptComponent.cc Y2CCScript.cc
-libpy2script_la_LDFLAGS = -version-info 2:0
 
 libpy2remote_la_SOURCES =				\
 	Y2RemoteComponent.cc Y2CCRemote.cc		\

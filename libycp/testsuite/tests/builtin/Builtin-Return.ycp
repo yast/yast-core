@@ -1,0 +1,11 @@
+# test the type check of the return value
+
+{
+    list l = ["foo", "bar"];
+    return filter (string v, l, ``{ return v!="foo"; }) == ["bar"];
+}
+
+{
+    list l = ["foo", "bar"];
+    return filter (string v, l, ``{ return v; }) == ["bar"]; // fail, incorrect return type
+}

@@ -1,0 +1,77 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer comparison (boolean maximum, integer Int1, integer Int2)
+    // integer maximum (integer Int1, integer Int2)
+    // integer minimum (integer Int1, integer Int2)
+    // filename: "tests/builtin/Builtin2.ycp"
+    integer comparison (boolean maximum, integer Int1, integer Int2)
+{
+    if ((maximum == true))
+    {
+    if ((Int1 >= Int2))
+    return Int1;
+else
+    return Int2;
+}
+else
+    {
+    if ((Int1 <= Int2))
+    return Int1;
+else
+    return Int2;
+}
+}
+    integer maximum (integer Int1, integer Int2)
+{
+    return comparison (true, Int1, Int2);
+}
+    integer minimum (integer Int1, integer Int2)
+{
+    return comparison (false, Int1, Int2);
+}
+    return (((maximum (5, minimum (7, 3)) == 5) && (maximum (5, 7) == maximum (7, 5))) && (minimum (5, 7) == minimum (7, 5)));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer comparison (boolean maximum, integer Int1, integer Int2)
+    // integer maximum (integer Int1, integer Int2)
+    // integer minimum (integer Int1, integer Int2)
+    // filename: "tests/builtin/Builtin2.ycp"
+    integer comparison (boolean maximum, integer Int1, integer Int2)
+{
+    if ((maximum == true))
+    {
+    if ((Int1 >= Int2))
+    return Int1;
+else
+    return Int2;
+}
+else
+    {
+    if ((Int1 <= Int2))
+    return Int1;
+else
+    return Int2;
+}
+}
+    integer maximum (integer Int1, integer Int2)
+{
+    return comparison (true, Int1, Int2);
+}
+    integer minimum (integer Int1, integer Int2)
+{
+    return comparison (false, Int1, Int2);
+}
+    return ((maximum (5, 7) != minimum (5, 7)) && (maximum (7, 5) != minimum (5, 7)));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/builtin/Builtin2.ycp"
+    return "test cases for define finished";
+}
+----------------------------------------------------------------------

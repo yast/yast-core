@@ -1,0 +1,5 @@
+{
+    import "CircularM2";
+
+    y2error ("%1", CircularM2::y);
+}

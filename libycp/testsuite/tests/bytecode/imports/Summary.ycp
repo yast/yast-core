@@ -1,0 +1,10 @@
+{
+    import "Summary";
+
+    string Summary()
+    {
+	return Summary::NotConfigured ();
+    }
+
+    return Summary();
+}

@@ -25,7 +25,7 @@
 #define Y2SerialComponent_h
 
 #include "Y2Component.h"
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 
 /**
  * @short Interface to a component via serial line
@@ -55,7 +55,7 @@ class Y2SerialComponent : public Y2Component
    /**
     * Parser used to parse input
     */
-   YCPParser parser;
+   Parser parser;
    
 
     /**

@@ -73,6 +73,13 @@ public:
     virtual Y2Component *create(const char *name, int level, int current_level) const;
 
     /**
+     * Override this method to implement providing a component for 
+     * a given namespace. 
+     * If you are not able to create a matching component, return 0.
+     */
+    virtual Y2Component *provideNamespace(const char *name);
+
+    /**
      * Specifies, whether this creator creates Y2Servers.
      */
     virtual bool isServerCreator() const = 0;

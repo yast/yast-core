@@ -1,0 +1,47 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer inc (integer i)
+    // filename: "tests/scope/Define.ycp"
+    integer inc (integer i)
+{
+    return (i + 1);
+}
+    return 1;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer plus (integer i, integer j)
+    // filename: "tests/scope/Define.ycp"
+    integer plus (integer i, integer j)
+{
+    return (i + j);
+}
+    return 2;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer fac (integer i)
+    // filename: "tests/scope/Define.ycp"
+    integer fac (integer i)
+{
+    if ((i < 2))
+    return 1;
+    return (i * fac ((i - 1)));
+}
+    return 2;
+}
+----------------------------------------------------------------------
+tests/scope/Define.ycp:33:Parameter 'plus' shadows function name
+[Parser] tests/scope/Define.ycp:33 Parameter 'plus' shadows function name
+tests/scope/Define.ycp:35:Undeclared identifier 'i'
+[Parser] tests/scope/Define.ycp:35 Undeclared identifier 'i'
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/Define.ycp:31 Parser error

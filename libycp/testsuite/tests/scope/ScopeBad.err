@@ -1,0 +1,18 @@
+tests/scope/ScopeBad.ycp:42:Mismatched return type in block
+[Parser] tests/scope/ScopeBad.ycp:42 Mismatched return type in block
+tests/scope/ScopeBad.ycp:42:Expected 'string', seen 'integer'.
+[Parser] tests/scope/ScopeBad.ycp:42 Expected 'string', seen 'integer'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/ScopeBad.ycp:20 Parser error
+tests/scope/ScopeBad.ycp:55:type mismatch in assignment
+[Parser] tests/scope/ScopeBad.ycp:55 type mismatch in assignment
+tests/scope/ScopeBad.ycp:55:Expected 'integer', seen 'string'.
+[Parser] tests/scope/ScopeBad.ycp:55 Expected 'integer', seen 'string'.
+Parsed:
+----------------------------------------------------------------------
+YError
+----------------------------------------------------------------------
+[Interpreter] tests/scope/ScopeBad.ycp:47 Parser error

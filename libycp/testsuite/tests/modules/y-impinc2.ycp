@@ -1,0 +1,5 @@
+{
+    include "impinc.inc";
+
+    y2error ("In main: Function returned: %1", ii ());
+}

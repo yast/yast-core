@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/map-term.ycp"
+    return $["foo":`id (1), "bar":`id (2)];
+}

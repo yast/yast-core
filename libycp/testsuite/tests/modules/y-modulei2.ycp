@@ -1,0 +1,8 @@
+{
+  import "YModule";
+
+  YModule::ag = 27;
+//  YModule::al = 27;	// error
+
+  return YModule::ag == 27;
+}

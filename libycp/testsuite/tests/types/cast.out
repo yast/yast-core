@@ -1,0 +1,8 @@
+("foo")
+(nil)
+("foo")
+(nil)
+(["foo"])
+(nil)
+($["foo":1])
+(nil)

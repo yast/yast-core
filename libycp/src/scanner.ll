@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------\
+/*---------------------------------------------------------*- c++ -*---\
 |                                                                      |
 |                      __   __    ____ _____ ____                      |
 |                      \ \ / /_ _/ ___|_   _|___ \                     |
@@ -11,7 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	scanner.ll
-   Version	2.0
+   Version	3.0
    Author:	Klaus Kämpf <kkaempf@suse.de>
    Maintainer:	Klaus Kämpf <kkaempf@suse.de>
 
@@ -19,20 +19,30 @@
 
 %{
 
-#include "YCP.h"
-#include "y2log.h"
-#include "parser.h"
 #include <stdlib.h>
 
+#include "ycp/y2log.h"
+#include "parser.h"
+
+// We handle the line counting using a define
+// in case we need to fix it again or decide tou use option yylineno
+/*
+// This fails after the nested scanner is destroyed
 int yylineno = 1;
+int *lineptr = 0;
+#define LINE_VAR yylineno
+#define INC_LINE ++LINE_VAR; *lineptr = LINE_VAR
+*/
+#define LINE_VAR m_lineNumber
+#define INC_LINE ++LINE_VAR
+
 //#define DEBUG_SCANNER
 #ifndef DEBUG_SCANNER
 #define debug_scanner nix
+static void nix(...) { }
 #else
 #define debug_scanner printf
 #endif
-
-static void nix(...) { }
 
 static inline unsigned
 fromhex(char hex)
@@ -42,230 +52,312 @@ fromhex(char hex)
     else                   return (unsigned)(hex - 'A' + 10);
 }
 
-#include "YCPScanner.h"
+#include "ycp/Scanner.h"
+#include "ycp/Type.h"
+#include "ycp/StaticDeclaration.h"
+#include "ycp/SymbolTable.h"
+#include "ycp/SymbolEntry.h"
+#include "ycp/YBlock.h"
+
+extern StaticDeclaration static_declarations;
+
+SymbolTable *builtinTable = NULL;
+
+// use during scan of qualified symbols
+static SymbolTable *namespaceTable = NULL;
+// the namespace prefix when BEGIN(namespace) is called.
+static char *namespace_prefix = 0;
 
 static char *scanner_token;
 
-#define RESULT(val,type) setScannedValue(val, yylineno); scanner_token = yytext; return type
+static tokenValue token_value;
+
+#define RESULT(type,token) setScannedToken(token_value, type); scanner_token = yytext; return token
 
 %}
 
 %option noyywrap
 
 %option c++
-%option yyclass="YCPScanner"
+%option yyclass="Scanner"
 
-%x bybl str comment
+%x bybl str comment namespace
 
 LETTER	[a-z][A-Z]
 ODIGIT	[0-7]
 DIGIT	[0-9]
 HDIGIT	[0-9][a-f][A-F]
- /* [[:alnum:]_-]+ | ["] (any-except-bkls-quot* (bksl any)*)+ ["] */
-PATHSEGMENT [[:alnum:]_-]+|\"([^\\"]*(\\.)*)+\"
+PATHSEGMENT ([[:alpha:]_][[:alnum:]_-]*)|\"([^\\"]*(\\.)*)+\"
 SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
 
 %%
+ /* " */
+ /* ----------------------------------- */
+ /*	Whitespace and Comments		*/
+ /* ----------------------------------- */
+
 
 ^[\t ]*#.*$			{ /* Ignore Unix style Comments */ }
 \/\*				{ BEGIN (comment); }
-<comment>\n			{ yylineno++; }
+<comment>\n			{ INC_LINE; }
 <comment>\*\/			{ BEGIN (INITIAL); }
 <comment>.			{ /* skip  */ }
 
 \/\/.*$				{ /* Ignore C++ style comments */ }
 \n				{ /* Ignore newlines  */
-				  yylineno++; }
+				  INC_LINE;
+				}
 [\f\t\r\v ]+			{ /* Ignore Whitespaces according to isspace(3) */ }
 
-  /* -- constants  */
+
+ /* ----------------------------------- */
+ /*	Numerical Constants		*/
+ /* ----------------------------------- */
 
 	/* floating point constant  */
 
-[0-9]+\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+ {
-	  debug_scanner("<YCPFloat>");
-	  RESULT (YCPFloat(yytext), YCP_FLOAT);
-	}
+[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+ {
+	debug_scanner("<float>");
+	token_value.fval = atof (yytext);
+	RESULT (Type::ConstFloat, C_FLOAT);
+    }
 
 	/* integer constant  */
 
 [1-9][0-9]* {
-	  debug_scanner("<YCPInteger int>");
-	  RESULT (YCPInteger(yytext), YCP_INTEGER);
-	}
+	debug_scanner("<int>");
+	token_value.ival = atoll (yytext);
+	RESULT (Type::ConstInteger, C_INTEGER);
+    }
 
 	/* octal constant  */
 
 0[0-7]* {
-	  debug_scanner("<YCPInteger oct>");
-	  long long i;
-	  sscanf (yytext, "%Lo", &i);
-	  RESULT (YCPInteger(i), YCP_INTEGER);
-	}
+	debug_scanner("<oct>");
+	sscanf (yytext, "%Lo", &(token_value.ival));
+	RESULT (Type::ConstInteger, C_INTEGER);
+    }
 
 	/* hexadecimal constant  */
 
 0x[0-9A-Fa-f]+ {
-	  debug_scanner("<YCPInteger hex>");
-	  long long i;
-	  sscanf (yytext, "0x%Lx", &i);
-	  RESULT (YCPInteger(i), YCP_INTEGER);
-	}
+	debug_scanner("<hex>");
+	sscanf (yytext, "0x%Lx", &(token_value.ival));
+	RESULT (Type::ConstInteger, C_INTEGER);
+    }
 
-	/* -- double colon  */
-
-::	{ return DCOLON; }
-
-
-	/* -- byteblock  */
+ /* ----------------------------------- */
+ /*	Byteblock			*/
+ /* ----------------------------------- */
 
 	/* byteblock prefix  */
 
-\#\[    {
-	  if (scandata_buffer == 0) scandata_buffer = extend_scanbuffer (1);
-	  if (scandata_buffer == 0) return SCANNER_ERROR;
-	  scandata_buffer_ptr = scandata_buffer;
-	  BEGIN (bybl);
-        }
+\#\[ {
+	if (m_scandataBuffer == 0) m_scandataBuffer = extend_scanbuffer (sizeof (long));
+	if (m_scandataBuffer == 0) return SCANNER_ERROR;
+	m_scandataBufferPtr = m_scandataBuffer + sizeof (long);
+	BEGIN (bybl);
+    }
 
 	/* byteblock suffix  */
 
 <bybl>\] {
-	  debug_scanner ("<YCPByteblock>");
-	  BEGIN (INITIAL);
-	  const unsigned char *bytes = (const unsigned char *)scandata_buffer;
-	  long length = (long)(scandata_buffer_ptr - scandata_buffer);
-	  RESULT (YCPByteblock(bytes, length), YCP_BYTEBLOCK);
-        }
+	debug_scanner ("<byteblock>");
+	BEGIN (INITIAL);
+	const char *bytes = (const char *)(m_scandataBuffer + sizeof (long));
+	long length = (long)(m_scandataBufferPtr - bytes);
+	memcpy (m_scandataBuffer, &length, sizeof (long));
+	token_value.cval = (unsigned char *)m_scandataBuffer;
+	RESULT (Type::ConstByteblock, C_BYTEBLOCK);
+    }
 
 	/* byteblock data  */
 
 <bybl>([0123456789ABCDEFabcdef][0123456789ABCDEFabcdef])+ {
-	  int ylen   = strlen (yytext);
-	  int offset = scandata_buffer_ptr - scandata_buffer;
+	int needed   = yyleng;
+	int used = m_scandataBufferPtr - m_scandataBuffer;
 
-	  if (offset + ylen/2 >= scandata_buffer_size) {
-	    if (extend_scanbuffer (ylen) == 0) return SCANNER_ERROR;
-	    scandata_buffer_ptr = scandata_buffer + offset;
-	  }
-	  for (int i=0; i<ylen/2; i++) {
-	    *scandata_buffer_ptr++ = (fromhex(yytext[i*2]) << 4) | (fromhex(yytext[i*2+1]));
-	  }
-        };
+	if (used + needed/2 >= m_scandataBufferSize)
+	{
+	    if (extend_scanbuffer (needed) == 0)
+		return SCANNER_ERROR;
+	    m_scandataBufferPtr = m_scandataBuffer + used; // might be realloced
+	}
+	for (int i=0; i < needed/2; i++)
+	{
+	    *m_scandataBufferPtr++ = (fromhex(yytext[i*2]) << 4) | (fromhex(yytext[i*2+1]));
+	}
+    }
 
 <bybl>[\t\r ]+ {
-	  /* Ignore Whitespaces */
-	}
+	/* Ignore Whitespaces */
+    }
 
 <bybl>\n {
 	  /* Ignore Newline */
-	  yylineno++;
-	}
+	INC_LINE;
+    }
+
+<bybl><<EOF>> {
+	logError("unterminated byteblock constant", LINE_VAR);
+    }
 
 <bybl>. {
-          logError("bad character in byteblock constant", yylineno);
-          return SCANNER_ERROR;
-        }
+	logError("bad character in byteblock constant", LINE_VAR);
+	return SCANNER_ERROR;
+    }
 
-        /* -- string  */
+ /* ----------------------------------- */
+ /*	String				*/
+ /* ----------------------------------- */
 
-        /* string prefix  */
+	/* string prefix  */
 
-\"      {
-          if (scandata_buffer == 0)
-            scandata_buffer = extend_scanbuffer (1);
-          if (scandata_buffer == 0)
-            return SCANNER_ERROR;
+\"  {
+        /* " */
+	if (m_scandataBuffer == 0)
+	    m_scandataBuffer = extend_scanbuffer (1);
+	if (m_scandataBuffer == 0)
+	    return SCANNER_ERROR;
 
-          scandata_buffer_ptr = scandata_buffer;
-          BEGIN (str);
-        }
+	m_scandataBufferPtr = m_scandataBuffer;
+	BEGIN (str);
+    }
 
-        /* string suffix  */
+	/* string suffix  */
 
 <str>\" {
-          debug_scanner ("<YCPString>");
-          BEGIN (INITIAL);
-          *scandata_buffer_ptr = '\0';
-          RESULT (YCPString(scandata_buffer), YCP_STRING);
-        }
+        /* " */
+	debug_scanner ("<string>");
+	BEGIN (INITIAL);
+	*m_scandataBufferPtr = '\0';
+	token_value.sval = strdup (m_scandataBuffer);
+	RESULT (Type::ConstString, STRING);
+    }
 
-        /* string octal character  */
+	/* string octal character  */
 
 <str>\\[0-7]{1,3} {
-	  debug_scanner("<YCPOctal escape in string>");
-          /* octal escape sequence */
-          /* mis-use result as scandata_buffer offset  */
-          int result = scandata_buffer_ptr - scandata_buffer;
-          if (result >= scandata_buffer_size) {
-              if (extend_scanbuffer (1) == 0)
-		  return SCANNER_ERROR;
-	      scandata_buffer_ptr = scandata_buffer + result;
-	  }
-          (void) sscanf( yytext + 1, "%o", &result );
-	  if (( result > 0xff ) || (result == 0))
-	      logError("bad octal constant", yylineno);
-	  else
-	      *scandata_buffer_ptr++ = result;
-	  }
+	debug_scanner("<octal escape in string>");
+
+	/* octal escape sequence */
+	/* mis-use result as m_scandataBuffer offset  */
+
+	int result = m_scandataBufferPtr - m_scandataBuffer;
+	if (result >= m_scandataBufferSize)
+	{
+	    if (extend_scanbuffer (1) == 0)
+		return SCANNER_ERROR;
+	    m_scandataBufferPtr = m_scandataBuffer + result;
+	}
+	(void) sscanf (yytext + 1, "%o", &result);
+	if (( result > 0xff )
+	    || (result == 0))
+	{
+	    logError("bad octal constant", LINE_VAR);
+	}
+	else
+	{
+	    *m_scandataBufferPtr++ = result;
+	}
+    }
 
 	/* string escaped character  */
 
 <str>\\(.|\n) {
-	  debug_scanner("<escape in string>");
-	  int offset = scandata_buffer_ptr - scandata_buffer;
-	  if (offset >= scandata_buffer_size) {
+	debug_scanner("<escape in string>");
+	int offset = m_scandataBufferPtr - m_scandataBuffer;
+	if (offset >= m_scandataBufferSize)
+	{
 	    if (extend_scanbuffer (1) == 0)
-	      return SCANNER_ERROR;
-	    scandata_buffer_ptr = scandata_buffer + offset;
-	  }
-	  switch (yytext[1]) {
-	    case 'n': *scandata_buffer_ptr++ = '\n'; break;
-	    case 't': *scandata_buffer_ptr++ = '\t'; break;
-	    case 'r': *scandata_buffer_ptr++ = '\r'; break;
-	    case 'b': *scandata_buffer_ptr++ = '\b'; break;
-	    case 'f': *scandata_buffer_ptr++ = '\f'; break;
-	    case '\n': yylineno++; break;
-	    default:  *scandata_buffer_ptr++ = yytext[1]; break;
-	  }
+		return SCANNER_ERROR;
+	    m_scandataBufferPtr = m_scandataBuffer + offset;
 	}
+	switch (yytext[1])
+	{
+	    case 'n': *m_scandataBufferPtr++ = '\n'; break;
+	    case 't': *m_scandataBufferPtr++ = '\t'; break;
+	    case 'r': *m_scandataBufferPtr++ = '\r'; break;
+	    case 'b': *m_scandataBufferPtr++ = '\b'; break;
+	    case 'f': *m_scandataBufferPtr++ = '\f'; break;
+	    case '\n': INC_LINE; break;
+	    default:  *m_scandataBufferPtr++ = yytext[1]; break;
+	}
+    }
 
-        /* string escaped " char  */
+	/* string escaped " char  */
 
 <str>[^\\\"\n]+ {
-	  char *yptr = yytext;
-	  int ylen = strlen (yptr);
-	  int offset = scandata_buffer_ptr - scandata_buffer;
-	  if (offset + ylen >= scandata_buffer_size) {
-	    if (extend_scanbuffer (ylen) == 0)
-	      return SCANNER_ERROR;
-	    scandata_buffer_ptr = scandata_buffer + offset;
-	  }
-	  strcpy (scandata_buffer_ptr, yptr);
-	  scandata_buffer_ptr += ylen;
-	}
+        /* " */
+	char *yptr = yytext;
+	int needed = yyleng;
+	int used = m_scandataBufferPtr - m_scandataBuffer;
 
-        /* \n in string */
+	if (used + needed >= m_scandataBufferSize)
+	{
+	    if (extend_scanbuffer (needed) == 0)
+		return SCANNER_ERROR;
+	    m_scandataBufferPtr = m_scandataBuffer + used;  // might be realloced
+	}
+	strcpy (m_scandataBufferPtr, yptr);
+	m_scandataBufferPtr += needed;
+    }
+
+	/* \n in string */
 
 <str>\n {
-	  int offset = scandata_buffer_ptr - scandata_buffer;
-	  if (offset >= scandata_buffer_size) {
+	int offset = m_scandataBufferPtr - m_scandataBuffer;
+	if (offset >= m_scandataBufferSize)
+	{
 	    if (extend_scanbuffer (1) == 0)
-	      return SCANNER_ERROR;
-	    scandata_buffer_ptr = scandata_buffer + offset;
-	  }
-          *scandata_buffer_ptr++ = '\n';
-          yylineno++;
-        }
+		return SCANNER_ERROR;
+	    m_scandataBufferPtr = m_scandataBuffer + offset;
+	}
+	*m_scandataBufferPtr++ = '\n';
+	INC_LINE;
+    }
 
-nil|nilboolean|nilinteger|nilfloat|nilstring|nillocale|nilbyteblock|nilpath|nillist|nilmap|nilsymbol|nilterm	{
-	 	debug_scanner("<YCPNil>");
-		RESULT (YCPVoid(), YCP_VOID);			};
-true|false  {	debug_scanner("<YCPBoolean>");
-		RESULT (YCPBoolean(yytext), YCP_BOOLEAN);		};
+<str><<EOF>> {
+	logError("unterminated string constant", LINE_VAR);
+    }
 
+ /* ----------------------------------- */
+ /*      Misc Constants			*/
+ /* ----------------------------------- */
 
- /* -- statement keywords  */
+nil {
+	debug_scanner("<nil>");
+	RESULT (Type::ConstVoid, C_VOID);
+    }
+
+true  {
+	debug_scanner("<true>");
+	token_value.bval = true;
+	RESULT (Type::ConstBoolean, C_BOOLEAN);
+    }
+
+false  {
+	debug_scanner("<false>");
+	token_value.bval = false;
+	RESULT (Type::ConstBoolean, C_BOOLEAN);
+    }
+
+ /* -- path  */
+
+\.|(\.{PATHSEGMENT})+ {
+	debug_scanner("<path>");
+	token_value.pval = yytext;
+	if (yytext[yyleng-1] == '-')
+	{
+	    logError ("dash behind path constant not allowed", LINE_VAR);
+	    return SCANNER_ERROR;
+	}
+	RESULT (Type::ConstPath, C_PATH);
+    }
+
+ /* ----------------------------------- */
+ /*	Statement Keywords		*/
+ /* ----------------------------------- */
 
 return		{ return RETURN;	};
 define		{ return DEFINE;	};
@@ -281,102 +373,390 @@ repeat		{ return REPEAT;	};
 until		{ return UNTIL;		};
 empty		{ return EMPTY;		};
 list		{ return LIST;		};
-block		{ return BLOCK;		};
 map		{ return MAP;		};
+struct		{ return STRUCT;	};
+block		{ return BLOCK;		};
 include		{ return INCLUDE;	};
 import		{ return IMPORT;	};
 export		{ return EXPORT;	};
 global		{ return GLOBAL;	};
-_dump_scope	{ return DUMPSCOPE;	};
-_dump_meminfo	{ return MEMINFO;	};
-_fullname	{ return FULLNAME;	};
-_callback	{ return CALLBACK;	};
-size		{ return SIZE;		};
-lookup		{ return LOOKUP;	};
-select		{ return SELECT;	};
-remove		{ return REMOVE;	};
-foreach		{ return FOREACH;	};
-eval		{ return EVAL;		};
-symbolof	{ return SYMBOLOF;	};
+static		{ return STATIC;	};
+extern		{ return EXTERN;	};
 module		{ return MODULE;	};
 textdomain	{ return TEXTDOMAIN;	};
 const		{ return CONST;		};
-isnil		{ return ISNIL;		};
-union		{ return UNION;		};
-merge		{ return MERGE;		};
-add		{ return ADD;		};
-change		{ return CHANGE;	};
-sort		{ return SORT;		};
-lsort		{ return LSORT;		};
+typedef		{ return TYPEDEF;	};
+lookup		{ return LOOKUP;	};
 
-  /* -- basetype  */
+ /* ----------------------------------- */
+ /*	Type Keywords			*/
+ /* ----------------------------------- */
 
-any         { RESULT (YCPDeclAny(), ANY);			};
-void        { RESULT (YCPDeclType(YT_VOID), YCP_DECLTYPE);	};
-boolean     { RESULT (YCPDeclType(YT_BOOLEAN), YCP_DECLTYPE);	};
-integer     { RESULT (YCPDeclType(YT_INTEGER), YCP_DECLTYPE);	};
-float       { RESULT (YCPDeclType(YT_FLOAT), YCP_DECLTYPE);	};
-string      { RESULT (YCPDeclType(YT_STRING), YCP_DECLTYPE);	};
-byteblock   { RESULT (YCPDeclType(YT_BYTEBLOCK), YCP_DECLTYPE);	};
-locale      { RESULT (YCPDeclType(YT_LOCALE), YCP_DECLTYPE);	};
-term        { RESULT (YCPDeclType(YT_TERM), YCP_DECLTYPE);	};
-path        { RESULT (YCPDeclType(YT_PATH), YCP_DECLTYPE);	};
-declaration { RESULT (YCPDeclType(YT_DECLARATION), YCP_DECLTYPE); };
-symbol      { RESULT (YCPDeclType(YT_SYMBOL), YCP_DECLTYPE);	};
+any		{ RESULT (Type::Any, C_TYPE);	};
+void		{ RESULT (Type::Void, C_TYPE); };
+boolean		{ RESULT (Type::Boolean, C_TYPE); };
+integer		{ RESULT (Type::Integer, C_TYPE); };
+float		{ RESULT (Type::Float, C_TYPE); };
+string		{ RESULT (Type::String, C_TYPE); };
+byteblock	{ RESULT (Type::Byteblock, C_TYPE); };
+ /* list, map are keywords and done by parser.yy  */
+locale		{ RESULT (Type::Locale, C_TYPE); };
+term		{ RESULT (Type::Term, C_TYPE); };
+path		{ RESULT (Type::Path, C_TYPE); };
+symbol		{ RESULT (Type::Symbol, C_TYPE); };
 
  /* common mistyped names  */
-int	    { logError ("Seen 'int', use 'integer' instead", yylineno); return SCANNER_ERROR; };
-char	    { logError ("Seen 'char', use 'string' instead", yylineno); return SCANNER_ERROR; };
-bool	    { logError ("Seen 'bool', use 'boolean' instead", yylineno); return SCANNER_ERROR; };
+int	{ logError ("Seen 'int', use 'integer' instead", LINE_VAR); return SCANNER_ERROR; };
+char	{ logError ("Seen 'char', use 'string' instead", LINE_VAR); return SCANNER_ERROR; };
+bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER_ERROR; };
 
-UI	{ return UI; }
-WFM	{ return WFM; }
-Pkg	{ return Pkg; }
-Perl	{ return Perl; }
-SCR	{ return SCR; }
-
- /* -- path  */
-
-\.|(\.{PATHSEGMENT})+ {
-	    debug_scanner("<YCPPath>");
-	    if (yyleng == 1) {
-		RESULT (YCPPath(yytext), YCP_PATH);
-	    }
-	    else {
-		if (yytext[yyleng-1] == '-') {
-		    logError ("dash behind path constant not allowed", yylineno);
-		    return SCANNER_ERROR;
-		}
-		YCPPath p (yytext);
-		if (p->length() == 0) {
-		    logError ("not a path constant", yylineno);
-		    return SCANNER_ERROR;
-		}
-		RESULT (p, YCP_PATH);
-	    }
-	}
+ /* ----------------------------------- */
+ /*	Quotes				*/
+ /* ----------------------------------- */
 
  /* -- quoted symbol  */
 
-\`([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*) {
-		debug_scanner("<YCPSymbol quoted>");
-		RESULT (YCPSymbol(yytext+1, true), SYMBOL);
-	}
+\`{SYMBOL} {
+	debug_scanner("<`symbol>");
+	token_value.yval = strdup (yytext + 1);
+	RESULT (Type::ConstSymbol, C_SYMBOL);
+    }
 
  /* -- double quoted symbol  */
 
-\`\`([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*) {
-		debug_scanner("<YCPSymbol dquoted>");
-		logError ("*** Don't use ``symbol... but ``(symbol ... ***", yylineno);
-		RESULT (YCPSymbol(yytext+2, false), QUOTED_SYMBOL);
+\`\`{SYMBOL} {
+	debug_scanner("<``symbol>");
+	logError ("*** Don't use ``symbol... but ``(symbol ... ***", LINE_VAR);
+	return SCANNER_ERROR;
+    }
+
+  /* -- symbols  */
+
+  /* qualified symbol  */
+{SYMBOL}:: {
+	yytext[yyleng-2] = 0;
+
+	TableEntry *tentry = builtinTable->find (yytext);	// check for builtin/namespace
+	if (tentry != 0)
+	{
+	    y2debug ("found (%s)", tentry->toString().c_str());
+	    namespaceTable = tentry->sentry()->table();			// is a predefined namespace ?
+	    if (namespaceTable == 0)
+	    {
+		logError ("Prefix '%s' is not a namespace", LINE_VAR, yytext);
+		return SCANNER_ERROR;
+	    }
+	    y2debug ("predefined namespace (%s) -> table %p", yytext, namespaceTable);
+
+	    namespace_prefix = strdup (yytext);
+
+	    BEGIN (namespace);
 	}
+	else
+	{
+	    tentry = m_localTable->find (yytext, SymbolEntry::c_module);		// check for import or self reference
+	    if (tentry == 0)
+	    {
+		tentry = m_localTable->find (yytext, SymbolEntry::c_namespace);
+	    }
+	    if (tentry == 0)
+	    {
+		tentry = m_localTable->find (yytext, SymbolEntry::c_self);
+	    }
+	    y2debug ("m_localTable[%p]->find (%s) = %p", m_localTable, yytext, tentry);
+	    if (tentry == 0)
+	    {
+		logError ("Unknown namespace '%s'", LINE_VAR, yytext);
+		return SCANNER_ERROR;
+	    }
+	    else if (tentry->sentry()->category() == SymbolEntry::c_self)	// self reference
+	    {
+		// ignore self-prefix inside module definition
+		y2debug ("ignore self-prefix (%s)", yytext);
+		BEGIN (INITIAL);
+	    }
+	    else
+	    {
+		y2debug ("found (%s)", tentry->toString().c_str());
+		
+		if (! tentry->sentry()->isModule())
+		{
+		    logError ("Not a module '%s'", LINE_VAR, yytext);
+		    return SCANNER_ERROR;
+		}
+		
+		Y2Namespace *block = tentry->sentry()->name_space();
 
-  /* -- symbol  */
+		y2debug ("Going to get a table" );
+		// ok, this YCode defines it's own table of exported symbols
+		namespaceTable = block->table();
+		if (namespaceTable == 0)
+		{
+		    logError ("Module table is empty", LINE_VAR);
+		    return SCANNER_ERROR;
+		}
+		y2debug ("imported namespace (%s) -> table %p", yytext, namespaceTable);
 
+		namespace_prefix = strdup (yytext);
+
+		BEGIN (namespace);
+	    }
+	}
+    }
+
+
+<namespace>{SYMBOL}(::{SYMBOL})* {
+
+	BEGIN (INITIAL);
+
+	// check symbol for namespace
+	// table points to namespace table
+	// entry points to entry in table (== 0 for initial search)
+
+	TableEntry *tentry = 0;
+
+	// start of current SYMBOL
+	char *colon = yytext;
+	// end of current SYMBOL (the ':' is temporarily replaced by '\0')
+	char *next = 0;
+
+	while (colon != 0)
+	{
+	    if (next != 0)			// skip to next symbol (does not trigger on first symbol)
+	    {
+		*next = ':';
+		colon = next + 2;
+	    }
+
+	    next = strchr (colon, ':');
+	    if (next != 0)
+	    {
+		*next = 0;
+	    }
+
+	    // defined in table ?
+	    // must be c_module if followed by '::'
+	    // else find any type
+
+	    // entry is the 'import' TableEntry in the local table
+	    //   it's SymbolEntry points to the real YBlock
+
+	    tentry = namespaceTable->find (colon, (next != 0) ? SymbolEntry::c_module : SymbolEntry::c_unspec);
+	    y2debug ("find ('%s'<next @ %p> in %p) = t@%p", colon, next, namespaceTable, tentry);
+
+	    if ((tentry != 0)			// found entry
+		&& (next != 0))			// and must be module
+	    {
+		if (! tentry->sentry()->isModule())
+		{
+		    logError ("Not a module '%s'", LINE_VAR, colon);
+		    free (namespace_prefix);
+		    return SCANNER_ERROR;
+		}
+		
+		Y2Namespace *block = tentry->sentry()->name_space();
+
+		// ok, this YCode defines it's own table of exported symbols
+		namespaceTable = block->table();
+		if (namespaceTable == 0)
+		{
+		    logError ("Module table is empty", LINE_VAR);
+		    free (namespace_prefix);
+		    return SCANNER_ERROR;
+		}
+
+	    }
+
+	    if (tentry == 0)
+	    {
+		if (next != 0)
+		{
+		    logError ("Unknown namespace '%s::%s'", LINE_VAR, namespace_prefix, yytext);
+		}
+		else
+		{
+		    logError ("Unknown identifier '%s::%s'", LINE_VAR, namespace_prefix, yytext);
+		}
+		free (namespace_prefix);
+		return SCANNER_ERROR;
+	    }
+
+	    if (next == 0)
+	    {
+		break;
+	    }
+
+	}  // while (colon != 0)
+
+	y2debug ("<QualifiedSymbol(%s@%p)>", yytext, tentry);
+
+	switch (tentry->sentry()->category())
+	{
+	    case SymbolEntry::c_global:
+	    case SymbolEntry::c_unspec:
+	    break;
+	    case SymbolEntry::c_module:
+	    case SymbolEntry::c_namespace:
+	    case SymbolEntry::c_self:
+	    {
+		logError ("Module/Namespace name '%s' after '::' ?!", LINE_VAR, yytext);
+		return SCANNER_ERROR;
+	    }
+	    break;
+	    case SymbolEntry::c_variable:
+	    case SymbolEntry::c_reference:
+	    case SymbolEntry::c_function:
+	    case SymbolEntry::c_builtin:
+	    {
+		token_value.tval = tentry;
+		RESULT (tentry->sentry()->type(), IDENTIFIER);
+	    }
+	    break;
+	    case SymbolEntry::c_typedef:
+	    {
+		RESULT (tentry->sentry()->type(), C_TYPE);
+	    }
+	    break;
+	    case SymbolEntry::c_const:
+	    {
+		// FIXME
+		token_value.sval = strdup (yytext);
+		RESULT (Type::ConstString, STRING);
+	    }
+	    break;
+	}
+	logError ("Global identifier of unknown category '%s'", LINE_VAR, yytext);
+	return SCANNER_ERROR;
+    }
+
+  /* plain symbol  */
 {SYMBOL} {
-		debug_scanner("<YCPSymbol>");
-		RESULT (YCPSymbol(yytext, false), SYMBOL);
+	/*y2debug ("builtinTable %p, m_localTable %p, m_globalTable %p", builtinTable, m_localTable, m_globalTable);*/
+	TableEntry *tentry = builtinTable->find (yytext);
+if (tentry!=0) y2debug ("'%s' is builtin", yytext);
+	if (tentry == 0)
+	{
+	    tentry = m_localTable->find (yytext);
+if (tentry!=0) y2debug ("'%s' is local", yytext);
 	}
+	if (tentry == 0)
+	{
+	    tentry = m_globalTable->find (yytext);
+if (tentry!=0) y2debug ("'%s' is global", yytext);
+	}
+	if (tentry == 0)
+	{
+	    debug_scanner("<Symbol(%s)>", yytext);
+	    token_value.nval = strdup (yytext);
+	    RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
+	}
+	token_value.tval = tentry;
+	switch (tentry->sentry()->category())
+	{
+	    case SymbolEntry::c_module:
+	    case SymbolEntry::c_self:
+	    {
+		y2debug ("<Symbol equals module(%s@%p)>", yytext, tentry);
+		token_value.nval = strdup (yytext);
+		RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
+	    }
+	    break;
+	    case SymbolEntry::c_typedef:
+	    {
+		y2debug ("<Typedef(%s@%p)>", yytext, tentry);
+		RESULT (tentry->sentry()->type(), C_TYPE);
+	    }
+	    break;
+	    case SymbolEntry::c_const:
+	    {
+		y2debug ("<Const(%s@%p)>", yytext, tentry);
+		// FIXME
+		token_value.sval = strdup (yytext);
+		RESULT (Type::ConstString, STRING);
+	    }
+	    break;
+	    case SymbolEntry::c_namespace:
+	    {
+		y2debug ("<Namespace(%s@%p)>", yytext, tentry);
+		token_value.tval = tentry;
+		RESULT (tentry->sentry()->type(), SYM_NAMESPACE);
+	    }
+	    break;
+	    case SymbolEntry::c_global:
+	    case SymbolEntry::c_unspec:
+	    case SymbolEntry::c_variable:
+	    case SymbolEntry::c_reference:
+	    case SymbolEntry::c_function:
+	    case SymbolEntry::c_builtin:
+	    {
+		y2debug ("<identifier(%s@%p)>", yytext, tentry);
+		token_value.tval = tentry;
+		RESULT (tentry->sentry()->type(), IDENTIFIER);
+	    }
+	    break;
+	}
+	logError ("Identifier of unknown category '%s'", LINE_VAR, yytext);
+	return SCANNER_ERROR;
+    }
+
+  /* global symbol  */
+::{SYMBOL}  {
+	char *name = yytext + 2;
+	if (builtinTable->find (name) != 0)
+	{
+	    logError ("Keyword used as variable '%s'", LINE_VAR, name);
+	    return SCANNER_ERROR;
+	}
+	TableEntry *tentry = m_globalTable->find (name, SymbolEntry::c_unspec);
+	if (tentry == 0)
+	{
+	    y2debug ("'%s' not found in %p", name, m_globalTable);
+	    logError ("Unknown global variable '%s'", LINE_VAR, name);
+	    return SCANNER_ERROR;
+	}
+	switch (tentry->sentry()->category())
+	{
+	    case SymbolEntry::c_global:
+	    case SymbolEntry::c_unspec:
+	    case SymbolEntry::c_namespace:	// can't happen since it's in builtinTable only
+	    case SymbolEntry::c_self:
+	    break;
+	    case SymbolEntry::c_module:
+	    {
+		logError ("Module name '%s' after '::' ?!", LINE_VAR, name);
+		return SCANNER_ERROR;
+	    }
+	    break;
+	    case SymbolEntry::c_variable:
+	    case SymbolEntry::c_reference:
+	    case SymbolEntry::c_function:
+	    case SymbolEntry::c_builtin:
+	    {
+		token_value.tval = tentry;
+		RESULT (tentry->sentry()->type(), IDENTIFIER);
+	    }
+	    break;
+	    case SymbolEntry::c_typedef:
+	    {
+		RESULT (tentry->sentry()->type(), C_TYPE);
+	    }
+	    break;
+	    case SymbolEntry::c_const:
+	    {
+		// FIXME
+		token_value.sval = strdup (name);
+		RESULT (Type::ConstString, STRING);
+	    }
+	    break;
+	}
+	logError ("Global identifier of unknown category '%s'", LINE_VAR, name);
+	return SCANNER_ERROR;
+    }
+
+
+ /* ----------------------------------- */
+ /*	Operators			*/
+ /* ----------------------------------- */
 
   /* -- locale  */
 _\(	{ return I18N;		}
@@ -386,33 +766,37 @@ _\(	{ return I18N;		}
 
   /* -- comparison operators  */
 ==	{ return EQUALS;	}
-\<	{ return ST;		}
-\>	{ return GT;		}
-\<=	{ return SE;		}
+\<	{ return yytext[0];	}
+\>	{ return yytext[0];	}
+\<=	{ return LE;		}
 \>=	{ return GE;		}
 \!=	{ return NEQ;		}
 
   /* -- boolean operators  */
 &&	{ return AND;		}
 \|\|	{ return OR; 		}
-\!	{ return NOT;		}
+\!	{ return yytext[0];	}
 \<\<	{ return LEFT;		}
 \>\>	{ return RIGHT;		}
 
   /* -- quotes  */
 
-\`\`\{	{ return QUOTED_BLOCK;		}
-\`\`\(	{ return QUOTED_EXPRESSION;	}
-\`\`	{ logError ("Lonely doubleqoute", yylineno); return SCANNER_ERROR; }
-\`	{ logError ("Lonely qoute", yylineno); return SCANNER_ERROR; }
+::\`\`\{	{ return DCQUOTED_BLOCK; }
+::\{	{ return DCQUOTED_BLOCK; }
+\`\`\{	{ return QUOTED_BLOCK; }
+\`\`\(	{ return QUOTED_EXPRESSION; }
+\`\`	{ logError ("Lonely doubleqoute", LINE_VAR); return SCANNER_ERROR; }
+\`	{ logError ("Lonely qoute", LINE_VAR); return SCANNER_ERROR; }
 
 
   /* -- bit operators  */
-\||\&|~	{ return yytext[0];	}
+\||\^|\&|~	{
+	    return yytext[0];
+	}
 
   /* -- math operators  */
 \+|\-|\*|\/|\% {
-	  return yytext[0];
+	    return yytext[0];
 	}
 
 \]\:	{
@@ -420,11 +804,15 @@ _\(	{ return I18N;		}
 	}
 
 \[|\]|\(|\)|,|\{|\}|:|\;|\=|\? {
-	  return yytext[0];
+	    return yytext[0];
+	}
+
+<<EOF>> {
+	    return END_OF_FILE;
 	}
 
 .	{
-		debug_scanner("?%s?", yytext);
-	  	logError ("Unexpected char '%s'", yylineno, yytext);
-		return SCANNER_ERROR;
+	    debug_scanner("?%s?", yytext);
+	    logError ("Unexpected char '%s'", LINE_VAR, yytext);
+	    return SCANNER_ERROR;
 	}

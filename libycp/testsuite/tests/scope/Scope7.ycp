@@ -1,0 +1,13 @@
+// Scope7.inc declares the function Modified too
+// But the error about the original location mixes _this_ file name
+// and the _included_ line number
+{
+ include "Scope7.inc";
+
+ boolean modified = false;
+
+ boolean Modified () {
+    return modified;
+ }
+
+}

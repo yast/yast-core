@@ -28,7 +28,7 @@
 
 #include "Y2RemoteComponent.h"
 #include <y2util/ExternalProgram.h>
-#include <ycp/YCPParser.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 #include "TelnetProtocol.h"
@@ -101,9 +101,6 @@ Y2RemoteComponent::evaluate (const YCPValue& command)
 {
     y2debug ("evaluate %s", command->toString ().c_str ());
 
-    // Note: Those special numbers in the YCPErrors are used inside the
-    // WFMSubAgent class.
-
     if (is_server)
     {
 	if (!is_up)
@@ -118,7 +115,7 @@ Y2RemoteComponent::evaluate (const YCPValue& command)
 	    {
 		y2error ("Remote login was not successful: wrong password");
 		delete rp;
-		return YCPError ("Wrong password", YCPInteger (1LL));
+		return YCPVoid ();
 	    }
 
 	    if (status != RemoteProtocol::RP_OK)
@@ -127,8 +124,7 @@ Y2RemoteComponent::evaluate (const YCPValue& command)
 			 protocol.c_str (), loginname.c_str (), hostname.c_str (),
 			 componentname.c_str ());
 		delete rp;
-		return YCPError ("Remote login was not successful",
-				 YCPInteger (2LL));
+		return YCPVoid ();
 	    }
 
 	    parser.setInput (rp->inputFile (), "<remote>");
@@ -141,34 +137,8 @@ Y2RemoteComponent::evaluate (const YCPValue& command)
 
 	while (true)
 	{
-#if 0
-	    while (true)
-	    {
-		int c = fgetc (rp->inputFile ());
-		if (c == EOF) break;
-	    }
-#endif
 
 	    YCPValue ret = receive ();
-
-	    if (ret->isBuiltin ())
-	    {
-		const YCPBuiltin builtin = ret->asBuiltin ();
-		if (builtin->builtin_code () == YCPB_CALLBACK)
-		{
-		    if (!getCallback ())
-		    {
-			y2error ("fatal error: got callback code but don't "
-				 "have a callback component to evaluate");
-			exit (5);
-		    }
-
-		    YCPValue tmp1 = builtin->value (0);
-		    YCPValue tmp2 = getCallback ()->evaluate (builtin->value (0));
-		    send (tmp2, true);
-		    continue;
-		}
-	    }
 
 	    if (!ret.isNull ())
 		return ret;
@@ -180,11 +150,7 @@ Y2RemoteComponent::evaluate (const YCPValue& command)
     }
     else
     {
-	if (!is_up)
-	    return YCPNull ();	// FIXME
-
-	send (YCPBuiltin (YCPB_CALLBACK, command), true);
-	return receive ();
+	return YCPNull ();
     }
 }
 
@@ -242,7 +208,7 @@ Y2RemoteComponent::doActualWork (const YCPList& arglist,
     while (!(value = receive ()).isNull ())
     {
 	if (value->isTerm () && value->asTerm ()->size () == 1 &&
-	    value->asTerm ()->symbol ()->symbol () == "result")
+	    value->asTerm ()->name () == "result")
 	{
 	    y2debug ("got result from remote module: %s",
 		     value->toString ().c_str ());
@@ -288,7 +254,7 @@ YCPValue
 Y2RemoteComponent::receive ()
 {
     // y2debug ("receive begin");
-    YCPValue v = parser.parse ();
+    YCPValue v = YCPCode (parser.parse ());
     // y2debug ("receive end %s", v->toString ().c_str ());
     return v;
 }
@@ -297,6 +263,8 @@ Y2RemoteComponent::receive ()
 string
 Y2RemoteComponent::askPassword (bool& ok)
 {
+#if 0
+//FIXME:
     // Ask password
     YCPValue password = callModule (string ("password"), YCPList (),
 				    user_interface);
@@ -306,6 +274,7 @@ Y2RemoteComponent::askPassword (bool& ok)
 	return password->asString ()->value ();
     }
     else
+#endif
     {
 	ok = false;
 	return "";

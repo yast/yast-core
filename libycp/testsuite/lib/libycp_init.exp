@@ -1,14 +1,31 @@
+#------------------------------------------------
+#
+# get all *.ycp below tests/$subdir
+#
+
+proc get-files { srcdir subdir extension } {
+  if [catch {set filenames [list "$srcdir/$subdir/$CASE.$extension"] }] {
+    # get all files matching $srcdir/$subdir/*.$extension
+    set filenames [lsort [glob $srcdir/$subdir/*.$extension]]
+  }
+#  print "$srcdir$subdir: $filenames"
+  return $filenames
+}
+
+
+#------------------------------------------------
 #
 # run a ycp file
 #
-proc ycp-run { src } {
+proc ycp-run { src dir } {
 
   set path [split $src "/"]
-  set filename [lindex $path [expr [llength $path]-1]]
+  set srcfilename [lindex $path [expr [llength $path]-1]]
+  set srcdirname [lindex $path [expr [llength $path]-2]]
 
   # extract basename and check extension
 
-  set fname [split $filename "."]
+  set fname [split $srcfilename "."]
 
   if {[llength $fname] < 2} {
     fail "Bad filename syntax '$src'"
@@ -22,65 +39,281 @@ proc ycp-run { src } {
   # setup filenames
 
   # $src is the name of the original testfile with absolute path
-  # tests/$filename is the name of the original testfile with relative path,
+  # $dir/$srcfilename is the name of the original testfile with relative path,
   #                 relative to the testsuite directory
-  set test_input  "tests/$filename"
+  set test_input "$dir/$srcfilename"
 
   set base_name [lindex $fname 0]
 
-  set stdout_name "tests/$base_name.out"
-  set stderr_name "tests/$base_name.err"
-  set log_name    "tests/$base_name.log"
+  set stdout_name "$dir/$base_name.out"
+  set stderr_name "$dir/$base_name.err"
   set tmpout_name "tmp.out.$base_name"
   set tmperr_name "tmp.err.$base_name"
-  set tmplog_name "tmp.log.$base_name"
 
-  puts "Running $base_name..."
+#  puts "Running $srcdirname/$base_name..."
 
   # run the test
 
   set result ""
-  set oops [catch { set result [exec "tests/runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
+  puts -nonewline "Checking $base_name                    \r"
+  flush stdout
+  set oops [catch { set result [exec "./runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
 
   if {$oops != 0} {
-    fail "test case failed for $base_name: $catched"
+    fail "test case failed for $srcdirname/$base_name: $catched"
     return -1
   }
 
   # check return code from runycp
 
   if {$result != ""} {
-    warning "Compilation of $base_name results in '$result'"
+    warning "Running of $srcdirname/$base_name results in '$result'"
     return -1
   }
+
+  # my tcl skills suck
+  set should_fail0 [grep "xfail" "^$base_name\$"]
+  set should_fail [expr 0 == [string match $should_fail0 ""]]
 
   # check stdout
 
   if {[diff $stdout_name "tmp.out.$base_name"] != 1} {
-    fail "Wrong stdout for $base_name"
-    set oops [catch { set result [exec test -f $stdout_name] } catched ]
-    if {$oops == 0} {
-      puts "\nThe diff follows...\n"
-      puts [exec sh -c "diff -u $stdout_name tmp.out.$base_name || true"]
-    }
-    return -1
+      set msg "Wrong stdout for $srcdirname/$base_name"
+      if {$should_fail} {
+	  xfail $msg
+      } else {
+	  fail $msg
+      }
+      return -1
   }
 
   # check stderr
 
   if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
-    fail "Wrong stderr for $base_name"
-    set oops [catch { set result [exec test -f $stderr_name] } catched ]
-    if {$oops == 0} {
-      puts "\nThe diff follows...\n"
-      puts [exec sh -c "diff -u $stderr_name tmp.err.$base_name || true"]
+      set msg "Wrong stderr for $srcdirname/$base_name"
+      if {$should_fail} {
+	  xfail $msg
+      } else {
+	  fail $msg
+      }
+      return -1
+  }
+
+  # ok, all is fine
+
+  if {$should_fail} {
+      xpass $base_name
+  } else {
+      pass $base_name
+  }
+
+  return 0
+}
+
+#------------------------------------------------
+#
+# run a bytecode file
+#
+proc bytecode-run { src dir } {
+
+  set path [split $src "/"]
+  set srcfilename [lindex $path [expr [llength $path]-1]]
+  set srcdirname [lindex $path [expr [llength $path]-2]]
+
+  # extract basename and check extension
+
+  set ycpname [split $srcfilename "."]
+
+  if {[llength $ycpname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return -1
+  }
+  if {[lindex $ycpname [expr [llength $ycpname]-1]] != "ycp"} {
+    fail "Not .ycp extension '$src'"
+    return -1
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # $dir/$srcfilename is the name of the original testfile with relative path,
+  #                 relative to the testsuite directory
+  set test_input "$dir/$srcfilename"
+
+  set base_name [lindex $ycpname 0]
+  set err_name "$dir/$base_name.err"
+  set out_name "$dir/$base_name.out"
+  set ybc_name "$dir/$base_name.ybc"
+  set log_name "$dir/$base_name.log"
+  set tmpout_name "tmp.out.$base_name"
+  set tmpybc_name "tmp.ybc.$base_name"
+  set tmperr_name "tmp.err.$base_name"
+
+  set should_fail0 [grep "xfail" "^$base_name\$"]
+  set should_fail [expr 0 == [string match $should_fail0 ""]]
+
+  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
+  flush stdout
+#  puts --nonewline "Module $dir/Module ...\r"
+
+  # compile the test
+
+  set result ""
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-c" "-l" "$tmperr_name" "-o" "$ybc_name" "$test_input" ] } catched]
+
+  if {$oops != 0} {
+#    if {$result != ""} {
+	fail "run-compilation failed for $srcdirname/$base_name ($oops:$result): $catched"
+	return 1
+#    } else {
+#	return 0
+#    }
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    set msg "run-Compilation of $srcdirname/$base_name results in '$result'"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      fail $msg
+    }
+    return 1
+  }
+
+  puts -nonewline "Printing $srcdirname/$base_name                   \r"
+  flush stdout
+
+  # print the test
+
+  set result ""
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "$ybc_name" ] } catched]
+
+  if {$oops != 0} {
+    set msg "running failed for $srcdirname/$base_name: $catched"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      fail $msg
+    }
+    return 1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    fail "Print of $srcdirname/$base_name results in '$result'"
+    return 1
+  }
+
+  if {[diff $err_name $tmperr_name] != 1} {
+      fail "Wrong print for $srcdirname/$base_name ($err_name vs. $tmperr_name)"
+      return -1
+  }
+  
+  puts -nonewline "Interpreting $srcdirname/$base_name                   \r"
+  flush stdout
+
+  # run the test
+
+  set result ""
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-o" "$tmpout_name" "$ybc_name" ] } catched]
+
+  if {$oops != 0} {
+    fail "running failed for $srcdirname/$base_name: $catched"
+    return -1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    set msg "Run of $srcdirname/$base_name results in '$result'"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      fail $msg
     }
     return -1
   }
 
-  # ok, all is fine
+  if {[diff $out_name $tmpout_name] != 1} {
+      fail "Wrong result for $srcdirname/$base_name ($out_name vs. $tmpout_name)"
+      return -1
+  }
+  
+  pass $base_name
+
+  return 0
+}
+
+
+#------------------------------------------------
+#
+# compile a file into a bytecode
+#
+proc bytecode-compile { src dir } {
+
+  set path [split $src "/"]
+  set srcfilename [lindex $path [expr [llength $path]-1]]
+  set srcdirname [lindex $path [expr [llength $path]-2]]
+
+  # extract basename and check extension
+
+  set ycpname [split $srcfilename "."]
+
+  if {[llength $ycpname] < 2} {
+    fail "Bad filename syntax '$src'"
+    return -1
+  }
+  if {[lindex $ycpname [expr [llength $ycpname]-1]] != "ycp"} {
+    fail "Not .ycp extension '$src'"
+    return -1
+  }
+
+  # setup filenames
+
+  # $src is the name of the original testfile with absolute path
+  # $dir/$srcfilename is the name of the original testfile with relative path,
+  #                 relative to the testsuite directory
+  set test_input "$dir/$srcfilename"
+
+  set base_name [lindex $ycpname 0]
+  set ybc_name "$dir/$base_name.ybc"
+  set tmpout_name "tmp.out.$base_name"
+  set tmpybc_name "tmp.ybc.$base_name"
+  set tmperr_name "tmp.err.$base_name"
+
+  set should_fail0 [grep "xfail" "^$base_name\$"]
+  set should_fail [expr 0 == [string match $should_fail0 ""]]
+
+  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
+  flush stdout
+
+  # compile the test
+
+  set result ""
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-c" "-l" "$tmperr_name" "-o" "$ybc_name" "$test_input" ] } catched]
+
+  if {$oops != 0} {
+    fail "compilation failed for module $srcdirname/$base_name: $catched"
+    return -1
+  }
+
+  # check return code from runc
+
+  if {$result != ""} {
+    set msg "Compilation of $srcdirname/$base_name results in '$result'"
+    if {$should_fail} {
+      xfail $msg
+    } else {
+      fail $msg
+    }
+    return -1
+  }
 
   pass $base_name
 
   return 0
 }
+

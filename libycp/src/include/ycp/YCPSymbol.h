@@ -1,19 +1,19 @@
 /*---------------------------------------------------------------------\
-|                                                                      |
-|                      __   __    ____ _____ ____                      |
-|                      \ \ / /_ _/ ___|_   _|___ \                     |
-|                       \ V / _` \___ \ | |   __) |                    |
-|                        | | (_| |___) || |  / __/                     |
-|                        |_|\__,_|____/ |_| |_____|                    |
-|                                                                      |
-|                               core system                            |
-|                                                        (C) SuSE GmbH |
-\----------------------------------------------------------------------/
+|                                                                      |  
+|                      __   __    ____ _____ ____                      |  
+|                      \ \ / /_ _/ ___|_   _|___ \                     |  
+|                       \ V / _` \___ \ | |   __) |                    |  
+|                        | | (_| |___) || |  / __/                     |  
+|                        |_|\__,_|____/ |_| |_____|                    |  
+|                                                                      |  
+|                               core system                            | 
+|                                                        (C) SuSE GmbH |  
+\----------------------------------------------------------------------/ 
 
    File:       YCPSymbol.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Author:	Mathias Kettner <kettner@suse.de>
+   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -27,7 +27,7 @@
 
 /**
  * @short YCP symbol.
- * Symbols appear as components of paths, as names of
+ * Symbols appear as components of pathes, as names of
  * structure elements and as term names. The ASCII representation
  * of a symbol is a letter or underscore followed by an arbitrary
  * number of letters, digits and underscores.
@@ -40,37 +40,24 @@ class YCPSymbolRep : public YCPValueRep
 {
     string v;
 
-    /**
-     * Symbols can be quoted or unquoted. The difference is when
-     * a YCP interpreter evaluates the symbol. A quoted symbol evalutes
-     * to itself (and remains quoted!). An unquoted symbol is
-     * looked up as a variable.
-     */
-    bool quoted;
-
 protected:
     friend class YCPSymbol;
 
     /**
      * Creates new symbol from a const char *pointer.
      */
-    YCPSymbolRep(const char *s, bool quoted);
+    YCPSymbolRep(const char *s);
 
     /**
      * Creates a new symbol from a string.
      */
-    YCPSymbolRep(string s, bool quoted);
+    YCPSymbolRep(string s);
 
 public:
     /**
      * Returns the symbol's string.
      */
     string symbol() const;
-
-    /**
-     * Returns whether the symbol is quoted.
-     */
-    bool isQuoted() const;
 
     /**
      * Returns the symbol's string as const char * pointer.
@@ -93,6 +80,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_SYMBOL. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
@@ -108,9 +100,9 @@ class YCPSymbol : public YCPValue
 {
     DEF_COMMON(Symbol, Value);
 public:
-    YCPSymbol(const char *s, bool quoted) : YCPValue(new YCPSymbolRep(s, quoted)) {}
-    YCPSymbol(string s, bool quoted) : YCPValue(new YCPSymbolRep(s, quoted)) {}
+    YCPSymbol(const char *s) : YCPValue(new YCPSymbolRep(s)) {}
+    YCPSymbol(string s) : YCPValue(new YCPSymbolRep(s)) {}
+    YCPSymbol(std::istream & str);
 };
 
 #endif   // YCPSymbol_h
-

@@ -43,10 +43,12 @@ class YCPPathRep : public YCPValueRep
         bool complex;     // true if component is quoted by " in source. false otherwise (component contains only a-zA-Z0-9-_)
         Component() : component (), complex (false) {}
         Component(string s);  // for initial creation. Unquotes and unescapes
+        Component(std::istream & str);  // for initial creation
         int compare(const Component&to) const {
             return component.compare(to.component);
         }
         string toString() const;
+	std::ostream & toStream (std::ostream & str) const;
     };
 
     vector<Component> components;
@@ -142,6 +144,11 @@ public:
     string toString() const;
 
     /**
+     * Output value as bytecode to stream
+     */
+    std::ostream & toStream (std::ostream & str) const;
+
+    /**
      * Returns YT_PATH. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
@@ -159,6 +166,8 @@ class YCPPath : public YCPValue
 public:
     YCPPath() : YCPValue(new YCPPathRep()) {}
     YCPPath(const char *r) : YCPValue(new YCPPathRep(r)) {}
+    YCPPath(string s) : YCPValue(new YCPPathRep(s.c_str())) {}
+    YCPPath(std::istream & str);
 };
 
 #endif   // YCPPath_h

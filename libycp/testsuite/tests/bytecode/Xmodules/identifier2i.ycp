@@ -1,0 +1,19 @@
+#
+# ---------------------------------------------------------
+#
+#  Filename:    Identifier2.ycp
+#
+#  Purpose:     test identifier ycp type
+#
+#  Creator:     mvidner@suse.cz
+#
+#  Maintainer:  mvidner@suse.cz
+#
+# ---------------------------------------------------------
+
+{
+  return {
+    import "Identifier2";
+    return Identifier2::f();
+  };
+}
