@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov  2 08:10:35 CET 2004 - visnov@suse.cz
+
+- Use shared representation for booleans and nils
+- 2.11.9 
+
+-------------------------------------------------------------------
 Mon Nov  1 10:22:38 CET 2004 - mvidner@suse.cz
 
 - UI: added Date and Time widgets, qt only (nashif)
