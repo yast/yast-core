@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Thu Dec 19 13:43:33 CET 2002 - cschum@suse.de
+
+- Pkg:: interface
+  - Added ErrorDetails() function.
+  - Added YouFinish() function.
+  - Added callback handling for YOU progress.
+- 2.7.6
+
+-------------------------------------------------------------------
 Wed Dec 18 16:09:37 CET 2002 - mvidner@suse.de
 
 - perl library:
