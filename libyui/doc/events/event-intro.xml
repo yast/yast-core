@@ -1,4 +1,6 @@
-
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="UI-Events">
+    <title>UI Events</title>
     <section id="UI-Event-Intro">
         <title>Introduction</title>
         <section>
@@ -162,18 +164,18 @@
                 <para>
                     If a YCP application is interested in events that occur in a
                     widget other than a button, the <emphasis
-                        role="i">notify</emphasis> <link linkend="Widget_widget">widget option</link> can be used
-                    when creating it with UI::OpenDialog().</para>
+                        role="i">notify</emphasis> widget option can be used
+                    when creating it with <literal>UI::OpenDialog()</literal>.</para>
 
                 <example><title>The notify option</title>
 
                     <programlisting>
-                        <emphasis role="b">UI::OpenDialog</emphasis>(...
-                        `SelectionBox(`id(`pizza ), <emphasis role="em">`opt(`notify )</emphasis>, ... ),
-                        ...
-                        `Table(`id(`toppings), <emphasis role="em">`opt(`notify, `immediate )</emphasis>, ... ),
-                        ...
-                        )
+UI::OpenDialog(...
+  `SelectionBox(`id(`pizza ), `opt(`notify ), ... ),
+   ...
+  `Table(`id(`toppings), `opt(`notify, `immediate ), ... ),
+  ...
+)
                     </programlisting>
 
                     <para>In general, the <emphasis role="i">notify</emphasis> options makes <link linkend="UI-Event-UserInput">UserInput()</link> return when
@@ -218,7 +220,7 @@
                     single value that is being read, it is a whole dialog full of
                     whatever widgets you see fit to put there. All the widgets take
                     care of themselves; they all handle their values automatically. You
-                    just have to ask them (<link linkend="UI-Builtins">UI::QueryWidget()</link>) for the
+                    just have to ask them (<link linkend="YUI_builtins">UI::QueryWidget()</link>) for the
                     values when you need them (leave them alone as long as you
                     don't).</para>
 
@@ -232,15 +234,15 @@
                     sequence:</para>
 
                 <programlisting>
-                    OpenDialog(...);
+OpenDialog(...);
 
-                    UserInput();
-                    QueryWidget(...);
-                    QueryWidget(...);
-                    QueryWidget(...);
-                    ...
+UserInput();
+QueryWidget(...);
+QueryWidget(...);
+QueryWidget(...);
+...
 
-                    CloseDialog();
+CloseDialog();
 
                 </programlisting>
 
@@ -292,27 +294,27 @@
                 <para>It might look about like this:</para>
 
                 <programlisting>
-                    define void selectionChanged( any widgetID, map event, any clientData ) ``{
-                    ...
-                    // Handle SelectionChanged event
-                    ...
-                    };
+define void selectionChanged( any widgetID, map event, any clientData ) {
+   ...
+   // Handle SelectionChanged event
+   ...
+};
 
-                    define void activated( any widgetID, map event, any clientData ) ``{
-                    ...
-                    // Handle Activated event
-                    ...
-                    };
+define void activated( any widgetID, map event, any clientData ) {
+   ...
+   // Handle Activated event
+   ...
+};
 
-                    ...
-                    UI::OpenDialog(
-                    ...
-                    `Table(`id(`devices ), ... ),
-                    ...
-                    )
-                    ...
-                    UI::AddCallback(`id(`devices ), `SelectionChanged, nil );
-                    UI::AddCallback(`id(`devices ), `Activated, nil );
+...
+UI::OpenDialog(
+   ...
+   `Table(`id(`devices ), ... ),
+   ...
+);
+...
+UI::AddCallback(`id(`devices ), `SelectionChanged, nil );
+UI::AddCallback(`id(`devices ), `Activated, nil );
 
                 </programlisting>
 
@@ -533,80 +535,81 @@
                     this:</para>
 
                 <programlisting>
-                    {
-                    // <emphasis role="em">Example how NOT to do things</emphasis>
+{
+    // Example how NOT to do things
 
-                    <emphasis role="b">UI::OpenDialog</emphasis>(
+    UI::OpenDialog(
                     ...
-                    `<link linkend="SelectionBox_widget">SelectionBox</link>(`id(`colors ),
-                    [
-                    `item(`id("FF0000"), "Red" ),
-                    `item(`id("00FF00"), "Blue",<emphasis role="em">true</emphasis>),  // Initially selected
-                    `item(`id("0000FF"), "Green" )
-                    ] ),
-                    );
+                    `SelectionBox(`id(`colors ),
+                        [
+                            `item(`id("FF0000"), "Red" ),
+                            `item(`id("00FF00"), "Blue",true),  // Initially selected
+                            `item(`id("0000FF"), "Green" )
+                        ] 
+                    )
+    );
 
-                    // Intentionally NOT setting the initial color:
-                    //
-                    // Selecting an item in the SelectionBox upon creation will trigger a
-                    // SelectionChanged event right upon entering the event loop.
-                    // The SelectionChanged handler code will take care of setting the initial color.
-                    // <emphasis role="em">THIS IS A STUPID IDEA!</emphasis>
+    // Intentionally NOT setting the initial color:
+    //
+    // Selecting an item in the SelectionBox upon creation will trigger a
+    // SelectionChanged event right upon entering the event loop.
+    // The SelectionChanged handler code will take care of setting the initial color.
+    // THIS IS A STUPID IDEA!
 
-                    <emphasis role="b">map</emphasis> event = $[];
+    map event = $[];
 
-                    repeat
-                    {
-                    event = <emphasis role="b">UI::WaitForEvent()</emphasis>;
+    repeat
+    {
+          event = UI::WaitForEvent();
 
-                    if ( event["ID"]:nil == `colors )
-                    {
-                    if ( <emphasis role="b">event["EventReason"]</emphasis>:nil == "SelectionChanged" )
-                    {
-                    // Handle color change
-                    setColor( <emphasis role="b">UI::QueryWidget</emphasis>(`id(`colors ), `SelectedItem ) );
-                    }
-                    }
-                    ...
-                    } until ( event["ID"]:nil == `close );
-                    }
+          if ( event["ID"]:nil == `colors )
+          {
+              if ( event["EventReason"]:nil == "SelectionChanged" )
+              {
+                  // Handle color change
+                  setColor( UI::QueryWidget(`id(`colors ), `SelectedItem ) );
+              }
+          }
+          ...
+    } until ( event["ID"]:nil == `close );
+}
 
                 </programlisting>
 
                 <programlisting>
-                    {
-                    // Fixed the broken logic in the example above
+{
+    // Fixed the broken logic in the example above
 
-                    <emphasis role="b">UI::OpenDialog</emphasis>(
+    UI::OpenDialog(
                     ...
-                    `<link linkend="SelectionBox_widget">SelectionBox</link>(`id(`colors ),
+                    `SelectionBox(`id(`colors ),
                     [
                     `item(`id("FF0000"), "Red" ),
-                    `item(`id("00FF00"), "Blue",<emphasis role="b">true</emphasis>),  // Initially selected
+                    `item(`id("00FF00"), "Blue",true),  // Initially selected
                     `item(`id("0000FF"), "Green" )
                     ] ),
                     );
 
-                    <emphasis role="em">// Set initial color                                      </emphasis> 
-                    <emphasis role="em">setColor( UI::QueryWidget(`id(`colors ), `SelectedItem ) );</emphasis>
+    // Set initial color
+    setColor( UI::QueryWidget(`id(`colors ), `SelectedItem ) );
 
-                    <emphasis role="b">map</emphasis> event = $[];
+    map event = $[];
 
-                    repeat
-                    {
-                    event = <emphasis role="b">UI::WaitForEvent()</emphasis>;
+    repeat
+    {
+        event = UI::WaitForEvent();
 
-                    if ( event["ID"]:nil == `colors )
-                    {
-                    if ( <emphasis role="b">event["EventReason"]</emphasis>:nil == "SelectionChanged" )
-                    {
-                    // Handle color change
-                    setColor( <emphasis role="b">UI::QueryWidget</emphasis>(`id(`colors ), `SelectedItem ) );
-                    }
-                    }
-                    ...
-                    } until ( event["ID"]:nil == `close );
-                    }
+        if ( event["ID"]:nil == `colors )
+        {
+            if ( event["EventReason"]:nil == "SelectionChanged" )
+            {
+                // Handle color change
+                setColor( UI::QueryWidget(`id(`colors ), `SelectedItem ) );
+            }
+        }
+        ...
+    } until ( event["ID"]:nil == `close );
+}
 
                 </programlisting>
 
@@ -635,9 +638,505 @@
         <para>This section describes only those builtin
             functions of the YaST2 user interface that are relevant for event
             handling. The YaST2 UI has many more builtin functions that are not
-            mentioned here. Refer to the <link linkend="UI-Builtins">UI builtin reference</link> for details.
+            mentioned here. Refer to the <link linkend="YUI_builtins">UI builtin reference</link> for details.
         </para>
         <para>The Event-related UI Builtin are available in the
             <link linkend="UI-Event-Builtins-Reference">reference</link></para>
 
     </section>
+
+<section id="Event_Reference">
+    <title>Event Reference</title>
+
+    <section id="Eventmaps">
+        <title>Event Maps in General</title>
+
+        <para>Use <link linkend="UI-Event-WaitForEvent">WaitForEvent()</link> to get full
+            information about a YaST2 UI event. <link linkend="UI-Event-UserInput">UserInput()</link> only returns a
+            small part of that information, the ID field of the event map.</para>
+
+        <para>The event map returned by <link linkend="UI-Event-WaitForEvent">WaitForEvent()</link> always
+            contains at least the following elements:</para>
+
+        <informaltable>
+            <tgroup cols="4">
+                <thead>
+                    <row>
+                        <entry>Map Key</entry>
+                        <entry>Value Type</entry>
+                        <entry>Valid Values</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>EventType</entry>
+                        <entry>string</entry>
+                        <entry>
+                            <itemizedlist>
+                                <listitem>
+                                    <link linkend="WidgetEvent">WidgetEvent</link>
+                                </listitem>
+                                <listitem>
+                                    <link linkend="MenuEvent">MenuEvent</link>
+                                </listitem>
+                                <listitem><link
+                                        linkend="TimeoutEvent">TimeoutEvent</link>
+                                </listitem>
+                                <listitem>
+                                    <link linkend="CancelEvent">CancelEvent</link>
+                                </listitem>
+                                <listitem>
+                                    <link linkend="KeyEvent">KeyEvent</link>
+                                </listitem>
+                                <listitem>
+                                    <link linkend="DebugEvent">DebugEvent</link>
+                                </listitem>
+                            </itemizedlist>
+                        </entry>
+                        <entry>
+                            <itemizedlist>
+                                <listitem>
+                                    <para>The type of this event.</para>
+                                </listitem>
+                                <listitem>
+                                    <para>Use this for general event classification.</para>
+                                </listitem>
+                            </itemizedlist>
+                        </entry>
+                    </row>
+                    <row>
+                        <entry>ID</entry>
+                        <entry>any</entry>
+                        <entry/>
+                        <entry>The ID (a widget ID for <link linkend="WidgetEvent">WidgetEvents</link>) that caused the event.
+                            This is what <link linkend="UI-Event-UserInput">UserInput()</link> returns.</entry></row>
+                    <row><entry>EventSerialNo</entry><entry>integer</entry><entry>&gt;= 0</entry><entry>The serial number of this event.
+                            Intended for debugging.
+                    </entry></row>
+                </tbody>
+            </tgroup>
+        </informaltable>
+
+    </section>
+    <section id="EventTypes">
+        <title>Event Types</title>
+
+        <section id="WidgetEvent">
+            <title>WidgetEvent</title>
+
+            <para>All WidgetEvents have these map fields in common:</para>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>WidgetEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>EventReason</entry><entry>string</entry><entry>
+                                <itemizedlist>
+                                    <listitem><link
+                                            linkend="Activated">Activated</link></listitem>
+                                    <listitem> <link
+                                    linkend="ValueChanged">ValueChanged</link></listitem>
+                            <listitem>
+                                <link
+                                    linkend="SelectionChanged">SelectionChanged</link></listitem>
+                        </itemizedlist>
+                                </entry><entry>The reason for this event. This is something like an event
+                                sub-type. Use this to find out what the user really did with the
+                                widget.</entry></row>
+                        <row><entry>ID</entry><entry>any</entry><entry/><entry>The ID of the widget that caused the event.
+                                This is what <link linkend="UI-Event-UserInput">UserInput()</link> returns.</entry></row>
+                        <row><entry>WidgetID</entry><entry>any</entry><entry/><entry>The ID of the widget that caused the event. This is nothing but
+                                an alias for "ID", but with this alias you can easily find out if
+                                this is a widget event at the same time as you retrieve the widget
+                                ID: No other events than WidgetEvent have this field.</entry></row>
+                        <row><entry>WidgetClass</entry><entry>string</entry><entry>PushButton
+                                SelectionBox
+                                Table
+                                CheckBox
+                                ...</entry><entry>The class (type) of the widget that caused the event.</entry></row>
+                        <row><entry>WidgetDebugLabel</entry><entry>string</entry><entry/><entry>
+                                <para>The label (more general: the widget's <emphasis role="i">shortcut property</emphasis>)
+                                    of the widget that caused the event - in human readable form
+                                    without any shortcut markers ("&amp;"), maybe abbreviated to a
+                                    reasonable length.</para>
+
+                                <para>This label is translated to the current locale (the current
+                                    user's language).</para>
+
+                                <para>This is intended for debugging so you can easily dump something
+                                    into the log file when you get an event.</para>
+
+                                <para>Wigets that don't have a label don't add this field to the event
+                                    map, so make sure you use a reasonable default when using a map
+                                    lookup for this field: Don't use <emphasis role="i">nil</emphasis>, use "" (the emtpy
+                                    string) instead.</para>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+        </section>
+        <section id="Activated">
+            <title>Activated WidgetEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventReason</entry><entry>string</entry><entry>Activated</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>An <emphasis role="i">Activated</emphasis> <link linkend="WidgetEvent">WidgetEvent</link> is
+                sent when the user explicitly wishes to activate an action.</para>
+
+            <para>Traditionally, this means clicking on a <link linkend="PushButton_widget">PushButton</link> or activating
+                it with some other means like pressing its shortcut key
+                combination, moving the keyboard focus to it and pressing
+                <emphasis role="i">space</emphasis>.</para>
+
+            <para>Some other widgets (<link linkend="Table_widget">Table</link>, <link
+                    linkend="SelectionBox_widget">SelectionBox</link>, <link linkend="Tree_widget">Tree</link>) can also trigger this kind
+                of event if they have the <link linkend="UI-Event-Intro-notify">notify
+                    option</link> set.</para>
+
+            <para><emphasis role="b">User interface style hint:</emphasis> YCP
+                applications should use this to do the "typical" operation of that
+                item - like editing an entry if the dialog has an "Edit" button.
+                Use this <emphasis role="i">Activated</emphasis> <link linkend="WidgetEvent">WidgetEvent</link>
+                only as a redundant way (for "power users") of invoking an action.
+                Always keep that "Edit" (or similar) button around for novice
+                users; double-clicks are by no way obvious. The user shouldn't need
+                to experiment how to get things done.</para>
+
+
+            <informaltable>
+                <tgroup cols="3">
+                    <thead>
+                        <row>
+                            <entry>Widget Type</entry>
+                            <entry>Widget Options</entry>
+                            <entry>Action to Trigger the Event</entry>
+                        </row>
+                                </thead>
+                                <tbody>
+                                    <row><entry><link linkend="PushButton_widget">PushButton</link></entry>
+                                        <entry><emphasis role="i">(none)</emphasis></entry>
+                                        <entry>
+                                            <itemizedlist spacing="compact">
+                                                <listitem><para>Single click on the button (Qt).</para></listitem>
+                                                <listitem><para>Press <emphasis role="i">space</emphasis> on the button.</para></listitem>
+                                                <listitem><para>Press <emphasis role="i">return</emphasis> anywhere in the dialog. This activates the dialog's <emphasis role="i">default button</emphasis> if it has any and if the respective UI can handle default buttons.</para></listitem>
+                                            </itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="Table_widget">Table</link></entry><entry><link
+                                    linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Double click on an item (Qt).</para></listitem><listitem><para>Press <emphasis role="i">space</emphasis> on an item.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="SelectionBox_widget">SelectionBox</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Double click on an item (Qt).</para></listitem><listitem><para>Press <emphasis role="i">space</emphasis> on an item.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="Tree_widget">Tree</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Double click on an item (Qt). 
+                                        </para><para><emphasis role="b">Note:</emphasis> This will also open or close items that have children!</para>
+                                </listitem><listitem><para>Press <emphasis role="i">space</emphasis> on an item.</para></listitem></itemizedlist>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>Note that <link linkend="MenuButton_widget">MenuButton</link> and <link linkend="RichText_widget">RichText</link> don't ever send <link linkend="WidgetEvent">WidgetEvents</link>. They send <link linkend="MenuEvent">MenuEvents</link> instead.</para>
+
+            <para/></section><section id="ValueChanged"><title>ValueChanged WidgetEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventReason</entry><entry>string</entry><entry>ValueChanged</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A <emphasis role="i">ValueChanged</emphasis> <link linkend="WidgetEvent">WidgetEvent</link> is
+                sent by most interactive widgets that have a value that can be
+                changed by the user. They all require the <link linkend="UI-Event-Intro-notify">notify option</link> to be set to send this
+                event.</para>
+
+            <para>Widgets that have the concept of a "selected item" like <link linkend="SelectionBox_widget">SelectionBox</link>, <link linkend="Table_widget">Table</link>, or <link linkend="Tree_widget">Tree</link> don't send this event -
+                they send a <link linkend="SelectionChanged">SelectionChanged
+                    WidgetEvent</link> instead. One exception to this rule is the <link linkend="MultiSelectionBox_widget">MultiSelectionBox</link>
+                which can send both events, depending on what the user did.</para>
+
+            <informaltable><tgroup cols="3"><thead><row><entry>Widget Type</entry><entry>Widget Options</entry><entry>Action to Trigger the Event</entry></row>
+                                </thead><tbody><row><entry><link linkend="MultiSelectionBox_widget">MultiSelectionBox</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Toggle an item's on/off state: 
+                                <itemizedlist spacing="compact"><listitem><para>Click on an item's checkbox (Qt).</para></listitem><listitem><para>Press <emphasis role="i">space</emphasis> on an item.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="CheckBox_widget">CheckBox</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Toggle the on/off state: 
+                                <itemizedlist spacing="compact"><listitem><para>Single click the widget (Qt).</para></listitem><listitem><para>Press <emphasis role="i">space</emphasis> on the widget.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="RadioButton_widget">RadioButton</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Set this RadioButton to <emphasis role="i">on</emphasis>: 
+                                <itemizedlist spacing="compact"><listitem><para>Single click the widget (Qt).</para></listitem><listitem><para>Press <emphasis role="i">space</emphasis> on the widget.</para></listitem></itemizedlist>
+
+                                No event is sent when the button's status is set to <emphasis role="i">off</emphasis>
+                                because another RadioButton of the same <link linkend="RadioButtonGroup_widget">RadioButtonGroup</link> is
+                                set to <emphasis role="i">on</emphasis> to avoid generating a lot of useless events: Only
+                                the <emphasis role="i">on</emphasis> case is relevant for most YCP applications.</entry></row>
+                        <row><entry>
+                                <itemizedlist>
+                                    <listitem><link
+                                            linkend="TextEntry_widget">TextEntry</link></listitem>
+                                        <listitem><link
+                                                linkend="MultiLineEdit_widget">MultiLineEdit</link></listitem>
+                                    </itemizedlist>
+                        
+                        </entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Enter text.</entry></row>
+                        <row><entry><link linkend="ComboBox_widget">ComboBox</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Select another value from the drop-down list: 
+                                            <itemizedlist spacing="compact"><listitem><para>Open the drop-down list and click on one of its items
+                                                        (Qt).</para></listitem><listitem><para>Open the drop-down list, use the cursor keys to move the
+                                                        selection and press <emphasis role="i">space</emphasis> or <emphasis role="i">return</emphasis> to actually
+                                                        accept that item. 
+                                                        </para><para>Simply opening the drop-down list and moving the cursor around
+                                                        in it (i.e. changing its selection) does <emphasis role="b">not</emphasis> trigger this
+                                                        event.</para>
+                                            </listitem></itemizedlist>
+                                </para></listitem><listitem><para>Enter text (with <link linkend="ComboBox_widget">`opt(`editable )</link> ).</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="IntField_widget">IntField</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Change the numeric value: 
+                                <itemizedlist spacing="compact"><listitem><para>Enter a number.</para></listitem><listitem><para>Click on the <emphasis role="i">up</emphasis> button (Qt).</para></listitem><listitem><para>Click on the <emphasis role="i">down</emphasis> button (Qt).</para></listitem><listitem><para>Press <emphasis role="i">cursor up</emphasis> in the widget (NCurses).</para></listitem><listitem><para>Press <emphasis role="i">cursor down</emphasis> in the widget (NCurses).</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="Slider_widget">Slider</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Move the slider.</para></listitem><listitem><para>Enter a number in the embedded IntField.</para></listitem><listitem><para>Use one of the embedded IntField's <emphasis role="i">up</emphasis> / <emphasis role="i">down</emphasis>
+                                            button.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="PartitionSplitter_widget">PartitionSplitter</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>
+                                <itemizedlist spacing="compact"><listitem><para>Move the slider.</para></listitem><listitem><para>Enter a number in one of the embedded IntFields.</para></listitem><listitem><para>Use one of the embedded IntFields' <emphasis role="i">up</emphasis> / <emphasis role="i">down</emphasis>
+                                            button.</para></listitem></itemizedlist>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para/></section><section id="SelectionChanged"><title>SelectionChanged
+                WidgetEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventReason</entry><entry>string</entry><entry>SelectionChanged</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A <emphasis role="i">SelectionChanged</emphasis> <link linkend="SelectionChanged">WidgetEvent</link> is sent by most widgets that
+                have the concept of a "selected item" like <link linkend="SelectionBox_widget">SelectionBox</link>, <link linkend="Table_widget">Table</link>, or <link linkend="Tree_widget">Tree</link> when the selected item
+                changes.</para>
+
+            <para>Note that the <link linkend="MultiSelectionBox_widget">MultiSelectionBox</link>
+                widget can send a <emphasis role="i">SelectionChanged</emphasis> event, but also a <link linkend="ValueChanged">ValueChanged WidgetEvent</link> depending on what
+                the user did. This is one reason to keep <emphasis role="i">SelectionChanged</emphasis>
+                and <link linkend="ValueChanged">ValueChanged</link> two distinct events:
+                Widgets can have both concepts which may be equally important,
+                depending on the YCP application.</para>
+
+            <para>The <link linkend="ComboBox_widget">ComboBox</link>
+                never sends a <emphasis role="i">SelectionChanged</emphasis> event. It only sends <link linkend="ValueChanged">ValueChanged WidgetEvents</link>.</para>
+
+            <para>The rationale behind this is that merely opening the drop-down
+                list without actually accepting one of its items is just a
+                temporary operation in a separate pop-up window (the drop-down
+                list) that should not affect the YCP application or other widgets
+                in the same dialog until the user actually accepts a value - upon
+                which event a <link linkend="ValueChanged">ValueChanged WidgetEvent</link>
+                is sent.</para>
+
+            <informaltable><tgroup cols="3"><thead><row><entry>Widget Type</entry><entry>Widget Options</entry><entry>Action to Trigger the Event</entry></row>
+                                </thead><tbody><row><entry><link linkend="SelectionBox_widget">SelectionBox</link>
+                                </entry><entry>
+                                <informaltable><tgroup cols="2"><tbody><row><entry>Qt:</entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry></row>
+                                            <row><entry>NCurses:</entry><entry>`opt(<link linkend="UI-Event-Intro-notify">`notify</link>,`immediate)</entry></row>
+                                </tbody></tgroup></informaltable>
+                                </entry><entry>Select another item: 
+                                <itemizedlist spacing="compact"><listitem><para>Click on an item (Qt).</para></listitem><listitem><para>Press <emphasis role="i">cursor up</emphasis> in the widget.</para></listitem><listitem><para>Press <emphasis role="i">cursor down</emphasis> in the widget.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry>Qt:</entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry></row>
+                        <row><entry>NCurses:</entry><entry>`opt(<link linkend="UI-Event-Intro-notify">`notify</link>,`immediate)</entry></row>
+                        <row><entry><link linkend="Table_widget">Table</link>
+                                </entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify,`immediate)</link></entry><entry>Select another item: 
+                                <itemizedlist spacing="compact"><listitem><para>Click on an item (Qt).</para></listitem><listitem><para>Press <emphasis role="i">cursor up</emphasis> in the widget.</para></listitem><listitem><para>Press <emphasis role="i">cursor down</emphasis> in the widget.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="Tree_widget">Tree</link>
+                                </entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Select another item: 
+                                <itemizedlist spacing="compact"><listitem><para>Click on an item (Qt).</para></listitem><listitem><para>Press <emphasis role="i">cursor up</emphasis> in the widget.</para></listitem><listitem><para>Press <emphasis role="i">cursor down</emphasis> in the widget.</para></listitem></itemizedlist>
+                        </entry></row>
+                        <row><entry><link linkend="MultiSelectionBox_widget">MultiSelectionBox</link></entry><entry><link linkend="UI-Event-Intro-notify">`opt(`notify)</link></entry><entry>Select another item: 
+                                <itemizedlist spacing="compact"><listitem><para>Click on an item's text (not on the checkbox) (Qt).</para></listitem><listitem><para>Press <emphasis role="i">cursor up</emphasis> in the widget.</para></listitem><listitem><para>Press <emphasis role="i">cursor down</emphasis> in the widget.</para></listitem></itemizedlist>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para/></section><section id="MenuEvent"><title>MenuEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>MenuEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>ID</entry><entry>any</entry><entry/><entry>
+                                <para>The ID of the menu item the user selected or the <emphasis role="i">href</emphasis>
+                                    target (as string) for hyperlinks in <link linkend="RichText_widget">RichText</link> widgets.</para>
+
+                                <para><emphasis role="b">Notice:</emphasis>This is not the widget ID, it is a menu item or
+                                    hyperlink ID <emphasis role="i">inside</emphasis> that <link linkend="MenuButton_widget">MenuButton</link> or <link linkend="RichText_widget">RichText</link> widget!</para>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A MenuEvent is sent when the user activates a menu entry in a <link linkend="MenuButton_widget">MenuButton</link> or a
+                hyperlink in a <link linkend="RichText_widget">RichText</link> widget.</para>
+
+            <para>Since the ID of the <link linkend="MenuButton_widget">MenuButton</link> or <link linkend="RichText_widget">RichText</link> widget is
+                irrelevant in either case, this is not another subclass of <link linkend="WidgetEvent">WidgetEvent</link>; the ID field has different
+                semantics - and remember, the ID field is the only thing what <link linkend="UI-Event-UserInput">UserInput()</link> returns so
+                this is particularly important.</para>
+
+            <para>For most YCP applications this difference is purely academic.
+                Simply use the ID and treat it like it were just another button's
+                ID.</para>
+
+            <para>No <link linkend="UI-Event-Intro-notify">notify option</link> is
+                necessary for getting this event. Both <link linkend="MenuButton_widget">MenuButton</link> and <link linkend="RichText_widget">RichText</link> deliver MenuEvents
+                right away.</para>
+
+            <para/></section><section id="TimeoutEvent"><title>TimeoutEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>TimeoutEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>ID</entry><entry>symbol</entry><entry>`timeout</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A TimeoutEvent is sent when the timeout specified at <link
+                    linkend="UI-Event-WaitForEvent">WaitForEvent()</link> or <link
+                    linkend="UI-Event-TimeoutUserInput">TimeoutUserInput()</link> is
+                expired and there is no other event pending (i.e. there is no other
+                user input).</para>
+
+            <para><link linkend="UI-Event-PollInput">PollInput()</link> never
+                returns a TimeoutEvent; it simply returns <emphasis role="i">nil</emphasis> if there is no
+                input.</para>
+
+            <para/></section><section id="CancelEvent"><title>CancelEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>CancelEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>ID</entry><entry>symbol</entry><entry>`cancel</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A CancelEvent is an event that is sent when the user performs a
+                general "cancel" action that is usually not part of the YCP
+                application.</para>
+
+            <para>For the <emphasis role="b">Qt UI</emphasis>, this means he used the window manager
+                close button or a special key combination like Alt-F4 to close the
+                active dialog's window. For the <emphasis role="b">NCurses UI</emphasis>, this means he
+                hit the ESC key.</para>
+
+            <para><emphasis role="b">User interface style hint:</emphasis> It is usually
+                a good idea for each dialog to provide some kind of "safe exit"
+                anyway. Most popup dialogs (at least those that have more than just
+                a simple "OK" button) should provide a "Cancel" button. If you use
+                the widget ID `cancel for that button, CancelEvents integrate
+                seamlessly into your YCP application.
+            </para>
+            <para>
+                "Main window" type dialogs should have an "Abort" button or
+                something similar. If you don't use the widget ID `cancel for that
+                button, don't forget to handle `cancel or "CancelEvent" like that
+                "Abort" button. The user should always have a safe way out of a
+                dialog - preferably one that doesn't change anything. Don't forget
+                to add a confirmation popup before you really exit if there are
+                unsaved data that might get lost!</para>
+
+        </section>
+        <section id="KeyEvent"
+            ><title>KeyEvent</title>
+
+            <para>KeyEvents are specific to the NCurses UI. They are not intended
+                for general usage. The idea is to use them where the default
+                keyboard focus handling is insufficient - for example, when the
+                logical layout of a dialog is known and the keyboard focus should
+                be moved to the logically right widget upon pressing the <emphasis role="i">cursor
+                    right</emphasis> key.</para>
+
+            <para>Widgets deliver KeyEvents if they have <literal>`opt( keyEvent )</literal>
+                set. This is independent of the <link linkend="UI-Event-Intro-notify">notify option</link>.</para>
+
+            <para>It is completely up to the UI what key presses are delivered as
+                key events. Never rely on each and every key press to be
+                delivered.</para>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>KeyEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>ID</entry><entry>string</entry>
+                            <entry><literallayout>
+                                    CursorRight
+                                    CursorDown
+                                    F1
+                                    a
+                                    A
+                                    ...
+                                </literallayout></entry><entry>The key symbol of this event in human readable form.
+                                This is what <link linkend="UI-Event-UserInput">UserInput()</link> returns.</entry></row>
+                        <row><entry>KeySymbol</entry><entry>string</entry><entry>
+                                <literallayout>
+                                    CursorRight
+                                    CursorDown
+                                    F1
+                                    a
+                                    A
+                                    ...
+                                </literallayout></entry><entry>The key symbol of this event in human readable form.
+                                This is nothing but an alias for "ID", but with this alias you can
+                                easily find out if this is a key event at the same time as you
+                                retrieve the key symbol: No other events than KeyEvent have this
+                                field.</entry></row>
+                        <row><entry>FocusWidgetID</entry><entry>any</entry><entry/><entry>The ID of the widget that currently has the keyboard focus.
+                                Unlike a <link linkend="WidgetEvent">WidgetEvent</link>, this is
+                                <emphasis role="b">not</emphasis> the same as "ID".</entry></row>
+                        <row><entry>FocusWidgetClass</entry><entry>string</entry><entry>TextEntry
+                                SelectionBox
+                                ...</entry><entry>The class (type) of the widget that has the keyboard
+                                focus.</entry></row>
+                        <row><entry>FocusWidgetDebugLabel</entry><entry>string</entry><entry/><entry>
+                                <para>The label (more general: the widget's <emphasis role="i">shortcut property</emphasis>)
+                                    of the focus widget - in human readable form without any shortcut
+                                    markers ("&amp;"), maybe abbreviated to a reasonable length.</para>
+
+                                <para>This label is translated to the current locale (the current
+                                    user's language).</para>
+
+                                <para>This is intended for debugging so you can easily dump something
+                                    into the log file when you get an event.</para>
+
+                                <para>Wigets that don't have a label don't add this field to the event
+                                    map, so make sure you use a reasonable default when using a map
+                                    lookup for this field: Don't use <emphasis role="i">nil</emphasis>, use "" (the emtpy
+                                    string) instead.</para>
+                        </entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>Even though at first glance the KeyEvent map looks very much
+                like the <link linkend="WidgetEvent">WidgetEvent</link>'s map, it is
+                different in how the "ID" field is used: A KeyEvent uses it to
+                return the key symbol, while a <link linkend="WidgetEvent">WidgetEvent</link> returns the widget ID. This is
+                intended to integrate more seamlessly with common usage of <link linkend="UI-Event-UserInput">UserInput()</link>: A YCP application
+                can simply use <link linkend="UI-Event-UserInput">UserInput()</link> and check for a
+                return value "CursorRight" etc. - which should not cause any
+                trouble unless somebody uses this as a (badly chosen) widget
+                ID.</para>
+
+        </section>
+
+        <section id="DebugEvent"><title>DebugEvent</title>
+
+            <informaltable><tgroup cols="4"><thead><row><entry>Map Key</entry><entry>Value Type</entry><entry>Valid Values</entry><entry>Description</entry></row>
+                        </thead><tbody><row><entry>EventType</entry><entry>string</entry><entry>DebugEvent</entry><entry>(constant)</entry></row>
+                        <row><entry>ID</entry><entry>symbol</entry><entry>`debugHotkey</entry><entry>(constant)</entry></row>
+            </tbody></tgroup></informaltable>
+
+            <para>A DebugEvent is an event type especially intended for debugging
+                YCP code. It is sent when the user presses a special key
+                combination.</para>
+
+            <para>For the <emphasis role="b">Qt UI</emphasis>, this event is sent upon pressing
+                Alt-Ctrl-Shift-D. There is currently no such key combination in the
+                <emphasis role="b">NCurses UI</emphasis>.</para>
+
+            <para>Use DebugEvents event to dump additional data
+                to the log file or to open special debugging popup dialogs - but
+                <emphasis role="b">never</emphasis> do anything with it that might turn out to be a
+                security hazard. Remember, even though the key combination is
+                really awkward, sooner or later some users will get to know it, and
+                they will experiment.</para>
+
+        </section>
+    </section>
+</section>
+
+</section>

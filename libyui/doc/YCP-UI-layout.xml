@@ -1,5 +1,6 @@
-<chapter id="YCP-UI-layout">
-  <title>YaST2 Layout Howto</title>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="layout-howto">
+<title>YaST2 Layout</title>
   <section>
     <title>Summary: What's This All About?</title>
     <para>This is both a tutorial and a reference on how to lay out YaST2
@@ -49,7 +50,7 @@ there are more: Most static texts in dialogs are widgets, too. And
 there are a lot of widgets you can't see: Layout boxes like
 <emphasis role="i">HBox</emphasis> or <emphasis role="i">VBox</emphasis> and many more that don't actually
 display something but arrange other widgets in some way.</para>
-      <para>See the <link linkend="widget_reference">widget reference</link> for
+      <para>See the <link linkend="YUI_widgets">widget reference</link> for
 details and a list of all available widgets.</para>
     </section>
     <section id="ui_indepencence">
@@ -144,7 +145,7 @@ honored.
     <para>This section covers the widgets used for creating dialog layouts
 - the kind of widgets that are less obvious to the user. If you are
 interested in the "real" widgets, i.e. the kind you can actually
-see, please refer to the <link linkend="widget_reference">widget reference</link>.</para>
+see, please refer to the <link linkend="YUI_widgets">widget reference</link>.</para>
     <section id="layout_boxes">
       <title>Layout Boxes:  <link linkend="Box_widget">HBox</link> and <link linkend="Box_widget">VBox</link></title>
       <para>This is the most basic and also the most natural layout widget.
@@ -873,4 +874,4 @@ it.
       </section>
     </section>
   </section>
-</chapter>
+</section>

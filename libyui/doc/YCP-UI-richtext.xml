@@ -1,4 +1,9 @@
-  <para>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<appendix id="YCP-UI-Richtext">
+                <title>UI Richtext</title>
+
+<para>
 The RichText widget in the Qt UI
 currently supports the tags listed below. Note that not all of them
 will make sense for use within YaST2 (Most notably all those which
@@ -148,3 +153,4 @@ automatically.</para>
       <para>&lt;hr&gt; - A horizonal line</para>
     </listitem>
   </itemizedlist>
+                            </appendix>

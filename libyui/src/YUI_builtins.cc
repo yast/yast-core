@@ -12,7 +12,8 @@
 
   File:		YUI_builtins.cc
 
-		UI builtin commands
+  Summary:      UI builtin commands
+  Namespace:    UI
 
 
   Authors:	Mathias Kettner <kettner@suse.de>
@@ -59,14 +60,16 @@ using std::string;
 
 
 /**
- * @builtin SetModulename( string name ) -> void
- *
+ * @builtin SetModulename
+ * @short Set Module Name
+ * @description
  * Does nothing. The SetModulename command is introduced for
  * the translator. But the translator sends all commands
  * to the ui. So the ui shouldn't complain about this
  * command.
- *
- * @example SetModulename( "inst_environment" )
+ * @param string module
+ * @return void
+ * @usage SetModulename( "inst_environment" )
  */
 
 void YUI::evaluateSetModulename( const YCPString & name )
@@ -83,8 +86,9 @@ const char * YUI::moduleName()
 
 
 /**
- * @builtin GetModulename( <string> ) -> string
- *
+ * @builtin GetModulename
+ * @short Get the name of a Module
+ * @description
  * This is tricky. The UI doesn't care about the current module
  * name, only the translator does. However, since the translator
  * acts as a filter between a client and the UI, it cant directly
@@ -92,8 +96,9 @@ const char * YUI::moduleName()
  * modules name in the translator and it arrives here as the term
  * argument. So the example has no arguments, but the internal code
  * checks for a string argument.
+ * @return string
  *
- * @example GetModulename()
+ * @usage GetModulename()
  */
 
 YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
@@ -108,17 +113,21 @@ YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
 
 
 /**
- * @builtin SetLanguage( string lang, [ string encoding ] ) -> nil
- *
- * Tells the ui that the user has selected another language.
- * If the ui has any language dependend output that language
+ * @builtin SetLanguage
+ * @short Set the language of the UI
+ * @description
+ * Tells the UI that the user has selected another language.
+ * If the UI has any language dependend output that language
  * setting is honored. <tt>lang</tt> is an ISO language string,
  * such as <tt>de</tt> or <tt>de_DE</tt>. It is required
  * to specify an encoding scheme, since not all user interfaces
  * are capable of UTF-8.
+ * @param string lang Language selected by user
+ * @optarg string encoding
+ * @return void
  *
- * @example SetLanguage( "de_DE@euro" )
- * @example SetLanguage( "en_GB" )
+ * @usage SetLanguage( "de_DE@euro" )
+ * @usage SetLanguage( "en_GB" )
  */
 
 void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
@@ -141,15 +150,17 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
 
 
 /**
- * @builtin GetProductName() -> string
- *
+ * @builtin GetProductName
+ * @short Get Product Name
+ * @description
  * Returns the current product name ("SuSE Linux", "United Linux", etc.) for
  * display in dialogs. This can be set with SetProductName().
- * <p>
+ *
  * Note: In help texts in RichText widgets, a predefined macro &amp;product;
  * can be used for the same purpose.
  *
- * @example sformat( "Welcome to %1", GetProductName() );
+ * @return string Product Name
+ * @usage sformat( "Welcome to %1", GetProductName() );
  **/
 YCPString YUI::evaluateGetProductName()
 {
@@ -158,20 +169,23 @@ YCPString YUI::evaluateGetProductName()
 
 
 /**
- * @builtin SetProductName( string prod ) -> void
- *
+ * @builtin SetProductName
+ * @short set Product Name
+ * @description
  * Set the current product name ("SuSE Linux", "United Linux", etc.) for
  * display in dialogs and in RichText widgets (for help text) with the RichText
  * &amp;product; macro.
- * <p>
+ * 
  * This product name should be concise and meaningful to the user and not
  * cluttered with detailed version information. Don't use something like
  * "SuSE Linux 12.3-i786 Professional". Use something like "SuSE Linux"
  * instead.
- * <p>
+ * 
  * This information can be retrieved with the GetProductName() builtin.
+ * @param string prod
+ * @return void
  *
- * @example SetProductName( "SuSE HyperWall" );
+ * @usage SetProductName( "SuSE HyperWall" );
  **/
 void YUI::evaluateSetProductName( const YCPString & name )
 {
@@ -192,12 +206,20 @@ YCPValue YUI::setLanguage( const YCPTerm & term )
 
 
 /**
- * @builtin SetConsoleFont( string console_magic, string font, string screen_map, string unicode_map, string encoding ) -> nil
- *
+ * @builtin SetConsoleFont
+ * @short Set Console Font
+ * @description
  * Switches the text console to the specified font.
  * See the setfont(8) command and the console HowTo for details.
+ * @see setfont(8)
+ * @param string console_magic
+ * @param string font
+ * @param string screen_map
+ * @param string unicode_map
+ * @param string encoding
+ * @return void
  *
- * @example SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
+ * @usage SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
 void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font,
@@ -208,9 +230,10 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
 
 /**
  * @builtin SetKeyboard
+ * @short Set Keyboard
  *
- *
- * @example SetKeyboard( )
+ * @return void
+ * @usage SetKeyboard( )
  */
 
 void YUI::evaluateSetKeyboard( )
@@ -285,8 +308,9 @@ void YUI::makeScreenShot( string filename )
 
 
 /**
- * @builtin GetLanguage( boolean strip_encoding ) -> string
- *
+ * @builtin GetLanguage
+ * @short Get Language
+ * @description
  * Retrieves the current language setting from of the user interface.  Since
  * YaST2 is a client server architecture, we distinguish between the language
  * setting of the user interface and that of the configuration modules. If the
@@ -298,6 +322,10 @@ void YUI::makeScreenShot( string filename )
  * cut off, i.e. everything from the first "." or "@" on. Otherwise the current
  * contents of the "LANG" environment variable is returned ( which very likely
  * ends with ".UTF-8" since this is the encoding YaST2 uses internally).
+ *
+ * @param boolean strip_encoding
+ * @return string
+ *
  */
 
 YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
@@ -328,17 +356,16 @@ YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
 
 
 /**
- * @builtin UserInput() -> any
- *
+ * @builtin UserInput
+ * @short User Input
+ * @description
  * Waits for the user to click some button, close the window or
  * activate some widget that has the <tt>`notify</tt> option set.
  * The return value is the id of the widget that has been selected
  * or <tt>`cancel</tt> if the user selected the implicit cancel
  * button (for example he closes the window).
- * <p>
- * Read more details and usage example in the
- * <a href="events/event-builtins.html#UserInput">
- * YaST2 UI Event Handling Documentation</a>.
+ * 
+ * @return any
  */
 YCPValue YUI::evaluateUserInput()
 {
@@ -350,8 +377,9 @@ YCPValue YUI::evaluateUserInput()
 
 
 /**
- * @builtin PollInput() -> any
- *
+ * @builtin PollInput
+ * @short Poll Input
+ * @description
  * Doesn't wait but just looks if the user has clicked some
  * button, has closed the window or has activated
  * some widget that has the <tt>`notify</tt> option set. Returns
@@ -359,10 +387,9 @@ YCPValue YUI::evaluateUserInput()
  * or <tt>`cancel</tt> if the user selected the implicite cancel
  * button ( for example he closes the window). Returns nil if no
  * user input has occured.
- * <p>
- * Read more details and usage example in the
- * <a href="events/event-builtins.html#PollInput">
- * YaST2 UI Event Handling Documentation</a>.
+ *
+ * @return any
+ * 
  */
 YCPValue YUI::evaluatePollInput()
 {
@@ -374,8 +401,9 @@ YCPValue YUI::evaluatePollInput()
 
 
 /**
- * @builtin TimeoutUserInput( integer timeout_millisec ) -> any
- *
+ * @builtin TimeoutUserInput
+ * @short User Input with Timeout
+ * @description
  * Waits for the user to click some button, close the window or
  * activate some widget that has the <tt>`notify</tt> option set
  * or until the specified timeout is expired.
@@ -383,10 +411,9 @@ YCPValue YUI::evaluatePollInput()
  * or <tt>`cancel</tt> if the user selected the implicit cancel
  * button (for example he closes the window).
  * Upon timeout, <tt>`timeout</tt> is returned.
- * <p>
- * Read more details and usage example in the
- * <a href="events/event-builtins.html#TimeoutUserInput">
- * YaST2 UI Event Handling Documentation</a>.
+ * 
+ * @param integer timeout_millisec
+ * @return any
  */
 YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 {
@@ -400,15 +427,14 @@ YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 
 
 /**
- * @builtin WaitForEvent() -> map
- * @builtin WaitForEvent( integer timeout_millisec ) -> map
- *
+ * @builtin WaitForEvent
+ * @short Wait for Event
+ * @description
  * Extended event handling - very much like UserInput(), but returns much more
  * detailed information about the event that occured in a map.
- * <p>
- * Read more details and usage example in the
- * <a href="events/event-builtins.html#WaitForEvent">
- * YaST2 UI Event Handling Documentation</a>.
+ *
+ * @optarg timeout_millisec
+ * @return map
  */
 YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 {
@@ -592,50 +618,60 @@ YUI::filterInvalidEvents( YEvent * event )
 
 
 /**
- * @builtin OpenDialog( term widget ) -> boolean
+ * @builtin OpenDialog
  *
+ * @short Opens a new dialog.
+ * @description
  * Opens a new dialog. <tt>widget</tt> is a term representation of the widget
  * being displayed.
- * See <a href="YCP-UI-widgets.html">the widget documentation</a> for details
+ *
+ * See the widget documentation for details
  * what widgets are available.	All open dialogs are arranged in a stack. A
  * newly opened dialog is put on top of the stack. All operations implicitely
  * refer to the topmost dialog. The user can interact only with that dialog.
  * The application does not terminate if the last dialog is closed.
- * <p>
- * Returns true on success.
+ * 
+ * @param term widget
+ * @return boolean Returns true on success.
  *
- * @example OpenDialog( `Label( "Please wait..." ) )
+ * @usage OpenDialog( `Label( "Please wait..." ) )
  */
 
 /**
- * @builtin OpenDialog( term options, term widget ) -> boolean
- *
+ * @builtin OpenDialog
+ * @id OpenDialog_with_options
+ * @short Open a Dialog with options
+ * @description
  * Same as the OpenDialog with one argument, but you can specify options
  * with a term of the form <tt><b>`opt</b></tt>.
- * <p>
+ * 
  * The option <tt>`defaultsize</tt> makes the dialog be resized to the default
  * size, for example for the Qt interface the -geometry option is honored and
  * for ncurses the dialog fills the whole window.
- * <p>
+ * 
  * The option <tt>`centered</tt> centers the dialog to the desktop.
  * This has no effect for popup dialogs that are a child of a `defaultsize dialog
  * that is currently visible.
- * <p>
+ * 
  * The option <tt>`decorated</tt> add a window border around the dialog, which
  * comes in handy if no window manager is running. This option may be ignored in
  * non-graphical UIs.
- * <p>
+ * 
  * <tt>`smallDecorations</tt> tells the window manager to use only minimal
  * decorations - in particular, no title bar. This is useful for very small
  * popups (like only a one line label and no button). Don't overuse this.
  * This option is ignored for `defaultsize dialogs.
- * <p>
+ * 
  * The option <tt>`warncolor</tt> displays the entire dialog in a bright
  * warning color.
- * <p>
+ * 
  * The option <tt>`infocolor</tt> is a less intrusive color.
  *
- * @example OpenDialog( `opt( `defaultsize ), `Label( "Hi" ) )
+ * @param term options
+ * @param term widget
+ * @return boolean
+ *
+ * @usage OpenDialog( `opt( `defaultsize ), `Label( "Hi" ) )
  */
 
 YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
@@ -690,12 +726,13 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
 
 
 /**
- * @builtin CloseDialog() -> boolean
- *
+ * @builtin CloseDialog()
+ * @short Close an open dialog
+ * @description
  * Closes the most recently opened dialog. It is an error
  * to call <tt>CloseDialog</tt> if no dialog is open.
- * <p>
- * Returns true on success.
+ * 
+ * @return boolean Returns true on success.
  */
 
 YCPValue YUI::evaluateCloseDialog()
@@ -751,17 +788,20 @@ void YUI::closeDialog( YDialog * )
 
 
 /**
- * @builtin ChangeWidget( `id( any widgetId ), symbol property, any newValue ) -> boolean
- * @builtin ChangeWidget( symbol widgetId, symbol property, any newValue ) -> boolean
- *
+ * @builtin ChangeWidget
+ * @short Change widget contents
+ * @description
  * Changes a property of a widget of the topmost dialog. <tt>id</tt> specified
  * the widget to change, <tt>property</tt> specifies the property that should
  * be changed, <tt>newvalue</tt> gives the new value.
- * <p>
+ * 
  * For example in order to change the label of a TextEntry with id `name to
  * "anything", you write <tt>ChangeWidget( `id(`name), `Label, "anything" )</tt>.
- * <p>
- * Returns true on success.
+ * @param symbol widgetId Can also be specified as `id( any widgetId )
+ * @param symbol property
+ * @param any newValue
+ * 
+ * @return boolean Returns true on success.
  */
 
 YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & new_value )
@@ -810,15 +850,19 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
 
 
 /**
- * @builtin QueryWidget( `id( any id ), symbol | term property ) -> any
- * @builtin QueryWidget( symbol widgetId ), symbol | term property ) -> any
- *
+ * @builtin QueryWidget
+ * @short Query Widget contents
+ * @description
  * Queries a property of a widget of the topmost dialog.  For example in order
  * to query the current text of a TextEntry with id `name, you write
  * <tt>QueryWidget( `id(`name), `Value )</tt>. In some cases the propery can be given
  * as term in order to further specify it. An example is
  * <tt>QueryWidget( `id( `table ), `Item( 17 ) )</tt> for a table where you query a
  * certain item.
+ *
+ * @param  symbol widgetId Can also be specified as `id( any id )
+ * @param symbol|term property 
+ * @return any
  */
 
 YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
@@ -843,20 +887,17 @@ YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & p
 
 
 /**
- * @builtin ReplaceWidget( `id( any id ), term newWidget ) -> boolean
- * @builtin ReplaceWidget( symbol id, term newWidget ) -> boolean
+ * @builtin ReplaceWidget
  *
+ * @description
  * Replaces a complete widget (or widget subtree) with an other widget
  * (or widget tree). You can only replace the widget contained in
  * a <tt>ReplacePoint</tt>. As parameters to <tt>ReplaceWidget</tt>
  * specify the id of the ReplacePoint and the new widget.
- * <p>
- * This is an example:
- * <pre>
- * OpenDialog( `ReplacePoint( `id( `rp ), `PushButton( "OK" ) ) );
- * ...
- * ReplaceWidget( `id( `rp ), `Label( "Label" ) )
- * </pre>
+ * 
+ * @param symbol id
+ * @param term newWidget
+ * @return boolean
  */
 
 YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm & new_widget )
@@ -934,18 +975,20 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
 
 
 /**
- * @builtin WizardCommand( term wizardCommand ) -> boolean
- *
+ * @builtin WizardCommand
+ * @short Run a wizard command
+ * @description
  * Issue a command to a wizard widget with ID 'wizardId'.
- * <p>
+ * <
  * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
- * <p>
+ * 
  * For available wizard commands see file YQWizard.cc .
  * If the current UI does not provide a wizard widget, 'false' is returned.
  * It is safe to call this even for UIs that don't provide a wizard widget. In
  * this case, all calls to this builtin simply return 'false'.
- * <p>
- * Returns true on success.
+ * @param term wizardCommand
+ *
+ * @return boolean  Returns true on success.
  */
 
 YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
@@ -974,17 +1017,17 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
 
 
 /**
- * @builtin SetFocus( `id( any widgetId ) ) -> boolean
- * @builtin SetFocus( symbol widgetId ) ) -> boolean
- *
+ * @builtin SetFocus
+ * @short Set Focus to the specified widget
+ * @description
  * Sets the keyboard focus to the specified widget.  Notice that not all
  * widgets can accept the keyboard focus; this is limited to interactive
  * widgets like PushButtton, TextEntry, SelectionBox etc. - manager widgets
  * like VBox, HBox etc. will not accept the keyboard focus. They will not
  * propagate the keyboard focus to some child widget that accepts the
  * focus. Instead, an error message will be emitted into the log file.
- * <p>
- * Returns true on success (i.e. the widget accepted the focus).
+ * @param symbol widgetId 
+ * @return boolean Returns true on success (i.e. the widget accepted the focus).
  */
 
 YCPBoolean YUI::evaluateSetFocus( const YCPValue & id_value )
@@ -1004,14 +1047,17 @@ YCPBoolean YUI::evaluateSetFocus( const YCPValue & id_value )
 
 
 /**
- * @builtin BusyCursor() -> void
- *
+ * @builtin BusyCursor
+ * @short Sets the mouse cursor to the busy curso
+ * @description
  * Sets the mouse cursor to the busy cursor, if the UI supports such a feature.
- * <p>
+ * 
  * This should normally not be necessary. The UI handles mouse cursors itself:
  * When input is possible (i.e. inside UserInput() ), there is automatically a
  * normal cursor, otherwise, there is the busy cursor. Override this at your
  * own risk.
+ *
+ * @return void
  */
 
 void YUI::evaluateBusyCursor()
@@ -1022,15 +1068,18 @@ void YUI::evaluateBusyCursor()
 
 
 /**
- * @builtin RedrawScreen() -> void
- *
+ * @builtin RedrawScreen
+ * @short Redraws the screen
+ * @description
  * Redraws the screen after it very likely has become garbled by some other output.
- * <p>
+ * 
  * This should normally not be necessary: The ( specific ) UI redraws the screen
  * automatically whenever required. Under rare circumstances, however, the
  * screen might have changes due to circumstances beyond the UI's control: For
  * text based UIs, for example, system commands that cause output to every tty
  * might make this necessary. Call this in the YCP code after such a command.
+ *
+ * @return void
  */
 
 void YUI::evaluateRedrawScreen()
@@ -1040,15 +1089,18 @@ void YUI::evaluateRedrawScreen()
 
 
 /**
- * @builtin NormalCursor() -> void
- *
+ * @builtin NormalCursor
+ * @short Sets the mouse cursor to the normal cursor
+ * @description
  * Sets the mouse cursor to the normal cursor ( after BusyCursor ), if the UI
  * supports such a feature.
- * <p>
+ * 
  * This should normally not be necessary. The UI handles mouse cursors itself:
  * When input is possible (i.e. inside UserInput() ), there is automatically a
  * normal cursor, otherwise, there is the busy cursor. Override this at your
  * own risk.
+ *
+ * @return void
  */
 
 void YUI::evaluateNormalCursor()
@@ -1059,10 +1111,14 @@ void YUI::evaluateNormalCursor()
 
 
 /**
- * @builtin MakeScreenShot( string filename ) -> void
- *
+ * @builtin MakeScreenShot
+ * @short Make Screen Shot
+ * @description
  * Make a screen shot if the specific UI supports that.
  * The Qt UI opens a file selection box if filename is empty.
+ *
+ * @param string filename
+ * @return void
  */
 
 void YUI::evaluateMakeScreenShot( const YCPString & filename )
@@ -1073,10 +1129,13 @@ void YUI::evaluateMakeScreenShot( const YCPString & filename )
 
 
 /**
- * @builtin DumpWidgetTree() -> void
- *
+ * @builtin DumpWidgetTree
+ * @short Debugging function
+ * @description
  * Debugging function: Dump the widget tree of the current dialog to the log
  * file.
+ *
+ * @return void
  */
 
 void YUI::evaluateDumpWidgetTree()
@@ -1094,9 +1153,12 @@ void YUI::evaluateDumpWidgetTree()
 
 
 /**
- * @builtin RecordMacro( string macroFileName ) -> void
- *
+ * @builtin RecordMacro
+ * @short Record Macro into  a file
+ * @description
  * Begin recording a macro. Write the macro contents to file "macroFilename".
+ * @param string macroFileName
+ * @return void
  */
 void YUI::evaluateRecordMacro( const YCPString & filename )
 {
@@ -1123,10 +1185,13 @@ void YUI::deleteMacroRecorder()
 
 
 /**
- * @builtin StopRecordingMacro() -> void
- *
+ * @builtin StopRecordingMacro
+ * @short Stop recording macro
+ * @description
  * Stop macro recording. This is only necessary if you don't wish to record
  * everything until the program terminates.
+ *
+ * @return void
  */
 void YUI::evaluateStopRecordMacro()
 {
@@ -1141,11 +1206,15 @@ void YUI::stopRecordMacro()
 
 
 /**
- * @builtin PlayMacro( string macroFileName ) -> void
- *
+ * @builtin PlayMacro
+ * @short Play a recorded macro
+ * @description
  * Execute everything in macro file "macroFileName".
  * Any errors are sent to the log file only.
  * The macro can be terminated only from within the macro file.
+ *
+ * @param string macroFileName
+ * @return void
  */
 void YUI::evaluatePlayMacro( const YCPString & filename )
 {
@@ -1199,15 +1268,18 @@ void YUI::deleteMacroPlayer()
 
 
 /**
- * @builtin FakeUserInput( any nextUserInput ) -> void
- * @builtin FakeUserInput() -> void
- *
+ * @builtin FakeUserInput
+ * @short Fake User Input
+ * @description
  * Prepare a fake value for the next call to UserInput() -
  * i.e. the next UserInput() will return exactly this value.
  * This is only useful in connection with macros.
- * <p>
+ * 
  * If called without a parameter, the next call to UserInput()
  * will return "nil".
+ *
+ * @optarg any nextUserInput
+ * @return void
  */
 void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 {
@@ -1217,44 +1289,26 @@ void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 
 
 /**
- * @builtin Glyph( symbol glyph ) -> string
- *
+ * @builtin Glyph
+ * @short Return a special character ( a 'glyph' )
+ * @description
  * Return a special character ( a 'glyph' ) according to the symbol specified.
- * <p>
+ * 
  * Not all UIs may be capable of displaying every glyph; if a specific UI
  * doesn't support it, a textual representation ( probably in plain ASCII ) will
  * be returned.
- * <p>
+ * 
  * This is also why there is only a limited number of predefined
  * glyphs: An ASCII equivalent is required which is sometimes hard to find for
  * some characters defined in Unicode / UTF-8.
- * <p>
+ * 
  * Please note the value returned may consist of more than one character; for
  * example, Glyph( `ArrowRight ) may return something like "-&gt;".
- * <p>
- * Predefined glyphs include:
- * <ul>
- *     <li>`ArrowLeft
- *     <li>`ArrowRight
- *     <li>`ArrowUp
- *     <li>`ArrowDown
- *     <li>`CheckMark
- *     <li>`BulletArrowRight
- *     <li>`BulletCircle
- *     <li>`BulletSquare
- * </ul>
- * <p>
+ * 
  * If an unknown glyph symbol is specified, 'nil' is returned.
- * <p>
- * See also the <a href="examples/Glyphs.ycp">Glyphs.ycp</a>
- * UI example:
- * <table border=2><tr><td>
- * <img src="examples/screenshots/Glyphs.png">
- * </td></tr></table>
- * <i>Glyphs in the Qt UI</i>
- * <p>
- * <img src="examples/screenshots/Glyphs-ncurses.png">
- * <p><i>Glyphs in the NCurses UI</i>
+ *
+ * @param symbol glyph
+ * @return string
  */
 YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 {
@@ -1285,96 +1339,12 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 
 
 /**
- * @builtin GetDisplayInfo() -> map
- *
+ * @builtin GetDisplayInfo
+ * @short Get Display Info
+ * @description
  * Get information about the current display and the UI's capabilities.
- * <p>
- * Returns a map with the following contents:
- * <p>
- * <table>
- *	<tr>
- *		<td>	Width			</td>	<td>integer</td>
- *		<td>
- *			The overall display width.
- *			<p>Unit: characters for text mode UIs,
- *			pixels for graphical UIs.
- *			<p>-1 means unknown.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	Height			</td>	<td>integer</td>
- *		<td>
- *			The overall display height.
- *			<p>-1 means unknown.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	Depth			</td>	<td>integer</td>
- *		<td>
- *			The display color depth.
- *			Meaningful only for graphical displays.
- *			<p>-1 means unknown.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	Colors			</td	<td>integer</td>
- *		<td>
- *			The number of colors that can be displayed
- *			simultaneously at any one time.
- *			<p>-1 means unknown.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	DefaultWidth		</td>	<td>integer</td>
- *		<td>	The width of a `opt( `defaultsize ) dialog.</td>
- *	</tr>
- *	<tr>
- *		<td>	DefaultHeight		</td>	<td>integer</td>
- *		<td>	The height of a `opt( `defaultsize ) dialog.</td>
- *	</tr>
- *	<tr>
- *		<td>	TextMode		</td>	<td>boolean</td>
- *		<td>
- *			<i>true</i> if text mode only supported.
- *			<b>Don't misuse this!</b> See remark below.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	HasImageSupport		</td>	<td>boolean</td>
- *		<td>	<i>true</i> if images can be displayed.</td>
- *	</tr>
- *	<tr>
- *		<td>	HasLocalImageSupport	</td>	<td>boolean</td>
- *		<td>	<i>true</i> if images can be loaded from local files rather than
- *			having to use <tt>SCR::Read( .target.byte, ... )</tt>.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	HasAnimationSupport	</td>	<td>boolean</td>
- *		<td>	<i>true</i> if animations can be displayed,
- *			i.e. if the Image widget supports <tt>`opt( `animated )</tt>.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>	HasIconSupport		</td>	<td>boolean</td>
- *		<td>	<i>true</i> if icons can be displayed.</td>
- *	</tr>
- *	<tr>
- *		<td>	HasFullUtf8Support	</td>	<td>boolean</td>
- *		<td>	<i>true</i> if all UTF-8 characters can be displayed simultaneously.</td>
- *	</tr>
- *	<tr>
- *		<td>	RichTextSupportsTable	</td>	<td>boolean</td>
- *		<td>	<i>true</i> if this UI's RichText widget supports HTML-like table tags</td>
- *	</tr>
- * </table>
  *
- * <p>
- * <b>Important:</b> Don't misuse this function to simply not support the
- * NCurses UI properly! Always think twice before checking for <i>text
- * mode</i>. If you think there is no proper layout etc. solution for NCurses,
- * it might be time to reconsider the complexity or even the concept of your
- * dialog.
+ * @return map
  *
  */
 YCPMap YUI::evaluateGetDisplayInfo()
@@ -1400,15 +1370,18 @@ YCPMap YUI::evaluateGetDisplayInfo()
 
 
 /**
- * @builtin RecalcLayout() -> void
- *
+ * @builtin RecalcLayout
+ * @short Racalculate Layout
+ * @description
  * Recompute the layout of the current dialog.
- * <p>
+ * 
  * <b>This is a very expensive operation.</b>
- * <p>
+ * 
  * Use this after changing widget properties that might affect their size -
  * like the a Label widget's value. Call this once ( ! ) after changing all such
  * widget properties.
+ *
+ * @return void
  */
 void YUI::evaluateRecalcLayout()
 {
@@ -1426,10 +1399,11 @@ void YUI::evaluateRecalcLayout()
 
 
 /**
- * @builtin PostponeShortcutCheck() -> void
- *
+ * @builtin PostponeShortcutCheck
+ * @short Postpone Shortcut Check
+ * @description
  * Postpone keyboard shortcut checking during multiple changes to a dialog.
- * <p>
+ * 
  * Normally, keyboard shortcuts are checked automatically when a dialog is
  * created or changed. This can lead to confusion, however, when multiple
  * changes to a dialog ( repeated ReplaceWidget() calls ) cause unwanted
@@ -1439,16 +1413,16 @@ void YUI::evaluateRecalcLayout()
  * <tt>CheckShortcuts()</tt>. Do this before the next call to
  * <tt>UserInput()</tt> or <tt>PollInput()</tt> to make sure the dialog doesn't
  * change "on the fly" while the user tries to use one of those shortcuts.
- * <p>
+ * 
  * The next call to <tt>UserInput()</tt> or <tt>PollInput()</tt> will
  * automatically perform that check if it hasn't happened yet, any an error
  * will be issued into the log file.
- * <p>
+ * 
  * Use only when really necessary. The automatic should do well in most cases.
- * <p>
+ * 
  * The normal sequence looks like this:
- * <p>
- * <pre>
+ * 
+ * <code>
  * PostponeShortcutChecks();
  * ReplaceWidget( ... );
  * ReplaceWidget( ... );
@@ -1457,7 +1431,9 @@ void YUI::evaluateRecalcLayout()
  * CheckShortcuts();
  * ...
  * UserInput();
- * </pre>
+ * </code>
+ *
+ * @return void
  */
 void YUI::evaluatePostponeShortcutCheck()
 {
@@ -1475,14 +1451,15 @@ void YUI::evaluatePostponeShortcutCheck()
 
 
 /**
- * @builtin CheckShortcuts() -> void
- *
+ * @builtin CheckShortcuts
+ * @short Perform an explicit shortcut check after postponing shortcut checks.
+ * @description
  * Perform an explicit shortcut check after postponing shortcut checks.
  * Use this after calling <tt>PostponeShortcutCheck()</tt>.
- * <p>
+ * 
  * The normal sequence looks like this:
- * <p>
- * <pre>
+ * 
+ * <code>
  * PostponeShortcutChecks();
  * ReplaceWidget( ... );
  * ReplaceWidget( ... );
@@ -1491,7 +1468,9 @@ void YUI::evaluatePostponeShortcutCheck()
  * CheckShortcuts();
  * ...
  * UserInput();
- * </pre>
+ * </code>
+ *
+ * @return void
  */
 void YUI::evaluateCheckShortcuts()
 {
@@ -1514,12 +1493,15 @@ void YUI::evaluateCheckShortcuts()
 
 
 /**
- * @builtin WidgetExists( `id( any widgetId ) ) -> boolean
- * @builtin WidgetExists( symbol widgetId ) ) -> boolean
- *
+ * @builtin WidgetExists
+ * @short Check whether or not a widget with the given ID currently exists
+ * @description
  * Check whether or not a widget with the given ID currently exists in the
  * current dialog. Use this to avoid errors in the log file before changing the
  * properties of widgets that might or might not be there.
+ *
+ * @param symbol widgetId 
+ * @return boolean
  */
 YCPBoolean YUI::evaluateWidgetExists( const YCPValue & id_value )
 {
@@ -1532,13 +1514,18 @@ YCPBoolean YUI::evaluateWidgetExists( const YCPValue & id_value )
 
 
 /**
- * @builtin RunPkgSelection( `id( any pkgSelId ) -> any
- *
+ * @builtin RunPkgSelection
+ * @short Initialize and run the PackageSelector widget
+ * @description
  * <b>Not to be used outside the package selection</b>
+ *
  * Initialize and run the PackageSelector widget identified by 'pkgSelId'.
+ *
  * Black magic to everybody outside. ;- )
- * <p>
- * Returns `cancel if the user wishes to cancel his selections.
+ * 
+ * @param any pkgSelId
+ * @return any Returns `cancel if the user wishes to cancel his selections.
+ * 
  */
 YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 {
@@ -1566,16 +1553,16 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 
 
 /**
- * @builtin AskForExistingDirectory( string startDir, string headline ) -> string
- *
+ * @builtin AskForExistingDirectory
+ * @short Open a directory selection box and prompt the user for an existing directory.
+ * @description
  * Open a directory selection box and prompt the user for an existing directory.
- * <p>
- * <i>startDir</i> is the initial directory that is displayed.
- * <p>
- * <i>headline</i> is an explanatory text for the directory selection box.
+ * 
+ * @param string startDir is the initial directory that is displayed.
+ * @param string headline is an explanatory text for the directory selection box.
  * Graphical UIs may omit that if no window manager is running.
- * <p>
- * Returns the selected directory name or <i>nil</i> if the user canceled the operation.
+ * @return string  Returns the selected directory name or <i>nil</i> if the
+ * user canceled the operation.
  */
 YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
@@ -1585,18 +1572,17 @@ YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const
 
 
 /**
- * @builtin AskForExistingFile( string startWith, string filter, string headline ) -> string
- *
+ * @builtin AskForExistingFile
+ * @short Open a file selection box and prompt the user for an existing file.
+ * @description
  * Open a file selection box and prompt the user for an existing file.
- * <p>
- * <i>startWith</i> is the initial directory or file.
- * <p>
- * <i>filter</i> is one or more blank-separated file patterns, e.g. "*.png *.jpg"
- * <p>
- * <i>headline</i> is an explanatory text for the file selection box.
+ * 
+ * @param string startWith is the initial directory or file.
+ * @param string filter is one or more blank-separated file patterns, e.g. "*.png *.jpg"
+ * @param string headline is an explanatory text for the file selection box. 
  * Graphical UIs may omit that if no window manager is running.
- * <p>
- * Returns the selected file name or <i>nil</i> if the user canceled the operation.
+ * @return string Returns the selected file name or <i>nil</i> if the user
+ * canceled the operation.
  */
 YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
@@ -1605,20 +1591,18 @@ YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCP
 
 
 /**
- * @builtin AskForSaveFileName( string startWith, string filter, string headline ) -> string
- *
+ * @builtin AskForSaveFileName
+ * @short Open a file selection box and prompt the user for a file to save data to.
+ * @description
  * Open a file selection box and prompt the user for a file to save data to.
  * Automatically asks for confirmation if the user selects an existing file.
- * A
- * <p>
- * <i>startWith</i> is the initial directory or file.
- * <p>
- * <i>filter</i> is one or more blank-separated file patterns, e.g. "*.png *.jpg"
- * <p>
- * <i>headline</i> is an explanatory text for the file selection box.
+ * 
+ * @param string startWith is the initial directory or file.
+ * @param string filter is one or more blank-separated file patterns, e.g. "*.png *.jpg"
+ * @param string headline is an explanatory text for the file selection box.
  * Graphical UIs may omit that if no window manager is running.
- * <p>
- * Returns the selected file name or <i>nil</i> if the user canceled the operation.
+ * 
+ * @return string Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
 YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
@@ -1627,19 +1611,20 @@ YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCP
 
 
 /**
- * @builtin SetFunctionKeys( map fkeys ) -> void
- *
- * Set the ( default ) function keys for a number of buttons.
- * <p>
+ * @builtin SetFunctionKeys
+ * @short Set the ( default ) function keys for a number of buttons.
+ * @description
  * This function receives a map with button labels and the respective function
  * key number that should be used if on other `opt( `key_F.. ) is specified.
- * <p>
+ * 
  * Any keyboard shortcuts in those labels are silently ignored so this is safe
  * to use even if the UI's internal shortcut manager rearranges shortcuts.
- * <p>
+ * 
  * Each call to this function overwrites the data of any previous calls.
- * <p>
- * @example SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
+ * 
+ * @param map fkeys
+ * @return void
+ * @usage SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
  */
 void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 {
@@ -1692,11 +1677,16 @@ int YUI::defaultFunctionKey( YCPString ylabel )
 
 
 /**
- * @builtin WFM/SCR ( expression ) -> any
- *
+ * @builtin WFM/SCR
+ * @id WFM_SCR
+ * @short callback
+ * @description
  * This is used for a callback mechanism. The expression will
  * be sent to the WFM interpreter and evaluated there.
  * USE WITH CAUTION.
+ *
+ * @param block expression
+ * @return any
  */
 
 YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
@@ -1727,12 +1717,18 @@ YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 
 
 /**
- * @builtin Recode ( string from, string to, string text ) -> any
- *
+ * @builtin Recode
+ * @short Recode encoding of string from or to "UTF-8" encoding.
+ * @description
  * Recode encoding of string from or to "UTF-8" encoding.
  * One of from/to must be "UTF-8", the other should be an
  * iso encoding specifier (i.e. "ISO-8859-1" for western languages,
  * "ISO-8859-2" for eastern languages, etc. )
+ *
+ * @param string from
+ * @param string to
+ * @param string text
+ * @return any
  */
 
 YCPValue YUI::evaluateRecode( const YCPString & from, const YCPString & to, const YCPString & text )

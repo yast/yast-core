@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <reference id="UI-Event-Builtins-Reference">
         <title>Event-related UI Builtin Functions</title>
 
@@ -8,11 +8,11 @@
 
 <refentry id="UI-Event-UserInput">
     <refmeta>
-        <refentrytitle>UserInput()</refentrytitle>
+        <refentrytitle>UI::UserInput</refentrytitle>
         <manvolnum>1</manvolnum>
     </refmeta>
     <refnamediv>
-        <refname>UserInput</refname>
+        <refname>UI::UserInput</refname>
         <refpurpose>Waits for user input and returns a widget ID.</refpurpose>
     </refnamediv>
     <refsect1>
@@ -151,12 +151,12 @@ any widget_id = <emphasis role="b">UI::UserInput()</emphasis>;
 <refentry id="UI-Event-PollInput">
 
     <refmeta>
-    <refentrytitle>PollInput</refentrytitle>
+    <refentrytitle>UI::PollInput</refentrytitle>
     <manvolnum>1</manvolnum>
 </refmeta>
 
 <refnamediv>
-    <refname>PollInput</refname>
+    <refname>UI::PollInput</refname>
     <refpurpose>Checks for pending user input. Does not wait. Returns a widget
             ID or <emphasis role="i">nil</emphasis> if no input is
             available.</refpurpose>
@@ -246,12 +246,12 @@ any widget_id = <emphasis role="b">UI::PollInput()</emphasis>;
 <refentry id="UI-Event-TimeoutUserInput">
     
     <refmeta>
-    <refentrytitle>TimeoutUserInput</refentrytitle>
+    <refentrytitle>UI::TimeoutUserInput</refentrytitle>
     <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-    <refname>TimeoutUserInput</refname>
+    <refname>UI::TimeoutUserInput</refname>
     <refpurpose>Waits for user input and returns a widget ID. Returns ID
         <emphasis role="i">`timeout</emphasis> if no input is available for
         <emphasis role="i">timeout</emphasis>
@@ -352,12 +352,12 @@ any widget_id = <emphasis role="b">UI::TimeoutUserInput</emphasis>( integer time
 <refentry id="UI-Event-WaitForEvent">
     
     <refmeta>
-        <refentrytitle>WaitForEvent</refentrytitle>
+        <refentrytitle>UI::WaitForEvent</refentrytitle>
         <manvolnum>1</manvolnum>
     </refmeta>
 
     <refnamediv>
-        <refname>WaitForEvent</refname>
+        <refname>UI::WaitForEvent</refname>
         <refpurpose>Waits for user input and returns an event map. Returns ID
             <emphasis role="i">`timeout</emphasis> if
             no input is available for <emphasis role="i">timeout</emphasis>

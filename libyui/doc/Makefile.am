@@ -2,25 +2,47 @@
 # Makefile.am for core/libyui/doc
 #
 
-SUBDIRS = events widgets examples FAQs
+SUBDIRS = events examples FAQs
 
 htmldir = $(docdir)/libyui
+builtin	= $(srcdir)/../src/YUI_builtins.cc $(srcdir)/../src/YUI_widgets.cc \
+	  $(srcdir)/../src/YUI_special_widgets.cc
+builtinxml := $(builtin:%.cc=%.xml)
+xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
+htmlfiles = $(wildcard html/*.html)
 
 html_DATA =			\
 	ui-arch.jpg		\
-	ui-arch.html		\
-	UI-additional.html	\
-	YCP-UI-layout.html	\
-	YCP-builtins-ui.html	\
-	YCP-UI-richtext.html	\
-	README.newapi
+	README.newapi		\
+	html/index.html		\
+	$(htmlfiles)		\
+	html/yast2docs.css
 
 EXTRA_DIST = $(html_DATA)
 
-builtin	= $(srcdir)/../src/YUI_builtins.cc
 
-YCP-builtins-ui.html: $(builtin)
-	@ybindir@/makebuiltindocs -t "UI built-in functions" $(builtin) > $@.new
-	mv $@.new $@
 
-CLEANFILES = YCP-builtins-ui.html
+$(xmlfiles) : $(builtin)
+	@ybindir@/ydoc2 ../src/$(subst xml,cc,$@)
+	@XSLTPROC@ @STYLESHEET_YDOC@ output.xml > $@
+	@ybindir@/replace_entities $@
+
+html/index.html: $(xmlfiles) ui.xml
+	XML_CATALOG_FILES=@XML_CATALOG@\
+	@XSLTPROC@ --xinclude \
+	@STYLESHEET_HTML@ ui.xml
+
+html/yast2docs.css: html/index.html
+	cp @STYLESHEET_CSS@ html
+	cp -a $(ydatadir)/docbook/images html
+	cp -a $(srcdir)/examples html 
+
+CLEANFILES = $(xmlfiles) output.xml
+
+clean-local:
+	rm -rf html
+
+install-data-local:
+	mkdir -p $(DESTDIR)$(htmldir)
+	cp -a $(srcdir)/html/images $(DESTDIR)$(htmldir)
+	cp -a $(srcdir)/examples $(DESTDIR)$(htmldir)

@@ -3,16 +3,13 @@
 "/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
 
 
-<!ENTITY % all_widgets SYSTEM "widgets/refenteries.ent">
-%all_widgets;
-<!ENTITY  All-Widgets  SYSTEM "widgets/refenteries.xml">
 
-
-
+<!ENTITY  YUI_special_widgets SYSTEM "YUI_special_widgets.xml">
+<!ENTITY  YUI_widgets SYSTEM "YUI_widgets.xml">
+<!ENTITY  YUI_builtins SYSTEM "YUI_builtins.xml">
 <!ENTITY  YCP-UI-richtext  SYSTEM "YCP-UI-richtext.xml">
 <!ENTITY  YCP-UI-layout  SYSTEM "YCP-UI-layout.xml">
 <!ENTITY  UI-event-intro  SYSTEM "events/event-intro.xml">
-<!ENTITY  UI-event-ref  SYSTEM "events/event-reference.xml">
 <!ENTITY  UI-event-builtins  SYSTEM "events/event-builtins.xml">
 
 ]>
@@ -41,18 +38,12 @@
     </toc>
 
 
-     &YCP-UI-layout;
-
-     <chapter id="UI-Events">
-        <title>Event Handling in the YaST2 UI</title>
-         &UI-event-intro;
-         &UI-event-ref;
-     </chapter>
-    <reference id="widget_reference">
-        <title>UI Widget Reference</title>
-        &All-Widgets;
-    </reference>
+        &YCP-UI-layout;
+        &UI-event-intro;
     <!-- event builtin reference -->
+    &YUI_widgets;
+    &YUI_special_widgets;
+    &YUI_builtins;
     &UI-event-builtins;
     <appendix id="YCP-UI-Richtext">
         <title>UI Richtext</title>

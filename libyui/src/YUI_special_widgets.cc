@@ -12,7 +12,7 @@
 
 File:		YUI_special_widgets.cc
 
-Special (optional) widgets
+Summary: Special (optional) widgets
 
 
 Authors:	Mathias Kettner <kettner@suse.de>
@@ -41,13 +41,14 @@ Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 
 /**
- * @builtin HasSpecialWidget( `symbol widget ) -> boolean
- *
+ * @builtin HasSpecialWidget
+ * @short Checks for support of a special widget type.
+ * @description
  * Checks for support of a special widget type. Use this prior to creating a
  * widget of this kind. Do not use this to check for ordinary widgets like
  * PushButton etc. - just the widgets where the widget documentation explicitly
  * states it is an optional widget not supported by all UIs.
- * <p>
+ * 
  * Returns true if the UI supports the special widget and false if not.
  */
 
@@ -149,9 +150,7 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
  * placeholder where the current value will be inserted ( sformat() -style ) and
  * newlines. If no labels are specified, only the values will be
  * displayed. Specify empty labels to suppress this.
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * @note        This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `BarGraph )</tt> before using it.
  *
  */
@@ -216,9 +215,7 @@ YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm 
  *
  * Very much the same as a `Label except you specify foreground and background colors and margins.
  * This widget is only available on graphical UIs with at least 15 bit color depth ( 32767 colors ).
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * @note  This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `ColoredLabel )</tt> before using it.
  */
 
@@ -274,13 +271,12 @@ YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPT
  * operation. The widget itself ( i.e. the UI ) polls the specified file and
  * automatically updates the display as required even if the download is taking
  * place in the foreground.
- * <p>
+ * 
  * Please notice that this will work only if the UI runs on the same machine as
  * the file to download which may not taken for granted ( but which is so for
  * most users ).
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * 
+ * @note This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `DownloadProgress )</tt> before using it.
  *
  */
@@ -348,45 +344,43 @@ YWidget * YUI::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const 
  * specified as tab contents or similar actions (it might even just replace
  * data in a Table or RichText widget if this is the tab contents). Hence the
  * name <i>Dumb</i>Tab.
- * <p>
+ * 
  * The items in the item list can either be simple strings or `item() terms
  * with an optional ID for each individual item (which will be returned upon
  * UI::UserInput() and related when the user selects this tab), a (mandatory)
  * user-visible label and an (optional) flag that indicates that this tab is
  * initially selected. If you specify only a string, UI::UserInput() will
  * return this string.
- * <p>
- * <b>Style Guide Note:</b>
- * <p>
- * Please notice that using this kind of widget more often than not is the
+ *
+ * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * for availability with <tt>HasSpecialWidget( `DumbTab )</tt> before
+ * using it.
+ * 
+ * @note Please notice that using this kind of widget more often than not is the
  * result of <b>poor dialog or workflow design</b>.
- * <p>
+ * 
  * Using tabs only hides complexity, but the complexity remains there. They do
  * little to make problems simpler. This however should be the approach of
  * choice for good user interfaces.
- * <p>
+ * 
  * It is very common for tabs to be overlooked by users if there are just two
  * tabs to select from, so in this case better use an "Expert..." or
  * "Details..." button - this gives much more clue to the user that there is
  * more information  available while at the same time clearly indicating that
  * those other options are much less commonly used.
- * <p>
+ * 
  * If there are very many different views on data or if there are lots and lots
  * of settings, you might consider using a tree for much better navigation. The
  * Qt UI's wizard even has a built-in tree that can be used instead of the help
  * panel.
- * <p>
+ * 
  * If you use a tree for navigation, unter all circumstances avoid using tabs
  * at the same time - there is no way for the user to tell which tree nodes
  * have tabs and which have not, making navigation even more difficult.
  * KDE's control center or Mozilla's settings are very good examples
  * how <b>not</b> to do that - you become bogged down for sure in all those
  * tree nodes and tabs hidden within so many of them.
- * <p>
- * <b>Technical Usage Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
- * for availability with <tt>HasSpecialWidget( `DumbTab )</tt> before
- * using it.
+ * 
  */
 
 YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -529,29 +523,29 @@ YWidget * YUI::createDumbTab( YWidget *parent, YWidgetOpt & opt, const YCPTerm &
  * @usage	if ( HasSpecialWidget( `MultiProgressMeter ) {...
  *		`MultiProgressMeter( "Percentage", 1, 100, 50 )
  *
- * @examples	MultiProgressMeter1.ycp MultiProgressMeter2.ycp
+ * @examples	MultiProgressMeter1.ycp 
  *
  * @description
  *
-
  * A vertical (VMultiProgressMeter) or horizontal (HMultiProgressMeter)
  * progress display with multiple segments. The numbers passed on widget
  * creation are the maximum numbers of each individual segment. Segments sizes
  * will be displayed proportionally to these numbers.
- * <p>
+ * 
  * This widget is intended for applications like showing the progress of
  * installing from multiple CDs while giving the user a hint how much will be
  * installed from each individual CD.
- * <p>
+ * 
  * Set actual values later with
+ * <code>
  * UI::ChangeWidget(`id(...), `Values, [ 1, 2, ...] );
- * <p>
+ * </code>
+ * 
  * The widget may choose to reserve a minimum amount of space for each segment
  * even if that means that some segments will be shown slightly out of
  * proportion.
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * 
+ * @note  This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `MultiProgressMeter )</tt> before using it.
  */
 
@@ -618,16 +612,14 @@ YWidget * YUI::createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt, cons
  * @examples	Slider1.ycp Slider2.ycp ColoredLabel3.ycp
  *
  * @description
- *
  * A horizontal slider with ( numeric ) input field that allows input of an
  * integer value in a given range. The user can either drag the slider or
  * simply enter a value in the input field.
- * <p>
+ * 
  * Remember you can use <tt>`opt( `notify )</tt> in order to get instant response
  * when the user changes the value - if this is desired.
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * 
+ * @note  This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `Slider )</tt> before using it.
  *
  */
@@ -701,14 +693,13 @@ YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & 
  * Below the bar graph is a slider with an input fields to the left and right
  * where the user can either input the desired remaining free space or the
  * desired size of the new partition or drag the slider to do this.
- * <p>
+ * 
  * The total size is <tt>usedSize+freeSize</tt>.
- * <p>
+ * 
  * The user can resize the new partition between <tt>minNewPartSize</tt> and
  * <tt>totalFreeSize-minFreeSize</tt>.
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * 
+ * @note This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  * */
 
@@ -799,12 +790,11 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
  * This is the UI-specific technical implementation of a wizard dialog's main widget.
  * This is not intended for general use - use the Wizard:: module instead which will use this
  * widget properly.
- * <p>
+ * 
  * A wizard widget always has ID `wizard.<p>
  * The ID of the single replace point within the wizard is always `contents.
- * <p>
- * <b>Note:</b>
- * This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * 
+ * @note This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  */
 

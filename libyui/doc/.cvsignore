@@ -3,4 +3,5 @@ Makefile.in
 *.bak
 *.auto
 *~
-YCP-builtins-ui.html
+YUI_builtins.xml
+output.xml
