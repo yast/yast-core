@@ -17,7 +17,6 @@
 #include <string>
 
 #include <YCP.h>
-#include <ycp/Parser.h>
 #include <ycp/y2log.h>
 
 #include "DummyAgent.h"
