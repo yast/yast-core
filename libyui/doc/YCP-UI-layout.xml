@@ -188,8 +188,8 @@ random numbers. The layout engine will add the weights of all
 children of a layout box and calculate percentages for each widget
 automatically. Specify a <emphasis role="b">HWeight</emphasis> for <emphasis role="b">HBox</emphasis> children
 and a <emphasis role="b">VWeight</emphasis> for <emphasis role="b">VBox</emphasis> children.</para>
-      <section>
-        <title>Example 1:</title>
+      <example>
+          <title>Specifying Proportions 1</title>
         <programlisting>
 `HBox(
       `HWeight( 20, `PushButton( "OK"     ) ),
@@ -208,9 +208,9 @@ if that means violating <link linkend="nice_size">nice size</link>
 restrictions (i.e. a widget gets less space than it needs). You are
 the boss; if you specify weights, the layout engine assumes you
 know what you are doing.</para>
-      </section>
-      <section>
-        <title>Example 2:</title>
+      </example>
+      <example>
+          <title>Specifying Proportions 2</title>
         <para>(See also <link linkend="equal">creating widgets of equal size</link> in
 the <link linkend="common_techniques">common layout techniques</link>
 section)</para>
@@ -228,9 +228,9 @@ size of each individual button.</para>
         <para>Please note how the weights do not add up to 100 here. The value
 "1" is absolutely random; we might as well have specified "42" for
 each button to achieve that effect.</para>
-      </section>
-      <section>
-        <title>Example 3:</title>
+      </example>
+      <example>
+          <title>Specifying Proportions 3</title>
         <para>The YaST2 wizard layout reserves 30% of horizontal space for the
 help text (a <link linkend="RichText_widget">RichText</link>
 widget) and the remaining 70% for the rest of the dialog. The
@@ -262,7 +262,7 @@ suits well for the purposes of YaST2.</para>
 less obvious ones like the <link linkend="TextEntry_widget">TextEntry</link>.</para>
         <para><emphasis role="b">Note:</emphasis> This list may be incomplete. Use your common
 sense.</para>
-      </section>
+      </example>
     </section>
     <section id="rubber_bands">
       <title>Rubber Bands:  <link linkend="Empty_widget">HStretch</link> and <link linkend="Empty_widget">VStretch</link></title>
@@ -310,6 +310,7 @@ rubber band that will take at least the specified amount of space.
 Use this to create nicely spaced dialogs with a reasonable resize
 behaviour.</para>
       <example>
+          <title>Spacings</title>
         <programlisting>
 `HBox(
       `PushButton( "OK" ),
@@ -368,10 +369,6 @@ effect, but only if used sparingly.</para>
       <para>You may need to put a <link linkend="squash">squash</link> widget around
 the frame in order to avoid excessive empty space between the frame
 and its inner widgets.</para>
-      <section>
-        <title>Example:</title>
-        <link linkend="squash_example">squash example</link>
-      </section>
     </section>
     <section id="radiobuttongroup">
       <title>Grouping RadioButtons:  <link linkend="RadioButtonGroup_widget">RadioButtonGroup</link></title>
@@ -394,9 +391,8 @@ RadioButtonGroup.</para>
       <para>Don't forget to include your RadioBox within a <link linkend="frame">frame!</link> <link linkend="RadioButtonGroup_widget">RadioButtonGroup</link>,
 <link linkend="Frame_widget">Frame</link> and <link linkend="Squash_widget">HVSquash</link> usually all come
 together.</para>
-      <section>
-        <title>Example:</title>
-        <anchor id="squash_example"/>
+      <example id="squash_example">
+          <title>Grouping RadioButtons </title>
         <programlisting>
 `HVCenter(
           `HVSquash(
@@ -412,7 +408,7 @@ together.</para>
                    )
          )
 </programlisting>
-      </section>
+      </example>
     </section>
     <section id="replacepoint">
       <title>The Esoterics:  <link linkend="ReplacePoint_widget">ReplacePoint</link></title>
@@ -619,8 +615,8 @@ e.g. with <link linkend="xspacings">spacings</link>.</para>
 precious screen space themselves by putting a <link linkend="Spacing_widget">VSpacing</link> in a <link linkend="Box_widget">HBox</link> or a <link linkend="Spacing_widget">HSpacing</link> in a <link linkend="Box_widget">VBox</link> - it will resize the
 corresponding <link linkend="layout_boxes">layout box</link> in its <link linkend="dimensions">secondary dimension</link>. It will take no space
 in its <link linkend="dimensions">primary dimension</link>.</para>
-      <section>
-        <title>Example:</title>
+      <example>
+          <title>Specifying the Size of Scrollable Widgets</title>
         <programlisting>
 `VBox(
       `HSpacing(40),            // make the scrollable widget at least 40 units wide
@@ -638,7 +634,7 @@ such widgets to pure coincidence - always explicitly specify their
 sizes.
 
 </para>
-      </section>
+      </example>
     </section>
   </section>
   <section id="hints">
