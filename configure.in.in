@@ -21,6 +21,7 @@ AC_SUBST(SUSEVERSION)
 ## some common checks
 @YAST2-CHECKS-COMMON@
 @YAST2-CHECKS-PROGRAM@
+@YAST2-CHECKS-TESTSUITE@
 
 ## and generate the output
 AC_OUTPUT(
