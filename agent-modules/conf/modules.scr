@@ -26,5 +26,5 @@
 .modules
 
 `ag_modules(
-    SCR::ModulesConf("/etc/modules.conf")
+    ModulesConf("/etc/modules.conf")
 )

@@ -3,6 +3,6 @@
  */
 {
     // do not ignore case in regexps
-    SCR::Write (., "force");
-    return SCR::Dir (.s);
+    Write (., "force");
+    return Dir (.s);
 }

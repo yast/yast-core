@@ -1,6 +1,0 @@
-{ 
-    y2milestone ("%1", NoSuchModule::Read ()); 
-    y2milestone ("%1", NoSuchModule::Read (.local.size, "/etc"));
-    y2milestone ("%1", WFM::Read (.local.size, "/etc"));
-    y2milestone ("%1", WFM::NoSuchModule::Read (.local.size, "/etc"));
-} 

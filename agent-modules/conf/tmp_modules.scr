@@ -36,5 +36,5 @@
 .tmp.modules
 
 `ag_modules(
-  SCR::ModulesConf("/tmp/modules.conf")
+  ModulesConf("/tmp/modules.conf")
 )

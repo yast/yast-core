@@ -2,7 +2,7 @@
 .
 
 `ag_ini(
-  SCR::IniAgent("tests/icreg1.in.test",
+  IniAgent("tests/icreg1.in.test",
     $[
       "options" : [ "ignore_case_regexps" ],
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],

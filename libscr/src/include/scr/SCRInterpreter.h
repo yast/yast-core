@@ -43,8 +43,6 @@ public:
      */
     string interpreter_name () const;
 
-    YCPValue evaluateSCR (const YCPValue& value);
-
 protected:
 
     YCPValue evaluateInstantiatedTerm (const YCPTerm& term);

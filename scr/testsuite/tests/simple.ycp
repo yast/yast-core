@@ -1,7 +1,7 @@
 {
-    SCR::RegisterAgent (., "tests/simple.scr");
+    RegisterAgent (., "tests/simple.scr");
     
-    any tmp = SCR::Read (.a);
+    any tmp = Read (.a);
     
     return tmp;
 }

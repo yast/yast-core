@@ -1,7 +1,7 @@
 .
 
 `ag_anyagent (
-    SCR::AnyAgent (
+    Description (
       ``(File ("tests/etc_passwd.in")),	// real file name
       "#",			// Comment
       true,

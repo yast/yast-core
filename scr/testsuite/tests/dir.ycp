@@ -1,16 +1,16 @@
 {
-    SCR::UnregisterAllAgents ();
+    UnregisterAllAgents ();
 
-    SCR::RegisterAgent (.foo1, "tests/haha.scr");
-    SCR::RegisterAgent (.foo2.a, "tests/huhu.scr");
-    SCR::RegisterAgent (.foo2.c, "tests/hihi.scr");
-    SCR::RegisterAgent (.foo2.b, "tests/haha.scr");
+    RegisterAgent (.foo1, "tests/haha.scr");
+    RegisterAgent (.foo2.a, "tests/huhu.scr");
+    RegisterAgent (.foo2.c, "tests/hihi.scr");
+    RegisterAgent (.foo2.b, "tests/haha.scr");
 
     list ret = [];
 
-    ret = add (ret, SCR::Dir (.));
-    ret = add (ret, SCR::Dir (.foo1));
-    ret = add (ret, SCR::Dir (.foo2));
+    ret = add (ret, Dir (.));
+    ret = add (ret, Dir (.foo1));
+    ret = add (ret, Dir (.foo2));
 
     return ret;
 }

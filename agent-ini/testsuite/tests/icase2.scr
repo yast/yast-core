@@ -1,7 +1,8 @@
+
 .
 
 `ag_ini(
-  SCR::IniAgent("tests/icase2.in.test",
+  IniAgent("tests/icase2.in.test",
     $[
       "options" : [ "ignore_case", "prefer_uppercase" ],
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],

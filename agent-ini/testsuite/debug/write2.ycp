@@ -3,9 +3,9 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    SCR::Write (.v.Val1, "changed");
-    SCR::Write (.v.Val2, 23);
-    SCR::Write (.v.Val3, 33.12);
-    SCR::Write (.v.Val4, ["a", "b", "c", ]);
+    Write (.v.Val1, "changed");
+    Write (.v.Val2, 23);
+    Write (.v.Val3, 33.12);
+    Write (.v.Val4, ["a", "b", "c", ]);
     return "return";
 }

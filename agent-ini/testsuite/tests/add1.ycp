@@ -3,13 +3,13 @@
 
     // The file is not saved if not changed. We must change something
     // and flush it!
-    SCR::Write (.s.Section1.Sub1, "\n; Comment to Sub1\n");
-    SCR::Write (.s.Section1.Sub1.SubSub1, "\n; Comment to SubSub1\n");
-    SCR::Write (.s.Section2, "\n; Comment to Section2\n");
+    Write (.s.Section1.Sub1, "\n; Comment to Sub1\n");
+    Write (.s.Section1.Sub1.SubSub1, "\n; Comment to SubSub1\n");
+    Write (.s.Section2, "\n; Comment to Section2\n");
 
-    SCR::Write (.v.Section1.Sub1.SubSub1.ournicekey, "Our nice value");
-    SCR::Write (.s.Section3, "\n; New section\n");
-    SCR::Write (.v.Section3.Val1, "\"Value1 in Section3\"");
-    SCR::Write (., "force");
+    Write (.v.Section1.Sub1.SubSub1.ournicekey, "Our nice value");
+    Write (.s.Section3, "\n; New section\n");
+    Write (.v.Section3.Val1, "\"Value1 in Section3\"");
+    Write (., "force");
 
 }

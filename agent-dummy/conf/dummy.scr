@@ -32,5 +32,5 @@
 .dummy
 
 `ag_dummy (
-  SCR::DataMap($["a":1,"b":$["c":2, "d":3]], 0)
+  DataMap($["a":1,"b":$["c":2, "d":3]], 0)
 )

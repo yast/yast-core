@@ -1,8 +1,0 @@
-[Interpreter] tests/ModuleErr.ycp:2 Undefined function NoSuchModule::Read()
-[YCP] tests/ModuleErr.ycp:2 nil
-[Interpreter] tests/ModuleErr.ycp:3 Undefined function NoSuchModule::Read()
-[YCP] tests/ModuleErr.ycp:3 nil
-[Interpreter] tests/ModuleErr.ycp:4 Couldn't mount agent to handle '.target.size'
-[YCP] tests/ModuleErr.ycp:4 nil
-[libscr] SCRInterpreter.cc(evaluateInstantiatedTerm):53 Bad namespace for SCR
-[YCP] tests/ModuleErr.ycp:5 nil

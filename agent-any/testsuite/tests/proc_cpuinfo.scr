@@ -1,7 +1,7 @@
 .
 
 `anyagent(
-    SCR::AnyAgent (
+    Description (
       ``(File ("tests/proc_cpuinfo.in")),	// real file name
   "#\n",			// Comment
   true,				// read-only

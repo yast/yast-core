@@ -2,24 +2,24 @@
  * Here ignore_case is on
  */
 {
-    SCR::Write (.v.sec1.val1, "10");
-    SCR::Write (.v.sec1.Val1, "11");
-    SCR::Write (.v.sec1.vAl1, "12");
-    SCR::Write (.v.sec1.vaL1, "13");
-    SCR::Write (.v.sec1.VAl1, "14");
-    SCR::Write (.v.sec1.VaL1, "15");
-    SCR::Write (.v.sec1.VAL1, "16");
+    Write (.v.sec1.val1, "10");
+    Write (.v.sec1.Val1, "11");
+    Write (.v.sec1.vAl1, "12");
+    Write (.v.sec1.vaL1, "13");
+    Write (.v.sec1.VAl1, "14");
+    Write (.v.sec1.VaL1, "15");
+    Write (.v.sec1.VAL1, "16");
 
-    SCR::Write (.v.Sec2.val2, "10");
-    SCR::Write (.v.sEc2.Val2, "11");
-    SCR::Write (.v.seC2.vAl2, "12");
-    SCR::Write (.v.SEC2.vaL2, "13");
-    SCR::Write (.v.SEc2.VAl2, "14");
-    SCR::Write (.v.sEC2.VaL2, "15");
-    SCR::Write (.v.SeC2.VAL2, "16");
+    Write (.v.Sec2.val2, "10");
+    Write (.v.sEc2.Val2, "11");
+    Write (.v.seC2.vAl2, "12");
+    Write (.v.SEC2.vaL2, "13");
+    Write (.v.SEc2.VAl2, "14");
+    Write (.v.sEC2.VaL2, "15");
+    Write (.v.SeC2.VAL2, "16");
 
-    SCR::Write (.s.SEc3, "\n; comment\n");
-    SCR::Write (.v.SEC3.VAL1, "huhu");
-    SCR::Write (., "force");
-    return SCR::Dir (.s);
+    Write (.s.SEc3, "\n; comment\n");
+    Write (.v.SEC3.VAL1, "huhu");
+    Write (., "force");
+    return Dir (.s);
 }

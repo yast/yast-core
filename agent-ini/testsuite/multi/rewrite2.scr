@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  SCR::IniAgent( [ "multi/rewrite2.in.*.test" ],
+  IniAgent( [ "multi/rewrite2.in.*.test" ],
     $[
       "rewrite" : [
 	[ "multi/rewrite2\.in\.(.+)$", "multi/rewrite2.in.%s"],

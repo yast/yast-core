@@ -68,19 +68,18 @@ WFMSubAgent::start_and_check (bool check_version, int* error)
 	return false;
     }
 
-    YCPValue q = YCPTerm (YCPSymbol ("SuSEVersion", false));
-    YCPValue a = my_comp->evaluate (q);
+    YCPValue q1 = YCPTerm (YCPSymbol ("SuSEVersion", false));
+    YCPValue q2 = YCPVoid ();
+
+    YCPValue a = my_comp->evaluate (check_version ? q1 : q2);
 
     if (a->isError ())
     {
-	y2error ("created SCR comp is broken");
-
 	YCPValue e = a->asError ()->value ();
 	if (e->isInteger ())
 	    *error = -3 - (int)(e->asInteger ()->value ());
 	else
 	    *error = -3;
-
 	return false;
     }
 
@@ -90,7 +89,6 @@ WFMSubAgent::start_and_check (bool check_version, int* error)
 
 	if (!a->isString () || a->asString ()->value () != SUSEVERSION)
 	{
-	    y2error ("created SCR comp has wrong suseversion");
 	    *error = -2;
 	    return false;
 	}

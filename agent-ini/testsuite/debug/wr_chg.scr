@@ -1,7 +1,7 @@
 .
 
 `ag_ini(
-  SCR::IniAgent("debug/wr_chg.in.test",
+  IniAgent("debug/wr_chg.in.test",
     $[
       "options" : [ "global_values" ],
       "subindent" : "  ",

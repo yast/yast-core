@@ -6,17 +6,17 @@
 
 
 {
-    list l = SCR::Dir (.s);
+    list l = Dir (.s);
     y2milestone ("%1", l);
     foreach (`i, l, ``{
-	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
+	y2milestone ("%2: %1", Dir (add (.s, i)), i);
     });
-    y2milestone ("%1", SCR::Dir (.s."1.test"."fortech_litomysl"));
+    y2milestone ("%1", Dir (.s."1.test"."fortech_litomysl"));
 
-    SCR::Write (.v."1.test"."iqnet_praha"."Brand_new", "New value");
-    SCR::Write (.v."2.test"."arcor"."Brand_new", "New value");
-    SCR::Write (.v."3.test"."Totalise"."Brand_new", "New value");
-    SCR::Write (.v."4.test"."juno_online_services_inc_"."Brand_new", "New value");
+    Write (.v."1.test"."iqnet_praha"."Brand_new", "New value");
+    Write (.v."2.test"."arcor"."Brand_new", "New value");
+    Write (.v."3.test"."Totalise"."Brand_new", "New value");
+    Write (.v."4.test"."juno_online_services_inc_"."Brand_new", "New value");
 
     return nil;
 }

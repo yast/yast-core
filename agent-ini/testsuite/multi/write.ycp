@@ -3,18 +3,18 @@
 //
 // providers.rpm
 //
-// SCR::Write test.
+// write test.
 
 
 {
-    SCR::Write (.s."multi/write.in.4.test", "");
-    SCR::Write (.s."multi/write.in.4.test"."added", "#comment\n");
-    SCR::Write (.v."multi/write.in.4.test"."added".Number, "0609 112 777");
-    SCR::Write (.v."multi/write.in.1.test".fortech_litomysl.Username, "fakeuser");
-    list l = SCR::Dir (.s);
+    Write (.s."multi/write.in.4.test", "");
+    Write (.s."multi/write.in.4.test"."added", "#comment\n");
+    Write (.v."multi/write.in.4.test"."added".Number, "0609 112 777");
+    Write (.v."multi/write.in.1.test".fortech_litomysl.Username, "fakeuser");
+    list l = Dir (.s);
     y2milestone ("%1", l);
     foreach (`i, l, ``{
-	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
+	y2milestone ("%2: %1", Dir (add (.s, i)), i);
     });
     return nil;
 }

@@ -1,5 +1,5 @@
 .
 
 `ag_ini(
-  SCR::SysConfigFile ("tests/rc1.in.test")
+  SysConfigFile ("tests/rc1.in.test")
 )

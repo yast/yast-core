@@ -125,7 +125,7 @@ AnyAgent::otherCommand (const YCPTerm & term)
 {
     const string sym = term->symbol ()->symbol ();
 
-    if (sym == "AnyAgent" && term->size () >= 4)
+    if (sym == "Description" && term->size () >= 4)
     {
 	if (description_read)
 	{
@@ -165,12 +165,12 @@ AnyAgent::otherCommand (const YCPTerm & term)
 		    mName = t;
 	    }
 	    else
-		return YCPError (string ("Bad first arg of AnyAgent (): ") +
+		return YCPError (string ("Bad first arg of Description (): ") +
 				 s, YCPNull ());
 	}
 
 	if (mType == MTYPE_NONE)
-	    return YCPError ("First arg of AnyAgent () not recognized",
+	    return YCPError ("First arg of Description () not recognized",
 			     YCPNull ());
 
 	// extract comment characters
@@ -190,11 +190,11 @@ AnyAgent::otherCommand (const YCPTerm & term)
 		mComment = fillterm->value (0)->asString ()->value ();
 	    }
 	    else
-		return YCPError ("Second arg of AnyAgent () not Fillup(string)",
+		return YCPError ("Second arg of Description() not Fillup(string)",
 				 YCPNull ());
 	}
 	else
-	    return YCPError ("Second arg of AnyAgent () not string",
+	    return YCPError ("Second arg of Description() not string",
 			     YCPNull ());
 
 	// extract read-only flag
@@ -210,7 +210,7 @@ AnyAgent::otherCommand (const YCPTerm & term)
 	    }
 	}
 	else
-	    y2warning ("Third arg of AnyAgent () not boolean");
+	    y2warning ("Third arg of Description () not boolean");
 
 	// extract syntax description
 

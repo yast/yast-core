@@ -106,15 +106,9 @@ WFMInterpreter::interpreter_name () const
 YCPValue
 WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
 {
-    y2debug ("%s", term->toString().c_str());
-
-    if (!term->name_space().empty())
-    {
-	y2error ("Bad namespace for WFM");
-	return YCPVoid();
-    }
-
     string sym = term->symbol()->symbol();
+
+    y2debug ("%s", term->toString().c_str());
 
     if	    (sym == "UI")		return evaluateWFM_UI (term);
 
@@ -190,22 +184,17 @@ WFMInterpreter::evaluateWFM (const YCPValue& value)
 	    return evaluate (b->value(0));
 	}
     }
-    else if (value->isTerm())
+    else if (value->isTerm() && value->asTerm()->isQuoted())
     {
 	YCPTerm vt = value->asTerm();
-	YCPTerm t (YCPSymbol (vt->symbol()->symbol(), false), vt->name_space());
-	for (int i = 0; i < vt->size(); i++)
+	YCPTerm t(YCPSymbol(vt->symbol()->symbol(), false), vt->name_space());
+	for (int i=0; i<vt->size(); i++)
 	{
-	    YCPValue v = evaluate (vt->value (i));
-	    if (v.isNull ())
-	    {
-		return YCPError ("WFM parameter is NULL\n", YCPNull ());
-	    }
-	    t->add (v);
+	    t->add(vt->value(i));
 	}
-	return evaluateInstantiatedTerm (t);
+	return evaluate (t);
     }
-    return YCPError ("Unknown WFM:: operation");
+    return evaluate (value);
 }
 
 
@@ -660,12 +649,10 @@ WFMInterpreter::evaluateSCROpen (const YCPTerm& term)
 	int error;
 	if (!agent->start_and_check (check_version, &error))
 	{
-	    y2error ("SCROpen failed, error is %d", error);
 	    delete agent;
 	    return YCPInteger (error);
 	}
 
-	y2debug ("SCROpen succeeded, handle is %d", handle);
 	scrs.push_back (agent);
 	return YCPInteger (handle);
     }

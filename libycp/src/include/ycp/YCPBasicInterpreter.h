@@ -48,20 +48,13 @@ class YCPDebugger;
 class YCPBasicInterpreter : public YCPScope
 {
 private:
-
     /**
      * name of the currently evaluated module (block).
      * normally empty.
      */
     string moduleName;
 
-    /**
-     * evaluate block via subclassed evaluateInstantiatedTerm
-     */
-    bool enable_subclassed;
-
 public:
-
     /**
      * YCP define being evaluated.
      */
@@ -134,18 +127,7 @@ public:
      */
     YCPValue setModuleName (const string& modulename);
 
-    /**
-     * enable/disable use of subclassed interpreter
-     * used when recursively calling evaluate() from inside
-     * a subclassed interpreter (YUIInterpreter, SCRInterpreter)
-     * so it's evaluateInstantiatedTerm() gets called
-     * @param flag
-     * @return current flag
-     */
-    bool enableSubclassed (bool flag) { bool ret = enable_subclassed; enable_subclassed = flag; return ret; }
-
 protected:
-
    /**
      * Override this method to implement term evaluation. When the
      * interpreter executes a @ref YCPEvaluationStatementRep with
@@ -275,17 +257,13 @@ private:
      */
     YCPValue evaluateDefine (bool global, const YCPList& args);
 
-protected:
-
     /**
      * Looks through all macro definitions and tries to find one that
      * matches the given term and evaluates if, if existent. Otherwise
      * returns 0.
      * @param term Term to be evaluated
      */
-    YCPValue evaluateDefinition (const YCPTerm& term);
-
-private:
+    YCPValue evaluateDefinition(const YCPTerm& term);
 
     /**
      * Evaluates the logical && and || operators. The reason,

@@ -36,5 +36,5 @@
 .mnt.modules
 
 `ag_modules(
-  SCR::ModulesConf("/mnt/etc/modules.conf")
+  ModulesConf("/mnt/etc/modules.conf")
 )

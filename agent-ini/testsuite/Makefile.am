@@ -27,7 +27,3 @@ runag_ini_LDFLAGS = -L$(libdir)				\
 	$(srcdir)/../../liby2/src/libpy2script.la	\
 	$(srcdir)/../src/libpy2ag_ini.la		\
 	-Xlinker --no-whole-archive
-
-clean-local:
-	rm -f tmp.err.* tmp.out.* site.exp *.log *.sum *.bak
-

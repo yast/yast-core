@@ -44,7 +44,6 @@ YCPDebugger* YCPBasicInterpreter::debugger = NULL;
 
 
 YCPBasicInterpreter::YCPBasicInterpreter ()
-    : enable_subclassed (false)
 {
     if (!debugger)
     {
@@ -78,6 +77,7 @@ YCPBasicInterpreter::interpreter_name () const
 {
     return "YCP";	// must be upper case
 }
+
 
 YCPValue YCPBasicInterpreter::callback (const YCPValue& value)
 {
@@ -642,21 +642,18 @@ YCPValue YCPBasicInterpreter::evaluateTerm(const YCPTerm& term)
 
     YCPValue ret = evaluateDefinition(evalterm);
 
-    if (ret.isNull()
-	&& evalterm->name_space().empty())
+    if (ret.isNull())
     {
-	// Give subclassed YCPInterpreter a chance to know the term
-	// It is very important, that the parent interpreter handles
-	// the evaluation, since YCPInterpreter is subclassed from that.
+	// Give subclassed Interpreter a chance
+	ret = evaluateInstantiatedTerm(evalterm);
+	if (ret.isNull())
+	{
+	    // Give subclassed YCPInterpreter a chance to know the term
+	    // It is very important, that the parent interpreter handles
+	    // the evaluation, since YCPInterpreter is subclassed from that.
 
-	ret = evaluateBuiltinTerm(evalterm);
-    }
-
-    if (ret.isNull()
-	&& enable_subclassed)
-    {
-	// use subclassed Interpreter
-	ret = evaluateInstantiatedTerm (evalterm);
+	    ret = evaluateBuiltinTerm(evalterm);
+	}
     }
 
     if (ret.isNull())
@@ -1070,7 +1067,7 @@ YCPValue YCPBasicInterpreter::evaluateBlock(const YCPBlock& block)
     // directly contained in another block.
 
     bool do_break, do_continue, do_return;
-    YCPValue retval = block->evaluate (this, do_break, do_continue, do_return);
+    YCPValue retval = block->evaluate(this, do_break, do_continue, do_return);
 
     /* FIXME: already checked in block->evaluate !  */
     if (do_break)

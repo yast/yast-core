@@ -1,14 +1,14 @@
 {
-    // test of SCR::Reading type of section/value
+    // test of reading type of section/value
 
-    y2milestone ("%1", SCR::Read (.st."/boot/zImage-1.5.99"));
-    y2milestone ("%1", SCR::Read (.st."/boot/zImage-1.0.9"));
-    y2milestone ("%1", SCR::Read (.st."/tamu/vmlinuz"));
-    y2milestone ("%1", SCR::Read (.st."/dev/hda3"));
-    y2milestone ("%1", SCR::Read (.st."/dev/hdb5"));
-    y2milestone ("%1", SCR::Read (.vt.boot));
-    y2milestone ("%1", SCR::Read (.vt.prompt));
-    y2milestone ("%1", SCR::Read (.vt.timeout));
-    y2milestone ("%1", SCR::Read (.vt."/dev/hdb5".label));
-    return SCR::Dir (.s);
+    y2milestone ("%1", Read (.st."/boot/zImage-1.5.99"));
+    y2milestone ("%1", Read (.st."/boot/zImage-1.0.9"));
+    y2milestone ("%1", Read (.st."/tamu/vmlinuz"));
+    y2milestone ("%1", Read (.st."/dev/hda3"));
+    y2milestone ("%1", Read (.st."/dev/hdb5"));
+    y2milestone ("%1", Read (.vt.boot));
+    y2milestone ("%1", Read (.vt.prompt));
+    y2milestone ("%1", Read (.vt.timeout));
+    y2milestone ("%1", Read (.vt."/dev/hdb5".label));
+    return Dir (.s);
 }

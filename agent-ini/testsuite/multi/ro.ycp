@@ -7,11 +7,11 @@
 
 
 {
-    SCR::Write (.s.new, "newsection");
-    list l = SCR::Dir (.s);
+    Write (.s.new, "newsection");
+    list l = Dir (.s);
     y2milestone ("%1", l);
     foreach (`i, l, ``{
-	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
+	y2milestone ("%2: %1", Dir (add (.s, i)), i);
     });
     return nil;
 }

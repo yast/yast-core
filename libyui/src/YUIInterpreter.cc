@@ -378,7 +378,7 @@ YCPValue YUIInterpreter::callback(const YCPValue& value)
 
 YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 {
-    y2debug ("YUIInterpreter::evaluateUI(%s)\n", value->toString().c_str());
+    y2debug ("evaluateUI(%s)\n", value->toString().c_str());
     if (value->isBuiltin())
     {
 	YCPBuiltin b = value->asBuiltin();
@@ -387,35 +387,17 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 	    return evaluate (b->value(0));
 	}
     }
-    else if (value->isTerm())
+    else if (value->isTerm() && value->asTerm()->isQuoted())
     {
 	YCPTerm vt = value->asTerm();
-	YCPTerm t (YCPSymbol (vt->symbol()->symbol(), false), vt->name_space());
-	for (int i = 0; i < vt->size(); i++)
+	YCPTerm t(YCPSymbol(vt->symbol()->symbol(), false), vt->name_space());
+	for (int i=0; i<vt->size(); i++)
 	{
-	    YCPValue v = evaluate (vt->value (i));
-	    if (v.isNull ())
-	    {
-		return YCPError ("YUI parameter is NULL\n", YCPNull ());
-	    }
-	    t->add (v);
+	    t->add(vt->value(i));
 	}
-	// try predefined first
-	YCPValue v = evaluateInstantiatedTerm (t);
-	if (v.isNull ())
-	{
-	    v = evaluateDefinition (t);
-	}
-	return v;
+	return evaluate (t);
     }
-    else if (value->isBlock())
-    {
-	bool b = enableSubclassed (true);
-	YCPValue v = evaluate (value);
-	enableSubclassed (b);
-	return v;
-    }
-    return YCPError ("Unknown UI:: operation");
+    return evaluate (value);
 }
 
 

@@ -1,8 +1,0 @@
-[Interpreter] tests/ModuleErr.ycp:2 Undefined function NoSuchModule::Read()
-[YCP] tests/ModuleErr.ycp:2 nil
-[Interpreter] tests/ModuleErr.ycp:3 Undefined function NoSuchModule::Read()
-[YCP] tests/ModuleErr.ycp:3 nil
-[Interpreter] :-1 Can't create component 'ag_system'
-[YCP] tests/ModuleErr.ycp:4 nil
-[wfm] WFMInterpreter.cc(evaluateInstantiatedTerm):113 Bad namespace for WFM
-[YCP] tests/ModuleErr.ycp:5 nil

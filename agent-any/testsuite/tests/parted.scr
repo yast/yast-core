@@ -4,7 +4,7 @@
 .
 
 `ag_anyagent(
-  SCR::AnyAgent (
+  Description (
   ``(File ("tests/parted.in")),
   "\n", true,
   ``(Tuple (
