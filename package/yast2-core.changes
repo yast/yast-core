@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jan 29 13:17:35 CET 2004 - visnov@suse.cz
+
+- don't distribute bison-generated code 
+
+-------------------------------------------------------------------
 Wed Jan 28 10:56:52 CET 2004 - arvin@suse.de
 
 - fixed testsuite
