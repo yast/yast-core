@@ -1259,7 +1259,7 @@ YCPValue YUIInterpreter::evaluateGlyph(const YCPTerm& term)
  * <p>
  * <b>Important:</b> Don't misuse this function to simply not support the
  * NCurses UI properly! Always think twice before checking for <i>text
- * mode</>. If you think there is no proper layout etc. solution for NCurses,
+ * mode</i>. If you think there is no proper layout etc. solution for NCurses,
  * it might be time to reconsider the complexity or even the concept of your
  * dialog.
  *
