@@ -256,8 +256,11 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 
     PMYouServer server = convertServerObject( args->value( 0 )->asMap() );
 
-    _last_error =
-        _y2pm.youPatchManager().instYou().retrievePatchDirectory( server );
+    InstYou &you = _y2pm.youPatchManager().instYou();
+
+    you.paths()->setPatchServer( server );
+
+    _last_error = you.retrievePatchDirectory();
     if ( _last_error ) {
       if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       return YCPString( "error" );
@@ -297,8 +300,11 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
     bool reload = args->value(1)->asBoolean()->value();
     bool checkSig = args->value(2)->asBoolean()->value();
 
-    _last_error =
-        _y2pm.youPatchManager().instYou().retrievePatchInfo( server, reload, checkSig );
+    InstYou &you = _y2pm.youPatchManager().instYou();
+
+    you.paths()->setPatchServer( server );
+
+    _last_error = you.retrievePatchInfo( reload, checkSig );
     if ( _last_error ) {
       if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
