@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 29 16:34:19 CET 2002 - sh@suse.de
+
+- Fixed bug/wish #13866: Delayed keyboard shortcut checking
+  New UI builtins PostponeShortcutCheck(), CheckShortcuts() 
+
+-------------------------------------------------------------------
 Fri Nov 22 14:24:41 CET 2002 - msvec@suse.cz
 
 - system agent:

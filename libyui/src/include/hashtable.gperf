@@ -3,6 +3,7 @@ AskForExistingFile
 AskForSaveFileName
 BusyCursor
 ChangeWidget
+CheckShortcuts
 CloseDialog
 DumpWidgetTree
 FakeUserInput
@@ -16,6 +17,7 @@ NormalCursor
 OpenDialog
 PlayMacro
 PollInput
+PostponeShortcutCheck
 QueryWidget
 RecalcLayout
 Recode

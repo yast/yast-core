@@ -83,11 +83,27 @@ public:
 
     /**
      * Checks the keyboard shortcuts of all children of this dialog
-     * (not for sub-dialogs!).
+     * (not for sub-dialogs!) unless shortcut checks are postponed or 'force'
+     * is 'true'.
+     *
+     * A forced shortcut check resets postponed checking.
      */
-    void checkKeyboardShortcuts();
+    void checkShortcuts( bool force = false );
 
+    /**
+     * From now on, postpone keyboard shortcut checks -
+     * i.e. normal (not forced) checkKeyboardShortcuts() will do nothing.
+     * Reset this mode by forcing a shortcut check with 
+     * checkKeyboardShortcuts( true ).
+     **/
+    void postponeShortcutCheck() { _shortcutCheckPostponed = true; }
 
+    /**
+     * Return whether or not shortcut checking is currently postponed.
+     **/
+    bool shortcutCheckPostponed() const { return _shortcutCheckPostponed; }
+
+    
 protected:
 
     /*
@@ -97,6 +113,8 @@ protected:
     YBoolOpt	_hasWarnColor;
     YBoolOpt	_hasInfoColor;
     YBoolOpt	_isDecorated;
+
+    bool	_shortcutCheckPostponed;
 };
 
 

@@ -31,6 +31,7 @@ YDialog::YDialog(YWidgetOpt &opt)
     _hasWarnColor.setValue(opt.hasWarnColor.value());
     _hasInfoColor.setValue(opt.hasInfoColor.value());
     _isDecorated.setValue(opt.isDecorated.value());
+    _shortcutCheckPostponed = false;
 }
 
 
@@ -53,9 +54,17 @@ void YDialog::setInitialSize()
 }
 
 
-void YDialog::checkKeyboardShortcuts()
+void YDialog::checkShortcuts( bool force )
 {
+    if ( _shortcutCheckPostponed && ! force )
+    {
+	y2debug( "shortcut check postponed" );
+	return;
+    }
+
     YShortcutManager shortcutManager( this );
     shortcutManager.checkShortcuts();
+	
+    _shortcutCheckPostponed	= false;
 }
 

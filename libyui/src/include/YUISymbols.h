@@ -51,6 +51,10 @@
 #define YUIBuiltin_UserInput			"UserInput"
 #define YUIBuiltin_WidgetExists			"WidgetExists"
 
+#define YUIBuiltin_PostponeShortcutCheck	"PostponeShortcutCheck"
+#define YUIBuiltin_CheckShortcuts		"CheckShortcuts"
+
+
 #define YUIBuiltin_RecordMacro			"RecordMacro"
 #define YUIBuiltin_StopRecordMacro		"StopRecordMacro"
 #define YUIBuiltin_PlayMacro			"PlayMacro"

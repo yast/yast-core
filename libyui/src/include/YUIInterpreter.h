@@ -177,7 +177,7 @@ public:
     /**
      * Parse an item list for a MultiSelectionBox
      */
-    int parseMultiSelectionBoxItemList( const YCPList &	item_list, YMultiSelectionBox *	multi_sel_box );
+    int parseMultiSelectionBoxItemList( const YCPList & item_list, YMultiSelectionBox * multi_sel_box );
 
     /**
      * Parse an `rgb() value
@@ -513,7 +513,7 @@ protected:
      */
     virtual YWidget *createPkgSpecial(YWidget *parent, YWidgetOpt &opt, const YCPString &subwidget ) = 0;
 
-    
+
     /**
      * Creates a DummySpecialWidget.
      *
@@ -535,7 +535,7 @@ protected:
 					       const YCPString &label,
 					       const YCPString &filename,
 					       int expectedSize);
-    virtual bool 	hasDownloadProgress();
+    virtual bool	hasDownloadProgress();
 
     /**
      * Creates a BarGraph widget.
@@ -545,7 +545,7 @@ protected:
      * If you do, remember to overwrite the has...() method as well!
      */
     virtual YWidget *	createBarGraph(YWidget *parent, YWidgetOpt &opt);
-    virtual bool 	hasBarGraph();
+    virtual bool	hasBarGraph();
 
     /**
      * Creates a ColoredLabelwidget.
@@ -558,7 +558,7 @@ protected:
 					   YCPString label,
 					   YColor foreground, YColor background,
 					   int margin );
-    virtual bool 	hasColoredLabel();
+    virtual bool	hasColoredLabel();
 
 
     /**
@@ -571,10 +571,10 @@ protected:
     virtual YWidget *	createSlider(YWidget *		parent,
 				     YWidgetOpt &	opt,
 				     const YCPString &	label,
-				     int 		minValue,
-				     int 		maxValue,
-				     int 		initialValue );
-    virtual bool 	hasSlider();
+				     int		minValue,
+				     int		maxValue,
+				     int		initialValue );
+    virtual bool	hasSlider();
 
     /**
      * Creates a PartitionSplitter widget.
@@ -586,30 +586,30 @@ protected:
      * @param parent		the parent widget
      * @param opt		the widget options
      * @param usedSize		size of the used part of the partition
-     * @param totalFreeSize 	total size of the free part of the partition (before the split)
+     * @param totalFreeSize	total size of the free part of the partition (before the split)
      * @param newPartSize	suggested size of the new partition
      * @param minNewPartSize	minimum size of the new partition
-     * @param minFreeSize 	minimum remaining free size of the old partition
-     * @param usedLabel 		BarGraph label for the used part of the old partition
-     * @param freeLabel 		BarGraph label for the free part of the old partition
-     * @param newPartLabel  	BarGraph label for the new partition
+     * @param minFreeSize	minimum remaining free size of the old partition
+     * @param usedLabel			BarGraph label for the used part of the old partition
+     * @param freeLabel			BarGraph label for the free part of the old partition
+     * @param newPartLabel	BarGraph label for the new partition
      * @param freeFieldLabel	label for the remaining free space field
-     * @param newPartFieldLabel	label for the new partition size field
+     * @param newPartFieldLabel label for the new partition size field
      */
 
     virtual YWidget *createPartitionSplitter( YWidget *		parent,
 					      YWidgetOpt &	opt,
-					      int 		usedSize,
-					      int 		totalFreeSize,
-					      int 		newPartSize,
-					      int 		minNewPartSize,
-					      int 		minFreeSize,
-					      const YCPString &	usedLabel,
-					      const YCPString &	freeLabel,
-					      const YCPString &	newPartLabel,
-					      const YCPString &	freeFieldLabel,
-					      const YCPString &	newPartFieldLabel );
-    virtual bool 	hasPartitionSplitter();
+					      int		usedSize,
+					      int		totalFreeSize,
+					      int		newPartSize,
+					      int		minNewPartSize,
+					      int		minFreeSize,
+					      const YCPString & usedLabel,
+					      const YCPString & freeLabel,
+					      const YCPString & newPartLabel,
+					      const YCPString & freeFieldLabel,
+					      const YCPString & newPartFieldLabel );
+    virtual bool	hasPartitionSplitter();
 
 
     /**
@@ -636,15 +636,15 @@ protected:
      * UI-specific getDisplayInfo() functions.
      * See UI builtin GetDisplayInfo() doc for details.
      **/
-    virtual int  getDisplayWidth()		{ return -1; }
-    virtual int  getDisplayHeight() 		{ return -1; }
-    virtual int  getDisplayDepth() 		{ return -1; }
-    virtual long getDisplayColors() 		{ return -1; }
-    virtual int  getDefaultWidth()		{ return -1; }
-    virtual int  getDefaultHeight()		{ return -1; }
-    virtual bool textMode()	 		{ return true; }
+    virtual int	 getDisplayWidth()		{ return -1; }
+    virtual int	 getDisplayHeight()		{ return -1; }
+    virtual int	 getDisplayDepth()		{ return -1; }
+    virtual long getDisplayColors()		{ return -1; }
+    virtual int	 getDefaultWidth()		{ return -1; }
+    virtual int	 getDefaultHeight()		{ return -1; }
+    virtual bool textMode()			{ return true; }
     virtual bool hasImageSupport()		{ return false; }
-    virtual bool hasLocalImageSupport()		{ return true;  }
+    virtual bool hasLocalImageSupport()		{ return true;	}
     virtual bool hasAnimationSupport()		{ return false; }
     virtual bool hasIconSupport()		{ return false; }
     virtual bool hasFullUtf8Support()		{ return false; }
@@ -694,27 +694,27 @@ protected:
      * Graphical UIs may omit that if no window manager is running.
      *
      * Returns the selected directory name
-     * or 'nil' (YCPVoid()) if the user canceled the operation. 
+     * or 'nil' (YCPVoid()) if the user canceled the operation.
      **/
     virtual YCPValue askForExistingDirectory ( const YCPString & startDir,
 					       const YCPString & headline ) = 0;
-    
+
     /**
      * UI-specific implementation of the AskForExistingFile() builtin.
      *
      * Open a file selection box and prompt the user for an existing file.
-     * 
+     *
      * 'startWith' is the initial directory or file.
-     * 
+     *
      * 'filter' is one or more blank-separated file patterns, e.g. "*.png *.jpg"
-     * 
+     *
      * 'headline' is an explanatory text for the file selection box.
      * Graphical UIs may omit that if no window manager is running.
-     * 
+     *
      * Returns the selected file name
      * or 'nil' (YCPVoid()) if the user canceled the operation.
      **/
-    virtual YCPValue askForExistingFile	( const YCPString & startWith,
+    virtual YCPValue askForExistingFile ( const YCPString & startWith,
 					  const YCPString & filter,
 					  const YCPString & headline ) = 0;
 
@@ -723,18 +723,18 @@ protected:
      *
      * Open a file selection box and prompt the user for a file to save data to.
      * Automatically asks for confirmation if the user selects an existing file.
-     * 
+     *
      * 'startWith' is the initial directory or file.
-     * 
+     *
      * 'filter' is one or more blank-separated file patterns, e.g. "*.png *.jpg"
-     * 
+     *
      * 'headline' is an explanatory text for the file selection box.
      * Graphical UIs may omit that if no window manager is running.
-     * 
+     *
      * Returns the selected file name
      * or 'nil' (YCPVoid()) if the user canceled the operation.
      **/
-    virtual YCPValue askForSaveFileName	( const YCPString & startWith,
+    virtual YCPValue askForSaveFileName ( const YCPString & startWith,
 					  const YCPString & filter,
 					  const YCPString & headline ) = 0;
 
@@ -754,7 +754,7 @@ protected:
      * @ref #pollInput.
      */
     YCPValue evaluateInstantiatedTerm( const YCPTerm & term );
-    
+
     YCPValue callback		( const YCPValue & value );
     YCPValue evaluateUI		( const YCPValue & value );
     YCPValue evaluateWFM	( const YCPValue & value );
@@ -859,35 +859,37 @@ protected:
      * Implementations for most UI builtins.
      * Each method corresponds directly to one UI builtin.
      **/
-    YCPValue evaluateAskForExistingDirectory	( const YCPTerm & term );
-    YCPValue evaluateAskForExistingFile		( const YCPTerm & term );
-    YCPValue evaluateAskForSaveFileName		( const YCPTerm & term );
-    YCPValue evaluateBusyCursor			( const YCPTerm & term );
-    YCPValue evaluateChangeWidget		( const YCPTerm & term );
-    YCPValue evaluateCloseDialog		( const YCPTerm & term );
-    YCPValue evaluateDumpWidgetTree		( const YCPTerm & term );
-    YCPValue evaluateFakeUserInput 		( const YCPTerm & term );
-    YCPValue evaluateGetDisplayInfo		( const YCPTerm & term );
-    YCPValue evaluateGetLanguage		( const YCPTerm & term );
-    YCPValue evaluateGetModulename		( const YCPTerm & term );
-    YCPValue evaluateGlyph 			( const YCPTerm & term );
-    YCPValue evaluateHasSpecialWidget		( const YCPTerm & term );
-    YCPValue evaluateMakeScreenShot		( const YCPTerm & term );
-    YCPValue evaluateNormalCursor		( const YCPTerm & term );
-    YCPValue evaluateOpenDialog			( const YCPTerm & term );
-    YCPValue evaluatePlayMacro 			( const YCPTerm & term );
-    YCPValue evaluateQueryWidget		( const YCPTerm & term );
-    YCPValue evaluateRecalcLayout		( const YCPTerm & term );
-    YCPValue evaluateRecode 			( const YCPTerm & term );
-    YCPValue evaluateRecordMacro 		( const YCPTerm & term );
-    YCPValue evaluateRedrawScreen		( const YCPTerm & term );
-    YCPValue evaluateRunPkgSelection		( const YCPTerm & term );
-    YCPValue evaluateSetConsoleFont		( const YCPTerm & term );
-    YCPValue evaluateSetFocus			( const YCPTerm & term );
-    YCPValue evaluateSetLanguage		( const YCPTerm & term );
-    YCPValue evaluateSetModulename		( const YCPTerm & term );
-    YCPValue evaluateStopRecordMacro 		( const YCPTerm & term );
-    YCPValue evaluateWidgetExists		( const YCPTerm & term );
+    YCPValue evaluateAskForExistingDirectory		( const YCPTerm & term );
+    YCPValue evaluateAskForExistingFile			( const YCPTerm & term );
+    YCPValue evaluateAskForSaveFileName			( const YCPTerm & term );
+    YCPValue evaluateBusyCursor				( const YCPTerm & term );
+    YCPValue evaluateChangeWidget			( const YCPTerm & term );
+    YCPValue evaluateCloseDialog			( const YCPTerm & term );
+    YCPValue evaluateDumpWidgetTree			( const YCPTerm & term );
+    YCPValue evaluateFakeUserInput			( const YCPTerm & term );
+    YCPValue evaluateGetDisplayInfo			( const YCPTerm & term );
+    YCPValue evaluateGetLanguage			( const YCPTerm & term );
+    YCPValue evaluateGetModulename			( const YCPTerm & term );
+    YCPValue evaluateGlyph				( const YCPTerm & term );
+    YCPValue evaluateHasSpecialWidget			( const YCPTerm & term );
+    YCPValue evaluateMakeScreenShot			( const YCPTerm & term );
+    YCPValue evaluateNormalCursor			( const YCPTerm & term );
+    YCPValue evaluateOpenDialog				( const YCPTerm & term );
+    YCPValue evaluatePlayMacro				( const YCPTerm & term );
+    YCPValue evaluateQueryWidget			( const YCPTerm & term );
+    YCPValue evaluateRecalcLayout			( const YCPTerm & term );
+    YCPValue evaluateRecode				( const YCPTerm & term );
+    YCPValue evaluateRecordMacro			( const YCPTerm & term );
+    YCPValue evaluateRedrawScreen			( const YCPTerm & term );
+    YCPValue evaluateRunPkgSelection			( const YCPTerm & term );
+    YCPValue evaluateSetConsoleFont			( const YCPTerm & term );
+    YCPValue evaluateSetFocus				( const YCPTerm & term );
+    YCPValue evaluateSetLanguage			( const YCPTerm & term );
+    YCPValue evaluateSetModulename			( const YCPTerm & term );
+    YCPValue evaluateStopRecordMacro			( const YCPTerm & term );
+    YCPValue evaluateWidgetExists			( const YCPTerm & term );
+    YCPValue evaluatePostponeShortcutCheck		( const YCPTerm & term );
+    YCPValue YUIInterpreter::evaluateCheckShortcuts	( const YCPTerm & term );
 
     /**
      * Implements the UserInput and PollInput() UI commands:
