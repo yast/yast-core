@@ -2,6 +2,7 @@
 Fri Feb 20 15:34:06 CET 2004 - arvin@suse.de
 
 - fix Pkg::SourceEditGet, Pkg::SourceEditSet and Pkg::SourceScan
+- fixed seg. fault with unresolved xref's
 
 -------------------------------------------------------------------
 Fri Feb 20 13:45:30 CET 2004 - visnov@suse.cz
@@ -16,8 +17,8 @@ Fri Feb 20 13:45:30 CET 2004 - visnov@suse.cz
 Thu Feb 19 18:14:32 CET 2004 - visnov@suse.cz
 
 - memory fixes:
- lazy initialization of a symbol table
- free function declarations/definitions in client calls
+  lazy initialization of a symbol table
+  free function declarations/definitions in client calls
 
 -------------------------------------------------------------------
 Thu Feb 19 13:06:36 CET 2004 - mvidner@suse.cz
