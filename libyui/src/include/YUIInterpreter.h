@@ -69,7 +69,7 @@ public:
      * Looks up the topmost dialog
      */
     YDialog *currentDialog() const;
-    
+
     /**
      * Creates a YUIInterpreter.
      * @param with_threads Set this to true if you want a seperate ui thread
@@ -208,7 +208,7 @@ public:
      * @param log_error set to true if you want me to log an error if
      * the id is not existing.
      */
-    
+
     YWidget *widgetWithId(const YCPValue &id, bool log_error=false);
 
     /**
@@ -226,7 +226,7 @@ public:
      */
     YCPValue evaluateReplaceWidget(const YCPTerm& term);
 
-    
+
 protected:
 
 
@@ -513,6 +513,7 @@ protected:
      */
     virtual YWidget *createPkgSpecial(YWidget *parent, YWidgetOpt &opt, const YCPString &subwidget ) = 0;
 
+    
     /**
      * Creates a DummySpecialWidget.
      *
@@ -677,11 +678,68 @@ protected:
      * UI-specific runPkgSelection method.
      * This default implementation does nothing.
      * Use this to post-initialize widget stuff that cannot be done in the
-     * createPackageSelector() method. 
+     * createPackageSelector() method.
      **/
     virtual YCPValue runPkgSelection( YWidget * packageSelector ) { return YCPVoid(); }
 
+
+    /**
+     * UI-specific implementation of the AskForExistingDirectory() builtin.
+     *
+     * Open a directory selection box and prompt the user for an existing directory.
+     *
+     * 'startDir' is the initial directory that is displayed.
+     *
+     * 'headline' is an explanatory text for the directory selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     *
+     * Returns the selected directory name
+     * or 'nil' (YCPVoid()) if the user canceled the operation. 
+     **/
+    virtual YCPValue askForExistingDirectory ( const YCPString & startDir,
+					       const YCPString & headline ) = 0;
     
+    /**
+     * UI-specific implementation of the AskForExistingFile() builtin.
+     *
+     * Open a file selection box and prompt the user for an existing file.
+     * 
+     * 'startWith' is the initial directory or file.
+     * 
+     * 'filter' is one or more blank-separated file patterns, e.g. "*.png *.jpg"
+     * 
+     * 'headline' is an explanatory text for the file selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     * 
+     * Returns the selected file name
+     * or 'nil' (YCPVoid()) if the user canceled the operation.
+     **/
+    virtual YCPValue askForExistingFile	( const YCPString & startWith,
+					  const YCPString & filter,
+					  const YCPString & headline ) = 0;
+
+    /**
+     * UI-specific implementation of the AskForSaveFileName() builtin.
+     *
+     * Open a file selection box and prompt the user for a file to save data to.
+     * Automatically asks for confirmation if the user selects an existing file.
+     * 
+     * 'startWith' is the initial directory or file.
+     * 
+     * 'filter' is one or more blank-separated file patterns, e.g. "*.png *.jpg"
+     * 
+     * 'headline' is an explanatory text for the file selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     * 
+     * Returns the selected file name
+     * or 'nil' (YCPVoid()) if the user canceled the operation.
+     **/
+    virtual YCPValue askForSaveFileName	( const YCPString & startWith,
+					  const YCPString & filter,
+					  const YCPString & headline ) = 0;
+
+
+
     /**
      * This function is inherited from YCPInterpreter. It checks
      * if the given term is a command the UI understands. If no,
@@ -695,12 +753,13 @@ protected:
      * is overridden by some actual UI, such as @ref #userInput or
      * @ref #pollInput.
      */
-    YCPValue evaluateInstantiatedTerm(const YCPTerm& term);
-    YCPValue callback(const YCPValue& value);
-    YCPValue evaluateUI(const YCPValue& value);
-    YCPValue evaluateWFM(const YCPValue& value);
-    YCPValue evaluateSCR(const YCPValue& value);
-    YCPValue setTextdomain (const string& textdomain);
+    YCPValue evaluateInstantiatedTerm( const YCPTerm & term );
+    
+    YCPValue callback		( const YCPValue & value );
+    YCPValue evaluateUI		( const YCPValue & value );
+    YCPValue evaluateWFM	( const YCPValue & value );
+    YCPValue evaluateSCR	( const YCPValue & value );
+    YCPValue setTextdomain	( const string & textdomain) ;
     string getTextdomain (void);
 
     /**
@@ -789,164 +848,57 @@ protected:
      * Filter out invalid events.
      **/
     YWidget * filterInvalidEvents( YWidget *event_widget );
-	
+
     /**
-     * acutally executes an ui command term. Never returns YCPNull.
+     * actually executes an ui command term. Never returns YCPNull.
      */
-    YCPValue executeUICommand(const YCPTerm &term);
+    YCPValue executeUICommand			( const YCPTerm & term );
 
 
     /**
-     * Implements the UI command SetModulename.
-     */
-    YCPValue evaluateSetModulename(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command GetModulename.
-     */
-    YCPValue evaluateGetModulename(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command SetLanguage.
-     */
-    YCPValue evaluateSetLanguage(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command GetLanguage.
-     */
-    YCPValue evaluateGetLanguage(const YCPTerm& term);
-
-
-    /**
-     * Implements the GetDisplayInfo UI command.
-     */
-    YCPValue evaluateGetDisplayInfo(const YCPTerm& term);
-
-
-    /**
-     * Implements the RecalcLayout UI command.
+     * Implementations for most UI builtins.
+     * Each method corresponds directly to one UI builtin.
      **/
-    YCPValue evaluateRecalcLayout(const YCPTerm& term);
-
+    YCPValue evaluateAskForExistingDirectory	( const YCPTerm & term );
+    YCPValue evaluateAskForExistingFile		( const YCPTerm & term );
+    YCPValue evaluateAskForSaveFileName		( const YCPTerm & term );
+    YCPValue evaluateBusyCursor			( const YCPTerm & term );
+    YCPValue evaluateChangeWidget		( const YCPTerm & term );
+    YCPValue evaluateCloseDialog		( const YCPTerm & term );
+    YCPValue evaluateDumpWidgetTree		( const YCPTerm & term );
+    YCPValue evaluateFakeUserInput 		( const YCPTerm & term );
+    YCPValue evaluateGetDisplayInfo		( const YCPTerm & term );
+    YCPValue evaluateGetLanguage		( const YCPTerm & term );
+    YCPValue evaluateGetModulename		( const YCPTerm & term );
+    YCPValue evaluateGlyph 			( const YCPTerm & term );
+    YCPValue evaluateHasSpecialWidget		( const YCPTerm & term );
+    YCPValue evaluateMakeScreenShot		( const YCPTerm & term );
+    YCPValue evaluateNormalCursor		( const YCPTerm & term );
+    YCPValue evaluateOpenDialog			( const YCPTerm & term );
+    YCPValue evaluatePlayMacro 			( const YCPTerm & term );
+    YCPValue evaluateQueryWidget		( const YCPTerm & term );
+    YCPValue evaluateRecalcLayout		( const YCPTerm & term );
+    YCPValue evaluateRecode 			( const YCPTerm & term );
+    YCPValue evaluateRecordMacro 		( const YCPTerm & term );
+    YCPValue evaluateRedrawScreen		( const YCPTerm & term );
+    YCPValue evaluateRunPkgSelection		( const YCPTerm & term );
+    YCPValue evaluateSetConsoleFont		( const YCPTerm & term );
+    YCPValue evaluateSetFocus			( const YCPTerm & term );
+    YCPValue evaluateSetLanguage		( const YCPTerm & term );
+    YCPValue evaluateSetModulename		( const YCPTerm & term );
+    YCPValue evaluateStopRecordMacro 		( const YCPTerm & term );
+    YCPValue evaluateWidgetExists		( const YCPTerm & term );
 
     /**
-     * Implements the WidgetExists UI command.
-     **/
-    YCPValue evaluateWidgetExists(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command SetConsoleFont.
-     */
-    YCPValue evaluateSetConsoleFont(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI commands UserInput and PollInput()
+     * Implements the UserInput and PollInput() UI commands:
      * @param poll set this to true if you want PollInput(), false for UserInput()
      */
-    YCPValue evaluateUserInput(const YCPTerm& term, bool poll);
-
-
-    /**
-     * Implements the UI command OpenDialog.
-     */
-    YCPValue evaluateOpenDialog(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command CloseDialog.
-     */
-    YCPValue evaluateCloseDialog(const YCPTerm& term);
-
-
-    /**
-     * Implements the UI command ChangeWidget.
-     */
-    YCPValue evaluateChangeWidget(const YCPTerm& term);
-
-    /**
-     * Implements the UI command QueryWidget.
-     */
-    YCPValue evaluateQueryWidget(const YCPTerm& term);
-
-    /**
-     * Implements the UI command HasSpecialWidget.
-     */
-    YCPValue evaluateHasSpecialWidget(const YCPTerm& term);
-
-    /**
-     * Implements the UI command SetFocus.
-     */
-    YCPValue evaluateSetFocus(const YCPTerm& term);
-
-    /**
-     * Implements the UI command BusyCursor.
-     */
-    YCPValue evaluateBusyCursor(const YCPTerm& term);
-
-    /**
-     * Implements the UI command NormalCursor.
-     */
-    YCPValue evaluateNormalCursor(const YCPTerm& term);
-
-    /**
-     * Implements the RedrawScreen command.
-     */
-    YCPValue evaluateRedrawScreen(const YCPTerm& term);
-
-    /**
-     * Implements the MakeScreenShot UI command.
-     */
-    YCPValue evaluateMakeScreenShot(const YCPTerm& term);
-
-    /**
-     * Implements the DumpWidgetTree UI command.
-     */
-    YCPValue evaluateDumpWidgetTree(const YCPTerm& term);
-
-    /**
-     * Implements the Recode UI command.
-     */
-    YCPValue evaluateRecode (const YCPTerm& term);
-
-    /**
-     * Implements the RecordMacro UI command.
-     */
-    YCPValue evaluateRecordMacro (const YCPTerm& term);
-
-    /**
-     * Implements the StopRecordMacro UI command.
-     */
-    YCPValue evaluateStopRecordMacro (const YCPTerm& term);
-
-    /**
-     * Implements the PlayMacro UI command.
-     */
-    YCPValue evaluatePlayMacro (const YCPTerm& term);
-
-    /**
-     * Implements the FakeUserInput UI command.
-     */
-    YCPValue evaluateFakeUserInput (const YCPTerm& term);
-
-    /**
-     * Implements the Glyph UI command.
-     */
-    YCPValue evaluateGlyph (const YCPTerm& term);
-
-    /**
-     * Implements the UI command RunPkgSelection.
-     */
-    YCPValue evaluateRunPkgSelection(const YCPTerm& term);
+    YCPValue evaluateUserInput	(const YCPTerm & term, bool poll);
 
     /**
      * Implements the WFM or SCR callback command.
      */
-    YCPValue evaluateCallback (const YCPTerm& term, bool to_wfm);
+    YCPValue evaluateCallback (const YCPTerm & term, bool to_wfm);
 
 
     /**
@@ -1209,7 +1161,7 @@ protected:
      */
     YWidget *createPkgSpecial(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
 			      const YCPList &optList, int argnr);
-    
+
     /**
      * Helper function of createWidgetTree.
      * Creates a DummySpecialWidget.

@@ -1,3 +1,6 @@
+AskForExistingDirectory
+AskForExistingFile
+AskForSaveFileName
 BusyCursor
 ChangeWidget
 CloseDialog

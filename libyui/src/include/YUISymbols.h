@@ -22,6 +22,9 @@
 
 // UI builtin functions
 
+#define YUIBuiltin_AskForExistingFile		"AskForExistingFile"
+#define YUIBuiltin_AskForExistingDirectory	"AskForExistingDirectory"
+#define YUIBuiltin_AskForSaveFileName		"AskForSaveFileName"
 #define YUIBuiltin_BusyCursor			"BusyCursor"
 #define YUIBuiltin_ChangeWidget			"ChangeWidget"
 #define YUIBuiltin_CloseDialog			"CloseDialog"
@@ -161,8 +164,10 @@
 #define YUIOpt_shrinkable			"shrinkable"
 #define YUIOpt_testMode				"testMode"
 #define YUIOpt_tiled				"tiled"
+#define YUIOpt_updateMode			"updateMode"
 #define YUIOpt_vstretch				"vstretch"
 #define YUIOpt_warncolor			"warncolor"
+#define YUIOpt_youMode				"youMode"
 #define YUIOpt_zeroHeight			"zeroHeight"
 #define YUIOpt_zeroWidth			"zeroWidth"
 
@@ -178,9 +183,6 @@
 #define YUIOpt_key_F10				"key_F10"
 #define YUIOpt_key_F11				"key_F11"
 #define YUIOpt_key_F12				"key_F12"
-
-#define YUIOpt_youMode				"youMode"
-#define YUIOpt_updateMode			"updateMode"
 
 
 // Predefined glyphs for builtin Glyph()
