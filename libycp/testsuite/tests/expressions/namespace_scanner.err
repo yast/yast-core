@@ -1,0 +1,3 @@
+[Parser] tests/expressions/namespace_scanner.ycp:4 Unexpected char '4'
+[Parser] tests/expressions/namespace_scanner.ycp:4 syntax error, unexpected SCANNER_ERROR
+runycp: parser error
