@@ -1172,6 +1172,26 @@ HwProbe::hd2value (hd_t *hd)
 		}
 	    }
 	    break;
+	    case hd_detail_scsi: {
+		scsi_t *info = hd->detail->scsi.data;
+		if (info)
+		{
+#if defined(__s390__) || defined(__s390x__)
+		    char buf[128];
+		    snprintf (buf, 128, "0x%llx", info->wwpn);
+		    out->add (YCPString ("wwpn"), YCPString (buf));
+		    snprintf (buf, 128, "0x%llx", info->fcp_lun);
+		    out->add (YCPString ("fcp_lun"), YCPString (buf));
+		    if (info->controller_id)
+			out->add (YCPString ("controller_id"), YCPString (info->controller_id));
+#endif
+		    out->add (YCPString ("host"), YCPInteger (info->host));
+		    out->add (YCPString ("channel"), YCPInteger (info->channel));
+		    out->add (YCPString ("id"), YCPInteger (info->id));
+		    out->add (YCPString ("lun"), YCPInteger (info->lun));
+		}
+	    }
+	    break;
 	    default:
 	    break;
 	}

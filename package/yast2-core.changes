@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar  8 17:35:04 CET 2004 - jsrain@suse.de
+
+- probe agent returns additional info for SCSI discs
+- 2.9.54
+
+-------------------------------------------------------------------
 Sun Mar  7 12:07:24 CET 2004 - kkaempf@suse.de
 
 - use propagation information from Type::match in Type::canCast
