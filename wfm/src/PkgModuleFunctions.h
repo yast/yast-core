@@ -219,6 +219,7 @@ class PkgModuleFunctions
 	YCPValue YouInstallCurrentPatch (YCPList args);
 	YCPValue YouInstallPatches (YCPList args);
         YCPValue YouRemovePackages (YCPList args);
+        YCPValue YouFinish (YCPList args);
 
 	/**
 	 * Constructor.

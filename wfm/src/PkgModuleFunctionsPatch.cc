@@ -75,12 +75,15 @@ PkgModuleFunctions::YouStatus (YCPList args)
 
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
-    PMYouPatchPathsPtr paths = _y2pm.youPatchManager().instYou().paths();
+    InstYou &you = _y2pm.youPatchManager().instYou();
+    PMYouPatchPathsPtr paths = you.paths();
     
     result->add( YCPString( "product" ), YCPString( paths->product() ) );
     result->add( YCPString( "version" ), YCPString( paths->version() ) );
     result->add( YCPString( "basearch" ), YCPString( paths->baseArch() ) );
     result->add( YCPString( "business" ), YCPBoolean( paths->businessProduct() ) );
+    
+    result->add( YCPString( "lastupdate" ), YCPInteger( you.lastUpdate() ) );
     
     return result;
 }
@@ -301,10 +304,7 @@ PkgModuleFunctions::YouNextPatch (YCPList args)
     }
 
     if ( !ok ) {
-      ERR << "YouNextPatch fail" << endl;
       result->add( YCPString( "error" ), YCPString( "abort" ) );
-    } else {
-      ERR << "YouNextPatch ok" << endl;
     }
 
     return result;
@@ -398,6 +398,19 @@ YCPValue
 PkgModuleFunctions::YouRemovePackages (YCPList args)
 {
     _last_error = _y2pm.youPatchManager().instYou().removePackages();
+    if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
+    return YCPBoolean( true );
+}
+
+/**
+   @builtin Pkg::YouFinish () -> bool
+
+   finish update. Writes date of last update.
+*/
+YCPValue
+PkgModuleFunctions::YouFinish (YCPList args)
+{
+    _last_error = _y2pm.youPatchManager().instYou().writeLastUpdate();
     if ( _last_error ) return YCPError( _last_error.errstr(), YCPBoolean( false ) );
     return YCPBoolean( true );
 }

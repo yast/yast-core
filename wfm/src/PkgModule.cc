@@ -137,6 +137,7 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "YouInstallCurrentPatch")	return YouInstallCurrentPatch (args);
     else if (function == "YouInstallPatches")	return YouInstallPatches (args);
     else if (function == "YouRemovePackages")	return YouRemovePackages (args);
+    else if (function == "YouFinish")		return YouFinish (args);
     // target related functions
     else if (function == "TargetInit")		return TargetInit (args);
     else if (function == "TargetFinish")	return TargetFinish (args);
