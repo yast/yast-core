@@ -24,7 +24,6 @@ using std::map;
 
 #define MAGIC_ENTRY	"Ctrl and Alt keys stuck -- press Del to continue."
 
-
 /**
  * This class contains one entry from the modules.conf file.
  *

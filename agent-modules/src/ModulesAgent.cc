@@ -9,7 +9,6 @@
  *
  */
 
-
 #include "Y2Logger.h"
 #include "ModulesAgent.h"
 #include "ModulesConf.h"
