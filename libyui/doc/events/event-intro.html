@@ -592,7 +592,7 @@ is clearly nothing they should be troubled with.
 This is why <b>all current YaST2 UIs have onle one single <i>pending
 event</i> and not a queue of events.</b> When a new event occurs, it usually
 overwrites any event that may still be pending - i.e. events get lost if there
-are too many (more than the YCP application can and wants to handle).
+are too many of them (more than the YCP application can and wants to handle).
 <p>
 
 
@@ -657,7 +657,7 @@ not. But it's easy not to rely on that. Instead of writing code like this:
 
 <pre class="code">
 {
-    // Example <em>how NOT to do things</em>
+    // <em>Example how NOT to do things</em>
 
     <b>UI::OpenDialog</b>(
                    ...
