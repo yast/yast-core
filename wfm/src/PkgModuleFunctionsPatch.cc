@@ -32,6 +32,7 @@
 #include <y2pm/PMYouPatchManager.h>
 #include <y2pm/InstYou.h>
 #include <y2pm/PMPackage.h>
+#include <y2pm/PMYouProduct.h>
 
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPBoolean.h>
@@ -77,14 +78,14 @@ PkgModuleFunctions::YouStatus ()
     result->add( YCPString( "error" ), YCPBoolean( false ) );
     
     InstYou &you = _y2pm.youPatchManager().instYou();
-    PMYouPatchPathsPtr paths = you.paths();
+    PMYouProductPtr product = you.paths()->product();
     
-    result->add( YCPString( "product" ), YCPString( paths->product() ) );
-    result->add( YCPString( "version" ), YCPString( paths->version() ) );
-    result->add( YCPString( "basearch" ), YCPString( paths->baseArch() ) );
-    result->add( YCPString( "business" ), YCPBoolean( paths->businessProduct() ) );
+    result->add( YCPString( "product" ), YCPString( product->product() ) );
+    result->add( YCPString( "version" ), YCPString( product->version() ) );
+    result->add( YCPString( "basearch" ), YCPString( product->baseArch() ) );
+    result->add( YCPString( "business" ), YCPBoolean( product->businessProduct() ) );
 
-    result->add( YCPString( "mirrorurl" ), YCPString( paths->youUrl() ) );
+    result->add( YCPString( "mirrorurl" ), YCPString( product->youUrl() ) );
     
     result->add( YCPString( "lastupdate" ), YCPInteger( you.lastUpdate() ) );
     
