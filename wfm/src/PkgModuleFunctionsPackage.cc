@@ -47,13 +47,6 @@
 
 using std::string;
 
-inline void assertActiveSources() {
-#warning Actually we dont want to activate sources here
-  // the calling context should assert that target/sources are up,
-  // dependent on it's needs.
-  Y2PM::instSrcManager().enableDefaultSources();
-}
-
 /**
  * helper function, get selectable by name
  */
@@ -61,8 +54,6 @@ inline void assertActiveSources() {
 PMSelectablePtr
 PkgModuleFunctions::getPackageSelectable (const std::string& name)
 {
-    assertActiveSources();
-
     PMSelectablePtr selectable;
     if (!name.empty())
         selectable = _y2pm.packageManager().getItem(name);
@@ -911,11 +902,11 @@ YCPValue
 PkgModuleFunctions::PkgSolve (const YCPBoolean& filter)
 {
     bool filter_conflicts_with_installed = false;
-    
+
     if (! filter.isNull ())
     {
 	filter_conflicts_with_installed = filter->value();
-	
+
     }
 
     PkgDep::ResultList good;
@@ -966,7 +957,7 @@ YCPValue
 PkgModuleFunctions::PkgCommit (const YCPInteger& media)
 {
     int medianr = media->value ();
-    
+
     if (medianr < 0)
     {
 	return YCPError ("Bad args to Pkg::PkgCommit");
