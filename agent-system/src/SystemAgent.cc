@@ -208,12 +208,12 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     if (cmd == "tmpdir")
     {
 	/**
-	 * @builtin Read (.tmpdir) -> string
+	 * @builtin Read (.target.tmpdir) -> string
 	 * Returns the (instance specific) directory for storing temporary
 	 * files. The directory (and its contents) will be removed by the
 	 * SystemAgent destructor (usually when yast2 exits)
 	 *
-	 * @example Read (.tmpdir) -> "/some/temp/dir"
+	 * @example Read (.target.tmpdir) -> "/some/temp/dir"
 	 */
 
 	return YCPString (tempdir);
@@ -248,11 +248,11 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     if (cmd == "string")
     {
 	/**
-	 * @builtin Read (.string, string filename) -> string
+	 * @builtin Read (.target.string, string filename) -> string
 	 * Opens an Ascii file and reads the contents to a single
 	 * string. Newlines are preserved.
 	 *
-	 * @example Read (.string, "/some/file") -> "a contents"
+	 * @example Read (.target.string, "/some/file") -> "a contents"
 	 */
 
 	string output;
@@ -277,7 +277,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     else if (cmd == "byte")
     {
 	/**
-	 * @builtin Read (.byte, string filename) -> byteblock
+	 * @builtin Read (.target.byte, string filename) -> byteblock
 	 * Opens a binary file and reads its contents into a single byteblock.
 	 */
 
@@ -417,7 +417,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     else if (cmd == "size")
     {
 	/**
-	 * @builtin Read (.size, string filename) -> integer
+	 * @builtin Read (.target.size, string filename) -> integer
 	 * return current size of file
 	 * returns -1 if the file does not exist
 	 */
@@ -434,13 +434,13 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg)
     else if (cmd == "symlink")
     {
 	/**
-	 * @builtin Read (.symlink, string filename) -> string
+	 * @builtin Read (.target.symlink, string filename) -> string
 	 *
 	 * Returns the content of the symbolic link filename. If the filename
 	 * does not exist or is no symbolic link, nil is returned and an error
 	 * logged.
 	 *
-	 * @example Read (.symlink, "/var/X11R6/bin/X")
+	 * @example Read (.target.symlink, "/var/X11R6/bin/X")
 	 */
 
 	const int size = 1024;
@@ -480,13 +480,13 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
     if (cmd == "passwd")
     {
 	/**
-	 * @builtin Write (.passwd.name, string cryptval) -> bool
+	 * @builtin Write (.target.passwd.&lt;name&gt;, string cryptval) -> bool
 	 * .passwd can be used to set or modify the encrypted password
 	 * of an already existing user in /etc/passwd and /etc/shadow.
 	 *
 	 * This call returns true on success and false, if it fails.
 	 *
-	 * @example Write (.passwd.root, crypt (a_passwd))
+	 * @example Write (.target.passwd.root, crypt (a_passwd))
 	 */
 
 	if (path->length() != 2)
@@ -519,7 +519,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
     else if (cmd == "string")
     {
 	/**
-	 * @builtin Write (.string, string filename, string value) -> boolean
+	 * @builtin Write (.target.string, string filename, string value) -> boolean
 	 * Writes the string <tt>value</tt> into a file. If the file already
 	 * exists, the existing file is overwritten. The return value is
 	 * true, if the file has been written successfully.
@@ -555,7 +555,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
     else if (cmd == "byte")
     {
 	/**
-	 * @builtin Write (.byte, string filename, byteblock) -> boolean
+	 * @builtin Write (.target.byte, string filename, byteblock) -> boolean
 	 * Write a byteblock into a file.
 	 */
 
@@ -590,7 +590,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
     else if (cmd == "ycp" || cmd == "yast2")
     {
 	/**
-	 * @builtin Write (.ycp, string filename, any value) -> boolean
+	 * @builtin Write (.target.ycp, string filename, any value) -> boolean
 	 * Opens a file for writing and prints the value <tt>value</tt> in
 	 * YCP syntax to that file. Returns true, if the file has
 	 * been written, false otherwise. The newly created file gets
@@ -599,7 +599,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	 */
 
 	/**
-	 * @builtin Write (.ycp, [ string filename, integer mode], any value) -> boolean
+	 * @builtin Write (.target.ycp, [ string filename, integer mode], any value) -> boolean
 	 * Opens a file for writing and prints the value <tt>value</tt> in
 	 * YCP syntax to that file. Returns true, if the file has
 	 * been written, false otherwise. The newly created file gets
@@ -709,9 +709,9 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    environment = arg;
 
 	/**
-	 * @builtin Execute (.bash, string command, map environment) -> integer
-	 * @builtin Execute (.bash_background, string command, map environment) -> integer
-	 * @builtin Execute (.bash_output, string command, map environment) -> map
+	 * @builtin Execute (.target.bash, string command, map environment) -> integer
+	 * @builtin Execute (.target.bash_background, string command, map environment) -> integer
+	 * @builtin Execute (.target.bash_output, string command, map environment) -> map
 	 *
 	 * Runs a bash command. The command is stated as string.
 	 * The map variables can be used to give initial environment
@@ -729,8 +729,8 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 * <dd> "stderr" : &lt;string&gt;  //stderr of the command
 	 * ]</pre>
 	 *
-	 * @example Execute (.bash, "/bin/touch $FILE ; exit 5", $["FILE":"/somedir/somefile"]) -> 5
-	 * @example Execute (.bash_output, "/bin/touch $FILE ; exit 5", $["FILE":"/somedir/somefile"]) -> $[ "exit" : 5, "stdout" : "", "stderr" : ""]
+	 * @example Execute (.target.bash, "/bin/touch $FILE ; exit 5", $["FILE":"/somedir/somefile"]) -> 5
+	 * @example Execute (.target.bash_output, "/bin/touch $FILE ; exit 5", $["FILE":"/somedir/somefile"]) -> $[ "exit" : 5, "stdout" : "", "stderr" : ""]
 	 *
 	 */
 
@@ -798,7 +798,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "symlink")
     {
 	/**
-	 * @builtin Execute (.symlink, string oldpath, string newpath) -> boolean
+	 * @builtin Execute (.target.symlink, string oldpath, string newpath) -> boolean
 	 *
 	 * Creates a symbolic link named newpath which contains the
 	 * string oldpath.
@@ -809,7 +809,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 *
 	 * The return value is true or false, depending of the success.
 	 *
-	 * @example Execute (.symlink, "/lib/YaST2", "Y2")
+	 * @example Execute (.target.symlink, "/lib/YaST2", "Y2")
 	 */
 
 	if (value.isNull () || arg.isNull () || !value->isString () ||
@@ -832,7 +832,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "mkdir")
     {
 	/**
-	 * @builtin Execute (.mkdir, string path <, integer mode>)) -> boolean
+	 * @builtin Execute (.target.mkdir, string path <, integer mode>)) -> boolean
 	 *
 	 * Creates a directory and all its parents, if necessary.
 	 * All created elements will have mode 0755 if mode is omitted.
@@ -840,7 +840,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 * The return value is true or false, depending of the success, ie if
 	 * the directory exists afterwards.
 	 *
-	 * @example Execute (.mkdir, "/var/adm/mount")
+	 * @example Execute (.target.mkdir, "/var/adm/mount")
 	 */
 
 	if (value.isNull() || !value->isString())
@@ -885,7 +885,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "mount")
     {
 	/**
-	 * @builtin Execute (.mount, [ string device, string mountpoint <, string logfile>], [, string options])) -> boolean
+	 * @builtin Execute (.target.mount, [ string device, string mountpoint <, string logfile>], [, string options])) -> boolean
 	 *
 	 * Mounts a (block) device at a mountpoint.
 	 * If logfile is given, the stderr of the mount cmd will be appended to
@@ -893,8 +893,8 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 *
 	 * The return value is true or false, depending of the success
 	 *
-	 * @example Execute (.mount, ["/dev/fd0", "/floppy"], "-t msdos")
-	 * @example Execute (.mount, ["/dev/fd0", "/floppy", "/var/log/y2mountlog"], "-t msdos")
+	 * @example Execute (.target.mount, ["/dev/fd0", "/floppy"], "-t msdos")
+	 * @example Execute (.target.mount, ["/dev/fd0", "/floppy", "/var/log/y2mountlog"], "-t msdos")
 	 */
 
 	if (value.isNull() || !value->isList())
@@ -951,7 +951,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "smbmount")
     {
 	/**
-	 * @builtin Execute (.smbmount, [ string server_and_dir, string mountpoint <, string logfile>], [, string options])) -> boolean
+	 * @builtin Execute (.target.smbmount, [ string server_and_dir, string mountpoint <, string logfile>], [, string options])) -> boolean
 	 *
 	 * Mounts a SMB share at a mountpoint.
 	 * if logfile is given, the stderr of the mount cmd will be appended to
@@ -959,8 +959,8 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 *
 	 * The return value is true or false, depending of the success
 	 *
-	 * @example Execute (.smbmount, ["//windows/crap", "/crap"], "-o guest")
-	 * @example Execute (.smbmount, ["//smb/share", "/smbshare", "/var/log/y2mountlog"])
+	 * @example Execute (.target.smbmount, ["//windows/crap", "/crap"], "-o guest")
+	 * @example Execute (.target.smbmount, ["//smb/share", "/smbshare", "/var/log/y2mountlog"])
 	 */
 
 	if (value.isNull() || !value->isList())
@@ -1014,12 +1014,12 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "umount")
     {
 	/**
-	 * @builtin Execute (.umount, string mountpoint) -> boolean
+	 * @builtin Execute (.target.umount, string mountpoint) -> boolean
 	 * Unmounts a (block) device at a mountpoint.
 	 *
 	 * The return value is true or false, depending of the success.
 	 *
-	 * @example Execute (.umount, "/floppy")
+	 * @example Execute (.target.umount, "/floppy")
 	 */
 	if (value.isNull() || !value->isString())
 	{
@@ -1036,12 +1036,12 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "remove")
     {
 	/**
-	 * @builtin Execute (.remove, string file) -> boolean
+	 * @builtin Execute (.target.remove, string file) -> boolean
 	 * Remove a file.
 	 *
 	 * The returnvalue is true or false, depending of the success.
 	 *
-	 * @example Execute (.remove, "/tmp/xyzzy")
+	 * @example Execute (.target.remove, "/tmp/xyzzy")
 	 */
 	if (value.isNull() || !value->isString())
 	{
@@ -1058,12 +1058,12 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "insmod")
     {
 	/**
-	 * @builtin Execute (.insmod, string module, string options) -> boolean
+	 * @builtin Execute (.target.insmod, string module, string options) -> boolean
 	 * Load module in target system.
 	 *
 	 * The return value is true or false, depending of the success.
 	 *
-	 * @example Execute (.insmod, "a_module", "an option")
+	 * @example Execute (.target.insmod, "a_module", "an option")
 	 */
 
 	if (value.isNull() || !value->isString())
@@ -1086,12 +1086,12 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
     else if (cmd == "modprobe")
     {
 	/**
-	 * @builtin Execute (.modprobe, string module, string options) -> boolean
+	 * @builtin Execute (.target.modprobe, string module, string options) -> boolean
 	 * Load module in target system.
 	 *
 	 * The return value is true or false, depending of the success.
 	 *
-	 * @example Execute (.modprobe, "a_module", "an option")
+	 * @example Execute (.target.modprobe, "a_module", "an option")
 	 */
 
 	if (value.isNull() || !value->isString())
@@ -1111,6 +1111,31 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    else if (cmd == "kill") {
+
+	/**
+	 * @builtin Execute(.target.kill, integer pid [, integer signal]) -> boolean
+	 * Kill process with signal (SIGTERM if not specified).
+	 *
+	 * The return value is true or false, depending of the success.
+	 *
+	 * @example Execute (.target.kill, 1, 9)
+	 */
+
+	if (value.isNull() || !value->isInteger())
+	    return YCPError("Bad PID in Execute (.kill, integer pid, integer signal)", YCPBoolean(false));
+
+	int signal = 15;
+	int pid = value->asInteger()->value();
+
+	if (!arg.isNull() && arg->isInteger())
+	    signal = arg->asInteger()->value();
+
+	return YCPBoolean (kill(pid,signal) != -1);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     else if (cmd == "control")
     {
 
@@ -1121,12 +1146,11 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	{
 
 	    /**
-	     * @builtin Execute (.ioctl, string file) -> boolean
-	     * Trigger an ioctl on the given file.
+	     * @builtin Execute (.target.control.printer_reset, string device) -> boolean
+	     * Reset the given printer (trigger ioctl)
 	     *
 	     * The return value is true or false, depending of the success
 	     *
-	     * @example Execute (.control.printer_reset, string device)
 	     */
 
 	    if (value.isNull() || !value->isString())
