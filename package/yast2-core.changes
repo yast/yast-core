@@ -3,7 +3,7 @@ Mon Sep  9 19:27:54 CEST 2002 - kkaempf@suse.de
 
 - display all CDs, even those with no packages to install
 - handle uninstalled source packages
-- 2.6.36
+- 2.6.37
 
 -------------------------------------------------------------------
 Mon Sep 09 16:11:26 CEST 2002 - arvin@suse.de
