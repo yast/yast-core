@@ -29,20 +29,35 @@
 
 #include <ycp/YCPValue.h>
 #include <ycp/YCPList.h>
+#include <ycp/YCPInterpreter.h>
 
 /**
  * A simple class for package management access
  */
 class PkgModuleFunctions
 {
-    private:
+  protected:
+	/**
+	 * access to packagemanager
+	 */
 	Y2PM _y2pm;
+
+	/**
+	 * access to WFM for callbacks
+	 */
+	YCPInterpreter *_wfm;
+
+    private:
 	vector<InstSrcManager::ISrcId> _sources;
 	unsigned int _first_free_source_slot;
 
     public:
 	// general
 	YCPValue CheckSpace (YCPList args);
+	YCPValue SetLocale (YCPList args);
+	YCPValue GetLocale (YCPList args);
+	YCPValue SetAdditionalLocales (YCPList args);
+	YCPValue GetAdditionalLocales (YCPList args);
 
 	// source related
 	YCPValue SourceInit (YCPList args);
@@ -58,6 +73,7 @@ class PkgModuleFunctions
 	YCPValue TargetInstall (YCPList args);
 	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetLogfile (YCPList args);
+	YCPValue SetProgressCallback(YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);
@@ -66,7 +82,6 @@ class PkgModuleFunctions
 	bool SetSelectionString (std::string name);	// internal
 	YCPValue ClearSelection (YCPList args);
 	YCPValue ActivateSelections (YCPList args);
-	bool ActivateSelectionPackages (PMSelectionPtr selection); // internal
 
 	// package related
 	YCPValue GetPackages (YCPList args);
@@ -87,6 +102,7 @@ class PkgModuleFunctions
 	YCPValue RestoreState (YCPList args);
 
 	YCPValue PkgPrepareOrder (YCPList args);
+	YCPValue PkgMediaSizes (YCPList args);
 	YCPValue PkgNextDelete (YCPList args);
 	YCPValue PkgNextInstall (YCPList args);
 
@@ -107,7 +123,7 @@ class PkgModuleFunctions
 	/**
 	 * Constructor.
 	 */
-	PkgModuleFunctions ();
+	PkgModuleFunctions (YCPInterpreter *wfmInterpreter);
 
 	/**
 	 * Destructor.

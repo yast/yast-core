@@ -25,22 +25,23 @@
 
 #include <string>
 
-#include <Y2PM.h>
+#include <PkgModuleFunctions.h>
 
 #include <ycp/YCPValue.h>
 #include <ycp/YCPList.h>
+#include <ycp/YCPInterpreter.h>
 
 /**
  * A simple class for package management access
  */
-class PkgModule
+class PkgModule : public PkgModuleFunctions
 {
-public:
+  public:
 
     /**
      * Constructor.
      */
-    PkgModule ();
+    PkgModule (YCPInterpreter *wfmInterpreter);
 
     /**
      * Destructor.

@@ -71,8 +71,8 @@ PkgModuleFunctions::GetSelections (YCPList args)
 
     YCPList selections;
 
-    for (PMManager::PMSelectableVec::const_iterator it = Y2PM::selectionManager().begin();
-	 it != Y2PM::selectionManager().end();
+    for (PMManager::PMSelectableVec::const_iterator it = _y2pm.selectionManager().begin();
+	 it != _y2pm.selectionManager().end();
 	 ++it)
     {
 	PMSelectionPtr selection;
@@ -205,6 +205,9 @@ PkgModuleFunctions::SelectionData (YCPList args)
 
 // ------------------------
 
+// internal
+// sel selection by string
+
 bool
 PkgModuleFunctions::SetSelectionString (std::string name)
 {
@@ -311,73 +314,20 @@ PkgModuleFunctions::ClearSelection (YCPList args)
 
 
 // ------------------------
-
-// internal
-// select/deselect all packages from selection
-
-bool
-PkgModuleFunctions::ActivateSelectionPackages (PMSelectionPtr selection)
-{
-    y2milestone ("activate selection %s", ((const std::string &)(selection->name())).c_str());
-
-    std::list<std::string>::const_iterator it;
-    std::list<std::string> packs = selection->delpacks();
-    y2milestone ("%d delpacks", packs.size());
-    if (packs.size() > 0)
-    for (it = packs.begin(); it != packs.end(); ++it)
-    {
-	DoRemoveString(*it);
-    }
-    packs = selection->delpacks(_y2pm.getPreferredLocale());
-    y2milestone ("%d locale delpacks", packs.size());
-    if (packs.size() > 0)
-    for (it = packs.begin(); it != packs.end(); ++it)
-    {
-	DoRemoveString(*it);
-    }
-    packs = selection->inspacks();
-    y2milestone ("%d inspacks", packs.size());
-    if (packs.size() > 0)
-    for (it = packs.begin(); it != packs.end(); ++it)
-    {
-	DoProvideString(*it);
-    }
-    packs = selection->inspacks(_y2pm.getPreferredLocale());
-    y2milestone ("%d locale inspacks", packs.size());
-    if (packs.size() > 0)
-    for (it = packs.begin(); it != packs.end(); ++it)
-    {
-	y2milestone ("locale: '%s'", (*it).c_str());
-	DoProvideString(*it);
-    }
-    return true;
-}
-
-// ------------------------
 /**
    @builtin Pkg::ActivateSelections () -> bool
 
-   Activate all selected selections (-> loop through all packages
-	and select/deselect accordingly
+   Activate all selected selections
 
-   *** IT'S A WORKAROUND, DON'T USE ***
+   To be called when user is done with selections and wants
+   to continue on the package level (or finish)
+
+   This will transfer the selection status to package status
 */
 YCPValue
 PkgModuleFunctions::ActivateSelections (YCPList args)
 {
-    // reset package manager
-    _y2pm.packageManager().setNothingSelected();
+    _y2pm.selectionManager().activate (_y2pm.packageManager());
 
-    for (PMManager::PMSelectableVec::const_iterator it = Y2PM::selectionManager().begin();
-	 it != Y2PM::selectionManager().end();
-	 ++it)
-    {
-	if ((*it)->status() != PMSelectable::S_Install)
-	    continue;
-	PMSelectionPtr selection = (*it)->theObject();
-	if (selection == 0)
-	    continue;
-	ActivateSelectionPackages (selection);
-    }
     return YCPBoolean (true);
 }

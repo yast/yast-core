@@ -25,6 +25,7 @@
 #include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
+#include <y2util/FSize.h>
 #include <y2pm/InstData.h>
 #include <y2pm/PMObject.h>
 #include <y2pm/PMSelectable.h>
@@ -63,6 +64,45 @@ PkgModuleFunctions::PkgPrepareOrder (YCPList args)
     counts->add (YCPInteger (packs_to_delete.size()));
     counts->add (YCPInteger (packs_to_install.size()));
     return counts;
+}
+
+/**   
+   @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
+     return cumulated sizes to be installed from different media
+
+     Returns the install size per media, not the archivesize !!
+ */
+YCPValue
+PkgModuleFunctions::PkgMediaSizes (YCPList args)
+{
+    vector<FSize> mediasizes;
+
+    for (PMPackageManager::PMSelectableVec::const_iterator it = _y2pm.packageManager().begin();
+	 it != _y2pm.packageManager().end(); ++it)
+    {
+	if (!(*it)->to_install())
+	    continue;
+
+	PMPackagePtr package = (*it)->candidateObj();
+	if (!package)
+	    continue;
+
+	unsigned int medianr = package->medianr();
+	FSize size = package->size();
+
+	if (medianr > mediasizes.size())
+	{
+	    mediasizes.resize (medianr);
+	}
+	mediasizes[medianr-1] += size;
+    }
+
+    YCPList ycpsizes;
+    for (unsigned int i = 0; i < mediasizes.size(); ++i)
+    {
+	ycpsizes->add (YCPInteger ((long long)mediasizes[i]));
+    }
+    return ycpsizes;
 }
 
 // ------------------------

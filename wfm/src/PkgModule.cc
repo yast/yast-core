@@ -23,7 +23,6 @@
 
 #include <ycp/y2log.h>
 #include <PkgModule.h>
-#include <PkgModuleFunctions.h>
 
 #include <y2util/Url.h>
 #include <y2pm/InstData.h>
@@ -41,7 +40,8 @@ using std::string;
 //-------------------------------------------------------------------
 // PkgModule
 
-PkgModule::PkgModule ()
+PkgModule::PkgModule (YCPInterpreter *wfmInterpreter)
+    : PkgModuleFunctions (wfmInterpreter)
 {
 }
 
@@ -59,61 +59,65 @@ PkgModule::~PkgModule ()
 YCPValue
 PkgModule::evaluate (string function, YCPList args)
 {
-    static PkgModuleFunctions f;
-
 //    y2milestone ("PkgModule::evaluate (%s, %s)", function.c_str(), args->toString().c_str());
 
     // general functions
-    if (function == "CheckSpace")		return f.CheckSpace (args);
+    if (function == "CheckSpace")		return CheckSpace (args);
+    else if (function == "SetLocale")		return SetLocale (args);
+    else if (function == "GetLocale")		return GetLocale (args);
+    else if (function == "SetAdditionalLocales")return SetAdditionalLocales (args);
+    else if (function == "GetAdditionalLocales")return GetAdditionalLocales (args);
     // package functions
-    else if (function == "GetPackages")		return f.GetPackages (args);
-    else if (function == "IsProvided")		return f.IsProvided (args);
-    else if (function == "IsAvailable")		return f.IsAvailable (args);
-    else if (function == "IsSelected")		return f.IsSelected (args);
-    else if (function == "DoProvide")		return f.DoProvide (args);
-    else if (function == "DoRemove")		return f.DoRemove (args);
-    else if (function == "PkgSummary")		return f.PkgSummary (args);
-    else if (function == "PkgVersion")		return f.PkgVersion (args);
-    else if (function == "PkgSize")		return f.PkgSize (args);
-    else if (function == "PkgLocation")		return f.PkgLocation (args);
-    else if (function == "PkgMediaNr")		return f.PkgMediaNr (args);
-    else if (function == "IsManualSelection")	return f.IsManualSelection (args);
-    else if (function == "SaveState")		return f.SaveState (args);
-    else if (function == "RestoreState")	return f.RestoreState (args);
-    else if (function == "PkgPrepareOrder")	return f.PkgPrepareOrder (args);
-    else if (function == "PkgNextDelete")	return f.PkgNextDelete (args);
-    else if (function == "PkgNextInstall")	return f.PkgNextInstall (args);
+    else if (function == "GetPackages")		return GetPackages (args);
+    else if (function == "IsProvided")		return IsProvided (args);
+    else if (function == "IsAvailable")		return IsAvailable (args);
+    else if (function == "IsSelected")		return IsSelected (args);
+    else if (function == "DoProvide")		return DoProvide (args);
+    else if (function == "DoRemove")		return DoRemove (args);
+    else if (function == "PkgSummary")		return PkgSummary (args);
+    else if (function == "PkgVersion")		return PkgVersion (args);
+    else if (function == "PkgSize")		return PkgSize (args);
+    else if (function == "PkgLocation")		return PkgLocation (args);
+    else if (function == "PkgMediaNr")		return PkgMediaNr (args);
+    else if (function == "IsManualSelection")	return IsManualSelection (args);
+    else if (function == "SaveState")		return SaveState (args);
+    else if (function == "RestoreState")	return RestoreState (args);
+    else if (function == "PkgPrepareOrder")	return PkgPrepareOrder (args);
+    else if (function == "PkgMediaSizes")	return PkgMediaSizes (args);
+    else if (function == "PkgNextDelete")	return PkgNextDelete (args);
+    else if (function == "PkgNextInstall")	return PkgNextInstall (args);
     // selection related
-    else if (function == "GetSelections")	return f.GetSelections (args);
-    else if (function == "SelectionData")	return f.SelectionData (args);
-    else if (function == "SetSelection")	return f.SetSelection (args);
-    else if (function == "ClearSelection")	return f.ClearSelection (args);
-    else if (function == "ActivateSelections")	return f.ActivateSelections (args);
+    else if (function == "GetSelections")	return GetSelections (args);
+    else if (function == "SelectionData")	return SelectionData (args);
+    else if (function == "SetSelection")	return SetSelection (args);
+    else if (function == "ClearSelection")	return ClearSelection (args);
+    else if (function == "ActivateSelections")	return ActivateSelections (args);
     // patch related functions
-    else if (function == "YouStatus")		return f.YouStatus (args);
-    else if (function == "YouGetServers")	return f.YouGetServers (args);
-    else if (function == "YouGetPatches")	return f.YouGetPatches (args);
-    else if (function == "YouAttachSource")	return f.YouAttachSource (args);
-    else if (function == "YouGetPackages")	return f.YouGetPackages (args);
-    else if (function == "YouSelectPatches")	return f.YouSelectPatches (args);
-    else if (function == "YouFirstPatch")	return f.YouFirstPatch (args);
-    else if (function == "YouNextPatch")	return f.YouNextPatch (args);
-    else if (function == "YouGetCurrentPatch")	return f.YouGetCurrentPatch (args);
-    else if (function == "YouInstallCurrentPatch")	return f.YouInstallCurrentPatch (args);
-    else if (function == "YouInstallPatches")	return f.YouInstallPatches (args);
-    else if (function == "YouRemovePackages")	return f.YouRemovePackages (args);
+    else if (function == "YouStatus")		return YouStatus (args);
+    else if (function == "YouGetServers")	return YouGetServers (args);
+    else if (function == "YouGetPatches")	return YouGetPatches (args);
+    else if (function == "YouAttachSource")	return YouAttachSource (args);
+    else if (function == "YouGetPackages")	return YouGetPackages (args);
+    else if (function == "YouSelectPatches")	return YouSelectPatches (args);
+    else if (function == "YouFirstPatch")	return YouFirstPatch (args);
+    else if (function == "YouNextPatch")	return YouNextPatch (args);
+    else if (function == "YouGetCurrentPatch")	return YouGetCurrentPatch (args);
+    else if (function == "YouInstallCurrentPatch")	return YouInstallCurrentPatch (args);
+    else if (function == "YouInstallPatches")	return YouInstallPatches (args);
+    else if (function == "YouRemovePackages")	return YouRemovePackages (args);
     // target related functions
-    else if (function == "TargetInit")		return f.TargetInit (args);
-    else if (function == "TargetFinish")	return f.TargetFinish (args);
-    else if (function == "TargetInstall")	return f.TargetInstall (args);
-    else if (function == "TargetRemove")	return f.TargetRemove (args);
-    else if (function == "TargetLogfile")	return f.TargetLogfile (args);
+    else if (function == "TargetInit")		return TargetInit (args);
+    else if (function == "TargetFinish")	return TargetFinish (args);
+    else if (function == "TargetInstall")	return TargetInstall (args);
+    else if (function == "TargetRemove")	return TargetRemove (args);
+    else if (function == "TargetLogfile")	return TargetLogfile (args);
+    else if (function == "SetProgressCallback")	return SetProgressCallback (args);
     // source related functions
-    else if (function == "SourceInit")		return f.SourceInit (args);
-    else if (function == "SourceFinish")	return f.SourceFinish (args);
-    else if (function == "SourceGeneralData")	return f.SourceGeneralData (args);
-    else if (function == "SourceMediaData")	return f.SourceMediaData (args);
-    else if (function == "SourceProductData")	return f.SourceProductData (args);
-    else if (function == "SourceProvide")	return f.SourceProvide (args);
+    else if (function == "SourceInit")		return SourceInit (args);
+    else if (function == "SourceFinish")	return SourceFinish (args);
+    else if (function == "SourceGeneralData")	return SourceGeneralData (args);
+    else if (function == "SourceMediaData")	return SourceMediaData (args);
+    else if (function == "SourceProductData")	return SourceProductData (args);
+    else if (function == "SourceProvide")	return SourceProvide (args);
     return YCPError ("Undefined Pkg:: function");
 }

@@ -21,20 +21,21 @@
 
 #include <ycp/y2log.h>
 #include <PkgModuleFunctions.h>
+
 #include <y2pm/InstSrcManager.h>
 #include <y2pm/InstSrcDescr.h>
 #include <ycp/YCPError.h>
 #include <ycp/YCPInteger.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPBoolean.h>
-#include <ycp/YCPList.h>
 #include <ycp/YCPMap.h>
 
 /**
  * Constructor.
  */
-PkgModuleFunctions::PkgModuleFunctions ()
-    : _first_free_source_slot(0)
+PkgModuleFunctions::PkgModuleFunctions (YCPInterpreter *wfmInterpreter)
+    : _wfm (wfmInterpreter)
+    , _first_free_source_slot(0)
 {
     _y2pm.packageManager(false);	// start without target
 }
@@ -64,6 +65,87 @@ PkgModuleFunctions::CheckSpace (YCPList args)
 #warning CheckSpace TBD
     y2warning ("CheckSpace (%s)", args->toString().c_str());
     return YCPList ();
+}
+
+
+/**
+ * @builtin Pkg::SetLocale (string locale) -> void
+ *
+ * set the given locale as the "preferred" locale
+ */
+YCPValue
+PkgModuleFunctions::SetLocale (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::SetLocale");
+    }
+    LangCode langcode(args->value(0)->asString()->value());
+    _y2pm.setPreferredLocale (langcode);
+    return YCPVoid();
+}
+
+/**
+ * @builtin Pkg::GetLocale () -> string locale
+ *
+ * get the currently preferred locale
+ */
+YCPValue
+PkgModuleFunctions::GetLocale (YCPList args)
+{
+    return YCPString ((const std::string &)(_y2pm.getPreferredLocale()));
+}
+
+
+/**
+ * @builtin Pkg::SetAdditionalLocales (list of string) -> void
+ *
+ * set list of 
+ */
+YCPValue
+PkgModuleFunctions::SetAdditionalLocales (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isList()))
+    {
+	return YCPError ("Bad args to Pkg::SetAdditionalLocales");
+    }
+    std::list<LangCode> langcodelist;
+    int i = 0;
+    YCPList langycplist = args->value(0)->asList();
+    while (i < langycplist->size())
+    {
+	if (langycplist->value (i)->isString())
+	{
+	    langcodelist.push_back (LangCode (langycplist->value (i)->asString()->value()));
+	}
+	else
+	{
+	    y2error ("Pkg::SetAdditionalLocales ([...,%s,...]) not string", langycplist->value (i)->toString().c_str());
+	}
+	i++;
+    }
+    _y2pm.setRequestedLocales (langcodelist);
+    return YCPVoid();
+}
+
+/**
+ * @builtin Pkg::GetAdditionalLocales
+ *
+ * return list of additional locales
+ */
+YCPValue
+PkgModuleFunctions::GetAdditionalLocales (YCPList args)
+{
+    YCPList langycplist;
+    const std::list<LangCode> langcodelist = _y2pm.getRequestedLocales();
+    for (std::list<LangCode>::const_iterator it = langcodelist.begin();
+	 it != langcodelist.end(); ++it)
+    {
+	langycplist->add (YCPString ((const std::string &)(*it)));
+    }
+    return langycplist;
 }
 
 

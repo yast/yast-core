@@ -117,7 +117,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
     {
 	if (pkgmodule == 0)
 	{
-	    pkgmodule = new PkgModule;
+	    pkgmodule = new PkgModule (this);
 	    if (pkgmodule == 0)
 	    {
 		return YCPError ("Can't create PkgModule", YCPVoid());
