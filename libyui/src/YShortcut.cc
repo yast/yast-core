@@ -131,7 +131,7 @@ YShortcut::setShortcut( char new_shortcut )
     str.insert( pos,
 		string( 1, shortcutMarker() ) );	// equivalent to 'string( "& " )'
 
-    YCPSymbol propertyName( widget()->shortcutProperty(), true );
+    YCPSymbol propertyName( widget()->shortcutProperty() );
     YCPValue propertyValue = YCPString( str );
     widget()->changeWidget( propertyName, propertyValue );
 
@@ -202,7 +202,7 @@ YShortcut::getShortcutString( YWidget * widget )
     if ( ! widget || ! widget->shortcutProperty() )
 	return string( "" );
 
-    YCPSymbol propertyName( widget->shortcutProperty(), true );
+    YCPSymbol propertyName( widget->shortcutProperty() );
     YCPValue  propertyValue = widget->queryWidget( propertyName );
 
     return propertyValue.isNull() || ! propertyValue->isString() ?

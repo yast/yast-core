@@ -8,11 +8,12 @@ INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
 	-I$(srcdir)/../src/include			\
+	-I/usr/include/YaST2				\
 	-I$(includedir)
 
-noinst_PROGRAMS = runyui
+bin_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
-runyui_LDADD = ../src/libyui.la -lycp -lpthread -ly2util
+runyui_LDADD = ../src/libyui.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la -lpthread -ly2util
 runyui_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)
 
 AUTOMAKE_OPTIONS = dejagnu

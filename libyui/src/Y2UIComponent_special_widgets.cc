@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUIInterpreter_special_widgets.cc
+  File:		Y2UIComponent_special_widgets.cc
   
 		Special ( optional ) widgets
 
@@ -28,7 +28,7 @@
 #include <ycp/y2log.h>
 #include <ycp/YCPMap.h>
 
-#include "YUIInterpreter.h"
+#include "Y2UIComponent.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
 #include "YWidget.h"
@@ -51,14 +51,11 @@
  * Returns true if the UI supports the special widget and false if not.
  */
 
-YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateHasSpecialWidget( const YCPSymbol & widget )
 {
     bool hasWidget = false;
 
-    if ( term->size() != 1 || ! term->value(0)->isSymbol() )
-	return YCPNull();
-
-    string symbol = term->value(0)->asSymbol()->symbol();
+    string symbol = widget->symbol();
 
     if	    ( symbol == YUISpecialWidget_DummySpecialWidget	)	hasWidget = hasDummySpecialWidget();
     else if ( symbol == YUISpecialWidget_BarGraph		)	hasWidget = hasBarGraph();
@@ -88,7 +85,7 @@ YCPValue YUIInterpreter::evaluateHasSpecialWidget( const YCPTerm & term )
 //
 
 
-YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						   const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr > 0 )
@@ -112,7 +109,7 @@ YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &
 }
 
 
-bool YUIInterpreter::hasDummySpecialWidget()
+bool Y2UIComponent::hasDummySpecialWidget()
 {
     return true;
 }
@@ -124,7 +121,7 @@ bool YUIInterpreter::hasDummySpecialWidget()
  * Normally, the implementation within the libyui returns 0.
  */
 
-YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
+YWidget *Y2UIComponent::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
 {
     opt.isHeading.setValue( true );
     opt.isOutputField.setValue( true );
@@ -161,7 +158,7 @@ YWidget *YUIInterpreter::createDummySpecialWidget( YWidget *parent, YWidgetOpt &
  *
  */
 
-YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -227,7 +224,7 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt, cons
  * for availability with <tt>HasSpecialWidget( `ColoredLabel )</tt> before using it.
  */
 
-YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					     const YCPList & optList, int argnr )
 {
     if ( term->size() - argnr != 4
@@ -290,7 +287,7 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt, 
  *
  */
 
-YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						 const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -356,7 +353,7 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & o
  *
  */
 
-YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				       const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -436,7 +433,7 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt, const 
  * for availability with <tt>HasSpecialWidget( `PartitionSplitter )</tt> before using it.
  * */
 
-YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+YWidget *Y2UIComponent::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 						  const YCPList & optList, int argnr )
 {
     int numArgs = term->size() - argnr;
@@ -503,27 +500,27 @@ YWidget *YUIInterpreter::createPartitionSplitter( YWidget *parent, YWidgetOpt & 
  * Overwrite if the specific UI provides the corresponding widget.
  */
 
-bool YUIInterpreter::hasDownloadProgress()
+bool Y2UIComponent::hasDownloadProgress()
 {
     return false;
 }
 
-bool YUIInterpreter::hasBarGraph()
+bool Y2UIComponent::hasBarGraph()
 {
     return false;
 }
 
-bool YUIInterpreter::hasColoredLabel()
+bool Y2UIComponent::hasColoredLabel()
 {
     return false;
 }
 
-bool YUIInterpreter::hasSlider()
+bool Y2UIComponent::hasSlider()
 {
     return false;
 }
 
-bool YUIInterpreter::hasPartitionSplitter()
+bool Y2UIComponent::hasPartitionSplitter()
 {
     return false;
 }
@@ -536,7 +533,7 @@ bool YUIInterpreter::hasPartitionSplitter()
  * has...() method as well!
  */
 
-YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
+YWidget *Y2UIComponent::createDownloadProgress( YWidget *parent, YWidgetOpt & opt,
 						 const YCPString & label,
 						 const YCPString & filename,
 						 int expectedSize )
@@ -547,7 +544,7 @@ YWidget *YUIInterpreter::createDownloadProgress( YWidget *parent, YWidgetOpt & o
     return 0;
 }
 
-YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt )
+YWidget *Y2UIComponent::createBarGraph( YWidget *parent, YWidgetOpt & opt )
 {
     y2error( "Default createBarGraph() method called - "
 	     "forgot to call HasSpecialWidget()?" );
@@ -555,7 +552,7 @@ YWidget *YUIInterpreter::createBarGraph( YWidget *parent, YWidgetOpt & opt )
     return 0;
 }
 
-YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
+YWidget *Y2UIComponent::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
 					     YCPString label,
 					     YColor fg, YColor bg, int margin )
 {
@@ -565,7 +562,7 @@ YWidget *YUIInterpreter::createColoredLabel( YWidget *parent, YWidgetOpt & opt,
     return 0;
 }
 
-YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt,
+YWidget *Y2UIComponent::createSlider( YWidget *parent, YWidgetOpt & opt,
 				       const YCPString & label,
 				       int minValue, int maxValue, int initialValue )
 {
@@ -576,7 +573,7 @@ YWidget *YUIInterpreter::createSlider( YWidget *parent, YWidgetOpt & opt,
 }
 
 
-YWidget *YUIInterpreter::createPartitionSplitter( YWidget *		parent,
+YWidget *Y2UIComponent::createPartitionSplitter( YWidget *		parent,
 						  YWidgetOpt &		opt,
 						  int 			usedSize,
 						  int 			totalFreeSize,

@@ -4,13 +4,15 @@
 
 SUBDIRS = include
 
+AM_CXXFLAGS = -DY2LOG=\"libycp\"
+
 lib_LTLIBRARIES = libyui.la
 
 libyui_la_SOURCES =				\
-	YUIInterpreter_core.cc			\
-	YUIInterpreter_builtins.cc		\
-	YUIInterpreter_widgets.cc		\
-	YUIInterpreter_special_widgets.cc	\
+	Y2UIComponent_core.cc			\
+	Y2UIComponent_builtins.cc		\
+	Y2UIComponent_widgets.cc		\
+	Y2UIComponent_special_widgets.cc	\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\
@@ -51,13 +53,15 @@ libyui_la_SOURCES =				\
 	YTable.cc				\
 	YTextEntry.cc				\
 	YTree.cc				\
-	YWidget.cc
+	YWidget.cc				\
+	UI.cc
 
 INCLUDES =					\
 	-I$(srcdir)/../../libycp/src/include	\
 	-I$(srcdir)/../../liby2/src/include	\
 	-I$(srcdir)/include			\
-	-I$(includedir)
+	-I$(includedir)				\
+	-I/usr/include/YaST2
 
 libyui_la_LDFLAGS = -version-info 2:0
 libyui_la_LIBADD = -lpthread

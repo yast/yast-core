@@ -20,8 +20,9 @@
 #include <stdio.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPVoid.h>
-#include <ycp/YCPParser.h>
-#include <ycp/YCPBlock.h>
+#include <ycp/Parser.h>
+#include <ycp/YBlock.h>
+#include <ycp/YCPCode.h>
 
 #define y2log_component "ui-macro"
 #include <ycp/y2log.h>
@@ -61,8 +62,8 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 
     y2milestone( "Loading macro file %s", macroFileName.c_str() );
 
-    YCPParser parser( macroFile, macroFileName.c_str() );
-    _macro = parser.parse();
+    Parser parser( macroFile, macroFileName.c_str() );
+    _macro = YCPCode( parser.parse() );
 
     if ( _macro.isNull() )
     {
@@ -72,7 +73,7 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 	return;
     }
 
-    if ( ! _macro->isBlock() )
+    if ( _macro->asCode()->code()->kind() != YCode::yeBlock )
     {
 	setError();
 	y2error( "Macro syntax error in file %s - expected YCP block",
@@ -80,8 +81,11 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 	return;
     }
 
+#if 0
+// FIXME:
     y2debug( "Playing macro from file %s - %d macro blocks",
 	     macroFileName.c_str(), _macro->asBlock()->size() );
+#endif
     _nextBlockNo = 0;
 
     fclose( macroFile );
@@ -97,17 +101,24 @@ bool YMacroPlayer::finished()
     }
     else
     {
+#if 0
+// FIXME:
 	y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
 		 _nextBlockNo ,_macro->asBlock()->size(),
 		 _nextBlockNo >= _macro->asBlock()->size() ? "true" : "false" );
 
 	return _nextBlockNo >= _macro->asBlock()->size();
+#else
+	return true;
+#endif
     }
 }
 
 
-YCPBlock YMacroPlayer::nextBlock()
+YBlock YMacroPlayer::nextBlock()
 {
+#if 0
+// FIXME:
     if ( error() || finished() )
     {
 	return YCPNull();
@@ -130,6 +141,7 @@ YCPBlock YMacroPlayer::nextBlock()
     }
 
     return macroBlock->asNestedStatement()->value();
+#endif
 }
 
 

@@ -10,13 +10,14 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUIInterpreter_builtins.cc
+  File:		Y2UIComponent_builtins.cc
 
 		UI builtin commands
 
 
   Authors:	Mathias Kettner <kettner@suse.de>
 		Stefan Hundhammer <sh@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
 
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
@@ -41,7 +42,7 @@
 #include <ycp/YCPMap.h>
 #include <ycp/YCPVoid.h>
 
-#include "YUIInterpreter.h"
+#include "Y2UIComponent.h"
 #include "YEvent.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
@@ -54,75 +55,7 @@
 
 using std::string;
 
-
-
-YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
-{
-    string symbol = term->symbol()->symbol();
-    YCPValue ret = YCPNull();
-#ifdef VERBOSE_COMMANDS
-    y2debug( "YUIInterpreter::executeUICommand( %s )", symbol.c_str() );
-#endif
-
-    if	    ( symbol == YUIBuiltin_AskForExistingDirectory	) ret = evaluateAskForExistingDirectory ( term );
-    else if ( symbol == YUIBuiltin_AskForExistingFile		) ret = evaluateAskForExistingFile	( term );
-    else if ( symbol == YUIBuiltin_AskForSaveFileName		) ret = evaluateAskForSaveFileName	( term );
-    else if ( symbol == YUIBuiltin_BusyCursor			) ret = evaluateBusyCursor		( term );
-    else if ( symbol == YUIBuiltin_ChangeWidget			) ret = evaluateChangeWidget		( term );
-    else if ( symbol == YUIBuiltin_CheckShortcuts		) ret = evaluateCheckShortcuts		( term );
-    else if ( symbol == YUIBuiltin_CloseDialog			) ret = evaluateCloseDialog		( term );
-    else if ( symbol == YUIBuiltin_DumpWidgetTree		) ret = evaluateDumpWidgetTree		( term );
-    else if ( symbol == YUIBuiltin_FakeUserInput		) ret = evaluateFakeUserInput		( term );
-    else if ( symbol == YUIBuiltin_GetDisplayInfo		) ret = evaluateGetDisplayInfo		( term );
-    else if ( symbol == YUIBuiltin_GetLanguage			) ret = evaluateGetLanguage		( term );
-    else if ( symbol == YUIBuiltin_GetModulename		) ret = evaluateGetModulename		( term );
-    else if ( symbol == YUIBuiltin_GetProductName		) ret = evaluateGetProductName		( term );
-    else if ( symbol == YUIBuiltin_Glyph			) ret = evaluateGlyph			( term );
-    else if ( symbol == YUIBuiltin_HasSpecialWidget		) ret = evaluateHasSpecialWidget	( term );
-    else if ( symbol == YUIBuiltin_MakeScreenShot		) ret = evaluateMakeScreenShot		( term );
-    else if ( symbol == YUIBuiltin_NormalCursor			) ret = evaluateNormalCursor		( term );
-    else if ( symbol == YUIBuiltin_OpenDialog			) ret = evaluateOpenDialog		( term );
-    else if ( symbol == YUIBuiltin_PlayMacro			) ret = evaluatePlayMacro		( term );
-    else if ( symbol == YUIBuiltin_PollInput			) ret = evaluatePollInput		( term );
-    else if ( symbol == YUIBuiltin_PostponeShortcutCheck	) ret = evaluatePostponeShortcutCheck	( term );
-    else if ( symbol == YUIBuiltin_QueryWidget			) ret = evaluateQueryWidget		( term );
-    else if ( symbol == YUIBuiltin_RecalcLayout			) ret = evaluateRecalcLayout		( term );
-    else if ( symbol == YUIBuiltin_Recode			) ret = evaluateRecode			( term );
-    else if ( symbol == YUIBuiltin_RecordMacro			) ret = evaluateRecordMacro		( term );
-    else if ( symbol == YUIBuiltin_RedrawScreen			) ret = evaluateRedrawScreen		( term );
-    else if ( symbol == YUIBuiltin_ReplaceWidget		) ret = evaluateReplaceWidget		( term );
-    else if ( symbol == YUIBuiltin_RunPkgSelection		) ret = evaluateRunPkgSelection		( term );
-    else if ( symbol == YUIBuiltin_SCR				) ret = evaluateCallback		( term, false );
-    else if ( symbol == YUIBuiltin_SetConsoleFont		) ret = evaluateSetConsoleFont		( term );
-    else if ( symbol == YUIBuiltin_SetKeyboard			) ret = evaluateSetKeyboard		( term );
-    else if ( symbol == YUIBuiltin_SetFocus			) ret = evaluateSetFocus		( term );
-    else if ( symbol == YUIBuiltin_SetFunctionKeys		) ret = evaluateSetFunctionKeys		( term );
-    else if ( symbol == YUIBuiltin_SetLanguage			) ret = evaluateSetLanguage		( term );
-    else if ( symbol == YUIBuiltin_SetModulename		) ret = evaluateSetModulename		( term );
-    else if ( symbol == YUIBuiltin_SetProductName		) ret = evaluateSetProductName		( term );
-    else if ( symbol == YUIBuiltin_StopRecordMacro		) ret = evaluateStopRecordMacro		( term );
-    else if ( symbol == YUIBuiltin_TimeoutUserInput		) ret = evaluateTimeoutUserInput	( term );
-    else if ( symbol == YUIBuiltin_UserInput			) ret = evaluateUserInput		( term );
-    else if ( symbol == YUIBuiltin_WFM				) ret = evaluateCallback		( term, true );
-    else if ( symbol == YUIBuiltin_WaitForEvent			) ret = evaluateWaitForEvent		( term );
-    else if ( symbol == YUIBuiltin_WidgetExists			) ret = evaluateWidgetExists		( term );
-    else
-    {
-	y2internal( "Unknown term symbol in executeUICommand: %s",
-		    symbol.c_str() );
-	return YCPVoid();
-    }
-
-    if ( ret.isNull() )
-    {
-	return YCPError ( string ( "Invalid arguments for ui command: " )+term->toString() );
-    }
-    else return ret;
-}
-
-
-
-// builtin HasSpecialWidget() -> YUIInterpreter_special_widgets.cc
+// builtin HasSpecialWidget() -> Y2UIComponent_special_widgets.cc
 
 
 /**
@@ -136,18 +69,13 @@ YCPValue YUIInterpreter::executeUICommand( const YCPTerm & term )
  * @example SetModulename( "inst_environment" )
  */
 
-YCPValue YUIInterpreter::evaluateSetModulename( const YCPTerm & term )
+void Y2UIComponent::evaluateSetModulename( const YCPString & name )
 {
-    if ( term->size() == 1 && term->value(0)->isString() )
-    {
-	_moduleName = term->value(0)->asString()->value();
-	return YCPVoid();
-    }
-    else return YCPNull();
+    _moduleName = name->value();
 }
 
 
-const char *YUIInterpreter::moduleName()
+const char *Y2UIComponent::moduleName()
 {
     return _moduleName.c_str();
 }
@@ -168,7 +96,7 @@ const char *YUIInterpreter::moduleName()
  * @example GetModulename()
  */
 
-YCPValue YUIInterpreter::evaluateGetModulename( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateGetModulename( const YCPTerm & term )
 {
     if ( ( term->size() == 1 ) && ( term->value(0)->isString() ) )
     {
@@ -193,29 +121,25 @@ YCPValue YUIInterpreter::evaluateGetModulename( const YCPTerm & term )
  * @example SetLanguage( "en_GB" )
  */
 
-YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
+void Y2UIComponent::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
 {
-    if ( term->size() > 0 && term->value(0)->isString() )
+    string lang = language->value();
+    if ( !encoding.isNull() )
     {
-	string lang = term->value(0)->asString()->value();
-	if ( term->size() > 1 && term->value(1)->isString() )
-	{
-	    lang += ".";
-	    lang += term->value(1)->asString()->value();
-	}
-
-	setenv( "LANG", lang.c_str(), 1 ); // 1 : replace
-#ifdef WE_HOPEFULLY_DONT_NEED_THIS_ANY_MORE
-	setlocale( LC_ALL, "" );	// switch char set mapping in glibc
-#endif
-	setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
-	YCPTerm newTerm = YCPTerm( term->symbol() );
-	newTerm->add ( YCPString( lang ) );
-	y2milestone ( "ui specific setLanguage( %s )", newTerm->toString().c_str() );
-
-	return setLanguage( newTerm );	// UI-specific setLanguage: returns YCPVoid() if OK, YCPNull() if error
+	lang += ".";
+	lang += encoding->value();
     }
-    else return YCPNull();
+
+    setenv( "LANG", lang.c_str(), 1 ); // 1 : replace
+#ifdef WE_HOPEFULLY_DONT_NEED_THIS_ANY_MORE
+    setlocale( LC_ALL, "" );	// switch char set mapping in glibc
+#endif
+    setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
+    YCPTerm newTerm = YCPTerm( "SetLanguage" );
+    newTerm->add ( YCPString( lang ) );
+    y2milestone ( "ui specific setLanguage( %s )", newTerm->toString().c_str() );
+
+    setLanguage( newTerm );	// UI-specific setLanguage: returns YCPVoid() if OK, YCPNull() if error
 }
 
 
@@ -230,11 +154,8 @@ YCPValue YUIInterpreter::evaluateSetLanguage( const YCPTerm & term )
  *
  * @example sformat( "Welcome to %1", GetProductName() );
  **/
-YCPValue YUIInterpreter::evaluateGetProductName( const YCPTerm & term )
+YCPString Y2UIComponent::evaluateGetProductName()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     return YCPString( _productName );
 }
 
@@ -255,14 +176,9 @@ YCPValue YUIInterpreter::evaluateGetProductName( const YCPTerm & term )
  * 
  * @example SetProductName( "SuSE HyperWall" );
  **/
-YCPValue YUIInterpreter::evaluateSetProductName( const YCPTerm & term )
+void Y2UIComponent::evaluateSetProductName( const YCPString & name )
 {
-    if ( term->size() == 1 && term->value(0)->isString() )
-    {
-	_productName = term->value(0)->asString()->value();
-	return YCPVoid();
-    }
-    else return YCPNull();
+    _productName = name->value();
 }
 
 
@@ -270,7 +186,7 @@ YCPValue YUIInterpreter::evaluateSetProductName( const YCPTerm & term )
  * Default UI-specific setLanguage()
  * Returns OK (YCPVoid() )
  */
-YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
+YCPValue Y2UIComponent::setLanguage( const YCPTerm & term )
 {
     // NOP
 
@@ -287,22 +203,10 @@ YCPValue YUIInterpreter::setLanguage( const YCPTerm & term )
  * @example SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
-YCPValue YUIInterpreter::evaluateSetConsoleFont( const YCPTerm & term )
+void Y2UIComponent::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font, 
+    const YCPString & screen_map, const YCPString & unicode_map, const YCPString & encoding )
 {
-    if ( term->size() == 5 &&
-	 term->value(0)->isString() &&
-	 term->value(1)->isString() &&
-	 term->value(2)->isString() &&
-	 term->value(3)->isString() &&
-	 term->value(4)->isString()   )
-    {
-	return setConsoleFont( term->value(0)->asString(),	// console magic
-			       term->value(1)->asString(),	// font
-			       term->value(2)->asString(),	// screen_map
-			       term->value(3)->asString(),	// unicode_map
-			       term->value(4)->asString() );	// encoding
-    }
-    else return YCPNull();
+    setConsoleFont( console_magic, font, screen_map, unicode_map, encoding );
 }
 
 /**
@@ -312,12 +216,9 @@ YCPValue YUIInterpreter::evaluateSetConsoleFont( const YCPTerm & term )
  * @example SetKeyboard( )
  */
 
-YCPValue YUIInterpreter::evaluateSetKeyboard( const YCPTerm & term )
+void Y2UIComponent::evaluateSetKeyboard( )
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
-    return setKeyboard( );
+    setKeyboard( );
 }
 
 /*
@@ -325,7 +226,7 @@ YCPValue YUIInterpreter::evaluateSetKeyboard( const YCPTerm & term )
  * Returns OK ( YCPVoid() )
  */
 
-YCPValue YUIInterpreter::setKeyboard(  )
+YCPValue Y2UIComponent::setKeyboard(  )
 {
     // NOP
 
@@ -337,7 +238,7 @@ YCPValue YUIInterpreter::setKeyboard(  )
  * Returns OK ( YCPVoid() )
  */
 
-YCPValue YUIInterpreter::setConsoleFont( const YCPString & console_magic,
+YCPValue Y2UIComponent::setConsoleFont( const YCPString & console_magic,
 					 const YCPString & font,
 					 const YCPString & screen_map,
 					 const YCPString & unicode_map,
@@ -352,7 +253,7 @@ YCPValue YUIInterpreter::setConsoleFont( const YCPString & console_magic,
 /**
  * Default UI-specific busyCursor() - does nothing
  */
-void YUIInterpreter::busyCursor()
+void Y2UIComponent::busyCursor()
 {
     // NOP
 }
@@ -361,7 +262,7 @@ void YUIInterpreter::busyCursor()
 /**
  * Default UI-specific normalCursor() - does nothing
  */
-void YUIInterpreter::normalCursor()
+void Y2UIComponent::normalCursor()
 {
     // NOP
 }
@@ -370,7 +271,7 @@ void YUIInterpreter::normalCursor()
 /**
  * Default UI-specific redrawScreen() - does nothing
  */
-void YUIInterpreter::redrawScreen()
+void Y2UIComponent::redrawScreen()
 {
     // NOP
 }
@@ -379,7 +280,7 @@ void YUIInterpreter::redrawScreen()
 /**
  * Default UI-specific makeScreenShot() - does nothing
  */
-void YUIInterpreter::makeScreenShot( string filename )
+void Y2UIComponent::makeScreenShot( string filename )
 {
     // NOP
 }
@@ -402,33 +303,29 @@ void YUIInterpreter::makeScreenShot( string filename )
  * ends with ".UTF-8" since this is the encoding YaST2 uses internally).
  */
 
-YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
+YCPString Y2UIComponent::evaluateGetLanguage( const YCPBoolean & strip )
 {
-    if ( term->size() == 1 && term->value(0)->isBoolean() )
+    bool strip_encoding = strip->value();
+    const char *lang_cstr = getenv( "LANG" );
+    string lang = "";		// Fallback if $LANG not set
+
+    if ( lang_cstr )		// only if environment variable set
     {
-	bool strip_encoding = term->value(0)->asBoolean()->value();
-	const char *lang_cstr = getenv( "LANG" );
-	string lang = "";		// Fallback if $LANG not set
+	lang = lang_cstr;
 
-	if ( lang_cstr )		// only if environment variable set
+	if ( strip_encoding )
 	{
-	    lang = lang_cstr;
+	    y2milestone( "Stripping encoding" );
+	    string::size_type pos = lang.find_first_of( ".@" );
 
-	    if ( strip_encoding )
+	    if ( pos != string::npos )		// if encoding etc. specified
 	    {
-		y2milestone( "Stripping encoding" );
-		string::size_type pos = lang.find_first_of( ".@" );
-
-		if ( pos != string::npos )		// if encoding etc. specified
-		{
-		    lang = lang.substr( 0, pos );	// remove it
-		}
+		lang = lang.substr( 0, pos );	// remove it
 	    }
 	}
-
-	return YCPString( lang );
     }
-    else return YCPNull();
+
+    return YCPString( lang );
 }
 
 
@@ -446,11 +343,8 @@ YCPValue YUIInterpreter::evaluateGetLanguage( const YCPTerm & term )
  * <a href="events/event-builtins.html#UserInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateUserInput()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     return doUserInput( YUIBuiltin_UserInput,
 			0,		// timeout_millisec
 			true,		// wait
@@ -473,11 +367,8 @@ YCPValue YUIInterpreter::evaluateUserInput( const YCPTerm & term )
  * <a href="events/event-builtins.html#PollInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue YUIInterpreter::evaluatePollInput( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluatePollInput()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     return doUserInput( YUIBuiltin_PollInput,
 			0,		// timeout_millisec
 			false,		// wait
@@ -500,12 +391,9 @@ YCPValue YUIInterpreter::evaluatePollInput( const YCPTerm & term )
  * <a href="events/event-builtins.html#TimeoutUserInput">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue YUIInterpreter::evaluateTimeoutUserInput( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateTimeoutUserInput( const YCPInteger & timeout )
 {
-    if ( term->size() != 1 || ! term->value(0)->isInteger() )
-	return YCPNull();
-
-    long timeout_millisec = term->value(0)->asInteger()->value();
+    long timeout_millisec = timeout->value();
 
     return doUserInput( YUIBuiltin_TimeoutUserInput,
 			timeout_millisec,
@@ -525,16 +413,13 @@ YCPValue YUIInterpreter::evaluateTimeoutUserInput( const YCPTerm & term )
  * <a href="events/event-builtins.html#WaitForEvent">
  * YaST2 UI Event Handling Documentation</a>.
  */
-YCPValue YUIInterpreter::evaluateWaitForEvent( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateWaitForEvent( const YCPInteger & timeout )
 {
     long timeout_millisec = 0;
 
-    if ( term->size() != 0 )
+    if ( ! timeout.isNull() )
     {
-	if ( term->size() != 1 || ! term->value(0)->isInteger() )
-	    return YCPNull();
-
-	timeout_millisec = term->value(0)->asInteger()->value();
+	timeout_millisec = timeout->value();
     }
 
     return doUserInput( YUIBuiltin_WaitForEvent,
@@ -546,7 +431,7 @@ YCPValue YUIInterpreter::evaluateWaitForEvent( const YCPTerm & term )
 
 
 
-YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
+YCPValue Y2UIComponent::doUserInput( const char * 	builtin_name,
 				      long 		timeout_millisec,
 				      bool 		wait,
 				      bool 		detailed )
@@ -657,7 +542,7 @@ YCPValue YUIInterpreter::doUserInput( const char * 	builtin_name,
 
 
 YEvent *
-YUIInterpreter::filterInvalidEvents( YEvent * event )
+Y2UIComponent::filterInvalidEvents( YEvent * event )
 {
     if ( ! event )
 	return 0;
@@ -744,20 +629,19 @@ YUIInterpreter::filterInvalidEvents( YEvent * event )
  * @example OpenDialog( `opt( `defaultsize ), `Label( "Hi" ) )
  */
 
-YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
+YCPBoolean Y2UIComponent::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
 {
-    int argc = term->size();
+    y2debug( "Evaluate open dialog" );
+    y2debug( "term: %s", dialog_term->toString().c_str() );
 
-    if ( ( argc == 1 && term->value(0)->isTerm() ) ||	// Trivial case: No `opt(), only the dialog description term
-	 ( argc == 2
-	   && term->value(0)->asTerm()->symbol()->symbol() == YUISymbol_opt	// `opt(...)
-	   && term->value(1)->isTerm() ) )					// The actual dialog
+    y2debug( "opts: %s", opts.isNull() ? "none" : opts->toString().c_str() );
+    
+    YWidgetOpt opt;
+
+    if ( ! opts.isNull() ) // evaluate `opt() contents
     {
-	YWidgetOpt opt;
-
-	if ( argc == 2 ) // evaluate `opt() contents
-	{
-	    YCPList optList = term->value(0)->asTerm()->args();
+	    y2debug( "There are options" );
+	    YCPList optList = opts->args();
 
 	    for ( int o=0; o < optList->size(); o++ )
 	    {
@@ -768,21 +652,23 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
 		    else
-			y2warning( "Unknown option %s for OpenDialog", term->value(o)->toString().c_str() );
+			y2warning( "Unknown option %s for OpenDialog", opts->value(o)->toString().c_str() );
 		}
 	    }
-	}
+    }
 
-	blockEvents();	// We don't want self-generated events from UI builtins.
-	YDialog *dialog = createDialog( opt );
+    blockEvents();	// We don't want self-generated events from UI builtins.
+    y2debug( "About to create dialog" );
+    YDialog *dialog = createDialog( opt );
+    y2debug( "Dialog created" );
 
-	if ( dialog )
+    if ( dialog )
+    {
+	registerDialog( dialog ); // must be done first!
+	YWidget *widget = createWidgetTree( dialog, 0, dialog_term );
+
+	if ( widget )
 	{
-	    registerDialog( dialog ); // must be done first!
-	    YWidget *widget = createWidgetTree( dialog, 0, term->value( argc-1 )->asTerm() );
-
-	    if ( widget )
-	    {
 		dialog->addChild( widget );
 		dialog->setInitialSize();
 		dialog->checkShortcuts();
@@ -790,18 +676,12 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
 
 		unblockEvents();
 		return YCPBoolean( true );
-	    }
-	    else removeDialog();
 	}
+	else removeDialog();
+    }
 
-	unblockEvents();
-	return YCPBoolean( false );
-    }
-    else
-    {
-	y2error( "Bad arguments for UI::OpenDialog()." );
-	return YCPNull();
-    }
+    unblockEvents();
+    return YCPBoolean( false );
 }
 
 
@@ -815,53 +695,52 @@ YCPValue YUIInterpreter::evaluateOpenDialog( const YCPTerm & term )
  * Returns true on success.
  */
 
-YCPValue YUIInterpreter::evaluateCloseDialog( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateCloseDialog()
 {
-    if ( term->size() == 0 )
+    blockEvents();	// We don't want self-generated events from UI builtins.
+    YDialog *dialog = currentDialog();
+
+    if ( ! dialog )
     {
-	blockEvents();	// We don't want self-generated events from UI builtins.
-	YDialog *dialog = currentDialog();
-
-	if ( ! dialog )
-	    return YCPError ( "Can't CloseDialog: No dialog existing.", YCPBoolean( false ) );
-
-	closeDialog( dialog );
-	removeDialog();
-	unblockEvents();
-
-	return YCPBoolean( true );
+	ycp2error ( "Can't CloseDialog: No dialog existing.");
+	return YCPBoolean( false );
     }
-    else return YCPNull();
+
+    closeDialog( dialog );
+    removeDialog();
+    unblockEvents();
+
+    return YCPBoolean( true );
 }
 
 
-void YUIInterpreter::registerDialog( YDialog *dialog )
+void Y2UIComponent::registerDialog( YDialog *dialog )
 {
     dialogstack.push_back( dialog );
 }
 
 
-void YUIInterpreter::removeDialog()
+void Y2UIComponent::removeDialog()
 {
     delete currentDialog();
     dialogstack.pop_back();
 }
 
 
-YDialog *YUIInterpreter::currentDialog() const
+YDialog *Y2UIComponent::currentDialog() const
 {
     if ( dialogstack.size() >= 1 ) return dialogstack.back();
     else return 0;
 }
 
 
-void YUIInterpreter::showDialog( YDialog * )
+void Y2UIComponent::showDialog( YDialog * )
 {
     // dummy default implementation
 }
 
 
-void YUIInterpreter::closeDialog( YDialog * )
+void Y2UIComponent::closeDialog( YDialog * )
 {
     // dummy default implementation
 }
@@ -882,27 +761,24 @@ void YUIInterpreter::closeDialog( YDialog * )
  * Returns true on success.
  */
 
-YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & new_value )
 {
-    if ( term->size() != 3
-	 || ( ! isSymbolOrId( term->value(0) ) )
-	 || ( ! term->value(1)->isSymbol() &&
-	      ! term->value(1)->isTerm()	) )
+    if ( ! isSymbolOrId( id_value ) )
     {
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( id_value );
     YWidget *widget = widgetWithId( id, true );
 
     if ( ! widget )
-	return YCPVoid();
+	return YCPBoolean( false );
 
-    if ( term->value(1)->isSymbol() )
+    if ( property->isSymbol() )
     {
 	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
-	YCPSymbol sym = term->value(1)->asSymbol();
-	YCPValue ret = widget->changeWidget( sym, term->value(2) );
+	YCPSymbol sym = property->asSymbol();
+	YCPValue ret = widget->changeWidget( sym, new_value );
 
 	if ( widget->shortcutProperty()				// The widget has a shortcut property
 	     && sym->symbol() == widget->shortcutProperty()	// and this is what should be changed
@@ -921,7 +797,7 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
     else
     {
 	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
-	YCPValue result = widget->changeWidget( term->value(1)->asTerm(), term->value(2) );
+	YCPValue result = widget->changeWidget( property->asTerm(), new_value );
 	unblockEvents();
 
 	return result;
@@ -942,26 +818,23 @@ YCPValue YUIInterpreter::evaluateChangeWidget( const YCPTerm & term )
  * certain item.
  */
 
-YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
 {
-    if ( term->size() != 2
-	 || ( ! isSymbolOrId( term->value(0) )
-	 || ( ! term->value(1)->isSymbol() &&
-	      ! term->value(1)->isTerm()     ) ) )
+    if ( ! isSymbolOrId( id_value ) )
     {
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( id_value );
     YWidget *widget = widgetWithId( id, true ); // reports error
 
     if ( ! widget )
 	return YCPVoid();
 
-    if ( term->value(1)->isSymbol() )
-	return widget->queryWidget( term->value(1)->asSymbol() );
+    if ( property->isSymbol() )
+	return widget->queryWidget( property->asSymbol() );
     else
-	return widget->queryWidget( term->value(1)->asTerm() );
+	return widget->queryWidget( property->asTerm() );
 }
 
 
@@ -983,17 +856,14 @@ YCPValue YUIInterpreter::evaluateQueryWidget( const YCPTerm & term )
  * </pre>
  */
 
-YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
+YCPBoolean Y2UIComponent::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm & new_widget )
 {
-    if ( term->size() != 2
-	 || ! isSymbolOrId( term->value(0) )
-	 || ! term->value(1)->isTerm()
-	 )
+    if ( ! isSymbolOrId( id_value ) )
     {
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( id_value );
     YWidget *replpoint = widgetWithId( id, true ); // reports error
     if ( ! replpoint ) return YCPBoolean( false );
 
@@ -1025,7 +895,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
 
     rp->removeChildren();
 
-    YWidget *widget = createWidgetTree( replpoint, rbg, term->value(1)->asTerm() );
+    YWidget *widget = createWidgetTree( replpoint, rbg, new_widget );
 
     if ( widget )
     {
@@ -1041,7 +911,7 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
     {
 	blockEvents();	// We don't want self-generated events from UI builtins.
 
-	widget = createWidgetTree( replpoint, rbg, YCPTerm( YCPSymbol( YUIWidget_Empty, true ), YCPList() ) );
+	widget = createWidgetTree( replpoint, rbg, YCPTerm( YUIWidget_Empty, YCPList() ) );
 
 	if ( widget )
 	{
@@ -1075,16 +945,16 @@ YCPValue YUIInterpreter::evaluateReplaceWidget( const YCPTerm & term )
  * Returns true on success (i.e. the widget accepted the focus).
  */
 
-YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
+YCPBoolean Y2UIComponent::evaluateSetFocus( const YCPValue & id_value )
 {
-    if ( term->size() != 1 || ! isSymbolOrId( term->value(0) ) )
+    if ( ! isSymbolOrId( id_value ) )
 	return YCPNull();
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( id_value );
     YWidget *widget = widgetWithId( id, true );
 
     if ( ! widget )
-	return YCPVoid();
+	return YCPBoolean( false );
 
     return YCPBoolean( widget->setKeyboardFocus() );
 }
@@ -1102,13 +972,9 @@ YCPValue YUIInterpreter::evaluateSetFocus( const YCPTerm & term )
  * own risk.
  */
 
-YCPValue YUIInterpreter::evaluateBusyCursor( const YCPTerm & term )
+void Y2UIComponent::evaluateBusyCursor()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     busyCursor();
-    return YCPVoid();
 }
 
 
@@ -1125,13 +991,9 @@ YCPValue YUIInterpreter::evaluateBusyCursor( const YCPTerm & term )
  * might make this necessary. Call this in the YCP code after such a command.
  */
 
-YCPValue YUIInterpreter::evaluateRedrawScreen( const YCPTerm & term )
+void Y2UIComponent::evaluateRedrawScreen()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     redrawScreen();
-    return YCPVoid();
 }
 
 
@@ -1147,13 +1009,9 @@ YCPValue YUIInterpreter::evaluateRedrawScreen( const YCPTerm & term )
  * own risk.
  */
 
-YCPValue YUIInterpreter::evaluateNormalCursor( const YCPTerm & term )
+void Y2UIComponent::evaluateNormalCursor()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     normalCursor();
-    return YCPVoid();
 }
 
 
@@ -1165,13 +1023,9 @@ YCPValue YUIInterpreter::evaluateNormalCursor( const YCPTerm & term )
  * The Qt UI opens a file selection box if filename is empty.
  */
 
-YCPValue YUIInterpreter::evaluateMakeScreenShot( const YCPTerm & term )
+void Y2UIComponent::evaluateMakeScreenShot( const YCPString & filename )
 {
-    if ( term->size() != 1 || ! term->value(0)->isString() )
-	return YCPNull();
-
-    makeScreenShot( term->value(0)->asString()->value() );
-    return YCPVoid();
+    makeScreenShot( filename->value () );
 }
 
 
@@ -1183,22 +1037,17 @@ YCPValue YUIInterpreter::evaluateMakeScreenShot( const YCPTerm & term )
  * file.
  */
 
-YCPValue YUIInterpreter::evaluateDumpWidgetTree( const YCPTerm & term )
+void Y2UIComponent::evaluateDumpWidgetTree()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     YDialog *dialog = currentDialog();
 
     if ( ! dialog )
     {
 	y2error( "DumpWidgetTree: No dialog existing." );
-	return YCPVoid();
+	return;
     }
 
     dialog->dumpDialogWidgetTree();
-
-    return YCPVoid();
 }
 
 
@@ -1207,29 +1056,20 @@ YCPValue YUIInterpreter::evaluateDumpWidgetTree( const YCPTerm & term )
  *
  * Begin recording a macro. Write the macro contents to file "macroFilename".
  */
-YCPValue YUIInterpreter::evaluateRecordMacro( const YCPTerm & term )
+void Y2UIComponent::evaluateRecordMacro( const YCPString & filename )
 {
-    if ( term->size() == 1 && term->value(0)->isString() )
-    {
-	recordMacro( term->value(0)->asString()->value() );
-
-	return YCPVoid();
-    }
-    else
-    {
-	return YCPNull();
-    }
+    recordMacro( filename->value () );
 }
 
 
-void YUIInterpreter::recordMacro( string filename )
+void Y2UIComponent::recordMacro( string filename )
 {
     deleteMacroRecorder();
     macroRecorder = new YMacroRecorder( filename );
 }
 
 
-void YUIInterpreter::deleteMacroRecorder()
+void Y2UIComponent::deleteMacroRecorder()
 {
     if ( macroRecorder )
     {
@@ -1246,18 +1086,13 @@ void YUIInterpreter::deleteMacroRecorder()
  * Stop macro recording. This is only necessary if you don't wish to record
  * everything until the program terminates.
  */
-YCPValue YUIInterpreter::evaluateStopRecordMacro( const YCPTerm & term )
+void Y2UIComponent::evaluateStopRecordMacro()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     stopRecordMacro();
-
-    return YCPVoid();
 }
 
 
-void YUIInterpreter::stopRecordMacro()
+void Y2UIComponent::stopRecordMacro()
 {
     deleteMacroRecorder();
 }
@@ -1270,30 +1105,23 @@ void YUIInterpreter::stopRecordMacro()
  * Any errors are sent to the log file only.
  * The macro can be terminated only from within the macro file.
  */
-YCPValue YUIInterpreter::evaluatePlayMacro( const YCPTerm & term )
+void Y2UIComponent::evaluatePlayMacro( const YCPString & filename )
 {
-    if ( term->size() == 1 && term->value(0)->isString() )
-    {
-	playMacro( term->value(0)->asString()->value() );
-
-	return YCPVoid();
-    }
-    else
-    {
-	return YCPNull();
-    }
+    playMacro( filename->value() );
 }
 
 
-void YUIInterpreter::playMacro( string filename )
+void Y2UIComponent::playMacro( string filename )
 {
     deleteMacroPlayer();
     macroPlayer = new YMacroPlayer( filename );
 }
 
 
-void YUIInterpreter::playNextMacroBlock()
+void Y2UIComponent::playNextMacroBlock()
 {
+#if 0
+// FIXME:
     if ( ! macroPlayer )
     {
 	y2error( "No macro player active." );
@@ -1322,10 +1150,11 @@ void YUIInterpreter::playNextMacroBlock()
 	    }
 	}
     }
+#endif
 }
 
 
-void YUIInterpreter::deleteMacroPlayer()
+void Y2UIComponent::deleteMacroPlayer()
 {
     if ( macroPlayer )
     {
@@ -1346,14 +1175,9 @@ void YUIInterpreter::deleteMacroPlayer()
  * <p>
  * "nil" is a legal value.
  */
-YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
+void Y2UIComponent::evaluateFakeUserInput( const YCPValue & next_input )
 {
-    if ( term->size() != 1 )	// must have 1 arg - anything allowed
-	return YCPNull();
-
-    fakeUserInputQueue.push_back( term->value(0) );
-
-    return YCPVoid();
+    fakeUserInputQueue.push_back( next_input );
 }
 
 
@@ -1398,17 +1222,8 @@ YCPValue YUIInterpreter::evaluateFakeUserInput( const YCPTerm & term )
  * <img src="examples/screenshots/Glyphs-ncurses.png">
  * <p><i>Glyphs in the NCurses UI</i>
  */
-YCPValue YUIInterpreter::evaluateGlyph( const YCPTerm & term )
+YCPString Y2UIComponent::evaluateGlyph( const YCPSymbol & glyphSym )
 {
-    if ( term->size() != 1 || ! term->value(0)->isSymbol() )
-    {
-	y2error( "Expected symbol, not %s", term->toString().c_str() );
-	return YCPNull();
-    }
-
-    YCPSymbol glyphSym = term->value(0)->asSymbol();
-
-
     YCPString glyphText = glyph( glyphSym );	// ask specific UI
 
     if ( glyphText->value().length() == 0 )	// specific UI doesn't have a suitable representation
@@ -1524,11 +1339,8 @@ YCPValue YUIInterpreter::evaluateGlyph( const YCPTerm & term )
  * dialog.
  *
  */
-YCPValue YUIInterpreter::evaluateGetDisplayInfo( const YCPTerm & term )
+YCPMap Y2UIComponent::evaluateGetDisplayInfo()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     YCPMap info_map;
 
     info_map->add( YCPString( YUICap_Width			), YCPInteger( getDisplayWidth()	) );
@@ -1559,11 +1371,8 @@ YCPValue YUIInterpreter::evaluateGetDisplayInfo( const YCPTerm & term )
  * like the a Label widget's value. Call this once ( ! ) after changing all such
  * widget properties.
  */
-YCPValue YUIInterpreter::evaluateRecalcLayout( const YCPTerm & term )
+void Y2UIComponent::evaluateRecalcLayout()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     YDialog *dialog = currentDialog();
 
     if ( ! dialog )
@@ -1574,8 +1383,6 @@ YCPValue YUIInterpreter::evaluateRecalcLayout( const YCPTerm & term )
     {
 	dialog->setInitialSize();
     }
-
-    return YCPVoid();
 }
 
 
@@ -1613,11 +1420,8 @@ YCPValue YUIInterpreter::evaluateRecalcLayout( const YCPTerm & term )
  * UserInput();
  * </pre>
  */
-YCPValue YUIInterpreter::evaluatePostponeShortcutCheck( const YCPTerm & term )
+void Y2UIComponent::evaluatePostponeShortcutCheck()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     YDialog *dialog = currentDialog();
 
     if ( ! dialog )
@@ -1628,8 +1432,6 @@ YCPValue YUIInterpreter::evaluatePostponeShortcutCheck( const YCPTerm & term )
     {
 	dialog->postponeShortcutCheck();
     }
-
-    return YCPVoid();
 }
 
 
@@ -1652,11 +1454,8 @@ YCPValue YUIInterpreter::evaluatePostponeShortcutCheck( const YCPTerm & term )
  * UserInput();
  * </pre>
  */
-YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
+void Y2UIComponent::evaluateCheckShortcuts()
 {
-    if ( term->size() != 0 )
-	return YCPNull();
-
     YDialog *dialog = currentDialog();
 
     if ( ! dialog )
@@ -1672,8 +1471,6 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
 
 	dialog->checkShortcuts( true );
     }
-
-    return YCPVoid();
 }
 
 
@@ -1685,12 +1482,11 @@ YCPValue YUIInterpreter::evaluateCheckShortcuts( const YCPTerm & term )
  * current dialog. Use this to avoid errors in the log file before changing the
  * properties of widgets that might or might not be there.
  */
-YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
+YCPBoolean Y2UIComponent::evaluateWidgetExists( const YCPValue & id_value )
 {
-    if ( term->size() != 1
-	 || ! isSymbolOrId( term->value(0) ) ) return YCPNull();
+    if ( ! isSymbolOrId( id_value ) ) return YCPNull();
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( id_value );
     YWidget *widget = widgetWithId( id, false ); // reports error
     return widget ? YCPBoolean( true ) : YCPBoolean( false );
 }
@@ -1705,16 +1501,15 @@ YCPValue YUIInterpreter::evaluateWidgetExists( const YCPTerm & term )
  * <p>
  * Returns `cancel if the user wishes to cancel his selections.
  */
-YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateRunPkgSelection( const YCPValue & value_id )
 {
-    if ( term->size() != 1
-	 || ! isSymbolOrId( term->value( 0 ) ) )
+    if ( ! isSymbolOrId( value_id ) )
     {
-	y2error( "RunPkgSelection(): expecting `id( ... ), not '%s'", term->toString().c_str() );
+	y2error( "RunPkgSelection(): expecting `id( ... ), not '%s'", value_id->toString().c_str() );
 	return YCPNull();
     }
 
-    YCPValue id = getId( term->value(0) );
+    YCPValue id = getId( value_id );
     YWidget * selector = widgetWithId( id, true );
 
     if ( ! selector )
@@ -1743,17 +1538,9 @@ YCPValue YUIInterpreter::evaluateRunPkgSelection( const YCPTerm & term )
  * <p>
  * Returns the selected directory name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue YUIInterpreter::evaluateAskForExistingDirectory( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
-    if ( term->size() == 2 &&
-	 term->value(0)->isString() &&
-	 term->value(1)->isString()   )
-    {
-	return askForExistingDirectory( term->value(0)->asString(),
-					term->value(1)->asString() );
-    }
-
-    return YCPNull();
+    return askForExistingDirectory( startDir, headline );
 }
 
 
@@ -1772,20 +1559,9 @@ YCPValue YUIInterpreter::evaluateAskForExistingDirectory( const YCPTerm & term )
  * <p>
  * Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue YUIInterpreter::evaluateAskForExistingFile( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
-    if ( term->size() == 3 &&
-	 term->value(0)->isString() &&
-	 term->value(1)->isString() &&
-	 term->value(2)->isString()   )
-    {
-	return askForExistingFile( term->value(0)->asString(),
-				   term->value(1)->asString(),
-				   term->value(2)->asString() );
-
-    }
-
-    return YCPNull();
+    return askForExistingFile( startWith, filter, headline );
 }
 
 
@@ -1805,20 +1581,9 @@ YCPValue YUIInterpreter::evaluateAskForExistingFile( const YCPTerm & term )
  * <p>
  * Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue YUIInterpreter::evaluateAskForSaveFileName( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
-    if ( term->size() == 3 &&
-	 term->value(0)->isString() &&
-	 term->value(1)->isString() &&
-	 term->value(2)->isString()   )
-    {
-	return askForSaveFileName( term->value(0)->asString(),
-				   term->value(1)->asString(),
-				   term->value(2)->asString() );
-
-    }
-
-    return YCPNull();
+    return askForSaveFileName( startWith, filter, headline );
 }
 
 
@@ -1837,11 +1602,8 @@ YCPValue YUIInterpreter::evaluateAskForSaveFileName( const YCPTerm & term )
  * <p>
  * @example SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
  */
-YCPValue YUIInterpreter::evaluateSetFunctionKeys( const YCPTerm & term )
+void Y2UIComponent::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 {
-    if ( term->size() == 1 && term->value(0)->isMap() )
-    {
-	YCPMap new_fkeys( term->value(0)->asMap() );
 	default_fkeys = YCPMap();
 
 	for ( YCPMapIterator it = new_fkeys->begin(); it != new_fkeys->end(); ++it )
@@ -1869,14 +1631,10 @@ YCPValue YUIInterpreter::evaluateSetFunctionKeys( const YCPTerm & term )
 			 it.key()->toString().c_str(), it.value()->toString().c_str() );
 	    }
 	}
-	return YCPVoid();
-    }
-    else
-	return YCPNull();
 }
 
 
-int YUIInterpreter::defaultFunctionKey( YCPString ylabel )
+int Y2UIComponent::defaultFunctionKey( YCPString ylabel )
 {
     int fkey = 0;
 
@@ -1902,7 +1660,7 @@ int YUIInterpreter::defaultFunctionKey( YCPString ylabel )
  * USE WITH CAUTION.
  */
 
-YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
+YCPValue Y2UIComponent::evaluateCallback( const YCPTerm & term, bool to_wfm )
 {
     y2debug ( "( %s ), callback @ %p", term->toString().c_str(), callbackComponent );
     if ( term->size() != 1 )	// must have 1 arg - anything allowed
@@ -1940,31 +1698,19 @@ YCPValue YUIInterpreter::evaluateCallback( const YCPTerm & term, bool to_wfm )
  * "ISO-8859-2" for eastern languages, etc. )
  */
 
-YCPValue YUIInterpreter::evaluateRecode( const YCPTerm & term )
+YCPValue Y2UIComponent::evaluateRecode( const YCPString & from, const YCPString & to, const YCPString & text )
 {
-    if ( ( term->size() != 3 )
-	 || ! (term->value(0)->isString())
-	 || ! (term->value(1)->isString())
-	 || ! (term->value(2)->isString()))
-    {
-	y2error( "Wrong number or type of arguments for Recode ( string from, string to, string text )" );
-	return YCPVoid();
-    }
-
     string outstr;
-    if ( Recode ( term->value(2)->asString()->value(),
-		  term->value(0)->asString()->value(),
-		  term->value(1)->asString()->value(),
-		  outstr ) != 0 )
+    if ( Recode ( text->value (), from->value (), to->value (), outstr ) != 0 )
     {
 	static bool warned_about_recode = false;
 	if ( ! warned_about_recode )
 	{
-	    y2error ( "Recode ( %s, %s, ... )", term->value(0)->asString()->value().c_str(), term->value( 1)->asString()->value().c_str() );
+	    y2error ( "Recode ( %s, %s, ... )", from->value().c_str(), to->value().c_str() );
 	    warned_about_recode = true;
 	}
 	// return text as-is
-	return ( term->value(2)->asString() );
+	return ( text );
     }
     return YCPString ( outstr );
 }
@@ -1984,7 +1730,7 @@ static string  to_name	     = "";
 static const unsigned recode_buf_size = 1024;
 static char	      recode_buf[ recode_buf_size ];
 
-int YUIInterpreter::Recode( const string & instr, const string & from,
+int Y2UIComponent::Recode( const string & instr, const string & from,
 			    const string & to, string & outstr )
 {
     if ( from == to

@@ -5,7 +5,8 @@
 pkgincludedir = $(includedir)/yui
 
 pkginclude_HEADERS =				\
-	YUIInterpreter.h			\
+	Y2UIComponent.h				\
+	UI.h					\
 	YUISymbols.h				\
 	hashtable.gperf				\
 	hashtable.h 				\
@@ -56,7 +57,7 @@ pkginclude_HEADERS =				\
 
 
 hashtable.h: hashtable.gperf
-	gperf -k 1,7,9 -H YUIInterpreter_hash -N YUIInterpreter_in_word_set -L ANSI-C -C -E -I <$< > hashtable.out && mv hashtable.out $@ || (rm -f hashtable.out ; false)
+	gperf -k 1,7,9 -H Y2UIComponent_hash -N Y2UICompoent_in_word_set -L ANSI-C -C -E -I <$< > hashtable.out && mv hashtable.out $@ || (rm -f hashtable.out ; false)
 
 CLEANFILES = libyui.kdoc
 

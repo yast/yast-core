@@ -124,7 +124,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
     if ( ! _macroFile )
 	return;
 
-    YCPTerm term( YCPSymbol( YUIBuiltin_FakeUserInput, false ) );
+    YCPTerm term( YUIBuiltin_FakeUserInput );
     term->add( input );
 
     fprintf( _macroFile, "%s%s%s;\n", YMACRO_INDENT, YMACRO_INDENT,
@@ -171,11 +171,11 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
     }
 
 
-    YCPTerm term( YCPSymbol( YUIBuiltin_ChangeWidget, false ) );	// ChangeWidget()
-    YCPTerm id( YCPSymbol( YUISymbol_id, true ) );			// `id()
+    YCPTerm term( YUIBuiltin_ChangeWidget );	// ChangeWidget()
+    YCPTerm id( YUISymbol_id );			// `id()
     id->add( widget->id() );						// `id( `something )
     term->add( id );							// ChangeWidget( `id( `something ) )
-    YCPSymbol property( propertyName, true );				// `Value	etc.
+    YCPSymbol property( propertyName );				// `Value	etc.
 
     term->add( property );						// ChangeWidget( `id( `something ), `Value )
     term->add( widget->queryWidget( property ) );			// ChangeWidget( `id( `something ), `Value, 42 )

@@ -151,7 +151,7 @@ YCPMap YWidgetEvent::ycpEvent()
 	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YTextEntry, ...)
 		widgetClass++;
 
-	    map->add( YCPString( "WidgetClass" ), YCPSymbol( widgetClass, true ) );
+	    map->add( YCPString( "WidgetClass" ), YCPSymbol( widgetClass ) );
 	}
 
 
@@ -216,7 +216,7 @@ YCPMap YKeyEvent::ycpEvent()
 	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YTextEntry, ...)
 		widgetClass++;
 
-	    map->add( YCPString( "FocusWidgetClass" ), YCPSymbol( widgetClass, true ) );
+	    map->add( YCPString( "FocusWidgetClass" ), YCPSymbol( widgetClass ) );
 	}
 
 
@@ -254,7 +254,7 @@ YSimpleEvent::YSimpleEvent( EventType 		eventType,
 YSimpleEvent::YSimpleEvent( EventType 		eventType,
 			    const char * 	id )
     : YEvent( eventType )
-    , _id( YCPSymbol( id, true ) )
+    , _id( YCPSymbol( id ) )
 {
 }
 
@@ -262,7 +262,7 @@ YSimpleEvent::YSimpleEvent( EventType 		eventType,
 YSimpleEvent::YSimpleEvent( EventType 		eventType,
 			    const string & 	id )
     : YEvent( eventType )
-    , _id( YCPSymbol( id.c_str(), true ) )
+    , _id( YCPSymbol( id.c_str() ) )
 {
 }
 

@@ -82,7 +82,7 @@ YCPValue YTable::changeWidget( const YCPSymbol & property,
 
 YCPValue YTable::changeWidget( const YCPTerm & property, const YCPValue & newvalue )
 {
-    string s = property->symbol()->symbol();
+    string s = property->name();
     /*
      * @property item		Item( id )	read: a single item ( string or term )
      * @property integer|string	Item( id,column ) write: replacement for one specific cell ( see example )
@@ -141,7 +141,7 @@ YCPValue YTable::queryWidget( const YCPSymbol & property )
 
 YCPValue YTable::queryWidget( const YCPTerm & property )
 {
-    string s = property->symbol()->symbol();
+    string s = property->name();
     if ( s == YUIProperty_Item )
     {
 	if ( property->size() != 1 )
@@ -178,7 +178,7 @@ bool YTable::addItems( const YCPList & itemlist )
 
 bool YTable::addItem( const YCPValue & item )
 {
-    if ( ! item->isTerm() || item->asTerm()->symbol()->symbol() != YUISymbol_item )
+    if ( ! item->isTerm() || item->asTerm()->name() != YUISymbol_item )
     {
 	y2error( "Invalid item specification %s: Must be `" YUISymbol_item "() term",
 		 item->toString().c_str() );
@@ -194,7 +194,7 @@ bool YTable::addItem( const YCPValue & item )
     }
 
     if ( ! collist->value(0)->isTerm()
-	 || collist->value(0)->asTerm()->symbol()->symbol() != YUISymbol_id
+	 || collist->value(0)->asTerm()->name() != YUISymbol_id
 	 || collist->value(0)->asTerm()->size() != 1)
     {
 	y2error( "Invalid item specification %s: Must begin with `" YUISymbol_id "() term",
@@ -265,8 +265,8 @@ int YTable::numCols() const
 YCPTerm YTableRow::makeTerm() const
 {
     // Return the item as term
-    YCPTerm itemterm( YUISymbol_item, true );
-    YCPTerm idterm( YUISymbol_id, true );
+    YCPTerm itemterm( YUISymbol_item );
+    YCPTerm idterm( YUISymbol_id );
     idterm->add( id );
     itemterm->add( idterm );
     for ( unsigned int c=0; c < elements.size(); c++ )

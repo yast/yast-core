@@ -18,10 +18,12 @@
 /-*/
 
 #include <stdio.h>
-#include <YUIInterpreter.h>
 #include <ycp/y2log.h>
+#include <ycp/ExecutionEnvironment.h>
 
 extern int yydebug;
+
+ExecutionEnvironment ee;
 
 int
 main (int argc, const char *argv[])

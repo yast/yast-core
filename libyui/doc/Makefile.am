@@ -17,7 +17,7 @@ html_DATA =			\
 
 EXTRA_DIST = $(html_DATA)
 
-builtin	= $(srcdir)/../src/YUIInterpreter_builtins.cc
+builtin	= $(srcdir)/../src/Y2UIComponent_builtins.cc
 
 YCP-builtins-ui.html: $(builtin)
 	@ybindir@/makebuiltindocs -t "UI built-in functions" $(builtin) > $@.new

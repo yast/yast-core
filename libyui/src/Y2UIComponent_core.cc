@@ -10,13 +10,14 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUIInterpreter_core.cc
+  File:		Y2UIComponent_core.cc
 
-		Core functions of the UI interpreter
+		Core functions of the UI component
 		
 
   Authors:	Mathias Kettner <kettner@suse.de>
 		Stefan Hundhammer <sh@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
 		
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
@@ -38,7 +39,7 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
-#include "YUIInterpreter.h"
+#include "Y2UIComponent.h"
 #include "YUISymbols.h"
 #include "hashtable.h"
 #include "YWidget.h"
@@ -49,24 +50,25 @@
 #include "YReplacePoint.h"
 
 
-bool YUIInterpreter::_reverseLayout = false;
+bool Y2UIComponent::_reverseLayout = false;
+Y2UIComponent* Y2UIComponent::current_ui = 0;
 
-
-YUIInterpreter::YUIInterpreter( bool with_threads, Y2Component *callback )
+Y2UIComponent::Y2UIComponent( bool with_threads, Y2Component *callback )
     : id_counter(0)
     , with_threads( with_threads )
     , box_in_the_middle( YCPNull() )
     , _moduleName( "yast2" )
     , _productName( "SuSE Linux" )
-    , macroRecorder(0)
-    , macroPlayer(0)
+    , macroRecorder (0)
+    , macroPlayer (0)
     , callbackComponent( callback )
     , _events_blocked( false )
 {
+    if( current_ui == 0 ) current_ui = this;
 }
 
 
-YUIInterpreter::~YUIInterpreter()
+Y2UIComponent::~Y2UIComponent()
 {
     if ( with_threads )
     {
@@ -84,41 +86,56 @@ YUIInterpreter::~YUIInterpreter()
 
     deleteMacroRecorder();
     deleteMacroPlayer();
+    
+    if( current_ui == this ) current_ui = 0;
+}
+
+
+void Y2UIComponent::setCurrentInstance()
+{
+    current_ui = this;
 }
 
 
 Y2Component *
-YUIInterpreter::getCallback( void )
+Y2UIComponent::getCallback( void )
 {
-    y2debug ( "YUIInterpreter[%p]::getCallback() = %p", this, callbackComponent );
+    y2debug ( "Y2UIComponent[%p]::getCallback() = %p", this, callbackComponent );
     return callbackComponent;
 }
 
 
 void
-YUIInterpreter::setCallback( Y2Component *callback )
+Y2UIComponent::setCallback( Y2Component *callback )
 {
-    y2debug ( "YUIInterpreter[%p]::setCallback( %p )", this, callback );
+    y2debug ( "Y2UIComponent[%p]::setCallback( %p )", this, callback );
     callbackComponent = callback;
     return;
 }
 
 
 string
-YUIInterpreter::interpreter_name() const
+Y2UIComponent::name() const
 {
     return "UI";	// must be upper case
 }
 
 
 void
-YUIInterpreter::internalError( const char *msg )
+Y2UIComponent::internalError( const char *msg )
 {
     fprintf( stderr, "YaST2 UI internal error: %s", msg );
 }
 
 
-void YUIInterpreter::topmostConstructorHasFinished()
+YCPValue Y2UIComponent::executeUICommand( const YCPTerm &term )
+{
+    y2error( "Running executeUICommand not supported: %s", term->toString ().c_str ());
+    return YCPVoid();
+}
+
+
+void Y2UIComponent::topmostConstructorHasFinished()
 {
     // The ui thread must not be started before the constructor
     // of the actual user interface is finished. Otherwise there
@@ -157,7 +174,7 @@ void YUIInterpreter::topmostConstructorHasFinished()
 }
 
 
-void YUIInterpreter::createUIThread()
+void Y2UIComponent::createUIThread()
 {
     pthread_attr_t attr;
     pthread_attr_init( & attr );
@@ -165,7 +182,7 @@ void YUIInterpreter::createUIThread()
 }
 
 
-void YUIInterpreter::terminateUIThread()
+void Y2UIComponent::terminateUIThread()
 {
     y2debug( "Telling UI thread to shut down" );
     terminate_ui_thread = true;
@@ -175,7 +192,7 @@ void YUIInterpreter::terminateUIThread()
 }
 
 
-void YUIInterpreter::signalUIThread()
+void Y2UIComponent::signalUIThread()
 {
     static char arbitrary = 42;
     write ( pipe_to_ui[1], & arbitrary, 1 );
@@ -186,7 +203,7 @@ void YUIInterpreter::signalUIThread()
 }
 
 
-bool YUIInterpreter::waitForUIThread()
+bool Y2UIComponent::waitForUIThread()
 {
     char arbitrary;
     int res;
@@ -214,7 +231,7 @@ bool YUIInterpreter::waitForUIThread()
 }
 
 
-void YUIInterpreter::signalYCPThread()
+void Y2UIComponent::signalYCPThread()
 {
     static char arbitrary;
     write( pipe_from_ui[1], & arbitrary, 1 );
@@ -225,7 +242,7 @@ void YUIInterpreter::signalYCPThread()
 }
 
 
-bool YUIInterpreter::waitForYCPThread()
+bool Y2UIComponent::waitForYCPThread()
 {
     char arbitrary;
 
@@ -253,7 +270,7 @@ bool YUIInterpreter::waitForYCPThread()
 }
 
 
-void YUIInterpreter::uiThreadMainLoop()
+void Y2UIComponent::uiThreadMainLoop()
 {
     while ( true )
     {
@@ -292,212 +309,12 @@ void YUIInterpreter::uiThreadMainLoop()
 }
 
 
-YCPValue YUIInterpreter::evaluateInstantiatedTerm( const YCPTerm & term )
-{
-    string symbol = term->symbol()->symbol();
-    y2debug( "evaluateInstantiatedTerm( %s )", symbol.c_str() );
-
-    if ( YUIInterpreter_in_word_set( symbol.c_str(), symbol.length() ) )
-    {
-	if ( macroPlayer )
-	{
-	    string command = term->symbol()->symbol();
-	    
-	    if( command == YUIBuiltin_UserInput		||
-		command == YUIBuiltin_TimeoutUserInput	||
-		command == YUIBuiltin_WaitForEvent )
-	    {
-		// This must be done in the YCP thread to keep the threads synchronized!
-		playNextMacroBlock();
-	    }
-	}
-
-	if ( with_threads )
-	{
-	    box_in_the_middle = term;
-	    signalUIThread();
-	    
-	    while ( ! waitForUIThread() )
-	    {
-		// NOP
-	    }
-
-	    return box_in_the_middle;
-	}
-	else return executeUICommand( term );
-    }
-    else return YCPNull();
-}
-
-
-YCPValue YUIInterpreter::callback( const YCPValue & value )
-{
-    y2debug ( "YUIInterpreter::callback( %s )", value->toString().c_str() );
-    if ( value->isBuiltin() )
-    {
-	YCPBuiltin b = value->asBuiltin();
-	YCPValue v = b->value (0);
-
-	if ( b->builtin_code() == YCPB_UI )
-	{
-	    return evaluate (v);
-	}
-
-	if ( callbackComponent )
-	{
-	    YCPValue v = YCPNull();
-	    if ( b->builtin_code() == YCPB_WFM )		// if it goes to WFM, just send the value
-	    {
-		v = callbackComponent->evaluate (v);
-	    }
-	    else		// going to SCR, send the complete value
-	    {
-		v = callbackComponent->evaluate ( value );
-	    }
-	    return v;
-	}
-    }
-
-    return YCPNull();
-}
-
-
-YCPValue YUIInterpreter::evaluateUI( const YCPValue & value )
-{
-    y2debug ( "evaluateUI( %s )\n", value->toString().c_str() );
-    if ( value->isBuiltin() )
-    {
-	YCPBuiltin b = value->asBuiltin();
-	if ( b->builtin_code() == YCPB_DEEPQUOTE )
-	{
-	    return evaluate ( b->value(0) );
-	}
-    }
-    else if ( value->isTerm() && value->asTerm()->isQuoted() )
-    {
-	YCPTerm vt = value->asTerm();
-	YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
-	for ( int i=0; i<vt->size(); i++ )
-	{
-	    t->add( vt->value(i) );
-	}
-	return evaluate (t);
-    }
-    return evaluate ( value );
-}
-
-
-YCPValue YUIInterpreter::evaluateWFM( const YCPValue & value )
-{
-    y2debug ( "YUIInterpreter[%p]::evaluateWFM[%p]( %s )\n", this, callbackComponent, value->toString().c_str() );
-    if ( callbackComponent )
-    {
-	if ( value->isBuiltin() )
-	{
-	    YCPBuiltin b = value->asBuiltin();
-	    if ( b->builtin_code() == YCPB_DEEPQUOTE )
-	    {
-		return callbackComponent->evaluate ( b->value(0) );
-	    }
-	}
-	else if ( value->isTerm() )
-	{
-	    YCPTerm vt = value->asTerm();
-	    YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
-	    for ( int i=0; i<vt->size(); i++ )
-	    {
-		YCPValue v = evaluate ( vt->value(i) );
-		if ( v.isNull() )
-		{
-		    return YCPError ( "WFM parameter is NULL\n", YCPNull() );
-		}
-		t->add(v);
-	    }
-	    return callbackComponent->evaluate (t);
-	}
-	return callbackComponent->evaluate ( value );
-    }
-    y2error ( "YUIInterpreter[%p]: No callbackComponent", this );
-    return YCPError ( "YUIInterpreter::evaluateWFM: No callback component WFM existing.", YCPNull() );
-}
-
-
-
-YCPValue YUIInterpreter::evaluateSCR( const YCPValue & value )
-{
-    y2debug ( "evaluateSCR( %s )\n", value->toString().c_str() );
-    if ( callbackComponent )
-    {
-	if ( value->isBuiltin() )
-	{
-	    YCPBuiltin b = value->asBuiltin();
-	    if ( b->builtin_code() == YCPB_DEEPQUOTE )
-	    {
-		return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, b->value(0) ) );
-	    }
-	}
-	else if ( value->isTerm() )
-	{
-	    YCPTerm vt = value->asTerm();
-	    YCPTerm t( YCPSymbol( vt->symbol()->symbol(), false ), vt->name_space() );
-	    for ( int i=0; i<vt->size(); i++ )
-	    {
-		YCPValue v = evaluate ( vt->value(i) );
-		if ( v.isNull() )
-		{
-		    return YCPError ( "SCR parameter is NULL\n", YCPNull() );
-		}
-		t->add(v);
-	    }
-	    return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, t ) );
-	}
-	return callbackComponent->evaluate ( YCPBuiltin ( YCPB_SCR, value ) );
-    }
-    return YCPError ( "YUIInterpreter::evaluateSCR: No callback component WFM existing.", YCPNull() );
-}
-
-
-
-YCPValue YUIInterpreter::evaluateLocale( const YCPLocale & l )
-{
-    y2debug( "evaluateLocale( %s )\n", l->value()->value().c_str() );
-
-    // locales are evaluated by the WFM now. If a locale happens
-    // to show up here, send it back. evaluateWFM() might return
-    // YCPNull() if no WFM is available. Handle this also.
-
-    YCPValue v = evaluateWFM(l);
-    if ( v.isNull() )
-    {
-	return l->value();  // return YCPString()
-    }
-    return v;
-}
-
-
-
-YCPValue YUIInterpreter::setTextdomain( const string& textdomain )
-{
-    return evaluateWFM ( YCPBuiltin ( YCPB_LOCALDOMAIN, YCPString ( textdomain ) ) );
-}
-
-
-
-string YUIInterpreter::getTextdomain( void )
-{
-    YCPValue v = evaluateWFM ( YCPBuiltin ( YCPB_GETTEXTDOMAIN ) );
-    if ( ! v.isNull() && v->isString() )
-	return v->asString()->value();
-    return "ui";
-}
-
-
 // ----------------------------------------------------------------------
 // Default implementations for the virtual methods the deal with
 // event processing
 
 
-void YUIInterpreter::idleLoop( int fd_ycp )
+void Y2UIComponent::idleLoop( int fd_ycp )
 {
     // Just wait for fd_ycp to become readable
     fd_set fdset;
@@ -508,7 +325,7 @@ void YUIInterpreter::idleLoop( int fd_ycp )
 }
 
 
-YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
+YRadioButtonGroup *Y2UIComponent::findRadioButtonGroup( YContainerWidget * root, YWidget * widget, bool * contains )
 {
     YCPValue root_id = root->id();
 
@@ -543,7 +360,7 @@ YRadioButtonGroup *YUIInterpreter::findRadioButtonGroup( YContainerWidget * root
 
 void *start_ui_thread( void *ui_int )
 {
-    YUIInterpreter *ui_interpreter = ( YUIInterpreter * ) ui_int;
+    Y2UIComponent *ui_interpreter = ( Y2UIComponent * ) ui_int;
     ui_interpreter->uiThreadMainLoop();
     return 0;
 }

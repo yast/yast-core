@@ -20,7 +20,7 @@
 #define YMacroPlayer_h
 
 #include <string>
-#include <ycp/YCPBlock.h>
+#include <ycp/YBlock.h>
 
 class YWidget;
 
@@ -54,7 +54,7 @@ public:
      * counter. Returns YCPNull() on any previous error or if finished.
      * Check for error() or finished() before calling this!
      */
-    YCPBlock nextBlock();
+    YBlock nextBlock();
 
     /**
      * Rewind macro execution - prepare to redo from start
