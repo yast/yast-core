@@ -543,3 +543,51 @@ PkgModuleFunctions::SourceSetEnabled (YCPList args)
     if ( _last_error ) return YCPBoolean( false );
     else return YCPBoolean( true );
 }
+
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceDelete (integer source_id ) -> bool
+ *
+ * Delete source. Return true, if successful, false, if not.
+ */ 
+YCPValue
+PkgModuleFunctions::SourceDelete (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    return YCPBoolean( false );
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceRaisePriority (integer source_id ) -> void
+ *
+ * Raise priority of source.
+ */ 
+YCPValue
+PkgModuleFunctions::SourceRaisePriority (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    return YCPVoid();
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::SourceLowerPriority (integer source_id ) -> void
+ *
+ * Raise priority of source.
+ */ 
+YCPValue
+PkgModuleFunctions::SourceLowerPriority (YCPList args)
+{
+    InstSrcManager::ISrcId source_id =  getSourceByArgs (args, 0);
+    if (!source_id)
+	return YCPVoid();
+
+    return YCPVoid();
+}

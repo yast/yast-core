@@ -104,6 +104,9 @@ class PkgModuleFunctions
 	YCPValue SourceCacheCopyTo (YCPList args);
 	YCPValue SourceProduct (YCPList args);
         YCPValue SourceSetEnabled (YCPList args);
+        YCPValue SourceDelete (YCPList args);
+        YCPValue SourceRaisePriority (YCPList args);
+        YCPValue SourceLowerPriority (YCPList args);
 
 	// target related
 	YCPValue TargetInit (YCPList args);

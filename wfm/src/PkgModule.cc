@@ -155,5 +155,8 @@ PkgModule::evaluate (string function, YCPList args)
     else if (function == "SourceCacheCopyTo")	return SourceCacheCopyTo (args);
     else if (function == "SourceProduct")	return SourceProduct (args);
     else if (function == "SourceSetEnabled")	return SourceSetEnabled (args);
+    else if (function == "SourceDelete")	return SourceDelete (args);
+    else if (function == "SourceRaisePriority")	return SourceRaisePriority (args);
+    else if (function == "SourceLowerPriority")	return SourceLowerPriority (args);
     return YCPError (string ("Undefined Pkg::")+function);
 }
