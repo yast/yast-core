@@ -290,6 +290,7 @@ Type::match (constTypePtr expected) const
     }
 
     if (isAny()) return -1;		// any does not propagate
+    if (isUnspec()) return 0;		// unspecified matches all
     if (isVoid()) return 0;		// nil matches all
     if (isInteger())			// int -> float
     {
@@ -1049,18 +1050,28 @@ MapType::matchFlex (constTypePtr type, unsigned int number) const
 int
 MapType::match (constTypePtr expected) const
 {
-#if DO_DEBUG
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-#endif
     int bm = basematch (expected);
-    if (bm == 1
-	|| (bm == 0
-	    && expected->isMap()
-	    && (m_keytype->isUnspec() || m_keytype->match (((constMapTypePtr)expected)->m_keytype) >= 0)
-	    && (m_valuetype->isUnspec()					// empty map
-		|| m_valuetype->match (((constMapTypePtr)expected)->m_valuetype) >= 0)))
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s', basematch %d", toString().c_str(), expected->toString().c_str(), bm);
+#endif
+    if (bm == 1)
     {
 	return 0;
+    }
+
+    if (bm == 0
+	&& expected->isMap())
+    {
+	// check if the expected map is more detailed
+
+	constMapTypePtr mexpected = (constMapTypePtr)expected;
+	if (   (m_keytype->isUnspec()					// this is a constant $[]
+		|| m_keytype->match (mexpected->m_keytype) >= 0)
+	    && (m_valuetype->isUnspec()					// this is a constant $[]
+		|| m_valuetype->match (mexpected->m_valuetype) >= 0))
+	{
+	    return 0;
+	}
     }
     return -1;
 }
@@ -1903,12 +1914,26 @@ Type::detailedtype (constTypePtr type) const
 #endif
 	return this;
     }
+    else if (type->isUnspec())		// <unspec> does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+#endif
+	return this;
+    }
     else if (type->isAny())		// 'any' does not contain type information
     {
 #if DO_DEBUG
 	y2debug ("Type::detailedtype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
 #endif
 	return this;
+    }
+    else if (isUnspec())		// <unspec> does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+#endif
+	return type;
     }
     else if (isAny())			// 'any' does not contain type information
     {

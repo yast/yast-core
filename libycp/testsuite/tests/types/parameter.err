@@ -1,0 +1,15 @@
+[Scanner] tests/types/parameter.ycp:4 Warning: Empty function definition
+Parsed:
+----------------------------------------------------------------------
+{
+    // void dlg_logical_volume (map <string, any> co)
+    // map <string, map> tg
+    // filename: "tests/types/parameter.ycp"
+    void dlg_logical_volume (map <string, any> co)
+{
+    return;
+}
+    map <string, map> tg = $[];
+    dlg_logical_volume (/* map -> map <string, any> */tg[""]:$[]);
+}
+----------------------------------------------------------------------

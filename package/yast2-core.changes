@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov  2 17:48:52 CET 2004 - kkaempf@suse.de
+
+- Fix type ordering in detailedtype() further, 'any' has more
+  type information than '<unspec>' (#47853)
+
+-------------------------------------------------------------------
 Tue Nov  2 15:36:59 CET 2004 - kkaempf@suse.de
 
 - recognize select() in parser.
