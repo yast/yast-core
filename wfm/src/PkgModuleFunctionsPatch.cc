@@ -79,14 +79,16 @@ PkgModuleFunctions::YouStatus ()
     
     InstYou &you = _y2pm.youPatchManager().instYou();
     PMYouProductPtr product = you.paths()->primaryProduct();
-    
-    result->add( YCPString( "product" ), YCPString( product->product() ) );
-    result->add( YCPString( "version" ), YCPString( product->version() ) );
-    result->add( YCPString( "basearch" ), YCPString( product->baseArch() ) );
-    result->add( YCPString( "business" ), YCPBoolean( product->businessProduct() ) );
 
-    result->add( YCPString( "mirrorurl" ), YCPString( product->youUrl() ) );
-    
+    if ( product )
+    {
+	result->add( YCPString( "product" ), YCPString( product->product() ) );
+	result->add( YCPString( "version" ), YCPString( product->version() ) );
+	result->add( YCPString( "basearch" ), YCPString( product->baseArch() ) );
+	result->add( YCPString( "business" ), YCPBoolean( product->businessProduct() ) );
+
+	result->add( YCPString( "mirrorurl" ), YCPString( product->youUrl() ) );
+    }
     result->add( YCPString( "lastupdate" ), YCPInteger( you.lastUpdate() ) );
     
     return result;
