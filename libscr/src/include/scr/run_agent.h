@@ -53,6 +53,11 @@ process_options (int argc, char* argv[])
 		&& (argp + 1 < argc)) {
 		argp++;
 		set_log_filename (argv[argp]);
+	    } else if ((argv[argp][0] == '-')
+		&& (argv[argp][1] == 'c')
+		&& (argp + 1 < argc)) {
+		argp++;
+		set_log_conf (argv[argp]);
 	    } else if (fname == 0) {
 		fname = argv[argp];
 	    } else {

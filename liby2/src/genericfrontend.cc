@@ -111,6 +111,18 @@ main (int argc, char **argv)
 
 	    set_log_filename( argv[arg] );   // set logfile given in command line
 	}
+	if (!strcmp(argv[arg], "-c") || !strcmp(argv[arg], "--logconf"))
+	{
+	    arg++;   // switch to filename
+
+	    if (arg >= argc)
+	    {
+		print_error ("Option %s is missing an argument", argv[arg-1]);
+		exit(5);
+	    }
+
+	    set_log_conf( argv[arg] );
+	}
     }
 
     // set a defined umask
@@ -135,7 +147,19 @@ main (int argc, char **argv)
 	// Logfile already done at program start --> ignore here
 	arg+=2;	  // skip over logfilename
     }
+    if (!strcmp(argv[arg], "-c") || !strcmp(argv[arg], "--logconf"))
+    {
+	// Logfile already done at program start --> ignore here
+	arg+=2;	  // skip over logfilename
+    }
+    // The first argument might be the log option or MUST be the client name
+    if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
+    {
+	// Logfile already done at program start --> ignore here
+	arg+=2;	  // skip over logfilename
+    }
     
+
     // Check for namespace exceptions registration
     while (!strcmp(argv[arg], "-n"))
     {
@@ -176,6 +200,11 @@ main (int argc, char **argv)
     while (arg < argc)
     {
 	if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
+	{
+	    // Logfile already done at program start --> ignore here
+	    arg++;   // skip filename
+	}
+	else if (!strcmp(argv[arg], "-c") || !strcmp(argv[arg], "--logconf"))
 	{
 	    // Logfile already done at program start --> ignore here
 	    arg++;   // skip filename

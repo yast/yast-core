@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Fri Jan 23 15:39:57 CET 2004 - msvec@suse.cz
+
+- added possibility to use a custom log.conf
+- 2.9.18
+
+-------------------------------------------------------------------
+Fri Jan 23 15:39:57 CET 2004 - visnov@suse.cz
+
+- this is "The New Interpreter" release
+
+-------------------------------------------------------------------
 Fri Jan 16 11:31:47 CET 2004 - arvin@suse.de
 
 - implemented stack for each ycp callback of packagemanager
