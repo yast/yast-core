@@ -327,6 +327,11 @@ YCPValue evaluateRegexpSub(YCPInterpreter *interpreter, const YCPList& args);
 YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
+ * Implements the builtin regexppos
+ */
+YCPValue evaluateRegexpPos(YCPInterpreter *interpreter, const YCPList& args);
+
+/**
  * Implements the builtin y2log
  */
 YCPValue evaluateY2Debug(YCPInterpreter *interpreter, const YCPList& args);

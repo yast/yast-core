@@ -50,6 +50,7 @@ sformat,	evaluateSformat
 issubstring,	evaluateIsSubString
 findfirstof,	evaluateFindFirstOf
 regexpmatch,    evaluateRegexpMatch
+regexppos,      evaluateRegexpPos
 splitstring,	evaluateSplitString
 mergestring,	evaluateMergeString
 mapmap,		evaluateMapmap

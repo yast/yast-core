@@ -3,6 +3,9 @@
 ( regexpmatch( "aaabbb", ".*ab.*" ) == true )
 ( regexpmatch( "aaabbb", ".*ba.*" ) == false)
 
+( regexppos( "abcd012efg45", "[0-9]+" ) == [ 4, 3 ] )
+( regexppos( "abcdefghijk", "[0-9]+" ) == [] )
+
 ( regexpsub( "aaabbb", "(.*ab).*",  "s_\\1_e" ) == "s_aaab_e" )
 ( regexpsub( "aaabbb", "(.*abb)(.*)",  "s_\\1_e\\2" ) ==  "s_aaabb_eb" )
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug  6 11:57:08 CEST 2003 - fehr@suse.de
+
+- added new ycp builtin regexppos 
+- version 2.8.15
+
+-------------------------------------------------------------------
 Tue Aug 05 17:05:50 CEST 2003 - arvin@suse.de
 
 - fixed testsuite

@@ -722,6 +722,43 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
     return YCPBoolean(result.solved);
 }
 
+/**
+ * @builtin regexppos( string input, string pattern ) -> [ pos, len ]
+ * Returns a list with position and lenth of the first match, if no match
+ * is found it returns an empty list. 
+
+ * The regexp in <tt>pattern</tt> must not contain brackets.
+ *
+ * Example <pre>
+ * regexppos( "abcd012efgh345", "[0-9]+" ) -> [4, 3]
+ * regexppos( "aaabbb", "[0-9]+" ) -> []
+ * </pre>
+ */
+YCPValue evaluateRegexpPos(YCPInterpreter *interpreter, const YCPList& args)
+{
+    if( args->size() != 2 || !args->value(0)->isString() || !args->value(1)->isString() )
+	return YCPError("Wrong Arguments to regexpmatch( string input, string pattern )");
+
+    const char *input   = args->value(0)->asString()->value().c_str();
+    string pattern = "(" + args->value(1)->asString()->value() + ")";
+
+    Reg_Ret result = solve_regular_expression( input, pattern.c_str(), "" );
+
+    if(result.error) {
+	y2error("Error in regexp <%s> <%s>: %s", input, pattern.c_str(), result.error_str.c_str());
+	return YCPNull();
+    }
+
+    YCPList list;
+    if(result.solved)
+	{
+	list->add( YCPInteger( args->value(0)->asString()->value().find( result.match_str[1] )));
+	list->add( YCPInteger( result.match_str[1].length() ));
+	}
+
+    return list;
+}
+
 
 /**
  * @builtin regexpsub( string input, string pattern, string match ) -> string
