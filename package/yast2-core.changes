@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr 13 12:19:10 CEST 2004 - mvidner@suse.cz
+
+- initialize stub UI when invoked from Perl (#37338)
+- 2.9.79
+
+-------------------------------------------------------------------
 Tue Apr  6 11:55:30 CEST 2004 - kkaempf@suse.de
 
 - check strings from hwinfo properly (#36080)
