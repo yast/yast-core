@@ -64,9 +64,12 @@ s_size (const YCPString &s)
      * @builtin size
      * @short Returns the number of characters of the string <tt>s</tt>
      * @param string s String
+     * @return integer Size of string <tt>s</tt>
+     *
      * @description
      * Notice, that size(nil) -> nil
-     * @return integer Size of string
+     *
+     * @usage size("size") -> 4
      */
      
     if (s.isNull ())
@@ -204,7 +207,7 @@ s_tohexstring (const YCPInteger &i)
      * @builtin tohexstring
      * @short Converts a integer to a hexadecimal string.
      * @param integer number Number
-     * @return string Number in Hex
+     * @return string number in Hex
      *
      * @description
      * 
@@ -227,19 +230,20 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
      * @builtin substring
      * @id substring_1
      * @short Return part of a string
-     * @param string s Original String
-     * @param inetger start Start posistion
-     * @optarg integer end End Posistion
+     * @param string STRING Original String
+     * @param integer OFFSET Start position
+     * @optarg integer LENGTH Length of new string
      * @return string 
      * @description
      *
-     * Returns the portion of string  specified by the start and length
-     * parameters.
+     * Returns the portion of <tt>STRING</tt>  specified by the <tt>OFFSET</tt>
+     * and <tt>LENGHT</tt> parameters. <tt>OFFSET</tt> starts with 0.
      *
      * @usage substring ("some text", 5) -> "text"
      * @usage substring ("some text", 42) -> ""
      * @usage substring ("some text", 5, 2) -> "te"
      * @usage substring ("some text", 42, 2) -> ""
+     * @usage substring("123456789", 2, 3) -> "345"
      */
 
     if (s.isNull () || i1.isNull ())
@@ -266,17 +270,19 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
      * @builtin substring
      * @id substring_2
      * @short Extract a substring
+     *
      * @description
-     * Extract a substring of the string <tt>STRING</tt>, starting at
-     * <tt>START</tt> after the first one with length of at most
-     * <tt>LENGTH</tt>.
+     * Extracts a substring of the string <tt>STRING</tt>, starting at
+     * <tt>OFFSET</tt> after the first one with length of at most
+     * <tt>LENGTH</tt>. <tt>OFFSET</tt> starts with 0.
      *
      * @param string STRING
-     * @param integer START
+     * @param integer OFFSET
      * @param integer LENGTH
      * @return string
      * @usage substring ("some text", 5, 2) -> "te"
      * @usage substring ("some text", 42, 2) -> ""
+     * @usage substring("123456789", 2, 3) -> "345"
      */
 
     if (s.isNull () || i1.isNull() || i2.isNull ())
@@ -304,18 +310,21 @@ s_find (const YCPString &s1, const YCPString &s2)
      * @short Return position of a substring
      * @param string STRING1 String
      * @param string STRING2 Substring
-     * @return integer
+     * @return integer OFFSET
      * If substring is not found find returns `-1'.
      *
      * @description
      *
-     * The `find' function searches string for a specified substring (possibly
-     * a single character) and returns its starting position.
+     * The <tt>find</tt> function searches string for the first occurency of
+     * a specified substring (possibly a single character) and returns its
+     * starting position.
      * 
      * Returns the first position in <tt>STRING1</tt> where the
      * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
+     * <tt>OFFSET</tt> starts with 0.
      *
-     *
+     * @see findfirstof
+     * @see findfirstnotof
      * @usage find ("abcdefghi", "efg") -> 4
      * @usage find ("aaaaa", "z") -> -1
      */
@@ -341,10 +350,13 @@ s_tolower (const YCPString &s)
      * @short Make a string lowercase
      * @param string s String
      * @return string String in lower case
+     *
      * @description
      * Returns string with all alphabetic characters converted to lowercase.
+     * Notice: national characters are left unchanged.
      *
      * @usage tolower ("aBcDeF") -> "abcdef"
+     * @usage tolower ("ABCÁÄÖČ") -> "abcÁÄÖČ"
      */
 
     if (s.isNull ())
@@ -363,12 +375,14 @@ s_toupper (const YCPString &s)
     /**
      * @builtin toupper
      * @short  Make a string uppercase
-     * @description 
      *
+     * @description 
      * Returns string with all alphabetic characters converted to
      * uppercase.
-     *
+     
+     * @see toupper
      * @usage tolower ("aBcDeF") -> "ABCDEF"
+     * @usage toupper ("abcáäöč") -> "ABCáäöč"
      */
 
     if (s.isNull ())
@@ -386,7 +400,7 @@ s_toascii (const YCPString &s)
 {
     /**
      * @builtin toascii 
-     * @short FIXME
+     * @short Returns characters below 0x7F included in <tt>STRING</tt>
      * @param string STRING
      * @return string
      *
@@ -394,7 +408,8 @@ s_toascii (const YCPString &s)
      * Returns a string that results from string <tt>STRING</tt> by
      * copying each character that is below 0x7F (127).
      *
-     * @usage toascii ("axx") -> "aB"
+     * @usage toascii ("aBë") -> "aB"
+     * @usage toascii ("123+-abcABCöëä") -> "123+-abcABC"
      */
 
     if (s.isNull ())
@@ -415,15 +430,18 @@ s_removechars (const YCPString &s, YCPString &r)
     /**
      * @builtin deletechars
      *
-     * @short Delete charachters from  a string (FIXME)
+     * @short Removes all characters from a string
      * @param string STRING
-     * @param string REMOVE Charachters to be removed
+     * @param string REMOVE Characters to be removed from <tt>STRING</tt>
      * @return string
+     *
      * @description
      * Returns a string that results from string <tt>STRING</tt> by removing
-     * all characters that occur in <tt>REMOVE</tt>.
+     * all characters that occur in string <tt>REMOVE</tt>.
      *
+     * @see filterchars
      * @usage deletechars ("a", "abcdefghijklmnopqrstuvwxyz") -> ""
+     * @usage deletechars ("abc","cde") -> "ab"
      */
 
     if (s.isNull () || r.isNull ())
@@ -448,14 +466,16 @@ s_filterchars (const YCPString &s, const YCPString &i)
      * @builtin filterchars
      * @short Filter charachters out of a String
      * @param string STRING
-     * @param string include String to be included
+     * @param string CHARS chars to be included
      * @return string
+     *
      * @description
-     *
      * Returns a string that results from string <tt>STRING</tt> by removing
-     * all characters that do not occur in <tt>include</tt>.
+     * all characters that do not occur in <tt>CHARS</tt>.
      *
+     * @see deletechars
      * @usage filterchars ("a", "abcdefghijklmnopqrstuvwxyz") -> "ac"
+     * @usage filterchars ("abc","cde") -> "c"
      */
 
     if (s.isNull () || i.isNull ())
@@ -493,7 +513,8 @@ s_mergestring (const YCPList &l, const YCPString &s)
      * @usage mergestring (["", "abc", "dev", "ghi"], "/") -> "/abc/dev/ghi"
      * @usage mergestring (["abc", "dev", "ghi", ""], "/") -> "abc/dev/ghi/"
      * @usage mergestring ([1, "a", 3], ".") -> "a"
-     * @usage mergestring ([], ".") -> ""
+     * @usage mergestring (["1", "a", "3"], ".") -> "a"
+     * @usage mergestring ([], ".") -> "1.a.3"
      * @usage mergestring (["abc", "dev", "ghi"], "") -> "abcdevghi"
      * @usage mergestring (["abc", "dev", "ghi"], "123") -> "abc123dev123ghi"
      */
@@ -541,13 +562,16 @@ s_findfirstnotof (const YCPString &s1, const YCPString &s2)
      * @short Search string for first non matching chars
      * @param string STRING
      * @param string CHARS
+     *
      * @description
-     * The `findfirstnotof' function searches the first element of string that
+     * The <tt>findfirstnotof</tt> function searches the first element of string that
      * doesn't match any character stored in chars and returns its position.
      *
      * @return integer the position of the first character in <tt>STRING</tt> that is
      * not contained in <tt>CHARS</tt>.
      *
+     * @see findfirstof
+     * @see find
      * @usage findfirstnotof ("abcdefghi", "abcefghi") -> 3
      * @usage findfirstnotof ("aaaaa", "a") -> nil
      */
@@ -577,8 +601,9 @@ s_findfirstof (const YCPString &s1, const YCPString &s2)
      * @short Find position of first matching charachters in string
      * @param string STRING
      * @param string CHARS Charachters to find
+     *
      * @description
-     * The `findfirstof' function searches string for the first match of any
+     * The <tt>findfirstof</tt> function searches string for the first match of any
      * character stored in chars and returns its position. 
      *
      * If no match is found findfirstof returns `nil'. 
@@ -586,6 +611,8 @@ s_findfirstof (const YCPString &s1, const YCPString &s2)
      * @return integer the position of the first character in <tt>STRING</tt> that is
      * contained in <tt>CHARS</tt>.
      *
+     * @see findfirstnotof
+     * @see find
      * @usage findfirstof ("abcdefghi", "cxdv") -> 2
      * @usage findfirstof ("aaaaa", "z") -> nil
      */
@@ -619,6 +646,7 @@ s_findlastof (const YCPString &s1, const YCPString &s2)
      * @return integer the position of the last character in <tt>STRING</tt> that is
      * contained in <tt>CHARS</tt>.
      *
+     * @see findfirstof
      * @usage findlastof ("abcdecfghi", "cxdv") -> 5
      * @usage findlastof ("aaaaa", "z") -> nil
      */
@@ -652,6 +680,7 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
      * @return integer The position of the last character in <tt>STRING</tt> that is
      * NOT contained in <tt>CHARS</tt>.
      *
+     * @see findfirstnotof
      * @usage findlastnotof( "abcdefghi", "abcefghi" ) -> 3 ('d')
      * @usage findlastnotof("aaaaa", "a") -> nil
      */
@@ -836,7 +865,8 @@ s_regexpsub (const YCPString &i, const YCPString &p, const YCPString &m)
      * @param string PATTERN
      * @param string OUTPUT
      * @return string
-     * @description 
+     *
+     * @description
      * Searches a string for a POSIX Extended Regular Expression match
      * and returns <i>OUTPUT</i> with the matched subexpressions
      * substituted or <b>nil</b> if no match was found.
@@ -890,24 +920,19 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
      *
      * If the pattern is invalid, 'nil' is returned.
      *
+     * @usage
      * Examples: 
-     * <code>
+     * // e ==  [ "aaabbB" ]
      * list e = regexptokenize ("aaabbBb", "(.*[A-Z]).*");
      *
-     * // e ==  [ "aaabbB" ]
-     *
+     * // h == [ "aaab", "bb" ]
      * list h = regexptokenize ("aaabbb", "(.*ab)(.*)");
      *
-     * // h == [ "aaab", "bb" ]
-     *
+     * // h == []
      * list h = regexptokenize ("aaabbb", "(.*ba).*");
      *
-     * // h == []
-     *
-     * list h = regexptokenize ("aaabbb", "(.*ba).*(");
-     *
      * // h == nil
-     * </code>
+     * list h = regexptokenize ("aaabbb", "(.*ba).*(");
      */
     // ")
 
@@ -944,9 +969,14 @@ s_tostring (const YCPValue &v)
     /**
      * @builtin tostring 
      * @short Converts a value to a string.
+     *
      * @param any VALUE
      * @return string
      *
+     * @usage tostring(.path) -> ".path"
+     * @usage tostring([1,2,3]) -> "[1, 2, 3]"
+     * @usage tostring($[1:1,2:2,3:3]) -> "$[1:1, 2:2, 3:3]"
+     * @usage tostring(`Empty()) -> "`Empty ()"
      */
 
     if (v.isNull())

@@ -35,6 +35,7 @@ p_size (const YCPPath &path)
     /**
      * @builtin size
      * @short Returns the number of path elements
+     *
      * @description
      * Returns the number of path elements of the path PATH, i.e. the
      * length of <tt>PATH</tt>.
@@ -58,14 +59,16 @@ p_add (const YCPPath &path, const YCPString &s)
     /**
      * @builtin add
      * @short Add a path element to existing path
+     *
      * @description
      * Returns <tt>PATH</tt> with added path element created from string
      * <tt>STR</tt>.
      * @param path PATH
-     * @param string STR
+     * @param string or path STR
      * @return path
      *
      * @usage add (.aaa, "anypath...\n\"") -> .aaa."anypath...\n\""
+     * @usage add (.sysconfig, .safety) -> .sysconfig.safety
      */
 
     if (path.isNull () || s.isNull ())

@@ -35,11 +35,12 @@ b_tobyteblock (const YCPValue &v)
     /**
      * @builtin tobyteblock
      * @short Converts a value to a byteblock.
+     *
      * @description
      * If the value can't be converted to a byteblock, nilbyteblock is returned.
+     *
      * @param any VALUE
      * @return byteblock
-     *
      */
 
     if (v.isNull())
@@ -61,6 +62,7 @@ b_size (const YCPByteblock &v)
      * @short  Returns a size of a byteblock in bytes.
      * @param byteblock VALUE
      * @return integer
+     * @usage size(#[03A6f298B5]) -> 5
      *
      */
 
