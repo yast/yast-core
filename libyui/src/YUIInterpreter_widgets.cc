@@ -2368,7 +2368,7 @@ YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt & opt
 /*
  * @widget	PkgSpecial
  * @short	Package selection special - DON'T USE IT
- * @class	YEmpty
+ * @class	YPkgSpecial
  * @usage	`PkgSpecial( "subwidget_name" )
  *
  * @description
