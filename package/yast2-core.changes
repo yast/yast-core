@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Oct 19 16:38:08 CEST 2004 - kkaempf@suse.de
+
+- is() now checks against the actual value, not the declared
+  type (#37146)
+
+-------------------------------------------------------------------
 Tue Oct 19 14:47:29 CEST 2004 - visnov@suse.de
 
 - Y2ScriptComponent removed 
