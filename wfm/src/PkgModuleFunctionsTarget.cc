@@ -307,9 +307,10 @@ PkgModuleFunctions::TargetRebuildDB (YCPList args)
 
 /** ------------------------
  * 
- * @builtin Pkg::InitDU (list string) -> void
+ * @builtin Pkg::InitDU (list(map)) -> void
  *
- * return init DU calculation for given directories
+ * init DU calculation for given directories
+ * parameter: [ $["name":"dir-without-leading-slash", "free":int_free, "used": int_used]
  */
 YCPValue
 PkgModuleFunctions::TargetInitDU (YCPList args)
@@ -318,7 +319,7 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
 	|| !(args->value(0)->isList())
 	|| (args->value(0)->asList()->size() == 0))
     {
-	return YCPError ("Bad args to Pkg::TargetDUInit");
+	return YCPError ("Bad args to Pkg::TargetInitDU");
     }
 
     std::set<PkgDuMaster::MountPoint> mountpoints;
@@ -326,20 +327,62 @@ PkgModuleFunctions::TargetInitDU (YCPList args)
     YCPList dirlist = args->value(0)->asList();
     for (int i = 0; i < dirlist->size(); ++i)
     {
-	if (!dirlist->value(i)->isString())
+	bool good = true;
+	YCPMap partmap;
+	std::string dname;
+	long long dfree = 0LL;
+	long long dused = 0LL;
+
+	if (dirlist->value(i)->isMap())
+	{
+	    partmap = dirlist->value(i)->asMap();
+	}
+	else
+	{
+	   good = false;
+	}
+
+	if (good
+	    && partmap->value(YCPString("name"))->isString())
+	{
+	    dname = partmap->value(YCPString("name"))->asString()->value();
+	    if (dname[0] != '/')
+		dname = string("/") + dname;
+	}
+	else
+	{
+	    good = false;
+	}
+
+	if (good
+	    && partmap->value(YCPString("free"))->isInteger())
+	{
+	    dfree = partmap->value(YCPString("free"))->asInteger()->value();
+	}
+	else
+	{
+	    good = false;
+	}
+
+	if (good
+	    && partmap->value(YCPString("used"))->isInteger())
+	{
+	    dused = partmap->value(YCPString("used"))->asInteger()->value();
+	}
+	else
+	{
+	    good = false;
+	}
+
+	if (!good)
 	{
 	    y2error ("TargetDUInit: bad item %d: %s", i, dirlist->value(i)->toString().c_str());
 	    continue;
 	}
 
-	string dir = dirlist->value(i)->asString()->value();
+	long long dirsize = dfree + dused;
 
-	long long used, size, bsize;
-	get_disk_stats (dir.c_str(), &used, &size, &bsize);
-
-	y2milestone ("dir %s, bsize %lld, total %lld, used %lld", dir.c_str(), bsize, size, used);
-
-	PkgDuMaster::MountPoint point (dir, FSize (bsize), FSize (size), FSize (used));
+	PkgDuMaster::MountPoint point (dname, FSize (4096), FSize (dirsize), FSize (dused));
 	mountpoints.insert (point);
     }
     _y2pm.packageManager().setMountPoints(mountpoints);
