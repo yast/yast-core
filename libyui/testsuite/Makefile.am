@@ -8,7 +8,6 @@ INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/../../liby2/src/include		\
 	-I$(srcdir)/../src/include			\
-	-I/usr/include/YaST2				\
 	-I$(includedir)
 
 noinst_PROGRAMS = runyui
