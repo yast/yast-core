@@ -184,7 +184,7 @@ PkgModuleFunctions::YouGetServers (YCPList args)
 	return YCPString( "args" );
     }
 
-    std::list<Url> servers;
+    std::list<PMYouServer> servers;
     _last_error = _y2pm.youPatchManager().instYou().servers( servers );
     if ( _last_error ) {
       if ( _last_error == YouError::E_get_youservers_failed ) return YCPString( "get" );
@@ -194,9 +194,9 @@ PkgModuleFunctions::YouGetServers (YCPList args)
     }
 
     YCPList result = YCPList( args->value( 0 )->asList() );
-    std::list<Url>::const_iterator it;
+    std::list<PMYouServer>::const_iterator it;
     for( it = servers.begin(); it != servers.end(); ++it ) {
-      result->add ( YCPString( (*it).asString() ) );
+      result->add ( YCPString( (*it).url ) );
     }
 
     return YCPString( "" );
@@ -224,11 +224,13 @@ PkgModuleFunctions::YouGetDirectory (YCPList args)
 	return YCPString ("args");
     }
     string urlstr = args->value(0)->asString()->value_cstr();
-    Url url( urlstr );
-    if ( !url.isValid() ) return YCPString( "url" );
+    if ( !Url( urlstr ).isValid() ) return YCPString( "url" );
+
+    PMYouServer server;
+    server.url = urlstr;
 
     _last_error =
-        _y2pm.youPatchManager().instYou().retrievePatchDirectory( url );
+        _y2pm.youPatchManager().instYou().retrievePatchDirectory( server );
     if ( _last_error ) {
       if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       return YCPString( "error" );
@@ -263,14 +265,16 @@ PkgModuleFunctions::YouGetPatches (YCPList args)
 	return YCPString ("args");
     }
     string urlstr = args->value(0)->asString()->value_cstr();
-    Url url( urlstr );
-    if ( !url.isValid() ) return YCPString( "url" );
+    if ( !Url( urlstr ).isValid() ) return YCPString( "url" );
+
+    PMYouServer server;
+    server.url = urlstr;
 
     bool reload = args->value(1)->asBoolean()->value();
     bool checkSig = args->value(2)->asBoolean()->value();
 
     _last_error =
-        _y2pm.youPatchManager().instYou().retrievePatchInfo( url, reload, checkSig );
+        _y2pm.youPatchManager().instYou().retrievePatchInfo( server, reload, checkSig );
     if ( _last_error ) {
       if ( _last_error == MediaError::E_login_failed ) return YCPString( "login" );
       if ( _last_error.errClass() == PMError::C_MediaError ) return YCPString( "media" );
