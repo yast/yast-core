@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar  1 11:25:35 CET 2004 - kkaempf@suse.de
+
+- properly add all device resources to output list (#35190)
+
+-------------------------------------------------------------------
 Sat Feb 28 13:42:42 CET 2004 - kkaempf@suse.de
 
 - use 'new' to allocate char buffer for SymbolEntry, so it can

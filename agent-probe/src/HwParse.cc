@@ -1376,16 +1376,14 @@ HwProbe::hd2value (hd_t *hd)
 	      YCPValue mapkey = YCPString (name);
 	      YCPValue mapval = map->value (mapkey);
 
+	      YCPList resList;		// new list of resource maps
 	      if ((!mapval.isNull())
-		  && (mapval->isList ())) {	// mapkey existant
-		  mapval->asList()->add (res);
-		  map->add (mapkey, mapval);
+		  && (mapval->isList ()))	// mapkey existant
+	      {
+		  resList = mapval->asList();
 	      }
-	      else {
-		  YCPList resList;		// new list of resource maps
-		  resList->add (res);
-		  map->add (mapkey, resList);
-	      }
+	      resList->add (res);
+	      map->add (mapkey, resList);
 	  } // if (res && name)
 
 	} // loop over resources
