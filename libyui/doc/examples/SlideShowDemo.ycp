@@ -141,10 +141,9 @@
 	if ( size( rpms ) > currentCd )
 	{
 	    integer seconds = rpms[ currentCd-1 ]:0 * megaBytesPerSecond;
-	    remaining = sformat( "Next %1 in %2: %3",
-				 mediaType,
-				 formatTime( seconds ),
-				 mediumName( currentCd+1 ) );
+	    remaining = sformat( "Next: %1  --  %2",
+				 mediumName( currentCd+1 ),
+				 formatTime( seconds ) );
 	}
 
 	return remaining;
@@ -225,6 +224,7 @@ the respective function to display the list.</p>					\
 			  `VMultiProgressMeter(`id(`progress), rpms )
 			  )
 		    ),
+	      `VSpacing( 0.3 ),
 	      `Label(`id(`nextMedium ), `opt( `hstretch), "" )
 	      );
 
