@@ -174,9 +174,7 @@ YCPValue evaluateContains (YCPInterpreter *interpreter, const YCPList& args)
     {
 	YCPList l = args->value(0)->asList();
 	YCPValue v = args->value(1);
-	for (int i=0; i<l->size(); i++)
-	    if (l->value(i)->equal(v)) return YCPBoolean(true);
-	return YCPBoolean(false);
+	return YCPBoolean (l->contains (v));
     }
     else return YCPError("Wrong arguments to contains()");
 }
@@ -875,7 +873,7 @@ YCPValue evaluateListOp (YCPInterpreter *interpreter, builtin_t code, const YCPL
 	     * </pre>
 	     */
 	    if (args->size() == 2)
-	        return args->value(0)->asList()->functionalAdd(args->value(1));
+		return args->value(0)->asList()->functionalAdd(args->value(1));
 	}
 	break;
 	case YCPB_CHANGE:

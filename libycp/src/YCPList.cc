@@ -76,8 +76,8 @@ void YCPListRep::set(const int i, const YCPValue& value)
 void YCPListRep::remove(const int n)
 {
     if ((n < 0) || (n >= size())) {
-        y2error("Invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
-        abort();
+	y2error("Invalid index %d (max %d) in %s", n, size()-1, __PRETTY_FUNCTION__);
+	abort();
     }
     elements.erase (elements.begin () + n);
 }
@@ -90,6 +90,19 @@ void YCPListRep::swap(int x, int y)
 	return;
 
     std::swap (elements[x], elements[y]);
+}
+
+
+bool YCPListRep::contains (const YCPValue& value) const
+{
+    for (vector <YCPValue>::const_iterator it = elements.begin ();
+	 it != elements.end (); it++)
+    {
+	if ((*it)->equal (value))
+	    return true;
+    }
+
+    return false;
 }
 
 
@@ -212,4 +225,3 @@ string YCPListRep::commaList() const
     }
     return ret;
 }
-

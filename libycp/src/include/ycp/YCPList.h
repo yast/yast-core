@@ -99,6 +99,11 @@ public:
     void swap(int x, int y);
 
     /**
+     * Returns true if the list contains the value, otherwise false.
+     */
+    bool contains (const YCPValue& value) const;
+
+    /**
      * Sorts the list. This function changes the list.
      */
     void sortlist();
