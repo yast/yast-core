@@ -81,7 +81,7 @@ YEVariable::YEVariable (SymbolEntryPtr entry)
 }
 
 
-YEVariable::YEVariable (std::istream & str)
+YEVariable::YEVariable (bytecodeistream & str)
     : YCode (yeVariable)
 {
     m_entry = Bytecode::readEntry (str);
@@ -158,7 +158,7 @@ YEReference::YEReference (SymbolEntryPtr entry)
 }
 
 
-YEReference::YEReference (std::istream & str)
+YEReference::YEReference (bytecodeistream & str)
     : YCode (yeReference)
 {
     m_entry = Bytecode::readEntry (str);
@@ -227,7 +227,7 @@ YETerm::YETerm (const char *name)
 }
 
 
-YETerm::YETerm (std::istream & str)
+YETerm::YETerm (bytecodeistream & str)
     : YCode (yeTerm)
     , m_parameters (0)
 {
@@ -384,7 +384,7 @@ YECompare::YECompare (YCodePtr left, c_op op, YCodePtr right)
 }
 
 
-YECompare::YECompare (std::istream & str)
+YECompare::YECompare (bytecodeistream & str)
     : YCode (yeCompare)
 {
     m_left = Bytecode::readCode (str);
@@ -508,7 +508,7 @@ YELocale::YELocale (const char *singular, const char *plural, YCodePtr count, co
 }
 
 
-YELocale::YELocale (std::istream & str)
+YELocale::YELocale (bytecodeistream & str)
     : YCode (yeLocale)
 {
     m_singular = Bytecode::readCharp (str);		// text for singular
@@ -605,7 +605,7 @@ YEList::YEList (YCodePtr code)
 }
 
 
-YEList::YEList (std::istream & str)
+YEList::YEList (bytecodeistream & str)
     : YCode (yeList)
     , m_first (0)
 {
@@ -755,7 +755,7 @@ YEMap::YEMap (YCodePtr key, YCodePtr value)
 }
 
 
-YEMap::YEMap (std::istream & str)
+YEMap::YEMap (bytecodeistream & str)
     : YCode (yeMap)
     , m_first (0)
 {
@@ -937,7 +937,7 @@ YEPropagate::YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to)
 }
 
 
-YEPropagate::YEPropagate (std::istream & str)
+YEPropagate::YEPropagate (bytecodeistream & str)
     : YCode (yePropagate)
     , m_from (Bytecode::readType (str))
     , m_to (Bytecode::readType (str))
@@ -1104,7 +1104,7 @@ YEUnary::YEUnary (declaration_t *decl, YCodePtr arg)
 }
 
 
-YEUnary::YEUnary (std::istream & str)
+YEUnary::YEUnary (bytecodeistream & str)
     : YCode (yeUnary)
 {
     extern StaticDeclaration static_declarations;
@@ -1195,7 +1195,7 @@ YEBinary::YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2)
 }
 
 
-YEBinary::YEBinary (std::istream & str)
+YEBinary::YEBinary (bytecodeistream & str)
     : YCode (yeBinary)
 {
     extern StaticDeclaration static_declarations;
@@ -1324,7 +1324,7 @@ YETriple::YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false)
 }
 
 
-YETriple::YETriple (std::istream & str)
+YETriple::YETriple (bytecodeistream & str)
     : YCode (yeTriple)
 {
     m_expr = Bytecode::readCode (str);
@@ -1403,7 +1403,7 @@ YEIs::YEIs (YCodePtr expr, constTypePtr type)
 }
 
 
-YEIs::YEIs (std::istream & str)
+YEIs::YEIs (bytecodeistream & str)
     : YCode (yeIs)
     , m_type (Bytecode::readType (str))
 {
@@ -1489,7 +1489,7 @@ YEReturn::YEReturn (YCodePtr expr)
 }
 
 
-YEReturn::YEReturn (std::istream & str)
+YEReturn::YEReturn (bytecodeistream & str)
     : YCode (yeReturn)
 {
     m_expr = Bytecode::readCode (str);
@@ -1539,7 +1539,7 @@ YEBracket::YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr res
 }
 
 
-YEBracket::YEBracket (std::istream & str)
+YEBracket::YEBracket (bytecodeistream & str)
     : YCode (yeBracket)
 {
     m_var = Bytecode::readCode (str);
@@ -1697,7 +1697,7 @@ YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePt
 }
 
 
-YEBuiltin::YEBuiltin (std::istream & str)
+YEBuiltin::YEBuiltin (bytecodeistream & str)
     : YCode (yeBuiltin)
     , m_parameterblock (0)
     , m_parameters (0)
@@ -2267,7 +2267,7 @@ YECall::YECall (TableEntry* entry)
 }
 
 
-YECall::YECall (std::istream & str)
+YECall::YECall (bytecodeistream & str)
     : YCode (yeFunction)
     , m_entry (0)
     , m_sentry (Bytecode::readEntry (str))
@@ -2580,7 +2580,7 @@ YEFunction::YEFunction (TableEntry* entry)
 }
 
 
-YEFunction::YEFunction (std::istream & str)
+YEFunction::YEFunction (bytecodeistream & str)
     : YECall (str)
 {
     m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
@@ -2695,7 +2695,7 @@ YEFunctionPointer::YEFunctionPointer (TableEntry* entry)
 }
 
 
-YEFunctionPointer::YEFunctionPointer (std::istream & str)
+YEFunctionPointer::YEFunctionPointer (bytecodeistream & str)
     : YECall (str)
 {
     m_kind = yeFunctionPointer;

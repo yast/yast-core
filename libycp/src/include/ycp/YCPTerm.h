@@ -179,7 +179,7 @@ class YCPTerm : public YCPValue
 public:
     YCPTerm(const string& s) : YCPValue(new YCPTermRep(s)) {}
     YCPTerm(const string& s, const YCPList& l) : YCPValue(new YCPTermRep(s, l)) {}
-    YCPTerm(std::istream & str);
+    YCPTerm(bytecodeistream & str);
 
     string name() const { return CONST_ELEMENT->name (); }
     YCPList args() const { return CONST_ELEMENT->args (); }

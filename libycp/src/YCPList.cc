@@ -280,7 +280,7 @@ YCPListRep::toStream (std::ostream & str) const
 
 // --------------------------------------------------------
 
-YCPList::YCPList(std::istream & str)
+YCPList::YCPList(bytecodeistream & str)
     : YCPValue (YCPList())
 {
     u_int32_t len = Bytecode::readInt32 (str);

@@ -53,9 +53,9 @@ protected:
 
     /**
      * Creates a new YCPByteblockRep object from a stream.
-     * See YCPByteblock (std::istream &) implementation.
+     * See YCPByteblock (bytecodeistream &) implementation.
      */
-    YCPByteblockRep (std::istream & str, long len);
+    YCPByteblockRep (bytecodeistream & str, long len);
 
     /**
      * Cleans up
@@ -109,7 +109,7 @@ class YCPByteblock : public YCPValue
     DEF_COMMON(Byteblock, Value);
 public:
     YCPByteblock(const unsigned char *r, long l) : YCPValue(new YCPByteblockRep(r, l)) {}
-    YCPByteblock(std::istream & str);
+    YCPByteblock(bytecodeistream & str);
 };
 
    

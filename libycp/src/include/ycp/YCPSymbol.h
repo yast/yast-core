@@ -103,7 +103,7 @@ class YCPSymbol : public YCPValue
 public:
     YCPSymbol(const char *s) : YCPValue(new YCPSymbolRep(s)) {}
     YCPSymbol(string s) : YCPValue(new YCPSymbolRep(s)) {}
-    YCPSymbol(std::istream & str);
+    YCPSymbol(bytecodeistream & str);
 };
 
 #endif   // YCPSymbol_h

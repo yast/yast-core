@@ -45,6 +45,84 @@
 #include <string.h>
 #include <ctype.h>
 
+static int
+readInt (bytecodeistream & str)
+{
+    int i = 0;
+
+    char c;
+
+    for (;;)
+    {
+	str.get (c);
+	if (!isdigit (c))
+	    break;
+	i *= 10;
+	i += (c - '0');
+    }
+
+    return i;
+}
+
+
+bytecodeistream::bytecodeistream (string filename)
+    : std::ifstream (filename.c_str ())
+    , m_major (-1)
+    , m_minor (-1)
+    , m_release (-1)
+{
+    if (!is_open ())
+    {
+	y2error ("Failed to open '%s': %s", filename.c_str(), strerror (errno));
+	return;
+    }
+    // read YaST_BYTECODE_HEADER
+
+    char header[sizeof(YaST_BYTECODE_HEADER)+1];
+    int headerlen = strlen (YaST_BYTECODE_HEADER);
+    read (header, headerlen);
+    header[headerlen] = 0;
+    if (strcmp (header, YaST_BYTECODE_HEADER) != 0)
+    {
+	y2error ("Not a bytecode file '%s'[%s]", filename.c_str(), header);
+	return;
+    }
+
+    m_major = readInt (*this);
+    m_minor = readInt (*this);
+    m_release = readInt (*this);
+}
+
+bool bytecodeistream::isVersion (int major, int minor, int release)
+{
+    return (major == m_major) 
+	&& (minor == m_minor) 
+	&& (release == m_release);
+}
+
+bool bytecodeistream::isVersionAtMost (int major, int minor, int release)
+{
+    if (m_major > major)
+    {
+	return false;
+    }
+    
+    if (m_major == major)
+    {
+	if (m_minor > minor)
+	{
+	    return false;
+	}
+	
+	if ( (m_minor == minor) && (m_release > m_release))
+	{
+	    return false;
+	}
+    }
+
+    return true;
+}
+
 int Bytecode::m_namespace_nesting_level = -1;
 int Bytecode::m_namespace_nesting_array_size = 0;
 int Bytecode::m_namespace_tare_level = 0;
@@ -78,7 +156,7 @@ Bytecode::writeBool (std::ostream & str, const bool value)
 
 
 bool
-Bytecode::readBool (std::istream & str)
+Bytecode::readBool (bytecodeistream & str)
 {
     char c;
     str.get (c);
@@ -109,7 +187,7 @@ Bytecode::writeInt32 (std::ostream & str, const u_int32_t value)
 
 
 u_int32_t
-Bytecode::readInt32 (std::istream & str)
+Bytecode::readInt32 (bytecodeistream & str)
 {
     char c;
     str.get (c);
@@ -140,7 +218,7 @@ Bytecode::writeString (std::ostream & streamref, const string & stringref)
 
 
 bool
-Bytecode::readString (std::istream & streamref, string & stringref)
+Bytecode::readString (bytecodeistream & streamref, string & stringref)
 {
     bool ret = false;
     stringref.erase();
@@ -174,7 +252,7 @@ Bytecode::writeUstring (std::ostream & streamref, const Ustring ustringref)
 
 
 Ustring
-Bytecode::readUstring (std::istream & streamref)
+Bytecode::readUstring (bytecodeistream & streamref)
 {
     u_int32_t len = readInt32 (streamref);
     Ustring ret = Ustring (SymbolEntry::_nameHash, "");
@@ -204,7 +282,7 @@ Bytecode::writeCharp (std::ostream & str, const char * charp)
 
 
 char *
-Bytecode::readCharp (std::istream & str)
+Bytecode::readCharp (bytecodeistream & str)
 {
     u_int32_t len = readInt32 (str);
     if (str.good())
@@ -233,7 +311,7 @@ Bytecode::writeBytep (std::ostream & str, const unsigned char * bytep, unsigned 
 
 
 unsigned char *
-Bytecode::readBytep (std::istream & str)
+Bytecode::readBytep (bytecodeistream & str)
 {
     u_int32_t len = readInt32 (str);
     if (str.good())
@@ -260,7 +338,7 @@ Bytecode::writeType (std::ostream & str, constTypePtr type)
 
 
 TypePtr
-Bytecode::readType (std::istream & str)
+Bytecode::readType (bytecodeistream & str)
 {
     int kind = readInt32 (str);
 #if DO_DEBUG
@@ -330,7 +408,7 @@ Bytecode::writeValue (std::ostream & str, const YCPValue value)
  */
 
 YCPValue
-Bytecode::readValue (std::istream & str)
+Bytecode::readValue (bytecodeistream & str)
 {
     char vt;
     if (str.get (vt))
@@ -451,7 +529,7 @@ Bytecode::writeYCodelist (std::ostream & str, const ycodelist_t *codelist)
 
 
 bool
-Bytecode::readYCodelist (std::istream & str, ycodelist_t **anchor)
+Bytecode::readYCodelist (bytecodeistream & str, ycodelist_t **anchor)
 {
     u_int32_t count = readInt32 (str);
 
@@ -673,7 +751,7 @@ Bytecode::writeEntry (std::ostream & str, const SymbolEntryPtr sentry)
 
 
 SymbolEntryPtr 
-Bytecode::readEntry (std::istream & str)
+Bytecode::readEntry (bytecodeistream & str)
 {
     // read reference to namespaces (namespace_id) symbol table (position)
     int namespace_id = Bytecode::readInt32 (str);
@@ -733,7 +811,7 @@ Bytecode::readEntry (std::istream & str)
 
 // read code from stream
 YCodePtr
-Bytecode::readCode (std::istream & str)
+Bytecode::readCode (bytecodeistream & str)
 {
     char code;
     if (!str.get (code))
@@ -1022,26 +1100,6 @@ Bytecode::readModule (const string & mname)
 }
 
 
-static int
-readInt (std::istream & str)
-{
-    int i = 0;
-
-    char c;
-
-    for (;;)
-    {
-	str.get (c);
-	if (!isdigit (c))
-	    break;
-	i *= 10;
-	i += (c - '0');
-    }
-
-    return i;
-}
-
-
 // read YCode from file, return YCode (YError in case of failure)
 YCodePtr
 Bytecode::readFile (const string & filename)
@@ -1049,31 +1107,16 @@ Bytecode::readFile (const string & filename)
 #if DO_DEBUG
 //    y2debug ("Bytecode::readFile (%s)", filename.c_str());
 #endif
-    std::ifstream instream (filename.c_str());
+    bytecodeistream instream (filename);
     if (!instream.is_open ())
     {
 	y2error ("Failed to open '%s': %s", filename.c_str(), strerror (errno));
 	return 0;
     }
     // check YaST_BYTECODE_HEADER
-
-    char header[sizeof(YaST_BYTECODE_HEADER)+1];
-    int headerlen = strlen (YaST_BYTECODE_HEADER);
-    instream.read (header, headerlen);
-    header[headerlen] = 0;
-    if (strcmp (header, YaST_BYTECODE_HEADER) != 0)
-    {
-	y2error ("Not a bytecode file '%s'[%s]", filename.c_str(), header);
-	return 0;
-    }
-
-    int major = readInt (instream);
-    int minor = readInt (instream);
-    int release = readInt (instream);
-
-    if ( (major == atoi (YaST_BYTECODE_MAJOR))
-	&& (minor == atoi (YaST_BYTECODE_MINOR))
-	&& (release <= atoi (YaST_BYTECODE_RELEASE)))
+    if ( instream.isVersionAtMost(atoi (YaST_BYTECODE_MAJOR)
+	, atoi (YaST_BYTECODE_MINOR)
+	, atoi (YaST_BYTECODE_RELEASE)) )
     {
 #if DO_DEBUG
 //	y2debug ("Header accepted");
@@ -1082,7 +1125,10 @@ Bytecode::readFile (const string & filename)
 	return readCode (instream);
     }
 
-    y2error ("Unsupported version %d.%d.%d", major, minor, release);
+    y2error ("Unsupported version %d.%d.%d"
+	, instream.major ()
+	, instream.minor ()
+	, instream.release ());
     return 0;
 }
 

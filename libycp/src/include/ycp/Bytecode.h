@@ -36,6 +36,21 @@ class Y2Namespace;
 #include <string>
 #include <map>
 
+#include <fstream>
+
+class bytecodeistream : public std::ifstream
+{
+	int m_major, m_minor, m_release;
+    public:
+	bytecodeistream (string filename);
+	bool isVersion (int major, int minor, int revision);
+	bool isVersionAtMost (int major, int minor, int revision);
+	
+	int major () const { return m_major; }
+	int minor () const { return m_minor; }
+	int release () const { return m_release; }
+};
+
 class Bytecode {
     static int m_namespace_nesting_level;
     static int m_namespace_nesting_array_size;
@@ -47,39 +62,39 @@ class Bytecode {
     public:
 	// bool I/O
 	static std::ostream & writeBool (std::ostream & streamref, bool value);
-	static bool readBool (std::istream & streamref);
+	static bool readBool (bytecodeistream & streamref);
 
 	// string I/O
 	static std::ostream & writeString (std::ostream & streamref, const std::string & stringref);
-	static bool readString (std::istream & streamref, std::string & stringref);
+	static bool readString (bytecodeistream & streamref, std::string & stringref);
 
 	// Ustring I/O
 	static std::ostream & writeUstring (std::ostream & streamref, const Ustring ustringref);
-	static Ustring readUstring (std::istream & streamref);
+	static Ustring readUstring (bytecodeistream & streamref);
 
 	// char * I/O
 	static std::ostream & writeCharp (std::ostream & streamref, const char * charp);
-	static char * readCharp (std::istream & streamref);
+	static char * readCharp (bytecodeistream & streamref);
 
 	// bytepointer I/O
 	static std::ostream & writeBytep (std::ostream & streamref, const unsigned char * bytep, unsigned int len);
-	static unsigned char * readBytep (std::istream & streamref);
+	static unsigned char * readBytep (bytecodeistream & streamref);
 
 	// u_int32_t I/O
 	static std::ostream & writeInt32 (std::ostream & str, const u_int32_t value);
-	static u_int32_t readInt32 (std::istream & str);
+	static u_int32_t readInt32 (bytecodeistream & str);
 
 	// Type I/O
 	static std::ostream & writeType (std::ostream & str, constTypePtr type);
-	static TypePtr readType (std::istream & str);
+	static TypePtr readType (bytecodeistream & str);
 
 	// YCPValue I/O
 	static std::ostream & writeValue (std::ostream & str, const YCPValue value);
-	static YCPValue readValue (std::istream & str);
+	static YCPValue readValue (bytecodeistream & str);
 
 	// ycodelist_t * I/O
 	static std::ostream & writeYCodelist (std::ostream & str, const ycodelist_t *codelist);
-	static bool readYCodelist (std::istream & str, ycodelist_t **anchor);
+	static bool readYCodelist (bytecodeistream & str, ycodelist_t **anchor);
 
 	//-----------------------------------------------------------
 	// block nesting handling
@@ -109,13 +124,13 @@ class Bytecode {
 	//   the SymbolEntries itself are 'owned' by Y2Namespace (YBlock in YCP) and referenced via pointers
 	//   to SymbolEntry. These functions handle stream I/O for SymbolEntry pointers.
 	static std::ostream &writeEntry (std::ostream & str, const SymbolEntryPtr entry);
-	static SymbolEntryPtr readEntry (std::istream & str);
+	static SymbolEntryPtr readEntry (bytecodeistream & str);
 
 	//-----------------------------------------------------------
 	// YCode read.
 	// Must be implemented outside of YCode since we have derived classes to allocate...
 	// see YCode for write
-	static YCodePtr readCode (std::istream & str);
+	static YCodePtr readCode (bytecodeistream & str);
 
 	// File I/O
 	// reading and writing complete files is done via separate functions

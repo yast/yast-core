@@ -602,7 +602,7 @@ YBlock::statementCount () const
 // --------------------------
 // bytecode I/O
 
-YBlock::YBlock (std::istream & str)
+YBlock::YBlock (bytecodeistream & str)
     : YCode (yeBlock)
     , m_kind (b_unknown)
     , m_name ("")

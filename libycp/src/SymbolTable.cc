@@ -51,7 +51,7 @@ TableEntry::TableEntry (const char *key, SymbolEntryPtr entry, const Point *poin
 }
 
 
-TableEntry::TableEntry (std::istream & str)
+TableEntry::TableEntry (bytecodeistream & str)
     : m_prev (0)
     , m_next (0)
     , m_overloaded_prev (0)

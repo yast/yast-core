@@ -125,7 +125,7 @@ YCPStringRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 static string
-fromStream (std::istream & str)
+fromStream (bytecodeistream & str)
 {
     string s;
     Bytecode::readString (str, s);
@@ -133,7 +133,7 @@ fromStream (std::istream & str)
 }
 
 
-YCPString::YCPString (std::istream & str)
+YCPString::YCPString (bytecodeistream & str)
     : YCPValue (new YCPStringRep (fromStream (str)))
 {
 }

@@ -222,7 +222,7 @@ YCPMapRep::toStream (std::ostream & str) const
 
 // --------------------------------------------------------
 
-YCPMap::YCPMap(std::istream & str)
+YCPMap::YCPMap(bytecodeistream & str)
     : YCPValue (YCPMap())
 {
     u_int32_t len = Bytecode::readInt32 (str);

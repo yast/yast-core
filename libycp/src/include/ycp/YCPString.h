@@ -104,7 +104,7 @@ class YCPString : public YCPValue
     DEF_COMMON(String, Value);
 public:
     YCPString(string s) : YCPValue(new YCPStringRep(s)) {}
-    YCPString(std::istream & str);
+    YCPString(bytecodeistream & str);
 };
 
 #endif   // YCPString_h

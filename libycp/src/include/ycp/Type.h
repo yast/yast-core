@@ -29,6 +29,7 @@
 #include "ycp/TypePtr.h"
 
 class FunctionType;
+class bytecodeistream;
 
 class Type : public Rep
 #ifdef D_MEMUSAGE
@@ -173,7 +174,7 @@ private:
 
 public:
     Type ();
-    Type (tkind kind, std::istream & str);
+    Type (tkind kind, bytecodeistream & str);
     virtual ~Type ();
 
     /**
@@ -310,7 +311,7 @@ public:
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     FlexType (bool as_const = false);
-    FlexType (std::istream & str);
+    FlexType (bytecodeistream & str);
     ~FlexType ();
 };
 
@@ -331,7 +332,7 @@ public:
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     unsigned int number () const;
     NFlexType (unsigned int number, bool as_const = false);
-    NFlexType (std::istream & str);
+    NFlexType (bytecodeistream & str);
     ~NFlexType ();
 };
 
@@ -354,7 +355,7 @@ public:
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     constTypePtr type () const { return m_type; }
     VariableType (constTypePtr type = Type::Unspec, bool as_const = false);
-    VariableType (std::istream & str);
+    VariableType (bytecodeistream & str);
     ~VariableType ();
 };
 
@@ -379,7 +380,7 @@ public:
     constTypePtr type () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     ListType (constTypePtr type = Type::Unspec, bool as_const = false);
-    ListType (std::istream & str);
+    ListType (bytecodeistream & str);
     ~ListType ();
 };
 
@@ -406,7 +407,7 @@ public:
     constTypePtr valuetype () const { return m_valuetype; }
     std::ostream & toStream (std::ostream & str) const;
     MapType (constTypePtr key = Type::Unspec, constTypePtr value = Type::Unspec, bool as_const = false);
-    MapType (std::istream & str);
+    MapType (bytecodeistream & str);
     ~MapType ();
 };
 
@@ -430,7 +431,7 @@ public:
     constTypePtr returnType () const { return m_type; }
     std::ostream & toStream (std::ostream & str) const;
     BlockType (constTypePtr type, bool as_const = false);
-    BlockType (std::istream & str);
+    BlockType (bytecodeistream & str);
     ~BlockType ();
 };
 
@@ -453,7 +454,7 @@ public:
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     TupleType (constTypePtr type, bool as_const = false);
-    TupleType (std::istream & str);
+    TupleType (bytecodeistream & str);
     void concat (constTypePtr t);
     unsigned int parameterCount () const { return m_types.size(); }
     constTypePtr parameterType (unsigned int parameter_number) const;
@@ -481,7 +482,7 @@ public:
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;
     FunctionType (constTypePtr returntype = Type::Unspec, bool as_const = false);
-    FunctionType (std::istream & str);
+    FunctionType (bytecodeistream & str);
     ~FunctionType ();
     constTypePtr returnType () const { return m_returntype; }
     void concat (constTypePtr t);

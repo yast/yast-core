@@ -134,7 +134,7 @@ public:
     YBlock (const std::string & filename, blockkind_t kind = b_unknown);
     // midlevel block
     YBlock (const Point *point);
-    YBlock (std::istream & str);
+    YBlock (bytecodeistream & str);
     ~YBlock ();
 
     //---------------------------------------------------------------

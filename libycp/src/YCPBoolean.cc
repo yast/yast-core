@@ -76,7 +76,7 @@ YCPBooleanRep::compare(const YCPBoolean& b) const
 
 // --------------------------------------------------------
 
-YCPBoolean::YCPBoolean (std::istream & str)
+YCPBoolean::YCPBoolean (bytecodeistream & str)
     : YCPValue (new YCPBooleanRep (Bytecode::readBool (str)))
 {
 }

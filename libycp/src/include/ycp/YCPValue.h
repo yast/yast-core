@@ -26,6 +26,8 @@
 
 #include "YCPElement.h"
 
+class bytecodeistream;
+
 /**
  * @short Value Type
  * Defines constants for the Value types. The Value type specifies the class

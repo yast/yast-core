@@ -60,7 +60,7 @@ class YStatement : public YCode
     int m_line;					// line number
 public:
     YStatement (ykind kind, int line = 0);
-    YStatement (ykind kind, std::istream & str);
+    YStatement (ykind kind, bytecodeistream & str);
     ~YStatement () {};
     virtual string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -81,7 +81,7 @@ class YSExpression : public YStatement
     YCodePtr m_expr;
 public:
     YSExpression (YCodePtr expr, int line = 0);		// statement
-    YSExpression (std::istream & str);
+    YSExpression (bytecodeistream & str);
     ~YSExpression ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -101,7 +101,7 @@ class YSBlock : public YStatement
     YBlockPtr m_block;
 public:
     YSBlock (YBlockPtr block, int line = 0);
-    YSBlock (std::istream & str);
+    YSBlock (bytecodeistream & str);
     ~YSBlock ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -121,7 +121,7 @@ class YSReturn : public YStatement
     YCodePtr m_value;
 public:
     YSReturn (YCodePtr value, int line = 0);
-    YSReturn (std::istream & str);
+    YSReturn (bytecodeistream & str);
     ~YSReturn ();
     void propagate (constTypePtr from, constTypePtr to);
     YCodePtr value () const;	// needed in YBlock::justReturn
@@ -145,7 +145,7 @@ class YSTypedef : public YStatement
     constTypePtr m_type;	// type
 public:
     YSTypedef (const string &name, constTypePtr type, int line = 0);	// Typedef
-    YSTypedef (std::istream & str);
+    YSTypedef (bytecodeistream & str);
     ~YSTypedef () {};
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
@@ -167,7 +167,7 @@ class YSFunction : public YStatement
 
 public:
     YSFunction (SymbolEntryPtr entry, int line = 0);
-    YSFunction (std::istream & str);
+    YSFunction (bytecodeistream & str);
     ~YSFunction ();
 
     // symbol entry of function itself
@@ -196,7 +196,7 @@ class YSAssign : public YStatement
     YCodePtr m_code;
 public:
     YSAssign (bool definition, SymbolEntryPtr entry, YCodePtr code, int line = 0);
-    YSAssign (bool definition, std::istream & str);
+    YSAssign (bool definition, bytecodeistream & str);
     ~YSAssign ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -219,7 +219,7 @@ class YSBracket : public YStatement
     YCodePtr m_code;
 public:
     YSBracket (SymbolEntryPtr entry, YCodePtr arg, YCodePtr code, int line = 0);
-    YSBracket (std::istream & str);
+    YSBracket (bytecodeistream & str);
     ~YSBracket ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -244,7 +244,7 @@ class YSIf : public YStatement
     YCodePtr m_false;		// false statement/block
 public:
     YSIf (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false, int line = 0);
-    YSIf (std::istream & str);
+    YSIf (bytecodeistream & str);
     ~YSIf ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -266,7 +266,7 @@ class YSWhile : public YStatement
 
 public:
     YSWhile (YCodePtr expr, YCodePtr loop, int line = 0);
-    YSWhile (std::istream & str);
+    YSWhile (bytecodeistream & str);
     ~YSWhile ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -288,7 +288,7 @@ class YSRepeat : public YStatement
 
 public:
     YSRepeat (YCodePtr loop, YCodePtr expr, int line = 0);
-    YSRepeat (std::istream & str);
+    YSRepeat (bytecodeistream & str);
     ~YSRepeat ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -310,7 +310,7 @@ class YSDo : public YStatement
 
 public:
     YSDo (YCodePtr loop, YCodePtr expr, int line = 0);
-    YSDo (std::istream & str);
+    YSDo (bytecodeistream & str);
     ~YSDo ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -330,7 +330,7 @@ class YSTextdomain : public YStatement
     Ustring m_domain;
 public:
     YSTextdomain (const string &textdomain, int line = 0);
-    YSTextdomain (std::istream & str);
+    YSTextdomain (bytecodeistream & str);
     ~YSTextdomain ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -354,7 +354,7 @@ class YSInclude : public YStatement
     bool m_skipped;
 public:
     YSInclude (const string &filename, int line = 0, bool skipped = false);
-    YSInclude (std::istream & str);
+    YSInclude (bytecodeistream & str);
     ~YSInclude ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -375,7 +375,7 @@ class YSImport : public YStatement, public Import
 public:
     YSImport (const string &name, int line = 0);
     YSImport (const string &name, Y2Namespace *name_space);
-    YSImport (std::istream & str);
+    YSImport (bytecodeistream & str);
     ~YSImport ();
     string name () const;
     string toString () const;
@@ -396,7 +396,7 @@ class YSFilename : public YStatement
     Ustring m_filename;
 public:
     YSFilename (const string &filename, int line = 0);
-    YSFilename (std::istream & str);
+    YSFilename (bytecodeistream & str);
     ~YSFilename ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;

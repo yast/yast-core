@@ -92,7 +92,7 @@ class YCPInteger : public YCPValue
 public:
     YCPInteger(long long v) : YCPValue(new YCPIntegerRep(v)) {}
     YCPInteger(const char *r) : YCPValue(new YCPIntegerRep(r)) {}
-    YCPInteger(std::istream & str);
+    YCPInteger(bytecodeistream & str);
 };
 
 #endif   // YCPInteger_h

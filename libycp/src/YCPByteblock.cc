@@ -34,7 +34,7 @@ YCPByteblockRep::YCPByteblockRep (const unsigned char *b, long len)
 }
 
 
-YCPByteblockRep::YCPByteblockRep (std::istream & str, long len)
+YCPByteblockRep::YCPByteblockRep (bytecodeistream & str, long len)
     : len (len)
 {
     bytes = new unsigned char [len];
@@ -140,7 +140,7 @@ YCPByteblockRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 static int
-fromStream (std::istream & str)
+fromStream (bytecodeistream & str)
 {
     u_int32_t len = Bytecode::readInt32 (str);
     if (str.good())
@@ -151,7 +151,7 @@ fromStream (std::istream & str)
 }
 
 
-YCPByteblock::YCPByteblock (std::istream & str)
+YCPByteblock::YCPByteblock (bytecodeistream & str)
     : YCPValue (new YCPByteblockRep (str, fromStream (str)))
 {
 }

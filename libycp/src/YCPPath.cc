@@ -306,7 +306,7 @@ YCPPathRep::Component::toString() const
  */
 
 
-YCPPathRep::Component::Component(std::istream & str)
+YCPPathRep::Component::Component(bytecodeistream & str)
     : component (SymbolEntry::emptyUstring)
 {
     char v;
@@ -352,14 +352,14 @@ YCPPathRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 static string
-fromStream (std::istream & str)
+fromStream (bytecodeistream & str)
 {
     string s;
     Bytecode::readString (str, s);
     return s;
 }
 
-YCPPath::YCPPath (std::istream & str)
+YCPPath::YCPPath (bytecodeistream & str)
     : YCPValue (new YCPPathRep (fromStream(str).c_str()))
 {
 #if 0

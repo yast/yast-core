@@ -76,6 +76,6 @@ class YCPVoid : public YCPValue
     DEF_COMMON(Void, Value);
 public:
     YCPVoid() : YCPValue(new YCPVoidRep()) {}
-    YCPVoid(std::istream & str);
+    YCPVoid(bytecodeistream & str);
 };
 #endif   // YCPVoid_h

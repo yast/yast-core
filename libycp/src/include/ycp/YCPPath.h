@@ -45,7 +45,7 @@ class YCPPathRep : public YCPValueRep
         bool complex;     // true if component is quoted by " in source. false otherwise (component contains only a-zA-Z0-9-_)
         Component() : component (SymbolEntry::emptyUstring), complex (false) {}
         Component(string s);  // for initial creation. Unquotes and unescapes
-        Component(std::istream & str);  // for initial creation
+        Component(bytecodeistream & str);  // for initial creation
         int compare(const Component&to) const {
             return component.asString().compare(to.component.asString());
         }
@@ -169,7 +169,7 @@ public:
     YCPPath() : YCPValue(new YCPPathRep()) {}
     YCPPath(const char *r) : YCPValue(new YCPPathRep(r)) {}
     YCPPath(string s) : YCPValue(new YCPPathRep(s.c_str())) {}
-    YCPPath(std::istream & str);
+    YCPPath(bytecodeistream & str);
 };
 
 #endif   // YCPPath_h

@@ -102,14 +102,14 @@ YCPFloatRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 static const string
-fromStream (std::istream & str)
+fromStream (bytecodeistream & str)
 {
     string v;
     Bytecode::readString (str, v);
     return v;
 }
 
-YCPFloat::YCPFloat (std::istream & str)
+YCPFloat::YCPFloat (bytecodeistream & str)
     : YCPValue (new YCPFloatRep (fromStream (str).c_str()))
 {
 }

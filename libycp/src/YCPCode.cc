@@ -91,7 +91,7 @@ YCPCodeRep::toStream (std::ostream & str) const
 
 // --------------------------------------------------------
 
-YCPCode::YCPCode (std::istream & str)
+YCPCode::YCPCode (bytecodeistream & str)
     : YCPValue (YCPCode())
 {
     (const_cast<YCPCodeRep*>(static_cast<const YCPCodeRep*>(element)))->m_code = Bytecode::readCode (str);

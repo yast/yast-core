@@ -33,6 +33,7 @@ using namespace std;
 class SymbolEntry;
 class SymbolTable;
 class TableEntry;
+class bytecodeistream;
 
 // Only use BUILTIN_STATISTICS for testing. It will create three files
 // /tmp/builtin-X.txt which list all builtins registered, looked up
@@ -107,7 +108,7 @@ public:
     std::ostream & writeDeclaration (std::ostream & str, const declaration_t *decl) const;
 
     // read declaration from stream (return declaration matching name and type _exactly_)
-    declaration_t *readDeclaration (std::istream & str) const;
+    declaration_t *readDeclaration (bytecodeistream & str) const;
 
     // show a declaration
     // @param full if false, just show the name; if true, show name and signatur

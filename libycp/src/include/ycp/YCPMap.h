@@ -206,7 +206,7 @@ class YCPMap : public YCPValue
     DEF_COW_COMMON(Map, Value);
 public:
     YCPMap() : YCPValue(new YCPMapRep()) {}
-    YCPMap(std::istream & str);
+    YCPMap(bytecodeistream & str);
 
     void add(const YCPValue& key, const YCPValue& value) { ELEMENT->add (key,value); }
     YCPMap functionalAdd(const YCPValue& key, const YCPValue& value) const { return CONST_ELEMENT-> functionalAdd (key,value); }

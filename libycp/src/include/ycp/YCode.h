@@ -233,7 +233,7 @@ class YConst : public YCode
     YCPValue m_value;		// constant (not allowed in union :-( )
 public:
     YConst (ykind kind, YCPValue value);		// Constant
-    YConst (ykind kind, std::istream & str);
+    YConst (ykind kind, bytecodeistream & str);
     ~YConst () {};
     YCPValue value() const;
     string toString() const;
@@ -275,7 +275,7 @@ public:
     static void ensureBindDomain (const string& domain);
 
     YLocale (const char *locale, const char *textdomain);
-    YLocale (std::istream & str);
+    YLocale (bytecodeistream & str);
     ~YLocale ();
     const char *value () const;
     const char *domain () const;
@@ -300,7 +300,7 @@ class YDeclaration : public YCode
     declaration_t *m_value;	// builtin declaration
 public:
     YDeclaration (ykind kind, declaration_t *value);	// Builtin decl
-    YDeclaration (std::istream & str);
+    YDeclaration (bytecodeistream & str);
     ~YDeclaration () {};
     declaration_t *value() const;
     string toString() const;
@@ -338,7 +338,7 @@ class YFunction : public YCode
 
 public:
     YFunction (YBlockPtr parameterblock, const SymbolEntryPtr entry = 0);
-    YFunction (std::istream & str);
+    YFunction (bytecodeistream & str);
     ~YFunction ();
 
     // access to formal parameters
@@ -350,7 +350,7 @@ public:
     YBlockPtr definition () const;
     void setDefinition (YBlockPtr body);
     // read definition from stream
-    void setDefinition (std::istream & str);
+    void setDefinition (bytecodeistream & str);
 
     string toStringDeclaration () const;
     string toString () const;

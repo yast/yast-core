@@ -61,7 +61,7 @@ YCPVoidRep::toStream (std::ostream & str) const
 
 // --------------------------------------------------------
 
-YCPVoid::YCPVoid (std::istream & str)
+YCPVoid::YCPVoid (bytecodeistream & str)
     : YCPValue (new YCPVoidRep())
 {
 }

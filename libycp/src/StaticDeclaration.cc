@@ -537,7 +537,7 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
 
 // read declaration from stream (return declaration matching name and type _exactly_)
 declaration_t *
-StaticDeclaration::readDeclaration (std::istream & str) const
+StaticDeclaration::readDeclaration (bytecodeistream & str) const
 {
     char *name = Bytecode::readCharp (str);
     constTypePtr type = Bytecode::readType (str);

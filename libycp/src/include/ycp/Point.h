@@ -53,6 +53,8 @@ using std::string;
 #include <y2util/MemUsage.h>
 #include "ycp/SymbolEntry.h"
 
+class bytecodeistream;
+
 class Point
 #ifdef D_MEMUSAGE
    : public MemUsage
@@ -66,7 +68,7 @@ class Point
     size_t mem_size () const { return sizeof (Point); }
     Point (std::string filename, int line = 0, const Point *point = 0);
     Point (SymbolEntryPtr sentry, int line = 0, const Point *point = 0);
-    Point (std::istream & str);
+    Point (bytecodeistream & str);
     ~Point (void);
 
     SymbolEntryPtr sentry (void) const;

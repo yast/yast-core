@@ -103,7 +103,7 @@ class YCPFloat : public YCPValue
 public:
     YCPFloat(double v) : YCPValue(new YCPFloatRep(v)) {}
     YCPFloat(const char *r) : YCPValue(new YCPFloatRep(r)) {}
-    YCPFloat(std::istream & str);
+    YCPFloat(bytecodeistream & str);
 };
 
 #endif   // YCPFloat_h

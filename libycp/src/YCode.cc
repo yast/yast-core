@@ -248,7 +248,7 @@ YConst::YConst (ykind kind, YCPValue value)
 }
 
 
-YConst::YConst (ykind kind, std::istream & str)
+YConst::YConst (ykind kind, bytecodeistream & str)
     : YCode (kind)
     , m_value (YCPNull())
 {
@@ -451,7 +451,7 @@ YLocale::YLocale (const char *locale, const char *textdomain)
 }
 
 
-YLocale::YLocale (std::istream & str)
+YLocale::YLocale (bytecodeistream & str)
     : YCode (ycLocale)
 {
     m_locale = Bytecode::readCharp (str);		// the string to be translated
@@ -632,7 +632,7 @@ YFunction::setDefinition (YBlockPtr definition)
 
 
 void
-YFunction::setDefinition (std::istream & str)
+YFunction::setDefinition (bytecodeistream & str)
 {
     if (Bytecode::readBool (str))
     {
@@ -731,7 +731,7 @@ YFunction::evaluate (bool cse)
 
 // read function (prototype only !) from stream
 //
-YFunction::YFunction (std::istream & str)
+YFunction::YFunction (bytecodeistream & str)
     : YCode (ycFunction)
     , m_declaration (0)
     , m_definition (0)

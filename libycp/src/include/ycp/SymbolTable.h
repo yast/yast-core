@@ -76,7 +76,7 @@ protected:
 public:
     size_t mem_size () const { return sizeof (TableEntry); }
     TableEntry (const char *key, SymbolEntryPtr entry, const Point *point, SymbolTable *table = 0);
-    TableEntry (std::istream & str);
+    TableEntry (bytecodeistream & str);
     ~TableEntry ();
     const char *key () const;
     TableEntry *next () const;

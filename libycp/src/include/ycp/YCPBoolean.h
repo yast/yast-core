@@ -95,7 +95,7 @@ class YCPBoolean : public YCPValue
 public:
     YCPBoolean(bool v) : YCPValue(new YCPBooleanRep(v)) {}
     YCPBoolean(const char *r) : YCPValue(new YCPBooleanRep(r)) {}
-    YCPBoolean(std::istream & str);
+    YCPBoolean(bytecodeistream & str);
 };
 
 #endif	// YCPBoolean_h

@@ -73,7 +73,7 @@ YStatement::YStatement (ykind kind, int line)
 }
 
 
-YStatement::YStatement (ykind kind, std::istream & str)
+YStatement::YStatement (ykind kind, bytecodeistream & str)
     : YCode (kind)
 {
     m_line = Bytecode::readInt32 (str);
@@ -133,7 +133,7 @@ YSExpression::YSExpression (YCodePtr expr, int line)
 }
 
 
-YSExpression::YSExpression (std::istream & str)
+YSExpression::YSExpression (bytecodeistream & str)
     : YStatement (ysExpression, str)
 {
     m_expr = Bytecode::readCode (str);
@@ -187,7 +187,7 @@ YSBlock::YSBlock (YBlockPtr block, int line)
 }
 
 
-YSBlock::YSBlock (std::istream & str)
+YSBlock::YSBlock (bytecodeistream & str)
     : YStatement (ysBlock, str)
 {
     m_block = Bytecode::readCode (str);
@@ -235,7 +235,7 @@ YSReturn::YSReturn (YCodePtr value, int line)
 }
 
 
-YSReturn::YSReturn (std::istream & str)
+YSReturn::YSReturn (bytecodeistream & str)
     : YStatement (ysReturn, str)
     , m_value (0)
 {
@@ -385,7 +385,7 @@ YSFunction::evaluate (bool cse)
 }
 
 
-YSFunction::YSFunction (std::istream & str)
+YSFunction::YSFunction (bytecodeistream & str)
     : YStatement (ysFunction, str)
     , m_entry (Bytecode::readEntry (str))
 {
@@ -422,7 +422,7 @@ YSTypedef::YSTypedef (const string &name, constTypePtr type, int line)
 }
 
 
-YSTypedef::YSTypedef (std::istream & str)
+YSTypedef::YSTypedef (bytecodeistream & str)
     : YStatement (ysTypedef, str)
     , m_name (Bytecode::readUstring (str))
 {
@@ -470,7 +470,7 @@ YSAssign::YSAssign (bool definition, SymbolEntryPtr entry, YCodePtr code, int li
 }
 
 
-YSAssign::YSAssign (bool definition, std::istream & str)
+YSAssign::YSAssign (bool definition, bytecodeistream & str)
     : YStatement (definition ? ysVariable : ysAssign, str)
 {
     m_entry = Bytecode::readEntry (str);
@@ -557,7 +557,7 @@ YSBracket::toString () const
 }
 
 
-YSBracket::YSBracket (std::istream & str)
+YSBracket::YSBracket (bytecodeistream & str)
     : YStatement (ysBracket, str)
 {
     m_entry = Bytecode::readEntry (str);
@@ -744,7 +744,7 @@ YSIf::YSIf (YCodePtr a_condition, YCodePtr a_true, YCodePtr a_false, int line)
 }
 
 
-YSIf::YSIf (std::istream & str)
+YSIf::YSIf (bytecodeistream & str)
     : YStatement (ysIf, str)
     , m_true (0)
     , m_false (0)
@@ -887,7 +887,7 @@ YSWhile::toString () const
 }
 
 
-YSWhile::YSWhile (std::istream & str)
+YSWhile::YSWhile (bytecodeistream & str)
     : YStatement (ysWhile, str)
     , m_loop (0)
 {
@@ -1014,7 +1014,7 @@ YSRepeat::YSRepeat (YCodePtr loop, YCodePtr condition, int line)
 }
 
 
-YSRepeat::YSRepeat (std::istream & str)
+YSRepeat::YSRepeat (bytecodeistream & str)
     : YStatement (ysRepeat, str)
     , m_loop (0)
 {
@@ -1136,7 +1136,7 @@ YSDo::YSDo (YCodePtr loop, YCodePtr condition, int line)
 }
 
 
-YSDo::YSDo (std::istream & str)
+YSDo::YSDo (bytecodeistream & str)
     : YStatement (ysDo, str)
     , m_loop (0)
 {
@@ -1271,7 +1271,7 @@ YSTextdomain::toString() const
 }
 
 
-YSTextdomain::YSTextdomain (std::istream & str)
+YSTextdomain::YSTextdomain (bytecodeistream & str)
     : YStatement (ysTextdomain, str)
     , m_domain (Bytecode::readUstring (str))
 {
@@ -1326,7 +1326,7 @@ YSInclude::toString() const
 }
 
 
-YSInclude::YSInclude (std::istream & str)
+YSInclude::YSInclude (bytecodeistream & str)
     : YStatement (ysInclude, str)
     , m_filename (Bytecode::readUstring (str))
 {
@@ -1405,7 +1405,7 @@ YSImport::toString() const
 //
 // If an error occurs, m_name will be set to empty
 //
-YSImport::YSImport (std::istream & str)
+YSImport::YSImport (bytecodeistream & str)
     : YStatement (ysImport, str)
 {
     char *mname = Bytecode::readCharp (str);
@@ -1533,7 +1533,7 @@ YSFilename::toString() const
 }
 
 
-YSFilename::YSFilename (std::istream & str)
+YSFilename::YSFilename (bytecodeistream & str)
     : YStatement (ysFilename, str)
     , m_filename (Bytecode::readUstring (str))
 {

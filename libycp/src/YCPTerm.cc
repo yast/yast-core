@@ -166,7 +166,7 @@ YCPTermRep::toStream (std::ostream & str) const
 
 // --------------------------------------------------------
 
-YCPTerm::YCPTerm (std::istream & str)
+YCPTerm::YCPTerm (bytecodeistream & str)
     : YCPValue (YCPTerm("no-name-so-far"))
 {
     string s;

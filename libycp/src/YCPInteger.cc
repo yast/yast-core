@@ -108,7 +108,7 @@ YCPIntegerRep::toStream (std::ostream & str) const
 
 // ----------------------------------------------
 
-static long long fromStream (std::istream & str)
+static long long fromStream (bytecodeistream & str)
 {
     char c;
     long long ll = 0LL;
@@ -127,7 +127,7 @@ static long long fromStream (std::istream & str)
     return ll;
 }
 
-YCPInteger::YCPInteger (std::istream & str)
+YCPInteger::YCPInteger (bytecodeistream & str)
     : YCPValue (new YCPIntegerRep (fromStream (str)))
 {
 }

@@ -199,7 +199,7 @@ class YCPList : public YCPValue
     DEF_COW_COMMON(List, Value);
 public:
     YCPList() : YCPValue(new YCPListRep()) {}
-    YCPList(std::istream & str);
+    YCPList(bytecodeistream & str);
 
     int size() const { return CONST_ELEMENT->size (); }
     void reserve (int size) { ELEMENT->reserve (size); }

@@ -145,7 +145,7 @@ public:
     // create declaration point symbol (category == c_filename)
     SymbolEntry (const char *filename);
 
-    SymbolEntry (std::istream & str, const Y2Namespace *name_space = 0);
+    SymbolEntry (bytecodeistream & str, const Y2Namespace *name_space = 0);
 
     virtual ~SymbolEntry ();
 

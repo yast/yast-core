@@ -85,7 +85,7 @@ YCPSymbolRep::toStream (std::ostream & str) const
 // --------------------------------------------------------
 
 static string
-fromStream (std::istream & str)
+fromStream (bytecodeistream & str)
 {
     string s;
     Bytecode::readString (str, s);
@@ -93,7 +93,7 @@ fromStream (std::istream & str)
 }
 
 
-YCPSymbol::YCPSymbol (std::istream & str)
+YCPSymbol::YCPSymbol (bytecodeistream & str)
     : YCPValue (new YCPSymbolRep (fromStream (str)))
 {
 }

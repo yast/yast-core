@@ -123,7 +123,7 @@ Type::~Type()
 //----------------------------------------------------------------
 // stream I/O
 
-Type::Type (tkind kind, std::istream & str)
+Type::Type (tkind kind, bytecodeistream & str)
     : m_kind (kind)
     , m_const (Bytecode::readBool (str))
     , m_reference (Bytecode::readBool (str))
@@ -354,7 +354,7 @@ FlexType::FlexType (bool as_const)
 }
 
 
-FlexType::FlexType (std::istream & str)
+FlexType::FlexType (bytecodeistream & str)
     : Type (FlexT, str)
 {
 #if DO_DEBUG
@@ -451,7 +451,7 @@ NFlexType::NFlexType (unsigned int number, bool as_const)
 }
 
 
-NFlexType::NFlexType (std::istream & str)
+NFlexType::NFlexType (bytecodeistream & str)
     : Type (NFlexT, str)
     , m_number (Bytecode::readInt32 (str))
 {
@@ -563,7 +563,7 @@ VariableType::VariableType (constTypePtr type, bool as_const)
 }
 
 
-VariableType::VariableType (std::istream & str)
+VariableType::VariableType (bytecodeistream & str)
     : Type (VariableT, str)
     , m_type (Bytecode::readType (str))
 {
@@ -667,7 +667,7 @@ ListType::ListType (constTypePtr type, bool as_const)
 }
 
 
-ListType::ListType (std::istream & str)
+ListType::ListType (bytecodeistream & str)
     : Type (ListT, str)
     , m_type (Bytecode::readType (str))
 {
@@ -812,7 +812,7 @@ MapType::MapType (constTypePtr key, constTypePtr value, bool as_const)
 }
 
 
-MapType::MapType (std::istream & str)
+MapType::MapType (bytecodeistream & str)
     : Type (MapT, str)
     , m_keytype (Bytecode::readType (str))
     , m_valuetype (Bytecode::readType (str))
@@ -991,7 +991,7 @@ BlockType::BlockType (constTypePtr type, bool as_const)
 }
 
 
-BlockType::BlockType (std::istream & str)
+BlockType::BlockType (bytecodeistream & str)
     : Type (BlockT, str)
     , m_type (Bytecode::readType (str))
 {
@@ -1103,7 +1103,7 @@ TupleType::TupleType (constTypePtr type, bool as_const)
 }
 
 
-TupleType::TupleType (std::istream & str)
+TupleType::TupleType (bytecodeistream & str)
     : Type (TupleT, str)
 {
     u_int32_t count = Bytecode::readInt32 (str);
@@ -1340,7 +1340,7 @@ FunctionType::FunctionType (constTypePtr return_type, constFunctionTypePtr argum
     }
 }
 
-FunctionType::FunctionType (std::istream & str)
+FunctionType::FunctionType (bytecodeistream & str)
     : Type (FunctionT, str)
     , m_returntype (Bytecode::readType (str))
 {

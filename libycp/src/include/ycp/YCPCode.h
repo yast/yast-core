@@ -95,7 +95,7 @@ class YCPCode : public YCPValue
 public:
     YCPCode() : YCPValue (new YCPCodeRep ()) {}
     YCPCode (YCodePtr code) : YCPValue (new YCPCodeRep (code)) {}
-    YCPCode (std::istream & str);
+    YCPCode (bytecodeistream & str);
 };
 
 
@@ -162,7 +162,7 @@ class YCPBreak : public YCPValue
     DEF_COMMON(Break, Value);
 public:
     YCPBreak() : YCPValue (new YCPBreakRep ()) {}
-    YCPBreak (std::istream & str) : YCPValue (new YCPBreakRep ()) {}
+    YCPBreak (bytecodeistream & str) : YCPValue (new YCPBreakRep ()) {}
 };
 
 
@@ -229,7 +229,7 @@ class YCPReturn : public YCPValue
     DEF_COMMON(Return, Value);
 public:
     YCPReturn() : YCPValue (new YCPReturnRep ()) {}
-    YCPReturn(std::istream & str) : YCPValue (new YCPReturnRep ()) {}
+    YCPReturn(bytecodeistream & str) : YCPValue (new YCPReturnRep ()) {}
 };
 
 
@@ -300,7 +300,7 @@ class YCPEntry : public YCPValue
     DEF_COMMON(Entry, Value);
 public:
     YCPEntry (SymbolEntryPtr entry) : YCPValue (new YCPEntryRep (entry)) {}
-    YCPEntry (std::istream & str);
+    YCPEntry (bytecodeistream & str);
 };
 
 
@@ -371,7 +371,7 @@ class YCPReference : public YCPValue
     DEF_COMMON(Reference, Value);
 public:
     YCPReference (SymbolEntryPtr entry) : YCPValue (new YCPReferenceRep (entry)) {}
-    YCPReference (std::istream & str);
+    YCPReference (bytecodeistream & str);
 };
 
 #endif   // YCPCode_h

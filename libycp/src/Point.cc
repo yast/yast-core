@@ -133,7 +133,7 @@ Point::toString (void) const
 //-----------------------------------------------
 // stream I/O
 
-Point::Point (std::istream & str)
+Point::Point (bytecodeistream & str)
     : m_entry (Bytecode::readEntry (str))
     , m_line (Bytecode::readInt32 (str))
     , m_point (0)

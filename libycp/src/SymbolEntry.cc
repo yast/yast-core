@@ -489,7 +489,7 @@ SymbolEntry::toString (bool with_type) const
 
 // bytecode constructor
 
-SymbolEntry::SymbolEntry (std::istream & str, const Y2Namespace *name_space)
+SymbolEntry::SymbolEntry (bytecodeistream & str, const Y2Namespace *name_space)
     : m_global (Bytecode::readBool (str))
     , m_namespace (name_space)
     , m_position (Bytecode::readInt32 (str))
