@@ -44,6 +44,7 @@ YCPDebugger* YCPBasicInterpreter::debugger = NULL;
 
 
 YCPBasicInterpreter::YCPBasicInterpreter ()
+    : ui_block (false)
 {
     if (!debugger)
     {
@@ -77,7 +78,6 @@ YCPBasicInterpreter::interpreter_name () const
 {
     return "YCP";	// must be upper case
 }
-
 
 YCPValue YCPBasicInterpreter::callback (const YCPValue& value)
 {
@@ -652,6 +652,13 @@ YCPValue YCPBasicInterpreter::evaluateTerm(const YCPTerm& term)
 	ret = evaluateBuiltinTerm(evalterm);
     }
 
+    if (ret.isNull()
+	&& ui_block)
+    {
+	// use subclassed YUIInterpreter
+	ret = evaluateInstantiatedTerm (evalterm);
+    }
+
     if (ret.isNull())
     {
 	string symbol = evalterm->symbol()->symbol();
@@ -1063,7 +1070,7 @@ YCPValue YCPBasicInterpreter::evaluateBlock(const YCPBlock& block)
     // directly contained in another block.
 
     bool do_break, do_continue, do_return;
-    YCPValue retval = block->evaluate(this, do_break, do_continue, do_return);
+    YCPValue retval = block->evaluate (this, do_break, do_continue, do_return);
 
     /* FIXME: already checked in block->evaluate !  */
     if (do_break)

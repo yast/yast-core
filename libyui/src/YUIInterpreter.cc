@@ -402,6 +402,13 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 	}
 	return evaluateInstantiatedTerm (t);
     }
+    else if (value->isBlock())
+    {
+	bool b = setUIBlock (true);
+	YCPValue v = evaluate (value);
+	setUIBlock (b);
+	return v;
+    }
     return YCPError ("Unknown UI:: operation");
 }
 

@@ -180,6 +180,11 @@ public:
      **/
     bool YUIInterpreter::parseRgb(const YCPValue & val, YColor *color, bool complain);
 
+    /**
+     * evaluate in UI context (namespace)
+     */
+    YCPValue evaluateUI(const YCPValue& value);
+
 protected:
 
     /**
@@ -633,7 +638,6 @@ protected:
      */
     YCPValue evaluateInstantiatedTerm(const YCPTerm& term);
     YCPValue callback(const YCPValue& value);
-    YCPValue evaluateUI(const YCPValue& value);
     YCPValue evaluateWFM(const YCPValue& value);
     YCPValue evaluateSCR(const YCPValue& value);
     YCPValue setTextdomain (const string& textdomain);

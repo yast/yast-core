@@ -54,6 +54,11 @@ private:
      */
     string moduleName;
 
+    /**
+     * evaluate block via evaluateUI
+     */
+    bool ui_block;
+
 public:
     /**
      * YCP define being evaluated.
@@ -126,6 +131,15 @@ public:
      * !! set only during evaluatation of a module block !!
      */
     YCPValue setModuleName (const string& modulename);
+
+    /**
+     * set interpreter for block
+     * used for UI::{...} so the block gets evaluated via
+     * evaluateUI instead evaluate
+     * @param flag
+     * @return current flag
+     */
+    bool setUIBlock (bool flag) { bool ret = ui_block; ui_block = flag; return ret; }
 
 protected:
    /**
