@@ -613,6 +613,10 @@ YUI::filterInvalidEvents( YEvent * event )
  * size, for example for the Qt interface the -geometry option is honored and
  * for ncurses the dialog fills the whole window.
  * <p>
+ * The option <tt>`centered</tt> centers the dialog to the desktop.
+ * This has no effect for popup dialogs that are a child of a `defaultsize dialog
+ * that is currently visible.
+ * <p>
  * The option <tt>`decorated</tt> add a window border around the dialog, which
  * comes in handy if no window manager is running. This option may be ignored in
  * non-graphical UIs.
@@ -641,6 +645,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )	opt.hasWarnColor.setValue( true );
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )	opt.hasInfoColor.setValue( true );
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )	opt.isDecorated.setValue( true );
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )	opt.isCentered.setValue( true );
 		    else
 			y2warning( "Unknown option %s for OpenDialog", opts->value(o)->toString().c_str() );
 		}

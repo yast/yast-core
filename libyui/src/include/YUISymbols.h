@@ -158,6 +158,7 @@
 #define YUIOpt_autoScrollDown			"autoScrollDown"
 #define YUIOpt_autoShortcut			"autoShortcut"
 #define YUIOpt_countShowDelta			"countShowDelta"
+#define YUIOpt_centered				"centered"
 #define YUIOpt_debugLayout			"debugLayout"
 #define YUIOpt_decorated			"decorated"
 #define YUIOpt_default				"default"

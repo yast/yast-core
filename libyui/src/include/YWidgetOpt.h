@@ -165,6 +165,7 @@ struct YWidgetOpt
     YBoolOpt hasWarnColor;
     YBoolOpt hasInfoColor;
     YBoolOpt isDecorated;
+    YBoolOpt isCentered;
 };
 
 
