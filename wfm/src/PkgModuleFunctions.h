@@ -73,7 +73,9 @@ class PkgModuleFunctions
 	YCPValue TargetInstall (YCPList args);
 	YCPValue TargetRemove (YCPList args);
 	YCPValue TargetLogfile (YCPList args);
-	YCPValue SetProgressCallback(YCPList args);
+	YCPValue SetProgressCallback (YCPList args);
+	YCPValue TargetCapacity (YCPList args);
+	YCPValue TargetUsed (YCPList args);
 
 	// selection related
 	YCPValue GetSelections (YCPList args);

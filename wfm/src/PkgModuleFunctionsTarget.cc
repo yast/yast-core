@@ -37,6 +37,9 @@
 #include <ycp/YCPMap.h>
 #include <ycp/YCPError.h>
 
+#include <unistd.h>
+#include <sys/statvfs.h>
+
 using std::string;
 
 /** ------------------------
@@ -129,5 +132,66 @@ PkgModuleFunctions::TargetLogfile (YCPList args)
 }
 
 
+/** ------------------------
+ * INTERNAL
+ * get_disk_stats
+ *
+ * return capacity and usage of partition at directory
+ */
+static void
+get_disk_stats (const char *fs, long long *used, long long *size)
+{
+    struct statvfs sb;
+    if (statvfs (fs, &sb) < 0)
+    {
+	*used = *size = -1;
+	return;
+    }
+    long long blocksize = sb.f_frsize ? : sb.f_bsize;
+    *size = sb.f_blocks * blocksize;
+    *used = (sb.f_blocks - sb.f_bfree) * blocksize;
+}
 
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetCapacity (string dir) -> integer
+ *
+ * return capacity of partition at directory
+ */
+YCPValue
+PkgModuleFunctions::TargetCapacity (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetCapacity");
+    }
+
+    long long used, size;
+    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size);
+
+    return YCPInteger (size);
+}
+
+/** ------------------------
+ * 
+ * @builtin Pkg::TargetUsed (string dir) -> integer
+ *
+ * return usage of partition at directory
+ */
+YCPValue
+PkgModuleFunctions::TargetUsed (YCPList args)
+{
+    if ((args->size() != 1)
+	|| !(args->value(0)->isString()))
+    {
+	return YCPError ("Bad args to Pkg::TargetUsed");
+    }
+
+    long long used, size;
+    get_disk_stats (args->value(0)->asString()->value().c_str(), &used, &size);
+
+    return YCPInteger (used);
+}
 

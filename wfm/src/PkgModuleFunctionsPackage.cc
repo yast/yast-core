@@ -68,7 +68,7 @@ PkgModuleFunctions::PkgPrepareOrder (YCPList args)
 
 /**   
    @builtin Pkg::PkgMediaSizes () -> [ media_1_size, media_2_size, ...]
-     return cumulated sizes to be installed from different media
+     return cumulated sizes (in kb !) to be installed from different media
 
      Returns the install size per media, not the archivesize !!
  */
@@ -101,7 +101,7 @@ PkgModuleFunctions::PkgMediaSizes (YCPList args)
     YCPList ycpsizes;
     for (unsigned int i = 0; i < mediasizes.size(); ++i)
     {
-	ycpsizes->add (YCPInteger ((long long)mediasizes[i]));
+	ycpsizes->add (YCPInteger (((long long)mediasizes[i]) / 1024LL));
     }
     return ycpsizes;
 }
@@ -193,9 +193,7 @@ PkgModuleFunctions::IsSelected (YCPList args)
     PMSelectablePtr selectable = _y2pm.packageManager().getItem(args->value(0)->asString()->value());
     if (!selectable)
 	return YCPBoolean (false);
-    if ((selectable->status() == PMSelectable::S_Install)
-	|| (selectable->status() == PMSelectable::S_Update)
-	|| (selectable->status() == PMSelectable::S_Auto))
+    if (selectable->to_install())
     {
 	return YCPBoolean (true);
     }
@@ -240,7 +238,7 @@ PkgModuleFunctions::DoProvideString (std::string name)
 	//y2error ("Provide: package '%s' not found", name.c_str());
 	return false;
     }
-    selectable->set_status (PMSelectable::S_Install);
+    selectable->appl_set_install();
     return true;
 }
 
@@ -297,7 +295,7 @@ PkgModuleFunctions::DoRemoveString (std::string name)
 	y2error ("Remove: package '%s' not found", name.c_str());
 	return false;
     }
-    selectable->set_status (PMSelectable::S_Del);
+    selectable->appl_set_delete();
     return true;
 }
 
@@ -612,9 +610,7 @@ PkgModuleFunctions::GetPackages(YCPList args)
 	}
 	else if (which == "selected")
 	{
-	    if (((*it)->status() != PMSelectable::S_Install)
-		&& ((*it)->status() != PMSelectable::S_Update)
-		&& ((*it)->status() != PMSelectable::S_Auto))
+	    if (!((*it)->to_install()))
 	    {
 		continue;
 	    }
