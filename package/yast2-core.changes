@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Aug 12 11:36:02 CEST 2004 - jsrain@suse.cz
+
+- added libpng to neededforbuild
+- 2.10.4
+
+-------------------------------------------------------------------
 Tue Aug  3 10:01:16 CEST 2004 - visnov@suse.cz
 
 - fix handling of 'import "Summary"' testcase in symbol tables
