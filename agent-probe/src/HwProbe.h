@@ -81,7 +81,7 @@ private:
     /**
      * convert driver_info_t entry to map value
      */
-    YCPMap driver_info2map (driver_info_t *drv, const char **name);
+    YCPMap driver_info2map (const driver_info_t *drv, const char **name);
 
     /**
      * lookup hardware components matching item

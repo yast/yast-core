@@ -266,7 +266,7 @@ strlist2ycplist (str_list_t *strlist, YCPMap map, char *key)
  */
 
 YCPMap
-HwProbe::driver_info2map (driver_info_t *drvinfo, const char **name)
+HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 {
     YCPMap map;
 
@@ -472,7 +472,6 @@ HwProbe::hd2value (hd_t *hd)
 {
     YCPMap out;
     char *s;
-    driver_info_t *drvinfo;
 
     // we're just probing this hardware, so the user is running yast2
     // and configuring this hardware.
@@ -755,7 +754,7 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("model"), YCPString (s));
 
     // driver info
-    drvinfo = hd_driver_info (hd_base, hd);
+    const driver_info_t* drvinfo = hd->driver_info;
     YCPList drvlist;
     while (drvinfo)
     {
