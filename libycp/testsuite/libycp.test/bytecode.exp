@@ -20,3 +20,4 @@ foreach dir $directories {
 #	bytecode-run $file tests/bytecode/$dir
     }
 }
+puts ""

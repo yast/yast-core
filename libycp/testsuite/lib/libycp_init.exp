@@ -50,16 +50,17 @@ proc ycp-run { src dir } {
   set tmpout_name "tmp.out.$base_name"
   set tmperr_name "tmp.err.$base_name"
 
-  puts "Running $srcdirname/$base_name..."
+  puts -nonewline "."
+  flush stdout
+#  puts "Checking $base_name"
 
   # run the test
 
   set result ""
-#  puts -nonewline "Checking $base_name                    \r"
-#  flush stdout
   set oops [catch { set result [exec "./runtest.sh" "$test_input" "$tmpout_name" "$tmperr_name" ] } catched]
 
   if {$oops != 0} {
+    puts ""
     fail "test case failed for $srcdirname/$base_name: $catched"
     return -1
   }
@@ -67,6 +68,7 @@ proc ycp-run { src dir } {
   # check return code from runycp
 
   if {$result != ""} {
+    puts ""
     warning "Running of $srcdirname/$base_name results in '$result'"
     return -1
   }
@@ -82,6 +84,7 @@ proc ycp-run { src dir } {
       if {$should_fail} {
 	  xfail $msg
       } else {
+	  puts ""
 	  fail $msg
       }
       return -1
@@ -94,6 +97,7 @@ proc ycp-run { src dir } {
       if {$should_fail} {
 	  xfail $msg
       } else {
+	  puts ""
 	  fail $msg
       }
       return -1
@@ -152,10 +156,9 @@ proc bytecode-run { src dir } {
   set should_fail0 [grep "xfail" "^$base_name\$"]
   set should_fail [expr 0 == [string match $should_fail0 ""]]
 
-#  puts -nonewline "Compiling $srcdirname/$base_name                   \r"
-#  flush stdout
-  puts "Testing $base_name ..."
-#  flush stdout
+#  puts "Compiling $srcdirname/$base_name"
+  puts -nonewline "."
+  flush stdout
 
   # compile the test
 
@@ -164,6 +167,7 @@ proc bytecode-run { src dir } {
 
   if {$oops != 0} {
 #    if {$result != ""} {
+        puts ""
 	fail "run-compilation failed for $srcdirname/$base_name ($oops:$result): $catched"
 	return 1
 #    } else {
@@ -178,13 +182,11 @@ proc bytecode-run { src dir } {
     if {$should_fail} {
       xfail $msg
     } else {
+      puts ""
       fail $msg
     }
     return 1
   }
-
-#  puts -nonewline "Printing $srcdirname/$base_name                   \r"
-#  flush stdout
 
   # print the test
 
@@ -197,6 +199,7 @@ proc bytecode-run { src dir } {
     if {$should_fail} {
       xfail $msg
     } else {
+      puts ""
       fail $msg
     }
     return 1
@@ -205,11 +208,13 @@ proc bytecode-run { src dir } {
   # check return code from runc
 
   if {$result != ""} {
+    puts ""
     fail "Print of $srcdirname/$base_name results in '$result'"
     return 1
   }
 
   if {[diff $err_name $tmperr_name] != 1} {
+      puts ""
       fail "Wrong print for $srcdirname/$base_name ($err_name vs. $tmperr_name)"
       return -1
   }
@@ -224,6 +229,7 @@ proc bytecode-run { src dir } {
   set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-o" "$tmpout_name" "-l" "/dev/null" "$ybc_name" ] } catched]
 
   if {$oops != 0} {
+    puts ""
     fail "running failed for $srcdirname/$base_name: $catched"
     return -1
   }
@@ -231,6 +237,7 @@ proc bytecode-run { src dir } {
   # check return code from runc
 
   if {$result != ""} {
+    puts ""
     set msg "Run of $srcdirname/$base_name results in '$result'"
     if {$should_fail} {
       xfail $msg
@@ -241,6 +248,7 @@ proc bytecode-run { src dir } {
   }
 
   if {[diff $out_name $tmpout_name] != 1} {
+      puts ""
       fail "Wrong result for $srcdirname/$base_name ($out_name vs. $tmpout_name)"
       return -1
   }
