@@ -109,7 +109,8 @@ public:
 
     /**
      * Creates a function call instance, which can be used to call a 
-     * function from this namespace.
+     * function from this namespace. The object is NOT owned anymore by this
+     * instance, the caller can (and should) delete it.
      *
      * @param name	name of the required function
      * @return 		an object, that can be used to call the function, or NULL on error
