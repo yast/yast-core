@@ -752,7 +752,7 @@ YCPValue evaluateRegexpMatch(YCPInterpreter *interpreter, const YCPList& args)
 
 /**
  * @builtin regexppos( string input, string pattern ) -> [ pos, len ]
- * Returns a list with position and lenth of the first match, if no match
+ * Returns a list with position and length of the first match, if no match
  * is found it returns an empty list.
 
  * The regexp in <tt>pattern</tt> must not contain brackets.
