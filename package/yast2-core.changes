@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jan 28 05:53:43 CET 2004 - nashif@suse.de
+
+- Added builtin Pkg::PkgProperties to retrieve more data about 
+  package location and source
+
+-------------------------------------------------------------------
 Tue Jan 27 18:46:39 CET 2004 - mvidner@suse.cz
 
 - moved agent-ypserv to yast2-nis-client
