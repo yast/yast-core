@@ -32,7 +32,8 @@
 
     list<map> steps = flatten( [ base_installation_steps, config_steps ] );
 
-    list<integer> rpms = [ 600, 150, 30, 100 ];
+    list<integer> initialRpms = [ 600, 150, 30, 100 ];
+    list<integer> rpms = initialRpms;
     boolean useTimeout = false;
 
 
@@ -43,19 +44,22 @@
 			      `PushButton( `opt(`default), "&OK" )
 			      )
 			);
-	UI::TimeoutUserInput( 10 * 1000 );
+	UI::TimeoutUserInput( 5 * 1000 );
 	UI::CloseDialog();
     }
 
+    
     define list<integer> subtract( list<integer> valueList, integer delta )
     {
 	boolean subtracted = false;
 	list<integer> newList = [];
 	integer cdNo = 1;
 	integer newCd = -1;
+	integer total = 0;
 
 	foreach ( integer val, valueList, ``{
 	    cdNo = cdNo + 1;
+	    total = total + val;
 	    
 	    if ( val > 0 && ! subtracted )
 	    {
@@ -74,8 +78,16 @@
 
 	UI::ChangeWidget(`progress, `Values, newList );
 
-	if ( newCd > 0 )
+	if ( newCd > 0 && newCd <= size( valueList ) )
 	    mediaChange( newCd );
+
+	if ( total <= 0 )
+	{
+	    useTimeout = false;
+	    UI::WizardCommand(`SetNextButtonLabel( "&Start" ) );
+	    newList = initialRpms;
+	    y2milestone( "Resetting to %1", rpms );
+	}
 	
 	return newList;
     }
@@ -165,7 +177,7 @@
 	if ( button == `next 	)
 	{
 	    useTimeout = ! useTimeout;
-	    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "Start" ) );
+	    UI::WizardCommand(`SetNextButtonLabel( useTimeout ? "&Stop" : "&Start" ) );
 	}
 	if ( button == `back 	)	delta = 10;
 	if ( button == `timeout	)	delta = 100;
