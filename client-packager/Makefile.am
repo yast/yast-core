@@ -1,5 +1,5 @@
 #
-# Makefile.am for packager
+# Makefile.am for core/client-packager
 #
 
 SUBDIRS = src testsuite doc

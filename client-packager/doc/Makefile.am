@@ -1,5 +1,5 @@
 #
-# Makefile.am for packager/doc
+# Makefile.am for core/client-packager/doc
 #
 
 SUBDIRS = autodocs
