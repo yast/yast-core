@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug  5 13:13:41 CEST 2003 - gs@suse.de
+
+- libyui: YUI builtin SetKeyboard added 
+
+-------------------------------------------------------------------
 Thu Jul 31 11:35:19 CEST 2003 - arvin@suse.de
 
 - support special plugins with several agents
