@@ -150,7 +150,7 @@ PkgModuleFunctions::GetSelections (YCPList args)
 
 // ------------------------
 /**
-   @builtin Pkg::SelectionData (string selection)
+   @builtin Pkg::SelectionData (string selection) -> map
   	->	$["summary" : "This is a nice selection",
   		"category" : "Network",
   		"visible" : true,

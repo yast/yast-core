@@ -135,7 +135,7 @@ PkgModuleFunctions::SetAdditionalLocales (YCPList args)
 }
 
 /**
- * @builtin Pkg::GetAdditionalLocales
+ * @builtin Pkg::GetAdditionalLocales -> list
  *
  * return list of additional locales
  */
