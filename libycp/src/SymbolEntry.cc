@@ -40,10 +40,12 @@ IMPL_BASE_POINTER(SymbolEntry);
 UstringHash SymbolEntry::_nameHash;
 Ustring SymbolEntry::emptyUstring = Ustring (SymbolEntry::_nameHash, "");
 
+#ifdef D_MEMUSAGE
 void __UUsage ()
 {
-    fprintf (stderr, "%d Ustrings using %ld bytes\n", SymbolEntry::_nameHash.size(), SymbolEntry::_nameHash.sum());
+//    fprintf (stderr, "%d Ustrings using %ld bytes\n", SymbolEntry::_nameHash.size(), SymbolEntry::_nameHash.sum());
 }
+#endif
 
 /**
  * constructor
