@@ -632,17 +632,15 @@ namespace Y2PMRecipients {
       return YouError::E_callback_missing;
     }
 
-    virtual PMError log( const string &text )
+    virtual void log( const string &text )
     {
       D__ << "you log: " << text << endl;
       CB callback( ycpcb( YCPCallbacks::CB_YouLog ) );
       if ( callback._set ) {
 	callback.addStr( text );
-        string result = callback.evaluateStr();
-        if ( result == "" ) return PMError();
-        else return PMError::E_error;
+        bool success = callback.evaluate();
+        if ( !success ) ERR << "Error evaluating YouLog callback." << endl;
       }
-      return YouError::E_callback_missing;
     }
 
     virtual bool executeYcpScript( const string & script ) {
