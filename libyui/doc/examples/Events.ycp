@@ -16,9 +16,9 @@
      **/
     define string formatEvent( map event ) ``{
 	string html = "<h3>Event:</h3><p>";
-
-	foreach (string key, string value, event, ``{
-	    html = html + "<font color=blue>" + key + "</font>: " + value + "<br>";
+y2milestone ("formatEvent(%1)", event);
+	foreach (string key, any value, event, ``{
+	    html = html + "<font color=blue>" + key + "</font>: " + (is (value, string) ? (string)value : tostring (value)) + "<br>";
 	});
 
 	html = html + "</p>";
