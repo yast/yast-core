@@ -1779,10 +1779,10 @@ type:
 	C_TYPE				// type ($$.t) is set by scanner
 					// C_TYPE includes already expanded typedefs
 |	LIST				{ $$.t = Type::List; }
-|	LIST '<' type '>'		{ $$.t = ListTypePtr ( new ListType ($3.t)); }
+|	LIST '<' type_gt		{ $$.t = ListTypePtr ( new ListType ($3.t)); }
 |	MAP				{ $$.t = Type::Map; }
-|	MAP '<' type ',' type '>'	{ $$.t = MapTypePtr ( new MapType ($3.t, $5.t)); }
-|	BLOCK '<' type '>'		{ $$.t = BlockTypePtr ( new BlockType ($3.t)); }
+|	MAP '<' type ',' type_gt	{ $$.t = MapTypePtr ( new MapType ($3.t, $5.t)); }
+|	BLOCK '<' type_gt		{ $$.t = BlockTypePtr ( new BlockType ($3.t)); }
 |	CONST type			{ TypePtr t = $2.t->clone(); t->asConst();
 					  if (!t->isConst())  yywarning ("Bogus 'const'", $2.l);
 					  $$.t = t;
@@ -1793,6 +1793,12 @@ type:
 					}
 |	type '(' ')'			{ $$.t = FunctionTypePtr ( new FunctionType ($1.t)); }
 |	type '(' types ')'		{ $$.t = new FunctionType ( $1.t, (constFunctionTypePtr)$3.t); }
+;
+
+/* recognize "type >" vs "type >>" */
+type_gt:
+	type '>'			{ $$.t = $1.t; }
+|	type RIGHT			{ yyLerror ("Missing blank between '>' and '>'", $2.l); $$.t = $1.t; }
 ;
 
 types:

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 15 09:34:42 CEST 2004 - kkaempf@suse.de
+
+- improve error message for "... type>>" typos (#38967)
+
+-------------------------------------------------------------------
 Thu Apr 15 09:17:22 CEST 2004 - visnov@suse.cz
 
 - show nil warning even for builtins (#32738)

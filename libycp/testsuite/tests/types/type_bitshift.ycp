@@ -1,0 +1,3 @@
+{
+  list <list <string>> l = [ [ "foo" ] ];	// ">>" is wrong, must be "> >"
+}
