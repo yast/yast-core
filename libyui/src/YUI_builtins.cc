@@ -40,6 +40,7 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 #include <Y2.h>
+#include <ycp/YCPVoid.h>
 
 #include "YUI.h"
 #include "YEvent.h"
@@ -123,7 +124,7 @@ YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
 void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
 {
     string lang = language->value();
-    if ( !encoding.isNull() )
+    if ( ! encoding.isNull() )
     {
 	lang += ".";
 	lang += encoding->value();
@@ -428,9 +429,9 @@ YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 
 
 YCPValue YUI::doUserInput( const char * 	builtin_name,
-				      long 		timeout_millisec,
-				      bool 		wait,
-				      bool 		detailed )
+			   long 		timeout_millisec,
+			   bool 		wait,
+			   bool 		detailed )
 {
     // Plausibility check for timeout
 
@@ -517,10 +518,13 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
     if ( macroRecorder )
     {
-	macroRecorder->beginBlock();
-	dialog->saveUserInput( macroRecorder );
-	macroRecorder->recordUserInput( input );
-	macroRecorder->endBlock();
+	if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
+	{
+	    macroRecorder->beginBlock();
+	    dialog->saveUserInput( macroRecorder );
+	    macroRecorder->recordUserInput( input );
+	    macroRecorder->endBlock();
+	}
     }
 
 
