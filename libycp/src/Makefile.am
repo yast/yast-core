@@ -6,11 +6,12 @@ SUBDIRS = include
 
 # for pathsearch.cc
 # FIXME use the standard defines
-AM_CXXFLAGS = -DY2LOG=\"libycp\"			\
-	-DYAST2DIR=\"$(prefix)/share/YaST2\"		\
+AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
+	-DYAST2DIR=\"$(prefix)/share/YaST2\"	\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-DEXECCOMPDIR=\"${execcompdir}\"	\
-	-DLOCALEDIR=\"${localedir}\"
+	-DLOCALEDIR=\"${localedir}\"		\
+	-DDO_DEBUG=$(DO_DEBUG)
 
 lib_LTLIBRARIES = libycp.la
 
