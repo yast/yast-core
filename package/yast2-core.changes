@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov  6 15:49:52 CET 2003 - mvidner@suse.cz
+
+- Using doxygen instead of kdoc.
+- 2.9.4
+
+-------------------------------------------------------------------
 Wed Oct 22 16:45:10 CEST 2003 - visnov@suse.cz
 
 - implemented mapmap and listmap accepting also $[] as a result
