@@ -91,9 +91,10 @@ WFMInterpreter::WFMInterpreter (Y2Component *my_component,
     {
 	YCPList args;
 	args->add (YCPString (lang));
-	evaluateSetLanguage (YCPTerm (YCPSymbol("SetLanguage", false), args));
+
 	// set locale according to the language setting
 	setlocale( LC_ALL, "" );
+	evaluateSetLanguage (YCPTerm (YCPSymbol("SetLanguage", false), args));
     }
 }
 
