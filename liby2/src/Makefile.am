@@ -4,6 +4,7 @@
 
 SUBDIRS = include
 
+AM_LDFLAGS = -L$(libdir)
 AM_CXXFLAGS = -DY2LOG=\"liby2\" -DYAST2DIR=\"${yast2dir}\"		\
 	-DPLUGINDIR=\"${plugindir}\" -DEXECCOMPDIR=\"${execcompdir}\"
 

@@ -2,6 +2,8 @@
 # Makefile.am for core/base/src
 #
 
+AM_LDFLAGS = -L$(libdir)
+
 ybin_PROGRAMS = y2base
 
 y2base_SOURCES = y2base.cc

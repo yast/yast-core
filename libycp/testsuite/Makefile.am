@@ -5,6 +5,7 @@
 SUBDIRS = config lib libycp.test tests
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
+AM_LDFLAGS = -L$(libdir)
 
 INCLUDES = -I$(srcdir)/../src/include -I$(includedir)		\
 	-I$(includedir)

@@ -3,6 +3,7 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"agent-any\"
+AM_LDFLAGS = -L$(libdir)
 
 plugin_LTLIBRARIES = libpy2ag_anyagent.la
 noinst_LTLIBRARIES = liby2ag_anyagent.la

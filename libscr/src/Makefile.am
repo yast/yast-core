@@ -5,6 +5,7 @@
 SUBDIRS = include
 
 AM_CXXFLAGS = -DY2LOG=\"libscr\"
+AM_LDFLAGS = -L$(libdir)
 
 lib_LTLIBRARIES = libscr.la
 
