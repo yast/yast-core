@@ -40,7 +40,7 @@ html/index.html: $(xmlfiles) ui.xml
 
 html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html
-	cp -a $(ydatadir)/docbook/images html
+	cp -a `pkg-config --variable=yast2dir yast2-devtools`/data/docbook/images html
 	cp -a $(srcdir)/examples html 
 	-find html -name .svn -type d -exec rm -rf '{}' \; 
 

@@ -5,7 +5,9 @@
 # google: automake makemaker
 # http://sources.redhat.com/ml/automake/2001-03/msg00395.html
 PERL=perl
-Makefile.perl: Makefile.PL
+# Makefile: when configure runs, we may have a different prefix,
+# even different perl
+Makefile.perl: Makefile.PL Makefile
 	$(PERL) $< MAKEFILE=$@ PREFIX=$(prefix)
 
 noinst_DATA = .made_mod
