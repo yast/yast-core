@@ -41,7 +41,7 @@
 
 
 
-<h1><a name="ui_builtins">UI Builtin Functions</a></h1>
+<h1><a name="ui_builtins">Event-related UI Builtin Functions</a></h1>
 
 <p><i>
 <b>Note:</b> This section describes only those builtin functions of the YaST2
@@ -120,7 +120,7 @@ any widget_id = <span id="code-keyword">UI::UserInput()</span>;
 			 )
 		   );
 
-    any widget_id = nil;
+    <b>symbol</b> widget_id = nil; // All widget IDs used here are symbols
 
     // Event loop
     
@@ -178,9 +178,83 @@ any widget_id = <span id="code-keyword">UI::UserInput()</span>;
 
 
 
-<h2><a name="UserInput">PollInput()</a></h2>
-<h2><a name="UserInput">TimeoutUserInput()</a></h2>
-<h2><a name="UserInput">WaitForEvent()</a></h2>
+<h2><a name="PollInput">PollInput()</a></h2>
+
+<p>
+PollInput() is very much like <a href="#UserInput">UserInput()</a>, but it
+doesn't wait. It only checks if there is a user event pending - the user may
+have clicked on a button since the last call to PollInput() or 
+<a href="#UserInput">UserInput()</a>. 
+<p>
+If there is one, the ID of the widget (usually a button unless other widgets
+have the  <a href="notify">notify option</a> set) ID is returned. If there is
+none, <i>nil</i> (the YCP value for "nothing", "invalid") is returned.
+<p>
+Use PollInput() to check if the user wishes to abort operations of long
+duration that are performed in a loop. Notice that PollInput() will result in a
+"busy wait", so don't simply use it everywhere instead of 
+<a href="#UserInput">UserInput()</a>.
+<p>
+Notice there is also <a href="#TimeoutUserInput">TimeoutUserInput()</a> 
+and <a href="#WaitForEvent">WaitForEvent()</a>
+that both accept a millisecond timeout argument.
+
+<h3>Usage:</h3>
+<blockquote><pre id="code">
+any widget_id = <span id="code-keyword">UI::PollInput()</span>;
+
+</pre></blockquote>
+
+<h3>Example:</h3>
+
+<blockquote><pre id="code">
+// PollInput.ycp
+//
+// Example for common usage of UI::PollInput()
+
+{
+    // Build dialog with two labels and a "stop" button.
+
+    integer count     = 0;
+    integer count_max = 10000;
+
+    <span id="code-keyword">UI::OpenDialog</span>(
+		   `VBox(
+			 `Label( "Calculating..." ),
+			 `Label(`id(`count ), sformat( "%1 of %2", count, count_max ) ),
+			 `PushButton(`id(`stop), "&Stop" )
+			 )
+		   );
+
+    any widget_id = nil;
+
+    // Event loop
+
+    repeat
+    {
+	widget_id = <span id="code-highlight">UI::PollInput()</span>;
+
+
+	// Simulate heavy calculation
+
+	sleep(200); // milliseconds
+
+	// Update screen to show that the program is really busy
+	count = count + 1;
+	<span id="code-keyword">UI::ChangeWidget</span>(`id(`count), `Value, sformat( "%1 of %2", count, count_max ) );
+	<span id="code-keyword">UI::RecalcLayout()</span>; // Might be necessary when the label becomes wider
+
+    } until ( widget_id == `stop || count >= count_max );
+
+    <span id="code-keyword">UI::CloseDialog()</span>;
+}
+
+</pre></blockquote>
+
+
+
+<h2><a name="TimeoutUserInput">TimeoutUserInput()</a></h2>
+<h2><a name="WaitForEvent">WaitForEvent()</a></h2>
 
 
 <h1><a name="event_reference">Event Reference</a></h1>

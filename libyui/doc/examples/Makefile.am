@@ -88,6 +88,7 @@ examples_DATA =					\
 	Password1.ycp				\
 	Password2.ycp				\
 	PkgSpecial.ycp				\
+	PollInput.ycp				\
 	PollInput1.ycp				\
 	ProgressBar1.ycp			\
 	ProgressBar2.ycp			\
