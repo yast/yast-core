@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 25 14:59:28 CET 2004 - kkaempf@suse.de
+
+- warn if rhs of assignment is a void function (#36922)
+
+-------------------------------------------------------------------
 Thu Mar 25 13:05:34 CET 2004 - kkaempf@suse.de
 
 - treat empty block after 'if' properly (#36902)

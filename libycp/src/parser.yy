@@ -1910,6 +1910,14 @@ definition:
 		    break;
 		}
 
+		if ($3.t->isVoid()			// rhs is void
+		    && !$1.t->isVoid()			// but lhs is not void
+		    && !$1.t->isAny()			//   or any
+		    && !$3.c->isConstant())		// and rhs is not 'nil' (but a void expression)
+		{
+		    yywarning ("rhs of assignment does not have a value", $3.l);
+		}
+
 		TableEntry *tentry = $1.v.tval;
 
 		if (tentry->sentry()->isFunction()
@@ -2400,6 +2408,14 @@ assignment:
 		    break;
 		}
 
+		if ($3.t->isVoid()			// rhs is void
+		    && !$1.t->isVoid()			// but lhs is not void
+		    && !$1.t->isAny()			//   or any
+		    && !$3.c->isConstant())		// and rhs is not 'nil' (but a void expression)
+		{
+		    yywarning ("rhs of assignment does not have a value", $3.l);
+		}
+
 		int match = $3.t->match ($1.t);
 
 		if (match < 0)
@@ -2464,6 +2480,14 @@ assignment:
 		{
 		    yyVerror ($1.v.nval, $1.l);
 		    break;
+		}
+
+		if ($6.t->isVoid()			// rhs is void
+		    && !$1.t->isVoid()			// but lhs is not void
+		    && !$1.t->isAny()			//   or any
+		    && !$6.c->isConstant())		// and rhs is not 'nil' (but a void expression)
+		{
+		    yywarning ("rhs of assignment does not have a value", $3.l);
 		}
 
 		if (!$1.t->isList()

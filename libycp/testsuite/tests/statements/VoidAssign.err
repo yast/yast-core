@@ -112,6 +112,7 @@ Parsed:
     return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), false, true] == [false, true, true, false, true]);
 }
 ----------------------------------------------------------------------
+[Scanner] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment does not have a value
 Parsed:
 ----------------------------------------------------------------------
 {
