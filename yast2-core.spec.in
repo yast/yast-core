@@ -76,6 +76,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 %dir @execcompdir@/servers
 %dir @execcompdir@/servers_non_y2
 
+/usr/bin/ycpc
 %{_libdir}/lib*.so.*
 @ybindir@/y2base
 @ybindir@/startshell
@@ -97,7 +98,6 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 %files devel
 %defattr(-,root,root)
-/usr/bin/ycpc
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 @plugindir@/lib*.so

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 12 15:59:09 CET 2004 - arvin@suse.de
+
+- moved program ycpc to main package
+
+-------------------------------------------------------------------
 Thu Feb 12 11:15:19 CET 2004 - arvin@suse.de
 
 - added some udev and sysfs info in probe agent (bug #34355)
