@@ -3,13 +3,39 @@
 <section id="hello"><title>Hello, world</title>
   <para>
   YCP is used in the YaST environment which always provides a user interface
-  for interaction with the user. YCP therefore does not implement the standard
+  for interaction with the user. Therefore, YCP does not implement the standard
   I/O channels like <literal>stdin</literal> and <literal>stdout</literal>. Instead
-  the user interface or logging is used.</para>
-  <para>However, running a YCP program from command line will output the final
-  return value of the program. This is useful for prototyping and testing only.</para>
+  the user interface or logging (for debug) is used to communicate with the
+  user (or developer).</para>
+  <para>So you'll not find any print statements for easy message output in YCP.
+  Things are a bit more AUFWENDIG to output a message, but the result is also
+  a lot more nicer.</para>
 
-  <section><title>Straightforward</title>
+  <section><title>A simple popup window</title>
+  <para>
+  The following piece of code implements the famous <emphasis>Hello, world!</emphasis>
+  example in YCP. You'll find the code <ulink url="../examples/HelloWorld.ycp">here</ulink>.
+  <programlisting>
+{
+    UI::OpenDialog(
+	       `VBox( 
+		     `Label("Hello, world!"),
+		     `PushButton(`opt(`default), "&Ok")
+		     )
+	       );
+    UI::UserInput();
+    UI::CloseDialog();
+}
+  </programlisting>
+  You can run this program from the commandline (<command>cd</command> to the <filename>examples</filename>
+  directory first) as follows: <command>yast2 ./HelloWorld.ycp</command>
+  </para>
+  <para>
+  Depending on the value of the <literal>DISPLAY</literal> variable, the program will run as an <literal>X11</literal>
+  or <literal>curses</literal> application. You can run it as <command>DISPLAY= yast2 ./HelloWorld.ycp</command>
+  to force it to curses.</para>
+  <note><para>The <literal>DISPLAY</literal> environment variable also makes it possible to redirect the window to
+  another machine. This also makes graphical remote administration with YaST a breeze.</para></note>
   <para>
   As mentioned above, the final return value is shown if a YCP program is run
   from command line. The following example shows this.
