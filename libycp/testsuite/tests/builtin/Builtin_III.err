@@ -1,36 +1,30 @@
 Parsed:
 ----------------------------------------------------------------------
-(sort (integer x, integer y, [3, 6, 2, 8], { return (x <= y); }) == [2, 3, 6, 8])
+(sort (integer x, integer y, [3, 6, 2, 8], { return (x < y); }) == [2, 3, 6, 8])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:29 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:29 Parameter 'y' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:45 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:45 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1, 2, 1, 2], { return true; }) == [1, 2, 1, 2])
+(sort (any x, any y, [1, 2, 1, 2], { return (x < y); }) == [1, 1, 2, 2])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:30 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:30 Parameter 'y' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:47 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:47 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1, 2, 1, 2], { return (x <= y); }) == [1, 1, 2, 2])
+(sort (any x, any y, [1], { return (x < y); }) == [1])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:32 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:32 Parameter 'y' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:48 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:48 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1], { return (x <= y); }) == [1])
+(sort (any x, any y, [1, 1, 1, 1, (2 - 1), (1 * 1), (-1 * -1)], { return (x < y); }) == [1, 1, 1, 1, 1, 1, 1])
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:33 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:33 Parameter 'y' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:49 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin_III.ycp:49 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
-(sort (any x, any y, [1, 1, 1, 1, (2 - 1), (1 * 1), (-1 * -1)], { return (x <= y); }) == [1, 1, 1, 1, 1, 1, 1])
-----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:34 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin_III.ycp:34 Parameter 'y' has unspecified type
-Parsed:
-----------------------------------------------------------------------
-(sort (any x, any y, [], { return (x <= y); }) == [])
+(sort (any x, any y, [], { return (x < y); }) == [])
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
@@ -46,13 +40,13 @@ Parsed:
 ----------------------------------------------------------------------
 No match for 'sformat : <unspec> (const integer)':
 sformat:string (string, ...)
-tests/builtin/Builtin_III.ycp:51:Bad parameter '<const integer> 42'
-[Parser] tests/builtin/Builtin_III.ycp:51 Bad parameter '<const integer> 42'
+tests/builtin/Builtin_III.ycp:66:Bad parameter '<const integer> 42'
+[Parser] tests/builtin/Builtin_III.ycp:66 Bad parameter '<const integer> 42'
 Parsed:
 ----------------------------------------------------------------------
 Parser error
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin_III.ycp:51 Parser error
+[Interpreter] tests/builtin/Builtin_III.ycp:66 Parser error
 Parsed:
 ----------------------------------------------------------------------
 (findfirstnotof ("abcdefghi", "abcefghi") == 3)
