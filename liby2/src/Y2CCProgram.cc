@@ -45,7 +45,7 @@ bool Y2CCProgram::isServerCreator() const
 
 
 Y2Component *
-Y2CCProgram::create (const char *name, int level, int current_level) const
+Y2CCProgram::createInLevel (const char *name, int level, int current_level) const
 {
     string root;
 

@@ -43,7 +43,7 @@ Y2CCScript::Y2CCScript()
 }
 
 
-Y2Component *Y2CCScript::create(const char *name, int level, int) const
+Y2Component *Y2CCScript::createInLevel(const char *name, int level, int) const
 {
     if (name == 0)
     {

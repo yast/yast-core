@@ -66,7 +66,7 @@ public:
      * If it does not contain a slash, it is searched for in YASTHOME/modules or
      * YASTHOME/servers, resp.
      */
-    Y2Component *create(const char *name, int level, int current_level) const;
+    Y2Component *createInLevel(const char *name, int level, int current_level) const;
     
     /**
      * Importing a namespace from a program-based subcomponent is not possible.
