@@ -296,6 +296,8 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 	ycp2error ("Cannot use 'nil' as key in change ()");
 	return YCPNull ();
     }
+    
+    y2internal ("Change does not work as expected! The argument is not passed by reference.");
 
     map->add (key, value);
     return map;
