@@ -107,6 +107,12 @@ is represented as undef. Paths are represented as references to
 strings. Instead of ycpArgIs..., ycpGetArgType and ycpGetArg...,
 use ref($argument) eq "ARRAY" and the like.</p>
 
+<p>Note that <a href="ycp-pm-pod.html#return">ycp::Return</a> will guess what
+type a scalar is and return an appropriate YCP type. This may not be always
+what you want (cf. bug 21804) and you can prevent it by passing it a second
+parameter of 1.
+</p>
+
 <pre class="ycp">
     # Write command
     elsif ($command eq "Write")
@@ -138,11 +144,11 @@ use ref($argument) eq "ARRAY" and the like.</p>
     {
 	if ($path eq ".table")
 	{
-	    ycp::Return (\@table);
+	    ycp::Return (\@table, 1);
 	}
 	elsif ($path eq ".trailing_comment")
 	{
-	    ycp::Return ($trailing_comment);
+	    ycp::Return ($trailing_comment, 1);
 	}
 	else
 	{
@@ -217,7 +223,7 @@ else
 <!-- ================ -->
 <h2 id="logging">Logging</h2>
 
-<p>A <a href="../../libycp/logging.html">standard set</a> of
+<p>A <a href="../libycp/logging.html">standard set</a> of
 logging functions is now available: <a href=
 "ycp-pm-pod.html#y2debug">y2debug</a>, y2milestone, y2warning,
 y2error, y2security and y2internal.</p>
