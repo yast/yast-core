@@ -188,7 +188,8 @@ proc bytecode-run { src dir } {
   # print the test
 
   set result ""
-  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "$ybc_name" ] } catched]
+  # FIXME: log is to /dev/null !!!
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "-l" "/dev/null" "$ybc_name" ] } catched]
 
   if {$oops != 0} {
     set msg "running failed for $srcdirname/$base_name: $catched"
@@ -218,7 +219,8 @@ proc bytecode-run { src dir } {
   # run the test
 
   set result ""
-  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-o" "$tmpout_name" "$ybc_name" ] } catched]
+  # FIXME: log is to /dev/null !!!
+  set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-o" "$tmpout_name" "-l" "/dev/null" "$ybc_name" ] } catched]
 
   if {$oops != 0} {
     fail "running failed for $srcdirname/$base_name: $catched"
