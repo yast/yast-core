@@ -22,7 +22,7 @@
 #include "ycp/Bytecode.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 #endif
 
 #include <ctype.h>
