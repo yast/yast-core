@@ -2675,7 +2675,7 @@ function_call:
    since we're using the $0 feature of bison here, we can't
    split up this BNF further :-(
 
-   $0 refers to $$ of the 'term' rule, ie $0.c is the function (one of 4 kinds)
+   $0 refers to $3 of the 'function_call' rule, ie $0.c is the function (one of 4 kinds)
 
    return $$.t == 0 on error, $$.c == 0 if empty
  */
@@ -2683,13 +2683,13 @@ function_call:
 parameters:
 	/* empty  */
 	    {
-		y2debug ("Empty parameters (%p)", $0.c);
+		y2debug ("Empty parameters (%p)", ($0.t != NULL)? $0.c: NULL);
 		$$.c = 0;
 		$$.t = Type::Unspec;
 	    }
 |	type identifier
 	    {
-		y2debug ("parameters: type/name ($0.c@%p, [%s '%s'])", $0.c, $1.t->toString().c_str(), $2.t->isUnspec () ? $2.v.nval : $2.v.tval->key());
+		y2debug ("parameters: type/name ($0.c@%p, [%s '%s'])", ($0.t != NULL)? $0.c: NULL, $1.t->toString().c_str(), $2.t->isUnspec () ? $2.v.nval : $2.v.tval->key());
 
 
 		/* if the function was not found, better fail now */
