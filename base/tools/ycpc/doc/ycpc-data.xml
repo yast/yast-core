@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<section id="ycpc">
+<title>Overview</title>
+
+<para>
+ycpc requires one of -c -E -f -p or -r. We should forget about -f -r and -p, 
+because they're useful for debugging or automatic compilation.
+</para>
+
+
+</section>
+
+<section id="ycpc-options">
+
+<para>
+ycpc -h will give you this:
+</para>
+
+<para>
+
+<screen>
+Usage:
+  ycpc [-h] [--help]
+  ycpc [-v] [--version]
+  ycpc &lt;command> [&lt;option>]... &lt;filename>...
+  Commands:
+        -c, --compile             compile to bytecode
+        -E, --fsyntax-only        check syntax and print (unless -q)
+        -f, --freshen             freshen .ybc files
+        -p, --print               read and print bytecode
+        -r, --run                 read and run bytecode
+  Options:
+        -l, --log-file &lt;name>     log file, - means stderr
+        -q, --quiet               no output
+        -t, --test                more output (-tt, -ttt)
+
+        -d, --no-implicit-imports don't preload implicit namespaces
+        -F, --Force               force recompilation of all dependant files
+        -I, --include-path        where to find include files
+	-M, --module-path         where to find module files
+	--no-std-includes         drop all built-in include paths
+	--no-std-modules          drop all built-in include paths
+	-n, --no-std-paths        no standard paths
+	-o, --output              output file for -c, -E, -p, -r
+	-R, --recursive           operate recursively
+	-u, --ui {ncurses|qt}     UI to start in combination with 'r'
+</screen>
+</para>
+
+<para>								
+-c compile YCP to YBC. As a parameter YCP file must be provided, the
+corresponding output file is automatically named with ycp to ybc extension 
+changed. The output file can be renamed using -o option.
+</para>
+
+<para>								
+-E check YCP syntax only. This is similar to -c, but the output file is not 
+written. The mnemonics: behavior is similar to the -E parameter for gcc.
+-E is typically used together with -q to check for syntax.
+</para>
+
+<para>								
+Other options:
+</para>
+
+<para>								
+-l, --log-file &lt;name>     log file, - means stderr
+this is useful if the log needs to be redirected. stderr is detault value.
+</para>
+
+<para>								
+-q, --quiet               no output
+useful for -E and -c. Don't print any progress etc.
+</para>
+
+<para>								
+-t, --test                more output (-tt, -ttt)
+not interesting.
+</para>
+
+<para>								
+-d, --no-implicit-imports don't preload implicit namespaces
+useful for ycpc development, nothing of general interest.
+This will suppress the standard behavior, where the Pkg, SCR, UI and WFM 
+namespaces are automatically preloaded, no need to put imports for them into 
+the YCP file.
+</para>
+
+<para>								
+-F, --Force               force recompilation of all dependant files
+not interesting.
+</para>
+
+<para>								
+-I, --include-path        where to find include files
+if the include files should be searched also in non-standard prefix, use this 
+option.
+</para>
+
+<para>								
+-M, --module-path         where to find module files
+if the imported modules should be searched also in non-standard prefix, use 
+this option.
+</para>
+
+<para>								
+--no-std-includes         drop all built-in include paths
+standard includes are: 
+/usr/share/YaST2/include
+$Y2DIR/include
+$HOME/.yast2/include
+</para>
+
+<para>								
+--no-std-modules          drop all built-in include paths
+standard modules are: 
+/usr/share/YaST2/module
+$Y2DIR/module
+$HOME/.yast2/module
+</para>
+
+<para>								
+-n, --no-std-paths        no standard paths
+this will drop all standard prefixes:
+/usr/share/YaST2/
+$Y2DIR
+$HOME/.yast2/
+</para>
+
+<para>								
+-o, --output              output file for -c, -E, -p, -r
+Redirect output to a file. for -E -p and -r is detault stdout.
+</para>
+
+<para>								
+-R, --recursive           operate recursively
+This is useful if compiling number of YCP files at once, like *.ycp.
+</para>
+
+<para>								
+-u, --ui {ncurses|qt}     UI to start in combination with 'r'
+not interesting.
+</para>
+																					
+</section>
