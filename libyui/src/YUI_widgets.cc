@@ -2164,7 +2164,7 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * @option	zeroWidth make widget report a nice width of 0
  * @option	zeroHeight make widget report a nice height of 0
  * @option	animated image data contain an animated image ( e.g. MNG )
- * @usage	`Image( `suseheader, "SuSE Linux 7.0" )
+ * @usage	`Image( "/home/kilroy/logo.png", "Logo" )
  * @example	Image1.ycp Image-animated.ycp Image-local.ycp Image-scaled.ycp Image-tiled.ycp
  *
  * @description
@@ -2175,11 +2175,6 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * <p>
  * The image is specified as any of:
  * <ul>
- * <li>symbol - load a predefined static image. Valid values are:
- *	<ul>
- *	<li><tt>`suseheader</tt> the SuSE standard header image
- *	<li><tt>`yast2</tt> the YaST2 logo
- *	</ul>
  * <li>byteblock - something you read with
  *     <tt>SCR::Read( .target.byte, "image1.png" )</tt>.
  *     This works on any configuration, even remote.
@@ -2248,17 +2243,7 @@ YWidget * YUI::createImage( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
     if ( term->value( argnr )->isString() )
 	return createImage( parent, opt, term->value( argnr )->asString(), term->value( argnr+1 )->asString() );
 
-    ImageType img;
-    string symbol = term->value( argnr )->asSymbol()->symbol();
-    if	    ( symbol == "suseheader" 	)	img = IT_SUSEHEADER;
-    else if ( symbol == "yast2" 	)	img = IT_YAST2;
-    else
-    {
-	y2error( "Unknown predefined image %s", symbol.c_str() );
-	return 0;
-    }
-
-    return createImage( parent, opt, img, term->value( argnr+1 )->asString() );
+    return 0;
 }
 
 

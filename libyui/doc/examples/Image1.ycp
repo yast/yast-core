@@ -7,7 +7,6 @@
         UI::OpenDialog(
                    `VBox(
                          `Image(pixels, "Image 1"), 
-                         `Image(`suseheader, "SuSE header"),
                          `PushButton("&OK")));
         UI::UserInput();
         UI::CloseDialog();

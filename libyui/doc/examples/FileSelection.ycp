@@ -2,8 +2,6 @@
 {
     UI::OpenDialog( `opt(`defaultsize),
 		    `VBox(
-			  `Image(`suseheader, "SuSE" ),
-			  `VSpacing( 0.5 ),
 			  `Heading( "YaST2 File Selector Demo" ),
 			  `VStretch(),
 

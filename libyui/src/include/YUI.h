@@ -145,15 +145,6 @@ public:
     void topmostConstructorHasFinished();
 
     /**
-     * Constants for different predifined images
-     */
-    enum ImageType
-    {
-	IT_SUSEHEADER,
-	IT_YAST2
-    };
-
-    /**
      * Issue an internal error. Derived UIs should overwrite this to display
      * the error message in a suitable manner, e.g. open a popup (and wait for
      * confirmation!).
@@ -592,11 +583,6 @@ protected:
      * Creates an image widget from a file name
      */
     virtual YWidget *createImage( YWidget *parent, YWidgetOpt & opt, YCPString file_name, YCPString defaulttext ) = 0;
-
-    /**
-     * Creates an image widget from a predefined set of images
-     */
-    virtual YWidget *createImage( YWidget *parent, YWidgetOpt & opt, ImageType img, YCPString defaulttext ) = 0;
 
     /**
      * Creates an IntField widget.
