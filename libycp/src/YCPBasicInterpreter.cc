@@ -341,11 +341,21 @@ YCPValue YCPBasicInterpreter::evaluateBuiltin (const YCPBuiltin& builtin)
     {
 	case YCPB_GETTEXTDOMAIN:
 	{
+	    // used by UI
 	    return YCPString (getTextdomain());	// get current textdomain
 	}
 	break;
 	case YCPB_TEXTDOMAIN:
 	{
+	    /**
+	     * @builtin textdomain (optional_string_expression) -> string
+	     * Returns the current textdomain and optionally sets a new one.
+	     *
+	     * It replaces the builtin variable textdomain.
+	     *
+	     * Compare with the texdomain declaration,
+	     * which needs a string literal.
+	     */
 	    ret = YCPString (getTextdomain());	// get current textdomain
 	    if (builtin->size () == 0)
 		return ret;

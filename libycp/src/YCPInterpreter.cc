@@ -162,6 +162,10 @@ YCPValue YCPInterpreter::evaluateBuiltinBuiltin (builtin_t code, const YCPList& 
 		    ret = evaluateTermOp (this, code, args);
 		break;
 		case YT_BYTEBLOCK:
+		    /**
+		     * @builtin size (byteblock b) -> integer
+		     * Returns the number of bytes in b.
+		     */
 		    if (code == YCPB_SIZE)
 			ret = YCPInteger (args->value(0)->asByteblock()->size());
 		break;

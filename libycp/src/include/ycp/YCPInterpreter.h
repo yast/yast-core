@@ -182,7 +182,7 @@ YCPValue evaluateToHexString(YCPInterpreter *interpreter, const YCPList& args);
 YCPValue evaluateToPath(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
- * Implements the builtin topath
+ * Implements the builtin toterm
  */
 YCPValue evaluateToTerm (YCPInterpreter* interpreter, const YCPList& args);
 

@@ -23,6 +23,12 @@
 
 YCPValue evaluateToTerm (YCPInterpreter* interpreter, const YCPList& args)
 {
+    /**
+     * @builtin toterm (string s) -> term
+     * Converts a string to a quoted term without arguments.
+     *
+     * Example: <pre>toterm ("foo") -> `foo ()</pre>
+     */
     if (args->size() == 1 && args->value (0)->isString ())
     {
 	string str = args->value (0)->asString ()->value ();
