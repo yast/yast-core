@@ -178,7 +178,7 @@ namespace Y2PMRecipients {
     virtual void start() {
     }
     virtual void progress( const ProgressData & prg ) {
-      CB callback( ycpcb( YCPCallbacks::CB_ProgressRebuildDB ) );
+      CB callback( ycpcb( YCPCallbacks::CB_ProgressRebuildDb ) );
       if ( callback._set ) {
 	_pc = prg;
 	if ( _pc.updateIfNewPercent( 5 ) ) {
@@ -770,10 +770,6 @@ YCPValue PkgModuleFunctions::CallbackMediaChange( const YCPString& args ) {
   return SET_YCP_CB( CB_MediaChange, args );
 }
 
-YCPValue PkgModuleFunctions::CallbackProgressRebuildDB( const YCPString& args ) {
-  return SET_YCP_CB( CB_ProgressRebuildDB, args );
-}
-
 YCPValue PkgModuleFunctions::CallbackSourceChange( const YCPString& args ) {
   return SET_YCP_CB( CB_SourceChange, args );
 }
@@ -790,6 +786,19 @@ YCPValue PkgModuleFunctions::CallbackYouExecuteYcpScript( const YCPString& args 
 }
 YCPValue PkgModuleFunctions::CallbackYouScriptProgress( const YCPString& args ) {
   return SET_YCP_CB( CB_YouScriptProgress, args );
+}
+
+YCPValue PkgModuleFunctions::CallbackStartRebuildDb( const YCPString& args ) {
+  return SET_YCP_CB( CB_StartRebuildDb, args );
+}
+YCPValue PkgModuleFunctions::CallbackProgressRebuildDb( const YCPString& args ) {
+  return SET_YCP_CB( CB_ProgressRebuildDb, args );
+}
+YCPValue PkgModuleFunctions::CallbackNotifyRebuildDb( const YCPString& args ) {
+  return SET_YCP_CB( CB_NotifyRebuildDb, args );
+}
+YCPValue PkgModuleFunctions::CallbackStopRebuildDb( const YCPString& args ) {
+  return SET_YCP_CB( CB_StopRebuildDb, args );
 }
 
 YCPValue PkgModuleFunctions::CallbackStartConvertDb( const YCPString& args ) {

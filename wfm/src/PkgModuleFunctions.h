@@ -83,7 +83,7 @@ class PkgModuleFunctions : public Y2Namespace
         YCPValue pkgError( PMError err_r, const YCPValue & ret_r = YCPVoid() );
 
         int _solve_errors;
-	
+
     protected:
 
         PMSelectablePtr getPackageSelectable (const std::string& name);
@@ -130,12 +130,15 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue CallbackProgressPackage (const YCPString& func);
 	YCPValue CallbackDonePackage (const YCPString& func);
 	YCPValue CallbackMediaChange (const YCPString& func);
-	YCPValue CallbackProgressRebuildDB (const YCPString& func);
 	YCPValue CallbackSourceChange (const YCPString& func);
 	YCPValue CallbackYouProgress (const YCPString& func);
 	YCPValue CallbackYouPatchProgress (const YCPString& func);
         YCPValue CallbackYouExecuteYcpScript (const YCPString& func);
         YCPValue CallbackYouScriptProgress (const YCPString& func);
+        YCPValue CallbackStartRebuildDb (const YCPString& func);
+        YCPValue CallbackProgressRebuildDb (const YCPString& func);
+        YCPValue CallbackNotifyRebuildDb (const YCPString& func);
+        YCPValue CallbackStopRebuildDb (const YCPString& func);
         YCPValue CallbackStartConvertDb (const YCPString& func);
         YCPValue CallbackProgressConvertDb (const YCPString& func);
         YCPValue CallbackNotifyConvertDb (const YCPString& func);
@@ -269,12 +272,15 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressPackage, "void (string)",String,		PkgModuleFunctions, CallbackProgressPackage);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackDonePackage, 	"void (string)",String,		PkgModuleFunctions, CallbackDonePackage);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackMediaChange, 	"void (string)",String,		PkgModuleFunctions, CallbackMediaChange);
-	Y2FUNCTIONCALL1 ( Pkg, CallbackProgressRebuildDB, "void (string)",String,	PkgModuleFunctions, CallbackProgressRebuildDB);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackSourceChange, 	"void (string)",String, 	PkgModuleFunctions, CallbackSourceChange);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouProgress, 	"void (string)",String,		PkgModuleFunctions, CallbackYouProgress);
 	Y2FUNCTIONCALL1 ( Pkg, CallbackYouPatchProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouPatchProgress);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouExecuteYcpScript, "void (string)",String,	PkgModuleFunctions, CallbackYouExecuteYcpScript);
         Y2FUNCTIONCALL1 ( Pkg, CallbackYouScriptProgress, "void (string)",String,	PkgModuleFunctions, CallbackYouScriptProgress);
+        Y2FUNCTIONCALL1 ( Pkg, CallbackStartRebuildDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStartRebuildDb);
+        Y2FUNCTIONCALL1 ( Pkg, CallbackProgressRebuildDb, "void (string)",String,	PkgModuleFunctions, CallbackProgressRebuildDb);
+        Y2FUNCTIONCALL1 ( Pkg, CallbackNotifyRebuildDb, "void (string)",String,		PkgModuleFunctions, CallbackNotifyRebuildDb);
+        Y2FUNCTIONCALL1 ( Pkg, CallbackStopRebuildDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStopRebuildDb);
         Y2FUNCTIONCALL1 ( Pkg, CallbackStartConvertDb, 	"void (string)",String,		PkgModuleFunctions, CallbackStartConvertDb);
         Y2FUNCTIONCALL1 ( Pkg, CallbackProgressConvertDb, "void (string)",String,	PkgModuleFunctions, CallbackProgressConvertDb);
         Y2FUNCTIONCALL1 ( Pkg, CallbackNotifyConvertDb, "void (string)",String,		PkgModuleFunctions, CallbackNotifyConvertDb);
@@ -386,7 +392,7 @@ class PkgModuleFunctions : public Y2Namespace
 	Y2FUNCTIONCALL  ( Pkg, YouDisconnect, 		"boolean ()",		PkgModuleFunctions, YouDisconnect);
         Y2FUNCTIONCALL  ( Pkg, YouFinish, 		"boolean ()",		PkgModuleFunctions, YouFinish);
 
-	
+
 	/**
 	 * Constructor.
 	 */

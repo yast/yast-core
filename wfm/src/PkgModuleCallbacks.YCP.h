@@ -68,7 +68,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
      * On changes here, adapt @ref cbName.
      **/
     enum CBid {
-      CB_ProgressRebuildDB,
+      CB_StartRebuildDb, CB_ProgressRebuildDb, CB_NotifyRebuildDb, CB_StopRebuildDb,
       CB_StartConvertDb, CB_ProgressConvertDb, CB_NotifyConvertDb, CB_StopConvertDb,
       CB_StartProvide, CB_ProgressProvide, CB_DoneProvide,
       CB_StartPackage, CB_ProgressPackage, CB_DonePackage,
@@ -88,7 +88,10 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
     static string cbName( CBid id_r ) {
       switch ( id_r ) {
 #define ENUM_OUT(N) case CB_##N: return #N
-	ENUM_OUT( ProgressRebuildDB );
+	ENUM_OUT( StartRebuildDb );
+	ENUM_OUT( ProgressRebuildDb );
+	ENUM_OUT( NotifyRebuildDb );
+	ENUM_OUT( StopRebuildDb );
 	ENUM_OUT( StartConvertDb );
 	ENUM_OUT( ProgressConvertDb );
 	ENUM_OUT( NotifyConvertDb );
@@ -149,7 +152,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
       // FIXME: possible memory leak on repeated setting of a callback
       string::size_type colonpos = name_r.find("::");
       if ( colonpos != string::npos ) {
-      
+
         string module = name_r.substr ( 0, colonpos );
 	string symbol = name_r.substr ( colonpos + 2 );
 
@@ -228,7 +231,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
           y2error ("No namespace %s for a callback of %s", module.c_str (), name.c_str ());
 	  return NULL;
       }
-      
+
       Y2Function* func = ns->createFunctionCall (name);
       if (func == NULL)
       {
@@ -271,7 +274,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	    , _func( _send.ycpcb().createCallback( func ) )
 	    , _result( YCPVoid() )
 	  {}
-	  
+
 	  ~CB ()
 	  {
 	    if (_func) delete _func;
@@ -299,7 +302,7 @@ class PkgModuleFunctions::CallbackHandler::YCPCallbacks
 	    if ( _set && _func ) {
 	      y2debug ("Evaluating callback");
 	      _result = _func->evaluateCall ();
-	      
+
 	      delete _func;
 	      _func = _send.ycpcb().createCallback( _id );
 	      return true;

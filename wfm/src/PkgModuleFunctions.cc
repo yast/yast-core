@@ -43,7 +43,7 @@ PkgModuleFunctions::PkgModuleFunctions ()
   // it's cheap to launch them
   _y2pm.packageManager();
   _y2pm.selectionManager();
-  
+
   registerFunctions ();
 }
 
@@ -174,20 +174,23 @@ void PkgModuleFunctions::registerFunctions()
     REGISTERFUNCTIONCALL1 ( 99,		Pkg, CallbackStartPackage);
     REGISTERFUNCTIONCALL1 ( 100,	Pkg, CallbackProgressPackage);
     REGISTERFUNCTIONCALL1 ( 101,	Pkg, CallbackDonePackage);
-    REGISTERFUNCTIONCALL1 ( 102,	Pkg, CallbackProgressRebuildDB);
-    REGISTERFUNCTIONCALL1 ( 103,	Pkg, CallbackYouProgress);
-    REGISTERFUNCTIONCALL1 ( 104,	Pkg, CallbackYouPatchProgress);
-    REGISTERFUNCTIONCALL1 ( 105,	Pkg, CallbackYouExecuteYcpScript);
-    REGISTERFUNCTIONCALL1 ( 106,	Pkg, CallbackYouScriptProgress);
-    REGISTERFUNCTIONCALL1 ( 107,	Pkg, CallbackStartConvertDb);
-    REGISTERFUNCTIONCALL1 ( 108,	Pkg, CallbackProgressConvertDb);
-    REGISTERFUNCTIONCALL1 ( 109,	Pkg, CallbackNotifyConvertDb);
-    REGISTERFUNCTIONCALL1 ( 110,	Pkg, CallbackStopConvertDb);
-    
-    REGISTERFUNCTIONCALL1 ( 111,	Pkg, PkgLocation);
-    REGISTERFUNCTIONCALL1 ( 112,	Pkg, YouSetServer);
-    REGISTERFUNCTIONCALL  ( 113,	Pkg, YouGetUserPassword);
-    REGISTERFUNCTIONCALL3 ( 114,	Pkg, YouSetUserPassword);
+    REGISTERFUNCTIONCALL1 ( 102,	Pkg, CallbackYouProgress);
+    REGISTERFUNCTIONCALL1 ( 103,	Pkg, CallbackYouPatchProgress);
+    REGISTERFUNCTIONCALL1 ( 104,	Pkg, CallbackYouExecuteYcpScript);
+    REGISTERFUNCTIONCALL1 ( 105,	Pkg, CallbackYouScriptProgress);
+    REGISTERFUNCTIONCALL1 ( 106,	Pkg, CallbackStartRebuildDb);
+    REGISTERFUNCTIONCALL1 ( 107,	Pkg, CallbackProgressRebuildDb);
+    REGISTERFUNCTIONCALL1 ( 108,	Pkg, CallbackNotifyRebuildDb);
+    REGISTERFUNCTIONCALL1 ( 109,	Pkg, CallbackStopRebuildDb);
+    REGISTERFUNCTIONCALL1 ( 110,	Pkg, CallbackStartConvertDb);
+    REGISTERFUNCTIONCALL1 ( 111,	Pkg, CallbackProgressConvertDb);
+    REGISTERFUNCTIONCALL1 ( 112,	Pkg, CallbackNotifyConvertDb);
+    REGISTERFUNCTIONCALL1 ( 113,	Pkg, CallbackStopConvertDb);
+
+    REGISTERFUNCTIONCALL1 ( 114,	Pkg, PkgLocation);
+    REGISTERFUNCTIONCALL1 ( 115,	Pkg, YouSetServer);
+    REGISTERFUNCTIONCALL  ( 116,	Pkg, YouGetUserPassword);
+    REGISTERFUNCTIONCALL3 ( 117,	Pkg, YouSetUserPassword);
 }
 
 ///////////////////////////////////////////////////////////////////
