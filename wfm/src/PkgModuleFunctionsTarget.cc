@@ -298,9 +298,9 @@ PkgModuleFunctions::TargetRebuildDB ()
  *
  * init DU calculation for given directories
  * parameter: [ $["name":"dir-without-leading-slash",
-                  "free":int_free,
-		  "used":int_used,
-		  "readonly":bool]
+ *                "free":int_free,
+ *		  "used":int_used,
+ *		  "readonly":bool] ]
  */
 YCPValue
 PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
@@ -367,10 +367,7 @@ PkgModuleFunctions::TargetInitDU (const YCPList& dirlist)
 	{
 	    readonly = partmap->value(YCPString("readonly"))->asBoolean()->value();
 	}
-	else
-	{
-	    good = false;
-	}
+	// else: optional arg, use default
 
 	if (!good)
 	{
