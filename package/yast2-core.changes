@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Sep  5 10:20:18 CEST 2003 - gs@suse.de
+
+- testsuite adapted (language.err)
+- 2.8.24 
+
+-------------------------------------------------------------------
 Thu Sep  4 15:30:04 CEST 2003 - gs@suse.de
 
 - WFMInterpreter: get correct encoding in SetLanguage() 
