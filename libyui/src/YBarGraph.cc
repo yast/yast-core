@@ -101,7 +101,7 @@ int YBarGraph::value(int n)
     }
     else
     {
-	y2error( "YBarGraph::value(): Invalid index %d (0 <= n <=%d",
+	y2error( "YBarGraph::value(): Invalid index %d (0 <= n <= %zd",
 		 n, _values.size() );
 
 	return -1;
@@ -129,7 +129,7 @@ string YBarGraph::label(int n)
 	}
 	else
 	{
-	    y2error( "YBarGraph::label(): Invalid index %d (0 <= n <=%d",
+	    y2error( "YBarGraph::label(): Invalid index %d (0 <= n <= %zd",
 		     n, _labels.size() );
 	}
 
