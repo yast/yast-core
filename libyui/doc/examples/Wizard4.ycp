@@ -44,6 +44,7 @@
     
     UI::WizardCommand(`AddTreeItem( "1-2", "First 3rd level "  , "3rd 1" ) );
     UI::WizardCommand(`AddTreeItem( "1-2", "Second 3rd level " , "3rd 2" ) );
+    UI::WizardCommand(`AddTreeItem( "1-2", "Item without ID"   , "" ) );
 
     UI::WizardCommand(`SelectTreeItem( "3rd 1" ) );
     
@@ -56,6 +57,8 @@
 
 	if ( event[ "ID" ]:nil == `abort )
 	    break;
+
+	y2milestone( "Tree selection: %1", UI::QueryWidget(`id(`wizard), `CurrentItem ) );
     }
 
     UI::CloseDialog();
