@@ -2304,9 +2304,10 @@ YWidget *YUIInterpreter::createIntField(YWidget *parent, YWidgetOpt &opt, const 
  * @widget	PackageSelector
  * @short	Complete software package selection
  * @class	YPackageSelector
+ * @optarg	string floppyDevice
  * @option	youMode start in YOU (YaST Online Update) mode
  * @option	updateMode start in update Mode
- * @usage	`PackageSelector()
+ * @usage	`PackageSelector( "/dev/fd0" )
  *
  * @examples	PackageSelector1.ycp
  *
@@ -2317,16 +2318,23 @@ YWidget *YUIInterpreter::createIntField(YWidget *parent, YWidgetOpt &opt, const 
  * widget and let the package manager and the package selector handle all the
  * rest. The result of all this are the data stored in the package manager.
  * <p>
- * <b>Notice:</b> <i>(preliminary)</i>
- * UserInput() will only return after the user is done selecting packages.
+ * Use UI::RunPkgSelection() after creating a dialog with this widget.
+ * The result of UI::UserInput() in a dialog with such a widget is undefined -
+ * it may or may not return.
+ * <p>
+ * This widget gets the (best) floppy device as a parameter since the UI has no
+ * general way of finding out by itself what device can be used for saving or
+ * loading pacakge lists etc. - this is best done outside and passed here as a
+ * parameter.
  */
 
-YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt &opt, const YCPTerm &term,
-					       const YCPList &optList, int argnr)
+YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					       const YCPList & optList, int argnr)
 {
     int numArgs = term->size() - argnr;
 
-    if ( numArgs != 0 )
+    if ( numArgs > 1 ||
+	 ( numArgs == 1 && ! term->value( argnr )->isString() ) )
     {
 	y2error( "Invalid arguments for the PackageSelector widget: %s",
 		 term->toString().c_str() );
@@ -2349,7 +2357,9 @@ YWidget *YUIInterpreter::createPackageSelector(YWidget *parent, YWidgetOpt &opt,
 	else logUnknownOption(term, optList->value(o));
     }
 
-    return createPackageSelector(parent, opt);
+    YCPString floppyDevice = numArgs > 0 ? term->value( argnr )->asString() : YCPString("");
+
+    return createPackageSelector( parent, opt, floppyDevice );
 }
 
 

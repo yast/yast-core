@@ -513,8 +513,11 @@ protected:
 
     /**
      * Creates a PackageSelector widget.
+     *
+     * "floppyDevice" may be an empty string if no such device was specified in the YCP code.
+     * Usually it is something like "/dev/fd0".
      */
-    virtual YWidget *createPackageSelector(YWidget *parent, YWidgetOpt &opt ) = 0;
+    virtual YWidget *createPackageSelector(YWidget *parent, YWidgetOpt &opt, const YCPString &floppyDevice ) = 0;
 
     /**
      * Creates a PkgSpecial widget, i.e. a specific subwidget.
