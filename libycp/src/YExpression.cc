@@ -893,6 +893,9 @@ YEPropagate::YEPropagate (std::istream & str)
     , m_to (Bytecode::readType (str))
 {
     m_value = Bytecode::readCode (str);
+    
+    // throw away type info
+    m_from = Type::Void;
 }
 
 
@@ -1435,7 +1438,10 @@ YEBracket::YEBracket (std::istream & str)
     m_var = Bytecode::readCode (str);
     m_arg = Bytecode::readCode (str);
     m_def = Bytecode::readCode (str);
-    m_resultType = Bytecode::readType (str);
+    
+    // throw away the type info
+    Bytecode::readType (str);
+    m_resultType = Type::Void;	
 }
 
 
@@ -1613,6 +1619,9 @@ YEBuiltin::YEBuiltin (std::istream & str)
     {
 	ycp2error ("Can't find builtin '%s'", m_decl ? StaticDeclaration::Decl2String (m_decl, true).c_str() : m_type->toString().c_str());
     }
+
+    // throw away type info
+    m_type = Type::Void;    
 }
 
 
@@ -1639,6 +1648,7 @@ YEBuiltin::toStream (std::ostream & str) const
     {
 	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
+    
     return str;
 }
 
