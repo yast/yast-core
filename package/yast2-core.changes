@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb 11 16:07:55 CET 2003 - sh@suse.de
+
+- New generic way to find widgets belonging to a dialog, excluding
+  sub-dialogs: YDialog::widgets() 
+
+-------------------------------------------------------------------
 Fri Feb  7 13:07:35 CET 2003 - kkaempf@suse.de
 
 - call nl_langinfo() if no explicit encoding given (#23348)
