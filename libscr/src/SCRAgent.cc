@@ -97,7 +97,7 @@ SCRAgent::readconf (const char *filename)
     y2debug( "Parsed value (%p): %s", tmpvalue, tmpvalue != 0 ? tmpvalue->toString().c_str() : "not available" );
     if (tmpvalue == 0 || tmpvalue->kind () != YCode::yeTerm )
     {
-	ycp2error ("Not a term in scr file '%s'.", filename);
+	ycp2error ("Not a term in scr file.");
 	return YCPNull();
     }
 

@@ -79,14 +79,14 @@ class Parser
     bool m_depends;
 
     /**
-     * Filename of file just beeing parsed.
+     * Filename of ExecutionEnvironment, restore at destructor
      */
-    string file_name;
+    string m_restore_name;
     
     /**
      * If true, the scanner reached EOF.
      */
-    bool at_eof;
+    bool m_at_eof;
 
 public:
     /**
@@ -225,7 +225,7 @@ public:
      * parse available, pass it here in order to get nice error
      * location messages in case of a parse error.
      */
-    void setInput(int fd, const char *filename=0);
+    void setInput(int fd, const char *filename = 0);
 
     /**
      * Makes the scanner use buffering, i.e. read more than
@@ -244,15 +244,20 @@ public:
     bool depends() const;
 
     /**
-     * Accesses file_name
+     * Accesses filename from ExecutionEnvironment
      */
     const char *filename () const;
 
     /**
-     * Sets file_name
+     * Sets filename in ExecutionEnvironment
      */
     void setFilename (const string f);
-    
+
+    /**
+     * Restore filename to ExecutionEnvironment
+     */
+    void restoreFilename () const;
+
     /**
      * Resets the parser. Use this call before you parse from
      * a new source. It resets the line numbers in the scanner.

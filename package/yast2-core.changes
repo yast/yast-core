@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Feb 22 16:50:35 CET 2004 - kkaempf@suse.de
+
+- restore filename at end of parser, adapt testcases
+- 2.9.41
+
+-------------------------------------------------------------------
 Sun Feb 22 12:25:41 CET 2004 - kkaempf@suse.de
 
 - don't delete YConst code

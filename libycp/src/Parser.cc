@@ -42,7 +42,7 @@ Parser::Parser()
     , m_depends (false)
 {
     init ();
-    at_eof = false;
+    m_at_eof = false;
     lineno = 0;
 }
 
@@ -53,7 +53,7 @@ Parser::Parser(FILE *file, const char *filename)
 {
     setInput(file, filename);
     init ();
-    at_eof = false;
+    m_at_eof = false;
     lineno = 0;
 }
 
@@ -65,7 +65,7 @@ Parser::Parser(const char *buf)
 {
     setInput(buf);
     init ();
-    at_eof = false;
+    m_at_eof = false;
     lineno = 0;
 }
 
@@ -77,14 +77,17 @@ Parser::Parser(int fd, const char *filename)
 {
     setInput(fd, filename);
     init ();
-    at_eof = false;
+    m_at_eof = false;
     lineno = 0;
 }
+
 
 Parser::~Parser()
 {
     if (m_scanner) delete m_scanner;
+    restoreFilename ();
 }
+
 
 void
 Parser::setInput(FILE *file, const char *filename)
@@ -96,7 +99,7 @@ Parser::setInput(FILE *file, const char *filename)
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (file, filename);
     if (buffered) m_scanner->setBuffered ();
-    at_eof = false;
+    m_at_eof = false;
 }
 
 
@@ -107,7 +110,7 @@ Parser::setInput(const char *buf)
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (buf);
     if (buffered) m_scanner->setBuffered ();
-    at_eof = false;
+    m_at_eof = false;
 }
 
 
@@ -121,7 +124,7 @@ Parser::setInput(int fd, const char *filename)
     if (m_scanner) delete m_scanner;
     m_scanner = new Scanner (fd, filename);
     if (buffered) m_scanner->setBuffered ();
-    at_eof = false;
+    m_at_eof = false;
 }
 
 
@@ -130,7 +133,7 @@ Parser::setBuffered()
 {
     if (m_scanner) m_scanner->setBuffered ();
     buffered = true;
-    at_eof = false;
+    m_at_eof = false;
 }
 
 
@@ -144,7 +147,7 @@ Parser::setDepends()
 bool
 Parser::atEOF()
 {
-    return at_eof;
+    return m_at_eof;
 }
 
 Scanner *
@@ -184,23 +187,33 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
     yyparse ((void *) this);
     if (lineno == -1)
     {
-	at_eof = true;
+	m_at_eof = true;
     }
     return result;
 }
 
+
 const char *
 Parser::filename () const
 {
-    return file_name.c_str ();
+    return ee.filename().c_str ();
 }
+
 
 void
 Parser::setFilename (const string f)
 {
-    file_name = f;
+    m_restore_name = ee.filename();
     ee.setFilename (f);
 }
+
+
+void
+Parser::restoreFilename () const
+{
+    ee.setFilename (m_restore_name);
+}
+
 
 void
 Parser::init ()

@@ -1,5 +1,5 @@
 tests/error.scr:3:syntax error, unexpected END_OF_FILE, expecting ')' or ','
 [Parser] tests/error.scr:3 syntax error, unexpected END_OF_FILE, expecting ')' or ','
-[Interpreter] tests/error.ycp:4 Not a term in scr file 'tests/error.scr'.
+[Interpreter] tests/error.scr:4 Not a term in scr file.
 [Interpreter] tests/error.ycp:4 Couldn't mount agent to handle '.foo'
 [Interpreter] tests/error.ycp:4 SCR::Read() failed
