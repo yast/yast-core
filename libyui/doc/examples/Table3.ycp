@@ -1,10 +1,10 @@
 UI(``{
     list itemlist1 =
 	[
-	 `item(`id(1), "Chili",           6),
-	 `item(`id(2), "Salami Baguette", nil),
 	 `item(`id(3), "Spaghetti",	  8),
-	 `item(`id(4), "Steak Sandwich",  12)
+	 `item(`id(4), "Steak Sandwich",  12),
+	 `item(`id(1), "Chili",           6),
+	 `item(`id(2), "Salami Baguette", nil)
 	];
 
     list itemlist2 =
