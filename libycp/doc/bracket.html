@@ -62,13 +62,13 @@ Note that there must be no space between the closing bracket and the colon.
 Examples:<BR>
 <PRE>
 {
-  map m = ["a":1, "b":2, "c":3];
+  map m = $["a":1, "b":2, "c":3];
 
   integer three = m["c"]:0;		// == 3
 
   integer zero = m["notthere"]:0;	// default value
 
-  map mm = ["a":$[1:2], "b":$[3:4], "c":$[5:6]];
+  map mm = $["a":$[1:2], "b":$[3:4], "c":$[5:6]];
 
   return (mm["b",0]:0 == three);	// returns true
 }
@@ -110,7 +110,7 @@ Examples:<BR>
   l[1] = 25;			// l = [1,25,3] now !
 
   // change the "c" element
-  map m = ["a":1, "b":2, "c":3];
+  map m = $["a":1, "b":2, "c":3];
   m["c"] = 42;			// m = $["a":1, "b":2, "c":42] now
 
   // extend the list to 7 elements (0-6)
