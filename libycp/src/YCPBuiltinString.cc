@@ -530,6 +530,37 @@ YCPValue evaluateCryptBlowfish(YCPInterpreter *interpreter, const YCPList &args)
 }
 
 
+YCPValue evaluateTimeString(YCPInterpreter *interpreter, const YCPList &args)
+{
+    /**
+     * @builtin timestring (string format, integer time, boolean utc) -> string
+     * Combination of standard libc functions gmtime or localtime and strftime.
+     *
+     * Example <pre>
+     * timestring ("", 100, false) -> ""
+     * </pre>
+     */
+
+    if (args->size() == 3 && args->value(0)->isString() &&
+	args->value(1)->isInteger() && args->value(2)->isBoolean())
+    {
+	string format = args->value(0)->asString()->value();
+	time_t t = args->value(1)->asInteger()->value();
+	bool utc = args->value(2)->asBoolean()->value();
+
+	struct tm* tm = utc ? gmtime (&t) : localtime (&t);
+
+	const size_t size = 100;
+	char buffer[size];
+	strftime (buffer, size, format.c_str (), tm);
+
+	return YCPString (buffer);
+    }
+
+    return YCPNull();
+}
+
+
 YCPValue evaluateMergeString(YCPInterpreter *interpreter, const YCPList& args)
 {
    /**

@@ -34,6 +34,7 @@ crypt,		evaluateCrypt
 cryptmd5,	evaluateCryptMD5
 cryptbigcrypt,	evaluateCryptBigcrypt
 cryptblowfish,	evaluateCryptBlowfish
+timestring,	evaluateTimeString
 substring,	evaluateSubString
 findfirstnotof,	evaluateFindFirstNotOf
 tolower,	evaluateToLower

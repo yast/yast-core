@@ -157,6 +157,11 @@ YCPValue evaluateCryptBigcrypt(YCPInterpreter *interpreter, const YCPList& args)
 YCPValue evaluateCryptBlowfish(YCPInterpreter *interpreter, const YCPList& args);
 
 /**
+ * Implements the builtin timestring
+ */
+YCPValue evaluateTimeString(YCPInterpreter *interpreter, const YCPList& args);
+
+/**
  * Implements the builtin tointeger
  */
 YCPValue evaluateToInteger(YCPInterpreter *interpreter, const YCPList& args);
