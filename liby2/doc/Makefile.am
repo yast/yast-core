@@ -10,6 +10,6 @@ html_DATA = \
 	Y2-access.html Y2-components.html	\
 	Y2-overview.html  			\
 	componentbroker.txt			\
-	README.componentsearch README.remote README.serial
+	README.componentsearch 
 
 EXTRA_DIST = $(html_DATA)
