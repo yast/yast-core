@@ -48,6 +48,151 @@
 
 using std::string;
 
+///////////////////////////////////////////////////////////////////
+//
+//	CLASS NAME : SelQueryResult
+/**
+ *
+ **/
+struct SelQueryResult {
+  enum Instance {
+    NONE = 0x00,
+    INST = 0x01,
+    CAND = 0x02,
+    BOTH = (INST|CAND)
+  };
+
+  PMSelectablePtr _sel;
+  Instance        _match;
+
+  bool setMatchBit( Instance bit_r, const bool & val_r ) {
+    if ( val_r ) {
+      _match = Instance( _match | bit_r );
+    } else {
+      _match = Instance( _match & ~bit_r );
+    }
+    return val_r;
+  }
+
+  SelQueryResult( PMSelectablePtr sel_r = 0 )
+    : _sel( sel_r )
+    , _match( NONE )
+  {}
+
+  bool setInstMatch( const bool & val_r ) {
+    return setMatchBit( INST, val_r );
+  }
+  bool setCandMatch( const bool & val_r ) {
+    return setMatchBit( CAND, val_r );
+  }
+
+  Instance onSystem() const {
+    if ( _sel && _sel->is_onSystem() ) {
+      return( _sel->to_install() ? CAND : INST );
+    }
+    return NONE;
+  }
+};
+
+inline YCPSymbol asYCPSymbol( const SelQueryResult::Instance & obj_r ) {
+  switch ( obj_r ) {
+  case SelQueryResult::NONE: return YCPSymbol( "NONE" );
+  case SelQueryResult::INST: return YCPSymbol( "INST" );
+  case SelQueryResult::CAND: return YCPSymbol( "CAND" );
+  case SelQueryResult::BOTH: return YCPSymbol( "BOTH" );
+  };
+  return YCPSymbol( "NONE" );
+};
+
+inline YCPList asYCPList( const SelQueryResult & obj_r ) {
+  YCPList ret;
+  ret->add( YCPString( obj_r._sel ? obj_r._sel->name()->c_str() : "" ) );
+  ret->add( asYCPSymbol( obj_r._match ) );
+  ret->add( asYCPSymbol( obj_r.onSystem() ) );
+  return ret;
+}
+
+inline YCPList asYCPList( const list<SelQueryResult> & obj_r ) {
+  YCPList ret;
+  for ( list<SelQueryResult>::const_iterator it = obj_r.begin(); it != obj_r.end(); ++it ) {
+    ret->add( asYCPList( *it ) );
+  }
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////
+
+typedef SelQueryResult (*queryStringFnc)( PMSelectablePtr sel_r, const string & tag_r );
+
+inline list<SelQueryResult> queryString( queryStringFnc query_r, const string & tag_r ) {
+  list<SelQueryResult> ret;
+  for ( PMPackageManager::PMSelectableVec::const_iterator sel = Y2PM::packageManager().begin();
+	sel != Y2PM::packageManager().end(); ++sel ) {
+    SelQueryResult res = query_r( *sel, tag_r );
+    if ( res._match ) {
+      ret.push_back( res );
+    }
+  }
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////
+
+/**
+ * Test whether a certain tag is provided by the selectables 
+ * installed or candidate object, and return the query result. 
+ **/
+static SelQueryResult queryProvides( PMSelectablePtr sel_r, const string & tag_r ) {
+  SelQueryResult ret( sel_r );
+  if ( sel_r ) {
+    PkgName tag( tag_r );
+    if ( sel_r->name() == tag_r ) {
+      ret._match = SelQueryResult::BOTH;
+    } else {
+      PkgRelation rel( tag );
+      ret.setInstMatch( sel_r->has_installed()
+  		        && sel_r->installedObj()->doesProvide( rel ) );
+      ret.setCandMatch( sel_r->has_candidate()
+  		        && sel_r->candidateObj()->doesProvide( rel ) );
+    }
+  }
+  return ret;
+}
+
+///////////////////////////////////////////////////////////////////
+
+// ------------------------
+/**
+ *  @builtin Pkg::PkgQueryProvides( string tag ) -> [ [string, symbol, symbol], [string, symbol, symbol], ...]
+ *
+ *  @return list of all package instances providing 'tag'.
+ *
+ *  A package instance is itself a list of three items:
+ *
+ *  - string name: The package name
+ *
+ *  - symbol instance: Specifies which instance of the package contains a match.
+ *      'NONE no match
+ *      'INST the installed package
+ *      'CAND the candidate package
+ *      'BOTH both packages
+ *
+ *  - symbol onSystem: Tells which instance of the package would be available
+ *    on the system, if PkgCommit was called right now. That way you're able to 
+ *    tell wheter the tag will be available on the system after PkgCommit.
+ *    (e.g. if onSystem != 'NONE && ( onSystem == instance || instance == 'BOTH ))
+ *      'NONE stays uninstalled or is deleted
+ *      'INST the installed one remains untouched
+ *      'CAND the candidate package will be installed
+ */
+YCPList  
+PkgQueryProvides( const YCPString& tag )
+{
+  return asYCPList( queryString( queryProvides, tag->value() ) );
+}
+
+///////////////////////////////////////////////////////////////////
+
 /******************************************************************
 **
 **

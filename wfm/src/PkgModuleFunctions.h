@@ -332,6 +332,8 @@ class PkgModuleFunctions : public Y2Namespace
 	YCPValue PkgAnyToInstall ();
 	// FIXME: is this needed?
 	YCPValue PkgFileHasOwner (YCPList args);
+	/* TYPEINFO: list<list<any>>(string) */ 
+	YCPList  PkgQueryProvides(const YCPString& tag);
 
 	/* TYPEINFO: boolean(string)*/
 	YCPValue PkgInstall (const YCPString& p);
