@@ -14,100 +14,73 @@
 #include <sys/stat.h>
 
 #include <YCP.h>
-#include <ycp/YCPParser.h>
+#include <ycp/YCode.h>
+#include <ycp/Parser.h>
 #include <ycp/y2log.h>
+#include <ycp/pathsearch.h>
 
 #include "config.h"
 
 extern int yydebug;
-extern int yyeof_reached;
 
-static YCPParser parser;
+extern int SymbolTableDebug;
+
+static Parser parser;
 int quiet = 0;
-int normalize = 0;		// parse and print just the value
 int recursive = 0;
 
 /**
  * Parse one file
  */
-
 int
-parsefile (const char *fname)
+parsefile(const char *fname)
 {
     int ret = 0;
     FILE *infile = stdin;
 
     if (fname)
     {
-	if ((infile = fopen(fname,"r")) != 0)
-	{
-	    parser.setInput(infile,fname);
-	}
+	if ((infile = fopen (fname, "r")))
+	    parser.setInput (infile, fname);
 	else
-	{
-	    parser.setInput(fname);
-	}
+	    parser.setInput (fname);
     }
     
     parser.setBuffered();
-    YCPValue v = YCPVoid ();
-    yyeof_reached = 0;
+    YCode *c = 0;
+
+    SymbolTableDebug = 1;
 
     for (;;)
     {
-	if (yyeof_reached)
-	{
-//	    fprintf (stderr, "yyeof before parse\n");
-	    break;
-	}
-	v = parser.parse();
-	if (yyeof_reached)
-	{
-//	    fprintf (stderr, "yyeof after parse\n");
-	    break;
-	}
+	c = parser.parse ();
 
-	if (v.isNull())
+	if (c == 0)
 	{
-	    if (!quiet && !normalize)
+	    if (parser.atEOF())
 	    {
-		printf("NULL\n");
+		if (!quiet)
+		    printf("EOF\n");
+		break;
 	    }
-	    if (ret == 0)
+	    if (ret == 0)		// first failure
 	    {
-		if (quiet)
-		{
-		    fprintf(stderr,"Parse error: %s\n",fname);
-		}
+		fprintf (stderr, "Fail: %s\n", fname);
 		ret = 1;
 	    }
-	    break;
 	}
-	if (!quiet)
+	else if (c->isError ())
 	{
-	    if (normalize)
-	    {
-		printf ("%s\n", v->toString().c_str());
-	    }
-	    else
-	    {
-		if(v->isString())
-		{
-		    printf("--> %s\n", v->asString()->value_cstr());
-		}
-		else
-		{
-		    printf("--> %s\n", v->toString().c_str());
-		}
-	    }
+	    printf ("ERROR !\n");
+	}
+	else if (!quiet)
+	{
+	    printf ("--> %s\n", c->toString().c_str());
 	}
     }
 
-    if (infile
-	&& infile != stdin)
-    {
+    if (infile && infile != stdin)
 	fclose (infile);
-    }
 
     return ret;
 }
@@ -115,8 +88,7 @@ parsefile (const char *fname)
 /**
  * Recurse through directories
  */
-int
-recurse(const char *path)
+int recurse(const char *path)
 {
     DIR *d;
     struct dirent *dent;
@@ -125,30 +97,30 @@ recurse(const char *path)
     char name[1024];
     int ret = 0;
 
-    if (!(d=opendir(path)))
+    if(!(d=opendir(path)))
     {
 	perror(path);
 	return 1;
     }
 
     /* fprintf(stderr,"PATH: %s\n",path); */
-    while ((dent=readdir(d)))
+    while ((dent = readdir(d)))
     {
 	if (!(strcmp(dent->d_name,".")&&strcmp(dent->d_name,"..")))
 	    continue;
-	pp = (char *)malloc(strlen(path)+strlen(dent->d_name)+30);
+	pp= (char*)malloc (strlen(path) + strlen(dent->d_name)+30);
 	if (!pp)
 	{
 	    perror("malloc");
 	    return 1;
 	}
-	strcpy(pp,path);
-	if(pp[strlen(pp)-1]!='/')
-	    strcat(pp,"/");
-	strcat(pp,dent->d_name);
-	if (lstat(pp,&st)==-1)
+	strcpy (pp,path);
+	if (pp[strlen(pp)-1] != '/')
+	    strcat (pp, "/");
+	strcat (pp,dent->d_name);
+	if (lstat (pp,&st) == -1)
 	{
-	    perror(pp);
+	    perror (pp);
 	    ret = 1;
 	    continue;
 	}
@@ -162,32 +134,29 @@ recurse(const char *path)
 	if (S_ISREG(st.st_mode))
 	{
 	    /* fprintf(stderr,"FILE: %s%c%s\n",path,'/',dent->d_name); */
-	    snprintf(name,sizeof(name),"%s/%s", path, dent->d_name);
+	    snprintf (name,sizeof(name),"%s/%s", path, dent->d_name);
 	    if (strlen(name) > 4
-		&& !strcmp(name+strlen(name)-4, ".ycp"))
+		&& !strcmp (name+strlen(name)-4,".ycp"))
 	    {
-		if (parsefile(name) != 0)
-		{
+		if (parsefile(name))
 		    ret = 1;
-		}
 	    }
 	}
-	free(pp);
+	free (pp);
     }
-    closedir(d);
+    closedir (d);
     return ret;
 }
 
 /**
  * Display help text
  */
-void
-print_help(const char *name)
+void print_help(const char *name)
 {
     printf ("Usage:\n");
     printf ("  %s [-h] [--help]\n", name);
     printf ("  %s [-v] [--version]\n", name);
-    printf ("  %s [-q] [-n] [-R] <ycpvalue|filename>\n", name);
+    printf ("  %s [-q] [-R] {-I include-path} {-M module-path} <ycpvalue|filename>\n", name);
 }
 
 /**
@@ -202,29 +171,33 @@ void print_version()
 /**
  * main() function
  */
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int i = 0, ret = 0;
+
+    YCPPathSearch::initialize ();
 
     for(;;)
     {
         int option_index = 0;
 
-        static struct option options[] = {
+        static struct option options[] =
+	{
             {"help", 0, 0, 'h'},
             {"version", 0, 0, 'v'},
             {"recursive", 0, 0, 'R'},
             {"quiet", 0, 0, 'q'},
-            {"normalize", 0, 0, 'n'},
+            {"include-path", 1, 0, 'I'},
+            {"module-path", 1, 0, 'M'},
             {"file", 1, 0, 'f'},
             {0, 0, 0, 0}
         };
 
-        int c = getopt_long(argc,argv,"h?vVqrRn",options,&option_index);
-        if(c==EOF) break;
+        int c = getopt_long (argc,argv,"h?vVqrRI:M:",options,&option_index);
+        if (c == EOF) break;
 
-        switch(c) {
+        switch (c)
+	{
             case 'h':
             case '?':
                 print_help(argv[0]);
@@ -240,11 +213,14 @@ main(int argc, char *argv[])
             case 'q':
                 quiet = 1;
                 break;
-            case 'n':
-                normalize = 1;
+            case 'I':
+		YCPPathSearch::addPath (YCPPathSearch::Include, optarg);
+                break;
+            case 'M':
+		YCPPathSearch::addPath (YCPPathSearch::Module, optarg);
                 break;
             default:
-                fprintf(stderr,"Try `%s -h' for more information.\n",argv[0]);
+                fprintf (stderr,"Try `%s -h' for more information.\n",argv[0]);
                 exit(1);
         }
     }
@@ -260,12 +236,12 @@ main(int argc, char *argv[])
 	    return recurse(".");
     }
 	
-    for (i=optind; i<argc;i++)
+    for (i = optind; i < argc;i++)
     {
 	if (recursive)
 	{
 	    if (recurse(argv[i]))
-		    ret = 1;
+		ret = 1;
 	}
 	else
 	{

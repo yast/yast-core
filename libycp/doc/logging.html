@@ -55,7 +55,7 @@ for warnings and <tt>y2error()</tt> for error messages, syntax is same
 as <tt>printf(3)</tt>.
 <li>Set <tt>"export Y2DEBUG=1"</tt> in your <tt>.profile</tt> or run
 <tt>"Y2DEBUG=1 yast2"</tt>.
-<li>If <tt>root</tt>, see <tt>/var/log/YaST2/y2log</tt>, otherwise <tt>~/.y2log</tt>
+<li>If <tt>root</tt>, see <tt>/var/log/y2log</tt>, otherwise <tt>~/.y2log</tt>
 for the output.
 <li>In the <tt>y2log</tt>, entries are uniquely identified by the filename and line number.
 <li>Read the whole <a href="#top">documentation</a>.
@@ -171,7 +171,7 @@ purposes (just) before the inclusion of <tt><a href="y2log.h">y2log.h</a></tt>:
 
 The <b>YaST2</b> log is written to a file. If you work as normal user,
 the default logfile is <tt>~/.y2log</tt>. If you work as root, the file
-is <tt>/var/log/YaST2/y2log</tt>. The logfile is created with the permissions
+is <tt>/var/log/y2log</tt>. The logfile is created with the permissions
 600, since it may contain secret data when the debug level is turned on.
 
 <p>If the logfile cannot be open, the <tt>stderr</tt> is use instead.
@@ -246,14 +246,11 @@ you can control some logging feature by the environment variables.
 <dl>
 <dt>Y2DEBUG</dt>
 	<dd>By setting this variable to an arbitrary value you turn on
-	the debug log output. But only when entry control is not
+	the debug log output on. But only when entry control is not
 	covered by the usual <a href="#control">logfile control</a>.
 <dt>Y2DEBUGALL</dt>
 	<dd>By setting this variable to an arbitrary value you turn on
-	the debug log output. Everything will be logged.
-<dt>Y2DEBUGSHELL</dt>
-	<dd>By setting this variable to an arbitrary value you turn on
-	the debug log output for the bash_background processes.
+	the debug log output on. Everything will be logged.
 <dt>Y2MAXLOGSIZE</dt>
 	<dd>By this variable you can control the size of logfiles.
 	See <a href="#logfiles">Logfiles</a> for details.
