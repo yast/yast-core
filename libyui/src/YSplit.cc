@@ -270,7 +270,7 @@ void YSplit::setSize( long newWidth, long newHeight )
     {
 	// Mirror the widget X geometry for languages with left-to-right
 	// writing direction (Arabic, Hebrew).
-	
+
 	for ( int i = 0; i < numChildren(); i++ )
 	    x_pos[i] = newWidth - x_pos[i] - widths[i];
     }
@@ -388,18 +388,6 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 	    childPos[i] = pos;
 	    pos += childSize[i];
-
-	    if ( debugLayout )
-	    {
-		y2debug( "child #%d ( %s ) will get %ld "
-			 "( nice size: %ld, weight: %ld, stretchable: %s ), pos %ld",
-			 i, child(i)->widgetClass(),
-			 childSize[i],
-			 child(i)->nicesize( primary ),
-			 child(i)->weight( primary ),
-			 child(i)->stretchable( primary ) ? "yes" : "no",
-			 childPos[i] );
-	    }
 	}
     }
     else	// The pathological case: Not enough space.
@@ -553,8 +541,21 @@ void YSplit::doResize( sizeVector & width,
 {
     for ( int i = 0; i < numChildren(); i++ )
     {
-	child(i)->setSize( width[i], height[i] );
-	moveChild( child(i), x_pos[i], y_pos[i] );
+	YWidget *w = child(i);
+
+	w->setSize( width[i], height[i] );
+	moveChild( w, x_pos[i], y_pos[i] );
+
+	if ( debugLayout )
+	{
+	    string label = w->debugLabel();
+
+	    if ( ! label.empty() )
+		label = "\"" + label + "\"";
+
+	    y2milestone( "x: %4ld  y: %4ld  w: %4ld  h: %4ld %s %s",
+			 x_pos[i], y_pos[i], width[i], height[i],
+			 w->widgetClass(), label.c_str() );
+	}
     }
 }
-
