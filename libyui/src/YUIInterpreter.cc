@@ -400,7 +400,13 @@ YCPValue YUIInterpreter::evaluateUI(const YCPValue& value)
 	    }
 	    t->add (v);
 	}
-	return evaluateInstantiatedTerm (t);
+	// try predefined first
+	YCPValue v = evaluateInstantiatedTerm (t);
+	if (v.isNull ())
+	{
+	    v = evaluateDefinition (t);
+	}
+	return v;
     }
     else if (value->isBlock())
     {
