@@ -164,6 +164,11 @@
 
 
 
+    //
+    // ----------------------------- main() ----------------------------------
+    //
+
+
     if ( ! UI::HasSpecialWidget(`Wizard) ||
 	 ! UI::HasSpecialWidget(`DumbTab ) )
     {
@@ -244,13 +249,30 @@ the respective function to display the list.</p>					\
 	      `Label(`id(`nextMedia ), `opt( `hstretch), "" )
 	      );
 
+    term cdTable =
+	`Table(
+	       `id(`cdTable), `opt(`keepSorting),
+	       `header( "Media", "Size", "Packages", "Time" ),
+	       [
+		`item(`id("total"), "Total", "638.1 MB", "485", "23:31" ),
+		`item(`id("1-1"), "SLES-9 Base CD", "620.7 MB", "480", "20:23" ),
+		`item(`id("1-1"), "SLES-9 CD 1", "620.7 MB", "480", "20:23" ),
+		`item(`id("1-2"), "SLES-9 CD 2",  "17.4 MB",   "5",  "3:08" ),
+		`item(`id("1-3"), "SLES-9 CD 3",  "--", "--", "--:--" ),
+		`item(`id("1-4"), "SLES-9 CD 4",  "--", "--", "--:--" ),
+		`item(`id("1-5"), "SLES-9 CD 5",  "--", "--", "--:--" ),
+		`item(`id("2-1"), "SLES-9 SP 1 CD 1",  "--", "--", "--:--" ),
+		`item(`id("2-2"), "SLES-9 SP 1 CD 2",  "--", "--", "--:--" ),
+		`item(`id("3-1"), "SLES-9 SP 2 CD 1",  "--", "--", "--:--" )
+		]
+	       );
 
     term detailsPage =
 	`VBox(`id(`detailsPage ),
 	      `VWeight( 1,	// lower layout priority
 			`HBox(
 			      `VBox(
-				    `VWeight( 1, `Label(`opt(`vstretch, `hstretch), "CD Info" ) ),
+				    `VWeight( 1, cdTable ),
 				    `VWeight( 1, `LogView(`id(`pkgLog ),  "", 6, 100 ) ),
 				    `ProgressBar(`id(`progressCurrentPackage), "", 100, 42 )
 				    ),
