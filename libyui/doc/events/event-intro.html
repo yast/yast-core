@@ -463,7 +463,7 @@ Since the YaST2 UI doesn't have a single
 where the program spends most of its time, an indefinite period of time may
 pass between causing an event (e.g., the user clicks on a widget) and event
 <i>delivery</i> - the time where the (YCP) application actually receives the
-event and begins processing it. The time gap between that depends on when the
+event and begins processing it. That time gap between depends on when the
 YCP code executes the next
 <a href="event-builtins.html#UserInput">UserInput()</a>
 etc. statement.
@@ -502,17 +502,17 @@ Ah yes, and no animals were harmed in the process of making that scenario. ;-)
 <li>The user clicks "OK" again.
 
 <li>
-The initialization is done. The YCP code reaches
-<a href="event-builtins.html#UserInput">UserInput()</a>.
-
-<li>
-Queued events are delivered (remember, this is only a fictious scenario - the
-UI does not really do that). The first "OK" click from the queue is delivered -
-i.e.
+<p>
+The initialization is done. 
+Usually, the YCP code would now reach
+<a href="event-builtins.html#UserInput">UserInput()</a>
+and ueued events would be delivered (remember, this is only a fictious scenario
+- the UI does not really do that). The first "OK" click from the queue is
+delivered - i.e.
 <a href="event-builtins.html#UserInput">UserInput()</a>
 returns `ok.
-
-<li>
+<br>
+But this doesn't happen this time:
 The initialization code found out that something might be wrong with the
 partitioning or file systems. It might make sense to convert, say, the mounted
 <tt>/usr</tt> file system from <i>oldLameFs-3.0</i> to
