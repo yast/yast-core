@@ -1,12 +1,17 @@
 -------------------------------------------------------------------
+Mon Feb 09 14:34:36 CET 2004 - arvin@suse.de
+
+- fixed building on s390
+
+-------------------------------------------------------------------
 Fri Feb  6 18:46:00 CET 2004 - sh@suse.de
 
-- Re-enabled macro player with new interpreter  
+- Re-enabled macro player with new interpreter
 
 -------------------------------------------------------------------
 Fri Feb  6 08:27:01 CET 2004 - visnov@suse.cz
 
-- Fix UI::changeWidget for terms in `Table 
+- Fix UI::changeWidget for terms in `Table
 
 -------------------------------------------------------------------
 Thu Feb  5 13:38:23 CET 2004 - msvec@suse.cz
@@ -18,27 +23,27 @@ Thu Feb  5 13:38:23 CET 2004 - msvec@suse.cz
 Tue Feb  3 17:12:21 CET 2004 - visnov@suse.cz
 
 - Fix memory corruption on duplicate function parameters.
-- 2.9.24 
+- 2.9.24
 
 -------------------------------------------------------------------
 Tue Feb  3 15:06:49 CET 2004 - visnov@suse.cz
 
-- Fix UI::queryWidget for terms in `Table 
+- Fix UI::queryWidget for terms in `Table
 
 -------------------------------------------------------------------
 Tue Feb  3 14:09:56 CET 2004 - visnov@suse.cz
 
-- Fix some Pkg builtins 
+- Fix some Pkg builtins
 
 -------------------------------------------------------------------
 Tue Feb  3 12:44:48 CET 2004 - visnov@suse.cz
 
-- Don't do fancy testsuite presentation 
+- Don't do fancy testsuite presentation
 
 -------------------------------------------------------------------
 Tue Feb  3 12:03:32 CET 2004 - gs@suse.de
 
-- make language change known in Y2WFMComponent::SetLanguage 
+- make language change known in Y2WFMComponent::SetLanguage
 
 -------------------------------------------------------------------
 Tue Feb  3 10:34:17 CET 2004 - kkaempf@suse.de
@@ -48,7 +53,7 @@ Tue Feb  3 10:34:17 CET 2004 - kkaempf@suse.de
 -------------------------------------------------------------------
 Tue Feb  3 07:58:12 CET 2004 - visnov@suse.cz
 
-- ycpc puts a new line at the end for -E (msvec@suse.cz) 
+- ycpc puts a new line at the end for -E (msvec@suse.cz)
 
 -------------------------------------------------------------------
 Mon Feb  2 16:28:17 CET 2004 - msvec@suse.cz
@@ -59,7 +64,7 @@ Mon Feb  2 16:28:17 CET 2004 - msvec@suse.cz
 Fri Jan 30 16:37:48 CET 2004 - visnov@suse.cz
 
 - for lookup use the same code as for bracket
-- bytecode version change! 
+- bytecode version change!
 
 -------------------------------------------------------------------
 Fri Jan 30 13:01:36 CET 2004 - visnov@suse.cz
@@ -75,7 +80,7 @@ Thu Jan 29 18:09:18 CET 2004 - msvec@suse.cz
 -------------------------------------------------------------------
 Thu Jan 29 18:07:41 CET 2004 - visnov@suse.cz
 
-- temporary fix bytecode testsuite for nonroot build 
+- temporary fix bytecode testsuite for nonroot build
 - UI emits only warning not error if no handler is available
 
 -------------------------------------------------------------------
@@ -88,7 +93,7 @@ Thu Jan 29 17:49:41 CET 2004 - mvidner@suse.cz
 -------------------------------------------------------------------
 Thu Jan 29 13:17:35 CET 2004 - visnov@suse.cz
 
-- don't distribute bison-generated code 
+- don't distribute bison-generated code
 
 -------------------------------------------------------------------
 Thu Jan 29 09:46:33 CET 2004 - mvidner@suse.cz

@@ -1,5 +1,6 @@
 @HEADER-COMMENT@
-# neededforbuild curl curl-devel dejagnu expect gpp hwinfo hwinfo-devel doxygen libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel rpm-devel tcl yast2-devtools yast2-packagemanager yast2-packagemanager-devel ElectricFence
+
+# neededforbuild curl curl-devel dejagnu expect gpp hwinfo hwinfo-devel doxygen libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel rpm-devel tcl yast2-devtools yast2-packagemanager yast2-packagemanager-devel udev ElectricFence
 
 @HEADER@
 Summary:	-
