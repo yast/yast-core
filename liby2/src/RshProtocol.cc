@@ -43,6 +43,7 @@ RshProtocol::callComponent (string password, bool passwd_supplied)
     {
 	"Y a S T 2",             // Login successfull
 	"password:",             // password should be entered
+	"':",                    // passphrase should be entered
 	"continue connecting",   // hostname not yet known
     };
 
@@ -68,6 +69,7 @@ RshProtocol::callComponent (string password, bool passwd_supplied)
 		break;
 
 	    case 1:   // Password required
+	    case 2:   // Passphrase required
 		if (!passwd_supplied)
 		{
 		    // If no password is supplied, remember to send it next time
@@ -83,7 +85,7 @@ RshProtocol::callComponent (string password, bool passwd_supplied)
 		}
 		break;
 
-	    case 2:   // host not yet known (continue anyway)
+	    case 3:   // host not yet known (continue anyway)
 		send ("yes\n");
 		break;
 
