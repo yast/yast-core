@@ -294,7 +294,7 @@ PkgModuleFunctions::TargetRebuildDB ()
 
 /** ------------------------
  * 
- * @builtin Pkg::TagetInitDU (list(map)) -> void
+ * @builtin Pkg::TargetInitDU (list(map)) -> void
  *
  * init DU calculation for given directories
  * parameter: [ $["name":"dir-without-leading-slash", "free":int_free, "used": int_used]
