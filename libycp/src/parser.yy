@@ -432,13 +432,13 @@ bracket_expression:
 		    }
 		}					// type determination done
 
+#if DO_DEBUG
+		    y2debug ("default type '%s', determined type '%s'", $5.t->toString().c_str(), $$.t->toString().c_str());
+#endif
 		// default ($5) must match for non-nil
 		if (! $5.t->isVoid ()				// default is not 'nil'
 		    && $5.t->match ($$.t) == -1)		// and it doesn't match the determined type
 		{
-#if DO_DEBUG
-		    y2debug ("default type '%s', determined type '%s'", $5.t->toString().c_str(), $$.t->toString().c_str());
-#endif
 		    yyTypeMismatch ((string ("Bracket default to '")
 				     + $1.c->toString()
 				     + string ("' has wrong type")).c_str(), $$.t, $5.t, $1.l);		// -> then we have a type error
@@ -455,8 +455,11 @@ bracket_expression:
 			// for non-nil default and cur == Any use the type of the default,
 			// but with runtime type checking
 			$$.c = new YEPropagate ($$.c, Type::Any, $5.t);
-			$$.t = $5.t;
 		    }
+		    $$.t = $$.t->detailedtype ($5.t);
+#if DO_DEBUG
+		    y2debug ("detailed type '%s'", $$.t->toString().c_str());
+#endif
 		}
 	    }
 ;
@@ -568,7 +571,6 @@ compact_expression:
 		    yyTypeMismatch ("Third parameter to 'lookup' has wrong type", (constMapTypePtr($3.t))->valuetype(), $7.t, $1.l);		// -> then we have a type error
 		    $$.t = 0;
 		}
-
 		check_void_assign (0, &($7));
 		$$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $7.t);
 		$$.t = $7.t;
@@ -1329,7 +1331,7 @@ statement:
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
 
 #if DO_DEBUG
-		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW, $1.l, yychar, p_parser->scanner(), $2.v.sval);
+		y2debug ("new scanner at %s:%d, yychar [%d], now %p for %s", FILE_NOW.c_str(), $1.l, yychar, p_parser->scanner(), $2.v.sval);
 #endif
 		$$.c = new YSInclude ($2.v.sval, scanner->linenumber);
 		p_parser->m_block_stack->theBlock->addIncluded ($2.v.sval);
@@ -1939,6 +1941,9 @@ definition:
 		else
 		{
 		    int match = $3.t->match ($1.t);
+#if DO_DEBUG
+		    y2debug ("Assign '%s' = '%s' -> %d", $1.t->toString().c_str(), $3.t->toString().c_str(), match);
+#endif
 		    if (match < 0)				// no match
 		    {
 			if ($1.t->isBlock()			// lhs is block
@@ -3838,25 +3843,29 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 	return;
     }
 
-    if (rhs->c->kind() == YCode::yeBracket)
+    if (rhs->c->kind() == YCode::yeBracket)	// rhs is bracket operator
     {
 	if (lhs != 0)				// bracket operator checked void before
 	{
 	    return;
 	}
+
 	YEBracketPtr b = rhs->c;
 	if (b == 0)
 	{
 	    yyerror_with_lineinfo (parser, rhs->l, "rhs isn't yeBracket but pretends to be");
 	    return;
 	}
-	YYSTYPE bracket_default_as_yystype = { b->def(), 0, 0, rhs->l };
+
+	YYSTYPE bracket_default_as_yystype = { b->def(), 0, b->type(), rhs->l };
+
 	return i_check_void_assign (0, &bracket_default_as_yystype, parser);
     }
 
-    if (rhs->c->kind() == YCode::yeBuiltin)
+    if (rhs->c->kind() == YCode::yeBuiltin)	// rhs is builtin function
     {
 	YEBuiltinPtr b = rhs->c;
+
 	if (b == 0)
 	{
 	    yyerror_with_lineinfo (parser, rhs->l, "rhs isn't yeBuiltin but pretends to be");
@@ -3866,11 +3875,11 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 
     if (lhs == 0)
     {
-	yywarning_with_lineinfo (parser, rhs->l, "default of bracket expression does not have a value");
+	yywarning_with_lineinfo (parser, rhs->l, "default of bracket expression is undefined");
     }
     else
     {
-	yywarning_with_lineinfo (parser, rhs->l, "rhs of assignment does not have a value");
+	yywarning_with_lineinfo (parser, rhs->l, "rhs of assignment is undefined");
     }
 
     return;

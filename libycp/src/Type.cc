@@ -825,6 +825,7 @@ string
 ListType::toString () const
 {
     string ret = preToString() + "list";
+
     if (!m_type->isUnspec()
 	&& !m_type->isAny())		// list <any> -> list
     {
@@ -854,17 +855,24 @@ ListType::matchFlex (constTypePtr type, unsigned int number) const
 int
 ListType::match (constTypePtr expected) const
 {
-#if DO_DEBUG
-    y2debug ("match '%s', expected '%s'", toString().c_str(), expected->toString().c_str());
-#endif
     int bm = basematch (expected);
-    if (bm == 1
-	|| (bm == 0
-	    && expected->isList()
-	    && (m_type->isUnspec()				// empty list
-		|| m_type->match (((constListTypePtr)expected)->m_type) >= 0)))
+#if DO_DEBUG
+    y2debug ("match '%s', expected '%s', basematch %d", toString().c_str(), expected->toString().c_str(), bm);
+#endif
+    if (bm == 1)
     {
 	return 0;
+    }
+    if (bm == 0
+	&& expected->isList())
+    {
+	constListTypePtr lexpected = expected;
+	if (lexpected->m_type->isUnspec()				// empty list
+	    || m_type->isUnspec()
+	    || m_type->match (lexpected->m_type) >= 0)
+    {
+	return 0;
+    }
     }
     return -1;
 }
@@ -907,6 +915,33 @@ ListType::commontype (constTypePtr type) const
     }
 
     return Type::Any;
+}
+
+
+/**
+ * Finds a type that contains most information
+ * This should be the widest such type - TODO
+ */
+
+constTypePtr
+ListType::detailedtype (constTypePtr type) const
+{
+#if DO_DEBUG
+    y2debug ("ListType::detailedtype '%s', '%s'", toString().c_str(), type->toString().c_str());
+#endif
+#warning unfinished
+    if (type->isVoid()
+	|| type->isUnspec())
+    {
+	return constListTypePtr (this);
+    }
+    else if (type->isList())
+    {
+	constListTypePtr listtype = type;
+	return ListTypePtr (new ListType (m_type->detailedtype (listtype->m_type)));
+    }
+
+    return Type::Error;
 }
 
 
@@ -1067,6 +1102,32 @@ MapType::commontype (constTypePtr type) const
     }
 
     return Type::Any;
+}
+
+
+/**
+ * Finds a type which contains most information
+ */
+
+constTypePtr
+MapType::detailedtype (constTypePtr type) const
+{
+#if DO_DEBUG
+    y2debug ("MapType::detailedtype '%s', '%s'", toString().c_str(), type->toString().c_str());
+#endif
+#warning not implemented
+    if (type->isVoid()
+	|| type->isUnspec())
+    {
+	return constMapTypePtr (this);
+    }
+    else if (type->isMap())
+    {
+	constMapTypePtr maptype = type;
+	return MapTypePtr (new MapType (m_keytype->detailedtype (maptype->m_keytype), m_valuetype->detailedtype (maptype->m_valuetype)));
+    }
+
+    return Type::Error;
 }
 
 
@@ -1811,6 +1872,61 @@ Type::commontype (constTypePtr type) const
     y2debug ("commontype '%s' ('%s') -> any", toString().c_str(), type->toString().c_str());
 #endif
     return Type::Any;
+}
+
+
+/**
+ * Finds a type which contains most information
+ * This should be the narrowest such type - TODO
+ */
+
+constTypePtr
+Type::detailedtype (constTypePtr type) const
+{
+#if DO_DEBUG
+    y2debug ("Type::detailedtype '%s' ('%s')", toString().c_str(), type->toString().c_str());
+#endif
+
+    if (isVoid())		// 'nil' does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+#endif
+	return type;
+    }
+    else if (type->isAny())		// 'any' does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+#endif
+	return this;
+    }
+    else if (isAny())			// 'any' does not contain type information
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+#endif
+	return type;
+    }
+    else if (match (type) >= 0)		// if this matches the expected type, the latter is more detailed
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s' ('%s')*", toString().c_str(), type->toString().c_str());
+#endif
+	return type;
+    }
+    else if (type->match (this) >= 0)	// if type matches the expected this, the latter is more detailed
+    {
+#if DO_DEBUG
+	y2debug ("Type::detailedtype '%s'* ('%s')", toString().c_str(), type->toString().c_str());
+#endif
+	return this;
+    }
+
+#if DO_DEBUG
+    y2debug ("Type::detailedtype '%s' ('%s') -> error", toString().c_str(), type->toString().c_str());
+#endif
+    return Type::Error;
 }
 
 // EOF

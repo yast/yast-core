@@ -300,7 +300,18 @@ public:
 
     YCPValueType valueType () const;
 
+    // determine the common type of two types, used to determine the type of lists
+    // and maps with various elements.
+    // -> returns the largets (containing least amount of information) matching
+    //    type (Any if types do not match)
+    //    the return type is 'least common denominator'
     virtual constTypePtr commontype (constTypePtr type) const;
+
+    // determine the more detailed type of two types, used to determine the type of bracket
+    // element vs. bracket default
+    // -> returns the smallest (containing most amount of information) matching
+    //    type (Error if types do not match)
+    virtual constTypePtr detailedtype (constTypePtr type) const;
 };
 
 // <flex>
@@ -380,6 +391,7 @@ public:
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     constTypePtr commontype (constTypePtr type) const;
+    constTypePtr detailedtype (constTypePtr type) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
@@ -406,6 +418,7 @@ public:
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
     constTypePtr commontype (constTypePtr type) const;
+    constTypePtr detailedtype (constTypePtr type) const;
     bool canCast (constTypePtr to) const;
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;

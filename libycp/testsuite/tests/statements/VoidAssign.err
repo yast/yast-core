@@ -80,7 +80,7 @@ Parsed:
     return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), is (v_map, void), is (v_map, map)] == [false, true, true, true, true]);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment does not have a value
+[Scanner] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment is undefined
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -96,8 +96,8 @@ Parsed:
     return (ls == nil);
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment does not have a value
-[Scanner] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression does not have a value
+[Scanner] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment is undefined
+[Scanner] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression is undefined
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -111,10 +111,10 @@ Parsed:
 }
     integer a = fun ();
     map m = $[0:0];
-    return /* any -> any */m[0]:m[0]:fun ();
+    return m[0]:m[0]:fun ();
 }
 ----------------------------------------------------------------------
-[Scanner] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment does not have a value
+[Scanner] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment is undefined
 Parsed:
 ----------------------------------------------------------------------
 {
