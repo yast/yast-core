@@ -123,6 +123,7 @@ WFMInterpreter::evaluateInstantiatedTerm (const YCPTerm& term)
     else if (sym == "Read")		return evaluateRead (term);
     else if (sym == "Write")		return evaluateWrite (term);
     else if (sym == "Execute")		return evaluateExecute (term);
+    else if (sym == "Dir")		return evaluateDir (term);
 
     else if (sym == "SetLanguage")	return evaluateSetLanguage (term);
     else if (sym == "GetLanguage")	return evaluateGetLanguage (term);
@@ -1001,7 +1002,8 @@ YCPValue
 WFMInterpreter::evaluateRead (const YCPTerm &term)
 {
     /**
-     * Interface to the system agent. See documentation there.
+     * @builtin Read (path, [any]) -> any
+     * Special interface to the system agent. Not for general use.
      */
 
     if (!local.start ())
@@ -1014,22 +1016,25 @@ WFMInterpreter::evaluateRead (const YCPTerm &term)
 	// strip leading .local from path
 
 	if (path->length () < 2)
-	    return YCPError ("Too few arguments for WFM::"+term->toString());
+	    return YCPError ("Too short path for WFM::"+term->toString());
 
 	if (path->component_str (0) != "local")
 	    return YCPError ("Path not '.local' in WFM::"+term->toString());
 
 	path = path->at (1);
 
-	if (term->size () == 1)
-	    return local.agent ()->Read (path);
 
-	if (term->size () == 2)
-	    return local.agent ()->Read (path, term->value (1));
+	switch (term->size ())
+	{
+	    case 1:
+		return local.agent ()->Read (path);
 
+	    case 2:
+		return local.agent ()->Read (path, term->value (1));
+	}
     }
 
-    return YCPError ("Bad args for Read()");
+    return YCPError ("Bad arguments for WFM::" + term->toString());
 }
 
 
@@ -1037,7 +1042,8 @@ YCPValue
 WFMInterpreter::evaluateWrite (const YCPTerm &term)
 {
     /**
-     * Interface to the system agent. See documentation there.
+     * @builtin Write (path, any, [any]) -> boolean
+     * Special interface to the system agent. Not for general use.
      */
 
     if (!local.start ())
@@ -1050,22 +1056,24 @@ WFMInterpreter::evaluateWrite (const YCPTerm &term)
 	// strip leading .local from path
 
 	if (path->length () < 2)
-	    return YCPError ("Too few arguments for WFM::"+term->toString());
+	    return YCPError ("Too short path for WFM::"+term->toString());
 
 	if (path->component_str (0) != "local")
 	    return YCPError ("Path not '.local' in WFM::"+term->toString());
 
 	path = path->at (1);
 
-	if (term->size () == 2)
-	    return local.agent ()->Write (path, term->value (1));
+	switch (term->size ())
+	{
+	    case 2:
+		return local.agent ()->Write (path, term->value (1));
 
-	if (term->size () == 3)
-	    return local.agent ()->Write (path, term->value (1), term->value (2));
-
+	    case 3:
+		return local.agent ()->Write (path, term->value (1), term->value (2));
+	}
     }
 
-    return YCPError ("Bad args for Write()");
+    return YCPError ("Bad arguments for WFM::" + term->toString());
 }
 
 
@@ -1073,7 +1081,8 @@ YCPValue
 WFMInterpreter::evaluateExecute (const YCPTerm &term)
 {
     /**
-     * Interface to the system agent. See documentation there.
+     * @builtin Execute (path, [any, [any]]) -> any
+     * Special interface to the system agent. Not for general use.
      */
 
     if (!local.start ())
@@ -1086,18 +1095,60 @@ WFMInterpreter::evaluateExecute (const YCPTerm &term)
 	// strip leading .local from path
 
 	if (path->length () < 2)
-	    return YCPError ("Too few arguments for WFM::"+term->toString());
+	    return YCPError ("Too short path for WFM::"+term->toString());
 
 	if (path->component_str (0) != "local")
 	    return YCPError ("Path not '.local' in WFM::"+term->toString());
 
 	path = path->at (1);
 
-	if (term->size () == 2)
-	    return local.agent ()->Execute (path, term->value (1));
+	switch (term->size ())
+	{
+	    case 1:
+		return local.agent ()->Execute (path);
 
-	if (term->size () == 3)
-	    return local.agent ()->Execute (path, term->value (1), term->value (2));
+	    case 2:
+		return local.agent ()->Execute (path, term->value (1));
+
+	    case 3:
+		return local.agent ()->Execute (path, term->value (1), term->value (2));
+	}
+    }
+
+    return YCPError ("Bad arguments for WFM::" + term->toString());
+}
+
+
+YCPValue
+WFMInterpreter::evaluateDir (const YCPTerm &term)
+{
+    /**
+     * @builtin Dir (path) -> any
+     * Special interface to the system agent. Not for general use.
+     */
+
+    if (!local.start ())
+	return YCPVoid ();
+
+    if (term->size () >= 1 && term->value (0)->isPath ())
+    {
+	YCPPath path = term->value (0)->asPath ();
+
+	// strip leading .local from path
+
+	if (path->length () < 2)
+	    return YCPError ("Too short path for WFM::"+term->toString());
+
+	if (path->component_str (0) != "local")
+	    return YCPError ("Path not '.local' in WFM::"+term->toString());
+
+	path = path->at (1);
+
+	switch (term->size ())
+	{
+	    case 1:
+		return local.agent ()->Dir (path);
+	}
     }
 
     return YCPError ("Bad arguments for WFM::" + term->toString());
@@ -1238,4 +1289,3 @@ WFMInterpreter::evaluateSetLanguage (const YCPTerm& term)
 
     return YCPError ("Bad WFM::SetLanguage ("+term->toString()+")", YCPNull());
 }
-

@@ -184,7 +184,7 @@ private:
     /**
      * Implements the builtin GetClientName
      */
-   YCPValue evaluateGetClientName(const YCPTerm& term);
+    YCPValue evaluateGetClientName(const YCPTerm& term);
 
     /**
      * Implements the builtin Read (path, arg).
@@ -200,6 +200,11 @@ private:
      * Implements the builtin Execute (path, value, arg).
      */
     YCPValue evaluateExecute (const YCPTerm&);
+
+    /**
+     * Implements the builtin Dir (path).
+     */
+    YCPValue evaluateDir (const YCPTerm&);
 
     /**
      * Implements the builtins Args() and Args(integer)
@@ -259,4 +264,3 @@ private:
 
 
 #endif // WFMInterpreter_h
-
