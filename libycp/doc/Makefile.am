@@ -6,7 +6,7 @@ htmldir = $(docdir)/libycp
 
 html_DATA =					\
 	ycp/book1.html				\
-	changes.html syntax.html		\
+	changes.html				\
 	bracket.html traps.html			\
 	logging.html debugger.html		\
 	modules.html				\
