@@ -1352,20 +1352,23 @@ statement:
 		// check existance of module
 
 		TableEntry *tentry = p_parser->scanner()->localTable()->find (name, SymbolEntry::c_module);
+
+		string module = name;
+		delete [] name;
+
 		if (tentry == 0)
 		{
-		    if (string (name) == p_parser->m_current_block->name())
+		    if (module == p_parser->m_current_block->name())
 		    {
 			yywarning("Ignoring self-import", $1.l);
 			break;
 		    }
 
 		    ee.setLinenumber ($1.l);			// if YSImport logs an error
-		    string module = name;
 		    YSImportPtr imp = new YSImport (module, $1.l);
 		    if (imp->name().empty())
 		    {
-			yyNoModule (name, $1.l);
+			yyNoModule (module.c_str(), $1.l);
 			$$.t = 0;
 			break;
 		    }
@@ -1373,7 +1376,7 @@ statement:
 		    Y2Namespace *name_space = imp->nameSpace();
 		    if (name_space == 0)
 		    {
-			yyNoModule (name, $1.l);
+			yyNoModule (module.c_str(), $1.l);
 			$$.t = 0;
 			break;
 		    }
@@ -1381,7 +1384,7 @@ statement:
 		    tentry = p_parser->m_block_stack->theBlock->newNamespace (module, name_space, $1.l);
 		    if (tentry == 0)
 		    {
-			yyNoModule (name, $1.l);
+			yyNoModule (module.c_str(), $1.l);
 			$$.t = 0;
 			break;
 		    }
