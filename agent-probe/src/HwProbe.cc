@@ -255,7 +255,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 	{ "boot_arch",		 5, pr_cpu,	0},
 	{ "version",		 6, pr_null,	0},
 	{ "boot_disk",		 7, pr_bios,	0},
-	{ "ihw_data",		 8, pr_null,	0},
+	{ "cdb_isdn",		 8, pr_null,	0},
 	{ "has_smp",		 9, pr_null,	0},
 	{ "bios_video",		10, pr_bios,	0},
 	{ "has_apm",		12, pr_bios,	0},
@@ -439,8 +439,8 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		case 7:		// boot_disk
 		    value = bootDisk ();
 		break;
-		case 8:		// ihw_data
-		    value = ihwData ();
+		case 8:		// cdb_isdn
+		    value = cdb_isdnData ();
 		break;
 		case 9:		// has_smp
 		    value = YCPBoolean (hd_smp_support (hd_base) ? true : false);

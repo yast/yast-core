@@ -429,7 +429,7 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 		    if (ip->valid)
 		    {
 			YCPList pList;
-			if (1 || (ip->flags & P_DEFINE))
+			if (1)
 			{
 			    int i;
 			    unsigned int *vp = ip->alt_value;
@@ -971,112 +971,120 @@ HwProbe::bootDisk ()
 	return YCPString ("");
 }
 
+// convert String list ("a,b,c") into a YCPList
+
+YCPList String2List(const char *sl)
+{
+    YCPList l;
+    char *s, *t;
+    char *str = strdup(sl);
+
+    for (s = str; (t = strchr(s, ',')); s = t + 1) {
+	*t = 0;
+	l->add (YCPString (s));
+    }
+    l->add (YCPString (s));
+    free(str);
+    return l;
+}
 
 // return isdn hardware data
 //
 YCPValue
-HwProbe::ihwData ()
+HwProbe::cdb_isdnData ()
 {
-    YCPList isdnList;
+    YCPMap isdnMap;
+    YCPMap VendorMap;
+    YCPMap CardMap;
 
-    y2debug ("ihwData()");
+    y2debug ("CDBISDNData()");
 
-    ihw_card_info *icp;
-    ihw_driver_info *idp;
-    ihw_para_info *para_p;
-    int card, drv, pnr;
+    cdb_isdn_card *cic;
+    cdb_isdn_vario *civ;
+    cdb_isdn_vendor *vend;
+    int card, vario, v;
 
-    y2debug ("IHW_VERSION %4x", hd_ihw_get_version());
-    y2debug ("IHW_DATA VERSION %x",hd_ihw_get_db_version());
-    y2debug ("IHW_DATA DATE %s", hd_ihw_get_db_date());
+    y2debug ("CDBISDN_VERSION %4x", hd_cdbisdn_get_version());
+    y2debug ("CDBISDN_DATA VERSION %x",hd_cdbisdn_get_db_version());
+    y2debug ("CDBISDN_DATA DATE %s", hd_cdbisdn_get_db_date());
 
-    card = 0;
-    while ((icp = hd_ihw_get_card(card++)))
+    v=0;
+    while ((vend = hd_cdbisdn_get_vendor(v++)))
+    {
+	YCPMap  isdnVendor;
+
+	isdnVendor->add (YCPString ("name"), YCPString (vend->name));
+	isdnVendor->add (YCPString ("shortname"), YCPString (vend->shortname));
+	isdnVendor->add (YCPString ("refcnt"), YCPInteger (vend->refcnt));
+	isdnVendor->add (YCPString ("VendorID"), YCPInteger (vend->vnr));
+	VendorMap->add (YCPInteger (vend->vnr), isdnVendor);
+    }
+    isdnMap->add (YCPString ("Vendors"), VendorMap);
+
+    card = 1;
+    while ((cic = hd_cdbisdn_get_card(card++)))
     {
 	YCPMap  isdnEntry;
-	YCPMap  isdnParameter;
 	YCPList isdnDriver;
 
-	if (icp->name)
+	if (cic->name)
 	{
-	    isdnEntry->add (YCPString ("name"), YCPString (icp->name));
+	    isdnEntry->add (YCPString ("name"), YCPString (cic->name));
 	}
 
-	/* temporary until libhd update */
-#if (IHW_VERSION == 0x0203)
-	isdnEntry->add (YCPString ("features"), YCPInteger (1));
-	isdnEntry->add (YCPString ("lines"), YCPInteger (1));
-#else
-	isdnEntry->add (YCPString ("features"), YCPInteger (icp->features));
-	isdnEntry->add (YCPString ("lines"), YCPInteger (icp->line_cnt));
-#endif
-	drv = icp->driver;
-	while ((idp = hd_ihw_get_driver(drv))) {
+	if (cic->lname)
+	{
+	    isdnEntry->add (YCPString ("longname"), YCPString (cic->lname));
+	}
+
+	isdnEntry->add (YCPString ("VendorRef"), YCPInteger (cic->vhandle));
+	isdnEntry->add (YCPString ("features"), YCPInteger (cic->features));
+	isdnEntry->add (YCPString ("lines"), YCPInteger (cic->line_cnt));
+	vario = cic->vario;
+	while ((civ = hd_cdbisdn_get_vario(vario))) {
 	    YCPMap  isdnDrvEntry;
 
-	    isdnDrvEntry->add (YCPString ("name"), YCPString(idp->name));
-	    isdnDrvEntry->add (YCPString ("mod_name"), YCPString(idp->mod_name));
-	    isdnDrvEntry->add (YCPString ("type"), YCPInteger (idp->typ));
-	    isdnDrvEntry->add (YCPString ("subtype"), YCPInteger (idp->subtyp));
-	    isdnDrvEntry->add (YCPString ("drvid"), YCPInteger (idp->drvid));
-	    isdnDrvEntry->add (YCPString ("features"), YCPInteger (idp->features));
-	    isdnDrvEntry->add (YCPString ("arch"), YCPInteger (idp->arch));
-	    if (idp->description)
-		isdnDrvEntry->add (YCPString ("description"), YCPString(idp->description));
-	    /* temporary until libhd update */
-	    if (idp->need_pkg) {
-		YCPList	pkgs;
-		char	*s, *t;
-		char	*str = strdup(idp->need_pkg);
-
-		for (s = str; (t = strchr(s, ',')); s = t + 1) {
-		    *t = 0;
-		    pkgs->add (YCPString (s));
-		}
-		pkgs->add (YCPString (s));
-		isdnDrvEntry->add (YCPString ("need_pkg"), pkgs);
-		free(str);
-	    }
+	    isdnDrvEntry->add (YCPString ("name"), YCPString(civ->name));
+	    isdnDrvEntry->add (YCPString ("mod_name"), YCPString(civ->mod_name));
+	    isdnDrvEntry->add (YCPString ("type"), YCPInteger (civ->typ));
+	    isdnDrvEntry->add (YCPString ("subtype"), YCPInteger (civ->subtyp));
+	    isdnDrvEntry->add (YCPString ("drvid"), YCPInteger (civ->drvid));
+	    if (civ->description)
+		isdnDrvEntry->add (YCPString ("description"), YCPString(civ->description));
+	    if (civ->info)
+		isdnDrvEntry->add (YCPString ("info"), YCPString(civ->info));
+	    if (civ->need_pkg)
+		isdnDrvEntry->add (YCPString ("need_pkg"), String2List(civ->need_pkg));
+	    if (civ->features && civ->features[0])
+		isdnDrvEntry->add (YCPString ("features"), String2List(civ->features));
+	    if (civ->protocol)
+		isdnDrvEntry->add (YCPString ("protocol"), String2List(civ->protocol));
+	    if (civ->irq && civ->irq[0])
+		isdnDrvEntry->add (YCPString ("IRQ"), String2List(civ->irq));
+	    if (civ->io && civ->io[0])
+		isdnDrvEntry->add (YCPString ("IO"), String2List(civ->io));
+	    if (civ->membase && civ->membase[0])
+		isdnDrvEntry->add (YCPString ("MEMBASE"), String2List(civ->membase));
 	    isdnDriver->add (isdnDrvEntry);
-	    drv = idp->next_drv;
+	    vario = civ->next_vario;
 	}
 	isdnEntry->add (YCPString ("driver"), isdnDriver);
-	isdnEntry->add (YCPString ("class"), YCPInteger (icp->Class));
-	if ((icp->Class == CLASS_PCI) || (icp->Class == CLASS_ISAPNP) ||
-	    (icp->Class == CLASS_USB))
+	isdnEntry->add (YCPString ("class"), YCPString (cic->Class));
+	isdnEntry->add (YCPString ("bus"), YCPString (cic->bus));
+	if (cic->vendor != 0)
 	{
-	    isdnEntry->add (YCPString ("vendor"), YCPInteger (icp->vendor));
-	    isdnEntry->add (YCPString ("device"), YCPInteger (icp->device));
-	    isdnEntry->add (YCPString ("subvendor"), YCPInteger (icp->subvendor));
-	    isdnEntry->add (YCPString ("subdevice"), YCPInteger (icp->subdevice));
+	    isdnEntry->add (YCPString ("vendor"), YCPInteger (cic->vendor));
+	    isdnEntry->add (YCPString ("device"), YCPInteger (cic->device));
+	    isdnEntry->add (YCPString ("subvendor"), YCPInteger (cic->subvendor));
+	    isdnEntry->add (YCPString ("subdevice"), YCPInteger (cic->subdevice));
 	}
-	pnr = 1;
-	while ((para_p = hd_ihw_get_parameter(icp->handle, pnr++)))
-	{
-	    y2debug ("para number %d", pnr-1);
-	    if (para_p->flags & P_DEFINE)
-	    {
-		YCPList defineList;
-		defineList->add (YCPInteger (para_p->def_value));
-		if (para_p->list)
-		{
-		    unsigned long *p = (unsigned long *)(para_p->list + 1);
-		    int i,para_count = *para_p->list;
-
-		    for (i=0; i<para_count; i++)
-		    {
-			defineList->add (YCPInteger (*p++));
-		    }
-		}
-		isdnParameter->add (YCPString (para_p->name), defineList);
-		isdnEntry->add (YCPString ("parameter"), isdnParameter);
-	    }
-	}
-
-	isdnList->add (isdnEntry);
+	isdnEntry->add (YCPString ("CardID"), YCPInteger (cic->handle));
+	isdnEntry->add (YCPString ("revision"), YCPInteger (cic->revision));
+	CardMap->add (YCPInteger (cic->handle), isdnEntry);
     }
+    isdnMap->add (YCPString ("Cards"), CardMap);
 
-    return isdnList;
+    return isdnMap;
 }
 
 

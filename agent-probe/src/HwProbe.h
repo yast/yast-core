@@ -120,7 +120,7 @@ private:
      * lookup isdn hardware data
      * return YCPValue
      */
-    YCPValue ihwData ();
+    YCPValue cdb_isdnData ();
 
     /**
      * lookup which video card is used by bios
