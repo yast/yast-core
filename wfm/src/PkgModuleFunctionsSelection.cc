@@ -37,7 +37,6 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPList.h>
 #include <ycp/YCPMap.h>
-#include <ycp/YCPError.h>
 
 using std::string;
 
@@ -78,17 +77,10 @@ PkgModuleFunctions::getSelectionSelectable (const std::string& name)
 
 */
 YCPValue
-PkgModuleFunctions::GetSelections (YCPList args)
+PkgModuleFunctions::GetSelections (const YCPSymbol& stat, const YCPString& cat)
 {
-    if ((args->size() != 2)
-	|| !(args->value(0)->isSymbol())
-	|| !(args->value(1)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::GetSelections");
-    }
-
-    string status = args->value(0)->asSymbol()->symbol();
-    string category = args->value(1)->asString()->value();
+    string status = stat->symbol();
+    string category = cat->value();
 
     YCPList selections;
 
@@ -171,15 +163,10 @@ PkgModuleFunctions::GetSelections (YCPList args)
 */
 
 YCPValue
-PkgModuleFunctions::SelectionData (YCPList args)
+PkgModuleFunctions::SelectionData (const YCPString& sel)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SelectionData");
-    }
     YCPMap data;
-    string name = args->value(0)->asString()->value();
+    string name = sel->value();
 
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (!selectable)
@@ -242,17 +229,10 @@ PkgModuleFunctions::SelectionData (YCPList args)
 */
 
 YCPValue
-PkgModuleFunctions::SelectionContent (YCPList args)
+PkgModuleFunctions::SelectionContent (const YCPString& sel, const YCPBoolean& to_delete, const YCPString& lang)
 {
-    if ((args->size() != 3)
-	|| !(args->value(0)->isString())
-	|| !(args->value(1)->isBoolean())
-	|| !(args->value(2)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SelectionContent");
-    }
     YCPList data;
-    string name = args->value(0)->asString()->value();
+    string name = sel->value();
 
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (!selectable)
@@ -267,9 +247,9 @@ PkgModuleFunctions::SelectionContent (YCPList args)
 
     std::list<std::string> pacnames;
     YCPList paclist;
-    LangCode locale (args->value(2)->asString()->value());
+    LangCode locale (lang->value());
 
-    if (args->value(1)->asBoolean()->value() == false)			// inspacks
+    if (to_delete->value() == false)			// inspacks
     {
 	pacnames = selection->inspacks (locale);
     }
@@ -372,15 +352,10 @@ PkgModuleFunctions::SetSelectionString (std::string name, bool recursive)
    a known selection.
 
 */
-YCPValue
-PkgModuleFunctions::SetSelection (YCPList args)
+YCPBoolean
+PkgModuleFunctions::SetSelection (const YCPString& selection)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SetSelection");
-    }
-    string name = args->value(0)->asString()->value();
+    string name = selection->value();
 
     return YCPBoolean (SetSelectionString (name));
 }
@@ -394,14 +369,9 @@ PkgModuleFunctions::SetSelection (YCPList args)
 
 */
 YCPValue
-PkgModuleFunctions::ClearSelection (YCPList args)
+PkgModuleFunctions::ClearSelection (const YCPString& selection)
 {
-    if ((args->size() != 1)
-	|| !(args->value(0)->isString()))
-    {
-	return YCPError ("Bad args to Pkg::SetSelection");
-    }
-    string name = args->value(0)->asString()->value();
+    string name = selection->value();
     PMSelectablePtr selectable = _y2pm.selectionManager().getItem(name);
     if (selectable)
     {
@@ -434,12 +404,11 @@ PkgModuleFunctions::ClearSelection (YCPList args)
 
    This will transfer the selection status to package status
 */
-YCPValue
-PkgModuleFunctions::ActivateSelections (YCPList args)
+YCPBoolean
+PkgModuleFunctions::ActivateSelections ()
 {
     _y2pm.selectionManager().activate (_y2pm.packageManager());
 
     return YCPBoolean (true);
 }
-
 
