@@ -203,7 +203,7 @@ public:
      * check, if the type can be casted (at runtime considered
      * to be - similar to dynamic_cast) to another type
      */
-    virtual bool canCast (constTypePtr to) const { return isAny () || (valueType () == to->valueType ()); }
+    virtual bool canCast (constTypePtr to) const;
 
     /**
      * clone this type

@@ -206,6 +206,9 @@ struct scannerstack_t : stack_t {
 
 // mark here if we're parsing a module
 static bool inside_module = false;
+
+static int repeat_count = 0;
+static int do_while_count = 0;
 //----------------------------------------------------------------------------
 %}
 
@@ -434,7 +437,7 @@ bracket_expression:
 		    {
 			// for non-nil default and cur == Any use the type of the default,
 			// but with runtime type checking
-			$$.c = new YEPropagate ($$.c, $$.t, $5.t);
+			$$.c = new YEPropagate ($$.c, Type::Any, $5.t);
 			$$.t = $5.t;
 		    }
 		}
@@ -463,26 +466,19 @@ casted_expression:
 #endif
 
 	    int match = $4.t->match ($2.t);	// would casted type allow expression type ?
-	    if (match > 0)
+	    if (match == 0)
 	    {
-		y2milestone ("Propagated match %s -> %s at line %d", $2.t->toString().c_str(), $4.t->toString().c_str(), $2.l);
+		$$.c = $4.c;			// types match anyway
 	    }
-	    else if (match < 0)
+	    else if ($4.t->canCast ($2.t))
 	    {
-		if ($4.t->canCast($2.t))
-		{
-		    $$.c = new YEPropagate ($4.c, $4.t, $2.t);
-		}
-		else 
-		{
-		    yyCantCast ($4.t, $2.t, $2.l);
-	    	    $$.t = 0;
-		    break;
-		}		
+		$$.c = new YEPropagate ($4.c, $4.t, $2.t);
 	    }
 	    else 
 	    {
-		$$.c = $4.c;
+		yyCantCast ($4.t, $2.t, $2.l);
+	    	$$.t = 0;
+		break;
 	    }
 
 	    $$.t = $2.t;
@@ -1334,6 +1330,7 @@ statement:
 			break;
 		    }
 
+		    ee.setLinenumber ($1.l);			// if YSImport logs an error
 		    string module = name;
 		    $$.c = new YSImport (module, $1.l);
 		    
@@ -1590,10 +1587,12 @@ control_statement:
 |	DO
 	    {
 		p_parser->m_loop_count++;
+		do_while_count++;
 	    }
 	block
 	    {
 		p_parser->m_loop_count--;
+		do_while_count--;
 		if ($3.t == 0)
 		{
 		    $$.t = 0;
@@ -1627,10 +1626,12 @@ control_statement:
 |	REPEAT
 	    {
 		p_parser->m_loop_count++;
+		repeat_count++;
 	    }
 	block
 	    {
 		p_parser->m_loop_count--;
+		repeat_count--;
 		if ($3.t == 0)
 		{
 		    $$.t = 0;
@@ -1689,6 +1690,14 @@ control_statement:
 	    }
 |	CONTINUE ';'
 	    {
+		if (do_while_count > 0)
+		{
+		    if (getenv ("Y2CONTINUE") != 0) yywarning ("CONTINUE IN DO-WHILE", $1.l);
+		}
+		if (repeat_count > 0)
+		{
+		    if (getenv ("Y2CONTINUE") != 0) yywarning ("CONTINUE IN REPEAT", $1.l);
+		}
 		if (p_parser->m_loop_count <= 0)
 		{
 		    yyLerror ("'continue' outside of loop.", $1.l);

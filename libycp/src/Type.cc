@@ -295,6 +295,20 @@ Type::match (constTypePtr expected) const
 
 
 bool
+Type::canCast (constTypePtr to) const
+{
+    if (isAny())
+    {
+	return true;
+    }
+#if DO_DEBUG
+    y2debug ("Type::canCast [%s] -> [%s]", toString().c_str(), to->toString().c_str());
+#endif
+    return (match (to) >= 0);
+}
+
+
+bool
 Type::equals (constTypePtr expected) const
 {
     if (m_nocheck)

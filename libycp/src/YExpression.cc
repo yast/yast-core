@@ -987,6 +987,7 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
     return false;
 }
 
+
 YCPValue
 YEPropagate::evaluate (bool cse)
 {

@@ -528,11 +528,14 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
     Y2Component* client_comp = Y2ComponentBroker::createClient (new_modulename.c_str ());
     if (client_comp)
     {
-	ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
+	string filename = ee.filename ();
+	int linenumber = ee.linenumber ();
+	ycp2milestone (filename.c_str(), linenumber,
 		       "Calling YaST client %s", new_modulename.c_str ());
 	YCPValue result = client_comp->doActualWork (args, NULL);
-
-	ycp2milestone (ee.filename ().c_str(), ee.linenumber (),
+	ee.setFilename (filename);
+	ee.setLinenumber (linenumber);
+	ycp2milestone (filename.c_str(), linenumber,
 		       "Called YaST client returned: %s", result.isNull () ? "nil" : result->toString ().c_str ());
 	return result;
 
