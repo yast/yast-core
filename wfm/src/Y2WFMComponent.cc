@@ -11,6 +11,7 @@
 \----------------------------------------------------------------------/
 
    File:	Y2WFMComponent.cc
+   Summary:     WFM Builtins
 
    Author:	Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
@@ -217,11 +218,20 @@ YCPInteger
 Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversion)
 {
     /**
-     * @builtin SCROpen (string name, bool check_version) -> integer
+     * @builtin SCROpen 
+     * @short Create a new scr instance.
+     * 
+     * @description
+     *
      * Create a new scr instance. The name must be a valid y2component name
      * (e.g. "scr", "chroot=/mnt:scr"). The component is created immediately.
-     * The parameter check_version determined whether the SuSE Version should
+     * The parameter check_version determines whether the SuSE Version should
      * be checked. On error a negative value is returned.
+     *
+     * @param string name a valid y2component name
+     * @param boolean check_version determines whether the SuSE Version should be
+     * checked
+     * @return integer On error a negative value is returned.
      */
 
     string name = scrname->value ();
@@ -248,8 +258,10 @@ void
 Y2WFMComponent::SCRClose (const YCPInteger& h)
 {
     /**
-     * @builtin SCRClose (integer handle) -> void
-     * Close a scr instance.
+     * @builtin SCRClose
+     * @short Close a scr instance.
+     * @param integer handle  SCR handle
+     * @return void
      */
 
     int handle = h->value ();
@@ -280,8 +292,10 @@ YCPString
 Y2WFMComponent::SCRGetName (const YCPInteger &h)
 {
     /**
-     * @builtin SCRGetName (integer handle) -> string
-     * Get the name of a scr instance.
+     * @builtin SCRGetName
+     * @short Get the name of a scr instance.
+     * @param integer handle SCR handle
+     * @return string Name
      */
 
     int handle = h->value ();
@@ -294,8 +308,10 @@ void
 Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
 {
     /**
-     * @builtin SCRSetDefault (integer handle) -> void
-     * Set's the default scr instance.
+     * @builtin SCRSetDefault
+     * @short Set's the default scr instance.
+     * @param integer handle SCR handle
+     * @return void 
      */
 
     default_handle = handle->value ();
@@ -312,8 +328,9 @@ YCPInteger
 Y2WFMComponent::SCRGetDefault () const
 {
     /**
-     * @builtin SCRGetDefault () -> integer
-     * Get's the default scr instance.
+     * @builtin SCRGetDefault
+     * @short Get's the default scr instance.
+     * @return integer Default SCR handle
      */
 
     return YCPInteger (default_handle);
@@ -324,12 +341,15 @@ YCPValue
 Y2WFMComponent::Args (const YCPInteger& i) const
 {
     /**
-     * @builtin Args() -> list
-     * Returns the arguments with which the module was called.
-     * It is a list whose
+     * @builtin Args
+     * @short Returns the arguments with which the module was called.
+     * @description
+     * The result is a list whose
      * arguments are the module's arguments. If the module
-     * was called with <tt>CallModule("my_mod",&nbsp;[17,&nbsp;true])</tt>,
-     * &nbsp;<tt>Args()</tt> will return <tt>[ 17, true ]</tt>.
+     * was called with <tt>CallFunction("my_mod", [17,true])</tt>,
+     * <tt>Args()</tt> will return <tt>[ 17, true ]</tt>.
+     *
+     * @return list List of arguments
      */
 
     if (i.isNull ())
@@ -362,8 +382,9 @@ YCPString
 Y2WFMComponent::GetLanguage () const
 {
     /**
-     * @builtin GetLanguage() -> string
-     * Returns the current language code (without modifiers !)
+     * @builtin GetLanguage
+     * @short Returns the current language code (without modifiers !)
+     * @return string Language
      */
 
     return YCPString(currentLanguage);
@@ -374,8 +395,9 @@ YCPString
 Y2WFMComponent::GetEncoding () const
 {
     /**
-     * @builtin GetEncoding() -> string
-     * Returns the current encoding code
+     * @builtin GetEncoding
+     * @short Returns the current encoding code
+     * @return string Encoding
      */
 
     return YCPString(systemEncoding);
@@ -386,8 +408,9 @@ YCPString
 Y2WFMComponent::GetEnvironmentEncoding ()
 {
     /**
-     * @builtin GetEnvironmentEncoding() -> string
-     * Returns the encoding code of the environment where yast is started
+     * @builtin GetEnvironmentEncoding
+     * @short Returns the encoding code of the environment where yast is started
+     * @return string encoding code of the environment
      */
     return YCPString(environmentEncoding);
 }
@@ -397,12 +420,20 @@ YCPString
 Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encoding)
 {
     /**
-     * @builtin SetLanguage("de_DE" [, encoding]) -> "<proposed encoding>"
-     * Selects the language for translate()
-     * @example SetLanguage("de_DE", "UTF-8") -> ""
-     * @example SetLanguage("de_DE@euro") -> "ISO-8859-15"
+     * @builtin SetLanguage
+     * @short Selects the language for translate()
+     * @param string language 
+     * @optarg string encoding
+     * @usage SetLanguage("de_DE", "UTF-8") -> ""
+     * @usage SetLanguage("de_DE@euro") -> "ISO-8859-15"
+     *
+     * @description
      * The "<proposed encoding>" is the output of 'nl_langinfo (CODESET)'
      * and only given if SetLanguage() is called with a single argument.
+     *
+     * @return string proposed encoding
+     * have fun
+     * 
      */
 
     string proposedEncoding;
@@ -461,8 +492,12 @@ YCPValue
 Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
 {
     /**
-     * @builtin Read (path, [any]) -> any
-     * Special interface to the system agent. Not for general use.
+     * @builtin Read
+     * @short Special interface to the system agent. Not for general use.
+     * @param path path Path
+     * @optarg any options
+     * @return any
+     * 
      */
 
     if (!local.start ())
@@ -493,8 +528,11 @@ YCPValue
 Y2WFMComponent::Write (const YCPPath &path, const YCPValue &arg1, const YCPValue &arg2)
 {
     /**
-     * @builtin Write (path, any, [any]) -> boolean
-     * Special interface to the system agent. Not for general use.
+     * @builtin Write
+     * @short Special interface to the system agent. Not for general use.
+     * @param path path Path
+     * @optarg any options
+     * @return boolean
      */
 
     if (!local.start ())
@@ -518,8 +556,11 @@ YCPValue
 Y2WFMComponent::Execute (const YCPPath &path, const YCPValue &arg1)
 {
     /**
-     * @builtin Execute (path, any) -> any
-     * Special interface to the system agent. Not for general use.
+     * @builtin Execute
+     * @short Special interface to the system agent. Not for general use.
+     * @param path path Path
+     * @optarg any options
+     * @return any
      */
 
     if (!local.start ())
@@ -543,19 +584,24 @@ YCPValue
 Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 {
     /**
-     * @builtin call(string name, list arguments) -> any
-     * Executes a YCP client or a Y2 client component. This implies
-     * that the called YCP code has full access to
+     * @builtin call
+     * @short Executes a YCP client or a Y2 client component.
+     * @param string name client name
+     * @param list arguments list of arguments
+     *
+     * @description
+     * This implies * that the called YCP code has full access to
      * all module status in the currently running YaST.
      *
      * The modulename is temporarily changed to the name of the
      * called script or a component.
      *
-     * @example call ("inst_mouse", [true, false]) -> ....
-     *
      * In the example, WFM looks for the file YAST2HOME/clients/inst_mouse.ycp
      * and executes it. If the client is not found, a Y2 client component
      * is tried to be created.
+     *
+     * @usage call ("inst_mouse", [true, false]) -> ....
+     * @return any
      */
 
     string new_modulename = client->value ();

@@ -3,16 +3,41 @@
 SUBDIRS =
 
 htmldir = $(docdir)/wfm
+htmlfiles = $(wildcard html/*.html)
+builtin = $(srcdir)/../src/Y2WFMComponent.cc 
+builtinxml := $(builtin:%.cc=%.xml)
+xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
 
-html_DATA = YCP-builtins-wfm.html
 
-CLEANFILES = YCP-builtins-wfm.html
+html_DATA =			\
+	html/yast2docs.css	\
+	html/index.html		\
+	$(htmlfiles)
 
-builtin_wfm = $(srcdir)/../src/Y2WFMComponent.cc \
-        $(srcdir)/../src/Y2CCWFM.cc
+html/index.html: $(xmlfiles) wfm.xml
+	XML_CATALOG_FILES=@XML_CATALOG@\
+	@XSLTPROC@ --xinclude \
+	@STYLESHEET_HTML@ wfm.xml
 
-YCP-builtins-wfm.html: $(builtin_wfm)
-	@ybindir@/makebuiltindocs -t "WFM built-in functions" $^ > $@.new
-	mv $@.new $@
 
-EXTRA_DIST = $(html_DATA)
+
+$(xmlfiles) : $(builtin)
+	@ybindir@/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
+	@XSLTPROC@ @STYLESHEET_YDOC@ $@.tmp > $@
+	@ybindir@/replace_entities $@
+	rm $@.tmp
+
+html/yast2docs.css: html/index.html
+	cp @STYLESHEET_CSS@ html
+	cp -a $(ydatadir)/docbook/images html
+
+EXTRA_DIST = 
+
+CLEANFILES =  $(xmlfiles)
+
+clean-local:
+	rm -rf html
+
+install-data-local:
+	mkdir -p $(DESTDIR)$(htmldir)
+	cp -a $(srcdir)/html/images $(DESTDIR)$(htmldir)
