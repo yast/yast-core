@@ -547,6 +547,15 @@ HwProbe::driver_info2map (const driver_info_t *drvinfo, const char **name)
 	}
 	break;
 
+	case di_dsl:
+	{
+	    DRV2TYPE (driver_info_dsl_t);
+	    *name = "dsl";
+	    map->add (YCPString ("mode"), YCPString (d->mode));
+	    map->add (YCPString ("name"), YCPString (d->name));
+	}
+	break;
+
 	case di_kbd:
 	{
 	    DRV2TYPE (driver_info_kbd_t);

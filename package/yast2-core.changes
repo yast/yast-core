@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 11 19:18:32 CET 2005 - mvidner@suse.cz
+
+- Added .probe.dsl
+
+-------------------------------------------------------------------
 Tue Jan 11 11:18:54 CET 2005 - visnov@suse.cz
 
 - remove fprintf calls, use logs instead
