@@ -151,9 +151,10 @@ static YCPSymbol mediaChangeCallbackSymbol("",false);
  * see packagemanager/src/inst/include/y2pm/InstSrc:_mediachangefunc
  *
  * return "" -> ok, retry
- * return "C" -> cancel
- * return "S" -> skip
- * return "E" -> eject
+ * return "C" -> cancel installation
+ * return "S" -> skip this media
+ * return "I" -> ignore wrong media id
+ * return "E" -> eject media
  * else url
  */
 static std::string
