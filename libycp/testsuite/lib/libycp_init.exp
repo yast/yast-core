@@ -69,7 +69,7 @@ proc ycp-run { src dir } {
 
   if {$result != ""} {
     puts ""
-    warning "Running of $srcdirname/$base_name results in '$result'"
+    warning "Running of (src $src dir $dir) $srcdirname/$base_name results in '$result'"
     return -1
   }
 
@@ -195,7 +195,7 @@ proc bytecode-run { src dir } {
   set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "-l" "/dev/null" "$ybc_name" ] } catched]
 
   if {$oops != 0} {
-    set msg "running failed for $srcdirname/$base_name: $catched"
+    set msg "running failed for (src $src dir $dir) $srcdirname/$base_name: $catched"
     if {$should_fail} {
       xfail $msg
     } else {
@@ -230,7 +230,7 @@ proc bytecode-run { src dir } {
 
   if {$oops != 0} {
     puts ""
-    fail "running failed for $srcdirname/$base_name: $catched"
+    fail "running failed for (src $src dir $dir) $srcdirname/$base_name: $catched"
     return -1
   }
 
@@ -381,7 +381,7 @@ proc bytecode-run-compatible { src dir ver } {
   set oops [catch { set result [exec "./runc" "-q" "-I" "$dir/../Include" "-M" "$dir/../Module" "-p" "-o" "$tmperr_name" "-l" "/dev/null" "$ybc_name" ] } catched]
 
   if {$oops != 0} {
-    set msg "running failed for $srcdirname/$base_name: $catched"
+    set msg "running failed for (src $src dir $dir) $srcdirname/$base_name: $catched"
     if {$should_fail} {
       xfail $msg
     } else {
@@ -416,7 +416,7 @@ proc bytecode-run-compatible { src dir ver } {
 
   if {$oops != 0} {
     puts ""
-    fail "running failed for $srcdirname/$base_name: $catched"
+    fail "running failed for (src $src dir $dir) $srcdirname/$base_name: $catched"
     return -1
   }
 

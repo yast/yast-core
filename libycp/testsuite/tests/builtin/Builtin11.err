@@ -9,6 +9,11 @@ Parsed:
     return MyTerm;
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin11.ycp:30 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin11.ycp:31 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin11.ycp:32 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin11.ycp:33 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin11.ycp:34 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -18,9 +23,11 @@ Parsed:
     term MyTerm = `Termified (`Austria, `Belgium);
     term NewTerm = `Termified ();
     NewTerm = add (MyTerm, `China);
-    return (((((select (MyTerm, 0, nil) == `Austria) && (select (MyTerm, 1, nil) == `Belgium)) && (select (NewTerm, 0, nil) == `Austria)) && (select (NewTerm, 1, nil) == `Belgium)) && (select (NewTerm, size (MyTerm), nil) == `China));
+    return (((((/* any -> symbol */MyTerm[0]:nil == `Austria) && (/* any -> symbol */MyTerm[1]:nil == `Belgium)) && (/* any -> symbol */NewTerm[0]:nil == `Austria)) && (/* any -> symbol */NewTerm[1]:nil == `Belgium)) && (/* any -> symbol */NewTerm[size (MyTerm)]:nil == `China));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin11.ycp:46 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin11.ycp:47 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -32,7 +39,7 @@ Parsed:
     MyTerm = `Termified ();
     NewTerm = add (MyTerm, `China);
     NewTerm = add (NewTerm, `China);
-    return (((select (NewTerm, 0, nil) == `China) && (select (NewTerm, 1, nil) == `China)) && (symbolof (MyTerm) == `Termified));
+    return (((/* any -> symbol */NewTerm[0]:nil == `China) && (/* any -> symbol */NewTerm[1]:nil == `China)) && (symbolof (MyTerm) == `Termified));
 }
 ----------------------------------------------------------------------
 Parsed:

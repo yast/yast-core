@@ -1,3 +1,4 @@
+[Scanner] tests/scope/Declaration.ycp:5 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -6,12 +7,13 @@ Parsed:
     map hallo (integer x, list st)
 {
     y2milestone ("%1 %2", x, st);
-    return /* any -> map */select (st, 1, $[]);
+    return /* any -> map */st[1]:$[];
 }
     return (hallo (17, [true, $[1:45], #[102A]]) == $[1:45]);
 }
 ----------------------------------------------------------------------
 [YCP] tests/scope/Declaration.ycp:4 17 [true, $[1:45], #[102A]]
+[Scanner] tests/scope/Declaration.ycp:14 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -20,12 +22,13 @@ Parsed:
     map hallo (integer x, list st)
 {
     y2milestone ("%1 %2", x, st);
-    return /* any -> map */select (st, 1, $[]);
+    return /* any -> map */st[1]:$[];
 }
     return (hallo (19, [true, $[1:2], #[DEADBEAF]]) == $[1:2]);
 }
 ----------------------------------------------------------------------
 [YCP] tests/scope/Declaration.ycp:13 19 [true, $[1:2], #[DEADBEAF]]
+[Scanner] tests/scope/Declaration.ycp:23 Warning: 'select ()' is deprecated
 [Parser] tests/scope/Declaration.ycp:25 Parameters don't match any declaration:
 [Parser] tests/scope/Declaration.ycp:25 hallo (120)
 [Parser] tests/scope/Declaration.ycp:25 Candidates are:
@@ -35,6 +38,7 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/scope/Declaration.ycp:19 Parser error
+[Scanner] tests/scope/Declaration.ycp:32 Warning: 'select ()' is deprecated
 [Parser] tests/scope/Declaration.ycp:34 Types are not comparable
 [Parser] tests/scope/Declaration.ycp:34 Expected 'map', seen 'const integer'.
 Parsed:

@@ -1,3 +1,6 @@
+[Scanner] tests/values/List.ycp:18 Warning: 'select ()' is deprecated
+[Scanner] tests/values/List.ycp:25 Warning: 'select ()' is deprecated
+[Scanner] tests/values/List.ycp:26 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -21,8 +24,8 @@ else
 }
     list la = [3.14, "foo", 1];
     integer index = 1;
-    any s = select (la, index, nil);
-    return [! isString (la), isString (s), is (s, string), isString (select (la, index, nil)), is (select (la, index, nil), string)];
+    any s = la[index]:nil;
+    return [! isString (la), isString (s), is (s, string), isString (la[index]:nil), is (/* any -> string */la[index]:nil, string)];
 }
 ----------------------------------------------------------------------
 [YCP] tests/values/List.ycp:11 [3.14, "foo", 1] not a string

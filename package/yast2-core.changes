@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Nov  2 15:36:59 CET 2004 - kkaempf@suse.de
+
+- recognize select() in parser.
+- use identical type checking for bracket operator and select()
+  (#43612)
+- mark select() as deprecated.
+
+-------------------------------------------------------------------
 Tue Nov  2 13:55:18 CET 2004 - nashif@suse.de
 
 - Added new widgets: YDate / YTime 

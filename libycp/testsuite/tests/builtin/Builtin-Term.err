@@ -38,23 +38,29 @@ Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Term.ycp:34 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
-select (`hirn (1, 2), -1, 42)
+/* any -> const integer */`hirn (1, 2)[-1]:42
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Term.ycp:35 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
-select (`hirn (1, 2), 0, 42)
+/* any -> const integer */`hirn (1, 2)[0]:42
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Term.ycp:36 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
-select (`hirn (1, 2), 1, 42)
+/* any -> const integer */`hirn (1, 2)[1]:42
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Term.ycp:37 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
-select (`hirn (1, 2), 2, 42)
+/* any -> const integer */`hirn (1, 2)[2]:42
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin-Term.ycp:39 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
-select (`hirn (1, 2), 0, "wrong type")
+/* any -> string */`hirn (1, 2)[0]:"wrong type"
 ----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Term.ycp:39 Can't convert value '1' to type 'string'

@@ -389,6 +389,7 @@ textdomain	{ return TEXTDOMAIN;	};
 const		{ return CONST;		};
 typedef		{ return TYPEDEF;	};
 lookup		{ return LOOKUP;	};
+select		{ return SELECT;	};
 
  /* ----------------------------------- */
  /*	Type Keywords			*/

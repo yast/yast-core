@@ -1,3 +1,4 @@
+[Scanner] tests/builtin/Builtin10.ycp:30 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -7,7 +8,7 @@ Parsed:
     list MyList = ["Austria", "Belgium", "China", `D_Nation, "England", "France", "Greece"];
     list NewList = [];
     NewList = prepend (MyList, .Hungary);
-    return ((size (MyList) == 7) && (/* any -> path */select (NewList, 0, nil) == .Hungary));
+    return ((size (MyList) == 7) && (/* any -> path */NewList[0]:nil == .Hungary));
 }
 ----------------------------------------------------------------------
 Parsed:

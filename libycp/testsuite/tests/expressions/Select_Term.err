@@ -1,3 +1,4 @@
+[Scanner] tests/expressions/Select_Term.ycp:23 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -16,9 +17,10 @@ Parsed:
     term node5 = `Termified (node1, node4);
     term node6 = `Termified (`Greece, nil);
     term node7 = `Termified (node5, node6);
-    return (select (node1, 0, nil) == `Austria);
+    return (node1[0]:nil == `Austria);
 }
 ----------------------------------------------------------------------
+[Scanner] tests/expressions/Select_Term.ycp:35 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -37,7 +39,7 @@ Parsed:
     term node5 = `Termified (node1, node4);
     term node6 = `Termified (`Greece, nil);
     term node7 = `Termified (node5, node6);
-    return (select (node2, 0, nil) == `China);
+    return (node2[0]:nil == `China);
 }
 ----------------------------------------------------------------------
 Parsed:

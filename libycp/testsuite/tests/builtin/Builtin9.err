@@ -9,6 +9,7 @@ Parsed:
     return MyList;
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin9.ycp:43 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -18,9 +19,10 @@ Parsed:
     list MyList = ["Austria", "Belgium", "China", `D_Nation, "England", "France", "Greece"];
     list NewList = [];
     NewList = add (MyList, .Hungary);
-    return ((size (MyList) == 7) && (/* any -> path */select (NewList, size (MyList), nil) == .Hungary));
+    return ((size (MyList) == 7) && (/* any -> path */NewList[size (MyList)]:nil == .Hungary));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin9.ycp:61 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -31,7 +33,7 @@ Parsed:
     list NewList = [];
     MyList = [];
     NewList = add (MyList, "Hungary");
-    return (select (NewList, 0, nil) == "Hungary");
+    return (NewList[0]:nil == "Hungary");
 }
 ----------------------------------------------------------------------
 Parsed:

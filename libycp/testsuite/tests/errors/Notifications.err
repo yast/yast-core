@@ -83,6 +83,7 @@ Parsed:
 Parser error
 ----------------------------------------------------------------------
 [Interpreter] tests/errors/Notifications.ycp:68 Parser error
+[Scanner] tests/errors/Notifications.ycp:81 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -101,6 +102,6 @@ Parsed:
     list node5 = [node1, node4];
     list node6 = [7];
     list node7 = [node5, node6];
-    return (select (node7, -1, nil) == nil);
+    return (node7[-1]:nil == nil);
 }
 ----------------------------------------------------------------------

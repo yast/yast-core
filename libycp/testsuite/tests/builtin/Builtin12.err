@@ -1,3 +1,4 @@
+[Scanner] tests/builtin/Builtin12.ycp:22 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -8,7 +9,7 @@ Parsed:
     // list ResultSet
     // filename: "tests/builtin/Builtin12.ycp"
     list SetOne = [0, "Hello world", true];
-    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetEqual = [SetOne[2]:nil, (7 * 0), ("Hello " + "world")];
     list SetTwo = [., (15 % 5)];
     list SetDifferent = [3.];
     list ResultSet = [];
@@ -16,6 +17,7 @@ Parsed:
     return (ResultSet == SetOne);
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin12.ycp:33 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -26,7 +28,7 @@ Parsed:
     // list ResultSet
     // filename: "tests/builtin/Builtin12.ycp"
     list SetOne = [0, "Hello world", true];
-    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetEqual = [SetOne[2]:nil, (7 * 0), ("Hello " + "world")];
     list SetTwo = [., (15 % 5)];
     list SetDifferent = [3.];
     list ResultSet = [];
@@ -34,6 +36,8 @@ Parsed:
     return ((ResultSet == SetOne) && (ResultSet != SetEqual));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin12.ycp:45 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin12.ycp:51 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -44,14 +48,16 @@ Parsed:
     // list ResultSet
     // filename: "tests/builtin/Builtin12.ycp"
     list SetOne = [0, "Hello world", true];
-    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetEqual = [SetOne[2]:nil, (7 * 0), ("Hello " + "world")];
     list SetTwo = [., (15 % 5)];
     list SetDifferent = [3.];
     list ResultSet = [];
     ResultSet = union (SetOne, SetTwo);
-    return (ResultSet == add (SetOne, select (SetTwo, 0, nil)));
+    return (ResultSet == add (SetOne, SetTwo[0]:nil));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin12.ycp:56 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin12.ycp:62 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -62,14 +68,16 @@ Parsed:
     // list ResultSet
     // filename: "tests/builtin/Builtin12.ycp"
     list SetOne = [0, "Hello world", true];
-    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetEqual = [SetOne[2]:nil, (7 * 0), ("Hello " + "world")];
     list SetTwo = [., (15 % 5)];
     list SetDifferent = [3.];
     list ResultSet = [];
     ResultSet = union (SetOne, SetDifferent);
-    return (ResultSet == add (SetOne, select (SetDifferent, 0, nil)));
+    return (ResultSet == add (SetOne, SetDifferent[0]:nil));
 }
 ----------------------------------------------------------------------
+[Scanner] tests/builtin/Builtin12.ycp:67 Warning: 'select ()' is deprecated
+[Scanner] tests/builtin/Builtin12.ycp:73 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 {
@@ -80,12 +88,12 @@ Parsed:
     // list ResultSet
     // filename: "tests/builtin/Builtin12.ycp"
     list SetOne = [0, "Hello world", true];
-    list SetEqual = [select (SetOne, 2, nil), (7 * 0), ("Hello " + "world")];
+    list SetEqual = [SetOne[2]:nil, (7 * 0), ("Hello " + "world")];
     list SetTwo = [., (15 % 5)];
     list SetDifferent = [3.];
     list ResultSet = [];
     ResultSet = union (SetDifferent, SetOne);
-    return (ResultSet != add (SetOne, select (SetDifferent, 0, nil)));
+    return (ResultSet != add (SetOne, SetDifferent[0]:nil));
 }
 ----------------------------------------------------------------------
 Parsed:

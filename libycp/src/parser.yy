@@ -235,7 +235,7 @@ static int do_while_count = 0;
 %token  TYPEDEF
 %token  MODULE IMPORT EXPORT MAPEXPR INCLUDE GLOBAL TEXTDOMAIN
 %token	CONST FULLNAME STATIC EXTERN
-%token	LOOKUP 
+%token	LOOKUP SELECT 
 
 %token	SYM_NAMESPACE
  /* known entry  */
@@ -586,6 +586,75 @@ compact_expression:
 		    $$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $$.t);
 		    if (! $7.t->isVoid ()                       // default is not 'nil'
 			&& $$.t->isAny()			// map is unspecified
+			&& !$7.t->isAny())                      // don't cast any -> any
+                    {
+                        // for non-nil default and cur == Any use the type of the default,
+                        // but with runtime type checking
+                        $$.c = new YEPropagate ($$.c, Type::Any, $7.t);
+                    }
+                    $$.t = $$.t->detailedtype ($7.t);
+#if DO_DEBUG
+                    y2debug ("detailed type '%s'", $$.t->toString().c_str());
+#endif
+		}
+		$$.l = $1.l;
+	    }
+|	SELECT '(' expression ',' expression ',' expression ')'
+	    {
+		if (($3.t == 0)
+		    || ($5.t == 0)
+		    || ($7.t == 0))
+		{
+		    $$.t = 0;
+		    break;
+		}
+
+		yywarning ("'select ()' is deprecated", $1.l);
+
+		// select needs special treatment because we must
+		// pass a 'type hint' about the default expression
+		// if default is nil, the type can't be seen in a YCPValue
+		if ($3.t->isList())
+		{
+		    // likely type of select() expression
+
+		    $$.t = (constListTypePtr($3.t))->type();
+		}
+		else if ($3.t->isTerm())
+		{
+		    // likely type of select() expression
+
+		    $$.t = Type::Any;
+		}
+		else
+		{
+		    yyLerror ("First parameter to 'select' must have list or map type", $3.l);
+		    $$.t = 0;
+		    break;
+		}
+
+		// check the type of the index
+		if ($5.t->match (Type::Integer) < 0)
+		{
+		    yyTypeMismatch ("Second parameter to 'select' has wrong type", Type::Integer, $5.t, $1.l);	// -> then we have a type error
+		    $$.t = 0;
+		}
+
+		// default ($7) must match for non-nil
+		if (! $7.t->isVoid ()			// default is not 'nil'
+		    && !$$.t->isUnspec()		// and we have a determined type (list only, term doesnt have it)
+		    && $7.t->match ($$.t) == -1)	// and it doesn't match the determined type
+		{
+		    yyTypeMismatch ("Third parameter to 'select' has wrong type", $$.t, $7.t, $1.l);	// -> then we have a type error
+		    $$.t = 0;
+		}
+		else
+		{
+		    // see bracket_expression !!
+		    check_void_assign (0, &($7));
+		    $$.c = new YEBracket ($3.c, new YEList($5.c), $7.c, $$.t);
+		    if (! $7.t->isVoid ()                       // default is not 'nil'
+			&& $$.t->isAny()			// list is unspecified
 			&& !$7.t->isAny())                      // don't cast any -> any
                     {
                         // for non-nil default and cur == Any use the type of the default,
