@@ -203,6 +203,7 @@ struct scannerstack_t : stack_t {
     string filename;
     int linenumber;
     enum scan_states state;
+    const char *old_textdomain ;	// the textdomain set before starting the include
 };
 #define scannerstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
 #define scannerstack_pop(s) (scannerstack_t *)stack_pop ((stack_t **)&(s))
@@ -1322,6 +1323,7 @@ statement:
 		scanner->linenumber = $1.l;
 		scanner->scanner = p_parser->scanner();
 		scanner->state = SCAN_START_INCLUDE;	// see start_block()
+		scanner->old_textdomain = p_parser->m_block_stack->textdomain;
 
 		scannerstack_push (p_parser->m_scanner_stack, scanner);
 
@@ -3344,6 +3346,9 @@ int yylex(YYSTYPE *lvalp_void, void *void_pr)
 	currentScanner = top->scanner;
 	pr->setScanner (currentScanner);
 	pr->setFilename (top->filename);
+	
+	// restore the text domain
+	pr->m_block_stack->textdomain = top->old_textdomain;
 	
 	YSFilename* fn = new YSFilename (top->filename);
 	pr->m_current_block->attachStatement (fn);
