@@ -1455,6 +1455,10 @@ YEIs::evaluate (bool cse)
 	    value_type = code->type ();
 	}
     }
+    else if (value->isReference ())
+    {
+	value_type = value->asReference ()->entry ()->type ();
+    }
     else
     {
 	value_type = Type::vt2type (value->valuetype());

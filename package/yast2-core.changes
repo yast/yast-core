@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 16 18:14:53 CEST 2004 - visnov@suse.cz
+
+- fix is() for function pointers (#43848) 
+ 
+-------------------------------------------------------------------
 Mon Aug 16 15:41:18 CEST 2004 - visnov@suse.cz
 
 - fix function pointers from perl-bindings (#43606)

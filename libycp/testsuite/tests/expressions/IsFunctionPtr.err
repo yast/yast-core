@@ -1,0 +1,23 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // symbol f (string s)
+    // any x
+    // filename: "tests/expressions/IsFunctionPtr.ycp"
+    symbol f (string s)
+{
+    return `x;
+}
+    any x = f;
+    if (is (x, symbol))
+    {
+    // symbol xx
+    symbol xx = /* any -> symbol */x;
+    return xx;
+}
+else
+    {
+    return "GOOD";
+}
+}
+----------------------------------------------------------------------
