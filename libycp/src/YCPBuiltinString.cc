@@ -205,7 +205,7 @@ s_tohexstring (const YCPInteger &i)
 {
     /**
      * @builtin tohexstring
-     * @short Converts a integer to a hexadecimal string.
+     * @short Converts an integer to a hexadecimal string.
      * @param integer number Number
      * @return string number in Hex
      *
@@ -229,7 +229,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
     /**
      * @builtin substring
      * @id substring_1
-     * @short Return part of a string
+     * @short Returns part of a string
      * @param string STRING Original String
      * @param integer OFFSET Start position
      * @optarg integer LENGTH Length of new string
@@ -269,7 +269,7 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
     /**
      * @builtin substring
      * @id substring_2
-     * @short Extract a substring
+     * @short Extracts a substring
      *
      * @description
      * Extracts a substring of the string <tt>STRING</tt>, starting at
@@ -307,7 +307,7 @@ s_find (const YCPString &s1, const YCPString &s2)
 {
     /**
      * @builtin find
-     * @short Return position of a substring
+     * @short Returns position of a substring
      * @param string STRING1 String
      * @param string STRING2 Substring
      * @return integer OFFSET
@@ -347,7 +347,7 @@ s_tolower (const YCPString &s)
 {
     /**
      * @builtin tolower
-     * @short Make a string lowercase
+     * @short Makes a string lowercase
      * @param string s String
      * @return string String in lower case
      *
@@ -374,7 +374,7 @@ s_toupper (const YCPString &s)
 {
     /**
      * @builtin toupper
-     * @short  Make a string uppercase
+     * @short  Makes a string uppercase
      *
      * @description 
      * Returns string with all alphabetic characters converted to
@@ -464,7 +464,7 @@ s_filterchars (const YCPString &s, const YCPString &i)
 {
     /**
      * @builtin filterchars
-     * @short Filter charachters out of a String
+     * @short Filters characters out of a String
      * @param string STRING
      * @param string CHARS chars to be included
      * @return string
@@ -497,7 +497,7 @@ s_mergestring (const YCPList &l, const YCPString &s)
 {
     /**
      * @builtin mergestring 
-     * @short Join list elements with a string
+     * @short Joins list elements with a string
      * @param list<string> PIECES A List of strings
      * @param string GLUE
      * @return string 
@@ -559,7 +559,7 @@ s_findfirstnotof (const YCPString &s1, const YCPString &s2)
 {
     /**
      * @builtin findfirstnotof
-     * @short Search string for first non matching chars
+     * @short Searches string for the first non matching chars
      * @param string STRING
      * @param string CHARS
      *
@@ -598,9 +598,9 @@ s_findfirstof (const YCPString &s1, const YCPString &s2)
 {
     /**
      * @builtin findfirstof
-     * @short Find position of first matching charachters in string
+     * @short Finds position of the first matching characters in string
      * @param string STRING
-     * @param string CHARS Charachters to find
+     * @param string CHARS Characters to find
      *
      * @description
      * The <tt>findfirstof</tt> function searches string for the first match of any
@@ -641,7 +641,7 @@ s_findlastof (const YCPString &s1, const YCPString &s2)
      * character stored in chars and returns its position.
      *
      * @param string STRING String
-     * @param string CHARS Charachters to find
+     * @param string CHARS Characters to find
      *
      * @return integer the position of the last character in <tt>STRING</tt> that is
      * contained in <tt>CHARS</tt>.
@@ -670,7 +670,7 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
      * @builtin findlastnotof
      * @short Searches the last element of string that doesn't match
      * @param string STRING
-     * @param string CHARS Charachters
+     * @param string CHARS Characters
      * @description The `findlastnotof' function searches the last element of
      * string that doesn't match any character stored in chars and returns its
      * position.
@@ -996,7 +996,7 @@ s_timestring (const YCPString &fmt, const YCPInteger &time, const YCPBoolean &ut
 {
    /**
      * @builtin timestring
-     * @short Return time string
+     * @short Returns time string
      * @description
      * Combination of standard libc functions gmtime or localtime and strftime.
      *
@@ -1029,9 +1029,9 @@ s_crypt (const YCPString &s)
 {
     /**
      * @builtin crypt
-     * @short Encrypt a string
+     * @short Encrypts a string
      * @description
-     * Encrypt the string <tt>UNENCRYPTED</tt> using the standard
+     * Encrypts the string <tt>UNENCRYPTED</tt> using the standard
      * password encryption provided by the system.
      * @param string UNENCRYPTED
      * @return string 
@@ -1060,9 +1060,9 @@ s_cryptmd5 (const YCPString &s)
 {
     /**
      * @builtin cryptmd5
-     * @short Encrypt a string using md5
+     * @short Encrypts a string using md5
      * @description
-     * Encrypt the string <tt>UNENCRYPTED</tt> using md5
+     * Encrypts the string <tt>UNENCRYPTED</tt> using MD5
      * password encryption.
      * @param string  UNENCRYPTED
      * @return string
@@ -1091,9 +1091,9 @@ s_cryptbigcrypt(const YCPString& original)
 {
     /**
      * @builtin cryptbigcrypt
-     * @short Encrypt a string using bigcrypt
+     * @short Encrypts a string using bigcrypt
      * @description
-     * Encrypt the string <tt>UNENCRYPTED</tt> using bigcrypt
+     * Encrypts the string <tt>UNENCRYPTED</tt> using bigcrypt
      * password encryption. The password is not truncated.
      * @param string UNENCRYPTED
      * @return string
@@ -1122,9 +1122,9 @@ s_cryptblowfish(const YCPString& original)
 {
     /**
      * @builtin cryptblowfish
-     * @short Encrypt a string with blowfish
+     * @short Encrypts a string with blowfish
      * @description
-     * Encrypt the string <tt>UNENCRYPTED</tt> using blowfish
+     * Encrypts the string <tt>UNENCRYPTED</tt> using blowfish
      * password encryption. The password is not truncated.
      *
      * @param string UNENCRYPTED
