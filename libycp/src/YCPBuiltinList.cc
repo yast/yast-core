@@ -47,7 +47,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin find
-     * @short Search for the first occurence of a certain element in a list
+     * @short Searches for the first occurence of a certain element in a list
      * @param any VAR
      * @param list LIST
      * @param block EXPR
@@ -100,7 +100,7 @@ l_prepend (const YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin prepend 
-     * @short Prepend a list with a new element
+     * @short Prepends a list with a new element
      * @param list LIST List
      * @param any ELEMENT Element to prepend
      * @return list
@@ -125,7 +125,7 @@ l_contains (const YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin contains 
-     * @short Check if a list contains an element
+     * @short Checks if a list contains an element
      * @param list LIST List
      * @param any ELEMENT Element
      * @return boolean True if element is in the list.
@@ -159,7 +159,7 @@ l_setcontains (const YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin setcontains
-     * @short Check if a sorted list contains an element
+     * @short Checks if a sorted list contains an element
      *
      * @param list LIST List
      * @param any ELEMENT Element
@@ -209,7 +209,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
 {
     /**
      * @builtin union
-     * @short Union of lists
+     * @short Unions of lists
      * @param list LIST1 First List
      * @param list LIST2 Second List
      * @return list 
@@ -270,7 +270,7 @@ l_mergelist (const YCPList &list1, const YCPList &list2)
 {
     /**
      * @builtin merge 
-     * @short Merge two lists into one
+     * @short Merges two lists into one
      * @param list LIST1 First List
      * @param list LIST2 Second List
      * @return list 
@@ -312,7 +312,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin filter
-     * @short Filter a List
+     * @short Filters a List
      * @param any VAR Variable
      * @param list LIST List to be filtered
      * @param block<boolean> EXPR Block
@@ -494,7 +494,7 @@ l_flatten (const YCPList &list)
 {
     /**
      * @builtin flatten
-     * @short Flatten List
+     * @short Flattens List
      * @param list<list> LIST
      * @return list
      *
@@ -537,7 +537,7 @@ l_toset (const YCPList &list)
 {
     /**
      * @builtin toset
-     * @short Sort list and remove duplicates
+     * @short Sorts list and removes duplicates
      * @param list LIST
      * @return list Sorted list with unique items
      * @description
@@ -574,12 +574,12 @@ l_sortlist (const YCPList &list)
     /**
      * @builtin sort
      * @id sort_1
-     * @short Sort a List according to the YCP builtin predicate
+     * @short Sorts a List according to the YCP builtin predicate
      * @param list LIST
      * @return list Sorted list
      *
      * @description
-     * Sort the list LIST according to the YCP builtin predicate.
+     * Sorts the list LIST according to the YCP builtin predicate.
      * Duplicates are not removed.
      *
      * @usage sort ([2, 1, true, 1]) -> [true, 1, 1, 2]
@@ -750,7 +750,7 @@ l_changelist (YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin change
-     * @short Change a list
+     * @short Changes a list
      * @param list LIST
      * @param any value
      * @return list
@@ -806,7 +806,7 @@ l_size (const YCPValue &list)
 {
     /**
      * @builtin size 
-     * @short Return size of list
+     * @short Returns size of list
      * @param list LIST
      * @return integer size of the list
      *
@@ -830,12 +830,12 @@ l_remove (const YCPList &list, const YCPInteger &i)
 {
     /**
      * @builtin remove
-     * @short Remove element from a list
+     * @short Removes element from a list
      * @param list LIST
      * @param integer e element index
      * @return list Returns nil if the index is invalid.
      * @description
-     * Remove the <tt>i</tt>'th value from a list. The first value has the
+     * Removes the <tt>i</tt>'th value from a list. The first value has the
      * index 0. The call remove ([1,2,3], 1) thus returns [1,3].
      *
      * @usage remove ([1, 2], 0) -> [2]
@@ -873,7 +873,7 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
      * @builtin select
-     * @short Selet a list element (deprecated)
+     * @short Selects a list element (deprecated)
      * @param list LIST
      * @param integer INDEX
      * @param any  DEFAULT
@@ -931,7 +931,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin foreach
-     * @short Process the content of a list 
+     * @short Processes the content of a list 
      * @param any VAR
      * @param list LIST
      * @param block EXPR
