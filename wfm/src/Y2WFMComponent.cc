@@ -223,7 +223,7 @@ Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversio
      * 
      * @description
      *
-     * Create a new scr instance. The name must be a valid y2component name
+     * Creates a new scr instance. The name must be a valid y2component name
      * (e.g. "scr", "chroot=/mnt:scr"). The component is created immediately.
      * The parameter check_version determines whether the SuSE Version should
      * be checked. On error a negative value is returned.
@@ -259,7 +259,7 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 {
     /**
      * @builtin SCRClose
-     * @short Close a scr instance.
+     * @short Closes a scr instance.
      * @param integer handle  SCR handle
      * @return void
      */
@@ -309,7 +309,7 @@ Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
 {
     /**
      * @builtin SCRSetDefault
-     * @short Set's the default scr instance.
+     * @short Sets the default scr instance.
      * @param integer handle SCR handle
      * @return void 
      */
@@ -329,7 +329,7 @@ Y2WFMComponent::SCRGetDefault () const
 {
     /**
      * @builtin SCRGetDefault
-     * @short Get's the default scr instance.
+     * @short Gets the default scr instance.
      * @return integer Default SCR handle
      */
 
@@ -409,7 +409,7 @@ Y2WFMComponent::GetEnvironmentEncoding ()
 {
     /**
      * @builtin GetEnvironmentEncoding
-     * @short Returns the encoding code of the environment where yast is started
+     * @short Returns the encoding code of the environment where YaST is started
      * @return string encoding code of the environment
      */
     return YCPString(environmentEncoding);
