@@ -61,7 +61,7 @@ using std::string;
 
 /**
  * @builtin SetModulename
- * @short Set Module Name
+ * @short Sets Module Name
  * @description
  * Does nothing. The SetModulename command is introduced for
  * the translator. But the translator sends all commands
@@ -87,7 +87,7 @@ const char * YUI::moduleName()
 
 /**
  * @builtin GetModulename
- * @short Get the name of a Module
+ * @short Gets the name of a Module
  * @description
  * This is tricky. The UI doesn't care about the current module
  * name, only the translator does. However, since the translator
@@ -114,7 +114,7 @@ YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
 
 /**
  * @builtin SetLanguage
- * @short Set the language of the UI
+ * @short Sets the language of the UI
  * @description
  * Tells the UI that the user has selected another language.
  * If the UI has any language dependend output that language
@@ -151,7 +151,7 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
 
 /**
  * @builtin GetProductName
- * @short Get Product Name
+ * @short Gets Product Name
  * @description
  * Returns the current product name ("SuSE Linux", "United Linux", etc.) for
  * display in dialogs. This can be set with SetProductName().
@@ -170,10 +170,10 @@ YCPString YUI::evaluateGetProductName()
 
 /**
  * @builtin SetProductName
- * @short set Product Name
+ * @short Sets Product Name
  * @description
- * Set the current product name ("SuSE Linux", "United Linux", etc.) for
- * display in dialogs and in RichText widgets (for help text) with the RichText
+ * Sets the current product name ("SuSE Linux", "United Linux", etc.) for
+ * displaying in dialogs and in RichText widgets (for help text) with the RichText
  * &amp;product; macro.
  * 
  * This product name should be concise and meaningful to the user and not
@@ -207,7 +207,7 @@ YCPValue YUI::setLanguage( const YCPTerm & term )
 
 /**
  * @builtin SetConsoleFont
- * @short Set Console Font
+ * @short Sets Console Font
  * @description
  * Switches the text console to the specified font.
  * See the setfont(8) command and the console HowTo for details.
@@ -230,7 +230,7 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
 
 /**
  * @builtin SetKeyboard
- * @short Set Keyboard
+ * @short Sets Keyboard
  *
  * @return void
  * @usage SetKeyboard( )
@@ -309,7 +309,7 @@ void YUI::makeScreenShot( string filename )
 
 /**
  * @builtin GetLanguage
- * @short Get Language
+ * @short Gets Language
  * @description
  * Retrieves the current language setting from of the user interface.  Since
  * YaST2 is a client server architecture, we distinguish between the language
@@ -428,7 +428,7 @@ YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 
 /**
  * @builtin WaitForEvent
- * @short Wait for Event
+ * @short Waits for Event
  * @description
  * Extended event handling - very much like UserInput(), but returns much more
  * detailed information about the event that occured in a map.
@@ -640,7 +640,7 @@ YUI::filterInvalidEvents( YEvent * event )
 /**
  * @builtin OpenDialog
  * @id OpenDialog_with_options
- * @short Open a Dialog with options
+ * @short Opens a Dialog with options
  * @description
  * Same as the OpenDialog with one argument, but you can specify options
  * with a term of the form <tt><b>`opt</b></tt>.
@@ -727,7 +727,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
 
 /**
  * @builtin CloseDialog()
- * @short Close an open dialog
+ * @short Closes an open dialog
  * @description
  * Closes the most recently opened dialog. It is an error
  * to call <tt>CloseDialog</tt> if no dialog is open.
@@ -789,7 +789,7 @@ void YUI::closeDialog( YDialog * )
 
 /**
  * @builtin ChangeWidget
- * @short Change widget contents
+ * @short Changes widget contents
  * @description
  * Changes a property of a widget of the topmost dialog. <tt>id</tt> specified
  * the widget to change, <tt>property</tt> specifies the property that should
@@ -851,7 +851,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
 
 /**
  * @builtin QueryWidget
- * @short Query Widget contents
+ * @short Queries Widget contents
  * @description
  * Queries a property of a widget of the topmost dialog.  For example in order
  * to query the current text of a TextEntry with id `name, you write
@@ -976,9 +976,9 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
 
 /**
  * @builtin WizardCommand
- * @short Run a wizard command
+ * @short Runs a wizard command
  * @description
- * Issue a command to a wizard widget with ID 'wizardId'.
+ * Issues a command to a wizard widget with ID 'wizardId'.
  * <
  * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
  * 
@@ -1018,7 +1018,7 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
 
 /**
  * @builtin SetFocus
- * @short Set Focus to the specified widget
+ * @short Sets Focus to the specified widget
  * @description
  * Sets the keyboard focus to the specified widget.  Notice that not all
  * widgets can accept the keyboard focus; this is limited to interactive
@@ -1048,7 +1048,7 @@ YCPBoolean YUI::evaluateSetFocus( const YCPValue & id_value )
 
 /**
  * @builtin BusyCursor
- * @short Sets the mouse cursor to the busy curso
+ * @short Sets the mouse cursor to the busy cursor
  * @description
  * Sets the mouse cursor to the busy cursor, if the UI supports such a feature.
  * 
@@ -1112,9 +1112,9 @@ void YUI::evaluateNormalCursor()
 
 /**
  * @builtin MakeScreenShot
- * @short Make Screen Shot
+ * @short Makes Screen Shot
  * @description
- * Make a screen shot if the specific UI supports that.
+ * Makes a screen shot if the specific UI supports that.
  * The Qt UI opens a file selection box if filename is empty.
  *
  * @param string filename
@@ -1132,7 +1132,7 @@ void YUI::evaluateMakeScreenShot( const YCPString & filename )
  * @builtin DumpWidgetTree
  * @short Debugging function
  * @description
- * Debugging function: Dump the widget tree of the current dialog to the log
+ * Debugging function: Dumps the widget tree of the current dialog to the log
  * file.
  *
  * @return void
@@ -1154,9 +1154,9 @@ void YUI::evaluateDumpWidgetTree()
 
 /**
  * @builtin RecordMacro
- * @short Record Macro into  a file
+ * @short Records Macro into a file
  * @description
- * Begin recording a macro. Write the macro contents to file "macroFilename".
+ * Begins recording a macro. Write the macro contents to file "macroFilename".
  * @param string macroFileName
  * @return void
  */
@@ -1186,9 +1186,9 @@ void YUI::deleteMacroRecorder()
 
 /**
  * @builtin StopRecordingMacro
- * @short Stop recording macro
+ * @short Stops recording macro
  * @description
- * Stop macro recording. This is only necessary if you don't wish to record
+ * Stops macro recording. This is only necessary if you don't wish to record
  * everything until the program terminates.
  *
  * @return void
@@ -1207,9 +1207,9 @@ void YUI::stopRecordMacro()
 
 /**
  * @builtin PlayMacro
- * @short Play a recorded macro
+ * @short Plays a recorded macro
  * @description
- * Execute everything in macro file "macroFileName".
+ * Executes everything in macro file "macroFileName".
  * Any errors are sent to the log file only.
  * The macro can be terminated only from within the macro file.
  *
@@ -1269,9 +1269,9 @@ void YUI::deleteMacroPlayer()
 
 /**
  * @builtin FakeUserInput
- * @short Fake User Input
+ * @short Fakes User Input
  * @description
- * Prepare a fake value for the next call to UserInput() -
+ * Prepares a fake value for the next call to UserInput() -
  * i.e. the next UserInput() will return exactly this value.
  * This is only useful in connection with macros.
  * 
@@ -1290,9 +1290,9 @@ void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 
 /**
  * @builtin Glyph
- * @short Return a special character ( a 'glyph' )
+ * @short Returns a special character ( a 'glyph' )
  * @description
- * Return a special character ( a 'glyph' ) according to the symbol specified.
+ * Returns a special character ( a 'glyph' ) according to the symbol specified.
  * 
  * Not all UIs may be capable of displaying every glyph; if a specific UI
  * doesn't support it, a textual representation ( probably in plain ASCII ) will
@@ -1340,9 +1340,9 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 
 /**
  * @builtin GetDisplayInfo
- * @short Get Display Info
+ * @short Gets Display Info
  * @description
- * Get information about the current display and the UI's capabilities.
+ * Gets information about the current display and the UI's capabilities.
  *
  * @return map
  *
@@ -1371,7 +1371,7 @@ YCPMap YUI::evaluateGetDisplayInfo()
 
 /**
  * @builtin RecalcLayout
- * @short Racalculate Layout
+ * @short Recalculates Layout
  * @description
  * Recompute the layout of the current dialog.
  * 
@@ -1400,7 +1400,7 @@ void YUI::evaluateRecalcLayout()
 
 /**
  * @builtin PostponeShortcutCheck
- * @short Postpone Shortcut Check
+ * @short Postpones Shortcut Check
  * @description
  * Postpone keyboard shortcut checking during multiple changes to a dialog.
  * 
@@ -1452,9 +1452,9 @@ void YUI::evaluatePostponeShortcutCheck()
 
 /**
  * @builtin CheckShortcuts
- * @short Perform an explicit shortcut check after postponing shortcut checks.
+ * @short Performs an explicit shortcut check after postponing shortcut checks.
  * @description
- * Perform an explicit shortcut check after postponing shortcut checks.
+ * Performs an explicit shortcut check after postponing shortcut checks.
  * Use this after calling <tt>PostponeShortcutCheck()</tt>.
  * 
  * The normal sequence looks like this:
@@ -1494,9 +1494,9 @@ void YUI::evaluateCheckShortcuts()
 
 /**
  * @builtin WidgetExists
- * @short Check whether or not a widget with the given ID currently exists
+ * @short Checks whether or not a widget with the given ID currently exists
  * @description
- * Check whether or not a widget with the given ID currently exists in the
+ * Checks whether or not a widget with the given ID currently exists in the
  * current dialog. Use this to avoid errors in the log file before changing the
  * properties of widgets that might or might not be there.
  *
@@ -1515,7 +1515,7 @@ YCPBoolean YUI::evaluateWidgetExists( const YCPValue & id_value )
 
 /**
  * @builtin RunPkgSelection
- * @short Initialize and run the PackageSelector widget
+ * @short Initializes and run the PackageSelector widget
  * @description
  * <b>Not to be used outside the package selection</b>
  *
@@ -1554,9 +1554,9 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 
 /**
  * @builtin AskForExistingDirectory
- * @short Open a directory selection box and prompt the user for an existing directory.
+ * @short Opens a directory selection box and prompt the user for an existing directory.
  * @description
- * Open a directory selection box and prompt the user for an existing directory.
+ * Opens a directory selection box and prompt the user for an existing directory.
  * 
  * @param string startDir is the initial directory that is displayed.
  * @param string headline is an explanatory text for the directory selection box.
@@ -1573,9 +1573,9 @@ YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const
 
 /**
  * @builtin AskForExistingFile
- * @short Open a file selection box and prompt the user for an existing file.
+ * @short Opens a file selection box and prompt the user for an existing file.
  * @description
- * Open a file selection box and prompt the user for an existing file.
+ * Opens a file selection box and prompt the user for an existing file.
  * 
  * @param string startWith is the initial directory or file.
  * @param string filter is one or more blank-separated file patterns, e.g. "*.png *.jpg"
@@ -1592,9 +1592,9 @@ YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCP
 
 /**
  * @builtin AskForSaveFileName
- * @short Open a file selection box and prompt the user for a file to save data to.
+ * @short Opens a file selection box and prompt the user for a file to save data to.
  * @description
- * Open a file selection box and prompt the user for a file to save data to.
+ * Opens a file selection box and prompt the user for a file to save data to.
  * Automatically asks for confirmation if the user selects an existing file.
  * 
  * @param string startWith is the initial directory or file.
@@ -1612,7 +1612,7 @@ YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCP
 
 /**
  * @builtin SetFunctionKeys
- * @short Set the ( default ) function keys for a number of buttons.
+ * @short Sets the ( default ) function keys for a number of buttons.
  * @description
  * This function receives a map with button labels and the respective function
  * key number that should be used if on other `opt( `key_F.. ) is specified.
@@ -1718,9 +1718,9 @@ YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 
 /**
  * @builtin Recode
- * @short Recode encoding of string from or to "UTF-8" encoding.
+ * @short Recodes encoding of string from or to "UTF-8" encoding.
  * @description
- * Recode encoding of string from or to "UTF-8" encoding.
+ * Recodes encoding of string from or to "UTF-8" encoding.
  * One of from/to must be "UTF-8", the other should be an
  * iso encoding specifier (i.e. "ISO-8859-1" for western languages,
  * "ISO-8859-2" for eastern languages, etc. )
