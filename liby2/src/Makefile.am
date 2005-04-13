@@ -24,7 +24,8 @@ liby2_la_SOURCES = \
 	SymbolEntry.cc
 
 liby2_la_LDFLAGS = -version-info 2:0
-liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl
+# pthread added (74501)
+liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl -lpthread
 
 libpy2stdio_la_SOURCES =				\
 	Y2StdioComponent.cc Y2CCStdio.cc

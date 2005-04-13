@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Apr 13 16:01:30 CEST 2005 - visnov@suse.cz
+
+- added libpthread for all YaST binaries (#76401)
+- 2.12.4
+
+-------------------------------------------------------------------
 Wed Apr  6 13:21:31 CEST 2005 - visnov@suse.cz
 
 - added virtual destructors to keep gcc4 happy
