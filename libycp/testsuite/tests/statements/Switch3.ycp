@@ -1,0 +1,10 @@
+{
+	integer res = 0;
+
+	switch (1) {
+		case 0: res = 0; break;
+		case 1: res = 1; break;
+		default: res = -1; break;
+	}
+	return res;
+}

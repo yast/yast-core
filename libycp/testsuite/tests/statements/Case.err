@@ -1,0 +1,2 @@
+[Parser] tests/statements/Case.ycp:2 case expression not allowed outside of switch statement
+runycp: parser error

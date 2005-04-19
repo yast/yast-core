@@ -1,0 +1,4 @@
+{
+	case 1: return 1;	// error: case outside of switch
+	return 0;
+}

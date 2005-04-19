@@ -1,0 +1,9 @@
+{
+	integer res = 0;
+
+	switch (res-1) {
+		case res+2: res = 0; break;	// error: non-constant label
+		default: res = -1; break;
+	}
+	return res;
+}

@@ -1,0 +1,5 @@
+{
+	default: return 1;	// error: default outside of switch
+
+	return 0;
+}
