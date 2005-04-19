@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr 19 17:23:02 CEST 2005 - visnov@suse.cz
+
+- implemented 'switch' statement
+
+-------------------------------------------------------------------
 Wed Apr 13 16:01:30 CEST 2005 - visnov@suse.cz
 
 - added libpthread for all YaST binaries (#76401)
