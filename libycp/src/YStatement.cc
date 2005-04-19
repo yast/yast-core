@@ -39,7 +39,7 @@
 #include "y2/Y2ComponentBroker.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 1
+#define DO_DEBUG 0
 #endif
 
 extern ExecutionEnvironment ee;
@@ -1596,9 +1596,8 @@ YSSwitch::~YSSwitch ()
 string
 YSSwitch::toString() const
 {
-    string s = string ("switch (") + m_condition->toString () + ") {\n";
+    string s = string ("switch (") + m_condition->toString () + ") \n";
     s += m_block->toStringSwitch (m_cases, m_defaultcase);
-    s += "}";
     return s;
 }
 
@@ -1684,7 +1683,13 @@ YSSwitch::evaluate (bool cse)
 #if DO_DEBUG
 	y2debug ("Evaluating from statement '%d'",m_cases[condition]);
 #endif
-	return m_block->evaluateFrom (m_cases[condition]);
+	YCPValue res = m_block->evaluateFrom (m_cases[condition]);
+
+	// break should not be propagated
+	if (!res.isNull () && res->isBreak ())
+	    res = YCPNull ();
+	    
+	return res;
     }
     // no case, try default if defined
     else if (m_defaultcase != -1)
@@ -1692,7 +1697,13 @@ YSSwitch::evaluate (bool cse)
 #if DO_DEBUG
 	y2debug ("Evaluating from default statement '%d'",m_defaultcase);
 #endif
-	return m_block->evaluateFrom (m_defaultcase);
+	YCPValue res = m_block->evaluateFrom (m_defaultcase);
+
+	// break should not be propagated
+	if (!res.isNull () && res->isBreak ())
+	    res = YCPNull ();
+	    
+	return res;
     }
 
 #if DO_DEBUG

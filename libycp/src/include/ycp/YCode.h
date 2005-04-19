@@ -120,8 +120,8 @@ public:
 	ysFilename,		//  restore filename after include
 	ysImport,		// import
 	ysBlock,		// a block as statement
-	ysStatement,		// -- placeholder --
-	ysSwitch		// [54] switch () (since 10.0)
+	ysSwitch,		// switch (since 10.0)
+	ysStatement		// [54] -- placeholder --
     };
 
 protected:

@@ -14,7 +14,7 @@
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
 		Stanislav Visnovsky <visnov@suse.cz>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+   Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 // -*- c++ -*-
@@ -434,6 +434,7 @@ public:
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
+    constTypePtr conditionType () const { return m_condition->type (); };
     bool setCase (YCPValue value);
     bool setDefaultCase ();
     void setBlock (YBlockPtr block);

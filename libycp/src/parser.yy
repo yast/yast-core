@@ -51,7 +51,7 @@
 #include <list>
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 #include "YCP.h"
@@ -1007,6 +1007,9 @@ block:
 		// the block of the switch
 		
 		if (in_switch) {
+#if DO_DEBUG
+		    y2debug ("Setting block for switch");
+#endif
 		    p_parser->m_switch_stack->statement->
 			setBlock (p_parser->m_block_stack->theBlock);
 		    in_switch = false;
@@ -1653,21 +1656,42 @@ statement:
 		    break;
 		}
 		
-		// FIXME: verify that we are in switch
-
-		// FIXME: attach code
-		YCPValue val = $2.c->evaluate (true);
-		if (val.isNull ())
+		// verify that we are in switch
+		if (! p_parser->m_switch_stack)
 		{
-		    // FIXME: report error about non-constant label
+		    yyLerror ("case expression not allowed outside of switch statement", $1.l);
 		    $$.t = 0;
 		    break;
 		}
 
-		// FIXME: check, if in switch and type
-		bool non_duplicate = p_parser->m_switch_stack->statement->setCase (val);
+		YCPValue val = $2.c->evaluate (true);
+		if (val.isNull ())
+		{
+		    yyLerror ("case expression must be constant", $1.l);
+
+		    $$.t = 0;
+		    break;
+		}
+
+		YSSwitchPtr st = p_parser->m_switch_stack->statement;
 		
-		// FIXME: report duplicate
+		// check type
+		if (st->conditionType ()->match ($2.c->type ()) != 0)
+		{
+		    yyTypeMismatch("Invalid constant type in the case statement"
+			,st->conditionType (), $2.c->type (), $1.l);
+		    $$.t = 0;
+		    break;
+		}
+		
+		bool non_duplicate = st->setCase (val);
+
+		if (! non_duplicate)
+		{
+		    yyLerror ("Duplicate case expression", $1.l);
+		    $$.t = 0;
+		    break;
+		}
 		
 		$$.t = Type::Void;
 		$$.c = 0;	// no code
@@ -1680,12 +1704,23 @@ statement:
 		    break;
 		}
 
-		// FIXME: attach code
-		// FIXME: check, if in switch and type
+		// verify that we are in switch
+		if (! p_parser->m_switch_stack)
+		{
+		    yyLerror ("case expression not allowed outside of switch statement", $1.l);
+		    $$.t = 0;
+		    break;
+		}
+
 		bool non_duplicate = 
 		    p_parser->m_switch_stack->statement->setDefaultCase ();
-		
-		// FIXME: report duplicate
+
+		if (! non_duplicate)
+		{
+		    yyLerror ("Duplicate case expression", $1.l);
+		    $$.t = 0;
+		    break;
+		}
 		
 		$$.t = Type::Void;
 		$$.c = 0;	// no code
@@ -1973,7 +2008,10 @@ control_statement:
 		    break;
 		}
 
-		$$.t = Type::Void;
+#if DO_DEBUG
+		y2debug ("Finished switch: %s", sw->toString ().c_str ());
+#endif
+		$$.t = Type::Unspec;
 		$$.c = sw;
 	    }
 ;
