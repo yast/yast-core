@@ -199,6 +199,7 @@ Parser::init ()
     m_parser_errors = 0;
     m_block_stack = 0;
     m_scanner_stack = 0;
+    m_switch_stack = 0;
     m_current_block = 0;
     m_blockstack_depth = 0;
 

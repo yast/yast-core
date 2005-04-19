@@ -99,7 +99,7 @@ bool
 YCode::isStatement() const
 {
     return ((m_kind > yeExpression)
-	    && (m_kind < ysStatement));
+	    && (m_kind < ysStatement || m_kind == ysSwitch));
 }
 
 

@@ -13,6 +13,7 @@
    File:	YStatement.h
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
@@ -28,6 +29,7 @@ using std::string;
 #include "ycp/SymbolTable.h"
 #include "ycp/YSymbolEntry.h"
 #include "ycp/Import.h"
+#include "ycp/ycpless.h"
 
 class YBlock;		// forward declaration for YDo, YRepeat
 
@@ -49,6 +51,7 @@ DEFINE_DERIVED_POINTER(YSTextdomain, YCode);
 DEFINE_DERIVED_POINTER(YSInclude, YCode);
 DEFINE_DERIVED_POINTER(YSImport, YCode);
 DEFINE_DERIVED_POINTER(YSFilename, YCode);
+DEFINE_DERIVED_POINTER(YSSwitch, YCode);
 
 //-------------------------------------------------------------------
 /**
@@ -404,5 +407,37 @@ public:
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
+
+//-------------------------------------------------------------------
+/**
+ * switch
+ */
+
+class YSSwitch : public YStatement
+{
+    REP_BODY(YSSwitch);
+    YCodePtr m_condition;
+    YBlockPtr m_block;
+    
+    // index of the default case statement in the block
+    int m_defaultcase;
+    
+    // indices of the case statements in the block
+    map<YCPValue, int, ycpless> m_cases;
+    
+public:
+    YSSwitch (YCodePtr condition);
+    YSSwitch (bytecodeistream & str);
+    ~YSSwitch ();
+    string name () const;
+    string toString () const;
+    std::ostream & toStream (std::ostream & str) const;
+    YCPValue evaluate (bool cse = false);
+    constTypePtr type () const { return Type::Void; };
+    bool setCase (YCPValue value);
+    bool setDefaultCase ();
+    void setBlock (YBlockPtr block);
+};
+
 
 #endif   // YStatement_h

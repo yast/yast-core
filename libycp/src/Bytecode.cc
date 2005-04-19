@@ -1044,6 +1044,11 @@ Bytecode::readCode (bytecodeistream & str)
 	    res = new YSBlock (str);
 	}
 	break;
+	case YCode::ysSwitch:
+	{
+	    res = new YSSwitch (str);
+	}
+	break;
 	default:
 	{
 	    y2error ("Unknown code %d", code);

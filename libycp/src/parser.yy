@@ -13,7 +13,8 @@
    File:       parser.yy
 
    Author:     Klaus Kämpf <kkaempf@suse.de>
-   Maintainer: Klaus Kämpf <kkaempf@suse.de>
+	       Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer: Stanislav Visnovsky <visnov@suse.cz>
 
 
    Implementation rules
@@ -196,6 +197,17 @@ struct blockstack_t : stack_t {
 #define blockstack_pop(s) (p_parser->m_blockstack_depth--, (blockstack_t *)stack_pop ((stack_t **)&(s)))
 #define blockstack_at_toplevel() (p_parser->m_blockstack_depth == 1)
 
+
+//! stack for switch
+
+struct switchstack_t : stack_t {
+    YSSwitchPtr statement;	//!< pointer to switch statement
+};
+#define switchstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
+#define switchstack_pop(s) ((switchstack_t *)stack_pop ((stack_t **)&(s)))
+
+static bool in_switch = false;
+
 enum scan_states {
     SCAN_FILE,		//!< a plain file
     SCAN_START_INCLUDE,	//!< before the first token of an include file (see start_block())
@@ -238,6 +250,7 @@ static int do_while_count = 0;
 %token  MODULE IMPORT EXPORT MAPEXPR INCLUDE GLOBAL TEXTDOMAIN
 %token	CONST FULLNAME STATIC EXTERN
 %token	LOOKUP SELECT 
+%token	SWITCH CASE DEFAULT
 
 %token	SYM_NAMESPACE
  /* known entry  */
@@ -989,6 +1002,16 @@ block:
 		}
 
 		start_block (p_parser, b_t);
+
+		// verify, if we are in switch. if yes, say we are
+		// the block of the switch
+		
+		if (in_switch) {
+		    p_parser->m_switch_stack->statement->
+			setBlock (p_parser->m_block_stack->theBlock);
+		    in_switch = false;
+		}
+		
 	    }
 	block_end
 	    {
@@ -1622,6 +1645,51 @@ statement:
 		}
 		$$ = $1;
 	    }
+|	CASE expression ':'
+	    {
+		if ($2.t == 0)
+		{
+		    $$.t = 0;
+		    break;
+		}
+		
+		// FIXME: verify that we are in switch
+
+		// FIXME: attach code
+		YCPValue val = $2.c->evaluate (true);
+		if (val.isNull ())
+		{
+		    // FIXME: report error about non-constant label
+		    $$.t = 0;
+		    break;
+		}
+
+		// FIXME: check, if in switch and type
+		bool non_duplicate = p_parser->m_switch_stack->statement->setCase (val);
+		
+		// FIXME: report duplicate
+		
+		$$.t = Type::Void;
+		$$.c = 0;	// no code
+	    }
+|	DEFAULT  ':'
+	    {
+		if ($2.t == 0)
+		{
+		    $$.t = 0;
+		    break;
+		}
+
+		// FIXME: attach code
+		// FIXME: check, if in switch and type
+		bool non_duplicate = 
+		    p_parser->m_switch_stack->statement->setDefaultCase ();
+		
+		// FIXME: report duplicate
+		
+		$$.t = Type::Void;
+		$$.c = 0;	// no code
+	    }
 ;
 
 control_statement:
@@ -1822,7 +1890,8 @@ control_statement:
 	    }
 |	BREAK ';'
 	    {
-		if (p_parser->m_loop_count <= 0)
+		if (p_parser->m_loop_count <= 0
+		    && p_parser->m_switch_stack == 0)
 		{
 		    yyLerror ("'break' outside of loop.", $1.l);
 		    $$.t = 0;
@@ -1868,6 +1937,44 @@ control_statement:
 		$$.t = $2.t->isVoid() ? Type::Nil : $2.t;	// "return nil;" is of type 'Nil'
 		$$.c = new YSReturn ($2.c, $1.l);
 		$$.l = $1.l;
+	    }
+|	SWITCH '(' expression ')'
+	    {
+		// propagate errors
+		if ($3.t == 0)
+		{
+		    $$.t = 0;
+		    break;
+		}
+		
+		YSSwitchPtr sw = new YSSwitch ($3.c);
+
+		// push to stack
+		switchstack_t* top = new switchstack_t;
+		top->statement = sw;
+		switchstack_push (p_parser->m_switch_stack, top);
+		
+		in_switch = true;
+	    }
+	block
+	    {
+		// cleanup, just in case
+		in_switch = false;
+		
+		// pop from stack
+		switchstack_t* top = switchstack_pop (p_parser->m_switch_stack);
+		YSSwitchPtr sw = top->statement;
+		delete top;
+
+		// propagate errors
+		if ($6.t == 0)
+		{
+		    $$.t = 0;
+		    break;
+		}
+
+		$$.t = Type::Void;
+		$$.c = sw;
 	    }
 ;
 

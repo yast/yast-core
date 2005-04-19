@@ -472,6 +472,50 @@ YBlock::toString () const
 }
 
 
+string
+YBlock::toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) const
+{
+    // first, create reverse map of cases
+    int statementcount = statementCount ();
+    YCPValue values[statementcount];
+    
+    for (int i = 0; i < statementcount; i++)
+	values[i] = YCPNull ();
+	
+    for (map<YCPValue, int, ycpless>::iterator it = cases.begin ();
+	it != cases.end (); it++ )
+    {
+	values[ it->second ] = it->first;
+    }
+    
+    // create string output
+    string s = "{";
+
+    s += environmentToString ();
+
+    stmtlist_t *stmt = m_statements;
+    int index = 0;
+    while (stmt)
+    {
+	s += "\n    ";
+	if (index == defaultcase)
+	{
+	    s += "default:\n    ";
+	}
+	else if (! values[index].isNull ())
+	{
+	    s += "case " + values[index]->toString ()+":\n    ";
+	}
+	s += stmt->stmt->toString();
+	stmt = stmt->next;
+	index++;
+    }
+
+    s += "\n}\n";
+    return s;
+}
+
+
 YCPValue
 YBlock::evaluate (bool cse)
 {
@@ -502,6 +546,95 @@ YBlock::evaluate (bool cse)
 
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
+    while (stmt)
+    {
+	YStatementPtr statement = stmt->stmt;
+	
+#if DO_DEBUG
+	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
+#endif
+
+	ee.setStatement (statement);
+	value = statement->evaluate ();
+
+	if (!value.isNull())
+	{
+#if DO_DEBUG
+	    y2debug ("Block exit (%s)", value->toString().c_str());
+#endif
+	    break;
+	}
+
+	stmt = stmt->next;
+    }
+    if (!restore_name.empty())
+    {
+	ee.setFilename (restore_name);
+    }
+    
+    m_running = old_m_running;
+    
+    // recursion handling - not used for modules
+    if (! isModule () && m_running)
+    {
+	popFromStack ();
+    }
+
+#if DO_DEBUG
+    y2debug ("YBlock::evaluate done (stmt %p, kind %d, value '%s')\n", stmt, m_kind, value.isNull() ? "NULL" : value->toString().c_str());
+#endif
+
+    // if stmt==0 we're at the end of the block. If the block is evaluated as a statement,
+    //   it returns NULL, else it returns Void
+    if (stmt == 0)
+    {
+	if (m_kind == b_statement)
+	{
+	    return YCPNull();
+	}
+	return YCPVoid();
+    }
+
+    // if stmt!=0 we just evaluated a break or return statement. A 'return;' evaluates to YCPReturn
+    return value;
+}
+
+
+// FIXME: consolidate duplicate code of different 'evaluate'
+YCPValue
+YBlock::evaluateFrom (int statement_index)
+{
+#if DO_DEBUG
+    y2debug ("YBlock::evaluate from statement([%d]%s)\n", (int)m_kind, toString().c_str());
+#endif
+
+    // recursion handling - not used for modules
+    if (m_running)
+    {
+	pushToStack ();
+    }
+    
+    bool old_m_running = m_running;
+    m_running = true;
+
+    string restore_name;
+    if (!filename().empty())
+    {
+	restore_name = ee.filename ();
+	ee.setFilename (filename());
+    }
+
+    stmtlist_t *stmt = m_statements;
+    YCPValue value = YCPVoid ();
+    
+    // skip statements until index
+    while (stmt && statement_index > 0)
+    {
+	stmt = stmt->next;
+	statement_index--;
+    }
+    
+    // execute the rest of statements
     while (stmt)
     {
 	YStatementPtr statement = stmt->stmt;

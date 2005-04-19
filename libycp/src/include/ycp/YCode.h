@@ -119,9 +119,9 @@ public:
 	ysInclude,		// include
 	ysFilename,		//  restore filename after include
 	ysImport,		// import
-	ysBlock,		// [52] a block as statement
-	ysStatement		// -- placeholder --
-	
+	ysBlock,		// a block as statement
+	ysStatement,		// -- placeholder --
+	ysSwitch		// [54] switch () (since 10.0)
     };
 
 protected:

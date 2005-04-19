@@ -13,7 +13,8 @@
    File:	YBlock.h
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
-   Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
+   Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 // -*- c++ -*-
@@ -154,6 +155,9 @@ public:
 
     // evaluate the complete block
     virtual YCPValue evaluate (bool cse = false);
+    
+    // evaluate the block from the given statement (switch)
+    YCPValue evaluateFrom (int statement_index);
 
     // evaluate a single statement
     // this is a special purpose interface for macro player
@@ -266,6 +270,7 @@ public:
 
     string toString () const;
     string environmentToString () const;
+    string toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) const;
 
     //---------------------------------------------------------------
     // stream output

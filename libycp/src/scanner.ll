@@ -422,6 +422,9 @@ typedef		{ return TYPEDEF;	};
 lookup		{ return LOOKUP;	};
 betrachten	{ return LOOKUP;	};
 select		{ return SELECT;	};
+switch		{ return SWITCH;	};
+case		{ return CASE;		};
+default		{ return DEFAULT;	};
 selektieren	{ return SELECT;	};
 
  /* ----------------------------------- */

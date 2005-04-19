@@ -32,6 +32,7 @@
 class Scanner;
 class blockstack_t;
 class scannerstack_t;
+class switchstack_t;
 class YBlock;
 
 /**
@@ -112,6 +113,11 @@ public:
      * Stack of parsed blocks 
      */
     blockstack_t *m_block_stack;
+
+    /**
+     * Stack of parsed switches 
+     */
+    switchstack_t *m_switch_stack;
 
     /**
      * Scanners used for include parsing

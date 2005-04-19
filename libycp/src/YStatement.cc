@@ -39,7 +39,7 @@
 #include "y2/Y2ComponentBroker.h"
 
 #ifndef DO_DEBUG
-#define DO_DEBUG 0
+#define DO_DEBUG 1
 #endif
 
 extern ExecutionEnvironment ee;
@@ -62,6 +62,7 @@ IMPL_DERIVED_POINTER(YSTextdomain, YCode);
 IMPL_DERIVED_POINTER(YSInclude, YCode);
 IMPL_DERIVED_POINTER(YSImport, YCode);
 IMPL_DERIVED_POINTER(YSFilename, YCode);
+IMPL_DERIVED_POINTER(YSSwitch, YCode);
 
 // ------------------------------------------------------------------
 // statement (-> statement, next statement)
@@ -1570,6 +1571,170 @@ YSFilename::evaluate (bool cse)
     if (! cse) ee.setFilename (m_filename.asString());
 
     return YCPNull ();
+}
+
+
+//-------------------------------------------------------------------
+/**
+ * Switch
+ */
+
+YSSwitch::YSSwitch (YCodePtr condition)
+    : YStatement (ysSwitch)
+    , m_condition (condition)
+    , m_block (0)
+    , m_defaultcase (-1)
+{
+}
+
+
+YSSwitch::~YSSwitch ()
+{
+}
+
+
+string
+YSSwitch::toString() const
+{
+    string s = string ("switch (") + m_condition->toString () + ") {\n";
+    s += m_block->toStringSwitch (m_cases, m_defaultcase);
+    s += "}";
+    return s;
+}
+
+
+YSSwitch::YSSwitch (bytecodeistream & str)
+    : YStatement (ysSwitch, str)
+    , m_condition (0)
+    , m_block (0)
+    , m_defaultcase (-1)
+{
+    m_condition = Bytecode::readCode (str);
+    if (! m_condition)
+    {
+	m_valid = false;
+	return;
+    }
+
+    int size = Bytecode::readInt32 (str);
+    for (int i = 0; i < size ; i++)
+    {
+	YCPValue cv = Bytecode::readValue (str);
+	if (cv.isNull ())
+	{
+	    m_valid = false;
+	    return;
+	}
+	int index = Bytecode::readInt32 (str);
+	m_cases[cv] = index;
+    }
+    
+    m_defaultcase = Bytecode::readInt32 (str);
+    
+    m_block = (YBlockPtr)Bytecode::readCode (str);
+    if (! m_block)
+    {
+	m_valid = false;
+	return;
+    }
+}
+
+
+std::ostream &
+YSSwitch::toStream (std::ostream & str) const
+{
+    YStatement::toStream (str);
+
+    m_condition->toStream (str);
+
+    Bytecode::writeInt32 (str, m_cases.size ());
+    
+    for (map<YCPValue, int, ycpless>::const_iterator it = m_cases.begin ()
+	; it != m_cases.end () ; it++)
+    {
+	Bytecode::writeValue (str, it->first);
+	Bytecode::writeInt32 (str, it->second);
+    }
+    
+    Bytecode::writeInt32 (str, m_defaultcase);
+    
+    return m_block->toStream (str);
+}
+
+
+YCPValue
+YSSwitch::evaluate (bool cse)
+{
+#if DO_DEBUG
+    y2debug( "YSSwitch");
+#endif
+    if (cse)
+	return YCPNull ();
+	
+    YCPValue condition = m_condition->evaluate ();
+    if (condition.isNull ())
+    {
+	ycperror ("switch condition evaluates to 'nil'");
+	return YCPNull ();
+    }
+    
+    // if there is a case for this value, execute
+    if (m_cases.find (condition) != m_cases.end ())
+    {
+#if DO_DEBUG
+	y2debug ("Evaluating from statement '%d'",m_cases[condition]);
+#endif
+	return m_block->evaluateFrom (m_cases[condition]);
+    }
+    // no case, try default if defined
+    else if (m_defaultcase != -1)
+    {
+#if DO_DEBUG
+	y2debug ("Evaluating from default statement '%d'",m_defaultcase);
+#endif
+	return m_block->evaluateFrom (m_defaultcase);
+    }
+
+#if DO_DEBUG
+    y2debug ("Switch done");
+#endif
+
+    return YCPNull ();
+}
+
+
+bool
+YSSwitch::setCase (YCPValue value)
+{
+    // verify duplicate
+    if (m_cases.find (value) != m_cases.end ())
+	return false;
+    
+    int index = m_block->statementCount ();
+    
+    m_cases[value]=index;
+    
+    return true;
+}
+
+
+bool
+YSSwitch::setDefaultCase ()
+{
+    // fail, if there is default case already
+    if (m_defaultcase != -1)
+	return false;
+
+    m_defaultcase = m_block->statementCount ();
+    
+    return true;
+}
+
+
+void
+YSSwitch::setBlock (YBlockPtr block)
+{
+    m_block = block;
 }
 
 // EOF
