@@ -30,10 +30,9 @@
 
 
 YSelectionBox::YSelectionBox( const YWidgetOpt & opt, YCPString label )
-    : YWidget( opt )
-    , label( label )
+    : YSelectionWidget( opt,label )
 {
-    // y2debug( "YSelectionBox( %s )", label->value_cstr() );
+    // y2debug( "YSelectionBox( %s )", label->value_cstr() ); 
 
     // Derived classes need to check opt.shrinkable!
 
@@ -41,7 +40,6 @@ YSelectionBox::YSelectionBox( const YWidgetOpt & opt, YCPString label )
     setDefaultStretchable( YD_VERT,  true );
 
 }
-
 
 YCPValue YSelectionBox::changeWidget( const YCPSymbol & property, const YCPValue & newValue )
 {
@@ -53,32 +51,31 @@ YCPValue YSelectionBox::changeWidget( const YCPSymbol & property, const YCPValue
      */
     if ( s == YUIProperty_Label )
     {
-	if ( newValue->isString() )
-	{
-	    setLabel( newValue->asString() );
-	    return YCPBoolean( true );
-	}
-	else
-	{
-	    y2error( "SelectionBox: Invalid parameter %s for Label property. Must be string",
-		     newValue->toString().c_str() );
-	    return YCPBoolean( false );
-	}
+	return changeLabel ( newValue );
     }
-
+	
     /**
      * @property string CurrentItem
      * The currently selected item or its ID, if it has one.
      */
     else if ( s == YUIProperty_CurrentItem )	 // Select item with that id
     {
-	int index = itemWithId( newValue, true ); // true: log error
+    	int index = itemWithId( newValue, true ); // true: log error
 	if ( index < 0 ) return YCPBoolean( false );
 	else
 	{
 	    setCurrentItem( index );
 	    return YCPBoolean( true );
 	}
+    } 
+
+    /**
+     * @property id_list Items
+     * The items that are displayed
+     */
+    else if ( s == YUIProperty_Items ) 
+    {
+	return changeItems( newValue );
     }
     else return YWidget::changeWidget( property, newValue );
 }
@@ -104,54 +101,9 @@ YCPValue YSelectionBox::queryWidget( const YCPSymbol & property )
 }
 
 
-void YSelectionBox::setLabel( const YCPString & label )
-{
-    this->label = label;
-}
-
-
-YCPString YSelectionBox::getLabel()
-{
-    return label;
-}
-
-
-void YSelectionBox::addItem( const YCPValue & id, const YCPString & text, bool selected )
-{
-    item_ids->add( id );
-    item_labels->add( text );
-    itemAdded( text, numItems()-1, selected );
-}
-
-
-void YSelectionBox::itemAdded( const YCPString & , int, bool )
-{
-    // default dummy implementation
-}
-
-
-int YSelectionBox::numItems() const
-{
-    return item_ids->size();
-}
-
-
-int YSelectionBox::itemWithId( const YCPValue & id, bool report_error )
-{
-    for ( int i=0; i < numItems(); i++ )
-    {
-	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal( id ) ) return i;
-	else if ( item_labels->value(i)->equal( id ) ) return i;
-    }
-    if ( report_error )
-	y2error( "SelectionBox: No item %s existing", id->toString().c_str() );
-
-    return -1;
-}
 
 
 void YSelectionBox::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
 }
-

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Apr 21 16:48:05 CEST 2005 - sh@suse.de
+
+- Merged selection_widget_cleanups branch to trunk:
+  selection widgets can now replace list items
+  (SelectionBox, ComboBox, MultiSelectionBox, Tree) 
+
+-------------------------------------------------------------------
 Tue Apr 19 17:23:02 CEST 2005 - visnov@suse.cz
 
 - implemented 'switch' statement

@@ -19,7 +19,7 @@
 #ifndef YComboBox_h
 #define YComboBox_h
 
-#include "YWidget.h"
+#include "YSelectionWidget.h"
 #include <ycp/YCPString.h>
 #include <ycp/YCPList.h>
 
@@ -28,7 +28,7 @@ class YMacroRecorder;
 /**
  * @short Implementation of the ComboBox widget
  */
-class YComboBox : public YWidget
+class YComboBox : public YSelectionWidget
 {
 public:
     /**
@@ -49,11 +49,6 @@ public:
     virtual char *widgetClass() { return "YComboBox"; }
 
     /**
-     * Adds an item to the selection box.
-     */
-    void addItem( const YCPValue & id, const YCPString & text, bool selected );
-
-    /**
      * Implements the ui command changeWidget.
      */
     YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
@@ -62,19 +57,6 @@ public:
      * Implements the ui command queryWidget
      */
     YCPValue queryWidget( const YCPSymbol & property );
-
-    /**
-     * Change the label text. Overload this, but call
-     * YTextEntry::setLabel at the end of your own function.
-     */
-    virtual void setLabel( const YCPString & label );
-
-    /**
-     * Get the current label text. This method cannot be overidden.
-     * The value of the label cannot be changed other than by calling setLabel,
-     * i.e. not by the ui. Therefore setLabel stores the current label in #label.
-     */
-    YCPString getLabel();
 
     /**
      * Change the valid input characters.
@@ -89,23 +71,7 @@ public:
      */
     YCPString getValidChars();
 
-    /**
-     * The name of the widget property that holds the keyboard shortcut.
-     * Inherited from YWidget.
-     */
-    const char *shortcutProperty() { return YUIProperty_Label; }
-    
-
 protected:
-    /**
-     * Is called, when an item has been added. Overload this to
-     * fill the ui specific widget with items.
-     * @param string text of the new item
-     * @param index index of the new item.
-     * @param selected true if the item should be selected.
-     */
-    virtual void itemAdded( const YCPString & string, int index, bool selected );
-
     /**
      * Returns the ComboBox value.
      */
@@ -129,21 +95,7 @@ protected:
      */
     virtual void setCurrentItem( int index ) = 0;
 
-
 private:
-    /**
-     * Returns the current number of items
-     */
-    int numItems() const;
-
-    /**
-     * Searches for an item with a certain id or a certain label.
-     * Returns the index of the found item or -1 if none was found
-     * @param report_error set this to true, if you want me to
-     * report an error if non item can be found.
-     */
-    int itemWithId( const YCPValue & id, bool report_error );
-
     /**
      * Save the widget's user input to a macro recorder.
      * Intentionally declared as "private" so all macro recording internals are
@@ -152,26 +104,9 @@ private:
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
     /**
-     * The current label of the selectionbox
-     */
-    YCPString label;
-
-    /**
      * Valid input characters
      */
     YCPString validChars;
-
-    /**
-     * The current list of item ids. We make destructive changes to
-     * this variable, so make sure only one reference to it exists!
-     */
-    YCPList item_ids;
-
-    /**
-     * The current list of item labels. We make destructive changes to
-     * this variable, so make sure only one reference to it exists!
-     */
-    YCPList item_labels;
 
     /**
      * Any input ( not only from the list ) permitted?

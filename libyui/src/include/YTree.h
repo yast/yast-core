@@ -121,6 +121,10 @@ public:
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
     
+    /**
+     * parses a given itemlist and calls addItem(...) to insert entries
+     */
+    int parseItems( const YCPList &	itemList, YTreeItem *parentItem = 0);
 
 protected:
 
@@ -163,6 +167,11 @@ protected:
      */
     YTreeItemList items;
 
+    /**
+     * Cleares the YTreeItemList. This function is
+     * calles out of the corresponding YQ classes.
+     */
+    virtual void deleteAllItems();
 
 private:
 

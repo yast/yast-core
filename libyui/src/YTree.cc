@@ -28,6 +28,7 @@
 #include "YUISymbols.h"
 #include "YMacroRecorder.h"
 #include "YTree.h"
+#include "YUI.h"
 
 
 YTree::YTree( const YWidgetOpt & opt, YCPString newLabel )
@@ -100,6 +101,27 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 	    y2error( "Tree: No item %s existing", newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
+    }
+
+    /**
+     * @property YTreeItem list Items
+     * The items that are displayed
+     */
+    else if ( s == YUIProperty_Items ) 
+    {
+	if ( newvalue->isList() )
+	{
+	    deleteAllItems();
+	    YCPList itemlist = newvalue->asList();
+	    if ( parseItems( itemlist ) == -1 ) 
+	    {
+		y2error ("%s: Failed to parse itemlist while changing items",
+			 widgetClass() );
+		return YCPBoolean( false );
+	    }
+	    rebuildTree();
+	}
+	return YCPBoolean( true );
     }
     else
     {
@@ -300,6 +322,117 @@ void YTree::saveUserInput( YMacroRecorder *macroRecorder )
 {
     macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
 }
+
+
+int YTree::parseItems( const YCPList &	itemList,
+			      YTreeItem *parentItem )
+{
+    for ( int i=0; i < itemList->size(); i++ )
+    {
+	YCPValue item = itemList->value(i);
+
+	if ( item->isString() )
+	{
+	    // The simplest case: just a string, nothing elsewas 
+	    ( void ) addItem ( parentItem, YCPNull(), item->asString(), false );
+	}
+	else if ( item->isTerm() && item->asTerm()->name() == YUISymbol_item )
+	{
+	    // found `item()
+
+	    YCPTerm iterm = item->asTerm();
+
+	    if ( iterm->size() < 1 || iterm->size() > 4 )
+	    {
+		y2error( "Tree: Invalid argument number in %s",
+			 iterm->toString().c_str() );
+
+		return -1;
+	    }
+
+	    int argnr = 0;
+
+
+	    // check for item `id() ( optional )
+
+	    YCPValue item_id = YCPNull();
+
+	    if ( YUI::checkId ( iterm->value( argnr ), false ) )
+	    {
+		item_id = YUI::getId ( iterm->value ( argnr++ ) );
+	    }
+
+
+	    // extract item label ( mandatory )
+
+	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
+	    {
+		y2error( "Tree: Invalid item arguments in %s",
+			 iterm->toString().c_str() );
+
+		return -1;
+	    }
+
+	    YCPString item_label = iterm->value( argnr++ )->asString();
+
+
+	    bool item_open = false;
+
+	    if ( argnr < iterm->size() )
+	    {
+		// check for 'open' flag ( true/false ) ( optional )
+
+		if ( iterm->value( argnr )->isBoolean() )
+		{
+		    item_open = iterm->value( argnr++ )->asBoolean()->value();
+		}
+	    }
+
+	    YTreeItem * treeItem = addItem ( parentItem, item_id, item_label, item_open );
+
+	    if ( argnr < iterm->size() )
+	    {
+		// check for sub-item list ( optional )
+		if ( ! iterm->value( argnr )->isList() )
+		{
+		    y2error( "Expecting tree item list instead of: %s",
+			     iterm->value( argnr )->toString().c_str() );
+
+		    return -1;
+		}
+
+		if ( parseItems ( iterm->value ( argnr++ )->asList(), treeItem ) == -1 )
+		{
+		    return -1;
+		}
+	    }
+
+
+	    // Anything left over must be an error.
+
+	    if ( argnr != iterm->size() )
+	    {
+		y2error( "Tree: Wrong number of arguments in %s", item->toString().c_str() );
+	    }
+	}
+	else
+	{
+	    y2error( "Invalid item %s: Tree items must be strings or specified with `"
+		     YUISymbol_item "()", item->toString().c_str() );
+	}
+    }
+
+    return 0;
+}
+
+
+void YTree::deleteAllItems()
+{
+    items.clear();
+}
+
+
+
 
 
 /*==========================================================================*/

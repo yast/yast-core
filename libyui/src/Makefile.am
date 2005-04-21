@@ -60,7 +60,8 @@ libyui_la_SOURCES =				\
 	YTime.cc				\
 	YTree.cc				\
 	YWidget.cc				\
-	YWizard.cc
+	YWizard.cc				\
+	YSelectionWidget.cc
 
 
 INCLUDES =					\

@@ -29,8 +29,7 @@
 
 
 YMultiSelectionBox::YMultiSelectionBox( const YWidgetOpt & opt, YCPString label )
-    : YWidget( opt )
-    , label( label )
+    : YSelectionWidget( opt,label )
 {
     // y2debug( "YMultiSelectionBox( %s )", label->value_cstr() );
 
@@ -52,21 +51,9 @@ YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCP
      */
     if ( sym == YUIProperty_Label )
     {
-	if ( newValue->isString() )
-	{
-	    setLabel( newValue->asString() );
-
-	    return YCPBoolean( true );
-	}
-	else
-	{
-	    y2error( "MultiSelectionBox: Invalid parameter %s for Label property. Must be string",
-		     newValue->toString().c_str() );
-
-	    return YCPBoolean( false );
-	}
+	return changeLabel( newValue );
     }
-
+	
     /**
      * @property string CurrentItem
      * The item that currently has the keyboard focus
@@ -81,6 +68,7 @@ YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCP
 	    return YCPBoolean( true );
 	}
     }
+
     /**
      * @property id_list SelectedItems
      * The items that are currently selected
@@ -92,31 +80,41 @@ YCPValue YMultiSelectionBox::changeWidget( const YCPSymbol & property, const YCP
 	    y2error( "MultiSelectionBox: Can't set property %s: "
 		     "Expected list of IDs or item labels, not %s",
 		     sym.c_str(), newValue->toString().c_str() );
-
+			
 	    return YCPBoolean( false );
 	}
-
+		
 	OptimizeChanges below( *this ); // delay screen updates until this block is left
-
+		
 	deselectAllItems();
 	YCPList selected_items = newValue->asList();
-
+		
 	for ( int i = 0; i < selected_items->size(); i++ )
 	{
 	    YCPValue id = selected_items->value(i);
 	    int index	= itemWithId( id, true ); // true: log error
-
+			
 	    if ( index < 0 )			// No such item
 	    {
 		return YCPBoolean( false );
 	    }
-
+			
 	    selectItem( index );
 	}
-
+		
 	return YCPBoolean( false );
     }
-    else return YWidget::changeWidget( property, newValue );
+
+    /**
+     * @property id_list Items
+     * The items that are displayed
+     */
+    else if ( sym == YUIProperty_Items ) 
+    {
+	return changeItems ( newValue );
+    }
+    else
+	return YWidget::changeWidget( property, newValue );
 }
 
 
@@ -154,57 +152,6 @@ YCPValue YMultiSelectionBox::queryWidget( const YCPSymbol & property )
 	return selected_items;
     }
     else return YWidget::queryWidget( property );
-}
-
-
-void YMultiSelectionBox::setLabel( const YCPString & label )
-{
-    this->label = label;
-}
-
-
-YCPString YMultiSelectionBox::getLabel()
-{
-    return label;
-}
-
-
-void YMultiSelectionBox::addItem( const YCPString &	text,
-				  const YCPValue  &	id,
-				  bool 			selected )
-{
-    // y2debug( "Adding item '%s'", text->value().c_str() );
-
-    item_labels->add( text );
-    item_ids->add( id );
-    itemAdded( text, selected );
-}
-
-
-int YMultiSelectionBox::numItems() const
-{
-    return item_ids->size();
-}
-
-
-void YMultiSelectionBox::deleteAllItems()
-{
-    item_labels = YCPList();
-    item_ids	= YCPList();
-}
-
-
-int YMultiSelectionBox::itemWithId( const YCPValue & id, bool report_error )
-{
-    for ( int i=0; i < numItems(); i++ )
-    {
-	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal( id ) ) return i;
-	else if ( item_labels->value(i)->equal( id ) ) return i;
-    }
-    if ( report_error )
-	y2error( "MultiSelectionBox: No item %s existing", id->toString().c_str() );
-
-    return -1;
 }
 
 

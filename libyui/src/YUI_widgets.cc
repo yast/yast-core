@@ -1456,8 +1456,8 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
 {
     int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
-	 || !term->value(argnr)->isString()
-	 || (numargs == 2 && !term->value(argnr+1)->isList()))
+	 || ! term->value( argnr )->isString()
+	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
 	y2error( "Invalid arguments for the SelectionBox widget: %s",
 		 term->toString().c_str() );
@@ -1476,61 +1476,13 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
     }
 
     YSelectionBox *selbox = dynamic_cast<YSelectionBox *> ( createSelectionBox( parent, opt, term->value( argnr )->asString() ) );
-    assert( selbox );
-    if ( numargs == 2 )
-    {
-	YCPList itemlist = term->value( argnr+1 )->asList();
-	for ( int i=0; i<itemlist->size(); i++ )
-	{
-	    YCPValue item = itemlist->value(i);
-	    if ( item->isString() )
-	    {
-		selbox->addItem( YCPNull(), item->asString(), false );
-	    }
-	    else if ( item->isTerm()
-		      && item->asTerm()->name() == YUISymbol_item )
-	    {
-		YCPTerm iterm = item->asTerm();
-		if ( iterm->size() < 1 || iterm->size() > 3 )
-		{
-		    y2error( "SelectionBox: Invalid argument number in %s",
-			     iterm->toString().c_str() );
-		}
-		else
-		{
-		    int argnr = checkId( iterm->value(0) ) ? 1 : 0;
-		    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-			y2error( "SelectionBox: Invalid item arguments in %s",
-				 iterm->toString().c_str() );
-		    else
-		    {
-			YCPValue item_id = YCPNull();
-			if ( argnr == 1 ) item_id = getId( iterm->value(0) );
-			YCPString item_label = iterm->value( argnr )->asString();
-			bool item_selected = false;
-			if ( iterm->size() >= argnr + 2 )
-			{
-			    if ( iterm->value( argnr+1 )->isBoolean() )
-				item_selected = iterm->value( argnr+1 )->asBoolean()->value();
-			    else
-			    {
-				y2error( "SelectionBox: Invalid item arguments in %s",
-					 iterm->toString().c_str() );
-			    }
-			}
 
-			selbox->addItem( item_id, item_label, item_selected );
-		    }
-		}
-	    }
-	    else
-	    {
-		y2error( "Invalid item %s: SelectionBox items must be strings or specified with `"
-			 YUISymbol_item "()", item->toString().c_str() );
-	    }
-	    // `item
-	} // loop over items
-    }
+    if ( selbox && numargs >= 2 )
+    {
+	if ( ! selbox->parseItems( term->value( argnr+1 )->asList() ) )
+	    return 0;
+    }	
+
     return selbox;
 }
 
@@ -1540,7 +1492,7 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
  * @short	Selection box that allows selecton of multiple items
  * @class	YMultiSelectionBox
  * @arg		string	label
- * @arg		list	items	the items initially contained in the selection box
+ * @optarg	list	items	the items initially contained in the selection box
  * @option	shrinkable make the widget very small
  * @usage	`MultiSelectionBox( `id( `topping ), "select pizza toppings:", [ "Salami", `item( `id( `cheese ), "Cheese", true ) ] )
  * @examples	MultiSelectionBox1.ycp MultiSelectionBox2.ycp MultiSelectionBox3.ycp
@@ -1560,11 +1512,11 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
 
 YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
 {
-    int term_size = term->size() - argnr;
+    int numargs = term->size() - argnr;
 
-    if ( term_size != 2
+    if ( numargs < 1 || numargs > 2
 	 || ! term->value( argnr   )->isString()
-	 || ! term->value( argnr+1 )->isList() )
+	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
 	y2error( "Invalid arguments for the MultiSelectionBox widget: %s",
 		 term->toString().c_str() );
@@ -1578,113 +1530,19 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
 	else logUnknownOption( term, optList->value(o) );
     }
 
-    YMultiSelectionBox *multi_sel_box = dynamic_cast<YMultiSelectionBox *>
-	( createMultiSelectionBox( parent, opt, term->value( argnr )->asString() ) );
-    assert( multi_sel_box );
+    YMultiSelectionBox *multi_sel_box =
+	dynamic_cast<YMultiSelectionBox *> ( createMultiSelectionBox( parent, opt, term->value( argnr )->asString() ) );
 
-
-    if ( ! multi_sel_box ||
-	 parseMultiSelectionBoxItemList( term->value ( argnr+1 )->asList(), multi_sel_box ) < 0 )
+    if ( multi_sel_box && numargs >= 2 )
     {
-	return 0;
+	if ( ! multi_sel_box->parseItems( term->value( argnr+1 )->asList() ) )
+	    return 0;
     }
 
     return multi_sel_box;
 }
 
 
-int
-YUI::parseMultiSelectionBoxItemList( const YCPList &		item_list,
-				     YMultiSelectionBox *	multi_sel_box )
-{
-    multi_sel_box->deleteAllItems();
-
-    for ( int i=0; i < item_list->size(); i++ )
-    {
-	YCPValue item = item_list->value(i);
-
-	if ( item->isString() )
-	{
-	    // Simple case: string
-
-	    multi_sel_box->addItem( item->asString() );
-	}
-	else if ( item->isTerm() && item->asTerm()->name() == YUISymbol_item )
-	{
-	    // Found `item()
-
-	    YCPTerm iterm = item->asTerm();
-
-	    if ( iterm->size() < 1 || iterm->size() > 3 )	// `item( `id( ... ), "label", true )
-	    {
-		y2error( "MultiSelectionBox: Invalid argument number in %s",
-			 iterm->toString().c_str() );
-
-		return -1;
-	    }
-
-	    int argnr = 0;
-
-
-	    // check for item `id() (optional)
-
-	    YCPValue item_id = YCPNull();
-
-	    if ( checkId( iterm->value( argnr ), false ) )
-	    {
-		item_id = getId ( iterm->value ( argnr++ ) );
-	    }
-
-
-	    // extract item label ( mandatory )
-
-	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-	    {
-		y2error( "MultiSelectionBox: Expected item label string, not %s",
-			 iterm->toString().c_str() );
-
-		return -1;
-	    }
-
-	    YCPString item_label = iterm->value( argnr++ )->asString();
-
-
-	    bool item_selected = false;
-
-	    if ( argnr < iterm->size() )
-	    {
-		// check for 'selected' flag ( true/false ) ( optional )
-
-		if ( iterm->value( argnr )->isBoolean() )
-		{
-		    item_selected = iterm->value( argnr++ )->asBoolean()->value();
-		}
-	    }
-
-
-	    // Anything left over must be an error.
-
-	    if ( argnr != iterm->size() )
-	    {
-		y2error( "MultiSelectinBox: Wrong number of arguments in %s",
-			 item->toString().c_str() );
-
-		return -1;
-	    }
-
-	    multi_sel_box->addItem( item_label, item_id, item_selected );
-	}
-	else
-	{
-	    y2error( "MultiSelectionBox: Invalid item - use either a "
-		     "simple string or `item( `opt( ... ), \"label\", true/false ), not %s",
-		     item->toString().c_str() );
-	    return -1;
-	}
-    }
-
-    return 0;
-}
 
 
 /**
@@ -1721,7 +1579,7 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
     int numargs = term->size() - argnr;
     if ( numargs < 1 || numargs > 2
 	 || !term->value(argnr)->isString()
-	 || (numargs == 2 && !term->value(argnr+1)->isList()))
+	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
 	y2error( "Invalid arguments for the ComboBox widget: %s",
 		 term->toString().c_str() );
@@ -1734,64 +1592,15 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
 	else logUnknownOption( term, optList->value(o) );
     }
 
-    YComboBox *cbox = dynamic_cast<YComboBox *> ( createComboBox( parent, opt, term->value( argnr )->asString() ) );
-    assert( cbox );
-    if ( numargs == 2 )
-    {
-	YCPList itemlist = term->value( argnr+1 )->asList();
-	for ( int i=0; i<itemlist->size(); i++ )
-	{
-	    YCPValue item = itemlist->value(i);
-	    if ( item->isString() )
-	    {
-		cbox->addItem( YCPNull(), item->asString(), false );
-	    }
-	    else if ( item->isTerm()
-		      && item->asTerm()->name() == YUISymbol_item )
-	    {
-		YCPTerm iterm = item->asTerm();
-		if ( iterm->size() < 1 || iterm->size() > 3 )
-		{
-		    y2error( "ComboBox: Invalid argument number in %s",
-			     iterm->toString().c_str() );
-		}
-		else
-		{
-		    int argnr = checkId( iterm->value(0) ) ? 1 : 0;
-		    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-			y2error( "ComboBox: Invalid item arguments in %s",
-				 iterm->toString().c_str() );
-		    else
-		    {
-			YCPValue item_id = YCPNull();
-			if ( argnr == 1 ) item_id = getId( iterm->value(0) );
-			YCPString item_label = iterm->value( argnr )->asString();
-			bool item_selected = false;
-			if ( iterm->size() >= argnr + 2 )
-			{
-			    if ( iterm->value( argnr+1 )->isBoolean() )
-				item_selected = iterm->value( argnr+1 )->asBoolean()->value();
-			    else
-			    {
-				y2error( "ComboBox: Invalid item arguments in %s",
-					 iterm->toString().c_str() );
-			    }
-			}
+    YComboBox *combo_box = dynamic_cast<YComboBox *> ( createComboBox( parent, opt, term->value( argnr )->asString() ) );
 
-			// We're all set - all arguments checked and gathered.
-			cbox->addItem( item_id, item_label, item_selected );
-		    }
-		}
-	    }
-	    else
-	    {
-		y2error( "Invalid item %s: ComboBox items must be strings or specified with `"
-			 YUISymbol_item "()", item->toString().c_str() );
-	    }
-	    // `item
-	} // loop over items
+    if ( combo_box )
+    {
+	if ( ! combo_box->parseItems( term->value( argnr+1 )->asList() ) )
+	    return 0;
     }
-    return cbox;
+
+    return combo_box;
 }
 
 
@@ -1850,7 +1659,8 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
     int termSize = term->size() - argnr;
 
     if ( termSize < 1 || termSize > 2
-	 || ! term->value( argnr )->isString() )
+	 || ! term->value( argnr )->isString()
+	 || ( termSize >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
 	y2error( "Invalid arguments for the Tree widget: %s",
 		 term->toString().c_str() );
@@ -1871,123 +1681,18 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
 	    return 0;
 	}
 
-	if ( parseTreeItemList ( term->value ( argnr+1 )->asList(), tree ) == -1 )
+	if ( tree->parseItems( term->value ( argnr+1 )->asList() ) == -1 )
 	    return 0;
     }
 
     if ( tree )
-    {
 	tree->rebuildTree();
-    }
 
+    
     return tree;
 }
 
 
-int
-YUI::parseTreeItemList( const YCPList &	itemList,
-			YTree *		tree,
-			YTreeItem *		parentItem )
-{
-    for ( int i=0; i < itemList->size(); i++ )
-    {
-	YCPValue item = itemList->value(i);
-
-	if ( item->isString() )
-	{
-	    // The simplest case: just a string, nothing else
-
-	    ( void ) tree->addItem ( parentItem, YCPNull(), item->asString(), false );
-	}
-	else if ( item->isTerm() && item->asTerm()->name() == YUISymbol_item )
-	{
-	    // found `item()
-
-	    YCPTerm iterm = item->asTerm();
-
-	    if ( iterm->size() < 1 || iterm->size() > 4 )
-	    {
-		y2error( "Tree: Invalid argument number in %s",
-			 iterm->toString().c_str() );
-
-		return -1;
-	    }
-
-	    int argnr = 0;
-
-
-	    // check for item `id() ( optional )
-
-	    YCPValue item_id = YCPNull();
-
-	    if ( checkId ( iterm->value( argnr ), false ) )
-	    {
-		item_id = getId ( iterm->value ( argnr++ ) );
-	    }
-
-
-	    // extract item label ( mandatory )
-
-	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-	    {
-		y2error( "Tree: Invalid item arguments in %s",
-			 iterm->toString().c_str() );
-
-		return -1;
-	    }
-
-	    YCPString item_label = iterm->value( argnr++ )->asString();
-
-
-	    bool item_open = false;
-
-	    if ( argnr < iterm->size() )
-	    {
-		// check for 'open' flag ( true/false ) ( optional )
-
-		if ( iterm->value( argnr )->isBoolean() )
-		{
-		    item_open = iterm->value( argnr++ )->asBoolean()->value();
-		}
-	    }
-
-	    YTreeItem * treeItem = tree->addItem ( parentItem, item_id, item_label, item_open );
-
-	    if ( argnr < iterm->size() )
-	    {
-		// check for sub-item list ( optional )
-
-		if ( ! iterm->value( argnr )->isList() )
-		{
-		    y2error( "Expecting tree item list instead of: %s",
-			     iterm->value( argnr )->toString().c_str() );
-
-		    return -1;
-		}
-
-		if ( parseTreeItemList ( iterm->value ( argnr++ )->asList(), tree, treeItem ) == -1 )
-		{
-		    return -1;
-		}
-	    }
-
-
-	    // Anything left over must be an error.
-
-	    if ( argnr != iterm->size() )
-	    {
-		y2error( "Tree: Wrong number of arguments in %s", item->toString().c_str() );
-	    }
-	}
-	else
-	{
-	    y2error( "Invalid item %s: Tree items must be strings or specified with `"
-		     YUISymbol_item "()", item->toString().c_str() );
-	}
-    }
-
-    return 0;
-}
 
 
 
@@ -2453,7 +2158,7 @@ YWidget * YUI::widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, 
 }
 
 
-bool YUI::checkId( const YCPValue & v, bool complain ) const
+bool YUI::checkId( const YCPValue & v, bool complain )
 {
     if ( v->isTerm()
 	 && v->asTerm()->size() == 1
@@ -2481,7 +2186,7 @@ bool YUI::isSymbolOrId( const YCPValue & val ) const
 }
 
 
-YCPValue YUI::getId( const YCPValue & val ) const
+YCPValue YUI::getId( const YCPValue & val )
 {
     if ( val->isTerm() && val->asTerm()->name() == YUISymbol_id )
 	return val->asTerm()->value(0);

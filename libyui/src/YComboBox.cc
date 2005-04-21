@@ -29,8 +29,7 @@
 
 
 YComboBox::YComboBox( const YWidgetOpt & opt, YCPString label )
-    : YWidget( opt )
-    , label( label )
+    : YSelectionWidget( opt, label )
     , validChars( "" )
 {
     // y2debug( "YComboBox( %s )", label->value_cstr() );
@@ -49,17 +48,7 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
      */
     if ( s == YUIProperty_Label )
     {
-	if ( newvalue->isString() )
-	{
-	    setLabel( newvalue->asString() );
-	    return YCPBoolean( true );
-	}
-	else
-	{
-	    y2error( "ComboBox: Invalid parameter %s for Label property. Must be string",
-		     newvalue->toString().c_str() );
-	    return YCPBoolean( false );
-	}
+	return changeLabel ( newvalue );
     }
 
     /**
@@ -91,6 +80,15 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	    }
 	}
     }
+
+	/**
+     * @property id_list Items
+     * The items that are displayed
+     */
+    else if ( s == YUIProperty_Items ) 
+    {
+		return changeItems( newvalue );
+	}
 
     /**
      * @property string ValidChars valid input characters
@@ -169,18 +167,6 @@ YCPValue YComboBox::queryWidget( const YCPSymbol & property )
 }
 
 
-void YComboBox::setLabel( const YCPString & label )
-{
-    this->label = label;
-}
-
-
-YCPString YComboBox::getLabel()
-{
-    return label;
-}
-
-
 void YComboBox::setValidChars( const YCPString & newValidChars )
 {
     this->validChars= newValidChars;
@@ -191,46 +177,6 @@ YCPString YComboBox::getValidChars()
 {
     return validChars;
 }
-
-
-void YComboBox::addItem( const YCPValue & id, const YCPString & text, bool selected )
-{
-    item_ids->add( id );
-    item_labels->add( text );
-    itemAdded( text, numItems()-1, selected );
-
-    if ( selected )
-    {
-	setCurrentItem( numItems()-1 );
-    }
-}
-
-
-void YComboBox::itemAdded( const YCPString & , int, bool )
-{
-    // default dummy implementaion
-}
-
-
-int YComboBox::numItems() const
-{
-    return item_labels->size();
-}
-
-
-int YComboBox::itemWithId( const YCPValue & id, bool report_error )
-{
-    for ( int i=0; i < numItems(); i++ )
-    {
-	if ( ! item_ids->value(i).isNull() && item_ids->value(i)->equal( id ) ) return i;
-	else if ( item_labels->value(i)->equal( id ) ) return i;
-    }
-    if ( report_error )
-	y2error( "ComboBox: No item %s existing", id->toString().c_str() );
-
-    return -1;
-}
-
 
 void YComboBox::saveUserInput( YMacroRecorder *macroRecorder )
 {

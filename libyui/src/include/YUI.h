@@ -167,18 +167,6 @@ public:
      */
     int parseMenuItemList( const YCPList & itemList, YMenuButton *menu_button, YMenu *parentMenu = 0 );
 
-
-    /**
-     * Parse a tree item list
-     */
-    int parseTreeItemList( const YCPList & itemList, YTree *tree, YTreeItem *parentItem = 0 );
-
-
-    /**
-     * Parse an item list for a MultiSelectionBox
-     */
-    int parseMultiSelectionBoxItemList( const YCPList & item_list, YMultiSelectionBox * multi_sel_box );
-
     /**
      * Parse an `rgb() value
      **/
@@ -335,6 +323,20 @@ public:
      * came from.
      */
     void uiThreadMainLoop();
+
+    /**
+     * Checks if the given value is a term with the symbol 'id and
+     * size one. Logs an error if this is not so and 'complain' is set.
+     *
+     * @return 'true' if 'val' is a valid `id().
+     */
+    static bool checkId( const YCPValue & val, bool complain = true );
+
+    /**
+     * Assumes that the value v is of the form `id( any i ) and returns
+     * the contained i.
+     */
+    static YCPValue getId( const YCPValue & v );
 
 
 protected:
@@ -1366,25 +1368,12 @@ protected:
     void removeDialog();
 
     /**
-     * Checks if the given value is a term with the symbol 'id and
-     * size one. Logs an error if this is not so and 'complain' is set.
-     *
-     * @return 'true' if 'val' is a valid `id().
-     */
-    bool checkId( const YCPValue & val, bool complain = true ) const;
-
-    /**
      * Checks if the given value is either a symbol or a term `id().
      *
      * @return 'true' if 'val' is a symbol or a valid `id().
      */
     bool isSymbolOrId( const YCPValue & val ) const;
 
-    /**
-     * Assumes that the value v is of the form `id( any i ) and returns
-     * the contained i.
-     */
-    YCPValue getId( const YCPValue & v ) const;
 
     /**
      * Delete the internal macro recorder and set the pointer to 0.
