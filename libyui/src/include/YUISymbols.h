@@ -267,6 +267,7 @@
 
 #define YUISymbol_id				"id"
 #define YUISymbol_opt				"opt"
+#define YUISymbol_icon				"icon"
 #define YUISymbol_item				"item"
 #define YUISymbol_menu				"menu"
 #define YUISymbol_header			"header"

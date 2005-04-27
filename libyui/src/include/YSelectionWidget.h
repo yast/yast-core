@@ -112,16 +112,18 @@ protected:
     YCPString getLabel();
 
     /**
-     * Adds an item to the box.
+     * Adds one item
      */
-    virtual void addItem( const YCPValue & id, const YCPString & text, bool selected );
+    virtual void addItem( const YCPValue  & id,
+			  const YCPString & text,
+			  const YCPString & icon,
+			  bool selected );
   
     /**
      * Cleares the two lists item_ids and item_labels. This function is
      * calles out of the corresponding YQ classes.
      */
     virtual void deleteAllItems();
-    
     
     /**
      * Changes the widgets label. Is used in every changeWidget(...)
@@ -134,6 +136,29 @@ protected:
      * changeWidget(...)  function in derived classes.
      */
     virtual YCPValue changeItems ( const YCPValue & newValue );
+
+
+    /**
+     * Returns the full path name for the icon that corresponds with item
+     * number item_no or YCPVoid() if there is none.
+     **/
+    YCPString itemIcon( int item_no ) const;
+
+    /**
+     * Returns 'true' if any item of this widget has an icon
+     **/
+    bool hasIcons() const { return _hasIcons; }
+    
+
+private:
+    
+    /**
+     * The curent list of item icons. We make destructive changes to
+     * this variable, so make sure only one reference to it exists!
+     **/
+    YCPList item_icons;
+
+    bool _hasIcons;
 
 };
 

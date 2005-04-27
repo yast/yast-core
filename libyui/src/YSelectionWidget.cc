@@ -32,6 +32,7 @@
 YSelectionWidget::YSelectionWidget( const YWidgetOpt & opt, YCPString label )
     : YWidget( opt )
     , label( label )
+    , _hasIcons( false )
 {
     // y2debug( "YSelectionWidget( %s )", label->value_cstr() );
 }
@@ -74,57 +75,110 @@ int YSelectionWidget::itemWithId( const YCPValue & id, bool report_error )
 }
 
 
-int YSelectionWidget::parseItems( const YCPList & itemlist )
+int YSelectionWidget::parseItems( const YCPList & item_list )
 {
-    for ( int i=0; i<itemlist->size(); i++ )
+    _hasIcons = false;
+
+    for ( int i=0; i < item_list->size(); i++ )
     {
-	YCPValue item = itemlist->value(i);
-	    
+	YCPValue item = item_list->value(i);
+
 	if ( item->isString() ) // item is just a label
 	{
-	    addItem( YCPNull(), item->asString(), false );
+	    addItem( YCPNull(), item->asString(), YCPNull(), false );
 	}
-	else if ( item->isTerm() // item is a term (maybe with id)
+	else if ( item->isTerm() // item is a term
 		  && item->asTerm()->name() == YUISymbol_item )
 	{
 	    YCPTerm iterm = item->asTerm();
-	    // there must be an id, a label for the item and a optional third bool
-	    // parameter (selected yes?no)
-	    if ( iterm->size() < 1 || iterm->size() > 3 )
+
+	    // `item()
+	    //
+	    //     Parameters:
+	    //     `id()		optional
+	    //     label (string)	mandatory
+	    //     `icon()		optional
+	    //     bool selected	optional
+
+	    if ( iterm->size() < 1 || iterm->size() > 4 )
 	    {
 		y2error( "%s: Invalid argument number in %s",
 			 widgetClass(), iterm->toString().c_str() );
 	    }
 	    else
 	    {
-		int argnr = YUI::checkId( iterm->value(0) ) ? 1 : 0;
-		if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-		    y2error( "%s: Invalid item arguments in %s",
-			     widgetClass(), iterm->toString().c_str() );
-		else
+		// Using YCPNull() as initial value to detect syntax errors
+
+		YCPValue  	item_id    	= YCPNull();
+		YCPString 	item_label	= YCPNull();
+		YCPString 	item_icon  	= YCPNull();
+		YCPBoolean	item_selected	= YCPNull();
+		bool		ok		= true;
+
+		for ( int n=0; n < iterm->size() && ok; n++ )
 		{
-		    YCPValue item_id = YCPNull();
-		    if ( argnr == 1 ) 
+		    YCPValue arg = iterm->value( n );
+
+		    if ( arg->isTerm() )	// `id(), `icon()
 		    {
-			item_id = YUI::getId( iterm->value(0) );
-		    }
-			
-		    YCPString item_label = iterm->value( argnr )->asString();
-			
-		    bool item_selected = false;
-			
-		    if ( iterm->size() >= argnr + 2 )
-		    {
-			if ( iterm->value( argnr+1 )->isBoolean() )
-			    item_selected = iterm->value( argnr+1 )->asBoolean()->value();
-			else
+			ok = arg->asTerm()->size() == 1;
+
+			if ( ok )
 			{
-			    y2error( "%s: Invalid item arguments in %s",
-				     widgetClass(), iterm->toString().c_str() );
+			    if ( arg->asTerm()->name() == YUISymbol_id )	// `id()
+			    {
+				item_id = arg->asTerm()->value(0);
+			    }
+			    else if ( arg->asTerm()->name() == YUISymbol_icon )	// `icon()
+			    {
+				ok = arg->asTerm()->value(0)->isString();
+
+				if ( ok )
+				{
+				    item_icon = arg->asTerm()->value(0)->asString();
+				    _hasIcons = true;
+				}
+			    }
+			    else
+			    {
+				ok = false;
+			    }
 			}
 		    }
-		    // add one item to the widget
-		    addItem( item_id, item_label, item_selected );
+		    else if ( arg->isString() )		// label
+		    {
+			ok = item_label.isNull();
+
+			if ( ok )
+			    item_label = arg->asString();
+		    }
+		    else if ( arg->isBoolean() )	// selected flag
+		    {
+			ok = item_selected.isNull();
+
+			if ( ok )
+			    item_selected = arg->asBoolean();
+		    }
+		    else
+		    {
+			ok = false;
+		    }
+		}
+
+		if ( ok )
+		    ok = ! item_label.isNull();		// the label is mandatory
+
+		if ( ! ok )
+		{
+		    y2error( "%s: Invalid item arguments: %s",
+			     widgetClass(), iterm->toString().c_str() );
+		}
+		else
+		{
+		    if ( item_selected.isNull() )
+			item_selected = YCPBoolean( false );
+
+		    addItem( item_id, item_label, item_icon, item_selected->value() );
 		}
 	    }
 	}
@@ -133,18 +187,22 @@ int YSelectionWidget::parseItems( const YCPList & itemlist )
 	    y2error( "Invalid item %s: %s items must be strings or specified with `"
 		     YUISymbol_item "()", widgetClass(), item->toString().c_str() );
 	}
-    } // loop over items
-    
+    }
+
     return 1;
 }
 
 
-void YSelectionWidget::addItem( const YCPValue & id, const YCPString & text, bool selected )
+void YSelectionWidget::addItem( const YCPValue & id,
+				const YCPString & text,
+				const YCPString & icon,
+				bool selected )
 {
     item_ids->add( id );
     item_labels->add( text );
-    itemAdded( text, numItems()-1, selected );
+    item_icons->add( icon );
 
+    itemAdded( text, numItems()-1, selected );
 }
 
 
@@ -155,38 +213,52 @@ void YSelectionWidget::deleteAllItems()
 }
 
 
+YCPString YSelectionWidget::itemIcon( int item_no ) const
+{
+    if ( item_no < 0 || item_no >= item_icons.size() )
+	return YCPString( "" );
+
+    YCPString icon = item_icons->value( item_no )->asString();
+
+    if ( icon.isNull() || icon->isVoid() )
+	return YCPString( "" );
+
+    return icon;
+}
+
+
 
 YCPValue YSelectionWidget::changeLabel( const YCPValue & newValue )
 {
     if ( newValue->isString() )
     {
 	setLabel( newValue->asString() );
-	
+
 	return YCPBoolean( true );
     }
     else
     {
 	y2error( "%s: Invalid parameter %s for Label property. Must be string",
 		 widgetClass(), newValue->toString().c_str() );
-	
+
 	return YCPBoolean( false );
     }
 }
 
 
-YCPValue YSelectionWidget::changeItems ( const YCPValue & newValue ) 
+YCPValue YSelectionWidget::changeItems ( const YCPValue & newValue )
 {
     if ( newValue->isList() )
     {
 	deleteAllItems();
 	YCPList itemlist = newValue->asList();
-	if ( ! parseItems( itemlist ) ) 
+	if ( ! parseItems( itemlist ) )
 	{
 	    y2error ("%s: Failed to parse itemlist while changing items",
 		     widgetClass() );
 	    return YCPBoolean( false );
 	}
     }
-    
+
     return YCPBoolean( true );
 }
