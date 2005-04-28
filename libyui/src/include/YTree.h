@@ -122,9 +122,11 @@ public:
     const char *shortcutProperty() { return YUIProperty_Label; }
     
     /**
-     * parses a given itemlist and calls addItem(...) to insert entries
+     * Parses a given item list and calls addItem(...) to insert entries.
+     *
+     * Returns 'true' on succes, 'false' on error.
      */
-    int parseItems( const YCPList &	itemList, YTreeItem *parentItem = 0);
+    bool parseItemList( const YCPList & itemList, YTreeItem *parentItem = 0);
 
 protected:
 

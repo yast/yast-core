@@ -1479,8 +1479,7 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
 
     if ( selbox && numargs >= 2 )
     {
-	if ( ! selbox->parseItems( term->value( argnr+1 )->asList() ) )
-	    return 0;
+	selbox->parseItemList( term->value( argnr+1 )->asList() );
     }	
 
     return selbox;
@@ -1535,8 +1534,7 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
 
     if ( multi_sel_box && numargs >= 2 )
     {
-	if ( ! multi_sel_box->parseItems( term->value( argnr+1 )->asList() ) )
-	    return 0;
+	multi_sel_box->parseItemList( term->value( argnr+1 )->asList() );
     }
 
     return multi_sel_box;
@@ -1596,8 +1594,7 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
 
     if ( combo_box )
     {
-	if ( ! combo_box->parseItems( term->value( argnr+1 )->asList() ) )
-	    return 0;
+	combo_box->parseItemList( term->value( argnr+1 )->asList() );
     }
 
     return combo_box;
@@ -1681,7 +1678,7 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
 	    return 0;
 	}
 
-	if ( tree->parseItems( term->value ( argnr+1 )->asList() ) == -1 )
+	if ( ! tree->parseItemList( term->value ( argnr+1 )->asList() ) )
 	    return 0;
     }
 

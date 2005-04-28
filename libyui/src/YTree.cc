@@ -107,16 +107,15 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
      * @property YTreeItem list Items
      * The items that are displayed
      */
-    else if ( s == YUIProperty_Items ) 
+    else if ( s == YUIProperty_Items )
     {
 	if ( newvalue->isList() )
 	{
 	    deleteAllItems();
 	    YCPList itemlist = newvalue->asList();
-	    if ( parseItems( itemlist ) == -1 ) 
+	    if ( ! parseItemList( itemlist ) )
 	    {
-		y2error ("%s: Failed to parse itemlist while changing items",
-			 widgetClass() );
+		y2error ("%s: Error parsing item list", widgetClass() );
 		return YCPBoolean( false );
 	    }
 	    rebuildTree();
@@ -271,7 +270,7 @@ void YTree::findOpenItems( YCPMap & openItems, YTreeItemList items )
 	  ++it )
     {
 	YTreeItem * item = *it;
-	
+
 	if ( item->isOpen() )
 	{
 	    YCPValue id = item->getId();
@@ -324,8 +323,8 @@ void YTree::saveUserInput( YMacroRecorder *macroRecorder )
 }
 
 
-int YTree::parseItems( const YCPList &	itemList,
-			      YTreeItem *parentItem )
+bool YTree::parseItemList( const YCPList &	itemList,
+			  YTreeItem *		parentItem )
 {
     for ( int i=0; i < itemList->size(); i++ )
     {
@@ -333,7 +332,7 @@ int YTree::parseItems( const YCPList &	itemList,
 
 	if ( item->isString() )
 	{
-	    // The simplest case: just a string, nothing elsewas 
+	    // The simplest case: just a string, nothing elsewas
 	    ( void ) addItem ( parentItem, YCPNull(), item->asString(), false );
 	}
 	else if ( item->isTerm() && item->asTerm()->name() == YUISymbol_item )
@@ -347,7 +346,7 @@ int YTree::parseItems( const YCPList &	itemList,
 		y2error( "Tree: Invalid argument number in %s",
 			 iterm->toString().c_str() );
 
-		return -1;
+		return false;
 	    }
 
 	    int argnr = 0;
@@ -370,7 +369,7 @@ int YTree::parseItems( const YCPList &	itemList,
 		y2error( "Tree: Invalid item arguments in %s",
 			 iterm->toString().c_str() );
 
-		return -1;
+		return false;
 	    }
 
 	    YCPString item_label = iterm->value( argnr++ )->asString();
@@ -398,12 +397,12 @@ int YTree::parseItems( const YCPList &	itemList,
 		    y2error( "Expecting tree item list instead of: %s",
 			     iterm->value( argnr )->toString().c_str() );
 
-		    return -1;
+		    return false;
 		}
 
-		if ( parseItems ( iterm->value ( argnr++ )->asList(), treeItem ) == -1 )
+		if ( ! parseItemList( iterm->value ( argnr++ )->asList(), treeItem ) )
 		{
-		    return -1;
+		    return false;
 		}
 	    }
 
@@ -422,7 +421,7 @@ int YTree::parseItems( const YCPList &	itemList,
 	}
     }
 
-    return 0;
+    return true;
 }
 
 

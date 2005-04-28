@@ -75,7 +75,7 @@ int YSelectionWidget::itemWithId( const YCPValue & id, bool report_error )
 }
 
 
-int YSelectionWidget::parseItems( const YCPList & item_list )
+void YSelectionWidget::parseItemList( const YCPList & item_list )
 {
     _hasIcons = false;
 
@@ -188,8 +188,6 @@ int YSelectionWidget::parseItems( const YCPList & item_list )
 		     YUISymbol_item "()", widgetClass(), item->toString().c_str() );
 	}
     }
-
-    return 1;
 }
 
 
@@ -251,13 +249,7 @@ YCPValue YSelectionWidget::changeItems ( const YCPValue & newValue )
     if ( newValue->isList() )
     {
 	deleteAllItems();
-	YCPList itemlist = newValue->asList();
-	if ( ! parseItems( itemlist ) )
-	{
-	    y2error ("%s: Failed to parse itemlist while changing items",
-		     widgetClass() );
-	    return YCPBoolean( false );
-	}
+	parseItemList( newValue->asList() );
     }
 
     return YCPBoolean( true );

@@ -52,9 +52,9 @@ public:
     virtual const char *shortcutProperty() { return YUIProperty_Label; }
 
     /**
-     * parses a given itemlist and calls addItem(...) to insert entries
+     * Parses a given itemlist and calls addItem(...) to insert entries.
      */
-    int parseItems( const YCPList & itemlist );
+    void parseItemList( const YCPList & itemlist );
 
     
 protected:
