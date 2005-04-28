@@ -76,6 +76,7 @@ public:
     YTreeItem *	addItem ( YTreeItem *		parentItem,
 			  const YCPValue &	id,
 			  const YCPString &	text,
+			  const YCPString &	iconName,
 			  bool			open );
 
     /**
@@ -87,6 +88,7 @@ public:
      */
     YTreeItem *	addItem ( YTreeItem *		parentItem,
 			  const YCPString &	text,
+			  const YCPString &	iconName,
 			  void *		data,
 			  bool			open );
 
@@ -114,13 +116,13 @@ public:
      * current label in #label.
      */
     YCPString getLabel();
-    
+
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
-    
+
     /**
      * Parses a given item list and calls addItem(...) to insert entries.
      *
@@ -155,19 +157,14 @@ protected:
 
     /**
      * Returns a YCPList of items in the format needed for creating a tree
-     * widget. 
+     * widget.
      **/
     YCPList itemsTermList( YTreeItemList items );
-    
+
     /**
      * Recursively fills a map 'openItems' with items that are open.
      **/
     void findOpenItems( YCPMap & openItems, YTreeItemList items );
-    
-    /**
-     * The items.
-     */
-    YTreeItemList items;
 
     /**
      * Cleares the YTreeItemList. This function is
@@ -175,17 +172,20 @@ protected:
      */
     virtual void deleteAllItems();
 
-private:
-
-#if 0
     /**
-     * Searches for an item with a certain id or a certain label.
-     * Returns the index of the found item or -1 if none was found
-     * @param report_error set this to true, if you want me to
-     * report an error if non item can be found.
-     */
-    int itemWithId( const YCPValue & id, bool report_error );
-#endif
+     * Returns 'true' if any item of this widget has an icon
+     **/
+    bool hasIcons() const { return _hasIcons; }
+
+
+    //
+    // Data members
+    //
+    
+    YTreeItemList items;
+
+
+private:
 
     /**
      * Save the widget's user input to a macro recorder.
@@ -195,10 +195,12 @@ private:
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
 
-    /**
-     * The current label of the tree
-     */
+    //
+    // Data members
+    //
+
     YCPString label;
+    bool _hasIcons;
 };
 
 
@@ -211,12 +213,20 @@ public:
     /**
      * Regular constructor for root level items.
      **/
-    YTreeItem ( YTree *	    parent, YCPValue id, YCPString text, bool open = false );
-    
+    YTreeItem ( YTree *			parent,
+		const YCPValue	&	id,
+		const YCPString &	text,
+		const YCPString &	iconName,
+		bool			open = false );
+
     /**
      * Regular constructor for items in deeper tree levels.
      **/
-    YTreeItem ( YTreeItem * parent, YCPValue id, YCPString text, bool open = false );
+    YTreeItem ( YTreeItem * 		parent,
+		const YCPValue &	id,
+		const YCPString &	text,
+		const YCPString &	iconName,
+		bool 			open = false );
 
 
     /**
@@ -226,17 +236,25 @@ public:
      * Use YTreeItem::data() to retrieve this pointer. Casting will be
      * necessary to make any use of it.
      **/
-    YTreeItem ( YTree *	    parent, YCPString text, void * data, bool open = false );
+    YTreeItem ( YTree *	    		parent,
+		const YCPString &	text,
+		const YCPString &	iconName,
+		void * 			data,
+		bool 			open = false );
 
 
     /**
      * Special constructor for deeper level items that take an opaque data pointer for
      * application use: This kind of root item can be used to reference to
-     * external objects that are connected with this tree item. 
+     * external objects that are connected with this tree item.
      * Use YTreeItem::data() to retrieve this pointer. Casting will be
      * necessary to make any use of it.
      **/
-    YTreeItem ( YTreeItem * parent, YCPString text, void * data, bool open = false );
+    YTreeItem ( YTreeItem * 		parent,
+		const YCPString &	text,
+		const YCPString &	iconName,
+		void * 			data,
+		bool 			open = false );
 
 
     /**
@@ -244,10 +262,10 @@ public:
      **/
     virtual ~YTreeItem();
 
-    const YCPString &		getText()		const { return text;	}
-    const YCPValue &		getId()			const { return id;	}
-    const YTreeItemList &	itemList()		const { return items;	}
-    bool			isOpenByDefault()	const { return openByDefault; }
+    const YCPString &		getText()		const { return _text;	}
+    const YCPValue &		getId()			const { return _id;	}
+    const YTreeItemList &	itemList()		const { return _items;	}
+    bool			isOpenByDefault()	const { return _openByDefault; }
 
     /**
      * Recursively search for an item with a given ID.
@@ -263,14 +281,14 @@ public:
 
     /**
      * Set this item's "open" flag. The UI has to take care to set this each
-     * time the user opens or closes a branch. 
+     * time the user opens or closes a branch.
      **/
     void setOpen( bool open ) { _open = open; }
 
     /**
      * Returns this item's "open" flag.
      **/
-    bool isOpen()		const { return _open; }
+    bool isOpen() const { return _open; }
 
     /**
      * Returns the opaque data pointer for applicaton use.
@@ -281,20 +299,31 @@ public:
      * Set the opaque data pointer. The application may choose to store
      * internal data here. Watch for dangling pointers!
      **/
-    void setData( void * newData ) { _data = newData; }
+    void setData( void * data ) { _data = data; }
+
+    /**
+     * Returns the name of this item's icon or an empty string if it doesn't have one.
+     **/
+    YCPString iconName() const;
+
+    /**
+     * Sets this item's icon name.
+     **/
+    void setIconName( const YCPString & icon ) { _iconName = icon; }
 
 
 protected:
 
-    YCPValue		id;
+    YCPValue		_id;
     void *		_data;
-    YCPString		text;
-    YTree *		parentTree;
-    YTreeItem *		parentItem;
-    bool		openByDefault;
+    YCPString		_text;
+    YCPString		_iconName;
+    YTree *		_parentTree;
+    YTreeItem *		_parentItem;
+    bool		_openByDefault;
     bool		_open;
 
-    YTreeItemList	items;
+    YTreeItemList	_items;
 };
 
 

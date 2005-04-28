@@ -26,6 +26,7 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
+#include "YSelectionWidget.h"
 #include "YMacroRecorder.h"
 #include "YTree.h"
 #include "YUI.h"
@@ -34,6 +35,7 @@
 YTree::YTree( const YWidgetOpt & opt, YCPString newLabel )
     : YWidget( opt )
     , label( newLabel )
+    , _hasIcons( false )
 {
     // y2debug( "YTree( %s )", newLabel->value_cstr() );
     setDefaultStretchable( YD_HORIZ, true );
@@ -113,6 +115,7 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 	{
 	    deleteAllItems();
 	    YCPList itemlist = newvalue->asList();
+
 	    if ( ! parseItemList( itemlist ) )
 	    {
 		y2error ("%s: Error parsing item list", widgetClass() );
@@ -185,14 +188,15 @@ YTreeItem *
 YTree::addItem( YTreeItem *		parentItem,
 		const YCPValue &	id,
 		const YCPString &	text,
+		const YCPString &	iconName,
 		bool			open )
 {
     YTreeItem *treeItem;
 
     if ( parentItem )
-	treeItem = new YTreeItem ( parentItem, id, text, open );
+	treeItem = new YTreeItem( parentItem, id, text, iconName, open );
     else
-	treeItem = new YTreeItem ( this, id, text, open );
+	treeItem = new YTreeItem( this, id, text, iconName, open );
 
     return treeItem;
 }
@@ -201,15 +205,16 @@ YTree::addItem( YTreeItem *		parentItem,
 YTreeItem *
 YTree::addItem( YTreeItem *		parentItem,
 		const YCPString &	text,
+		const YCPString &	iconName,
 		void *			data,
 		bool			open )
 {
     YTreeItem *treeItem;
 
     if ( parentItem )
-	treeItem = new YTreeItem ( parentItem, text, data, open );
+	treeItem = new YTreeItem( parentItem, text, iconName, data, open );
     else
-	treeItem = new YTreeItem ( this, text, data, open );
+	treeItem = new YTreeItem( this, text, iconName, data, open );
 
     return treeItem;
 }
@@ -333,91 +338,44 @@ bool YTree::parseItemList( const YCPList &	itemList,
 	if ( item->isString() )
 	{
 	    // The simplest case: just a string, nothing elsewas
-	    ( void ) addItem ( parentItem, YCPNull(), item->asString(), false );
+	    ( void ) addItem ( parentItem, YCPNull(), item->asString(), YCPString( "" ), false );
 	}
-	else if ( item->isTerm() && item->asTerm()->name() == YUISymbol_item )
+	else if ( item->isTerm()
+		  && item->asTerm()->name() == YUISymbol_item )	// `item(...)
 	{
-	    // found `item()
+	    YCPValue	id		= YCPNull();
+	    YCPString	label		= YCPNull();
+	    YCPString	iconName	= YCPNull();
+	    YCPBoolean	isOpen		= YCPNull();
+	    YCPList	subItemList	= YCPNull();
 
-	    YCPTerm iterm = item->asTerm();
-
-	    if ( iterm->size() < 1 || iterm->size() > 4 )
+	    if ( YSelectionWidget::parseItem( item->asTerm(),				// in
+					      id, label, iconName, isOpen, subItemList) )	// out
 	    {
-		y2error( "Tree: Invalid argument number in %s",
-			 iterm->toString().c_str() );
+		if ( isOpen.isNull() )
+		    isOpen = YCPBoolean( false );
 
+		if ( ! iconName.isNull() )
+		    _hasIcons = true;
+
+		YTreeItem * treeItem = addItem( parentItem, id, label, iconName, isOpen->value() );
+
+		if ( ! subItemList.isNull() )
+		{
+		    if ( ! parseItemList( subItemList, treeItem ) )
+			return false;
+		}
+	    }
+	    else
+	    {
 		return false;
-	    }
-
-	    int argnr = 0;
-
-
-	    // check for item `id() ( optional )
-
-	    YCPValue item_id = YCPNull();
-
-	    if ( YUI::checkId ( iterm->value( argnr ), false ) )
-	    {
-		item_id = YUI::getId ( iterm->value ( argnr++ ) );
-	    }
-
-
-	    // extract item label ( mandatory )
-
-	    if ( iterm->size() <= argnr || ! iterm->value( argnr )->isString() )
-	    {
-		y2error( "Tree: Invalid item arguments in %s",
-			 iterm->toString().c_str() );
-
-		return false;
-	    }
-
-	    YCPString item_label = iterm->value( argnr++ )->asString();
-
-
-	    bool item_open = false;
-
-	    if ( argnr < iterm->size() )
-	    {
-		// check for 'open' flag ( true/false ) ( optional )
-
-		if ( iterm->value( argnr )->isBoolean() )
-		{
-		    item_open = iterm->value( argnr++ )->asBoolean()->value();
-		}
-	    }
-
-	    YTreeItem * treeItem = addItem ( parentItem, item_id, item_label, item_open );
-
-	    if ( argnr < iterm->size() )
-	    {
-		// check for sub-item list ( optional )
-		if ( ! iterm->value( argnr )->isList() )
-		{
-		    y2error( "Expecting tree item list instead of: %s",
-			     iterm->value( argnr )->toString().c_str() );
-
-		    return false;
-		}
-
-		if ( ! parseItemList( iterm->value ( argnr++ )->asList(), treeItem ) )
-		{
-		    return false;
-		}
-	    }
-
-
-	    // Anything left over must be an error.
-
-	    if ( argnr != iterm->size() )
-	    {
-		y2error( "Tree: Wrong number of arguments in %s", item->toString().c_str() );
 	    }
 	}
 	else
 	{
 	    y2error( "Invalid item %s: Tree items must be strings or specified with `"
 		     YUISymbol_item "()", item->toString().c_str() );
+	    return false;
 	}
     }
 
@@ -427,6 +385,7 @@ bool YTree::parseItemList( const YCPList &	itemList,
 
 void YTree::deleteAllItems()
 {
+    _hasIcons = false;
     items.clear();
 }
 
@@ -437,55 +396,75 @@ void YTree::deleteAllItems()
 /*==========================================================================*/
 
 
-YTreeItem::YTreeItem( YTree * parent, YCPValue newId, YCPString newText, bool open )
-    : id ( newId )
+YTreeItem::YTreeItem( YTree * 		parent,
+		      const YCPValue & 	id,
+		      const YCPString &	text,
+		      const YCPString &	iconName,
+		      bool 		open )
+    : _id( id )
+    , _data( 0 )
+    , _text( text)
+    , _iconName( iconName )
+    , _parentTree( parent )
+    , _parentItem( ( YTreeItem * ) 0 )
+    , _openByDefault( open )
+    , _open( open )
+{
+    parent->items.push_back ( this );
+}
+
+
+YTreeItem::YTreeItem( YTreeItem * 	parent,
+		      const YCPValue &	id,
+		      const YCPString &	text,
+		      const YCPString & iconName,
+		      bool 		open )
+    : _id( id )
     , _data(0)
-    , text ( newText )
-    , parentTree ( parent )
-    , parentItem ( ( YTreeItem * ) 0 )
-    , openByDefault ( open )
+    , _text( text)
+    , _iconName( iconName )
+    , _parentTree( ( YTree * ) 0 )
+    , _parentItem( parent )
+    , _openByDefault( open )
     , _open( open )
 {
-    parent->items.push_back ( this );
+    parent->_items.push_back ( this );
 }
 
 
-YTreeItem::YTreeItem( YTreeItem * parent, YCPValue newId, YCPString newText, bool open )
-    : id ( newId )
-    , _data(0)
-    , text ( newText )
-    , parentTree ( ( YTree * ) 0 )
-    , parentItem ( parent )
-    , openByDefault ( open )
-    , _open( open )
-{
-    parent->items.push_back ( this );
-}
-
-
-YTreeItem::YTreeItem( YTree * parent, YCPString newText, void * data, bool open )
-    : id( YCPNull() )
+YTreeItem::YTreeItem( YTree * 		parent,
+		      const YCPString & text,
+		      const YCPString & iconName,
+		      void * 		data,
+		      bool 		open )
+    : _id( YCPNull() )
     , _data( data )
-    , text ( newText )
-    , parentTree ( parent )
-    , parentItem ( ( YTreeItem * ) 0 )
-    , openByDefault ( open )
+    , _text( text )
+    , _iconName( iconName )
+    , _parentTree( parent )
+    , _parentItem( ( YTreeItem * ) 0 )
+    , _openByDefault( open )
     , _open( open )
 {
     parent->items.push_back ( this );
 }
 
 
-YTreeItem::YTreeItem( YTreeItem * parent, YCPString newText, void * data, bool open )
-    : id( YCPNull() )
+YTreeItem::YTreeItem( YTreeItem * 	parent,
+		      const YCPString &	text,
+		      const YCPString & iconName,
+		      void * 		data,
+		      bool 		open )
+    : _id( YCPNull() )
     , _data( data )
-    , text ( newText )
-    , parentTree ( ( YTree * ) 0 )
-    , parentItem ( parent )
-    , openByDefault ( open )
+    , _text( text )
+    , _iconName( iconName )
+    , _parentTree( ( YTree * ) 0 )
+    , _parentItem( parent )
+    , _openByDefault( open )
     , _open( open )
 {
-    parent->items.push_back ( this );
+    parent->_items.push_back ( this );
 }
 
 
@@ -496,12 +475,12 @@ YTreeItem::~YTreeItem()
     // Unfortuanately, STL iterators are doo dumb to modify their
     // container - so we really need to do this manually.
 
-    for ( unsigned i=0; i < items.size(); i++ )
+    for ( unsigned i=0; i < _items.size(); i++ )
     {
-	delete items[i];
+	delete _items[i];
     }
 
-    items.clear();
+    _items.clear();
 }
 
 
@@ -511,9 +490,9 @@ YTreeItem::findItemWithId( const YCPValue & id )
     if ( ! getId().isNull() && getId()->equal( id ) )
 	return this;
 
-    for ( unsigned i=0; i < items.size(); i++ )
+    for ( unsigned i=0; i < _items.size(); i++ )
     {
-	YTreeItem *it = items[i]->findItemWithId ( id );
+	YTreeItem *it = _items[i]->findItemWithId ( id );
 
 	if ( it )
 	    return it;
@@ -529,9 +508,9 @@ YTreeItem::findItemWithText( const YCPString & text )
     if ( getText()->equal( text ) )
 	return this;
 
-    for ( unsigned i=0; i < items.size(); i++ )
+    for ( unsigned i=0; i < _items.size(); i++ )
     {
-	YTreeItem *it = items[i]->findItemWithText ( text );
+	YTreeItem *it = _items[i]->findItemWithText ( text );
 
 	if ( it )
 	    return it;
@@ -540,3 +519,9 @@ YTreeItem::findItemWithText( const YCPString & text )
     return ( YTreeItem * ) 0;
 }
 
+
+YCPString
+YTreeItem::iconName() const
+{
+    return _iconName.isNull() ? YCPString( "" ) : _iconName;
+}

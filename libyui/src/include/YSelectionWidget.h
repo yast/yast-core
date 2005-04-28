@@ -56,9 +56,38 @@ public:
      */
     void parseItemList( const YCPList & itemlist );
 
-    
+
+    /**
+     * Parse one `item() term with
+     *     `id()	 	[optional]
+     *     `icon()	 	[optional]
+     *     string label  	[MANDATORY]
+     *     bool selected 	[optional]
+     *     list subItemList	[optional]
+     *
+     * Example:
+     *
+     * `item( `id(`my_id), `icon( "colorful.png" ), "My Label", true )
+     *
+     * The order of those parameters within `item() is arbitrary.
+     * The _ret Parameters are are return parameters that will be changed by
+     * this function.
+     *
+     * If the subItemList is not desired, rejecting it is the caller's
+     * responsibility (check if ! .isNull() and issue error).
+     *
+     * Returns 'true' on success, 'false' on error.
+     **/
+    static bool parseItem( const YCPTerm & itemTerm,
+			   YCPValue  	 & item_id_ret,
+			   YCPString 	 & item_label_ret,
+			   YCPString 	 & item_icon_ret,
+			   YCPBoolean	 & item_selected_ret,
+			   YCPList	 & sub_item_list_ret );
+
+
 protected:
- 
+
     /**
      * Called when an item has been added. Overload this to
      * fill the ui specific widget with items.
@@ -118,19 +147,19 @@ protected:
 			  const YCPString & text,
 			  const YCPString & icon,
 			  bool selected );
-  
+
     /**
      * Cleares the two lists item_ids and item_labels. This function is
      * calles out of the corresponding YQ classes.
      */
     virtual void deleteAllItems();
-    
+
     /**
      * Changes the widgets label. Is used in every changeWidget(...)
      * function in derived classes.
      */
     virtual YCPValue changeLabel( const YCPValue & newValue );
-    
+
     /**
      * Changes the widgets displayed items. Is used in every
      * changeWidget(...)  function in derived classes.
@@ -148,10 +177,10 @@ protected:
      * Returns 'true' if any item of this widget has an icon
      **/
     bool hasIcons() const { return _hasIcons; }
-    
+
 
 private:
-    
+
     /**
      * The curent list of item icons. We make destructive changes to
      * this variable, so make sure only one reference to it exists!

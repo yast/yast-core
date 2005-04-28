@@ -4,7 +4,8 @@
 
 SUBDIRS = include
 
-AM_CXXFLAGS = -DY2LOG=\"libycp\"
+AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
+	-fmessage-length=0
 
 lib_LTLIBRARIES = libyui.la
 
