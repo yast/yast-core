@@ -130,6 +130,12 @@ public:
      */
     bool parseItemList( const YCPList & itemList, YTreeItem *parentItem = 0);
 
+    /**
+     * Returns 'true' if any item of this widget has an icon
+     **/
+    bool hasIcons() const { return _hasIcons; }
+
+
 protected:
 
     /**
@@ -171,11 +177,6 @@ protected:
      * calles out of the corresponding YQ classes.
      */
     virtual void deleteAllItems();
-
-    /**
-     * Returns 'true' if any item of this widget has an icon
-     **/
-    bool hasIcons() const { return _hasIcons; }
 
 
     //
