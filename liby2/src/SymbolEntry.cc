@@ -301,7 +301,16 @@ SymbolEntry::toString (bool with_type) const
 		if (m_category == c_function)
 		{
 		    constFunctionTypePtr type = (constFunctionTypePtr)m_type;
-		    s += " " + type->parameters ()->toString ();
+		    
+		    // are there any parameters
+		    if (type->parameters())
+		    {
+			s += " " + type->parameters ()->toString ();
+		    }
+		    else
+		    {
+			s += " ()";
+		    }
 		}
 		return s;
 	    }
