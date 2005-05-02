@@ -405,6 +405,7 @@ protected:
     TableEntry* m_entry;
     SymbolEntryPtr m_sentry;
     YCodePtr *m_parameters;
+    constTypePtr *m_parameter_types;
     Y2Function* m_functioncall;
     
     uint m_next_param_id;

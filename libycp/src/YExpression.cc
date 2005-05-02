@@ -2338,6 +2338,7 @@ YECall::YECall (TableEntry* entry)
     , m_entry (entry)
     , m_sentry ( entry ? entry->sentry () : 0)
     , m_parameters (0)
+    , m_parameter_types (0)
     , m_functioncall (0)
 {
 #if DO_DEBUG
@@ -2362,6 +2363,7 @@ YECall::YECall (TableEntry* entry)
     if (max>0)
     {
 	m_parameters = new YCodePtr[max];
+	m_parameter_types = new constTypePtr[max];
     }
     m_next_param_id = 0;
 }
@@ -2372,6 +2374,7 @@ YECall::YECall (bytecodeistream & str)
     , m_entry (0)
     , m_sentry (Bytecode::readEntry (str))
     , m_parameters (0)
+    , m_parameter_types (0)
     , m_functioncall (0)
     , m_next_param_id (0)
 {
@@ -2407,6 +2410,11 @@ YECall::~YECall ()
 	delete[] m_parameters;
     }
     
+    if (m_parameter_types)
+    {
+	delete[] m_parameter_types;
+    }
+
     if (m_functioncall)
     {
 	delete m_functioncall;
@@ -2481,6 +2489,10 @@ YECall::entry() const
 
     /**
      * Attach parameter to external function call
+     *
+     * This function doesn't really check parameter types,
+     * this is done in YECall::finalize() below.
+     *
      * @param code: parameter code
      * @param type: parameter type
      * @return NULL if success,
@@ -2502,12 +2514,16 @@ YECall::attachParameter (YCodePtr code, constTypePtr type)
     }
     
     // check, if there is not too many of params
-    if (m_parameters == 0)
+    if ((m_parameters == 0)
+	|| (m_parameter_types == 0))
     {
 	// excessive parameter - we don't expect any
 	return Type::Error;
     }
     
+    // find next parameter slot to be filled, loop through chain
+    //  of overloaded functions
+
     uint max = 0;
     TableEntry* t = m_entry;
     while (t)
@@ -2526,7 +2542,9 @@ YECall::attachParameter (YCodePtr code, constTypePtr type)
 	return Type::Error;
     }
 
-    m_parameters[m_next_param_id++] = code;
+    m_parameters[m_next_param_id] = code;
+    m_parameter_types[m_next_param_id] = type;
+    m_next_param_id++;
 
 #if DO_DEBUG
     y2debug ("done");
@@ -2574,7 +2592,7 @@ YECall::finalize()
 	{
 	    constTypePtr expected_type = ftype->parameterType (check_count);
 	    YCodePtr code = m_parameters[check_count];
-	    constTypePtr type = code->type ();
+	    constTypePtr type = m_parameter_types[check_count];
 	    
 	    // if the parameter type is block, find out the type for the actual param
 	    if (expected_type->isBlock ())
