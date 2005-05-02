@@ -356,7 +356,13 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	    return YCPNull ();
 	}
 	
+	// evaluate, but not as constant
 	YCPValue ret = c->evaluate (true);
+	if (ret.isNull ())
+	{
+	    y2milestone ("External program returned executable code, executing");
+	    ret = c->evaluate (false);
+	}
 
 	return ret;
     }
