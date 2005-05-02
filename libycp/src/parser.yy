@@ -1707,7 +1707,7 @@ statement:
 		// verify that we are in switch
 		if (! p_parser->m_switch_stack)
 		{
-		    yyLerror ("case expression not allowed outside of switch statement", $1.l);
+		    yyLerror ("'default' not allowed outside of switch statement", $1.l);
 		    $$.t = 0;
 		    break;
 		}

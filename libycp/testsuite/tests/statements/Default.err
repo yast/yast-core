@@ -1,2 +1,2 @@
-[Parser] tests/statements/Default.ycp:2 case expression not allowed outside of switch statement
+[Parser] tests/statements/Default.ycp:2 'default' not allowed outside of switch statement
 runycp: parser error
