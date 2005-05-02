@@ -1,0 +1,5 @@
+[Parser] tests/types/mismatch.ycp:6 Parameters don't match any declaration:
+[Parser] tests/types/mismatch.ycp:6 CreateTable ($[], ["Id", "Configuration", "Device"], [[1, "aaa", "Samsung Calex"], [2, "bbb", "Trivial Trinitron"]])
+[Parser] tests/types/mismatch.ycp:6 Candidates are:
+[Parser] tests/types/mismatch.ycp:6 string CreateTable (map <string, any> changed_options, list <string> header, list <list <string>> items)
+runycp: parser error

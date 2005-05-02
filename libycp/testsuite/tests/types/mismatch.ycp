@@ -1,0 +1,11 @@
+{
+    string CreateTable (map <string, any> changed_options, list<string> header, list <list <string> > items) {
+	return "";
+    }
+
+    CreateTable(
+	$[],
+	[ "Id", "Configuration", "Device" ],
+	[ [ 1, "aaa", "Samsung Calex" ], [ 2, "bbb", "Trivial Trinitron" ] ]
+    );
+}
