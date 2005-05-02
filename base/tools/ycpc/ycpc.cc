@@ -4,6 +4,7 @@
  * YCP standalone bytecode compiler
  *
  * Authors: Klaus Kaempf <kkaempf@suse.de>
+ *	    Stanislav Visnovsky <visnov@suse.cz>
  */
 
 #include <dirent.h>
@@ -23,6 +24,7 @@
 #include <ycp/Bytecode.h>
 #include <ycp/Import.h>
 #include <ycp/y2log.h>
+#include <../../libycp/src/parser.h>
 #include <ycp/pathsearch.h>
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentBroker.h>
@@ -44,6 +46,8 @@ extern int SymbolTableDebug;
 static Parser *parser = NULL;
 
 static char *outname = NULL;
+
+extern ExecutionEnvironment ee;
 
 static int quiet = 0;		// no output
 static int verbose = 0;		// much output
@@ -861,6 +865,16 @@ parsefile (const char *infname)
     YCodePtr c = NULL;
 
     c = parser->parse ();
+    
+    int ln = parser->scanner ()->lineNumber ();
+    
+    if (! parser->atEOF () && parser->scanner ()->yylex () != END_OF_FILE)
+    {
+	ee.setFilename (parser->scanner ()->filename ());
+	ee.setLinenumber (ln);
+	ycperror ("Unreachable code at the end of file");
+	c = NULL;
+    }
 
     fclose (infile);
 

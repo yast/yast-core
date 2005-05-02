@@ -3,6 +3,7 @@ Mon May  2 16:41:42 CEST 2005 - visnov@suse.cz
 
 - fix function parameter type check (#64627)
 - evaluate the code returned if not constant (#65815)
+- report unreachable code at the end of file (#66152)
 
 -------------------------------------------------------------------
 Mon May  2 15:42:24 CEST 2005 - visnov@suse.cz
