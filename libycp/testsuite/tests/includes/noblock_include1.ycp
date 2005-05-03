@@ -1,0 +1,5 @@
+# a testcase for including a file which does not enclose its contents
+# in a block (#65486)
+{
+	include "no_brackets.inc";
+}

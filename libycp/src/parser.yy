@@ -2307,6 +2307,14 @@ function_start:
 #if DO_DEBUG
 		y2debug ("start parameter block for '%s()'", ($1.t) ? $1.v.tval->sentry()->name() : "<err>");
 #endif
+		// if the scanner still think it's an include, teach him
+		// this allows include without closed in a block
+		if ((p_parser->m_scanner_stack != 0)
+    		    && (p_parser->m_scanner_stack->state == SCAN_START_INCLUDE))
+		{
+		    p_parser->m_scanner_stack->state = SCAN_INCLUDE;
+		}
+		
 		// start with the declared return type
 		YBlockPtr parameter_block = start_block (p_parser, $1.t);
 
@@ -3133,6 +3141,13 @@ function_call:
 			if ((decl->tentry->isOverloaded())				// if overloaded
 			    || (decl->flags & DECL_SYMBOL))		// or can have a symbol as parameter
 			{
+			    // if the scanner still think it's an include, teach him
+			    // this allows include without closed in a block
+			    if ((p_parser->m_scanner_stack != 0)
+    				&& (p_parser->m_scanner_stack->state == SCAN_START_INCLUDE))
+			    {
+				p_parser->m_scanner_stack->state = SCAN_INCLUDE;
+			    }
 			    // start block for possible symbol parameters
 			    YBlockPtr block = start_block (p_parser, Type::Unspec);
 #if DO_DEBUG
