@@ -4,7 +4,7 @@
 				 `VBox(
 				       `Label("How do you want to crash?"),
 				       `Left(`RadioButton(`id(0), "No&w")),
-				       `Left(`RadioButton(`id(1), "&Every now an then" )),
+				       `Left(`RadioButton(`id(1), "&Every now and then" )),
 				       `Left(`RadioButton(`id(2), "Every &five minutes", true)),
 				       `Left(`RadioButton(`id(3), "Ne&ver", true )),
 				       `HBox(
