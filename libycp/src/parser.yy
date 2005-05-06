@@ -1717,7 +1717,7 @@ statement:
 
 		if (! non_duplicate)
 		{
-		    yyLerror ("Duplicate case expression", $1.l);
+		    yyLerror ("Duplicate 'default' expression", $1.l);
 		    $$.t = 0;
 		    break;
 		}
