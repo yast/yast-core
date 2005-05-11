@@ -1592,7 +1592,7 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
 
     YComboBox *combo_box = dynamic_cast<YComboBox *> ( createComboBox( parent, opt, term->value( argnr )->asString() ) );
 
-    if ( combo_box )
+    if ( combo_box && numargs >=2 )
     {
 	combo_box->parseItemList( term->value( argnr+1 )->asList() );
     }
