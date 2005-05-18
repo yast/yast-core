@@ -86,7 +86,8 @@ YCPValue YMultiLineEdit::changeWidget( const YCPSymbol & property, const YCPValu
 	}
     }
     /**
-     * @property integer InputMaxLength limit the amount of characters
+     * @property integer InputMaxLength limit the number of characters which
+     * can be inserted. A value of -1 means unlimited input.
      */
     else if ( s == YUIProperty_InputMaxLength )
     {
@@ -97,7 +98,7 @@ YCPValue YMultiLineEdit::changeWidget( const YCPSymbol & property, const YCPValu
 	}
 	else
 	{
-	    y2error( "MultiLineEdit: Invalid parameter %s for LimitInput property. Must be integer.",
+	    y2error( "MultiLineEdit: Invalid parameter %s for InputMaxLength property. Must be integer.",
 		     newValue->toString().c_str() );
 	    return YCPBoolean( false );
 	}

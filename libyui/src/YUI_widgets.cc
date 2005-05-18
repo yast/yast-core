@@ -1345,6 +1345,7 @@ YWidget * YUI::createRadioButtonGroup( YWidget * parent, YWidgetOpt & opt, const
  * @examples	TextEntry1.ycp TextEntry2.ycp TextEntry3.ycp TextEntry4.ycp
  *		TextEntry5.ycp TextEntry6.ycp
  *		Password1.ycp Password2.ycp
+ *              TextEntry-setInputMaxLength.ycp
  *
  * @description
  * 
@@ -1393,7 +1394,7 @@ YWidget * YUI::createTextEntry( YWidget * parent, YWidgetOpt & opt,
  * @optarg	string initialText the initial contents of the field
  * @usage	`MultiLineEdit( `id( `descr ), "Enter problem &amp; description:", "No problem here." )
  *
- * @examples	MultiLineEdit1.ycp MultiLineEdit2.ycp MultiLineEdit3.ycp
+ * @examples	MultiLineEdit1.ycp MultiLineEdit2.ycp MultiLineEdit3.ycp MultiLineEdit-setInputMaxLength.ycp
  *
  * @description
  *
@@ -1551,7 +1552,7 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
  * @optarg	list items the items contained in the combo box
  * @option	editable the user can enter any value.
  * @usage	`ComboBox( `id( `pizza ), "select your Pizza:", [ "Margarita", `item( `id( `na ), "Napoli" ) ] )
- * @examples	ComboBox1.ycp ComboBox2.ycp ComboBox3.ycp ComboBox4.ycp
+ * @examples	ComboBox1.ycp ComboBox2.ycp ComboBox3.ycp ComboBox4.ycp ComboBox-setInputMaxLength.ycp
  *
  * @description
  *

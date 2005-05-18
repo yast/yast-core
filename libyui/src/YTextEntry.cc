@@ -119,7 +119,7 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	}
     }
     /**
-     * @property integer InputMaxLength the amount of characters
+     * @property interger InputMaxLength limit the amount of characters
      */
     else if ( s == YUIProperty_InputMaxLength )
     {
@@ -130,7 +130,7 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	}
 	else
 	{
-	    y2error( "TextEntry: Invalid parameter %s for ValidChars property. Must be integer.",
+	    y2error( "TextEntry: Invalid parameter %s for InputMaxLength. Must be integer.",
 		     newvalue->toString().c_str() );
 	    return YCPBoolean( false );
 	}
