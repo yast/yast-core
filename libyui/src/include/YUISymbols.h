@@ -159,6 +159,7 @@
 #define YUIProperty_Values			"Values"
 #define YUIProperty_WidgetClass			"WidgetClass"
 #define YUIProperty_WindowID			"WindowID"
+#define YUIProperty_InputMaxLength		"InputMaxLength"
 
 
 // Widget and dialog options

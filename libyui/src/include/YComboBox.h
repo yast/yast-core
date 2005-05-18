@@ -71,6 +71,13 @@ public:
      */
     YCPString getValidChars();
 
+    /**
+     * Specify the amount of characters which can be inserted.
+     *
+     * Overload this to limit the input.
+     */
+    virtual void setInputMaxLength( const YCPInteger & numberOfChars );
+
 protected:
     /**
      * Returns the ComboBox value.

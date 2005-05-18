@@ -20,6 +20,7 @@
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPInteger.h>
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
@@ -116,9 +117,25 @@ YCPValue YComboBox::changeWidget( const YCPSymbol & property, const YCPValue & n
 	    return YCPBoolean( false );
 	}
     }
+    /**
+     * @property interger InputMaxLength limit the amount of characters
+     */
+    else if ( s == YUIProperty_InputMaxLength )
+    {
+	if ( newvalue->isInteger() )
+	{
+	    setInputMaxLength( newvalue->asInteger()->value() );
+	    return YCPBoolean( true );
+	}
+	else
+	{
+	    y2error( "ComboBox: Invalid parameter %s for LimitInput property. Must be integer.",
+		     newvalue->toString().c_str() );
+	    return YCPBoolean( false );
+	}
+    }
     else return YWidget::changeWidget( property, newvalue ); // handle default properties
 }
-
 
 
 YCPValue YComboBox::queryWidget( const YCPSymbol & property )
@@ -183,3 +200,7 @@ void YComboBox::saveUserInput( YMacroRecorder *macroRecorder )
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 
+
+void YComboBox::setInputMaxLength( const YCPInteger & numberOfChars ) 
+{
+}

@@ -88,6 +88,13 @@ public:
     virtual void setValidChars( const YCPString & validChars );
 
     /**
+     * Specify the amount of characters which can be inserted.
+     *
+     * Overload this to limit the input.
+     */
+    virtual void setInputMaxLength( const YCPInteger & numberOfChars );
+
+    /**
      * Get the valid input characters.
      */
     YCPString getValidChars();
@@ -104,7 +111,7 @@ public:
      **/
     bool passwordMode() const { return _passwordMode; }
 
-    
+
 protected:
 
     /**

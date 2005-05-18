@@ -84,6 +84,12 @@ public:
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
     
+    /**
+     * Specify the amount of characters which can be inserted.
+     *
+     * Overload this to limit the input.
+     */
+    virtual void setInputMaxLength( const YCPInteger & numberOfChars );
 
 private:
 

@@ -19,6 +19,7 @@
 
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
+#include <ycp/YCPInteger.h>
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
@@ -84,6 +85,23 @@ YCPValue YMultiLineEdit::changeWidget( const YCPSymbol & property, const YCPValu
 	    return YCPBoolean( false );
 	}
     }
+    /**
+     * @property integer InputMaxLength limit the amount of characters
+     */
+    else if ( s == YUIProperty_InputMaxLength )
+    {
+	if ( newValue->isInteger() )
+	{
+	    setInputMaxLength( newValue->asInteger()->value() );
+	    return YCPBoolean( true );
+	}
+	else
+	{
+	    y2error( "MultiLineEdit: Invalid parameter %s for LimitInput property. Must be integer.",
+		     newValue->toString().c_str() );
+	    return YCPBoolean( false );
+	}
+    }
     else return YWidget::changeWidget( property, newValue );
 }
 
@@ -103,3 +121,6 @@ void YMultiLineEdit::saveUserInput( YMacroRecorder *macroRecorder )
     macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 
+void YMultiLineEdit::setInputMaxLength( const YCPInteger & numberOfChars ) 
+{
+}

@@ -20,6 +20,7 @@
 
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPBoolean.h>
+#include <ycp/YCPInteger.h>
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
@@ -117,10 +118,29 @@ YCPValue YTextEntry::changeWidget( const YCPSymbol & property, const YCPValue & 
 	    return YCPBoolean( false );
 	}
     }
+    /**
+     * @property integer InputMaxLength the amount of characters
+     */
+    else if ( s == YUIProperty_InputMaxLength )
+    {
+	if ( newvalue->isInteger() )
+	{
+	    setInputMaxLength( newvalue->asInteger()->value() );
+	    return YCPBoolean( true );
+	}
+	else
+	{
+	    y2error( "TextEntry: Invalid parameter %s for ValidChars property. Must be integer.",
+		     newvalue->toString().c_str() );
+	    return YCPBoolean( false );
+	}
+    }
     else return YWidget::changeWidget( property, newvalue );
 }
 
-
+void YTextEntry::setInputMaxLength( const YCPInteger & numberOfChars ) 
+{
+}
 
 YCPValue YTextEntry::queryWidget( const YCPSymbol & property )
 {
