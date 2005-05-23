@@ -31,6 +31,9 @@
 //---------------------------------------------------------------------------
 // YCPCode
 
+class YCPBreak;
+class YCPReturn;
+
 /**
  * @short Wrapper for YCode as YCPValue
  */
