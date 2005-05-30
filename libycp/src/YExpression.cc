@@ -3207,4 +3207,10 @@ Y2YCPFunction::reset ()
     return true;
 }
 
+
+string
+Y2YCPFunction::name () const
+{
+    return m_sentry->name ();
+}
 // EOF

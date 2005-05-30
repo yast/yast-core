@@ -142,8 +142,8 @@ public:
     //---------------------------------------------------------------
     // Table access
 
-    // access table (for traversal)
-    const TableEntry **table() const;
+    // full copy of the current table into a namespace
+    void tableCopy(Y2Namespace* tofill) const;
 
     // return size of hash table
     int size() const;

@@ -33,6 +33,7 @@ class SymbolTable;
 class Point;
 class Y2Function;
 class StaticDeclaration;
+class SymbolTable;
 
 /**
  * Y2Namespace implements a hash(?) table of nested(?) SymbolEntries and
@@ -45,6 +46,8 @@ protected:
     SymbolTable* m_table;
     unsigned int m_symbolcount;
     symbols_t m_symbols;
+    
+    friend class SymbolTable;
 
     // add symbol to namespace, it now belongs here
     // returns the index into m_symbols

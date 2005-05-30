@@ -916,4 +916,32 @@ SymbolTable::toStringSymbols() const
     return s;
 }
 
+
+void
+SymbolTable::tableCopy(Y2Namespace* tofill) const
+{
+    for (int i=0; i < m_prime; i++)
+    {
+	if (m_table[i] != 0)
+	{
+		SymbolEntryPtr s = m_table[i]->sentry ();
+		y2milestone ("Converting symbolentry for '%s'", m_table[i]->key ());
+		tofill->enterSymbol (new SymbolEntry (tofill, i, m_table[i]->key ()
+		    , s->category (), s->type ()));
+		
+		// now, convert the m_next stuff, others should be fine
+		// because the parser is running using the local namespace
+		// FIXME: what about the overloaded ones?
+		TableEntry* t_next = m_table[i]->m_next;
+		while (t_next)
+		{
+		    SymbolEntryPtr s = t_next->sentry ();
+		    y2milestone ("Converting symbolentry for '%s'", t_next->key ());
+		    tofill->enterSymbol (new SymbolEntry (tofill, i, t_next->key ()
+			, s->category (), s->type ()));
+		    t_next = t_next->m_next;
+		}
+	}
+    }
+}
 // EOF

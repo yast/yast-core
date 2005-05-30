@@ -149,12 +149,15 @@ void Y2ProgramComponent::result(const YCPValue& result)
     // has been issued. Therefore at this point the external
     // program may not have been started after all. So we need
     // to check, if it's running.
-
+    
     if (pid != -1)
     {
 	YCPTerm resultterm("result");
 	resultterm->add(result);
 	sendToExternal(resultterm);
+
+        y2milestone ("Sending result: %s", resultterm->toString ().c_str ());
+
 	terminateExternalProgram();
     }
 }
@@ -407,8 +410,52 @@ void Y2ProgramComponent::sendToExternal(const YCPValue& value)
 }
 
 
+void Y2ProgramComponent::sendToExternal(const string& value)
+{
+    if (!externalProgramOK())
+    {
+	y2error ("External program %s died unexpectedly", bin_file.c_str());
+    }
+
+    char *v = NULL;
+
+    if (is_non_y2)  v = strdup(value.c_str());   // no brackets
+    else            v = strdup(("(" + value + ")").c_str());
+
+    bool error = (write(to_external[1], v, strlen(v)) < 0);
+    if (error)
+    {
+	y2debug ("Error writing to external program %s: Couldn't send %s (%s)", bin_file.c_str(), v, strerror (errno));
+	terminateExternalProgram();
+    }
+    free(v);
+
+    // We send an additional linefeed. This makes it more conveniant for non
+    // Y2 programs, for example that shell can do a read to get one value. For
+    // Y2 programs it increases the readability if you want to dump and debug
+    // the whole stream.
+
+    // We MUST NOT trigger an error, if the sending of the linefeed is not
+    // successful. This sporadically happens after we send a module the last
+    // return just before the module has done its work and terminates. It then
+    // justs sends the result(..) message, and closes down without reading the
+    // linefeed. The pipe breaks down and the sending fails. But as long as we
+    // don't collect the process by calling wait4, we can still read the
+    // result (..) from the input pipe, which is very important. Otherwise the
+    // result value would be dropped.
+
+    write(to_external[1], "\n", 1);
+}
+
+
 bool Y2ProgramComponent::externalProgramOK() const
 {
     if (pid == -1) return false;
     else return kill(pid, 0) == 0;
+}
+
+
+bool Y2ProgramComponent::remote() const
+{
+    return true;
 }

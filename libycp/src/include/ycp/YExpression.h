@@ -477,6 +477,7 @@ public:
     ~Y2YCPFunction ();
     
     string qualifiedName () const;
+    string name () const;
 
     // implementation of the Y2Function interface:
 

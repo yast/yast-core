@@ -174,6 +174,8 @@ public:
      * the loading of the plugin as well.
      */
     virtual SCRAgent * getSCRAgent ();
+    
+    virtual bool remote () const;
 };
 
 #endif // Y2Component_h

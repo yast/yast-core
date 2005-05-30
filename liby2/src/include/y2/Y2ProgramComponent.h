@@ -129,6 +129,17 @@ public:
      */
     YCPValue doActualWork(const YCPList& arglist, Y2Component *user_interface);
 
+    void sendToExternal(const string&);
+
+    /**
+     * Receives a YCP value from the external program.
+     */
+    YCPValue receiveFromExternal();
+
+
+    bool remote () const;
+    
+
 private:
     /**
      * Lauches the external programm in a new process.
@@ -140,11 +151,6 @@ private:
      * Kills the external program (that is process) with SIGQUIT
      */
     void terminateExternalProgram();
-
-    /**
-     * Receives a YCP value from the external program.
-     */
-    YCPValue receiveFromExternal();
 
     /**
      * Send a YCP value to the external program

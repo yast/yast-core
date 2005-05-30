@@ -14,6 +14,7 @@
 #include <y2/Y2Component.h>
 
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPTerm.h>
 
 class SCRAgent;
 
@@ -98,7 +99,19 @@ Y2AgentComp<Agent>::evaluate (const YCPValue& v)
 	
     YCPValue value = v;
     if (value->isCode ())
+    {
+	YCodePtr c = v->asCode ()->code ();
+
+	
+	if ( c->kind () != YCode::yeTerm)
+	{
+	    y2milestone ("Evaluating an expression, not SCR builtin");
+	    value = value->asCode ()->evaluate ();
+	    return value;
+	}
+
 	value = value->asCode ()->evaluate ();
+    }
 	
     if (value.isNull () || value->isVoid ())
 	return value;

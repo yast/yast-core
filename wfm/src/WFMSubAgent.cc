@@ -38,7 +38,7 @@ WFMSubAgent::~WFMSubAgent ()
 {
     if (my_comp)
     {
-	y2debug ("Deleting SubAgent: %d %s", my_handle, my_name.c_str ());
+	y2milestone ("Deleting SubAgent: %d %s", my_handle, my_name.c_str ());
 	my_comp->result (YCPVoid ());	// tell server to terminate
 	delete my_comp;
     }

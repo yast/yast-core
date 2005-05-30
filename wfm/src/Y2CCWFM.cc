@@ -180,6 +180,13 @@ bool Y2CCWFM::isServerCreator() const
 
 Y2Component* Y2CCWFM::provideNamespace(const char* name)
 {
+    // first, check if we should provide System namespace
+    if (strstr (name, "System::") == name)
+    {
+	return Y2WFMComponent::instance ();
+
+    }
+    
     // check the filename
     string filename = YCPPathSearch::findModule (name);
     if (filename.empty())

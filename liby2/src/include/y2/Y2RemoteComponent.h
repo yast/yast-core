@@ -119,6 +119,7 @@ public:
      */
     YCPValue doActualWork(const YCPList& arglist, Y2Component *user_interface);
 
+    bool remote () const;
 private:
 
     /**

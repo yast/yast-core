@@ -23,6 +23,7 @@
 #include <errno.h>
 
 #include <y2/Y2ComponentBroker.h>
+#include <y2/Y2ProgramComponent.h>
 
 #include <ycp/y2log.h>
 #include <ycp/pathsearch.h>
@@ -34,6 +35,7 @@
 #include <scr/SCR.h>
 
 #include "Y2WFMComponent.h"
+#include "Y2SystemNamespace.h"
 
 extern ExecutionEnvironment ee;
 
@@ -273,18 +275,31 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 	ycperror ("Trying to close undefined handle '%d'", handle);
 	return;
     }
-    delete *it;
-    scrs.erase (it);
-    
-    ycpmilestone ("SCR handle %d closed", handle);
-    
+
     // if it was the default one, try to handle the situation gracefully
     if (handle == default_handle)
     {
 	default_handle = -1;
 	ycpmilestone ("There is no default SCR set now");
 	// SCR::instance () is set to NULL by the SCRAgent destructor
+
+	for ( SystemNamespaces::iterator ns = system_namespaces.begin ();
+		ns != system_namespaces.end (); ns ++ )
+	{
+	    y2milestone ("Redirecting system namespace '%s' to local"
+		, (*ns)->name ().c_str ()); 
+
+	    (*ns)->useLocal ();
+	}
+
     }
+    
+    WFMSubAgent* agent = (*it);
+
+    scrs.erase (it);
+    delete agent;
+    
+    ycpmilestone ("SCR handle %d closed", handle);    
 }
 
 
@@ -313,13 +328,31 @@ Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
      * @param integer handle SCR handle
      * @return void 
      */
+     
+    y2milestone ("Seting default SCR: %s", handle->toString ().c_str ());
 
     default_handle = handle->value ();
     WFMSubAgents::iterator it = find_handle (default_handle);
     if (it != scrs.end ())
     {
 	if ((*it)->agent ())
+	{
 	    (*it)->agent ()->setAsCurrentSCR ();
+	    
+	    bool remote = (*it)->comp ()->remote ();
+	    
+	    for ( SystemNamespaces::iterator ns = system_namespaces.begin ();
+		    ns != system_namespaces.end (); ns ++ )
+	    {
+		y2milestone ("Redirecting system namespace '%s' via '%s'"
+		    , (*ns)->name ().c_str (), (*it)->comp ()->name ().c_str ()); 
+
+		if (remote)
+		    (*ns)->useRemote (dynamic_cast<Y2ProgramComponent*>((*it)->comp ()));
+		else
+		    (*ns)->useLocal ();
+	    }
+	}
     }
 }
 
@@ -634,6 +667,31 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 Y2Namespace *
 Y2WFMComponent::import (const char* name_space)
 {
+    // System:: namespace access
+    if (strstr (name_space, "System::") == name_space)
+    {
+        char* subsys = const_cast<char*>(name_space) + 8; // skip the prefix
+        Y2Component* local_comp = Y2ComponentBroker::getNamespaceComponent (subsys);
+	
+	if (local_comp == 0)
+	    return 0;
+	    
+	Y2Namespace* local_ns = local_comp->import (subsys);
+	
+        if (local_ns != 0)
+        {
+            // there is a local component, use it for the wrapper
+
+            Y2SystemNamespace* ns = new Y2SystemNamespace (local_ns);
+	    
+	    // FIXME: check for duplicates
+	    system_namespaces.push_back (ns);
+	    
+            return ns;
+        }
+        return 0;
+    }
+
     y2milestone ("Y2WFMComponent::import (%s)", name_space);
 
     // create the namespace

@@ -10,41 +10,42 @@
 |							  (C) SuSE GmbH |
 \-----------------------------------------------------------------------/
 
-   File:	Y2Function.h
-		a generic interface for calling a function from a namespace
+   File:	Y2StdioFunction.h
+		a remote function call
 
    Author:	Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
 
 /-*/
 
-#ifndef Y2Function_h
-#define Y2Function_h
+#ifndef Y2StdioFunction_h
+#define Y2StdioFunction_h
 
-#include <string>
-using std::string;
+#include <y2/Y2Namespace.h>
+#include <y2/Y2Function.h>
 
-#include "ycp/YCPValue.h"
-#include "ycp/Type.h"
+class Y2ProgramComponent;
 
-/**
- * A function call interface.
- * Created by Y2Namespace::createFunctionCall ("funcname")
- */
-class Y2Function {
+class Y2StdioFunction : public Y2Function {
 
+    string m_namespace;
+    string m_name;
+    constFunctionTypePtr m_type;
+    YCPValue* m_parameters;
+
+    Y2ProgramComponent* m_sender;
+    
 public:
-    /**
-     * Whithout this, can't delete YEFunction
-     * which is derived from YCode, Y2Function
-     */
-    virtual ~Y2Function () {};
+    Y2StdioFunction (string ns, string name
+	, constFunctionTypePtr type, Y2ProgramComponent* sender);
+    
+    virtual ~Y2StdioFunction ();
 
     /**
      * Attaches a parameter to a given position to the call.
      * @return false if there was a type mismatch
      */
-    virtual bool attachParameter (const YCPValue& arg, const int position) = 0;
+    virtual bool attachParameter (const YCPValue& arg, const int position);
 
     /**
      * What type is expected for the next appendParameter (val) ?
@@ -52,32 +53,32 @@ public:
      * simple type system of Perl to the elaborate type system of YCP)
      * @return Type::Any if number of parameters exceeded
      */
-    virtual constTypePtr wantedParameterType () const = 0;
+    virtual constTypePtr wantedParameterType () const;
 
     /**
      * Appends a parameter to the call.
      * @return false if there was a type mismatch
      */
-    virtual bool appendParameter (const YCPValue& arg) = 0;
+    virtual bool appendParameter (const YCPValue& arg);
 
     /**
      * Signal that we're done adding parameters.
      * @return false if there was a parameter missing
      */
-    virtual bool finishParameters () = 0;
+    virtual bool finishParameters ();
 
     /**
      * Executes the call
      */
-    virtual YCPValue evaluateCall () = 0;
+    virtual YCPValue evaluateCall ();
 
     /**
      * Reset the currecn parameters, so the instance
      * can be reused for the next call (appendParameter etc)
      */    
-    virtual bool reset () = 0;
+    virtual bool reset ();
     
-    virtual string name () const = 0;
+    virtual string name () const;
 };
 
-#endif // Y2Function_h
+#endif // Y2StdioFunction_h

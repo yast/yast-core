@@ -285,3 +285,9 @@ Y2RemoteComponent::askPassword (bool& ok)
     }
 }
 
+
+bool
+Y2RemoteComponent::remote () const
+{
+    return true;
+}

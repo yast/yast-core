@@ -82,3 +82,10 @@ Y2Component::getSCRAgent ()
 {
     return NULL;
 }
+
+
+bool
+Y2Component::remote () const
+{
+    return false;
+}

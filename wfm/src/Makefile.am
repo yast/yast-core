@@ -11,7 +11,13 @@ libpy2wfm_la_SOURCES =				\
 	Y2WFMComponent.cc Y2WFMComponent.h	\
 	Y2CCWFM.cc Y2CCWFM.h			\
 	WFM.cc WFM.h				\
-	WFMSubAgent.cc WFMSubAgent.h
+	WFMSubAgent.cc WFMSubAgent.h		\
+	Y2SystemNamespace.cc			\
+	Y2SystemNamespace.h			\
+	Y2StdioFunction.cc			\
+	Y2StdioFunction.h			\
+	Y2SystemFunction.h			\
+	Y2SystemFunction.cc
 
 
 # use this for KMTrace: libpy2wfm_la_LIBADD = liby2wfm.la /opt/kde3/lib/libktrace_s.a

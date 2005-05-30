@@ -27,6 +27,7 @@ runwfm_LDADD = \
 	$(top_builddir)/libscr/src/libscr.la	\
 	$(top_builddir)/libycp/src/libycp.la	\
 	$(top_builddir)/liby2/src/liby2.la	\
+	$(top_builddir)/liby2/src/libpy2program.la	\
 	${Y2UTIL_LIBS}
 
 runc_SOURCES = runc.cc
@@ -36,6 +37,7 @@ runc_LDADD = ../src/libpy2wfm.la		\
 	$(top_builddir)/libscr/src/libscr.la	\
 	$(top_builddir)/libycp/src/libycp.la	\
 	$(top_builddir)/liby2/src/liby2.la	\
+	$(top_builddir)/liby2/src/libpy2program.la	\
 	${Y2UTIL_LIBS}
 
 clean-local:

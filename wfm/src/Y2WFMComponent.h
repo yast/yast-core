@@ -30,6 +30,8 @@
 
 #define MAX_CLIENT_NAME_LEN 160
 
+class Y2SystemNamespace;
+
 class Y2WFMComponent : public Y2Component
 {
 
@@ -90,7 +92,10 @@ private:
      * Type and list of SCR instances.
      */
     typedef vector <WFMSubAgent*> WFMSubAgents;
+    typedef vector <Y2SystemNamespace*> SystemNamespaces;
+    
     WFMSubAgents scrs;
+    SystemNamespaces system_namespaces;
 
     /**
      * Finds a SCR instance to a given handle.

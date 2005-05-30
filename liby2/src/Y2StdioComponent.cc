@@ -132,9 +132,17 @@ Y2StdioComponent::receive ()
     YCodePtr pc = parser.parse ();
     if (pc)
     {
-	y2debug ("receive end %s", pc->toString ().c_str ());
-	return YCPCode (pc);
+        // try constant evaluation
+        YCPValue val = pc->evaluate (true);
+        if (val.isNull ())
+        {
+            val = YCPCode (pc);
+        }
+
+        y2debug ("receive end %s", val->toString ().c_str ());
+        return val;
     }
+
     y2debug ("receive end - parse error");
     return YCPNull ();
 }
