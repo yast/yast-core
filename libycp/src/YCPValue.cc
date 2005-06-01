@@ -34,6 +34,7 @@
 #include "ycp/YCPTerm.h"
 #include "ycp/YCPMap.h"
 #include "ycp/YCPCode.h"
+#include "ycp/YCPExternal.h"
 
 
 // YCPValueRep
@@ -58,6 +59,7 @@ bool YCPValueRep::isBreak()	  const { return valuetype() == YT_BREAK; }
 bool YCPValueRep::isReturn()	  const { return valuetype() == YT_RETURN; }
 bool YCPValueRep::isEntry()	  const { return valuetype() == YT_ENTRY; }
 bool YCPValueRep::isReference()	  const { return valuetype() == YT_REFERENCE; }
+bool YCPValueRep::isExternal()	  const { return valuetype() == YT_EXTERNAL; }
 
 
 // value type conversions
@@ -229,6 +231,18 @@ YCPValueRep::asReference() const
 	abort();
     }
     return YCPReference (static_cast<const YCPReferenceRep *>(this));
+}
+
+YCPExternal
+YCPValueRep::asExternal() const
+{
+    if (!isExternal())
+    {
+	ycp2error("Invalid cast of YCP value '%s'! Should be but is not External!",
+	      toString().c_str());
+	abort();
+    }
+    return YCPExternal (static_cast<const YCPExternalRep *>(this));
 }
 
 bool

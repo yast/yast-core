@@ -39,5 +39,6 @@
 #include <ycp/YCPSymbol.h>
 #include <ycp/YCPTerm.h>
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPExternal.h>
 
 #endif // YCP_h

@@ -57,6 +57,7 @@ class YCPBuiltin;
 class YCPCode;
 class YCPEntry;
 class YCPReference;
+class YCPExternal;
 
 
 #define DEF_OPS(name)						\

@@ -429,6 +429,11 @@ Type::matchvalue (YCPValue value) const
 	    y2debug ("Code (%s)", ycpcode->toString().c_str());
 	}
 	break;
+	case YT_EXTERNAL:				// external entity
+	{
+	    y2debug ("External payload (%s)", value->toString().c_str());
+	}
+	break;
 	case YT_RETURN:					// { return; }
 	{
 	    m = 0;					// -> evaluates to 'nil' -> matches every type

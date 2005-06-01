@@ -27,6 +27,7 @@ libycpvalues_la_SOURCES = 				\
 	YCPMap.cc YCPPath.cc				\
 	YCPString.cc YCPSymbol.cc YCPTerm.cc		\
 	YCPValue.cc YCPVoid.cc 				\
+	YCPExternal.cc					\
 	Type.cc 
 
 libycp_la_SOURCES = 					\

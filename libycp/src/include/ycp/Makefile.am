@@ -14,6 +14,7 @@ pkginclude_HEADERS =					\
 	YCPMap.h YCPPath.h				\
 	YCPString.h YCPSymbol.h YCPTerm.h		\
 	YCPValue.h YCPVoid.h toString.h			\
+	YCPExternal.h					\
 	YCPDebugger.h					\
 	Type.h TypePtr.h				\
 	YCPBuiltinBoolean.h YCPBuiltinFloat.h		\

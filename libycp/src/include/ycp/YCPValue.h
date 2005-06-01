@@ -50,7 +50,8 @@ enum YCPValueType {
     YT_BREAK	   = 13,	// value of 'break;'
     YT_ENTRY	   = 14,	// just a placeholder for a SymbolEntry belonging to a function (i.e. foreach())
     YT_ERROR	   = 15,	// error value, will cause trouble
-    YT_REFERENCE   = 16		// a reference to a variable
+    YT_REFERENCE   = 16,	// a reference to a variable
+    YT_EXTERNAL	   = 17		// a reference to an external data
 };
 
 enum YCPOrder {
@@ -159,6 +160,11 @@ public:
     bool isReference() const;
 
     /**
+     * Checks, if the type of this value is YT_EXTERNAL.
+     */
+    bool isExternal() const;
+
+    /**
      * Casts this value into a pointer of type const YCPVoidRep *.
      */
     YCPVoid asVoid() const;
@@ -227,6 +233,11 @@ public:
      * Casts this value into a pointer of type const YCPReference.
      */
     YCPReference asReference() const;
+
+    /**
+     * Casts this value into a pointer of type const YCPExternal.
+     */
+    YCPExternal asExternal() const;
 
     /**
      * Compares two YCP values for equality. Two values are equal if

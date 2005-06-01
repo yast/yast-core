@@ -45,6 +45,7 @@ Type::vt2type (enum YCPValueType vt)
 	case YT_MAP:		return Type::Map;
 	case YT_CODE:		return Type::Block;
 	case YT_ENTRY:		return Type::Variable;
+	case YT_EXTERNAL:	return Type::Any;
 	default:
 		return Type::Unspec;
     }
