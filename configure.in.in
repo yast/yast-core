@@ -36,6 +36,15 @@ if [[ "$yast_found_efence" = "no" ]]; then
  AC_MSG_ERROR(efence lib is missing. Please install the package ElectricFence.)
 fi
 
+
+# agent-parse: needs hd.h -> hwinfo-devel
+yast_found_hwinfo=no
+AC_CHECK_HEADER(hd.h,[yast_found_hwinfo=yes])
+if [[ "$yast_found_hwinfo" = "no" ]]; then
+ AC_MSG_ERROR(Headers for hwinfo are missing. Please install the package hwinfo-devel.)
+fi
+
+
 PKG_CHECK_MODULES([Y2UTIL], [liby2util])
 AC_SUBST(Y2UTIL_CFLAGS)
 AC_SUBST(Y2UTIL_LIBS)
