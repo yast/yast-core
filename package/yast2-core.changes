@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 14 10:46:25 CEST 2005 - visnov@suse.cz
+
+- added sysfsutils to NFB
+- 2.12.7 
+
+-------------------------------------------------------------------
 Wed Jun  1 14:14:57 CEST 2005 - mlazar@suse.cz
 
 - libycp: added YCPExternal type for storing external data types
