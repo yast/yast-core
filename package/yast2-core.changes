@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 14 12:36:56 CEST 2005 - visnov@suse.cz
+
+- libpy2wfm: fix missing dependency on libpy2program (schwab)
+- 2.12.8 
+
+-------------------------------------------------------------------
 Tue Jun 14 10:46:25 CEST 2005 - visnov@suse.cz
 
 - added sysfsutils to NFB
