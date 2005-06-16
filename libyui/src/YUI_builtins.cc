@@ -925,7 +925,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
     // radiobutton group is in the unchanged rest? We must find the radio button
     // group belonging to the new subtree.
 
-    bool contains;
+    bool contains = false;
     YRadioButtonGroup *rbg = findRadioButtonGroup( currentDialog(), replpoint, & contains );
 
     // I must _first_ remove the old widget and then create the new ones. The reason
