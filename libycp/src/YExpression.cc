@@ -2342,7 +2342,7 @@ YECall::YECall (TableEntry* entry)
     , m_functioncall (0)
 {
 #if DO_DEBUG
-    y2debug ("YECall[%p] (%s)", this, entry->sentry()->toString().c_str());
+    y2debug ("YECall[%p] (%s)", this, entry ? entry->sentry()->toString().c_str() : 0);
 #endif
     // lookup the maximal number of parameters for this entry (and overloads)
     // retrieve function type for formal parameter list
@@ -2998,7 +2998,7 @@ Y2YCPFunction::Y2YCPFunction (YSymbolEntryPtr entry)
     
     m_parameters = new YCPValue[count];
     
-    for (int i=0; i < count; i++)
+    for (uint i=0; i < count; i++)
     {
 	m_parameters[i] = YCPNull ();
     }
