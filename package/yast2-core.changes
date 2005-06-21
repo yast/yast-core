@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 21 11:05:51 CEST 2005 - visnov@suse.cz
+
+- use redirected System:: prefix also after the redirection
+- 2.12.9 
+
+-------------------------------------------------------------------
 Tue Jun 14 12:36:56 CEST 2005 - visnov@suse.cz
 
 - libpy2wfm: fix missing dependency on libpy2program (schwab)

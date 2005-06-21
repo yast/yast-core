@@ -41,7 +41,11 @@
 Y2SystemNamespace::Y2SystemNamespace (Y2Namespace* local_ns)
     : Y2Namespace()
     , m_local_ns (local_ns)
+    , m_remote_sender (0)
+    , m_use_remote (false)
 {
+    m_functions.clear ();
+    m_name = local_ns->name ();
     createTable ();
     local_ns->table ()->tableCopy (this);
 }
@@ -91,10 +95,20 @@ Y2SystemNamespace::createFunctionCall (const string name, constFunctionTypePtr t
 	return 0;
     }
     
-    y2milestone ("allocating new Y2SystemFunction %s", name.c_str ());
+    y2debug ("allocating new Y2SystemFunction %s::%s", m_name.c_str (), name.c_str ());
 
     Y2SystemFunction* fnc = new Y2SystemFunction (local_func, type);
     m_functions.push_back (fnc);
+    
+    // currently we use remote communication
+    if (m_use_remote)
+    {
+	fnc->useRemote (new Y2StdioFunction (
+	    m_local_ns->name ()
+	    , name
+	    , type
+	    , m_remote_sender));
+    }
 
     return fnc;
 }
@@ -103,17 +117,21 @@ Y2SystemNamespace::createFunctionCall (const string name, constFunctionTypePtr t
 void
 Y2SystemNamespace::useRemote (Y2ProgramComponent* sender)
 {
-    y2milestone ("redirecting to %s", sender->name ().c_str ());
+    y2debug ("redirecting '%s' to %s", m_name.c_str (), sender->name ().c_str ());
     for ( vector<Y2SystemFunction*>::iterator it = m_functions.begin ();
 	it != m_functions.end () ; ++it )
     {
-	y2milestone ("Redirected: %s", (*it)->name ().c_str ());
 	(*it)->useRemote (new Y2StdioFunction (
 	    m_local_ns->name ()
 	    , (*it)->name ()
 	    , (*it)->type ()
 	    , sender));
     }
+    
+    m_use_remote = true;
+    m_remote_sender = sender;
+
+    y2debug ("redirecting '%s' done", m_name.c_str ());
 }
 
 
@@ -127,4 +145,6 @@ Y2SystemNamespace::useLocal ()
 	y2milestone ("Redirected: %s", (*it)->name ().c_str ());
 	(*it)->useLocal ();
     }
+    
+    m_use_remote = false;
 }

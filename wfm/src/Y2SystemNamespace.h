@@ -31,6 +31,9 @@ class Y2SystemFunction;
 class Y2SystemNamespace : public Y2Namespace {
 
     Y2Namespace* m_local_ns;
+    Y2ProgramComponent* m_remote_sender;
+    bool m_use_remote;
+
     vector<Y2SystemFunction*> m_functions;
     
     string m_name;
