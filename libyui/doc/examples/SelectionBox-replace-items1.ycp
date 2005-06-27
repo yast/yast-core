@@ -20,7 +20,8 @@
 			  `SelectionBox(`id(`menu), "Daily &Specials:", pizza_list ),
 			  `HBox(
 				`PushButton(`id(`pizza), "Pi&zza" ),
-				`PushButton(`id(`pasta), "&Pasta" )
+				`PushButton(`id(`pasta), "&Pasta" ),
+				`PushButton(`id(`diet ), "Strict &Diet" )
 				),
 			  `PushButton(`id(`ok), "&OK" )
 			  )
@@ -34,6 +35,7 @@
 
 	if ( button == `pizza )		UI::ChangeWidget(`menu, `Items, pizza_list );
 	if ( button == `pasta )		UI::ChangeWidget(`menu, `Items, pasta_list );
+	if ( button == `diet  )		UI::ChangeWidget(`menu, `Items, [] );
 	
     } while ( button != `ok );
 
