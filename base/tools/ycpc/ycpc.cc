@@ -1111,7 +1111,7 @@ void print_help (const char *name)
     printf (opt_fmt, "-I, --include-path", "where to find include files");
     printf (opt_fmt, "-M, --module-path", "where to find module files");
     printf (opt_fmt, "--no-std-includes", "drop all built-in include paths");
-    printf (opt_fmt, "--no-std-modules", "drop all built-in include paths");
+    printf (opt_fmt, "--no-std-modules", "drop all built-in module paths");
     printf (opt_fmt, "-n, --no-std-paths", "no standard paths");
     printf (opt_fmt, "-o, --output", "output file for -c, -E, -p, -r");
     printf (opt_fmt, "-R, --recursive", "operate recursively");
