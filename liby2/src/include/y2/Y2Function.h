@@ -28,8 +28,45 @@ using std::string;
 #include "ycp/Type.h"
 
 /**
- * A function call interface.
- * Created by Y2Namespace::createFunctionCall ("funcname")
+ * A function call interface. It is an abstract base for providing
+ * an interface for calling a function inside YaST. Any Y2 namespace
+ * can provide its own implementation for calling functions provided
+ * by the namespace. Typically returned value by 
+ * Y2Namespace::createFunctionCall ("funcname", function_type).
+ *
+ * 
+ * <pre>
+
+// an example to call Popup::Message()
+ 
+// first, find out the component for the namespace
+Y2Component* impl = Y2ComponentBroker::provideNamespace ("Popup");
+if (impl != 0)
+{
+    // let the component import the namespace
+    Y2Namespace* ns = impl->import ("Popup");
+    
+    if (ns != 0)
+    {
+	// create a function call object for the function
+        Y2Function* fnc = ns->createFunctionCall ("Message"
+	    , Type::fromSignature ("void (string)"));
+	    
+	if (fnc != 0)
+	{
+	    // pass the parameter for the function
+	    fnc->appendParameter (YCPString ("This is my test"));
+	    fnc->finishParameters ();
+	    
+	    // evaluate the call
+	    fnc->evaluateCall ();
+	    
+	    // function is not longer needed, free it
+	    delete fnc;
+	}
+    }
+} 
+</pre>
  */
 class Y2Function {
 
