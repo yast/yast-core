@@ -120,7 +120,7 @@
 #define YUIWidget_PkgSpecial			"PkgSpecial"
 
 
-// Special ( optional ) widgets
+// Special (optional) widgets
 
 #define YUISpecialWidget_BarGraph		"BarGraph"
 #define YUISpecialWidget_ColoredLabel		"ColoredLabel"
@@ -168,6 +168,7 @@
 #define YUIOpt_autoScrollDown			"autoScrollDown"
 #define YUIOpt_autoAdvance			"autoAdvance"
 #define YUIOpt_autoShortcut			"autoShortcut"
+#define YUIOpt_boldFont				"boldFont"
 #define YUIOpt_countShowDelta			"countShowDelta"
 #define YUIOpt_centered				"centered"
 #define YUIOpt_debugLayout			"debugLayout"
@@ -273,6 +274,7 @@
 #define YUISymbol_menu				"menu"
 #define YUISymbol_header			"header"
 #define YUISymbol_rgb				"rgb"
+#define YUISymbol_BackgroundPixmap		"BackgroundPixmap"
 
 
 #endif // YUISymbols_h

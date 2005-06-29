@@ -134,7 +134,7 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
  * @widget	BarGraph
  * @short	Horizontal bar graph (optional widget)
  * @class	YBarGraph
- * @arg		list values the initial values ( integer numbers )
+ * @arg		list values the initial values (integer numbers)
  * @optarg	list labels the labels for each part; use "%1" to include the
  *		current numeric value. May include newlines.
  * @usage	if ( HasSpecialWidget( `BarGraph ) {...
@@ -147,7 +147,7 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt )
  *
  * A horizontal bar graph for graphical display of proportions of integer
  * values.  Labels can be passed for each portion; they can include a "%1"
- * placeholder where the current value will be inserted ( sformat() -style ) and
+ * placeholder where the current value will be inserted (sformat() -style) and
  * newlines. If no labels are specified, only the values will be
  * displayed. Specify empty labels to suppress this.
  * @note        This is a "special" widget, i.e. not all UIs necessarily support it.  Check
@@ -207,6 +207,7 @@ YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm 
  * @arg		color foreground color
  * @arg		color background color
  * @arg		integer margin around the widget in pixels
+ * @option	boldFont use a bold font
  * @usage	`ColoredLabel( "Hello, World!", `rgb( 255, 0, 255 ), `rgb( 0, 128, 0 ), 20 )
  *
  * @examples	ColoredLabel1.ycp ColoredLabel2.ycp ColoredLabel3.ycp ColoredLabel4.ycp
@@ -214,7 +215,7 @@ YWidget * YUI::createBarGraph( YWidget *parent, YWidgetOpt & opt, const YCPTerm 
  * @description
  *
  * Very much the same as a `Label except you specify foreground and background colors and margins.
- * This widget is only available on graphical UIs with at least 15 bit color depth ( 32767 colors ).
+ * This widget is only available on graphical UIs with at least 15 bit color depth (32767 colors).
  * @note  This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `ColoredLabel )</tt> before using it.
  */
@@ -268,13 +269,13 @@ YWidget * YUI::createColoredLabel( YWidget *parent, YWidgetOpt & opt, const YCPT
  * @description
  *
  * This widget automatically displays the progress of a lengthy download
- * operation. The widget itself ( i.e. the UI ) polls the specified file and
+ * operation. The widget itself (i.e. the UI) polls the specified file and
  * automatically updates the display as required even if the download is taking
  * place in the foreground.
  * 
  * Please notice that this will work only if the UI runs on the same machine as
- * the file to download which may not taken for granted ( but which is so for
- * most users ).
+ * the file to download which may not taken for granted (but which is so for
+ * most users).
  * 
  * @note This is a "special" widget, i.e. not all UIs necessarily support it.  Check
  * for availability with <tt>HasSpecialWidget( `DownloadProgress )</tt> before using it.
@@ -612,7 +613,7 @@ YWidget * YUI::createMultiProgressMeter( YWidget *parent, YWidgetOpt & opt, cons
  * @examples	Slider1.ycp Slider2.ycp ColoredLabel3.ycp
  *
  * @description
- * A horizontal slider with ( numeric ) input field that allows input of an
+ * A horizontal slider with (numeric) input field that allows input of an
  * integer value in a given range. The user can either drag the slider or
  * simply enter a value in the input field.
  * 
@@ -669,7 +670,7 @@ YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & 
  *
  * @arg integer	usedSize		size of the used part of the partition
  * @arg integer	totalFreeSize 		total size of the free part of the partition
- *					( before the split )
+ *					(before the split)
  * @arg integer newPartSize		suggested size of the new partition
  * @arg integer minNewPartSize		minimum size of the new partition
  * @arg integer minFreeSize		minimum free size of the old partition
@@ -688,8 +689,8 @@ YWidget * YUI::createSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & 
  *
  * A very specialized widget to allow a user to comfortably split an existing
  * hard disk partition in two parts. Shows a bar graph that displays the used
- * space of the partition, the remaining free space ( before the split ) of the
- * partition and the space of the new partition ( as suggested ).
+ * space of the partition, the remaining free space (before the split) of the
+ * partition and the space of the new partition (as suggested).
  * Below the bar graph is a slider with an input fields to the left and right
  * where the user can either input the desired remaining free space or the
  * desired size of the new partition or drag the slider to do this.

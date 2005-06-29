@@ -128,6 +128,7 @@ struct YWidgetOpt
     YBoolOpt keyEvents;	
     YBoolOpt easterEgg;
     YBoolOpt testMode;
+    YBoolOpt boldFont;		// YCheckBox, YRadioButton, YLabel
 
     YLongOpt hWeight;		// from YUIInterpreter::createWeight()
     YLongOpt vWeight;		// from YUIInterpreter::createWeight()

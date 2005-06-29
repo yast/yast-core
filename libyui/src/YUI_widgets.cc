@@ -92,7 +92,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
      *
      * @option	disabled	Set this widget insensitive, i.e. disable any user interaction.
      *				The widget will show this state by being greyed out
-     *				( depending on the specific UI ).
+     *				(depending on the specific UI).
      *
      * @option	hstretch	Make this widget stretchable in the horizontal dimension.
      *
@@ -144,6 +144,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
 	    else if ( sym == YUIOpt_autoShortcut ) opt.autoShortcut.setValue( true );
 	    else if ( sym == YUIOpt_easterEgg	) opt.easterEgg.setValue( true );
 	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue( true );
+	    else if ( sym == YUIOpt_boldFont	) opt.boldFont.setValue( true );
 	    else if ( sym == YUIOpt_keyEvents	) opt.keyEvents.setValue( true );
 	    else if ( sym == YUIOpt_key_F1	) opt.key_Fxx.setValue(	 1 );
 	    else if ( sym == YUIOpt_key_F2	) opt.key_Fxx.setValue(	 2 );
@@ -319,7 +320,7 @@ YWidget * YUI::createWidgetTree( YWidget * parent, YRadioButtonGroup * rbg, cons
  * @class	YReplacePoint
  * @arg		term child the child widget
  * @usage	`ReplacePoint( `id( `rp ), `Empty() )
- * @example	ReplacePoint1.ycp
+ * @example	ReplacePoint1.ycpDumbTab2.ycp ShortcutCheckPostponed.ycp  WidgetExists.ycp
  *
  * @description
  *
@@ -665,7 +666,7 @@ YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  * @widgets	HWeight VWeight
  * @id          Weight
  * @short	Control relative size of layouts
- * @class	( YWeight )
+ * @class	(YWeight)
  * @arg		integer weight the new weight of the child widget
  * @arg		term child the child widget
  * @usage	`HWeight( 2, `SelectionBox( "Language" ) )
@@ -688,7 +689,7 @@ YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  * use <tt>HVWeight</tt>, the weight in both dimensions is set to the same
  * value.
  *
- * Note: No real widget is created ( any more ), just the weight value is
+ * Note: No real widget is created (any more), just the weight value is
  * passed to the child widget.
  * 
  */
@@ -727,7 +728,7 @@ YWidget * YUI::createWeight( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  * @widgets	HBox VBox
  * @id          Box
  * @short	Generic layout: Arrange widgets horizontally or vertically
- * @class	( Box )
+ * @class	(Box)
  * @optarg	term child1 the first child widget
  * @optarg	term child2 the second child widget
  * @optarg	term child3 the third child widget
@@ -798,9 +799,10 @@ YWidget * YUI::createLBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
  * @class	YLabel
  * @arg		string label
  * @option	outputField make the label look like an input field in read-only mode
+ * @option	boldFont use a bold font
  * @usage	`Label( "Here goes some text\nsecond line" )
  *
- * @examples	Label1.ycp Label2.ycp Label3.ycp
+ * @examples	Label1.ycp Label2.ycp Label3.ycp Label4.ycp
  *		Heading1.ycp Heading2.ycp Heading3.ycp
  *
  * @description
@@ -846,7 +848,7 @@ YWidget * YUI::createLabel( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * @option	autoScrollDown automatically scroll down for each text change
  * @option	shrinkable make the widget very small
  * @usage	`RichText( "This is a <b>bold</b> text" )
- * @example	RichText1.ycp
+ * @example	RichText1.ycp RichText2.ycp RichText3.ycp RichText-hyperlinks.ycp
  *
  * @description
  *
@@ -891,9 +893,9 @@ YWidget * YUI::createRichText( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @widget	LogView
  * @short	scrollable log lines like "tail -f"
  * @class	YLogView
- * @arg		string label ( above the log lines )
- * @arg		integer visibleLines number of visible lines ( without scrolling )
- * @arg		integer maxLines number of log lines to store ( use 0 for "all" )
+ * @arg		string label (above the log lines)
+ * @arg		integer visibleLines number of visible lines (without scrolling)
+ * @arg		integer maxLines number of log lines to store (use 0 for "all")
  * @usage	`LogView( "Log file", 4, 200 );
  * @example	LogView1.ycp
  *
@@ -906,7 +908,7 @@ YWidget * YUI::createRichText( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * The LogView will keep up to "maxLines" of output, discarding the oldest
  * lines if there are more. If "maxLines" is set to 0, all lines will be kept.
  * 
- * "visibleLines" lines will be visible by default ( without scrolling ) unless
+ * "visibleLines" lines will be visible by default (without scrolling) unless
  * you stretch the widget in the layout.
  * 
  * Use <tt>ChangeWidget( `id( `log ), `LastLine, "bla blurb...\n" )</tt> to append
@@ -945,7 +947,7 @@ YWidget * YUI::createLogView( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * @widget	PushButton IconButton
  * @short	Perform action on click
  * @class	YPushButton
- * @arg		string iconName ( IconButton only )
+ * @arg		string iconName (IconButton only)
  * @arg		string label
  * @option	default makes this button the dialogs default button
  * @usage	`PushButton( `id( `click ), `opt( `default, `hstretch ), "Click me" )
@@ -959,7 +961,7 @@ YWidget * YUI::createLogView( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * the user presses the button, <tt>UserInput()</tt> returns with the id of the
  * pressed button.
  * 
- * You can ( and should ) provide keybord shortcuts along with the button
+ * You can (and should) provide keybord shortcuts along with the button
  * label. For example "&amp; Apply" as a button label will allow the user to
  * activate the button with Alt-A, even if it currently doesn't have keyboard
  * focus. This is important for UIs that don't support using a mouse.
@@ -968,7 +970,7 @@ YWidget * YUI::createLogView( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * addition to the text. If the UI cannot handle icons, it displays only the
  * text, and the icon is silently omitted.
  * 
- * Icons are ( at the time of this writing ) loaded from the <em>theme</em>
+ * Icons are (at the time of this writing) loaded from the <em>theme</em>
  * directory, /usr/share/YaST2/theme/current.
  * 
  */
@@ -1060,11 +1062,11 @@ YWidget * YUI::createPushButton( YWidget * parent, YWidgetOpt & opt, const YCPTe
  * <b>Style guide hint:</b> Don't overuse this widget. Use it for dialogs that
  * provide lots of actions. Make the most frequently used actions accessible
  * via normal <tt>PushButtons</tt>. Move less frequently used actions
- * ( e.g. "expert" actions ) into one or more <tt>MenuButtons</tt>. Don't nest
+ * (e.g. "expert" actions) into one or more <tt>MenuButtons</tt>. Don't nest
  * the popup menus too deep - the deeper the nesting, the more awkward the user
  * interface will be.
  * 
- * You can ( and should ) provide keybord shortcuts along with the button
+ * You can (and should) provide keybord shortcuts along with the button
  * label as well as for any menu item.
  * 
  */
@@ -1194,8 +1196,9 @@ YUI::parseMenuItemList( const YCPList &	itemList,
  * @arg		string label the text describing the check box
  * @optarg	boolean|nil checked whether the check box should start checked -
  *		nil means tristate condition, i.e. neither on nor off
+ * @option	boldFont use a bold font
  * @usage	`CheckBox( `id( `cheese ), "&amp; Extra cheese" )
- * @examples	CheckBox1.ycp CheckBox2.ycp CheckBox3.ycp
+ * @examples	CheckBox1.ycp CheckBox2.ycp CheckBox3.ycp CheckBox4.ycp
  *
  * @description
  * 
@@ -1230,8 +1233,9 @@ YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @class	YRadioButton
  * @arg		string label
  * @optarg	boolean selected
+ * @option	boldFont use a bold font
  * @usage	`RadioButton( `id( `now ), "Crash now", true )
- * @examples	RadioButton1.ycp RadioButton2.ycp Frame2.ycp
+ * @examples	RadioButton1.ycp RadioButton2.ycp Frame2.ycp ShortcutConflict3.ycp
  *
  * @description
  * 
@@ -1438,7 +1442,13 @@ YWidget * YUI::createMultiLineEdit( YWidget * parent, YWidgetOpt & opt,
  * @option	shrinkable make the widget very small
  * @option	immediate	make `notify trigger immediately when the selected item changes
  * @usage	`SelectionBox( `id( `pizza ), "select your Pizza:", [ "Margarita", `item( `id( `na ), "Napoli" ) ] )
- * @examples	SelectionBox1.ycp SelectionBox2.ycp SelectionBox3.ycp SelectionBox4.ycp
+ * @examples	SelectionBox1.ycp
+ *		SelectionBox2.ycp
+ *		SelectionBox3.ycp
+ *		SelectionBox4.ycp
+ *		SelectionBox-icons.ycp
+ *		SelectionBox-replace-items1.ycp
+ *		SelectionBox-replace-items2.ycp
  *
  * @description
  *
@@ -1495,18 +1505,22 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
  * @optarg	list	items	the items initially contained in the selection box
  * @option	shrinkable make the widget very small
  * @usage	`MultiSelectionBox( `id( `topping ), "select pizza toppings:", [ "Salami", `item( `id( `cheese ), "Cheese", true ) ] )
- * @examples	MultiSelectionBox1.ycp MultiSelectionBox2.ycp MultiSelectionBox3.ycp
+ * @examples	MultiSelectionBox1.ycp
+ *		MultiSelectionBox2.ycp
+ *		MultiSelectionBox3.ycp
+ *		MultiSelectionBox-replace-items1.ycp
+ *		MultiSelectionBox-replace-items2.ycp
  *
  * @description
  *
  * The MultiSelectionBox displays a ( scrollable ) list of items from which any
- * number ( even nothing! ) can be selected. Use the MultiSelectionBox's
+ * number (even nothing!) can be selected. Use the MultiSelectionBox's
  * <tt>SelectedItems</tt> property to find out which.
  * 
  * Each item can be specified either as a simple string or as
- * <tt>`item( ... )</tt> which includes an ( optional ) ID and an ( optional )
- * 'selected' flag that specifies the initial selected state ( 'not selected',
- * i.e. 'false', is default ).
+ * <tt>`item( ... )</tt> which includes an ( optional ) ID and an (optional)
+ * 'selected' flag that specifies the initial selected state ('not selected',
+ * i.e. 'false', is default).
  * 
  */
 
@@ -1546,13 +1560,18 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
 
 /**
  * @widget	ComboBox
- * @short	drop-down list selection ( optionally editable )
+ * @short	drop-down list selection (optionally editable)
  * @class	YComboBox
  * @arg		string label
  * @optarg	list items the items contained in the combo box
  * @option	editable the user can enter any value.
  * @usage	`ComboBox( `id( `pizza ), "select your Pizza:", [ "Margarita", `item( `id( `na ), "Napoli" ) ] )
- * @examples	ComboBox1.ycp ComboBox2.ycp ComboBox3.ycp ComboBox4.ycp ComboBox-setInputMaxLength.ycp
+ * @examples	ComboBox1.ycp
+ *		ComboBox2.ycp
+ *		ComboBox3.ycp
+ *		ComboBox4.ycp
+ * 		ComboBox-replace-items1.ycp
+ * 		ComboBox-setInputMaxLength.ycp
  *
  * @description
  *
@@ -1562,7 +1581,7 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
  * the user can also freely enter any value. By default, the user can only
  * select an item already present in the list.
  * 
- * The items are very much like SelectionBox items: They can have an ( optional )
+ * The items are very much like SelectionBox items: They can have an (optional)
  * ID, they have a mandatory text to be displayed and an optional boolean
  * parameter indicating the selected state. Only one of the items may have this
  * parameter set to "true"; this will be the default selection on startup.
@@ -1634,7 +1653,11 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  *		subtrees will always be open.
  *
  * @usage	`Tree( `id( `treeID ), "treeLabel", [ "top1", "top2", "top3" ] );
- * @examples	Tree1.ycp Tree2.ycp
+ * @examples	Tree1.ycp
+ *		Tree2.ycp
+ *		Tree-icons.ycp
+ *		Tree-replace-items.ycp
+ *		Wizard4.ycp
  *
  * @description
  * 
@@ -1649,6 +1672,9 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * The tree widget will not perform any sorting on its own: The items are
  * always sorted by insertion order. The application needs to handle sorting
  * itself, if desired.
+ *
+ * Note: The Qt version of the Wizard widget also provides a built-in tree with
+ * an API that is (sometimes) easier to use. 
  * 
  */
 
@@ -1714,7 +1740,7 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
  * specifying its title. For example <tt>`header( "Name", "Price" )</tt> creates
  * the two columns "Name" and "Price".
  * 
- * The second argument is an optional list of items ( rows ) that are inserted in
+ * The second argument is an optional list of items (rows) that are inserted in
  * the table. Each item has the form <tt>`item( `id( </tt> id <tt> ), first
  * column, second column, ... )</tt>. For each column one argument has to be
  * specified, which must be of type void, string or integer. Strings are being
@@ -1878,15 +1904,14 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * @option	scaleToFit scale the pixmap so it fits the available space: zoom in or out as needed
  * @option	zeroWidth make widget report a nice width of 0
  * @option	zeroHeight make widget report a nice height of 0
- * @option	animated image data contain an animated image ( e.g. MNG )
- * @usage	`Image( `suseheader, "SuSE Linux 7.0" )
+ * @option	animated image data contain an animated image (e.g. MNG)
  * @example	Image1.ycp Image-animated.ycp Image-local.ycp Image-scaled.ycp Image-tiled.ycp
  *
  * @description
  * 
  * Displays an image - if the respective UI is capable of that. If not, it is
  * up to the UI to decide whether or not to display the specified default text
- * instead ( e.g. with the NCurses UI ).
+ * instead (e.g. with the NCurses UI).
  * 
  * Use <tt>`opt( `zeroWidth )</tt> and / or <tt>`opt( `zeroHeight )</tt> 
  * if the real size of the
@@ -1972,7 +1997,7 @@ YWidget * YUI::createImage( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * <link linkend="Slider_widget">Slider</link> widget, even as a replacement for
  * this when the specific UI doesn't support the Slider.
  * Remember it always makes sense to specify limits for numeric input, even if
- * those limits are very large ( e.g. +/- MAXINT ).
+ * those limits are very large (e.g. +/- MAXINT).
  * 
  * Fractional numbers are currently not supported.
  * 
@@ -2012,7 +2037,7 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @short	Complete software package selection
  * @class	YPackageSelector
  * @optarg	string floppyDevice
- * @option	youMode start in YOU ( YaST Online Update ) mode
+ * @option	youMode start in YOU (YaST Online Update) mode
  * @option	updateMode start in update mode
  * @option	searchMode start with the "search" filter view 
  * @option	summaryMode start with the "installation summary" filter view
@@ -2023,7 +2048,7 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @description
  *
  * A very complex widget that handles software package selection completely
- * transparently. Set up the package manager ( the backend ) before creating this
+ * transparently. Set up the package manager (the backend) before creating this
  * widget and let the package manager and the package selector handle all the
  * rest. The result of all this are the data stored in the package manager.
  * 

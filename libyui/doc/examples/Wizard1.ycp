@@ -5,9 +5,9 @@
 
 {
     UI::OpenDialog(`opt(`defaultsize),
-		   `Wizard( `back,  "&Back",
-			     `abort, "Ab&ort",
-			     `next,  "&Next" ) );
+		   `Wizard( `back,  "",
+			    `abort, "&Cancel",
+			    `next,  "&OK" ) );
 
     while( true )
     {

@@ -139,7 +139,7 @@ bool YSelectionWidget::parseItem( const YCPTerm & itemTerm,
 
     if ( itemTerm->size() < 1 || itemTerm->size() > 4 )
     {
-	y2error( "%s: Invalid argument number in %s", itemTerm->toString().c_str() );
+	y2error( "Invalid argument number in %s", itemTerm->toString().c_str() );
     }
 
     item_id    		= YCPNull();
