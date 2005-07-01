@@ -32,11 +32,11 @@ public:
 
     /**
      * Constructor
-     * @param size the relative size of this widget
+     * @param size the relative size of this widget in logical layout units (normalized to 80x25)
      * @param horizontal flag: use "size" for the horizontal dimension?
      * @param vertical flag: use "size" for the vertical dimension?
      */
-    YSpacing( const YWidgetOpt & opt, float size, bool horizontal, bool vertical );
+    YSpacing( const YWidgetOpt & opt, float layoutUnits, bool horizontal, bool vertical );
 
     /**
      * Returns a descriptive name of this widget class for logging,
@@ -59,24 +59,19 @@ public:
     bool isLayoutStretch( YUIDimension dim ) const;
 
     /**
-     * Convert a relative size in the given dimension in units actually
-     * used by the respective UI ( pixels or characters ).
-     * Overwrite this method to round sizes < 1.0 to zero or to make
-     * sure a widget gets at least one unit ( e.g. pixel ) in any
-     * direction if the UI cannot handle zero sizes.
-     * @param dim Dimension, either YD_HORIZ or YD_VERT
-     * @param relativeSize size as passed as widget parameter
-     */
-    virtual long absoluteSize( YUIDimension dim, float relativeSize );
-
-
-protected:
+     * Width in device dependent units (pixels or character cells)
+     **/
+    long width() const { return _size[ YD_HORIZ ]; }
+    
     /**
-     * Relative size in both dimensions. The virtual absoluteSize()
-     * method is used in order to determine the real size in units used
-     * by the UI.
-     */
-    float relativeSize[ YUIAllDimensions ];
+     * Height in device dependent units (pixels or character cells)
+     **/
+    long height() const { return _size[ YD_VERT ]; }
+
+    
+private:
+    
+    long _size[ YUIAllDimensions ];
 };
 
 

@@ -58,7 +58,8 @@ typedef YCPValue (*v2vvvv)  (const YCPValue &, const YCPValue &, const YCPValue 
 typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
 
 
-bool YUI::_reverseLayout = false;
+bool	YUI::_reverseLayout	= false;
+YUI *	YUI::_yui		= 0;
 
 
 YUI::YUI( bool with_threads )
@@ -71,6 +72,7 @@ YUI::YUI( bool with_threads )
     , _events_blocked( false )
     , _callback( 0 )
 {
+    _yui = this;
 }
 
 

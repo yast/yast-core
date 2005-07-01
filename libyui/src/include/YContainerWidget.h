@@ -66,7 +66,7 @@ public:
     YWidget *child( int i ) const;
 
     /**
-     * Default implementation, that assumes exactly one child.
+     * Default implementation, assuming exactly one child.
      * Returns the nicesize of the child.
      * @param dim Dimension, either YD_HORIZ or YD_VERT
      */

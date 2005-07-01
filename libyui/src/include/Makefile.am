@@ -7,6 +7,7 @@ pkgincludedir = $(includedir)/yui
 pkginclude_HEADERS =				\
 	YUIComponent.h				\
 	YUI.h					\
+	YUI_util.h				\
 	UI.h					\
 	YUISymbols.h				\
 						\

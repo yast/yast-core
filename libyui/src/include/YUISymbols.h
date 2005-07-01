@@ -95,6 +95,10 @@
 #define YUIWidget_Left				"Left"
 #define YUIWidget_LogView			"LogView"
 #define YUIWidget_MenuButton			"MenuButton"
+#define YUIWidget_MarginBox			"MarginBox"
+#define YUIWidget_MinHeight			"MinHeight"
+#define YUIWidget_MinSize			"MinSize"
+#define YUIWidget_MinWidth			"MinWidth"
 #define YUIWidget_MultiLineEdit			"MultiLineEdit"
 #define YUIWidget_MultiSelectionBox		"MultiSelectionBox"
 #define YUIWidget_PackageSelector		"PackageSelector"
@@ -274,6 +278,10 @@
 #define YUISymbol_menu				"menu"
 #define YUISymbol_header			"header"
 #define YUISymbol_rgb				"rgb"
+#define YUISymbol_leftMargin			"leftMargin"
+#define YUISymbol_rightMargin			"rightMargin"
+#define YUISymbol_topMargin			"topMargin"
+#define YUISymbol_bottomMargin			"bottomMargin"
 #define YUISymbol_BackgroundPixmap		"BackgroundPixmap"
 
 

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Jul  1 20:09:09 CEST 2005 - sh@suse.de
+
+- V 2.12.10
+- New layout helper widget: MarginBox
+- Improved geometry management for insufficient screen space
+
+-------------------------------------------------------------------
 Tue Jun 21 11:05:51 CEST 2005 - visnov@suse.cz
 
 - use redirected System:: prefix also after the redirection

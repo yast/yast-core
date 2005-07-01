@@ -130,15 +130,23 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 	descr += "`id( " + w->id()->toString() + " )";
     }
 
+    string stretch;
+    
+    if ( w->stretchable( YD_HORIZ ) )	stretch += "hstretch ";
+    if ( w->stretchable( YD_VERT  ) )	stretch += "vstretch";
+
+    if ( ! stretch.empty() )
+	stretch = "(" + stretch + ") ";
+
     if ( descr.empty() )
     {
-	y2milestone( "Widget tree: %s%s #%d at %p",
-		     indentation.c_str(), w->widgetClass(), w->internalId(), w );
+	y2milestone( "Widget tree: %s%s #%d %sat %p",
+		     indentation.c_str(), w->widgetClass(), w->internalId(), stretch.c_str(), w );
     }
     else
     {
-	y2milestone( "Widget tree: %s%s %s at %p",
-		     indentation.c_str(), w->widgetClass(), descr.c_str(), w );
+	y2milestone( "Widget tree: %s%s %s %sat %p",
+		     indentation.c_str(), w->widgetClass(), descr.c_str(), stretch.c_str(), w );
     }
 }
 

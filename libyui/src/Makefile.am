@@ -16,6 +16,7 @@ libyui_la_SOURCES =				\
 	YUI_widgets.cc				\
 	YUI_special_widgets.cc			\
 	YUI_bindings.cc				\
+	YUI_util.cc				\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\

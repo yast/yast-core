@@ -38,6 +38,7 @@
 #include "YUISymbols.h"
 #include "YWidget.h"
 #include "YDialog.h"
+#include "YUI_util.h"
 
 #include "YAlignment.h"
 #include "YComboBox.h"
@@ -123,7 +124,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
      *
      * This is not a widget for general usage, this is just a placeholder for
      * descriptions of options that all widgets have in common.
-     * 
+     *
      * Use them for any widget whenever it makes sense.
      *
      * @example AutoShortcut1.ycp AutoShortcut2.ycp
@@ -200,6 +201,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_HVSquash		)	w = createSquash		( p, opt, term, ol, n, rbg, true,  true );
     else if ( s == YUIWidget_HWeight		)	w = createWeight		( p, opt, term, ol, n, rbg, YD_HORIZ );
     else if ( s == YUIWidget_Left		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignBegin,	YAlignUnchanged );
+    else if ( s == YUIWidget_MarginBox		)	w = createMarginBox		( p, opt, term, ol, n, rbg );
     else if ( s == YUIWidget_RadioButtonGroup	)	w = createRadioButtonGroup	( p, opt, term, ol, n, rbg );
     else if ( s == YUIWidget_Right		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignEnd,		YAlignUnchanged );
     else if ( s == YUIWidget_Top		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged,	YAlignBegin	);
@@ -377,8 +379,8 @@ YWidget * YUI::createReplacePoint( YWidget * parent, YWidgetOpt & opt, const YCP
  * are stretchable horizontally or vertically resp., <tt>HVStretch</tt> is
  * stretchable in both directions. You can use them to control
  * the layout.
- * 
- * 
+ *
+ *
  */
 
 YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -412,17 +414,17 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  *
  * @description
  *
- * 
+ *
  * These widgets can be used to create empty space within a dialog to avoid
  * widgets being cramped together - purely for aesthetical reasons. There is no
  * functionality attached.
- * 
+ *
  * <em>Do not try to use spacings with excessive sizes to create layouts!</em>
  * This is very likely to work for just one UI.	 Use spacings only to separate
  * widgets from each other or from dialog borders. For other purposes, use
  * <tt>`HWeight</tt> and <tt>`VWeight</tt> and describe the dialog logically
  * rather than physically.
- * 
+ *
  * The <tt>size</tt> given is measured in units roughly equivalent to the size
  * of a character in the respective UI. Fractional numbers can be used here,
  * but text based UIs may choose to round the number as appropriate - even if
@@ -432,7 +434,7 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * 1.
  * <tt>HSpacing</tt> will create a horizontal spacing with default width and zero height.
  * <tt>VSpacing</tt> will create a vertical spacing with default height and zero width.
- * 
+ *
  * With options <tt>hstretch</tt> or <tt>vstretch</tt>, the spacing
  * will at least take the amount of space specified with
  * <tt>size</tt>, but it will be stretchable in the respective
@@ -441,7 +443,7 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * is equivalent to
  * <tt>`HBox( `HSpacing( 0.5 ), `HSpacing( 0.5 ) )
  * </tt>
- * 
+ *
  */
 
 YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -452,7 +454,7 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
     float size	  = 1.0;
     bool	 param_ok = false;
 
-    if ( term->size() == argnr )			// no parameter
+    if ( term->size() == argnr )		// no parameter
     {
 	param_ok = true;
     }
@@ -495,12 +497,12 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * @example	HCenter1.ycp HCenter2.ycp HCenter3.ycp Alignment1.ycp
  *
  * @description
- * 
+ *
  * The Alignment widgets are used to control the layout of a dialog. They are
  * useful in situations, where to a widget is assigned more space than it can
  * use. For example if you have a VBox containing four CheckBoxes, the width of
  * the VBox is determined by the CheckBox with the longest label. The other
- * CheckBoxes are centered per default. 
+ * CheckBoxes are centered per default.
  *
  * With <tt>`Left( widget )</tt> you tell
  * widget that it should be layouted leftmost of the space that is available to
@@ -508,9 +510,8 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * other three widgets center their child widget horizontally, vertically or in
  * both directions.
  *
- * The important fact for all alignment widgets is, that they
- * make their child widget <b>stretchable</b> in the dimension it is aligned.
- * 
+ * Note: An alignment widget makes a widget implicitly stretchable in the
+ * dimension it aligns. 
  */
 
 YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -530,7 +531,7 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
 	else if ( halign == YAlignEnd   )	halign = YAlignBegin;
     }
 
-    rejectAllOptions( term,optList );
+    rejectAllOptions( term, optList );
     YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, halign, valign ) );
     assert( alignment );
 
@@ -545,6 +546,122 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
 	    return 0;
 	}
     }
+    return alignment;
+}
+
+
+/**
+ * @widget	MarginBox
+ * @id          MarginBox
+ * @short	Margins around one child widget
+ * @class	YAlignment
+ * @arg		float horMargin	 margin left and right of the child widget
+ * @arg		float vertMargin margin above and below the child widget
+ * @arg		term child The contained child widget
+ * @usage	`MarginBox( 0.2, 0.3, `Label( "Hello" ) );
+ * @usage	`MarginBox( `leftMargin( 0.7,), `rightMargin( 2.0 ), `topMargin( 0.3 ), `bottomMargin( 0.8 ), `Label( "Hello" ) );
+ * @example	MarginBox1.ycp MarginBox2.ycp
+ *
+ * @description
+ *
+ * This widget is a shorthand to add margins to the sides of a child widget
+ * (which may of course also be a VBox or a HBox, i.e. several widgets).
+ *
+ * Unlike more complex constructs like nested VBox and HBox widgets with
+ * VSpacing and HSpacing at the sides, the margins of a MarginBox have lower
+ * layout priorities than the real content, so if screen space becomes scarce,
+ * the margins will be reduced first, and only if the margins are zero, the
+ * content will be reduced in size.
+ */
+
+YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+				int argnr, YRadioButtonGroup * rbg )
+{
+    float 	leftMargin	= 0.0;
+    float 	rightMargin	= 0.0;
+    float 	topMargin 	= 0.0;
+    float	bottomMargin	= 0.0;
+    
+    bool 	paramOK		= false;
+    int		argc		= term->size() - argnr;
+    YCPTerm	childTerm	= YCPNull();
+
+
+    if ( argc == 3 &&				// `MarginBox( horMargin, vertMargin, child )
+	 isNum( term->value( argnr   ) ) &&
+	 isNum( term->value( argnr+1 ) ) &&
+	 term->value( argnr+2 )->isTerm() )
+    {
+	leftMargin = rightMargin  = toFloat( term->value( argnr   ) );
+	topMargin  = bottomMargin = toFloat( term->value( argnr+1 ) );
+	childTerm  = term->value( argnr+2 )->asTerm();
+	paramOK    = true;
+    }
+
+    if ( ! paramOK && argc == 5 ) // `MarginBox(`leftMargin(99), `rightMargin(99), `topMargin(99), `bottomMargin(99), child );
+    {
+ 	paramOK = term->value( argnr+4)->isTerm();
+	
+	for ( int i=argnr; i < argnr+4 && paramOK; i++ )
+	{
+	    if ( term->value(i)->isTerm() )
+	    {
+		YCPTerm marginTerm = term->value(i)->asTerm();
+		
+		if ( marginTerm->size() == 1 && isNum( marginTerm->value(0) ) )
+		{
+		    float margin = toFloat( marginTerm->value(0) );
+		    if      ( marginTerm->name() == YUISymbol_leftMargin   )	leftMargin   = margin;
+		    else if ( marginTerm->name() == YUISymbol_rightMargin  )	rightMargin  = margin;
+		    else if ( marginTerm->name() == YUISymbol_topMargin    )	topMargin    = margin;
+		    else if ( marginTerm->name() == YUISymbol_bottomMargin )	bottomMargin = margin;
+		    else							paramOK = false;
+		}
+		else paramOK = false;
+	    }
+	    else paramOK = false;
+
+	    if ( ! paramOK )
+		y2error( "Bad margin specification: %s", term->value(i)->toString().c_str() );
+	}
+
+	if ( paramOK )
+	    childTerm  = term->value( argnr+4 )->asTerm();
+    }
+    
+    if ( ! paramOK )
+    {
+	y2error( "Bad MarginBox parameters: %s",
+		 term->toString().c_str() );
+	y2error( "Use either `MarginBox( horMargin, vertMargin, childTerm )" );
+	y2error( "or `MarginBox( `leftMargin( 99 ), `rightMargin( 99 ), `topMargin( 99 ), `bottomMargin( 99 ), childTerm )" );
+
+	return 0;
+    }
+    
+
+    rejectAllOptions( term, optList );
+    YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, YAlignUnchanged, YAlignUnchanged ) );
+    assert( alignment );
+
+    if ( alignment )
+    {
+	alignment->setParent( parent );
+	
+	alignment->setLeftMargin  ( deviceUnits( YD_HORIZ, leftMargin   ) );
+	alignment->setRightMargin ( deviceUnits( YD_HORIZ, rightMargin  ) );
+	alignment->setTopMargin   ( deviceUnits( YD_VERT,  topMargin    ) );
+	alignment->setBottomMargin( deviceUnits( YD_VERT,  bottomMargin ) );
+	
+	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
+	if ( child ) alignment->addChild( child );
+	else
+	{
+	    delete alignment;
+	    return 0;
+	}
+    }
+    
     return alignment;
 }
 
@@ -565,7 +682,7 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
  * the top left edge of that frame. It is used to visually group widgets
  * together. It is very common to use a frame like this around radio button
  * groups.
- * 
+ *
  */
 
 YWidget * YUI::createFrame( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -621,15 +738,15 @@ YWidget * YUI::createFrame( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * The Squash widgets are used to control the layout. A <tt>HSquash</tt> widget
  * makes its child widget <b>nonstretchable</b> in the horizontal dimension.
  * A <tt>VSquash</tt> operates vertically, a <tt>HVSquash</tt> in both
- * dimensions.	
+ * dimensions.
  *
  * You can used this for example to reverse the effect of
  * <tt>`Left</tt> making a widget stretchable. If you want to make a VBox
  * containing for left aligned CheckBoxes, but want the VBox itself to be
  * nonstretchable and centered, than you enclose each CheckBox with a
  * <tt>`Left( .. )</tt> and the whole VBox with a <tt>HSquash( ... )</tt>.
- * 
- * 
+ *
+ *
  */
 
 YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -680,7 +797,7 @@ YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  *
  * @description
  *
- * 
+ *
  * This widget is used to control the layout. When a <tt>HBox</tt> or
  * <tt>VBox</tt> widget decides how to devide remaining space amount two
  * <b>stretchable</b> widgets, their weights are taken into account. This
@@ -691,7 +808,7 @@ YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  *
  * Note: No real widget is created (any more), just the weight value is
  * passed to the child widget.
- * 
+ *
  */
 
 YWidget * YUI::createWeight( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -745,7 +862,7 @@ YWidget * YUI::createWeight( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
  *
  * The layout boxes are used to split up the dialog and layout a number of
  * widgets horizontally ( <tt>HBox</tt> ) or vertically ( <tt>VBox</tt> ).
- * 
+ *
  */
 
 YWidget * YUI::createLBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -852,12 +969,12 @@ YWidget * YUI::createLabel( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  *
  * @description
  *
- * 
+ *
  * A <tt>RichText</tt> is a text area with two major differences to a
  * <tt>Label</tt>: The amount of data it can contain is not restricted by the
  * layout and a number of control sequences are allowed, which control the
  * layout of the text.
- * 
+ *
  */
 
 YWidget * YUI::createRichText( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -901,22 +1018,22 @@ YWidget * YUI::createRichText( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  *
  * @description
  *
- * 
+ *
  * A scrolled output-only text window where ASCII output of any kind can be
  * redirected - very much like a shell window with "tail -f".
- * 
+ *
  * The LogView will keep up to "maxLines" of output, discarding the oldest
  * lines if there are more. If "maxLines" is set to 0, all lines will be kept.
- * 
+ *
  * "visibleLines" lines will be visible by default (without scrolling) unless
  * you stretch the widget in the layout.
- * 
+ *
  * Use <tt>ChangeWidget( `id( `log ), `LastLine, "bla blurb...\n" )</tt> to append
  * one or several line(s) to the output. Notice the newline at the end of each line!
- * 
+ *
  * Use <tt>ChangeWidget( `id( `log ), `Value, "bla blurb...\n" )</tt> to replace
  * the entire contents of the LogView.
- * 
+ *
  * Use <tt>ChangeWidget( `id( `log ), `Value, "" )</tt> to clear the contents.
  */
 
@@ -955,24 +1072,24 @@ YWidget * YUI::createLogView( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  *
  * @description
  *
- * 
+ *
  * A <tt>PushButton</tt> is a button with a text label the user can
  * press in order to activate some action. If you call <tt>UserInput()</tt> and
  * the user presses the button, <tt>UserInput()</tt> returns with the id of the
  * pressed button.
- * 
+ *
  * You can (and should) provide keybord shortcuts along with the button
  * label. For example "&amp; Apply" as a button label will allow the user to
  * activate the button with Alt-A, even if it currently doesn't have keyboard
  * focus. This is important for UIs that don't support using a mouse.
- * 
+ *
  * An <tt>IconButton</tt> is pretty much the same, but it has an icon in
  * addition to the text. If the UI cannot handle icons, it displays only the
  * text, and the icon is silently omitted.
- * 
+ *
  * Icons are (at the time of this writing) loaded from the <em>theme</em>
  * directory, /usr/share/YaST2/theme/current.
- * 
+ *
  */
 
 YWidget * YUI::createPushButton( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -1050,25 +1167,25 @@ YWidget * YUI::createPushButton( YWidget * parent, YWidgetOpt & opt, const YCPTe
  * @examples	MenuButton1.ycp MenuButton2.ycp
  *
  * @description
- * 
+ *
  * This is a widget that looks very much like a <tt>PushButton</tt>, but unlike
  * a <tt>PushButton</tt> it doesn't immediately start some action but opens a
  * popup menu from where the user can select an item that starts an action. Any
  * item may in turn open a submenu etc.
- * 
+ *
  * <tt>UserInput()</tt> returns the ID of a menu item if one was activated. It
  * will never return the ID of the <tt>MenuButton</tt> itself.
- * 
+ *
  * <b>Style guide hint:</b> Don't overuse this widget. Use it for dialogs that
  * provide lots of actions. Make the most frequently used actions accessible
  * via normal <tt>PushButtons</tt>. Move less frequently used actions
  * (e.g. "expert" actions) into one or more <tt>MenuButtons</tt>. Don't nest
  * the popup menus too deep - the deeper the nesting, the more awkward the user
  * interface will be.
- * 
+ *
  * You can (and should) provide keybord shortcuts along with the button
  * label as well as for any menu item.
- * 
+ *
  */
 
 YWidget * YUI::createMenuButton( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1201,11 +1318,11 @@ YUI::parseMenuItemList( const YCPList &	itemList,
  * @examples	CheckBox1.ycp CheckBox2.ycp CheckBox3.ycp CheckBox4.ycp
  *
  * @description
- * 
+ *
  * A checkbox widget has two states: Checked and not checked. It returns no
  * user input but you can query and change its state via the <tt>Value</tt>
  * property.
- * 
+ *
  */
 
 YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1238,12 +1355,12 @@ YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @examples	RadioButton1.ycp RadioButton2.ycp Frame2.ycp ShortcutConflict3.ycp
  *
  * @description
- * 
+ *
  * A radio button is not usefull alone. Radio buttons are group such that the
  * user can select one radio button of a group. It is much like a selection
  * box, but radio buttons can be dispersed over the dialog.  Radio buttons must
  * be contained in a <tt>RadioButtonGroup</tt>.
- * 
+ *
  */
 
 YWidget * YUI::createRadioButton( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -1299,12 +1416,12 @@ YWidget * YUI::createRadioButton( YWidget * parent, YWidgetOpt & opt, const YCPT
  * the layout nor has it a graphical representation. It is just used to
  * logically group RadioButtons together so the one-out-of-many selection
  * strategy can be ensured.
- * 
+ *
  * Radio button groups may be nested.  Looking bottom up we can say that a
  * radio button belongs to the radio button group that is nearest to it. If you
  * give the <tt>RadioButtonGroup</tt> widget an id, you can use it to query and
  * set which radio button is currently selected.
- * 
+ *
  */
 
 YWidget * YUI::createRadioButtonGroup( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
@@ -1352,10 +1469,10 @@ YWidget * YUI::createRadioButtonGroup( YWidget * parent, YWidgetOpt & opt, const
  *              TextEntry-setInputMaxLength.ycp
  *
  * @description
- * 
+ *
  * This widget is a one line text entry field with a label above it. An initial
  * text can be provided.
- * 
+ *
  * @note        You can and should set a keyboard shortcut within the
  * label. When the user presses the hotkey, the corresponding text entry widget
  * will get the keyboard focus.
@@ -1402,10 +1519,10 @@ YWidget * YUI::createTextEntry( YWidget * parent, YWidgetOpt & opt,
  *
  * @description
  *
- * 
+ *
  * This widget is a multiple line text entry field with a label above it.
  * An initial text can be provided.
- * 
+ *
  * @note        You can and should set a keyboard shortcut within the
  * label. When the user presses the hotkey, the corresponding MultiLineEdit
  * widget will get the keyboard focus.
@@ -1460,7 +1577,7 @@ YWidget * YUI::createMultiLineEdit( YWidget * parent, YWidgetOpt & opt,
  * string label, boolean selected )</tt>, where you give an id of the form
  * <tt>`id( any v )</tt> where you can store an aribtrary value as id. The third
  * argument controls whether the item is the selected item.
- * 
+ *
  */
 
 YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1491,7 +1608,7 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
     if ( selbox && numargs >= 2 )
     {
 	selbox->parseItemList( term->value( argnr+1 )->asList() );
-    }	
+    }
 
     return selbox;
 }
@@ -1516,12 +1633,12 @@ YWidget * YUI::createSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCP
  * The MultiSelectionBox displays a ( scrollable ) list of items from which any
  * number (even nothing!) can be selected. Use the MultiSelectionBox's
  * <tt>SelectedItems</tt> property to find out which.
- * 
+ *
  * Each item can be specified either as a simple string or as
  * <tt>`item( ... )</tt> which includes an ( optional ) ID and an (optional)
  * 'selected' flag that specifies the initial selected state ('not selected',
  * i.e. 'false', is default).
- * 
+ *
  */
 
 YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1580,16 +1697,16 @@ YWidget * YUI::createMultiSelectionBox( YWidget * parent, YWidgetOpt & opt, cons
  * ( mandatory ) label and an ( optional ) id.	When the 'editable' option is set,
  * the user can also freely enter any value. By default, the user can only
  * select an item already present in the list.
- * 
+ *
  * The items are very much like SelectionBox items: They can have an (optional)
  * ID, they have a mandatory text to be displayed and an optional boolean
  * parameter indicating the selected state. Only one of the items may have this
  * parameter set to "true"; this will be the default selection on startup.
- * 
+ *
  * @note         You can and should set a keyboard shortcut within the
  * label. When the user presses the hotkey, the combo box will get the keyboard
  * focus.
- * 
+ *
  */
 
 YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1631,21 +1748,21 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  *              <code>
  *		itemList ::=
  *			[
- *				item			
- *				[ , item ]		
- *				[ , item ]		
- *				...			
+ *				item
+ *				[ , item ]
+ *				[ , item ]
+ *				...
  *			]
- *		item ::= 
- *			string |		
- *			`item( 
- *				[ `id( string  ),] 
- *				string			
- *				[ , true | false ]	
- *				[ , itemList ]		
+ *		item ::=
+ *			string |
+ *			`item(
+ *				[ `id( string  ),]
+ *				string
+ *				[ , true | false ]
+ *				[ , itemList ]
  *			)
  *              </code>
- *		
+ *
  *		The boolean parameter inside `item() indicates whether or not
  *		the respective tree item should be opened by default - if it
  *		has any subitems and if the respective UI is capable of closing
@@ -1660,22 +1777,22 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  *		Wizard4.ycp
  *
  * @description
- * 
+ *
  * A tree widget provides a selection from a hierarchical tree structure. The
  * semantics are very much like those of a SelectionBox. Unlike the
  * SelectionBox, however, tree items may have subitems that in turn may have
  * subitems etc.
- * 
+ *
  * Each item has a label string, optionally preceded by an ID. If the item has
  * subitems, they are specified as a list of items after the string.
- * 
+ *
  * The tree widget will not perform any sorting on its own: The items are
  * always sorted by insertion order. The application needs to handle sorting
  * itself, if desired.
  *
  * Note: The Qt version of the Wizard widget also provides a built-in tree with
- * an API that is (sometimes) easier to use. 
- * 
+ * an API that is (sometimes) easier to use.
+ *
  */
 
 YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1712,7 +1829,7 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
     if ( tree )
 	tree->rebuildTree();
 
-    
+
     return tree;
 }
 
@@ -1739,14 +1856,14 @@ YWidget * YUI::createTree( YWidget * parent, YWidgetOpt & opt, const YCPTerm & t
  * term with the symbol <tt>header</tt>. For each column you add a string
  * specifying its title. For example <tt>`header( "Name", "Price" )</tt> creates
  * the two columns "Name" and "Price".
- * 
+ *
  * The second argument is an optional list of items (rows) that are inserted in
  * the table. Each item has the form <tt>`item( `id( </tt> id <tt> ), first
  * column, second column, ... )</tt>. For each column one argument has to be
  * specified, which must be of type void, string or integer. Strings are being
  * left justified, integer right and a nil denote an empty cell, just as the
  * empty string.
- * 
+ *
  */
 
 YWidget * YUI::createTable( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1851,12 +1968,12 @@ YWidget * YUI::createTable( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * @examples	ProgressBar1.ycp ProgressBar2.ycp
  *
  * @description
- * 
+ *
  * A progress bar is a horizontal bar with a label that shows a progress
  * value. If you omit the optional parameter <tt>maxvalue</tt>, the maximum
  * value will be 100. If you omit the optional parameter <tt>progress</tt>, the
  * progress bar will set to 0 initially.
- * 
+ *
  */
 
 YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1908,12 +2025,12 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * @example	Image1.ycp Image-animated.ycp Image-local.ycp Image-scaled.ycp Image-tiled.ycp
  *
  * @description
- * 
+ *
  * Displays an image - if the respective UI is capable of that. If not, it is
  * up to the UI to decide whether or not to display the specified default text
  * instead (e.g. with the NCurses UI).
- * 
- * Use <tt>`opt( `zeroWidth )</tt> and / or <tt>`opt( `zeroHeight )</tt> 
+ *
+ * Use <tt>`opt( `zeroWidth )</tt> and / or <tt>`opt( `zeroHeight )</tt>
  * if the real size of the
  * image widget is determined by outside factors, e.g. by the size of
  * neighboring widgets. With those options you can override the default "nice
@@ -1922,20 +2039,20 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * wide even when only 640 pixels are shown normally. If more screen space is
  * available, more of the image is shown, if not, the layout engine doesn't
  * complain about the image widget not getting its nice size.
- * 
+ *
  * `opt( `tiled ) will make the image repeat endlessly in both dimensions to fill
  * up any available space. You might want to add `opt( `zeroWidth ) or
  * `opt( `zeroHeight ) ( or both ), too to make use of this feature.
- * 
+ *
  * `opt( `scaleToFit ) scales the image to fit into the available space, i.e. the
  * image will be zoomed in or out as needed.
- * 
+ *
  * This option implicitly sets `opt( `zeroWidth ) and `opt( zeroHeight ),
  * too since there is no useful default size for such an image.
- * 
+ *
  * Please note that setting both `opt( `tiled ) and `opt( `scaleToFit ) at once
  * doesn't make any sense.
- * 
+ *
  */
 
 YWidget * YUI::createImage( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList, int argnr )
@@ -1998,9 +2115,9 @@ YWidget * YUI::createImage( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
  * this when the specific UI doesn't support the Slider.
  * Remember it always makes sense to specify limits for numeric input, even if
  * those limits are very large (e.g. +/- MAXINT).
- * 
+ *
  * Fractional numbers are currently not supported.
- * 
+ *
  */
 
 YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -2039,7 +2156,7 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @optarg	string floppyDevice
  * @option	youMode start in YOU (YaST Online Update) mode
  * @option	updateMode start in update mode
- * @option	searchMode start with the "search" filter view 
+ * @option	searchMode start with the "search" filter view
  * @option	summaryMode start with the "installation summary" filter view
  * @usage	`PackageSelector( "/dev/fd0" )
  *
@@ -2051,16 +2168,16 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * transparently. Set up the package manager (the backend) before creating this
  * widget and let the package manager and the package selector handle all the
  * rest. The result of all this are the data stored in the package manager.
- * 
+ *
  * Use UI::RunPkgSelection() after creating a dialog with this widget.
  * The result of UI::UserInput() in a dialog with such a widget is undefined -
  * it may or may not return.
- * 
+ *
  * This widget gets the (best) floppy device as a parameter since the UI has no
  * general way of finding out by itself what device can be used for saving or
  * loading pacakge lists etc. - this is best done outside and passed here as a
  * parameter.
- * 
+ *
  */
 
 YWidget * YUI::createPackageSelector( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,
@@ -2110,7 +2227,7 @@ YWidget * YUI::createPackageSelector( YWidget * parent, YWidgetOpt & opt, const 
  * @description
  *
  * Use only if you know what you are doing - that is, DON'T USE IT.
- * 
+ *
  */
 
 YWidget * YUI::createPkgSpecial( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term,

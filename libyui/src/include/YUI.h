@@ -107,6 +107,13 @@ public:
      */
     virtual ~YUI();
 
+    
+    /**
+     * Access the global UI.
+     **/
+    static YUI * ui() { return _yui; }
+
+
     /**
      * Looks up the topmost dialog
      */
@@ -229,6 +236,22 @@ public:
      * UI::GetProductName is the YCP equivalent to this function.
      **/
     string productName() const { return _productName; }
+
+    /**
+     * Convert logical layout spacing units into device dependent units.
+     * A default size dialog is assumed to be 80x25 layout spacing units.
+     *
+     * Derived UI may want to reimplement this method.
+     **/
+    virtual long deviceUnits( YUIDimension dim, float layout_units );
+
+    /**
+     * Convert device dependent units into logical layout spacing units.
+     * A default size dialog is assumed to be 80x25 layout spacing units.
+     *
+     * Derived UI may want to reimplement this method.
+     **/
+    virtual float layoutUnits( YUIDimension dim, long device_units );
 
     /**
      * Returns 'true' if widget geometry should be reversed for languages that
@@ -1078,6 +1101,13 @@ protected:
 			      YRadioButtonGroup *rbg,
 			      YAlignmentType halign, YAlignmentType valign );
 
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a MarginBox.
+     */
+    YWidget *createMarginBox( YWidget * parent, YWidgetOpt & opt,
+			      const YCPTerm & term, const YCPList & optList,
+			      int argnr, YRadioButtonGroup * rbg );
 
     /**
      * Helper function of createWidgetTree.
@@ -1493,6 +1523,13 @@ protected:
      * The callback component previously set with setCallback().
      **/
     Y2Component * _callback;
+
+    
+    /**
+     * Global reference to the UI
+     **/
+    static YUI * _yui;
+
 };
 
 #endif // YUI_h

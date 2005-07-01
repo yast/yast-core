@@ -29,6 +29,10 @@ YAlignment::YAlignment( const YWidgetOpt & opt,
 			YAlignmentType halign,
 			YAlignmentType valign )
     : YContainerWidget( opt )
+    , _leftMargin(0)
+    , _rightMargin(0)
+    , _topMargin(0)
+    , _bottomMargin(0)
 {
     align[ YD_HORIZ ] = halign;
     align[ YD_VERT ]  = valign;
@@ -42,44 +46,115 @@ bool YAlignment::stretchable( YUIDimension dim ) const
 }
 
 
-void YAlignment::setSize( long newwidth, long newheight )
+long YAlignment::nicesize( YUIDimension dim )
 {
-    long newsize[2];
-    newsize[ YD_HORIZ ]  = newwidth;
-    newsize[ YD_VERT ]   = newheight;
+    long nice_size = child(0)->nicesize( dim );
 
-    long newchildsize[2];
-    long newchildpos[2];
+    if ( dim == YD_HORIZ )
+	nice_size += leftMargin() + rightMargin();
+    else 
+	nice_size += topMargin() + bottomMargin();
+    
+    return nice_size;
+}
 
-    for ( YUIDimension dim = YD_HORIZ; dim <= YD_VERT; dim = ( YUIDimension )( dim + 1 ) )
+
+void YAlignment::setSize( long newWidth, long newHeight )
+{
+    if ( ! child(0) )
     {
-	if ( child(0)->stretchable( dim ) )
-	{
-	    newchildsize[ dim ] = newsize[ dim ];
-	    newchildpos [ dim ] = 0;
-	}
-	else
-	{
-	    newchildsize[ dim ] = min( newsize[ dim ], child(0)->nicesize( dim ) );
-	    switch ( align[ dim ] )
-	    {
-		case YAlignUnchanged:
-		case YAlignCenter:
-		    newchildpos[ dim ] = ( newsize[ dim ] - newchildsize[ dim ] ) / 2;
-		    break;
-
-		case YAlignBegin:
-		    newchildpos[ dim ] = 0;
-		    break;
-
-		case YAlignEnd:
-		    newchildpos[ dim ] = newsize[ dim ] - newchildsize[ dim ];
-		    break;
-	    }
-	}
+	y2error( "No child in %s", widgetClass() );
+	return;
     }
 
-    child(0)->setSize( newchildsize[ YD_HORIZ ], newchildsize[ YD_VERT ] );
-    moveChild( child(0), newchildpos[ YD_HORIZ ], newchildpos[ YD_VERT ] );
+    
+    long newSize[ YUIAllDimensions ];
+    newSize[ YD_HORIZ ]  = newWidth;
+    newSize[ YD_VERT  ]  = newHeight;
+    
+    long offset[ YUIAllDimensions ];
+    offset[ YD_HORIZ ] = leftMargin();
+    offset[ YD_VERT  ] = topMargin();
+
+    long totalMargin[ YUIAllDimensions ];
+    totalMargin[ YD_HORIZ ] = leftMargin() + rightMargin();
+    totalMargin[ YD_VERT  ] = topMargin()  + bottomMargin();
+
+    long newChildSize[ YUIAllDimensions ];
+    long newChildPos [ YUIAllDimensions ];
+
+    
+    for ( YUIDimension dim = YD_HORIZ; dim <= YD_VERT; dim = (YUIDimension) (dim+1) )
+    {
+	long childNiceSize = child(0)->nicesize( dim );
+	long niceSize      = childNiceSize + totalMargin[ dim ];
+	
+	if ( newSize[ dim ] >= niceSize )
+	    // Optimum case: enough space for the child and all margins
+	{
+	    if ( align[ dim ] == YAlignUnchanged && child(0)->stretchable( dim ) )
+	    {
+		newChildSize[ dim ] = newSize[ dim ] - totalMargin[ dim ];
+	    }
+	    else
+	    {
+		newChildSize[ dim ] = childNiceSize;
+	    }
+	}
+	else if ( newSize[ dim ] >= childNiceSize )
+	    // Still enough space for the child, but not for all margins
+	{
+	    newChildSize[ dim ] = childNiceSize; // Give the child as much space as it needs
+
+	    // Reduce the margins
+
+	    if ( totalMargin[ dim ] > 0 ) // Prevent division by zero
+	    {
+		// Redistribute remaining space according to margin ratio
+		// (disregarding integer rounding errors - we don't care about one pixel)
+		    
+		long remaining = newSize[ dim ] - childNiceSize;
+		offset     [ dim ] = remaining * offset[ dim ] / totalMargin[ dim ];
+		totalMargin[ dim ] = remaining;
+	    }
+
+	}
+	else // Not even enough space for the child - forget about the margins
+	{
+	    newChildSize[ dim ] = newSize[ dim ];
+	    offset	[ dim ] = 0;
+	    totalMargin [ dim ] = 0;
+	}
+	    
+
+	switch ( align[ dim ] )
+	{
+	    case YAlignCenter:
+		newChildPos[ dim ] = ( newSize[ dim ] - newChildSize[ dim ] - totalMargin[ dim ] ) / 2;
+		break;
+
+	    case YAlignUnchanged:
+	    case YAlignBegin:
+		newChildPos[ dim ] = 0;
+		break;
+
+	    case YAlignEnd:
+		newChildPos[ dim ] = newSize[ dim ] - newChildSize[ dim ] - totalMargin[ dim ];
+		break;
+	}
+
+	newChildPos[ dim ] += offset[ dim ];
+    }
+
+    child(0)->setSize( newChildSize[ YD_HORIZ ], newChildSize[ YD_VERT ] );
+    moveChild( child(0), newChildPos[ YD_HORIZ ], newChildPos[ YD_VERT ] );
+}
+
+
+
+long YAlignment::totalMargins( YUIDimension dim ) const
+{
+    if ( dim == YD_HORIZ )	return leftMargin() + rightMargin();
+    else			return topMargin()  + bottomMargin();
 }
 

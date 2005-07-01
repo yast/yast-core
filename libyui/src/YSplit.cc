@@ -22,6 +22,7 @@
 #include <ycp/y2log.h>
 
 #include "YSplit.h"
+#include "YAlignment.h"
 #include "YUI.h"
 
 
@@ -355,7 +356,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 		if ( childSize[i] < child(i)->nicesize( primary ) )
 		{
-		    y2debug( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
+		    y2debug( "Resizing child widget #%d (%s) below its nice size of %ld to %ld "
 			     "- check the layout!",
 			     i, child(i)->widgetClass(), child(i)->nicesize( primary ), childSize[i] );
 		}
@@ -401,13 +402,49 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	 * among them as fair as possible.
 	 */
 
-	long tooSmall		= -distributableSize;
-	int  loserCount		= 0;
-	long dividedLoss	= 0L;
-
+	long tooSmall		 	= -distributableSize;
+	int  loserCount 	 	= 0;
+	long totalMargins	 	= 0L;
+	long remainingMargins	 	= 0L;
+	double marginScale		= 0.0;
+	
 	y2debug ( "Not enough space - %ld too small - check the layout!", tooSmall );
 
+	
+	// Maybe some of the children are YAlignments with margins that can be reduced
+	
+	for ( int i = 0; i < numChildren(); i++ )
+	{
+	    if ( ! child(i)->hasWeight( primary ) ) // children with weights will get nothing anyway
+	    {
+		YAlignment * alignment = dynamic_cast<YAlignment *> ( child(i) );
 
+		if ( alignment )
+		{
+		    totalMargins += alignment->totalMargins( primary );
+		    y2debug( "Found alignment with margins" );
+		}
+	    }
+	}
+
+	
+	if ( totalMargins > tooSmall )	// We can make up for insufficient space just by reducing margins
+	{
+	    remainingMargins = totalMargins - tooSmall;
+	    tooSmall = 0L;
+	    marginScale = ( (double) remainingMargins ) / totalMargins;
+
+	    y2debug( "Making up for insufficient space by reducing margins to %.3g%% - %ld left for margins",
+		     100.0 * marginScale, remainingMargins );
+	}
+	else				// Reducing all margins to zero still doesn't solve the problem
+	{
+	    tooSmall -= totalMargins;
+
+	    y2debug( "Reducing all margins to 0, but still %ld too small", tooSmall );
+	}
+
+	
 	// Calculate initial sizes
 
 	for ( int i = 0; i < numChildren(); i++ )
@@ -416,6 +453,21 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 	    {
 		loserCount++;
 		childSize[i] = child(i)->nicesize( primary );
+
+		YAlignment * alignment = dynamic_cast<YAlignment *> ( child(i) );
+		
+		if ( alignment )		// Alignment widgets may have margins we can reduce
+		{
+		    long margins = alignment->totalMargins( primary );
+		    childSize[i] -= margins;			// Strip off original margin
+
+		    if ( remainingMargins > 0 )			// Anything left to redistribute?
+		    {
+			margins		 = (long) ( marginScale * margins) ;	// Scale down margin
+			childSize[i]	 += margins;		// Add the scaled-down margin
+			remainingMargins -= margins;		// Deduct from redistributable margin
+		    }
+		}
 	    }
 	    else
 	    {
@@ -428,8 +480,8 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 
 
 	// Distribute loss
-
-	do
+	
+	while ( tooSmall > 0 && loserCount > 0 )
 	{
 	    if ( debugLayout )
 	    {
@@ -437,8 +489,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 			 tooSmall, loserCount );
 	    }
 
-	    if ( loserCount > 0 )	// avoid division by zero
-		dividedLoss	= max( tooSmall / loserCount, 1L );
+	    long dividedLoss = max( tooSmall / loserCount, 1L );
 
 	    for ( int i = 0; i < numChildren() && tooSmall > 0; i++ )
 	    {
@@ -477,7 +528,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 			     childPos[i] );
 		}
 	    }
-	} while ( tooSmall > 0 && loserCount > 0 );
+	}
 
 
 	// Calculate postitions
@@ -514,14 +565,14 @@ void YSplit::calcSecondaryGeometry( long	newSize,
 
 	if ( childSize[i] < nice )
 	{
-	    y2debug( "Resizing child widget #%d ( %s ) below its nice size of %ld to %ld "
+	    y2debug( "Resizing child widget #%d (%s) below its nice size of %ld to %ld "
 		     "- check the layout!",
 		     i, child(i)->widgetClass(), nice, childSize[i] );
 	}
 
 	if ( debugLayout )
 	{
-	    y2debug( "child #%d ( %s ) will get %ld "
+	    y2debug( "child #%d (%s) will get %ld "
 		     "(nice size: %ld, weight: %ld, stretchable: %s), pos %ld",
 		     i, child(i)->widgetClass(),
 		     childSize[i],
