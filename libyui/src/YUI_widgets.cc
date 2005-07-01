@@ -509,9 +509,6 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * it. <tt>Right, Top</tt> and <tt>Bottom</tt> are working accordingly.	 The
  * other three widgets center their child widget horizontally, vertically or in
  * both directions.
- *
- * Note: An alignment widget makes a widget implicitly stretchable in the
- * dimension it aligns. 
  */
 
 YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
