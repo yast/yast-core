@@ -4,6 +4,8 @@ Fri Jul  1 20:09:09 CEST 2005 - sh@suse.de
 - V 2.12.10
 - New layout helper widget: MarginBox
 - Improved geometry management for insufficient screen space
+- Fixed bug in Alignment widget - now no longer requiring a Squash
+  widget inside for proper alignment
 
 -------------------------------------------------------------------
 Tue Jun 21 11:05:51 CEST 2005 - visnov@suse.cz
