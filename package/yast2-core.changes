@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jul  5 11:30:25 CEST 2005 - sh@suse.de
+
+- New UI layout helper widgets: MinWidth, MinHeight, MinSize
+- V 2.12.12 
+
+-------------------------------------------------------------------
 Tue Jul  5 11:20:12 CEST 2005 - kkaempf@suse.de
 
 - hwinfo/libhd need hal and dbus for building
