@@ -202,6 +202,9 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUIWidget_HWeight		)	w = createWeight		( p, opt, term, ol, n, rbg, YD_HORIZ );
     else if ( s == YUIWidget_Left		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignBegin,	YAlignUnchanged );
     else if ( s == YUIWidget_MarginBox		)	w = createMarginBox		( p, opt, term, ol, n, rbg );
+    else if ( s == YUIWidget_MinHeight		)	w = createMinSize		( p, opt, term, ol, n, rbg, false, true  );
+    else if ( s == YUIWidget_MinSize		)	w = createMinSize		( p, opt, term, ol, n, rbg, true,  true  );
+    else if ( s == YUIWidget_MinWidth		)	w = createMinSize		( p, opt, term, ol, n, rbg, true,  false );
     else if ( s == YUIWidget_RadioButtonGroup	)	w = createRadioButtonGroup	( p, opt, term, ol, n, rbg );
     else if ( s == YUIWidget_Right		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignEnd,		YAlignUnchanged );
     else if ( s == YUIWidget_Top		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged,	YAlignBegin	);
@@ -545,6 +548,99 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
     }
     return alignment;
 }
+
+
+
+/**
+ * @widgets	MinWidth MinHeight MinSize
+ * @id          MinSize
+ * @short	Layout minimum size
+ * @class	YAlignment
+ * @arg		float|integer size minimum width (for MinWidth or MinSize) or minimum heigh (for MinHeight)
+ * @optarg	float|integer height (only for MinSize)
+ * @arg		term child The contained child widget
+ * @usage	`MinWidth( 30, TextEntry(`id(`name), "Name" ) );
+ * @example	MinWidth1.ycp MinHeight1.ycp MinSize1.ycp
+ *
+ * @description
+ *
+ * This widget makes sure its one child never gets less screen space than the specified amount.
+ * It implicitly makes the child stretchable in that dimension.
+ */
+
+YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
+			      int argnr, YRadioButtonGroup * rbg,
+			      bool hor, bool vert )
+{
+    int		argc		= term->size() - argnr;
+    float	minWidth	= 0.0;
+    float	minHeight	= 0.0;
+    YCPTerm	childTerm	= YCPNull();
+    
+    if ( hor && vert )
+    {
+	if ( argc != 3 ||
+	     ! isNum ( term->value( argnr   ) ) ||
+	     ! isNum ( term->value( argnr+1 ) ) ||
+	     ! term->value( argnr+2 )->isTerm() )
+	{
+	
+	    y2error( "Bad arguments for %s - expected `%s( minWidth, minHeight, child ), not %s",
+		     YUIWidget_MinSize, YUIWidget_MinSize, term->toString().c_str() );
+	    return 0;
+	}
+
+	minWidth  = toFloat( term->value( argnr   ) );
+	minHeight = toFloat( term->value( argnr+1 ) );
+	childTerm = term->value( argnr+2 )->asTerm();
+    }
+    else
+    {
+	if ( argc != 2 ||
+	     ! isNum ( term->value( argnr   ) ) ||
+	     ! term->value( argnr+1 )->isTerm() )
+	{
+	
+	    y2error( "Bad arguments for MinWidth|Height - expected ( minSize, child ), not %s",
+		     term->toString().c_str() );
+	    return 0;
+	}
+
+	if   ( hor )	minWidth  = toFloat( term->value( argnr ) );
+	else		minHeight = toFloat( term->value( argnr ) );
+	
+	childTerm = term->value( argnr+1 )->asTerm();
+    }
+
+    
+    rejectAllOptions( term, optList );
+    YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, YAlignUnchanged, YAlignUnchanged ) );
+    assert( alignment );
+
+    if ( alignment )
+    {
+	alignment->setParent( parent );
+	alignment->setMinWidth ( deviceUnits( YD_HORIZ, minWidth  ) );
+	alignment->setMinHeight( deviceUnits( YD_VERT,  minHeight ));
+	
+	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
+	
+	if ( child )
+	{
+	    alignment->addChild( child );
+
+	    if ( hor  )	child->setStretchable( YD_HORIZ, true );
+	    if ( vert )	child->setStretchable( YD_VERT , true );
+	}
+	else
+	{
+	    delete alignment;
+	    return 0;
+	}
+    }
+    return alignment;
+}
+
 
 
 /**
@@ -2032,10 +2128,8 @@ YWidget * YUI::createProgressBar( YWidget * parent, YWidgetOpt & opt, const YCPT
  * image widget is determined by outside factors, e.g. by the size of
  * neighboring widgets. With those options you can override the default "nice
  * size" of the image widget and make it show just a part of the image.
- * This is used for example in the YaST2 title graphics that are 2000 pixels
- * wide even when only 640 pixels are shown normally. If more screen space is
- * available, more of the image is shown, if not, the layout engine doesn't
- * complain about the image widget not getting its nice size.
+ * If more screen space is available, more of the image is shown, if not, the
+ * layout engine doesn't complain about the image widget not getting its nice size.
  *
  * `opt( `tiled ) will make the image repeat endlessly in both dimensions to fill
  * up any available space. You might want to add `opt( `zeroWidth ) or

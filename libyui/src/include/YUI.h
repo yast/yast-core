@@ -1111,6 +1111,18 @@ protected:
 
     /**
      * Helper function of createWidgetTree.
+     * Creates a MinWidth, MinHeight, or MinSize.
+     *
+     * @param hor  use minimum width
+     * @param vert use minimum height
+     */
+    YWidget *createMinSize( YWidget * parent, YWidgetOpt & opt,
+			    const YCPTerm & term, const YCPList & optList, int argnr,
+			    YRadioButtonGroup * rbg,
+			    bool hor, bool vert );
+
+    /**
+     * Helper function of createWidgetTree.
      * Creates one of HSquash, VSquash, HVSquash.
      *
      * @param hsquash whether the child is being squashed horizontally

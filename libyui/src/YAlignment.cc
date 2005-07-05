@@ -33,9 +33,11 @@ YAlignment::YAlignment( const YWidgetOpt & opt,
     , _rightMargin(0)
     , _topMargin(0)
     , _bottomMargin(0)
+    , _minWidth(0)
+    , _minHeight(0)
 {
     align[ YD_HORIZ ] = halign;
-    align[ YD_VERT ]  = valign;
+    align[ YD_VERT  ] = valign;
 }
 
 
@@ -49,13 +51,20 @@ bool YAlignment::stretchable( YUIDimension dim ) const
 long YAlignment::nicesize( YUIDimension dim )
 {
     long nice_size = child(0)->nicesize( dim );
+    long min_size;
 
     if ( dim == YD_HORIZ )
+    {
 	nice_size += leftMargin() + rightMargin();
-    else 
+	min_size = minWidth();
+    }
+    else
+    {
 	nice_size += topMargin() + bottomMargin();
+	min_size = minHeight();
+    }
     
-    return nice_size;
+    return max( min_size, nice_size );
 }
 
 

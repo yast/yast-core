@@ -32,7 +32,8 @@ enum YAlignmentType
 
 
 /**
- * @short Implemenation of the Left, Right, Bottom, Top, HCenter, VCenter and HVCenter widgets
+ * @short Implemenation of the Left, Right, Bottom, Top, HCenter, VCenter and
+ * HVCenter widgets 
  */
 class YAlignment : public YContainerWidget
 {
@@ -92,8 +93,8 @@ public:
     long leftMargin()	const	{ return _leftMargin;	}
 
     /**
-     * Returns the right margin in pixels, the distance between the right edge of
-     * this alignment and the right edge of the child widget. 
+     * Returns the right margin in pixels, the distance between the right edge
+     * of this alignment and the right edge of the child widget. 
      **/
     long rightMargin()	const	{ return _rightMargin;	}
 
@@ -104,8 +105,8 @@ public:
     long topMargin()	const	{ return _topMargin;	}
 
     /**
-     * Returns the bottom margin in pixels, the distance between the bottom edge of
-     * this alignment and the bottom edge of the child widget. 
+     * Returns the bottom margin in pixels, the distance between the bottom
+     * edge of this alignment and the bottom edge of the child widget. 
      **/
     long bottomMargin() const	{ return _bottomMargin; }
 
@@ -134,22 +135,43 @@ public:
      **/ 
     void setBottomMargin( long margin ) { _bottomMargin = margin; }
 
-    
+    /**
+     * Returns the minimum width of this alignment or 0 if none is set.
+     * nicesize() will never return less than this value.
+     **/
+    long minWidth() const { return _minWidth; }
 
-protected:
+    /**
+     * Returns the minimum height of this alignment or 0 if none is set.
+     * nicesize() will never return less than this value.
+     **/
+    long minHeight() const { return _minHeight; }
+
+    /**
+     * Set the minimum width to return for nicesize().
+     **/
+    void setMinWidth( long width ) { _minWidth = width; }
     
     /**
-     * Alignment of the contained widget in each dimension
-     */
-    YAlignmentType align[ YUIAllDimensions ];
+     * Set the minimum height to return for nicesize().
+     **/
+    void setMinHeight( long height ) { _minHeight = height; }
+
+
+protected:
 
     
-    // Margins
+    // Data members
     
+    YAlignmentType align[ YUIAllDimensions ];
+
     long _leftMargin;
     long _rightMargin;
     long _topMargin;
     long _bottomMargin;
+
+    long _minWidth;
+    long _minHeight;
 };
 
 
