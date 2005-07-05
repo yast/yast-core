@@ -167,3 +167,17 @@ long YAlignment::totalMargins( YUIDimension dim ) const
     else			return topMargin()  + bottomMargin();
 }
 
+
+
+void YAlignment::setBackgroundPixmap( string pixmap )
+{
+    if ( pixmap.length() > 0 &&
+	 pixmap[0] != '/'  &&	// Absolute path?
+	 pixmap[0] != '.'    )	// Path relative to $CWD ?
+    {
+	// Prepend theme dir ("/usr/share/YaST2/theme/current/")
+	pixmap = pixmap.insert( 0, string( THEMEDIR "/" ) );
+    }
+    
+    _backgroundPixmap = pixmap;
+}

@@ -1,7 +1,14 @@
 -------------------------------------------------------------------
+Tue Jul  5 17:32:49 CEST 2005 - sh@suse.de
+
+- V 2.12.13
+- Support for background pixmaps in alignment widgets 
+
+-------------------------------------------------------------------
 Tue Jul  5 11:30:25 CEST 2005 - sh@suse.de
 
 - New UI layout helper widgets: MinWidth, MinHeight, MinSize
+- Added klibc, klibc-devel, udev to neededforbuild (for hwinfo)
 - V 2.12.12 
 
 -------------------------------------------------------------------

@@ -494,9 +494,9 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * @id          Alignment
  * @short	Layout alignment
  * @class	YAlignment
+ * @optarg	`BackgroundPixmap( "dir/pixmap.png" )	background pixmap
  * @arg		term child The contained child widget
- * @optarg	boolean enabled true if ...
- * @usage	`Left( `CheckBox( "Crash every five minutes" ) )
+ * @usage	`Left( `CheckBox( "Don't ask this again" ) )
  * @example	HCenter1.ycp HCenter2.ycp HCenter3.ycp Alignment1.ycp
  *
  * @description
@@ -512,16 +512,44 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * it. <tt>Right, Top</tt> and <tt>Bottom</tt> are working accordingly.	 The
  * other three widgets center their child widget horizontally, vertically or in
  * both directions.
+ *
+ * An optional background pixmap can be specified as the first argument.
+ * UIs that support background pixmaps will then use the specified file
+ * as a (tiled) backgound image.
+ *
+ * If that name does not start with "/" or ".", the theme path
+ * ("/usr/share/YaST2/theme/current/") will be prepended.
  */
 
 YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTerm & term, const YCPList & optList,
 				int argnr, YRadioButtonGroup * rbg,
 				YAlignmentType halign, YAlignmentType valign )
 {
-    if ( term->size() != argnr+1 )
+    int		argc		= term->size() - argnr;
+    YCPTerm	childTerm	= YCPNull();
+    string	background_pixmap;
+
+
+    if ( argc == 1 &&				// Simple case: `Center( widget )
+	 term->value( argnr )->isTerm() )
     {
-	y2error( "%s: The alignment widgets take one widget as argument",
+	childTerm = term->value( argnr )->asTerm();
+    }
+    else if ( argc == 2 &&		// `Center( `BackgroundPixmap( "somedir/pixmap.png" ), widget )
+	 term->value( argnr   )->isTerm() &&
+	 term->value( argnr   )->asTerm()->name() == YUISymbol_BackgroundPixmap &&
+	 term->value( argnr   )->asTerm()->value(0)->isString() &&
+	 term->value( argnr+1 )->isTerm() )
+    {
+	background_pixmap = term->value( argnr )->asTerm()->value(0)->asString()->value();
+	childTerm = term->value( argnr+1 )->asTerm();
+    }
+    else
+    {
+	y2error( "Bad arguments for alignment widget: %s",
 		 term->toString().c_str() );
+	y2error( "Expected `Alignment( child ) or "
+		 "`Alignment(`BackgroundPixmap( \"dir/pixmap.png\" ), child )" );
 	return 0;
     }
 
@@ -538,8 +566,14 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
     if ( alignment )
     {
 	alignment->setParent( parent );
-	YWidget *child = createWidgetTree( alignment, rbg, term->value( argnr )->asTerm() );
-	if ( child ) alignment->addChild( child );
+
+	if ( ! background_pixmap.empty() )
+	    alignment->setBackgroundPixmap( background_pixmap );
+	
+	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
+	
+	if ( child )
+	    alignment->addChild( child );
 	else
 	{
 	    delete alignment;

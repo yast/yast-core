@@ -22,6 +22,8 @@
 
 #include "YContainerWidget.h"
 
+using std::string;
+
 enum YAlignmentType
 {
     YAlignUnchanged,
@@ -33,7 +35,7 @@ enum YAlignmentType
 
 /**
  * @short Implemenation of the Left, Right, Bottom, Top, HCenter, VCenter and
- * HVCenter widgets 
+ * HVCenter widgets
  */
 class YAlignment : public YContainerWidget
 {
@@ -77,7 +79,7 @@ public:
      * calls this method at the end.
      */
     void setSize( long newwidth, long newheight );
-    
+
     /**
      * Returns the preferred size of this widget, taking margins into account.
      *
@@ -88,25 +90,25 @@ public:
 
     /**
      * Returns the left margin in pixels, the distance between the left edge of
-     * this alignment and the left edge of the child widget. 
+     * this alignment and the left edge of the child widget.
      **/
     long leftMargin()	const	{ return _leftMargin;	}
 
     /**
      * Returns the right margin in pixels, the distance between the right edge
-     * of this alignment and the right edge of the child widget. 
+     * of this alignment and the right edge of the child widget.
      **/
     long rightMargin()	const	{ return _rightMargin;	}
 
     /**
      * Returns the top margin in pixels, the distance between the top edge of
-     * this alignment and the top edge of the child widget. 
+     * this alignment and the top edge of the child widget.
      **/
     long topMargin()	const	{ return _topMargin;	}
 
     /**
      * Returns the bottom margin in pixels, the distance between the bottom
-     * edge of this alignment and the bottom edge of the child widget. 
+     * edge of this alignment and the bottom edge of the child widget.
      **/
     long bottomMargin() const	{ return _bottomMargin; }
 
@@ -117,22 +119,22 @@ public:
 
     /**
      * Set the left margin in pixels.
-     **/ 
+     **/
     void setLeftMargin( long margin ) { _leftMargin = margin; }
-    
+
     /**
      * Set the right margin in pixels.
-     **/ 
+     **/
     void setRightMargin( long margin ) { _rightMargin = margin; }
-    
+
     /**
      * Set the top margin in pixels.
-     **/ 
+     **/
     void setTopMargin( long margin ) { _topMargin = margin; }
-    
+
     /**
      * Set the bottom margin in pixels.
-     **/ 
+     **/
     void setBottomMargin( long margin ) { _bottomMargin = margin; }
 
     /**
@@ -151,18 +153,36 @@ public:
      * Set the minimum width to return for nicesize().
      **/
     void setMinWidth( long width ) { _minWidth = width; }
-    
+
     /**
      * Set the minimum height to return for nicesize().
      **/
     void setMinHeight( long height ) { _minHeight = height; }
 
+    /**
+     * Set a background pixmap.
+     *
+     * Derived classes may want to overwrite this.
+     *
+     * This parent method should be called first in the overwritten method to
+     * ensure path expansion is done as specified (prepend the theme path
+     * ("/usr/share/YaST2/theme/current/") if the path doesn't start with "/"
+     * or ".").
+     **/
+    virtual void setBackgroundPixmap( string px );
+
+    /**
+     * Returns the name of the background pixmap or an empty string, if there
+     * is none.
+     **/
+    string backgroundPixmap() const { return _backgroundPixmap; }
+
 
 protected:
 
-    
+
     // Data members
-    
+
     YAlignmentType align[ YUIAllDimensions ];
 
     long _leftMargin;
@@ -172,6 +192,8 @@ protected:
 
     long _minWidth;
     long _minHeight;
+
+    string _backgroundPixmap;
 };
 
 

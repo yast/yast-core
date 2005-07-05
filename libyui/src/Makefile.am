@@ -5,6 +5,7 @@
 SUBDIRS = include
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
+	-DTHEMEDIR=\"${themedir}/current\"	\
 	-fmessage-length=0
 
 lib_LTLIBRARIES = libyui.la
