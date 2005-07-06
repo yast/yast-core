@@ -256,7 +256,9 @@ static int do_while_count = 0;
  /* known entry  */
 %token  IDENTIFIER
 
- /* constant  */
+ /* constants  */
+ /* the C_xxx tokens return a YConst(), STRING is handled special */
+ /*  since we need it also as non-ycp value */
 %token  STRING
 %token	C_VOID C_BOOLEAN C_INTEGER C_FLOAT
 %token	C_BYTEBLOCK C_PATH C_SYMBOL C_TYPE
@@ -483,7 +485,7 @@ bracket_expression:
 ;
 
 castable_expression:
-|	compact_expression
+| 	compact_expression
 |	casted_expression
 |	bracket_expression
 ;
@@ -726,7 +728,7 @@ compact_expression:
 		$$.t = Type::String;
 		$$.l = $1.l;
 	    }
-|	I18N STRING ',' STRING ',' expression ')'
+|	I18N string ',' string ',' expression ')'
 	    {
 		if ($6.t == 0)
 		{
@@ -753,7 +755,7 @@ compact_expression:
 		$$.t = Type::Locale;
 		$$.l = $1.l;
 	    }
-|	I18N STRING ')'
+|	I18N string ')'
 	    {
 		if (p_parser->m_block_stack == 0
 		    || p_parser->m_block_stack->textdomain == 0)
@@ -2895,13 +2897,31 @@ assignment:
 
 /* ----------------------------------------------------------*/
 
+/* allow multi line strings  */
+string:
+	STRING
+|	string STRING
+	    {
+		int s1len = strlen ($1.v.sval);
+		int s2len = strlen ($2.v.sval);
+		char *s = new char [s1len + s2len + 1];
+		strcpy (s, $1.v.sval);
+		strcpy (s + s1len, $2.v.sval);
+		delete[] $1.v.sval;
+		delete[] $2.v.sval;
+		$$.v.sval = s;
+		$$.l = $1.l;
+	    }
+;
+
 constant:
 	C_VOID
 |	C_BOOLEAN
 |	C_INTEGER
 |	C_FLOAT
-|	STRING
+|	STRING		/* can't use 'string' here, because it needs lookahead and hence is no 'compact'_expression  */
 	    {
+		/* convert to ycp value, like all other constants  */
 		$$.c = new YConst (YCode::ycString, YCPString ($1.v.sval));
 		delete[] $1.v.sval;
 		$$.t = Type::String;

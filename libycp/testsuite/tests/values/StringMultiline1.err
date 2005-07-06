@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // string s
+    // filename: "tests/values/StringMultiline1.ycp"
+    textdomain "test";
+    string s = _("This is a multi-line string", "And more", 2);
+    return (s == "And more");
+}
+----------------------------------------------------------------------

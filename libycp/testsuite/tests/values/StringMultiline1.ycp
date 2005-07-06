@@ -1,0 +1,11 @@
+{
+  textdomain "test";
+  string s = _("This is"			// with comments
+		" a multi-"
+		// and more comments
+		"line string", "And"
+		" " "more", 2);
+
+  return (s == "And more");
+}
+
