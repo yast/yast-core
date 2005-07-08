@@ -58,6 +58,62 @@ SIGSEGVhandler (int sig)
     kill ( getpid (), SIGSEGV);
 }
 
+
+#include <blocxx/Logger.hpp>
+#include <blocxx/LogMessage.hpp>
+#include <blocxx/LogConfig.hpp>
+
+/**
+ * The YaST logger for LiMaL framework. It's just a wrapper around
+ * the standard YaST logging mechanism.
+ */
+class YaSTLogger : public blocxx::Logger
+{
+public:
+	/**
+	 * Constructor. YaST will try to log every message level,
+	 * because we filter on our own.
+	 */
+        YaSTLogger() : blocxx::Logger ("YaST",blocxx::E_ALL_LEVEL) {}
+
+	/**
+	 * The logging message processing. The method converts the
+	 * Blocxx LogMessage into a YaST logger. Unfortunatelly,
+	 * the log level can be received only as a string, so
+	 * we have to do a conversion to loglevel_t used by YaST.
+	 *
+	 * @param m	the message to be logged
+	 */
+        virtual void doProcessLogMessage(const blocxx::LogMessage& m) const
+	{
+	    loglevel_t level = LOG_DEBUG;
+	    if (m.category == blocxx::Logger::STR_FATAL_CATEGORY 
+		|| m.category == blocxx::Logger::STR_ERROR_CATEGORY)
+	    {
+		level = LOG_ERROR;
+	    } else if (m.category == blocxx::Logger::STR_INFO_CATEGORY)
+	    {
+		level = LOG_MILESTONE;
+	    }
+	    
+	    y2_logger(level,m.component.c_str ()
+		,m.filename,m.fileline,m.methodname,m.message.c_str ());
+	}
+
+	/**
+	 * Clone this logger - create a new instance as a copy
+	 * of this one and return a reference to the instance.
+	 */
+	virtual blocxx::LoggerRef doClone() const
+	{
+    	    return blocxx::LoggerRef(new YaSTLogger(*this));
+	}
+};
+
+
+// create a blocxx::LoggerRef used by YaST
+blocxx::LoggerRef logger(new YaSTLogger());
+
 int
 main (int argc, char **argv)
 {
@@ -94,6 +150,10 @@ main (int argc, char **argv)
 	print_usage();
 	exit(5);
     }
+
+    // register the LiMaL logger
+    blocxx::Logger::setDefaultLogger(logger);
+  
 
     // Scan all options for -l/--logfile. They must be honored BEFORE
     // the logger is used the first time.
