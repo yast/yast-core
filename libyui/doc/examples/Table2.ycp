@@ -1,27 +1,27 @@
 {
     UI::OpenDialog(
-	       `VBox(
-		     `Label("Today's menu"),
-		     `HSpacing(40),	// make the table and thus the dialog wider
-		     `HBox(
-			   `VSpacing(10),	// make the table higher
-			   `Table(
-				  `id(`table), `opt(`keepSorting),
-				  `header("Name", `Right("Price"), `Center("Rating")),
-				  [
-				   `item(`id(0), "Steak Sandwich",	12,  "+++"),
-				   `item(`id(1), "Salami Baguette",	nil, "-"  ),
-				   `item(`id(2), "Chili",		6,   "--" ),
-				   `item(`id(3), "Spaghetti",		8,   "+"  )
-				  ]
-				  )
-			   ),
-		     `HBox(
-			   `HCenter(`PushButton(`id(`next), "&Next")),
-			   `PushButton(`id(`cancel), "&Close")
-			   )
-		     )
-	       );
+		   `VBox(
+			 `Heading("Today's menu"),
+			 `MinSize( 30, 7,
+				   `Table(
+					  `id(`table), `opt(`keepSorting),
+					  `header("Name", `Right("Price"), `Center("Rating")),
+					  [
+					   `item(`id(0), "Steak Sandwich",	12,  "+++"),
+					   `item(`id(1), "Salami Baguette",	nil, "-"  ),
+					   `item(`id(2), "Chili",		6,   "--" ),
+					   `item(`id(3), "Spaghetti",		8,   "+"  )
+					   ]
+					  )
+				   ),
+			 `Right(
+				`HBox(
+				      `PushButton(`id(`next), "&Next"),
+				      `PushButton(`id(`cancel), "&Close")
+				      )
+				)
+			 )
+		   );
 
     UI::ChangeWidget(`id(`table), `CurrentItem, 2);
     

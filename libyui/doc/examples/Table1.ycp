@@ -1,16 +1,18 @@
 {
     UI::OpenDialog(
 	       `VBox(
-		     `Label("Today's menu"),
-		     `Table(
-			    `header("Name", "Price"),
-			    [
-			     `item(`id(1), "Chili",		6),
-			     `item(`id(2), "Salami Baguette",	nil),
-			     `item(`id(3), "Spaghetti",		8),
-			     `item(`id(4), "Steak Sandwich",	12)
-			    ]
-			    ),
+		     `Heading("Today's menu"),
+		     `MinSize( 25, 7,
+			       `Table(
+				      `header("Name", "Price"),
+				      [
+				       `item(`id(1), "Chili",		6),
+				       `item(`id(2), "Salami Baguette",	nil),
+				       `item(`id(3), "Spaghetti",		8),
+				       `item(`id(4), "Steak Sandwich",	12)
+				       ]
+				      )
+			       ),
 		     `PushButton("&OK")
 		     )
 	       );

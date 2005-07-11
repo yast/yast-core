@@ -21,19 +21,17 @@
     integer listnum = 0;
 
     UI::OpenDialog(
-	       `VBox(
-		     `Label("Prices"),
-		     `HSpacing(40),	// make the table and thus the dialog wide enough
-		     `HBox(
-			   `VSpacing(10),
-			   `Table(`id(`table), `header("Name", "price"), itemlist1)
-			   ),
-		     `HBox(
-			   `HCenter(`PushButton(`id(`next), "Change &Table Contents")),
-			   `PushButton(`id(`cancel), "&Close")
-			   )
-		     )
-	       );
+		   `VBox(
+			 `Heading("Prices"),
+			 `MinSize( 30, 10, `Table(`id(`table), `header("Name", "price"), itemlist1) ),
+			 `Right(
+				`HBox(
+				      `PushButton(`id(`next), "Change &Table Contents"),
+				      `PushButton(`id(`cancel), "&Close")
+				      )
+				)
+			 )
+		   );
 
     while (UI::UserInput() != `cancel)
     {
