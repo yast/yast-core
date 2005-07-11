@@ -114,7 +114,7 @@ protected:
      * @param elements the strings of the elements, one for each column.
      * @param index index of the new item.
      */
-    virtual void itemAdded( vector<string> elements, int index );
+    virtual void itemAdded( vector<string> elements, int index ) = 0;
 
     /**
      * Is called, when all items have been cleared. Overload this

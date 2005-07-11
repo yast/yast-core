@@ -150,6 +150,7 @@
 #define YUIProperty_Enabled			"Enabled"
 #define YUIProperty_ExpectedSize		"ExpectedSize"
 #define YUIProperty_Filename			"Filename"
+#define YUIProperty_InputMaxLength		"InputMaxLength"
 #define YUIProperty_Item			"Item"
 #define YUIProperty_Items			"Items"
 #define YUIProperty_Label			"Label"
@@ -163,7 +164,6 @@
 #define YUIProperty_Values			"Values"
 #define YUIProperty_WidgetClass			"WidgetClass"
 #define YUIProperty_WindowID			"WindowID"
-#define YUIProperty_InputMaxLength		"InputMaxLength"
 
 
 // Widget and dialog options

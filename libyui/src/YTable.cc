@@ -84,7 +84,7 @@ YCPValue YTable::changeWidgetTerm( const YCPTerm & property, const YCPValue & ne
 {
     string s = property->name();
     /*
-     * @property item		Item(id)	read: a single item ( string or term )
+     * @property item		Item(id)	read: a single item (string or term)
      * @property integer|string	Item(id,column) write: replacement for one specific cell ( see example )
      */
     if ( s == YUIProperty_Item )
@@ -240,11 +240,6 @@ void YTable::addItem( const YCPValue & id, vector<string> elements )
     itemAdded( elements, rows.size() - 1 );
 }
 
-
-void YTable::itemAdded( vector<string>, int )
-{
-    // default dummy implementaion
-}
 
 
 int YTable::numItems() const

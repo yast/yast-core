@@ -95,7 +95,7 @@ protected:
      * @param index index of the new item.
      * @param selected true if the item should be selected.
      */
-    virtual void itemAdded( const YCPString & string, int index, bool selected );
+    virtual void itemAdded( const YCPString & string, int index, bool selected ) = 0;
 
     /**
      * Searches for an item with a certain id or a certain label.
@@ -106,19 +106,17 @@ protected:
     int itemWithId( const YCPValue & id, bool report_error );
 
     /**
-     * The current label of the selectionWidget
+     * The current label of the SelectionWidget
      */
     YCPString label;
 
     /**
-     * The current list of item ids. We make destructive changes to
-     * this variable, so make sure only one reference to it exists!
+     * The current list of item ids
      */
     YCPList item_ids;
 
     /**
-     * The current list of item labels. We make destructive changes to
-     * this variable, so make sure only one reference to it exists!
+     * The current list of item labels
      */
     YCPList item_labels;
 

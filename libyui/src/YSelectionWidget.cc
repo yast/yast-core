@@ -49,12 +49,6 @@ YCPString YSelectionWidget::getLabel()
 }
 
 
-void YSelectionWidget::itemAdded( const YCPString & , int index, bool selected)
-{
-    // default dummy implementation
-}
-
-
 int YSelectionWidget::numItems() const
 {
     return item_ids->size();
