@@ -9,9 +9,10 @@
 			   `Label(`id(`lang_label), `opt(`outputField, `hstretch), UI::GetLanguage(false))
 			   ),
 		     `HBox(
-			   `PushButton(`id(`set),		"&UI::SetLanguage()\n"),
-			   `PushButton(`id(`get_strip),		"&UI::GetLanguage()\nstrip encoding"),
-			   `PushButton(`id(`get_nostrip),	"&UI::GetLanguage()\nwith encoding"),
+			   `PushButton(`id(`set),		"UI::&SetLanguage()\n"),
+			   `PushButton(`id(`get_strip),		"UI::&GetLanguage()\nstrip encoding"),
+			   `PushButton(`id(`get_nostrip),	"&UI::GetLanguage()\n&with encoding"),
+			   `PushButton(`id(`test_dialog),	"&Test Dialog" ),
 			   `HSpacing(3),
 			   `PushButton(`id(`close), "&Close" )
 			   )
@@ -41,6 +42,18 @@
 	{
 	    UI::SetLanguage((string) UI::QueryWidget(`id(`lang_field), `Value));
 	    UI::ChangeWidget(`id(`lang_label), `Value, UI::GetLanguage(false));
+	}
+	else if ( id == `test_dialog )
+	{
+	    UI::OpenDialog(
+			   `VBox(
+				 `Heading( "Test Dialog" ),
+				 `Label( "Fonts may have changed" ),
+				 `PushButton(`opt(`default), "&OK" )
+				 )
+			   );
+	    UI::UserInput();
+	    UI::CloseDialog();
 	}
     }
 }
