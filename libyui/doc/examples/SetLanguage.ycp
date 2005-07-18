@@ -1,3 +1,4 @@
+// -*- coding: utf-8 -*-
 {
     // Example for UI::SetLanguage() UI::GetLanguage()
     
@@ -48,7 +49,7 @@
 	    UI::OpenDialog(
 			   `VBox(
 				 `Heading( "Test Dialog" ),
-				 `Label( "Fonts may have changed" ),
+				 `Label( "Fonts may have changed\nGrüß Gott\nCzech (česky)\nGreek (Ελληνικά)\nRussian (Русский)\n漢字かな直\nHangul (한글)" ),
 				 `PushButton(`opt(`default), "&OK" )
 				 )
 			   );
