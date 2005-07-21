@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jul 21 14:33:49 CEST 2005 - mvidner@suse.cz
+
+- System agent: Check for fork failure (#97566).
+- 2.12.18
+
+-------------------------------------------------------------------
 Thu Jul 21 13:43:34 CEST 2005 - sh@suse.de
 
 - Added support `opt(`hvstretch) for alignment widgets for

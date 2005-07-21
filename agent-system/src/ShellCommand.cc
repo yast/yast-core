@@ -35,16 +35,21 @@ shellcommand (const string &command, const string &tempdir)
     int pipe1[2];
     if (pipe (pipe1))
     {
-	y2error ("pipe failed");
+	y2error ("pipe failed, errno: %d", errno);
 	return -1;
     }
 
     fflush (0);
     pid_t log2 = fork ();
 
-    if (log2)
+    if (log2 == -1)
     {
-	/* y2log stderr */
+	y2error ("fork failed, errno: %d", errno);
+	return -1;
+    }
+    else if (log2)
+    {
+	/* parent: collect stderr */
 
 	FILE *err = 0;
 	if (!tempdir.empty ())
@@ -55,7 +60,6 @@ shellcommand (const string &command, const string &tempdir)
 	if (stream1 == 0)
 	{
 	    y2error ("stream1 fdopen error");
-	    free (s1);
 	    return -1;
 	}
 	close (pipe1[1]);
@@ -81,7 +85,7 @@ shellcommand (const string &command, const string &tempdir)
     }
     else
     {
-	/* y2log stdout */
+	/* 1st child: fork the command and collect stdout */
 
 	ExternalProgram::renumber_fd (pipe1[1], 2);
 	close (pipe1[0]);
@@ -89,16 +93,21 @@ shellcommand (const string &command, const string &tempdir)
 	int pipe2[2];
 	if (pipe (pipe2))
 	{
-	    y2error ("pipe failed");
+	    y2error ("pipe failed, errno: %d", errno);
 	    _exit (1);
 	}
 
 	fflush (0);
 	pid_t child = fork ();
 
-	if (child)
+	if (child == -1)
 	{
-	    /* y2log stdout */
+	    y2error ("fork failed, errno: %d", errno);
+	    _exit (1);
+	}
+	else if (child)
+	{
+	    /* parent (1st child): collect stdout */
 
 	    FILE *out = 0;
 	    if (!tempdir.empty ())
@@ -109,7 +118,6 @@ shellcommand (const string &command, const string &tempdir)
 	    if (stream2 == 0)
 	    {
 		y2error ("stream2 fdopen error");
-		free (s2);
 		_exit (1);
 	    }
 	    close (pipe2[1]);
@@ -129,7 +137,7 @@ shellcommand (const string &command, const string &tempdir)
 	}
 	else
 	{
-	    /* child process */
+	    /* child of child: run the command */
 
 	    ExternalProgram::renumber_fd (pipe2[1], 1);
 	    close (pipe2[0]);
