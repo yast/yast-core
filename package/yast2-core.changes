@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jul 21 16:56:45 CEST 2005 - sh@suse.de
+
+- Restored correct HStretch() and VStretch() behaviour
+- V 2.12.19 
+
+-------------------------------------------------------------------
 Thu Jul 21 14:33:49 CEST 2005 - mvidner@suse.cz
 
 - System agent: Check for fork failure (#97566).
