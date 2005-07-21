@@ -396,6 +396,9 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
 	return 0;
     }
     rejectAllOptions( term,optList );
+    
+    if ( hstretchable ) opt.isHStretchable.setValue( true );
+    if ( vstretchable ) opt.isVStretchable.setValue( true );
 
     return createEmpty( parent, opt );
 }
