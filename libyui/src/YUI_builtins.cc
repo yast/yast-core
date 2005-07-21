@@ -139,7 +139,7 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
 	lang += encoding->value();
     }
 
-    setenv( "LANG", lang.c_str(), 1 ); // 1 : replace
+    setenv( "LANG", lang.c_str(), 1 );  // 1 : replace
     setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
     YCPTerm newTerm = YCPTerm( "SetLanguage" );
     newTerm->add ( YCPString( lang ) );
