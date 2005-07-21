@@ -101,7 +101,9 @@ void YAlignment::setSize( long newWidth, long newHeight )
 	if ( newSize[ dim ] >= niceSize )
 	    // Optimum case: enough space for the child and all margins
 	{
-	    if ( align[ dim ] == YAlignUnchanged && child(0)->stretchable( dim ) )
+	    if ( child(0)->stretchable( dim ) &&
+		 ( align[ dim ] == YAlignUnchanged ||
+		   _stretch[ dim ] ) )	// special case: promote child stretchability if `opt(`?stretch) set
 	    {
 		newChildSize[ dim ] = newSize[ dim ] - totalMargin[ dim ];
 	    }

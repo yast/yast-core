@@ -397,9 +397,6 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
     }
     rejectAllOptions( term,optList );
 
-    if ( hstretchable ) opt.isHStretchable.setValue( true );
-    if ( vstretchable ) opt.isVStretchable.setValue( true );
-
     return createEmpty( parent, opt );
 }
 
@@ -507,11 +504,19 @@ YWidget * YUI::createSpacing( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
  * the VBox is determined by the CheckBox with the longest label. The other
  * CheckBoxes are centered per default.
  *
- * With <tt>`Left( widget )</tt> you tell
- * widget that it should be layouted leftmost of the space that is available to
+ * With <tt>`Left( widget )</tt> you tell a
+ * widget that it should be laid out leftmost of the space that is available to
  * it. <tt>Right, Top</tt> and <tt>Bottom</tt> are working accordingly.	 The
  * other three widgets center their child widget horizontally, vertically or in
  * both directions.
+ *
+ * As a very special case, alignment widgets that have `opt(`hvstretch) (and related)
+ * set promote their child widget's stretchability to the parent layout.
+ * I.e., they do not align a child that is stretchable in that dimension,
+ * but stretch it to consume the available space. This is only very rarely
+ * useful, such as in very generic layout code where the content of an alignment
+ * widget is usually unknown, and it might make sense to, say, center a child
+ * that is not stretchable, and OTOH to stretch a child that is stretchable.
  *
  * An optional background pixmap can be specified as the first argument.
  * UIs that support background pixmaps will then use the specified file
