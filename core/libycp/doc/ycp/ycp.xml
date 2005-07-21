@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+<!-- Maintainer: kkaempf@suse.de -->
+<!-- $Id$ -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                         "/usr/share/sgml/db41xml/docbookx.dtd"
+[
+<!ENTITY version "0.01">
+<!ENTITY copyright "MEGACOPYRIGHT &copy;&reg;">
+
+<!ENTITY introduction SYSTEM "introduction.xml">
+<!ENTITY usage SYSTEM "usage.xml">
+<!ENTITY language SYSTEM "language.xml">
+<!ENTITY % languageentities SYSTEM "language/ENTITIES.xml">
+%languageentities;
+
+<!ENTITY implementation SYSTEM "implementation.xml">
+<!ENTITY % implementationentities SYSTEM "implementation/ENTITIES.xml">
+%implementationentities;
+
+<!ENTITY debugger SYSTEM "debugger.xml">
+<!ENTITY % debuggerentities SYSTEM "debugger/ENTITIES.xml">
+%debuggerentities;
+
+]>
+
+<book>
+
+  <bookinfo>
+    <title>The YCP language</title>
+    <subtitle>Everything about the YaST Control Programming language</subtitle>
+    <author>
+       <firstname>Klaus</firstname>
+       <surname>K&auml;mpf</surname>
+    </author>
+    <author>
+       <firstname>Martin</firstname>
+       <surname>Vidner</surname>
+    </author>
+    <author>
+       <firstname>Stanislav</firstname>
+       <surname>Visnovsky</surname>
+    </author>
+    <copyright><year>2004</year><holder>SuSE Linux AG</holder></copyright>
+    <legalnotice>
+      <para>This document is not to be construed as a promise by any participating company to develop, deliver,
+or market a feature or a product.</para><para>
+SUSE LINUX AG makes no representations or warranties with respect to the contents of this document,
+and specifically disclaims any express or implied warranties of merchantability or fitness or any
+particular purpose.  Further, SUSE LINUX AG reserves the right to revise this document and to make
+changes to its content, at any time, without obligation to notify any person or entity of such revisions or changes.</para>
+    <para>You are allowed to distribute unchanged copies of this document.</para>
+    </legalnotice>
+    <abstract>
+      <para>This document presents a gentle introduction to the YCP language
+	as implemented in the YaST installation and administration tool.</para>
+    </abstract>
+  </bookinfo>
+
+
+    &introduction;	<!--  gentle introduction -->
+
+			<!-- Part1: ycp users documentation -->
+
+    &language;		<!-- about the language, syntax, semantics -->
+
+    &usage;		<!--  descriptions for interpreter and tools -->
+
+    &debugger;		<!-- descriptions for debugger -->
+
+			<!-- Part2: ycp implementation documentation -->
+
+    &implementation;	<!-- general notes about implementation -->
+
+
+</book>

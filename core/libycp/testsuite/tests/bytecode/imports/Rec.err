@@ -1,0 +1,8 @@
+{
+    // module "Rec"
+    // term dialog
+    // filename: "tests/bytecode/imports/Rec.ycp"
+    import "Rec";
+    term dialog = `VBox (`HBox (`HStretch (), "w2"));
+    y2error ("%1", Rec::ProcessTerm (dialog, $[], 0));
+}

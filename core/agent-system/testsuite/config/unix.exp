@@ -1,0 +1,5 @@
+load_lib "ag_system_init.exp"
+
+proc ag_system_exit {} {}
+proc ag_system_version {} {}
+

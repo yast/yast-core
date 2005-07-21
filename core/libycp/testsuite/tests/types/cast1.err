@@ -1,0 +1,38 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast1.ycp"
+    any foo = ["foo"];
+    return /* any -> list <string> */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast1.ycp"
+    any foo = ["foo", 1];
+    return /* any -> list <string> */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast1.ycp:12 Can't convert value '["foo", 1]' to type 'list <string>'
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast1.ycp"
+    any foo = $["foo":1];
+    return /* any -> map <string, integer> */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <string, any> foo
+    // filename: "tests/types/cast1.ycp"
+    map <string, any> foo = $["bar":"bar", "foo":1];
+    return /* map <string, any> -> map <string, integer> */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast1.ycp:22 Can't convert value '$["bar":"bar", "foo":1]' to type 'map <string, integer>'

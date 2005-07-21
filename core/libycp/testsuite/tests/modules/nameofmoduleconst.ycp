@@ -1,0 +1,7 @@
+{
+  import "YModule";
+
+  YModule::cag = 27;	// error
+
+  return YModule::cag == 1;
+}

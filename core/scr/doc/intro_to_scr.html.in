@@ -1,0 +1,111 @@
+System Configuration Repository
+
+<h2>What is the repository ?</h2>
+
+The repository provides a common interface to the system configuration
+(usually stored below <tt>/etc</tt>) and status (below <tt>/proc</tt>).
+<p>
+It abstracts from file formats and architectural dependencies by
+implementing a common naming scheme and access interface for all data.
+<p>
+In conjunction with the workflow language, the repository can also
+be used for global data storage.
+<p>
+<H3>Data storage</h3>
+Data is either
+<UL>
+<LI>transient</LI>
+<br>or
+<LI>persistent</LI>
+</UL>
+Transient data ´lives´ from it´s creation (at or short after boot time) until
+shutdown. Persistent data has no predefined end-of-life.
+<p>
+<h3>Implementation</h3>
+The repository uses a disk based file for persistent and private (i.e. not system dependant) data.
+Information about the running system comes either from the <tt>/proc</tt> or the
+<tt>/etc</tt> filesystems. Both are accessed by <b>agents</b> which have knowledge
+about the file formats and transform the data to and from the representation used
+inside the repository library.
+<p>
+<img src="repository.png">
+<p>
+Knowledge about data, its type, availability, nameing, etc. is known to the
+repository library (configuration file at startup). The library decides how
+to access the data (disk based, via agent, ...).
+<p>
+<h3>Agents</h3>
+
+Agents are used to access data outside the repository library and its own
+disk file. This is typically system specific data, e.g. specific configuration
+files below <tt>/etc</tt>. This approach allows normal system configuration
+by editing configuration files to coexist with workflow driven administration.
+It also prevents inconsistencies by keeping a single data source.
+<p>
+By using write-only agents to reconstruct a configuration file from
+data stored in the repository database, it's easy to reconstruct 
+configurations destroyed by accident.<br>
+This also supports rather complex files (e.g. sendmail.cf) which are
+constructed by a set of system commands.
+<p>
+Agents may also be used to extend the available data by use of <b>repository
+servers</b> which provide data common to a set of systems (e.g. clusters).
+<p>
+<h3>Configurations</h3>
+The notion of <b>configurations</b> describes the concept of several co-existing
+sets of repository data to support changing system environments. This is a
+typical requirement for laptop users who either work standalone or using
+a docking station for additional peripherials. Choosing the configuration
+at boot-up adapts the system to the actual environment.
+<p>
+<h3>Versioning</h3>
+Having configurations leads directly to versioning of repository data to
+'go back' after mis-configuration. It may also used to check the system
+setup for changes and reconstruct a 'safe' setup.
+<p>
+<h3>Security</h3>
+The repository can be used to implement security based on authorization and
+authentification. Logging actions or tracing data areas (e.g. watchpoints)
+helps in debugging workflows.
+<p>
+<h3>Views</h3>
+The data repository could be organized as a <b>bag of typed values</b>. 
+Access is provided by <b>views</b> which describe a <em>path to the value</em>.
+<p> This approach tries to eliminate
+inconsistencies by storing each value only once. Different views of
+the values are possible.
+<p>
+This notion of views is already implemented in the
+<tt>/proc</tt> filesystem. Take for example interrupts. <tt>/proc/interrupts</tt> views
+interrupts and devices, <tt>/proc/pci</tt> views PCI cards and their configuration including interrupts.
+ The value <em>interrupt</em> is the same in both views.<br>
+<p>
+To keep track of values, each value is accompanied with<br>
+<table><td>its type<td>int, string, ip-address, ...<tr>
+<td>a timestamp<td>time of last changed<tr>
+<td>a link to the creator/owner<td>created by, changeable by<tr>
+<td>flags<br>.<br>.<br><td>transient/persistent<br>enabled/disabled<br>...<tr>
+</table>
+<p>
+The repository stores data as (value, type) pairs and accesses it with a <em>view</em>.
+Views can be registered with the repository without actually storing data. This is of particular
+interest with data coming from agents, which is generated on the fly. Another aspect
+is documentation. By describing views together with the type of data accessed by the view,
+module implementors can browse through the repository and find the data they need.
+<hr>
+<p>
+<H2>Design parameters</H2>
+<ul>
+  Abstract view on configuration and system data<br>
+  Configurations<br>
+  Networking<br>
+  <ul>
+    repository server as common database for e.g cluster nodes<br>
+    authorization ?<br>
+    distributed, hierachical database (e.g. company - department - team - user) ?<br>
+  </ul>
+  versioning<br>
+  restoring a running configuration<br>
+  data import/export<br>
+  cloning a configuration<br>
+</ul>

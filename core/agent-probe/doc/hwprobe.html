@@ -1,0 +1,233 @@
+<HTML>
+<HEAD>
+<TITLE>HwProbe description syntax</TITLE>
+</HEAD>
+<BODY>
+<H1>HwProbe description syntax</H1>
+<HR>
+
+<H2>Purpose</H2>
+The HwProbe is a generalized agent to handle access to the libhd hardware
+autoprobe library.
+<P>
+
+<H2>Implementation</H2>
+The HwProbe probes the hardware when needed. There is no (more) probing at
+initialization time. It's the sole responsibility of the underlying
+<tt>libhd</tt> library to give a consistent view of the hardware.
+<P>
+The libhd data closely resembles the PCI view of hardware, namely classes and
+subclasses. The class data is extended to included ISAPnP and other non-PCI
+hardware. However, this implementation detail is transparently mapped.
+<P>
+
+<h2>Hardware probing repository paths</h2>
+
+<p>The hardware probing repository is accessed with the path prefix
+<tt>.probe</tt> followed by sub-paths.</p>
+
+<p> A list of possible sub-paths can be retrieved with <tt>Dir (.probe)</tt>
+which currently results in:</p>
+
+<pre>
+(["has_pcmcia", "architecture", "boot_arch", "version", "boot_disk",
+"cdb_isdn", "has_smp", "bios_video", "framebuffer", "status", "cdrom",
+"floppy", "disk", "netif", "display", "mouse", "keyboard", "sound", "isdn",
+"modem", "storage", "netcard", "monitor", "printer", "tv", "scanner",
+"system", "camera", "chipcard", "usbctrl", "hub", "scsi", "ide", "memory",
+"fbdev", "usb", "pci", "isapnp", "cpu", "braille", "joystick", "bios"])
+</pre>
+
+<p>There exists a useful ycp script <tt>source/tools/probeall.ycp</tt> which
+probes and displays everything.<p>
+
+<p>
+<h3>Explanation of <TT>.probe</TT> paths</h3>
+
+<TABLE>
+
+<TR><TH>path</TH><TH>type</TH><TH>result</TH><TH>comment</TH></TR>
+
+<TR>
+<TD><TT>.probe.cdrom</TT></TD>
+<TD>YCPList</TD>
+<TD>list of hd-entries</TD>
+<TD>only returns component data for cd-rom like devices (cd-r, cd-rw, dvd) </TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.disk</TT></TD>
+<TD>YCPList</TD>
+<TD>list of hd-entries</TD>
+<TD>only returns component data for disk like devices (harddisk, *not* floppy !) </TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.net</TT></TD>
+<TD>YCPList</TD>
+<TD>list of hd-entries</TD>
+<TD>only returns component data for network like devices (ethernet, loopback (!), dummy (!)) </TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.has_pcmcia</TT></TD>
+<TD>YCPBoolean</TD>
+<TD><TT>true</tt> if the system has a pcmcia controller, false else</TD>
+<TD>used to decide if pcmcia software is to be installed and how</TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.has_eide</TT></TD>
+<TD>YCPBoolean</TD>
+<TD><TT>true</tt> if the system has a special EIDE controller, false else</TD>
+<TD>used to decide if a special kernel (with compiled-in driver) is to be installed</TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.architecture</TT></TD>
+<TD>YCPString</TD>
+<TD>reports the system architecture, i.e. <TT>"intel"</tt> or <TT>"alpha"</TT></TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.boot_arch</TT></TD>
+<TD>YCPString</TD>
+</TR>
+
+<TR>
+<TD><TT>.probe.system</TT></TD>
+<TD>YCPString</TD>
+<TD>reports the system type if given, else "" (i.e. "MacRISC", "PReP", or "CHRP" on PPC)</TD>
+</TR>
+
+<tr>
+<td><tt>.probe.modem</tt></td>
+<td>YCPList</td>
+<td>list of modems<td>
+</tr>
+
+<tr>
+<td><tt>.probe.isdn</tt></td>
+<td>YCPList</td>
+<td>list of isdn cards<td>
+</tr>
+
+<tr>
+<td><tt>.probe.dsl</tt></td>
+<td>YCPList</td>
+<td>list of DSL cards<td>
+</tr>
+
+<tr>
+<td><tt>.probe.netcard</tt></td>
+<td>YCPList</td>
+<td>list of network cards<td>
+</tr>
+
+</TABLE>
+<HR>
+<P>
+
+<H3>General layout of a hd-entry</H3>
+As stated above, most <TT>Read(.probe)</TT> calls return a list of entries
+matching a specific feature. All these entries have a common layout
+(i.e. vendor-id) and some device specific data (i.e. geometry for harddisks,
+hsync/vsync values for video monitors, etc.)
+<BR>
+This chapter explains the general layout.
+<P>
+Each entry is a YCPMap with the following key/value pairs<BR>
+<P>
+<BIGGER>Important:</BIGGER> Always check for the existence of a key/value pair !!!<P>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>broken</TD><TD>Boolean</TD><TD>true</TD><TD>hardware seems broken</TD></TR>
+<TR><TD>cardtype</TD><TD>String</TD><TD>AGP</TD><TD>pci card in agp slot</TD></TR>
+<TR><TD>cardtype</TD><TD>String</TD><TD>PnP</TD><TD>PnP device</TD></TR>
+<TR><TD>bus</TD><TD>String</TD><TD><i>(see below)</i></TD><TD>name of bus</TD></TR>
+<TR><TD>baseclass</TD><TD>String</TD><TD><i>(see below)</i></TD><TD>name of baseclass</TD></TR>
+<TR><TD>subclass</TD><TD>String</TD><TD><i>(see below)</i></TD><TD>name of subclass</TD></TR>
+<TR><TD>class_id</TD><TD>Integer</TD><TD><i>(see libhd)</i></TD><TD>baseclass id</TD></TR>
+<TR><TD>sub_class_id</TD><TD>Integer</TD><TD><i>(see libhd)</i></TD><TD>subclass id</TD></TR>
+<TR><TD>device</TD><TD>String</TD><TD>name of device</TD><TD>user readable format</TD></TR>
+<TR><TD>vendor</TD><TD>String</TD><TD>name of vendor</TD><TD>user readable format</TD></TR>
+<TR><TD>sub_device</TD><TD>String</TD><TD>name of subdevice</TD><TD>user readable format</TD></TR>
+<TR><TD>sub_vendor</TD><TD>String</TD><TD>name of subvendor</TD><TD>user readable format</TD></TR>
+<TR><TD>device_id</TD><TD>Integer</TD><TD>value of device</TD><TD>internal format</TD></TR>
+<TR><TD>vendor_id</TD><TD>Integer</TD><TD>value of vendor</TD><TD>internal format</TD></TR>
+<TR><TD>sub_device_id</TD><TD>Integer</TD><TD>value of subdevice</TD><TD>internal format</TD></TR>
+<TR><TD>sub_vendor_id</TD><TD>Integer</TD><TD>value of subvendor</TD><TD>internal format</TD></TR>
+<TR><TD>unique_key</TD><TD>String</TD><TD>unique key for every hardware item</TD><TD>consists of two parts: a position/slot dependent
+part and one that is independent of the location of the card/device. They
+are separated by a '.' (dot)</TD></TR>
+<TR><TD>rev</TD><TD>String</TD><TD>revision code</TD><TD>revision code is an integer</TD></TR>
+<TR><TD>compat_device</TD><TD>String</TD><TD>name of compatible device</TD><TD>only used for ISA-PnP</TD></TR>
+<TR><TD>compat_vendor</TD><TD>String</TD><TD>name of compatible vendor</TD><TD>only used for ISA-PnP</TD></TR>
+<TR><TD>attached_to</TD><TD>Map</TD><TD><i>recursive</i></TD><TD>complete data of device</TD></TR>
+<TR><TD>dev_name</TD><TD>String</TD><TD>/dev/<i>xxx</i></TD><TD>associated device file</TD></TR>
+<TR><TD><i>driver info</i></TD><TD>Map</TD><TD><i>(see below)</i></TD><TD>device specific driver information</TD></TR>
+<TR><TD>resource</TD><TD>Map</TD><TD><i>(see below)</i></TD><TD>Map of resources used/needed by device</TD></TR>
+</TABLE>
+<P>
+
+<H3>Possible driver info</H3>
+<P>
+As <i>driver info</i> the following keys are defined<P>
+<tt>module</tt>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>name</TD><TD>String</TD><TD>module</TD><TD>name of driver/module</TD></TR>
+<TR><TD>active</TD><TD>Boolean</TD><TD>true</TD><TD>if module is already loaded</TD></TR>
+<TR><TD>modprobe</TD><TD>Boolean</TD><TD>true/false</TD><TD>if modprobe or insmod is to be used for loading</TD></TR>
+<TR><TD>args</TD><TD>String</TD><TD>module arguments</TD><TD>arguments used for loading module</TD></TR>
+<TR><TD>conf</TD><TD>String</TD><TD>conf.modules entry</TD><TD>data for conf.modules</TD></TR>
+</TABLE><BR>
+<P>
+ <tt>mouse</tt>
+<P>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>xf86</TD><TD>String</TD><TD>XF86Config entry</TD><TD></TD></TR>
+<TR><TD>gpm</TD><TD>String</TD><TD>gpm parameter</TD><TD></TD></TR>
+</TABLE><BR>
+<P>
+ <tt>x11</tt>
+<P>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>server</TD><TD>String</TD><TD>X11 server</TD><TD>might not be present in map (voodoo 1/2 special add ons don't need a server)</TD></TR>
+<TR><TD>version</TD><TD>String</TD><TD>X11 server version</TD><TD>"3" ("server" is XFree 3.3.x Server) or "4" ("server" is XFree 4.x module)</TD></TR>
+<TR><TD>has_3d</TD><TD>Boolean</TD><TD>3d accel hardware present</TD><TD></TD></TR>
+<TR><TD>c8</TD><TD>Boolean</TD><TD>true/false</TD><TD>8 bpp support</TD></TR>
+<TR><TD>c15</TD><TD>Boolean</TD><TD>true/false</TD><TD>15 bpp support</TD></TR>
+<TR><TD>c16</TD><TD>Boolean</TD><TD>true/false</TD><TD>16 bpp support</TD></TR>
+<TR><TD>c24</TD><TD>Boolean</TD><TD>true/false</TD><TD>24 bpp support</TD></TR>
+<TR><TD>c32</TD><TD>Boolean</TD><TD>true/false</TD><TD>32 bpp support</TD></TR>
+<TR><TD>dacspeed</TD><TD>Integer</TD><TD>(value in MHz)</TD><TD></TD></TR>
+<TR><TD>packages</TD><TD>List (of Strings)</TD><TD>additional packages to install</TD><TD>if applicable</TD></TR>
+<TR><TD>extensions</TD><TD>List (of Strings)</TD><TD>additional X extensions to load</TD><TD>usually goes to 'Module' section, i.e. "glx.so"</TD></TR>
+<TR><TD>options</TD><TD>List (of Strings)</TD><TD>special server options</TD><TD>usually goes to 'Device' section, i.e. "no_accel"</TD></TR>
+<TR><TD>raw</TD><TD>String</TD><TD>extra info to add to XF86Config</TD><TD>to be inserted into 'Device' section</TD></TR>
+</TABLE><BR>
+<P>
+ <tt>display</tt>
+<P>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>width</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>height</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>min_vsync</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>max_vsync</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>min_hsync</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>max_hsync</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+<TR><TD>bandwidth</TD><TD>Integer</TD><TD></TD><TD></TD></TR>
+</TABLE><BR>
+ <tt>dsl</tt>
+<P>
+<TABLE>
+<TR><TH>key</TH><TH>type</TH><TH>value</TH><TH>comment</TH></TR>
+<TR><TD>name</TD><TD>String</TD><TD>driver name</TD><TD></TD></TR>
+<TR><TD>mode</TD><TD>String</TD><TD></TD><TD>capiadsl, pppoe</TD></TR>
+</TABLE><BR>
+</BODY>
+</HTML>

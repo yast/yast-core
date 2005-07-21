@@ -1,0 +1,90 @@
+## core configure.in.in
+
+## initialize
+@YAST2-INIT-COMMON@
+@YAST2-INIT-PROGRAM@
+
+## special stuff
+
+# libycp needs flex and bison
+AM_PROG_LEX
+AC_CHECK_PROGS(YACC, 'bison -y -d -v' byacc, false)
+if test "$YACC" = false; then
+	AC_MSG_ERROR([bison not installed])
+fi
+
+# liby2:Y2SerialComponent needs term.h -> ncurses, ncurses-devel
+yast_found_ncurses=no
+AC_CHECK_HEADER(term.h,[yast_found_ncurses=yes])
+if [[ "$yast_found_ncurses" = "no" ]]; then
+ AC_MSG_ERROR(Headers for ncurses are missing. Please install the package ncurses-devel.)
+fi
+
+
+# libycp: y2crypt needs xcrypt.h -> libxcrypt, libxcrypt-devel
+yast_found_xcrypt=no
+AC_CHECK_HEADER(xcrypt.h,[yast_found_xcrypt=yes])
+if [[ "$yast_found_xcrypt" = "no" ]]; then
+ AC_MSG_ERROR(Headers for xcrypt are missing. Please install the package libxcrypt-devel.)
+fi
+
+
+# libycp/testsuite: links against efence
+yast_found_efence=no
+AC_CHECK_LIB(efence,EF_Print,[yast_found_efence=yes])
+if [[ "$yast_found_efence" = "no" ]]; then
+ AC_MSG_ERROR(efence lib is missing. Please install the package ElectricFence.)
+fi
+
+
+# agent-parse: needs hd.h -> hwinfo-devel
+yast_found_hwinfo=no
+AC_CHECK_HEADER(hd.h,[yast_found_hwinfo=yes])
+if [[ "$yast_found_hwinfo" = "no" ]]; then
+ AC_MSG_ERROR(Headers for hwinfo are missing. Please install the package hwinfo-devel.)
+fi
+
+
+PKG_CHECK_MODULES([Y2UTIL], [liby2util])
+AC_SUBST(Y2UTIL_CFLAGS)
+AC_SUBST(Y2UTIL_LIBS)
+
+# for historic reasons this value is called SUSEVERSION
+SUSEVERSION=`echo $VERSION | cut -d . -f 1,2`
+AC_SUBST(SUSEVERSION)
+
+AGENT_INCLUDES='dnl
+ -I$(top_srcdir)/libycp/src/include dnl
+ -I$(top_srcdir)/liby2/src/include dnl
+ -I$(top_srcdir)/libscr/src/include dnl
+ ${Y2UTIL_CFLAGS}'
+AC_SUBST(AGENT_INCLUDES)
+
+# override AGENT_LIBADD which is AC_SUBSTed in YAST2-CHECKS-PROGRAM
+AGENT_LIBADD='dnl
+ $(top_builddir)/libscr/src/libscr.la dnl
+ $(top_builddir)/libycp/src/libycp.la dnl
+ $(top_builddir)/liby2/src/liby2.la dnl
+ ${Y2UTIL_LIBS}'
+
+AX_CHECK_DOCBOOK
+CREATE_PKGCONFIG=true
+## some common checks
+@YAST2-CHECKS-COMMON@
+@YAST2-CHECKS-PROGRAM@
+@YAST2-CHECKS-TESTSUITE@
+
+## check for blocxx
+AC_CHECK_HEADER(blocxx/BLOCXX_config.h, [yast_found_blocxx=yes])
+if [[ "$yast_found_blocxx" != "yes" ]]; then
+ AC_MSG_ERROR(Headers for blocxx are missing. Please install the package blocxx-devel.)
+fi
+
+## and generate the output
+AC_CONFIG_FILES([
+	liby2/doc/Y2-access.html
+	liby2/doc/Y2-components.html
+	scr/doc/SCR.html
+	scr/doc/intro_to_scr.html
+])
+@YAST2-OUTPUT@

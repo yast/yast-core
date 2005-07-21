@@ -1,0 +1,26 @@
+/**
+ * File:
+ *   yp_makefile.scr
+ * Summary:
+ *   SCR Agent for accessing /var/yp/Makefile
+ * Access:
+ *   read/write
+ * Authors:
+ *   Unknown <dan@suse.cz>
+ * See:
+ *   libscr
+ * Example:
+ *   Read(.var.yp.makefile) -> <map>
+ *   Read(.var.yp.makefile.maps) -> <list>
+ *   Read(.var.yp.makefile.<VARIABLE>) -> <string>
+ *
+ *   Write(.var.yp.makefile.<VARIABLE>, <string>) -> <integer>
+ *   Write(.var.yp.makefile.maps, <list>) -> <integer>
+ *   Write(.var.yp.makefile, <map>) -> <integer>
+ * 
+ * $Id$
+ *
+ */
+.var.yp.makefile
+
+`ag_yp_makefile ()

@@ -1,0 +1,7 @@
+// when casting an unknown identifier in a known namespace to a list/map,
+// it is reported as having a type equal
+// to the element/key type of the list/map...
+{
+    import "Identifier";
+    list<integer> l = (list<integer>) Identifier::no_such_identifier;
+}

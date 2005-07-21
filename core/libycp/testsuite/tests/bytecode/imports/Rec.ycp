@@ -1,0 +1,8 @@
+{
+    import "Rec";
+
+    term dialog = `VBox (`HBox (`HStretch (), "w2"));
+
+    y2error ("%1", Rec::ProcessTerm (dialog, $[], 0));
+
+}

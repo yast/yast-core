@@ -1,0 +1,7 @@
+{
+  list l = [];
+
+  // Bug 34156: was interpreted as ((string)l)[0]:"foo"
+  // should be interpreted as (string)(l[0]:"foo")
+  return (string)l[0]:"foo";
+}

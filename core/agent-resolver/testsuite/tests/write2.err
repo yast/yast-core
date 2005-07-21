@@ -1,0 +1,3 @@
+[YCP] tests/write2.ycp:3 .search true
+[YCP] tests/write2.ycp:4 .nameservers true
+[YCP] tests/write2.ycp:5 . true

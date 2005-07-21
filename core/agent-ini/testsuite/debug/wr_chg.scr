@@ -1,0 +1,22 @@
+.
+
+`ag_ini(
+  `IniAgent("debug/wr_chg.in.test",
+    $[
+      "options" : [ "global_values" ],
+      "subindent" : "  ",
+      "comments": [ "^[ \t]*;.*", ";.*", "\\{[^}]*\\}", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "[ \t]*\\+([A-Za-z0-9_]+)[ \t]*", "+%s" ],
+        "end"   : [ "[ \t]*\\-([A-Za-z0-9_]+)[ \t]*", "-%s" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

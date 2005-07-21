@@ -1,0 +1,32 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// also tested in Strings.ycp
+// libycp[1004] Scanner: bad octal constant
+"Hello world\755"  
+
+// libycp[2] Equality on declaration types now implemented
+
+// list addition is implemented
+((([5] + [6]) == ( [5, 6] )) == true )
+
+// libycp[6] Equality on maps now implemented
+
+// map addition is implemented
+((($[ 1: "Paris" ] + $[ 2: "London" ] ) == $[ 1: "Paris", 2: "London" ] ) == true )
+
+// libycp[16] Assignment not possible: variable ComposedString is not declared
+// libycp[9] Undeclared variable ComposedString
+// libycp[10] Cannot evaluate unknown term (nil + " string")
+( { ComposedString="composed"; return d + " string"; } )
+

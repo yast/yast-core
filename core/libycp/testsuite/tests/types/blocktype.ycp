@@ -1,0 +1,23 @@
+//
+{
+    integer Foo (block <boolean> b) {
+	// we don't return directly, because there's another bug
+	integer ret = nil;
+	if (eval (b))
+	{
+	    ret = 1;
+	}
+	else
+	{
+	    ret = 0;
+	}
+	return ret;
+    }
+
+    // this works
+    block <boolean> trueblock = { return true; };
+    y2milestone ("Foo: %1", Foo (trueblock));
+
+    // this does not
+    y2milestone ("Foo: %1", Foo ({ return true; }));
+}

@@ -1,0 +1,18 @@
+{
+    list ret = [];
+    
+    SCR::RegisterAgent (.foo, "tests/haha.scr");
+    
+    ret = add (ret, SCR::Read (.foo.a));
+    
+    SCR::UnregisterAgent (.foo);
+    
+    any a = SCR::Read (.foo.a);
+    ret = add (ret, a == nil ? "nil" : a );
+    
+    SCR::RegisterAgent (.foo, "tests/hihi.scr");
+    
+    ret = add (ret, SCR::Read (.foo.a));
+    
+    return ret;
+}

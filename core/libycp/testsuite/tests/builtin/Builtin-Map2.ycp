@@ -1,0 +1,41 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Map.ycp
+#
+#  Purpose:	test cases for all map builtins
+#
+# ---------------------------------------------------------
+
+(lookup ($[1:"a", 2:"bc"], 371, "take this"))
+
+
+# filter
+
+("** foreach **")
+{
+    // foreach without a return
+    integer sum = 0;
+    foreach (string k, integer i, $["one":1, "two":2, "four":4], ``{
+	sum = sum + i;
+    });
+    return sum;
+}
+
+# mapmap
+
+("** listmap **")
+(listmap(integer k, [1,2,3], ``( $[k : "xy"])))
+(listmap(integer k, [1,2,3], ``{ integer a = k+10; any b = sformat("x%1",k); map ret = $[a:b]; return(ret); }))
+(listmap(integer k, [1,2,3], ``{ if (k>2) break ; integer a = k+10; any b = sformat("x%1",k); map ret = $[a:b]; return(ret); }))
+
+
+("** union **")
+
+(union ($[1:"a", 2:"b"], $[3:"c", 4:"d"]))
+(union ($[1:"a", 2:"b"], $[1:"c", 2:"d"]))
+
+
+("** add **")
+
+(add ($[a: 17, b: 11], `b, nil))

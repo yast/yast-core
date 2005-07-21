@@ -1,0 +1,2 @@
+[Parser] tests/types/functionassign.ycp:6 Assignment to function
+runycp: parser error

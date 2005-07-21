@@ -1,0 +1,12 @@
+{
+  // nested_return.ycp
+  if (false)
+    return "a";
+
+  if (true)
+  {
+    if (false) return "b";
+    else y2milestone("fool");
+  }
+  return nil;
+}

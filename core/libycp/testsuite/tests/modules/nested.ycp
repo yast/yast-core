@@ -1,0 +1,8 @@
+{
+  // check module nesting and xref
+
+  import "NestedB";
+  import "NestedC";
+
+  return NestedB::b1 + NestedC::c1;
+}

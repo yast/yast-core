@@ -1,0 +1,36 @@
+{
+  // type propagation integer -> float
+
+  integer i = 5;
+  float fi = i;
+  float f = 5;
+  return [f,fi];
+}
+
+{
+  // type propagation integer -> float
+
+  integer i = 5;
+  float fi = i;
+  float f = 5;
+  i = f;	// error !
+  return [f,fi];
+}
+
+
+{
+  // #21769
+  if (0.5 < 1) return true;
+  return false;
+}
+{
+  // #21769
+  if (1 < 0.5) return false;
+  return true;
+}
+
+{
+   integer i = 3.14;
+   float f = 3;
+   return [i, f];
+}

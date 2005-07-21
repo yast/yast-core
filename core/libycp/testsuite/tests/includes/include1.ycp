@@ -1,0 +1,5 @@
+{
+    include "include1.inc";
+
+    return inc (41);
+}

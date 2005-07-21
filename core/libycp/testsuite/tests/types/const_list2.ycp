@@ -1,0 +1,9 @@
+{
+  list <const integer> l = [ 1, 2, 3];	// const integer is useless
+
+  l = l + [42, 42];	// ok, m itself is not const
+
+  l[0] = 42;		// ok, even though elements of l are const
+
+  return l[3]:0;
+}

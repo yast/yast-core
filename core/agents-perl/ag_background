@@ -1,0 +1,436 @@
+#!/usr/bin/perl -w
+
+#
+# File:
+#   ag_background 
+#
+# Authors:
+#   Ladislav Slezak <lslezak@suse.cz>
+#
+# Description:
+#   Background process agent 
+#
+# $Id$
+#
+
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+use strict;
+
+use IPC::Open3;
+
+# WNOHANG constant
+use POSIX ":sys_wait_h";
+
+# child running flag
+our $child_running = 0;
+our $child_pid = -1;
+
+# max. size of input buffer (number of lines)
+my $buffer_size = 500;    
+
+# max. size of input buffer for error output
+my $buffer_size_err = 200;
+
+# input line buffer for stdin - store read part of the line
+my $input1 = '';
+
+# input line buffer for stderr - store read part of the line
+my $input2 = '';
+
+# SIGCHLD handler
+sub Handler()
+{
+    if ($child_running)
+    {
+	waitpid(-1, WNOHANG);
+        $child_running = 0;
+	$child_pid = -1;
+    }
+}
+
+# send SIGTERM (and then SIGKILL) to running subprocess
+sub KillSubprocess()
+{
+    if ($child_running)
+    {
+	kill(15, $child_pid);       # send SIGTERM
+
+	sleep 1;                    # wait a little bit
+
+	if ($child_running)         # child process still running?
+	{
+	    kill(9, $child_pid);    # send SIGKILL
+	}
+	return 1;
+    }
+    else
+    {
+	return 0;
+    }
+}
+
+sub ErrorPath($)
+{
+    my ($p) = @_;
+
+    y2error("Bad path: $p");
+    ycp::Return("");
+}
+
+sub ErrorCommand($)
+{
+    my ($c) = @_;
+    
+    y2error("Bad command: $c");
+    ycp::Return("");
+}
+
+# install SIGCHLD handler
+$SIG{CHLD} = \&Handler;
+
+my $stdin_set = my $pipe_set = '';
+vec($stdin_set, fileno(STDIN), 1) = 1;
+
+my $watch = $stdin_set;	# watch STDIN
+
+my $total_lines = 0;	# total number of lines from script
+my $newlines = 0;	# number of new lines since last reading output
+my $total_lines_err = 0;	# total number of lines from script
+my $newlines_err = 0;	# number of new lines since last reading output
+
+my $store_out = 0;
+my $store_err = 0;
+my @out = ();		# new lines since last reading
+my @err = ();
+
+my $pipe_defined = 0;
+my $pipe_defined_err = 0;
+
+my $exit = 0;
+
+$| = 1;
+
+# main loop
+while (1) 
+{
+    # wait until some data can be read
+    select(my $watch_out = $watch, undef, undef, undef);
+
+    # get status
+    my $stdin_avail = vec($watch_out, fileno(STDIN), 1);
+    my $output_avail = ($pipe_defined == 1) ? vec($watch_out, fileno(RD), 1) : 0;
+    my $err_avail = ($pipe_defined_err == 1) ? vec($watch_out, fileno(ERR), 1) : 0;
+    my $line;
+
+#    print "stdin_avail: $stdin_avail  output_avail: $output_avail   err_avail: $err_avail\n";
+
+    if ($stdin_avail)	# STDIN data available
+    {
+	$line = <STDIN>;
+
+	if (!defined $line)
+	{
+	    exit;
+	}
+	
+	chomp($line);
+
+	my ($command, $path, $arg) = ycp::ParseCommand($line);
+
+	if ($command eq 'Execute')
+	{
+	    if ($path eq '.run' || $path eq '.run_output' || $path eq '.run_output_err')
+	    {
+		# another process is already running
+		if ($child_running)
+		{
+		    y2error('A subprocess is already running');
+		    ycp::Return('false');
+		}
+		elsif (defined $arg)
+		{
+		    $store_out = ($path eq '.run') ? 0 : 1;
+		    $store_err = ($path eq '.run_output_err') ? 1 : 0;
+
+		    #reset counters
+		    $total_lines = 0;
+		    $newlines = 0;
+		    @out = ();
+
+		    $total_lines_err = 0;
+		    $newlines_err = 0;
+		    @err = ();
+
+		    $child_running = 1;
+
+		    my $start_error = 0;
+
+		    # start subprocess
+		    $child_pid = open3(*WRT, *RD, *ERR, "$arg")
+			or $start_error = 1;
+
+		    # if child is running or 
+		    if ($start_error == 0)
+		    {
+			$pipe_set = '';
+			vec($pipe_set, fileno(RD), 1) = 1;
+			vec($pipe_set, fileno(ERR), 1) = 1;
+
+			$watch = $stdin_set | $pipe_set;       # watch both sets
+			$pipe_defined = 1;
+			$pipe_defined_err = 1;
+		    }
+
+		    # use non-blocking write
+		    use Fcntl;
+		    fcntl(WRT, F_SETFL, O_NONBLOCK);
+
+		    ycp::Return(!$start_error ? 'true' : 'false');
+		}
+	    }
+	    elsif ($path eq '.kill')
+	    {
+    		ycp::Return(KillSubprocess() ? 'true' : 'false');
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
+	elsif ($command eq 'Read')
+	{
+	    if ($path eq '.lines')
+	    {
+		ycp::Return($total_lines);
+	    }
+	    if ($path eq '.pid')
+	    {
+		ycp::Return($child_pid);
+	    }
+	    elsif ($path eq '.newlines')
+	    {
+		ycp::Return($newlines);
+	    }
+	    elsif ($path eq '.newlines_err')
+	    {
+		ycp::Return($newlines_err);
+	    }
+	    elsif ($path eq '.lines_err')
+	    {
+		ycp::Return($total_lines_err);
+	    }
+	    elsif ($path eq '.store')
+	    {
+		ycp::Return($store_out == 1 ? 'true' : 'false');
+	    }
+	    elsif ($path eq '.isrunning')
+	    {
+		ycp::Return($child_running == 1 ? 'true' : 'false');
+	    }
+	    elsif ($path eq '.status')
+	    {
+		ycp::Return($exit);
+	    }
+	    elsif ($path eq '.newout')
+	    {
+		ycp::Return(\@out, 1);
+		
+		$newlines = 0;
+		@out = ();
+	    }
+	    elsif ($path eq '.newerr')
+	    {
+		ycp::Return(\@err, 1);
+		
+		$newlines_err = 0;
+		@err = ();
+	    }
+	    elsif ($path eq '.buffer_out')
+	    {
+		ycp::Return($input1, 1);
+		$input1 = '';
+	    }
+	    elsif ($path eq '.buffer_err')
+	    {
+		ycp::Return($input2, 1);
+		$input2 = '';
+	    }
+	    elsif ($path eq '.output_open')
+	    {
+		ycp::Return($pipe_defined ? 'true' : 'false');
+	    }
+	    elsif ($path eq '.buffer_size')
+	    {
+		ycp::Return($buffer_size);
+	    }
+	    elsif ($path eq '.buffer_size_err')
+	    {
+		ycp::Return($buffer_size_err);
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
+	elsif ($command eq 'result')
+	{
+	    if ($child_running)
+	    {
+		KillSubprocess();
+		y2warning('Subprocess was killed at \'result\' command');
+	    }
+	    exit(0);
+	}
+	elsif ($command eq 'Write')
+	{
+	    if ($path eq '.buffer_size' || $path eq '.buffer_size_err')
+	    {
+		if (defined $arg)
+		{
+		    if ($arg >= 1)
+		    {
+			if ($path eq '.buffer_size')
+			{
+			    $buffer_size = $arg;
+			}
+			else
+			{
+			    $buffer_size_err = $arg;
+			}
+
+			ycp::Return('true');
+		    }
+		    else
+		    {
+			ycp::Return('false');
+		    }
+		}
+		else
+		{
+		    ycp::Return('false');
+		}
+	    }
+	    elsif ($path eq '.stdin')
+	    {
+		if ($child_running && defined $arg)
+		{
+		    ycp::Return(syswrite(WRT, $arg));	# add new line char
+		}
+		else
+		{
+		    ycp::Return(-1);
+		}
+	    }
+	    else
+	    {
+		ErrorPath($path);
+	    }
+	}
+	else
+	{
+	    ErrorCommand($command);
+	}
+    }
+	    
+    if ($output_avail) 	# script output available
+    {
+	if (@out >= $buffer_size)
+	{
+	    # too many lines in input buffer - wait for STDIN command
+	    select(my $watch_out = $stdin_set, undef, undef, undef);
+	}
+	else
+	{
+	    my $len = sysread(RD, $line, 64);
+	    $input1 = "$input1$line";
+	    
+	    my $pos = index($input1, "\n");
+	    
+	    if ((defined $len) && $len == 0)
+	    {
+		$pipe_defined = 0;
+		$watch = $stdin_set;	# now watch only STDIN
+
+		# watch also stderr if it is still open
+		if ($pipe_defined_err)
+		{
+		    vec($watch, fileno(ERR), 1) = 1;
+		}
+
+		close(RD);
+		$exit = $? >> 8;	# high 8 bits are exit value
+	    }
+	    else
+	    {
+		while ($pos >= 0)
+		{
+		    $line = substr($input1, 0, $pos);
+		    $input1 = substr($input1, $pos + 1);
+
+		    if ($store_out)
+		    {
+			push(@out, $line);
+		    }
+		    
+		    $newlines++;
+		    $total_lines++;
+
+		    $pos = index($input1, "\n");
+		}
+	    }
+	}
+    }
+
+    if ($err_avail) 	# error output available
+    {
+	if (@err >= $buffer_size_err)
+	{
+	    # too many lines in input buffer - wait for STDIN command
+	    select(my $watch_out = $stdin_set, undef, undef, undef);
+	}
+	else
+	{
+	    my $len = sysread(ERR, $line, 64);
+	    $input2 = "$input2$line";
+	    
+	    my $pos = index($input2, "\n");
+	    
+	    if ((defined $len) && $len == 0)
+	    {
+		$pipe_defined_err = 0;
+		$watch = $stdin_set;	# now watch only STDIN
+
+		# watch also stdout if it is still open
+		if ($pipe_defined)
+		{
+		    vec($watch, fileno(RD), 1) = 1;
+		}
+
+		close(ERR);
+		$exit = $? >> 8;	# high 8 bits are exit value
+	    }
+	    else
+	    {
+		while ($pos >= 0)
+		{
+		    $line = substr($input2, 0, $pos);
+		    $input2 = substr($input2, $pos + 1);
+
+		    if ($store_err)
+		    {
+			push(@err, $line);
+		    }
+		    
+		    $newlines_err++;
+		    $total_lines_err++;
+
+		    $pos = index($input2, "\n");
+		}
+	    }
+	}
+    }
+}
+
+

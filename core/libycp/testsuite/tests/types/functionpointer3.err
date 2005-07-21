@@ -1,0 +1,3 @@
+[Parser] tests/types/functionpointer3.ycp:15 Types are not comparable
+[Parser] tests/types/functionpointer3.ycp:15 Expected 'boolean ()', seen 'const boolean'.
+runycp: parser error

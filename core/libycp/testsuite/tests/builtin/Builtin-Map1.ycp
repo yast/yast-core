@@ -1,0 +1,36 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Map.ycp
+#
+#  Purpose:	test cases for all map builtins
+#
+# ---------------------------------------------------------
+
+
+("** equality **")
+
+($[1:"one", 2:"two"] == $[1:"one", 2:"two"])
+($[1:"one", 2:"two"] == $[2:"two", 1:"one"])
+
+($[1:"one", 2:"two"] == $[1:"one", 2:"two", 3:"three"])
+
+
+("** inequality **")
+
+($[1:"one", 2:"two"] != $[1:"one", 2:"two"])
+($[1:"one", 2:"two"] != $[2:"two", 1:"one"])
+
+($[1:"one", 2:"two"] != $[1:"one", 2:"two", 3:"three"])
+
+
+("** haskey **")
+
+(haskey ($[1:"one", 2:"two"], 1))
+(haskey ($[1:"one", 2:"two"], 42))
+
+
+("** lookup **")
+
+(lookup ($[1:"a", 2:"bc"], 1, "no"))
+(lookup ($[1:"a", 2:"bc"], 1, 42))

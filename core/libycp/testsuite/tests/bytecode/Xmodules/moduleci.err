@@ -1,0 +1,6 @@
+{
+    // module "modulec"
+    // filename: "tests/bytecode/Xmodules/moduleci.ycp"
+    import "modulec";
+    y2milestone ("After importing the module.");
+}

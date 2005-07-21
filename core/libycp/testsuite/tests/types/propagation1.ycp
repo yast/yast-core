@@ -1,0 +1,18 @@
+{
+  // type propagation integer -> float
+  if (false)
+  {
+    return 1.1;
+  }
+  return 1;
+}
+
+{
+  // type propagation float -> integer
+
+  if (false)
+  {
+    return 1;
+  }
+  return 1.1;
+}

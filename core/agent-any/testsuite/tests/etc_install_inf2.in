@@ -1,0 +1,20 @@
+Sourcemounted: 0
+Display: Color
+alias eth0 de4x5
+Bootmode: Net
+Netdevice: eth0
+IP: 10.10.0.50
+Netmask: 255.255.0.0
+Gateway: 10.10.0.8
+Nameserver: 10.10.0.1
+Server: 10.10.0.136
+Serverdir: /dist/6.3-i386
+INITRD_MODULES="de4x5"
+SMP: 0
+Mouse-Device: /dev/psaux
+Mouse-Type: ps/2
+Floppy-Disk: 1
+YaST2-Update: 0
+Textmode: 0
+Framebuffer: 0x0301
+

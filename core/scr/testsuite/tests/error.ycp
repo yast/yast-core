@@ -1,0 +1,5 @@
+{
+    SCR::RegisterAgent (.foo, "tests/error.scr");
+
+    return (SCR::Read (.foo));
+}

@@ -1,0 +1,8 @@
+/*
+ * Here ignore_case is on
+ */
+{
+    // do not ignore case in regexps
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
+}

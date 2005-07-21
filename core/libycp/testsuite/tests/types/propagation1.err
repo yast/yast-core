@@ -1,0 +1,23 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/types/propagation1.ycp"
+    if (false)
+    {
+    return 1.1;
+}
+    return /* const integer -> const float */1;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/propagation1.ycp:7 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/types/propagation1.ycp"
+    if (false)
+    {
+    return 1;
+}
+    return /* const float -> const integer */1.1;
+}
+----------------------------------------------------------------------

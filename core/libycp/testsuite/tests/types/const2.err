@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // map <integer, const integer> m
+    // filename: "tests/types/const2.ycp"
+    map <integer, const integer> m = $[1:1, 2:2, 3:3];
+    m[1] = 42;
+    return m[1]:0;
+}
+----------------------------------------------------------------------
+[Parser] tests/types/const2.ycp:15 Assignment to const identifier 'm'
+runycp: parser error

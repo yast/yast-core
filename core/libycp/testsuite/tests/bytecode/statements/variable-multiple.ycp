@@ -1,0 +1,9 @@
+{
+    boolean b = false;
+    integer i = 42;
+    float f = 42.42;
+    path p = .p.a.t.h;
+    list l = [1, 2, 3];
+    map m = $[1:"a", 2:"b", 3:"c"];
+    return [b, i, f, p, l, m];
+}

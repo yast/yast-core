@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/subtraction.ycp"
+    return (1 - 1);
+}

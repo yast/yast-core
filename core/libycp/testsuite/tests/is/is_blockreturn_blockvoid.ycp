@@ -1,0 +1,4 @@
+// useless test. ``{return;} == {return;} == nil, and nil matches every type
+{
+   return is (``{ return; }, block <void>) == true;
+}

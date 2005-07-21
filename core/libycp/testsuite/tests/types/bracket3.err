@@ -1,0 +1,4 @@
+[Parser] tests/types/bracket3.ycp:8 Bracket parameter '0' to 'a' has wrong type
+[Parser] tests/types/bracket3.ycp:8 Expected 'string', seen 'const integer'.
+[Parser] tests/types/bracket3.ycp:9 Warning: Identifier 'res' might be used uninitialized
+runycp: parser error

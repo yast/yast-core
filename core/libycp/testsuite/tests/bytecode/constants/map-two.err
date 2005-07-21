@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/map-two.ycp"
+    return $[1:true, 2:false];
+}

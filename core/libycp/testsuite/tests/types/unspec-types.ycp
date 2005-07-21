@@ -1,0 +1,13 @@
+{
+    list foo = [];
+    list <integer> bar = [];
+    
+    return [ foo, bar ];
+}
+
+{
+    map foo = $[];
+    map <integer,string> bar = $[];
+
+    return [ foo, bar ];
+}

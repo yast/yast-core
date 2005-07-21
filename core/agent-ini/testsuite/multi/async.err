@@ -1,0 +1,9 @@
+[agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test"
+[agent-ini] IniFile.cc(setSectionProp):XXX Adding section .s."multi/async.in.4.test".xxx
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."multi/async.in.4.test".xxx.homepage = "http://xxx.suse.de/"
+[YCP] multi/async.ycp:XXX ["multi/async.in.1.test", "multi/async.in.2.test", "multi/async.in.4.test"]
+[YCP] multi/async.ycp:XXX multi/async.in.1.test: ["iqnet_praha", "fortech_litomysl"]
+[YCP] multi/async.ycp:XXX multi/async.in.2.test: ["apexnet_plzen"]
+[YCP] multi/async.ycp:XXX multi/async.in.4.test: ["xxx", "other"]
+[agent-ini] IniParser.cc(write):XXX Skipping file multi/async.in.1.test that was not changed.
+[agent-ini] IniParser.cc(write):XXX Removing file multi/async.in.3.test

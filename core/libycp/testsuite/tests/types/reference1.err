@@ -1,0 +1,5 @@
+[Parser] tests/types/reference1.ycp:3 Parameters don't match any declaration:
+[Parser] tests/types/reference1.ycp:3 increment (1)
+[Parser] tests/types/reference1.ycp:3 Candidates are:
+[Parser] tests/types/reference1.ycp:3 integer increment (integer & i)
+runycp: parser error

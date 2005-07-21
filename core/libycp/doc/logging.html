@@ -1,0 +1,312 @@
+<html><head>
+<title>YaST2 Logging</title>
+</head><body bgcolor=#ffffff>
+<!-- Author: Michal Svec <msvec@suse.cz> -->
+<!-- $Id$ -->
+
+<h1>YaST2 Logging</h1>
+
+<p>
+This document describes how to use the <b>YaST2</b> logging.
+</p>
+
+
+<h2>Introduction</h2>
+
+<p>
+During execution <b>YaST2</b> components create log messages. The purpose
+is to inform the user or the programmer about errors and other incidents.
+</p>
+
+<p>
+
+The logging should be used instead of <tt>fprintf(stderr,...)</tt> to create
+logmessages of different types. It can be better controled, what to
+log and what not, where to log and how to log.
+</p>
+
+<h2>Quick start</h2>
+
+<ul>
+<li>Use <tt>y2debug()</tt> for debugging messages, <tt>y2warning()</tt>
+for warnings and <tt>y2error()</tt> for error messages, syntax is same
+as <tt>printf(3)</tt>.
+<li>Set <tt>"export Y2DEBUG=1"</tt> in your <tt>.profile</tt> or run
+<tt>"Y2DEBUG=1 yast2"</tt>.
+<li>If <tt>root</tt>, see <tt>/var/log/YaST2/y2log</tt>, otherwise <tt>~/.y2log</tt>
+for the output.
+<li>In the <tt>y2log</tt>, entries are uniquely identified by the filename and line number.
+</ul>
+
+<h2>Logging levels</h2>
+
+<p>
+There exist six different log levels denoting incidents of
+different importance:
+</p>
+
+<dl>
+<dt>0: DEBUG</dt>
+	<dd> Debug messages, which help the programmers.</dd>
+<dt>1: MILESTONE</dt>
+	<dd>Normal log messages. Some important actions are logged.
+	For example each time a <b>YaST2</b> module is started, a log
+	entry is created.</dd>
+<dt>2: WARNING</dt>
+	<dd>Some error has occured, but the execution could be
+	continued.</dd>
+<dt>3: ERROR</dt>
+	<dd>Some major error has occured. The execution may be continued,
+	but probably more errors will occur.</dd>
+<dt>4: SECURITY</dt>
+	<dd>Some security relevant incident has occured.</dd>
+<dt>5: INTERNAL</dt>
+	<dd>Internal error. Please enter into Bugzilla or directly
+	contact the programmers.</dd>
+</dl>
+
+<p>
+In the default setting the levels 1-5 are logged, level 0 (DEBUG) is
+switched off. See the <a href="#control">Logging control</a> and
+<a href="#env">Environment control</a> for more details how to
+control the logging and its levels.
+
+<h2>Logging functions</h2>
+
+<p>
+According to the <a href="#levels">logging levels</a>, use the following
+logging functions:</p>
+
+<pre>
+void y2debug(const char *format, ...);
+void y2milestone(const char *format, ...);
+void y2warning(const char *format, ...);
+void y2error(const char *format, ...);
+void y2security(const char *format, ...);
+void y2internal(const char *format, ...);
+</pre>
+<p>
+The parameter <tt>format</tt> is the format string like the one for
+<tt>printf(3)</tt></p>.
+
+<h2>Additional functions</h2>
+
+
+<h3>Setting the logfile name</h3>
+
+<pre>
+void y2setLogfileName(const char *filename);
+</pre>
+
+<p>
+This function sets the logfile name. If the name cannot be open for
+writing (append), it use the default <a href="#logfiles">logfiles</a>.
+If you want to output the debug log the <tt>stderr</tt>, use <tt>"-"</tt>
+as the argument for the y2setLogfileName:
+</p>
+<pre>
+y2setLogfileName("-");
+</pre>
+
+<h3>Universal logging functions:</h3>
+<pre>
+void y2logger(loglevel_t level, const char *format, ...);
+void y2vlogger(loglevel_t level, const char *format, va_list ap);
+</pre>
+
+<p>
+These functions are provided probably only for those who don't want to use
+the regular <a href="#functions">logging functions</a>. For example for
+setting the loglevel acording to some rule.
+
+</p>
+
+<h2>Components</h2>
+
+<p>
+As the filenames are not unique over the whole <b>YaST2</b> source,
+you can specify the component name. Then the pair of the component
+name and the filename will uniquely identify the message.
+</p>
+
+<p><b>Note:</b> I think that the filenames should be self explaining
+and thus unique overall the whole source. Then the component name
+can be removed, but as now the filename is not unique, you can
+optionally specify the component name.
+</p>
+
+<p>As the component is a more general property then filename, it should
+be same in all messages in one file. So for one source file it is defined
+only once, at the beginning of the file. And because of implementation
+purposes (just) before the inclusion of <tt><a href="y2log.h">y2log.h</a></tt>:
+</p>
+
+<pre>
+#define y2log_component "y2a_mods"
+#include &lt;ycp/y2log.h&gt;
+</pre>
+
+<h2>Logfiles</h2>
+
+<p>
+The <b>YaST2</b> log is written to a file. If you work as normal user,
+the default logfile is <tt>~/.y2log</tt>. If you work as root, the file
+is <tt>/var/log/YaST2/y2log</tt>. The logfile is created with the permissions
+600, since it may contain secret data when the debug level is turned on.
+</p>
+
+<p>If the logfile cannot be open, the <tt>stderr</tt> is use instead.</p>
+
+<h2>Log entries</h2>
+
+<p>
+Each log entry consist of these fields:</p>
+<dl>
+<dt><tt>date</tt></dt>
+	<dd>The date when the log entry has been made.
+<dt><tt>time</tt></dt>
+	<dd>The time when the log entry has been made.
+<dt><tt>level</tt></dt>
+	<dd>The log entry level. See <a href="#levels">Logging levels</a>.
+<dt><tt>hostname</tt></dt>
+	<dd>The hostname of host where the yast2 runs.
+<dt><tt>pid</tt></dt>
+	<dd>The process ID of the yast2 process.
+<dt><tt>component</tt></dt>
+	<dd>The name of the current component. Optional and probably obsolete.
+<dt><tt>filename</tt></dt>
+	<dd>The name of the source file where the log entry has been made.
+<dt><tt>function</tt></dt>
+	<dd>The name of the function where the log entry has been made.
+<dt><tt>line</tt></dt>
+	<dd>The line number where the log entry has been made.
+<dt><tt>message</tt></dt>
+	<dd>The text of the log message.
+</dl>
+
+<p>The output format:</p>
+<pre>
+date time &lt;level&gt; hostname(pid) [component] filename(function):line message...
+date time &lt;level&gt; hostname(pid) filename(function):line message...
+</pre>
+
+<p>Example:</p>
+<pre>
+2000-10-13 15:35:36 &lt;3&gt; beholder(2971) [ag_modules] Modules.cc(quit):22 io=7
+2000-10-13 15:35:37 &lt;0&gt; beholder(2971) ModulesAgent.cc(main):23 irq=7
+</pre>
+
+<h2>Logging control</h2>
+
+
+<p>
+The log control uses  a simple ini-like configuration file. It is looked for at
+/etc/YaST2/log.conf for root and at $HOME/.yast2/log.conf for
+regular users.
+</p>
+
+<p>
+Example log.conf file could look like:
+</p>
+<pre>
+
+    [Log]
+    file = true
+    syslog = false
+    debug = false
+
+    [Debug]
+    YCP = true
+    agent-pam = true
+    packagemanager = false
+</pre>
+
+<p>
+"syslog=true", which basically means remote-logging. The similar
+option "file=true" means use the usual log files for logging. You
+could also turn those off which means no logging would be done
+at all, but rather don't do that ;-)</p>
+
+<p>
+The "debug=true" means basically the same as Y2DEBUG=1 (that
+envirnoment variable overrides the log.conf settings) and that
+is log by default all debug messages (if not said otherwise).
+</p>
+
+<p>
+You can turn debuggin on ("agent-pam=true") for a particular
+component (even if "debug=false") and also turn debugging off (for the case that
+"debug=true").
+</p>
+
+<p>
+To provide a useful example, normal developers would need something
+like this $HOME/.yast2/log.conf (and unset Y2DEBUG):
+</p>
+
+<pre>
+    [Debug]
+    YCP = true
+    agent-pam = true
+</pre>
+
+<p>
+It means turn YCP debug messages on and also turn on some particular
+agent. The other debug are in most uninteresting, so let them turned
+off.
+</p>
+
+<p>
+During installation , define the variable "Loghost" on the command line with the log server ip address (Loghost=192.168.1.1 ) and all messages will be sent to this host. If you add y2debug, debugging will also be activated in log.conf.</p>
+<p>
+On the server side, using syslog-ng, you can have logging per host using the following filters:
+</p>
+<pre>
+
+source network {
+    tcp();
+    udp();
+};
+
+destination netmessages { file("/var/log/messages.$HOST"); };
+log { source(network); filter(f_messages); destination(netmessages); }; 
+
+</pre>
+
+
+<h2>Environment control</h2>
+
+<p>
+Additionally to the usual <a href="#control">logfile control</a>
+you can control some logging feature by the environment variables.
+</p>
+
+<dl>
+<dt>Y2DEBUG</dt>
+	<dd>By setting this variable to an arbitrary value you turn on
+	the debug log output. But only when entry control is not
+	covered by the usual <a href="#control">logfile control</a>.
+<dt>Y2DEBUGALL</dt>
+	<dd>By setting this variable to an arbitrary value you turn on
+	the debug log output. Everything will be logged.
+<dt>Y2DEBUGSHELL</dt>
+	<dd>By setting this variable to an arbitrary value you turn on
+	the debug log output for the bash_background processes.
+<dt>Y2MAXLOGSIZE</dt>
+	<dd>By this variable you can control the size of logfiles.
+	See <a href="#logfiles">Logfiles</a> for details.
+<dt>Y2MAXLOGNUM</dt>
+	<dd>By this variable you can control the number of logfiles.
+	See <a href="#logfiles">Logfiles</a> for details.
+</dl>
+
+<p>
+Example: call the module <tt>password</tt> with <b>QT</b> interface
+and debugging messages set to on:
+</p>
+<pre>
+bash$ Y2DEBUG=1 yast2 users
+</pre>
+
+
+</body></html>

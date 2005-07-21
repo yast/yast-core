@@ -1,0 +1,5 @@
+load_lib "ag_resolver_init.exp"
+
+proc ag_resolver_exit {} {}
+proc ag_resolver_version {} {}
+

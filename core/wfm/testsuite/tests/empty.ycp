@@ -1,0 +1,10 @@
+{
+    // empty.ycp
+    // dummy file for include test
+
+    y2milestone ("empty");
+
+    define void do_log () ``{
+        y2milestone ("empty::do_log");    
+    }
+}

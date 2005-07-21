@@ -1,0 +1,5 @@
+load_lib "ag_anyagent_init.exp"
+
+proc ag_anyagent_exit {} {}
+proc ag_anyagent_version {} {}
+

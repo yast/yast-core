@@ -1,0 +1,13 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "Module0";
+    //T: TEntry (Inc@5:global integer Module0::Inc (integer j))
+    // global integer Module0::Inc (integer j)
+    // filename: "tests/bytecode/Module/Module0.ycp"
+    global integer Module0::Inc (integer j)
+{
+    return (j + 1);
+}
+}
+----------------------------------------------------------------------

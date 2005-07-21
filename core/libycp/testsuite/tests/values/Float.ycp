@@ -1,0 +1,33 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Float.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for YCP_Float
+
+# ------- YCP_Float
+3e2
+3E2
+9E-2
+3.0e2
+2.56E-2
+3.0
+2.56
+0e-2
+0.0E2
+0e0
+#
+# a ´normal´ float starting with . like .1 is a YCP_Path !
+#
+# after the exponent eE there is only ´-´ valid, not ´+´!
+#
+

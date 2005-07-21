@@ -1,0 +1,24 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_is.ycp
+#
+#  Purpose:     test cases for YCP "is"
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// Checks if the value complies to a declaration .
+// A special case is to check for a certain type.
+
+// Added "--" not to get lost in the output diffs.
+// NOPT marks places which change if IS_IS_OPTIMIZED in parser.yy
+// is changed to false.
+// This needs to be thought out.
+
+( is( `string, string ) == false )
+( is( $[ 8 : true ], list <integer> )  == false )  // not a list

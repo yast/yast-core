@@ -1,0 +1,3 @@
+{
+    return (foreach (`i, `i, $[1:1, 2:2, 3:3], { return i; }));
+}

@@ -1,0 +1,17 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer v
+    // integer increment ()
+    // integer i
+    // filename: "tests/statements/SideEffect.ycp"
+    integer v = 1;
+    integer increment ()
+{
+    v = (v + 1);
+    return v;
+}
+    integer i = increment ();
+    return [v, i];
+}
+----------------------------------------------------------------------

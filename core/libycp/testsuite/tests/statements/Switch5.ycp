@@ -1,0 +1,9 @@
+{
+	integer res = 0;
+
+	switch (res-1) {
+		case "a": res = 0; break;	// error: invalid type
+		default: res = -1; break;
+	}
+	return res;
+}

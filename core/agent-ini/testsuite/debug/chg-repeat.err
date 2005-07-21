@@ -1,0 +1,6 @@
+[agent-ini] IniParser.cc(UpdateIfModif):XXX Skipping possible reparse due to repeat_names
+[YCP] debug/chg-repeat.ycp:XXX ["PartA", "PartB"]
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v.Val2 = "New"
+[agent-ini] IniParser.cc(UpdateIfModif):XXX Skipping possible reparse due to repeat_names
+[YCP] debug/chg-repeat.ycp:XXX ["PartA", "PartB"]
+[agent-ini] IniParser.cc(UpdateIfModif):XXX Skipping possible reparse due to repeat_names

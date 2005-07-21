@@ -1,0 +1,53 @@
+# author: visnov@suse.cz
+#
+# check deep bracket type checking
+
+{
+    list< map > a = [ $[ "key" : true ] ];
+
+    boolean res = (boolean) (a[0, 0]:false); // ok, map does not provide types, but runtime error, resulting in "false"
+    return ( res == false ); 
+}
+
+
+{
+    list< map > a = [ $[ "key" : true ] ];
+
+    map res = a[0]:nil; // test a shorter index list
+    return res == $[ "key" : true ] ; 
+}
+
+
+{
+    list < term > a = [ `t ( 1, `b ) ];
+    integer res = (integer) (a[0, 0]:-1);  // ok, for terms we cannot determine types
+    return ( res == 1 );
+}
+
+{
+    list< map > a = [ $[ "key" : true ] ];
+
+    map res = a[0 + 1]:nil; // also test a builtin as a parameter type
+    return res == nil ; 
+}
+
+{
+    define integer fce(string str) ``{
+        return tointeger(str);
+    }
+
+    list<map> a = [ $[ "key" : true ] ];
+
+    map res = a[fce("0")]:$[];
+    return res == $[ "key" : true ];
+}
+
+{
+    // type of the ternary operator
+    list a = [ "foo" ];
+    
+    boolean cond = true;
+    
+    string res = a[ cond ? 0 : 1]:"";
+    return res == "foo";
+}

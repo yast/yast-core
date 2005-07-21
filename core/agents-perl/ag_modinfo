@@ -1,0 +1,107 @@
+#!/usr/bin/perl
+#
+# Author: Jan Holesovsky <kendy@suse.cz>, 2001
+#
+# Agent for reading modinfo of modules in the directory
+# /lib/modules/`uname -r`/
+#
+# $Id$
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+
+my $result;
+
+my $modules_prefix = "/lib/modules/".qx(/bin/uname -r | /usr/bin/tr -d '\n');
+
+while ( <STDIN> )
+{
+    # ycpDoVerboseLog();
+
+    ycpInit( $_ );
+
+    my $path = my $module_name = ycpGetPath;
+    $path =~ s/\./\//g;
+    $module_name =~ s/^.*\.//;
+
+    $path = $modules_prefix.$path;
+    y2debug( "ag_modinfo. Using: ", $path );
+
+    #----------------------------------------------------------
+    #  Check the Command
+    #----------------------------------------------------------
+
+    if ( ycpCommandIsDir )
+    {
+	my @list        = ();
+	my $dirs        = qx(cd $path 2> /dev/null ; find -type d 2> /dev/null);
+
+	foreach my $dir (split ("\n", $dirs)) {
+	    my $list_mod = qx(cd $path/$dir 2> /dev/null; ls *.ko 2> /dev/null);
+	    $list_mod =~ s/\.ko//g;
+	    foreach my $file (split("\n", $list_mod)) {
+		push @list, $file;
+	    }
+	}
+	ycp::Return ( \@list );
+    }
+    elsif ( ycpCommandIsRead )
+    {
+	# full name of the module
+	my $modinfo = qx(/sbin/modinfo $module_name 2> /dev/null);
+
+	my @list = split("\n", $modinfo);
+
+	my %mod = ();
+	foreach $_ (@list)
+	{
+	    my $desc = $_;
+	    $desc =~ s/^[^:]*:\s*//;
+	    $desc =~ s/^[^"]*"//;
+	    $desc =~ s/".*$//;
+
+	    if (/^filename/)
+	    {
+		$mod{"module_filename"} = $desc;
+	    }
+	    if (/^description/)
+	    {
+		$mod{"module_description"} = $desc;
+	    }
+	    if (/^author/)
+	    {
+		$mod{"module_author"} = $desc;
+	    }
+	    if (/^parm/)
+	    {
+		# key is parameter name
+		my $key = $_;
+	    	$key =~ s/^[^:]*:\s*//;
+		$key =~ s/^([^ \t\n\r\f:]*).*:.*/$1/;
+		
+		# remove parameter name from the description
+	    	$desc =~ s/^[^:]*:\s*//;
+		$mod{$key} = $desc;
+	    }
+	}
+
+	ycp::Return ( \%mod, 1 );
+
+    }
+
+    # result: we must exit
+    elsif (ycpCommandIsResult)
+    {
+	y2debug ("got result -> say goodbye!");
+	exit;
+    }
+
+    else
+    {
+	my $return_value = sprintf( "Unknown instruction %s or argument: %s", ycpGetCommand, ycpGetArgType);
+
+	ycp::Return( $return_value );
+    }
+}
+
+# end

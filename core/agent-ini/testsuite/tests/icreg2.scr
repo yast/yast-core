@@ -1,0 +1,21 @@
+
+.
+
+`ag_ini(
+  `IniAgent("tests/icreg2.in.test",
+    $[
+      "options" : [ ],
+      "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "Section=([a-zA-Z0-9]+)", "Section=%s" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "Value=([a-zA-Z0-9]+)=(.*)$" , "Value=%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

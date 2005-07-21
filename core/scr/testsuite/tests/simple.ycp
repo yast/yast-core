@@ -1,0 +1,7 @@
+{
+    SCR::RegisterAgent (., "tests/simple.scr");
+    
+    any tmp = SCR::Read (.a);
+    
+    return tmp;
+}

@@ -1,0 +1,11 @@
+// Scope8.inc includes Scope7.inc which declares the function Modified too
+{
+ include "Scope8.inc";
+
+ boolean modified = false;
+
+ boolean Modified () {
+    return modified;
+ }
+
+}

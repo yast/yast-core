@@ -1,0 +1,5 @@
+{
+    map<string, map<string, string> > connections = $[];
+    connections = remove(connections, "foo");
+    return connections;
+}

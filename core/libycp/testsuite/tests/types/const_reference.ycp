@@ -1,0 +1,17 @@
+//passing const as references
+
+{
+  void inc  (integer & i)	{ i = i + 1; }		// function modifies parameter
+  void cinc (const integer & i) { return; }		// functions does not modify parameter
+
+  inc (1);		// err, passing const as reference
+  integer i = 1;
+  inc (i);		// ok
+  const integer ci = 1;
+  inc (ci);		// err, passing const as reference
+
+
+  cinc (1);		// ok
+  cinc (i);		// ok
+  cinc (ci);		// ok
+}

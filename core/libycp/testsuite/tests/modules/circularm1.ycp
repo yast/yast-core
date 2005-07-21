@@ -1,0 +1,9 @@
+{
+    import "CircularM1";
+
+    y2error ("%1", CircularM1::x);
+
+    import "CircularM2";
+
+    y2error ("%1", CircularM2::y);
+}

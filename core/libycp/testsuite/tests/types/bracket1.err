@@ -1,0 +1,26 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <string> a
+    // string res
+    // filename: "tests/types/bracket1.ycp"
+    list <string> a = ["foo"];
+    string res = a[0]:nil;
+    return (res == "foo");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <string> a
+    // string res
+    // filename: "tests/types/bracket1.ycp"
+    list <string> a = ["foo"];
+    string res = a[0]:"";
+    return (res == "foo");
+}
+----------------------------------------------------------------------
+[Parser] tests/types/bracket1.ycp:22 Bracket default to 'a' has wrong type
+[Parser] tests/types/bracket1.ycp:22 Expected 'string', seen 'const boolean'.
+[Parser] tests/types/bracket1.ycp:23 Warning: Identifier 'res' might be used uninitialized
+runycp: parser error

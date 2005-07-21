@@ -1,0 +1,22 @@
+[Scanner] impinc.inc:2 Warning: Ignoring self-import
+Parsed:
+----------------------------------------------------------------------
+{
+    module "ImpInc";
+    //T: TEntry (ii@4:global integer ImpInc::ii ())
+    //T: TEntry (ImpInc@12:global void ImpInc::ImpInc ())
+    // global integer ImpInc::ii ()
+    // global void ImpInc::ImpInc ()
+    // filename: "tests/bytecode/Module/ImpInc.ycp"
+    // include "impinc.inc";
+    global integer ImpInc::ii ()
+{
+    return 5;
+}
+    // force filename: "tests/bytecode/Module/ImpInc.ycp"
+    global void ImpInc::ImpInc ()
+{
+    y2error ("In ImpInc: Function returned: %1", ImpInc::ii ());
+}
+}
+----------------------------------------------------------------------

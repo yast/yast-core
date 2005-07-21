@@ -1,0 +1,6 @@
+{
+  textdomain "a";
+  // type propagation locale->string in builtin
+  
+  return size ( _("a") );
+}

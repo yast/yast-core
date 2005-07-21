@@ -1,0 +1,16 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // void f (string s)
+    // map m
+    // string s
+    // filename: "tests/types/bug47659.ycp"
+    void f (string s)
+{
+    return;
+}
+    map m = $["a":"A"];
+    string s = /* any -> string */m["a"]:nil;
+    f (/* any -> string */m["a"]:nil);
+}
+----------------------------------------------------------------------

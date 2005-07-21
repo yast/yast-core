@@ -1,0 +1,32 @@
+(["/boot/zimage-1.5.99", "/boot/zimage-1.0.9", "/tamu/vmlinuz", "/dev/hda3", "/dev/hdb5"])
+# lilo.conf
+#
+#  global options:
+boot=/dev/hda
+prompt
+timeout=150
+lba32
+compact
+vga=normal
+root=/dev/hda1
+read-only
+menu-title=" John's Computer "
+#
+#  bootable kernel images:
+image=/boot/zImage-1.5.99
+     label=try
+image=/boot/zImage-1.0.9
+     label=1.0.9
+image=/tamu/vmlinuz
+     label=tamu
+     root=/dev/hdb2
+     vga=ask
+#
+#  other operating systems:
+other=/dev/hda3
+     label=dos
+other=/dev/hdb5
+     label=os2
+     loader=/boot/os2_d.b
+     table=E:
+

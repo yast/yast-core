@@ -1,0 +1,4 @@
+{
+  import "YModule";
+  return YModule::af() == 6;
+}

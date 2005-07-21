@@ -1,0 +1,3 @@
+[Parser] tests/errors/Notifications6.ycp:17 'if' expression not boolean
+[Parser] tests/errors/Notifications6.ycp:17 Expected 'boolean', seen 'string'.
+runycp: parser error

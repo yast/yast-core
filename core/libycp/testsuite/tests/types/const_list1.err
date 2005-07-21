@@ -1,0 +1,2 @@
+[Parser] tests/types/const_list1.ycp:4 Assignment to const identifier 'l'
+runycp: parser error

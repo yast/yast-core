@@ -1,0 +1,2 @@
+[Parser] tests/statements/Switch6.ycp:5 case expression must be constant
+runycp: parser error

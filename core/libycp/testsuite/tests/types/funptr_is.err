@@ -1,0 +1,23 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Foo (string s)
+    // integer (string) f
+    // boolean Check (any fp)
+    // filename: "tests/types/funptr_is.ycp"
+    integer Foo (string s)
+{
+    return 42;
+}
+    integer (string) f = Foo;
+    boolean Check (any fp)
+{
+    y2milestone ("Checking %1", fp);
+    return is (fp, integer (string));
+}
+    y2milestone ("Checking %1", f);
+    return ([is (f, integer (string)), Check (f)] == [true, true]);
+}
+----------------------------------------------------------------------
+[YCP] tests/types/funptr_is.ycp:13 Checking <YCPRef:integer Foo (string s)>
+[YCP] tests/types/funptr_is.ycp:9 Checking <YCPRef:integer Foo (string s)>

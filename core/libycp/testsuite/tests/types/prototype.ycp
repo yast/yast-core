@@ -1,0 +1,17 @@
+{
+  // function prototype testcase
+
+  integer f1 ();
+
+  integer f2 ()
+  {
+    return f1();
+  }
+
+  integer f1 ()
+  {
+    return 42;
+  }
+
+  return f2();
+}

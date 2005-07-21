@@ -1,0 +1,4 @@
+{
+  integer increment (integer & i) { i = i + 1; return i;}
+  return increment (1);
+}

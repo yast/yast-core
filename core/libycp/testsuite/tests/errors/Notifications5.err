@@ -1,0 +1,3 @@
+[Parser] tests/errors/Notifications5.ycp:17 'if' expression not boolean
+[Parser] tests/errors/Notifications5.ycp:17 Expected 'boolean', seen 'const float'.
+runycp: parser error

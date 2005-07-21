@@ -1,0 +1,6 @@
+{
+    // module "Namespace"
+    // filename: "tests/bytecode/Xmodules/Namespace1.ycp"
+    import "Namespace";
+    return (Namespace::globalFunction () == 4711);
+}

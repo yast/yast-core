@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+docu2
+
+<b>Write a Perl script as SCR agent:</b>
+<hr  color="red" align="left" size="1"></hr><br><br>
+
+First we have to say that it is a perl script ;-)<br>
+Then we add our lib ycp.<br><br>
+<pre><font  face="Courier" color="Black">
+#!/usr/bin/perl
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+</font></pre><br><br><br>
+
+In the next step we build the <i>main loop</i>
+Our new perlscript is loaded only once by the SCR, which controlls all
+agents.<br>
+For every request it reads the input from <tt>stdin</tt> an writes it output
+to <tt>stdout</tt>. The protocol for stdin and stdout is YCP, and for perl
+you have some convenice functions.<br><br>
+
+<b>Let have a look at the simplest working script:</b><br><br>
+<pre><font  face="Courier" color="Black">
+ while ( <a href="dfs"><font color="black">&lt;STDIN&gt;</font></a> )
+ {
+   # ycpDoVerboseLog();
+
+   ycpInit( $_ );
+
+   # read the arguments ...
+   # do the work ...
+
+   ycpReturn&lt;<em>whatever</em>&gt;( <return_value> );
+}
+
+</font></pre><br><br><br>
+
+<b>2. Read the Arguments</b>
+<hr  color="red" align="left" size="1"></hr><br>
+
+For a useable script we have to pass some arguments to this script.
+In the YCP world for every call, we pass three types of
+arguments to the script.
+<br>
+<br><b>Pratical approach:</b> (for details see <a href="docu6perl.htm">the arguments</a>)<br><br>
+
+1.The most important argument type is the <b>value</b>. The value we
+pass to the script, is what in other scripts usually is call
+<em>arguments</em>. So if we nedd a list of integer for our script, we
+choose a <tt>list</tt> as value, if we need a single string, we choose
+<tt>string</tt>
+
+2.The <b>function type</b>: If you have no typical <i>Read</i>/<i>Write</i>, like
+reading, writing a configfile use <i>Execute</i>. This is not in any way
+critical. A script can support more than one type!<br><br>
+
+3.The <b>subpath</b>: For a little agent don't use subpath. Call your agent
+every time with the path you mount it on. (see example later on)<br><br>
+
+<pre>
+simple value:    <font  face="Courier" color="Black">"10.10.0.1"</font>   or 127
+complex value:    <font  face="Courier" color="Black">$[ "device":"eth0", "netmask":"255.255.255.0", "gateway":"0.0.0.0" ]</font>
+</pre>
+<br>
+
+In our example, for agent which should test for a given list of server,
+if they are reachable via <i>ping</i> we have made the following decisions:<br><br>
+<pre>
+ function type: <font  face="Courier" color="Black"><b>Execute</b></font>
+ path:          <font  face="Courier" color="Black"><b>.ping</b> </font>
+ subpath:       <font  face="Courier" color="Black"><b>.</b>  </font>
+ value:         <font  face="Courier" color="Black">a .<b>list.</b> of hosts, every host as string </font>
+</pre>
+<br>
+Now we look at our example. In first step we check the incoming data, if they have the expected
+values ;-). We use the suitable <tt>ycpCommandIs*</tt> and <tt>ycpArgIs*</tt> <br><br>
+<pre><font  face="Courier" color="Black">
+   #----------------------------------------------------------
+   #  Check the Command
+   #  We expect a `Execute( .ping, [ <host1>,<host2> ...]);
+   #----------------------------------------------------------
+
+   if ( ycpCommandIsExecute &&  ycpArgIsList )
+   {
+	y2debug( "Now we check with ping the hosts:", ycpGetArgList );
+
+</font></pre><br><br>
+In the last line we have written debug line, with
+<tt>y2debug</tt>. The debug lines are written to <tt>/var/log/YaST2/y2log</tt>
+<br><b>Note:</b> Be sure never to write debug messages or anything else via
+print to stdout. You will break the communication protokoll, and your
+server will stop working.<br>
+<br>
+Now we will start to process our data. First we have read the list of servers into a perl array.<br> We use the
+suitable <tt>ycpGetArg*</tt> call:
+<br><br>
+<pre><font  face="Courier" color="Black">
+
+	##########################################
+	#           OUR PERL MAIN
+	##########################################
+
+	# get the list of hosts
+	my    @host_array    =  ycpGetArgList;
+
+</font></pre><br><br><br>
+
+
+<b>3. Do the work</b>
+<hr  color="red" align="left" size="1"></hr><br>
+
+Our main task is <b> a typical perl script</b>, which send a <i>ping</i> to
+all servers in the list.<br><br>
+<pre><font  face="Courier" color="Black">
+	my    %result;
+	my    $host;
+
+	# send a ping to all hosts
+	my $p = Net::Ping->new("icmp");
+	foreach $host (@host_array)
+	{
+	    if ( $p->ping($host, 1) )
+	    {
+		$result{$host} = "    alive";
+	    }
+	    else
+	    {
+		$result{$host} = "NOT alive";
+	    }
+	}
+	$p->close();
+
+
+</font></pre><br><br>
+
+At the end we make <b>a debug output</b> of the result hash.<br><br>
+
+<pre><font  face="Courier" color="Black">
+	# for debug purpose: print a result list to /var/log/YaST2/y2log
+	while (( $host, my $alive) = each(%result))
+	{
+	   y2debug( $alive, ": Host", $host);
+	}
+</font></pre><br><br><br>
+
+<b>4. Writing the output value to the SCR</b>
+<hr  color="red" align="left" size="1"></hr><br>
+As last step our script should return the server list to the SCR, and
+for every server the list should contain if the server is reachable or
+not. We have this data stored in a perl hash and send this as a YCP
+<tt>map</tt>
+to the SCR.<br><br>
+
+For this task, we only have to return our result hash via <tt>ycpReturnHashAsMap</tt>:<br>
+<b>Note:</b> It is very important, that <b>for every call</b> of the script
+you have to pass one, <b>exactly</b> one return Value to the SCR.<br>
+Therefore you have to call exactly one <tt>ycpRetun*</tt> function of
+our <a href="reference.html">perl-ycp interface</a>.<br><br>
+<pre><font  face="Courier" color="Black">
+
+	##########################################
+	#        END of PERL MAIN
+	##########################################
+
+	ycpReturnHashAsMap( %result );
+
+   }
+   else
+   {
+	my $return_value = sprintf( "Unknown instruction %s or argument: %s", ycpGetCommand, ycpGetArgType);
+
+	ycpReturnSkalarAsString( $return_value );
+   }
+}
+
+# end
+
+</font></pre><br><br><br>
+
+Now our script is ready to use.
+In first step you should test your script
+see <a href="kjh">Test your script</a><br><br>
+
+To test it within a YCP module we have to
+copy it to /usr/lib/YaST2/servers_non_y2
+a good name for our new file is ag_<path>, so we had
+choosen <i>ag_ping</i>.<br><br><br>
+
+
+In the last step we have to define the mount point for our script, i.e
+the path:<br><br>
+
+
+<div align="center"><a href="docu1perl.htm" ><b><font color="Red"><< Back</font></b></a>&nbsp;&nbsp;<a href="docu3perl.htm" ><b><font color="Red">Next>></font></b></a></div>
+
+</body>
+</html>

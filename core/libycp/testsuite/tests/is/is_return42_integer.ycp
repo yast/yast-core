@@ -1,0 +1,3 @@
+{
+   return is ({ return 42; }, integer) == true;
+}

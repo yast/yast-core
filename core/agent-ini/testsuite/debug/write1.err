@@ -1,0 +1,6 @@
+[YCP] debug/write1.ycp:XXX First write:
+[YCP] debug/write1.ycp:XXX Written 1st time
+[agent-ini] IniParser.cc(write):XXX File debug/write1.in.test did not change. Not saving.
+[YCP] debug/write1.ycp:XXX Written 2nd time
+[YCP] debug/write1.ycp:XXX Writting in destructor
+[agent-ini] IniParser.cc(write):XXX File debug/write1.in.test did not change. Not saving.

@@ -1,0 +1,17 @@
+[Parser] tests/types/const_reference.ycp:7 Parameters don't match any declaration:
+[Parser] tests/types/const_reference.ycp:7 inc (1)
+[Parser] tests/types/const_reference.ycp:7 Candidates are:
+[Parser] tests/types/const_reference.ycp:7 void inc (integer & i)
+[Parser] tests/types/const_reference.ycp:11 Parameters don't match any declaration:
+[Parser] tests/types/const_reference.ycp:11 inc (ci)
+[Parser] tests/types/const_reference.ycp:11 Candidates are:
+[Parser] tests/types/const_reference.ycp:11 void inc (integer & i)
+[Parser] tests/types/const_reference.ycp:14 Parameters don't match any declaration:
+[Parser] tests/types/const_reference.ycp:14 cinc (1)
+[Parser] tests/types/const_reference.ycp:14 Candidates are:
+[Parser] tests/types/const_reference.ycp:14 void cinc (integer & i)
+[Parser] tests/types/const_reference.ycp:16 Parameters don't match any declaration:
+[Parser] tests/types/const_reference.ycp:16 cinc (ci)
+[Parser] tests/types/const_reference.ycp:16 Candidates are:
+[Parser] tests/types/const_reference.ycp:16 void cinc (integer & i)
+runycp: parser error

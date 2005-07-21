@@ -1,0 +1,44 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer int_fun (integer i)
+    // float float_fun (float f)
+    // float a
+    // float b
+    // filename: "tests/types/propagation2.ycp"
+    integer int_fun (integer i)
+{
+    return (i + 1);
+}
+    float float_fun (float f)
+{
+    return (f + 1.);
+}
+    float a = float_fun (/* const integer -> float */1);
+    float b = /* integer -> float */int_fun (2);
+    return [a, b];
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/propagation2.ycp:30 Implicit float conversion will loose accuracy
+[Interpreter] tests/types/propagation2.ycp:33 Implicit float conversion will loose accuracy
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer int_fun (integer i)
+    // float float_fun (float f)
+    // integer c
+    // integer d
+    // filename: "tests/types/propagation2.ycp"
+    integer int_fun (integer i)
+{
+    return (i + 1);
+}
+    float float_fun (float f)
+{
+    return (f + 1.);
+}
+    integer c = int_fun (/* const float -> integer */3.);
+    integer d = /* float -> integer */float_fun (/* const integer -> float */4);
+    return [c, d];
+}
+----------------------------------------------------------------------

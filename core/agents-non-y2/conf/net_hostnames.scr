@@ -1,0 +1,26 @@
+/**
+ * File:	net_hostnames.scr
+ * Summary:	Agent for reading hostnames on the local network
+ * Access:	read-only
+ * Authors:	Michal Svec, Martin Vidner
+ * See:		ping(8), nslookup(8)
+ *
+ * Example:
+ *   Read(.net.hostnames)
+ *   (["Snell.suse.de", "Steiner.suse.de", "Mandelbrot.suse.de", ...])
+ *   Read(.net.hostnames.515)
+ *   Read(.net.hostnames.631)
+ *   Read(.net.hostnames.samba)
+ *
+ * $Id$
+ *
+ * <p>Script that reads a list of host reachable on the local network
+ * by pinging the broadcast address and then doing a nslookup of the
+ * addresses found.</p>
+ *
+ * <p>It can read hostnames that are reachable on the local network,
+ * samba servers or servers with some port opened.</p>
+ */
+.net.hostnames
+
+`ag_hostnames ()

@@ -1,0 +1,10 @@
+{
+    map card = $[ "module" : ["abc", "def"] ];
+                                                                               
+                                                                              
+    string module_name = (string) lookup (card,"module",nil);
+//    string module_name = (string) card["module"]:nil;
+                                                                               
+                                                                              
+    y2milestone("module_name: %1", module_name);
+}

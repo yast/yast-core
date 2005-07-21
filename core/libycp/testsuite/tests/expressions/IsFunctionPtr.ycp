@@ -1,0 +1,17 @@
+{
+symbol f (string s) {
+    return `x;
+}
+any x = f;
+if (is (x, symbol))
+{
+// this shouldn't, but is reached
+    symbol xx = (symbol)x;
+    return xx;
+}
+else
+{
+   return "GOOD";
+}
+}
+

@@ -1,0 +1,25 @@
+# author: visnov@suse.cz
+#
+# check deep bracket type checking
+
+{
+    list< map <string, boolean> > a = [ $[ "key" : true ] ];
+
+    boolean res = a[0, "key"]:nil;
+    return ( res == true ); 
+}
+
+{
+    list< map <string, boolean> > a = [ $[ "key" : true ] ];
+
+    boolean res = a[0, "key"]:false;
+    return ( res == true ); 
+}
+
+{
+    list< map <string, boolean> > a = [ $[ "key" : true ] ];
+
+    boolean res = a[0, "key"]:""; // parse error, default value does not match type
+    return ( res == true ); 
+}
+

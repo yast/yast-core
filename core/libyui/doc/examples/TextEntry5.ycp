@@ -1,0 +1,17 @@
+{
+    UI::OpenDialog(
+	       `VBox(
+		     `Frame("Shrinkable Textentries",
+			    `HBox(
+				  `TextEntry(`opt(`shrinkable), "1"),
+				  `TextEntry(`opt(`shrinkable), "2"),
+				  `TextEntry(`opt(`shrinkable), "3"),
+				  `TextEntry(`opt(`shrinkable), "4")
+				  )
+			    ),
+		     `PushButton(`opt(`default), "&OK" )
+		     )
+	       );
+    UI::UserInput();
+    UI::CloseDialog();
+}

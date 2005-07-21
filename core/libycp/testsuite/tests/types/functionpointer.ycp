@@ -1,0 +1,19 @@
+{
+    integer one () { return 1; }
+
+    integer () oneptr = one;
+
+    oneptr = one;
+
+    return oneptr ();
+}
+
+{
+    integer one (integer v) { return v+1; }
+
+    integer (integer) oneptr = one;
+
+    oneptr = one;
+
+    return oneptr (41);
+}

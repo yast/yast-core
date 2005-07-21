@@ -1,0 +1,4 @@
+(nil)
+domain suse.cz
+nameserver 10.10.0.2
+nameserver 10.10.128.2

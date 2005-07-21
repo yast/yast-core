@@ -1,0 +1,16 @@
+// comma error test
+//
+// [Scanner] comma.ycp:15 Parse error: parse error 
+//
+{
+  define void func(string a, string b, string c) ``{
+    return;
+  }
+
+  string text = "" +
+"bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb
+bla blurb blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla
+blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla blurb bla";
+
+  func( "Hello", ,"World");
+}

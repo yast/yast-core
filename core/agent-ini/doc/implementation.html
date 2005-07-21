@@ -1,0 +1,71 @@
+<html><head><title>Ini Agent implementation notes</title></head><body>
+<h1>Ini Agent implementation notes</h1>
+<h2>Structure</h2>
+<p>
+Classes: <ul>
+<li><b>IniAgent</b> is a communication point between ini file and ycp. Ini
+agent contains <b>IniParser</b>. IniAgent passes parameters (control file) to
+the IniParser.
+</li>
+<li><b>IniParser</b> is an object that parses control file, and reads/writes
+ini file.
+</li>
+<li><b>IniSection</b> is a section descriptor. Also acts as a container of
+values and sections.
+</li>
+<li><b>IniEntry</b> is a value descriptor.
+</li>
+</ul>
+The data hierarchy is as follows: IniAgent contains IniParser. IniParser
+contains IniSection, IniSection contains other IniSections and IniEntries.
+</p>
+<h3>IniEntry</h3>
+<p>
+Contains value, comment, index of rule by which is was read and dirty bit.
+As you see, IniEntry doesn't know its name. IniEntries are, as you will see
+soon, stored in a map, which uses names as keys. All we need to do with
+IniEntry is: initialize/read/set.
+</p>
+<h3>IniSection</h3>
+<p>
+IniSection is more complicated. Besides the bunch of options, it contains
+obligatory comment, dirty flag and index of rule by which it was read. This
+time it knows is name. end_comment is a comment at the end of the section --
+it is used to preserve the comment at the end of the file. Member <b>index</b>
+is an index of all sub values and sub sections. It contains only a name and
+information if it is a value or a section. It is necessary to keep the
+information about order. Maps <b>values</b> and <b>sections</b> contain all
+sub values and sub sections.
+</p>
+<p>
+When the multiple file feature was added, we got another
+set of rules - a mapping between section name and file name. But guess
+what, the member read_by was used for both value rules and name
+rewrite rules. It is a mess, causing bug #19066.<br>
+So rewrite_by was added, but there are kludges: .section_type accesses
+read_by or rewrite_by depending on whether there are none or any
+rewrite rules, respectively. This information is passed as an extra
+parameter to IniSection::{Read,Write}.
+</p>
+<h3>IniParser</h3>
+<p>
+IniParser does parsing of the ini file according to the control file. IniAgent
+calls <tt>initFiles</tt> and <tt>initMachine</tt> to initialize flags and
+structures. Method <tt>parse</tt> parses input file(s) and method
+<tt>write</tt> writes it. Process of parsing a file is described in <a
+href="ini.html">ini.html</a>. I am only describing multiple files hadling
+here. Multiple files can be specified by 1 or more glob expressions. As we
+check if the file changed on the disk for each read or dir, we have to save
+the last known modification time and when we check if files weren't externally
+changed, we perform the globing again and check the modification time of each
+file with saved value (and possibly re-read the file). When reading/writting
+multiple files, rewrite rules may take in effect. In such case we set index of
+the rule to the read_by member of the section. Hence we have the index of the
+rule which will be used for writing.
+</p>
+<h3>IniAgent</h3>
+<p>
+There is nothing interesting about it. Just look to <tt>otherCommand</tt> to
+see how IniParser is initialized.
+</p>
+</body></html>

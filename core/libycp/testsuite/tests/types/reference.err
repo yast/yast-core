@@ -1,0 +1,17 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer increment (integer & i)
+    // integer one
+    // integer two
+    // filename: "tests/types/reference.ycp"
+    integer increment (integer & i)
+{
+    i = (i + 1);
+    return i;
+}
+    integer one = 1;
+    integer two = increment (one);
+    return [one, two];
+}
+----------------------------------------------------------------------

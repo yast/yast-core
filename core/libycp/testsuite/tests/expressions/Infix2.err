@@ -1,0 +1,3 @@
+[Parser] tests/expressions/Infix2.ycp:4 Expression before '?' must be boolean
+[Parser] tests/expressions/Infix2.ycp:4 Expected 'boolean', seen 'map <const integer, const boolean>'.
+runycp: parser error

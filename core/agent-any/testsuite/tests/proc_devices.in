@@ -1,0 +1,26 @@
+Character devices:
+  1 mem
+  2 pty
+  3 ttyp
+  4 ttyS
+  5 cua
+  6 lp
+  7 vcs
+ 10 misc
+ 14 sound
+ 29 fb
+108 ppp
+109 lvm
+116 alsa
+128 ptm
+136 pts
+162 raw
+180 usb
+
+Block devices:
+  1 ramdisk
+  2 fd
+  3 ide0
+  7 loop
+ 22 ide1
+ 58 lvm

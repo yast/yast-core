@@ -1,0 +1,58 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-String.ycp
+#
+#  Purpose:	test cases for all string builtins
+#
+# ---------------------------------------------------------
+
+
+("** size **")
+
+(size (""))
+(size ("linux"))
+
+
+("** plus **")
+
+("YaST" + "2")
+("YaST" + 2)
+("YaST" + .two)
+("YaST" + `two)
+{textdomain "base" ; return _("YaST") + "2" ; }
+{textdomain "base" ; return "The " + _("YaST") ; }
+
+
+("** equality **")
+
+("YaST2" == "YaST2")
+("YaST2" == "yast2")
+
+
+("** inequality **")
+
+("YaST2" != "yast2")
+("YaST2" != "YaST2")
+
+
+("** issubstring **")
+
+(issubstring ("some text", "tex"))
+(issubstring ("some text", "no"))
+
+
+("** substring **")
+
+(substring ("some text", 5))
+(substring ("some text", 42))
+
+(substring ("some text", 5, 2))
+(substring ("some text", 42, 2))
+
+
+("** mergestring **")
+
+(mergestring (["", "abc", "dev", "ghi"], "/"))
+(mergestring (["abc", "dev", "ghi", ""], "/"))
+(mergestring ([1, "a", 3], "."))

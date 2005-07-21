@@ -1,0 +1,157 @@
+YaST2: The System Configuration Repository (SCR)
+
+<h2>Agents</h2>
+<p>The SCR creates a consistent view onto the system hardware
+and configuration files. For each piece of interest there exists
+a corresponding YCP data structure representing it. The SCR has a
+bunch of helper programs, which do the actual work. Such a helper
+is called <i>agent</i>. An SCR agent
+maps a YCP data structure onto a particular piece of hardware or a configuration
+file and vice versa.
+
+    <ul>
+      <li>We speak of <i>writing</i>, when the agent
+	gets some YCP data structure and creates or modifies some config
+	file on the system. </li>
+      <li>We speak of <i>reading</i>, when the agent
+	reads some configuration file or scans the system hardware
+	and produces a YCP data structure.</li>
+    </ul>
+
+<p>An example agent could be one the reads and writes the hostname
+of the computer. The YCP representation of the hostname is a data
+structure consisting of a single string. When writing, the agent
+changes the variable <tt>HOSTNAME</tt> in the file <tt>/etc/rc.config</tt>
+and calls the program <tt>hostname</tt> to set the hostname in the kernel.
+When reading, the agent calls the program <tt>hostname</tt> to read the
+actual hostname and creates a YCP string from it.</p>
+<p>Documentation about the agents can be found below the
+ <tt>/usr/share/doc/packages/yast2/ag_*</tt> directories.</p>
+
+<h2>Tree</h2>
+<p>As a computer's hardware and software configuration is quite
+complex, the SCR organizes all data in a tree. It is much like
+a filesystem. The SCR tree consists of three different kinds of nodes:
+
+<p>
+<table width="100%" bgcolor="#f96500" cellspacing=0><tr><td>
+<table width="100%" bgcolor="#ffc080" cellpadding=10><tr><td>
+
+      <table bgcolor="#ffc080" border=0 cellpadding=10 cellspacing=0>
+	<tr>
+	  <td valign=top>data nodes</td>
+	  <td>A data note represents one piece of data, for example
+	    the hostname or the mountpoint of one of the filesystems
+	    in /etc/fstab. It is a <i>leaf</i> in the tree.</td></tr>
+
+	<tr>
+	  <td valign=top>map nodes</td>
+	  <td>A map node is an inner node. It has none, one or more subtrees and
+	    assigns a <i>name</i> to each subtree. It is used to structure data.
+	    The root node of the SCR tree is a map node. One of its subtrees
+	    is called <tt>config</tt>, another <tt>hardware</tt>. The name map node
+            resembles the YCP data type <tt>map</tt>. </td></tr>
+
+	<tr>
+	  <td valign=top>list nodes</td>
+	  <td>A list node is much like a map node, but its subtrees are not named
+	    but numbered. List nodes represent data that is countable, such as
+            the <tt>/etc/fstab</tt>.</td></tr>
+      </table>
+</td></tr></table>
+</td></tr></table>
+
+<h2>Paths</h2>
+<p>A <i>path</i> is a description were to find a node in the tree. It is a list
+of path components. Each path component may be either a string or an integer.
+The empty list specifies the root node. If the path <i>p</i> specifies a map node 
+and the map node has a subtree called <i>n</i>, then <tt>add(p, n)</tt> specifies
+the root node of the subtree. If the path <i>p</i> specifies a list node 
+and the list node and <i>i</i> is an integer, then <tt>add(p, i)</tt> specifies
+the <i>i</i>'th subtree of the list node.
+
+<p>Consider this tree:
+<p>
+
+<table width="100%" bgcolor="#f96500" cellspacing=0><tr><td>
+<table width="100%" bgcolor="#ffc080" cellpadding=10><tr><td>
+<table><tr><td>
+<img src="scr-tree.png">
+</td>
+<td valign=top>
+<p>The green nodes are list nodes, the blue nodes are map nodes, the smaller grey nodes 
+are data nodes. The right green node represents the filesystem table (<tt>/etc/fstab</tt>).
+
+<p>The path to the fstab list node is <tt>["config", "fstab"]</tt>. The path to the second
+entry in the filesystem table is <tt>["config", "fstab", 1]</tt>. The YCP parser allows
+you to write paths with a dot-notation. In dot-notation the path would be written
+<tt>.config.fstab.1</tt>. The path to the mount point of the first entry of the filesystem table
+would be <tt>.config.fstab.0.mountpoint</tt>.
+</td></tr></table>
+</td></tr></table>
+</td></tr></table>
+
+<h2>Access</h2>
+<p>
+The task of the SCR is to provide the modules with information about the hardware and the software
+configuration and write back changed configuration without the modules having to know anything
+about the details of the data representation.
+
+<p>For this the SCR provides an <i>API</i>, i.e. a defined set of YCP functions
+it understands. You can call these functions from YCP scripts running in
+the Workflowmanager with the call <tt>SCR(...)</tt>. We use <tt>path</tt> as a shortcut
+for <tt>list(string|integer)</tt>. These are the commands:</p>
+
+<table width="100%" bgcolor="#f96500" cellspacing=0><tr><td>
+<table width="100%" bgcolor="#ffc080" cellpadding=10><tr><td>
+
+<table cellspacing=10><tr>
+ <td valign=top><b>Function</b></td><td valign=top><b>What it does</b></td></tr>
+
+ <tr><td valign=top><tt>Read(path p) -> any</tt></td>
+     <td valign=top>Reads the data represented by the node at path p.</td></tr>
+
+ <tr><td valign=top><tt>Write(path p, any v) -> boolean</tt></td>
+     <td valign=top>Writes the value v to the node at path p. The boolean return value is true
+         on success. On error a log entry is made. Reasons for errors can be a mistyped
+         value v or some problem with the periphery.</td></tr>
+
+ <tr><td valign=top><tt>Dir(path p) -> list(path)</tt></td>
+     <td valign=top>Returns a list of all subtrees of the node p. p must point to map node.
+         For each subtree the list contains a string. In the example
+         if you call <tt>Dir(.config)</tt>, the answer would be <tt>["net", "fstab"]</tt></td></tr>
+
+</table>
+
+</td></tr></table>
+</td></tr></table>
+
+<h2>Agents and Implementation</h2>
+
+<p>How is the SCR implemented? Each agent handles one subtree.
+In our example one agent handles the filesystem table. It is <i>mounted</i>
+to the path <tt>.config.fstab</tt>. If the SCR gets a request for this
+path, it delegates it to the agent, stripping the <tt>.config.fstab</tt> away
+before this. Thus if you send <tt>Read(.config.fstab)</tt> to the SCR, the
+fstab agent will have to answer <tt>Read(.)</tt>. The agent has to handle
+all calls for one of its nodes.
+
+<p>The fstab agent does not only have to be able to read the complete
+fstab in answer to <tt>Read(.)</tt>, it also has to implement reading
+of one entry, e.g. <tt>Read(.3)</tt>. It has to implement every SCR
+function for every node. To make life easier, there is a library that
+supports writing agents, which is called <tt>libscr</tt>.
+
+<p>The easiest way to implement an agent is one, that only implement
+Read() and Write() for the root path (.). The libscr can deduce the
+implementation of the other paths from that, even if it is less performant
+than a native implementation could be. 
+
+<h2>Remote SCR</h2>
+
+<p>There is no special networking support within the SCR, since this is
+not neccessary: Any two YaST2 components can communicate over a network
+connection choosing out of a variety of protocols like telnet, rsh, getty
+or a serial line. When you mount an agent into the scr tree, you specify
+a server component name. This name can denote a remote component as well
+as a local one.

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+for i in tmp.out.* ; do
+	testname=${i#tmp.out.}
+
+	# find out the test files
+	if [ -f tests/bytecode/*/$testname.ycp ]; then
+		testfile=`ls tests/bytecode/*/$testname.ycp`
+		testoutput=`ls tests/bytecode/*/$testname.out`
+		testerror=`ls tests/bytecode/*/$testname.err`
+	elif [ -f tests/*/$testname.ycp ]; then
+                testfile=`ls tests/*/$testname.ycp`
+                testoutput=`ls tests/*/$testname.out`
+                testerror=`ls tests/*/$testname.err`
+	fi
+
+	# check, if the test failed
+	outdiff=`diff -u tmp.out.$testname $testoutput`
+        errdiff=`diff -u tmp.err.$testname $testerror`
+
+	if [ ! -z "$outdiff" -o  ! -z "$errdiff" ] ; then
+		if [ ! -z "$outdiff" ] ; then
+			problem="output ";
+		fi 
+                if [ ! -z "$errdiff" ] ; then
+                        problem="error ";
+                fi
+
+		echo "Failed: $testname ( $problem)";
+
+		while true; do
+			echo -n "(e) error (o) output (u) update (s) skip: "
+		 	read choice
+
+			case $choice in
+				"e") diff -u tmp.err.$testname $testerror;;
+				"o") diff -u tmp.out.$testname $testoutput ;;
+				"u") if [ ! -z "$outdiff" ]; then
+					cp tmp.out.$testname $testoutput
+				   fi
+				   if [ ! -z "$errdiff" ]; then
+                                        cp tmp.err.$testname $testerror
+                                   fi
+				   echo "$testname updated";
+				   break
+				;;
+				"s") break;;
+			esac 
+		done
+	fi	
+done

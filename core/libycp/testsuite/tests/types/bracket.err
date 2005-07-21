@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list a
+    // filename: "tests/types/bracket.ycp"
+    list a = ["foo"];
+    return (a[0]:nil == "foo");
+}
+----------------------------------------------------------------------
+[Parser] tests/types/bracket.ycp:12 Bracket parameter '"bar"' to 'a' has wrong type
+[Parser] tests/types/bracket.ycp:12 Expected 'integer', seen 'const string'.
+runycp: parser error

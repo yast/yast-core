@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="types"><title>Types</title>
+
+ <section><title>Basic types</title>
+
+  <section><title>void</title>
+  <para>
+  <literal>void</literal> is the most simplest type with just a single value <literal>nil</literal>.
+  </para>
+  <para>This basically means 'no specific value' and is used for functions that don't return a value.</para>
+  <para>The <literal>void</literal> type is only allowed in function declarations, you cannot declare variables
+  of type <literal>void</literal>.</para>
+  <para></para>
+  <para>Using <literal>void</literal> in expressions has a special meaning of <emphasis>exception</emphasis>
+  and must be handled accordingly.</para><para>See <xref linkend="handling_nil"/> for further details.</para>
+  <screen>
+  nil
+  </screen>
+  </section>
+
+  <section><title>boolean</title>
+  <para>
+  Boolean is just what you would expect with values <literal>true</literal> and <literal>false</literal>.
+  </para>
+  <screen>
+  true
+  false
+  </screen>
+  <para>
+  Values of the type <literal>boolean</literal> are used in conditional expressions and loops.
+  </para>
+  </section>
+
+  <section><title>integer</title>
+  <para>
+  Integers are singed, 64bit values. Their syntactic representation is just like in any other programming language.
+  </para>
+  <screen>
+  0
+  -42
+  1234567890
+  </screen>
+  </section>
+
+  <section><title>float</title>
+  <para>
+  Float is implemented as a C++ <literal>double</literal> value.
+  </para>
+  <screen>
+  0.0
+  -42.42
+  3.141592653
+  </screen>
+  </section>
+
+  <section><title>string</title>
+  <para>
+  Strings are sequences of characters enclosed in double qoutes (<literal>"</literal>).
+  </para>
+  <para>Inside strings, the normal (C like) escape sequences are recognized (i.e. <literal>\n</literal> for line-feed)
+  </para>
+  <para>Non ASCII characters should be UTF-8 encoded.
+  </para>
+  <screen>
+  ""
+  "abc"
+  "First line\nSecond line\n"
+  </screen>
+  </section>
+
+  <section><title>byteblock</title>
+  <para>
+  Byteblock is used to specify binary data.
+  </para>
+  <para>Syntactically, it starts with a hash mark (<literal>#</literal>) followed by an open square bracket
+  (<literal>[</literal>), an even number of hexadecimal digits, and a closing square bracket
+  (<literal>]</literal>).
+  </para>
+  <screen>
+  #[000102030405060708090A0B0C0D0F]
+  #[]
+  #[DEADBEEF]
+  </screen>
+  </section>
+
+  <section><title>symbol</title>
+  <para>
+  A symbol is a named constant. Symbols begin with a backquote Their usage is like <literal>enum</literal> in the C language, however there
+  is no internal relationship from symbols to integer values.
+  </para>
+  <screen>
+  `foo
+  `bar
+  </screen>
+  </section>
+
+  <section><title>path</title>
+  <para>
+  A path is an ordered sequence of strings. Pathes always begin with a dot, followed by zero or more dot-separated
+  symbolic names. A single dot denotes an empty path.
+  </para>
+  <screen>
+  .
+  .a.path.looks.like.this
+  </screen>
+  <para>The main usage for paths is in interaction with the system layer where pathes are used to specify the
+  file and value within the file. A typical example is accessing <filename>/etc/sysconfig</filename> files and
+  values. E.g. <literal>.etc.sysconfig.clock.TIMEZONE</literal> denotes the <literal>TIMEZONE</literal> value of
+  the file <filename>/etc/sysconfig/clock</filename>.</para>
+  </section>
+
+ </section>
+
+ <section><title>Complex types</title>
+
+  <section><title>list</title>
+  <para>
+  A list is an ordered set of values.
+  </para>
+  <screen>
+  []
+  [1,2,3,4,5]
+  [true, "a", #[00]]
+  </screen>
+  </section>
+
+  <section><title>map</title>
+  <para>
+  A map is a set of key/value pairs. Only integer or string values are allowed as keys. Both
+  key types cannot be mixed in a single map.</para>
+  <screen>
+  $[]
+  $[0 : "zero", 1 : "one", 2 : "two" ]
+  $["zero" : 0, "one" : 1, "two" : 2 ]
+  </screen>
+  <para>
+  The elements of a map are ordered by their key values. So the last map in the above
+  example will be output as:
+  <screen>
+  $["one" : 1, "two" : 2, "zero" : 0]
+  </screen>
+  </para>
+  </section>
+
+  <section><title>term</title>
+  <para>
+  A term is like an unevaluated function call. It starts with a symbol, followed by zero
+  or more comma-separated values in parantheses. Terms are mostly used in communicating with
+  the user interface when expressing widget structures and screen layouts.
+  </para>
+  <screen>
+  `name (arg1, arg2, arg3)
+  </screen>
+  <para>See the examples for programming the user interface for typical uses of terms.</para>
+  </section>
+
+ </section>
+
+</section>
+
+

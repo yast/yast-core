@@ -1,0 +1,3 @@
+[Parser] tests/scope/ScopeBad.ycp:42 Mismatched return type in block
+[Parser] tests/scope/ScopeBad.ycp:42 Expected 'string', seen 'integer'.
+runycp: parser error

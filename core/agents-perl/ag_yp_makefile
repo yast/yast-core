@@ -1,0 +1,179 @@
+#!/usr/bin/perl
+#
+# Author: Dan Vesely (dan@suse.cz)
+#
+# $Id$
+#
+# Agent for accessing '/var/yp/Makefile'
+#
+# Global variables:
+#                   %parse_value ... hash with variables
+#                   %changed     ... hash if the var was changed
+#                   @maps        ... array with maps to be build
+#
+
+use lib "/usr/lib/YaST2/agents_non_y2";
+use ycp;
+
+#
+# routine to log and return error
+#
+sub log_error ( $ ) {
+    my ($err_msg) = @_;
+    y2debug ("Error in ag_yp_makefile: ", $err_msg);
+    return 0;
+}
+
+
+#
+# routine that read the file and fill-in global hash %parse_value
+# and global @maps array with maps to built
+#
+sub parse_file () {
+
+    my $in_maps = 0;
+    open (FILE, "<  /var/yp/Makefile") || return log_error ("Opening file /var/yp/Makefile");
+
+    while (<FILE>)
+    {
+        if ($_ =~ /(^\w*)\s*=\s*([^\#\n]*)\s*/)         # variables
+        {
+            $parse_value{$1} = $2;
+        }
+        elsif ($_ =~ /^all\:\s*([^\#\n\\]*)/)           # "all:" rule
+        {
+            @maps = split (/\s/, $1);
+            $in_maps = ($_ =~ /.*\\\s*$/)
+        }
+        elsif ($in_maps && $_ =~ /\s*([^\#\n\\]*)/) {   # "all:" rule continue
+            push @maps, split (/\s/, $1);
+            $in_maps = ($_ =~ /.*\\\s*$/);
+        }
+    }   
+    close (FILE);
+}
+
+#
+# routine that writes the file by copying the original one
+# replacing values filles in %parse_value hash if appropriate 
+# %changed entry is filled
+#
+sub write_file () {
+
+    my $in_maps = 0;
+    open (ORIG, "<  /var/yp/Makefile")     || return log_error ("Opening file /var/yp/Makefile");
+    open (NEWF, ">  /var/yp/Makefile.tmp") || return log_error ("Opening file /var/yp/Makefile.tmp");
+
+    while (<ORIG>)
+    {
+        if ($_ =~ /(^\w*)\s*=\s*([^\#\n]*)\s*/)         # variables
+        {
+            if ($changed{$1} && defined ($parse_value{$1}))
+            {
+                print NEWF $1 . "=" . $parse_value{$1} . "\n";
+            }
+            else
+            {
+                print NEWF $_;
+            }
+        }
+        elsif ($changed{"maps"} && $_ =~ /^all\:\s*([^\#\n]*)/) {   # "all:: rule
+            print NEWF "all: " . join (" ", @maps) . "\n";
+            $in_maps = ($_ =~ /.*\\\s*$/);
+        }
+        elsif ($in_maps) {                      # "all:' rule continue
+            $in_maps = ($_ =~ /.*\\\s*$/);
+        }
+        else
+        {
+            print NEWF $_;
+        }
+    }   
+    close (NEWF);
+    close (ORIG);
+
+    system "cp /var/yp/Makefile /var/yp/Makefile.bak" || return log_error ("Creating backup");
+    system "mv /var/yp/Makefile.tmp /var/yp/Makefile" || return log_error ("Moving temp file");
+
+    return 1;
+}
+
+#
+# MAIN cycle
+#
+
+parse_file ();
+
+while ( <STDIN> ) 
+{
+    #ycpDoVerboseLog();
+
+    ycpInit ($_);
+
+    # Read command
+    if (ycpCommandIsRead && ycpArgIsNone)
+    {
+        if (ycpGetPath =~ /\.maps/) {
+            ycpReturnArrayAsList (@maps);
+        }
+        elsif (ycpGetPath =~ /\.(\w+)/) {
+            my $variable_value = defined ($parse_value{$1}) ? $parse_value{$1} : "";
+            ycpReturnSkalarAsString ($variable_value);
+        }
+        elsif (ycpGetPath =~ /\./) {
+            ycpReturnHashAsMap (%parse_value);
+        }
+        else {
+            y2debug ("Unrecognized path!");
+            ycpReturnSkalarAsString ("");
+        }
+    }
+    
+
+    # Write command
+    elsif (ycpCommandIsWrite)
+    {
+        my $path   = ycpGetPath;
+        my $result = 1; 
+        if (ycpArgIsString && $path =~ /\.(\w+)/)
+        {
+            $parse_value{$1} = ycpGetArgString;
+            $changed{$1}     = 1;
+        }
+        elsif (ycpArgIsMap && $path =~ /\./)
+        {
+            %parse_value = ycpGetArgMap;
+            foreach my $key (keys %parse_value) { $changed{$key} = 1; }
+        }
+        elsif (ycpArgIsList && $path =~ /\.maps/)
+        {
+            @maps            = ycpGetArgList;
+            $changed{"maps"} = 1;
+        }
+        elsif (ycpArgIsNil && $path =~ /\./)
+        {
+            $result = write_file ();
+        }
+        else 
+        {
+            y2debug ("Wrong path ", ycpGetPath, " or argument: ", ycpGetArgType);
+            $result = 0;
+        }
+
+        ycpReturnSkalarAsBoolean ($result);        
+    }
+
+    # result: we should exit
+    elsif (ycpCommandIsResult)
+    {
+	exit;
+    }
+
+    # Unknown command
+    else 
+    {
+        y2debug ("Unknown instruction ", ycpGetCommand, " or argument: ", ycpGetArgType);
+        ycpReturnSkalarAsBoolean (0);
+    }
+
+}

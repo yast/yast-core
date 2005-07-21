@@ -1,0 +1,7 @@
+(["sec1", "sec2"])
+[sec1]
+val1=2
+val2=3
+[sec2]
+val1=30
+val2=40

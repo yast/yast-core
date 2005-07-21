@@ -1,0 +1,13 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    module "Summary";
+    //T: TEntry (NotConfigured@4:global string Summary::NotConfigured ())
+    // global string Summary::NotConfigured ()
+    // filename: "tests/bytecode/Module/Summary.ycp"
+    global string Summary::NotConfigured ()
+{
+    return "not configured yet";
+}
+}
+----------------------------------------------------------------------

@@ -1,0 +1,40 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Term.ycp
+#
+#  Purpose:	test cases for all term builtins
+#
+# ---------------------------------------------------------
+
+
+("** size **")
+
+(size (`hrombuch (18, false)))
+
+
+("** add **")
+
+(add (`sym (1), 2))
+
+
+("** symbolof and argsof **")
+
+(symbolof (`hrombuch (18, false)))
+(argsof (`hrombuch (18, false)))
+
+
+("** remove **")
+
+(remove (`hrombuch ("a", "b", "c"), 1))
+
+
+("** select **")
+
+(select (`hirn (1, 2), -1, 42))
+(select (`hirn (1, 2), 0, 42))
+(select (`hirn (1, 2), 1, 42))
+(select (`hirn (1, 2), 2, 42))
+
+(select (`hirn (1, 2), 0, "wrong type"))
+

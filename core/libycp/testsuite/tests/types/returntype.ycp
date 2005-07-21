@@ -1,0 +1,9 @@
+{
+  // defining block must match function declaration
+
+  integer one () {
+    return "1";			// error
+  }
+
+  return one();
+}

@@ -1,0 +1,64 @@
+(nil)
+multi/rewrite2.in.1.test  -------------------------------
+[Dialer iqnet_praha]
+  Country = Czech Republic
+  ISDN supported = 1
+  Product = WWW Registrace
+  Brand_new = New value
+[End]
+
+[Dialer fortech_litomysl]
+  Country = Czech Republic
+  ISDN supported = 1
+  Phone = 0971202311
+  [Dialer sun_litomysl]
+    SubPhone = 0971202312
+  [End]
+[End]
+
+[Dialer apexnet_plzen]
+  Country = Czech Republic
+  ISDN supported = 1
+  Phone = 0971206911
+[End]
+multi/rewrite2.in.2.test  -------------------------------
+[Dialer arcor]
+  Compuserve = 0
+  Provider = Arcor
+  Brand_new = New value
+[End]
+
+[Dialer mobilcom]
+  Compuserve = 0
+  Provider = Mobilcom
+  Phone = 0101901929
+[End]
+multi/rewrite2.in.3.test  -------------------------------
+[Dialer Totalise]
+  Compuserve = 0
+  Provider = Totalise
+  Phone = 08453001470
+  Brand_new = New value
+[End]
+
+[Dialer force9]
+  Provider = Force9
+  Phone = 08451424000
+[End]
+multi/rewrite2.in.4.test  -------------------------------
+[Dialer m3_company]
+  Country = USA
+  ISDN supported = 1
+  Provider = M3 Company
+[End]
+
+[Dialer juno_online_services_inc_]
+  Country = USA
+  ISDN supported = 0
+  Brand_new = New value
+[End]
+
+[Dialer earthlink_network]
+  Country = USA
+  Provider = EarthLink Network
+[End]

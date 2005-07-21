@@ -1,0 +1,15 @@
+(["Section1", "Section2"])
+;
+; leading comment
+;
+[Section1]
+val2=2
+val1=3
+
+[Section2]
+val1=10
+val2=40
+val3=30
+;
+; trailing comment
+;

@@ -1,0 +1,1 @@
+[agent-ini] IniParser.cc(parse_helper):XXX tests/globval2.in.test:2: Key: values at the top level not allowed.

@@ -1,0 +1,27 @@
+.
+
+`ag_ini(
+  `IniAgent("tests/type.in.test",
+  $[
+    "options" : [ "no_nested_sections", "ignore_case", "global_values", ],
+    "subindent" : "  ",
+    "comments": [ "^[ \t]*#.*", "#.*", "^[ \t]*$" ],
+    "sections" : [
+        $[
+        "begin" : [ "other[ \t]*=[\t ]*(.*[^ \t])[ \t]*$", "  other\t= %s" ],
+        ],
+        $[
+        "begin" : [ "image[ \t]*=[\t ]*(.*[^ \t])[ \t]*$", "  image\t= %s" ],
+        ],
+    ],
+    "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s = %s"],
+        ],
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])()*$" , "%s"],
+        ],
+    ],
+  ]
+  )
+)

@@ -1,0 +1,67 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Lookup.ycp
+#
+#  Purpose:     test cases for YCP 'lookup'
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// In map m looks up the value matching to given key k. 
+// Returns nil if the key was not found.
+
+{
+     map   node1 = $[ 1: "Austria", 2: "Belgium" ];
+     map   node2 = $[ 3: "China", 4: "D-Nation" ];
+     map   node3 = $[ 5: "England", 6: "France" ];
+     map   node4 = $[ 9: node2, 10: node3 ];
+     map   node5 = $[ 8: node1, 11: node4 ];
+     map   node6 = $[ 7: "Greece" ];
+     map   node7 = $[ 12: node5, 13: node6 ];
+
+     return( lookup( node7, 12, nil) ==
+	$[
+	  8: $[	1: "Austria", 2: "Belgium" ],
+	 11: $[ 9: $[ 3: "China", 4: "D-Nation" ],
+	       10: $[ 5: "England", 6: "France" ]]]);
+}
+
+{
+     map   node1 = $[ 1: "Austria", 2: "Belgium" ];
+     map   node2 = $[ 3: "China", 4: "D-Nation" ];
+     map   node3 = $[ 5: "England", 6: "France" ];
+     map   node4 = $[ 9: node2, 10: node3 ];
+     map   node5 = $[ 8: node1, 11: node4 ];
+     map   node6 = $[ 7: "Greece" ];
+     map   node7 = $[ 12: node5, 13: node6 ];
+
+     return(  node5 );
+}
+
+{
+     map   node1 = $[ 1: "Austria", 2: "Belgium" ];
+     map   node2 = $[ 3: "China", 4: "D-Nation" ];
+     map   node3 = $[ 5: "England", 6: "France" ];
+     map   node4 = $[ 9: node2, 10: node3 ];
+     map   node5 = $[ 8: node1, 11: node4 ];
+     map   node6 = $[ 7: "Greece" ];
+     map   node7 = $[ 12: node5, 13: node6 ];
+
+     return( lookup( node7, 14, "abc" ) == "abc" );
+}
+
+{
+     map   node1 = $[ 1: "Austria", 2: "Belgium" ];
+     map   node2 = $[ 3: "China", 4: "D-Nation" ];
+     map   node3 = $[ 5: "England", 6: "France" ];
+     map   node4 = $[ 9: node2, 10: node3 ];
+     map   node5 = $[ 8: node1, 11: node4 ];
+     map   node6 = $[ 7: "Greece" ];
+     map   node7 = $[ 12: node5, 13: node6 ];
+
+     return( lookup( node7, 9, nil ) == nil );
+}

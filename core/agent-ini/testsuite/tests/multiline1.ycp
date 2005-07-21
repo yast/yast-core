@@ -1,0 +1,8 @@
+{
+    // multiline values example, does not join values
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
+}

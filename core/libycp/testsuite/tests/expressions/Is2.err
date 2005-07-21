@@ -1,0 +1,2 @@
+[Parser] tests/expressions/Is2.ycp:23 Undeclared identifier 'name'
+runycp: parser error

@@ -1,0 +1,10 @@
+{
+    boolean a = true;
+    list <string> NL = [nil];
+    list <string> N = nil;
+    list <string> L1 = a ? NL : N;
+    list <string> L2 = a ? [nil] : N;
+    // fails
+    list <string> L3 = a ? [nil] : nil;
+}
+

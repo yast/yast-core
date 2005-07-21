@@ -1,0 +1,2 @@
+[Parser] tests/modules/emptyModule.ycp:1 Empty module
+runycp: parser error

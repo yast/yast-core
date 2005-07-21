@@ -1,0 +1,34 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // typedef list <string> myType;
+    // list <string> mt
+    // filename: "tests/types/Typedef.ycp"
+    typedef list <string> myType;
+    list <string> mt = ["a", "b"];
+    return mt;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // typedef list <path> myType;
+    // list <path> mt
+    // filename: "tests/types/Typedef.ycp"
+    typedef list <path> myType;
+    list <path> mt = [.p.a.t.h];
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // typedef list <list <path>> myType;
+    // list <list <path>> mt
+    // filename: "tests/types/Typedef.ycp"
+    typedef list <list <path>> myType;
+    list <list <path>> mt = [[.p.a.t.h]];
+}
+----------------------------------------------------------------------
+[Parser] tests/types/Typedef.ycp:25 type mismatch in variable definition
+[Parser] tests/types/Typedef.ycp:25 Expected 'list <list <path>>', seen 'list <const path>'.
+runycp: parser error

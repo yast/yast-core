@@ -1,0 +1,9 @@
+{
+   module "Summary";
+
+   global string NotConfigured()
+   {
+	return "not configured yet";
+   }
+}
+

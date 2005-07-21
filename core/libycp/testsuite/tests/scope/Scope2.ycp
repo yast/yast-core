@@ -1,0 +1,35 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Scope2.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for the scope of variables
+
+// the variable is declared multiple
+// the block is left with the last return statement
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if (true)
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = MultipleUsedVariable + 1;
+       if (true)
+       {
+           MultipleUsedVariable = "I am a string";
+       }
+   }
+
+   return MultipleUsedVariable;
+}

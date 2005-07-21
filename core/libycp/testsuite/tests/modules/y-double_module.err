@@ -1,0 +1,2 @@
+[Parser] tests/modules/y-double_module.ycp:5 module statement in sub-block
+runycp: parser error

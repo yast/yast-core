@@ -1,0 +1,7 @@
+{
+  if (true);  // <== ";" is wrong here
+  {
+    return true;
+  }
+  return false;
+}

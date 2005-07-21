@@ -1,0 +1,23 @@
+<!-- $Id$ -->
+
+<chapter id="language"><title>YCP Language Description</title>
+
+&motivation;
+&hello;
+
+&types;
+&expressions;
+&bracket;
+&statements;
+
+&scopes;
+&namespaces;
+
+&builtins;
+&functions;
+
+&predefined;
+
+</chapter>
+
+&grammar;

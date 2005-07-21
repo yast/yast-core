@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<article>
+  <title>YCP language Reference: YCP Operators</title>
+  <section>
+    <title>Comparison Operators</title>
+    <para>These are binary operators for comparison of two values. The
+result is always boolean.</para>
+    <informaltable>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Operator</entry>
+            <entry>Datatype</entry>
+            <entry>Description</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>==</entry>
+            <entry>almost all</entry>
+            <entry>True if operands are equal, otherwise false.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&lt;</entry>
+            <entry>almost all</entry>
+            <entry>True if left operand is smaller than the right one, otherwise
+false.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&gt;</entry>
+            <entry>almost all</entry>
+            <entry>True if left operand is greater than the right one, otherwise
+false.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&lt;=</entry>
+            <entry>almost all</entry>
+            <entry>True if left operand is smaller or equal to the right one,
+otherwise false.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&gt;=</entry>
+            <entry>almost all</entry>
+            <entry>True if left operand is greater or equal to the right one,
+otherwise false.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>!=</entry>
+            <entry>almost all</entry>
+            <entry>True if operands are not equal, otherwise false.</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para/>
+  </section>
+  <section>
+    <title>Boolean Operators</title>
+    <para>These are logical operators, that works with boolean datatype,
+two are binary one is unary. The result is always boolean.</para>
+    <informaltable>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Operator</entry>
+            <entry>Datatype</entry>
+            <entry>Description</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>&amp;&amp;</entry>
+            <entry>boolean</entry>
+            <entry>True if both operands are true, otherwise false (logical
+and).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>||</entry>
+            <entry>boolean</entry>
+            <entry>True if at least one of the operands is true, otherwise false
+(logical or).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>!</entry>
+            <entry>boolean</entry>
+            <entry>True if the operand if false, otherwise false (logical
+not).</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para/>
+  </section>
+  <section>
+    <title>Bit Operators</title>
+    <para>These are bit operators that works with integer, two are binary
+one is unary. The result is always integer.</para>
+    <informaltable>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Operator</entry>
+            <entry>Datatype</entry>
+            <entry>Description</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>&amp;</entry>
+            <entry>integer</entry>
+            <entry>Bits of the result number are product of the bits of the
+operands (bit and).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>|</entry>
+            <entry>integer</entry>
+            <entry>Bits of the result number are count of the bits of the operands
+(bit or).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>~</entry>
+            <entry>integer</entry>
+            <entry>Bits of the result number are reverted bits of operand (bit
+not).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&lt;&lt;</entry>
+            <entry>integer</entry>
+            <entry>Bits of the result number are left shifted bits of the operands
+(bit shift left).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>&gt;&gt;</entry>
+            <entry>integer</entry>
+            <entry>Bits of the result number are right shifted bits of the
+operands (bit shift right).</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para/>
+  </section>
+  <section>
+    <title>Math Operators</title>
+    <para>There math operators works with numeric data types (integer and
+float) and also with string. All are binary (except unary
+minus).</para>
+    <informaltable>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Operator</entry>
+            <entry>Datatype</entry>
+            <entry>Description</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>+</entry>
+            <entry>integer, float, string</entry>
+            <entry>The result is sum of the numbers or concatenation of the
+strings.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>-</entry>
+            <entry>integer, float</entry>
+            <entry>The result is difference of the numbers.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>*</entry>
+            <entry>integer, float</entry>
+            <entry>The result is product of the numbers.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>/</entry>
+            <entry>integer, float</entry>
+            <entry>The result is quotient of the numbers (number class is
+preserved, thus quotient of integers produce integer, etc).</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>%</entry>
+            <entry>integer</entry>
+            <entry>The result is modulo.</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>unary -</entry>
+            <entry>integer, float</entry>
+            <entry>The result is negative number.</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para/>
+  </section>
+  <section>
+    <title>Triple Operator</title>
+    <para>This is the operator known from C language ( <emphasis role="i">condition</emphasis>
+<emphasis role="b">?</emphasis> <emphasis role="i">expression</emphasis> <emphasis role="b">:</emphasis> <emphasis role="i">expression</emphasis>). The first
+operand is expression that can evaluate to boolean, types of second
+and third operands are code dependent. The result of the triple
+operator expression is the second operand in the case the first
+operand (condition) evaluates to true, the third one otherwise.</para>
+    <informaltable>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Code</entry>
+            <entry>Result</entry>
+            <entry>Comment</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>(3 &gt; 2) ? true : false</entry>
+            <entry>true</entry>
+            <entry>The expression (3 &gt; 2) evaluates to true, the result is
+true</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>contains ([1, 2, 3], 5) ? "yes" : "no"</entry>
+            <entry>"no"</entry>
+            <entry>The expression contains ([1, 2, 3], 5) evaluates to false, the
+result is "no"</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>(size ([]) &gt; 0) ? 1 : -1</entry>
+            <entry>-1</entry>
+            <entry>The expression size ([]) &gt; 0 evaluates to false, the result
+is -1</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para><emphasis role="b">Note:</emphasis> Using brackets makes code cleaner, but is not
+necessary (according to operators precedence).</para>
+    <para><emphasis role="b">Note:</emphasis> With the introduction of the <ulink url="bracket.html">index operator</ulink> ( a = mapvar["key"]:default
+), the sequence "]:" became a lexical token usable only for
+indexing, so watch out when using the triple operator with lists
+and maps. Use parentheses or white space.</para>
+    <para/>
+  </section>
+  <section>
+    <title>Operators Precedence</title>
+    <para>The table of operators precedence (from lowest to highest).</para>
+    <informaltable>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>&#xA0;Direction&#xA0;</entry>
+            <entry>&#xA0;Operators&#xA0;</entry>
+          </row>
+          <text/>
+        </thead>
+        <tbody>
+          <row>
+            <entry>right</entry>
+            <entry>=</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>?:</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>||</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>&amp;&amp;</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>== !=</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>&lt; &lt;= &gt; &gt;=</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>+ -</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>* / %</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>&lt;&lt; &gt;&gt;</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>|</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>left</entry>
+            <entry>&amp;</entry>
+          </row>
+          <text/>
+          <row>
+            <entry>prefix</entry>
+            <entry>! ~ -</entry>
+          </row>
+          <text/>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para/>
+  </section>
+</article>

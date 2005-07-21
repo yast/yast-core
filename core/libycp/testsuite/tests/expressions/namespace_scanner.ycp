@@ -1,0 +1,8 @@
+# testcase for 38327
+
+{
+	import "NestedA";
+
+	y2error ("%1", NestedA::42
+a1);
+}

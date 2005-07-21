@@ -1,0 +1,16 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // string BuggyFunction ()
+    // map <string, string> test_map
+    // filename: "tests/expressions/bracket_default_function.ycp"
+    string BuggyFunction ()
+{
+    y2warning ("Running BuggyFunction");
+    return "this-string-shouldn't-be-returned";
+}
+    map <string, string> test_map = $["aaa":"aaa", "bbb":"bbb", "ccc":"ddd"];
+    y2milestone ("String: %1", test_map["aaa"]:BuggyFunction ());
+}
+----------------------------------------------------------------------
+[YCP] tests/expressions/bracket_default_function.ycp:14 String: aaa

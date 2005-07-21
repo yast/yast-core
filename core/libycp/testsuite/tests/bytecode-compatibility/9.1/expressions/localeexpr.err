@@ -1,0 +1,5 @@
+{
+    // filename: "tests/bytecode/expressions/localeexpr.ycp"
+    textdomain "test";
+    return _("This is a test", "With number", 42);
+}

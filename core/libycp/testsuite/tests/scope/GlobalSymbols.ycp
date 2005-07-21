@@ -1,0 +1,27 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    GlobalSymbols.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+    void func1 (integer i) {
+        y2error ("== local  func: %1", i);
+    }
+
+    // duplicate
+
+    void func1 (integer i) {
+        y2error ("== duplicate func: %1", i);
+    }
+    func1 (5);
+    return 0;
+}

@@ -1,0 +1,21 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/If.ycp"
+    if (true)
+    return 1;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/If.ycp"
+    if (false)
+    return 1;
+else
+    return 2;
+    return 3;
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/If.ycp:16 'break' outside of loop.
+runycp: parser error

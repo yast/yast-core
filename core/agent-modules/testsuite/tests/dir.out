@@ -1,0 +1,22 @@
+(true)
+# dir test
+
+alias al1 a1
+alias al2 a2
+
+options op1 o1
+options op2 o2 o2a
+
+pre-install pri1 prin1
+pre-install pri2 prin2 prin2a
+
+post-install poi1 poin1
+post-install poi2 poin2 poin2a
+
+pre-remove prr1 prre1
+pre-remove prr2 prre2 prre2a
+
+post-remove por1 pore1
+post-remove por2 pore2 porte2a
+
+keep

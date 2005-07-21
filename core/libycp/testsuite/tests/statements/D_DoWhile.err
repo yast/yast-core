@@ -1,0 +1,81 @@
+Parsed:
+----------------------------------------------------------------------
+"NON-TERMINAL while"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Symbol0038
+    // filename: "tests/statements/D_DoWhile.ycp"
+    integer Symbol0038 = 0;
+    do
+{
+    if ((Symbol0038 == 6))
+    {
+    Symbol0038 = (Symbol0038 + 1);
+    continue;
+}
+else
+    if ((Symbol0038 == 7))
+    break;
+    Symbol0038 = (Symbol0038 + 1);
+}
+while ((Symbol0038 < 10));
+    return Symbol0038;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Symbol0039
+    // integer Symbol0040
+    // filename: "tests/statements/D_DoWhile.ycp"
+    integer Symbol0039 = 0;
+    integer Symbol0040 = 0;
+    do
+{
+    do
+{
+    if ((Symbol0040 == 0))
+    break;
+    Symbol0039 = 20;
+    Symbol0040 = (Symbol0040 + 1);
+}
+while ((Symbol0040 < 10));
+    if ((Symbol0039 == 7))
+    break;
+    Symbol0039 = (Symbol0039 + 1);
+}
+while ((Symbol0039 < 10));
+    return Symbol0039;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Symbol0041
+    // filename: "tests/statements/D_DoWhile.ycp"
+    integer Symbol0041 = 0;
+    do
+{
+    Symbol0041 = {
+    // integer Symbol0042
+    integer Symbol0042 = 0;
+    do
+{
+    if ((Symbol0042 == 7))
+    return Symbol0042;
+    Symbol0042 = (Symbol0042 + 1);
+}
+while ((Symbol0042 < 10));
+    return Symbol0042;
+}
+;
+    if ((Symbol0041 == 7))
+    return (Symbol0041 * Symbol0041);
+    Symbol0041 = (Symbol0041 + 1);
+}
+while ((Symbol0041 < 10));
+    return Symbol0041;
+}
+----------------------------------------------------------------------

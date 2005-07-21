@@ -1,0 +1,12 @@
+{
+    y2warning(".resolver %1",SCR::Dir(.));
+    y2warning(".resolver.modified %1",SCR::Read(.modified));
+    y2warning(".resolver.backup %1",SCR::Read(.backup));
+    y2warning(".resolver.process %1",SCR::Read(.process));
+    y2warning(".resolver.process_id %1",SCR::Read(.process_id));
+    y2warning(".resolver.script %1",SCR::Read(.script));
+    y2warning(".resolver.saveto %1",SCR::Read(.saveto));
+    y2warning(".resolver.info %1",SCR::Read(.info));
+    y2warning(".resolver.search %1",SCR::Read(.search));
+    y2warning(".resolver.domain %1",SCR::Read(.domain));
+}

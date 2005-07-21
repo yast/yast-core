@@ -1,0 +1,42 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("Everybody likes Linux!");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("%1 m$-windows system deleted", "%1 m$-windows systems deleted", 42);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/values/Locale.ycp"
+    textdomain "locale";
+    return _("%1 linux system installed", "%1 linux systems installed", (40 + 2));
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // string a
+    // locale al
+    // string b
+    // locale bl
+    // filename: "tests/values/Locale.ycp"
+    textdomain "textdomain";
+    string a = _("abc");
+    locale al = a;
+    string b = _("def", "abc", 42);
+    locale bl = b;
+    return (a == bl);
+}
+----------------------------------------------------------------------
+[Parser] tests/values/Locale.ycp:33 No textdomain defined
+runycp: parser error

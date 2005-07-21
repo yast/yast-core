@@ -1,0 +1,339 @@
+<section id="builtins">
+<title>Builtins</title>
+<para>
+All predefined (statically declared) names (variables, functions, namespaces) of YCP are named <emphasis>builtins</emphasis>.
+</para>
+<para>The characteristic of builtins is their implementation in C++. The presence (or absence)
+of builtins is controlled at link time of the YCP interpreter. Builtins are added to the symbol
+lookup table in static constructors, before doing any processing.
+</para>
+<para>The static declaration of builtins must include at least three attributes
+<itemizedlist>
+<listitem><para>The name of the function</para></listitem>
+<listitem><para>The signature (parameter and return types) of the function</para></listitem>
+<listitem><para>The pointer to the functions (C++) implementation</para></listitem>
+</itemizedlist>
+Especially the signature attribute, to be able to statically declare possibly complex type expressions,
+ influenced strongly the implementation of the type system.</para>
+<para>Before going into details, a simple example of a builtin function</para>
+
+<section><title>Example: sleep()</title>
+<para>The function sleep() expects an integer (the number of milliseconds to sleep) and
+returns nothing ('void').</para>
+<para>It's C++ implementation is as follows:
+<screen>
+static YCPInteger
+Sleep (const YCPInteger & ms)
+{
+    /**
+     * @builtin sleep (integer ms) -> void
+     * Sleeps a number of milliseconds.
+     */
+
+    usleep (ms->value () * 1000);
+    return YCPVoid ();
+}
+</screen>
+</para>
+<para>There are a few things about this implementation to be remarked
+<itemizedlist>
+<listitem><para>The function is declared static</para>
+<para>There is no need to link against this function since its pointer is passed
+to the table of builtins. Declaring the C++ function static reduces the link overhead.</para>
+<para> </para></listitem>
+<listitem><para>The function returns an <literal>YCPInteger</literal></para>
+<para>The return type of builtin functions must be a (derived type of) <literal>YCPValue</literal>. There's
+currently no provision to check the return type of functions, the interpreter relies on the correctness
+of the static declaration.</para>
+<para> </para> </listitem>
+<listitem><para>The function expects an <literal>YCPInteger</literal></para>
+<para>This is an enormous improvement compared to the old interpreter where every
+function had to check the number and types of its arguments. It could be further
+improved by getting rid of the YCPValue data structures and operate directly
+on C++ data types.</para>
+<para> </para></listitem>
+</itemizedlist>
+</para>
+<para>
+Builtin functions <emphasis>must not</emphasis> be member functions of a class. This would
+require an object of this class (for the <literal>this</literal> pointer) which is not
+available during execution. But by grouping builtin functions by the types they operate
+one (i.e. <literal>list</literal> functions are defined in <literal>YCPBuiltinList.cc</literal>)
+and making them <literal>static</literal>, there's enough 'implementation locality' already.
+</para>
+<para> </para>
+<para>The complete (static) declaration for sleep() is quite simple
+<screen>
+        { "sleep",      "v|i", 0,               (void *)Sleep, 0 },
+</screen>
+It lists the name of the function (<literal>sleep</literal>), its signature (<literal>v|i</literal>: a function (<literal>|</literal>), returning
+void (<literal>v</literal> before the <literal>|</literal>), expecting an integer (<literal>i</literal>), see <xref linkend="type_system"/> for details),
+flags (0 here, see below), a pointer to the C++ implementation, and an internal bookkeeping pointer (set to 0).
+</para>
+<para>See <literal>src/YCPBuiltinMisc.cc</literal> for the complete implementation</para>
+<para> </para>
+<para>
+Now the static declaration must be registered with the builtin symbol table. This is done by listing all static
+declarations of a specific kind in an array and wrapping it together with a call to <literal>registerDeclarations</literal>
+in the constructor of a class.</para>
+<para>This implementation technique was choosen to take advantage of the automatic execution of constructors
+in C++ when generating an object. By making this object <literal>static</literal>, the C++ compiler ensures
+calling of the constructor at program start.</para>
+<para>
+The class itself is as simple as a class could possibly be, it only has a constructor
+<screen>
+// file: YCPBuiltinMisc.h
+
+class YCPBuiltinMisc {
+
+public:
+    YCPBuiltinMisc ();
+
+};
+</screen>
+</para>
+<para>
+The constructor lists all static declarations in an array and passes this array
+to the <literal>registerDeclarations</literal> method of the external <literal>StaticDeclaration</literal>
+object. <literal>...</literal> denotes lines left out which are not relevant in explaining the concept.
+<screen>
+#include "ycp/YCPBuiltinMisc.h"
+...
+#include "ycp/StaticDeclaration.h"
+...
+YCPBuiltinMisc::YCPBuiltinMisc ()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+...
+        { "sleep",      "v|i", 0,               (void *)Sleep, 0 },
+...
+        { 0, 0, 0, 0 }		// end of array
+    };
+
+    extern StaticDeclaration static_declarations;
+    static_declarations.registerDeclarations ("YCPBuiltinMisc", declarations);
+}
+</screen>
+</para>
+<para>
+Now just the call to the constructor remains. This is implemented for all builtins in
+the file <literal>YBuiltin.cc</literal> which simply declares a static object of all
+relevant builtin classes.</para>
+<para>The constructor call for <literal>YCPBuiltinMisc</literal> is
+<screen>
+#include "ycp/YCPBuiltinMisc.h"
+static YCPBuiltinMisc builtin_misc;             // trigger constructor
+</screen>
+</para>
+<para>
+As one can see, implementing and declaring builtins is pretty simple since all the type and parameter
+checking is done centrally in the interpreter.
+</para>
+</section><!-- example -->
+
+<section><title>Data structures</title>
+<para>The structure for static declaration is called <literal>declaration_t</literal> and defined
+in <literal>ycp/StaticDeclaration.h</literal> as
+<screen>
+struct declaration {
+  const char *name;             // name of variable/function/typedef
+  const char *signature;        // signature of variable/function/typedef
+  int flags;                    // parameter acceptance, @ref DeclFlags
+  void *ptr;                    // pointer to builtin value/function
+  struct declaration *next;     // link to next overloaded declaration (internal use only)
+};
+typedef struct declaration declaration_t;
+</screen>
+Here the 'bookkeeping' pointer mentioned further above is shown. It is used to link overloaded
+(polymorphic) declarations together. Since the name is entered into a symbol table, which doesn't
+allow duplicate symbols, all declarations with identical names are kept in a linked list.</para>
+<para>When looking up a builtin function, the name of the function is known first since it precedes
+it's arguments (syntactically, a function call is <literal>name ( parameter, parameter, ...)</literal>).
+The type system gradually 'approaches' the type correct function declaration as (typed) parameters
+are added to the function call. It scans the 'overload chain' for the best matching signature.
+</para>
+<para>During the scan, the type of the parameters determine the builtin function(s) which match(es).
+As soon as a non-ambiguous match is found, the matching declaration determines the types of the remaining
+parameters. Therefore, when defining polymorphic functions, its useful to distinguish such functions
+in its leftmost parameters.</para>
+<para> </para>
+<para>
+The <literal>signature</literal> parameter is a char pointer since declaring a <literal>TypeCode</literal> object
+wouldn't work in static declarations. This is also the reason to name this attribute <literal>signature</literal>
+instead of <literal>type</literal> (which is used for <literal>TypeCode</literal> data).
+</para>
+
+<para>
+The <literal>flags</literal> attribute is a bitmask consisting of values from <literal>enum DeclFlags</literal>
+<screen>
+enum DeclFlags
+{
+    DECL_NIL =          0x00000001,     // function accepts nil
+    DECL_WILD =         0x00000002,     // function expects wildcard
+    DECL_SYMBOL =       0x00000004,     // function expects a symbol as parameter (local environment)
+    DECL_CODE =         0x00000008,     // function expects code as parameter (local evaluation)
+    DECL_LOOP =         0x00000010,     // function implements a loop, allows break statement
+    DECL_TYPEDEF =      0x00000020,     // name declares a typedef
+    DECL_CONSTANT =     0x00000040,     // name declares a constant
+    DECL_NAMESPACE =    0x00000080,     // name declares a namespace (switches registerDeclarations !)
+};
+</screen>
+</para>
+<para>
+These flags can be used to give 'hints' about the kind of declaration and the inner workings of
+the declared builtin.
+<itemizedlist>
+<listitem><para><literal>DECL_NIL</literal></para>
+  <para>The interpreter usually rejects calls to builtins if one of the arguments evaluates to <literal>nil</literal>.
+  The <literal>DECL_NIL</literal> flag tells the interpreter 'this builtin knows how to handle <literal>nil</literal>
+  arguments' and allows such values.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_WILD</literal></para>
+  <para>This flags the wildcard arguments type of functions (i.e. logging functions) similar to <literal>stdarg</literal> in C.
+  </para><para>Wildcard means 'any number and types of arguments might follow' and all such arguments are passed to the
+  function in one <literal>YCPList</literal>. When setting up the call environment, this flag triggers the collection of
+  evaluated argument in a <literal>YCPList</literal>.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_SYMBOL</literal></para>
+  <para>Some functions, <literal>foreach</literal> for example, expect a typed symbol as an argument in order to build up
+  a local execution environment. This flag tells the interpreter to set up such a local environment for the function call.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_CODE</literal></para>
+  <para>This flag is currently unused.</para>
+  <para>As with <literal>DECL_SYMBOL</literal> above, functions with a local environment usually evaluate code in this
+  environment. This flag tells the interpreter that the function has 'code' type arguments which are to be passed
+  without evaluation.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_LOOP</literal></para>
+  <para>Some builtins implement a loop functionality (i.e. all functions traversing a list or a map) where a <literal>return</literal>
+  or <literal>break</literal> should affect the builtin loop and not a possibly surrounding loop or function.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_TYPEDEF</literal></para>
+  <para>This flags the declared name as a <literal>typedef</literal> instead of a function. Only the signature is used here.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_CONSTANT</literal></para>
+  <para>This flags the declared name as a builtin constant. This isn't fully supported yet.
+  </para>
+  <para> </para></listitem>
+<listitem><para><literal>DECL_NAMESPACE</literal></para>
+  <para>This flags the declared name as a namespace prefix. All following declarations are added to this namespace.
+  See below for a more detailed explanation.
+  </para>
+  <para> </para></listitem>
+</itemizedlist>
+</para>
+</section> <!-- Data structures -->
+
+<section><title>More complex example</title>
+<para>Traversing a list or a map is done with the <literal>foreach</literal> buitlin which implements
+one of the more complex (including polymorphism, loop, and local environment) declarations</para>
+<para>The list variant is declared as
+<screen>
+        { "foreach", "x|YaLaCx",   DECL_LOOP|DECL_SYMBOL, (void *)l_foreach, 0},
+</screen>
+</para>
+<para>The map variant is declared as
+<screen>
+        { "foreach", "x|YaYaMaCx", DECL_LOOP|DECL_SYMBOL, (void *)m_foreach, 0},
+</screen>
+</para>
+<para>
+
+</para>
+</section> <!-- more complex examples -->
+<section><title>Namespaces</title>
+<para>A dummy UI namespace
+<screen>
+UI::UI()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+        { "UI",           "",     DECL_NAMESPACE, 0, 0 },
+        { "OpenDialog",   "v|w",  0,              0, 0 },
+        { "CloseDialog",  "v|",   0,              0, 0 },
+        { "UserInput",    "a|",   0,              0, 0 },
+        { 0, 0, 0, 0 }
+    };
+
+    extern StaticDeclaration static_declarations;
+    static_declarations.registerDeclarations ("UI", declarations);
+}
+</screen>
+</para>
+<para>Namespace declarations affect only the array passed to <literal>registerDeclarations</literal>. All declarations
+<emphasis>following</emphasis> a namespace declaration are entered to the given namespace.
+</para>
+<para>With the above shown <literal>UI</literal> example, three (dummy, since there functions pointer is zero) functions
+are declared:
+<itemizedlist>
+<listitem><para><literal>UI::OpenDialog</literal></para></listitem>
+<listitem><para><literal>UI::CloseDialog</literal></para></listitem>
+<listitem><para><literal>UI::UserInput</literal></para></listitem>
+</itemizedlist>
+</para>
+<para>By adding further <literal>DECL_NAMESPACE</literal> declarations, nested namespaces can be defined.
+For example:
+<screen>
+UI::UI()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+        { "UI",          "",     DECL_NAMESPACE, 0, 0 },
+        { "OpenDialog",  "v|w",  0,              0, 0 },
+        { "CloseDialog", "v|",   0,              0, 0 },
+        { "Input",       "",     DECL_NAMESPACE, 0, 0 },
+        { "User",        "a|",   0,              0, 0 },
+        { 0, 0, 0, 0 }
+    };
+
+    extern StaticDeclaration static_declarations;
+    static_declarations.registerDeclarations ("UI", declarations);
+}
+</screen>
+would declare
+<itemizedlist>
+<listitem><para><literal>UI::OpenDialog</literal></para></listitem>
+<listitem><para><literal>UI::CloseDialog</literal></para></listitem>
+<listitem><para><literal>UI::Input::User</literal></para></listitem>
+</itemizedlist>
+</para>
+<para>
+By declaring an empty namespace, the current namespace get's reset to the global namespace. This way,
+multiple namespaces can be declared in a single file:
+<screen>
+UI::UI()
+{
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations[] = {
+        { "UI",        "",     DECL_NAMESPACE, 0, 0 },
+        { "Dialog",    "",     DECL_NAMESPACE, 0, 0 },
+        { "Open",      "v|w",  0,              0, 0 },
+        { "Close",     "v|",   0,              0, 0 },
+        { "",	       "",     DECL_NAMESPACE, 0, 0 },	// reset namespace
+        { "UI",        "",     DECL_NAMESPACE, 0, 0 },
+        { "Input",     "",     DECL_NAMESPACE, 0, 0 },
+        { "User",      "a|",   0,              0, 0 },
+        { 0, 0, 0, 0 }
+    };
+
+    extern StaticDeclaration static_declarations;
+    static_declarations.registerDeclarations ("UI", declarations);
+}
+</screen>
+This would result in
+<itemizedlist>
+<listitem><para><literal>UI::Dialog::Open</literal></para></listitem>
+<listitem><para><literal>UI::Dialog::Close</literal></para></listitem>
+<listitem><para><literal>UI::Input::User</literal></para></listitem>
+</itemizedlist>
+</para>
+</section> <!-- namespaces -->
+
+</section> <!-- builtins -->

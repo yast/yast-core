@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/and.ycp"
+    return (true && false);
+}

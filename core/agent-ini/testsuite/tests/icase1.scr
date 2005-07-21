@@ -1,0 +1,21 @@
+
+.
+
+`ag_ini(
+  `IniAgent("tests/icase1.in.test",
+    $[
+      "options" : [ "ignore_case" ],
+      "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "[ \t]*\\[[ \t]*(.*[^ \t])[ \t]*\\][ \t]*", "[%s]" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

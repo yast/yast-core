@@ -1,0 +1,17 @@
+//
+// Multiple files test
+//
+// providers.rpm
+//
+// read-only test.
+
+
+{
+    SCR::Write (.s.new, "newsection");
+    list<string> l = SCR::Dir (.s);
+    y2milestone ("%1", l);
+    foreach (string i, l, ``{
+	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
+    });
+    return nil;
+}

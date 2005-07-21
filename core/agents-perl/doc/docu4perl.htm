@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+docu4
+
+<b>Last Step:</b>
+<hr  color="red" align="left" size="1"></hr><br>
+Including this fuction in "normal" YCP-Script with user interface<br><br>
+
+Write a file /tmp/test_ping.ycp:<br><br>
+<font  face="Courier" color="Black"><pre>
+{
+
+          map hosts = SCR(`Execute(.ping, ["www.suse.de"]);
+//	                        ^
+//	                        | Read needs a `
+
+	  string output = sformat("Host: www.suse.de is %2 ",
+	                           lookup(hosts, "www.suse.de") );
+
+   UI(``{
+          OpenDialog(`Label(  output  ));
+          UserInput();
+          CloseDialog();
+        });
+}<br><br><br>
+
+
+
+Eingabe:
+ /usr/lib/YaST2/bin > ./y2base /tmp/test_ping.ycp qt
+                                                  ^^^
+
+Ausgabe:
+A popup ...
+</font><br><br><br></pre>
+
+<div align="center"><a href="docu3perl.htm" ><b><font color="Red"><< Back</font></b></a>&nbsp;&nbsp;<a href="docu5perl.htm" ><b><font color="Red">Next>></font></b></a></div>
+
+</font>
+</body>
+</html>

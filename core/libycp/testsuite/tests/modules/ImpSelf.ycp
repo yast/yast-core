@@ -1,0 +1,13 @@
+{
+    module "ImpSelf";
+
+    global define void ImpSelf () ``{
+        import "ImpSelf";
+        ImpSelf::x ();
+    }
+
+    global define void x () ``{
+        y2error ("x");
+    }
+}
+

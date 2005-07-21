@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/ne.ycp"
+    return (42 != 69);
+}

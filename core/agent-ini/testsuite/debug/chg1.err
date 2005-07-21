@@ -1,0 +1,4 @@
+[YCP] debug/chg1.ycp:XXX value11
+[agent-ini] IniParser.cc(UpdateIfModif):XXX Data file 'debug/chg1.in.test' was changed externaly!
+[YCP] debug/chg1.ycp:XXX value12
+[agent-ini] IniParser.cc(write):XXX File debug/chg1.in.test did not change. Not saving.

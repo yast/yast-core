@@ -1,0 +1,21 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgData.ycp
+#
+#  Purpose:     test "Pkg::*" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    string package = "k_deflt";
+    string summary = Pkg::PkgSummary(package);
+    string version = Pkg::PkgVersion(package);
+    integer psize = Pkg::PkgSize(package);
+    string group = Pkg::PkgGroup(package);
+    return [ package, summary, version, psize, group ];
+}

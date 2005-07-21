@@ -1,0 +1,2 @@
+[Parser] tests/statements/Deep_Quote.ycp:17 Undeclared identifier 'Time'
+runycp: parser error

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="expressions"><title>Expressions</title>
+<section id="operators"><title>Operators</title>
+ <section><title>Prefix</title>
+ <para>
+!, ~
+ </para>
+ </section>
+ <section><title>Infix</title>
+ <para>
++, -, *, /
+ </para>
+ </section>
+ <section><title>Locales</title>
+ <para>
+_("..."), _("...", "...", int)
+ </para>
+ </section>
+ <section><title>Bracket</title>
+ <para>
+ </para>
+ </section>
+</section>
+<section id="handling_nil"><title>Handling <literal>nil</literal></title>
+ <para>
+ Using <literal>nil</literal> in expressions needs to be done with special care since
+ <literal>nil</literal> is no ordinary value which can be processed further.
+ </para>
+ <para>If a function might return <literal>nil</literal>, the caller must be prepared
+ to handle this return value. This is done by checking for (in)equality with <literal>nil</literal>.
+ </para>
+ <para>There are some builtin functions which know how to cope with <literal>nil</literal>,
+ but this is an exception. Usually, a <literal>nil</literal> value in an expression yields
+ the complete expression to <literal>nil</literal>.
+ </para>
+</section>
+</section>
+
+

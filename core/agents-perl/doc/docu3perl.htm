@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+docu3
+
+<b>Create a file</b> /usr/lib/YaST2/scrconf/*.scr, in our example we use ping.scr<br><br>
+<pre><font  face="Courier" color="Black">
+------ ping.scr -------------------
+.ping
+
+`ag_ping ()
+---------------------------------------------
+</font></pre>
+Insert in the first line mount point (=path)
+In the second line the you need a <a href="fg">'scriptname</a>()<br>
+
+
+If you have a running YaST2 you have to restart it, then you
+have access to your new script.<br><br>
+
+
+Lets test our script on the command line:<br>
+Rootlogin!<br>
+<pre><font  face="Courier" color="Black">
+root@steiner:/usr/lib/YaST2/bin > ./y2base stdio scr
+                                                 ^^^^!
+out: ([])
+in:  Execute(.ping, ["www.suse.de"])
+out: ($["www.suse.de":"    alive"])
+
+ Logfile /var/log/YaST2/y2log:
+2001-02-01 17:29:01 <2> steiner(2622) [y2scr] ScriptingAgent.cc(RegisterAgent):92 Path '.xf86config' newly registered
+2001-02-01 17:29:01 <0> steiner(2622) [liby2] Y2ComponentBroker.cc(createComponent):55 createComponent (ag_ping, Server)
+2001-02-01 17:29:01 <0> steiner(2622) [liby2] Y2ComponentBroker.cc(createComponent):72 Component ag_ping created in level = 3, order = 3
+2001-02-01 17:29:01 <0> steiner(2626) [liby2] Y2ProgramComponent.cc(launchExternalProgram):271 Going to execute /usr/lib/YaST2/servers_non_y2/ag_ping
+2001-02-01 17:29:01 <0> --perl--  Now we check with ping the hosts: www.suse.de
+2001-02-01 17:29:01 <0> --perl--      alive : Host www.suse.de
+</font><br><br><br>
+</pre>
+
+<div align="center"><a href="docu2perl.htm" ><b><font color="Red"><< Back</font></b></a>&nbsp;&nbsp;<a href="docu4perl.htm" ><b><font color="Red">Next>></font></b></a></div>
+
+</font>
+</body>
+</html>

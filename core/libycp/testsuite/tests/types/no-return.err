@@ -1,0 +1,2 @@
+[Parser] tests/types/no-return.ycp:4 No return statement in non-void function definition
+runycp: parser error

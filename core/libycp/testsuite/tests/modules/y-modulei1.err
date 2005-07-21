@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "YModule"
+    // filename: "tests/modules/y-modulei1.ycp"
+    import "YModule";
+    return (YModule::af () == 6);
+}
+----------------------------------------------------------------------
+[YCP] tests/Module/YModule.ycp:9 I am a constructor

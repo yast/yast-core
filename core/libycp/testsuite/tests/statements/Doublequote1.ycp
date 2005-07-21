@@ -1,0 +1,41 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_doubleqoute.ycp
+#
+#  Purpose:     test cases for YCP doubleqoute
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// The double backquotes `` are called "deep quote". They are used
+// to prevent the enclosed expression from evaluation.
+
+( ``{ return 3 + 4; } )
+( { return 7; } )
+
+( {
+	// this code tests block assigning (not in variable definition)
+	block <integer> foo1 = nil;
+	
+	foo1 = ``{ return 42; };
+	
+	return eval(foo1);
+  })
+  
+( {
+	// this code tests block assigning (not in variable definition)
+	// also, the code must not be evaluated
+	block <integer> foo1 = nil;
+	
+	integer foo2 = 55;
+	
+	foo1 = ``{ return foo2+1; };
+	
+	foo2 = 41;
+	
+	return eval(foo1);
+  })

@@ -1,0 +1,30 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = "foo";
+    return /* any -> string */foo;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // any foo
+    // filename: "tests/types/cast.ycp"
+    any foo = "foo";
+    return /* any -> integer */foo;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/types/cast.ycp:12 Can't convert value '"foo"' to type 'integer'
+Parsed:
+----------------------------------------------------------------------
+{
+    // string foo
+    // filename: "tests/types/cast.ycp"
+    string foo = "foo";
+    return foo;
+}
+----------------------------------------------------------------------
+[Parser] tests/types/cast.ycp:22 Can't cast from 'string' to 'integer'.
+runycp: parser error

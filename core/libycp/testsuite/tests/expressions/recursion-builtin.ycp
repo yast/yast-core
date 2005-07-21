@@ -1,0 +1,17 @@
+# testcase for 38596
+
+{ 
+    list test(list<map> tree) { 
+        // Workaround commented 
+        // map abak = nil; 
+        list<string> b =maplist(map a, tree, ``{ 
+                // abak = a; 
+                test(a["items"]:[]); 
+                // a = abak; 
+                return (a["name"]:""); 
+                }); 
+        return b; 
+    } 
+ 
+    return test([$["name":"aaa", "items":[ $["name":"bbb"] ]  ]]); 
+}

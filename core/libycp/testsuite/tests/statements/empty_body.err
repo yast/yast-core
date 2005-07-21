@@ -1,0 +1,13 @@
+[Parser] tests/statements/empty_body.ycp:5 Warning: Empty function definition
+Parsed:
+----------------------------------------------------------------------
+{
+    // void func (string a, string b, string c)
+    // filename: "tests/statements/empty_body.ycp"
+    void func (string a, string b, string c)
+{
+    return;
+}
+    func ("Hello", "cruel", "World");
+}
+----------------------------------------------------------------------

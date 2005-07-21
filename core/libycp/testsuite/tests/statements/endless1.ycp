@@ -1,0 +1,28 @@
+{
+  void f (integer & i)
+  {
+    if (i < 10)
+    {
+      while (true)
+      {
+	i = i + 1;
+	if (i > 10)
+	    return;
+      }
+    }
+    else
+    {
+      do {
+	i = i - 1;
+	if (i < 2)
+	    break;
+      } while (i > 0);
+      return;
+    }
+  }
+  integer i = 1;
+  f (i);
+  integer j = 10;
+  f (j);
+  return [i, j];
+}

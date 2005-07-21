@@ -1,0 +1,4 @@
+[YCP] tests/write4.ycp:2 alias.al1 true
+[YCP] tests/write4.ycp:3 alias.al1.comment true
+[YCP] tests/write4.ycp:4 options.op1 true
+[YCP] tests/write4.ycp:5 keep true

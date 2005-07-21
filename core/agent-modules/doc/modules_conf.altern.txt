@@ -1,0 +1,197 @@
+Interface specification for modules-agent
+=========================================
+
+0. Introduction
+
+This document is an alternative to the previous document about the
+modules.conf agent made by Michal Svec <msvec@suse.cz> and Dan Vesely
+<dan@suse.cz>. This one is written by Jan Holesovsky <kendy@suse.cz>.
+
+1. What is modules-agent
+
+This is an agent for reading and writing /etc/modules.conf.
+
+2. Syntax of /etc/modules
+
+It is very complex but usually only few of its possibilities is used.
+
+The configuration file consists of a set of lines.
+All empty lines, and all text on a line after a '#', will be ignored.
+Lines may be continued by ending the line with a '\'.
+
+The  remaining lines should all conform to one of the following formats:
+
+2.1 Lines defining the behaviour of modprobe (and depmod)
+
+'module' (resp. 'alias_name') represents name of the module (resp. symbolic
+name) on what the command (the first word if it is not 'add') will be applied.
+
+'module' (or 'alias_name') should be used as a key.
+
+    [add] above module module_list
+    alias alias_name real_name
+    [add] below module module_list
+    [add] options module MODULE_SPECIFIC_OPTIONS
+    install module command ...
+    [add] probe name module_list
+    [add] probeall name module_list
+    post-install module command ...
+    post-remove module command ...
+    pre-install module command ...
+    pre-remove module command ...
+    remove module command ...
+
+2.2 Conditions
+
+They can change what commands will be used.
+
+    else
+    elseif EXPRESSION
+    endif
+    if EXPRESSION
+
+2.3 Paths
+
+    keep
+    path=A_PATH
+    path[TAG]=A_PATH
+
+2.4 Other
+
+    define VARIABLE WORD
+    depfile=A_PATH
+    include PATH_TO_CONFIG_FILE
+    insmod_opt=GENERIC_OPTIONS_TO_INSMOD
+
+3. Problems
+
+When conditions (2.2) or special commands (2.3, 2.4) are used in the
+/etc/modules.conf, problems begin. When we do not want to break the file, we
+have two choices:
+   - do not change the order in the /etc/modules.conf file.
+     But then the representation is not much useful.
+   - remake it to an order-independent form.
+     There are limitations with this solution but the work with the
+     representation is very simple.
+
+This document describes the second way.
+
+3.1 Solution of the problems with conditions
+
+Each conditional command (2.2) must be remembered and stored together with the
+command on which it applies. Example:
+
+Original file:
+if cond1
+  if cond2
+    alias kkk lll
+    alias ooo ppp
+  elseif cond3
+    alias mmm nnn
+  endif
+endif
+
+In the memory:
+# condition for kkk
+if cond1
+  if cond2
+    alias kkk lll
+  endif
+endif
+
+# condition for ooo
+if cond1
+  if cond2
+    alias ooo ppp
+  endif
+endif
+
+# condition for mmm
+if cond1
+  if cond2
+  elseif cond3
+    alias mmm nnn
+  endif
+endif
+
+Of course, in the time of write the commands with the same conditions must be
+stored together or the file will grow with each save.
+
+3.2 Solution of the problems with paths (2.3)
+
+Each path must be remembered. They should be moved to the beginning of the
+file and a warning should go into y2log. It is not ideal but even the manpage
+to modules.conf says
+             'Note:  please avoid having any path directives con­
+              ditionally processed.  Since  modprobe  has  enough
+              built-in  "smarts",  a conditionally processed path
+              directive will  gain  you  nothing  but  confusion.
+              Really.'
+
+3.3 Solution of problems with other commands (2.4)
+
+'define' must be remembered the same way as (and together with) paths because
+the variables can be used in the conditions. There must be added some code to
+restore the original value of the variable. The agent must recognize such
+added code or the file would grow with each save.
+
+Example:                        New:
+if cond1                        define YAST2TMP_KKK `echo $KKK`
+  define KKK kkk                if cond1
+  if cond_depending_on_KKK        define KKK kkk
+    command1                      if cond_depending_on_KKK
+  endif                             command1
+endif                             endif
+                                endif
+				define KKK `echo YAST2TMP_KKK`
+
+'depfile' will go (with a warning) to the beginning of the file. The
+conditions must be written as well.
+
+'include' will be replaced with the content of the included file.
+
+'insmod_opt' the same as 'depfile'
+
+4. YCP representation
+
+modules.conf will be read/written under SRC path .etc.modules_conf. The whole
+file will be returned as its YCP representation:
+
+$[ module_name|alias_name :                 // The name is the key
+   $[ "alias"|"options"|"probe"|... :       // The command
+      [ $[ "comment" : "# The comment",
+           "prereq"  : [ "if cond1",        // Prerequisites
+	                 "define KKK kkk" ],
+	   "value"   : val,                 // Usually a string;
+	                                    //   a map for options
+	   "add"     : true|false ],        // It has 'add' prefix
+	$[ "value" : .......   ]            // When later in the file appeared
+      ],                                    //   the same 'command' 'module'
+      "command2" : ..... ],
+   module : ......,
+   integer :                                // The special commands must be
+   $[ "path"|"depfile" : ... ]              //   remembered somewhere!
+]
+
+Note: Records indexed with integers are the commands which do not apply on a
+particular module. They will be written in the beginning of the file.
+
+The most common operations (new alias, new options to a module) can be
+performed in quite easy way:
+
+map modules = SRC(`Read(.etc.modules_conf));
+
+// Alias:
+modules = add(modules, "eth0",
+  $[ "comment" : "# Alias set by YaST2\n",
+     "alias" : [ $[ "value" : module_name ]]]);
+
+// Set options:
+modules = add(modules, "parport_pc",
+  $[ "options" : [ $[ "value" : $[ "io" : io_string, "irq" : irq_string ]]]]);
+
+SCR(`Write(.etc.modules, modules));
+
+5. Implementation details
+
+The agent should be implemented in this order: 2.1, 2.3, 2.2, 2.4

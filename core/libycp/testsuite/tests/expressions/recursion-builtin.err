@@ -1,0 +1,18 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list test (list <map> tree)
+    // filename: "tests/expressions/recursion-builtin.ycp"
+    list test (list <map> tree)
+{
+    // list <string> b
+    list <string> b = maplist (map a, tree, {
+    test (/* any -> list */a["items"]:[]);
+    return /* any -> string */a["name"]:"";
+}
+);
+    return b;
+}
+    return test ([$["items":[$["name":"bbb"]], "name":"aaa"]]);
+}
+----------------------------------------------------------------------

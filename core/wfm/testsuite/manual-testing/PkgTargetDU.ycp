@@ -1,0 +1,20 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgTargetDU.ycp
+#
+#  Purpose:     test "Pkg::TargetInitDU and Pkg::TargetGetDU" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    Pkg::IsAvailable ("aaa_base");	// triggers initialization
+    Pkg::PkgInstall ("gdm2");
+    Pkg::PkgSolve();
+    Pkg::TargetInitDU (["/", "/boot"]);
+    return Pkg::TargetGetDU();
+}

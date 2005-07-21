@@ -1,0 +1,23 @@
+# author: visnov@suse.cz
+#
+# there is just too many possibilities, this checks only some of them
+
+{
+    any foo = "foo";
+    return (string)foo;	// OK, runtime conversion type detection works
+}
+
+{
+    any foo = "foo";
+    return (integer)foo; // fail in runtime
+}
+
+{
+    string foo = "foo";
+    return (string)foo; // OK, compile type conversion works
+}
+
+{
+    string foo = "foo";
+    return (integer)foo; // fail at compile time
+}

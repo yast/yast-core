@@ -1,0 +1,4 @@
+{
+    string tmp = tostring (SCR::Read (.tmpdir));
+    return (substring (tmp, 0, 11));
+}

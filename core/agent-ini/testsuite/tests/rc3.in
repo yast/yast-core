@@ -1,0 +1,22 @@
+#
+# This language is used in YaST. This is also the default
+# for local users, if RC_LANG and RC_LC_ALL are not set. Root
+# uses this language if ROOT_USES_LANG is set to "YES"
+#
+DEFAULT_LANGUAGE="english"
+#
+# Some people don't want SuSEconfig to modify the system. With this
+# entry you can disable SuSEconfig completely. 
+# Please don't contact our support if you have trouble configuring your 
+# system after having disabled SuSEconfig.  (yes/no)
+#
+ENABLE_SUSECONFIG="yes"
+#
+# ...
+SEPARATED="abc abc abc
+cba cba cba"
+SEP2="huhu \
+      hoho \
+      hehe "
+ALSO=' apostrophes are allowed '
+

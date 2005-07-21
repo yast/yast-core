@@ -1,0 +1,94 @@
+Example:
+
+SCR::Read(.probe.sound)
+
+gives [$[... "unique_key":"WL76.JYL4K7uOcf9" ... ]]
+
+You can write the string with .probe.status.info
+
+SCR::Write(.probe.status.info, "WL76.JYL4K7uOcf9", "Hello, world!")
+
+and read it with
+
+SCR::Read(.probe.status.info, "WL76.JYL4K7uOcf9") -> "Hello, world!"
+
+
+
+
+
+In the meantime, I've enhance the probing agent to read and write all
+stati (that is: 'configured', 'available', 'info', and 'needed').
+
+All except 'info' have `yes, `no, `unknown as possible values
+'info' either has `unknown or a string (with free contents)
+
+SCR::Read(.probe.status, <unique_key>)
+now returns a map, e.g. $["available":`yes, "configured":`new, "info":`unknown, "needed":`yes]
+
+The .probe.status path for Write must have '.configured', '.available', or
+'.needed' as the last path element:
+
+SCR::Write(.probe.status.needed, "WL76.JYL4K7uOcf9", `yes)
+
+
+Saving the binding will probably added also, afaik Steffen is currently
+working on extending libhd in this regard.
+
+
+
+
+
+> The latest probing agent now has the ability to do a "pseudo" probing by
+> accessing the status database of libhd instead of the real hardware.
+> 
+> This is done by adding ".manual" to the probing path, i.e.
+> 
+> SCR::Read(.probe.cdrom)
+> 
+> does a real hardware probing, but
+> 
+> SCR::Read(.probe.cdrom.manual)
+> 
+> only reports devices which have an entry in the libhd database.
+> 
+> This applies to the following .probe paths:
+> cdrom, floppy, disk, netif, display, mouse, keyboard, sound, isdn, modem,
+> storage, netdev, monitor, printer, tv, scanner, system, camera, chipcard, and
+> usb.
+> 
+
+Some additional remarks:
+The data mentioned above do have a history which means they are not
+available at any time. The situation is as follows:
+
+Installation:
+During installation these data are created by the first "real" probing.
+Only afterwards the database is filled and can be accessed via ...manual.
+Therefore users of those data should keep track of this for themselves
+during installation.
+
+Running system:
+In the running system the data have been probed during the boot process.
+
+
+Therefore within the YCP modules one could do s.th.like
+
+if ( Mode::normal )     // running system
+{
+   data = SCR::Read(.probe....manual);          // DB lookup
+}
+else    // assume initial mode here (may be more complicated)
+{
+   if ( already_probed )
+   {
+      data = SCR::Read(.probe....manual);       // DB lookup
+   }
+   else
+   {
+      data = SCR::Read(.probe....);             // real probing
+      already_probed = true;
+   }
+}
+
+This is especially helpful if a HW-device does not stand multiple
+probing or must not be probed under certain cicumstances.

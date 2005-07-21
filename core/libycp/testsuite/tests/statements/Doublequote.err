@@ -1,0 +1,6 @@
+Parsed:
+----------------------------------------------------------------------
+{ return (1 + 2); }
+----------------------------------------------------------------------
+[Parser] tests/statements/Doublequote.ycp:18 Undeclared identifier 'name'
+runycp: parser error

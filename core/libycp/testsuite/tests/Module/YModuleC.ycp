@@ -1,0 +1,12 @@
+// a simple module with a constructor
+{
+    module "YModuleC";
+
+    global void YModuleC ()
+    {
+    	// I am bored of Hello, world...
+        // Tschechisch 101 ;)
+	// "Servus", wortl. "zum Erfolg"
+	y2milestone ("Nazdar!");
+    }
+}

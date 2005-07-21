@@ -1,0 +1,47 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Scope1.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for the scope of variables
+
+
+// the variable is declared twice
+// the loop is defined, because there is a declaration within that block
+{
+
+   integer DoubleUsedVariable = 0;
+   integer Loop = 0;
+
+   while (Loop < 5)
+   {
+       integer DoubleUsedVariable = 5;
+
+       DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+       Loop = Loop + 1;
+   }
+
+   DoubleUsedVariable = DoubleUsedVariable - 2;
+
+   while (Loop < 5)
+   {
+       integer DoubleUsedVariable = 5;
+
+       DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+       Loop = Loop + 1;
+   }
+
+   DoubleUsedVariable = DoubleUsedVariable * DoubleUsedVariable;
+
+   return DoubleUsedVariable;
+}
+

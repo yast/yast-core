@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="functions">
+<title>Functions</title>
+ <section><title>usage</title>
+ <para>
+ </para>
+ </section>
+ <section><title>define</title>
+ <para>
+ </para>
+ </section>
+ <section><title>global (scope)</title>
+ <para>
+ </para>
+ </section>
+
+ <section><title>Modifiers</title>
+
+  <section><title>const</title>
+  <para>
+  Declares a variable as 'read-only' so it can't be modified by assignment.
+  </para>
+  <para>
+  not implemented yet
+  </para>
+  <screen>
+  const integer the_answer = 42;	// clearly unchangable value ;-)
+  </screen>
+  <para>A constant map or a map of constants
+  <screen>
+  const map integer m1 = [ 1, 2, 3, 4 ];
+  map const integer m2 = [ 5, 6, 7, 8 ];
+  </screen>
+  <literal>const</literal>, being a prefix modifier, binds the closest type
+  to its right. So <literal>m1</literal>, being a constant map, can't be changed.
+  <literal>m2</literal> is a map of constant integers, so map elements can be
+  added or deleted, but their value can't be changed.</para>
+  </section>
+
+ </section>
+
+ <section><title>References</title>
+ <para>
+ Useful for explicit 'call by reference' of function arguments.
+ </para>
+ <para>
+  not implemented yet
+ </para>
+ <screen>
+ void increment (integer &amp; i) { i = i + 1; }
+ </screen>
+ <para>
+ You can't mix <literal>const</literal> and <literal>&amp;</literal>.</para>
+ <para>References are not pointers but for implementing 'call by reference'
+ because a variables value should be changed from inside the function.</para>
+ <para>Since a <literal>const</literal> value can't be changed, const value references
+ are not needed.</para>
+ </section>
+
+</section>

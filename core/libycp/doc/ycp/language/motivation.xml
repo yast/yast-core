@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="motivation"><title>Motivation for YCP</title>
+
+ <section><title>A bit of history</title>
+ <para>
+ </para>
+ </section>
+
+ <section><title>Why not Perl, Python, Tcl, ... ?</title>
+ <para>
+Because we defined the language requirements first and then looked at
+a solution. The language had to be
+<itemizedlist>
+<listitem><para>small (it must be used during installation)</para></listitem>
+<listitem><para>easy to learn and understand (this ruled out 'prolog' ;-))</para></listitem>
+<listitem><para>fit to size (include only whats really needed)</para></listitem>
+<listitem><para>easily extendable (need a new feature ? No problem !)</para></listitem>
+<listitem><para>controllable by us (We must understand the source and fix bugs
+  _immediately_ instead of asking some maintainers half around the world)</para></listitem>
+<listitem><para>implemented as an interpreter (no edit-compile-link-test cycles)</para></listitem>
+<listitem><para>usable as a prototype language (edit-test cycles !)</para></listitem>
+<listitem><para>usable in a distributed/networked environment (-> ASCII !)</para></listitem>
+<listitem><para>be politically clean (and there were enough 'political' pro and cons
+  about _any_ existing language <computeroutput>:-)</computeroutput>)</para></listitem>
+<listitem><para>coverable by the YaST license</para></listitem>
+</itemizedlist>
+The initial language design and implementation was done in about 2 weeks.
+  </para>
+  </section>
+
+  <section><title>The YaST environment</title>
+ <para>
+ The evolution of YCP is tightly coupled with the requirements of YaST, esp. in interfacing
+ with the system layer and the user interface.
+  </para>
+  </section>
+</section>
+
+

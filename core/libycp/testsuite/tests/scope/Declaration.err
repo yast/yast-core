@@ -1,0 +1,36 @@
+[Parser] tests/scope/Declaration.ycp:5 Warning: 'select ()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // map hallo (integer x, list st)
+    // filename: "tests/scope/Declaration.ycp"
+    map hallo (integer x, list st)
+{
+    y2milestone ("%1 %2", x, st);
+    return /* any -> map */st[1]:$[];
+}
+    return (hallo (17, [true, $[1:45], #[102A]]) == $[1:45]);
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:4 17 [true, $[1:45], #[102A]]
+[Parser] tests/scope/Declaration.ycp:14 Warning: 'select ()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // map hallo (integer x, list st)
+    // filename: "tests/scope/Declaration.ycp"
+    map hallo (integer x, list st)
+{
+    y2milestone ("%1 %2", x, st);
+    return /* any -> map */st[1]:$[];
+}
+    return (hallo (19, [true, $[1:2], #[DEADBEAF]]) == $[1:2]);
+}
+----------------------------------------------------------------------
+[YCP] tests/scope/Declaration.ycp:13 19 [true, $[1:2], #[DEADBEAF]]
+[Parser] tests/scope/Declaration.ycp:23 Warning: 'select ()' is deprecated
+[Parser] tests/scope/Declaration.ycp:25 Parameters don't match any declaration:
+[Parser] tests/scope/Declaration.ycp:25 hallo (120)
+[Parser] tests/scope/Declaration.ycp:25 Candidates are:
+[Parser] tests/scope/Declaration.ycp:25 map hallo (integer x, list st)
+runycp: parser error

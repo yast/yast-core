@@ -1,0 +1,21 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/While.ycp"
+    while (true)
+    return true;
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/statements/While.ycp"
+    while (false)
+    {
+    break;
+}
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/While.ycp:14 'while' expression not boolean
+[Parser] tests/statements/While.ycp:14 Expected 'boolean', seen 'integer'.
+runycp: parser error

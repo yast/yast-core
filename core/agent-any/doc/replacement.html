@@ -1,0 +1,60 @@
+<pre>
+$Id$
+
+The any-agent is poorly documented, so with the upcoming enhancements to the
+ini-agent let's examine whether it could be replaced by it or something else.
+
+
+Used in:
+  boot_vmlinuz_version.scr		1-liner, run, arg
+  dasddev.scr				(s390)
+  etc_cryptotab.scr			tabular
+  etc_defaultdomain.scr			1-liner
+  etc_fstab.scr				tabular
+  etc_mtab.scr				tabular
+  etc_passwd.scr			tabular with colons and numbers
+  etc_shells.scr			list of lines
+  insserv_conf.scr			map of lists
+  parted_check.scr			unused?
+  parted_print.scr			map of maps, optional
+  pdisk.scr				unused?
+  proc_cmdline.scr			1-liner, list
+  proc_filesystems.scr			map, key after value
+  proc_meminfo.scr			map with maps
+  proc_modules.scr			map of maps
+  proc_mounts.scr			tabular
+  proc_parport_devices.scr		list of lines
+  proc_partitions.scr			tabular with numbers
+  proc_serial_devices.scr		list of lines
+  proc_swaps.scr			tabular
+  proc_usblp_devices.scr		list of lines
+  routes.scr				tabular
+  run_df.scr				tabular, run
+  run_get_suseconfig_modules.scr	list of lines, run
+  run_ifconfig.scr			HAIRY list of maps of ...
+  run_swapon_s.scr			map
+  run_ypwhich_m.scr			tabular, run
+  syslinux_cfg.scr			unused? map
+  tmp_alice_network.scr			map of maps, umm
+  tmp_alice_part.scr			list of maps, umm
+  tmp_alice_routes.scr			tabular
+  var_yp_securenets.scr			tabular, tries to preserve comments
+  var_yp_ypservers.scr			1-liner, list
+
+* Features
+
+** Discards comments :(
+
+** Not only reads/writes files, can also read program output.
+
+** Typical one-liner: get a single line, not including the \n
+boot_vmlinuz_version.scr:
+``(String("^\n"))
+etc_defaultdomain.scr:
+``(Or(String("^\n"), ""))       // just a string, may be empty
+** Typical use: tabular files, like /etc/fstab
+
+** Tuple (..., Continue ("\n"))
+
+** see also yast2-hacker 29 May 2002, Anas
+</pre>

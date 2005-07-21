@@ -1,0 +1,19 @@
+#
+# ---------------------------------------------------------
+#
+#  Filename:    y-identifier1.ycp
+#
+#  Purpose:     test identifier global/local access
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+    import "Identifier1";
+
+    return Identifier1::f();
+}

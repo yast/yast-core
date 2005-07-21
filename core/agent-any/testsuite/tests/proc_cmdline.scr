@@ -1,0 +1,13 @@
+.
+
+`anyagent(
+    `Description (
+      (`File ("tests/proc_cmdline.in")),	// real file name
+      "#\n",			// Comment
+      true,			// read-only
+      (`List (
+	`String ("^ \n"),
+	" "
+      ))
+    )
+)

@@ -1,0 +1,267 @@
+<section id="bytecode">
+<title>Bytecode</title>
+<para>
+Thoughts about YCP bytecode format
+<orderedlist>
+<listitem><para>
+General
+  <itemizedlist>
+<listitem><para>
+  - every object should get Save and Load functions
+    to write itself to a stream and re-create itself
+    by reading from the stream
+</para></listitem>
+<listitem><para>
+  - the stream should be structured like the program
+    (nested bytecode)
+</para></listitem>
+<listitem><para>
+  - bytecode should be portable (endianess !)
+</para></listitem>
+  </itemizedlist>
+</para></listitem>
+
+<listitem><para>
+Values
+  <itemizedlist>
+  <listitem><para>
+Void</para><para>
+  - type
+</para></listitem>
+<listitem><para>
+  Bool</para><para>
+  - type, char
+</para></listitem>
+<listitem><para>
+  Int</para><para>
+  - type, 64bit in network byte order
+</para></listitem>
+<listitem><para>
+  Float</para><para>
+  - type, IEEE compatible value
+</para></listitem>
+<listitem><para>
+  String</para><para>
+  - type, 64bit len, set of chars
+</para></listitem>
+<listitem><para>
+  Byteblock</para><para>
+  - type, len, set of bytes
+</para></listitem>
+<listitem><para>
+  Path</para><para>
+  - type, component count, set of <parameter>count</parameter> string components
+</para></listitem>
+<listitem><para>
+  Symbol</para><para>
+  - type, len, set of bytes
+</para></listitem>
+<listitem><para>
+  Locale
+</para></listitem>
+<listitem><para>
+  List
+</para></listitem>
+<listitem><para>
+  Map
+</para></listitem>
+  </itemizedlist>
+</para></listitem>
+
+<listitem><para>
+Types
+  unneeded, type information is stripped
+</para></listitem>
+
+<listitem><para>
+Expressions
+  <itemizedlist>
+<listitem><para>
+  Propagate</para><para>
+  - unneeded
+</para></listitem>
+<listitem><para>
+  Unary</para><para>
+  - op, expression
+</para></listitem>
+<listitem><para>
+  Binary</para><para>
+  - expression, op, expression
+</para></listitem>
+<listitem><para>
+  Triple</para><para>
+  - expression, expression, expression
+</para></listitem>
+<listitem><para>
+  Compare</para><para>
+  - expression, op, expression
+</para></listitem>
+<listitem><para>
+  Prefix</para><para>
+  - op, expression
+</para></listitem>
+<listitem><para>
+  Locale</para><para>
+  - textdomain, string
+</para></listitem>
+<listitem><para>
+  List</para><para>
+  - expression, expression, ...
+</para></listitem>
+<listitem><para>
+  Map</para><para>
+  - (expression, expression), (expression, expression), ...
+</para></listitem>
+<listitem><para>
+  Term</para><para>
+  - unneeded (either constant or function ref)
+</para></listitem>
+<listitem><para>
+  Lookup</para><para>
+  - builtin
+</para></listitem>
+<listitem><para>
+  Is</para><para>
+  - builtin
+</para></listitem>
+<listitem><para>
+  Bracket</para><para>
+  - builtin
+</para></listitem>
+<listitem><para>
+  Variable</para><para>
+  - block + offset
+</para></listitem>
+<listitem><para>
+  Block</para><para>
+  - code
+</para></listitem>
+  </itemizedlist>
+</para></listitem>
+
+<listitem><para>
+Statements
+  <itemizedlist>
+<listitem><para>
+  Type</para><para>
+  - unneeded
+</para></listitem>
+<listitem><para>
+  Variable Def</para><para>
+   init variable with default value
+</para></listitem>
+<listitem><para>
+  Function Def</para><para>
+   - unneeded, part of scope, see block
+</para></listitem>
+<listitem><para>
+  Assign</para><para>
+   - variabe, expression
+</para></listitem>
+<listitem><para>
+  If
+</para></listitem>
+<listitem><para>
+  While
+</para></listitem>
+<listitem><para>
+  Do
+</para></listitem>
+<listitem><para>
+  Repeat
+</para></listitem>
+<listitem><para>
+  Expression
+</para></listitem>
+<listitem><para>
+  Return
+</para></listitem>
+<listitem><para>
+  Break
+</para></listitem>
+<listitem><para>
+  Continue
+</para></listitem>
+<listitem><para>
+  Undefine
+  - unneeded
+</para></listitem>
+<listitem><para>
+  Foreach
+</para></listitem>
+<listitem><para>
+  Textdomain</para><para>
+  - unneeded
+</para></listitem>
+<listitem><para>
+  Import</para><para>
+  - unneeded
+</para></listitem>
+<listitem><para>
+  Bracket
+</para></listitem>
+  </itemizedlist>
+</para></listitem>
+
+<listitem><para>
+Blocks
+</para><para>
+  Blocks are nested
+</para><para>
+  Blocks 'own' variables (SymbolEntry array)
+</para><para>
+  Variable references are based on block + array offset
+</para><para>
+
+  -> must save nesting level and re-construct SymbolEntry array on read
+</para><para>
+
+  This works for local entries only since they're 'saturated' (only intra-block
+  references)
+</para><para>
+
+  For global variables (only useful inside modules !), a complete SymbolTable must
+  be reconstructed since the block being read might be needed by the parser.
+  -> keep global variables in SymbolTable
+</para><para>
+
+  The nesting level approach works ok for local blocks but fails for global
+  ones (modules). Instead of the nesting level, a 'module index' should be
+  used together with a list of imported modules.
+</para><para>
+  Maybe this can be replaced by an 'offset' in the block stack kept in Bytecode.
+  The block-stack approach fails during import, since the entry references
+  inside (!) the module are relative to the module (block id 0 refers to the
+  modules block). So during module load (and variable de-referencing) a
+  proper offset (block_id 0 refers to current stack id 42) could be sufficient.
+</para></listitem>
+
+<listitem><para>
+Includes
+</para></listitem>
+
+<listitem><para>
+Files
+  The notion of a "compilation unit" might be useful.
+</para></listitem>
+</orderedlist>
+</para>
+</section>
+
+<section><title>TODO</title>
+<para>
+<itemizedlist>
+<listitem><para>
+- add module / namespace identifier to builtin declarations
+</para></listitem>
+<listitem><para>
+- add type information to identifier (ensure that reference to a builtin function
+    from a bytecode refers to the same function)
+  i.e.  <varname>module</varname>:<varname>builtin_function</varname>:<varname>type</varname>
+</para></listitem>
+</itemizedlist>
+
+</para>
+
+</section>
+

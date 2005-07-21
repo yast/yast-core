@@ -1,0 +1,74 @@
+Some notes about the resolver agent
+
+General
+-------
+
+The target agent is the SCR interface to /etc/resolv.conf,
+the resolver (name server) configuration file.
+
+Since it has multi-line configuration options (e.g. 'nameserver'),
+it can't be handled by the current AnyAgent.
+
+
+Paths
+-----
+The Target agent is mounted to the '.resolver' path of the SCR
+namespace. See the RESOLVER(5) manual page for details about the
+semantics of the resolver configuration file.
+
+Comment tags have been added to the /etc/resolv.conf file (see
+http://w3.suse.de/~poeml/resolv.conf-modification-howto.txt) and thus
+resolver agent understand these tags and provide interface to them.
+All of the infos are strings (and may contains '\n' character to be for
+than one line, but then all new lines MUST start with '#').
+
+Path for enforcing/disabling of writing info headers is now also
+present. The path is '.resolver.write_header' and is only for
+writing. The boolean value is used to force/disable writing of info headers.
+
+Implemented paths are
+
+Read(.resolver.search) -> list of domain names
+Read(.resolver.nameserver) -> list of nameserver IP addresses
+Read(.resolver.domain) -> local domain name
+Read(.resolver.sortlist) -> list of sort options
+Read(.resolver.options) -> list of resolver options
+
+Info paths
+
+Read(.resolver.modified) -> string
+Read(.resolver.backup)   -> string
+Read(.resolver.process)   -> string
+Read(.resolver.process_id)   -> string
+Read(.resolver.script)   -> string
+Read(.resolver.info)   -> string
+
+
+The write calls
+
+Write(.resolver.search, ["domain1", "domain2"])
+Write(.resolver.nameserver, ["IP1", "IP2", "IP3"])
+Write(.resolver.domain, "domain.name")
+Write(.resolver.sortlist, ["sort1", "sort2", "sort3"])
+Write(.resolver.options, ["opt1", "opt2", "opt3"])
+
+
+To write info paths
+
+Write(.resolver.modified, <string>)
+Write(.resolver.backup, <string>)
+Write(.resolver.process, <string>)
+Write(.resolver.process_id, <string>)
+Write(.resolver.script, <string>)
+Write(.resolver.info, <string>)
+
+Write(.resolver.write_header, <boolean>)
+
+just change the in-memory copy of /etc/resolv.conf
+
+Use
+
+Write (.resolv, <any value>)
+
+to 'flush' the data to /etc/resolv.conf. This is also done
+when un-mounting the agent.

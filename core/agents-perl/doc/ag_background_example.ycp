@@ -1,0 +1,71 @@
+/**
+ *  File:
+ *    ag_background_example.ycp
+ *
+ *  Authors:
+ *    Ladislav Slezak <lslezak@suse.cz>
+ *
+ *  Description:
+ *    Example for background agent
+ *
+ *  $Id$
+ *
+ *  This is example program for background agent. Find is used
+ *  to simulate script which searches something on the disk.
+ *
+ */
+
+{
+
+UI::OpenDialog(
+    `VBox(
+	`VSpacing(0.5),
+	`HSpacing( `opt(`hstretch), 80),
+	`HBox(
+	    `Label("Searching in directory: "),
+	    `Label(`id(`dir), `opt(`hstretch), "")
+	),
+	`VSpacing(0.5),
+	`PushButton(`id(`abort), "Abort"),
+	`VSpacing(0.5)
+    )
+);
+
+// start subprocess
+SCR::Execute(.background.run_output, "/usr/bin/find /usr -type d");
+
+list script_out = [];
+symbol ret = nil;
+
+while(SCR::Read(.background.output_open) || (SCR::Read(.background.newlines) > 0))
+{
+    script_out = SCR::Read(.background.newout);
+
+    // parse output in script_out and update progress in dialog accordingly
+    maplist(`d, script_out, ``{UI::ChangeWidget(`id(`dir), `Value, d);});
+
+    while (SCR::Read(.background.newlines) == 0 && SCR::Read(.background.output_open))
+    {
+        sleep(100);	// small wait
+
+        ret = UI::PollInput();
+
+	// check if abort button was pressed
+	if (ret == `abort)
+	{
+	    SCR::Execute(.background.kill, nil);	// kill subprocess
+	    break;
+	}
+    }
+
+    if (ret == `abort)
+    {
+	break;
+    }
+
+}
+
+UI::CloseDialog();
+
+}
+

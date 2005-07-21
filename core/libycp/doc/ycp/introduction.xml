@@ -1,0 +1,55 @@
+<!-- Maintainer: kkaempf@suse.de -->
+<!-- $Id$ -->
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<section id="about-yast">
+<title>About YaST</title>
+<para>
+YaST (Yet another Setup Tool) is an integrated management application
+for installation, upgrade, configuration and administration of SuSE Linux
+systems.
+</para>
+<para>
+Its modular design with separated layers for system access, control, and
+user interface gives it great flexibility and usability across a wide
+range of applications. Its layers allow to abstract away from system or
+architecture details and make it possible to use YaST in graphical and
+text-mode environments across a broad range of architectures.
+</para>
+<para>
+Key to the separation of the above mentioned layers is a common data
+format of the interfaces. It allows to use different implementation languages
+for different parts of YaST, like C, C++, Perl, Shell, Python, and more. They
+all communicate via the YaST Control Program (YCP) syntax for data exchange.
+</para>
+<para>
+Besides data, YCP also has a rich set of control statements which allow to
+write programs which directly interact with the system layer and the user
+interface. This makes YCP ideal for implementing the different functions
+of the control layer, the YaST modules.
+</para>
+</section>
+
+
+<section id="ycp-overview"><title>YCP overview</title>
+<para>
+YCP is a <literal>C</literal> like, strictly typed, interpreted language uniquely designed
+for the requirements of YaST.
+</para>
+<note><para>Since YaST didn't carry a GPL like license, using GPL code for
+the language was not an option.</para></note>
+
+<para>
+YCP has a rich set of data types, ranging from basic types like integer and
+string to lists and ordered sets (called <literal>map</literal> in YCP).
+Include files and namespaces allow for code modularization and reusage
+of common functions. Bindings to external components exist, like the
+user interface, the system access layer, and the software management
+library (<literal>packagemanager</literal>).
+</para>
+</section>
+
+
+</chapter>

@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/ge.ycp"
+    return (69 >= 42);
+}

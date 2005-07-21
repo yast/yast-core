@@ -1,0 +1,2 @@
+[Parser] tests/expressions/comma.ycp:15 syntax error, unexpected ','
+runycp: parser error

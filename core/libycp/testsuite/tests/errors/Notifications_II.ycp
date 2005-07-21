@@ -1,0 +1,79 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications_II.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// Notifications are reports that are reported within the y2log.
+// Normally this log is generated in the home directory of 
+// the tester named ~/.y2log.
+// In an installed system the log is located as /var/log/y2log.
+
+// Because outputs on stderr are no longer reported on stderr,
+// because of ncurses, these reports are logged in a special 
+// logfile. The logfile are no longer test related :-(
+
+// This file contains test cases which are located in other
+// ycp test files and which are producing log reports.
+// The original test cases are going to be commented out if the are
+// small (one line) or the will be removed.
+
+
+// --------------------------------------------------------
+//   from Builtin.ycp
+// --------------------------------------------------------
+
+{
+    list  node1 = [ 1, 2 ];
+    list  node2 = [ 3, 4 ];
+    list  node3 = [ 5, 6 ];
+    list  node4 = [ node2, node3 ];
+    list  node5 = [ node1, node4 ];
+    list  node6 = [ 7 ];
+    list  node7 = [ node5, node6 ];
+
+    return( select( node7, 2, nil ) == nil );
+}
+
+{
+    list  node1 = [ 1, 2 ];
+    list  node2 = [ 3, 4 ];
+    list  node3 = [ 5, 6 ];
+    list  node4 = [ node2, node3 ];
+    list  node5 = [ node1, node4 ];
+    list  node6 = [ 7 ];
+    list  node7 = [ node5, node6 ];
+
+    return( select( node7, 200, nil ) == nil );
+}
+
+// invalid index on maps no longer occuring, because of select()
+
+// --------------------------------------------------------
+//   from Builtin_II.ycp
+// --------------------------------------------------------
+
+{ return (substring( "some text", -1 ) == ""); }
+{ return ( substring( "some text", 10 ) == "" ); }
+{ return ( substring( "", 1 ) == "" ); }
+
+
+
+// --------------------------------------------------------
+//   from Builtin_IV.ycp
+// --------------------------------------------------------
+
+// as an problem, already discussed, is that there must be a totally order:
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), 1 ) == true )
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), [ 1,2 ] ) == true )
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), [ 3,5 ] ) == true )
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), [ "End" ] ) == true )
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), 5 ) == false )
+( setcontains( toset( [ 1, [ 1,2 ], [ 3,5 ], [ "End" ] ] ), "End" ) == false )

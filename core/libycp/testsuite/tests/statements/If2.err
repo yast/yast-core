@@ -1,0 +1,2 @@
+[Parser] tests/statements/If2.ycp:3 Declaration must be inside block
+runycp: parser error

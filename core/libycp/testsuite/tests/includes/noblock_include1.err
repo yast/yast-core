@@ -1,0 +1,13 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean bla ()
+    // filename: "no_brackets.inc"
+    // include "no_brackets.inc";
+    boolean bla ()
+{
+    return true;
+}
+    // force filename: "tests/includes/noblock_include1.ycp"
+}
+----------------------------------------------------------------------

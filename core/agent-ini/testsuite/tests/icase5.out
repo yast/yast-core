@@ -1,0 +1,11 @@
+(["Sec1", "Sec2", "Sec3"])
+[Sec1]
+Val1=16
+Val2=3
+[Sec2]
+Val1=30
+Val2=16
+
+; comment
+[Sec3]
+Val1=huhu

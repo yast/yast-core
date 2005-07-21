@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i1
+    // map <integer, integer &> m
+    // filename: "tests/types/reference4.ycp"
+    integer i1 = 1;
+    map <integer, integer &> m = $[1:i1];
+}
+----------------------------------------------------------------------

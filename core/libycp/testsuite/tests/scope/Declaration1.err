@@ -1,0 +1,4 @@
+[Parser] tests/scope/Declaration1.ycp:5 Warning: 'select ()' is deprecated
+[Parser] tests/scope/Declaration1.ycp:7 Types are not comparable
+[Parser] tests/scope/Declaration1.ycp:7 Expected 'map', seen 'const integer'.
+runycp: parser error

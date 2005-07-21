@@ -1,0 +1,7 @@
+{
+  // function prototype testcase
+
+  integer f1 (integer p);
+
+  return f1(0);
+}

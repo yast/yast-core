@@ -1,0 +1,35 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Locale.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+
+# --------- YCP_Locale
+
+{ textdomain "locale"; return _("Everybody likes Linux!"); }
+
+{ textdomain "locale"; return _("%1 m$-windows system deleted", "%1 m$-windows systems deleted", 42); }
+
+{ textdomain "locale"; return _("%1 linux system installed", "%1 linux systems installed", 40+2); }
+
+{ // string -> locale propagation
+  textdomain "textdomain";
+
+  string a = _("abc");
+  locale al = a;
+  string b = _("def", "abc", 42);
+  locale bl = b;
+  return a == bl;
+}
+
+(_("Error, no textdomain defined"))
+
+

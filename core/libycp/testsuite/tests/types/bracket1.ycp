@@ -1,0 +1,25 @@
+# author: visnov@suse.cz
+#
+# check deep bracket type checking
+
+{
+    list<string> a = ["foo"];
+    
+    string res = a[0]:nil;
+    return ( res == "foo" ); 
+}
+
+{
+    list<string> a = ["foo"];
+
+    string res = a[0]:"";
+    return ( res == "foo" ); 
+}
+
+
+{
+    list<string> a = ["foo"];
+    string res = a[0]:false; // parse error, default value does not match type
+    return ( res == "foo" ); 
+}
+

@@ -1,0 +1,4 @@
+[libycp] tests/modules/y-impself.ycp:2 Module 'ImpSelf' not found
+[Interpreter] tests/modules/y-impself.ycp:2 Loading module 'ImpSelf' failed
+[Parser] tests/modules/y-impself.ycp:2 Can't load module 'ImpSelf'.
+runycp: parser error

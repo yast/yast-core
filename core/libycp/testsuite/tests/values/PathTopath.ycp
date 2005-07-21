@@ -1,0 +1,27 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PathComplex.ycp
+#
+#  Purpose:     test cases for YCP test. Test path with
+#               sections between " "
+#
+#  Creator:     pblahos@suse.cz
+#
+#  Maintainer:  pblahos@suse.cz
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for YCP_Path
+
+# ------- YCP_Path
+
+    topath (".")
+    topath (".aaa.bbb")
+    topath (".!@#%^&*(")
+    topath (".!@#%^&*(.aaa")
+    topath (".aaa\"aaa")
+    topath (".\"aaaaaa") // this is absolutely invalid and result is empty!
+    topath (".aaa.\"aaaaaa") // this is absolutely invalid and result is empty!
+

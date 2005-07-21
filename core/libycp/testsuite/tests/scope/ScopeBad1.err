@@ -1,0 +1,3 @@
+[Parser] tests/scope/ScopeBad1.ycp:27 type mismatch in assignment
+[Parser] tests/scope/ScopeBad1.ycp:27 Expected 'integer', seen 'string'.
+runycp: parser error

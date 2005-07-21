@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
+
+<!ENTITY  YCPBuiltinInteger  SYSTEM "YCPBuiltinInteger.xml">
+<!ENTITY  YCPBuiltinString  SYSTEM "YCPBuiltinString.xml">
+<!ENTITY  YCPBuiltinMap  SYSTEM "YCPBuiltinMap.xml">
+<!ENTITY  YCPBuiltinList  SYSTEM "YCPBuiltinList.xml">
+<!ENTITY  YCPBuiltinPath  SYSTEM "YCPBuiltinPath.xml">
+<!ENTITY  YCPBuiltinTerm  SYSTEM "YCPBuiltinTerm.xml">
+<!ENTITY  YCPBuiltinMisc  SYSTEM "YCPBuiltinMisc.xml">
+<!ENTITY  YCPBuiltinFloat  SYSTEM "YCPBuiltinFloat.xml">
+<!ENTITY  YCPBuiltinByteblock  SYSTEM "YCPBuiltinByteblock.xml">
+
+
+]>
+<book>
+    <bookinfo>
+        <title>YCP</title>
+        <subtitle>YCP Builtins</subtitle>
+        <authorgroup>
+            <author>
+                <firstname>YaST2</firstname>
+                <surname>Team</surname>
+                <affiliation>
+                    <orgname> SUSE Linux AG</orgname>
+                </affiliation>
+            </author>
+        </authorgroup>
+        <corpauthor>SUSE Linux AG</corpauthor>
+        <copyright>
+            <year>2004</year>
+            <holder> SUSE Linux AG</holder>
+        </copyright>
+    </bookinfo>
+
+
+    <toc>
+    </toc>
+    &YCPBuiltinInteger;
+    &YCPBuiltinString;
+    &YCPBuiltinMap;
+    &YCPBuiltinList;
+    &YCPBuiltinPath;
+    &YCPBuiltinTerm;
+    &YCPBuiltinMisc;
+    &YCPBuiltinFloat;
+    &YCPBuiltinByteblock;
+
+</book>

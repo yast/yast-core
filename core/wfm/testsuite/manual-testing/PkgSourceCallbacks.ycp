@@ -1,0 +1,38 @@
+{
+    global define integer changeMedium (integer error, integer current, integer wanted)
+    ``{
+	y2milestone ("change (err %1, now %2, want %3)", error, current, wanted);
+	return 1;
+    }
+
+    global define integer errorMedium (string message)
+    ``{
+	y2milestone ("errorMedium(%1)", message);
+    }
+
+    integer source = -1;
+    list srclist = Pkg::SourceList(true);
+    y2milestone ("%1 sources found", size(srclist));
+
+    if (size (srclist) > 0)
+    {
+	source = srclist[0]:-1;
+    }
+    else
+    {
+        source = Pkg::SourceInit("dir:///dist/7.3-i386/CD1");
+	if (source == nil)
+	    source = -1;
+    }
+    if (source < 0)
+	return 1;
+
+    Pkg::SourceSetMediaChangeCallback(source, "changeMedium");
+    Pkg::SourceSetMediaErrorCallback(source, "errorMedium");
+    string filename = Pkg::SourceProvideLocation (source, "3ddiag");
+    y2milestone ("At %1", filename);
+
+    if (!Pkg::SourceFinish (source))
+	return 2;
+    return 0;
+}

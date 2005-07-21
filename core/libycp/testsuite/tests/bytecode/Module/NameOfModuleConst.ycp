@@ -1,0 +1,13 @@
+{
+    module "NameOfModuleConst";
+
+    global const integer ag = 1;
+    integer al = 2;
+
+    global define void NameOfModule() {
+	y2milestone ("I am a constructor\n");
+	al = 5;
+    }
+
+    global define integer af() { return ag+al; }
+}

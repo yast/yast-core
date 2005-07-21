@@ -1,0 +1,10 @@
+{
+  textdomain "test";
+
+  string s = _("This is"
+		" a multi-"
+		"line string");
+
+  return (s == "This is a multi-line string");
+}
+

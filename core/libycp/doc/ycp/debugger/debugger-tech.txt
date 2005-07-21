@@ -1,0 +1,91 @@
+
+
+REQUIREMENTS:
+
+- Debug a remote machine, esp. during installation.
+
+- Don't slow down yast2 (when not debugging).
+
+- Don't make yast2 (significant) bigger.
+
+- Secure.
+
+
+
+CONCLUSIONS:
+
+- remote machine -> communication over port
+
+- communication over port -> unsecure and need of network
+
+- there are many interpreters running, but we have only one port ->
+  communication must be able to debug several interpreters
+
+- many interpreters -> interpreters should have a name for convenience and
+  must have a unique number
+
+- security risk of port -> only enable debugging when environment variable is
+  set -> started without env. var. -> no debugging in case something goes
+  wrong unexpectedly
+
+- environment variable -> not set, no speed loss
+
+- environment variable Y2DEBUGGER
+    0: don't debug
+    1: debug
+    2: debug and wait for debugger to connect
+
+
+
+LAYOUT OF COMMUNICATION ON SOCKET:
+
+- Easy.
+
+- Debugging must be possible even in the inst-sys, without network and
+  without X11 -> telnet must be usable as a simple frontend.
+
+
+
+PROBLEMS:
+
+- When you enter a command for the debugger, it won't be handled while the
+  interpreter isn't working (e.g. waiting for user input).
+
+- The interpreters might run in different threads. Does this lead to problems?
+
+- The ui interpreter doesn't know anything about filenames (yet).
+
+
+
+IMPLEMENTATION:
+
+
+- We have one object of type YCPDebugger. It handles the debugging of all
+  YCPBasicInterpreters in that process.
+
+- The YCPDebugger is created/destroyed in the constructor/destructor of
+  YCPBasicInterpreters (depending on the environment variable Y2DEBUGGER).
+  Every interpreter calls add_interpreter/delete_interpreter in the
+  constructor/destructor since the debugger holds a list of all existing
+  interpreters.
+
+- The most important function of the debugger is debug. It is called from the
+  interpreter at two points:
+  
+  1. Right at the beginning of YCPBasicInterpreter::evaluate.
+  2. In YCPBlockRep::evaluate.
+  
+  The function debug does the following:
+  
+  - See if we should stop the interpreter. This might be due to a "interrupt"
+    command, a breakpoint or we have reached a specified level. If Y2DEBUGGER
+    is equal 2, we always stop the first time we enter debug.
+  
+  - If we have stopped, we print the current position and some additional data
+    and wait for commands from the frontend. There are mainly two different
+    kinds of commands: those that continue the execution, like "continue",
+    "step" or "single", and those that don't continue the execution, like
+    "list breakpoints", "break" or "print". The commands are handle in the
+    function handle_command.
+
+

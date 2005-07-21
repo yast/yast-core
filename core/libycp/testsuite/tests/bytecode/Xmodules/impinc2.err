@@ -1,0 +1,14 @@
+{
+    // module "ImpInc"
+    // integer ii ()
+    // filename: "tests/bytecode/Xmodules/impinc2.ycp"
+    // include "impinc.inc";
+    import "ImpInc";
+    integer ii ()
+{
+    return 5;
+}
+
+    // force filename: "tests/bytecode/Xmodules/impinc2.ycp"
+    y2error ("In main: Function returned: %1", ii ());
+}

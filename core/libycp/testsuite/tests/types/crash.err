@@ -1,0 +1,16 @@
+[Parser] tests/types/crash.ycp:6 Binary operator not defined for this type
+[Parser] tests/types/crash.ycp:6 No match for '+ : <unspec> (boolean, integer)'
+[Parser] tests/types/crash.ycp:6 Please fix parameter types to match one of:
+[Parser] tests/types/crash.ycp:6 '+ : integer (integer, integer)'
+[Parser] tests/types/crash.ycp:6 '+ : float (float, float)'
+[Parser] tests/types/crash.ycp:6 '+ : string (string, string)'
+[Parser] tests/types/crash.ycp:6 '+ : string (string, integer)'
+[Parser] tests/types/crash.ycp:6 '+ : string (string, path)'
+[Parser] tests/types/crash.ycp:6 '+ : string (string, symbol)'
+[Parser] tests/types/crash.ycp:6 '+ : path (path, path)'
+[Parser] tests/types/crash.ycp:6 '+ : path (path, string)'
+[Parser] tests/types/crash.ycp:6 '+ : list <<T>> (const list <<T>>, const list <<T>>)'
+[Parser] tests/types/crash.ycp:6 '+ : list <<T>> (const list <<T>>, const <T>)'
+[Parser] tests/types/crash.ycp:6 '+ : list (const list, any)'
+[Parser] tests/types/crash.ycp:6 '+ : map (const map, const map)'
+runycp: parser error

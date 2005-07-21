@@ -1,0 +1,6 @@
+{
+    // module "Namespace"
+    // filename: "tests/bytecode/imports/Namespace2c.ycp"
+    import "Namespace";
+    return (Namespace::mixedFunction () == 4753);
+}

@@ -1,0 +1,21 @@
+
+.
+
+`ag_ini(
+  `IniAgent("tests/icreg1.in.test",
+    $[
+      "options" : [ "ignore_case_regexps" ],
+      "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "Section=([a-zA-Z0-9]+)", "Section=%s" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "Value=([a-zA-Z0-9]+)=(.*)$" , "Value=%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

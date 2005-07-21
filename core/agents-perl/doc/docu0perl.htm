@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Untitled</title>
+</head>
+
+<body
+bgcolor="#fafff4" vlink="red" alink="green" link="#660099">
+<font color="Navy">
+page1
+
+<div align="center"><h1><strong>Practical Introductions</strong></h1></div>
+
+<br>
+
+If you want to use a perlscript in YCP you have two posibilities:<br><br>
+
+<b>1.The fastest way: fire and forget</b>
+<hr  color="red" align="left" size="1"></hr>
+<br><br>
+
+You can call your perlscript via the target agent:
+<table cellpadding=10 cellspacing=10 >
+<tr>
+<td bgcolor=#dddddd >
+<pre ><font  face="Courier" color="Black">
+SCR(`Execute (.target.bash, "<em>call script</em></a>" )
+
+SCR(`Execute (.target.bash, "/usr/lib/myperscript -nofaults ")
+</font></pre>
+</td>
+</tr>
+</table>
+
+With this method you can easiely send input data via commandline.
+As output you only get the exit code of your script
+see <a href="">target agent</a> for detail<br><br><br>
+
+
+<b>2.Second possibility:</b>
+<hr  color="red" align="left" size="1"></hr><br>
+
+Use the perl-binding:<br><br>
+
+2.1 pro:<br>
+<ul>
+    <li> You can send a complex input to the script, a
+         list or a map, ..<br>
+    <li> The script is loaded only once<br>
+    <li> Your script can send complex output to the calling 
+         YCP, e.g. a <tt>string</tt>, a <tt>list</tt>, a<tt> map</tt> or a <tt>integer</tt>. <br><br>
+</ul>
+2.2 con:<br>
+<ul>
+    <li> You <b>must not</b> use stdin and stdout!!<br>
+    <li> You have a little more development overhead,
+         (You need approximatly 1/2 h to learn and to
+          use this interface)<br><br><br>
+</ul>
+<div align="center"><a href="docu1perl.htm" ><b>Next >> </font></b></a></div>
+</font>
+</body>
+</html>

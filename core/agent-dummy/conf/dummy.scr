@@ -1,0 +1,36 @@
+/**
+ * File:
+ *   dummy.scr
+ * Summary:
+ *   SCR Agent for testing
+ * Access:
+ *   read/write
+ * Authors:
+ *   Unknown <yast2-hacker@suse.de>
+ * See:
+ *   libscr
+ * Example:
+ *   `ag_dummy (
+ *     DataMap($["a":1,"b":$["c":2, "d":3]], 0)
+ *   )
+ **
+ *   Read(.dummy)
+ *   (0)
+ *   Read(.dummy.a)
+ *   (1)
+ *   Read(.dummy.b)
+ *   ($["c":2, "d":3])
+ *   Read(.dummy.b.d)
+ *   (3)
+ * 
+ * $Id$
+ *
+ * Test agent.
+ * Returns the default (second arg to DataMap) for relative root (.dummy) 
+ * or looks up the path in the map (first arg to DataMap)
+ */
+.dummy
+
+`ag_dummy (
+  `DataMap($["a":1,"b":$["c":2, "d":3]], 0)
+)

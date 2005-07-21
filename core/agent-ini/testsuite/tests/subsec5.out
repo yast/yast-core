@@ -1,0 +1,41 @@
+(["xs1", "s1"])
+Section xs1
+  xVal1=xv1
+  Section xs2
+    xVal1=xv3
+    Section xs3
+      xV=xX
+    End xs3
+  End xs2
+  Section xzzz
+    Section xxx
+      xaa=ooo
+    End xxx
+  End xzzz
+  xVal2=v2
+End xs1
+
+; comment s1
+Section s1
+; comment v1
+  Val1=v1
+; comment s2
+  Section s2
+; comment val1=v3
+    Val1=v3
+    Section s3
+      V=X
+    ; comment before s3
+    End s3
+  ; comment before s2
+  End s2
+  Section zzz
+    Section xx
+      aa=ooo
+    End xx
+  End zzz
+; comment val2=v2
+  Val2=v2
+; comment before s1
+End s1
+; end comment

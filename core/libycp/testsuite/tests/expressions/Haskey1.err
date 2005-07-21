@@ -1,0 +1,11 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any ret
+    // map <string, map <string, string>> Levels
+    // filename: "tests/expressions/Haskey1.ycp"
+    any ret = "";
+    map <string, map <string, string>> Levels = $[];
+    return haskey (Levels, ret);
+}
+----------------------------------------------------------------------

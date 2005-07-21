@@ -1,0 +1,78 @@
+{
+
+    integer b = 0;
+    foreach(integer a, [1,2,3,4,5,6], {
+
+            if (a == 7)
+                b = 0;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            else if (a == 8)
+                b = 1;
+            });
+
+}

@@ -1,0 +1,5 @@
+[Parser] tests/types/not_a_function.ycp:4 Identifier is not a function
+[Parser] tests/types/not_a_function.ycp:4 'can_convert' defined in tests/types/not_a_function.ycp:2.
+[Parser] tests/types/not_a_function.ycp:4 Excessive parameter
+[Parser] tests/types/not_a_function.ycp:4 Bad parameter '<const boolean> false'
+runycp: parser error

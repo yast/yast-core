@@ -1,0 +1,14 @@
+{
+    module "YModule";
+
+    global const integer cag = 1;
+    global integer ag = 1;
+    integer al = 2;
+
+    global define void YModule() {
+	y2milestone ("I am a constructor\n");
+	al = 5;
+    }
+
+    global define integer af() { return ag+al; }
+}

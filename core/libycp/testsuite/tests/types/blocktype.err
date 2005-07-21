@@ -1,0 +1,33 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer Foo (block <boolean> b)
+    // block <boolean> trueblock
+    // filename: "tests/types/blocktype.ycp"
+    integer Foo (block <boolean> b)
+{
+    // integer ret
+    integer ret = nil;
+    if (eval (b))
+    {
+    ret = 1;
+}
+else
+    {
+    ret = 0;
+}
+    return ret;
+}
+    block <boolean> trueblock = { return {
+    return true;
+}
+; };
+    y2milestone ("Foo: %1", Foo (trueblock));
+    y2milestone ("Foo: %1", Foo ({
+    return true;
+}
+));
+}
+----------------------------------------------------------------------
+[YCP] tests/types/blocktype.ycp:19 Foo: 1
+[YCP] tests/types/blocktype.ycp:22 Foo: 1

@@ -1,0 +1,26 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // void aoo (integer value)
+    // void boo (integer value)
+    // void foo (integer foo_val)
+    // filename: "tests/builtin/Backtrace.ycp"
+    void aoo (integer value)
+{
+    y2milestone (-1, "My test");
+}
+    void boo (integer value)
+{
+    aoo ((value + 1));
+}
+    void foo (integer foo_val)
+{
+    boo ((foo_val + 1));
+}
+    foo (41);
+}
+----------------------------------------------------------------------
+[YCP] tests/builtin/Backtrace.ycp:6 My test
+[YCP] tests/builtin/Backtrace.ycp:10 aoo ((value + 1))
+[YCP] tests/builtin/Backtrace.ycp:14 boo ((foo_val + 1))
+[YCP] tests/builtin/Backtrace.ycp:17 foo (41)

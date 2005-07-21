@@ -1,0 +1,9 @@
+{
+    list <list<list<string> > > tmp1 = [ [ [ "haha" ] ] ];	// list <list <list < string > > >
+
+    list <string> tmp2 = tmp1[0]:[];	// list <list < string > > : list
+
+    string tmp3 = tmp2[0]:"";
+
+    return [tmp1, tmp2, tmp3];
+}

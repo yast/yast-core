@@ -1,0 +1,11 @@
+Makefile
+Makefile.in
+wfm
+*.o
+*.lo
+*.la
+.deps
+.libs
+*.kdoc
+PkgBuiltinCalls.h
+PkgBuiltinTable.h

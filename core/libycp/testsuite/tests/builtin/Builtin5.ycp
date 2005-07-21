@@ -1,0 +1,31 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin5.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// structure tests for maps based on select() are no longer valid.
+// They are replaced by a comparison which is now valid.
+
+{
+     map   node1 = $[ 1: "Austria", 2: "Belgium" ];
+     map   node2 = $[ 3: "China", 4: "D-Nation" ];
+     map   node3 = $[ 5: "England", 6: "France" ];
+     map   node4 = $[ 9: node2, 10: node3 ];
+     map   node5 = $[ 8: node1, 11: node4 ];
+     map   node6 = $[ 7: "Greece" ];
+     map   node7 = $[ 12: node5, 13: node6 ];
+
+     return( node7 == ($[12:$[8:$[1:"Austria", 2:"Belgium"], 11:$[9:$[3:"China", 4:"D-Nation"], 10:$[5:"England", 6:"France"]]], 13:$[7:"Greece"]]));
+}
+
+{
+     return( "test case select for maps is no longer valid (now replaced)" );
+}

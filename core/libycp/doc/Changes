@@ -1,0 +1,13 @@
+Mandatory changes to YCP
+
+builtins
+--------
+
+mapmap(... block<list>) -> mapmap (... block<map>)
+CheckIP -> CheckIPv4
+
+
+types
+-----
+
+list (x) -> list <x>

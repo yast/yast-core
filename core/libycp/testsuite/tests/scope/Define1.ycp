@@ -1,0 +1,9 @@
+{
+    // error
+    define integer plus (integer i, integer i)
+    {
+	return i;
+    }
+
+    return 2;
+}

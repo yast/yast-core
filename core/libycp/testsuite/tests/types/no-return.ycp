@@ -1,0 +1,12 @@
+// bug 40687
+{
+    define list haha ()		// non void function
+    {
+        list ret = [];
+        // return ret;		// without explicit 'return'
+    }
+
+    list l = haha ();
+    return l;
+}
+

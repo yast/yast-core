@@ -1,0 +1,9 @@
++Main
+  Key=Val
+  +Sub
+    Key=Val
+    +Sub
+      Key=Val
+    -Sub
+  -Sub
+-Main

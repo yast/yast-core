@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "no_brackets2.inc"
+    // include "no_brackets2.inc";
+    y2milestone ("This is a builtin with variable number of parameters");
+    // force filename: "tests/includes/noblock_include2.ycp"
+}
+----------------------------------------------------------------------
+[YCP] no_brackets2.inc:3 This is a builtin with variable number of parameters

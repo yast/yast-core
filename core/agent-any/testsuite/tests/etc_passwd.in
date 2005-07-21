@@ -1,0 +1,42 @@
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/bin/bash
+daemon:x:2:2:daemon:/sbin:/bin/bash
+lp:x:4:7:lp daemon:/var/spool/lpd:/bin/bash
+uucp:x:10:14::/var/lib/uucp/taylor_config:/bin/bash
+games:x:12:100::/tmp:/bin/bash
+man:x:13:2::/var/catman:/bin/bash
+at:x:25:25::/var/spool/atjobs:/bin/bash
+postgres:x:26:2:Postgres Database Admin:/var/lib/pgsql:/bin/bash
+lnx:x:27:27:LNX Database Admin:/usr/lib/lnx:/bin/bash
+mdom:x:28:28:Mailing list agent:/usr/lib/majordomo:/bin/bash
+yard:x:29:29:YARD Database Admin:/usr/lib/YARD:/bin/bash
+wwwrun:x:30:65534:Daemon user for apache:/tmp:/bin/bash
+squid:x:31:65534:WWW proxy squid:/var/squid:/bin/bash
+fax:x:33:14:Facsimile Agent:/var/spool/fax:/bin/bash
+gnats:x:34:65534:Gnats Gnu Backtracking System:/usr/lib/gnats:/bin/bash
+empress:x:35:100:Empress Database Admin:/usr/empress:/bin/bash
+adabas:x:36:100:Adabas-D Database Admin:/usr/lib/adabas:/bin/bash
+amanda:x:37:6:Amanda Admin:/var/lib/amanda:/bin/bash
+ixess:x:38:29:IXware Admin:/usr/lib/ixware:/bin/bash
+irc:x:39:65534:IRC Daemon:/usr/lib/ircd:/bin/bash
+ftp:x:40:2:ftp account:/usr/local/ftp:/bin/bash
+firewall:x:41:31:firewall account:/tmp:/bin/false
+informix:x:43:34:Informix Database Admin:/usr/lib/informix:/bin/bash
+named:x:44:44:Nameserver Daemon:/var/named:/bin/bash
+virtuoso:x:45:100:Virtuoso Admin:/opt/virtuoso-lite:/bin/bash
+db2fenc1:x:46:46:DB2 Instance UDF user:/usr/lib/db2/db2fenc1:/bin/bash
+db2inst1:x:47:47:DB2 Instance main user:/usr/lib/db2/db2inst1:/bin/bash
+db2as:x:48:48:DB2 Administration:/usr/lib/db2/db2as:/bin/bash
+fnet:x:49:14:FidoNet:/var/spool/fnet:/bin/bash
+nobody:x:65534:65534:nobody:/tmp:/bin/bash
+gdm:x:8052:15:Gnome Display Manager:/var/lib/gdm:/bin/bash
+justme:x:8053:100::/home/justme:/bin/bash
+postfix:x:51:51:Postfix:/var/spool/postfix:/bin/false
+cyrus:x:52:12:User for Imapd:/usr/cyrus:/bin/bash
+cvsuser:x:507:100:just for test:/home/cvsuser:/bin/bash
+news:x:9:13:News system:/etc/news:/bin/bash
+nps:x:53:100:NPS admin:/opt/nps:/bin/bash
+skyrix:x:54:100:SKYRIX admin:/opt/skyrix/home:/bin/bash
+dbmaker:x:55:52:Dbmaker Database Admin:/usr/lib/dbmaker:/bin/bash
+arvin:x:10176:50:Arvin Schnell:/home/arvin:/bin/tcsh
++::::::

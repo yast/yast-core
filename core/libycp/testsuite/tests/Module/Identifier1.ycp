@@ -1,0 +1,28 @@
+#
+# ---------------------------------------------------------
+#
+#  Filename:    Identifier1.ycp
+#
+#  Purpose:     test identifier ycp type
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+  module "Identifier1";
+
+  global integer a = 55;	// this is accessible via ::a
+
+  // should be [ 55, 42]
+  //   and a warning about local a shadowing global a
+
+  global list <integer> f ()
+  {
+	integer a = 42;
+	return [ ::a, a ];
+  }
+}

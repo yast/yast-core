@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+*.o
+md_autorun
+.deps
+.libs
+

@@ -1,0 +1,32 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer return_value
+    // filename: "tests/builtin/Builtin_V.ycp"
+    integer return_value = 1;
+    if (true)
+    {
+    // integer multiply (integer value)
+    integer multiply (integer value)
+{
+    return (value * 3);
+}
+    return_value = multiply (return_value);
+    if (true)
+    {
+    // integer multiply (integer value)
+    integer multiply (integer value)
+{
+    return (value * 5);
+}
+    return_value = multiply (return_value);
+}
+    return_value = multiply (return_value);
+}
+    return (return_value == 45);
+}
+----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin_V.ycp:47 Warning: Useless 'global' outside of module
+[Parser] tests/builtin/Builtin_V.ycp:56 Mismatched return type in block
+[Parser] tests/builtin/Builtin_V.ycp:56 Expected 'string', seen 'integer'.
+runycp: parser error

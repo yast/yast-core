@@ -1,0 +1,6 @@
+Parsed:
+----------------------------------------------------------------------
+"NON-TERMINAL YCP_DeclTerm"
+----------------------------------------------------------------------
+[Parser] tests/errors/Notifications.ycp:20 Undeclared identifier 'Symbol0002'
+runycp: parser error

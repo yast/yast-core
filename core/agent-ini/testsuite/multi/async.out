@@ -1,0 +1,43 @@
+(nil)
+multi/async.in.1.test  -------------------------------
+[Dialer iqnet_praha]
+Country = Czech Republic
+ISDN supported = 1
+Provider = IQNET (Praha)
+Product = WWW Registrace
+Homepage = http://registrace.iqnet.cz
+Phone = 0971101711
+Qualifiedphone = +420971101711
+Username = iqnet
+Password = registrace
+
+[Dialer fortech_litomysl]
+Country = Czech Republic
+ISDN supported = 1
+Provider = Fortech (Litomy≈°l, Svitavy, Poliƒ215ka, Moravsk√° T≈231ebov√°)
+Product =
+Homepage = http://www.lit.cz
+Phone = 0971202311
+Qualifiedphone = +420464616999
+Username =
+Password =
+multi/async.in.2.test  -------------------------------
+# other comment for 2
+[Dialer apexnet_plzen]
+Country = Czech Republic
+ISDN supported = 1
+Provider = ApexNet (Plze≈210)
+Product = Internet Super
+Homepage = http://www.apexnet.cz
+Phone = 0971206911
+Qualifiedphone = 
+Username = 
+Password = 
+multi/async.in.4.test  -------------------------------
+# New file 4
+# section xxx in file 4
+[Dialer xxx]
+homepage = http://xxx.suse.de/
+[Dialer other]
+homepage = http://www.other.dom
+Product = 

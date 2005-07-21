@@ -1,0 +1,6 @@
+{
+    // module "Identifier"
+    // filename: "tests/bytecode/imports/Identifier.ycp"
+    import "Identifier";
+    return Identifier::f ();
+}

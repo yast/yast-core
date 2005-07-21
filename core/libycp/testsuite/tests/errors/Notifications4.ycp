@@ -1,0 +1,17 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+// conditionals: a condition can oly evaluate to true or false
+// otherwise an error occours:
+// libycp[27] condition * in if statement evaluates to *, but only true and false are allowed
+{ if( 7 + 5 ) return "Condition is integer"; }

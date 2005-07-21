@@ -1,0 +1,24 @@
+// Test the bitwise and
+// Martin Vidner <mvidner@suse.cz>
+
+    // BITWISE AND
+    ( (0 & 0) == 0 )
+    ( (1 & 0) == 0 )
+    ( (0 & 1) == 0 )
+    ( (1 & 1) == 1 )
+    ( (0x0f0f & 0x00ff) == 0x000f )
+
+    // this is the difference between logical and bitwise and:
+    ( (0x0f0f & 0xf0f0) == 0 )
+
+    // test large numbers:
+    // 0xfedcba9876543210 <- digit count
+    ( (0x7000000000000001 & 0x7000000000000002) == 0x7000000000000000 )
+
+    // Test precedence:
+    // in C, they bind looser than equality, addition...
+    // and tighter than their logical counterparts
+    ( (0x0400 - 0x0200 & 0xff) == 0 )
+    // Testing this does not make sense because we 
+    // would have to cast to boolean and thus set the precedence explicitly
+    //( (0x0f0f & 0xf0f0 && 0xf0f0 & 0x0f0f) == false )

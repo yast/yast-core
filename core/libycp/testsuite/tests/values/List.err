@@ -1,0 +1,33 @@
+[Parser] tests/values/List.ycp:18 Warning: 'select ()' is deprecated
+[Parser] tests/values/List.ycp:25 Warning: 'select ()' is deprecated
+[Parser] tests/values/List.ycp:26 Warning: 'select ()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean isString (any a)
+    // list la
+    // integer index
+    // any s
+    // filename: "tests/values/List.ycp"
+    boolean isString (any a)
+{
+    if (is (a, string))
+    {
+    y2milestone ("%1 is a string", a);
+    return true;
+}
+else
+    {
+    y2milestone ("%1 not a string", a);
+    return false;
+}
+}
+    list la = [3.14, "foo", 1];
+    integer index = 1;
+    any s = la[index]:nil;
+    return [! isString (la), isString (s), is (s, string), isString (la[index]:nil), is (/* any -> string */la[index]:nil, string)];
+}
+----------------------------------------------------------------------
+[YCP] tests/values/List.ycp:11 [3.14, "foo", 1] not a string
+[YCP] tests/values/List.ycp:6 foo is a string
+[YCP] tests/values/List.ycp:6 foo is a string

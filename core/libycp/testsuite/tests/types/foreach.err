@@ -1,0 +1,3 @@
+[Parser] tests/types/foreach.ycp:3 Wrong parameters in call to foreach(...)
+[Parser] tests/types/foreach.ycp:3 Expected '(variable <any>, variable <map>, map <any, map>, block <void>)', seen '(variable <any>, variable <map>, map, block <void>)'.
+runycp: parser error

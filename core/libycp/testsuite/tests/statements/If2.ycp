@@ -1,0 +1,5 @@
+{
+    if (false)
+	integer i = 1;
+}
+

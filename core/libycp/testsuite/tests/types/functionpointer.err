@@ -1,0 +1,30 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer one ()
+    // integer () oneptr
+    // filename: "tests/types/functionpointer.ycp"
+    integer one ()
+{
+    return 1;
+}
+    integer () oneptr = one;
+    oneptr = one;
+    return oneptr ();
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer one (integer v)
+    // integer (integer) oneptr
+    // filename: "tests/types/functionpointer.ycp"
+    integer one (integer v)
+{
+    return (v + 1);
+}
+    integer (integer) oneptr = one;
+    oneptr = one;
+    return oneptr (41);
+}
+----------------------------------------------------------------------

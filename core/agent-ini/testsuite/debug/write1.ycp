@@ -1,0 +1,13 @@
+{
+    // test of adding values, sections, subsections
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    SCR::Write (.v.Val1, "changed");
+    y2error ("First write:");
+    SCR::Write (., nil);
+    y2error ("Written 1st time");
+    SCR::Write (., nil);
+    y2error ("Written 2nd time");
+    y2error ("Writting in destructor");
+}

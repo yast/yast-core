@@ -1,0 +1,45 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list MyList
+    // list NewList
+    // filename: "tests/builtin/Builtin9.ycp"
+    list MyList = ["Austria", "Belgium", "China", `D_Nation, "England", "France", "Greece"];
+    list NewList = [];
+    return MyList;
+}
+----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin9.ycp:43 Warning: 'select ()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // list MyList
+    // list NewList
+    // filename: "tests/builtin/Builtin9.ycp"
+    list MyList = ["Austria", "Belgium", "China", `D_Nation, "England", "France", "Greece"];
+    list NewList = [];
+    NewList = add (MyList, .Hungary);
+    return ((size (MyList) == 7) && (/* any -> path */NewList[size (MyList)]:nil == .Hungary));
+}
+----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin9.ycp:61 Warning: 'select ()' is deprecated
+Parsed:
+----------------------------------------------------------------------
+{
+    // list MyList
+    // list NewList
+    // filename: "tests/builtin/Builtin9.ycp"
+    list MyList = ["Austria", "Belgium", "China", `D_Nation, "England", "France", "Greece"];
+    list NewList = [];
+    MyList = [];
+    NewList = add (MyList, "Hungary");
+    return (NewList[0]:nil == "Hungary");
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/builtin/Builtin9.ycp"
+    return "test case add for list finished";
+}
+----------------------------------------------------------------------

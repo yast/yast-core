@@ -1,0 +1,7 @@
+{
+    any ret = "";
+    map<string,map<string,string> > Levels = $[];
+
+    return haskey (Levels, ret);
+}
+

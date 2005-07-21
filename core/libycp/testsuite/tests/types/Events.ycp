@@ -1,0 +1,22 @@
+// (Advanced) YCP example for various UI events:
+//
+// Create a dialog with all kinds of widgets that can generate events and
+// display any event nicely formatted in a RichText widget.
+//
+// Most widgets have the `notify option set to demonstrate what events they can
+// send.
+//
+// Use the "Close" button to quit the example.
+{
+    define string formatEvent( map event ) ``{
+	string html = "<h3>Event:</h3><p>";
+y2milestone ("formatEvent(%1)", event);
+	foreach (string key, string value, event, ``{
+	    html = html + "<font color=blue>" + key + "</font>: " + value + "<br>";
+	});
+
+	html = html + "</p>";
+
+	return html;
+    };
+}

@@ -1,0 +1,28 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // typedef integer number;
+    // integer Inc (integer n)
+    // filename: "tests/types/Typedef2.ycp"
+    typedef integer number;
+    integer Inc (integer n)
+{
+    return (n + 1);
+}
+    return Inc (1);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // typedef float number;
+    // list <float> Singleton (float n)
+    // filename: "tests/types/Typedef2.ycp"
+    typedef float number;
+    list <float> Singleton (float n)
+{
+    return [n];
+}
+    return Singleton (3.14);
+}
+----------------------------------------------------------------------

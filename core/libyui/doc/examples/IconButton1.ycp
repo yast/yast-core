@@ -1,0 +1,12 @@
+{
+    // Build a dialog with one icon button.
+    // Wait until that button is clicked,
+    // then close the dialog and terminate.
+
+    UI::OpenDialog(
+	       `IconButton( "topRow_right.png", "&OK" )
+	       );
+
+    UI::UserInput();
+    UI::CloseDialog();
+}

@@ -1,0 +1,200 @@
+		SYSTEM CONFIGURATION REPOSITORY Server (SCR)
+		============================================
+
+Generals
+----------
+
+The SCR (System configuration repository) is a "server component" with the 
+execute files "/lib/YaST2/servers/scr" or "/bin/y2scr" ( link to 
+/lib/YaST2/servers/scr ). 
+(-
+REMEMBER:
+A server component is one that - once it's initialized -
+just waits for jobs to do. Another component can send a request
+and thus pass the control to the server. That does what is neccessary
+in order to do handle the request and returns an answer. 
+In YaST2 they play a passive role. They just wait for a command and 
+handle it. 
+-)
+The server component SCR use other servers called "agents"
+which realize subtrees of the SCR tree.
+( subtree: e.g .etc.xf86config or .probe.byclass.monitor )
+Agents could be a single program, a script or a C++ class which is 
+included in SCR.
+Current agents are:
+
+NAME	        SUBTREE			TYP	Files
+ag_xf86config() .etc.xf86config		C++	Xf86ConfigAgent.*
+ag_password()   .etc.shadow		C++	PasswordAgent.*
+ag_hwprobe()    .probe			C++	HwProbe.*
+ag_exec()       .exec			C++	Exec.*
+ag_fdisk()      .disk			C++	FdiskAgent.*
+ag_hostnames()  .net.hostnames		script  YASTHOME/servers/ag_hostname
+anyagent	shown in 		C++	AnyAgent*.*
+                YASTHOME/scrconf/
+                anyagent.ycp
+
+The realtionship between agent-name and subtree is explained in
+YAST_DIR/scrconf/*.ycp by mounting the agents ( The command
+"Mountagent" is later explained )
+
+SCR is often called by YCP-scripts like (e.g. file:inst_xf86config.ycp) :
+
+....
+..
+.
+map monitor = SCR(`Read(.probe.byclass.monitor));
+.
+..
+...
+(Reads the values from the monitor by calling the server "SCR" and his
+ agent "ag_hwprobe". It returns YCPValues );
+
+OR
+
+...
+..
+.
+if (!SCR(`Write(.etc.xf86config,xf86config))) {
+.     .....}
+..
+...
+(Writes the map "xf86config" into a file by calling the server "SCR" and
+ his agent "ag_xf86config" .)
+
+Summary of SCR-terms:
+	Read		read values
+	Write		write values
+	Dir		get all subtrees of this agent
+	Execute		start a program
+
+
+Creating the SCR
+------------------
+
+The SCR is realized by the YaST2 component "scr". The Workflowmanager
+or any other component that needs the scr creates it using the
+Y2ComponentBroker. See liby2 docu.
+
+REMEMBER:
+(-
+A component could be a client or a server. In our case it is the server-
+component "SCR".
+-)
+
+Connecting the agents to SCR
+-------------------------------
+Every server-component (defined in  Y2Component) has a fixed structure 
+concerning the member-functions, which are overloaded by the specific 
+member-functions of our Y2SCRComponet ( see Y2SCRComponent.h)
+
+The server-component Y2SCRComponent has following member variables:
+ ScriptingAgent *agent 	   : derived from SCRAgent; 
+                             This agent is called TOPLEVEL-agent.
+			     It has a list of all SUB-agents, that are 
+                             connected to SCR. The list has the name "agents". 
+                             The list has following components:
+                             - Y2component: The agent, which is a server too
+                             - YCPPath: The path for the agent.
+                             Further there are
+			     member-functions like "Read", "Write" defined.
+			     
+ SCRInterpreter *intepreter: derived from YCPInterpreter; It intepretes all
+                             commands, has the list of all agents ( It has
+                             a pointer to TOPLEVEL "agent" called "agent") 
+                             and calls the required
+                             agents if required ( see function 
+                             "evaluateInstantiatedTerm" in file 
+                             libscr/SCRInterpreter.cc )
+
+The most important function of the server-component Y2SCRComponent is 
+"evaluate". This member-function is called, when the YCP-command "SCR(<...>)" 
+has been called.
+With the first call of "SCR(<...>)" the agents are installed by following
+steps:
+- Calling the function "Y2SCRComponent::evaluate" 
+- "evaluate" calls "parseConfigFiles" ( file Y2SCRComponent.cc )
+  All YCP-Scripts in the directory YAST2HOME/scrconf are read and executed.
+  At the moment there are only YCP-scripts that mount the agents to SCR 
+  (Command "MountAgent"):
+  -- Read the YCP-Script:
+               YCPParser parser(FP, filename)
+  -- Parse it to YCPValue:
+               YCPValue value = parser.parse()
+  -- Execute it by calling the intepreter (  SCRInterpreter *intepreter )
+               interpreter->evaluate(value)
+  --- ( file libscr/SCRInterpreter.cc )
+      Calling the overloaded function "evaluateInstantiatedTerm" with 
+      term->symbol()->symbol() = "MountAgent".
+      Calls the function "agent->otherCommand" of the TOPLEVEL agent.
+      REMEMBER:
+      "agent" ( defined in "intepreter") is a pointer to the TOPLEVEL agent
+      "ScriptingAgent *agent"( defined in Y2SCRComponent) which has the
+      list of mounted SUB-agents.
+  ---- ( file ScriptingAgent.cc )
+      The function "otherCommand" call the protected function "MountAgent".
+      This function generates a new component, which is a SUB-agent-server, by 
+      calling
+                Y2Component *agentcomponent = 
+			Y2ComponentBroker::createServer(componentname.c_str());
+      and initialize them by
+                // term's arguments are preloaded into the server component
+                for (int i=0; i<term->size(); i++)
+                  agentcomponent->evaluate(term->value(0));
+
+      this component is inserted in the SUB-agent-list.
+
+
+Interprete the SCR call like SCR(`Write(.etc.xf86config,xf86config)))
+---------------------------------------------------------------------
+
+- Calling the function "Y2SCRComponent::evaluate" 
+  --  ( file Y2SCRComponent.cc )
+      calling the intepreter (  SCRInterpreter *intepreter )
+               interpreter->evaluate(<YCPVALUE>)
+  --- ( file libscr/SCRInterpreter.cc )
+      Calling the overloded function "evaluateInstantiatedTerm" with 
+      term->symbol()->symbol() = "Write".
+      Calls the function "agent->Write(".etc.xf86config",xf86config" of the 
+      TOPLEVEL agent.
+      REMEMBER:
+      "agent" ( defined in "intepreter") is a pointer to the TOPLEVEL agent
+      "ScriptingAgent *agent"( defined in Y2SCRComponent) which has the
+      list of mounted SUB-agents.
+  ---- ( file ScriptingAgent.cc )
+       The function "Write" call the protected function 
+       "executeSubagentCommand"
+  ----- This function search the appropriate SUB-agent ("xf86config") by the
+        path "xf86config" and calls them:
+		 agentcomponent->evaluate(commandterm);
+  ------ ( file Xf86ConfigAgent.cc )
+	The function "evaluate" creates a new "SCRInterpreter" Objekt, which
+        contains the a new agent object "Xf86ConfigAgent":
+    		interpreter = new SCRInterpreter(new Xf86ConfigAgent());
+        So this object has NOT the TOP-LEVEL agent with the SUB-agent-list,
+        but only A SUB-agent "xf86ConfigAgent".
+        Then calls the "evaluation" function of this "SCRInterpreter"-object.
+  ------- ( file SCRInterpreter.cc )
+	  The overloaded function "evaluateInstantiatedTerm" of the 
+          "SCRInterpreter"-object calls then the "write" function of the
+          agent "Xf86configAgent".
+  -------- ( file Xf86ConfigAgent.cc )
+           In function "write" the value "xf86config" ( second parameter
+           of SCR(`Write(.etc.xf86config,xf86config))) which is a map )
+           is written to file.
+
+
+
+FAQ
+-----
+
+How does SCR know, if the agent is a script, a program or a lib which is 
+included ? How to start it ?
+
+It does not need to. It just needs the name of the component. This name
+is given at MountAgent - time. The YaST2 Component Architecture, realized
+in liby2, will create the component via the Y2ComponentBroker. The
+component can be a compiled in component, a YCP or shell script, an
+external program, an internet connection or an other type of component.
+
+

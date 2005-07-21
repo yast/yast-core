@@ -1,0 +1,14 @@
+# author: visnov@suse.cz
+#
+# check deep bracket type checking
+
+{
+    list a = ["foo"];
+    return ( a[0]:nil == "foo" );
+}
+
+{
+    list a = ["foo"];
+    return ( a["bar"]:"no" == "foo" ); // parse error, cannot index using string in a list
+}
+

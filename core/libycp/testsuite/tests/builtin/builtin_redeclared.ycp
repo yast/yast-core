@@ -1,0 +1,9 @@
+{
+    // redefinition of builtin splitstring (#9765)
+    define string splitstring(string a, string b)
+    {
+	return "1";
+    }
+
+    return splitstring("A", " ");
+}

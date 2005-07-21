@@ -1,0 +1,32 @@
+//
+// More constants
+//
+
+// symbol
+(`name)
+
+// list
+[]
+[1]
+[1,]
+[1,2,3,4,5]
+["a","b","c"]
+[true, 1, "a"]
+
+// map
+$[]
+$[1:1]
+$[1:1,]
+$[1:1,2:2,3:3,4:4,5:5]
+$["a":1,"b":3,"c":5]
+$[`true:1, 1:2, "a":3]
+
+// locale
+{ textdomain "locale"; return _("This is a locale"); }
+{ textdomain "locale"; return _("Single", "Multiple", 5); }
+
+// term
+(`a_term (1, 2,3))
+
+// block
+({ return 42;})

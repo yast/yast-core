@@ -1,0 +1,22 @@
+- purpose, usage
+
+- data
+  constants
+  types
+
+- expressions
+  unary
+  binary
+  functions
+  - builtin
+  - userdefined
+
+- statements
+  - assign
+  - if then else
+  - loops
+
+- namespaces, modules
+
+- translations
+

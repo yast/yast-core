@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer plus (integer i, integer j)
+    // filename: "tests/expressions/Plus.ycp"
+    integer plus (integer i, integer j)
+{
+    return (i + j);
+}
+    return plus (1, 1);
+}
+----------------------------------------------------------------------

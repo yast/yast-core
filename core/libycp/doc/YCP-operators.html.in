@@ -1,0 +1,102 @@
+<html><head>
+<title>YCP language Reference: YCP Operators</title>
+</head><body> 
+<h1>YCP language Reference: YCP Operators</h1>
+
+
+<h2>comparison operators</h2>
+<p>These are binary operators for comparison of two values. The result is always boolean.</p>
+        <table border="1">
+                <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
+                <tr><td align="center">==</td><td>almost all</td><td>True if operands are equal, otherwise false.</td></tr>
+                <tr><td align="center">&lt;</td><td>almost all</td><td>True if left operand is smaller than the right one, otherwise false.</td></tr>
+                <tr><td align="center">&gt;</td><td>almost all</td><td>True if left operand is greater than the right one, otherwise false.</td></tr>
+                <tr><td align="center">&lt;=</td><td>almost all</td><td>True if left operand is smaller or equal to the right one, otherwise false.</td></tr>
+                <tr><td align="center">&gt;=</td><td>almost all</td><td>True if left operand is greater or equal to the right one, otherwise false.</td></tr>
+                <tr><td align="center">!=</td><td>almost all</td><td>True if operands are not equal, otherwise false.</td></tr>
+        </table>
+
+        <h2>boolean operators</h2>
+        <p>
+        These are logical operators, that works with boolean datatype, two are binary one is unary. The result is always boolean.
+        </p>
+        <table border="1">
+                <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
+                <tr><td align="center">&amp;&amp;</td><td>boolean</td><td>True if both operands are true, otherwise false (logical and).</td></tr>
+                <tr><td align="center">||</td><td>boolean</td><td>True if at least one of the operands is true, otherwise false (logical or).</td></tr>
+                <tr><td align="center">!</td><td>boolean</td><td>True if the operand if false, otherwise false (logical not).</td></tr>
+        </table>
+
+
+        <h2>bit operators</h2>
+        <p>
+        These are bit operators that works with integer, two are binary one is unary. The result is always integer.
+</p>
+        <table border="1">
+                <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
+                <tr><td align="center">&amp;</td><td>integer</td><td>Bits of the result number are product of the bits of the operands (bit and).</td></tr>
+                <tr><td align="center">|</td><td>integer</td><td>Bits of the result number are count of the bits of the operands (bit or).</td></tr>
+                <tr><td align="center">~</td><td>integer</td><td>Bits of the result number are reverted bits of operand (bit not).</td></tr>
+                <tr><td align="center">&lt;&lt;</td><td>integer</td><td>Bits of the result number are left shifted bits of the operands (bit shift left).</td></tr>
+                <tr><td align="center">&gt;&gt;</td><td>integer</td><td>Bits of the result number are right shifted bits of the operands (bit shift right).</td></tr>
+        </table>
+
+
+        <h2>math operators</h2>
+        <p>
+        There math operators works with numeric data types (integer and float) and also with string. All are binary (except unary minus).  </p>
+        <table border="1">
+                <tr><th>Operator</th><th>Datatype</th><th>Description</th></tr>
+                <tr><td align="center">+</td><td>integer, float, string</td><td>The result is sum of the numbers or concatenation of the strings.</td></tr>
+                <tr><td align="center">-</td><td>integer, float</td><td>The result is difference of the numbers.</td></tr>
+                <tr><td align="center">*</td><td>integer, float</td><td>The result is product of the numbers.</td></tr>
+                <tr><td align="center">/</td><td>integer, float</td><td>The result is quotient of the numbers (number class is preserved, thus quotient of integers produce integer, etc).</td></tr>
+                <tr><td align="center">%</td><td>integer</td><td>The result is modulo.</td></tr>
+                <tr><td align="center">unary -</td><td>integer, float</td><td>The result is negative number.</td></tr>
+        </table>
+
+        <h2>triple operator</h2>
+        <p>
+        This is the operator known from C language ( <i>condition</i> <b>?</b> <i>expression</i> <b>:</b> <i>expression</i>). The first operand is expression that can evaluate to boolean, types of second and third operands are code dependent. The result of the triple operator expression is the second operand in the case the first operand (condition) evaluates to true, the third one otherwise.
+        </p>
+        <table border="1">
+                <tr><th>Code</th><th>Result</th><th>Comment</th></tr>
+                <tr><td>(3 &gt; 2) ? true : false</td><td>true</td><td>The expression (3 > 2) evaluates to true, the result is true</td></tr>
+                <tr><td>contains ([1, 2, 3], 5) ? &quot;yes&quot; : &quot;no&quot;</td><td>&quot;no&quot;</td><td>The expression contains ([1, 2, 3], 5) evaluates to false, the result is &quot;no&quot;</td></tr>
+                <tr><td>(size ([]) &gt; 0) ? 1 : -1</td><td>-1</td><td>The expression size ([]) > 0 evaluates to false, the result is -1</td></tr>
+        </table>
+
+  <p>
+  <b>Note:</b> Using brackets makes code cleaner, but is not necessary (according to operators precedence).
+  </p>
+  <p>
+  <b>Note:</b> With the introduction of the
+  <a href="bracket.html">index operator</a> ( a = mapvar["key"]:default ),
+  the sequence "]:" became a lexical token usable only for indexing,
+  so watch out when using the triple operator with lists and maps. Use
+  parentheses or white space.
+  </p>
+
+  <h2>operators precedence</h2>
+  <p>
+        The table of operators precedence (from lowest to highest).
+</p>
+        <table border="1">
+                <tr><th>&nbsp;Direction&nbsp;</th><th>&nbsp;Operators&nbsp;</th></tr>
+                <tr><td align="center">right</td><td>=</td></tr>
+                <tr><td align="center">left</td><td>?:</td></tr>
+                <tr><td align="center">left</td><td>||</td></tr>
+                <tr><td align="center">left</td><td>&amp;&amp;</td></tr>
+                <tr><td align="center">left</td><td>== !=</td></tr>
+                <tr><td align="center">left</td><td>&lt; &lt;= &gt; &gt;=</td></tr>
+                <tr><td align="center">left</td><td>+ -</td></tr>
+                <tr><td align="center">left</td><td>* / %</td></tr>
+                <tr><td align="center">left</td><td>&lt;&lt; &gt;&gt;</td></tr>
+                <tr><td align="center">left</td><td>|</td></tr>
+                <tr><td align="center">left</td><td>&amp;</td></tr>
+                <tr><td align="center">prefix</td><td>! ~ -</td></tr>
+        </table>
+
+</body></html>
+<!-- vim: ft=html
+-->

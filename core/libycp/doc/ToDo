@@ -1,0 +1,100 @@
+ToDo
+
+$Id$
+
+kkaempf:
+
+X- take a look at function pointers implementation
+  -> almost done 2003-08-07
+
+X- add 'const' keyword to specify constants (read-only values)
+  -> needs separation of constructed vs. modified types. "Mi" is a constructed type (map),
+     "Ci" is a modified type. But "CMi" and "MCi" do get complicated.
+     Probably needs a different TypeCode implementation
+  -> done
+
+X- the typed list and map syntax might be enhanced
+  currently	list (integer) = [ 1, 2, 3, ...]
+  proposal	list [integer] = [ 1, 2, 3, ...]
+  however, for maps we might need a similar syntax, esp. if keys
+  and values are to be typed.
+  How about	map [ integer : string ] = $[ 1 : "one", 2 : "two", ...]
+  or		map $[ integer : string ] = $[ 1 : "one", 2 : "two", ...]
+
+  or even	list < integer > = [ 1, 2, 3, ...]
+		map < integer : string > = $[ 1 : "one", 2 : "two", ...]
+
+  --> see discussion about function pointers why '(' and ')' should be replaced
+
+  --> done 2003-08-06
+
+- think about 'tuple' types so functions can return multiple values
+  (this is mostly needed for the Perl interface since Perl supports
+   tuple assignments)
+
+X- type syntax
+
+  with the above mentioned features (function pointers, tuples, typed lists and maps)
+  the type syntax probably needs a refinement
+
+  I'd like to specify 'reference to function returning list of strings taking reference
+  to tuple of integer,boolean as arguments'.
+
+  -> WRONG. A 'reference' is something which can be changed by assigning a new value.
+  -> Better name it 'function pointers'. Of course, references to function pointers are allowed
+
+  When looking at 'typedef', the 'type is a function' should be easily expressable. The easiest
+  is probably 'typedef fptr integer (integer, boolean)'
+  A (pointer to a) function returning a list: 'typedef fptr list (integer)'
+  -> Using '(' and ')' for list members must be changed
+
+  -> done
+
+- pass parser errors up properly.
+
+  Currently, a syntax error in a block can result in a valid parse returning
+  { ...; return YError; }
+  The existance of the error can only be seen by checking the global error count
+  but the correct solution would be to invalidate the whole block and return
+  YError instead of YBlock.
+
+X- add Bytecode::writeFile / readFile so bytecode files get a proper header (possibly
+  with version info). There's currently no 'syntax check' for bytecode files.
+  -> done
+
+X- add type modifier 'static' for init-once variables
+   -> done
+
+X- call module constructor
+  -> done
+
+- set filename during function evaluation
+  evaluating functions currently logs the filename of the caller, but it
+  should report the filename of the function definition.
+
+
+visnov:
+
+- SCR::DataMap implementation - more precisely, we need a standard
+  way to configure an agent
+
+- builtin "result()" for component communication
+
+- take a look at variable reference implementation
+
+- INI agent testsuite rewrite
+
+Other stuff to be done:
+
+- should Y2ScriptComponent argument rather YCode than YCPValue?
+
+- ExternalDataSource is for scripting agent only, not for liby2!!!
+
+- Should be scripting component deleted and replaced by WFM?
+
+- Reimplement MacroRecorder/Player, or at least modify YBlock etc for it
+
+- Add SIGSEGV (and possibly other signals) handler
+
+X- do not import a module multiple times
+  -> done

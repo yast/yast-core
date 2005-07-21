@@ -1,0 +1,5 @@
+load_lib "wfm_init.exp"
+
+proc wfm_exit {} {}
+proc wfm_version {} {}
+

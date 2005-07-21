@@ -1,0 +1,19 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PkgIsProvided.ycp
+#
+#  Purpose:     test "Pkg::IsProvided" handling
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+{
+    // Pkg::IsProvided (string tag) -> boolean
+    boolean aaa_base = Pkg::IsProvided ("aaa_base");
+    boolean kernel = Pkg::IsProvided ("kernel");
+    return aaa_base && kernel;
+}

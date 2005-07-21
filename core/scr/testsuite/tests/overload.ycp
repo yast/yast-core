@@ -1,0 +1,17 @@
+{
+    SCR::RegisterAgent (.foo1, "tests/haha.scr");
+    SCR::RegisterAgent (.foo1.bar, "tests/hihi.scr");
+
+    SCR::RegisterAgent (.foo2.bar, "tests/hihi.scr");
+    SCR::RegisterAgent (.foo2, "tests/haha.scr");
+
+    list ret = [];
+
+    ret = add (ret, SCR::Read (.foo1.a));
+    ret = add (ret, SCR::Read (.foo1.bar.a));
+
+    ret = add (ret, SCR::Read (.foo2.a));
+    ret = add (ret, SCR::Read (.foo2.bar.a));
+
+    return ret;
+}

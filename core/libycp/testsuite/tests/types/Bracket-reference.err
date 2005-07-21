@@ -1,0 +1,15 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // void replace (map & m)
+    // map foo
+    // filename: "tests/types/Bracket-reference.ycp"
+    void replace (map & m)
+{
+    m["foo"] = "bar";
+}
+    map foo = $[];
+    replace (foo);
+    return foo;
+}
+----------------------------------------------------------------------

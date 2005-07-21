@@ -1,0 +1,17 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer f1 (integer j)
+    // integer f2 (integer i)
+    // filename: "tests/types/prototype1.ycp"
+    integer f2 (integer i)
+{
+    return f1 (i);
+}
+    integer f1 (integer j)
+{
+    return (j + 42);
+}
+    return f2 (0);
+}
+----------------------------------------------------------------------

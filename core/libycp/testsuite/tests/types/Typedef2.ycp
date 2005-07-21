@@ -1,0 +1,23 @@
+// mvidner@suse.cz
+
+// Parameter matching
+{
+    typedef integer number;
+    number Inc (number n)
+    {
+	return n + 1;
+    }
+
+    return Inc (1);
+}
+
+// list(typedef)
+{
+    typedef float number;
+    list <number> Singleton (number n)
+    {
+	return [n];
+    }
+
+    return Singleton (3.14);
+}

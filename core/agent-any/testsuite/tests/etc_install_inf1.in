@@ -1,0 +1,11 @@
+Sourcemounted: 0
+Display: Color
+Cdrom: hdc
+Bootmode: CD
+SMP: 0
+Mouse-Device: /dev/psaux
+Mouse-Type: ps/2
+Floppy-Disk: 1
+YaST2-Update: 0
+Textmode: 0
+Framebuffer: 0x0301

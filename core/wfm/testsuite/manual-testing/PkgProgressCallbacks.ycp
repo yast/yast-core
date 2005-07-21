@@ -1,0 +1,9 @@
+{
+    import "PackageCallbacks";
+
+    PackageCallbacks::StartPackage ("namghasdghasdghasdghasdfghsdfaghsdfghfsdghsdfghfsdghdsfaghe", "summary", 1234567, false);
+    PackageCallbacks::ProgressPackage (42);
+    UI::UserInput();
+    PackageCallbacks::DonePackage (0, "name");
+
+}

@@ -1,0 +1,22 @@
+/**
+ * File:
+ *   modinfo.scr
+ * Summary:
+ *   SCR Agent for reading modinfo
+ * Access:
+ *   read
+ * Authors:
+ *   Jan Holesovsky <kendy@suse.cz>
+ * See:
+ *   yast2-config-tv
+ * Example:
+ *   Dir(.modinfo.kernel.drivers.media.video)
+ *   Read(.modinfo.kernel.drivers.media.video.bttv)
+ * 
+ * $Id$
+ *
+ */
+.modinfo
+
+`ag_modinfo ()
+

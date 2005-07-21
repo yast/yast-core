@@ -1,0 +1,19 @@
+# return type of the dquoted block inside of the function
+# is unknown - this code must parse
+
+{
+
+define boolean PollAbort() ``{
+    return true;
+}
+
+define symbol ReadDialog() ``{
+
+    block<boolean> AbortFunction = ``{return PollAbort();};
+    boolean ret = true;
+    return ret ? `next : `abort;
+}
+
+return true;
+
+}

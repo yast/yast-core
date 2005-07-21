@@ -1,0 +1,14 @@
+Makefile
+Makefile.in
+y.output
+libycp.kdoc
+scanner.cc
+parser.cc
+parser.h
+parser.output
+hashtable.h
+*.o
+*.lo
+*.la
+.deps
+.libs

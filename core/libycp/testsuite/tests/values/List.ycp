@@ -1,0 +1,28 @@
+// Typed select and "is" optimization cooperate badly.
+{
+    define boolean isString (any a) ``{
+	if (is (a, string))
+	{
+	    y2milestone ("%1 is a string", a);
+	    return true;
+	}
+	else
+	{
+	    y2milestone ("%1 not a string", a);
+	    return false;
+	}
+    }
+
+    list <any> la = [3.14, "foo", 1];
+    integer index = 1;
+    any s = select (la, index, nil);
+
+    return [
+	!isString (la),
+
+	isString (s),
+	is (s, string),
+	isString (select (la, index, nil)),			// runtime type check
+	is (select (la, index, (string)nil), string)		// parsetime type check
+	];
+}

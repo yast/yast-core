@@ -1,0 +1,8 @@
+{
+   boolean f (block<integer> bi)
+   {
+     y2milestone("called");
+     return is (bi, block <integer>);
+   }
+   return f ({ y2milestone("calling"); return 42; }) == false;
+}

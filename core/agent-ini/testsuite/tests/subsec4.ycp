@@ -1,0 +1,8 @@
+{
+    // unnamed section end tag, matching by type
+
+    // The file is not saved if not changed. We must change something
+    // and flush it!
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
+}

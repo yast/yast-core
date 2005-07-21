@@ -1,0 +1,15 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer i
+    // filename: "tests/scope/NestedVariables.ycp"
+    integer i = 1;
+    i = {
+    // integer j
+    integer j = 2;
+    return j;
+}
+;
+    return i;
+}
+----------------------------------------------------------------------

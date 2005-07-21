@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/lt.ycp"
+    return (42 < 69);
+}

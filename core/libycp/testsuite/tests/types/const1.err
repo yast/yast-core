@@ -1,0 +1,3 @@
+[Parser] tests/types/const1.ycp:4 Assignment to const identifier 'm'
+[Parser] tests/types/const1.ycp:6 Assignment to const identifier 'm'
+runycp: parser error

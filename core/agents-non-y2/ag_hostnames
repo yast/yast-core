@@ -1,0 +1,199 @@
+#!/bin/bash
+
+# File:		ag_hostnames
+# Package:	Network configuration
+# Summary:	Agent for reading hostnames from local network
+# Authors:	Michal Svec, Martin Vidner
+#
+# $Id$
+#
+# Agent for reading
+# - hostnames from local network
+# - hostnames of hosts that have a particular TCP port open
+# - hostnames of hosts that have a particular RPC service open
+# - hostnames of samba servers
+#
+# Note: hostnames are not sorted.
+
+if [ x$1 = x-d ]; then
+    set -x
+else
+    exec 2>/dev/null
+fi
+
+# We want to parse English output
+export LC_ALL=C
+
+# this function is duplicated in ag_showexports and ag_hostnames
+# after $1 seconds, kill $2 and all its children
+# return $2's exit status
+function kill_after() {
+    local TIMEOUT=$1
+    local LONG_PID=$2
+
+    {
+	sleep $TIMEOUT
+	LONG_CHILDREN_PIDS=`ps --ppid $LONG_PID --no-headers -o pid`
+	kill $LONG_PID $LONG_CHILDREN_PIDS
+    } &
+    SLEEP_PID=$!
+
+    # now wait until the long command finishes or is killed
+    wait $LONG_PID
+    local RET=$?
+    # if it did not exit because of a signal,
+    # then the killer is useless and we will kill him instead
+    if [ $RET -lt 128 ]; then
+	kill $SLEEP_PID
+    fi
+    return $RET
+}
+
+# RETVAL convention avoids passing return values as stdout
+# and thus spawning new processes
+
+# uses RETVAL
+function ycp_item() {
+    RETVAL="\"$1\", "
+}
+
+function lookup_ip() {
+    local ip=$1
+    if [ $BADLOOKUP != 4 ] ; then
+#	NAME=$(dig +short +tries=1 +time=1 -x $ip | sed -e 's/\.$//')
+#	NAME=$(dig +short -x $ip | sed -e 's/\.$//')
+#	NAME=$(host -W1 $ip | sed -n '/.*domain name pointer \(.*\)\.$/s//\1/p')
+	NAME="$(getent hosts "$ip" | sed -e 's/^[0-9. ]*//')"
+	[ -z "$NAME" ] && BADLOOKUP=$(expr $BADLOOKUP + 1)
+	NAME="${NAME:-$ip}"
+    else
+	NAME="$ip"
+    fi
+    RETVAL="$NAME"
+}
+
+# uses RETVAL
+function broadcast_addr() {
+    # may be empty
+    local INTERFACE=$1
+    RETVAL=$(/sbin/ifconfig $INTERFACE | sed -n '/.*Bcast:\([0-9.]*\).*/s//\1/p' | head -n 1)
+}
+
+# uses RETVAL
+function broadcast_ping() {
+    # wait long enough to gather as many hosts as possible, #40582
+    RETVAL=$(ping -b -w 10 "$BROADCAST" | sed -n '/.*from \([0-9.]\+\).*/s//\1/p'  | sort -u)
+}
+
+# uses exit status
+# is_port_open $ADDR $PORT
+function is_port_open() {
+    /usr/bin/netcat -w 1 -z $1 $2
+}
+
+# uses exit status
+# is_rpc_service_open_long $ADDR $SERVICE
+function is_rpc_service_open_long() {
+    #hack: not quoting $2 enables scanning for a particular version
+    /usr/sbin/rpcinfo -u "$1" $2 >/dev/null || \
+    /usr/sbin/rpcinfo -t "$1" $2 >/dev/null
+}
+
+# uses exit status
+# is_rpc_service_open $ADDR $SERVICE
+# calls is_rpc_service_open but kills it if it takes too long
+function is_rpc_service_open() {
+    is_rpc_service_open_long "$1" "$2" &
+    kill_after 2 $!
+#    local RET=$?
+#    echo "result: $RET" >&2
+#    return $RET
+}
+
+# hostnames [-p portnum|-r rpcservice] [interface]
+# echoes the output
+function hostnames() {
+    local PORT
+    local SERVICE
+    local INTERFACE
+    if [ x$1 = x-p ]; then
+	PORT=$2
+	shift 2
+    elif [ x$1 = x-r ]; then
+	SERVICE="$2"
+	shift 2
+    fi
+    INTERFACE=$1
+
+    BADLOOKUP=0
+    if [ $IP_ONLY != 0 ]; then
+	BADLOOKUP=4
+    fi
+    broadcast_addr $INTERFACE; BROADCAST=$RETVAL
+    if [ "$BROADCAST" ] ; then
+	broadcast_ping; IPS=$RETVAL
+	ANSWER=
+	for IP in $IPS ; do
+	    # filter out hosts that do not have the wanted service
+	    if [ -n "$PORT" ]; then
+		is_port_open $IP $PORT || IP=""
+	    elif [ -n "$SERVICE" ]; then
+		is_rpc_service_open $IP "$SERVICE" || IP=""
+	    fi
+
+	    if [ -n "$IP" ] ; then
+		lookup_ip $IP; ycp_item $RETVAL; ANSWER="$ANSWER $RETVAL"
+	    fi
+	done
+	echo '[' "$ANSWER" ']'
+    else
+	echo '[]'
+    fi
+}
+
+while true ; do
+    IFS=
+    read COMMAND || exit
+    unset IFS
+    # strip leading backquote introduced by NI
+    COMMAND=${COMMAND#\`}
+
+    IP_ONLY=0
+    case "$COMMAND" in
+	"result ("*)
+	    exit
+	    ;;
+	'Dir (.)')
+	    echo '[ "rpc", "interface", "samba" ]'
+	    ;;
+	'Read (.)')
+	    hostnames
+	    ;;
+	'Read (.,'*)
+	    PORT=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
+	    hostnames -p $PORT
+	    ;;
+	'Read (.rpc,'*)
+	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.rpc, *"\(.*\)")/\1/')
+	    hostnames -r "$SERVICE"
+	    ;;
+	'Read (.ip.rpc,'*)
+	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.ip.rpc, *"\(.*\)")/\1/')
+	    IP_ONLY=1
+	    hostnames -r "$SERVICE"
+	    ;;
+	'Read (.interface,'*)
+	    INTERFACE=$(echo "$COMMAND" | sed 's/^Read (.interface, *"\(.*\)")/\1/')
+	    hostnames $INTERFACE
+	    ;;
+	'Read (.samba)')
+	    echo -n [
+		nmblookup -M -T - | awk -F '[, \t]+' '/<01>/ { printf "\"%s\", ", $1; }'
+	    echo ]
+	    ;;
+	*)
+	    echo nil
+    esac
+done
+
+# EOF

@@ -1,0 +1,24 @@
+#
+# ---------------------------------------------------------
+#
+#  Filename:    y-identifier1-nested.ycp
+#
+#  Purpose:     test identifier global/local access
+#
+#  Creator:     kkaempf@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+{
+    list <integer> f ()
+    {
+	import "Identifier1";
+
+	return Identifier1::f();
+    }
+
+    return f();
+}

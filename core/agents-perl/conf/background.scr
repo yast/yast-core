@@ -1,0 +1,32 @@
+/**
+ * File:
+ *   background.scr
+ *
+ * Summary:
+ *   SCR Agent for executing processes on the background
+ *
+ * Access:
+ *   read/execute
+ *
+ * Authors:
+ *   Ladislav Slezak <lslezak@suse.cz>
+ *
+ * See:
+ *
+ * Example:
+ *   Execute(.run_output, "/bin/date") -> (true)
+ *   Read(.newlines) -> (1)
+ *   Read(.newout) -> [ "Tue Oct 16 09:21:18 CEST 2001" ]
+ *   Read(.newlines) -> (0)
+ *   Read(.isrunning) -> (false)
+ *   Read(.status) -> (0)
+ *   
+ *   This script executes programm on background. Reading full
+ *   subprocess STDOUT or only number of output lines is possible while
+ *   programm is running.
+ *
+ */
+.background
+
+`ag_background ()
+

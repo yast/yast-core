@@ -1,0 +1,41 @@
+Agent for accessing '/var/yp/Makefile'
+======================================
+
+The agent is designed to read/write this Makefile. It reads/writes
+variables and "all:" rule. Currently it is not possible to add a new
+entries to the Makefile, just change the existing ones.
+
+Implemented paths:
+
+Read (.var.yp.makefile) -> <map>
+
+- returns map with all variables
+
+Read (.var.yp.makefile.maps) -> <list>
+
+- returns list of maps in the "all:" rule
+
+Read (.var.yp.makefile.<VARIBLE>) -> (string>
+
+- returns value of VARIABLE (empty string if does
+  not exists)
+
+Write (.var.yp.makefile, <map>) -> <boolean>
+
+- saves values of the variables in the map
+
+Write (.var.yp.makefile.maps, <list>) -> <boolean>
+
+- save the rule "all:"
+
+Write (.var.yp.makefile.<VARIABLE>, <string>) -> <boolean>
+
+- save the VARIABLE
+
+Write (.var.yp.makefile, nil)
+
+- writes (physically) the file by copying the original one and
+  replacing the overwritten values
+
+
+Note: all writes returns true on success false on error.

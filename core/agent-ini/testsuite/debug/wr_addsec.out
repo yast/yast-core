@@ -1,0 +1,13 @@
+(nil)
++Main
+  Key=Val
+  +Sub
+    Key=Val
+    +Sub
+      Key=Val
+; Comment
+      +Sub
+      -Sub
+    -Sub
+  -Sub
+-Main

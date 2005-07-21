@@ -1,0 +1,7 @@
+{
+    const integer ic = 42;
+
+    ic = ic + 1;
+
+    return ic;
+}

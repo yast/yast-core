@@ -1,0 +1,9 @@
+[Parser] tests/expressions/Formatted3.ycp:2 Warning: Format string is not constant, no parameter checking possible
+Parsed:
+----------------------------------------------------------------------
+{
+    // filename: "tests/expressions/Formatted3.ycp"
+    y2milestone (sformat ("HAHA %11 %21", "A", 42));
+}
+----------------------------------------------------------------------
+[YCP] tests/expressions/Formatted3.ycp:2 HAHA A1 421

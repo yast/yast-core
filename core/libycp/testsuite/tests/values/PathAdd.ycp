@@ -1,0 +1,23 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    PathAdd.ycp
+#
+#  Purpose:     test cases for YCP test. Tests add buildin.
+#
+#  Creator:     pblahos@suse.cz
+#
+#  Maintainer:  pblahos@suse.cz
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for YCP_Path
+
+# ------- YCP_Path
+   // strange but allowed (p = .; is not allowed)
+
+    add (., "pathsegment")
+    add (.segment, "\"!@#$%^&*()_+")
+    add (."%^&", "\"!..@#$%^&*()_+")
+    add (.segment, .aaa.aaa)

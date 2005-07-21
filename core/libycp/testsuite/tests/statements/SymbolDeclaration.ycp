@@ -1,0 +1,13 @@
+{
+# testcase for bug #40441
+
+define void foo (string s) {
+    return;
+}
+
+define void bar () {
+    string s = "qqq";
+    foo (string s);	// declaration is not allowed here
+}
+
+}

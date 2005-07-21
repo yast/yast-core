@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/or.ycp"
+    return (true || false);
+}

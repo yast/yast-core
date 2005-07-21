@@ -1,0 +1,67 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Builtin_III.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+# ---------------- added 1999/11/24 ---------------
+
+//
+// findfirstnotof( string s_1, string s_2 ) -> integer
+//
+// Returns the position of the first character in <tt>s_1</tt> that
+// is NOT contained in <tt>s_2</tt>.
+//
+
+( findfirstnotof( "abcdefghi", "abcefghi" ) == 3 )
+( findfirstnotof( "abcdefghi", "" ) == 0 )
+// ( findfirstnotof( "", "abcdefghi" ) == 0 )   --> nil
+
+
+
+//
+// crypt(string unencrypted) -> string
+//
+// Encrypt the string <tt>unencrypted</tt> using the standard
+// password encryption provided by the system.
+//
+// only the first 8 characters are encrypted ...
+//
+// NO check for crypt, since it has random salt()
+
+
+//
+// splitstring (s, c) -> list (string)
+//  split s at c resulting in a list of strings
+//  only consider first char of c
+
+( splitstring ("", "") == [] )
+( splitstring ("abc", "") == [] )
+( splitstring ("abc/def/ghi", "/") == ["abc", "def", "ghi"] )
+( splitstring ("/abc/def/ghi", "/") == ["", "abc", "def", "ghi"] )
+( splitstring ("abc/def/ghi/", "/") == ["abc", "def", "ghi", ""] )
+( splitstring ("abc/def/ghi/", "/a") == ["", "bc", "def", "ghi", ""] )
+( splitstring ("abc/def/ghi", ".") == ["abc/def/ghi" ] )
+( splitstring ("/", "/") == ["", ""] )
+
+//
+// mergestring (l, c) -> string
+//  merge list of strings to single string. Insert c between list elements
+//  considers all chars of c
+
+( mergestring ([], "") == "" )
+( mergestring ([], "abc") == "" )
+( mergestring (["abc", "def", "ghi"], "/") == "abc/def/ghi" )
+( mergestring (["", "abc", "def", "ghi"], "/") == "/abc/def/ghi" )
+( mergestring (["abc", "def", "ghi", ""], "/") == "abc/def/ghi/" )
+( mergestring (["abc", "def", "ghi", ""], "/a") == "abc/adef/aghi/a" )
+( mergestring (["", ""], "/") == "/" )
+
+

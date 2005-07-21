@@ -1,0 +1,21 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    Notifications.ycp
+#
+#  Purpose:     test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  jd@suse.de
+#
+# ---------------------------------------------------------
+
+"NON-TERMINAL YCP_DeclTerm"
+# NON-TERMINAL YCP_DeclTerm     
+#
+#  ( Symbol0002 ( empty ) )
+
+// libycp[10] Cannot evaluate unknown term Symbol0002()
+( Symbol0002 ( ) )                            // not valid
+

@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Symbolic"
+    // filename: "tests/modules/symbolic.ycp"
+    import "Symbolic";
+    Symbolic::func ();
+}
+----------------------------------------------------------------------
+[YCP] tests/Module/Symbolic.ycp:9 Next value: 1
+[YCP] tests/Module/Symbolic.ycp:9 Next value: 2
+[YCP] tests/Module/Symbolic.ycp:9 Next value: 3

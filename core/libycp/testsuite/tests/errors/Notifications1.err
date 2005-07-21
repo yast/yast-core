@@ -1,0 +1,16 @@
+[Parser] tests/errors/Notifications1.ycp:16 bad octal constant
+Parsed:
+----------------------------------------------------------------------
+"Hello world"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+((([5] + [6]) == [5, 6]) == true)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+((($[1:"Paris"] + $[2:"London"]) == $[1:"Paris", 2:"London"]) == true)
+----------------------------------------------------------------------
+[Parser] tests/errors/Notifications1.ycp:31 Undeclared identifier 'ComposedString'
+[Parser] tests/errors/Notifications1.ycp:31 Undeclared identifier 'd'
+runycp: parser error

@@ -1,0 +1,9 @@
+(nil)
++Main
+  Key=Val
+  +Sub1
+    +Sub2
+      Key2=new
+    -Sub2
+  -Sub1
+-Main

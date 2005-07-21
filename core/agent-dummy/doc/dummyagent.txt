@@ -1,0 +1,109 @@
+Interface Specification For Dummy-Agent
+=======================================
+$Id$
+
+1. What is the dummy-agent?
+---------------------------
+
+The dummy-agent is used to replace SCR agents with
+'dummy' counterparts to make testing easier.
+
+For this purpose, the dummy-agent does not work
+actively on the system but runs passively without any
+side-effects.
+
+This is especially helpful for testmode and the hwprobe
+agent. All hardware related data can come from a static
+description.
+
+2. How do I use the dummy-agent?
+--------------------------------
+
+The dummy-agent is used just like any other agent and
+in fact transparently replaces another agent.
+
+Just create a SCR config file and register the file to the SCR:
+SCR(`RegisterAgent(.some.path, "File.scr"));
+
+Then you can use the SCR(`Read(.some.path)), SCR(`Write(.some.path,value)),
+SCR(`Execute(.some.path,value)), etc. You can also explicitely mount
+and unmount the agent with MountAgent and UnmountAgent.
+
+The magic is hidden in the File.scr, in the "data" argument to
+the dummy-agent. This arguments are one to three maps with string
+or path values as keys. There is also an optional argument with default
+value for read. Write returns always true as default. Execute returns always
+0 as default.
+
+The example File.scr with filled Read map and default:
+
+.path.spec
+`ag_dummy( DataMap($["a":1,"b":$["c":2, "d":3]], 0) )
+
+Another example with filled Read, Write and Execute map and default:
+
+.path.spec
+`ag_dummy( DataMap($["a":1,"b":$["c":2, "d":3]],
+           $["target" : $["write" : false ]], $["target": $["bash" : 1 ]], 0))
+
+3. How to use the dummy-agent for complicated test cases?
+---------------------------------------------------------
+
+For some tests it could be required that an agent shall return one value on
+first call, another value on second call and so on. For that purpose you can
+transfer a list of maps for Read and/or Write and/or Execute. How to write the
+tests see documentation in .../yast2/modules/testsuite/doc.
+
+Example: 
+You want to test a define (a function) which calls an agent several times
+in a loop and the loop goes on until the agent call returns ok. Example below
+tranfers a list of maps for SCR(`Execute(.target.bash,"")) calls. The exit code
+of first and second call will be 1 and 0 for third call. 
+
+.path.spec
+`ag_dummy(DataMap(
+  $["probe":$["cdrom":["/dev/sr2"]], "yast2":$["instsource":$["cdnum":1, "cdrelease":123]]],
+  $[],
+  [$["target":$["bash":1]], $["target":$["bash":1]], $["target":$["bash":0]]], 
+  []
+))
+
+Another usage can be that you will test a module which calls an agent when
+entering the module and again at the end and the dummy-agent shall return a
+different value at the end (e.g. after doing some changes).
+
+4. Dummyagent Dir operation
+---------------------------
+
+Note that for Dir operation Read map is used. Keys of tuples found on given path
+are returned. Example:
+map ReadMap = $[
+"root" : $[ "bin" : "", "none" : "", `sym : `aaa,]
+];
+Dir (.root) returns list [ "bin", "none", `sym ].
+
+Index of read call is not increased when using Dir (see chapter 3 for details).
+Example:
+.path.spec
+`ag_dummy(DataMap(
+  [$["target":$["bash":1]], $["target":$["bash":2]], $["target":$["bash":3]]], 
+  $[], $[], 
+  []
+))
+Read (.target.bash) --> 1
+Dir (.target)
+Read (.target.bash) --> 2
+
+5. Possible syntax
+------------------
+
+The DataMap argument can have these forms:
+
+DataMap( map read, any default);
+DataMap( map read, map write, any default);
+DataMap( map read, map write, map exec, any default);
+
+Each map argument can be also a list of maps:
+
+DataMap( [ map read1, map read2, ... ], any default);
+...

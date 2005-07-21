@@ -1,0 +1,3 @@
+[Parser] tests/statements/Switch5.ycp:5 Invalid constant type in the case statement
+[Parser] tests/statements/Switch5.ycp:5 Expected 'integer', seen 'const string'.
+runycp: parser error

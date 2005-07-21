@@ -1,0 +1,5 @@
+load_lib "ag_modules_init.exp"
+
+proc ag_modules_exit {} {}
+proc ag_modules_version {} {}
+

@@ -1,0 +1,9 @@
+// a simple module
+{
+    module "Module0";
+
+    global integer Inc (integer j)
+    {
+	return j + 1;
+    }
+}

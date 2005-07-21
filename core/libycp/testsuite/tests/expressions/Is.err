@@ -1,0 +1,6 @@
+Parsed:
+----------------------------------------------------------------------
+is (nil, void)
+----------------------------------------------------------------------
+[Parser] tests/expressions/Is.ycp:24 Undeclared identifier 'a'
+runycp: parser error

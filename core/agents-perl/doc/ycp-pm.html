@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<!-- $Id$ -->
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<title>Perl module for YCP</title>
+<style type="text/css">
+pre.ycp { background-color: #dfefff }
+</style>
+</head>
+<body bgcolor="white">
+<h1>Perl module for YCP</h1>
+
+<p>This document describes new features of the Perl module for
+writing YaST2 SCR agents.</p>
+
+<!--
+<p>Changes:
+<ul>
+<li>
+</ul>
+-->
+<p><b>Contents:</b><br>
+<!-- BEGIN TOC (see ~mvidner/bin/htmltoc) -->
+&nbsp;&nbsp;<a href="#intro">Introduction</a><br>
+&nbsp;&nbsp;<a href="#basic">Basic usage</a><br>
+&nbsp;&nbsp;<a href="#agentconf">Agent Configuration</a><br>
+&nbsp;&nbsp;<a href="#logging">Logging</a><br>
+<!-- END TOC -->
+</p>
+
+<hr>
+<h2 id="intro">Introduction</h2>
+
+<p>Mike's <a href="docu0perl.htm">original documentation</a>
+describes in detail a simple "ping" agent, with instructions how to
+test it and run it.</p>
+
+<p>The original module could only handle simple data. Lists and
+maps could not be nested. Klaas later added a function to return a
+complex structure.</p>
+
+<p>The new features are:</p>
+
+<ul>
+<li>A (hopefully) simplified interface: one data structure, two
+functions for parsing and one for writing YCP.</li>
+
+<li>Parsing of arbitrarily nested lists and maps.</li>
+
+<li>Proper handling of special characters in strings.</li>
+
+<li>Easy configuration of agents in <tt>.scr</tt> files.</li>
+
+<li>A standard logging interface.</li>
+</ul>
+
+<p>A <a href="ycp-pm-pod.html">reference document</a> is avaiable.
+It also suggests better equivalents to obsoleted functions.</p>
+
+<!-- ================ -->
+<h2 id="basic">Basic usage</h2>
+
+<p>In this example we look at an actual agent for accessing mailer
+tables.</p>
+
+<p>A mailer table is conceptually just a map of keys and values.
+The agent also wants to preserve the textual structure of a map
+file so it also stores comments and preserves the order of entries.
+So the actual representation of the table is <tt>@table</tt>, a
+list of maps with the keys "comment", "key" and "value". A trailing
+comment is held separately in <tt>$trailing_comment</tt>.</p>
+
+<p>Commands are parsed by <a href=
+"ycp-pm-pod.html#parsecommand">ycp::ParseCommand</a>, which
+replaces ycpInit. It returns a list containing a command, a path
+and an optional argument. Instead of ycpCommandIs..., use a simple
+string comparison.</p>
+
+<p>Values are returned by <a href=
+"ycp-pm-pod.html#return">ycp::Return</a>, which replaces
+ycpReturn...As... and ycpReturn.</p>
+
+<pre class="ycp">
+while ( &lt;STDIN&gt; )
+{
+    my ($command, $path, $argument) = ycp::ParseCommand ($_);
+
+    if ($command eq "Dir")
+    {
+	if ($path eq ".")
+	{
+	    ycp::Return (["table", "trailing_comment"]);
+	}
+	else
+	{
+	    ycp::Return ([]);
+	}
+    }
+</pre>
+
+<p>The argument is a <a href=
+"ycp-pm-pod.html#perlycpvalue">PerlYCPValue</a>: simple types such
+as integers, strings and booleans are represented as scalars; maps
+and lists are represented as references to hashes and arrays. Nil
+is represented as undef. Paths are represented as references to
+strings. Instead of ycpArgIs..., ycpGetArgType and ycpGetArg...,
+use ref($argument) eq "ARRAY" and the like.</p>
+
+<p>Note that <a href="ycp-pm-pod.html#return">ycp::Return</a> will guess what
+type a scalar is and return an appropriate YCP type. This may not be always
+what you want (cf. bug 21804) and you can prevent it by passing it a second
+parameter of 1.
+</p>
+
+<pre class="ycp">
+    # Write command
+    elsif ($command eq "Write")
+    {
+	my $result = "true";
+	if ($path eq ".trailing_comment" &amp;&amp; ! ref ($argument))
+	{
+	    $trailing_comment = $argument;
+	}
+	elsif ($path eq ".table" &amp;&amp; ref ($argument) eq "ARRAY")
+	{
+	    @table = @{$argument};
+	}
+	elsif ($path eq "." &amp;&amp; !defined ($argument))
+	{
+	    $result = write_file ();
+	}
+	else
+	{
+	    y2error ("Wrong path $path or argument: ", ref ($argument));
+	    $result = "false";
+	}
+
+	ycp::Return ($result);
+    }
+
+    # Read command
+    elsif ($command eq "Read")
+    {
+	if ($path eq ".table")
+	{
+	    ycp::Return (\@table, 1);
+	}
+	elsif ($path eq ".trailing_comment")
+	{
+	    ycp::Return ($trailing_comment, 1);
+	}
+	else
+	{
+	    y2error ("Unrecognized path! '$path'");
+	    ycp::Return ("");
+	}
+    }
+
+
+    # result: we should exit
+    elsif ($command eq "result")
+    {
+	exit;
+    }
+
+    # Unknown command
+    else
+    {
+	y2error ("Unknown instruction $command or argument: ", ref ($argument));
+	ycp::Return ("false");
+    }
+
+}
+</pre>
+
+<!-- ================ -->
+<h2 id="agentconf">Agent Configuration</h2>
+
+<p>In a SCR configuration file, you can specify a configuration
+command that will be the first one passed to the agent:</p>
+
+<pre class="ycp">
+.mail
+
+`ag_mailtable (
+  Mailtable ($[
+    "filename": "/home/mvidner/mta/virtusertable1",
+    "continue_escaped_newline": true,
+    "continue_leading_blanks": true,
+    "colon": false,
+  ])
+)
+</pre>
+
+<p>In C++, this is handled by SCRAgent::otherCommand. In Perl, use
+<a href="ycp-pm-pod.html#parseterm">ycp::ParseTerm</a>. In the
+example agent above, the main loop is actually preceded by this
+code:</p>
+
+<pre class="ycp">
+# read the agent arguments
+$_ = &lt;STDIN&gt;;
+# reply to the client (this actually gets eaten by the ScriptingAgent)
+ycp::Return (undef);
+
+my ($symbol, $config, @rest) = ycp::ParseTerm ($_);
+if ($symbol ne "Mailtable")
+{
+    y2error ("The first command must be the configuration.(Seen '$_')");
+    exit;
+}
+else
+{
+    $filename = $config-&gt;{"filename"};
+    $continue_escaped_newline = $config-&gt;{"continue_escaped_newline"};
+    $continue_leading_blanks = $config-&gt;{"continue_leading_blanks"};
+    $separator = $config-&gt;{"colon"} ? qr/:\s+/ : qr/\s+/;
+    $oseparator = $config-&gt;{"colon"} ? ":\t" : "\t";
+}
+</pre>
+
+<!-- ================ -->
+<h2 id="logging">Logging</h2>
+
+<p>A <a href="../libycp/logging.html">standard set</a> of
+logging functions is now available: <a href=
+"ycp-pm-pod.html#y2debug">y2debug</a>, y2milestone, y2warning,
+y2error, y2security and y2internal.</p>
+
+<p>Normally, all these functions except y2debug produce output.
+Setting the environment variable Y2DEBUG to any value enables
+y2debug too.</p>
+
+<hr>
+<a href="mailto:mvidner@suse.cz">Martin Vidner</a>, 2001-11-12.
+</body>
+</html>

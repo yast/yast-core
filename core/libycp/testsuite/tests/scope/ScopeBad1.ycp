@@ -1,0 +1,40 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:    ScopeBad.ycp
+#
+#  Purpose:     'bad' test cases for YCP test
+#
+#  Creator:     jd@suse.de
+#
+#  Maintainer:  kkaempf@suse.de
+#
+# ---------------------------------------------------------
+
+
+// this tests includes tests for the scope of variables
+
+// the variable is declared multiple
+// the integer variable is assigned a 'string block'
+{
+
+   integer MultipleUsedVariable = 0;
+
+   if( true )
+   {
+       integer MultipleUsedVariable = 1;
+
+       MultipleUsedVariable = 				// block assignment !
+       {
+	   while( true )
+	   {
+	       string MultipleUsedVariable = "";
+
+	       MultipleUsedVariable = "I am a string";
+	       return MultipleUsedVariable;
+	   }
+       };
+   }
+
+   return MultipleUsedVariable;
+}

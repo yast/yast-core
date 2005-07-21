@@ -1,0 +1,19 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // module "Identifier"
+    // integer f ()
+    // filename: "tests/modules/embedded.ycp"
+    import "Identifier";
+    integer f ()
+{
+    return Identifier::this_is_global;
+    {
+    // module "Identifier1"
+    import "Identifier1";
+    return Identifier1::a;
+}
+}
+    return f ();
+}
+----------------------------------------------------------------------

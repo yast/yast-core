@@ -1,0 +1,46 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-List.ycp
+#
+#  Purpose:	test cases for all list builtins
+#
+# ---------------------------------------------------------
+
+
+("** equality **")
+
+([1, 2] == [1, 2])
+([] == [])
+([1, 2, 3] == [1, 2])
+([1, 2] == [])
+([] == [1, 2])
+
+
+("** inequality **")
+
+([1, 2] != [1, 2])
+([] != [])
+([1, 2, 3] != [1, 2])
+([1, 2] != [])
+([] != [1, 2])
+
+
+("** foreach **")
+
+{
+    // foreach without a return
+    integer sum = 0;
+    foreach (integer i, [1, 2, 4], ``{
+	sum = sum + i;
+    });
+    return sum;
+}
+
+#find
+
+
+("** prepend **")
+
+(prepend ([1, 4], 8))
+(prepend ([], 8))

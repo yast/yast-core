@@ -1,0 +1,22 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list foo
+    // list <integer> bar
+    // filename: "tests/types/unspec-types.ycp"
+    list foo = [];
+    list <integer> bar = [];
+    return [foo, bar];
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map foo
+    // map <integer, string> bar
+    // filename: "tests/types/unspec-types.ycp"
+    map foo = $[];
+    map <integer, string> bar = $[];
+    return [foo, bar];
+}
+----------------------------------------------------------------------

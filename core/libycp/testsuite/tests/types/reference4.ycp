@@ -1,0 +1,4 @@
+{
+  integer i1 = 1;
+  map <integer, const integer &> m = $[ 1:i1];	// Ok
+}

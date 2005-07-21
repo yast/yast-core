@@ -1,0 +1,2 @@
+[Parser] tests/types/const.ycp:4 Assignment to const identifier 'ic'
+runycp: parser error

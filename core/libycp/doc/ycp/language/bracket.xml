@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding='ISO-8859-15'?>
+
+<section id="bracket"><title>The bracket operator</title>
+
+    <section id="bracket_intro"><title>Introduction</title>
+<para>
+The bracket operator is the use of '[' and ']' like accessing
+arrays in C.</para>
+<para>
+In YCP, this operator is used to ease handling with (possibly
+nested) lists and maps.</para>
+<para>
+The bracket operator can be applied to any list or map variable
+and should be used in favour of (deeply) nested lookup() and select()
+cascades.
+</para>
+</section>
+    <section id="bracket_access"><title>Access variant</title>
+<para>
+The access variant of the bracket operator is used for accessing
+elements of a list or a map. It effectively replaces <literal>select</literal>
+for lists and <literal>lookup</literal> for maps.</para>
+
+    <section id="bracket_access_lists"><title>Accessing lists</title>
+<para>
+General syntax:</para>
+<para>
+for simple lists:</para>
+<para>
+&lt;<emphasis>list-var</emphasis>&gt;<literal>[</literal>&lt;<emphasis>index</emphasis>&gt;<literal>]:</literal>&lt;<emphasis>default-value</emphasis>&gt;
+</para>
+<para>
+for nested lists:</para>
+<para>
+&lt;<emphasis>list-var</emphasis>&gt;<literal>[</literal>&lt;<emphasis>index</emphasis>&gt;<literal>,</literal>&lt;<emphasis>index</emphasis>&gt;<literal>&nbsp;&lt;</literal><emphasis>, ...</emphasis>&gt;<literal>]:</literal>&lt;<emphasis>default-value</emphasis>&gt;
+</para>
+
+<para><emphasis>index</emphasis> must be an integer and counts from 0 up to the number of elements-1.</para>
+<para>
+It will return the <emphasis>default-value</emphasis> if you try to access an out-of-bounds element.</para>
+<note><para>
+Note that there must be no space between the closing bracket and the colon.
+</para></note>
+<para>
+Examples:</para>
+<para>
+<programlisting>
+{
+  list l = [1, 2, 3];
+
+  integer three = l[2]:0;		// == 3
+
+  integer zero = l[42]:0;		// default value
+
+  list ll = [[1,2], [3,4], [5,6]];
+
+  return (ll[1,0]:0 == three);	// returns true
+}
+</programlisting>
+</para>
+</section>
+
+    <section id="bracket_access_maps"><title>Accessing maps</title>
+<para>General syntax:</para>
+<para>for simple maps:</para>
+<para>
+&lt;<emphasis>map-var</emphasis>&gt;<literal>[</literal>&lt;<emphasis>key</emphasis>&gt;<literal>]:</literal>&lt;<emphasis>default-value</emphasis>&gt;
+</para>
+<para>for nested lists:</para>
+<para>
+&lt;<emphasis>map-var</emphasis>&gt;<literal>[</literal>&lt;<emphasis>key</emphasis>&gt;<literal>,</literal>&lt;<emphasis>key</emphasis>&gt;<literal>&nbsp;&lt;</literal><emphasis>, ...</emphasis>&gt;<literal>]:</literal>&lt;<emphasis>default-value</emphasis>&gt;
+</para>
+<para><emphasis>key</emphasis> must have an allowed type for maps, integer, string, or symbol.</para>
+<para>
+It will return <emphasis>default-value</emphasis> if you try to access an non existing key.</para>
+<note><para>
+Note that there must be no space between the closing bracket and the colon.
+</para></note>
+<para>Examples:</para>
+<para>
+<programlisting>
+{
+  map m = $["a":1, "b":2, "c":3];
+
+  integer three = m["c"]:0;		// == 3
+
+  integer zero = m["notthere"]:0;	// default value
+
+  map mm = $["a":$[1:2], "b":$[3:4], "c":$[5:6]];
+
+  return (mm["b",0]:0 == three);	// returns true
+}
+</programlisting>
+</para>
+</section>
+
+    <section id="bracket_access_mixed"><title>Mixed map/list access</title>
+<para>
+Since the bracket operator applies to list and maps, you can use it
+to access nested lists and maps. But be careful not to mix up the
+index/key types.</para>
+<para>
+Examples:</para>
+<para>
+<programlisting>
+{
+  map map_of_lists = $["a":[1, 2, 3], "b":[4,5,6], "c":[7,8,9]];
+  integer three = map_of_lists["a",2]:0;		// == 3
+  list list_of_maps = [$[1:2], $[3:4], $[5:6]];
+  return (list_of_maps[1,0]:0 == three);		// returns true
+}
+</programlisting>
+</para>
+</section>
+</section>
+
+
+    <section id="bracket_assign"><title>Assign variant</title>
+<para>
+The bracket operator can also be used on the left side of an assignment (lvalue).</para>
+<para>
+This changes the list or map element <command>in place (!!)</command> and must be
+used with care.</para>
+<para>
+If the map or list element does not exist, it will be created. The bracket
+operator can therefore replace <literal>add</literal> and <literal>change</literal>.</para>
+<para>
+Creating a new list element will extend the size of the list. Holes will
+be filled with <literal>nil</literal>. See the examples below.</para>
+<para>
+</para>
+<para>
+If used as an lvalue, the default value is <command>not</command> allowed.</para>
+<para>
+Examples:</para>
+<para>
+<programlisting>
+{
+  list l = [1,2,3];
+
+  // change the second element
+  l[1] = 25;			// l = [1,25,3] now !
+
+  // change the "c" element
+  map m = $["a":1, "b":2, "c":3];
+  m["c"] = 42;			// m = $["a":1, "b":2, "c":42] now
+
+  // extend the list to 7 elements (0-6)
+  l[6] = 6;			// l = [1,25,3,nil,nil,nil,6] now !
+
+  // add a new element to m
+
+  m["zz"] = 13;
+
+  return (mm);			// $["a":1, "b":2, "c":42, "zz":13]
+}
+</programlisting>
+</para>
+</section>
+</section>

@@ -1,0 +1,26 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map <string, boolean>> a
+    // boolean res
+    // filename: "tests/types/bracket2.ycp"
+    list <map <string, boolean>> a = [$["key":true]];
+    boolean res = a[0, "key"]:nil;
+    return (res == true);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map <string, boolean>> a
+    // boolean res
+    // filename: "tests/types/bracket2.ycp"
+    list <map <string, boolean>> a = [$["key":true]];
+    boolean res = a[0, "key"]:false;
+    return (res == true);
+}
+----------------------------------------------------------------------
+[Parser] tests/types/bracket2.ycp:22 Bracket default to 'a' has wrong type
+[Parser] tests/types/bracket2.ycp:22 Expected 'boolean', seen 'string'.
+[Parser] tests/types/bracket2.ycp:23 Warning: Identifier 'res' might be used uninitialized
+runycp: parser error

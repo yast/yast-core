@@ -1,0 +1,73 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map> a
+    // boolean res
+    // filename: "tests/types/bracket5.ycp"
+    list <map> a = [$["key":true]];
+    boolean res = /* any -> const boolean */a[0, 0]:false;
+    return (res == false);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map> a
+    // map res
+    // filename: "tests/types/bracket5.ycp"
+    list <map> a = [$["key":true]];
+    map res = a[0]:nil;
+    return (res == $["key":true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <term> a
+    // integer res
+    // filename: "tests/types/bracket5.ycp"
+    list <term> a = [`t (1, `b)];
+    integer res = /* any -> integer */a[0, 0]:-1;
+    return (res == 1);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <map> a
+    // map res
+    // filename: "tests/types/bracket5.ycp"
+    list <map> a = [$["key":true]];
+    map res = a[(0 + 1)]:nil;
+    return (res == nil);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer fce (string str)
+    // list <map> a
+    // map res
+    // filename: "tests/types/bracket5.ycp"
+    integer fce (string str)
+{
+    return tointeger (str);
+}
+    list <map> a = [$["key":true]];
+    map res = a[fce ("0")]:$[];
+    return (res == $["key":true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list a
+    // boolean cond
+    // string res
+    // filename: "tests/types/bracket5.ycp"
+    list a = ["foo"];
+    boolean cond = true;
+    string res = /* any -> string */a[cond ? 0 : 1]:"";
+    return (res == "foo");
+}
+----------------------------------------------------------------------

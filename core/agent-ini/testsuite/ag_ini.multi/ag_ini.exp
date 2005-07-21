@@ -1,0 +1,8 @@
+#
+# ag_ini.exp
+# 'main' file for all ag_ini.multi
+#
+
+# foreach file, call ycp-run (from testsuite/lib)
+
+foreach file [get-files "$srcdir/multi" ycp] { ycp-run multi $file }

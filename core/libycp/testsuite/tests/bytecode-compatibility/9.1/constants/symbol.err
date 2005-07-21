@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/constants/symbol.ycp"
+    return `JustATest;
+}

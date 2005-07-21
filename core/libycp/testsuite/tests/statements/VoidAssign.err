@@ -1,0 +1,135 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // integer v_integer
+    // filename: "tests/statements/VoidAssign.ycp"
+    integer v_integer = 5;
+    v_integer = nil;
+    return ([(v_integer == 0), (v_integer == nil), is (v_integer, void), is (v_integer, integer)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean v_boolean
+    // filename: "tests/statements/VoidAssign.ycp"
+    boolean v_boolean = false;
+    v_boolean = nil;
+    return ([(v_boolean == false), (v_boolean == nil), is (v_boolean, void), is (v_boolean, boolean)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // float v_float
+    // filename: "tests/statements/VoidAssign.ycp"
+    float v_float = 5.5;
+    v_float = nil;
+    return ([(v_float == 0.), (v_float == nil), is (v_float, void), is (v_float, float)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // symbol v_symbol
+    // filename: "tests/statements/VoidAssign.ycp"
+    symbol v_symbol = `a_symbol;
+    v_symbol = nil;
+    return ([(v_symbol == `nil), (v_symbol == nil), is (v_symbol, void), is (v_symbol, symbol)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // string v_string
+    // filename: "tests/statements/VoidAssign.ycp"
+    string v_string = "a string";
+    v_string = nil;
+    return ([(v_string == ""), (v_string == nil), is (v_string, void), is (v_string, string)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/VoidAssign.ycp:61 Warning: Empty locale constant
+Parsed:
+----------------------------------------------------------------------
+{
+    // locale v_locale
+    // filename: "tests/statements/VoidAssign.ycp"
+    textdomain "dummy";
+    locale v_locale = _("a locale");
+    v_locale = nil;
+    return ([(v_locale == ""), (v_locale == nil), is (v_locale, void), is (v_locale, locale)] == [false, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list v_list
+    // filename: "tests/statements/VoidAssign.ycp"
+    list v_list = [1, 2, 3];
+    v_list = nil;
+    return ([(v_list == []), (v_list == nil), (size (v_list) == 0), is (v_list, void), is (v_list, list)] == [false, true, true, true, true]);
+}
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // map v_map
+    // filename: "tests/statements/VoidAssign.ycp"
+    map v_map = $[1:1, 2:2, 3:3];
+    v_map = nil;
+    return ([(v_map == $[]), (v_map == nil), (size (v_map) == 0), is (v_map, void), is (v_map, map)] == [false, true, true, true, true]);
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/VoidAssign.ycp:89 Warning: rhs of assignment is undefined
+Parsed:
+----------------------------------------------------------------------
+{
+    // void nilreturn ()
+    // list <string> ls
+    // filename: "tests/statements/VoidAssign.ycp"
+    void nilreturn ()
+{
+    return nil;
+}
+    list <string> ls = nil;
+    ls = nilreturn ();
+    return (ls == nil);
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/VoidAssign.ycp:98 Warning: rhs of assignment is undefined
+[Parser] tests/statements/VoidAssign.ycp:102 Warning: default of bracket expression is undefined
+Parsed:
+----------------------------------------------------------------------
+{
+    // void fun ()
+    // integer a
+    // map m
+    // filename: "tests/statements/VoidAssign.ycp"
+    void fun ()
+{
+    return nil;
+}
+    integer a = fun ();
+    map m = $[0:0];
+    return m[0]:m[0]:fun ();
+}
+----------------------------------------------------------------------
+[Parser] tests/statements/VoidAssign.ycp:110 Warning: rhs of assignment is undefined
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <string> l
+    // boolean b
+    // filename: "tests/statements/VoidAssign.ycp"
+    list <string> l = ["S.u.S.E.", "SuSE", "SUSE", "Novell", "IBM"];
+    boolean b = foreach (string s, l, {
+    if ((s == "IBM"))
+    {
+    y2milestone ("not yet");
+}
+}
+);
+    return (b == nil);
+}
+----------------------------------------------------------------------
+[YCP] tests/statements/VoidAssign.ycp:114 not yet

@@ -1,0 +1,4 @@
+{
+    // filename: "tests/bytecode/expressions/triple.ycp"
+    return (1 < 2) ? true : false;
+}

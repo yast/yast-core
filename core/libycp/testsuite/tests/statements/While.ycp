@@ -1,0 +1,16 @@
+{
+    while (true)
+	return true;
+}
+
+{
+    while (false)
+    {
+	break;
+    }
+}
+
+{
+    while (1+1)
+	continue;
+}
