@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Thu Jul 21 13:43:34 CEST 2005 - sh@suse.de
+
+- Added support `opt(`hvstretch) for alignment widgets for
+  backward compatibility with (buggy) old layout behaviour:
+  propagate child stretchability to alignment parent
+- V 2.12.17
+
+-------------------------------------------------------------------
 Mon Jul 11 17:25:16 CEST 2005 - sh@suse.de
 
 - Fixed bug #95722: No items in NCurses MultiSelectionBox 
