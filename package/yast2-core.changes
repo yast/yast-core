@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Aug  8 15:54:53 CEST 2005 - kkaempf@suse.de
+
+- hd_change_status() -> hd_change_config_status() to get the
+  unique_key <-> UDI mapping right in libhd.
+- 2.12.21
+
+-------------------------------------------------------------------
 Sat Aug  6 21:50:58 CEST 2005 - aj@suse.de
 
 - Add libxml2-devel to neededforbuild.

@@ -491,7 +491,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    {
 			return YCPError ("Argument must be string", YCPBoolean (false));
 		    }
-		    return YCPBoolean (hd_change_status (arg->asString()->value_cstr(),
+		    return YCPBoolean (hd_change_config_status (hd_base, arg->asString()->value_cstr(),
 							 status, writeval->asString()->value_cstr()) == 0);
 		}
 
@@ -516,7 +516,7 @@ HwProbe::checkPath (const YCPPath& path, const YCPValue& arg,
 		    default:
 		    break;
 		}
-		value = YCPBoolean (hd_change_status (arg->asString()->value_cstr(), status, 0) == 0);
+		value = YCPBoolean (hd_change_config_status (hd_base, arg->asString()->value_cstr(), status, 0) == 0);
 	    }
 	}
 	else			// assume Dir()
