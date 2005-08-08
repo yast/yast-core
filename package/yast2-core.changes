@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sat Aug  6 21:50:58 CEST 2005 - aj@suse.de
+
+- Add libxml2-devel to neededforbuild.
+
+-------------------------------------------------------------------
 Thu Aug  4 13:11:13 CEST 2005 - jsrain@suse.cz
 
 - reverted changes in layout engine in order to display stretches
