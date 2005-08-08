@@ -2,7 +2,7 @@
 Mon Aug  8 15:54:53 CEST 2005 - kkaempf@suse.de
 
 - hd_change_status() -> hd_change_config_status() to get the
-  unique_key <-> UDI mapping right in libhd.
+  unique_key <-> UDI mapping right in libhd [#102575].
 - 2.12.21
 
 -------------------------------------------------------------------
