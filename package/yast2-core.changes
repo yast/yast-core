@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug  9 15:20:53 CEST 2005 - kkaempf@suse.de
+
+- pass the UDI value in probing results. [#102575].
+
+-------------------------------------------------------------------
 Mon Aug  8 15:54:53 CEST 2005 - kkaempf@suse.de
 
 - hd_change_status() -> hd_change_config_status() to get the
