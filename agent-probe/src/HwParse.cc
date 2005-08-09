@@ -1313,6 +1313,14 @@ HwProbe::hd2value (hd_t *hd)
 	out->add (YCPString ("sub_vendor"), YCPString (s));
     }
 
+    // HAL udi
+
+    s = hd->udi;
+    if (s)
+    {
+	out->add (YCPString ("udi"), YCPString (s));
+    }
+
     // unique key
 
     s = hd->unique_id;
