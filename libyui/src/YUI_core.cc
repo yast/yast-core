@@ -13,12 +13,12 @@
   File:		YUI_core.cc
 
 		Core functions of the UI component
-		
+
 
   Authors:	Mathias Kettner <kettner@suse.de>
 		Stefan Hundhammer <sh@suse.de>
 		Stanislav Visnovsky <visnov@suse.cz>
-		
+
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <unistd.h> // pipe()
 #include <fcntl.h>  // fcntl()
-#include <errno.h> 
+#include <errno.h>
 #include <locale.h> // setlocale()
 #include <pthread.h>
 #include <assert.h>
@@ -96,7 +96,7 @@ YUI::~YUI()
 	    y2error( "Missing UI::CloseDialog() for" );
 	    dialog->dumpWidgetTree();
 	}
-	
+
 	removeDialog();
     }
 
@@ -174,14 +174,21 @@ void YUI::terminateUIThread()
 
 
 extern YCPValue UIUserInput ();
+extern YCPValue UITimeoutUserInput( const YCPInteger& timeout );
+extern YCPValue UIWaitForEvent();
+extern YCPValue UIWaitForEventTimeout( const YCPInteger & timeout );
+
 
 YCPValue YUI::callBuiltin( void * function, int argc, YCPValue argv[] )
 {
     YCPValue ret = YCPVoid();
-    
+
     if ( macroPlayer )
     {
-	if (function == UIUserInput)
+	if ( function == UIUserInput		||
+	     function == UITimeoutUserInput 	||
+	     function == UIWaitForEvent 	||
+	     function == UIWaitForEventTimeout	  )
 	{
 	    playNextMacroBlock ();
 	}
@@ -192,9 +199,9 @@ YCPValue YUI::callBuiltin( void * function, int argc, YCPValue argv[] )
 	_builtinCallData.function	= function;
 	_builtinCallData.argc		= argc;
 	_builtinCallData.argv		= argv;
-	
+
 	signalUIThread();
-	
+
 	while ( ! waitForUIThread() )
 	{
 	    // NOP
@@ -218,7 +225,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	y2error( "NULL function pointer!" );
 	return YCPNull();
     }
-    
+
     // ensure YCPNull will be passed as YCPVoid
     for (int i = 0; i < argc ; i++)
     {
@@ -227,7 +234,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	    argv[i] = YCPVoid ();
 	}
     }
-    
+
     YCPValue ret = YCPVoid();
 
     switch ( argc )
@@ -257,7 +264,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	    }
 	    break;
     }
-    
+
     return ret;
 }
 
@@ -351,7 +358,7 @@ void YUI::uiThreadMainLoop()
 	// be necessary.  Anyway: Why do we set the pipe to non-blocking if we
 	// wait in idleLoop for it to become readable? It is needed in
 	// YUIQt::idleLoop for QSocketNotifier.
-	
+
 	if ( ! waitForYCPThread () )
 	    continue;
 
@@ -360,8 +367,8 @@ void YUI::uiThreadMainLoop()
 
 	// callFunction() checks for NULL function pointers
 
-	_builtinCallData.result = callFunction( _builtinCallData.function, 
-						_builtinCallData.argc, 
+	_builtinCallData.result = callFunction( _builtinCallData.function,
+						_builtinCallData.argc,
 						_builtinCallData.argv );
 	signalYCPThread();
     }
@@ -424,7 +431,7 @@ void *start_ui_thread( void * yui )
 #if VERBOSE_COMM
     y2debug( "Starting UI thread" );
 #endif
-    
+
     if ( ui )
 	ui->uiThreadMainLoop();
     return 0;

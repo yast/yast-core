@@ -132,7 +132,7 @@ UIPollInput()
 }
 
 
-static YCPValue
+YCPValue
 UITimeoutUserInput( const YCPInteger& timeout )
 {
     if ( YUIComponent::ui() )
@@ -142,7 +142,7 @@ UITimeoutUserInput( const YCPInteger& timeout )
 }
 
 
-static YCPValue
+YCPValue
 UIWaitForEvent()
 {
     if ( YUIComponent::ui() )
@@ -152,7 +152,7 @@ UIWaitForEvent()
 }
 
 
-static YCPValue
+YCPValue
 UIWaitForEventTimeout( const YCPInteger & timeout )
 {
     if ( YUIComponent::ui() )

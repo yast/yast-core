@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Aug 19 16:13:27 CEST 2005 - sh@suse.de
+
+- Added macro player support for the other event-releated UI builtins:
+  WaitForEvent(), WaitForEvent( timeout ), TimeoutUserInput()
+  to fix bug #98265: Macro player doesn't work
+- V 2.12.23 
+
+-------------------------------------------------------------------
 Fri Aug 19 15:24:07 CEST 2005 - sh@suse.de
 
 - Reintroduced the UI layout engine's change reverted on 2005-08-04
