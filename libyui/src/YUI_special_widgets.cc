@@ -29,8 +29,6 @@ Maintainer:	Stefan Hundhammer <sh@suse.de>
 #include "YUI.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
-#include "YMacroRecorder.h"
-#include "YMacroPlayer.h"
 
 #include "YBarGraph.h"
 #include "YDumbTab.h"
