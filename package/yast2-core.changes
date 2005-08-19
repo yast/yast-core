@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Aug 19 15:24:07 CEST 2005 - sh@suse.de
+
+- Reintroduced the UI layout engine's change reverted on 2005-08-04
+  by jsrain below now that the true cause of the problem is
+  established
+- V 2.12.22 
+
+-------------------------------------------------------------------
 Tue Aug  9 15:20:53 CEST 2005 - kkaempf@suse.de
 
 - pass the UDI value in probing results. [#102575].
