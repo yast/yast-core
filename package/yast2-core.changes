@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep  6 13:47:48 CEST 2005 - kkaempf@suse.de
+
+- configure with AC_SYS_LARGEFILE (#115394)
+
+-------------------------------------------------------------------
 Fri Aug 19 16:13:27 CEST 2005 - sh@suse.de
 
 - Added macro player support for the other event-releated UI builtins:

@@ -2,6 +2,8 @@
 
 ## initialize
 @YAST2-INIT-COMMON@
+AC_SYS_LARGEFILE
+
 @YAST2-INIT-PROGRAM@
 
 ## special stuff
