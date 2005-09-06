@@ -10,6 +10,8 @@
  * $Id$
  */
 
+#include "config.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -21,7 +23,6 @@
 
 #include <string>
 
-#include <config.h>
 #include <YCP.h>
 #include <ycp/y2log.h>
 

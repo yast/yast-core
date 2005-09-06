@@ -10,7 +10,7 @@
  * $Id$
  */
 
-#include <config.h>
+#include "config.h"
 
 #include <dirent.h>
 #include <errno.h>

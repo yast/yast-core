@@ -10,6 +10,8 @@
  * $Id$
  */
 
+#include "config.h"
+
 #include <y2util/PathInfo.h>
 #include <ycp/y2log.h>
 #include <vector>
