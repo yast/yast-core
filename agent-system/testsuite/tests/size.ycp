@@ -5,3 +5,8 @@
 {
     return SCR::Read (.size, "tests/data2.read");
 }
+
+{
+    return SCR::Read (.size, "tests/data3.read");
+}
+

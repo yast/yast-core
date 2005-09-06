@@ -20,5 +20,16 @@
 
 {
     map m = tomap (SCR::Read (.stat, "tests/data1.read"));
-    return m["size"]:0;
+    return m["size"]:-1;
 }
+
+{
+    map m = tomap (SCR::Read (.stat, "tests/data2.read"));
+    return m["size"]:-1;
+}
+
+{
+    map m = tomap (SCR::Read (.stat, "tests/data3.read"));
+    return m["size"]:-1;
+}
+

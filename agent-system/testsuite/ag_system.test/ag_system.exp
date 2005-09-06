@@ -3,6 +3,11 @@
 # 'main' file for all ag_system tests
 #
 
+# create a 4.5 GB sparse file to test the .size and .stat functions
+# for proper large file support
+
+  set oops [catch { set result [exec "/bin/dd" "if=/dev/zero" "of=tests/data3.read" "bs=1M" "seek=4500" "count=10"] } catched]
+
 # get all files matching tests/*.ycp
 
 set filenames [glob $srcdir/tests/*.ycp]
@@ -10,3 +15,5 @@ set filenames [glob $srcdir/tests/*.ycp]
 # foreach file, call ycp-run (from testsuite/lib)
 
 foreach file $filenames { ycp-run $file }
+
+  exec "/bin/rm" "tests/data3.read"
