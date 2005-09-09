@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Sep  9 15:45:13 CEST 2005 - sh@suse.de
+
+- (visnov) Fixed bug #115298: Install on x86_64 horribly slow
+  due to excessive memory requirements
+  Removed string hash in YCPString 
+- V 2.12.26
+
+-------------------------------------------------------------------
 Tue Sep  6 13:47:48 CEST 2005 - kkaempf@suse.de
 
 - configure with AC_SYS_LARGEFILE (#115394)

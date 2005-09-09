@@ -38,7 +38,7 @@
  */
 class YCPStringRep : public YCPValueRep
 {
-    Ustring v;
+    string v;
 
 protected:
     friend class YCPString;

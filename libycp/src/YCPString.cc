@@ -28,14 +28,14 @@
 // YCPStringRep
 
 YCPStringRep::YCPStringRep(string s)
-    : v(Ustring (*SymbolEntry::_nameHash, s))
+    : v(s)
 {
 }
 
 string
 YCPStringRep::value() const
 {
-    return v.asString();
+    return v;
 }
 
 
@@ -49,7 +49,7 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 
     if (!rl)
     {
-        tmp = v.asString().compare (s->v.asString());
+        tmp = v.compare (s->v);
     }
     else
     {
@@ -74,7 +74,7 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 const char *
 YCPStringRep::value_cstr() const
 {
-    return v.asString().c_str();
+    return v.c_str();
 }
 
 
@@ -82,7 +82,7 @@ string
 YCPStringRep::toString() const
 {
     string ret = "\"";
-    const char *r = v.asString().c_str();
+    const char *r = v.c_str();
     while (*r) {
 	if (*r == '\n') ret += "\\n";
 	else if (*r == '\t') ret += "\\t";
@@ -118,7 +118,7 @@ YCPStringRep::valuetype() const
 std::ostream &
 YCPStringRep::toStream (std::ostream & str) const
 {
-    return Bytecode::writeUstring (str, v);
+    return Bytecode::writeString (str, v);
 }
 
 
