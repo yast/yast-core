@@ -270,7 +270,7 @@ i_tointeger (const YCPValue &v)
      * @builtin tointeger
      * @short Converts a value to an integer.
      * @description
-     * If the value can't be converted to an integer, nilinteger is returned.
+     * If the value can't be converted to an integer, nil is returned.
      * @param any VALUE
      * @return integer 
      *
