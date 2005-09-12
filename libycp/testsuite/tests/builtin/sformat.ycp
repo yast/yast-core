@@ -1,0 +1,29 @@
+// YEBuiltin::evaluate only allowed 6 parameters
+// but there are sformats that use all 9
+//
+// kkaempf:
+// *gggg*
+// the 6 parameter limit is only for fixed parameter functions
+// however, sformat (and similar logging functions) use
+// a variable number of arguments.
+{
+    sformat ("P0:");
+    sformat ("P1:%1",
+		 .);
+    sformat ("P2:%1%2",
+		 ., .);
+    sformat ("P3:%1%2%3",
+		 ., ., .);
+    sformat ("P4:%1%2%3%4",
+		 ., ., ., .);
+    sformat ("P5:%1%2%3%4%5",
+		 ., ., ., ., .);
+    sformat ("P6:%1%2%3%4%5%6",
+		 ., ., ., ., ., .);
+    sformat ("P7:%1%2%3%4%5%6%7",
+		 ., ., ., ., ., ., .);
+    sformat ("P8:%1%2%3%4%5%6%7%8",
+		 ., ., ., ., ., ., ., .);
+    sformat ("P9:%1%2%3%4%5%6%7%8%9",
+		 1, 2, 3, 4, 5, 6, 7, 8, 9);
+}
