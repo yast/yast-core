@@ -1898,7 +1898,7 @@ YEBuiltin::finalize (Logger* problem_logger)
 		{
 		    if (number >= bits)
 		    {
-			problem_logger->warning (string ("Numeric value after %% too large (")
+			problem_logger->warning (string ("Numeric value after % too large (")
 			    + *cptr + "), cant check validity");
 		    }
 		    else
@@ -1909,8 +1909,8 @@ YEBuiltin::finalize (Logger* problem_logger)
 		else if ((number == 0)			// no digit following %
 			 && (*cptr != '%'))		// %% is allowed
 		{
-		    problem_logger->error (string("Bad '%%' selector in format string at '")
-			+(cptr-1)+"', use '%%n' (n=1,2,...) instead ");
+		    problem_logger->error (string("Bad '%' selector in format string at '")
+			+(cptr-1)+"', use '%n' (n=1,2,...) instead ");
 		    return Type::Error;
 		}
 	    }
