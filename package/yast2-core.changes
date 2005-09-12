@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Sep 12 13:15:11 CEST 2005 - kkaempf@suse.de
+
+- ensure string reference does not go out of scope too early
+  (#116432)
+- V 2.12.27
+
+-------------------------------------------------------------------
 Fri Sep  9 15:45:13 CEST 2005 - sh@suse.de
 
 - (visnov) Fixed bug #115298: Install on x86_64 horribly slow

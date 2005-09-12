@@ -1862,20 +1862,32 @@ YEBuiltin::finalize (Logger* problem_logger)
 	    problem_logger->error ("First parameter should be format string");
 	    return Type::Error;
 	}
-	
+
+	// get the argument string
+
 	const char *cptr = NULL;
-	if (formatcode->kind() == YCode::ycLocale)
+	YCPString ystring("");			// temporary string, just to keep the reference from going out of scope
+
+	if (formatcode->kind() == YCode::ycString)			// it might be a normal string constant
 	{
-	    // use the locale string (avoids warning for sformat)
+	    // keep the reference in ystring
+	    ystring = formatcode->evaluate()->asString();
+	    cptr = ystring->value_cstr();
+	}
+	else if (formatcode->kind() == YCode::ycLocale)			// or a translatable string
+	{
+	    // use the untranslated locale string (avoids warning for sformat)
 	    cptr = ((YLocalePtr)formatcode)->value();
 	}
-	else if (formatcode->kind() != YCode::ycString)
+	else								// any other value we can't check here (defer to runtime checking)
 	{
 	    // otherwise accept only strings
 	    problem_logger->warning ("Format string is not constant, no parameter checking possible");
 	    return 0;
 	}
-	cptr = formatcode->evaluate()->asString()->value_cstr();
+
+	// save start of cptr, for error message
+	const char *cptr_start = cptr;
 
 	// check %n values and set bits in 'mask' for every n
 	// dont simply count the number of %n occurences, since they might be duplicate
@@ -1910,7 +1922,8 @@ YEBuiltin::finalize (Logger* problem_logger)
 			 && (*cptr != '%'))		// %% is allowed
 		{
 		    problem_logger->error (string("Bad '%' selector in format string at '")
-			+(cptr-1)+"', use '%n' (n=1,2,...) instead ");
+			+ (cptr-1) + "', use '%n' (n=1,2,...) instead.");
+		    problem_logger->error (string("Full string: '") + cptr_start + "'.");
 		    return Type::Error;
 		}
 	    }

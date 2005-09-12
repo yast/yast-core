@@ -6,7 +6,8 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/expressions/Formatted2.ycp:2 HAHA A B A
-[Parser] tests/expressions/Formatted2.ycp:5 Bad '%' selector in format string at '%s %d', use '%n' (n=1,2,...) instead 
+[Parser] tests/expressions/Formatted2.ycp:5 Bad '%' selector in format string at '%s %d', use '%n' (n=1,2,...) instead.
+[Parser] tests/expressions/Formatted2.ycp:5 Full string: 'HAHA %s %d'.
 [Parser] tests/expressions/Formatted2.ycp:5 Wrong parameters in call to y2milestone(...)
 [Parser] tests/expressions/Formatted2.ycp:5 Expected '(string, ...)', seen '(string, ...)'.
 runycp: parser error
