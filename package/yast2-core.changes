@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Sep 19 11:10:35 CEST 2005 - mvidner@suse.cz
+
+- For deprecated builtins, document what to use instead.
+
+-------------------------------------------------------------------
 Mon Sep 12 13:15:11 CEST 2005 - kkaempf@suse.de
 
 - ensure string reference does not go out of scope too early

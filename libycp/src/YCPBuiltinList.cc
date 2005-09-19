@@ -873,7 +873,7 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
      * @builtin select
-     * @short Selects a list element (deprecated)
+     * @short Selects a list element (deprecated, use LIST[INDEX]:DEFAULT)
      * @param list LIST
      * @param integer INDEX
      * @param any  DEFAULT
@@ -979,7 +979,7 @@ l_tolist (const YCPValue &v)
 {
     /**
      * @builtin tolist
-     * @short Converts a value to a list (deprecated).
+     * @short Converts a value to a list (deprecated, use (list)VAR).
      * @param any VAR
      * @return list
      *

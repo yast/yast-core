@@ -503,8 +503,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
 // just put here the lookup builtin docs
     /**
      * @builtin lookup
-     * @short Select a map element (deprecated)
-     *
+     * @short Select a map element (deprecated, use MAP[KEY]:DEFAULT)   
      * @param map MAP
      * @param any KEY
      * @param any DEFAULT

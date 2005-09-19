@@ -103,7 +103,7 @@ YCPValue
 t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 {
     /**
-     * @builtin select (deprecated)
+     * @builtin select (deprecated, use TERM[ITEM]:DEFAULT)
      * @short Select item from term
      * @description
      * Gets the <tt>i</tt>'th value of the term <tt>t</tt>. The first value
