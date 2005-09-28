@@ -1907,6 +1907,7 @@ YWidget * YUI::createComboBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @usage	`Tree( `id( `treeID ), "treeLabel", [ "top1", "top2", "top3" ] );
  * @examples	Tree1.ycp
  *		Tree2.ycp
+ *		Tree3.ycp
  *		Tree-icons.ycp
  *		Tree-replace-items.ycp
  *		Wizard4.ycp
