@@ -66,7 +66,7 @@
 			   ),
 		     `HBox(
 			   `Label("Current Value:"),
-			   `Label(`id(`echo), `opt(`outputField), "?????????")
+			   `Label(`id(`echo), `opt(`outputField, `hstretch), "?????????")
 			   ),
 		     `PushButton(`id(`ok), `opt(`default), "&OK")
 		     )
@@ -78,16 +78,16 @@
 	{
 	    id = UI::UserInput();
 
-	    if      ( id == `sel_usr)		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, "usr"  );
-	    else if ( id == `sel_usr_local)	UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `usr_local );
-	    else if ( id == `sel_opt) 		UI::ChangeWidget( `id( `dest_dir ), `CurrentItem, `opt );
+	    if      ( id == `sel_usr)		UI::ChangeWidget(`dest_dir, `CurrentItem, "usr"  );
+	    else if ( id == `sel_usr_local)	UI::ChangeWidget(`dest_dir, `CurrentItem, `usr_local );
+	    else if ( id == `sel_opt) 		UI::ChangeWidget(`dest_dir, `CurrentItem, `opt );
 	    else if ( id == `dest_dir)
 	    {
-		UI::ChangeWidget( `id( `echo ), `Value, "hello");
-		any current_dir = UI::QueryWidget(`id(`dest_dir), `CurrentItem);
+		UI::ChangeWidget(`echo, `Value, "");
+		any current_dir = UI::QueryWidget(`dest_dir, `CurrentItem);
 
 		if ( current_dir != nil )
-		    UI::ChangeWidget( `id( `echo ), `Value, sformat( "%1", current_dir ) );
+		    UI::ChangeWidget(`echo, `Value, sformat( "%1", current_dir ) );
 	    }
 
 	    y2milestone( "Items:\n%1", UI::QueryWidget(`dest_dir, `Items ) );

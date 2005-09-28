@@ -1,7 +1,7 @@
 {
     UI::OpenDialog(
 	       `VBox(
-		     `Frame ( "Important",
+		     `Frame ( "Hey! I&mportant!",
 			      `Label("Hello, World!")
 			      ),
 		     `PushButton("&OK")
