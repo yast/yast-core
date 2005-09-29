@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep 29 13:28:43 CEST 2005 - visnov@suse.cz
+
+- Split .probe agent to another package
+- V 2.13.0
+
+-------------------------------------------------------------------
 Wed Sep 28 15:09:43 CEST 2005 - sh@suse.de
 
 - Added UI::QueryWidget(..., CurrentBranch ) for YTree 

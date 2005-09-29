@@ -1,6 +1,6 @@
 @HEADER-COMMENT@
 
-# neededforbuild curl curl-devel dejagnu expect gpp dbus-1 dbus-1-devel dbus-1-glib hal hal-devel hwinfo hwinfo-devel klibc klibc-utils doxygen libpng libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel tcl yast2-devtools sysfsutils wireless-tools ElectricFence openslp openslp-devel perl-XML-Writer libxml2 libxml2-devel libxslt libgcrypt libgpg-error pkgconfig docbook-xsl-stylesheets docbook_4 sgml-skel udev blocxx blocxx-devel pcre
+# neededforbuild curl curl-devel dejagnu expect gpp doxygen libpng libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel tcl yast2-devtools ElectricFence openslp openslp-devel perl-XML-Writer libxml2 libxml2-devel libxslt libgcrypt libgpg-error pkgconfig docbook-xsl-stylesheets docbook_4 sgml-skel udev blocxx blocxx-devel pcre
 
 @HEADER@
 Summary:	-
@@ -15,8 +15,8 @@ Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
 Obsoletes:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
-Provides:	yast2-agent-modules yast2-agent-probe yast2-agent-system
-Obsoletes:	yast2-agent-modules yast2-agent-probe yast2-agent-system
+Provides:	yast2-agent-modules yast2-agent-system
+Obsoletes:	yast2-agent-modules yast2-agent-system
 Provides:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Obsoletes:	yast2-core-scr yast2-core-wfm yast2-core-translator
 Provides:	y2base yast2-base y2translator y2xlator
@@ -41,8 +41,8 @@ Provides:	yast2-agent-any-devel yast2-agent-ini-devel
 Obsoletes:	yast2-agent-any-devel yast2-agent-ini-devel
 Provides:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
 Obsoletes:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
-Provides:	yast2-agent-probe-devel yast2-agent-system-devel
-Obsoletes:	yast2-agent-probe-devel yast2-agent-system-devel
+Provides:	yast2-agent-system-devel
+Obsoletes:	yast2-agent-system-devel
 Provides:	yast2-core-scr-devel yast2-core-wfm-devel
 Obsoletes:	yast2-core-scr-devel yast2-core-wfm-devel
 Provides:	yast2-core-translator-devel
