@@ -164,11 +164,54 @@ YCPValue YTree::queryWidget( const YCPSymbol & property )
 
 	return openItems;
     }
+    /*
+     * @property CurrentBranch a list of the current item and all its ancestors
+     * from the root item to the current item- either the respective IDs or,
+     * for items that don't have IDs, the item text. If no item is currently
+     * selected, 'nil' is returned.
+     *
+     * This property can only be queried, not set.
+     */
+    else if ( s == YUIProperty_CurrentBranch )
+    {
+	return currentBranch();
+    }
     else
 	return YWidget::queryWidget( property );
 
     return YCPVoid();
 }
+
+
+
+YCPValue YTree::currentBranch() const
+{
+    const YTreeItem *current = getCurrentItem();
+
+    if ( ! current )
+	return YCPVoid();
+    
+    YCPList branchList;
+    branchToList( branchList, current );
+    
+    return branchList;
+}
+
+
+
+void YTree::branchToList( YCPList & branchList, const YTreeItem * item )
+{
+    if ( item )
+    {
+	if ( item->parent() )
+	{
+	    branchToList( branchList, item->parent() );
+	}
+
+	branchList->add( item->getId().isNull() ? item->getText() : item->getId() );
+    }
+}
+
 
 
 void

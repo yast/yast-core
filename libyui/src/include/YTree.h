@@ -135,6 +135,14 @@ public:
      **/
     bool hasIcons() const { return _hasIcons; }
 
+    /**
+     * Returns a list of the current item and all its ancestors from the
+     * root item to the current item - either the respective IDs or, for items
+     * that don't have IDs, the item text. If no item is currently selected,
+     * YCPVoid ('nil') is returned.
+     **/
+    YCPValue currentBranch() const;
+
 
 protected:
 
@@ -177,6 +185,11 @@ protected:
      * calles out of the corresponding YQ classes.
      */
     virtual void deleteAllItems();
+
+    /**
+     * Recursively add items to list 'branchList' from 'item' up to the tree's root
+     **/
+    static void branchToList( YCPList & branchList, const YTreeItem * item );
 
 
     //
@@ -263,6 +276,8 @@ public:
      **/
     virtual ~YTreeItem();
 
+    YTreeItem *			parent()		const { return _parentItem; }
+    YTree *			tree()			const { return _parentTree; }
     const YCPString &		getText()		const { return _text;	}
     const YCPValue &		getId()			const { return _id;	}
     const YTreeItemList &	itemList()		const { return _items;	}
@@ -314,6 +329,10 @@ public:
 
 
 protected:
+
+    //
+    // Data members
+    //
 
     YCPValue		_id;
     void *		_data;

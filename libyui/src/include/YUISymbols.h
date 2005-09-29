@@ -143,6 +143,7 @@
 // Widget properties
 
 #define YUIProperty_CurrentButton		"CurrentButton"
+#define YUIProperty_CurrentBranch		"CurrentBranch"
 #define YUIProperty_CurrentItem			"CurrentItem"
 #define YUIProperty_DebugLabel			"DebugLabel"
 #define YUIProperty_DialogDebugLabel		"DialogDebugLabel"
