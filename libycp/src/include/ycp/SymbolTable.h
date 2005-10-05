@@ -194,7 +194,7 @@ public:
     //---------------------------------------------------------------
     // write usage to stream, see YSImport
 
-    std::ostream &SymbolTable::writeUsage (std::ostream & str) const;
+    std::ostream &writeUsage (std::ostream & str) const;
 
     //---------------------------------------------------------------
     // string

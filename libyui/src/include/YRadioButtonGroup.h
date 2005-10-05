@@ -89,7 +89,7 @@ protected:
     /**
      * Find the currently selected button
      */
-    YRadioButton *YRadioButtonGroup::currentButton() const;
+    YRadioButton *currentButton() const;
 
     /**
      * Make another of the buttons currently selected

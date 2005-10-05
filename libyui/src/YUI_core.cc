@@ -61,6 +61,7 @@ typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue 
 bool	YUI::_reverseLayout	= false;
 YUI *	YUI::_yui		= 0;
 
+extern void *start_ui_thread( void * yui );
 
 YUI::YUI( bool with_threads )
     : id_counter(0)

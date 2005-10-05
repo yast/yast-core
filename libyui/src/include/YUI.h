@@ -177,7 +177,7 @@ public:
     /**
      * Parse an `rgb() value
      **/
-    bool YUI::parseRgb( const YCPValue & val, YColor *color, bool complain );
+    bool parseRgb( const YCPValue & val, YColor *color, bool complain );
 
     /**
      * Creates a new widget tree.

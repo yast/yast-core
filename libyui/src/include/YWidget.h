@@ -112,7 +112,7 @@ public:
     /**
      * Return the parent YWidget of this widget.
      */
-    YWidget * YWidget::yParent() const;
+    YWidget * yParent() const;
 
     /**
      * Return the YDialog this widget belongs to.
