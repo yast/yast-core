@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 10 15:44:14 CEST 2005 - visnov@suse.cz
+
+- install also string helpers
+- disable failing testsuite in system agent
+- V 2.13.2 
+
+-------------------------------------------------------------------
 Wed Oct  5 10:37:41 CEST 2005 - visnov@suse.cz
 
 - fix build
