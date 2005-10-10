@@ -47,7 +47,7 @@ libycp_la_SOURCES = 					\
 	YCPBuiltinMisc.cc				\
 	YSymbolEntry.cc					\
 	TypeStatics.cc					\
-	y2string.cc y2string.h				\
+	y2string.cc					\
 	y2crypt.cc y2crypt.h
 
 $(srcdir)/scanner.cc: scanner.ll parser.h

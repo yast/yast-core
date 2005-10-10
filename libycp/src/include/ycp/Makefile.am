@@ -32,6 +32,7 @@ pkginclude_HEADERS =					\
 	SymbolTable.h Scanner.h Parser.h 		\
 	YSymbolEntry.h					\
 	y2log.h ycpless.h pathsearch.h			\
+	y2string.h					\
 	ExecutionEnvironment.h
 
 #<INSTALL-HEADER-TARGET>
