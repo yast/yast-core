@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 12 08:34:36 CEST 2005 - visnov@suse.cz
+
+- really fix the system agent testsuite
+- V 2.13.3 
+
+-------------------------------------------------------------------
 Mon Oct 10 15:44:14 CEST 2005 - visnov@suse.cz
 
 - install also string helpers
