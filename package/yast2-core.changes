@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 20 15:52:39 CEST 2005 - visnov@suse.cz
+
+- added missing import for Agent skeleton
+- V 2.13.4
+
+-------------------------------------------------------------------
 Wed Oct 12 08:34:36 CEST 2005 - visnov@suse.cz
 
 - really fix the system agent testsuite

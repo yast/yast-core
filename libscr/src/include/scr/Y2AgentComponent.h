@@ -13,6 +13,7 @@
 #include <ycp/YCPTerm.h>
 #include <y2/Y2Component.h>
 
+#include <ycp/YCPCode.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPTerm.h>
 
