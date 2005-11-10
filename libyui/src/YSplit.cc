@@ -24,11 +24,8 @@
 #include "YAlignment.h"
 #include "YUI.h"
 
-
-#ifdef max
-#undef max
-#endif
-#define max( a, b ) ( (a) >? (b) )
+// std::max instead of the deprecated gcc extension
+#include <algorithm>
 
 
 YSplit::YSplit( const YWidgetOpt & opt, YUIDimension dimension )
@@ -156,7 +153,7 @@ long YSplit::childrenMaxNiceSize( YUIDimension dimension )
 
     for ( int i = 0; i < numChildren(); i++ )
     {
-	maxNiceSize = max ( child(i)->nicesize( dimension ), maxNiceSize );
+	maxNiceSize = std::max ( child(i)->nicesize( dimension ), maxNiceSize );
     }
 
     return maxNiceSize;
@@ -488,7 +485,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 			 tooSmall, loserCount );
 	    }
 
-	    long dividedLoss = max( tooSmall / loserCount, 1L );
+	    long dividedLoss = std::max( tooSmall / loserCount, 1L );
 
 	    for ( int i = 0; i < numChildren() && tooSmall > 0; i++ )
 	    {
@@ -505,7 +502,7 @@ void YSplit::calcPrimaryGeometry( long		newSize,
 			loserCount--;
 
 			if ( loserCount > 0 )
-			    dividedLoss = max( tooSmall / loserCount, 1L );
+			    dividedLoss = std::max( tooSmall / loserCount, 1L );
 		    }
 		}
 		else
