@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE XMLYCP SYSTEM "yml.dtd">
+
+<YML>
+  <command>
+    <OpenDialog>
+        <opt><defaultsize /></opt>
+
+        <VBox>
+            <VCenter>
+                <HSquash>
+                <VBox>
+                    <Left>
+                        <CheckBox>
+                            <![CDATA[short]]>
+                        </CheckBox>
+                    </Left>
+                    <Left>
+                        <CheckBox>
+                            <![CDATA[longer]]>
+                        </CheckBox>
+                    </Left>
+                    <Left>
+                        <CheckBox>
+                            <![CDATA[even longer]]>
+                        </CheckBox>
+                    </Left>
+                    <Left>
+                        <CheckBox>
+                            <![CDATA[yet even longer]]>
+                        </CheckBox>
+                    </Left>
+                </VBox>
+            </HSquash>
+            </VCenter>
+
+            <Left>
+                <PushButton>
+                    <![CDATA[bottom left]]>
+                </PushButton>
+                <PushButton>
+                    <![CDATA[bottom middle]]>
+                </PushButton>
+                <PushButton>
+                    <![CDATA[bottom right]]>
+                </PushButton>
+            </Left>
+        </VBox>
+    </OpenDialog>
+  </command>
+  <command>
+      <UserInput />
+  </command>
+  <command>
+      <CloseDialog />
+  </command>
+</YML>
