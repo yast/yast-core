@@ -193,8 +193,25 @@ struct blockstack_t : stack_t {
     int includeDepth;		//!< block is include file, all definitions go to the outer block
     TableEntry *self;		//!< c_self entry during module parsing
 };
-#define blockstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
-#define blockstack_pop(s) (p_parser->m_blockstack_depth--, (blockstack_t *)stack_pop ((stack_t **)&(s)))
+static void
+_blockstack_push (blockstack_t **blockstackptr, blockstack_t *blockelement)
+{
+    stack_t **stackptr = (stack_t **)blockstackptr;
+    stack_t *stackelement = (stack_t *)blockelement;
+    stack_push (stackptr, stackelement);
+}
+#define blockstack_push(s,e) _blockstack_push(&(s), e)
+
+static blockstack_t *
+_blockstack_pop (Parser *parser, blockstack_t **blockstackptr)
+{
+    parser->m_blockstack_depth--;
+    stack_t **stackptr = (stack_t **)blockstackptr;
+    stack_t *stackelement = stack_pop (stackptr);
+    return (blockstack_t *)stackelement;
+}
+#define blockstack_pop(s) _blockstack_pop(p_parser, &(s))
+
 #define blockstack_at_toplevel() (p_parser->m_blockstack_depth == 1)
 
 
@@ -203,8 +220,20 @@ struct blockstack_t : stack_t {
 struct switchstack_t : stack_t {
     YSSwitchPtr statement;	//!< pointer to switch statement
 };
-#define switchstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
-#define switchstack_pop(s) ((switchstack_t *)stack_pop ((stack_t **)&(s)))
+static void
+_switchstack_push (switchstack_t **switchstack, stack_t *e)
+{
+    stack_t **stackptr = (stack_t **)switchstack;
+    stack_push (stackptr, e);
+}
+#define switchstack_push(s,e) _switchstack_push(&(s), e)
+static switchstack_t *
+_switchstack_pop (switchstack_t **switchstack)
+{
+    stack_t **stackptr = (stack_t **)switchstack;
+    return (switchstack_t *)stack_pop (stackptr);
+}
+#define switchstack_pop(s) _switchstack_pop(&(s))
 
 static bool in_switch = false;
 
@@ -222,8 +251,20 @@ struct scannerstack_t : stack_t {
     enum scan_states state;
     const char *old_textdomain ;	// the textdomain set before starting the include
 };
-#define scannerstack_push(s,e) stack_push ((stack_t **)&(s), (stack_t *)e)
-#define scannerstack_pop(s) (scannerstack_t *)stack_pop ((stack_t **)&(s))
+static void
+_scannerstack_push(scannerstack_t **scannerstackptr, stack_t *element)
+{
+    stack_t **stackptr = (stack_t **)scannerstackptr;
+    stack_push (stackptr, element);
+}
+#define scannerstack_push(s,e) _scannerstack_push(&(s), e)
+static scannerstack_t *
+_scannerstack_pop(scannerstack_t **scannerstackptr)
+{
+    stack_t **stackptr = (stack_t **)scannerstackptr;
+    return (scannerstack_t *)stack_pop (stackptr);
+}
+#define scannerstack_pop(s) _scannerstack_pop (&(s))
 #define scannerstack_empty() (p_parser->m_scanner_stack == 0)
 
 // mark here if we're parsing a module
@@ -4173,7 +4214,7 @@ i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser)
 	    return;
 	}
 
-	YYSTYPE bracket_default_as_yystype = { b->def(), 0, b->type(), rhs->l };
+	YYSTYPE bracket_default_as_yystype = { b->def(), {0}, b->type(), rhs->l };
 
 	return i_check_void_assign (0, &bracket_default_as_yystype, parser);
     }

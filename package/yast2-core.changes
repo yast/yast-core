@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov 22 15:45:29 CET 2005 - kkaempf@suse.de
+
+- fix 'type-punned pointer' warnings in parser.yy
+- V 2.13.5
+
+-------------------------------------------------------------------
 Thu Oct 20 15:52:39 CEST 2005 - visnov@suse.cz
 
 - added missing import for Agent skeleton
