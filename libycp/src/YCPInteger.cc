@@ -33,7 +33,7 @@ YCPIntegerRep::YCPIntegerRep(long long v)
 }
 
 
-YCPIntegerRep::YCPIntegerRep(const char *r)
+YCPIntegerRep::YCPIntegerRep(const char *r, bool *valid)
 {
     
     int converted;
@@ -47,6 +47,11 @@ YCPIntegerRep::YCPIntegerRep(const char *r)
     else
     {
 	converted = sscanf(r, "%Ld", &v);
+    }
+
+    if (valid != NULL)			// return validity of passed value, if wanted
+    {
+	*valid = (converted == 1);
     }
 
     if (converted != 1)

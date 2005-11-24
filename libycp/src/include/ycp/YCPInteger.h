@@ -44,8 +44,9 @@ protected:
 
     /**
      * Constructs a new YCPIntegerRep from its ASCII representation.
+     *  if valid != NULL, returns validity of string (if it really represents an integer)
      */
-    YCPIntegerRep(const char *r);
+    YCPIntegerRep(const char *r, bool *valid);
 
 public:
     /**
@@ -78,6 +79,7 @@ public:
      * Returns YT_INTEGER. See @ref YCPValueRep#type.
      */
     YCPValueType valuetype() const;
+
 };
 
 /**
@@ -91,7 +93,7 @@ class YCPInteger : public YCPValue
     DEF_COMMON(Integer, Value);
 public:
     YCPInteger(long long v) : YCPValue(new YCPIntegerRep(v)) {}
-    YCPInteger(const char *r) : YCPValue(new YCPIntegerRep(r)) {}
+    YCPInteger(const char *r, bool *valid = NULL) : YCPValue(new YCPIntegerRep(r, valid)) {}
     YCPInteger(bytecodeistream & str);
 };
 

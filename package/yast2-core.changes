@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov 24 18:08:12 CET 2005 - kkaempf@suse.de
+
+- fix 'tointeger' to match documentation. It now returns nil
+  instead of 0 on illegal (non-convertible) string values (#115560)
+
+-------------------------------------------------------------------
 Tue Nov 22 15:45:29 CET 2005 - kkaempf@suse.de
 
 - fix 'type-punned pointer' warnings in parser.yy

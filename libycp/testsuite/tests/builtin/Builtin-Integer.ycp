@@ -65,9 +65,10 @@
 
 ("** conversions **")
 
-(tointeger (7411))
-(tointeger (4.03))
-(tointeger ("42"))
-(tointeger ("0x42"))
-(tointeger ("042"))
-
+(tointeger (7411) == 7411)
+(tointeger (4.03) == 4)
+(tointeger ("42") == 42)
+(tointeger ("0x42") == 66)
+(tointeger ("042") == 34)
+(tointeger ("") == nil)
+(tointeger ("foo") == nil)

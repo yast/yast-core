@@ -290,8 +290,13 @@ i_tointeger (const YCPValue &v)
 	case YT_FLOAT:
 	    return YCPInteger ((long long int) (v->asFloat()->value()));
 	break;
-	case YT_STRING:
-	    return YCPInteger (v->asString()->value_cstr ());
+	case YT_STRING: {
+	    bool valid = false;
+	    YCPInteger i (v->asString()->value_cstr (), &valid);
+	    if (!valid)
+		break;
+	    return i;
+	}
 	break;
 	default:
 	break;
