@@ -68,3 +68,9 @@ libycp_la_LDFLAGS = -version-info 2:0
 libycp_la_LIBADD = ${Y2UTIL_LIBS} -lxcrypt libycpvalues.la
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
+
+# don't distribute generated files
+dist-hook:
+	rm $(distdir)/scanner.cc
+	rm $(distdir)/parser.cc
+

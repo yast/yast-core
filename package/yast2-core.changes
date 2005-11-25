@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 25 10:11:13 CET 2005 - kkaempf@suse.de
+
+- remove scanner.cc and parser.cc from .tar.bz2 in order to force
+  their re-generation during build.
+
+-------------------------------------------------------------------
 Thu Nov 24 18:08:12 CET 2005 - kkaempf@suse.de
 
 - fix 'tointeger' to match documentation. It now returns nil
