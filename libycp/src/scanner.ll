@@ -90,7 +90,7 @@ ODIGIT	[0-7]
 DIGIT	[0-9]
 HDIGIT	[0-9][a-f][A-F]
 PATHSEGMENT ([[:alpha:]_][[:alnum:]_-]*)|\"([^\\"]*(\\.)*)+\"
-SYMBOL [[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*
+SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 %%
  /* " */
