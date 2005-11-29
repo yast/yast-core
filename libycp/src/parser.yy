@@ -3234,10 +3234,6 @@ function_call:
 			}
 			$$.t = decl->type;
 
-			if (decl->flags & DECL_DEPRECATED)
-			{
-			    yywarning ((string (decl->name) + "(...) is deprecated, please fix").c_str(), $1.l);
-			}
 		    }
 		    else if (sentry->type()->isFunction())
 		    {
@@ -3379,6 +3375,12 @@ function_call:
 #endif
 			    $$.c = $3.c;
 			    $$.t = builtin->type ();
+
+			    if (builtin->decl ()->flags & DECL_DEPRECATED)
+			    {
+				yywarning ((string (builtin->decl ()->name) + "(...) is deprecated, please fix").c_str(), $1.l);
+			    }
+
 			}
 		    }
 		    break;

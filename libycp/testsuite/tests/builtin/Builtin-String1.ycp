@@ -45,6 +45,9 @@
 (find ("abcdefghi", "efg"))
 (find ("aaaaa", "z"))
 
+(search ("abcdefghi", "efg"))
+(search ("aaaaa", "z"))
+
 (findfirstnotof ("abcdefghi", "abcefghi"))
 (findfirstnotof ("aaaaa", "a"))
 (findfirstof ("abcdefghi", "cxdv"))

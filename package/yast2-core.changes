@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Nov 29 14:31:36 CET 2005 - visnov@suse.cz
+
+- implemented search () for string lookup, marked find ()
+  for strings as deprecated.
+- V 2.13.8
+
+-------------------------------------------------------------------
 Fri Nov 25 10:11:13 CET 2005 - kkaempf@suse.de
 
 - remove scanner.cc and parser.cc from .tar.bz2 in order to force

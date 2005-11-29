@@ -303,6 +303,47 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
 
 
 static YCPValue
+s_search (const YCPString &s1, const YCPString &s2)
+{
+    /**
+     * @builtin search
+     * @short Returns position of a substring
+     * @param string STRING1 String
+     * @param string STRING2 Substring
+     * @return integer OFFSET
+     * If substring is not found find returns `nil'.
+     *
+     * @description
+     *
+     * The <tt>search</tt> function searches string for the first occurency of
+     * a specified substring (possibly a single character) and returns its
+     * starting position.
+     * 
+     * Returns the first position in <tt>STRING1</tt> where the
+     * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
+     * <tt>OFFSET</tt> starts with 0.
+     *
+     * @see findfirstof
+     * @see findfirstnotof
+     * @see find
+     * @usage search ("abcdefghi", "efg") -> 4
+     * @usage search ("aaaaa", "z") -> nil
+     */
+
+    if (s1.isNull () || s2.isNull ())
+	return YCPNull ();
+
+    string ss1 = s1->value ();
+    string::size_type pos = ss1.find (s2->value ());
+
+    if (pos == string::npos)
+	return YCPVoid ();		// not found
+    else
+	return YCPInteger (pos);	// found
+}
+
+
+static YCPValue
 s_find (const YCPString &s1, const YCPString &s2)
 {
     /**
@@ -323,22 +364,19 @@ s_find (const YCPString &s1, const YCPString &s2)
      * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
      * <tt>OFFSET</tt> starts with 0.
      *
+     * @deprecated Use search() instead
      * @see findfirstof
      * @see findfirstnotof
+     * @see search
      * @usage find ("abcdefghi", "efg") -> 4
      * @usage find ("aaaaa", "z") -> -1
      */
 
-    if (s1.isNull () || s2.isNull ())
-	return YCPNull ();
+    YCPValue ret = s_search (s1, s2);
+    if (!ret.isNull () && ret->isVoid ())
+	ret = YCPInteger (-1);
 
-    string ss1 = s1->value ();
-    string::size_type pos = ss1.find (s2->value ());
-
-    if (pos == string::npos)
-	return YCPInteger (-1);		// not found
-    else
-	return YCPInteger (pos);	// found
+    return ret;
 }
 
 
@@ -1261,7 +1299,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "tostring",	   "string (any)",			(void *)s_tostring },
 	{ "tohexstring",   "string (integer)",			(void *)s_tohexstring },
 	{ "size",	   "integer (string)",			(void *)s_size },
-	{ "find",	   "integer (string, string)",		(void *)s_find },
+	{ "find",	   "integer (string, string)",		(void *)s_find,		DECL_DEPRECATED },
+	{ "search",	   "integer (string, string)",		(void *)s_search },
 	{ "tolower",	   "string (string)",			(void *)s_tolower },
 	{ "toupper",	   "string (string)",			(void *)s_toupper },
 	{ "toascii",	   "string (string)",			(void *)s_toascii },
