@@ -1,0 +1,14 @@
+{
+    void ChangeI (any & a) {
+//	a = 42;			// Expected 'any &', seen 'const integer'. !?
+
+	any b = 42;		// or integer b
+	a = b;
+    }
+
+    string s = "Hello";
+    ChangeI (s);
+    y2milestone ("s:   %1", s);
+    y2milestone ("s+'':   %1", s+""); // segv
+}
+

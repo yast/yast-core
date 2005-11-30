@@ -2405,6 +2405,21 @@ function_start:
 #if DO_DEBUG
 		    y2debug ("formal param '%s %s'@%d", formalp->type->toString().c_str(), formalp->name, formalp->line);
 #endif
+
+		    if (formalp->type->isReference()
+			&& formalp->type->isAny())
+		    {
+			yyLerror ("Reference to 'any' not allowed", formalp->line);
+
+			// to properly delete a function, also the corresponding SymbolEntry must be
+			// adapted (so it does not try to access the YFunction anymore)
+			fentry->setCategory (SymbolEntry::c_unspec);
+			func = 0;
+
+			$$.t = 0;
+			break;
+		    }
+
 		    // compute function type
 
 		    ftype->concat (formalp->type);

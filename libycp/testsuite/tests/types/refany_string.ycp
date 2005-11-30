@@ -1,0 +1,10 @@
+{
+    void ChangeS (any & a) {
+	a = "Hello, world";
+    }
+
+    integer i = 0;
+    ChangeS (i);
+    y2milestone ("i:   %1", i);
+    y2milestone ("i+1: %1", i + 1); // garbage
+}

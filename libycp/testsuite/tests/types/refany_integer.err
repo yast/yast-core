@@ -1,0 +1,8 @@
+[Parser] tests/types/refany_integer.ycp:2 Reference to 'any' not allowed
+[Parser] tests/types/refany_integer.ycp:6 Undeclared identifier 'a'
+[Parser] tests/types/refany_integer.ycp:10 Warning: Identifier 'ChangeI' might be used uninitialized
+[Parser] tests/types/refany_integer.ycp:10 Identifier is not a function
+[Parser] tests/types/refany_integer.ycp:10 'ChangeI' defined in tests/types/refany_integer.ycp:2.
+[Parser] tests/types/refany_integer.ycp:10 Excessive parameter
+[Parser] tests/types/refany_integer.ycp:10 Bad parameter '<string> s'
+runycp: parser error
