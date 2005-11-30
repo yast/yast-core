@@ -530,7 +530,7 @@ YSAssign::evaluate (bool cse)
 
 // ------------------------------------------------------------------
 // bracket assignment
-
+// <entry>[<arg>] = <code>
 
 YSBracket::YSBracket (SymbolEntryPtr entry, YCodePtr arg, YCodePtr code, int line)
     : YStatement (ysBracket, line)
@@ -592,7 +592,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     {
 	return value;
     }
-	
+
     if (current.isNull ())
     {
 	YCPList correct_until;
@@ -697,10 +697,15 @@ YSBracket::evaluate (bool cse)
     if (cse) return YCPNull();
 
     // evaluate other arguments _before_ error checking
+
+    // the bracket arguments
     YCPValue arg_value = m_arg->evaluate ();
+
+    // the rhs of the assignment
     YCPValue newvalue = m_code->evaluate ();
 
-    // check variable first
+    // now check the variable
+
     YCPValue result = m_entry->value(); 
     if (result.isNull())
     {

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Nov 29 17:13:20 CET 2005 - kkaempf@suse.de
+
+- make preference rule explicit in scanner.ll (for flex-2.5.31)
+- evaluate rhs before lhs in bracket assignment (#135858)
+- V 2.13.9
+
+-------------------------------------------------------------------
 Tue Nov 29 14:31:36 CET 2005 - visnov@suse.cz
 
 - implemented search () for string lookup, marked find ()
