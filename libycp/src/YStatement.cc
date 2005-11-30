@@ -696,6 +696,10 @@ YSBracket::evaluate (bool cse)
 {
     if (cse) return YCPNull();
 
+    // evaluate other arguments _before_ error checking
+    YCPValue arg_value = m_arg->evaluate ();
+    YCPValue newvalue = m_code->evaluate ();
+
     // check variable first
     YCPValue result = m_entry->value(); 
     if (result.isNull())
@@ -706,10 +710,6 @@ YSBracket::evaluate (bool cse)
 //FIXME:	m_entry->setValue (m_entry->code() ? m_entry->code()->evaluate () : YCPNull());
 //FIXME:	result = m_entry->value();
     }
-
-    // evaluate other arguments _before_ error checking
-    YCPValue arg_value = m_arg->evaluate ();
-    YCPValue newvalue = m_code->evaluate ();
 
     // bad variable ?
     if (result.isNull())

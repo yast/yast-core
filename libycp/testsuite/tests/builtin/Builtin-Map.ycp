@@ -37,7 +37,13 @@
 (lookup ($[1:"a", 2:"bc"], 371, "take this"))
 
 
-# filter
+("** filter **")
+(``{   
+    map<string, integer> m = $["one": 1];   
+    // The expression should return a boolean   
+    // But nil crashes y2base   
+    return filter (string s, integer i, m, ``( nil ));
+})
 
 ("** foreach **")
 {

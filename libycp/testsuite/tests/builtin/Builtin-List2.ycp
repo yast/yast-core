@@ -32,7 +32,15 @@
 (merge ([1, 2, 3], [2, 3, 4]))
 
 
-# filter
+("** filter **")
+{ 
+    list<integer> m = [1];   
+    // The expression should return a boolean   
+    // But nil crashes y2base   
+    return filter (integer i, m, ``( nil ));   
+}
+
+("** maplist **")
 
 (maplist (integer v, [1, 2, 3, 5], ``(v + 1)))
 

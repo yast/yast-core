@@ -3,6 +3,9 @@ Tue Nov 29 14:31:36 CET 2005 - visnov@suse.cz
 
 - implemented search () for string lookup, marked find ()
   for strings as deprecated.
+- fix scanner for newer flex
+- don't crash on 'nil' as return value from filter/find (#120298)
+- in bracket assignment, allow to change the lhv in rh expression (#135858)
 - V 2.13.8
 
 -------------------------------------------------------------------

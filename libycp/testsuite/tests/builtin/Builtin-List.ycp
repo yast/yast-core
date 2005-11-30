@@ -37,7 +37,13 @@
     return sum;
 }
 
-#find
+("** find **")
+{
+    list<integer> m = [1];
+    // The expression should return a boolean
+    // But nil crashes y2base
+    return find (integer i, m, ``( nil ));
+}
 
 
 ("** prepend **")

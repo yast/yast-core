@@ -107,6 +107,12 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
 	    ycp2error ("Bad filter expression %s", expr->toString ().c_str ());
 	    return YCPNull ();
 	}
+        // nil == false
+        if (v->isVoid ())
+        {
+            ycp2error ("The expression for 'filter' returned 'nil'");
+            continue;
+        }
 	if (v->isBreak())
 	{
 	    break;

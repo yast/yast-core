@@ -56,6 +56,24 @@ merge ([1, 2, 3], [2, 3, 4])
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
+"** filter **"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+{
+    // list <integer> m
+    // filename: "tests/builtin/Builtin-List2.ycp"
+    list <integer> m = [1];
+    return filter (integer i, m, { return nil; });
+}
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List2.ycp:40 The expression for 'filter' returned 'nil'
+Parsed:
+----------------------------------------------------------------------
+"** maplist **"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
 maplist (integer v, [1, 2, 3, 5], { return (v + 1); })
 ----------------------------------------------------------------------
 Parsed:
@@ -98,8 +116,8 @@ Parsed:
 ----------------------------------------------------------------------
 sort (integer x, integer y, [3, 6, 2, 8], { return (x > y); })
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List2.ycp:57 Parameter 'x' has unspecified type
-[Interpreter] tests/builtin/Builtin-List2.ycp:57 Parameter 'y' has unspecified type
+[Interpreter] tests/builtin/Builtin-List2.ycp:65 Parameter 'x' has unspecified type
+[Interpreter] tests/builtin/Builtin-List2.ycp:65 Parameter 'y' has unspecified type
 Parsed:
 ----------------------------------------------------------------------
 sort (any x, any y, [3, 6, 2, 8], { return (x > y); })
@@ -148,12 +166,12 @@ Parsed:
 ----------------------------------------------------------------------
 "** change **"
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:82 Warning: change(...) is deprecated, please fix
+[Parser] tests/builtin/Builtin-List2.ycp:90 Warning: change(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 change ([1, 4], 8)
 ----------------------------------------------------------------------
-[libycp] tests/builtin/Builtin-List2.ycp:82 Change does not work as expected! The argument is not passed by reference.
+[libycp] tests/builtin/Builtin-List2.ycp:90 Change does not work as expected! The argument is not passed by reference.
 Parsed:
 ----------------------------------------------------------------------
 "** remove **"
@@ -166,34 +184,34 @@ Parsed:
 ----------------------------------------------------------------------
 remove ([], 0)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List2.ycp:88 Index 0 for remove () out of range
+[Interpreter] tests/builtin/Builtin-List2.ycp:96 Index 0 for remove () out of range
 Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:93 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:101 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][-1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:94 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:102 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][0]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:95 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:103 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:96 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:104 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][3]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:97 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:105 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> string */[1, "two"][0]:"wrong type"
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List2.ycp:88 Can't convert value '1' to type 'string'
+[Interpreter] tests/builtin/Builtin-List2.ycp:96 Can't convert value '1' to type 'string'

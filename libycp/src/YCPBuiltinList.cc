@@ -83,6 +83,12 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	    ycp2error ("Bad find expression %s", expr->toString ().c_str ());
 	    break;
 	}
+	// nil == false 
+	if (v->isVoid ())
+	{
+	    ycp2error ("The expression for 'find' returned 'nil'");
+	    continue;
+	}
 
 	if (v->asBoolean ()->value ())
 	{
@@ -346,6 +352,12 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	{
 	    ycp2error ("Bad filter expression %s", expr->toString ().c_str ());
 	    return YCPNull ();
+	}
+	// nil == false 
+	if (v->isVoid ())
+	{
+	    ycp2error ("The expression for 'filter' returned 'nil'");
+	    continue;
 	}
 	if (v->isBreak())
 	{
