@@ -18,6 +18,8 @@
 /-*/
 // -*- c++ -*-
 
+#include <libintl.h>	// for dngettext
+
 #include "ycp/y2log.h"
 #include "ycp/StaticDeclaration.h"
 
@@ -35,8 +37,6 @@
 #include "ycp/SymbolTable.h"
 
 #include "ycp/Bytecode.h"
-
-#include "ycp/y2log.h"
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0

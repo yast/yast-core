@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Thu Dec  1 09:44:06 CET 2005 - kkaempf@suse.de
+
+- include <libintl.h> for dngettext()
+
+-------------------------------------------------------------------
+Wed Nov 30 17:36:30 CET 2005 - kkaempf@suse.de
+
+- disallow references to 'any' (#97956)
+
+-------------------------------------------------------------------
 Tue Nov 29 17:13:20 CET 2005 - kkaempf@suse.de
 
 - make preference rule explicit in scanner.ll (for flex-2.5.31)
