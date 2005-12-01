@@ -2409,6 +2409,7 @@ function_start:
 		    if (formalp->type->isReference()
 			&& formalp->type->isAny())
 		    {
+			// #97956
 			yyLerror ("Reference to 'any' not allowed", formalp->line);
 
 			// to properly delete a function, also the corresponding SymbolEntry must be
