@@ -48,9 +48,12 @@ typedef enum {
 
 */
 
+#define TESTFILE    "test/minitest.xml"
+
 #include <ycp/YCPTerm.h>
 #include <ycp/YCPValue.h>
 #include <ycp/YCPVoid.h>
+#include <ycp/YCPString.h>
 #include <libxml2/libxml/tree.h>
 #include <libxml2/libxml/xmlreader.h>
 #include <libxml2/libxml/parser.h>
@@ -58,7 +61,8 @@ typedef enum {
 #include <string>
 
 
-YCPList xml2ycp(xmlNode * node, int offset = 0)
+
+YCPList xml2ycp(xmlNode * node, bool symbol = false)
 {
     xmlNode *cur_node = node;
     YCPList ymlList;
@@ -69,23 +73,36 @@ YCPList xml2ycp(xmlNode * node, int offset = 0)
         YCPList childs;
         newelement = YCPVoid();
 
-        // find out what kind of element we have got here and create a YCPValue
+        // identify kind of element; create a YCPValue
         switch (cur_node->type)
         {
             case XML_ELEMENT_NODE       :
-                         newelement = YCPTerm( (char*) cur_node->name  );
-                         break;
+   
+                  if ( !xmlStrcmp(cur_node->name,  (const xmlChar*) "symbol" ) ) {
+                      char *prop = (char*) xmlGetProp(cur_node, (const xmlChar *)"name");
+                      if (prop)
+                        newelement = YCPSymbol( prop );
+                      else {
+                        fprintf (stderr, "Error! Symbol without a name!\n");
+                        newelement = YCPVoid();
+                      }
+                  }
+                  else newelement = YCPTerm(  (char*) cur_node->name );
+                  break;
 
             case XML_ATTRIBUTE_NODE     :
-                         newelement = YCPVoid();
-                         break;
+                  newelement = YCPVoid();
+                  break;
 
-            case XML_TEXT_NODE          : newelement = YCPVoid(); break;
-            case XML_CDATA_SECTION_NODE : newelement = YCPVoid();
-               //  for (int i=0; i++ < offset; printf(" "));
-               //  printf("CDATA      %s\n", cur_node->content);
-               //  printf("NOTHIN TO DO ... CDATA      %s\n", cur_node->content);
-                                           break;
+            case XML_TEXT_NODE          :
+                  if ( xmlIsBlankNode(cur_node) )
+                      newelement = YCPVoid();
+                  else newelement = YCPString( (char*) cur_node->content );
+                      break;
+
+            case XML_CDATA_SECTION_NODE : newelement = YCPVoid(); break;
+                  // cur_node->content);
+
             case XML_ENTITY_REF_NODE    : newelement = YCPVoid(); break;
             case XML_ENTITY_NODE        : newelement = YCPVoid(); break;
             case XML_PI_NODE            : newelement = YCPVoid(); break;
@@ -103,10 +120,7 @@ YCPList xml2ycp(xmlNode * node, int offset = 0)
             case XML_XINCLUDE_START     : newelement = YCPVoid(); break;
             case XML_XINCLUDE_END       : newelement = YCPVoid(); break;
             case XML_DOCB_DOCUMENT_NODE : newelement = YCPVoid(); break;
-            default                     : newelement = YCPVoid();
-                   //                        for (int i=0; i++ < offset; printf(" "));
-                   //                        printf("<----\n");
-                                           break;
+            default                     : newelement = YCPVoid(); break;
         }
 
 
@@ -114,7 +128,7 @@ YCPList xml2ycp(xmlNode * node, int offset = 0)
         if ( !newelement.isNull() )
         {
             // at first - get the elements childs
-            childs = xml2ycp(cur_node->children, offset +8);
+            childs = xml2ycp(cur_node->children);
 
             if ( ! childs.isEmpty() )
                 for (int i=0; i < childs.size(); i++ )
@@ -126,23 +140,83 @@ YCPList xml2ycp(xmlNode * node, int offset = 0)
 }
 
 
-YCPValue YMLParser(xmlNodePtr &node)
+string YMLParser(xmlNodePtr &node)
 {
-    YCPValue yml;
     YCPList ymlList;
-
     ymlList = xml2ycp(node);
+    string ycpString="";
 
-    if ( ymlList->isEmpty() ) return YCPVoid();
-    if ( ymlList->size() > 1 || ymlList->size() < 0 )
-    {
-        printf("ERROR: XML document does not have _one_ YML node\n");
-       // return YCPVoid();
+    for(int i=0; i<=ymlList->size() ; i++ )
+        if ( !ymlList->value(i).isNull() && !ymlList->value(i)->isVoid() )
+        {
+            ycpString += ymlList->value(i)->toString().c_str();
+            if (i != ymlList->size()-1) ycpString += ", ";
+        }
+
+    return ycpString;
+}
+
+
+
+
+string YMLDocumentParser(xmlNodePtr &node)
+{
+    if ( xmlStrcmp(node->name, (const xmlChar*) "YML") )
+    {   printf("no yml-tag found\n"); 
+        exit (0);
     }
 
-    yml = ymlList->value(0);
-    return yml;
+    xmlNodePtr commands;
+    commands=node->children;
+    string commandString;
+    string subtree;
+
+    for ( ; commands ;  commands=commands->next)
+    {
+        if ( !xmlStrcmp(commands->name, (const xmlChar*) "command") )
+        {
+            // we found a command node - lets create a string
+
+            commandString += "UI::";
+            commandString += (char*) xmlGetProp(commands, (const xmlChar*) "action");
+            commandString += "(";
+
+            //subtree = xml2ycp(commands->children);
+            subtree = YMLParser(commands->children);
+            commandString += subtree;
+
+            commandString += ");\n";
+        }
+
+    }
+    return commandString;
 }
+
+
+
+
+
+
+/*  New Parser Structure
+
+
++parse doc
+    -test/validate
+    -find YML-root-node
+
+    +build output string
+        -echo "{\n"
+        +parse inner commands
+            +while (next-node)
+                -find command
+                -parse (nested) parameters
+                -echo $command
+            -end
+        -echo "\n}"
+    -output string
+-exit
+
+*/
 
 
 
@@ -153,7 +227,7 @@ int main( void )
     xmlDocPtr xmldoc;
     xmlNodePtr current;
 
-    xmldoc = xmlParseFile("test/yml-test.xml");
+    xmldoc = xmlParseFile(TESTFILE);
 
     if (xmldoc == NULL)
     {
@@ -180,8 +254,11 @@ int main( void )
    // fprintf(stderr, "success: obviously parsing the document worked quite fine!\n");
 
     YCPValue yt;
-    yt = YMLParser(current);
+    //yt = YMLParser(current);
+    printf("{\n\n%s\n}", YMLDocumentParser(current).c_str() );
 
+
+/*  temporary disabled
     if ( yt.isNull() ) printf("yt is NULL\n");
     else
     {
@@ -193,6 +270,7 @@ int main( void )
         }
         else printf("\n%s\n", yt->toString().c_str() );
     }
+*/
 
     xmlFreeDoc(xmldoc);
     return 0;
