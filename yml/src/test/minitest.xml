@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE XMLYCP SYSTEM "yml.dtd">
+
+<YML>
+    <command action="OpenDialog">
+        <VBox>
+            <Label>Hello, world</Label>
+            <PushButton>OK</PushButton>
+        </VBox>
+    </command>
+    <command action="UserInput" />
+    <command action="CloseDialog" />
+</YML>
