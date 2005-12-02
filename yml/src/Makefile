@@ -17,4 +17,7 @@ YMLdebug: YMLparser.cc
 all: YML
 
 clean:
-	rm YML YMLdebug
+	rm YML YMLdebug test.ycp
+
+test: YML
+	./YML > test.ycp && y2base ./test.ycp qt
