@@ -3,6 +3,7 @@ Tue Dec 13 17:12:54 CET 2005 - mvidner@suse.cz
 
 - Added yast2-core.pc.in (new devtools don't provide a generic one).
 - Do not require hwinfo now that .probe is in yast2-hardware-detection.
+- V 2.13.11
 
 -------------------------------------------------------------------
 Mon Dec  5 10:35:50 CET 2005 - visnov@suse.cz
