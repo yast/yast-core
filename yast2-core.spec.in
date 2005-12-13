@@ -8,9 +8,6 @@ Requires:	netcat
 Requires:	perl = %{perl_version}
 # liby2util-2.11.5: ExternalCommand::renumber_fd
 Requires:	liby2util >= 2.11.5
-# hwinfo-10.2: res_wlan_t
-# hwinfo-11.10: hd_change_config_status(hd_data, ...)
-Requires:	hwinfo >= 11.10
 Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig

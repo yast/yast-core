@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec 13 15:20:12 CET 2005 - mvidner@suse.cz
+
+- Do not require hwinfo now that .probe is in yast2-hardware-detection.
+
+-------------------------------------------------------------------
 Mon Dec  5 10:35:50 CET 2005 - visnov@suse.cz
 
 - include <langinfo.h> for nl_langinfo()
