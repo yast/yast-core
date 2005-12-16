@@ -19,6 +19,5 @@ y2ag_dummy_LDADD = 					\
 	${Y2UTIL_LIBS}
 y2ag_dummy_LDFLAGS =				\
 	-Xlinker --whole-archive		\
-	../../liby2/src/libpy2stdio.la		\
 	../src/libpy2ag_dummy.la		\
 	-Xlinker --no-whole-archive

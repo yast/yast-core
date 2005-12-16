@@ -8,13 +8,11 @@ pkgincludedir = $(includedir)/y2
 
 pkginclude_HEADERS =							\
 	Y2Component.h Y2ComponentBroker.h Y2ComponentCreator.h		\
-	RemoteProtocol.h RloginProtocol.h RshProtocol.h SuProtocol.h	\
-	SudoProtocol.h TelnetProtocol.h					\
-	Y2CCProgram.h Y2CCRemote.h Y2CCSerial.h Y2CCStdio.h		\
-	Y2ProgramComponent.h Y2RemoteComponent.h 			\
+	Y2CCProgram.h Y2CCSerial.h Y2CCStdio.h				\
+	Y2ProgramComponent.h 			 			\
 	Y2SerialComponent.h Y2StdioComponent.h				\
 	Y2PluginComponent.h Y2CCPlugin.h 				\
-	Y2Namespace.h Y2NamespaceCPP.h					\
+	Y2Namespace.h 							\
 	Y2Function.h SymbolEntry.h
 
 #<INSTALL-HEADER-TARGET>

@@ -27,8 +27,6 @@ libpy2wfm_la_LIBADD = \
 	../../libyui/src/libyui.la		\
 	../../libscr/src/libscr.la		\
 	../../libycp/src/libycp.la		\
-	../../liby2/src/libpy2stdio.la		\
-	../../liby2/src/libpy2program.la	\
 	../../liby2/src/liby2.la		\
 	${Y2UTIL_LIBS}
 

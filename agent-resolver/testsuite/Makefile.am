@@ -15,7 +15,6 @@ runresolver_SOURCES = runresolver.cc
 runresolver_LDADD = ${AGENT_LIBADD}
 runresolver_LDFLAGS = 					\
 	-Xlinker --whole-archive			\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_resolver.la		\
 	-Xlinker --no-whole-archive
 

@@ -7,9 +7,6 @@ ybin_PROGRAMS = y2base
 y2base_SOURCES = y2base.cc
 
 YAST2CORE =					\
-	../../liby2/src/libpy2plugin.la		\
-	../../liby2/src/libpy2stdio.la		\
-	../../liby2/src/libpy2program.la	\
 	../../wfm/src/libpy2wfm.la		\
 	../../libycp/src/libycp.la		\
 	../../liby2/src/liby2.la		\
@@ -46,15 +43,10 @@ INCLUDES = ${AGENT_INCLUDES}                 		\
 scr_SOURCES =                                           \
         scr.cc
 
-scr_LDADD = ${AGENT_LIBADD}                             \
-        $(top_builddir)/liby2/src/libpy2stdio.la        \
-        $(top_builddir)/liby2/src/libpy2plugin.la
+scr_LDADD = ${AGENT_LIBADD}
 
 scr_LDFLAGS =                                   \
         -Xlinker --whole-archive                \
-        $(top_builddir)/liby2/src/libpy2plugin.la       \
-        $(top_builddir)/liby2/src/libpy2stdio.la        \
-        $(top_builddir)/liby2/src/libpy2program.la      \
         $(top_builddir)/scr/src/libpy2scr.la            \
 	$(top_builddir)/wfm/src/libpy2wfm.la		\
         -Xlinker --no-whole-archive

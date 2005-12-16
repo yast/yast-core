@@ -18,7 +18,6 @@ runag_anyagent_LDADD = ${AGENT_LIBADD}
 # why is whole-archive necessary?
 runag_anyagent_LDFLAGS = \
 	-Xlinker --whole-archive		\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_anyagent.la		\
 	-Xlinker --no-whole-archive
 

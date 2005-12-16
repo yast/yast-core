@@ -19,16 +19,9 @@ ycpc_LDADD = $(top_builddir)/libycp/src/libycp.la \
 	$(top_builddir)/libyui/src/libyui.la \
 	$(top_builddir)/wfm/src/libpy2wfm.la \
 	$(top_builddir)/liby2/src/liby2.la \
-	$(top_builddir)/liby2/src/libpy2program.la \
 	$(top_builddir)/libscr/src/libscr.la \
 	$(top_builddir)/scr/src/libpy2scr.la \
 	${Y2UTIL_LIBS}
-
-ycpc_LDFLAGS = \
-       -Xlinker --whole-archive        \
-        $(top_builddir)/liby2/src/libpy2plugin.la         \
-       -Xlinker --no-whole-archive 
-
 
 PACKAGE=ycpc
 

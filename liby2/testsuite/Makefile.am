@@ -24,8 +24,6 @@ runplugin_LDADD = -lycp
 runplugin_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
-	../src/libpy2plugin.la\
-	../src/libpy2stdio.la	\
 	-Xlinker --no-whole-archive
 
 runprogram_SOURCES = $(rungeneric_SOURCES)
@@ -33,17 +31,6 @@ runprogram_LDADD = -lycp
 runprogram_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)	\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
-	../src/libpy2program.la	\
-	../src/libpy2stdio.la	\
-	-Xlinker --no-whole-archive
-
-runremote_SOURCES = $(rungeneric_SOURCES)
-runremote_LDADD = -lycp
-runremote_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
-	-Xlinker --whole-archive	\
-	../src/liby2.la	\
-	../src/libpy2remote.la	\
-	../src/libpy2stdio.la	\
 	-Xlinker --no-whole-archive
 
 runserial_SOURCES = $(rungeneric_SOURCES)
@@ -52,7 +39,6 @@ runserial_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
 	../src/libpy2serial.la	\
-	../src/libpy2stdio.la	\
 	-Xlinker --no-whole-archive
 
 runstdio_SOURCES = $(rungeneric_SOURCES)
@@ -60,7 +46,6 @@ runstdio_LDADD = -lycp
 runstdio_LDFLAGS = -L$(srcdir)/../../libycp/src -L$(libdir)		\
 	-Xlinker --whole-archive	\
 	../src/liby2.la	\
-	../src/libpy2stdio.la	\
 	-Xlinker --no-whole-archive
 
 clean-local:

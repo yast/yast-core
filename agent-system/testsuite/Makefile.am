@@ -19,6 +19,5 @@ runag_system_SOURCES = runag_system.cc
 runag_system_LDADD = ${AGENT_LIBADD}
 runag_system_LDFLAGS = 				\
 	-Xlinker --whole-archive		\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_system.la	\
 	-Xlinker --no-whole-archive

@@ -17,7 +17,6 @@ runmodules_SOURCES = runmodules.cc
 runmodules_LDADD = ${AGENT_LIBADD}
 runmodules_LDFLAGS = 				\
 	-Xlinker --whole-archive		\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
 	../src/libpy2ag_modules.la	\
 	-Xlinker --no-whole-archive
 

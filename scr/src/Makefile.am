@@ -11,16 +11,12 @@ scr_SOURCES =						\
 	scr.cc
 
 scr_LDADD = ${AGENT_LIBADD}				\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
-	$(top_builddir)/liby2/src/libpy2plugin.la
+	$(top_builddir)/liby2/src/liby2.la
 
 scr_DEPENDENCIES = libpy2scr.la
 
 scr_LDFLAGS =					\
 	-Xlinker --whole-archive		\
-	$(top_builddir)/liby2/src/libpy2plugin.la	\
-	$(top_builddir)/liby2/src/libpy2stdio.la	\
-	$(top_builddir)/liby2/src/libpy2program.la	\
 	libpy2scr.la				\
 	-Xlinker --no-whole-archive
 

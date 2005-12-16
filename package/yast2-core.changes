@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Dec 16 14:07:56 CET 2005 - visnov@suse.cz
+
+- remove obsolete code
+- join libraries
+- V 2.13.12 
+
+-------------------------------------------------------------------
 Tue Dec 13 17:12:54 CET 2005 - mvidner@suse.cz
 
 - Added yast2-core.pc.in (new devtools don't provide a generic one).
