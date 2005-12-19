@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Dec 19 17:33:47 CET 2005 - visnov@suse.cz
+
+- workaround ppc64 problems, don't like against ElectricFence
+- V 2.13.13
+
+-------------------------------------------------------------------
 Fri Dec 16 14:07:56 CET 2005 - visnov@suse.cz
 
 - remove obsolete code
