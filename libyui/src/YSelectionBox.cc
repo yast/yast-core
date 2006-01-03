@@ -57,8 +57,10 @@ YCPValue YSelectionBox::changeWidget( const YCPSymbol & property, const YCPValue
     /**
      * @property string CurrentItem
      * The currently selected item or its ID, if it has one.
+     * Alias: Value
      */
-    else if ( s == YUIProperty_CurrentItem )	 // Select item with that id
+    else if ( s == YUIProperty_CurrentItem ||
+	      s == YUIProperty_Value )	 // Select item with that id
     {
     	int index = itemWithId( newValue, true ); // true: log error
 	if ( index < 0 ) return YCPBoolean( false );
@@ -86,7 +88,8 @@ YCPValue YSelectionBox::queryWidget( const YCPSymbol & property )
 {
     string s = property->symbol();
     if      ( s == YUIProperty_Label      ) return getLabel();
-    else if ( s == YUIProperty_CurrentItem )
+    else if ( s == YUIProperty_CurrentItem ||
+	      s == YUIProperty_Value )
     {
 	int index = getCurrentItem();
 	// y2debug( "current item: %d", index );

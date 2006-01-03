@@ -47,8 +47,10 @@ YCPValue YTable::changeWidget( const YCPSymbol & property,
 
     /*
      * @property integer CurrentItem the ID of the currently selected item
+     * Alias: Value
      */
-    if ( s == YUIProperty_CurrentItem )  // Sort for item with that id
+    if ( s == YUIProperty_CurrentItem ||
+	 s == YUIProperty_Value )  // Sort for item with that id
     {
 	int index = itemWithId( newValue, true ); // true: log error
 	if ( index < 0 ) return YCPBoolean( false );
@@ -128,7 +130,8 @@ YCPValue YTable::changeWidgetTerm( const YCPTerm & property, const YCPValue & ne
 YCPValue YTable::queryWidget( const YCPSymbol & property )
 {
     string s = property->symbol();
-    if ( s == YUIProperty_CurrentItem )
+    if ( s == YUIProperty_CurrentItem ||
+	 s == YUIProperty_Value )
     {
 	int index = getCurrentItem();
 	// y2debug( "current item: %d", index );

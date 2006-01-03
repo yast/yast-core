@@ -95,8 +95,11 @@ YCPValue YRadioButtonGroup::changeWidget( const YCPSymbol & property, const YCPV
      * @property any CurrentButton
      * The id of the currently selected radio button belonging to this group. If
      * no button is selected, CurrentButton is nil.
+     * Alias: Value
      */
-    if ( s == YUIProperty_CurrentButton ) return YCPBoolean( setCurrentButton( newvalue ) );
+    if ( s == YUIProperty_CurrentButton ||
+	 s == YUIProperty_Value )
+	return YCPBoolean( setCurrentButton( newvalue ) );
     return YWidget::changeWidget( property, newvalue );
 }
 
@@ -104,7 +107,8 @@ YCPValue YRadioButtonGroup::changeWidget( const YCPSymbol & property, const YCPV
 YCPValue YRadioButtonGroup::queryWidget( const YCPSymbol & property )
 {
     string s = property->symbol();
-    if ( s == YUIProperty_CurrentButton )
+    if ( s == YUIProperty_CurrentButton ||
+	 s == YUIProperty_Value )
     {
 	YRadioButton *cb = currentButton();
 	if ( cb ) return cb->id();

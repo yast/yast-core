@@ -84,8 +84,10 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
 
     /*
      * @property itemId CurrentItem the currently selected item
+     * Alias: Value
      */
-    else if ( s == YUIProperty_CurrentItem )
+    else if ( s == YUIProperty_CurrentItem ||
+	      s == YUIProperty_Value )
     {
 	YTreeItem *it = findItemWithId ( newvalue );
 
@@ -141,7 +143,8 @@ YCPValue YTree::queryWidget( const YCPSymbol & property )
     {
 	return getLabel();
     }
-    else if ( s == YUIProperty_CurrentItem )
+    else if ( s == YUIProperty_CurrentItem ||
+	      s == YUIProperty_Value )
     {
 	const YTreeItem *it = getCurrentItem();
 
