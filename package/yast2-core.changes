@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Jan  4 19:30:30 CET 2006 - sh@suse.de
+
+- Add-on for feature #3476: left-handed mouse during installation
+  enable querying if user changed mouse to left-handed from the UI
+- V 2.13.15
+
+-------------------------------------------------------------------
 Tue Jan  3 14:32:30 CET 2006 - mvidner@suse.cz
 
 - UI: made `Value an alias for `CurrentButton (`RadioButtonGroup)
