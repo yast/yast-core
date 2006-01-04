@@ -145,8 +145,8 @@ y2milestone ("formatEvent(%1)", event);
 
     term fields 	= `VSquash(
 				   `HBox(
-					 `Top( `ComboBox(`id(`salutation), `opt(`notify), "&To:", 
-							 [ "Mr.", "Mrs.", "Miss", "Dr.", "Don", "King" ] ) ),
+					 `Top( `ComboBox(`id(`salutation), `opt(`notify, `editable), "&To:", 
+							 [ "Mr.", "Mrs.", "Miss", "Dr.", "Don", "King", "His Royal Highness" ] ) ),
 					 `Top( `TextEntry(`id(`name), `opt(`notify), "&Name:" ) ),
 					 `MultiLineEdit(`id(`address), `opt(`notify), "&Address:" ),
 					 `VSpacing( 4 ) // Force height (don't use MultiLineEdit default height)
