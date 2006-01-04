@@ -1364,6 +1364,7 @@ YCPMap YUI::evaluateGetDisplayInfo()
     info_map->add( YCPString( YUICap_HasIconSupport		), YCPBoolean( hasIconSupport()		) );
     info_map->add( YCPString( YUICap_HasFullUtf8Support		), YCPBoolean( hasFullUtf8Support()	) );
     info_map->add( YCPString( YUICap_RichTextSupportsTable	), YCPBoolean( richTextSupportsTable()	) );
+    info_map->add( YCPString( YUICap_LeftHandedMouse		), YCPBoolean( leftHandedMouse()	) );
 
     return info_map;
 }

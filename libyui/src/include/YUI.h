@@ -822,6 +822,7 @@ protected:
     virtual bool hasIconSupport()		{ return false; }
     virtual bool hasFullUtf8Support()		{ return false; }
     virtual bool richTextSupportsTable()	{ return false; }
+    virtual bool leftHandedMouse()		{ return false; }
 
     /**
      * UI-specific busyCursor function.

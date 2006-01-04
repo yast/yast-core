@@ -267,6 +267,7 @@
 #define YUICap_HasIconSupport			"HasIconSupport"
 #define YUICap_HasFullUtf8Support		"HasFullUtf8Support"
 #define YUICap_RichTextSupportsTable		"RichTextSupportsTable"
+#define YUICap_LeftHandedMouse			"LeftHandedMouse"
 
 
 
