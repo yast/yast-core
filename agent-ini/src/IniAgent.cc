@@ -6,6 +6,7 @@
  *
  * Authors:
  *   Petr Blahos <pblahos@suse.cz>
+ *   Martin Vidner <mvidner@suse.cz>
  *
  * $Id$
  */

@@ -610,8 +610,9 @@ subsections (see above) or values:
 <tt>Write (.ini.all, <i>new_map</i>)</tt> replaces all the data. 
 <p>Multiple names of the same kind are allowed.</p>
 
-<p>TODO: how does it interact with multiple-files support? Erasing
-a file this way probably does not work.</p>
+<p>With <a href="#multiple-files">multiple files</a>, files must
+be erased explicitly by writing <tt>nil</tt> to the section
+<tt>value</tt>. (Works since yast2-core-2.13.16.)</p>
 
 <h3 id="flatmode">SysConfig/flat mode</h3>
 
@@ -820,7 +821,7 @@ else we are in normal mode
 </pre>
 
 <i><b>Note:</b> The complete development documentation is available
-in the <a href="autodocs/index.html"><tt>autodocs/</tt></a>
+in the <a href="../autodocs/classIniAgent.html"><tt>autodocs/</tt></a>
 directory.</i> 
 <h2 id="changes">Changes</h2>
 
@@ -828,7 +829,7 @@ directory.</i>
 <li><b>2001-10-09:</b> Forced final write changed from Write
 (.ini.write_force, nil) to Write (.ini, "force").</li>
 
-<li><b>2001/10-09:</b> RcAgent interface described.</li>
+<li><b>2001-10-09:</b> RcAgent interface described.</li>
 
 <li><b>2002-01-09:</b> Write (.ini, "clean") to clean changes
 implemented and described.</li>

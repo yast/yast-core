@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jan  6 10:48:40 CET 2006 - mvidner@suse.cz
+
+- Ini agent: allow deleting files via .all, needed by slp-server.
+- V 2.13.16
+
+-------------------------------------------------------------------
 Wed Jan  4 19:30:30 CET 2006 - sh@suse.de
 
 - Add-on for feature #3476: left-handed mouse during installation

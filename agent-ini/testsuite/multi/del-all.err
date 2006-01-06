@@ -1,0 +1,5 @@
+[YCP] multi/del-all.ycp:XXX ["multi/del-all.in.2.test", "multi/del-all.in.4.test"]
+[YCP] multi/del-all.ycp:XXX multi/del-all.in.2.test: []
+[YCP] multi/del-all.ycp:XXX multi/del-all.in.4.test: ["mobilcom"]
+[agent-ini] IniParser.cc(write):XXX Removing file multi/del-all.in.1.test
+[agent-ini] IniParser.cc(write):XXX Removing file multi/del-all.in.3.test

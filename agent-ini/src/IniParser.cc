@@ -6,6 +6,7 @@
  *
  * Authors:
  *   Petr Blahos <pblahos@suse.cz>
+ *   Martin Vidner <mvidner@suse.cz>
  *
  * $Id$
  */
@@ -885,7 +886,12 @@ int IniParser::write()
 			int wb = s.getRewriteBy (); // bug #19066 
 			string filename = getFileName (s.getName (), wb);
 
+			// This is the only place where we unmark a
+			// section for deletion - when it is a file
+			// that got some data again. We can do it
+			// because we only erase the files afterwards.
 			deleted_sections.erase (filename);
+
 			if (!s.isDirty ()) {
 			    y2debug ("Skipping file %s that was not changed.", filename.c_str());
 			    continue;
@@ -996,7 +1002,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
     ini.clean();
     return 0;
 }
-string IniParser::getFileName (const string&sec, int rb)
+string IniParser::getFileName (const string&sec, int rb) const
 {
     string file = sec;
     if (-1 != rb && (int) rewrites.size () > rb)

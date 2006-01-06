@@ -1,0 +1,30 @@
+//
+// Multiple files test
+//
+// providers.rpm
+//
+// delete test using .all
+// this should do the same as del.ycp but using the .all interface
+
+
+{
+    map a = (map) SCR::Read (.all);
+//    y2milestone (".all: %1",    a);
+    //the sections are sorted
+    // SCR::Write (.s."multi/del-all.in.1.test", nil);
+    a["value", 0, "value"] = nil;
+    // SCR::Write (.s."multi/del-all.in.2.test", nil);
+    a["value", 1, "value"] = [];
+    // SCR::Write (.s."multi/del-all.in.3.test", nil);
+    a["value", 2, "value"] = nil;   
+    // SCR::Write (.s."multi/del-all.in.2.test", "#Comment for 2\n");
+    a["value", 1, "comment"] = "#Comment for 2\n";
+    SCR::Write (.all, a);
+
+    list<string> l = SCR::Dir (.s);
+    y2milestone ("%1", l);
+    foreach (string i, l, ``{
+	y2milestone ("%2: %1", SCR::Dir (add (.s, i)), i);
+    });
+    return nil;
+}

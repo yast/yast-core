@@ -230,7 +230,9 @@ private:
     // huh??? allow_values, allow_sections and allow_subsub
     // were never actuially used
 
-    /** The parser, queried about global settings */
+    /** The parser, queried about global settings
+     * But once the const is discarded to add to deleted_sections
+     */
     const IniParser *ip;
 
     /**

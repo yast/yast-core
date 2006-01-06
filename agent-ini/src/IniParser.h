@@ -424,7 +424,7 @@ public:
      * @param rb index of rewrite rule
      * @return rewritten file name
      */
-    string getFileName (const string&sec, int rb);
+    string getFileName (const string&sec, int rb) const;
     /**
      * Using file name rewriting?
      */

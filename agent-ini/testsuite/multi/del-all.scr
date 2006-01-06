@@ -1,0 +1,20 @@
+.
+
+`ag_ini(
+  `IniAgent( [ "multi/del-all.in.*.test" ],
+    $[
+      "options" : [ ],
+      "comments": [ "^[ \t]*#.*", "^[ \t]*$" ],
+      "sections" : [
+	$[
+	"begin" : [ "[ \t]*\\[Dialer[ \t]+(.*[^ \t])[ \t]*\\][ \t]*", "[Dialer %s]" ],
+	],
+      ],
+      "params" : [
+	$[
+	"match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s = %s"],
+      ],
+    ],
+    ]
+  )
+)

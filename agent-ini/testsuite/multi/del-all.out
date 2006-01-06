@@ -1,0 +1,20 @@
+(nil)
+multi/del-all.in.2.test  -------------------------------
+#Comment for 2
+multi/del-all.in.4.test  -------------------------------
+[Dialer mobilcom]
+Compuserve = 0
+Stupid Mode = 1
+ISDN supported = 1
+Country = Germany
+Provider = Mobilcom
+Product = 01019Freenet
+Priority = 0
+Homepage = www.mobilcom.de
+Phone = 0101901929
+Username = anything
+Password = anything
+Ask Password = 0
+DialMessage1 = 
+DialMessage2 = 
+WVDialMon Exec = 

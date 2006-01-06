@@ -6,6 +6,7 @@
  *
  * Authors:
  *   Petr Blahos <pblahos@suse.cz>
+ *   Martin Vidner <mvidner@suse.cz>
  *
  * $Id$
  */
@@ -675,17 +676,37 @@ int IniSection::setAllDoIt (const YCPMap &in)
 
 	if (kind == "section")
 	{
-	    IniSection s (ip);
-	    ret = s.setAllDoIt (mitem);
-	    if (ret != 0)
+	    // check whether we are deleting a file-section
+	    YCPValue mv = mitem->value (YCPString ("value"));
+	    if (mv->isVoid ())
 	    {
-		break;
+		string del_name;
+		int del_rb;		
+		if (!getMapString (mitem, "name", del_name) ||
+		    !getMapInteger (mitem, "file", del_rb))
+		{
+		    ret = -1;
+		    break;
+		}
+		const_cast<IniParser *>(ip)->deleted_sections.insert (
+		    ip->getFileName (del_name, del_rb)
+		    );
 	    }
-	    container.push_back (IniContainerElement (s));
+	    else
+	    {
+		IniSection s (ip);
+		ret = s.setAllDoIt (mitem);
+		if (ret != 0)
+		{
+		    break;
+		}
+		container.push_back (IniContainerElement (s));
+	    }
 	}
 	else if (kind == "value")
 	{
 	    IniEntry e;
+// FIXME ret =
 	    e.setAllDoIt (mitem);
 	    if (ret != 0)
 	    {
