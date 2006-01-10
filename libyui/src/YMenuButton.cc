@@ -90,23 +90,23 @@ YMenuButton::addMenuItem( const YCPString &	item_label,
 			  YMenu *		parent_menu )
 {
     YMenuItem * item = new YMenuItem( item_label, parent_menu, next_index++, item_id );
-    
+
     if ( ! parent_menu )
     {
 	parent_menu = toplevel_menu;
     }
     parent_menu->addMenuItem( item );
-    
+
     items.push_back( item );
 }
-    
+
 
 YMenu *
 YMenuButton::addSubMenu( const YCPString &	sub_menu_label,
 			 YMenu *		parent_menu )
 {
     YMenu * menu = new YMenu( sub_menu_label, parent_menu );
-    
+
     if ( ! parent_menu )
     {
 	parent_menu = toplevel_menu;
@@ -115,7 +115,22 @@ YMenuButton::addSubMenu( const YCPString &	sub_menu_label,
 
     return menu;
 }
-    
+
+
+void
+YMenuButton::resolveShortcutConflicts()
+{
+    // TO DO
+    // TO DO
+    // TO DO
+
+    // For every menu level, make sure keyboard shortcuts are unique within that menu level.
+    // If necessary, change some of them (move the '&' character to some other character).
+
+
+    // See YShortcutManager for more hints.
+}
+
 
 YCPValue
 YMenuButton::indexToId( int index )
@@ -144,7 +159,7 @@ YMenuItem::YMenuItem( const YCPString &		label,
     , parent( parent_menu )
     , index( index )
 {
-    
+
 }
 
 
@@ -154,7 +169,7 @@ YMenu::YMenu( const YCPString & 	label,
 	      const YCPValue &		id	)
     : YMenuItem( label, parent_menu, index, id )
 {
-    
+
 }
 
 

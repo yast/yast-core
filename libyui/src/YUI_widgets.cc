@@ -1346,6 +1346,7 @@ YWidget * YUI::createMenuButton( YWidget * parent, YWidgetOpt & opt, const YCPTe
 	return 0;
     }
 
+    menu_button->resolveShortcutConflicts();
     menu_button->createMenu();	// actually create the specific UI's menu hierarchy
 
     return menu_button;

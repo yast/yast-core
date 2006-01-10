@@ -91,7 +91,7 @@ public:
     void 	addMenuItem( const YCPString &	item_label,
 			     const YCPValue &	item_id,
 			     YMenu *		parent_menu = 0 );
-    
+
     /**
      * Add a submenu.
      *
@@ -100,12 +100,22 @@ public:
      */
     YMenu *	addSubMenu( const YCPString &	sub_menu_label,
 			    YMenu *		parent_menu = 0	);
-    
+
     /**
      * Retrieve the corresponding application ID to an internal menu item
      * index.
      */
     YCPValue indexToId( int index );
+
+
+    /**
+     * Resolve keyboard shortcut conflicts: Change shortcuts of menu items if
+     * there are duplicates in the respective menu level.
+     *
+     * This has to be called after all items are added, but before createMenu()
+     * (see below).
+     **/
+    void resolveShortcutConflicts();
 
     /**
      * Actually create the menu hierarchy in the specific UI.
@@ -120,7 +130,7 @@ public:
      * Inherited from YWidget.
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
-    
+
 
 protected:
     /**
@@ -137,7 +147,7 @@ protected:
      * List of all items somewhere in the menu hierarchy.
      */
     YMenuItemList items;
-    
+
     /**
      * The top level menu
      */
@@ -184,7 +194,7 @@ public:
      **/
     virtual void	setLabel( YCPString newLabel ) { label = newLabel; }
 
-    
+
 protected:
 
     YCPString		label;
