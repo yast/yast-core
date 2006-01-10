@@ -1542,6 +1542,7 @@ statement:
 		    }
 
 		    ee.setLinenumber ($1.l);			// if YSImport logs an error
+		    ee.setFilename (p_parser->scanner ()->filename ());
 		    YSImportPtr imp = new YSImport (module, $1.l);
 		    if (imp->name().empty())
 		    {

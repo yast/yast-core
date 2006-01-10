@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 10 09:01:15 CET 2006 - visnov@suse.cz
+
+- display file name on failing import (#141566) 
+
+-------------------------------------------------------------------
 Fri Jan  6 10:48:40 CET 2006 - mvidner@suse.cz
 
 - Ini agent: allow deleting files via .all, needed by slp-server.
