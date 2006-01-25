@@ -62,6 +62,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_HMultiProgressMeter	)	hasWidget = hasMultiProgressMeter();
     else if ( symbol == YUISpecialWidget_VMultiProgressMeter	)	hasWidget = hasMultiProgressMeter();
     else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
+    else if ( symbol == YUISpecialWidget_PatternSelector	)	hasWidget = hasPatternSelector();
     else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
     else if ( symbol == YUISpecialWidget_Wizard			)	hasWidget = hasWizard();
     else if ( symbol == YUISpecialWidget_Date			)	hasWidget = hasDate();
@@ -98,7 +99,7 @@ YWidget * YUI::createDummySpecialWidget( YWidget *parent, YWidgetOpt & opt, cons
 	return 0;
     }
 
-    rejectAllOptions( term,optList );
+    rejectAllOptions( term, optList );
 
     if ( hasDummySpecialWidget() )
     {
@@ -764,6 +765,48 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
 
 
 
+/*
+ * @widget	PatternSelector
+ * @short	High-level widget to select software patterns (selections)
+ * @class	YPatternSelector
+ * @usage	if ( UI::HasSpecialWidget( `PatternSelector) {...
+ *		`PatternSelector()...
+ *		UI::RunPkgSelection();
+ *
+ * @examples	PatternSelector1.ycp PatternSelector2.ycp
+ *
+ * @description
+ *
+ * This widget is similar to the PackageSelector in its semantics: It is a very
+ * high-level widget that lets the user select software, but unlike the
+ * PackageSelector it works on software patterns (selections).
+ */
+
+YWidget * YUI::createPatternSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				      const YCPList & optList, int argnr )
+{
+    if ( term->size() - argnr > 0 )
+    {
+	y2error( "Invalid arguments for the PatternSelector widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    rejectAllOptions( term, optList );
+    
+    if ( hasPatternSelector() )
+    {
+	return createPatternSelector( parent, opt );
+    }
+    else
+    {
+	y2error( "This UI does not support the PatternSelector." );
+	return 0;
+    }
+}
+
+
+
 /**
  * @widgets	Date
  * @short	Date input field
@@ -1049,6 +1092,16 @@ YWidget * YUI::createPartitionSplitter( YWidget *		parent,
 					const YCPString &	newPartFieldLabel )
 {
     y2error( "Default createPartitionSplitter() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
+
+
+YWidget * YUI::createPatternSelector( YWidget *		parent,
+				      YWidgetOpt &	opt )
+{
+    y2error( "Default createPatternSelector() method called - "
 	     "forgot to call HasSpecialWidget()?" );
 
     return 0;

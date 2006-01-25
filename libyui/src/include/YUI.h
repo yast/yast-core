@@ -772,6 +772,13 @@ protected:
     
     virtual bool	hasPartitionSplitter()  { return false; }
 
+    /**
+     * Creates a pattern selector.
+     **/
+    virtual YWidget *createPatternSelector( YWidget *parent, YWidgetOpt & opt );
+    
+    virtual bool	hasPatternSelector() { return false; }
+
 
     /**
      * Creates a Wizard frame.
@@ -1361,6 +1368,12 @@ protected:
     YWidget *createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				      const YCPList & optList, int argnr );
 
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a PatternSelector.
+     */
+    YWidget *createPatternSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				    const YCPList & optList, int argnr );
 
 
     /**
