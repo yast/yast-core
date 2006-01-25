@@ -36,7 +36,7 @@ YFrame::YFrame( const YWidgetOpt & opt, const YCPString & newLabel )
 
 void YFrame::setLabel( const YCPString & newLabel )
 {
-    this->label = newLabel;
+    this->label = YCPString( YShortcut::cleanShortcutString( newLabel->value() ) );
 }
 
 
@@ -49,7 +49,7 @@ YCPString YFrame::getLabel()
 YCPValue YFrame::changeWidget( const YCPSymbol & property, const YCPValue & newValue )
 {
     string s = property->symbol();
-   
+
     /**
      * @property string Value the label text
      */
