@@ -15,9 +15,6 @@
     }
     
 
-    Pkg::TargetInit( "/",	// installed system
-		     false ); 	// don't create a new RPM database
-
     UI::OpenDialog(`opt(`defaultsize), `PatternSelector(`id(`selector) ) );
     any input = UI::RunPkgSelection(`id(`selector) );
     UI::CloseDialog();

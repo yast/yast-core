@@ -1,0 +1,39 @@
+// PatternSelector in wizard frame
+{
+    if ( ! UI::HasSpecialWidget(`PatternSelector ) )
+    {
+        UI::OpenDialog(
+		   `VBox( 
+			 `Label("Error: This UI doesn't support the PatternSelector widget!"),
+			 `PushButton(`opt(`default), "&OK")
+			 )
+		   );
+        UI::UserInput();
+        UI::CloseDialog();
+	
+	return;
+    }
+
+    
+    UI::OpenDialog(`opt(`defaultsize ),
+		   `Wizard(`back,   "",
+			   `cancel, "&Cancel",
+			   `ok,     "&OK" ) );
+
+    string help_text = "Help text needs to be written";
+
+    UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/yast-software.png" ) );
+    UI::WizardCommand(`SetDialogHeading( "Software Selection" ) );
+    UI::WizardCommand(`SetHelpText( help_text ) );
+    
+    Pkg::TargetInit( "/",	// installed system
+		     false ); 	// don't create a new RPM database
+
+    UI::ReplaceWidget(`id(`contents), `PatternSelector(`id(`selector) ) );
+
+
+    any input = UI::RunPkgSelection(`id(`selector) );
+    UI::CloseDialog();
+
+    y2milestone( "Input: %1", input );
+}
