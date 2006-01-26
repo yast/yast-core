@@ -1,8 +1,8 @@
 @HEADER-COMMENT@
 
-# neededforbuild curl curl-devel dejagnu expect gpp doxygen libpng libgpp libtool libxcrypt libxcrypt-devel liby2util liby2util-devel openssl openssl-devel popt popt-devel tcl yast2-devtools ElectricFence openslp openslp-devel perl-XML-Writer libxml2 libxml2-devel libxslt libgcrypt libgpg-error pkgconfig docbook-xsl-stylesheets docbook_4 sgml-skel udev blocxx blocxx-devel pcre
 
 @HEADER@
+BuildRequires:	ElectricFence blocxx-devel curl-devel dejagnu docbook-xsl-stylesheets doxygen gcc-c++ libxcrypt-devel libxslt liby2util-devel openslp-devel perl-XML-Writer popt-devel sgml-skel udev yast2-devtools
 Summary:	-
 Requires:	netcat
 Requires:	perl = %{perl_version}
