@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan 30 19:17:49 CET 2006 - sh@suse.de
+
+- V 2.13.17
+- Implemented (optional) PatternSelector widget (feature #129)
+
+-------------------------------------------------------------------
 Tue Jan 10 09:01:15 CET 2006 - visnov@suse.cz
 
 - display file name on failing import (#141566) 
