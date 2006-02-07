@@ -1,5 +1,7 @@
 // Full-fledged pattern selection
 {
+    textdomain "bogus";
+    
     void detailedSelection()
     {
 	// Open empty dialog for instant feedback
@@ -34,7 +36,27 @@
 			   `cancel, "&Cancel",
 			   `ok,     "&OK" ) );
 
-    string help_text = "Help text needs to be written";
+	string help_text
+	    = _( "<p>"
+		 "The available software for this system is shown by category in the left "
+		 "column.  To view a description for an item, select it in the list."
+		 "</p>" )
+	    + _( "<p>"
+		 "Change the status of items by clicking on their status icon "
+		 "or right-click on any icon for a context menu. "
+		 "With the context menu you can also change the status of all items."
+		 "</p>" )
+	    + _( "<p>"
+		 "<b>Details</b> opens the detailed software package selection "
+		 "where you can view and select individual software packages."
+		 "</p>" )
+	    + _( "<p>"
+		 "The <b>disk usage</b> display in the lower right corner shows the remaining disk space "
+		 "after all requested changes will have been performed. "
+		 "Please notice that hard disk partitions that are full or nearly full can degrade "
+		 "system performance and in some cases even cause serious problems. "
+		 "The system needs some available disk space to run properly."
+		 "</p>" );
 
     UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/yast-software.png" ) );
     UI::WizardCommand(`SetDialogHeading( "Software Selection" ) );
