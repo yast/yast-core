@@ -326,7 +326,7 @@ YWidget * YUI::createWidgetTree( YWidget * parent, YRadioButtonGroup * rbg, cons
  * @class	YReplacePoint
  * @arg		term child the child widget
  * @usage	`ReplacePoint( `id( `rp ), `Empty() )
- * @example	ReplacePoint1.ycpDumbTab2.ycp ShortcutCheckPostponed.ycp  WidgetExists.ycp
+ * @example	ReplacePoint1.ycp DumbTab2.ycp ShortcutCheckPostponed.ycp WidgetExists.ycp
  *
  * @description
  *
