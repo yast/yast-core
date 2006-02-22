@@ -155,7 +155,7 @@ YCPMap YWidgetEvent::ycpEvent()
 	}
 
 
-	// Add the Widget's shortcut property.
+	// Add the Widget's debug label.
 	// This is usually the label (translated to the user's locale).
 
 	string debugLabel = _widget->debugLabel();
