@@ -82,6 +82,12 @@ public:
      * Inherited from YWidget.
      */
     const char *shortcutProperty() { return YUIProperty_Label; }
+  
+    /**
+     * The name of the widget property that will return user input.
+     * Inherited from YWidget.
+     **/
+    const char *userInputProperty() { return YUIProperty_Value; }
 
 
 private:

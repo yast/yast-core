@@ -20,6 +20,7 @@
 #ifndef YContainerWidget_h
 #define YContainerWidget_h
 
+#include <ycp/YCPMap.h>
 #include "YWidget.h"
 
 /**
@@ -162,6 +163,13 @@ public:
      * fields, check boxes etc.
      */
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
+
+    /**
+     * (Recursively) collect the content of all input fields or other
+     * interactive widgets in this container and its children and add them to
+     * 'fieldContents'.
+     **/
+    virtual void collectUserInput( YCPList & fieldContents );
 
 
 protected:

@@ -76,7 +76,7 @@ public:
      * This makes this useful for debugging only.
      **/
     virtual std::string debugLabel();
- 
+
     /**
      * Checks whether or not this object is valid. This is to enable
      * dangling pointer error checking ( i.e. this object is already
@@ -249,7 +249,7 @@ public:
 
     /**
      * Returns 'true' if this widget should send key events, i.e. if it has
-     * `opt(`keyEvent) set. 
+     * `opt(`keyEvent) set.
      **/
     bool sendKeyEvents() const { return _sendKeyEvents; }
 
@@ -338,12 +338,20 @@ public:
      * The name of the widget property that holds the keyboard shortcut, if any.
      * Overwrite this for widgets that can have keyboard shortcuts.
      */
-    virtual const char *shortcutProperty() { return ( const char * ) 0; }
+    virtual const char *shortcutProperty() { return (const char *) 0; }
 
-    
+    /**
+     * The name of the widget property that will return user input, if there is
+     * any.  Widgets that do have user input (such as TextEntry, ComboBox,
+     * SelBox) should overwrite this methods. Widgets that are purely passive
+     * (such as Label, RichText) should not.
+     **/
+    virtual const char *userInputProperty() { return (const char *) 0; }
+
+
     // NCurses optimizations
 
-    
+
     /**
      * In some UIs updating the screen content is an expensive operation. Use
      * startMultipleChanges() to tell the ui that you're going to perform multiple
@@ -417,7 +425,7 @@ protected:
 
     /**
      * Flag: Automatically assign a keyboard shortcut without complaints in the
-     * log file? 
+     * log file?
      **/
     bool _autoShortcut;
 

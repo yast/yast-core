@@ -56,6 +56,13 @@ public:
      */
     YCPValue queryWidget( const YCPSymbol & property );
 
+    /**
+     * The name of the widget property that will return user input.
+     * Inherited from YWidget.
+     **/
+    const char *userInputProperty() { return YUIProperty_SelectedItems; }
+    
+    
 protected:
     /**
      * Check whether or not item #index is selected.

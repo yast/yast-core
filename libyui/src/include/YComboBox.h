@@ -77,6 +77,13 @@ public:
      * Overload this to limit the input.
      */
     virtual void setInputMaxLength( const YCPInteger & numberOfChars );
+    
+    /**
+     * The name of the widget property that will return user input.
+     * Inherited from YWidget.
+     **/
+    const char *userInputProperty() { return YUIProperty_Value; }
+
 
 protected:
     /**

@@ -1610,10 +1610,79 @@ YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCP
     return askForSaveFileName( startWith, filter, headline );
 }
 
+/**
+ * @builtin CollectUserInput
+ * @short Collects the content of all input widgets in a dialog or in a container
+ * @description
+ * This function returns a list of maps describing the content of all input widgets
+ * in the current dialog (or in the widget with the specified ID, if any is
+ * given), such as TextEntry, ComboBox, SelectionBox, ... widgets (but not
+ * Labels, RichText, etc., that don't accept user input).
+ *
+ * This function returns a list with a map for each input widget:
+ *
+ * $[
+ *	"ID"	  	: (widget ID)
+ *	"Value"	  	: (current value of this widget, depending on "Property")
+ *	"Property"	: (what property this is, `Value, `CurrentItem or whatever)
+ *
+ *	"WidgetClass"	: (one of "TextEntry", "ComboBox", "SelectionBox", ...)
+ *	"DebugLabel	: ((translated) label of this widget, possibly shortened: "Name", ...)
+ * ]
+ *
+ * @param term ID (optional)
+ * @return list<map<string, any>>
+ * @usage list<map<string, any>> fieldContents = CollectUserInput();
+ */
+
+YCPValue YUI::evaluateCollectUserInput()
+{
+    if ( currentDialog() )
+    {
+	YCPList userInputList;
+	currentDialog()->collectUserInput( userInputList );
+	return userInputList;
+    }
+    else
+    {
+	y2error( "No dialog existing" );
+	return YCPNull();
+    }
+}
+
+
+YCPValue YUI::evaluateCollectUserInput( const YCPTerm & widgetId )
+{
+    if ( ! isSymbolOrId( widgetId ) )
+    {
+	return YCPNull();
+    }
+
+    YCPValue id = getId( widgetId );
+    YWidget * widget = widgetWithId( id, true ); // reports error
+
+    if ( ! widget )
+	return YCPVoid();
+
+    YContainerWidget * container = dynamic_cast<YContainerWidget *>( widget );
+
+    if ( ! container )
+	container = dynamic_cast<YContainerWidget *>( widget->yParent() );
+
+    if ( container )
+    {
+	YCPList userInputList;
+	container->collectUserInput( userInputList );
+	return userInputList;
+    }
+    else // should never happen
+	return YCPVoid();
+}
+
 
 /**
  * @builtin SetFunctionKeys
- * @short Sets the ( default ) function keys for a number of buttons.
+ * @short Sets the (default) function keys for a number of buttons.
  * @description
  * This function receives a map with button labels and the respective function
  * key number that should be used if on other `opt( `key_F.. ) is specified.

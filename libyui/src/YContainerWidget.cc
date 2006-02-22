@@ -20,6 +20,7 @@
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
+#include <ycp/YCPSymbol.h>
 #include "YContainerWidget.h"
 #include "YWizard.h"
 #include "YLabel.h"
@@ -54,7 +55,7 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
 		 deletedChild->widgetClass(), deletedChild->internalId() );
 	return;
     }
-    
+
     if ( deletedChild == _debugLabelWidget )
 	_debugLabelWidget = 0;
 
@@ -65,7 +66,7 @@ void YContainerWidget::childDeleted( YWidget *deletedChild )
     bool found = false;
     vector<YWidget *>::iterator it = children.begin();
     int deletedChildId = deletedChild->internalId();
-    
+
     while ( ! found && it != children.end() )
     {
 	if ( ( *it )->internalId() == deletedChildId )	// Don't compare pointers here!
@@ -131,7 +132,7 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
     }
 
     string stretch;
-    
+
     if ( w->stretchable( YD_HORIZ ) )	stretch += "hstretch ";
     if ( w->stretchable( YD_VERT  ) )	stretch += "vstretch";
 
@@ -290,7 +291,7 @@ string YContainerWidget::debugLabel()
     if ( _debugLabelWidget )
     {
 	string label = _debugLabelWidget->debugLabel();
-	
+
 	if ( ! label.empty() )
 	    return formatDebugLabel( _debugLabelWidget, label );
     }
@@ -305,7 +306,7 @@ string YContainerWidget::debugLabel()
 		return formatDebugLabel( child(i), label );
 	}
     }
-	    
+
 
     return "";
 }
@@ -337,9 +338,9 @@ string YContainerWidget::formatDebugLabel( YWidget * widget, const string & debL
 
 void YContainerWidget::saveUserInput( YMacroRecorder *macroRecorder )
 {
-    vector<YWidget *>::iterator it = children.begin();
-
-    while ( it != children.end() )
+    for ( vector<YWidget *>::iterator it = children.begin();
+	  it != children.end();
+	  ++it )
     {
 	YWidget *widget = *it;
 
@@ -350,13 +351,59 @@ void YContainerWidget::saveUserInput( YMacroRecorder *macroRecorder )
 	     * that doesn't have an ID since this ID is required to make use of
 	     * this saved data later when playing the macro.
 	     * Other than that, container widgets need to recurse over all
-	     * their children. 
+	     * their children.
 	     */
 
 	    widget->saveUserInput( macroRecorder );
 	}
+    }
+}
 
-	++it;
+
+void YContainerWidget::collectUserInput( YCPList & contentsList )
+{
+    for ( vector<YWidget *>::iterator it = children.begin();
+	  it != children.end();
+	  ++it )
+    {
+	YWidget *widget = *it;
+
+	if ( widget->isContainer() )
+	{
+	    ( (YContainerWidget *) widget)->collectUserInput( contentsList );
+	}
+	else if ( widget->hasId() &&			// No use without an ID
+		  widget->userInputProperty() )		// Only for widgets that hold user input
+	{
+	    YCPMap map;
+
+	    map->add( YCPString( "ID"		), widget->id() );
+	    map->add( YCPString( "Property"	), YCPSymbol( widget->userInputProperty() ) );
+	    map->add( YCPString( "Value"	), widget->queryWidget( YCPSymbol( widget->userInputProperty() ) ) );
+
+	    // Add WidgetClass
+
+	    const char * widgetClass = widget->widgetClass();
+
+	    if ( widgetClass )
+	    {
+		if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YTextEntry, ...)
+		    widgetClass++;
+
+		map->add( YCPString( "WidgetClass" ), YCPSymbol( widgetClass ) );
+	    }
+
+
+	    // Add the Widget's debug label.
+	    // This is usually the label (translated to the user's locale).
+
+	    string debugLabel = widget->debugLabel();
+
+	    if ( ! debugLabel.empty() )
+		map->add( YCPString( "DebugLabel" ), YCPString( debugLabel ) );
+
+	    contentsList->add( map );
+	}
     }
 }
 

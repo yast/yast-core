@@ -217,11 +217,6 @@ public:
     YWidget *widgetWithId( YContainerWidget *widgetRoot, const YCPValue & id, bool log_error=false );
 
     /**
-     * Implements the UI command ReplaceWidget.
-     */
-    YCPBoolean evaluateReplaceWidget( const YCPValue & value_id, const YCPTerm & term );
-
-    /**
      * Returns the default function key number for a widget with the specified
      * label or 0 if there is none. Any keyboard shortcuts that may be
      * contained in 'label' are stripped away before any comparison.
@@ -297,6 +292,8 @@ public:
     void evaluateBusyCursor				();
     YCPValue evaluateChangeWidget			( const YCPValue & value_id, const YCPValue & property, const YCPValue & new_value );
     void evaluateCheckShortcuts				();
+    YCPValue evaluateCollectUserInput			();
+    YCPValue evaluateCollectUserInput			( const YCPTerm & widgetId );
     YCPValue evaluateCloseDialog			();
     void evaluateDumpWidgetTree				();
     void evaluateFakeUserInput				( const YCPValue & next_input );
@@ -316,6 +313,7 @@ public:
     YCPValue evaluateRecode				( const YCPString & from, const YCPString & to, const YCPString & text );
     void evaluateRecordMacro				( const YCPString & filename );
     void evaluateRedrawScreen				();
+    YCPBoolean evaluateReplaceWidget			( const YCPValue & value_id, const YCPTerm & term );
     YCPValue evaluateRunPkgSelection			( const YCPValue & value_id );
     void evaluateSetConsoleFont				( const YCPString& magic, 
 							  const YCPString& font,

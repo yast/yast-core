@@ -55,6 +55,13 @@ public:
      * Implements the ui command queryWidget
      */
     YCPValue queryWidget( const YCPSymbol & property );
+    
+    /**
+     * The name of the widget property that will return user input.
+     * Inherited from YWidget.
+     **/
+    const char *userInputProperty() { return YUIProperty_CurrentItem; }
+    
 
 protected:
     /**

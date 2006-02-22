@@ -91,7 +91,7 @@ public:
     const YCPString 	freeFieldLabel()     	{ return _freeFieldLabel;	}
     const YCPString 	newPartFieldLabel()    	{ return _newPartFieldLabel;	}
 
-    
+
     /**
      * The name of the widget property that holds the keyboard shortcut.
      * Inherited from YWidget.
@@ -103,7 +103,13 @@ public:
      * overwritten here merely for the sake of completeness.
      */
     const char *shortcutProperty() { return ( const char * ) 0; }
-    
+
+    /**
+     * The name of the widget property that will return user input.
+     * Inherited from YWidget.
+     **/
+    const char *userInputProperty() { return YUIProperty_Value; }
+
 
 private:
 

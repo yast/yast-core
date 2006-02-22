@@ -569,6 +569,30 @@ UIWizardCommand( const YCPTerm & command )
 }
 
 
+
+
+static YCPValue
+UICollectUserInput( const YCPTerm & widget_id, const YCPSymbol & property )
+{
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateCollectUserInput();
+    else
+	return YCPVoid();
+}
+
+
+static YCPValue
+UICollectUserInputTerm( const YCPTerm & widget_id, const YCPTerm & property )
+{
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateCollectUserInput();
+    else
+	return YCPVoid();
+}
+
+
+
+
 static YCPValue
 UICallHandler( void * ptr, int argc, YCPValue argv[] )
 {
@@ -654,6 +678,8 @@ UI::UI()
 	    { "SetModulename",		"void (string)",					(void*) UISetModulename 	},
 	    { "HasSpecialWidget",	"boolean (symbol)",					(void*) UIHasSpecialWidget 	},
 	    { "WizardCommand",		"boolean (term)",					(void*) UIWizardCommand		},
+	    { "CollectUserInput",	"list<map<string, any>> ()",				(void*) UICollectUserInput	},
+	    { "CollectUserInput",	"list<map<string, any>> ( term )",			(void*) UICollectUserInputTerm	},
 	    { 0, 0, 0, 0, 0, 0, 0 }
 	};
 
