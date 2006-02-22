@@ -245,6 +245,16 @@ y2milestone ("formatEvent(%1)", event);
 	{
 	    UI::ChangeWidget(`send_mafioso, `Value, nil );
 	}
+	if ( event["ID"]:nil == `info )
+	{
+	    list<map<string, any> > widget_contents = UI::CollectUserInput();
+	    y2milestone( "CollectUserInput() returned %1", widget_contents );
+
+	    foreach( map<string, any> widget, widget_contents,
+	    {
+		y2milestone( "Widget contents: %1", widget );
+	    });
+	}
 	    
     } until ( event["ID"]:nil == `close );
 
