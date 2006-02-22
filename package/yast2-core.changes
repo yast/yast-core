@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Wed Feb 22 16:47:29 CET 2006 - sh@suse.de
+
+- V 2.13.18
+- Support for registration during installation:
+  Dump complete contents of a dialog with one single call
+  (new builtin UI::CollectUserInput() ) 
+
+-------------------------------------------------------------------
 Mon Jan 30 19:17:49 CET 2006 - sh@suse.de
 
 - V 2.13.17
