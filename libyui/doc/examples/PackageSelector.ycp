@@ -1,7 +1,13 @@
+// Package Selector example
 {
+    Pkg::SourceCreate( "file:/srv/sles-10-i386/CD1/", "" );
     Pkg::TargetInit( "/",	// installed system
 		     false ); 	// don't create a new RPM database
-    UI::OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`testMode, `searchMode), "/dev/fd0" ) );
+    
+    UI::OpenDialog(`opt(`defaultsize),
+		   `PackageSelector(`id(`selector),
+				    `opt(`testMode),  
+				    "/dev/fd0" ) );
     any input = UI::RunPkgSelection(`id(`selector) );
     UI::CloseDialog();
 
