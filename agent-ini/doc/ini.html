@@ -624,10 +624,11 @@ with rc-agent. So values are accessible under
 value, new value will be created. You may not create value by
 writting its comment.</p>
 
-<h3 id="finally">Final write</h3>
+<h3 id="finally">Writes are Cached</h3>
 
-<p>Changes are written to disk when Write (.ini, nil) is called or
-in agent destructor. Agent handles external change of ini file, in
+<p>Changes are written to disk when <tt>Write (.ini, nil)</tt> is called or
+in agent destructor.<br />
+Agent handles external change of ini file, in
 other words, it writes only changed values (except when <a
 href="#repeat_names">repeat_names</a> is used). If you do not call
 Write at the end, agent writes changed data to disk in the
