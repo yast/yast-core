@@ -5,8 +5,8 @@
 		     false ); 	// don't create a new RPM database
     
     UI::OpenDialog(`opt(`defaultsize),
-		   `PackageSelector(`id(`selector),
-				    `opt(`testMode),  
+		   `PackageSelector(`id(`selector), `opt(`testMode),
+				    // `opt(`testMode),  
 				    "/dev/fd0" ) );
     any input = UI::RunPkgSelection(`id(`selector) );
     UI::CloseDialog();

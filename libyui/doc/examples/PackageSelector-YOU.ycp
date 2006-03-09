@@ -1,5 +1,17 @@
+// YOU mode
 {
-    UI::OpenDialog(`opt(`defaultsize), `PackageSelector(`id(`selector), `opt(`testMode, `youMode) ) );
+    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386/", "/" );
+
+    if ( false )
+    {
+	Pkg::TargetInit( "/",		// installed system
+			 false ); 	// don't create a new RPM database
+    }
+    
+    UI::OpenDialog(`opt(`defaultsize),
+		   `PackageSelector(`id(`selector),
+				    `opt(`testMode, `youMode) ) );
+//				    `opt(`testMode ) ) );
     UI::RunPkgSelection(`id(`selector) );
     UI::CloseDialog();
 }
