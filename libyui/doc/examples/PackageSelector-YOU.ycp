@@ -1,13 +1,14 @@
 // YOU mode
 {
-    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386/", "/" );
+    // Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386/", "/" );
+    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386.rudi/", "/" );
 
-    if ( false )
+    if ( true )
     {
 	Pkg::TargetInit( "/",		// installed system
 			 false ); 	// don't create a new RPM database
     }
-    
+
     UI::OpenDialog(`opt(`defaultsize),
 		   `PackageSelector(`id(`selector),
 				    `opt(`testMode, `youMode) ) );
