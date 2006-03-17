@@ -1,7 +1,7 @@
 // YOU mode
 {
-    // Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386/", "/" );
-    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386.rudi/", "/" );
+    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386/", "/" );
+    // Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386.rudi/", "/" );
 
     if ( true )
     {
