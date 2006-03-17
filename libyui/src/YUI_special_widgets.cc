@@ -773,7 +773,7 @@ YWidget * YUI::createPartitionSplitter( YWidget *parent, YWidgetOpt & opt, const
  *		`PatternSelector()...
  *		UI::RunPkgSelection();
  *
- * @examples	PatternSelector1.ycp PatternSelector2.ycp
+ * @examples	PatternSelector-solo.ycp PatternSelector-wizard.ycp
  *
  * @description
  *
