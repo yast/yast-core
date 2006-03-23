@@ -162,6 +162,7 @@ struct YWidgetOpt
     YBoolOpt summaryMode;	// YPackageSelector
     YBoolOpt updateMode;	// YPackageSelector
     YBoolOpt youMode;		// YPackageSelector
+    YBoolOpt instSourcesMode;	// YPackageSelector
     YBoolOpt stepsEnabled;	// YWizard
     YBoolOpt treeEnabled;	// YWizard
     

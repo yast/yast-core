@@ -2294,6 +2294,7 @@ YWidget * YUI::createIntField( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @option	updateMode start in update mode
  * @option	searchMode start with the "search" filter view
  * @option	summaryMode start with the "installation summary" filter view
+ * @option	instSourcesMode start with the "installation sources" filter view
  * @usage	`PackageSelector( "/dev/fd0" )
  *
  * @examples	PackageSelector.ycp
@@ -2342,6 +2343,7 @@ YWidget * YUI::createPackageSelector( YWidget * parent, YWidgetOpt & opt, const 
 	    else if ( sym == YUIOpt_updateMode  ) opt.updateMode.setValue( true );
 	    else if ( sym == YUIOpt_searchMode  ) opt.searchMode.setValue( true );
 	    else if ( sym == YUIOpt_summaryMode ) opt.summaryMode.setValue( true );
+	    else if ( sym == YUIOpt_instSourcesMode ) opt.instSourcesMode.setValue( true );
 	    else logUnknownOption( term, optList->value(o) );
 	}
 	else logUnknownOption( term, optList->value(o) );
