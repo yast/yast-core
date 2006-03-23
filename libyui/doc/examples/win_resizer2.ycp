@@ -40,37 +40,37 @@
 	       `VSquash(
 			`VBox(
 			      `HSpacing(50),		// force width
-			      `Left( `Label( _("Now:") ) ),
+			      `Left( `Label( "Now:" ) ),
 			      `BarGraph( `opt(`vstretch),
 					 [ win_used, total_free ],
 					 [
-					  _("Windows\nused\n%1 ") + unit,
-					  _("Windows\nfree\n%1 ") + unit
+					  "Windows\nused\n%1 " + unit,
+					  "Windows\nfree\n%1 " + unit
 					 ]
 					 ),
 			      `VSpacing(2),
 
-			      `Left( `Label( _("After installation:") ) ),
+			      `Left( `Label( "After installation:" ) ),
 			      `BarGraph( `id(`graph), `opt(`vstretch),
 					 [ win_used, win_free, linux_size ],
 					 [
-					  _("Windows\nused\n%1 ") + unit,
-					  _("Windows\nfree\n%1 ") + unit,
-					  _("Linux\n%1 ") + unit
+					  "Windows\nused\n%1 " + unit,
+					  "Windows\nfree\n%1 " + unit,
+					  "Linux\n%1 "	       + unit
 					 ]
 					 ),
 			      `VSpacing(0.5),
 			      `Slider( `id(`win_free),   `opt(`notify),
-				       _("Windows free (") + unit + ")",
+				       "Windows free (" + unit + ")",
 				       min_free, total_free - linux_min, win_free ),
 			      `VSpacing(0.5),
 			      `Slider( `id(`linux_size),   `opt(`notify),
-				       _("Linux (") + unit + ")",
+				       "Linux (" + unit + ")",
 				       linux_min, total_free - min_free, linux_size ),
 			      `VSpacing(0.5),
 			      `HBox(
-				    `HCenter(`PushButton(`id(`suggest), _("&Default") ) ),
-				    `PushButton(`id(`close), `opt(`default), _("&Close") )
+				    `HCenter(`PushButton(`id(`suggest), "&Default" ) ),
+				    `PushButton(`id(`close), `opt(`default), "&Close" )
 				    )
 			      )
 			)
