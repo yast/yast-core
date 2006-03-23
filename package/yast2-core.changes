@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Mar 23 12:06:37 CET 2006 - sh@suse.de
+
+- V 2.13.19
+- Enable starting up pkg selector in inst sources view: Use
+  `opt(`instSourcesMode) 
+
+-------------------------------------------------------------------
 Fri Feb 24 14:36:28 CET 2006 - mvidner@suse.cz
 
 - ini agent docs: emphasized that writes are cached.
