@@ -34,7 +34,7 @@ while ( <STDIN> )
     if ( ycpCommandIsDir )
     {
 	my @list        = ();
-	my $dirs        = qx(cd $path 2> /dev/null ; find -type d 2> /dev/null);
+	my $dirs        = qx(cd $path 2> /dev/null && find -type d 2> /dev/null);
 
 	foreach my $dir (split ("\n", $dirs)) {
 	    my $list_mod = qx(cd $path/$dir 2> /dev/null; ls *.ko 2> /dev/null);
