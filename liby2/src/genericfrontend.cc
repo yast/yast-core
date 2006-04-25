@@ -28,6 +28,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <signal.h>
+#include <sstream>
 
 #include <ycp/y2log.h>
 #include <ycp/ExecutionEnvironment.h>
@@ -190,12 +191,13 @@ main (int argc, char **argv)
 
     YCPPathSearch::initialize();
 
-    y2milestone ("Launched YaST2 component '%s'", progname);
-
+    ostringstream argdump;
     for (int arg = 1; arg < argc; arg++)
     {
-	y2debug ("arg %d: %s", arg, argv[arg]);
+	argdump << " '" << argv[arg] << "'";
     }
+
+    y2milestone ("Launched YaST2 component '%s'%s", progname, argdump.str().c_str());
 
     // Now evaluate command line options in sequence
 

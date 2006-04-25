@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr 25 18:31:58 CEST 2006 - mvidner@suse.cz
+
+- Print also the y2base arguments on the first log line (#169257).
+- 2.13.21
+
+-------------------------------------------------------------------
 Mon Apr  3 14:22:06 CEST 2006 - mvidner@suse.cz
 
 - Do not use a random path if an invalid one is given in Dir(.modinfo)
