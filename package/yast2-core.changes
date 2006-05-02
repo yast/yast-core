@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue May  2 16:19:15 CEST 2006 - lslezak@suse.cz
+
+- ag_background - use unlimited buffer size as default, do not
+  block the subprocess (#169648), update of the example
+- 2.13.22
+
+-------------------------------------------------------------------
 Tue Apr 25 18:31:58 CEST 2006 - mvidner@suse.cz
 
 - Print also the y2base arguments on the first log line (#169257).

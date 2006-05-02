@@ -31,24 +31,27 @@ UI::OpenDialog(
     )
 );
 
+// set buffer size if the progress should be updated more times
+// SCR::Write(.background.buffer_size, 10);
+
 // start subprocess
 SCR::Execute(.background.run_output, "/usr/bin/find /usr -type d");
 
-list script_out = [];
+list<string> script_out = [];
 symbol ret = nil;
 
-while(SCR::Read(.background.output_open) || (SCR::Read(.background.newlines) > 0))
+while((boolean)SCR::Read(.background.output_open) || (boolean)(SCR::Read(.background.newlines) > 0))
 {
-    script_out = SCR::Read(.background.newout);
+    script_out = (list<string>)SCR::Read(.background.newout);
 
     // parse output in script_out and update progress in dialog accordingly
-    maplist(`d, script_out, ``{UI::ChangeWidget(`id(`dir), `Value, d);});
+    UI::ChangeWidget(`id(`dir), `Value, script_out[size(script_out) - 1]:"");
 
-    while (SCR::Read(.background.newlines) == 0 && SCR::Read(.background.output_open))
+    while ((integer)SCR::Read(.background.newlines) == 0 && (boolean)SCR::Read(.background.output_open))
     {
-        sleep(100);	// small wait
+        sleep(100);	// small delay
 
-        ret = UI::PollInput();
+        ret = (symbol) UI::PollInput();
 
 	// check if abort button was pressed
 	if (ret == `abort)

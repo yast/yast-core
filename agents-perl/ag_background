@@ -27,11 +27,11 @@ use POSIX ":sys_wait_h";
 our $child_running = 0;
 our $child_pid = -1;
 
-# max. size of input buffer (number of lines)
-my $buffer_size = 500;    
+# max. size of input buffer (number of lines), 0 = unlimited buffer
+my $buffer_size = 0;
 
-# max. size of input buffer for error output
-my $buffer_size_err = 200;
+# max. size of input buffer for error output, 0 = unlimited buffer
+my $buffer_size_err = 0;
 
 # input line buffer for stdin - store read part of the line
 my $input1 = '';
@@ -47,6 +47,10 @@ sub Handler()
 	waitpid(-1, WNOHANG);
         $child_running = 0;
 	$child_pid = -1;
+
+	# restore default buffer size for the next process
+	$buffer_size = 0;
+	$buffer_size_err = 0;
     }
 }
 
@@ -289,7 +293,7 @@ while (1)
 	    {
 		if (defined $arg)
 		{
-		    if ($arg >= 1)
+		    if ($arg >= 0)
 		    {
 			if ($path eq '.buffer_size')
 			{
@@ -336,7 +340,7 @@ while (1)
 	    
     if ($output_avail) 	# script output available
     {
-	if (@out >= $buffer_size)
+	if (@out >= $buffer_size && $buffer_size > 0)
 	{
 	    # too many lines in input buffer - wait for STDIN command
 	    select(my $watch_out = $stdin_set, undef, undef, undef);
@@ -385,7 +389,7 @@ while (1)
 
     if ($err_avail) 	# error output available
     {
-	if (@err >= $buffer_size_err)
+	if (@err >= $buffer_size_err && $buffer_size_err > 0)
 	{
 	    # too many lines in input buffer - wait for STDIN command
 	    select(my $watch_out = $stdin_set, undef, undef, undef);
