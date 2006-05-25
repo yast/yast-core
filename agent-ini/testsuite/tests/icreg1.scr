@@ -8,12 +8,12 @@
       "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
       "sections" : [
         $[
-        "begin" : [ "Section=([a-zA-Z0-9]+)", "Section=%s" ],
+        "begin" : [ "Section=([[:alnum:]]+)", "Section=%s" ],
         ],
       ],
       "params" : [
         $[
-        "match" : [ "Value=([a-zA-Z0-9]+)=(.*)$" , "Value=%s=%s"],
+        "match" : [ "Value=([[:alnum:]]+)=(.*)$" , "Value=%s=%s"],
       ],
     ],
     ]

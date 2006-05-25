@@ -66,7 +66,7 @@
 (regexpsub ("aaabbb", "(.*ab).*", "s_\\1_e") == "s_aaab_e")
 (regexpsub ("aaabbb", "(.*abb)(.*)", "s_\\1_e\\2") == "s_aaabb_eb")
 
-(regexptokenize ("aaabbBb", "(.*[A-Z]).*") == [ "aaabbB" ])
+(regexptokenize ("aaabbBb", "(.*[[:upper:]]).*") == [ "aaabbB" ])
 (regexptokenize ("aaabbb", "(.*ab)(.*)") == ["aaab", "bb"])
 (regexptokenize ("aaabbb", "(.*ba).*") == [])
 (regexptokenize ("aaabbb", "(.*ba).*()") == [])

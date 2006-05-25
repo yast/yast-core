@@ -209,29 +209,29 @@ YCPTerm IniAgent::generateSysConfigTemplate (string fn)
     YCPMap param;
     YCPList lp;
     l = YCPList ();
-    lp->add (YCPString ("([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)\""));
+    lp->add (YCPString ("([[:alnum:]_]+)[ \t]*=[ \t]*\"([^\"]*)\""));
     lp->add (YCPString ("%s=\"%s\""));
     param->add (YCPString ("match"), lp);
     lp = YCPList ();
-    lp->add (YCPString ("([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)"));
+    lp->add (YCPString ("([[:alnum:]_]+)[ \t]*=[ \t]*\"([^\"]*)"));
     lp->add (YCPString ("([^\"]*)\""));
     param->add (YCPString ("multiline"), lp);
     l->add (param);
 
     lp = YCPList ();
     param = YCPMap ();
-    lp->add (YCPString ("^[ \t]*([a-zA-Z_][a-zA-Z0-9_]*)[ \t]*=[ \t]*'([^']*)'"));
+    lp->add (YCPString ("^[ \t]*([[:alpha:]_][[:alnum:]_]*)[ \t]*=[ \t]*'([^']*)'"));
     lp->add (YCPString ("%s='%s'"));
     param->add (YCPString ("match"), lp);
     lp = YCPList ();
-    lp->add (YCPString ("([a-zA-Z_][a-zA-Z0-9_]*)[ \t]*=[ \t]*'([^']*)"));
+    lp->add (YCPString ("([[:alpha:]_][[:alnum:]_]*)[ \t]*=[ \t]*'([^']*)"));
     lp->add (YCPString ("([^']*)'"));
     param->add (YCPString ("multiline"), lp);
     l->add (param);
 
     lp = YCPList ();
     param = YCPMap ();
-    lp->add (YCPString ("([a-zA-Z0-9_]+)[ \t]*=[ \t]*([^\"]*[^ \t\"]|)[ \t]*$"));
+    lp->add (YCPString ("([[:alnum:]_]+)[ \t]*=[ \t]*([^\"]*[^ \t\"]|)[ \t]*$"));
     lp->add (YCPString ("%s=\"%s\""));
     param->add (YCPString ("match"), lp);
     l->add (param);

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu May 25 10:43:24 CEST 2006 - mvidner@suse.cz
+
+- Use [:alpha:] instead of A-Za-z to catch all ASCII letters even in
+  Estonian (#177560).
+- 2.13.23
+
+-------------------------------------------------------------------
 Tue May  2 16:19:15 CEST 2006 - lslezak@suse.cz
 
 - ag_background - use unlimited buffer size as default, do not
