@@ -305,7 +305,7 @@ public:
     YCPValue evaluateHasSpecialWidget			( const YCPSymbol & widget );
     void evaluateMakeScreenShot				( const YCPString & filename );
     void evaluateNormalCursor				();
-    YCPBoolean evaluateOpenDialog			( const YCPTerm & term, const YCPTerm & term = YCPNull() );
+    YCPBoolean evaluateOpenDialog			( const YCPTerm & term, const YCPTerm & opts = YCPNull() );
     void evaluatePlayMacro				( const YCPString & filename );
     void evaluatePostponeShortcutCheck			();
     YCPValue evaluateQueryWidget			( const YCPValue& value_id, const YCPValue& property );
