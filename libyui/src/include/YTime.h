@@ -64,7 +64,7 @@ public:
 
     /**
      * change the label of the Time  entry. Overload this, but call
-     * YTextEntry::setLabel at the end of your own function.
+     * YTime::setLabel at the end of your own function.
      */
     virtual void setLabel( const YCPString & label );
 

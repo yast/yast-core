@@ -64,7 +64,7 @@ public:
 
     /**
      * change the label of the Date  entry. Overload this, but call
-     * YTextEntry::setLabel at the end of your own function.
+     * YDate::setLabel at the end of your own function.
      */
     virtual void setLabel( const YCPString & label );
 
