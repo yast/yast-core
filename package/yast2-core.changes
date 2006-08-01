@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug  1 13:42:35 CEST 2006 - visnov@suse.cz
+
+- Fix POSIX make
+- 2.13.24 
+
+-------------------------------------------------------------------
 Thu May 25 10:43:24 CEST 2006 - mvidner@suse.cz
 
 - Use [:alpha:] instead of A-Za-z to catch all ASCII letters even in
