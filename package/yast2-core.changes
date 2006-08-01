@@ -1,10 +1,4 @@
 -------------------------------------------------------------------
-Tue Aug  1 13:07:13 CEST 2006 - visnov@suse.cz
-
-- adapt for POSIX make
-- 2.13.23 
-
--------------------------------------------------------------------
 Tue May  2 16:19:15 CEST 2006 - lslezak@suse.cz
 
 - ag_background - use unlimited buffer size as default, do not
