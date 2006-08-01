@@ -34,9 +34,7 @@ $(xmlfiles) : $(builtin)
 	rm $@.tmp
 
 html/index.html: $(xmlfiles) ui.xml
-	XML_CATALOG_FILES=@XML_CATALOG@\
-	@XSLTPROC@ --xinclude \
-	@STYLESHEET_HTML@ ui.xml
+	XML_CATALOG_FILES=@XML_CATALOG@ @XSLTPROC@ --xinclude @STYLESHEET_HTML@ ui.xml
 
 html/yast2docs.css: html/index.html
 	cp @STYLESHEET_CSS@ html

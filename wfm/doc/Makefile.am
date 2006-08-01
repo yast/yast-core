@@ -15,9 +15,7 @@ html_DATA =			\
 	$(htmlfiles)
 
 html/index.html: $(xmlfiles) wfm.xml
-	XML_CATALOG_FILES=@XML_CATALOG@\
-	@XSLTPROC@ --xinclude \
-	@STYLESHEET_HTML@ wfm.xml
+	XML_CATALOG_FILES=@XML_CATALOG@ @XSLTPROC@ --xinclude @STYLESHEET_HTML@ wfm.xml
 
 
 

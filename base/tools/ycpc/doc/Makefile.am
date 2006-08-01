@@ -12,9 +12,7 @@ html_DATA =			\
 	$(htmlfiles)
 
 html/index.html: $(xmlfiles)
-	XML_CATALOG_FILES=@XML_CATALOG@\
-	@XSLTPROC@ --xinclude \
-	@STYLESHEET_HTML@ ycpc.xml
+	XML_CATALOG_FILES=@XML_CATALOG@ @XSLTPROC@ --xinclude @STYLESHEET_HTML@ ycpc.xml
 
 
 html/yast2docs.css: html/index.html
