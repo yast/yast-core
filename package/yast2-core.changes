@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug  2 15:16:19 CEST 2006 - mvidner@suse.cz
+
+- Include more variables in yast2-core.pc
+- 2.13.25
+
+-------------------------------------------------------------------
 Tue Aug  1 13:42:35 CEST 2006 - visnov@suse.cz
 
 - Fix POSIX make
