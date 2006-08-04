@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Aug  4 14:47:40 CEST 2006 - mvidner@suse.cz
+
+- Memory reduction: removed YCode members m_valid and m_kind to save
+  5% of heap.
+
+-------------------------------------------------------------------
 Wed Aug  2 15:16:19 CEST 2006 - mvidner@suse.cz
 
 - Include more variables in yast2-core.pc

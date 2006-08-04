@@ -74,14 +74,14 @@ IMPL_DERIVED_POINTER(YEFunctionPointer, YECall);
 // variable ref (-> SymbolEntry)
 
 YEVariable::YEVariable (SymbolEntryPtr entry)
-    : YCode (yeVariable)
+    : YCode ()
     , m_entry (entry)
 {
 }
 
 
 YEVariable::YEVariable (bytecodeistream & str)
-    : YCode (yeVariable)
+    : YCode ()
 {
     m_entry = Bytecode::readEntry (str);
 }
@@ -148,7 +148,7 @@ YEVariable::toStream (std::ostream & str) const
 // reference (-> SymbolEntry)
 
 YEReference::YEReference (SymbolEntryPtr entry)
-    : YCode (yeReference)
+    : YCode ()
     , m_entry (entry)
 {
 #if DO_DEBUG
@@ -158,7 +158,7 @@ YEReference::YEReference (SymbolEntryPtr entry)
 
 
 YEReference::YEReference (bytecodeistream & str)
-    : YCode (yeReference)
+    : YCode ()
 {
     m_entry = Bytecode::readEntry (str);
 }
@@ -219,7 +219,7 @@ YEReference::type () const
 // term (-> name, parameters)
 
 YETerm::YETerm (const char *name)
-    : YCode (yeTerm)
+    : YCode ()
     , m_name (name)
     , m_parameters (0)
 {
@@ -227,7 +227,7 @@ YETerm::YETerm (const char *name)
 
 
 YETerm::YETerm (bytecodeistream & str)
-    : YCode (yeTerm)
+    : YCode ()
     , m_parameters (0)
 {
     m_name = Bytecode::readCharp (str);
@@ -375,7 +375,7 @@ YETerm::toStream (std::ostream & str) const
 // Compare (-> left, right, type)
 
 YECompare::YECompare (YCodePtr left, c_op op, YCodePtr right)
-    : YCode (yeCompare)
+    : YCode ()
     , m_left (left)
     , m_op (op)
     , m_right (right)
@@ -384,7 +384,7 @@ YECompare::YECompare (YCodePtr left, c_op op, YCodePtr right)
 
 
 YECompare::YECompare (bytecodeistream & str)
-    : YCode (yeCompare)
+    : YCode ()
 {
     m_left = Bytecode::readCode (str);
     char c;
@@ -494,7 +494,7 @@ YECompare::toStream (std::ostream & str) const
 // locale expression (-> singular, plural, count)
 
 YELocale::YELocale (const char *singular, const char *plural, YCodePtr count, const char *textdomain)
-    : YCode (yeLocale)
+    : YCode ()
     , m_singular (singular)
     , m_plural (plural)
     , m_count (count)
@@ -508,7 +508,7 @@ YELocale::YELocale (const char *singular, const char *plural, YCodePtr count, co
 
 
 YELocale::YELocale (bytecodeistream & str)
-    : YCode (yeLocale)
+    : YCode ()
 {
     m_singular = Bytecode::readCharp (str);		// text for singular
     m_plural = Bytecode::readCharp (str);		// text for plural
@@ -596,7 +596,7 @@ YELocale::toStream (std::ostream & str) const
 // list expression (-> value, next list value)
 
 YEList::YEList (YCodePtr code)
-    : YCode (yeList)
+    : YCode ()
 {
     m_first = new ycodelist_t;
     m_first->code = code;
@@ -605,7 +605,7 @@ YEList::YEList (YCodePtr code)
 
 
 YEList::YEList (bytecodeistream & str)
-    : YCode (yeList)
+    : YCode ()
     , m_first (0)
 {
     Bytecode::readYCodelist (str, &m_first);
@@ -747,7 +747,7 @@ YEList::type () const
 // map expression (-> key, value, next key/value pair)
 
 YEMap::YEMap (YCodePtr key, YCodePtr value)
-    : YCode (yeMap)
+    : YCode ()
     , m_first (0)
 {
     attach (key, value);
@@ -755,7 +755,7 @@ YEMap::YEMap (YCodePtr key, YCodePtr value)
 
 
 YEMap::YEMap (bytecodeistream & str)
-    : YCode (yeMap)
+    : YCode ()
     , m_first (0)
 {
     u_int32_t count = Bytecode::readInt32 (str);
@@ -922,7 +922,7 @@ YEMap::type () const
 // propagation expression (-> declaration_t for conversion, value)
 
 YEPropagate::YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to)
-    : YCode (yePropagate)
+    : YCode ()
     , m_from (from)
     , m_to (to)
     , m_value (value)
@@ -937,7 +937,7 @@ YEPropagate::YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to)
 
 
 YEPropagate::YEPropagate (bytecodeistream & str)
-    : YCode (yePropagate)
+    : YCode ()
     , m_from (Bytecode::readType (str))
     , m_to (Bytecode::readType (str))
 {
@@ -1095,7 +1095,7 @@ YEPropagate::toStream (std::ostream & str) const
 // unary expression (-> declaration_t, arg)
 
 YEUnary::YEUnary (declaration_t *decl, YCodePtr arg)
-    : YCode (yeUnary)
+    : YCode ()
     , m_decl (decl)
     , m_arg (arg)
 {
@@ -1103,7 +1103,7 @@ YEUnary::YEUnary (declaration_t *decl, YCodePtr arg)
 
 
 YEUnary::YEUnary (bytecodeistream & str)
-    : YCode (yeUnary)
+    : YCode ()
 {
     extern StaticDeclaration static_declarations;
 
@@ -1185,7 +1185,7 @@ YEUnary::toStream (std::ostream & str) const
 // binary expression (-> declaration_t, arg1, arg2)
 
 YEBinary::YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2)
-    : YCode (yeBinary)
+    : YCode ()
     , m_decl (decl)
     , m_arg1 (arg1)
     , m_arg2 (arg2)
@@ -1194,7 +1194,7 @@ YEBinary::YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2)
 
 
 YEBinary::YEBinary (bytecodeistream & str)
-    : YCode (yeBinary)
+    : YCode ()
 {
     extern StaticDeclaration static_declarations;
 
@@ -1314,7 +1314,7 @@ YEBinary::type () const
 // Triple (? :) expression (-> bool expr, true value, false value)
 
 YETriple::YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false)
-    : YCode (yeTriple)
+    : YCode ()
     , m_expr (a_expr)
     , m_true (a_true)
     , m_false (a_false)
@@ -1323,7 +1323,7 @@ YETriple::YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false)
 
 
 YETriple::YETriple (bytecodeistream & str)
-    : YCode (yeTriple)
+    : YCode ()
 {
     m_expr = Bytecode::readCode (str);
     m_true = Bytecode::readCode (str);
@@ -1394,7 +1394,7 @@ YETriple::toStream (std::ostream & str) const
 // is (expression, type)
 
 YEIs::YEIs (YCodePtr expr, constTypePtr type)
-    : YCode (yeIs)
+    : YCode ()
     , m_expr (expr)
     , m_type (type)
 {
@@ -1402,7 +1402,7 @@ YEIs::YEIs (YCodePtr expr, constTypePtr type)
 
 
 YEIs::YEIs (bytecodeistream & str)
-    : YCode (yeIs)
+    : YCode ()
     , m_type (Bytecode::readType (str))
 {
     m_expr = Bytecode::readCode (str);
@@ -1488,14 +1488,14 @@ YEIs::toStream (std::ostream & str) const
 // Return (expression)
 
 YEReturn::YEReturn (YCodePtr expr)
-    : YCode (yeReturn)
+    : YCode ()
     , m_expr (expr)
 {
 }
 
 
 YEReturn::YEReturn (bytecodeistream & str)
-    : YCode (yeReturn)
+    : YCode ()
 {
     m_expr = Bytecode::readCode (str);
 }
@@ -1535,7 +1535,7 @@ YEReturn::toStream (std::ostream & str) const
 // bracket expression: identifier [ arg, arg, ...] : default
 
 YEBracket::YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr resultType)
-    : YCode (yeBracket)
+    : YCode ()
     , m_var (var)
     , m_arg (arg)
     , m_def (def)
@@ -1545,7 +1545,7 @@ YEBracket::YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr res
 
 
 YEBracket::YEBracket (bytecodeistream & str)
-    : YCode (yeBracket)
+    : YCode ()
 {
     m_var = Bytecode::readCode (str);
     m_arg = Bytecode::readCode (str);
@@ -1697,7 +1697,7 @@ YEBracket::toStream (std::ostream & str) const
 // builtin function ref (-> declaration_t, type, parameters)
 
 YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePtr type)
-    : YCode (yeBuiltin)
+    : YCode ()
     , m_decl (decl)
     , m_type (type==0 ? Type::Function(Type::Unspec) : (constFunctionTypePtr)type)
     , m_parameterblock (parameterblock)
@@ -1707,7 +1707,7 @@ YEBuiltin::YEBuiltin (declaration_t *decl, YBlockPtr parameterblock, constTypePt
 
 
 YEBuiltin::YEBuiltin (bytecodeistream & str)
-    : YCode (yeBuiltin)
+    : YCode ()
     , m_parameterblock (0)
     , m_parameters (0)
 {
@@ -2347,7 +2347,7 @@ YEBuiltin::evaluate (bool cse)
 // function call parameter handling (-> SymbolEntry + Parameters)
 
 YECall::YECall (TableEntry* entry)
-    : YCode (yeFunction)
+    : YCode ()
     , m_entry (entry)
     , m_sentry ( entry ? entry->sentry () : 0)
     , m_parameters (0)
@@ -2383,7 +2383,7 @@ YECall::YECall (TableEntry* entry)
 
 
 YECall::YECall (bytecodeistream & str)
-    : YCode (yeFunction)
+    : YCode ()
     , m_entry (0)
     , m_sentry (Bytecode::readEntry (str))
     , m_parameters (0)
@@ -2402,8 +2402,7 @@ YECall::YECall (bytecodeistream & str)
 	    if (m_parameters[i] == 0)
 	    {
 		y2error ("parameter code read failed for %d", i);
-		m_valid = false;
-		return;
+		throw Bytecode::Invalid();
 	    }
 	}
     }
@@ -2775,7 +2774,7 @@ YEFunction::YEFunction (bytecodeistream & str)
     if (m_functioncall == 0)
     {
 	y2error ("Cannot create a function call for %s", m_sentry->toString ().c_str ());
-	m_valid = false;
+	throw Bytecode::Invalid();
     }
 }
 
@@ -2895,7 +2894,6 @@ YEFunction::finalize()
 YEFunctionPointer::YEFunctionPointer (TableEntry* entry)
     : YECall (entry)
 {
-    m_kind = yeFunctionPointer;
 #if DO_DEBUG
     y2debug ("YEFunctionPointer[%p] (%s)", this, entry ? entry->sentry()->toString().c_str() : "nil");
 #endif
@@ -2905,7 +2903,6 @@ YEFunctionPointer::YEFunctionPointer (TableEntry* entry)
 YEFunctionPointer::YEFunctionPointer (bytecodeistream & str)
     : YECall (str)
 {
-    m_kind = yeFunctionPointer;
 }
 
 

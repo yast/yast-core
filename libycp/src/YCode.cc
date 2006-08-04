@@ -49,15 +49,12 @@
 IMPL_BASE_POINTER(YCode);
 IMPL_DERIVED_POINTER(YConst, YCode);
 IMPL_DERIVED_POINTER(YLocale, YCode);
-IMPL_DERIVED_POINTER(YDeclaration, YCode);
 IMPL_DERIVED_POINTER(YFunction, YCode);
 
 // ------------------------------------------------------------------
 // YCode
 
-YCode::YCode (ykind kind)
-    : m_kind (kind)
-    , m_valid (true)
+YCode::YCode ()
 {
 }
 
@@ -67,53 +64,38 @@ YCode::~YCode ()
 }
 
 
-YCode::ykind
-YCode::kind() const
-{
-    return m_kind;
-}
-
-
-bool
-YCode::valid() const
-{
-    return m_valid;
-}
-
-
 bool
 YCode::isConstant() const
 {
-    return (m_kind < ycConstant);
+    return false;
 }
 
 
 bool
 YCode::isError() const
 {
-    return (m_kind == yxError);
+    return false; 		// TODO unused in practice?
 }
 
 
 bool
 YCode::isStatement() const
 {
-    return ((m_kind > yeExpression)
-	    && (m_kind < ysStatement || m_kind == ysSwitch));
+    return false;
 }
 
 
 bool
 YCode::isBlock () const
 {
-    return (m_kind == yeBlock);
+    return false;
 }
 
 
 bool
 YCode::isReferenceable () const
 {
-    return (m_kind == yeVariable);
+    return false;
 }
 
 
@@ -181,7 +163,7 @@ YCode::toString (ykind kind)
 	"ysInclude",
 	"ysImport",
 	"ysBlock",		// a block
-
+// FIXME ysSwitch is missing
 	"ysStatement"		// -- placeholder --
     };
 
@@ -198,7 +180,7 @@ YCode::toString (ykind kind)
 string
 YCode::toString() const
 {
-    return toString (m_kind);
+    return toString (kind ());
 }
 
 
@@ -206,10 +188,11 @@ YCode::toString() const
 std::ostream &
 YCode::toStream (std::ostream & str) const
 {
+    ykind k = kind ();
 #if DO_DEBUG
-    y2debug ("YCode::toStream (%d:%s)", (int)m_kind, YCode::toString (m_kind).c_str());
+    y2debug ("YCode::toStream (%d:%s)", (int)k, YCode::toString (k).c_str());
 #endif
-    return str.put ((char)m_kind);
+    return str.put ((char)k);
 }
 
 
@@ -237,14 +220,14 @@ YCode::type () const
 // constant (-> YCPValue)
 
 YConst::YConst (ykind kind, YCPValue value)
-    : YCode (kind)
+    : m_kind (kind)
     , m_value (value)
 {
 }
 
 
 YConst::YConst (ykind kind, bytecodeistream & str)
-    : YCode (kind)
+    : m_kind (kind)
     , m_value (YCPNull())
 {
     if (Bytecode::readBool (str))		// not nil
@@ -337,6 +320,12 @@ YConst::YConst (ykind kind, bytecodeistream & str)
 }
 
 
+YCode::ykind
+YConst::kind() const
+{
+    return m_kind;
+}
+
 YCPValue
 YConst::value() const
 {
@@ -373,7 +362,6 @@ YConst::toString() const
     }
     return "nilWHAT?";
 }
-
 
 YCPValue
 YConst::evaluate (bool cse)
@@ -434,7 +422,7 @@ YConst::type () const
 YLocale::t_uniquedomains YLocale::domains;
 
 YLocale::YLocale (const char *locale, const char *textdomain)
-    : YCode (ycLocale)
+    : YCode ()
     , m_locale (locale)
 {
     if (domains.find (textdomain) == domains.end ())
@@ -447,7 +435,7 @@ YLocale::YLocale (const char *locale, const char *textdomain)
 
 
 YLocale::YLocale (bytecodeistream & str)
-    : YCode (ycLocale)
+    : YCode ()
 {
     m_locale = Bytecode::readCharp (str);		// the string to be translated
 
@@ -546,51 +534,10 @@ YLocale::ensureBindDomain (const string& domain)
 }
 
 // ------------------------------------------------------------------
-// declaration (-> declaration_t)
-
-YDeclaration::YDeclaration (ykind kind, declaration_t *value)
-    : YCode (kind)
-    , m_value (value)
-{
-}
-
-
-declaration_t *
-YDeclaration::value() const
-{
-    return m_value;
-}
-
-
-string
-YDeclaration::toString() const
-{
-    return StaticDeclaration::Decl2String (m_value);
-}
-
-
-YCPValue
-YDeclaration::evaluate (bool cse)
-{
-#if DO_DEBUG
-    y2debug("evaluate(declaration %s) = nil", toString().c_str());
-#endif
-    return YCPNull();
-}
-
-
-std::ostream &
-YDeclaration::toStream (std::ostream & str) const
-{
-    y2warning ("oops?!");
-    return str;
-}
-
-// ------------------------------------------------------------------
 // function definition
 
 YFunction::YFunction (YBlockPtr declaration, const SymbolEntryPtr entry)
-    : YCode (ycFunction)
+    : YCode ()
     , m_declaration (declaration)
     , m_definition (0)
     , m_is_global (entry ? entry->isGlobal() : true)
@@ -727,7 +674,7 @@ YFunction::evaluate (bool cse)
 // read function (prototype only !) from stream
 //
 YFunction::YFunction (bytecodeistream & str)
-    : YCode (ycFunction)
+    : YCode ()
     , m_declaration (0)
     , m_definition (0)
     , m_is_global (false)		// don't care about globalness any more

@@ -144,6 +144,10 @@ public:
     //---------------------------------------------------------------
     // YCode
 
+    /** yes */
+    virtual bool isBlock () const { return true; }
+    virtual ykind kind () const { return yeBlock; }
+
     // warning: it is return type in fact!
     constTypePtr type () const { return m_type; }
     
@@ -195,7 +199,7 @@ public:
     void setKind (blockkind_t kind);
 
     // get block kind
-    blockkind_t kind () const;
+    blockkind_t bkind () const;
 
     // block is toplevel block of a module
     bool isModule () const	{ return (m_kind == b_module); }		// toplevel module block

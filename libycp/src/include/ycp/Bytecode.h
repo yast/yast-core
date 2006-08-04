@@ -60,6 +60,9 @@ class Bytecode {
     static map<string, YBlockPtr>* m_bytecodeCache;
 
     public:
+    /** Thrown instead of unsetting YCode::valid */
+    class Invalid {};
+
 	// bool I/O
 	static std::ostream & writeBool (std::ostream & streamref, bool value);
 	static bool readBool (bytecodeistream & streamref);

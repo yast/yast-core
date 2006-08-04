@@ -64,9 +64,12 @@ public:
     YEVariable (SymbolEntryPtr entry);
     YEVariable (bytecodeistream & str);
     ~YEVariable () {};
+    virtual ykind kind () const { return yeVariable; }
     const char *name () const;
     SymbolEntryPtr entry () const;
     string toString () const;
+    /** yes */
+    virtual bool isReferenceable () const { return true; }
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
     constTypePtr type() const { return m_entry->type(); }
@@ -83,6 +86,7 @@ public:
     YEReference (SymbolEntryPtr entry);
     YEReference (bytecodeistream & str);
     ~YEReference () {};
+    virtual ykind kind () const { return yeReference; }
     const char *name () const;
     SymbolEntryPtr entry () const;
     string toString () const;
@@ -103,6 +107,7 @@ public:
     YETerm (const char *name);
     YETerm (bytecodeistream & str);
     ~YETerm ();
+    virtual ykind kind () const { return yeTerm; }
     // dummy is here just to make it similar to YEBuiltin and YEFunction
     constTypePtr attachParameter (YCodePtr code, constTypePtr dummy = Type::Unspec);
     string toString () const;
@@ -135,6 +140,7 @@ public:
     YECompare (YCodePtr left, c_op op, YCodePtr right);
     YECompare (bytecodeistream & str);
     ~YECompare ();
+    virtual ykind kind () const { return yeCompare; }
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -156,6 +162,7 @@ public:
     YELocale (const char *singular, const char *plural, YCodePtr count, const char *textdomain);
     YELocale (bytecodeistream & str);
     ~YELocale ();
+    virtual ykind kind () const { return yeLocale; }
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -174,6 +181,7 @@ public:
     YEList (YCodePtr code);
     YEList (bytecodeistream & str);
     ~YEList ();
+    virtual ykind kind () const { return yeList; }
     void attach (YCodePtr element);
 //    YCodePtr code () const;
     string toString () const;
@@ -197,6 +205,7 @@ public:
     YEMap (YCodePtr key, YCodePtr value);
     YEMap (bytecodeistream & str);
     ~YEMap ();
+    virtual ykind kind () const { return yeMap; }
     void attach (YCodePtr key, YCodePtr value);
 //    YCodePtr key () const;
 //    YCodePtr value () const;
@@ -220,6 +229,7 @@ public:
     YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to);
     YEPropagate (bytecodeistream & str);
     ~YEPropagate ();
+    virtual ykind kind () const { return yePropagate; }
     string toString () const;
     bool canPropagate(const YCPValue& value, constTypePtr to_type) const;
     YCPValue evaluate (bool cse = false);
@@ -240,6 +250,7 @@ public:
     YEUnary (declaration_t *decl, YCodePtr arg);		// expression
     YEUnary (bytecodeistream & str);
     ~YEUnary ();
+    virtual ykind kind () const { return yeUnary; }
     declaration_t *decl () const;
 //    YCodePtr arg () const;
     string toString () const;
@@ -262,6 +273,7 @@ public:
     YEBinary (declaration_t *decl, YCodePtr arg1, YCodePtr arg2);
     YEBinary (bytecodeistream & str);
     ~YEBinary ();
+    virtual ykind kind () const { return yeBinary; }
     declaration_t *decl ();
 //    YCodePtr arg1 () const;
 //    YCodePtr arg2 () const;
@@ -285,6 +297,7 @@ public:
     YETriple (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false);
     YETriple (bytecodeistream & str);
     ~YETriple ();
+    virtual ykind kind () const { return yeTriple; }
 //    YCodePtr expr () const;
 //    YCodePtr iftrue () const;
 //    YCodePtr iffalse () const;
@@ -307,6 +320,7 @@ public:
     YEIs (YCodePtr expr, constTypePtr type);
     YEIs (bytecodeistream & str);
     ~YEIs ();
+    virtual ykind kind () const { return yeIs; }
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -325,6 +339,7 @@ public:
     YEReturn (YCodePtr expr);
     YEReturn (bytecodeistream & str);
     ~YEReturn ();
+    virtual ykind kind () const { return yeReturn; }
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -346,6 +361,7 @@ public:
     YEBracket (YCodePtr var, YCodePtr arg, YCodePtr def, constTypePtr resultType);
     YEBracket (bytecodeistream & str);
     ~YEBracket ();
+    virtual ykind kind () const { return yeBracket; }
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
@@ -371,6 +387,7 @@ public:
     YEBuiltin (declaration_t *decl, YBlockPtr parameterblock = 0, constTypePtr type = 0);
     YEBuiltin (bytecodeistream & str);
     ~YEBuiltin ();
+    virtual ykind kind () const { return yeBuiltin; }
     declaration_t *decl () const;
     /**
      * 'close' function, perform final parameter check
@@ -449,6 +466,7 @@ class YEFunction : public YECall
 public:
     YEFunction (TableEntry* entry);
     YEFunction (bytecodeistream & str);
+    virtual ykind kind () const { return yeFunction; }
     virtual YCPValue evaluate (bool cse = false);
     virtual constTypePtr finalize ();
 };
@@ -462,6 +480,7 @@ class YEFunctionPointer : public YECall
 public:
     YEFunctionPointer (TableEntry* entry);
     YEFunctionPointer (bytecodeistream & str);
+    virtual ykind kind () const { return yeFunctionPointer; }
     virtual YCPValue evaluate (bool cse = false);
 };
 

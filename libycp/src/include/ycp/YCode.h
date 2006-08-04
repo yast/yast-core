@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------\
+/*-----------------------------------------------------------*- c++ -*-\
 |                                                                      |
 |                      __   __    ____ _____ ____                      |
 |                      \ \ / /_ _/ ___|_   _|___ \                     |
@@ -124,16 +124,12 @@ public:
 	ysStatement		// [54] -- placeholder --
     };
 
-protected:
-    ykind m_kind;
-    bool m_valid;
-
 public:
 
     /**
      * Creates a new YCode element
      */
-    YCode (ykind kind);
+    YCode ();
 
     /**
      * Cleans up
@@ -143,13 +139,8 @@ public:
     /**
      * Returns the YCode kind
      */
-    ykind kind() const;
+    virtual ykind kind() const = 0;
    
-    /**
-     * Returns true, if this instance is valid.
-     */
-    bool valid() const;
-
     /**
      * Returns an ASCII representation of the YCode.
      */
@@ -165,7 +156,7 @@ public:
     /**
      * returns true if the YCode represents a constant
      */
-    bool isConstant () const;
+    virtual bool isConstant () const;
 
     /**
      * returns true if the YCode represents an error
@@ -175,17 +166,17 @@ public:
     /**
      * returns true if the YCode represents a statement
      */
-    bool isStatement () const;
+    virtual bool isStatement () const;
 
     /**
      * returns true if the YCode represents a block
      */
-    bool isBlock () const;
+    virtual bool isBlock () const;
 
     /**
      * returns true if the YCode represents something we can reference to
      */
-    bool isReferenceable () const;
+    virtual bool isReferenceable () const;
 
     /**
      * evaluate YCode to YCPValue
@@ -210,14 +201,18 @@ public:
 class YConst : public YCode
 {
     REP_BODY(YConst);
+    ykind m_kind;
     YCPValue m_value;		// constant (not allowed in union :-( )
 public:
     YConst (ykind kind, YCPValue value);		// Constant
     YConst (ykind kind, bytecodeistream & str);
     ~YConst () {};
     YCPValue value() const;
+    virtual ykind kind() const;
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
+    /** yes */
+    virtual bool isConstant () const { return true; }
     YCPValue evaluate (bool cse = false);
     constTypePtr type() const;
 };
@@ -257,6 +252,7 @@ public:
     YLocale (const char *locale, const char *textdomain);
     YLocale (bytecodeistream & str);
     ~YLocale ();
+    virtual ykind kind () const { return ycLocale; }
     const char *value () const;
     const char *domain () const;
     string toString() const;
@@ -268,25 +264,6 @@ private:
 
     t_uniquedomains::const_iterator m_domain;
 
-};
-
-/**
- * declaration (-> declaration_t)
- */
-
-class YDeclaration : public YCode
-{
-    REP_BODY(YDeclaration);
-    declaration_t *m_value;	// builtin declaration
-public:
-    YDeclaration (ykind kind, declaration_t *value);	// Builtin decl
-    YDeclaration (bytecodeistream & str);
-    ~YDeclaration () {};
-    declaration_t *value() const;
-    string toString() const;
-    std::ostream & toStream (std::ostream & str) const;
-    YCPValue evaluate (bool cse = false);
-    constTypePtr type() const { return m_value->type; }
 };
 
 /**
@@ -320,6 +297,7 @@ public:
     YFunction (YBlockPtr parameterblock, const SymbolEntryPtr entry = 0);
     YFunction (bytecodeistream & str);
     ~YFunction ();
+    virtual ykind kind () const { return ycFunction; }
 
     // access to formal parameters
     unsigned int parameterCount () const;

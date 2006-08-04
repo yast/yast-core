@@ -845,6 +845,9 @@ Bytecode::readCode (bytecodeistream & str)
     
     YCodePtr res = 0;
 
+    try
+    {
+
     switch (code)
     {
 	case YCode::ycConstant:
@@ -961,7 +964,7 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
 	case YCode::ysVariable:
 	{
-	    res = new YSAssign (true, str);
+	    res = new YSVariable (str);
 	}
 	break;
 	case YCode::ysFunction:
@@ -971,7 +974,7 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
 	case YCode::ysAssign:
 	{
-	    res = new YSAssign (false, str);
+	    res = new YSAssign (str);
 	}
 	break;
 	case YCode::ysBracket:
@@ -1011,12 +1014,12 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
 	case YCode::ysBreak:
 	{
-	    res = new YStatement ((YCode::ykind)code, str);
+	    res = new YSBreak (str);
 	}
 	break;
 	case YCode::ysContinue:
 	{
-	    res = new YStatement ((YCode::ykind)code, str);
+	    res = new YSContinue (str);
 	}
 	break;
 	case YCode::ysTextdomain:
@@ -1055,9 +1058,13 @@ Bytecode::readCode (bytecodeistream & str)
 	}
 	break;
     }
-    
-    if (!res || ! res->valid())
-	return 0;
+
+    }
+    catch (const Bytecode::Invalid&)
+    {
+	// there are memory leaks all over the place now
+	y2error ("Caught invalid bytecode");
+    }
 
     return res;
 }
