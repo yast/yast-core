@@ -787,7 +787,7 @@ compact_expression:
 
 		if ($6.t->match (Type::Integer) < 0)
 		{
-		    yyTypeMismatch ("Last parameter to _(...) has wrong type", Type::Integer, $6.t, $6.l);
+		    yyTypeMismatch ("Last parameter to " "_(...) has wrong type", Type::Integer, $6.t, $6.l);
 		    $$.t = 0;
 		    break;
 		}
