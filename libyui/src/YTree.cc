@@ -91,8 +91,9 @@ YTree::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
     {
 	YTreeItem *it = findItemWithId ( newvalue );
 
-	if ( ! it )
-	    it = findItemWithText ( newvalue->asString() );
+	// Let user also pass a string of the item text instead of an id...
+	if ( ! it && newvalue->isString() )
+		it = findItemWithText ( newvalue->asString() );
 
 	if ( it )
 	{
