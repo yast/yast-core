@@ -7,7 +7,7 @@
 DEFAULT_LANGUAGE="english"
 #
 # ...
-SEPARATED="abc abc abccba cba cba"
+SEPARATED="abc abc abc cba cba cba"
 SEP2="huhu \
       hoho \
       hehe "

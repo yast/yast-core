@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
-Mon Aug  7 09:58:13 CEST 2006 - mvidner@suse.cz
+Mon Aug  7 11:09:03 CEST 2006 - mvidner@suse.cz
 
+- ini-agent: use a space separator for join_multiline (#195914).
 - Fixed a crash when modifying a `Tree property on a non-existing
   item (Ricardo Cruz).
 - 2.13.26

@@ -564,7 +564,7 @@ int IniParser::parse_helper(IniSection&ini)
 		    {    
 			// it is the end of broken line
 			state = 0;
-			val = val + (join_multiline ? "" : "\n") + m[1];
+			val = val + (join_multiline ? " " : "\n") + m[1];
 			line = m.rest;
 			if (!path.size())
 			    {   // we are in toplevel section, going deeper
@@ -581,7 +581,7 @@ int IniParser::parse_helper(IniSection&ini)
 			comment = "";
 		    }
 		    else
-			val = val + (join_multiline ? "" : "\n") + line;
+			val = val + (join_multiline ? " " : "\n") + line;
 		}
 	    if (!state)
 		{
