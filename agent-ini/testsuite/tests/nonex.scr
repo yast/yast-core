@@ -1,0 +1,5 @@
+.ini
+
+`ag_ini(
+  `SysConfigFile ("tests/nonex.in.test")
+)
