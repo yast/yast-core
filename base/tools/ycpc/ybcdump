@@ -3,6 +3,41 @@
 # http://en.opensuse.org/User:Mvidner
 # (your eyes might hurt. this is one of my first scripts in Ruby)
 
+require 'getoptlong'
+Opts = [
+        [ "--debug",         "-d", GetoptLong::NO_ARGUMENT,
+          "Enables debugging prints for misparsed ybc"],
+        [ "--stat-strings",  "-s", GetoptLong::NO_ARGUMENT,
+          "Print also string statistcs"],
+        [ "--stat-ints",     "-i", GetoptLong::NO_ARGUMENT,
+          "Print also integer statistcs"],
+        [ "--stat-objects",  "-o", GetoptLong::NO_ARGUMENT,
+          "Print also object statistcs"],
+        [ "--help",          "-h", GetoptLong::NO_ARGUMENT,
+          "This help"]
+       ]
+# The embedded helps must be moved out
+helps = Hash.new("?")
+Opts.each do |oitem|
+  helps[oitem[0]] = oitem.pop
+end
+# Parse options
+opts = GetoptLong.new(*Opts)
+$o = Hash.new(false)
+opts.each do |opt, arg|
+  $o[opt] = true
+end
+# Help?
+if $o["--help"]
+  puts "#$0 [-h]"
+  puts "#$0 [-d] [-s] [-i] [-o] foo.ybc"
+  Opts.each do |oitem|
+    printf "  %-2s %-15s %s\n", oitem[1], oitem[0], helps[oitem[0]]
+  end
+  exit
+end
+
+# Real work now
 $f = ARGF
 
 $, = "\n" # array print separator
@@ -12,6 +47,7 @@ def oops
 end
 
 def pos
+  return unless $o["--debug"]
   printf "POS 0x%x\n", $f.file.pos
 end
 
@@ -28,6 +64,7 @@ if h != HEADER
 end
 
 def debug(*args)
+  return unless $o["--debug"]
   puts *args
 end
 
@@ -1309,18 +1346,31 @@ end
 $stat_strings = Hash.new(0)
 $stat_ints = Hash.new(0)
 c = YCode.create
-puts "---"
-puts c
-puts "--- string stats"
-print_stats $stat_strings
-#puts "--- int stats"
-#print_stats $stat_ints
+puts "---" if $o["--debug"]
 
-GC.start
-stat_objects = Hash.new(0)
-ObjectSpace.each_object do |obj|
-  klass = obj.class.to_s
-  stat_objects[klass] += 1
+puts c
+
+if $o["--stat-strings"]
+  puts "--- string stats"
+  print_stats $stat_strings
 end
-puts "--- obj stats"
-print_stats stat_objects
+
+if $o["--stat-ints"]
+  puts "--- int stats"
+  print_stats $stat_ints
+end
+
+if $o["--stat-objects"]
+  GC.start
+  stat_objects = Hash.new(0)
+  ObjectSpace.each_object do |obj|
+    klass = obj.class.to_s
+    stat_objects[klass] += 1
+  end
+  puts "--- obj stats"
+  print_stats stat_objects
+end
+
+# Local Variables:
+# mode: ruby
+# End
