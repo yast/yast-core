@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug  8 08:55:36 CEST 2006 - mvidner@suse.cz
+
+- Added ybcdump, a tool for understaning the *.ybc "bytecode".
+
+-------------------------------------------------------------------
 Mon Aug  7 11:09:03 CEST 2006 - mvidner@suse.cz
 
 - ini-agent: use a space separator for join_multiline (#195914).

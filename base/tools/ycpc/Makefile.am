@@ -23,7 +23,6 @@ ycpc_LDADD = $(top_builddir)/libycp/src/libycp.la \
 	$(top_builddir)/scr/src/libpy2scr.la \
 	${Y2UTIL_LIBS}
 
-PACKAGE=ycpc
+ybin_SCRIPTS = ybcdump
 
-clean-local:
-	rm -f $(bin_PROGRAMS)
+EXTRA_DIST = $(ybin_SCRIPTS)

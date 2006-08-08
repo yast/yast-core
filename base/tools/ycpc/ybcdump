@@ -1,0 +1,1326 @@
+#! /usr/bin/env ruby
+# decode YaST bytecode (*.ybc)
+# http://en.opensuse.org/User:Mvidner
+# (your eyes might hurt. this is one of my first scripts in Ruby)
+
+$f = ARGF
+
+$, = "\n" # array print separator
+def oops
+  puts "oops"
+  exit
+end
+
+def pos
+  printf "POS 0x%x\n", $f.file.pos
+end
+
+def die
+  pos
+  reallydie
+end
+
+HEADER = "YaST bytecode 1.4.0\0"
+h = $f.read(HEADER.size)
+if h != HEADER
+  puts "Expected the header #{HEADER}"
+  oops
+end
+
+def debug(*args)
+  puts *args
+end
+
+# array of words
+YKIND = %w(
+	yxError
+	ycVoid ycBoolean ycInteger ycFloat
+	ycString ycByteblock ycPath ycSymbol
+	ycList ycMap ycTerm
+	ycEntry
+	ycConstant
+	ycLocale
+	ycFunction
+
+	yePropagate
+	yeUnary yeBinary yeTriple
+	yeCompare
+	yeLocale
+	yeList yeMap yeTerm
+	yeIs
+	yeBracket
+	yeBlock
+	yeReturn
+	yeVariable
+	yeBuiltin
+	yeFunction
+	yeReference
+	yeFunctionPointer
+	yeExpression
+
+	ysTypedef
+	ysVariable
+	ysFunction
+	ysAssign
+	ysBracket
+
+	ysIf ysWhile ysDo ysRepeat
+	ysExpression
+	ysReturn ysBreak ysContinue
+	ysTextdomain
+	ysInclude
+	ysFilename
+	ysImport
+	ysBlock
+	ysSwitch
+	ysStatement
+)
+
+class YCode
+  # factory
+  def YCode.create
+#    debug "ycode"
+    ykind = byte
+#    debug YKIND[ykind]
+    # name-based?
+    case YKIND[ykind]
+    when "ycVoid", "ycBoolean", "ycInteger", "ycFloat", \
+      "ycString", "ycSymbol", \
+      "ycList", "ycMap", "ycPath", "ycEntry" # ...
+      YConst.new(ykind)
+    when "ycLocale"
+      YLocale.new
+    when "yeLocale"
+      YELocale.new
+    when "yeIs"
+      YEIs.new
+    when "yeList"
+      YEList.new
+    when "yeTerm"
+      YETerm.new
+    when "yeMap"
+      YEMap.new
+    when "yeBlock"
+      YBlock.new
+    when "yeReturn"
+      YEReturn.new
+    when "yeBuiltin"
+      YEBuiltin.new
+    when "yeVariable"
+      YEVariable.new
+    when "yeReference"
+      YEReference.new
+    when "yeFunction"
+      YEFunction.new(false)
+    when "yeFunctionPointer"
+      YEFunction.new(true)
+    when "yeCompare"
+      YECompare.new
+    when "yeUnary"
+      YEUnary.new
+    when "yeBinary"
+      YEBinary.new
+    when "yeTriple"
+      YETriple.new
+    when "yePropagate"
+      YEPropagate.new
+    when "yeBracket"
+      YEBracket.new
+    when "ysVariable"
+      YSAssign.new(true)
+    when "ysAssign"
+      YSAssign.new(false)
+    when "ysBracket"
+      YSBracket.new
+    when "ysImport"
+      YSImport.new
+    when "ysTypedef"
+      YSTypedef.new
+    when "ysFunction"
+      YSFunction.new
+    when "ysExpression"
+      YSExpression.new
+    when "ysBlock"
+      YSBlock.new
+    when "ysReturn"
+      YSReturn.new
+    when "ysTextdomain"
+      YSTextdomain.new
+    when "ysFilename"
+      YSFilename.new
+    when "ysInclude"
+      YSInclude.new
+    when  "ysIf"
+      YSIf.new
+    when "ysWhile"
+      YSWhile.new
+    when "ysDo"
+      YSDo.new
+    when "ysRepeat"
+      YSRepeat.new
+    when "ysSwitch"
+      YSSwitch.new
+    when "ysBreak"
+      YSBreak.new
+    when "ysContinue"
+      YSContinue.new
+    when "ycFunction"
+      YFunction.new
+    else
+      puts YKIND[ykind]
+      die
+    end
+  end
+end
+
+def yCodeList
+  @list = []
+  n = int
+  n.times do
+    item = YCode.create
+    debug "ITEM", item
+    pos
+    @list << item
+  end
+  @list
+end
+
+BLOCKKIND = [
+             "b_unknown",
+             "b_module",
+             "b_file",
+             "b_statement",
+             "b_definition",
+             "b_value",              # unused
+             "b_namespace",          # DECL_NAMESPACE
+             "b_using",              # ?? UI::{}
+            ]
+
+# TODO yblock is terribly overloaded
+# investigate split-up
+# - module (ENV, name)
+# optimize: symbolless blocks
+class YBlock < YCode
+  attr_reader :sentries
+
+  def symtable
+    self
+  end
+
+  def initialize
+    @name = gstring
+    @blockkind = int
+    debug "block '#@name' kind:#{BLOCKKIND[@blockkind]}" 
+    
+    @sentries = []
+    symbolcount = int
+    symbolcount.times do
+      sentry = SymbolEntry.new
+      @sentries << sentry
+    end
+    debug "SYMS", @sentries
+
+    @env = []
+    if BLOCKKIND[@blockkind] == "b_module"
+      envcount = int
+      envcount.times do
+        e = TableEntry.new(symtable)
+        @env << e
+      end
+    end
+    debug "ENV", @env
+
+    # TODO at least the line number seems useless here
+    # maybe even the file
+    @point = Point.new
+
+    @stats = yCodeList
+  end
+
+  def to_s
+    "block '#@name' kind:#{BLOCKKIND[@blockkind]} #@point\n" + 
+      "SYMBOLS:#{@sentries.size}\n" +
+      "{#{@sentries.to_s}}\n" +
+      "ENV:#{@env.size}\n" +
+      "{#{@env.to_s}}\n" +
+      "STATS:#{@stats.size}\n" +
+      "{#{@stats.to_s}}"
+  end
+end
+
+class YStatement # ycode?
+  def initialize
+    @line = Line.new
+  end
+
+  def to_s
+    "[#@line] "
+  end
+end
+
+class YSAssign < YStatement
+  def initialize(is_var)
+    super()
+    @lhs = SERef.new
+    @rhs = YCode.create
+  end
+  
+  def to_s
+    "#{super} #@lhs := #@rhs"
+  end
+end
+
+# var[args]=val
+class YSBracket < YStatement
+  def initialize
+    super
+    @var = SERef.new
+    @args = YCode.create
+    @val = YCode.create
+  end
+
+  def to_s
+    super + "#@var[#@args] := #@val"
+  end
+end
+
+class YSTextdomain < YStatement
+  def initialize
+    super
+    @value = gstring
+  end
+  def to_s
+    super + "TEXTDOMAIN #@value"
+  end
+end
+
+class YSFilename < YStatement
+  def initialize
+    super
+    @value = gstring
+  end
+  def to_s
+    super + "FILENAME #@value"
+  end
+end
+
+class YSInclude < YStatement
+  def initialize
+    super
+    @value = gstring
+    @skipped = bool
+  end
+  def to_s
+    super + "INCLUDE #@skipped #@value"
+  end
+end
+
+# function definition
+class YSFunction < YStatement
+  def initialize
+    super
+    @seref = SERef.new
+
+    # declaration
+    # (global functions already have the declaration,
+    # local ones get it now)
+#    if (!@seref.global)
+    guess = peek > 1 # have_defn is not bool
+    if (guess)
+      @decl = YCode.create
+    end
+
+    # definition
+    have_defn = bool
+    if (have_defn)
+      @defn = YCode.create
+      # set kind to b_definition
+    end
+  end
+
+  def to_s
+    super + "DEFINE #@seref DECL #@decl\nDEFN #@defn"
+  end
+end
+
+# expression as statement (function call with discarded val?)
+class YSExpression < YStatement
+  def initialize
+    super
+    @expr = YCode.create
+  end
+
+  def to_s
+    super + "SEXPR #@expr"
+  end
+end
+
+class YSBlock < YStatement
+  def initialize
+    super
+    @block = YCode.create
+  end
+
+  def to_s
+    super + "#@block"
+  end
+end
+
+class YSImport < YStatement
+  def initialize
+    super
+    @name = gstring
+    @xrefs = []
+    xrefcount = int
+    xrefcount.times do
+      xname = gstring
+      xtype = Type.create
+      @xrefs << [xname, xtype]
+    end
+  end
+
+  def to_s
+    super + "IMPORT #@name\nXRefs\n" +
+      @xrefs.join("\n")
+  end
+end
+
+# TODO superfluous? part of symbol table anyway
+class YSTypedef < YStatement
+  def initialize
+    super
+    @name = gstring
+    @type = Type.create
+  end
+
+  def to_s
+    super + "TYPEDEF #@name #@type"
+  end
+end
+
+class YSReturn < YStatement
+  def initialize
+    super
+    have_value = bool
+    if (have_value)
+      @value = YCode.create
+    end
+  end
+
+  def to_s
+    super + "RETURN #@value"
+  end
+end
+
+class YSIf < YStatement
+  def initialize
+    super
+    @cond = YCode.create
+    have_iftrue = bool
+    if (have_iftrue)
+      @iftrue = YCode.create
+    end
+    have_iffalse = bool
+    if (have_iffalse)
+      @iffalse = YCode.create
+    end
+  end
+  def to_s
+    super + "IF #@cond THEN {#@iftrue} ELSE {#@iffalse}"
+  end
+end
+
+class YSWhile < YStatement
+  def initialize
+    super
+    @cond = YCode.create
+    have_body = bool
+    if (have_body)
+      @body = YCode.create
+    end
+  end
+  def to_s
+    super + "WHILE #@cond {#@body}"
+  end
+end
+
+class YSDo < YStatement
+  def initialize
+    super
+    have_body = bool
+    if (have_body)
+      @body = YCode.create
+    end
+    @cond = YCode.create
+  end
+  def to_s
+    super + "DO {#@body} WHILE #@cond"
+  end
+end
+
+# both do while and repeat until. crazy.
+class YSRepeat < YStatement
+  def initialize
+    super
+    have_body = bool
+    if (have_body)
+      @body = YCode.create
+    end
+    @cond = YCode.create
+  end
+  def to_s
+    super + "REPEAT {#@body} UNTIL #@cond"
+  end
+end
+
+# Printerlib
+class YSSwitch < YStatement
+  def initialize
+    super
+    @cond = YCode.create
+    @cases = []
+    n = int
+    n.times do
+      value = YCPValue.create
+      index = int
+      @cases << [value, index]
+    end
+    @default = int
+    @body = YCode.create
+  end
+  def to_s
+    super + "SWITCH #@cond (#@cases) DEFAULT #@default {#@body}"
+  end
+end
+
+
+# TODO in ycp YStatement wastefully remembers kind so this class is not needed
+class YSBreak < YStatement
+  def to_s
+    super + "BREAK"
+  end
+end
+
+# TODO in ycp YStatement wastefully remembers kind so this class is not needed
+class YSContinue < YStatement
+  def to_s
+    super + "CONTINUE"
+  end
+end
+
+# ``( )
+class YEReturn < YCode
+  def initialize
+    @param = YCode.create
+  end
+
+  def to_s
+    "(ERET #@param)"
+  end
+end
+
+class YEIs < YCode
+  def initialize
+    @type = Type.create
+    @expr = YCode.create
+  end
+
+  def to_s
+    "(IS #@type #@expr)"
+  end
+end
+
+class YEBuiltin < YCode
+  def initialize
+    @type = Type.create         # TODO thrown away
+    @sdecl = SDecl.new
+    have_paramblock = bool
+    if (have_paramblock)
+      @paramblock = YCode.create
+    end
+    @params = yCodeList
+  end
+
+  def to_s
+    "BUILTIN #@sdecl paramblock #@paramblock params (#@params)"
+  end
+end
+
+OP = [
+      "?",
+      "?NOT",
+      "==",
+      "!=",
+      "<",
+      ">=",
+      "<=",
+      ">",
+]
+class YECompare < YCode
+  def initialize
+    @left = YCode.create
+    @op = byte
+    @right = YCode.create
+  end
+
+  def to_s
+    "(#@left #{OP[@op]} #@right)"
+  end
+end
+
+class YEUnary < YCode
+  def initialize
+    @decl = SDecl.new
+    @param = YCode.create
+  end
+
+  def to_s
+    "(UNARY #@decl #@param)"
+  end
+end
+
+class YEBinary < YCode
+  def initialize
+    @decl = SDecl.new
+    @param1 = YCode.create
+    @param2 = YCode.create
+  end
+
+  def to_s
+    "(BINARY #@decl #@param1 #@param2)"
+  end
+end
+
+class YETriple < YCode
+  def initialize
+    @cond = YCode.create
+    @iftrue = YCode.create
+    @iffalse = YCode.create
+  end
+
+  def to_s
+    "(TRIPLE #@cond ? #@iftrue : #@iffalse)"
+  end
+end
+
+class YEVariable < YCode
+  def initialize
+    @seref = SERef.new
+  end
+
+  def to_s
+    "(EVAR #@seref)"
+  end
+end
+
+class YEReference < YCode
+  def initialize
+    @seref = SERef.new
+  end
+
+  def to_s
+    "(EREF #@seref)"
+  end
+end
+
+# type conversion
+class YEPropagate < YCode
+  def initialize
+    @from = Type.create
+    @to = Type.create
+    @val = YCode.create
+  end
+
+  def to_s
+    "(CAST #@from -> #@to #@val)"
+  end
+end
+
+class YEBracket < YCode
+  def initialize
+    @var = YCode.create
+    @args = YCode.create
+    @default = YCode.create
+    @type = Type.create         # TODO thrown away
+  end
+
+  def to_s
+    "#@var[#@args]:#@default"
+  end
+end
+
+# actually < YECall
+class YEFunction < YCode
+  def initialize(ptr)
+    @ptr = ptr
+    @seref = SERef.new
+
+    paramcount = int
+    @params = []
+    paramcount.times do
+      param = YCode.create
+      debug param
+      @params << param
+    end
+  end
+
+  def to_s
+    kind = if @ptr then "FPTR" else "FCALL" end
+    "#{kind} #@seref PARAMS(#@params)"
+  end
+end
+
+# just the declaration, er, the parameter block
+class YFunction < YCode
+  def initialize
+    # not present for functions without parameters
+    need_decl = bool
+    if (need_decl)
+      #yeBlock
+      @decl = YCode.create
+    end
+  end
+
+  def to_s
+    "CFUNC #@decl"
+  end
+end
+
+class YEList < YCode
+  def initialize
+    @params = yCodeList
+  end
+
+  def to_s
+    "ELIST [#@params]"
+  end
+end
+
+class YETerm < YCode
+  def initialize
+    @symbol = gstring
+    @params = yCodeList
+  end
+
+  def to_s
+    "ETERM #@symbol PARAMS(#@params)"
+  end
+end
+
+class YEMap < YCode
+  def initialize
+    @params = []
+    n = int
+    (2*n).times do
+      item = YCode.create
+      debug "ITEM", item
+      pos
+      @params << item
+    end
+  end
+
+  def to_s
+    "EMAP $[#@params]"
+  end
+end
+
+class YELocale < YCode
+  def initialize
+    @sg = gstring
+    @pl = gstring
+    @n = YCode.create
+    @domain = gstring
+  end
+
+  def to_s
+    "_(@#@domain\"#@sg\",\"#@pl\",#@n)"
+  end
+end
+
+class YLocale
+  def initialize
+    @val = gstring
+    @domain = gstring
+  end
+
+  def to_s
+    "_(@#@domain\"#@val\")"
+  end
+end
+
+# TODO should be simply represented as YCPValue
+class YConst < YCode
+  def initialize(ykind)
+    notnil = bool
+    return unless notnil
+
+    case YKIND[ykind]
+    when "ycVoid"
+      @val = YCPVoid.new
+    when "ycBoolean"
+      @val =YCPBoolean.new
+    when "ycInteger"
+      @val = YCPInteger.new
+    when "ycFloat"
+      @val = YCPFloat.new
+    when "ycString"
+      @val = YCPString.new
+    when "ycSymbol"
+      @val = YCPSymbol.new
+    when "ycList"
+      @val = YCPList.new
+    when "ycMap"
+      @val = YCPMap.new
+    when "ycPath"
+      @val = YCPPath.new
+    when "ycEntry"
+      @val = YCPEntry.new
+    else
+      die
+    end
+  end
+
+  def to_s
+    "#@val"
+  end
+end
+
+# ---------------------- YCP values
+
+YCPVALUETYPE = %w(
+    YT_VOID
+    YT_BOOLEAN
+    YT_INTEGER
+    YT_FLOAT
+    YT_STRING
+    YT_BYTEBLOCK
+    YT_PATH
+    YT_SYMBOL
+    YT_LIST
+    YT_TERM
+    YT_MAP
+    YT_CODE	
+    YT_RETURN	
+    YT_BREAK	
+    YT_ENTRY	
+    YT_ERROR	
+    YT_REFERENCE
+    YT_EXTERNAL	
+)
+
+class YCPValue
+  # Bytecode::readValue
+  def YCPValue.create
+    yt = byte
+    case YCPVALUETYPE[yt]
+    when "YT_VOID"
+      YCPVoid.new
+    when "YT_BOOLEAN"
+      YCPBoolean.new
+    when "YT_INTEGER"
+      YCPInteger.new
+    when "YT_FLOAT"
+      YCPFloat.new
+    when "YT_STRING"
+      YCPString.new
+    when "YT_BYTEBLOCK"
+      YCPByteblock.new
+    when "YT_PATH"
+      YCPPath.new
+    when "YT_SYMBOL"
+      YCPSymbol.new
+    when "YT_LIST"
+      YCPList.new
+    when "YT_TERM"
+      YCPTerm.new
+    when "YT_MAP"
+      YCPMap.new
+    when "YT_CODE"
+      YCPCode.new
+    when "YT_RETURN"
+      YCPReturn.new
+    when "YT_BREAK"
+      YCPBreak.new
+    when "YT_ENTRY"
+      YCPEntry.new
+    when "YT_ERROR"
+      YCPError.new
+    when "YT_REFERENCE"
+      YCPReference.new
+    when "YT_EXTERNAL"
+      YCPExternal.new
+    end
+  end
+end
+
+class YCPBoolean <YCPValue
+  def initialize
+    @val = bool
+  end
+  def to_s
+    "#@val"
+  end
+end
+
+class YCPVoid <YCPValue
+  def to_s
+    "nil"
+  end
+end
+
+class YCPInteger <YCPValue
+  def initialize
+    @val = int64
+  end
+  def to_s
+    "#@val"
+  end
+end
+
+class YCPFloat <YCPValue
+  def initialize
+    @val = gstring              # convert to float todo
+  end
+  def to_s
+    "#@val"
+  end
+end
+
+class YCPString <YCPValue
+  def initialize
+    @val = gstring
+  end
+  def to_s
+    "\"#@val\""
+  end
+end
+
+class YCPPath <YCPValue
+  def initialize
+    @val = gstring
+  end
+  def to_s
+    "#@val"
+  end
+end
+
+class YCPSymbol <YCPValue
+  def initialize
+    @val = gstring
+  end
+  def to_s
+    "`#@val"
+  end
+end
+
+# FIXME empty list vs nil list?
+class YCPList < YCPValue
+  def initialize
+    @val = []
+    n = int
+    n.times do
+      @val << YCPValue.create
+    end
+  end
+
+  def to_s
+    "["+ @val.join(",") + "]"
+  end
+end
+
+class YCPMap < YCPValue
+  def initialize
+    @val = []
+    n = int
+    (2*n).times do
+      @val << YCPValue.create
+    end
+  end
+
+  def to_s
+    "$["+ @val.join(",") + "]"
+  end
+end
+
+class YCPTerm < YCPValue
+  def initialize
+    @symbol = YCPSymbol.new
+    @args = YCPList.new
+  end
+
+  def to_s
+    "#@symbol #@args"
+  end
+end
+
+class YCPEntry < YCPValue
+  def initialize
+    @val = SERef.new
+  end
+  def to_s
+    "YCPEntry #@val"
+  end
+end
+
+# in OSRRepairUI, ``() in ycp val
+class YCPCode < YCPValue
+  def initialize
+    @val = YCode.create
+  end
+  def to_s
+    "YCPCode #@val"
+  end
+end
+
+  
+# ---------------------- tables
+class TableEntry
+  def initialize(symtable)
+    @symtable = symtable
+    @seref = SERef.new
+    @point = Point.new
+    if (@symtable.sentries[@seref.pos].globalfunc?)
+      @code = YCode.create
+    end
+  end
+
+  def to_s
+    "#@seref #@point" +
+      if (@symtable.sentries[@seref.pos].globalfunc?)
+        "\nGF: #@code"
+      else
+        ""
+      end
+  end
+end
+
+#symbol entry reference
+class SERef
+  attr_reader :pos
+
+  def initialize
+    @nsid = int
+    @pos = int
+    if @pos > 0x7fffffff
+      @pos -= 0x100000000
+    end
+  end
+
+  def to_s
+    "(#@nsid:#@pos)"
+  end
+end
+
+class Line
+  def initialize
+    @line = int
+  end
+
+  def to_s
+    "L#@line"
+  end
+end
+
+class Point
+  def initialize
+    @seref = SERef.new
+    @line = Line.new
+    if (bool)
+      @next = Point.new
+    end
+  end
+
+  def to_s
+    "@#@seref#@line" +
+      if (! @next.nil?)
+        " -> #@next"
+      else
+        ""
+      end
+  end
+end
+
+CATEGORY = %w(
+	c_unspec
+	c_global
+	c_module
+	c_variable
+	c_reference
+	c_function
+	c_builtin
+	c_typedef
+	c_const
+	c_namespace
+	c_self
+	c_predefined
+	c_filename
+)
+
+class SymbolEntry
+  def initialize
+    @global = bool
+    @pos = int
+    @name = gstring
+    @category = int
+    @type = Type.create
+  end
+
+  def to_s
+    global = @global? "global ": ""
+    "SE: ##@pos #@name: #@type (#{global}#{CATEGORY[@category]})" 
+  end
+
+  def globalfunc?
+    @global and CATEGORY[@category] == "c_function"
+  end
+end
+
+# static declaration (weird)
+class SDecl
+  def initialize
+    @name = gstring
+    @type = Type.create
+  end
+  
+  def to_s
+    "(SDECL #@name #@type)"
+  end
+end
+
+# -------------------- types
+
+TKIND = %w(
+	UnspecT
+	ErrorT
+	AnyT
+	BooleanT
+	ByteblockT
+	FloatT
+	IntegerT
+	LocaleT
+	PathT
+	StringT
+	SymbolT
+	TermT
+	VoidT
+	WildcardT
+	FlexT
+	VariableT
+	ListT
+	MapT
+	BlockT
+	TupleT
+	FunctionT
+	NilT
+	NFlexT
+)
+
+class Type
+  def Type.create
+    tkind = int
+    
+    case TKIND[tkind]
+    when "UnspecT", "ErrorT", "AnyT", "BooleanT", "ByteblockT", "FloatT", \
+      "IntegerT", "LocaleT", "PathT", "StringT", "SymbolT", "TermT", "VoidT", \
+      "WildcardT", "FlexT", "NilT"
+      Type.new(tkind)
+    when "BlockT"
+      BlockT.new(tkind)
+    when "FunctionT"
+      FunctionT.new(tkind)
+    when "TupleT"
+      TupleT.new(tkind)
+    when "ListT"
+      ListT.new(tkind)
+    when "MapT"
+      MapT.new(tkind)
+    when "VariableT"
+      VariableT.new(tkind)
+    when "NFlexT"
+      NFlexT.new(tkind)
+    else
+      puts TKIND[tkind]
+      die
+    end
+  end
+
+  def initialize(tkind)
+    @tkind = tkind
+    @const = bool
+    @ref = bool
+  end
+
+  def to_s
+    (@const? "const ": "") +
+      (@ref? "ref ": "") +
+      "#{TKIND[@tkind]}"
+  end
+end
+
+class BlockT < Type
+  def initialize(kind)
+    super
+    @returns = Type.create
+  end
+
+  def to_s
+    super + "<#@returns>"
+  end
+end
+
+class NFlexT < Type
+  def initialize(kind)
+    super
+    @n = int
+  end
+
+  def to_s
+    super + "<#@n>"
+  end
+end
+
+class VariableT < Type
+  def initialize(kind)
+    super
+    @values = Type.create
+  end
+
+  def to_s
+    super + "<#@values>"
+  end
+end
+
+class ListT < Type
+  def initialize(kind)
+    super
+    @values = Type.create
+  end
+
+  def to_s
+    super + "<#@values>"
+  end
+end
+
+class MapT < Type
+  def initialize(kind)
+    super
+    @keys = Type.create
+    @values = Type.create
+  end
+
+  def to_s
+    super + "<#@keys,#@values>"
+  end
+end
+
+class TupleT < Type
+  def initialize(kind)
+    super
+    @args = []
+    int.times do
+      @args << Type.create 
+    end
+  end
+
+  def to_s
+    @args.join ","
+  end
+end
+
+class FunctionT < Type
+  def initialize(kind)
+    super
+    @returns = Type.create
+    args = bool
+    if (args)
+      @args = Type.create
+    end
+  end
+
+  def to_s
+    super + "(#@args) -> #@returns"
+  end
+end
+
+# ------------- primitives
+
+def gstring
+  len = int
+  s = $f.read(len)
+  $stat_strings[s] = $stat_strings[s] + 1
+  s
+end
+
+def assert(cond)
+  if (!cond)
+    puts "At #{$f.pos}:"
+    die
+  end
+end
+
+def bool
+  byte == 1
+end
+
+def int64
+  n = 0
+  len = byte
+  len.times do |i|
+    b = byte
+    n = n | (b << (8 * i))
+  end
+  if n > (1 << (8 * len - 1))
+    n -= 1 << (8 * len)
+  end
+  n
+end
+
+def int
+  len = byte
+  assert(len == 4)
+  # V: unsigned little-endian 4 bytes
+  i = $f.read(4).unpack("V")[0]
+#  $stat_ints[i] = $stat_ints[i] + 1
+  i
+end
+
+def byte
+  $f.getc
+end
+
+def peek
+  b = byte
+  $f.file.ungetc(b)
+  pos
+  b
+end
+
+# ----------------------- stats
+
+# stats is hash value -> count
+def print_stats(stats)
+  stats.sort.each do |v, c|
+    printf "%4d %s\n", c, v
+  end
+end
+
+#---------------------------- main
+
+$stat_strings = Hash.new(0)
+$stat_ints = Hash.new(0)
+c = YCode.create
+puts "---"
+puts c
+puts "--- string stats"
+print_stats $stat_strings
+#puts "--- int stats"
+#print_stats $stat_ints
+
+GC.start
+stat_objects = Hash.new(0)
+ObjectSpace.each_object do |obj|
+  klass = obj.class.to_s
+  stat_objects[klass] += 1
+end
+puts "--- obj stats"
+print_stats stat_objects

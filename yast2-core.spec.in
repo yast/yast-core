@@ -102,6 +102,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 %files devel
 %defattr(-,root,root)
+@ybindir@/ybcdump
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 @plugindir@/lib*.so
