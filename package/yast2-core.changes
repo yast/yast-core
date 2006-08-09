@@ -1,7 +1,9 @@
 -------------------------------------------------------------------
-Wed Aug  9 14:15:35 CEST 2006 - mvidner@suse.cz
+Wed Aug  9 14:53:23 CEST 2006 - mvidner@suse.cz
 
 - agent-ini: fixed value_type and section_type with repeat_names (#191495).
+- libycp: added YCPValue::valuetype_str() for better debug messages.
+- 2.13.28
 
 -------------------------------------------------------------------
 Tue Aug  8 08:55:36 CEST 2006 - mvidner@suse.cz

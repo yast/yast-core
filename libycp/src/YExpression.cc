@@ -1259,7 +1259,7 @@ YEBinary::evaluate (bool cse)
     const declaration_t *decl = m_decl;
 #if DO_DEBUG
     y2debug ("func %s (%s) [%s,%s]", decl->name, decl->type->toString().c_str(), arg1->toString().c_str(), arg2->toString().c_str());
-    y2debug ("type1 %d, type2 %d", (int)arg1->valuetype(), (int)arg2->valuetype());
+    y2debug ("type1 %s, type2 %s", arg1->valuetype_str(), arg2->valuetype_str());
 #endif
 
 #ifdef BUILTIN_STATISTICS

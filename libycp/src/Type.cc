@@ -318,7 +318,10 @@ Type::matchvalue (YCPValue value) const
 #if DO_DEBUG
     y2debug ("matchvalue type '%s', value '%s'", toString().c_str(), value.isNull()?"NULL":value->toString().c_str());
 #endif
-    y2debug ("matchvalue type '%s'[%d], value '%s'[%d]", toString().c_str(), m_kind, value.isNull()?"NULL":value->toString().c_str(), value.isNull()?-1:value->valuetype());
+    y2debug ("matchvalue type '%s'[%d], value '%s'[%s]",
+	     toString().c_str(), m_kind,
+	     value.isNull()?"NULL":value->toString().c_str(),
+	     value.isNull()?"":value->valuetype_str());
 
     if (value.isNull()) return -1;			// error value
 

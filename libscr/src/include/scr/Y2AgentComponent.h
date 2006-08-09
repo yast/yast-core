@@ -160,7 +160,7 @@ Y2AgentComp<Agent>::evaluate (const YCPValue& v)
     }
 #endif
 
-    y2error( "Unhandled value (%d): %s", value->valuetype (), value->toString ().c_str () );
+    y2error( "Unhandled value (%s): %s", value->valuetype_str (), value->toString ().c_str () );
 
     return YCPVoid();
 }

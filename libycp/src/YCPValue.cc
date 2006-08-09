@@ -39,6 +39,21 @@
 
 // YCPValueRep
 
+static
+const char * names[] = {
+    "VOID", "BOOLEAN", "INTEGER", "FLOAT", "STRING", "BYTEBLOCK", "PATH",
+    "SYMBOL", "LIST", "TERM", "MAP", "CODE", "RETURN", "BREAK",
+    "ENTRY", "ERROR", "REFERENCE", "EXTERNAL",
+};
+
+const char *
+YCPValueRep::valuetype_str () const
+{
+    YCPValueType vt = valuetype ();
+    if (vt < 0 || (unsigned)vt >= sizeof (names) / sizeof( names[0]))
+	return "UNKNOWN";
+    return names[vt];
+}
 
 // value type checking
 

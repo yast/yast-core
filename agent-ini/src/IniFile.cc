@@ -44,8 +44,8 @@ YCPList as_list (const YCPValue& v, const char * context)
 {
     if (v->isList ())
 	return v->asList ();
-    ycp2error ("Expected a list for %s, got %d %s",
-	       context, v->valuetype(), v->toString().c_str());
+    ycp2error ("Expected a list for %s, got %s %s",
+	       context, v->valuetype_str(), v->toString().c_str());
     return YCPNull ();
 }
 
@@ -57,8 +57,8 @@ YCPString as_string (const YCPValue& v, const char * context)
 {
     if (v->isString ())
 	return v->asString ();
-    ycp2error ("Expected a string for %s, got %d %s",
-	       context, v->valuetype(), v->toString().c_str());
+    ycp2error ("Expected a string for %s, got %s %s",
+	       context, v->valuetype_str(), v->toString().c_str());
     return YCPNull ();
 }
 
@@ -70,8 +70,8 @@ YCPInteger as_integer (const YCPValue& v, const char * context)
 {
     if (v->isInteger ())
 	return v->asInteger ();
-    ycp2error ("Expected an integer for %s, got %d %s",
-	       context, v->valuetype(), v->toString().c_str());
+    ycp2error ("Expected an integer for %s, got %s %s",
+	       context, v->valuetype_str(), v->toString().c_str());
     return YCPNull ();
 }
 
