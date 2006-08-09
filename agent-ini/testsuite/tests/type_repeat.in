@@ -1,0 +1,9 @@
+1 section1
+V1 key1 = val1
+V2 key2 # val2
+2 section2
+V3 key3 % val3
+3 section3
+V1 key1 = val1
+V2 key2 # val2
+V3 key3 % val3

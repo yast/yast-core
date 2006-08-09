@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug  9 14:15:35 CEST 2006 - mvidner@suse.cz
+
+- agent-ini: fixed value_type and section_type with repeat_names (#191495).
+
+-------------------------------------------------------------------
 Tue Aug  8 08:55:36 CEST 2006 - mvidner@suse.cz
 
 - Added ybcdump, a tool for understaning the *.ybc "bytecode".

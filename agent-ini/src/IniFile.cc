@@ -21,8 +21,8 @@
 #include "IniParser.h"
 
 /**
- * Converts ycp value to string. Returns empty string if ycp value isn't
- * YCPString.
+ * Converts ycp value to string.
+ * Returns the string representation if the ycp value isn't a YCPString.
  * @param v YCPValue to convert
  * @return converted string
  */
@@ -34,6 +34,45 @@ string to_string (const YCPValue&v)
     else
 	s = v->toString ();
     return s;
+}
+
+/**
+ * Return the YCPList or YCPNull if it is not one. Log an error.
+ */
+static
+YCPList as_list (const YCPValue& v, const char * context)
+{
+    if (v->isList ())
+	return v->asList ();
+    ycp2error ("Expected a list for %s, got %d %s",
+	       context, v->valuetype(), v->toString().c_str());
+    return YCPNull ();
+}
+
+/**
+ * Return the YCPString or YCPNull if it is not one. Log an error.
+ */
+static
+YCPString as_string (const YCPValue& v, const char * context)
+{
+    if (v->isString ())
+	return v->asString ();
+    ycp2error ("Expected a string for %s, got %d %s",
+	       context, v->valuetype(), v->toString().c_str());
+    return YCPNull ();
+}
+
+/**
+ * Return the YCPInteger or YCPNull if it is not one. Log an error.
+ */
+static
+YCPInteger as_integer (const YCPValue& v, const char * context)
+{
+    if (v->isInteger ())
+	return v->asInteger ();
+    ycp2error ("Expected an integer for %s, got %d %s",
+	       context, v->valuetype(), v->toString().c_str());
+    return YCPNull ();
 }
 
 void IniSection::initValue (const string&key,const string&val,const string&comment,int rb)
@@ -437,13 +476,13 @@ int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
     string s = p->component_str (0);
     if (s == "v" || s == "value")
 	return setValue (p, v, 0, 1);
-    if ((s == "vc" || s == "value_comment" || s == "valuecomment") && v->isString ())
+    if (s == "vc" || s == "value_comment" || s == "valuecomment")
       return setValue (p, v, 1, 1);
-    if ((s == "vt" || s == "value_type" || s == "valuetype") && v->isInteger ())
+    if (s == "vt" || s == "value_type" || s == "valuetype")
       return setValue (p, v, 2, 1);
-    if ((s == "s" || s == "section" || s == "sc" || s == "section_comment" || s == "sectioncomment") && v->isString ())
+    if (s == "s" || s == "section" || s == "sc" || s == "section_comment" || s == "sectioncomment")
       return setSectionProp (p, v, 0, 1);
-    if ((s == "st" || s == "section_type" || s == "sectiontype") && v->isInteger ())
+    if (s == "st" || s == "section_type" || s == "sectiontype")
       return setSectionProp (p, v, rewrite? 1:2, 1);
     return -1;
 }
@@ -490,7 +529,9 @@ int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int
 	YCPList props;
 	if (ip->repeatNames ())
 	{
-	    props = in->asList ();	// TODO check it in the agent
+	    props = as_list (in, "property of section with repeat_names");
+	    if (props.isNull())
+		return -1;
 	}
 	else
 	{
@@ -536,12 +577,24 @@ int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int
 
 		// set a section's property
 		IniSection & s = si->s ();
-		if (what == 0)
-		    s.setComment (prop->asString()->value_cstr());
-		else if (what == 1)
-		    s.setRewriteBy (prop->asInteger()->value());
-		else
-		    s.setReadBy (prop->asInteger()->value());
+		if (what == 0) {
+		    YCPString str = as_string (prop, "section_comment");
+		    if (str.isNull())
+			return -1;
+		    s.setComment (str->value_cstr());
+		}
+		else if (what == 1) {
+		    YCPInteger i = as_integer (prop, "section_rewrite");
+		    if (i.isNull())
+			return -1;
+		    s.setRewriteBy (i->value());
+		}
+		else {
+		    YCPInteger i = as_integer (prop, "section_type");
+		    if (i.isNull())
+			return -1;
+		    s.setReadBy (i->value());
+		}
 
 		if (xi != xe)
 		{
@@ -738,7 +791,9 @@ int IniSection::setMyValue (const YCPPath &p, const YCPValue&in, int what, int d
     YCPList props;
     if (ip->repeatNames ())
     {
-	props = in->asList ();	// TODO check it in the agent
+	props = as_list (in, "section with repeat_names");
+	if (props.isNull())
+	    return -1;
     }
     else
     {
@@ -794,9 +849,23 @@ int IniSection::setMyValue (const YCPPath &p, const YCPValue&in, int what, int d
 	    IniEntry & e = ei->e ();
 	    switch (what)
 	    {
-		case 0:	e.setValue   (to_string (prop));		 break;
-		case 1:	e.setComment (prop->asString()->value()); break;
-		default:	e.setReadBy  (prop->asInteger()->value());break;
+		case 0:
+		    e.setValue (to_string (prop));
+		    break;
+		case 1: {
+		    YCPString s = as_string (prop, "comment");
+		    if (s.isNull())
+			return -1;
+		    e.setComment (s->value());
+		    break;
+		}
+		default: {
+		    YCPInteger i = as_integer (prop, "value_type");
+		    if (i.isNull())
+			return -1;
+		    e.setReadBy (i->value());
+		    break;
+		}
 	    }
 
 	    if (xi != xe)

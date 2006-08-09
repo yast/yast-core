@@ -1,0 +1,35 @@
+{
+    // test of reading type of section/value
+
+    y2milestone ("%1", SCR::Read (.st.section1));
+    y2milestone ("%1", SCR::Read (.st.section2));
+    y2milestone ("%1", SCR::Read (.st.section3));
+    y2milestone ("%1", SCR::Read (.vt.section1.key1));
+    y2milestone ("%1", SCR::Read (.vt.section1.key2));
+    y2milestone ("%1", SCR::Read (.vt.section2.key3));
+    y2milestone ("%1", SCR::Read (.vt.section3.key1));
+    y2milestone ("%1", SCR::Read (.vt.section3.key2));
+    y2milestone ("%1", SCR::Read (.vt.section3.key3));
+
+    SCR::Write (.st.section1, [1]);
+    SCR::Write (.st.section2, [2]);
+    SCR::Write (.st.section3, [0]);
+    SCR::Write (.vt.section1.key1, [1]);
+    SCR::Write (.vt.section1.key2, [2]);
+    SCR::Write (.vt.section2.key3, [0]);
+    SCR::Write (.vt.section3.key1, [1]);
+    SCR::Write (.vt.section3.key2, [2]);
+    SCR::Write (.vt.section3.key3, [0]);
+
+    y2milestone ("%1", SCR::Read (.st.section1));
+    y2milestone ("%1", SCR::Read (.st.section2));
+    y2milestone ("%1", SCR::Read (.st.section3));
+    y2milestone ("%1", SCR::Read (.vt.section1.key1));
+    y2milestone ("%1", SCR::Read (.vt.section1.key2));
+    y2milestone ("%1", SCR::Read (.vt.section2.key3));
+    y2milestone ("%1", SCR::Read (.vt.section3.key1));
+    y2milestone ("%1", SCR::Read (.vt.section3.key2));
+    y2milestone ("%1", SCR::Read (.vt.section3.key3));
+
+    return SCR::Dir (.s);
+}
