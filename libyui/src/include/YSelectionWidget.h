@@ -127,7 +127,7 @@ protected:
 
     /**
      * Change the label text. Overload this, but call
-     * YTextEntry::setLabel at the end of your own function.
+     * YSelectionWidget::setLabel at the end of your own function.
      */
     virtual void setLabel( const YCPString & label );
 

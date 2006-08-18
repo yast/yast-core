@@ -55,7 +55,7 @@ public:
 
     /**
      * Change the RichText text. Overload this, but call
-     * YRichText::setRichText at the end of your own function.
+     * YRichText::setText at the end of your own function.
      */
     virtual void setText( const YCPString & RichText );
 

@@ -104,7 +104,7 @@ public:
 
     /**
      * Change the label text. Overload this, but call
-     * YTextEntry::setLabel at the end of your own function.
+     * YTree::setLabel at the end of your own function.
      */
     virtual void setLabel( const YCPString & label );
 
@@ -154,7 +154,7 @@ protected:
 
     /**
      * Returns the index of the currently
-     * selected item or -1 if no item is selected.
+     * selected item or NULL if no item is selected.
      */
     virtual const YTreeItem * getCurrentItem() const = 0;
 
