@@ -415,14 +415,26 @@ sub ParseYcpString ($)
     }
 }
 
-# Converts a path (a string reference) to a list of its components
-# Normalizes (removes superfluous quoting)
-# . -> ()
-# .foo.bar -> ('foo', 'bar')
-# ."foo" -> ('foo')
-# ."double\"quote" -> ('double"quote')
-# ."a.dot" -> ('a.dot')
-# On error, returns undef
+=head2 PathComponents
+
+PathComponents $path_ref
+
+ ($cmd, $path) = ParseCommand ('`Read (.foo."%gconf.d"."gernel")'
+ @c = PathComponents (\$path);
+ if ($c[0] eq '%gconf.d' && $c[1] eq "gernel") {...}
+
+Converts a path (a string reference, L</PerlYCPValue>) to a list
+of its components. It deals with the nontrivial parts of path syntax.
+On error it returns undef.
+
+ .			-> ()
+ .foo.bar		-> ('foo', 'bar')
+ ."foo"			-> ('foo')
+ ."double\"quote"	-> ('double"quote')
+ ."a.dot"		-> ('a.dot')
+
+=cut
+
 sub PathComponents ($)
 {
     my $path_ref = shift;
