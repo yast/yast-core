@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Aug 21 16:15:33 CEST 2006 - mvidner@suse.cz
+
+- ycp.pm: added PathComponents to normalize nontrivial paths
+- 2.13.29
+
+-------------------------------------------------------------------
 Wed Aug  9 14:53:23 CEST 2006 - mvidner@suse.cz
 
 - agent-ini: fixed value_type and section_type with repeat_names (#191495).
