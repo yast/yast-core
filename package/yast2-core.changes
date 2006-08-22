@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug 22 13:01:28 CEST 2006 - lslezak@suse.cz
+
+- generateYCPWrappers - fixed crash when nil is passed as
+  an argument to YCP binding (#194435)
+- 2.13.30
+
+-------------------------------------------------------------------
 Mon Aug 21 16:15:33 CEST 2006 - mvidner@suse.cz
 
 - ycp.pm: added PathComponents to normalize nontrivial paths
