@@ -1216,6 +1216,7 @@ class NFlexT < Type
   end
 end
 
+# for iterator builtins
 class VariableT < Type
   def initialize(kind)
     super
@@ -1373,4 +1374,4 @@ end
 
 # Local Variables:
 # mode: ruby
-# End
+# End:
