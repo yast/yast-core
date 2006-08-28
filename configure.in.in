@@ -10,6 +10,9 @@ AC_SYS_LARGEFILE
 
 # libycp needs flex and bison
 AM_PROG_LEX
+if test -z "$LEX"; then
+  AC_MSG_ERROR([Install the package flex.])
+fi
 AC_CHECK_PROGS(YACC, 'bison -y -d -v' byacc, false)
 if test "$YACC" = false; then
 	AC_MSG_ERROR([bison not installed])
