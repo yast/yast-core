@@ -173,7 +173,7 @@ public:
 };
 
 /**
- * Eg. rx: "^ *Section +(.*)$", out: "Section %s"
+ * Eg.\ rx: "^ *Section +(.*)$", out: "Section %s" (ini-agent)
  */
 struct IoPattern
 {
@@ -182,7 +182,7 @@ struct IoPattern
 };
 
 /**
- * section description
+ * section description (ini-agent)
  */
 struct section
 {
@@ -192,7 +192,7 @@ struct section
 };
 
 /**
- * Parametr description
+ * Parametr description (ini-agent)
  */
 struct param
 {
@@ -206,6 +206,7 @@ struct param
     bool multiline_valid;
 };
 
+/// File description (name, section name, mtime); ini-agent
 struct FileDescr
 {
     /**

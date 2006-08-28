@@ -47,8 +47,8 @@ static const char *resolver_keys[] = {
   0
 };
 
-
-typedef struct info_entry {
+/// (ResolverAgent)
+struct info_entry {
     const char *key;
     const char *tag;
 };

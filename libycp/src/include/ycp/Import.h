@@ -32,6 +32,7 @@ using std::string;
 class SymbolEntry;
 class Y2Namespace;
 
+/// instantiate to import a module
 class Import {
     // track tables of nested imports, no need to track their usage
 

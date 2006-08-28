@@ -23,6 +23,7 @@
 
 using namespace std;
 
+/// Function and source location, for backtraces
 struct CallFrame {
     string called_function;
     string filename;

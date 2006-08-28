@@ -732,7 +732,7 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
     else return YCPInteger( pos );                  // found
 }
 
-
+/// (regexp builtins)
 typedef struct REG_RET
 {
     string result_str;

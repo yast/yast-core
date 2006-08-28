@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 28 15:02:40 CEST 2006 - mvidner@suse.cz
+
+- Added some Doxygen comments.
+
+-------------------------------------------------------------------
 Tue Aug 22 13:01:28 CEST 2006 - lslezak@suse.cz
 
 - generateYCPWrappers - fixed crash when nil is passed as

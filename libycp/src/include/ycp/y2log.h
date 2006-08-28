@@ -76,7 +76,7 @@
 #define ycpmilestone(format,args...) 		\
     ycp_log(LOG_MILESTONE, format, ##args)
 
-// c++ interface for logging
+/// c++ interface for logging
 class Logger {
 public:
     virtual ~Logger() {}

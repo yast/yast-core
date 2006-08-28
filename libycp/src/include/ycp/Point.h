@@ -14,12 +14,27 @@
 
    Author:	Klaus Kaempf <kkaempf@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
+/-*/
+// -*- c++ -*-
 
+#ifndef Point_h
+#define Point_h
+
+#include <string>
+using std::string;
+
+// MemUsage.h defines/undefines D_MEMUSAGE
+#include <y2util/MemUsage.h>
+#include "y2/SymbolEntry.h"
+
+class bytecodeistream;
+
+/**
    Definition of "definition point" which stores
    - filename
    - line number
    - inclusion point
-   to trace filenames, definition points, and include hierachies
+   to trace filenames, definition points, and include hierachies.
 
    This helps in issuing proper error messages like
      "identifier <name>
@@ -40,21 +55,7 @@
 
    An identifier has a definition point. A file has a filename and
    an inclusion point (if its an included file).
-/-*/
-// -*- c++ -*-
-
-#ifndef Point_h
-#define Point_h
-
-#include <string>
-using std::string;
-
-// MemUsage.h defines/undefines D_MEMUSAGE
-#include <y2util/MemUsage.h>
-#include "y2/SymbolEntry.h"
-
-class bytecodeistream;
-
+*/
 class Point
 #ifdef D_MEMUSAGE
    : public MemUsage
