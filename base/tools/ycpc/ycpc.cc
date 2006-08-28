@@ -70,6 +70,7 @@ static char *ui_name = 0;
 
 #define MAXPATHLEN 2048
 
+/// directory recursion (ycpc)
 typedef struct recurse_struct {
     struct recurse_struct *parent;
     DIR *d;			// opendir/readdir handle
@@ -246,11 +247,12 @@ recurseNext (recurseT *handle, struct stat *st)
 
 //-----------------------------------------------------------------------------
 
+/// file dependency (ycpc)
 class FileDep {
     private:
 	std::string m_name;
 	std::string m_path;
-	bool m_is_module;
+	bool m_is_module;	///< module or include
 	bool m_have_source;
 	time_t m_srctime;
 	time_t m_bintime;
@@ -961,7 +963,7 @@ int printcode (const char *outfname, const toStringAble & c)
 	}
     }
 
-    progress ("Parsed:\n", 0);
+    progress ("Parsed:\n");
     if (outstream.is_open())
     {
 	outstream << c->toString() << endl;
