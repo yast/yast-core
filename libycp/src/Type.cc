@@ -1364,8 +1364,7 @@ TupleType::concat (constTypePtr t)
 constTypePtr
 TupleType::parameterType (unsigned int parameter_number) const
 {
-    if ((parameter_number < 0)
-	|| (parameter_number >= m_types.size()))
+    if (parameter_number >= m_types.size())
     {
 	return Type::Error;
     }
