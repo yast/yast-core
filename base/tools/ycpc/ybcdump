@@ -1318,7 +1318,7 @@ def int
   assert(len == 4)
   # V: unsigned little-endian 4 bytes
   i = $f.read(4).unpack("V")[0]
-#  $stat_ints[i] = $stat_ints[i] + 1
+  $stat_ints[i] = $stat_ints[i] + 1
   i
 end
 
