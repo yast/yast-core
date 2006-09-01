@@ -196,7 +196,7 @@ public:
     /*
      * match <flex<number>> to type, return type if <flex<number>> matches
      */
-    virtual constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const { return 0; }
+    virtual constTypePtr matchFlex (constTypePtr /*type*/, unsigned int /*number*/ = 0) const { return 0; }
 
     /**
      * check match with expected type
@@ -496,7 +496,7 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
-    bool canCast (constTypePtr to) const { return false; }
+    bool canCast (constTypePtr /*to*/) const { return false; }
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;

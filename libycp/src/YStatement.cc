@@ -95,7 +95,7 @@ YStatement::toString () const
 
 
 YCPValue
-YStatement::evaluate (bool cse)
+YStatement::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("YStatement::evaluate(%s)\n", toString().c_str());
@@ -137,7 +137,7 @@ YSBreak::toString () const
 
 
 YCPValue
-YSBreak::evaluate (bool cse)
+YSBreak::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("YSBreak::evaluate(%s)\n", toString().c_str());
@@ -175,7 +175,7 @@ YSContinue::toString () const
 
 
 YCPValue
-YSContinue::evaluate (bool cse)
+YSContinue::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("YSContinue::evaluate(%s)\n", toString().c_str());
@@ -441,7 +441,7 @@ YSFunction::toString() const
 
 
 YCPValue
-YSFunction::evaluate (bool cse)
+YSFunction::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("YSFunction::evaluate(%s)\n", toString().c_str());
@@ -517,7 +517,7 @@ YSTypedef::toStream (std::ostream & str) const
 // FIXME: needed ?
 
 YCPValue
-YSTypedef::evaluate (bool cse)
+YSTypedef::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug("evaluate(%s) = nil", toString().c_str());
@@ -1394,7 +1394,7 @@ YSTextdomain::toStream (std::ostream & str) const
 
 
 YCPValue
-YSTextdomain::evaluate (bool cse)
+YSTextdomain::evaluate (bool /*cse*/)
 {
     return YCPNull();
 }

@@ -80,7 +80,7 @@ YCPExternalRep::toStream (std::ostream & str) const
 
 // ----------------------------------------------
 
-YCPExternal::YCPExternal (bytecodeistream & str)
+YCPExternal::YCPExternal (bytecodeistream &)
     : YCPValue (new YCPExternalRep (NULL, ""))
 {
     y2error ("Trying to load an external payload in stream");

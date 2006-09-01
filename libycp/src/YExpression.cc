@@ -273,7 +273,7 @@ YETerm::name () const
      */
 
 constTypePtr
-YETerm::attachParameter (YCodePtr code, constTypePtr dummy)
+YETerm::attachParameter (YCodePtr code, constTypePtr /*dummy*/)
 {
     if ((code == 0)
 	|| (code->isError()))
@@ -1517,7 +1517,7 @@ YEReturn::toString () const
 
 
 YCPValue
-YEReturn::evaluate (bool cse)
+YEReturn::evaluate (bool /*cse*/)
 {
     return YCPCode (m_expr);
 }

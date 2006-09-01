@@ -197,7 +197,7 @@ YCode::toStream (std::ostream & str) const
 
 
 YCPValue
-YCode::evaluate (bool cse)
+YCode::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("evaluate(%s) = nil", toString().c_str());
@@ -364,7 +364,7 @@ YConst::toString() const
 }
 
 YCPValue
-YConst::evaluate (bool cse)
+YConst::evaluate (bool /*cse*/)
 {
     YCPValue v = m_value;
 #if DO_DEBUG
@@ -660,7 +660,7 @@ YFunction::toString() const
 
 
 YCPValue
-YFunction::evaluate (bool cse)
+YFunction::evaluate (bool /*cse*/)
 {
 #if DO_DEBUG
     y2debug ("YFunction::evaluate(%s)\n", toString().c_str());
