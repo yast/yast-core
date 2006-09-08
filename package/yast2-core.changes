@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
-Mon Aug 28 15:02:40 CEST 2006 - mvidner@suse.cz
+Fri Sep  8 16:45:29 CEST 2006 - mvidner@suse.de
 
+- ini-agent: let Dir(.) return ["section", "value"] for non-flat files.
 - Added some Doxygen comments.
 
 -------------------------------------------------------------------

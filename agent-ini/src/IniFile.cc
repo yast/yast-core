@@ -1074,8 +1074,9 @@ int IniSection::Dir (const YCPPath&p, YCPList&l)
 	return dirValueFlat (p, l);
     if (p->length()<1)
 	{
-	    y2error ("I do not know what to dir from %s.", p->toString().c_str());
-	    return -1;
+	    l.add (YCPString ("section"));
+	    l.add (YCPString ("value"));
+	    return 0;
 	}
 
     string s = p->component_str(0);
