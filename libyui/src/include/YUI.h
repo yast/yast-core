@@ -99,15 +99,15 @@ protected:
      */
     YUI( bool with_threads );
 
-    
+
 public:
-    
+
     /**
      * Destructor.
      */
     virtual ~YUI();
 
-    
+
     /**
      * Access the global UI.
      **/
@@ -268,15 +268,15 @@ public:
 
     /**
      * Call 'function' with 'argc' YCPValue parameters and return the result of
-     * 'function'. 
-     **/ 
+     * 'function'.
+     **/
     static YCPValue callFunction( void * function, int argc, YCPValue argv[] );
 
     /**
      * Set a callback component.
      **/
     void setCallback( Y2Component * callback ) { _callback = callback; }
-    
+
     /**
      * Returns the callback previously set with setCallback().
      **/
@@ -290,6 +290,7 @@ public:
     YCPValue evaluateAskForExistingFile			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
     YCPValue evaluateAskForSaveFileName			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
     void evaluateBusyCursor				();
+    void evaluateBeep     				();
     YCPValue evaluateChangeWidget			( const YCPValue & value_id, const YCPValue & property, const YCPValue & new_value );
     void evaluateCheckShortcuts				();
     YCPValue evaluateCollectUserInput			();
@@ -315,10 +316,10 @@ public:
     void evaluateRedrawScreen				();
     YCPBoolean evaluateReplaceWidget			( const YCPValue & value_id, const YCPTerm & term );
     YCPValue evaluateRunPkgSelection			( const YCPValue & value_id );
-    void evaluateSetConsoleFont				( const YCPString& magic, 
+    void evaluateSetConsoleFont				( const YCPString& magic,
 							  const YCPString& font,
-							  const YCPString& screen_map, 
-							  const YCPString& unicode_map, 
+							  const YCPString& screen_map,
+							  const YCPString& unicode_map,
 							  const YCPString& encoding );
     void evaluateSetKeyboard				();
     YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
@@ -513,7 +514,7 @@ protected:
      */
     virtual YWidget *createLabel( YWidget *parent, YWidgetOpt & opt, const YCPString & text ) = 0;
 
-    
+
     /**
      * Creates a rich text widget
      * @param text Initial text of the label
@@ -649,7 +650,7 @@ protected:
 						const YCPString & label,
 						const YCPString & filename,
 						int expectedSize );
-    
+
     virtual bool	hasDownloadProgress() { return false; }
 
     /**
@@ -675,22 +676,22 @@ protected:
 					    int margin );
     virtual bool	hasColoredLabel() { return false; }
 
-    
+
     /**
      * Creates a Date input filed
      */
     virtual YWidget *	createDate( YWidget *parent,
-				    YWidgetOpt & opt, 
+				    YWidgetOpt & opt,
 				    const YCPString & label,
 				    const YCPString & date );
     virtual bool	hasDate() { return false; }
 
-    
+
     /**
      * Creates a Time input filed
      */
     virtual YWidget *	createTime( YWidget *parent,
-				    YWidgetOpt & opt,   
+				    YWidgetOpt & opt,
 				    const YCPString & label,
 				    const YCPString & time );
     virtual bool	hasTime() { return false; }
@@ -767,14 +768,14 @@ protected:
 					      const YCPString & newPartLabel,
 					      const YCPString & freeFieldLabel,
 					      const YCPString & newPartFieldLabel );
-    
+
     virtual bool	hasPartitionSplitter()  { return false; }
 
     /**
      * Creates a pattern selector.
      **/
     virtual YWidget *createPatternSelector( YWidget *parent, YWidgetOpt & opt );
-    
+
     virtual bool	hasPatternSelector() { return false; }
 
 
@@ -785,10 +786,10 @@ protected:
 				   const YCPValue & backButtonId,	const YCPString & backButtonLabel,
 				   const YCPValue & abortButtonId,	const YCPString & abortButtonLabel,
 				   const YCPValue & nextButtonId,	const YCPString & nextButtonLabel  );
-    
+
     virtual bool	hasWizard() { return false; }
 
-    
+
     /**
      * UI-specific setLanguage() function.
      * Returns YCPVoid() if OK and YCPNull() on error.
@@ -853,6 +854,13 @@ protected:
      */
     virtual void makeScreenShot( string filename );
 
+    /**
+     * UI-specific beep method.
+     *
+     * Emit acoustic signal or something equivalent.
+     * This default implementation does nothing.
+     */
+    virtual void beep();
 
     /**
      * UI-specific runPkgSelection method.
@@ -1024,7 +1032,7 @@ protected:
 			  bool 		wait,
 			  bool 		detailed );
 
-    
+
     /**
      * Implements the WFM or SCR callback command.
      */
@@ -1160,7 +1168,7 @@ protected:
 
     YWidget *createDate( YWidget *parent, YWidgetOpt & opt,
 			  const YCPTerm & term, const YCPList & optList, int argnr);
-    
+
     YWidget *createTime( YWidget *parent, YWidgetOpt & opt,
 			  const YCPTerm & term, const YCPList & optList, int argnr);
 
@@ -1310,7 +1318,7 @@ protected:
      */
     YWidget *createWizard( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 			   const YCPList & optList, int argnr );
-    
+
     /**
      * Helper function of createWidgetTree.
      * Creates a DummySpecialWidget.
@@ -1548,7 +1556,7 @@ protected:
      **/
     Y2Component * _callback;
 
-    
+
     /**
      * Global reference to the UI
      **/

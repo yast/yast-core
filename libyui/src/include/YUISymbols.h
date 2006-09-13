@@ -25,6 +25,7 @@
 #define YUIBuiltin_AskForExistingDirectory	"AskForExistingDirectory"
 #define YUIBuiltin_AskForExistingFile		"AskForExistingFile"
 #define YUIBuiltin_AskForSaveFileName		"AskForSaveFileName"
+#define YUIBuiltin_Beep				"Beep"
 #define YUIBuiltin_BusyCursor			"BusyCursor"
 #define YUIBuiltin_ChangeWidget			"ChangeWidget"
 #define YUIBuiltin_CloseDialog			"CloseDialog"
@@ -61,7 +62,6 @@
 
 #define YUIBuiltin_PostponeShortcutCheck	"PostponeShortcutCheck"
 #define YUIBuiltin_CheckShortcuts		"CheckShortcuts"
-
 
 #define YUIBuiltin_RecordMacro			"RecordMacro"
 #define YUIBuiltin_StopRecordMacro		"StopRecordMacro"

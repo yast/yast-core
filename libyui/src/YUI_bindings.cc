@@ -361,6 +361,15 @@ UIDumpWidgetTree()
 
 
 static YCPValue
+UIBeep()
+{
+    if ( YUIComponent::ui() )
+	YUIComponent::ui()->evaluateBeep();
+
+    return YCPVoid();
+}
+
+static YCPValue
 UIRecordMacro( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
@@ -649,6 +658,7 @@ UI::UI()
 	    { "CheckShortcuts",		"void ()",						(void*) UICheckShortcuts 	},
 	    { "MakeScreenShot",		"void ()",						(void*) UIMakeScreenshot 	},
 	    { "MakeScreenShot",		"void (string)",					(void*) UIMakeScreenshotToFile 	},
+	    { "Beep"          ,		"void ()"      ,					(void*) UIBeep 			},
 	    { "RecordMacro",		"void (string)",					(void*) UIRecordMacro 		},
 	    { "PlayMacro",		"void (string)",					(void*) UIPlayMacro 		},
 	    { "StopRecordMacro",	"void ()",						(void*) UIStopRecordMacro 	},

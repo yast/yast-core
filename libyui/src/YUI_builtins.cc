@@ -306,6 +306,14 @@ void YUI::makeScreenShot( string filename )
 }
 
 
+/**
+ * Default UI-specific beep() - does nothing
+ */
+void YUI::beep()
+{
+    // NOP
+}
+
 
 /**
  * @builtin GetLanguage
@@ -1151,6 +1159,20 @@ void YUI::evaluateDumpWidgetTree()
     dialog->dumpDialogWidgetTree();
 }
 
+/**
+ * @builtin Beep
+ * @short Beeps the system bell
+ * @description
+ * Beeps the system bell. This is implemented by the frontend, which may do
+ * a visual beep if the system is set up that way (eg. for accessiblity
+ * purposes).
+ *
+ * @return void
+ */
+void YUI::evaluateBeep()
+{
+    beep();
+}
 
 /**
  * @builtin RecordMacro

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Sep 13 16:41:06 CEST 2006 - sh@suse.de
+
+- Applied patch from Ricardo Cruz <rpmcruz@clix.pt>
+  for new UI::Beep() built-in 
+
+-------------------------------------------------------------------
 Fri Sep  8 16:45:29 CEST 2006 - mvidner@suse.de
 
 - ini-agent: let Dir(.) return ["section", "value"] for non-flat files.
