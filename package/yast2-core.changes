@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep 19 17:46:43 CEST 2006 - mvidner@suse.cz
+
+- Reduced YCPValue from two pointers to one by removing the
+  superfluous "virtual" qualifiers. Heap reduced by 10%.
+- 2.14.0
+
+-------------------------------------------------------------------
 Tue Sep 19 15:46:58 CEST 2006 - lslezak@suse.cz
 
 - ag_background - added missing .open_output_err path handler

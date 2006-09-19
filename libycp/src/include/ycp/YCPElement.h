@@ -71,11 +71,19 @@ private:							\
     int operator !() const;					\
     int operator ==(const YCPElement &) const;
 
+
+#ifdef D_MEMUSAGE
+#define DEF_MEMSIZE(name)					\
+    virtual size_t mem_size () const { return sizeof (YCP##name); }
+#else
+#define DEF_MEMSIZE(name)
+#endif
+
 #define DEF_COMMON(name, base)					\
     DEF_OPS(name)						\
     friend class YCP##base##Rep;				\
 public:								\
-    virtual size_t mem_size () const { return sizeof (YCP##name); } \
+    DEF_MEMSIZE(name)						\
     YCP##name(const YCPNull &n) : YCP##base(n) {}		\
 protected:							\
     YCP##name (const YCP##name##Rep *x) : YCP##base(x) {}
@@ -329,7 +337,7 @@ public:
     YCPElement(const YCPNull&);
     YCPElement(const YCPElementRep *e);
     YCPElement(const YCPElement &e);
-    virtual ~YCPElement();
+    ~YCPElement();
     const YCPElement& operator=(const YCPElement& e);
     bool isNull() const { return element == 0; }
     bool refersToSameElementAs(const YCPElement& e) const { return element == e.element; }    

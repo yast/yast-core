@@ -59,12 +59,11 @@ AM_YFLAGS = -d -v
 
 INCLUDES = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
 
-libycpvalues_la_LDFLAGS = -version-info 2:0
-
+# CURRENT:REVISION:AGE
+libycpvalues_la_LDFLAGS = -version-info 3:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
-libycp_la_LDFLAGS = -version-info 2:0
-
+libycp_la_LDFLAGS = -version-info 3:0:0
 libycp_la_LIBADD = ${Y2UTIL_LIBS} -lxcrypt libycpvalues.la
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
