@@ -112,10 +112,10 @@ YCPBuiltinBoolean::YCPBuiltinBoolean ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "!",  "boolean (boolean)",  (void *)b_lnot },
-	{ "||", "boolean (boolean, boolean)", (void *)b_or, 	DECL_NOEVAL },
-	{ "&&", "boolean (boolean, boolean)", (void *)b_and, 	DECL_NOEVAL },
-	{ 0 }
+	{ "!",  "boolean (boolean)",          (void *)b_lnot,   0,           0, 0, 0 },
+	{ "||", "boolean (boolean, boolean)", (void *)b_or, 	DECL_NOEVAL, 0, 0, 0 },
+	{ "&&", "boolean (boolean, boolean)", (void *)b_and, 	DECL_NOEVAL, 0, 0, 0 },
+	{ 0,    0,                            0,                0,           0, 0, 0 },
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinBoolean", declarations);

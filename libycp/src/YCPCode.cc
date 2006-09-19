@@ -51,7 +51,7 @@ YCPCodeRep::code() const
 
 
 YCPOrder
-YCPCodeRep::compare(const YCPCode& l) const
+YCPCodeRep::compare(const YCPCode&) const
 {
     return YO_LESS;
 }
@@ -116,7 +116,7 @@ YCPEntryRep::entry() const
 
 
 YCPOrder
-YCPEntryRep::compare (const YCPEntry& l) const
+YCPEntryRep::compare (const YCPEntry&) const
 {
     return YO_LESS;
 }
@@ -138,7 +138,7 @@ YCPEntryRep::valuetype() const
 
 
 YCPValue
-YCPEntryRep::evaluate (bool cse) const
+YCPEntryRep::evaluate (bool /*cse*/) const
 {
     y2debug ("YCPEntryRep::evaluate (%s)", this->toString().c_str());
 
@@ -173,7 +173,7 @@ YCPReferenceRep::entry() const
 
 
 YCPOrder
-YCPReferenceRep::compare (const YCPReference& l) const
+YCPReferenceRep::compare (const YCPReference&) const
 {
     return YO_LESS;
 }
@@ -195,7 +195,7 @@ YCPReferenceRep::valuetype() const
 
 
 YCPValue
-YCPReferenceRep::evaluate (bool cse) const
+YCPReferenceRep::evaluate (bool /*cse*/) const
 {
     y2debug ("YCPReferenceRep::evaluate (%s)", this->toString().c_str());
 

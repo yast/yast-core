@@ -68,7 +68,7 @@ YCPVoid::YCPVoid ()
 {
 }
 
-YCPVoid::YCPVoid (bytecodeistream & str)
+YCPVoid::YCPVoid (bytecodeistream &)
     : YCPValue ( *(nil ? nil : (nil = new YCPVoid(new YCPVoidRep()) )))
 {
 }

@@ -60,12 +60,10 @@ while (@exports)
 
 	# handle parameters
 	my @params = split /,\s*/, $rec { "params" };
-
-	print CALL "\t\tcase $position: return m_instance->$func_name (" ;
-
 	my $paramcount = 1;
-
 	my @cppparams = ();
+	my @tests = ();
+
 	while (@params)
 	{
 		my @par = split (" ", shift (@params) );
@@ -74,12 +72,15 @@ while (@exports)
 		{
 			$type = $par [1];
 		}
-		$type =~ s/^YCP(\w+)&?/as$1/;
-		$type = "m_param" . $paramcount . "->" . $type . "()" ;
+		$type =~ s/^YCP(\w+)&?/$1/;
+
+		push (@tests, "if (m_param$paramcount->isVoid()) {y2error(\"ERROR: Parameter $paramcount is nil, ".$type." is required\"); return YCPVoid();}");
+		
+		$type = "m_param" . $paramcount . "->as" . $type . "()" ;
 		push @cppparams, $type;
 		$paramcount++;
 	}
-	print CALL join (", ", @cppparams) . "); \n" ;
+	print CALL "\t\tcase $position: ". join (" ", @tests) . " return m_instance->$func_name (" . join (", ", @cppparams) . "); \n" ;
 
 	print REGISTER "\tenterSymbol (new SymbolEntry (this, $position, " ;
 	print REGISTER "\"$func_name\", SymbolEntry::c_function, Type::fromSignature (\"$signature\") ) );\n";

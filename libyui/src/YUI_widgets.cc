@@ -978,6 +978,7 @@ YWidget * YUI::createWeight( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 
 
 /**
+ * @todo doxyden does not understand this. disable.
  * @widgets	HBox VBox
  * @id          Box
  * @short	Generic layout: Arrange widgets horizontally or vertically

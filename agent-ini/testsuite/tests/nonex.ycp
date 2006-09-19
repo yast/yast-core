@@ -1,0 +1,11 @@
+// testing #66344
+{
+    any key = "default";
+    SCR::RegisterAgent (.target, `ag_system ());
+    SCR::Execute (.target.bash, "mv tests/nonex.in.test tests/nonex.in.test.away");
+    key = SCR::Read (.ini.KEY);
+    y2milestone ("KEY: %1", key);
+    SCR::Execute (.target.bash, "mv tests/nonex.in.test.away tests/nonex.in.test");
+    key = SCR::Read (.ini.KEY);
+    y2milestone ("KEY: %1", key);
+}

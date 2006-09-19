@@ -85,6 +85,7 @@ use Sys::Hostname;
 my @e_io = qw(
 	       ParseTerm
 	       ParseCommand
+	       PathComponents
 	       Return
 	       );
 
@@ -412,6 +413,64 @@ sub ParseYcpString ($)
 	    return ("", "Can't happen in ParseYcpString", $ycp_value);
 	}
     }
+}
+
+=head2 PathComponents
+
+PathComponents $path_ref
+
+ ($cmd, $path) = ParseCommand ('`Read (.foo."%gconf.d"."gernel")'
+ @c = PathComponents (\$path);
+ if ($c[0] eq '%gconf.d' && $c[1] eq "gernel") {...}
+
+Converts a path (a string reference, L</PerlYCPValue>) to a list
+of its components. It deals with the nontrivial parts of path syntax.
+On error it returns undef.
+
+ .			-> ()
+ .foo.bar		-> ('foo', 'bar')
+ ."foo"			-> ('foo')
+ ."double\"quote"	-> ('double"quote')
+ ."a.dot"		-> ('a.dot')
+
+=cut
+
+sub PathComponents ($)
+{
+    my $path_ref = shift;
+    if (ref ($path_ref) ne "SCALAR") {
+	y2error ("Expecting a reference to a scalar");
+	return undef;
+    }
+    my $path = $$path_ref;
+
+    return undef if $path eq "";
+    return () if $path eq ".";
+
+    my @result = ();
+
+    while ($path =~ s/^\.(${lex_pathsegment})(.*)/$2/o) {
+	my $segment = $1;
+	if ($segment =~ /^"/) {
+	    # FIXME check whether paths are like strings, unify
+	    my ($parsed, $err, $rest) = ParseYcpString ($segment);
+	    if ($err ne "") {
+		y2error ("Bad complex path component: '$err'");
+		return undef;
+	    }
+	    elsif ($rest ne "") {
+		y2error ("Extra characters in path component: '$rest'");
+		return undef;
+	    }
+	    $segment = $parsed;
+	}
+	push @result, $segment;
+    }
+    if ($path ne "") {
+	y2error ("Extra characters in path: '$path'");
+	return undef;
+    }
+    return @result;
 }
 
 # Internal

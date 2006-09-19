@@ -1,0 +1,10 @@
+(["section1", "section2", "section3"])
+2 section1
+V2 key1 # val1
+V3 key2 % val2
+3 section2
+V1 key3 = val3
+1 section3
+V2 key1 # val1
+V3 key2 % val2
+V1 key3 = val3

@@ -13,6 +13,7 @@
 [Interpreter] tests/n1.ycp:XXX Wrong value for path .vc.Section1.Val1: 42.
 [Interpreter] tests/n1.ycp:XXX Wrong path '.vc.Section1.Val1' in Write().
 [YCP] tests/n1.ycp:XXX false
+[Interpreter] tests/n1.ycp:XXX Expected a string for comment, got INTEGER 42
 [YCP] tests/n1.ycp:XXX false
 [Interpreter] tests/n1.ycp:XXX Wrong value for path .vt.Section1.Val1: 42.
 [Interpreter] tests/n1.ycp:XXX Wrong path '.vt.Section1.Val1' in Write().

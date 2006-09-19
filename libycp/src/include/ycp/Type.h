@@ -31,6 +31,7 @@
 class FunctionType;
 class bytecodeistream;
 
+/// YCP type
 class Type : public Rep
 #ifdef D_MEMUSAGE
   , public MemUsage
@@ -195,7 +196,7 @@ public:
     /*
      * match <flex<number>> to type, return type if <flex<number>> matches
      */
-    virtual constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const { return 0; }
+    virtual constTypePtr matchFlex (constTypePtr /*type*/, unsigned int /*number*/ = 0) const { return 0; }
 
     /**
      * check match with expected type
@@ -314,7 +315,7 @@ public:
     virtual constTypePtr detailedtype (constTypePtr type) const;
 };
 
-// <flex>
+/// YCP type \<flex\>
 
 class FlexType : public Type
 {
@@ -333,7 +334,7 @@ public:
 };
 
 
-// <flexN>
+/// YCP type \<flexN\>
 
 class NFlexType : public Type
 {
@@ -354,7 +355,7 @@ public:
 };
 
 
-// Variable <type>
+/// YCP type Variable \<type\> for iterator builtins
 
 class VariableType : public Type
 {
@@ -377,7 +378,7 @@ public:
 };
 
 
-// List <type>
+/// YCP type List \<type\>
 
 class ListType : public Type
 {
@@ -403,7 +404,7 @@ public:
 };
 
 
-// Map <keytype, valuetype>
+/// YCP type Map \<keytype, valuetype\>
 
 class MapType : public Type
 {
@@ -431,8 +432,7 @@ public:
 };
 
 
-// Block <type>
-
+/// YCP type Block \<type\>
 class BlockType : public Type
 {
     REP_BODY(BlockType);
@@ -455,7 +455,7 @@ public:
 };
 
 
-// Tuple <type, type, ...>
+/// Tuple \<type, type, ...\> (function arguments)
 
 class TupleType : public Type
 {
@@ -481,7 +481,7 @@ public:
 };
 
 
-// Function <returntype, arg1type, arg2type, ...>
+/// YCP type Function \<returntype, arg1type, arg2type, ...\>
 
 class FunctionType : public Type
 {
@@ -496,7 +496,7 @@ public:
     constTypePtr matchFlex (constTypePtr type, unsigned int number = 0) const;
     int match (constTypePtr expected) const;
     bool equals (constTypePtr expected) const;
-    bool canCast (constTypePtr to) const { return false; }
+    bool canCast (constTypePtr /*to*/) const { return false; }
     TypePtr clone () const;
     constTypePtr unflex (constTypePtr type, unsigned int number = 0) const;
     std::ostream & toStream (std::ostream & str) const;

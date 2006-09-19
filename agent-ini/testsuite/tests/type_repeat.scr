@@ -1,0 +1,32 @@
+.
+
+`ag_ini(
+  `IniAgent("tests/type_repeat.in.test",
+  $[
+    "options" : [ "global_values", "repeat_names", ],
+    "comments": [ "^[ \t]*$" ],
+    "sections" : [
+        $[
+	"begin" : ["1[ \t]+([[:alnum:]]+)[ \t]*$", "1 %s", ]
+        ],
+        $[
+	"begin" : ["2[ \t]+([[:alnum:]]+)[ \t]*$", "2 %s", ]
+        ],
+        $[
+	"begin" : ["3[ \t]+([[:alnum:]]+)[ \t]*$", "3 %s", ]
+        ],
+    ],
+    "params" : [
+	$[
+	"match" : [ "^V1 ([[:alnum:]]+) = (.*)$", "V1 %s = %s" ],
+	],
+	$[
+	"match" : [ "^V2 ([[:alnum:]]+) # (.*)$", "V2 %s # %s" ],
+	],
+	$[
+	"match" : [ "^V3 ([[:alnum:]]+) % (.*)$", "V3 %s %% %s" ],
+	],
+    ],
+  ]
+  )
+)

@@ -40,12 +40,12 @@ class SymbolTable;
 #include "ycp/Type.h"
 #include "ycp/y2log.h"
 
-// linked list for formal parameters
+/// linked list for formal parameters (not a stack at all)
 typedef struct formalparamstack {
-    struct formalparamstack *next;	// ptr to next formal parameter
-    const char *name;			// name of formal parameter
-    constTypePtr type;			// type of formal parameter
-    unsigned int line;			// line number of name token
+    struct formalparamstack *next;	///< ptr to next formal parameter
+    const char *name;			///< name of formal parameter
+    constTypePtr type;			///< type of formal parameter
+    unsigned int line;			///< line number of name token
 } formalparam_t;
 
 typedef union {

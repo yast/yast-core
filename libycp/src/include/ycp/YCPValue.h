@@ -79,6 +79,12 @@ public:
     virtual YCPValueType valuetype() const = 0;
 
     /**
+     * A string description of the type, for debugging only.
+     * (Not suitable for parsing)
+     */
+    const char * valuetype_str() const;
+
+    /**
      * Checks, if the type of this value is YT_VOID or YT_RETURN (explicitly returned void).
      */
     bool isVoid() const;

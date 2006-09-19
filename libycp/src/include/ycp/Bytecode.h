@@ -38,6 +38,7 @@ class Y2Namespace;
 
 #include <fstream>
 
+/// An istream that remembers some data about the bytecode.
 class bytecodeistream : public std::ifstream
 {
 	int m_major, m_minor, m_release;
@@ -51,15 +52,24 @@ class bytecodeistream : public std::ifstream
 	int release () const { return m_release; }
 };
 
+/// *.ybc I/O
 class Bytecode {
     static int m_namespace_nesting_level;
     static int m_namespace_nesting_array_size;
     static int m_namespace_tare_level;
-    typedef struct { const Y2Namespace *name_space; bool with_xrefs; } namespaceentry_t;
+    
+    /// references to namespaces
+    struct namespaceentry_t {
+	const Y2Namespace *name_space;
+	bool with_xrefs;	///< external references... ???
+    };
     static namespaceentry_t *m_namespace_nesting_array;
     static map<string, YBlockPtr>* m_bytecodeCache;
 
     public:
+    /** Thrown instead of unsetting YCode::valid */
+    class Invalid {};
+
 	// bool I/O
 	static std::ostream & writeBool (std::ostream & streamref, bool value);
 	static bool readBool (bytecodeistream & streamref);

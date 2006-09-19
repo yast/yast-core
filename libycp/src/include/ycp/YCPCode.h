@@ -134,7 +134,7 @@ public:
      * Compares two YBreaks for equality, greaterness or smallerness.
      * 
      */
-    YCPOrder compare (const YCPBreak &v) const { return YO_EQUAL; }
+    YCPOrder compare (const YCPBreak &) const { return YO_EQUAL; }
 
     /**
      * Returns an ASCII representation of the YBreak.
@@ -165,7 +165,7 @@ class YCPBreak : public YCPValue
     DEF_COMMON(Break, Value);
 public:
     YCPBreak() : YCPValue (new YCPBreakRep ()) {}
-    YCPBreak (bytecodeistream & str) : YCPValue (new YCPBreakRep ()) {}
+    YCPBreak (bytecodeistream &) : YCPValue (new YCPBreakRep ()) {}
 };
 
 
@@ -202,7 +202,7 @@ public:
      * Compares two YReturns for equality, greaterness or smallerness.
      * 
      */
-    YCPOrder compare (const YCPReturn &v) const { return YO_EQUAL; }
+    YCPOrder compare (const YCPReturn &) const { return YO_EQUAL; }
 
     /**
      * Returns an ASCII representation of the YCPReturn.
@@ -232,7 +232,7 @@ class YCPReturn : public YCPValue
     DEF_COMMON(Return, Value);
 public:
     YCPReturn() : YCPValue (new YCPReturnRep ()) {}
-    YCPReturn(bytecodeistream & str) : YCPValue (new YCPReturnRep ()) {}
+    YCPReturn(bytecodeistream &) : YCPValue (new YCPReturnRep ()) {}
 };
 
 

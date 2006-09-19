@@ -787,7 +787,7 @@ compact_expression:
 
 		if ($6.t->match (Type::Integer) < 0)
 		{
-		    yyTypeMismatch ("Last parameter to _(...) has wrong type", Type::Integer, $6.t, $6.l);
+		    yyTypeMismatch ("Last parameter to " "_(...) has wrong type", Type::Integer, $6.t, $6.l);
 		    $$.t = 0;
 		    break;
 		}
@@ -1976,7 +1976,7 @@ control_statement:
 		    $$.t = 0;
 		    break;
 		}
-		$$.c = new YStatement (YCode::ysBreak, $1.l);
+		$$.c = new YSBreak ($1.l);
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
 	    }
@@ -1996,7 +1996,7 @@ control_statement:
 		    $$.t = 0;
 		    break;
 		}
-		$$.c = new YStatement (YCode::ysContinue, $1.l);
+		$$.c = new YSContinue ($1.l);
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
 	    }
@@ -2293,7 +2293,7 @@ definition:
 
 		    if (match == 0)		// type match ok
 		    {
-			$$.c = new YSAssign (true, tentry->sentry(), $3.c, $1.l);
+			$$.c = new YSVariable (tentry->sentry(), $3.c, $1.l);
 			sentry->setCode($3.c);
 		    }
 		    if (sentry->category() == SymbolEntry::c_unspec)
@@ -2811,7 +2811,7 @@ assignment:
 		    $3.c = new YEPropagate ($3.c, $3.t, $1.t);
 		}
 
-		$$.c = new YSAssign (false, $1.v.tval->sentry(), $3.c, $1.l);
+		$$.c = new YSAssign ($1.v.tval->sentry(), $3.c, $1.l);
 		$$.t = Type::Unspec;
 		$$.l = $1.l;
 	    }

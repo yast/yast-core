@@ -51,7 +51,7 @@ IMPL_DERIVED_POINTER(YBlock, YCode);
 // block (-> list of statements, list of symbols, kind)
 
 YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
-    : YCode (yeBlock)
+    : YCode ()
     , m_kind (kind)
     , m_name ("")
     , m_tenvironment (0)
@@ -76,7 +76,7 @@ YBlock::YBlock (const std::string & filename, YBlock::blockkind_t kind)
 
 // intermediate block
 YBlock::YBlock (const Point *point)
-    : YCode (yeBlock)
+    : YCode ()
     , m_kind (b_unknown)
     , m_name ("")
     , m_tenvironment (0)
@@ -353,7 +353,7 @@ YBlock::setKind (YBlock::blockkind_t kind)
 
 
 YBlock::blockkind_t
-YBlock::kind () const
+YBlock::bkind () const
 {
     return m_kind;
 }
@@ -750,7 +750,7 @@ YBlock::statementCount () const
 // bytecode I/O
 
 YBlock::YBlock (bytecodeistream & str)
-    : YCode (yeBlock)
+    : YCode ()
     , m_kind (b_unknown)
     , m_name ("")
     , m_tenvironment (0)
@@ -847,15 +847,12 @@ YBlock::YBlock (bytecodeistream & str)
 	YCodePtr code = Bytecode::readCode (str);
 	if (code == 0)
 	{
-	    m_kind = b_unknown;
-	    m_valid = false;
-	    break;
+	    throw Bytecode::Invalid();
 	}
 	if (!code->isStatement())			// code must be statement
 	{
 	    y2error ("Code is no statement: %d", code->kind());
-	    m_valid = false;
-	    break;
+	    throw Bytecode::Invalid();
 	}
 
 	stmt->stmt = (YStatementPtr)code;

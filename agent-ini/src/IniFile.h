@@ -340,7 +340,7 @@ private:
      * @param in value to set (YCPString or YCPInteger) (or YCPList)
      * @param what 0 -- value, 1 -- comment, other -- read-by.
      * @param depth path index
-     * @return 0
+     * @return 0 on success
      */
     int setMyValue (const YCPPath &p, const YCPValue&in, int what, int depth);
     /**

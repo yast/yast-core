@@ -41,6 +41,17 @@ sub Result ($)
     }
 }
 
+sub ListCompare ($$)
+{
+    my ($a, $b) = @_;
+    return 0 if scalar(@$a) != scalar (@$b);
+    my $i = 0;
+    foreach my $v (@$a) {
+	return 0 if ($v ne $b->[$i++]);
+    }
+    return 1;
+}
+
 my @string_test =
     (
      [ '"a boring string", more_ycp', 'a boring string' ],
@@ -96,21 +107,43 @@ my @path_test =
     (
      # simple cases
      [ '.',
-       '.' ],
+       '.',
+       [],
+     ],
      [ '.a-path.that_rules',
-       '.a-path.that_rules' ],
+       '.a-path.that_rules',
+       ['a-path', 'that_rules'],
+     ],
      # quoted paths: so far libycp does not strip quotes even if possible
      [ '."foo"',
-       '."foo"' ],
+       '."foo"',
+       ['foo'],
+     ],
      [ '.""',
-       '.""' ],
+       '.""',
+       [''],
+     ],
      [ '.foo."bar"',
-       '.foo."bar"' ],
+       '.foo."bar"',
+       ['foo', 'bar'],
+     ],
      [ '."foo".bar',
-       '."foo".bar' ],
+       '."foo".bar',
+       ['foo', 'bar'],
+     ],
      # nasty cases when we strip quotes
      [ '."trailing-dash-"',
-       '."trailing-dash-"' ],
+       '."trailing-dash-"',
+       ['trailing-dash-'],
+     ],
+     [ '."double\"quote"',
+       '."double\"quote"',
+       ['double"quote'],
+     ],
+     [ '."a.dot"',
+       '."a.dot"',
+       ['a.dot'],
+     ],
      );
 
 # return true on sucess
@@ -124,6 +157,34 @@ sub TestPaths ()
 	    Result (ref ($p) eq "SCALAR" && $$p eq $case->[1]);
 	}
     };
+}
+
+my @path_comp_fail =
+    (
+     'foo',
+     \ 42,
+     \ '',
+     \ 'foo',
+     \ '.+',
+     \ '."',
+     \ '."truncated',
+     \ '."extra"chars',
+    );
+sub TestPathComponents ()
+{
+    print "TestPathComponents\n";
+    foreach my $case (@path_test)
+    {
+	my $p = Parse ($case->[0]);
+	Result (ListCompare ([ycp::PathComponents ($p)], $case->[2]));
+    }
+    print "TestPathComponents errors\n";
+    foreach my $case (@path_comp_fail)
+    {
+	my $pcase = ref($case)? "r'$$case'": "'$case'";
+	print "\t$pcase: " if $verbose;
+	Result (!defined (ycp::PathComponents ($case)));
+    }
 }
 
 my @number_test =
@@ -320,6 +381,7 @@ sub TestOutput ()
 TestStrings ();
 TestByteblocks ();
 TestPaths ();
+TestPathComponents ();
 TestNumbers ();
 TestLists ();
 TestMaps ();

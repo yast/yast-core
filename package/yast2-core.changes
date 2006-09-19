@@ -1,4 +1,68 @@
 -------------------------------------------------------------------
+Wed Sep 13 16:41:06 CEST 2006 - sh@suse.de
+
+- Applied patch from Ricardo Cruz <rpmcruz@clix.pt>
+  for new UI::Beep() built-in 
+
+-------------------------------------------------------------------
+Fri Sep  8 16:45:29 CEST 2006 - mvidner@suse.de
+
+- ini-agent: let Dir(.) return ["section", "value"] for non-flat files.
+- Added some Doxygen comments.
+
+-------------------------------------------------------------------
+Tue Aug 22 13:01:28 CEST 2006 - lslezak@suse.cz
+
+- generateYCPWrappers - fixed crash when nil is passed as
+  an argument to YCP binding (#194435)
+- 2.13.30
+
+-------------------------------------------------------------------
+Mon Aug 21 16:15:33 CEST 2006 - mvidner@suse.cz
+
+- ycp.pm: added PathComponents to normalize nontrivial paths
+- 2.13.29
+
+-------------------------------------------------------------------
+Wed Aug  9 14:53:23 CEST 2006 - mvidner@suse.cz
+
+- agent-ini: fixed value_type and section_type with repeat_names (#191495).
+- libycp: added YCPValue::valuetype_str() for better debug messages.
+- 2.13.28
+
+-------------------------------------------------------------------
+Tue Aug  8 08:55:36 CEST 2006 - mvidner@suse.cz
+
+- Added ybcdump, a tool for understaning the *.ybc "bytecode".
+- 2.13.27
+
+-------------------------------------------------------------------
+Mon Aug  7 11:09:03 CEST 2006 - mvidner@suse.cz
+
+- ini-agent: use a space separator for join_multiline (#195914).
+- Fixed a crash when modifying a `Tree property on a non-existing
+  item (Ricardo Cruz).
+- 2.13.26
+
+-------------------------------------------------------------------
+Fri Aug  4 14:47:40 CEST 2006 - mvidner@suse.cz
+
+- Memory reduction: removed YCode members m_valid and m_kind to save
+  5% of heap.
+
+-------------------------------------------------------------------
+Wed Aug  2 15:16:19 CEST 2006 - mvidner@suse.cz
+
+- Include more variables in yast2-core.pc
+- 2.13.25
+
+-------------------------------------------------------------------
+Tue Aug  1 13:42:35 CEST 2006 - visnov@suse.cz
+
+- Fix POSIX make
+- 2.13.24 
+
+-------------------------------------------------------------------
 Thu May 25 10:43:24 CEST 2006 - mvidner@suse.cz
 
 - Use [:alpha:] instead of A-Za-z to catch all ASCII letters even in

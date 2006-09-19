@@ -35,13 +35,17 @@ class YBlock;		// forward declaration for YDo, YRepeat
 
 //-------------------------------------------------------------------
 
+// FIXME bad inheritance
 DEFINE_DERIVED_POINTER(YStatement, YCode);
+DEFINE_DERIVED_POINTER(YSBreak, YCode);
+DEFINE_DERIVED_POINTER(YSContinue, YCode);
 DEFINE_DERIVED_POINTER(YSExpression, YCode);
 DEFINE_DERIVED_POINTER(YSBlock, YCode);
 DEFINE_DERIVED_POINTER(YSReturn, YCode);
 DEFINE_DERIVED_POINTER(YSTypedef, YCode);
 DEFINE_DERIVED_POINTER(YSFunction, YCode);
 DEFINE_DERIVED_POINTER(YSAssign, YCode);
+DEFINE_DERIVED_POINTER(YSVariable, YCode);
 DEFINE_DERIVED_POINTER(YSBracket, YCode);
 DEFINE_DERIVED_POINTER(YSIf, YCode);
 DEFINE_DERIVED_POINTER(YSWhile, YCode);
@@ -63,14 +67,52 @@ class YStatement : public YCode
     REP_BODY(YStatement);
     int m_line;					// line number
 public:
-    YStatement (ykind kind, int line = 0);
-    YStatement (ykind kind, bytecodeistream & str);
+    YStatement (int line = 0);
+    YStatement (bytecodeistream & str);
     ~YStatement () {};
     virtual string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    /** yes */
+    virtual bool isStatement () const { return true; }
     int line () const { return m_line; };
     virtual YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
+};
+
+
+//-------------------------------------------------------------------
+/**
+ * "break"
+ */
+
+class YSBreak : public YStatement
+{
+    REP_BODY(YSBreak);
+public:
+    YSBreak (int line = 0);		// statement
+    YSBreak (bytecodeistream & str);
+    virtual ykind kind () const { return ysBreak; }
+    string toString () const;
+    std::ostream & toStream (std::ostream & str) const;
+    YCPValue evaluate (bool cse = false);
+};
+
+
+//-------------------------------------------------------------------
+/**
+ * "continue"
+ */
+
+class YSContinue : public YStatement
+{
+    REP_BODY(YSContinue);
+public:
+    YSContinue (int line = 0);		// statement
+    YSContinue (bytecodeistream & str);
+    virtual ykind kind () const { return ysContinue; }
+    string toString () const;
+    std::ostream & toStream (std::ostream & str) const;
+    YCPValue evaluate (bool cse = false);
 };
 
 
@@ -87,6 +129,7 @@ public:
     YSExpression (YCodePtr expr, int line = 0);		// statement
     YSExpression (bytecodeistream & str);
     ~YSExpression ();
+    virtual ykind kind () const { return ysExpression; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -107,6 +150,7 @@ public:
     YSBlock (YBlockPtr block, int line = 0);
     YSBlock (bytecodeistream & str);
     ~YSBlock ();
+    virtual ykind kind () const { return ysBlock; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -127,6 +171,7 @@ public:
     YSReturn (YCodePtr value, int line = 0);
     YSReturn (bytecodeistream & str);
     ~YSReturn ();
+    virtual ykind kind () const { return ysReturn; }
     void propagate (constTypePtr from, constTypePtr to);
     YCodePtr value () const;	// needed in YBlock::justReturn
     void clearValue ();		// needed if justReturn triggers
@@ -151,6 +196,7 @@ public:
     YSTypedef (const string &name, constTypePtr type, int line = 0);	// Typedef
     YSTypedef (bytecodeistream & str);
     ~YSTypedef () {};
+    virtual ykind kind () const { return ysTypedef; }
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -173,6 +219,7 @@ public:
     YSFunction (YSymbolEntryPtr entry, int line = 0);
     YSFunction (bytecodeistream & str);
     ~YSFunction ();
+    virtual ykind kind () const { return ysFunction; }
 
     // symbol entry of function itself
     SymbolEntryPtr entry () const;
@@ -196,16 +243,35 @@ public:
 class YSAssign : public YStatement
 {
     REP_BODY(YSAssign);
+protected:
     SymbolEntryPtr m_entry;
     YCodePtr m_code;
 public:
-    YSAssign (bool definition, SymbolEntryPtr entry, YCodePtr code, int line = 0);
-    YSAssign (bool definition, bytecodeistream & str);
+    YSAssign (SymbolEntryPtr entry, YCodePtr code, int line = 0);
+    YSAssign (bytecodeistream & str);
     ~YSAssign ();
+    virtual ykind kind () const { return ysAssign; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
-    constTypePtr type () const { return Type::Void; };
+};
+
+
+//-------------------------------------------------------------------
+/**
+ * assignment or definition
+ * [<type>] <m_entry> = <m_code>
+ */
+
+class YSVariable : public YSAssign
+{
+    REP_BODY(YSVariable);
+public:
+    YSVariable (SymbolEntryPtr entry, YCodePtr code, int line = 0);
+    YSVariable (bytecodeistream & str);
+    ~YSVariable ();
+    virtual ykind kind () const { return ysVariable; }
+    string toString () const;
 };
 
 
@@ -225,6 +291,7 @@ public:
     YSBracket (SymbolEntryPtr entry, YCodePtr arg, YCodePtr code, int line = 0);
     YSBracket (bytecodeistream & str);
     ~YSBracket ();
+    virtual ykind kind () const { return ysBracket; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     // recursively extract list arg at idx, get value from current at idx
@@ -250,6 +317,7 @@ public:
     YSIf (YCodePtr a_expr, YCodePtr a_true, YCodePtr a_false, int line = 0);
     YSIf (bytecodeistream & str);
     ~YSIf ();
+    virtual ykind kind () const { return ysIf; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -272,6 +340,7 @@ public:
     YSWhile (YCodePtr expr, YCodePtr loop, int line = 0);
     YSWhile (bytecodeistream & str);
     ~YSWhile ();
+    virtual ykind kind () const { return ysWhile; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -294,6 +363,7 @@ public:
     YSRepeat (YCodePtr loop, YCodePtr expr, int line = 0);
     YSRepeat (bytecodeistream & str);
     ~YSRepeat ();
+    virtual ykind kind () const { return ysRepeat; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -316,6 +386,7 @@ public:
     YSDo (YCodePtr loop, YCodePtr expr, int line = 0);
     YSDo (bytecodeistream & str);
     ~YSDo ();
+    virtual ykind kind () const { return ysDo; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -336,6 +407,7 @@ public:
     YSTextdomain (const string &textdomain, int line = 0);
     YSTextdomain (bytecodeistream & str);
     ~YSTextdomain ();
+    virtual ykind kind () const { return ysTextdomain; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -360,6 +432,7 @@ public:
     YSInclude (const string &filename, int line = 0, bool skipped = false);
     YSInclude (bytecodeistream & str);
     ~YSInclude ();
+    virtual ykind kind () const { return ysInclude; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -381,6 +454,7 @@ public:
     YSImport (const string &name, Y2Namespace *name_space);
     YSImport (bytecodeistream & str);
     ~YSImport ();
+    virtual ykind kind () const { return ysImport; }
     string name () const;
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
@@ -402,6 +476,7 @@ public:
     YSFilename (const string &filename, int line = 0);
     YSFilename (bytecodeistream & str);
     ~YSFilename ();
+    virtual ykind kind () const { return ysFilename; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
     YCPValue evaluate (bool cse = false);
@@ -429,6 +504,7 @@ public:
     YSSwitch (YCodePtr condition);
     YSSwitch (bytecodeistream & str);
     ~YSSwitch ();
+    virtual ykind kind () const { return ysSwitch; }
     string name () const;
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;

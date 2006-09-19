@@ -121,16 +121,16 @@ private:
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
 
-    int 			_usedSize;
-    int 			_totalFreeSize;
-    int 			_newPartSize;
-    int 			_minNewPartSize;
-    int 			_minFreeSize;
-    const YCPString &	_usedLabel;
-    const YCPString &	_freeLabel;
-    const YCPString &	_newPartLabel;
-    const YCPString &	_freeFieldLabel;
-    const YCPString &	_newPartFieldLabel;
+    int 	_usedSize;
+    int 	_totalFreeSize;
+    int 	_newPartSize;
+    int 	_minNewPartSize;
+    int 	_minFreeSize;
+    YCPString	_usedLabel;
+    YCPString	_freeLabel;
+    YCPString	_newPartLabel;
+    YCPString	_freeFieldLabel;
+    YCPString	_newPartFieldLabel;
 };
 
 
