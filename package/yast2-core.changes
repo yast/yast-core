@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep 19 15:46:58 CEST 2006 - lslezak@suse.cz
+
+- ag_background - added missing .open_output_err path handler
+
+-------------------------------------------------------------------
 Wed Sep 13 16:41:06 CEST 2006 - sh@suse.de
 
 - Applied patch from Ricardo Cruz <rpmcruz@clix.pt>

@@ -265,6 +265,10 @@ while (1)
 	    {
 		ycp::Return($pipe_defined ? 'true' : 'false');
 	    }
+	    elsif ($path eq '.output_open_err')
+	    {
+		ycp::Return($pipe_defined_err ? 'true' : 'false');
+	    }
 	    elsif ($path eq '.buffer_size')
 	    {
 		ycp::Return($buffer_size);
