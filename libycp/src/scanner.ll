@@ -12,8 +12,8 @@
 
    File:	scanner.ll
    Version	3.0
-   Author:	Klaus Kmpf <kkaempf@suse.de>
-   Maintainer:	Klaus Kmpf <kkaempf@suse.de>
+   Author:	Klaus Kämpf <kkaempf@suse.de>
+   Maintainer:	Klaus Kämpf <kkaempf@suse.de>
 
 /-*/
 
