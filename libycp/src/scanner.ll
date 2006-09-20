@@ -12,8 +12,8 @@
 
    File:	scanner.ll
    Version	3.0
-   Author:	Klaus Kämpf <kkaempf@suse.de>
-   Maintainer:	Klaus Kämpf <kkaempf@suse.de>
+   Author:	Klaus Kmpf <kkaempf@suse.de>
+   Maintainer:	Klaus Kmpf <kkaempf@suse.de>
 
 /-*/
 
@@ -530,7 +530,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    y2debug ("m_localTable[%p]->find (%s) = %p", m_localTable, yytext, tentry);
 	    if (tentry == 0)
 	    {
-		logError ("Unknown namespace '%s'", LINE_VAR, yytext);
+		logError ("Unknown namespace '%s'. Missing 'import'?", LINE_VAR, yytext);
 		return SCANNER_ERROR;
 	    }
 	    else if (tentry->sentry()->category() == SymbolEntry::c_self)	// self reference
@@ -639,7 +639,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    {
 		if (next != 0)
 		{
-		    logError ("Unknown namespace '%s::%s'", LINE_VAR, namespace_prefix, yytext);
+		    logError ("Unknown namespace '%s::%s'. Missing 'import'?", LINE_VAR, namespace_prefix, yytext);
 		}
 		else
 		{

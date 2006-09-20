@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep 20 11:09:10 CEST 2006 - mvidner@suse.cz
+
+- libycp: Improved an error message to say "Missing import?".
+
+-------------------------------------------------------------------
 Tue Sep 19 17:46:43 CEST 2006 - mvidner@suse.cz
 
 - Reduced YCPValue from two pointers to one by removing the
