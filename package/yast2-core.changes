@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Sep 25 16:03:43 CEST 2006 - mvidner@suse.cz
+
+- Removed unneeded BuildRequires.
+- 2.14.1
+
+-------------------------------------------------------------------
 Wed Sep 20 11:09:10 CEST 2006 - mvidner@suse.cz
 
 - libycp: Improved an error message to say "Missing import?".

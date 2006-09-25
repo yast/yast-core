@@ -5,9 +5,8 @@
 # obviously
 BuildRequires:	gcc-c++
 # needed for all yast packages
-BuildRequires:	yast2-devtools
-# used by ycpdoc, and ydoc2
-BuildRequires:	perl-XML-Writer
+# 2.13.26: compensate for missing sgml-skel
+BuildRequires:	yast2-devtools >= 2.13.26
 # used at "make check"
 BuildRequires:	ElectricFence
 # testsuite
@@ -16,8 +15,6 @@ BuildRequires:	dejagnu
 BuildRequires:	doxygen
 # docbook docs
 BuildRequires:	docbook-xsl-stylesheets libxslt 
-# required by docbook-xsl-stylesheets
-BuildRequires:	sgml-skel
 # logging
 BuildRequires:	blocxx-devel
 # libycp includes crypto built-ins
@@ -26,13 +23,6 @@ BuildRequires:  libxcrypt-devel
 BuildRequires:	liby2util-devel
 # probably pulled by liby2util
 BuildRequires:	curl-devel
-## dunno, candidates for removal
-# probably pkg-bindings now
-BuildRequires:	openslp-devel
-# belonged to rpm
-BuildRequires:	popt-devel
-# maybe for hardware-detection
-BuildRequires:	udev 
 
 Summary:	-
 Requires:	netcat
