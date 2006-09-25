@@ -1,7 +1,9 @@
 -------------------------------------------------------------------
-Mon Sep 25 16:03:43 CEST 2006 - mvidner@suse.cz
+Mon Sep 25 18:31:25 CEST 2006 - mvidner@suse.cz
 
 - Removed unneeded BuildRequires.
+- Call xsltproc with --nonet, via $(XSLTPROC_FLAGS).
+- Adjusted testsuite for the Missing import change.
 - 2.14.1
 
 -------------------------------------------------------------------

@@ -15,13 +15,13 @@ html_DATA =			\
 	$(htmlfiles)
 
 html/index.html: $(xmlfiles) wfm.xml
-	XML_CATALOG_FILES=@XML_CATALOG@ @XSLTPROC@ --xinclude @STYLESHEET_HTML@ wfm.xml
+	XML_CATALOG_FILES=@XML_CATALOG@ $(XSLTPROC) $(XSLTPROC_FLAGS) --xinclude @STYLESHEET_HTML@ wfm.xml
 
 
 
 $(xmlfiles) : $(builtin)
 	`pkg-config --variable=ybindir yast2-devtools`/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
-	@XSLTPROC@ @STYLESHEET_YDOC@ $@.tmp > $@
+	$(XSLTPROC) $(XSLTPROC_FLAGS) @STYLESHEET_YDOC@ $@.tmp > $@
 	`pkg-config --variable=ybindir yast2-devtools`/replace_entities $@
 	rm $@.tmp
 

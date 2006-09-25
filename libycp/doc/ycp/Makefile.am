@@ -7,13 +7,13 @@ validate:
 	xmllint --valid --noout ycp.xml
 
 ycp.fo: ycp.xml customize-fo.xsl
-	xsltproc -o ycp.fo customize-fo.xsl ycp.xml
+	$(XSLTPROC) $(XSLTPROC_FLAGS) -o ycp.fo customize-fo.xsl ycp.xml
 
 ycp.pdf: ycp.fo
 	fop -q ycp.fo ycp.pdf
 
 html/index.html: ycp.xml customize-html.xsl
-	xsltproc customize-html.xsl ycp.xml
+	$(XSLTPROC) $(XSLTPROC_FLAGS) customize-html.xsl ycp.xml
 
 html_DATA = $(wildcard html/*)
 
