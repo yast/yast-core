@@ -1,6 +1,6 @@
 [libycp] tests/modules/circularm2.ycp:2 Module 'CircularM2' not found
 [Interpreter] tests/modules/circularm2.ycp:2 Loading module 'CircularM2' failed
 [Parser] tests/modules/circularm2.ycp:2 Can't load module 'CircularM2'.
-[Parser] tests/modules/circularm2.ycp:4 Unknown namespace 'CircularM2'
+[Parser] tests/modules/circularm2.ycp:4 Unknown namespace 'CircularM2'. Missing 'import'?
 [Parser] tests/modules/circularm2.ycp:4 syntax error, unexpected SCANNER_ERROR
 runycp: parser error
