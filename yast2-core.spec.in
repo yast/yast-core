@@ -5,8 +5,7 @@
 # obviously
 BuildRequires:	gcc-c++
 # needed for all yast packages
-# 2.13.26: compensate for missing sgml-skel
-BuildRequires:	yast2-devtools >= 2.13.26
+BuildRequires:	yast2-devtools
 # used at "make check"
 BuildRequires:	ElectricFence
 # testsuite
@@ -15,6 +14,8 @@ BuildRequires:	dejagnu
 BuildRequires:	doxygen
 # docbook docs
 BuildRequires:	docbook-xsl-stylesheets libxslt 
+# catalog: convert URIs to local filenames
+BuildRequires:	sgml-skel
 # logging
 BuildRequires:	blocxx-devel
 # libycp includes crypto built-ins
