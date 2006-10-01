@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sun Oct  1 15:29:24 CEST 2006 - mvidner@suse.cz
+
+- Adapted for upcoming blocxx 2.x changes (by Michael Calmer).
+
+-------------------------------------------------------------------
 Mon Sep 25 18:31:25 CEST 2006 - mvidner@suse.cz
 
 - Removed unneeded BuildRequires.

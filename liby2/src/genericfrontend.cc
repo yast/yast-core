@@ -60,22 +60,42 @@ SIGSEGVhandler (int sig)
 }
 
 
+#include <blocxx/BLOCXX_config.h>
 #include <blocxx/Logger.hpp>
 #include <blocxx/LogMessage.hpp>
+#if BLOCXX_LIBRARY_VERSION >= 5
+#include <blocxx/LogAppender.hpp>
+#else
 #include <blocxx/LogConfig.hpp>
+#endif
 
 /**
  * The YaST logger for LiMaL framework. It's just a wrapper around
  * the standard YaST logging mechanism.
  */
+#if BLOCXX_LIBRARY_VERSION >= 5
+class YaSTLogger : public blocxx::LogAppender
+#else
 class YaSTLogger : public blocxx::Logger
+#endif
 {
 public:
+	virtual ~YaSTLogger() {};
+
 	/**
 	 * Constructor. YaST will try to log every message level,
 	 * because we filter on our own.
 	 */
+#if BLOCXX_LIBRARY_VERSION >= 5
+	YaSTLogger() : blocxx::LogAppender(
+			blocxx::LogAppender::ALL_COMPONENTS,
+			blocxx::LogAppender::ALL_CATEGORIES,
+			blocxx::LogAppender::STR_TTCC_MESSAGE_FORMAT
+		)
+	{}
+#else
         YaSTLogger() : blocxx::Logger ("YaST",blocxx::E_ALL_LEVEL) {}
+#endif
 
 	/**
 	 * The logging message processing. The method converts the
@@ -85,13 +105,25 @@ public:
 	 *
 	 * @param m	the message to be logged
 	 */
+#if BLOCXX_LIBRARY_VERSION >= 5
+        virtual void doProcessLogMessage(const blocxx::String    & f,
+	                                 const blocxx::LogMessage& m) const
+	{
+	    (void)f;
+#else
         virtual void doProcessLogMessage(const blocxx::LogMessage& m) const
 	{
+#endif
 	    loglevel_t level = LOG_DEBUG;
 	    if (m.category == blocxx::Logger::STR_FATAL_CATEGORY 
 		|| m.category == blocxx::Logger::STR_ERROR_CATEGORY)
 	    {
 		level = LOG_ERROR;
+#if BLOCXX_LIBRARY_VERSION >= 5
+	    } else if (m.category == blocxx::Logger::STR_WARNING_CATEGORY)
+	    {
+		level = LOG_WARNING;
+#endif
 	    } else if (m.category == blocxx::Logger::STR_INFO_CATEGORY)
 	    {
 		level = LOG_MILESTONE;
@@ -100,7 +132,7 @@ public:
 	    y2_logger(level,m.component.c_str ()
 		,m.filename,m.fileline,m.methodname,m.message.c_str ());
 	}
-
+#if BLOCXX_LIBRARY_VERSION <= 4
 	/**
 	 * Clone this logger - create a new instance as a copy
 	 * of this one and return a reference to the instance.
@@ -109,11 +141,27 @@ public:
 	{
     	    return blocxx::LoggerRef(new YaSTLogger(*this));
 	}
+#endif
 };
 
+// YaSTLogger redirection factory for BloCxx/LiMaL
+struct logger_initializer
+{
+	logger_initializer()
+	{
+#if BLOCXX_LIBRARY_VERSION >= 5
+		blocxx::LogAppender::setDefaultLogAppender(
+			blocxx::LogAppenderRef(new YaSTLogger())
+		);
+#else
+		blocxx::Logger::setDefaultLogger(
+			blocxx::LoggerRef(new YaSTLogger())
+		);
+#endif
+	}
+};
+static logger_initializer initialize_logger;
 
-// create a blocxx::LoggerRef used by YaST
-blocxx::LoggerRef logger(new YaSTLogger());
 
 int
 main (int argc, char **argv)
@@ -151,10 +199,6 @@ main (int argc, char **argv)
 	print_usage();
 	exit(5);
     }
-
-    // register the LiMaL logger
-    blocxx::Logger::setDefaultLogger(logger);
-  
 
     // Scan all options for -l/--logfile. They must be honored BEFORE
     // the logger is used the first time.
