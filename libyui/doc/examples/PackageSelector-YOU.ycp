@@ -1,6 +1,6 @@
 // YOU mode
 {
-    Pkg::SourceCreate( "http://armstrong.suse.de/download/Code/10/update/i386.ro/", "/" );
+    Pkg::SourceCreate( "http://you.suse.de/pub/suse/update/10.1/", "/" );
 
     if ( true )
     {

@@ -1,14 +1,14 @@
 // Full-fledged pattern selection
 {
     textdomain "bogus";
-    
+
     // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.1-Beta3/i386/CD1/", "" );
     Pkg::SourceCreate( "file:/srv/sles-10-i386/CD1/", "" );
-    
+
     void detailedSelection()
     {
 	// Open empty dialog for instant feedback
-	
+
 	UI::OpenDialog(`opt(`defaultsize),
 		       `ReplacePoint(`id( `rep),
 				     `Label( "Reading package database..." )
@@ -16,24 +16,24 @@
 		       );
 
 	// This will take a while: Detailed package data are retrieved
-	// while the package manager is initialized  
+	// while the package manager is initialized
 	UI::ReplaceWidget(`rep, `PackageSelector(`id(`packages ), "/dev/fd0" ) );
-		
+
 	symbol input = (symbol) UI::RunPkgSelection(`id(`packages ) );
 	y2milestone( "Package selector returned  %1", input );
 	UI::CloseDialog();
-	    
+
     }
 
 
-    
+
     if ( ! UI::HasSpecialWidget(`PatternSelector ) )
     {
 	detailedSelection();	// Fallback: Do detailed selection right away
 	return;
     }
 
-    
+
     UI::OpenDialog(`opt(`defaultsize ),
 		   `Wizard(`back,   "",
 			   `cancel, "&Cancel",
@@ -64,13 +64,16 @@
     UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/yast-software.png" ) );
     UI::WizardCommand(`SetDialogHeading( "Software Selection" ) );
     UI::WizardCommand(`SetHelpText( help_text ) );
-    
-    Pkg::TargetInit( "/",	// installed system
-		     false ); 	// don't create a new RPM database
+
+    if ( false )
+    {
+	Pkg::TargetInit( "/",		// installed system
+			 false ); 	// don't create a new RPM database
+    }
 
     UI::ReplaceWidget(`id(`contents), `PatternSelector(`id(`patterns ) ) );
 
-    
+
     symbol button = nil;
 
     repeat
@@ -80,8 +83,8 @@
 
 	    if ( button == `details )
 		detailedSelection();
-	    
+
 	} until ( button == `cancel || button == `accept );
-    
+
     UI::CloseDialog();
 }

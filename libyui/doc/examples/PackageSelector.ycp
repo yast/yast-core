@@ -1,8 +1,6 @@
 // Package Selector example
 {
-    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.1-Beta7/i386/CD1/", "" );
-    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.0-RC4/i386/CD1/", "" );
-    // Pkg::SourceCreate( "file:/srv/10.1-i386/CD1/", "" );
+    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.1-DVD9-RC3/i386/DVD1/", "" );
     Pkg::SourceCreate( "file:/srv/10.1-i386/DVD1/", "" );
     // Pkg::SourceCreate( "file:/srv/sles-10-i386/CD1/", "" );
 
