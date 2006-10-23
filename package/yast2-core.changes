@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 23 10:34:25 CEST 2006 - mvidner@suse.cz
+
+- Worked around building with doxygen 1.5.0 by not including
+  liby2util.tag.
+- 2.14.3
+
+-------------------------------------------------------------------
 Sun Oct  1 15:29:24 CEST 2006 - mvidner@suse.cz
 
 - Adapted for upcoming blocxx 2.x changes (by Michael Calmer).
