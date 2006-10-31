@@ -28,6 +28,30 @@
 
 IMPL_BASE_POINTER (Regex_t);
 
+
+TemporaryLocale::TemporaryLocale (int category, const char * locale) {
+    _category = category;
+    _oldlocale = my_setlocale (_category, NULL);
+    if (_oldlocale != NULL)
+	_oldlocale = strdup (_oldlocale);
+    my_setlocale (_category, locale);
+}
+
+TemporaryLocale::~TemporaryLocale () {
+    if (_oldlocale != NULL) {
+	my_setlocale (_category, _oldlocale);
+	free (_oldlocale);
+    }
+}
+
+char * TemporaryLocale::my_setlocale(int category, const char *locale) {
+    // This string may be allocated in static storage.
+    char * ret = setlocale (category, locale);
+    if (ret == NULL)
+	y2error ("Cannot set locale category %d to %s.", category, locale);
+    return ret;
+}
+
 IniParser::~IniParser ()
 {
     // regex deallocation used to be here

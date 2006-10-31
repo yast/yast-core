@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Oct 31 16:50:39 CET 2006 - mvidner@suse.cz
+
+- ini-agent: use C locale when building regular expressions so that
+  A-Z works for Estonian (#177560).
+- 2.14.4
+
+-------------------------------------------------------------------
 Mon Oct 23 10:34:25 CEST 2006 - mvidner@suse.cz
 
 - Worked around building with doxygen 1.5.0 by not including

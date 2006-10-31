@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <regex.h>
+#include <locale.h>
 
 #include <y2util/RepDef.h>
 #include <YCP.h>
@@ -36,6 +37,24 @@ using std::ofstream;
 using std::set;
 
 DEFINE_BASE_POINTER (Regex_t);
+
+#pragma GCC visibility push(hidden)
+
+//! Set and later restore a locale category.
+// It is restored when we go out of scope.
+class TemporaryLocale
+{
+public:
+    TemporaryLocale (int category, const char * locale);
+    ~TemporaryLocale ();
+private:
+    //! call setlocale but log errors
+    char *my_setlocale(int category, const char *locale);
+
+    int _category;
+    char * _oldlocale;
+};
+#pragma GCC visibility pop
 
 /**
  * Wrapper to manage regex_t *
@@ -74,6 +93,9 @@ public:
 	}
 	else
 	{
+	    // #177560: [A-Za-z] excludes some ASCII letters in Estonian
+	    TemporaryLocale tl (LC_ALL, "C");
+
 	    ret = regcomp (&regex, pattern.c_str (),
 			   REG_EXTENDED | (ignore_case ? REG_ICASE : 0));
 	    if (ret)
