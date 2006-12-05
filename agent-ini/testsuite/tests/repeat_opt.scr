@@ -1,0 +1,20 @@
+.
+
+`ag_ini(
+  `IniAgent("tests/repeat_opt.in.test",
+    $[
+      "options" : [ "repeat_names" ],
+      "comments": [ "^[ \t]*;.*", ";.*", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "[ \t]*\\[[ \t]*(.*[^ \t])[ \t]*\\][ \t]*", "[%s]" ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s=%s"],
+      ],
+    ],
+    ]
+  )
+)

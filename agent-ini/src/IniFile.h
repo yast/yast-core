@@ -493,8 +493,9 @@ public:
      * @param comment comment
      * @param rb read-by
      * @param wb rewrite-by. if -2 (default), it is not changed
+     * @return a reference to the section
      */
-    void initSection (const string&name,const string&comment,int rb, int wb=-2);
+    IniSection& initSection (const string&name,const string&comment,int rb, int wb=-2);
     /**
      * This function has very special purpose, it ensures that top-section
      * delimiter is not written when saving multiple files.
@@ -524,6 +525,7 @@ public:
     virtual void clean();
 
     /**
+     * OBSOLETE, to be removed.
      * Gets section on a path. Recursive. Attention! This function
      * aborts when it doesn't find the section! Use with care!
      * (Used only by IniParser::parse_helper)
@@ -533,6 +535,7 @@ public:
      */
     IniSection& findSection(const vector<string>&path, int from = 0);
     /**
+     * OBSOLETE, to be removed.
      * If currently parsed end-section-tag hasn't matched currently
      * processed section by name, we need to find the best possible match
      * by type (read_by). Hence we

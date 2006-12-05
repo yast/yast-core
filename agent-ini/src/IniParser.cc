@@ -537,8 +537,8 @@ int IniParser::parse_helper(IniSection&ini)
     string line;
     size_t i;
 
-    // stack of section names
-    vector<string>path;
+    // stack of open sections, innermost at front
+    list<IniSection *> open_sections;
 
     //
     // read line
@@ -590,7 +590,7 @@ int IniParser::parse_helper(IniSection&ini)
 			state = 0;
 			val = val + (join_multiline ? " " : "\n") + m[1];
 			line = m.rest;
-			if (!path.size())
+			if (open_sections.empty ())
 			    {   // we are in toplevel section, going deeper
 				// check for toplevel values allowance
 				if (!global_values)
@@ -598,10 +598,9 @@ int IniParser::parse_helper(IniSection&ini)
 				else
 				    ini.initValue (key, val, comment, matched_by);
 			    }
-			else
-			    {
-				ini.findSection(path).initValue(key, val, comment, matched_by);
-			    }
+			else {
+			    open_sections.front()->initValue(key, val, comment, matched_by);
+			}
 			comment = "";
 		    }
 		    else
@@ -628,25 +627,28 @@ int IniParser::parse_helper(IniSection&ini)
 			if (i < sections.size ())
 			    {
 				// section begin found !!! check conditions
-				if (path.size())
+				if (!open_sections.empty())
 				    {   // there were some sections
 					// is there need to close previous section?
-					if (sectionNeedsEnd(ini.findSection(path).getReadBy()))
+					IniSection * cur = open_sections.front();
+					if (sectionNeedsEnd(cur->getReadBy()))
 					    {
 						if(no_nested_sections)
 						    {
 							scanner_error ("Section %s started but section %s is not finished",
 								 found.c_str(),
-								 path[path.size()-1].c_str());
-							path.pop_back();
+								 cur->getName());
+							open_sections.pop_front();
 						    }
 					    }
 					else
-					    path.pop_back();
+					    open_sections.pop_front();
 				    }
-				if (!path.size())
+
+				IniSection * parent = NULL;
+				if (open_sections.empty())
 				    {   // we are in toplevel section, going deeper
-					ini.initSection (found, comment, i);
+					parent = &ini;
 				    }
 				else
 				    {
@@ -654,11 +656,14 @@ int IniParser::parse_helper(IniSection&ini)
 					    scanner_error ("Attempt to create nested section %s.", found.c_str ());
 					else
 					{
-					    ini.findSection(path).initSection(found, comment, i);
+					    parent = open_sections.front();
 					}
 				    }
+
+				if (parent)
+				    open_sections.push_front (& parent->initSection (found, comment, i));
+
 				comment = "";
-				path.push_back(found);
 			    }
 		    } // check for section begin
 
@@ -687,51 +692,55 @@ int IniParser::parse_helper(IniSection&ini)
 				// comment
 				if (!comment.empty ())
 				    {
-					if (!path.size())
+					if (open_sections.empty())
 					    ini.setEndComment (comment.c_str ());
 					else
 					    {
-						ini.findSection(path).setEndComment (comment.c_str ());
+						open_sections.front()->setEndComment (comment.c_str ());
 					    }
 					comment = "";
 				    }
-				if (!path.size ())
+				if (open_sections.empty ())
 				    scanner_error ("Nothing to close.");
-				else if (!found.empty ())
-				    {   // there is a subexpression
-					int len = path.size ();
-					int j;
+				else {
+				    list<IniSection *>::iterator
+					b = open_sections.begin(),
+					e = open_sections.end(),
+					it;
 
-					for (j = len - 1; j >= 0;j--)
-					    if (path[j] == found)
-					    {
-						path.resize (j);
+				    string name_to_close = found;
+				    bool complain = false;
+
+				    if (!name_to_close.empty ())
+				    {   // there is a subexpression (section name)
+					for (it = b; it != e; ++it) {
+					    if ((*it)->getName() == name_to_close)
 						break;
-					    }
-				    	if (j == -1)
-					{   // we did not find, so close the first that needs it
-					    int m = ini.findEndFromUp (path, i);
-					    int toclose = len - 1;
-					    if (-1 != m)
-					    {
-						toclose = m - 1;
-					    }
-					    scanner_error ("Unexpected closing %s. Closing section %s.", found.c_str(), path[toclose].c_str());
-					    path.resize (toclose);
+					}
+
+					if (it == e) {
+					    // no match by name, try matching by type
+					    name_to_close = "";
+					    complain = true;
 					}
 				    }
-				else
-				    {   // there is no subexpression
-					int m = ini.findEndFromUp (path, i);
-					if (-1 != m) // we have perfect match
-					{
-					    path.resize(m - 1);
+				    
+				    if (name_to_close.empty ()) {
+					// there was no name or we did not find the specified one
+					for (it = b; it != e; ++it) {
+					    if ((*it)->getReadBy() == i)
+						break;
 					}
-					else if ((i = path.size ()) > 0)
-					{
-					    path.resize (i - 1);
+					if (it == e) {
+					    // not even a match by type
+					    it = b;
 					}
+
+					if (complain)
+					    scanner_error ("Unexpected closing %s. Closing section %s.", found.c_str(), (*it)->getName());
 				    }
+				    open_sections.erase (b, ++it);
+				}
 			    }
 		    }
 
@@ -753,7 +762,7 @@ int IniParser::parse_helper(IniSection&ini)
 			}
 			if (i != params.size ())
 			    {
-				if (!path.size())
+				if (open_sections.empty())
 				    {   // we are in toplevel section, going deeper
 					// check for toplevel values allowance
 					if (!global_values)
@@ -763,7 +772,7 @@ int IniParser::parse_helper(IniSection&ini)
 				    }
 				else
 				    {
-					ini.findSection(path).initValue(key, val, comment, i);
+					open_sections.front()->initValue(key, val, comment, i);
 				    }
 				comment = "";
 			    }

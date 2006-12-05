@@ -105,7 +105,7 @@ void IniSection::initValue (const string&key,const string&val,const string&comme
     ivalues.insert (IniEntryIndex::value_type (k, --container.end ()));
 
 }
-void IniSection::initSection (const string&name,const string&comment,int rb, int wb)
+IniSection& IniSection::initSection (const string&name,const string&comment,int rb, int wb)
 {
     string k = ip->changeCase (name);
     
@@ -141,6 +141,8 @@ void IniSection::initSection (const string&name,const string&comment,int rb, int
     container.push_back (ce);
     // index it
     isections.insert (IniSectionIndex::value_type (k, --container.end ()));
+    // return reference to the new copy(!)
+    return container.back().s();
 }
 
 IniSection& IniSection::findSection(const vector<string>&path, int from)

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec  5 10:54:41 CET 2006 - mvidner@suse.cz
+
+- ini-agent with repeat_names: do not merge sections with same name
+  when parsing. They can be accessed using .all. (#224414)
+
+-------------------------------------------------------------------
 Tue Dec  5 08:45:30 CET 2006 - mvidner@suse.cz
 
 - Do not abort if a nonterm is passed to `ReplacePoint or `*Squash
