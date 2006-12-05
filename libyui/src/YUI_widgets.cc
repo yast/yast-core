@@ -342,7 +342,7 @@ YWidget * YUI::createReplacePoint( YWidget * parent, YWidgetOpt & opt, const YCP
 {
     if ( term->size() != argnr+1 ||
 	 term->value( argnr ).isNull() ||
-	 term->value( argnr )->isVoid()	 )
+	 ! term->value( argnr )->isTerm() )
     {
 	y2error( "Invalid arguments for the ReplacePoint widget: %s",
 		 term->toString().c_str() );
@@ -889,7 +889,9 @@ YWidget * YUI::createSquash( YWidget * parent, YWidgetOpt & opt, const YCPTerm &
 			     int argnr, YRadioButtonGroup * rbg,
 			     bool hsquash, bool vsquash )
 {
-    if ( term->size() != argnr+1 )
+    if ( term->size() != argnr+1 ||
+	 term->value( argnr ).isNull() ||
+	 ! term->value( argnr )->isTerm() )
     {
 	y2error( "%s: The squash widgets take one widget as argument",
 		 term->toString().c_str() );

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Dec  5 08:45:30 CET 2006 - mvidner@suse.cz
+
+- Do not abort if a nonterm is passed to `ReplacePoint or `*Squash
+  (#225815).
+- 2.15.0
+
+-------------------------------------------------------------------
 Tue Oct 31 16:50:39 CET 2006 - mvidner@suse.cz
 
 - ini-agent: use C locale when building regular expressions so that
