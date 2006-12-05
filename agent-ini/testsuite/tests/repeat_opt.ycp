@@ -1,0 +1,7 @@
+/*
+ * Preserve duplications. See also #224414.
+ */
+{
+    SCR::Write (., "force");
+    return SCR::Dir (.s);
+}

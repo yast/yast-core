@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Dec  5 10:54:41 CET 2006 - mvidner@suse.cz
+
+- ini-agent with repeat_names: do not merge sections with same name
+  when parsing. They can be accessed using .all. (#224414)
+- 2.13.31
+
+-------------------------------------------------------------------
 Tue Sep 19 15:46:58 CEST 2006 - lslezak@suse.cz
 
 - ag_background - added missing .open_output_err path handler
