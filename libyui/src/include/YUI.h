@@ -322,6 +322,7 @@ public:
 							  const YCPString& unicode_map,
 							  const YCPString& encoding );
     void evaluateSetKeyboard				();
+    YCPInteger evaluateRunInTerminal			( const YCPString& module);
     YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
     void evaluateSetFunctionKeys			( const YCPMap & new_keys );
     void evaluateSetLanguage				( const YCPString& lang, const YCPString& encoding = YCPNull() );
@@ -810,6 +811,15 @@ protected:
 				     const YCPString & encoding );
 
     virtual YCPValue setKeyboard();
+
+
+    /**
+     * UI-specific runInTerminal() function.
+     * Returns (integer) return code of external program it spawns
+     * in the same terminal
+    */
+
+    virtual int runInTerminal( const YCPString & module );  	
 
     /**
      * UI-specific getDisplayInfo() functions.

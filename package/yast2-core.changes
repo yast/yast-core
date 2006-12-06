@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Dec  6 17:09:36 CET 2006 - kmachalkova@suse.cz
+
+- Added RunInTerminal UI builtin for running external programs from
+  ncurses UI (#148683, #221254, #222547)
+- 2.13.32
+
+-------------------------------------------------------------------
 Tue Dec  5 10:54:41 CET 2006 - mvidner@suse.cz
 
 - ini-agent with repeat_names: do not merge sections with same name
