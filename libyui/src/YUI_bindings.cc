@@ -101,6 +101,14 @@ UISetKeyboard()
     return YCPVoid();
 }
 
+static YCPValue
+UIRunInTerminal( const YCPString &module )
+{
+    if (YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateRunInTerminal( module );
+    else
+        return YCPVoid();
+}
 
 static YCPValue
 UIGetLanguage( const YCPBoolean & strip )
@@ -649,6 +657,7 @@ UI::UI()
 	    { "SetProductName",		"void (string)",					(void*) UISetProductName 	},
 	    { "SetConsoleFont",		"void (string, string, string, string, string)",	(void*) UISetConsoleFont 	},
 	    { "SetKeyboard",		"void ()",						(void*) UISetKeyboard 		},
+	    { "RunInTerminal",		"integer (string)",					(void*) UIRunInTerminal		},
 	    { "BusyCursor",		"void ()",						(void*) UIBusyCursor 		},
 	    { "NormalCursor",		"void ()",						(void*) UINormalCursor 		},
 	    { "RedrawScreen",		"void ()",						(void*) UIRedrawScreen 		},

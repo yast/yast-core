@@ -51,6 +51,7 @@
 #define YUIBuiltin_SetFocus			"SetFocus"
 #define YUIBuiltin_SetFunctionKeys		"SetFunctionKeys"
 #define YUIBuiltin_SetKeyboard			"SetKeyboard"
+#define YUIBuiltin_RunInTerminal		"RunInTerminal"
 #define YUIBuiltin_SetLanguage			"SetLanguage"
 #define YUIBuiltin_SetModulename		"SetModulename"
 #define YUIBuiltin_SetProductName		"SetProductName"

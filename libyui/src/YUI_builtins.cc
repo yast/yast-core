@@ -230,6 +230,37 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
 
 
 /**
+ * @builtin RunInTerminal
+ * @short runs external program in the same terminal
+ * @description
+ * Use this builtin if you want to run external program from ncurses UI
+ * as a separate process. It saves current window layout to the stack and
+ * runs the external program in the same terminal. When done, it restores   
+ * the original window layout and returns exit code of the external program
+ * (an integer value returned by system() call). When called from Qt UI,
+ * an error message is printed to the log.
+ * @param string external_program
+ * return integer
+ *
+ * @usage RunInTerminal("/bin/bash")
+ */
+
+YCPInteger YUI::evaluateRunInTerminal(const YCPString & module )
+{ 
+    int ret = runInTerminal( module ); 
+
+    return YCPInteger ( ret );
+
+}
+
+int YUI::runInTerminal ( const YCPString & module ) 
+{
+    y2error("Not in text-mode: Cannot run external program in terminal."); 	
+   
+    return -1;
+}
+
+/**
  * @builtin SetKeyboard
  * @short Sets Keyboard
  *
