@@ -1,13 +1,13 @@
 // Package Selector example
 {
     Pkg::SourceCreate( "file:/mounts/machcd/CDs/openSUSE-10.2-RC5-FTP-OSS", "" );
+    boolean useInstalledSystem = true;
 
-
-if ( false )
-{
-    Pkg::TargetInit( "/",	// installed system
-		     false ); 	// don't create a new RPM database
-}
+    if ( useInstalledSystem )
+    {
+	Pkg::TargetInit( "/",		// installed system
+			 false ); 	// don't create a new RPM database
+    }
     
     UI::OpenDialog(`opt(`defaultsize),
 		   `PackageSelector(`id(`selector), "/dev/fd0" ) );
