@@ -1,6 +1,6 @@
 // Package Selector example
 {
-    Pkg::SourceCreate( "file:/mounts/machcd2/CDs/SUSE-Linux-10.1-RC5-DVD-Retail-i386/DVD1", "" );
+    Pkg::SourceCreate( "file:/mounts/machcd/CDs/openSUSE-10.2-RC5-FTP-OSS", "" );
 
 
 if ( false )
