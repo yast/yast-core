@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jan  5 20:57:57 CET 2007 - sh@suse.de
+
+- Added CheckBoxFrame widget for feature #5673 
+
+-------------------------------------------------------------------
 Wed Dec  6 17:09:36 CET 2006 - kmachalkova@suse.cz
 
 - Added RunInTerminal UI builtin for running external programs from

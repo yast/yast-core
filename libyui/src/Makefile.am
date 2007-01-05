@@ -22,6 +22,7 @@ libyui_la_SOURCES =				\
 	YAlignment.cc				\
 	YBarGraph.cc				\
 	YCheckBox.cc				\
+	YCheckBoxFrame.cc			\
 	YColoredLabel.cc			\
 	YDate.cc				\
 	YDumbTab.cc				\

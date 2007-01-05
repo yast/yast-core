@@ -14,6 +14,7 @@ pkginclude_HEADERS =				\
 	YAlignment.h				\
 	YBarGraph.h				\
 	YCheckBox.h				\
+	YCheckBoxFrame.h			\
 	YColoredLabel.h				\
 	YDumbTab.h				\
 	YComboBox.h				\
