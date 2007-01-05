@@ -54,7 +54,7 @@ public:
     YCPValue queryWidget( const YCPSymbol & property );
 
     /**
-     * Set the text in the entry to a new value
+     * Set the check box on or off
      */
     virtual void setValue( const YCPValue & checked ) = 0;
 
