@@ -97,9 +97,6 @@ public:
      **/
     bool invertAutoEnable() const { return _invertAutoEnable; }
 
-
-protected:
-
     /**
      * Handle enabling/disabling of child widgets based on 'isChecked' (the
      * current status of the check box) and autoEnable() and
@@ -107,6 +104,9 @@ protected:
      *
      * Derived classes should call this when the check box status changes
      * rather than try to handle it on their level.
+     *
+     * This method also needs to be called after new child widgets are added to
+     * establish the initial enabled or disabled state of the child widgets.
      **/
     void handleChildrenEnablement( bool isChecked );
 

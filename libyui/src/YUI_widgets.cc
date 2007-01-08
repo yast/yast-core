@@ -42,6 +42,7 @@
 
 #include "YAlignment.h"
 #include "YComboBox.h"
+#include "YCheckBoxFrame.h"
 #include "YMenuButton.h"
 #include "YRadioButton.h"
 #include "YRadioButtonGroup.h"
@@ -1490,8 +1491,10 @@ YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * @arg		boolean checked whether the check box should start checked
  * @arg		term child the child widgets for frame content - typically
  *		`VBox(...) or `HBox(...)
+ * @option	noAutoEnable do not enable/disable frame children upon status change
+ * @option	invertAutoAnable disable frame children if check box is checked
  * @usage	`CheckBoxFrame( `id( `custom), "&Custom", true, `VBox(`TextEntry(...), ... )
- * @examples	CheckBoxFrame1.ycp
+ * @examples	CheckBoxFrame1.ycp CheckBoxFrame2.ycp CheckBoxFrame3.ycp
  *
  * @description
  *
@@ -1512,11 +1515,6 @@ YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
  * Please note that unlike YCheckBox this widget does not support tri-state -
  * it is always either on or off.
  */
-
-// Currently not supported:
-//
-// @option	noAutoEnable do not enable/disable frame children upon status change
-// @option	invertAutoAnable disable frame children if check box is checked
 
 YWidget * YUI::createCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 				    const YCPTerm & term, const YCPList & optList, int argnr,
@@ -1542,17 +1540,11 @@ YWidget * YUI::createCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
     {
 	if ( optList->value(o)->isSymbol() )
 	{
-#if 0
-	    // `opt(`invertAutoEnable) and `opt(`noAutoEnable) are currently not supported:
-	    // the underlying QGroupBox widget forces enabling/disabling
-	    // -- for future use ---
 	    string sym = optList->value(o)->asSymbol()->symbol();
 
 	    if	    ( sym  == YUIOpt_invertAutoEnable	) opt.invertAutoEnable.setValue( true );
 	    else if ( sym  == YUIOpt_noAutoEnable	) opt.noAutoEnable.setValue( true );
-	    else
-#endif
-		logUnknownOption( term, optList->value(o) );
+	    else logUnknownOption( term, optList->value(o) );
 	}
 	else logUnknownOption( term, optList->value(o) );
     }
@@ -1563,7 +1555,8 @@ YWidget * YUI::createCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 	opt.invertAutoEnable.setValue( false );
     }
 
-    YContainerWidget * checkBoxFrame = createCheckBoxFrame( parent, opt, label, checked );
+    YCheckBoxFrame * checkBoxFrame = dynamic_cast<YCheckBoxFrame *>
+	( createCheckBoxFrame( parent, opt, label, checked ) );
 
     if ( checkBoxFrame )
     {
@@ -1573,6 +1566,7 @@ YWidget * YUI::createCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 	if ( child )
 	{
 	    checkBoxFrame->addChild( child );
+	    checkBoxFrame->handleChildrenEnablement( checked );
 	}
 	else // Error creating the children tree
 	{

@@ -163,11 +163,15 @@ void YContainerWidget::setChildrenEnabling( bool enabled )
 	    if ( container )
 	    {
 		// y2debug( "Recursing into %s", container->debugLabel().c_str() );
+		container->setEnabling( enabled );
 		container->setChildrenEnabling( enabled );
 	    }
 	}
 	else
+	{
+	    // y2debug( "%s %s", enabled ? "Enabling" : "Disabling", children[i]->debugLabel().c_str() );
 	    children[i]->setEnabling( enabled );
+	}
     }
 }
 

@@ -59,6 +59,10 @@ void YCheckBoxFrame::handleChildrenEnablement( bool enabled )
 	if ( invertAutoEnable() )
 	    enabled = ! enabled;
 
+	y2debug( "%s child widgets of %s %s",
+		 enabled ? "Enabling" : "Diabling",
+		 widgetClass(), debugLabel().c_str() );
+	
 	setChildrenEnabling( enabled );
     }
 }
