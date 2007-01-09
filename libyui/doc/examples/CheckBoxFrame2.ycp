@@ -19,7 +19,7 @@
 						      )
 				     ),
 			 `PushButton("&OK")
-p			 )
+			 )
 		   );
     UI::UserInput();
     UI::CloseDialog();
