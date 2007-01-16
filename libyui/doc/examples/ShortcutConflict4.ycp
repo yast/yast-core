@@ -1,6 +1,10 @@
+// Demo for shortcut checking:
+// Deliberately generate a shortcut conflict.
+//
+// This kind of conflict cannot be resolved.
+// Only one of the Widgets with "&A" will get a shortcut at all.
 {
-    // Demo for shortcut checking:
-    // Deliberately generate a shortcut conflict.
+    
     
     UI::OpenDialog(
 	       `VBox(
@@ -13,20 +17,10 @@
 
 
     any button = nil;
-    integer count = 3;
     
     do
     {
 	button = UI::UserInput();
-
-	if ( button != `quit )
-	{
-	    count = count + 1;
-	    string label = sformat( "&Do Something %1...", count );
-	    y2milestone( "Changing button label for button #%1 to \"%2\"", button, label );
-	    UI::ChangeWidget( `id( button ), `Label, label );
-	}
-	
     } while ( button != `quit );
 
 	
