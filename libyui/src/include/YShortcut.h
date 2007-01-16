@@ -42,16 +42,32 @@ public:
     virtual ~YShortcut();
 
     /**
+     * 
+     **/
+    enum { None = 0 };
+
+    /**
      * Returns the YWidget this shortcut data belong to.
      **/
     YWidget * 	widget() { return _widget; }
-
     
     /**
      * Returns the textual representation of the widget class of the widget
      * this shortcut data belongs to.
      **/
     const char *widgetClass() { return widget()->widgetClass(); }
+
+    /**
+     * Returns 'true' if the widget that is associated with this shortcut is a
+     * button (derived from YPushButton).
+     **/
+    bool isButton() const { return _isButton; }
+
+    /**
+     * Returns 'true' if the widget that is associated with this shortcut is a
+     * wizard button (one of the navigation buttons of a wizard).
+     **/
+    bool isWizardButton() const { return _isWizardButton; }
 
     /**
      * Returns the complete shortcut string ( which may or may not contain "& " ),
@@ -89,9 +105,15 @@ public:
     char shortcut();
 
     /**
-     * Set ( override ) the shortcut character.
+     * Set (override) the shortcut character.
      **/
     void setShortcut( char new_shortcut );
+
+    /**
+     * Clear the shortcut: Override the shortcut character with nothing.
+     * This may happen if a conflict cannot be resolved.
+     **/
+    void clearShortcut();
 
     /**
      * Query the internal 'conflict' marker. This class doesn't care about that
@@ -173,6 +195,8 @@ protected:
     int		_shortcut;	// int to enable initializing with invalid char ( -1 )
     
     bool	_conflict;
+    bool	_isButton;
+    bool	_isWizardButton;
     int		_distinctShortcutChars;
 };
 
