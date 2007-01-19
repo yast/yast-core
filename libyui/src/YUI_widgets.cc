@@ -42,6 +42,7 @@
 
 #include "YAlignment.h"
 #include "YComboBox.h"
+#include "YCheckBoxFrame.h"
 #include "YMenuButton.h"
 #include "YRadioButton.h"
 #include "YRadioButtonGroup.h"
@@ -194,6 +195,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
 
     if	    ( s == YUIWidget_Bottom		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignUnchanged,	YAlignEnd	);
     else if ( s == YUIWidget_Frame		)	w = createFrame			( p, opt, term, ol, n, rbg );
+    else if ( s == YUIWidget_CheckBoxFrame	)	w = createCheckBoxFrame		( p, opt, term, ol, n, rbg );
     else if ( s == YUIWidget_HBox		)	w = createLBox			( p, opt, term, ol, n, rbg, YD_HORIZ );
     else if ( s == YUIWidget_HCenter		)	w = createAlignment		( p, opt, term, ol, n, rbg, YAlignCenter, 	YAlignUnchanged );
     else if ( s == YUIWidget_HSquash		)	w = createSquash		( p, opt, term, ol, n, rbg, true,  false );
@@ -397,7 +399,7 @@ YWidget * YUI::createEmpty( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
 	return 0;
     }
     rejectAllOptions( term,optList );
-    
+
     if ( hstretchable ) opt.isHStretchable.setValue( true );
     if ( vstretchable ) opt.isVStretchable.setValue( true );
 
@@ -578,9 +580,9 @@ YWidget * YUI::createAlignment( YWidget * parent, YWidgetOpt & opt, const YCPTer
 
 	if ( ! background_pixmap.empty() )
 	    alignment->setBackgroundPixmap( background_pixmap );
-	
+
 	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
-	
+
 	if ( child )
 	    alignment->addChild( child );
 	else
@@ -619,7 +621,7 @@ YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
     float	minWidth	= 0.0;
     float	minHeight	= 0.0;
     YCPTerm	childTerm	= YCPNull();
-    
+
     if ( hor && vert )
     {
 	if ( argc != 3 ||
@@ -627,7 +629,7 @@ YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
 	     ! isNum ( term->value( argnr+1 ) ) ||
 	     ! term->value( argnr+2 )->isTerm() )
 	{
-	
+
 	    y2error( "Bad arguments for %s - expected `%s( minWidth, minHeight, child ), not %s",
 		     YUIWidget_MinSize, YUIWidget_MinSize, term->toString().c_str() );
 	    return 0;
@@ -643,7 +645,7 @@ YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
 	     ! isNum ( term->value( argnr   ) ) ||
 	     ! term->value( argnr+1 )->isTerm() )
 	{
-	
+
 	    y2error( "Bad arguments for MinWidth|Height - expected ( minSize, child ), not %s",
 		     term->toString().c_str() );
 	    return 0;
@@ -651,11 +653,11 @@ YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
 
 	if   ( hor )	minWidth  = toFloat( term->value( argnr ) );
 	else		minHeight = toFloat( term->value( argnr ) );
-	
+
 	childTerm = term->value( argnr+1 )->asTerm();
     }
 
-    
+
     rejectAllOptions( term, optList );
     YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, YAlignUnchanged, YAlignUnchanged ) );
     assert( alignment );
@@ -665,9 +667,9 @@ YWidget * YUI::createMinSize( YWidget * parent, YWidgetOpt & opt, const YCPTerm 
 	alignment->setParent( parent );
 	alignment->setMinWidth ( deviceUnits( YD_HORIZ, minWidth  ) );
 	alignment->setMinHeight( deviceUnits( YD_VERT,  minHeight ));
-	
+
 	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
-	
+
 	if ( child )
 	{
 	    alignment->addChild( child );
@@ -717,7 +719,7 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
     float 	rightMargin	= 0.0;
     float 	topMargin 	= 0.0;
     float	bottomMargin	= 0.0;
-    
+
     bool 	paramOK		= false;
     int		argc		= term->size() - argnr;
     YCPTerm	childTerm	= YCPNull();
@@ -737,13 +739,13 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
     if ( ! paramOK && argc == 5 ) // `MarginBox(`leftMargin(99), `rightMargin(99), `topMargin(99), `bottomMargin(99), child );
     {
  	paramOK = term->value( argnr+4)->isTerm();
-	
+
 	for ( int i=argnr; i < argnr+4 && paramOK; i++ )
 	{
 	    if ( term->value(i)->isTerm() )
 	    {
 		YCPTerm marginTerm = term->value(i)->asTerm();
-		
+
 		if ( marginTerm->size() == 1 && isNum( marginTerm->value(0) ) )
 		{
 		    float margin = toFloat( marginTerm->value(0) );
@@ -764,7 +766,7 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
 	if ( paramOK )
 	    childTerm  = term->value( argnr+4 )->asTerm();
     }
-    
+
     if ( ! paramOK )
     {
 	y2error( "Bad MarginBox parameters: %s",
@@ -774,7 +776,7 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
 
 	return 0;
     }
-    
+
 
     rejectAllOptions( term, optList );
     YAlignment *alignment = dynamic_cast<YAlignment *> ( createAlignment( parent, opt, YAlignUnchanged, YAlignUnchanged ) );
@@ -783,12 +785,12 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
     if ( alignment )
     {
 	alignment->setParent( parent );
-	
+
 	alignment->setLeftMargin  ( deviceUnits( YD_HORIZ, leftMargin   ) );
 	alignment->setRightMargin ( deviceUnits( YD_HORIZ, rightMargin  ) );
 	alignment->setTopMargin   ( deviceUnits( YD_VERT,  topMargin    ) );
 	alignment->setBottomMargin( deviceUnits( YD_VERT,  bottomMargin ) );
-	
+
 	YWidget *child = createWidgetTree( alignment, rbg, childTerm );
 	if ( child ) alignment->addChild( child );
 	else
@@ -797,7 +799,7 @@ YWidget * YUI::createMarginBox( YWidget * parent, YWidgetOpt & opt, const YCPTer
 	    return 0;
 	}
     }
-    
+
     return alignment;
 }
 
@@ -835,7 +837,7 @@ YWidget * YUI::createFrame( YWidget * parent, YWidgetOpt & opt, const YCPTerm & 
 	return 0;
     }
 
-    rejectAllOptions( term,optList );
+    rejectAllOptions( term, optList );
     YCPString label = term->value( argnr++ )->asString();
     YContainerWidget *frame = createFrame( parent, opt, label );
 
@@ -1480,6 +1482,102 @@ YWidget * YUI::createCheckBox( YWidget * parent, YWidgetOpt & opt, const YCPTerm
     YCPBoolean checked( false );
     if ( s == 2 ) checked = term->value( argnr+1 )->asBoolean();
     return createCheckBox( parent, opt, term->value( argnr )->asString(), checked->value() );
+}
+
+
+/**
+ * @widget	CheckBoxFrame
+ * @short	Frame with clickable on/off toggle button
+ * @class	YCheckBoxFrame
+ * @arg		string label the text describing the check box
+ * @arg		boolean checked whether the check box should start checked
+ * @arg		term child the child widgets for frame content - typically
+ *		`VBox(...) or `HBox(...)
+ * @option	noAutoEnable do not enable/disable frame children upon status change
+ * @option	invertAutoAnable disable frame children if check box is checked
+ * @usage	`CheckBoxFrame( `id( `custom), "&Custom", true, `VBox(`TextEntry(...), ... )
+ * @examples	CheckBoxFrame1.ycp CheckBoxFrame2.ycp CheckBoxFrame3.ycp
+ *
+ * @description
+ *
+ * This is a combination of the check box widget and the frame widget:
+ * A frame that has a check box where a simple frame would have its frame title.
+ *
+ * By default, the frame content (the child widgets) get disabled if the check box
+ * is set to "off" (unchecked) and enabled if the check box is set to "on" (cheched).
+ *
+ * `opt(`invertAutoEnable) inverts this behaviour: It makes YCheckBoxFrame
+ * disable its content (its child widgets) if it is set to "on" (checked) and
+ * enable its content if it is set to "off".
+ *
+ * `opt(`noAutoEnable) switches off disabling and enabling the frame content (the
+ * child widgets) completely. In that case, use QueryWidget() and/or
+ * `opt(`immediate).
+ *
+ * Please note that unlike YCheckBox this widget does not support tri-state -
+ * it is always either on or off.
+ */
+
+YWidget * YUI::createCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
+				    const YCPTerm & term, const YCPList & optList, int argnr,
+				    YRadioButtonGroup * rbg  )
+{
+    int s = term->size() - argnr;
+    if ( s != 3
+	 || ! term->value( argnr   )->isString()
+	 || ! term->value( argnr+1 )->isBoolean()
+	 || ! term->value( argnr+2 )->isTerm()
+	)
+    {
+	y2error( "Invalid arguments for the CheckBoxFrame widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    YCPString	label		= term->value( argnr   )->asString();
+    bool	checked 	= term->value( argnr+1 )->asBoolean()->value();
+    YCPTerm	childTerm	= term->value( argnr+2 )->asTerm();
+
+    for ( int o=0; o < optList->size(); o++ )
+    {
+	if ( optList->value(o)->isSymbol() )
+	{
+	    string sym = optList->value(o)->asSymbol()->symbol();
+
+	    if	    ( sym  == YUIOpt_invertAutoEnable	) opt.invertAutoEnable.setValue( true );
+	    else if ( sym  == YUIOpt_noAutoEnable	) opt.noAutoEnable.setValue( true );
+	    else logUnknownOption( term, optList->value(o) );
+	}
+	else logUnknownOption( term, optList->value(o) );
+    }
+
+    if ( opt.noAutoEnable.value() && opt.invertAutoEnable.value() )
+    {
+	y2warning( "`opt(noAutoEnable) automatically disables `opt(`invertAutoEnable)" );
+	opt.invertAutoEnable.setValue( false );
+    }
+
+    YCheckBoxFrame * checkBoxFrame = dynamic_cast<YCheckBoxFrame *>
+	( createCheckBoxFrame( parent, opt, label, checked ) );
+
+    if ( checkBoxFrame )
+    {
+	checkBoxFrame->setParent( parent );
+	YWidget * child = createWidgetTree( checkBoxFrame, rbg, childTerm );
+
+	if ( child )
+	{
+	    checkBoxFrame->addChild( child );
+	    checkBoxFrame->handleChildrenEnablement( checked );
+	}
+	else // Error creating the children tree
+	{
+	    delete checkBoxFrame;
+	    return 0;
+	}
+    }
+
+    return checkBoxFrame;
 }
 
 

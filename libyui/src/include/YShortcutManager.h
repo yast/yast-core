@@ -109,7 +109,7 @@ protected:
     void clearShortcutList();
 
     /**
-     * Search all children of _dialog ( not those of any sub-dialogs! ) for child
+     * Search all children of _dialog (not those of any sub-dialogs!) for child
      * widgets that could accept a keyboard shortcut and add these to
      * _shortcutList.
      **/
@@ -120,6 +120,20 @@ protected:
      * used in the '_used' array. Unset the conflict marker if that succeeded.
      **/
     void resolveConflict( YShortcut * shortcut );
+
+    /**
+     * Find the shortest wizard button in 'conflictList', if there is any.
+     * Returns the index of that shortest wizard button or -1 if there is none.
+     **/
+    int findShortestWizardButton( const YShortcutList & conflictList );
+
+    /**
+     * Find the shortest widget in 'conflictList'. Buttons get priority if they
+     * have the same number of eligible shortcut characters as another widget.
+     *
+     * Returns the index of the shortest widget.
+     **/
+    unsigned findShortestWidget( const YShortcutList & conflictList );
 
     /**
      * The dialog this shortcut manager works on.

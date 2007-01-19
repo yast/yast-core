@@ -23,6 +23,7 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPSymbol.h>
 #include "YShortcut.h"
+#include "YPushButton.h"
 #include <ctype.h>	// toupper(), tolower()
 
 
@@ -39,6 +40,22 @@ YShortcut::YShortcut( YWidget *shortcut_widget )
     _conflict				= false;
     _shortcut_string_chached		= false;
     _clean_shortcut_string_chached	= false;
+
+    YPushButton * button = dynamic_cast<YPushButton *>( shortcut_widget);
+    _isButton = ( button != 0 );
+
+    if ( _isButton )
+    {
+	_isWizardButton = strstr( shortcut_widget->widgetClass(), "WizardButton" );
+
+	// y2debug( "%s %s is %sa wizard button", widgetClass(), cleanShortcutString().c_str(), _isWizardButton ? "" : "not " );
+    }
+    else
+    {
+	_isWizardButton = 0;
+    }
+
+    // y2debug( "%s %s is %sa button", widgetClass(), cleanShortcutString().c_str(), _isButton ? "" : "not " );
 }
 
 
@@ -117,19 +134,23 @@ void
 YShortcut::setShortcut( char new_shortcut )
 {
     string str = cleanShortcutString();
-    char findme[] = { tolower( new_shortcut ), toupper( new_shortcut ), 0 };
-    string::size_type pos = str.find_first_of( findme );
 
-    if ( pos == string::npos )
+    if ( new_shortcut != YShortcut::None )
     {
-	y2error( "Can't find '%c' in %s \"%s\"",
-		 new_shortcut, widgetClass(), cleanShortcutString().c_str() );
+	char findme[] = { tolower( new_shortcut ), toupper( new_shortcut ), 0 };
+	string::size_type pos = str.find_first_of( findme );
 
-	return;
+	if ( pos == string::npos )
+	{
+	    y2error( "Can't find '%c' in %s \"%s\"",
+		     new_shortcut, widgetClass(), cleanShortcutString().c_str() );
+
+	    return;
+	}
+
+	str.insert( pos,
+		    string( 1, shortcutMarker() ) );	// equivalent to 'string( "& " )'
     }
-
-    str.insert( pos,
-		string( 1, shortcutMarker() ) );	// equivalent to 'string( "& " )'
 
     YCPSymbol propertyName( widget()->shortcutProperty() );
     YCPValue propertyValue = YCPString( str );
@@ -138,6 +159,13 @@ YShortcut::setShortcut( char new_shortcut )
     _shortcut_string_chached		= false;
     _clean_shortcut_string_chached	= false;
     _shortcut = new_shortcut;
+}
+
+
+void
+YShortcut::clearShortcut()
+{
+    setShortcut( YShortcut::None );
 }
 
 

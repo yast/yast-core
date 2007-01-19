@@ -152,6 +152,30 @@ void YContainerWidget::dumpWidget( YWidget *w, int indentationLevel )
 }
 
 
+void YContainerWidget::setChildrenEnabling( bool enabled )
+{
+    for ( int i = 0; i < numChildren(); i++ )
+    {
+	if ( children[i]->isContainer() )
+	{
+	    YContainerWidget * container = dynamic_cast<YContainerWidget *>( children[i] );
+
+	    if ( container )
+	    {
+		// y2debug( "Recursing into %s", container->debugLabel().c_str() );
+		container->setEnabling( enabled );
+		container->setChildrenEnabling( enabled );
+	    }
+	}
+	else
+	{
+	    // y2debug( "%s %s", enabled ? "Enabling" : "Disabling", children[i]->debugLabel().c_str() );
+	    children[i]->setEnabling( enabled );
+	}
+    }
+}
+
+
 void YContainerWidget::addChild( YWidget *child )
 {
     if ( find( children.begin(), children.end(), child ) != children.end() )
@@ -290,7 +314,12 @@ string YContainerWidget::debugLabel()
 {
     if ( _debugLabelWidget )
     {
-	string label = _debugLabelWidget->debugLabel();
+	string label;
+	
+	if ( _debugLabelWidget == this )
+	    label = YWidget::debugLabel();
+	else
+	    label = _debugLabelWidget->debugLabel();
 
 	if ( ! label.empty() )
 	    return formatDebugLabel( _debugLabelWidget, label );

@@ -60,12 +60,13 @@ public:
     YCPValue queryWidget( const YCPSymbol & property );
 
     /**
-     * Set the text in the entry to a new value
+     * Set the radio button to a new value - check or uncheck it
      */
     virtual void setValue( const YCPBoolean & checked ) = 0;
 
     /**
-     * get the text currently entered in the text entry
+     * Returns the current vlue of the radio button: 'true' if checked, 'false'
+     * if unchecked 
      */
     virtual YCPBoolean getValue() = 0;
 

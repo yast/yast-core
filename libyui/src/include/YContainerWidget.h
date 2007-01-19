@@ -149,6 +149,11 @@ public:
     void dumpDialogWidgetTree();
 
     /**
+     * Enable or disable all widgets in this widget tree.
+     **/
+    void setChildrenEnabling( bool enabled );
+
+    /**
      * Returns a (possibly translated) text describing this dialog for
      * debugging.
      **/

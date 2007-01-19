@@ -164,32 +164,22 @@ YShortcutManager::resolveAllConflicts()
 
     // Resolve each conflict
 
-    while ( conflictList.size() > 0 )
+    while ( ! conflictList.empty() )
     {
-	/**
-	 * Pick a conflict widget to resolve. Use the widget with the least
-	 * number of eligible shortcut characters first to maximize chances for
-	 * success.
-	 **/
+	//
+	// Pick a conflict widget to resolve.
+	//
 
-	int shortest_index = 0;
-	int shortest_len = conflictList[0]->distinctShortcutChars();
+	// Wizard buttons have priority - check any of them first.
+	int prio_index = findShortestWizardButton( conflictList );
 
-	for ( unsigned i=1; i < conflictList.size(); i++ )
-	{
-	    if ( conflictList[i]->distinctShortcutChars() < shortest_len )
-	    {
-		// Found an even shorter one
-
-		shortest_index	= i;
-		shortest_len	= conflictList[i]->distinctShortcutChars();
-	    }
-	}
+	if ( prio_index < 0 )
+	    prio_index = findShortestWidget( conflictList); // Find the shortest widget. Buttons have priority.
 
 
 	// Pick a new shortcut for this widget.
 
-	YShortcut * shortcut = conflictList[ shortest_index ];
+	YShortcut * shortcut = conflictList[ prio_index ];
 	resolveConflict( shortcut );
 
 	if ( shortcut->conflict() )
@@ -202,7 +192,7 @@ YShortcutManager::resolveAllConflicts()
 
 	// Mark this particular conflict as resolved.
 
-	conflictList.erase( conflictList.begin() + shortest_index );
+	conflictList.erase( conflictList.begin() + prio_index );
     }
 
     if ( _conflictCount > 0 )
@@ -210,6 +200,7 @@ YShortcutManager::resolveAllConflicts()
 	y2debug( "%d shortcut conflict(s) left", _conflictCount );
     }
 }
+
 
 
 void
@@ -220,7 +211,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
     char candidate = shortcut->preferred();			// This is always normalized, no need to normalize again.
 
     if ( ! YShortcut::isValid( candidate )			// Can't use this character - pick another one.
-	 || _used[ (int) candidate ] )				
+	 || _used[ (int) candidate ] )
     {
 	candidate = 0;						// Restart from scratch - forget the preferred character.
 	string str = shortcut->cleanShortcutString();
@@ -269,8 +260,76 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 
 	_used[ (int) candidate ] = true;
 	shortcut->setConflict( false );
-	_conflictCount--;
     }
+    else	// No unique shortcut found
+    {
+	y2milestone( "Couldn't resolve shortcut conflict for %s \"%s\" - assigning no shortcut",
+		     shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+	shortcut->clearShortcut();
+	shortcut->setConflict( false );
+    }
+
+    _conflictCount--;
+}
+
+
+
+int
+YShortcutManager::findShortestWizardButton( const YShortcutList & conflictList )
+{
+    int shortest_index = -1;
+    int shortest_len   = -1;
+
+    for ( unsigned i=1; i < conflictList.size(); i++ )
+    {
+	if ( conflictList[i]->isWizardButton() )
+	{
+	    if ( shortest_len < 0 ||
+		 conflictList[i]->distinctShortcutChars() < shortest_len )
+	    {
+		shortest_index = i;
+		shortest_len   = conflictList[i]->distinctShortcutChars();
+	    }
+
+	}
+    }
+
+    return shortest_index;
+}
+
+
+
+unsigned
+YShortcutManager::findShortestWidget( const YShortcutList & conflictList )
+{
+    unsigned shortest_index = 0;
+    int      shortest_len   = conflictList[ shortest_index ]->distinctShortcutChars();
+
+    for ( unsigned i=1; i < conflictList.size(); i++ )
+    {
+	int this_len = conflictList[i]->distinctShortcutChars();
+
+	if ( this_len < shortest_len )
+	{
+	    // Found an even shorter one
+
+	    shortest_index = i;
+	    shortest_len   = this_len;
+	}
+	else if ( this_len == shortest_len )
+	{
+	    if ( conflictList[i]->isButton() &&
+		 ! conflictList[ shortest_index ]->isButton() )
+	    {
+		// Prefer a button over another widget with the same length
+
+		shortest_index = i;
+		shortest_len   = this_len;
+	    }
+	}
+    }
+
+    return shortest_index;
 }
 
 

@@ -12,7 +12,9 @@
 
   File:		YUI.h
 
-  Author:	Mathias Kettner <kettner@suse.de>
+  Authors:	Mathias Kettner <kettner@suse.de>
+		Stefan Hundhammer <sh@suse.de>
+		
   Maintainer:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
@@ -491,6 +493,12 @@ protected:
      */
     virtual YContainerWidget *createFrame( YWidget *parent, YWidgetOpt & opt, const YCPString & label ) = 0;
 
+    /**
+     * Creates a check box frame
+     * @param label Label of the checkbox
+     * @param true if it is checked
+     */
+    virtual YContainerWidget *createCheckBoxFrame( YWidget *parent, YWidgetOpt & opt, const YCPString & label, bool checked ) = 0;
 
 
     //
@@ -1103,6 +1111,14 @@ protected:
     YWidget *createFrame( YWidget *parent, YWidgetOpt & opt,
 			  const YCPTerm & term, const YCPList & optList, int argnr,
 			  YRadioButtonGroup *rbg );
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a CheckBoxFrame.
+     */
+    YWidget *createCheckBoxFrame( YWidget *parent, YWidgetOpt & opt,
+				  const YCPTerm & term, const YCPList & optList, int argnr,
+				  YRadioButtonGroup *rbg );
+
 
     /**
      * Helper function of createWidgetTree.

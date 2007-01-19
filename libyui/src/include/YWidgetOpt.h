@@ -30,7 +30,7 @@ public:
      * Constructor
      */
     YAnyOpt()			{ _defined = false; }
-    
+
     /**
      * Destructor
      */
@@ -125,7 +125,7 @@ struct YWidgetOpt
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
     YBoolOpt autoAdvance;
-    YBoolOpt keyEvents;	
+    YBoolOpt keyEvents;
     YBoolOpt easterEgg;
     YBoolOpt testMode;
     YBoolOpt boldFont;		// YCheckBox, YRadioButton, YLabel
@@ -149,6 +149,8 @@ struct YWidgetOpt
     YBoolOpt isEditable;	// YComboBox
     YBoolOpt immediateMode;	// YTable
     YBoolOpt keepSorting;	// YTable
+    YBoolOpt invertAutoEnable;	// YCheckBoxFrame
+    YBoolOpt noAutoEnable;	// YCheckBoxFrame
     YBoolOpt debugLayoutMode;	// YSplit
     YBoolOpt zeroWidth;		// YImage
     YBoolOpt zeroHeight;	// YImage
@@ -165,7 +167,7 @@ struct YWidgetOpt
     YBoolOpt instSourcesMode;	// YPackageSelector
     YBoolOpt stepsEnabled;	// YWizard
     YBoolOpt treeEnabled;	// YWizard
-    
+
     // YDialog-specific options
     //
     // These are multiplexed into YWidgetOpt since YDialog inherits
