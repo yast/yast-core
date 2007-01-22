@@ -16,7 +16,7 @@ my $modules_prefix = "/lib/modules/".qx(/bin/uname -r | /usr/bin/tr -d '\n');
 while ( <STDIN> )
 {
     # ycpDoVerboseLog();
-    my ($command, $path, $arg) = ParseCommand ($_);
+    my ($command, $path, $arg) = ycp::ParseCommand ($_);
 
     my $module_name = $path;
     $path =~ s/\./\//g;
