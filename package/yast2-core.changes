@@ -3,6 +3,7 @@ Mon Jan 22 09:08:01 CET 2007 - mvidner@suse.cz
 
 - ag_modinfo: do not return numbers instead of strings. Fixes a crash
   in "yast2 tv" when accessing 80211.ko (#224742).
+- 2.13.35
 
 -------------------------------------------------------------------
 Tue Jan 16 19:18:29 CET 2007 - sh@suse.de
