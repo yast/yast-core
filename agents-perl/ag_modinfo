@@ -7,7 +7,6 @@
 #
 # $Id$
 
-use lib "/usr/lib/YaST2/agents_non_y2";
 use ycp;
 
 my $result;
@@ -17,10 +16,9 @@ my $modules_prefix = "/lib/modules/".qx(/bin/uname -r | /usr/bin/tr -d '\n');
 while ( <STDIN> )
 {
     # ycpDoVerboseLog();
+    my ($command, $path, $arg) = ParseCommand ($_);
 
-    ycpInit( $_ );
-
-    my $path = my $module_name = ycpGetPath;
+    my $module_name = $path;
     $path =~ s/\./\//g;
     $module_name =~ s/^.*\.//;
 
@@ -31,7 +29,7 @@ while ( <STDIN> )
     #  Check the Command
     #----------------------------------------------------------
 
-    if ( ycpCommandIsDir )
+    if ( $command eq "Dir" )
     {
 	my @list        = ();
 	my $dirs        = qx(cd $path 2> /dev/null && find -type d 2> /dev/null);
@@ -43,9 +41,9 @@ while ( <STDIN> )
 		push @list, $file;
 	    }
 	}
-	ycp::Return ( \@list );
+	ycp::Return ( \@list, 1 ); # #224742
     }
-    elsif ( ycpCommandIsRead )
+    elsif ( $command eq "Read" )
     {
 	# full name of the module
 	my $modinfo = qx(/sbin/modinfo $module_name 2> /dev/null);
@@ -90,7 +88,7 @@ while ( <STDIN> )
     }
 
     # result: we must exit
-    elsif (ycpCommandIsResult)
+    elsif ( $command eq "result" )
     {
 	y2debug ("got result -> say goodbye!");
 	exit;
@@ -98,7 +96,7 @@ while ( <STDIN> )
 
     else
     {
-	my $return_value = sprintf( "Unknown instruction %s or argument: %s", ycpGetCommand, ycpGetArgType);
+	my $return_value = sprintf( "Unknown instruction %s", $command);
 
 	ycp::Return( $return_value );
     }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan 22 09:08:01 CET 2007 - mvidner@suse.cz
+
+- ag_modinfo: do not return numbers instead of strings. Fixes a crash
+  in "yast2 tv" when accessing 80211.ko (#224742).
+
+-------------------------------------------------------------------
 Mon Jan 22 09:02:45 CET 2007 - mvidner@suse.cz
 
 - autodocs: reenabled liby2util.tag
