@@ -15,9 +15,7 @@ index.html: $(wildcard $(top_srcdir)/*/*.cc $(top_srcdir)/*/*/*.cc)
 	${YDOXYGEN} PROJECT_NAME=@RPMNAME@ \
 		INPUT=.. \
 		"TAGFILES=\
+		\"$(DOC)/liby2util/autodocs/liby2util.tag = \
+		  $(DOC)/liby2util/autodocs\" \
 		"
-
-# disabled for now, doxygen 1.5.0 fails on it
-#		\"$(DOC)/liby2util/autodocs/liby2util.tag = \
-#		  $(DOC)/liby2util/autodocs\" \
 # TODO: create libzypp.tag and use it (elsewhere)

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan 22 09:02:45 CET 2007 - mvidner@suse.cz
+
+- autodocs: reenabled liby2util.tag
+
+-------------------------------------------------------------------
 Fri Jan  5 20:57:57 CET 2007 - sh@suse.de
 
 - Added CheckBoxFrame widget for feature #5673
