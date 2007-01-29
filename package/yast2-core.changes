@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan 29 13:16:50 CET 2007 - mvidner@suse.cz
+
+- ag_system: do not make yast exit when PID has 7 or more digits (#237481).
+- 2.13.36
+
+-------------------------------------------------------------------
 Mon Jan 22 09:08:01 CET 2007 - mvidner@suse.cz
 
 - ag_modinfo: do not return numbers instead of strings. Fixes a crash
