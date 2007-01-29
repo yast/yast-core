@@ -107,8 +107,9 @@ remove_directory (const string& path, int depth)
  */
 SystemAgent::SystemAgent ()
 {
-    char tmp1[25];
-    snprintf (tmp1, 25, "/tmp/YaST2-%05d-XXXXXX", getpid ());
+    // #237481: problems with pids with too many digits: 64bits: max 20 digits
+    char tmp1[19+20];
+    snprintf (tmp1, sizeof(tmp1), "/tmp/YaST2-%05d-XXXXXX", getpid ());
 
     const char* tmp2 = mkdtemp (tmp1);
     if (!tmp2)
