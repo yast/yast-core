@@ -325,7 +325,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      * @return list 
      * @description
      * For each element of the list <tt>LIST</tt> the expression <tt>expr</tt>
-     * is executed in a new context, where the variable <tt>VAR</tt>
+     * is executed in a new block, where the variable <tt>VAR</tt>
      * is assigned to that value. If the expression evaluates to true under
      * this circumstances, the value is appended to the result list.
      *
@@ -386,7 +386,7 @@ l_maplist (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      *
      * @description
      * For each element of the list <tt>LIST</tt> the expression <tt>EXPR</tt>
-     * is evaluated in a new context, where the variable <tt>VAR</tt>
+     * is evaluated in a new block, where the variable <tt>VAR</tt>
      * is assigned to that value. The result is the list of those
      * evaluations.
      *
@@ -436,7 +436,7 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      *
      * @description
      * For each element <tt>VAR</tt> of the list <tt>LIST</tt> in the expression
-     * <tt>EXPR</tt> is evaluated in a new context. The result is the map of
+     * <tt>EXPR</tt> is evaluated in a new block. The result is the map of
      * those evaluations.
      *
      * The result of each evaluation <i>must</i> be

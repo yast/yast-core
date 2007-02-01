@@ -76,7 +76,7 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
      * @short Filter a Map
      * @description
      * For each key/value pair of the map <tt>MAP</tt> the expression <tt>EXPR</tt>
-     * is evaluated in a new context, where the variable <tt>KEY</tt> is assigned
+     * is evaluated in a new block, where the variable <tt>KEY</tt> is assigned
      * to the key and <tt>VALUE</tt> to the value of the pair. If the expression
      * evaluates to true, the key/value pair is appended to the returned map.
      *
@@ -138,7 +138,7 @@ m_mapmap (const YCPSymbol &key, const YCPSymbol &value,
      * @description
      * Maps an operation onto all key/value pairs of the map <tt>MAP</tt> and
      * thus creates a new map. For each key/value pair of the map <tt>MAP</tt>
-     * the expression <tt>EXPR</tt> is evaluated in a new context, where the
+     * the expression <tt>EXPR</tt> is evaluated in a new block, where the
      * variable <tt>KEY</tt> is assigned to the key and <tt>VALUE</tt> to the value
      * of the pair. The result is the map of those evaluations.
      *
@@ -205,7 +205,7 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
      * a list.
      *
      * For each key/value pair of the map <tt>MAP</tt> the expression <tt>e</tt>
-     * is evaluated in a new context, where the variable <tt>KEY</tt>
+     * is evaluated in a new block, where the variable <tt>KEY</tt>
      * is assigned to the key and <tt>VALUE</tt> to the value of the pair.
      * The result is the list of those evaluations.
      * @param any KEY
@@ -394,7 +394,7 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
      * @short Process the content of a map
      * @description
      * For each key:value pair of the map <tt>MAP</tt> the expression
-     * <tt>EXPR</tt> is executed in a new context, where the variables
+     * <tt>EXPR</tt> is executed in a new block, where the variables
      * <tt>KEY</tt> is bound to the key and <tt>VALUE</tt> is bound to the
      * value. The return value of the last execution of exp is the value
      * of the <tt>foreach</tt> construct.

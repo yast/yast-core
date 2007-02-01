@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb  1 15:52:46 CET 2007 - mvidner@suse.cz
+
+- libycp: clarified docs for iterator builtins ("in a new block"
+  instead of "in a new context", #236730)
+
+-------------------------------------------------------------------
 Mon Jan 29 13:16:50 CET 2007 - mvidner@suse.cz
 
 - ag_system: do not make yast exit when PID has 7 or more digits (#237481).
