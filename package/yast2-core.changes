@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb  8 10:17:13 CET 2007 - mvidner@suse.cz
+
+- SCR::RegisterAgent: fixed a bug in the declaration of this call.
+
+-------------------------------------------------------------------
 Thu Feb  1 15:52:46 CET 2007 - mvidner@suse.cz
 
 - libycp: clarified docs for iterator builtins ("in a new block"
