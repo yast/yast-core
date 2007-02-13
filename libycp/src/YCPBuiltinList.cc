@@ -762,14 +762,14 @@ l_changelist (YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin change
-     * @short Changes a list
+     * @short Changes a list. Deprecated, use LIST[size(LIST)] = value.
      * @param list LIST
      * @param any value
      * @return list
      *
      * @description
-     * DO NOT use this yet. Its for a special requst, not for common use!!!
-     * changes the list LIST adds a new element
+     * Before Code 9, this was used to change a list directly
+     * without creating a copy. Now it is a synonym for add.
      *
      * @see add
      * @usage change ([1, 4], 8) -> [1, 4, 8]

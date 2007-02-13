@@ -328,14 +328,10 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
      * @builtin change
-     * @short Change element pair in a map
+     * @short Change element pair in a map. Deprecated, use MAP[KEY] = VALUE.
      * @description
-     * DO NOT use this yet. It's for a special requst, not for common use!!!
-     *
-     * Adds the key/value pair <tt>KEY : VALUE</tt> to the map <tt>MAP</tt> and
-     * returns the map. <tt>MAP</tt> <i>is</i> modified. If the key <tt>KEY</tt>
-     * exists in <tt>KEY</tt>, the old key/value pair is replaced with the new
-     * one.
+     * Before Code 9, this was used to change a map directly
+     * without creating a copy. Now it is a synonym for add.
      *
      * @param map MAP
      * @param any KEY
