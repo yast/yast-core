@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb 13 16:22:05 CET 2007 - kmachalkova@suse.cz
+
+- Replaced '[x]' placeholder glyph (CheckMark) with 'x' to make it
+  distinct from ncurses checkbox (#244061) 
+
+-------------------------------------------------------------------
 Thu Feb  8 10:17:13 CET 2007 - mvidner@suse.cz
 
 - SCR::RegisterAgent: fixed a bug in the declaration of this call.
