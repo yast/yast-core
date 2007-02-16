@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb 16 17:10:24 CET 2007 - mvidner@suse.cz
+
+- Added SCR::RegisterNewAgents, for agents defined in add-ons (#245508).
+- 2.13.37
+
+-------------------------------------------------------------------
 Mon Jan 29 13:16:50 CET 2007 - mvidner@suse.cz
 
 - ag_system: do not make yast exit when PID has 7 or more digits (#237481).
