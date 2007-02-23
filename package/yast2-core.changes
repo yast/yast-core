@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb 23 10:50:13 CET 2007 - mvidner@suse.cz
+
+- Signals: in addition to SEGV, catch also HUP, INT, QUIT, ILL, ABRT,
+  FPE, TERM, and log the fact (#238172).
+
+-------------------------------------------------------------------
 Tue Feb 13 16:22:05 CET 2007 - kmachalkova@suse.cz
 
 - Replaced '[x]' placeholder glyph (CheckMark) with 'x' to make it
