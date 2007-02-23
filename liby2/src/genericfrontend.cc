@@ -50,13 +50,16 @@ static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)
 static bool is_ycp_value (const char* arg);
 
 void
-SIGSEGVhandler (int sig)
+signal_handler (int sig)
 {
     signal (sig, SIG_IGN);
-    // FIXME: if no filename is set, this looks like a display spec
-    fprintf (stderr, "Segmentation fault at %s:%d\n", ee.filename ().c_str (), ee.linenumber ());
+    fprintf (stderr, "YaST got signal %d at YCP file %s:%d\n",
+	     sig, ee.filename ().c_str (), ee.linenumber ());
+    y2error ("got signal %d at YCP file %s:%d",
+	     sig, ee.filename ().c_str (), ee.linenumber ());
+    // bye
     signal (sig, SIG_DFL);
-    kill ( getpid (), SIGSEGV);
+    kill ( getpid (), sig);
 }
 
 
@@ -131,7 +134,16 @@ main (int argc, char **argv)
     signal(SIGPIPE, SIG_IGN);
 
     // Give some output for the SIGSEGV
-    signal(SIGSEGV, SIGSEGVhandler);
+    // and other signals too, #238172
+    // Note that USR1 and USR2 are handled by the logger.
+    signal (SIGHUP,  signal_handler);
+    signal (SIGINT,  signal_handler);
+    signal (SIGQUIT, signal_handler);
+    signal (SIGILL , signal_handler);
+    signal (SIGABRT, signal_handler);
+    signal (SIGFPE,  signal_handler);
+    signal (SIGSEGV, signal_handler);
+    signal (SIGTERM, signal_handler);
 
     if (argc < 2) {
 	fprintf (stderr, "\nToo few arguments");

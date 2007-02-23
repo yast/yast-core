@@ -15,7 +15,9 @@
 #include <scr/SCRAgent.h>
 #include "SCRSubAgent.h"
 
-
+/**
+ * The main agant that dispatches calls to other agents.
+ */
 class ScriptingAgent : public SCRAgent
 {
 

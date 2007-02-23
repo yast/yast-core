@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Feb 23 10:50:13 CET 2007 - mvidner@suse.cz
+
+- Signals: in addition to SEGV, catch also HUP, INT, QUIT, ILL, ABRT,
+  FPE, TERM, and log the fact (#238172).
+- SCR::RegisterAgent: fixed a bug in the declaration of this call.
+- 2.13.38
+
+-------------------------------------------------------------------
 Fri Feb 16 17:10:24 CET 2007 - mvidner@suse.cz
 
 - Added SCR::RegisterNewAgents, for agents defined in add-ons (#245508).
