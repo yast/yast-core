@@ -124,6 +124,11 @@ private:
     YCPValue UnmountAllAgents ();
 
     /**
+     * Register new agents
+     */
+    YCPBoolean RegisterNewAgents ();
+
+    /**
      * Calls a subagent to execute a Read, Write, Dir or other command
      * @param command the command like "Read", "Dir", ..
      * @param path All commands take a path as first parameter. Here you

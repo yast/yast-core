@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb 23 13:12:41 CET 2007 - mvidner@suse.cz
+
+- Added SCR::RegisterNewAgents, for agents defined in add-ons (#245508).
+- 2.15.4
+
+-------------------------------------------------------------------
 Fri Feb 23 11:03:10 CET 2007 - mvidner@suse.cz
 
 - ag_ini: Log errors if the syntax description term contains invalid data,

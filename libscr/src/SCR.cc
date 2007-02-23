@@ -201,6 +201,17 @@ SCRUnmountAgent (const YCPPath &path) {
     return SCRAgent::instance ()->UnmountAgent (path);
 }
 
+static YCPValue 
+SCRRegisterNewAgents () {
+    if (! SCRAgent::instance())
+    {
+	ycperror ( "No SCR instance found" );
+	return YCPVoid ();
+    }
+    y2debug( "Running SCR::RegisterNewAgents on SCR agent %p", SCRAgent::instance () );
+    return SCRAgent::instance ()->RegisterNewAgents ();
+}
+
 SCR::SCR ()
 {
     // already done, we must avoid double registration
@@ -226,6 +237,7 @@ SCR::SCR ()
 	{ "UnregisterAgent",	"boolean (path)",		(void *)SCRUnregisterAgent },
 	{ "UnregisterAllAgents","boolean ()",			(void *)SCRUnregisterAllAgents },
 	{ "UnmountAgent",	"boolean (path)",		(void *)SCRUnmountAgent },
+	{ "RegisterNewAgents",  "boolean ()",			(void *)SCRRegisterNewAgents },
 	{ 0 }
     };
 

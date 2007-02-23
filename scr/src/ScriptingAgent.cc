@@ -29,14 +29,7 @@
 
 ScriptingAgent::ScriptingAgent ()
 {
-    for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
-	 level++)
-    {
-	y2debug( "Scripting agent searching SCRs in %s", (Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level)
-			  + "/scrconf" ).c_str() );
-	parseConfigFiles (Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level)
-			  + "/scrconf");
-    }
+    RegisterNewAgents ();
 }
 
 
@@ -370,6 +363,18 @@ ScriptingAgent::UnmountAllAgents ()
     return YCPBoolean (true);
 }
 
+YCPBoolean
+ScriptingAgent::RegisterNewAgents ()
+{
+    for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
+	 level++)
+    {
+	string dir = Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level) + "/scrconf";
+	y2debug( "Scripting agent searching SCRs in %s", dir.c_str() );
+	parseConfigFiles (dir);
+    }
+    return YCPBoolean (true);
+}
 
 YCPValue
 ScriptingAgent::executeSubagentCommand (const char *command,

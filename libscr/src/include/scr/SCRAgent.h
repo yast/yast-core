@@ -114,6 +114,14 @@ public:
     }
 
     /**
+     * Register new agents
+     */
+    virtual YCPBoolean RegisterNewAgents () {
+	ycp2error( "Unimplemented RegisterNewAgents called" );
+	return YCPBoolean( false );
+    }
+
+    /**
      * Execute other commands. Return 0 if the command is
      * not defined in your Agent.
      */
