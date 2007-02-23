@@ -178,11 +178,17 @@ int IniParser::initMachine (const YCPMap&scr)
 
     // read the options
     YCPValue v = scr->value(YCPString("options"));
-    if (!v.isNull() && v->isList ())
-	{
+    if (!v.isNull()) {
+	if (!v->isList ())
+	    y2error ("'options' must be a list");
+	else {
 	    int len = v->asList()->size();
 	    for (int i = 0;i<len;i++)
 		{
+		    if (!v->asList()->value(i)->isString()) {
+			y2error ("items of 'options' must be strings");
+			continue;
+		    }
 		    string sv = v->asList()->value(i)->asString()->value();
 #define COMPARE_OPTION(X) if (sv == #X) X = true; else 
 		    COMPARE_OPTION (ignore_case_regexps)
@@ -202,6 +208,7 @@ int IniParser::initMachine (const YCPMap&scr)
 #undef  COMPARE_OPTION
 		}
 	}
+    }
 
     if (ignore_case && multiple_files)
     {
@@ -210,8 +217,11 @@ int IniParser::initMachine (const YCPMap&scr)
     }
 
     v = scr->value(YCPString("rewrite"));
-    if (!v.isNull() && v->isList())
-    {
+    if (!v.isNull()) {
+	if (!v->isList ())
+	    y2error ("'rewrite' must be a list");
+	else {
+
 	int len = v->asList()->size();
 	rewrites.clear ();
 	rewrites.reserve (len);
@@ -230,17 +240,27 @@ int IniParser::initMachine (const YCPMap&scr)
 		    rewrites.push_back (p);
 		}
 	    }
+	    else
+		y2error ("items of 'rewrite' must be lists of two strings");
+	}
+
 	}
     }
 
     v = scr->value(YCPString("subindent"));
-    if (!v.isNull() && v->isString())
-	subindent = v->asString()->value();
+    if (!v.isNull()) {
+	if (!v->isString ())
+	    y2error ("'subindent' must be a string");
+	else
+	    subindent = v->asString()->value();
+    }
 
     // read comments
     v = scr->value(YCPString("comments"));
-    if (!v.isNull() && v->isList ())
-	{
+    if (!v.isNull()) {
+	if (!v->isList ())
+	    y2error ("'comments' must be a list");
+	else {
 	    int len = v->asList()->size();
 	    linecomments.clear ();
 	    comments.clear ();
@@ -248,6 +268,10 @@ int IniParser::initMachine (const YCPMap&scr)
 	    comments.reserve (len);
 	    for (int i = 0;  i < len; i++)
 	    {
+		if (!v->asList()->value(i)->isString()) {
+		    y2error ("items of 'comments' must be strings");
+		    continue;
+		}
 		YCPString s = v->asList()->value(i)->asString();
 		vector <Regex> & regexes = ('^' == s->value_cstr()[0]) ?
 		    linecomments : comments;
@@ -258,18 +282,23 @@ int IniParser::initMachine (const YCPMap&scr)
 		}
 	    }
 	}
+    }
 
     // read sections
     v = scr->value(YCPString("sections"));
-    if (!v.isNull() && v->isList ())
-	{
+    if (!v.isNull()) {
+	if (!v->isList ())
+	    y2error ("'sections' must be a list");
+	else {
 	    int len = v->asList()->size();
 	    // compile them to regex_t
 	    sections.clear ();
 	    sections.reserve (len);
 	    for (int i = 0;  i < len; i++)
 		{
-		    if (v->asList()->value(i)->isMap())
+		    if (!v->asList()->value(i)->isMap())
+			y2error ("items of 'sections' must be maps");
+		    else
 			{
 			    section s;
 			    YCPMap m = v->asList()->value(i)->asMap ();
@@ -307,18 +336,23 @@ int IniParser::initMachine (const YCPMap&scr)
 			}
 		}
 	}
+    }
 
     // read parameters
     v = scr->value(YCPString("params"));
-    if (!v.isNull() && v->isList ())
-	{
+    if (!v.isNull()) {
+	if (!v->isList ())
+	    y2error ("'params' must be a list");
+	else {
 	    int len = v->asList()->size();
 	    // compile them to regex_t
 	    params.clear ();
 	    params.reserve (len);
 	    for (int i = 0; i < len; i++)
 		{
-		    if (v->asList()->value(i)->isMap())
+		    if (!v->asList()->value(i)->isMap())
+			y2error ("items of 'params' must be maps");
+		    else
 			{
 			    YCPMap m = v->asList()->value(i)->asMap ();
 			    param pa;
@@ -369,6 +403,7 @@ int IniParser::initMachine (const YCPMap&scr)
 			}
 		}
 	}
+    }
     return 0;
 }
 

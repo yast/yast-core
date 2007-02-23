@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb 23 11:03:10 CET 2007 - mvidner@suse.cz
+
+- ag_ini: Log errors if the syntax description term contains invalid data,
+  for example if "params" is not a list or its items are not maps..
+
+-------------------------------------------------------------------
 Fri Feb 23 10:50:13 CET 2007 - mvidner@suse.cz
 
 - Signals: in addition to SEGV, catch also HUP, INT, QUIT, ILL, ABRT,
