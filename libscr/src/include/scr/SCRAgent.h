@@ -69,8 +69,8 @@ public:
     /**
      * Execute a command
      */
-    virtual YCPValue Execute (const YCPPath& path, const YCPValue& value = YCPNull(),
-			      const YCPValue& arg = YCPNull()) {
+    virtual YCPValue Execute (const YCPPath& path, const YCPValue& /*value*/ = YCPNull(),
+			      const YCPValue& /*arg*/ = YCPNull()) {
 	ycp2error( "Unimplemented Execute called for path %s", path-> toString ().c_str () );
 	return YCPNull ();
     }
@@ -78,14 +78,14 @@ public:
     /**
      * Get a detailed error description if a previous command failed
      */
-    virtual YCPMap Error (const YCPPath& path) {
+    virtual YCPMap Error (const YCPPath& /*path*/) {
 	return unspecified_error;
     }
 
     /**
      * Register an agent
      */
-    virtual YCPBoolean RegisterAgent (const YCPPath& path, const YCPValue& value) {
+    virtual YCPBoolean RegisterAgent (const YCPPath& path, const YCPValue& /*value*/) {
 	ycp2error( "Unimplemented RegisterAgent called for path %s", path-> toString ().c_str () );
 	return YCPBoolean( false );
     }
@@ -109,7 +109,7 @@ public:
     /**
      * Unmount an agent
      */
-    virtual YCPBoolean UnmountAgent (const YCPPath& path) {
+    virtual YCPBoolean UnmountAgent (const YCPPath& /*path*/) {
 	return YCPBoolean( false );
     }
 
