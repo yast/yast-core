@@ -1092,7 +1092,7 @@ recurse (const char *path)
  */
 void print_help (const char *name)
 {
-    char * opt_fmt = "\t%-25s %s\n";
+#define opt_fmt "\t%-25s %s\n"
     printf ("Usage:\n");
     printf ("  %s [-h] [--help]\n", name);
     printf ("  %s [-v] [--version]\n", name);
@@ -1119,6 +1119,7 @@ void print_help (const char *name)
     printf (opt_fmt, "-R, --recursive", "operate recursively");
     printf (opt_fmt, "-u, --ui {ncurses|qt}", "UI to start in combination with 'r'");
 //    printf (opt_fmt, "-, --", "");
+#undef opt_fmt
 }
 
 /**

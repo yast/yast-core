@@ -3786,14 +3786,14 @@ static void
 yyerror_with_lineinfo (Parser *parser, int lineno, const char *s)
 {
     parser->m_parser_errors++;
-    parser->scanner()->logError (s, (lineno > 0) ? lineno : parser->m_lineno);
+    parser->scanner()->logError ("%s", (lineno > 0) ? lineno : parser->m_lineno, s);
 }
 
 
 static void
 yywarning_with_lineinfo (Parser *parser, int lineno, const char *s)
 {
-    parser->scanner()->logWarning (s, (lineno > 0) ? lineno : parser->m_lineno);
+    parser->scanner()->logWarning ("%s", (lineno > 0) ? lineno : parser->m_lineno, s);
 }
 
 
@@ -3844,7 +3844,7 @@ yyerror_with_tableentry (Parser *parser, int lineno, const char *s, TableEntry *
 {
     parser->m_parser_errors++;
     int line = (lineno > 0) ? lineno : parser->m_lineno;
-    parser->scanner()->logError (s, line);
+    parser->scanner()->logError ("%s", line, s);
     const Point *point = tentry->point();
     bool start = true;
     while (point != 0)
@@ -3937,7 +3937,7 @@ yyerror_type_mismatch (Parser *parser, int lineno, const char *s, constTypePtr e
     parser->m_parser_errors++;
     if (s && *s)
     {
-	parser->scanner()->logError (s, linenumber);
+	parser->scanner()->logError ("%s", linenumber, s);
     }
 
     if (expected_type->isUnspec())

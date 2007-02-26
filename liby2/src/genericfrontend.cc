@@ -133,7 +133,7 @@ public:
 	    }
 	    
 	    y2_logger(level,m.component.c_str ()
-		,m.filename,m.fileline,m.methodname,m.message.c_str ());
+		,m.filename,m.fileline,m.methodname,"%s", m.message.c_str ());
 	}
 #if BLOCXX_LIBRARY_VERSION <= 4
 	/**
@@ -609,7 +609,7 @@ print_error (const char* format, ...)
     va_end (ap);
 
     fprintf (stderr, "%s\n", msg);
-    y2error (msg);
+    y2error ("%s", msg);
 
     free (msg);
 }

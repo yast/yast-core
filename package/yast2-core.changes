@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 26 18:04:01 CET 2007 - mvidner@suse.cz
+
+- Fixed format string bugs in log messages (#246807).
+
+-------------------------------------------------------------------
 Fri Feb 23 13:12:41 CET 2007 - mvidner@suse.cz
 
 - Added SCR::RegisterNewAgents, for agents defined in add-ons (#245508).

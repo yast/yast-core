@@ -236,7 +236,7 @@ Scanner::LexerInput (char* buf, int maxnum)
 void
 Scanner::LexerError (const char* msg)
 {
-    logError(msg, 0);
+    logError("%s", 0, msg);
 }
 
 

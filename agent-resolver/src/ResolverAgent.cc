@@ -387,7 +387,7 @@ static int flushCache (const char *filename)
 	    {
 		break;
 	    }
-	    fprintf (f, skey.c_str());
+	    fprintf (f, "%s", skey.c_str());
 	    int i = 0;
 	    for (i = 0; i < list->size(); i++)
 	    {
