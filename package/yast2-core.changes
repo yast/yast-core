@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 16 16:21:00 CET 2007 - mvidner@suse.cz
+
+- Files referenced from /usr/share/doc/packages/yast2-core/libycp/index.html
+  were not installed due to a typo (#235111).
+
+-------------------------------------------------------------------
 Mon Feb 26 18:04:01 CET 2007 - mvidner@suse.cz
 
 - Fixed format string bugs in log messages (#246807).

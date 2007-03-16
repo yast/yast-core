@@ -7,7 +7,7 @@ htmldir = $(docdir)/libycp
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
-htmlfiles = $(wildcard html/.html)
+htmlfiles = $(wildcard html/*.html)
 
 
 html_DATA =			\
