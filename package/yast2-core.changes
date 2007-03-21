@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 21 16:34:46 CET 2007 - kmachalkova@suse.cz
+
+- YWidget: warning instead of error in setKeyboardFocus (#255785) 
+
+-------------------------------------------------------------------
 Fri Mar 16 16:21:00 CET 2007 - mvidner@suse.cz
 
 - Files referenced from /usr/share/doc/packages/yast2-core/libycp/index.html

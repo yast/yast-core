@@ -356,7 +356,7 @@ bool YWidget::isLayoutStretch( YUIDimension dim ) const
 
 bool YWidget::setKeyboardFocus()
 {
-    y2error( "Widget %s cannot accept the keyboard focus.", id()->toString().c_str() );
+    y2warning( "Widget %s cannot accept the keyboard focus.", id()->toString().c_str() );
     return false;
 }
 
