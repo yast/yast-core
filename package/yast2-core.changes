@@ -2,6 +2,7 @@
 Fri Mar 30 11:00:02 CEST 2007 - mvidner@suse.cz
 
 - BuildRequire flex and bison explicitly.
+- yast2-core-devel: Require flex because of FlexLexer.h
 - 2.15.5
 
 -------------------------------------------------------------------
