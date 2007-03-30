@@ -22,6 +22,8 @@ BuildRequires:	sgml-skel
 BuildRequires:	blocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
+# liby2:Y2SerialComponent needs term.h
+BuildRequires:	ncurses-devel
 # to be integrated
 BuildRequires:	liby2util-devel
 # probably pulled by liby2util
