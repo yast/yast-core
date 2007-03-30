@@ -4,6 +4,8 @@
 @HEADER@
 # obviously
 BuildRequires:	gcc-c++
+# we have a parser
+BuildRequires:	flex bison
 # needed for all yast packages
 BuildRequires:	yast2-devtools
 # used at "make check"

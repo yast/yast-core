@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 30 11:00:02 CEST 2007 - mvidner@suse.cz
+
+- BuildRequire flex and bison explicitly.
+- 2.15.5
+
+-------------------------------------------------------------------
 Wed Mar 21 16:34:46 CET 2007 - kmachalkova@suse.cz
 
 - YWidget: warning instead of error in setKeyboardFocus (#255785) 
