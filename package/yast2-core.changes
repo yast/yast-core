@@ -1,7 +1,9 @@
 -------------------------------------------------------------------
 Fri Apr 13 17:38:58 CEST 2007 - sh@suse.de
 
-- Added infrastructure for UI plugins 
+- Merged mod-ui branch changes (r37142:37462) back to trunk:
+  - Added infrastructure for UI plugins 
+
 - V 2.15.6
 
 -------------------------------------------------------------------
