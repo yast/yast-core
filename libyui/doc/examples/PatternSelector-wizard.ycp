@@ -2,8 +2,7 @@
 {
     textdomain "bogus";
     
-    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.1-Beta3/i386/CD1/", "" );
-    Pkg::SourceCreate( "file:/srv/sles-10-i386/CD1/", "" );
+    Pkg::SourceCreate( "file:/mounts/dist/full/full-10.2-i386/", "" );
     
     void detailedSelection()
     {

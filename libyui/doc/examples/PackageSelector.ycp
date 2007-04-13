@@ -1,10 +1,7 @@
 // Package Selector example
 {
-    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.1-Beta7/i386/CD1/", "" );
-    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/SUSE-10.0-RC4/i386/CD1/", "" );
-    // Pkg::SourceCreate( "file:/srv/10.1-i386/CD1/", "" );
-    Pkg::SourceCreate( "file:/srv/10.1-i386/DVD1/", "" );
-    // Pkg::SourceCreate( "file:/srv/sles-10-i386/CD1/", "" );
+    // Pkg::SourceCreate( "http://dist.suse.de/install/SLP/openSUSE-10.2-GM-DVD9/i386/DVD1/", "" );
+    Pkg::SourceCreate( "file:/dist/full/full-10.2-i386/", "" );
 
     if ( true )
     {

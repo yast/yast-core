@@ -1,6 +1,6 @@
 // Package Selector example
 {
-    boolean use_installed_system = true;
+    boolean use_installed_system = false;
     
     Pkg::SourceCreate( "file:/mounts/dist/full/full-10.2-i386/", "" );
 
