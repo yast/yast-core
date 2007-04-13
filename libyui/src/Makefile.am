@@ -6,6 +6,7 @@ SUBDIRS = include
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
 	-DTHEMEDIR=\"${themedir}/current\"	\
+	-DPLUGINDIR=\"${plugindir}\"		\
 	-fmessage-length=0
 
 lib_LTLIBRARIES = libyui.la
@@ -18,6 +19,7 @@ libyui_la_SOURCES =				\
 	YUI_special_widgets.cc			\
 	YUI_bindings.cc				\
 	YUI_util.cc				\
+	YUIPlugin.cc				\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\

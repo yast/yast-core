@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Apr 13 17:38:58 CEST 2007 - sh@suse.de
+
+- Added infrastructure for UI plugins 
+- V 2.15.6
+
+-------------------------------------------------------------------
 Fri Mar 30 11:00:02 CEST 2007 - mvidner@suse.cz
 
 - BuildRequire flex and bison explicitly.

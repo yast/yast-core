@@ -10,6 +10,8 @@ pkginclude_HEADERS =				\
 	YUI_util.h				\
 	UI.h					\
 	YUISymbols.h				\
+	YUIPlugin.h				\
+	YPackageSelectorPlugin.h		\
 						\
 	YAlignment.h				\
 	YBarGraph.h				\
