@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr 16 17:59:35 CEST 2007 - mvidner@suse.cz
+
+- Recommend, not require, netcat (#264309).
+- 2.15.7
+
+-------------------------------------------------------------------
 Fri Apr 13 17:38:58 CEST 2007 - sh@suse.de
 
 - Merged mod-ui branch changes (r37142:37462) back to trunk:

@@ -24,6 +24,8 @@ fi
 # We want to parse English output
 export LC_ALL=C
 
+NETCAT=/usr/bin/netcat
+
 # this function is duplicated in ag_showexports and ag_hostnames
 # after $1 seconds, kill $2 and all its children
 # return $2's exit status
@@ -88,7 +90,7 @@ function broadcast_ping() {
 # uses exit status
 # is_port_open $ADDR $PORT
 function is_port_open() {
-    /usr/bin/netcat -w 1 -z $1 $2
+    $NETCAT -w 1 -z $1 $2
 }
 
 # uses exit status
@@ -170,8 +172,12 @@ while true ; do
 	    hostnames
 	    ;;
 	'Read (.,'*)
-	    PORT=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
-	    hostnames -p $PORT
+	    if [ -x $NETCAT ]; then
+		PORT=$(echo "$COMMAND" | sed 's/^Read (., *\(.*\))/\1/')
+		hostnames -p $PORT
+	    else
+		echo '[ ".install.netcat.rpm" ]'
+	    fi
 	    ;;
 	'Read (.rpc,'*)
 	    SERVICE=$(echo "$COMMAND" | sed 's/^Read (.rpc, *"\(.*\)")/\1/')

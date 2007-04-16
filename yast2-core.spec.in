@@ -30,7 +30,8 @@ BuildRequires:	liby2util-devel
 BuildRequires:	curl-devel
 
 Summary:	-
-Requires:	netcat
+# ag_hostnames: .net.hostnames (#264309)
+Recommends:	netcat
 Requires:	perl = %{perl_version}
 # liby2util-2.11.5: ExternalCommand::renumber_fd
 Requires:	liby2util >= 2.11.5
