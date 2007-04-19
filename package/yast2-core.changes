@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Thu Apr 19 12:55:05 CEST 2007 - sh@suse.de
+
+- Merged mod-ui branch changes (r37462:37567) back to trunk:
+  - Reorganized layout of libyui source tree:
+    Moved header files to the same directory as sources
+
+- V 2.15.8
+
+-------------------------------------------------------------------
 Mon Apr 16 17:59:35 CEST 2007 - mvidner@suse.cz
 
 - Recommend, not require, netcat (#264309).
