@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed May  9 15:14:49 CEST 2007 - sh@suse.de
+
+- Added SimplePatchSelector widget (requested by hmuelle) 
+  for move-to-sp1 patch as a workaround to zen-updater limitations:
+  zen-updater can't handle dependency problems, and a simpler UI
+  than a full-fledged PackageSelector is required by PM
+- V 2.13.39
+
+-------------------------------------------------------------------
 Fri Feb 23 10:50:13 CET 2007 - mvidner@suse.cz
 
 - Signals: in addition to SEGV, catch also HUP, INT, QUIT, ILL, ABRT,

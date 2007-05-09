@@ -139,6 +139,7 @@
 #define YUISpecialWidget_VMultiProgressMeter	"VMultiProgressMeter"
 #define YUISpecialWidget_PartitionSplitter	"PartitionSplitter"
 #define YUISpecialWidget_PatternSelector	"PatternSelector"
+#define YUISpecialWidget_SimplePatchSelector	"SimplePatchSelector"
 #define YUISpecialWidget_Slider			"Slider"
 #define YUISpecialWidget_Time			"Time"
 #define YUISpecialWidget_Wizard			"Wizard"
