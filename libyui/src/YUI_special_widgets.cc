@@ -64,6 +64,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_Slider			)	hasWidget = hasSlider();
     else if ( symbol == YUISpecialWidget_PatternSelector	)	hasWidget = hasPatternSelector();
     else if ( symbol == YUISpecialWidget_PartitionSplitter	)	hasWidget = hasPartitionSplitter();
+    else if ( symbol == YUISpecialWidget_SimplePatchSelector	)	hasWidget = hasSimplePatchSelector();
     else if ( symbol == YUISpecialWidget_Wizard			)	hasWidget = hasWizard();
     else if ( symbol == YUISpecialWidget_Date			)	hasWidget = hasDate();
     else if ( symbol == YUISpecialWidget_Time			)	hasWidget = hasTime();
@@ -806,6 +807,62 @@ YWidget * YUI::createPatternSelector( YWidget *parent, YWidgetOpt & opt, const Y
 }
 
 
+/*
+ * @widget	SimplePatchSelector
+ * @short	Simplified approach to patch selection
+ * @class	YSimplePatchSelector
+ * @usage	if ( UI::HasSpecialWidget( `SimplePatchSelector) {...
+ *		`SimplePatchSelector()...
+ *		UI::RunPkgSelection();
+ *
+ * @examples	SimplePatchSelector-empty.ycp SimplePatchSelector-stable.ycp
+ *
+ * @description
+ *
+ * This is a stripped-down version of the PackageSelector widget in "online
+ * update" ("patches") mode. It provides a very simplistic view on patches. It does
+ * not give access to handling packages by itself, but it contains a
+ * "Details..." button that lets the application open a full-fledged
+ * PackageSelector (in "online update" / "patches" mode).
+ *
+ * Be advised that only this widget alone without access to the full
+ * PackageSelector might easily lead the user to a dead end: If dependency
+ * problems arise that cannot easily be solved from within the dependency
+ * problems dialog or by deselecting one or several patches, it might be
+ * necessary for the user to solve the problem on the package level. If he
+ * cannot do that, he might be unable to continue his update task.
+ *
+ * This widget is similar in many ways to the PatternSelector widget: It gives
+ * a higher-level, more abstract access to package management at the cost of
+ * omitting details and fine control that more advanced users will want or
+ * need. The SimplePatchSelector should be used in ways similarl to the
+ * PatternSelector widget.
+ */
+
+YWidget * YUI::createSimplePatchSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+				      const YCPList & optList, int argnr )
+{
+    if ( term->size() - argnr > 0 )
+    {
+	y2error( "Invalid arguments for the SimplePatchSelector widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    rejectAllOptions( term, optList );
+    
+    if ( hasSimplePatchSelector() )
+    {
+	return createSimplePatchSelector( parent, opt );
+    }
+    else
+    {
+	y2error( "This UI does not support the SimplePatchSelector." );
+	return 0;
+    }
+}
+
+
 
 /**
  * @widgets	Date
@@ -1102,6 +1159,16 @@ YWidget * YUI::createPatternSelector( YWidget *		parent,
 				      YWidgetOpt &	opt )
 {
     y2error( "Default createPatternSelector() method called - "
+	     "forgot to call HasSpecialWidget()?" );
+
+    return 0;
+}
+
+
+YWidget * YUI::createSimplePatchSelector( YWidget *		parent,
+				      YWidgetOpt &	opt )
+{
+    y2error( "Default createSimplePatchSelector() method called - "
 	     "forgot to call HasSpecialWidget()?" );
 
     return 0;

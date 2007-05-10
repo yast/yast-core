@@ -789,6 +789,14 @@ protected:
 
 
     /**
+     * Creates a simple patch selector.
+     **/
+    virtual YWidget *createSimplePatchSelector( YWidget *parent, YWidgetOpt & opt );
+
+    virtual bool	hasSimplePatchSelector() { return false; }
+
+
+    /**
      * Creates a Wizard frame.
      */
     virtual YWidget *createWizard( YWidget *parent, YWidgetOpt & opt,
@@ -1406,6 +1414,13 @@ protected:
      */
     YWidget *createPatternSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				    const YCPList & optList, int argnr );
+
+    /**
+     * Helper function of createWidgetTree.
+     * Creates a SimplePatchSelector.
+     */
+    YWidget *createSimplePatchSelector( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
+					const YCPList & optList, int argnr );
 
 
     /**

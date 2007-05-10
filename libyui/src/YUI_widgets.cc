@@ -262,6 +262,7 @@ YWidget * YUI::createWidgetTree( YWidget *		p,
     else if ( s == YUISpecialWidget_Time		)	w = createTime			( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_PartitionSplitter	)	w = createPartitionSplitter	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_PatternSelector	)	w = createPatternSelector	( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_SimplePatchSelector	)	w = createSimplePatchSelector	( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_Wizard		)	w = createWizard		( p, opt, term, ol, n );
     else
     {
