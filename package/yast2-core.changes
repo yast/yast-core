@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu May 24 11:56:41 CEST 2007 - stbinner@suse.de
+
+- add missing %run_ldconfig calls
+
+-------------------------------------------------------------------
 Thu Apr 19 12:55:05 CEST 2007 - sh@suse.de
 
 - Merged mod-ui branch changes (r37462:37567) back to trunk:

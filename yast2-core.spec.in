@@ -93,6 +93,12 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 @CLEAN@
 
+%post
+%run_ldconfig
+
+%postun
+%run_ldconfig
+
 %files
 %defattr(-,root,root)
 
