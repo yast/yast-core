@@ -1,35 +1,8 @@
 #!/usr/bin/expect --
-# test ...
+# try to test bug #263308
 
-set timeout 3
-expect_after {    
-    default {
-	puts "OOPS, last matched <<$expect_out(buffer)>>"
-	exit 1
-    }
-    # pass thru agent stderr
-#    -i $error_spawn_id
-#    default {send_user $expect_out(buffer)}
-}
+source test-common.exp
 
-#stty -echo
-
-#set prog "/usr/lib/YaST2/servers_non_y2/ag_background"
-set prog "../ag_background"
-puts $prog
-
-# does not work
-#spawn "sh" "-c" "PERLDB_OPTS='NonStop=1 AutoTrace=1 frame=6' perl -dS $prog"
-
-# can pass -d
-spawn $prog $argv
-
-match_max 100000
-
-# TODO use a basic loop like in example and docs
-# (while running, or while output open? clarify!)
-
-# sleep: have it still running while this simple test runs
 send "`Execute(.run_output_err, \"echo O; echo O; sleep 1; echo OUT; echo >&2 ERR; exit 2\")\r"
 expect "(true)$"
 

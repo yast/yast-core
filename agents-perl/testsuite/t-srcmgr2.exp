@@ -1,36 +1,14 @@
 #!/usr/bin/expect --
 # test ...
 
-set timeout 3
-expect_after {    
-    default {
-	puts "OOPS, last matched <<$expect_out(buffer)>>"
-	exit 1
-    }
-    # pass thru agent stderr
-#    -i $error_spawn_id
-#    default {send_user $expect_out(buffer)}
-}
-
-#stty -echo
-
-#set prog "/usr/lib/YaST2/servers_non_y2/ag_background"
-set prog "../ag_background"
-#puts $prog
-
-# does not work
-#spawn "sh" "-c" "PERLDB_OPTS='NonStop=1 AutoTrace=1 frame=6' perl -dS $prog"
-
-# can pass -d
-spawn $prog $argv
-
-match_max 100000
-
-
-send "`Execute(.run_output_err, \"seq 100 199; seq 200 249 >&2; exec 1<&- 2<&-; sleep 2; exit 113\")\r"
-expect "(true)$"
+source test-common.exp
 
 send "`Write(.buffer_size, 10)\r";
+expect "(true)$"
+send "`Write(.buffer_size_err, 10)\r";
+expect "(true)$"
+
+send "`Execute(.run_output_err, \"seq 100 199; seq 200 249 >&2; exec 1<&- 2<&-; sleep 2; exit 113\")\r"
 expect "(true)$"
 
 while {1} {

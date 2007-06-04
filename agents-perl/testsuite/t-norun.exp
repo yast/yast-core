@@ -1,16 +1,8 @@
-#!/usr/bin/expect -f
+#!/usr/bin/expect --
 # test agent status before starting a process
-set timeout 3
-expect_after {
-    default {
-	puts OOPS
-	exit 1
-    }
-}
 
-#stty -echo
-spawn ../ag_background
-match_max 100000
+source test-common.exp
+
 expect -exact ""
 
 send "`Read(.pid)\r"

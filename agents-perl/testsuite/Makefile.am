@@ -7,3 +7,5 @@ TESTS = \
  t-srcmgr2.exp
 
 XFAIL_TESTS = t-srcmgr1.exp
+
+EXTRA_DIST = test-comon.exp $(TESTS)
