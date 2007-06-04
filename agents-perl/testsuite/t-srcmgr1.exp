@@ -1,0 +1,58 @@
+#!/usr/bin/expect --
+# test ...
+
+set timeout 3
+expect_after {    
+    default {
+	puts "OOPS, last matched <<$expect_out(buffer)>>"
+	exit 1
+    }
+    # pass thru agent stderr
+#    -i $error_spawn_id
+#    default {send_user $expect_out(buffer)}
+}
+
+#stty -echo
+
+#set prog "/usr/lib/YaST2/servers_non_y2/ag_background"
+set prog "../ag_background"
+#puts $prog
+
+# does not work
+#spawn "sh" "-c" "PERLDB_OPTS='NonStop=1 AutoTrace=1 frame=6' perl -dS $prog"
+
+# can pass -d
+spawn $prog $argv
+
+match_max 100000
+
+# TODO use a basic loop like in example and docs
+# (while running, or while output open? clarify!)
+
+# sleep: have it still running while this simple test runs
+#send "`Execute(.run_output_err, \"echo O; echo O; exec 1<&-; sleep 2; echo >&2 ERR; exit 113\")\r"
+send "`Execute(.run_output_err, \"echo OUT; echo OUT; echo >&2 ERR; exec 1<&- 2<&-; sleep 2; exit 113\")\r"
+expect "(true)$"
+
+while {1} {
+    send "`Read(.isrunning)\r"
+    expect {
+	"(true)$" {sleep 1}
+	"(false)$" break
+    }
+
+}
+
+send "`Read(.status)\r"
+expect "(113)$"
+
+send "`Read(.newout)\r"
+expect -ex "\[\"OUT\",\"OUT\",\] "
+send "`Read(.newerr)\r"
+expect -ex "\[\"ERR\",\] "
+
+send "`Execute(.kill, \"\")\r"
+expect "(false)$"
+
+send "`result(true)\r"
+expect eof

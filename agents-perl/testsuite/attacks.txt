@@ -1,0 +1,9 @@
+test it all on original agent and the new one
+
+1) possible bug: double assignment of exit status (on eof of both stdout and
+stderr)
+
+2)
+try also running more (unrelated) processes to check whether the values are
+properly initialized, to simulate indepedent uses of the agent within a single
+yast process

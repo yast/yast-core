@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jun  4 14:40:26 CEST 2007 - mvidner@suse.cz
+
+- ag_background: added a test suite.
+
+-------------------------------------------------------------------
 Thu May 24 11:56:41 CEST 2007 - stbinner@suse.de
 
 - add missing %run_ldconfig calls

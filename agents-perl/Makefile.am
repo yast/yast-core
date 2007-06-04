@@ -2,7 +2,7 @@
 # Makefile.am for core/agents-perl
 #
 
-SUBDIRS = conf lib doc
+SUBDIRS = conf lib doc testsuite
 
 agentdir = @execcompdir@/servers_non_y2
 

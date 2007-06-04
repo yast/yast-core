@@ -1,0 +1,48 @@
+#!/usr/bin/expect -f
+# test agent status before starting a process
+set timeout 3
+expect_after {
+    default {
+	puts OOPS
+	exit 1
+    }
+}
+
+#stty -echo
+spawn ../ag_background
+match_max 100000
+expect -exact ""
+
+# sleep: have it still running while this simple test runs
+send "`Execute(.run, \"sleep 2; echo Hello world\")\r"
+expect "(true)"
+
+send "`Read(.pid)\r"
+expect -re "(\[0-9\]+)"
+send_user "\n"
+
+send "`Read(.store)\r"
+expect "(false)"
+send "`Read(.isrunning)\r"
+expect "(true)"
+# still undefined? 
+send "`Read(.status)\r"
+expect "(0)"
+send "`Read(.lines)\r"
+expect "(0)"
+send "`Read(.lines_err)\r"
+expect "(0)"
+send "`Read(.newlines)\r"
+expect "(0)"
+send "`Read(.newlines_err)\r"
+expect "(0)"
+send "`Read(.newout)\r"
+expect -ex "\[\] "
+send "`Read(.newerr)\r"
+expect -ex "\[\] "
+send "`Read(.output_open)\r"
+expect "(true)"
+send "`Read(.output_open_err)\r"
+expect "(true)"
+send "`result(true)\r"
+expect eof

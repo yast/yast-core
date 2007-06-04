@@ -1,0 +1,43 @@
+#!/usr/bin/expect -f
+# test agent status before starting a process
+set timeout 3
+expect_after {
+    default {
+	puts OOPS
+	exit 1
+    }
+}
+
+#stty -echo
+spawn ../ag_background
+match_max 100000
+expect -exact ""
+
+send "`Read(.pid)\r"
+expect "(-1)"
+send_user "\n"
+
+send "`Read(.store)\r"
+expect "(false)"
+send "`Read(.isrunning)\r"
+expect "(false)"
+send "`Read(.status)\r"
+expect "(0)"
+send "`Read(.lines)\r"
+expect "(0)"
+send "`Read(.lines_err)\r"
+expect "(0)"
+send "`Read(.newlines)\r"
+expect "(0)"
+send "`Read(.newlines_err)\r"
+expect "(0)"
+send "`Read(.newout)\r"
+expect -ex "\[\] "
+send "`Read(.newerr)\r"
+expect -ex "\[\] "
+send "`Read(.output_open)\r"
+expect "(false)"
+send "`Read(.output_open_err)\r"
+expect "(false)"
+send "`result(true)\r"
+expect eof

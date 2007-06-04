@@ -1,0 +1,50 @@
+`Execute(.run, "cmd")
+`Execute(.run_output, "cmd")
+`Execute(.run_output_err, "cmd")
+
+`Execute(.kill)
+
+`Read(.pid)
+`Read(.isrunning)
+`Read(.status)
+`Read(.lines)
+`Read(.lines_err)
+`Read(.newlines)
+`Read(.newlines_err)
+`Read(.store)
+`Read(.newout)
+`Read(.newerr)
+`Read(.buffer_out)
+`Read(.buffer_err)
+`Read(.output_open)
+`Read(.output_open_err)
+`Read(.buffer_size)
+`Read(.buffer_size_err)
+
+`Write(.buffer_size, num)
+`Write(.buffer_size_err, num)
+`Write(.stdin, "string")
+
+`result(true)
+
+--
+`Execute(.run, "sh -c 'exit 0'")
+`Read(.pid) # expect positive number
+sleep
+`Read(.store) #no
+`Read(.output_open)
+`Read(.output_open_err)
+`Read(.isrunning) # no
+`Read(.status)
+# empty output
+# numbers
+`Read(.lines)
+`Read(.lines_err)
+`Read(.newlines)
+`Read(.newlines_err)
+`Read(.newout)
+`Read(.newerr)
+# nonlines
+`Read(.buffer_out)
+`Read(.buffer_err)
+`result(true)
