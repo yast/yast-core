@@ -8,4 +8,4 @@ TESTS = \
 
 XFAIL_TESTS = t-srcmgr1.exp
 
-EXTRA_DIST = test-comon.exp $(TESTS)
+EXTRA_DIST = test-common.exp $(TESTS)
