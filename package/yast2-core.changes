@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 25 18:10:49 CEST 2007 - mvidner@suse.cz
+
+- ag_background: added a test suite.
+- Recommend, not require, netcat (#264309).
+
+-------------------------------------------------------------------
 Thu Jun 21 17:37:27 CEST 2007 - adrian@suse.de
 
 - fix changelog entry order
