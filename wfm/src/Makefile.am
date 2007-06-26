@@ -42,6 +42,5 @@ wfmincludedir = $(includedir)/wfm
 
 wfminclude_HEADERS =				\
 	Y2WFMComponent.h			\
-	WFMSubAgent.h
-
-
+	WFMSubAgent.h				\
+	WFM.h
