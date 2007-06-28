@@ -78,11 +78,11 @@ Random (const YCPInteger & max)
     /**
      * @builtin random
      * @short Random number generator.
-     * @description Returns random integer in the interval (0,MAX).
+     * @description Returns a random integer in the interval [0,MAX).
      * <tt>srandom</tt> must be activated to get really random
      * numbers.
      * @param integer MAX
-     * @return integer Returns integer in the interval (0,MAX).
+     * @return integer Returns integer in the interval [0,MAX).
      * @usage random(100) -> 82
      * @usage random(100) -> 36
      */
@@ -90,6 +90,7 @@ Random (const YCPInteger & max)
     if (max.isNull ())
 	return YCPNull ();
 
+    // see NOTES in man 3 rand,
     // <1,10> 1+(int) (10.0*rand()/(RAND_MAX+1.0));
     int ret = (int) (max->value () * rand () / (RAND_MAX + 1.0));
     return YCPInteger (ret);
