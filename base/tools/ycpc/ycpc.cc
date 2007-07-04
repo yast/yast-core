@@ -22,6 +22,7 @@
 #include <ycp/YCode.h>
 #include <ycp/Parser.h>
 #include <ycp/Bytecode.h>
+#include <ycp/Xmlcode.h>
 #include <ycp/Import.h>
 #include <ycp/y2log.h>
 #include <../../libycp/src/parser.h>
@@ -55,6 +56,7 @@ static int no_std_path = 0;	// dont use builtin pathes
 static int recursive = 0;	// recursively all files
 static int parse = 0;		// just parse source code
 static int compile = 0;		// just compile source to bytecode
+static int to_xml = 0;		// output XML instead of bytecode
 static int read_n_print = 0;	// read and print bytecode
 static int read_n_run = 0;	// read and run bytecode
 static int freshen = 0;		// freshen recompilation
@@ -915,11 +917,11 @@ compilefile (const char *infname, const char *outfname)
 	int len = ofname.size ();
 	if (len > 4 && ofname.substr (len-4, 4) == ".ycp")
 	{
-	    ofname = ofname.replace (len-4, 4, ".ybc");
+	    ofname = ofname.replace (len-4, 4, to_xml ? ".xml" : ".ybc");
 	}
 	else
 	{
-	    ofname += ".ybc";
+	    ofname += to_xml ? ".xml" : ".ybc";
 	}
     }
     progress ("compiling to '%s'\n", ofname.c_str ());
@@ -929,7 +931,14 @@ compilefile (const char *infname, const char *outfname)
     if (c != NULL )
     {
 	progress ("saving ...\n");
-	return Bytecode::writeFile (c, ofname) ? 0 : 1;
+	int result = 0;
+	if (to_xml) {
+	    result = Xmlcode::writeFile (c, ofname);
+	}
+	else {
+	    result = Bytecode::writeFile (c, ofname);
+	}
+	return result ? 0 : 1;
     }
 
     return 2;
@@ -1178,10 +1187,11 @@ int main(int argc, char *argv[])
 	    {"test", 0, 0, 't'},			// lots of output
 	    {"ui", 1, 0, 'u' },				// UI to start in combination with 'r'
 	    {"version", 0, 0, 'v'},			// show version and exit
+	    {"xml", 0, 0, 'x'},				// output XML insteaf of Bytecode
 	    {0, 0, 0, 0}
 	};
 
-	int c = getopt_long (argc, argv, "h?vVnpqrtRdEcFfI:M:o:l:u:", options, &option_index);
+	int c = getopt_long (argc, argv, "h?vxVnpqrtRdEcFfI:M:o:l:u:", options, &option_index);
 	if (c == EOF) break;
 
 	switch (c)
@@ -1268,6 +1278,9 @@ int main(int argc, char *argv[])
 		break;
 	    case 'u':
 		ui_name = strdup (optarg);
+		break;
+	    case 'x':
+		to_xml = 1;
 		break;
 	    default:
 		fprintf (stderr, "Try `%s -h' for more information.\n", argv[0]);
