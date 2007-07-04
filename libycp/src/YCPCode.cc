@@ -23,6 +23,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPCode.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 //---------------------------------------------------------------------------
 // YCPCodeRep
@@ -89,6 +90,14 @@ YCPCodeRep::toStream (std::ostream & str) const
     return m_code->toStream (str);
 }
 
+std::ostream &
+YCPCodeRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<ycpcode>";
+    m_code->toXml( str, indent );
+    return str << "</ycpcode>";
+}
+
 // --------------------------------------------------------
 
 YCPCode::YCPCode (bytecodeistream & str)
@@ -153,6 +162,12 @@ YCPEntryRep::toStream (std::ostream & str) const
     return Bytecode::writeEntry (str, m_entry);
 }
 
+std::ostream &
+YCPEntryRep::toXml( std::ostream & str, int indent ) const
+{
+    return Xmlcode::writeEntry (str, m_entry);
+}
+
 
 
 //---------------------------------------------------------------------------
@@ -210,6 +225,25 @@ YCPReferenceRep::toStream (std::ostream & str) const
     return str;
 }
 
+std::ostream &
+YCPReferenceRep::toXml( std::ostream & str, int indent ) const
+{
+    // this is not used, instead YEVariable is used for xml
+    return str;
+}
 
+
+
+std::ostream &
+YCPBreakRep::toXml( std::ostream & str, int indent ) const
+{
+    return str << "<break/>";
+}
+
+std::ostream &
+YCPReturnRep::toXml( std::ostream & str, int indent ) const
+{
+    return str << "<return/>";
+}
 
 // EOF

@@ -36,6 +36,7 @@
 #include "ycp/Point.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/Scanner.h"
 
 #include "ycp/y2log.h"
@@ -516,6 +517,49 @@ YBlock::toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) cons
 }
 
 
+std::ostream &
+YBlock::toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::ostream & str, int indent ) const
+{
+    // first, create reverse map of cases
+    int statementcount = statementCount ();
+    YCPValue values[statementcount];
+    
+    for (int i = 0; i < statementcount; i++)
+	values[i] = YCPNull ();
+	
+    for (map<YCPValue, int, ycpless>::iterator it = cases.begin ();
+	it != cases.end (); it++ )
+    {
+	values[ it->second ] = it->first;
+    }
+    
+    // s += environmentToString ();
+
+    stmtlist_t *stmt = m_statements;
+    int index = 0;
+    while (stmt)
+    {
+	str << Xmlcode::spaces( indent );
+	if (index == defaultcase)
+	{
+	    str << "<default>\n";
+	    str << stmt->stmt->toXml( str, indent+2 ) << endl;
+	    str << "</default>";
+	}
+	else if (! values[index].isNull ())
+	{
+	    str << "<case>" << values[index]->toXml( str, 0 ) << endl;
+	    str << stmt->stmt->toXml( str, indent+2 ) << endl;
+	    str << "</case>";
+	}
+	stmt = stmt->next;
+	index++;
+    }
+
+    return str;
+}
+
+
 YCPValue
 YBlock::evaluate (bool cse)
 {
@@ -961,6 +1005,92 @@ YBlock::toStream (std::ostream & str) const
 #if DO_DEBUG
     y2debug ("YBlock::toStream done");
 #endif
+    return str;
+}
+
+
+std::ostream &
+YBlock::toXml( std::ostream & str, int indent ) const
+{
+    str << Xmlcode::spaces( indent ) << "<block kind=\"";
+
+    switch( m_kind ) {
+	case b_unknown: str << "unspec"; break;
+	case b_module: str << "module"; break;
+	case b_file: str << "file"; break;
+	case b_statement: str << "stmt"; break;
+	case b_definition: str << "def"; break;
+	case b_value: str << "value"; break;
+	case b_namespace: str << "namespace"; break;
+	case b_using: str << "using"; break;
+    }
+    str << "\"";
+    if( !m_name.empty() ) {
+	str << " name=\"" << m_name << "\"";
+    }
+    str << ">\n";
+
+    indent += 2;
+
+    Xmlcode::pushNamespace (nameSpace());
+
+    if (symbolCount() > 0)
+    {
+	str << Xmlcode::spaces( indent ) << "<symbols>\n";
+
+	for (unsigned int i = 0; i < symbolCount(); i++)
+	{
+	    YSymbolEntryPtr entry = (YSymbolEntryPtr)symbolEntry (i);
+	    entry->toXml( str, indent+2 );				// write SymbolEntry
+	    str << endl;
+	}
+	str << Xmlcode::spaces( indent ) << "</symbols>\n";
+
+#if 0
+	// if its a module, write the table
+
+	if (isModule())	
+	{
+	    yTElist_t *tptr = m_tenvironment;
+
+	    if (tptr) {
+		str << Xmlcode::spaces( indent ) << "<table>\n";
+		
+		while (tptr)
+		{
+		    tptr->tentry->toXml( str, indent+2 );		// write the table entries
+		    str << endl;
+		    tptr = tptr->next;
+		}
+		str << Xmlcode::spaces( indent ) << "</table>\n";
+	    }
+	}
+#endif
+    }
+
+#if 0
+    m_point->toXml( str, indent );
+    str << endl;
+#endif
+
+    stmtlist_t *stmt = m_statements;
+    if( stmt ) {
+	str << Xmlcode::spaces( indent ) << "<statements>\n";
+
+	while (stmt)						// write statements
+	{
+	    str << Xmlcode::spaces( indent+2 );
+	    stmt->stmt->toXml (str, indent+2 );				// YSImport will push it's namespace
+	    str << endl;
+	    stmt = stmt->next;
+	}
+
+	str << Xmlcode::spaces( indent ) << "</statements>\n";
+    }
+    Xmlcode::popUptoNamespace (nameSpace());
+
+    str << Xmlcode::spaces( indent-2 ) << "</block>\n";
+
     return str;
 }
 

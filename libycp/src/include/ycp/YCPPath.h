@@ -51,6 +51,7 @@ class YCPPathRep : public YCPValueRep
         }
         string toString() const;
 	std::ostream & toStream (std::ostream & str) const;
+	std::ostream & toXml (std::ostream & str, int indent ) const;
     };
 
     vector<Component> components;
@@ -149,6 +150,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_PATH. See @ref YCPValueRep#valuetype.

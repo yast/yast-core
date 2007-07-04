@@ -72,6 +72,7 @@ public:
     ~YStatement () {};
     virtual string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     /** yes */
     virtual bool isStatement () const { return true; }
     int line () const { return m_line; };
@@ -94,6 +95,7 @@ public:
     virtual ykind kind () const { return ysBreak; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
 };
 
@@ -112,6 +114,7 @@ public:
     virtual ykind kind () const { return ysContinue; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
 };
 
@@ -132,6 +135,7 @@ public:
     virtual ykind kind () const { return ysExpression; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -153,6 +157,7 @@ public:
     virtual ykind kind () const { return ysBlock; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -177,6 +182,7 @@ public:
     void clearValue ();		// needed if justReturn triggers
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -199,6 +205,7 @@ public:
     virtual ykind kind () const { return ysTypedef; }
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -229,6 +236,7 @@ public:
 
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -253,6 +261,7 @@ public:
     virtual ykind kind () const { return ysAssign; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
 };
 
@@ -294,6 +303,7 @@ public:
     virtual ykind kind () const { return ysBracket; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     // recursively extract list arg at idx, get value from current at idx
     // and replace with value. re-generating the list/map/term during unwind
     YCPValue commit (YCPValue current, int idx, YCPList arg, YCPValue value);
@@ -320,6 +330,7 @@ public:
     virtual ykind kind () const { return ysIf; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -343,6 +354,7 @@ public:
     virtual ykind kind () const { return ysWhile; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -366,6 +378,7 @@ public:
     virtual ykind kind () const { return ysRepeat; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -389,6 +402,7 @@ public:
     virtual ykind kind () const { return ysDo; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -410,6 +424,7 @@ public:
     virtual ykind kind () const { return ysTextdomain; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
     const char *domain () const { return m_domain->c_str(); };
@@ -435,6 +450,7 @@ public:
     virtual ykind kind () const { return ysInclude; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
     string filename () const { return m_filename; };
@@ -458,6 +474,7 @@ public:
     string name () const;
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -479,6 +496,7 @@ public:
     virtual ykind kind () const { return ysFilename; }
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
 };
@@ -508,6 +526,7 @@ public:
     string name () const;
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type () const { return Type::Void; };
     constTypePtr conditionType () const { return m_condition->type (); };

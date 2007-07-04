@@ -115,6 +115,9 @@ public:								\
     std::ostream & toStream (std::ostream & str ) const {	\
 	return element->toStream (str);				\
     }								\
+    std::ostream & toXml (std::ostream & str, int indent ) const {	\
+	return element->toXml( str, indent );				\
+    }								\
     YCPValueType valuetype () const { return (static_cast<const YCP##name##Rep*>(element))->valuetype (); }
 
 
@@ -274,6 +277,7 @@ public:
      * Writes the value to a stream in bytecode format.
      */
     virtual std::ostream & toStream (std::ostream & str) const = 0;
+    virtual std::ostream & toXml (std::ostream & str, int indent ) const = 0;
     
     /**
      * Returns a shallow copy of this elementRep. Redefine this method 

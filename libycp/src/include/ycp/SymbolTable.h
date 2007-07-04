@@ -90,6 +90,7 @@ public:
     string toStringSymbols () const;
     void makeDefinition (int line);	// convert declaration to definition (exchanges m_point)
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     // remove yourself from the SymbolTable.
     void remove ();
@@ -195,6 +196,7 @@ public:
     // write usage to stream, see YSImport
 
     std::ostream &writeUsage (std::ostream & str) const;
+    std::ostream &writeXmlUsage( std::ostream & str, int indent ) const;
 
     //---------------------------------------------------------------
     // string

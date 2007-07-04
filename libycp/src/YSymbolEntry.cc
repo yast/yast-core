@@ -32,6 +32,7 @@ using std::string;
 #include "ycp/SymbolTable.h"
 #include "ycp/StaticDeclaration.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 IMPL_DERIVED_POINTER(YSymbolEntry, SymbolEntry);
 
@@ -257,6 +258,31 @@ YSymbolEntry::toStream (std::ostream & str) const
     }
 #endif
     return str;
+    // value is never written
+}
+
+
+std::ostream &
+YSymbolEntry::toXml (std::ostream & str, int indent ) const
+{
+    str << Xmlcode::spaces( indent ) << "<sym_def";
+    if (m_global) str << " global=\"1\"";
+    str << " category=\"" << catString(); str << "\"";
+    str << " type=\""; str << m_type->toXmlString(); str << "\"";
+    str << ">";
+    str << m_name.asString();
+#if 0
+    if (m_category == c_variable)
+    {
+	if (m_payload.m_code != 0)		// formal arguments don't have a payload (a default value)
+	{
+	    str << "<payload>";
+	    m_payload.m_code->toXml( str, indent+2 );
+	    str << "</payload>";
+	}
+    }
+#endif
+    return str << "</sym_def>";
     // value is never written
 }
 

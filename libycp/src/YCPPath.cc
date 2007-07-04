@@ -20,6 +20,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPPath.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include <ctype.h>
 
 // YCPPathRep
@@ -330,6 +331,16 @@ YCPPathRep::Component::toStream (std::ostream & str) const
 }
 
 std::ostream &
+YCPPathRep::Component::toXml (std::ostream & str, int indent ) const
+{
+    str << "<component";
+    if (complex) str << " complex";
+    str << ">";
+    str << component.asString();
+    return str << "</component>";
+}
+
+std::ostream &
 YCPPathRep::toStream (std::ostream & str) const
 {
 #if 0
@@ -345,6 +356,26 @@ YCPPathRep::toStream (std::ostream & str) const
 #else
     return Bytecode::writeString (str, toString());
 #endif
+}
+
+std::ostream &
+YCPPathRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<path>";
+#if 0
+    if (Xmlcode::writeInt32 (str, components.size()))
+    {
+	for (unsigned c = 0; c < components.size(); c++)
+	{
+	    if (!components[c].toStream (str))
+		break;
+	}
+    }
+    return str;
+#else
+    str << toString();
+#endif
+    return str << "</path>";
 }
 
 

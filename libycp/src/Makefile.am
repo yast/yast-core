@@ -21,6 +21,7 @@ lib_LTLIBRARIES = libycpvalues.la libycp.la
 
 libycpvalues_la_SOURCES = 				\
 	Bytecode.cc Import.cc Point.cc			\
+	Xmlcode.cc					\
 	YCPBoolean.cc					\
 	YCPElement.cc YCPByteblock.cc YCPFloat.cc	\
 	YCPInteger.cc YCPList.cc 			\

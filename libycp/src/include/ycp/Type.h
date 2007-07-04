@@ -30,6 +30,7 @@
 
 class FunctionType;
 class bytecodeistream;
+class xmlcodeistream;
 
 /// YCP type
 class Type : public Rep
@@ -182,11 +183,17 @@ public:
      * Converts a type code to its YCP notation.
      */
     virtual string toString () const;
+    virtual string toXmlString () const;
 
     /**
-     * write out to stream
+     * write bytecode out to stream
      */
     virtual std::ostream & toStream (std::ostream & str) const;
+
+    /**
+     * write xml out to stream
+     */
+    virtual std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /*
      * is base or constructed type

@@ -34,6 +34,7 @@ using namespace std;
 #include "ycp/YBlock.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/Import.h"
 #include "ycp/Point.h"
 
@@ -510,6 +511,29 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
     Bytecode::writeCharp (str, n.c_str());
     decl->type->toStream (str);
     return str;
+}
+
+
+// write declaration to stream (name and type)
+std::ostream &
+StaticDeclaration::writeXmlDeclaration (std::ostream & str, const declaration_t *decl) const
+{
+    str << "<static";
+
+    string ns;
+
+    const declaration_t *d = decl;
+    while( d->name_space != 0 )
+    {
+        d = d->name_space;
+	if (!ns.empty()) ns += "::";
+	ns = std::string(d->name);
+    }
+
+    if (!ns.empty()) str << " ns=\"" << ns << "\"";
+    str << " name=\"" << Xmlcode::xmlify( decl->name ) << "\">";
+    decl->type->toXml( str, 0 );
+    return str << "</static>";
 }
 
 

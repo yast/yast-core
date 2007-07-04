@@ -23,6 +23,7 @@
 #include "ycp/SymbolTable.h"
 #include "y2/SymbolEntry.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/Point.h"
 
 #ifndef DO_DEBUG
@@ -176,6 +177,26 @@ TableEntry::toStream (std::ostream & str) const
 	((YFunctionPtr)(((YSymbolEntryPtr)m_entry)->code()))->toStream (str);
     }
     return str;
+}
+
+
+std::ostream &
+TableEntry::toXml (std::ostream & str, int indent ) const
+{
+    str << Xmlcode::spaces( indent ) << "<tableentry>\n";
+    str << Xmlcode::spaces( indent+2 );
+    Xmlcode::writeEntry (str, m_entry);
+    str << endl;
+    m_point->toXml (str, indent+2 );
+    if ((m_entry->category() == SymbolEntry::c_function)		// write function prototype if it's global
+	&& m_entry->isGlobal())
+    {
+//	y2debug ("TableEntry::toStream: write global function prototype");
+
+	// FIXME: why do we this here???
+	((YFunctionPtr)(((YSymbolEntryPtr)m_entry)->code()))->toXml( str, indent );
+    }
+    return str << endl << Xmlcode::spaces( indent ) << "</tableentry>";
 }
 
 
@@ -476,6 +497,60 @@ SymbolTable::writeUsage (std::ostream & str) const
     }
 
     return str;
+}
+
+
+std::ostream &
+SymbolTable::writeXmlUsage (std::ostream & str, int indent ) const
+{
+    if (m_used == 0)
+	return str;
+
+    std::vector<TableEntry *> xrefs;
+
+    std::map<const char *, TableEntry *>::iterator it;
+
+    for (it = m_used->begin(); it != m_used->end(); it++)
+    {
+	TableEntry *tentry = it->second;
+	tentry->sentry()->setPosition (xrefs.size());
+#if DO_DEBUG
+	y2debug ("%d -> %s", xrefs.size(), tentry->sentry()->toString().c_str());
+#endif
+	xrefs.push_back (tentry);
+    }
+
+    int rsize = xrefs.size();
+    if (rsize == 0)
+	return str;
+
+    bool xref_debug = (getenv (XREFDEBUG) != 0);
+
+    if (xref_debug) y2milestone ("Need %d symbols from table %p\n", rsize, this);
+#if DO_DEBUG
+    else y2debug ("Need %d symbols from table %p\n", rsize, this);
+#endif
+
+    str << Xmlcode::spaces( indent ) << "<usage>\n";
+
+    int position = 0;
+    while (position < rsize)
+    {
+	SymbolEntryPtr sentry = xrefs[position]->sentry();
+
+	if (xref_debug) y2milestone("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+#if DO_DEBUG
+	else y2debug("XRef %p::%s @ %d\n", this, sentry->toString().c_str(), position);
+#endif
+	str << Xmlcode::spaces( indent+2 ) << "<name>" << sentry->name() << "</name>";
+	sentry->type()->toXml( str, 0 );
+	str << endl;
+
+	sentry->setPosition (-position - 1);			// negative position -> Xref
+	position++;
+    }
+
+    return str << Xmlcode::spaces( indent ) << "</usage>\n";
 }
 
 //-------------------------------------------------------------------

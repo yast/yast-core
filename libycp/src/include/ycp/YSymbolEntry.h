@@ -103,6 +103,7 @@ public:
 
     virtual string toString (bool with_type = true) const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 };
 
 #endif // YSymbolEntry_h

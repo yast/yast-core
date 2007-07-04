@@ -40,6 +40,7 @@
 #include "ycp/YBlock.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
@@ -193,6 +194,17 @@ YCode::toStream (std::ostream & str) const
     y2debug ("YCode::toStream (%d:%s)", (int)k, YCode::toString (k).c_str());
 #endif
     return str.put ((char)k);
+}
+
+
+std::ostream &
+YCode::toXml (std::ostream & str, int indent ) const
+{
+    ykind k = kind ();
+#if DO_DEBUG
+    y2debug ("YCode::toStream (%d:%s)", (int)k, YCode::toString (k).c_str());
+#endif
+    return str << "<ycode code=" << k << "/>";
 }
 
 
@@ -390,6 +402,18 @@ YConst::toStream (std::ostream & str) const
     return m_value->toStream (str);
 }
 
+std::ostream &
+YConst::toXml (std::ostream & str, int indent ) const
+{
+    if (m_kind == ycConstant) {
+	y2error ("Internal error, a constant not supposed to be written to xml");
+    }
+    if (m_value.isNull())
+	return str << "<null/>";
+
+    return m_value->toXml (str, 0 );
+}
+
 
 constTypePtr
 YConst::type () const
@@ -481,6 +505,14 @@ YLocale::toStream (std::ostream & str) const
     YCode::toStream (str);
     Bytecode::writeCharp (str, m_locale);
     return Bytecode::writeCharp (str, m_domain->first);
+}
+
+std::ostream &
+YLocale::toXml (std::ostream & str, int indent ) const
+{
+    str << "<locale domain=\"" << m_domain->first << "\">";
+    str << m_locale;
+    return str << "</locale>";
 }
 
 string
@@ -732,6 +764,14 @@ YFunction::toStreamDefinition (std::ostream & str) const
 }
 
 
+std::ostream &
+YFunction::toXmlDefinition (std::ostream & str, int indent ) const
+{
+    // see toXml(...)
+    return str;
+}
+
+
 // writing a function to a stream is done in two (well, in fact three) parts
 // 1. the SymbolEntry (done when writing the block this function is defined in)
 // 2. the declaration block
@@ -758,6 +798,33 @@ YFunction::toStream (std::ostream & str) const
     {
 	m_declaration->toStream (str);
     }
+    return str;
+}
+
+
+std::ostream &
+YFunction::toXml (std::ostream & str, int indent ) const
+{
+    bool need_declaration = ((m_declaration != 0) && (m_declaration->symbolCount() > 0));
+    bool need_definition = (m_definition != 0);
+
+    if (need_declaration || need_definition) {
+	if (need_declaration)
+	{
+	    Xmlcode::pushNamespace (m_declaration->nameSpace());	// keep the declaration accessible during definition write
+	    str << Xmlcode::spaces( indent+2 ) << "<declaration>\n";
+	    m_declaration->toXml (str, indent+4 );
+	    str << Xmlcode::spaces( indent+2 ) << "</declaration>\n";
+	}
+	str << Xmlcode::spaces( indent+2 ) << "<definition>\n";
+	m_definition->toXml (str, indent+4 );
+	str << Xmlcode::spaces( indent+2 ) << "</definition>\n";
+	if (need_declaration)
+	{
+	    Xmlcode::popNamespace (m_declaration->nameSpace());
+	}
+    }
+
     return str;
 }
 

@@ -45,6 +45,7 @@ using std::string;
 
 #include "ycp/Point.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/Scanner.h"
 
 #include "ycp/y2log.h"
@@ -166,6 +167,22 @@ Point::toStream (std::ostream & str) const
 	Bytecode::writeBool (str, false);
     }
     return str;
+}
+
+
+std::ostream &
+Point::toXml (std::ostream & str, int indent ) const
+{
+    str << Xmlcode::spaces( indent ) << "<point line=" << m_line << ">";
+#if DO_DEBUG
+    y2debug ("Point::toStream (%s)", toString().c_str());
+#endif
+    Xmlcode::writeEntry (str, m_entry);
+    if (m_point)
+    {
+	m_point->toXml( str, indent );
+    }
+    return str << "</point>";
 }
 
 

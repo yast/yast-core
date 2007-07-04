@@ -262,6 +262,7 @@ public:
      */
     YCPOrder compare(const YCPValue &v, bool rl = false) const;
 
+    virtual std::ostream & toXml (std::ostream & str, int indent ) const = 0;
 };
 
 

@@ -79,5 +79,6 @@ class Point
 
     std::string toString (void) const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 };
 #endif // Point_h

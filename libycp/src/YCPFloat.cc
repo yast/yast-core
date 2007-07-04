@@ -22,6 +22,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPFloat.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 // YCPFloatRep
 
@@ -96,6 +97,12 @@ std::ostream &
 YCPFloatRep::toStream (std::ostream & str) const
 {
     return Bytecode::writeString (str, toString());
+}
+
+std::ostream &
+YCPFloatRep::toXml (std::ostream & str, int indent ) const
+{
+    return str << "<float>" << toString() << "</float>";
 }
 
 

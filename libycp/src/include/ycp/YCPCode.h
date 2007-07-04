@@ -73,6 +73,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_CODE. See @ref YCPValueRep#type.
@@ -146,6 +147,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const { return str; };
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_BREAK. See @ref YCPValueRep#type.
@@ -213,6 +215,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const { return str; };
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_BREAK. See @ref YCPValueRep#type.
@@ -279,6 +282,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_ENTRY. See @ref YCPValueRep#type.
@@ -350,6 +354,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_Reference. See @ref YCPValueRep#type.

@@ -281,6 +281,8 @@ public:
 
     // write block to stream
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml( std::ostream & str, int indent ) const;
+    std::ostream & toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::ostream & str, int indent ) const;
 
 };
 

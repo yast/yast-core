@@ -20,6 +20,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPMap.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/ExecutionEnvironment.h"
 
 extern ExecutionEnvironment ee;
@@ -217,6 +218,19 @@ YCPMapRep::toStream (std::ostream & str) const
 	    break;
     }
     return str;
+}
+
+
+std::ostream &
+YCPMapRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<map>";
+    for(YCPMapIterator pos = begin(); pos != end(); ++pos )
+    {
+	str << "<key>"; pos.key()->toXml( str, 0 ); str << "</key>";
+	str << "<val>"; pos.value()->toXml( str, 0 ); str << "</val>";
+    }
+    return str << "</map>";
 }
 
 

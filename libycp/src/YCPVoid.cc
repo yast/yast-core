@@ -58,6 +58,12 @@ YCPVoidRep::toStream (std::ostream & str) const
     return str;
 }
 
+std::ostream &
+YCPVoidRep::toXml (std::ostream & str, int indent ) const
+{
+    return str << "<void/>";
+}
+
 
 // --------------------------------------------------------
 

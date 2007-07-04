@@ -37,6 +37,7 @@
 #include "ycp/SymbolTable.h"
 
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
@@ -143,6 +144,14 @@ YEVariable::toStream (std::ostream & str) const
     return str;
 }
 
+std::ostream &
+YEVariable::toXml( std::ostream & str, int indent ) const
+{
+    str << "<var_ref>";
+    str << m_entry->toString (false /*definition*/);
+    return str << "</var_ref>";
+}
+
 
 // ------------------------------------------------------------------
 // reference (-> SymbolEntry)
@@ -204,6 +213,15 @@ YEReference::toStream (std::ostream & str) const
     YCode::toStream (str);
     Bytecode::writeEntry (str, m_entry);
     return str;
+}
+
+
+std::ostream &
+YEReference::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yereference>";
+    Xmlcode::writeEntry (str, m_entry);
+    return str << "</yereference>";
 }
 
 
@@ -369,6 +387,14 @@ YETerm::toStream (std::ostream & str) const
     return Bytecode::writeYCodelist (str, m_parameters);
 }
 
+std::ostream &
+YETerm::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yeterm name=\"" << m_name << "\">";
+    Xmlcode::writeYCodelist (str, m_parameters);
+    return str << "</yeterm>";
+}
+
 
 
 // ------------------------------------------------------------------
@@ -398,23 +424,31 @@ YECompare::~YECompare ()
 {
 }
 
+static string
+compare_op_string( YECompare::c_op op )
+{
+    switch (op)
+    {
+	case YECompare::C_EQ:  return "=="; break;
+	case YECompare::C_NEQ: return "!="; break;
+	case YECompare::C_LT:  return "<";  break;
+	case YECompare::C_GE:  return ">="; break;
+	case YECompare::C_LE:  return "<="; break;
+	case YECompare::C_GT:  return ">";  break;
+	default:
+		break;
+    }
+    return "?compare?";
+}
+
 
 string
 YECompare::toString () const
 {
     string s = "(" + m_left->toString();
-    switch (m_op)
-    {
-	case C_EQ:  s += " == "; break;
-	case C_NEQ: s += " != "; break;
-	case C_LT:  s += " < ";  break;
-	case C_GE:  s += " >= "; break;
-	case C_LE:  s += " <= "; break;
-	case C_GT:  s += " > ";  break;
-	default:
-		s += " ?compare? ";
-		break;
-    }
+    s += " ";
+    s += compare_op_string( m_op );
+    s += " ";
     s += m_right->toString();
     return s + ")";
 }
@@ -487,6 +521,16 @@ YECompare::toStream (std::ostream & str) const
 
     str.put ((char)m_op);
     return m_right->toStream (str);
+}
+
+
+std::ostream &
+YECompare::toXml (std::ostream & str, int indent ) const
+{
+    str << "<compare op=\"" << compare_op_string( m_op ) << "\">";
+    str << "<lhs>"; m_left->toXml( str, 0 ); str << "</lhs>";
+    str << "<rhs>"; m_right->toXml( str, 0 ); str << "</rhs>";
+    return str << "</compare>";
 }
 
 
@@ -589,6 +633,16 @@ YELocale::toStream (std::ostream & str) const
     Bytecode::writeCharp (str, m_plural);
     m_count->toStream (str);
     return Bytecode::writeCharp (str, m_domain->first);
+}
+
+
+std::ostream &
+YELocale::toXml (std::ostream & str, int indent ) const
+{
+    str << "<locale domain=\"" << m_domain->first << "\">";
+    str << "<singular>" << m_singular << "</singular>";
+    str << "<plural>" << m_plural << "</plural>";
+    return str << "</locale>";
 }
 
 
@@ -722,6 +776,15 @@ YEList::toStream (std::ostream & str) const
 {
     YCode::toStream (str);
     return Bytecode::writeYCodelist (str, m_first);
+}
+
+
+std::ostream &
+YEList::toXml (std::ostream & str, int indent ) const
+{
+    str << "<list>";
+    Xmlcode::writeYCodelist( str, m_first );
+    return str << "</list>";
 }
 
 
@@ -880,6 +943,21 @@ YEMap::toStream (std::ostream & str) const
 	mapp = mapp->next;
     }
     return str;
+}
+
+
+std::ostream &
+YEMap::toXml( std::ostream & str, int indent ) const
+{
+    str << "<map>";
+    mapval_t *mapp = m_first;
+    while (mapp)
+    {
+	str << "<key>"; mapp->key->toXml( str, 0 ); str << "</key>";
+	str << "<val>"; mapp->value->toXml( str, 0 ); str << "</val>";
+	mapp = mapp->next;
+    }
+    return str << "</map>";
 }
 
 
@@ -1090,6 +1168,17 @@ YEPropagate::toStream (std::ostream & str) const
     return m_value->toStream (str);
 }
 
+std::ostream &
+YEPropagate::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yepropagate>";
+    str << "<from>"; m_from->toXml( str, 0); str << "</from>";
+    str << "<to>"; m_to->toXml( str, 0 ); str << "</to>";
+    m_value->toXml( str, 0 );
+    return str << "</yepropagate>";
+}
+
+
 
 // ------------------------------------------------------------------
 // unary expression (-> declaration_t, arg)
@@ -1178,6 +1267,18 @@ YEUnary::toStream (std::ostream & str) const
 
     static_declarations.writeDeclaration (str, m_decl);
     return m_arg->toStream (str);
+}
+
+
+std::ostream &
+YEUnary::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yeunary>";
+    extern StaticDeclaration static_declarations;
+
+    static_declarations.writeXmlDeclaration( str, m_decl );
+    m_arg->toXml( str, 0 );
+    return str << "</yeunary>";
 }
 
 
@@ -1281,6 +1382,19 @@ YEBinary::toStream (std::ostream & str) const
     static_declarations.writeDeclaration (str, m_decl);
     m_arg1->toStream (str);
     return m_arg2->toStream (str);
+}
+
+
+std::ostream &
+YEBinary::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yebinary>";
+    extern StaticDeclaration static_declarations;
+
+    static_declarations.writeXmlDeclaration (str, m_decl);
+    m_arg1->toXml( str, 0 );
+    m_arg2->toXml( str, 0 );
+    return str << "</yebinary>";
 }
 
 
@@ -1390,6 +1504,17 @@ YETriple::toStream (std::ostream & str) const
 }
 
 
+std::ostream &
+YETriple::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yetriple>";
+    str << "<cond>"; m_expr->toXml( str, 0); str << "</cond>";
+    str << "<true>"; m_true->toXml( str, 0 ); str << "</true>";
+    str << "<false>"; m_false->toXml( str, 0); str << "</false>";
+    return str << "</yetriple>";
+}
+
+
 // ------------------------------------------------------------------
 // is (expression, type)
 
@@ -1484,6 +1609,16 @@ YEIs::toStream (std::ostream & str) const
 }
 
 
+std::ostream &
+YEIs::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yeis>";
+    str << "<type>"; m_type->toXml( str, 0); str << "</type>";
+    str << "<expr>"; m_expr->toXml( str, 0); str << "</expr>";
+    return str << "</yeis>";
+}
+
+
 // ------------------------------------------------------------------
 // Return (expression)
 
@@ -1528,6 +1663,14 @@ YEReturn::toStream (std::ostream & str) const
 {
     YCode::toStream (str);
     return m_expr->toStream (str);
+}
+
+std::ostream &
+YEReturn::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yereturn>";
+    m_expr->toXml( str, 0 );
+    return str << "</yereturn>";
 }
 
 
@@ -1693,6 +1836,23 @@ YEBracket::toStream (std::ostream & str) const
 }
 
 
+std::ostream &
+YEBracket::toXml (std::ostream & str, int indent ) const
+{
+    str << "<yebracket>";
+    str << "<var>";
+    m_var->toXml( str, 0 );
+    str << "</var><arg>";
+    m_arg->toXml( str, 0 );
+    str << "</arg><def>";
+    m_def->toXml( str, 0 );
+    str << "</def><type>";
+    m_resultType->toXml( str, 0);
+    str << "</type>";
+    return str << "</yebracket>";
+}
+
+
 // ------------------------------------------------------------------
 // builtin function ref (-> declaration_t, type, parameters)
 
@@ -1762,6 +1922,24 @@ YEBuiltin::toStream (std::ostream & str) const
 	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
     return str;
+}
+
+
+std::ostream &
+YEBuiltin::toXml( std::ostream & str, int indent ) const
+{
+    str << "<call builtin=\"1\" name=\"" << m_decl->name << "\">";
+
+    if (m_parameterblock != 0)
+    {
+	Xmlcode::pushNamespace( m_parameterblock->nameSpace() );
+    }
+    Xmlcode::writeYCodelist( str, m_parameters );
+    if (m_parameterblock != 0)
+    {
+	Xmlcode::popNamespace( m_parameterblock->nameSpace() );
+    }
+    return str << "</call>";
 }
 
 
@@ -2736,6 +2914,23 @@ YECall::toStream (std::ostream & str) const
 	}
     }
     return str;
+}
+
+
+std::ostream &
+YECall::toXml (std::ostream & str, int indent ) const
+{
+    str << "<call ns=\"" << m_sentry->nameSpace()->name() << "\" name=\"" << m_sentry->name() << "\">";
+    if (m_next_param_id > 0) {
+	str << "<parameters>";
+
+	for (uint i = 0 ; i < m_next_param_id; i++)
+	{
+	    m_parameters[i]->toXml( str, 0 );
+	}
+	str << "</parameters>";
+    }
+    return str << "</call>";
 }
 
 

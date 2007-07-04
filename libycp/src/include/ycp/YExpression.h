@@ -72,6 +72,7 @@ public:
     virtual bool isReferenceable () const { return true; }
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return m_entry->type(); }
 };
 
@@ -92,6 +93,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const;
 };
 
@@ -114,6 +116,7 @@ public:
     const char *name () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return Type::Term; }
 };
 
@@ -144,6 +147,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return Type::Boolean; }
 };
 
@@ -166,6 +170,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return Type::Locale; }
 };
 
@@ -187,6 +192,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const;
     int count () const;
     YCodePtr value (int index) const;
@@ -212,6 +218,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const;
 };
 
@@ -234,6 +241,7 @@ public:
     bool canPropagate(const YCPValue& value, constTypePtr to_type) const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return m_to; }
 };
 
@@ -256,6 +264,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return ((constFunctionTypePtr)m_decl->type)->returnType (); }
 };
 
@@ -280,6 +289,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const;
 };
 
@@ -304,6 +314,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return m_true->type ()->commontype (m_false->type ()); }
 };
 
@@ -324,6 +335,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return Type::Boolean; }
 };
 
@@ -343,6 +355,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return m_expr->type(); }
 };
 
@@ -365,6 +378,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const { return m_resultType; }
     YCodePtr def () const { return m_def; }
 };
@@ -407,6 +421,7 @@ public:
     string toString () const;
     YCPValue evaluate (bool cse = false);
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type () const;
     constTypePtr completeType () const;
     YBlockPtr parameterBlock () const;
@@ -451,6 +466,7 @@ public:
     virtual constTypePtr finalize ();
     string toString () const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     constTypePtr type() const;
     string qualifiedName () const;
     

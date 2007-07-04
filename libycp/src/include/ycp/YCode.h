@@ -152,6 +152,7 @@ public:
      * see Bytecode for read
      */
     virtual std::ostream & toStream (std::ostream & str) const = 0;
+    virtual std::ostream & toXml (std::ostream & str, int indent ) const = 0;
 
     /**
      * returns true if the YCode represents a constant
@@ -211,6 +212,7 @@ public:
     virtual ykind kind() const;
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     /** yes */
     virtual bool isConstant () const { return true; }
     YCPValue evaluate (bool cse = false);
@@ -257,6 +259,7 @@ public:
     const char *domain () const;
     string toString() const;
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     YCPValue evaluate (bool cse = false);
     constTypePtr type() const { return Type::Locale; }
     
@@ -312,8 +315,10 @@ public:
 
     string toStringDeclaration () const;
     string toString () const;
-    std::ostream & toStreamDefinition (std::ostream & str) const;
-    std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toStreamDefinition (std::ostream & str ) const;
+    std::ostream & toXmlDefinition (std::ostream & str, int indent ) const;
+    std::ostream & toStream (std::ostream & str ) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
     virtual YCPValue evaluate (bool cse = false);
     constTypePtr type() const;
 };

@@ -20,6 +20,7 @@
 #include <ycp/y2log.h>
 #include "YCPBoolean.h"
 #include "Bytecode.h"
+#include "Xmlcode.h"
 
 // YCPBooleanRep
 
@@ -55,6 +56,13 @@ std::ostream &
 YCPBooleanRep::toStream (std::ostream & str) const
 {
     return Bytecode::writeBool (str, v);
+}
+
+
+std::ostream &
+YCPBooleanRep::toXml (std::ostream & str, int indent ) const
+{
+    return str << "<bool>" << ( v ? "true" : "false" ) << "</bool>";
 }
 
 

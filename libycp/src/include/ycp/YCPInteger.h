@@ -74,6 +74,7 @@ public:
      * Output value as bytecode to stream
      */
     std::ostream & toStream (std::ostream & str) const;
+    std::ostream & toXml (std::ostream & str, int indent ) const;
 
     /**
      * Returns YT_INTEGER. See @ref YCPValueRep#type.

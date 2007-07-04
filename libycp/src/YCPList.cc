@@ -23,6 +23,7 @@
 #include "ycp/YCPList.h"
 #include <algorithm>
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 #include "ycp/YCPCodeCompare.h"
 #include "ycp/ExecutionEnvironment.h"
 
@@ -275,6 +276,20 @@ YCPListRep::toStream (std::ostream & str) const
 	}
     }
     return str;
+}
+
+
+std::ostream &
+YCPListRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<list>";
+    for (unsigned index = 0; index < elements.size(); index++)
+    {
+	str << "<element>";
+	elements[index]->toXml( str, 0 );
+	str << "</element>";
+    }
+    return str << "</list>";
 }
 
 

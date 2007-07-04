@@ -20,6 +20,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPSymbol.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 
 // YCPSymbolRep
@@ -79,6 +80,14 @@ std::ostream &
 YCPSymbolRep::toStream (std::ostream & str) const
 {
     return Bytecode::writeUstring (str, v);
+}
+
+std::ostream &
+YCPSymbolRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<symbol>";
+    str << v.asString();
+    return str << "</symbol>";
 }
 
 

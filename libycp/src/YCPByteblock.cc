@@ -20,6 +20,7 @@
 #include <ycp/y2log.h>
 #include "YCPByteblock.h"
 #include "Bytecode.h"
+#include "Xmlcode.h"
 
 using std::min;
 
@@ -134,6 +135,12 @@ std::ostream &
 YCPByteblockRep::toStream (std::ostream & str) const
 {
     return Bytecode::writeBytep (str, bytes, len);
+}
+
+std::ostream &
+YCPByteblockRep::toXml (std::ostream & str, int indent ) const
+{
+    return Xmlcode::writeBytep (str, bytes, len);
 }
 
 

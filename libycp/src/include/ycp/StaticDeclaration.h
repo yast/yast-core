@@ -108,6 +108,7 @@ public:
 
     // write declaration to stream (name and type)
     std::ostream & writeDeclaration (std::ostream & str, const declaration_t *decl) const;
+    std::ostream & writeXmlDeclaration (std::ostream & str, const declaration_t *decl) const;
 
     // read declaration from stream (return declaration matching name and type _exactly_)
     declaration_t *readDeclaration (bytecodeistream & str) const;

@@ -23,6 +23,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPString.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 
 // YCPStringRep
@@ -119,6 +120,13 @@ std::ostream &
 YCPStringRep::toStream (std::ostream & str) const
 {
     return Bytecode::writeString (str, v);
+}
+
+
+std::ostream &
+YCPStringRep::toXml (std::ostream & str, int indent ) const
+{
+    return str << "<string>" << Xmlcode::xmlify(v) << "</string>";
 }
 
 

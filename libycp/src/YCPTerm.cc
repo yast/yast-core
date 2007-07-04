@@ -22,6 +22,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPTerm.h"
 #include "ycp/Bytecode.h"
+#include "ycp/Xmlcode.h"
 
 // YCPTermRep
 YCPTermRep::YCPTermRep(const string& s)
@@ -161,6 +162,14 @@ YCPTermRep::toStream (std::ostream & str) const
     y2debug ("Writing a term");
     Bytecode::writeUstring (str, s);
     return l->toStream (str);
+}
+
+std::ostream &
+YCPTermRep::toXml (std::ostream & str, int indent ) const
+{
+    str << "<term name=\"" << s << "\">";
+    l->toXml( str, indent );
+    return str << "</term>";
 }
 
 
