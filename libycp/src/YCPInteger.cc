@@ -114,7 +114,7 @@ YCPIntegerRep::toStream (std::ostream & str) const
 std::ostream &
 YCPIntegerRep::toXml (std::ostream & str, int indent ) const
 {
-    return str << "<int>" << v << "</int>";
+    return str << "<const type=\"int\" value=\"" << v << "\"/>";
 }
 
 

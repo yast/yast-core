@@ -361,7 +361,7 @@ YCPPathRep::toStream (std::ostream & str) const
 std::ostream &
 YCPPathRep::toXml (std::ostream & str, int indent ) const
 {
-    str << "<path>";
+    str << "<const type=\"path\" value=\">";
 #if 0
     if (Xmlcode::writeInt32 (str, components.size()))
     {
@@ -375,7 +375,7 @@ YCPPathRep::toXml (std::ostream & str, int indent ) const
 #else
     str << toString();
 #endif
-    return str << "</path>";
+    return str << "\"/>";
 }
 
 

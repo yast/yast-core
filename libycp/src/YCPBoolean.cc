@@ -62,7 +62,7 @@ YCPBooleanRep::toStream (std::ostream & str) const
 std::ostream &
 YCPBooleanRep::toXml (std::ostream & str, int indent ) const
 {
-    return str << "<bool>" << ( v ? "true" : "false" ) << "</bool>";
+    return str << "<const type=\"bool\" value=\"" << ( v ? "true" : "false" ) << "\"/>";
 }
 
 

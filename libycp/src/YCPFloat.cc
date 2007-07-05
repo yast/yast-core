@@ -102,7 +102,7 @@ YCPFloatRep::toStream (std::ostream & str) const
 std::ostream &
 YCPFloatRep::toXml (std::ostream & str, int indent ) const
 {
-    return str << "<float>" << toString() << "</float>";
+    return str << "<const type=\"float\" value=\"" << toString() << "\"/>";
 }
 
 

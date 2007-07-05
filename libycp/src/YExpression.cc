@@ -147,9 +147,9 @@ YEVariable::toStream (std::ostream & str) const
 std::ostream &
 YEVariable::toXml( std::ostream & str, int indent ) const
 {
-    str << "<var_ref>";
+    str << "<variable name=\"";
     str << m_entry->toString (false /*definition*/);
-    return str << "</var_ref>";
+    return str << "\"/>";
 }
 
 
