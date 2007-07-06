@@ -167,7 +167,7 @@ YCPTermRep::toStream (std::ostream & str) const
 std::ostream &
 YCPTermRep::toXml (std::ostream & str, int indent ) const
 {
-    str << "<term name=\"" << s << "\">";
+    str << "<const type=\"term\" name=\"" << s << "\">";
     l->toXml( str, indent );
     return str << "</term>";
 }
