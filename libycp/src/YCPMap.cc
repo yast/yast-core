@@ -227,8 +227,10 @@ YCPMapRep::toXml (std::ostream & str, int indent ) const
     str << "<map>";
     for(YCPMapIterator pos = begin(); pos != end(); ++pos )
     {
+	str << "<element>";
 	str << "<key>"; pos.key()->toXml( str, 0 ); str << "</key>";
-	str << "<val>"; pos.value()->toXml( str, 0 ); str << "</val>";
+	str << "<value>"; pos.value()->toXml( str, 0 ); str << "</value>";
+	str << "</element>";
     }
     return str << "</map>";
 }
