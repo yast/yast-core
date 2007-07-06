@@ -1273,10 +1273,10 @@ YEUnary::toStream (std::ostream & str) const
 std::ostream &
 YEUnary::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yeunary>";
+    str << "<yeunary";
     extern StaticDeclaration static_declarations;
-
     static_declarations.writeXmlDeclaration( str, m_decl );
+    str << ">";
     m_arg->toXml( str, 0 );
     return str << "</yeunary>";
 }
@@ -1388,10 +1388,10 @@ YEBinary::toStream (std::ostream & str) const
 std::ostream &
 YEBinary::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yebinary>";
+    str << "<yebinary";
     extern StaticDeclaration static_declarations;
-
     static_declarations.writeXmlDeclaration (str, m_decl);
+    str << ">";
     m_arg1->toXml( str, 0 );
     m_arg2->toXml( str, 0 );
     return str << "</yebinary>";
