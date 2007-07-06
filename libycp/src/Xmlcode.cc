@@ -265,7 +265,6 @@ Xmlcode::writeYCodelist( std::ostream & str, const ycodelist_t *codelist )
 #if DO_DEBUG
     y2debug( "Xmlcode::writeYCodelist %d entries", count);
 #endif
-    str << "<parameters>";
     codep = codelist;
     while( codep)
     {
@@ -279,7 +278,7 @@ Xmlcode::writeYCodelist( std::ostream & str, const ycodelist_t *codelist )
 	str << "</parameter>";
     }
 
-    return str << "</parameters>";
+    return str;
 }
 
 
