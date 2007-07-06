@@ -518,8 +518,6 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
 std::ostream &
 StaticDeclaration::writeXmlDeclaration (std::ostream & str, const declaration_t *decl) const
 {
-    str << "<static";
-
     string ns;
 
     const declaration_t *d = decl;
@@ -531,9 +529,9 @@ StaticDeclaration::writeXmlDeclaration (std::ostream & str, const declaration_t 
     }
 
     if (!ns.empty()) str << " ns=\"" << ns << "\"";
-    str << " name=\"" << Xmlcode::xmlify( decl->name ) << "\">";
+    str << " name=\"" << Xmlcode::xmlify( decl->name ) << "\"";
     decl->type->toXml( str, 0 );
-    return str << "</static>";
+    return str;
 }
 
 
