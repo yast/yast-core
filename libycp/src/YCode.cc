@@ -410,8 +410,8 @@ YConst::toXml (std::ostream & str, int indent ) const
     }
     if (m_value.isNull())
 	return str << "<null/>";
-
-    return m_value->toXml (str, 0 );
+    m_value->toXml (str, 0 );
+    return str;
 }
 
 
@@ -507,12 +507,12 @@ YLocale::toStream (std::ostream & str) const
     return Bytecode::writeCharp (str, m_domain->first);
 }
 
+// see also YELocale::toXml
 std::ostream &
 YLocale::toXml (std::ostream & str, int indent ) const
 {
-    str << "<locale domain=\"" << m_domain->first << "\">";
-    str << m_locale;
-    return str << "</locale>";
+    str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_locale ) << "\"/>";
+    return str;
 }
 
 string

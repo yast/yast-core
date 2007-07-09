@@ -636,13 +636,15 @@ YELocale::toStream (std::ostream & str) const
 }
 
 
+// see also YLocale::toXml
 std::ostream &
 YELocale::toXml (std::ostream & str, int indent ) const
 {
-    str << "<locale domain=\"" << m_domain->first << "\">";
-    str << "<singular>" << m_singular << "</singular>";
-    str << "<plural>" << m_plural << "</plural>";
-    return str << "</locale>";
+    str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_singular )
+	<< "\" plural=\"" << Xmlcode::xmlify( m_plural ) << "\">";
+    m_count->toXml( str, 0 );
+    str << "</locale>";
+    return str;
 }
 
 

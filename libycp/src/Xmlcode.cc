@@ -877,12 +877,14 @@ Xmlcode::xmlify( const string & s )
 
     const char *cptr = s.c_str();
     const char *next;
-    while( (next = strpbrk( cptr, "&<>" )) ) {
+    while( (next = strpbrk( cptr, "&<>'\"" )) ) {
 	result += string( cptr, next - cptr );
 	switch (*next) {
 	  case '&': result += "&amp;"; break;
 	  case '<': result += "&lt;"; break;
 	  case '>': result += "&gt;"; break;
+	  case '"': result += "&quot;"; break;
+	  case '\'': result += "&apos;"; break;
 	}
 	cptr = next + 1;
     }
