@@ -2920,17 +2920,17 @@ YECall::toStream (std::ostream & str) const
 std::ostream &
 YECall::toXml (std::ostream & str, int indent ) const
 {
-    str << "<call ns=\"" << m_sentry->nameSpace()->name() << "\" name=\"" << m_sentry->name() << "\">";
+    str << "<yecall ns=\"" << m_sentry->nameSpace()->name() << "\" name=\"" << m_sentry->name() << "\">";
     if (m_next_param_id > 0) {
-	str << "<parameters>";
+	str << "<parameter>";
 
 	for (uint i = 0 ; i < m_next_param_id; i++)
 	{
 	    m_parameters[i]->toXml( str, 0 );
 	}
-	str << "</parameters>";
+	str << "</parameter>";
     }
-    return str << "</call>";
+    return str << "</yecall>";
 }
 
 

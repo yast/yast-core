@@ -417,7 +417,7 @@ YSReturn::toStream (std::ostream & str) const
 std::ostream &
 YSReturn::toXml (std::ostream & str, int indent ) const
 {
-    str << "<return>";
+    str << Xmlcode::spaces( indent ) << "<return>";
     if (m_value != 0)
         m_value->toXml( str, 0 );
     return str << "</return>";
@@ -1020,14 +1020,14 @@ YSIf::toXml (std::ostream & str, int indent ) const
     {
 	str << endl << Xmlcode::spaces( indent+2 ) << "<then>\n";
 	m_true->toXml( str, indent+4 );
-	str << Xmlcode::spaces( indent+2 ) << "</then>\n";
+	str << endl << Xmlcode::spaces( indent+2 ) << "</then>\n";
 	str << Xmlcode::spaces( indent );
     }
     if (m_false)
     {
 	str << endl << Xmlcode::spaces( indent+2 ) << "<else>\n";
 	m_false->toXml( str, indent+4 );
-	str << Xmlcode::spaces( indent+2 ) << "</else>\n";
+	str << endl << Xmlcode::spaces( indent+2 ) << "</else>\n";
 	str << Xmlcode::spaces( indent );
     }
     return str << "</if>";
@@ -1560,7 +1560,7 @@ YSTextdomain::toStream (std::ostream & str) const
 std::ostream &
 YSTextdomain::toXml (std::ostream & str, int indent ) const
 {
-    return str << "<textdomain>" << m_domain.asString() << "</textdomain>";
+    return str << "<textdomain name=\"" << m_domain.asString() << "\"/>";
 }
 
 
@@ -1782,7 +1782,7 @@ std::ostream &
 YSImport::toXml( std::ostream & str, int indent ) const
 {
     Xmlcode::pushNamespace (nameSpace());				// see YBlock::toXml(str) for popUptoNamespace()
-    return str << "<import>" << m_name.asString() << "</import>";
+    return str << "<import name=\"" << m_name.asString() << "\"/>";
 }
 
 

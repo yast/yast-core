@@ -816,9 +816,7 @@ YFunction::toXml (std::ostream & str, int indent ) const
 	    m_declaration->toXml (str, indent+4 );
 	    str << Xmlcode::spaces( indent+2 ) << "</declaration>\n";
 	}
-	str << Xmlcode::spaces( indent+2 ) << "<definition>\n";
-	m_definition->toXml (str, indent+4 );
-	str << Xmlcode::spaces( indent+2 ) << "</definition>\n";
+	m_definition->toXml (str, indent+2 );
 	if (need_declaration)
 	{
 	    Xmlcode::popNamespace (m_declaration->nameSpace());
