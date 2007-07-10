@@ -268,14 +268,14 @@ Xmlcode::writeYCodelist( std::ostream & str, const ycodelist_t *codelist )
     codep = codelist;
     while( codep)
     {
-	str << "<parameter>";
+	str << "<element>";
 	if( !codep->code->toXml( str, 0 ) )
 	{
 	    y2error( "Error writing codelist");
 	    break;
 	}
 	codep = codep->next;
-	str << "</parameter>";
+	str << "</element>";
     }
 
     return str;
@@ -463,7 +463,7 @@ Xmlcode::writeEntry( std::ostream & str, const SymbolEntryPtr sentry)
     if (!ns.empty())
 	str << " ns=\"" << ns << "\"";
     str << " pos=\"" << sentry->position();
-    str << "\">" << sentry->name() << "</entry>";
+    str << "\" name=\"" << sentry->name() << "\"/>";
     return str;
 }
 
