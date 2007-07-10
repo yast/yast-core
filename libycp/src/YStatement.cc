@@ -254,9 +254,9 @@ YSExpression::toStream (std::ostream & str) const
 std::ostream &
 YSExpression::toXml( std::ostream & str, int indent ) const
 {
-    str << "<expression>";
+    str << "<expr>";
     m_expr->toXml( str, indent );
-    return str << "</expression>";
+    return str << "</expr>";
 }
 
 
