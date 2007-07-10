@@ -955,8 +955,10 @@ YEMap::toXml( std::ostream & str, int indent ) const
     mapval_t *mapp = m_first;
     while (mapp)
     {
+	str << "<element>";
 	str << "<key>"; mapp->key->toXml( str, 0 ); str << "</key>";
 	str << "<value>"; mapp->value->toXml( str, 0 ); str << "</value>";
+	str << "</element>";
 	mapp = mapp->next;
     }
     return str << "</map>";
