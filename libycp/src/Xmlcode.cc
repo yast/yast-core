@@ -846,7 +846,7 @@ Xmlcode::writeFile( const YCodePtr code, const string & filename)
     }
 
     outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    outstream << "<ycp version=\"2.15.8.39248\">\n";
+    outstream << "<ycp version=\"2.15.8.39280\">\n";
     code->toXml( outstream, 2 );
     outstream << "</ycp>\n";
     return ! outstream.fail( );
