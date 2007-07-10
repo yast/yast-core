@@ -1443,9 +1443,7 @@ YSDo::toXml( std::ostream & str, int indent ) const
     str << "<do>";
     if (m_loop != 0)
     {
-        str << "<do>";
 	m_loop->toXml( str, indent );
-	str << "</do>";
     }
     str << "<while>";
     m_condition->toXml( str, indent );
