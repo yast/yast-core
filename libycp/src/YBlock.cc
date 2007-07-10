@@ -1079,9 +1079,9 @@ YBlock::toXml( std::ostream & str, int indent ) const
 
 	while (stmt)						// write statements
 	{
-	    str << Xmlcode::spaces( indent+2 );
-	    stmt->stmt->toXml (str, indent+2 );				// YSImport will push it's namespace
-	    str << endl;
+	    str << Xmlcode::spaces( indent+2 ) << "<stmt>";
+	    stmt->stmt->toXml (str, 0 );				// YSImport will push it's namespace
+	    str << "</stmt>" << endl; 
 	    stmt = stmt->next;
 	}
 
