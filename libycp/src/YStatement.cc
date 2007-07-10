@@ -1624,8 +1624,8 @@ std::ostream &
 YSInclude::toXml( std::ostream & str, int indent ) const
 {
     str << "<include";
-    if (m_skipped) str << " skipped";
-    return str << ">" << m_filename.asString() << "</include>";
+    if (m_skipped) str << " skipped=\"1\"";
+    return str << " name=\"" << m_filename.asString() << "\"/>";
 }
 
 
@@ -1845,7 +1845,7 @@ YSFilename::toStream (std::ostream & str) const
 std::ostream &
 YSFilename::toXml(std::ostream & str, int indent ) const
 {
-    return str << "<filename>" << m_filename.asString() << "</filename>";
+    return str << "<filename name=\"" << m_filename.asString() << "\"/>";
 }
 
 
