@@ -1173,9 +1173,7 @@ YEPropagate::toStream (std::ostream & str) const
 std::ostream &
 YEPropagate::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yepropagate>";
-    str << "<from>"; m_from->toXml( str, 0); str << "</from>";
-    str << "<to>"; m_to->toXml( str, 0 ); str << "</to>";
+    str << "<yepropagate from=\"" << m_from->toString() << "\" to=\"" << m_to->toString() << "\">";
     m_value->toXml( str, 0 );
     return str << "</yepropagate>";
 }
@@ -1614,8 +1612,7 @@ YEIs::toStream (std::ostream & str) const
 std::ostream &
 YEIs::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yeis>";
-    str << "<type>"; m_type->toXml( str, 0); str << "</type>";
+    str << "<yeis "; m_type->toXml( str, 0); str << "/>";
     str << "<expr>"; m_expr->toXml( str, 0); str << "</expr>";
     return str << "</yeis>";
 }
@@ -1841,16 +1838,12 @@ YEBracket::toStream (std::ostream & str) const
 std::ostream &
 YEBracket::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yebracket>";
-    str << "<var>";
-    m_var->toXml( str, 0 );
-    str << "</var><arg>";
-    m_arg->toXml( str, 0 );
-    str << "</arg><def>";
-    m_def->toXml( str, 0 );
-    str << "</def><type>";
+    str << "<yebracket ";
     m_resultType->toXml( str, 0);
-    str << "</type>";
+    str << ">";
+    m_var->toXml( str, 0 );		// <variable>...</variable>
+    m_arg->toXml( str, 0 );		// <list>...</list>
+    m_def->toXml( str, 0 );		// default
     return str << "</yebracket>";
 }
 
@@ -2924,13 +2917,13 @@ YECall::toXml (std::ostream & str, int indent ) const
 {
     str << "<yecall ns=\"" << m_sentry->nameSpace()->name() << "\" name=\"" << m_sentry->name() << "\">";
     if (m_next_param_id > 0) {
-	str << "<parameter>";
+	str << "<args>";
 
 	for (uint i = 0 ; i < m_next_param_id; i++)
 	{
 	    m_parameters[i]->toXml( str, 0 );
 	}
-	str << "</parameter>";
+	str << "</args>";
     }
     return str << "</yecall>";
 }
