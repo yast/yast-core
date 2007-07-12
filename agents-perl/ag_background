@@ -91,6 +91,12 @@ sub ErrorCommand($)
     ycp::Return("");
 }
 
+my $exit = 0;
+
+sub ReadExitCode {
+    $exit = $? >> 8;	# high 8 bits are exit value
+}
+
 # install SIGCHLD handler
 $SIG{CHLD} = \&Handler;
 
@@ -111,8 +117,6 @@ my @err = ();
 
 my $pipe_defined = 0;
 my $pipe_defined_err = 0;
-
-my $exit = 0;
 
 $| = 1;
 
@@ -235,6 +239,7 @@ while (1)
 	    }
 	    elsif ($path eq '.status')
 	    {
+		ReadExitCode();
 		ycp::Return($exit);
 	    }
 	    elsif ($path eq '.newout')
@@ -368,7 +373,7 @@ while (1)
 		}
 
 		close(RD);
-		$exit = $? >> 8;	# high 8 bits are exit value
+		ReadExitCode();
 	    }
 	    else
 	    {
@@ -417,7 +422,7 @@ while (1)
 		}
 
 		close(ERR);
-		$exit = $? >> 8;	# high 8 bits are exit value
+		ReadExitCode();
 	    }
 	    else
 	    {
