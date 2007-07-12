@@ -3,7 +3,6 @@ Thu Jul 12 11:52:24 CEST 2007 - locilka@suse.cz
 
 - Fixed ag_background to always read the process exit status before
   returning it (#285920).
-- 2.15.7
 
 -------------------------------------------------------------------
 Mon Jun 25 18:10:49 CEST 2007 - mvidner@suse.cz
