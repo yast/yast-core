@@ -6,6 +6,4 @@ TESTS = \
  t-srcmgr1.exp \
  t-srcmgr2.exp
 
-XFAIL_TESTS = t-srcmgr1.exp
-
 EXTRA_DIST = test-common.exp $(TESTS)
