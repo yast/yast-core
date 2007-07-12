@@ -282,7 +282,7 @@ YCPListRep::toStream (std::ostream & str) const
 std::ostream &
 YCPListRep::toXml (std::ostream & str, int indent ) const
 {
-    str << "<list>";
+    str << "<list size=\"" << elements.size() << "\">";
     for (unsigned index = 0; index < elements.size(); index++)
     {
 	str << "<element>";

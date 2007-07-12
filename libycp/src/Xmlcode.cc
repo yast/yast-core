@@ -256,7 +256,7 @@ Xmlcode::writeYCodelist( std::ostream & str, const ycodelist_t *codelist )
     u_int32_t count = 0;
     const ycodelist_t *codep = codelist;
 
-    while( codep)
+    while( codep )
     {
 	count++;
 	codep = codep->next;

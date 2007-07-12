@@ -224,7 +224,7 @@ YCPMapRep::toStream (std::ostream & str) const
 std::ostream &
 YCPMapRep::toXml (std::ostream & str, int indent ) const
 {
-    str << "<map>";
+    str << "<map size=\"" << stl_map.size() << "\">";
     for(YCPMapIterator pos = begin(); pos != end(); ++pos )
     {
 	str << "<element>";

@@ -784,7 +784,15 @@ YEList::toStream (std::ostream & str) const
 std::ostream &
 YEList::toXml (std::ostream & str, int indent ) const
 {
-    str << "<list>";
+    u_int32_t count = 0;
+    const ycodelist_t *codep = m_first;
+
+    while( codep )
+    {
+	count++;
+	codep = codep->next;
+    }
+    str << "<list size=\"" << count << "\">";
     Xmlcode::writeYCodelist( str, m_first );
     return str << "</list>";
 }
@@ -1843,8 +1851,8 @@ YEBracket::toXml (std::ostream & str, int indent ) const
     str << "<yebracket ";
     m_resultType->toXml( str, 0);
     str << ">";
-    m_var->toXml( str, 0 );		// <variable>...</variable>
-    m_arg->toXml( str, 0 );		// <list>...</list>
+    m_var->toXml( str, 0 );		// variable
+    m_arg->toXml( str, 0 );		// list
     m_def->toXml( str, 0 );		// default
     return str << "</yebracket>";
 }
