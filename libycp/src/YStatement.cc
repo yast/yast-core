@@ -637,12 +637,9 @@ YSAssign::toStream (std::ostream & str) const
 std::ostream &
 YSAssign::toXml( std::ostream & str, int indent ) const
 {
-    str << "<assign>";
-    str << "<lhs>";
-    str << m_entry->toString (false /*definition*/);
-    str << "</lhs><rhs>";
+    str << "<assign name=\"" << m_entry->toString (false /*definition*/) << "\">";
     m_code->toXml( str, 0 );
-    return str << "</rhs></assign>";
+    return str << "</assign>";
 }
 
 
@@ -1139,7 +1136,7 @@ std::ostream &
 YSWhile::toXml (std::ostream & str, int indent ) const
 {
     str << "<while>\n";
-    str << Xmlcode::spaces( indent+2 ) << "<cond>"; str << m_condition->toXml(str, 0 ); str << "</cond>\n";
+    str << Xmlcode::spaces( indent+2 ) << "<cond>"; m_condition->toXml(str, 0 ); str << "</cond>\n";
     if (m_loop) {
 	str << Xmlcode::spaces( indent+2 ) << "<do>";
 	m_loop->toXml(str, indent );

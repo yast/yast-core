@@ -959,8 +959,16 @@ YEMap::toStream (std::ostream & str) const
 std::ostream &
 YEMap::toXml( std::ostream & str, int indent ) const
 {
-    str << "<map>";
     mapval_t *mapp = m_first;
+    u_int32_t count = 0;
+    while( mapp )
+    {
+	count++;
+	mapp = mapp->next;
+    }
+    str << "<map size=\"" << count << "\">";
+
+    mapp = m_first;
     while (mapp)
     {
 	str << "<element>";
@@ -1183,7 +1191,7 @@ YEPropagate::toStream (std::ostream & str) const
 std::ostream &
 YEPropagate::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yepropagate from=\"" << m_from->toString() << "\" to=\"" << m_to->toString() << "\">";
+    str << "<yepropagate from=\"" << Xmlcode::xmlify( m_from->toString() ) << "\" to=\"" << Xmlcode::xmlify( m_to->toString() ) << "\">";
     m_value->toXml( str, 0 );
     return str << "</yepropagate>";
 }
@@ -1933,18 +1941,49 @@ YEBuiltin::toStream (std::ostream & str) const
 std::ostream &
 YEBuiltin::toXml( std::ostream & str, int indent ) const
 {
-    str << "<call builtin=\"1\" name=\"" << m_decl->name << "\">";
+    str << "<builtin name=\"" << m_decl->name << "\"";
+
+    // list: find, filter, maplist, listmap, sort, foreach
+    // map: mapmap, maplist, filter, foreach
 
     if (m_parameterblock != 0)
     {
 	Xmlcode::pushNamespace( m_parameterblock->nameSpace() );
     }
+
+    if (m_decl->flags & DECL_SYMBOL)
+    {
+	ycodelist_t *sym1 = NULL;
+	ycodelist_t *sym2 = NULL;
+	ycodelist_t *value = NULL;
+	ycodelist_t *block = NULL;
+
+	// symbols are also in YBlockPtr *m_parameterblock
+	ycodelist_t *p = m_parameters;
+	while (p) {
+	    switch (p->code->kind()) {
+		case ycEntry:
+		    if (sym1 != NULL)
+			sym2 = p;
+		    else
+			sym1 = p;
+		break;
+		case yeBlock: block = p; break;
+		default: value = p; break;
+	    }
+	    p = p->next;
+	}
+	if (sym1 == NULL) cerr << "No symbol for " << m_decl->name << endl;
+	if (value == NULL) cerr << "No value for " << m_decl->name << endl;
+	if (block == NULL) cerr << "No block for " << m_decl->name << endl;
+    }
+    str << ">";
     Xmlcode::writeYCodelist( str, m_parameters );
     if (m_parameterblock != 0)
     {
 	Xmlcode::popNamespace( m_parameterblock->nameSpace() );
     }
-    return str << "</call>";
+    return str << "</builtin>";
 }
 
 
@@ -2925,7 +2964,11 @@ YECall::toStream (std::ostream & str) const
 std::ostream &
 YECall::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yecall ns=\"" << m_sentry->nameSpace()->name() << "\" name=\"" << m_sentry->name() << "\">";
+    str << "<call";
+    if (!m_sentry->nameSpace()->name().empty()) {
+	str << " ns=\"" << m_sentry->nameSpace()->name() << "\"";
+    }
+    str << " name=\"" << m_sentry->name() << "\">";
     if (m_next_param_id > 0) {
 	str << "<args>";
 
@@ -2935,7 +2978,7 @@ YECall::toXml (std::ostream & str, int indent ) const
 	}
 	str << "</args>";
     }
-    return str << "</yecall>";
+    return str << "</call>";
 }
 
 
