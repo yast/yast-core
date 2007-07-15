@@ -390,7 +390,15 @@ YETerm::toStream (std::ostream & str) const
 std::ostream &
 YETerm::toXml (std::ostream & str, int indent ) const
 {
-    str << "<yeterm name=\"" << m_name << "\">";
+    u_int32_t count = 0;
+    const ycodelist_t *codep = m_parameters;
+
+    while( codep )
+    {
+	count++;
+	codep = codep->next;
+    }
+    str << "<yeterm name=\"" << m_name << "\" args=\"" << count << "\">";
     Xmlcode::writeYCodelist (str, m_parameters);
     return str << "</yeterm>";
 }
@@ -527,7 +535,7 @@ YECompare::toStream (std::ostream & str) const
 std::ostream &
 YECompare::toXml (std::ostream & str, int indent ) const
 {
-    str << "<compare op=\"" << compare_op_string( m_op ) << "\">";
+    str << "<compare op=\"" << Xmlcode::xmlify( compare_op_string( m_op ) ) << "\">";
     str << "<lhs>"; m_left->toXml( str, 0 ); str << "</lhs>";
     str << "<rhs>"; m_right->toXml( str, 0 ); str << "</rhs>";
     return str << "</compare>";
@@ -1943,42 +1951,67 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
 {
     str << "<builtin name=\"" << m_decl->name << "\"";
 
-    // list: find, filter, maplist, listmap, sort, foreach
-    // map: mapmap, maplist, filter, foreach
-
     if (m_parameterblock != 0)
     {
 	Xmlcode::pushNamespace( m_parameterblock->nameSpace() );
     }
 
-    if (m_decl->flags & DECL_SYMBOL)
-    {
-	ycodelist_t *sym1 = NULL;
-	ycodelist_t *sym2 = NULL;
-	ycodelist_t *value = NULL;
-	ycodelist_t *block = NULL;
+    // check DECL_SYMBOL functions, these are e.g.
+    // list: find, filter, maplist, listmap, sort, foreach
+    // map: mapmap, maplist, filter, foreach
 
-	// symbols are also in YBlockPtr *m_parameterblock
-	ycodelist_t *p = m_parameters;
-	while (p) {
-	    switch (p->code->kind()) {
-		case ycEntry:
-		    if (sym1 != NULL)
-			sym2 = p;
-		    else
-			sym1 = p;
-		break;
-		case yeBlock: block = p; break;
-		default: value = p; break;
+    ycodelist_t *block = NULL;
+    ycodelist_t *value = NULL;
+    ycodelist_t *p = m_parameters;
+    u_int32_t count = 0;
+    while (p) {
+
+	if (m_decl->flags & DECL_SYMBOL)
+	{
+	    // we have three types of parameters
+	    //  1. symbols (used to assign values for the block)
+	    //     - symbols always come first
+	    //  2. expression (must eval to a enumerable type, list or map
+	    //	the builtin operates on and assigns values by iterating over the value)
+	    //  3. block to call with symbols assigned
+	    //     - the block always is last
+	    //
+	    // find symbols (entries into m_parameterblock) first
+	    //
+
+	    if (p->code->kind() == ycEntry) {
+		str << " sym" << count << "=\"" << Xmlcode::xmlify( p->code->toString() ) << "\"";
 	    }
-	    p = p->next;
+	    else if (p->next) {
+		if (value) cerr << "Value already set!" << endl;
+		value = p;
+	    }
+	    else {
+		if (block) cerr << "Block already set!" << endl;
+		block = p;
+	    }
 	}
-	if (sym1 == NULL) cerr << "No symbol for " << m_decl->name << endl;
-	if (value == NULL) cerr << "No value for " << m_decl->name << endl;
-	if (block == NULL) cerr << "No block for " << m_decl->name << endl;
+	p = p->next;
+	++count;
+    }
+
+    if ((m_decl->flags & DECL_SYMBOL) == 0)
+    {
+	str << " args=\"" << count << "\"";
     }
     str << ">";
-    Xmlcode::writeYCodelist( str, m_parameters );
+
+    if (m_decl->flags & DECL_SYMBOL)
+    {
+	str << "<expr>";
+	value->code->toXml( str, indent+2 );
+	str << "</expr>";
+	block->code->toXml( str, indent );
+    }
+    else {
+	Xmlcode::writeYCodelist( str, m_parameters );
+    }
+    
     if (m_parameterblock != 0)
     {
 	Xmlcode::popNamespace( m_parameterblock->nameSpace() );
