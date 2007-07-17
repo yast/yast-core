@@ -543,14 +543,16 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::os
 	if (index == defaultcase)
 	{
 	    str << "<default>\n";
-	    str << stmt->stmt->toXml( str, indent+2 ) << endl;
-	    str << "</default>";
+	    stmt->stmt->toXml( str, indent+2 );
+	    str << endl << "</default>";
 	}
 	else if (! values[index].isNull ())
 	{
-	    str << "<case>" << values[index]->toXml( str, 0 ) << endl;
-	    str << stmt->stmt->toXml( str, indent+2 ) << endl;
-	    str << "</case>";
+	    str << "<case>";
+	    values[index]->toXml( str, 0 );
+	    str << endl;
+	    stmt->stmt->toXml( str, indent+2 );
+	    str << endl << "</case>";
 	}
 	stmt = stmt->next;
 	index++;

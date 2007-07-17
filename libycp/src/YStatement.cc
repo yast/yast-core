@@ -573,9 +573,9 @@ YSTypedef::toStream (std::ostream & str) const
 std::ostream &
 YSTypedef::toXml( std::ostream & str, int indent ) const
 {
-    str << "<typedef name=\"" << m_name << "\">";
+    str << "<typedef name=\"" << m_name << "\"";
     m_type->toXml( str, 0 );
-    return str << "</typedef>";
+    return str << "/>";
 }
 
 
@@ -1945,9 +1945,9 @@ YSSwitch::toXml( std::ostream & str, int indent ) const
 {
     str << "<switch>";
 
-    str << "<condition>";
+    str << "<cond>";
     m_condition->toXml( str, 0 );
-    str << "</condition>\n";
+    str << "</cond>\n";
 
     m_block->toXmlSwitch( m_cases, m_defaultcase, str, indent+2 );
     return str << endl << Xmlcode::spaces( indent ) << "</switch>";
