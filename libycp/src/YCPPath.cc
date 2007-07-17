@@ -373,7 +373,7 @@ YCPPathRep::toXml (std::ostream & str, int indent ) const
     }
     return str;
 #else
-    str << toString();
+    str << Xmlcode::xmlify( toString() );
 #endif
     return str << "\"/>";
 }
