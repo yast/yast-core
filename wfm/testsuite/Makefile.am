@@ -24,7 +24,7 @@ runwfm_SOURCES = runwfm.cc
 
 runwfm_LDADD = \
 	../src/libpy2wfm.la			\
-	$(top_builddir)/libyui/src/libyui.la	\
+	$(top_builddir)/libyui/src/libpy2UI.la	\
 	$(top_builddir)/libscr/src/libscr.la	\
 	$(top_builddir)/libycp/src/libycp.la	\
 	$(top_builddir)/liby2/src/liby2.la	\
@@ -33,7 +33,7 @@ runwfm_LDADD = \
 runc_SOURCES = runc.cc
 runc_LDFLAGS = -L$(libdir)
 runc_LDADD = ../src/libpy2wfm.la		\
-	$(top_builddir)/libyui/src/libyui.la	\
+	$(top_builddir)/libyui/src/libpy2UI.la	\
 	$(top_builddir)/libscr/src/libscr.la	\
 	$(top_builddir)/libycp/src/libycp.la	\
 	$(top_builddir)/liby2/src/liby2.la	\

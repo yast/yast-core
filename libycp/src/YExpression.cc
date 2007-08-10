@@ -1908,12 +1908,6 @@ YEBuiltin::YEBuiltin (bytecodeistream & str)
     {
 	Bytecode::popNamespace (m_parameterblock->nameSpace());
     }
-    if (!m_decl
-	|| m_type->isError ())
-    {
-	ycp2error ("Can't find builtin '%s'", m_decl ? StaticDeclaration::Decl2String (m_decl, true).c_str() : m_type->toString().c_str());
-	str.setstate (ios::failbit);
-    }
     // throw away type info
     m_type = Type::Void;
 }

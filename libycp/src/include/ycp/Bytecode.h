@@ -67,7 +67,12 @@ class Bytecode {
     static map<string, YBlockPtr>* m_bytecodeCache;
 
     public:
-    /** Thrown instead of unsetting YCode::valid */
+    /** Thrown when it does not make sense to parse more bytecode.
+     * Formerly we used to unset YCode::valid instead.
+     * Any function taking bytecodeistream as a parameter may throw this.
+     * It is recommended to catch them in the same function where the stream
+     * is constructed (Bytecode::readFile).
+     */
     class Invalid {};
 
 	// bool I/O

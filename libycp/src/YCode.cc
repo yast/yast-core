@@ -103,7 +103,7 @@ YCode::isReferenceable () const
 string
 YCode::toString (ykind kind)
 {
-    static char *names[] = {
+    static const char *names[] = {
 	"yxError",
 	// [1] Constants	(-> YCPValue, except(!) locale -> yeLocale)
 	"ycVoid", "ycBoolean", "ycInteger", "ycFloat",	// constants

@@ -10,7 +10,6 @@ YAST2CORE =					\
 	../../wfm/src/libpy2wfm.la		\
 	../../libycp/src/libycp.la		\
 	../../liby2/src/liby2.la		\
-	../../libyui/src/libyui.la		\
 	../../libscr/src/libscr.la		
 
 #	../../scr/src/libpy2scr.la		

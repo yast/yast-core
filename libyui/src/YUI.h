@@ -51,7 +51,7 @@ class YRadioButtonGroup;
 class YTree;
 class YTreeItem;
 class Y2Component;
-
+class Y2UIFunction;
 
 typedef struct
 {
@@ -62,17 +62,13 @@ typedef struct
 
 struct  YUIBuiltinCallData
 {
-    void *	function;
-    int		argc;
-    YCPValue *	argv;
+    Y2UIFunction *	function;
     YCPValue	result;
 
     YUIBuiltinCallData()
 	: result( YCPVoid() )
     {
 	function	= 0;
-	argc		= 0;
-	argv		= 0;
     }
 };
 
@@ -101,6 +97,7 @@ protected:
      */
     YUI( bool with_threads );
 
+    friend class Y2UIFunction;
 
 public:
 
@@ -115,6 +112,11 @@ public:
      **/
     static YUI * ui() { return _yui; }
 
+
+    /**
+     * Access to the flag, if we run with threads.
+     **/
+    bool threads() { return with_threads; }
 
     /**
      * Looks up the topmost dialog
@@ -266,7 +268,10 @@ public:
      * This is called from libycp/YExpression via the UI builtin declarations
      * that call UICallHandler.
      **/
-    YCPValue callBuiltin( void * function, int argc, YCPValue argv[] );
+    YCPValue callBuiltin( void * /*function*/, int /*argc*/, YCPValue /*argv*/[] ) {
+	// FIXME dummy UI?
+	return YCPNull();
+    }
 
     /**
      * Call 'function' with 'argc' YCPValue parameters and return the result of
@@ -447,7 +452,7 @@ protected:
      *
      * Derived UIs may or may not choose to overwrite this.
      */
-    virtual YCPString glyph( const YCPSymbol & glyphSymbol ) { return YCPString( "" ); }
+    virtual YCPString glyph( const YCPSymbol & /*glyphSymbol*/ ) { return YCPString( "" ); }
 
 
     //
@@ -894,7 +899,7 @@ protected:
      * Use this to post-initialize widget stuff that cannot be done in the
      * createPackageSelector() method.
      **/
-    virtual YCPValue runPkgSelection( YWidget * packageSelector ) { return YCPVoid(); }
+    virtual YCPValue runPkgSelection( YWidget * /*packageSelector*/ ) { return YCPVoid(); }
 
 
     /**

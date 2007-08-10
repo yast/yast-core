@@ -109,14 +109,12 @@ public:
 	 * @param m	the message to be logged
 	 */
 #if BLOCXX_LIBRARY_VERSION >= 5
-        virtual void doProcessLogMessage(const blocxx::String    & f,
+        virtual void doProcessLogMessage(const blocxx::String    & /*f*/,
 	                                 const blocxx::LogMessage& m) const
-	{
-	    (void)f;
 #else
         virtual void doProcessLogMessage(const blocxx::LogMessage& m) const
-	{
 #endif
+	{
 	    loglevel_t level = LOG_DEBUG;
 	    if (m.category == blocxx::Logger::STR_FATAL_CATEGORY 
 		|| m.category == blocxx::Logger::STR_ERROR_CATEGORY)
@@ -165,6 +163,207 @@ struct logger_initializer
 };
 static logger_initializer initialize_logger;
 
+void
+parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name, YCPList& arglist)
+{
+    if (!argv[arg]) {
+	print_usage ();
+	exit (1);
+    }
+
+    client_name = argv[arg];
+    arg++;   // next argument (first client option)
+
+    // Prepare client options
+    while (arg < argc)
+    {
+	if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
+	{
+	    // Logfile already done at program start --> ignore here
+	    arg++;   // skip filename
+	}
+	else if (!strcmp(argv[arg], "-c") || !strcmp(argv[arg], "--logconf"))
+	{
+	    // Logfile already done at program start --> ignore here
+	    arg++;   // skip filename
+	}
+	else if (!strcmp(argv[arg], "-s"))	// Parse one value (YCPList of options) from stdin
+	{
+	    Parser parser (0, "<stdin>");	// set parser to stdin
+	    YCodePtr pc = parser.parse ();
+
+	    YCPValue option = YCPNull ();
+	    if (pc)
+	    {
+		option = pc->evaluate(true);	// get one value (should be a YCPList)
+	    }
+
+	    if (option.isNull())
+	    {
+		print_error ("Client option -s: Couldn't parse valid YCP value from stdin");
+		exit (5);
+	    }
+
+	    if (!option->isList())
+	    {
+		print_error ("Client option -s: Parsed YCP value is NOT a YCPList");
+		exit (5);
+	    }
+
+	    arglist = option->asList();	  // the option read _IS_ arglist
+	}
+	else if (!strcmp(argv[arg], "-f"))	// Parse values from file
+	{
+	    arg++;   // switch to filename
+
+	    if (arg >= argc)
+	    {
+		print_error ("Client option -f is missing an argument");
+		print_usage();
+		exit(5);
+	    }
+
+	    FILE *file = fopen (argv[arg], "r");
+	    if (!file)
+	    {
+		print_error ("Client option -f: Couldn't open %s for reading", argv[arg]);
+		exit(5);
+	    }
+
+	    bool one_value_parsed = false;
+
+	    while (!feof(file))	  // Parse all values until EOF
+	    {
+		Parser parser(file, argv[arg]);   // set parser to file
+
+		YCodePtr pc = parser.parse ();
+
+		if ( pc )
+		{
+		    arglist->add( pc->evaluate(true) );
+		    one_value_parsed = true;
+		}
+	    }
+
+	    fclose (file);
+
+	    if (!one_value_parsed)
+	    {
+		print_error ("Client option -f: Couldn't parse valid YCP value from file %s",
+			     argv[arg]);
+		exit(5);
+	    }
+	}
+	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
+	{
+	    Parser parser (argv[arg]);	// set parser to option
+
+	    YCodePtr pc = parser.parse ();
+
+	    if (!pc )
+	    {
+		print_error ("Client option %s is not a valid YCP value", argv[arg]);
+		exit(5);
+	    }
+
+	    arglist->add( pc->evaluate (true));   // add to arglist
+	}
+	else break;   // must be server name
+
+	arg++;	      // switch to next argument
+    } // Parsing client options
+}
+
+void
+parse_server_and_options (int argc, char ** argv, int& arg, char *& server_name, YCPList& preload)
+{
+    if (arg >= argc)
+    {
+	fprintf(stderr, "No server module given\n");
+	print_usage ();
+	exit (5);
+    }
+
+    // now create server
+    if (!argv[arg]) {
+	print_usage ();
+	exit (1);
+    }
+
+    server_name = argv[arg];
+    arg++;   // next argument (first server option)
+
+    // Prepare server and general options
+
+    while (arg < argc)
+    {
+	if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
+	{
+	    // Logfile already done at program start --> ignore here
+	    arg++;   // skip filename
+	}
+	else if (!strcmp(argv[arg], "-p"))   // preload
+	{
+	    arg++;   // switch to filename
+
+	    if (arg >= argc)
+	    {
+		print_error ("Server option -p is missing an argument");
+		print_usage();
+		exit(5);
+	    }
+
+	    FILE *file = fopen (argv[arg], "r");
+	    if (!file)
+	    {
+		print_error ("Client option -p: Couldn't open %s for reading", argv[arg]);
+		exit(5);
+	    }
+
+	    bool one_value_parsed = false;
+
+	    while (!feof(file))	  // Parse all values until EOF
+	    {
+		Parser parser(file, argv[arg]);   // set parser to file
+
+		YCodePtr pc = parser.parse ();
+
+		if (pc)
+		{
+		    preload->add(pc->evaluate (true));   // add to preload list
+		    one_value_parsed = true;
+		}
+	    }
+
+	    fclose (file);
+
+	    if (!one_value_parsed)
+	    {
+		print_error ("Server option -p: Couldn't parse a valid YCP value from file %s",
+			     argv[arg]);
+		exit(5);
+	    }
+	}
+	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
+	{
+	    Parser parser (argv[arg]);	// set parser to option
+
+	    YCodePtr pc = parser.parse ();
+
+	    if (!pc)
+	    {
+		print_error ("Server option %s is not a valid YCP value", argv[arg]);
+		exit(5);
+	    }
+
+	    preload->add (pc->evaluate (true));	// add to preload list
+	}
+	else break; // specific server options
+
+	arg++;	    // switch to next argument
+    }	// parsing server options
+
+}
 
 int
 main (int argc, char **argv)
@@ -294,222 +493,29 @@ main (int argc, char **argv)
 	arg++;
     }
 
-    // now create client
-    char *client_name = argv[arg];
-    if (!client_name) {
-	print_usage ();
-	exit (1);
-    }
+    // "arg" and these two are output params
+    char * client_name;
+    YCPList arglist;    
+    parse_client_and_options (argc, argv, arg, client_name, arglist);
 
-    Y2Component *client = Y2ComponentBroker::createClient (client_name);
-    if (!client)
-    {
-	print_error ("No such client module %s", client_name);
-	print_usage ();
-	exit (5);
-    }
-
-    arg++;   // next argument (first client option)
-
-    // Prepare client options
-
-    YCPList arglist;
-
-    while (arg < argc)
-    {
-	if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
-	{
-	    // Logfile already done at program start --> ignore here
-	    arg++;   // skip filename
-	}
-	else if (!strcmp(argv[arg], "-c") || !strcmp(argv[arg], "--logconf"))
-	{
-	    // Logfile already done at program start --> ignore here
-	    arg++;   // skip filename
-	}
-	else if (!strcmp(argv[arg], "-s"))	// Parse one value (YCPList of options) from stdin
-	{
-	    Parser parser (0, "<stdin>");	// set parser to stdin
-	    YCodePtr pc = parser.parse ();
-
-	    YCPValue option = YCPNull ();
-	    if (pc)
-	    {
-		option = pc->evaluate(true);	// get one value (should be a YCPList)
-	    }
-
-	    if (option.isNull())
-	    {
-		print_error ("Client option -s: Couldn't parse valid YCP value from stdin");
-		exit (5);
-	    }
-
-	    if (!option->isList())
-	    {
-		print_error ("Client option -s: Parsed YCP value is NOT a YCPList");
-		exit (5);
-	    }
-
-	    arglist = option->asList();	  // the option read _IS_ arglist
-	}
-	else if (!strcmp(argv[arg], "-f"))	// Parse values from file
-	{
-	    arg++;   // switch to filename
-
-	    if (arg >= argc)
-	    {
-		print_error ("Client option -f is missing an argument");
-		print_usage();
-		exit(5);
-	    }
-
-	    FILE *file = fopen (argv[arg], "r");
-	    if (!file)
-	    {
-		print_error ("Client option -f: Couldn't open %s for reading", argv[arg]);
-		exit(5);
-	    }
-
-	    bool one_value_parsed = false;
-
-	    while (!feof(file))	  // Parse all values until EOF
-	    {
-		Parser parser(file, argv[arg]);   // set parser to file
-
-		YCodePtr pc = parser.parse ();
-
-		if ( pc )
-		{
-		    arglist->add( pc->evaluate(true) );
-		    one_value_parsed = true;
-		}
-	    }
-
-	    fclose (file);
-
-	    if (!one_value_parsed)
-	    {
-		print_error ("Client option -f: Couldn't parse valid YCP value from file %s",
-			     argv[arg]);
-		exit(5);
-	    }
-	}
-	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
-	{
-	    Parser parser (argv[arg]);	// set parser to option
-
-	    YCodePtr pc = parser.parse ();
-
-	    if (!pc )
-	    {
-		print_error ("Client option %s is not a valid YCP value", argv[arg]);
-		exit(5);
-	    }
-
-	    arglist->add( pc->evaluate (true));   // add to arglist
-	}
-	else break;   // must be server name
-
-	arg++;	      // switch to next argument
-    } // Parsing client options
-
-    if (arg >= argc)
-    {
-	fprintf(stderr, "No server module given\n");
-	print_usage ();
-	exit (5);
-    }
+    // "arg" and these two are output params
+    char * server_name;
+    YCPList preload;		       // prepare preload files from option -p
+    parse_server_and_options (argc, argv, arg, server_name, preload);
 
     // now create server
-    char *server_name = argv[arg];
-    if (!server_name) {
-	print_usage ();
-	exit (1);
-    }
 
-    Y2Component *server = Y2ComponentBroker::createServer (server_name);
+    Y2ComponentBroker::registerNamespaceException ("UI", server_name);
+    Y2Component *server = Y2ComponentBroker::getNamespaceComponent ("UI");
     if (!server) {
 	print_error ("No such server module %s", server_name);
 	print_usage();
 	exit(5);
     }
 
-    arg++;   // next argument (first server option)
-
-    // Prepare server and general options
-    YCPList preload;		       // prepare preload files from option -p
-
-    while (arg < argc)
-    {
-	if (!strcmp(argv[arg], "-l") || !strcmp(argv[arg], "--logfile"))
-	{
-	    // Logfile already done at program start --> ignore here
-	    arg++;   // skip filename
-	}
-	else if (!strcmp(argv[arg], "-p"))   // preload
-	{
-	    arg++;   // switch to filename
-
-	    if (arg >= argc)
-	    {
-		print_error ("Server option -p is missing an argument");
-		print_usage();
-		exit(5);
-	    }
-
-	    FILE *file = fopen (argv[arg], "r");
-	    if (!file)
-	    {
-		print_error ("Client option -p: Couldn't open %s for reading", argv[arg]);
-		exit(5);
-	    }
-
-	    bool one_value_parsed = false;
-
-	    while (!feof(file))	  // Parse all values until EOF
-	    {
-		Parser parser(file, argv[arg]);   // set parser to file
-
-		YCodePtr pc = parser.parse ();
-
-		if (pc)
-		{
-		    preload->add(pc->evaluate (true));   // add to preload list
-		    one_value_parsed = true;
-		}
-	    }
-
-	    fclose (file);
-
-	    if (!one_value_parsed)
-	    {
-		print_error ("Server option -p: Couldn't parse a valid YCP value from file %s",
-			     argv[arg]);
-		exit(5);
-	    }
-	}
-	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
-	{
-	    Parser parser (argv[arg]);	// set parser to option
-
-	    YCodePtr pc = parser.parse ();
-
-	    if (!pc)
-	    {
-		print_error ("Server option %s is not a valid YCP value", argv[arg]);
-		exit(5);
-	    }
-
-	    preload->add (pc->evaluate (true));	// add to preload list
-	}
-	else break; // specific server options
-
-	arg++;	    // switch to next argument
-    }	// parsing server options
-
     // Put argument into a nice new array and give them to the server
     char **server_argv = new char *[argc-arg+2];
-    server_argv[0] = server_name;
+    server_argv[0] = strdup (server_name);
     for (int i = arg; i < argc; i++)
 	server_argv[i-arg+1] = argv[i];
     argv[argc] = NULL;
@@ -521,6 +527,16 @@ main (int argc, char **argv)
     for (int i = 0; i < preload->size(); i++)
     {
 	server->evaluate(preload->value(i));
+    }
+
+    // now create client
+
+    Y2Component *client = Y2ComponentBroker::createClient (client_name);
+    if (!client)
+    {
+	print_error ("No such client module %s", client_name);
+	print_usage ();
+	exit (5);
     }
 
     // The environment variable YAST_IS_RUNNING is checked in rpm

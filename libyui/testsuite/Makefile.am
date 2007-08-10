@@ -12,7 +12,11 @@ INCLUDES =						\
 
 noinst_PROGRAMS = runyui
 runyui_SOURCES = runyui.cc
-runyui_LDADD = ../src/libyui.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la ${Y2UTIL_LIBS} -lpthread
+runyui_LDADD = ../src/libpy2UI.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la ${Y2UTIL_LIBS} -lpthread
+
+#This is needed for the testsuite to run
+#But it has been broken for ages now
+#PACKAGE=libyui
 
 AUTOMAKE_OPTIONS = dejagnu
 

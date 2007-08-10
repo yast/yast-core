@@ -7,16 +7,17 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-fmessage-length=0
 
-lib_LTLIBRARIES = libyui.la
+plugin_LTLIBRARIES = libpy2UI.la
 
-libyui_la_SOURCES =				\
+libpy2UI_la_SOURCES =				\
 	YUIComponent.cc				\
 	YUI_core.cc				\
 	YUI_builtins.cc				\
 	YUI_widgets.cc				\
 	YUI_special_widgets.cc			\
-	YUI_bindings.cc				\
 	YUI_util.cc				\
+	Y2UINamespace.cc			\
+	Y2CCUI.cc				\
 	YUIPlugin.cc				\
 						\
 	YAlignment.cc				\
@@ -72,9 +73,10 @@ pkgincludedir = $(includedir)/yui
 
 pkginclude_HEADERS =				\
 	YUIComponent.h				\
+	Y2UINamespace.h				\
+	Y2CCUI.h				\
 	YUI.h					\
 	YUI_util.h				\
-	UI.h					\
 	YUISymbols.h				\
 	YUIPlugin.h				\
 	YPackageSelectorPlugin.h		\
@@ -137,10 +139,17 @@ INCLUDES =					\
 	-I$(top_srcdir)/liby2/src/include	\
 	${Y2UTIL_CFLAGS}
 
-libyui_la_LDFLAGS = -version-info 2:0
-libyui_la_LIBADD = -lpthread
+libpy2UI_la_LDFLAGS = -version-info 2:0
+libpy2UI_la_LIBADD = -lpthread
 
-CLEANFILES = libyui.kdoc
+# "foo bar: baz" is wrong
+# see "info '(automake)Multiple Outputs'"
+%BuiltinCalls.h %BuiltinTable.h : Y2%Namespace.h
+	${top_srcdir}/base/tools/devtools/generateYCPWrappers $< $*BuiltinCalls.h $*BuiltinTable.h
+
+BUILT_SOURCES = UIBuiltinTable.h UIBuiltinCalls.h
+
+CLEANFILES = libyui.kdoc $(BUILT_SOURCES)
 
 
 #<INSTALL-HEADER-TARGET>

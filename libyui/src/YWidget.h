@@ -130,7 +130,7 @@ public:
      * automatically delete any child widgets if they are deleted
      * themselves. This conflicts with destructors that delete child widgets.
      */
-    virtual void childDeleted( YWidget *child ) {}
+    virtual void childDeleted( YWidget * /*child*/ ) {}
 
     /**
      * Returns true if this is a dialog widget.

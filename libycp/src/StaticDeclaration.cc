@@ -50,7 +50,7 @@ using namespace std;
 // list of namespace prefixes to mark as 'predefined'
 // They will be auto-loaded by the scanner on first appearance
 //
-static char *predefined[] = {
+static const char *predefined[] = {
   "UI", "WFM", "SCR", "Pkg", 0
 };
 //------------------------------------------------------------------------
@@ -62,7 +62,7 @@ StaticDeclaration::StaticDeclaration()
 #if DO_DEBUG
     y2debug ("m_declTable %p", m_declTable);
 #endif
-    char **pptr = predefined;
+    const char **pptr = predefined;
     SymbolEntryPtr sentry;
     Point *point = new Point ("<predefined>");
     while (*pptr != 0)
@@ -548,7 +548,10 @@ StaticDeclaration::readDeclaration (bytecodeistream & str) const
     if (decl == 0)
     {
 	ycp2error ("No match for '%s (%s)'", name, type->toString().c_str());
-	str.setstate (std::ostream::failbit);
+	ycp2error ("That is a builtin function, so your bytecode");
+	ycp2error ("needs to be recompiled using a recent yast2-core.");
+	delete [] name;
+	throw Bytecode::Invalid();
     }
     delete [] name;
     return decl;

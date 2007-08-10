@@ -845,8 +845,7 @@ Bytecode::readCode (bytecodeistream & str)
     
     YCodePtr res = 0;
 
-    try
-    {
+    // there used to be a try/catch here but it was moved to readFile
 
     switch (code)
     {
@@ -1059,13 +1058,6 @@ Bytecode::readCode (bytecodeistream & str)
 	break;
     }
 
-    }
-    catch (const Bytecode::Invalid&)
-    {
-	// there are memory leaks all over the place now
-	y2error ("Caught invalid bytecode");
-    }
-
     return res;
 }
 
@@ -1158,8 +1150,17 @@ Bytecode::readFile (const string & filename)
 #if DO_DEBUG
 //	y2debug ("Header accepted");
 #endif
-	
-	return readCode (instream);
+
+	try
+	{
+	    return readCode (instream);
+	}
+	catch (const Bytecode::Invalid&)
+	{
+	    // there are memory leaks all over the place now
+	    y2error ("Caught invalid bytecode in '%s'", filename.c_str());
+	    return 0;
+	}
     }
 
     y2error ("Unsupported version %d.%d.%d"

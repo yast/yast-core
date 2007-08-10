@@ -98,6 +98,8 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 		return -1;
 	    }
 
+	    y2debug ("Component found: %s", comp->name().c_str());
+
 	    name_space = comp->import (cname);						// do the bytecode import
 	    if (name_space == NULL)
 	    {

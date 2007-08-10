@@ -102,6 +102,8 @@ public:
      * Returns the SCRAgent of the Y2Component or NULL if it doesn't have one.
      */
     SCRAgent* getSCRAgent ();
+    
+    Y2Namespace* import (const char* name_space);
 
     /**
      * Tells this server, that the client doesn't need it's services

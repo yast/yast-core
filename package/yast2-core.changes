@@ -1,4 +1,37 @@
 -------------------------------------------------------------------
+Thu Aug  9 10:22:43 CEST 2007 - mvidner@suse.cz
+
+- The dummy Y2 component is instantiable but YUI is not, fixed the
+  namespace accordingly.
+- 2.15.6.4
+
+-------------------------------------------------------------------
+Wed Aug  8 16:59:33 CEST 2007 - mvidner@suse.cz
+
+- Make the dummy UI instantiable for testsuite purposes.
+- 2.15.6.3
+
+-------------------------------------------------------------------
+Mon Aug  6 15:16:00 CEST 2007 - mvidner@suse.cz
+
+- Increased the ag_background test suite timeout to prevent random
+  failures due to scheduling.
+- Disabled it.
+
+-------------------------------------------------------------------
+Mon Aug  6 13:48:45 CEST 2007 - mvidner@suse.cz
+
+- Converted the UI functions from YCP builtins to a YCP namespace, so
+  that they can be called from other language bindings.
+- 2.15.6.2
+
+-------------------------------------------------------------------
+Wed Jul 18 06:06:06 CEST 2007 - kkaempf@suse.de
+
+- ycpc can now output an XML representation of the parse tree
+  http://kkaempf.blogspot.com/2007/07/hackweek-aftermath.html
+
+-------------------------------------------------------------------
 Thu Jul 12 11:52:24 CEST 2007 - locilka@suse.cz
 
 - Fixed ag_background to always read the process exit status before

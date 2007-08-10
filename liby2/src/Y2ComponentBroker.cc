@@ -121,11 +121,12 @@ Y2ComponentBroker::getNamespaceComponent (const char* name)
     {
 	string comp_name = exi->second;
 
-	Y2Component *comp = Y2ComponentBroker::createComponent (comp_name.c_str (), true);
+	// the ui stuff is a mess, must prefer servers
+	Y2Component *comp = createServer (comp_name.c_str ());
 	if (! comp) 
 	{
-	    // no client component, try server as well
-	    comp = Y2ComponentBroker::createComponent (comp_name.c_str (), false);
+	    // no server component, try client as well
+	    comp = Y2ComponentBroker::createClient (comp_name.c_str ());
 	}
 
 	if (comp)

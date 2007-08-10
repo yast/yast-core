@@ -40,6 +40,7 @@
 #include <ycp/y2log.h>
 #include <ycp/YCPVoid.h>
 
+#include "Y2UINamespace.h"
 #include "YUI.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
@@ -178,45 +179,6 @@ extern YCPValue UIUserInput ();
 extern YCPValue UITimeoutUserInput( const YCPInteger& timeout );
 extern YCPValue UIWaitForEvent();
 extern YCPValue UIWaitForEventTimeout( const YCPInteger & timeout );
-
-
-YCPValue YUI::callBuiltin( void * function, int argc, YCPValue argv[] )
-{
-    YCPValue ret = YCPVoid();
-
-    if ( macroPlayer )
-    {
-	if ( function == UIUserInput		||
-	     function == UITimeoutUserInput 	||
-	     function == UIWaitForEvent 	||
-	     function == UIWaitForEventTimeout	  )
-	{
-	    playNextMacroBlock ();
-	}
-    }
-
-    if ( with_threads )
-    {
-	_builtinCallData.function	= function;
-	_builtinCallData.argc		= argc;
-	_builtinCallData.argv		= argv;
-
-	signalUIThread();
-
-	while ( ! waitForUIThread() )
-	{
-	    // NOP
-	}
-
-	ret = _builtinCallData.result;
-    }
-    else
-    {
-	ret = callFunction( function, argc, argv );
-    }
-
-    return ret;
-}
 
 
 YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
@@ -366,11 +328,8 @@ void YUI::uiThreadMainLoop()
 	if ( terminate_ui_thread )
 	    return;
 
-	// callFunction() checks for NULL function pointers
+	_builtinCallData.result = _builtinCallData.function->evaluateCall_int();
 
-	_builtinCallData.result = callFunction( _builtinCallData.function,
-						_builtinCallData.argc,
-						_builtinCallData.argv );
 	signalYCPThread();
     }
 }

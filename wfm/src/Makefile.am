@@ -24,7 +24,7 @@ libpy2wfm_la_SOURCES =				\
 libpy2wfm_la_LDFLAGS = -version-info 2:0
 libpy2wfm_la_LIBADD = \
 	../../scr/src/libpy2scr.la		\
-	../../libyui/src/libyui.la		\
+	../../libyui/src/libpy2UI.la		\
 	../../libscr/src/libscr.la		\
 	../../libycp/src/libycp.la		\
 	../../liby2/src/liby2.la		\

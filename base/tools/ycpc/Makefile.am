@@ -17,7 +17,7 @@ INCLUDES = -I$(top_srcdir)/libycp/src/include \
 bin_PROGRAMS = ycpc
 ycpc_SOURCES = ycpc.cc
 ycpc_LDADD = $(top_builddir)/libycp/src/libycp.la \
-	$(top_builddir)/libyui/src/libyui.la \
+	$(top_builddir)/libyui/src/libpy2UI.la \
 	$(top_builddir)/wfm/src/libpy2wfm.la \
 	$(top_builddir)/liby2/src/liby2.la \
 	$(top_builddir)/libscr/src/libscr.la \

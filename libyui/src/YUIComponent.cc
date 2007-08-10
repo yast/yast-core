@@ -27,6 +27,7 @@
 #include <ycp/YCPVoid.h>
 
 #include "YUIComponent.h"
+#include "Y2UINamespace.h"
 #include "YUI.h"
 
 
@@ -43,13 +44,16 @@ YUIComponent::YUIComponent()
     _macro_file			= 0;
     _with_threads		= false;
     _have_server_options	= false;
+    _namespace 		= NULL;
 
     if ( _uiComponent )
     {
-	y2error( "Can't create multiple instances of UI component!" );
-	return;
+       y2error( "Can't create multiple instances of UI component! (existing '%s', requested '%s')"
+        ,  _uiComponent->name ().c_str(), this->name ().c_str ());
+       return;
     }
-    
+
+    y2debug ("Setting UI component to '%s'", name().c_str());    
     _uiComponent	= this;
 }
 
@@ -66,6 +70,23 @@ YUIComponent * YUIComponent::uiComponent()
     return _uiComponent;
 }
 
+
+Y2Namespace *YUIComponent::import (const char* name)
+{
+    y2debug ("%s trying to import %s", this->name().c_str(), name);
+    if ( strcmp (name, "UI") == 0)
+    {
+        if (_namespace == NULL)
+        {
+            _namespace = new Y2UINamespace(this);
+	    y2debug ("Namespace created %p", _namespace);
+        }
+
+        return _namespace;
+    }
+
+    return NULL;
+}
 
 void YUIComponent::createUI()
 {
@@ -142,7 +163,7 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 }
 
 
-void YUIComponent::result( const YCPValue & result )
+void YUIComponent::result( const YCPValue & /*result*/ )
 {
     if ( _ui )
 	delete _ui;
@@ -166,5 +187,13 @@ Y2Component * YUIComponent::getCallback() const
 	return 0;
 }
 
+
+YUI * YUIComponent::createUI( int /*argc*/, char ** /*argv*/, bool /*with_threads*/, const char * /*macro_file*/ )
+{
+    // This component can be instantiated for compilation purposes
+    // but it cannot evaluate the code.
+    y2debug ("Cannot create generic UI");
+    return 0;
+}
 
 // EOF

@@ -202,7 +202,7 @@ Y2WFMComponent::find_handle (int handle)
 const char*
 Y2WFMComponent::get_env_lang () const
 {
-    static char* names[] = { "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG" };
+    static const char* names[] = { "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG" };
 
     for (size_t i = 0; i < sizeof (names)/sizeof (names[0]); i++)
     {

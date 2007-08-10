@@ -45,7 +45,6 @@
 #endif
 
 #include <scr/SCR.h>
-#include <UI.h>
 #include "WFM.h"
 
 Y2CCWFM::Y2CCWFM()
@@ -59,7 +58,6 @@ static void initializeBuiltins ()
     // we can't do this in constructor, since it is called in static initialization
     // and we can't control the order of initialization - it can crash
     static SCR scr;
-    static UI ui;
     static WFM wfm;
 }
 

@@ -128,6 +128,23 @@ Y2PluginComponent::getSCRAgent ()
 }
 
 
+Y2Namespace*
+Y2PluginComponent::import (const char* name_space)
+{
+    if (!handle)
+    {
+	loadPlugin ();
+    }
+
+    if (!comp)
+    {
+	return 0;
+    }
+
+    return comp->import (name_space);
+}
+
+
 void
 Y2PluginComponent::result (const YCPValue& result)
 {

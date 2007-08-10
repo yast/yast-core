@@ -26,6 +26,7 @@
 
 
 class YUI;
+class Y2Namespace;
 
 /**
  * @short abstract base class for YaST2 user interface components.
@@ -33,7 +34,7 @@ class YUI;
  **/
 class YUIComponent : public Y2Component
 {
-protected:
+public:
     /**
      * Constructor.
      */
@@ -44,6 +45,7 @@ protected:
      */
     virtual ~YUIComponent();
 
+protected:
     /**
      * Create the UI. This is called when all the information for doing that is
      * complete, in setServerOptions().
@@ -51,9 +53,11 @@ protected:
      *
      * Implement this method in derived classes.
      **/
-    virtual YUI * createUI( int argc, char **argv, bool with_threads, const char * macro_file ) = 0;
+    virtual YUI * createUI( int argc, char **argv, bool with_threads, const char * macro_file );
 
 public:
+
+    virtual Y2Namespace *import (const char* name);
 
     /**
      * Returns the instance of the UI component 0 if none has been created yet.
@@ -116,6 +120,7 @@ private:
 
     static YUI *		_ui;
     static YUIComponent *	_uiComponent;
+    Y2Namespace *		_namespace;
 
     int			_argc;
     char **		_argv;

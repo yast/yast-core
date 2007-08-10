@@ -1696,9 +1696,9 @@ YSImport::YSImport (bytecodeistream & str)
 
     if (nameSpace() == 0)
     {
-	ycp2error ("Import '%s' failed\n", name().c_str());
-	ycp2error ("No namespace\n");
-	return;
+	ycp2error ("Import '%s' failed...\n", name().c_str());
+	ycp2error ("Could not create its namespace\n");
+	throw Bytecode::Invalid();
     }
 
     // now load symbols we need from the just imported namespace

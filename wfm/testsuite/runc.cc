@@ -25,7 +25,6 @@
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentCreator.h>
 
-#include <UI.h>
 #include <scr/SCR.h>
 #include <WFM.h>
 
@@ -321,7 +320,6 @@ int main (int argc, char *argv[])
     // initialize the buildins
     WFM wfm;
     SCR scr;
-    UI ui;
 
     for(;;)
     {

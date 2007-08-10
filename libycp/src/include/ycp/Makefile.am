@@ -8,6 +8,7 @@ pkgincludedir = $(includedir)/ycp
 
 pkginclude_HEADERS =					\
 							\
+	Xmlcode.h					\
 	YCPBoolean.h YCPByteblock.h			\
 	YCPElement.h YCPFloat.h				\
 	YCPInteger.h YCPList.h				\

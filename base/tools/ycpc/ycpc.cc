@@ -30,7 +30,6 @@
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentBroker.h>
 
-#include <UI.h>
 #include <scr/SCR.h>
 #include <WFM.h>
 
@@ -62,7 +61,7 @@ static int read_n_run = 0;	// read and run bytecode
 static int freshen = 0;		// freshen recompilation
 static int force = 0;		// force recompilation
 static int no_implicit_namespaces = 0;	// don't preload implicit namespaces
-static char *ui_name = 0;
+static const char *ui_name = 0;
 #define UI_QT_NAME "qt"
 #define UI_NCURSES_NAME "ncurses"
 
@@ -1311,7 +1310,6 @@ int main(int argc, char *argv[])
     // register builtins
     SCR scr;
     WFM wfm;
-    UI ui;
 
     if ((compile == parse)		// both are zero
 	&& (compile == freshen)
