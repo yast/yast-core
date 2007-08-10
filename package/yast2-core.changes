@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Aug 10 17:38:17 CEST 2007 - mvidner@suse.cz
+
+- Finished integrating Feature #120292, UI as a namespace callable
+  from yast2-*-bindings.
+- 2.15.7
+
+-------------------------------------------------------------------
 Thu Aug  9 10:22:43 CEST 2007 - mvidner@suse.cz
 
 - The dummy Y2 component is instantiable but YUI is not, fixed the
