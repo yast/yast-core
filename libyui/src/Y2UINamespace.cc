@@ -333,7 +333,7 @@ Y2UINamespace::NormalCursor()
 
 
 YCPValue
-Y2UINamespace::MakeScreenshot( const YCPString & filename )
+Y2UINamespace::MakeScreenShot( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
 	YUIComponent::ui()->evaluateMakeScreenShot( filename );
@@ -343,10 +343,10 @@ Y2UINamespace::MakeScreenshot( const YCPString & filename )
 
 
 YCPValue
-Y2UINamespace::MakeScreenshot()
+Y2UINamespace::MakeScreenShot()
 {
     if ( YUIComponent::ui() )
-	return MakeScreenshot( YCPNull() );
+	return MakeScreenShot( YCPNull() );
     else
 	return YCPVoid();
 }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Aug 13 09:22:06 CEST 2007 - mvidner@suse.cz
+
+- Fixed the capitalization of UI::MakeScreenShot.
+- 2.15.8
+
+-------------------------------------------------------------------
 Fri Aug 10 17:38:17 CEST 2007 - mvidner@suse.cz
 
 - Finished integrating Feature #120292, UI as a namespace callable

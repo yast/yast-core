@@ -229,10 +229,10 @@ class Y2UINamespace: public Y2Namespace
 	YCPValue NormalCursor ();
 
 	/* TYPEINFO: void (string) */
-	YCPValue MakeScreenshot ( const YCPString & filename );
+	YCPValue MakeScreenShot ( const YCPString & filename );
 
 	/* TYPEINFO: void () */
-	YCPValue MakeScreenshot ();
+	YCPValue MakeScreenShot ();
 
 	/* TYPEINFO: void () */
 	YCPValue DumpWidgetTree ();
