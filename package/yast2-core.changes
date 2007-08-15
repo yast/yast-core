@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Mon Aug 13 22:14:05 CEST 2007 - coolo@suse.de
+
+- really fix the crash
+
+-------------------------------------------------------------------
+Mon Aug 13 18:15:53 CEST 2007 - coolo@suse.de
+
+- Fix endless recursion (#299826)
+
+-------------------------------------------------------------------
 Mon Aug 13 09:22:06 CEST 2007 - mvidner@suse.cz
 
 - Fixed the capitalization of UI::MakeScreenShot.
