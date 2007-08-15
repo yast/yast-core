@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug 15 11:31:20 CEST 2007 - mvidner@suse.cz
+
+- Do not log return value from clients (#248300).
+- 2.13.40
+
+-------------------------------------------------------------------
 Wed May  9 15:14:49 CEST 2007 - sh@suse.de
 
 - Added SimplePatchSelector widget (requested by hmuelle) 
