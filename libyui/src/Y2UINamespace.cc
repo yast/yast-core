@@ -218,7 +218,10 @@ Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPSymbol & proper
 YCPValue
 Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & new_value )
 {
-    return ChangeWidget( widget_id, YCPSymbol(property.name()), new_value );
+    if ( YUIComponent::ui() )
+	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
+    else
+	return YCPVoid();
 }
 
 

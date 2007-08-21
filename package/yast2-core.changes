@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug 21 15:57:24 CEST 2007 - mvidner@suse.cz
+
+- Fixed changing the value of table cells (#302042).
+- 2.15.9
+
+-------------------------------------------------------------------
 Mon Aug 13 22:14:05 CEST 2007 - coolo@suse.de
 
 - really fix the crash
