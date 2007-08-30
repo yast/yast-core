@@ -2,15 +2,14 @@
  * Example for an animated image
  **/
 {
-    global define void MovieDemo(byteblock movie) ``{
-        UI::OpenDialog(
-                   `VBox(
-                         `Image(`opt(`animated), movie, "Movie"), 
-                         `PushButton("&OK")));
-        UI::UserInput();
-        UI::CloseDialog();
-    };
-    
-    byteblock movie = (byteblock) SCR::Read( .target.byte, "/usr/share/splash/keys.mng" );
-    MovieDemo( movie );
-}
+    string movie = "/usr/share/doc/packages/libqt4/examples/widgets/movie/movies/fire.mng";
+    UI::OpenDialog(
+		   `VBox(
+			 `MinSize( 10, 4,
+				   `Image(`opt(`animated), movie, "animation" ) ),
+			 `PushButton("&OK")
+			 )
+		   );
+    UI::UserInput();
+    UI::CloseDialog();
+};

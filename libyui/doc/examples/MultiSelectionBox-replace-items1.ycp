@@ -16,7 +16,7 @@
     list veggie_toppings =
 	[
 	 "Cheese",
-	 "Mushrooms",
+	 "Mushrooms (you might want to consult somebody who knows which ones are toxic)",
 	 "Pepperoni",
 	 "Rucola",
 	 "Tomatoes"
@@ -24,7 +24,7 @@
 
     UI::OpenDialog(`HBox(`VSpacing(15),	// layout trick: force minimum height
 			 `VBox(
-			       `HSpacing(25),	// force minimum width
+			       `HSpacing(120),	// force minimum width
 			       `MultiSelectionBox(`id(`toppings), "Toppings:", all_toppings ),
 			       `Left( `CheckBox(`id(`veggie), `opt(`notify), "&Vegetarian" ) ),
 			       `PushButton(`id(`ok), "&OK" )

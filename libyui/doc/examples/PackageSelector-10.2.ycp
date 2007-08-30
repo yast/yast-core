@@ -2,7 +2,7 @@
 {
     boolean use_installed_system = false;
     
-    Pkg::SourceCreate( "file:/mounts/dist/full/full-10.2-i386/", "" );
+    Pkg::SourceCreate( "ftp://dist.suse.de/10.2-i386/", "" );
 
 
     if ( use_installed_system )
