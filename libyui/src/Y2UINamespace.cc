@@ -33,6 +33,8 @@
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
 
+#define VERBOSE_UI_CALLS	0
+
 
 YCPValue
 Y2UINamespace::SetLanguage( const YCPString & language )
@@ -844,8 +846,10 @@ Y2UINamespace::~Y2UINamespace ()
 
 Y2Function* Y2UINamespace::createFunctionCall (const string name, constFunctionTypePtr type)
 {
+#if VERBOSE_UI_CALLS
     y2debug ("Creating function call for %s", name.c_str ());
-    y2debug ("whose type is %s", type? type->toString().c_str() : "unknown");    
+    y2debug ("whose type is %s", type? type->toString().c_str() : "unknown");
+#endif
 
     // overloading: functions with same name must be adjacent in m_symbols
 
@@ -884,7 +888,9 @@ Y2Function* Y2UINamespace::createFunctionCall (const string name, constFunctionT
 	    // found exact match
 	    // BTW, p->position() may change as we go, don't get confused.
 	    // What matters is our own counting.
+#if VERBOSE_UI_CALLS
 	    y2debug ("Found symbol '%s' @%d", p->toString ().c_str (), p->position ());
+#endif
 	    return new Y2UIFunction (this, m_comp, it - b, play_macro_blocks);
 	}
     }
