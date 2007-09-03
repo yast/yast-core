@@ -24,6 +24,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <errno.h>
 
 #include "ycp/YCPBuiltinMisc.h"
 #include "ycp/YCPBoolean.h"
@@ -139,6 +140,86 @@ Srandom2 (const YCPInteger & seed)
     return YCPVoid ();
 }
 
+
+static YCPBoolean
+Setenv2 (const YCPString & name, const YCPString & value, const YCPBoolean & overwrite)
+{
+    /**
+     * @builtin setenv
+     * @short Change or add an environment variable
+     * @description
+     * The setenv() function adds the variable to the
+     * environment with the value. If variable exist
+     * the value is changed.
+     * @param string variable
+     * @param string value
+     * @param boolean overwrite
+     * @return boolean
+     * @id setenv_2
+     * @usage setenv("PATH", "/home/user", true)
+     */
+    //3rd argument (1) means that value will be overwrite if it exist
+    int ret = setenv(name->value().c_str(), value->value().c_str(), (overwrite->value() ? 1:0) ); 
+    if (ret == 0) {
+        return YCPBoolean(true);
+    } else { 
+        ycp2error ("[Setenv1] failed %s",strerror(errno));
+        return YCPBoolean(false);
+    }
+}
+
+
+static YCPBoolean
+Setenv1 (const YCPString & name, const YCPString & value)
+{
+    /**
+     * @builtin setenv
+     * @short Change or add an environment variable
+     * @description
+     * The setenv() function adds the variable to the
+     * environment with the value. If variable exist
+     * the value is changed.
+     * @param string variable
+     * @param string value
+     * @return boolean
+     * @id setenv_1
+     * @usage setenv("PATH", "/home/user")
+     */
+    //3rd argument (1) means that value will be overwrite if it exist
+
+    return Setenv2(name, value, YCPBoolean(true));
+
+}
+
+
+
+/*
+static YCPString
+Getenv (const YCPString & name)
+{
+     **
+     * @builtin setenv
+     * @short Change or add an environment variable
+     * @description
+     * The getenv(variable) function returns the value of variable from
+     * environment. If variable doesn't exist
+     * the value is NULL.
+     * @param string name
+     * @return string value
+     * @id getenv_1
+     * @usage getenv("name")
+     *
+ 
+    char *value = getenv(name->value().c_str());
+    if (value) { 
+        string ret (value);        
+        return YCPString(ret);
+    } else {
+        return YCPNull();
+    }
+
+}
+*/
 
 static YCPValue
 Eval (const YCPValue & v)
@@ -518,6 +599,9 @@ YCPBuiltinMisc::YCPBuiltinMisc ()
 	{ "time",	"integer ()",			(void *)Time		},
 	{ "sleep",	"void (integer)",		(void *)Sleep		},
 	{ "random",	"integer (integer)",		(void *)Random		},
+        { "setenv",	"boolean (string,string)", 	(void *)Setenv1		},
+	{ "setenv",	"boolean (string,string,boolean)", (void *)Setenv2	}, 
+	//{ "getenv",	"string (string)",		(void *)Getenv		},  //function exist in other module
 	{ "srandom",	"integer ()",			(void *)Srandom1	},
 	{ "srandom",	"void (integer)",		(void *)Srandom2	},
 	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX },

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Sep  3 13:41:33 CEST 2007 - juhliarik@suse.cz
+
+- Added new function getenv(), #305163
+- 2.15.10 
+
+-------------------------------------------------------------------
 Tue Aug 21 15:57:24 CEST 2007 - mvidner@suse.cz
 
 - Fixed changing the value of table cells (#302042).
