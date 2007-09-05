@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep  5 13:18:55 CEST 2007 - mvidner@suse.cz
+
+- Fixed missing return value in YSymbolEntry::toXml
+
+-------------------------------------------------------------------
 Mon Sep  3 13:41:33 CEST 2007 - juhliarik@suse.cz
 
 - Added new function getenv(), #305163

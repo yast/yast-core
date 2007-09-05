@@ -270,6 +270,7 @@ YSymbolEntry::toXml (std::ostream & str, int indent ) const
     str << " category=\"" << catString(); str << "\"";
     str << " type=\""; str << m_type->toXmlString(); str << "\"";
     str << " name=\""; str << m_name.asString(); str << "\"/>";
+    return str;
     // value is never written
 }
 
