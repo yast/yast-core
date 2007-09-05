@@ -2,7 +2,7 @@
  * Example for an animated image
  **/
 {
-    string movie = "/usr/share/doc/packages/libqt4/examples/widgets/movie/movies/fire.mng";
+    string movie = "/usr/share/YaST2/theme/current/animations/ticks-endless.mng";
     UI::OpenDialog(
 		   `VBox(
 			 `MinSize( 10, 4,
