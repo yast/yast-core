@@ -3,6 +3,7 @@ Thu Sep  6 16:43:06 CEST 2007 - mvidner@suse.cz
 
 - Enabled iterating over all functions of a Y2Namespace, for
   a more natural call syntax in yast2-python-bindings (#308213).
+- Do not log return value from clients (#248300).
 - 2.15.11
 
 -------------------------------------------------------------------

@@ -651,7 +651,9 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 	YCPValue result = client_comp->doActualWork (args, NULL);
 	ee.setFilename (filename);
 	ee.setLinenumber (linenumber);
-	ycp2milestone (filename.c_str(), linenumber,
+	ycp2milestone (filename.c_str(), linenumber, "Called YaST client returned.");
+	// some clients return plaintext secrets #248300
+	ycp2debug (filename.c_str(), linenumber,
 		       "Called YaST client returned: %s", result.isNull () ? "nil" : result->toString ().c_str ());
 	return result;
 
