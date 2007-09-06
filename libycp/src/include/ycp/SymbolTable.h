@@ -149,6 +149,23 @@ public:
     // return size of hash table
     int size() const;
 
+    // consumer returns true to continue iterating
+    typedef bool (* EntryConsumer) (const SymbolEntry&);
+    /**
+     * call the consumer for each entry (or until it requests a break)
+     *
+     * Example:
+     *   static bool MyClass::DoIt (const SymbolEntry & se) {
+     *     cout << se.name() << endl;
+     *     return true;
+     *   }
+     *
+     *   void MyClass::Foo () {
+     *     my_y2namespace->table()->forEach (&DoIt);
+     *   }
+     */
+    void forEach (EntryConsumer consumer) const;
+
     //---------------------------------------------------------------
     // enter/find/remove
 
