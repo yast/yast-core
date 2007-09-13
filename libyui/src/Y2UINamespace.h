@@ -303,13 +303,11 @@ class Y2UINamespace: public Y2Namespace
 	/* TYPEINFO: boolean (term) */
 	YCPValue WizardCommand ( const YCPTerm & command );
 
-	// FIXME BOGUS!, see implementation
-	/* TYPEINFO:list<map<string, any>> () */
-	YCPValue CollectUserInput( const YCPTerm & widget_id, const YCPSymbol & property );
+	/* TYPEINFO:list<map<string,any>> () */
+	YCPValue CollectUserInput ();
 
-	// FIXME BOGUS!, see implementation
-	/* TYPEINFO:list<map<string, any>> (term) */
-	YCPValue CollectUserInput( const YCPTerm & widget_id, const YCPTerm & property );
+	/* TYPEINFO:list<map<string,any>> (term) */
+	YCPValue CollectUserInput( const YCPTerm & widget_id );
 
 YCPValue
 CallHandler( void * ptr, int argc, YCPValue argv[] );

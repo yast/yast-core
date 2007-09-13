@@ -164,7 +164,7 @@ y2milestone ("formatEvent(%1)", event);
 			 `Left(
 			       `HVSquash(
 					 `Frame( "Payment",
-						 `RadioButtonGroup( payment_radio_box )
+						 `RadioButtonGroup(`id(`payment_group), payment_radio_box )
 						 )
 					 )
 			       ),
@@ -247,6 +247,8 @@ y2milestone ("formatEvent(%1)", event);
 	}
 	if ( event["ID"]:nil == `info )
 	{
+	    list<map<string, any> > pg = UI::CollectUserInput(`id(`payment_group));
+	    y2milestone( "CollectUserInput(`id(`payment_group)) returned %1", pg );
 	    list<map<string, any> > widget_contents = UI::CollectUserInput();
 	    y2milestone( "CollectUserInput() returned %1", widget_contents );
 

@@ -586,7 +586,7 @@ Y2UINamespace::WizardCommand( const YCPTerm & command )
 
 
 YCPValue
-Y2UINamespace::CollectUserInput( const YCPTerm & widget_id, const YCPSymbol & property )
+Y2UINamespace::CollectUserInput( )
 {
     if ( YUIComponent::ui() )
        return YUIComponent::ui()->evaluateCollectUserInput();
@@ -596,10 +596,10 @@ Y2UINamespace::CollectUserInput( const YCPTerm & widget_id, const YCPSymbol & pr
 
 
 YCPValue
-Y2UINamespace::CollectUserInput( const YCPTerm & widget_id, const YCPTerm & property )
+Y2UINamespace::CollectUserInput( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
-       return YUIComponent::ui()->evaluateCollectUserInput();
+       return YUIComponent::ui()->evaluateCollectUserInput( widget_id );
     else
        return YCPVoid();
 }
