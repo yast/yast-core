@@ -142,6 +142,12 @@ shellcommand (const string &command, const string &tempdir)
 	    ExternalProgram::renumber_fd (pipe2[1], 1);
 	    close (pipe2[0]);
 
+	    // #223602
+	    // close all file descriptors above stderr
+	    for ( int i = getdtablesize() - 1; i > 2; --i ) {
+		close( i );
+	    }
+	    
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
 		ret = WEXITSTATUS (ret);
