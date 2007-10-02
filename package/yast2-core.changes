@@ -1,8 +1,8 @@
--------------------------------------------------------------------
 Tue Oct  2 15:53:06 CEST 2007 - mvidner@suse.cz
 
 - Close unneeded file descriptors before execing another
   program (#223602).
+- Fixed compilation errors with GCC 4.3 by adding missing includes.
 - 2.16.0
 
 -------------------------------------------------------------------
