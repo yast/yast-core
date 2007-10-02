@@ -21,6 +21,7 @@
 #ifndef Y2ComponentBroker_h
 #define Y2ComponentBroker_h
 
+#include <string.h>
 #include <map>
 #include <vector>
 #include <string>
