@@ -198,7 +198,7 @@ Y2PathSearch::findy2exe (string root, string compname, bool server,
     {
 	// Check at least if it is executable (for others) and
 	// if it is a regular file.
-	if (S_ISREG (buf.st_mode) && buf.st_mode & S_IXOTH == S_IXOTH)
+	if (S_ISREG (buf.st_mode) && (buf.st_mode & S_IXOTH == S_IXOTH))
 	{
 	    return pathname;
 	}

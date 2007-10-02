@@ -75,7 +75,7 @@ void y2errPath (const vector<string>&p, const char*c = "")
     int len = p.size();
     for (;i<len;i++)
 	out = out + p[i] + " ";
-    y2error (out.c_str());
+    y2error ("%s", out.c_str());
 }
 
 bool onlySpaces (const char*str)

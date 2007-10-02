@@ -1265,7 +1265,7 @@ YEUnary::evaluate (bool cse)
     const declaration_t *decl = m_decl;
 
     if (arg.isNull()
-	&& (decl->flags & DECL_NIL == 0))
+	&& ((decl->flags & DECL_NIL) == 0))
     {
 	ycp2error ("Argument (%s) to %s(...) is nil", m_arg->toString().c_str(), m_decl->name);
 	return YCPNull ();
