@@ -9,6 +9,7 @@ pkgincludedir = $(includedir)/y2
 pkginclude_HEADERS =							\
 	Y2Component.h Y2ComponentBroker.h Y2ComponentCreator.h		\
 	Y2CCProgram.h Y2CCSerial.h Y2CCStdio.h				\
+	Y2ErrorComponent.h						\
 	Y2ProgramComponent.h 			 			\
 	Y2SerialComponent.h Y2StdioComponent.h				\
 	Y2PluginComponent.h Y2CCPlugin.h 				\

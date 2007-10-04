@@ -33,6 +33,7 @@
 #include <ycp/y2log.h>
 #include <Y2CCWFM.h>
 #include <Y2WFMComponent.h>
+#include <y2/Y2ErrorComponent.h>
 
 
 #include <ycp/Parser.h>
@@ -168,7 +169,9 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
 	return s;
     }
 
-    return NULL;
+    // NULL would mean not found and the component broker would keep trying
+    // which means it would ignore errors in y2update (#330656)
+    return new Y2ErrorComponent ();
 }
 
 bool Y2CCWFM::isServerCreator() const

@@ -33,6 +33,7 @@
 #include <ycp/y2log.h>
 #include <ycp/ExecutionEnvironment.h>
 #include "Y2Component.h"
+#include "Y2ErrorComponent.h"
 #include "Y2ComponentBroker.h"
 #include <YCP.h>
 #include <ycp/Parser.h>
@@ -538,6 +539,12 @@ main (int argc, char **argv)
 	print_usage ();
 	exit (5);
     }
+    if (dynamic_cast<Y2ErrorComponent *>(client))
+    {
+	print_error ("Error while creating client module %s", client_name);
+	exit (5);
+    }
+
 
     // The environment variable YAST_IS_RUNNING is checked in rpm
     // post install scripts. Might be useful for other scripts as
