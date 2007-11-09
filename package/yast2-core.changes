@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov  9 16:04:19 CET 2007 - mvidner@suse.cz
+
+- Allow nil in UI::ChangeWidget again (#340523). Improved error
+  reporting for cases where it is rightly disallowed.
+- 2.16.3
+
+-------------------------------------------------------------------
 Fri Nov  2 14:03:37 CET 2007 - mvidner@suse.cz
 
 - Do not look for YCP scripts under the current working

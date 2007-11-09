@@ -180,17 +180,14 @@ class Y2UINamespace: public Y2Namespace
 	/* TYPEINFO: boolean() */
 	YCPValue CloseDialog();
 
-	// TODO DECL_NIL?
 	/* TYPEINFO: boolean (symbol, symbol, any) */
-	YCPValue ChangeWidget ( const YCPSymbol & widget_id, const YCPSymbol & property, const YCPValue & new_value );
+	YCPValue ChangeWidget ( const YCPSymbol & widget_id, const YCPSymbol & property, const YCPValue & /*nil*/ new_value );
 
-	// TODO DECL_NIL?
 	/* TYPEINFO: boolean (term, symbol, any) */
-	YCPValue ChangeWidget ( const YCPTerm & widget_id, const YCPSymbol & property, const YCPValue & new_value );
+	YCPValue ChangeWidget ( const YCPTerm & widget_id, const YCPSymbol & property, const YCPValue & /*nil*/ new_value );
 
-	// TODO DECL_NIL?
 	/* TYPEINFO: boolean (term, term, any) */
-	YCPValue ChangeWidget ( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & new_value );
+	YCPValue ChangeWidget ( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & /*nil*/ new_value );
 
 	/* TYPEINFO: any (symbol, symbol) */
 	YCPValue QueryWidget ( const YCPSymbol & widget_id, const YCPSymbol & property );
