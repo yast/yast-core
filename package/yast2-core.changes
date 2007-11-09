@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov  2 14:03:37 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.16.2
+
+-------------------------------------------------------------------
 Thu Oct  4 15:03:52 CEST 2007 - mvidner@suse.cz
 
 - Distinguish "foo.ycp contains an error" from "foo.ycp not found"
