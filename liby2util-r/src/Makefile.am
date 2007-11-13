@@ -27,4 +27,4 @@ liby2util_la_SOURCES =		\
 
 liby2util_la_LDFLAGS = -version-info 4:0:0
 
-liby2util_la_LIBADD = #-lutil -lz $(OPENSSL_LIBS) -lxml2
+liby2util_la_LIBADD = -lutil
