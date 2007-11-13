@@ -24,17 +24,11 @@ BuildRequires:	blocxx-devel
 BuildRequires:  libxcrypt-devel
 # liby2:Y2SerialComponent needs term.h
 BuildRequires:	ncurses-devel
-# to be integrated
-BuildRequires:	liby2util-devel
-# probably pulled by liby2util
-BuildRequires:	curl-devel
 
 Summary:	-
 # ag_hostnames: .net.hostnames (#264309)
 Recommends:	netcat
 Requires:	perl = %{perl_version}
-# liby2util-2.11.5: ExternalCommand::renumber_fd
-Requires:	liby2util >= 2.11.5
 Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig

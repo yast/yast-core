@@ -42,7 +42,8 @@ if [[ "$yast_found_efence" = "no" ]]; then
 fi
 
 
-PKG_CHECK_MODULES([Y2UTIL], [liby2util])
+Y2UTIL_CFLAGS='-I$(top_srcdir)/liby2util-r/src/include'
+Y2UTIL_LIBS='$(top_builddir)/liby2util-r/src/liby2util.la'
 AC_SUBST(Y2UTIL_CFLAGS)
 AC_SUBST(Y2UTIL_LIBS)
 
