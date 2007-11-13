@@ -1,0 +1,9 @@
+Input: ftp://localhost/pfad/1/2/
+asString: ftp://localhost/pfad/1/2/
+isValid: true
+isLocal: false
+protocol: ftp
+host: localhost
+port: -1
+path: /pfad/1/2/
+options: 

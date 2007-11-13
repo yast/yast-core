@@ -1,0 +1,159 @@
+#############################################################
+# $Header$
+#
+# $Log$
+# Revision 1.1  2004/02/20 23:37:31  ma
+# counted_pointer tests
+#
+#############################################################
+#
+# Top Makefile
+#
+#############################################################
+
+#############################################################
+
+SUBDIRS = $(shell find * -maxdepth 0 -type d)
+ALLSRC = $(wildcard *.cc)
+ALLPRG = $(ALLSRC:.cc=)
+ALLRUN = $(ALLSRC:.cc=.testrun)
+
+#############################################################
+
+INCLUDE =	/Local/ma/yast2/current/source/liby2util/testsuite/test_counted_pointer
+LINCLUDE =
+LLOAD =		y2util
+
+DEFINE =        Y2LOG=\"tt\"
+
+#############################################################
+#
+# Compiler and linker configuration
+#
+#############################################################
+
+.EXPORT_ALL_VARIABLES:
+
+SHELL 	=	/bin/bash
+CMD   	=	$(SHELL) -ec
+
+#############################################################
+#
+# Compiler and linker options
+#
+#############################################################
+
+CC  =		g++
+CXX =		g++
+
+CPPFLAGS =	$(addprefix -D, $(DEFINE)) $(addprefix -I, $(INCLUDE))
+
+DEPOPTS  =	-MMD
+CXXOPTS  =	-Wall -g
+CXXFLAGS =      $(DEPOPTS) $(CXXOPTS)
+
+LDOPTS  =
+LDFLAGS =	$(LDOPTS) $(addprefix -L, $(LINCLUDE))
+
+LOADLIBES =	$(addprefix -l, $(LLOAD))
+
+COMPILE = $(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LOADLIBES)
+
+#############################################################
+
+.SUFFIXES:
+.SUFFIXES: .o .cc
+.PHONY: dummy first_rule sub_dirs sub_makefiles all_targets claen bare
+
+#############################################################
+#
+# Special variables which should not be exported
+#
+unexport SUBDIRS
+unexport SUBMAKEFILES
+unexport ALLSRC
+unexport ALLPRG
+unexport ALLRUN
+
+#############################################################
+#
+# Default rule
+#
+
+first_rule: 	sub_dirs
+	$(MAKE) all_targets
+
+#############################################################
+#
+# Subdirs
+#
+SUBMAKEFILES = 	$(SUBDIRS:%=%/Makefile)
+
+$(SUBMAKEFILES):
+	ln Makefile $@
+
+sub_dirs::	$(SUBMAKEFILES)
+ifdef SUBDIRS
+		@set -e; for i in $(SUBDIRS); do $(MAKE) -C $$i; done
+endif
+
+clean bare \
+sub_makefiles::	$(SUBMAKEFILES)
+ifdef SUBDIRS
+		@set -e; for i in $(SUBDIRS); do $(MAKE) -C $$i $@; done
+endif
+
+#############################################################
+#
+# Targets
+#
+
+all_targets:	$(ALLRUN)
+
+ifdef ALLRUN
+$(ALLRUN): %.testrun : %
+	-@./$< > $@
+endif
+
+$(ALLPRG): % : %.cc
+	@rm -f $@
+	-@$(COMPILE) $< -o $@ 2>$@.testgpp
+	@test -f $@ || { touch $@; chmod 700 $@; }
+
+clean::
+	-@rm -f *.d *.testrun *.testgpp $(ALLPRG)
+
+bare:: clean
+	-@rm -f *.cc
+
+#############################################################
+#############################################################
+#
+# Common rules
+#
+
+#############################################################
+#
+# Don't use them in NT-match-anything rules.
+# (i.e. don't try to make them from a .c .y .o....)
+#
+
+Make% :
+
+#############################################################
+#
+# Never try to remake them
+#
+
+Make% ::	;
+%.d   ::	;
+
+#############################################################
+# include dependency files they exist
+#
+
+ifneq "$(strip $(wildcard *.d))" ""
+  include $(wildcard *.d)
+endif
+
+#############################################################

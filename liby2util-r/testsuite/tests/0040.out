@@ -1,0 +1,9 @@
+Input: smb://server/file
+asString: smb://server/file
+isValid: true
+isLocal: false
+protocol: smb
+host: server
+port: -1
+path: /file
+options: 

@@ -1,0 +1,9 @@
+Input: nfs://myserver/path/on/server/;mountoptions=ro
+asString: nfs://myserver/path/on/server/;mountoptions=ro
+isValid: true
+isLocal: false
+protocol: nfs
+host: myserver
+port: -1
+path: /path/on/server/
+options: mountoptions=ro;

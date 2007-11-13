@@ -1,0 +1,9 @@
+Input: file:/onlyadir/
+asString: file:/onlyadir/
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: /onlyadir/
+options: 

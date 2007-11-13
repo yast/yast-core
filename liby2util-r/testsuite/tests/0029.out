@@ -1,0 +1,9 @@
+Input: cd:///
+asString: cd:///
+isValid: true
+isLocal: true
+protocol: cd
+host: 
+port: -1
+path: /
+options: 

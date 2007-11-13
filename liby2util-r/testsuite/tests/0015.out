@@ -1,0 +1,9 @@
+Input: ://localhost/
+asString: ://
+isValid: false
+isLocal: true
+protocol: 
+host: 
+port: -1
+path: 
+options: 

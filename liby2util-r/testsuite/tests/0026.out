@@ -1,0 +1,9 @@
+Input: file:/absolute/path/to/file
+asString: file:/absolute/path/to/file
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: /absolute/path/to/file
+options: 

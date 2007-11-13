@@ -1,0 +1,9 @@
+Input: dir://relativefile
+asString: dir://relativefile
+isValid: true
+isLocal: false
+protocol: dir
+host: relativefile
+port: -1
+path: 
+options: 

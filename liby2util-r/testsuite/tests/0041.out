@@ -1,0 +1,9 @@
+Input: http://www.example.com:8000
+asString: http://www.example.com:8000
+isValid: true
+isLocal: false
+protocol: http
+host: www.example.com
+port: 8000
+path: 
+options: 

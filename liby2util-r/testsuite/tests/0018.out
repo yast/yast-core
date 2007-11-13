@@ -1,0 +1,9 @@
+Input: ftp://:21/
+asString: ://
+isValid: false
+isLocal: true
+protocol: 
+host: 
+port: -1
+path: 
+options: 

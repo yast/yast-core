@@ -1,0 +1,9 @@
+Input: file:/onlyafile
+asString: file:/onlyafile
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: /onlyafile
+options: 

@@ -1,0 +1,9 @@
+Input: ftp://user:pw@host:21/pub;type=b
+asString: ftp://user:PASSWORD@host:21/pub;type=b
+isValid: true
+isLocal: false
+protocol: ftp
+host: host
+port: 21
+path: /pub
+options: type=b;

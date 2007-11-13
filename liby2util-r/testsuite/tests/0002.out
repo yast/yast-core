@@ -1,0 +1,9 @@
+Input: file:/etc/hosts
+asString: file:/etc/hosts
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: /etc/hosts
+options: 

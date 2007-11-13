@@ -1,0 +1,9 @@
+Input: argl
+asString: file:argl
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: argl
+options: 

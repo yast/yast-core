@@ -1,0 +1,14 @@
+#
+# liby2util.exp
+# 'main' file for all liby2util tests
+#
+
+# get all files matching *.prg
+
+set filenames [glob $srcdir/*.prg]
+
+# foreach file, call prg-run (from testsuite/lib)
+
+# Disable tests because *.prg programs aren't correctly set up as tests.
+# foreach file $filenames { prg-run $file }
+untested "*.prg aren't tested. Fix the testsuite."

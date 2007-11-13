@@ -1,0 +1,9 @@
+Input: dir:///
+asString: dir:///
+isValid: true
+isLocal: true
+protocol: dir
+host: 
+port: -1
+path: /
+options: 

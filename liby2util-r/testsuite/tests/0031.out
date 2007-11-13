@@ -1,0 +1,9 @@
+Input: cd:///;devices=/dev/hdc,/dev/hdd
+asString: cd:///;devices=/dev/hdc,/dev/hdd
+isValid: true
+isLocal: true
+protocol: cd
+host: 
+port: -1
+path: /
+options: devices=/dev/hdc,/dev/hdd;

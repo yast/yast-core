@@ -1,0 +1,9 @@
+Input: file:/path/with/sp aces/to/file
+asString: file:/path/with/sp aces/to/file
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: /path/with/sp aces/to/file
+options: 

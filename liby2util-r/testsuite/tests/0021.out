@@ -1,0 +1,9 @@
+Input: file:relative/path/to/dir/
+asString: file:relative/path/to/dir/
+isValid: true
+isLocal: true
+protocol: file
+host: 
+port: -1
+path: relative/path/to/dir/
+options: 
