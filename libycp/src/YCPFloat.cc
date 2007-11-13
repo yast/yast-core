@@ -39,13 +39,13 @@ YCPFloatRep::YCPFloatRep(const char *r)
     // first try HEX and OCT --> "-0x000b", "-000010", ...
     v = (double) strtol(r, &endptr, 0);
 
-    if ( *endptr == '.' && isdigit(*(endptr+1))                       ||
-	 *endptr == 'e' && isdigit(*(endptr+1))                       ||
-	 *endptr == 'e' && *(endptr+1) == '-' && isdigit(*(endptr+2)) ||
-	 *endptr == 'e' && *(endptr+1) == '+' && isdigit(*(endptr+2)) ||
-	 *endptr == 'E' && isdigit(*(endptr+1))                       ||
-	 *endptr == 'E' && *(endptr+1) == '-' && isdigit(*(endptr+2)) ||
-	 *endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2))    )   // real float  
+    if ((*endptr == '.' && isdigit(*(endptr+1))                      )||
+	(*endptr == 'e' && isdigit(*(endptr+1))                      )||
+	(*endptr == 'e' && *(endptr+1) == '-' && isdigit(*(endptr+2)))||
+	(*endptr == 'e' && *(endptr+1) == '+' && isdigit(*(endptr+2)))||
+	(*endptr == 'E' && isdigit(*(endptr+1))                      )||
+	(*endptr == 'E' && *(endptr+1) == '-' && isdigit(*(endptr+2)))||
+	(*endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2)))   )   // real float  
     {
 	v = atof(r);   // use default
     }

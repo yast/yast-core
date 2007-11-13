@@ -150,7 +150,8 @@ f_tostring (const YCPFloat &f, const YCPInteger &precision)
 
     char *buffer;
 
-    asprintf (&buffer, "%.*f", int (precision->value ()), f->value ());
+    if (asprintf (&buffer, "%.*f", int (precision->value ()), f->value ()) == -1)
+	return YCPNull (); // malloc error
     YCPValue ret = YCPString (buffer);
     free (buffer);
     return ret;
