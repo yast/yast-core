@@ -7,7 +7,6 @@ pkgincludedir = $(includedir)/y2util
 # these go to $(pkgincludedir)
 
 pkginclude_HEADERS =		\
-	Digest.h \
 	ExternalDataSource.h \
 	ExternalProgram.h \
 	MemUsage.h \

@@ -27,7 +27,6 @@
 #include <y2util/ExternalProgram.h>
 
 #include <y2util/PathInfo.h>
-#include <y2util/Digest.h>
 
 using namespace std;
 
@@ -671,42 +670,6 @@ int PathInfo::copy_file2dir( const Pathname & file, const Pathname & dest )
   }
   int ret = prog.close();
   return _Log_Result( ret, "returned" );
-}
-
-///////////////////////////////////////////////////////////////////
-//
-//
-//	METHOD NAME : PathInfo::md5sum
-//	METHOD TYPE : std::string
-//
-std::string PathInfo::md5sum( const Pathname & file )
-{
-  if ( ! PathInfo( file ).isFile() ) {
-    return string();
-  }
-  ifstream istr( file.asString().c_str() );
-  if ( ! istr ) {
-    return string();
-  }
-  return Digest::digest( "MD5", istr );
-}
-
-///////////////////////////////////////////////////////////////////
-//
-//
-//	METHOD NAME : PathInfo::sha1sum
-//	METHOD TYPE : std::string
-//
-std::string PathInfo::sha1sum( const Pathname & file )
-{
-  if ( ! PathInfo( file ).isFile() ) {
-    return string();
-  }
-  ifstream istr( file.asString().c_str() );
-  if ( ! istr ) {
-    return string();
-  }
-  return Digest::digest( "SHA1", istr );
 }
 
 ///////////////////////////////////////////////////////////////////

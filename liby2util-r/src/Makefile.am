@@ -13,7 +13,6 @@ AM_CPPFLAGS = -DY2LOG=\"liby2util\" $(DEBUG_FLAGS) -D_GNU_SOURCE -DLOCALEDIR=\"$
 lib_LTLIBRARIES = liby2util.la
 
 liby2util_la_SOURCES =		\
-	Digest.cc \
 	ExternalDataSource.cc \
 	ExternalProgram.cc \
 	MemUsage.cc \
