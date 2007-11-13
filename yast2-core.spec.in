@@ -22,8 +22,6 @@ BuildRequires:	sgml-skel
 BuildRequires:	blocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
-# liby2:Y2SerialComponent needs term.h
-BuildRequires:	ncurses-devel
 
 Summary:	-
 # ag_hostnames: .net.hostnames (#264309)
@@ -67,7 +65,7 @@ Provides:	yast2-core-translator-devel
 Obsoletes:	yast2-core-translator-devel
 Provides:	yast2-core-scr-soho-devel
 Obsoletes:	yast2-core-scr-soho-devel
-Requires:	libxcrypt-devel hwinfo-devel ncurses-devel
+Requires:	libxcrypt-devel hwinfo-devel
 Requires:	glibc-devel libstdc++-devel pcre-devel blocxx-devel sysfsutils
 # for FlexLexer.h; I think that this dependency could be made
 # private but it seems not worth the effort

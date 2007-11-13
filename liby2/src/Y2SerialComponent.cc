@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <term.h>
+#include <termios.h>
 #include <linux/types.h>
 #include <linux/serial.h>
 #include <sys/time.h> // timeval
