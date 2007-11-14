@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Nov 14 13:50:23 CET 2007 - mvidner@suse.cz
+
+- Added missing parts of liby2util.rpm.
+- 2.16.5
+
+-------------------------------------------------------------------
 Tue Nov 13 16:06:26 CET 2007 - mvidner@suse.cz
 
 - Integrated the surviving parts of liby2util.rpm (F120312).
