@@ -1,7 +1,0 @@
-{
-  string iso1 = "ÄÖÜäöüß";
-  string utf8 = "Ã„Ã–ÃœÃ¤Ã¶Ã¼ÃŸ";
-
-  y2milestone ("%1", [ UI(`Recode ("utf-8", "ISO-8859-1", utf8)) == iso1,
-	   UI(`Recode ("ISO-8859-1", "utf-8", iso1)) == utf8]);
-}
