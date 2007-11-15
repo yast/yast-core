@@ -1,0 +1,12 @@
+// Simple image example
+{
+    
+    UI::OpenDialog(
+	       `VBox( 
+		     `Image( "/usr/share/YaST2/theme/current/wallpapers/welcome.jpg" ),
+		     `PushButton(`opt(`default), "&OK")
+		     )
+	       );
+    UI::UserInput();
+    UI::CloseDialog();
+}

@@ -1,0 +1,5 @@
+*.bak
+*.auto
+*~
+Makefile
+Makefile.in

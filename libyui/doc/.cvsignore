@@ -1,0 +1,9 @@
+Makefile
+Makefile.in
+*.bak
+*.auto
+*~
+YUI_builtins.xml
+YUI_*widgets*.xml
+output.xml
+html

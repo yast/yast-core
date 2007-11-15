@@ -1,0 +1,1 @@
+sudo y2qt i18n_keyboard.ycp qt -font '-gnu-unifont-medium-r-normal--16-160-75-75-c-80-iso10646-1'
