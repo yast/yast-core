@@ -2,7 +2,7 @@
 {
     textdomain "bogus";
     
-    Pkg::SourceCreate( "file:/mounts/dist/full/full-10.2-i386/", "" );
+    Pkg::SourceCreate( "http://dist.suse.de/install/SLP/openSUSE-10.3-LATEST-DVD/i386/DVD1/", "" );
     
     void detailedSelection()
     {
