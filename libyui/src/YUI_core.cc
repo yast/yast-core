@@ -158,25 +158,32 @@ void YUI::topmostConstructorHasFinished()
 
     if ( with_threads )
     {
-	pipe( pipe_from_ui );
-	pipe( pipe_to_ui );
-
-	// Make fd non blockable the ui thread reads from
-	long arg;
-	arg = fcntl( pipe_to_ui[0], F_GETFL );
-	if ( fcntl( pipe_to_ui[0], F_SETFL, arg | O_NONBLOCK ) < 0 )
+	if ( pipe( pipe_from_ui ) == 0 &&
+	     pipe( pipe_to_ui   ) == 0   )
 	{
-	    y2error( "Couldn't set O_NONBLOCK: errno=%d: %m", errno );
-	    with_threads = false;
-	    close( pipe_to_ui[0] );
-	    close( pipe_to_ui[1] );
-	    close( pipe_from_ui[0] );
-	    close( pipe_from_ui[1] );
+
+	    // Make fd non blockable the ui thread reads from
+	    long arg;
+	    arg = fcntl( pipe_to_ui[0], F_GETFL );
+	    if ( fcntl( pipe_to_ui[0], F_SETFL, arg | O_NONBLOCK ) < 0 )
+	    {
+		y2error( "Couldn't set O_NONBLOCK: errno=%d: %m", errno );
+		with_threads = false;
+		close( pipe_to_ui[0] );
+		close( pipe_to_ui[1] );
+		close( pipe_from_ui[0] );
+		close( pipe_from_ui[1] );
+	    }
+	    else
+	    {
+		terminate_ui_thread = false;
+		createUIThread();
+	    }
 	}
 	else
 	{
-	    terminate_ui_thread = false;
-	    createUIThread();
+	    y2error( "pipe() failed: errno=%d: %m", errno );
+	    exit(2);
 	}
     }
     else
@@ -264,7 +271,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 void YUI::signalUIThread()
 {
     static char arbitrary = 42;
-    write ( pipe_to_ui[1], & arbitrary, 1 );
+    (void) write ( pipe_to_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
     y2debug( "Wrote byte to ui thread %d", pipe_to_ui[1] );
@@ -303,7 +310,7 @@ bool YUI::waitForUIThread()
 void YUI::signalYCPThread()
 {
     static char arbitrary;
-    write( pipe_from_ui[1], & arbitrary, 1 );
+    (void) write( pipe_from_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
     y2debug( "Wrote byte to ycp thread %d", pipe_from_ui[1] );
