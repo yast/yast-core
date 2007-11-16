@@ -1,4 +1,44 @@
 -------------------------------------------------------------------
+Fri Nov 16 16:37:12 CET 2007 - sh@suse.de
+
+- V 2.16.6 
+- Merged mod-ui branch to trunk:
+  - Moved YCP code out of widget code
+    (still to be done for some non-widget classes)
+
+  - Clearer and consistent widget (C++) interfaces
+  - Reasonable support for creating YWidgets from C++
+  - Now using widget factories for better abstraction and handling
+
+  - Moved misc. YCP parsers out of widget classes to separate classes
+  - Item parsers (YSelectionBox, YComboBox, YTree, YTable, ...)
+    now more forgiving
+  - Individual table cells can now queried and set in YTable
+  - More informative error messages 
+  - Error messages in log now report the YCP code location
+
+  - Renamed YTextEdit to YInputField (old name still valid)
+  - Renamed YTime     to YTimeField  (old name still valid)
+  - Renamed YDate     to YDateField  (old name still valid)
+
+  - Dropped YColoredLabel widget     (nowhere in use any more anyway)
+  - Dropped UI::CollectUserInput()   (nowhere in use)
+  - Dropped YImage from YCPByteBlock (nowhere in use any more)
+
+  - All YSelectionWidgets (YSelectionBox, YComboBox, YTree, YTable,
+    YMultiSelectionBox, YMenu) now support 
+    UI::QueryWidget(`myWidget, `Items )   (returning an item list)
+
+  - Consistent icon support for YSelectionWidgets
+    (YSelectionBox, YComboBox, YTree, YTable, YMultiSelectionBox, YMenu)
+
+  Background and more details at
+
+  http://www.suse.de/~sh/y2-mod-ui.pdf
+  http://www.suse.de/~sh/y2-ui-arch-old.pdf
+  http://www.suse.de/~sh/y2-ui-arch-modular.pdf
+
+-------------------------------------------------------------------
 Wed Nov 14 13:50:23 CET 2007 - mvidner@suse.cz
 
 - Added missing parts of liby2util.rpm.
