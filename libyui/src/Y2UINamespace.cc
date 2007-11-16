@@ -901,7 +901,7 @@ Y2Function* Y2UINamespace::createFunctionCall( const string name, constFunctionT
 	return NULL;
     }
 
-    y2debug ("overloaded %s, %u@%u", name.c_str(), re - rb, rb - b);
+    y2debug ("overloaded %s, %p@%p", name.c_str(), re - rb, rb - b);
     return new Y2UIOverloadedFunction (this, m_comp, rb - b, rb, re, play_macro_blocks);
 }
 
