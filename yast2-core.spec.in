@@ -22,6 +22,8 @@ BuildRequires:	sgml-skel
 BuildRequires:	blocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
+# libyui ImplPtr
+BuildRequires:	boost-devel
 
 Summary:	-
 # ag_hostnames: .net.hostnames (#264309)
