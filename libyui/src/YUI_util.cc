@@ -18,6 +18,7 @@
 
 
 #include <errno.h>  	// strerror()
+#include <iconv.h>
 
 #include "YUI_util.h"
 #include "YUI.h"
