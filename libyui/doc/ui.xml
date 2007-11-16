@@ -2,8 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" 
 "/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd" [
 
-<!ENTITY  YUI_special_widgets SYSTEM "YUI_special_widgets.xml">
-<!ENTITY  YUI_widgets SYSTEM "YUI_widgets.xml">
+<!ENTITY  YCPDialogParser SYSTEM "YCPDialogParser.xml">
 <!ENTITY  YUI_builtins SYSTEM "YUI_builtins.xml">
 <!ENTITY  YCP-UI-richtext  SYSTEM "YCP-UI-richtext.xml">
 <!ENTITY  YCP-UI-layout  SYSTEM "YCP-UI-layout.xml">
@@ -39,8 +38,7 @@
         &YCP-UI-layout;
         &UI-event-intro;
     <!-- event builtin reference -->
-    &YUI_widgets;
-    &YUI_special_widgets;
+    &YCPDialogParser;
     &YUI_builtins;
     &UI-event-builtins;
     <appendix id="YCP-UI-Richtext">
