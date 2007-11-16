@@ -11,7 +11,7 @@ AM_CPPFLAGS = -DY2LOG=\"liby2util-testsuite\"
 
 AM_LDFLAGS = \
 	-Xlinker --whole-archive	\
-	$(builddir)/../src/liby2util.la	\
+	$(srcdir)/../src/liby2util.la	\
 	-Xlinker --no-whole-archive
 
 noinst_PROGRAMS = \
