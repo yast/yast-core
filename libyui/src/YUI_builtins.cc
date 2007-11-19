@@ -21,8 +21,9 @@
 /-*/
 
 
-#define VERBOSE_COMMANDS	// pretty verbose logging of each UI command
 #define VERBOSE_REPLACE_WIDGET 		0
+#define VERBOSE_EVENTS			0
+
 #define NONFATAL_OPENDIALOG_EXCEPTIONS	0
 
 #include <stdio.h>
@@ -457,6 +458,10 @@ YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
  */
 YCPValue YUI::evaluateUserInput()
 {
+#if VERBOSE_EVENTS
+    y2debug( "UI::UserInput()" );
+#endif
+    
     return doUserInput( YUIBuiltin_UserInput,
 			0,		// timeout_millisec
 			true,		// wait
@@ -481,6 +486,10 @@ YCPValue YUI::evaluateUserInput()
  */
 YCPValue YUI::evaluatePollInput()
 {
+#if VERBOSE_EVENTS
+    y2debug( "UI::PollInput()" );
+#endif
+    
     return doUserInput( YUIBuiltin_PollInput,
 			0,		// timeout_millisec
 			false,		// wait
@@ -506,6 +515,10 @@ YCPValue YUI::evaluatePollInput()
 YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 {
     long timeout_millisec = timeout->value();
+    
+#if VERBOSE_EVENTS
+    y2debug( "UI::TimeoutUserInput( %d )", timeout_millisec );
+#endif
 
     return doUserInput( YUIBuiltin_TimeoutUserInput,
 			timeout_millisec,
@@ -527,11 +540,15 @@ YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 {
     long timeout_millisec = 0;
-
+    
     if ( ! timeout.isNull() )
     {
 	timeout_millisec = timeout->value();
     }
+    
+#if VERBOSE_EVENTS
+    y2debug( "UI::WaitForEvent( %d )", timeout_millisec );
+#endif
 
     return doUserInput( YUIBuiltin_WaitForEvent,
 			timeout_millisec,
@@ -581,6 +598,9 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	    {
 		// Get an event from the specific UI. Wait if there is none.
 
+#if VERBOSE_EVENTS
+		y2debug( "SpecificUI::userInput()" );
+#endif
 		event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
 
 		// If there was no event or if filterInvalidEvents() discarded
@@ -591,6 +611,9 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	{
 	    // Get an event from the specific UI. Don't wait if there is none.
 
+#if VERBOSE_EVENTS
+	    y2debug( "SpecificUI::pollInput()" );
+#endif
 	    event = filterInvalidEvents( pollInput() );
 
 	    // Nevermind if filterInvalidEvents() discarded an invalid event.
@@ -601,10 +624,15 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	if ( event )
 	{
+	    
 	    if ( detailed )
 		input = event->ycpEvent();	// The event map
 	    else
 		input = event->userInput();	// Only one single ID (or 'nil')
+
+#if VERBOSE_EVENTS
+	    y2debug( "Got regular event from keyboard / mouse: %s", input->toString().c_str() );
+#endif
 	}
     }
     else // fakeUserInputQueue contains elements -> use the first one
@@ -612,6 +640,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	// Handle macro playing
 
 	input = fakeUserInputQueue.front();
+	y2debug( "Using event from fakeUserInputQueue: %s", input->toString().c_str() );
 	fakeUserInputQueue.pop_front();
     }
 
@@ -1482,6 +1511,7 @@ void YUI::deleteMacroPlayer()
  */
 void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 {
+    y2debug( "UI::FakeUserInput(%s)", next_input->toString().c_str() );
     fakeUserInputQueue.push_back( next_input );
 }
 

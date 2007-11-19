@@ -51,7 +51,7 @@ YInputField::YInputField( YWidget * parent, const string & label, bool passwordM
 {
     YUI_CHECK_NEW( priv );
 
-    setDefaultStretchable( YD_HORIZ, true );
+    // setDefaultStretchable( YD_HORIZ, true  );
     setDefaultStretchable( YD_VERT,  false );
 }
 
@@ -89,6 +89,7 @@ bool YInputField::shrinkable() const
 void YInputField::setShrinkable( bool shrinkable )
 {
     priv->shrinkable = shrinkable;
+    // setDefaultStretchable( YD_HORIZ, ! shrinkable );
 }
 
 
