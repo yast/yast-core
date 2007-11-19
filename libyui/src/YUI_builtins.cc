@@ -874,96 +874,108 @@ void YUI::closeDialog( YDialog * )
 
 YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & newValue )
 {
-    if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
-    {
-	return YCPNull();
-    }
-
-    YCPValue	id	= YCPDialogParser::parseIdTerm( id_value );
-    YWidget *	widget 	= YCPDialogParser::findWidgetWithId( id );
-
-    if ( ! widget )
-	return YCPBoolean( false );
-
-    blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
     YCPValue ret = YCPVoid();
-
-    YPropertySet propSet = widget->propertySet();
-
-    if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
+    
+    try
     {
-	// FIXME: Get rid of this
-	// FIXME: Get rid of this
-	// FIXME: Get rid of this
-
-	if ( property->isSymbol() )
-	{
-	    YCPSymbol sym = property->asSymbol();
-	    y2debug( "Old style UI::ChangeWidget() for %s::%s",
-		     widget->widgetClass(), sym->toString().c_str() );
-	    ret = widget->changeWidget( sym, newValue );
-	}
-	else
-	{
-	    y2error( "Bad argument for UI::ChangeWidget(): %s",
-		     property->toString().c_str() );
-	}
+	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
 	
-	// FIXME: Get rid of this
-	// FIXME: Get rid of this
-	// FIXME: Get rid of this
-    }
-    else
-    {
-	try
+	if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
 	{
+	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
+						id_value->toString().c_str() ) );
+	}
+
+	YCPValue	id	= YCPDialogParser::parseIdTerm( id_value );
+	YWidget *	widget 	= YCPDialogParser::findWidgetWithId( id,
+								     true ); // throw if not found
+
+	YPropertySet propSet = widget->propertySet();
+
+	if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
+	{
+	    // FIXME: Get rid of this
+	    // FIXME: Get rid of this
+	    // FIXME: Get rid of this
+
 	    if ( property->isSymbol() )
 	    {
-		string oldShortcutString = widget->shortcutString();
-		string propertyName	 = property->asSymbol()->symbol();
-		// y2milestone( "New style UI::ChangeWidget() for %s::%s", widget->widgetClass(), propertyName.c_str() );
-
-		YPropertyValue val;
-
-		if	( newValue->isString()  )	val = YPropertyValue( newValue->asString()->value()  );
-		else if	( newValue->isInteger() )	val = YPropertyValue( newValue->asInteger()->value() );
-		else if	( newValue->isBoolean() )	val = YPropertyValue( newValue->asBoolean()->value() );
-		else
-		    val = YPropertyValue( false ); // Dummy value, will be rejected anyway
-
-		bool success = widget->setProperty( propertyName, val );
-
-		if ( ! success )
-		{
-		    // Try again with the known special cases
-		    success = YCPPropertyHandler::setComplexProperty( widget, propertyName, newValue );
-		}
-
-		ret = YCPBoolean( success );
-
-		if ( oldShortcutString != widget->shortcutString() )
-		    YDialog::currentDialog()->checkShortcuts();
-	    }
-	    else if ( property->isTerm() )
-	    {
-		bool success	= YCPPropertyHandler::setComplexProperty( widget, property->asTerm(), newValue );
-		ret		= YCPBoolean( success );
+		YCPSymbol sym = property->asSymbol();
+		y2debug( "Old style UI::ChangeWidget() for %s::%s",
+			 widget->widgetClass(), sym->toString().c_str() );
+		ret = widget->changeWidget( sym, newValue );
 	    }
 	    else
 	    {
-		YUI_THROW( YUIException( string( "Bad UI::ChangeWidget args: " )
-					 + property->toString() ) );
+		y2error( "Bad argument for UI::ChangeWidget(): %s",
+			 property->toString().c_str() );
+	    }
+	
+	    // FIXME: Get rid of this
+	    // FIXME: Get rid of this
+	    // FIXME: Get rid of this
+	}
+	else
+	{
+	    try
+	    {
+		if ( property->isSymbol() )
+		{
+		    string oldShortcutString = widget->shortcutString();
+		    string propertyName	 = property->asSymbol()->symbol();
+		    // y2milestone( "New style UI::ChangeWidget() for %s::%s", widget->widgetClass(), propertyName.c_str() );
+
+		    YPropertyValue val;
+
+		    if	( newValue->isString()  )	val = YPropertyValue( newValue->asString()->value()  );
+		    else if	( newValue->isInteger() )	val = YPropertyValue( newValue->asInteger()->value() );
+		    else if	( newValue->isBoolean() )	val = YPropertyValue( newValue->asBoolean()->value() );
+		    else
+			val = YPropertyValue( false ); // Dummy value, will be rejected anyway
+
+		    bool success = widget->setProperty( propertyName, val );
+
+		    if ( ! success )
+		    {
+			// Try again with the known special cases
+			success = YCPPropertyHandler::setComplexProperty( widget, propertyName, newValue );
+		    }
+
+		    ret = YCPBoolean( success );
+
+		    if ( oldShortcutString != widget->shortcutString() )
+			YDialog::currentDialog()->checkShortcuts();
+		}
+		else if ( property->isTerm() )
+		{
+		    bool success	= YCPPropertyHandler::setComplexProperty( widget, property->asTerm(), newValue );
+		    ret		= YCPBoolean( success );
+		}
+		else
+		{
+		    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::ChangeWidget args: " )
+							+ property->toString() ) );
+		}
+	    }
+	    catch( YUIException & exception )
+	    {
+		YUI_CAUGHT( exception );
+		ycperror( "UI::ChangeWidget() failed for property %s of %s with ID %s, new value: %s",
+			  property->toString().c_str(),
+			  widget->widgetClass(),
+			  id->toString().c_str(),
+			  newValue->toString().c_str() );
 	    }
 	}
-	catch( YUIException & exception )
-	{
-	    YUI_CAUGHT( exception );
-	    ycperror( "UI::ChangeWidget() failed for property %s of %s with ID %s, new value: %s",
-		      property->toString().c_str(),
-		      widget->widgetClass(),
-		      id->toString().c_str(),
-		      newValue->toString().c_str() );
-	}
+    }
+    catch( YUIException & exception )
+    {
+	YUI_CAUGHT( exception );
+	ycperror( "UI::ChangeWidget failed: UI::ChangeWidget( %s, %s, %s )",
+		  id_value->toString().c_str(),
+		  property->toString().c_str(),
+		  newValue->toString().c_str() );
+	ret = YCPNull();
     }
 
     unblockEvents();
@@ -991,80 +1003,92 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
 
 YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
 {
-    if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
+    YCPValue ret = YCPVoid();
+    
+    try
     {
-	return YCPNull();
-    }
-
-    YCPValue id = YCPDialogParser::parseIdTerm( id_value );
-    YWidget *widget = YCPDialogParser::findWidgetWithId( id );
-
-    if ( ! widget )
-	return YCPVoid();
-
-    YPropertySet propSet = widget->propertySet();
-
-    if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
-    {
-	if ( property->isSymbol() )
+	if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
 	{
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
-	    YCPSymbol sym = property->asSymbol();
-	    y2debug( "Old style UI::QueryWidget() for %s::%s",
-		     widget->widgetClass(), sym->symbol().c_str() );
-	    return widget->queryWidget( sym );
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
+	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
+						id_value->toString().c_str() ) );
 	}
-    }
-    else
-    {
-	// y2debug( "New style UI::QueryWidget() for %s::%s", widget->widgetClass(), sym->symbol().c_str() );
 
-	try
+	YCPValue id = YCPDialogParser::parseIdTerm( id_value );
+	YWidget *widget = YCPDialogParser::findWidgetWithId( id,
+							     true ); // throw if not found
+
+	YPropertySet propSet = widget->propertySet();
+
+	if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
 	{
-	    if ( property->isSymbol() )		// The normal case: UI::QueryWidget(`myWidget, `SomeProperty)
+	    if ( property->isSymbol() )
 	    {
-		string propertyName = property->asSymbol()->symbol();
-		YPropertyValue val  = widget->getProperty( propertyName );
+		// FIXME: Get rid of this
+		// FIXME: Get rid of this
+		// FIXME: Get rid of this
+		YCPSymbol sym = property->asSymbol();
+		y2debug( "Old style UI::QueryWidget() for %s::%s",
+			 widget->widgetClass(), sym->symbol().c_str() );
+		return widget->queryWidget( sym );
+		// FIXME: Get rid of this
+		// FIXME: Get rid of this
+		// FIXME: Get rid of this
+	    }
+	}
+	else
+	{
+	    // y2debug( "New style UI::QueryWidget() for %s::%s", widget->widgetClass(), sym->symbol().c_str() );
 
-		switch ( val.type() )
+	    try
+	    {
+		if ( property->isSymbol() )		// The normal case: UI::QueryWidget(`myWidget, `SomeProperty)
 		{
-		    case YStringProperty:	return YCPString ( val.stringVal()  );
-		    case YBoolProperty:		return YCPBoolean( val.boolVal()    );
-		    case YIntegerProperty:	return YCPInteger( val.integerVal() );
-		    case YOtherProperty:	return YCPPropertyHandler::getComplexProperty( widget, propertyName );
+		    string propertyName = property->asSymbol()->symbol();
+		    YPropertyValue val  = widget->getProperty( propertyName );
 
-		    default:
-			y2error( "Unknown result for setProperty( %s )", propertyName.c_str() );
-			return YCPVoid();
+		    switch ( val.type() )
+		    {
+			case YStringProperty:	return YCPString ( val.stringVal()  );
+			case YBoolProperty:		return YCPBoolean( val.boolVal()    );
+			case YIntegerProperty:	return YCPInteger( val.integerVal() );
+			case YOtherProperty:	return YCPPropertyHandler::getComplexProperty( widget, propertyName );
+
+			default:
+			    ycperror( "Unknown result for setProperty( %s )", propertyName.c_str() );
+			    return YCPVoid();
+		    }
+		}
+		else if ( property->isTerm() )	// Very rare: UI::QueryWidget(`myTable, `Item("abc", 3) )
+		{
+		    return YCPPropertyHandler::getComplexProperty( widget, property->asTerm() );
+		}
+		else
+		{
+		    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::QueryWidget args: " )
+							+ property->toString() ) );
 		}
 	    }
-	    else if ( property->isTerm() )	// Very rare: UI::QueryWidget(`myTable, `Item("abc", 3) )
+	    catch( YUIException & exception )
 	    {
-		return YCPPropertyHandler::getComplexProperty( widget, property->asTerm() );
-	    }
-	    else
-	    {
-		YUI_THROW( YUIException( string( "Bad UI::QueryWidget args: " )
-					 + property->toString() ) );
-	    }
-	}
-	catch( YUIException & exception )
-	{
-	    YUI_CAUGHT( exception );
-	    ycperror( "UI::QueryWidget() failed for property %s of %s with ID %s",
-		      property->toString().c_str(),
-		      widget->widgetClass(),
-		      id->toString().c_str() );
+		YUI_CAUGHT( exception );
+		ycperror( "UI::QueryWidget() failed for property %s of %s with ID %s",
+			  property->toString().c_str(),
+			  widget->widgetClass(),
+			  id->toString().c_str() );
 
+	    }
 	}
     }
+    catch( YUIException & exception )
+    {
+	YUI_CAUGHT( exception );
+	ycperror( "UI::QueryWidget failed: UI::QueryWidget( %s, %s )",
+		  id_value->toString().c_str(),
+		  property->toString().c_str() );
+	ret = YCPNull();
+    }
 
-    return YCPVoid();
+    return ret;
 }
 
 

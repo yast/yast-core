@@ -457,6 +457,18 @@ public:
 };
 
 
+class YUISyntaxErrorException: public YUIException
+{
+public:
+    YUISyntaxErrorException( const string & msg )
+	: YUIException( msg )
+	{}
+
+    virtual ~YUISyntaxErrorException() throw()
+	{}
+};
+
+
 /**
  * Abstract base class for widget property exceptions.
  **/
