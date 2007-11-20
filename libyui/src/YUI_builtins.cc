@@ -287,7 +287,7 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
  * as a separate process. It saves current window layout to the stack and
  * runs the external program in the same terminal. When done, it restores
  * the original window layout and returns exit code of the external program
- * (an integer value returned by system() call). When called from Qt UI,
+ * (an integer value returned by system() call). When called from the Qt UI,
  * an error message is printed to the log.
  * @param string external_program
  * return integer
@@ -315,7 +315,7 @@ int YUI::runInTerminal ( const YCPString & module )
  * @short Sets Keyboard
  *
  * @return void
- * @usage SetKeyboard( )
+ * @usage SetKeyboard()
  */
 void YUI::evaluateSetKeyboard( )
 {
@@ -337,7 +337,7 @@ YCPValue YUI::setKeyboard(  )
 
 /*
  * Default UI-specific setConsoleFont()
- * Returns OK ( YCPVoid() )
+ * Returns OK (YCPVoid())
  */
 YCPValue YUI::setConsoleFont( const YCPString & console_magic,
 					const YCPString & font,
@@ -409,7 +409,7 @@ void YUI::beep()
  *
  * If "strip_encoding" is set to "true", all encoding or similar information is
  * cut off, i.e. everything from the first "." or "@" on. Otherwise the current
- * contents of the "LANG" environment variable is returned ( which very likely
+ * contents of the "LANG" environment variable is returned (which very likely
  * ends with ".UTF-8" since this is the encoding YaST2 uses internally).
  *
  * @param boolean strip_encoding
@@ -477,8 +477,8 @@ YCPValue YUI::evaluateUserInput()
  * button, has closed the window or has activated
  * some widget that has the <tt>`notify</tt> option set. Returns
  * the id of the widget that has been selected
- * or <tt>`cancel</tt> if the user selected the implicite cancel
- * button ( for example he closes the window). Returns nil if no
+ * or <tt>`cancel</tt> if the user selected the implicit cancel
+ * button (for example he closes the window). Returns nil if no
  * user input has occured.
  *
  * @return any
@@ -732,7 +732,7 @@ YUI::filterInvalidEvents( YEvent * event )
  *
  * See the widget documentation for details
  * what widgets are available.	All open dialogs are arranged in a stack. A
- * newly opened dialog is put on top of the stack. All operations implicitely
+ * newly opened dialog is put on top of the stack. All operations implicitly
  * refer to the topmost dialog. The user can interact only with that dialog.
  * The application does not terminate if the last dialog is closed.
  *
@@ -1295,7 +1295,7 @@ void YUI::evaluateBusyCursor()
  * @description
  * Redraws the screen after it very likely has become garbled by some other output.
  *
- * This should normally not be necessary: The ( specific ) UI redraws the screen
+ * This should normally not be necessary: The (specific) UI redraws the screen
  * automatically whenever required. Under rare circumstances, however, the
  * screen might have changes due to circumstances beyond the UI's control: For
  * text based UIs, for example, system commands that cause output to every tty
@@ -1314,7 +1314,7 @@ void YUI::evaluateRedrawScreen()
  * @builtin NormalCursor
  * @short Sets the mouse cursor to the normal cursor
  * @description
- * Sets the mouse cursor to the normal cursor ( after BusyCursor ), if the UI
+ * Sets the mouse cursor to the normal cursor (after BusyCursor), if the UI
  * supports such a feature.
  *
  * This should normally not be necessary. The UI handles mouse cursors itself:
@@ -1519,12 +1519,12 @@ void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 
 /**
  * @builtin Glyph
- * @short Returns a special character ( a 'glyph' )
+ * @short Returns a special character (a 'glyph')
  * @description
- * Returns a special character ( a 'glyph' ) according to the symbol specified.
+ * Returns a special character (a 'glyph') according to the symbol specified.
  *
  * Not all UIs may be capable of displaying every glyph; if a specific UI
- * doesn't support it, a textual representation ( probably in plain ASCII ) will
+ * doesn't support it, a textual representation (probably in plain ASCII) will
  * be returned.
  *
  * This is also why there is only a limited number of predefined
@@ -1608,7 +1608,7 @@ YCPMap YUI::evaluateGetDisplayInfo()
  * <b>This is a very expensive operation.</b>
  *
  * Use this after changing widget properties that might affect their size -
- * like the a Label widget's value. Call this once ( ! ) after changing all such
+ * like the a Label widget's value. Call this once (!) after changing all such
  * widget properties.
  *
  * @return void
@@ -1627,7 +1627,7 @@ void YUI::evaluateRecalcLayout()
  *
  * Normally, keyboard shortcuts are checked automatically when a dialog is
  * created or changed. This can lead to confusion, however, when multiple
- * changes to a dialog ( repeated ReplaceWidget() calls ) cause unwanted
+ * changes to a dialog (repeated ReplaceWidget() calls) cause unwanted
  * intermediate states that may result in shortcut conflicts while the dialog
  * is not final yet. Use this function to postpone this checking until all
  * changes to the dialog are done and then explicitly check with
