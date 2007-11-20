@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Tue Nov 20 17:57:44 CET 2007 - sh@suse.de
+
+- V 2.16.7
+- More graceful error handling in
+  - UI::ChangeWidget()
+  - UI::QueryWidget() 
+- InputField widgets now use reasonable default width,
+  no longer grow to eat up as much width as available
+
+-------------------------------------------------------------------
 Fri Nov 16 16:37:12 CET 2007 - sh@suse.de
 
 - V 2.16.6 
