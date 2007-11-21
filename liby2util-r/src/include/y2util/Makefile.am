@@ -9,7 +9,6 @@ pkgincludedir = $(includedir)/y2util
 pkginclude_HEADERS =		\
 	ExternalDataSource.h \
 	ExternalProgram.h \
-	FSize.h \
 	MemUsage.h \
 	PathInfo.h \
 	Pathname.h \
@@ -17,9 +16,6 @@ pkginclude_HEADERS =		\
 	RepDef.h \
 	TreeItem.h \
 	Ustring.h \
-	YRpmGroupsTree.h \
-	YStringTree.h \
-	YTransText.h \
 	Y2SLog.h \
 	miniini.h \
 	stringutil.h \

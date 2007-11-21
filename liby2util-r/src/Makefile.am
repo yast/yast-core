@@ -15,13 +15,10 @@ lib_LTLIBRARIES = liby2util.la
 liby2util_la_SOURCES =		\
 	ExternalDataSource.cc \
 	ExternalProgram.cc \
-	FSize.cc \
 	MemUsage.cc \
 	PathInfo.cc \
 	Pathname.cc \
 	Rep.cc \
-	YRpmGroupsTree.cc \
-	YStringTree.cc \
 	Y2SLog.cc \
 	miniini.cc \
 	stringutil.cc \
