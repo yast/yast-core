@@ -76,7 +76,6 @@ FSize::Unit FSize::bestUnit() const
   return T;
 }
 
-#if 0
 ///////////////////////////////////////////////////////////////////
 //
 //
@@ -99,10 +98,16 @@ std::string FSize::form( const Unit unit_r, unsigned fw, unsigned prec, const bo
   } else if ( unit_r == B )
     prec = 0; // doesn't make sense for Byte
 
-  string ret = stringutil::form( "%*.*f", fw, prec, ( double( _size ) / factor( unit_r ) ) );
-  if ( showunit ) {
-    ret = stringutil::form( "%s %s", ret.c_str(), unit( unit_r ) );
-  }
+  char buffer[80]; // should be long enough for any numeric sprintf()
+  snprintf( buffer, sizeof( buffer ),
+	    "%*.*f",
+	    fw, prec, ( double( _size ) / factor( unit_r ) ) );
+
+  string ret( buffer );
+  
+  if ( showunit )
+    ret += string(" ") + unit( unit_r );
+
   return ret;
 }
 
@@ -119,18 +124,4 @@ std::string FSize::asString() const
 {
   return form();
 }
-
-/******************************************************************
-**
-**
-**	FUNCTION NAME : operator<<
-**	FUNCTION TYPE : std::ostream &
-**
-**	DESCRIPTION :
-*/
-std::ostream & operator<<( std::ostream & str, const FSize & obj )
-{
-  return str << obj.asString();
-}
-#endif
 
