@@ -100,7 +100,7 @@ public:
     virtual YTree *		createTree		( YWidget * parent, const string & label )				= 0;
     virtual YTable *		createTable		( YWidget * parent, YTableHeader * header )				= 0;
     virtual YProgressBar *	createProgressBar	( YWidget * parent, const string & label, int maxValue = 100 )		= 0;
-    virtual YRichText *		createRichText		( YWidget * parent, const string & text, bool plainTextMode = false )	= 0;
+    virtual YRichText *		createRichText		( YWidget * parent, const string & text = string(), bool plainTextMode = false )	= 0;
 
     //
     // Less Common Leaf Widgets
