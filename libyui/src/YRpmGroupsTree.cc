@@ -17,7 +17,7 @@
 /-*/
 
 
-#include <y2util/YRpmGroupsTree.h>
+#include "YRpmGroupsTree.h"
 
 #define TEXTDOMAIN "rpm-groups"
 

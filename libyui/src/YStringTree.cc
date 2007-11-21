@@ -18,7 +18,7 @@
 
 
 #include <stdio.h>
-#include <y2util/YStringTree.h>
+#include "YStringTree.h"
 
 
 using std::string;

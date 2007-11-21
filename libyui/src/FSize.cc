@@ -24,7 +24,7 @@
 #include <iostream>
 
 #include <y2util/stringutil.h>
-#include <y2util/FSize.h>
+#include "FSize.h"
 
 using namespace std;
 
@@ -76,6 +76,7 @@ FSize::Unit FSize::bestUnit() const
   return T;
 }
 
+#if 0
 ///////////////////////////////////////////////////////////////////
 //
 //
@@ -131,4 +132,5 @@ std::ostream & operator<<( std::ostream & str, const FSize & obj )
 {
   return str << obj.asString();
 }
+#endif
 

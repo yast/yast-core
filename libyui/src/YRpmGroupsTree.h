@@ -20,7 +20,7 @@
 #define YRpmGroupsTree_h
 
 
-#include <y2util/YStringTree.h>
+#include "YStringTree.h"
 
 
 /**

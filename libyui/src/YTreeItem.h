@@ -116,8 +116,10 @@ public:
 
     /**
      * Returns this item's parent item or 0 if it is a toplevel item.
+     *
+     * Reimplemented from YItem.
      **/
-    YTreeItem * parent() const { return _parent; }
+    virtual YTreeItem * parent() const { return _parent; }
 
 private:
 

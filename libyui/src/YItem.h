@@ -171,6 +171,13 @@ public:
     virtual YItemIterator	childrenEnd() 		{ return _noChildren.end(); }
     virtual YItemConstIterator	childrenEnd() const	{ return _noChildren.end(); }
 
+    /**
+     * Returns this item's parent item or 0 if it is a toplevel item.
+     * This default implementation always returns 0.
+     * Derived classes that handle children should reimplement this.
+     **/
+    virtual YItem * parent() const { return 0; }
+
 
 private:
 

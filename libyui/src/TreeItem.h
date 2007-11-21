@@ -72,7 +72,7 @@ protected:
 	    _parent->addChild( this );
     }
 
-    
+
 private:
     /**
      * Private ( i.e. disabled ) copy constructor and operator=()
@@ -146,7 +146,7 @@ public:
     void setFirstChild(	TreeItem<PAYLOAD> * newFirstChild )
 	{ _firstChild = newFirstChild; }
 
-    
+
     /**
      * Add a child to the internal children list - usually called from within
      * the child's default constructor.
@@ -164,7 +164,7 @@ public:
 	    setFirstChild( newChild );
 	}
     }
-    
+
 
 protected:
 
@@ -213,7 +213,7 @@ public:
      **/
     virtual ~SortedTreeItem<PAYLOAD> () {}
 
-    
+
     /**
      * Insert a child into the internal children list in ascending sort order.
      * Called from the new child's constructor, thus 'public'.
@@ -256,23 +256,23 @@ public:
      * Returns this item's parent or 0 if there is none.
      **/
     SortedTreeItem<PAYLOAD> * 	parent() 	const
-	{ return ( SortedTreeItem<PAYLOAD> * ) _parent; 	}
+	{ return ( SortedTreeItem<PAYLOAD> * ) TreeItem<PAYLOAD>::_parent; }
 
     /**
      * Returns this item's next sibling or 0 if there is none.
      **/
     SortedTreeItem<PAYLOAD> * 	next() 		const
-	{ return ( SortedTreeItem<PAYLOAD> * ) _next; 	}
+	{ return ( SortedTreeItem<PAYLOAD> * ) TreeItem<PAYLOAD>::_next; }
 
     /**
      * Returns this item's first child or 0 if there is none.
      **/
     SortedTreeItem<PAYLOAD> * 	firstChild()	const
-	{ return ( SortedTreeItem<PAYLOAD> * ) _firstChild; }
-    
-    
+	{ return ( SortedTreeItem<PAYLOAD> * ) TreeItem<PAYLOAD>::_firstChild; }
+
+
 private:
-    
+
     /**
      * Private ( i.e. disabled ) copy constructor and operator=()
      * - neither makes any sense with this class.

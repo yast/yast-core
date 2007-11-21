@@ -20,8 +20,8 @@
 #define YStringTree_h
 
 #include <string>
-#include <y2util/YTransText.h>
-#include <y2util/TreeItem.h>
+#include "YTransText.h"
+#include "TreeItem.h"
 
 
 typedef SortedTreeItem<YTransText>	YStringTreeItem;

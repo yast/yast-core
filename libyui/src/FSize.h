@@ -146,6 +146,9 @@ class FSize {
      **/
     static const unsigned bestPrec = (unsigned)-1;
 
+#if 0
+    // Disabled: would require stringutils.cc
+    
     /**
      * Return string representation in given Unit. Parameter <code>fw</code> and
      * <code>prec</code> denote field width and precision as in a "%*.*f" printf
@@ -174,6 +177,7 @@ class FSize {
      * Write asString.
      **/
     friend std::ostream & operator<<( std::ostream & str, const FSize & obj );
+#endif
 };
 
 ///////////////////////////////////////////////////////////////////

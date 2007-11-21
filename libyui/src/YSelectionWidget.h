@@ -79,6 +79,10 @@ public:
      * Add one item. This widget assumes ownership of the item object and will
      * delete it in its destructor.
      *
+     * NOTE: For tree items, call this only for the toplevel items; all
+     * non-toplevel items are already owned by their respective parent
+     * items. Adding them to the parent widget will clash with this ownership.
+     *
      * Derived classes can overwrite this function, but they should call this
      * base class function in the new implementation.
      **/

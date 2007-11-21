@@ -7,6 +7,8 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-fmessage-length=0
 
+AM_CPPFLAGS = -DLOCALEDIR=\"${localedir}\"
+
 plugin_LTLIBRARIES = libpy2UI.la
 
 libpy2UI_la_SOURCES =				\
@@ -86,7 +88,11 @@ libpy2UI_la_SOURCES =				\
 	YTable.cc				\
 	YTimeField.cc				\
 	YTree.cc				\
-	YWizard.cc
+	YWizard.cc				\
+						\
+	YRpmGroupsTree.cc			\
+	YStringTree.cc				\
+	FSize.cc
 
 
 pkgincludedir = $(includedir)/yui
@@ -181,10 +187,14 @@ pkginclude_HEADERS =				\
 	YSquash.h				\
 	YTable.h				\
 	YTimeField.h				\
-	YTransText.h				\
 	YTree.h					\
 	YWizard.h				\
-	TreeItem.h
+						\
+	YRpmGroupsTree.h			\
+	YStringTree.h				\
+	YTransText.h				\
+	TreeItem.h				\
+	FSize.h
 
 
 
