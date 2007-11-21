@@ -39,6 +39,25 @@
 
 extern StaticDeclaration static_declarations;
 
+// "is" is actually not a built-in, it is a special language form
+// because its second argument is a type, not a value. but people
+// expect it to be documented among built-ins.
+// (it is implemented in class YEIs in YExpression.cc)
+/**
+ * @builtin is
+ * @short Checks whether a value is of a certain type
+ * @param any value a value whose type is checked
+ * @param type type type to check
+ * @return boolean
+ * @usage
+ * any ui = UI::UserInput();
+ * if (is (ui, string)) {
+ *     foo ("Hello, " + (string) ui);
+ * }
+ * else if (is (ui, symbol)) {
+ *     bar ((symbol) ui);
+ * }
+ */
 
 static YCPInteger
 Time ()
@@ -79,9 +98,11 @@ Random (const YCPInteger & max)
     /**
      * @builtin random
      * @short Random number generator.
-     * @description Returns a random integer in the interval [0,MAX).
+     * @description
+     * Returns a random integer in the interval [0,MAX).
      * <tt>srandom</tt> must be activated to get really random
      * numbers.
+     *
      * @param integer MAX
      * @return integer Returns integer in the interval [0,MAX).
      * @usage random(100) -> 82
@@ -107,6 +128,7 @@ Srandom1 ()
      * @description
      * Initialize random number generator with current date and
      * time and returns the seed.
+     *
      * @return integer
      * @id srandom_1
      * @usage srandom()
@@ -151,6 +173,7 @@ Setenv2 (const YCPString & name, const YCPString & value, const YCPBoolean & ove
      * The setenv() function adds the variable to the
      * environment with the value. If variable exist
      * the value is changed.
+     *
      * @param string variable
      * @param string value
      * @param boolean overwrite
@@ -179,6 +202,7 @@ Setenv1 (const YCPString & name, const YCPString & value)
      * The setenv() function adds the variable to the
      * environment with the value. If variable exist
      * the value is changed.
+     *
      * @param string variable
      * @param string value
      * @return boolean
@@ -193,22 +217,23 @@ Setenv1 (const YCPString & name, const YCPString & value)
 
 
 
-/*
+#if 0
 static YCPString
 Getenv (const YCPString & name)
 {
      **
-     * @builtin setenv
+     * @bu iltin getenv
      * @short Change or add an environment variable
      * @description
      * The getenv(variable) function returns the value of variable from
      * environment. If variable doesn't exist
      * the value is NULL.
+     *
      * @param string name
      * @return string value
      * @id getenv_1
      * @usage getenv("name")
-     *
+     */
  
     char *value = getenv(name->value().c_str());
     if (value) { 
@@ -219,7 +244,7 @@ Getenv (const YCPString & name)
     }
 
 }
-*/
+#endif
 
 static YCPValue
 Eval (const YCPValue & v)

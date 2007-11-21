@@ -1544,6 +1544,8 @@ YETriple::toXml (std::ostream & str, int indent ) const
 // ------------------------------------------------------------------
 // is (expression, type)
 
+// it is documented like a *builtin* in YCPBuiltinMisc.cc !
+
 YEIs::YEIs (YCodePtr expr, constTypePtr type)
     : YCode ()
     , m_expr (expr)
