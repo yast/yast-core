@@ -36,6 +36,21 @@ class YApplicationPrivate;
  **/
 class YApplication
 {
+protected:
+
+    friend class YUI;
+    /**
+     * Constructor.
+     *
+     * Use YUI::app() to get the singleton for this class.
+     **/
+    YApplication();
+
+    /**
+     * Destructor.
+     **/
+    virtual ~YApplication();
+
 public:
 
     /**
@@ -77,7 +92,7 @@ public:
      * ...
      *
      * This function returns 10 for F10, F for F9 etc.;
-     * 0 means "no function key". 
+     * 0 means "no function key".
      **/
     int defaultFunctionKey( const string & label ) const;
 
@@ -94,21 +109,28 @@ public:
      **/
     void clearDefaultFunctionKeys();
 
-  
-protected:
-    
-    friend class YUI;
     /**
-     * Constructor.
+     * Set language and encoding for the locale environment ($LANG).
      *
-     * Use YUI::app() to get the singleton for this class.
+     * This affects UI-internal translations (e.g. for predefined dialogs like
+     * file selection), encoding and fonts.
+     *
+     * 'language' is the ISO short code ("de_DE", "en_US", ...).
+     *
+     * 'encoding' an (optional) encoding ("utf8", ...) that will be appended if
+     * present.
+     *
+     * Derived classes can overwrite this method, but they should call this
+     * base class method at the beginning of the new implementation.
      **/
-    YApplication();
+    virtual void setLanguage( const string & language,
+			      const string & encoding = string() );
 
     /**
-     * Destructor.
+     * Return the current language from the locale environment ($LANG).
+     * If 'stripEncoding' is true, any encoding (".utf8" etc.) is removed.
      **/
-    virtual ~YApplication();
+    string language( bool stripEncoding = false ) const;
 
 private:
 

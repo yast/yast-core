@@ -30,7 +30,6 @@
 #include <unistd.h> 	// pipe()
 #include <fcntl.h>  	// fcntl()
 #include <errno.h>  	// strerror()
-#include <locale.h> 	// setlocale()
 #include <pthread.h>
 #include <assert.h>
 #include <string.h>
@@ -182,20 +181,7 @@ YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
 
 void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
 {
-    string lang = language->value();
-    if ( ! encoding.isNull() )
-    {
-	lang += ".";
-	lang += encoding->value();
-    }
-
-    setenv( "LANG", lang.c_str(), 1 );  // 1 : replace
-    setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
-    YCPTerm newTerm = YCPTerm( "SetLanguage" );
-    newTerm->add ( YCPString( lang ) );
-    y2milestone ( "ui specific setLanguage( %s )", newTerm->toString().c_str() );
-
-    setLanguage( newTerm );	// UI-specific setLanguage: returns YCPVoid() if OK, YCPNull() if error
+    YUI::app()->setLanguage( language->value(), encoding->value() );
 }
 
 
@@ -240,18 +226,6 @@ YCPString YUI::evaluateGetProductName()
 void YUI::evaluateSetProductName( const YCPString & name )
 {
     _productName = name->value();
-}
-
-
-/*
- * Default UI-specific setLanguage()
- * Returns OK (YCPVoid() )
- */
-YCPValue YUI::setLanguage( const YCPTerm & term )
-{
-    // NOP
-
-    return YCPVoid();	// OK (YCPNull() would mean error)
 }
 
 
@@ -419,27 +393,7 @@ void YUI::beep()
 
 YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
 {
-    bool strip_encoding = strip->value();
-    const char *lang_cstr = getenv( "LANG" );
-    string lang = "";		// Fallback if $LANG not set
-
-    if ( lang_cstr )		// only if environment variable set
-    {
-	lang = lang_cstr;
-
-	if ( strip_encoding )
-	{
-	    y2milestone( "Stripping encoding" );
-	    string::size_type pos = lang.find_first_of( ".@" );
-
-	    if ( pos != string::npos )		// if encoding etc. specified
-	    {
-		lang = lang.substr( 0, pos );	// remove it
-	    }
-	}
-    }
-
-    return YCPString( lang );
+    return YCPString( YUI::app()->language( strip->value() ) );
 }
 
 

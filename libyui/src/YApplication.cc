@@ -17,8 +17,12 @@
 
 /-*/
 
-
+#include <locale.h> 	// setlocale()
 #include <map>
+
+#define y2log_component "ui"
+#include <ycp/y2log.h>
+
 #include "YApplication.h"
 #include "YDialog.h"
 #include "YUIException.h"
@@ -103,4 +107,46 @@ void
 YApplication::clearDefaultFunctionKeys()
 {
     priv->defaultFunctionKey.clear();
+}
+
+
+void
+YApplication::setLanguage( const string & language, const string & encoding )
+{
+    string lang = language;
+    
+    if ( ! encoding.empty() )
+    {
+	lang += ".";
+	lang += encoding;
+    }
+
+    setenv( "LANG", lang.c_str(), 1 );  // 1 : replace
+    setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
+    
+    y2milestone ( "Setting language to \"%s\"", lang.c_str() );
+}
+
+
+string
+YApplication::language( bool stripEncoding ) const
+{
+    const char *lang_env = getenv( "LANG" );
+
+    if ( ! lang_env )
+	return "";
+    
+    string lang( lang_env );
+
+    if ( stripEncoding )
+    {
+	string::size_type pos = lang.find_first_of( ".@" );
+
+	if ( pos != string::npos )		// if encoding etc. specified
+	{
+	    lang = lang.substr( 0, pos );	// remove it
+	}
+    }
+
+    return lang;
 }

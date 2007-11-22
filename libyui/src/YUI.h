@@ -454,13 +454,6 @@ public:
     
 protected:
 
-    /**
-     * UI-specific setLanguage() function.
-     * Returns YCPVoid() if OK and YCPNull() on error.
-     * This default implementation does nothing.
-     **/
-    virtual YCPValue setLanguage( const YCPTerm & term );
-
 
     /**
      * UI-specific setConsoleFont() function.

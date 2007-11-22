@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov 22 21:13:34 CET 2007 - sh@suse.de
+
+- Moved UI setLanguage from YUI to YApplication 
+
+-------------------------------------------------------------------
 Thu Nov 22 11:05:16 CET 2007 - locilka@suse.cz
 
 - Fixed XML documentation not to point to non-existent widgets.
