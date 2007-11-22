@@ -146,6 +146,12 @@ void YSelectionWidget::addItem( YItem * item )
 {
     YUI_CHECK_PTR( item );
 
+    if ( item->parent() )
+    {
+	YUI_THROW( YUIException( "Item already owned by parent item -"
+				 " call addItem() only for toplevel items!" ) );
+    }
+    
     // Add the new item to the item list
 
     priv->itemCollection.push_back( item );
