@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov 22 11:05:16 CET 2007 - locilka@suse.cz
+
+- Fixed XML documentation not to point to non-existent widgets.
+
+-------------------------------------------------------------------
 Tue Nov 20 17:57:44 CET 2007 - sh@suse.de
 
 - V 2.16.7

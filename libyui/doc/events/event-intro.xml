@@ -153,7 +153,7 @@
 
                 <para>All that can make <link linkend="UI-Event-UserInput">UserInput()</link> return in this
                     example are the two buttons. Other widgets like input
-                    fields ( <link linkend="TextEntry_widget">TextEntry</link>), selection
+                    fields ( <link linkend="InputField_widget">InputField</link>), selection
                     boxes etc. by do not do anything that makes <link linkend="UI-Event-UserInput">UserInput()</link> return -
                     unless explicitly requested.</para>
 
@@ -871,7 +871,7 @@ UI::AddCallback(`id(`devices ), `Activated, nil );
                         <row><entry>
                                 <itemizedlist>
                                     <listitem><link
-                                            linkend="TextEntry_widget">TextEntry</link></listitem>
+                                            linkend="InputField_widget">InputField</link></listitem>
                                         <listitem><link
                                                 linkend="MultiLineEdit_widget">MultiLineEdit</link></listitem>
                                     </itemizedlist>

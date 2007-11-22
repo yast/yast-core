@@ -50,7 +50,7 @@ there are more: Most static texts in dialogs are widgets, too. And
 there are a lot of widgets you can't see: Layout boxes like
 <emphasis role="i">HBox</emphasis> or <emphasis role="i">VBox</emphasis> and many more that don't actually
 display something but arrange other widgets in some way.</para>
-      <para>See the <link linkend="YUI_widgets">widget reference</link> for
+      <para>See the <link linkend="YCPDialogParser">widget reference</link> for
 details and a list of all available widgets.</para>
     </section>
     <section id="ui_indepencence">
@@ -145,7 +145,7 @@ honored.
     <para>This section covers the widgets used for creating dialog layouts
 - the kind of widgets that are less obvious to the user. If you are
 interested in the "real" widgets, i.e. the kind you can actually
-see, please refer to the <link linkend="YUI_widgets">widget reference</link>.</para>
+see, please refer to the <link linkend="YCPDialogParser">widget reference</link>.</para>
     <section id="layout_boxes">
       <title>Layout Boxes:  <link linkend="Box_widget">HBox</link> and <link linkend="Box_widget">VBox</link></title>
       <para>This is the most basic and also the most natural layout widget.
@@ -260,7 +260,7 @@ reasonable default size on its own - you must supply one. We chose
 30% of the screen space - which of course is absolutely random but
 suits well for the purposes of YaST2.</para>
         <para>Use this technique for widgets like the <link linkend="SelectionBox_widget">SelectionBox</link>, the <link linkend="Table_widget">Table widget</link>, the <link linkend="Tree_widget">Tree widget</link>, the <link linkend="RichText_widget">RichText</link>, but also for
-less obvious ones like the <link linkend="TextEntry_widget">TextEntry</link>.</para>
+less obvious ones like the <link linkend="InputField_widget">InputField</link>.</para>
         <para><emphasis role="b">Note:</emphasis> This list may be incomplete. Use your common
 sense.</para>
       </example>
