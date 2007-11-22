@@ -323,10 +323,16 @@ the respective function to display the list.</p>					\
 	}
 	if      ( button == `back 	)	delta = 10;
 	else if ( button == `timeout	)	delta = 100;
-	else if ( button == `showSlide	)	UI::ReplaceWidget(`tabContents, slideShowPage );
+	else if ( button == `showSlide	)
+	{
+	    y2milestone( "Switching to slide show" );
+	    UI::ReplaceWidget(`tabContents, slideShowPage );
+	}
 	else if ( button == `showDetails   )
 	{
-	    y2milestone( "detailsPage:\n%1", detailsPage );
+	    y2milestone( "Switching to details" );
+	    // y2debug( "detailsPage:\n%1", detailsPage );
+	    
 	    UI::ReplaceWidget(`tabContents, detailsPage   );
 
 
