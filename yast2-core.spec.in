@@ -19,7 +19,8 @@ BuildRequires:	docbook-xsl-stylesheets libxslt
 # catalog: convert URIs to local filenames
 BuildRequires:	sgml-skel
 # logging
-BuildRequires:	blocxx-devel
+# renamed: http://lists.opensuse.org/opensuse-packaging/2007-11/msg00076.html
+BuildRequires:	libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
 # libyui ImplPtr
