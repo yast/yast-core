@@ -32,18 +32,6 @@ Recommends:	netcat
 Requires:	perl = %{perl_version}
 Provides:	liby2util = 2.16.1
 Obsoletes:	liby2util < 2.16.1
-Provides:	libycp liby2 libyui libscr
-Obsoletes:	libycp liby2 libyui libscr
-Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
-Obsoletes:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
-Provides:	yast2-agent-modules yast2-agent-system
-Obsoletes:	yast2-agent-modules yast2-agent-system
-Provides:	yast2-core-scr yast2-core-wfm yast2-core-translator
-Obsoletes:	yast2-core-scr yast2-core-wfm yast2-core-translator
-Provides:	y2base yast2-base y2translator y2xlator
-Obsoletes:	y2base yast2-base y2translator y2xlator
-Provides:	yast2-core-scr-soho yast2-lib64-compat
-Obsoletes:	yast2-core-scr-soho yast2-lib64-compat
 
 %description
 -
@@ -52,26 +40,6 @@ Obsoletes:	yast2-core-scr-soho yast2-lib64-compat
 Summary:	-
 Provides:	liby2util-devel = 2.16.1
 Obsoletes:	liby2util-devel < 2.16.1
-Provides:	libycp:/usr/lib/YaST2/include/YCP.h
-Provides:	liby2:/usr/lib/YaST2/include/Y2.h
-Provides:	libyui:/usr/lib/YaST2/include/yui/YUIInterpreter.h
-Provides:	libscr:/usr/lib/YaST2/include/SCR.h
-Provides:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
-Obsoletes:	y2a_any y2a_mods y2a_hwpb y2scr y2wfm
-Provides:	libycp-devel liby2-devel libyui-devel libscr-devel
-Obsoletes:	libycp-devel liby2-devel libyui-devel libscr-devel
-Provides:	yast2-agent-any-devel yast2-agent-ini-devel
-Obsoletes:	yast2-agent-any-devel yast2-agent-ini-devel
-Provides:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
-Obsoletes:	yast2-agent-rcconfig-devel yast2-agent-modules-devel
-Provides:	yast2-agent-system-devel
-Obsoletes:	yast2-agent-system-devel
-Provides:	yast2-core-scr-devel yast2-core-wfm-devel
-Obsoletes:	yast2-core-scr-devel yast2-core-wfm-devel
-Provides:	yast2-core-translator-devel
-Obsoletes:	yast2-core-translator-devel
-Provides:	yast2-core-scr-soho-devel
-Obsoletes:	yast2-core-scr-soho-devel
 Requires:	libxcrypt-devel hwinfo-devel
 Requires:	glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
 # for FlexLexer.h; I think that this dependency could be made
