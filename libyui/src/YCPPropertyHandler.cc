@@ -644,6 +644,14 @@ YCPPropertyHandler::trySetMultiSelectionBoxCurrentItem( YWidget * widget, const 
 
     if ( ! multiSelBox )
 	return false;
+    
+    if ( val->isVoid() )	// Special case: nil sets "no selected item"
+    {
+	multiSelBox->setCurrentItem( 0 );
+	return true;
+    }
+    
+    // Find the item with the specified ID
 
     YCPItem * item = findItem<YCPItem>( multiSelBox , val );
 
