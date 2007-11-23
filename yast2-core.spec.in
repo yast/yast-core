@@ -29,6 +29,8 @@ Summary:	-
 # ag_hostnames: .net.hostnames (#264309)
 Recommends:	netcat
 Requires:	perl = %{perl_version}
+Provides:	liby2util = 2.16.1
+Obsoletes:	liby2util < 2.16.1
 Provides:	libycp liby2 libyui libscr
 Obsoletes:	libycp liby2 libyui libscr
 Provides:	yast2-agent-any yast2-agent-ini yast2-agent-rcconfig
@@ -47,6 +49,8 @@ Obsoletes:	yast2-core-scr-soho yast2-lib64-compat
 
 @HEADER-DEVEL@
 Summary:	-
+Provides:	liby2util-devel = 2.16.1
+Obsoletes:	liby2util-devel < 2.16.1
 Provides:	libycp:/usr/lib/YaST2/include/YCP.h
 Provides:	liby2:/usr/lib/YaST2/include/Y2.h
 Provides:	libyui:/usr/lib/YaST2/include/yui/YUIInterpreter.h
