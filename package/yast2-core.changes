@@ -1,4 +1,16 @@
 -------------------------------------------------------------------
+Fri Nov 23 11:38:55 CET 2007 - sh@suse.de
+
+- Allow selecting nothing in SelectionWidgets
+  - SelectionBox
+  - ComboBox
+  - MultiSelectionBox
+  - Tree
+  - Table
+
+   Use   UI::ChangeWidget(`myWidget, `CurrentItem, nil )
+
+-------------------------------------------------------------------
 Fri Nov 23 09:39:01 CET 2007 - mvidner@suse.cz
 
 - Dependencies: liby2util absorbed, blocxx renamed, cleaned up
