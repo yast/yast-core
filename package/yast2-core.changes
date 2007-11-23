@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 23 09:39:01 CET 2007 - mvidner@suse.cz
+
+- Dependencies: liby2util absorbed, blocxx renamed, cleaned up
+  ancient cruft.
+
+-------------------------------------------------------------------
 Thu Nov 22 21:13:34 CET 2007 - sh@suse.de
 
 - Moved UI setLanguage from YUI to YApplication 
