@@ -73,7 +73,7 @@ Obsoletes:	yast2-core-translator-devel
 Provides:	yast2-core-scr-soho-devel
 Obsoletes:	yast2-core-scr-soho-devel
 Requires:	libxcrypt-devel hwinfo-devel
-Requires:	glibc-devel libstdc++-devel pcre-devel blocxx-devel sysfsutils
+Requires:	glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
 # for FlexLexer.h; I think that this dependency could be made
 # private but it seems not worth the effort
 Requires:	flex
