@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 23 12:32:55 CET 2007 - sh@suse.de
+
+- Fixed bug #52673 : Deselect all items in SelectionBox
+- Fixed bug #230496: Exchange MenuButton items 
+
+-------------------------------------------------------------------
 Fri Nov 23 11:38:55 CET 2007 - sh@suse.de
 
 - Allow selecting nothing in SelectionWidgets
