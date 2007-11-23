@@ -138,7 +138,8 @@ y2milestone ("formatEvent(%1)", event);
 						    ),
 					     `item(`id(`doggie_bag ), "Order doggie bag" ),
 					     `item(`id( "This is a dumb user who will click on everything. Nevermind." ),
-						   "Order dog to eat the leftovers in the doggie bag" )
+						   "Order dog to eat the leftovers in the doggie bag" ),
+					     `item(`id(`cancel_order), "Cancel order" )
 					     ]
 					    )
 				);
@@ -244,6 +245,13 @@ y2milestone ("formatEvent(%1)", event);
 	else if ( event["ID"]:nil == `order )
 	{
 	    UI::ChangeWidget(`send_mafioso, `Value, nil );
+	}
+	else if ( event["ID"]:nil == `cancel_order )
+	{
+	    UI::ChangeWidget(`delivery_service,	`Value, nil );
+	    UI::ChangeWidget(`pizza,		`Value, nil );
+	    UI::ChangeWidget(`toppings,		`CurrentItem, nil );
+	    UI::ChangeWidget(`drink,		`Value, nil );
 	}
     } until ( event["ID"]:nil == `close );
 

@@ -310,6 +310,15 @@ bool trySetSelectionWidgetValue( YWidget * widget, const YCPValue & val )
     if ( ! selWidget )
 	return false;
 
+    if ( val->isVoid() )	// Special case: nil deselects everything
+    {
+	selWidget->deselectAllItems();
+	return true;
+    }
+
+    
+    // Find the item with the specified ID
+    
     Item_t * item = findItem<Item_t>( selWidget, val );
 
     if ( item )
