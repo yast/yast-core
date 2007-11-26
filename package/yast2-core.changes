@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Nov 26 15:29:27 CET 2007 - mvidner@suse.cz
+
+- ElectricFence is not required since 2 years ago
+- 2.16.8
+
+-------------------------------------------------------------------
 Fri Nov 23 12:32:55 CET 2007 - sh@suse.de
 
 - Fixed bug #52673 : Deselect all items in SelectionBox
