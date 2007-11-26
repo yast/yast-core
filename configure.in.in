@@ -29,14 +29,6 @@ if [[ "$yast_found_xcrypt" = "no" ]]; then
 fi
 
 
-# libycp/testsuite: links against efence
-yast_found_efence=no
-AC_CHECK_LIB(efence,EF_Print,[yast_found_efence=yes])
-if [[ "$yast_found_efence" = "no" ]]; then
- AC_MSG_ERROR(efence lib is missing. Please install the package ElectricFence.)
-fi
-
-
 Y2UTIL_CFLAGS='-I$(top_srcdir)/liby2util-r/src/include'
 Y2UTIL_LIBS='$(top_builddir)/liby2util-r/src/liby2util.la'
 AC_SUBST(Y2UTIL_CFLAGS)
