@@ -28,6 +28,8 @@
 #include <sys/wait.h>
 #include <linux/lp.h>
 #include <string>
+#include <sstream>
+#include <stdexcept>
 
 #include <YCP.h>
 #include <ycp/pathsearch.h>
@@ -114,8 +116,12 @@ SystemAgent::SystemAgent ()
     const char* tmp2 = mkdtemp (tmp1);
     if (!tmp2)
     {
-	y2error ("Can't create tmp directory: %m");
-	exit (EXIT_FAILURE);
+	std::ostringstream stm;
+	stm << "Cannot create temporary directory " << tmp1 << ':'
+	    << strerror (errno);
+	y2error ("%s", stm.str().c_str());
+	// #343258: terminate will print the uncaught exception too, unlike plain exit
+	throw std::runtime_error (stm.str());
     }
 
     tempdir = tmp2;

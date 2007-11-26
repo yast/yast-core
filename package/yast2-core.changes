@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Nov 26 17:55:30 CET 2007 - mvidner@suse.cz
+
+- Visibly report the failure to create the temporary directory (#343258).
+
+-------------------------------------------------------------------
 Mon Nov 26 15:29:27 CET 2007 - mvidner@suse.cz
 
 - ElectricFence is not required since 2 years ago
