@@ -221,7 +221,7 @@ Setenv1 (const YCPString & name, const YCPString & value)
 static YCPString
 Getenv (const YCPString & name)
 {
-     **
+     /**
      * @bu iltin getenv
      * @short Change or add an environment variable
      * @description
