@@ -3242,11 +3242,27 @@ YCPDialogParser::parseWizard( YWidget * parent, YWidgetOpt & opt,
     YWidgetID *	nextButtonId		= new YCPValueWidgetID( parseIdTerm( term->value( argnr+4 ) ) );
     string	nextButtonLabel		= term->value( argnr+5 )->asString()->value();
 
-    return YUI::optionalWidgetFactory()->createWizard( parent,
-						       backButtonId,	backButtonLabel,
-						       abortButtonId,	abortButtonLabel,
-						       nextButtonId,	nextButtonLabel,
-						       wizardMode );
+    YWizard * wizard =
+	YUI::optionalWidgetFactory()->createWizard( parent,
+						    backButtonLabel,
+						    abortButtonLabel,
+						    nextButtonLabel,
+						    wizardMode );
+    YUI_CHECK_NEW( wizard );
+    
+    // All wizard widgets have a fixed ID `wizard
+    YWidgetID * wizardId = new YCPValueWidgetID( YCPSymbol( YWizardID ) );
+    wizard->setId( wizardId );
+
+    // The wizard internal contents ReplacePoint has a fixed ID `contents
+    YWidgetID * contentsId =  new YCPValueWidgetID( YCPSymbol( YWizardContentsReplacePointID ) );
+
+    if ( wizard->backButton()  ) 		wizard->backButton()->setId ( backButtonId  );
+    if ( wizard->abortButton() ) 		wizard->abortButton()->setId( abortButtonId );
+    if ( wizard->nextButton()  ) 		wizard->nextButton()->setId ( nextButtonId  );
+    wizard->contentsReplacePoint()->setId( contentsId );
+
+    return wizard;
 }
 
 

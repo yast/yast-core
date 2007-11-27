@@ -48,27 +48,12 @@ bool YOptionalWidgetFactory::hasWizard()
 
 YWizard *
 YOptionalWidgetFactory::createWizard( YWidget *   	parent,
-				      YWidgetID *	backButtonId,	const string & backButtonLabel,
-				      YWidgetID * 	abortButtonId,	const string & abortButtonLabel,
-				      YWidgetID * 	nextButtonId,	const string & nextButtonLabel,
-				      YWizardMode 	wizardMode )
-{
-    THROW_UNSUPPORTED( "YWizard" );
-}
-
-
-YWizard *
-YOptionalWidgetFactory::createWizard( YWidget *   	parent,
 				      const string & 	backButtonLabel,
 				      const string & 	abortButtonLabel,
 				      const string & 	nextButtonLabel,
 				      YWizardMode 	wizardMode )
 {
-    return createWizard( parent,
-			 0, backButtonLabel,
-			 0, abortButtonLabel,
-			 0, nextButtonLabel,
-			 wizardMode );
+    THROW_UNSUPPORTED( "YWizard" );
 }
 
 

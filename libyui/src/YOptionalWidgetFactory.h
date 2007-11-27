@@ -56,17 +56,11 @@ public:
     //
 
     virtual bool			hasWizard();
-    YWizard *				createWizard		( YWidget * 		parent,
+    virtual YWizard *			createWizard		( YWidget * 		parent,
 								  const string & 	backButtonLabel,
 								  const string & 	abortButtonLabel,
 								  const string & 	nextButtonLabel,
 								  YWizardMode		wizardMode = YWizardMode_Standard );
-
-    virtual YWizard *			createWizard		( YWidget *   parent,
-								  YWidgetID * backButtonId,	const string & backButtonLabel,
-								  YWidgetID * abortButtonId,	const string & abortButtonLabel,
-								  YWidgetID * nextButtonId,	const string & nextButtonLabel,
-								  YWizardMode wizardMode = YWizardMode_Standard );
 
     virtual bool			hasDumbTab();
     virtual YDumbTab *			createDumbTab		( YWidget * parent );

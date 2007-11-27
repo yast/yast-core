@@ -127,6 +127,7 @@ protected:
     static YCPValue tryGetMultiSelectionBoxCurrentItem	( YWidget * widget );
     static YCPValue tryGetTreeOpenItems			( YWidget * widget );
     static YCPValue tryGetTreeCurrentBranch		( YWidget * widget );
+    static YCPValue tryGetWizardCurrentItem		( YWidget * widget );
     static YCPValue tryGetTableCell			( YWidget * widget, const YCPTerm & propertyTerm );
     static YCPValue tryGetTableItem			( YWidget * widget, const YCPTerm & propertyTerm );
     static YCPValue tryGetTableItems			( YWidget * widget );

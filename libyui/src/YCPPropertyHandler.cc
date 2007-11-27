@@ -58,6 +58,7 @@
 #include "YSelectionBox.h"
 #include "YTable.h"
 #include "YTree.h"
+#include "YWizard.h"
 #include "YUISymbols.h"
 
 using std::list;
@@ -170,6 +171,7 @@ YCPPropertyHandler::getComplexProperty( YWidget * widget, const string & propert
 	val = tryGetTableValue		( widget );	if ( ! val.isNull() ) return val;
 	val = tryGetComboBoxValue	( widget );	if ( ! val.isNull() ) return val;
 	val = tryGetDumbTabValue	( widget );	if ( ! val.isNull() ) return val;
+	val = tryGetWizardCurrentItem	( widget );	if ( ! val.isNull() ) return val;
 
 	val = tryGetMultiSelectionBoxCurrentItem( widget ); if ( ! val.isNull() ) return val;
     }
@@ -964,6 +966,18 @@ YCPPropertyHandler::tryGetMultiSelectionBoxCurrentItem( YWidget * widget )
     }
 
     return YCPVoid();
+}
+
+
+YCPValue
+YCPPropertyHandler::tryGetWizardCurrentItem( YWidget * widget )
+{
+    YWizard * wizard = dynamic_cast<YWizard *> (widget);
+
+    if ( ! wizard )
+	return YCPNull();
+
+    return YCPString( wizard->currentTreeSelection() );
 }
 
 

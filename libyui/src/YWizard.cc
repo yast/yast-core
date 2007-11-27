@@ -19,47 +19,32 @@
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>
-#include <ycp/YCPTerm.h>
-#include "YCPValueWidgetID.h"
 
 #include "YWizard.h"
+#include "YPushButton.h"
+
 
 struct YWizardPrivate
 {
-    YWizardPrivate( YWidgetID * 	backButtonId,	const string & backButtonLabel,
-		    YWidgetID * 	abortButtonId,	const string & abortButtonLabel,
-		    YWidgetID * 	nextButtonId,	const string & nextButtonLabel,
-		    YWizardMode 	wizardMode )
-	: backButtonLabel( backButtonLabel )
-	, abortButtonLabel( abortButtonLabel )
-	, nextButtonLabel( nextButtonLabel )
-	, backButtonId( backButtonId )
-	, abortButtonId( abortButtonId )
-	, nextButtonId( nextButtonId )
+    YWizardPrivate( YWizardMode wizardMode )
+	: wizardMode( wizardMode )
+	, nextButtonIsProtected( false )
 	{}
 
-    string	backButtonLabel;
-    string	abortButtonLabel;
-    string	nextButtonLabel;
-    YWidgetID * backButtonId;
-    YWidgetID *	abortButtonId;
-    YWidgetID *	nextButtonId;
     YWizardMode	wizardMode;
+    bool	nextButtonIsProtected;
 };
 
 
 
 
-YWizard::YWizard( YWidget *	parent,
-		  YWidgetID * 	backButtonId,	const string & backButtonLabel,
-		  YWidgetID * 	abortButtonId,	const string & abortButtonLabel,
-		  YWidgetID * 	nextButtonId,	const string & nextButtonLabel,
-		  YWizardMode 	wizardMode )
+YWizard::YWizard( YWidget *		parent,
+		  const string & 	backButtonLabel,
+		  const string & 	abortButtonLabel,
+		  const string & 	nextButtonLabel,
+		  YWizardMode 		wizardMode )
     : YWidget( parent )
-      , priv( new YWizardPrivate( backButtonId, 	backButtonLabel,
-				  abortButtonId,	abortButtonLabel,
-				  nextButtonId,		nextButtonLabel,
-				  wizardMode ) )
+    , priv( new YWizardPrivate( wizardMode ) )
 {
     YUI_CHECK_NEW( priv );
 
@@ -68,9 +53,6 @@ YWizard::YWizard( YWidget *	parent,
     // won't do; a children manager that can handle more children is needed.
     setChildrenManager( new YWidgetChildrenManager( this ) );
 
-    // All wizard widgets have a fixed ID `wizard
-    YWidget::setId( new YCPValueWidgetID( YCPSymbol( YWizardID ) ) );
-
     setDefaultStretchable( YD_HORIZ, true );
     setDefaultStretchable( YD_VERT,  true );
 }
@@ -78,105 +60,67 @@ YWizard::YWizard( YWidget *	parent,
 
 YWizard::~YWizard()
 {
-    // Intentionally not deleting the button IDs here: The wizard buttons
-    // assume responsibility for them. For YWidget derived wizard buttons, the
-    // YWidget destructor will delete the ID.
+    // NOP
 }
 
 
-string YWizard::backButtonLabel() const
+bool
+YWizard::nextButtonIsProtected() const
 {
-    return priv->backButtonLabel;
+    return priv->nextButtonIsProtected;
 }
 
 
-string YWizard::abortButtonLabel() const
+void
+YWizard::protectNextButton( bool protect )
 {
-    return priv->abortButtonLabel;
+    priv->nextButtonIsProtected = protect;
 }
 
 
-string YWizard::nextButtonLabel() const
+void
+YWizard::setButtonLabel( YPushButton * button, const string & label )
 {
-    return priv->nextButtonLabel;
+    if ( button )
+	button->setLabel( label );
+    else
+	y2error( "NULL button" );
 }
 
 
-YWidgetID * YWizard::backButtonId() const
+void
+YWizard::ping()
 {
-    return priv->backButtonId;
+    y2debug( "YWizard is active" );
 }
 
 
-YWidgetID * YWizard::abortButtonId() const
+const YPropertySet &
+YWizard::propertySet()
 {
-    return priv->abortButtonId;
-}
+    static YPropertySet propSet;
 
-
-YWidgetID * YWizard::nextButtonId() const
-{
-    return priv->nextButtonId;
-}
-
-
-void YWizard::setBackButtonLabel ( const string & newLabel )
-{
-    priv->backButtonLabel = newLabel;
-}
-
-
-void YWizard::setAbortButtonLabel( const string & newLabel )
-{
-    priv->abortButtonLabel = newLabel;
-}
-
-
-void YWizard::setNextButtonLabel ( const string & newLabel )
-{
-    priv->nextButtonLabel = newLabel;
-}
-
-
-void YWizard::setBackButtonId ( YWidgetID * newId )
-{
-    priv->backButtonId = newId;
-}
-
-
-void YWizard::setAbortButtonId( YWidgetID * newId )
-{
-    priv->abortButtonId = newId;
-}
-
-
-void YWizard::setNextButtonId ( YWidgetID * newId )
-{
-    priv->nextButtonId = newId;
-}
-
-
-
-
-
-
-YCPValue YWizard::command( const YCPTerm & command )
-{
-    y2error( "YWizard::command() not reimplemented!" );
-
-    return YCPNull();
-}
-
-
-
-YCPValue YWizard::queryWidget( const YCPSymbol & property )
-{
-    string sym = property->symbol();
-
-    if ( sym == YUIProperty_CurrentItem )
+    if ( propSet.isEmpty() )
     {
-	return currentTreeSelection();
+	/*
+	 * @property string CurrentItem	the currently selected tree item (read only)
+	 */
+	propSet.add( YProperty( YUIProperty_CurrentItem, YStringProperty, true ) );	// read-only
+	propSet.add( YWidget::propertySet() );
     }
-    else return YWidget::queryWidget( property );
+
+    return propSet;
 }
 
+
+YPropertyValue
+YWizard::getProperty( const string & propertyName )
+{
+    propertySet().check( propertyName ); // throws exceptions if not found
+
+    if ( propertyName == YUIProperty_CurrentItem )	return YPropertyValue( YOtherProperty );
+    else
+    {
+	return YWidget::getProperty( propertyName );
+    }
+}

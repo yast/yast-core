@@ -26,6 +26,7 @@ libpy2UI_la_SOURCES =				\
 	YCPTreeItemWriter.cc			\
 	YCPPropertyHandler.cc			\
 	YCPValueWidgetID.cc			\
+	YCPWizardCommandParser.cc		\
 	YItem.cc				\
 	YTreeItem.cc				\
 	YTableItem.cc				\
@@ -119,6 +120,7 @@ pkginclude_HEADERS =				\
 	YCPTreeItemWriter.h			\
 	YCPPropertyHandler.h			\
 	YCPValueWidgetID.h			\
+	YCPWizardCommandParser.h		\
 	YCP_UI_Exception.h			\
 	YChildrenManager.h			\
 	YItem.h					\

@@ -56,6 +56,7 @@
 #include "YCPDialogParser.h"
 #include "YCPItemParser.h"
 #include "YCPPropertyHandler.h"
+#include "YCPWizardCommandParser.h"
 #include "YOptionalWidgetFactory.h"
 #include "YCheckBox.h"
 
@@ -1153,10 +1154,10 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm 
  * @short Runs a wizard command
  * @description
  * Issues a command to a wizard widget with ID 'wizardId'.
- * <
+ * 
  * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
  *
- * For available wizard commands see file YQWizard.cc .
+ * For available wizard commands see file YWizard.cc .
  * If the current UI does not provide a wizard widget, 'false' is returned.
  * It is safe to call this even for UIs that don't provide a wizard widget. In
  * this case, all calls to this builtin simply return 'false'.
@@ -1184,10 +1185,10 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
 	return YCPBoolean( false );
 
     blockEvents();	// Avoid self-generated events from builtins
-    YCPValue ret = wizard->command( command );
+    bool ret = YCPWizardCommandParser::parseAndExecute( wizard, command );
     unblockEvents();
 
-    return ret;
+    return YCPBoolean( ret );
 }
 
 

@@ -20,11 +20,11 @@
 #define YWizard_h
 
 #include "YWidget.h"
-#include <ycp/YCPString.h>
-#include <ycp/YCPValue.h>
 
 class YMacroRecorder;
 class YWizardPrivate;
+class YPushButton;
+class YReplacePoint;
 
 #define YWizardID			"wizard"
 #define YWizardContentsReplacePointID	"contents"
@@ -90,22 +90,12 @@ protected:
      * Constructor.
      *
      * If only two buttons are desired, leave 'backButtonLabel' empty.
-     *
-     * Each button can take an ID. All IDs can be 0.
-     *
-     * For wizard buttons that have an ID, a wizard button event will return
-     * that ID. For wizard buttons that don't have an ID, a wizard button event
-     * will return the button label (stripped of any '&' indicating keyboard
-     * shortcuts). 
-     *
-     * The Wizard's internal wizard buttons assume ownership of the button IDs
-     * and will delete them (if non-null) in their destructors.
      **/
-    YWizard( YWidget *	 parent,
-	     YWidgetID * backButtonId,	const string & backButtonLabel,
-	     YWidgetID * abortButtonId,	const string & abortButtonLabel,
-	     YWidgetID * nextButtonId,	const string & nextButtonLabel,
-	     YWizardMode wizardMode = YWizardMode_Standard );
+    YWizard( YWidget *	 	parent,
+	     const string & 	backButtonLabel,
+	     const string & 	abortButtonLabel,
+	     const string & 	nextButtonLabel,
+	     YWizardMode 	wizardMode = YWizardMode_Standard );
 
 public:
 
@@ -120,69 +110,221 @@ public:
      **/
     virtual const char * widgetClass() const { return "YWizard"; }
 
+    
+    //
+    // Wizard basics
+    //
+    
     /**
-     * Generic direct access to implementation-specific functions.
-     * Derived classes should implement this.
-     **/
-    virtual YCPValue command( const YCPTerm & command );
-
-    /**
-     * Implements UI::QueryWidget() for this widget class.
-     **/
-    YCPValue queryWidget( const YCPSymbol & property );
-
-    /**
-     * Return the button labels.
-     **/
-    string backButtonLabel() const;
-    string abortButtonLabel() const;
-    string nextButtonLabel() const;
-
-    /**
-     * Return the button IDs or 0 if a button doesn't have an ID.
-     **/
-    YWidgetID * backButtonId() const;
-    YWidgetID * abortButtonId() const;
-    YWidgetID * nextButtonId() const;
-
-    /**
-     * Set the button labels.
+     * Return the wizard buttons or 0 if there is no such button.
      *
-     * Derived classes might want to overwrite this, but they should call this
-     * respective base class function in the new implementation.
+     * Derived classes are required to implement this.
      **/
-    virtual void setBackButtonLabel ( const string & newLabel );
-    virtual void setAbortButtonLabel( const string & newLabel );
-    virtual void setNextButtonLabel ( const string & newLabel );
+    virtual YPushButton * backButton()  const = 0;
+    virtual YPushButton * abortButton() const = 0;
+    virtual YPushButton * nextButton()  const = 0;
 
     /**
-     * Set the button IDs. The receiving wizard button assumes ownership over
-     * the respective ID and will delete it in its destructor (or when a new ID
-     * is set).
+     * Return the internal contents ReplacePoint.
      *
-     * Derived classes might want to overwrite this, but they should call this
-     * respective base class function in the new implementation.
+     * Derived classes are required to implement this.
      **/
-    virtual void setBackButtonId ( YWidgetID * newId );
-    virtual void setAbortButtonId( YWidgetID * newId );
-    virtual void setNextButtonId ( YWidgetID * newId );
+    virtual YReplacePoint * contentsReplacePoint() const = 0;
+
+    /**
+     * Protect the wizard's "Next" button against disabling.
+     **/
+    void protectNextButton( bool protect );
+
+    /**
+     * Check if the wizard's "Next" button is currently protected against
+     * disabling.
+     **/
+    bool nextButtonIsProtected() const;
+
+    /**
+     * Set the label of one of the wizard buttons (backButton(), abortButton(),
+     * nextButton() ) if that button is non-null.
+     *
+     * The default implementation simply calls button->setLabel( newLabel ).
+     **/
+    virtual void setButtonLabel( YPushButton * button, const string & newLabel );
+    
+    /**
+     * Set the help text.
+     **/
+    virtual void setHelpText( const string & helpText ) = 0;
+
+    /**
+     * Set the dialog icon. An empty icon name clears the current icon.
+     **/
+    virtual void setDialogIcon( const string & iconName ) = 0;
+
+    /**
+     * Set the dialog heading.
+     **/
+    virtual void setDialogHeading( const string & headingText ) = 0;
 
     
-protected:
+    //
+    // Steps handling
+    //
+    
+    /**
+     * Add a step for the steps panel on the side bar.
+     * This only adds the step to the internal list of steps.
+     * The display is only updated upon calling updateSteps().
+     **/
+    virtual void addStep( const string & text, const string & id ) = 0;
+
+    /**
+     * Add a step heading for the steps panel on the side bar.
+     * This only adds the heading to the internal list of steps.
+     * The display is only updated upon calling updateSteps().
+     **/
+    virtual void addStepHeading( const string & text ) = 0;
+
+    /**
+     * Delete all steps and step headings from the internal lists.
+     * The display is only updated upon calling updateSteps().
+     **/
+    virtual void deleteSteps() = 0;
+
+    /**
+     * Set the current step. This also triggers updateSteps() if necessary.
+     **/
+    virtual void setCurrentStep( const string & id ) = 0;
+
+    /**
+     * Update the steps display: Reflect the internal steps and heading lists
+     * in the layout.
+     **/
+    virtual void updateSteps() = 0;
+
+    
+    //
+    // Tree handling
+    //
+    
+    /**
+     * Add a tree item. If "parentID" is an empty string, it will be a root
+     * item. 'text' is the text that will be displayed in the tree, 'id' the ID
+     * with which this newly created item can be referenced - and that will be
+     * returned when the user clicks on a tree item.
+     **/
+    virtual void addTreeItem( const string & parentID,
+			      const string & text,
+			      const string & id	) = 0;
+
+    /**
+     * Select the tree item with the specified ID, if such an item exists.
+     **/
+    virtual void selectTreeItem( const string & id ) = 0;
 
     /**
      * Returns the current tree selection or an empty string if nothing is
      * selected or there is no tree.
      **/
-    virtual YCPString currentTreeSelection() { return YCPString( "" ); }
+    virtual string currentTreeSelection() = 0;
+
+    /**
+     * Delete all tree items.
+     **/
+    virtual void deleteTreeItems() = 0;
+
+    
+    //
+    // Menu handling
+    //
+    
+    /**
+     * Add a menu to the menu bar. If the menu bar is not visible yet, it will
+     * be made visible. 'text' is the user-visible text for the menu bar
+     * (including keyboard shortcuts marked with '&'), 'id' is the menu ID for
+     * later addMenuEntry() etc. calls.
+     **/
+    virtual void addMenu( const string & text,
+			  const string & id ) = 0;
+
+    /**
+     * Add a submenu to the menu with ID 'parentMenuID'.
+     **/
+    virtual void addSubMenu( const string & parentMenuID,
+			     const string & text,
+			     const string & id ) = 0;
+
+    /**
+     * Add a menu entry to the menu with ID 'parentMenuID'. 'id' is what will
+     * be returned by UI::UserInput() etc. when a user activates this menu entry.
+     **/
+    virtual void addMenuEntry( const string & parentMenuID,
+			       const string & text,
+			       const string & id ) = 0;
+
+    /**
+     * Add a menu separator to a menu.
+     **/
+    virtual void addMenuSeparator( const string & parentMenuID ) = 0;
+
+    /**
+     * Delete all menus and hide the menu bar.
+     **/
+    virtual void deleteMenus() = 0;
+
+    /**
+     * Show a "Release Notes" button above the "Help" button in the steps panel
+     * with the specified label that will return the specified id to
+     * UI::UserInput() when clicked.
+     **/
+    virtual void showReleaseNotesButton( const string & label,
+					 const string & id ) = 0;
+
+    //
+    // Misc
+    //
+    
+    /**
+     * Hide an existing "Release Notes" button.
+     **/
+    virtual void hideReleaseNotesButton() = 0;
+
+    /**
+     * Retranslate internal buttons that are not accessible from the outside:
+     * - [Help]
+     * - [Steps]
+     * - [Tree]
+     **/
+    virtual void retranslateInternalButtons() = 0;
+
+    /**
+     * NOP command to check if a YWizard is running.
+     **/
+    void ping();
 
 
+    //
+    // Property handling
+    //
+    
+    /**
+     * Get a property.
+     * Reimplemented from YWidget.
+     *
+     * This method may throw YUIPropertyExceptions.
+     **/
+    virtual YPropertyValue getProperty( const string & propertyName );
 
-
-    // Data members
+    /**
+     * Return this class's property set.
+     * This also initializes the property upon the first call.
+     *
+     * Reimplemented from YWidget.
+     **/
+    virtual const YPropertySet & propertySet();
 
 
 private:
+
     ImplPtr<YWizardPrivate> priv;
 };
 

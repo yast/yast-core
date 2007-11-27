@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Tue Nov 27 19:06:13 CET 2007 - sh@suse.de
+
+- Moved UI::WizardCommand() parsing to separate class
+- Added stubs to YWizard to make YCP-free derived classes possible
+- YWizard's internal YReplacePoint now has a string ID "contents",
+  no longer YCPSymbol `contents
+- V 2.16.10
+
+-------------------------------------------------------------------
 Mon Nov 26 17:55:30 CET 2007 - mvidner@suse.cz
 
 - Visibly report the failure to create the temporary directory (#343258).
