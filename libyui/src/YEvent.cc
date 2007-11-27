@@ -326,6 +326,8 @@ YCPValue YMenuEvent::id() const
 
 	if ( ycpItem )
 	    return ycpItem->id();
+
+	return YCPString( _item->label() );
     }
 
     return _id;
