@@ -2,6 +2,7 @@
 Mon Nov 26 17:55:30 CET 2007 - mvidner@suse.cz
 
 - Visibly report the failure to create the temporary directory (#343258).
+- 2.16.9
 
 -------------------------------------------------------------------
 Mon Nov 26 15:29:27 CET 2007 - mvidner@suse.cz
