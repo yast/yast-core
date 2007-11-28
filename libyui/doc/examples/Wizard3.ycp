@@ -69,7 +69,7 @@
     UI::WizardCommand(`SetDialogIcon( "/usr/share/YaST2/theme/SuSELinux/icons/22x22/apps/user_add.png" ) );
     UI::WizardCommand(`SetDialogHeading( "Welcome to the YaST2 installation" ) );
     UI::WizardCommand(`SetHelpText( help_text ) );
-    UI::WizardCommand(`ShowReleaseNotesButton( "&Release Notes", `release_notes ) );
+    UI::WizardCommand(`ShowReleaseNotesButton( "&Release Notes", "release_notes" ) );
 
     UI::WizardCommand(`AddStepHeading( "Base Installation" ) );
     
