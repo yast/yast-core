@@ -92,7 +92,7 @@
     {
 	symbol button = (symbol) UI::UserInput();
 
-	if ( button == `abort )
+	if ( button == `abort || button == `cancel )
 	    break;
 
 	if ( button == `next || button == `back )
