@@ -439,3 +439,15 @@
   * Added lots of pure virtual functions to YWizard
   * All YCPValue and other YCP related code can now be removed from 
     YWizard-derived classes 
+
+
+2007-11-30 sh@suse.de
+
+* Migrated YDialog
+* Removed YContainerWidget for good
+* Removed legacy YWidget::queryWidget() and YWidget::changeWidget() methods
+* Dropped support for outdated property handling with old 
+  YWidget::queryWidget() and YWidget::changeWidget() methods
+* Dropped support for outdated YWidget( YWidgetOpt ) constructors
+* Removed unneeded YWidgetOpt fields
+* Added basic default button handling to YDialog and YPushButton

@@ -1,4 +1,25 @@
 -------------------------------------------------------------------
+Fri Nov 30 17:15:47 CET 2007 - sh@suse.de
+
+- Removed YContainerWidget for good
+- Removed legacy YWidget::queryWidget() and YWidget::changeWidget()
+  methods
+- Dropped support for outdated property handling with old 
+  YWidget::queryWidget() and YWidget::changeWidget() methods
+- Dropped support for outdated YWidget( YWidgetOpt ) constructors
+- Unified Y*WidgetFactory::create*Dialog() methods: 
+  - Added pure virtual YWidgetFactory::createDialog( type, colorMode)
+  - Made YWidgetFactory::createMainDialog() and
+    YWidgetFactory::createPopupDialog() non-virtual
+- Moved special YInputField macro handling for passwords
+  to YMacroRecorder (don't record passwords in macros)
+- Removed unneeded YWidgetOpt fields
+- Catch exceptions in evaluateReplaceWidget
+  (more graceful error handling)
+- Added basic default button handling to YDialog, YPushButton
+- V 2.16.11 
+
+-------------------------------------------------------------------
 Thu Nov 29 17:41:50 CET 2007 - locilka@suse.cz
 
 - Added some examples to UI::GetDisplayInfo() documentation.
