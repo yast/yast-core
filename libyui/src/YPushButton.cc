@@ -22,6 +22,7 @@
 
 #include "YUI.h"
 #include "YApplication.h"
+#include "YDialog.h"
 #include "YUISymbols.h"
 #include "YPushButton.h"
 
@@ -57,7 +58,12 @@ YPushButton::YPushButton( YWidget * parent, const string & label )
 
 YPushButton::~YPushButton()
 {
-    // NOP
+    YDialog * dialog = findDialog();
+    
+    if ( dialog && dialog->defaultButton() == this )
+    {
+	dialog->setDefaultButton( 0 );
+    }
 }
 
 

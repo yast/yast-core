@@ -25,9 +25,10 @@
 
 class YMacroRecorder;
 class YShortcutManager;
+class YPushButton;
 class YDialogPrivate;
 
-// See YTypes.h for enum YDialogType and enum YDialogColorMode 
+// See YTypes.h for enum YDialogType and enum YDialogColorMode
 
 
 class YDialog : public YSingleChildContainerWidget
@@ -62,7 +63,7 @@ public:
      * Delete the topmost dialog.
      *
      * Will throw a YUINoDialogException if there is no dialog and 'doThrow' is
-     * 'true'. 
+     * 'true'.
      *
      * Returns 'true' if there is another open dialog after deleting,
      * 'false' if there is none.
@@ -84,7 +85,7 @@ public:
      * Return the current (topmost) dialog.
      *
      * If there is none, throw a YUINoDialogException if 'doThrow' is 'true'
-     * and return 0 if 'doThrow' is false. 
+     * and return 0 if 'doThrow' is false.
      **/
     static YDialog * currentDialog( bool doThrow = true );
 
@@ -132,6 +133,27 @@ public:
     bool shortcutCheckPostponed() const;
 
     /**
+     * Return this dialog's default button: The button that is activated when
+     * the user hits [Return] anywhere in this dialog. Note that this is not
+     * the same as the button that currently has the keyboard focus.
+     *
+     * This might return 0 if there is no default button.
+     **/
+    YPushButton * defaultButton() const;
+
+    /**
+     * Set this dialog's default button (the button that is activated when
+     * the user hits [Return] anywhere in this dialog). 0 means no default
+     * button.
+     *
+     * There should be no more than one default button in a dialog.
+     *
+     * Derived classes are free to overwrite this method, but they should
+     * call this base class method in the new implementation.
+     **/
+    virtual void setDefaultButton( YPushButton * defaultButton );
+
+    /**
      * Implements the ui command queryWidget
      **/
     YCPValue queryWidget( const YCPSymbol & property );
@@ -139,7 +161,7 @@ public:
 protected:
 
     static std::stack<YDialog *> _dialogStack;
-    
+
 private:
 
     ImplPtr<YDialogPrivate> priv;

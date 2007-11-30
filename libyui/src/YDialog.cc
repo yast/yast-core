@@ -22,6 +22,7 @@
 #include <ycp/YCPSymbol.h>
 #include "YDialog.h"
 #include "YShortcutManager.h"
+#include "YPushButton.h"
 #include "YUIException.h"
 
 using std::string;
@@ -43,6 +44,7 @@ struct YDialogPrivate
     YDialogType		dialogType;
     YDialogColorMode	colorMode;
     bool		shortcutCheckPostponed;
+    YPushButton *	defaultButton;
 };
 
 
@@ -112,6 +114,26 @@ YDialog::checkShortcuts( bool force )
 
 	priv->shortcutCheckPostponed = false;
     }
+}
+
+
+YPushButton *
+YDialog::defaultButton() const
+{
+    return priv->defaultButton;
+}
+
+
+void
+YDialog::setDefaultButton( YPushButton * newDefaultButton )
+{
+    if ( newDefaultButton && priv->defaultButton ) // already have one?
+    {
+	y2error( "Too many `opt(`default) PushButtons: [%s]",
+		 newDefaultButton->label().c_str() );
+    }
+
+    priv->defaultButton = newDefaultButton;
 }
 
 
