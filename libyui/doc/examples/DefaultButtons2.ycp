@@ -73,8 +73,8 @@
 			    `Heading( "Current workflow step:" ),
 			    `VSpacing(0.5),
 			    `HSquash( `InputField(`id(`stepName), "Step &Name: " ) ),
-			    `PushButton(`id(`doit), `opt(`default), "&Do something!" ),
-			    `PushButton(`id(`doit), `opt(`default), "&Do something!" )
+			    `PushButton(`id(`doit1), `opt(`default), "&Do something!" ),
+			    `PushButton(`id(`doit2), `opt(`default), "&Do something!" )
 			    ) );
     
     foreach ( map step, base_installation_steps, ``{
@@ -110,7 +110,7 @@
 	    show_step( current_step );
 	}
 	
-	if ( button == `doit )
+	if ( button == `doit1 )
 	{
 	    y2milestone( "Doing something" );
 	}
