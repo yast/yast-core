@@ -124,18 +124,13 @@ struct YWidgetOpt
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
     YBoolOpt keyEvents;
-    YBoolOpt testMode;
-    YBoolOpt boldFont;		// YCheckBox, YRadioButton, YLabel
 
 
     // Widget-specific options
     //
     // See the respective widget doc in YCPDialogParser::parse???()
 
-    YBoolOpt isDefaultButton;	// YPushButton
-    YBoolOpt isOutputField;	// YLabel
-    YBoolOpt autoScrollDown;	// YRichText
-    YBoolOpt plainTextMode;	// YRichText
+    YBoolOpt boldFont;		// YCheckBox, YRadioButton, YLabel
     YLongOpt key_Fxx;		// YPushButton: No. of F-Key (1..24), 0 if none
 };
 

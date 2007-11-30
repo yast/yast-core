@@ -166,7 +166,6 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
 	    else if ( sym == YUIOpt_vstretch	) opt.isVStretchable.setValue( true );
 	    else if ( sym == YUIOpt_hvstretch	) { opt.isHStretchable.setValue( true ); opt.isVStretchable.setValue( true ); }
 	    else if ( sym == YUIOpt_autoShortcut ) opt.autoShortcut.setValue( true );
-	    else if ( sym == YUIOpt_testMode	) opt.testMode.setValue( true );
 	    else if ( sym == YUIOpt_boldFont	) opt.boldFont.setValue( true );
 	    else if ( sym == YUIOpt_keyEvents	) opt.keyEvents.setValue( true );
 	    else if ( sym == YUIOpt_key_F1	) opt.key_Fxx.setValue(	 1 );
@@ -1183,6 +1182,7 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 {
     string label;
     string iconName;
+    bool   isDefaultButton = false;
 
     if ( isIconButton )
     {
@@ -1219,7 +1219,7 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 	{
 	    string sym = optList->value(o)->asSymbol()->symbol();
 
-	    if	 ( sym == YUIOpt_default ) opt.isDefaultButton.setValue( true );
+	    if	 ( sym == YUIOpt_default )	isDefaultButton = true;
 	    else logUnknownOption( term, optList->value(o) );
 	}
 	else logUnknownOption( term, optList->value(o) );
@@ -1227,7 +1227,7 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 
     YPushButton * button = YUI::widgetFactory()->createPushButton( parent, label );
 
-    if ( opt.isDefaultButton.value() )
+    if ( isDefaultButton )
 	button->setDefaultButton();
 
     if ( isIconButton )
