@@ -24,8 +24,6 @@
 #define VERBOSE_REPLACE_WIDGET 		0
 #define VERBOSE_EVENTS			0
 
-#define NONFATAL_OPENDIALOG_EXCEPTIONS	0
-
 #include <stdio.h>
 #include <unistd.h> 	// pipe()
 #include <fcntl.h>  	// fcntl()
@@ -52,6 +50,7 @@
 #include "YReplacePoint.h"
 #include "YShortcut.h"
 #include "YWizard.h"
+#include "YWidgetFactory.h"
 #include "YCPValueWidgetID.h"
 #include "YCPDialogParser.h"
 #include "YCPItemParser.h"
@@ -705,39 +704,37 @@ YUI::filterInvalidEvents( YEvent * event )
  * Same as the OpenDialog with one argument, but you can specify options
  * with a term of the form <tt><b>`opt</b></tt>.
  *
- * The option <tt>`defaultsize</tt> makes the dialog be resized to the default
- * size, for example for the Qt interface the -geometry option is honored and
- * for ncurses the dialog fills the whole window.
+ * The <tt>`mainDialog</tt> option creates a "main window" dialog:
+ * The dialog will get a large "default size". In the Qt UI, this typically
+ * means 800x600 pixels large (or using a -geometry command line argument if
+ * present) or full screen. In the NCurses UI, this is always full screen.
  *
- * The option <tt>`centered</tt> centers the dialog to the desktop.
- * This has no effect for popup dialogs that are a child of a `defaultsize dialog
- * that is currently visible.
+ * <tt>`defaultsize</tt> is an alias for <tt>`mainDialog</tt>.
  *
- * The option <tt>`decorated</tt> add a window border around the dialog, which
- * comes in handy if no window manager is running. This option may be ignored in
- * non-graphical UIs.
- *
- * <tt>`smallDecorations</tt> tells the window manager to use only minimal
- * decorations - in particular, no title bar. This is useful for very small
- * popups (like only a one line label and no button). Don't overuse this.
- * This option is ignored for `defaultsize dialogs.
- *
- * The option <tt>`warncolor</tt> displays the entire dialog in a bright
+ * The <tt>`warncolor</tt> option displays the entire dialog in a bright
  * warning color.
  *
- * The option <tt>`infocolor</tt> is a less intrusive color.
+ * The <tt>`infocolor</tt> option displays the dialog in a color scheme that is
+ * distinct from the normal colors, but not as bright as warncolor.
+ *
+ * The <tt>`decorated</tt> option is now obsolete, but still accepted to keep
+ * old code working. 
+ *
+ * The <tt>`centered</tt> option is now obsolete, but still accepted to keep
+ * old code working. 
  *
  * @param term options
  * @param term widget
  * @return boolean
  *
- * @usage OpenDialog( `opt( `defaultsize ), `Label( "Hi" ) )
+ * @usage OpenDialog( `opt( `defaultsize ), `Label( "Hello, World!" ) )
  */
 
-YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm & opts )
+YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialogTerm )
 {
-    YWidgetOpt opt;
-
+    YDialogType		dialogType = YPopupDialog;
+    YDialogColorMode	colorMode  = YDialogNormalColor;
+    
     if ( ! opts.isNull() ) // evaluate `opt() contents
     {
 	    YCPList optList = opts->args();
@@ -746,59 +743,48 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & dialog_term, const YCPTerm &
 	    {
 		if ( optList->value(o)->isSymbol() )
 		{
-		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) 		opt.hasDefaultSize.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )		opt.hasWarnColor.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )		opt.hasInfoColor.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated )		opt.isDecorated.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )		opt.isCentered.setValue( true );
-		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_smallDecorations )	opt.hasSmallDecorations.setValue( true );
+		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_mainDialog  ) 		dialogType = YMainDialog;
+		    if      ( optList->value(o)->asSymbol()->symbol() == YUIOpt_defaultsize ) 		dialogType = YMainDialog;
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_infocolor )		colorMode  = YDialogInfoColor;
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_warncolor )		colorMode  = YDialogWarnColor;
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated ) 		{} // obsolete
+		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )		{} // obsolete
 		    else
 			y2warning( "Unknown option %s for OpenDialog", opts->value(o)->toString().c_str() );
 		}
 	    }
     }
 
-    blockEvents();	// We don't want self-generated events from UI builtins.
-    YDialog *dialog = createDialog( opt );
+    blockEvents();	// Prevent self-generated events from UI built-ins.
 
-    if ( dialog )
+    bool ok = true;
+    
+    try
     {
-#if NONFATAL_OPENDIALOG_EXCEPTIONS
-	try
-	{
-#endif
-	    YWidget * child = YCPDialogParser::parseWidgetTreeTerm( dialog, dialog_term );
+	YDialog * dialog = YUI::widgetFactory()->createDialog( dialogType, colorMode );
+	YUI_CHECK_NEW( dialog );
 
-	    if ( child )
-	    {
-		dialog->setInitialSize();
-		dialog->checkShortcuts();
-		showDialog( dialog );
+	YCPDialogParser::parseWidgetTreeTerm( dialog, dialogTerm );
 
-		unblockEvents();
-		return YCPBoolean( true );
-	    }
-	    else
-	    {
-		YDialog::deleteTopmostDialog();
-	    }
-#if NONFATAL_OPENDIALOG_EXCEPTIONS
-	}
-	catch ( YUIException & exception )
-	{
-	    YUI_CAUGHT( exception );
+	dialog->setInitialSize();
+	dialog->checkShortcuts();
+	showDialog( dialog );
+    }
+    catch ( YUIException & exception )
+    {
+	YUI_CAUGHT( exception );
 
-	    // Delete this half-created dialog:
-	    // Some widgets are in a very undefined state (no children etc.)
-	    YDialog::deleteTopmostDialog();
+	// Delete this half-created dialog:
+	// Some widgets are in a very undefined state (no children etc.)
+	YDialog::deleteTopmostDialog();
 
-	    ycperror( "UI::OpenDialog(): Dialog term parse error" );
-	}
-#endif
+	ycperror( "UI::OpenDialog() failed" );
+	ok = false;
     }
 
     unblockEvents();
-    return YCPBoolean( false );
+    
+    return YCPBoolean( ok );
 }
 
 
@@ -856,7 +842,7 @@ void YUI::closeDialog( YDialog * )
  * @return boolean Returns true on success.
  */
 
-YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & property, const YCPValue & newValue )
+YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & property, const YCPValue & newValue )
 {
     YCPValue ret = YCPVoid();
     
@@ -864,99 +850,61 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
     {
 	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
 	
-	if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
+	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	{
 	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
-						id_value->toString().c_str() ) );
+						idValue->toString().c_str() ) );
 	}
 
-	YCPValue	id	= YCPDialogParser::parseIdTerm( id_value );
+	YCPValue	id	= YCPDialogParser::parseIdTerm( idValue );
 	YWidget *	widget 	= YCPDialogParser::findWidgetWithId( id,
 								     true ); // throw if not found
 
 	YPropertySet propSet = widget->propertySet();
 
-	if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
+	if ( property->isSymbol() )
 	{
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
+	    string oldShortcutString = widget->shortcutString();
+	    string propertyName	 = property->asSymbol()->symbol();
+	    // y2milestone( "New style UI::ChangeWidget() for %s::%s", widget->widgetClass(), propertyName.c_str() );
 
-	    if ( property->isSymbol() )
-	    {
-		YCPSymbol sym = property->asSymbol();
-		y2debug( "Old style UI::ChangeWidget() for %s::%s",
-			 widget->widgetClass(), sym->toString().c_str() );
-		ret = widget->changeWidget( sym, newValue );
-	    }
+	    YPropertyValue val;
+
+	    if		( newValue->isString()  )	val = YPropertyValue( newValue->asString()->value()  );
+	    else if	( newValue->isInteger() )	val = YPropertyValue( newValue->asInteger()->value() );
+	    else if	( newValue->isBoolean() )	val = YPropertyValue( newValue->asBoolean()->value() );
 	    else
+		val = YPropertyValue( false ); // Dummy value, will be rejected anyway
+
+	    bool success = widget->setProperty( propertyName, val );
+
+	    if ( ! success )
 	    {
-		y2error( "Bad argument for UI::ChangeWidget(): %s",
-			 property->toString().c_str() );
+		// Try again with the known special cases
+		success = YCPPropertyHandler::setComplexProperty( widget, propertyName, newValue );
 	    }
-	
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
-	    // FIXME: Get rid of this
+
+	    ret = YCPBoolean( success );
+
+	    if ( oldShortcutString != widget->shortcutString() )
+		YDialog::currentDialog()->checkShortcuts();
+	}
+	else if ( property->isTerm() )
+	{
+	    bool success	= YCPPropertyHandler::setComplexProperty( widget, property->asTerm(), newValue );
+	    ret		= YCPBoolean( success );
 	}
 	else
 	{
-	    try
-	    {
-		if ( property->isSymbol() )
-		{
-		    string oldShortcutString = widget->shortcutString();
-		    string propertyName	 = property->asSymbol()->symbol();
-		    // y2milestone( "New style UI::ChangeWidget() for %s::%s", widget->widgetClass(), propertyName.c_str() );
-
-		    YPropertyValue val;
-
-		    if	( newValue->isString()  )	val = YPropertyValue( newValue->asString()->value()  );
-		    else if	( newValue->isInteger() )	val = YPropertyValue( newValue->asInteger()->value() );
-		    else if	( newValue->isBoolean() )	val = YPropertyValue( newValue->asBoolean()->value() );
-		    else
-			val = YPropertyValue( false ); // Dummy value, will be rejected anyway
-
-		    bool success = widget->setProperty( propertyName, val );
-
-		    if ( ! success )
-		    {
-			// Try again with the known special cases
-			success = YCPPropertyHandler::setComplexProperty( widget, propertyName, newValue );
-		    }
-
-		    ret = YCPBoolean( success );
-
-		    if ( oldShortcutString != widget->shortcutString() )
-			YDialog::currentDialog()->checkShortcuts();
-		}
-		else if ( property->isTerm() )
-		{
-		    bool success	= YCPPropertyHandler::setComplexProperty( widget, property->asTerm(), newValue );
-		    ret		= YCPBoolean( success );
-		}
-		else
-		{
-		    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::ChangeWidget args: " )
-							+ property->toString() ) );
-		}
-	    }
-	    catch( YUIException & exception )
-	    {
-		YUI_CAUGHT( exception );
-		ycperror( "UI::ChangeWidget() failed for property %s of %s with ID %s, new value: %s",
-			  property->toString().c_str(),
-			  widget->widgetClass(),
-			  id->toString().c_str(),
-			  newValue->toString().c_str() );
-	    }
+	    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::ChangeWidget args: " )
+						+ property->toString() ) );
 	}
     }
     catch( YUIException & exception )
     {
 	YUI_CAUGHT( exception );
 	ycperror( "UI::ChangeWidget failed: UI::ChangeWidget( %s, %s, %s )",
-		  id_value->toString().c_str(),
+		  idValue->toString().c_str(),
 		  property->toString().c_str(),
 		  newValue->toString().c_str() );
 	ret = YCPNull();
@@ -985,89 +933,56 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & id_value, const YCPValue & 
  * @return any
  */
 
-YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & property )
+YCPValue YUI::evaluateQueryWidget( const YCPValue & idValue, const YCPValue & property )
 {
     YCPValue ret = YCPVoid();
     
     try
     {
-	if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
+	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	{
 	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
-						id_value->toString().c_str() ) );
+						idValue->toString().c_str() ) );
 	}
 
-	YCPValue id = YCPDialogParser::parseIdTerm( id_value );
+	YCPValue id = YCPDialogParser::parseIdTerm( idValue );
 	YWidget *widget = YCPDialogParser::findWidgetWithId( id,
 							     true ); // throw if not found
 
 	YPropertySet propSet = widget->propertySet();
 
-	if ( propSet.size() == 5 ) // unchanged from YWidget, no properties supported
+	if ( property->isSymbol() )		// The normal case: UI::QueryWidget(`myWidget, `SomeProperty)
 	{
-	    if ( property->isSymbol() )
+	    string propertyName = property->asSymbol()->symbol();
+	    YPropertyValue val  = widget->getProperty( propertyName );
+
+	    switch ( val.type() )
 	    {
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
-		YCPSymbol sym = property->asSymbol();
-		y2debug( "Old style UI::QueryWidget() for %s::%s",
-			 widget->widgetClass(), sym->symbol().c_str() );
-		return widget->queryWidget( sym );
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
-		// FIXME: Get rid of this
+		case YStringProperty:	return YCPString ( val.stringVal()  );
+		case YBoolProperty:	return YCPBoolean( val.boolVal()    );
+		case YIntegerProperty:	return YCPInteger( val.integerVal() );
+		case YOtherProperty:	return YCPPropertyHandler::getComplexProperty( widget, propertyName );
+
+		default:
+		    ycperror( "Unknown result for setProperty( %s )", propertyName.c_str() );
+		    return YCPVoid();
 	    }
+	}
+	else if ( property->isTerm() )	// Very rare: UI::QueryWidget(`myTable, `Item("abc", 3) )
+	{
+	    return YCPPropertyHandler::getComplexProperty( widget, property->asTerm() );
 	}
 	else
 	{
-	    // y2debug( "New style UI::QueryWidget() for %s::%s", widget->widgetClass(), sym->symbol().c_str() );
-
-	    try
-	    {
-		if ( property->isSymbol() )		// The normal case: UI::QueryWidget(`myWidget, `SomeProperty)
-		{
-		    string propertyName = property->asSymbol()->symbol();
-		    YPropertyValue val  = widget->getProperty( propertyName );
-
-		    switch ( val.type() )
-		    {
-			case YStringProperty:	return YCPString ( val.stringVal()  );
-			case YBoolProperty:		return YCPBoolean( val.boolVal()    );
-			case YIntegerProperty:	return YCPInteger( val.integerVal() );
-			case YOtherProperty:	return YCPPropertyHandler::getComplexProperty( widget, propertyName );
-
-			default:
-			    ycperror( "Unknown result for setProperty( %s )", propertyName.c_str() );
-			    return YCPVoid();
-		    }
-		}
-		else if ( property->isTerm() )	// Very rare: UI::QueryWidget(`myTable, `Item("abc", 3) )
-		{
-		    return YCPPropertyHandler::getComplexProperty( widget, property->asTerm() );
-		}
-		else
-		{
-		    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::QueryWidget args: " )
-							+ property->toString() ) );
-		}
-	    }
-	    catch( YUIException & exception )
-	    {
-		YUI_CAUGHT( exception );
-		ycperror( "UI::QueryWidget() failed for property %s of %s with ID %s",
-			  property->toString().c_str(),
-			  widget->widgetClass(),
-			  id->toString().c_str() );
-
-	    }
+	    YUI_THROW( YUISyntaxErrorException( string( "Bad UI::QueryWidget args: " )
+						+ property->toString() ) );
 	}
     }
     catch( YUIException & exception )
     {
 	YUI_CAUGHT( exception );
 	ycperror( "UI::QueryWidget failed: UI::QueryWidget( %s, %s )",
-		  id_value->toString().c_str(),
+		  idValue->toString().c_str(),
 		  property->toString().c_str() );
 	ret = YCPNull();
     }
@@ -1087,64 +1002,64 @@ YCPValue YUI::evaluateQueryWidget( const YCPValue & id_value, const YCPValue & p
  *
  * @param symbol id
  * @param term newWidget
- * @return boolean
+ * @return true if success, false if failed
  */
 
-YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & id_value, const YCPTerm & newContentTerm )
+YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm & newContentTerm )
 {
-    if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
+    bool success = true;
+    
+    try
     {
-	return YCPNull();
-    }
+	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
+	{
+	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
+						idValue->toString().c_str() ) );
+	}
 
-    YCPValue id = YCPDialogParser::parseIdTerm( id_value );
-    YWidget * widget = YCPDialogParser::findWidgetWithId( id );
-    if ( ! widget ) return YCPBoolean( false );
+	blockEvents();	// Prevent self-generated events
+	YCPValue  id     = YCPDialogParser::parseIdTerm( idValue );
+	YWidget * widget = YCPDialogParser::findWidgetWithId( id,
+							      true ); // throw if not found
+	if ( ! widget ) return YCPBoolean( false );
 
-    YReplacePoint * replacePoint = dynamic_cast<YReplacePoint *> (widget);
+	YReplacePoint * replacePoint = dynamic_cast<YReplacePoint *> (widget);
 
-    if ( ! replacePoint )
-    {
-	y2error( "ReplaceWidget: widget %s is not a ReplacePoint",
-		 id->toString().c_str() );
-	return YCPBoolean( false );
-    }
+	if ( ! replacePoint )
+	    YUI_THROW( YUIException( string( "Widget with ID " ) + id->toString() + " is not a ReplacePoint" ) );
 
 #if VERBOSE_REPLACE_WIDGET
-    replacePoint->dumpDialogWidgetTree();
+	replacePoint->dumpDialogWidgetTree();
 #endif
-    YDialog * dialog = YDialog::currentDialog();
+	YDialog * dialog = YDialog::currentDialog();
 
-    YWidget::OptimizeChanges below( *dialog ); // delay screen updates until this block is left
-    replacePoint->deleteChildren();
+	YWidget::OptimizeChanges below( *dialog ); // delay screen updates until this block is left
+	replacePoint->deleteChildren();
 
-    YWidget * child = YCPDialogParser::parseWidgetTreeTerm( replacePoint, newContentTerm );
-
-    if ( ! child->hasParent() )
-	child->setParent( replacePoint );
-
-    replacePoint->showChild();
+	YCPDialogParser::parseWidgetTreeTerm( replacePoint, newContentTerm );
+	replacePoint->showChild();
 
 #if VERBOSE_REPLACE_WIDGET
-    replacePoint->dumpDialogWidgetTree();
+	replacePoint->dumpDialogWidgetTree();
 #endif
-
-    if ( child )
-    {
-	blockEvents();	// We don't want self-generated events from UI builtins.
 
 	dialog->setInitialSize();
 	dialog->checkShortcuts();
-
-	unblockEvents();
-
-	return YCPBoolean( true );
     }
-    else
+    catch( YUIException & exception )
     {
-	YUI_THROW( YUIException( "ReplaceWidget() failed" ) );
-	return YCPBoolean( false );
+	YUI_CAUGHT( exception );
+	success = false;
+	
+	ycperror( "UI::ReplaceWidget() failed: UI::ReplaceWidget( %s, %s )",
+		  idValue->toString().c_str(),
+		  newContentTerm->toString().c_str() );
+	
     }
+
+    unblockEvents();
+
+    return YCPBoolean( success );
 }
 
 
@@ -1207,12 +1122,12 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
  * @return boolean Returns true on success (i.e. the widget accepted the focus).
  */
 
-YCPBoolean YUI::evaluateSetFocus( const YCPValue & id_value )
+YCPBoolean YUI::evaluateSetFocus( const YCPValue & idValue )
 {
-    if ( ! YCPDialogParser::isSymbolOrId( id_value ) )
+    if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	return YCPNull();
 
-    YCPValue id = YCPDialogParser::parseIdTerm( id_value );
+    YCPValue id = YCPDialogParser::parseIdTerm( idValue );
     YWidget *widget = YCPDialogParser::findWidgetWithId( id );
 
     if ( ! widget )
@@ -1705,11 +1620,11 @@ void YUI::evaluateCheckShortcuts()
  * @param symbol widgetId
  * @return boolean
  */
-YCPBoolean YUI::evaluateWidgetExists( const YCPValue & id_value )
+YCPBoolean YUI::evaluateWidgetExists( const YCPValue & idValue )
 {
-    if ( ! YCPDialogParser::isSymbolOrId( id_value ) ) return YCPNull();
+    if ( ! YCPDialogParser::isSymbolOrId( idValue ) ) return YCPNull();
 
-    YCPValue id = YCPDialogParser::parseIdTerm( id_value );
+    YCPValue id = YCPDialogParser::parseIdTerm( idValue );
     YWidget *widget = YCPDialogParser::findWidgetWithId( id,
 							 false ); // Don't throw if not found
     return widget ? YCPBoolean( true ) : YCPBoolean( false );

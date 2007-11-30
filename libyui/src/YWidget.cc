@@ -63,7 +63,6 @@ struct YWidgetPrivate
 	, notify( false )
 	, sendKeyEvents( false )
 	, autoShortcut( false )
-	, oldStyleConstructor( false )
 	, toolkitWidgetRep( 0 )
 	, id( 0 )
 	, functionKey( 0 )
@@ -86,7 +85,6 @@ struct YWidgetPrivate
     bool			notify;
     bool 			sendKeyEvents;
     bool 			autoShortcut;
-    bool			oldStyleConstructor;
     void *			toolkitWidgetRep;
     YWidgetID *			id;
     YBothDim<bool>		stretch;
@@ -98,20 +96,6 @@ struct YWidgetPrivate
 
 
 bool YWidget::_usedOperatorNew = false;
-
-// FIXME: Obsolete
-// FIXME: Obsolete
-// FIXME: Obsolete
-YWidget::YWidget( const YWidgetOpt & opt )
-    : priv( new YWidgetPrivate( new YWidgetChildrenRejector( this ) ) )
-{
-    YUI_CHECK_NEW( priv );
-    priv->oldStyleConstructor = true;
-}
-// FIXME: Obsolete
-// FIXME: Obsolete
-// FIXME: Obsolete
-
 
 
 YWidget::YWidget( YWidget * parent )
@@ -271,9 +255,6 @@ YWidget::setBeingDestroyed()
 YWidget *
 YWidget::parent() const
 {
-    if ( oldStyleConstructor() && ! priv->parent )
-	YUI_THROW( YUIException( string( "No parent set yet for " ) + widgetClass() ) );
-
     return priv->parent;
 }
 
@@ -297,13 +278,6 @@ YWidget::setParent( YWidget * newParent )
     }
 
     priv->parent = newParent;
-}
-
-
-bool
-YWidget::oldStyleConstructor() const
-{
-    return priv->oldStyleConstructor;
 }
 
 
@@ -403,14 +377,12 @@ YWidget::propertySet()
 	 * @property boolean Notify 		the current notify state (see also `opt( `notify ))
 	 * @property string  WidgetClass 	the widget class of this widget (YLabel, YPushButton, ...)
 	 * @property string  DebugLabel		(possibly translated) text describing this widget for debugging
-	 * @property string  DialogDebugLabel 	(possibly translated) text describing this dialog for debugging
 	 **/
 
 	propSet.add( YProperty( YUIProperty_Enabled,		YBoolProperty	) );
 	propSet.add( YProperty( YUIProperty_Notify,		YBoolProperty	) );
 	propSet.add( YProperty( YUIProperty_WidgetClass,	YStringProperty, true	) ); // read-only
 	propSet.add( YProperty( YUIProperty_DebugLabel,		YStringProperty, true	) ); // read-only
-	propSet.add( YProperty( YUIProperty_DialogDebugLabel,	YStringProperty, true	) ); // read-only
     }
 
     return propSet;
@@ -454,15 +426,6 @@ YWidget::getProperty( const std::string & propertyName )
     if ( propertyName == YUIProperty_Notify  		) return YPropertyValue( notify()   	);
     if ( propertyName == YUIProperty_WidgetClass	) return YPropertyValue( widgetClass() 	);
     if ( propertyName == YUIProperty_DebugLabel		) return YPropertyValue( debugLabel()	);
-    if ( propertyName == YUIProperty_DialogDebugLabel 	)
-    {
-	YDialog * dialog = findDialog();
-
-	if ( dialog )
-	    return YPropertyValue( dialog->debugLabel() );
-	else
-	    return YPropertyValue( debugLabel() );
-    }
 
     return YPropertyValue( false ); // NOTREACHED
 }
@@ -723,73 +686,4 @@ YWidget::saveUserInput( YMacroRecorder *macroRecorder )
     }
 }
 
-
-// FIXME: Obsolete
-// FIXME: Obsolete
-// FIXME: Obsolete
-
-
-YCPValue YWidget::changeWidget( const YCPSymbol & property, const YCPValue & newvalue )
-{
-    string symbol = property->symbol();
-
-    if ( ! isValid() )
-    {
-	y2error( "YWidget::changeWidget( %s ): ERROR: Invalid widget", symbol.c_str() );
-
-	return YCPBoolean( false );	// Error
-    }
-
-    if ( symbol == YUIProperty_Enabled )
-    {
-	if ( newvalue->isBoolean() )
-	{
-	    bool e = newvalue->asBoolean()->value();
-	    setEnabled(e);
-	    priv->enabled = e;
-	    return YCPBoolean( true );
-	}
-	else y2error( "Wrong argument %s for widget property `Enabled - boolean expected.",
-		      newvalue->toString().c_str() );
-    }
-
-    if ( symbol == YUIProperty_Notify )
-    {
-	if ( newvalue->isBoolean() )
-	{
-	    setNotify( newvalue->asBoolean()->value() );
-	    return YCPBoolean( true );
-	}
-	else y2error( "Wrong argument %s for widget property `Notify - boolean expected.",
-		      newvalue->toString().c_str() );
-    }
-
-    return YCPBoolean( false );
-}
-
-
-YCPValue YWidget::queryWidget( const YCPSymbol & property )
-{
-    string symbol = property->symbol();
-
-    if ( symbol == YUIProperty_Enabled 		) 	return YCPBoolean( isEnabled() );
-    if ( symbol == YUIProperty_Notify 		)	return YCPBoolean( notify() );
-    if ( symbol == YUIProperty_WidgetClass 	) 	return YCPString( widgetClass() );
-    if ( symbol == YUIProperty_DebugLabel	) 	return YCPString( debugLabel() );
-    if ( symbol == YUIProperty_DialogDebugLabel )
-    {
-	return YDialog::currentDialog()->queryWidget( property );
-    }
-    else
-    {
-	y2error( "Couldn't query unkown widget property %s::%s",
-		 widgetClass(), symbol.c_str() );
-	return YCPVoid();
-    }
-}
-
-
-// FIXME: Obsolete
-// FIXME: Obsolete
-// FIXME: Obsolete
 

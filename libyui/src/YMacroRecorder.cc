@@ -30,6 +30,7 @@
 
 #include "YUISymbols.h"
 #include "YWidget.h"
+#include "YInputField.h"
 #include "YDialog.h"
 #include "YMacroRecorder.h"
 #include "YUIComponent.h"
@@ -165,14 +166,6 @@ void YMacroRecorder::recordTimeStamp()
 }
 
 
-void YMacroRecorder::recordDialogDebugLabel()
-{
-    fprintf( _macroFile, "%s%s// %s\n",
-	     YMACRO_INDENT, YMACRO_INDENT,
-	     YDialog::currentDialog()->debugLabel().c_str() );
-}
-
-
 void YMacroRecorder::recordComment( string text )
 {
     fprintf( _macroFile, "%s%s// %s\n",
@@ -187,7 +180,6 @@ void YMacroRecorder::beginBlock()
 	return;
 
     fprintf( _macroFile, "%s{\n", YMACRO_INDENT );
-    recordDialogDebugLabel();
     fprintf( _macroFile, "%s%s//\n", YMACRO_INDENT, YMACRO_INDENT );
     recordYcpCodeLocation();
     recordTimeStamp();
@@ -309,22 +301,41 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
     if ( ! widgetId )
 	return;
     
-    YCPTerm idTerm( YUISymbol_id );		// `id()
+    YCPTerm idTerm( YUISymbol_id );	// `id()
     idTerm->add( widgetId->value() );	// `id( `something )
 
-    YCPValue val = widget->queryWidget( YCPSymbol( propertyName ) );
+    YInputField * inputField = dynamic_cast<YInputField *> (widget);
 
-    fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s \"%s\"\n",
-	     // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget
-	     YMACRO_INDENT, YMACRO_INDENT,
-	     YUIBuiltin_ChangeWidget,
-	     idTerm->toString().c_str(),
-	     propertyName,
-	     val->toString().c_str(),
-	     widget->widgetClass(),
-	     widget->debugLabel().c_str() );
+    if ( inputField && inputField->passwordMode() )
+    {
+	// Don't record passwords in the macro file
 
-    y2debug( "Recording %s status: %s: %s",
-	     widget->widgetClass(), propertyName, val->toString().c_str() );
+	string text = "UI::";
+	text += YUIBuiltin_ChangeWidget;
+	text += "( " + idTerm->toString() + ", \t`";
+	text += YUIProperty_Value;
+	text += ", \"<not recording password in plain text>\" );\t// ";
+	text += widget->widgetClass();
+	text += " \"" + widget->debugLabel() + "\"";
+
+	recordComment( text );
+    }
+    else
+    {
+	YCPValue val = YUI::ui()->evaluateQueryWidget( idTerm, YCPSymbol( propertyName ) );
+
+	fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s \"%s\"\n",
+		 // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget
+		 YMACRO_INDENT, YMACRO_INDENT,
+		 YUIBuiltin_ChangeWidget,
+		 idTerm->toString().c_str(),
+		 propertyName,
+		 val->toString().c_str(),
+		 widget->widgetClass(),
+		 widget->debugLabel().c_str() );
+
+	y2debug( "Recording %s status: %s: %s",
+		 widget->widgetClass(), propertyName, val->toString().c_str() );
+    }
 }
 

@@ -33,6 +33,20 @@ YWidgetFactory::~YWidgetFactory()
 }
 
 
+YDialog *
+YWidgetFactory::createMainDialog( YDialogColorMode colorMode )
+{
+    return createDialog( YMainDialog, colorMode );
+}
+
+
+YDialog *
+YWidgetFactory::createPopupDialog( YDialogColorMode colorMode )
+{
+    return createDialog( YPopupDialog, colorMode );
+}
+
+
 YLayoutBox *
 YWidgetFactory::createVBox( YWidget * parent )
 {

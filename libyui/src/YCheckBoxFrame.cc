@@ -48,11 +48,6 @@ YCheckBoxFrame::YCheckBoxFrame( YWidget * 	parent,
     , priv( new YCheckBoxFramePrivate( label ) )
 {
     YUI_CHECK_NEW( priv );
-    
-#if 0
-    // FIXME
-    _debugLabelWidget   = this;
-#endif
 }
 
 

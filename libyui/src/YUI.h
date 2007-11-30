@@ -48,9 +48,6 @@ class Y2Component;
 class Y2UIFunction;
 class YUIBuiltinCallData;
 
-// FIXME: Obsolete
-class YContainerWidget;
-
 
 struct  YUIBuiltinCallData
 {
@@ -308,7 +305,7 @@ public:
     YCPValue evaluateHasSpecialWidget			( const YCPSymbol & widget );
     void evaluateMakeScreenShot				( const YCPString & filename );
     void evaluateNormalCursor				();
-    YCPBoolean evaluateOpenDialog			( const YCPTerm & term, const YCPTerm & opts = YCPNull() );
+    YCPBoolean evaluateOpenDialog			( const YCPTerm & opts, const YCPTerm & dialogTerm );
     void evaluatePlayMacro				( const YCPString & filename );
     void evaluatePostponeShortcutCheck			();
     YCPValue evaluateQueryWidget			( const YCPValue& value_id, const YCPValue& property );
@@ -440,16 +437,6 @@ protected:
      * Derived UIs may or may not choose to overwrite this.
      **/
     virtual YCPString glyph( const YCPSymbol & glyphSymbol ) { return YCPString( "" ); }
-
-
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-public:
-    virtual YDialog *createDialog( YWidgetOpt & opt ) = 0;
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
 
     
 protected:

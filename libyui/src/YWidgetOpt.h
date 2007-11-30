@@ -116,15 +116,13 @@ class YLongOpt: public YAnyOpt<long>
 struct YWidgetOpt
 {
     // Common options for all widgets.
-    // See the inline doc in YUIInterpreter::createWidget() for details
-    // or ../../doc/autodocs/YWidget-widget.html
+    // See the inline doc in YCPDialogParser for details.
 
     YBoolOpt isDisabled;
     YBoolOpt notifyMode;
     YBoolOpt isHStretchable;
     YBoolOpt isVStretchable;
     YBoolOpt autoShortcut;
-    YBoolOpt autoAdvance;
     YBoolOpt keyEvents;
     YBoolOpt testMode;
     YBoolOpt boldFont;		// YCheckBox, YRadioButton, YLabel
@@ -133,40 +131,12 @@ struct YWidgetOpt
     // Widget-specific options
     //
     // See the respective widget doc in YCPDialogParser::parse???()
-    // or ../../doc/autodocs/???-widget.html
 
     YBoolOpt isDefaultButton;	// YPushButton
     YBoolOpt isOutputField;	// YLabel
     YBoolOpt autoScrollDown;	// YRichText
     YBoolOpt plainTextMode;	// YRichText
-    YBoolOpt isShrinkable;	// YTextEntry
-    YBoolOpt isEditable;	// YComboBox
-    YBoolOpt immediateMode;	// YTable
-    YBoolOpt keepSorting;	// YTable
-    YBoolOpt invertAutoEnable;	// YCheckBoxFrame
-    YBoolOpt noAutoEnable;	// YCheckBoxFrame
-    YBoolOpt zeroWidth;		// YImage
-    YBoolOpt zeroHeight;	// YImage
-    YBoolOpt animated;		// YImage
-    YBoolOpt tiled;		// YImage
-    YBoolOpt scaleToFit;	// YImage
-    YBoolOpt countShowDelta;	// YPartitionSplitter
     YLongOpt key_Fxx;		// YPushButton: No. of F-Key (1..24), 0 if none
-
-    YBoolOpt stepsEnabled;	// YWizard
-    YBoolOpt treeEnabled;	// YWizard
-
-    // YDialog-specific options
-    //
-    // These are multiplexed into YWidgetOpt since YDialog inherits
-    // YSingleChildContainerWidget which in turn inherits YWidget.
-
-    YBoolOpt hasDefaultSize;
-    YBoolOpt hasWarnColor;
-    YBoolOpt hasInfoColor;
-    YBoolOpt isDecorated;
-    YBoolOpt isCentered;
-    YBoolOpt hasSmallDecorations;
 };
 
 

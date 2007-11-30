@@ -74,8 +74,9 @@ public:
     // Dialogs
     //
 
-    virtual YDialog *		createMainDialog()	= 0;
-    virtual YDialog *		createPopupDialog()	= 0;
+    YDialog *			createMainDialog	( YDialogColorMode colorMode = YDialogNormalColor );
+    YDialog *			createPopupDialog	( YDialogColorMode colorMode = YDialogNormalColor );
+    virtual YDialog *		createDialog		( YDialogType dialogType, YDialogColorMode colorMode = YDialogNormalColor ) = 0;
 
     //
     // Layout Boxes

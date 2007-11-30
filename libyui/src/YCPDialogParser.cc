@@ -317,29 +317,6 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
 	if ( opt.isHStretchable.value()	)	w->setStretchable( YD_HORIZ, true );
 	if ( opt.isVStretchable.value()	)	w->setStretchable( YD_VERT,  true );
 	if ( opt.key_Fxx.value() > 0	)	w->setFunctionKey( opt.key_Fxx.value() );
-
-	if ( w->oldStyleConstructor() )
-	{
-	    // FIXME: Obsolete
-	    // FIXME: Obsolete
-	    // FIXME: Obsolete
-
-	    if ( p && ! w->hasParent() )
-	    {
-		w->setParent( p );
-	    }
-
-	    if ( ! p->contains( w ) )
-	    {
-		y2warning( "Late adding child %s to %s", w->widgetClass(), p->widgetClass() );
-		p->addChild( w );
-	    }
-
-	    // FIXME: Obsolete
-	    // FIXME: Obsolete
-	    // FIXME: Obsolete
-	}
-
     }
     else
     {
@@ -1248,21 +1225,6 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 	else logUnknownOption( term, optList->value(o) );
     }
 
-
-    // Look up default function keys unless explicitly set
-
-#if 0
-    // FIXME
-    // FIXME
-    // FIXME
-    if ( opt.key_Fxx.value() == 0 )
-	opt.key_Fxx.setValue( defaultFunctionKey( YCPString( label ) ) );
-    // FIXME
-    // FIXME
-    // FIXME
-#endif
-
-
     YPushButton * button = YUI::widgetFactory()->createPushButton( parent, label );
 
     if ( opt.isDefaultButton.value() )
@@ -1454,10 +1416,10 @@ YCPDialogParser::parseCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 	else logUnknownOption( term, optList->value(o) );
     }
 
-    if ( opt.noAutoEnable.value() && opt.invertAutoEnable.value() )
+    if ( invertAutoEnable && ! autoEnable )
     {
 	y2warning( "`opt(noAutoEnable) automatically disables `opt(`invertAutoEnable)" );
-	opt.invertAutoEnable.setValue( false );
+	invertAutoEnable = false;
     }
 
     YCheckBoxFrame * checkBoxFrame = YUI::widgetFactory()->createCheckBoxFrame( parent, label, checked );

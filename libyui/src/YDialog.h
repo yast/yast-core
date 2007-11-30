@@ -25,6 +25,9 @@
 
 class YMacroRecorder;
 class YShortcutManager;
+class YDialogPrivate;
+
+// See YTypes.h for enum YDialogType and enum YDialogColorMode 
 
 
 class YDialog : public YSingleChildContainerWidget
@@ -32,8 +35,15 @@ class YDialog : public YSingleChildContainerWidget
 protected:
     /**
      * Constructor.
+     *
+     * 'dialogType' is one of YMainDialog or YPopupDialog.
+     *
+     * 'colorMode' can be set to YDialogWarnColor to use very bright "warning"
+     * colors or YDialogInfoColor to use more prominent, yet not quite as
+     * bright as "warning" colors. Use both only very rarely.
      **/
-    YDialog( const YWidgetOpt & opt );
+    YDialog( YDialogType 	dialogType,
+	     YDialogColorMode	colorMode = YDialogNormalColor );
 
     /**
      * Destructor.
@@ -42,6 +52,12 @@ protected:
     virtual ~YDialog();
 
 public:
+    /**
+     * Return a descriptive name of this widget class for logging,
+     * debugging etc.
+     **/
+    virtual const char * widgetClass() const { return "YDialog"; }
+
     /**
      * Delete the topmost dialog.
      *
@@ -79,108 +95,54 @@ public:
 	{ return currentDialog( doThrow ); }
 
     /**
-     * Returns a descriptive name of this widget class for logging,
-     * debugging etc.
-     **/
-    virtual const char * widgetClass() const { return "YDialog"; }
-
-    /**
-     * Sets the initial dialog size. Honors the `defaultsize option
-     * and -geometry
+     * Set the initial dialog size, depending on dialogType:
+     * YMainDialog dialogs get the UI's "default main window" size,
+     * YPopupDialog dialogs use their content's preferred size.
      **/
     void setInitialSize();
 
     /**
-     * Returns true if the dialog has the `defaultsize option set.
+     * Return this dialog's type (YMainDialog / YPopupDialog).
      **/
-    bool hasDefaultSize() { return _hasDefaultSize.value(); }
+    YDialogType dialogType() const;
 
     /**
-     * Returns true if the dialog has the `warncolor option set.
+     * Return this dialog's color mode.
      **/
-    bool hasWarnColor() { return _hasWarnColor.value(); }
+    YDialogColorMode colorMode() const;
 
     /**
-     * Returns true if the dialog has the `infocolor option set.
-     **/
-    bool hasInfoColor() { return _hasInfoColor.value(); }
-
-    /**
-     * Returns true if the dialog has the `decorated option set.
-     **/
-    bool isDecorated() { return _isDecorated.value(); }
-
-    /**
-     * Returns true if the dialog has the `decorated option set.
-     **/
-    bool isCentered() { return _isCentered.value(); }
-
-    /**
-     * Returns true if the dialog has the `smallDecorations option set.
-     **/
-    bool hasSmallDecorations() { return _hasSmallDecorations.value(); }
-
-    /**
-     * Checks the keyboard shortcuts of all children of this dialog
-     * (not for sub-dialogs!) unless shortcut checks are postponed or 'force'
-     * is 'true'.
+     * Checks the keyboard shortcuts of widgets in this dialog unless shortcut
+     * checks are postponed or 'force' is 'true'.
      *
      * A forced shortcut check resets postponed checking.
      **/
     void checkShortcuts( bool force = false );
 
     /**
-     * From now on, postpone keyboard shortcut checks -
-     * i.e. normal ( not forced ) checkKeyboardShortcuts() will do nothing.
-     * Reset this mode by forcing a shortcut check with
-     * checkKeyboardShortcuts( true ).
+     * From now on, postpone keyboard shortcut checks - i.e. normal (not
+     * forced) checkKeyboardShortcuts() will do nothing.  Reset this mode by
+     * forcing a shortcut check with checkKeyboardShortcuts( true ).
      **/
-    void postponeShortcutCheck() { _shortcutCheckPostponed = true; }
+    void postponeShortcutCheck();
 
     /**
      * Return whether or not shortcut checking is currently postponed.
      **/
-    bool shortcutCheckPostponed() const { return _shortcutCheckPostponed; }
+    bool shortcutCheckPostponed() const;
 
     /**
      * Implements the ui command queryWidget
      **/
     YCPValue queryWidget( const YCPSymbol & property );
 
-    /**
-     * Returns a (possibly translated) text describing this dialog for
-     * debugging.
-     **/
-    virtual std::string dialogDebugLabel();
-
-    /**
-     * Alias for dialogDebugLabel();
-     **/
-    virtual std::string debugLabel()		{ return dialogDebugLabel(); }
-
-
 protected:
 
-    /**
-     * Format a debug label.
-     **/
-    string formatDebugLabel( YWidget * widget, const string & debLabel );
-
-
-    //
-    // Data members
-    //
-    
-    YBoolOpt	_hasDefaultSize;
-    YBoolOpt	_hasWarnColor;
-    YBoolOpt	_hasInfoColor;
-    YBoolOpt	_isDecorated;
-    YBoolOpt	_isCentered;
-    YBoolOpt	_hasSmallDecorations;
-
-    bool	_shortcutCheckPostponed;
-
     static std::stack<YDialog *> _dialogStack;
+    
+private:
+
+    ImplPtr<YDialogPrivate> priv;
 };
 
 

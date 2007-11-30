@@ -178,34 +178,9 @@ YInputField::getProperty( const string & propertyName )
 void
 YInputField::saveUserInput( YMacroRecorder *macroRecorder )
 {
-#if 0
-    // FIXME
-    // FIXME
-    // FIXME
-    
-    if ( passwordMode() )
-    {
-	if ( hasId() )
-	{
-	    string text = "UI::";
-	    text += YUIBuiltin_ChangeWidget;
-	    text += "( " + id()->toString() + ", \t`";
-	    text += YUIProperty_Value;
-	    text += ", \"<not recording password in plain text>\" );\t// ";
-	    text += widgetClass();
-	    text += " \"" + debugLabel() + "\"";
-
-	    macroRecorder->recordComment( text );
-	}
-    }
-    else
+    if ( ! passwordMode() ) // Don't record passwords in the macro file
     {
 	macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
     }
-    
-    // FIXME
-    // FIXME
-    // FIXME
-#endif
 }
 

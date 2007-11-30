@@ -53,4 +53,20 @@ enum YAlignmentType
 };
 
 
+enum YDialogType
+{
+    YMainDialog,
+    YPopupDialog
+};
+
+
+enum YDialogColorMode
+{
+    YDialogNormalColor,	// Default 
+    YDialogInfoColor,	// Brighter colors
+    YDialogWarnColor	// Very bright Warning colors
+};
+
+
+
 #endif // YTypes_h

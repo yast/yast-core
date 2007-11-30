@@ -48,7 +48,6 @@ libpy2UI_la_SOURCES =				\
 	YCheckBox.cc				\
 	YCheckBoxFrame.cc			\
 	YComboBox.cc				\
-	YContainerWidget.cc			\
 	YDateField.cc				\
 	YDialog.cc				\
 	YDownloadProgress.cc			\
@@ -149,7 +148,6 @@ pkginclude_HEADERS =				\
 	YCheckBox.h				\
 	YCheckBoxFrame.h			\
 	YComboBox.h				\
-	YContainerWidget.h			\
 	YDateField.h				\
 	YDialog.h				\
 	YDownloadProgress.h			\

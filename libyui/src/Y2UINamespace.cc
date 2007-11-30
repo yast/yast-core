@@ -173,8 +173,7 @@ YCPValue
 Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 {
     if ( YUIComponent::ui() )
-	// Notice: Parameter order is switched!
-	return YUIComponent::ui()->evaluateOpenDialog( dialog_term, opts );
+	return YUIComponent::ui()->evaluateOpenDialog( opts, dialog_term );
     else
 	return YCPVoid();
 }
@@ -183,7 +182,7 @@ Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 YCPValue
 Y2UINamespace::OpenDialog( const YCPTerm & dialog_term )
 {
-    return m_comp->ui()->evaluateOpenDialog( dialog_term );
+    return m_comp->ui()->evaluateOpenDialog( YCPNull(), dialog_term );
 }
 
 

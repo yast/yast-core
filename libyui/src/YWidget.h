@@ -56,14 +56,6 @@ protected:
      **/
     YWidget( YWidget * parent );
 
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    YWidget( const YWidgetOpt & opt );
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-
 public:
     /**
      * Destructor.
@@ -142,7 +134,6 @@ public:
      **/
     virtual bool setProperty( const string & propertyName,
 			      const YPropertyValue & val );
-    // FIXME: = 0
 
     /**
      * Get a property. Derived classes need to implement this.
@@ -151,7 +142,6 @@ public:
      *	 - if there is no property with that name
      **/
     virtual YPropertyValue getProperty( const string & propertyName );
-    // FIXME: = 0
 
 
     //
@@ -248,24 +238,6 @@ public:
      * Set this widget's parent.
      **/
     void setParent( YWidget * newParent );
-
-
-    // FIXME: Throw this out once all widgets are ported!
-    // FIXME: Throw this out once all widgets are ported!
-    // FIXME: Throw this out once all widgets are ported!
-    /**
-     * Return 'true' if an old-style constructor was used to create this widget.
-     * In that case, setParent() needs to be called from the outside, and for
-     * the parent widget, addChild() needs to be called.
-     *
-     * NOTICE: This function will silently disappear once all widgets are
-     * ported in the libyui.
-     **/
-    bool oldStyleConstructor() const;
-    // FIXME: Throw this out once all widgets are ported!
-    // FIXME: Throw this out once all widgets are ported!
-    // FIXME: Throw this out once all widgets are ported!
-
 
     /**
      * Traverse up the widget hierarchy and find the dialog this widget belongs
@@ -504,18 +476,6 @@ public:
      * call this base class function in the new function.
      **/
     virtual void setFunctionKey( int fkey_no );
-
-
-
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    virtual YCPValue changeWidget( const YCPSymbol & property, const YCPValue & newvalue );
-    virtual YCPValue queryWidget( const YCPSymbol & property );
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-    // FIXME: Obsolete
-
 
     /**
      * Set the keyboard focus to this widget.

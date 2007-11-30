@@ -35,6 +35,14 @@
 	       );
     UI::UserInput();
     
+    UI::OpenDialog(`opt(`defaultsize),
+	       `VBox(
+		     `Label( "A fourth main dialog" ),
+		     `PushButton(`opt(`default), "OK\nLevel 4" )
+		     )
+	       );
+    UI::UserInput();
+
     UI::OpenDialog( `VBox(
 		      `Label( "And another independent popup dialog" ),
 		      `PushButton(`opt(`default), "OK" )
@@ -42,6 +50,7 @@
 		);
     UI::UserInput();
 
+    UI::CloseDialog(); UI::UserInput();
     UI::CloseDialog(); UI::UserInput();
     UI::CloseDialog(); UI::UserInput();
     UI::CloseDialog(); UI::UserInput();

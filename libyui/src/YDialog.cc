@@ -29,21 +29,30 @@ using std::string;
 #define VERBOSE_DIALOGS	0
 
 
-
 std::stack<YDialog *> YDialog::_dialogStack;
 
 
-YDialog::YDialog( const YWidgetOpt & opt )
-    : YSingleChildContainerWidget( 0 )
+struct YDialogPrivate
 {
-    _hasDefaultSize.setValue( opt.hasDefaultSize.value() );
-    _hasWarnColor.setValue( opt.hasWarnColor.value() );
-    _hasInfoColor.setValue( opt.hasInfoColor.value() );
-    _isDecorated.setValue( opt.isDecorated.value() );
-    _isCentered.setValue( opt.isCentered.value() );
-    _hasSmallDecorations.setValue( opt.hasSmallDecorations.value() );
-    _shortcutCheckPostponed = false;
+    YDialogPrivate( YDialogType dialogType, YDialogColorMode colorMode )
+	: dialogType( dialogType )
+	, colorMode( colorMode )
+	, shortcutCheckPostponed( false )
+	{}
 
+    YDialogType		dialogType;
+    YDialogColorMode	colorMode;
+    bool		shortcutCheckPostponed;
+};
+
+
+
+YDialog::YDialog( YDialogType dialogType, YDialogColorMode colorMode )
+    : YSingleChildContainerWidget( 0 )
+    , priv( new YDialogPrivate( dialogType, colorMode ) )
+{
+    YUI_CHECK_NEW( priv );
+    
     _dialogStack.push( this );
 
 #if VERBOSE_DIALOGS
@@ -58,6 +67,66 @@ YDialog::~YDialog()
     y2debug( "Destroying YDialog at %p", this );
 #endif
 }
+
+
+YDialogType
+YDialog::dialogType() const
+{
+    return priv->dialogType;
+}
+
+
+YDialogColorMode
+YDialog::colorMode() const
+{
+    return priv->colorMode;
+}
+
+
+void
+YDialog::postponeShortcutCheck()
+{
+    priv->shortcutCheckPostponed = true;
+}
+
+
+bool
+YDialog::shortcutCheckPostponed() const
+{
+    return priv->shortcutCheckPostponed;
+}
+
+
+void
+YDialog::checkShortcuts( bool force )
+{
+    if ( priv->shortcutCheckPostponed && ! force )
+    {
+	y2debug( "shortcut check postponed" );
+    }
+    else
+    {
+
+	YShortcutManager shortcutManager( this );
+	shortcutManager.checkShortcuts();
+
+	priv->shortcutCheckPostponed = false;
+    }
+}
+
+
+void
+YDialog::setInitialSize()
+{
+#if VERBOSE_DIALOGS
+    y2debug( "Setting initial size for YDialog at %p", this );
+#endif
+    
+    // Trigger geometry management
+    setSize( preferredWidth(), preferredHeight() );
+}
+
+
 
 
 YDialog *
@@ -104,102 +173,6 @@ int
 YDialog::openDialogsCount()
 {
     return _dialogStack.size();
-}
-
-
-void YDialog::setInitialSize()
-{
-#if VERBOSE_DIALOGS
-    y2debug( "Setting initial size for YDialog at %p", this );
-#endif
-    
-    // Trigger geometry management
-    setSize( preferredWidth(), preferredHeight() );
-}
-
-
-void YDialog::checkShortcuts( bool force )
-{
-    if ( _shortcutCheckPostponed && ! force )
-    {
-	y2debug( "shortcut check postponed" );
-	return;
-    }
-
-    YShortcutManager shortcutManager( this );
-    shortcutManager.checkShortcuts();
-
-    _shortcutCheckPostponed = false;
-}
-
-
-YCPValue YDialog::queryWidget( const YCPSymbol & property )
-{
-    string symbol = property->symbol();
-
-    if ( symbol == YUIProperty_DebugLabel ||
-	 symbol == YUIProperty_DialogDebugLabel )	return YCPString( dialogDebugLabel() );
-    else
-    {
-	return YWidget::queryWidget( property );
-    }
-}
-
-
-string YDialog::dialogDebugLabel()
-{
-#if 0
-    // FIXME
-    // FIXME
-    // FIXME
-
-    if ( _debugLabelWidget )
-    {
-	string label = _debugLabelWidget->debugLabel();
-
-	if ( ! label.empty() )
-	    return formatDebugLabel( _debugLabelWidget, label );
-    }
-
-    for ( YWidgetListConstIterator * it = parent->childrenBegin();
-	  it != parent->childrenEnd();
-	  ++it )
-    {
-	string label = (*it)->debugLabel();
-
-	if ( ! label.empty() )
-	    return formatDebugLabel( child(i), label );
-    }
-
-    // FIXME
-    // FIXME
-    // FIXME
-#endif
-
-    return widgetClass();
-}
-
-
-string YDialog::formatDebugLabel( YWidget * widget, const string & debLabel )
-{
-    if ( debLabel.empty() )
-	return "";
-
-    string label = "Dialog with ";
-
-    if ( widget->hasChildren() )
-    {
-	label += debLabel;
-    }
-    else
-    {
-	label += widget->widgetClass();
-	label += " \"";
-	label += debLabel;
-	label += "\"";
-    }
-
-    return label;
 }
 
 
