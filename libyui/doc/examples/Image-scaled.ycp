@@ -5,7 +5,7 @@
 	       `VBox(
 		     `MinSize( 30, 10, 
 			       `Image(`opt(`scaleToFit ),
-				      "/usr/share/wallpapers/alta-badia.jpg" )
+				      "/usr/share/wallpapers/alta-badia.jpg", "fallback text" )
 			       ),
 		     `PushButton(`opt(`default), "&OK")
 		     )

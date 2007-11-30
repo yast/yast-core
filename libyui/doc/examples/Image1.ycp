@@ -3,7 +3,7 @@
     
     UI::OpenDialog(
 	       `VBox( 
-		     `Image( "/usr/share/YaST2/theme/current/wallpapers/welcome.jpg" ),
+		     `Image( "/usr/share/YaST2/theme/current/wallpapers/welcome.jpg", "fallback text" ),
 		     `PushButton(`opt(`default), "&OK")
 		     )
 	       );

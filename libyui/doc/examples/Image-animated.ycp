@@ -4,7 +4,7 @@
     UI::OpenDialog(
 	       `VBox(
 		     `MinSize( 30, 10, 
-			       `Image(`opt(`animated), "/usr/lib/qt3/doc/examples/widgets/trolltech.gif" )
+			       `Image(`opt(`animated), "/usr/lib/qt3/doc/examples/widgets/trolltech.gif", "fallback text" )
 			       ),
 		     `PushButton(`opt(`default), "&OK")
 		     )

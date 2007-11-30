@@ -2,6 +2,7 @@
 Thu Nov 29 17:41:50 CET 2007 - locilka@suse.cz
 
 - Added some examples to UI::GetDisplayInfo() documentation.
+- Fixed examples for Image widget.
 
 -------------------------------------------------------------------
 Tue Nov 27 19:06:13 CET 2007 - sh@suse.de
