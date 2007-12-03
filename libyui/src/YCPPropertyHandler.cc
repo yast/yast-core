@@ -79,6 +79,7 @@ YCPPropertyHandler::setComplexProperty( YWidget *		widget,
 	if ( trySetTableValue		( widget, val ) )		return true;
 	if ( trySetComboBoxValue	( widget, val ) )		return true;
 	if ( trySetDumbTabValue		( widget, val ) )		return true;
+	if ( trySetRadioButtonGroupCurrentButton( widget, val ) )	return true;
     }
     else if ( propertyName == YUIProperty_Values )
     {
