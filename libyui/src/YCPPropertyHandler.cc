@@ -159,6 +159,7 @@ YCPPropertyHandler::getComplexProperty( YWidget * widget, const string & propert
 	val = tryGetTableValue		( widget );	if ( ! val.isNull() ) return val;
 	val = tryGetComboBoxValue	( widget );	if ( ! val.isNull() ) return val;
 	val = tryGetDumbTabValue	( widget );	if ( ! val.isNull() ) return val;
+        val = tryGetRadioButtonGroupCurrentButton( widget );	if ( ! val.isNull() ) return val;
     }
     else if ( propertyName == YUIProperty_Values )
     {
@@ -318,9 +319,9 @@ bool trySetSelectionWidgetValue( YWidget * widget, const YCPValue & val )
 	return true;
     }
 
-    
+
     // Find the item with the specified ID
-    
+
     Item_t * item = findItem<Item_t>( selWidget, val );
 
     if ( item )
@@ -646,13 +647,13 @@ YCPPropertyHandler::trySetMultiSelectionBoxCurrentItem( YWidget * widget, const 
 
     if ( ! multiSelBox )
 	return false;
-    
+
     if ( val->isVoid() )	// Special case: nil sets "no selected item"
     {
 	multiSelBox->setCurrentItem( 0 );
 	return true;
     }
-    
+
     // Find the item with the specified ID
 
     YCPItem * item = findItem<YCPItem>( multiSelBox , val );
@@ -705,7 +706,7 @@ YCPPropertyHandler::trySetBarGraphValues( YWidget * widget, const YCPValue & val
 	return false;
 
     string msg = "Expected a list of integers";
-    
+
     if ( ! val->isList() )
     {
 	YUI_THROW( YUIBadPropertyArgException( YProperty( YUIProperty_Values,
@@ -716,7 +717,7 @@ YCPPropertyHandler::trySetBarGraphValues( YWidget * widget, const YCPValue & val
     YBarGraphMultiUpdate multiUpdate( barGraph );
 
     YCPList valuesList = val->asList();
-    
+
     for ( int i=0; i < valuesList->size(); i++ )
     {
 	if ( valuesList->value(i)->isInteger() )
@@ -750,7 +751,7 @@ YCPPropertyHandler::trySetBarGraphLabels( YWidget * widget, const YCPValue & val
 	return false;
 
     string msg = "Expected a list of strings";
-    
+
     if ( ! val->isList() )
     {
 	YUI_THROW( YUIBadPropertyArgException( YProperty( YUIProperty_Values,
@@ -761,7 +762,7 @@ YCPPropertyHandler::trySetBarGraphLabels( YWidget * widget, const YCPValue & val
     YBarGraphMultiUpdate multiUpdate( barGraph );
 
     YCPList labelsList = val->asList();
-    
+
     for ( int i=0; i < labelsList->size(); i++ )
     {
 	if ( labelsList->value(i)->isString() )
@@ -1218,7 +1219,7 @@ YCPPropertyHandler::tryGetBarGraphValues( YWidget * widget )
 
     for ( int i=0; i < barGraph->segments(); i++ )
 	result->add( YCPInteger( barGraph->segment(i).value() ) );
-    
+
     return result;
 }
 
@@ -1235,7 +1236,7 @@ YCPPropertyHandler::tryGetBarGraphLabels( YWidget * widget )
 
     for ( int i=0; i < barGraph->segments(); i++ )
 	result->add( YCPString( barGraph->segment(i).label() ) );
-    
+
     return result;
 }
 
