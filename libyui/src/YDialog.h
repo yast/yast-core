@@ -63,7 +63,7 @@ public:
      * Delete the topmost dialog.
      *
      * Will throw a YUINoDialogException if there is no dialog and 'doThrow' is
-     * 'true'.
+     * 'true'. 
      *
      * Returns 'true' if there is another open dialog after deleting,
      * 'false' if there is none.
@@ -153,11 +153,7 @@ public:
      **/
     virtual void setDefaultButton( YPushButton * defaultButton );
 
-    /**
-     * Implements the ui command queryWidget
-     **/
-    YCPValue queryWidget( const YCPSymbol & property );
-
+    
 protected:
 
     static std::stack<YDialog *> _dialogStack;
