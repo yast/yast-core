@@ -414,7 +414,7 @@ public:
 };
 
 /**
- * Exception class vor invalid widgets.
+ * Exception class for invalid widgets.
  * This is typically caused by widget pointers that continue living after the
  * corresponding widget has already been deleted.
  **/
