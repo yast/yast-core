@@ -678,26 +678,6 @@ YUI::filterInvalidEvents( YEvent * event )
 
 /**
  * @builtin OpenDialog
- *
- * @short Opens a new dialog.
- * @description
- * Opens a new dialog. <tt>widget</tt> is a term representation of the widget
- * being displayed.
- *
- * See the widget documentation for details
- * what widgets are available.	All open dialogs are arranged in a stack. A
- * newly opened dialog is put on top of the stack. All operations implicitly
- * refer to the topmost dialog. The user can interact only with that dialog.
- * The application does not terminate if the last dialog is closed.
- *
- * @param term widget
- * @return boolean Returns true on success.
- *
- * @usage OpenDialog( `Label( "Please wait..." ) )
- */
-
-/**
- * @builtin OpenDialog
  * @id OpenDialog_with_options
  * @short Opens a Dialog with options
  * @description
