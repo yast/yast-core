@@ -651,13 +651,13 @@ void YWidget::dumpWidget( YWidget *w, int indentationLevel )
 
     if ( descr.empty() )
     {
-	y2milestone( "Widget tree: %s%s %sat %p",
-		     indentation.c_str(), w->widgetClass(), stretch.c_str(), w );
+	y2milestone( "Widget tree: %s%s %sat %p (widgetRep: %p)",
+		     indentation.c_str(), w->widgetClass(), stretch.c_str(), w, w->widgetRep() );
     }
     else
     {
-	y2milestone( "Widget tree: %s%s %s %sat %p",
-		     indentation.c_str(), w->widgetClass(), descr.c_str(), stretch.c_str(), w );
+	y2milestone( "Widget tree: %s%s %s %sat %p (widgetRep: %p)",
+		     indentation.c_str(), w->widgetClass(), descr.c_str(), stretch.c_str(), w,w->widgetRep() );
     }
 }
 
