@@ -66,18 +66,3 @@ YSingleChildContainerWidget::stretchable( YUIDimension dim ) const
     else
 	return YWidget::stretchable( dim );
 }
-
-
-string
-YSingleChildContainerWidget::debugLabel()
-{
-    string str = widgetClass();
-
-    if ( hasChildren() )
-    {
-	str += " with ";
-	str += firstChild()->debugLabel();
-    }
-
-    return str;
-}

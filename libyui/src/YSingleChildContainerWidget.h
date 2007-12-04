@@ -69,12 +69,6 @@ public:
      * Reimplemented from YWidget.
      **/
     virtual bool stretchable( YUIDimension dim ) const;
-
-    /**
-     * Descriptive label for debugging. Derived from this widget's only child
-     * (if there is one). 
-     **/
-    virtual string debugLabel();
 };
 
 
