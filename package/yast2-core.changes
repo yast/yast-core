@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed Dec  5 14:42:32 CET 2007 - sh@suse.de
+
+- Fixed YMenuEvent( string ) handling:
+=> Fixed bug #346158: Hyperlinks don't work
+=> Fixed bug #346165: Wizard tree selection doesn't work
+
+- V 2.16.13
+
+-------------------------------------------------------------------
 Wed Dec  5 11:53:14 CET 2007 - sh@suse.de
 
 - Fixed bug #346139: CheckBoxFrame is inverted 
