@@ -287,7 +287,7 @@ YSimpleEvent::YSimpleEvent( EventType		eventType,
 YSimpleEvent::YSimpleEvent( EventType		eventType,
 			    const string &	id )
     : YEvent( eventType )
-    , _id( YCPString( id.c_str() ) )
+    , _id( YCPString( id ) )
 {
 }
 
