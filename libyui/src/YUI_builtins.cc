@@ -23,6 +23,7 @@
 
 #define VERBOSE_REPLACE_WIDGET 		0
 #define VERBOSE_EVENTS			0
+#define VERBOSE_DISCARDED_EVENTS	0
 
 #include <stdio.h>
 #include <unistd.h> 	// pipe()
@@ -666,6 +667,18 @@ YUI::filterInvalidEvents( YEvent * event )
 	    // Yes, really y2debug() - this may legitimately happen.
 	    y2debug( "Discarding event from widget from foreign dialog" );
 
+#if VERBOSE_DISCARDED_EVENTS
+	    y2debug( "Expected: %p (widgetRep %p), received: %p (widgetRep %p)",
+		     YDialog::currentDialog(),
+		     YDialog::currentDialog()->widgetRep(),
+		     widgetEvent->widget()->findDialog(), 
+		     widgetEvent->widget()->findDialog()->widgetRep() );
+	    y2debug( "Event widget: " );
+	    widgetEvent->widget()->findDialog()->dumpWidgetTree();
+	    y2debug( "Current dialog:" );
+	    YDialog::currentDialog()->dumpWidgetTree();
+#endif
+		     
 	    delete widgetEvent;
 	    return 0;
 	}
