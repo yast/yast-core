@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec  5 11:53:14 CET 2007 - sh@suse.de
+
+- Fixed bug #346139: CheckBoxFrame is inverted 
+
+-------------------------------------------------------------------
 Mon Dec  3 11:42:01 CET 2007 - coolo@suse.de
 
 - continue supporting `Value for RadioButtonGroup (#345490) for now

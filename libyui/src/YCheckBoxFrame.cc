@@ -29,8 +29,8 @@ struct YCheckBoxFramePrivate
 {
     YCheckBoxFramePrivate( const string & label )
 	: label( label )
-	, autoEnable( autoEnable )
-	, invertAutoEnable( invertAutoEnable )
+	, autoEnable( true )
+	, invertAutoEnable( false )
 	{}
 
     string	label;
@@ -74,6 +74,7 @@ bool YCheckBoxFrame::autoEnable() const
 
 void YCheckBoxFrame::setAutoEnable( bool autoEnable )
 {
+    // y2debug( "Auto enable %s", autoEnable ? "on" : "off" );
     priv->autoEnable = autoEnable;
 }
 
@@ -84,6 +85,7 @@ bool YCheckBoxFrame::invertAutoEnable() const
 
 void YCheckBoxFrame::setInvertAutoEnable( bool invertAutoEnable )
 {
+    // y2debug( "Invert auto enable %s", invertAutoEnable ? "on" : "off" );
     priv->invertAutoEnable = invertAutoEnable;
 }
 
