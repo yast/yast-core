@@ -197,7 +197,7 @@ protected:
      **/
     static YWidget * parseInputField( YWidget *parent, YWidgetOpt & opt,
 				     const YCPTerm & term, const YCPList & optList, int argnr,
-				     bool passwordMode );
+				     bool passwordMode, bool bugCompatibilityMode = false );
 
     static YWidget * parseMultiLineEdit( YWidget *parent, YWidgetOpt & opt,
 					 const YCPTerm & term, const YCPList & optList, int argnr );

@@ -252,7 +252,7 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
     else if ( s == YUIWidget_Right		)	w = parseAlignment		( p, opt, term, ol, n, YAlignEnd,	YAlignUnchanged );
     else if ( s == YUIWidget_SelectionBox	)	w = parseSelectionBox		( p, opt, term, ol, n );
     else if ( s == YUIWidget_Table		)	w = parseTable			( p, opt, term, ol, n );
-    else if ( s == YUIWidget_TextEntry		)	w = parseInputField		( p, opt, term, ol, n, false );
+    else if ( s == YUIWidget_TextEntry		)	w = parseInputField		( p, opt, term, ol, n, false, true ); // bugCompatibilityMode
     else if ( s == YUIWidget_Top		)	w = parseAlignment		( p, opt, term, ol, n, YAlignUnchanged,	YAlignBegin	);
     else if ( s == YUIWidget_Tree		)	w = parseTree			( p, opt, term, ol, n );
     else if ( s == YUIWidget_VBox		)	w = parseLayoutBox		( p, opt, term, ol, n, YD_VERT );
@@ -1551,13 +1551,23 @@ YCPDialogParser::parseRadioButtonGroup( YWidget * parent, YWidgetOpt & opt,
  * @note        You can and should set a keyboard shortcut within the
  * label. When the user presses the hotkey, the corresponding text entry widget
  * will get the keyboard focus.
+ *
+ * @note	Bug compatibility mode: If used as TextEntry(), `opt(`hstretch)
+ *		is automatically added (with a warning in the log about that fact)
+ *		to avoid destroying dialogs written before fixing a geometry bug
+ *		in the widget. The bug had caused all TextEntry widgets to be
+ *		horizontally stretchable, so they consumed all the horizontal
+ *		space they could get, typically making them as wide as the dialog.
+ *		When used with the new name InputField(), they use a reasonable
+ *		default width. You can still add `opt(`hstretch), of course.
  **/
 
 YWidget *
 YCPDialogParser::parseInputField( YWidget * parent, YWidgetOpt & opt,
 				 const YCPTerm & term, const YCPList & optList, int argnr,
-				 bool passwordMode )
+				 bool passwordMode, bool bugCompatibilityMode )
 {
+    static bool postedBugCompatibilityWarning = false;
 
     if ( term->size() - argnr < 1 || term->size() - argnr > 2
 	 || !term->value(argnr)->isString()
@@ -1590,6 +1600,28 @@ YCPDialogParser::parseInputField( YWidget * parent, YWidgetOpt & opt,
 
     if ( shrinkable )
 	inputField->setShrinkable();
+    else if ( bugCompatibilityMode )
+    {
+	inputField->setStretchable( YD_HORIZ, true );
+
+	if ( ! postedBugCompatibilityWarning )
+	{
+	    y2warning( "\n"
+		       "\nUsing `TextEntry() in bug compatibiltiy mode."
+		       "\nThis is equivalent to `InputField(`opt(`hstretch), ...)."
+		       "\nThis makes the field grab as much space horizontally as it can get,"
+		       "\ntypically making it stretch across the entire width of the dialog."
+		       "\nWithout this hstretch, the field will take a reasonable default width."
+		       "\n"
+		       "\nIf this `hstretch is really desired, please use `InputField(`opt(`hstretch), ...)."
+		       "\nIf it is not, please use `InputField() without `hstretch."
+		       "\n\n"
+		       );
+
+	    postedBugCompatibilityWarning = true;
+	}
+    }
+
 
     return inputField;
 }
@@ -3211,7 +3243,7 @@ YCPDialogParser::parseWizard( YWidget * parent, YWidgetOpt & opt,
 						    nextButtonLabel,
 						    wizardMode );
     YUI_CHECK_NEW( wizard );
-    
+
     // All wizard widgets have a fixed ID `wizard
     YWidgetID * wizardId = new YCPValueWidgetID( YCPSymbol( YWizardID ) );
     wizard->setId( wizardId );

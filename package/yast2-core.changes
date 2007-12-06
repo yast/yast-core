@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Thu Dec  6 16:28:04 CET 2007 - sh@suse.de
+
+- Fixed bug #345819 (input fields too small):
+  Introduced bug compatibility mode for TextEntry widget;
+  when used with the old name `TextEntry(), `opt(`hstretch)
+  is automatically assumed; with the new name `InputField() it
+  behaves like specified.
+
+- V 2.16.14 
+
+-------------------------------------------------------------------
 Wed Dec  5 14:42:32 CET 2007 - sh@suse.de
 
 - Fixed YMenuEvent( string ) handling:
