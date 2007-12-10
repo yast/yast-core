@@ -451,3 +451,15 @@
 * Dropped support for outdated YWidget( YWidgetOpt ) constructors
 * Removed unneeded YWidgetOpt fields
 * Added basic default button handling to YDialog and YPushButton
+
+
+2007-12-10 sh@suse.de
+
+* Moved file and directory dialogs from YUI to YApplication:
+  - askForExistingDirectory()
+  - askForExistingFile()
+  - askForSaveFile()
+* Parameters and return values now all std::string
+* Now return empty string upon user cancel
+
+

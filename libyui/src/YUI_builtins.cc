@@ -1670,7 +1670,7 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 
 /**
  * @builtin AskForExistingDirectory
- * @short Opens a directory selection box and prompt the user for an existing directory.
+ * @short Ask user for existing directory
  * @description
  * Opens a directory selection box and prompt the user for an existing directory.
  *
@@ -1680,16 +1680,22 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
  * @return string  Returns the selected directory name or <i>nil</i> if the
  * user canceled the operation.
  */
-YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
+YCPValue
+YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
-    return askForExistingDirectory( startDir, headline );
+    string ret = app()->askForExistingDirectory( startDir->value(), headline->value() );
+    
+    if ( ret.empty() )
+	return YCPVoid();
+    else
+	return YCPString( ret );
 }
 
 
 
 /**
  * @builtin AskForExistingFile
- * @short Opens a file selection box and prompt the user for an existing file.
+ * @short Ask user for existing file
  * @description
  * Opens a file selection box and prompt the user for an existing file.
  *
@@ -1702,13 +1708,18 @@ YCPValue YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const
  */
 YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
-    return askForExistingFile( startWith, filter, headline );
+    string ret = app()->askForExistingFile( startWith->value(), filter->value(), headline->value() );
+    
+    if ( ret.empty() )
+	return YCPVoid();
+    else
+	return YCPString( ret );
 }
 
 
 /**
  * @builtin AskForSaveFileName
- * @short Opens a file selection box and prompt the user for a file to save data to.
+ * @short Ask user for a file to save data to.
  * @description
  * Opens a file selection box and prompt the user for a file to save data to.
  * Automatically asks for confirmation if the user selects an existing file.
@@ -1722,7 +1733,12 @@ YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCP
  */
 YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
-    return askForSaveFileName( startWith, filter, headline );
+    string ret = app()->askForSaveFileName( startWith->value(), filter->value(), headline->value() );
+    
+    if ( ret.empty() )
+	return YCPVoid();
+    else
+	return YCPString( ret );
 }
 
 /**

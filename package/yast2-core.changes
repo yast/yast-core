@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Mon Dec 10 18:35:12 CET 2007 - sh@suse.de
+
+- Moved file and directory dialogs from YUI to YApplication:
+  - askForExistingDirectory(), 
+  - askForExistingFile()
+  - askForSaveFile()
+- V 2.16.15
+ 
+
+-------------------------------------------------------------------
 Thu Dec  6 16:28:04 CET 2007 - sh@suse.de
 
 - Fixed bug #345819 (input fields too small):

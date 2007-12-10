@@ -132,6 +132,65 @@ public:
      **/
     string language( bool stripEncoding = false ) const;
 
+    /**
+     * Open a directory selection box and prompt the user for an existing
+     * directory.
+     *
+     * 'startDir' is the initial directory that is displayed.
+     *
+     * 'headline' is an explanatory text for the directory selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     *
+     * Returns the selected directory name
+     * or an empty string if the user canceled the operation.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual string askForExistingDirectory( const string & startDir,
+					    const string & headline ) = 0;
+
+    /**
+     * Open a file selection box and prompt the user for an existing file.
+     *
+     * 'startWith' is the initial directory or file.
+     *
+     * 'filter' is one or more blank-separated file patterns, e.g.
+     * "*.png *.jpg"
+     *
+     * 'headline' is an explanatory text for the file selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     *
+     * Returns the selected file name
+     * or an empty string if the user canceled the operation.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual string askForExistingFile( const string & startWith,
+				       const string & filter,
+				       const string & headline ) = 0;
+
+    /**
+     * Open a file selection box and prompt the user for a file to save data
+     * to.  Automatically asks for confirmation if the user selects an existing
+     * file.
+     *
+     * 'startWith' is the initial directory or file.
+     *
+     * 'filter' is one or more blank-separated file patterns, e.g.
+     * "*.png *.jpg"
+     *
+     * 'headline' is an explanatory text for the file selection box.
+     * Graphical UIs may omit that if no window manager is running.
+     *
+     * Returns the selected file name
+     * or an empty string if the user canceled the operation.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual string askForSaveFileName( const string & startWith,
+				       const string & filter,
+				       const string & headline ) = 0;
+
 private:
 
     ImplPtr<YApplicationPrivate> priv;
