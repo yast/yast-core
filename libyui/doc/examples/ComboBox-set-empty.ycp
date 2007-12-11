@@ -12,9 +12,11 @@
 				     `item(`id(`fun), "Funghi", true ),
 				     `item(`id(`sal), "Salami"       )
 				    ] ),
-		     `PushButton(`id(`empty), "&Empty"),
-		     `PushButton(`id(42), "42"),
-		     `PushButton(`id(`ok),"&OK")
+		     `HBox(
+			   `PushButton(`id(`empty), "&Empty"),
+			   `PushButton(`id(42), "42"),
+			   `PushButton(`id(`ok),"&OK")
+			   )
 		     )
 	       );
 
@@ -41,4 +43,6 @@
     // that caused UI::UserInput() to return.
     any pizza=UI::QueryWidget(`id(`pizza), `Value);
     y2milestone( "Selected %1", pizza );
+
+    UI::CloseDialog();
 }
