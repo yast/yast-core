@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec 11 18:39:03 CET 2007 - sh@suse.de
+
+- Fixed bug #347634: Cannot pass empty string to editable ComboBox 
+
+-------------------------------------------------------------------
 Tue Dec 11 18:22:22 CET 2007 - sh@suse.de
 
 - Fixed byproduct of fix for bug #346158 and bug #346165:

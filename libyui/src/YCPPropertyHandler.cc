@@ -387,7 +387,12 @@ YCPPropertyHandler::trySetComboBoxValue( YWidget * widget, const YCPValue & val 
     {
 	if ( comboBox->editable() )
 	{
-	    if ( val->isString() || val->isInteger() )
+	    if ( val->isString() )
+	    {
+		comboBox->setValue( val->asString()->value() );
+		return true;
+	    }
+	    else if ( val->isInteger() )
 	    {
 		comboBox->setValue( val->toString() );
 		return true;
