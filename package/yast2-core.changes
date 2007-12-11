@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Dec 11 18:22:22 CET 2007 - sh@suse.de
+
+- Fixed byproduct of fix for bug #346158 and bug #346165:
+  All YSimpleEvents returned strings now, even predefined IDs
+  `cancel, `timeout, `debugConsole; now returning correct IDs again
+
+-------------------------------------------------------------------
 Mon Dec 10 18:35:12 CET 2007 - sh@suse.de
 
 - Moved file and directory dialogs from YUI to YApplication:

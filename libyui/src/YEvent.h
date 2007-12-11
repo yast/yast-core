@@ -38,7 +38,7 @@ class YItem;
 class YEvent
 {
 public:
-    
+
     enum EventType
     {
 	NoEvent = 0,
@@ -59,7 +59,7 @@ public:
 	SelectionChanged,
 	ValueChanged
     };
-    
+
 
     /**
      * Constructor.
@@ -68,7 +68,7 @@ public:
 
     /**
      * Virtual desctructor to force a polymorph object
-     * so dynamic_cast can be used  
+     * so dynamic_cast can be used
      **/
     virtual ~YEvent();
 
@@ -87,12 +87,12 @@ public:
      * Returns the character representation of an event type.
      **/
     static const char * toString( EventType eventType );
-    
+
     /**
      * Returns the character representation of an event reason.
      **/
     static const char * toString( EventReason reason );
-    
+
     /**
      * Constructs a YCP map to be returned upon UI::WaitForEvent().
      **/
@@ -107,12 +107,12 @@ public:
      **/
     virtual YCPValue userInput();
 
-    
+
 protected:
 
     EventType 			_eventType;
     unsigned long		_serial;
-    
+
     static unsigned long	_nextSerial;
     static int			_activeEvents;
 };
@@ -122,12 +122,12 @@ protected:
 class YWidgetEvent: public YEvent
 {
 public:
-    
+
     /**
      * Constructor.
      **/
     YWidgetEvent( YWidget *	widget		= 0,
-		  EventReason	reason		= Activated, 
+		  EventReason	reason		= Activated,
 		  EventType 	eventType	= WidgetEvent );
 
     /**
@@ -155,7 +155,7 @@ public:
      * Reimplemented from YEvent.
      **/
     virtual YCPValue userInput();
-    
+
 protected:
 
     YWidget * 	_widget;
@@ -166,7 +166,7 @@ protected:
 class YKeyEvent: public YEvent
 {
 public:
-    
+
     /**
      * Constructor.
      *
@@ -186,7 +186,7 @@ public:
     /**
      * Returns the widget that currently has the keyboard focus.
      *
-     * This might as well be 0 if no widget has the focus or if the creator of 
+     * This might as well be 0 if no widget has the focus or if the creator of
      * this event could not obtain that information.
      **/
     YWidget * focusWidget() const { return _focusWidget; }
@@ -205,7 +205,7 @@ public:
      * Reimplemented from YEvent.
      **/
     virtual YCPValue userInput();
-    
+
 protected:
 
     string	_keySymbol;
@@ -219,7 +219,7 @@ protected:
 class YSimpleEvent: public YEvent
 {
 public:
-    
+
     /**
      * Constructors.
      **/
@@ -247,7 +247,7 @@ public:
      **/
     virtual YCPValue userInput();
 
-    
+
 protected:
 
     YCPValue _id;
@@ -260,12 +260,12 @@ protected:
 class YMenuEvent: public YSimpleEvent
 {
 public:
-    
+
     YMenuEvent( YItem * item )
 	: YSimpleEvent( MenuEvent, YCPVoid() ),
 	  _item( item )
 	{}
-    
+
     YMenuEvent( const YCPValue & id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
     YMenuEvent( const char *     id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
     YMenuEvent( const string & 	 id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
@@ -290,8 +290,8 @@ protected:
 class YCancelEvent: public YSimpleEvent
 {
 public:
-    
-    YCancelEvent() : YSimpleEvent( CancelEvent, "cancel" ) {}
+
+    YCancelEvent() : YSimpleEvent( CancelEvent, YCPSymbol( "cancel" ) ) {}
 };
 
 
@@ -302,8 +302,8 @@ public:
 class YDebugEvent: public YSimpleEvent
 {
 public:
-    
-    YDebugEvent() : YSimpleEvent( DebugEvent, "debugHotkey" ) {}
+
+    YDebugEvent() : YSimpleEvent( DebugEvent, YCPSymbol( "debugHotkey" ) ) {}
 };
 
 
@@ -314,8 +314,8 @@ public:
 class YTimeoutEvent: public YSimpleEvent
 {
 public:
-    
-    YTimeoutEvent() : YSimpleEvent( TimeoutEvent, "timeout" ) {}
+
+    YTimeoutEvent() : YSimpleEvent( TimeoutEvent, YCPSymbol( "timeout" ) ) {}
 };
 
 
