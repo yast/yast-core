@@ -25,7 +25,7 @@
     {
         id = UI::TimeoutUserInput( interval_millisec );
 
-	if ( id == `timeout )
+	if ( id == "timeout" )
 	{
 	    // Periodic screen update
 	    
