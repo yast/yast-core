@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Dec 11 14:19:34 CET 2007 - mvidner@suse.cz
+
+- Enabled iterating over all functions of a Y2Namespace, for
+  a more natural call syntax in yast2-python-bindings (#308213).
+- 2.13.40
+
+-------------------------------------------------------------------
 Wed May  9 15:14:49 CEST 2007 - sh@suse.de
 
 - Added SimplePatchSelector widget (requested by hmuelle) 

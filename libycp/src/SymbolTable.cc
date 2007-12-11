@@ -944,4 +944,27 @@ SymbolTable::tableCopy(Y2Namespace* tofill) const
 	}
     }
 }
+
+// for #308213
+void
+SymbolTable::forEach(SymbolTable::EntryConsumer consumer) const
+{
+    for (int i=0; i < m_prime; i++)
+    {
+	if (m_table[i] != 0)
+	{
+	    SymbolEntryPtr s = m_table[i]->sentry ();
+	    if (! consumer (*s))
+		return;
+
+	    // walk the chain of colliding entries
+	    for (TableEntry* t_next = m_table[i]->m_next; t_next; t_next = t_next->m_next)
+	    {
+		SymbolEntryPtr s = t_next->sentry ();
+		if (! consumer (*s))
+		    return;
+	    }
+	}
+    }
+}
 // EOF
