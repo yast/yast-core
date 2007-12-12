@@ -39,6 +39,7 @@ struct YDialogPrivate
 	: dialogType( dialogType )
 	, colorMode( colorMode )
 	, shortcutCheckPostponed( false )
+	, defaultButton( 0 )
 	{}
 
     YDialogType		dialogType;
