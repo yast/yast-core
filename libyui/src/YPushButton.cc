@@ -85,9 +85,22 @@ bool YPushButton::isDefaultButton() const
 }
 
 
-void YPushButton::setDefaultButton( bool def )
+void YPushButton::setDefaultButton( bool isDefaultButton )
 {
-    priv->isDefaultButton = def;
+    priv->isDefaultButton = isDefaultButton;
+
+    YDialog * dialog = findDialog();
+    
+    if ( dialog )
+    {
+	if ( isDefaultButton )
+	    dialog->setDefaultButton( this );
+	else
+	{
+	    if ( dialog->defaultButton() == this )
+		dialog->setDefaultButton( 0 );
+	}
+    }
 }
 
 
