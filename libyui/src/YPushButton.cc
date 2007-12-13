@@ -32,16 +32,15 @@ using std::string;
 
 struct YPushButtonPrivate
 {
-    string	label;
-    bool	isDefaultButton;
-
-    /**
-     * Constructor.
-     **/
     YPushButtonPrivate( const string & label )
 	: label( label )
 	, isDefaultButton( false )
+	, setDefaultButtonRecursive( false )
 	{}
+    
+    string	label;
+    bool	isDefaultButton;
+    bool	setDefaultButtonRecursive;
 };
 
 
@@ -89,17 +88,27 @@ void YPushButton::setDefaultButton( bool isDefaultButton )
 {
     priv->isDefaultButton = isDefaultButton;
 
-    YDialog * dialog = findDialog();
-    
-    if ( dialog )
+    if ( ! priv->setDefaultButtonRecursive )
     {
-	if ( isDefaultButton )
-	    dialog->setDefaultButton( this );
-	else
+	// Prevent endless recursion if dialog->setDefaultButton()
+	// calls this function again
+	
+	priv->setDefaultButtonRecursive = true;
+
+	YDialog * dialog = findDialog();
+    
+	if ( dialog )
 	{
-	    if ( dialog->defaultButton() == this )
-		dialog->setDefaultButton( 0 );
+	    if ( isDefaultButton )
+		dialog->setDefaultButton( this );
+	    else
+	    {
+		if ( dialog->defaultButton() == this )
+		    dialog->setDefaultButton( 0 );
+	    }
 	}
+	
+	priv->setDefaultButtonRecursive = false;
     }
 }
 
