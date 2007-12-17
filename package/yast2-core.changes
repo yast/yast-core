@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 29 13:28:57 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.13.41
+
+-------------------------------------------------------------------
 Wed Aug 15 11:31:20 CEST 2007 - mvidner@suse.cz
 
 - Do not log return value from clients (#248300).
