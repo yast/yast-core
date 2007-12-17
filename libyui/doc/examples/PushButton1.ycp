@@ -4,8 +4,8 @@
     // then close the dialog and terminate.
 
     UI::OpenDialog(
-	       `PushButton( "&OK" )
-	       );
+		   `PushButton( "&OK" )
+		   );
 
     UI::UserInput();
     UI::CloseDialog();
