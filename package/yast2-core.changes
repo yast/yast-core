@@ -3,6 +3,19 @@ Tue Dec 11 14:19:34 CET 2007 - mvidner@suse.cz
 
 - Enabled iterating over all functions of a Y2Namespace, for
   a more natural call syntax in yast2-python-bindings (#308213).
+- 2.13.42
+
+-------------------------------------------------------------------
+Mon Oct 29 13:28:57 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.13.41
+
+-------------------------------------------------------------------
+Wed Aug 15 11:31:20 CEST 2007 - mvidner@suse.cz
+
+- Do not log return value from clients (#248300).
 - 2.13.40
 
 -------------------------------------------------------------------

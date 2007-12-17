@@ -71,16 +71,25 @@ Y2PathSearch::searchPath (WHAT what, int level)
 
 	for (int i = 0; i < NUM_LEVELS; i++)
 	{
-	    if (home
-		&& strcmp (paths[i], "HOME") == 0)
+	    // #330965, avoid publicly writable dirs in search path
+	    // (we return a nonexistent dir because the API does not
+	    // allow us to say Skip, and a cleanup patch to fix that
+	    // would be too large)
+	    static const char * not_there = YAST2DIR "/not-there";
+	    if (strcmp (paths[i], "HOME") == 0)
 	    {
+	      if (home)
 		my_paths[i] = string (home) + "/.yast2";
+	      else
+		my_paths[i] = string (not_there);
 	    }
-	    else if (y2dir
-		     && (strcmp (paths[i], "Y2DIR") == 0)
-		     && (strcmp (YAST2DIR, y2dir) != 0))		// prevent path duplication
+	    else if (strcmp (paths[i], "Y2DIR") == 0)
 	    {
+	      if (y2dir
+		     && (strcmp (YAST2DIR, y2dir) != 0))		// prevent path duplication
 		my_paths[i] = string (y2dir);
+	      else
+		my_paths[i] = string (not_there);
 	    }
 	    else
 	    {
