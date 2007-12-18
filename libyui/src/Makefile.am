@@ -87,6 +87,7 @@ libpy2UI_la_SOURCES =				\
 	YSquash.cc				\
 	YTable.cc				\
 	YTimeField.cc				\
+	YTimezoneSelector.cc			\
 	YTree.cc				\
 	YWizard.cc				\
 						\
@@ -187,6 +188,7 @@ pkginclude_HEADERS =				\
 	YSquash.h				\
 	YTable.h				\
 	YTimeField.h				\
+	YTimezoneSelector.h                     \
 	YTree.h					\
 	YWizard.h				\
 						\

@@ -79,6 +79,7 @@
 #include "YTimeField.h"
 #include "YTree.h"
 #include "YWizard.h"
+#include "YTimezoneSelector.h"
 
 using std::string;
 
@@ -280,6 +281,7 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
     else if ( s == YUISpecialWidget_Time		)	w = parseTimeField		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_TimeField		)	w = parseTimeField		( p, opt, term, ol, n );
     else if ( s == YUISpecialWidget_Wizard		)	w = parseWizard			( p, opt, term, ol, n );
+    else if ( s == YUISpecialWidget_TimezoneSelector	)	w = parseTimezoneSelector	( p, opt, term, ol, n );
     else
     {
 	YUI_THROW( YUIException( string( "Unknown widget type " ) + s.c_str() ) );
@@ -3259,6 +3261,51 @@ YCPDialogParser::parseWizard( YWidget * parent, YWidgetOpt & opt,
     return wizard;
 }
 
+/**
+ * @widgets	TimezoneSelector
+ * @short	Timezone selector map
+ * @class	YTimezoneSelector
+ *
+ * @arg		string pixmap     path to a jpg or png of a world map - with 0°0° being the
+ *                                middle of the picture
+ * @arg         map timezones     a map of timezones. The map should be between e.g. Europe/London
+ *                                and the tooltip to be displayed ("United Kingdom")
+ *
+ * @usage	if ( HasSpecialWidget( `TimezoneSelector ) {...
+ * 		    `TimezoneSelector( "world.jpg", timezones )
+ *
+ * @description
+ * An graphical timezone selector map
+ *
+ * @note This is a "special" widget, i.e. not all UIs necessarily support it.  Check
+ * for availability with <tt>HasSpecialWidget( `TimezoneSelector)</tt> before using it.
+ **/
+YWidget *
+YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
+                                        const YCPTerm & term, const YCPList & optList, int argnr )
+{
+
+    if ( term->size() - argnr != 2
+	 || !term->value(argnr)->isString()
+         || !term->value(argnr+1)->isMap() )
+    {
+	y2error( "Invalid arguments for the TimezoneSelector widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    rejectAllOptions( term, optList );
+
+    string pixmap = term->value( argnr )->asString()->value();
+    map<string,string> zones;
+    YCPMap secondArg = term->value( argnr+1 )->asMap();
+    for ( YCPMapIterator it = secondArg.begin(); it != secondArg.end(); ++it )
+        zones[ it.key()->asString()->value() ] = it.value()->asString()->value();
+
+    YTimezoneSelector * selector = YUI::optionalWidgetFactory()->createTimezoneSelector( parent, pixmap, zones );
+
+    return selector;
+}
 
 
 

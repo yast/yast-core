@@ -228,3 +228,15 @@ YOptionalWidgetFactory::createDummySpecialWidget( YWidget * parent )
     return YUI::widgetFactory()->createOutputField( parent, "YDummySpecialWidget" );
 }
 
+bool YOptionalWidgetFactory::hasTimezoneSelector()
+{
+    return false;
+}
+
+YTimezoneSelector *
+YOptionalWidgetFactory::createTimezoneSelector( YWidget * parent,
+                                                const string & map,
+                                                const map<string, string>& zones)
+{
+    THROW_UNSUPPORTED( "YTimezoneSelector" );
+}

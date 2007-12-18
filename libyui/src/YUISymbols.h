@@ -143,6 +143,7 @@
 #define YUISpecialWidget_Time			"Time"
 #define YUISpecialWidget_TimeField		"TimeField"
 #define YUISpecialWidget_Wizard			"Wizard"
+#define YUISpecialWidget_TimezoneSelector	"TimezoneSelector"
 
 
 // Widget properties

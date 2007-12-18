@@ -38,7 +38,7 @@ class YPartitionSplitter;
 class YSlider;
 class YTimeField;
 class YWidget;
-
+class YTimezoneSelector;
 
 /**
  * Abstract widget factory for optional ("special") widgets.
@@ -115,7 +115,10 @@ public:
     bool				hasDummySpecialWidget();
     YWidget *				createDummySpecialWidget( YWidget * parent );
 
-
+    virtual bool                        hasTimezoneSelector();
+    virtual YTimezoneSelector *         createTimezoneSelector( YWidget * parent,
+								const string & pixmap, 
+								const map<string,string> & timezones );
 
 protected:
 

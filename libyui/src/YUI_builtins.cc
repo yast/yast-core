@@ -98,6 +98,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_Wizard			)	hasWidget = fact->hasWizard();
     else if ( symbol == YUISpecialWidget_Date			)	hasWidget = fact->hasDateField();
     else if ( symbol == YUISpecialWidget_Time			)	hasWidget = fact->hasTimeField();
+    else if ( symbol == YUISpecialWidget_TimezoneSelector	)	hasWidget = fact->hasTimezoneSelector();
     else
     {
 	y2error( "HasSpecialWidget(): Unknown special widget: %s", symbol.c_str() );
