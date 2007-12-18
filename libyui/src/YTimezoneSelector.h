@@ -21,6 +21,8 @@
 
 #include "YWidget.h"
 
+class YTimezoneSelectorPrivate;
+
 class YTimezoneSelector : public YWidget
 {
 protected:
@@ -86,6 +88,9 @@ public:
      * subclasses have to implement this to set value
      */
     virtual void setCurrentZone( const std::string &zone ) = 0;
+
+private:
+    ImplPtr<YTimezoneSelectorPrivate> priv;
 
 };
 

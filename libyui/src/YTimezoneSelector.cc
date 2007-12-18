@@ -23,6 +23,10 @@
 #include "YUISymbols.h"
 #include "YTimezoneSelector.h"
 
+class YTimezoneSelectorPrivate 
+{
+   bool dummy;
+};
 
 
 YTimezoneSelector::YTimezoneSelector( YWidget *		parent,
