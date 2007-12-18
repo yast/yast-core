@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 18 17:14:00 CET 2007 - coolo@suse.de
+
+- adding another optional widget: timezone selector
+- V 2.16.16
+
+-------------------------------------------------------------------
 Tue Dec 11 18:39:03 CET 2007 - sh@suse.de
 
 - Fixed bug #347634: Cannot pass empty string to editable ComboBox 
