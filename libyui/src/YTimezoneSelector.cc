@@ -23,7 +23,7 @@
 #include "YUISymbols.h"
 #include "YTimezoneSelector.h"
 
-class YTimezoneSelectorPrivate 
+class YTimezoneSelectorPrivate
 {
    bool dummy;
 };
@@ -51,6 +51,7 @@ YTimezoneSelector::propertySet()
     if ( propSet.isEmpty() )
     {
         propSet.add( YProperty( YUIProperty_Value, YStringProperty ) );
+        propSet.add( YProperty( YUIProperty_CurrentItem, YStringProperty ) );
 	propSet.add( YWidget::propertySet() );
     }
 
@@ -65,13 +66,15 @@ YTimezoneSelector::setProperty( const string & propertyName, const YPropertyValu
 
     if ( propertyName == YUIProperty_Value )
     {
-        setCurrentZone( val.stringVal() );
+        setCurrentZone( val.stringVal(), true );
         return true; // success -- no special handling necessary
     }
-    else
+    if ( propertyName == YUIProperty_CurrentItem )
     {
-	return YWidget::setProperty( propertyName, val );
+        setCurrentZone( val.stringVal(), false );
+        return true; // success -- no special handling necessary
     }
+    return YWidget::setProperty( propertyName, val );
 }
 
 
@@ -81,9 +84,7 @@ YTimezoneSelector::getProperty( const string & propertyName )
     propertySet().check( propertyName ); // throws exceptions if not found
 
     if ( propertyName == YUIProperty_Value ) 	return YPropertyValue( currentZone() );
-    else
-    {
-	return YWidget::getProperty( propertyName );
-    }
+    if ( propertyName == YUIProperty_CurrentItem )    return YPropertyValue( currentZone() );
+    return YWidget::getProperty( propertyName );
 }
 

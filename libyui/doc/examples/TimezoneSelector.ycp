@@ -43,43 +43,51 @@
         "US/Samoa" : "Samoa",
         "US/Eastern" : "Eastern",
         "Europe/London" : "United Kingdom",
-        "America/New_York" : "Eastern"
-	
+        "America/New_York" : "Eastern",
+        "Australia/Darwin"       : "Northern Territory--Darwin",
+        "Australia/Brisbane"  : "Queensland--Brisbane",
+        "Australia/South"       : "South Australia--Adelaide",
+        "Australia/Sydney"         : "New South Wales--Sydney",
+        "Australia/ACT"         : "Australian Capital Territory--Canberra",
+        "Australia/Hobart"    : "Tasmania--Hobart",
+        "Australia/Melbourne"    : "Victoria--Melbourne",
+        "Australia/Perth"        : "Western Australia--Perth"
     ];
 
 
     // Ask the UI whether or not it supports this widget.
-    
+
     if ( UI::HasSpecialWidget(`TimezoneSelector) )
     {
 	// Only create a dialog with this kind of widget if it is supported
 	UI::OpenDialog(
-		   `VBox( 
+		   `VBox(
 			 `TimezoneSelector(`id(`timezone), `opt(`notify),  Directory::themedir + "/current/worldmap/GLOBALeb10colshade.jpg", examples),
 			 `PushButton(`id(`ok), `opt(`default), "&Close"),
-	           	 `ComboBox(`id(`combozone), `opt(`notify), 
+			 `ComboBox(`id(`combozone), `opt(`notify),
 				    "",
 				    [
-                                     `item("Please select your timezone"),
 				     `item(`id(`london), "Europe/London"       ),
 				     `item(`id(`prag), "Europe/Prague" ),
 				     `item(`id(`ny), "America/New_York"       )
 				    ] )
 			 )
 		   );
+                   // preselect something
+                   UI::ChangeWidget(`id(`timezone), `CurrentItem,  "Europe/London");
     }
     else
     {
 	// Always provide a fallback: Either try to create a simpler dialog
 	// without the special widget, or terminate with an error message.
 	UI::OpenDialog(
-		   `VBox( 
+		   `VBox(
 			 `Label("Timezone Selector not supported!"),
 			 `PushButton(`opt(`default), "&Oops!")
 			 )
 		   );
     }
-    
+
     while( true )
     {
        symbol button = (symbol)UI::UserInput();
@@ -102,7 +110,7 @@
             string zone=(string)UI::QueryWidget(`id(`timezone), `Value);
             UI::ChangeWidget(`id(`combozone), `Value, zone);
         }
-    }	
+    }
 
     UI::CloseDialog();
 }

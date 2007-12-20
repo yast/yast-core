@@ -87,7 +87,7 @@ public:
     /**
      * subclasses have to implement this to set value
      */
-    virtual void setCurrentZone( const std::string &zone ) = 0;
+    virtual void setCurrentZone( const std::string &zone, bool zoom ) = 0;
 
 private:
     ImplPtr<YTimezoneSelectorPrivate> priv;
