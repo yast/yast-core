@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Dec 21 18:29:30 CET 2007 - coolo@suse.de
+
+- support `CurrentItem to the timezone selector
+- V 2.16.17
+
+-------------------------------------------------------------------
 Tue Dec 18 17:14:00 CET 2007 - coolo@suse.de
 
 - adding another optional widget: timezone selector
