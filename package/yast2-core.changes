@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 29 11:10:32 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.14.5
+
+-------------------------------------------------------------------
 Tue Oct 31 16:50:39 CET 2006 - mvidner@suse.cz
 
 - ini-agent: use C locale when building regular expressions so that

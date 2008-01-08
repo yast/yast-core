@@ -90,7 +90,11 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
     {
 	// not found "clients/<name>.ycp"
 	// try plain name
+	// only if the name contains a slash, #330965#c10
+	if (!strchr (name, '/'))
+	    return 0;
 
+	// we have to keep completeFilename because it also does :: translation :(
 	fullname = Y2PathSearch::completeFilename (string (name));
 	if (fullname.empty())
 	    return 0;
@@ -99,22 +103,14 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
 	if (!file) return 0; // Not found under the direct path either.
 
 	filename = name;
-	// 2nd try: examine the file: Is it not executable or does
-	// the name end in .ycp or does the file begin with #!/bin/y2wfm
+	// 2nd try: examine the file: does the name end in .ycp
 
 	bool try_it = false;
 
 	if (strlen(name) > 4 && !strcmp(name + strlen(name) - 4, ".ycp"))
 	    try_it = true;
-	else {
-	    struct stat buf;
-	    if (0 == stat(name, &buf))
-	    {
-		// Try it, if it is not executable
-		if (S_ISREG(buf.st_mode) && buf.st_mode & S_IXOTH != S_IXOTH)
-		    try_it = true;
-	    }
-	}
+	// The stat code that used to be here had a bug
+	// in operator precedence rendering it useless. let's make it explicit.
 	if (!try_it) return 0;
 
 	modulename = string(name);
