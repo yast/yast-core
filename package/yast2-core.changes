@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 29 10:17:33 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.15.13
+
+-------------------------------------------------------------------
 Thu Sep 13 09:56:14 CEST 2007 - mvidner@suse.cz
 
 - UI::CollectUserInput: fixed crash introduced when namespacifying,
