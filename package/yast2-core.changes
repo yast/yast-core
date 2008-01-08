@@ -1,4 +1,16 @@
 -------------------------------------------------------------------
+Mon Nov  5 13:08:55 CET 2007 - mvidner@suse.cz
+
+- Fixed compilation by using proper flex version.
+
+-------------------------------------------------------------------
+Mon Oct 29 13:59:10 CET 2007 - mvidner@suse.cz
+
+- Do not look for YCP scripts under the current working
+  directory, unless explicitly requested (#330965).
+- 2.12.28
+
+-------------------------------------------------------------------
 Mon Sep 12 13:15:11 CEST 2005 - kkaempf@suse.de
 
 - ensure string reference does not go out of scope too early
