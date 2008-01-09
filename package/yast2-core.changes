@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jan  9 14:52:29 CET 2008 - sh@suse.de
+
+- Fixed segfault upon shutting down UI
+  (observed mostly on single-CPU non-hyperthreading machines) 
+
+-------------------------------------------------------------------
 Fri Dec 21 18:29:30 CET 2007 - coolo@suse.de
 
 - support `CurrentItem to the timezone selector
