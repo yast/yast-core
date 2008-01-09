@@ -3,6 +3,7 @@ Wed Jan  9 14:52:29 CET 2008 - sh@suse.de
 
 - Fixed segfault upon shutting down UI
   (observed mostly on single-CPU non-hyperthreading machines) 
+- V 2.16.18
 
 -------------------------------------------------------------------
 Fri Dec 21 18:29:30 CET 2007 - coolo@suse.de
