@@ -719,7 +719,7 @@ YUI::filterInvalidEvents( YEvent * event )
  *
  * @param term options
  * @param term widget
- * @return boolean
+ * @return boolean true if success, false if error
  *
  * @usage OpenDialog( `opt( `defaultsize ), `Label( "Hello, World!" ) )
  */
