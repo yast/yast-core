@@ -55,8 +55,9 @@ YUI *	YUI::_yui		= 0;
 extern void *start_ui_thread( void * yui );
 
 
-YUI::YUI( bool with_threads )
-    : with_threads( with_threads )
+YUI::YUI( bool withThreads )
+    : _withThreads( withThreads )
+    , _uiThread( 0 )
     , _moduleName( "yast2" )
     , _productName( "SUSE Linux" )
     , macroRecorder (0)
@@ -70,13 +71,11 @@ YUI::YUI( bool with_threads )
 
 YUI::~YUI()
 {
-    if ( with_threads )
+    if ( _withThreads && _uiThread )
     {
-	terminateUIThread();
-	close( pipe_to_ui[0] );
-	close( pipe_to_ui[1] );
-	close( pipe_from_ui[0] );
-	close( pipe_from_ui[1] );
+	y2error( "shutdownThreads() was never called!" );
+	y2error( "shutting down now - this might segfault" );
+	shutdownThreads();
     }
 
     if ( YDialog::openDialogsCount() > 0 )
@@ -156,7 +155,7 @@ void YUI::topmostConstructorHasFinished()
     // method. It must be called at the end of the constructor of the specific
     // UI (the Qt UI or the NCurses UI).
 
-    if ( with_threads )
+    if ( _withThreads )
     {
 	if ( pipe( pipe_from_ui ) == 0 &&
 	     pipe( pipe_to_ui   ) == 0   )
@@ -168,7 +167,7 @@ void YUI::topmostConstructorHasFinished()
 	    if ( fcntl( pipe_to_ui[0], F_SETFL, arg | O_NONBLOCK ) < 0 )
 	    {
 		y2error( "Couldn't set O_NONBLOCK: errno=%d: %m", errno );
-		with_threads = false;
+		_withThreads = false;
 		close( pipe_to_ui[0] );
 		close( pipe_to_ui[1] );
 		close( pipe_from_ui[0] );
@@ -197,7 +196,7 @@ void YUI::createUIThread()
 {
     pthread_attr_t attr;
     pthread_attr_init( & attr );
-    pthread_create( & ui_thread, & attr, start_ui_thread, this );
+    pthread_create( & _uiThread, & attr, start_ui_thread, this );
 }
 
 
@@ -208,8 +207,22 @@ void YUI::terminateUIThread()
     signalUIThread();
     y2debug( "Waiting for UI thread to shut down" );
     waitForUIThread();
-    pthread_join( ui_thread, 0 );
+    pthread_join( _uiThread, 0 );
     y2debug( "UI thread shut down correctly" );
+}
+
+
+void YUI::shutdownThreads()
+{
+    if ( _uiThread )
+    {
+	terminateUIThread();
+	_uiThread = 0;
+	close( pipe_to_ui[0] );
+	close( pipe_to_ui[1] );
+	close( pipe_from_ui[0] );
+	close( pipe_from_ui[1] );
+    }
 }
 
 

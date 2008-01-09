@@ -85,7 +85,7 @@ protected:
     /**
      * Constructor.
      **/
-    YUI( bool with_threads );
+    YUI( bool withThreads );
 
     friend class Y2UIFunction;
 
@@ -96,6 +96,13 @@ public:
      **/
     virtual ~YUI();
 
+    /**
+     * Shut down multithreading. This needs to be called before the destructor
+     * if the UI was created with threads. If the UI was created without
+     * threads, this does nothing.
+     **/
+    void shutdownThreads();
+	
     /**
      * Access the global UI.
      **/
@@ -254,7 +261,7 @@ public:
     /**
      * Running with threads?
      **/
-    bool runningWithThreads() const { return with_threads; }
+    bool runningWithThreads() const { return _withThreads; }
 
     /**
      * Call a UI builtin function in the correct thread (the UI thread).
@@ -662,12 +669,12 @@ protected:
     /**
      * true if a seperate UI thread is created
      **/
-    bool with_threads;
+    bool _withThreads;
 
     /**
      * Handle to the ui thread.
      **/
-    pthread_t ui_thread;
+    pthread_t _uiThread;
 
     /**
      * Inter-thread communication between the YCP thread and the UI thread:

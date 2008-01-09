@@ -52,14 +52,17 @@ YUIComponent::YUIComponent()
     }
 
     y2debug ("Setting UI component to '%s'", name().c_str());    
-    _uiComponent	= this;
+    _uiComponent = this;
 }
 
 
 YUIComponent::~YUIComponent()
 {
     if ( _ui )
+    {
+	_ui->shutdownThreads(); // cannot be called in the UI's destructor
 	delete _ui;
+    }
 }
 
 
@@ -164,9 +167,11 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 void YUIComponent::result( const YCPValue & /*result*/ )
 {
     if ( _ui )
+    {
+	_ui->shutdownThreads(); // cannot be called in the UI's destructor
 	delete _ui;
-    
-    _ui = 0;
+	_ui = 0;
+    }
 }
 
 
