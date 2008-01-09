@@ -206,6 +206,8 @@ void YUI::terminateUIThread()
     y2debug( "Telling UI thread to shut down" );
     terminate_ui_thread = true;
     signalUIThread();
+    y2debug( "Waiting for UI thread to shut down" );
+    waitForUIThread();
     pthread_join( ui_thread, 0 );
     y2debug( "UI thread shut down correctly" );
 }
@@ -353,7 +355,7 @@ void YUI::uiThreadMainLoop()
 	idleLoop ( pipe_to_ui[0] );
 
 	// The pipe is non-blocking, so we have to check if we really read a
-	// signal byte. Although idleLoop already makes a select, this seems to
+	// signal byte. Although idleLoop already does a select(), this seems to
 	// be necessary.  Anyway: Why do we set the pipe to non-blocking if we
 	// wait in idleLoop for it to become readable? It is needed in
 	// YUIQt::idleLoop for QSocketNotifier.
@@ -362,7 +364,12 @@ void YUI::uiThreadMainLoop()
 	    continue;
 
 	if ( terminate_ui_thread )
+	{
+	    y2debug( "Final sync with YCP thread" );
+	    signalYCPThread();
+	    y2debug( "Shutting down UI main loop" );
 	    return;
+	}
 
 	_builtinCallData.result = _builtinCallData.function->evaluateCall_int();
 
