@@ -1,0 +1,33 @@
+/**
+ * $Id$
+ * File:	modprobe_blacklist.scr
+ * Summary:	SCR agent for accessing /etc/modprobe.d/blacklist file
+ * Authors:	Ladislav Slezák <lslezak@novell.com>
+ * Access:	read / write
+ * See:		modprobe.conf(5), modules.html
+ *
+ * Examples:
+ *   Dir(.modprobe_blacklist)
+ *   (["alias", "blacklist", "install"])
+ **
+ *   Dir(.modprobe_blacklist.blacklist)
+ *   (["act2000", "ad1889", "ali5455", ... "vmware", "ymfpci"])
+ **
+ *   Write(.modprobe_blacklist.blacklist.act2000, nil)
+ **
+ *   Dir(.modprobe_blacklist.alias)
+ *   (["pci:v0000109Ed0000036Esv00000000sd00000000bc04sc00i00", "pci:v0000109Ed00000878sv00000000sd00000000bc04sc80i00"])
+ **
+ *   Read(.modprobe_blacklist.alias."pci:v0000109Ed0000036Esv00000000sd00000000bc04sc00i00")
+ *   ("bttv_skip_it")
+ **
+ *   Write(.modprobe_blacklist.alias."pci:v0000109Ed0000036Esv00000000sd00000000bc04sc00i00", nil)
+ **
+ *
+ * <p>Reads/writes <tt>/etc/modprobe.d/blacklist</tt>. For more details see <tt>man modprobe.conf<tt>.</p>
+ */
+.modprobe_blacklist
+
+`ag_modules(
+    `ModulesConf("/etc/modprobe.d/blacklist")
+)

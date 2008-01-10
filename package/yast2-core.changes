@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jan 10 09:48:14 CET 2008 - lslezak@suse.cz
+
+- added .modprobe_blacklist agent for parsing
+  /etc/modprobe.d/blacklist file (#330109)
+- V 2.16.19
+
+-------------------------------------------------------------------
 Wed Jan  9 14:52:29 CET 2008 - sh@suse.de
 
 - Fixed segfault upon shutting down UI
