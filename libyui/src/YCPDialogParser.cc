@@ -80,6 +80,7 @@
 #include "YTree.h"
 #include "YWizard.h"
 #include "YTimezoneSelector.h"
+#include "YBusyIndicator.h"
 
 using std::string;
 
@@ -262,6 +263,7 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
     else if ( s == YUIWidget_VSquash		)	w = parseSquash			( p, opt, term, ol, n, false, true );
     else if ( s == YUIWidget_VStretch		)	w = parseSpacing		( p, opt, term, ol, n, YD_VERT, true );
     else if ( s == YUIWidget_VWeight		)	w = parseWeight			( p, opt, term, ol, n, YD_VERT );
+    else if ( s == YUIWidget_BusyIndicator	)	w = parseBusyIndicator		( p, opt, term, ol, n );
 
     // Special widgets - may or may not be supported by the specific UI.
     // The YCP application should ask for presence of such a widget with Has???Widget() prior to creating one.
@@ -2198,6 +2200,9 @@ YCPDialogParser::parseTableHeader( const YCPTerm & headerTerm )
  * value will be 100. If you omit the optional parameter <tt>progress</tt>, the
  * progress bar will set to 0 initially.
  *
+ * If you don't know the number of total steps you might want to use the 
+ * BusyIndicator widget instead of ProgressBar.
+ *
  **/
 
 YWidget *
@@ -3306,6 +3311,54 @@ YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
 
     return selector;
 }
+
+/**
+ * @widget	Busy Indicator
+ * @short	Graphical busy indicator
+ * @class	YBusyIndicator
+ * @arg		string	label	the label describing the bar
+ * @optarg	integer	timeout	the timout until busy indicator changes to stalled state
+ * @usage	`BusyIndicator(`id(`busy), "background action", 2000 ),
+ * @example	BusyIndicator.ycp
+ *
+ * @description
+ *
+ * A busy indicator is a bar with a label that gives feedback to the user that
+ * a task is in progress and the user has to wait. It is similar to a progress bar.
+ * The difference is that a busy indicator can be used when the total number of
+ * steps is not known before the action starts. You have to send keep alive messages
+ * by setting alive to true every now and then, otherwise the busy indicator will 
+ * change to stalled state.
+ *
+ **/
+
+YWidget *
+YCPDialogParser::parseBusyIndicator( YWidget * parent, YWidgetOpt & opt,
+				   const YCPTerm & term, const YCPList & optList, int argnr )
+{
+    int s = term->size() - argnr;
+    if ( s < 1
+	 || s > 2
+	 || (s >= 1 && !term->value(argnr)->isString())
+	 || (s >= 2 && !term->value(argnr+1)->isInteger()) )
+    {
+	y2error( "Invalid arguments for the BusyIndicator widget: %s",
+		 term->toString().c_str() );
+	return 0;
+    }
+
+    rejectAllOptions( term,optList );
+
+    string  label        = term->value( argnr )->asString()->value();
+    int	    timeout      = 1000;
+
+    if ( s >= 2 ) timeout	= term->value( argnr+1 )->asInteger()->value();
+
+    YBusyIndicator * busyIndicator = YUI::widgetFactory()->createBusyIndicator( parent, label, timeout );
+
+    return busyIndicator;
+}
+
 
 
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 10 17:10:00 CET 2008 - tgoettlicher@suse.de
+
+- added BusyIndicator widget (fate #302559)
+- V 2.16.20
+
+-------------------------------------------------------------------
 Thu Jan 10 09:48:14 CET 2008 - lslezak@suse.cz
 
 - added .modprobe_blacklist agent for parsing

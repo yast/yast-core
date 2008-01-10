@@ -268,6 +268,8 @@ protected:
     static YWidget * parseTimezoneSelector ( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					     const YCPList & optList, int argnr );
 
+    static YWidget * parseBusyIndicator( YWidget *parent, YWidgetOpt & opt,
+				       const YCPTerm & term, const YCPList & optList, int argnr );
     /**
      * Look for a widget id in a widget term. If it finds one, returns
      * it and sets argnr to 1, otherwise it creates a new unique widget

@@ -42,6 +42,7 @@ libpy2UI_la_SOURCES =				\
 	YWidgetFactory.cc			\
 	YOptionalWidgetFactory.cc		\
 	YWidgetID.cc				\
+	YBusyIndicator.cc			\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\
@@ -191,6 +192,7 @@ pkginclude_HEADERS =				\
 	YTimezoneSelector.h                     \
 	YTree.h					\
 	YWizard.h				\
+	YBusyIndicator.h			\
 						\
 	YRpmGroupsTree.h			\
 	YStringTree.h				\

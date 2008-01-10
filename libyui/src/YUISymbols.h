@@ -124,6 +124,7 @@
 #define YUIWidget_VStretch			"VStretch"
 #define YUIWidget_VWeight			"VWeight"
 #define YUIWidget_PkgSpecial			"PkgSpecial"
+#define YUIWidget_BusyIndicator			"BusyIndicator"
 
 
 // Special (optional) widgets
@@ -177,6 +178,8 @@
 #define YUIProperty_Values			"Values"
 #define YUIProperty_VisibleLines		"VisibleLines"
 #define YUIProperty_WidgetClass			"WidgetClass"
+#define YUIProperty_Timeout			"Timeout"
+#define YUIProperty_Alive			"Alive"
 
 
 // Widget and dialog options
