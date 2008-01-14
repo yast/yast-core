@@ -61,13 +61,13 @@ public:
     virtual void setLabel( const string & label );
 
     /**
-     * Return the current timout value.
+     * Return the current timeout in milliseconds.
      **/
     int timeout() const;
 
     /**
-     * Set the timeout is ms after that the widget shows 'stalled' when no
-     * new tick is received.
+     * Set the timeout in milliseconds after that the widget shows 'stalled'
+     * when no new tick is received.
      *
      * Derived classes should reimplement this, but they should call this
      * base class method at the end of the overloaded function.

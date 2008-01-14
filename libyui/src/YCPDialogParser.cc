@@ -3313,11 +3313,11 @@ YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
 }
 
 /**
- * @widget	Busy Indicator
+ * @widget	BusyIndicator
  * @short	Graphical busy indicator
  * @class	YBusyIndicator
  * @arg		string	label	the label describing the bar
- * @optarg	integer	timeout	the timout until busy indicator changes to stalled state
+ * @optarg	integer	timeout	the timeout in milliseconds until busy indicator changes to stalled state, 1000ms by default
  * @usage	`BusyIndicator(`id(`busy), "background action", 2000 ),
  * @example	BusyIndicator.ycp
  *

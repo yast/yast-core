@@ -107,7 +107,7 @@ YBusyIndicator::propertySet()
     if ( propSet.isEmpty() )
     {
 	/*
-	 * @property integer Timeout	timeout until busy indicator changes to stalled state
+	 * @property integer Timeout	timeout in ms until busy indicator changes to stalled state
 	 * @property bool    Alive	busy indicator is in alive or stalled state
 	 * @property string  Label	caption above the busy indicator
 	 */

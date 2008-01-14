@@ -207,7 +207,7 @@ INCLUDES =					\
 	-I$(top_srcdir)/liby2/src/include	\
 	${Y2UTIL_CFLAGS}
 
-libpy2UI_la_LDFLAGS = -version-info 2:0
+libpy2UI_la_LDFLAGS = -version-info 3:0
 libpy2UI_la_LIBADD = -lpthread
 
 # "foo bar: baz" is wrong

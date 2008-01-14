@@ -1,12 +1,11 @@
-// Simple ProgressBar example
+// Simple BusyIndicator example
 {
-    integer timeout = 1001;
+    integer timeout = 3000;	// in milisenconds
     
     UI::OpenDialog(
 		   `VBox(
 			 `BusyIndicator(`id(`busy), "Sample busy indicator", timeout ),
 			 `PushButton(`id(`alive), "send &tick"),
-			 `PushButton(`id(`query), "&query"),
 			 `Right(`PushButton(`id(`close), "&Close" ) )
 			 )
 		   );
@@ -19,11 +18,6 @@
 	if ( button == `alive )
 	{
 	    UI::ChangeWidget(`id(`busy), `Alive, true);
-	    UI::ChangeWidget(`id(`busy), `Timeout, 999);
-	}
-	else if ( button == `query )
-	{
-	    UI::ChangeWidget(`id(`busy), `Label, sformat("timeout: %1, alive: %2",UI::QueryWidget(`id(`busy), `Timeout), UI::QueryWidget(`id(`busy), `Alive)));
 	}
 	else if ( button == `close )
 	    break;
