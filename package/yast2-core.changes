@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 15 14:22:31 CET 2008 - mvidner@suse.cz
+
+- reverted libpy2UI.so.3 to .so.2 as the plugin loader expects
+
+-------------------------------------------------------------------
 Mon Jan 14 12:30:00 CET 2008 - tgoettlicher@suse.de
 
 - minor changes in BusyIndicator widget 
