@@ -1,7 +1,9 @@
 -------------------------------------------------------------------
 Tue Jan 15 14:22:31 CET 2008 - mvidner@suse.cz
 
+- Log the C backtrace when receiving a signal (FATE 302167).
 - reverted libpy2UI.so.3 to .so.2 as the plugin loader expects
+- 2.16.22
 
 -------------------------------------------------------------------
 Mon Jan 14 12:30:00 CET 2008 - tgoettlicher@suse.de

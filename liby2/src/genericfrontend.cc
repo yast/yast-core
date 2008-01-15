@@ -28,6 +28,9 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <signal.h>
+#include <execinfo.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sstream>
 
 #include <ycp/y2log.h>
@@ -50,6 +53,21 @@ static void print_help ();
 static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)));
 static bool is_ycp_value (const char* arg);
 
+// FATE 302167, info '(libc) Backtraces'
+void
+log_backtrace ()
+{
+    static const int N = 100;
+    void *frames[N];
+    size_t size = backtrace (frames, N);
+    char ** strings = backtrace_symbols (frames, size);
+
+    for (size_t i = 0; i < size; ++i)
+	y2error ("frame %zd: %s", i, strings[i]);
+
+    free (strings);
+}
+
 void
 signal_handler (int sig)
 {
@@ -58,6 +76,7 @@ signal_handler (int sig)
 	     sig, ee.filename ().c_str (), ee.linenumber ());
     y2error ("got signal %d at YCP file %s:%d",
 	     sig, ee.filename ().c_str (), ee.linenumber ());
+    log_backtrace ();
     // bye
     signal (sig, SIG_DFL);
     kill ( getpid (), sig);
