@@ -447,7 +447,7 @@ yui_y2logger( YUILogLevel_t	logLevel,
 	      const char * 	sourceFunctionName,
 	      const char *	message )
 {
-    loglevel_t y2logLevel;
+    loglevel_t y2logLevel = LOG_DEBUG;
     
     switch ( logLevel )
     {
