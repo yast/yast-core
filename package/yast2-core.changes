@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Jan 16 15:50:01 CET 2008 - mvidner@suse.cz
+
+- any-agent: added Omit, a write-nothing companion to Optional,
+  necessary for an fstab truncation fix (#351648)
+- 2.13.41.1
+
+-------------------------------------------------------------------
 Mon Oct 29 13:28:57 CET 2007 - mvidner@suse.cz
 
 - Do not look for YCP scripts under the current working

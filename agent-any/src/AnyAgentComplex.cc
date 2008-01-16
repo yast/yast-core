@@ -448,8 +448,9 @@ AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
 	    y2debug ("YT_TERM (%s)", s.c_str ());
 
 	    // Optional
+	    // Omit, #351648
 
-	    if (s == "Optional" && term->size () > 0)
+	    if ((s == "Optional" || s == "Omit") && term->size () > 0)
 	    {
 		YCPValue ov = parseData (line, term->value (0), true);
 		if (ov.isNull ())
@@ -736,6 +737,13 @@ AnyAgent::unparseData (const YCPValue & syntax, const YCPValue & value)
 	    if (s == "Optional" && term->size () > 0)
 	    {
 		return unparseData (term->value (0), value);
+	    }
+
+	    // Omit
+
+	    if (s == "Omit" && term->size () > 0)
+	    {
+		return "";
 	    }
 
 	    // Continue
