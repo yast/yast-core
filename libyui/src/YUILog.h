@@ -22,7 +22,7 @@
 #error Missing #define YUILogComponent "myComponent" before #include "YUILog.h"
 #endif
 
-#include <iosfwd>
+#include <iostream>
 
 #include "ImplPtr.h"
 
@@ -48,6 +48,15 @@
 #define yuiMilestone()	YUILog::milestone( YUILogComponent, __FILE__, __LINE__, __FUNCTION__ )
 #define yuiWarning()	YUILog::warning  ( YUILogComponent, __FILE__, __LINE__, __FUNCTION__ )
 #define yuiError()	YUILog::error    ( YUILogComponent, __FILE__, __LINE__, __FUNCTION__ )
+
+using std::endl;
+using std::hex;
+using std::dec;
+
+//
+// ------ End of user relevant part ------
+//
+
 
 
 class YUILogPrivate;
