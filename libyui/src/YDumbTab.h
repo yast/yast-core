@@ -99,7 +99,7 @@ public:
      *
      * Reimplemented from YSelectionWidget.
      **/
-    virtual string shortcutString() { return ""; }
+    virtual string shortcutString() const { return ""; }
 
     /**
      * Set the string of this widget that holds the keyboard shortcut.
@@ -120,7 +120,7 @@ public:
      * Descriptive label for debugging. Derived from this widget's only child
      * (if there is one). 
      **/
-    virtual string debugLabel();
+    virtual string debugLabel() const;
     
 private:
 

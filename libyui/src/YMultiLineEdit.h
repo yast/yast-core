@@ -64,7 +64,7 @@ public:
     /**
      * Get the label (the caption above the MultiLineEdit).
      **/
-    string label();
+    string label() const;
 
     /**
      * Set the label (the caption above the MultiLineEdit).
@@ -151,7 +151,7 @@ public:
      *
      * Reimplemented from YWidget.
      **/
-    virtual string shortcutString() { return label(); }
+    virtual string shortcutString() const { return label(); }
 
     /**
      * Set the string of this widget that holds the keyboard shortcut.

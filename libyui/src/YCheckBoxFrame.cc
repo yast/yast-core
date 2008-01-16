@@ -57,7 +57,7 @@ YCheckBoxFrame::~YCheckBoxFrame()
 }
 
 
-string YCheckBoxFrame::label()
+string YCheckBoxFrame::label() const
 {
     return priv->label;
 }

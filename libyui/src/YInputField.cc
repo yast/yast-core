@@ -62,7 +62,7 @@ YInputField::~YInputField()
 }
 
 
-string YInputField::label()
+string YInputField::label() const
 {
     return priv->label;
 }

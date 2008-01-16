@@ -59,7 +59,7 @@ YMultiLineEdit::~YMultiLineEdit()
 }
 
 
-string YMultiLineEdit::label()
+string YMultiLineEdit::label() const
 {
     return priv->label;
 }

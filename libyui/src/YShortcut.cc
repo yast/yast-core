@@ -215,7 +215,7 @@ YShortcut::getShortcutString()
 
 
 string
-YShortcut::getShortcutString( YWidget * widget )
+YShortcut::getShortcutString( const YWidget * widget )
 {
     if ( ! widget )
 	return string( "" );

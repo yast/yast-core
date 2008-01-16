@@ -54,7 +54,7 @@ YSimpleInputField::~YSimpleInputField()
 }
 
 
-string YSimpleInputField::label()
+string YSimpleInputField::label() const
 {
     return priv->label;
 }

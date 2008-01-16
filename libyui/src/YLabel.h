@@ -156,7 +156,7 @@ public:
      * Reimplemented from YWidget since a YLabel doesn't have a shortcut
      * property.  
      **/
-    virtual string debugLabel();
+    virtual string debugLabel() const;
     
 private:
 

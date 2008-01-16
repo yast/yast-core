@@ -170,7 +170,7 @@ public:
      * Obtain a widget's shortcut property - the string that contains "& " to
      * designate a shortcut.
      **/
-    static string getShortcutString( YWidget * widget );
+    static string getShortcutString( const YWidget * widget );
 
     
 protected:

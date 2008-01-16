@@ -155,7 +155,7 @@ YLabel::getProperty( const string & propertyName )
 }
 
 
-string YLabel::debugLabel()
+string YLabel::debugLabel() const
 {
     string label = text();
     

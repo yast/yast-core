@@ -51,7 +51,7 @@ public:
     /**
      * Return the label text on the CheckBoxFrame.
      **/
-    string label();
+    string label() const;
 
     /**
      * Change the label text on the CheckBoxFrame.
@@ -121,7 +121,7 @@ public:
      *
      * Reimplemented from YWidget.
      **/
-    virtual string shortcutString() { return label(); }
+    virtual string shortcutString() const { return label(); }
 
     /**
      * Set the string of this widget that holds the keyboard shortcut.

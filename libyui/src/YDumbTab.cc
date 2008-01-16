@@ -79,7 +79,7 @@ YDumbTab::stretchable( YUIDimension dim ) const
 
 
 string
-YDumbTab::debugLabel()
+YDumbTab::debugLabel() const
 {
     string str = widgetClass();
 
