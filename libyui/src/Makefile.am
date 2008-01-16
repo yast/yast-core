@@ -34,6 +34,7 @@ libpy2UI_la_SOURCES =				\
 	YProperty.cc				\
 	YUIComponent.cc				\
 	YUIException.cc				\
+	YUILog.cc				\
 	YUIPlugin.cc				\
 	YUI_builtins.cc				\
 	YUI_core.cc				\
@@ -136,6 +137,7 @@ pkginclude_HEADERS =				\
 	YUI.h					\
 	YUIComponent.h				\
 	YUIException.h				\
+	YUILog.h				\
 	YUIPlugin.h				\
 	YUISymbols.h				\
 	YUI_util.h				\

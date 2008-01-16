@@ -29,6 +29,9 @@
 #include <locale.h> // setlocale()
 #include <pthread.h>
 
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 #include <ycp/YCPVoid.h>
@@ -54,6 +57,15 @@ YUI *	YUI::_yui		= 0;
 
 extern void *start_ui_thread( void * yui );
 
+static void
+yui_y2logger( YUILogLevel_t	logLevel,
+	      const char *	logComponent,
+	      const char *	sourceFileName,
+	      int 	 	sourceLineNo,
+	      const char * 	sourceFunctionName,
+	      const char *	message );
+
+
 
 YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
@@ -66,6 +78,7 @@ YUI::YUI( bool withThreads )
     , _callback( 0 )
 {
     _yui = this;
+    YUILog::setLoggerFunction( yui_y2logger );
 }
 
 
@@ -424,6 +437,43 @@ void *start_ui_thread( void * yui )
 	ui->uiThreadMainLoop();
     return 0;
 }
+
+
+static void
+yui_y2logger( YUILogLevel_t	logLevel,
+	      const char *	logComponent,
+	      const char *	sourceFileName,
+	      int 	 	sourceLineNo,
+	      const char * 	sourceFunctionName,
+	      const char *	message )
+{
+    loglevel_t y2logLevel;
+    
+    switch ( logLevel )
+    {
+	case YUI_LOG_DEBUG:	y2logLevel = LOG_DEBUG;		break;
+	case YUI_LOG_MILESTONE:	y2logLevel = LOG_MILESTONE;	break;
+	case YUI_LOG_WARNING:	y2logLevel = LOG_WARNING;	break;
+	case YUI_LOG_ERROR:	y2logLevel = LOG_ERROR;		break;
+    }
+
+    if ( ! logComponent )
+	logComponent = "??";
+
+    if ( ! sourceFileName )
+	sourceFileName = "??";
+
+    if ( ! sourceFunctionName )
+	sourceFunctionName = "??";
+
+    if ( ! message )
+	message = "";
+
+    y2_logger( y2logLevel, logComponent,
+	       sourceFileName, sourceLineNo, sourceFunctionName,
+	       "%s", message );
+}
+
 
 
 
