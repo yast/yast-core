@@ -10,10 +10,10 @@
 			 )
 		   );
  
-    
+
     while ( true ) 
     {
-	symbol button = (symbol) UI::UserInput();
+	symbol button = (symbol) UI::TimeoutUserInput(100);
 
 	if ( button == `alive )
 	{
