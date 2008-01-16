@@ -3330,6 +3330,10 @@ YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
  * by setting alive to true every now and then, otherwise the busy indicator will 
  * change to stalled state.
  *
+ * There are some limitations due to technical reasons in ncurses ui:
+ * Only one BusyIndicator widget works at the same time.
+ * The BusyIndicator widget cannot be used together with an UserInput widget.
+ * Please use the TimeoutUserInput widget in a loop instead. 
  **/
 
 YWidget *
