@@ -20,6 +20,7 @@
 #define YWidgetID_h
 
 #include <string>
+#include <iosfwd>
 
 using std::string;
 
@@ -105,6 +106,8 @@ public:
 private:
     string _value;
 };
+
+std::ostream & operator<<( std::ostream & stream, const YWidgetID * id );
 
 
 #endif // YWidgetID_h

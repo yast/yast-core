@@ -18,15 +18,10 @@
 
 
 #include <signal.h>
+#include <iostream>
 
-#include <ycp/YCPBoolean.h>
-#include <ycp/YCPInteger.h>
-#include <ycp/YCPSymbol.h>
-#include <ycp/YCPString.h>
-#include <ycp/YCPTerm.h>
-#include <ycp/YCPVoid.h>
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YShortcut.h"
@@ -106,8 +101,11 @@ YWidget::YWidget( YWidget * parent )
 
     if ( ! _usedOperatorNew )
     {
-	y2error( "FATAL: Widget at %p not created with operator new !", this );
-	y2error( "Check core dump for a backtrace." );
+	yuiError() << "FATAL: Widget at "
+		   << hex << (void *) this << dec
+		   << " not created with operator new !"
+		   << endl;
+	yuiError() << "Check core dump for a backtrace." << endl;
 	abort();
     }
 
@@ -129,7 +127,7 @@ YWidget::~YWidget()
 {
     YUI_CHECK_WIDGET( this );
     setBeingDestroyed();
-    // y2debug( "Destructor of YWidget %p", this );
+    // yuiDebug() << "Destructor of YWidget " << this << endl;
 
     deleteChildren();
 
@@ -168,8 +166,7 @@ YWidget::addChild( YWidget * child )
 #if CHECK_FOR_DUPLICATE_CHILDREN
     if ( child && childrenManager()->contains( child ) )
     {
-	y2error( "%s at %p already contains %s at %p!",
-		 widgetClass(), this, child->widgetClass(), child );
+	yuiError() << this << " already contains " << child << endl;
 	YUI_THROW( YUIInvalidChildException<YWidget>( this, child ) );
     }
 #endif
@@ -183,7 +180,7 @@ YWidget::removeChild( YWidget * child )
 {
     if ( ! beingDestroyed() )
     {
-	// y2debug( "Removing widget at %p from %s", child, widgetClass() );
+	// yuiDebug() << "Removing " << child << " from " << this << endl;
 	childrenManager()->remove( child );
     }
 }
@@ -201,7 +198,7 @@ YWidget::deleteChildren()
 
 	if ( child->isValid() )
 	{
-	    // y2debug( "Deleting %s at %p", child->widgetClass(), child );
+	    // yuiDebug() << "Deleting " << child << endl;
 	    delete child;
 	}
     }
@@ -211,7 +208,7 @@ YWidget::deleteChildren()
 
 
 string
-YWidget::debugLabel()
+YWidget::debugLabel() const
 {
     string label = YShortcut::cleanShortcutString( YShortcut::getShortcutString( this ) );
 
@@ -272,8 +269,9 @@ YWidget::setParent( YWidget * newParent )
     if ( newParent && priv->parent )
     {
 	YDialog::currentDialog()->dumpWidgetTree();
-	y2warning( "%s::setParent( %p ) this: %p   old parent: %p",
-		   widgetClass(), newParent, this, priv->parent );
+	yuiWarning() << "Reparenting " << this
+		     << " from " << priv->parent
+		     << " to " << newParent << endl;
 	YUI_THROW( YUIException( string( widgetClass() ) + " already has a parent!" ) );
     }
 
@@ -461,8 +459,10 @@ YWidget::isEnabled() const
 
 void YWidget::setShortcutString( const std::string & str )
 {
-    y2error( "Default setShortcutString() method called - "
-	     "should be reimplemented in %s", widgetClass() );
+    yuiError() << "Default setShortcutString() method called - "
+	       << "this should be reimplemented in "
+	       << widgetClass()
+	       << endl;
 }
 
 
@@ -533,7 +533,7 @@ bool YWidget::hasWeight( YUIDimension dim )
 
 bool YWidget::setKeyboardFocus()
 {
-    y2warning( "Widget %s cannot accept the keyboard focus.", id()->toString().c_str() );
+    yuiWarning() << this << " cannot accept the keyboard focus." << endl;
     return false;
 }
 
@@ -585,11 +585,11 @@ void YWidget::setChildrenEnabled( bool enabled )
 
 	if ( child->hasChildren() )
 	{
-	    // y2debug( "Recursing into %s", child->debugLabel().c_str() );
+	    // yuiDebug() << "Recursing into " << child << endl;
 	    child->setChildrenEnabled( enabled );
 	}
 
-	// y2debug( "%s %s", enabled ? "Enabling" : "Disabling", child->debugLabel().c_str() );
+	// yuiDebug() << (  enabled ? "Enabling " : "Disabling " ) << child << endl;
 	child->setEnabled( enabled );
     }
 }
@@ -627,38 +627,15 @@ void YWidget::dumpWidgetTree( int indentationLevel )
 void YWidget::dumpWidget( YWidget *w, int indentationLevel )
 {
     string indentation ( indentationLevel * 4, ' ' );
-
-    string descr( w->debugLabel() );
-
-    if ( ! descr.empty() )
-	descr = "\"" + descr + "\"";
-
-    if ( w->hasId() )
-    {
-	if ( ! descr.empty() )
-	    descr += " ";
-
-	descr += "`id( " + w->id()->toString() + " )";
-    }
-
     string stretch;
 
     if ( w->stretchable( YD_HORIZ ) )	stretch += "hstretch ";
     if ( w->stretchable( YD_VERT  ) )	stretch += "vstretch";
 
     if ( ! stretch.empty() )
-	stretch = "(" + stretch + ") ";
+	stretch = " (" + stretch + ") ";
 
-    if ( descr.empty() )
-    {
-	y2milestone( "Widget tree: %s%s %sat %p (widgetRep: %p)",
-		     indentation.c_str(), w->widgetClass(), stretch.c_str(), w, w->widgetRep() );
-    }
-    else
-    {
-	y2milestone( "Widget tree: %s%s %s %sat %p (widgetRep: %p)",
-		     indentation.c_str(), w->widgetClass(), descr.c_str(), stretch.c_str(), w,w->widgetRep() );
-    }
+    yuiMilestone() << indentation << "Widget tree: " << w << stretch << endl;
 }
 
 
@@ -687,3 +664,36 @@ YWidget::saveUserInput( YMacroRecorder *macroRecorder )
 }
 
 
+std::ostream & operator<<( std::ostream & stream, const YWidget * w )
+{
+    if ( w )
+    {
+	stream << w->widgetClass();
+	string debugLabel = w->debugLabel();
+
+	if ( debugLabel.empty() )
+	{
+	    if ( w->hasId() )
+		stream << " ID: \"" << w->id() << "\"";
+	}
+	else	// Has debugLabel
+	{
+	    stream << " \"" << debugLabel << "\"";
+	}
+
+	stream << " at " << hex << (void *) w << dec;
+
+	if ( w->widgetRep() )
+	{
+	    stream << " (widgetRep: "
+		   << hex << w->widgetRep() << dec
+		   << ")";
+	}
+    }
+    else
+    {
+	stream << "<NULL widget>";
+    }
+
+    return stream;
+}

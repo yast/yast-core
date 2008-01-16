@@ -16,7 +16,11 @@
 
 /-*/
 
+
+#include <iostream>
 #include "YWidgetID.h"
+
+using std::endl;
 
 
 YStringWidgetID::YStringWidgetID( const string & val )
@@ -65,3 +69,13 @@ YStringWidgetID::valueConstRef() const
     return _value;
 }
 
+
+std::ostream & operator<<( std::ostream & stream, const YWidgetID * id )
+{
+    if ( id )
+	stream << id->toString();
+    else
+	stream << "<NULL YWidgetID>";
+
+    return stream;
+}

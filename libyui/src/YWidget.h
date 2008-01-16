@@ -20,6 +20,7 @@
 #define YWidget_h
 
 #include <string>
+#include <iosfwd>
 #include <ycp/YCPValue.h>
 
 #include "YTypes.h"
@@ -79,7 +80,7 @@ public:
      * Note: This is usually translated to the user's target language.
      * This makes this useful for debugging only.
      **/
-    virtual string debugLabel();
+    virtual string debugLabel() const;
 
 
     //
@@ -494,7 +495,7 @@ public:
      *
      * Overwrite this for widgets that can have keyboard shortcuts.
      **/
-    virtual string shortcutString() { return string( "" ); }
+    virtual string shortcutString() const { return string( "" ); }
 
     /**
      * Set the string of this widget that holds the keyboard shortcut, if any.
@@ -638,6 +639,9 @@ private:
 #include "YWidget_OptimizeChanges.h"
 
 };
+
+
+std::ostream & operator<<( std::ostream & stream, const YWidget * widget );
 
 
 #endif // YWidget_h
