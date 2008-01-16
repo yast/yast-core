@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 16 15:32:31 CET 2008 - tgoettlicher@suse.de
+
+- fixed BusyIndicator example
+
+-------------------------------------------------------------------
 Wed Jan 16 14:14:24 CET 2008 - sh@suse.de
 
 - Infrastructure for new stream-based UI logging 
