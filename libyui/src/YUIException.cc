@@ -22,8 +22,8 @@
 #include <sstream>
 #include <string.h>	// strerror()
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 #include "YUIException.h"
 #include "YWidget.h"
 
@@ -46,12 +46,12 @@ string YCodeLocation::asString() const
     return str;
 }
 
+
 ostream &
 operator<<( ostream & str, const YCodeLocation & obj )
 {
     return str << obj.asString();
 }
-
 
 
 YUIException::YUIException()
@@ -123,11 +123,11 @@ YUIException::log( const YUIException & 	exception,
 		   const YCodeLocation & 	location,
 		   const char * const 		prefix )
 {
-    y2warning( "%s %s %s",
-	       location.asString().c_str(),
-	       prefix,
-	       exception.asString().c_str() );
-    // INT << where_r << " " << prefix_r << " " << excpt_r << endl;
+    YUILog::warning( YUILogComponent,
+		     location.file().c_str(),
+		     location.line(),
+		     location.func().c_str() )
+			 << "\t" << prefix << " " << exception.asString() << endl;
 }
 
 

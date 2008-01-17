@@ -216,7 +216,7 @@ public:
      **/
     YCodeLocation( const string & file_r,
 		   const string & func_r,
-		   unsigned       line_r )
+		   int		  line_r )
 	: _file( file_r )
 	, _func( func_r )
 	, _line( line_r )
@@ -242,7 +242,7 @@ public:
     /**
      * Returns the source line number where the exception occured.
      **/
-    unsigned line() const { return _line; }
+    int line() const { return _line; }
 
     /**
      * Returns the location in normalized string format.
@@ -257,7 +257,7 @@ public:
 private:
     string	_file;
     string	_func;
-    unsigned	_line;
+    int		_line;
 
 }; // YCodeLocation
 

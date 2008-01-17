@@ -17,10 +17,11 @@
 /-*/
 
 
+#include <string.h>
+
 #define YUILogComponent "ui"
 #include "YUILog.h"
 #include "YUIException.h"
-#include <string.h>
 
 using std::ostream;
 using std::cerr;
@@ -120,14 +121,14 @@ YUILogBuffer::writeBuffer( const char * sequence, std::streamsize seqLen )
     if ( logLevel != YUI_LOG_DEBUG || enableDebugLogging )
     {
 	// Add new character sequence
-	
+
 	if ( seqLen > 0 )
 	    buffer += string( sequence, seqLen );
 
 	//
 	// Output buffer contents line by line
 	//
-	
+
 	std::size_t start       = 0;
 	std::size_t newline_pos = 0;
 
@@ -168,7 +169,7 @@ YUILogBuffer::overflow( int ch )
 	char sequence = ch;
 	writeBuffer( &sequence, 1 );
     }
-    
+
     return 0;
 }
 
