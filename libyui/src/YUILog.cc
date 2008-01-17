@@ -20,6 +20,7 @@
 #define YUILogComponent "ui"
 #include "YUILog.h"
 #include "YUIException.h"
+#include <string.h>
 
 using std::ostream;
 using std::cerr;
