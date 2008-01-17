@@ -17,12 +17,13 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 #include "YAlignment.h"
 #include "YBothDim.h"
 
 using std::min;
+using std::max;
 
 
 struct YAlignmentPrivate
@@ -210,7 +211,7 @@ void YAlignment::setSize( int newWidth, int newHeight )
 {
     if ( ! hasChildren() )
     {
-	y2error( "No child in %s", widgetClass() );
+	yuiError() << "No child in " << this << endl;
 	return;
     }
 
@@ -299,9 +300,9 @@ void YAlignment::setSize( int newWidth, int newHeight )
     moveChild( firstChild(), newChildPos.hor, newChildPos.vert );
 
 #if 0
-    y2debug( "setSize( alignment, %d, %d )", newWidth, newHeight );
-    y2debug( "setSize( child, %d, %d )", newChildSize.hor, newChildSize.vert );
-    y2debug( "moveChild( %d, %d) ",  newChildPos.hor, newChildPos.vert );
+    yuiDebug() << "setSize( alignment, " << newWidth         << ", " << newHeight         << ")" << endl;
+    yuiDebug() << "setSize( child, "     << newChildSize.hor << ", " << newChildSize.vert << ")" << endl;
+    yuiDebug() << "moveChild( "          << newChildPos.hor  << ", " << newChildPos.vert  << ")" << endl;
 #endif
 }
 

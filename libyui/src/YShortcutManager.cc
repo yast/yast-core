@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui-shortcuts"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-shortcuts"
+#include "YUILog.h"
 #include "YShortcutManager.h"
 #include "YDialog.h"
 
@@ -45,7 +45,7 @@ YShortcutManager::~YShortcutManager()
 void
 YShortcutManager::checkShortcuts( bool autoResolve )
 {
-    y2debug( "Checking keyboard shortcuts" );
+    yuiDebug() << "Checking keyboard shortcuts" << endl;
 
     clearShortcutList();
     findShortcutWidgets( _dialog->childrenBegin(), _dialog->childrenEnd() );
@@ -78,10 +78,10 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 	    {
 		shortcut->setConflict();
 		_conflictCount++;
-		y2milestone( "Shortcut conflict: '%c' used for %s \"%s\"",
-			     shortcut->preferred(),
-			     shortcut->widgetClass(),
-			     shortcut->shortcutString().c_str() );
+		
+		yuiMilestone() << "Shortcut conflict: '" << shortcut->preferred()
+			       << "' used for " << shortcut->widget()
+			       << endl;
 	    }
 	}
 	else	// No or invalid shortcut
@@ -93,9 +93,7 @@ YShortcutManager::checkShortcuts( bool autoResolve )
 
 		if ( ! shortcut->widget()->autoShortcut() )
 		{
-		    y2milestone( "No valid shortcut for %s \"%s\"",
-				 shortcut->widgetClass(),
-				 shortcut->cleanShortcutString().c_str() );
+		    yuiMilestone() << "No valid shortcut for " << shortcut->widget() << endl;
 		}
 	    }
 	}
@@ -117,32 +115,19 @@ YShortcutManager::checkShortcuts( bool autoResolve )
     }
     else
     {
-	y2debug( "No shortcut conflicts" );
+	yuiDebug() << "No shortcut conflicts" << endl;
     }
-
-#if 0
-    for ( unsigned i=0; i < _shortcutList.size(); i++ )
-    {
-	YShortcut *shortcut = _shortcutList[i];
-
-	y2debug( "Shortcut '%c' for %s \"%s\" ( original: \"%s\" )",
-		 shortcut->shortcut() ? shortcut->shortcut() : ' ',
-		 shortcut->widgetClass(),
-		 shortcut->cleanShortcutString().c_str(),
-		 shortcut->shortcutString().c_str() );
-    }
-#endif
 }
 
 
 void
 YShortcutManager::resolveAllConflicts()
 {
-    y2debug( "Resolving shortcut conflicts" );
+    yuiDebug() << "Resolving shortcut conflicts" << endl;
 
     if ( ! _didCheck )
     {
-	y2milestone( "Call checkShortcuts() first!" );
+	yuiMilestone() << "Call checkShortcuts() first!" << endl;
 	return;
     }
 
@@ -186,9 +171,7 @@ YShortcutManager::resolveAllConflicts()
 
 	if ( shortcut->conflict() )
 	{
-	    y2milestone( "Couldn't resolve shortcut conflict for %s \"%s\"",
-			 shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
-
+	    yuiMilestone() << "Couldn't resolve shortcut conflict for " << shortcut->widget() << endl;
 	}
 
 
@@ -199,7 +182,7 @@ YShortcutManager::resolveAllConflicts()
 
     if ( _conflictCount > 0 )
     {
-	y2debug( "%d shortcut conflict(s) left", _conflictCount );
+	yuiDebug() << _conflictCount <<  " shortcut conflict(s) left" << endl;
     }
 }
 
@@ -208,7 +191,7 @@ YShortcutManager::resolveAllConflicts()
 void
 YShortcutManager::resolveConflict( YShortcut * shortcut )
 {
-    // y2debug( "Picking shortcut for %s \"%s\"", shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+    // yuiDebug() << "Picking shortcut for " << shortcut->widget() << endl;
 
     char candidate = shortcut->preferred();			// This is always normalized, no need to normalize again.
 
@@ -221,7 +204,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	for ( string::size_type pos = 0; pos < str.length(); pos++ )	// Search all the shortcut string.
 	{
 	    char c = YShortcut::normalized( str[ pos ] );
-	    // y2debug( "Checking #%d '%c'", (int) c, c );
+	    // yuiDebug() << "Checking '" << c << "'" << endl;
 
 	    if ( YShortcut::isValid(c) && ! _used[ (int) c ] ) 	// Could we use this character?
 	    {
@@ -229,7 +212,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 		     || ! YShortcut::isValid( candidate ) )		// or don't we have anything yet?
 		{
 		    candidate = c;			// Use this one.
-		    // y2debug( "Picking %c", c );
+		    // yuiDebug() << "Picking '" << c << "'" << endl;
 
 		    if ( _wanted[ (int) c ] == 0 )	// It doesn't get any better than this:
 			break;				// Nobody wants this shortcut anyway.
@@ -244,20 +227,24 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	{
 	    if ( shortcut->widget()->autoShortcut() )
 	    {
-		y2debug( "Automatically assigning shortcut '%c' to %s(`opt(`autoShortcut ), \"%s\" )",
-			 candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+		yuiDebug() << "Automatically assigning shortcut '" << candidate
+			   << "' to " << shortcut->widgetClass() << "(`opt(`autoShortcut ), \""
+			   << shortcut->cleanShortcutString() << "\" )"
+			   << endl;
 	    }
 	    else
 	    {
-		y2debug( "Reassigning shortcut '%c' for %s \"%s\"",
-			 candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+		yuiDebug() << "Reassigning shortcut '" << candidate
+			   << "' for " << shortcut->widget()
+			   << endl;
 	    }
 	    shortcut->setShortcut( candidate );
 	}
 	else
 	{
-	    y2debug( "Keeping preferred shortcut '%c' for %s \"%s\"",
-		     candidate, shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+	    yuiDebug() << "Keeping preferred shortcut '" << candidate
+		       << "' for " << shortcut->widget()
+		       << endl;
 	}
 
 	_used[ (int) candidate ] = true;
@@ -265,8 +252,11 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
     }
     else	// No unique shortcut found
     {
-	y2milestone( "Couldn't resolve shortcut conflict for %s \"%s\" - assigning no shortcut",
-		     shortcut->widgetClass(), shortcut->cleanShortcutString().c_str() );
+	yuiMilestone() << "Couldn't resolve shortcut conflict for "
+		       << shortcut->widget()
+		       << " - assigning no shortcut"
+		       << endl;
+	
 	shortcut->clearShortcut();
 	shortcut->setConflict( false );
     }

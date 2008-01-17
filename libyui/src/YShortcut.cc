@@ -18,8 +18,8 @@
 
 
 
-#define y2log_component "ui-shortcuts"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-shortcuts"
+#include "YUILog.h"
 #include "YShortcut.h"
 #include "YPushButton.h"
 #include <ctype.h>	// toupper(), tolower()
@@ -46,14 +46,14 @@ YShortcut::YShortcut( YWidget * shortcutWidget )
     {
 	_isWizardButton = strstr( shortcutWidget->widgetClass(), "WizardButton" );
 
-	// y2debug( "%s %s is %sa wizard button", widgetClass(), cleanShortcutString().c_str(), _isWizardButton ? "" : "not " );
+	// yuiDebug() << shortcutWidget <<  ( _isWizardButton ? " is " : " is not " ) << "a wizard button" << endl;
     }
     else
     {
 	_isWizardButton = 0;
     }
 
-    // y2debug( "%s %s is %sa button", widgetClass(), cleanShortcutString().c_str(), _isButton ? "" : "not " );
+    // yuiDebug() << shortcutWidget <<  ( _isButton ? " is " : " is not " ) << "a button" << endl;
 }
 
 
@@ -140,8 +140,10 @@ YShortcut::setShortcut( char newShortcut )
 
 	if ( pos == string::npos )
 	{
-	    y2error( "Can't find '%c' in %s \"%s\"",
-		     newShortcut, widgetClass(), cleanShortcutString().c_str() );
+	    yuiError() << "Can't find '<< " << newShortcut
+		       << "' in " << widgetClass()
+		       << " \"" << cleanShortcutString() << "\""
+		       << endl;
 
 	    return;
 	}

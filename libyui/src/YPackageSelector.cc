@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui-pkg"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-pkg"
+#include "YUILog.h"
 
 #include "YPackageSelector.h"
 
@@ -27,7 +27,7 @@ YPackageSelector::YPackageSelector( YWidget * parent, long modeFlags )
     : YWidget( parent )
     , _modeFlags( modeFlags )
 {
-    y2milestone( "YPackageSelector flags: 0x%lx", modeFlags );
+    yuiMilestone() << "YPackageSelector flags: " << hex << modeFlags << dec << endl;
 
     setDefaultStretchable( YD_HORIZ, true );
     setDefaultStretchable( YD_VERT,  true );

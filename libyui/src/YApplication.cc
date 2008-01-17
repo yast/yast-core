@@ -20,8 +20,8 @@
 #include <locale.h> 	// setlocale()
 #include <map>
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YApplication.h"
 #include "YDialog.h"
@@ -124,7 +124,7 @@ YApplication::setLanguage( const string & language, const string & encoding )
     setenv( "LANG", lang.c_str(), 1 );  // 1 : replace
     setlocale( LC_NUMERIC, "C" );	// but always format numbers with "."
     
-    y2milestone ( "Setting language to \"%s\"", lang.c_str() );
+    yuiMilestone() <<  "Setting language to " << lang << endl;
 }
 
 

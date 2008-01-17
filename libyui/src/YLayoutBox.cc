@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui-layout"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-layout"
+#include "YUILog.h"
 
 #include "YLayoutBox.h"
 #include "YAlignment.h"
@@ -91,9 +91,9 @@ YLayoutBox::setDebugLayout( bool deb )
 {
     priv->debugLayout = deb;
 
-    y2debug( "YLayoutBox: Layout debugging %s",
-	     deb ? "enabled" : "disabled" );
-
+    yuiDebug() << "YLayoutBox: Layout debugging "
+	       << ( deb ? "enabled" : "disabled" )
+	       << endl;
 }
 
 
@@ -202,16 +202,14 @@ YLayoutBox::findDominatingChild()
     {
 	if ( dominatingChild >= 0 )
 	{
-	    y2debug( "YLayoutBox::findDominatingChild(): "
-		     "Found dominating child: %s - preferred size: %d, weight: %d",
-		     dominatingChild->widgetClass(),
-		     dominatingChild->preferredSize( primary() ),
-		     dominatingChild->weight( primary() ) );
+	    yuiDebug() << "Found dominating child: " << dominatingChild
+		       << " - preferred size: " << dominatingChild->preferredSize( primary() )
+		       << ", weight: " << dominatingChild->weight( primary() )
+		       << endl;
 	}
 	else
 	{
-	    y2debug( "YLayoutBox::findDominatingChild(): "
-		     "This layout doesn't have a dominating child." );
+	    yuiDebug() << "This layout doesn't have a dominating child." << endl;
 	}
     }
 
@@ -444,13 +442,13 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 
 	if ( debugLayout() )
 	{
-	    y2debug( "Distributing extra space" );
-	    y2debug( "new size: %d", 			newSize			);
-	    y2debug( "distributable size: %d", 	distributableSize	);
-	    y2debug( "rubber band extra: %d",		rubberBandExtra		);
-	    y2debug( "rubber bands: %d", 		rubberBands		);
-	    y2debug( "total weight: %d", 		totalWeight		);
-	    y2debug( "non weighted extra: %d", 	nonWeightedExtra 	);
+	    yuiDebug() << "Distributing extra space"				<< endl;
+	    yuiDebug() << "\tnew size: "		<< newSize		<< endl;
+	    yuiDebug() << "\tdistributable size: " 	<< distributableSize	<< endl;
+	    yuiDebug() << "\trubber band extra: "	<< rubberBandExtra	<< endl;
+	    yuiDebug() << "\trubber bands: "		<< rubberBands		<< endl;
+	    yuiDebug() << "\ttotal weight: "		<< totalWeight		<< endl;
+	    yuiDebug() << "\tnon weighted extra: "	<< nonWeightedExtra 	<< endl;
 	}
 
 	int i=0;
@@ -468,9 +466,12 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 
 		if ( childSize[i] < child->preferredSize( primary() ) )
 		{
-		    y2debug( "Resizing child widget #%d (%s) below its preferred size of %d to %d "
-			     "- check the layout!",
-			     i, child->widgetClass(), child->preferredSize( primary() ), childSize[i] );
+		    yuiDebug() << "Resizing child widget #" << i
+			       << "(" << child 
+			       << ") below its preferred size of " << child->preferredSize( primary() )
+			       << " to " << childSize[i]
+			       << " - check the layout!"
+			       << endl;
 		}
 	    }
 	    else
@@ -520,7 +521,7 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 	int 	remainingMargins	= 0L;
 	double	marginScale		= 0.0;
 
-	y2debug ( "Not enough space - %d too small - check the layout!", tooSmall );
+	yuiDebug() << "Not enough space: " << tooSmall << " too small - check the layout!" << endl;
 
 
 	// Maybe some of the children are YAlignments with margins that can be reduced
@@ -536,7 +537,7 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 		if ( alignment )
 		{
 		    totalMargins += alignment->totalMargins( primary() );
-		    y2debug( "Found alignment with margins" );
+		    yuiDebug() << "Found alignment with margins" << endl;
 		}
 	    }
 	}
@@ -548,14 +549,16 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 	    tooSmall = 0L;
 	    marginScale = ( (double) remainingMargins ) / totalMargins;
 
-	    y2debug( "Making up for insufficient space by reducing margins to %.3g%% - %d left for margins",
-		     100.0 * marginScale, remainingMargins );
+	    yuiDebug() << "Making up for insufficient space by reducing margins to "
+		       << 100.0 * marginScale << "% - "
+		       << remainingMargins << " left for margins"
+		       << endl;
 	}
 	else				// Reducing all margins to zero still doesn't solve the problem
 	{
 	    tooSmall -= totalMargins;
 
-	    y2debug( "Reducing all margins to 0, but still %d too small", tooSmall );
+	    yuiDebug() << "Reducing all margins to 0, but still " << tooSmall << " too small" << endl;
 	}
 
 
@@ -602,8 +605,9 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 	{
 	    if ( debugLayout() )
 	    {
-		y2debug( "Distributing insufficient space of %d amoung %d losers",
-			 tooSmall, loserCount );
+		yuiDebug() << "Distributing insufficient space of " << tooSmall
+			   << " amoung " << loserCount << " losers"
+			   << endl;
 	    }
 
 	    int dividedLoss = std::max( tooSmall / loserCount, 1 );
@@ -639,15 +643,14 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 		{
 		    YWidget * child = *it;
 
-		    y2debug( "child #%d ( %s ) will get %d - %d too small "
-			     "(preferred size: %d, weight: %d, stretchable: %s), pos %d",
-			     i, child->widgetClass(),
-			     childSize[i],
-			     child->preferredSize( primary() ) - childSize[i],
-			     child->preferredSize( primary() ),
-			     child->weight( primary() ),
-			     child->stretchable( primary() ) ? "yes" : "no",
-			     childPos[i] );
+		    yuiDebug() << "child #" << i <<" ( " << child
+			       << " ) will get " << childSize[i]
+			       << " - "  << child->preferredSize( primary() ) - childSize[i] << " too small"
+			       << " (preferred size: "<< child->preferredSize( primary() )
+			       << ", weight: " << child->weight( primary() )
+			       << ", stretchable: " << ( child->stretchable( primary() ) ? "yes" : "no" )
+			       << "), pos: " << childPos[i]
+			       << endl;
 		}
 	    }
 	}
@@ -692,21 +695,24 @@ YLayoutBox::calcSecondaryGeometry( int	 	newSize,
 
 	if ( childSize[i] < preferred )
 	{
-	    y2debug( "Resizing child widget #%d (%s) below its preferred size of %d to %d "
-		     "- check the layout!",
-		     i, child->widgetClass(), preferred, childSize[i] );
+	    yuiDebug() << "Resizing child widget #" << i
+		       << " (" << child
+		       << ") below its preferred size of " << preferred
+		       << " to " << childSize[i]
+		       << "- check the layout!"
+		       << endl;
 	}
 
 	if ( debugLayout() )
 	{
-	    y2debug( "child #%d (%s) will get %d "
-		     "(preferred size: %d, weight: %d, stretchable: %s), pos %d",
-		     i, child->widgetClass(),
-		     childSize[i],
-		     preferred,
-		     child->weight( secondary() ),
-		     child->stretchable( secondary() ) ? "yes" : "no",
-		     childPos[i] );
+	    yuiDebug() << "child #" << i
+		       << " (" << child
+		       << ") will get " << childSize[i]
+		       << "(preferred size: " << preferred
+		       << ", weight: " << child->weight( secondary() )
+		       << ", stretchable: " << ( child->stretchable( secondary() ) ? "yes" : "no" )
+		       << "), pos: " << childPos[i]
+		       << endl;
 	}
     }
 }
@@ -730,14 +736,12 @@ YLayoutBox::doResize( sizeVector & width,
 
 	if ( debugLayout() )
 	{
-	    string label = child->debugLabel();
-
-	    if ( ! label.empty() )
-		label = "\"" + label + "\"";
-
-	    y2milestone( "x: %4d  y: %4d  w: %4d  h: %4d %s %s",
-			 x_pos[i], y_pos[i], width[i], height[i],
-			 child->widgetClass(), label.c_str() );
+	    yuiMilestone() << "x: "  << x_pos[i]
+			   << " y: " << y_pos[i]
+			   << " w: " << width[i]
+			   << " h: " << height[i]
+			   << child
+			   << endl;
 	}
     }
 }

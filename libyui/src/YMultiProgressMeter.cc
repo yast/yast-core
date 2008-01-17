@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YMultiProgressMeter.h"
@@ -176,65 +176,3 @@ YMultiProgressMeter::getProperty( const string & propertyName )
 }
 
 
-
-
-#if 0
-    //
-    // SetProp
-    //
-
-    /**
-     * @property string Values the current values for all segments
-     */
-    if ( s == YUIProperty_Values )
-    {
-	if ( newValue->isList() )
-	{
-	    YCPList valList = newValue->asList();
-
-	    if ( valList->size() == segments() )
-	    {
-		for ( int i=0; i < segments(); i++ )
-		{
-		    setCurrentValue( i, valList->value( i )->asInteger()->value() );
-		}
-
-		y2debug( "Setting values: %s", valList->toString().c_str() );
-		doUpdate();	// notify derived classes
-		return YCPBoolean( true );
-	    }
-	    else
-	    {
-		y2error( "Expected %d values for MultiProgressMeter, not %d (%s)",
-			 segments(), valList->size(), valList->toString().c_str() );
-	    }
-	    
-	    return YCPBoolean( false );
-	}
-	else
-	{
-	    y2error( "Expected list<integer> for MultiProgressMeter values, not %s",
-		     newValue->toString().c_str() );
-	    return YCPBoolean( false );
-	}
-    }
-
-    //
-    // GetProp
-    //
-
-    string s = property->symbol();
-    if ( s == YUIProperty_Values )
-    {
-	YCPList values;
-
-	for ( int i=0; i < segments(); i++ )
-	{
-	    val = ( i < (int) _currentValues.size() ) ? _currentValues[ i ] : -1;
-	    values->add( YCPInteger( val ) );
-	}
-
-	return values;
-    }
-
-#endif

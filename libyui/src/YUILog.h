@@ -52,6 +52,8 @@
 using std::endl;
 using std::hex;
 using std::dec;
+using std::boolalpha;
+using std::noboolalpha;
 
 //
 // ------ End of user relevant part ------

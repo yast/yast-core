@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YMacroRecorder.h"
@@ -74,7 +74,7 @@ bool YCheckBoxFrame::autoEnable() const
 
 void YCheckBoxFrame::setAutoEnable( bool autoEnable )
 {
-    // y2debug( "Auto enable %s", autoEnable ? "on" : "off" );
+    // yuiDebug() << "Auto enable: " << boolalpha << autoEnable << endl;
     priv->autoEnable = autoEnable;
 }
 
@@ -85,7 +85,7 @@ bool YCheckBoxFrame::invertAutoEnable() const
 
 void YCheckBoxFrame::setInvertAutoEnable( bool invertAutoEnable )
 {
-    // y2debug( "Invert auto enable %s", invertAutoEnable ? "on" : "off" );
+    // yuiDebug() << "Invert auto enable: ", boolalpha << invertAutoEnable << endl;
     priv->invertAutoEnable = invertAutoEnable;
 }
 
@@ -97,10 +97,7 @@ void YCheckBoxFrame::handleChildrenEnablement( bool enabled )
 	if ( invertAutoEnable() )
 	    enabled = ! enabled;
 
-	y2debug( "%s child widgets of %s",
-		 enabled ? "Enabling" : "Disabling",
-		 widgetClass() );
-
+	yuiDebug() << ( enabled ? "Enabling" : "Disabling" ) << " child widgets of " << this << endl;
 	setChildrenEnabled( enabled );
     }
 }

@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include <algorithm>
 #include "YSelectionWidget.h"
@@ -157,7 +157,7 @@ void YSelectionWidget::addItem( YItem * item )
     priv->itemCollection.push_back( item );
     item->setIndex( priv->itemCollection.size() - 1 );
 
-    // y2debug( "Adding item \"%s\"", item->label().c_str() );
+    // yuiDebug() << "Adding item \"" << item->label() << "\"" << endl;
 
     //
     // Enforce single selection (if applicable)
@@ -316,7 +316,7 @@ YSelectionWidget::findSelectedItem( YItemConstIterator begin,
 						     item->childrenEnd() );
 	    if ( selectedItem )
 	    {
-		// y2debug( "Selected item: \"%s\"", selectedItem->label().c_str() );
+		// yuiDebug() <<( "Selected item: \"" << selectedItem->label() << "\"" << endl;
 		return selectedItem;
 	    }
 	}

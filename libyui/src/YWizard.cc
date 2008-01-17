@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YWizard.h"
 #include "YPushButton.h"
@@ -81,17 +81,19 @@ YWizard::protectNextButton( bool protect )
 void
 YWizard::setButtonLabel( YPushButton * button, const string & label )
 {
+    // FIXME: Throw exception? ( YUI_CHECK_PTR() )
+    
     if ( button )
 	button->setLabel( label );
     else
-	y2error( "NULL button" );
+	yuiError() << "NULL button" << endl;
 }
 
 
 void
 YWizard::ping()
 {
-    y2debug( "YWizard is active" );
+    yuiDebug() << "YWizard is active" << endl;
 }
 
 

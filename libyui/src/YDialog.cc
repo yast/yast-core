@@ -17,8 +17,8 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 #include <ycp/YCPSymbol.h>
 #include "YDialog.h"
 #include "YShortcutManager.h"
@@ -59,7 +59,7 @@ YDialog::YDialog( YDialogType dialogType, YDialogColorMode colorMode )
     _dialogStack.push( this );
 
 #if VERBOSE_DIALOGS
-    y2debug( "New YDialog at %p", this );
+    yuiDebug() << "New YDialog " << this << endl;
 #endif
 }
 
@@ -67,7 +67,7 @@ YDialog::YDialog( YDialogType dialogType, YDialogColorMode colorMode )
 YDialog::~YDialog()
 {
 #if VERBOSE_DIALOGS
-    y2debug( "Destroying YDialog at %p", this );
+    yuiDebug() << "Destroying " << this << endl;
 #endif
 }
 
@@ -105,7 +105,7 @@ YDialog::checkShortcuts( bool force )
 {
     if ( priv->shortcutCheckPostponed && ! force )
     {
-	y2debug( "shortcut check postponed" );
+	yuiDebug() << "Shortcut check postponed" << endl;
     }
     else
     {
@@ -130,8 +130,9 @@ YDialog::setDefaultButton( YPushButton * newDefaultButton )
 {
     if ( newDefaultButton && priv->defaultButton ) // already have one?
     {
-	y2error( "Too many `opt(`default) PushButtons: [%s]",
-		 newDefaultButton->label().c_str() );
+	yuiError() << "Too many `opt(`default) PushButtons: ["
+		   << newDefaultButton->label()
+		   << "]" << endl;
     }
 
     priv->defaultButton = newDefaultButton;
@@ -142,7 +143,7 @@ void
 YDialog::setInitialSize()
 {
 #if VERBOSE_DIALOGS
-    y2debug( "Setting initial size for YDialog at %p", this );
+    yuiDebug() << "Setting initial size for " << this << endl;
 #endif
     
     // Trigger geometry management
