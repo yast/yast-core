@@ -35,11 +35,16 @@
 #include <iconv.h>
 
 #define y2log_component "ui"
-#include <ycp/y2log.h>
+#include <ycp/y2log.h>	// ycperror()
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
 #include <Y2.h>
 #include <ycp/YCPVoid.h>
 
 #include "YUI.h"
+#include "YUI_util.h"
 #include "YApplication.h"
 #include "YEvent.h"
 #include "YUIException.h"
@@ -101,7 +106,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
     else if ( symbol == YUISpecialWidget_TimezoneSelector	)	hasWidget = fact->hasTimezoneSelector();
     else
     {
-	y2error( "HasSpecialWidget(): Unknown special widget: %s", symbol.c_str() );
+	yuiError() << "HasSpecialWidget(): Unknown special widget: " << symbol << endl;
 	return YCPNull();
     }
 
@@ -281,7 +286,7 @@ YCPInteger YUI::evaluateRunInTerminal(const YCPString & module )
 
 int YUI::runInTerminal ( const YCPString & module )
 {
-    y2error("Not in text-mode: Cannot run external program in terminal.");
+    yuiError() << "Not in text mode: Cannot run external program in terminal." << endl;
 
     return -1;
 }
@@ -415,9 +420,9 @@ YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
 YCPValue YUI::evaluateUserInput()
 {
 #if VERBOSE_EVENTS
-    y2debug( "UI::UserInput()" );
+    yuiDebug() << "UI::UserInput()" << endl;
 #endif
-    
+
     return doUserInput( YUIBuiltin_UserInput,
 			0,		// timeout_millisec
 			true,		// wait
@@ -443,9 +448,9 @@ YCPValue YUI::evaluateUserInput()
 YCPValue YUI::evaluatePollInput()
 {
 #if VERBOSE_EVENTS
-    y2debug( "UI::PollInput()" );
+    yuiDebug() << "UI::PollInput()" << endl;
 #endif
-    
+
     return doUserInput( YUIBuiltin_PollInput,
 			0,		// timeout_millisec
 			false,		// wait
@@ -471,9 +476,9 @@ YCPValue YUI::evaluatePollInput()
 YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 {
     long timeout_millisec = timeout->value();
-    
+
 #if VERBOSE_EVENTS
-    y2debug( "UI::TimeoutUserInput( %d )", timeout_millisec );
+    yuiDebug() << "UI::TimeoutUserInput( " << timeout_millisec << " )" << endl;
 #endif
 
     return doUserInput( YUIBuiltin_TimeoutUserInput,
@@ -496,14 +501,14 @@ YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
 YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 {
     long timeout_millisec = 0;
-    
+
     if ( ! timeout.isNull() )
     {
 	timeout_millisec = timeout->value();
     }
-    
+
 #if VERBOSE_EVENTS
-    y2debug( "UI::WaitForEvent( %d )", timeout_millisec );
+    yuiDebug() << "UI::WaitForEvent( " << timeout_millisec << " )" << endl;
 #endif
 
     return doUserInput( YUIBuiltin_WaitForEvent,
@@ -524,8 +529,10 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
     if ( timeout_millisec < 0 )
     {
-	y2error( "%s(): Invalid value %ld for timeout - assuming 0",
-		 builtin_name, timeout_millisec );
+	yuiError() << builtin_name << "(): Invalid value " << timeout_millisec
+		   << " for timeout - assuming 0"
+		   << endl;
+	
 	timeout_millisec = 0;
     }
 
@@ -536,7 +543,10 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
     if ( dialog->shortcutCheckPostponed() )
     {
-	y2error( "Missing CheckShortcuts() before %s() after PostponeShortcutCheck()!", builtin_name );
+	yuiError() << "Missing CheckShortcuts() before " << builtin_name
+		   << "() after PostponeShortcutCheck()!"
+		   << endl;
+	
 	dialog->checkShortcuts( true );
     }
 
@@ -555,7 +565,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 		// Get an event from the specific UI. Wait if there is none.
 
 #if VERBOSE_EVENTS
-		y2debug( "SpecificUI::userInput()" );
+		yuiDebug() << "SpecificUI::userInput()" << endl;
 #endif
 		event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
 
@@ -568,7 +578,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	    // Get an event from the specific UI. Don't wait if there is none.
 
 #if VERBOSE_EVENTS
-	    y2debug( "SpecificUI::pollInput()" );
+	    yuiDebug() << "SpecificUI::pollInput()" << endl;
 #endif
 	    event = filterInvalidEvents( pollInput() );
 
@@ -580,14 +590,14 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	if ( event )
 	{
-	    
+
 	    if ( detailed )
 		input = event->ycpEvent();	// The event map
 	    else
 		input = event->userInput();	// Only one single ID (or 'nil')
 
 #if VERBOSE_EVENTS
-	    y2debug( "Got regular event from keyboard / mouse: %s", input->toString().c_str() );
+	    yuiDebug() << "Got regular event from keyboard / mouse: " << input << endl;
 #endif
 	}
     }
@@ -596,7 +606,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	// Handle macro playing
 
 	input = fakeUserInputQueue.front();
-	y2debug( "Using event from fakeUserInputQueue: %s", input->toString().c_str() );
+	yuiDebug() << "Using event from fakeUserInputQueue: "<< input << endl;
 	fakeUserInputQueue.pop_front();
     }
 
@@ -648,7 +658,7 @@ YUI::filterInvalidEvents( YEvent * event )
 	     * and the widget has been destroyed meanwhile.
 	     **/
 
-	    // y2debug( "Discarding event for widget that has become invalid" );
+	    // yuiDebug() << "Discarding event for widget that has become invalid" << endl;
 
 	    delete widgetEvent;
 	    return 0;
@@ -665,21 +675,21 @@ YUI::filterInvalidEvents( YEvent * event )
 	     * arrived, but maybe simply nobody has evaluated them.
 	     **/
 
-	    // Yes, really y2debug() - this may legitimately happen.
-	    y2debug( "Discarding event from widget from foreign dialog" );
+	    // Yes, really yuiDebug() - this may legitimately happen.
+	    yuiDebug() << "Discarding event from widget from foreign dialog" << endl;
 
 #if VERBOSE_DISCARDED_EVENTS
-	    y2debug( "Expected: %p (widgetRep %p), received: %p (widgetRep %p)",
-		     YDialog::currentDialog(),
-		     YDialog::currentDialog()->widgetRep(),
-		     widgetEvent->widget()->findDialog(), 
-		     widgetEvent->widget()->findDialog()->widgetRep() );
-	    y2debug( "Event widget: " );
+	    yuiDebug() << "Expected: "   << YDialog::currentDialog()
+		       << ", received: " << widgetEvent->widget()->findDialog()
+		       << endl;
+
+	    yuiDebug() << "Event widget: "  << widgetEvent->widget() << endl;
+	    yuiDebug() << "From:" << endl;
 	    widgetEvent->widget()->findDialog()->dumpWidgetTree();
-	    y2debug( "Current dialog:" );
+	    yuiDebug() << "Current dialog:" << endl;
 	    YDialog::currentDialog()->dumpWidgetTree();
 #endif
-		     
+
 	    delete widgetEvent;
 	    return 0;
 	}
@@ -712,10 +722,10 @@ YUI::filterInvalidEvents( YEvent * event )
  * distinct from the normal colors, but not as bright as warncolor.
  *
  * The <tt>`decorated</tt> option is now obsolete, but still accepted to keep
- * old code working. 
+ * old code working.
  *
  * The <tt>`centered</tt> option is now obsolete, but still accepted to keep
- * old code working. 
+ * old code working.
  *
  * @param term options
  * @param term widget
@@ -728,7 +738,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 {
     YDialogType		dialogType = YPopupDialog;
     YDialogColorMode	colorMode  = YDialogNormalColor;
-    
+
     if ( ! opts.isNull() ) // evaluate `opt() contents
     {
 	    YCPList optList = opts->args();
@@ -744,7 +754,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_decorated ) 		{} // obsolete
 		    else if ( optList->value(o)->asSymbol()->symbol() == YUIOpt_centered  )		{} // obsolete
 		    else
-			y2warning( "Unknown option %s for OpenDialog", opts->value(o)->toString().c_str() );
+			yuiWarning() << "Unknown option " << opts->value(o) << " for OpenDialog" << endl;
 		}
 	    }
     }
@@ -752,7 +762,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
     blockEvents();	// Prevent self-generated events from UI built-ins.
 
     bool ok = true;
-    
+
     try
     {
 	YDialog * dialog = YUI::widgetFactory()->createDialog( dialogType, colorMode );
@@ -777,7 +787,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
     }
 
     unblockEvents();
-    
+
     return YCPBoolean( ok );
 }
 
@@ -839,11 +849,11 @@ void YUI::closeDialog( YDialog * )
 YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & property, const YCPValue & newValue )
 {
     YCPValue ret = YCPVoid();
-    
+
     try
     {
 	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
-	
+
 	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	{
 	    YUI_THROW( YUISyntaxErrorException( string( "Expected `id(...) or `symbol, not " ) +
@@ -860,7 +870,6 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & p
 	{
 	    string oldShortcutString = widget->shortcutString();
 	    string propertyName	 = property->asSymbol()->symbol();
-	    // y2milestone( "New style UI::ChangeWidget() for %s::%s", widget->widgetClass(), propertyName.c_str() );
 
 	    YPropertyValue val;
 
@@ -930,7 +939,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & p
 YCPValue YUI::evaluateQueryWidget( const YCPValue & idValue, const YCPValue & property )
 {
     YCPValue ret = YCPVoid();
-    
+
     try
     {
 	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
@@ -1002,7 +1011,7 @@ YCPValue YUI::evaluateQueryWidget( const YCPValue & idValue, const YCPValue & pr
 YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm & newContentTerm )
 {
     bool success = true;
-    
+
     try
     {
 	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
@@ -1044,11 +1053,11 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
     {
 	YUI_CAUGHT( exception );
 	success = false;
-	
+
 	ycperror( "UI::ReplaceWidget() failed: UI::ReplaceWidget( %s, %s )",
 		  idValue->toString().c_str(),
 		  newContentTerm->toString().c_str() );
-	
+
     }
 
     unblockEvents();
@@ -1063,7 +1072,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
  * @short Runs a wizard command
  * @description
  * Issues a command to a wizard widget with ID 'wizardId'.
- * 
+ *
  * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
  *
  * For available wizard commands see file YWizard.cc .
@@ -1325,7 +1334,7 @@ void YUI::playNextMacroBlock()
 {
     if ( ! macroPlayer )
     {
-	y2error( "No macro player active." );
+	yuiError() << "No macro player active." << endl;
 	return;
     }
 
@@ -1341,7 +1350,7 @@ void YUI::playNextMacroBlock()
 
 	    if ( macroPlayer->error() || result.isNull() )
 	    {
-		y2error( "Macro aborted" );
+		yuiError() << "Macro aborted" << endl;
 		deleteMacroPlayer();
 	    }
 	}
@@ -1375,7 +1384,7 @@ void YUI::deleteMacroPlayer()
  */
 void YUI::evaluateFakeUserInput( const YCPValue & next_input )
 {
-    y2debug( "UI::FakeUserInput(%s)", next_input->toString().c_str() );
+    yuiDebug() << "UI::FakeUserInput( " << next_input << " )" << endl;
     fakeUserInputQueue.push_back( next_input );
 }
 
@@ -1421,7 +1430,7 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 	else if ( sym == YUIGlyph_BulletSquare		)	glyphText = YCPString( "[]"  );
 	else	// unknown glyph symbol
 	{
-	    y2error( "Unknown glyph `%s", sym.c_str() );
+	    yuiError() << "Unknown glyph `" << sym << endl;
 	    return YCPNull();
 	}
     }
@@ -1596,7 +1605,7 @@ void YUI::evaluateCheckShortcuts()
 
     if ( ! dialog->shortcutCheckPostponed() )
     {
-	y2warning( "Use UI::CheckShortcuts() only after UI::PostponeShortcutCheck() !" );
+	yuiWarning() << "Use UI::CheckShortcuts() only after UI::PostponeShortcutCheck() !" << endl;
     }
 
     dialog->checkShortcuts( true );
@@ -1647,7 +1656,7 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
     {
 	if ( ! YCPDialogParser::isSymbolOrId( value_id ) )
 	{
-	    y2error( "RunPkgSelection(): expecting `id( ... ), not '%s'", value_id->toString().c_str() );
+	    yuiError() << "RunPkgSelection(): expecting `id( ... ), not " << value_id << endl;
 	    return YCPNull();
 	}
 
@@ -1685,7 +1694,7 @@ YCPValue
 YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
     string ret = app()->askForExistingDirectory( startDir->value(), headline->value() );
-    
+
     if ( ret.empty() )
 	return YCPVoid();
     else
@@ -1710,7 +1719,7 @@ YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPStrin
 YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     string ret = app()->askForExistingFile( startWith->value(), filter->value(), headline->value() );
-    
+
     if ( ret.empty() )
 	return YCPVoid();
     else
@@ -1735,7 +1744,7 @@ YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCP
 YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     string ret = app()->askForSaveFileName( startWith->value(), filter->value(), headline->value() );
-    
+
     if ( ret.empty() )
 	return YCPVoid();
     else
@@ -1769,7 +1778,7 @@ void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 
 	    if ( fkey > 0 && fkey <= 24 )
 	    {
-		y2debug( "Mapping \"%s\"\t-> F%d", label.c_str(), fkey );
+		yuiDebug() << "Mapping \"" << label << "\"\t-> F" << fkey << endl;
 		app()->setDefaultFunctionKey( label, fkey );
 	    }
 	    else
@@ -1876,7 +1885,7 @@ YCPValue YUI::evaluateRecode( const YCPString & from, const YCPString & to, cons
 	static bool warned_about_recode = false;
 	if ( ! warned_about_recode )
 	{
-	    y2error ( "Recode ( %s, %s, ... )", from->value().c_str(), to->value().c_str() );
+	    yuiError() << "Recode( " << from << ", " << to << " )" << endl;
 	    warned_about_recode = true;
 	}
 	// return text as-is

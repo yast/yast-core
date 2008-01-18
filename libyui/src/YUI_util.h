@@ -19,6 +19,8 @@
 #ifndef YUI_util_h
 #define YUI_util_h
 
+#include <iostream>
+
 #include <ycp/YCPString.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPTerm.h>
@@ -38,7 +40,10 @@ bool isNum( const YCPValue & val );
  **/
 float toFloat( const YCPValue & val );
 
-
+/**
+ * Stream output for YCPValues
+ **/
+std::ostream & operator<<( std::ostream & stream, const YCPValue & val );
 
 
 #endif // YUI_util_h

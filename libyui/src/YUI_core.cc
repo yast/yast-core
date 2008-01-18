@@ -23,17 +23,18 @@
 #define VERBOSE_COMM 0	// VERY verbose thread communication logging
 
 #include <stdio.h>
-#include <unistd.h> // pipe()
-#include <fcntl.h>  // fcntl()
+#include <string.h>	// strerror()
+#include <unistd.h>	// pipe()
+#include <fcntl.h>  	// fcntl()
 #include <errno.h>
-#include <locale.h> // setlocale()
+#include <locale.h> 	// setlocale()
 #include <pthread.h>
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 #include <ycp/YCPVoid.h>
 
 #include "Y2UINamespace.h"
@@ -86,13 +87,13 @@ YUI::~YUI()
 {
     if ( _withThreads && _uiThread )
     {
-	y2error( "shutdownThreads() was never called!" );
-	y2error( "shutting down now - this might segfault" );
+	yuiError() << "shutdownThreads() was never called!"     << endl;
+	yuiError() << "shutting down now - this might segfault" << endl;
 	shutdownThreads();
     }
 
     if ( YDialog::openDialogsCount() > 0 )
-	y2error( "%d open dialogs left over", YDialog::openDialogsCount() );
+	yuiError() << YDialog::openDialogsCount() << " open dialogs left over" << endl;
 
     YDialog::deleteAllDialogs();
 
@@ -179,7 +180,7 @@ void YUI::topmostConstructorHasFinished()
 	    arg = fcntl( pipe_to_ui[0], F_GETFL );
 	    if ( fcntl( pipe_to_ui[0], F_SETFL, arg | O_NONBLOCK ) < 0 )
 	    {
-		y2error( "Couldn't set O_NONBLOCK: errno=%d: %m", errno );
+		yuiError() << "Couldn't set O_NONBLOCK: errno: " << errno << " " << strerror( errno ) << endl;
 		_withThreads = false;
 		close( pipe_to_ui[0] );
 		close( pipe_to_ui[1] );
@@ -194,13 +195,13 @@ void YUI::topmostConstructorHasFinished()
 	}
 	else
 	{
-	    y2error( "pipe() failed: errno=%d: %m", errno );
+	    yuiError() << "pipe() failed: errno: " << errno << " " << strerror( errno ) << endl;
 	    exit(2);
 	}
     }
     else
     {
-	y2milestone( "Running without threads" );
+	yuiMilestone() << "Running without threads" << endl;
     }
 }
 
@@ -215,13 +216,13 @@ void YUI::createUIThread()
 
 void YUI::terminateUIThread()
 {
-    y2debug( "Telling UI thread to shut down" );
+    yuiDebug() << "Telling UI thread to shut down" << endl;
     terminate_ui_thread = true;
     signalUIThread();
-    y2debug( "Waiting for UI thread to shut down" );
+    yuiDebug() << "Waiting for UI thread to shut down" << endl;
     waitForUIThread();
     pthread_join( _uiThread, 0 );
-    y2debug( "UI thread shut down correctly" );
+    yuiDebug() << "UI thread shut down correctly" << endl;
 }
 
 
@@ -249,7 +250,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 {
     if ( function == 0 )
     {
-	y2error( "NULL function pointer!" );
+	yuiError() << "NULL function pointer!" << endl;
 	return YCPNull();
     }
 
@@ -286,7 +287,7 @@ YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
 	    break;
 	default:
 	    {
-		y2error( "Bad builtin: Arg count %d", argc );
+		yuiError() << "Bad builtin: Arg count: " << argc << endl;
 		ret = YCPNull();
 	    }
 	    break;
@@ -302,7 +303,7 @@ void YUI::signalUIThread()
     (void) write ( pipe_to_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
-    y2debug( "Wrote byte to ui thread %d", pipe_to_ui[1] );
+    yuiDebug() << "Wrote byte to UI thread: " << pipe_to_ui[1] << endl;
 #endif
 }
 
@@ -314,7 +315,7 @@ bool YUI::waitForUIThread()
 
     do {
 #if VERBOSE_COMM
-	y2debug ( "Waiting for ui thread..." );
+	yuiDebug() << "Waiting for UI thread..." << endl;
 #endif
 	res = read( pipe_from_ui[0], & arbitrary, 1 );
 	if ( res == -1 )
@@ -322,12 +323,12 @@ bool YUI::waitForUIThread()
 	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
 	    else
-		y2error ( "waitForUIThread: %m" );
+		yuiError() <<  "waitForUIThread: errno: " << errno << " " << strerror( errno ) << endl;
 	}
     } while ( res == 0 );
 
 #if VERBOSE_COMM
-    y2debug ( "Read byte from ui thread" );
+    yuiDebug() << "Read byte from UI thread" << endl;
 #endif
 
     // return true if we really did get a signal byte
@@ -341,7 +342,7 @@ void YUI::signalYCPThread()
     (void) write( pipe_from_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
-    y2debug( "Wrote byte to ycp thread %d", pipe_from_ui[1] );
+    yuiDebug() << "Wrote byte to YCP thread: " << pipe_from_ui[1] << endl;
 #endif
 }
 
@@ -353,7 +354,7 @@ bool YUI::waitForYCPThread()
     int res;
     do {
 #if VERBOSE_COMM
-	y2debug ( "Waiting for ycp thread..." );
+	yuiDebug() << "Waiting for YCP thread..." << endl;
 #endif
 	res = read( pipe_to_ui[0], & arbitrary, 1 );
 	if ( res == -1 )
@@ -361,12 +362,12 @@ bool YUI::waitForYCPThread()
 	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
 	    else
-		y2error ( "waitForYCPThread: errno=%d: %m", errno );
+		yuiError() << "waitForYCPThread: errno: " << errno << " " << strerror( errno ) << endl;
 	}
     } while ( res == 0 );
 
 #if VERBOSE_COMM
-    y2debug ( "Read byte from ycp thread" );
+    yuiDebug() << "Read byte from YCP thread" << endl;
 #endif
 
     // return true if we really did get a signal byte
@@ -391,9 +392,9 @@ void YUI::uiThreadMainLoop()
 
 	if ( terminate_ui_thread )
 	{
-	    y2debug( "Final sync with YCP thread" );
+	    yuiDebug() << "Final sync with YCP thread" << endl;
 	    signalYCPThread();
-	    y2debug( "Shutting down UI main loop" );
+	    yuiDebug() << "Shutting down UI main loop" << endl;
 	    return;
 	}
 
@@ -430,7 +431,7 @@ void *start_ui_thread( void * yui )
     YUI * ui= (YUI *) yui;
 
 #if VERBOSE_COMM
-    y2debug( "Starting UI thread" );
+    yuiDebug() << "Starting UI thread" << endl;
 #endif
 
     if ( ui )

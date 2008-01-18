@@ -20,9 +20,9 @@
 #define YMacroPlayer_h
 
 #include <string>
+#include <ycp/YBlock.h>
 
 class YWidget;
-class YBlock;
 
 class YMacroPlayer
 {

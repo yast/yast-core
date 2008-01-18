@@ -18,8 +18,8 @@
 
 
 
-#define y2log_component "ui-events"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-events"
+#include "YUILog.h"
 
 #include "YEvent.h"
 #include "YSimpleEventHandler.h"
@@ -49,7 +49,7 @@ void YSimpleEventHandler::clear()
     if ( _pending_event )
     {
 #if VERBOSE_EVENTS
-	y2debug( "Clearing pending event: %s", YEvent::toString( _pending_event->eventType() ) );
+	yuiDebug() << "Clearing pending event: " << YEvent::toString( _pending_event->eventType() ) << endl;
 #endif
 	delete _pending_event;
     }
@@ -69,14 +69,14 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
 {
     if ( ! event )
     {
-	y2error( "Ignoring NULL event" );
+	yuiError() << "Ignoring NULL event" << endl;
 	return;
     }
 
     if ( eventsBlocked() )
     {
 #if VERBOSE_BLOCK
-	y2debug( "Blocking %s event", YEvent::toString( event->eventType() ) );
+	yuiDebug() << "Blocking " << YEvent::toString( event->eventType() ) << " event" << endl;
 #endif
 	// Avoid memory leak: The event handler assumes ownership of the newly
 	// created event, so we have to clean it up here.
@@ -101,7 +101,7 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
     }
 
 #if VERBOSE_EVENTS
-	y2debug( "New pending event: %s", YEvent::toString( event->eventType() ) );
+    yuiDebug() << "New pending event: " << YEvent::toString( event->eventType() ) << endl;
 #endif
 
     _pending_event = event;
@@ -123,8 +123,8 @@ YSimpleEventHandler::eventPendingFor( YWidget * widget ) const
 void YSimpleEventHandler::blockEvents( bool block )
 {
 #if VERBOSE_BLOCK
-    if ( block )	y2debug( "Blocking events"   );
-    else		y2debug( "Unblocking events" );
+    if ( block )	yuiDebug() << "Blocking events"   << endl;
+    else		yuiDebug() << "Unblocking events" << endl;
 #endif
 
     _events_blocked = block;

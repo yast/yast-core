@@ -589,7 +589,7 @@ void YWidget::setChildrenEnabled( bool enabled )
 	    child->setChildrenEnabled( enabled );
 	}
 
-	// yuiDebug() << (  enabled ? "Enabling " : "Disabling " ) << child << endl;
+	// yuiDebug() << ( enabled ? "Enabling " : "Disabling " ) << child << endl;
 	child->setEnabled( enabled );
     }
 }

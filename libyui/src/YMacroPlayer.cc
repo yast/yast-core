@@ -24,8 +24,8 @@
 #include <ycp/YBlock.h>
 #include <ycp/YCPCode.h>
 
-#define y2log_component "ui-macro"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-macro"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YWidget.h"
@@ -43,7 +43,7 @@ YMacroPlayer::YMacroPlayer( const string & macroFileName )
 
 YMacroPlayer::~YMacroPlayer()
 {
-    y2debug( "Deleting macro player." );
+    yuiDebug() << "Deleting macro player." << endl;
 }
 
 
@@ -56,11 +56,11 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
     if ( ! macroFile )
     {
 	setError();
-	y2error( "Can't open macro file %s", macroFileName.c_str() );
+	yuiError() << "Can't open macro file " << macroFileName << endl;
 	return ;
     }
 
-    y2milestone( "Loading macro file %s", macroFileName.c_str() );
+    yuiMilestone() << "Loading macro file " << macroFileName << endl;
 
     Parser parser( macroFile, macroFileName.c_str() );
     YCodePtr parsed = parser.parse();
@@ -68,23 +68,26 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
     if ( !parsed || parsed->isError() )
     {
 	setError();
-	y2error( "Error parsing macro file %s - macro execution aborted",
-		 macroFileName.c_str() );
+	yuiError() << "Error parsing macro file " << macroFileName
+		   << " -- macro execution aborted"
+		   << endl;
 	return;
     }
 
     if ( !parsed->isBlock() )
     {
 	setError();
-	y2error( "Macro syntax error in file %s - expected YCP block",
-		 macroFileName.c_str() );
+	yuiError() << "Macro syntax error in file " << macroFileName
+		   << " -- expected YCP block"
+		   << endl;
 	return;
     }
 
     _macro = static_cast <YBlockPtr> (parsed) ;
 
-    y2debug( "Playing macro from file %s - %d macro blocks",
-	     macroFileName.c_str(), _macro->statementCount() );
+    yuiDebug() << "Playing macro from file " << macroFileName
+	       << " - " << _macro->statementCount() << " macro blocks"
+	       << endl;
     _nextBlockNo = 0;
 
     fclose( macroFile );
@@ -95,12 +98,13 @@ bool YMacroPlayer::finished()
 {
     if ( error() || !_macro || _nextBlockNo < 0 )
     {
-	y2warning( "Test for error() first before testing finished() !" );
+	yuiWarning() << "Test for error() first before testing finished() !" << endl;
 	return true;
     }
-    y2debug( "_nextBlockNo: %d, size: %d, finished(): %s",
-	      _nextBlockNo ,_macro->statementCount(),
-	      _nextBlockNo >= _macro->statementCount() ? "true" : "false" );
+    yuiDebug() << "_nextBlockNo: " 	<< _nextBlockNo 
+	       << ", size: "		<< _macro->statementCount()
+	       << ", finished(): " 	<< boolalpha << ( _nextBlockNo >= _macro->statementCount() )
+	       << endl;
 
     return _nextBlockNo >= _macro->statementCount();
 }
@@ -113,7 +117,7 @@ YCPValue YMacroPlayer::evaluateNextBlock()
 	return YCPNull();
     }
 
-    y2milestone( "Evaluating macro block #%d", _nextBlockNo );
+    yuiMilestone() << "Evaluating macro block #" << _nextBlockNo << endl;
 
     return _macro->evaluate( _nextBlockNo++ );
 }

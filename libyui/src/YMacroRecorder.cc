@@ -23,10 +23,10 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPTerm.h>
 #include <ycp/YCPVoid.h>
-
-#define y2log_component "ui-macro"
-#include <ycp/y2log.h>
 #include <ycp/ExecutionEnvironment.h>
+
+#define YUILogComponent "ui-macro"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YWidget.h"
@@ -36,6 +36,7 @@
 #include "YUIComponent.h"
 #include "YCPValueWidgetID.h"
 #include "YUI.h"
+#include "YUI_util.h"
 
 #ifndef Y2LOG_DATE
 #   define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
@@ -67,12 +68,12 @@ void YMacroRecorder::openMacroFile( const string & macroFileName )
 
     if ( _macroFile )
     {
-	y2milestone( "Recording macro to %s", macroFileName.c_str() );
+	yuiMilestone() << "Recording macro to " << macroFileName << endl;
 
     }
     else
     {
-	y2error( "Can't record to macro file %s", macroFileName.c_str() );
+	yuiError() << "Can't record to macro file " << macroFileName << endl;
     }
 }
 
@@ -83,7 +84,7 @@ void YMacroRecorder::closeMacroFile()
     {
 	fclose( _macroFile );
 	_macroFile = 0;
-	y2milestone( "Macro recording done." );
+	yuiMilestone() << "Macro recording done." << endl;
     }
 }
 
@@ -223,7 +224,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
 
     fflush( _macroFile );	// sync to disk at this point - for debugging
 
-    y2debug( "Input: %s", input->isVoid() ? "(nil)" : input->toString().c_str() );
+    yuiDebug() << "Input: " << input << endl;
 }
 
 
@@ -272,19 +273,19 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
 
     if ( ! widget )
     {
-	y2error( "Null widget" );
+	yuiError() << "Null widget" << endl;
 	return;
     }
 
     if ( ! widget->isValid() )
     {
-	y2error( "Invalid widget" );
+	yuiError() << "Invalid widget" << endl;
 	return;
     }
 
     if ( ! propertyName )
     {
-	y2error ( "Null property name" );
+	yuiError() << "Null property name" << endl;
 	return;
     }
 
@@ -334,8 +335,10 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
 		 widget->widgetClass(),
 		 widget->debugLabel().c_str() );
 
-	y2debug( "Recording %s status: %s: %s",
-		 widget->widgetClass(), propertyName, val->toString().c_str() );
+	yuiDebug() << "Recording " 	<< widget->widgetClass()
+		   << " status: "  	<< propertyName
+		   << ": "		<< val
+		   << endl;
     }
 }
 

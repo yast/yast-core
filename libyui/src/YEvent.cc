@@ -18,8 +18,8 @@
 
 
 
-#define y2log_component "ui-events"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui-events"
+#include "YUILog.h"
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPString.h>
 #include <ycp/YCPInteger.h>
@@ -43,7 +43,7 @@ YEvent::YEvent( EventType eventType )
 
     if ( ++_activeEvents > 3 )
     {
-	y2error( "Memory leak? %d active events", _activeEvents );
+	yuiError() << "Memory leak? " << _activeEvents << " active events!" << endl;
     }
 }
 
@@ -52,7 +52,7 @@ YEvent::~YEvent()
 {
     if ( --_activeEvents < 0 )
     {
-	y2error( "FATAL: More events deleted than destroyed" );
+	yuiError() << "FATAL: More events deleted than destroyed" << endl;
 	abort();
     }
 }

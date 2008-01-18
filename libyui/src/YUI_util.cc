@@ -20,11 +20,11 @@
 #include <errno.h>  	// strerror()
 #include <iconv.h>
 
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
 #include "YUI_util.h"
 #include "YUI.h"
-
-#define y2log_component "ui"
-#include <ycp/y2log.h>
 
 
 using std::string;
@@ -47,12 +47,22 @@ float toFloat( const YCPValue & val )
     if ( val->isFloat() )
 	return val->asFloat()->value();
 
-    y2error( "Can't convert this to float: %s",
-	     val->toString().c_str() );
+    yuiError() << "Can't convert " << val << " to float" << endl;
 
     return -1.0;
 }
 
+
+std::ostream &
+operator<<( std::ostream & stream, const YCPValue & val )
+{
+    if ( val.isNull() )
+	return stream << "<YCPNull>";
+    else if ( val->isVoid() )
+	return stream << "<nil>";
+    else
+	return stream << val->toString();
+}
 
 
 // FIXME: The following code is ugly
@@ -138,7 +148,11 @@ int YUI::Recode( const string & src,
 	if ( ! complained )
 	{
 	    // glibc-locale is not necessarily installed so only complain once
-	    y2error( "Recode: ( errno %d ) failed conversion '%s' to '%s'", errno, srcEncoding.c_str(), destEncoding.c_str() );
+	    yuiError() << "Recode: (errno " << errno
+		       <<  ") -- failed conversion: '" << srcEncoding
+		       << "' --> '" << destEncoding << "'"
+		       << endl;
+	    
 	    complained = true;
 	}
 	dest = src;

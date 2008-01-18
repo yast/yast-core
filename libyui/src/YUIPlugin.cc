@@ -19,8 +19,8 @@
 
 #include <dlfcn.h>
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 #include "YUIPlugin.h"
 
 
@@ -43,8 +43,10 @@ YUIPlugin::YUIPlugin( const char * pluginLibBaseName )
     if ( ! _pluginLibHandle )
     {
 	_errorMsg = dlerror();
-	y2error( "Could not load UI plugin \"%s\": %s",
-		 pluginLibBaseName, _errorMsg.c_str() );
+	
+	yuiError() << "Could not load UI plugin \"" << pluginLibBaseName
+		   << "\": " << _errorMsg
+		   << endl;
     }
 }
 
@@ -79,8 +81,9 @@ void * YUIPlugin::locateSymbol( const char * symbol )
 
     if ( ! addr )
     {
-	y2error( "Could not locate symbol \"%s\" in %s",
-		 symbol, pluginLibFullPath().c_str() );
+	yuiError() << "Could not locate symbol \"" << symbol 
+		   << "\" in " << pluginLibFullPath()
+		   << endl;
     }
 
     return addr;
