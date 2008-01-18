@@ -17,6 +17,9 @@
 /-*/
 
 
+#include <iomanip>	// std::setw()
+#include <algorithm>	// std::max()
+
 #define YUILogComponent "ui-layout"
 #include "YUILog.h"
 
@@ -25,7 +28,7 @@
 #include "YSpacing.h"
 #include "YUI.h"
 
-#include <algorithm>
+using std::setw;
 
 
 struct YLayoutBoxPrivate
@@ -91,9 +94,7 @@ YLayoutBox::setDebugLayout( bool deb )
 {
     priv->debugLayout = deb;
 
-    yuiDebug() << "YLayoutBox: Layout debugging "
-	       << ( deb ? "enabled" : "disabled" )
-	       << endl;
+    yuiDebug() << "YLayoutBox: Layout debugging: " << boolalpha << deb << endl;
 }
 
 
@@ -200,11 +201,11 @@ YLayoutBox::findDominatingChild()
 
     if ( debugLayout() )
     {
-	if ( dominatingChild >= 0 )
+	if ( dominatingChild )
 	{
-	    yuiDebug() << "Found dominating child: " << dominatingChild
-		       << " - preferred size: " << dominatingChild->preferredSize( primary() )
-		       << ", weight: " << dominatingChild->weight( primary() )
+	    yuiDebug() << "Found dominating child: "	<< dominatingChild
+		       << " - preferred size: " 	<< dominatingChild->preferredSize( primary() )
+		       << ", weight: " 			<< dominatingChild->weight( primary() )
 		       << endl;
 	}
 	else
@@ -466,11 +467,10 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 
 		if ( childSize[i] < child->preferredSize( primary() ) )
 		{
-		    yuiDebug() << "Resizing child widget #" << i
-			       << "(" << child 
-			       << ") below its preferred size of " << child->preferredSize( primary() )
-			       << " to " << childSize[i]
-			       << " - check the layout!"
+		    yuiDebug() << "Layout running out of space: "
+			       << "Resizing child widget #" 		<< i << " ("<< child 
+			       << ") below its preferred size of "	<< child->preferredSize( primary() )
+			       << " to " 				<< childSize[i]
 			       << endl;
 		}
 	    }
@@ -605,9 +605,9 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 	{
 	    if ( debugLayout() )
 	    {
-		yuiDebug() << "Distributing insufficient space of " << tooSmall
-			   << " amoung " << loserCount << " losers"
-			   << endl;
+		yuiWarning() << "Distributing insufficient space of " << tooSmall
+			     << " amoung " << loserCount << " losers"
+			     << endl;
 	    }
 
 	    int dividedLoss = std::max( tooSmall / loserCount, 1 );
@@ -643,14 +643,14 @@ YLayoutBox::calcPrimaryGeometry( int		newSize,
 		{
 		    YWidget * child = *it;
 
-		    yuiDebug() << "child #" << i <<" ( " << child
-			       << " ) will get " << childSize[i]
-			       << " - "  << child->preferredSize( primary() ) - childSize[i] << " too small"
-			       << " (preferred size: "<< child->preferredSize( primary() )
-			       << ", weight: " << child->weight( primary() )
-			       << ", stretchable: " << ( child->stretchable( primary() ) ? "yes" : "no" )
-			       << "), pos: " << childPos[i]
-			       << endl;
+		    yuiWarning() << "child #" << i <<" ( " << child
+				 << " ) will get " 	<< childSize[i]
+				 << " - "  		<< child->preferredSize( primary() ) - childSize[i] << " too small"
+				 << " (preferred size: "<< child->preferredSize( primary() )
+				 << ", weight: " 	<< child->weight( primary() )
+				 << ", stretchable: " 	<< boolalpha << child->stretchable( primary() )
+				 << "), pos: " 		<< childPos[i]
+				 << endl;
 		}
 	    }
 	}
@@ -695,24 +695,25 @@ YLayoutBox::calcSecondaryGeometry( int	 	newSize,
 
 	if ( childSize[i] < preferred )
 	{
-	    yuiDebug() << "Resizing child widget #" << i
-		       << " (" << child
-		       << ") below its preferred size of " << preferred
-		       << " to " << childSize[i]
-		       << "- check the layout!"
+	    yuiDebug() << "Layout running out of space: "
+		       << "Resizing child widget #"		<< i
+		       << " (" 					<< child
+		       << ") below its preferred size of " 	<< preferred
+		       << " to " 				<< childSize[i]
 		       << endl;
 	}
 
 	if ( debugLayout() )
 	{
-	    yuiDebug() << "child #" << i
-		       << " (" << child
-		       << ") will get " << childSize[i]
-		       << "(preferred size: " << preferred
-		       << ", weight: " << child->weight( secondary() )
-		       << ", stretchable: " << ( child->stretchable( secondary() ) ? "yes" : "no" )
-		       << "), pos: " << childPos[i]
-		       << endl;
+	    ( childSize[i] < preferred ? yuiWarning() : yuiDebug() )
+		<< "child #"		<< i
+		<< " (" 		<< child
+		<< ") will get " 	<< childSize[i]
+		<< " (preferred size: " << preferred
+		<< ", weight: " 	<< child->weight( secondary() )
+		<< ", stretchable: " 	<< boolalpha << child->stretchable( secondary() )
+		<< "), pos: " 		<< childPos[i]
+		<< endl;
 	}
     }
 }
@@ -736,11 +737,11 @@ YLayoutBox::doResize( sizeVector & width,
 
 	if ( debugLayout() )
 	{
-	    yuiMilestone() << "x: "  << x_pos[i]
-			   << " y: " << y_pos[i]
-			   << " w: " << width[i]
-			   << " h: " << height[i]
-			   << child
+	    yuiMilestone() << "  x: " << setw( 3 ) << x_pos[i]
+			   << "  y: " << setw( 3 ) << y_pos[i]
+			   << "  w: " << setw( 3 ) << width[i]
+			   << "  h: " << setw( 3 ) << height[i]
+			   << "  "   << child
 			   << endl;
 	}
     }
