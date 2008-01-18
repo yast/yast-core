@@ -16,7 +16,7 @@
 
 /-*/
 
-#define MAX_DEBUG_LABEL_LEN	70
+#define MAX_DEBUG_LABEL_LEN	32
 
 
 #define y2log_component "ui"
