@@ -574,6 +574,9 @@ and results in " xxx xxx ". With String(" x", " "), leading and
 trailing blanks are stripped. So " xxx xxx " is still matched but
 the result is "xxx xxx".
 <p>
+To match any string (rest of the line) use <code>String ("^\n")</code>.
+</p>
+<p>
 Empty matches are not allowed. If you want to match an empty string,
 use <code>Or (String ("^\n"), "")</code>
 instead of <code>String ("^\n")</code>.
