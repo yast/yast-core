@@ -578,8 +578,9 @@ To match any string (rest of the line) use <code>String ("^\n")</code>.
 </p>
 <p>
 Empty matches are not allowed. If you want to match an empty string,
-use <code>Or (String ("^\n"), "")</code>
-instead of <code>String ("^\n")</code>.
+use <code>Or (String (<i>pattern</i>), "")</code>
+instead of <code>String (<i>pattern</i>)</code>.
+In other words, String has a "+" repeat count, not "*".
 </dd>
 <dt>Write:
 <dd>When writing such values, stripping is also performed. So writing
