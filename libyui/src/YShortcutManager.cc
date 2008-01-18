@@ -235,7 +235,7 @@ YShortcutManager::resolveConflict( YShortcut * shortcut )
 	    else
 	    {
 		yuiDebug() << "Reassigning shortcut '" << candidate
-			   << "' for " << shortcut->widget()
+			   << "' to " << shortcut->widget()
 			   << endl;
 	    }
 	    shortcut->setShortcut( candidate );

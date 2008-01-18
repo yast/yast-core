@@ -316,7 +316,7 @@ YSelectionWidget::findSelectedItem( YItemConstIterator begin,
 						     item->childrenEnd() );
 	    if ( selectedItem )
 	    {
-		// yuiDebug() <<( "Selected item: \"" << selectedItem->label() << "\"" << endl;
+		// yuiDebug() << "Selected item: \"" << selectedItem->label() << "\"" << endl;
 		return selectedItem;
 	    }
 	}
