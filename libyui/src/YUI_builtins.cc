@@ -1414,30 +1414,8 @@ void YUI::evaluateFakeUserInput( const YCPValue & next_input )
  */
 YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 {
-    YCPString glyphText = glyph( glyphSym );	// ask specific UI
-
-    if ( glyphText->value().length() == 0 )	// specific UI doesn't have a suitable representation
-    {
-	string sym = glyphSym->symbol();
-
-	if	( sym == YUIGlyph_ArrowLeft		)	glyphText = YCPString( "<-"  );
-	else if ( sym == YUIGlyph_ArrowRight		)	glyphText = YCPString( "->"  );
-	else if ( sym == YUIGlyph_ArrowUp		)	glyphText = YCPString( "^"   );
-	else if ( sym == YUIGlyph_ArrowDown		)	glyphText = YCPString( "v"   );
-	else if ( sym == YUIGlyph_CheckMark		)	glyphText = YCPString( "x"   );
-	else if ( sym == YUIGlyph_BulletArrowRight	)	glyphText = YCPString( "=>"  );
-	else if ( sym == YUIGlyph_BulletCircle		)	glyphText = YCPString( "o"   );
-	else if ( sym == YUIGlyph_BulletSquare		)	glyphText = YCPString( "[]"  );
-	else	// unknown glyph symbol
-	{
-	    yuiError() << "Unknown glyph `" << sym << endl;
-	    return YCPNull();
-	}
-    }
-
-    return glyphText;
+    return YCPString( YUI::app()->glyph( glyphSym->symbol() ) );
 }
-
 
 
 /**

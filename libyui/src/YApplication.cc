@@ -150,3 +150,22 @@ YApplication::language( bool stripEncoding ) const
 
     return lang;
 }
+
+
+string
+YApplication::glyph( const string & sym )
+{
+    if	    ( sym == YUIGlyph_ArrowLeft		)	return ( "<-"  );
+    else if ( sym == YUIGlyph_ArrowRight	)	return ( "->"  );
+    else if ( sym == YUIGlyph_ArrowUp		)	return ( "^"   );
+    else if ( sym == YUIGlyph_ArrowDown		)	return ( "v"   );
+    else if ( sym == YUIGlyph_CheckMark		)	return ( "x"   );
+    else if ( sym == YUIGlyph_BulletArrowRight	)	return ( "=>"  );
+    else if ( sym == YUIGlyph_BulletCircle	)	return ( "o"   );
+    else if ( sym == YUIGlyph_BulletSquare	)	return ( "[]"  );
+    else	// unknown glyph symbol
+    {
+	yuiError() << "Unknown glyph `" << sym << endl;
+	return "";
+    }
+}

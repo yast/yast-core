@@ -463,3 +463,9 @@
 * Now return empty string upon user cancel
 
 
+
+2008-01-20 sh@suse.de
+
+* Moved glyph handling from YUI to YApplication, 
+  now using std::string instead of YCPString and YCPSymbol;
+  forget YMyUI::glyph(), implement YMyApplication::glyph()

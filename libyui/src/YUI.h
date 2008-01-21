@@ -434,17 +434,6 @@ protected:
      **/
     virtual void closeDialog( YDialog *dialog );
 
-
-    /**
-     * Implement the 'Glyph()' builtin in the specific UI:
-     *
-     * Return a representation for the glyph symbol specified in UTF-8 encoding
-     * or an empty string to get a default textual representation.
-     *
-     * Derived UIs may or may not choose to overwrite this.
-     **/
-    virtual YCPString glyph( const YCPSymbol & glyphSymbol ) { return YCPString( "" ); }
-
     
 protected:
 

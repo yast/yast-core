@@ -245,6 +245,7 @@ y2milestone ("formatEvent(%1)", event);
 	else if ( event["ID"]:nil == `order )
 	{
 	    UI::ChangeWidget(`send_mafioso, `Value, nil );
+	    UI::DumpWidgetTree();
 	}
 	else if ( event["ID"]:nil == `cancel_order )
 	{

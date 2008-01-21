@@ -133,6 +133,29 @@ public:
     string language( bool stripEncoding = false ) const;
 
     /**
+     * Return a string for a named glyph:
+     *
+     *    YUIGlyph_ArrowLeft		
+     *    YUIGlyph_ArrowRight		
+     *    YUIGlyph_ArrowUp		
+     *    YUIGlyph_ArrowDown		
+     *    YUIGlyph_CheckMark		
+     *    YUIGlyph_BulletArrowRight	
+     *    YUIGlyph_BulletCircle		
+     *    YUIGlyph_BulletSquare		
+     *
+     * Using this is discouraged in new applications.
+     * This method is available for backward compatibility.
+     *
+     * This default implementation returns simple textual representations for
+     * each glyph simbol (e.g., "->" for YUIGlyphArrorRight).
+     *
+     * Derived classes are free to overwrite this. It does not make sense to
+     * call this base class method in a new implementation.
+     **/
+    virtual string glyph( const string & glyphSymbolName );
+    
+    /**
      * Open a directory selection box and prompt the user for an existing
      * directory.
      *
@@ -193,6 +216,7 @@ public:
 
 private:
 
+    
     ImplPtr<YApplicationPrivate> priv;
 };
 
