@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <iomanip>
 #include <cxxabi.h>
 #include <string>
 
@@ -67,11 +68,18 @@ log_backtrace ()
     size_t size = backtrace (frames, N);
     char ** strings = backtrace_symbols (frames, size);
 
+    std::stringstream backtrace;
+    
     for (size_t i = 0; i < size; ++i)
     {
-	string demangled_name = demangle( strings[i] );
-	y2error ("frame %2zd: %s", i, demangled_name.c_str() );
+	backtrace << "   Frame "
+		  << std::setw( 2 ) << i << ": "
+		  << demangle( strings[i] ) << "\n";
+			       
     }
+
+    y2error( "Back trace:\n\n%s\n== End of back trace ===\n",
+	     backtrace.str().c_str() );
 
     free (strings);
 }
