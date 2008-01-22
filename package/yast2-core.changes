@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 22 15:02:51 CET 2008 - sh@suse.de
+
+- Improved back trace legibility: Demangling C++ symbols 
+
+-------------------------------------------------------------------
 Mon Jan 16 17:06:00 CET 2008 - tgoettlicher@suse.de
 
 - updated docu for BusyIndicator widget

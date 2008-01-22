@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <cxxabi.h>
+#include <string>
 
 #include <ycp/y2log.h>
 #include <ycp/ExecutionEnvironment.h>
@@ -42,6 +44,7 @@
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
 
+using std::string;
 ExecutionEnvironment ee;
 
 static const int YCP_ERROR = 16;
@@ -52,6 +55,8 @@ static void print_usage ();
 static void print_help ();
 static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)));
 static bool is_ycp_value (const char* arg);
+string demangle( const char * mangled );
+
 
 // FATE 302167, info '(libc) Backtraces'
 void
@@ -63,10 +68,53 @@ log_backtrace ()
     char ** strings = backtrace_symbols (frames, size);
 
     for (size_t i = 0; i < size; ++i)
-	y2error ("frame %zd: %s", i, strings[i]);
+    {
+	string demangled_name = demangle( strings[i] );
+	y2error ("frame %2zd: %s", i, demangled_name.c_str() );
+    }
 
     free (strings);
 }
+
+
+
+string demangle( const char * mangled )
+{
+    const char * func_begin = strchr( mangled, '(' );
+
+    if ( ! func_begin )
+	return string( mangled );
+
+    func_begin++; // skip '('
+
+    string func( func_begin );
+    std::size_t func_end = func.find_first_of( ")+" );
+
+    if ( func_end != string::npos )
+	func.erase( func_end );
+
+    int status = 0;
+    char * demangled_name =
+	abi::__cxa_demangle( func.c_str(),
+			     0, // output buffer
+			     0, // length
+			     & status );
+
+    if ( status == 0 && demangled_name )
+    {
+	func = string( demangled_name );
+	free( demangled_name ); // abi::__cxa_demangle uses malloc()
+
+	string lib_name = string( mangled, func_begin - mangled  -1 );
+
+	return lib_name + "  " + func;
+    }
+    else
+    {
+	return string( mangled );
+    }
+}
+
 
 void
 signal_handler (int sig)
