@@ -69,13 +69,12 @@ log_backtrace ()
     char ** strings = backtrace_symbols (frames, size);
 
     std::stringstream backtrace;
-    
+
     for (size_t i = 0; i < size; ++i)
     {
 	backtrace << "   Frame "
 		  << std::setw( 2 ) << i << ": "
 		  << demangle( strings[i] ) << "\n";
-			       
     }
 
     y2error( "Back trace:\n\n%s\n== End of back trace ===\n",
@@ -192,7 +191,7 @@ public:
 #endif
 	{
 	    loglevel_t level = LOG_DEBUG;
-	    if (m.category == blocxx::Logger::STR_FATAL_CATEGORY 
+	    if (m.category == blocxx::Logger::STR_FATAL_CATEGORY
 		|| m.category == blocxx::Logger::STR_ERROR_CATEGORY)
 	    {
 		level = LOG_ERROR;
@@ -205,7 +204,7 @@ public:
 	    {
 		level = LOG_MILESTONE;
 	    }
-	    
+
 	    y2_logger(level,m.component.c_str ()
 		,m.filename,m.fileline,m.methodname,"%s", m.message.c_str ());
 	}
@@ -571,7 +570,7 @@ main (int argc, char **argv)
 
     // "arg" and these two are output params
     char * client_name;
-    YCPList arglist;    
+    YCPList arglist;
     parse_client_and_options (argc, argv, arg, client_name, arglist);
 
     // "arg" and these two are output params
