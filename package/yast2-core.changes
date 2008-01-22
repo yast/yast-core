@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jan 22 15:42:25 CET 2008 - lslezak@suse.cz
+
+- ag_background - added .signal path for sending a specified signal
+  e.g. SCR::Execute(.background.signal, 10), posted by Kevin James
+
+-------------------------------------------------------------------
 Tue Jan 22 15:02:51 CET 2008 - sh@suse.de
 
 - Improved back trace legibility: Demangling C++ symbols 

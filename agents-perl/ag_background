@@ -75,6 +75,23 @@ sub KillSubprocess()
     }
 }
 
+# send specified SIG to running subprocess
+sub SigSubprocess($)
+{
+
+    my ($sig) = @_;
+
+    if ($child_running)
+    {
+        kill($sig, $child_pid);       # send SIG
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 sub ErrorPath($)
 {
     my ($p) = @_;
@@ -201,6 +218,10 @@ while (1)
 	    elsif ($path eq '.kill')
 	    {
     		ycp::Return(KillSubprocess() ? 'true' : 'false');
+	    }
+           elsif ($path eq '.signal')
+	    {
+		ycp::Return(SigSubprocess("$arg") ? 'true' : 'false');
 	    }
 	    else
 	    {
