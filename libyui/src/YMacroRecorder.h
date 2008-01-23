@@ -61,7 +61,8 @@ public:
      * If no file name is given, a default file name (with auto-increment) will
      * be used. 
      **/
-    void recordMakeScreenShot( bool enabled = false, const char * filename=0 );
+    void recordMakeScreenShot( bool enabled = false,
+			       const string & filename = string() );
 
     /**
      * Record a text as a comment.
