@@ -406,24 +406,6 @@ void YUI::uiThreadMainLoop()
 
 
 // ----------------------------------------------------------------------
-// Default implementations for the virtual methods the deal with
-// event processing
-
-#if 0
-
-void YUI::idleLoop( int fd_ycp )
-{
-    // Just wait for fd_ycp to become readable
-    fd_set fdset;
-    FD_ZERO( & fdset );
-    FD_SET( fd_ycp, & fdset );
-    // FIXME: check for EINTR
-    select( fd_ycp+1, & fdset, 0, 0, 0 );
-}
-
-#endif
-
-// ----------------------------------------------------------------------
 
 
 void *start_ui_thread( void * yui )
@@ -437,6 +419,25 @@ void *start_ui_thread( void * yui )
     if ( ui )
 	ui->uiThreadMainLoop();
     return 0;
+}
+
+
+
+
+// FIXME: Move this to another class
+// (YUI should become independent of YCP and the YaST2 infrastructure)
+
+bool YUI::debugLoggingEnabled() const
+{
+    return get_log_debug();
+}
+
+
+void
+YUI::enableDebugLogging( bool enable )
+{
+    YUILog::enableDebugLogging( enable );
+    set_log_debug( enable );
 }
 
 

@@ -647,6 +647,17 @@ protected:
      **/
     void playNextMacroBlock();
 
+    /**
+     * Check if debug logging is enabled.
+     **/
+    bool debugLoggingEnabled() const;
+
+    /**
+     * Enable or disable debug logging.
+     * This will propagate the parameter to YUILog::enableDebugLogging(),
+     * but it might do more than just that. 
+     **/
+    void enableDebugLogging( bool enable = true );
 
 
 
