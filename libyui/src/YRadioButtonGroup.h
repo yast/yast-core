@@ -24,7 +24,7 @@
 class YRadioButton;
 class YRadioButtonGroupPrivate;
 
-typedef list<YRadioButton *> 			YRadioButtonList;
+typedef std::list<YRadioButton *> 		YRadioButtonList;
 typedef YRadioButtonList::iterator		YRadioButtonListIterator;
 typedef YRadioButtonList::const_iterator	YRadioButtonListConstIterator;
 
