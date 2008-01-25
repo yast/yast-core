@@ -21,20 +21,21 @@
 
 #include <pthread.h>
 #include <deque>
+#include <string>
+
+using std::deque;
+using std::string;
+
 #include <ycp/YCPString.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPTerm.h>
 #include <ycp/YCPInteger.h>
 #include <ycp/YCPMap.h>
 #include <ycp/YCPBoolean.h>
-#include <ycp/YCPByteblock.h>
 
 #include "YTypes.h"
 #include "YWidgetOpt.h"
 
-
-using std::deque;
-using std::string;
 
 class YApplication;
 class YWidget;
@@ -102,7 +103,7 @@ public:
      * threads, this does nothing.
      **/
     void shutdownThreads();
-	
+
     /**
      * Access the global UI.
      **/
@@ -172,6 +173,11 @@ protected:
     virtual YApplication * createApplication() = 0;
 
 public:
+
+    /**
+     * The C++ counterpart to UI::UserInput().
+     **/
+    YCPValue waitForUserInput();
 
     /**
      * Block (or unblock) events. If events are blocked, any event sent
@@ -420,6 +426,8 @@ protected:
      **/
     virtual YEvent * pollInput() = 0;
 
+    
+public:
     /**
      * Show and activate a previously created dialog.
      * This default implementation does nothing.
@@ -434,7 +442,7 @@ protected:
      **/
     virtual void closeDialog( YDialog *dialog );
 
-    
+
 protected:
 
 
@@ -626,7 +634,6 @@ protected:
 			  bool 		wait,
 			  bool 		detailed );
 
-
     /**
      * Implements the WFM or SCR callback command.
      **/
@@ -655,7 +662,7 @@ protected:
     /**
      * Enable or disable debug logging.
      * This will propagate the parameter to YUILog::enableDebugLogging(),
-     * but it might do more than just that. 
+     * but it might do more than just that.
      **/
     void enableDebugLogging( bool enable = true );
 

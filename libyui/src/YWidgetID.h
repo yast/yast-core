@@ -19,8 +19,8 @@
 #ifndef YWidgetID_h
 #define YWidgetID_h
 
-#include <string>
 #include <iosfwd>
+#include <string>
 
 using std::string;
 

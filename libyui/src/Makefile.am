@@ -16,6 +16,7 @@ libpy2UI_la_SOURCES =				\
 	Y2CCUI.cc				\
 	YApplication.cc				\
 	YCPDialogParser.cc			\
+	YCPErrorDialog.cc			\
 	YCPItemParser.cc			\
 	YCPItemWriter.cc			\
 	YCPMenuItemParser.cc			\
@@ -108,6 +109,7 @@ pkginclude_HEADERS =				\
 	YBothDim.h				\
 	YColor.h				\
 	YCPDialogParser.h			\
+	YCPErrorDialog.h			\
 	YCPItem.h				\
 	YCPItemParser.h				\
 	YCPItemWriter.h				\

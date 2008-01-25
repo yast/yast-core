@@ -46,17 +46,18 @@
 #include "YUI.h"
 #include "YUI_util.h"
 #include "YApplication.h"
+#include "YWidget.h"
 #include "YEvent.h"
 #include "YUIException.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
-#include "YWidget.h"
 #include "YMacroRecorder.h"
 #include "YMacroPlayer.h"
 #include "YReplacePoint.h"
 #include "YShortcut.h"
 #include "YWizard.h"
 #include "YWidgetFactory.h"
+#include "YCPErrorDialog.h"
 #include "YCPValueWidgetID.h"
 #include "YCPDialogParser.h"
 #include "YCPItemParser.h"
@@ -430,6 +431,19 @@ YCPValue YUI::evaluateUserInput()
 }
 
 
+YCPValue YUI::waitForUserInput()
+{
+#if VERBOSE_EVENTS
+    yuiDebug() << "Waiting for user input..." << endl;
+#endif
+    
+    return doUserInput( YUIBuiltin_UserInput,
+			0,		// timeout_millisec
+			true,		// wait
+			false );	// detailed
+}
+
+
 /**
  * @builtin PollInput
  * @short Poll Input
@@ -532,98 +546,104 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	yuiError() << builtin_name << "(): Invalid value " << timeout_millisec
 		   << " for timeout - assuming 0"
 		   << endl;
-	
+
 	timeout_millisec = 0;
     }
-
-
-    YDialog * dialog = YDialog::currentDialog();
-
-    // Check for leftover postponed shortcut check
-
-    if ( dialog->shortcutCheckPostponed() )
-    {
-	yuiError() << "Missing CheckShortcuts() before " << builtin_name
-		   << "() after PostponeShortcutCheck()!"
-		   << endl;
-	
-	dialog->checkShortcuts( true );
-    }
-
-
-    // Handle events
 
     YEvent *	event = 0;
     YCPValue 	input = YCPVoid();
 
-    if ( fakeUserInputQueue.empty() )
+    try
     {
-	if ( wait )
+	YDialog * dialog = YDialog::currentDialog();
+
+	// Check for leftover postponed shortcut check
+
+	if ( dialog->shortcutCheckPostponed() )
 	{
-	    do
+	    yuiError() << "Missing CheckShortcuts() before " << builtin_name
+		       << "() after PostponeShortcutCheck()!"
+		       << endl;
+
+	    dialog->checkShortcuts( true );
+	}
+
+
+	// Handle events
+
+	if ( fakeUserInputQueue.empty() )
+	{
+	    if ( wait )
 	    {
-		// Get an event from the specific UI. Wait if there is none.
+		do
+		{
+		    // Get an event from the specific UI. Wait if there is none.
 
 #if VERBOSE_EVENTS
-		yuiDebug() << "SpecificUI::userInput()" << endl;
+		    yuiDebug() << "SpecificUI::userInput()" << endl;
 #endif
-		event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
+		    event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
 
-		// If there was no event or if filterInvalidEvents() discarded
-		// an invalid event, go back and get the next one.
-	    } while ( ! event );
-	}
-	else
-	{
-	    // Get an event from the specific UI. Don't wait if there is none.
-
-#if VERBOSE_EVENTS
-	    yuiDebug() << "SpecificUI::pollInput()" << endl;
-#endif
-	    event = filterInvalidEvents( pollInput() );
-
-	    // Nevermind if filterInvalidEvents() discarded an invalid event.
-	    // PollInput() is called very often (in a loop) anyway, and most of
-	    // the times it returns 'nil' anyway, so there is no need to care
-	    // for just another 'nil' that is returned in this exotic case.
-	}
-
-	if ( event )
-	{
-
-	    if ( detailed )
-		input = event->ycpEvent();	// The event map
+		    // If there was no event or if filterInvalidEvents() discarded
+		    // an invalid event, go back and get the next one.
+		} while ( ! event );
+	    }
 	    else
-		input = event->userInput();	// Only one single ID (or 'nil')
+	    {
+		// Get an event from the specific UI. Don't wait if there is none.
 
 #if VERBOSE_EVENTS
-	    yuiDebug() << "Got regular event from keyboard / mouse: " << input << endl;
+		yuiDebug() << "SpecificUI::pollInput()" << endl;
 #endif
+		event = filterInvalidEvents( pollInput() );
+
+		// Nevermind if filterInvalidEvents() discarded an invalid event.
+		// PollInput() is called very often (in a loop) anyway, and most of
+		// the times it returns 'nil' anyway, so there is no need to care
+		// for just another 'nil' that is returned in this exotic case.
+	    }
+
+	    if ( event )
+	    {
+
+		if ( detailed )
+		    input = event->ycpEvent();	// The event map
+		else
+		    input = event->userInput();	// Only one single ID (or 'nil')
+
+#if VERBOSE_EVENTS
+		yuiDebug() << "Got regular event from keyboard / mouse: " << input << endl;
+#endif
+	    }
 	}
-    }
-    else // fakeUserInputQueue contains elements -> use the first one
-    {
-	// Handle macro playing
-
-	input = fakeUserInputQueue.front();
-	yuiDebug() << "Using event from fakeUserInputQueue: "<< input << endl;
-	fakeUserInputQueue.pop_front();
-    }
-
-
-    // Handle macro recording
-
-    if ( macroRecorder )
-    {
-	if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
+	else // fakeUserInputQueue contains elements -> use the first one
 	{
-	    macroRecorder->beginBlock();
-	    dialog->saveUserInput( macroRecorder );
-	    macroRecorder->recordUserInput( input );
-	    macroRecorder->endBlock();
+	    // Handle macro playing
+
+	    input = fakeUserInputQueue.front();
+	    yuiDebug() << "Using event from fakeUserInputQueue: "<< input << endl;
+	    fakeUserInputQueue.pop_front();
+	}
+
+	// Handle macro recording
+
+	if ( macroRecorder )
+	{
+	    if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
+	    {
+		macroRecorder->beginBlock();
+		dialog->saveUserInput( macroRecorder );
+		macroRecorder->recordUserInput( input );
+		macroRecorder->endBlock();
+	    }
 	}
     }
-
+    catch ( YUIException & exception )
+    {
+	YUI_CAUGHT( exception );
+	YCPErrorDialog::exceptionDialog( "Internal Error", exception );
+	YUI_RETHROW( exception );
+    }
 
     // Clean up.
     //
@@ -784,6 +804,8 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 
 	ycperror( "UI::OpenDialog() failed" );
 	ok = false;
+
+	YCPErrorDialog::exceptionDialog( "UI Syntax Error", exception );
     }
 
     unblockEvents();
@@ -1058,6 +1080,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
 		  idValue->toString().c_str(),
 		  newContentTerm->toString().c_str() );
 
+	YCPErrorDialog::exceptionDialog( "UI Syntax Error", exception );
     }
 
     unblockEvents();

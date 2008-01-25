@@ -1,0 +1,74 @@
+/*---------------------------------------------------------------------\
+|								       |
+|		       __   __	  ____ _____ ____		       |
+|		       \ \ / /_ _/ ___|_   _|___ \		       |
+|			\ V / _` \___ \ | |   __) |		       |
+|			 | | (_| |___) || |  / __/		       |
+|			 |_|\__,_|____/ |_| |_____|		       |
+|								       |
+|				core system			       |
+|							 (C) SuSE GmbH |
+\----------------------------------------------------------------------/
+
+  File:		YCPErrorDialog.cc
+
+  Author:	Stefan Hundhammer <sh@suse.de>
+
+/-*/
+
+#include <ycp/YCPSymbol.h>
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
+#include "YCPErrorDialog.h"
+#include "YUI.h"
+#include "YUI_util.h"
+#include "YApplication.h"
+
+#include "YWidgetFactory.h"
+#include "YCPValueWidgetID.h"
+#include "YDialog.h"
+#include "YLabel.h"
+#include "YPushButton.h"
+#include "YLayoutBox.h"
+
+using std::string;
+
+
+void YCPErrorDialog::exceptionDialog( const string & headingText,
+				      const YUIException & exception ) throw()
+{
+    try
+    {
+	YWidgetFactory * fac = YUI::widgetFactory();
+	YDialog * dialog = fac->createPopupDialog( YDialogWarnColor );
+	YLayoutBox * vbox = fac->createVBox( dialog );
+	fac->createHeading( vbox, headingText );
+	fac->createLabel( vbox, exception.asString() );
+	fac->createLabel( vbox, "Check the log file!" );
+	YLayoutBox * buttonBox = fac->createHBox( vbox );
+	fac->createHStretch( buttonBox );
+	YPushButton * closeButton = fac->createPushButton( buttonBox, "&Close" );
+	closeButton->setId( new YCPValueWidgetID( YCPSymbol( "cancel" ) ) );
+
+	dialog->setInitialSize();
+	dialog->checkShortcuts();
+	YUI::ui()->showDialog( dialog );
+
+	YCPValue input = YUI::ui()->waitForUserInput();
+	yuiMilestone() << "Input: " << input << endl;
+
+	YUI::ui()->closeDialog( YDialog::currentDialog() );
+	YDialog::deleteTopmostDialog();
+    }
+    catch ( YUIException & ex )
+    {
+	YUI_CAUGHT( exception );
+    }
+    catch ( ... )
+    {
+	yuiWarning() << "Caught unknown exception" << endl;
+    }
+}
+
