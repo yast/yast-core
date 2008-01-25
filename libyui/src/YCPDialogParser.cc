@@ -24,7 +24,10 @@
 #include <ycp/YCPBoolean.h>
 
 #define y2log_component "ui"
-#include <ycp/y2log.h>
+#include <ycp/y2log.h>	// ycperror()
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YCPDialogParser.h"
 
@@ -83,6 +86,24 @@
 #include "YBusyIndicator.h"
 
 using std::string;
+
+/**
+ * Complain in the log and throw syntax error exception.
+ * Written as a macro to preserve the original C++ code location.
+ **/
+#define THROW_BAD_ARGS(ARG_TERM)			\
+    do							\
+    {							\
+	string msg = "Invalid arguments for the ";	\
+	msg += (ARG_TERM)->name();			\
+	msg += " widget";				\
+							\
+	ycperror( "%s: %s", msg.c_str(),		\
+		  (ARG_TERM)->toString().c_str() );	\
+							\
+	_YUI_THROW( YUISyntaxErrorException( msg ),	\
+		    YUI_EXCEPTION_CODE_LOCATION );	\
+    } while ( 0 )
 
 
 YWidget *
@@ -199,8 +220,8 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
 	}
 	else if ( ! rawopt->value(o)->isTerm() )
 	{
-	    y2warning( "Invalid widget option %s. Options must be symbols or terms",
-		       rawopt->value(o)->toString().c_str() );
+	    ycperror( "Invalid widget option %s. Options must be symbols or terms.",
+		      rawopt->value(o)->toString().c_str() );
 	}
 	else ol->add( rawopt->value(o) );
     }
@@ -323,7 +344,7 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
     }
     else
     {
-	y2error( "Could not create %s", s.c_str() );
+	yuiError() << "Could not create " << s << endl;
 	ycperror( "Could not create %s from\n%s", s.c_str(), term->toString().c_str() );
     }
 
@@ -376,9 +397,7 @@ YCPDialogParser::parseReplacePoint( YWidget * parent, YWidgetOpt & opt, const YC
 	 term->value( argnr ).isNull() ||
 	 ! term->value( argnr )->isTerm() )
     {
-	y2error( "Invalid arguments for the ReplacePoint widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -410,9 +429,7 @@ YCPDialogParser::parseEmpty( YWidget * parent, YWidgetOpt & opt,
 {
     if ( term->size() != argnr )
     {
-	y2error( "Invalid arguments for the %s widget: %s",
-		 term->name().c_str(),term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -484,9 +501,7 @@ YCPDialogParser::parseSpacing( YWidget * parent, YWidgetOpt & opt,
 
     if ( ! param_ok )
     {
-	y2error( "Invalid arguments for the %s widget: %s",
-		 term->name().c_str(),term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -562,11 +577,7 @@ YCPDialogParser::parseAlignment( YWidget * parent, YWidgetOpt & opt,
     }
     else
     {
-	y2error( "Bad arguments for alignment widget: %s",
-		 term->toString().c_str() );
-	y2error( "Expected `Alignment( child ) or "
-		 "`Alignment(`BackgroundPixmap( \"dir/pixmap.png\" ), child )" );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     if ( YUI::ui()->reverseLayout() )
@@ -622,10 +633,7 @@ YCPDialogParser::parseMinSize( YWidget * parent, YWidgetOpt & opt,
 	     ! isNum ( term->value( argnr+1 ) ) ||
 	     ! term->value( argnr+2 )->isTerm() )
 	{
-
-	    y2error( "Bad arguments for %s - expected `%s( minWidth, minHeight, child ), not %s",
-		     YUIWidget_MinSize, YUIWidget_MinSize, term->toString().c_str() );
-	    return 0;
+	    THROW_BAD_ARGS( term );
 	}
 
 	minWidth  = toFloat( term->value( argnr   ) );
@@ -638,10 +646,7 @@ YCPDialogParser::parseMinSize( YWidget * parent, YWidgetOpt & opt,
 	     ! isNum ( term->value( argnr   ) ) ||
 	     ! term->value( argnr+1 )->isTerm() )
 	{
-
-	    y2error( "Bad arguments for MinWidth|Height - expected ( minSize, child ), not %s",
-		     term->toString().c_str() );
-	    return 0;
+	    THROW_BAD_ARGS( term );
 	}
 
 	if   ( hor )	minWidth  = toFloat( term->value( argnr ) );
@@ -734,7 +739,7 @@ YCPDialogParser::parseMarginBox( YWidget * parent, YWidgetOpt & opt,
 	    else paramOK = false;
 
 	    if ( ! paramOK )
-		y2error( "Bad margin specification: %s", term->value(i)->toString().c_str() );
+		ycperror( "Bad margin specification: %s", term->value(i)->toString().c_str() );
 	}
 
 	if ( paramOK )
@@ -743,12 +748,7 @@ YCPDialogParser::parseMarginBox( YWidget * parent, YWidgetOpt & opt,
 
     if ( ! paramOK )
     {
-	y2error( "Bad MarginBox parameters: %s",
-		 term->toString().c_str() );
-	y2error( "Use either `MarginBox( horMargin, vertMargin, childTerm )" );
-	y2error( "or `MarginBox( `leftMargin( 99 ), `rightMargin( 99 ), `topMargin( 99 ), `bottomMargin( 99 ), childTerm )" );
-
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -790,9 +790,7 @@ YCPDialogParser::parseFrame( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr )->isString()
 	 || ! term->value( argnr+1 )->isTerm() )
     {
-	y2error( "Invalid arguments for the Frame widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -839,9 +837,7 @@ YCPDialogParser::parseSquash( YWidget * parent, YWidgetOpt & opt,
 	 term->value( argnr ).isNull() ||
 	 ! term->value( argnr )->isTerm() )
     {
-	y2error( "%s: The squash widgets take one widget as argument",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -894,9 +890,7 @@ YCPDialogParser::parseWeight( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isInteger()
 	 || !term->value(argnr+1)->isTerm())
     {
-	y2error( "Invalid arguments for the Weight widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
     rejectAllOptions( term,optList );
 
@@ -998,9 +992,7 @@ YCPDialogParser::parseLabel( YWidget * parent, YWidgetOpt & opt,
     if ( term->size() - argnr != 1
 	 || !term->value(argnr)->isString())
     {
-	y2error( "Invalid arguments for the Label widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -1057,9 +1049,7 @@ YCPDialogParser::parseRichText( YWidget * parent, YWidgetOpt & opt,
     if ( term->size() - argnr != 1
 	 || !term->value(argnr)->isString())
     {
-	y2error( "Invalid arguments for the Label RichText: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string 	text 		= term->value( argnr )->asString()->value();
@@ -1131,9 +1121,7 @@ YCPDialogParser::parseLogView( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr+1 )->isInteger()
 	 || ! term->value( argnr+2 )->isInteger())
     {
-	y2error( "Invalid arguments for the LogView widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -1194,9 +1182,7 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 	     || ! term->value(argnr)->isString()
 	     || ! term->value(argnr+1)->isString() )
 	{
-	    y2error( "Invalid arguments for the IconButton widget: %s",
-		     term->toString().c_str() );
-	    return 0;
+	    THROW_BAD_ARGS( term );
 	}
 
 	iconName = term->value( argnr	)->asString()->value();
@@ -1207,9 +1193,7 @@ YCPDialogParser::parsePushButton( YWidget * parent, YWidgetOpt & opt,
 	if ( term->size() - argnr != 1
 	     || !term->value(argnr)->isString() )
 	{
-	    y2error( "Invalid arguments for the PushButton widget: %s",
-		     term->toString().c_str() );
-	    return 0;
+	    THROW_BAD_ARGS( term );
 	}
 
 	label = term->value( argnr )->asString()->value();
@@ -1282,10 +1266,7 @@ YCPDialogParser::parseMenuButton( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr )->isString()
 	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
-	y2error( "Invalid arguments for the MenuButton widget: "
-		 "expected \"label\", [ `item(), `item(), ... ], not %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -1331,9 +1312,7 @@ YCPDialogParser::parseCheckBox( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value( argnr )->isString()
 	 || ( size == 2 && ! term->value(argnr+1)->isBoolean() ) )
     {
-	y2error( "Invalid arguments for the CheckBox widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
     rejectAllOptions( term,optList );
 
@@ -1396,9 +1375,7 @@ YCPDialogParser::parseCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr+2 )->isTerm()
 	 )
     {
-	y2error( "Invalid arguments for the CheckBoxFrame widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string	label		 = term->value( argnr   )->asString()->value();
@@ -1422,7 +1399,7 @@ YCPDialogParser::parseCheckBoxFrame( YWidget * parent, YWidgetOpt & opt,
 
     if ( invertAutoEnable && ! autoEnable )
     {
-	y2warning( "`opt(noAutoEnable) automatically disables `opt(`invertAutoEnable)" );
+	yuiWarning() << ( "`opt(noAutoEnable) automatically disables `opt(`invertAutoEnable)" );
 	invertAutoEnable = false;
     }
 
@@ -1467,9 +1444,7 @@ YCPDialogParser::parseRadioButton( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr )->isString()
 	 || ( s == 2 && ! term->value( argnr+1 )->isBoolean() ) )
     {
-	y2error( "Invalid arguments for the RadioButton widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -1518,9 +1493,7 @@ YCPDialogParser::parseRadioButtonGroup( YWidget * parent, YWidgetOpt & opt,
     if ( term->size() != argnr+1
 	 || !term->value(argnr)->isTerm())
     {
-	y2error( "Invalid arguments for the RadioButtonGroup widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -1577,10 +1550,7 @@ YCPDialogParser::parseInputField( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
 	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
-	y2error( "Invalid arguments for the %s widget: %s",
-		 passwordMode ? "Password" : "InputField",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string label = term->value( argnr )->asString()->value();
@@ -1610,17 +1580,17 @@ YCPDialogParser::parseInputField( YWidget * parent, YWidgetOpt & opt,
 
 	if ( ! postedBugCompatibilityWarning )
 	{
-	    y2warning( "\n"
-		       "\nUsing `TextEntry() in bug compatibiltiy mode."
-		       "\nThis is equivalent to `InputField(`opt(`hstretch), ...)."
-		       "\nThis makes the field grab as much space horizontally as it can get,"
-		       "\ntypically making it stretch across the entire width of the dialog."
-		       "\nWithout this hstretch, the field will take a reasonable default width."
-		       "\n"
-		       "\nIf this `hstretch is really desired, please use `InputField(`opt(`hstretch), ...)."
-		       "\nIf it is not, please use `InputField() without `hstretch."
-		       "\n\n"
-		       );
+	    yuiWarning() <<
+		"\n"
+		"\nUsing `TextEntry() in bug compatibiltiy mode."
+		"\nThis is equivalent to `InputField(`opt(`hstretch), ...)."
+		"\nThis makes the field grab as much space horizontally as it can get,"
+		"\ntypically making it stretch across the entire width of the dialog."
+		"\nWithout this hstretch, the field will take a reasonable default width."
+		"\n"
+		"\nIf this `hstretch is really desired, please use `InputField(`opt(`hstretch), ...)."
+		"\nIf it is not, please use `InputField() without `hstretch."
+		"\n\n" << endl;
 
 	    postedBugCompatibilityWarning = true;
 	}
@@ -1661,9 +1631,7 @@ YCPDialogParser::parseMultiLineEdit( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
 	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
-	y2error( "Invalid arguments for the MultiLineEdit widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -1724,9 +1692,7 @@ YCPDialogParser::parseSelectionBox( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr )->isString()
 	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
-	y2error( "Invalid arguments for the SelectionBox widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string label = term->value( argnr )->asString()->value();
@@ -1796,10 +1762,7 @@ YCPDialogParser::parseMultiSelectionBox( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr   )->isString()
 	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
-	y2error( "Invalid arguments for the MultiSelectionBox widget: %s",
-		 term->toString().c_str() );
-
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string label      = term->value( argnr )->asString()->value();
@@ -1871,9 +1834,7 @@ YCPDialogParser::parseComboBox( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
 	 || ( numargs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
-	y2error( "Invalid arguments for the ComboBox widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string label    = term->value( argnr )->asString()->value();
@@ -1965,9 +1926,7 @@ YCPDialogParser::parseTree( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value( argnr )->isString()
 	 || ( numArgs >= 2 && ! term->value( argnr+1 )->isList() ) )
     {
-	y2error( "Invalid arguments for the Tree widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2080,9 +2039,7 @@ YCPDialogParser::parseTable( YWidget * parent, YWidgetOpt & opt,
 	 || term->value(argnr)->asTerm()->name() != YUISymbol_header
 	 || (numArgs == 2 && !term->value(argnr+1)->isList()))
     {
-	y2error( "Invalid arguments for the Table widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -2147,7 +2104,7 @@ YCPDialogParser::parseTableHeader( const YCPTerm & headerTerm )
 	    {
 		string msg = string( "Unknown table header alignment: " )
 		    + colHeaderTerm->name().c_str();
-		y2error ( "%s", msg.c_str() );
+		yuiError() << msg << endl;
 		ycperror( "%s", msg.c_str() );
 	    }
 
@@ -2160,7 +2117,7 @@ YCPDialogParser::parseTableHeader( const YCPTerm & headerTerm )
 		    string msg = string( "Expected string for table header, not " )
 			+ colHeaderTerm->value(0)->toString();
 
-		    y2error ( "%s", msg.c_str() );
+		    yuiError() << msg << endl;
 		    ycperror( "%s", msg.c_str() );
 		}
 
@@ -2169,7 +2126,7 @@ YCPDialogParser::parseTableHeader( const YCPTerm & headerTerm )
 		    string msg = string( "Ignoring extra parameters of %s" )
 			+ colHeaderTerm->toString();
 
-		    y2error ( "%s", msg.c_str() );
+		    yuiError() << msg << endl;
 		    ycperror( "%s", msg.c_str() );
 		}
 	    }
@@ -2200,7 +2157,7 @@ YCPDialogParser::parseTableHeader( const YCPTerm & headerTerm )
  * value will be 100. If you omit the optional parameter <tt>progress</tt>, the
  * progress bar will set to 0 initially.
  *
- * If you don't know the number of total steps you might want to use the 
+ * If you don't know the number of total steps you might want to use the
  * BusyIndicator widget instead of ProgressBar.
  *
  **/
@@ -2216,9 +2173,7 @@ YCPDialogParser::parseProgressBar( YWidget * parent, YWidgetOpt & opt,
 	 || (s >= 2 && !term->value(argnr+1)->isInteger())
 	 || (s >= 3 && !term->value(argnr+2)->isInteger()))
     {
-	y2error( "Invalid arguments for the ProgressBar widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2287,9 +2242,7 @@ YCPDialogParser::parseImage( YWidget * parent, YWidgetOpt & opt,
 
     if ( ! ok )
     {
-	y2error( "Invalid arguments for the Image widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     string	imageFileName	= term->value( argnr )->asString()->value();
@@ -2362,9 +2315,7 @@ YCPDialogParser::parseIntField( YWidget * parent, YWidgetOpt & opt,
 	 || ! term->value(argnr+3)->isInteger()
 	 )
     {
-	y2error( "Invalid arguments for the IntField widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2420,9 +2371,7 @@ YCPDialogParser::parsePackageSelector( YWidget * parent, YWidgetOpt & opt,
     if ( numArgs > 1 ||
 	 ( numArgs == 1 && ! term->value( argnr )->isString() ) )
     {
-	y2error( "Invalid arguments for the PackageSelector widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -2473,9 +2422,7 @@ YCPDialogParser::parsePkgSpecial( YWidget * parent, YWidgetOpt & opt,
     if ( numArgs != 1
 	 || ! term->value( argnr )->isString() )
     {
-	y2error( "Invalid arguments for the PkgSpecial widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2497,9 +2444,7 @@ YCPDialogParser::parseDummySpecialWidget( YWidget *parent, YWidgetOpt & opt,
 {
     if ( term->size() - argnr > 0 )
     {
-	y2error( "Invalid arguments for the DummySpecialWidget widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -2546,9 +2491,7 @@ YCPDialogParser::parseBarGraph( YWidget *parent, YWidgetOpt & opt,
 	 || ( numArgs > 1 && ! term->value(argnr+1)->isList() )
 	 )
     {
-	y2error( "Invalid arguments for the BarGraph widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2640,9 +2583,7 @@ YCPDialogParser::parseDownloadProgress( YWidget *parent, YWidgetOpt & opt,
 	 || ! term->value(argnr+2)->isInteger()
 	 )
     {
-	y2error( "Invalid arguments for the DownloadProgress widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2731,9 +2672,7 @@ YCPDialogParser::parseDumbTab( YWidget *parent, YWidgetOpt & opt,
 	 || ! term->value( argnr+1 )->isTerm()
 	 )
     {
-	y2error( "Invalid arguments for the DumbTab widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     YCPList itemList  = term->value( argnr   )->asList();
@@ -2793,9 +2732,7 @@ YCPDialogParser::parseMultiProgressMeter( YWidget *parent, YWidgetOpt & opt,
 
     if ( numArgs != 1 || ! term->value(argnr)->isList() )
     {
-	y2error( "Invalid arguments for the MultiProgressMeter widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     vector<float> maxValues;
@@ -2888,9 +2825,7 @@ YCPDialogParser::parseSlider( YWidget *parent, YWidgetOpt & opt,
 	 || ! term->value(argnr+3)->isInteger()
 	 )
     {
-	y2error( "Invalid arguments for the Slider widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -2964,9 +2899,7 @@ YCPDialogParser::parsePartitionSplitter( YWidget *parent, YWidgetOpt & opt,
 	 || ! term->value(argnr+9)->isString()	// newPartFieldLabel
 	 )
     {
-	y2error( "Invalid arguments for the PartitionSplitter widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -3020,9 +2953,7 @@ YCPDialogParser::parsePatternSelector( YWidget *parent, YWidgetOpt & opt,
 {
     if ( term->size() - argnr > 0 )
     {
-	y2error( "Invalid arguments for the PatternSelector widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -3069,9 +3000,7 @@ YCPDialogParser::parseSimplePatchSelector( YWidget *parent, YWidgetOpt & opt,
 {
     if ( term->size() - argnr > 0 )
     {
-	y2error( "Invalid arguments for the SimplePatchSelector widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -3106,9 +3035,7 @@ YCPDialogParser::parseDateField( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
 	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
-	y2error( "Invalid arguments for the DateField widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -3153,9 +3080,7 @@ YCPDialogParser::parseTimeField( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
 	 || (term->size() == argnr+2 && !term->value(argnr+1)->isString()))
     {
-	y2error( "Invalid arguments for the TimeField widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -3217,9 +3142,7 @@ YCPDialogParser::parseWizard( YWidget * parent, YWidgetOpt & opt,
 	 || ! isSymbolOrId( term->value( argnr+2 ) ) || ! term->value( argnr+3 )->isString()
 	 || ! isSymbolOrId( term->value( argnr+4 ) ) || ! term->value( argnr+5 )->isString() )
     {
-	y2error( "Invalid arguments for the Wizard widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
 
@@ -3294,9 +3217,7 @@ YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
 	 || !term->value(argnr)->isString()
          || !term->value(argnr+1)->isMap() )
     {
-	y2error( "Invalid arguments for the TimezoneSelector widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term, optList );
@@ -3327,13 +3248,13 @@ YCPDialogParser::parseTimezoneSelector( YWidget * parent, YWidgetOpt & opt,
  * a task is in progress and the user has to wait. It is similar to a progress bar.
  * The difference is that a busy indicator can be used when the total number of
  * steps is not known before the action starts. You have to send keep alive messages
- * by setting alive to true every now and then, otherwise the busy indicator will 
+ * by setting alive to true every now and then, otherwise the busy indicator will
  * change to stalled state.
  *
  * There are some limitations due to technical reasons in ncurses ui:
  * Only one BusyIndicator widget works at the same time.
  * The BusyIndicator widget cannot be used together with an UserInput widget.
- * Please use the TimeoutUserInput widget in a loop instead. 
+ * Please use the TimeoutUserInput widget in a loop instead.
  **/
 
 YWidget *
@@ -3346,9 +3267,7 @@ YCPDialogParser::parseBusyIndicator( YWidget * parent, YWidgetOpt & opt,
 	 || (s >= 1 && !term->value(argnr)->isString())
 	 || (s >= 2 && !term->value(argnr+1)->isInteger()) )
     {
-	y2error( "Invalid arguments for the BusyIndicator widget: %s",
-		 term->toString().c_str() );
-	return 0;
+	THROW_BAD_ARGS( term );
     }
 
     rejectAllOptions( term,optList );
@@ -3406,7 +3325,7 @@ YCPDialogParser::checkId( const YCPValue & v, bool complain )
     {
 	if ( complain )
 	{
-	    y2error( "Expected `" YUISymbol_id "( any v ), you gave me %s", v->toString().c_str() );
+	    ycperror( "Expected `" YUISymbol_id "( any v ), not  %s", v->toString().c_str() );
 	}
 	return false;
     }
@@ -3446,7 +3365,7 @@ YCPDialogParser::getWidgetId( const YCPTerm & term, int *argnr )
 	YCPTerm idterm = term->value(0)->asTerm();
 	if ( idterm->size() != 1 )
 	{
-	    y2error( "Widget id `" YUISymbol_id "() must have exactly one argument. You gave %s",
+	    ycperror( "Widget id `" YUISymbol_id "() expects exactly one argument, not %s",
 		     idterm->toString().c_str() );
 	    return YCPNull();
 	}
@@ -3457,7 +3376,7 @@ YCPDialogParser::getWidgetId( const YCPTerm & term, int *argnr )
 			       false ) ) // Don't throw exception if not found
 	{
             // Already have a widget with that ID?
-	    y2error( "Widget id %s is not unique", id->toString().c_str() );
+	    ycperror( "Widget id %s is not unique", id->toString().c_str() );
 	    return YCPNull();
 	}
 
@@ -3490,8 +3409,8 @@ YCPDialogParser::getWidgetOptions( const YCPTerm & term, int *argnr )
 void
 YCPDialogParser::logUnknownOption( const YCPTerm & term, const YCPValue & option )
 {
-    y2warning( "Unknown option %s in %s widget",
-	       option->toString().c_str(), term->name().c_str() );
+    ycperror( "Unknown option %s in %s widget",
+	      option->toString().c_str(), term->name().c_str() );
 }
 
 
