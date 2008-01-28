@@ -1098,7 +1098,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
  *
  * <b>This builtin is not for general use. Use the Wizard.ycp module instead.</b>
  *
- * For available wizard commands see file YWizard.cc .
+ * For available wizard commands see file YCPWizardCommandParser.cc .
  * If the current UI does not provide a wizard widget, 'false' is returned.
  * It is safe to call this even for UIs that don't provide a wizard widget. In
  * this case, all calls to this builtin simply return 'false'.
