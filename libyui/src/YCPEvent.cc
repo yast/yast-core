@@ -44,6 +44,9 @@ YCPEvent::YCPEvent( const YEvent * event )
 YCPValue
 YCPEvent::eventId() const
 {
+    if ( ! _event )
+	return YCPVoid();
+    
     //
     // Widget Events
     //
@@ -121,18 +124,21 @@ YCPEvent::eventMap() const
 {
     YCPMap map;
 
-    map->add( YCPString( "EventType"	 ), YCPString ( YEvent::toString( _event->eventType() ) ) );
-    map->add( YCPString( "EventSerialNo" ), YCPInteger( _event->serial() ) );
-
-    YCPValue id = eventId();
-
-    if ( ! id.isNull() && ! id->isVoid() )
+    if ( _event )
     {
-	map->add( YCPString( "ID" ), id );
-    }
+	map->add( YCPString( "EventType"     ), YCPString ( YEvent::toString( _event->eventType() ) ) );
+	map->add( YCPString( "EventSerialNo" ), YCPInteger( _event->serial() ) );
 
-    addWidgetEventFields( map, id );
-    addKeyEventFields   ( map, id );
+	YCPValue id = eventId();
+
+	if ( ! id.isNull() && ! id->isVoid() )
+	{
+	    map->add( YCPString( "ID" ), id );
+	}
+
+	addWidgetEventFields( map, id );
+	addKeyEventFields   ( map, id );
+    }
 
     return map;
 }
