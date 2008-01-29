@@ -30,7 +30,7 @@ using std::string;
 
 
 /**
- * @short Abstract base class for filter views with hierarchical filter
+ * Abstract base class for filter views with hierarchical filter
  * criteria - e.g., RPM group tags, MIME types.
  **/
 class YStringTree

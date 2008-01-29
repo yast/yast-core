@@ -25,7 +25,8 @@ class YWidget;
 
 
 /**
- * @short Simple event handler suitable for most UIs.
+ * Simple event handler suitable for most UIs.
+ *
  * This event handler keeps track of one single event that gets overwritten
  * when a new one arrives.
  **/

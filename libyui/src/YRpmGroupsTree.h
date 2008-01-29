@@ -24,7 +24,7 @@
 
 
 /**
- * @short Efficient storage for RPM group tags
+ * Efficient storage for RPM group tags
  **/
 class YRpmGroupsTree: public YStringTree
 {

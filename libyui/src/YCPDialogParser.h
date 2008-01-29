@@ -44,9 +44,8 @@ public:
     /**
      * Parse a widget tree term.
      *
-     * @param parent the widget or dialog this widget is contained in
-     * @param term YCPTerm describing the widget
-     * @param rbg Pointer to the current radio button group
+     * 'parent': the widget or dialog this widget is contained in
+     * 'term': YCPTerm describing the widget
      *
      * Return value: pointer to the new widget or 0 if it was not successful.
      * And error has been logged in this case
@@ -76,7 +75,7 @@ public:
      * Return value: 'true' if 'val' is a symbol or a valid `id().
      **/
     static bool isSymbolOrId( const YCPValue & val );
-    
+
     /**
      * Checks if the given value is a term with the symbol 'id and
      * size one. Logs an error if this is not so and 'complain' is set.
@@ -115,7 +114,7 @@ protected:
 
     static YWidget * parseFrame( YWidget *parent, YWidgetOpt & opt,
 				 const YCPTerm & term, const YCPList & optList, int argnr );
-    
+
     static YWidget * parseCheckBoxFrame( YWidget *parent, YWidgetOpt & opt,
 					 const YCPTerm & term, const YCPList & optList, int argnr );
 
@@ -218,7 +217,7 @@ protected:
 				 const YCPTerm & term, const YCPList & optList, int argnr );
 
     static YTableHeader * parseTableHeader( const YCPTerm & headerTerm );
-    
+
     static YWidget * parseProgressBar( YWidget *parent, YWidgetOpt & opt,
 				       const YCPTerm & term, const YCPList & optList, int argnr );
 
@@ -252,7 +251,7 @@ protected:
     static YWidget * parseMultiProgressMeter( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 					      const YCPList & optList, int argnr,
 					      YUIDimension dim );
-    
+
     static YWidget * parseSlider( YWidget *parent, YWidgetOpt & opt, const YCPTerm & term,
 				  const YCPList & optList, int argnr );
 
@@ -285,30 +284,31 @@ protected:
      * Increases argnr by 1 if options are found.
      * For example PushButton( `id( 17 ), `opt( `kilroy, `color( `red ) )
      * has the option list [ `kilroy, `color( `red ) ]
-     * @param term the Widgetterm
-     * @param argnr in/out: The number of the first non-id argument.
+     * 'term': the Widget term
+     * 'argnr' (in/out): The number of the first non-id argument.
      * Returns the number of the first non-id and non-opt argument.
+     *
      * Return value: The option list, which may be empty, but never YCPNull
      **/
     static YCPList getWidgetOptions( const YCPTerm & term, int *argnr );
 
     /**
      * Logs a warning for an unknown widget option
-     * @param term the widget term, e.g. PushButton( `opt( `unknown ), ... )
-     * @param option the unknown option itself
+     * 'term:  the widget term, e.g. PushButton( `opt( `unknown ), ... )
+     * 'option': the unknown option itself
      **/
     static void logUnknownOption( const YCPTerm & term, const YCPValue & option );
 
     /**
      * Logs warning messages for all widget options other than the
      * standard ones - for widgets that don't handle any options.
-     * @param term the widget term, e.g. PushButton( `opt( `unknown ), ... )
-     * @param optList the list of options not yet processed
+     * 'term': the widget term, e.g. PushButton( `opt( `unknown ), ... )
+     * 'optList': the list of options not yet processed
      **/
     static void rejectAllOptions( const YCPTerm & term, const YCPList & optList );
 
 private:
-    
+
     /**
      * Constructor.
      *

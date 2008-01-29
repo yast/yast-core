@@ -21,7 +21,7 @@
 
 
 /**
- * @short Helper template class for options that may have some value or may be undefined
+ * Helper template class for options that may have some value or may be undefined
  **/
 template<class T> class YAnyOpt
 {
@@ -74,7 +74,7 @@ protected:
 
 
 /**
- * @short boolean option - tri state: true, false, undefined
+ * boolean option - tri state: true, false, undefined
  **/
 class YBoolOpt: public YAnyOpt<bool>
 {
@@ -83,7 +83,7 @@ class YBoolOpt: public YAnyOpt<bool>
 
 
 /**
- * @short long option - long value or undefined
+ * long option - long value or undefined
  **/
 class YLongOpt: public YAnyOpt<long>
 {
@@ -92,7 +92,7 @@ class YLongOpt: public YAnyOpt<long>
 
 
 /**
- * @short collection of various widget options to be passed
+ * collection of various widget options to be passed
  * transparently through the various library layers.
  *
  * This is a struct and not an object since there is neither a

@@ -25,7 +25,7 @@
 
 
 /**
- * @short Helper class for shortcut management:
+ * Helper class for shortcut management:
  * This class holds data about the shortcut for one single widget.
  **/
 class YShortcut

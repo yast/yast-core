@@ -28,7 +28,7 @@ class YUI;
 class Y2Namespace;
 
 /**
- * @short abstract base class for YaST2 user interface components.
+ * abstract base class for YaST2 user interface components.
  * Derive your own component class from this one and implement createUI().
  **/
 class YUIComponent : public Y2Component

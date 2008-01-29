@@ -29,7 +29,7 @@
 //	CLASS NAME : FSize
 //
 /**
- * @short Store and operate on (file/package/partition) sizes (long long).
+ * Store and operate on (file/package/partition) sizes (long long).
  **/
 class FSize {
 

@@ -25,7 +25,7 @@
 
 
 /**
- * @short Template class for tree items that can handle tree children in a
+ * Template class for tree items that can handle tree children in a
  * generic way - firstChild(), next() and parent(). Each item stores one value
  * of type 'PAYLOAD'.
  *
@@ -177,7 +177,7 @@ protected:
 
 
 /**
- * @short Template class for tree items that maintain sort order.
+ * Template class for tree items that maintain sort order.
  *
  * Class 'PAYLOAD' to provide operator<() in addition to what template
  *'TreeItem' requires.
