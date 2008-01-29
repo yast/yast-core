@@ -20,14 +20,8 @@
 
 #define YUILogComponent "ui-events"
 #include "YUILog.h"
-#include <ycp/YCPVoid.h>
-#include <ycp/YCPString.h>
-#include <ycp/YCPInteger.h>
 #include "YWidget.h"
-#include "YCPItem.h"
-#include "YCPMenuItem.h"
 #include "YEvent.h"
-#include "YCPValueWidgetID.h"
 
 using std::string;
 
@@ -98,25 +92,6 @@ YEvent::toString( EventReason reason )
 }
 
 
-YCPValue YEvent::userInput()
-{
-    return YCPVoid();
-}
-
-
-YCPMap YEvent::ycpEvent()
-{
-    YCPMap map;
-
-    map->add( YCPString( "EventType"		), YCPString ( toString( eventType() )	) );
-    map->add( YCPString( "EventSerialNo"	), YCPInteger( serial()			) );
-
-    return map;
-}
-
-
-
-
 
 
 YWidgetEvent::YWidgetEvent( YWidget *	widget,
@@ -129,73 +104,6 @@ YWidgetEvent::YWidgetEvent( YWidget *	widget,
 }
 
 
-YCPMap YWidgetEvent::ycpEvent()
-{
-    // Use the generic YEvent's map as a base
-
-    YCPMap map = YEvent::ycpEvent();
-    map->add( YCPString( "EventReason" ), YCPString ( toString( reason() )	) );
-
-    if ( _widget )
-    {
-	// Add widget specific info:
-	// Add WidgetID
-
-	if ( _widget->hasId() )
-	{
-	    YCPValueWidgetID * id = dynamic_cast<YCPValueWidgetID *> ( _widget->id() );
-
-	    if ( id )
-	    {
-		map->add( YCPString( "ID"	), id->value() );
-		map->add( YCPString( "WidgetID"	), id->value() );	// This is just an alias
-	    }
-	}
-
-
-	// Add WidgetClass
-
-	const char * widgetClass = _widget->widgetClass();
-
-	if ( widgetClass )
-	{
-	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YInputField, ...)
-		widgetClass++;
-
-	    map->add( YCPString( "WidgetClass" ), YCPSymbol( widgetClass ) );
-	}
-
-
-	// Add the Widget's debug label.
-	// This is usually the label (translated to the user's locale).
-
-	string debugLabel = _widget->debugLabel();
-
-	if ( ! debugLabel.empty() )
-	    map->add( YCPString( "WidgetDebugLabel" ), YCPString( debugLabel ) );
-    }
-
-    return map;
-}
-
-
-YCPValue YWidgetEvent::userInput()
-{
-    if ( _widget->hasId() )
-    {
-	YCPValueWidgetID * id = dynamic_cast<YCPValueWidgetID *> ( _widget->id() );
-
-	if ( id )
-	    return id->value();
-    }
-
-    return YCPVoid();
-}
-
-
-
-
-
 
 YKeyEvent::YKeyEvent( const string &	keySymbol,
 		      YWidget *		focusWidget )
@@ -203,133 +111,5 @@ YKeyEvent::YKeyEvent( const string &	keySymbol,
     , _keySymbol( keySymbol )
     , _focusWidget( focusWidget )
 {
-}
-
-
-YCPMap YKeyEvent::ycpEvent()
-{
-    // Use the generic YEvent's map as a base
-
-    YCPMap map = YEvent::ycpEvent();
-
-    if ( ! _keySymbol.empty() )
-    {
-	map->add( YCPString( "KeySymbol" ), YCPString( _keySymbol ) );
-	map->add( YCPString( "ID"	 ), YCPString( _keySymbol ) ); // just an alias
-    }
-
-    if ( _focusWidget )
-    {
-	// Add widget specific info:
-	// Add ID of the focus widget
-
-	if ( _focusWidget->hasId() )
-	{
-	    YCPValueWidgetID * id = dynamic_cast<YCPValueWidgetID *> ( _focusWidget->id() );
-
-	    if ( id )
-		map->add( YCPString( "FocusWidgetID" ), id->value() ); // just an alias
-	}
-
-
-	// Add WidgetClass
-
-	const char * widgetClass = _focusWidget->widgetClass();
-
-	if ( widgetClass )
-	{
-	    if ( *widgetClass == 'Y' )	// skip leading "Y" (YPushButton, YInputField, ...)
-		widgetClass++;
-
-	    map->add( YCPString( "FocusWidgetClass" ), YCPSymbol( widgetClass ) );
-	}
-
-
-	// Add the Widget's shortcut property.
-	// This is usually the label (translated to the user's locale).
-
-	string debugLabel = _focusWidget->debugLabel();
-
-	if ( ! debugLabel.empty() )
-	    map->add( YCPString( "FocusWidgetDebugLabel" ), YCPString( debugLabel ) );
-    }
-
-    return map;
-}
-
-
-YCPValue YKeyEvent::userInput()
-{
-    return YCPString( _keySymbol );
-}
-
-
-
-
-
-
-YSimpleEvent::YSimpleEvent( EventType		eventType,
-			    const YCPValue &	id )
-    : YEvent( eventType )
-    , _id( id )
-{
-}
-
-
-YSimpleEvent::YSimpleEvent( EventType		eventType,
-			    const char *	id )
-    : YEvent( eventType )
-    , _id( YCPString( id ) )
-{
-}
-
-
-YSimpleEvent::YSimpleEvent( EventType		eventType,
-			    const string &	id )
-    : YEvent( eventType )
-    , _id( YCPString( id ) )
-{
-}
-
-
-YCPMap YSimpleEvent::ycpEvent()
-{
-    // Use the generic YEvent's map as a base
-
-    YCPMap map = YEvent::ycpEvent();
-
-    // Add ID
-    map->add( YCPString( "ID" ), id() );
-
-    return map;
-}
-
-
-YCPValue YSimpleEvent::userInput()
-{
-    return id();
-}
-
-
-
-
-YCPValue YMenuEvent::id() const
-{
-    if ( _item )
-    {
-	YCPMenuItem * ycpMenuItem = dynamic_cast<YCPMenuItem *> (_item);
-
-	if ( ycpMenuItem )
-	    return ycpMenuItem->id();
-
-	YCPItem * ycpItem = dynamic_cast<YCPItem *> (_item);
-
-	if ( ycpItem )
-	    return ycpItem->id();
-
-	return YCPString( _item->label() );
-    }
-
-    return _id;
 }
 

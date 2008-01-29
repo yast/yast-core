@@ -4,8 +4,8 @@
     // then close the dialog and terminate.
 
     UI::OpenDialog(
-	       `IconButton( "topRow_right.png", "&OK" )
-	       );
+		   `IconButton( "icons/22x22/apps/yast-users.png", "&OK" )
+		   );
 
     UI::UserInput();
     UI::CloseDialog();

@@ -426,7 +426,7 @@ protected:
      **/
     virtual YEvent * pollInput() = 0;
 
-    
+
 public:
     /**
      * Show and activate a previously created dialog.
@@ -521,12 +521,10 @@ protected:
 
     /**
      * UI-specific runPkgSelection method.
-     * This default implementation does nothing.
      *
-     * Use this to post-initialize widget stuff that cannot be upon creating
-     * the PackageSelector.
+     * Derived classes are required to implement this.
      **/
-    virtual YCPValue runPkgSelection( YWidget * /*packageSelector*/ ) { return YCPVoid(); }
+    virtual YEvent * runPkgSelection( YWidget * packageSelector ) = 0;
 
 
 

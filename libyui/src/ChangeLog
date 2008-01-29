@@ -469,3 +469,18 @@
 * Moved glyph handling from YUI to YApplication, 
   now using std::string instead of YCPString and YCPSymbol;
   forget YMyUI::glyph(), implement YMyApplication::glyph()
+
+
+2008-01-25 sh@suse.de
+
+* UI::OpenDialog() now opens error dialog in case of exception
+  (using the new mod-ui calls, works for all UIs)
+
+* UI::UserInput() now opens error dialog in case of exception
+  (using the new mod-ui calls, works for all UIs)
+
+
+2008-01-29 sh@suse.de
+
+* Moved YCP part out of YEvent to new class YCPEvent
+* YUI::runPkgSelection() now returns YEvent * and is pure virtual

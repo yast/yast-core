@@ -58,6 +58,7 @@
 #include "YWizard.h"
 #include "YWidgetFactory.h"
 #include "YCPErrorDialog.h"
+#include "YCPEvent.h"
 #include "YCPValueWidgetID.h"
 #include "YCPDialogParser.h"
 #include "YCPItemParser.h"
@@ -605,11 +606,12 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	    if ( event )
 	    {
-
+		YCPEvent ycpEvent( event );
+		
 		if ( detailed )
-		    input = event->ycpEvent();	// The event map
+		    input = ycpEvent.eventMap();
 		else
-		    input = event->userInput();	// Only one single ID (or 'nil')
+		    input = ycpEvent.eventId();
 
 #if VERBOSE_EVENTS
 		yuiDebug() << "Got regular event from keyboard / mouse: " << input << endl;
@@ -1664,8 +1666,21 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 	YCPValue id = YCPDialogParser::parseIdTerm( value_id );
 	YWidget * selector = YCPDialogParser::findWidgetWithId( id );
 
-	// call overloaded method from specific UI
-	result = runPkgSelection( selector );
+	yuiMilestone() << "Running package selection..." << endl;
+	YEvent * event = runPkgSelection( selector );
+
+	if ( event )
+	{
+	    YCPEvent ycpEvent( event );
+	    result = ycpEvent.eventId();
+
+	    if ( result->isString() )				
+		result = YCPSymbol( result->asString()->value() ); // "accept" -> `accept
+
+	    yuiMilestone() << "Package selection done. Returning with " << result << endl;
+
+	    delete event;
+	}
     }
     catch ( YUIException & exception )
     {

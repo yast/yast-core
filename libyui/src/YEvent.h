@@ -21,10 +21,6 @@
 
 
 #include <string>
-#include <ycp/YCPValue.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPSymbol.h>
-#include <ycp/YCPVoid.h>
 
 using std::string;
 class YWidget;
@@ -33,7 +29,7 @@ class YItem;
 
 /**
  * Abstract base class for events to be returned upon UI::UserInput()
- * and related.
+ * and related functions.
  **/
 class YEvent
 {
@@ -68,7 +64,7 @@ public:
 
     /**
      * Virtual desctructor to force a polymorph object
-     * so dynamic_cast can be used
+     * so dynamic_cast<> can be used.
      **/
     virtual ~YEvent();
 
@@ -92,20 +88,6 @@ public:
      * Returns the character representation of an event reason.
      **/
     static const char * toString( EventReason reason );
-
-    /**
-     * Constructs a YCP map to be returned upon UI::WaitForEvent().
-     **/
-    virtual YCPMap ycpEvent();
-
-    /**
-     * Returns the ID to be returned upon UI::UserInput().
-     *
-     * This is the same as the "id" field of the ycpEvent() map
-     * (if this type of event has any such field in its map).
-     * It may also be YCPVoid() (nil).
-     **/
-    virtual YCPValue userInput();
 
 
 protected:
@@ -141,21 +123,6 @@ public:
      **/
     EventReason reason() const { return _reason; }
 
-    /**
-     * Constructs a YCP map to be returned upon UI::WaitForEvent().
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPMap ycpEvent();
-
-    /**
-     * Returns the ID to be returned upon UI::UserInput().
-     * This is the same as the "id" field of the ycpEvent() map.
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPValue userInput();
-
 protected:
 
     YWidget * 	_widget;
@@ -186,25 +153,10 @@ public:
     /**
      * Returns the widget that currently has the keyboard focus.
      *
-     * This might as well be 0 if no widget has the focus or if the creator of
+     * This might be 0 if no widget has the focus or if the creator of
      * this event could not obtain that information.
      **/
     YWidget * focusWidget() const { return _focusWidget; }
-
-    /**
-     * Constructs a YCP map to be returned upon UI::WaitForEvent().
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPMap ycpEvent();
-
-    /**
-     * Returns the ID to be returned upon UI::UserInput().
-     * This is the same as the "id" field of the ycpEvent() map.
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPValue userInput();
 
 protected:
 
@@ -214,72 +166,36 @@ protected:
 
 
 /**
- * Abstract base class for events that just deal with an ID.
- **/
-class YSimpleEvent: public YEvent
-{
-public:
-
-    /**
-     * Constructors.
-     **/
-    YSimpleEvent( EventType eventType, const YCPValue & 	id );
-    YSimpleEvent( EventType eventType, const char * 		id );
-    YSimpleEvent( EventType eventType, const string &		id );
-
-    /**
-     * Returns the ID associated with this event.
-     **/
-    virtual YCPValue id() const { return _id; }
-
-    /**
-     * Constructs a YCP map to be returned upon UI::WaitForEvent().
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPMap ycpEvent();
-
-    /**
-     * Returns the ID to be returned upon UI::UserInput().
-     * This is the same as the "id" field of the ycpEvent() map.
-     *
-     * Reimplemented from YEvent.
-     **/
-    virtual YCPValue userInput();
-
-
-protected:
-
-    YCPValue _id;
-};
-
-
-/**
  * Event to be returned upon menu selection.
  **/
-class YMenuEvent: public YSimpleEvent
+class YMenuEvent: public YEvent
 {
 public:
 
     YMenuEvent( YItem * item )
-	: YSimpleEvent( MenuEvent, YCPVoid() ),
-	  _item( item )
+	: YEvent( MenuEvent )
+	, _item( item )
 	{}
 
-    YMenuEvent( const YCPValue & id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
-    YMenuEvent( const char *     id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
-    YMenuEvent( const string & 	 id )	: YSimpleEvent( MenuEvent, id ), _item(0) {}
+    YMenuEvent( const char *     id )	: YEvent( MenuEvent ), _item(0), _id( id ) {}
+    YMenuEvent( const string & 	 id )	: YEvent( MenuEvent ), _item(0), _id( id ) {}
 
     /**
-     * Returns the ID associated with this event.
-     *
-     * Reimplemented from YSimpleEvent.
+     * Return the YItem that corresponds to this event or 0 if the event was
+     * constructed with a string ID.
      **/
-    virtual YCPValue id() const;
+    YItem * item() const { return _item; }
+
+    /**
+     * Return the string ID of this event. This will be an empty string if the
+     * event was constructed with a YItem.
+     **/
+    string id() const { return _id; }
 
 protected:
 
     YItem * _item;
+    string  _id;
 };
 
 
@@ -287,11 +203,11 @@ protected:
  * Event to be returned upon closing a dialog with the window manager close
  * button (or Alt-F4)
  **/
-class YCancelEvent: public YSimpleEvent
+class YCancelEvent: public YEvent
 {
 public:
 
-    YCancelEvent() : YSimpleEvent( CancelEvent, YCPSymbol( "cancel" ) ) {}
+    YCancelEvent() : YEvent( CancelEvent ) {}
 };
 
 
@@ -299,11 +215,11 @@ public:
  * Event to be returned upon closing a dialog with the window manager close
  * button (or Alt-F4)
  **/
-class YDebugEvent: public YSimpleEvent
+class YDebugEvent: public YEvent
 {
 public:
 
-    YDebugEvent() : YSimpleEvent( DebugEvent, YCPSymbol( "debugHotkey" ) ) {}
+    YDebugEvent() : YEvent( DebugEvent ) {}
 };
 
 
@@ -311,14 +227,12 @@ public:
  * Event to be returned upon timeout
  * (i.e. no event available in the specified timeout)
  **/
-class YTimeoutEvent: public YSimpleEvent
+class YTimeoutEvent: public YEvent
 {
 public:
 
-    YTimeoutEvent() : YSimpleEvent( TimeoutEvent, YCPSymbol( "timeout" ) ) {}
+    YTimeoutEvent() : YEvent( TimeoutEvent ) {}
 };
-
-
 
 
 #endif // YEvent_h
