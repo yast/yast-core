@@ -6,7 +6,7 @@
 	      `VSpacing(),
 	      `HCenter(
 		       `HSquash(
-				`VBox( 
+				`VBox(
 				      `HSpacing( 50 ),
 				      `InputField( "Name" ),
 				      `InputField( "E-Mail" ),
@@ -27,7 +27,10 @@
 		      + "You need to do most everything yourself.\n"
 		      + "Each tab behaves very much like a push button;\n"
 		      + "the YCP application is notified when the user clicks on a tab.\n"
-		      + "The application must take care to exchange the tab contents." )
+		      + "The application must take care to exchange the tab contents.\n"
+		      + "\n"
+		      + "Note: That means changes made in on tab are lost when switching\n"
+		      + "the tabs, e.g. text entered here in the address tab.")
 	      );
 
     term style_hints_page =
@@ -44,8 +47,8 @@
 		    )
 	      );
 
-    
-		  
+
+
     UI::OpenDialog(`opt(`defaultsize),
 		   `VBox(
 			 `DumbTab( [
