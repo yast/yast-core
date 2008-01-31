@@ -40,12 +40,14 @@ struct YDialogPrivate
 	, colorMode( colorMode )
 	, shortcutCheckPostponed( false )
 	, defaultButton( 0 )
+	, isOpen( false )
 	{}
 
     YDialogType		dialogType;
     YDialogColorMode	colorMode;
     bool		shortcutCheckPostponed;
     YPushButton *	defaultButton;
+    bool		isOpen;
 };
 
 
@@ -55,7 +57,7 @@ YDialog::YDialog( YDialogType dialogType, YDialogColorMode colorMode )
     , priv( new YDialogPrivate( dialogType, colorMode ) )
 {
     YUI_CHECK_NEW( priv );
-    
+
     _dialogStack.push( this );
 
 #if VERBOSE_DIALOGS
@@ -69,6 +71,57 @@ YDialog::~YDialog()
 #if VERBOSE_DIALOGS
     yuiDebug() << "Destroying " << this << endl;
 #endif
+
+    if ( ! _dialogStack.empty() && _dialogStack.top() == this )
+    {
+	_dialogStack.pop();
+
+	if ( ! _dialogStack.empty() )
+	    _dialogStack.top()->activate();
+    }
+    else
+	yuiError() << "Not top of dialog stack: " << this << endl;
+}
+
+
+void
+YDialog::open()
+{
+    if ( priv->isOpen )
+	return;
+
+    checkShortcuts();
+    setInitialSize();
+    openInternal();	// Make sure this is only called once!
+
+    priv->isOpen = true;
+}
+
+
+bool
+YDialog::isOpen() const
+{
+    return priv->isOpen;
+}
+
+
+bool
+YDialog::destroy( bool doThrow )
+{
+    YUI_CHECK_WIDGET( this );
+
+    if ( _dialogStack.empty() ||
+	 _dialogStack.top() != this )
+    {
+	if ( doThrow )
+	    YUI_THROW( YUIDialogStackingOrderException() );
+
+	return false;
+    }
+
+    delete this;
+
+    return true;
 }
 
 
@@ -145,8 +198,17 @@ YDialog::setInitialSize()
 #if VERBOSE_DIALOGS
     yuiDebug() << "Setting initial size for " << this << endl;
 #endif
-    
+
     // Trigger geometry management
+    setSize( preferredWidth(), preferredHeight() );
+}
+
+
+void
+YDialog::recalcLayout()
+{
+    yuiDebug() << "Recalculating layout for " << this << endl;
+
     setSize( preferredWidth(), preferredHeight() );
 }
 
@@ -178,7 +240,6 @@ YDialog::deleteTopmostDialog( bool doThrow )
     else
     {
 	delete _dialogStack.top();
-	_dialogStack.pop();
     }
 
     return ! _dialogStack.empty();
@@ -188,8 +249,31 @@ YDialog::deleteTopmostDialog( bool doThrow )
 void
 YDialog::deleteAllDialogs()
 {
-    while ( deleteTopmostDialog( false ) )
-    {}
+    while ( ! _dialogStack.empty() )
+    {
+	delete _dialogStack.top();
+    }
+}
+
+
+void
+YDialog::deleteTo( YDialog * targetDialog )
+{
+    YUI_CHECK_WIDGET( targetDialog );
+
+    while ( ! _dialogStack.empty() )
+    {
+	YDialog * dialog = _dialogStack.top();
+
+	delete dialog;
+
+	if ( dialog == targetDialog )
+	    return;
+    }
+
+    // If we ever get here, targetDialog was nowhere in the dialog stack.
+
+    YUI_THROW( YUIDialogStackingOrderException() );
 }
 
 

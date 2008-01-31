@@ -48,7 +48,8 @@ protected:
 
     /**
      * Destructor.
-     * Don't delete a dialog directly, use YDialog::deleteTopmostDialog().
+     * Don't delete a dialog directly, use YDialog::deleteTopmostDialog()
+     * or YDialog::destroy().
      **/
     virtual ~YDialog();
 
@@ -60,10 +61,47 @@ public:
     virtual const char * widgetClass() const { return "YDialog"; }
 
     /**
+     * Open a newly created dialog: Finalize it and make it visible
+     * on the screen.
+     *
+     * Applications should call this once after all children are created.
+     * If the application doesn't do this, it will be done automatically upon
+     * the next call of YDialog::waitForEvent() (or related). This is OK if
+     * YDialog::waitForEvent() is called immediately after creating the dialog
+     * anyway. If it is not, the application might appear sluggish to the user.
+     *
+     * Derived classes are free to reimplement this, but they should call this
+     * base class method in the new implementation.
+     **/
+    void open();
+
+    /**
+     * Return 'true' if open() has already been called for this dialog.
+     **/
+    bool isOpen() const;
+
+    /**
+     * Close and delete this dialog (and all its children) if it is the topmost
+     * dialog. If this is not the topmost dialog, this will throw an exception
+     * if 'doThrow' is true (default).
+     *
+     * Remember that all pointers to the dialog and its children will be
+     * invalid after this operation.
+     *
+     * This is intentionally not named close() since close() would not imply
+     * that the dialog and its children are deleted.
+     *
+     * Returns 'true' upon success, 'false' upon failure.
+     **/
+    bool destroy( bool doThrow = true );
+
+    /**
      * Delete the topmost dialog.
      *
      * Will throw a YUINoDialogException if there is no dialog and 'doThrow' is
-     * 'true'. 
+     * 'true'.
+     *
+     * This is equivalent to YDialog::currentDialog()->destroy().
      *
      * Returns 'true' if there is another open dialog after deleting,
      * 'false' if there is none.
@@ -74,6 +112,11 @@ public:
      * Delete all open dialogs.
      **/
     static void deleteAllDialogs();
+
+    /**
+     * Delete all dialogs from the topmost to the one specified.
+     **/
+    static void deleteTo( YDialog * dialog );
 
     /**
      * Returns the number of currently open dialogs (from 1 on), i.e., the
@@ -102,6 +145,20 @@ public:
      **/
     void setInitialSize();
 
+    /**
+     * Recalculate the layout of the dialog and of all its children after
+     * children have been added or removed or if any of them changed its
+     * preferred width of height.
+     *
+     * This is a very expensive operation. Call it only when really necessary.
+     * YDialog::open() includes a call to YDialog::setInitialSize() which does
+     * the same.
+     *
+     * The basic idea behind this function is to call it when the dialog
+     * changed after it (and its children hierarchy) was initially created.
+     **/
+    void recalcLayout();
+    
     /**
      * Return this dialog's type (YMainDialog / YPopupDialog).
      **/
@@ -153,9 +210,29 @@ public:
      **/
     virtual void setDefaultButton( YPushButton * defaultButton );
 
+    /**
+     * Activate this dialog: Make sure that it is shown as the topmost dialog
+     * of this application and that it can receive input.  
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual void activate() = 0;
     
+
 protected:
 
+    /**
+     * Internal open() method. This is called (exactly once during the life
+     * time of the dialog) in open().
+     *
+     * Derived classes are required to implement this to do whatever is
+     * necessary to make this dialog visible on the screen.
+     **/
+    virtual void openInternal() = 0;
+    
+    /**
+     * Stack holding all currently existing dialogs.
+     **/
     static std::stack<YDialog *> _dialogStack;
 
 private:

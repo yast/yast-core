@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 31 15:25:52 CET 2008 - sh@suse.de
+
+- Simplified and unified internal UI dialog handling 
+- V 2.16.25
+
+-------------------------------------------------------------------
 Tue Jan 29 20:02:26 CET 2008 - sh@suse.de
 
 - YCP-less event handling in libyui core

@@ -484,3 +484,13 @@
 
 * Moved YCP part out of YEvent to new class YCPEvent
 * YUI::runPkgSelection() now returns YEvent * and is pure virtual
+
+
+2008-01-31 sh@suse.de
+
+* Moved dialog handling from YUI to YDialog:
+  - removed YUI::showDialog()
+  - removed YUI::closeDialog()
+  - Now using YDialog::open() and YDialog::destroy()
+  - Derived classes now have to implement YDialog::openInternal()
+    and YDialog::activate()

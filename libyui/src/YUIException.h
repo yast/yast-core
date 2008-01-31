@@ -457,6 +457,18 @@ public:
 };
 
 
+class YUIDialogStackingOrderException: public YUIException
+{
+public:
+    YUIDialogStackingOrderException()
+	: YUIException( "Dialog stacking order violated" )
+	{}
+
+    virtual ~YUIDialogStackingOrderException() throw()
+	{}
+};
+
+
 class YUISyntaxErrorException: public YUIException
 {
 public:

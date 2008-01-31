@@ -427,22 +427,6 @@ protected:
     virtual YEvent * pollInput() = 0;
 
 
-public:
-    /**
-     * Show and activate a previously created dialog.
-     * This default implementation does nothing.
-     **/
-    virtual void showDialog( YDialog *dialog );
-
-    /**
-     * Decativate and close a previously created dialog.
-     * This default implementation does nothing.
-     *
-     * Don't delete the dialog. This will be done at some other place.
-     **/
-    virtual void closeDialog( YDialog *dialog );
-
-
 protected:
 
 

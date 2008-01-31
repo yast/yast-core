@@ -51,20 +51,19 @@ void YCPErrorDialog::exceptionDialog( const string & headingText,
 	fac->createHStretch( buttonBox );
 	YPushButton * closeButton = fac->createPushButton( buttonBox, "&Close" );
 	closeButton->setId( new YCPValueWidgetID( YCPSymbol( "cancel" ) ) );
-
-	dialog->setInitialSize();
-	dialog->checkShortcuts();
-	YUI::ui()->showDialog( dialog );
+	dialog->open();
 
 	YCPValue input = YUI::ui()->waitForUserInput();
 	yuiMilestone() << "Input: " << input << endl;
 
-	YUI::ui()->closeDialog( YDialog::currentDialog() );
-	YDialog::deleteTopmostDialog();
+	dialog->destroy();
     }
     catch ( YUIException & ex )
     {
 	YUI_CAUGHT( exception );
+	
+	// No other action. If opening this error dialog fails, the user will
+	// just have to live with the error being reported in the log file only.
     }
     catch ( ... )
     {

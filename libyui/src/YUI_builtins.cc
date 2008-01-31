@@ -712,6 +712,8 @@ YUI::filterInvalidEvents( YEvent * event )
 	    YDialog::currentDialog()->dumpWidgetTree();
 #endif
 
+	    YDialog::currentDialog()->activate();
+
 	    delete widgetEvent;
 	    return 0;
 	}
@@ -791,10 +793,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 	YUI_CHECK_NEW( dialog );
 
 	YCPDialogParser::parseWidgetTreeTerm( dialog, dialogTerm );
-
-	dialog->setInitialSize();
-	dialog->checkShortcuts();
-	showDialog( dialog );
+	dialog->open();
     }
     catch ( YUIException & exception )
     {
@@ -830,25 +829,10 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 YCPValue YUI::evaluateCloseDialog()
 {
     blockEvents();	// We don't want self-generated events from UI builtins.
-
-    closeDialog( YDialog::currentDialog() );
     YDialog::deleteTopmostDialog();
-
     unblockEvents();
 
     return YCPBoolean( true );
-}
-
-
-void YUI::showDialog( YDialog * )
-{
-    // dummy default implementation
-}
-
-
-void YUI::closeDialog( YDialog * )
-{
-    // dummy default implementation
 }
 
 
