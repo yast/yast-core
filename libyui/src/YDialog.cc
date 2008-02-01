@@ -27,7 +27,8 @@
 
 using std::string;
 
-#define VERBOSE_DIALOGS	0
+#define VERBOSE_DIALOGS			0
+#define VERBOSE_DISCARDED_EVENTS	0
 
 
 std::stack<YDialog *> YDialog::_dialogStack;
@@ -106,22 +107,36 @@ YDialog::isOpen() const
 
 
 bool
+YDialog::isTopmostDialog() const
+{
+    if ( _dialogStack.empty() )
+    {
+	yuiError() << "Dialog stack empty, but dialog existing: " << this << endl;
+	return false;
+    }
+
+    return _dialogStack.top() == this;
+}
+
+
+bool
 YDialog::destroy( bool doThrow )
 {
     YUI_CHECK_WIDGET( this );
 
-    if ( _dialogStack.empty() ||
-	 _dialogStack.top() != this )
+    if ( isTopmostDialog() )
+    {
+	delete this;
+
+	return true;
+    }
+    else
     {
 	if ( doThrow )
 	    YUI_THROW( YUIDialogStackingOrderException() );
 
 	return false;
     }
-
-    delete this;
-
-    return true;
 }
 
 
@@ -211,6 +226,126 @@ YDialog::recalcLayout()
 
     setSize( preferredWidth(), preferredHeight() );
 }
+
+
+YEvent *
+YDialog::waitForEvent( int timeout_millisec )
+{
+    if ( ! isTopmostDialog() )
+	YUI_THROW( YUIDialogStackingOrderException() );
+
+    if ( timeout_millisec < 0 )
+	timeout_millisec = 0;
+
+    if ( ! isOpen() )
+	open();
+
+    if ( shortcutCheckPostponed() )
+    {
+	yuiError() << "Performing missing keyboard shortcut check now in "
+		   << this << endl;
+
+	checkShortcuts( true );
+    }
+
+    YEvent * event = 0;
+
+    do
+    {
+	event = filterInvalidEvents( waitForEventInternal( timeout_millisec ) );
+
+	// If there was no event or if filterInvalidEvents() discarded
+	// an invalid event, go back and get the next one.
+    } while ( ! event );
+
+    return event;
+}
+
+
+YEvent *
+YDialog::pollEvent()
+{
+    if ( ! isTopmostDialog() )
+	YUI_THROW( YUIDialogStackingOrderException() );
+
+    if ( ! isOpen() )
+	open();
+
+    YEvent * event = filterInvalidEvents( pollEventInternal() );
+
+    // Nevermind if filterInvalidEvents() discarded an invalid event.
+    // pollInput() is normally called very often (in a loop), and most of the
+    // times it returns 0 anyway, so there is no need to care for just another
+    // 0 that is returned in this exotic case.
+
+    return event;
+}
+
+
+YEvent *
+YDialog::filterInvalidEvents( YEvent * event )
+{
+    if ( ! event )
+	return 0;
+
+    YWidgetEvent * widgetEvent = dynamic_cast<YWidgetEvent *> (event);
+
+    if ( widgetEvent && widgetEvent->widget() )
+    {
+	if ( ! widgetEvent->widget()->isValid() )
+	{
+	    /**
+	     * Silently discard events from widgets that have become invalid.
+	     *
+	     * This may legitimately happen if some widget triggered an event yet
+	     * nobody cared for that event (i.e. called UserInput() or PollInput() )
+	     * and the widget has been destroyed meanwhile.
+	     **/
+
+	    // yuiDebug() << "Discarding event for widget that has become invalid" << endl;
+
+	    delete widgetEvent;
+	    return 0;
+	}
+
+	if ( widgetEvent->widget()->findDialog() != this )
+	{
+	    /**
+	     * Silently discard events from all but the current (topmost) dialog.
+	     *
+	     * This may happen even here even though the specific UI should have
+	     * taken care about that: Events may still be in the queue. They might
+	     * have been valid (i.e. belonged to the topmost dialog) when they
+	     * arrived, but maybe simply nobody has evaluated them.
+	     **/
+
+	    // Yes, really yuiDebug() - this may legitimately happen.
+	    yuiDebug() << "Discarding event from widget from foreign dialog" << endl;
+
+#if VERBOSE_DISCARDED_EVENTS
+	    yuiDebug() << "Expected: "   << this
+		       << ", received: " << widgetEvent->widget()->findDialog()
+		       << endl;
+
+	    yuiDebug() << "Event widget: "  << widgetEvent->widget() << endl;
+	    yuiDebug() << "From:" << endl;
+	    widgetEvent->widget()->findDialog()->dumpWidgetTree();
+	    yuiDebug() << "Current dialog:" << endl;
+	    dumpWidgetTree();
+#endif
+
+	    activate(); // try to force this dialog to the foreground
+
+	    delete widgetEvent;
+	    return 0;
+	}
+
+    }
+
+    return event;
+}
+
+
 
 
 

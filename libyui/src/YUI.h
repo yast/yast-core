@@ -65,20 +65,6 @@ struct  YUIBuiltinCallData
 
 /**
  * Abstract base class of a YaST2 user interface.
- *
- * The implementation of a YaST2 user interface such as qt and ncurses
- * constists in subclassing YUI.
- *
- * We have to handle two cases slightly different: The case with and without
- * a seperate UI thread.
- *
- * You have two alternatives how to implement event handling in your UI.
- * Either override idleLoop, userInput and pollInput
- * or override pollInput and waitForEvent, whichever is
- * easier for you.
- *
- * This class is an abstract base class that contains pure virtuals.
- * It is not intended for direct instantiation, only for inheritance.
  **/
 class YUI
 {
@@ -173,11 +159,6 @@ protected:
     virtual YApplication * createApplication() = 0;
 
 public:
-
-    /**
-     * The C++ counterpart to UI::UserInput().
-     **/
-    YCPValue waitForUserInput();
 
     /**
      * Block (or unblock) events. If events are blocked, any event sent
@@ -372,8 +353,6 @@ protected:
 
     const char *moduleName();
 
-    // Event handling, execution flow
-
     /**
      * This virtual method is called when threads are activated in case the
      * execution control is currently on the side of the module.  This means
@@ -389,45 +368,6 @@ protected:
      * ui-specific fds and do a common select() call.
      **/
     virtual void idleLoop( int fd_ycp ) = 0;
-
-    /**
-     * UI-specific UserInput() method.
-     *
-     * This is called upon evaluating the UI::UserInput() builtin command.
-     * This method should remain in its own event loop until an event for the
-     * topmost dialog (YDialog::currentDialog() ) is available or until the
-     * specified timeout (in milliseconds, 0 for "wait forever") is expired (in
-     * which case it should return the pointer to a YTimeoutEvent).
-     *
-     * This method is to return a pointer to an event created with the "new"
-     * operator. The generic UI component assumes ownership of this newly
-     * created object and destroys it when appropriate.
-     *
-     * The caller will gracefully handle if this method returns 0, albeit this
-     * is always an error which may result in an error message in the log file.
-     *
-     * Derived UIs are required to implement this method.
-     **/
-    virtual YEvent * userInput( unsigned long timeout_millisec = 0 ) = 0;
-
-    /**
-     * UI-specific PollInput() method.
-     *
-     * This is called upon evaluating the UI::PollInput() builtin command.
-     * This method should just check if there are any pending events for the
-     * topmost dialog (YDialog::currentDialog() ). This method never waits for
-     * any events - if there is no pending event, it returns 0.
-     *
-     * If there is a pending event, a pointer to that event (newly created with
-     * the "new" operator) is returned. The generic UI component assumes
-     * ownership of this newly created object and destroys it when appropriate.
-     *
-     * Derived UIs are required to implement this method.
-     **/
-    virtual YEvent * pollInput() = 0;
-
-
-protected:
 
 
     /**
@@ -588,11 +528,6 @@ protected:
     bool waitForYCPThread();
 
     /**
-     * Filter out invalid events.
-     **/
-    YEvent * filterInvalidEvents( YEvent * event );
-
-    /**
      * Mid-level handler for the user input related UI commands:
      *	   UserInput()
      *	   TimeoutUserInput()
@@ -647,7 +582,6 @@ protected:
      * but it might do more than just that.
      **/
     void enableDebugLogging( bool enable = true );
-
 
 
 
@@ -737,7 +671,6 @@ protected:
      * The callback component previously set with setCallback().
      **/
     Y2Component * _callback;
-
 
     /**
      * Global reference to the UI

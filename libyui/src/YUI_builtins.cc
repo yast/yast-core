@@ -23,7 +23,6 @@
 
 #define VERBOSE_REPLACE_WIDGET 		0
 #define VERBOSE_EVENTS			0
-#define VERBOSE_DISCARDED_EVENTS	0
 
 #include <stdio.h>
 #include <unistd.h> 	// pipe()
@@ -432,19 +431,6 @@ YCPValue YUI::evaluateUserInput()
 }
 
 
-YCPValue YUI::waitForUserInput()
-{
-#if VERBOSE_EVENTS
-    yuiDebug() << "Waiting for user input..." << endl;
-#endif
-    
-    return doUserInput( YUIBuiltin_UserInput,
-			0,		// timeout_millisec
-			true,		// wait
-			false );	// detailed
-}
-
-
 /**
  * @builtin PollInput
  * @short Poll Input
@@ -575,34 +561,9 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	if ( fakeUserInputQueue.empty() )
 	{
 	    if ( wait )
-	    {
-		do
-		{
-		    // Get an event from the specific UI. Wait if there is none.
-
-#if VERBOSE_EVENTS
-		    yuiDebug() << "SpecificUI::userInput()" << endl;
-#endif
-		    event = filterInvalidEvents( userInput( (unsigned long) timeout_millisec ) );
-
-		    // If there was no event or if filterInvalidEvents() discarded
-		    // an invalid event, go back and get the next one.
-		} while ( ! event );
-	    }
+		event = dialog->waitForEvent( timeout_millisec );
 	    else
-	    {
-		// Get an event from the specific UI. Don't wait if there is none.
-
-#if VERBOSE_EVENTS
-		yuiDebug() << "SpecificUI::pollInput()" << endl;
-#endif
-		event = filterInvalidEvents( pollInput() );
-
-		// Nevermind if filterInvalidEvents() discarded an invalid event.
-		// PollInput() is called very often (in a loop) anyway, and most of
-		// the times it returns 'nil' anyway, so there is no need to care
-		// for just another 'nil' that is returned in this exotic case.
-	    }
+		event = dialog->pollEvent();
 
 	    if ( event )
 	    {
@@ -657,70 +618,6 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	delete event;
 
     return input;
-}
-
-
-YEvent *
-YUI::filterInvalidEvents( YEvent * event )
-{
-    if ( ! event )
-	return 0;
-
-    YWidgetEvent * widgetEvent = dynamic_cast<YWidgetEvent *> (event);
-
-    if ( widgetEvent && widgetEvent->widget() )
-    {
-	if ( ! widgetEvent->widget()->isValid() )
-	{
-	    /**
-	     * Silently discard events from widgets that have become invalid.
-	     *
-	     * This may legitimately happen if some widget triggered an event yet
-	     * nobody cared for that event (i.e. called UserInput() or PollInput() )
-	     * and the widget has been destroyed meanwhile.
-	     **/
-
-	    // yuiDebug() << "Discarding event for widget that has become invalid" << endl;
-
-	    delete widgetEvent;
-	    return 0;
-	}
-
-	if ( widgetEvent->widget()->findDialog() != YDialog::currentDialog() )
-	{
-	    /**
-	     * Silently discard events from all but the current (topmost) dialog.
-	     *
-	     * This may happen even here even though the specific UI should have
-	     * taken care about that: Events may still be in the queue. They might
-	     * have been valid (i.e. belonged to the topmost dialog) when they
-	     * arrived, but maybe simply nobody has evaluated them.
-	     **/
-
-	    // Yes, really yuiDebug() - this may legitimately happen.
-	    yuiDebug() << "Discarding event from widget from foreign dialog" << endl;
-
-#if VERBOSE_DISCARDED_EVENTS
-	    yuiDebug() << "Expected: "   << YDialog::currentDialog()
-		       << ", received: " << widgetEvent->widget()->findDialog()
-		       << endl;
-
-	    yuiDebug() << "Event widget: "  << widgetEvent->widget() << endl;
-	    yuiDebug() << "From:" << endl;
-	    widgetEvent->widget()->findDialog()->dumpWidgetTree();
-	    yuiDebug() << "Current dialog:" << endl;
-	    YDialog::currentDialog()->dumpWidgetTree();
-#endif
-
-	    YDialog::currentDialog()->activate();
-
-	    delete widgetEvent;
-	    return 0;
-	}
-
-    }
-
-    return event;
 }
 
 

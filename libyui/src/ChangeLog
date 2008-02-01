@@ -437,8 +437,8 @@
 * Migrated YWizard
   * Moved WizardCommand parsing out to YCPWizardCommandParser
   * Added lots of pure virtual functions to YWizard
-  * All YCPValue and other YCP related code can now be removed from 
-    YWizard-derived classes 
+  * All YCPValue and other YCP related code can now be removed from
+    YWizard-derived classes
 
 
 2007-11-30 sh@suse.de
@@ -446,7 +446,7 @@
 * Migrated YDialog
 * Removed YContainerWidget for good
 * Removed legacy YWidget::queryWidget() and YWidget::changeWidget() methods
-* Dropped support for outdated property handling with old 
+* Dropped support for outdated property handling with old
   YWidget::queryWidget() and YWidget::changeWidget() methods
 * Dropped support for outdated YWidget( YWidgetOpt ) constructors
 * Removed unneeded YWidgetOpt fields
@@ -466,7 +466,7 @@
 
 2008-01-20 sh@suse.de
 
-* Moved glyph handling from YUI to YApplication, 
+* Moved glyph handling from YUI to YApplication,
   now using std::string instead of YCPString and YCPSymbol;
   forget YMyUI::glyph(), implement YMyApplication::glyph()
 
@@ -492,5 +492,16 @@
   - removed YUI::showDialog()
   - removed YUI::closeDialog()
   - Now using YDialog::open() and YDialog::destroy()
-  - Derived classes now have to implement YDialog::openInternal()
-    and YDialog::activate()
+  - Derived classes now have to implement:
+    - YDialog::openInternal()
+    - YDialog::activate()
+
+
+2008-02-01 sh@suse.de
+
+* Moved event handling from YUI to YDialog:
+  - removed YUI::userInput()
+  - removed YUI::pollInput()
+  - Derived classes now have to implement:
+    - YDialog::waitForEventInternal()
+    - YDialog::pollEventInternal()

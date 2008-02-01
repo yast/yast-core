@@ -21,6 +21,7 @@
 #define YDialog_h
 
 #include "YSingleChildContainerWidget.h"
+#include "YEvent.h"
 #include <stack>
 
 class YMacroRecorder;
@@ -79,6 +80,44 @@ public:
      * Return 'true' if open() has already been called for this dialog.
      **/
     bool isOpen() const;
+
+    /**
+     * Wait for a user event. In most cases, this means waiting until the user
+     * has clicked on a button in this dialog. If any widget has its 'notify'
+     * flag set (`opt(`notify) in YCP, setNotify( true ) in C++), an action on
+     * such a widget will also make waitForEvent() return.
+     *
+     * If the specified timeout elapses without any user event, a YTimeoutEvent
+     * will be returned. 0 means no timeout (wait forever).
+     *
+     * If open() has not been called for this dialog until now,
+     * it is called now.
+     *
+     * Ownership of the event is transferred to the caller, i.e. the caller is
+     * responsible for deleting it after use.
+     *
+     * If this dialog is not the topmost dialog, an exception is thrown.
+     **/
+    YEvent * waitForEvent( int timeout_millisec = 0 );
+
+    /**
+     * Check if a user event is pending. If there is one, return it.
+     * If there is none, do not wait for one - return 0.
+     *
+     * If open() has not been called for this dialog until now,
+     * it is called now.
+     *
+     * Ownership of the event is transferred to the caller, i.e. the caller is
+     * responsible for deleting it after use.
+     *
+     * If this dialog is not the topmost dialog, an exception is thrown.
+     **/ 
+    YEvent * pollEvent();
+
+    /**
+     * Return 'true' if this dialog is the topmost dialog.
+     **/
+    bool isTopmostDialog() const;
 
     /**
      * Close and delete this dialog (and all its children) if it is the topmost
@@ -158,7 +197,7 @@ public:
      * changed after it (and its children hierarchy) was initially created.
      **/
     void recalcLayout();
-    
+
     /**
      * Return this dialog's type (YMainDialog / YPopupDialog).
      **/
@@ -212,12 +251,12 @@ public:
 
     /**
      * Activate this dialog: Make sure that it is shown as the topmost dialog
-     * of this application and that it can receive input.  
+     * of this application and that it can receive input.
      *
      * Derived classes are required to implement this.
      **/
     virtual void activate() = 0;
-    
+
 
 protected:
 
@@ -229,7 +268,28 @@ protected:
      * necessary to make this dialog visible on the screen.
      **/
     virtual void openInternal() = 0;
+
+    /**
+     * Wait for a user event.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual YEvent * waitForEventInternal( int timeout_millisec ) = 0;
     
+    /**
+     * Check if a user event is pending. If there is one, return it.
+     * If there is none, do not wait for one - return 0.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual YEvent * pollEventInternal() = 0;
+
+    /**
+     * Filter out invalid events: Return 0 if the event does not belong to this
+     * dialog or the unchanged event if it does.
+     **/
+    YEvent * filterInvalidEvents( YEvent * event );
+
     /**
      * Stack holding all currently existing dialogs.
      **/

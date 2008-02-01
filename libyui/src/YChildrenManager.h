@@ -195,19 +195,6 @@ public:
      **/
     virtual void add( T * child )
 	{ YUI_THROW( YUITooManyChildrenException<T>( this->container() ) ); }
-
-#if 0
-    /**
-     * Remove a child.
-     *
-     * Reimplemented from YChildrenManager.
-     *
-     * Since this class is designed to reject children, this always throws a
-     * YUIInvalidChildException.
-     **/
-    virtual void remove( T * child )
-	{ YUI_THROW( YUIInvalidChildException<T>( this->container(), child ) ); }
-#endif
 };
 
 

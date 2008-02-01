@@ -53,15 +53,14 @@ void YCPErrorDialog::exceptionDialog( const string & headingText,
 	closeButton->setId( new YCPValueWidgetID( YCPSymbol( "cancel" ) ) );
 	dialog->open();
 
-	YCPValue input = YUI::ui()->waitForUserInput();
-	yuiMilestone() << "Input: " << input << endl;
-
+	YEvent * event = dialog->waitForEvent();
+	delete event;
 	dialog->destroy();
     }
     catch ( YUIException & ex )
     {
 	YUI_CAUGHT( exception );
-	
+
 	// No other action. If opening this error dialog fails, the user will
 	// just have to live with the error being reported in the log file only.
     }
