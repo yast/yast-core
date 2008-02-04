@@ -135,14 +135,14 @@ public:
     /**
      * Return a string for a named glyph:
      *
-     *    YUIGlyph_ArrowLeft		
-     *    YUIGlyph_ArrowRight		
-     *    YUIGlyph_ArrowUp		
-     *    YUIGlyph_ArrowDown		
-     *    YUIGlyph_CheckMark		
-     *    YUIGlyph_BulletArrowRight	
-     *    YUIGlyph_BulletCircle		
-     *    YUIGlyph_BulletSquare		
+     *    YUIGlyph_ArrowLeft
+     *    YUIGlyph_ArrowRight
+     *    YUIGlyph_ArrowUp
+     *    YUIGlyph_ArrowDown
+     *    YUIGlyph_CheckMark
+     *    YUIGlyph_BulletArrowRight
+     *    YUIGlyph_BulletCircle
+     *    YUIGlyph_BulletSquare
      *
      * Using this is discouraged in new applications.
      * This method is available for backward compatibility.
@@ -154,7 +154,7 @@ public:
      * call this base class method in a new implementation.
      **/
     virtual string glyph( const string & glyphSymbolName );
-    
+
     /**
      * Open a directory selection box and prompt the user for an existing
      * directory.
@@ -214,9 +214,53 @@ public:
 				       const string & filter,
 				       const string & headline ) = 0;
 
+    /**
+     * Run a shell command (typically an interactive program using NCurses)
+     * in a terminal (window).
+     *
+     * This is useful for text UIs (e.g., NCurses) that need special
+     * preparation prior to running an NCurses-based application and special
+     * clean-up afterwards.
+     *
+     * This default implementation logs an error and returns with -1.
+     **/
+    virtual int runInTerminal( const string & command );
+
+
+    //
+    // Display information.
+    //
+    // Width and height are returned in the the UI's native dimension:
+    // Pixels for graphical UIs, character cells for text UIs.
+    // -1 means "value cannot be obtained" for int functions.
+    //
+    // Derived classes are required to implement these functions.
+    //
+
+    virtual int	 displayWidth()			= 0;
+    virtual int	 displayHeight()		= 0;
+    virtual int	 displayDepth()			= 0;
+    virtual long displayColors()		= 0;
+
+    // Size of main dialogs
+    virtual int	 defaultWidth()			= 0;
+    virtual int	 defaultHeight()		= 0;
+
+    //
+    // UI capabilities
+    //
+
+    virtual bool isTextMode()			= 0;
+    virtual bool hasImageSupport()		= 0;
+    virtual bool hasIconSupport()		= 0;
+    virtual bool hasAnimationSupport()		= 0;
+    virtual bool hasFullUtf8Support()		= 0;
+    virtual bool richTextSupportsTable()	= 0;
+    virtual bool leftHandedMouse()		= 0;
+
+
 private:
 
-    
     ImplPtr<YApplicationPrivate> priv;
 };
 

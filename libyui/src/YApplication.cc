@@ -169,3 +169,13 @@ YApplication::glyph( const string & sym )
 	return "";
     }
 }
+
+
+int
+YApplication::runInTerminal ( const string & module )
+{
+    yuiError() << "Not in text mode: Cannot run external program in terminal." << endl;
+
+    return -1;
+}
+

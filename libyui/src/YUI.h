@@ -58,7 +58,7 @@ struct  YUIBuiltinCallData
     YUIBuiltinCallData()
 	: result( YCPVoid() )
     {
-	function	= 0;
+	function = 0;
     }
 };
 
@@ -382,34 +382,6 @@ protected:
 				     const YCPString & encoding );
 
     virtual YCPValue setKeyboard();
-
-
-    /**
-     * UI-specific runInTerminal() function.
-     * Returns (integer) return code of external program it spawns
-     * in the same terminal
-    **/
-
-    virtual int runInTerminal( const YCPString & module );
-
-    /**
-     * UI-specific getDisplayInfo() functions.
-     * See UI builtin GetDisplayInfo() doc for details.
-     **/
-    virtual int	 getDisplayWidth()		{ return -1; }
-    virtual int	 getDisplayHeight()		{ return -1; }
-    virtual int	 getDisplayDepth()		{ return -1; }
-    virtual long getDisplayColors()		{ return -1; }
-    virtual int	 getDefaultWidth()		{ return -1; }
-    virtual int	 getDefaultHeight()		{ return -1; }
-    virtual bool textMode()			{ return true; }
-    virtual bool hasImageSupport()		{ return false; }
-    virtual bool hasLocalImageSupport()		{ return true;	}
-    virtual bool hasAnimationSupport()		{ return false; }
-    virtual bool hasIconSupport()		{ return false; }
-    virtual bool hasFullUtf8Support()		{ return false; }
-    virtual bool richTextSupportsTable()	{ return false; }
-    virtual bool leftHandedMouse()		{ return false; }
 
     /**
      * UI-specific busyCursor function.

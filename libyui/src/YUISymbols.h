@@ -278,7 +278,6 @@
 #define YUICap_DefaultHeight			"DefaultHeight"
 #define YUICap_TextMode				"TextMode"
 #define YUICap_HasImageSupport			"HasImageSupport"
-#define YUICap_HasLocalImageSupport		"HasLocalImageSupport"
 #define YUICap_HasAnimationSupport		"HasAnimationSupport"
 #define YUICap_HasIconSupport			"HasIconSupport"
 #define YUICap_HasFullUtf8Support		"HasFullUtf8Support"

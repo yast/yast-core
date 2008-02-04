@@ -265,32 +265,22 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
  * @builtin RunInTerminal
  * @short runs external program in the same terminal
  * @description
- * Use this builtin if you want to run external program from ncurses UI
- * as a separate process. It saves current window layout to the stack and
- * runs the external program in the same terminal. When done, it restores
- * the original window layout and returns exit code of the external program
- * (an integer value returned by system() call). When called from the Qt UI,
- * an error message is printed to the log.
+ * Use this builtin if you want to run an external program from the NCcurses UI
+ * as a separate process. It saves the current window layout and runs the
+ * external program in the same terminal. When done, it restores the original
+ * window layout and returns the exit code of the external program.
+ * When called from the Qt UI, an error message is printed to the log.
  * @param string external_program
  * return integer
  *
  * @usage RunInTerminal("/bin/bash")
  */
 
-YCPInteger YUI::evaluateRunInTerminal(const YCPString & module )
+YCPInteger YUI::evaluateRunInTerminal(const YCPString & command )
 {
-    int ret = runInTerminal( module );
-
-    return YCPInteger ( ret );
-
+    return YCPInteger( yApp()->runInTerminal( command->value() ) );
 }
 
-int YUI::runInTerminal ( const YCPString & module )
-{
-    yuiError() << "Not in text mode: Cannot run external program in terminal." << endl;
-
-    return -1;
-}
 
 /**
  * @builtin SetKeyboard
@@ -568,7 +558,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 	    if ( event )
 	    {
 		YCPEvent ycpEvent( event );
-		
+
 		if ( detailed )
 		    input = ycpEvent.eventMap();
 		else
@@ -1341,7 +1331,6 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
  *	"HasFullUtf8Support":true,
  *	"HasIconSupport":false,
  *	"HasImageSupport":true,
- *	"HasLocalImageSupport":true,
  *	"Height":1050,
  *	"LeftHandedMouse":false,
  *	"RichTextSupportsTable":true,
@@ -1361,7 +1350,6 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
  *	"HasFullUtf8Support":true,
  *	"HasIconSupport":false,
  *	"HasImageSupport":false,
- *	"HasLocalImageSupport":true,
  *	"Height":54,
  *	"LeftHandedMouse":false,
  *	"RichTextSupportsTable":false,
@@ -1378,21 +1366,21 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 YCPMap YUI::evaluateGetDisplayInfo()
 {
     YCPMap info_map;
+    YApplication * app = yApp(); // slight optimization
 
-    info_map->add( YCPString( YUICap_Width			), YCPInteger( getDisplayWidth()	) );
-    info_map->add( YCPString( YUICap_Height			), YCPInteger( getDisplayHeight()	) );
-    info_map->add( YCPString( YUICap_Depth			), YCPInteger( getDisplayDepth()	) );
-    info_map->add( YCPString( YUICap_Colors			), YCPInteger( getDisplayColors()	) );
-    info_map->add( YCPString( YUICap_DefaultWidth		), YCPInteger( getDefaultWidth()	) );
-    info_map->add( YCPString( YUICap_DefaultHeight		), YCPInteger( getDefaultHeight()	) );
-    info_map->add( YCPString( YUICap_TextMode			), YCPBoolean( textMode()		) );
-    info_map->add( YCPString( YUICap_HasImageSupport		), YCPBoolean( hasImageSupport()	) );
-    info_map->add( YCPString( YUICap_HasLocalImageSupport	), YCPBoolean( hasLocalImageSupport()	) );
-    info_map->add( YCPString( YUICap_HasAnimationSupport	), YCPBoolean( hasAnimationSupport()	) );
-    info_map->add( YCPString( YUICap_HasIconSupport		), YCPBoolean( hasIconSupport()		) );
-    info_map->add( YCPString( YUICap_HasFullUtf8Support		), YCPBoolean( hasFullUtf8Support()	) );
-    info_map->add( YCPString( YUICap_RichTextSupportsTable	), YCPBoolean( richTextSupportsTable()	) );
-    info_map->add( YCPString( YUICap_LeftHandedMouse		), YCPBoolean( leftHandedMouse()	) );
+    info_map->add( YCPString( YUICap_Width			), YCPInteger( app->displayWidth()	) );
+    info_map->add( YCPString( YUICap_Height			), YCPInteger( app->displayHeight()	) );
+    info_map->add( YCPString( YUICap_Depth			), YCPInteger( app->displayDepth()	) );
+    info_map->add( YCPString( YUICap_Colors			), YCPInteger( app->displayColors()	) );
+    info_map->add( YCPString( YUICap_DefaultWidth		), YCPInteger( app->defaultWidth()	) );
+    info_map->add( YCPString( YUICap_DefaultHeight		), YCPInteger( app->defaultHeight()	) );
+    info_map->add( YCPString( YUICap_TextMode			), YCPBoolean( app->isTextMode()	) );
+    info_map->add( YCPString( YUICap_HasImageSupport		), YCPBoolean( app->hasImageSupport()	) );
+    info_map->add( YCPString( YUICap_HasIconSupport		), YCPBoolean( app->hasIconSupport()	) );
+    info_map->add( YCPString( YUICap_HasAnimationSupport	), YCPBoolean( app->hasAnimationSupport()   ) );
+    info_map->add( YCPString( YUICap_HasFullUtf8Support		), YCPBoolean( app->hasFullUtf8Support()    ) );
+    info_map->add( YCPString( YUICap_RichTextSupportsTable	), YCPBoolean( app->richTextSupportsTable() ) );
+    info_map->add( YCPString( YUICap_LeftHandedMouse		), YCPBoolean( app->leftHandedMouse()	) );
 
     return info_map;
 }
@@ -1555,7 +1543,7 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 	    YCPEvent ycpEvent( event );
 	    result = ycpEvent.eventId();
 
-	    if ( result->isString() )				
+	    if ( result->isString() )
 		result = YCPSymbol( result->asString()->value() ); // "accept" -> `accept
 
 	    yuiMilestone() << "Package selection done. Returning with " << result << endl;
