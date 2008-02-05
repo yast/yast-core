@@ -33,8 +33,8 @@ using std::string;
 
 YSimpleEventHandler::YSimpleEventHandler()
 {
-    _pending_event	= 0;
-    _events_blocked	= false;
+    _pendingEvent	= 0;
+    _eventsBlocked	= false;
 }
 
 
@@ -46,20 +46,20 @@ YSimpleEventHandler::~YSimpleEventHandler()
 
 void YSimpleEventHandler::clear()
 {
-    if ( _pending_event )
+    if ( _pendingEvent )
     {
 #if VERBOSE_EVENTS
-	yuiDebug() << "Clearing pending event: " << YEvent::toString( _pending_event->eventType() ) << endl;
+	yuiDebug() << "Clearing pending event: " << YEvent::toString( _pendingEvent->eventType() ) << endl;
 #endif
-	delete _pending_event;
+	delete _pendingEvent;
     }
 }
 
 
 YEvent * YSimpleEventHandler::consumePendingEvent()
 {
-    YEvent * event = _pending_event;
-    _pending_event = 0;
+    YEvent * event = _pendingEvent;
+    _pendingEvent = 0;
 
     return event;
 }
@@ -85,7 +85,7 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
 	return;
     }
 
-    if ( _pending_event )
+    if ( _pendingEvent )
     {
 	/**
 	 * This simple event handler keeps track of only the latest user event.
@@ -97,21 +97,21 @@ void YSimpleEventHandler::sendEvent( YEvent * event )
 	 * processed) by the generic UI.
 	 **/
 
-	delete _pending_event;
+	delete _pendingEvent;
     }
 
 #if VERBOSE_EVENTS
     yuiDebug() << "New pending event: " << YEvent::toString( event->eventType() ) << endl;
 #endif
 
-    _pending_event = event;
+    _pendingEvent = event;
 }
 
 
 bool
 YSimpleEventHandler::eventPendingFor( YWidget * widget ) const
 {
-    YWidgetEvent * event = dynamic_cast<YWidgetEvent *> (_pending_event);
+    YWidgetEvent * event = dynamic_cast<YWidgetEvent *> (_pendingEvent);
 
     if ( ! event )
 	return false;
@@ -127,5 +127,5 @@ void YSimpleEventHandler::blockEvents( bool block )
     else		yuiDebug() << "Unblocking events" << endl;
 #endif
 
-    _events_blocked = block;
+    _eventsBlocked = block;
 }

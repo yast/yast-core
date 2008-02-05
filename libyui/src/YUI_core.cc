@@ -73,9 +73,9 @@ YUI::YUI( bool withThreads )
     , _uiThread( 0 )
     , _moduleName( "yast2" )
     , _productName( "SUSE Linux" )
-    , macroRecorder (0)
-    , macroPlayer (0)
-    , _events_blocked( false )
+    , _macroRecorder(0)
+    , _macroPlayer(0)
+    , _eventsBlocked( false )
     , _callback( 0 )
 {
     _yui = this;

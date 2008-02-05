@@ -580,14 +580,14 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	// Handle macro recording
 
-	if ( macroRecorder )
+	if ( _macroRecorder )
 	{
 	    if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
 	    {
-		macroRecorder->beginBlock();
-		dialog->saveUserInput( macroRecorder );
-		macroRecorder->recordUserInput( input );
-		macroRecorder->endBlock();
+		_macroRecorder->beginBlock();
+		dialog->saveUserInput( _macroRecorder );
+		_macroRecorder->recordUserInput( input );
+		_macroRecorder->endBlock();
 	    }
 	}
     }
@@ -1166,16 +1166,16 @@ void YUI::evaluateRecordMacro( const YCPString & filename )
 void YUI::recordMacro( string filename )
 {
     deleteMacroRecorder();
-    macroRecorder = new YMacroRecorder( filename );
+    _macroRecorder = new YMacroRecorder( filename );
 }
 
 
 void YUI::deleteMacroRecorder()
 {
-    if ( macroRecorder )
+    if ( _macroRecorder )
     {
-	delete macroRecorder;
-	macroRecorder = 0;
+	delete _macroRecorder;
+	_macroRecorder = 0;
     }
 }
 
@@ -1222,29 +1222,29 @@ void YUI::evaluatePlayMacro( const YCPString & filename )
 void YUI::playMacro( string filename )
 {
     deleteMacroPlayer();
-    macroPlayer = new YMacroPlayer( filename );
+    _macroPlayer = new YMacroPlayer( filename );
 }
 
 
 void YUI::playNextMacroBlock()
 {
-    if ( ! macroPlayer )
+    if ( ! _macroPlayer )
     {
 	yuiError() << "No macro player active." << endl;
 	return;
     }
 
-    if ( macroPlayer->error() || macroPlayer->finished() )
+    if ( _macroPlayer->error() || _macroPlayer->finished() )
     {
 	deleteMacroPlayer();
     }
     else
     {
-	if ( ! macroPlayer->finished() )
+	if ( ! _macroPlayer->finished() )
 	{
-	    YCPValue result = macroPlayer->evaluateNextBlock();
+	    YCPValue result = _macroPlayer->evaluateNextBlock();
 
-	    if ( macroPlayer->error() || result.isNull() )
+	    if ( _macroPlayer->error() || result.isNull() )
 	    {
 		yuiError() << "Macro aborted" << endl;
 		deleteMacroPlayer();
@@ -1256,10 +1256,10 @@ void YUI::playNextMacroBlock()
 
 void YUI::deleteMacroPlayer()
 {
-    if ( macroPlayer )
+    if ( _macroPlayer )
     {
-	delete macroPlayer;
-	macroPlayer = 0;
+	delete _macroPlayer;
+	_macroPlayer = 0;
     }
 }
 

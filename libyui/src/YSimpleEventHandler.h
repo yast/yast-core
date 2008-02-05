@@ -71,7 +71,7 @@ public:
      *
      * This event handler keeps track of only one single (the last one) event.
      **/
-    YEvent * pendingEvent() const { return _pending_event; }
+    YEvent * pendingEvent() const { return _pendingEvent; }
 
     /**
      * Consumes the pending event. Sets the internal pending event to 0.
@@ -106,15 +106,15 @@ public:
     /**
      * Returns 'true' if events are currently blocked.
      **/
-    bool eventsBlocked() const { return _events_blocked; }
+    bool eventsBlocked() const { return _eventsBlocked; }
 
 
 protected:
 
     // Data members
 
-    YEvent * 	_pending_event;
-    bool	_events_blocked;
+    YEvent * 	_pendingEvent;
+    bool	_eventsBlocked;
 };
 
 

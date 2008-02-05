@@ -168,7 +168,7 @@ public:
      * can be queried with eventsBlocked(), so if you reimplement
      * blockEvents(), be sure to reimplement eventsBlocked() as well.
      **/
-    virtual void blockEvents( bool block = true ) { _events_blocked = block; }
+    virtual void blockEvents( bool block = true ) { _eventsBlocked = block; }
 
     /**
      * Unblock events previously blocked. This is just an alias for
@@ -183,7 +183,7 @@ public:
      *
      * Reimplent this if you reimplement blockEvents().
      **/
-    virtual bool eventsBlocked() const { return _events_blocked; }
+    virtual bool eventsBlocked() const { return _eventsBlocked; }
 
     /**
      * Must be called after the constructor of the Qt/NCurses ui
@@ -433,7 +433,7 @@ protected:
 
     /**
      * Start macro recording to file "filename".
-     * Any previous active macro recorder will be terminated( regularly ) prior
+     * Any previous active macro recorder will be terminated (regularly) prior
      * to this.
      **/
     void recordMacro( string filename );
@@ -453,12 +453,24 @@ protected:
     /**
      * Return whether macro recording is in progress or not
      **/
-    bool recordingMacro()	{ return macroRecorder != 0;	}
+    bool recordingMacro() const	{ return _macroRecorder != 0; }
 
     /**
      * Return whether macro playing is in progress or not
      **/
-    bool playingMacro()		{ return macroPlayer != 0;	}
+    bool playingMacro() const	{ return _macroPlayer != 0; }
+
+    /**
+     * Return the macro recorder if it is active (recording)
+     * or 0 if it is not.
+     **/
+    YMacroRecorder * macroRecorder() const { return _macroRecorder; }
+
+    /**
+     * Return the macro player if it is active (recording)
+     * or 0 if it is not.
+     **/
+    YMacroPlayer * macroPlayer() const { return _macroPlayer; }
 
 
 protected:
@@ -615,12 +627,12 @@ protected:
     /**
      * The current macro recorder.
      **/
-    YMacroRecorder *macroRecorder;
+    YMacroRecorder *_macroRecorder;
 
     /**
      * The current macro player.
      **/
-    YMacroPlayer *macroPlayer;
+    YMacroPlayer *_macroPlayer;
 
     /**
      * Queue for synthetic (faked) user input events.
@@ -631,7 +643,7 @@ protected:
      * Flag that keeps track of blocked events.
      * Never query this directly, use eventsBlocked() instead.
      **/
-    bool _events_blocked;
+    bool _eventsBlocked;
 
     /**
      * Returns 'true' if widget geometry should be reversed for languages that
