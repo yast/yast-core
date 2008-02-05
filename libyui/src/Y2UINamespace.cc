@@ -30,6 +30,7 @@
 #include <ycp/y2log.h>
 
 #include "YUI.h"
+#include "YUISymbols.h"
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
 
@@ -864,7 +865,10 @@ Y2Function* Y2UINamespace::createFunctionCall( const string name, constFunctionT
         return NULL;
     }
 
-    bool play_macro_blocks = (name == "UserInput" || name == "TimeoutUserInput" || name == "WaitForEvent");
+    bool play_macro_blocks =
+	( name == YUIBuiltin_UserInput        ||
+	  name == YUIBuiltin_TimeoutUserInput ||
+	  name == YUIBuiltin_WaitForEvent       );
 
     symbols_t::iterator rb = it;
     // 2: find end of range of overloaded functions or the exact match
