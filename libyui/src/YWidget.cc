@@ -33,6 +33,7 @@
 #include "YUIException.h"
 #include "YWidgetID.h"
 #include "YBothDim.h"
+#include "YMacroRecorder.h"
 
 #include "YChildrenManager.h"
 
@@ -642,6 +643,19 @@ void YWidget::dumpWidget( YWidget *w, int indentationLevel )
 void
 YWidget::saveUserInput( YMacroRecorder *macroRecorder )
 {
+    //
+    // Record this widget's user input property (if there is any)
+    //
+    
+    if ( userInputProperty() )
+    {
+	macroRecorder->recordWidgetProperty( this, userInputProperty() );
+    }
+
+    //
+    // Record the child widgets' (if there are any) user input
+    //
+    
     for ( YWidgetListConstIterator it = childrenBegin();
 	  it != childrenEnd();
 	  ++it )

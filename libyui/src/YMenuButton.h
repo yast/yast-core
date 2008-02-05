@@ -22,7 +22,6 @@
 #include "YSelectionWidget.h"
 #include "YMenuItem.h"
 
-class YMacroRecorder;
 class YMenuItem;
 class YMenuButtonPrivate;
 

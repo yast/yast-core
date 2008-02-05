@@ -21,7 +21,6 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
-#include "YMacroRecorder.h"
 #include "YSimpleInputField.h"
 
 
@@ -116,9 +115,3 @@ YSimpleInputField::getProperty( const string & propertyName )
     }
 }
 
-
-void
-YSimpleInputField::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
-}

@@ -22,7 +22,6 @@
 #include "YWidget.h"
 
 
-class YMacroRecorder;
 class YPartitionSplitterPrivate;
 
 
@@ -178,14 +177,7 @@ public:
 
 private:
 
-    /**
-     * Save the widget's user input to a macro recorder.
-     **/
-    virtual void saveUserInput( YMacroRecorder *macroRecorder );
-
     ImplPtr<YPartitionSplitterPrivate> priv;
-
-
 };
 
 

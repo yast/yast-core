@@ -21,7 +21,6 @@
 
 #include "YIntField.h"
 
-class YMacroRecorder;
 class YSliderPrivate;
 
 

@@ -122,16 +122,6 @@ public:
     const char * userInputProperty() { return YUIProperty_Value; }
 
 
-protected:
-    /**
-     * Save the widget's user input to a macro recorder.
-     *
-     * This sample implementation saves value(). This can be reimplemented in
-     * derived classes. Typically it does not make sense to call this base
-     * class method in new implementations.
-     **/
-    virtual void saveUserInput( YMacroRecorder *macroRecorder );
-
 private:
     
     ImplPtr<YSimpleInputFieldPrivate> priv;

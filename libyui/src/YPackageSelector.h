@@ -20,9 +20,6 @@
 #define YPackageSelector_h
 
 #include "YWidget.h"
-#include <ycp/YCPString.h>
-
-class YMacroRecorder;
 
 #define YPkg_TestMode		1 << 0
 #define YPkg_OnlineUpdateMode	1 << 1

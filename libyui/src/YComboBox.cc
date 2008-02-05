@@ -21,7 +21,6 @@
 #include "YUILog.h"
 
 #include "YUISymbols.h"
-#include "YMacroRecorder.h"
 #include "YComboBox.h"
 #include "YUIException.h"
 
@@ -235,13 +234,5 @@ YComboBox::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-
-void
-YComboBox::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 

@@ -22,7 +22,6 @@
 
 #include "YUISymbols.h"
 #include "YSelectionWidget.h"
-#include "YMacroRecorder.h"
 #include "YTree.h"
 #include "YTreeItem.h"
 
@@ -130,12 +129,5 @@ YTree::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-void
-YTree::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
 }
 

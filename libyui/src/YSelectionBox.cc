@@ -23,7 +23,6 @@
 #include "YSelectionBox.h"
 #include "YUISymbols.h"
 #include "YUIException.h"
-#include "YMacroRecorder.h"
 
 
 struct YSelectionBoxPrivate
@@ -147,9 +146,3 @@ YSelectionBox::getProperty( const string & propertyName )
     }
 }
 
-
-void
-YSelectionBox::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
-}

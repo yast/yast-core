@@ -24,7 +24,6 @@
 #include "YEvent.h"
 #include <stack>
 
-class YMacroRecorder;
 class YShortcutManager;
 class YPushButton;
 class YDialogPrivate;

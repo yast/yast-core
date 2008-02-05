@@ -21,7 +21,6 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
-#include "YMacroRecorder.h"
 #include "YTable.h"
 #include "YCPValueWidgetID.h"
 
@@ -68,7 +67,7 @@ void
 YTable::setTableHeader( YTableHeader * newHeader )
 {
     YUI_CHECK_PTR( newHeader );
-    
+
     if ( priv->header->columns() != newHeader->columns() )
 	deleteAllItems();
 
@@ -203,12 +202,5 @@ YTable::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-void
-YTable::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_CurrentItem );
 }
 

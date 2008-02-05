@@ -19,8 +19,10 @@
 #ifndef YLayoutBox_h
 #define YLayoutBox_h
 
-
+#include <vector>
 #include "YWidget.h"
+
+using std::vector;
 
 class YLayoutBoxPrivate;
 

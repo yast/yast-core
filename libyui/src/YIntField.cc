@@ -20,7 +20,6 @@
 #define y2log_component "ui"
 #include <ycp/y2log.h>
 
-#include "YMacroRecorder.h"
 #include "YIntField.h"
 
 
@@ -185,12 +184,5 @@ YIntField::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-void
-YIntField::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 

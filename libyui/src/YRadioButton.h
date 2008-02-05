@@ -22,7 +22,6 @@
 #include "YWidget.h"
 
 class YRadioButtonGroup;
-class YMacroRecorder;
 class YRadioButtonPrivate;
 
 using std::string;
@@ -188,15 +187,16 @@ protected:
      **/
     YRadioButtonGroup * findRadioButtonGroup() const;
 
-
-private:
     /**
      * Save the widget's user input to a macro recorder.
-     * Intentionally declared as "private" so all macro recording internals are
-     * handled by the abstract libyui level, not by a specific UI.
+     *
+     * Reimplemented from YWidget because only radio buttons that are on (no
+     * more than one per radio box) are recorded. 
      **/
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
+private:
+    
     ImplPtr<YRadioButtonPrivate> priv;
 };
 

@@ -22,6 +22,9 @@
 
 #include "YWidget.h"
 #include <string>
+#include <vector>
+
+using std::vector;
 
 
 /**

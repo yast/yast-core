@@ -21,7 +21,6 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
-#include "YMacroRecorder.h"
 #include "YCheckBox.h"
 
 
@@ -123,12 +122,5 @@ YCheckBox::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-void
-YCheckBox::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 

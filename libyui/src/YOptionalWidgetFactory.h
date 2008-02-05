@@ -21,12 +21,14 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "YTypes.h"
 #include "YWizard.h"
 
 using std::string;
 using std::vector;
+using std::map;
 
 class YBarGraph;
 class YDateField;

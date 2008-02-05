@@ -21,7 +21,6 @@
 
 #include "YSelectionWidget.h"
 
-class YMacroRecorder;
 class YComboBoxPrivate;
 
 
@@ -230,14 +229,6 @@ protected:
 
 
 private:
-
-    /**
-     * Save the widget's user input to a macro recorder.
-     * Intentionally declared as "private" so all macro recording internals are
-     * handled by the abstract libyui level, not by a specific UI.
-     **/
-    virtual void saveUserInput( YMacroRecorder *macroRecorder );
-
 
     ImplPtr<YComboBoxPrivate> priv;
 };

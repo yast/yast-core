@@ -21,7 +21,6 @@
 
 #include <string>
 #include <iosfwd>
-#include <ycp/YCPValue.h>
 
 #include "YTypes.h"
 #include "YProperty.h"
@@ -32,10 +31,9 @@
 #include "ImplPtr.h"
 
 
-class YCPSymbol;
-class YMacroRecorder;
 class YDialog;
 class YWidgetID;
+class YMacroRecorder;
 
 using std::string;
 
@@ -537,12 +535,22 @@ public:
     //
 
     /**
-     * Recursively save the user input of all child widgets
-     * to a macro recorder:
+     * Recursively save the user input of all child widgets to a macro
+     * recorder: 
      *
      * All child widgets that could contain data entered by the user
      * are requested to send their contents to the macro recorder, e.g. input
      * fields, check boxes etc.
+     *
+     * This default implementation records this widget's user input property
+     * (the property returned by userInputProperty) and then recursively calls
+     * saveUserInput() for all child widgets. This is suitable for most cases,
+     * for container widgets as well as for leaf widgets that have no or
+     * exactly one property that needs to be recorded.
+     *
+     * Widgets that need another number of properties recorded should
+     * reimplement this method (and NOT call this default method in the new
+     * implementation).  
      **/
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 

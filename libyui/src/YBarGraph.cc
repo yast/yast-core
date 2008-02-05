@@ -18,12 +18,16 @@
 
 
 #include <stdio.h>
+#include <vector>
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YBarGraph.h"
+
+using std::vector;
+
 
 #define CHECK_INDEX(index)						\
     do									\

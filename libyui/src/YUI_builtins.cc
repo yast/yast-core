@@ -538,8 +538,8 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	if ( dialog->shortcutCheckPostponed() )
 	{
-	    yuiError() << "Missing CheckShortcuts() before " << builtin_name
-		       << "() after PostponeShortcutCheck()!"
+	    yuiError() << "Missing UI::CheckShortcuts() before UI::" << builtin_name
+		       << "() after UI::PostponeShortcutCheck()!"
 		       << endl;
 
 	    dialog->checkShortcuts( true );

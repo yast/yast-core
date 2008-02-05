@@ -21,7 +21,6 @@
 #include <ycp/y2log.h>
 
 #include "YUISymbols.h"
-#include "YMacroRecorder.h"
 #include "YMultiLineEdit.h"
 
 #define DEFAULT_VISIBLE_LINES	3
@@ -146,12 +145,5 @@ YMultiLineEdit::getProperty( const string & propertyName )
     {
 	return YWidget::getProperty( propertyName );
     }
-}
-
-
-void
-YMultiLineEdit::saveUserInput( YMacroRecorder *macroRecorder )
-{
-    macroRecorder->recordWidgetProperty( this, YUIProperty_Value );
 }
 

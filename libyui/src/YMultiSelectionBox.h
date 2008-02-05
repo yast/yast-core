@@ -21,7 +21,6 @@
 
 #include "YSelectionWidget.h"
 
-class YMacroRecorder;
 class YMultiSelectionBoxPrivate;
 
 
@@ -120,14 +119,14 @@ public:
      **/
     virtual void setCurrentItem( YItem * item ) = 0;
 
-private:
     /**
      * Save the widget's user input to a macro recorder.
-     * Intentionally declared as "private" so all macro recording internals are
-     * handled by the abstract libyui level, not by a specific UI.
+     *
+     * Reimplemented from YWidget because two properties need to be recorded.
      **/
     virtual void saveUserInput( YMacroRecorder *macroRecorder );
 
+private:
 
     ImplPtr<YMultiSelectionBoxPrivate> priv;
 };
