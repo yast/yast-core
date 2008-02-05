@@ -79,7 +79,7 @@ script (YCPNull()),
 	return;
     }
 
-    if (! current_wfm) 
+    if (! current_wfm)
     {
 	// if there is wfm already, it will handle the WFM builtins!
 	current_wfm = this;
@@ -92,7 +92,7 @@ Y2WFMComponent::~Y2WFMComponent ()
     // delete all SCRs
     for (WFMSubAgents::iterator it = scrs.begin (); it != scrs.end (); it++)
         delete *it;
-	
+
     if (current_wfm == this)
     {
 	current_wfm = NULL;
@@ -133,14 +133,14 @@ YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
 {
     y2debug( "Starting evaluation" );
-    
+
     // Prepare the arguments. It has the form [script, [clientargs...]]
     YCPList wfm_arglist;
     wfm_arglist->add(script);
     wfm_arglist->add(YCPString(name()));
     wfm_arglist->add (YCPString (fullname));
     wfm_arglist->add(arglist);
-    
+
     // store the old arguments and module name to preserve reentrancy
     YCPList old_arguments = argumentlist;
     string old_modulename = modulename;
@@ -171,7 +171,7 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     }
 
     y2debug ("Script is: %s", script->toString().c_str());
-        
+
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
 
     YCPValue v = script->asCode ()->evaluate ();
@@ -221,9 +221,9 @@ YCPInteger
 Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversion)
 {
     /**
-     * @builtin SCROpen 
+     * @builtin SCROpen
      * @short Create a new scr instance.
-     * 
+     *
      * @description
      *
      * Creates a new scr instance. The name must be a valid y2component name
@@ -269,7 +269,7 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
-    
+
     if (it == scrs.end ())
     {
 	// invalid handle
@@ -288,19 +288,19 @@ Y2WFMComponent::SCRClose (const YCPInteger& h)
 		ns != system_namespaces.end (); ns ++ )
 	{
 	    y2milestone ("Redirecting system namespace '%s' to local"
-		, (*ns)->name ().c_str ()); 
+		, (*ns)->name ().c_str ());
 
 	    (*ns)->useLocal ();
 	}
 
     }
-    
+
     WFMSubAgent* agent = (*it);
 
     scrs.erase (it);
     delete agent;
-    
-    ycpmilestone ("SCR handle %d closed", handle);    
+
+    ycpmilestone ("SCR handle %d closed", handle);
 }
 
 
@@ -327,10 +327,10 @@ Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
      * @builtin SCRSetDefault
      * @short Sets the default scr instance.
      * @param integer handle SCR handle
-     * @return void 
+     * @return void
      */
-     
-    y2milestone ("Seting default SCR: %s", handle->toString ().c_str ());
+
+    y2milestone ("Setting default SCR: %s", handle->toString ().c_str ());
 
     default_handle = handle->value ();
     WFMSubAgents::iterator it = find_handle (default_handle);
@@ -339,14 +339,14 @@ Y2WFMComponent::SCRSetDefault (const YCPInteger &handle)
 	if ((*it)->agent ())
 	{
 	    (*it)->agent ()->setAsCurrentSCR ();
-	    
+
 	    bool remote = (*it)->comp ()->remote ();
-	    
+
 	    for ( SystemNamespaces::iterator ns = system_namespaces.begin ();
 		    ns != system_namespaces.end (); ns ++ )
 	    {
 		y2milestone ("Redirecting system namespace '%s' via '%s'"
-		    , (*ns)->name ().c_str (), (*it)->comp ()->name ().c_str ()); 
+		    , (*ns)->name ().c_str (), (*it)->comp ()->name ().c_str ());
 
 		if (remote)
 		    (*ns)->useRemote (dynamic_cast<Y2ProgramComponent*>((*it)->comp ()));
@@ -456,7 +456,7 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
     /**
      * @builtin SetLanguage
      * @short Selects the language for translate()
-     * @param string language 
+     * @param string language
      * @optarg string encoding
      * @usage SetLanguage("de_DE", "UTF-8") -> ""
      * @usage SetLanguage("de_DE@euro") -> "ISO-8859-15"
@@ -467,7 +467,7 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
      *
      * @return string proposed encoding
      * have fun
-     * 
+     *
      */
 
     string proposedEncoding;
@@ -503,9 +503,9 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
 	// reset LC_CTYPE !!! (for ncurses)
 	setlocale( LC_CTYPE, locale.c_str() );
     }
-    
+
     setlocale (LC_NUMERIC, "C");       // always format numbers with "."
-    
+
     /* Change language. see info:gettext: */
     setenv ("LANGUAGE", currentLanguage.c_str(), 1);
 
@@ -531,7 +531,7 @@ Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
      * @param path path Path
      * @optarg any options
      * @return any
-     * 
+     *
      */
 
     if (!local.start ())
@@ -639,7 +639,7 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
      */
 
     string new_modulename = client->value ();
-	
+
     // try loading a client via Y2ComponentBroker
     Y2Component* client_comp = Y2ComponentBroker::createClient (new_modulename.c_str ());
     if (client_comp)
@@ -675,21 +675,21 @@ Y2WFMComponent::import (const char* name_space)
     {
         char* subsys = const_cast<char*>(name_space) + 8; // skip the prefix
         Y2Component* local_comp = Y2ComponentBroker::getNamespaceComponent (subsys);
-	
+
 	if (local_comp == 0)
 	    return 0;
-	    
+
 	Y2Namespace* local_ns = local_comp->import (subsys);
-	
+
         if (local_ns != 0)
         {
             // there is a local component, use it for the wrapper
 
             Y2SystemNamespace* ns = new Y2SystemNamespace (local_ns);
-	    
+
 	    // FIXME: check for duplicates
 	    system_namespaces.push_back (ns);
-	    
+
             return ns;
         }
         return 0;
@@ -721,6 +721,6 @@ Y2WFMComponent* Y2WFMComponent::instance()
     {
 	current_wfm = new Y2WFMComponent();
     }
-    
+
     return current_wfm;
 }
