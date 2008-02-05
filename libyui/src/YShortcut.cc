@@ -23,6 +23,7 @@
 #include "YShortcut.h"
 #include "YPushButton.h"
 #include <ctype.h>	// toupper(), tolower()
+#include <cstring> 	// strstr()
 
 
 // Return the number of elements of an array of any type
