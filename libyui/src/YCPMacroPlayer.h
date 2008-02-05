@@ -10,33 +10,33 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YMacroPlayer.h
+  File:		YCPMacroPlayer.h
 
   Author:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
-#ifndef YMacroPlayer_h
-#define YMacroPlayer_h
+#ifndef YCPMacroPlayer_h
+#define YCPMacroPlayer_h
 
 #include <string>
 #include <ycp/YBlock.h>
+#include "YMacroPlayer.h"
 
-class YWidget;
 
-class YMacroPlayer
+class YCPMacroPlayer: public YMacroPlayer
 {
 public:
 
     /**
      * Constructor
      **/
-    YMacroPlayer( const string & macroFileName );
+    YCPMacroPlayer( const string & macroFileName );
 
     /**
      * Destructor
      **/
-    virtual ~YMacroPlayer();
+    virtual ~YCPMacroPlayer();
 
     /**
      * Report error status
@@ -50,8 +50,8 @@ public:
     bool finished();
 
     /**
-     * Return the result of the next macro block and increment the internal block
-     * counter. Returns YCPNull() on any previous error or if finished.
+     * Return the result of the next macro block and increment the internal
+     * block counter. Returns YCPNull() on any previous error or if finished.
      * Check for error() or finished() before calling this!
      **/
     YCPValue evaluateNextBlock();
@@ -94,4 +94,4 @@ protected:
     int _nextBlockNo;
 };
 
-#endif // YMacroPlayer_h
+#endif // YCPMacroPlayer_h

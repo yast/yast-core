@@ -50,8 +50,8 @@
 #include "YUIException.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
-#include "YMacroRecorder.h"
-#include "YMacroPlayer.h"
+#include "YCPMacroRecorder.h"
+#include "YCPMacroPlayer.h"
 #include "YReplacePoint.h"
 #include "YShortcut.h"
 #include "YWizard.h"
@@ -580,14 +580,19 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	// Handle macro recording
 
-	if ( _macroRecorder )
+	if ( recordingMacro() )
 	{
-	    if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
+	    YCPMacroRecorder * recorder = dynamic_cast<YCPMacroRecorder *> ( macroRecorder() );
+
+	    if ( recorder )
 	    {
-		_macroRecorder->beginBlock();
-		dialog->saveUserInput( _macroRecorder );
-		_macroRecorder->recordUserInput( input );
-		_macroRecorder->endBlock();
+		if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
+		{
+		    recorder->beginBlock();
+		    dialog->saveUserInput( _macroRecorder );
+		    recorder->recordUserInput( input );
+		    recorder->endBlock();
+		}
 	    }
 	}
     }
@@ -1161,22 +1166,27 @@ void YUI::evaluateRecordMacro( const YCPString & filename )
 {
     recordMacro( filename->value () );
 }
-
-
+ 
+ 
 void YUI::recordMacro( string filename )
 {
-    deleteMacroRecorder();
-    _macroRecorder = new YMacroRecorder( filename );
+    YCPMacroRecorder * recorder = new YCPMacroRecorder( filename );
+    setMacroRecorder( recorder );
+}
+
+
+void YUI::setMacroRecorder( YMacroRecorder * recorder )
+{
+    if ( _macroRecorder )
+	delete _macroRecorder;
+
+    _macroRecorder = recorder;
 }
 
 
 void YUI::deleteMacroRecorder()
 {
-    if ( _macroRecorder )
-    {
-	delete _macroRecorder;
-	_macroRecorder = 0;
-    }
+    setMacroRecorder( 0 );
 }
 
 
@@ -1202,6 +1212,7 @@ void YUI::stopRecordMacro()
 }
 
 
+
 /**
  * @builtin PlayMacro
  * @short Plays a recorded macro
@@ -1221,30 +1232,36 @@ void YUI::evaluatePlayMacro( const YCPString & filename )
 
 void YUI::playMacro( string filename )
 {
-    deleteMacroPlayer();
-    _macroPlayer = new YMacroPlayer( filename );
+    YCPMacroPlayer * player = new YCPMacroPlayer( filename );
+    setMacroPlayer( player );
 }
 
 
 void YUI::playNextMacroBlock()
 {
-    if ( ! _macroPlayer )
+    YCPMacroPlayer * player = 0;
+    
+    if ( macroPlayer() )
+	player = dynamic_cast<YCPMacroPlayer *> ( macroPlayer() );
+    
+    if ( ! player )
     {
 	yuiError() << "No macro player active." << endl;
 	return;
     }
 
-    if ( _macroPlayer->error() || _macroPlayer->finished() )
+
+    if ( player->error() || player->finished() )
     {
 	deleteMacroPlayer();
     }
     else
     {
-	if ( ! _macroPlayer->finished() )
+	if ( ! player->finished() )
 	{
-	    YCPValue result = _macroPlayer->evaluateNextBlock();
+	    YCPValue result = player->evaluateNextBlock();
 
-	    if ( _macroPlayer->error() || result.isNull() )
+	    if ( player->error() || result.isNull() )
 	    {
 		yuiError() << "Macro aborted" << endl;
 		deleteMacroPlayer();
@@ -1254,13 +1271,18 @@ void YUI::playNextMacroBlock()
 }
 
 
-void YUI::deleteMacroPlayer()
+void YUI::setMacroPlayer( YMacroPlayer * player )
 {
     if ( _macroPlayer )
-    {
 	delete _macroPlayer;
-	_macroPlayer = 0;
-    }
+
+    _macroPlayer = player;
+}
+
+
+void YUI::deleteMacroPlayer()
+{
+    setMacroPlayer( 0 );
 }
 
 

@@ -436,19 +436,19 @@ protected:
      * Any previous active macro recorder will be terminated (regularly) prior
      * to this.
      **/
-    void recordMacro( string filename );
+    virtual void recordMacro( string filename );
 
     /**
      * Stop macro recording if this is in progress.
      * Nothing happens when no macro recording is in progress.
      **/
-    void stopRecordMacro();
+    virtual void stopRecordMacro();
 
     /**
      * Play macro in file "filename".
      * Any previous macro execution will be terminated prior to this.
      **/
-    void playMacro( string filename );
+    virtual void playMacro( string filename );
 
     /**
      * Return whether macro recording is in progress or not
@@ -541,6 +541,16 @@ protected:
     YCPValue evaluateCallback( const YCPTerm & term, bool to_wfm );
 
     /**
+     * Set the internal macro recorder and delete any previous one.
+     **/
+    void setMacroRecorder( YMacroRecorder * recorder );
+
+    /**
+     * Set the internal macro player and delete any previous one.
+     **/
+    void setMacroPlayer( YMacroPlayer * player );
+			  
+    /**
      * Delete the internal macro recorder and set the pointer to 0.
      **/
     void deleteMacroRecorder();
@@ -627,12 +637,12 @@ protected:
     /**
      * The current macro recorder.
      **/
-    YMacroRecorder *_macroRecorder;
+    YMacroRecorder * _macroRecorder;
 
     /**
      * The current macro player.
      **/
-    YMacroPlayer *_macroPlayer;
+    YMacroPlayer * _macroPlayer;
 
     /**
      * Queue for synthetic (faked) user input events.

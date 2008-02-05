@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YMacroRecorder.cc
+  File:		YCPMacroRecorder.cc
 
   Author:	Stefan Hundhammer <sh@suse.de>
 
@@ -31,8 +31,7 @@
 #include "YUISymbols.h"
 #include "YWidget.h"
 #include "YInputField.h"
-#include "YDialog.h"
-#include "YMacroRecorder.h"
+#include "YCPMacroRecorder.h"
 #include "YUIComponent.h"
 #include "YCPValueWidgetID.h"
 #include "YUI.h"
@@ -47,7 +46,8 @@
 #define YMACRO_INDENT "	   "	// 4 blanks
 
 
-YMacroRecorder::YMacroRecorder( const string & macroFileName )
+YCPMacroRecorder::YCPMacroRecorder( const string & macroFileName )
+    : YMacroRecorder( macroFileName )
 {
     _screenShotCount = 0;
     openMacroFile( macroFileName );
@@ -55,21 +55,20 @@ YMacroRecorder::YMacroRecorder( const string & macroFileName )
 }
 
 
-YMacroRecorder::~YMacroRecorder()
+YCPMacroRecorder::~YCPMacroRecorder()
 {
     writeMacroFileFooter();
     closeMacroFile();
 }
 
 
-void YMacroRecorder::openMacroFile( const string & macroFileName )
+void YCPMacroRecorder::openMacroFile( const string & macroFileName )
 {
     _macroFile = fopen( macroFileName.c_str(), "w" );
 
     if ( _macroFile )
     {
 	yuiMilestone() << "Recording macro to " << macroFileName << endl;
-
     }
     else
     {
@@ -78,7 +77,7 @@ void YMacroRecorder::openMacroFile( const string & macroFileName )
 }
 
 
-void YMacroRecorder::closeMacroFile()
+void YCPMacroRecorder::closeMacroFile()
 {
     if ( _macroFile )
     {
@@ -89,7 +88,7 @@ void YMacroRecorder::closeMacroFile()
 }
 
 
-void YMacroRecorder::writeMacroFileHeader()
+void YCPMacroRecorder::writeMacroFileHeader()
 {
     if ( ! _macroFile )
 	return;
@@ -110,7 +109,7 @@ void YMacroRecorder::writeMacroFileHeader()
 }
 
 
-void YMacroRecorder::writeMacroFileFooter()
+void YCPMacroRecorder::writeMacroFileFooter()
 {
     if ( ! _macroFile )
 	return;
@@ -119,7 +118,7 @@ void YMacroRecorder::writeMacroFileFooter()
 }
 
 
-void YMacroRecorder::recordYcpCodeLocation()
+void YCPMacroRecorder::recordYcpCodeLocation()
 {
     extern ExecutionEnvironment ee;	// YCP interpreter status
     ExecutionEnvironment::CallStack callStack( ee.callstack() );
@@ -154,7 +153,7 @@ void YMacroRecorder::recordYcpCodeLocation()
 }
 
 
-void YMacroRecorder::recordTimeStamp()
+void YCPMacroRecorder::recordTimeStamp()
 {
     time_t now_seconds = time (NULL);
     struct tm *tm_now = localtime( &now_seconds );
@@ -167,7 +166,7 @@ void YMacroRecorder::recordTimeStamp()
 }
 
 
-void YMacroRecorder::recordComment( string text )
+void YCPMacroRecorder::recordComment( string text )
 {
     fprintf( _macroFile, "%s%s// %s\n",
 	     YMACRO_INDENT, YMACRO_INDENT,
@@ -175,7 +174,7 @@ void YMacroRecorder::recordComment( string text )
 }
 
 
-void YMacroRecorder::beginBlock()
+void YCPMacroRecorder::beginBlock()
 {
     if ( ! _macroFile )
 	return;
@@ -188,7 +187,7 @@ void YMacroRecorder::beginBlock()
 }
 
 
-void YMacroRecorder::endBlock()
+void YCPMacroRecorder::endBlock()
 {
     if ( ! _macroFile )
 	return;
@@ -199,7 +198,7 @@ void YMacroRecorder::endBlock()
 }
 
 
-void YMacroRecorder::recordUserInput( const YCPValue & input )
+void YCPMacroRecorder::recordUserInput( const YCPValue & input )
 {
     if ( ! _macroFile )
 	return;
@@ -228,7 +227,7 @@ void YMacroRecorder::recordUserInput( const YCPValue & input )
 }
 
 
-void YMacroRecorder::recordMakeScreenShot( bool enabled, const string & fname )
+void YCPMacroRecorder::recordMakeScreenShot( bool enabled, const string & fname )
 {
     if ( ! _macroFile )
 	return;
@@ -251,7 +250,7 @@ void YMacroRecorder::recordMakeScreenShot( bool enabled, const string & fname )
     // End of discussion before it even starts. ;-)
 
     string filename = fname;
-	
+
     if ( filename.empty() )
     {
 	char buffer[256];
@@ -266,8 +265,8 @@ void YMacroRecorder::recordMakeScreenShot( bool enabled, const string & fname )
 }
 
 
-void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
-					   const char *	propertyName )
+void YCPMacroRecorder::recordWidgetProperty( YWidget *    widget,
+					     const char * propertyName )
 {
     if ( ! _macroFile )
 	return;
@@ -302,7 +301,7 @@ void YMacroRecorder::recordWidgetProperty( YWidget *	widget,
 
     if ( ! widgetId )
 	return;
-    
+
     YCPTerm idTerm( YUISymbol_id );	// `id()
     idTerm->add( widgetId->value() );	// `id( `something )
 

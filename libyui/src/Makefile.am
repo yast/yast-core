@@ -26,6 +26,8 @@ libpy2UI_la_SOURCES =				\
 	YCPTableItemWriter.cc			\
 	YCPTreeItemParser.cc			\
 	YCPTreeItemWriter.cc			\
+	YCPMacroPlayer.cc			\
+	YCPMacroRecorder.cc			\
 	YCPPropertyHandler.cc			\
 	YCPValueWidgetID.cc			\
 	YCPWizardCommandParser.cc		\
@@ -65,8 +67,6 @@ libpy2UI_la_SOURCES =				\
 	YLabel.cc				\
 	YLayoutBox.cc				\
 	YLogView.cc				\
-	YMacroPlayer.cc				\
-	YMacroRecorder.cc			\
 	YMenuButton.cc				\
 	YMultiLineEdit.cc			\
 	YMultiProgressMeter.cc			\
@@ -124,6 +124,8 @@ pkginclude_HEADERS =				\
 	YCPTreeItem.h				\
 	YCPTreeItemParser.h			\
 	YCPTreeItemWriter.h			\
+	YCPMacroPlayer.h			\
+	YCPMacroRecorder.h			\
 	YCPPropertyHandler.h			\
 	YCPValueWidgetID.h			\
 	YCPWizardCommandParser.h		\

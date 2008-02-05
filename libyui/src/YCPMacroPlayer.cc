@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YMacroPlayer.cc
+  File:		YCPMacroPlayer.cc
 
   Author:	Stefan Hundhammer <sh@suse.de>
 
@@ -29,26 +29,27 @@
 
 #include "YUISymbols.h"
 #include "YWidget.h"
-#include "YMacroPlayer.h"
+#include "YCPMacroPlayer.h"
 
 
 
-YMacroPlayer::YMacroPlayer( const string & macroFileName )
-    : _macro( 0 )
+YCPMacroPlayer::YCPMacroPlayer( const string & macroFileName )
+    : YMacroPlayer( macroFileName )
+    , _macro( 0 )
 {
     _nextBlockNo = -1;
     readMacroFile( macroFileName );
 }
 
 
-YMacroPlayer::~YMacroPlayer()
+YCPMacroPlayer::~YCPMacroPlayer()
 {
     yuiDebug() << "Deleting macro player." << endl;
 }
 
 
 
-void YMacroPlayer::readMacroFile( const string & macroFileName )
+void YCPMacroPlayer::readMacroFile( const string & macroFileName )
 {
     clearError();
     FILE * macroFile = fopen( macroFileName.c_str(), "r" );
@@ -94,7 +95,7 @@ void YMacroPlayer::readMacroFile( const string & macroFileName )
 }
 
 
-bool YMacroPlayer::finished()
+bool YCPMacroPlayer::finished()
 {
     if ( error() || !_macro || _nextBlockNo < 0 )
     {
@@ -110,7 +111,7 @@ bool YMacroPlayer::finished()
 }
 
 
-YCPValue YMacroPlayer::evaluateNextBlock()
+YCPValue YCPMacroPlayer::evaluateNextBlock()
 {
     if ( error() || finished() )
     {
@@ -123,7 +124,7 @@ YCPValue YMacroPlayer::evaluateNextBlock()
 }
 
 
-void YMacroPlayer::rewind()
+void YCPMacroPlayer::rewind()
 {
     _nextBlockNo = 0;
 }
