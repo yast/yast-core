@@ -31,12 +31,33 @@ public:
     /**
      * Constructor
      **/
-    YCPMacroPlayer( const string & macroFileName );
+    YCPMacroPlayer();
 
     /**
      * Destructor
      **/
     virtual ~YCPMacroPlayer();
+
+    /**
+     * Play a macro from the specified macro file.
+     *
+     * Implemented from YMacroPlayer.
+     **/
+    virtual void play( const string & macroFile );
+
+    /**
+     * Return 'true' if a macro is currently being played.
+     *
+     * Implemented from YMacroPlayer.
+     **/ 
+    virtual bool playing() const;
+    
+    /**
+     * Play the next block from the current macro, if there is one playing.
+     *
+     * Implemented from YMacroPlayer.
+     **/
+    virtual void playNextBlock();
 
     /**
      * Report error status
@@ -50,48 +71,20 @@ public:
     bool finished();
 
     /**
-     * Return the result of the next macro block and increment the internal
-     * block counter. Returns YCPNull() on any previous error or if finished.
-     * Check for error() or finished() before calling this!
-     **/
-    YCPValue evaluateNextBlock();
-
-    /**
      * Rewind macro execution - prepare to redo from start
      **/
     void rewind();
 
 protected:
 
-    /**
-     * Read and parse a macro file. Sets the internal "error" status.
-     **/
-    void readMacroFile( const string & macroFileName );
-
-    /**
-     * Clear error status
-     **/
-    void clearError()	{ _error = false; }
-
-    /**
-     * Set error status
-     **/
-    void setError()	{ _error = true; }
-
-    /**
-     * The parsed macro
-     **/
-    YBlockPtr _macro;
-
-    /**
-     * Error status
-     **/
-    bool _error;
-
-    /**
-     * Number of the next macro block to execute
-     **/
-    int _nextBlockNo;
+    //
+    // Data members
+    //
+    
+    YBlockPtr	_macro;
+    bool	_playing;
+    bool	_error;
+    int		_nextBlockNo;
 };
 
 #endif // YCPMacroPlayer_h

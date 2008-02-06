@@ -23,24 +23,43 @@
 
 class YWidget;
 
+
 /**
  * Abstract base class for macro recorders.
+ *
+ * Applications should not use this directly, but the static methods in YMacro.
  **/
 class YMacroRecorder
 {
-protected:    
+    friend class YMacro;
+
+protected:
 
     /**
      * Constructor
      **/
-    YMacroRecorder( const string & macroFileName );
+    YMacroRecorder() {}
 
 public:
-
     /**
      * Destructor
      **/
-    virtual ~YMacroRecorder();
+    virtual ~YMacroRecorder() {}
+
+    /**
+     * Start recording a macro to the specified file.
+     **/
+    virtual void record( const string & macroFileName ) = 0;
+
+    /**
+     * End recording and close the current macro file (if there is any).
+     **/
+    virtual void endRecording() = 0;
+
+    /**
+     * Return 'true' if a macro is currently being recorded.
+     **/
+    virtual bool recording() const = 0;
 
     /**
      * Record one widget property.
@@ -53,7 +72,7 @@ public:
      *
      * If 'enabled' is 'false', this statement will be commented out.
      * If no file name is given, a default file name (with auto-increment) will
-     * be used. 
+     * be used.
      **/
     virtual void recordMakeScreenShot( bool enabled = false,
 				       const string & filename = string() ) = 0;

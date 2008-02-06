@@ -33,6 +33,7 @@
 #include "YUISymbols.h"
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
+#include "YMacro.h"
 
 #define VERBOSE_UI_CALLS	0
 
@@ -685,9 +686,9 @@ YCPValue Y2UIFunction::evaluateCall()
     if ( ! m_comp->ui() )
 	return YCPVoid();	// dummy UI component
 
-    if ( m_play_macro_blocks && m_comp->ui()->playingMacro() )
+    if ( m_play_macro_blocks && YMacro::playing() )
     {
-	m_comp->ui()->playNextMacroBlock();
+	YMacro::playNextBlock();
     }
 
     YCPValue ret = YCPVoid();

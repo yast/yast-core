@@ -46,12 +46,12 @@
 #define YMACRO_INDENT "	   "	// 4 blanks
 
 
-YCPMacroRecorder::YCPMacroRecorder( const string & macroFileName )
-    : YMacroRecorder( macroFileName )
+YCPMacroRecorder::YCPMacroRecorder()
+    : YMacroRecorder()
+    , _macroFile(0)
+    , _screenShotCount(0)
+    , _recording( false )
 {
-    _screenShotCount = 0;
-    openMacroFile( macroFileName );
-    writeMacroFileHeader();
 }
 
 
@@ -62,12 +62,34 @@ YCPMacroRecorder::~YCPMacroRecorder()
 }
 
 
+void YCPMacroRecorder::record( const string & macroFileName )
+{
+    _screenShotCount = 0;
+    openMacroFile( macroFileName );
+    writeMacroFileHeader();
+}
+
+
+void YCPMacroRecorder::endRecording()
+{
+    writeMacroFileFooter();
+    closeMacroFile();
+}
+
+
+bool YCPMacroRecorder::recording() const
+{
+    return _recording;
+}
+
+
 void YCPMacroRecorder::openMacroFile( const string & macroFileName )
 {
     _macroFile = fopen( macroFileName.c_str(), "w" );
 
     if ( _macroFile )
     {
+	_recording = true;
 	yuiMilestone() << "Recording macro to " << macroFileName << endl;
     }
     else
@@ -85,6 +107,8 @@ void YCPMacroRecorder::closeMacroFile()
 	_macroFile = 0;
 	yuiMilestone() << "Macro recording done." << endl;
     }
+
+    _recording = false;
 }
 
 

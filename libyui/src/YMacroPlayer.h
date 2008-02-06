@@ -23,21 +23,39 @@
 
 /**
  * Abstract base class for macro player.
+ *
+ * Applications should not use this directly, but the static methods in YMacro.
  **/
 class YMacroPlayer
 {
+    friend class YMacro;
+    
 protected:
     /**
      * Constructor
      **/
-    YMacroPlayer( const string & macroFileName );
+    YMacroPlayer() {}
 
 public:
     /**
      * Destructor
      **/
-    virtual ~YMacroPlayer();
+    virtual ~YMacroPlayer() {}
 
+    /**
+     * Play a macro from the specified macro file.
+     **/
+    virtual void play( const string & macroFile ) = 0;
+
+    /**
+     * Play the next block from the current macro, if there is one playing.
+     **/
+    virtual void playNextBlock() = 0;
+
+    /**
+     * Return 'true' if a macro is currently being played.
+     **/ 
+    virtual bool playing() const = 0;
 };
 
 #endif // YMacroPlayer_h

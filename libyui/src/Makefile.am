@@ -47,10 +47,11 @@ libpy2UI_la_SOURCES =				\
 	YWidgetFactory.cc			\
 	YOptionalWidgetFactory.cc		\
 	YWidgetID.cc				\
-	YBusyIndicator.cc			\
+	YMacro.cc				\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\
+	YBusyIndicator.cc			\
 	YCheckBox.cc				\
 	YCheckBoxFrame.cc			\
 	YComboBox.cc				\
@@ -152,9 +153,13 @@ pkginclude_HEADERS =				\
 	YWidgetID.h				\
 	YWidgetOpt.h				\
 	YWidget_OptimizeChanges.h		\
+	YMacro.h				\
+	YMacroPlayer.h				\
+	YMacroRecorder.h			\
 						\
 	YAlignment.h				\
 	YBarGraph.h				\
+	YBusyIndicator.h			\
 	YCheckBox.h				\
 	YCheckBoxFrame.h			\
 	YComboBox.h				\
@@ -171,8 +176,6 @@ pkginclude_HEADERS =				\
 	YLabel.h				\
 	YLayoutBox.h				\
 	YLogView.h				\
-	YMacroPlayer.h				\
-	YMacroRecorder.h			\
 	YMenuButton.h				\
 	YMultiLineEdit.h			\
 	YMultiProgressMeter.h			\
@@ -200,7 +203,6 @@ pkginclude_HEADERS =				\
 	YTimezoneSelector.h                     \
 	YTree.h					\
 	YWizard.h				\
-	YBusyIndicator.h			\
 						\
 	YRpmGroupsTree.h			\
 	YStringTree.h				\

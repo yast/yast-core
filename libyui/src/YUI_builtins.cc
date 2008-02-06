@@ -50,6 +50,7 @@
 #include "YUIException.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
+#include "YMacro.h"
 #include "YCPMacroRecorder.h"
 #include "YCPMacroPlayer.h"
 #include "YReplacePoint.h"
@@ -580,18 +581,18 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	// Handle macro recording
 
-	if ( recordingMacro() )
+	if ( YMacro::recording() )
 	{
-	    YCPMacroRecorder * recorder = dynamic_cast<YCPMacroRecorder *> ( macroRecorder() );
+	    YCPMacroRecorder * macroRecorder = dynamic_cast<YCPMacroRecorder *> ( YMacro::recorder() );
 
-	    if ( recorder )
+	    if ( macroRecorder )
 	    {
 		if ( ! input->isVoid() || wait )	// Don't record empty PollInput() calls
 		{
-		    recorder->beginBlock();
-		    dialog->saveUserInput( _macroRecorder );
-		    recorder->recordUserInput( input );
-		    recorder->endBlock();
+		    macroRecorder->beginBlock();
+		    dialog->saveUserInput( macroRecorder );
+		    macroRecorder->recordUserInput( input );
+		    macroRecorder->endBlock();
 		}
 	    }
 	}
@@ -1164,31 +1165,9 @@ void YUI::evaluateBeep()
  */
 void YUI::evaluateRecordMacro( const YCPString & filename )
 {
-    recordMacro( filename->value () );
+    YMacro::record( filename->value () );
 }
  
- 
-void YUI::recordMacro( string filename )
-{
-    YCPMacroRecorder * recorder = new YCPMacroRecorder( filename );
-    setMacroRecorder( recorder );
-}
-
-
-void YUI::setMacroRecorder( YMacroRecorder * recorder )
-{
-    if ( _macroRecorder )
-	delete _macroRecorder;
-
-    _macroRecorder = recorder;
-}
-
-
-void YUI::deleteMacroRecorder()
-{
-    setMacroRecorder( 0 );
-}
-
 
 
 /**
@@ -1202,15 +1181,8 @@ void YUI::deleteMacroRecorder()
  */
 void YUI::evaluateStopRecordMacro()
 {
-    stopRecordMacro();
+    YMacro::endRecording();
 }
-
-
-void YUI::stopRecordMacro()
-{
-    deleteMacroRecorder();
-}
-
 
 
 /**
@@ -1226,63 +1198,7 @@ void YUI::stopRecordMacro()
  */
 void YUI::evaluatePlayMacro( const YCPString & filename )
 {
-    playMacro( filename->value() );
-}
-
-
-void YUI::playMacro( string filename )
-{
-    YCPMacroPlayer * player = new YCPMacroPlayer( filename );
-    setMacroPlayer( player );
-}
-
-
-void YUI::playNextMacroBlock()
-{
-    YCPMacroPlayer * player = 0;
-    
-    if ( macroPlayer() )
-	player = dynamic_cast<YCPMacroPlayer *> ( macroPlayer() );
-    
-    if ( ! player )
-    {
-	yuiError() << "No macro player active." << endl;
-	return;
-    }
-
-
-    if ( player->error() || player->finished() )
-    {
-	deleteMacroPlayer();
-    }
-    else
-    {
-	if ( ! player->finished() )
-	{
-	    YCPValue result = player->evaluateNextBlock();
-
-	    if ( player->error() || result.isNull() )
-	    {
-		yuiError() << "Macro aborted" << endl;
-		deleteMacroPlayer();
-	    }
-	}
-    }
-}
-
-
-void YUI::setMacroPlayer( YMacroPlayer * player )
-{
-    if ( _macroPlayer )
-	delete _macroPlayer;
-
-    _macroPlayer = player;
-}
-
-
-void YUI::deleteMacroPlayer()
-{
-    setMacroPlayer( 0 );
+    YMacro::play( filename->value() );
 }
 
 

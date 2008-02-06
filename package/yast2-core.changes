@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Feb  6 14:19:47 CET 2008 - sh@suse.de
+
+- Moved macro recording and playing out of YUI class into new
+  YMacro class with static functions
+- V 2.16.29 
+
+-------------------------------------------------------------------
 Fri Feb  1 14:48:52 CET 2008 - sh@suse.de
 
 - Moved UI event handling from YUI to YDialog

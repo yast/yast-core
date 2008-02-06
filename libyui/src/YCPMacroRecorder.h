@@ -33,12 +33,33 @@ public:
     /**
      * Constructor
      **/
-    YCPMacroRecorder( const string & macroFileName );
+    YCPMacroRecorder();
 
     /**
      * Destructor
      **/
     virtual ~YCPMacroRecorder();
+
+    /**
+     * Start recording a macro to the specified file.
+     *
+     * Implemented from YMacroRecorder.
+     **/
+    virtual void record( const string & macroFileName );
+
+    /**
+     * End recording and close the current macro file (if there is any).
+     *
+     * Implemented from YMacroRecorder.
+     **/
+    virtual void endRecording();
+
+    /**
+     * Return 'true' if a macro is currently being recorded.
+     *
+     * Implemented from YMacroRecorder.
+     **/
+    virtual bool recording() const;
 
     /**
      * Record one widget property.
@@ -58,7 +79,7 @@ public:
      * Implemented from YMacroRecorder.
      **/
     virtual void recordMakeScreenShot( bool enabled = false,
-			       const string & filename = string() );
+				       const string & filename = string() );
 
     /**
      * Record one user input.
@@ -121,6 +142,7 @@ protected:
     //
     FILE *	_macroFile;
     int		_screenShotCount;
+    bool	_recording;
 };
 
 #endif // YCPMacroRecorder_h

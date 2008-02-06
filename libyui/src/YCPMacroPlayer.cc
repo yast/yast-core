@@ -33,12 +33,13 @@
 
 
 
-YCPMacroPlayer::YCPMacroPlayer( const string & macroFileName )
-    : YMacroPlayer( macroFileName )
+YCPMacroPlayer::YCPMacroPlayer()
+    : YMacroPlayer()
     , _macro( 0 )
+    , _playing( false )
+    , _error( false )
+    , _nextBlockNo( -1 )
 {
-    _nextBlockNo = -1;
-    readMacroFile( macroFileName );
 }
 
 
@@ -48,15 +49,16 @@ YCPMacroPlayer::~YCPMacroPlayer()
 }
 
 
-
-void YCPMacroPlayer::readMacroFile( const string & macroFileName )
+void YCPMacroPlayer::play( const string & macroFileName )
 {
-    clearError();
+    _playing     = false;
+    _error       = false;
+    _nextBlockNo = -1;
     FILE * macroFile = fopen( macroFileName.c_str(), "r" );
 
     if ( ! macroFile )
     {
-	setError();
+	_error = true;
 	yuiError() << "Can't open macro file " << macroFileName << endl;
 	return ;
     }
@@ -66,18 +68,18 @@ void YCPMacroPlayer::readMacroFile( const string & macroFileName )
     Parser parser( macroFile, macroFileName.c_str() );
     YCodePtr parsed = parser.parse();
 
-    if ( !parsed || parsed->isError() )
+    if ( ! parsed || parsed->isError() )
     {
-	setError();
+	_error = true;
 	yuiError() << "Error parsing macro file " << macroFileName
 		   << " -- macro execution aborted"
 		   << endl;
 	return;
     }
 
-    if ( !parsed->isBlock() )
+    if ( ! parsed->isBlock() )
     {
-	setError();
+	_error = true;
 	yuiError() << "Macro syntax error in file " << macroFileName
 		   << " -- expected YCP block"
 		   << endl;
@@ -90,14 +92,34 @@ void YCPMacroPlayer::readMacroFile( const string & macroFileName )
 	       << " - " << _macro->statementCount() << " macro blocks"
 	       << endl;
     _nextBlockNo = 0;
+    _playing = true;
 
     fclose( macroFile );
 }
 
 
+void YCPMacroPlayer::playNextBlock()
+{
+    if ( error() || finished() )
+    {
+	_playing = false;
+    }
+
+    yuiMilestone() << "Evaluating macro block #" << _nextBlockNo << endl;
+
+    _macro->evaluate( _nextBlockNo++ );
+}
+
+
+bool YCPMacroPlayer::playing() const
+{
+    return _playing;
+}
+
+
 bool YCPMacroPlayer::finished()
 {
-    if ( error() || !_macro || _nextBlockNo < 0 )
+    if ( error() || ! _macro || _nextBlockNo < 0 )
     {
 	yuiWarning() << "Test for error() first before testing finished() !" << endl;
 	return true;
@@ -108,19 +130,6 @@ bool YCPMacroPlayer::finished()
 	       << endl;
 
     return _nextBlockNo >= _macro->statementCount();
-}
-
-
-YCPValue YCPMacroPlayer::evaluateNextBlock()
-{
-    if ( error() || finished() )
-    {
-	return YCPNull();
-    }
-
-    yuiMilestone() << "Evaluating macro block #" << _nextBlockNo << endl;
-
-    return _macro->evaluate( _nextBlockNo++ );
 }
 
 

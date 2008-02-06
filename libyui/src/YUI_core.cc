@@ -43,6 +43,11 @@
 #include "YWidget.h"
 #include "YDialog.h"
 #include "YApplication.h"
+#include "YMacro.h"
+
+// FIXME: Move this to YCP-specific part
+#include "YCPMacroRecorder.h"
+#include "YCPMacroPlayer.h"
 
 
 typedef YCPValue (*v2) ();
@@ -79,7 +84,12 @@ YUI::YUI( bool withThreads )
     , _callback( 0 )
 {
     _yui = this;
+
+    // FIXME: Move this to YCP-specific part
     YUILog::setLoggerFunction( yui_y2logger );
+    
+    YMacro::setRecorder( new YCPMacroRecorder() );
+    YMacro::setPlayer  ( new YCPMacroPlayer()   );
 }
 
 
@@ -97,8 +107,8 @@ YUI::~YUI()
 
     YDialog::deleteAllDialogs();
 
-    deleteMacroRecorder();
-    deleteMacroPlayer();
+    YMacro::deleteRecorder();
+    YMacro::deletePlayer();
 }
 
 

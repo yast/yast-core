@@ -505,3 +505,12 @@
   - Derived classes now have to implement:
     - YDialog::waitForEventInternal()
     - YDialog::pollEventInternal()
+
+
+2008-02-06 sh@suse.de
+
+* Macro recording and playing ins now unified and moved out of the YUI class.
+  Use the static functions in the new YMacro class instead now:
+  - YMacro::record()
+  - YMacro::play()
+  ...
