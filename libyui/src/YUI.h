@@ -202,15 +202,6 @@ public:
     virtual void internalError( const char *msg );
 
     /**
-     * Returns the current product name
-     * ("SuSE Linux", "SuSE Linux Enterprise Server", "United Linux", etc.).
-     *
-     * This can be set with the UI::SetProductName() builtin.
-     * UI::GetProductName is the YCP equivalent to this function.
-     **/
-    string productName() const { return _productName; }
-
-    /**
      * Convert logical layout spacing units into device dependent units.
      * A default size dialog is assumed to be 80x25 layout spacing units.
      *
@@ -545,11 +536,6 @@ protected:
      * after terminating itself.
      **/
     bool terminate_ui_thread;
-
-    /**
-     * The current product name ("SuSE Linux", "United Linux", ...).
-     **/
-    string _productName;
 
     /**
      * Queue for synthetic (faked) user input events.

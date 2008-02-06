@@ -226,6 +226,21 @@ public:
      **/
     virtual int runInTerminal( const string & command );
 
+    /**
+     * Set the current product name ("openSUSE", "SLES", ...).
+     * This name will be expanded in help texts when the &product; entity is
+     * used. 
+     *
+     * Derived classes can overwrite this method, but they should call this
+     * base class method at the beginning of the new implementation.
+     **/
+    virtual void setProductName( const string & productName );
+
+    /**
+     * Set the current product name ("openSUSE", "SLES", ...).
+     **/
+    string productName() const;
+
 
     //
     // Display information.

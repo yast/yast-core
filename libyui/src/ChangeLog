@@ -514,3 +514,5 @@
   - YMacro::record()
   - YMacro::play()
   ...
+
+* Moved productName() and setProductName() from YUI to YApplication

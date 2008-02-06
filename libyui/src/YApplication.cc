@@ -36,7 +36,12 @@ typedef map<string, int> YFunctionKeyMap;
 
 struct YApplicationPrivate
 {
+    YApplicationPrivate()
+	: productName( "openSUSE" )
+	{}
+    
     string		iconBasePath;
+    string		productName;
     YFunctionKeyMap	defaultFunctionKey;
 };
 
@@ -77,6 +82,19 @@ void
 YApplication::setIconBasePath( const string & newIconBasePath )
 {
     priv->iconBasePath = newIconBasePath;
+}
+
+void
+YApplication::setProductName( const string & productName )
+{
+    priv->productName = productName;
+}
+
+
+string
+YApplication::productName() const
+{
+    return priv->productName;
 }
 
 

@@ -183,7 +183,7 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
  **/
 YCPString YUI::evaluateGetProductName()
 {
-    return YCPString( _productName );
+    return YCPString( YUI::app()->productName() );
 }
 
 
@@ -208,7 +208,7 @@ YCPString YUI::evaluateGetProductName()
  **/
 void YUI::evaluateSetProductName( const YCPString & name )
 {
-    _productName = name->value();
+    YUI::app()->setProductName( name->value() );
 }
 
 

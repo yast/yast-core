@@ -76,7 +76,6 @@ yui_y2logger( YUILogLevel_t	logLevel,
 YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
     , _uiThread( 0 )
-    , _productName( "SUSE Linux" )
     , _eventsBlocked( false )
     , _callback( 0 )
 {
