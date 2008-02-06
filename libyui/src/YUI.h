@@ -239,7 +239,6 @@ public:
     void evaluateFakeUserInput				( const YCPValue & next_input );
     YCPMap evaluateGetDisplayInfo			();
     YCPString evaluateGetLanguage			( const YCPBoolean & strip_encoding );
-    YCPValue evaluateGetModulename			( const YCPTerm & term );
     YCPString evaluateGetProductName			();
     YCPString evaluateGlyph				( const YCPSymbol & symbol );
     YCPValue evaluateHasSpecialWidget			( const YCPSymbol & widget );
@@ -265,7 +264,6 @@ public:
     YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
     void evaluateSetFunctionKeys			( const YCPMap & new_keys );
     void evaluateSetLanguage				( const YCPString& lang, const YCPString& encoding = YCPNull() );
-    void evaluateSetModulename				( const YCPString & name );
     void evaluateSetProductName				( const YCPString & name );
     void evaluateStopRecordMacro			();
     YCPBoolean evaluateWidgetExists			( const YCPValue & value_id );
@@ -313,52 +311,6 @@ protected:
      **/
     virtual void idleLoop( int fd_ycp ) = 0;
 
-
-    /**
-     * UI-specific setConsoleFont() function.
-     * Returns YCPVoid() if OK and YCPNull() on error.
-     * This default implementation does nothing.
-     **/
-    virtual YCPValue setConsoleFont( const YCPString & console_magic,
-				     const YCPString & font,
-				     const YCPString & screen_map,
-				     const YCPString & unicode_map,
-				     const YCPString & encoding );
-
-    virtual YCPValue setKeyboard();
-
-    /**
-     * UI-specific busyCursor function.
-     * This default implementation does nothing.
-     **/
-    virtual void busyCursor();
-
-    /**
-     * UI-specific normalCursor function.
-     * This default implementation does nothing.
-     **/
-    virtual void normalCursor();
-
-    /**
-     * UI-specific redrawScreen method.
-     * This default implementation does nothing.
-     **/
-    virtual void redrawScreen();
-
-    /**
-     * UI-specific makeScreenShot function.
-     * This default implementation does nothing.
-     **/
-    virtual void makeScreenShot( string filename );
-
-    /**
-     * UI-specific beep method.
-     *
-     * Emit acoustic signal or something equivalent.
-     * This default implementation does nothing.
-     **/
-    virtual void beep();
-
     /**
      * UI-specific runPkgSelection method.
      *
@@ -380,7 +332,6 @@ protected:
      * until it does so.
      **/
     void terminateUIThread();
-
 
     /**
      * Creates and launches the ui thread.

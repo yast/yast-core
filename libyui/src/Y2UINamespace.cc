@@ -557,16 +557,6 @@ Y2UINamespace::Recode( const YCPString & from, const YCPString & to, const YCPSt
 
 
 YCPValue
-Y2UINamespace::SetModulename( const YCPString & name )
-{
-    if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetModulename( name );
-
-    return YCPVoid();
-}
-
-
-YCPValue
 Y2UINamespace::HasSpecialWidget( const YCPSymbol & widget )
 {
     if ( YUIComponent::ui() )

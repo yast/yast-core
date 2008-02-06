@@ -294,9 +294,6 @@ public:
     /* TYPEINFO: any (string, string, string) */
     YCPValue Recode( const YCPString & from, const YCPString & to, const YCPString & text );
 
-    /* TYPEINFO: void (string) */
-    YCPValue SetModulename( const YCPString & name );
-
     /* TYPEINFO: boolean (symbol) */
     YCPValue HasSpecialWidget( const YCPSymbol & widget );
 

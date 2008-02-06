@@ -104,9 +104,7 @@
 	_registered_functions.push_back ("SetFunctionKeys");
 	enterSymbol (new SymbolEntry (this, 51, "Recode", SymbolEntry::c_function, Type::fromSignature ("any (string, string, string)") ) );
 	_registered_functions.push_back ("Recode");
-	enterSymbol (new SymbolEntry (this, 52, "SetModulename", SymbolEntry::c_function, Type::fromSignature ("void (string)") ) );
-	_registered_functions.push_back ("SetModulename");
-	enterSymbol (new SymbolEntry (this, 53, "HasSpecialWidget", SymbolEntry::c_function, Type::fromSignature ("boolean (symbol)") ) );
+	enterSymbol (new SymbolEntry (this, 52, "HasSpecialWidget", SymbolEntry::c_function, Type::fromSignature ("boolean (symbol)") ) );
 	_registered_functions.push_back ("HasSpecialWidget");
-	enterSymbol (new SymbolEntry (this, 54, "WizardCommand", SymbolEntry::c_function, Type::fromSignature ("boolean (term)") ) );
+	enterSymbol (new SymbolEntry (this, 53, "WizardCommand", SymbolEntry::c_function, Type::fromSignature ("boolean (term)") ) );
 	_registered_functions.push_back ("WizardCommand");

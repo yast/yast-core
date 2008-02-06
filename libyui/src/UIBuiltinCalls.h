@@ -181,12 +181,9 @@
 			if (m_param2->isVoid()) {ycp2error("Parameter %d is nil, %s is required", 2, "String"); return YCPVoid();}
 			if (m_param3->isVoid()) {ycp2error("Parameter %d is nil, %s is required", 3, "String"); return YCPVoid();}
 			return m_instance->Recode (m_param1->asString(), m_param2->asString(), m_param3->asString()); 
-		case 52: // SetModulename
-			if (m_param1->isVoid()) {ycp2error("Parameter %d is nil, %s is required", 1, "String"); return YCPVoid();}
-			return m_instance->SetModulename (m_param1->asString()); 
-		case 53: // HasSpecialWidget
+		case 52: // HasSpecialWidget
 			if (m_param1->isVoid()) {ycp2error("Parameter %d is nil, %s is required", 1, "Symbol"); return YCPVoid();}
 			return m_instance->HasSpecialWidget (m_param1->asSymbol()); 
-		case 54: // WizardCommand
+		case 53: // WizardCommand
 			if (m_param1->isVoid()) {ycp2error("Parameter %d is nil, %s is required", 1, "Term"); return YCPVoid();}
 			return m_instance->WizardCommand (m_param1->asTerm()); 

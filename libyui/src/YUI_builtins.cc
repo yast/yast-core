@@ -116,34 +116,6 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
 }
 
 
-
-/**
- * @builtin GetModulename
- * @short Gets the name of a Module
- * @description
- * This is tricky. The UI doesn't care about the current module
- * name, only the translator does. However, since the translator
- * acts as a filter between a client and the UI, it cant directly
- * return the module name. The current implementation inserts the
- * modules name in the translator and it arrives here as the term
- * argument. So the example has no arguments, but the internal code
- * checks for a string argument.
- * @return string
- *
- * @usage GetModulename()
- */
-
-YCPValue YUI::evaluateGetModulename( const YCPTerm & term )
-{
-    if ( ( term->size() == 1 ) && ( term->value(0)->isString() ) )
-    {
-	return term->value(0);
-    }
-    else return YCPNull();
-}
-
-
-
 /**
  * @builtin SetLanguage
  * @short Sets the language of the UI
@@ -229,10 +201,17 @@ void YUI::evaluateSetProductName( const YCPString & name )
  * @usage SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
-void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPString & font,
-    const YCPString & screen_map, const YCPString & unicode_map, const YCPString & encoding )
+void YUI::evaluateSetConsoleFont( const YCPString & console_magic,
+				  const YCPString & font,
+				  const YCPString & screen_map,
+				  const YCPString & unicode_map,
+				  const YCPString & encoding )
 {
-    setConsoleFont( console_magic, font, screen_map, unicode_map, encoding );
+    YUI::app()->setConsoleFont( console_magic->value(),
+				font->value(),
+				screen_map->value(),
+				unicode_map->value(),
+				encoding->value() );
 }
 
 
@@ -253,7 +232,7 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic, const YCPStri
 
 YCPInteger YUI::evaluateRunInTerminal(const YCPString & command )
 {
-    return YCPInteger( yApp()->runInTerminal( command->value() ) );
+    return YCPInteger( YUI::app()->runInTerminal( command->value() ) );
 }
 
 
@@ -266,80 +245,7 @@ YCPInteger YUI::evaluateRunInTerminal(const YCPString & command )
  */
 void YUI::evaluateSetKeyboard( )
 {
-    setKeyboard( );
-}
-
-
-/*
- * Default UI-specific setKeyboard()
- * Returns OK ( YCPVoid() )
- */
-YCPValue YUI::setKeyboard(  )
-{
-    // NOP
-
-    return YCPVoid();	// OK ( YCPNull() would mean error )
-}
-
-
-/*
- * Default UI-specific setConsoleFont()
- * Returns OK (YCPVoid())
- */
-YCPValue YUI::setConsoleFont( const YCPString & console_magic,
-					const YCPString & font,
-					const YCPString & screen_map,
-					const YCPString & unicode_map,
-					const YCPString & encoding )
-{
-    // NOP
-
-    return YCPVoid();	// OK ( YCPNull() would mean error )
-}
-
-
-/**
- * Default UI-specific busyCursor() - does nothing
- */
-void YUI::busyCursor()
-{
-    // NOP
-}
-
-
-/**
- * Default UI-specific normalCursor() - does nothing
- */
-void YUI::normalCursor()
-{
-    // NOP
-}
-
-
-/**
- * Default UI-specific redrawScreen() - does nothing
- */
-void YUI::redrawScreen()
-{
-    // NOP
-}
-
-
-/**
- * Default UI-specific makeScreenShot() - does nothing
- */
-void YUI::makeScreenShot( string filename )
-{
-    // NOP
-}
-
-
-/**
- * Default UI-specific beep() - does nothing
- */
-void YUI::beep()
-{
-    // NOP
+    YUI::app()->initConsoleKeyboard();
 }
 
 
@@ -650,7 +556,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 	    }
     }
 
-    blockEvents();	// Prevent self-generated events from UI built-ins.
+    YUI::ui()->blockEvents();	// Prevent self-generated events from UI built-ins.
 
     bool ok = true;
 
@@ -676,7 +582,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 	YCPErrorDialog::exceptionDialog( "UI Syntax Error", exception );
     }
 
-    unblockEvents();
+    YUI::ui()->unblockEvents();
 
     return YCPBoolean( ok );
 }
@@ -695,9 +601,9 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
 
 YCPValue YUI::evaluateCloseDialog()
 {
-    blockEvents();	// We don't want self-generated events from UI builtins.
+    YUI::ui()->blockEvents();	// We don't want self-generated events from UI builtins.
     YDialog::deleteTopmostDialog();
-    unblockEvents();
+    YUI::ui()->unblockEvents();
 
     return YCPBoolean( true );
 }
@@ -727,7 +633,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & p
 
     try
     {
-	blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
+	YUI::ui()->blockEvents();	// We don't want self-generated events from UI::ChangeWidget().
 
 	if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	{
@@ -788,7 +694,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & p
 	ret = YCPNull();
     }
 
-    unblockEvents();
+    YUI::ui()->unblockEvents();
 
     return ret;
 }
@@ -895,7 +801,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
 						idValue->toString().c_str() ) );
 	}
 
-	blockEvents();	// Prevent self-generated events
+	YUI::ui()->blockEvents();	// Prevent self-generated events
 	YCPValue  id     = YCPDialogParser::parseIdTerm( idValue );
 	YWidget * widget = YCPDialogParser::findWidgetWithId( id,
 							      true ); // throw if not found
@@ -936,7 +842,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
 	YCPErrorDialog::exceptionDialog( "UI Syntax Error", exception );
     }
 
-    unblockEvents();
+    YUI::ui()->unblockEvents();
 
     return YCPBoolean( success );
 }
@@ -978,9 +884,9 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
     if ( ! wizard )
 	return YCPBoolean( false );
 
-    blockEvents();	// Avoid self-generated events from builtins
+    YUI::ui()->blockEvents();	// Avoid self-generated events from builtins
     bool ret = YCPWizardCommandParser::parseAndExecute( wizard, command );
-    unblockEvents();
+    YUI::ui()->unblockEvents();
 
     return YCPBoolean( ret );
 }
@@ -1033,29 +939,7 @@ YCPBoolean YUI::evaluateSetFocus( const YCPValue & idValue )
 
 void YUI::evaluateBusyCursor()
 {
-    busyCursor();
-}
-
-
-
-/**
- * @builtin RedrawScreen
- * @short Redraws the screen
- * @description
- * Redraws the screen after it very likely has become garbled by some other output.
- *
- * This should normally not be necessary: The (specific) UI redraws the screen
- * automatically whenever required. Under rare circumstances, however, the
- * screen might have changes due to circumstances beyond the UI's control: For
- * text based UIs, for example, system commands that cause output to every tty
- * might make this necessary. Call this in the YCP code after such a command.
- *
- * @return void
- */
-
-void YUI::evaluateRedrawScreen()
-{
-    redrawScreen();
+    YUI::app()->busyCursor();
 }
 
 
@@ -1076,7 +960,28 @@ void YUI::evaluateRedrawScreen()
 
 void YUI::evaluateNormalCursor()
 {
-    normalCursor();
+    YUI::app()->normalCursor();
+}
+
+
+/**
+ * @builtin RedrawScreen
+ * @short Redraws the screen
+ * @description
+ * Redraws the screen after it very likely has become garbled by some other output.
+ *
+ * This should normally not be necessary: The (specific) UI redraws the screen
+ * automatically whenever required. Under rare circumstances, however, the
+ * screen might have changes due to circumstances beyond the UI's control: For
+ * text based UIs, for example, system commands that cause output to every tty
+ * might make this necessary. Call this in the YCP code after such a command.
+ *
+ * @return void
+ */
+
+void YUI::evaluateRedrawScreen()
+{
+    YUI::app()->redrawScreen();
 }
 
 
@@ -1094,7 +999,7 @@ void YUI::evaluateNormalCursor()
 
 void YUI::evaluateMakeScreenShot( const YCPString & filename )
 {
-    makeScreenShot( filename->value () );
+    YUI::app()->makeScreenShot( filename->value () );
 }
 
 
@@ -1126,8 +1031,9 @@ void YUI::evaluateDumpWidgetTree()
  */
 void YUI::evaluateBeep()
 {
-    beep();
+    YUI::app()->beep();
 }
+
 
 /**
  * @builtin RecordMacro
@@ -1278,7 +1184,7 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
 YCPMap YUI::evaluateGetDisplayInfo()
 {
     YCPMap info_map;
-    YApplication * app = yApp(); // slight optimization
+    YApplication * app = YUI::app(); // slight optimization
 
     info_map->add( YCPString( YUICap_Width			), YCPInteger( app->displayWidth()	) );
     info_map->add( YCPString( YUICap_Height			), YCPInteger( app->displayHeight()	) );

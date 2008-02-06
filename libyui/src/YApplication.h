@@ -215,18 +215,6 @@ public:
 				       const string & headline ) = 0;
 
     /**
-     * Run a shell command (typically an interactive program using NCurses)
-     * in a terminal (window).
-     *
-     * This is useful for text UIs (e.g., NCurses) that need special
-     * preparation prior to running an NCurses-based application and special
-     * clean-up afterwards.
-     *
-     * This default implementation logs an error and returns with -1.
-     **/
-    virtual int runInTerminal( const string & command );
-
-    /**
      * Set the current product name ("openSUSE", "SLES", ...).
      * This name will be expanded in help texts when the &product; entity is
      * used. 
@@ -270,6 +258,72 @@ public:
      * have right-to-left writing direction (Arabic, Hebrew).
      **/
     bool reverseLayout() const;
+
+    /**
+     * Change the (mouse) cursor to indicate busy status.
+     * This default implementation does nothing.
+     **/
+    virtual void busyCursor() {}
+
+    /**
+     * Change the (mouse) cursor back from busy status to normal.
+     * This default implementation does nothing.
+     **/
+    virtual void normalCursor() {}
+
+    /**
+     * Make a screen shot and save it to the specified file.
+     * This default implementation does nothing.
+     **/
+    virtual void makeScreenShot( const string & fileName ) {}
+
+    /**
+     * Beep.
+     * This default implementation does nothing.
+     **/
+    virtual void beep() {}
+
+    
+    //
+    // NCurses (text mode) specific
+    //
+
+    /**
+     * Redraw the screen.
+     * This default implementation does nothing.
+     **/
+    virtual void redrawScreen() {}
+
+    /**
+     * Initialize the (text) console keyboard.
+     * This default implementation does nothing.
+     **/
+    virtual void initConsoleKeyboard() {}
+
+    /**
+     * Set the (text) console font according to the current encoding etc.
+     * See the setfont(8) command and the console HowTo for details.
+     *
+     * This default implementation does nothing.
+     **/
+    virtual void setConsoleFont( const string & console_magic,
+				 const string & font,
+				 const string & screen_map,
+				 const string & unicode_map,
+				 const string & encoding )
+	{}
+
+    /**
+     * Run a shell command (typically an interactive program using NCurses)
+     * in a terminal (window).
+     *
+     * This is useful for text UIs (e.g., NCurses) that need special
+     * preparation prior to running an NCurses-based application and special
+     * clean-up afterwards.
+     *
+     * This default implementation logs an error and returns -1.
+     **/
+    virtual int runInTerminal( const string & command );
 
 
     //
