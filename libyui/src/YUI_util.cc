@@ -20,14 +20,27 @@
 #include <errno.h>  	// strerror()
 #include <iconv.h>
 
+#include <ycp/YCPInteger.h>
+#include <ycp/YCPFloat.h>
+
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
 #include "YUI_util.h"
-#include "YUI.h"
-
 
 using std::string;
+
+
+std::ostream &
+operator<<( std::ostream & stream, const YCPValue & val )
+{
+    if ( val.isNull() )
+	return stream << "<YCPNull>";
+    else if ( val->isVoid() )
+	return stream << "<nil>";
+    else
+	return stream << val->toString();
+}
 
 
 bool isNum( const YCPValue & val )
@@ -53,18 +66,6 @@ float toFloat( const YCPValue & val )
 }
 
 
-std::ostream &
-operator<<( std::ostream & stream, const YCPValue & val )
-{
-    if ( val.isNull() )
-	return stream << "<YCPNull>";
-    else if ( val->isVoid() )
-	return stream << "<nil>";
-    else
-	return stream << val->toString();
-}
-
-
 // FIXME: The following code is ugly
 // FIXME: The following code is ugly
 // FIXME: The following code is ugly
@@ -82,10 +83,10 @@ static string  to_name	     = "";
 static const unsigned recode_buf_size = 1024;
 static char	      recode_buf[ recode_buf_size ];
 
-int YUI::Recode( const string & src,
-		 const string & srcEncoding,
-		 const string & destEncoding,
-		 string & dest )
+int recode( const string & src,
+	    const string & srcEncoding,
+	    const string & destEncoding,
+	    string & 	   dest )
 {
     if ( srcEncoding == destEncoding
 	 || src.empty())

@@ -118,32 +118,6 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
 
 
 /**
- * @builtin SetModulename
- * @short Sets Module Name
- * @description
- * Does nothing. The SetModulename command is introduced for
- * the translator. But the translator sends all commands
- * to the ui. So the ui shouldn't complain about this
- * command.
- * @param string module
- * @return void
- * @usage SetModulename( "inst_environment" )
- */
-
-void YUI::evaluateSetModulename( const YCPString & name )
-{
-    _moduleName = name->value();
-}
-
-
-const char * YUI::moduleName()
-{
-    return _moduleName.c_str();
-}
-
-
-
-/**
  * @builtin GetModulename
  * @short Gets the name of a Module
  * @description
@@ -1694,27 +1668,27 @@ float YUI::layoutUnits( YUIDimension dim, int device_units )
  * iso encoding specifier (i.e. "ISO-8859-1" for western languages,
  * "ISO-8859-2" for eastern languages, etc. )
  *
- * @param string from
- * @param string to
+ * @param string fromEncoding
+ * @param string toEncoding
  * @param string text
  * @return any
  */
 
-YCPValue YUI::evaluateRecode( const YCPString & from, const YCPString & to, const YCPString & text )
+YCPValue YUI::evaluateRecode( const YCPString & fromEncoding, const YCPString & toEncoding, const YCPString & text )
 {
     string outstr;
-    if ( YUI::Recode ( text->value (), from->value (), to->value (), outstr ) != 0 )
+    if ( recode ( text->value(), fromEncoding->value(), toEncoding->value(), outstr ) != 0 )
     {
 	static bool warned_about_recode = false;
 	if ( ! warned_about_recode )
 	{
-	    yuiError() << "Recode( " << from << ", " << to << " )" << endl;
+	    yuiError() << "recode( " << fromEncoding << ", " << toEncoding << " )" << endl;
 	    warned_about_recode = true;
 	}
 	// return text as-is
-	return ( text );
+	return text;
     }
-    return YCPString ( outstr );
+    return YCPString( outstr );
 }
 
 

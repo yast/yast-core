@@ -21,14 +21,13 @@
 
 #include <iostream>
 
-#include <ycp/YCPString.h>
-#include <ycp/YCPVoid.h>
-#include <ycp/YCPTerm.h>
-#include <ycp/YCPInteger.h>
-#include <ycp/YCPFloat.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPBoolean.h>
+#include <ycp/YCPValue.h>
 
+
+/**
+ * Stream output for YCPValues
+ **/
+std::ostream & operator<<( std::ostream & stream, const YCPValue & val );
 
 /**
  * Check if a YCPValue is a numerical value (YCPInteger or YCPFloat).
@@ -40,10 +39,15 @@ bool isNum( const YCPValue & val );
  **/
 float toFloat( const YCPValue & val );
 
+
 /**
- * Stream output for YCPValues
+ * Recode a string from or to UTF-8.
  **/
-std::ostream & operator<<( std::ostream & stream, const YCPValue & val );
+int recode( const string &	src,
+	    const string & 	srcEncoding,
+	    const string & 	destEncoding,
+	    string & 		dest );
+
 
 
 #endif // YUI_util_h

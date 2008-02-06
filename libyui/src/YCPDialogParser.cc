@@ -20,6 +20,7 @@
 #include <ycp/YCPString.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPInteger.h>
+#include <ycp/YCPFloat.h>
 #include <ycp/YCPMap.h>
 #include <ycp/YCPBoolean.h>
 
@@ -32,6 +33,7 @@
 #include "YCPDialogParser.h"
 
 #include "YUI.h"
+#include "YUI_util.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
 #include "YCPValueWidgetID.h"
@@ -41,7 +43,6 @@
 #include "YCPTableItemParser.h"
 #include "YCP_UI_Exception.h"
 #include "YDialog.h"
-#include "YUI_util.h"
 #include "YWidgetFactory.h"
 #include "YOptionalWidgetFactory.h"
 #include "YBothDim.h"

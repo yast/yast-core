@@ -76,10 +76,7 @@ yui_y2logger( YUILogLevel_t	logLevel,
 YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
     , _uiThread( 0 )
-    , _moduleName( "yast2" )
     , _productName( "SUSE Linux" )
-    , _macroRecorder(0)
-    , _macroPlayer(0)
     , _eventsBlocked( false )
     , _callback( 0 )
 {

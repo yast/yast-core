@@ -202,14 +202,6 @@ public:
     virtual void internalError( const char *msg );
 
     /**
-     * Recode a string from or to UTF-8.
-     **/
-    static int Recode( const string &	src,
-		       const string & 	srcEncoding,
-		       const string & 	destEncoding,
-		       string & 	dest );
-
-    /**
      * Returns the current product name
      * ("SuSE Linux", "SuSE Linux Enterprise Server", "United Linux", etc.).
      *
@@ -351,8 +343,6 @@ public:
 protected:
 
 
-    const char *moduleName();
-
     /**
      * This virtual method is called when threads are activated in case the
      * execution control is currently on the side of the module.  This means
@@ -422,8 +412,6 @@ protected:
      **/
     virtual YEvent * runPkgSelection( YWidget * packageSelector ) = 0;
 
-
-
     YCPValue callback( const YCPValue & value );
 
     /**
@@ -431,79 +419,6 @@ protected:
      **/
     YCPValue evaluateLocale( const YCPLocale & );
 
-
-#if 0
-    //
-    // Macro recording and playing
-    //
-
-    /**
-     * Return whether macro recording is in progress or not.
-     **/
-    bool recordingMacro() const	{ return _macroRecorder != 0; }
-
-    /**
-     * Return whether macro playing is in progress or not.
-     **/
-    bool playingMacro() const	{ return _macroPlayer != 0; }
-
-    /**
-     * Set the internal macro recorder and delete any previous one.
-     **/
-    void setMacroRecorder( YMacroRecorder * recorder );
-
-    /**
-     * Set the internal macro player and delete any previous one.
-     **/
-    void setMacroPlayer( YMacroPlayer * player );
-			  
-    /**
-     * Return the macro recorder if it is active (recording)
-     * or 0 if it is not.
-     **/
-    YMacroRecorder * macroRecorder() const { return _macroRecorder; }
-
-    /**
-     * Return the macro player if it is active (recording)
-     * or 0 if it is not.
-     **/
-    YMacroPlayer * macroPlayer() const { return _macroPlayer; }
-
-    /**
-     * Delete the internal macro recorder and set the pointer to 0.
-     **/
-    void deleteMacroRecorder();
-
-    /**
-     * Delete the internal macro player and set the pointer to 0.
-     **/
-    void deleteMacroPlayer();
-
-    /**
-     * Start macro recording to file "filename".
-     * Any previously active macro recording will be terminated (regularly)
-     * prior to this.
-     **/
-    void recordMacro( string filename );
-
-    /**
-     * Stop macro recording if this is in progress.
-     * Nothing happens when no macro recording is in progress.
-     **/
-    void stopRecordMacro();
-
-    /**
-     * Play macro in file "filename".
-     * Any previous macro execution will be terminated prior to this.
-     **/
-    void playMacro( string filename );
-
-    /**
-     * Play the next block of an active macro player.
-     **/
-    void playNextMacroBlock();
-#endif
-    
 
 protected:
     /**
@@ -632,24 +547,9 @@ protected:
     bool terminate_ui_thread;
 
     /**
-     * The current module name as set by the SetModuleName UI command.
-     **/
-    string _moduleName;
-
-    /**
      * The current product name ("SuSE Linux", "United Linux", ...).
      **/
     string _productName;
-
-    /**
-     * The current macro recorder.
-     **/
-    YMacroRecorder * _macroRecorder;
-
-    /**
-     * The current macro player.
-     **/
-    YMacroPlayer * _macroPlayer;
 
     /**
      * Queue for synthetic (faked) user input events.
