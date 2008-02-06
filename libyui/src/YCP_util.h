@@ -10,14 +10,14 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUI_util.h
+  File:		YCP_util.h
 
   Author:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
-#ifndef YUI_util_h
-#define YUI_util_h
+#ifndef YCP_util_h
+#define YCP_util_h
 
 #include <iostream>
 
@@ -50,4 +50,4 @@ int recode( const string &	src,
 
 
 
-#endif // YUI_util_h
+#endif // YCP_util_h

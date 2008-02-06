@@ -33,7 +33,7 @@
 #include "YCPDialogParser.h"
 
 #include "YUI.h"
-#include "YUI_util.h"
+#include "YCP_util.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
 #include "YCPValueWidgetID.h"

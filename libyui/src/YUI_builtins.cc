@@ -43,7 +43,7 @@
 #include <ycp/YCPVoid.h>
 
 #include "YUI.h"
-#include "YUI_util.h"
+#include "YCP_util.h"
 #include "YApplication.h"
 #include "YWidget.h"
 #include "YEvent.h"

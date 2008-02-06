@@ -23,7 +23,6 @@
 
 #include "YCPErrorDialog.h"
 #include "YUI.h"
-#include "YUI_util.h"
 #include "YApplication.h"
 
 #include "YWidgetFactory.h"

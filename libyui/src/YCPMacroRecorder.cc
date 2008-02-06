@@ -35,7 +35,7 @@
 #include "YUIComponent.h"
 #include "YCPValueWidgetID.h"
 #include "YUI.h"
-#include "YUI_util.h"
+#include "YCP_util.h"
 
 #ifndef Y2LOG_DATE
 #   define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */

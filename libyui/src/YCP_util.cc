@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUI_util.cc
+  File:		YCP_util.cc
 
   Author:	Stefan Hundhammer <sh@suse.de>
 
@@ -26,7 +26,7 @@
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
-#include "YUI_util.h"
+#include "YCP_util.h"
 
 using std::string;
 

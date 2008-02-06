@@ -31,6 +31,7 @@ libpy2UI_la_SOURCES =				\
 	YCPPropertyHandler.cc			\
 	YCPValueWidgetID.cc			\
 	YCPWizardCommandParser.cc		\
+	YCP_util.cc				\
 	YItem.cc				\
 	YTreeItem.cc				\
 	YTableItem.cc				\
@@ -42,7 +43,6 @@ libpy2UI_la_SOURCES =				\
 	YUIPlugin.cc				\
 	YUI_builtins.cc				\
 	YUI_core.cc				\
-	YUI_util.cc				\
 	YWidget.cc				\
 	YWidgetFactory.cc			\
 	YOptionalWidgetFactory.cc		\
@@ -131,6 +131,7 @@ pkginclude_HEADERS =				\
 	YCPValueWidgetID.h			\
 	YCPWizardCommandParser.h		\
 	YCP_UI_Exception.h			\
+	YCP_util.h				\
 	YChildrenManager.h			\
 	YItem.h					\
 	YMenuItem.h				\
@@ -147,7 +148,6 @@ pkginclude_HEADERS =				\
 	YUILog.h				\
 	YUIPlugin.h				\
 	YUISymbols.h				\
-	YUI_util.h				\
 	YWidget.h				\
 	YWidgetFactory.h			\
 	YWidgetID.h				\
