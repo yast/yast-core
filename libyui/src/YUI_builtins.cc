@@ -1633,33 +1633,6 @@ YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
 
 
 /**
- * Default conversion from logical layout spacing units
- * to device dependent units.
- *
- * This default function assumes 80x25 units.
- * Derived UIs may want to reimplement this.
- **/
-int YUI::deviceUnits( YUIDimension dim, float layout_units )
-{
-    return (int) ( layout_units + 0.5 );
-}
-
-
-/**
- * Default conversion from device dependent layout spacing units
- * to logical layout units.
- *
- * This default function assumes 80x25 units.
- * Derived UIs may want to reimplement this.
- **/
-float YUI::layoutUnits( YUIDimension dim, int device_units )
-{
-    return (float) device_units;
-}
-
-
-
-/**
  * @builtin Recode
  * @short Recodes encoding of string from or to "UTF-8" encoding.
  * @description

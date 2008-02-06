@@ -27,6 +27,7 @@
 #include "YAlignment.h"
 #include "YSpacing.h"
 #include "YUI.h"
+#include "YApplication.h"
 
 using std::setw;
 
@@ -372,7 +373,7 @@ YLayoutBox::setSize( int newWidth, int newHeight )
 	calcSecondaryGeometry( newWidth,  widths,  x_pos );
     }
 
-    if ( YUI::reverseLayout() )
+    if ( YUI::app()->reverseLayout() )
     {
 	// Mirror the widget X geometry for languages with left-to-right
 	// writing direction (Arabic, Hebrew).

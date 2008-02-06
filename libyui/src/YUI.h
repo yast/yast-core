@@ -192,43 +192,6 @@ public:
     void topmostConstructorHasFinished();
 
     /**
-     * Issue an internal error. Derived UIs should overwrite this to display
-     * the error message in a suitable manner, e.g. open a popup (and wait for
-     * confirmation!).
-     *
-     * The default implementation writes the error message to stderr.
-     * Notice: This function does _not_ abort the program.
-     **/
-    virtual void internalError( const char *msg );
-
-    /**
-     * Convert logical layout spacing units into device dependent units.
-     * A default size dialog is assumed to be 80x25 layout spacing units.
-     *
-     * Derived UI may want to reimplement this method.
-     **/
-    virtual int deviceUnits( YUIDimension dim, float layout_units );
-
-    /**
-     * Convert device dependent units into logical layout spacing units.
-     * A default size dialog is assumed to be 80x25 layout spacing units.
-     *
-     * Derived UI may want to reimplement this method.
-     **/
-    virtual float layoutUnits( YUIDimension dim, int device_units );
-
-    /**
-     * Returns 'true' if widget geometry should be reversed for languages that
-     * have right-to-left writing direction (Arabic, Hebrew).
-     **/
-    static bool reverseLayout() { return _reverseLayout; }
-
-    /**
-     * Set reverse layout for Arabic / Hebrew support
-     **/
-    static void setReverseLayout( bool rev ) { _reverseLayout = rev; }
-
-    /**
      * Running with threads?
      **/
     bool runningWithThreads() const { return _withThreads; }
@@ -547,12 +510,6 @@ protected:
      * Never query this directly, use eventsBlocked() instead.
      **/
     bool _eventsBlocked;
-
-    /**
-     * Returns 'true' if widget geometry should be reversed for languages that
-     * have right-to-left writing direction (Arabic, Hebrew).
-     **/
-    static bool _reverseLayout;
 
     /**
      * The callback component previously set with setCallback().

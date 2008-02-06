@@ -33,6 +33,7 @@
 #include "YCPDialogParser.h"
 
 #include "YUI.h"
+#include "YApplication.h"
 #include "YCP_util.h"
 #include "YUISymbols.h"
 #include "YWidget.h"
@@ -581,7 +582,7 @@ YCPDialogParser::parseAlignment( YWidget * parent, YWidgetOpt & opt,
 	THROW_BAD_ARGS( term );
     }
 
-    if ( YUI::ui()->reverseLayout() )
+    if ( YUI::app()->reverseLayout() )
     {
 	if 	( horAlign == YAlignBegin )	horAlign = YAlignEnd;
 	else if ( horAlign == YAlignEnd   )	horAlign = YAlignBegin;

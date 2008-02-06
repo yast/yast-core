@@ -19,6 +19,7 @@
 
 #include "YSpacing.h"
 #include "YUI.h"
+#include "YApplication.h"
 
 
 struct YSpacingPrivate
@@ -37,7 +38,7 @@ struct YSpacingPrivate
 
 YSpacing::YSpacing( YWidget * parent, YUIDimension dim, bool stretchable, YLayoutSize_t layoutUnits )
     : YWidget( parent )
-    , priv( new YSpacingPrivate( dim, YUI::ui()->deviceUnits( dim, layoutUnits ) ) )
+    , priv( new YSpacingPrivate( dim, YUI::app()->deviceUnits( dim, layoutUnits ) ) )
 {
     YUI_CHECK_NEW( priv );
     setStretchable( dim, stretchable );

@@ -232,7 +232,7 @@ public:
      * used. 
      *
      * Derived classes can overwrite this method, but they should call this
-     * base class method at the beginning of the new implementation.
+     * base class method in the new implementation.
      **/
     virtual void setProductName( const string & productName );
 
@@ -240,6 +240,36 @@ public:
      * Set the current product name ("openSUSE", "SLES", ...).
      **/
     string productName() const;
+
+    /**
+     * Convert logical layout spacing units into device dependent units.
+     * A default size dialog is assumed to be 80x25 layout spacing units.
+     *
+     * Derived classes may want to reimplement this method.
+     **/
+    virtual int deviceUnits( YUIDimension dim, float layoutUnits );
+
+    /**
+     * Convert device dependent units into logical layout spacing units.
+     * A default size dialog is assumed to be 80x25 layout spacing units.
+     *
+     * Derived classes may want to reimplement this method.
+     **/
+    virtual float layoutUnits( YUIDimension dim, int deviceUnits );
+
+    /**
+     * Set reverse layout for Arabic / Hebrew support.
+     *
+     * Derived classes can overwrite this method, but they should call this
+     * base class method in the new implementation.
+     **/
+    virtual void setReverseLayout( bool reverse );
+
+    /**
+     * Returns 'true' if widget geometry should be reversed for languages that
+     * have right-to-left writing direction (Arabic, Hebrew).
+     **/
+    bool reverseLayout() const;
 
 
     //

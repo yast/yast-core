@@ -38,10 +38,12 @@ struct YApplicationPrivate
 {
     YApplicationPrivate()
 	: productName( "openSUSE" )
+	, reverseLayout( false )
 	{}
     
     string		iconBasePath;
     string		productName;
+    bool		reverseLayout;
     YFunctionKeyMap	defaultFunctionKey;
 };
 
@@ -95,6 +97,19 @@ string
 YApplication::productName() const
 {
     return priv->productName;
+}
+
+
+void
+YApplication::setReverseLayout( bool reverse )
+{
+    priv->reverseLayout = reverse;
+}
+
+
+bool YApplication::reverseLayout() const
+{
+    return priv->reverseLayout;
 }
 
 
@@ -186,6 +201,20 @@ YApplication::glyph( const string & sym )
 	yuiError() << "Unknown glyph `" << sym << endl;
 	return "";
     }
+}
+
+
+int
+YApplication::deviceUnits( YUIDimension dim, float layoutUnits )
+{
+    return (int) ( layoutUnits + 0.5 );
+}
+
+
+float
+YApplication::layoutUnits( YUIDimension dim, int deviceUnits )
+{
+    return (float) deviceUnits;
 }
 
 

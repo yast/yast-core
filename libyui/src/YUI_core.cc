@@ -58,7 +58,6 @@ typedef YCPValue (*v2vvvv)  (const YCPValue &, const YCPValue &, const YCPValue 
 typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
 
 
-bool	YUI::_reverseLayout	= false;
 YUI *	YUI::_yui		= 0;
 
 extern void *start_ui_thread( void * yui );
@@ -152,13 +151,6 @@ YUI::app()
 
     YUI_CHECK_PTR( app );
     return app;
-}
-
-
-void
-YUI::internalError( const char *msg )
-{
-    fprintf( stderr, "YaST2 UI internal error: %s", msg );
 }
 
 

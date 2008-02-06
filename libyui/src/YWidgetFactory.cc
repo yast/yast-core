@@ -20,6 +20,7 @@
 #include "YAlignment.h"
 #include "YPushButton.h"
 #include "YUI.h"
+#include "YApplication.h"
 
 
 YWidgetFactory::YWidgetFactory()
@@ -165,10 +166,10 @@ YWidgetFactory::createMarginBox( YWidget * parent,
 {
     YAlignment * alignment = createAlignment( parent, YAlignUnchanged, YAlignUnchanged );
 
-    alignment->setLeftMargin  ( YUI::ui()->deviceUnits( YD_HORIZ, leftMargin   ) );
-    alignment->setRightMargin ( YUI::ui()->deviceUnits( YD_HORIZ, rightMargin  ) );
-    alignment->setTopMargin   ( YUI::ui()->deviceUnits( YD_VERT,  topMargin    ) );
-    alignment->setBottomMargin( YUI::ui()->deviceUnits( YD_VERT,  bottomMargin ) );
+    alignment->setLeftMargin  ( YUI::app()->deviceUnits( YD_HORIZ, leftMargin   ) );
+    alignment->setRightMargin ( YUI::app()->deviceUnits( YD_HORIZ, rightMargin  ) );
+    alignment->setTopMargin   ( YUI::app()->deviceUnits( YD_VERT,  topMargin    ) );
+    alignment->setBottomMargin( YUI::app()->deviceUnits( YD_VERT,  bottomMargin ) );
 
     return alignment;
 }
@@ -193,8 +194,8 @@ YWidgetFactory::createMinSize( YWidget * parent, YLayoutSize_t minWidth, YLayout
 {
     YAlignment * alignment = createAlignment( parent, YAlignUnchanged, YAlignUnchanged );
 
-    alignment->setMinWidth ( YUI::ui()->deviceUnits( YD_HORIZ, minWidth  ) );
-    alignment->setMinHeight( YUI::ui()->deviceUnits( YD_VERT,  minHeight ) );
+    alignment->setMinWidth ( YUI::app()->deviceUnits( YD_HORIZ, minWidth  ) );
+    alignment->setMinHeight( YUI::app()->deviceUnits( YD_VERT,  minHeight ) );
 
     return alignment;
 }
