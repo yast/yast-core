@@ -321,7 +321,10 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 YCPBoolean
 ScriptingAgent::UnregisterAgent (const YCPPath &path)
 {
-    done_sweep = false;
+    // an automatic sweep would undo this call.
+    // use RegisterNewAgents if you want that.
+    done_sweep = true;
+
     SubAgents::iterator agent = findByPath (path);
     if (agent == agents.end ())
     {
@@ -339,7 +342,9 @@ ScriptingAgent::UnregisterAgent (const YCPPath &path)
 YCPBoolean
 ScriptingAgent::UnregisterAllAgents ()
 {
-    done_sweep = false;
+    // an automatic sweep would undo this call.
+    // use RegisterNewAgents if you want that.
+    done_sweep = true;
     for (SubAgents::iterator agent = agents.begin (); agent != agents.end ();
 	 ++agent)
     {
@@ -540,7 +545,8 @@ ScriptingAgent::findAndRegisterSubagent (const YCPPath &path)
     }
 
     // guess did not work. register all.
-    Sweep ();
+    if (! done_sweep)
+	Sweep ();
     return findSubagent (path);
 }
 
