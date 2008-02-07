@@ -1,5 +1,3 @@
-
-
 /*
  *  ScriptingAgent.cc
  *
@@ -28,16 +26,46 @@
 
 
 ScriptingAgent::ScriptingAgent ()
+    : done_sweep (false)
 {
-    RegisterNewAgents ();
+    InitRegDirs ();
+    // to test the old behavior
+    if (getenv ("Y2SCRSWEEP"))
+	Sweep ();
 }
 
 
 ScriptingAgent::ScriptingAgent (const string& file)
+    : done_sweep (false)
 {
+    InitRegDirs ();
     y2debug( "Scripting agent using only SCR %s", file.c_str () );
     
     parseSingleConfigFile (file);
+}
+
+void
+ScriptingAgent::InitRegDirs ()
+{
+    for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
+	 level++)
+    {
+	RegistrationDir rd;
+	rd.last_changed = 0;	// very old
+	rd.name = Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level) + "/scrconf";
+	y2debug( "Scripting agent searching SCRs in %s", rd.name.c_str() );
+//	parseConfigFiles (rd.name);
+	
+	struct stat st;
+	if (stat (rd.name.c_str(), &st) != 0) {
+	    y2debug ("Can't read dir %s: %m", rd.name.c_str ());
+	}
+	else {
+	    y2milestone ("Agent registration: %s last changed at %s",
+			 rd.name.c_str(), ctime (&rd.last_changed));
+	    registration_dirs.push_back (rd);
+	}
+    }
 }
 
 
@@ -46,6 +74,11 @@ ScriptingAgent::~ScriptingAgent ()
     UnregisterAllAgents ();
 }
 
+bool less_than_inodes (const pair<ino_t, string>& a,
+		       const pair<ino_t, string>& b)
+{
+    return a.first < b.first;
+}
 
 void
 ScriptingAgent::parseConfigFiles (const string &directory)
@@ -60,22 +93,35 @@ ScriptingAgent::parseConfigFiles (const string &directory)
     }
 
     struct dirent *entry;
+    // Access the files in inode order, hopefully this reduces disk seeks
+    // Use a list and sort it (or not).
+    // typedef map<ino_t, string> sorted_names_t;
+    typedef list<pair<ino_t, string> > sorted_names_t;
+    sorted_names_t sorted_names;
     while ((entry = readdir (dir)))
     {
-	if (!strcmp (entry->d_name, ".") || !(strcmp (entry->d_name, "..")))
-	    continue;
-
+	char *n = entry->d_name;
 	// Read only *.scr files. For example TRANS.TBL makes problems
-	if (strlen (entry->d_name) <= 4 ||
-	    strcmp (entry->d_name + strlen (entry->d_name) - 4, ".scr"))
+	if (strlen (n) <= 4 ||
+	    strcmp (n + strlen (n) - 4, ".scr"))
 	    continue;
 
-	const string filename = directory + "/" + entry->d_name;
-	
-	parseSingleConfigFile (filename);
+	// sorted_names[entry->d_ino] = n;
+	sorted_names.push_back (make_pair (entry->d_ino, string(n)));
     }
 
     closedir (dir);
+
+    // TODO cache
+    if (!getenv ("Y2SCRNOSORT"))
+	sorted_names.sort(less_than_inodes);
+
+    sorted_names_t::iterator i = sorted_names.begin (), e = sorted_names.end ();
+    for (; i != e; ++i)
+    {
+	const string filename = directory + "/" + i->second;
+	parseSingleConfigFile (filename);
+    }
 }
 
 
@@ -115,10 +161,16 @@ ScriptingAgent::parseSingleConfigFile (const string &filename)
 	    SubAgents::iterator agent = findByPath (path);
 	    if (agent != agents.end ())
 	    {
-    		y2debug ("Ignoring re-registration of path '%s'", path->toString ().c_str ());
+		// TODO promote more debugs to errors or warnings
+    		y2warning ("Ignoring re-registration of path '%s'", path->toString ().c_str ());
+		// possible alternative: do not ignore
+		// - ok if the agent was not used yet (not mounted yet)
+		// - umount if mounted??
 	    }
 	    else
 	    {
+		// posible optimization:
+		// dont reparse the file
 		RegisterAgent (path, YCPString (filename));
 	    }
 	    break;
@@ -258,20 +310,9 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 	agents.erase (agent);
     }
 
+    // insert into ordered vector
     agents.insert (std::lower_bound (agents.begin (), agents.end (), path),
 		   new SCRSubAgent (path, value));
-
-#if 0
-    // only use for testing! insecure!
-    FILE* fout = fopen ("/tmp/scr-agents.txt", "w");
-    for (SubAgents::const_iterator agent = agents.begin ();
-	 agent != agents.end (); ++agent)
-    {
-	fprintf (fout, "%ld %s\n", (*agent)->get_path ()->length (),
-		 (*agent)->get_path ()->toString ().c_str ());
-    }
-    fclose (fout);
-#endif
 
     return YCPBoolean (true);
 }
@@ -280,6 +321,7 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 YCPBoolean
 ScriptingAgent::UnregisterAgent (const YCPPath &path)
 {
+    done_sweep = false;
     SubAgents::iterator agent = findByPath (path);
     if (agent == agents.end ())
     {
@@ -297,6 +339,7 @@ ScriptingAgent::UnregisterAgent (const YCPPath &path)
 YCPBoolean
 ScriptingAgent::UnregisterAllAgents ()
 {
+    done_sweep = false;
     for (SubAgents::iterator agent = agents.begin (); agent != agents.end ();
 	 ++agent)
     {
@@ -309,6 +352,7 @@ ScriptingAgent::UnregisterAllAgents ()
 }
 
 
+// FIXME if this still should work, try registering it first?
 YCPValue
 ScriptingAgent::MountAgent (const YCPPath &path)
 {
@@ -322,6 +366,7 @@ ScriptingAgent::MountAgent (const YCPPath &path)
 }
 
 
+// FIXME if this still should work, try registering them first?
 YCPValue
 ScriptingAgent::MountAllAgents ()
 {
@@ -363,9 +408,11 @@ ScriptingAgent::UnmountAllAgents ()
     return YCPBoolean (true);
 }
 
-YCPBoolean
-ScriptingAgent::RegisterNewAgents ()
+// unconditionally read all dirs
+void
+ScriptingAgent::Sweep ()
 {
+    y2debug ("Scripting agent sweeping");
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 	 level++)
     {
@@ -373,37 +420,89 @@ ScriptingAgent::RegisterNewAgents ()
 	y2debug( "Scripting agent searching SCRs in %s", dir.c_str() );
 	parseConfigFiles (dir);
     }
+    done_sweep = true;
+}
+
+
+
+YCPBoolean
+ScriptingAgent::RegisterNewAgents ()
+{
+    Sweep ();
     return YCPBoolean (true);
 }
 
-YCPValue
-ScriptingAgent::executeSubagentCommand (const char *command,
-					const YCPPath &path,
-					const YCPValue &arg,
-					const YCPValue &optpar)
+
+// cannot return "success" because we can register an unrelated path
+void
+ScriptingAgent::tryRegister (const YCPPath &path)
 {
-    y2debug( "ScriptingAgent::executeSubagentCommand: %s", command );
-    y2debug( "path: %s", path->toString ().c_str ());
-    y2debug( "arg: %s", arg.isNull() ? "null" : arg->toString().c_str ());
-    y2debug( "opt: %s", optpar.isNull() ? "null" : optpar->toString().c_str ());
-    
-    /**
-     *  Find the agent where the agent's path and the given path have
-     *  the longest match. Example:
-     *
-     *  agent net at .etc.network
-     *  agent isdn at .etc.network.isdn
-     *
-     *  The command Read (.etc.network.isdn.line0) will call agent
-     *  isdn with Read (.line0). The command Read (.etc.network)
-     *  will call agent net with Read (.).
-     */
+    string basename = path->toString().substr(1) + ".scr"; // skip "."
 
-    /*
-     *  The list of agents is sorted. So we can simply take the first
-     *  that does match.
-     */
+    list<RegistrationDir>::iterator
+	i = registration_dirs.begin(),
+	e = registration_dirs.end();
+    for (; i != e; ++i) {
+	RegistrationDir & rd = *i;
+	struct stat st;
+	if (stat (rd.name.c_str(), &st) != 0) {
+	    y2debug ("Can't read dir %s: %m", rd.name.c_str ());
+	}
+	else {
+	    // COBE, this caching logic is bogus
+	    //if (rd.last_changed < st.st_mtime) {
+		// change detected!
+		//rd.last_changed = st.st_mtime;
+		//y2milestone ("Agent registration: %s last changed at %s",
+	    //     rd.name.c_str(), ctime (&rd.last_changed));
+		string fname = rd.name + '/' + basename;
+		struct stat st;
+		if (stat (fname.c_str (), &st) == 0) {
+		    parseSingleConfigFile (fname);
+		    break;	// found
+		}
+	}
+    }
+}
 
+YCPList
+ScriptingAgent::dirSubagents (const YCPPath &path)
+{
+    const long path_length = path->length ();
+    YCPList dir_list = YCPList ();
+
+    for (SubAgents::const_iterator it = agents.begin ();
+	 it != agents.end (); ++it)
+    {
+	YCPPath it_path = (*it)->get_path ();
+	if (path->isPrefixOf (it_path))
+	{
+	    YCPString str = YCPString (it_path->component_str (path_length));
+	    const int size = dir_list->size ();
+	    if (size == 0 || !dir_list->value (size - 1)->equal (str))
+		dir_list->add (str);
+	}
+    }
+    return dir_list;
+}
+
+/**
+ *  Find the agent where the agent's path and the given path have
+ *  the longest match. Example:
+ *
+ *  agent net at .etc.network
+ *  agent isdn at .etc.network.isdn
+ *
+ *  The command Read (.etc.network.isdn.line0) will call agent
+ *  isdn with Read (.line0). The command Read (.etc.network)
+ *  will call agent net with Read (.).
+ */
+
+ScriptingAgent::SubAgents::const_iterator
+ScriptingAgent::findSubagent (const YCPPath &path)
+{
+    // The list of agents is sorted. So we can simply take the first
+    // that does match.
     SubAgents::const_iterator agent = agents.end ();
 
     // known bug: doesn't work with const_reverse_iterator
@@ -416,33 +515,57 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 	    break;
 	}
     }
+    return agent;
+}
 
-    if (agent == agents.end ())
-    {
-	// Special case to have the possibility of Dir (.rc) or similar...
-	if (strcmp (command, "Dir") != 0)
+// finds agent, registering it (or all of them) if necessary
+ScriptingAgent::SubAgents::const_iterator
+ScriptingAgent::findAndRegisterSubagent (const YCPPath &path)
+{
+    SubAgents::const_iterator agent = findSubagent (path);
+    if (agent != agents.end ())
+	return agent;
+
+    // no such agent registered.
+    // try registering by guessing its scr file name
+
+    // i = 0 gives the root path. we may need some caching after all for ".scr"
+    int i;
+    for (i = path->length(); i >= 0; --i) {
+	tryRegister (path->prefix (i));
+
+	agent = findSubagent (path); // retry
+	if (agent != agents.end ())
+	    return agent;
+    }
+
+    // guess did not work. register all.
+    Sweep ();
+    return findSubagent (path);
+}
+
+YCPValue
+ScriptingAgent::executeSubagentCommand (const char *command,
+					const YCPPath &path,
+					const YCPValue &arg,
+					const YCPValue &optpar)
+{
+    y2debug( "ScriptingAgent::executeSubagentCommand: %s", command );
+    y2debug( "path: %s", path->toString ().c_str ());
+    y2debug( "arg: %s", arg.isNull() ? "null" : arg->toString().c_str ());
+    y2debug( "opt: %s", optpar.isNull() ? "null" : optpar->toString().c_str ());
+
+    SubAgents::const_iterator agent = findAndRegisterSubagent (path);
+    if (agent == agents.end ()) {
+	bool cmd_is_dir = strcmp (command, "Dir") == 0;
+	// Special case to have the possibility of Dir (.sysconfig) or similar...
+	if (cmd_is_dir)
 	{
-	    return YCPError ("Couldn't find an agent to handle '" +
-			     path->toString () + "'");
+	    return dirSubagents (path);
 	}
-
-	const long path_length = path->length ();
-	YCPList dir_list = YCPList ();
-
-	for (SubAgents::const_iterator it = agents.begin ();
-	     it != agents.end (); ++it)
-	{
-	    YCPPath it_path = (*it)->get_path ();
-	    if (path->isPrefixOf (it_path))
-	    {
-		YCPString str = YCPString (it_path->component_str (path_length));
-		const int size = dir_list->size ();
-		if (size == 0 || !dir_list->value (size - 1)->equal (str))
-		    dir_list->add (str);
-	    }
-	}
-
-	return dir_list;
+	// if all fails:
+	return YCPError ("Couldn't find an agent to handle '" +
+			 path->toString () + "'");
     }
 
     (*agent)->mount (this);

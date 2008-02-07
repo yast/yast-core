@@ -1,6 +1,8 @@
 -------------------------------------------------------------------
-Thu Feb  7 10:35:35 CET 2008 - mvidner@suse.cz
+Thu Feb  7 11:09:39 CET 2008 - mvidner@suse.cz
 
+- Make SCR registration lazy: to find .foo, open only foo.scr.
+  If that fails, only then scan all *.scr. (fate#302975)
 - Test ports using bash's /dev/tcp instead of netcat (bnc#264309).
 
 -------------------------------------------------------------------

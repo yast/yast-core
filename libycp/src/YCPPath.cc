@@ -148,6 +148,15 @@ YCPPathRep::at(long index) const
     return postfix;
 }
 
+YCPPath
+YCPPathRep::prefix(long index) const
+{
+    YCPPath ret;
+    for (int i = 0; i < index; ++i)
+	ret->append(components[i]);
+    return ret;
+}
+
 
 string
 YCPPathRep::component_str(long index) const

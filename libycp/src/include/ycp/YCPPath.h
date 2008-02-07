@@ -119,9 +119,17 @@ public:
     /**
      * Returns a postfix of the path. You must check, that the
      * index you give is 0 <= i < @ref #length.
-     * @return Postfix path. destroy it after use.
+     * @return Postfix path.
      */
     YCPPath at(long index) const;
+
+    /**
+     * Returns a prefix of the path. You must check, that the
+     * index you give is 0 <= i < @ref #length.
+     * Informally, p == p.prefix(i) + p.at(i);
+     * @return Prefix path.
+     */
+    YCPPath prefix(long index) const;
 
     /**
      * Returns one component of the path as string. No error check

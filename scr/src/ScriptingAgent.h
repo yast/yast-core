@@ -11,6 +11,7 @@
 #ifndef ScriptingAgent_h
 #define ScriptingAgent_h
 
+#include <time.h>
 #include <y2/Y2Component.h>
 #include <scr/SCRAgent.h>
 #include "SCRSubAgent.h"
@@ -24,10 +25,12 @@ class ScriptingAgent : public SCRAgent
 public:
 
     /**
-     * Constructor. Also scans for scr-files.
+     * Constructor.
      */
     ScriptingAgent ();
 
+    // used only in agent-ini/testsuite...?
+    // TODO try to eliminate it
     /**
      * Constructor. Load only a single SCR.
      * 
@@ -41,14 +44,14 @@ public:
     ~ScriptingAgent ();
 
     /**
-     * Reads data. Destroy the result after use.
+     * Reads data.
      * @param path Specifies what part of the subtree should
      * be read. The path is specified _relatively_ to Root()!
      */
     virtual YCPValue Read (const YCPPath &path, const YCPValue &arg = YCPNull (), const YCPValue &opt = YCPNull ());
 
     /**
-     * Writes data. Destroy the result after use.
+     * Writes data.
      */
     virtual YCPBoolean Write (const YCPPath &path, const YCPValue &value,
 		    const YCPValue &arg = YCPNull ());
@@ -70,9 +73,12 @@ public:
     virtual YCPMap Error (const YCPPath &path);
 
     /**
-     * Handle the commands 'UnregisterAgent',
-     * 'UnregisterAllAgents', 'MountAgent', 'MountAllAgents',
-     * 'UnmountAgent' and 'UnmountAllAgents'.
+     * Handle the commands
+     * MountAgent, MountAllAgents, UnmountAllAgents,
+     * YaST2Version, SuSEVersion.
+     * Formerly also
+     * 'UnregisterAgent', 'UnregisterAllAgents',
+     * 'UnmountAgent' which are now builtins.
      */
     YCPValue otherCommand (const YCPTerm &term);
 
@@ -100,8 +106,30 @@ public:
 
 private:
 
+    // once we have to do a sweep (read all scr files because of
+    // a Dir or we were not lucky with a path patch), set this flag so
+    // that we do not unnecessarily sweep again
+    bool done_sweep;
+
+    // FIXME rethink the caching
+    struct RegistrationDir {
+	string name;
+	time_t last_changed; //!< st_mtime of the dir
+    };
+
+    /**
+     * Where to look for *.scr files, in order of preference
+     */
+    list<RegistrationDir> registration_dirs;
+
+    /**
+     * Populate registration_dirs
+     */
+    void InitRegDirs ();
+
     /**
      * Type and list of subagents
+     * The vector is sorted by path
      */
     typedef vector<SCRSubAgent*> SubAgents;
     SubAgents agents;
@@ -124,9 +152,44 @@ private:
     YCPValue UnmountAllAgents ();
 
     /**
-     * Register new agents
+     * Read all registration files.
+     */
+    void Sweep ();
+
+    /**
+     * Register new agents. (bnc#245508#c16)
+     * Rescan the scrconf registration directories and register any
+     * agents at new(!) paths. Agents, even new ones, on paths that
+     * are registered already, will not be replaced.  This means that
+     * .oes.specific.agent will start to work but something like
+     * adding
+     * /usr/local/etc/sysconfig to .sysconfig.network would not.
      */
     YCPBoolean RegisterNewAgents ();
+
+    /**
+     * For .foo.bar.baz, register foo.bar.baz.scr, or foo.bar.scr, or foo.scr.
+     * BTW we can register an unrelated path because this is just a heuristic.
+     */
+    void tryRegister (const YCPPath &path);
+
+    /**
+     * Iterate thru @ref agents
+     * @return end if not found
+     */
+    SubAgents::const_iterator findSubagent (const YCPPath &path);
+
+    /**
+     * Find it in @ref agents, registering if necessary, sweeping if necessary
+     * @see tryRegister
+     * @see Sweep
+     */
+    SubAgents::const_iterator findAndRegisterSubagent (const YCPPath &path);
+
+    /**
+     * If a SCR::Dir falls inside our tree, we have to provide a listing
+     */
+    YCPList dirSubagents (const YCPPath &path);
 
     /**
      * Calls a subagent to execute a Read, Write, Dir or other command
@@ -146,19 +209,20 @@ private:
     /**
      * Find agent exactly matching path. Returns agents.end () if the path
      * isn't covered by any agent.
+     * Does not try to register.
      */
     SubAgents::iterator findByPath (const YCPPath &path);
 
     /**
-     * Parses the given directory and all its subdirectories for
-     * SCR configuration files and evaluates them with the SCR
-     * interpreter.
+     * Parses all SCR configuration files in the given directory,
+     * registers the agents.
+     * (If a SCR path is already registered, keep the old one.)
      */
     void parseConfigFiles (const string &directory);
 
     /**
-     * Parses a single SCR configuration file and evaluates them with the SCR
-     * interpreter.
+     * Parses a single SCR configuration file,  registers the agent.
+     * (If the SCR path is already registered, keep the old one.)
      */
     void parseSingleConfigFile (const string &file);
 
