@@ -28,6 +28,24 @@
 #include "Y2UINamespace.h"
 #include "YUI.h"
 
+#include "YMacro.h"
+#include "YCPMacroRecorder.h"
+#include "YCPMacroPlayer.h"
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
+
+static void
+yui_y2logger( YUILogLevel_t	logLevel,
+	      const char *	logComponent,
+	      const char *	sourceFileName,
+	      int 	 	sourceLineNo,
+	      const char * 	sourceFunctionName,
+	      const char *	message );
+
+
+
 
 // Most class variables are static so they can be accessed from static methods.
 
@@ -105,7 +123,12 @@ void YUIComponent::createUI()
     }
 
     y2debug( "Creating UI" );
+    YUILog::setLoggerFunction( yui_y2logger );
     _ui = createUI( _argc, _argv, _with_threads, _macro_file );
+    
+    
+    YMacro::setRecorder( new YCPMacroRecorder() );
+    YMacro::setPlayer  ( new YCPMacroPlayer()   );
 }
 
 
@@ -190,5 +213,50 @@ YUI * YUIComponent::createUI( int /*argc*/, char ** /*argv*/, bool /*with_thread
     y2debug ("Cannot create generic UI");
     return 0;
 }
+
+
+
+static void
+yui_y2logger( YUILogLevel_t	logLevel,
+	      const char *	logComponent,
+	      const char *	sourceFileName,
+	      int 	 	sourceLineNo,
+	      const char * 	sourceFunctionName,
+	      const char *	message )
+{
+    loglevel_t y2logLevel = LOG_DEBUG;
+    
+    switch ( logLevel )
+    {
+	case YUI_LOG_DEBUG:	y2logLevel = LOG_DEBUG;		break;
+	case YUI_LOG_MILESTONE:	y2logLevel = LOG_MILESTONE;	break;
+	case YUI_LOG_WARNING:	y2logLevel = LOG_WARNING;	break;
+	case YUI_LOG_ERROR:	y2logLevel = LOG_ERROR;		break;
+    }
+
+    if ( ! logComponent )
+	logComponent = "??";
+
+    if ( ! sourceFileName )
+	sourceFileName = "??";
+
+    if ( ! sourceFunctionName )
+	sourceFunctionName = "??";
+
+    if ( ! message )
+	message = "";
+
+    y2_logger( y2logLevel, logComponent,
+	       sourceFileName, sourceLineNo, sourceFunctionName,
+	       "%s", message );
+}
+
+
+
+
+
+
+
+
 
 // EOF

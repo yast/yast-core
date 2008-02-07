@@ -14,6 +14,7 @@ plugin_LTLIBRARIES = libpy2UI.la
 libpy2UI_la_SOURCES =				\
 	Y2UINamespace.cc 			\
 	Y2CCUI.cc				\
+	YUI.cc					\
 	YCP_UI.cc				\
 	YCPDialogParser.cc			\
 	YCPErrorDialog.cc			\
@@ -41,7 +42,6 @@ libpy2UI_la_SOURCES =				\
 	YUIException.cc				\
 	YUILog.cc				\
 	YUIPlugin.cc				\
-	YUI_core.cc				\
 	YApplication.cc				\
 	YWidget.cc				\
 	YWidgetFactory.cc			\

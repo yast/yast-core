@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUI_core.cc
+  File:		YUI.cc
 
   Authors:	Stefan Hundhammer <sh@suse.de>
 		Stanislav Visnovsky <visnov@suse.cz>
@@ -27,14 +27,11 @@
 #include <unistd.h>	// pipe()
 #include <fcntl.h>  	// fcntl()
 #include <errno.h>
-#include <locale.h> 	// setlocale()
 #include <pthread.h>
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
-#define YUILogComponent "ui"
-#include "YUILog.h"
 #include <ycp/YCPVoid.h>
 
 #include "Y2UINamespace.h"
@@ -44,10 +41,6 @@
 #include "YDialog.h"
 #include "YApplication.h"
 #include "YMacro.h"
-
-// FIXME: Move this to YCP-specific part
-#include "YCPMacroRecorder.h"
-#include "YCPMacroPlayer.h"
 
 
 typedef YCPValue (*v2) ();
@@ -62,15 +55,6 @@ YUI *	YUI::_yui		= 0;
 
 extern void *start_ui_thread( void * yui );
 
-static void
-yui_y2logger( YUILogLevel_t	logLevel,
-	      const char *	logComponent,
-	      const char *	sourceFileName,
-	      int 	 	sourceLineNo,
-	      const char * 	sourceFunctionName,
-	      const char *	message );
-
-
 
 YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
@@ -78,12 +62,6 @@ YUI::YUI( bool withThreads )
     , _eventsBlocked( false )
 {
     _yui = this;
-
-    // FIXME: Move this to YCP-specific part
-    YUILog::setLoggerFunction( yui_y2logger );
-    
-    YMacro::setRecorder( new YCPMacroRecorder() );
-    YMacro::setPlayer  ( new YCPMacroPlayer()   );
 }
 
 
@@ -236,11 +214,6 @@ void YUI::shutdownThreads()
     }
 }
 
-
-extern YCPValue UIUserInput ();
-extern YCPValue UITimeoutUserInput( const YCPInteger& timeout );
-extern YCPValue UIWaitForEvent();
-extern YCPValue UIWaitForEventTimeout( const YCPInteger & timeout );
 
 
 YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
@@ -436,43 +409,6 @@ YUI::enableDebugLogging( bool enable )
     YUILog::enableDebugLogging( enable );
     set_log_debug( enable );
 }
-
-
-static void
-yui_y2logger( YUILogLevel_t	logLevel,
-	      const char *	logComponent,
-	      const char *	sourceFileName,
-	      int 	 	sourceLineNo,
-	      const char * 	sourceFunctionName,
-	      const char *	message )
-{
-    loglevel_t y2logLevel = LOG_DEBUG;
-    
-    switch ( logLevel )
-    {
-	case YUI_LOG_DEBUG:	y2logLevel = LOG_DEBUG;		break;
-	case YUI_LOG_MILESTONE:	y2logLevel = LOG_MILESTONE;	break;
-	case YUI_LOG_WARNING:	y2logLevel = LOG_WARNING;	break;
-	case YUI_LOG_ERROR:	y2logLevel = LOG_ERROR;		break;
-    }
-
-    if ( ! logComponent )
-	logComponent = "??";
-
-    if ( ! sourceFileName )
-	sourceFileName = "??";
-
-    if ( ! sourceFunctionName )
-	sourceFunctionName = "??";
-
-    if ( ! message )
-	message = "";
-
-    y2_logger( y2logLevel, logComponent,
-	       sourceFileName, sourceLineNo, sourceFunctionName,
-	       "%s", message );
-}
-
 
 
 
