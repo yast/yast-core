@@ -219,7 +219,15 @@ public:
     constTypePtr type() const;
 };
 
+// bother, 4.3 requires -std=c++0x
+// so without a condition in configure.in you can't have code
+// that works with 4.2 and 4.3 without warnings
+#ifdef HAVE_CXX0X
+#include <unordered_map>
+#else
 #include <ext/hash_map>
+#endif
+
 #include <string>
 #include <cstddef>
 
@@ -245,7 +253,11 @@ class YLocale : public YCode
     };
 
 public:
+#ifdef HAVE_CXX0X
+    typedef unordered_map<const char*, bool, hash<const char*>, eqstr> t_uniquedomains;
+#else
     typedef __gnu_cxx::hash_map<const char*, bool, __gnu_cxx::hash<const char*>, eqstr> t_uniquedomains;
+#endif
 
     static t_uniquedomains domains;	// keep every textdomain only once
     static t_uniquedomains::const_iterator setDomainStatus (const string& domain, bool status);
