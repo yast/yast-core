@@ -30,6 +30,7 @@
 #include <ycp/y2log.h>
 
 #include "YUI.h"
+#include "YCP_UI.h"
 #include "YUISymbols.h"
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
@@ -42,7 +43,7 @@ YCPValue
 Y2UINamespace::SetLanguage( const YCPString & language )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetLanguage( language );
+	YCP_UI::SetLanguage( language );
 
     return YCPVoid();
 }
@@ -52,7 +53,7 @@ YCPValue
 Y2UINamespace::SetLanguage( const YCPString & language, const YCPString & encoding )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetLanguage( language, encoding );
+	YCP_UI::SetLanguage( language, encoding );
 
     return YCPVoid();
 }
@@ -62,7 +63,7 @@ YCPValue
 Y2UINamespace::GetProductName()
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateGetProductName();
+	return YCP_UI::GetProductName();
     else
 	return YCPVoid();
 }
@@ -72,7 +73,7 @@ YCPValue
 Y2UINamespace::SetProductName( const YCPString & name )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetProductName( name );
+	YCP_UI::SetProductName( name );
 
     return YCPVoid();
 }
@@ -86,7 +87,7 @@ Y2UINamespace::SetConsoleFont( const YCPString & console_magic,
 		  const YCPString & encoding )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetConsoleFont( console_magic,
+	YCP_UI::SetConsoleFont( console_magic,
 						 font,
 						 screen_map,
 						 unicode_map,
@@ -99,7 +100,7 @@ YCPValue
 Y2UINamespace::SetKeyboard()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetKeyboard();
+	YCP_UI::SetKeyboard();
 
     return YCPVoid();
 }
@@ -109,7 +110,7 @@ YCPValue
 Y2UINamespace::GetLanguage( const YCPBoolean & strip )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateGetLanguage( strip );
+	return YCP_UI::GetLanguage( strip );
     else
 	return YCPVoid();
 }
@@ -118,8 +119,8 @@ Y2UINamespace::GetLanguage( const YCPBoolean & strip )
 YCPValue
 Y2UINamespace::RunInTerminal( const YCPString &module )
 {
-    if (YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateRunInTerminal( module );
+    if ( YUIComponent::ui() )
+	return YCP_UI::RunInTerminal( module );
     else
         return YCPVoid();
 }
@@ -127,7 +128,10 @@ Y2UINamespace::RunInTerminal( const YCPString &module )
 YCPValue
 Y2UINamespace::UserInput()
 {
-    return m_comp->ui()->evaluateUserInput();
+    if ( YUIComponent::ui() )
+	return YCP_UI::UserInput();
+    else
+        return YCPVoid();
 }
 
 
@@ -135,7 +139,7 @@ YCPValue
 Y2UINamespace::PollInput()
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluatePollInput();
+	return YCP_UI::PollInput();
     else
 	return YCPVoid();
 }
@@ -145,7 +149,7 @@ YCPValue
 Y2UINamespace::TimeoutUserInput( const YCPInteger& timeout )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateTimeoutUserInput( timeout );
+	return YCP_UI::TimeoutUserInput( timeout );
     else
 	return YCPVoid();
 }
@@ -155,7 +159,7 @@ YCPValue
 Y2UINamespace::WaitForEvent()
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateWaitForEvent();
+	return YCP_UI::WaitForEvent();
     else
 	return YCPVoid();
 }
@@ -165,7 +169,7 @@ YCPValue
 Y2UINamespace::WaitForEvent( const YCPInteger & timeout )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateWaitForEvent( timeout );
+	return YCP_UI::WaitForEvent( timeout );
     else
 	return YCPVoid();
 }
@@ -175,7 +179,7 @@ YCPValue
 Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateOpenDialog( opts, dialog_term );
+	return YCP_UI::OpenDialog( opts, dialog_term );
     else
 	return YCPVoid();
 }
@@ -184,7 +188,10 @@ Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 YCPValue
 Y2UINamespace::OpenDialog( const YCPTerm & dialog_term )
 {
-    return m_comp->ui()->evaluateOpenDialog( YCPNull(), dialog_term );
+    if ( YUIComponent::ui() )
+	return YCP_UI::OpenDialog( YCPNull(), dialog_term );
+    else
+	return YCPVoid();
 }
 
 
@@ -192,7 +199,7 @@ YCPValue
 Y2UINamespace::CloseDialog()
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateCloseDialog();
+	return YCP_UI::CloseDialog();
     else
 	return YCPVoid();
 }
@@ -202,7 +209,7 @@ YCPValue
 Y2UINamespace::ChangeWidget( const YCPSymbol & widget_id, const YCPSymbol & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
+	return YCP_UI::ChangeWidget( widget_id, property, new_value );
     else
 	return YCPVoid();
 }
@@ -212,7 +219,7 @@ YCPValue
 Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPSymbol & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
+	return YCP_UI::ChangeWidget( widget_id, property, new_value );
     else
 	return YCPVoid();
 }
@@ -222,7 +229,7 @@ YCPValue
 Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateChangeWidget( widget_id, property, new_value );
+	return YCP_UI::ChangeWidget( widget_id, property, new_value );
     else
 	return YCPVoid();
 }
@@ -232,7 +239,7 @@ YCPValue
 Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
+	return YCP_UI::QueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -242,7 +249,7 @@ YCPValue
 Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
+	return YCP_UI::QueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -252,7 +259,7 @@ YCPValue
 Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
+	return YCP_UI::QueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -262,7 +269,7 @@ YCPValue
 Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateQueryWidget( widget_id, property );
+	return YCP_UI::QueryWidget( widget_id, property );
     else
 	return YCPVoid();
 }
@@ -272,7 +279,7 @@ YCPValue
 Y2UINamespace::ReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
+	return YCP_UI::ReplaceWidget( widget_id, new_widget );
     else
 	return YCPVoid();
 }
@@ -282,7 +289,7 @@ YCPValue
 Y2UINamespace::ReplaceWidget( const YCPTerm & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateReplaceWidget( widget_id, new_widget );
+	return YCP_UI::ReplaceWidget( widget_id, new_widget );
     else
 	return YCPVoid();
 }
@@ -292,7 +299,7 @@ YCPValue
 Y2UINamespace::SetFocus( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateSetFocus( widget_id );
+	return YCP_UI::SetFocus( widget_id );
     else
 	return YCPVoid();
 }
@@ -302,7 +309,7 @@ YCPValue
 Y2UINamespace::SetFocus( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateSetFocus( widget_id );
+	return YCP_UI::SetFocus( widget_id );
     else
 	return YCPVoid();
 }
@@ -312,7 +319,7 @@ YCPValue
 Y2UINamespace::BusyCursor()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateBusyCursor();
+	YCP_UI::BusyCursor();
 
     return YCPVoid();
 }
@@ -322,7 +329,7 @@ YCPValue
 Y2UINamespace::RedrawScreen()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateRedrawScreen();
+	YCP_UI::RedrawScreen();
 
     return YCPVoid();
 }
@@ -332,7 +339,7 @@ YCPValue
 Y2UINamespace::NormalCursor()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateNormalCursor();
+	YCP_UI::NormalCursor();
 
     return YCPVoid();
 }
@@ -342,7 +349,7 @@ YCPValue
 Y2UINamespace::MakeScreenShot( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateMakeScreenShot( filename );
+	YCP_UI::MakeScreenShot( filename );
 
     return YCPVoid();
 }
@@ -362,7 +369,7 @@ YCPValue
 Y2UINamespace::DumpWidgetTree()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateDumpWidgetTree();
+	YCP_UI::DumpWidgetTree();
 
     return YCPVoid();
 }
@@ -372,7 +379,7 @@ YCPValue
 Y2UINamespace::Beep()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateBeep();
+	YCP_UI::Beep();
 
     return YCPVoid();
 }
@@ -381,7 +388,7 @@ YCPValue
 Y2UINamespace::RecordMacro( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateRecordMacro( filename );
+	YCP_UI::RecordMacro( filename );
 
     return YCPVoid();
 }
@@ -391,7 +398,7 @@ YCPValue
 Y2UINamespace::StopRecordMacro()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateStopRecordMacro();
+	YCP_UI::StopRecordMacro();
 
     return YCPVoid();
 }
@@ -401,7 +408,7 @@ YCPValue
 Y2UINamespace::PlayMacro( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluatePlayMacro( filename );
+	YCP_UI::PlayMacro( filename );
 
     return YCPVoid();
 }
@@ -410,7 +417,7 @@ YCPValue
 Y2UINamespace::FakeUserInput()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateFakeUserInput( YCPVoid() );
+	YCP_UI::FakeUserInput( YCPVoid() );
 
     return YCPVoid();
 }
@@ -420,7 +427,7 @@ YCPValue
 Y2UINamespace::FakeUserInput( const YCPValue & next_input )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateFakeUserInput( next_input );
+	YCP_UI::FakeUserInput( next_input );
 
     return YCPVoid();
 }
@@ -431,7 +438,7 @@ YCPValue
 Y2UINamespace::Glyph( const YCPSymbol & glyphSym  )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateGlyph( glyphSym );
+	return YCP_UI::Glyph( glyphSym );
     else
 	return YCPString( "*" );
 }
@@ -441,7 +448,7 @@ YCPValue
 Y2UINamespace::GetDisplayInfo()
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateGetDisplayInfo();
+	return YCP_UI::GetDisplayInfo();
     else
 	return YCPVoid();
 }
@@ -451,7 +458,7 @@ YCPValue
 Y2UINamespace::RecalcLayout()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateRecalcLayout();
+	YCP_UI::RecalcLayout();
 
     return YCPVoid();
 }
@@ -461,7 +468,7 @@ YCPValue
 Y2UINamespace::PostponeShortcutCheck()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluatePostponeShortcutCheck();
+	YCP_UI::PostponeShortcutCheck();
 
     return YCPVoid();
 }
@@ -470,7 +477,7 @@ YCPValue
 Y2UINamespace::CheckShortcuts()
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateCheckShortcuts();
+	YCP_UI::CheckShortcuts();
 
     return YCPVoid();
 }
@@ -480,7 +487,7 @@ YCPValue
 Y2UINamespace::WidgetExists( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
+	return YCP_UI::WidgetExists( widget_id );
     else
 	return YCPVoid();
 }
@@ -490,7 +497,7 @@ YCPValue
 Y2UINamespace::WidgetExists( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateWidgetExists( widget_id );
+	return YCP_UI::WidgetExists( widget_id );
     else
 	return YCPVoid();
 }
@@ -500,7 +507,7 @@ YCPValue
 Y2UINamespace::RunPkgSelection( const YCPValue & widget_id )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateRunPkgSelection( widget_id );
+	return YCP_UI::RunPkgSelection( widget_id );
     else
 	return YCPVoid();
 }
@@ -510,7 +517,7 @@ YCPValue
 Y2UINamespace::AskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateAskForExistingDirectory( startDir, headline );
+	return YCP_UI::AskForExistingDirectory( startDir, headline );
     else
 	return YCPVoid();
 }
@@ -520,7 +527,7 @@ YCPValue
 Y2UINamespace::AskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline  )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateAskForExistingFile( startWith, filter, headline );
+	return YCP_UI::AskForExistingFile( startWith, filter, headline );
     else
 	return YCPVoid();
 }
@@ -530,7 +537,7 @@ YCPValue
 Y2UINamespace::AskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateAskForSaveFileName( startWith, filter, headline );
+	return YCP_UI::AskForSaveFileName( startWith, filter, headline );
     else
 	return YCPVoid();
 }
@@ -540,7 +547,7 @@ YCPValue
 Y2UINamespace::SetFunctionKeys( const YCPMap & new_fkeys )
 {
     if ( YUIComponent::ui() )
-	YUIComponent::ui()->evaluateSetFunctionKeys( new_fkeys );
+	YCP_UI::SetFunctionKeys( new_fkeys );
 
     return YCPVoid();
 }
@@ -550,7 +557,7 @@ YCPValue
 Y2UINamespace::Recode( const YCPString & from, const YCPString & to, const YCPString & text )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateRecode( from, to, text );
+	return YCP_UI::Recode( from, to, text );
     else
 	return YCPVoid();
 }
@@ -560,7 +567,7 @@ YCPValue
 Y2UINamespace::HasSpecialWidget( const YCPSymbol & widget )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateHasSpecialWidget( widget );
+	return YCP_UI::HasSpecialWidget( widget );
     else
 	return YCPBoolean( false );
 }
@@ -570,7 +577,7 @@ YCPValue
 Y2UINamespace::WizardCommand( const YCPTerm & command )
 {
     if ( YUIComponent::ui() )
-	return YUIComponent::ui()->evaluateWizardCommand( command );
+	return YCP_UI::WizardCommand( command );
     else
 	return YCPBoolean( false );
 }
@@ -590,9 +597,16 @@ Y2UINamespace::CallHandler( void * ptr, int argc, YCPValue argv[] )
     }
 }
 
-// -------------
 
-Y2UIFunction::Y2UIFunction (Y2UINamespace* instance, YUIComponent* comp, unsigned int pos, bool play_macro_blocks) :
+//
+// --------------------------------------------------------------------
+//
+
+
+Y2UIFunction::Y2UIFunction (Y2UINamespace *	instance,
+			    YUIComponent * 	comp,
+			    unsigned 		pos,
+			    bool		play_macro_blocks) :
 m_position (pos)
 , m_instance (instance)
 , m_comp (comp)
@@ -603,22 +617,25 @@ m_position (pos)
 , m_param4 ( YCPNull() )
 , m_param5 ( YCPNull() )
 {
+    
 };
+
 
 bool Y2UIFunction::attachParameter (const YCPValue& arg, const int position)
 {
     switch (position)
     {
-    case 0: m_param1 = arg; break;
-    case 1: m_param2 = arg; break;
-    case 2: m_param3 = arg; break;
-    case 3: m_param4 = arg; break;
-    case 4: m_param5 = arg; break;
-    default: return false;
+	case 0: m_param1 = arg; break;
+	case 1: m_param2 = arg; break;
+	case 2: m_param3 = arg; break;
+	case 3: m_param4 = arg; break;
+	case 4: m_param5 = arg; break;
+	default: return false;
     }
 
     return true;
 }
+
 
 constTypePtr Y2UIFunction::wantedParameterType() const
 {
@@ -626,6 +643,7 @@ constTypePtr Y2UIFunction::wantedParameterType() const
     // hey but we could, at least for non-overloaded functions
     return Type::Any; // FIXME make this the default behavior in parent class
 }
+
 
 bool Y2UIFunction::appendParameter (const YCPValue& arg)
 {
@@ -654,6 +672,7 @@ bool Y2UIFunction::appendParameter (const YCPValue& arg)
     return false;
 }
 
+
 bool Y2UIFunction::finishParameters()
 {
     // Aha, perl could give us any garbage.
@@ -664,6 +683,7 @@ bool Y2UIFunction::finishParameters()
     y2internal ("FIXME finishParameters not implemented");
     return true;
 }
+
 
 YCPValue Y2UIFunction::evaluateCall()
 {
@@ -704,14 +724,17 @@ YCPValue Y2UIFunction::evaluateCall()
     return ret;
 }
 
+
 YCPValue Y2UIFunction::evaluateCall_int()
 {
-    switch (m_position) {
+    switch (m_position)
+    {
 #include "UIBuiltinCalls.h"
     }
 
     return YCPNull();
 }
+
 
 bool Y2UIFunction::reset()
 {
@@ -724,11 +747,13 @@ bool Y2UIFunction::reset()
     return true;
 }
 
+
 string Y2UIFunction::name() const
 {
     // FIXME. when is this called at all?
     return("Y2UI");
 }
+
 
 // error reporting helper
 static
@@ -742,7 +767,10 @@ void no_match (const char * name, constTypePtr type,
 }
 
 
-Y2UIOverloadedFunction::Y2UIOverloadedFunction ( Y2UINamespace* instance, YUIComponent* comp,
+
+
+Y2UIOverloadedFunction::Y2UIOverloadedFunction ( Y2UINamespace * instance,
+						 YUIComponent * comp,
 						 unsigned pos_offset,
 						 vector<SymbolEntryPtr>::iterator candidates_b,
 						 vector<SymbolEntryPtr>::iterator candidates_e,

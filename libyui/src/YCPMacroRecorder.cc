@@ -36,6 +36,7 @@
 #include "YCPValueWidgetID.h"
 #include "YUI.h"
 #include "YCP_util.h"
+#include "YCP_UI.h"
 
 #ifndef Y2LOG_DATE
 #   define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
@@ -347,7 +348,7 @@ void YCPMacroRecorder::recordWidgetProperty( YWidget *    widget,
     }
     else
     {
-	YCPValue val = YUI::ui()->evaluateQueryWidget( idTerm, YCPSymbol( propertyName ) );
+	YCPValue val = YCP_UI::QueryWidget( idTerm, YCPSymbol( propertyName ) );
 
 	fprintf( _macroFile, "%s%sUI::%s( %s,\t`%s,\t%s );\t// %s \"%s\"\n",
 		 // UI::ChangeWidget( `id( `something ), `Value, 42 ) // YWidget

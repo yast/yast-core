@@ -14,7 +14,7 @@ plugin_LTLIBRARIES = libpy2UI.la
 libpy2UI_la_SOURCES =				\
 	Y2UINamespace.cc 			\
 	Y2CCUI.cc				\
-	YApplication.cc				\
+	YCP_UI.cc				\
 	YCPDialogParser.cc			\
 	YCPErrorDialog.cc			\
 	YCPEvent.cc				\
@@ -41,8 +41,8 @@ libpy2UI_la_SOURCES =				\
 	YUIException.cc				\
 	YUILog.cc				\
 	YUIPlugin.cc				\
-	YUI_builtins.cc				\
 	YUI_core.cc				\
+	YApplication.cc				\
 	YWidget.cc				\
 	YWidgetFactory.cc			\
 	YOptionalWidgetFactory.cc		\
@@ -110,6 +110,7 @@ pkginclude_HEADERS =				\
 	YApplication.h				\
 	YBothDim.h				\
 	YColor.h				\
+	YCP_UI.h				\
 	YCPDialogParser.h			\
 	YCPErrorDialog.h			\
 	YCPEvent.h				\

@@ -52,7 +52,10 @@ protected:
      *
      * Implement this method in derived classes.
      **/
-    virtual YUI * createUI( int argc, char **argv, bool with_threads, const char * macro_file );
+    virtual YUI * createUI( int argc,
+			    char **argv,
+			    bool with_threads,
+			    const char * macro_file );
 
 public:
 
@@ -104,15 +107,15 @@ public:
     virtual string name() const { return string( "UI" ); }
     
     /**
-     * Set a callback component - call the UI's setCallback() method.
+     * Set a callback component.
      **/
-    void setCallback( Y2Component * callback );
+    void setCallback( Y2Component * callbackComponent )
+	{ _callbackComponent = callbackComponent; }
     
     /**
-     * Returns the UI's callback component previously set with setCallback();
-     * calls the UI's getCallback() method.
+     * Return the UI's callback component previously set with setCallback().
      **/
-    Y2Component * getCallback() const;
+    Y2Component * getCallback() const { return _callbackComponent; }
     
     
 private:
@@ -120,12 +123,13 @@ private:
     static YUI *		_ui;
     static YUIComponent *	_uiComponent;
     Y2Namespace *		_namespace;
+    Y2Component *		_callbackComponent;
 
-    int			_argc;
-    char **		_argv;
-    const char *	_macro_file;
-    bool		_with_threads;
-    bool		_have_server_options;
+    int				_argc;
+    char **			_argv;
+    const char *		_macro_file;
+    bool			_with_threads;
+    bool			_have_server_options;
 };
 
 #endif // YUIComponent_h

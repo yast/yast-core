@@ -20,18 +20,11 @@
 #define YUI_h
 
 #include <pthread.h>
-#include <deque>
 #include <string>
 
-using std::deque;
 using std::string;
 
-#include <ycp/YCPString.h>
 #include <ycp/YCPVoid.h>
-#include <ycp/YCPTerm.h>
-#include <ycp/YCPInteger.h>
-#include <ycp/YCPMap.h>
-#include <ycp/YCPBoolean.h>
 
 #include "YTypes.h"
 #include "YWidgetOpt.h"
@@ -45,7 +38,6 @@ class YEvent;
 class YDialog;
 class YMacroPlayer;
 class YMacroRecorder;
-class Y2Component;
 class Y2UIFunction;
 class YUIBuiltinCallData;
 
@@ -197,89 +189,10 @@ public:
     bool runningWithThreads() const { return _withThreads; }
 
     /**
-     * Call a UI builtin function in the correct thread (the UI thread).
-     * This is called from libycp/YExpression via the UI builtin declarations
-     * that call UICallHandler.
-     **/
-    YCPValue callBuiltin( void * /*function*/, int /*argc*/, YCPValue /*argv*/[] )
-    {
-	// FIXME dummy UI?
-	return YCPNull();
-    }
-
-    /**
      * Call 'function' with 'argc' YCPValue parameters and return the result of
      * 'function'.
      **/
     static YCPValue callFunction( void * function, int argc, YCPValue argv[] );
-
-    /**
-     * Set a callback component.
-     **/
-    void setCallback( Y2Component * callback ) { _callback = callback; }
-
-    /**
-     * Returns the callback previously set with setCallback().
-     **/
-    Y2Component * getCallback() const { return _callback; }
-
-    /**
-     * Implementations for most UI builtins.
-     * Each method corresponds directly to one UI builtin.
-     **/
-    YCPValue evaluateAskForExistingDirectory		( const YCPString& startDir, const YCPString& headline );
-    YCPValue evaluateAskForExistingFile			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
-    YCPValue evaluateAskForSaveFileName			( const YCPString& startDir, const YCPString& filter, const YCPString& headline );
-    void evaluateBusyCursor				();
-    void evaluateBeep     				();
-    YCPValue evaluateChangeWidget			( const YCPValue & value_id, const YCPValue & property, const YCPValue & new_value );
-    void evaluateCheckShortcuts				();
-    YCPValue evaluateCloseDialog			();
-    void evaluateDumpWidgetTree				();
-    void evaluateFakeUserInput				( const YCPValue & next_input );
-    YCPMap evaluateGetDisplayInfo			();
-    YCPString evaluateGetLanguage			( const YCPBoolean & strip_encoding );
-    YCPString evaluateGetProductName			();
-    YCPString evaluateGlyph				( const YCPSymbol & symbol );
-    YCPValue evaluateHasSpecialWidget			( const YCPSymbol & widget );
-    void evaluateMakeScreenShot				( const YCPString & filename );
-    void evaluateNormalCursor				();
-    YCPBoolean evaluateOpenDialog			( const YCPTerm & opts, const YCPTerm & dialogTerm );
-    void evaluatePlayMacro				( const YCPString & filename );
-    void evaluatePostponeShortcutCheck			();
-    YCPValue evaluateQueryWidget			( const YCPValue& value_id, const YCPValue& property );
-    void evaluateRecalcLayout				();
-    YCPValue evaluateRecode				( const YCPString & from, const YCPString & to, const YCPString & text );
-    void evaluateRecordMacro				( const YCPString & filename );
-    void evaluateRedrawScreen				();
-    YCPBoolean evaluateReplaceWidget			( const YCPValue & value_id, const YCPTerm & term );
-    YCPValue evaluateRunPkgSelection			( const YCPValue & value_id );
-    void evaluateSetConsoleFont				( const YCPString& magic,
-							  const YCPString& font,
-							  const YCPString& screen_map,
-							  const YCPString& unicode_map,
-							  const YCPString& encoding );
-    void evaluateSetKeyboard				();
-    YCPInteger evaluateRunInTerminal			( const YCPString& module);
-    YCPBoolean evaluateSetFocus				( const YCPValue & value_id );
-    void evaluateSetFunctionKeys			( const YCPMap & new_keys );
-    void evaluateSetLanguage				( const YCPString& lang, const YCPString& encoding = YCPNull() );
-    void evaluateSetProductName				( const YCPString & name );
-    void evaluateStopRecordMacro			();
-    YCPBoolean evaluateWidgetExists			( const YCPValue & value_id );
-
-    YCPValue evaluateUserInput				();
-    YCPValue evaluateTimeoutUserInput			( const YCPInteger & timeout );
-    YCPValue evaluateWaitForEvent			( const YCPInteger & timeout = YCPNull() );
-    YCPValue evaluateWizardCommand			( const YCPTerm & command );
-    YCPValue evaluatePollInput				();
-
-    /**
-     * Handlers for not-so-simple property types.
-     **/
-    YCPValue 	queryWidgetComplexTypes ( YWidget * widget, const string & propertyName );
-    void	changeWidgetComplexTypes( YWidget * widget, const string & propertyName, const YCPValue & val );
-
 
     /**
      * This method implements the UI thread in case it is existing.
@@ -291,9 +204,15 @@ public:
      **/
     void uiThreadMainLoop();
 
+    /**
+     * UI-specific runPkgSelection method.
+     *
+     * Derived classes are required to implement this.
+     **/
+    virtual YEvent * runPkgSelection( YWidget * packageSelector ) = 0;
+
 
 protected:
-
 
     /**
      * This virtual method is called when threads are activated in case the
@@ -311,22 +230,6 @@ protected:
      **/
     virtual void idleLoop( int fd_ycp ) = 0;
 
-    /**
-     * UI-specific runPkgSelection method.
-     *
-     * Derived classes are required to implement this.
-     **/
-    virtual YEvent * runPkgSelection( YWidget * packageSelector ) = 0;
-
-    YCPValue callback( const YCPValue & value );
-
-    /**
-     * Evaluates a locale. Evaluate _( "string" ) to "string".
-     **/
-    YCPValue evaluateLocale( const YCPLocale & );
-
-
-protected:
     /**
      * Tells the ui thread that it should terminate and waits
      * until it does so.
@@ -364,35 +267,6 @@ protected:
     bool waitForYCPThread();
 
     /**
-     * Mid-level handler for the user input related UI commands:
-     *	   UserInput()
-     *	   TimeoutUserInput()
-     *	   WaitForEvent()
-     *	   PollInput()
-     *
-     * 'builtin_name' is the name of the specific UI builtin command (to use
-     * the correct name in the log file).
-     *
-     * 'timeout_millisec' is the timeout in milliseconds to use (0 for "wait
-     * forever").
-     *
-     * 'wait' specifies if this should wait until an event is available if
-     * there is none yet.
-     *
-     * 'detailed' specifies if a full-fledged event map is desired as return
-     * value (WaitForEvent()) or one simple YCPValue (an ID).
-     **/
-    YCPValue doUserInput( const char *	builtin_name,
-			  long 		timeout_millisec,
-			  bool 		wait,
-			  bool 		detailed );
-
-    /**
-     * Implements the WFM or SCR callback command.
-     **/
-    YCPValue evaluateCallback( const YCPTerm & term, bool to_wfm );
-
-    /**
      * Check if debug logging is enabled.
      **/
     bool debugLoggingEnabled() const;
@@ -403,7 +277,6 @@ protected:
      * but it might do more than just that.
      **/
     void enableDebugLogging( bool enable = true );
-
 
 
     //
@@ -452,20 +325,10 @@ protected:
     bool terminate_ui_thread;
 
     /**
-     * Queue for synthetic (faked) user input events.
-     **/
-    deque<YCPValue> fakeUserInputQueue;
-
-    /**
      * Flag that keeps track of blocked events.
      * Never query this directly, use eventsBlocked() instead.
      **/
     bool _eventsBlocked;
-
-    /**
-     * The callback component previously set with setCallback().
-     **/
-    Y2Component * _callback;
 
     /**
      * Global reference to the UI

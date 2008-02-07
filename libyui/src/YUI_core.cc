@@ -76,7 +76,6 @@ YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
     , _uiThread( 0 )
     , _eventsBlocked( false )
-    , _callback( 0 )
 {
     _yui = this;
 

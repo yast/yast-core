@@ -42,7 +42,8 @@ YUIComponent::YUIComponent()
     _macro_file			= 0;
     _with_threads		= false;
     _have_server_options	= false;
-    _namespace 		= NULL;
+    _namespace 			= NULL;
+    _callbackComponent		= 0;
 
     if ( _uiComponent )
     {
@@ -117,7 +118,14 @@ YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_ar
     }
 
     if ( _ui )
+    {
+#if 0
+	// obsolete? The corresponding UI function always returns YCPull()
 	return _ui->callBuiltin( function, fn_argc, fn_argv );
+#else
+	return YCPNull();
+#endif
+    }
     else
 	return YCPVoid();
 }
@@ -172,22 +180,6 @@ void YUIComponent::result( const YCPValue & /*result*/ )
 	delete _ui;
 	_ui = 0;
     }
-}
-
-
-void YUIComponent::setCallback( Y2Component * callback )
-{
-    if ( _ui )
-	_ui->setCallback( callback );
-}
-
-
-Y2Component * YUIComponent::getCallback() const
-{
-    if ( _ui )
-	return _ui->getCallback();
-    else
-	return 0;
 }
 
 

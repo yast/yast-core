@@ -10,13 +10,9 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-  File:		YUI_builtins.cc
+  File:		YCP_UI.cc
 
-  Authors:	Mathias Kettner <kettner@suse.de>
-		Stefan Hundhammer <sh@suse.de>
-		Stanislav Visnovsky <visnov@suse.cz>
-
-  Maintainer:	Stefan Hundhammer <sh@suse.de>
+  Authors:	Stefan Hundhammer <sh@suse.de>
 
 /-*/
 
@@ -25,13 +21,7 @@
 #define VERBOSE_EVENTS			0
 
 #include <stdio.h>
-#include <unistd.h> 	// pipe()
-#include <fcntl.h>  	// fcntl()
-#include <errno.h>  	// strerror()
-#include <pthread.h>
-#include <assert.h>
 #include <string.h>
-#include <iconv.h>
 
 #define y2log_component "ui"
 #include <ycp/y2log.h>	// ycperror()
@@ -40,34 +30,37 @@
 #include "YUILog.h"
 
 #include <Y2.h>
-#include <ycp/YCPVoid.h>
 
+#include "YCP_UI.h"
 #include "YUI.h"
-#include "YCP_util.h"
-#include "YApplication.h"
-#include "YWidget.h"
-#include "YEvent.h"
+#include "YUIComponent.h"
 #include "YUIException.h"
 #include "YUISymbols.h"
-#include "YDialog.h"
-#include "YMacro.h"
-#include "YCPMacroRecorder.h"
-#include "YCPMacroPlayer.h"
-#include "YReplacePoint.h"
-#include "YShortcut.h"
-#include "YWizard.h"
-#include "YWidgetFactory.h"
+#include "YApplication.h"
+#include "YCPDialogParser.h"
 #include "YCPErrorDialog.h"
 #include "YCPEvent.h"
-#include "YCPValueWidgetID.h"
-#include "YCPDialogParser.h"
 #include "YCPItemParser.h"
+#include "YCPMacroPlayer.h"
+#include "YCPMacroRecorder.h"
 #include "YCPPropertyHandler.h"
+#include "YCPValueWidgetID.h"
 #include "YCPWizardCommandParser.h"
-#include "YOptionalWidgetFactory.h"
+#include "YCP_util.h"
 #include "YCheckBox.h"
+#include "YDialog.h"
+#include "YEvent.h"
+#include "YMacro.h"
+#include "YOptionalWidgetFactory.h"
+#include "YReplacePoint.h"
+#include "YShortcut.h"
+#include "YWidget.h"
+#include "YWidgetFactory.h"
+#include "YWizard.h"
 
 using std::string;
+
+std::deque<YCPValue> YCP_UI::_fakeUserInputQueue;
 
 
 /**
@@ -82,7 +75,7 @@ using std::string;
  * Returns true if the UI supports the special widget and false if not.
  */
 
-YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
+YCPValue YCP_UI::HasSpecialWidget( const YCPSymbol & widget )
 {
     YOptionalWidgetFactory * fact = YUI::optionalWidgetFactory();
 
@@ -134,7 +127,7 @@ YCPValue YUI::evaluateHasSpecialWidget( const YCPSymbol & widget )
  * @usage SetLanguage( "en_GB" )
  */
 
-void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & encoding )
+void YCP_UI::SetLanguage( const YCPString & language, const YCPString & encoding )
 {
     YUI::app()->setLanguage( language->value(), encoding->value() );
 }
@@ -153,7 +146,7 @@ void YUI::evaluateSetLanguage( const YCPString & language, const YCPString & enc
  * @return string Product Name
  * @usage sformat( "Welcome to %1", GetProductName() );
  **/
-YCPString YUI::evaluateGetProductName()
+YCPString YCP_UI::GetProductName()
 {
     return YCPString( YUI::app()->productName() );
 }
@@ -178,7 +171,7 @@ YCPString YUI::evaluateGetProductName()
  *
  * @usage SetProductName( "SuSE HyperWall" );
  **/
-void YUI::evaluateSetProductName( const YCPString & name )
+void YCP_UI::SetProductName( const YCPString & name )
 {
     YUI::app()->setProductName( name->value() );
 }
@@ -201,7 +194,7 @@ void YUI::evaluateSetProductName( const YCPString & name )
  * @usage SetConsoleFont( "( K", "lat2u-16.psf", "latin2u.scrnmap", "lat2u.uni", "latin1" )
  */
 
-void YUI::evaluateSetConsoleFont( const YCPString & console_magic,
+void YCP_UI::SetConsoleFont( const YCPString & console_magic,
 				  const YCPString & font,
 				  const YCPString & screen_map,
 				  const YCPString & unicode_map,
@@ -230,7 +223,7 @@ void YUI::evaluateSetConsoleFont( const YCPString & console_magic,
  * @usage RunInTerminal("/bin/bash")
  */
 
-YCPInteger YUI::evaluateRunInTerminal(const YCPString & command )
+YCPInteger YCP_UI::RunInTerminal(const YCPString & command )
 {
     return YCPInteger( YUI::app()->runInTerminal( command->value() ) );
 }
@@ -243,7 +236,7 @@ YCPInteger YUI::evaluateRunInTerminal(const YCPString & command )
  * @return void
  * @usage SetKeyboard()
  */
-void YUI::evaluateSetKeyboard( )
+void YCP_UI::SetKeyboard( )
 {
     YUI::app()->initConsoleKeyboard();
 }
@@ -270,7 +263,7 @@ void YUI::evaluateSetKeyboard( )
  *
  */
 
-YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
+YCPString YCP_UI::GetLanguage( const YCPBoolean & strip )
 {
     return YCPString( YUI::app()->language( strip->value() ) );
 }
@@ -289,7 +282,7 @@ YCPString YUI::evaluateGetLanguage( const YCPBoolean & strip )
  *
  * @return any
  */
-YCPValue YUI::evaluateUserInput()
+YCPValue YCP_UI::UserInput()
 {
 #if VERBOSE_EVENTS
     yuiDebug() << "UI::UserInput()" << endl;
@@ -317,7 +310,7 @@ YCPValue YUI::evaluateUserInput()
  * @return any
  *
  */
-YCPValue YUI::evaluatePollInput()
+YCPValue YCP_UI::PollInput()
 {
 #if VERBOSE_EVENTS
     yuiDebug() << "UI::PollInput()" << endl;
@@ -345,7 +338,7 @@ YCPValue YUI::evaluatePollInput()
  * @param integer timeout_millisec
  * @return any
  */
-YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
+YCPValue YCP_UI::TimeoutUserInput( const YCPInteger & timeout )
 {
     long timeout_millisec = timeout->value();
 
@@ -370,7 +363,7 @@ YCPValue YUI::evaluateTimeoutUserInput( const YCPInteger & timeout )
  * @optarg timeout_millisec
  * @return map
  */
-YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
+YCPValue YCP_UI::WaitForEvent( const YCPInteger & timeout )
 {
     long timeout_millisec = 0;
 
@@ -392,10 +385,10 @@ YCPValue YUI::evaluateWaitForEvent( const YCPInteger & timeout )
 
 
 
-YCPValue YUI::doUserInput( const char * 	builtin_name,
-			   long 		timeout_millisec,
-			   bool 		wait,
-			   bool 		detailed )
+YCPValue YCP_UI::doUserInput( const char * 	builtin_name,
+			      long 		timeout_millisec,
+			      bool 		wait,
+			      bool 		detailed )
 {
     // Plausibility check for timeout
 
@@ -429,7 +422,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 
 	// Handle events
 
-	if ( fakeUserInputQueue.empty() )
+	if ( _fakeUserInputQueue.empty() )
 	{
 	    if ( wait )
 		event = dialog->waitForEvent( timeout_millisec );
@@ -450,13 +443,13 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
 #endif
 	    }
 	}
-	else // fakeUserInputQueue contains elements -> use the first one
+	else // _fakeUserInputQueue contains elements -> use the first one
 	{
 	    // Handle macro playing
 
-	    input = fakeUserInputQueue.front();
+	    input = _fakeUserInputQueue.front();
 	    yuiDebug() << "Using event from fakeUserInputQueue: "<< input << endl;
-	    fakeUserInputQueue.pop_front();
+	    _fakeUserInputQueue.pop_front();
 	}
 
 	// Handle macro recording
@@ -531,7 +524,7 @@ YCPValue YUI::doUserInput( const char * 	builtin_name,
  * @usage OpenDialog( `opt( `defaultsize ), `Label( "Hello, World!" ) )
  */
 
-YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialogTerm )
+YCPBoolean YCP_UI::OpenDialog( const YCPTerm & opts, const YCPTerm & dialogTerm )
 {
     YDialogType		dialogType = YPopupDialog;
     YDialogColorMode	colorMode  = YDialogNormalColor;
@@ -599,7 +592,7 @@ YCPBoolean YUI::evaluateOpenDialog( const YCPTerm & opts, const YCPTerm & dialog
  * @return boolean Returns true on success.
  */
 
-YCPValue YUI::evaluateCloseDialog()
+YCPValue YCP_UI::CloseDialog()
 {
     YUI::ui()->blockEvents();	// We don't want self-generated events from UI builtins.
     YDialog::deleteTopmostDialog();
@@ -627,7 +620,7 @@ YCPValue YUI::evaluateCloseDialog()
  * @return boolean Returns true on success.
  */
 
-YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & property, const YCPValue & newValue )
+YCPValue YCP_UI::ChangeWidget( const YCPValue & idValue, const YCPValue & property, const YCPValue & newValue )
 {
     YCPValue ret = YCPVoid();
 
@@ -717,7 +710,7 @@ YCPValue YUI::evaluateChangeWidget( const YCPValue & idValue, const YCPValue & p
  * @return any
  */
 
-YCPValue YUI::evaluateQueryWidget( const YCPValue & idValue, const YCPValue & property )
+YCPValue YCP_UI::QueryWidget( const YCPValue & idValue, const YCPValue & property )
 {
     YCPValue ret = YCPVoid();
 
@@ -789,7 +782,7 @@ YCPValue YUI::evaluateQueryWidget( const YCPValue & idValue, const YCPValue & pr
  * @return true if success, false if failed
  */
 
-YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm & newContentTerm )
+YCPBoolean YCP_UI::ReplaceWidget( const YCPValue & idValue, const YCPTerm & newContentTerm )
 {
     bool success = true;
 
@@ -867,7 +860,7 @@ YCPBoolean YUI::evaluateReplaceWidget( const YCPValue & idValue, const YCPTerm &
  * @return boolean  Returns true on success.
  */
 
-YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
+YCPValue YCP_UI::WizardCommand( const YCPTerm & command )
 {
     if ( ! YUI::optionalWidgetFactory()->hasWizard() )
 	return YCPBoolean( false );
@@ -907,7 +900,7 @@ YCPValue YUI::evaluateWizardCommand( const YCPTerm & command )
  * @return boolean Returns true on success (i.e. the widget accepted the focus).
  */
 
-YCPBoolean YUI::evaluateSetFocus( const YCPValue & idValue )
+YCPBoolean YCP_UI::SetFocus( const YCPValue & idValue )
 {
     if ( ! YCPDialogParser::isSymbolOrId( idValue ) )
 	return YCPNull();
@@ -937,7 +930,7 @@ YCPBoolean YUI::evaluateSetFocus( const YCPValue & idValue )
  * @return void
  */
 
-void YUI::evaluateBusyCursor()
+void YCP_UI::BusyCursor()
 {
     YUI::app()->busyCursor();
 }
@@ -958,7 +951,7 @@ void YUI::evaluateBusyCursor()
  * @return void
  */
 
-void YUI::evaluateNormalCursor()
+void YCP_UI::NormalCursor()
 {
     YUI::app()->normalCursor();
 }
@@ -979,7 +972,7 @@ void YUI::evaluateNormalCursor()
  * @return void
  */
 
-void YUI::evaluateRedrawScreen()
+void YCP_UI::RedrawScreen()
 {
     YUI::app()->redrawScreen();
 }
@@ -997,7 +990,7 @@ void YUI::evaluateRedrawScreen()
  * @return void
  */
 
-void YUI::evaluateMakeScreenShot( const YCPString & filename )
+void YCP_UI::MakeScreenShot( const YCPString & filename )
 {
     YUI::app()->makeScreenShot( filename->value () );
 }
@@ -1014,7 +1007,7 @@ void YUI::evaluateMakeScreenShot( const YCPString & filename )
  * @return void
  */
 
-void YUI::evaluateDumpWidgetTree()
+void YCP_UI::DumpWidgetTree()
 {
     YDialog::currentDialog()->dumpDialogWidgetTree();
 }
@@ -1029,7 +1022,7 @@ void YUI::evaluateDumpWidgetTree()
  *
  * @return void
  */
-void YUI::evaluateBeep()
+void YCP_UI::Beep()
 {
     YUI::app()->beep();
 }
@@ -1043,7 +1036,7 @@ void YUI::evaluateBeep()
  * @param string macroFileName
  * @return void
  */
-void YUI::evaluateRecordMacro( const YCPString & filename )
+void YCP_UI::RecordMacro( const YCPString & filename )
 {
     YMacro::record( filename->value () );
 }
@@ -1059,7 +1052,7 @@ void YUI::evaluateRecordMacro( const YCPString & filename )
  *
  * @return void
  */
-void YUI::evaluateStopRecordMacro()
+void YCP_UI::StopRecordMacro()
 {
     YMacro::endRecording();
 }
@@ -1076,7 +1069,7 @@ void YUI::evaluateStopRecordMacro()
  * @param string macroFileName
  * @return void
  */
-void YUI::evaluatePlayMacro( const YCPString & filename )
+void YCP_UI::PlayMacro( const YCPString & filename )
 {
     YMacro::play( filename->value() );
 }
@@ -1096,10 +1089,10 @@ void YUI::evaluatePlayMacro( const YCPString & filename )
  * @optarg any nextUserInput
  * @return void
  */
-void YUI::evaluateFakeUserInput( const YCPValue & next_input )
+void YCP_UI::FakeUserInput( const YCPValue & next_input )
 {
     yuiDebug() << "UI::FakeUserInput( " << next_input << " )" << endl;
-    fakeUserInputQueue.push_back( next_input );
+    _fakeUserInputQueue.push_back( next_input );
 }
 
 
@@ -1126,7 +1119,7 @@ void YUI::evaluateFakeUserInput( const YCPValue & next_input )
  * @param symbol glyph
  * @return string
  */
-YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
+YCPString YCP_UI::Glyph( const YCPSymbol & glyphSym )
 {
     return YCPString( YUI::app()->glyph( glyphSym->symbol() ) );
 }
@@ -1181,7 +1174,7 @@ YCPString YUI::evaluateGlyph( const YCPSymbol & glyphSym )
  * @return map <string any>
  *
  */
-YCPMap YUI::evaluateGetDisplayInfo()
+YCPMap YCP_UI::GetDisplayInfo()
 {
     YCPMap info_map;
     YApplication * app = YUI::app(); // slight optimization
@@ -1218,7 +1211,7 @@ YCPMap YUI::evaluateGetDisplayInfo()
  *
  * @return void
  */
-void YUI::evaluateRecalcLayout()
+void YCP_UI::RecalcLayout()
 {
     YDialog::currentDialog()->setInitialSize();
 }
@@ -1261,7 +1254,7 @@ void YUI::evaluateRecalcLayout()
  *
  * @return void
  */
-void YUI::evaluatePostponeShortcutCheck()
+void YCP_UI::PostponeShortcutCheck()
 {
     YDialog::currentDialog()->postponeShortcutCheck();
 }
@@ -1289,7 +1282,7 @@ void YUI::evaluatePostponeShortcutCheck()
  *
  * @return void
  */
-void YUI::evaluateCheckShortcuts()
+void YCP_UI::CheckShortcuts()
 {
     YDialog * dialog = YDialog::currentDialog();
 
@@ -1313,7 +1306,7 @@ void YUI::evaluateCheckShortcuts()
  * @param symbol widgetId
  * @return boolean
  */
-YCPBoolean YUI::evaluateWidgetExists( const YCPValue & idValue )
+YCPBoolean YCP_UI::WidgetExists( const YCPValue & idValue )
 {
     if ( ! YCPDialogParser::isSymbolOrId( idValue ) ) return YCPNull();
 
@@ -1338,7 +1331,7 @@ YCPBoolean YUI::evaluateWidgetExists( const YCPValue & idValue )
  * @return any Returns `cancel if the user wishes to cancel his selections.
  *
  */
-YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
+YCPValue YCP_UI::RunPkgSelection( const YCPValue & value_id )
 {
     YCPValue result = YCPNull();
 
@@ -1354,7 +1347,7 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
 	YWidget * selector = YCPDialogParser::findWidgetWithId( id );
 
 	yuiMilestone() << "Running package selection..." << endl;
-	YEvent * event = runPkgSelection( selector );
+	YEvent * event = YUI::ui()->runPkgSelection( selector );
 
 	if ( event )
 	{
@@ -1393,10 +1386,9 @@ YCPValue YUI::evaluateRunPkgSelection( const YCPValue & value_id )
  * @return string  Returns the selected directory name or <i>nil</i> if the
  * user canceled the operation.
  */
-YCPValue
-YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
+YCPValue YCP_UI::AskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
-    string ret = app()->askForExistingDirectory( startDir->value(), headline->value() );
+    string ret = YUI::app()->askForExistingDirectory( startDir->value(), headline->value() );
 
     if ( ret.empty() )
 	return YCPVoid();
@@ -1419,9 +1411,11 @@ YUI::evaluateAskForExistingDirectory( const YCPString & startDir, const YCPStrin
  * @return string Returns the selected file name or <i>nil</i> if the user
  * canceled the operation.
  */
-YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
+YCPValue YCP_UI::AskForExistingFile( const YCPString & startWith,
+				     const YCPString & filter,
+				     const YCPString & headline )
 {
-    string ret = app()->askForExistingFile( startWith->value(), filter->value(), headline->value() );
+    string ret = YUI::app()->askForExistingFile( startWith->value(), filter->value(), headline->value() );
 
     if ( ret.empty() )
 	return YCPVoid();
@@ -1444,9 +1438,11 @@ YCPValue YUI::evaluateAskForExistingFile( const YCPString & startWith, const YCP
  *
  * @return string Returns the selected file name or <i>nil</i> if the user canceled the operation.
  */
-YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
+YCPValue YCP_UI::AskForSaveFileName( const YCPString & startWith,
+				     const YCPString & filter,
+				     const YCPString & headline )
 {
-    string ret = app()->askForSaveFileName( startWith->value(), filter->value(), headline->value() );
+    string ret = YUI::app()->askForSaveFileName( startWith->value(), filter->value(), headline->value() );
 
     if ( ret.empty() )
 	return YCPVoid();
@@ -1470,7 +1466,7 @@ YCPValue YUI::evaluateAskForSaveFileName( const YCPString & startWith, const YCP
  * @return void
  * @usage SetFunctionKeys( $[ "Back": 8, "Next": 10, ... ] );
  */
-void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
+void YCP_UI::SetFunctionKeys( const YCPMap & new_fkeys )
 {
     for ( YCPMapIterator it = new_fkeys->begin(); it != new_fkeys->end(); ++it )
     {
@@ -1482,7 +1478,7 @@ void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 	    if ( fkey > 0 && fkey <= 24 )
 	    {
 		yuiDebug() << "Mapping \"" << label << "\"\t-> F" << fkey << endl;
-		app()->setDefaultFunctionKey( label, fkey );
+		YUI::app()->setDefaultFunctionKey( label, fkey );
 	    }
 	    else
 	    {
@@ -1501,44 +1497,6 @@ void YUI::evaluateSetFunctionKeys( const YCPMap & new_fkeys )
 
 
 /**
- * @builtin WFM/SCR
- * @id WFM_SCR
- * @short callback
- * @description
- * This is used for a callback mechanism. The expression will
- * be sent to the WFM interpreter and evaluated there.
- * USE WITH CAUTION.
- *
- * @param block expression
- * @return any
- */
-
-YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
-{
-    if ( term->size() != 1 )	// must have 1 arg - anything allowed
-    {
-	return YCPNull();
-    }
-
-    if ( _callback )
-    {
-	YCPValue v = YCPNull();
-	if ( to_wfm )		// if it goes to WFM, just send the value
-	{
-	    v = _callback->evaluate ( term->value(0) );
-	}
-	else		// going to SCR, send the complete term
-	{
-	    v = _callback->evaluate( term );
-	}
-	return v;
-    }
-
-    return YCPVoid();
-}
-
-
-/**
  * @builtin Recode
  * @short Recodes encoding of string from or to "UTF-8" encoding.
  * @description
@@ -1553,7 +1511,9 @@ YCPValue YUI::evaluateCallback( const YCPTerm & term, bool to_wfm )
  * @return any
  */
 
-YCPValue YUI::evaluateRecode( const YCPString & fromEncoding, const YCPString & toEncoding, const YCPString & text )
+YCPValue YCP_UI::Recode( const YCPString & fromEncoding,
+			 const YCPString & toEncoding,
+			 const YCPString & text )
 {
     string outstr;
     if ( recode ( text->value(), fromEncoding->value(), toEncoding->value(), outstr ) != 0 )
@@ -1568,6 +1528,47 @@ YCPValue YUI::evaluateRecode( const YCPString & fromEncoding, const YCPString & 
 	return text;
     }
     return YCPString( outstr );
+}
+
+
+/**
+ * @builtin WFM/SCR
+ * @id WFM_SCR
+ * @short callback
+ * @description
+ * This is used for a callback mechanism. The expression will
+ * be sent to the WFM interpreter and evaluated there.
+ * USE WITH CAUTION.
+ *
+ * @param block expression
+ * @return any
+ */
+YCPValue YCP_UI::evaluateCallback( const YCPTerm & term, bool to_wfm )
+{
+    if ( term->size() != 1 )	// must have 1 arg - anything allowed
+    {
+	y2error( "No arguments" );
+	return YCPNull();
+    }
+
+    Y2Component * callbackComponent = YUIComponent::uiComponent()->getCallback();
+
+    if ( callbackComponent )
+    {
+	YCPValue ret = YCPNull();
+	
+	if ( to_wfm )	// if it goes to WFM, just send the value
+	{
+	    ret = callbackComponent->evaluate( term->value(0) );
+	}
+	else		// going to SCR, send the complete term
+	{
+	    ret = callbackComponent->evaluate( term );
+	}
+	return ret;
+    }
+
+    return YCPVoid();
 }
 
 
