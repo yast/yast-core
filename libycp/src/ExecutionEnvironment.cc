@@ -19,7 +19,24 @@
 #include "ycp/y2log.h"
 
 // the number of call frames to show warning at
-#define WARN_RECURSION 1000
+#define WARN_RECURSION 1001
+static const char * Y2RECURSIONLIMIT = "Y2RECURSIONLIMIT";
+
+
+ExecutionEnvironment::ExecutionEnvironment ()
+    : m_filename ("")
+    , m_forced_filename (false)
+    , m_statement(NULL)
+{
+    m_backtrace.clear ();
+
+    m_recursion_limit = 0;
+    char * s = getenv (Y2RECURSIONLIMIT);
+    if (s != NULL)
+	m_recursion_limit = atoi (s);
+    if (m_recursion_limit == 0)
+	m_recursion_limit = WARN_RECURSION;
+}
 
 int
 ExecutionEnvironment::linenumber () const
@@ -71,6 +88,16 @@ ExecutionEnvironment::setStatement (YStatementPtr s)
     return;
 }
 
+bool
+ExecutionEnvironment::endlessRecursion ()
+{
+    if (m_backtrace.size () == m_recursion_limit)
+    {
+	y2error ("Recursion limit of %d call frames reached. Set the environment variable %s to change this", m_recursion_limit, Y2RECURSIONLIMIT);
+	return true;
+    }
+    return false;
+}
 
 void
 ExecutionEnvironment::pushframe (string called_function)
@@ -79,11 +106,6 @@ ExecutionEnvironment::pushframe (string called_function)
     CallFrame* frame = new CallFrame (filename(), linenumber (), called_function);
     m_backtrace.push_back (frame);
     // backtrace( LOG_MILESTONE, 0 );
-    
-    if (m_backtrace.size () == WARN_RECURSION)
-    {
-	y2warning ("Too many call frames (%d). Endless recursion?", WARN_RECURSION);
-    }
 }
 
 

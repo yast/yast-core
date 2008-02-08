@@ -3063,6 +3063,7 @@ YEFunction::evaluate (bool cse)
     y2debug ("YEFunction::evaluate (%s)\n", toString().c_str());
 #endif
 
+    
     if (!m_functioncall)
     {
 	m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
@@ -3113,7 +3114,13 @@ YEFunction::evaluate (bool cse)
     // save the context info
     int linenumber = ee.linenumber ();
     string filename = ee.filename ();
-    
+
+    if (ee.endlessRecursion ())
+    {
+	y2error ("Returning nil instead of calling the function.");
+	return YCPVoid ();
+    }
+
     ee.pushframe (toString ());
 
     YCPValue value = m_functioncall->evaluateCall ();

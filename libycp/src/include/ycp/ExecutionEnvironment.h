@@ -55,10 +55,15 @@ private:
     bool m_forced_filename;
     YStatementPtr m_statement;
     CallStack m_backtrace;
+    /**
+     * There is a limit of 1001 call frames (overridable by
+     * Y2RECURSIONLIMIT in the environment). After that, a call is
+     * skipped and nil is returned instead.
+     */
+    size_t m_recursion_limit;
 
 public:
-    ExecutionEnvironment () : m_filename (""), m_forced_filename (false), m_statement(NULL) 
-	{ m_backtrace.clear (); };
+    ExecutionEnvironment ();
     ~ExecutionEnvironment() {};
 
     /**
@@ -90,6 +95,11 @@ public:
      * Set the currently evaluated statement.
      */
     void setStatement (YStatementPtr s);
+
+    /**
+     * Report error if there are too many stack frames
+     */
+    bool endlessRecursion ();
 
     /**
      * Push another call frame to the backtrace stack according to the

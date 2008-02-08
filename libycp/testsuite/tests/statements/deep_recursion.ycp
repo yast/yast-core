@@ -1,0 +1,12 @@
+// there is a recursion limit of 1001 call frames,
+// the next call will log an error and return nil
+{
+	integer Multiply (integer a, integer b) {
+		if (a == 1)
+			return b;
+		else
+			return Multiply (a - 1, b) + b;
+	}
+
+	return Multiply (10000, 42);
+}
