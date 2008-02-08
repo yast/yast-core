@@ -5,7 +5,7 @@
 SUBDIRS = events examples FAQs
 
 htmldir = $(docdir)/libyui
-builtin	= $(srcdir)/../src/YUI_builtins.cc $(srcdir)/../src/YCPDialogParser.cc
+builtin	= $(srcdir)/../src/YCP_UI.cc $(srcdir)/../src/YCPDialogParser.cc
 builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
 htmlfiles = $(wildcard html/*.html)
