@@ -61,7 +61,7 @@ ScriptingAgent::InitRegDirs ()
 	    y2debug ("Can't read dir %s: %m", rd.name.c_str ());
 	}
 	else {
-	    y2milestone ("Agent registration: %s last changed at %s",
+	    y2debug ("Agent registration: %s last changed at %s",
 			 rd.name.c_str(), ctime (&rd.last_changed));
 	    registration_dirs.push_back (rd);
 	}
