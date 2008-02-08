@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb  8 16:56:48 CET 2008 - sh@suse.de
+
+- Moved last YCPValue out of YUI
+- V 2.16.32 
+
+-------------------------------------------------------------------
 Fri Feb  8 11:28:32 CET 2008 - mvidner@suse.cz
 
 - Endless recursion: not only log it, but also break it by returning
