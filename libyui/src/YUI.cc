@@ -32,14 +32,13 @@
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
-#include <ycp/YCPVoid.h>
-
 #include "Y2UINamespace.h"
 #include "YUI.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
 #include "YApplication.h"
 #include "YMacro.h"
+#include "YBuiltinCaller.h"
 
 
 
@@ -51,6 +50,8 @@ extern void *start_ui_thread( void * yui );
 YUI::YUI( bool withThreads )
     : _withThreads( withThreads )
     , _uiThread( 0 )
+    , _builtinCaller( 0 )
+    , _terminate_ui_thread( false )
     , _eventsBlocked( false )
 {
     _yui = this;
@@ -68,6 +69,9 @@ YUI::~YUI()
 
     if ( YDialog::openDialogsCount() > 0 )
 	yuiError() << YDialog::openDialogsCount() << " open dialogs left over" << endl;
+
+    if ( _builtinCaller )
+	delete _builtinCaller;
 
     YDialog::deleteAllDialogs();
 
@@ -156,7 +160,7 @@ void YUI::topmostConstructorHasFinished()
 	    }
 	    else
 	    {
-		terminate_ui_thread = false;
+		_terminate_ui_thread = false;
 		createUIThread();
 	    }
 	}
@@ -183,7 +187,7 @@ void YUI::createUIThread()
 
 void YUI::terminateUIThread()
 {
-    terminate_ui_thread = true;
+    _terminate_ui_thread = true;
     signalUIThread();
     waitForUIThread();
     pthread_join( _uiThread, 0 );
@@ -286,14 +290,17 @@ void YUI::uiThreadMainLoop()
 	if ( ! waitForYCPThread () )
 	    continue;
 
-	if ( terminate_ui_thread )
+	if ( _terminate_ui_thread )
 	{
 	    signalYCPThread();
 	    yuiDebug() << "Shutting down UI main loop" << endl;
 	    return;
 	}
 
-	_builtinCallData.result = _builtinCallData.function->evaluateCall_int();
+	if ( _builtinCaller )
+	    _builtinCaller->call();
+	else
+	    yuiError() << "No builtinCaller set" << endl;
 
 	signalYCPThread();
     }

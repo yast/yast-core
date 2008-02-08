@@ -22,37 +22,20 @@
 #include <pthread.h>
 #include <string>
 
-using std::string;
-
-#include <ycp/YCPVoid.h>
-
 #include "YTypes.h"
 #include "YWidgetOpt.h"
 
+using std::string;
 
 class YApplication;
 class YWidget;
 class YWidgetFactory;
 class YOptionalWidgetFactory;
 class YEvent;
+class YBuiltinCaller;
 class YDialog;
 class YMacroPlayer;
 class YMacroRecorder;
-class Y2UIFunction;
-class YUIBuiltinCallData;
-
-
-struct  YUIBuiltinCallData
-{
-    Y2UIFunction *	function;
-    YCPValue		result;
-
-    YUIBuiltinCallData()
-	: result( YCPVoid() )
-    {
-	function = 0;
-    }
-};
 
 
 /**
@@ -60,13 +43,13 @@ struct  YUIBuiltinCallData
  **/
 class YUI
 {
+    friend class Y2UIFunction;
+
 protected:
     /**
      * Constructor.
      **/
     YUI( bool withThreads );
-
-    friend class Y2UIFunction;
 
 public:
 
@@ -199,6 +182,19 @@ public:
     void uiThreadMainLoop();
 
     /**
+     * Return the transparent inter-thread communication.
+     * This will return 0 until set from the outside.
+     **/
+    YBuiltinCaller * builtinCaller() const { return _builtinCaller; }
+
+    /**
+     * Set the transparent inter-thread communication.
+     * Built-ins are only really called if there is a valid YBuiltinCaller set.
+     **/
+    void setBuiltinCaller( YBuiltinCaller * caller )
+	{ _builtinCaller = caller; }
+
+    /**
      * UI-specific runPkgSelection method.
      *
      * Derived classes are required to implement this.
@@ -294,7 +290,7 @@ protected:
      * the result here and signals the YCP thread that waits until
      * the result is available.
      **/
-    YUIBuiltinCallData _builtinCallData;
+    YBuiltinCaller * _builtinCaller;
 
     /**
      * Used to synchronize data transfer with the ui thread.
@@ -316,7 +312,7 @@ protected:
      * thread replies by setting the flag back to false directly
      * after terminating itself.
      **/
-    bool terminate_ui_thread;
+    bool _terminate_ui_thread;
 
     /**
      * Flag that keeps track of blocked events.

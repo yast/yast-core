@@ -16,6 +16,7 @@ libpy2UI_la_SOURCES =				\
 	Y2CCUI.cc				\
 	YUI.cc					\
 	YCP_UI.cc				\
+	YCPBuiltinCaller.cc			\
 	YCPDialogParser.cc			\
 	YCPErrorDialog.cc			\
 	YCPEvent.cc				\
@@ -111,6 +112,7 @@ pkginclude_HEADERS =				\
 	YBothDim.h				\
 	YColor.h				\
 	YCP_UI.h				\
+	YCPBuiltinCaller.h			\
 	YCPDialogParser.h			\
 	YCPErrorDialog.h			\
 	YCPEvent.h				\
@@ -149,6 +151,7 @@ pkginclude_HEADERS =				\
 	YUILog.h				\
 	YUIPlugin.h				\
 	YUISymbols.h				\
+	YBuiltinCaller.h			\
 	YWidget.h				\
 	YWidgetFactory.h			\
 	YWidgetID.h				\

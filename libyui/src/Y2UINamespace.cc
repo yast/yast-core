@@ -34,6 +34,7 @@
 #include "YUISymbols.h"
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
+#include "YCPBuiltinCaller.h"
 #include "YMacro.h"
 
 #define VERBOSE_UI_CALLS	0
@@ -703,18 +704,30 @@ YCPValue Y2UIFunction::evaluateCall()
 
     YCPValue ret = YCPVoid();
 
-    if ( m_comp->ui()-> runningWithThreads() )
+    if ( m_comp->ui()->runningWithThreads() )
     {
-        m_comp->ui()->_builtinCallData.function = this;
+	YCPBuiltinCaller * builtinCaller =
+	    dynamic_cast<YCPBuiltinCaller *> (m_comp->ui()->builtinCaller() );
 
-        m_comp->ui()->signalUIThread();
+	if ( ! builtinCaller )
+	{
+	    builtinCaller = new YCPBuiltinCaller();
+	    m_comp->ui()->setBuiltinCaller( builtinCaller );
+	}
 
-        while ( ! m_comp->ui()->waitForUIThread() )
-        {
-            // NOP
-        }
+	if ( builtinCaller )
+	{
+	    builtinCaller->setFunction( this );
 
-        ret = m_comp->ui()->_builtinCallData.result;
+	    m_comp->ui()->signalUIThread();
+
+	    while ( ! m_comp->ui()->waitForUIThread() )
+	    {
+		// NOP
+	    }
+
+	    ret = builtinCaller->result();
+	}
     }
     else
     {
