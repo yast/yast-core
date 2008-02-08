@@ -29,7 +29,10 @@
     UI::OpenDialog(`opt(`defaultsize),
 	       `VBox(
 		     `Label( "A third dialog" ),
-		     `PushButton( `opt(`default), "OK\nLevel 3" )
+		     `PushButton( `opt(`default), "OK\nLevel 3" ),
+		     `VSpacing( 1 ),
+		     `InputField( "Phone:" ),
+		     `Label( "The dialog, e.g. InputField, keeps its status." )
 		     )
 	       );
     UI::UserInput();
