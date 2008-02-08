@@ -3,6 +3,7 @@ Fri Feb  8 11:28:32 CET 2008 - mvidner@suse.cz
 
 - Endless recursion: not only log it, but also break it by returning
   nil after 1001 call frames (setenv Y2RECURSIONLIMIT to change that).
+- 2.16.31
 
 -------------------------------------------------------------------
 Thu Feb  7 15:50:14 CET 2008 - sh@suse.de
