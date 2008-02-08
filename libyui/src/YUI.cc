@@ -37,7 +37,6 @@
 #include "Y2UINamespace.h"
 #include "YUI.h"
 #include "YUISymbols.h"
-#include "YWidget.h"
 #include "YDialog.h"
 #include "YApplication.h"
 #include "YMacro.h"
