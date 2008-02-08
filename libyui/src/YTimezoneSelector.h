@@ -19,9 +19,13 @@
 #ifndef YTimezoneSelector_h
 #define YTimezoneSelector_h
 
+#include <map>
 #include "YWidget.h"
 
+using std::map;
+
 class YTimezoneSelectorPrivate;
+
 
 class YTimezoneSelector : public YWidget
 {
