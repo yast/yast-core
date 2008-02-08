@@ -42,15 +42,8 @@
 #include "YMacro.h"
 
 
-typedef YCPValue (*v2) ();
-typedef YCPValue (*v2v)     (const YCPValue &);
-typedef YCPValue (*v2vv)    (const YCPValue &, const YCPValue &);
-typedef YCPValue (*v2vvv)   (const YCPValue &, const YCPValue &, const YCPValue &);
-typedef YCPValue (*v2vvvv)  (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
-typedef YCPValue (*v2vvvvv) (const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &, const YCPValue &);
 
-
-YUI *	YUI::_yui		= 0;
+YUI * YUI::_yui = 0;
 
 extern void *start_ui_thread( void * yui );
 
@@ -190,13 +183,10 @@ void YUI::createUIThread()
 
 void YUI::terminateUIThread()
 {
-    yuiDebug() << "Telling UI thread to shut down" << endl;
     terminate_ui_thread = true;
     signalUIThread();
-    yuiDebug() << "Waiting for UI thread to shut down" << endl;
     waitForUIThread();
     pthread_join( _uiThread, 0 );
-    yuiDebug() << "UI thread shut down correctly" << endl;
 }
 
 
@@ -214,66 +204,10 @@ void YUI::shutdownThreads()
 }
 
 
-
-YCPValue YUI::callFunction( void * function, int argc, YCPValue argv[] )
-{
-    if ( function == 0 )
-    {
-	yuiError() << "NULL function pointer!" << endl;
-	return YCPNull();
-    }
-
-    // ensure YCPNull will be passed as YCPVoid
-    for (int i = 0; i < argc ; i++)
-    {
-	if (argv[i].isNull ())
-	{
-	    argv[i] = YCPVoid ();
-	}
-    }
-
-    YCPValue ret = YCPVoid();
-
-    switch ( argc )
-    {
-	case 0:
-	    ret = (*(v2) function) ();
-	    break;
-	case 1:
-	    ret = (*(v2v) function) (argv[0]);
-	    break;
-	case 2:
-	    ret = (*(v2vv) function) (argv[0], argv[1]);
-	    break;
-	case 3:
-	    ret = (*(v2vvv) function) (argv[0], argv[1], argv[2]);
-	    break;
-	case 4:
-	    ret = (*(v2vvvv) function) (argv[0], argv[1], argv[2], argv[3]);
-	    break;
-	case 5:
-	    ret = (*(v2vvvvv) function) (argv[0], argv[1], argv[2], argv[3], argv[4]);
-	    break;
-	default:
-	    {
-		yuiError() << "Bad builtin: Arg count: " << argc << endl;
-		ret = YCPNull();
-	    }
-	    break;
-    }
-
-    return ret;
-}
-
-
 void YUI::signalUIThread()
 {
     static char arbitrary = 42;
     (void) write ( pipe_to_ui[1], & arbitrary, 1 );
-
-#if VERBOSE_COMM
-    yuiDebug() << "Wrote byte to UI thread: " << pipe_to_ui[1] << endl;
-#endif
 }
 
 
@@ -283,9 +217,6 @@ bool YUI::waitForUIThread()
     int res;
 
     do {
-#if VERBOSE_COMM
-	yuiDebug() << "Waiting for UI thread..." << endl;
-#endif
 	res = read( pipe_from_ui[0], & arbitrary, 1 );
 	if ( res == -1 )
 	{
@@ -295,10 +226,6 @@ bool YUI::waitForUIThread()
 		yuiError() <<  "waitForUIThread: errno: " << errno << " " << strerror( errno ) << endl;
 	}
     } while ( res == 0 );
-
-#if VERBOSE_COMM
-    yuiDebug() << "Read byte from UI thread" << endl;
-#endif
 
     // return true if we really did get a signal byte
     return res != -1;
@@ -311,7 +238,7 @@ void YUI::signalYCPThread()
     (void) write( pipe_from_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
-    yuiDebug() << "Wrote byte to YCP thread: " << pipe_from_ui[1] << endl;
+    yuiDebug() << "Wrote byte to YCP thread: " << endl;
 #endif
 }
 
@@ -361,7 +288,6 @@ void YUI::uiThreadMainLoop()
 
 	if ( terminate_ui_thread )
 	{
-	    yuiDebug() << "Final sync with YCP thread" << endl;
 	    signalYCPThread();
 	    yuiDebug() << "Shutting down UI main loop" << endl;
 	    return;
@@ -402,8 +328,7 @@ bool YUI::debugLoggingEnabled() const
 }
 
 
-void
-YUI::enableDebugLogging( bool enable )
+void YUI::enableDebugLogging( bool enable )
 {
     YUILog::enableDebugLogging( enable );
     set_log_debug( enable );

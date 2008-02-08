@@ -189,12 +189,6 @@ public:
     bool runningWithThreads() const { return _withThreads; }
 
     /**
-     * Call 'function' with 'argc' YCPValue parameters and return the result of
-     * 'function'.
-     **/
-    static YCPValue callFunction( void * function, int argc, YCPValue argv[] );
-
-    /**
      * This method implements the UI thread in case it is existing.
      * The loop consists of calling idleLoop, getting the next
      * command from the @ref YCPUIComponent, evaluating it, which
