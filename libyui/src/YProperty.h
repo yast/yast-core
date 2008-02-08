@@ -108,6 +108,12 @@ public:
 	_type( YStringProperty ), _stringVal( str ) {}
 
     /**
+     * Constructor for const char * (string) properties.
+     **/
+    YPropertyValue( const char * str ):
+	_type( YStringProperty ), _stringVal( str ) {}
+
+    /**
      * Constructor for bool properties.
      **/
     explicit YPropertyValue( bool b ):
