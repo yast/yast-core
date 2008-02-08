@@ -3,7 +3,7 @@
 "/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd" [
 
 <!ENTITY  YCPDialogParser SYSTEM "YCPDialogParser.xml">
-<!ENTITY  YUI_builtins SYSTEM "YUI_builtins.xml">
+<!ENTITY  YUI_builtins SYSTEM "YCP_UI.xml">
 <!ENTITY  YCP-UI-richtext  SYSTEM "YCP-UI-richtext.xml">
 <!ENTITY  YCP-UI-layout  SYSTEM "YCP-UI-layout.xml">
 <!ENTITY  UI-event-intro  SYSTEM "events/event-intro.xml">
