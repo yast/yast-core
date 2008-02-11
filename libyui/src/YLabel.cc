@@ -19,8 +19,8 @@
 #define MAX_DEBUG_LABEL_LEN	32
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YLabel.h"

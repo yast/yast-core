@@ -19,7 +19,7 @@
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
-#include <ycp/YCPSymbol.h>
+
 #include "YDialog.h"
 #include "YShortcutManager.h"
 #include "YPushButton.h"

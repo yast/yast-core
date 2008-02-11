@@ -17,16 +17,19 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YTimezoneSelector.h"
+
 
 class YTimezoneSelectorPrivate
 {
    bool dummy;
 };
+
+
 
 
 YTimezoneSelector::YTimezoneSelector( YWidget *		parent,

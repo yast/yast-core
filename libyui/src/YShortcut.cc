@@ -17,13 +17,14 @@
 /-*/
 
 
+#include <ctype.h>	// toupper(), tolower()
+#include <string.h> 	// strstr()
 
 #define YUILogComponent "ui-shortcuts"
 #include "YUILog.h"
+
 #include "YShortcut.h"
 #include "YPushButton.h"
-#include <ctype.h>	// toupper(), tolower()
-#include <cstring> 	// strstr()
 
 
 // Return the number of elements of an array of any type

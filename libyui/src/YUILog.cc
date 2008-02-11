@@ -21,6 +21,7 @@
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
+
 #include "YUIException.h"
 
 using std::ostream;

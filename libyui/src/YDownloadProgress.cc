@@ -18,10 +18,9 @@
 
 
 #include <sys/stat.h>
-#include <ycp/YCPSymbol.h>
-#include <ycp/YCPBoolean.h>
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YDownloadProgress.h"

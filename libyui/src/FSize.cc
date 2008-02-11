@@ -20,10 +20,8 @@
 /-*/
 
 #include <stdlib.h>
-
 #include <iostream>
 
-#include <y2util/stringutil.h>
 #include "FSize.h"
 
 using namespace std;

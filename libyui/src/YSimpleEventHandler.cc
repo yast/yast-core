@@ -17,7 +17,6 @@
 /-*/
 
 
-
 #define YUILogComponent "ui-events"
 #include "YUILog.h"
 

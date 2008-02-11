@@ -17,7 +17,8 @@
 /-*/
 
 
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YMultiSelectionBox.h"
 #include "YUISymbols.h"

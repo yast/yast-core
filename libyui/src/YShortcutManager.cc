@@ -19,6 +19,7 @@
 
 #define YUILogComponent "ui-shortcuts"
 #include "YUILog.h"
+
 #include "YShortcutManager.h"
 #include "YDialog.h"
 

@@ -24,6 +24,7 @@
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
+
 #include "YUIException.h"
 #include "YWidget.h"
 

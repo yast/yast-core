@@ -19,8 +19,10 @@
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
+
 #include "YAlignment.h"
 #include "YBothDim.h"
+
 
 using std::min;
 using std::max;

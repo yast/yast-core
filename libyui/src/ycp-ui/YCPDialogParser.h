@@ -24,7 +24,6 @@
 #include <ycp/YCPList.h>
 
 #include "YTypes.h"
-#include "YWidgetOpt.h"
 
 using std::vector;
 
@@ -32,6 +31,7 @@ class YWidget;
 class YMenu;
 class YMenuButton;
 class YTableHeader;
+class YWidgetOpt;
 
 
 /**

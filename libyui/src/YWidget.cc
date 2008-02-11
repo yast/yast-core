@@ -27,7 +27,6 @@
 #include "YShortcut.h"
 #include "YWidget.h"
 #include "YDialog.h"
-#include "YUIComponent.h"
 #include "YUI.h"
 #include "YDialog.h"
 #include "YUIException.h"

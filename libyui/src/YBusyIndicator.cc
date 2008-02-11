@@ -17,11 +17,12 @@
 /-*/
 
 
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+#define YUILogComponent "ui"
+#include "YUILog.h"
 
 #include "YUISymbols.h"
 #include "YBusyIndicator.h"
+
 
 struct YBusyIndicatorPrivate
 {

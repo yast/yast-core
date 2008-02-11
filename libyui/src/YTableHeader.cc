@@ -18,8 +18,10 @@
 
 
 #include <vector>
-#define y2log_component "ui"
-#include <ycp/y2log.h>
+
+#define YUILogComponent "ui"
+#include "YUILog.h"
+
 #include "YTableHeader.h"
 #include "YUIException.h"
 

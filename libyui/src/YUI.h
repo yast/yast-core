@@ -23,7 +23,6 @@
 #include <string>
 
 #include "YTypes.h"
-#include "YWidgetOpt.h"
 
 using std::string;
 

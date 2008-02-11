@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 11 19:23:29 CET 2008 - sh@suse.de
+
+- Preliminary UI split: moved ycp-ui out of libyui
+- V 2.16.33 
+
+-------------------------------------------------------------------
 Fri Feb  8 16:56:48 CET 2008 - sh@suse.de
 
 - Moved last YCPValue out of YUI

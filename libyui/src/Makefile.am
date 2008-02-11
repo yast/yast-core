@@ -2,53 +2,46 @@
 # Makefile.am for core/libyui/src
 #
 
-AM_CXXFLAGS = -DY2LOG=\"libycp\"		\
+# The leading . makes automake process this dir first, then the subdir
+SUBDIRS= . ycp-ui
+
+AM_CXXFLAGS =					\
 	-DTHEMEDIR=\"${themedir}/current\"	\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-fmessage-length=0
 
 AM_CPPFLAGS = -DLOCALEDIR=\"${localedir}\"
 
-plugin_LTLIBRARIES = libpy2UI.la
+lib_LTLIBRARIES = libyui.la
 
-libpy2UI_la_SOURCES =				\
-	Y2UINamespace.cc 			\
-	Y2CCUI.cc				\
+
+libyui_la_LDFLAGS = -version-info 3:0:0
+libyui_la_LIBADD = -lpthread
+
+libyui_la_SOURCES =				\
 	YUI.cc					\
-	YCP_UI.cc				\
-	YCPBuiltinCaller.cc			\
-	YCPDialogParser.cc			\
-	YCPErrorDialog.cc			\
-	YCPEvent.cc				\
-	YCPItemParser.cc			\
-	YCPItemWriter.cc			\
-	YCPMenuItemParser.cc			\
-	YCPMenuItemWriter.cc			\
-	YCPTableItemParser.cc			\
-	YCPTableItemWriter.cc			\
-	YCPTreeItemParser.cc			\
-	YCPTreeItemWriter.cc			\
-	YCPMacroPlayer.cc			\
-	YCPMacroRecorder.cc			\
-	YCPPropertyHandler.cc			\
-	YCPValueWidgetID.cc			\
-	YCPWizardCommandParser.cc		\
-	YCP_util.cc				\
+	YApplication.cc				\
+	YWidgetFactory.cc			\
+	YOptionalWidgetFactory.cc		\
+						\
+	YEvent.cc				\
 	YItem.cc				\
-	YTreeItem.cc				\
-	YTableItem.cc				\
-	YTableHeader.cc				\
+	YMacro.cc				\
 	YProperty.cc				\
-	YUIComponent.cc				\
+	YShortcut.cc				\
+	YShortcutManager.cc			\
+	YSimpleEventHandler.cc			\
+	YSingleChildContainerWidget.cc		\
+	YTableHeader.cc				\
+	YTableItem.cc				\
+	YTreeItem.cc				\
 	YUIException.cc				\
 	YUILog.cc				\
 	YUIPlugin.cc				\
-	YApplication.cc				\
-	YWidget.cc				\
-	YWidgetFactory.cc			\
-	YOptionalWidgetFactory.cc		\
 	YWidgetID.cc				\
-	YMacro.cc				\
+						\
+	YSelectionWidget.cc			\
+	YSimpleInputField.cc			\
 						\
 	YAlignment.cc				\
 	YBarGraph.cc				\
@@ -61,7 +54,6 @@ libpy2UI_la_SOURCES =				\
 	YDownloadProgress.cc			\
 	YDumbTab.cc				\
 	YEmpty.cc				\
-	YEvent.cc				\
 	YFrame.cc				\
 	YImage.cc				\
 	YInputField.cc				\
@@ -82,12 +74,6 @@ libpy2UI_la_SOURCES =				\
 	YReplacePoint.cc			\
 	YRichText.cc				\
 	YSelectionBox.cc			\
-	YSelectionWidget.cc			\
-	YShortcut.cc				\
-	YShortcutManager.cc			\
-	YSimpleEventHandler.cc			\
-	YSimpleInputField.cc			\
-	YSingleChildContainerWidget.cc		\
 	YSlider.cc				\
 	YSpacing.cc				\
 	YSquash.cc				\
@@ -95,84 +81,64 @@ libpy2UI_la_SOURCES =				\
 	YTimeField.cc				\
 	YTimezoneSelector.cc			\
 	YTree.cc				\
+	YWidget.cc				\
 	YWizard.cc				\
 						\
-	YRpmGroupsTree.cc			\
+	FSize.cc				\
 	YStringTree.cc				\
-	FSize.cc
+	YRpmGroupsTree.cc
+
 
 
 pkgincludedir = $(includedir)/yui
 
 pkginclude_HEADERS =				\
-	ImplPtr.h				\
-	Y2UINamespace.h				\
-	Y2CCUI.h				\
+	YUI.h					\
 	YApplication.h				\
+	YWidgetFactory.h			\
+	YOptionalWidgetFactory.h		\
+						\
+	YBuiltinCaller.h			\
 	YBothDim.h				\
-	YColor.h				\
-	YCP_UI.h				\
-	YCPBuiltinCaller.h			\
-	YCPDialogParser.h			\
-	YCPErrorDialog.h			\
-	YCPEvent.h				\
-	YCPItem.h				\
-	YCPItemParser.h				\
-	YCPItemWriter.h				\
-	YCPMenuItem.h				\
-	YCPMenuItemParser.h			\
-	YCPMenuItemWriter.h			\
-	YCPTableItemParser.h			\
-	YCPTableItemWriter.h			\
-	YCPTableItem.h				\
-	YCPTreeItem.h				\
-	YCPTreeItemParser.h			\
-	YCPTreeItemWriter.h			\
-	YCPMacroPlayer.h			\
-	YCPMacroRecorder.h			\
-	YCPPropertyHandler.h			\
-	YCPValueWidgetID.h			\
-	YCPWizardCommandParser.h		\
-	YCP_UI_Exception.h			\
-	YCP_util.h				\
 	YChildrenManager.h			\
+	YColor.h				\
+	YEvent.h				\
 	YItem.h					\
 	YMenuItem.h				\
-	YTreeItem.h				\
-	YTableItem.h				\
-	YTableHeader.h				\
-	YOptionalWidgetFactory.h		\
+	YMacro.h				\
+	YMacroPlayer.h				\
+	YMacroRecorder.h			\
 	YPackageSelectorPlugin.h		\
 	YProperty.h				\
+	YShortcut.h				\
+	YShortcutManager.h			\
+	YSimpleEventHandler.h			\
+	YSingleChildContainerWidget.h		\
+	YTableHeader.h				\
+	YTableItem.h				\
+	YTreeItem.h				\
 	YTypes.h				\
-	YUI.h					\
-	YUIComponent.h				\
 	YUIException.h				\
 	YUILog.h				\
 	YUIPlugin.h				\
 	YUISymbols.h				\
-	YBuiltinCaller.h			\
-	YWidget.h				\
-	YWidgetFactory.h			\
 	YWidgetID.h				\
-	YWidgetOpt.h				\
 	YWidget_OptimizeChanges.h		\
-	YMacro.h				\
-	YMacroPlayer.h				\
-	YMacroRecorder.h			\
+						\
+	YSelectionWidget.h			\
+	YSimpleInputField.h			\
 						\
 	YAlignment.h				\
 	YBarGraph.h				\
 	YBusyIndicator.h			\
-	YCheckBox.h				\
 	YCheckBoxFrame.h			\
+	YCheckBox.h				\
 	YComboBox.h				\
 	YDateField.h				\
 	YDialog.h				\
 	YDownloadProgress.h			\
 	YDumbTab.h				\
 	YEmpty.h				\
-	YEvent.h				\
 	YFrame.h				\
 	YImage.h				\
 	YInputField.h				\
@@ -188,48 +154,28 @@ pkginclude_HEADERS =				\
 	YPartitionSplitter.h			\
 	YProgressBar.h				\
 	YPushButton.h				\
-	YRadioButton.h				\
 	YRadioButtonGroup.h			\
+	YRadioButton.h				\
 	YReplacePoint.h				\
 	YRichText.h				\
 	YSelectionBox.h				\
-	YSelectionWidget.h			\
-	YShortcut.h				\
-	YShortcutManager.h			\
-	YSimpleEventHandler.h			\
-	YSingleChildContainerWidget.h		\
-	YSimpleInputField.h			\
 	YSlider.h				\
 	YSpacing.h				\
 	YSquash.h				\
 	YTable.h				\
 	YTimeField.h				\
-	YTimezoneSelector.h                     \
+	YTimezoneSelector.h			\
 	YTree.h					\
+	YWidget.h				\
 	YWizard.h				\
 						\
+	FSize.h					\
+	ImplPtr.h				\
+	TreeItem.h				\
 	YRpmGroupsTree.h			\
 	YStringTree.h				\
-	YTransText.h				\
-	TreeItem.h				\
-	FSize.h
+	YTransText.h
 
-
-
-INCLUDES =					\
-	-I$(top_srcdir)/libycp/src/include	\
-	-I$(top_srcdir)/liby2/src/include	\
-	${Y2UTIL_CFLAGS}
-
-libpy2UI_la_LDFLAGS = -version-info 2:0
-libpy2UI_la_LIBADD = -lpthread
-
-# "foo bar: baz" is wrong
-# see "info '(automake)Multiple Outputs'"
-%BuiltinCalls.h %BuiltinTable.h : Y2%Namespace.h
-	${top_srcdir}/base/tools/devtools/generateYCPWrappers $< $*BuiltinCalls.h $*BuiltinTable.h
-
-BUILT_SOURCES = UIBuiltinTable.h UIBuiltinCalls.h
 
 CLEANFILES = libyui.kdoc $(BUILT_SOURCES)
 

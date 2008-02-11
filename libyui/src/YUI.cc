@@ -32,7 +32,6 @@
 #define YUILogComponent "ui"
 #include "YUILog.h"
 
-#include "Y2UINamespace.h"
 #include "YUI.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
@@ -331,14 +330,22 @@ void *start_ui_thread( void * yui )
 
 bool YUI::debugLoggingEnabled() const
 {
+#if 0
+    // FIXME: Find a way to set y2log parameters without a hard dependency on libycp
     return get_log_debug();
+#else
+    return YUILog::debugLoggingEnabled();
+#endif
 }
 
 
 void YUI::enableDebugLogging( bool enable )
 {
     YUILog::enableDebugLogging( enable );
+#if 0
+    // FIXME: Find a way to set y2log parameters without a hard dependency on libycp
     set_log_debug( enable );
+#endif
 }
 
 

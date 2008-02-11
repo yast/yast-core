@@ -47,6 +47,7 @@
 #include "YWidgetFactory.h"
 #include "YOptionalWidgetFactory.h"
 #include "YBothDim.h"
+#include "YWidgetOpt.h"
 
 #include "YAlignment.h"
 #include "YBarGraph.h"

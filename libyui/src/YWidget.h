@@ -24,7 +24,6 @@
 
 #include "YTypes.h"
 #include "YProperty.h"
-#include "YWidgetOpt.h"
 #include "YUISymbols.h"
 #include "YUIException.h"
 #include "YChildrenManager.h"
