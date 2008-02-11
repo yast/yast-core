@@ -164,7 +164,7 @@ sub main()
     $src_dir    = $opt_s if $opt_s;
 
     print "src_dir: $src_dir\n";
-    my @main_file_names	= glob( $src_dir . "/*widgets.cc" );
+    my @main_file_names	= glob( $src_dir . "/ycp-ui/YCPDialogParser.cc" );
 
     # Check for other (undesired) command line parameters.
 
