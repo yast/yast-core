@@ -8,8 +8,6 @@ AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
 INCLUDES = -I$(top_srcdir)/libycp/src/include \
 	-I$(top_srcdir)/liby2/src/include \
-	-I$(top_srcdir)/libyui/src \
-	-I$(top_srcdir)/libyui/src/include \
 	-I$(top_srcdir)/libscr/src/include \
 	-I$(top_srcdir)/wfm/src		\
 	${Y2UTIL_CFLAGS}
@@ -17,7 +15,6 @@ INCLUDES = -I$(top_srcdir)/libycp/src/include \
 bin_PROGRAMS = ycpc
 ycpc_SOURCES = ycpc.cc
 ycpc_LDADD = $(top_builddir)/libycp/src/libycp.la \
-	$(top_builddir)/libyui/src/libpy2UI.la \
 	$(top_builddir)/wfm/src/libpy2wfm.la \
 	$(top_builddir)/liby2/src/liby2.la \
 	$(top_builddir)/libscr/src/libscr.la \
