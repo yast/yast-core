@@ -5,7 +5,7 @@
 SUBDIRS = events examples FAQs
 
 htmldir = $(docdir)/libyui
-builtin	= $(srcdir)/../src/YCP_UI.cc $(srcdir)/../src/YCPDialogParser.cc
+builtin	= $(srcdir)/../src/ycp-ui/YCP_UI.cc $(srcdir)/../src/ycp-ui/YCPDialogParser.cc
 builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
 htmlfiles = $(wildcard html/*.html)
@@ -27,7 +27,7 @@ EXTRA_DIST = ui-arch.jpg \
 
 
 $(xmlfiles) : $(builtin)
-	`pkg-config --variable=ybindir yast2-devtools`/ydoc2 -o $@.tmp ../src/$(subst xml,cc,$@)
+	`pkg-config --variable=ybindir yast2-devtools`/ydoc2 -o $@.tmp ../src/ycp-ui/$(subst xml,cc,$@)
 	$(XSLTPROC) $(XSLTPROC_FLAGS) @STYLESHEET_YDOC@ $@.tmp > $@
 	`pkg-config --variable=ybindir yast2-devtools`/replace_entities $@
 	rm $@.tmp
