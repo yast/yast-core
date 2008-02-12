@@ -62,7 +62,7 @@ YDialog::YDialog( YDialogType dialogType, YDialogColorMode colorMode )
     _dialogStack.push( this );
 
 #if VERBOSE_DIALOGS
-    yuiDebug() << "New YDialog " << this << endl;
+    yuiDebug() << "New " << this << endl;
 #endif
 }
 
