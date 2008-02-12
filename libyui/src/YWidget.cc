@@ -218,6 +218,12 @@ YWidget::debugLabel() const
 	label.append( "..." );
     }
 
+    for ( unsigned i=0; i < label.size(); i++ )
+    {
+	if ( label[i] == '\n' )
+	    label[i] = ' ';
+    }
+
     return label;
 }
 
