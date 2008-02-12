@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Feb 12 19:24:16 CET 2008 - sh@suse.de
+
+- New utility class YCommandLine in libyui to retrieve
+  argc and argv from /proc/<pid>/cmdline
+- V 2.16.34 
+
+-------------------------------------------------------------------
 Mon Feb 11 19:23:29 CET 2008 - sh@suse.de
 
 - Preliminary UI split: moved ycp-ui out of libyui
