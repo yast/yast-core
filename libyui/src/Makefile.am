@@ -24,6 +24,7 @@ libyui_la_SOURCES =				\
 	YWidgetFactory.cc			\
 	YOptionalWidgetFactory.cc		\
 						\
+	YCommandLine.cc				\
 	YEvent.cc				\
 	YItem.cc				\
 	YMacro.cc				\
@@ -102,6 +103,7 @@ pkginclude_HEADERS =				\
 	YBothDim.h				\
 	YChildrenManager.h			\
 	YColor.h				\
+	YCommandLine.cc				\
 	YEvent.h				\
 	YItem.h					\
 	YMenuItem.h				\
