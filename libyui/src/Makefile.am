@@ -10,7 +10,7 @@ AM_CXXFLAGS =					\
 	-DPLUGINDIR=\"${plugindir}\"		\
 	-fmessage-length=0
 
-AM_CPPFLAGS = -DLOCALEDIR=\"${localedir}\"
+AM_CPPFLAGS = -DLOCALEDIR=\"${localedir1}\"
 
 lib_LTLIBRARIES = libyui.la
 
@@ -103,7 +103,7 @@ pkginclude_HEADERS =				\
 	YBothDim.h				\
 	YChildrenManager.h			\
 	YColor.h				\
-	YCommandLine.cc				\
+	YCommandLine.h				\
 	YEvent.h				\
 	YItem.h					\
 	YMenuItem.h				\
