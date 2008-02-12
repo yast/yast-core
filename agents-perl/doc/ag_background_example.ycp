@@ -17,16 +17,18 @@
 
 {
 
+import "Label";
+
 UI::OpenDialog(
     `VBox(
 	`VSpacing(0.5),
 	`HSpacing( `opt(`hstretch), 80),
 	`HBox(
-	    `Label("Searching in directory: "),
+	    `Label(_("Searching in directory: ")),
 	    `Label(`id(`dir), `opt(`hstretch), "")
 	),
 	`VSpacing(0.5),
-	`PushButton(`id(`abort), "Abort"),
+	`PushButton(`id(`abort), Label::AbortButton()),
 	`VSpacing(0.5)
     )
 );
