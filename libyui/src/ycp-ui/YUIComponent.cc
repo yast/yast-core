@@ -108,6 +108,7 @@ Y2Namespace *YUIComponent::import (const char* name)
     return NULL;
 }
 
+
 void YUIComponent::createUI()
 {
     if ( ! _have_server_options )

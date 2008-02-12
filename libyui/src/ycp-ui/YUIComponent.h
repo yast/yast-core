@@ -52,10 +52,10 @@ protected:
      *
      * Implement this method in derived classes.
      **/
-    virtual YUI * createUI( int argc,
-			    char **argv,
-			    bool with_threads,
-			    const char * macro_file );
+    virtual YUI * createUI( int		 argc,
+			    char **	 argv,
+			    bool	 withThreads,
+			    const char * macroFile );
 
 public:
 
@@ -76,15 +76,14 @@ public:
 
     /**
      * Create a UI instance. The UI component normally handles that all by
-     * itself when the first UI builtin is called, but under very rare
-     * circumstances (e.g., in kyast) the UI needs to be created upon demand.
+     * itself when the first UI builtin is called.
      **/
     void createUI();
 
     /**
      * YUIComponent level call handler; this creates the actual UI instance
      * upon its first call and then hands over the function to be called to the
-     * UI's call handler. Weird, huh? ;-)
+     * UI's call handler to make sure it is executed in the correct thread.
      **/
     YCPValue callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] );
     
