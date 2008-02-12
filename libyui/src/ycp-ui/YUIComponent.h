@@ -52,10 +52,7 @@ protected:
      *
      * Implement this method in derived classes.
      **/
-    virtual YUI * createUI( int		 argc,
-			    char **	 argv,
-			    bool	 withThreads,
-			    const char * macroFile );
+    virtual YUI * createUI( bool withThreads );
 
 public:
 
@@ -104,6 +101,12 @@ public:
      * UI::OpenDialog() etc.
      **/
     virtual string name() const { return string( "UI" ); }
+
+    /**
+     * The name of a macro file that might have been passed as a -macro
+     * command line argument or 0 if none
+     **/
+    const char * macroFile() const { return _macroFile; }
     
     /**
      * Set a callback component.
@@ -124,11 +127,9 @@ private:
     Y2Namespace *		_namespace;
     Y2Component *		_callbackComponent;
 
-    int				_argc;
-    char **			_argv;
-    const char *		_macro_file;
-    bool			_with_threads;
-    bool			_have_server_options;
+    bool			_withThreads;
+    const char *		_macroFile;
+    bool			_haveServerOptions;
 };
 
 #endif // YUIComponent_h

@@ -55,13 +55,11 @@ YUIComponent *	YUIComponent::_uiComponent		= 0;
 
 YUIComponent::YUIComponent()
 {
-    _argc			= 0;
-    _argv			= 0;
-    _macro_file			= 0;
-    _with_threads		= false;
-    _have_server_options	= false;
-    _namespace 			= NULL;
-    _callbackComponent		= 0;
+    _macroFile		= 0;
+    _withThreads	= false;
+    _haveServerOptions	= false;
+    _namespace 		= NULL;
+    _callbackComponent	= 0;
 
     if ( _uiComponent )
     {
@@ -91,9 +89,10 @@ YUIComponent * YUIComponent::uiComponent()
 }
 
 
-Y2Namespace *YUIComponent::import (const char* name)
+Y2Namespace * YUIComponent::import( const char* name )
 {
     y2debug ("%s trying to import %s", this->name().c_str(), name);
+    
     if ( strcmp (name, "UI") == 0)
     {
         if (_namespace == NULL)
@@ -111,7 +110,7 @@ Y2Namespace *YUIComponent::import (const char* name)
 
 void YUIComponent::createUI()
 {
-    if ( ! _have_server_options )
+    if ( ! _haveServerOptions )
     {
 	y2error( "createUI() called before setServerOptions() !" );
 	return;
@@ -125,7 +124,7 @@ void YUIComponent::createUI()
 
     y2debug( "Creating UI" );
     YUILog::setLoggerFunction( yui_y2logger );
-    _ui = createUI( _argc, _argv, _with_threads, _macro_file );
+    _ui = createUI( _withThreads );
     
     
     YMacro::setRecorder( new YCPMacroRecorder() );
@@ -159,14 +158,14 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 {
     // Evaluate some command line arguments
 	
-    _with_threads = true;
-    _macro_file	  = 0;
+    _withThreads = true;
+    _macroFile	  = 0;
 
     for ( int i=0; i < argc; i++ )
     {
 	if ( strcmp( argv[i], "--nothreads" ) == 0 )
 	{
-	    _with_threads = false;
+	    _withThreads = false;
 	}
 	else if ( strcmp( argv[i], "--macro" ) == 0 )
 	{
@@ -178,18 +177,16 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 	    }
 	    else
 	    {
-		_macro_file = argv[++i];
+		_macroFile = argv[++i];
 		y2milestone( "Playing macro '%s' from command line",
-			     _macro_file ? _macro_file : "<NULL>" );
+			     _macroFile ? _macroFile : "<NULL>" );
 	    }
 	}
     }
 
-    _argc = argc;
-    _argv = argv;
-    _have_server_options = true;
+    _haveServerOptions = true;
 
-    // We only save those values for now. The UI gets instantiated upon the
+    // For now, the values are only saved. The UI gets instantiated upon the
     // first call to YUIComponent::ui() which will usually happen when the
     // first UI builtin is due to be executed via the call handler (see
     // YUI_bindings.cc).
@@ -207,7 +204,7 @@ void YUIComponent::result( const YCPValue & /*result*/ )
 }
 
 
-YUI * YUIComponent::createUI( int /*argc*/, char ** /*argv*/, bool /*with_threads*/, const char * /*macro_file*/ )
+YUI * YUIComponent::createUI( bool withThreads )
 {
     // This component can be instantiated for compilation purposes
     // but it cannot evaluate the code.

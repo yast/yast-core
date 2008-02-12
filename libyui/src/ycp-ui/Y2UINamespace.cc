@@ -692,6 +692,9 @@ YCPValue Y2UIFunction::evaluateCall()
     {
         y2debug( "Late creation of UI instance" );
         m_comp->createUI();
+
+	if ( m_comp->macroFile() ) // -macro argument passed on command line?
+	    YMacro::play( m_comp->macroFile() ); // play that macro
     }
 
     if ( ! m_comp->ui() )

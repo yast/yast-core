@@ -44,7 +44,7 @@
 
 
 
-#define YMACRO_INDENT "	   "	// 4 blanks
+#define YMACRO_INDENT "    "	// 4 blanks
 
 
 YCPMacroRecorder::YCPMacroRecorder()
@@ -167,7 +167,7 @@ void YCPMacroRecorder::recordYcpCodeLocation()
 	    }
 	    else
 	    {
-		fprintf( _macroFile, "%s%s// Source: %s(%s):%d\n",
+		fprintf( _macroFile, "%s%s// Source: %s( %s ):%d\n",
 			 YMACRO_INDENT, YMACRO_INDENT,
 			 frame->filename.c_str(),
 			 functionName.c_str(),
