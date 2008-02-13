@@ -17,7 +17,9 @@
 /-*/
 
 
-#include <string.h>
+#include <string>
+#include <vector>
+#include <pthread.h>
 
 #define YUILogComponent "ui"
 #include "YUILog.h"
@@ -28,6 +30,7 @@ using std::ostream;
 using std::cerr;
 using std::endl;
 using std::string;
+using std::vector;
 
 static void
 stderrLogger( YUILogLevel_t	logLevel,
@@ -54,9 +57,7 @@ public:
      * Constructor.
      **/
     YUILogBuffer()
-	: loggerFunction( stderrLogger )
-	, enableDebugLogging( true )
-	, logComponent( 0 )
+	: logComponent( 0 )
 	, sourceFileName( 0 )
 	, lineNo( 0 )
 	, functionName( 0 )
@@ -67,7 +68,6 @@ public:
      **/
     virtual ~YUILogBuffer()
 	{ flush(); }
-
 
     /**
      * Write (no more than maxLength characters of) a sequence of characters
@@ -89,7 +89,7 @@ public:
      * Write (no more than maxLength characters of) a sequence of characters
      * and return the number of characters written.
      *
-     * This is the actual worker function that uses the loggerFunction to
+     * This is the actual worker function that uses the YUILog::loggerFunction to
      * actually write characters.
      **/
     std::streamsize writeBuffer( const char * sequence, std::streamsize seqLen );
@@ -101,9 +101,6 @@ public:
 
 
 private:
-
-    YUILoggerFunction	loggerFunction;
-    bool		enableDebugLogging;
 
     YUILogLevel_t	logLevel;
     const char *	logComponent;
@@ -119,7 +116,7 @@ private:
 std::streamsize
 YUILogBuffer::writeBuffer( const char * sequence, std::streamsize seqLen )
 {
-    if ( logLevel != YUI_LOG_DEBUG || enableDebugLogging )
+    if ( logLevel != YUI_LOG_DEBUG || YUILog::debugLoggingEnabled() )
     {
 	// Add new character sequence
 
@@ -136,6 +133,8 @@ YUILogBuffer::writeBuffer( const char * sequence, std::streamsize seqLen )
 	while ( start < buffer.length() &&
 		( newline_pos = buffer.find_first_of( '\n', start ) ) != string::npos )
 	{
+	    YUILoggerFunction loggerFunction = YUILog::loggerFunction( true ); // never return 0
+
 	    string line = buffer.substr( start, newline_pos - start );
 
 	    loggerFunction( logLevel, logComponent,
@@ -184,15 +183,122 @@ void YUILogBuffer::flush()
 
 
 
-struct YUILogPrivate
+/**
+ * Helper class: Per-thread logging information.
+ *
+ * Multiple threads can easily clobber each others' half-done logging.
+ * A naive approach to prevent this would be to lock a mutex when a thread
+ * starts logging and unlock it when it's done logging. But that "when it's
+ * done" condition might never come true. std::endl or a newline in the output
+ * stream would be one indication, but there is no way to make sure there
+ * always is such a delimiter. If it is forgotten and that thread (that still
+ * has the mutex locked) runs into a waiting condition itself (e.g., UI thread
+ * synchronization with pipes), there would be a deadlock.
+ *
+ * So this much safer approach was chosen: Give each thread its own logging
+ * infrastructure, i.e., its own log stream and its own log buffer.
+ *
+ * Sure, in bad cases the logger function might still be executed in parallel
+ * and thus clobber a line or two of log output. But that's merely bad output
+ * formatting, not writing another thread's data structures without control -
+ * which can easily happen if multiple threads are working on the same output
+ * buffer, i.e. manipulate the same string.
+ **/
+struct YPerThreadLogInfo
 {
-    YUILogPrivate()
-	: logBuffer()
+    /**
+     * Constructor
+     **/
+    YPerThreadLogInfo()
+	: threadHandle( pthread_self() )
+	, logBuffer()
 	, logStream( &logBuffer )
-	{}
+    {
+	// cerr << "New thread with ID " << hex << threadHandle << dec << endl;
+    }
 
+    /**
+     * Destructor
+     **/
+    ~YPerThreadLogInfo()
+    {
+	logBuffer.flush();
+    }
+
+    /**
+     * Check if this per-thread logging information belongs to the specified thread.
+     **/
+    bool isThread( pthread_t otherThreadHandle )
+    {
+	return pthread_equal( otherThreadHandle, this->threadHandle );
+    }
+
+    
+    //
+    // Data members
+    //
+    
+    pthread_t		threadHandle;
     YUILogBuffer	logBuffer;
     ostream 		logStream;
+};
+
+
+
+
+struct YUILogPrivate
+{
+    /**
+     * Constructor
+     **/
+    YUILogPrivate()
+	: loggerFunction( stderrLogger )
+	, enableDebugLogging( true )
+	{}
+
+    /**
+     * Destructor
+     **/
+    ~YUILogPrivate()
+    {
+	for ( unsigned i=0; i < threadLogInfo.size(); i++ )
+	    delete threadLogInfo[i];
+    }
+
+    /**
+     * Find the per-thread logging information for the current thread.
+     * Create a new one if it doesn't exist yet.
+     **/
+    YPerThreadLogInfo * findCurrentThread()
+    {
+	pthread_t thisThread = pthread_self();
+
+	// Search backwards: Slight optimization for the YaST2 UI.
+	// The UI thread does the most logging, but it is created after the
+	// main thread.
+
+	for ( vector<YPerThreadLogInfo *>::reverse_iterator it = threadLogInfo.rbegin();
+	      it != threadLogInfo.rend();
+	      ++it )
+	{
+	    if ( (*it)->isThread( thisThread ) )
+		return (*it);
+	}
+
+	YPerThreadLogInfo * newThreadLogInfo = new YPerThreadLogInfo();
+	threadLogInfo.push_back( newThreadLogInfo );
+
+	return newThreadLogInfo;
+    }
+
+    //
+    // Data members
+    //
+
+    YUILoggerFunction		loggerFunction;
+    bool			enableDebugLogging;
+
+    vector<YPerThreadLogInfo *>	threadLogInfo;
 };
 
 
@@ -207,7 +313,6 @@ YUILog::YUILog()
 
 YUILog::~YUILog()
 {
-    priv->logBuffer.flush();
 }
 
 
@@ -229,14 +334,14 @@ YUILog::instance()
 void
 YUILog::enableDebugLogging( bool debugLogging )
 {
-    instance()->priv->logBuffer.enableDebugLogging = debugLogging;
+    instance()->priv->enableDebugLogging = debugLogging;
 }
 
 
 bool
 YUILog::debugLoggingEnabled()
 {
-    return instance()->priv->logBuffer.enableDebugLogging;
+    return instance()->priv->enableDebugLogging;
 }
 
 
@@ -246,16 +351,16 @@ YUILog::setLoggerFunction( YUILoggerFunction loggerFunction )
     if ( ! loggerFunction )
 	loggerFunction = stderrLogger;
 
-    instance()->priv->logBuffer.loggerFunction = loggerFunction;
+    instance()->priv->loggerFunction = loggerFunction;
 }
 
 
 YUILoggerFunction
-YUILog::loggerFunction()
+YUILog::loggerFunction( bool returnStderrLogger )
 {
-    YUILoggerFunction logger = instance()->priv->logBuffer.loggerFunction;
+    YUILoggerFunction logger = instance()->priv->loggerFunction;
 
-    if ( logger == stderrLogger )
+    if ( logger == stderrLogger && ! returnStderrLogger )
 	logger = 0;
 
     return logger;
@@ -269,25 +374,27 @@ YUILog::log( YUILogLevel_t	logLevel,
 	     int 		lineNo,
 	     const char * 	functionName )
 {
-    if ( ! priv->logBuffer.buffer.empty() )	// Leftovers from previous logging?
+    YPerThreadLogInfo * threadLogInfo = priv->findCurrentThread();
+
+    if ( ! threadLogInfo->logBuffer.buffer.empty() )	// Leftovers from previous logging?
     {
-	if ( priv->logBuffer.logLevel != logLevel ||
-	     priv->logBuffer.lineNo   != lineNo   ||
-	     strcmp( priv->logBuffer.logComponent,   logComponent   ) != 0 ||
-	     strcmp( priv->logBuffer.sourceFileName, sourceFileName ) != 0 ||
-	     strcmp( priv->logBuffer.functionName,   functionName   ) != 0   )
+	if ( threadLogInfo->logBuffer.logLevel != logLevel ||
+	     threadLogInfo->logBuffer.lineNo   != lineNo   ||
+	     strcmp( threadLogInfo->logBuffer.logComponent,   logComponent   ) != 0 ||
+	     strcmp( threadLogInfo->logBuffer.sourceFileName, sourceFileName ) != 0 ||
+	     strcmp( threadLogInfo->logBuffer.functionName,   functionName   ) != 0   )
 	{
-	    priv->logBuffer.flush();
+	    threadLogInfo->logBuffer.flush();
 	}
     }
 
-    priv->logBuffer.logLevel		= logLevel;
-    priv->logBuffer.logComponent	= logComponent;
-    priv->logBuffer.sourceFileName	= sourceFileName;
-    priv->logBuffer.lineNo		= lineNo;
-    priv->logBuffer.functionName	= functionName;
+    threadLogInfo->logBuffer.logLevel		= logLevel;
+    threadLogInfo->logBuffer.logComponent	= logComponent;
+    threadLogInfo->logBuffer.sourceFileName	= sourceFileName;
+    threadLogInfo->logBuffer.lineNo		= lineNo;
+    threadLogInfo->logBuffer.functionName	= functionName;
 
-    return priv->logStream;
+    return threadLogInfo->logStream;
 }
 
 

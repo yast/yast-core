@@ -130,15 +130,19 @@ public:
      * receive all UI log output (except debug logging if debug logging is
      * disabled).
      *
-     * By default, all logging is output to stdout. This behaviour can be
+     * By default, all logging is output to stderr. This behaviour can be
      * restored if 0 is passed as a function pointer here.
      **/
     static void setLoggerFunction( YUILoggerFunction loggerFunction );
 
     /**
-     * Return the UI logger function. 0 means stdout.
+     * Return the UI logger function.
+     *
+     * If stderr is used for logging (i.e. no logger function set), 0 is
+     * returned (unless 'returnStderrLogger' is 'true', in which case the
+     * internally used stderr-logger is returned).
      **/
-    static YUILoggerFunction loggerFunction();
+    static YUILoggerFunction loggerFunction( bool returnStderrLogger = false );
 
 
 private:

@@ -186,10 +186,14 @@ void YUI::createUIThread()
 
 void YUI::terminateUIThread()
 {
+    yuiDebug() << "Sending shutdown message to UI thread" << endl;
+    
     _terminate_ui_thread = true;
     signalUIThread();
     waitForUIThread();
     pthread_join( _uiThread, 0 );
+
+    yuiDebug() << "UI thread shut down correctly" << endl;
 }
 
 
@@ -211,27 +215,38 @@ void YUI::signalUIThread()
 {
     static char arbitrary = 42;
     (void) write ( pipe_to_ui[1], & arbitrary, 1 );
+    
+#if VERBOSE_COMM
+    yuiDebug() << "Wrote byte to UI thread" << endl;
+#endif
 }
 
 
 bool YUI::waitForUIThread()
 {
     char arbitrary;
-    int res;
+    int result;
 
     do {
-	res = read( pipe_from_ui[0], & arbitrary, 1 );
-	if ( res == -1 )
+#if VERBOSE_COMM
+	yuiDebug() << "Waiting for ui thread..." << endl;
+#endif
+	result = read( pipe_from_ui[0], & arbitrary, 1 );
+	if ( result == -1 )
 	{
 	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
 	    else
 		yuiError() <<  "waitForUIThread: errno: " << errno << " " << strerror( errno ) << endl;
 	}
-    } while ( res == 0 );
+    } while ( result == 0 );
 
+#if VERBOSE_COMM
+    yuiDebug() << "Read byte from ui thread" << endl;
+#endif
+    
     // return true if we really did get a signal byte
-    return res != -1;
+    return result != -1;
 }
 
 
@@ -241,7 +256,7 @@ void YUI::signalYCPThread()
     (void) write( pipe_from_ui[1], & arbitrary, 1 );
 
 #if VERBOSE_COMM
-    yuiDebug() << "Wrote byte to YCP thread: " << endl;
+    yuiDebug() << "Wrote byte to YCP thread" << endl;
 #endif
 }
 
@@ -250,27 +265,27 @@ bool YUI::waitForYCPThread()
 {
     char arbitrary;
 
-    int res;
+    int result;
     do {
 #if VERBOSE_COMM
 	yuiDebug() << "Waiting for YCP thread..." << endl;
 #endif
-	res = read( pipe_to_ui[0], & arbitrary, 1 );
-	if ( res == -1 )
+	result = read( pipe_to_ui[0], & arbitrary, 1 );
+	if ( result == -1 )
 	{
 	    if ( errno == EINTR || errno == EAGAIN )
 		continue;
 	    else
 		yuiError() << "waitForYCPThread: errno: " << errno << " " << strerror( errno ) << endl;
 	}
-    } while ( res == 0 );
+    } while ( result == 0 );
 
 #if VERBOSE_COMM
     yuiDebug() << "Read byte from YCP thread" << endl;
 #endif
 
     // return true if we really did get a signal byte
-    return res != -1;
+    return result != -1;
 }
 
 
