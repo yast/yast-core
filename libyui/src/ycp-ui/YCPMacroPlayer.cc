@@ -45,7 +45,7 @@ YCPMacroPlayer::YCPMacroPlayer()
 
 YCPMacroPlayer::~YCPMacroPlayer()
 {
-    yuiDebug() << "Deleting macro player." << endl;
+    // yuiDebug() << "Deleting macro player." << endl;
 }
 
 
@@ -88,9 +88,9 @@ void YCPMacroPlayer::play( const string & macroFileName )
 
     _macro = static_cast <YBlockPtr> (parsed) ;
 
-    yuiDebug() << "Playing macro from file " << macroFileName
-	       << " - " << _macro->statementCount() << " macro blocks"
-	       << endl;
+    yuiMilestone() << "Playing macro from file " << macroFileName
+		   << " - " << _macro->statementCount() << " macro blocks"
+		   << endl;
     _nextBlockNo = 0;
     _playing = true;
 
