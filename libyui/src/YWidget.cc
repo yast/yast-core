@@ -707,9 +707,6 @@ std::ostream & operator<<( std::ostream & stream, const YWidget * w )
     {
 	stream << w->widgetClass();
 
-	if ( ! w->widgetName().empty() )
-	    stream << " " << w->widgetName();
-	
 	string debugLabel = w->debugLabel();
 
 	if ( debugLabel.empty() )
