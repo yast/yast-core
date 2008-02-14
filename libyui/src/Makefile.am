@@ -37,6 +37,7 @@ libyui_la_SOURCES =				\
 	YTableItem.cc				\
 	YTreeItem.cc				\
 	YUIException.cc				\
+	YUILoader.cc				\
 	YUILog.cc				\
 	YUIPlugin.cc				\
 	YWidgetID.cc				\
@@ -121,6 +122,7 @@ pkginclude_HEADERS =				\
 	YTreeItem.h				\
 	YTypes.h				\
 	YUIException.h				\
+	YUILoader.h				\
 	YUILog.h				\
 	YUIPlugin.h				\
 	YUISymbols.h				\

@@ -33,6 +33,7 @@
 #include "YUILog.h"
 
 #include "YUI.h"
+#include "YUILoader.h"
 #include "YUISymbols.h"
 #include "YDialog.h"
 #include "YApplication.h"
@@ -41,7 +42,7 @@
 
 
 
-YUI * YUI::_yui = 0;
+YUI * YUI::_ui = 0;
 
 extern void *start_ui_thread( void * yui );
 
@@ -53,7 +54,7 @@ YUI::YUI( bool withThreads )
     , _terminate_ui_thread( false )
     , _eventsBlocked( false )
 {
-    _yui = this;
+    _ui = this;
 }
 
 
@@ -82,8 +83,8 @@ YUI::~YUI()
 YUI *
 YUI::ui()
 {
-    YUI_CHECK_PTR( _yui );
-    return _yui;
+    ensureUICreated();
+    return _ui;
 }
 
 
@@ -92,6 +93,8 @@ YUI::widgetFactory()
 {
     static YWidgetFactory * factory = 0;
 
+    ensureUICreated();
+    
     if ( ! factory )
 	factory = ui()->createWidgetFactory();
 
@@ -105,6 +108,8 @@ YUI::optionalWidgetFactory()
 {
     static YOptionalWidgetFactory * factory = 0;
 
+    ensureUICreated();
+    
     if ( ! factory )
 	factory = ui()->createOptionalWidgetFactory();
 
@@ -118,12 +123,24 @@ YUI::app()
 {
     static YApplication * app = 0;
 
+    ensureUICreated();
+    
     if ( ! app )
 	app = ui()->createApplication();
 
     YUI_CHECK_PTR( app );
     return app;
 }
+
+
+void YUI::ensureUICreated()
+{
+    if ( _ui )
+	return;
+
+    YUILoader::loadUI();
+}
+
 
 
 void YUI::topmostConstructorHasFinished()

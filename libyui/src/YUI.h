@@ -106,6 +106,14 @@ public:
     static YApplication * application() { return app(); }
     static YApplication * yApp()	{ return app(); }
 
+    /**
+     * Make sure there is a UI (with a UI plug-in) created.
+     *
+     * If there is none yet, this will use all-default parameters to load a UI
+     * plug-in and create a UI (without threads).
+     **/
+    static void ensureUICreated();
+
 
 protected:
     /**
@@ -319,10 +327,9 @@ protected:
      **/
     bool _eventsBlocked;
 
-    /**
-     * Global reference to the UI
-     **/
-    static YUI * _yui;
+private:
+    
+    static YUI * _ui;
 };
 
 

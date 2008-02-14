@@ -66,7 +66,7 @@ public:
      * Returns a human readable (but in most cases untranslated) error message
      * if there was an error.
      **/
-    string  errorMsg() const;
+    string errorMsg() const;
 
 protected:
 
