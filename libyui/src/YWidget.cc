@@ -85,6 +85,7 @@ struct YWidgetPrivate
     YBothDim<bool>		stretch;
     YBothDim<int>		weight;
     int				functionKey;
+    string			widgetName;
 };
 
 
@@ -327,6 +328,19 @@ void YWidget::setFunctionKey( int fkey_no )
 }
 
 
+string YWidget::widgetName() const
+{
+    return priv->widgetName;
+}
+
+
+void YWidget::setWidgetName( const string & name )
+{
+    priv->widgetName = name;
+}
+    
+
+
 YWidgetID *
 YWidget::id() const
 {
@@ -380,6 +394,7 @@ YWidget::propertySet()
 	 * @property boolean Enabled 		enabled/disabled state of this widget
 	 * @property boolean Notify 		the current notify state (see also `opt( `notify ))
 	 * @property string  WidgetClass 	the widget class of this widget (YLabel, YPushButton, ...)
+	 * @property string  WidgetName		internal name for this widget (by default the string-ized ID)
 	 * @property string  DebugLabel		(possibly translated) text describing this widget for debugging
 	 **/
 
@@ -387,6 +402,7 @@ YWidget::propertySet()
 	propSet.add( YProperty( YUIProperty_Notify,		YBoolProperty	) );
 	propSet.add( YProperty( YUIProperty_WidgetClass,	YStringProperty, true	) ); // read-only
 	propSet.add( YProperty( YUIProperty_DebugLabel,		YStringProperty, true	) ); // read-only
+	propSet.add( YProperty( YUIProperty_WidgetName,		YStringProperty ) );
     }
 
     return propSet;
@@ -408,6 +424,7 @@ YWidget::setProperty( const std::string & propertyName, const YPropertyValue & v
 
     if      ( propertyName == YUIProperty_Enabled )	setEnabled( val.boolVal() );
     else if ( propertyName == YUIProperty_Notify  )	setNotify ( val.boolVal() );
+    else if ( propertyName == YUIProperty_WidgetName )	setWidgetName( val.stringVal() );
 
     return true; // success -- no special processing necessary
 }
@@ -429,6 +446,7 @@ YWidget::getProperty( const std::string & propertyName )
     if ( propertyName == YUIProperty_Enabled 		) return YPropertyValue( isEnabled() 	);
     if ( propertyName == YUIProperty_Notify  		) return YPropertyValue( notify()   	);
     if ( propertyName == YUIProperty_WidgetClass	) return YPropertyValue( widgetClass() 	);
+    if ( propertyName == YUIProperty_WidgetName		) return YPropertyValue( widgetName() 	);
     if ( propertyName == YUIProperty_DebugLabel		) return YPropertyValue( debugLabel()	);
 
     return YPropertyValue( false ); // NOTREACHED
@@ -688,6 +706,10 @@ std::ostream & operator<<( std::ostream & stream, const YWidget * w )
     if ( w )
     {
 	stream << w->widgetClass();
+
+	if ( ! w->widgetName().empty() )
+	    stream << " " << w->widgetName();
+	
 	string debugLabel = w->debugLabel();
 
 	if ( debugLabel.empty() )

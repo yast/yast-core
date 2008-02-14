@@ -79,6 +79,16 @@ public:
      **/
     virtual string debugLabel() const;
 
+    /**
+     * Return this widget's debugging name (if one was previously set).
+     **/
+    string widgetName() const;
+
+    /**
+     * Set a widget name for debugging.
+     **/
+    void setWidgetName( const string & name );
+
 
     //
     // Property Management

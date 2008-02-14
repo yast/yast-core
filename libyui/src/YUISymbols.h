@@ -178,6 +178,7 @@
 #define YUIProperty_Values			"Values"
 #define YUIProperty_VisibleLines		"VisibleLines"
 #define YUIProperty_WidgetClass			"WidgetClass"
+#define YUIProperty_WidgetName			"WidgetName"
 #define YUIProperty_Timeout			"Timeout"
 #define YUIProperty_Alive			"Alive"
 

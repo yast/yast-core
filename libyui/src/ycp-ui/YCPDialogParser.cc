@@ -319,10 +319,10 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
     if ( w )
     {
 	if ( ! id.isNull()  &&	// ID specified for this widget
-	     ! id->isVoid() &&
-	     ! w->hasId() )	// widget doesn't have an ID yet
+	     ! id->isVoid() )
 	{
-	    w->setId( new YCPValueWidgetID( id ) );
+	    if ( ! w->hasId() )	// widget doesn't have an ID yet
+		w->setId( new YCPValueWidgetID( id ) );
 
 	    /*
 	     * Note: Don't set the ID if it is already set!
@@ -335,6 +335,8 @@ YCPDialogParser::parseWidgetTreeTerm( YWidget *		p,
 	     * on the Weight's child, which is not what the application
 	     * programmer expects.
 	     */
+	    
+	    w->setWidgetName( id->toString() );
 	}
 
 	if ( opt.isDisabled.value() 	)	w->setDisabled();
