@@ -120,6 +120,9 @@ string YSelectionWidget::iconFullPath( const string & iconName ) const
 
     if ( ! iconName.empty() )
     {
+	if ( iconName[0] == '/' )
+	    return iconName;
+	
 	if ( priv->iconBasePath.empty() ||
 	     priv->iconBasePath[0] != '/' )
 	{
