@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Feb 15 10:01:29 CET 2008 - lslezak@suse.cz
+
+- added new .process (agent-process) agent (obsoletes old
+  .background agent) - handles multiple subprocess, complete I/O
+  communication, tty support
+
+-------------------------------------------------------------------
 Wed Feb 13 19:24:07 CET 2008 - sh@suse.de
 
 - Made new UI logging thread-safe 

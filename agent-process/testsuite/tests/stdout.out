@@ -1,0 +1,2 @@
+([nil, "foo\n", "foo2\nfoo2\n", nil])
+([nil, "foo", "foo2", "foo2", nil])

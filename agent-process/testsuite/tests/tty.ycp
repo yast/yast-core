@@ -1,0 +1,67 @@
+// check running in a teminal both execution possibilities (direct and via shell)
+
+// "tty" is true - direct start
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/tty", $[ "tty" : true ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is true - start in a shell
+{
+    integer id = (integer)(SCR::Execute(.start_shell, "/usr/bin/tty", $[ "tty" : true ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is false - direct start
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/tty", $[ "tty" : false ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is false - start in a shell
+{
+    integer id = (integer)(SCR::Execute(.start_shell, "/usr/bin/tty", $[ "tty" : false ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is missing - direct start
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/tty"));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is missing - start in a shell
+{
+    integer id = (integer)(SCR::Execute(.start_shell, "/usr/bin/tty"));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}

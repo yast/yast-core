@@ -1,0 +1,59 @@
+
+// check reading from stderr
+{
+    // redirect stdout to stderr
+    integer id = (integer)(SCR::Execute(.start_shell, "cat 1>&2"));
+
+    // no output
+    string out1 = (string)SCR::Read(.read_stderr, id);
+
+    SCR::Write(., id, "foo\n");
+    sleep(50);
+    // read "foo\n"
+    string out2 = (string)SCR::Read(.read_stderr, id);
+
+    SCR::Write(., id, "foo2\nfoo2\n");
+    sleep(50);
+    // read "foo2\nfoo2\n"
+    string out3 = (string)SCR::Read(.read_stderr, id);
+
+    // no output
+    string out4 = (string)SCR::Read(.read_stderr, id);
+
+    // close the communication channel
+    SCR::Execute(.close, id);
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    return [ out1, out2, out3, out4 ];
+}
+
+{
+    // redirect stdout to stderr
+    integer id = (integer)(SCR::Execute(.start_shell, "cat 1>&2"));
+
+    // no output
+    string out1 = (string)SCR::Read(.read_line_stderr, id);
+
+    SCR::Write(., id, "foo\n");
+    sleep(50);
+    // read "foo\n"
+    string out2 = (string)SCR::Read(.read_line_stderr, id);
+
+    SCR::Write(., id, "foo2\nfoo2\n");
+    sleep(50);
+    // read "foo2\n"
+    string out3 = (string)SCR::Read(.read_line_stderr, id);
+
+    // read "foo2\n"
+    string out4 = (string)SCR::Read(.read_line_stderr, id);
+
+    // no output
+    string out5 = (string)SCR::Read(.read_line_stderr, id);
+
+
+    // close the communication channel
+    SCR::Execute(.close, id);
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    return [ out1, out2, out3, out4, out5 ];
+}

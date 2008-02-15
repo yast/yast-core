@@ -1,0 +1,76 @@
+/**
+ *  File:
+ *    ag_process_example.ycp
+ *
+ *  Authors:
+ *    Ladislav Slezák <lslezak@novell.com>
+ *
+ *  Description:
+ *    An example for the process agent
+ *
+ *  $Id$
+ *
+ *  This is example program for the process agent. Find is used
+ *  as the background script producing some output.
+ *
+ */
+
+{
+
+UI::OpenDialog(
+    `VBox(
+	`VSpacing(0.5),
+	`HSpacing( `opt(`hstretch), 80),
+	`HBox(
+	    `Label("Searching in directory: "),
+	    `Label(`id(`dir), `opt(`hstretch), "")
+	),
+	`VSpacing(0.5),
+	`PushButton(`id(`abort), "Abort"),
+	`VSpacing(0.5)
+    )
+);
+
+// start subprocess, remember the id
+integer id = (integer)(SCR::Execute(.process.start_shell, "/usr/bin/find /usr -type d"));
+
+symbol ret = nil;
+
+string line = "";
+
+while(SCR::Read(.process.running, id) == true)
+{
+    line = (string)SCR::Read(.process.read_line_stderr, id);
+    if (line != nil)
+    {
+	y2warning("Error: %1", line);
+    }
+
+    line = (string)SCR::Read(.process.read_line, id);
+
+    if (line != nil)
+    {
+	UI::ChangeWidget(`id(`dir), `Value, line);
+    }
+    else
+    {
+	// there was no input, wait for a while
+	// give the subprocess time to print something
+	sleep(20);
+    }
+
+    ret = (symbol) UI::PollInput();
+
+    // check if the abort button was pressed
+    if (ret == `abort)
+    {
+	SCR::Execute(.process.kill, id);	// kill the subprocess
+	break;
+    }
+
+}
+
+UI::CloseDialog();
+
+}
+

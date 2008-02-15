@@ -1,0 +1,23 @@
+
+
+// "tty" is invalid - direct start
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/tty", $[ "tty" : "invalid" ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}
+
+// "tty" is invalid - start in a shell
+{
+    integer id = (integer)(SCR::Execute(.start_shell, "/usr/bin/tty", $[ "tty" : "invalid" ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return regexpmatch(out, "^/dev/pts/[0-9]*\r\n$");
+}

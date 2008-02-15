@@ -1,0 +1,16 @@
+
+// NOTE: the test is disabled because the output is different in each run
+// so we cannot have any expected value for checking
+
+// check killing a process
+
+{
+    string id = tostring(SCR::Execute(.start_shell, "cat"));
+
+    // kill the process
+    SCR::Execute(.kill + id, 15);
+    while(SCR::Read(.running + id) == true) sleep(20);
+
+    return true;
+}
+

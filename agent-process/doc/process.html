@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<TITLE>Process agent description</TITLE>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- $Id$ -->
+</HEAD>
+<BODY>
+<H1>Process agent description</H1>
+<HR>
+
+<H2>Purpose</H2> 
+The Process agent (<TT>ag_process</TT>) is used to manage multiple subprocesses running in background.
+It is part of YaST2 SCR, the system configuration repository,
+used to access configuration data on the target system. The general
+SCR API allows <TT>Read()</TT> and <TT>Write()</TT> access to get and
+change data.
+
+<P>
+<H2>Implementation</H2>
+
+<P>The agent reuses ExternalProgram class from liby2util, class Process is derived from ExternalProgram and adds
+stderr reading/writing, output buffering and a posibility to send a specified signal.</P>
+
+
+<P>
+<H2>Interface of the Process agent</H2>
+The interface is implemented as a SCR agent with the usual <TT>Read()</TT>,
+<TT>Write()</TT> and <TT>Dir()</TT> interface. The path prefix used is
+
+<UL><TT>.process</TT></UL>
+
+<P>
+<I>The complete path description is available in the
+<A HREF="autodocs/ag_process-builtins.html"><TT>autodocs/</TT></A> directory.</I>
+
+<P>
+<H2>Details of API</H2>
+
+<H3>Start in shell vs. direct start</H3>
+
+<P>The agent can start a subprocess in two ways</P>
+
+<UL>
+    <LI>Using shell (/bin/sh) - the command is passed -c argument of shell executable. The advantage is that shell expanstion, IO redirection works as expected. The drawback is that there is an extra process started.</LI>
+    <LI>Direct execution - the command is executed directly, less possibilities but consumes less resources (no shell is started).</LI>
+</UL>
+
+<P>Note that the arguments are passed differently in each case. Shell execution requires the argument in the command, the arguments must be escaped to be processes correctly. The direct execution uses an optional map, the arguments are passed as a list of strings at key "args". In this case the armunets need not to be escpaed.</P>
+
+<P><B>Example:</B><BR>
+Start <TT>echo "\"foo bar\""</TT> command:
+<UL>
+<LI>Start in a shell: <TT>SCR::Execute(.process.start_shell, "/bin/echo \"\\\"foo bar\\\"\"");</TT></LI>
+<LI>Direct start: <TT>SCR::Execute(.process.start, "/bin/echo", $["args" : "\"foo bar\"");</TT></LI>
+</UL>
+</P>
+
+<H3>Reading stdout/stderr to unblock a process</H3>
+
+<P>
+When a subprocess produces too much output which is not read it is stopped when the buffers are full. (In my test it was about  after 64kB, but this is system dependent.)</P>
+
+<P>So it is a good idea to read the output regularly. It is possible to read the output (using .process.read(_line) and .process.read_stderr(_line) paths) when the process is running or just read the output to the internal buffers in the agent (using Execute(.process.buffer)) and read them later at once when the process is finished.
+</P>
+
+<P>
+<ADDRESS>
+Ladislav Slezák &lt;lslezak@novell.com&gt;<BR>
+</ADDRESS>
+
+
+</BODY>
+</HTML>

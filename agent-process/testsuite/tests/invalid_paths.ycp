@@ -1,0 +1,30 @@
+
+{
+    // check a subpath - not supported, must log an error
+    return SCR::Dir(.non_existing_path);
+}
+
+{
+    // check a subpath - not supported, must log an error
+    return SCR::Read(.non_existing_path);
+}
+
+{
+    // check a subpath - not supported, must log an error
+    return SCR::Write(.non_existing_path, nil);
+}
+
+{
+    // check a subpath - not supported, must log an error
+    return SCR::Execute(.non_existing_path);
+}
+
+{
+    // not existing process
+    return SCR::Read(.read, 123);
+}
+
+{
+    // not existing process
+    return SCR::Write(., 123, "");
+}

@@ -1,0 +1,47 @@
+
+// check setting an environment variable in both execution possibilities (direct and via shell)
+
+// set C locale
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/locale", $[ "C_locale" : true ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return contains(splitstring(out, "\n"), "LC_ALL=C");
+}
+
+// C locale option overrides the LC_ALL env variable 
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/locale", $[ "C_locale" : true, "env" : $[ "LC_ALL" : "en_US" ] ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return contains(splitstring(out, "\n"), "LC_ALL=C");
+}
+
+// do not set C locale
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/locale", $[ "C_locale" : false ]));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return contains(splitstring(out, "\n"), "LC_ALL=C");
+}
+
+// do not set C locale
+{
+    integer id = (integer)(SCR::Execute(.start, "/usr/bin/locale"));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+
+    return contains(splitstring(out, "\n"), "LC_ALL=C");
+}
+

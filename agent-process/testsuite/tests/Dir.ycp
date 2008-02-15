@@ -1,0 +1,24 @@
+{
+    return SCR::Dir(.);
+}
+
+{
+    // return only size of the result because the content is every time different
+    SCR::Execute(.start_shell, "exit 1");
+    return size(SCR::Dir(.));
+}
+
+{
+    integer i = (integer)(SCR::Execute(.start_shell, "exit 1"));
+
+    // avoid killing the process in .release, wait until it is running
+    while(SCR::Read(.running, i) == true) sleep(20);
+
+    integer size1 = size(SCR::Dir(.));
+    SCR::Execute(.release, i);
+    integer size2 = size(SCR::Dir(.));
+
+    // return only sizes of the result because the content is every time different
+    return [ size1, size2 ];
+}
+

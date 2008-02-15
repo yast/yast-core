@@ -1,0 +1,75 @@
+/**
+ * File:	process.scr
+ * Summary:	Process agent - run multiple processes in background
+ * Author:	Ladislav Slezák <lslezak@novell.com>
+ * Access:	read / write / execute
+ * See:		anyagent libscr	MANPAGE(1) file/relative/to/doc_home/file.html
+ *
+ * $Id$
+ *
+ * Examples:
+ *
+ *	// start a process using default locale
+ *	`Execute(.process.start_shell, "/bin/date")
+ *	(14896)
+ *	`Read(.process.read, 14896)
+ *	("Pá úno 15 07:15:24 CET 2008\n")
+ *	`Read(.process.running, 14896)
+ *	(false)
+ *	`Read(.process.status, 14896)
+ *	(0)
+ *
+ *	// start a process in C locale, in a terminal, set the environment
+ *	`Execute(.process.start_shell, "/bin/date", $["C_locale":true, "tty":true, "env":$["FOOVAR":"FOO"]])
+ *	(14899)
+ *	`Read(.process.read, 14899)
+ *	("Fri Feb 15 07:18:02 CET 2008\r\n")
+ *
+ *	// list processes
+ *	`Dir(.process)
+ *	([14896, 14899])
+ *
+ *	// release process (free allocated buffers...)
+ *	`Execute(.process.release, 14896)
+ *	(true)
+ *	`Dir(.process)
+ *	([14858, 14899])
+ *
+ *	// read/write lines example
+ *	`Execute(.process.start_shell, "cat")
+ *	(14900)
+ *	`Write(.process, 14900,"the first line\nthe second line\n")
+ *	(true)
+ *	`Read(.process.read_line, 14900)
+ *	("the first line")
+ *	`Read(.process.read_line, 14900)
+ *	("the second line")
+ *	`Read(.process.read_line, 14900)
+ *	(nil)
+ *
+ *	// read complete output
+ *	`Write(.process, 14900,"the first line\nthe second line\n")
+ *	(true)
+ *	`Read(.process.read, 14900)
+ *	("the first line\nthe second line\n")
+ *
+ *	// close input/output
+ *	`Read(.process.running, 14900)
+ *	(true)
+ *	`Execute(.process.close, 14900)
+ *	(0)
+ *	`Read(.process.running, 14900)
+ *	(false)
+ *
+ *
+ * The process agent can run multiple subprocesses in backgroung with full interaction
+ * (reading stdout/stderr, writing to stdin).
+ * It is possible to run a subprocess in terminal (instead of piped output/input).
+ *
+ * This agent obsoletes the background agent (ag_background).
+ */
+.process
+
+`ag_process(
+    `ProcessAgent()
+)
