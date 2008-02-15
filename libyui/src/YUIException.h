@@ -867,7 +867,7 @@ public:
 
 
 /**
- * Helper for YUI_THROW.
+ * Helper for YUI_THROW()
  **/
 template<class _Exception>
 void _YUI_THROW( const _Exception & exception_r, const YCodeLocation & where_r )
@@ -879,7 +879,7 @@ void _YUI_THROW( const _Exception & exception_r, const YCodeLocation & where_r )
 
 
 /**
- * Helper for YUI_THROW.
+ * Helper for YUI_CAUGHT()
  **/
 template<class _Exception>
 void _YUI_CAUGHT( const _Exception & exception_r, const YCodeLocation & where_r )
@@ -889,7 +889,7 @@ void _YUI_CAUGHT( const _Exception & exception_r, const YCodeLocation & where_r 
 
 
 /**
- * Helper for YUI_THROW.
+ * Helper for YUI_RETHROW()
  **/
 template<class _Exception>
 void _YUI_RETHROW( const _Exception & exception_r, const YCodeLocation & where_r )
