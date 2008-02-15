@@ -75,7 +75,7 @@ void YUILoader::loadPlugin( const string & name )
 
     if ( uiPlugin.success() )
     {
-	createUIFunction_t createUI = (createUIFunction_t) uiPlugin.locateSymbol( "createUI" );
+	createUIFunction_t createUI = (createUIFunction_t) uiPlugin.locateSymbol( "_Z8createUIb" ); // createUI(bool)
 
 	if ( createUI )
 	{
