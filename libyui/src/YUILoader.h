@@ -44,14 +44,14 @@ public:
      * - Qt      if $DISPLAY is set
      * - NCurses if stdout is a tty
      **/
-    static void loadUI();
+    static void loadUI( bool withThreads = false );
 
     /**
      * Load a UI plug-in. 'name' is one of the YUIPlugin_ -defines above.
      *
      * This might throw exceptions.
      **/
-    static void loadPlugin( const string & name );
+    static void loadPlugin( const string & name, bool withThreads = false );
 
 private:
     YUILoader()  {}

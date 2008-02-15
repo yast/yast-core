@@ -24,7 +24,7 @@
 #include "YUIException.h"
 
 
-void YUILoader::loadUI()
+void YUILoader::loadUI( bool withThreads )
 {
     const char * envDisplay = getenv( "DISPLAY" );
 
@@ -36,7 +36,7 @@ void YUILoader::loadUI()
 	
 	try
 	{
-	    loadPlugin( YUIPlugin_Qt );
+	    loadPlugin( YUIPlugin_Qt, withThreads );
 	    return;
 	}
 	catch ( YUIException & ex)
@@ -53,7 +53,7 @@ void YUILoader::loadUI()
 	
 	try
 	{
-	    loadPlugin( YUIPlugin_NCurses );
+	    loadPlugin( YUIPlugin_NCurses, withThreads );
 	    return;
 	}
 	catch ( YUIException & ex)
@@ -69,7 +69,7 @@ void YUILoader::loadUI()
 }
 
 
-void YUILoader::loadPlugin( const string & name )
+void YUILoader::loadPlugin( const string & name, bool withThreads )
 {
     YUIPlugin uiPlugin( name.c_str() );
 
@@ -79,7 +79,7 @@ void YUILoader::loadPlugin( const string & name )
 
 	if ( createUI )
 	{
-	    YUI * ui = createUI( false ); // no threads
+	    YUI * ui = createUI( withThreads ); // no threads
 
 	    if ( ui )
 		return;
