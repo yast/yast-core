@@ -85,6 +85,7 @@ YMultiSelectionBox::propertySet()
 	propSet.add( YProperty( YUIProperty_SelectedItems,	YOtherProperty	 ) );
 	propSet.add( YProperty( YUIProperty_Items,		YOtherProperty	 ) );
 	propSet.add( YProperty( YUIProperty_Label,		YStringProperty	 ) );
+	propSet.add( YProperty( YUIProperty_IconPath,		YStringProperty	 ) );
 	propSet.add( YWidget::propertySet() );
     }
 
@@ -101,6 +102,7 @@ YMultiSelectionBox::setProperty( const string & propertyName, const YPropertyVal
     else if ( propertyName == YUIProperty_SelectedItems	)	return false; // Needs special handling
     else if ( propertyName == YUIProperty_Items 	)	return false; // Needs special handling
     else if ( propertyName == YUIProperty_Label		)	setLabel( val.stringVal() );
+    else if ( propertyName == YUIProperty_IconPath      )       setIconBasePath( val.stringVal() );
     else
     {
 	return YWidget::setProperty( propertyName, val );
