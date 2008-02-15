@@ -19,4 +19,6 @@ int main( int argc, char **argv )
     
     YEvent * event = dialog->waitForEvent();
     delete event;
+
+    dialog->destroy();
 }
