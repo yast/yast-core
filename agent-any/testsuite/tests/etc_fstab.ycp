@@ -1,3 +1,5 @@
 {
-    return (SCR::Read (.));
+    any r = SCR::Read (.);
+    any w = SCR::Write(., r);
+    return [r, w];
 }

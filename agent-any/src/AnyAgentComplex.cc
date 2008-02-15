@@ -411,6 +411,7 @@ AnyAgent::unparseTuple (const YCPList & syntax, const YCPValue & value)
 		YCPTerm term = element->asTerm ();
 		if (!(term.isNull ()) && 
 		    ((term->name () == "Skip") ||
+		     (term->name () == "Omit") ||
 		     (term->name () == "Fillup")))
 		    continue;
 	    }
