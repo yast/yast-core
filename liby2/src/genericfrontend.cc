@@ -580,8 +580,12 @@ main (int argc, char **argv)
 
     // now create server
 
+#if 0
     Y2ComponentBroker::registerNamespaceException ("UI", server_name);
-    Y2Component *server = Y2ComponentBroker::getNamespaceComponent ("UI");
+#endif
+    Y2ComponentBroker::getNamespaceComponent( "UI" );
+    y2debug( "Creating server \"%s\"", server_name );
+    Y2Component *server = Y2ComponentBroker::createServer( server_name );
     if (!server) {
 	print_error ("No such server module %s", server_name);
 	print_usage();

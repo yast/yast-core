@@ -43,7 +43,7 @@ class Y2Component;
  * b) The data must be accessable before the first global
  *    constructor is called
  *
- * The component broker is the one, that you can ask for
+ * The component broker is the one that you can ask for
  * if you need a certain component. Components are specified
  * by names. A component name is an arbitrary string.
  * The component broker does not statically know what kinds components
@@ -103,18 +103,19 @@ public:
      * @param creator the component creator the register
      * @param order The orders define the order how the creators
      * are looked up. A creator with a lower order is looked up before one
-     * with a higher order. Very important is, that the compiled in components
-     * must be created with the lowest order to prevent in infinitive loop of starting
+     * with a higher order. It is very important that the compiled-in components
+     * must be created with the lowest order to prevent an infinitive loop of starting
      * external components.
+     * @param force override the stop_register flag.
      * See @ref #order_t for the possible orders.
      */
-    static void registerComponentCreator(const Y2ComponentCreator *creator, order_t order);
+    static void registerComponentCreator(const Y2ComponentCreator *creator, order_t order, bool force=false);
 
 private:
     /**
      * Tries to create or find a YaST2 component.
      * @param spec Specifies which component to find.
-     * @param look_for_clients Set this to true, if you are looking for clients.
+     * @param look_for_clients Set this to true if you are looking for clients.
      * If set to false only servers are created.
      * @return A pointer to the new component if one has been found, 0 if no
      * component matching spec has been found.
@@ -133,7 +134,7 @@ public:
     static Y2Component *createServer(const char *name);
     
     /**
-     * Provide a component, which implements the given namespace.
+     * Provide a component which implements the given namespace.
      *
      * @param name	the name of the requested namespace
      * @return 		a component instance or 0 if unsuccessful

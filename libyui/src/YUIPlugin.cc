@@ -39,7 +39,7 @@ YUIPlugin::YUIPlugin( const char * pluginLibBaseName )
     string pluginFilename = pluginLibFullPath();
 
     _pluginLibHandle = dlopen( pluginFilename.c_str(),
-			       RTLD_LAZY | RTLD_GLOBAL);
+			       RTLD_NOW | RTLD_GLOBAL);
 
     if ( ! _pluginLibHandle )
     {
@@ -53,6 +53,14 @@ YUIPlugin::YUIPlugin( const char * pluginLibBaseName )
 
 
 YUIPlugin::~YUIPlugin()
+{
+    // This intentionally does NOT call unload(): This would be
+    // counterproductive for almost all use cases of this class. 
+}
+
+
+void
+YUIPlugin::unload()
 {
     if ( _pluginLibHandle )
 	dlclose( _pluginLibHandle );
@@ -78,7 +86,7 @@ void * YUIPlugin::locateSymbol( const char * symbol )
     if ( ! _pluginLibHandle )
 	return 0;
     
-    void * addr = dlsym( _pluginLibHandle, symbol  );
+    void * addr = dlsym( _pluginLibHandle, symbol );
 
     if ( ! addr )
     {

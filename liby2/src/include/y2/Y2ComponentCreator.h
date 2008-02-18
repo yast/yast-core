@@ -48,8 +48,11 @@ public:
      * list of component creators.
      * @param order the order in which the creators are scanned. See
      * @ref Y2ComponentBroker#order_t
+     * @param force_register force registration of this creator even if the
+     * component broker's 'stop_register' flag is already set.
      */
     Y2ComponentCreator(Y2ComponentBroker::order_t order);
+    Y2ComponentCreator(Y2ComponentBroker::order_t order, bool force_register);
 
     /**
      * Base class must have virtual destructor

@@ -37,12 +37,24 @@ map<const char*, const Y2Component*, Y2ComponentBroker::ltstr> Y2ComponentBroker
 map<string, string> Y2ComponentBroker::namespace_exceptions;
 
 
-void Y2ComponentBroker::registerComponentCreator(const Y2ComponentCreator *c, order_t order)
+void Y2ComponentBroker::registerComponentCreator(const Y2ComponentCreator *c, order_t order, bool force)
 {
     initializeLists();
 
-    if (!stop_register)
+    // The "force" flag is needed by the UI component creator: It resides in a
+    // plug-in (libpy2UI), so it can register itself only when that plug-in is
+    // loaded, by which time registration is already closed. While stopping
+    // registration might make sense for most plug-ins, in this special case it
+    // does not: The UI component creator can create the "UI" name space as
+    // well as the "qt", "ncurses", "gtk" UI servers.
+    //
+    // 2008-02-18 sh@suse.de
+    
+    if (!stop_register || force)
+    {
+	// y2debug( "Registering component creator at %p - force: %d", c, (int) force );
         creators[order]->push_back(c);
+    }
 }
 
 
@@ -53,7 +65,7 @@ Y2ComponentBroker::createComponent (const char* name, bool look_for_clients)
 
     stop_register = true;
 
-    y2debug ("createComponent (%s, %s)", name, (look_for_clients ? "Client" : "Server"));
+    y2debug ("Creating component \"%s\" as %s)", name, (look_for_clients ? "client" : "server"));
 
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 	 level++)

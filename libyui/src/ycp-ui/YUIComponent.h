@@ -28,7 +28,7 @@ class YUI;
 class Y2Namespace;
 
 /**
- * abstract base class for YaST2 user interface components.
+ * Abstract base class for YaST2 user interface components.
  * Derive your own component class from this one and implement createUI().
  **/
 class YUIComponent : public Y2Component
@@ -36,27 +36,33 @@ class YUIComponent : public Y2Component
 public:
     /**
      * Constructor.
+     *
+     * 'requestedUIName' can be one of "qt", "ncurses", "gtk".
+     * If it is left empty, the most suitable UI will automatically be chosen.
      **/
-    YUIComponent();
+    YUIComponent( const string & requestedUIName = string() );
 
     /**
      * Destructor.
      **/
     virtual ~YUIComponent();
 
-protected:
     /**
-     * Create the UI. This is called when all the information for doing that is
-     * complete, in setServerOptions().
-     * 'argc' and 'argv' are the command line arguments.
-     *
-     * Implement this method in derived classes.
+     * Set the requested UI name after component creation.
+     * This might legitimately happen if the component creator is first called
+     * with "UI" and later again with one of "qt", "ncurses", "gtk". 
      **/
-    virtual YUI * createUI( bool withThreads );
+    void setRequestedUIName( const string & requestedUIName );
 
-public:
-
-    virtual Y2Namespace *import (const char* name);
+    /**
+     * Return the requested UI name.
+     **/
+    string requestedUIName() const { return _requestedUIName; }
+    
+    /**
+     * Import a name space.
+     **/
+    virtual Y2Namespace *import( const char* name );
 
     /**
      * Returns the instance of the UI component 0 if none has been created yet.
@@ -124,12 +130,13 @@ private:
 
     static YUI *		_ui;
     static YUIComponent *	_uiComponent;
-    Y2Namespace *		_namespace;
-    Y2Component *		_callbackComponent;
 
+    string			_requestedUIName;
     bool			_withThreads;
     const char *		_macroFile;
     bool			_haveServerOptions;
+    Y2Namespace *		_namespace;
+    Y2Component *		_callbackComponent;
 };
 
 #endif // YUIComponent_h

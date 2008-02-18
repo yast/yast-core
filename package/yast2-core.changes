@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Feb 18 18:34:56 CET 2008 - sh@suse.de
+
+- Load plug-ins for "UI", "qt", "ncurses" from one single plug-in
+- Made core UI independent of YCP and liby2 (Y2Component...)
+- V 2.16.35 
+
+-------------------------------------------------------------------
 Fri Feb 15 10:01:29 CET 2008 - lslezak@suse.cz
 
 - added new .process (agent-process) agent (obsoletes old

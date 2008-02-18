@@ -25,9 +25,13 @@
 
 Y2ComponentCreator::Y2ComponentCreator(Y2ComponentBroker::order_t order)
 {
-    Y2ComponentBroker::registerComponentCreator(this, order);
+    Y2ComponentBroker::registerComponentCreator(this, order );
 }
 
+Y2ComponentCreator::Y2ComponentCreator(Y2ComponentBroker::order_t order, bool force)
+{
+    Y2ComponentBroker::registerComponentCreator(this, order, force);
+}
 
 Y2ComponentCreator::~Y2ComponentCreator()
 {

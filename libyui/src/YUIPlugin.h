@@ -38,10 +38,20 @@ public:
     YUIPlugin( const char * pluginLibBaseName );
 
     /**
-     * Destructor. Calls dlclose() which will unload the plugin library if it
-     * is no longer used, i.e. if the reference count dlopen() uses reaches 0.
+     * Destructor.
+     *
+     * Please note that this will NOT attempt to unload the plugin library
+     * since this is usually counterproductive. If unloading the plugin is
+     * desired, call unload() manually.
      **/
     virtual ~YUIPlugin();
+
+    /**
+     * Unload this plugin. This calls dlclose() which will unload the plugin
+     * library if it is no longer used, i.e. if the reference count dlopen()
+     * uses reaches 0.
+     **/
+    void unload();
 
     /**
      * Try to locate the specified symbol (function or global variable) in the

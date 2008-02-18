@@ -10,49 +10,123 @@
 |                                                        (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:       Y2CCUI.cc
+   File:	Y2CCUI.cc
 
-   Author:     Stanislav Visnovsky <visnov@suse.cz>
-   Maintainer: Stanislav Visnovsky <visnov@suse.cz>
+   Authors:	Stanislav Visnovsky <visnov@suse.cz>
+		Stefan Hundhammer <sh@suse.de>
 
 /-*/
-/*
- * Component Creator that executes access to UI
- *
- * Author: Stanislav Visnovsky <visnov@suse.cz>
- */
 
 
+#include <string>
+
+#define y2log_component "ui"
 #include <ycp/y2log.h>
+
 #include <y2/Y2Component.h>
 #include "Y2CCUI.h"
 #include "YUIComponent.h"
 
-Y2Component* Y2CCDummyUI::provideNamespace(const char* name)
+using std::string;
+
+
+// Global instances of this class for the Y2ComponentBroker to find.
+//
+// The Y2Componentbroker will search for global symbols "g_y2cc" + component_name.
+
+Y2CCUI g_y2ccUI;	// UI
+
+
+Y2CCUI::Y2CCUI()
+    : Y2ComponentCreator( Y2ComponentBroker::PLUGIN,
+			  true ) // force_register
 {
-    y2debug ("UI library namespace provider tries for '%s'", name);
-    // implementation shortcut: we only provide the UI namsepace and the UI component
-    return create(name);
+    // Since this component creator resides in the libpy2UI plug-in, it is
+    // loaded as a plug-in, i.e. after component creator registration is closed
+    // in the component broker: It sets its stop_register flag when the first
+    // component or name space is created, so it rejects all attempts for
+    // further component creators to register themselves.
+    //
+    // But since this component creator not only creates the "UI" name space
+    // (which is normally the first component of the UIs to be created), but
+    // also the UIs themselves ("qt", "ncurses", "gtk"), it needs to be
+    // registered in the component broker, so the "force_registration" flag is
+    // needed.
+
+    // y2debug( "UI component creator %p constructor", this );
 }
 
-Y2Component* Y2CCDummyUI::create(const char* name) const
+
+Y2Component *
+Y2CCUI::provideNamespace( const char * cname )
 {
-    if (strcmp (name, "UI") == 0)
+    string name( cname );
+
+    if ( name == "UI" )
     {
-	Y2Component* ret = YUIComponent::uiComponent ();
-	if (ret == 0)
-	{
-	    y2milestone ("Creating UI library component");
-	    ret = new YUIComponent;
-	}
-	
-	return ret;
+	y2debug ("UI library namespace provider tries for '%s'", cname);
+	// implementation shortcut: we only provide the UI namespace and the UI component
+	return create( cname );
     }
     else
     {
-	return NULL;
+	return 0;
     }
 }
 
-// Create global variable to register this component creator
-Y2CCDummyUI g_y2ccUI;
+
+Y2Component *
+Y2CCUI::create( const char * cname ) const
+{
+    y2debug( "Requested \"%s\"", cname );
+    string name( cname );
+
+    if ( name == "UI" ||
+	 name == "qt" ||
+	 name == "ncurses"  ||
+#if SUPPORT_GTK_UI
+	 name == "gtk" ||
+#endif
+	 name == "ui" )
+    {
+	if ( name == "UI" || name == "ui" )
+	    name = "";		// Automatically choose the appropriate UI
+
+	YUIComponent* uiComponent = YUIComponent::uiComponent();
+
+	if ( ! uiComponent )
+	{
+	    y2milestone("Creating UI component for \"%s\"", cname );
+	    uiComponent = new YUIComponent( name );
+
+	    if ( ! uiComponent )
+	    {
+		y2error( "Creating UI component \"%s\"s failed", cname );
+	    }
+	}
+	else
+	{
+	    if ( uiComponent->requestedUIName().empty() && ! name.empty() )
+	    {
+		uiComponent->setRequestedUIName( name );
+	    }
+
+	    y2milestone( "Returning existing UI component for \"%s\"", cname );
+	}
+
+	return uiComponent;
+    }
+    else
+    {
+	return 0;
+    }
+}
+
+
+Y2Component *
+Y2CCUI::createInLevel( const char * name, int level, int currentLevel ) const
+{
+    return create( name );
+}
+
+

@@ -44,7 +44,7 @@
 
 YUI * YUI::_ui = 0;
 
-extern void *start_ui_thread( void * yui );
+extern void * start_ui_thread( void * yui );
 
 
 YUI::YUI( bool withThreads )
@@ -54,6 +54,7 @@ YUI::YUI( bool withThreads )
     , _terminate_ui_thread( false )
     , _eventsBlocked( false )
 {
+    yuiMilestone() << "Creating UI " << ( withThreads ? "with" : "without" ) << " threads" << endl;
     _ui = this;
 }
 
@@ -94,7 +95,7 @@ YUI::widgetFactory()
     static YWidgetFactory * factory = 0;
 
     ensureUICreated();
-    
+
     if ( ! factory )
 	factory = ui()->createWidgetFactory();
 
@@ -109,7 +110,7 @@ YUI::optionalWidgetFactory()
     static YOptionalWidgetFactory * factory = 0;
 
     ensureUICreated();
-    
+
     if ( ! factory )
 	factory = ui()->createOptionalWidgetFactory();
 
@@ -124,7 +125,7 @@ YUI::app()
     static YApplication * app = 0;
 
     ensureUICreated();
-    
+
     if ( ! app )
 	app = ui()->createApplication();
 
@@ -176,6 +177,9 @@ void YUI::topmostConstructorHasFinished()
 	    }
 	    else
 	    {
+#if VERBOSE_COMM
+		yuiDebug() << "Inter-thread communication pipes set up" << endl;
+#endif
 		_terminate_ui_thread = false;
 		createUIThread();
 	    }
@@ -197,14 +201,17 @@ void YUI::createUIThread()
 {
     pthread_attr_t attr;
     pthread_attr_init( & attr );
-    pthread_create( & _uiThread, & attr, start_ui_thread, this );
+    int ret = pthread_create( & _uiThread, & attr, start_ui_thread, this );
+
+    if ( ret != 0 )
+	yuiError() << "pthread_create() failed: " << errno << " " << strerror( errno ) << endl;
 }
 
 
 void YUI::terminateUIThread()
 {
     yuiDebug() << "Sending shutdown message to UI thread" << endl;
-    
+
     _terminate_ui_thread = true;
     signalUIThread();
     waitForUIThread();
@@ -232,7 +239,7 @@ void YUI::signalUIThread()
 {
     static char arbitrary = 42;
     (void) write ( pipe_to_ui[1], & arbitrary, 1 );
-    
+
 #if VERBOSE_COMM
     yuiDebug() << "Wrote byte to UI thread" << endl;
 #endif
@@ -261,7 +268,7 @@ bool YUI::waitForUIThread()
 #if VERBOSE_COMM
     yuiDebug() << "Read byte from ui thread" << endl;
 #endif
-    
+
     // return true if we really did get a signal byte
     return result != -1;
 }
@@ -310,7 +317,7 @@ void YUI::uiThreadMainLoop()
 {
     while ( true )
     {
-	idleLoop ( pipe_to_ui[0] );
+	idleLoop( pipe_to_ui[0] );
 
 	// The pipe is non-blocking, so we have to check if we really read a
 	// signal byte. Although idleLoop already does a select(), this seems to
@@ -341,9 +348,9 @@ void YUI::uiThreadMainLoop()
 // ----------------------------------------------------------------------
 
 
-void *start_ui_thread( void * yui )
+void * start_ui_thread( void * yui )
 {
-    YUI * ui= (YUI *) yui;
+    YUI * ui = (YUI *) yui;
 
 #if VERBOSE_COMM
     yuiDebug() << "Starting UI thread" << endl;

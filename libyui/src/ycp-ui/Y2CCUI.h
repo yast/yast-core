@@ -31,35 +31,52 @@
 
 class Y2Component;
 
+
+/**
+ * Component creator that provides access to the UI
+ **/
 class Y2CCUI : public Y2ComponentCreator
 {
     
 public:
-    Y2CCUI (Y2ComponentBroker::order_t order = Y2ComponentBroker::BUILTIN) : Y2ComponentCreator (order) {}
+    /**
+     * Constructor.
+     **/
+    Y2CCUI();
 
-    virtual bool isServerCreator () const { return true; };
+    virtual bool isServerCreator () const { return true; }
 
-};
+    /**
+     * Creation function for Y2Components.
+     *
+     * This class can create Y2UIComponents named:
+     *     - "UI"	(generic UI, for testsuites)
+     *     - "ui"	(automatically choose a suitable UI)
+     *     - "qt"	(Qt UI)
+     *     - "ncurses"	(NCurses (text based) UI)
+     *
+     * In future versions also:
+     *
+     *     - "gtk"	(Gtk UI)
+     *
+     * For all other names, 0 is returned, so the Y2ComponentBroker will keep
+     * on trying with other available creators. 
+     **/
+    virtual  Y2Component * create( const char * name ) const;
 
-// Have this class implement the UI interface for ycpc, where we need
-// only the type info and not the actual implementation.
-// But let it stand after the real UIs
-class Y2CCDummyUI : public Y2CCUI
-{
+    /**
+     * Creation function for non-built-in components.
+     **/
+    virtual Y2Component * createInLevel( const char * name, int level, int currentLevel ) const;
     
-public:
-    Y2CCDummyUI () : Y2CCUI (Y2ComponentBroker::PLUGIN) {}
-
     /**
-     * We provide the UI component
-     */
-    virtual  Y2Component *create(const char *name) const;
-
-    /**
-     * We provide the UI namespace
-     */
-    virtual  Y2Component *provideNamespace(const char *name);
-
+     * Name space provider function.
+     * This class can provide the "UI" name space.
+     *
+     * For all other names, 0 is returned, so the Y2ComponentBroker will keep
+     * on trying with other available creators. 
+     **/
+    virtual  Y2Component * provideNamespace( const char * name );
 };
 
 

@@ -27,6 +27,7 @@
 #include "YUIComponent.h"
 #include "Y2UINamespace.h"
 #include "YUI.h"
+#include "YUILoader.h"
 
 #include "YMacro.h"
 #include "YCPMacroRecorder.h"
@@ -49,26 +50,24 @@ yui_y2logger( YUILogLevel_t	logLevel,
 
 // Most class variables are static so they can be accessed from static methods.
 
-YUI *		YUIComponent::_ui			= 0;
-YUIComponent *	YUIComponent::_uiComponent		= 0;
+YUI *		YUIComponent::_ui		= 0;
+YUIComponent *	YUIComponent::_uiComponent	= 0;
 
 
-YUIComponent::YUIComponent()
+YUIComponent::YUIComponent( const string & name )
+    : _requestedUIName( name )
+    , _withThreads( false )
+    , _macroFile( 0 )
+    , _haveServerOptions( false )
+    , _namespace( 0 )
+    , _callbackComponent( 0 )
 {
-    _macroFile		= 0;
-    _withThreads	= false;
-    _haveServerOptions	= false;
-    _namespace 		= NULL;
-    _callbackComponent	= 0;
-
     if ( _uiComponent )
     {
-       y2error( "Can't create multiple instances of UI component! (existing '%s', requested '%s')"
-        ,  _uiComponent->name ().c_str(), this->name ().c_str ());
-       return;
+	y2error( "UI component already created" );
+	return;
     }
 
-    y2debug ("Setting UI component to '%s'", name().c_str());    
     _uiComponent = this;
 }
 
@@ -83,13 +82,26 @@ YUIComponent::~YUIComponent()
 }
 
 
-YUIComponent * YUIComponent::uiComponent()
+void
+YUIComponent::setRequestedUIName( const string & name )
+{
+    if ( ! name.empty() )
+    {
+	y2debug( "Setting requested UI name to \"%s\"", name.c_str() );
+	_requestedUIName = name;
+    }
+}
+
+
+YUIComponent *
+YUIComponent::uiComponent()
 {
     return _uiComponent;
 }
 
 
-Y2Namespace * YUIComponent::import( const char* name )
+Y2Namespace *
+YUIComponent::import( const char* name )
 {
     y2debug ("%s trying to import %s", this->name().c_str(), name);
     
@@ -108,7 +120,8 @@ Y2Namespace * YUIComponent::import( const char* name )
 }
 
 
-void YUIComponent::createUI()
+void
+YUIComponent::createUI()
 {
     if ( ! _haveServerOptions )
     {
@@ -118,21 +131,28 @@ void YUIComponent::createUI()
 
     if ( _ui )
     {
-	y2error( "can't create multiple UIs!" );
+	y2error( "Can't create multiple UIs!" );
 	return;
     }
 
     y2debug( "Creating UI" );
-    YUILog::setLoggerFunction( yui_y2logger );
-    _ui = createUI( _withThreads );
     
+    YUILog::setLoggerFunction( yui_y2logger );
+
+    if ( _requestedUIName.empty() )
+	YUILoader::loadUI( _withThreads );
+    else
+	YUILoader::loadPlugin( _requestedUIName, _withThreads );
+
+    _ui = YUI::ui();
     
     YMacro::setRecorder( new YCPMacroRecorder() );
     YMacro::setPlayer  ( new YCPMacroPlayer()   );
 }
 
 
-YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] )
+YCPValue
+YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] )
 {
     if ( ! _ui )
     {
@@ -154,7 +174,8 @@ YCPValue YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_ar
 }
 
 
-void YUIComponent::setServerOptions( int argc, char **argv )
+void
+YUIComponent::setServerOptions( int argc, char **argv )
 {
     // Evaluate some command line arguments
 	
@@ -193,7 +214,8 @@ void YUIComponent::setServerOptions( int argc, char **argv )
 }
 
 
-void YUIComponent::result( const YCPValue & /*result*/ )
+void
+YUIComponent::result( const YCPValue & /*result*/ )
 {
     if ( _ui )
     {
@@ -203,14 +225,6 @@ void YUIComponent::result( const YCPValue & /*result*/ )
     }
 }
 
-
-YUI * YUIComponent::createUI( bool withThreads )
-{
-    // This component can be instantiated for compilation purposes
-    // but it cannot evaluate the code.
-    y2debug ("Cannot create generic UI");
-    return 0;
-}
 
 
 
@@ -248,12 +262,6 @@ yui_y2logger( YUILogLevel_t	logLevel,
 	       sourceFileName, sourceLineNo, sourceFunctionName,
 	       "%s", message );
 }
-
-
-
-
-
-
 
 
 
