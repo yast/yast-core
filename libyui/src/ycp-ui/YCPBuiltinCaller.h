@@ -22,7 +22,7 @@
 #include "YBuiltinCaller.h"
 #include "ycp/YCPValue.h"
 
-class Y2UIFunction;
+class YUIFunction;
 
 
 /**
@@ -41,7 +41,7 @@ public:
     /**
      * Set the built-in function to be called.
      **/
-    void setFunction( Y2UIFunction * function ) { _function = function; }
+    void setFunction( YUIFunction * function ) { _function = function; }
     
     /**
      * Call the built-in.
@@ -57,7 +57,7 @@ public:
 
 private:
 
-    Y2UIFunction *	_function;
+    YUIFunction *	_function;
     YCPValue		_result;
 };
 

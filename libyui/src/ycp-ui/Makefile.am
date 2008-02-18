@@ -10,9 +10,9 @@ AM_CPPFLAGS = -DLOCALEDIR=\"${localedir}\"
 plugin_LTLIBRARIES = libpy2UI.la
 
 libpy2UI_la_SOURCES =				\
-	Y2CCUI.cc				\
+	YUIComponentCreator.cc			\
 	YUIComponent.cc				\
-	Y2UINamespace.cc			\
+	YUINamespace.cc				\
 	YCP_UI.cc				\
 	YCP_util.cc				\
 	YCPBuiltinCaller.cc			\
@@ -41,7 +41,7 @@ libpy2UI_la_SOURCES =				\
 pkgincludedir = $(includedir)/ycp-ui
 
 pkginclude_HEADERS =				\
-	Y2CCUI.h				\
+	YUIComponentCreator.h			\
 	YUIComponent.h				\
 						\
 	YCP_UI.h				\
@@ -51,7 +51,7 @@ pkginclude_HEADERS =				\
 
 
 noinst_HEADERS =				\
-	Y2UINamespace.h				\
+	YUINamespace.h				\
 	YCP_util.h				\
 	YCPBuiltinCaller.h			\
 						\
@@ -90,7 +90,7 @@ libpy2UI_la_LIBADD = -lpthread $(top_builddir)/libyui/src/libyui.la -lycp -ly2 -
 
 # "foo bar: baz" is wrong
 # see "info '(automake)Multiple Outputs'"
-%BuiltinCalls.h %BuiltinTable.h : Y2%Namespace.h
+%BuiltinCalls.h %BuiltinTable.h : Y%Namespace.h
 	${top_srcdir}/base/tools/devtools/generateYCPWrappers $< $*BuiltinCalls.h $*BuiltinTable.h
 
 BUILT_SOURCES = UIBuiltinTable.h UIBuiltinCalls.h

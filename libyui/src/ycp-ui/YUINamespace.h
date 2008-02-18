@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:	Y2UINamespace.h
+   File:	YUINamespace.h
 
    Authors:	Stanislav Visnovsky <visnov@suse.cz>
 		Martin Vidner <mvidner@susez.cz>
@@ -35,17 +35,17 @@
 #include "YUI.h"
 #include "YUIComponent.h"
 
-class Y2UINamespace;
+class YUINamespace;
 
 /**
  * One function call of the UI:: namespace
  **/
-class Y2UIFunction: public Y2Function
+class YUIFunction: public Y2Function
 {
 protected:
 
     unsigned int m_position;
-    Y2UINamespace* m_instance;
+    YUINamespace* m_instance;
     YUIComponent* m_comp;
     bool m_play_macro_blocks;
     YCPValue m_param1;
@@ -55,7 +55,7 @@ protected:
     YCPValue m_param5;
 public:
 
-    Y2UIFunction (Y2UINamespace* instance, YUIComponent* comp, unsigned int pos, bool play_macro_blocks);
+    YUIFunction (YUINamespace* instance, YUIComponent* comp, unsigned int pos, bool play_macro_blocks);
 
     bool attachParameter (const YCPValue& arg, const int position);
     constTypePtr wantedParameterType () const;
@@ -72,7 +72,7 @@ public:
  * One function call of the UI:: namespace:
  * A function where the signature is not known beforehand
  **/
-class Y2UIOverloadedFunction: public Y2UIFunction
+class YUIOverloadedFunction: public YUIFunction
 {
     /**
      * A range of SymbolEntries with a matching name.
@@ -81,7 +81,7 @@ class Y2UIOverloadedFunction: public Y2UIFunction
     vector<SymbolEntryPtr>::iterator m_candidates_e;
 
 public:
-    Y2UIOverloadedFunction( Y2UINamespace *			instance,
+    YUIOverloadedFunction( YUINamespace *			instance,
 			    YUIComponent  * 			comp,
 			    unsigned 				pos_offset,
 			    vector<SymbolEntryPtr>::iterator 	candidates_b,
@@ -95,7 +95,7 @@ public:
 };
 
 
-class Y2UINamespace: public Y2Namespace
+class YUINamespace: public Y2Namespace
 {
 private:
     void registerFunctions();
@@ -108,12 +108,12 @@ public:
     /**
      * Constructor.
      */
-    Y2UINamespace (YUIComponent* comp);
+    YUINamespace (YUIComponent* comp);
 
     /**
      * Destructor.
      */
-    virtual ~Y2UINamespace();
+    virtual ~YUINamespace();
 
     virtual const string name() const
     { return "UI"; }

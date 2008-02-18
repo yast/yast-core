@@ -10,22 +10,16 @@
 |                                                        (C) SuSE GmbH |  
 \----------------------------------------------------------------------/ 
 
-   File:       Y2CCUI.h
+   File:	YUIComponentCreator.h
 
-   Author:     Stanislav Visnovsky <visnov@suse.de>
-   Maintainer: Stanislav Visnovsky <visnov@suse.de>
+   Authors:	Stanislav Visnovsky <visnov@suse.de>
+		Stefan Hundhammer <sh@suse.de>
 
 /-*/
-// -*- c++ -*-
 
-/*
- * Component Creator that executes access to UI
- *
- * Author:     Stanislav Visnovsky <visnov@suse.de>
- */
 
-#ifndef Y2CCUI_h
-#define Y2CCUI_h
+#ifndef YUIComponentCreator_h
+#define YUIComponentCreator_h
 
 #include <y2/Y2ComponentCreator.h>
 
@@ -35,14 +29,14 @@ class Y2Component;
 /**
  * Component creator that provides access to the UI
  **/
-class Y2CCUI : public Y2ComponentCreator
+class YUIComponentCreator : public Y2ComponentCreator
 {
     
 public:
     /**
      * Constructor.
      **/
-    Y2CCUI();
+    YUIComponentCreator();
 
     virtual bool isServerCreator () const { return true; }
 
@@ -80,4 +74,4 @@ public:
 };
 
 
-#endif // Y2CCUI_h
+#endif // YUIComponentCreator_h

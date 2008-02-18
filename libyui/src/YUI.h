@@ -42,7 +42,7 @@ class YMacroRecorder;
  **/
 class YUI
 {
-    friend class Y2UIFunction;
+    friend class YUIFunction;
 
 protected:
     /**

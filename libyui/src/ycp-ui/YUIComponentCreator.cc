@@ -10,7 +10,7 @@
 |                                                        (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:	Y2CCUI.cc
+   File:	YUIComponentCreator.cc
 
    Authors:	Stanislav Visnovsky <visnov@suse.cz>
 		Stefan Hundhammer <sh@suse.de>
@@ -24,20 +24,23 @@
 #include <ycp/y2log.h>
 
 #include <y2/Y2Component.h>
-#include "Y2CCUI.h"
+#include "YUIComponentCreator.h"
 #include "YUIComponent.h"
 
 using std::string;
+
+
+#define SUPPORT_GTK_UI	0
 
 
 // Global instances of this class for the Y2ComponentBroker to find.
 //
 // The Y2Componentbroker will search for global symbols "g_y2cc" + component_name.
 
-Y2CCUI g_y2ccUI;	// UI
+YUIComponentCreator g_y2ccUI;	// UI
 
 
-Y2CCUI::Y2CCUI()
+YUIComponentCreator::YUIComponentCreator()
     : Y2ComponentCreator( Y2ComponentBroker::PLUGIN,
 			  true ) // force_register
 {
@@ -58,7 +61,7 @@ Y2CCUI::Y2CCUI()
 
 
 Y2Component *
-Y2CCUI::provideNamespace( const char * cname )
+YUIComponentCreator::provideNamespace( const char * cname )
 {
     string name( cname );
 
@@ -76,7 +79,7 @@ Y2CCUI::provideNamespace( const char * cname )
 
 
 Y2Component *
-Y2CCUI::create( const char * cname ) const
+YUIComponentCreator::create( const char * cname ) const
 {
     y2debug( "Requested \"%s\"", cname );
     string name( cname );
@@ -124,7 +127,7 @@ Y2CCUI::create( const char * cname ) const
 
 
 Y2Component *
-Y2CCUI::createInLevel( const char * name, int level, int currentLevel ) const
+YUIComponentCreator::createInLevel( const char * name, int level, int currentLevel ) const
 {
     return create( name );
 }

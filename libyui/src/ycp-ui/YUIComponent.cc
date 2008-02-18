@@ -25,7 +25,7 @@
 #include <ycp/YCPVoid.h>
 
 #include "YUIComponent.h"
-#include "Y2UINamespace.h"
+#include "YUINamespace.h"
 #include "YUI.h"
 #include "YUILoader.h"
 
@@ -109,7 +109,7 @@ YUIComponent::import( const char* name )
     {
         if (_namespace == NULL)
         {
-            _namespace = new Y2UINamespace(this);
+            _namespace = new YUINamespace(this);
 	    y2debug ("Namespace created %p", _namespace);
         }
 

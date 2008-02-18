@@ -18,7 +18,7 @@
 
 
 #include "YCPBuiltinCaller.h"
-#include "Y2UINamespace.h"
+#include "YUINamespace.h"
 
 
 void

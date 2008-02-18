@@ -10,7 +10,7 @@
 |							 (C) SuSE GmbH |
 \----------------------------------------------------------------------/
 
-   File:	Y2UINamespace.cc
+   File:	YUINamespace.cc
 
    Authors:	Klaus Kaempf <kkaempf@suse.de>
 		Stanislav Visnovsky <visnov@suse.cz>
@@ -33,7 +33,7 @@
 #include "YCP_UI.h"
 #include "YUISymbols.h"
 #include "YUIComponent.h"
-#include "Y2UINamespace.h"
+#include "YUINamespace.h"
 #include "YCPBuiltinCaller.h"
 #include "YMacro.h"
 
@@ -41,7 +41,7 @@
 
 
 YCPValue
-Y2UINamespace::SetLanguage( const YCPString & language )
+YUINamespace::SetLanguage( const YCPString & language )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::SetLanguage( language );
@@ -51,7 +51,7 @@ Y2UINamespace::SetLanguage( const YCPString & language )
 
 
 YCPValue
-Y2UINamespace::SetLanguage( const YCPString & language, const YCPString & encoding )
+YUINamespace::SetLanguage( const YCPString & language, const YCPString & encoding )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::SetLanguage( language, encoding );
@@ -61,7 +61,7 @@ Y2UINamespace::SetLanguage( const YCPString & language, const YCPString & encodi
 
 
 YCPValue
-Y2UINamespace::GetProductName()
+YUINamespace::GetProductName()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::GetProductName();
@@ -71,7 +71,7 @@ Y2UINamespace::GetProductName()
 
 
 YCPValue
-Y2UINamespace::SetProductName( const YCPString & name )
+YUINamespace::SetProductName( const YCPString & name )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::SetProductName( name );
@@ -81,7 +81,7 @@ Y2UINamespace::SetProductName( const YCPString & name )
 
 
 YCPValue
-Y2UINamespace::SetConsoleFont( const YCPString & console_magic,
+YUINamespace::SetConsoleFont( const YCPString & console_magic,
 		  const YCPString & font,
 		  const YCPString & screen_map,
 		  const YCPString & unicode_map,
@@ -98,7 +98,7 @@ Y2UINamespace::SetConsoleFont( const YCPString & console_magic,
 
 
 YCPValue
-Y2UINamespace::SetKeyboard()
+YUINamespace::SetKeyboard()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::SetKeyboard();
@@ -108,7 +108,7 @@ Y2UINamespace::SetKeyboard()
 
 
 YCPValue
-Y2UINamespace::GetLanguage( const YCPBoolean & strip )
+YUINamespace::GetLanguage( const YCPBoolean & strip )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::GetLanguage( strip );
@@ -118,7 +118,7 @@ Y2UINamespace::GetLanguage( const YCPBoolean & strip )
 
 
 YCPValue
-Y2UINamespace::RunInTerminal( const YCPString &module )
+YUINamespace::RunInTerminal( const YCPString &module )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::RunInTerminal( module );
@@ -127,7 +127,7 @@ Y2UINamespace::RunInTerminal( const YCPString &module )
 }
 
 YCPValue
-Y2UINamespace::UserInput()
+YUINamespace::UserInput()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::UserInput();
@@ -137,7 +137,7 @@ Y2UINamespace::UserInput()
 
 
 YCPValue
-Y2UINamespace::PollInput()
+YUINamespace::PollInput()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::PollInput();
@@ -147,7 +147,7 @@ Y2UINamespace::PollInput()
 
 
 YCPValue
-Y2UINamespace::TimeoutUserInput( const YCPInteger& timeout )
+YUINamespace::TimeoutUserInput( const YCPInteger& timeout )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::TimeoutUserInput( timeout );
@@ -157,7 +157,7 @@ Y2UINamespace::TimeoutUserInput( const YCPInteger& timeout )
 
 
 YCPValue
-Y2UINamespace::WaitForEvent()
+YUINamespace::WaitForEvent()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::WaitForEvent();
@@ -167,7 +167,7 @@ Y2UINamespace::WaitForEvent()
 
 
 YCPValue
-Y2UINamespace::WaitForEvent( const YCPInteger & timeout )
+YUINamespace::WaitForEvent( const YCPInteger & timeout )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::WaitForEvent( timeout );
@@ -177,7 +177,7 @@ Y2UINamespace::WaitForEvent( const YCPInteger & timeout )
 
 
 YCPValue
-Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
+YUINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::OpenDialog( opts, dialog_term );
@@ -187,7 +187,7 @@ Y2UINamespace::OpenDialog( const YCPTerm & opts, const YCPTerm & dialog_term )
 
 
 YCPValue
-Y2UINamespace::OpenDialog( const YCPTerm & dialog_term )
+YUINamespace::OpenDialog( const YCPTerm & dialog_term )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::OpenDialog( YCPNull(), dialog_term );
@@ -197,7 +197,7 @@ Y2UINamespace::OpenDialog( const YCPTerm & dialog_term )
 
 
 YCPValue
-Y2UINamespace::CloseDialog()
+YUINamespace::CloseDialog()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::CloseDialog();
@@ -207,7 +207,7 @@ Y2UINamespace::CloseDialog()
 
 
 YCPValue
-Y2UINamespace::ChangeWidget( const YCPSymbol & widget_id, const YCPSymbol & property, const YCPValue & new_value )
+YUINamespace::ChangeWidget( const YCPSymbol & widget_id, const YCPSymbol & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::ChangeWidget( widget_id, property, new_value );
@@ -217,7 +217,7 @@ Y2UINamespace::ChangeWidget( const YCPSymbol & widget_id, const YCPSymbol & prop
 
 
 YCPValue
-Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPSymbol & property, const YCPValue & new_value )
+YUINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPSymbol & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::ChangeWidget( widget_id, property, new_value );
@@ -227,7 +227,7 @@ Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPSymbol & proper
 
 
 YCPValue
-Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & new_value )
+YUINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPTerm & property, const YCPValue & new_value )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::ChangeWidget( widget_id, property, new_value );
@@ -237,7 +237,7 @@ Y2UINamespace::ChangeWidget( const YCPTerm & widget_id, const YCPTerm & property
 
 
 YCPValue
-Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
+YUINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::QueryWidget( widget_id, property );
@@ -247,7 +247,7 @@ Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPSymbol & prope
 
 
 YCPValue
-Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPTerm & property )
+YUINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::QueryWidget( widget_id, property );
@@ -257,7 +257,7 @@ Y2UINamespace::QueryWidget( const YCPSymbol & widget_id, const YCPTerm & propert
 
 
 YCPValue
-Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPSymbol & property )
+YUINamespace::QueryWidget( const YCPTerm & widget_id, const YCPSymbol & property )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::QueryWidget( widget_id, property );
@@ -267,7 +267,7 @@ Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPSymbol & propert
 
 
 YCPValue
-Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPTerm & property )
+YUINamespace::QueryWidget( const YCPTerm & widget_id, const YCPTerm & property )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::QueryWidget( widget_id, property );
@@ -277,7 +277,7 @@ Y2UINamespace::QueryWidget( const YCPTerm & widget_id, const YCPTerm & property 
 
 
 YCPValue
-Y2UINamespace::ReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
+YUINamespace::ReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::ReplaceWidget( widget_id, new_widget );
@@ -287,7 +287,7 @@ Y2UINamespace::ReplaceWidget( const YCPSymbol & widget_id, const YCPTerm & new_w
 
 
 YCPValue
-Y2UINamespace::ReplaceWidget( const YCPTerm & widget_id, const YCPTerm & new_widget )
+YUINamespace::ReplaceWidget( const YCPTerm & widget_id, const YCPTerm & new_widget )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::ReplaceWidget( widget_id, new_widget );
@@ -297,7 +297,7 @@ Y2UINamespace::ReplaceWidget( const YCPTerm & widget_id, const YCPTerm & new_wid
 
 
 YCPValue
-Y2UINamespace::SetFocus( const YCPSymbol & widget_id )
+YUINamespace::SetFocus( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::SetFocus( widget_id );
@@ -307,7 +307,7 @@ Y2UINamespace::SetFocus( const YCPSymbol & widget_id )
 
 
 YCPValue
-Y2UINamespace::SetFocus( const YCPTerm & widget_id )
+YUINamespace::SetFocus( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::SetFocus( widget_id );
@@ -317,7 +317,7 @@ Y2UINamespace::SetFocus( const YCPTerm & widget_id )
 
 
 YCPValue
-Y2UINamespace::BusyCursor()
+YUINamespace::BusyCursor()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::BusyCursor();
@@ -327,7 +327,7 @@ Y2UINamespace::BusyCursor()
 
 
 YCPValue
-Y2UINamespace::RedrawScreen()
+YUINamespace::RedrawScreen()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::RedrawScreen();
@@ -337,7 +337,7 @@ Y2UINamespace::RedrawScreen()
 
 
 YCPValue
-Y2UINamespace::NormalCursor()
+YUINamespace::NormalCursor()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::NormalCursor();
@@ -347,7 +347,7 @@ Y2UINamespace::NormalCursor()
 
 
 YCPValue
-Y2UINamespace::MakeScreenShot( const YCPString & filename )
+YUINamespace::MakeScreenShot( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::MakeScreenShot( filename );
@@ -357,7 +357,7 @@ Y2UINamespace::MakeScreenShot( const YCPString & filename )
 
 
 YCPValue
-Y2UINamespace::MakeScreenShot()
+YUINamespace::MakeScreenShot()
 {
     if ( YUIComponent::ui() )
 	return MakeScreenShot( YCPNull() );
@@ -367,7 +367,7 @@ Y2UINamespace::MakeScreenShot()
 
 
 YCPValue
-Y2UINamespace::DumpWidgetTree()
+YUINamespace::DumpWidgetTree()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::DumpWidgetTree();
@@ -377,7 +377,7 @@ Y2UINamespace::DumpWidgetTree()
 
 
 YCPValue
-Y2UINamespace::Beep()
+YUINamespace::Beep()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::Beep();
@@ -386,7 +386,7 @@ Y2UINamespace::Beep()
 }
 
 YCPValue
-Y2UINamespace::RecordMacro( const YCPString & filename )
+YUINamespace::RecordMacro( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::RecordMacro( filename );
@@ -396,7 +396,7 @@ Y2UINamespace::RecordMacro( const YCPString & filename )
 
 
 YCPValue
-Y2UINamespace::StopRecordMacro()
+YUINamespace::StopRecordMacro()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::StopRecordMacro();
@@ -406,7 +406,7 @@ Y2UINamespace::StopRecordMacro()
 
 
 YCPValue
-Y2UINamespace::PlayMacro( const YCPString & filename )
+YUINamespace::PlayMacro( const YCPString & filename )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::PlayMacro( filename );
@@ -415,7 +415,7 @@ Y2UINamespace::PlayMacro( const YCPString & filename )
 }
 
 YCPValue
-Y2UINamespace::FakeUserInput()
+YUINamespace::FakeUserInput()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::FakeUserInput( YCPVoid() );
@@ -425,7 +425,7 @@ Y2UINamespace::FakeUserInput()
 
 
 YCPValue
-Y2UINamespace::FakeUserInput( const YCPValue & next_input )
+YUINamespace::FakeUserInput( const YCPValue & next_input )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::FakeUserInput( next_input );
@@ -436,7 +436,7 @@ Y2UINamespace::FakeUserInput( const YCPValue & next_input )
 
 
 YCPValue
-Y2UINamespace::Glyph( const YCPSymbol & glyphSym  )
+YUINamespace::Glyph( const YCPSymbol & glyphSym  )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::Glyph( glyphSym );
@@ -446,7 +446,7 @@ Y2UINamespace::Glyph( const YCPSymbol & glyphSym  )
 
 
 YCPValue
-Y2UINamespace::GetDisplayInfo()
+YUINamespace::GetDisplayInfo()
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::GetDisplayInfo();
@@ -456,7 +456,7 @@ Y2UINamespace::GetDisplayInfo()
 
 
 YCPValue
-Y2UINamespace::RecalcLayout()
+YUINamespace::RecalcLayout()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::RecalcLayout();
@@ -466,7 +466,7 @@ Y2UINamespace::RecalcLayout()
 
 
 YCPValue
-Y2UINamespace::PostponeShortcutCheck()
+YUINamespace::PostponeShortcutCheck()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::PostponeShortcutCheck();
@@ -475,7 +475,7 @@ Y2UINamespace::PostponeShortcutCheck()
 }
 
 YCPValue
-Y2UINamespace::CheckShortcuts()
+YUINamespace::CheckShortcuts()
 {
     if ( YUIComponent::ui() )
 	YCP_UI::CheckShortcuts();
@@ -485,7 +485,7 @@ Y2UINamespace::CheckShortcuts()
 
 
 YCPValue
-Y2UINamespace::WidgetExists( const YCPSymbol & widget_id )
+YUINamespace::WidgetExists( const YCPSymbol & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::WidgetExists( widget_id );
@@ -495,7 +495,7 @@ Y2UINamespace::WidgetExists( const YCPSymbol & widget_id )
 
 
 YCPValue
-Y2UINamespace::WidgetExists( const YCPTerm & widget_id )
+YUINamespace::WidgetExists( const YCPTerm & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::WidgetExists( widget_id );
@@ -505,7 +505,7 @@ Y2UINamespace::WidgetExists( const YCPTerm & widget_id )
 
 
 YCPValue
-Y2UINamespace::RunPkgSelection( const YCPValue & widget_id )
+YUINamespace::RunPkgSelection( const YCPValue & widget_id )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::RunPkgSelection( widget_id );
@@ -515,7 +515,7 @@ Y2UINamespace::RunPkgSelection( const YCPValue & widget_id )
 
 
 YCPValue
-Y2UINamespace::AskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
+YUINamespace::AskForExistingDirectory( const YCPString & startDir, const YCPString & headline )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::AskForExistingDirectory( startDir, headline );
@@ -525,7 +525,7 @@ Y2UINamespace::AskForExistingDirectory( const YCPString & startDir, const YCPStr
 
 
 YCPValue
-Y2UINamespace::AskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline  )
+YUINamespace::AskForExistingFile( const YCPString & startWith, const YCPString & filter, const YCPString & headline  )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::AskForExistingFile( startWith, filter, headline );
@@ -535,7 +535,7 @@ Y2UINamespace::AskForExistingFile( const YCPString & startWith, const YCPString 
 
 
 YCPValue
-Y2UINamespace::AskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
+YUINamespace::AskForSaveFileName( const YCPString & startWith, const YCPString & filter, const YCPString & headline )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::AskForSaveFileName( startWith, filter, headline );
@@ -545,7 +545,7 @@ Y2UINamespace::AskForSaveFileName( const YCPString & startWith, const YCPString 
 
 
 YCPValue
-Y2UINamespace::SetFunctionKeys( const YCPMap & new_fkeys )
+YUINamespace::SetFunctionKeys( const YCPMap & new_fkeys )
 {
     if ( YUIComponent::ui() )
 	YCP_UI::SetFunctionKeys( new_fkeys );
@@ -555,7 +555,7 @@ Y2UINamespace::SetFunctionKeys( const YCPMap & new_fkeys )
 
 
 YCPValue
-Y2UINamespace::Recode( const YCPString & from, const YCPString & to, const YCPString & text )
+YUINamespace::Recode( const YCPString & from, const YCPString & to, const YCPString & text )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::Recode( from, to, text );
@@ -565,7 +565,7 @@ Y2UINamespace::Recode( const YCPString & from, const YCPString & to, const YCPSt
 
 
 YCPValue
-Y2UINamespace::HasSpecialWidget( const YCPSymbol & widget )
+YUINamespace::HasSpecialWidget( const YCPSymbol & widget )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::HasSpecialWidget( widget );
@@ -575,7 +575,7 @@ Y2UINamespace::HasSpecialWidget( const YCPSymbol & widget )
 
 
 YCPValue
-Y2UINamespace::WizardCommand( const YCPTerm & command )
+YUINamespace::WizardCommand( const YCPTerm & command )
 {
     if ( YUIComponent::ui() )
 	return YCP_UI::WizardCommand( command );
@@ -585,7 +585,7 @@ Y2UINamespace::WizardCommand( const YCPTerm & command )
 
 
 YCPValue
-Y2UINamespace::CallHandler( void * ptr, int argc, YCPValue argv[] )
+YUINamespace::CallHandler( void * ptr, int argc, YCPValue argv[] )
 {
     if ( YUIComponent::uiComponent() )
     {
@@ -604,7 +604,7 @@ Y2UINamespace::CallHandler( void * ptr, int argc, YCPValue argv[] )
 //
 
 
-Y2UIFunction::Y2UIFunction (Y2UINamespace *	instance,
+YUIFunction::YUIFunction (YUINamespace *	instance,
 			    YUIComponent * 	comp,
 			    unsigned 		pos,
 			    bool		play_macro_blocks) :
@@ -622,7 +622,7 @@ m_position (pos)
 };
 
 
-bool Y2UIFunction::attachParameter (const YCPValue& arg, const int position)
+bool YUIFunction::attachParameter (const YCPValue& arg, const int position)
 {
     switch (position)
     {
@@ -638,7 +638,7 @@ bool Y2UIFunction::attachParameter (const YCPValue& arg, const int position)
 }
 
 
-constTypePtr Y2UIFunction::wantedParameterType() const
+constTypePtr YUIFunction::wantedParameterType() const
 {
     // we do not help them with type conversion
     // hey but we could, at least for non-overloaded functions
@@ -646,7 +646,7 @@ constTypePtr Y2UIFunction::wantedParameterType() const
 }
 
 
-bool Y2UIFunction::appendParameter (const YCPValue& arg)
+bool YUIFunction::appendParameter (const YCPValue& arg)
 {
     if (m_param1.isNull())
     {
@@ -674,7 +674,7 @@ bool Y2UIFunction::appendParameter (const YCPValue& arg)
 }
 
 
-bool Y2UIFunction::finishParameters()
+bool YUIFunction::finishParameters()
 {
     // Aha, perl could give us any garbage.
     // Hmm, how do we cope with giving garbage to ycp modules?
@@ -686,7 +686,7 @@ bool Y2UIFunction::finishParameters()
 }
 
 
-YCPValue Y2UIFunction::evaluateCall()
+YCPValue YUIFunction::evaluateCall()
 {
     if ( ! m_comp->ui() )
     {
@@ -741,7 +741,7 @@ YCPValue Y2UIFunction::evaluateCall()
 }
 
 
-YCPValue Y2UIFunction::evaluateCall_int()
+YCPValue YUIFunction::evaluateCall_int()
 {
     switch (m_position)
     {
@@ -752,7 +752,7 @@ YCPValue Y2UIFunction::evaluateCall_int()
 }
 
 
-bool Y2UIFunction::reset()
+bool YUIFunction::reset()
 {
     m_param1 = YCPNull();
     m_param2 = YCPNull();
@@ -764,7 +764,7 @@ bool Y2UIFunction::reset()
 }
 
 
-string Y2UIFunction::name() const
+string YUIFunction::name() const
 {
     // FIXME. when is this called at all?
     return("Y2UI");
@@ -785,13 +785,13 @@ void no_match (const char * name, constTypePtr type,
 
 
 
-Y2UIOverloadedFunction::Y2UIOverloadedFunction ( Y2UINamespace * instance,
+YUIOverloadedFunction::YUIOverloadedFunction ( YUINamespace * instance,
 						 YUIComponent * comp,
 						 unsigned pos_offset,
 						 vector<SymbolEntryPtr>::iterator candidates_b,
 						 vector<SymbolEntryPtr>::iterator candidates_e,
 						 bool play_macro_blocks )
-    : Y2UIFunction (instance, comp, pos_offset, play_macro_blocks)
+    : YUIFunction (instance, comp, pos_offset, play_macro_blocks)
     , m_candidates_b (candidates_b)
     , m_candidates_e (candidates_e)
 {
@@ -800,7 +800,7 @@ Y2UIOverloadedFunction::Y2UIOverloadedFunction ( Y2UINamespace * instance,
 
 
 bool
-Y2UIOverloadedFunction::finishParameters()
+YUIOverloadedFunction::finishParameters()
 {
     FunctionTypePtr real_tp = new FunctionType (Type::Unspec); //return type
     if (!m_param1.isNull())
@@ -855,20 +855,20 @@ Y2UIOverloadedFunction::finishParameters()
 }
 
 
-Y2UINamespace::Y2UINamespace (YUIComponent* comp)
+YUINamespace::YUINamespace (YUIComponent* comp)
 {
     m_comp = comp;
     registerFunctions();
 }
 
 
-Y2UINamespace::~Y2UINamespace()
+YUINamespace::~YUINamespace()
 {
     // NOP
 }
 
 
-Y2Function* Y2UINamespace::createFunctionCall( const string name, constFunctionTypePtr type )
+Y2Function* YUINamespace::createFunctionCall( const string name, constFunctionTypePtr type )
 {
 #if VERBOSE_UI_CALLS
     y2debug ("Creating function call for %s", name.c_str());
@@ -924,7 +924,7 @@ Y2Function* Y2UINamespace::createFunctionCall( const string name, constFunctionT
 #if VERBOSE_UI_CALLS
 	    y2debug ("Found symbol '%s' @%d", p->toString().c_str(), p->position());
 #endif
-	    return new Y2UIFunction (this, m_comp, it - b, play_macro_blocks);
+	    return new YUIFunction (this, m_comp, it - b, play_macro_blocks);
 	}
     }
 
@@ -940,11 +940,11 @@ Y2Function* Y2UINamespace::createFunctionCall( const string name, constFunctionT
     }
 
     y2debug ("overloaded %s, %td@%td", name.c_str(), re - rb, rb - b);
-    return new Y2UIOverloadedFunction (this, m_comp, rb - b, rb, re, play_macro_blocks);
+    return new YUIOverloadedFunction (this, m_comp, rb - b, rb, re, play_macro_blocks);
 }
 
 
-void Y2UINamespace::registerFunctions()
+void YUINamespace::registerFunctions()
 {
 #include "UIBuiltinTable.h"
 }
