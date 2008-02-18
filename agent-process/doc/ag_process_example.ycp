@@ -70,6 +70,13 @@ while(SCR::Read(.process.running, id) == true)
 
 }
 
+// process the remaining lines in output buffer
+while (line != nil);
+{
+    UI::ChangeWidget(`id(`dir), `Value, line);
+    line = (string)SCR::Read(.process.read_line, id);
+}
+
 UI::CloseDialog();
 
 }

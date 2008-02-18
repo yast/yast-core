@@ -34,6 +34,66 @@ The interface is implemented as a SCR agent with the usual <TT>Read()</TT>,
 <A HREF="autodocs/ag_process-builtins.html"><TT>autodocs/</TT></A> directory.</I>
 
 <P>
+<H2>Typical use case</H2>
+
+<PRE>
+// start a subprocess, remember the id
+integer id = (integer)(SCR::Execute(.process.start_shell, "/usr/bin/find /usr -type d"));
+string line = "";
+
+while(SCR::Read(.process.running, id) == true)
+{
+    // read stderr
+    line = (string)SCR::Read(.process.read_line_stderr, id);
+    if (line != nil)
+    {
+	y2warning("Error: %1", line);
+    }
+
+    // read stdout
+    line = (string)SCR::Read(.process.read_line, id);
+
+
+    if (line != nil)
+    {
+	// process the output here
+	...
+    }
+    else
+    {
+	// there was no output, wait for a while
+	// give the subprocess time to print something
+	// NOTE: change the constand in respect to the running command,
+	// increase it for processes which print few lines
+	sleep(20);
+    }
+
+    ret = (symbol) UI::PollInput();
+
+    // check if the abort button was pressed
+    if (ret == `abort)
+    {
+	SCR::Execute(.process.kill, id);	// kill the subprocess
+	break;
+    }
+
+}
+
+// process the remaining lines in the stdout buffer
+while (line != nil);
+{
+    UI::ChangeWidget(`id(`dir), `Value, line);
+    line = (string)SCR::Read(.process.read_line, id);
+}
+
+// process the stderr buffer here
+...
+</PRE>
+
+
+</P>
+
+<P>
 <H2>Details of API</H2>
 
 <H3>Start in shell vs. direct start</H3>
