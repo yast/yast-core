@@ -31,7 +31,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <errno.h>
-
+#include <cstring>
 #include <y2util/Y2SLog.h>
 
 
