@@ -19,10 +19,8 @@
 
 #include <stdlib.h>	// malloc()
 #include <string.h>	// strdup()
-#include <unistd.h>	// getpid()
 
 #include <vector>
-#include <sstream>
 #include <fstream>
 
 #include "YCommandLine.h"
@@ -49,10 +47,7 @@ YCommandLine::YCommandLine()
 {
     YUI_CHECK_NEW( priv );
 
-    std::ostringstream fileName;
-    fileName << "/proc/" << getpid() << "/cmdline";
-
-    ifstream cmdline( fileName.str().c_str(), ifstream::in | ifstream::binary );
+    ifstream cmdline( "/proc/self/cmdline", ifstream::in | ifstream::binary );
 
     while ( cmdline.good() )
     {
