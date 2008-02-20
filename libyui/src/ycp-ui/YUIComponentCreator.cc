@@ -69,7 +69,7 @@ YUIComponentCreator::provideNamespace( const char * cname )
     {
 	y2debug ("UI library namespace provider tries for '%s'", cname);
 	// implementation shortcut: we only provide the UI namespace and the UI component
-	return create( cname );
+	return createInternal( cname, true ); // isNamespace
     }
     else
     {
@@ -79,10 +79,18 @@ YUIComponentCreator::provideNamespace( const char * cname )
 
 
 Y2Component *
-YUIComponentCreator::create( const char * cname ) const
+YUIComponentCreator::create( const char * name ) const
 {
-    y2debug( "Requested \"%s\"", cname );
-    string name( cname );
+    createInternal( name,
+		    false ); // isNamespace
+}
+
+
+Y2Component *
+YUIComponentCreator::createInternal( const string & componentName, bool isNamespace ) const
+{
+    string name = componentName;
+    y2debug( "Requested \"%s\"", name.c_str() );
 
     if ( name == "UI" ||
 	 name == "qt" ||
@@ -92,6 +100,9 @@ YUIComponentCreator::create( const char * cname ) const
 #endif
 	 name == "ui" )
     {
+	if ( name == "UI" && ! isNamespace )
+	    YUIComponent::setUseDummyUI( true );
+	
 	if ( name == "UI" || name == "ui" )
 	    name = "";		// Automatically choose the appropriate UI
 
@@ -99,12 +110,12 @@ YUIComponentCreator::create( const char * cname ) const
 
 	if ( ! uiComponent )
 	{
-	    y2milestone("Creating UI component for \"%s\"", cname );
+	    y2milestone("Creating UI component for \"%s\"", name.c_str() );
 	    uiComponent = new YUIComponent( name );
 
 	    if ( ! uiComponent )
 	    {
-		y2error( "Creating UI component \"%s\"s failed", cname );
+		y2error( "Creating UI component \"%s\"s failed", name.c_str() );
 	    }
 	}
 	else
@@ -114,7 +125,7 @@ YUIComponentCreator::create( const char * cname ) const
 		uiComponent->setRequestedUIName( name );
 	    }
 
-	    y2milestone( "Returning existing UI component for \"%s\"", cname );
+	    y2milestone( "Returning existing UI component for \"%s\"", name.c_str() );
 	}
 
 	return uiComponent;
@@ -129,7 +140,8 @@ YUIComponentCreator::create( const char * cname ) const
 Y2Component *
 YUIComponentCreator::createInLevel( const char * name, int level, int currentLevel ) const
 {
-    return create( name );
+    return createInternal( name,
+			   false ); // isNamespace
 }
 
 

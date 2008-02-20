@@ -22,8 +22,10 @@
 #define YUIComponentCreator_h
 
 #include <y2/Y2ComponentCreator.h>
+#include <string>
 
 class Y2Component;
+using std::string;
 
 
 /**
@@ -71,6 +73,13 @@ public:
      * on trying with other available creators. 
      **/
     virtual  Y2Component * provideNamespace( const char * name );
+
+protected:
+
+    /**
+     * Internal create method.
+     **/
+    Y2Component * createInternal( const string & name, bool isNamespace ) const;
 };
 
 

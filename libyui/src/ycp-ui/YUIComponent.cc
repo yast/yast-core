@@ -53,6 +53,7 @@ yui_y2logger( YUILogLevel_t	logLevel,
 
 YUI *		YUIComponent::_ui		= 0;
 YUIComponent *	YUIComponent::_uiComponent	= 0;
+bool		YUIComponent::_useDummyUI	= false;
 
 
 YUIComponent::YUIComponent( const string & name )
@@ -136,6 +137,12 @@ YUIComponent::createUI()
 	return;
     }
 
+    if ( _useDummyUI )
+    {
+	y2warning( "Using dummy UI, NOT creating a UI" );
+	return;
+    }
+
     y2debug( "Creating UI" );
     
     YUILog::setLoggerFunction( yui_y2logger );
@@ -164,11 +171,8 @@ YUIComponent::createUI()
 YCPValue
 YUIComponent::callBuiltin( void * function, int fn_argc, YCPValue fn_argv[] )
 {
-    if ( ! _ui )
-    {
-	y2debug( "Late creation of UI instance" );
+    if ( ! _ui && ! _useDummyUI )
 	createUI();
-    }
 
     if ( _ui )
     {

@@ -113,6 +113,20 @@ public:
      * command line argument or 0 if none
      **/
     const char * macroFile() const { return _macroFile; }
+
+    /**
+     * Return 'true' if a dummy UI is used, i.e. a real UI will never be
+     * instantiated. This is used in YCP testsuites to prevent UI calls
+     * blocking the testsuite workflow.
+     **/
+    static bool useDummyUI() { return _useDummyUI; }
+    
+    /**
+     * Set the useDummyUI flag to prevent a real UI from ever being
+     * instantiated. This is used in YCP testsuites to prevent UI calls
+     * blocking the testsuite workflow.
+     **/
+    static void setUseDummyUI( bool useDummyUI ) { _useDummyUI = useDummyUI; }
     
     /**
      * Set a callback component.
@@ -130,6 +144,7 @@ private:
 
     static YUI *		_ui;
     static YUIComponent *	_uiComponent;
+    static bool			_useDummyUI;
 
     string			_requestedUIName;
     bool			_withThreads;
