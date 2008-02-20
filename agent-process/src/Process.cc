@@ -77,9 +77,14 @@ void Process::readStdoutToBuffer()
 {
     const size_t b_size = 4096;
     char buffer[b_size];
+    size_t read;
 
-    const size_t read = receive(buffer, b_size);
-    stdout_buffer += std::string(buffer, read);
+    do
+    {
+	read = receive(buffer, b_size);
+	stdout_buffer.append(buffer, read);
+    }
+    while(read == b_size);
 }
 
 // read stdout and return the data
@@ -99,17 +104,23 @@ void Process::readToBuffer(int fd, std::string &buffer_str)
 {
     const size_t b_size = 4096;
     char buffer[b_size];
+    ssize_t len;
 
-    ssize_t len = ::read(fd, buffer, b_size);
-
-    // no input so far
-    if (len == -1)
+    do
     {
-	len = 0;
-    }
+	len = ::read(fd, buffer, b_size);
 
-    const std::string new_output(buffer, len);
-    buffer_str += new_output;
+	// no input so far
+	if (len != -1)
+	{
+	    buffer_str.append(buffer, len);
+	}
+	else
+	{
+	    break;
+	}
+    }
+    while(len == b_size);
 }
 
 // cut off the first line from a buffer and return it
