@@ -28,9 +28,10 @@
 struct YTreePrivate
 {
     YTreePrivate()
+	: immediateMode( false )
 	{}
 
-    int dummy;
+    bool immediateMode;
 };
 
 
@@ -51,6 +52,23 @@ YTree::YTree( YWidget * parent, const string & label )
 YTree::~YTree()
 {
     // NOP
+}
+
+
+bool
+YTree::immediateMode() const
+{
+    return priv->immediateMode;
+}
+
+
+void
+YTree::setImmediateMode( bool immediateMode )
+{
+    priv->immediateMode = immediateMode;
+
+    if ( immediateMode )
+	setNotify( true );
 }
 
 

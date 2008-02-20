@@ -1894,6 +1894,7 @@ YCPDialogParser::parseComboBox( YWidget * parent, YWidgetOpt & opt,
  *		and opening subtrees. If the UI cannot handle this, all
  *		subtrees will always be open.
  *
+ * @option	immediate	make `notify trigger immediately when the selected item changes
  * @usage	`Tree( `id( `treeID ), "treeLabel", [ "top1", "top2", "top3" ] );
  * @examples	Tree1.ycp
  *		Tree2.ycp
@@ -1934,7 +1935,13 @@ YCPDialogParser::parseTree( YWidget * parent, YWidgetOpt & opt,
 	THROW_BAD_ARGS( term );
     }
 
-    rejectAllOptions( term,optList );
+    bool immediate  = false;
+
+    for ( int o=0; o < optList->size(); o++ )
+    {
+	if ( optList->value(o)->isSymbol() && optList->value(o)->asSymbol()->symbol() == YUIOpt_immediate )	immediate  = true;
+	else logUnknownOption( term, optList->value(o) );
+    }
 
     string label = term->value ( argnr )->asString()->value();
 
@@ -1949,6 +1956,9 @@ YCPDialogParser::parseTree( YWidget * parent, YWidgetOpt & opt,
 	    tree->selectItem( tree->firstItem() );
     }
 
+    if ( immediate )
+	tree->setImmediateMode( true ); // includes setNotify()
+    
     return tree;
 }
 

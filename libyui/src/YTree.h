@@ -85,6 +85,31 @@ public:
     virtual void addItems( const YItemCollection & itemCollection );
 
     /**
+     * Deliver even more events than with notify() set.
+     *
+     * For YTree, this is relevant mostly for the NCurses UI:
+     *
+     * In graphical UIs like the Qt UI, the user can use the mouse to select an
+     * item in a tree. With notify() set, this will send an event right away
+     * (i.e., it will make UserInput and related return, while normally it
+     * would only return when the user clicks a PushButton).
+     *
+     * In the NCurses UI, there is no mouse, so the user has to use the cursor
+     * keys to move to the item he wants to select. In immediateMode(), every
+     * cursor key press will make the selection box send an event. Without
+     * immediateMode(), the NCTree will wait until the user hits the [Return]
+     * key until an event is sent. Depending on what the application does upon
+     * each selection box event, immediateMode() might make the application
+     * less responsive.
+     **/
+    bool immediateMode() const;
+
+    /**
+     * Set immediateMode() on or off.
+     **/
+    void setImmediateMode( bool on = true );
+
+    /**
      * Set a property.
      * Reimplemented from YWidget.
      *
