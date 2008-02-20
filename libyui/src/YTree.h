@@ -31,7 +31,7 @@ class YTreePrivate;
  * optional icon (*).
  *
  * This is very similar to SelectionBox, but each item can have subitems that
- * can be open (expanded) or closed (collapsed). 
+ * can be open (expanded) or closed (collapsed).
  *
  * The tree widget also has a caption label that is displayed above the
  * tree. The hotkey displayed in that caption label will move the keyboard
@@ -96,7 +96,7 @@ public:
      *
      * In the NCurses UI, there is no mouse, so the user has to use the cursor
      * keys to move to the item he wants to select. In immediateMode(), every
-     * cursor key press will make the selection box send an event. Without
+     * cursor key press will make the tree send an event. Without
      * immediateMode(), the NCTree will wait until the user hits the [Return]
      * key until an event is sent. Depending on what the application does upon
      * each selection box event, immediateMode() might make the application
