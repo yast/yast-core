@@ -29,6 +29,7 @@
 #include "y2util/y2log.h"
 #include "y2util/miniini.h"
 #include "y2util/stringutil.h"
+#include "y2util/PathInfo.h"
 #include <syslog.h>
 
 /* Defines */
@@ -65,7 +66,7 @@ inisection logconf;
 static bool did_set_logname = false;
 static bool did_read_logconf = false;
 
-static char *logname;
+static const char *logname;
 
 static off_t maxlogsize;
 static int   maxlognum;
@@ -120,6 +121,25 @@ static int dup_stderr()
 }
 static int variable_not_used = dup_stderr();
 
+static FILE * open_logfile()
+{
+    FILE *logfile = Y2LOG_STDERR;
+    if (*logname != '-') {
+	logfile = fopen (logname, "a");
+	// try creating the directory if it may be missing
+	if (!logfile && errno == ENOENT) {
+	    PathInfo::assert_dir (Pathname::dirname(logname), 0700);
+	    // and retry
+	    logfile = fopen (logname, "a");
+	}
+	if (!logfile && !log_simple) {
+	    fprintf (Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s.\n",
+		     logname, strerror (errno));
+	    return NULL;
+	}
+    }
+    return logfile;
+}
 
 /**
  * The universal logger function
@@ -203,15 +223,9 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
     /* Prepare the logfile */
     shift_log_files (string (logname));
 
-    FILE *logfile = Y2LOG_STDERR;
-    if (*logname != '-') {
-	logfile = fopen (logname, "a");
-	if (!logfile && !log_simple) {
-	    fprintf (Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s (%s:%d).\n",
-		     logname, strerror (errno), file, line);
-	    return;
-	}
-    }
+    FILE *logfile = open_logfile ();
+    if (!logfile)
+	return;
 
     /* Prepare the date */
 #if 1
@@ -277,15 +291,9 @@ void y2_logger_raw( const char* logmessage )
     /* Prepare the logfile */
     shift_log_files (string (logname));
 
-    FILE *logfile = Y2LOG_STDERR;
-    if (*logname != '-') {
-	logfile = fopen (logname, "a");
-	if (!logfile && !log_simple) {
-	    fprintf (Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s.\n",
-		     logname, strerror (errno));
-	    return;
-	}
-    }
+    FILE *logfile = open_logfile ();
+    if (!logfile)
+	return;
 
     fprintf (logfile, Y2LOG_RAW, logmessage);
 
@@ -342,9 +350,10 @@ void set_log_filename (string fname)
 	    }
 	    else
 	    {
-		logname = (char *)malloc (strlen (pw->pw_dir) + strlen (Y2LOG_USER) + 1);
-		strcpy (logname, pw->pw_dir);
-		strcat (logname, Y2LOG_USER);
+		// never freed
+		char * my_logname = (char *)malloc (strlen (pw->pw_dir) + strlen (Y2LOG_USER) + 1);
+		strcpy (my_logname, pw->pw_dir);
+		logname = strcat (my_logname, Y2LOG_USER);
 	    }
 	}
 	else		    /* Root */
