@@ -86,7 +86,12 @@ INCLUDES =					\
 	${Y2UTIL_CFLAGS}
 
 libpy2UI_la_LDFLAGS = -version-info 2:0 -Wl,--no-undefined
-libpy2UI_la_LIBADD = -lpthread $(top_builddir)/libyui/src/libyui.la -lycp -ly2 -lycpvalues -ly2util
+libpy2UI_la_LIBADD = -lpthread \
+	$(top_builddir)/libyui/src/libyui.la \
+	$(top_builddir)/libycp/src/libycp.la \
+	$(top_builddir)/liby2/src/liby2.la \
+	$(top_builddir)/libycp/src/libycpvalues.la \
+	$(top_builddir)/liby2util-r/src/liby2util.la
 
 # "foo bar: baz" is wrong
 # see "info '(automake)Multiple Outputs'"
