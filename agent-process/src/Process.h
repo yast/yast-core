@@ -45,7 +45,8 @@ private:
 
     std::string stdout_buffer;	// buffer for stdout
     std::string stderr_buffer;	// buffer for stderr
-    int stderr_pipes[2];	// a pipe for stderr output
+
+    FILE *stderr_output;
 
 private:
 
@@ -59,11 +60,6 @@ private:
     // a helper function
     std::string GetLineFromBuffer(std::string &buffer);
 
-    // a helper function
-    void readToBuffer(int fd, std::string &buffer_str);
-
-    void readStdoutToBuffer();
-
 public:
 
     /**
@@ -76,7 +72,7 @@ public:
      */
     Process(const std::string &commandline, bool use_pty = false, bool default_locale = false)
 	: ExternalProgram(commandline, Stderr_To_FileDesc,
-	    use_pty, create_stderr_pipes(), default_locale)
+	    use_pty, create_stderr_pipes(), default_locale), stderr_output(NULL)
     {}
 
     /**
@@ -124,11 +120,20 @@ public:
     std::string readErr();
 
     /**
-     * Read stdout and stderr of the process to buffers to unblock it
+     * Close all input/output filedescriptors
      */
-    void readToBuffers();
-
     int closeAll();
+
+    /**
+     * Read stdout to the internal buffer (can unblock the process)
+     */
+    void readStdoutToBuffer();
+
+    /**
+     * Read stderr to the internal buffer (can unblock the process)
+     */
+    void readStderrToBuffer();
+
 };
 
 #endif // Process_h

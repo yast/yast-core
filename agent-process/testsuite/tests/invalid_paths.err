@@ -1,6 +1,6 @@
 [agent-process] ProcessAgent.cc(Dir):80 Wrong path '.non_existing_path' in Dir().
 [agent-process] ProcessAgent.cc(Read):107 ID of the process is missing
-[agent-process] ProcessAgent.cc(Write):238 Unsupported path in Write(): .non_existing_path
-[agent-process] ProcessAgent.cc(Execute):455 ID of the process is missing
+[agent-process] ProcessAgent.cc(Write):243 Unsupported path in Write(): .non_existing_path
+[agent-process] ProcessAgent.cc(Execute):460 ID of the process is missing
 [agent-process] ProcessAgent.cc(Read):119 Process '123' not found
-[agent-process] ProcessAgent.cc(Write):256 Process '123' not found
+[agent-process] ProcessAgent.cc(Write):261 Process '123' not found

@@ -129,6 +129,11 @@ YCPValue ProcessAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPV
 	 *
 	 * @example Read (.process.running, 12345) -> true
 	 */
+
+	// read output to unblock the process
+	proc->second->readStdoutToBuffer();
+	proc->second->readStderrToBuffer();
+
 	return YCPBoolean(proc->second->running());
     }
     // handler for "pid" path
@@ -468,21 +473,7 @@ YCPValue ProcessAgent::Execute(const YCPPath &path,
 	    return YCPNull();
 	}
 
-	if (pth == "buffer")
-	{
-	    /**
-	     * @builtin Execute(.process.buffer, integer id) -> boolean
-	     * Read stdout and stderr of the process to unblock it when there is full buffer and the process is stopped.
-	     * This function (or .read and .read_stderr) should be called regularly to ensure that the process
-	     * is not blocked and can run.
-	     *
-	     * @example Execute(.process.buffer, 12345) -> true
-	     */
-	    y2milestone("Reading %d output to buffers...", id);
-	    proc->second->readToBuffers();
-	    return YCPBoolean(true);
-	}
-	else if (pth == "kill")
+	if (pth == "kill")
 	{
 	    /**
 	     * @builtin Execute(.process.kill, integer id, integer signal) -> boolean

@@ -100,24 +100,25 @@ std::string Process::read()
 }
 
 // read data from a fd to a buffer
-void Process::readToBuffer(int fd, std::string &buffer_str)
+void Process::readStderrToBuffer()
 {
-    const size_t b_size = 4096;
+    if (!stderr_output)
+    {
+	ERR << "stderr output is not open!" << std::endl;
+	return;
+    }
+
+    const int b_size = 4096;
     char buffer[b_size];
-    ssize_t len;
+    int len;
 
     do
     {
-	len = ::read(fd, buffer, b_size);
+	len = ::fread(buffer, 1, b_size, stderr_output);
 
-	// no input so far
-	if (len != -1)
+	if (len > 0)
 	{
-	    buffer_str.append(buffer, len);
-	}
-	else
-	{
-	    break;
+	    stderr_buffer.append(buffer, len);
 	}
     }
     while(len == b_size);
@@ -146,27 +147,20 @@ std::string Process::GetLineFromBuffer(std::string &buffer)
 // read a line from stderr
 std::string Process::readErrLine()
 {
-    readToBuffer(stderr_pipes[0], stderr_buffer);
+    readStderrToBuffer();
 
     return GetLineFromBuffer(stderr_buffer);
-}
-
-void Process::readToBuffers()
-{
-    // read from stderr to the buffer
-    readToBuffer(stderr_pipes[0], stderr_buffer);
-
-    readStdoutToBuffer();
 }
 
 // read data from stderr
 std::string Process::readErr()
 {
     // read from stderr to the buffer
-    readToBuffer(stderr_pipes[0], stderr_buffer);
+    readStderrToBuffer();
 
     // return the buffer and clear it 
     std::string ret(stderr_buffer);
+
     stderr_buffer.clear();
 
     return ret;
@@ -198,6 +192,8 @@ void UnblockFD(int fd)
 // create a pipe for stderr output
 int Process::create_stderr_pipes()
 {
+    int stderr_pipes[2];
+
     // create a pair of pipes
     if (pipe(stderr_pipes) != 0)
     {
@@ -207,7 +203,8 @@ int Process::create_stderr_pipes()
 
     // set the stderr pipe to non-blocking mode
     UnblockFD(stderr_pipes[0]);
-    UnblockFD(stderr_pipes[1]);
+
+    stderr_output = ::fdopen(stderr_pipes[0], "r");
 
     // return fd for writing
     return stderr_pipes[1];
@@ -215,8 +212,13 @@ int Process::create_stderr_pipes()
 
 int Process::closeAll()
 {
-    // close stderr pipe
-    ::close(stderr_pipes[0]);
+    if (!stderr_output)
+    {
+	// close stderr pipe
+	::fclose(stderr_output);
+
+	stderr_output = NULL;
+    }
 
     return ExternalProgram::close();
 }

@@ -1,0 +1,24 @@
+
+// check large stdout output (141k)
+// convert \0 to a printable character
+{
+    integer id = (integer)(SCR::Execute(.start_shell, "/bin/dd if=/dev/zero bs=1k count=141 | tr '\\0' 0"));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read, id);
+    return size(out);
+}
+
+// check large stderr output (141k)
+// convert \0 to a printable character
+{
+    integer id = (integer)(SCR::Execute(.start_shell,
+	// redirect dd status output from stderr to /dev/null (status contains non-constat writing speed)
+	"(/bin/dd if=/dev/zero bs=1k count=141 2> /dev/null) | tr '\\0' 0 1>&2"));
+
+    while(SCR::Read(.running, id) == true) sleep(20);
+
+    string out = (string)SCR::Read(.read_stderr, id);
+    return size(out);
+}
