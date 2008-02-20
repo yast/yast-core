@@ -861,6 +861,21 @@ public:
 };
 
 
+/**
+ * Exception class for UI plugin load failure
+ **/
+class YUICantLoadAnyUIException: public YUIException
+{
+public:
+    YUICantLoadAnyUIException()
+	: YUIException("No $DISPLAY and stdout is not a tty" ) 
+	{}
+
+    virtual ~YUICantLoadAnyUIException() throw()
+	{}
+};
+
+
 //
 // Helper templates
 //

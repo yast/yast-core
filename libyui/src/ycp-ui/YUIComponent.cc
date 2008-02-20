@@ -28,6 +28,7 @@
 #include "YUINamespace.h"
 #include "YUI.h"
 #include "YUILoader.h"
+#include "YUIException.h"
 
 #include "YMacro.h"
 #include "YCPMacroRecorder.h"
@@ -139,15 +140,24 @@ YUIComponent::createUI()
     
     YUILog::setLoggerFunction( yui_y2logger );
 
-    if ( _requestedUIName.empty() )
-	YUILoader::loadUI( _withThreads );
-    else
-	YUILoader::loadPlugin( _requestedUIName, _withThreads );
+    try
+    {
+	if ( _requestedUIName.empty() )
+	    YUILoader::loadUI( _withThreads );
+	else
+	    YUILoader::loadPlugin( _requestedUIName, _withThreads );
 
-    _ui = YUI::ui();
+	_ui = YUI::ui();
     
-    YMacro::setRecorder( new YCPMacroRecorder() );
-    YMacro::setPlayer  ( new YCPMacroPlayer()   );
+	YMacro::setRecorder( new YCPMacroRecorder() );
+	YMacro::setPlayer  ( new YCPMacroPlayer()   );
+    }
+    catch ( YUICantLoadAnyUIException & ex )
+    {
+	// Special case: Dummy UI (needed in test cases)
+	
+	YUI_CAUGHT( ex );
+    }
 }
 
 

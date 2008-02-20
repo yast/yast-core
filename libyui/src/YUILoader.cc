@@ -64,7 +64,7 @@ void YUILoader::loadUI( bool withThreads )
     }
     else
     {
-	YUI_THROW( YUIException( "No $DISPLAY and stdout is not a tty" ) );
+	YUI_THROW( YUICantLoadAnyUIException() );
     }
 }
 
