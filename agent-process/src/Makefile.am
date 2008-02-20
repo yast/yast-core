@@ -22,4 +22,4 @@ libpy2ag_process_la_SOURCES =				\
 libpy2ag_process_la_LDFLAGS = -version-info 2:0
 libpy2ag_process_la_LIBADD = @AGENT_LIBADD@
 
-INCLUDES = -I$(includedir)
+INCLUDES = @AGENT_INCLUDES@
