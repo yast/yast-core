@@ -120,7 +120,7 @@ Start <TT>echo "\"foo bar\""</TT> command:
 <P>
 When a subprocess produces too much output which is not read it is stopped when the buffers are full. (In my test it was about  after 64kB, but this is system dependent.)</P>
 
-<P>So it is a good idea to read the output regularly. It is possible to read the output (using .process.read(_line) and .process.read_stderr(_line) paths) when the process is running or just read the output to the internal buffers in the agent (using Execute(.process.buffer)) and read them later at once when the process is finished.
+<P>So it is a good idea to read the output regularly. It is possible to read the output (using .process.read(_line) and .process.read_stderr(_line) paths) when the process is running or just read the output to the internal buffers in the agent (using Read(.process.running), in addition to checking the status it read the outputs) and read them later at once when the process is finished.
 </P>
 
 <P>

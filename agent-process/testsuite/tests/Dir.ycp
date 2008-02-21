@@ -4,7 +4,11 @@
 
 {
     // return only size of the result because the content is every time different
-    SCR::Execute(.start_shell, "exit 1");
+    integer i = (integer)(SCR::Execute(.start_shell, "exit 1"));
+
+    // avoid killing the process
+    while(SCR::Read(.running, i) == true) sleep(20);
+
     return size(SCR::Dir(.));
 }
 
