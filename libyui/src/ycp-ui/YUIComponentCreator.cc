@@ -30,7 +30,7 @@
 using std::string;
 
 
-#define SUPPORT_GTK_UI	0
+#define SUPPORT_GTK_UI	1
 
 
 // Global instances of this class for the Y2ComponentBroker to find.
