@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb 21 07:26:08 CET 2008 - coolo@suse.de
+
+- support gtk
+- V 2.16.37
+
+-------------------------------------------------------------------
 Wed Feb 20 17:28:30 CET 2008 - coolo@suse.de
 
 - fix dummy UIs for test cases in yast modules
