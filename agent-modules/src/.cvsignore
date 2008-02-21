@@ -1,9 +1,0 @@
-Makefile
-Makefile.in
-*.o
-*.lo
-*.la
-.libs
-.deps
-ag_modules
-*.kdoc
