@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 25 18:08:53 CET 2008 - sh@suse.de
+
+- Package split: libyui and ycp-ui-bindings are now separate pkgs
+- V 2.16.38 
+
+-------------------------------------------------------------------
 Thu Feb 21 07:26:08 CET 2008 - coolo@suse.de
 
 - support gtk
