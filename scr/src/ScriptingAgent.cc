@@ -321,9 +321,7 @@ ScriptingAgent::RegisterAgent (const YCPPath &path, const YCPValue &value)
 YCPBoolean
 ScriptingAgent::UnregisterAgent (const YCPPath &path)
 {
-    // an automatic sweep would undo this call.
-    // use RegisterNewAgents if you want that.
-    done_sweep = true;
+    // done_sweep appears wrong, bnc#365116
 
     SubAgents::iterator agent = findByPath (path);
     if (agent == agents.end ())

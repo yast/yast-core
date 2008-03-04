@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  4 13:30:39 CET 2008 - mvidner@suse.cz
+
+- Do not stop registering agents after UnregisterAgent (bnc#365116).
+- 2.16.39
+
+-------------------------------------------------------------------
 Mon Feb 25 18:08:53 CET 2008 - sh@suse.de
 
 - Package split: libyui and ycp-ui-bindings are now separate pkgs
