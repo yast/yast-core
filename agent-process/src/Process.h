@@ -60,6 +60,13 @@ private:
     // a helper function
     std::string GetLineFromBuffer(std::string &buffer);
 
+    // a helper function
+    // reads the new stdout lines and adds them to stdout buffer
+    void BufferNewStdoutLines();
+
+    // checks emptines of the stdout buffer
+    bool IsAnyLineInBuffer(const std::string &buffer);
+
 public:
 
     /**
@@ -134,6 +141,10 @@ public:
      */
     void readStderrToBuffer();
 
+    /**
+     * Read whether there are some buffered lines
+     */
+    bool anyLineInStdout();
 };
 
 #endif // Process_h

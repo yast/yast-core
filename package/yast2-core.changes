@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Mar  5 09:58:00 CET 2008 - locilka@suse.cz
+
+- Extended .process agent with 'buffer_empty' function that returns
+  whether the stdout buffer is empty (needed for backup).
+- 2.16.40
+
+-------------------------------------------------------------------
 Tue Mar  4 13:30:39 CET 2008 - mvidner@suse.cz
 
 - Do not stop registering agents after UnregisterAgent (bnc#365116).

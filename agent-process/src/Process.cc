@@ -64,13 +64,26 @@ bool Process::kill()
     return ExternalProgram::kill();
 }
 
-// read a line from stdout
-std::string Process::readLine()
+void Process::BufferNewStdoutLines ()
 {
     const std::string new_output = receiveUpto('\n');
     stdout_buffer += new_output;
+}
+
+// read a line from stdout
+std::string Process::readLine()
+{
+    BufferNewStdoutLines();
 
     return GetLineFromBuffer(stdout_buffer);
+}
+
+// return whether stdout buffer contains any (finished) line
+bool Process::anyLineInStdout()
+{
+    BufferNewStdoutLines();
+
+    return IsAnyLineInBuffer(stdout_buffer);
 }
 
 void Process::readStdoutToBuffer()
@@ -142,6 +155,12 @@ std::string Process::GetLineFromBuffer(std::string &buffer)
 
     // no new line, return empty string
     return std::string();
+}
+
+// returns whether the buffer is empty
+bool Process::IsAnyLineInBuffer(const std::string &buffer)
+{
+    return buffer.empty();
 }
 
 // read a line from stderr

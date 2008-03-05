@@ -227,6 +227,16 @@ YCPValue ProcessAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPV
 	    return YCPInteger(proc->second->close());
 	}
     }
+    else if (cmd == "buffer_empty")
+    {
+	/**
+	 * @builtin Read (.process.buffer_empty, integer id) -> boolean
+	 * Returns boolean whether the stdout buffer is empty, if buffer is not empty, false is returned.
+	 *
+	 * @example Read (.process.buffer_empty, 12345) -> false
+	 */
+	return YCPBoolean (proc->second->anyLineInStdout());
+    }
 
     y2error("Wrong path '%s' in Read().", path->toString().c_str());
     return YCPNull();

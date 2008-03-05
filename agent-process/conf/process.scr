@@ -48,11 +48,18 @@
  *	(nil)
  *
  *	// read complete output
+ *	// check whether the buffer (output) is empty
+ *	// (even if process is dead, buffer might contain something)
  *	`Write(.process, 14900,"the first line\nthe second line\n")
  *	(true)
+ *	// buffer is not empty
+ *	`Read (.process.buffer_empty, 14900)
+ *	(false)
  *	`Read(.process.read, 14900)
  *	("the first line\nthe second line\n")
- *
+ *	// buffer is empty after .read
+ *	`Read (.process.buffer_empty, 14900)
+ *	(true)
  *	// close input/output
  *	`Read(.process.running, 14900)
  *	(true)
