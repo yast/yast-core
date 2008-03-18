@@ -512,7 +512,7 @@ YCPValue ProcessAgent::Execute(const YCPPath &path,
 	{
 	    /**
 	     * @builtin Execute(.process.release, integer id) -> boolean
-	     * Removes the process from the internal structure and releases all alocated resources (buffers).
+	     * Removes the process from the internal structure and releases all allocated resources (buffers).
 	     * If the process is running then it is killed by SIGKILL at first.
 	     *
 	     * @example Execute(.process.release, 12345) -> true
