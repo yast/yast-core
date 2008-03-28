@@ -415,7 +415,8 @@ ScriptingAgent::UnmountAllAgents ()
 void
 ScriptingAgent::Sweep ()
 {
-    y2warning ("Scripting agent sweeping");
+    extern ExecutionEnvironment ee;
+    ycp2warning (ee.filename().c_str(), ee.linenumber(), "Scripting agent sweeping");
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 	 level++)
     {
