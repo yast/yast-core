@@ -415,7 +415,7 @@ ScriptingAgent::UnmountAllAgents ()
 void
 ScriptingAgent::Sweep ()
 {
-    y2debug ("Scripting agent sweeping");
+    y2warning ("Scripting agent sweeping");
     for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 	 level++)
     {
@@ -435,12 +435,27 @@ ScriptingAgent::RegisterNewAgents ()
     return YCPBoolean (true);
 }
 
+// return a copy of s where each a is replaced by b
+static
+string
+tr (const string & s, char a, char b)
+{
+    char * sc = strdup (s.c_str ());
+    for (char * p = sc; *p; ++p) {
+	if (*p == a)
+	    *p = b;
+    }
+    string ret = sc;
+    free (sc);
+    return ret;
+}
 
 // cannot return "success" because we can register an unrelated path
 void
 ScriptingAgent::tryRegister (const YCPPath &path)
 {
-    string basename = path->toString().substr(1) + ".scr"; // skip "."
+    // .foo.bar.baz becomes foo_bar_baz.scr
+    string basename = tr (path->toString().substr(1), '.', '_') + ".scr";
 
     list<RegistrationDir>::iterator
 	i = registration_dirs.begin(),

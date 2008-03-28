@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Mar 28 17:22:19 CET 2008 - mvidner@suse.cz
+
+- Lazy SCR: to better suit the current naming scheme, to get .foo.bar
+  look for foo_bar.scr instead of foo.bar.scr
+- Lazy SCR: when sweeping, warn in the log
+- 2.16.41
+
+-------------------------------------------------------------------
 Wed Mar  5 09:58:00 CET 2008 - locilka@suse.cz
 
 - Extended .process agent with 'buffer_empty' function that returns
