@@ -24,6 +24,13 @@
 (argsof (`hrombuch (18, false)))
 
 
+("** toterm **")
+
+(toterm("sym"))
+(toterm(`sym))
+(toterm(`sym, [ 1, 2 ]))
+
+
 ("** remove **")
 
 (remove (`hrombuch ("a", "b", "c"), 1))

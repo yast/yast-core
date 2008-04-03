@@ -143,7 +143,7 @@ t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 
 
 static YCPValue
-t_toterm (const YCPValue &v)
+t_toterm1 (const YCPValue &v)
 {
     /**
      * @builtin toterm
@@ -154,7 +154,9 @@ t_toterm (const YCPValue &v)
      *
      * @param any VALUE
      * @return term
+     *
      * @usage toterm ("VBox") -> `VBox ()
+     * @usage toterm (`VBox) -> `VBox ()
      */
 
     if (v.isNull())
@@ -169,7 +171,45 @@ t_toterm (const YCPValue &v)
     {
 	return YCPTerm (v->asString()->value());
     }
+    else if (v->valuetype() == YT_SYMBOL)
+    {
+	return YCPTerm (v->asSymbol()->symbol());
+    }
     return YCPNull();
+}
+
+
+static YCPValue
+t_toterm2 (const YCPSymbol &s, const YCPList &l)
+{
+   /**
+     * @builtin toterm
+     * @short Constructs a term from a symbol and a list.
+     *
+     * @description
+     * Constructs a term from a symbol and a list. Thus complement to symbolof
+     * and argsof.
+     *
+     * @param symbol s
+     * @param list l
+     * @return term
+     *
+     * @usage toterm (`RadioButton, [ `id (`test), "Test" ]) -> `RadioButton (`id (`test), "Test")
+     */
+
+    if (s.isNull () || l.isNull ())
+    {
+	return YCPNull ();
+    }
+
+    YCPTerm ret = YCPTerm (s->symbol());
+
+    for (int i = 0; i < l->size (); i++)
+    {
+	ret->add(l->value (i));
+    }
+
+    return ret;
 }
 
 
@@ -242,7 +282,8 @@ YCPBuiltinTerm::YCPBuiltinTerm ()
 	{ "size",	"integer (term)",			(void *)t_size	},
 	{ "symbolof",	"symbol (term)",			(void *)t_symbolof },
 	{ "select",	"flex (term, integer, const flex)",	(void *)t_select, DECL_NIL|DECL_FLEX },
-	{ "toterm",	"term (any)",				(void *)t_toterm },
+	{ "toterm",	"term (any)",				(void *)t_toterm1 },
+	{ "toterm",	"term (symbol, const list <any>)",	(void *)t_toterm2 },
 	{ "remove",	"term (term, integer)",			(void *)t_remove },
 	{ "argsof",	"list <any> (term)",			(void *)t_argsof },
 	{ 0 }

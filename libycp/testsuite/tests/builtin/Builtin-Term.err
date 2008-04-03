@@ -28,6 +28,22 @@ argsof (`hrombuch (18, false))
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
+"** toterm **"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+toterm ("sym")
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+toterm (`sym)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+toterm (`sym, [1, 2])
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
 "** remove **"
 ----------------------------------------------------------------------
 Parsed:
@@ -38,29 +54,29 @@ Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-Term.ycp:34 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:41 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[-1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-Term.ycp:35 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:42 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[0]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-Term.ycp:36 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:43 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-Term.ycp:37 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:44 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> const integer */`hirn (1, 2)[2]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-Term.ycp:39 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-Term.ycp:46 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> string */`hirn (1, 2)[0]:"wrong type"
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-Term.ycp:39 Can't convert value '1' to type 'string'
+[Interpreter] tests/builtin/Builtin-Term.ycp:46 Can't convert value '1' to type 'string'
