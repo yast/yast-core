@@ -3,7 +3,7 @@
 #
 #  Filename:	Builtin-Integer.ycp
 #
-#  Purpose:	test cases for all integer builtins
+#  Purpose:	test cases for all float builtins
 #
 # ---------------------------------------------------------
 
@@ -50,4 +50,26 @@
 (tofloat (4))
 (tofloat ("42"))
 (tofloat ("3.14"))
+
+
+("** trunc **")
+
+(trunc (1.0))
+(trunc (1.4))
+(trunc (1.6))
+(trunc (2.0))
+
+(trunc (-1.0))
+(trunc (-1.4))
+(trunc (-1.6))
+(trunc (-2.0))
+
+
+("** pow ** ")
+
+(pow (10.0, 2.0))
+(pow (10.0, 1.0))
+(pow (10.0, 0.0))
+(pow (10.0, -1.0))
+(pow (10.0, -2.0))
 

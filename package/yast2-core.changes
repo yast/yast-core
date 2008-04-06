@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Apr 06 13:34:20 CEST 2008 - aschnell@suse.de
+
+- added float builtins trunc and pow
+- 2.16.44
+
+-------------------------------------------------------------------
 Sun Apr  6 11:11:55 CEST 2008 - coolo@suse.de
 
 - compile with xcrypt 3

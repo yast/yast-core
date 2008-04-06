@@ -20,6 +20,7 @@
 /-*/
 
 #include <unistd.h>
+#include <math.h>
 #include <stdio.h>
 
 #include "ycp/YCPBuiltinFloat.h"
@@ -44,7 +45,7 @@ f_plus (const YCPFloat &f1, const YCPFloat &f2)
      * 1.5 + 2.5 -> 4.0
      * </pre>
      */
-     
+
     if (f1.isNull () || f2.isNull ())
 	return YCPNull ();
 
@@ -131,10 +132,52 @@ f_neg (const YCPFloat &f1)
 
 
 static YCPValue
+f_trunc(const YCPFloat &f)
+{
+    /**
+     * @builtins trunc
+     * @short round to integer, towards zero
+     * @description
+     * Returns f round to the nearest integer, towards zero.
+     * @param f FLOAT
+     * @return FLOAT
+     * @usage trunc (+1.6) -> +1.0
+     * @usage trunc (-1.6) -> -1.0
+     */
+
+    if (f.isNull ())
+        return YCPNull ();
+
+    return YCPFloat(trunc(f->value()));
+}
+
+
+static YCPValue
+f_pow(const YCPFloat &f1, const YCPFloat &f2)
+{
+    /**
+     * @builtins pow
+     * @short power function
+     * @description
+     * Returns the value of f1 raised to the power of f2.
+     * @param f1 FLOAT
+     * @param f2 FLOAT
+     * @return FLOAT
+     * @usage pow (10.0, 3.0) -> 1000.0
+     */
+
+    if (f1.isNull () || f2.isNull ())
+        return YCPNull ();
+
+    return YCPFloat(pow(f1->value(), f2->value()));
+}
+
+
+static YCPValue
 f_tostring (const YCPFloat &f, const YCPInteger &precision)
 {
     /**
-     * @builtin tostring 
+     * @builtin tostring
      * @short Converts a floating point number to a string
      * @description
      * Converts a floating point number to a string, using the
@@ -206,6 +249,8 @@ YCPBuiltinFloat::YCPBuiltinFloat ()
 	{ "-",	     "float (float)",		(void *)f_neg },
 	{ "*",	     "float (float, float)",	(void *)f_mult },
 	{ "/",	     "float (float, float)",	(void *)f_div },
+	{ "trunc",   "float (float)",	        (void *)f_trunc },
+	{ "pow",     "float (float, float)",	(void *)f_pow },
 	{ "tofloat", "float (const any)",	(void *)f_tofloat },
 	{ "tostring","string (float, integer)",	(void *)f_tostring },
 	{ 0 }
