@@ -78,7 +78,7 @@ make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
     close (fd);
 
     char output[CRYPT_GENSALT_OUTPUT_SIZE];
-    char* retval = crypt_gensalt_rn (crypt_prefix, crypt_rounds, entropy,
+    char* retval = xcrypt_gensalt_r (crypt_prefix, crypt_rounds, entropy,
 				     sizeof (entropy), output, sizeof (output));
 
     memset (entropy, 0, sizeof (entropy));
@@ -111,8 +111,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for standard crypt");
 		return false;
 	    }
-	    newencrypted = crypt_rn (unencrypted.c_str (), salt, &output,
-				     sizeof (output));
+	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
@@ -123,8 +122,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for MD5 crypt");
 		return false;
 	    }
-	    newencrypted = crypt_rn (unencrypted.c_str (), salt, &output,
-				     sizeof (output));
+	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
@@ -146,8 +144,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for blowfish crypt");
 		return false;
 	    }
-	    newencrypted = crypt_rn (unencrypted.c_str (), salt, &output,
-				     sizeof (output));
+	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
