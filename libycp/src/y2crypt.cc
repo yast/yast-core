@@ -78,7 +78,10 @@ make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
     close (fd);
 
     char output[CRYPT_GENSALT_OUTPUT_SIZE];
-    char* retval = xcrypt_gensalt_r (crypt_prefix, crypt_rounds, entropy,
+#if !defined(crypt_gensalt_r)
+#define crypt_gensalt_r xcrypt_gensalt_rn
+#endif
+    char* retval = crypt_gensalt_r (crypt_prefix, crypt_rounds, entropy,
 				     sizeof (entropy), output, sizeof (output));
 
     memset (entropy, 0, sizeof (entropy));
