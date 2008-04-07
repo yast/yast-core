@@ -2,7 +2,7 @@
 /dev/sda1       /                         ext2            defaults   1   1
 /dev/sda3       /usr                      reiserfs        defaults   1   2
 
-/dev/scd0       /cdrom                    iso9660         ro,noauto,user 0   0
+  /dev/scd0       /cdrom                    iso9660         ro,noauto,user 0   0  
 
 /dev/fd0        /floppy                   auto            noauto,user 0   0
 wotan:/real-home        /home/dhs                 nfs     rw,hard,bg,intr,rsize=8192,wsize=8192

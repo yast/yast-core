@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Apr  7 13:14:10 CEST 2008 - mvidner@suse.cz
+
+- any-agent: added Omit, a write-nothing companion to Optional,
+  necessary for an fstab truncation fix (bnc#351648)
+- Fixed an omission in the implementation of Omit (bnc#351648).
+- 2.13.43
+
+-------------------------------------------------------------------
 Tue Dec 11 14:19:34 CET 2007 - mvidner@suse.cz
 
 - Enabled iterating over all functions of a Y2Namespace, for
