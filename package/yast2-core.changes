@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr  8 12:38:03 CEST 2008 - mvidner@suse.cz
+
+- y2base: Added -I and -M options to add search paths for includes and
+  modules (fate#2306).
+
+-------------------------------------------------------------------
 Sun Apr 06 13:34:20 CEST 2008 - aschnell@suse.de
 
 - added float builtins trunc and pow

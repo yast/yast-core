@@ -568,6 +568,41 @@ main (int argc, char **argv)
 	arg++;
     }
 
+// FIXME the whole option parsing sucks **** !
+
+    // list of -I / -M pathes
+    //   will be pushed to YCPPathSearch later to keep correct order
+    //   (the last added path to YCPPathSearch will be searched first)
+    std::list<std::string> modpaths;
+    std::list<std::string> incpaths;
+
+    // include paths
+    while (!strcmp(argv[arg], "-I"))
+    {
+	arg++;
+	incpaths.push_front (string (argv[arg])); // push to front so first one is last in list
+	arg++;
+    }
+
+    while (!strcmp(argv[arg], "-M"))
+    {
+	arg++;
+	modpaths.push_front (string (argv[arg])); // push to front so first one is last in list
+	arg++;
+    }
+
+    // add include and module pathes to YCPPathSearch so that the argument order is kept
+
+    std::list<std::string>::iterator pathit;
+    for (pathit = incpaths.begin(); pathit != incpaths.end(); pathit++)
+    {
+	YCPPathSearch::addPath (YCPPathSearch::Include, pathit->c_str());
+    }
+    for (pathit = modpaths.begin(); pathit != modpaths.end(); pathit++)
+    {
+	YCPPathSearch::addPath (YCPPathSearch::Module, pathit->c_str());
+    }
+
     // "arg" and these two are output params
     char * client_name;
     YCPList arglist;
@@ -681,6 +716,10 @@ print_help()
     fprintf (stderr,
 	     "LogOptions are:\n"
 	     "    -l | --logfile LogFile    : Set logfile\n"
+	     "    -c | --logconf ConfFile   : Configure logging\n"
+	     "    -n Namespace=Component    : Override component for namespace\n"
+	     "    -I Path                   : Add include search path\n"
+	     "    -M Path                   : Add module search path\n"
 	     "ClientOptions are:\n"
 	     "    -s                        : Get options as one YCPList from stdin\n"
 	     "    -f FileName               : Get YCPValue(s) from file\n"
