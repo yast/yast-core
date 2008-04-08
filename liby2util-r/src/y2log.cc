@@ -8,6 +8,7 @@
  *          Thomas Roelz <tom@suse.de>
  *          Michal Svec <msvec@suse.cz>
  *          Arvin Schnell <arvin@suse.de>
+ *          Martin Vidner <mvidner@suse.cz>
  *
  * $Id$
  */
@@ -373,14 +374,20 @@ string get_log_filename()
     return string (logname);
 }
 
+static string old (const string & filename, int i, const char * suffix) {
+    char numbuf[8];
+    sprintf (numbuf, "%d", i);
+    return filename + "-" + numbuf + suffix;
+}
 
 /**
  * Maintain logfiles
+ * We do all of this ourselves because during the installation
+ * logrotate does not run
  */
 static void shift_log_files(string filename)
 {
     struct stat buf;
-    char numbuf[8];
 
     if( stat(filename.c_str(), &buf) )
 	return;
@@ -388,18 +395,23 @@ static void shift_log_files(string filename)
     if( buf.st_size <= maxlogsize )
 	return;
 
-    /* Delete the last logfile, rename existing ones */
-    sprintf (numbuf, "%d", maxlognum - 1);
-    remove ((filename + "-" + numbuf).c_str());
+    static const char * gz = ".gz";
+    // Delete the last logfile
+    remove (old (filename, maxlognum - 1, ""   ).c_str());
+    remove (old (filename, maxlognum - 1, gz).c_str());
 
+    // rename existing ones
     for( int f = maxlognum-2; f > 0; f-- )
     {
-	sprintf (numbuf, "%d", f);
-	string oldname = filename + "-" + numbuf;
-	sprintf (numbuf, "%d", f+1);
-	rename (oldname.c_str(), (filename + "-" + numbuf).c_str());
+	rename (old (filename, f, "").c_str(), old (filename, f+1, "").c_str());
+	rename (old (filename, f, gz).c_str(), old (filename, f+1, gz).c_str());
     }
-    rename( filename.c_str(), (filename + "-1").c_str() );
+
+    // rename and compress first one
+    rename( filename.c_str(), old (filename, 1, "").c_str() );
+    // fate#300637: compress!
+    // may fail, but so what
+    system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
 }
 
 

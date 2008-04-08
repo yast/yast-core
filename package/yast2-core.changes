@@ -1,8 +1,10 @@
 -------------------------------------------------------------------
-Tue Apr  8 12:38:03 CEST 2008 - mvidner@suse.cz
+Tue Apr  8 18:14:44 CEST 2008 - mvidner@suse.cz
 
+- Compress (gzip) the rotated y2logs, in the background (fate#300637).
 - y2base: Added -I and -M options to add search paths for includes and
   modules (fate#2306).
+- 2.16.45
 
 -------------------------------------------------------------------
 Sun Apr 06 13:34:20 CEST 2008 - aschnell@suse.de
