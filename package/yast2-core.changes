@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Apr 09 11:16:34 CEST 2008 - aschnell@suse.de
+
+- added new builtin sublist
+- 2.16.46
+
+-------------------------------------------------------------------
 Tue Apr  8 18:14:44 CEST 2008 - mvidner@suse.cz
 
 - Compress (gzip) the rotated y2logs, in the background (fate#300637).

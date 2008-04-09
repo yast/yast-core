@@ -56,12 +56,12 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      * Searches for a certain item in the list. It applies the expression
      * <tt>EXPR</tt> to each element in the list and returns the first element
      * the makes the expression evaluate to true, if <tt>VAR</tt> is bound to
-     * that element. 
+     * that element.
      *
      * @return any Returns nil, if nothing is found.
      * @usage find (integer n, [3,5,6,4], ``(n >= 5)) -> 5
      */
-     
+
     if (list.isNull ())
     {
 	return YCPNull ();
@@ -83,7 +83,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	    ycp2error ("Bad find expression %s", expr->toString ().c_str ());
 	    break;
 	}
-	// nil == false 
+	// nil == false
 	if (v->isVoid ())
 	{
 	    ycp2error ("The expression for 'find' returned 'nil'");
@@ -105,7 +105,7 @@ static YCPValue
 l_prepend (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin prepend 
+     * @builtin prepend
      * @short Prepends a list with a new element
      * @param list LIST List
      * @param any ELEMENT Element to prepend
@@ -130,7 +130,7 @@ static YCPValue
 l_contains (const YCPList &list, const YCPValue &value)
 {
     /**
-     * @builtin contains 
+     * @builtin contains
      * @short Checks if a list contains an element
      * @param list LIST List
      * @param any ELEMENT Element
@@ -138,7 +138,7 @@ l_contains (const YCPList &list, const YCPValue &value)
      * @description
      *
      * Determines, if a certain value <tt>ELEMENT</tt> is contained in
-     * a list <tt>LIST</tt>. 
+     * a list <tt>LIST</tt>.
      *
      * @usage contains ([1, 2, 5], 2) -> true
      */
@@ -218,14 +218,14 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
      * @short Unions of lists
      * @param list LIST1 First List
      * @param list LIST2 Second List
-     * @return list 
+     * @return list
      *
      * @description
      * Interprets two lists as sets and returns a new list that has
      * all elements of the first list and all of the second list. Identical
      * elements are merged. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
-     * 
+     *
      * WARNING: quadratic complexity so far
      *
      * @see merge
@@ -275,11 +275,11 @@ static YCPValue
 l_mergelist (const YCPList &list1, const YCPList &list2)
 {
     /**
-     * @builtin merge 
+     * @builtin merge
      * @short Merges two lists into one
      * @param list LIST1 First List
      * @param list LIST2 Second List
-     * @return list 
+     * @return list
      *
      * @description
      * Interprets two lists as sets and returns a new list that has
@@ -314,6 +314,98 @@ l_mergelist (const YCPList &list1, const YCPList &list2)
 
 
 static YCPValue
+l_sublist1(const YCPList &list, const YCPInteger &offset)
+{
+   /**
+     * @builtin sublist
+     * @short Extracts a sublist
+     *
+     * @description
+     * Extracts a sublist of the list <tt>LIST</tt> starting at
+     * <tt>OFFSET</tt>. The <tt>OFFSET</tt> starts with 0.
+     *
+     * @param list LIST
+     * @param integer OFFSET
+     * @return list
+     *
+     * @usage sublist ([ "a", "b", "c"], 0) -> [ "a", "b", "c" ]
+     * @usage sublist ([ "a", "b", "c"], 2) -> [ "c" ]
+     */
+
+    if (list.isNull () || offset.isNull())
+	return YCPNull ();
+
+    int i1 = offset->value();
+    int i2 = list->size();
+
+    if (i1 < 0 || i1 >= list->size ())
+    {
+	ycp2error ("Offset %s for sublist () out of range", toString (i1).c_str ());
+	return YCPNull ();
+    }
+
+    YCPList newlist;
+
+    for (int i = i1; i < i2; i++)
+    {
+	newlist->add (list->value(i));
+    }
+
+    return newlist;
+}
+
+
+static YCPValue
+l_sublist2(const YCPList &list, const YCPInteger &offset, const YCPInteger &length)
+{
+    /**
+     * @builtin sublist
+     * @short Extracts a sublist
+     *
+     * @description
+     * Extracts a sublist of the list <tt>LIST</tt> starting at
+     * <tt>OFFSET</tt> with length <tt>LENGTH</tt>. The <tt>OFFSET</tt>
+     * starts with 0.
+     *
+     * @param list LIST
+     * @param integer OFFSET
+     * @param integer LENGTH
+     * @return list
+     *
+     * @usage sublist ([ "a", "b", "c"], 0, 2) -> [ "a", "b" ]
+     * @usage sublist ([ "a", "b", "c"], 1, 1) -> [ "b" ]
+     */
+
+    if (list.isNull () || offset.isNull() || length.isNull ())
+	return YCPNull ();
+
+    int i1 = offset->value();
+    int i2 = i1 + length->value();
+
+    if (i1 < 0 || i1 >= list->size ())
+    {
+	ycp2error ("Offset %s for sublist () out of range", toString (i1).c_str ());
+	return YCPNull ();
+    }
+
+    if (i2 < i1 || i2 > list->size ())
+    {
+	ycp2error ("Length %s for sublist () out of range", toString (i2).c_str ());
+	return YCPNull ();
+    }
+
+    YCPList newlist;
+
+    for (int i = i1; i < i2; i++)
+    {
+	newlist->add (list->value(i));
+    }
+
+    return newlist;
+}
+
+
+static YCPValue
 l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
@@ -322,7 +414,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
      * @param any VAR Variable
      * @param list LIST List to be filtered
      * @param block<boolean> EXPR Block
-     * @return list 
+     * @return list
      * @description
      * For each element of the list <tt>LIST</tt> the expression <tt>expr</tt>
      * is executed in a new block, where the variable <tt>VAR</tt>
@@ -353,7 +445,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	    ycp2error ("Bad filter expression %s", expr->toString ().c_str ());
 	    return YCPNull ();
 	}
-	// nil == false 
+	// nil == false
 	if (v->isVoid ())
 	{
 	    ycp2error ("The expression for 'filter' returned 'nil'");
@@ -475,7 +567,7 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	}
 	else if (! curr_value ->isMap () )
 	{
-            ycp2error("listmap() expression has to deliver a single entry map! You have produced the following value: %s", 
+            ycp2error("listmap() expression has to deliver a single entry map! You have produced the following value: %s",
                 curr_value->toString().c_str());
 	    return YCPNull ();
 	}
@@ -489,7 +581,7 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
             }
             else
             {
-                ycp2error("listmap() expression has to deliver a single entry map! You have produced the following value: %s", 
+                ycp2error("listmap() expression has to deliver a single entry map! You have produced the following value: %s",
                     curr_map->toString().c_str());
 	        return YCPNull ();
             }
@@ -616,7 +708,7 @@ l_sort (const YCPValue &sym1, const YCPValue &sym2,
      * @id sort_2
      * @short Sort list using an expression
      * @param any x
-     * @param any y 
+     * @param any y
      * @param list LIST
      * @param block EXPR
      * @return list
@@ -711,7 +803,7 @@ l_splitstring (const YCPString &s, const YCPString &c)
     {
 	return YCPNull ();
     }
-    
+
     if (c.isNull ())
     {
 	ycp2error ("Cannot split string using 'nil'");
@@ -817,7 +909,7 @@ static YCPValue
 l_size (const YCPValue &list)
 {
     /**
-     * @builtin size 
+     * @builtin size
      * @short Returns size of list
      * @param list LIST
      * @return integer size of the list
@@ -857,7 +949,7 @@ l_remove (const YCPList &list, const YCPInteger &i)
     {
 	return YCPNull ();
     }
-    
+
     if (i.isNull ())
     {
 	ycp2error ("Cannot remove item at index 'nil'");
@@ -916,7 +1008,7 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
     {
 	return def;
     }
-    
+
     // FIXME: runtime type check, because of the term variant of select
     // ensure, that it is really a list
     YCPValue tmp = list;
@@ -931,9 +1023,9 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 	ycp2error ("Incorrect builtin called, %s is not a list", tmp->toString ().c_str ());
 	return def;
     }
-    
+
     YCPValue v = list->asList()->value (idx);
-    
+
     return v;
 }
 
@@ -943,7 +1035,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin foreach
-     * @short Processes the content of a list 
+     * @short Processes the content of a list
      * @param any VAR
      * @param list LIST
      * @param block EXPR
@@ -962,7 +1054,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
     {
 	return YCPNull ();
     }
-    
+
     SymbolEntryPtr s = sym->asEntry()->entry();
     YCPValue ret = YCPVoid();
 
@@ -1024,6 +1116,8 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist	},
 	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX },
 	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist	},
+	{ "sublist",	"list <flex> (const list <flex>, integer)",						(void *)l_sublist1,     DECL_FLEX },
+	{ "sublist",	"list <flex> (const list <flex>, integer, integer)",					(void *)l_sublist2,     DECL_FLEX },
 	{ "filter",	"list <flex> (variable <flex>, const list <flex>, const block <boolean>)",		(void *)l_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "maplist",	"list <flex1> (variable <flex2>, const list <flex2>, const block <flex1>)",		(void *)l_maplist,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "listmap",	"map <flex1,flex2> (variable <flex3>, const list <flex3>, const block <map <flex1,flex2>>)",	(void *)l_listmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
