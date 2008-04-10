@@ -534,6 +534,7 @@ YLocale::evaluate (bool cse)
     return YCPString (ret);
 }
 
+// FIXME: why we use pair string:bool in domains if we used only true value?
 
 YLocale::t_uniquedomains::const_iterator
 YLocale::setDomainStatus (const string& domain, bool status)
@@ -549,6 +550,12 @@ YLocale::setDomainStatus (const string& domain, bool status)
     return domains.find (domain.c_str ());
 }
 
+bool
+YLocale::findDomain(const string& domain)
+{
+    return (domains.find (domain.c_str ()) == domains.end ()) ? false : true;
+}
+
 
 void 
 YLocale::ensureBindDomain (const string& domain)
@@ -556,13 +563,22 @@ YLocale::ensureBindDomain (const string& domain)
     if (domains.find (domain.c_str ()) == domains.end () 
 	|| ! domains[domain.c_str ()])
     {
-#if DO_DEBUG
-	y2debug ("going to bind a domain %s", domain.c_str() );
-#endif
-	bindtextdomain (domain.c_str (), LOCALEDIR);
-	bind_textdomain_codeset (domain.c_str (), "UTF-8");
-	setDomainStatus (domain, true);
+	bindDomainDir (domain, LOCALEDIR);
     }
+}
+
+
+void 
+YLocale::bindDomainDir (const string& domain, const string& domain_path)
+{
+
+#if DO_DEBUG
+    y2debug ("going to bind a domain %s with path %s", domain.c_str(),  domain_path.c_str());
+#endif
+    bindtextdomain (domain.c_str (), domain_path.c_str());
+    bind_textdomain_codeset (domain.c_str (), "UTF-8");
+    setDomainStatus (domain, true);
+ 
 }
 
 // ------------------------------------------------------------------

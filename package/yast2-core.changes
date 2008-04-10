@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Apr 10 16:53:17 CEST 2008 - mvidner@suse.cz
+
+- New builtin: dpgettext ("animals", "/mnt/share/locale", "Giraffe")
+  (fate#2826, by juhliarik).
+- 2.16.47
+
+-------------------------------------------------------------------
 Wed Apr 09 11:16:34 CEST 2008 - aschnell@suse.de
 
 - added new builtin sublist

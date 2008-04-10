@@ -1287,6 +1287,57 @@ s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString
 }
 
 
+static YCPValue
+s_dpgettext (const YCPString& domain, const YCPString& domain_path, const YCPString& text)
+{
+    /**
+     * @builtin dpgettext
+     * @short Translates the text using the given text domain and path
+     * @description
+     * Translates the text using the given text domain into
+     * the current language and path of localization .
+     * Path of localization is same than dirname in function bindtextdomain()
+     *
+     * This is a special case builtin not intended for general use.
+     * See _() instead.
+     *
+     * @param string textdomain
+     * @param string dirname
+     * @param string text
+     * @return string
+     * @usage dpgettext ("base", "/texdomain/path", "No") -> "Nie"
+     */
+
+    if ((domain.isNull () || domain->isVoid ()) ||
+	(domain_path.isNull () || domain_path->isVoid ()) ||
+	(text.isNull () || text->isVoid ())) 
+    {
+	return YCPNull ();
+    }
+
+    // initialize text domain if not done so
+    string dom = domain->value ();
+    string dom_path = domain_path->value ();
+
+    // check if domain exist
+    // it is important to bind domain back (LOCALEDIR) 
+    // if it is already binded
+    bool known_domain = false;
+    if (YLocale::findDomain(dom))
+	known_domain = true;
+
+    YLocale::bindDomainDir (dom, dom_path);
+    string result = dgettext (dom.c_str(), text->value().c_str());
+    // if it is known domain bind it back to LOCALEDIR
+    if (known_domain)
+	YLocale::bindDomainDir (dom, LOCALEDIR);
+
+    return YCPString (result);
+}
+
+
+
+
 YCPBuiltinString::YCPBuiltinString ()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -1324,6 +1375,7 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "regexptokenize","list <string> (string, string)",	(void *)s_regexptokenize },
 	{ "dgettext",	   "string (string, string)",		(void *)s_dgettext},
 	{ "dngettext",	   "string (string, string, string, integer)",	(void *)s_dngettext},
+	{ "dpgettext",	   "string (string, string, string)",	(void *)s_dpgettext},
 	{ 0 }
     };
 
