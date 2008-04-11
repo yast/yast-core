@@ -531,7 +531,10 @@ Y2WFMComponent::Read (const YCPPath &path, const YCPValue& arg)
      * @param path path Path
      * @optarg any options
      * @return any
-     *
+     * @description
+     * WFM::Read (.local.foo, ... ) works like SCR::Read (.target.foo, ...)
+     * but in the inst-sys rather than on the system being installed.
+     * It only works for paths starting with .local
      */
 
     if (!local.start ())
@@ -567,6 +570,10 @@ Y2WFMComponent::Write (const YCPPath &path, const YCPValue &arg1, const YCPValue
      * @param path path Path
      * @optarg any options
      * @return boolean
+     * @description
+     * WFM::Write (.local.foo, ... ) works like SCR::Write (.target.foo, ...)
+     * but in the inst-sys rather than on the system being installed.
+     * It only works for paths starting with .local
      */
 
     if (!local.start ())
@@ -595,6 +602,10 @@ Y2WFMComponent::Execute (const YCPPath &path, const YCPValue &arg1)
      * @param path path Path
      * @optarg any options
      * @return any
+     * @description
+     * WFM::Execute (.local.foo, ... ) works like SCR::Execute (.target.foo, ...)
+     * but in the inst-sys rather than on the system being installed.
+     * It only works for paths starting with .local
      */
 
     if (!local.start ())
