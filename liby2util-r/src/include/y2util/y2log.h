@@ -31,11 +31,20 @@ enum loglevel_t {
 
 /* Logging functions */
 
+// Implements y2_logger
 void y2_logger_function (loglevel_t level, const char *component, const char *file,
 		const int line, const char *func, const char *format, ...)
     __attribute__ ((format (printf, 6, 7)));
+// The knights of Blanik only show up when nothing else can help, and so will
+// the messages logged here. fate#302166
+void y2_logger_blanik   (loglevel_t level, const char *component, const char *file,
+		const int line, const char *func, const char *format, ...)
+    __attribute__ ((format (printf, 6, 7)));
 
+// Same as above, but with va_list
 void y2_vlogger_function (loglevel_t level, const char *component, const char *file,
+		 const int line, const char *func, const char *format, va_list ap);
+void y2_vlogger_blanik   (loglevel_t level, const char *component, const char *file,
 		 const int line, const char *func, const char *format, va_list ap);
 
 void y2_logger_raw( const char* message );
@@ -63,12 +72,16 @@ void y2_logger_raw( const char* message );
 do {									\
     if (should_be_logged (level, comp))					\
 	y2_logger_function (level,comp,file,line,function,format,##args);\
+    else if (should_be_buffered ())					\
+	y2_logger_blanik (level,comp,file,line,function,format,##args); \
 } while (0)
 
 #define y2_vlogger(level,comp,file,line,function,format,args)		\
 do {									\
     if (should_be_logged (level, comp))					\
 	y2_vlogger_function (level,comp,file,line,function,format,args);\
+    else if (should_be_buffered ())					\
+	y2_vlogger_blanik (level,comp,file,line,function,format,args);  \
 } while (0)
 
 /*
@@ -103,8 +116,13 @@ do {									\
 #define y2lograw(message)		y2_logger_raw(message)
 
 /**
+ * Should we bother evaluating the arguments to the logging function?
  */
 bool should_be_logged (int loglevel, string componentname);
+/**
+ * Should we bother evaluating the arguments to the buffering function?
+ */
+bool should_be_buffered ();
 
 /**
  * Set an alternate logfile name for @ref y2log. If this is not done by the
@@ -140,5 +158,24 @@ void set_log_debug(bool on = true);
  * whether debug logging is enabled
  */
 bool get_log_debug();
+
+// stores a few strings. can append one. can return all. old are forgotten.
+class LogTail {
+public:
+    typedef string Data;
+    LogTail (size_t max_size = 42);
+    ~LogTail ();
+    void push_back (const Data &);
+
+    // consumer returns true to continue iterating
+    typedef bool (* Consumer) (const Data &);
+    void for_each (Consumer c);
+private:
+    class Impl;
+    Impl *m_impl;
+};
+
+// the instance used for last resort logging
+extern LogTail blanik;
 
 #endif /* _y2log_h */

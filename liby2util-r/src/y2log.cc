@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <limits>
+#include <list>
 
 #include "y2util/y2log.h"
 #include "y2util/miniini.h"
@@ -62,6 +63,7 @@
 
 #define Y2LOG_VAR_DEBUG	"Y2DEBUG"
 #define Y2LOG_VAR_ALL	"Y2DEBUGALL"
+#define Y2LOG_VAR_ONCRASH "Y2DEBUGONCRASH"
 #define Y2LOG_VAR_SIZE	"Y2MAXLOGSIZE"
 #define Y2LOG_VAR_NUM	"Y2MAXLOGNUM"
 
@@ -158,6 +160,15 @@ void y2_logger_function(loglevel_t level, const char *component, const char *fil
     va_list ap;
     va_start(ap, format);
     y2_vlogger_function(level, component, file, line, func, format, ap);
+    va_end(ap);
+}
+
+void y2_logger_blanik(loglevel_t level, const char *component, const char *file,
+	  const int line, const char *func, const char *format, ...)
+{
+    va_list ap;
+    va_start(ap, format);
+    y2_vlogger_blanik(level, component, file, line, func, format, ap);
     va_end(ap);
 }
 
@@ -283,6 +294,24 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
 	else
 	    tolog = y2_logfmt_prefix (level) + ' ' + common;
 	do_log_yast (tolog.c_str ());
+    }
+}
+
+void y2_vlogger_blanik(loglevel_t level, const char *component, const char *file,
+	   const int line, const char *function, const char *format, va_list ap)
+{
+    string common = y2_logfmt_common (log_simple,
+				      component, file, line, function,
+				      format, ap);
+
+    if(log_to_syslog || log_to_file) {
+	string tolog;
+	if (log_simple || (log_to_syslog > log_to_file))
+	    tolog = common;
+	else
+	    tolog = y2_logfmt_prefix (level) + ' ' + common;
+	// store the message for worse times
+	blanik.push_back (tolog);
     }
 }
 
@@ -555,5 +584,63 @@ bool get_log_debug()
 {
 	return log_debug;
 }
+
+// buffer the debugging log and show it only if yast crashes
+// fate#302166
+
+bool should_be_buffered ()
+{
+    return getenv (Y2LOG_VAR_ONCRASH) != NULL;
+}
+
+// stores a few strings. can append one. can return all. old are forgotten.
+class LogTail::Impl {
+    size_t m_size;
+    size_t m_max_size;
+    std::list<Data> m_items;
+public:
+    Impl(size_t max_size = 42)
+    : m_size (0)
+    , m_max_size (max_size)
+	{}
+
+    void push_back (const Data &d) {
+	if (m_size >= m_max_size)
+	    m_items.pop_front ();
+	else
+	    ++m_size;
+
+	m_items.push_back (d);
+    }
+
+    void for_each (Consumer c) {
+	std::list<Data>::iterator i;
+	for (i = m_items.begin (); i != m_items.end (); ++i)
+	    if (! c(*i))
+		break;
+    }
+};
+
+LogTail::LogTail (size_t max_size)
+{
+    m_impl = new Impl (max_size);
+}
+
+LogTail::~LogTail ()
+{
+    delete m_impl;
+}
+
+void LogTail::push_back (const Data &d)
+{
+    m_impl->push_back (d);
+}
+void LogTail::for_each (LogTail::Consumer c)
+{
+    m_impl->for_each (c);
+}
+
+// define the singleton
+LogTail blanik = LogTail ();
 
 /* EOF */

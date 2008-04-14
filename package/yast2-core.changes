@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Apr 14 20:47:27 CEST 2008 - mvidner@suse.cz
+
+- If Y2DEBUGONCRASH is set, the crash handler will also print the
+  last few debugging log messages, even if Y2DEBUG is not set
+  (fate#302166).
+- 2.16.48
+
+-------------------------------------------------------------------
 Thu Apr 10 16:53:17 CEST 2008 - mvidner@suse.cz
 
 - New builtin: dpgettext ("animals", "/mnt/share/locale", "Giraffe")

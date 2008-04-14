@@ -58,6 +58,21 @@ static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)
 static bool is_ycp_value (const char* arg);
 string demangle( const char * mangled );
 
+static
+bool
+log_blanik (const string & s) 
+{
+    y2lograw (s.c_str ());
+}
+
+// fate#302166 "cache yast debugging logs in case of failure"
+static
+void log_stored_debug ()
+{
+    y2error ("Liberating suppressed debugging messages:");
+    blanik.for_each (log_blanik);
+    y2error ("End of suppressed debugging messages");
+}
 
 // FATE 302167, info '(libc) Backtraces'
 void
@@ -131,6 +146,7 @@ signal_handler (int sig)
 	     sig, ee.filename ().c_str (), ee.linenumber ());
     y2error ("got signal %d at YCP file %s:%d",
 	     sig, ee.filename ().c_str (), ee.linenumber ());
+    log_stored_debug ();
     log_backtrace ();
     // bye
     signal (sig, SIG_DFL);
