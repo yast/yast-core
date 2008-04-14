@@ -38,11 +38,16 @@
 #define _GNU_SOURCE 1				/* Needed for vasprintf below */
 
 #define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
-#define Y2LOG_FORMAT	"%s <%d> %s(%d)%s %s%s:%d %s%s"
+
+// 1 component, 2 file, 3 func, 4 line, 5 logtext, 6 eol
+#define Y2LOG_COMMON	"%s %s%s:%d %s%s"
 #define Y2LOG_SIMPLE	"%2$s%3$s:%4$d %1$s %5$s%6$s"	/* this is GNU gettext parameter reordering */
-#define Y2LOG_SYSLOG	"<%d>%s %s%s:%d %s%s"
-#define Y2LOG_RAW	"%s"
-#define Y2LOG_SYSLOGRAW	"%s"
+
+// 1 timestamp, 2 level, 3 hostname, 4 pid
+#define Y2LOG_FORMAT	"%s <%d> %s(%d)"
+// 1 level, 2 common part
+#define Y2LOG_SYSLOG	"<%d>%s"
+
 #define Y2LOG_MAXSIZE	10* 1024 * 1024		/* Maximal logfile size */
 #define Y2LOG_MAXNUM	10			/* Maximum logfiles number */
 
@@ -82,6 +87,8 @@ static bool log_simple = false;
 static FILE *Y2LOG_STDERR = stderr;		/* Default output */
 
 /* static prototypes */
+static void do_log_syslog( const char* logmessage );
+static void do_log_yast( const char* logmessage );
 static void shift_log_files(string filename);
 
 static const char *log_messages[] = {
@@ -150,19 +157,16 @@ void y2_logger_function(loglevel_t level, const char *component, const char *fil
 {
     va_list ap;
     va_start(ap, format);
-    y2_vlogger(level, component, file, line, func, format, ap);
+    y2_vlogger_function(level, component, file, line, func, format, ap);
     va_end(ap);
 }
 
 /**
- * The universal logger function
+ * Formats the common part
  */
-void y2_vlogger_function(loglevel_t level, const char *component, const char *file,
+string y2_logfmt_common(bool simple, const char *component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
-    /* Prepare the logfile name */
-    if(!did_set_logname) set_log_filename("");
-
     /* Prepare the log text */
     char *logtext = NULL;
     vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
@@ -192,7 +196,7 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
 	}
     }
 
-    /* Prepare the component */
+    /* Prepare the function */
     string func = function;
     if (!func.empty ())
 	func = "(" + func + ")";
@@ -203,16 +207,18 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
     if ((len==0) || ((len>0) && (logtext[len-1]!='\n')))
 	eol = true;
 
-    if(log_to_syslog) {
-	syslog (LOG_NOTICE, Y2LOG_SYSLOG, level, comp.c_str (),
-	    file, func.c_str (), line, logtext, eol?"\n":"");
-    }
+    char * result_c;
+    asprintf(&result_c, simple? Y2LOG_SIMPLE: Y2LOG_COMMON,
+	     comp.c_str (), file, func.c_str (), line, logtext, eol?"\n":"");
+    string result = result_c;
+    free (result_c);
 
-    if(!log_to_file) {
-	if(logtext) free(logtext);
-	return;
-    }
+    free (logtext);
+    return result;
+}
 
+string y2_logfmt_prefix (loglevel_t level)
+{
     /* Prepare the PID */
     pid_t pid = getpid();
 
@@ -220,13 +226,6 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
     char hostname[1024];
     if (gethostname(hostname, 1024))
 	strncpy(hostname, "unknown", 1024);
-
-    /* Prepare the logfile */
-    shift_log_files (string (logname));
-
-    FILE *logfile = open_logfile ();
-    if (!logfile)
-	return;
 
     /* Prepare the date */
 #if 1
@@ -257,37 +256,58 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
     strcat (date, tmp2);
 #endif
 
-    /* Do the log */
-    if(log_simple)
-	fprintf (logfile, Y2LOG_SIMPLE, comp.c_str (),
-		file, func.c_str (), line, logtext, eol?"\n":"");
-    else
-	fprintf (logfile, Y2LOG_FORMAT, date, level, hostname, pid, comp.c_str (),
-		file, func.c_str (), line, logtext, eol?"\n":"");
+    char * result_c = NULL;
+    asprintf (&result_c, Y2LOG_FORMAT, date, level, hostname, pid);
+    string result = result_c;
+    free (result_c);
 
-    /* Clean everything */
-    if (logfile && logfile != Y2LOG_STDERR)
-	fclose (logfile);
-    else
-	fflush (logfile);
+    return result;
+}
 
-    if (logtext)
-	free (logtext);
+
+void y2_vlogger_function(loglevel_t level, const char *component, const char *file,
+	   const int line, const char *function, const char *format, va_list ap)
+{
+    string common = y2_logfmt_common (log_simple,
+				      component, file, line, function,
+				      format, ap);
+
+    if(log_to_syslog) {
+	syslog (LOG_NOTICE, Y2LOG_SYSLOG, level, common.c_str ());
+    }
+
+    if(log_to_file) {
+	string tolog;
+	if (log_simple)
+	    tolog = common;
+	else
+	    tolog = y2_logfmt_prefix (level) + ' ' + common;
+	do_log_yast (tolog.c_str ());
+    }
 }
 
 void y2_logger_raw( const char* logmessage )
 {
-#warning cut'n'paste copy, need a clean up
+    if(log_to_syslog) {
+	do_log_syslog (logmessage);
+    }
+
+    if(log_to_file) {
+	do_log_yast (logmessage);
+    }
+}
+
+static
+void do_log_syslog( const char* logmessage )
+{
+    syslog (LOG_NOTICE, "%s", logmessage);
+}
+
+static
+void do_log_yast( const char* logmessage )
+{
     /* Prepare the logfile name */
     if(!did_set_logname) set_log_filename("");
-
-    if(log_to_syslog) {
-	syslog (LOG_NOTICE, Y2LOG_SYSLOGRAW, logmessage);
-    }
-
-    if(!log_to_file) {
-	return;
-    }
 
     /* Prepare the logfile */
     shift_log_files (string (logname));
@@ -296,7 +316,7 @@ void y2_logger_raw( const char* logmessage )
     if (!logfile)
 	return;
 
-    fprintf (logfile, Y2LOG_RAW, logmessage);
+    fprintf (logfile, "%s", logmessage);
 
     /* Clean everything */
     if (logfile && logfile != Y2LOG_STDERR)
