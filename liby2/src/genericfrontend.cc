@@ -63,6 +63,7 @@ bool
 log_blanik (const string & s) 
 {
     y2lograw (s.c_str ());
+    return true;
 }
 
 // fate#302166 "cache yast debugging logs in case of failure"
