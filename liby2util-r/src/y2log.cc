@@ -292,7 +292,7 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
 	if (log_simple)
 	    tolog = common;
 	else
-	    tolog = y2_logfmt_prefix (level) + ' ' + common;
+	    tolog = y2_logfmt_prefix (level) + common;
 	do_log_yast (tolog.c_str ());
     }
 }
@@ -309,7 +309,7 @@ void y2_vlogger_blanik(loglevel_t level, const char *component, const char *file
 	if (log_simple || (log_to_syslog > log_to_file))
 	    tolog = common;
 	else
-	    tolog = y2_logfmt_prefix (level) + ' ' + common;
+	    tolog = y2_logfmt_prefix (level) + common;
 	// store the message for worse times
 	blanik.push_back (tolog);
     }
