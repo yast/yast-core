@@ -135,7 +135,7 @@ static YCPValue
 f_trunc(const YCPFloat &f)
 {
     /**
-     * @builtins trunc
+     * @builtin trunc
      * @short round to integer, towards zero
      * @description
      * Returns f round to the nearest integer, towards zero.
@@ -156,7 +156,7 @@ static YCPValue
 f_pow(const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtins pow
+     * @builtin pow
      * @short power function
      * @description
      * Returns the value of f1 raised to the power of f2.
