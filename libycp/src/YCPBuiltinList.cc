@@ -225,6 +225,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
      * all elements of the first list and all of the second list. Identical
      * elements are merged. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
+     * <tt>nil</tt> as either argument makes the result <tt>nil</tt> too.
      *
      * WARNING: quadratic complexity so far
      *
@@ -286,6 +287,7 @@ l_mergelist (const YCPList &list1, const YCPList &list2)
      * all elements of the first list and all of the second list. Identical
      * elements are preserved. The order of the elements in the new list is
      * preserved. Elements of <tt>l1</tt> are prior to elements from <tt>l2</tt>.
+     * <tt>nil</tt> as either argument makes the result <tt>nil</tt> too.
      *
      * @see union
      * @usage merge ([1, 2], [3, 4]) -> [1, 2, 3, 4]
