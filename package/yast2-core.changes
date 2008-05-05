@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon May  5 13:08:05 CEST 2008 - mvidner@suse.cz
+
+- Allow literal strings as arguments (bnc#382883):
+   Before:   y2base foo    '("\\t")' '("\"")' UI
+   Now also: y2base foo -S '(\t)'    '(")'    UI
+- 2.16.49
+
+-------------------------------------------------------------------
 Mon Apr 14 20:47:27 CEST 2008 - mvidner@suse.cz
 
 - If Y2DEBUGONCRASH is set, the crash handler will also print the

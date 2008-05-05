@@ -55,7 +55,7 @@ static const char *progname = "genericfrontend";
 static void print_usage ();
 static void print_help ();
 static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)));
-static bool is_ycp_value (const char* arg);
+static bool has_parens (const char* arg);
 string demangle( const char * mangled );
 
 static
@@ -258,6 +258,8 @@ static logger_initializer initialize_logger;
 void
 parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name, YCPList& arglist)
 {
+    bool args_are_ycp = true;
+
     if (!argv[arg]) {
 	print_usage ();
 	exit (1);
@@ -278,6 +280,10 @@ parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name
 	{
 	    // Logfile already done at program start --> ignore here
 	    arg++;   // skip filename
+	}
+	else if (!strcmp(argv[arg], "-S"))
+	{
+	    args_are_ycp = false;
 	}
 	else if (!strcmp(argv[arg], "-s"))	// Parse one value (YCPList of options) from stdin
 	{
@@ -346,8 +352,10 @@ parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name
 		exit(5);
 	    }
 	}
-	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
+	else if (has_parens (argv[arg]))	// client args
 	{
+	  if (args_are_ycp)	// bnc#382883
+	  {
 	    Parser parser (argv[arg]);	// set parser to option
 
 	    YCodePtr pc = parser.parse ();
@@ -359,6 +367,12 @@ parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name
 	    }
 
 	    arglist->add( pc->evaluate (true));   // add to arglist
+	  }
+	  else
+	  {
+	      string value(argv[arg] + 1, strlen (argv[arg]) - 2);
+	      arglist->add (YCPString (value));
+	  }
 	}
 	else break;   // must be server name
 
@@ -436,7 +450,7 @@ parse_server_and_options (int argc, char ** argv, int& arg, char *& server_name,
 		exit(5);
 	    }
 	}
-	else if (is_ycp_value (argv[arg]))	// option is a YCP value -> parse it directly
+	else if (has_parens (argv[arg]))	// option is a YCP value -> parse it directly
 	{
 	    Parser parser (argv[arg]);	// set parser to option
 
@@ -740,7 +754,9 @@ print_help()
 	     "ClientOptions are:\n"
 	     "    -s                        : Get options as one YCPList from stdin\n"
 	     "    -f FileName               : Get YCPValue(s) from file\n"
-	     "    '(any YCPValue)'          : Parameter _IS_ a YCPValue\n"
+	     "    -S                        : Parameters are strings, not YCP to be parsed\n"
+	     "    '(any YCPValue)...'       : Parameter _IS_ a YCPValue\n"
+	     "                                -S '(t1)' '(\\t2)' is equivalent to '(\"t1\")' '(\"\\\\t2\")'\n"
 	     "Generic ServerOptions are:\n"
 	     "    -p FileName               : Evaluate YCPValue(s) from file (preload)\n"
 	     "    '(any YCPValue)'          : Parameter _IS_ a YCPValue to be evaluated\n"
@@ -773,7 +789,7 @@ print_error (const char* format, ...)
 
 
 static bool
-is_ycp_value (const char* arg)
+has_parens (const char* arg)
 {
     return arg[0] == '(' && arg[strlen (arg) - 1] == ')';
 }
