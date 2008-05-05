@@ -680,6 +680,14 @@ main (int argc, char **argv)
     if (!client)
     {
 	print_error ("No such client module %s", client_name);
+
+	std::list<string>::const_iterator
+	    i = YCPPathSearch::searchListBegin(YCPPathSearch::Client),
+	    e = YCPPathSearch::searchListEnd(YCPPathSearch::Client);
+	fprintf (stderr, "The search path follows. It does not include the current directory.\n");
+	for (; i != e; ++i)
+	    fprintf (stderr, "  %s\n", i->c_str());
+
 	print_usage ();
 	exit (5);
     }

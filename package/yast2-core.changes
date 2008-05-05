@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon May  5 16:16:37 CEST 2008 - mvidner@suse.cz
+
+- Show search path when client is not found (bnc#342213).
+
+-------------------------------------------------------------------
 Mon May  5 13:08:05 CEST 2008 - mvidner@suse.cz
 
 - Allow literal strings as arguments (bnc#382883):
