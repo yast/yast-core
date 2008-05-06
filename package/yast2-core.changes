@@ -2,6 +2,7 @@
 Mon May  5 16:16:37 CEST 2008 - mvidner@suse.cz
 
 - Show search path when client is not found (bnc#342213).
+- 2.16.50
 
 -------------------------------------------------------------------
 Mon May  5 13:08:05 CEST 2008 - mvidner@suse.cz
