@@ -701,9 +701,9 @@ main (int argc, char **argv)
     // The environment variable YAST_IS_RUNNING is checked in rpm
     // post install scripts. Might be useful for other scripts as
     // well.
-    if ((strcmp (client_name, "installation") == 0 ||
-	 strcmp (client_name, "installation.ycp") == 0) &&
-	arglist->contains (YCPString ("initial")))
+    if (strcmp (client_name, "live-installer") == 0 // bnc#389099
+	|| (strcmp (client_name, "installation") == 0
+	    && arglist->contains (YCPString ("initial"))))
     {
 	setenv ("YAST_IS_RUNNING", "instsys", 1);
     }

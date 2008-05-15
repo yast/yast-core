@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu May 15 09:36:44 CEST 2008 - mvidner@suse.cz
+
+- Set YAST_IS_RUNNING to "instsys" also for the live-installer (bnc#389099).
+- 2.16.51
+
+-------------------------------------------------------------------
 Mon May  5 16:16:37 CEST 2008 - mvidner@suse.cz
 
 - Show search path when client is not found (bnc#342213).
