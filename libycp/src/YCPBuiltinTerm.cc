@@ -147,6 +147,7 @@ t_toterm1 (const YCPValue &v)
 {
     /**
      * @builtin toterm
+     * @id toterm_1
      * @short Converts a value to a term.
      *
      * @description
@@ -184,6 +185,7 @@ t_toterm2 (const YCPSymbol &s, const YCPList &l)
 {
    /**
      * @builtin toterm
+     * @id toterm_2
      * @short Constructs a term from a symbol and a list.
      *
      * @description
