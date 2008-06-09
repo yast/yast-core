@@ -24,7 +24,7 @@
  *   Write(.modprobe_blacklist.alias."pci:v0000109Ed0000036Esv00000000sd00000000bc04sc00i00", nil)
  **
  *
- * <p>Reads/writes <tt>/etc/modprobe.d/blacklist</tt>. For more details see <tt>man modprobe.conf<tt>.</p>
+ * <p>Reads/writes <tt>/etc/modprobe.d/blacklist</tt>. For more details see <tt>man modprobe.conf</tt>.</p>
  */
 .modprobe_blacklist
 
