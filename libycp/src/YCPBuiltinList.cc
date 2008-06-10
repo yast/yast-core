@@ -320,6 +320,7 @@ l_sublist1(const YCPList &list, const YCPInteger &offset)
 {
    /**
      * @builtin sublist
+     * @id sublist_1
      * @short Extracts a sublist
      *
      * @description
@@ -362,6 +363,7 @@ l_sublist2(const YCPList &list, const YCPInteger &offset, const YCPInteger &leng
 {
     /**
      * @builtin sublist
+     * @id sublist_2
      * @short Extracts a sublist
      *
      * @description
