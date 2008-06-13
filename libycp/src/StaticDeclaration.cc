@@ -40,8 +40,6 @@ using namespace std;
 
 #include "ycp/y2log.h"
 
-#define DECLSIZE 127
-
 #ifndef DO_DEBUG
 #define DO_DEBUG 0
 #endif
