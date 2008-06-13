@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun 13 10:10:07 CEST 2008 - aschnell@suse.de
+
+- added some mathematics functions in namespace float
+- 2.17.0
+
+-------------------------------------------------------------------
 Thu May 15 09:36:44 CEST 2008 - mvidner@suse.cz
 
 - Set YAST_IS_RUNNING to "instsys" also for the live-installer (bnc#389099).

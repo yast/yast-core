@@ -132,13 +132,76 @@ f_neg (const YCPFloat &f1)
 
 
 static YCPValue
+f_abs(const YCPFloat &f)
+{
+    /**
+     * @builtin float::abs
+     * @short absolute value
+     * @description
+     * Returns absolute value of f.
+     * @param f FLOAT
+     * @return FLOAT
+     * @usage trunc (+1.6) -> +1.6
+     * @usage trunc (-1.6) -> +1.6
+     */
+
+    if (f.isNull ())
+	return YCPNull ();
+
+    return YCPFloat(fabs(f->value()));
+}
+
+
+static YCPValue
+f_floor(const YCPFloat &f)
+{
+    /**
+     * @builtin float::floor
+     * @short round downwards to integer
+     * @description
+     * Returns f rounded downwards to the nearest integer.
+     * @param f FLOAT
+     * @return FLOAT
+     * @usage trunc (+1.6) -> +1.0
+     * @usage trunc (-1.6) -> -2.0
+     */
+
+    if (f.isNull ())
+	return YCPNull ();
+
+    return YCPFloat(floor(f->value()));
+}
+
+
+static YCPValue
+f_ceil(const YCPFloat &f)
+{
+    /**
+     * @builtin float::ceil
+     * @short round upwards to integer
+     * @description
+     * Returns f rounded upwards to the nearest integer.
+     * @param f FLOAT
+     * @return FLOAT
+     * @usage trunc (+1.6) -> +2.0
+     * @usage trunc (-1.6) -> -1.0
+     */
+
+    if (f.isNull ())
+	return YCPNull ();
+
+    return YCPFloat(ceil(f->value()));
+}
+
+
+static YCPValue
 f_trunc(const YCPFloat &f)
 {
     /**
-     * @builtin trunc
+     * @builtin float::trunc
      * @short round to integer, towards zero
      * @description
-     * Returns f round to the nearest integer, towards zero.
+     * Returns f rounded to the nearest integer, towards zero.
      * @param f FLOAT
      * @return FLOAT
      * @usage trunc (+1.6) -> +1.0
@@ -146,7 +209,7 @@ f_trunc(const YCPFloat &f)
      */
 
     if (f.isNull ())
-        return YCPNull ();
+	return YCPNull ();
 
     return YCPFloat(trunc(f->value()));
 }
@@ -156,7 +219,7 @@ static YCPValue
 f_pow(const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
-     * @builtin pow
+     * @builtin float::pow
      * @short power function
      * @description
      * Returns the value of f1 raised to the power of f2.
@@ -167,7 +230,7 @@ f_pow(const YCPFloat &f1, const YCPFloat &f2)
      */
 
     if (f1.isNull () || f2.isNull ())
-        return YCPNull ();
+	return YCPNull ();
 
     return YCPFloat(pow(f1->value(), f2->value()));
 }
@@ -249,12 +312,24 @@ YCPBuiltinFloat::YCPBuiltinFloat ()
 	{ "-",	     "float (float)",		(void *)f_neg },
 	{ "*",	     "float (float, float)",	(void *)f_mult },
 	{ "/",	     "float (float, float)",	(void *)f_div },
-	{ "trunc",   "float (float)",	        (void *)f_trunc },
-	{ "pow",     "float (float, float)",	(void *)f_pow },
+	{ "trunc",   "float (float)",           (void *)f_trunc,	DECL_DEPRECATED },
+	{ "pow",     "float (float, float)",    (void *)f_pow,		DECL_DEPRECATED },
 	{ "tofloat", "float (const any)",	(void *)f_tofloat },
 	{ "tostring","string (float, integer)",	(void *)f_tostring },
 	{ 0 }
     };
 
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations_ns[] = {
+	{ "float",   "",			NULL,			DECL_NAMESPACE },
+	{ "abs",     "float (float)",		(void *)f_abs },
+	{ "floor",   "float (float)",		(void *)f_floor },
+	{ "ceil",    "float (float)",		(void *)f_ceil },
+	{ "trunc",   "float (float)",		(void *)f_trunc },
+	{ "pow",     "float (float, float)",	(void *)f_pow },
+	{ 0 }
+    };
+
     static_declarations.registerDeclarations ("YCPBuiltinFloat", declarations);
+    static_declarations.registerDeclarations ("YCPBuiltinFloat", declarations_ns);
 }

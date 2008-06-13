@@ -52,24 +52,42 @@
 (tofloat ("3.14"))
 
 
+("** abs **")
+
+(float::abs (1.6))
+(float::abs (-1.6))
+
+
+("** floor **")
+
+(float::floor (1.6))
+(float::floor (-1.6))
+
+
+("** ceil **")
+
+(float::ceil (1.6))
+(float::ceil (-1.6))
+
+
 ("** trunc **")
 
-(trunc (1.0))
-(trunc (1.4))
-(trunc (1.6))
-(trunc (2.0))
+(float::trunc (1.0))
+(float::trunc (1.4))
+(float::trunc (1.6))
+(float::trunc (2.0))
 
-(trunc (-1.0))
-(trunc (-1.4))
-(trunc (-1.6))
-(trunc (-2.0))
+(float::trunc (-1.0))
+(float::trunc (-1.4))
+(float::trunc (-1.6))
+(float::trunc (-2.0))
 
 
 ("** pow ** ")
 
-(pow (10.0, 2.0))
-(pow (10.0, 1.0))
-(pow (10.0, 0.0))
-(pow (10.0, -1.0))
-(pow (10.0, -2.0))
+(float::pow (10.0, 2.0))
+(float::pow (10.0, 1.0))
+(float::pow (10.0, 0.0))
+(float::pow (10.0, -1.0))
+(float::pow (10.0, -2.0))
 
