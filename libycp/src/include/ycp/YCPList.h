@@ -88,7 +88,7 @@ public:
     void set(const int n, const YCPValue& value);
 
     /**
-     * Remove a value from the list.
+     * Remove an element from the list.
      */
     void remove(const int n);
 
