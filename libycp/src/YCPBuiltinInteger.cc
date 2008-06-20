@@ -302,7 +302,6 @@ i_tointeger (const YCPValue &v)
 	break;
     }
     return YCPNull();
-
 }
 
 

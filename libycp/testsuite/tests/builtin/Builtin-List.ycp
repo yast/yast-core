@@ -67,3 +67,19 @@
 (sublist (["a", "b", "c"], 2, 0))
 (sublist (["a", "b", "c"], 2, 1))
 
+
+("** list::reduce **")
+
+(list::reduce (integer x, integer y, [], { return x + y; })) // error: no initial value and empty list
+(list::reduce (integer x, integer y, 0, [], { return x + y; }))
+(list::reduce (integer x, integer y, [2, 4, 6], { return x + y; }))
+(list::reduce (integer x, integer y, 0, [2, 4, 6], { return x + y; }))
+
+(list::reduce (integer x, integer y, [], { return x * y; })) // error: no initial value and empty list
+(list::reduce (integer x, integer y, 1, [], { return x * y; }))
+(list::reduce (integer x, integer y, [2, 4, 6], { return x * y; }))
+(list::reduce (integer x, integer y, 1, [2, 4, 6], { return x * y; }))
+
+(list::reduce (term t, float f, `item(`id(`dummy)), [], { return add(t, tostring(f)); }))
+(list::reduce (term t, float f, `item(`id(`dummy)), [3.14, 2.71], { return add(t, tostring(f)); }))
+

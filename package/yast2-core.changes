@@ -1,7 +1,14 @@
 -------------------------------------------------------------------
+Fri Jun 20 15:29:36 CEST 2008 - aschnell@suse.de
+
+- Added list::reduce builtin.
+- 2.17.1
+
+-------------------------------------------------------------------
 Fri Jun 13 10:10:07 CEST 2008 - aschnell@suse.de
 
-- Added float::abs, float::ceil, float::floor, float::trunc, float::pow.
+- Added float::abs, float::ceil, float::floor, float::trunc and 
+  float::pow.
 - 2.17.0
 
 -------------------------------------------------------------------

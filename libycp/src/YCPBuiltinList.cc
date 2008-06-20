@@ -1083,6 +1083,135 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 
 
 static YCPValue
+l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YCPCode &expr)
+{
+    /**
+     * @builtin list::reduce
+     * @id reduce_1
+     * @short Reduces a list to a single value.
+     * @param flex1 x
+     * @param flex1 y
+     * @param list<flex1> list
+     * @param block<flex1> expr
+     * @return flex1
+     *
+     * TODO
+     *
+     * list must not be empty
+     *
+     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 2
+     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 6
+     */
+
+    if (list.isNull())
+    {
+	return YCPNull();
+    }
+
+    if (list->size() < 1)
+    {
+	ycp2error("Empty list %s for 'reduce'", list->toString().c_str());
+	return YCPNull();
+    }
+
+    SymbolEntryPtr xs = x->asEntry()->entry();
+    SymbolEntryPtr ys = y->asEntry()->entry();
+
+    YCPValue ret = list->value(0);
+
+    for (int i = 1; i < list->size(); i++)
+    {
+	xs->setValue(ret);
+	ys->setValue(list->value(i));
+
+	YCPValue tmp = expr->evaluate();
+	if (tmp.isNull())
+	{
+	    ycp2error("Bad 'reduce' expression %s", expr->toString().c_str());
+	    continue;
+	}
+	if (tmp->isVoid())
+	{
+	    ycp2error("The expression for 'reduce' returned 'nil'");
+	    continue;
+	}
+	if (tmp->isBreak())
+	{
+	    break;
+	}
+
+	ret = tmp;
+    }
+
+    return ret;
+}
+
+
+static YCPValue
+l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, const YCPList &list, const YCPCode &expr)
+{
+    /**
+     * @builtin list::reduce
+     * @id reduce_2
+     * @short Reduces a list to a single value.
+     * @param flex1 x
+     * @param flex2 y
+     * @param flex1 value
+     * @param list<flex2> list
+     * @param block<flex1> expr
+     * @return flex1
+     *
+     * TODO
+     *
+     * list can be empty
+     *
+     * @usage list::reduce (integer x, integer y, 0, [2, 4, 6], { return x + y; }) -> 12
+     * @usage list::reduce (integer x, integer y, 1, [2, 4, 6], { return x * y; }) -> 48
+     *
+     * different types
+     *
+     * @usage list::reduce (term t, float f, `item(`id(`dummy)), [3.14, 2.71], { return add(t, tostring(f)); }) -> `item (`id (`dummy), "3.14", "2.71")
+     */
+
+    if (list.isNull())
+    {
+	return YCPNull();
+    }
+
+    SymbolEntryPtr xs = x->asEntry()->entry();
+    SymbolEntryPtr ys = y->asEntry()->entry();
+
+    YCPValue ret = initial;
+
+    for (int i = 0; i < list->size(); i++)
+    {
+	xs->setValue(ret);
+	ys->setValue(list->value(i));
+
+	YCPValue tmp = expr->evaluate();
+	if (tmp.isNull())
+	{
+	    ycp2error("Bad 'reduce' expression %s", expr->toString().c_str());
+	    continue;
+	}
+	if (tmp->isVoid())
+	{
+	    ycp2error("The expression for 'reduce' returned 'nil'");
+	    continue;
+	}
+	if (tmp->isBreak())
+	{
+	    break;
+	}
+
+	ret = tmp;
+    }
+
+    return ret;
+}
+
+
+static YCPValue
 l_tolist (const YCPValue &v)
 {
     /**
@@ -1143,5 +1272,14 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ 0 }
     };
 
+    // must be static, registerDeclarations saves a pointer to it!
+    static declaration_t declarations_ns[] = {
+	{ "list",	"",											NULL,	                DECL_NAMESPACE },
+	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ 0 }
+    };
+
     static_declarations.registerDeclarations ("YCPBuiltinList", declarations);
+    static_declarations.registerDeclarations ("YCPBuiltinList", declarations_ns);
 }
