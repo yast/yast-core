@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Fri Jun 13 10:10:07 CEST 2008 - aschnell@suse.de
 
-- added some mathematics functions in namespace float
+- Added float::abs, float::ceil, float::floor, float::trunc, float::pow.
 - 2.17.0
 
 -------------------------------------------------------------------
