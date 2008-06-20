@@ -1092,12 +1092,17 @@ l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YC
      * @param flex1 x
      * @param flex1 y
      * @param list<flex1> list
-     * @param block<flex1> expr
+     * @param block<flex1> expression
      * @return flex1
      *
-     * TODO
+     * @description
+     * Apply expression cumulatively to the values of the list, from left to
+     * right, to reduce the list to a single value. See
+     * http://en.wikipedia.org/wiki/Reduce_(higher-order_function) for a
+     * detailed explanation.
      *
-     * list must not be empty
+     * In this version the initial value is the first value of the list. Thus
+     * the list must not be empty.
      *
      * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 2
      * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 6
@@ -1158,17 +1163,21 @@ l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, cons
      * @param flex2 y
      * @param flex1 value
      * @param list<flex2> list
-     * @param block<flex1> expr
+     * @param block<flex1> expression
      * @return flex1
+     * 
+     * @description
+     * Apply expression cumulatively to the values of the list, from left to
+     * right, to reduce the list to a single value. See
+     * http://en.wikipedia.org/wiki/Reduce_(higher-order_function) for a
+     * detailed explanation.
      *
-     * TODO
-     *
-     * list can be empty
+     * In this version the initial value is explicitly provided. Thus the list
+     * can be empty. Also the return type can be different from the type of
+     * the list.
      *
      * @usage list::reduce (integer x, integer y, 0, [2, 4, 6], { return x + y; }) -> 12
      * @usage list::reduce (integer x, integer y, 1, [2, 4, 6], { return x * y; }) -> 48
-     *
-     * different types
      *
      * @usage list::reduce (term t, float f, `item(`id(`dummy)), [3.14, 2.71], { return add(t, tostring(f)); }) -> `item (`id (`dummy), "3.14", "2.71")
      */
