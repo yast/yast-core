@@ -23,6 +23,7 @@
 #include "ycp/YCPVoid.h"
 
 #include <stack>
+#include <algorithm>
 
 #ifndef DO_DEBUG
 #define DO_DEBUG 0

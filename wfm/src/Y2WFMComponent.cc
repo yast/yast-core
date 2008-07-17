@@ -23,6 +23,8 @@
 #include <locale.h>
 #include <errno.h>
 
+#include <algorithm>
+
 #include <y2/Y2ComponentBroker.h>
 #include <y2/Y2ProgramComponent.h>
 
