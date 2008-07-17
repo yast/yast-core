@@ -60,7 +60,7 @@ AC_PROG_CXX
 AC_MSG_CHECKING([for version of C++ standard])
 GCCVER=`$CXX -v 2>&1 | tail -n1`
 case "$GCCVER" in
-    "gcc version 4.3*")
+    gcc\ version\ 4.[3456789]*)
 dnl we need a HAVE_* flag for a public header, yuck
 dnl	AC_DEFINE([HAVE_CXX0X], 1, [Define to 1 if the c++ compiler knows <unordered_map> and the like])
 dnl	Y2CORE_CFLAGS="-std=c++0x"
