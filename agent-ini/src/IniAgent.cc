@@ -97,8 +97,8 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
     }
     else
     {
-	if (parser.repeatNames () && value->isList () ||
-	    !parser.repeatNames () &&  (value->isString () || value->isInteger()) ||
+	if (( parser.repeatNames () && value->isList ()) ||
+	    (!parser.repeatNames () &&  (value->isString () || value->isInteger())) ||
 	    path->component_str(0) == "all"
 	    )
 	    {
