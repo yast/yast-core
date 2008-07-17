@@ -18,6 +18,8 @@ mandir=@mandir@
 yast2dir=@yast2dir@
 ybindir=@ybindir@
 
+Cflags: @Y2CORE_CFLAGS@
+
 Name: @RPMNAME@
 Version: @VERSION@
 Description: YaST2 package "@RPMNAME@"

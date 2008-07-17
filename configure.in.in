@@ -52,6 +52,28 @@ AGENT_LIBADD='dnl
  $(top_builddir)/liby2/src/liby2.la dnl
  ${Y2UTIL_LIBS}'
 
+## <ext/hash_map> produces ugly warnings in gcc 4.3, but its replacement,
+## <unordered_map>, is in C++0x which is not stablilized yet.
+## More importantly, this thing is in a public header so we need to propagate
+## the findings to yast2-core users
+AC_PROG_CXX
+AC_MSG_CHECKING([for version of C++ standard])
+GCCVER=`$CXX -v 2>&1 | tail -n1`
+case "$GCCVER" in
+    "gcc version 4.3*")
+dnl we need a HAVE_* flag for a public header, yuck
+dnl	AC_DEFINE([HAVE_CXX0X], 1, [Define to 1 if the c++ compiler knows <unordered_map> and the like])
+dnl	Y2CORE_CFLAGS="-std=c++0x"
+	Y2CORE_CFLAGS="-std=c++0x -DHAVE_CXX0X"
+	AC_MSG_RESULT([c++0x])
+	;;
+    *)
+	Y2CORE_CFLAGS=""
+	AC_MSG_RESULT([older than c++0x])
+	;;
+esac
+AC_SUBST(Y2CORE_CFLAGS) dnl included in {C,CXX}FLAGS in YAST2-CHECKS-PROGRAM 
+
 AX_CHECK_DOCBOOK
 CREATE_PKGCONFIG=true
 ## some common checks
@@ -60,6 +82,7 @@ CREATE_PKGCONFIG=true
 @YAST2-CHECKS-TESTSUITE@
 
 ## check for blocxx
+dnl FIXME assumes PCRE
 AC_CHECK_HEADER(blocxx/BLOCXX_config.h, [yast_found_blocxx=yes])
 if [[ "$yast_found_blocxx" != "yes" ]]; then
  AC_MSG_ERROR(Headers for blocxx are missing. Please install the package blocxx-devel.)

@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Thu Jul 17 14:20:14 CEST 2008 - mvidner@suse.cz
+
+- Check GCC version and use <unordered_map> to get rid of
+  <ext/hash_map> warnings. It needs yast2-devtools-2.17.2 but fails
+  gracefully.
+- 2.17.2
+
+-------------------------------------------------------------------
 Fri Jun 20 15:29:36 CEST 2008 - aschnell@suse.de
 
 - Added list::reduce builtin.
