@@ -64,7 +64,9 @@ case "$GCCVER" in
 dnl we need a HAVE_* flag for a public header, yuck
 dnl	AC_DEFINE([HAVE_CXX0X], 1, [Define to 1 if the c++ compiler knows <unordered_map> and the like])
 dnl	Y2CORE_CFLAGS="-std=c++0x"
-	Y2CORE_CFLAGS="-std=c++0x -DHAVE_CXX0X"
+	# gnu++0x instead of c++0x so that
+	# we do not lose gnu extensions like typeof
+	Y2CORE_CFLAGS="-std=gnu++0x -DHAVE_CXX0X"
 	AC_MSG_RESULT([c++0x])
 	;;
     *)
