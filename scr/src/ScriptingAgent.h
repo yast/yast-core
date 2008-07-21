@@ -104,6 +104,18 @@ public:
      */
     virtual YCPBoolean UnmountAgent (const YCPPath &path);
 
+    /**
+     * Register new agents. (bnc#245508#c16)
+     * Rescan the scrconf registration directories and register any
+     * agents at new(!) paths. Agents, even new ones, on paths that
+     * are registered already, will not be replaced.  This means that
+     * .oes.specific.agent will start to work but something like
+     * adding
+     * /usr/local/etc/sysconfig to .sysconfig.network would not.
+     */
+    virtual YCPBoolean RegisterNewAgents ();
+
+
 private:
 
     // once we have to do a sweep (read all scr files because of
@@ -155,17 +167,6 @@ private:
      * Read all registration files.
      */
     void Sweep ();
-
-    /**
-     * Register new agents. (bnc#245508#c16)
-     * Rescan the scrconf registration directories and register any
-     * agents at new(!) paths. Agents, even new ones, on paths that
-     * are registered already, will not be replaced.  This means that
-     * .oes.specific.agent will start to work but something like
-     * adding
-     * /usr/local/etc/sysconfig to .sysconfig.network would not.
-     */
-    YCPBoolean RegisterNewAgents ();
 
     /**
      * For .foo.bar.baz, register foo.bar.baz.scr, or foo.bar.scr, or foo.scr.

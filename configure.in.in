@@ -90,6 +90,41 @@ if [[ "$yast_found_blocxx" != "yes" ]]; then
  AC_MSG_ERROR(Headers for blocxx are missing. Please install the package blocxx-devel.)
 fi
 
+PKG_CHECK_MODULES(DBUS, dbus-1)
+
+## check for PolicyKit
+AC_ARG_ENABLE([policykit],
+    AS_HELP_STRING([--enable-policykit], [Enable experimental PolicyKit support]),
+        [
+            case "${enableval}" in
+                yes) policykit=yes ;;
+                no) policykit=no ;;
+                *) AC_MSG_ERROR(--enable-policykit: Unknwon value ${enableval}) ;;
+            esac
+        ],
+        [policykit=yes])
+
+if test "x${policykit}" == xyes ; then
+    PKG_CHECK_MODULES(POLKIT, [ polkit-dbus >= 0.7 ],
+        [
+            HAVE_POLKIT=1
+            AC_DEFINE([HAVE_POLKIT], 1, [Have PolicyKit])
+            policydir=`pkg-config polkit-dbus --variable prefix`/share/PolicyKit/policy/
+            AC_SUBST(policydir)
+        ],
+        [
+            HAVE_POLKIT=0
+            AC_MSG_ERROR([*** PolicyKit support not found, install PolicyKit-devel: 'zypper in PolicyKit-devel' or libpolkit-dbus-dev.deb])
+        ])
+else
+    HAVE_POLKIT=0
+fi
+
+AC_SUBST(POLKIT_CFLAGS)
+AC_SUBST(POLKIT_LIBS)
+AC_SUBST(HAVE_POLKIT)
+AM_CONDITIONAL([HAVE_POLKIT], [test "x$HAVE_POLKIT" = x1])
+
 ## and generate the output
 AC_CONFIG_FILES([
 	liby2/doc/Y2-access.html

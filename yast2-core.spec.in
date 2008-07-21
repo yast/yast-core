@@ -22,6 +22,9 @@ BuildRequires:	libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
 
+# for SCR DBus service
+BuildRequires:	dbus-1-devel PolicyKit-devel
+
 Summary:	-
 Requires:	perl = %{perl_version}
 Provides:	liby2util = 2.16.1
@@ -95,6 +98,11 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 #  .packlist
 %{perl_vendorarch}/auto/ycp
 /var/adm/perl-modules/%name
+# DBus service
+@ybindir@/SCR_dbus_server
+# DBus service config
+/usr/share/dbus-1/system-services/org.opensuse.yast.SCR.service
+/etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
 
 %files devel
 %defattr(-,root,root)
