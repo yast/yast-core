@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Mon Jul 21 17:33:05 CEST 2008 - lslezak@suse.cz
+
+- integrated DBus/PolicyKit support to SCR level (SCR can run
+  as a DBus service, set Y2DBUS=1 for using the DBus service from
+  a yast client, requires setting PolicyKit priviledges for users)
+  (fate#301960)
+- 2.17.4
+
+-------------------------------------------------------------------
 Fri Jul 18 11:50:33 CEST 2008 - mvidner@suse.cz
 
 - Use -std=gnu++0x instead of c++0x so that we do not lose gnu
