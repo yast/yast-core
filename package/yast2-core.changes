@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Jul 22 09:48:17 CEST 2008 - lslezak@suse.cz
+
+- added PolicyKit-devel and dbus-1-devel packages to
+  yast2-core-devel dependencies
+- fixed crash: prevent from multiple delete in SCR destructor
+- 2.17.5
+
+-------------------------------------------------------------------
 Mon Jul 21 17:33:05 CEST 2008 - lslezak@suse.cz
 
 - integrated DBus/PolicyKit support to SCR level (SCR can run

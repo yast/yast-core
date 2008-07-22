@@ -420,5 +420,6 @@ SCR::~SCR()
     if (connection != NULL)
     {
 	delete connection;
+	connection = NULL;
     }
 }
