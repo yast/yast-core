@@ -105,12 +105,6 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 	regexec (&rxr3, name, 0, 0, 0) == 0)
 	tmp1 = tmp2 = "remote";
 
-    if (strcmp (name, "ag_evms") == 0 ||
-	strcmp (name, "ag_fdisk") == 0 ||
-	strcmp (name, "ag_lvm") == 0 ||
-	strcmp (name, "ag_md") == 0)
-	tmp1 = "ag_storage";
-
     // Look for the plugin and create component.
 
     string filename = Y2PathSearch::findy2plugin (tmp1, level);
