@@ -355,7 +355,7 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	
 	if (c == NULL || c->isError())
 	{
-	    y2error ("External program returned invalid data.");
+	    y2error ("External program %s returned invalid data. (No other error means no data at all)", bin_file.c_str ());
 	    return YCPNull ();
 	}
 	

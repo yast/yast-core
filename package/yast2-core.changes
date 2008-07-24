@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jul 24 09:16:13 CEST 2008 - mvidner@suse.cz
+
+- Better error message when an agent dies with errors (bnc#401706).
+
+-------------------------------------------------------------------
 Tue Jul 22 09:48:17 CEST 2008 - lslezak@suse.cz
 
 - added PolicyKit-devel and dbus-1-devel packages to
