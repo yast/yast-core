@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jul 25 10:34:30 CEST 2008 - aschnell@suse.de
+
+- fixed requires for yast2-core-devel
+
+-------------------------------------------------------------------
 Thu Jul 24 09:16:13 CEST 2008 - mvidner@suse.cz
 
 - Better error message when an agent dies with errors (bnc#401706).
