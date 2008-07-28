@@ -73,6 +73,7 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
 {
     /**
      * @builtin filter
+     * @id filter-map
      * @short Filter a Map
      * @description
      * For each key/value pair of the map <tt>MAP</tt> the expression <tt>EXPR</tt>
@@ -199,6 +200,7 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
 {
     /**
      * @builtin maplist 
+     * @id maplist-map
      * @short Maps an operation onto all elements key/value and create a list
      * @description
      * Maps an operation onto all elements key/value pairs of a map and thus creates
@@ -253,6 +255,7 @@ m_unionmap (const YCPMap &map1, const YCPMap &map2)
 {
     /**
      * @builtin union
+     * @id union-map
      * @short Union of 2 maps
      * @description
      * Interprets two maps as sets and returns a new map that has all
@@ -292,6 +295,7 @@ m_addmap (const YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
      * @builtin add 
+     * @id add-map
      * @short Add a key/value pair to a map
      *
      * @description
@@ -328,6 +332,7 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
      * @builtin change
+     * @id change-map
      * @short Change element pair in a map. Deprecated, use MAP[KEY] = VALUE.
      * @description
      * Before Code 9, this was used to change a map directly
@@ -362,6 +367,7 @@ m_size (const YCPValue &map)
 {
     /**
      * @builtin size
+     * @id size-map
      * @short Size of a map
      *
      * @description
@@ -387,6 +393,7 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
 {
     /**
      * @builtin foreach
+     * @id foreach-map
      * @short Process the content of a map
      * @description
      * For each key:value pair of the map <tt>MAP</tt> the expression
@@ -466,6 +473,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
 {
     /**
      * @builtin remove
+     * @id remove-map
      * @short Remove key/value pair from a map
      *
      * @description

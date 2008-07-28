@@ -59,6 +59,7 @@ b_size (const YCPByteblock &v)
 {
     /**
      * @builtin size
+     * @id size-byteblock
      * @short  Returns a size of a byteblock in bytes.
      * @param byteblock VALUE
      * @return integer

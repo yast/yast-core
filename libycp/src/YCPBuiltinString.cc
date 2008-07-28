@@ -62,6 +62,7 @@ s_size (const YCPString &s)
 {
     /**
      * @builtin size
+     * @id size-string
      * @short Returns the number of characters of the string <tt>s</tt>
      * @param string s String
      * @return integer Size of string <tt>s</tt>
@@ -348,6 +349,7 @@ s_find (const YCPString &s1, const YCPString &s2)
 {
     /**
      * @builtin find
+     * @id find-string
      * @short Returns position of a substring
      * @param string STRING1 String
      * @param string STRING2 Substring
@@ -1006,6 +1008,7 @@ s_tostring (const YCPValue &v)
 {
     /**
      * @builtin tostring 
+     * @id tostring-any
      * @short Converts a value to a string.
      *
      * @param any VALUE

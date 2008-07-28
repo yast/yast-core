@@ -241,6 +241,7 @@ f_tostring (const YCPFloat &f, const YCPInteger &precision)
 {
     /**
      * @builtin tostring
+     * @id tostring-float
      * @short Converts a floating point number to a string
      * @description
      * Converts a floating point number to a string, using the

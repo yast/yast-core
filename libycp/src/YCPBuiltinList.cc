@@ -47,6 +47,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin find
+     * @id find-list
      * @short Searches for the first occurence of a certain element in a list
      * @param any VAR
      * @param list LIST
@@ -215,6 +216,7 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
 {
     /**
      * @builtin union
+     * @id union-list
      * @short Unions of lists
      * @param list LIST1 First List
      * @param list LIST2 Second List
@@ -414,6 +416,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin filter
+     * @id filter-list
      * @short Filters a List
      * @param any VAR Variable
      * @param list LIST List to be filtered
@@ -474,6 +477,7 @@ l_maplist (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin maplist
+     * @id maplist-list
      * @short Maps an operation onto all elements of a list and thus creates a new list.
      * @param any VAR
      * @param list<any> LIST
@@ -858,6 +862,7 @@ l_changelist (YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin change
+     * @id change-list
      * @short Changes a list. Deprecated, use LIST[size(LIST)] = value.
      * @param list LIST
      * @param any value
@@ -888,6 +893,7 @@ l_add (const YCPList &list, const YCPValue &value)
 {
     /**
      * @builtin add
+     * @id add-list
      * @short Create a new list with a new element
      * @param list LIST
      * @param any VAR
@@ -914,6 +920,7 @@ l_size (const YCPValue &list)
 {
     /**
      * @builtin size
+     * @id size-list
      * @short Returns size of list
      * @param list LIST
      * @return integer size of the list
@@ -938,6 +945,7 @@ l_remove (const YCPList &list, const YCPInteger &i)
 {
     /**
      * @builtin remove
+     * @id remove-list
      * @short Removes element from a list
      * @param list LIST
      * @param integer e element index
@@ -981,6 +989,7 @@ l_select (const YCPValue &list, const YCPValue &i, const YCPValue &def)
 {
     /**
      * @builtin select
+     * @id select-list
      * @short Selects a list element (deprecated, use LIST[INDEX]:DEFAULT)
      * @param list LIST
      * @param integer INDEX
@@ -1039,6 +1048,7 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 {
     /**
      * @builtin foreach
+     * @id foreach-list
      * @short Processes the content of a list
      * @param any VAR
      * @param list LIST

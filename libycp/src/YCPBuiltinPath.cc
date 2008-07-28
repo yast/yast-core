@@ -34,6 +34,7 @@ p_size (const YCPPath &path)
 {
     /**
      * @builtin size
+     * @id size-path
      * @short Returns the number of path elements
      *
      * @description
@@ -58,6 +59,7 @@ p_add (const YCPPath &path, const YCPString &s)
 {
     /**
      * @builtin add
+     * @id add-path
      * @short Add a path element to existing path
      *
      * @description

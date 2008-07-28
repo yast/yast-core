@@ -35,6 +35,7 @@ t_size (const YCPTerm &term)
 {
     /**
      * @builtin size
+     * @id size-term
      * @short Returns the number of arguments of the term <tt>TERM</tt>.
      *
      * @param term TERM 
@@ -55,6 +56,7 @@ t_add (const YCPTerm &term, const YCPValue &value)
 {
     /**
      * @builtin add
+     * @id add-term
      * @short Add value to term
      * @description
      * Adds the value <tt>VALUE</tt> to the term <tt>TERM</tt> and returns the
@@ -104,6 +106,7 @@ t_select (const YCPValue &term, const YCPValue&i, const YCPValue &def)
 {
     /**
      * @builtin select (deprecated, use TERM[ITEM]:DEFAULT)
+     * @id select-term
      * @short Select item from term
      * @description
      * Gets the <tt>i</tt>'th value of the term <tt>t</tt>. The first value
@@ -220,6 +223,7 @@ t_remove (const YCPTerm &term, const YCPInteger &i)
 {
     /**
      * @builtin remove
+     * @id remove-term
      * @short Remove item from term
      *
      * @description
