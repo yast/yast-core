@@ -6,7 +6,7 @@ SUBDIRS = ycp
 htmldir = $(docdir)/libycp
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 xmlfiles = combined.xml
-htmlfiles = $(wildcard html/*.html)
+htmlfiles = $(wildcard html/*.html html/*/*.html)
 
 
 html_DATA =			\
