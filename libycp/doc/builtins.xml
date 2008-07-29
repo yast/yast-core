@@ -1,17 +1,8 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "/usr/share/xml/docbook/schema/dtd/4.2/docbookx.dtd"[
 
-<!ENTITY  YCPBuiltinInteger  SYSTEM "YCPBuiltinInteger.xml">
-<!ENTITY  YCPBuiltinString  SYSTEM "YCPBuiltinString.xml">
-<!ENTITY  YCPBuiltinMap  SYSTEM "YCPBuiltinMap.xml">
-<!ENTITY  YCPBuiltinList  SYSTEM "YCPBuiltinList.xml">
-<!ENTITY  YCPBuiltinPath  SYSTEM "YCPBuiltinPath.xml">
-<!ENTITY  YCPBuiltinTerm  SYSTEM "YCPBuiltinTerm.xml">
-<!ENTITY  YCPBuiltinMisc  SYSTEM "YCPBuiltinMisc.xml">
-<!ENTITY  YCPBuiltinFloat  SYSTEM "YCPBuiltinFloat.xml">
-<!ENTITY  YCPBuiltinByteblock  SYSTEM "YCPBuiltinByteblock.xml">
-
+<!ENTITY  combined  SYSTEM "combined.xml">
 
 ]>
 <book>
@@ -37,14 +28,7 @@
 
     <toc>
     </toc>
-    &YCPBuiltinInteger;
-    &YCPBuiltinString;
-    &YCPBuiltinMap;
-    &YCPBuiltinList;
-    &YCPBuiltinPath;
-    &YCPBuiltinTerm;
-    &YCPBuiltinMisc;
-    &YCPBuiltinFloat;
-    &YCPBuiltinByteblock;
+
+    &combined;
 
 </book>

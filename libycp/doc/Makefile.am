@@ -5,8 +5,7 @@ SUBDIRS = ycp
 
 htmldir = $(docdir)/libycp
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
-builtinxml := $(builtin:%.cc=%.xml)
-xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
+xmlfiles = combined.xml
 htmlfiles = $(wildcard html/*.html)
 
 
@@ -21,7 +20,7 @@ html/index.html: $(xmlfiles) builtins.xml
 YDOC := $(shell pkg-config --variable=ybindir yast2-devtools)/ydoc2
 RENT := $(shell pkg-config --variable=ybindir yast2-devtools)/replace_entities
 $(xmlfiles) : $(builtin)
-	$(YDOC) -o $@.tmp ../src/$(subst xml,cc,$@)
+	$(YDOC) -o $@.tmp $^
 	$(XSLTPROC) $(XSLTPROC_FLAGS) @STYLESHEET_YDOC@ $@.tmp > $@
 	$(RENT) $@
 	rm $@.tmp
@@ -40,3 +39,6 @@ clean-local:
 install-data-local:
 	mkdir -p $(DESTDIR)$(htmldir)
 	cp -a $(srcdir)/html/images $(DESTDIR)$(htmldir)
+
+check-manual:
+	xmllint --noout --valid builtins.xml
