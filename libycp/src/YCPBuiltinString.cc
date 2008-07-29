@@ -229,7 +229,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
 {
     /**
      * @builtin substring
-     * @id substring_1
+     * @id substring-rest
      * @short Returns part of a string
      * @param string STRING Original String
      * @param integer OFFSET Start position
@@ -269,7 +269,7 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
 {
     /**
      * @builtin substring
-     * @id substring_2
+     * @id substring-length
      * @short Extracts a substring
      *
      * @description

@@ -130,7 +130,7 @@ Srandom1 ()
      * time and returns the seed.
      *
      * @return integer
-     * @id srandom_1
+     * @id srandom-time
      * @usage srandom()
      */
 
@@ -148,7 +148,7 @@ Srandom2 (const YCPInteger & seed)
      * @short Initialize random number generator.
      * @param integer SEED
      * @return void
-     * @id srandom_2
+     * @id srandom-integer
      * @usage srandom(3355)
      */
 
@@ -178,7 +178,7 @@ Setenv2 (const YCPString & name, const YCPString & value, const YCPBoolean & ove
      * @param string value
      * @param boolean overwrite
      * @return boolean
-     * @id setenv_2
+     * @id setenv-choose
      * @usage setenv("PATH", "/home/user", true)
      */
     //3rd argument (1) means that value will be overwrite if it exist
@@ -206,7 +206,7 @@ Setenv1 (const YCPString & name, const YCPString & value)
      * @param string variable
      * @param string value
      * @return boolean
-     * @id setenv_1
+     * @id setenv-always
      * @usage setenv("PATH", "/home/user")
      */
     //3rd argument (1) means that value will be overwrite if it exist
@@ -231,7 +231,6 @@ Getenv (const YCPString & name)
      *
      * @param string name
      * @return string value
-     * @id getenv_1
      * @usage getenv("name")
      */
  
