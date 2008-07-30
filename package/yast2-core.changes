@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Jul 30 15:22:15 CEST 2008 - mvidner@suse.cz
+
+- Moved documentation around and adjusted it to conform with
+  http://en.opensuse.org/YaST/yastdoc
+- 2.17.7
+
+-------------------------------------------------------------------
 Fri Jul 25 10:34:30 CEST 2008 - aschnell@suse.de
 
 - fixed requires for yast2-core-devel
