@@ -1,5 +1,6 @@
-Interface Specification For Dummy-Agent
-=======================================
+<title>Interface Specification For Dummy-Agent</title>
+<h1>Interface Specification For Dummy-Agent</h1>
+<pre>
 $Id$
 
 1. What is the dummy-agent?
@@ -107,3 +108,4 @@ Each map argument can be also a list of maps:
 
 DataMap( [ map read1, map read2, ... ], any default);
 ...
+</pre>
