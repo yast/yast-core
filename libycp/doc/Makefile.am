@@ -22,7 +22,7 @@ YDOC := $(shell pkg-config --variable=ybindir yast2-devtools)/ydoc2
 RENT := $(shell pkg-config --variable=ybindir yast2-devtools)/replace_entities
 $(xmlfiles) : $(builtin)
 	$(YDOC) -o $@.tmp $^
-	$(XSLTPROC) $(XSLTPROC_FLAGS) @STYLESHEET_YDOC@ $@.tmp > $@
+	$(XSLTPROC) --stringparam disambiguate yes $(XSLTPROC_FLAGS) @STYLESHEET_YDOC@ $@.tmp > $@
 	$(RENT) $@
 	rm $@.tmp
 
