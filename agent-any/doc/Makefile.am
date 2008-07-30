@@ -4,9 +4,8 @@
 
 SUBDIRS =
 
-htmldir = $(docdir)/agent-any
-
-html_DATA = anyagent.html
+htmldir = $(yastdocdir)/components
+html_DATA = ag_anyagent.html
 
 EXTRA_DIST = $(html_DATA)
 

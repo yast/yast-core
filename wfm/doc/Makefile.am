@@ -2,7 +2,8 @@
 
 SUBDIRS =
 
-htmldir = $(docdir)/wfm
+htmldir = $(yastdocdir)/ycp/WFM
+
 htmlfiles = $(wildcard html/*.html)
 builtin = $(srcdir)/../src/Y2WFMComponent.cc 
 builtinxml := $(builtin:%.cc=%.xml)

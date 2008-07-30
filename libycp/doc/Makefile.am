@@ -3,7 +3,8 @@
 #
 SUBDIRS = ycp
 
-htmldir = $(docdir)/libycp
+htmldir = $(yastdocdir)/ycp
+
 builtin = $(wildcard $(srcdir)/../src/YCPBuiltin*.cc)
 xmlfiles = combined.xml
 htmlfiles = $(wildcard html/*.html html/*/*.html)

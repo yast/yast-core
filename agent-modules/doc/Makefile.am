@@ -1,8 +1,8 @@
 # Makefile.am for core/agent-modules/doc
 
-htmldir = $(docdir)/agent-modules
+htmldir = $(yastdocdir)/components
 
-html_DATA = modules.html TODO.txt
+html_DATA = ag_modules.html
 
 EXTRA_DIST = $(html_DATA)
 

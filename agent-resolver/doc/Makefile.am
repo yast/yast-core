@@ -2,8 +2,8 @@
 # Makefile.am for core/agent-resolver/doc
 #
 
-htmldir = $(docdir)/agent-resolver
+htmldir = $(yastdocdir)/components
 
-html_DATA = resolveragent.txt
+html_DATA = ag_resolver.html
 
 EXTRA_DIST = $(html_DATA)

@@ -4,7 +4,7 @@
 
 htmldir = $(docdir)/agents-perl
 
-html_DATA =	ag_yp_makefile.txt \
+html_DATA = \
 	  	ycp-pm.html \
 	  	ycp-pm-pod.html \
 		docu0perl.htm  \
@@ -18,7 +18,13 @@ html_DATA =	ag_yp_makefile.txt \
 		ag_background.html \
 		ag_background_example.ycp
 
+compdir = $(yastdocdir)/components
+comp_DATA = \
+		ag_yp_makefile.html \
+		ag_modinfo.html \
+		ag_background.html
+
 ycp-pm-pod.html: ../lib/ycp.pm
 	pod2html < $^ > $@
 
-EXTRA_DIST = $(html_DATA)
+EXTRA_DIST = $(html_DATA) $(comp_DATA)

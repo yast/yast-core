@@ -4,8 +4,8 @@
 
 SUBDIRS =
 
-htmldir = $(docdir)/agent-ini
+htmldir = $(yastdocdir)/components
 
-html_DATA = ini.html
+html_DATA = ag_ini.html
 
 EXTRA_DIST = $(html_DATA)

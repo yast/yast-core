@@ -5,14 +5,16 @@
 SUBDIRS =
 
 htmldir = $(docdir)/agent-system
-
-html_DATA = systemagent.txt passwdagent.txt ag_system-builtins.html
+html_DATA = systemagent.txt passwdagent.txt
 EXTRA_DIST = $(html_DATA)
 
 builtin = $(srcdir)/../src/SystemAgent.cc
-
-ag_system-builtins.html: $(builtin)
+hbuiltin = ag_system.html
+$(hbuiltin): $(builtin)
 	`pkg-config --variable=ybindir yast2-devtools`/makebuiltindocs -t "SCR System agent functions" -a $(builtin) > $@.new
 	mv $@.new $@
 
-CLEANFILES = ag_system-builtins.html
+compdir = $(yastdocdir)/components
+comp_DATA = $(hbuiltin)
+
+CLEANFILES = $(hbuiltin)

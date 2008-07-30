@@ -6,6 +6,9 @@ AC_SYS_LARGEFILE
 
 @YAST2-INIT-PROGRAM@
 
+yastdocdir=\${datadir}/doc/yastdoc/html
+AC_SUBST(yastdocdir)
+
 ## special stuff
 
 # libycp needs flex and bison

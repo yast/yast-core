@@ -4,7 +4,7 @@
 
 SUBDIRS = autodocs
 
-htmldir = $(docdir)
+htmldir = $(yastdocdir)/components
 
-html_DATA = process.html
+html_DATA = ag_process.html
 EXTRA_DIST = $(html_DATA)
