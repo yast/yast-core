@@ -1,3 +1,4 @@
+<pre>
 Some notes about the resolver agent
 
 General
@@ -55,20 +56,21 @@ Write(.resolver.options, ["opt1", "opt2", "opt3"])
 
 To write info paths
 
-Write(.resolver.modified, <string>)
-Write(.resolver.backup, <string>)
-Write(.resolver.process, <string>)
-Write(.resolver.process_id, <string>)
-Write(.resolver.script, <string>)
-Write(.resolver.info, <string>)
+Write(.resolver.modified, <i>string</i>)
+Write(.resolver.backup, <i>string</i>)
+Write(.resolver.process, <i>string</i>)
+Write(.resolver.process_id, <i>string</i>)
+Write(.resolver.script, <i>string</i>)
+Write(.resolver.info, <i>string</i>)
 
-Write(.resolver.write_header, <boolean>)
+Write(.resolver.write_header, <i>boolean</i>)
 
 just change the in-memory copy of /etc/resolv.conf
 
 Use
 
-Write (.resolv, <any value>)
+Write (.resolv, <i>any value</i>)
 
 to 'flush' the data to /etc/resolv.conf. This is also done
 when un-mounting the agent.
+</pre>
