@@ -136,7 +136,6 @@ f_abs(const YCPFloat &f)
 {
     /**
      * @builtin float::abs
-     * @id float--abs
      * @short absolute value
      * @description
      * Returns absolute value of f.
@@ -158,7 +157,6 @@ f_floor(const YCPFloat &f)
 {
     /**
      * @builtin float::floor
-     * @id float--floor
      * @short round downwards to integer
      * @description
      * Returns f rounded downwards to the nearest integer.
@@ -180,7 +178,6 @@ f_ceil(const YCPFloat &f)
 {
     /**
      * @builtin float::ceil
-     * @id float--ceil
      * @short round upwards to integer
      * @description
      * Returns f rounded upwards to the nearest integer.
@@ -202,7 +199,6 @@ f_trunc(const YCPFloat &f)
 {
     /**
      * @builtin float::trunc
-     * @id float--trunc
      * @short round to integer, towards zero
      * @description
      * Returns f rounded to the nearest integer, towards zero.
@@ -224,7 +220,6 @@ f_pow(const YCPFloat &f1, const YCPFloat &f2)
 {
     /**
      * @builtin float::pow
-     * @id float--pow
      * @short power function
      * @description
      * Returns the value of f1 raised to the power of f2.

@@ -3,8 +3,6 @@ Fri Aug  8 14:56:07 CEST 2008 - locilka@suse.cz
 
 - Re-added support to build libycp documentation in separate files
   additionally to combined.xml (needed for overall documentation).
-- Dots in @ids for *::* builtins replaced with double dashes.
-- Added @ids for *::* where missing (needed for docu).
 
 -------------------------------------------------------------------
 Wed Jul 30 15:22:15 CEST 2008 - mvidner@suse.cz

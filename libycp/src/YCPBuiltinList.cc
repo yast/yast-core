@@ -1097,7 +1097,7 @@ l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YC
 {
     /**
      * @builtin list::reduce
-     * @id list--reduce-internal
+     * @id list.reduce-internal
      * @short Reduces a list to a single value.
      * @param flex1 x
      * @param flex1 y
@@ -1167,7 +1167,7 @@ l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, cons
 {
     /**
      * @builtin list::reduce
-     * @id list--reduce-external
+     * @id list.reduce-external
      * @short Reduces a list to a single value.
      * @param flex1 x
      * @param flex2 y
