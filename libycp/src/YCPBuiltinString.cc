@@ -514,7 +514,7 @@ s_filterchars (const YCPString &s, const YCPString &i)
      * all characters that do not occur in <tt>CHARS</tt>.
      *
      * @see deletechars
-     * @usage filterchars ("a", "abcdefghijklmnopqrstuvwxyz") -> "ac"
+     * @usage filterchars ("a", "abcdefghijklmnopqrstuvwxyz") -> "a"
      * @usage filterchars ("abc","cde") -> "c"
      */
 
