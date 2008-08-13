@@ -82,4 +82,5 @@
 (tostring (tofloat (63), 4))
 (tostring (0.12345, 4))
 (tohexstring (31))
+(tohexstring (31, 4))
 

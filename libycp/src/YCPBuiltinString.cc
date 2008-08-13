@@ -202,24 +202,51 @@ s_issubstring (const YCPString &target, const YCPString &sub)
 
 
 static YCPValue
-s_tohexstring (const YCPInteger &i)
+s_tohexstring1 (const YCPInteger &i)
 {
     /**
      * @builtin tohexstring
+     * @id tohexstring-1
      * @short Converts an integer to a hexadecimal string.
      * @param integer number Number
      * @return string number in Hex
      *
      * @description
-     * 
+     *
      * @usage tohexstring (31) -> "0x1f"
      */
 
     if (i.isNull ())
 	return YCPNull ();
 
-    char buffer[66];
-    snprintf (buffer, 66, "0x%x", int (i->value ()));
+    char buffer[64 + 3];
+    snprintf (buffer, 64 + 3, "0x%llx", i->value ());
+    return YCPString (buffer);
+}
+
+
+static YCPValue
+s_tohexstring2 (const YCPInteger &i, const YCPInteger &w)
+{
+    /**
+     * @builtin tohexstring
+     * @id tohexstring-2
+     * @short Converts an integer to a hexadecimal string.
+     * @param integer number Number
+     * @param integer width Width
+     * @return string number in Hex
+     *
+     * @description
+     *
+     * @usage tohexstring (31, 1) -> "0x1f"
+     * @usage tohexstring (31, 4) -> "0x001f"
+     */
+
+    if (i.isNull () || w.isNull())
+	return YCPNull ();
+
+    char buffer[64 + 3];
+    snprintf (buffer, 64 + 3, "0x%0*llx", (int) w->value(), i->value ());
     return YCPString (buffer);
 }
 
@@ -1351,7 +1378,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "+",		   "string (string, symbol)",		(void *)s_plus4 },
 	{ "issubstring",   "boolean (string, string)",		(void *)s_issubstring },
 	{ "tostring",	   "string (any)",			(void *)s_tostring },
-	{ "tohexstring",   "string (integer)",			(void *)s_tohexstring },
+	{ "tohexstring",   "string (integer)",			(void *)s_tohexstring1 },
+	{ "tohexstring",   "string (integer, integer)",		(void *)s_tohexstring2 },
 	{ "size",	   "integer (string)",			(void *)s_size },
 	{ "find",	   "integer (string, string)",		(void *)s_find,		DECL_DEPRECATED },
 	{ "search",	   "integer (string, string)",		(void *)s_search },
