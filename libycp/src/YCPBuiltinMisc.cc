@@ -216,13 +216,11 @@ Setenv1 (const YCPString & name, const YCPString & value)
 }
 
 
-
-#if 0
 static YCPString
 Getenv (const YCPString & name)
 {
      /**
-     * @bu iltin getenv
+     * @builtin getenv
      * @short Change or add an environment variable
      * @description
      * The getenv(variable) function returns the value of variable from
@@ -231,7 +229,8 @@ Getenv (const YCPString & name)
      *
      * @param string name
      * @return string value
-     * @usage getenv("name")
+     * @usage getenv ("USER") -> "root"
+     * @usage getenv ("LC_CTYPE") -> "en_US.UTF-8"
      */
  
     char *value = getenv(name->value().c_str());
@@ -241,9 +240,8 @@ Getenv (const YCPString & name)
     } else {
         return YCPNull();
     }
-
 }
-#endif
+
 
 static YCPValue
 Eval (const YCPValue & v)
@@ -625,7 +623,7 @@ YCPBuiltinMisc::YCPBuiltinMisc ()
 	{ "random",	"integer (integer)",		(void *)Random		},
         { "setenv",	"boolean (string,string)", 	(void *)Setenv1		},
 	{ "setenv",	"boolean (string,string,boolean)", (void *)Setenv2	}, 
-	//{ "getenv",	"string (string)",		(void *)Getenv		},  //function exist in other module
+	{ "getenv",	"string (string)",		(void *)Getenv		},
 	{ "srandom",	"integer ()",			(void *)Srandom1	},
 	{ "srandom",	"void (integer)",		(void *)Srandom2	},
 	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
