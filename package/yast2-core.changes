@@ -2,6 +2,7 @@
 Wed Aug 27 12:13:27 CEST 2008 - locilka@suse.cz
 
 - Enabled getenv builtin.
+- 2.17.9
 
 -------------------------------------------------------------------
 Wed Aug 13 15:10:50 CEST 2008 - aschnell@suse.de
