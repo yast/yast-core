@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Sep  5 13:59:32 CEST 2008 - locilka@suse.cz
+
+- Added WFM::ClientExists function (needed for installation).
+- 2.17.10
+
+-------------------------------------------------------------------
 Wed Aug 27 12:13:27 CEST 2008 - locilka@suse.cz
 
 - Enabled getenv builtin.

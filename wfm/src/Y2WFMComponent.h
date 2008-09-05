@@ -72,6 +72,7 @@ public:
     YCPValue Execute (const YCPPath &path, const YCPValue& arg1);
     YCPValue CallFunction (const YCPString& client, const YCPList& args = YCPList ());
     YCPString GetEnvironmentEncoding ();
+    YCPBoolean ClientExists (const YCPString& client);
 
     virtual Y2Namespace* import (const char* name_space);
 

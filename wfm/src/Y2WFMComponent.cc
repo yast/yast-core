@@ -627,6 +627,44 @@ Y2WFMComponent::Execute (const YCPPath &path, const YCPValue &arg1)
 }
 
 
+YCPBoolean
+Y2WFMComponent::ClientExists (const YCPString& client)
+{
+    /**
+     * @builtin ClientExists
+     * @short Checks whether a YCP client exists
+     * @param string name client name
+     *
+     * @description
+     * This is similar to 'call' or 'CallFunction' but client is only
+     * checked for existence and not executed. If client exists
+     * 'true' is returned, otherwise 'false'.
+     *
+     * @usage ClientExists ("inst_mouse") -> true
+     * @usage ClientExists ("missing_client") -> false
+     * @return boolean whether client exists
+     */
+
+    string new_modulename = client->value ();
+
+    if (client.isNull() || new_modulename == "")
+    {
+	y2error ("Client name not defined %s", new_modulename.c_str());
+	return YCPBoolean (false);
+    }
+
+    // try loading a client via Y2ComponentBroker
+    Y2Component* client_comp = Y2ComponentBroker::createClient (new_modulename.c_str ());
+    if (client_comp)
+    {
+	return YCPBoolean (true);
+    }
+    else
+    {
+	return YCPBoolean (false);
+    }
+}
+
 YCPValue
 Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 {
