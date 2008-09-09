@@ -19,7 +19,8 @@ pkginclude_HEADERS =		\
 	Y2SLog.h \
 	miniini.h \
 	stringutil.h \
-	y2log.h
+	y2log.h \
+	y2changes.h
 
 
 #<INSTALL-HEADER-TARGET>

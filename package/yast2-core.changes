@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Sep  9 15:49:07 CEST 2008 - visnov@suse.cz
+
+- Added y2useritem and y2usernote builtins for user-level
+  action log (Fate #100386) 
+
+-------------------------------------------------------------------
 Tue Sep  9 11:39:07 CEST 2008 - locilka@suse.cz
 
 - Adjusted STDOUT in ycp.pm to use 'utf8'.

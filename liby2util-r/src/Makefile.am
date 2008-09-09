@@ -22,7 +22,8 @@ liby2util_la_SOURCES =		\
 	Y2SLog.cc \
 	miniini.cc \
 	stringutil.cc \
-	y2log.cc
+	y2log.cc \
+	y2changes.cc
 
 
 liby2util_la_LDFLAGS = -version-info 4:0:0

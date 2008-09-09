@@ -35,6 +35,7 @@
 #include "ycp/StaticDeclaration.h"
 
 #include "ycp/y2log.h"
+#include "y2util/y2changes.h"
 #include "ycp/ExecutionEnvironment.h"
 
 extern StaticDeclaration static_declarations;
@@ -614,6 +615,64 @@ Y2FInternal (const YCPInteger & f, const YCPString & format, const YCPList & arg
 }
 
 
+static YCPValue
+Y2UserItem (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2useritem
+     * @short Log an user-level system message to the y2changes
+     *
+     * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
+     * @return void
+     * @see sformat
+     *
+     * @usage y2useritem("Executing reboot")
+     */
+
+    YCPString arg = s_sformat (format, args);
+    if (arg.isNull () || !arg->isString ())
+    {
+	return YCPNull ();
+    }
+
+    y2useritem ("%s", arg->value().c_str());
+    
+    return YCPVoid();
+}
+
+
+static YCPValue
+Y2UserNote (const YCPString & format, const YCPList & args)
+{
+    /**
+     * @builtin y2usernote
+     * @short Log an user-level addional message to the y2changes
+     *
+     * @param string FORMAT
+     * @param any PAR1
+     * @param any PAR2
+     * @param any ...
+     * @return void
+     * @see sformat
+     *
+     * @usage y2usernote("Starting module Bee")
+     */
+
+    YCPString arg = s_sformat (format, args);
+    if (arg.isNull () || !arg->isString ())
+    {
+	return YCPNull ();
+    }
+
+    y2usernote ("%s", arg->value().c_str());
+    
+    return YCPVoid();
+}
+
+
 YCPBuiltinMisc::YCPBuiltinMisc ()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -643,6 +702,9 @@ YCPBuiltinMisc::YCPBuiltinMisc ()
 	{ "y2error",	"void (integer, string, ...)",	(void *)Y2FError,	DECL_NIL|DECL_WILD },
 	{ "y2security", "void (integer, string, ...)",	(void *)Y2FSecurity,	DECL_NIL|DECL_WILD },
 	{ "y2internal", "void (integer, string, ...)",	(void *)Y2FInternal,	DECL_NIL|DECL_WILD },
+	// user-level logging
+	{ "y2useritem", "void (string, ...)",		(void *)Y2UserItem,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
+	{ "y2usernote", "void (string, ...)",		(void *)Y2UserNote,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
 	{ 0 }
     };
 
