@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep  9 11:39:07 CEST 2008 - locilka@suse.cz
+
+- Adjusted STDOUT in ycp.pm to use 'utf8'.
+
+-------------------------------------------------------------------
 Fri Sep  5 13:59:32 CEST 2008 - locilka@suse.cz
 
 - Added WFM::ClientExists function (needed for installation).

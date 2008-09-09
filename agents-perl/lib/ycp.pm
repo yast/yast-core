@@ -79,6 +79,9 @@ use strict;
 use Time::localtime;
 use Sys::Hostname;
 
+# needed for printing character (>255)
+binmode STDOUT, ':utf8';
+
 @ISA     = qw(Exporter);
 
 
