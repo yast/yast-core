@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Sep 17 15:49:42 CEST 2008 - visnov@suse.cz
+
+- Warn to log if using non-standard place for loading modules
+- 2.17.12
+
+-------------------------------------------------------------------
 Tue Sep  9 15:49:07 CEST 2008 - visnov@suse.cz
 
 - Added y2useritem and y2usernote builtins for user-level

@@ -97,8 +97,10 @@ public:
      */
     static string completeFilename (const string& fname);
 
-private:
+protected:
+    static bool searchPrefixWarn;
 
+private:
     static int defaultComponentLevel ();
 
 };

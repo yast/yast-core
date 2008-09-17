@@ -48,6 +48,7 @@ static const char *paths[] =
 
 static const int NUM_LEVELS = sizeof (paths) / sizeof (paths[0]);
 
+bool Y2PathSearch::searchPrefixWarn = true;
 
 int
 Y2PathSearch::numberOfComponentLevels ()
@@ -178,6 +179,11 @@ Y2PathSearch::findy2 (string filename, int mode, int level)
 	pathname = completeFilename (pathname + filename);
 	if (access (pathname.c_str(), mode) == 0)
 	{
+	    // FIXME: this check is different for clients and for modules - see find
+	    if( searchPrefixWarn && i != NUM_LEVELS-1 )
+	    {
+		y2warning( "Using special search prefix '%s' for '%s'",searchPath (GENERIC, i).c_str(), pathname.c_str() );
+	    }
 	    return pathname;
 	}
     }
@@ -278,6 +284,8 @@ YCPPathSearch::initialize (Kind kind, const char *suffix)
     const char *home = getenv ("HOME");
     const char *y2dir = getenv ("Y2DIR");
 
+    searchPrefixWarn = (getenv ("Y2SILENTSEARCH") == NULL);
+
     addPath (kind, string (YAST2DIR) + suffix);
     if (home)
     {
@@ -329,6 +337,10 @@ YCPPathSearch::find (Kind kind, const string& name)
 	if (access (pathname.c_str(), R_OK) == 0)
 	{
 	    y2debug ("... success");
+	    // FIXME: this check is different for clients and for modules - see findy2
+	    if( searchPrefixWarn && *i != kindList.back () ) {
+		y2warning( "Using special search prefix '%s' for '%s'", i->c_str(), pathname.c_str() );
+	    }
 	    return pathname;
 	}
 
