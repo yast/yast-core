@@ -284,6 +284,18 @@ ScriptingAgent::otherCommand (const YCPTerm &term)
     {
 	return UnmountAllAgents ();
     }
+    else if (sym == "RegisterAgent"
+	     && term->size () == 2
+	     && term->value (0)->isPath ())
+    {
+	return RegisterAgent (term->value (0)->asPath (), term->value (1));
+    }
+    else if (sym == "UnregisterAgent"
+	     && term->size () == 1
+	     && term->value (0)->isPath ())
+    {
+	return UnregisterAgent (term->value (0)->asPath ());
+    }
     else if (sym == "YaST2Version" || sym == "SuSEVersion")
     {
 	// SuSEVersion is the older name (for historic reasons)

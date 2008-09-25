@@ -159,6 +159,63 @@ StdioSCRAgent::Error (const YCPPath &path)
 }
 
 
+YCPBoolean
+StdioSCRAgent::RegisterAgent (const YCPPath& path, const YCPValue& value) {
+    if (! m_handler)
+	return YCPNull ();
+	
+    y2debug( "This is StdioSCRAgent(%p)::RegisterAgent", this );
+
+    YCPTerm r ( "RegisterAgent" );
+    r.add (path);
+    r.add (value);
+    
+    YCPValue v = m_handler->evaluate (r);
+
+    if (v.isNull())
+    {
+	ycp2error ("SCR::RegisterAgent() failed");
+	return YCPNull ();
+    }
+    if (!v->isBoolean ())
+    {
+	ycp2error ("SCR::RegisterAgent() did not return a boolean (%s)", v->toString().c_str());
+	return YCPNull ();
+    }
+
+    return v->asBoolean();
+}
+
+
+
+YCPBoolean
+StdioSCRAgent::UnregisterAgent (const YCPPath& path) {
+    if (! m_handler)
+	return YCPNull ();
+	
+    y2debug( "This is StdioSCRAgent(%p)::UnregisterAgent", this );
+
+    YCPTerm r ( "UnregisterAgent" );
+    r.add (path);
+    
+    YCPValue v = m_handler->evaluate (r);
+
+    if (v.isNull())
+    {
+	ycp2error ("SCR::UnregisterAgent() failed");
+	return YCPNull ();
+    }
+    if (!v->isBoolean ())
+    {
+	ycp2error ("SCR::UnregisterAgent() did not return a boolean (%s)", v->toString().c_str());
+	return YCPNull ();
+    }
+
+    return v->asBoolean();
+}
+
+
+
 YCPValue
 StdioSCRAgent::otherCommand (const YCPTerm &term)
 {

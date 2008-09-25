@@ -56,8 +56,17 @@ public:
     virtual YCPMap Error (const YCPPath &path);
 
     /**
-     * Handle the commands 'UnregisterAgent',
-     * 'UnregisterAllAgents', 'MountAgent', 'MountAllAgents',
+     * Register an agent
+     */
+    virtual YCPBoolean RegisterAgent (const YCPPath& path, const YCPValue& value);
+
+    /**
+     * Unregister an agent
+     */
+    virtual YCPBoolean UnregisterAgent (const YCPPath& path);
+
+    /**
+     * Handle the commands 'UnregisterAllAgents', 'MountAgent', 'MountAllAgents',
      * 'UnmountAgent' and 'UnmountAllAgents'.
      */
     YCPValue otherCommand (const YCPTerm &term);

@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Sep 25 12:21:34 CEST 2008 - visnov@suse.cz
+
+- support SCR::RegisterAgent and SCR::UnregisterAgent in chroot 
+  (bnc #425472)
+- 2.17.13
+
+-------------------------------------------------------------------
 Wed Sep 17 15:49:42 CEST 2008 - visnov@suse.cz
 
 - Warn to log if using non-standard place for loading modules
