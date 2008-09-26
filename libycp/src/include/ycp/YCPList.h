@@ -22,11 +22,14 @@
 #define YCPList_h
 
 
+#include <iterator>
 #include "YCPValue.h"
 
 
-
+typedef vector<YCPValue> YCPValueList;
+class YCPListIterator;
 class YCPCodeCompare;
+
 
 /**
  * @short List of YCPValues that is a value itself
@@ -42,7 +45,7 @@ class YCPCodeCompare;
  */
 class YCPListRep : public YCPValueRep
 {
-    vector<YCPValue> elements;
+    YCPValueList elements;
 
 protected:
     friend class YCPList;
@@ -141,6 +144,20 @@ public:
     YCPValue value(int n) const;
 
     /**
+     * Returns a bidirectional STL iterator for the YCPList that
+     * is positioned at the first value pair in the list.
+     * (suitable for iterating over all entries)
+     */
+    YCPListIterator begin() const;
+
+    /**
+     * Returns a bidirectional STL iterator for the YCPList that
+     * is positioned BEHIND the last value pair in the list.
+     * (suitable for iterating over all entries)
+     */
+    YCPListIterator end() const;
+
+    /**
      * Compares two YCPLists for equality, greaterness or smallerness.
      * The relation is lexicographically with respect to the list elements,
      * i.e. elementwise comparison up to the shorter length.
@@ -186,6 +203,59 @@ public:
     string commaList() const;
 };
 
+
+/**
+ * @short Iterator for YCPList values.
+ */
+class YCPListIterator
+{
+    friend class YCPListRep;
+
+    YCPValueList::const_iterator position;
+
+public:
+
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef ptrdiff_t           difference_type;
+    typedef const YCPValue      value_type;
+    typedef const YCPValue*     pointer;
+    typedef const YCPValue&     reference;
+
+protected:
+
+    YCPListIterator(YCPValueList::const_iterator position)
+	: position(position) {}
+
+public:
+
+    /**
+     * Return the value of the current position.
+     */
+    reference operator*() const { return position.operator*(); }
+
+    /**
+     * Check for equality.
+     */
+    friend bool operator==(const YCPListIterator &x, const YCPListIterator &y) {
+	return x.position == y.position;
+    }
+
+    /**
+     * Check for inequality.
+     */
+    friend bool operator!=(const YCPListIterator &x, const YCPListIterator &y) {
+	return !(x == y);
+    }
+
+    /**
+     * Advance to the next position.
+     */
+    void operator++() { ++position; }
+    void operator++(int) { ++position; }
+
+};
+
+
 #define CONST_ELEMENT (static_cast<const YCPListRep*>(element))
 #define ELEMENT (const_cast<YCPListRep*>(static_cast<const YCPListRep*>(this->writeCopy())))
 
@@ -217,6 +287,8 @@ public:
     YCPList functionalAdd(const YCPValue& value, bool prepend = false) const
 	{ return CONST_ELEMENT->functionalAdd (value, prepend); }
     YCPValue value(int n) const { return CONST_ELEMENT->value (n); }
+    YCPListIterator begin() const { return CONST_ELEMENT->begin(); }
+    YCPListIterator end() const { return CONST_ELEMENT->end(); }
     string commaList() const { return CONST_ELEMENT->commaList (); }
 };
 

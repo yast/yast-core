@@ -193,6 +193,20 @@ YCPListRep::value(int n) const
 }
 
 
+YCPListIterator
+YCPListRep::begin() const
+{
+    return elements.begin();
+}
+
+
+YCPListIterator
+YCPListRep::end() const
+{
+    return elements.end();
+}
+
+
 YCPOrder
 YCPListRep::compare(const YCPList& l) const
 {

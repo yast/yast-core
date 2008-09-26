@@ -1256,6 +1256,72 @@ l_tolist (const YCPValue &v)
     return YCPNull();
 }
 
+bool haha(YCPValue a, YCPValue b)
+{
+    YCPOrder comp = a->compare (b);
+    return comp == YO_LESS;
+}
+
+
+static YCPValue
+s_difference(const YCPList& a, const YCPList& b)
+{
+    vector<YCPValue> r;
+    back_insert_iterator< vector<YCPValue> > bii(r);
+
+    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+
+    YCPList ret;
+    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
+	ret->add(*it);
+    return ret;
+}
+
+
+static YCPValue
+s_symmetric_difference(const YCPList& a, const YCPList& b)
+{
+    vector<YCPValue> r;
+    back_insert_iterator< vector<YCPValue> > bii(r);
+
+    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+
+    YCPList ret;
+    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
+	ret->add(*it);
+    return ret;
+}
+
+
+static YCPValue
+s_intersection(const YCPList& a, const YCPList& b)
+{
+    vector<YCPValue> r;
+    back_insert_iterator< vector<YCPValue> > bii(r);
+
+    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+
+    YCPList ret;
+    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
+    	ret->add(*it);
+    return ret;
+}
+
+
+static YCPValue
+s_union(const YCPList& a, const YCPList& b)
+{
+    vector<YCPValue> r;
+    back_insert_iterator< vector<YCPValue> > bii(r);
+
+    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+
+    YCPList ret;
+    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
+	ret->add(*it);
+    return ret;
+}
+
 
 YCPBuiltinList::YCPBuiltinList ()
 {
@@ -1296,6 +1362,10 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "list",	"",											NULL,	                DECL_NAMESPACE },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "difference",            "list <flex> (const list <flex>, const list <flex>)",                (void *)s_difference, DECL_FLEX },
+	{ "symmetric_difference",  "list <flex> (const list <flex>, const list <flex>)",                (void *)s_symmetric_difference, DECL_FLEX },
+	{ "intersection",          "list <flex> (const list <flex>, const list <flex>)",                (void *)s_intersection, DECL_FLEX },
+	{ "union",                 "list <flex> (const list <flex>, const list <flex>)",                (void *)s_union, DECL_FLEX },
 	{ 0 }
     };
 

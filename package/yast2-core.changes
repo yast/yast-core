@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 26 16:09:22 CEST 2008 - visnov@suse.cz
+
+- new builtins: list::difference, list::symmetric_difference,
+  list::intersection, list::union (aschnell, bnc #58844)
+- 2.17.15
+
+-------------------------------------------------------------------
 Fri Sep 26 12:17:35 CEST 2008 - visnov@suse.cz
 
 - allow clients to return exit code (bnc #350740)
