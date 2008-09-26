@@ -14,17 +14,45 @@
 
    Authors:	Mathias Kettner <kettner@suse.de>
 		Arvin Schnell <arvin@suse.de>
+		Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Arvin Schnell <arvin@suse.de>
 
 /-*/
-/*
- * main function common to all Y2 components
- */
-
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE		// needed for vasprintf below
 #endif
 
+/**
+ * \file
+ * Generic \ref main function handler for all YaST2 appliations.
+ */
+
+/**
+ * \mainpage YaST2 Core System Documentation
+ *
+ * This is the main page of the YaST2 Core documentation. Some of the general topics are covered by the
+ * following pages:
+ *
+ * - Component architecture
+ * 	- \ref components
+ * 	- \ref componentbroker
+ *	- \ref componentsearch
+ * - Handling of error codes: \ref exitcodes
+ */
+ 
+/**
+ * \page exitcodes YaST2 Exit Codes
+ *
+ * All applications using liby2 library share a common \ref main function. The function handles the exit codes in the following way.
+ * 
+ * The exit codes are described in \ref exitcodes.h header file. A special handling is applied to the value returned from the client.
+ *  - If a value is \ref YCPNull or \ref YCPVoid, exitcode \ref YAST_OK will be used. 
+ *  - If the value is \ref YCPBoolean, \ref YAST_OK will be returned for true, \ref YAST_CLIENTRESULT for false. 
+ *  - If the value is \ref YCPInteger, the value will be added to \ref YAST_CLIENTRESULT and the resulting
+ * integer will be the process exitcode. 
+ *  - If the value is \ref YCPSymbol, for names defined by \ref ycp_error_exit_symbols \ref YAST_CLIENTRESULT
+ * will be returned, otherwise \ref YAST_OK.
+ */
 #include <stdarg.h>
 #include <unistd.h>
 #include <signal.h>
@@ -44,12 +72,21 @@
 #include <YCP.h>
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
+#include "exitcodes.h"
+
+/// number of symbols that are handled as error codes
+#define MAX_YCP_ERROR_EXIT_SYMBOLS	2
+
+/// symbol names that are handled as error codes when returned by the client
+const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = { 
+    "abort",
+    "cancel"
+};
 
 using std::string;
 ExecutionEnvironment ee;
 
-static const int YCP_ERROR = 16;
-
+/// fallback name of the program
 static const char *progname = "genericfrontend";
 
 static void print_usage ();
@@ -262,7 +299,7 @@ parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name
 
     if (!argv[arg]) {
 	print_usage ();
-	exit (1);
+	exit (YAST_FEWARGUMENTS);
     }
 
     client_name = argv[arg];
@@ -299,13 +336,13 @@ parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name
 	    if (option.isNull())
 	    {
 		print_error ("Client option -s: Couldn't parse valid YCP value from stdin");
-		exit (5);
+		exit (YAST_OPTIONERROR);
 	    }
 
 	    if (!option->isList())
 	    {
 		print_error ("Client option -s: Parsed YCP value is NOT a YCPList");
-		exit (5);
+		exit (YAST_OPTIONERROR);
 	    }
 
 	    arglist = option->asList();	  // the option read _IS_ arglist
@@ -387,13 +424,13 @@ parse_server_and_options (int argc, char ** argv, int& arg, char *& server_name,
     {
 	fprintf(stderr, "No server module given\n");
 	print_usage ();
-	exit (5);
+	exit (YAST_OPTIONERROR);
     }
 
     // now create server
     if (!argv[arg]) {
 	print_usage ();
-	exit (1);
+	exit (YAST_FEWARGUMENTS);
     }
 
     server_name = argv[arg];
@@ -477,7 +514,7 @@ main (int argc, char **argv)
     if (!argv[0])
     {
 	fprintf (stderr, "Missing argv[0]. It is a NULL pointer.");
-	exit (5);
+	exit (YAST_OPTIONERROR);
     }
 
     progname = basename (argv[0]);	// get program name
@@ -501,12 +538,12 @@ main (int argc, char **argv)
     if (argc < 2) {
 	fprintf (stderr, "\nToo few arguments");
 	print_usage();
-	exit (1);
+	exit (YAST_FEWARGUMENTS);
     }
 
     if (!strcmp (argv[1], "-h") || !strcmp (argv[1], "--help")) {
 	print_help ();
-	exit (0);
+	exit (YAST_OK);
     }
 
     // client _AND_ server must be given
@@ -591,7 +628,7 @@ main (int argc, char **argv)
 	if (pos == NULL)
 	{
 	    print_error ("Option %s argument must be in format namespace=component", argv[arg-1]);
-	    exit (5);
+	    exit (YAST_OPTIONERROR);
 	}
 	*pos = 0;
 	Y2ComponentBroker::registerNamespaceException (argv[arg], pos+1);
@@ -689,12 +726,12 @@ main (int argc, char **argv)
 	    fprintf (stderr, "  %s\n", i->c_str());
 
 	print_usage ();
-	exit (5);
+	exit (YAST_OPTIONERROR);
     }
     if (dynamic_cast<Y2ErrorComponent *>(client))
     {
 	print_error ("Error while creating client module %s", client_name);
-	exit (5);
+	exit (YAST_OPTIONERROR);
     }
 
 
@@ -729,10 +766,30 @@ main (int argc, char **argv)
     // might be useful in tracking segmentation faults
     y2milestone ("Finished YaST2 component '%s'", progname);
 
-    if( !result.isNull () && result->isBoolean() )
-	exit( result->asBoolean()->value() ? 0 : YCP_ERROR );
+    if( result.isNull () )
+	exit (YAST_OK);
 
-    exit (EXIT_SUCCESS);
+    y2milestone( "Exiting with client return value '%s'", result->toString ().c_str ());
+
+    if( result->isBoolean () )
+    {
+	exit( result->asBoolean()->value() ? YAST_OK : YAST_CLIENTRESULT );
+    }
+	
+    if( result->isInteger () )
+	exit( YAST_CLIENTRESULT + result->asInteger ()->value () );
+
+    // if it is one of error symbols, return it as error
+    if( result->isSymbol () )
+    {
+	string symbol = result->asSymbol()->symbol();
+	for( int i = 0 ; i < MAX_YCP_ERROR_EXIT_SYMBOLS; i++ )
+	    if( symbol == ycp_error_exit_symbols[i] )
+		exit( YAST_CLIENTRESULT );
+    }
+    
+    // all other values
+    exit (YAST_OK);
 }
 
 

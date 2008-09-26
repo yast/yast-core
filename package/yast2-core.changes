@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 26 12:17:35 CEST 2008 - visnov@suse.cz
+
+- allow clients to return exit code (bnc #350740)
+- clean up documentation in liby2
+- 2.17.14 
+
+-------------------------------------------------------------------
 Thu Sep 25 12:21:34 CEST 2008 - visnov@suse.cz
 
 - support SCR::RegisterAgent and SCR::UnregisterAgent in chroot 

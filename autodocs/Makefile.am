@@ -13,5 +13,6 @@ doxygen.css @RPMNAME@.tag: index.html
 
 index.html: $(wildcard $(top_srcdir)/*/*.cc $(top_srcdir)/*/*/*.cc)
 	${YDOXYGEN} PROJECT_NAME=@RPMNAME@ \
-		INPUT=.. 
+		INPUT=..  \
+		EXCLUDE=../liby2util-r/testsuite
 # TODO: create libzypp.tag and use it (elsewhere)

@@ -34,6 +34,41 @@ class Y2ComponentCreator;
 class Y2Component;
 
 /**
+ * \page componentbroker YaST2 Component Broker
+ * \author Matthias Kettner
+ * \todo clean up and update
+ *
+ * <h2>How the component broker works</h2>
+ * 
+ * liby2 is the library which does all the stuff
+ * 
+ * in \ref Y2ProgramComponent.cc the server/client is started
+ * (\ref launchExternalProgram) by connecting pipes for stdin/stdout
+ * and starting the program via fork/execve.
+ * 
+ * The program is searched via \ref pathsearch.cc and must reside
+ * in a sub-directory "clients" or "servers".
+ * The $HOME directory is a special case, as a sub-dir $HOME/.yast2
+ * must exists.
+ * 
+ * Every program starts via \ref main() \ref genericfrontend.cc
+ * 
+ * The \ref main() function parses argv and starts
+ * the client (\ref Y2ComponentBroker::createClient) and the
+ * server (\ref Y2ComponentBroker::createServer) for the component
+ * 
+ * Expressions are 'commands' to the server and sent via
+ * "...Component::evaluate (const YCPValue& command)"
+ * 
+ * evaluate() starts the 'real' component if it is not already
+ * running.
+ * 
+ * \ref doActualWork() is used for client components
+ * 
+ * \ref result() is used to finish server components
+ */
+
+/**
  * @short Looks for and creates YaST2 components
  * This class has no instances and only static methods.
  * There are two reasons for this:
@@ -50,6 +85,8 @@ class Y2Component;
  * exist. During global constructor call time (before main), the
  * constructors of the @ref ComponentCreator classes <i>register</i>
  * themselves to the component broker.
+ * 
+ * For more details, see \page componentbroker
  */
 class Y2ComponentBroker
 {

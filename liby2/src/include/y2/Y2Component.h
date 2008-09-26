@@ -33,8 +33,199 @@ class YCPValue;
 class YCPList;
 
 /**
+ * \page components YaST2 Component Architecture
+ *
+ * \author Mathias Kettner
+ *
+ * \todo This is partially obsolete!
+ * 
+ * <h2>Design principles</h2>
+ * 
+ * <p>The YaST2 component model is the foundation of the
+ * YaST2 architecture. It is important to understand at least
+ * the basic ideas in order to be able to write new Y2 components.
+ * It's based upon the following design principles:
+ * 
+ * <p><table cellspacing=0 BGCOLOR="#f96500" width="100%"><tr><td>
+ * <table width="100%" bgcolor="#ffc080" cellpadding=10><TR><TD>
+ * <ul>
+ * 
+ * <p><li><i>YaST2 should be easily extensable. One should be able
+ * to exchange or add functionality independent
+ * of all other parts.</i>This leads to a modular architecture.
+ * The interchangable parts are called 'components'.</li>
+ * 
+ * <p><li><i>It should be possible, that a component can be added
+ * or exchanged merely through the fact, that a file has been
+ * added or exchanged.</i> This allows you to put configuration
+ * modules for a software into the same package as that software.
+ * For example you could write a configuration module for
+ * sendmail and put it into the sendmail package. As long as
+ * the sendmail package is installed, its YaST2 configuration
+ * module is available.</li>
+ * 
+ * <p><li><i>Despite the need for Y2 to be modular in concept,
+ * during execution time this should not lead to high communication
+ * overhead or large need in memory usage or the number of
+ * concurrently running processes.</i></li>
+ * 
+ * <p><li><i>The inter-component communication should be human
+ * readable, at least in debugging situations.</i></li>
+ * 
+ * <p><li><i>The inter-component communication should be network
+ * transparent.</i></li>
+ * 
+ * <p><li><i>It should be easy to write a component. Component implementing
+ * should not be restricted to a certain programming language.</i>
+ * 
+ * </ul>
+ * </td></tr></table>
+ * </td></tr></table>
+ * 
+ * <h2>Communication</h2>
+ * 
+ * <p>All components speak a common language and act according to
+ * defined protocol. Both the language and the protocol are
+ * called <i>YCP (YaST2 communication protocol)</i>. One protocol
+ * step consists of one of the partners sending exactly one
+ * <a href="../libycp/YCP-datatypes.html">YCP value</a>
+ *  to the other and the other receiving that value. In the
+ * next step, the component that just was receiving, is now sending and
+ * vice versa. The only exception is, that one of that partners
+ * may terminate the session and send a last <i>result</i> message
+ * after which - of course - the partner won't send another value.
+ * 
+ * <h2>Clients and Servers</h2>
+ * 
+ * <p>There are two different kinds of components: server components and
+ * client components, which differ in how the control flows.
+ * 
+ * <p>A <i>server</i> component is one that - once it's initialized -
+ * just waits for jobs to do. Another component can send a <i>request</i>
+ * and thus pass the control to the server. That does what is neccessary
+ * in order to do handle the request and returns an
+ * <i>answer</i>. Prominent examples for server components are the user
+ * interfaces. In YaST2 they play a <i>passive</i> role. They just wait
+ * for a command like &quot;Show me this dialog, wait for the next user
+ * input and return me that input&quot;. A server component can also use
+ * the service of another server component. For example the <i>SCR
+ * (System configuration repository)</i> makes use of servers called
+ * <i>agents</i>, which realize subtrees of the SCR tree.
+ * 
+ * <p>A <i>client</i> component is one that controls the flow. It may
+ * contain something like an &quot;event loop&quot;. In order to do its
+ * work, it can use the services of other server components. Client
+ * components are sometimes called <i>modules</i>. Examples for
+ * modules are the single steps of the YaST2 &quot;Installation
+ * Wizard&quot; or the program that calls <tt>rpm</tt> to install
+ * packages. Other examples could be a  module that configures the network
+ * setup of a workstation or one, that just sets the IP-number and the
+ * hostname of that workstation.
+ * 
+ * <p>Modules can be hiearchically structured
+ * and hand over control to other modules that acomplish sub tasks and
+ * are called <i>submodules</i> in this context. An example is the
+ * structure of the YaST2 installer. The installation itself is
+ * a module. For each of the wizard window steps, it calls a submodule.
+ * 
+ * <h2>How components are realized</h2>
+ * <p>There are quite a number of ways how you can implement a component.
+ * A component can be:
+ * <p><table cellspacing=0 BGCOLOR="#f96500" width="100%"><tr><td>
+ * <table width="100%" bgcolor="#ffc080" cellpadding=10><TR><TD>
+ * <ul>
+ * 
+ * <li>An executable program (ELF, /bin/sh, or whatsoever)</li>
+ * <li>A C++ class using <tt><a href="../libycp/autodocs/intro.html">libycp</a></tt>
+ * and <tt><a href="../liby2/autodocs/intro.html">liby2</a></tt></li>
+ * <li>A YCP script executed by the <i>Workflowmanager</i></li>
+ * <li>Youself typing some YCP code at a terminal</li>
+ * 
+ * </ul>
+ * </td></tr></table>
+ * </td></tr></table>
+ * 
+ * <p>Don't laugh over the last possibility! For debugging this is sometimes
+ * very helpful. You can simulate <i>any</i> component by typing to a terminal.
+ * 
+ * <h3>Executable programs</h3>
+ * 
+ * <p>A component that exists as <i>executable program</i> is realized by
+ * a process that is created when the component is needed. If a component
+ * needs the services of an external program component, it launches a
+ * seperate process and starts a communication via two unix pipes, one in
+ * each direction.
+ * 
+ * <p>The data flowing through these pipes is YCP Ascii
+ * representation. Each communication side needs a parser to analyse the
+ * data and a YCP syntax generater to write data to the pipe. Both can be
+ * found in the <tt><a href="../libycp/autodocs/intro.html">libycp</a></tt>,
+ * which can only used from C++ programs.
+ * 
+ * <p>But the production of YCP code
+ * can in many cases very easily be done be printing to stdout, for
+ * example with <tt>echo</tt> (shell) or <tt>printf</tt> (C).
+ * 
+ * <p>The parsing of YCP code is as bit more tricky. But in many cases you
+ * don't need a full featured parser, because you know beforehand what structure
+ * the value have that you get. This especially holds for client components,
+ * because they can decide, how the output from the server should look like.
+ * 
+ * <h3>C++ class using libycp and liby2</h3>
+ * <p>If you anyway decide to write your component in C++,
+ * it's by far the most conveniant way to use the functionality
+ * of libycp and liby2, whose only purpose is excactly to support
+ * component implementation.
+ * 
+ * <p>What you have to do is to subclass at least two classes:
+ * <tt><a href="../liby2/autodocs/Y2ComponentCreator.html">Y2ComponentCreator</a></tt> and
+ * <tt><a href="../liby2/autodocs/Y2Component.html">Y2Component</a></tt> and
+ * 
+ * <p>Depending on whether you want to implement a server or a client component
+ * you have to override different methods. Many examples can be found within the liby2
+ * itself.
+ * 
+ * <p>One big advantage of writing a component in C++ is, that
+ * you can very easily create three external appearances of the component:
+ * <ul>
+ * <li>A selfcontained executable program</li>
+ * <li>A shared library plugin to load during runtime</li>
+ * <li>A static library that can be linked together with other components</li>
+ * </ul>
+ * 
+ * <p>The YaST2 installer makes usage of the third variant only. All required components
+ * are linked together to <tt>y2base</tt>, which is statically linked against liby2 and
+ * libycp. The memory usage is reduced as well as the required disk space. Furthermore
+ * no creating and parsing of Ascii streams between the components is required. Protocol
+ * steps are simple function calls. Even for very large data structures, only one pointer
+ * has to be passed.
+ * 
+ * <h3>A YCP script executed by the <i>Workflowmanager</i></h3>
+ * <p>If you have installed YaST2, you will find some files ending in <tt>.ycp</tt>
+ * lying around  in <tt>/lib/YaST2/clients</tt>. These are YCP scripts implementing
+ * client components (modules). YCP is not only a protocol, it is also a full features
+ * programming language, which is in this case used to implement components. This is
+ * very conveniant as the language can directly operate on the protocol values and
+ * has some other nice features.
+ * 
+ * <p>The client scripts are executed by the <i>Workflowmanager</i>, which is an
+ * extension to the core YCP language. It implements a couple of builtin functions
+ * that allow communication the the system and with other
+ * components. Here is a
+ * <a href="../y2wfm/YCP-builtins-wfm.html">of builtins.</a>.
+ * 
+ * <h3>Youself typing YCP code at a terminal</h3>
+ * <p>You can be a component yourself :-). Just tell another component to communicate
+ * via stdio and speak with it. For example you can launch the component <tt>ycp</tt> by
+ * typing <tt>y2ycp stdio</tt>. Now you can enter YCP expressions and get the evaluation
+ * as answer.
+ */
+
+/**
  * @short Communication handle to a YaST2 component.
- * @see Y2ComponentBroker.
+ * @see componentbroker
+ * @see Y2ComponentBroker
+ *
  * YaST2 is a network oriented client/server architecture.
  * Currently there exist five differnt types of components:
  * userinterfaces, modules, the workflowmanagers, the

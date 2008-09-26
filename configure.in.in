@@ -130,8 +130,6 @@ AM_CONDITIONAL([HAVE_POLKIT], [test "x$HAVE_POLKIT" = x1])
 
 ## and generate the output
 AC_CONFIG_FILES([
-	liby2/doc/Y2-access.html
-	liby2/doc/Y2-components.html
 	scr/doc/SCR.html
 	scr/doc/intro_to_scr.html
 ])
