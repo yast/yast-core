@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Sep 29 23:03:10 CEST 2008 - visnov@suse.cz
+
+- YCP values overview page added to docs
+
+-------------------------------------------------------------------
 Fri Sep 26 16:09:22 CEST 2008 - visnov@suse.cz
 
 - new builtins: list::difference, list::symmetric_difference,
