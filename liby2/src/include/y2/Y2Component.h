@@ -88,8 +88,7 @@ class YCPList;
  * defined protocol. Both the language and the protocol are
  * called <i>YCP (YaST2 communication protocol)</i>. One protocol
  * step consists of one of the partners sending exactly one
- * <a href="../libycp/YCP-datatypes.html">YCP value</a>
- *  to the other and the other receiving that value. In the
+ * of \ref ycpvalues to the other and the other receiving that value. In the
  * next step, the component that just was receiving, is now sending and
  * vice versa. The only exception is, that one of that partners
  * may terminate the session and send a last <i>result</i> message
@@ -136,8 +135,7 @@ class YCPList;
  * <ul>
  * 
  * <li>An executable program (ELF, /bin/sh, or whatsoever)</li>
- * <li>A C++ class using <tt><a href="../libycp/autodocs/intro.html">libycp</a></tt>
- * and \ref liby2</li>
+ * <li>A C++ class using \ref libycp and \ref liby2</li>
  * <li>A YCP script executed by the <i>Workflowmanager</i></li>
  * <li>Youself typing some YCP code at a terminal</li>
  * 
@@ -159,8 +157,7 @@ class YCPList;
  * <p>The data flowing through these pipes is YCP Ascii
  * representation. Each communication side needs a parser to analyse the
  * data and a YCP syntax generater to write data to the pipe. Both can be
- * found in the <tt><a href="../libycp/autodocs/intro.html">libycp</a></tt>,
- * which can only used from C++ programs.
+ * found in the \ref libycp, which can only used from C++ programs.
  * 
  * <p>But the production of YCP code
  * can in many cases very easily be done be printing to stdout, for
@@ -178,8 +175,7 @@ class YCPList;
  * component implementation.
  * 
  * <p>What you have to do is to subclass at least two classes:
- * <tt><a href="../liby2/autodocs/Y2ComponentCreator.html">Y2ComponentCreator</a></tt> and
- * <tt><a href="../liby2/autodocs/Y2Component.html">Y2Component</a></tt> and
+ * \ref Y2ComponentCreator and \ref Y2Component and
  * 
  * <p>Depending on whether you want to implement a server or a client component
  * you have to override different methods. Many examples can be found within the liby2

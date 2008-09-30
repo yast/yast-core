@@ -21,6 +21,16 @@
 #ifndef YCode_h
 #define YCode_h
 
+/**
+ * \page ycplanguage YCP Scripting Language
+ * \todo Enhance
+ *
+ * YCP is a very simple imperative scripting language with builtin support for
+ * \ref ycpvalues, easy access to \ref components, common control structures and more.
+ * It is designed to be well suited for system configuration manipulation.
+ *
+ */
+
 #include <string>
 using std::string;
 

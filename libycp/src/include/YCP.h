@@ -29,6 +29,12 @@
 // include all basic types
 
 /**
+ * \page libycp libycp Library
+ *
+ * This is a library implementing basic \ref ycpvalues and \ref ycplanguage.
+ */
+
+/**
  * \page ycpvalues YCP Values
  *
  * YCP values are the primary way of communicating of YaST components. The following values are implemented:
