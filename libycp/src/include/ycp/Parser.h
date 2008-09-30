@@ -36,7 +36,8 @@ class switchstack_t;
 class YBlock;
 
 /**
- * @short YCP parser
+ * @short YCP language parser
+ *
  * A YCP parser read a characters stream and outputs a sequence
  * of YCP values. Three properties of the YCP grammar are important:
  *

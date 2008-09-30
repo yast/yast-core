@@ -29,6 +29,11 @@
  * \ref ycpvalues, easy access to \ref components, common control structures and more.
  * It is designed to be well suited for system configuration manipulation.
  *
+ * YCP interpreter consists of the following parts:
+ * - YCP \ref Parser which parses ASCII representation into in-memory representation (C++ classes
+ *   inheriting from the \ref YCode class.
+ * - YCP interpreter - the \ref YCode based classes
+ * - \ref YCP bytecode implementation
  */
 
 #include <string>
@@ -58,7 +63,14 @@ struct ycodelist {
 typedef struct ycodelist ycodelist_t;
 
 /**
- * @short YCode for precompiled ycp code
+ * \brief YCode for precompiled ycp code
+ *
+ * A class representing parsed YCP code. This is an abstract base class for implementing 
+ * any YCP language feature. \ref kind uniquely identifies the type of the class. 
+ * The class provides infrastructure for dumping a bytecode representation (\ref toStream), 
+ * XML representation (\ref toXML) and ASCII representation (\ref toString).
+ * 
+ * The represented YCP code is executed via invoking \ref evaluate.
  */
 class YCode : public Rep
 #ifdef D_MEMUSAGE
@@ -142,73 +154,107 @@ public:
     YCode ();
 
     /**
-     * Cleans up
+     * Destructor
      */
     virtual ~YCode();
 
     /**
-     * Returns the YCode kind
+     * Kind of this \ref YCode. This method must be reimplemented in the inherited classes.
+     *
+     * \return the YCode kind
      */
     virtual ykind kind() const = 0;
    
     /**
-     * Returns an ASCII representation of the YCode.
+     * Return ASCII represtation of this YCP code.
+     * 
+     * \return ASCII string representation
      */
     virtual string toString() const;
+
+    /**
+     * String representation of the YCode kind value. For debugging purposes.
+     *
+     * \param kind    which kind representation should be returned
+     * \return string representation
+     */
     static string toString(ykind kind);
 
     /**
-     * writes YCode to a stream
-     * see Bytecode for read
+     * Write YCP code to a byte stream (bytecode implementation). Every
+     * class inheriting from \ref YCode must reimplement this method.
+     * \param str	byte stream to store into
+     * \return 		byte stream for chaining writing bytecode (str)
      */
     virtual std::ostream & toStream (std::ostream & str) const = 0;
+
+    /**
+     * Write YCP code as XML representation. Every class inheriting from 
+     * \ref YCode must reimplement this method.
+     * \param str	string stream to store into
+     * \param indend	indentation level for pretty print
+     * \return 		string stream for chaining writing XML (str)
+     */
     virtual std::ostream & toXml (std::ostream & str, int indent ) const = 0;
 
     /**
-     * returns true if the YCode represents a constant
+     * Is this code constant?
+     *
+     * \return true if the \ref YCode represents a constant
      */
     virtual bool isConstant () const;
 
     /**
-     * returns true if the YCode represents an error
+     * Is this code a representation of an error?
+     *
+     * \returns true if the \ref YCode represents an error
      */
     bool isError () const;
 
     /**
-     * returns true if the YCode represents a statement
+     * Is this a YCP statement (e.g. if, while, ...)
+     *
+     * \return true if the \ref YCode represents a statement
      */
     virtual bool isStatement () const;
 
     /**
-     * returns true if the YCode represents a block
+     * Is this a YCP block?
+     *
+     * \return true if the \ref YCode represents a block
      */
     virtual bool isBlock () const;
 
     /**
-     * returns true if the YCode represents something we can reference to
+     * Can this code be stored in a variable of a type reference?
+     *
+     * \return true if the \ref YCode represents something we can reference to
      */
     virtual bool isReferenceable () const;
 
     /**
-     * evaluate YCode to YCPValue
-     * if debugger == 0
-     *	 called for parse time evaluation (i.e. constant subexpression elimination)
-     * else
-     *	 called for runtime evaluation		
+     * Execute YCP code to get the resulting \ref YCPValue. Every inherited class of YCode should reimplement
+     * this method.
+     * 
+     * \return \ref YCPValue after executing the code
+     * \param cse  should the evaluation be done for parse time evaluation (i.e. constant subexpression elimination)
      */
     virtual YCPValue evaluate (bool cse = false);
 
    /**
-    * return type (interesting mostly for function calls)
+    * Return type of this YCP code (interesting mostly for function calls).
+    *
+    * \return type of the value to be returned after calling \ref evaluate
     */
   virtual constTypePtr type() const;
 };
 
 
 /**
- * constant (-> YCPValue)
+ * \brief YCP Constant
+ *
+ * The base class for YCP constants (\ref YCPValue).
  */
-
 class YConst : public YCode
 {
     REP_BODY(YConst);
