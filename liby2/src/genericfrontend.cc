@@ -37,7 +37,17 @@
  * 	- \ref components
  * 	- \ref componentbroker
  *	- \ref componentsearch
+ *
  * - Handling of error codes: \ref exitcodes
+ *
+ * - Libraries
+ * 	- \ref liby2
+ * 	- \ref libycp
+ *	- \ref libscr
+ *
+ * - Generic components
+ *	- \ref SCR
+ * 	- \ref WFM
  */
  
 /**

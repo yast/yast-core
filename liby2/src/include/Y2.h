@@ -26,7 +26,9 @@
 #include <y2/Y2ComponentCreator.h>
 #include <y2/Y2ComponentBroker.h>
 
-/***
+/**
+ * \page liby2 liby2 Library
+ *
  * <h2>The YaST2 component architecture</h2>
  * 
  * <p>The YaST2 system consists of different components. These are
@@ -53,9 +55,9 @@
  * time and provide single isolated binaries as well as clusters of components, that need
  * not be disjunct.
  *
- * <h2>The generic frontend (GF)</h2>
+ * <h2>The generic frontend (y2base)</h2>
  * 
- * <p>The liby2 provides a main function. A component linked to liby2
+ * <p>The liby2 provides a \ref main function. A component linked to liby2
  * therefore need not and cannot have its own main function. This
  * generic main function does:
  *
@@ -64,36 +66,29 @@
  *   <li>find the server and the client component regardless, whether they are realized
  *       as external programs, 
  *       shared library plugins, YCP scripts or objects that are linked to the main binary</li>
- *   <li>parameter checking (not yet implemented)
+ *   <li>parameter checking 
  *   <li>launches the server and the client component with the correct paramters</li>
  *   <li>start the communication between client and server</li>
  * </ul>
  * 
  * <p>A YaST2 binary does always consist of the generic frontend and zero or more
- *  components that are linked in. The binary <tt>y2gf</tt> just contains the frontend
+ *  components that are linked in. The binary <tt>y2base</tt> just contains the frontend
  *  and the builtin components <tt>cat</tt> and <tt>stdio</tt>. <tt>cat</tt> is
  *  a server component that can be used instead of a user interface. It simply prints
  *  all commands it gets to stdout and waits for the answer at stdin. <tt>stdio</tt>
  *  works similary, but is a client.
  *
  * <p>The general synopsis of a call of a YaST2 binary is:
- * <pre>y2gf [server] client [client-options] [server-options]</pre>
+ * <pre>y2base client server [client-options] [server-options]</pre>
  * 
  * <p><font size="-1">( Please don't ask yet, why the server-options are stated <i>after</i>
  * the client options. We will see later. )</font> </p>
  * 
  * <p>An example would be:
- * <pre>y2gf qt mainmenu</pre>
+ * <pre>y2base menu qt</pre>
  *
  * <p>This call would use the component <tt>qt</tt>, which is the Qt-lib base graphical
- * user interface, as display server and start the module <tt>mainmenu</tt>.
- *
- * <p>If the name of the YaST2 binary is not equal to <tt>y2gf</tt>, then the name
- * without the <tt>y2</tt> is used as the name of the first component:
- * <pre>y2qt mainmenu</pre>
- * <p>This call does the same as the upper one. The generic frontend contained in <tt>y2qt</tt>
- * first looks for a builtin (linked against) component named <tt>qt</tt>. If it finds one 
- * <i>in itself</i>, it does not have to launch an external program component.
+ * user interface, as display server and start the module <tt>menu</tt>.
  *
  * <h3>Server options</h3>
  * <p>Every command line argument

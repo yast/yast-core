@@ -137,7 +137,7 @@ class YCPList;
  * 
  * <li>An executable program (ELF, /bin/sh, or whatsoever)</li>
  * <li>A C++ class using <tt><a href="../libycp/autodocs/intro.html">libycp</a></tt>
- * and <tt><a href="../liby2/autodocs/intro.html">liby2</a></tt></li>
+ * and \ref liby2</li>
  * <li>A YCP script executed by the <i>Workflowmanager</i></li>
  * <li>Youself typing some YCP code at a terminal</li>
  * 
