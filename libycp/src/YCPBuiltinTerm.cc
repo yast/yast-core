@@ -232,6 +232,9 @@ t_remove (const YCPTerm &term, const YCPInteger &i)
      * remove which allowed 'remove(`term(1,2,3), 0) = [1,2,3]'
      * Use 'argsof (term) -> list' for this kind of transformation.)
      *
+     * The yast2-core version < 2.17.16 returns nil if the index is invalid. This behavior
+     * has changed in version 2.17.16 to return unchanged term.
+     *
      * @param term TERM
      * @param integer i
      * @return term
@@ -250,7 +253,7 @@ t_remove (const YCPTerm &term, const YCPInteger &i)
     if (idx <= 0 || idx > args->size ())
     {
 	ycp2error ("Index %s for remove () out of range", toString (idx).c_str ());
-	return YCPNull ();
+	return term;
     }
 
     args->remove (idx-1);

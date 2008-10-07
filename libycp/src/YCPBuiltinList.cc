@@ -949,10 +949,13 @@ l_remove (const YCPList &list, const YCPInteger &i)
      * @short Removes element from a list
      * @param list LIST
      * @param integer e element index
-     * @return list Returns nil if the index is invalid.
+     * @return list Returns unchanged list if the index is invalid.
      * @description
      * Removes the <tt>i</tt>'th value from a list. The first value has the
      * index 0. The call remove ([1,2,3], 1) thus returns [1,3].
+     *
+     * The yast2-core version < 2.17.16 returns nil if the key is invalid. This behavior
+     * has changed in version 2.17.16 to return unchanged list.
      *
      * @usage remove ([1, 2], 0) -> [2]
      */
@@ -975,7 +978,7 @@ l_remove (const YCPList &list, const YCPInteger &i)
     if (idx < 0 || idx >= ret->size ())
     {
 	ycp2error ("Index %s for remove () out of range", toString (idx).c_str ());
-	return YCPNull ();
+	return ret;
     }
 
     ret->remove (idx);

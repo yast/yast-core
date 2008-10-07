@@ -478,13 +478,16 @@ m_remove (const YCPMap &map, const YCPValue &key)
      *
      * @description
      * Remove the value with the key <tt>KEY</tt> from a map. Returns
-     * nil if the key is invalid.
+     * unchanged map if the key is invalid.
+     *
+     * The yast2-core version < 2.17.16 returns nil if the key is invalid. This behavior
+     * has changed in version 2.17.16 to return unchanged map.
      *
      * @param map MAP
      * @param any KEY
      * @return map
      *
-     * @usage remove($[1:2], 0) -> nil
+     * @usage remove($[1:2], 0) -> $[1:2]
      * @usage remove($[1:2], 1) -> $[]
      * @usage remove ($[1:2, 3:4], 1) -> $[3:4]
      */
@@ -503,7 +506,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
     if(map->value (key).isNull ())
     {
         ycp2error ( "Key %s for remove () does not exist", key->toString ().c_str ());
-	return YCPNull ();
+	return ret;
     }
     
     ret->remove (key);
