@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Sat Oct 11 12:30:03 CEST 2008 - mvidner@suse.cz
+
+- Handle EINTR in YCP scanner. Makes possible to toggle
+  debugging via SIGUSR1 to 'y2base stdio scr' (bnc#434253).
+- 2.17.17
+
+-------------------------------------------------------------------
 Tue Oct  7 14:27:00 CEST 2008 - visnov@suse.cz
 
 - change remove builtin behavior to saner one (bnc #396697)

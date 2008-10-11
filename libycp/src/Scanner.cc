@@ -23,6 +23,7 @@
 #include <string>
 #include <unistd.h>
 #include <stdarg.h>
+#include <errno.h>
 
 #include "ycp/Scanner.h"
 #include "ycp/y2log.h"
@@ -216,7 +217,12 @@ Scanner::LexerInput (char* buf, int maxnum)
 
     else if (m_inputFd >= 0)
     {
-	ssize_t read_bytes = read (m_inputFd, buf, m_buffered ? maxnum : 1);
+	ssize_t read_bytes;
+	do {
+	    read_bytes = read (m_inputFd, buf, m_buffered ? maxnum : 1);
+	} while (read_bytes == -1 &&
+			(errno == EINTR || errno == ERESTART)); // bnc#434253
+
 	if (read_bytes >= 0)
 	    return read_bytes;
 	else
