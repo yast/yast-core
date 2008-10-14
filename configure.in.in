@@ -52,6 +52,7 @@ AC_SUBST(AGENT_INCLUDES)
 AGENT_LIBADD='dnl
  $(top_builddir)/libscr/src/libscr.la dnl
  $(top_builddir)/libycp/src/libycp.la dnl
+ $(top_builddir)/libycp/src/libycpvalues.la dnl
  $(top_builddir)/liby2/src/liby2.la dnl
  ${Y2UTIL_LIBS}'
 

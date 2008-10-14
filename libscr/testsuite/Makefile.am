@@ -12,7 +12,7 @@ INCLUDES =						\
 
 noinst_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
-runscr_LDADD = ../src/libscr.la ../../liby2/src/liby2.la ../../libycp/src/libycp.la ${Y2UTIL_LIBS} ../../liby2dbus/src/liby2dbus.la
+runscr_LDADD = ${AGENT_LIBADD} ../../liby2dbus/src/liby2dbus.la
 
 PACKAGE = libscr
 AUTOMAKE_OPTIONS = dejagnu
