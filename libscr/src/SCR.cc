@@ -140,7 +140,9 @@ SCRRead (const YCPPath &path) {
 }
 
 static YCPValue 
-SCRWrite2 (const YCPPath &path, const YCPValue& value) {
+SCRWrite2 (const YCPPath &path, const YCPValue& value_n) {
+    YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
+
     if (connection != NULL)
     {
 	return CallDBus("Write", path, value);
@@ -156,7 +158,10 @@ SCRWrite2 (const YCPPath &path, const YCPValue& value) {
 }
 
 static YCPValue 
-SCRWrite3 (const YCPPath &path, const YCPValue& value, const YCPValue& arg) {
+SCRWrite3 (const YCPPath &path, const YCPValue& value_n, const YCPValue& arg_n) {
+    YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
+    YCPValue arg =   arg_n.isNull()?   YCPVoid(): arg_n; // bnc#406138
+
     if (connection != NULL)
     {
 	return CallDBus("Write", path, value, arg);
@@ -222,7 +227,9 @@ SCRError (const YCPPath &path) {
 }
 
 static YCPValue 
-SCRExecute2 (const YCPPath &path, const YCPValue &arg) {
+SCRExecute2 (const YCPPath &path, const YCPValue &arg_n) {
+    YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
+
     if (connection != NULL)
     {
 	return CallDBus("Execute", path, arg);
@@ -235,13 +242,16 @@ SCRExecute2 (const YCPPath &path, const YCPValue &arg) {
     }
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
-    y2debug( "args: %s", arg.isNull () ? "null" : arg->toString ().c_str () );
+    y2debug( "args: %s", arg->toString ().c_str () );
     
     return SCRAgent::instance ()->Execute (path, arg);
 }
 
 static YCPValue 
-SCRExecute3 (const YCPPath &path, const YCPValue &arg, const YCPValue &opt) {
+SCRExecute3 (const YCPPath &path, const YCPValue &arg_n, const YCPValue &opt_n) {
+    YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
+    YCPValue opt = opt_n.isNull()? YCPVoid(): opt_n; // bnc#406138
+
     if (connection != NULL)
     {
 	return CallDBus("Execute", path, arg, opt);
@@ -254,7 +264,7 @@ SCRExecute3 (const YCPPath &path, const YCPValue &arg, const YCPValue &opt) {
     }
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
-    y2debug( "args: %s,%s", arg.isNull () ? "null" : arg->toString ().c_str (), opt.isNull () ? "null" : opt->toString ().c_str () );
+    y2debug( "args: %s,%s", arg->toString ().c_str (), opt->toString ().c_str () );
     
     return SCRAgent::instance ()->Execute (path, arg, opt);
 }

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 14 16:38:26 CEST 2008 - mvidner@suse.cz
+
+- Avoid YCPNull reaching SCR agents to prevent crashes (bnc#406138).
+
+-------------------------------------------------------------------
 Tue Oct 14 14:41:34 CEST 2008 - lslezak@suse.cz
 
 - use atomic type sig_atomic_t in signal handlers (bnc#434509)
