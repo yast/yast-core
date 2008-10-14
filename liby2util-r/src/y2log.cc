@@ -72,14 +72,16 @@
 inisection logconf;
 
 static bool did_set_logname = false;
-static bool did_read_logconf = false;
+// use atomic type in signal handler (see bnc#434509)
+static sig_atomic_t did_read_logconf = 0;
 
 static const char *logname;
 
 static off_t maxlogsize;
 static int   maxlognum;
 
-static bool log_debug = false;
+// use atomic type in signal handler (see bnc#434509)
+static sig_atomic_t log_debug = false;
 static bool log_to_file = true;
 static bool log_to_syslog = false;
 

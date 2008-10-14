@@ -25,7 +25,8 @@ extern "C"
 // ostringstream
 #include <sstream>
 
-static bool finish = false;
+// use atomic type in signal handler (see bnc#434509)
+static sig_atomic_t finish = 0;
 
 
 DBusServer::DBusServer()

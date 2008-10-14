@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 14 14:41:34 CEST 2008 - lslezak@suse.cz
+
+- use atomic type sig_atomic_t in signal handlers (bnc#434509)
+
+-------------------------------------------------------------------
 Sat Oct 11 12:30:03 CEST 2008 - mvidner@suse.cz
 
 - Handle EINTR in YCP scanner. Makes possible to toggle
