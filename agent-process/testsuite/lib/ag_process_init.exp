@@ -55,14 +55,22 @@ proc ycp-run { src } {
   # check stderr
 
   if {[diff $stderr_name "tmp.err.$base_name"] != 1} {
+    puts "\nThe diff follows...\n"
+    puts [exec sh -c "diff -u $stderr_name tmp.err.$base_name || true"]
+    puts ""
     fail "Wrong stderr for $base_name"
+    puts "See the diff above."
     return -1
   }
 
   # check stdout
 
   if {[diff $stdout_name "tmp.out.$base_name"] != 1} {
+    puts "\nThe diff follows...\n"
+    puts [exec sh -c "diff -u $stdout_name tmp.out.$base_name || true"]
+    puts ""
     fail "Wrong stdout for $base_name"
+    puts "See the diff above."
     return -1
   }
 
@@ -70,6 +78,9 @@ proc ycp-run { src } {
 
   if {[find . "tests/$base_name.write"] == "./tests/$base_name.write"} {
     if {[diff "tests/$base_name.write" "tmp.write.$base_name"] != 1} {
+      puts "\nThe diff follows...\n"
+      puts [exec sh -c "diff -u tests/$base_name.write tmp.write.$base_name || true"]
+      puts ""
       fail "Wrong write for $base_name"
       return -1
     }

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Oct 24 15:54:54 CEST 2008 - visnov@suse.cz
+
+- Also print diff when agent-process testsuite fails
+- 2.17.19 
+
+-------------------------------------------------------------------
 Tue Oct 14 16:38:26 CEST 2008 - mvidner@suse.cz
 
 - Avoid YCPNull reaching SCR agents to prevent crashes (bnc#406138).
