@@ -25,11 +25,22 @@ bool PolKit::isDBusUserAuthorized(const std::string &action_id, const std::strin
     y2debug("Checking action %s from %s", action_id.c_str(), dbus_caller.c_str());
 
     PolKitCaller *pk_caller = polkit_caller_new_from_dbus_name(con, dbus_caller.c_str(), &dbus_error);
+
     if (dbus_error_is_set (&dbus_error))
     {
-	y2error ("dbus error: %s: %s", dbus_error.name, dbus_error.message);
+	// PolKit sometimes sets the error even if the PolKitCaller object has been successfully returned
+	// see bnc#439150
+	if (pk_caller == NULL)
+	{
+	    y2error ("dbus error: %s: %s", dbus_error.name, dbus_error.message);
+	}
+
 	dbus_error_free (&dbus_error);
-	return false;
+
+	if (pk_caller == NULL)
+	{
+	    return false;
+	}
    }
 
     if (pk_caller == NULL)

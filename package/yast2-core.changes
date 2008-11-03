@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Nov  3 11:55:50 CET 2008 - lslezak@suse.cz
+
+- fixed testing of the result of polkit_caller_new_from_dbus_name()
+  call which sometime sets the error object even when there is no
+  real error (bnc#439150)
+- 2.17.20
+
+-------------------------------------------------------------------
 Fri Oct 24 15:54:54 CEST 2008 - visnov@suse.cz
 
 - Also print diff when agent-process testsuite fails
