@@ -764,8 +764,12 @@ my $log_good;
 sub BEGIN
 {
     $Y2DEBUG = $ENV{"Y2DEBUG"};
-
-    my @names = ( "/var/log/YaST2/y2log", "$ENV{HOME}/.y2log" );
+    my $home = $ENV{"HOME"};
+    my @names = ( "/var/log/YaST2/y2log" );
+    if (defined ($home))
+    {
+        push(@names, "$home/.y2log")
+    }
     if (defined ($ARGV[0]) && $ARGV[0] =~ /^(-l|--log)$/)
     {
 	@names = ( $ARGV[1] );
