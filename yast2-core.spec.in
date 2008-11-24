@@ -84,6 +84,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 %{_libdir}/lib*.so.*
 @ybindir@/y2base
 @ybindir@/startshell
+@ybindir@/tty_wrapper
 @ybindir@/md_autorun
 @ybindir@/elf-arch
 @plugindir@/lib*.so.*

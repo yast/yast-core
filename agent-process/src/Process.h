@@ -145,6 +145,12 @@ public:
      * Read whether there are some buffered lines
      */
     bool anyLineInStdout();
+
+    /**
+     * Return the stderror stream
+     */
+    FILE* errorFile();
+
 };
 
 #endif // Process_h

@@ -242,3 +242,8 @@ int Process::closeAll()
     return ExternalProgram::close();
 }
 
+FILE* Process::errorFile()
+{
+    return stderr_output;
+}
+

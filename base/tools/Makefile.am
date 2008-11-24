@@ -2,5 +2,5 @@
 # Makefile.am for core/base/tools
 #
 
-SUBDIRS = startshell autorun elf-arch ycpc devtools
+SUBDIRS = startshell autorun elf-arch ycpc devtools tty_wrapper
 

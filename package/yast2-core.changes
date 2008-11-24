@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Sun Nov  9 15:35:43 CET 2008 - lslezak@suse.cz
+
+- added 'tty_wrapper' binary to start a yast module in commandline
+  mode without a tty device (bnc#444228)
+- 2.17.21
+
+-------------------------------------------------------------------
 Mon Nov  3 11:55:50 CET 2008 - lslezak@suse.cz
 
 - fixed testing of the result of polkit_caller_new_from_dbus_name()
