@@ -51,6 +51,17 @@
 (substring ("some text", 42, 2))
 
 
+("** lsubstring **")
+
+(lsubstring ("some text", 5))
+(lsubstring ("some text", 42))
+(lsubstring ("ěščřžýáí", 5))
+
+(lsubstring ("some text", 5, 2))
+(lsubstring ("some text", 42, 2))
+(lsubstring ("ěščřžýáí", 5, 2))
+
+
 ("** mergestring **")
 
 (mergestring (["", "abc", "dev", "ghi"], "/"))

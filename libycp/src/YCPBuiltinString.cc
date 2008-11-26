@@ -331,6 +331,114 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
 
 
 static YCPValue
+s_lsubstring1 (const YCPString &s, const YCPInteger &i1)
+{
+    /**
+     * @builtin lsubstring
+     * @id lsubstring-rest
+     * @short Extracts a substring in UTF-8 encoded string
+     *
+     * @description
+     * Extracts a substring of the string <tt>STRING</tt>, starting at
+     * <tt>OFFSET</tt> after the first one with length of at most
+     * <tt>LENGTH</tt>. <tt>OFFSET</tt> starts with 0. This method uses UTF-8 encoding.
+     *
+     * @param string STRING
+     * @param integer OFFSET
+     * @param integer LENGTH
+     * @return string
+     * @usage substring ("some text", 5) -> "text"
+     * @usage substring ("some text", 42) -> ""
+     */
+
+    if (s.isNull () || i1.isNull())
+	return YCPNull ();
+
+    string lss = s->value ();
+    wstring ss;
+    
+    if( ! utf82wchar( lss, &ss ) )
+    {
+	y2error( "Unable to recode string '%s' to UTF-8", lss.c_str() );
+	return YCPNull ();
+    }
+    
+    string::size_type start = i1->value ();
+
+    if (start > ss.size ())
+    {
+	ycp2error ("Substring index out of range");
+	return YCPString ("");
+    }
+
+    ss = ss.substr ((wstring::size_type) start, wstring::npos);
+    
+    if( !wchar2utf8( ss, &lss ) )
+    {
+	y2error( "Unable to recode result string '%ls' from UTF-8", ss.c_str() );
+	return YCPNull ();
+    }
+    
+    return YCPString(lss);
+}
+
+
+static YCPValue
+s_lsubstring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
+{
+    /**
+     * @builtin lsubstring
+     * @id lsubstring-length
+     * @short Extracts a substring in UTF-8 encoded string
+     *
+     * @description
+     * Extracts a substring of the string <tt>STRING</tt>, starting at
+     * <tt>OFFSET</tt> after the first one with length of at most
+     * <tt>LENGTH</tt>. <tt>OFFSET</tt> starts with 0. This method uses UTF-8 encoding.
+     *
+     * @param string STRING
+     * @param integer OFFSET
+     * @param integer LENGTH
+     * @return string
+     * @usage lsubstring ("some text", 5, 2) -> "te"
+     * @usage lsubstring ("some text", 42, 2) -> ""
+     * @usage lsubstring("123456789", 2, 3) -> "345"
+     */
+
+    if (s.isNull () || i1.isNull() || i2.isNull ())
+	return YCPNull ();
+
+    string lss = s->value ();
+    wstring ss;
+    
+    if( ! utf82wchar( lss, &ss ) )
+    {
+	y2error( "Unable to recode string '%s' to UTF-8", lss.c_str() );
+	return YCPNull ();
+    }
+    
+    string::size_type start = i1->value ();
+    string::size_type length = i2->value ();
+
+    if (start > ss.size ())
+    {
+	ycp2error ("Substring index out of range");
+	return YCPString ("");
+    }
+
+    ss = ss.substr (start, length);
+    
+    if( !wchar2utf8( ss, &lss ) )
+    {
+	y2error( "Unable to recode result string '%ls' from UTF-8", ss.c_str() );
+	return YCPNull ();
+    }
+    
+    return YCPString(lss);
+}
+
+
+static YCPValue
 s_search (const YCPString &s1, const YCPString &s2)
 {
     /**
@@ -1407,6 +1515,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "dgettext",	   "string (string, string)",		(void *)s_dgettext},
 	{ "dngettext",	   "string (string, string, string, integer)",	(void *)s_dngettext},
 	{ "dpgettext",	   "string (string, string, string)",	(void *)s_dpgettext},
+	{ "lsubstring",	   "string (string, integer)",		(void *)s_lsubstring1 },
+	{ "lsubstring",	   "string (string, integer, integer)",	(void *)s_lsubstring2 },
 	{ 0 }
     };
 
