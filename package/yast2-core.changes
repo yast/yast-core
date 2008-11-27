@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Nov 27 15:22:59 CET 2008 - lslezak@suse.cz
+
+- tty_wrapper - disable LF to CRLF translation on the stdout stream
+  (bnc#444228)
+- 2.17.23
+
+-------------------------------------------------------------------
 Wed Nov 26 14:04:27 CET 2008 - visnov@suse.cz
 
 - added lsubstring builtin (bnc#446996)
