@@ -426,7 +426,21 @@ bool DBusServer::isActionAllowed(const std::string &caller, const std::string &p
 {
     // create actionId
     static const char *polkit_prefix = "org.opensuse.yast.scr";
-    std::string action_id(PolKit::createActionId(polkit_prefix, path, method, arg, opt));
+
+    // check the access right to all methods at first (see bnc#449794)
+    std::string action_id(PolKit::createActionId(polkit_prefix, "", method, "", ""));
+
+    if (policykit.isDBusUserAuthorized(action_id, caller, connection.getConnection()))
+    {
+	y2security("User is authorized to do action %s", action_id.c_str());
+	return true;
+    }
+    else
+    {
+	y2debug("User is NOT authorized to do action %s", action_id.c_str());
+    }
+
+    action_id = PolKit::createActionId(polkit_prefix, path, method, arg, opt);
 
     bool ret = false;
 

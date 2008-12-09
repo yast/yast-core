@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Dec  9 13:20:49 CET 2008 - lslezak@suse.cz
+
+- SCR DBus service - check for the global permissions at first
+  (all method parameters are allowed) then for specific ones,
+  added .policy file with the default values (bnc#449794)
+- 2.17.24
+
+-------------------------------------------------------------------
 Thu Nov 27 15:22:59 CET 2008 - lslezak@suse.cz
 
 - tty_wrapper - disable LF to CRLF translation on the stdout stream

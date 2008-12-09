@@ -2,7 +2,7 @@
 # Makefile.am for dbus/service
 #
 
-EXTRA_DIST=org.opensuse.yast.SCR.service.in org.opensuse.yast.SCR.conf.in
+EXTRA_DIST=org.opensuse.yast.SCR.service.in org.opensuse.yast.SCR.conf.in org.opensuse.yast.scr.policy
 
 AM_CXXFLAGS = -DY2LOG=\"SCR-service\" -DSUSEVERSION=\"${SUSEVERSION}\"
 
@@ -15,6 +15,14 @@ SCR_dbus_server_SOURCES = SCR_dbus_server.cc DBusServer.cc DBusServer.h
 SCR_dbus_server_CPPFLAGS = $(AM_CPPFLAGS) $(DBUS_CFLAGS) $(POLKIT_CFLAGS) -I$(top_builddir)/liby2dbus/src -I$(srcdir)/../../scr/src -I$(top_builddir)/libscr/src/include
 
 SCR_dbus_server_LDADD = ${AGENT_LIBADD} $(top_builddir)/liby2dbus/src/liby2dbus.la $(top_builddir)/scr/src/libpy2scr.la
+
+# PolicyKit defaults
+polkit_policiesdir = `pkg-config --print-errors --variable policydir polkit`
+polkit_policies_DATA = org.opensuse.yast.scr.policy
+
+# validate the policy files in 'make check' target
+check-local:
+	polkit-policy-file-validate $(polkit_policies_DATA)
 
 
 # service activation config
