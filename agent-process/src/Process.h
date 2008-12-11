@@ -77,9 +77,9 @@ public:
      * @param default_locale whether to set LC_ALL=C before starting
      * @param use_pty start the process in a terminal
      */
-    Process(const std::string &commandline, bool use_pty = false, bool default_locale = false)
+    Process(const std::string &commandline, bool use_pty = false, bool default_locale = false, bool pty_trans = true)
 	: ExternalProgram(commandline, Stderr_To_FileDesc,
-	    use_pty, create_stderr_pipes(), default_locale), stderr_output(NULL)
+	    use_pty, create_stderr_pipes(), default_locale, "", pty_trans), stderr_output(NULL)
     {}
 
     /**
@@ -88,9 +88,9 @@ public:
      * overwriting existing ones.
      */
 
-    Process(const char *const *argv, const Environment &environment, bool use_pty = false, bool default_locale = false)
+    Process(const char *const *argv, const Environment &environment, bool use_pty = false, bool default_locale = false, bool pty_trans = true)
 	: ExternalProgram(argv, environment, Stderr_To_FileDesc,
-	    use_pty, create_stderr_pipes(), default_locale)
+	    use_pty, create_stderr_pipes(), default_locale, "", pty_trans)
     {}
 
 

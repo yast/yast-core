@@ -64,7 +64,7 @@ public:
     ExternalProgram (std::string commandline,
 		     Stderr_Disposition stderr_disp = Normal_Stderr,
 		     bool use_pty = false, int stderr_fd = -1, bool default_locale = false,
-		     const Pathname& root = "");
+		     const Pathname& root = "", bool pty_trans = true);
 
     /**
      * Start an external program by giving the arguments as an arry of char *pointers.
@@ -74,19 +74,19 @@ public:
     ExternalProgram (const char *const *argv,
 		     Stderr_Disposition stderr_disp = Normal_Stderr,
 		     bool use_pty = false, int stderr_fd = -1, bool default_locale = false,
-		     const Pathname& root = "");
+		     const Pathname& root = "", bool pty_trans = true);
 
     ExternalProgram (const char *const *argv, const Environment & environment,
 		     Stderr_Disposition stderr_disp = Normal_Stderr,
 		     bool use_pty = false, int stderr_fd = -1, bool default_locale = false,
-		     const Pathname& root = "");
+		     const Pathname& root = "", bool pty_trans = true);
 
     ExternalProgram (const char *binpath, const char *const *argv_1,
-		     bool use_pty = false);
+		     bool use_pty = false, bool pty_trans = true);
 
 
     ExternalProgram (const char *binpath, const char *const *argv_1, const Environment & environment,
-		     bool use_pty = false);
+		     bool use_pty = false, bool pty_trans = true);
 
 
     ~ExternalProgram();
@@ -124,6 +124,12 @@ private:
      */
     bool use_pty;
 
+    /**
+     * Set to true if LF to CRLF output tranformation on the pty
+     * will be disabled
+     */
+    bool disable_pty_trans;
+
     pid_t pid;
     int _exitStatus;
 
@@ -132,6 +138,8 @@ private:
 			int stderr_fd = -1, bool default_locale = false,
 			const char* root = NULL);
 
+    // disable LF to CRLF translation on the terminal file descriptor
+    bool disableCRLFTranslation(int fd);
 };
 
 #endif // ExternalProgram_h

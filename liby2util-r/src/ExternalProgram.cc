@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <pty.h> // openpty
 #include <stdlib.h> // setenv
+#include <termios.h> // tcsetattr()
 
 #include <cstring> // strsignal
 
@@ -36,8 +37,8 @@ using namespace std;
 ExternalProgram::ExternalProgram (string commandline,
 				  Stderr_Disposition stderr_disp, bool use_pty,
 				  int stderr_fd, bool default_locale,
-				  const Pathname& root)
-    : use_pty (use_pty)
+				  const Pathname& root, bool pty_trans)
+    : use_pty (use_pty), disable_pty_trans(!pty_trans)
 {
     const char *argv[4];
     argv[0] = "/bin/sh";
@@ -58,8 +59,8 @@ ExternalProgram::ExternalProgram (string commandline,
 ExternalProgram::ExternalProgram (const char *const *argv,
 				  Stderr_Disposition stderr_disp, bool use_pty,
 				  int stderr_fd, bool default_locale,
-				  const Pathname& root)
-    : use_pty (use_pty)
+				  const Pathname& root, bool pty_trans)
+    : use_pty (use_pty), disable_pty_trans(!pty_trans)
 {
     const char* rootdir = NULL;
     if(!root.empty() && root != "/")
@@ -74,8 +75,8 @@ ExternalProgram::ExternalProgram (const char *const *argv,
 ExternalProgram::ExternalProgram (const char *const *argv, const Environment & environment,
 				  Stderr_Disposition stderr_disp, bool use_pty,
 				  int stderr_fd, bool default_locale,
-				  const Pathname& root)
-    : use_pty (use_pty)
+				  const Pathname& root, bool pty_trans)
+    : use_pty (use_pty), disable_pty_trans(!pty_trans)
 {
     const char* rootdir = NULL;
     if(!root.empty() && root != "/")
@@ -87,8 +88,8 @@ ExternalProgram::ExternalProgram (const char *const *argv, const Environment & e
 
 
 ExternalProgram::ExternalProgram (const char *binpath, const char *const *argv_1,
-				  bool use_pty)
-    : use_pty (use_pty)
+				  bool use_pty, bool pty_trans)
+    : use_pty (use_pty), disable_pty_trans(!pty_trans)
 {
     int i = 0;
     while (argv_1[i++])
@@ -102,8 +103,8 @@ ExternalProgram::ExternalProgram (const char *binpath, const char *const *argv_1
 
 
 ExternalProgram::ExternalProgram (const char *binpath, const char *const *argv_1, const Environment & environment,
-				  bool use_pty)
-    : use_pty (use_pty)
+				  bool use_pty, bool pty_trans)
+    : use_pty (use_pty), disable_pty_trans(!pty_trans)
 {
     int i = 0;
     while (argv_1[i++])
@@ -117,6 +118,39 @@ ExternalProgram::ExternalProgram (const char *binpath, const char *const *argv_1
 
 ExternalProgram::~ExternalProgram()
 {
+}
+
+// disable LF to CRLF translation on the terminal file descriptor
+// see 'man termios' or stty.c in core-utils for more info
+bool ExternalProgram::disableCRLFTranslation(int fd)
+{
+    if (!isatty(fd))
+    {
+	ERR << "The file descriptor is not a terminal!\n";
+	return false;
+    }
+
+    // properties of the terminal
+    struct termios mode;
+
+    // get the current attributes
+    if (tcgetattr(fd, &mode))
+    {
+	ERR << "tcgetattr() failed: " << strerror(errno) << endl;
+	return false;
+    }
+
+    // disable the LF to CRLF translation in the output flag
+    mode.c_oflag = mode.c_oflag & ~ONLCR;
+
+    // TCSADRAIN should be used when changing output flags (see 'man termios')
+    if (tcsetattr(fd, TCSADRAIN, &mode))
+    {
+	ERR << "tcsetattr() failed: " << strerror(errno) << endl;
+	return false;
+    }
+
+    return true;
 }
 
 
@@ -138,6 +172,11 @@ ExternalProgram::start_program (const char *const *argv, const Environment & env
 	{
 	    ERR << "openpty failed" << endl;
 	    return;
+	}
+
+	if (disable_pty_trans)
+	{
+	   disableCRLFTranslation(slave_tty);
 	}
     }
     else

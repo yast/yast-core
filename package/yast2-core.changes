@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Dec 11 15:06:31 CET 2008 - lslezak@suse.cz
+
+- tty_wrapper - fixed a deadlock in tty setting (set the terminal
+  properties _before_ starting the subprocess) (bnc#458025)
+- 2.17.25
+
+-------------------------------------------------------------------
 Tue Dec  9 13:20:49 CET 2008 - lslezak@suse.cz
 
 - SCR DBus service - check for the global permissions at first

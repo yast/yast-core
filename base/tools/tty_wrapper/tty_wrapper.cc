@@ -38,7 +38,6 @@ extern "C"
 #include <sys/select.h>
 #include <signal.h>
 #include <errno.h>
-#include <termios.h>
 }
 
 
@@ -75,39 +74,6 @@ bool registerSignalHandler()
     return true;
 }
 
-// disable LF to CRLF translation on the terminal file descriptor
-// see 'man termios' or stty.c in core-utils for more info
-bool disableCRLFTranslation(int fd)
-{
-    if (!isatty(fd))
-    {
-	std::cerr << "The file descriptor is not a terminal!\n";
-	return false;
-    }
-
-    // properties of the terminal
-    struct termios mode;
-
-    // get the current attributes
-    if (tcgetattr(fd, &mode))
-    {
-	::perror("tcgetattr()");
-	return false;
-    }
-
-    // disable the LF to CRLF translation in the output flag
-    mode.c_oflag = mode.c_oflag & ~ONLCR;
-
-    // TCSADRAIN should be used when changing output flags (see 'man termios')
-    if (tcsetattr(fd, TCSADRAIN, &mode))
-    {
-	::perror("tcsetattr()");
-	return false;
-    }
-
-    return true;
-}
-
 int main(int argc, char **argv)
 {
     if (argc > 1)
@@ -118,8 +84,19 @@ int main(int argc, char **argv)
 	    return 1;
 	}
 
+	sigset_t new_sigset, old_sigset;
+
+	// set asll signals
+	::sigfillset(&new_sigset);
+	// get the current mask
+	::sigprocmask(0, NULL, &old_sigset);
+
+	// block all signals
+	::sigprocmask(SIG_SETMASK, &new_sigset, NULL);
+
 	// start the subprocess
-	Process subprocess(argv + 1, ExternalProgram::Environment(), true /* use pty */, false /* no default locale */);
+	Process subprocess(argv + 1, ExternalProgram::Environment(), true /* use pty */,
+	    false /* no default locale */, false /* no LF to CRLF output translation*/);
 
 	// check stdin, subprocess::stdout and subprocess::stderr
 	int stdin_fd = 0;
@@ -127,20 +104,10 @@ int main(int argc, char **argv)
 	int sub_stderr_fd = fileno(subprocess.errorFile());
 	int max_fd = (sub_stdout_fd > sub_stderr_fd) ? sub_stdout_fd : sub_stderr_fd;
 
-	// disable CRLF translation on stdout output
-	disableCRLFTranslation(sub_stdout_fd);
-
 	// set nonblocking IO
 	subprocess.setBlocking(false);
 
 	fd_set rfds;
-
-	sigset_t new_sigset, old_sigset;
-
-	// block all signals
-	::sigfillset(&new_sigset);
-	// get the current mask
-	::sigprocmask(0, NULL, &old_sigset);
 
 	// this is a buffer for reading from stdin
 	char stdin_buffer[128];
@@ -152,6 +119,9 @@ int main(int argc, char **argv)
 
 	    if (finish)
 	    {
+		    // read stdout of the subprocess and print it on stdout
+		    std::cout << "Extra output: " << subprocess.read() << std::endl;
+
 		// SIGCHLD received, return the exit status
 		return subprocess.close();
 	    }
