@@ -119,9 +119,6 @@ int main(int argc, char **argv)
 
 	    if (finish)
 	    {
-		    // read stdout of the subprocess and print it on stdout
-		    std::cout << "Extra output: " << subprocess.read() << std::endl;
-
 		// SIGCHLD received, return the exit status
 		return subprocess.close();
 	    }
