@@ -53,6 +53,12 @@ protected:
     YCPStringRep(string s);
 
 public:
+
+    /**
+     * Returns true, iff this string is empty.
+     */
+    bool isEmpty() const;
+
     /**
      * Returns the value of this object in form of a C++
      * string value.
@@ -94,6 +100,9 @@ public:
     YCPValueType valuetype() const;
 };
 
+
+#define CONST_ELEMENT (static_cast<const YCPStringRep*>(element))
+
 /**
  * @short Wrapper for YCPStringRep
  * This class realizes an automatic memory management
@@ -106,7 +115,11 @@ class YCPString : public YCPValue
 public:
     YCPString(string s) : YCPValue(new YCPStringRep(s)) {}
     YCPString(bytecodeistream & str);
+
+    bool isEmpty() const { return CONST_ELEMENT->isEmpty(); }
 };
+
+#undef CONST_ELEMENT
 
 #endif   // YCPString_h
     

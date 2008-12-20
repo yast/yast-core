@@ -82,6 +82,11 @@ public:
     void remove(const YCPValue& key);
 
     /**
+     * Returns true, iff this map is empty.
+     */
+    bool isEmpty() const;
+
+    /**
      * Returns the number of key/value pairs.
      */
     long size() const;
@@ -212,6 +217,7 @@ public:
     void add(const YCPValue& key, const YCPValue& value) { ELEMENT->add (key,value); }
     YCPMap functionalAdd(const YCPValue& key, const YCPValue& value) const { return CONST_ELEMENT-> functionalAdd (key,value); }
     void remove(const YCPValue& key) { ELEMENT-> remove (key); }
+    bool isEmpty() const { return CONST_ELEMENT->isEmpty(); }
     long size() const { return CONST_ELEMENT-> size (); }
     YCPValue value(const YCPValue& key) const { return CONST_ELEMENT-> value (key); }
     YCPMapIterator begin() const { return CONST_ELEMENT-> begin (); }
