@@ -361,6 +361,27 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 }
 
 
+static YCPValue
+m_isempty(const YCPMap& m)
+{
+    /**
+     * @builtin isempty
+     * @id isempty-map
+     * @short Returns whether the map <tt>m</tt> is empty.
+     * @param map m Map
+     * @return boolean Emptiness of map <tt>m</tt>
+     *
+     * @description
+     * Notice that the map <tt>m</tt> must not be nil.
+     *
+     * @usage isempty($[]) -> true
+     * @usage isempty($[ `host : "pandora" ]) -> false
+     */
+
+    return YCPBoolean(m->isEmpty());
+}
+
+
 // parameter is YCPValue because we accept 'nil'
 static YCPValue
 m_size (const YCPValue &map)
@@ -547,6 +568,7 @@ YCPBuiltinMap::YCPBuiltinMap ()
 	{ "+",	    "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
 	{ "add",    "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_addmap,	DECL_FLEX },
 	{ "change", "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_changemap,DECL_FLEX|DECL_DEPRECATED },
+	{ "isempty", "boolean (const map <any,any>)",									    (void *)m_isempty   },
 	{ "size",   "integer (const map <any,any>)",									    (void *)m_size,	DECL_NIL },
 	{ "foreach","flex1 (variable <flex2>, variable <flex3>, const map <flex2,flex3>, const block <flex1>)",		    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "tomap",  "map <any,any> (const any)",									    (void *)m_tomap,	DECL_FLEX },

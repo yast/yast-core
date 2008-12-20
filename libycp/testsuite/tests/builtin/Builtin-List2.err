@@ -124,6 +124,23 @@ sort (any x, any y, [3, 6, 2, 8], { return (x > y); })
 ----------------------------------------------------------------------
 Parsed:
 ----------------------------------------------------------------------
+"** isempty **"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty ([])
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty ([1, 2, 3])
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty (nil)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-List2.ycp:72 Argument (nil) to isempty(...) is nil
+Parsed:
+----------------------------------------------------------------------
 "** size **"
 ----------------------------------------------------------------------
 Parsed:
@@ -166,12 +183,12 @@ Parsed:
 ----------------------------------------------------------------------
 "** change **"
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:90 Warning: change(...) is deprecated, please fix
+[Parser] tests/builtin/Builtin-List2.ycp:97 Warning: change(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 change ([1, 4], 8)
 ----------------------------------------------------------------------
-[libycp] tests/builtin/Builtin-List2.ycp:90 Change does not work as expected! The argument is not passed by reference.
+[libycp] tests/builtin/Builtin-List2.ycp:97 Change does not work as expected! The argument is not passed by reference.
 Parsed:
 ----------------------------------------------------------------------
 "** remove **"
@@ -184,34 +201,34 @@ Parsed:
 ----------------------------------------------------------------------
 remove ([], 0)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List2.ycp:96 Index 0 for remove () out of range
+[Interpreter] tests/builtin/Builtin-List2.ycp:103 Index 0 for remove () out of range
 Parsed:
 ----------------------------------------------------------------------
 "** select **"
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:101 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:108 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][-1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:102 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:109 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][0]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:103 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:110 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][1]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:104 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:111 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 [1, 2][3]:42
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-List2.ycp:105 Warning: 'select ()' is deprecated
+[Parser] tests/builtin/Builtin-List2.ycp:112 Warning: 'select ()' is deprecated
 Parsed:
 ----------------------------------------------------------------------
 /* any -> string */[1, "two"][0]:"wrong type"
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List2.ycp:96 Can't convert value '1' to type 'string'
+[Interpreter] tests/builtin/Builtin-List2.ycp:103 Can't convert value '1' to type 'string'

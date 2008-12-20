@@ -2,6 +2,7 @@
 Sat Dec 20 10:45:55 CET 2008 - aschnell@suse.de
 
 - added tosymbol builtin (bnc #192389)
+- added isempty builtin for string, list and map
 - 2.18.0
 
 -------------------------------------------------------------------

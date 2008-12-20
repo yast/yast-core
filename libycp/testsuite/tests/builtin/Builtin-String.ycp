@@ -8,10 +8,18 @@
 # ---------------------------------------------------------
 
 
+("** isempty **")
+
+(isempty (""))
+(isempty ("linux"))
+(isempty ((string) nil))
+
+
 ("** size **")
 
 (size (""))
 (size ("linux"))
+(size ((string) nil))
 
 
 ("** plus **")
