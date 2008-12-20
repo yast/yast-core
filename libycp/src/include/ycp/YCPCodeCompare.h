@@ -20,6 +20,7 @@
 
 #include "y2/SymbolEntry.h"
 #include "ycp/YCPCode.h"
+#include "ycp/YCPBoolean.h"
 #include "ycp/y2log.h"
 
 /**

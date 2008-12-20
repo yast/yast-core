@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sat Dec 20 10:45:55 CET 2008 - aschnell@suse.de
+
+- added tosymbol builtin (bnc #192389)
+- 2.18.0
+
+-------------------------------------------------------------------
 Thu Dec 11 15:06:31 CET 2008 - lslezak@suse.cz
 
 - tty_wrapper - fixed a deadlock in tty setting (set the terminal

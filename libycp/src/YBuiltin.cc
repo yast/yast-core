@@ -50,6 +50,9 @@ static YCPBuiltinPath builtin_path;		// trigger constructor
 #include "ycp/YCPBuiltinList.h"
 static YCPBuiltinList builtin_list;		// trigger constructor
 
+#include "ycp/YCPBuiltinSymbol.h"
+static YCPBuiltinSymbol builtin_symbol;		// trigger constructor
+
 #include "ycp/YCPBuiltinMap.h"
 static YCPBuiltinMap builtin_map;		// trigger constructor
 

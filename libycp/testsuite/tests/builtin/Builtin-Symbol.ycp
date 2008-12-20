@@ -1,0 +1,14 @@
+
+# ---------------------------------------------------------
+#
+#  Filename:	Builtin-Symbol.ycp
+#
+#  Purpose:	test cases for all symbol builtins
+#
+# ---------------------------------------------------------
+
+
+("** tosymbol **")
+
+(tosymbol ("test"))
+
