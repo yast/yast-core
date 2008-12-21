@@ -34,7 +34,7 @@ extern StaticDeclaration static_declarations;
 static YCPValue
 s_tosymbol (const YCPString& v)
 {
-    /* @builtin tostring 
+    /* @builtin tosymbol 
      * @short Converts a string to a symbol.
      *
      * @param string VALUE
@@ -43,11 +43,7 @@ s_tosymbol (const YCPString& v)
      * @usage tosymbol("test") -> `test
      */
 
-    if (v.isNull())
-	return YCPNull();
-    if (v->valuetype() == YT_STRING)
-	return YCPSymbol(v->asString()->value());
-    return YCPNull();
+    return YCPSymbol(v->value());
 }
 
 
