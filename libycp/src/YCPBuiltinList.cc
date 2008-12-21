@@ -1290,6 +1290,8 @@ bool haha(YCPValue a, YCPValue b)
 static YCPValue
 s_difference(const YCPList& a, const YCPList& b)
 {
+    // see http://www.sgi.com/tech/stl/set_difference.html
+
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
@@ -1305,6 +1307,8 @@ s_difference(const YCPList& a, const YCPList& b)
 static YCPValue
 s_symmetric_difference(const YCPList& a, const YCPList& b)
 {
+    // see http://www.sgi.com/tech/stl/set_symmetric_difference.html
+
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
@@ -1320,6 +1324,8 @@ s_symmetric_difference(const YCPList& a, const YCPList& b)
 static YCPValue
 s_intersection(const YCPList& a, const YCPList& b)
 {
+    // see http://www.sgi.com/tech/stl/set_intersection.html
+
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
@@ -1335,6 +1341,8 @@ s_intersection(const YCPList& a, const YCPList& b)
 static YCPValue
 s_union(const YCPList& a, const YCPList& b)
 {
+    // see http://www.sgi.com/tech/stl/set_union.html
+
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
