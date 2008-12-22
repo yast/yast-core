@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
+
+- Reverted r50800 which, in an attempt to fix another bug, encoded to
+  UTF-8 once too many, breaking i18n going thru Perl agents (bnc#448217).
+- 2.17.26
+
+-------------------------------------------------------------------
 Thu Dec 11 15:06:31 CET 2008 - lslezak@suse.cz
 
 - tty_wrapper - fixed a deadlock in tty setting (set the terminal
