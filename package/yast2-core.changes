@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
+
+- Reverted r50800 which, in an attempt to fix another bug, encoded to
+  UTF-8 once too many, breaking i18n going thru Perl agents (bnc#448217).
+
+-------------------------------------------------------------------
 Sat Dec 20 10:45:55 CET 2008 - aschnell@suse.de
 
 - added tosymbol builtin (bnc #192389)
