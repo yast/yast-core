@@ -11,6 +11,5 @@
 ("** tosymbol **")
 
 (tosymbol ("test"))
-(tosymbol (69))
 (tosymbol (nil))
 
