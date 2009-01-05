@@ -2,6 +2,7 @@
 Mon Jan  5 15:20:56 CET 2009 - visnov@suse.cz
 
 - match WFM component name and component creator instance 
+- improve main page for doxygen
 
 -------------------------------------------------------------------
 Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
