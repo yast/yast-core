@@ -24,14 +24,25 @@
 
 /**
  * \file
- * Generic \ref main function handler for all YaST2 appliations.
+ * Generic \ref main function handler for all YaST2 applications.
  */
 
 /**
- * \mainpage YaST2 Core System Documentation
+ * \mainpage Welcome to YaST2 Core System
  *
- * This is the main page of the YaST2 Core documentation. Some of the general topics are covered by the
- * following pages:
+ * \section intro Introduction
+ *
+ * This is the main page of the YaST2 Core documentation. YaST Core is a generic component-based
+ * system to provide the infrastructure for implementing functionality of the YaST
+ * installation and configuration tool.
+ *
+ * \section whatis What is YaST2 Core?
+ *
+ * YaST Core is a collection of libraries to provide an infrastructure for rapid
+ * development of configuration tools. It is a component-based, cross-language
+ * system.
+ *
+ * Some of the general topics are covered by the following pages:
  *
  * - Component architecture
  * 	- \ref components
@@ -48,6 +59,15 @@
  * - Generic components
  *	- \ref SCR
  * 	- \ref WFM
+ *
+ * \section community Join the community
+ *
+ * Visit our web site at : http://en.opensuse.org/YaST or #yast on irc.freenode.net
+ *
+ * \section License
+ *
+ * YaST is licensed under GPL v2.
+ *
  */
  
 /**
