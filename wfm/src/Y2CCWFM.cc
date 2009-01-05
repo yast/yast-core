@@ -213,4 +213,4 @@ Y2CCWFM::create (const char *name) const
 }
 
 
-Y2CCWFM g_y2ccWFM;
+Y2CCWFM g_y2ccwfm;

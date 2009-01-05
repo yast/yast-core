@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan  5 15:20:56 CET 2009 - visnov@suse.cz
+
+- match WFM component name and component creator instance 
+
+-------------------------------------------------------------------
 Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
 
 - Reverted r50800 which, in an attempt to fix another bug, encoded to
