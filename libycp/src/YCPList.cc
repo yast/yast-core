@@ -14,6 +14,7 @@
 
    Authors:	Mathias Kettner <kettner@suse.de>
 		Klaus Kaempf <kkaempf@suse.de>
+		Arvin Schnell <aschnell@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
@@ -102,14 +103,7 @@ YCPListRep::swap (int x, int y)
 
 bool YCPListRep::contains (const YCPValue& value) const
 {
-    for (vector <YCPValue>::const_iterator it = elements.begin ();
-         it != elements.end (); it++)
-    {
-        if ((*it)->equal (value))
-            return true;
-    }
-
-    return false;
+    return find_if(begin(), end(), bind2nd(ycpequal(), value)) != end();
 }
 
 
