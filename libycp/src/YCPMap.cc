@@ -12,7 +12,8 @@
 
    File:       YCPMap.cc
 
-   Author:	Mathias Kettner <kettner@suse.de>
+   Authors:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <aschnell@suse.de>
    Maintainer:	Klaus Kaempf <kkaempf@suse.de>
 
 /-*/
@@ -56,12 +57,20 @@ YCPMapRep::add (const YCPValue& key, const YCPValue& value)
 	ycp2error ("Only integer, string, or symbol constant allowed as key in map");
 	return;
     }
-    YCPValueYCPValueMap::iterator pos = stl_map.find( key );
 
-    if ( pos == stl_map.end() )
-	stl_map.insert( YCPValueYCPValueMap::value_type( key, value ) );
+    // note: 'stl_map[key] = value' would create a temporary object using the
+    // default constructor for YCPValue.
+
+    YCPMap::iterator pos = stl_map.lower_bound(key);
+    if (pos == stl_map.end() || !pos->first->equal(key))
+    {
+	// pos is just a hint but can avoid a second search through the map
+	stl_map.insert(pos, YCPMap::value_type(key, value));
+    }
     else
+    {
 	pos->second = value;
+    }
 }
 
 
