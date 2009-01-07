@@ -275,14 +275,14 @@ dump_value (int level, const YCPValue& value)
 	    {
 	    YCPMap map = value->asMap ();
 	    ret += "$[";
-	    for (YCPMapIterator i = map->begin (); i != map->end (); i++) {
+	    for (YCPMap::const_iterator i = map->begin(); i != map->end(); i++) {
 		if ( i != map->begin () )
 		    ret += ",";
 		ret += "\n";
 		ret += indent_output (level+1);
-		ret += dump_value (level+1, i.key ());
+		ret += dump_value (level+1, i->first);
 		ret += " : ";
-		ret += dump_value (level+1, i.value ());
+		ret += dump_value (level+1, i->second);
 	    }
 	    ret += "\n";
 	    ret += indent_output (level);
@@ -946,17 +946,18 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	}
 
 	string exports = "";
-	for (YCPMapIterator pos = variables->begin(); pos != variables->end(); ++pos)
+	for (YCPMap::const_iterator pos = variables->begin(); pos != variables->end(); ++pos)
 	{
-	    YCPValue key   = pos.key();
-	    YCPValue value = pos.value();
+	    const YCPValue& key = pos->first;
+	    const YCPValue& value = pos->second;
+
 	    if (!key->isString())
 	    {
 		return YCPError (string("Invalid value '")
 				 + key->toString()
 				 + "' for target variable name, which must be a string");
-
 	    }
+
 	    exports += "export " + key->asString()->value() + "='";
 	    string valstr;
 	    if (value->isString())
