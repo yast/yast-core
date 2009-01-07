@@ -93,6 +93,13 @@ public:
     void add(const YCPValue& value);
 
     /**
+     * Appends a value to the list. Takes over the memory management
+     * of that value. Use @ref YCPElementRep, if you need it
+     * yourself.
+     */
+    void push_back(const YCPValue& value);
+
+    /**
      * Sets a value in the list. Takes over the memory management
      * of that value. Use @ref YCPElementRep, if you need it
      * yourself.
@@ -229,6 +236,9 @@ public:
     typedef YCPListRep::YCPValueList::iterator iterator;
     typedef YCPListRep::YCPValueList::const_iterator const_iterator;
 
+    typedef YCPListRep::YCPValueList::value_type value_type;
+    typedef YCPListRep::YCPValueList::const_reference const_reference;
+
     YCPList() : YCPValue(new YCPListRep()) {}
     YCPList(bytecodeistream & str);
 
@@ -236,6 +246,7 @@ public:
     void reserve (int size) { ELEMENT->reserve (size); }
     bool isEmpty() const { return CONST_ELEMENT->isEmpty (); }
     void add(const YCPValue& value) { ELEMENT->add (value);  }
+    void push_back(const YCPValue& value) { ELEMENT->push_back(value); }
     void set(const int n, const YCPValue& value) { ELEMENT->set (n, value); }
     void remove(const int n) { ELEMENT->remove (n); }
     void swap(int x, int y) { ELEMENT->swap (x, y); }
