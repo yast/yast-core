@@ -166,35 +166,7 @@ l_setcontains (const YCPList &list, const YCPValue &value)
      * @usage setcontains ([1, 2, 5], 2) -> true
      */
 
-    if (list.isNull ())
-    {
-	return YCPNull ();
-    }
-
-    int hi = list->size () - 1;
-    int lo = 0;
-
-    while (lo <= hi)
-    {
-	int mid = (hi + lo) / 2;
-	YCPValue midvalue = list->value (mid);
-	YCPOrder comp = value->compare (midvalue);
-
-	switch (comp)
-	{
-	    case YO_EQUAL:
-		return YCPBoolean (true);
-		break;
-	    case YO_LESS:
-		hi = mid - 1;
-		break;
-	    case YO_GREATER:
-		lo = mid + 1;
-		break;
-	}
-    }
-
-    return YCPBoolean (false);
+    return YCPBoolean(binary_search(list->begin(), list->end(), value, ycpless()));
 }
 
 
