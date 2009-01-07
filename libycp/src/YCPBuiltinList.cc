@@ -1217,14 +1217,9 @@ s_difference(const YCPList& a, const YCPList& b)
 {
     // see http://www.sgi.com/tech/stl/set_difference.html
 
-    vector<YCPValue> r;
-    back_insert_iterator< vector<YCPValue> > bii(r);
-
-    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-
     YCPList ret;
-    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
-	ret->add(*it);
+    back_insert_iterator<YCPList> bii(ret);
+    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
     return ret;
 }
 
@@ -1234,14 +1229,9 @@ s_symmetric_difference(const YCPList& a, const YCPList& b)
 {
     // see http://www.sgi.com/tech/stl/set_symmetric_difference.html
 
-    vector<YCPValue> r;
-    back_insert_iterator< vector<YCPValue> > bii(r);
-
-    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-
     YCPList ret;
-    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
-	ret->add(*it);
+    back_insert_iterator<YCPList> bii(ret);
+    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
     return ret;
 }
 
@@ -1251,14 +1241,9 @@ s_intersection(const YCPList& a, const YCPList& b)
 {
     // see http://www.sgi.com/tech/stl/set_intersection.html
 
-    vector<YCPValue> r;
-    back_insert_iterator< vector<YCPValue> > bii(r);
-
-    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-
     YCPList ret;
-    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
-    	ret->add(*it);
+    back_insert_iterator<YCPList> bii(ret);
+    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
     return ret;
 }
 
@@ -1268,14 +1253,9 @@ s_union(const YCPList& a, const YCPList& b)
 {
     // see http://www.sgi.com/tech/stl/set_union.html
 
-    vector<YCPValue> r;
-    back_insert_iterator< vector<YCPValue> > bii(r);
-
-    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-
     YCPList ret;
-    for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
-	ret->add(*it);
+    back_insert_iterator<YCPList> bii(ret);
+    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
     return ret;
 }
 
