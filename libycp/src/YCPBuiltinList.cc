@@ -1349,7 +1349,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "find",	"flex (variable <flex>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX },
 	{ "prepend",	"list <flex> (const list <flex>, const flex)",						(void *)l_prepend,	DECL_FLEX },
 	{ "contains",	"boolean (const list <flex>, const flex)",						(void *)l_contains,	DECL_FLEX },
-	{ "setcontains","boolean (list <flex>, const flex)",							(void *)l_setcontains,	DECL_FLEX },
+	{ "setcontains","boolean (const list <flex>, const flex)",							(void *)l_setcontains,	DECL_FLEX },
 	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist	},
 	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX },
 	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist	},
