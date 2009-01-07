@@ -72,10 +72,9 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 
     SymbolEntryPtr s = symbol->asEntry()->entry();
 
-    for (int i = 0; i < list->size (); i++)
+    for (YCPList::const_iterator it = list->begin(); it != list->end(); ++it)
     {
-	YCPValue element = list->value (i);
-	s->setValue (element);
+	s->setValue(*it);
 
 	YCPValue v = expr->evaluate ();
 
@@ -93,7 +92,7 @@ l_find (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 
 	if (v->asBoolean ()->value ())
 	{
-	    ret = element;
+	    ret = *it;
 	    break;
 	}
     }
@@ -399,10 +398,9 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 
     SymbolEntryPtr s = symbol->asEntry()->entry();
 
-    for (int i = 0; i < list->size (); i++)
+    for (YCPList::const_iterator it = list->begin(); it != list->end(); ++it)
     {
-	YCPValue element = list->value (i);
-	s->setValue (element);
+	s->setValue(*it);
 
 	YCPValue v = expr->evaluate ();
 
@@ -423,7 +421,7 @@ l_filter (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
 	}
 	if (v->asBoolean ()->value ())
 	{
-	    ret->add (element);
+	    ret->add(*it);
 	}
     }
 
@@ -460,9 +458,9 @@ l_maplist (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
     YCPList ret;
     SymbolEntryPtr s = symbol->asEntry()->entry();
 
-    for (int i = 0; i < list->size (); i++)
+    for (YCPList::const_iterator it = list->begin(); it != list->end(); ++it)
     {
-	s->setValue (list->value (i));
+	s->setValue(*it);
 
 	YCPValue v = expr->evaluate ();
 
@@ -517,9 +515,9 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
     YCPList curr_list;
     YCPMap curr_map;
 
-    for (int i = 0; i < list->size (); i++)
+    for (YCPList::const_iterator it = list->begin(); it != list->end(); ++it)
     {
-	key->setValue (list->value (i));
+	key->setValue(*it);
 
 	YCPValue curr_value = expr->evaluate ();
 
@@ -1045,9 +1043,9 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
     SymbolEntryPtr s = sym->asEntry()->entry();
     YCPValue ret = YCPVoid();
 
-    for (int i=0; i < list->size(); i++)
+    for (YCPList::const_iterator it = list->begin(); it != list->end(); ++it)
     {
-	s->setValue (list->value (i));
+	s->setValue(*it);
 
 	ret = expr->evaluate ();
 	if (ret.isNull())
