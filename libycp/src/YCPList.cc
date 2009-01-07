@@ -182,14 +182,14 @@ YCPListRep::value(int n) const
 }
 
 
-YCPListIterator
+YCPListRep::const_iterator
 YCPListRep::begin() const
 {
     return elements.begin();
 }
 
 
-YCPListIterator
+YCPListRep::const_iterator
 YCPListRep::end() const
 {
     return elements.end();
