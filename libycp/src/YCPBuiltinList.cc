@@ -144,20 +144,7 @@ l_contains (const YCPList &list, const YCPValue &value)
      * @usage contains ([1, 2, 5], 2) -> true
      */
 
-    if (list.isNull ())
-    {
-	return YCPNull ();
-    }
-
-    for (int i = 0; i < list->size (); i++)
-    {
-	if (list->value (i)->equal (value))
-	{
-	    return YCPBoolean (true);
-	}
-    }
-
-    return YCPBoolean (false);
+    return YCPBoolean(list->contains(value));
 }
 
 
