@@ -12,7 +12,7 @@
 
    File:	YCPList.h
 
-   Author:	Mathias Kettner <kettner@suse.de>  
+   Authors:	Mathias Kettner <kettner@suse.de>  
 		Arvin Schnell <aschnell@suse.de>
    Maintainer:	Thomas Roelz <tom@suse.de>
 
