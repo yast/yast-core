@@ -141,7 +141,7 @@ Parsed:
 ----------------------------------------------------------------------
 list::reduce (integer x, integer y, [], { return (x + y); })
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List.ycp:73 Empty list [] for 'reduce'
+[Interpreter] tests/builtin/Builtin-List.ycp:73 Empty list for 'reduce'
 Parsed:
 ----------------------------------------------------------------------
 list::reduce (integer x, integer y, 0, [], { return (x + y); })
@@ -158,7 +158,7 @@ Parsed:
 ----------------------------------------------------------------------
 list::reduce (integer x, integer y, [], { return (x * y); })
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-List.ycp:78 Empty list [] for 'reduce'
+[Interpreter] tests/builtin/Builtin-List.ycp:78 Empty list for 'reduce'
 Parsed:
 ----------------------------------------------------------------------
 list::reduce (integer x, integer y, 1, [], { return (x * y); })

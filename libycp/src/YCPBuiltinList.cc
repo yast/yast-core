@@ -1139,7 +1139,7 @@ l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YC
      * the list must not be empty.
      *
      * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 2
-     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 6
+     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x > y ? x : y; }) -> 6
      */
 
     if (list.isNull())
@@ -1149,7 +1149,7 @@ l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YC
 
     if (list->size() < 1)
     {
-	ycp2error("Empty list %s for 'reduce'", list->toString().c_str());
+	ycp2error("Empty list for 'reduce'");
 	return YCPNull();
     }
 
