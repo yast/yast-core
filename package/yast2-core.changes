@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jan 07 15:17:23 CET 2009 - aschnell@suse.de
+
+- improved YCPList and YCPMap iterators
+- 2.18.1
+
+-------------------------------------------------------------------
 Mon Jan  5 15:20:56 CET 2009 - visnov@suse.cz
 
 - match WFM component name and component creator instance 
