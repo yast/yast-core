@@ -1104,51 +1104,19 @@ l_foreach (const YCPValue &sym, const YCPList &list, const YCPCode &expr)
 
 
 static YCPValue
-l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YCPCode &expr)
+l_reduce_helper(const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial,
+		const YCPList::const_iterator &first, const YCPList::const_iterator &last,
+		const YCPCode &expr)
 {
-    /**
-     * @builtin list::reduce
-     * @id list.reduce-internal
-     * @short Reduces a list to a single value.
-     * @param flex1 x
-     * @param flex1 y
-     * @param list<flex1> list
-     * @param block<flex1> expression
-     * @return flex1
-     *
-     * @description
-     * Apply expression cumulatively to the values of the list, from left to
-     * right, to reduce the list to a single value. See
-     * http://en.wikipedia.org/wiki/Reduce_(higher-order_function) for a
-     * detailed explanation.
-     *
-     * In this version the initial value is the first value of the list. Thus
-     * the list must not be empty.
-     *
-     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 2
-     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x > y ? x : y; }) -> 6
-     */
-
-    if (list.isNull())
-    {
-	return YCPNull();
-    }
-
-    if (list->size() < 1)
-    {
-	ycp2error("Empty list for 'reduce'");
-	return YCPNull();
-    }
-
     SymbolEntryPtr xs = x->asEntry()->entry();
     SymbolEntryPtr ys = y->asEntry()->entry();
 
-    YCPValue ret = list->value(0);
+    YCPValue ret = initial;
 
-    for (int i = 1; i < list->size(); i++)
+    for (YCPList::const_iterator it = first; it != last; ++it)
     {
 	xs->setValue(ret);
-	ys->setValue(list->value(i));
+	ys->setValue(*it);
 
 	YCPValue tmp = expr->evaluate();
 	if (tmp.isNull())
@@ -1174,6 +1142,46 @@ l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YC
 
 
 static YCPValue
+l_reduce1 (const YCPSymbol &x, const YCPSymbol &y, const YCPList &list, const YCPCode &expr)
+{
+    /**
+     * @builtin list::reduce
+     * @id list.reduce-internal
+     * @short Reduces a list to a single value.
+     * @param flex1 x
+     * @param flex1 y
+     * @param list<flex1> list
+     * @param block<flex1> expression
+     * @return flex1
+     *
+     * @description
+     * Apply expression cumulatively to the values of the list, from left to
+     * right, to reduce the list to a single value. See
+     * http://en.wikipedia.org/wiki/Reduce_(higher-order_function) for a
+     * detailed explanation.
+     *
+     * In this version the initial value is the first value of the list. Thus
+     * the list must not be empty.
+     *
+     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x < y ? x : y; }) -> 2
+     * @usage list::reduce (integer x, integer y, [2, 4, 6], { return x > y ? x : y; }) -> 6
+     */
+
+    if (list->isEmpty())
+    {
+ 	ycp2error("Empty list for 'reduce'");
+	return YCPNull();
+    }
+
+    const YCPList::const_iterator initial = list->begin();
+    const YCPList::const_iterator first = initial + 1;
+    const YCPList::const_iterator last = list->end();
+
+    return l_reduce_helper(x, y, *initial, first, last, expr);
+}
+
+
+static YCPValue
 l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, const YCPList &list, const YCPCode &expr)
 {
     /**
@@ -1186,7 +1194,7 @@ l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, cons
      * @param list<flex2> list
      * @param block<flex1> expression
      * @return flex1
-     * 
+     *
      * @description
      * Apply expression cumulatively to the values of the list, from left to
      * right, to reduce the list to a single value. See
@@ -1203,41 +1211,10 @@ l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, cons
      * @usage list::reduce (term t, float f, `item(`id(`dummy)), [3.14, 2.71], { return add(t, tostring(f)); }) -> `item (`id (`dummy), "3.14", "2.71")
      */
 
-    if (list.isNull())
-    {
-	return YCPNull();
-    }
+    const YCPList::const_iterator first = list->begin();
+    const YCPList::const_iterator last = list->end();
 
-    SymbolEntryPtr xs = x->asEntry()->entry();
-    SymbolEntryPtr ys = y->asEntry()->entry();
-
-    YCPValue ret = initial;
-
-    for (int i = 0; i < list->size(); i++)
-    {
-	xs->setValue(ret);
-	ys->setValue(list->value(i));
-
-	YCPValue tmp = expr->evaluate();
-	if (tmp.isNull())
-	{
-	    ycp2error("Bad 'reduce' expression %s", expr->toString().c_str());
-	    continue;
-	}
-	if (tmp->isVoid())
-	{
-	    ycp2error("The expression for 'reduce' returned 'nil'");
-	    continue;
-	}
-	if (tmp->isBreak())
-	{
-	    break;
-	}
-
-	ret = tmp;
-    }
-
-    return ret;
+    return l_reduce_helper(x, y, initial, first, last, expr);
 }
 
 
