@@ -622,12 +622,7 @@ l_toset (const YCPList &list)
 	return YCPNull ();
     }
 
-    set <YCPValue, ycpless> newset;
-
-    for (int i = 0; i < list->size (); i++)
-    {
-	newset.insert (list->value (i));
-    }
+    set<YCPValue, ycpless> newset(list->begin(), list->end());
 
     YCPList setlist;
     for (set <YCPValue, ycpless>::const_iterator it = newset.begin ();
