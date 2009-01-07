@@ -1267,12 +1267,6 @@ l_tolist (const YCPValue &v)
     return YCPNull();
 }
 
-bool haha(YCPValue a, YCPValue b)
-{
-    YCPOrder comp = a->compare (b);
-    return comp == YO_LESS;
-}
-
 
 static YCPValue
 s_difference(const YCPList& a, const YCPList& b)
@@ -1282,7 +1276,7 @@ s_difference(const YCPList& a, const YCPList& b)
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
-    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
 
     YCPList ret;
     for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
@@ -1299,7 +1293,7 @@ s_symmetric_difference(const YCPList& a, const YCPList& b)
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
-    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
 
     YCPList ret;
     for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
@@ -1316,7 +1310,7 @@ s_intersection(const YCPList& a, const YCPList& b)
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
-    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
 
     YCPList ret;
     for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
@@ -1333,7 +1327,7 @@ s_union(const YCPList& a, const YCPList& b)
     vector<YCPValue> r;
     back_insert_iterator< vector<YCPValue> > bii(r);
 
-    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, haha);
+    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
 
     YCPList ret;
     for(vector<YCPValue>::iterator it = r.begin(); it != r.end(); it++)
@@ -1349,7 +1343,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "find",	"flex (variable <flex>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX },
 	{ "prepend",	"list <flex> (const list <flex>, const flex)",						(void *)l_prepend,	DECL_FLEX },
 	{ "contains",	"boolean (const list <flex>, const flex)",						(void *)l_contains,	DECL_FLEX },
-	{ "setcontains","boolean (const list <flex>, const flex)",							(void *)l_setcontains,	DECL_FLEX },
+	{ "setcontains","boolean (const list <flex>, const flex)",						(void *)l_setcontains,	DECL_FLEX },
 	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist	},
 	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX },
 	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist	},
