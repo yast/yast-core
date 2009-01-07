@@ -12,7 +12,7 @@
 
    File:	YCPList.h
 
-   Authors:	Mathias Kettner <kettner@suse.de>  
+   Authors:	Mathias Kettner <kettner@suse.de>
 		Arvin Schnell <aschnell@suse.de>
    Maintainer:	Thomas Roelz <tom@suse.de>
 
@@ -43,20 +43,20 @@ class YCPCodeCompare;
  */
 class YCPListRep : public YCPValueRep
 {
-protected:
+private:
 
     typedef vector<YCPValue> YCPValueList;
-
-    typedef YCPValueList::iterator iterator;
-    typedef YCPValueList::const_iterator const_iterator;
-
-    friend class YCPList;
-
-private:
 
     YCPValueList elements;
 
 protected:
+
+    typedef YCPValueList::iterator iterator;
+    typedef YCPValueList::const_iterator const_iterator;
+    typedef YCPValueList::value_type value_type;
+    typedef YCPValueList::const_reference const_reference;
+
+    friend class YCPList;
 
     /**
      * Creates a new and empty list of type [ value ]
@@ -233,11 +233,10 @@ class YCPList : public YCPValue
 
 public:
 
-    typedef YCPListRep::YCPValueList::iterator iterator;
-    typedef YCPListRep::YCPValueList::const_iterator const_iterator;
-
-    typedef YCPListRep::YCPValueList::value_type value_type;
-    typedef YCPListRep::YCPValueList::const_reference const_reference;
+    typedef YCPListRep::iterator iterator;
+    typedef YCPListRep::const_iterator const_iterator;
+    typedef YCPListRep::value_type value_type;
+    typedef YCPListRep::const_reference const_reference;
 
     YCPList() : YCPValue(new YCPListRep()) {}
     YCPList(bytecodeistream & str);

@@ -43,18 +43,17 @@ class YCPMapIterator;
  */
 class YCPMapRep : public YCPValueRep
 {
-protected:
-
-    typedef YCPValueYCPValueMap::iterator iterator;
-    typedef YCPValueYCPValueMap::const_iterator const_iterator;
-
-    friend class YCPMap;
-
 private:
 
     YCPValueYCPValueMap stl_map;
 
 protected:
+
+    typedef YCPValueYCPValueMap::iterator iterator;
+    typedef YCPValueYCPValueMap::const_iterator const_iterator;
+    typedef YCPValueYCPValueMap::value_type value_type;
+
+    friend class YCPMap;
 
     /**
      * Creates a new and empty mapping.
@@ -184,10 +183,9 @@ class YCPMap : public YCPValue
 
 public:
 
-    typedef YCPValueYCPValueMap::iterator iterator;
-    typedef YCPValueYCPValueMap::const_iterator const_iterator;
-
-    typedef YCPValueYCPValueMap::value_type value_type;
+    typedef YCPMapRep::iterator iterator;
+    typedef YCPMapRep::const_iterator const_iterator;
+    typedef YCPMapRep::value_type value_type;
 
     YCPMap() : YCPValue(new YCPMapRep()) {}
     YCPMap(bytecodeistream & str);
