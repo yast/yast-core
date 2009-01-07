@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include <regex.h>
 #include <libintl.h>
-#include <iostream>
 #include <string>
 
 using std::string;
