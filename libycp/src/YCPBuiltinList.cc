@@ -541,8 +541,8 @@ l_listmap (const YCPSymbol &symbol, const YCPList &list, const YCPCode &expr)
             curr_map = curr_value->asMap();
             if ( curr_map->size() == 1 )
             {
-                YCPMapIterator it = curr_map->begin();
-                ret->add (it.key(), it.value());
+		YCPMap::const_iterator it = curr_map->begin();
+		ret->add(it->first, it->second);
             }
             else
             {
