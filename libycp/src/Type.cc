@@ -21,7 +21,7 @@
 #include "ycp/Type.h"
 #include "ycp/Bytecode.h"
 #include "ycp/Xmlcode.h"
-#include "ycp/YCPMap.h"		// for YCPMapIterator
+#include "ycp/YCPMap.h"
 #include "ycp/YCPCode.h"	// for YT_Code in matchvalue()
 
 #ifndef DO_DEBUG
@@ -455,10 +455,10 @@ Type::matchvalue (YCPValue value) const
 
 	    // check every map element
 	    YCPMap mvalue = value->asMap();
-	    for (YCPMapIterator i = mvalue->begin(); i != mvalue->end(); i++)
+	    for (YCPMap::const_iterator i = mvalue->begin(); i != mvalue->end(); ++i)
 	    {
-		YCPValue kvalue = i.key();			// get map key value
-		YCPValue evalue = i.value();			// get map element value
+		YCPValue kvalue = i->first;			// get map key value
+		YCPValue evalue = i->second;			// get map element value
 		y2debug ("kvalue '%s', evalue '%s'", kvalue->toString().c_str(), evalue->toString().c_str());
 		if (key_type->matchvalue (kvalue) < 0)
 		{

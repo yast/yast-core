@@ -1116,13 +1116,13 @@ YEPropagate::canPropagate(const YCPValue& value, constTypePtr to_type) const
 
 	YCPMap map = value->asMap ();
 
-	for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
+	for (YCPMap::const_iterator pos = map->begin(); pos != map->end(); ++pos)
 	{
-	    if (! canPropagate (pos.key (), key) )
+	    if (! canPropagate (pos->first, key) )
 	    {
 		return false;
 	    }
-	    if (! canPropagate (pos.value (), elem) )
+	    if (! canPropagate (pos->second, elem) )
 	    {
 		return false;
 	    }

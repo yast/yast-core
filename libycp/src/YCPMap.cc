@@ -88,9 +88,9 @@ YCPMapRep::functionalAdd (const YCPValue& key, const YCPValue& value) const
 
     YCPMap newmap;
 
-    for (YCPMapIterator pos = begin(); pos != end(); ++pos )
+    for (YCPMap::const_iterator pos = begin(); pos != end(); ++pos)
     {
-	newmap->add( pos.key(), pos.value() );
+	newmap->add(pos->first, pos->second);
     }
 
     newmap->add( key, value );
@@ -115,8 +115,8 @@ const YCPElementRep* YCPMapRep::shallowCopy() const
 {
     YCPMapRep* newmap = new YCPMapRep ();
 
-    for (YCPMapIterator pos = begin(); pos != end(); ++pos )
-        newmap->add (pos.key(), pos.value());
+    for (YCPMap::const_iterator pos = begin(); pos != end(); ++pos)
+	newmap->add(pos->first, pos->second);
 
     return newmap;
 }
@@ -146,10 +146,12 @@ YCPMapRep::hasKey(const YCPValue& key) const
 YCPValue
 YCPMapRep::value(const YCPValue& key) const
 {
-    YCPMapIterator pos = stl_map.find( key );
+    YCPMap::const_iterator pos = stl_map.find(key);
 
-    if ( pos != end() ) return pos.value();
-    else                return YCPNull();
+    if (pos != end())
+	return pos->second;
+    else
+	return YCPNull();
 }
 
 
@@ -174,16 +176,16 @@ YCPMapRep::compare(const YCPMap& m) const
 	else
 	{
 	    // equal length ==> pairwise comparison
-	    for( YCPMapIterator pos_this = begin(), pos_m = m->begin();
+	    for( YCPMap::const_iterator pos_this = begin(), pos_m = m->begin();
 		 pos_this != end(), pos_m != m->end();
 		 ++pos_this, ++pos_m )
 	    {
 		// compare keys
-		order = pos_this.key()->compare( pos_m.key() );
+		order = pos_this->first->compare(pos_m->first);
 		if ( order == YO_LESS || order == YO_GREATER ) return order;
 
 		// equal keys ==> compare values
-		order = pos_this.value()->compare( pos_m.value() );
+		order = pos_this->second->compare(pos_m->second);
 		if ( order == YO_LESS || order == YO_GREATER ) return order;
 	    }
 
@@ -200,12 +202,12 @@ YCPMapRep::toString() const
 {
     string s = "$[";
 
-    for(YCPMapIterator pos = begin(); pos != end(); ++pos )
+    for (YCPMap::const_iterator pos = begin(); pos != end(); ++pos)
     {
 	if ( pos != begin() ) s += ", ";
-	s += pos.key()->toString()
+	s += pos->first->toString()
 	     + ":"
-	     + ((pos.value().isNull()) ? "(null)" : pos.value()->toString());
+	     + ((pos->second.isNull()) ? "(null)" : pos->second->toString());
     }
 
     return s + "]";
@@ -226,11 +228,11 @@ std::ostream &
 YCPMapRep::toStream (std::ostream & str) const
 {
     Bytecode::writeInt32 (str, stl_map.size());
-    for(YCPMapIterator pos = begin(); pos != end(); ++pos )
+    for (YCPMap::const_iterator pos = begin(); pos != end(); ++pos)
     {
-	if (!Bytecode::writeValue (str, pos.key()))
+	if (!Bytecode::writeValue (str, pos->first))
 	    break;
-	if (!Bytecode::writeValue (str, pos.value()))
+	if (!Bytecode::writeValue (str, pos->second))
 	    break;
     }
     return str;
@@ -241,11 +243,11 @@ std::ostream &
 YCPMapRep::toXml (std::ostream & str, int indent ) const
 {
     str << "<map size=\"" << stl_map.size() << "\">";
-    for(YCPMapIterator pos = begin(); pos != end(); ++pos )
+    for (YCPMap::const_iterator pos = begin(); pos != end(); ++pos)
     {
 	str << "<element>";
-	str << "<key>"; pos.key()->toXml( str, 0 ); str << "</key>";
-	str << "<value>"; pos.value()->toXml( str, 0 ); str << "</value>";
+	str << "<key>"; pos->first->toXml( str, 0 ); str << "</key>";
+	str << "<value>"; pos->second->toXml( str, 0 ); str << "</value>";
 	str << "</element>";
     }
     return str << "</map>";

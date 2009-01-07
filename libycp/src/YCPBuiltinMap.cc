@@ -95,10 +95,10 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
     SymbolEntryPtr k = key->asEntry()->entry();
     SymbolEntryPtr v = value->asEntry()->entry();
 
-    for (YCPMapIterator pos = map->begin (); pos != map->end (); ++pos)
+    for (YCPMap::const_iterator pos = map->begin(); pos != map->end(); ++pos)
     {
-	k->setValue (pos.key());
-	v->setValue (pos.value());
+	k->setValue (pos->first);
+	v->setValue (pos->second);
 
 	YCPValue v = expr->evaluate ();
 
@@ -119,7 +119,7 @@ m_filter (const YCPSymbol &key, const YCPSymbol &value,
 	}
 	if (v->asBoolean ()->value ())
 	{
-	    ret->add (pos.key (), pos.value ());
+	    ret->add(pos->first, pos->second);
 	}
     }
 
@@ -164,10 +164,10 @@ m_mapmap (const YCPSymbol &key, const YCPSymbol &value,
     SymbolEntryPtr k = key->asEntry()->entry();
     SymbolEntryPtr v = value->asEntry()->entry();
 
-    for (YCPMapIterator pos = map->begin (); pos != map->end (); ++pos)
+    for (YCPMap::const_iterator pos = map->begin (); pos != map->end (); ++pos)
     {
-	k->setValue (pos.key());
-	v->setValue (pos.value());
+	k->setValue (pos->first);
+	v->setValue (pos->second);
 
 	YCPValue curr_value = expr->evaluate ();
 
@@ -179,8 +179,8 @@ m_mapmap (const YCPSymbol &key, const YCPSymbol &value,
 	    }
 
 	    expr_map = curr_value->asMap();
-	    YCPMapIterator it = expr_map->begin();
-	    ret->add (it.key(), it.value());
+	    YCPMap::const_iterator it = expr_map->begin();
+	    ret->add(it->first, it->second);
 	}
 	else
 	{
@@ -226,10 +226,10 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
     SymbolEntryPtr k = key->asEntry()->entry();
     SymbolEntryPtr v = value->asEntry()->entry();
 
-    for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
+    for (YCPMap::const_iterator pos = map->begin(); pos != map->end(); ++pos)
     {
-	k->setValue (pos.key());
-	v->setValue (pos.value());
+	k->setValue (pos->first);
+	v->setValue (pos->second);
 
 	YCPValue v = expr->evaluate();
 
@@ -279,9 +279,9 @@ m_unionmap (const YCPMap &map1, const YCPMap &map2)
     {
 	YCPMap map = (m == 0 ? map1 : map2);
 
-	for (YCPMapIterator pos = map->begin (); pos != map->end (); pos++)
+	for (YCPMap::const_iterator pos = map->begin(); pos != map->end(); ++pos)
 	{
-	    newmap->add (pos.key (), pos.value ());
+	    newmap->add(pos->first, pos->second);
 	}
     }
 
@@ -438,10 +438,10 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
     SymbolEntryPtr v = val->asEntry()->entry();
     YCPValue ret = YCPVoid();
 
-    for (YCPMapIterator pos = map->begin(); pos != map->end(); ++pos)
+    for (YCPMap::const_iterator pos = map->begin(); pos != map->end(); ++pos)
     {
-	k->setValue (pos.key());
-	v->setValue (pos.value());
+	k->setValue (pos->first);
+	v->setValue (pos->second);
 
 	ret = expr->evaluate ();
 	if (ret.isNull())
