@@ -92,6 +92,11 @@ public:
     long size() const;
 
     /**
+     * Returns true iff the map contains the key.
+     */
+    bool hasKey(const YCPValue& key) const;
+
+    /**
      * Looks for a certain key and returns the value assigned
      * to that key. Returns 0, if the key is not found.
      */
@@ -140,16 +145,6 @@ public:
      * Returns YT_MAP. See @ref YCPValueRep#valuetype.
      */
     YCPValueType valuetype() const;
-    
-
-private:
-    /**
-     * Searches the map for a given key and returns
-     * an iterator that is positioned at the entry found.
-     * If the key can not be found the iterator is positioned
-     * at end().
-     */
-    YCPMapIterator findKey(const YCPValue& key) const;
 };
 
 /**
@@ -219,6 +214,7 @@ public:
     void remove(const YCPValue& key) { ELEMENT-> remove (key); }
     bool isEmpty() const { return CONST_ELEMENT->isEmpty(); }
     long size() const { return CONST_ELEMENT-> size (); }
+    bool hasKey(const YCPValue& key) const { return CONST_ELEMENT->hasKey(key); }
     YCPValue value(const YCPValue& key) const { return CONST_ELEMENT-> value (key); }
     YCPMapIterator begin() const { return CONST_ELEMENT-> begin (); }
     YCPMapIterator end() const { return CONST_ELEMENT-> end (); }

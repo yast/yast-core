@@ -127,6 +127,13 @@ YCPMapRep::size() const
 }
 
 
+bool
+YCPMapRep::hasKey(const YCPValue& key) const
+{
+    return stl_map.find(key) != stl_map.end();
+}
+
+
 YCPValue
 YCPMapRep::value(const YCPValue& key) const
 {
@@ -193,13 +200,6 @@ YCPMapRep::toString() const
     }
 
     return s + "]";
-}
-
-
-YCPMapIterator
-YCPMapRep::findKey(const YCPValue& key) const
-{
-    return stl_map.find( key );
 }
 
 

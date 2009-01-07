@@ -62,8 +62,7 @@ m_haskey (const YCPMap &map, const YCPValue &value)
 	return YCPNull ();
     }
 
-    YCPValue tmp = map->value (value);
-    return YCPBoolean (!tmp.isNull ());
+    return YCPBoolean(map->hasKey(value));
 }
 
 
@@ -524,7 +523,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
 
     YCPMap ret = map;
 
-    if(map->value (key).isNull ())
+    if (!map->hasKey(key))
     {
         ycp2error ( "Key %s for remove () does not exist", key->toString ().c_str ());
 	return ret;
