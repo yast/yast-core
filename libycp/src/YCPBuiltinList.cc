@@ -617,11 +617,6 @@ l_toset (const YCPList &list)
      * @usage toset ([1, 5, 3, 2, 3, true, false, true]) -> [false, true, 1, 2, 3, 5]
      */
 
-    if (list.isNull ())
-    {
-	return YCPNull ();
-    }
-
     set<YCPValue, ycpless> newset(list->begin(), list->end());
 
     YCPList setlist;
