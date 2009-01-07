@@ -10,10 +10,11 @@
 |                                                        (C) SuSE GmbH |  
 \----------------------------------------------------------------------/ 
 
-   File:       YCPMap.h
+   File:	YCPMap.h
 
-   Author:     Mathias Kettner <kettner@suse.de>
-   Maintainer: Thomas Roelz <tom@suse.de>
+   Authors:	Mathias Kettner <kettner@suse.de>
+		Arvin Schnell <aschnell@suse.de>
+   Maintainer:	Thomas Roelz <tom@suse.de>
 
 /-*/
 // -*- c++ -*-
@@ -26,9 +27,11 @@
 #include "ycpless.h"
 
 
+// Only for backwards compatibility.
 typedef map<YCPValue, YCPValue, ycpless> YCPValueYCPValueMap;
 class YCPMapIterator;
  
+
 /**
  * @short A mapping from keys to values.
  * A map is also called assiciative array. It is a mapping from a set
@@ -40,10 +43,18 @@ class YCPMapIterator;
  */
 class YCPMapRep : public YCPValueRep
 {
+protected:
+
+    typedef YCPValueYCPValueMap::iterator iterator;
+    typedef YCPValueYCPValueMap::const_iterator const_iterator;
+
+    friend class YCPMap;
+
+private:
+
     YCPValueYCPValueMap stl_map;
 
 protected:
-    friend class YCPMap;
 
     /**
      * Creates a new and empty mapping.
@@ -56,6 +67,7 @@ protected:
     ~YCPMapRep() {}
 
 public:
+
     /**
      * Adds a new key/value pair. If the key is
      * existent, the old entry will be overwritten
@@ -103,16 +115,14 @@ public:
     YCPValue value(const YCPValue& key) const;
 
     /**
-     * Returns a bidirectional STL iterator for the YCPMap that
+     * Returns a bidirectional iterator for the YCPMap that
      * is positioned at the first value pair in the map.
-     * (suitable for iterating over all entries)
      */
     YCPMapIterator begin() const;
 
     /**
-     * Returns a bidirectional STL iterator for the YCPMap that
-     * is positioned BEHIND the last value pair in the map.
-     * (suitable for iterating over all entries)
+     * Returns a bidirectional iterator for the YCPMap that
+     * is positioned behind the last value pair in the map.
      */
     YCPMapIterator end() const;
 
@@ -147,49 +157,15 @@ public:
     YCPValueType valuetype() const;
 };
 
-/**
- * @short Iterator for YCPMap values.
- */
-class YCPMapIterator
+
+// Only for backwards compatibility.
+struct YCPMapIterator : public YCPValueYCPValueMap::const_iterator
 {
-    friend class YCPMapRep;
+    YCPMapIterator(YCPValueYCPValueMap::const_iterator it)
+        : YCPValueYCPValueMap::const_iterator(it) {}
 
-    YCPValueYCPValueMap::const_iterator position;
-
-protected:
-    YCPMapIterator(YCPValueYCPValueMap::const_iterator position)
-	: position(position) {}
-
-public:
-    /**
-     * Return the key of the current position.
-     */
-    YCPValue key() const { return position->first; }
-
-    /**
-     * Return the value of the current position.
-     */
-    YCPValue value() const { return position->second; }
-
-    /**
-     * Check for equality.
-     */
-    friend bool operator==(const YCPMapIterator &x, const YCPMapIterator &y) {
-	return x.position == y.position;
-    }
-
-    /**
-     * Check for inequality.
-     */
-    friend bool operator!=(const YCPMapIterator &x, const YCPMapIterator &y) {
-	return !(x == y);
-    }
-
-    /**
-     * Advance to the next position.
-     */
-    void operator++() { ++position; }
-    void operator++(int) { ++position; }
+    YCPValue key() const { return (*this)->first; }
+    YCPValue value() const { return (*this)->second; }
 };
 
 
@@ -205,7 +181,14 @@ public:
 class YCPMap : public YCPValue
 {
     DEF_COW_COMMON(Map, Value);
+
 public:
+
+    typedef YCPValueYCPValueMap::iterator iterator;
+    typedef YCPValueYCPValueMap::const_iterator const_iterator;
+
+    typedef YCPValueYCPValueMap::value_type value_type;
+
     YCPMap() : YCPValue(new YCPMapRep()) {}
     YCPMap(bytecodeistream & str);
 
