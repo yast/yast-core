@@ -24,6 +24,7 @@ pkginclude_HEADERS =					\
 	YCPBuiltinMap.h	YCPBuiltinMisc.h		\
 	YCPBuiltinPath.h YCPBuiltinString.h		\
 	YCPBuiltinTerm.h YCPBuiltinVoid.h		\
+	YCPBuiltinMultiset.h				\
 	StaticDeclaration.h				\
 	YCode.h	YCodePtr.h				\
 	YCPCode.h					\

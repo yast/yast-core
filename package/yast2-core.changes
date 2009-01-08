@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
+Thu Jan 08 19:01:01 CET 2009 - aschnell@suse.de
+
+- added namespace multiset with 1. some list function, 2. some new
+  functions and 3. extended testsuite
+- 2.18.1
+
+-------------------------------------------------------------------
 Wed Jan 07 15:17:23 CET 2009 - aschnell@suse.de
 
 - improved YCPList and YCPMap iterators
-- 2.18.1
 
 -------------------------------------------------------------------
 Mon Jan  5 15:20:56 CET 2009 - visnov@suse.cz

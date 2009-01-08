@@ -84,8 +84,3 @@
 (list::reduce (term t, float f, `item(`id(`dummy)), [3.14, 2.71], { return add(t, tostring(f)); }))
 
 
-("** difference **")
-
-(list::difference ([1, 2, 3], [2, 3, 4]))
-(list::difference ([2, 3, 4], [1, 2, 3]))
-

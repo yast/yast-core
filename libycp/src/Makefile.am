@@ -46,6 +46,7 @@ libycp_la_SOURCES = 					\
 	YCPBuiltinString.cc YCPBuiltinTerm.cc		\
 	YCPBuiltinVoid.cc YCPBuiltinMap.cc		\
 	YCPBuiltinMisc.cc YCPBuiltinSymbol.cc		\
+	YCPBuiltinMultiset.cc				\
 	YSymbolEntry.cc					\
 	TypeStatics.cc					\
 	y2string.cc					\

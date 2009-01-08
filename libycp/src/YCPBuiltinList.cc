@@ -1205,54 +1205,6 @@ l_tolist (const YCPValue &v)
 }
 
 
-static YCPValue
-s_difference(const YCPList& a, const YCPList& b)
-{
-    // see http://www.sgi.com/tech/stl/set_difference.html
-
-    YCPList ret;
-    back_insert_iterator<YCPList> bii(ret);
-    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-    return ret;
-}
-
-
-static YCPValue
-s_symmetric_difference(const YCPList& a, const YCPList& b)
-{
-    // see http://www.sgi.com/tech/stl/set_symmetric_difference.html
-
-    YCPList ret;
-    back_insert_iterator<YCPList> bii(ret);
-    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-    return ret;
-}
-
-
-static YCPValue
-s_intersection(const YCPList& a, const YCPList& b)
-{
-    // see http://www.sgi.com/tech/stl/set_intersection.html
-
-    YCPList ret;
-    back_insert_iterator<YCPList> bii(ret);
-    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-    return ret;
-}
-
-
-static YCPValue
-s_union(const YCPList& a, const YCPList& b)
-{
-    // see http://www.sgi.com/tech/stl/set_union.html
-
-    YCPList ret;
-    back_insert_iterator<YCPList> bii(ret);
-    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
-    return ret;
-}
-
-
 YCPBuiltinList::YCPBuiltinList ()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -1293,10 +1245,6 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "list",	"",											NULL,	                DECL_NAMESPACE },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "difference",            "list <flex> (const list <flex>, const list <flex>)",                (void *)s_difference, DECL_FLEX },
-	{ "symmetric_difference",  "list <flex> (const list <flex>, const list <flex>)",                (void *)s_symmetric_difference, DECL_FLEX },
-	{ "intersection",          "list <flex> (const list <flex>, const list <flex>)",                (void *)s_intersection, DECL_FLEX },
-	{ "union",                 "list <flex> (const list <flex>, const list <flex>)",                (void *)s_union, DECL_FLEX },
 	{ 0 }
     };
 

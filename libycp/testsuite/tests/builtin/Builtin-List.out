@@ -39,6 +39,3 @@
 (48)
 (`item (`id (`dummy)))
 (`item (`id (`dummy), "3.14", "2.71"))
-("** difference **")
-([1])
-([4])
