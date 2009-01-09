@@ -212,18 +212,8 @@ l_unionlist (const YCPList &list1, const YCPList &list2)
 
 	    // Already contained? I know, this has an _awful_ complexity.
 	    // We need to introduce an order on YCPValueRep to solve the problem.
-	    bool contained = false;
 
-	    for (int a = 0; a < newlist->size (); a++)
-	    {
-		if (newlist->value (a)->equal (to_insert))
-		{
-		    contained = true;
-		    break;
-		}
-	    }
-
-	    if (!contained)
+	    if (!newlist->contains(to_insert))
 		newlist->add (to_insert);
 	}
     }
