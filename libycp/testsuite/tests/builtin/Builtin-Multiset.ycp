@@ -36,3 +36,8 @@
 
 (multiset::union ([1, 3, 5], [2, 3, 4]))
 
+
+("** merge **")
+
+(multiset::merge ([1, 3, 5], [2, 3, 4]))
+

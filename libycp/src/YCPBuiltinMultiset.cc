@@ -90,6 +90,18 @@ ms_union(const YCPList& a, const YCPList& b)
 }
 
 
+static YCPValue
+ms_merge(const YCPList& a, const YCPList& b)
+{
+    // see http://www.sgi.com/tech/stl/merge.html
+
+    YCPList ret;
+    back_insert_iterator<YCPList> bii(ret);
+    merge(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    return ret;
+}
+
+
 YCPBuiltinMultiset::YCPBuiltinMultiset()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -100,6 +112,7 @@ YCPBuiltinMultiset::YCPBuiltinMultiset()
 	{ "symmetric_difference",  "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_symmetric_difference, DECL_FLEX },
 	{ "intersection",          "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_intersection, DECL_FLEX },
 	{ "union",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_union, DECL_FLEX },
+	{ "merge",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_merge, DECL_FLEX },
 	{ 0 }
     };
 
