@@ -110,7 +110,7 @@ YCPListRep::swap (int x, int y)
 
 bool YCPListRep::contains (const YCPValue& value) const
 {
-    return find_if(begin(), end(), bind2nd(ycpequal(), value)) != end();
+    return find_if(begin(), end(), bind2nd(ycpequal_to(), value)) != end();
 }
 
 

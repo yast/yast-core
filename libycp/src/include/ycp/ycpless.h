@@ -57,12 +57,12 @@ private:
  * Compares two YCPValues and returns true if they are equal, false otherwise.
  * Optionally the comparison is locale aware.
  */
-class ycpequal : public std::binary_function<YCPValue, YCPValue, bool>
+class ycpequal_to : public std::binary_function<YCPValue, YCPValue, bool>
 {
 
 public:
 
-    ycpequal(bool respect_locale = false) : respect_locale(respect_locale) {}
+    ycpequal_to(bool respect_locale = false) : respect_locale(respect_locale) {}
 
     bool operator()(const YCPValue& x, const YCPValue& y) const
     {
