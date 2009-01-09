@@ -57,16 +57,41 @@ private:
  * Compares two YCPValues and returns true if they are equal, false otherwise.
  * Optionally the comparison is locale aware.
  */
-class ycpequal_to : public std::binary_function<YCPValue, YCPValue, bool>
+class ycp_equal_to : public std::binary_function<YCPValue, YCPValue, bool>
 {
 
 public:
 
-    ycpequal_to(bool respect_locale = false) : respect_locale(respect_locale) {}
+    ycp_equal_to(bool respect_locale = false) : respect_locale(respect_locale) {}
 
     bool operator()(const YCPValue& x, const YCPValue& y) const
     {
 	return x->compare(y, respect_locale) == YO_EQUAL;
+    }
+
+private:
+
+    const bool respect_locale;
+
+};
+
+
+/*
+ * Global comparison functor usable as predicate for STL-algorithms.
+ *
+ * Compares two YCPValues and returns true if they are not equal, false
+ * otherwise.  Optionally the comparison is locale aware.
+ */
+class ycp_not_equal_to : public std::binary_function<YCPValue, YCPValue, bool>
+{
+
+public:
+
+    ycp_not_equal_to(bool respect_locale = false) : respect_locale(respect_locale) {}
+
+    bool operator()(const YCPValue& x, const YCPValue& y) const
+    {
+	return x->compare(y, respect_locale) != YO_EQUAL;
     }
 
 private:

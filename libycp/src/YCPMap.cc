@@ -62,7 +62,7 @@ YCPMapRep::add (const YCPValue& key, const YCPValue& value)
     // default constructor for YCPValue.
 
     YCPMap::iterator pos = stl_map.lower_bound(key);
-    if (pos == stl_map.end() || !pos->first->equal(key))
+    if (pos == stl_map.end() || ycp_not_equal_to()(pos->first, key))
     {
 	// pos is just a hint but can avoid a second search through the map
 	stl_map.insert(pos, YCPMap::value_type(key, value));
