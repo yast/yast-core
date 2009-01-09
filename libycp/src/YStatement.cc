@@ -1927,7 +1927,7 @@ YSSwitch::toStream (std::ostream & str) const
 
     Bytecode::writeInt32 (str, m_cases.size ());
     
-    for (map<YCPValue, int, ycpless>::const_iterator it = m_cases.begin ()
+    for (map<YCPValue, int, ycp_less>::const_iterator it = m_cases.begin ()
 	; it != m_cases.end () ; it++)
     {
 	Bytecode::writeValue (str, it->first);

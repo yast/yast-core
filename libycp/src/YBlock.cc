@@ -475,7 +475,7 @@ YBlock::toString () const
 
 
 string
-YBlock::toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) const
+YBlock::toStringSwitch (map<YCPValue, int, ycp_less> cases, int defaultcase) const
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
@@ -484,7 +484,7 @@ YBlock::toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) cons
     for (int i = 0; i < statementcount; i++)
 	values[i] = YCPNull ();
 	
-    for (map<YCPValue, int, ycpless>::iterator it = cases.begin ();
+    for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
     {
 	values[ it->second ] = it->first;
@@ -519,7 +519,7 @@ YBlock::toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) cons
 
 
 std::ostream &
-YBlock::toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::ostream & str, int indent ) const
+YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::ostream & str, int indent ) const
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
@@ -528,7 +528,7 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::os
     for (int i = 0; i < statementcount; i++)
 	values[i] = YCPNull ();
 	
-    for (map<YCPValue, int, ycpless>::iterator it = cases.begin ();
+    for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
     {
 	values[ it->second ] = it->first;

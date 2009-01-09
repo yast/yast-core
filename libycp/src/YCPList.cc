@@ -117,13 +117,14 @@ bool YCPListRep::contains (const YCPValue& value) const
 void
 YCPListRep::sortlist()
 {
-    std::sort(elements.begin(), elements.end(), ycpless());
+    std::sort(elements.begin(), elements.end(), ycp_less());
 }
 
 
-void YCPListRep::lsortlist()
+void
+YCPListRep::lsortlist()
 {
-    std::sort (elements.begin(), elements.end(), ycpless(true));
+    std::sort(elements.begin(), elements.end(), ycp_less(true));
 }
 
 

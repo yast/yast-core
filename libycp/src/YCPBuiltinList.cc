@@ -165,7 +165,7 @@ l_setcontains (const YCPList &list, const YCPValue &value)
      * @usage setcontains ([1, 2, 5], 2) -> true
      */
 
-    return YCPBoolean(binary_search(list->begin(), list->end(), value, ycpless()));
+    return YCPBoolean(binary_search(list->begin(), list->end(), value, ycp_less()));
 }
 
 
@@ -605,10 +605,10 @@ l_toset (const YCPList &list)
      * @usage toset ([1, 5, 3, 2, 3, true, false, true]) -> [false, true, 1, 2, 3, 5]
      */
 
-    set<YCPValue, ycpless> newset(list->begin(), list->end());
+    set<YCPValue, ycp_less> newset(list->begin(), list->end());
 
     YCPList setlist;
-    for (set <YCPValue, ycpless>::const_iterator it = newset.begin ();
+    for (set <YCPValue, ycp_less>::const_iterator it = newset.begin ();
 	 it != newset.end (); ++it)
     {
 	setlist->add (*it);

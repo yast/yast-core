@@ -32,12 +32,12 @@
  * Compares two YCPValues and returns true if the first value is less than the
  * second one, false otherwise. Optionally the comparison is locale aware.
  */
-class ycpless : public std::binary_function<YCPValue, YCPValue, bool>
+class ycp_less : public std::binary_function<YCPValue, YCPValue, bool>
 {
 
 public:
 
-    ycpless(bool respect_locale = false) : respect_locale(respect_locale) {}
+    ycp_less(bool respect_locale = false) : respect_locale(respect_locale) {}
 
     bool operator()(const YCPValue& x, const YCPValue& y) const
     {

@@ -28,7 +28,7 @@
 
 
 // Only for backwards compatibility.
-typedef map<YCPValue, YCPValue, ycpless> YCPValueYCPValueMap;
+typedef map<YCPValue, YCPValue, ycp_less> YCPValueYCPValueMap;
 class YCPMapIterator;
  
 

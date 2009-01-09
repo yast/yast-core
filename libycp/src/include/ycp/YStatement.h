@@ -516,7 +516,7 @@ class YSSwitch : public YStatement
     int m_defaultcase;
     
     // indices of the case statements in the block
-    map<YCPValue, int, ycpless> m_cases;
+    map<YCPValue, int, ycp_less> m_cases;
     
 public:
     YSSwitch (YCodePtr condition);

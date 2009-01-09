@@ -274,7 +274,7 @@ public:
 
     string toString () const;
     string environmentToString () const;
-    string toStringSwitch (map<YCPValue, int, ycpless> cases, int defaultcase) const;
+    string toStringSwitch (map<YCPValue, int, ycp_less> cases, int defaultcase) const;
 
     //---------------------------------------------------------------
     // stream output
@@ -282,7 +282,7 @@ public:
     // write block to stream
     std::ostream & toStream (std::ostream & str) const;
     std::ostream & toXml( std::ostream & str, int indent ) const;
-    std::ostream & toXmlSwitch( map<YCPValue, int, ycpless> cases, int defaultcase, std::ostream & str, int indent ) const;
+    std::ostream & toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::ostream & str, int indent ) const;
 
 };
 

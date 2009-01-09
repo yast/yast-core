@@ -38,7 +38,7 @@ ms_includes(const YCPList& a, const YCPList& b)
 {
     // see http://www.sgi.com/tech/stl/includes.html
 
-    return YCPBoolean(includes(a->begin(), a->end(), b->begin(), b->end(), ycpless()));
+    return YCPBoolean(includes(a->begin(), a->end(), b->begin(), b->end(), ycp_less()));
 }
 
 
@@ -49,7 +49,7 @@ ms_difference(const YCPList& a, const YCPList& b)
 
     YCPList ret;
     back_insert_iterator<YCPList> bii(ret);
-    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    set_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycp_less());
     return ret;
 }
 
@@ -61,7 +61,7 @@ ms_symmetric_difference(const YCPList& a, const YCPList& b)
 
     YCPList ret;
     back_insert_iterator<YCPList> bii(ret);
-    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    set_symmetric_difference(a->begin(), a->end(), b->begin(), b->end(), bii, ycp_less());
     return ret;
 }
 
@@ -73,7 +73,7 @@ ms_intersection(const YCPList& a, const YCPList& b)
 
     YCPList ret;
     back_insert_iterator<YCPList> bii(ret);
-    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    set_intersection(a->begin(), a->end(), b->begin(), b->end(), bii, ycp_less());
     return ret;
 }
 
@@ -85,7 +85,7 @@ ms_union(const YCPList& a, const YCPList& b)
 
     YCPList ret;
     back_insert_iterator<YCPList> bii(ret);
-    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    set_union(a->begin(), a->end(), b->begin(), b->end(), bii, ycp_less());
     return ret;
 }
 
@@ -97,7 +97,7 @@ ms_merge(const YCPList& a, const YCPList& b)
 
     YCPList ret;
     back_insert_iterator<YCPList> bii(ret);
-    merge(a->begin(), a->end(), b->begin(), b->end(), bii, ycpless());
+    merge(a->begin(), a->end(), b->begin(), b->end(), bii, ycp_less());
     return ret;
 }
 
