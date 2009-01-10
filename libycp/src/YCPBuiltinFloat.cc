@@ -313,8 +313,6 @@ YCPBuiltinFloat::YCPBuiltinFloat ()
 	{ "-",	     "float (float)",		(void *)f_neg },
 	{ "*",	     "float (float, float)",	(void *)f_mult },
 	{ "/",	     "float (float, float)",	(void *)f_div },
-	{ "trunc",   "float (float)",           (void *)f_trunc,	DECL_DEPRECATED },
-	{ "pow",     "float (float, float)",    (void *)f_pow,		DECL_DEPRECATED },
 	{ "tofloat", "float (const any)",	(void *)f_tofloat },
 	{ "tostring","string (float, integer)",	(void *)f_tostring },
 	{ 0 }
