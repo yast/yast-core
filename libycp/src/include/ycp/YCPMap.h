@@ -53,6 +53,7 @@ protected:
     typedef YCPValueYCPValueMap::iterator iterator;
     typedef YCPValueYCPValueMap::const_iterator const_iterator;
     typedef YCPValueYCPValueMap::value_type value_type;
+    typedef YCPValueYCPValueMap::const_reference const_reference;
     typedef YCPValueYCPValueMap::key_compare key_compare;
 
     friend class YCPMap;
@@ -189,6 +190,7 @@ public:
     typedef YCPMapRep::iterator iterator;
     typedef YCPMapRep::const_iterator const_iterator;
     typedef YCPMapRep::value_type value_type;
+    typedef YCPMapRep::const_reference const_reference;
     typedef YCPMapRep::key_compare key_compare;
 
     YCPMap() : YCPValue(new YCPMapRep()) {}
