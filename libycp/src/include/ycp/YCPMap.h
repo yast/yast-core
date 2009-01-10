@@ -27,7 +27,8 @@
 #include "ycpless.h"
 
 
-// Only for backwards compatibility.
+// Only for backwards compatibility. See mail from aschnell on yast-devel on
+// 2009-01-07.
 typedef map<YCPValue, YCPValue, ycp_less> YCPValueYCPValueMap;
 class YCPMapIterator;
  
@@ -158,14 +159,15 @@ public:
 };
 
 
-// Only for backwards compatibility.
+// Only for backwards compatibility. See mail from aschnell on yast-devel on
+// 2009-01-07.
 struct YCPMapIterator : public YCPValueYCPValueMap::const_iterator
 {
     YCPMapIterator(YCPValueYCPValueMap::const_iterator it)
         : YCPValueYCPValueMap::const_iterator(it) {}
 
-    YCPValue key() const { return (*this)->first; }
-    YCPValue value() const { return (*this)->second; }
+    YCPValue key() const __attribute__ ((deprecated)) { return (*this)->first; }
+    YCPValue value() const __attribute__ ((deprecated)) { return (*this)->second; }
 };
 
 
