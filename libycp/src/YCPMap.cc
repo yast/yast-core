@@ -58,19 +58,21 @@ YCPMapRep::add (const YCPValue& key, const YCPValue& value)
 	return;
     }
 
-    // note: 'stl_map[key] = value' would create a temporary object using the
-    // default constructor for YCPValue.
+    // Note: 'stl_map[key] = value' would create a temporary object using the
+    // default constructor for YCPValue. See Scott Meyers, Effective STL, Item
+    // 24.
 
     YCPMap::iterator pos = stl_map.lower_bound(key);
-    if (pos == stl_map.end() || ycp_not_equal_to()(pos->first, key))
+    if (pos != stl_map.end() && !YCPMap::key_compare()(key, pos->first))
+    {
+	pos->second = value;
+    }
+    else
     {
 	// pos is just a hint but can avoid a second search through the map
 	stl_map.insert(pos, YCPMap::value_type(key, value));
     }
-    else
-    {
-	pos->second = value;
-    }
+
 }
 
 
