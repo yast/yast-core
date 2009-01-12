@@ -28,7 +28,7 @@
 
 
 // Only for backwards compatibility. See mail from aschnell on yast-devel on
-// 2009-01-07.
+// 2009-01-07. http://lists.opensuse.org/yast-devel/2009-01/msg00016.html
 typedef map<YCPValue, YCPValue, ycp_less> YCPValueYCPValueMap;
 class YCPMapIterator;
  
@@ -161,7 +161,7 @@ public:
 
 
 // Only for backwards compatibility. See mail from aschnell on yast-devel on
-// 2009-01-07.
+// 2009-01-07. http://lists.opensuse.org/yast-devel/2009-01/msg00016.html
 struct YCPMapIterator : public YCPValueYCPValueMap::const_iterator
 {
     YCPMapIterator(YCPValueYCPValueMap::const_iterator it)
