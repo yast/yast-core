@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jan 23 15:15:05 CET 2009 - aschnell@suse.de
+
+- added hal agent (needed for bnc #464453)
+- 2.17.27
+
+-------------------------------------------------------------------
 Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
 
 - Reverted r50800 which, in an attempt to fix another bug, encoded to

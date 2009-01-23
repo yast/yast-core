@@ -21,7 +21,8 @@ BuildRequires:	sgml-skel
 BuildRequires:	libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
-
+# agent-hal
+BuildRequires:	hal-devel dbus-1-devel
 # for SCR DBus service
 BuildRequires:	dbus-1-devel PolicyKit-devel
 
