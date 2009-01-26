@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan 26 14:00:31 CET 2009 - mvidner@suse.cz
+
+- Fixed the D-Bus access policy (bnc#468390, CVE-2008-4311).
+- 2.18.27
+
+-------------------------------------------------------------------
 Mon Dec 22 13:16:02 CET 2008 - mvidner@suse.cz
 
 - Reverted r50800 which, in an attempt to fix another bug, encoded to
