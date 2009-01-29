@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 29 15:15:57 CET 2009 - aschnell@suse.de
+
+- added dbus client agent (required for bnc #464453)
+- 2.18.3
+
+-------------------------------------------------------------------
 Mon Jan 26 14:00:31 CET 2009 - mvidner@suse.cz
 
 - Fixed the D-Bus access policy (bnc#468390, CVE-2008-4311).
