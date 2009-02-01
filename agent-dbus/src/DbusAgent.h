@@ -52,7 +52,14 @@ public:
      */
     virtual YCPList Dir(const YCPPath& path) { return YCPList(); }
 
+    /**
+     * Used for mounting the agent.
+     */
+    virtual YCPValue otherCommand(const YCPTerm& term);
+
 private:
+
+    void connect(DBusBusType type);
 
     DBusConnection* connection;
     DBusError error;

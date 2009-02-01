@@ -1,9 +1,11 @@
 /**
  * File:
- *   dbus.scr
+ *   dbus.session.scr
  * Authors:
  *   Arvin Schnell <aschnell@suse.de>
  */
-.dbus
+.dbus.session
 
-`ag_dbus()
+`ag_dbus(
+    `Bus("session")
+)

@@ -13,22 +13,9 @@
 
 
 DbusAgent::DbusAgent()
+    : connection(NULL)
 {
-    y2milestone("connecting dbus");
-
     dbus_error_init(&error);
-
-    connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
-    if (dbus_error_is_set(&error))
-    {
-	y2error("dbus_bus_get failed (%s)\n", error.message);
-	dbus_error_free(&error);
-    }
-
-    if (connection == NULL)
-    {
-	y2error("connecting dbus failed");
-    }
 }
 
 
@@ -184,4 +171,50 @@ DbusAgent::Execute(const YCPPath& path, const YCPValue& value,
     }
 
     return YCPError(string("Undefined subpath for Execute(") + path->toString() + ")");
+}
+
+
+YCPValue
+DbusAgent::otherCommand(const YCPTerm& term)
+{
+    string sym = term->name();
+
+    if (sym == "Bus")
+    {
+	if (term->size() != 1 || !term->value(0)->isString())
+	{
+	    return YCPError("Bad number of arguments. Expecting Bus (\"type\")");
+	}
+
+	string bus = term->value(0)->asString()->value();
+	if (bus == "system")
+	    connect(DBUS_BUS_SYSTEM);
+	else if (bus == "session")
+	    connect(DBUS_BUS_SESSION);
+	else
+	    return YCPError("Unknown bus");
+
+	return YCPBoolean(true);
+    }
+
+    return YCPNull();
+}
+
+
+void
+DbusAgent::connect(DBusBusType type)
+{
+    y2milestone("connecting dbus");
+
+    connection = dbus_bus_get(type, &error);
+    if (dbus_error_is_set(&error))
+    {
+	y2error("dbus_bus_get() failed (%s)", error.message);
+	dbus_error_free(&error);
+    }
+
+    if (connection == NULL)
+    {
+	y2error("connecting dbus failed");
+    }
 }
