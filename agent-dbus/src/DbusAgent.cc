@@ -21,6 +21,7 @@ DbusAgent::DbusAgent()
 
 DbusAgent::~DbusAgent()
 {
+    disconnect();
 }
 
 
@@ -136,16 +137,23 @@ DbusAgent::Execute(const YCPPath& path, const YCPValue& value,
 	    {
 		const char* param = tmp3->asString()->value_cstr();
 		if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param))
+		{
+		    dbus_message_unref(message);
 		    return YCPError("dbus_message_iter_append_basic() failed");
+		}
 	    }
 	    else if (tmp3->isBoolean())
 	    {
 		bool param = tmp3->asBoolean()->value();
 		if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_BOOLEAN, &param))
+		{
+		    dbus_message_unref(message);
 		    return YCPError("dbus_message_iter_append_basic() failed");
+		}
 	    }
 	    else
 	    {
+		dbus_message_unref(message);
 		return YCPError("Unsupported type");
 	    }
 	}
@@ -204,6 +212,8 @@ DbusAgent::otherCommand(const YCPTerm& term)
 void
 DbusAgent::connect(DBusBusType type)
 {
+    disconnect();
+
     y2milestone("connecting dbus");
 
     connection = dbus_bus_get(type, &error);
@@ -216,5 +226,16 @@ DbusAgent::connect(DBusBusType type)
     if (connection == NULL)
     {
 	y2error("connecting dbus failed");
+    }
+}
+
+
+void
+DbusAgent::disconnect()
+{
+    if (connection)
+    {
+	dbus_connection_unref(connection);
+	connection = NULL;
     }
 }

@@ -60,6 +60,7 @@ public:
 private:
 
     void connect(DBusBusType type);
+    void disconnect();
 
     DBusConnection* connection;
     DBusError error;
