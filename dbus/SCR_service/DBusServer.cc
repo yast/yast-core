@@ -14,6 +14,10 @@
 
 #include <ycp/y2log.h>
 
+#include "scr_names.h"
+
+#define TIMEOUT 5000 /* 5 seconds */
+
 extern "C"
 {
 // nanosleep()
@@ -47,7 +51,7 @@ DBusServer::~DBusServer()
 bool DBusServer::connect()
 {
     // connect to DBus, request a service name
-    return connection.connect(DBUS_BUS_SYSTEM, "org.opensuse.yast.SCR");
+    return connection.connect(DBUS_BUS_SYSTEM, YAST_SCR_SERVICE);
 }
 
 // set 30 second timer
@@ -151,7 +155,7 @@ void DBusServer::run(bool forever)
 	}
 
 	// set 5 seconds timeout
-	connection.setTimeout(5000);
+	connection.setTimeout(TIMEOUT);
 	// try reading a message from DBus
 	DBusMsg request(connection.receive());
 
@@ -172,7 +176,9 @@ void DBusServer::run(bool forever)
 	    request.interface().c_str(), request.method().c_str());
       
 	// check this is a method call for the right object, interface & method
-	if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL && request.interface() == "org.opensuse.yast.SCR.Methods" && request.path() == "/SCR")
+	if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL
+	    && request.interface() == YAST_SCR_SERVICE_METHODS
+	    && request.path() == SCR_PATH)
 	{
 	    std::string method(request.method());
 
@@ -182,9 +188,14 @@ void DBusServer::run(bool forever)
 	    bool check_ok = false;
 
 	    // check missing arguments
-	    if (method == "Read" || method == "Write" || method == "Execute" ||
-		method == "Dir" || method == "Error" || method == "UnregisterAgent" ||
-		method == "UnmountAgent" || method == "RegisterAgent")
+	    if (method == METHOD_READ
+		|| method == METHOD_WRITE
+		|| method == METHOD_EXECUTE
+		|| method == METHOD_DIR
+		|| method == METHOD_ERROR
+		|| method == METHOD_UNREGISTER
+		|| method == METHOD_UNMOUNT
+		|| method == METHOD_REGISTER)
 	    {
 		if (request.arguments() == 0)
 		{
@@ -207,7 +218,7 @@ void DBusServer::run(bool forever)
 		    }
 		}
 	    }
-	    else if (method == "UnregisterAllAgents" || method != "RegisterNewAgents")
+	    else if (method == METHOD_UNREGISTER_ALL || method != METHOD_REGISTER_NEW)
 	    {
 		check_ok = true;
 	    }
@@ -254,29 +265,29 @@ void DBusServer::run(bool forever)
 
 		    YCPValue ret;
 
-		    if (method == "Read")
+		    if (method == METHOD_READ)
 			ret = sa->Read(pth, arg, opt);
-		    else if (method == "Write")
+		    else if (method == METHOD_WRITE)
 			ret = sa->Write(pth, arg, opt);
-		    else if (method == "Execute")
+		    else if (method == METHOD_EXECUTE)
 			ret = sa->Execute(pth, arg, opt);
-		    else if (method == "Dir")
+		    else if (method == METHOD_DIR)
 		    {
 			ret = sa->Dir(pth);
 			if (ret.isNull())
 			    ret = YCPList();
 		    }
-		    else if (method == "Error")
+		    else if (method == METHOD_ERROR)
 			ret = sa->Error(pth);
-		    else if (method == "UnregisterAgent")
+		    else if (method == METHOD_UNREGISTER)
 			ret = sa->UnregisterAgent(pth);
-		    else if (method == "UnregisterAllAgents")
+		    else if (method == METHOD_UNREGISTER_ALL)
 			ret = sa->UnregisterAllAgents();
-		    else if (method == "UnmountAgent")
+		    else if (method == METHOD_UNMOUNT)
 			ret = sa->UnmountAgent(pth);
-		    else if (method == "RegisterNewAgents")
+		    else if (method == METHOD_REGISTER_NEW)
 			ret = sa->RegisterNewAgents();
-		    else if (method == "RegisterAgent")
+		    else if (method == METHOD_REGISTER)
 			ret = sa->RegisterAgent(pth, arg);
 		    else
 			y2internal("Unhandled method %s", method.c_str());
@@ -298,11 +309,11 @@ void DBusServer::run(bool forever)
 	{
 	    y2milestone("Requesting path: %s", request.path().c_str());
 	    // define all exported methods here
-	    const char *introspect = (request.path() != "/SCR") ?
+	    const char *introspect = (request.path() != SCR_PATH) ?
 // introcpection data for the root node
 DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 "<node>"
-" <interface name='org.freedesktop.DBus.Introspectable'>"
+" <interface name='"DBUS_INTERFACE_INTROSPECTABLE"'>"
 "  <method name='Introspect'>"
 "   <arg name='xml_data' type='s' direction='out'/>"
 "  </method>"
@@ -313,53 +324,53 @@ DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 // introcpection data for SCR node
 DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 "<node>"
-" <interface name='org.opensuse.yast.SCR.Methods'>"
-"  <method name='Read'>"
+" <interface name='"YAST_SCR_SERVICE_METHODS"'>"
+"  <method name='"METHOD_READ"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='arg' type='(bsv)' direction='in'/>"
 "   <arg name='opt' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='Write'>"
+"  <method name='"METHOD_WRITE"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='arg' type='(bsv)' direction='in'/>"
 "   <arg name='opt' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='Execute'>"
+"  <method name='"METHOD_EXECUTE"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='arg' type='(bsv)' direction='in'/>"
 "   <arg name='opt' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='Dir'>"
+"  <method name='"METHOD_DIR"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='Error'>"
+"  <method name='"METHOD_ERROR"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='UnregisterAgent'>"
+"  <method name='"METHOD_UNREGISTER"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='UnregisterAllAgents'>"
+"  <method name='"METHOD_UNREGISTER_ALL"'>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='RegisterNewAgents'>"
+"  <method name='"METHOD_REGISTER_NEW"'>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='RegisterAgent'>"
+"  <method name='"METHOD_REGISTER"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='arg' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-"  <method name='UnmountAgent'>"
+"  <method name='"METHOD_UNMOUNT"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
-" <interface name='org.freedesktop.DBus.Introspectable'>"
+" <interface name='"DBUS_INTERFACE_INTROSPECTABLE"'>"
 "  <method name='Introspect'>"
 "   <arg name='xml_data' type='s' direction='out'/>"
 "  </method>"
@@ -425,7 +436,7 @@ bool DBusServer::isActionAllowed(const std::string &caller, const std::string &p
 	    const std::string &arg, const std::string &opt)
 {
     // create actionId
-    static const char *polkit_prefix = "org.opensuse.yast.scr";
+    static const char *polkit_prefix = POLKIT_PREFIX;
 
     // check the access right to all methods at first (see bnc#449794)
     std::string action_id(PolKit::createActionId(polkit_prefix, "", method, "", ""));
@@ -478,8 +489,8 @@ pid_t DBusServer::callerPid(const std::string &bus_name)
     DBusMsg query;
 
     // ask the DBus server for the PID of the caller
-    query.createCall("org.freedesktop.DBus", "/org/freedesktop/DBus/Bus",
-	"org.freedesktop.DBus", "GetConnectionUnixProcessID");
+    query.createCall(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS"/Bus",
+	DBUS_SERVICE_DBUS, "GetConnectionUnixProcessID");
 
     query.addString(bus_name);
 

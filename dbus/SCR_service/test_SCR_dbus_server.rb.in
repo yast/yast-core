@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+#
+# Test code for SCR_service
+#
+# test_SCR_dbus_server.rb is generated from test_SCR_dbus_server.rb.in
+#
+require 'test/unit'
+
+begin
+  require "dbus"
+rescue Exception => e
+  $stderr.puts "Please install ruby-dbus"
+  exit
+end
+
+class DBusTest < Test::Unit::TestCase
+  def test_loading
+    system_bus = DBus::SystemBus.instance
+    assert system_bus
+    
+    # Get the yast service
+    yast = system_bus.service("@YAST_SCR_SERVICE@")
+    assert yast
+    
+    # Get the object from this service
+    objYast = yast.object("/SCR")
+    assert objYast
+    
+    poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
+    assert poiSCR
+  end
+end
