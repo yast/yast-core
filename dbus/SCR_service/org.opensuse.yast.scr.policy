@@ -29,7 +29,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.execute">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR Execute Method</description>
     <message>System policy prevents the Yast SCR service from executing system calls.</message>
 
     <defaults>
@@ -40,7 +40,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.dir">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR Dir Method</description>
     <message>System policy prevents the Yast SCR service from listing agent properties.</message>
 
     <defaults>
@@ -51,7 +51,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.registeragent">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR RegisterAgent Method</description>
     <message>System policy prevents the Yast SCR service from registering a new agent.</message>
 
     <defaults>
@@ -62,7 +62,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.unregisteragent">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR UnregisterAgent Method</description>
     <message>System policy prevents the Yast SCR service from unregistering an agent.</message>
 
     <defaults>
@@ -73,7 +73,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.unmountagent">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR UnmountAgent Method</description>
     <message>System policy prevents the Yast SCR service from unmounting an agent.</message>
 
     <defaults>
@@ -84,7 +84,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.error">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR Error Method</description>
     <message>System policy prevents the Yast SCR service from reading error status.</message>
 
     <defaults>
@@ -95,7 +95,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.unregisterallagents">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR UnregisterAllAgents Method</description>
     <message>System policy prevents the Yast SCR service from unregistering all agents.</message>
 
     <defaults>
@@ -106,7 +106,7 @@
   </action>
 
   <action id="org.opensuse.yast.scr.registernewagents">
-    <description>Yast SCR Write Method</description>
+    <description>Yast SCR RegisterNewAgents Method</description>
     <message>System policy prevents the Yast SCR service from registering new unloaded agents.</message>
 
     <defaults>
