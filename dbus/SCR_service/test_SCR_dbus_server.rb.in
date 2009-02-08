@@ -30,4 +30,35 @@ class DBusTest < Test::Unit::TestCase
     poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
     assert poiSCR
   end
+  def test_throughput
+    start = Time.now
+    count = 0
+    while (Time.now - start < 1)
+      system_bus = DBus::SystemBus.instance
+      assert system_bus
+    
+      # Get the yast service
+      yast = system_bus.service("@YAST_SCR_SERVICE@")
+      assert yast
+    
+      # Get the object from this service
+      objYast = yast.object("/SCR")
+      assert objYast
+      
+      poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
+	  
+      res = poiSCR.define_method("Execute", "in path:(bsv), in arg:(bsv), in opt:(bsv), out ret:(bsv)")
+    
+      begin
+	r = poiSCR.Execute([false, "path", ["s",".target.bash_output"] ], 
+			   [false, "string", ["s","/bin/date +%r"] ], 
+			   [false, "", ["s",""] ])
+      rescue Exception => e
+      end
+      count += 1
+    end
+    elapsed = Time.now - start
+    persec = count / elapsed
+    puts "Throughput #{persec.to_i}/sec"
+  end
 end
