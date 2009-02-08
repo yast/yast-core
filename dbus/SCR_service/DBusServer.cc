@@ -16,7 +16,7 @@
 
 #include "scr_names.h"
 
-#define TIMEOUT 5000 /* 5 seconds */
+#define TIMEOUT 15000 /* 15 seconds */
 
 extern "C"
 {
@@ -154,14 +154,13 @@ void DBusServer::run(bool forever)
 	    }
 	}
 
-	// set 5 seconds timeout
-	connection.setTimeout(TIMEOUT);
 	// try reading a message from DBus
 	DBusMsg request(connection.receive());
 
 	// check if a message was received
 	if (request.empty())
 	{ 
+	    connection.setTimeout(TIMEOUT);
 	    continue; 
 	}
 
