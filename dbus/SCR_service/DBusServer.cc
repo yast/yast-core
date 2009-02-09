@@ -16,7 +16,7 @@
 
 #include "scr_names.h"
 
-#define TIMEOUT 15000 /* 15 seconds */
+#define TIMEOUT 15 /* 30 secs idle timeout */
 
 extern "C"
 {
@@ -54,10 +54,10 @@ bool DBusServer::connect()
     return connection.connect(DBUS_BUS_SYSTEM, YAST_SCR_SERVICE);
 }
 
-// set 30 second timer
+// set idle timer
 void DBusServer::resetTimer()
 {
-    ::alarm(30);
+    ::alarm(TIMEOUT);
 }
 
 // NOTE: this is a signal handler, do only really necessary tasks here!
@@ -138,7 +138,7 @@ void DBusServer::run(bool forever)
 	// the time is over
 	if (finish)
 	{
-	    y2milestone("Timout signal received");
+	    y2milestone("Timeout signal received");
 
 	    if (canFinish())
 	    {
@@ -160,7 +160,8 @@ void DBusServer::run(bool forever)
 	// check if a message was received
 	if (request.empty())
 	{ 
-	    connection.setTimeout(TIMEOUT);
+	    /* run the mainloop only on message or after(!) reaching the idle timeout */
+	    connection.setTimeout((TIMEOUT+1)*1000); /* returns on message or timeout */
 	    continue; 
 	}
 
