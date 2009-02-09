@@ -24,7 +24,7 @@ class DBusTest < Test::Unit::TestCase
     assert yast
     
     # Get the object from this service
-    objYast = yast.object("/SCR")
+    objYast = yast.object("/#{yast.root}")
     assert objYast
     
     poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
@@ -42,7 +42,7 @@ class DBusTest < Test::Unit::TestCase
       assert yast
     
       # Get the object from this service
-      objYast = yast.object("/SCR")
+      objYast = yast.object("/#{yast.root}")
       assert objYast
       
       poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
