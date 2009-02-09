@@ -2,8 +2,9 @@
 Mon Feb  9 13:33:48 CET 2009 - lslezak@suse.cz
 
 - SCR DBus service - improved reading DBus messages, it decreases
-  startup time from >10 seconds to almost instant start
-  (bnc#473874)
+  startup time from >10 seconds to almost instant start,
+  increase wait timeout to 15 seconds to run the main loop less
+  often (bnc#473874)
 - 2.17.29
 
 -------------------------------------------------------------------

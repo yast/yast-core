@@ -156,8 +156,8 @@ void DBusServer::run(bool forever)
 	// check if a message was received
 	if (request.empty())
 	{ 
-	    // wait for an incoming message, set 5 seconds timeout
-	    connection.setTimeout(5000);
+	    // wait for an incoming message, set 15 seconds timeout
+	    connection.setTimeout(15000);
 
 	    continue; 
 	}
