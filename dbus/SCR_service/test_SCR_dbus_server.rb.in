@@ -27,7 +27,7 @@ class DBusTest < Test::Unit::TestCase
     objYast = yast.object("/#{yast.root}")
     assert objYast
     
-    poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
+    poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
     assert poiSCR
   end
   def test_throughput
@@ -45,7 +45,7 @@ class DBusTest < Test::Unit::TestCase
       objYast = yast.object("/#{yast.root}")
       assert objYast
       
-      poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_SERVICE_METHODS@")
+      poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
 	  
       res = poiSCR.define_method("Execute", "in path:(bsv), in arg:(bsv), in opt:(bsv), out ret:(bsv)")
     

@@ -177,8 +177,8 @@ void DBusServer::run(bool forever)
       
 	// check this is a method call for the right object, interface & method
 	if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL
-	    && request.interface() == YAST_SCR_SERVICE_METHODS
-	    && request.path() == SCR_PATH)
+	    && request.interface() == YAST_SCR_INTERFACE
+	    && request.path() == SCR_OBJECT_PATH)
 	{
 	    std::string method(request.method());
 
@@ -309,7 +309,7 @@ void DBusServer::run(bool forever)
 	{
 	    y2milestone("Requesting path: %s", request.path().c_str());
 	    // define all exported methods here
-	    const char *introspect = (request.path() != SCR_PATH) ?
+	    const char *introspect = (request.path() != SCR_OBJECT_PATH) ?
 // introcpection data for the root node
 DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 "<node>"
@@ -324,7 +324,7 @@ DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 // introcpection data for SCR node
 DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 "<node>"
-" <interface name='"YAST_SCR_SERVICE_METHODS"'>"
+" <interface name='"YAST_SCR_INTERFACE"'>"
 "  <method name='"METHOD_READ"'>"
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='arg' type='(bsv)' direction='in'/>"

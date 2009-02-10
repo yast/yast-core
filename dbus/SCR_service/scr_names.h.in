@@ -4,7 +4,7 @@
  */
 
 #define YAST_SCR_SERVICE "@YAST_SCR_SERVICE@"
-#define YAST_SCR_SERVICE_METHODS "@YAST_SCR_SERVICE_METHODS@"
+#define YAST_SCR_INTERFACE "@YAST_SCR_INTERFACE@"
 
 #define METHOD_READ	      "Read"
 #define METHOD_WRITE	      "Write"
@@ -17,6 +17,6 @@
 #define METHOD_UNREGISTER_ALL "UnregisterAllAgents"
 #define METHOD_REGISTER_NEW   "RegisterNewAgents"
 
-#define SCR_PATH "/SCR"
+#define SCR_OBJECT_PATH "/SCR"
 
 #define POLKIT_PREFIX "org.opensuse.yast.scr"
