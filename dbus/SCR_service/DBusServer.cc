@@ -371,11 +371,11 @@ DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 "   <arg name='path' type='(bsv)' direction='in'/>"
 "   <arg name='ret' type='(bsv)' direction='out'/>"
 "  </method>"
+" </interface>"
 " <interface name='"DBUS_INTERFACE_INTROSPECTABLE"'>"
 "  <method name='Introspect'>"
 "   <arg name='xml_data' type='s' direction='out'/>"
 "  </method>"
-" </interface>"
 " </interface>"
 "</node>";
 
