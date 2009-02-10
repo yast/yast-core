@@ -48,13 +48,13 @@ DBusServer::~DBusServer()
 }
 
 
+// connect to DBus, request a service name
 bool DBusServer::connect()
 {
-    // connect to DBus, request a service name
     return connection.connect(DBUS_BUS_SYSTEM, YAST_SCR_SERVICE);
 }
 
-// set idle timer
+// reset idle timer
 void DBusServer::resetTimer()
 {
     ::alarm(TIMEOUT);
@@ -71,6 +71,7 @@ void sig_timer(int signal, siginfo_t *info, void *data)
     }
 }
 
+// register signal handler for idle timeout
 void DBusServer::registerSignalHandler()
 {
     struct sigaction new_action, old_action;
@@ -86,10 +87,10 @@ void DBusServer::registerSignalHandler()
     }
 }
 
+// check if clients are still running,
+// remove finished clients
 bool DBusServer::canFinish()
 {
-    // check if clients are still running,
-    // remove finished clients
     for(Clients::iterator it = clients.begin();
 	it != clients.end();)
     {
@@ -432,6 +433,7 @@ DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 }
 
 #ifdef HAVE_POLKIT
+// check if action is allowed by PolicyKit
 bool DBusServer::isActionAllowed(const std::string &caller, const std::string &path, const std::string &method,
 	    const std::string &arg, const std::string &opt)
 {
