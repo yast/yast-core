@@ -16,6 +16,7 @@ end
 
 class DBusTest < Test::Unit::TestCase
   def test_loading
+    # Get the bus
     system_bus = DBus::SystemBus.instance
     assert system_bus
     
@@ -24,9 +25,13 @@ class DBusTest < Test::Unit::TestCase
     assert yast
     
     # Get the object from this service
+    # (using the root object of the service, for SCR there's just one)
     objYast = yast.object("/#{yast.root}")
     assert objYast
     
+    # Create a local object for accessing the interface provided by the remote object
+    # The local application can 'talk' through this object which internally proxies
+    # all calls to the remote one via DBus.
     poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
     assert poiSCR
   end
