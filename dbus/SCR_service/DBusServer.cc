@@ -385,8 +385,8 @@ DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 	}
 	else if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL)
 	{
-	    y2warning("Ignoring unknown interface or method call: interface: %s, method: %s",
-		request.interface().c_str(), request.method().c_str());
+	    y2warning("Ignoring unknown object, interface or method call: object: %s, interface: %s, method: %s",
+		      request.path().c_str(), request.interface().c_str(), request.method().c_str());
 
 	    // report error
 	    reply.createError(request, "Unknown object, interface or method", DBUS_ERROR_UNKNOWN_METHOD);
