@@ -145,6 +145,11 @@ int main(int argc, char **argv)
 
 	    if (finish)
 	    {
+		// read the remaining pieces
+		std::string std_out(subprocess.read());
+		output(std_out, 1);
+		std::string err_out(subprocess.readErr());
+		output(err_out, 2);
 		// SIGCHLD received, return the exit status
 		return subprocess.close();
 	    }
