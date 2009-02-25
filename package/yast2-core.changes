@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Feb 25 14:49:33 CET 2009 - mvidner@suse.cz
+
+- Fixed tty_wrapper losing output: stdio was interrupted by SIGCHLD (bnc#470645).
+
+-------------------------------------------------------------------
 Thu Jan 29 15:15:57 CET 2009 - aschnell@suse.de
 
 - added dbus client agent (required for bnc #464453)

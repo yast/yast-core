@@ -74,6 +74,32 @@ bool registerSignalHandler()
     return true;
 }
 
+void output(const std::string & s, int fd)
+{
+    const char *cs = s.c_str();
+    while (true) {
+	ssize_t n = s.size();
+	ssize_t w = write(fd, cs, n);
+	if (w == n)
+	    break;		// success
+	else if (w == -1) {
+	    if (errno == EINTR) {
+		// perror("gotcha"); // bnc#470645
+	    }
+	    else {
+		perror("write"); // other cases
+		break;
+	    }
+	}
+	else {
+	    errno = 0;
+	    perror("short");
+	    cs += w;
+	    n -= w;
+	}
+    }
+}
+
 int main(int argc, char **argv)
 {
     if (argc > 1)
@@ -168,7 +194,7 @@ int main(int argc, char **argv)
 		{
 		    // read stdout of the subprocess and print it on stdout
 		    std::string std_out(subprocess.read());
-		    std::cout << std_out;
+		    output(std_out, 1);
 		}
 
 		// stderr available
@@ -176,7 +202,7 @@ int main(int argc, char **argv)
 		{
 		    // read stderr of the subprocess and print it on stderr
 		    std::string err_out(subprocess.readErr());
-		    std::cerr << err_out;
+		    output(err_out, 2);
 		}
 	    }
 	}
@@ -189,4 +215,3 @@ int main(int argc, char **argv)
 	return 1;
     }
 }
-
