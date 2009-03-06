@@ -103,7 +103,7 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @ybindir@/SCR_dbus_server
 # DBus service config
 /usr/share/dbus-1/system-services/org.opensuse.yast.SCR.service
-/etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
+%config /etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
 # PolicyKit default policies
 /usr/share/PolicyKit/policy/org.opensuse.yast.scr.policy
 
