@@ -4,6 +4,14 @@ Wed Feb 25 14:49:33 CET 2009 - mvidner@suse.cz
 - Fixed tty_wrapper losing output: stdio was interrupted by SIGCHLD (bnc#470645).
 
 -------------------------------------------------------------------
+Sun Feb 01 03:14:16 CET 2009 - mvidner@suse.cz
+
+- dbus: fixed timeout handling to reduce latency (kkaempf)
+  http://lists.opensuse.org/yast-devel/2009-02/msg00004.html
+- dbus: code cleanup (kkaempf)
+- dbus: fixed resource leaks (aschnell, lslezak)
+
+-------------------------------------------------------------------
 Thu Jan 29 15:15:57 CET 2009 - aschnell@suse.de
 
 - added dbus client agent (required for bnc #464453)
