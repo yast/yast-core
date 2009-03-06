@@ -93,7 +93,7 @@ ExecutionEnvironment::endlessRecursion ()
 {
     if (m_backtrace.size () == m_recursion_limit)
     {
-	y2error ("Recursion limit of %d call frames reached. Set the environment variable %s to change this", m_recursion_limit, Y2RECURSIONLIMIT);
+	y2error ("Recursion limit of %zd call frames reached. Set the environment variable %s to change this", m_recursion_limit, Y2RECURSIONLIMIT);
 	return true;
     }
     return false;
@@ -128,6 +128,8 @@ ExecutionEnvironment::backtrace (loglevel_t level, uint omit) const
 	
     // FIXME: omit
     CallStack::const_reverse_iterator it = m_backtrace.rbegin();
+
+    y2logger(level, "------------- Backtrace begin -------------");
     
     while (it != m_backtrace.rend())
     {
@@ -135,6 +137,8 @@ ExecutionEnvironment::backtrace (loglevel_t level, uint omit) const
 		 , "", "%s", (*it)->called_function.c_str ());
 	++it;
     };
+
+    y2logger(level, "------------- Backtrace end ---------------");
 }
 
 
