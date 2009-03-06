@@ -58,11 +58,9 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 @CLEAN@
 
-%post
-%run_ldconfig
+%post -p /sbin/ldconfig
 
-%postun
-%run_ldconfig
+%postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
