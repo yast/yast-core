@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar  6 13:53:48 CET 2009 - mvidner@suse.cz
+
+- ag_background: re-disabled the testsuite, silly me.
+
+-------------------------------------------------------------------
 Fri Mar  6 13:08:10 CET 2009 - lslezak@suse.cz
 
 - put backtrace begin and end markers to y2log when e.g.

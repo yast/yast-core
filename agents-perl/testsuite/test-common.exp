@@ -1,7 +1,7 @@
 # common setup for test cases of ag_backgound
 
-#tests disabled until libyui is integrated
-#exit 77 # automake TESTS: SKIP
+#tests disabled until I figure out bnc#475551
+exit 77 # automake TESTS: SKIP
 
 # enlarge your input buffer now! satisfaction guaranteed! give us your $$$
 match_max 100000
