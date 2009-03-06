@@ -21,6 +21,8 @@ Parsed:
 }
 ----------------------------------------------------------------------
 [YCP] tests/builtin/Backtrace.ycp:6 My test
+[libycp] ExecutionEnvironment.cc(backtrace):132 ------------- Backtrace begin -------------
 [YCP] tests/builtin/Backtrace.ycp:10 aoo ((value + 1))
 [YCP] tests/builtin/Backtrace.ycp:14 boo ((foo_val + 1))
 [YCP] tests/builtin/Backtrace.ycp:17 foo (41)
+[libycp] ExecutionEnvironment.cc(backtrace):141 ------------- Backtrace end ---------------
