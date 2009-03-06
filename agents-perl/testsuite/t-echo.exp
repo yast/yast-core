@@ -3,8 +3,6 @@
 
 source test-common.exp
 
-expect -exact ""
-
 # sleep: have it still running while this simple test runs
 send "`Execute(.run, \"sleep 2; echo Hello world\")\r"
 expect "(true)"

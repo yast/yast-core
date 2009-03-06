@@ -3,8 +3,6 @@
 
 source test-common.exp
 
-expect -exact ""
-
 send "`Read(.pid)\r"
 expect "(-1)"
 send_user "\n"

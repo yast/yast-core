@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Mar  6 10:57:11 CET 2009 - mvidner@suse.cz
+
+- ag_background: re-enabled the testsuite (bnc#470645#c11),
+  with some expect magic (~bnc#475551)
+- 2.18.4
+
+-------------------------------------------------------------------
 Wed Feb 25 14:49:33 CET 2009 - mvidner@suse.cz
 
 - Fixed tty_wrapper losing output: stdio was interrupted by SIGCHLD (bnc#470645).
