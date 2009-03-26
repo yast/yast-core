@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 26 08:26:56 CET 2009 - lslezak@suse.cz
+
+- .modprobe_blacklist agent: use /etc/modprobe.d/50-blacklist.conf
+  file instead of deprecated /etc/modprobe.d/blacklist
+
+-------------------------------------------------------------------
 Fri Mar  6 13:53:48 CET 2009 - mvidner@suse.cz
 
 - ag_background: re-disabled the testsuite, silly me.

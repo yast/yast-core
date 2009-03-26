@@ -29,5 +29,5 @@
 .modprobe_blacklist
 
 `ag_modules(
-    `ModulesConf("/etc/modprobe.d/blacklist")
+    `ModulesConf("/etc/modprobe.d/50-blacklist.conf")
 )
