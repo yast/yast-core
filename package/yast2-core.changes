@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr  6 13:12:39 CEST 2009 - mvidner@suse.cz
+
+- Dropped ag_xauth (.xauth.key), superseded since 2005 by 
+  $XAUTHLOCALHOSTNAME (bnc#482223).
+
+-------------------------------------------------------------------
 Thu Mar 26 08:26:56 CET 2009 - lslezak@suse.cz
 
 - .modprobe_blacklist agent: use /etc/modprobe.d/50-blacklist.conf
