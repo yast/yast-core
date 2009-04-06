@@ -1,6 +1,6 @@
 /**
  * File:	modules.scr
- * Summary:	SCR agent for /etc/modprobe.conf
+ * Summary:	SCR agent for /etc/modprobe.d/50-yast.conf
  * Authors:	Michal Svec <msvec@suse.cz>, Daniel Vesely <dan@suse.cz>
  * Access:	read / write
  * See:		modprobe.conf(5), modules.html
@@ -20,11 +20,11 @@
  *
  * $Id$
  *
- * <p>Reads/writes <tt>/etc/modprobe.conf</tt>. For more detail see its
+ * <p>Reads/writes <tt>/etc/modprobe.d/50-yast.conf</tt>. For more detail see its
  * own documentation.</p>
  */
 .modules
 
 `ag_modules(
-    `ModulesConf("/etc/modprobe.conf")
+    `ModulesConf("/etc/modprobe.d/50-yast.conf")
 )
