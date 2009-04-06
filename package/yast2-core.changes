@@ -6,6 +6,7 @@ Mon Apr  6 13:46:14 CEST 2009 - mvidner@suse.cz
 - Move /etc/modprobe.d/blacklist on update (bnc#485992).
 - Dropped ag_xauth (.xauth.key), superseded since 2005 by 
   $XAUTHLOCALHOSTNAME (bnc#482223).
+- 2.18.5
 
 -------------------------------------------------------------------
 Thu Mar 26 08:26:56 CET 2009 - lslezak@suse.cz
