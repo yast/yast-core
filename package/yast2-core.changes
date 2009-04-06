@@ -2,7 +2,8 @@
 Mon Apr  6 13:46:14 CEST 2009 - mvidner@suse.cz
 
 - Use /etc/modprobe.d/50-yast.conf instead of /etc/modprobe.conf
-  (bnc#284219).
+  (bnc#485992).
+- Move /etc/modprobe.d/blacklist on update (bnc#485992).
 - Dropped ag_xauth (.xauth.key), superseded since 2005 by 
   $XAUTHLOCALHOSTNAME (bnc#482223).
 

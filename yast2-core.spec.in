@@ -58,7 +58,13 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 
 @CLEAN@
 
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+# bnc#485992, since oS 11.2
+C=blacklist
+if test -f /etc/modprobe.d/$C; then
+     mv -f /etc/modprobe.d/$C /etc/modprobe.d/50-$C.conf
+fi
 
 %postun -p /sbin/ldconfig
 
