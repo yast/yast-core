@@ -7,39 +7,137 @@
 
 #include <ycp/y2log.h>
 
-PolKit::PolKit() : polkit_error(NULL)
+#include<map>
+
+extern "C"
 {
-    dbus_error_init (&dbus_error);
+#include <sys/select.h>
+#include <errno.h>
+}
+
+#include <cstring>
+
+typedef std::map<PolKitContext *, PolKit*> PolKitMapping;
+
+// PolKitContext * -> PolKit * mapping
+// for routing the policykit callbacks to the correct PolKit object
+PolKitMapping polkit_mapping;
+
+PolKit* findPolKitObj(PolKitContext *context)
+{
+    PolKitMapping::const_iterator it = polkit_mapping.find(context);
+
+    if (it == polkit_mapping.end())
+    {
+	y2error("Cannot find PolKit object for PolKitContext %p", context);
+	return NULL;
+    }
+    else
+    {
+	return it->second;
+    }
+}
+
+static void _polkitConfigChanged(PolKitContext *context, void *data)
+{
+    y2debug("PolicyKit context %p has been changed", context);
+
+    PolKit *pk = findPolKitObj(context);
+
+    if (pk != NULL)
+    {
+	pk->configChanged();
+    }
+}
+
+static int _polkitIOAddWatch(PolKitContext *context, int fd)
+{
+    y2debug("PolicyKit context %p: adding IO watch: %d", context, fd);
+
+    PolKit *pk = findPolKitObj(context);
+
+    if (pk == NULL)
+    {
+	return 0;
+    }
+    else
+    {
+	pk->addWatch(fd);
+    }
+
+    // TODO: Polkit doc says the result must be unique ID, is this OK??
+    return fd;
+}
+
+static void _polkitIORemoveWatch(PolKitContext *context, int fd)
+{
+    y2debug("PolicyKit context %p removing IO watch: %d", context, fd);
+
+    PolKit *pk = findPolKitObj(context);
+
+    if (pk != NULL)
+    {
+	pk->removeWatch(fd);
+    }
+}
+
+PolKit::PolKit()
+{
     context = polkit_context_new();
+
+    // add object mapping
+    polkit_mapping.insert(std::make_pair(context, this));
+
+    // set PolicyKit config change callback
+    polkit_context_set_config_changed(context, _polkitConfigChanged, NULL);
+
+    // set PolicyKit config watch callbacks
+    polkit_context_set_io_watch_functions(context, _polkitIOAddWatch, _polkitIORemoveWatch);
+
+    PolKitError *polkit_error = NULL;
     polkit_context_init(context, &polkit_error);
+
+    if (polkit_error)
+    {
+	y2error("PolicyKit error: %s: %s", polkit_error_get_error_name(polkit_error),
+	    polkit_error_get_error_message(polkit_error));
+
+        polkit_error_free(polkit_error);
+    }
+
+    select_timeout.tv_sec = 0;
+    select_timeout.tv_usec = 0;
 }
 
 PolKit::~PolKit()
 {
-    dbus_error_free(&dbus_error);
+    // release this object from mapping
+    polkit_mapping.erase(context);
+
+    // release the PolKitContext object
+    polkit_context_unref(context);
 }
 
 
-bool PolKit::isDBusUserAuthorized(const std::string &action_id, const std::string &dbus_caller, DBusConnection *con)
+bool PolKit::isDBusUserAuthorized(const std::string &action_id, const std::string &dbus_caller, DBusConnection *con, DBusError *err)
 {
     y2debug("Checking action %s from %s", action_id.c_str(), dbus_caller.c_str());
 
-    PolKitCaller *pk_caller = polkit_caller_new_from_dbus_name(con, dbus_caller.c_str(), &dbus_error);
+    PolKitCaller *pk_caller = polkit_caller_new_from_dbus_name(con, dbus_caller.c_str(), err);
 
-    if (dbus_error_is_set (&dbus_error))
+    if (dbus_error_is_set(err))
     {
 	// PolKit sometimes sets the error even if the PolKitCaller object has been successfully returned
 	// see bnc#439150
 	if (pk_caller == NULL)
 	{
-	    y2error ("dbus error: %s: %s", dbus_error.name, dbus_error.message);
-	}
-
-	dbus_error_free (&dbus_error);
-
-	if (pk_caller == NULL)
-	{
+	    y2error ("DBus error: creating PolKitCaller object failed: %s: %s", err->name, err->message);
 	    return false;
+	}
+	else
+	{
+	    // reset the error flag, no error
+	    dbus_error_free(err);
 	}
    }
 
@@ -56,16 +154,32 @@ bool PolKit::isDBusUserAuthorized(const std::string &action_id, const std::strin
     PolKitResult pk_result = polkit_context_is_caller_authorized(
 	context, pk_action, pk_caller, TRUE, &polkit_error);
 
-    polkit_caller_unref (pk_caller);
+    y2debug("polkit_context_is_caller_authorized() result: %s", polkit_result_to_string_representation(pk_result));
+
+    if (pk_result != POLKIT_RESULT_YES)
+    {
+	if (!polkit_dbus_error_generate(pk_action, pk_result, err))
+	{
+	    y2error("Cannot set DBus error from PolicyKit result");
+	}
+    }
+
     polkit_action_unref (pk_action);
 
     if (polkit_error)
+    {
+	y2error("PolicyKit error: %s: %s", polkit_error_get_error_name(polkit_error),
+	    polkit_error_get_error_message(polkit_error));
+
         polkit_error_free(polkit_error);
+    }
+
+    polkit_caller_unref(pk_caller);
 
     return pk_result == POLKIT_RESULT_YES;
 }
 
-std::string makeValidActionID(const std::string &s)
+std::string PolKit::makeValidActionID(const std::string &s)
 {
     if (s.empty())
 	return s;
@@ -127,4 +241,98 @@ std::string PolKit::createActionId(const std::string &prefix, const std::string 
     action_id = makeValidActionID(action_id);
 
     return action_id;
+}
+
+bool PolKit::isValidActionID(const std::string &action)
+{
+    return polkit_action_validate_id(action.c_str());
+}
+
+
+// check the registered file descriptors here,
+// if there is something to read then call
+// polkit_context_io_func(context, ready_fd)
+// to process the changes by PolicyKit
+//
+// this method must be called from the main loop
+
+void PolKit::checkPolkitChanges()
+{
+    y2debug("Checking changes in PolicyKit config...");
+
+    // filedescriptor set
+    fd_set rfds;
+
+    // init to empty set
+    FD_ZERO(&rfds);
+
+    int max_fd = -1;
+
+    for(WatchListType::const_iterator it = fd_watch_list.begin();
+	it != fd_watch_list.end();
+	++it)
+    {
+	// add the FD to the watch set
+	FD_SET(*it, &rfds);
+
+	if (max_fd < *it)
+	{
+	    max_fd = *it;
+	}
+    }
+
+    // check whether there is something to read, timeout is 0 (return immediately)
+    int retval = ::select(max_fd + 1, &rfds, NULL, NULL, &select_timeout);
+
+    y2debug("select() result: %d", retval);
+
+    // error?
+    if (retval == -1)
+    {
+	y2error("Error in select() call: %s", ::strerror(errno));
+    }
+    // data available?
+    else if (retval > 0)
+    {
+	for(WatchListType::const_iterator it = fd_watch_list.begin();
+	    it != fd_watch_list.end();
+	    ++it)
+	{
+	    // check the FD in the result
+	    if (FD_ISSET(*it, &rfds))
+	    {
+		y2debug("File descriptor %d has data available", *it);
+
+		// call the PolicyKit IO handler
+		// (the config changed callbacked will be called
+		// if the config has been changed)
+		polkit_context_io_func(context, *it);
+	    }
+	}
+    }
+}
+
+void PolKit::addWatch(int fd)
+{
+    y2milestone("Adding Polkit watch fd: %d", fd);
+
+    // add the fd to the internal list
+    fd_watch_list.push_back(fd);
+
+    y2debug("%zd file descriptors in the watch list", fd_watch_list.size());
+}
+
+void PolKit::removeWatch(int fd)
+{
+    y2milestone("Removing Polkit watch fd: %d", fd);
+
+    // remove the fd from the internal list
+    fd_watch_list.remove_if(std::bind2nd(std::equal_to<int>(), fd));
+
+    y2debug("%zd file descriptors in the watch list", fd_watch_list.size());
+}
+
+void PolKit::configChanged()
+{
+    y2milestone("PolicyKit config has been changed");
 }

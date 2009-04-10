@@ -4,6 +4,8 @@
 */
 
 #include "DBusServer.h"
+#include <cstring>
+#include <iostream>
 
 int main(int argc, char **argv)
 {
@@ -21,7 +23,7 @@ int main(int argc, char **argv)
 	    badopts = true;
     }
     if (badopts)
-	y2error ("Usage: %s [--disable-timer]", argv[0]);
+	std::cerr << "Usage: " << argv[0] << " [--disable-timer]\n";
 
     bool connected = server.connect();
 

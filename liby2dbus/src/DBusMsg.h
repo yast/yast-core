@@ -43,7 +43,9 @@ class DBusMsg
 	bool addDouble(double val);
 
 	bool addYCPValue(const YCPValue &val);
-	YCPValue getYCPValue(int index);
+	bool addValue(const YCPValue &val);
+
+	YCPValue getYCPValue(int index) const;
 
 	bool isMethodCall(const std::string &interface, const std::string &method) const;
 	int arguments() const;
@@ -58,10 +60,13 @@ class DBusMsg
 	std::string path() const;
 	std::string sender() const;
 
+	static const char *YCPValueSignature();
+
     private:
 
 	bool addValue(int type, void* data);
 	bool addValue(int type, void* data, DBusMessageIter *i);
+	bool addValueAt(const YCPValue &val, DBusMessageIter *i);
 	bool addYCPValue(const YCPValue &v, DBusMessageIter *i);
 	bool addYCPValueRaw(const YCPValue &val, DBusMessageIter *i);
 	void release();
@@ -70,8 +75,8 @@ class DBusMsg
 	int typeInt(const YCPValue &val) const;
 	const char * typeStr(const YCPValue &val) const;
 
-	YCPValue getYCPValue(DBusMessageIter *it);
-	YCPValue getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type = std::string());
+	YCPValue getYCPValue(DBusMessageIter *it) const;
+	YCPValue getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type = std::string()) const;
 };
 
 #endif

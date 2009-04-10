@@ -1,0 +1,18 @@
+
+This example integrates the Yast DBus service into KDE desktop.
+
+Copy the desktop configuration and the DBus client script using these commands:
+
+cp dbus_samba_export.desktop /usr/share/kde4/services/ServiceMenus/
+cp dbus_samba_export.py /usr/bin
+
+If the Samba server has been configured (by the system administrator) users who
+have org.opensuse.yast.modules.yapi-samba.addshare PolicyKit authorization can
+simply export a directory using Konqueror or Dolphin file manager.
+
+Just right-click on a folder, select "Actions" -> "Export directory as a Samba
+share" and that's it! The exported shares have by default read-only access.
+
+TODO: Samba service is not reloaded, the added share will be available _after_
+manual reload.
+

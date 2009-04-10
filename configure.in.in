@@ -136,6 +136,19 @@ else
 ACCESS_MODE=deny
 fi
 
+YAST_DBUS_SERVICE=org.opensuse.YaST.modules
+AC_SUBST(YAST_DBUS_SERVICE)
+YAST_DBUS_RAW_INTERFACE=org.opensuse.YaST.Values
+AC_SUBST(YAST_DBUS_RAW_INTERFACE)
+YAST_DBUS_YCP_INTERFACE=org.opensuse.YaST.YCPValues
+AC_SUBST(YAST_DBUS_YCP_INTERFACE)
+YAST_DBUS_MGR_INTERFACE=org.opensuse.YaST.modules.ModuleManager
+AC_SUBST(YAST_DBUS_MGR_INTERFACE)
+YAST_DBUS_OBJ_PREFIX=/org/opensuse/YaST/modules
+AC_SUBST(YAST_DBUS_OBJ_PREFIX)
+
+YAST_POLKIT_PREFIX_MANAGER=org.opensuse.yast.module-manager
+AC_SUBST(YAST_POLKIT_PREFIX_MANAGER)
 
 YAST_SCR_SERVICE=org.opensuse.yast.SCR
 YAST_SCR_INTERFACE=$YAST_SCR_SERVICE.Methods
@@ -144,7 +157,7 @@ YAST_SCR_SERVICE_DIR=$ybindir
 AC_SUBST(YAST_SCR_SERVICE)
 AC_SUBST(YAST_SCR_INTERFACE)
 AC_SUBST(YAST_SCR_SERVICE_DIR)
-AC_SUBST(YAST_SCR_INTERFACE)
+
 AC_SUBST(ACCESS_MODE)
 
 AC_SUBST(POLKIT_CFLAGS)
@@ -156,6 +169,10 @@ AM_CONDITIONAL([HAVE_POLKIT], [test "x$HAVE_POLKIT" = x1])
 AC_CONFIG_FILES([
 	scr/doc/SCR.html
 	scr/doc/intro_to_scr.html
+	dbus/namespace_service/src/yast_dbus_names.h
+	dbus/namespace_service/src/org.opensuse.yast.module-manager.policy
+	dbus/namespace_service/src/org.opensuse.YaST.modules.conf
+	dbus/namespace_service/src/org.opensuse.YaST.modules.service.in
 	dbus/SCR_service/org.opensuse.yast.SCR.conf
 	dbus/SCR_service/org.opensuse.yast.SCR.service.in
 	dbus/SCR_service/scr_names.h

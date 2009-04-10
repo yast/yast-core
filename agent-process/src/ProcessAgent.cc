@@ -370,10 +370,10 @@ YCPValue ProcessAgent::Execute(const YCPPath &path,
 		{
 		    YCPMap envmt = opt_map->value(YCPString("env"))->asMap();
 
-		    for(YCPMapIterator it = envmt.begin(); it != envmt.end(); it++)
+		    for(YCPMap::const_iterator it = envmt.begin(); it != envmt.end(); it++)
 		    {
-			YCPValue key = it.key();
-			YCPValue val = it.value();
+			YCPValue key = it->first;
+			YCPValue val = it->second;
 
 			if (!key.isNull() && key->isString() && !val.isNull() && val->isString())
 			{

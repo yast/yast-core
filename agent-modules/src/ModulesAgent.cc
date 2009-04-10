@@ -87,11 +87,11 @@ template <class T> YCPMap map2ycpmap(const T &m) {
  */
 ModuleEntry::EntryArg ycpmap2map (const YCPMap &m) {
     ModuleEntry::EntryArg ret_map;
-    YCPMapIterator it = m->begin ();
+    YCPMap::const_iterator it = m->begin ();
 
     for (; it != m->end(); ++it)
-	if (it.key()->isString () && it.value ()->isString ())
-	    ret_map[VAL2STR(it.key ())] = VAL2STR(it.value ());
+	if (it->first->isString () && it->second->isString ())
+	    ret_map[VAL2STR(it->first)] = VAL2STR(it->second);
 	else {
 	    y2error("Map element must be string!");
 	    return ModuleEntry::EntryArg();

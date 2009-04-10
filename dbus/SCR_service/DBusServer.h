@@ -6,46 +6,26 @@
 #ifndef DBUSSERVER_H
 #define DBUSSERVER_H
 
-#include "config.h"
+#include "DBusServerBase.h"
 
-#include <dbus/dbus.h>
+class ScriptingAgent;
 
-#include "DBusConn.h"
-#include "ScriptingAgent.h"
-
-#ifdef HAVE_POLKIT
-#include "PolKit.h"
-#endif
-
-extern "C"
-{
-#include <unistd.h>
-#include <signal.h>
-}
-
-class DBusServer
+class DBusServer : public DBusServerBase
 {
     public:
 
 	DBusServer();
-	~DBusServer();
+	virtual ~DBusServer();
 
-	bool connect();
-	/**
-	 * Runs the server
-	 * @param forever for debugging, disables exiting after timeout
-	 */
-	void run(bool forever = false);
+	virtual bool connect();
+
+
+    protected:
+
+	virtual actionList createActionId(const DBusMsg &msg);
+
 
     private:
-
-	DBusConn connection;
-
-#ifdef HAVE_POLKIT
-	PolKit policykit;
-	bool isActionAllowed(const std::string &caller, const std::string &path,
-	    const std::string &method, const std::string &arg, const std::string &opt);
-#endif
 
 	// SCR access    
 	ScriptingAgent *sa;
@@ -54,15 +34,24 @@ class DBusServer
 	DBusServer(const DBusServer&);
 	DBusServer& operator=(const DBusServer&);
 
-	void resetTimer();
-	void registerSignalHandler();
-	bool isProcessRunning(pid_t pid);
-	bool canFinish();
-	pid_t callerPid(const std::string &bus_name);
+	void registerFunctions();
 
-	typedef std::map<std::string, pid_t> Clients;
+	DBusMsg handler(const DBusMsg &request);
 
-	Clients clients;
+        class Callback : public std::function<DBusMsg (const DBusMsg &request)>
+	{
+	    DBusServer *ms;
+
+	    public:
+
+		Callback(DBusServer *s) : ms(s) {}
+		~Callback() {}
+
+		DBusMsg operator()(const DBusMsg &request)
+		{ return ms ? ms->handler(request) : DBusMsg(); }
+	};
+
+	Callback cb;
 };
 
 

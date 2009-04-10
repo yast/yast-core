@@ -157,7 +157,9 @@ std::string DBusMsg::path() const
 {
     if (msg != NULL)
     {
-	return std::string(dbus_message_get_path(msg));
+	const char *p = dbus_message_get_path(msg);
+	if (p != NULL)
+	    return std::string(p);
     }
 
     return std::string();
@@ -220,6 +222,188 @@ bool DBusMsg::addYCPValue(const YCPValue &val)
     bool ret = addYCPValue(val, &it);
 
     return ret;
+}
+
+bool DBusMsg::addValue(const YCPValue &val)
+{
+    if (val.isNull())
+    {
+	y2milestone("Ignoring YCPNull value");
+	return false;
+    }
+
+    y2debug("Adding YCP value: %s", val->toString().c_str());
+
+    // create insert iterator
+    DBusMessageIter it;
+    dbus_message_iter_init_append(msg, &it);
+
+    // add the value
+    bool ret = addValueAt(val, &it);
+
+    return ret;
+}
+
+bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
+{
+    int type = typeInt(val);
+
+    if (val->isInteger())
+    {
+	dbus_int64_t i64 = val->asInteger()->value();
+	addValue(type, &i64, i);
+    }
+    else if (val->isFloat())
+    {
+	double d = val->asFloat()->value();
+	addValue(type, &d, i);
+    }
+    else if (val->isString())
+    {
+	const char *str = val->asString()->value().c_str();
+	addValue(type, &str, i);
+    }
+    else if (val->isBoolean())
+    {
+	dbus_bool_t b = val->asBoolean()->value();
+	addValue(type, &b, i);
+    }
+    // add path and symbol as string
+    else if (val->isPath() || val->isSymbol() || val->isTerm() || val->isCode())
+    {
+	std::string val_str(val->toString());
+	const char *str = val_str.c_str();
+	// add path as a string
+	addValue(type, &str, i);
+    }
+    else if (val->isList())
+    {
+	YCPList lst = val->asList();
+	int sz = lst->size();
+	int index = 0;
+
+	// use string as fallback for empty map
+	std::string list_type(sz ? typeStr(lst->value(0)) : DBUS_TYPE_STRING_AS_STRING);
+
+	// dbus allows only basic complete types in a list
+	const std::string valid_list_types(DBUS_TYPE_INT64_AS_STRING DBUS_TYPE_DOUBLE_AS_STRING
+	    DBUS_TYPE_STRING_AS_STRING DBUS_TYPE_BOOLEAN_AS_STRING);
+
+	if (valid_list_types.find(list_type) == std::string::npos)
+	{
+	    y2error("Invalid type of list item (non-basic type): %s, ignoring the list", list_type.c_str());
+	    return false;
+	}
+
+	DBusMessageIter array_it;
+
+	// open array container
+	y2debug("Opening array container");
+
+	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, list_type.c_str(), &array_it);
+	while(index < sz)
+	{
+	    y2debug("Adding YCP value at index %d", index);
+
+	    YCPValue list_item = lst->value(index);
+
+	    if (typeStr(list_item) != list_type)
+	    {
+		y2error("Found different type in list: %s (expected %s) - ignoring item %s",
+		    typeStr(list_item), list_type.c_str(),
+		    list_item->toString().c_str());
+	    }
+	    else
+	    {
+		// add the raw YCP value
+		addValueAt(lst->value(index), &array_it);
+	    }
+
+	    index++;
+	}
+
+	// close array container
+	y2debug("Closing array container");
+	dbus_message_iter_close_container(i, &array_it);
+    }
+    else if (val->isMap())
+    {
+	YCPMap map = val->asMap();
+
+	DBusMessageIter array_it;
+
+	YCPMap::const_iterator mit = map.begin();
+	// use string as fallback for empty map
+	std::string key_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->first));
+
+	// dbus allows only basic types as key type in a map
+	const std::string valid_key_types(DBUS_TYPE_INT64_AS_STRING DBUS_TYPE_DOUBLE_AS_STRING
+	    DBUS_TYPE_STRING_AS_STRING DBUS_TYPE_BOOLEAN_AS_STRING);
+
+	if (valid_key_types.find(key_type) == std::string::npos)
+	{
+	    y2error("Invalid type of key in map (non-basic type): %s, ignoring the map", key_type.c_str());
+	    return false;
+	}
+
+	std::string map_signature("{" + key_type + "v}");
+
+	// open array container
+	y2debug("Opening DICT container");
+	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, map_signature.c_str(), &array_it);
+
+	for(YCPMap::const_iterator mit = map.begin(); mit != map.end() ; ++mit)
+	{
+	    YCPValue key = mit->first;
+	    YCPValue val = mit->second;
+
+	    // error: this is a different key type than the announced type
+	    if (key_type != typeStr(key))
+	    {
+		y2error("Found different key type %s (expected %s) - ignoring pair $[ %s : %s ]",
+		    typeStr(key), key_type.c_str(),
+		    key->toString().c_str(), val->toString().c_str());
+
+		continue;
+	    }
+
+	    DBusMessageIter map_item_it;
+	    y2debug("Opening map item container");
+
+	    dbus_message_iter_open_container(&array_it, DBUS_TYPE_DICT_ENTRY, 0, &map_item_it);
+
+	    // add the key
+	    addValueAt(key, &map_item_it);
+
+	    // add VARIANT container
+	    DBusMessageIter var_it2;
+	    y2debug("Opening VARIANT container with type %s", typeStr(val));
+	    dbus_message_iter_open_container(&map_item_it, DBUS_TYPE_VARIANT, typeStr(val), &var_it2);
+
+	    // add the key
+	    addValueAt(val, &var_it2);
+
+	    y2debug("Closing VARIANT container");
+	    dbus_message_iter_close_container(&map_item_it, &var_it2);
+
+	    // close map item
+	    dbus_message_iter_close_container(&array_it, &map_item_it);
+	    y2debug("Closing map item container");
+	}
+
+	// close array container
+	dbus_message_iter_close_container(i, &array_it);
+	y2debug("Closing DICT container");
+    }
+    else
+    {
+	y2error("Unsupported type %s, value: %s", Type::vt2type(val->valuetype())->toString().c_str(),
+	    val->toString().c_str());
+
+	// TODO add as string?
+    }
+
+    return true;
 }
 
 bool DBusMsg::addYCPValueRaw(const YCPValue &val, DBusMessageIter *i)
@@ -321,10 +505,10 @@ bool DBusMsg::addYCPValueRaw(const YCPValue &val, DBusMessageIter *i)
 	y2debug("Opening DICT container");
 	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, "{(bsv)(bsv)}", &array_it);
 
-	for(YCPMapIterator mit = map.begin(); mit != map.end() ; ++mit)
+	for(YCPMap::const_iterator mit = map.begin(); mit != map.end() ; ++mit)
 	{
-	    YCPValue key = mit.key();
-	    YCPValue val = mit.value();
+	    YCPValue key = mit->first;
+	    YCPValue val = mit->second;
 
 	    DBusMessageIter map_item_it;
 	    y2debug("Opening map item container");
@@ -442,7 +626,7 @@ int DBusMsg::arguments() const
 }
 
 
-YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type)
+YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type) const
 {
     YCPValue ret;
 
@@ -601,6 +785,58 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
 	    YCPTerm term(term_name, term_list);
 	    ret = term;
 	}
+	else if (ycp_type.empty())
+	{
+	    y2debug("Reading RAW DBus array");
+
+	    // is the container a map or a list?
+	    if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
+	    {
+		y2debug("Found a map");
+
+		YCPMap map;
+
+		while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
+		{
+		    // is it a map or a list?
+		    if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
+		    {
+			DBusMessageIter mapit;
+			dbus_message_iter_recurse(&sub, &mapit);
+
+			// read the key without the header
+			YCPValue key = getYCPValueRaw(&mapit);
+
+			dbus_message_iter_next(&mapit);
+
+			// read the value
+			YCPValue val = getYCPValueRaw(&mapit);
+
+			map->add(key, val);
+		    }
+
+		    dbus_message_iter_next(&sub);
+		}
+
+		ret = map;
+	    }
+	    else
+	    {
+		y2debug("Found a list");
+
+		YCPList lst;
+
+		while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
+		{
+		    YCPValue list_val = getYCPValue(&sub);
+		    lst->add(list_val);
+
+		    dbus_message_iter_next(&sub);
+		}
+
+		ret = lst;
+	    }
+	}
 	else
 	{
 	    y2error("Unknown container type for DBUS_TYPE_ARRAY: %s", ycp_type.c_str());
@@ -658,15 +894,22 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
     return ret;
 }
 
-YCPValue DBusMsg::getYCPValue(DBusMessageIter *it)
+YCPValue DBusMsg::getYCPValue(DBusMessageIter *it) const
 {
     int type = dbus_message_iter_get_arg_type(it);
     y2debug("Found DBus type: %d (%c)", type, (char)type);
 
     if (type != DBUS_TYPE_STRUCT)
     {
-	y2error("Expecting Struct container in the Dbus message");
-	return YCPVoid();
+	YCPValue ret = getYCPValueRaw(it, "");
+	if (ret.isNull())
+	{
+	    ret = YCPVoid();
+	}
+
+	y2milestone("Using RAW dbus value '%s' instead of (bsv) YCPValue structure", ret->toString().c_str());
+
+	return ret;
     }
 
     DBusMessageIter struct_iter;
@@ -732,7 +975,7 @@ YCPValue DBusMsg::getYCPValue(DBusMessageIter *it)
     return (received_nil) ? YCPVoid() : ret;
 }
 
-YCPValue DBusMsg::getYCPValue(int index)
+YCPValue DBusMsg::getYCPValue(int index) const
 {
     YCPValue ret = YCPNull();
 
@@ -850,7 +1093,7 @@ const char * DBusMsg::typeStr(const YCPValue &val) const
 	YCPMap map = val->asMap();
 
 	// get key type, use string as a fallback for an empty map
-	std::string key_type((map.size() > 0) ? typeStr(map.begin().key()) : "s");
+	std::string key_type((map.size() > 0) ? typeStr(map.begin()->first) : "s");
 
 	// key of the DBus DICT struct must be a basic type
 	// see http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-signatures
@@ -887,4 +1130,9 @@ int DBusMsg::type() const
     }
 
     return DBUS_MESSAGE_TYPE_INVALID;
+}
+
+const char *DBusMsg::YCPValueSignature()
+{
+    return "(bsv)";
 }

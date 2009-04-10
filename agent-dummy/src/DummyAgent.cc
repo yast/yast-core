@@ -128,10 +128,10 @@ YCPList DummyAgent::Dir(const YCPPath& path)
 	YCPValue v = checkPath(path, (readList->value(readCalls))->asMap(), defaultValue);
 	if (v->isMap ())
 	{
-	    YCPMapIterator it = v->asMap()->begin();
+	    YCPMap::const_iterator it = v->asMap()->begin();
 	    for(;it!=v->asMap()->end();it++)
 	    {
-		l->add (it.key ());
+		l->add (it->first);
 	    }
 	}
     }

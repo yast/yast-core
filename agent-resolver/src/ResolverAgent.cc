@@ -353,11 +353,11 @@ static int flushCache (const char *filename)
     }
 
     int retval = 0;
-    YCPMapIterator mptr = localCache->begin();
+    YCPMap::const_iterator mptr = localCache->begin();
 
     while (mptr != localCache->end())
     {
-	YCPValue key = mptr.key();
+	YCPValue key = mptr->first;
 	if (key.isNull() || !key->isString())
 	{
 	    y2error ("Bad key in localCache");
@@ -365,7 +365,7 @@ static int flushCache (const char *filename)
 	    break;
 	}
 	string skey = key->asString()->value();
-	YCPValue value = mptr.value();
+	YCPValue value = mptr->second;
 
 	if ((skey == "search")
 	    || (skey == "sortlist")

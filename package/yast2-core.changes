@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Apr 10 09:52:42 CEST 2009 - lslezak@suse.cz
+
+- Merged the Yast DBus service from /tmp/lslezak/core branch, the
+  service exports Yast name spaces on DBus. The SCR service has
+  been refactored - the common parts have been moved to liby2dbus.
+- Removed oboleted YCPMapIterators
+- 2.18.6
+
+-------------------------------------------------------------------
 Mon Apr  6 13:46:14 CEST 2009 - mvidner@suse.cz
 
 - Use /etc/modprobe.d/50-yast.conf instead of /etc/modprobe.conf

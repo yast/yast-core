@@ -113,6 +113,13 @@ fi
 # PolicyKit default policies
 /usr/share/PolicyKit/policy/org.opensuse.yast.scr.policy
 
+# DBus namespace service
+@ybindir@/yast_modules_dbus_server
+/usr/share/dbus-1/system-services/org.opensuse.YaST.modules.service
+%config /etc/dbus-1/system.d/org.opensuse.YaST.modules.conf
+/usr/share/PolicyKit/policy/org.opensuse.yast.module-manager.policy
+
+
 %files devel
 %defattr(-,root,root)
 @ybindir@/ybcdump
