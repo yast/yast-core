@@ -599,36 +599,44 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 DBusModulesServer::actionList DBusModulesServer::createActionId(const DBusMsg &msg)
 {
     // actionId: <prefix>.<namespace>.<method>
-    std::string ret(msg.interface() == YAST_DBUS_MGR_INTERFACE
-	? YAST_POLKIT_PREFIX_MANAGER : YAST_POLKIT_PREFIX_MODULES);
-    
-    std::string obj(msg.path());
+    std::string ret;
+    std::string method(msg.method());
 
-    // convert object path "/org/opensuse/yast/Label" to PolKit path "Label"
-    if (!obj.empty())
+    if (msg.interface() == YAST_DBUS_MGR_INTERFACE)
     {
-	if (obj[obj.size() - 1] == '/')
-	{
-	    obj.erase(obj.size() - 1);
-	}
+	// use a different prefix, do not take namespace from object path
+	ret = YAST_POLKIT_PREFIX_MANAGER;
+	// Lock and Unlock methods share the same PolicyKit action Id "lock"
+	if (method == YAST_DBUS_MANAGER_UNLOCK_METHOD)
+	    method = YAST_DBUS_MANAGER_LOCK_METHOD;
+    }
+    else
+    {
+	ret = YAST_POLKIT_PREFIX_MODULES;
 
-	obj.erase(0, obj.rfind("/"));
-
-	if (!obj.empty() && obj[0] == '/')
-	{
-	    obj.erase(obj.begin());
-	}
-
+	std::string obj(msg.path());
+	// convert object path "/org/opensuse/yast/Label" to PolKit path "Label"
 	if (!obj.empty())
 	{
-	    ret += '.' + obj;
+	    if (obj[obj.size() - 1] == '/')
+	    {
+		obj.erase(obj.size() - 1);
+	    }
+
+	    obj.erase(0, obj.rfind("/"));
+
+	    if (!obj.empty() && obj[0] == '/')
+	    {
+		obj.erase(obj.begin());
+	    }
+
+	    if (!obj.empty())
+	    {
+		ret += '.' + obj;
+	    }
 	}
     }
 
-    // Lock and Unlock methods share the same PolicyKit action Id "lock"
-    std::string method(msg.interface() == YAST_DBUS_MGR_INTERFACE &&
-	msg.method() == YAST_DBUS_MANAGER_UNLOCK_METHOD ? YAST_DBUS_MANAGER_LOCK_METHOD : msg.method());
-     
     ret += '.' + method;
 
     // make it valid action ID (lowercase chars, replace invalid chars)
