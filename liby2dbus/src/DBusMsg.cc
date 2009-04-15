@@ -905,6 +905,7 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
     else
     {
 	y2error("Unsupported DBus type: %d (%c)", type, (char)type);
+	ret = YCPVoid();
     }
 
     return ret;
