@@ -886,6 +886,22 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
 	dbus_message_iter_get_basic(it, &i);
 	ret = YCPInteger(i);
     }
+    else if (type == DBUS_TYPE_VARIANT)
+    {
+	DBusMessageIter sub;
+	dbus_message_iter_recurse(it, &sub);
+
+	y2debug("Found a DBus variant");
+	YCPValue val;
+
+	// there should be just one value inside the container
+	if (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
+	{
+	    val = getYCPValueRaw(&sub);
+	}
+
+	ret = val;
+    }
     else
     {
 	y2error("Unsupported DBus type: %d (%c)", type, (char)type);
