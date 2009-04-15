@@ -24,7 +24,7 @@ MOD_S = 'org.opensuse.YaST.modules'
 
 import sys
 if len(sys.argv) > 1 and sys.argv[1] == "--explicit":
-    mm_o = O(MOD_S, '/')
+    mm_o = O(MOD_S, '/org/opensuse/YaST/modules')
     mm = I(mm_o, 'org.opensuse.YaST.modules.ModuleManager')
     # polkit will ask
     mm.Import('Arch')
