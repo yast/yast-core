@@ -1,0 +1,16 @@
+# ---------------------------------------------------------
+#
+#  Filename:    swaplist.ycp
+#
+#  Purpose:     test cases for YCP list::swap builtin
+#
+#  Creator:     jreidinger@suse.cz
+#
+#  Maintainer:  jreidinger@suse.cz
+#
+# --------------------------------------------------------
+
+(list::swap([0,1,2,3],0,2))
+(list::swap([0,1,2,3],0,4))
+(list::swap([0,1,2,3],0,nil))
+(list::swap(nil,0,2))

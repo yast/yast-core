@@ -1167,6 +1167,55 @@ l_reduce2 (const YCPSymbol &x, const YCPSymbol &y, const YCPValue &initial, cons
     return l_reduce_helper(x, y, initial, first, last, expr);
 }
 
+static YCPValue
+l_swaplist (const YCPList &v, YCPInteger &i1, YCPInteger &i2){
+    /**
+     * @builtin list::swap
+     * @id list.swap
+     * @short Creates new list with swaped elemetns at offset i1 and i2.
+     * @param list<flex1> v list
+     * @param integer i1 index of first element
+     * @param integer i2 index of second element
+     * @return New list. Changed if offset is correct, otherwise return unchanged list 
+     *
+     * @description
+     * Creates new list with swaped elemetns at offset i1 and i2. Return nil if list or
+     * any offset is nil. Return unchanged list if any offset is out of bounds.
+     *
+     * @usage list::swap ([0,1,2,3],0,2) -> [2,1,0,3]
+     * @usage list::swap ([0,1,2,3],1,3) -> [0,3,2,1]
+     * @usage list::swap ([0,1,2,3],0,4) -> [0,1,2,3]
+     */
+    if (v.isNull ())
+    {
+	ycp2error ("Cannot swap 'nil' list");
+	return YCPNull ();
+    }
+
+    if (i1.isNull () || i2.isNull())
+    {
+	ycp2error ("Cannot swap item at index 'nil'");
+	return YCPNull ();
+    }
+
+    int it1 = i1->value();
+    int it2 = i2->value();
+    int siz = v->size();
+    YCPList ret = v;
+    if (it1< 0 || it1>= siz)
+    {
+ 	ycp2error("Index 'i1' is out of bounds for 'swap'");
+	return ret;
+    }
+    if (it2< 0 || it2>= siz)
+    {
+ 	ycp2error("Index 'i2' is out of bounds for 'swap'");
+	return ret;
+    }
+    
+    ret->swap(it1,it2);
+    return ret;
+}
 
 static YCPValue
 l_tolist (const YCPValue &v)
@@ -1235,6 +1284,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "list",	"",											NULL,	                DECL_NAMESPACE },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
+	{ "swap",	"list <flex> (const list <flex>, const integer, const integer)",			(void *)l_swaplist,	DECL_FLEX },
 	{ 0 }
     };
 
