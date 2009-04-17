@@ -1034,7 +1034,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "lsort",	"list <flex> (const list <flex>)",							(void *)l_lsortlist,	DECL_FLEX },
 	{ "splitstring","list <string> (string, string)",							(void *)l_splitstring	},
 	{ "change", 	"list <flex> (const list <flex>, const flex)",						(void *)l_changelist,	DECL_FLEX|DECL_DEPRECATED },
-	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
+	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX|DECL_NIL },
 	{ "+",		"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
 	{ "+",		"list <any> (const list <any>, any)",							(void *)l_add		},
 	{ "size",	"integer (const list <any>)",								(void *)l_size,		DECL_NIL },

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 17 13:51:36 CEST 2009 - juhliarik@suse.cz
+
+- added fix for problem with adding nil to list (bnc#216177) 
+
+-------------------------------------------------------------------
 Mon Apr  7 13:14:10 CEST 2008 - mvidner@suse.cz
 
 - any-agent: added Omit, a write-nothing companion to Optional,
