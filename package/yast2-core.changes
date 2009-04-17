@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 17 13:17:28 CEST 2009 - juhliarik@suse.cz
+
+- added fix for problem with adding nil to list (bnc#216177) 
+
+-------------------------------------------------------------------
 Fri Apr 10 09:52:42 CEST 2009 - lslezak@suse.cz
 
 - Merged the Yast DBus service from /tmp/lslezak/core branch, the
