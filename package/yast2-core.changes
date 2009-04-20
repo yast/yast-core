@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Apr 20 09:50:37 CEST 2009 - jreidinger@suse.cz
+
+- add builtin list::swap for list 
+
+-------------------------------------------------------------------
 Fri Apr 17 13:17:28 CEST 2009 - juhliarik@suse.cz
 
 - added fix for problem with adding nil to list (bnc#216177) 
