@@ -1017,7 +1017,7 @@ int IniParser::write()
 }
 int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 {
-    char out_buffer[2048];
+    char * out_buffer;
     string indent;
     string indent2;
     int readby = ini.getReadBy ();
@@ -1033,8 +1033,9 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
         of << ini.getComment();
     if (readby>=0 && readby < (int)sections.size ())
 	{
-	    snprintf (out_buffer, 2048, sections[readby].begin.out.c_str (), ini.getName());
+	    asprintf (&out_buffer, sections[readby].begin.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
+	    free (out_buffer);
 	}
     
     IniIterator
@@ -1053,9 +1054,12 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 		    IniEntry&e = ci->e ();
 		    if (e.getComment ()[0])
 			of << e.getComment();
-		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ())
-			snprintf (out_buffer, 2048, params[e.getReadBy ()].line.out.c_str (), e.getName(), e.getValue());
-		    of << indent2 << out_buffer << "\n";
+		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) {
+			// bnc#492859, a fixed buffer is too small
+			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), e.getValue());
+			of << indent2 << out_buffer << "\n";
+			free(out_buffer);
+		    }
 		    e.clean();
 		}
 	}
@@ -1064,8 +1068,9 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
         of << indent << ini.getEndComment();
     if (readby>=0 && readby < (int) sections.size () && sections[readby].end_valid)
 	{
-	    snprintf (out_buffer, 2048, sections[readby].end.out.c_str (), ini.getName());
+	    asprintf (&out_buffer, sections[readby].end.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
+	    free(out_buffer);
 	}
     ini.clean();
     return 0;
