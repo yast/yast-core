@@ -30,7 +30,7 @@ def export_dir(directory):
 	    share_name = share_name[1:]
 
         bus = dbus.SystemBus()
-	samba = bus.get_object('org.opensuse.YaST.modules', '/org/opensuse/YaST/modules/YaPI__Samba')
+	samba = bus.get_object('org.opensuse.YaST.modules', '/org/opensuse/YaST/modules/YaPI/Samba')
 
 	call = lambda: samba.AddShare(share_name, {'path':directory, 'comment':'Exported directory ' + directory, 'read only':'Yes'},
 				      dbus_interface='org.opensuse.YaST.Values')

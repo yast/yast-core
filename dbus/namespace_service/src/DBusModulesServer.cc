@@ -36,17 +36,41 @@ void DBusModulesServer::init_wfm()
     }
 }
 
-void MakeValidObjectName(std::string &name)
+std::string MakeValidObjectName(const std::string &name)
 {
-    for(std::string::iterator it = name.begin();
+    std::string ret;
+    // optimization: preallocate enough space, avoid memory reallocations
+    ret.reserve(name.size());
+
+    for(std::string::const_iterator it = name.begin();
 	it != name.end();
 	++it)
     {
+	// replace "::" -> "/"
+	if (*it == ':')
+	{
+	    std::string::const_iterator it2(it);
+	    it2++;
+
+	    if (it2 != name.end() && *it2 == ':')
+	    {
+		ret += '/';
+		it++;
+		continue;
+	    }
+	}
+
 	if (!isupper(*it) && !islower(*it) && (*it) != '_')
 	{
-	    *it = '_';
+	    ret += '_';
+	}
+	else
+	{
+	    ret += *it;
 	}
     }
+
+    return ret;
 }
 
 bool DBusModulesServer::importNamespace(const std::string &nspace)
@@ -72,7 +96,7 @@ bool DBusModulesServer::importNamespace(const std::string &nspace)
     {
 	ns->initialize();
 	std::string objname(nspace);
-	MakeValidObjectName(objname);
+	objname = MakeValidObjectName(objname);
 
 	y2milestone("Imported name space: %s, using object name: %s", nspace.c_str(), objname.c_str());
 
@@ -132,7 +156,7 @@ bool DBusModulesServer::registerFunction(const std::string &nspace, const char *
 	}
 
 	std::string namespace_str(nspace);
-	MakeValidObjectName(namespace_str);
+	namespace_str = MakeValidObjectName(namespace_str);
 
 	if (params_ok_raw)
 	{
@@ -623,12 +647,26 @@ DBusModulesServer::actionList DBusModulesServer::createActionId(const DBusMsg &m
 		obj.erase(obj.size() - 1);
 	    }
 
-	    obj.erase(0, obj.rfind("/"));
+	    // remove the object prefix path
+	    obj.erase(0, sizeof(YAST_DBUS_OBJ_PREFIX));
 
 	    if (!obj.empty() && obj[0] == '/')
 	    {
 		obj.erase(obj.begin());
 	    }
+
+	    for(std::string::iterator it = obj.begin();
+		it != obj.end();
+		++it)
+	    {
+		// replace "/" -> "."
+		if (*it == '/')
+		{
+		    *it = '.';
+		}
+	    }
+
+	    y2debug("Object path for PolicyKit action: %s", obj.c_str());
 
 	    if (!obj.empty())
 	    {

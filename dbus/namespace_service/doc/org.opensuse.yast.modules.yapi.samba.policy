@@ -6,7 +6,7 @@
   <vendor>Novell, Inc.</vendor>
   <vendor_url>http://www.novell.com</vendor_url>
   
-  <action id="org.opensuse.yast.modules.yapi-samba.getalldirectories">
+  <action id="org.opensuse.yast.modules.yapi.samba.getalldirectories">
     <description>Get list of all Samba shares.</description>
     <message>System policy prevents the Yast DBus service from reading all Samba exports.</message>
 
@@ -17,7 +17,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.addshare">
+  <action id="org.opensuse.yast.modules.yapi.samba.addshare">
     <description>Add a new Samba share.</description>
     <message>System policy prevents the Yast DBus service from adding a new Samba share.</message>
 
@@ -28,7 +28,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.editshare">
+  <action id="org.opensuse.yast.modules.yapi.samba.editshare">
     <description>Edit properties of a Samba share.</description>
     <message>System policy prevents the Yast DBus service from editing properties a Samba share.</message>
 
@@ -39,7 +39,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.deleteshare">
+  <action id="org.opensuse.yast.modules.yapi.samba.deleteshare">
     <description>Delete a Samba share.</description>
     <message>System policy prevents the Yast DBus service from deleting a Samba share.</message>
 
@@ -50,7 +50,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.enableshare">
+  <action id="org.opensuse.yast.modules.yapi.samba.enableshare">
     <description>Enable or disablea a Samba share.</description>
     <message>System policy prevents the Yast DBus service from enabling or disabling a Samba share.</message>
 
@@ -61,7 +61,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.getshare">
+  <action id="org.opensuse.yast.modules.yapi.samba.getshare">
     <description>Get details about a Samba share</description>
     <message>System policy prevents the Yast DBus service from reading properties of a Samba share.</message>
 
@@ -72,7 +72,7 @@
     </defaults>
   </action>
 
-  <action id="org.opensuse.yast.modules.yapi-samba.getshareenabled">
+  <action id="org.opensuse.yast.modules.yapi.samba.getshareenabled">
     <description>Get status of a Samba share (enabled/disabled)</description>
     <message>System policy prevents the Yast DBus service from reading status of a Samba share.</message>
 

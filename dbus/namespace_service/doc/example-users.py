@@ -3,7 +3,7 @@
 # see example-arch.py
 #
 # As root:
-# # polkit-auth --user $USER --grant org.opensuse.yast.modules.yapi-users.usersget
+# # polkit-auth --user $USER --grant org.opensuse.yast.modules.yapi.users.usersget
 # work around a bug in yast2-core-2.18.6:
 # # polkit-auth --user $USER --grant org.opensuse.yast.module-manager.modules.import
 
@@ -22,7 +22,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--explicit":
     # polkit will ask
     retry(lambda: mm.Import('YaPI::USERS'))
 
-Users_o = O(MOD_S, '/org/opensuse/YaST/modules/YaPI__USERS')
+Users_o = O(MOD_S, '/org/opensuse/YaST/modules/YaPI/USERS')
 Users = I(Users_o, 'org.opensuse.YaST.Values')
 cfg = {
     "type": "system",

@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Apr 24 08:40:07 CEST 2009 - lslezak@suse.cz
+
+- DBus service - better handle "::" separators in name space
+  string - replace it by "/" in DBus object path and "." in
+  PolicyKit action ID string
+- 2.18.7
+
+-------------------------------------------------------------------
 Mon Apr 20 09:50:37 CEST 2009 - jreidinger@suse.cz
 
 - add builtin list::swap for list 

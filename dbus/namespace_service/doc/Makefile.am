@@ -12,7 +12,7 @@ html_DATA = \
 	example-arch.py \
 	example-users.py \
 	polkit_helper.py \
-	org.opensuse.yast.modules.yapi-samba.policy \
+	org.opensuse.yast.modules.yapi.samba.policy \
 	YaPI_Samba.examples
 
 EXTRA_DIST = $(html_DATA)
