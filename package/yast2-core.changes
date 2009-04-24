@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed May 23 15:35:00 CEST 2012 - mvidner@suse.cz
+
+- agent-ini: do not truncate strings longer than 2048
+  while writing (bnc#492859, bnc#763386)
+- 2.17.45
+
+-------------------------------------------------------------------
 Fri Feb  3 14:36:31 CET 2012 - mvidner@suse.cz
 
 - ini-agent: only change permissions of new files (bnc#743355)

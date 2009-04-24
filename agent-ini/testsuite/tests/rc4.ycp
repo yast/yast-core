@@ -1,0 +1,5 @@
+// round trip of a long value: bnc#492859
+{
+	any v = SCR::Read (.LONG);
+	SCR::Write(.LONG, v);
+}
