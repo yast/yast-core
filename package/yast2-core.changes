@@ -7,6 +7,11 @@ Fri Apr 24 08:40:07 CEST 2009 - lslezak@suse.cz
 - 2.18.7
 
 -------------------------------------------------------------------
+Tue Apr 21 14:40:31 CEST 2009 - coolo@suse.de
+
+- avoid y2log in both signal handler and forked children (bnc#493152)
+
+-------------------------------------------------------------------
 Mon Apr 20 09:50:37 CEST 2009 - jreidinger@suse.cz
 
 - add builtin list::swap for list 

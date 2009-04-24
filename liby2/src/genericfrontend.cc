@@ -210,12 +210,14 @@ void
 signal_handler (int sig)
 {
     signal (sig, SIG_IGN);
+/* // bnc#493152#c19 only signal-safe functions are allowed
     fprintf (stderr, "YaST got signal %d at YCP file %s:%d\n",
 	     sig, ee.filename ().c_str (), ee.linenumber ());
     y2error ("got signal %d at YCP file %s:%d",
 	     sig, ee.filename ().c_str (), ee.linenumber ());
     log_stored_debug ();
     log_backtrace ();
+*/
     // bye
     signal (sig, SIG_DFL);
     kill ( getpid (), sig);

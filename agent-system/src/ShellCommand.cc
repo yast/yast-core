@@ -117,7 +117,7 @@ shellcommand (const string &command, const string &tempdir)
 	    FILE *stream2 = fdopen (pipe2[0], "r");
 	    if (stream2 == 0)
 	    {
-		y2error ("stream2 fdopen error");
+	        y2error ("stream2 fdopen error");
 		_exit (1);
 	    }
 	    close (pipe2[1]);
@@ -126,7 +126,8 @@ shellcommand (const string &command, const string &tempdir)
 	    {
 		if (out)
 		    fputs (s2, out);
-		y2debug ("%s", s2);
+		//bnc#493152#c24
+		//y2debug ("%s", s2);
 	    }
 
 	    fclose (stream2);
@@ -154,7 +155,7 @@ shellcommand (const string &command, const string &tempdir)
 	    else
 		ret = WTERMSIG (ret) + 128;
 
-	    y2debug ("Exit status is %d", ret);
+	    //y2debug ("Exit status is %d", ret);
 
 	    if (!tempdir.empty ())
 	    {
