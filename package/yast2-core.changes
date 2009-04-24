@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed May 23 15:35:00 CEST 2012 - mvidner@suse.cz
+
+- agent-ini: do not truncate strings longer than 2048
+  while writing (bnc#492859, bnc#763386)
+- 2.17.35.4
+
+-------------------------------------------------------------------
 Tue Aug 30 14:23:06 CEST 2011 - mvidner@suse.cz
 
 - ini-agent: Fixed a test failure "wrong stderr for nonex"
