@@ -77,8 +77,8 @@ bool registerSignalHandler()
 void output(const std::string & s, int fd)
 {
     const char *cs = s.c_str();
+    ssize_t n = s.size();
     while (true) {
-	ssize_t n = s.size();
 	ssize_t w = write(fd, cs, n);
 	if (w == n)
 	    break;		// success
