@@ -99,8 +99,15 @@ YCPValue Y2StdioComponent::doActualWork (const YCPList& arglist,
     send (arglist);
 
     YCPValue value = YCPNull();
-    while (!(value = receive()).isNull())
+    while (!parser.atEOF())
     {
+	value = receive();
+	if (value.isNull())
+	{
+	    send (value);	// bnc#498407
+	    continue;		// parse error, or EOF
+	}
+
 	if (value->isTerm() && value->asTerm()->size() == 1 &&
 	    value->asTerm()->name () == "result")
 	{

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Apr 27 13:37:29 CEST 2009 - mvidner@suse.cz
+
+- Y2StdioComponent: exit only at EOF, not on parse error (bnc#498407).
+
+-------------------------------------------------------------------
 Fri Apr 24 13:49:29 CEST 2009 - mvidner@suse.cz
 
 - agent-ini: do not truncate strings longer than 2048
