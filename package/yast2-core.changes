@@ -1,7 +1,10 @@
 -------------------------------------------------------------------
-Mon Apr 27 13:37:29 CEST 2009 - mvidner@suse.cz
+Mon Apr 27 15:51:11 CEST 2009 - mvidner@suse.cz
 
+- Resurrected logging in the signal handler, into
+  /var/log/YaST2/signal (or ./y2signal.log) (bnc#493152#c33).
 - Y2StdioComponent: exit only at EOF, not on parse error (bnc#498407).
+- 2.18.9
 
 -------------------------------------------------------------------
 Fri Apr 24 13:49:29 CEST 2009 - mvidner@suse.cz
