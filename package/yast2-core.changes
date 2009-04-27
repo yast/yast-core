@@ -19,6 +19,16 @@ Tue Apr 21 14:40:31 CEST 2009 - coolo@suse.de
 - avoid y2log in both signal handler and forked children (bnc#493152)
 
 -------------------------------------------------------------------
+Tue Apr 21 13:03:23 CEST 2009 - coolo@suse.de
+
+- another hot fix
+
+-------------------------------------------------------------------
+Mon Apr 20 20:36:56 CEST 2009 - coolo@suse.de
+
+- trying hot fix for bnc#493152 
+
+-------------------------------------------------------------------
 Mon Apr 20 09:50:37 CEST 2009 - jreidinger@suse.cz
 
 - add builtin list::swap for list 
