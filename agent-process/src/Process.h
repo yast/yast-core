@@ -23,7 +23,7 @@
  *
  * Authors: Ladislav Slezák <lslezak@novell.com>
  *
- * $Id:$
+ * $Id$
  */
 
 #ifndef Process_h

@@ -20,7 +20,7 @@
  */
 
 /*
-   File:	$Id:$
+   File:	$Id$
    Author:	Ladislav Slezák <lslezak@novell.com>
    Summary:     This is a generic tty wrapper
    Description: Starts a subprocess with a new internal tty input/output
