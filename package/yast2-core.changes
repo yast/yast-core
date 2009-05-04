@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon May  4 17:28:28 CEST 2009 - lslezak@suse.cz
+
+- SCR DBus service - fixed DBus object registration, fixed creating
+  the PolicyKit action ID
+- 2.18.10
+
+-------------------------------------------------------------------
 Mon Apr 27 15:51:11 CEST 2009 - mvidner@suse.cz
 
 - Resurrected logging in the signal handler, into

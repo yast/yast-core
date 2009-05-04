@@ -61,11 +61,6 @@ void DBusServer::registerFunctions()
 
     std::string object(SCR_OBJECT_PATH);
 
-    if (!object.empty() && object[0] == '/')
-    {
-	object.erase(object.begin());
-    }
-
     // register the manager object: register_function(object, interface, method, signature, handler)
     register_method(object, YAST_SCR_INTERFACE, METHOD_READ, sig_3param, cb);
     register_method(object, YAST_SCR_INTERFACE, METHOD_WRITE, sig_3param, cb);
@@ -142,7 +137,7 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 	    check_ok = true;
 	}
 
-	y2internal("check_ok: %d", check_ok);
+	y2debug("check_ok: %d", check_ok);
 
 	if (check_ok)
 	{
@@ -195,7 +190,7 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 	}
     }
 
-    y2internal("Finishing the callback");
+    y2milestone("Finishing the callback");
 
     return reply;
 }
@@ -210,22 +205,28 @@ DBusServer::actionList DBusServer::createActionId(const DBusMsg &msg)
 
     ret.push_back(action_id);
 
+    YCPValue path = msg.getYCPValue(0);
     YCPValue arg = msg.getYCPValue(1);
     YCPValue opt = msg.getYCPValue(2);
 
-    std::string arg_str, opt_str;
+    std::string path_str, arg_str, opt_str;
+
+    if (!path.isNull())
+    {
+	path_str = path->toString();
+    }
     
-    if (!arg.isNull())
+    if (!arg.isNull() && arg->isString())
     {
-	arg_str = arg->toString();
+	arg_str = arg->asString()->value();
     }
 
-    if (!opt.isNull())
+    if (!opt.isNull() && opt->isString())
     {
-	opt_str = opt->toString();
+	opt_str = opt->asString()->value();
     }
 
-    action_id = PolKit::createActionId(POLKIT_PREFIX, msg.path(), msg.method(), arg_str, opt_str);
+    action_id = PolKit::createActionId(POLKIT_PREFIX, path_str, msg.method(), arg_str, opt_str);
 
     ret.push_back(action_id);
 #endif

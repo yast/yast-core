@@ -26,7 +26,7 @@ class DBusTest < Test::Unit::TestCase
     
     # Get the object from this service
     # (using the root object of the service, for SCR there's just one)
-    objYast = yast.object("/#{yast.root}")
+    objYast = yast.object("/SCR")
     assert objYast
     
     # Create a local object for accessing the interface provided by the remote object
@@ -47,7 +47,7 @@ class DBusTest < Test::Unit::TestCase
       assert yast
     
       # Get the object from this service
-      objYast = yast.object("/#{yast.root}")
+      objYast = yast.object("/SCR")
       assert objYast
       
       poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
