@@ -458,6 +458,11 @@ bool DBusServerBase::isActionAllowed(const DBusMsg &msg, DBusError *err)
 	    return false;
 	}
 
+	if (dbus_error_is_set(err))
+	{
+	    dbus_error_free(err);
+	}
+
 	// check the policy here
 	if (policykit.isDBusUserAuthorized(*it, msg.sender(), connection.getConnection(), err))
 	{
