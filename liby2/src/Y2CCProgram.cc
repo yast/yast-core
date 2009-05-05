@@ -80,7 +80,7 @@ Y2CCProgram::createInLevel (const char *name, int level, int current_level) cons
     {
 	// Check at least if it is executable (for others) and
 	// if it is a regular file.
-	if (S_ISREG (buf.st_mode) && (buf.st_mode & S_IXOTH == S_IXOTH)) {
+	if (S_ISREG (buf.st_mode) && ((buf.st_mode & S_IXOTH) == S_IXOTH)) {
 	    if (!root.empty ())
 		file = file.substr (root.length ());
 	    return new Y2ProgramComponent (root, file.c_str (), name,
