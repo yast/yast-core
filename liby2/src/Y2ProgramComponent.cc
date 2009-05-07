@@ -305,6 +305,11 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 	    chdir ("/");
 	}
 
+	// close all filedescriptors above stderr, bnc#501758
+	for (int i = getdtablesize () - 1; i > 2; --i) {
+	    close (i);
+	}
+
 	execv (bin_file.c_str (), argv);	// execute program
 
 	// this code is only reached if exec failed

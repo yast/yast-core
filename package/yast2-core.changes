@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu May  7 15:46:48 CEST 2009 - mvidner@suse.cz
+
+- Y2ProgramComponent: close fds>2 before exec
+  to make external agents more robust (bnc#501758).
+
+-------------------------------------------------------------------
 Mon May  4 17:28:28 CEST 2009 - lslezak@suse.cz
 
 - SCR DBus service - fixed DBus object registration, fixed creating
