@@ -704,12 +704,14 @@ DBusMsg DBusModulesServer::unknownRequest(const DBusMsg &request)
 	y2debug("Found object prefix " YAST_DBUS_OBJ_PREFIX " in request");
 	std::string req_namespace(req_path, sizeof(YAST_DBUS_OBJ_PREFIX));
 
-	// hack: replace __ in request to :: to make a valid namespace
+	// hack: replace / in request to :: to make a valid namespace
 	// DBus object name cannot contain ::
-	std::string::size_type pos = req_namespace.find("__");
-	if (pos != std::string::npos)
+	std::string::size_type pos = req_namespace.find("/");
+
+	while (pos != std::string::npos)
 	{
-	    req_namespace.replace(pos, 2, "::");
+	    req_namespace.erase(pos, 1).insert(pos, "::");
+	    pos = req_namespace.find("/");
 	}
 
 	y2milestone("Autoimporting namespace %s...", req_namespace.c_str());
