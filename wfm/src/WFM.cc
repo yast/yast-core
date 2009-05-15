@@ -74,6 +74,12 @@ WFMCallFunction (const YCPString& name)
     return Y2WFMComponent::instance ()->CallFunction (name);
 }
 
+static YCPBoolean
+WFMClientExists (const YCPString& name)
+{
+    return Y2WFMComponent::instance ()->ClientExists (name);
+}
+
 static YCPValue
 WFMCallFunction1 (const YCPString& name, const YCPList& args)
 {
@@ -185,6 +191,7 @@ WFM::WFM ()
 	{ "Write",		"boolean (path, any, any)",	(void*)WFMWrite3},
 	{ "Write",		"boolean (path, any)",		(void*)WFMWrite2},
 	{ "Execute",		"any (path, any)",		(void*)WFMExecute},
+	{ "ClientExists",	"boolean (string)",		(void*)WFMClientExists},
 	{ 0 }
     };
 

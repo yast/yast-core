@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri May 15 12:21:15 CEST 2009 - juhliarik@suse.cz
+
+- added WFM::ClientExists because it is required for reipl 
+  (FATE#305938)
+- 2.13.44 
+
+-------------------------------------------------------------------
 Fri Apr 17 13:51:36 CEST 2009 - juhliarik@suse.cz
 
 - added fix for problem with adding nil to list (bnc#216177) 
