@@ -199,10 +199,10 @@ string y2_logfmt_common(bool simple, const char *component, const char *file,
     /* Prepare the file, strip rooted path  */
     if(*file == '/')		     // rooted path
     {
-	char *slashptr = strrchr (file, '/');
+	const char *slashptr = strrchr (file, '/');
 	if (slashptr > file)		    // last slash is second slash
 	{
-	    char *slashptr2 = slashptr-1;
+	    const char *slashptr2 = slashptr-1;
 
 	    // find last but one slash
 

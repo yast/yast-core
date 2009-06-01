@@ -282,7 +282,8 @@ StaticDeclaration::findDeclaration (const char *name) const
 #endif
 
     // split the name by the namespace
-    char *next = strstr (name, "::");
+    char *next = const_cast<char *>(strstr (name, "::"));
+    // cast away const because of the (temporary) '\0' below
 
 #if DO_DEBUG
     y2debug( "Next is %p", next );
