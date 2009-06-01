@@ -265,8 +265,13 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 {
     y2debug ("launchExternalProgram (%s, %s, ...)", argv[0], argv[1]);
     // Create socket-pair
-    pipe(to_external);
-    pipe(from_external);
+    int err;
+    err = pipe(to_external);
+    if (err != 0)
+	y2error("pipe failed: %s", strerror (errno));
+    err = pipe(from_external);
+    if (err != 0)
+	y2error("pipe failed: %s", strerror (errno));
 
     // Create module process
 

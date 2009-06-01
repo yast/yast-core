@@ -217,8 +217,10 @@ ExternalProgram::start_program (const char *const *argv, const Environment & env
 	    // unix guru knowledge ;-) )
 
 	    char name[512];
-	    ttyname_r(slave_tty, name, sizeof(name));
-	    ::close(open(name, O_RDONLY));
+	    int err = ttyname_r(slave_tty, name, sizeof(name));
+	    if (err == 0)
+		::close(open(name, O_RDONLY));
+	    // else error
 	}
 	else
 	{
