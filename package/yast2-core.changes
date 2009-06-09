@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun  9 11:29:35 CEST 2009 - mvidner@suse.cz
+
+- Fixed makefiles to work with "install" calls changed via
+  automake-1.11.
+
+-------------------------------------------------------------------
 Mon Jun  1 08:54:18 CEST 2009 - mvidner@suse.cz
 
 - Fixed char* constness for glibc-2.10.

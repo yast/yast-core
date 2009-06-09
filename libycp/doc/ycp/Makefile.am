@@ -15,7 +15,7 @@ ycp.pdf: ycp.fo
 html/index.html: ycp.xml customize-html.xsl
 	$(XSLTPROC) $(XSLTPROC_FLAGS) customize-html.xsl ycp.xml
 
-html_DATA = $(wildcard html/*)
+html_DATA = $(wildcard html/*.*)
 
 EXTRA_DIST = *.xml $(html_DATA)
 

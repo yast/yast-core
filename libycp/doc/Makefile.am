@@ -10,7 +10,7 @@ builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles = combined.xml
 # needed for building the overall documentation
 xmlfilesseparated := $(foreach xml,$(builtinxml),$(notdir $(xml)))
-htmlfiles = $(wildcard html/*.html html/*/*.html)
+htmlfiles = $(filter-out html/index.html,$(wildcard html/*.html html/*/*.html))
 
 
 html_DATA =			\
