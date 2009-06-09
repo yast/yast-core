@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdio.h>
+#include <sstream>
 
 #include "ycp/YCPBuiltinFloat.h"
 #include "ycp/YCPFloat.h"
@@ -265,6 +266,35 @@ f_tostring (const YCPFloat &f, const YCPInteger &precision)
 }
 
 
+// bnc#460094
+static YCPValue
+f_tolstring (const YCPFloat &f, const YCPInteger &precision)
+{
+    /**
+     * @builtin float::tolstring
+     * @short Converts a floating point number to a localized string
+     * @description
+     * Converts a floating point number to a localized string, using the
+     * specified precision.
+     * @param float FLOAT
+     * @param integer PRECISION
+     * @return string
+     * @usage tostring (0.12345, 4) -> 0,1235
+     */
+
+    if (f.isNull () || precision.isNull ())
+	return YCPNull ();
+
+    std::ostringstream ss;
+    ss.imbue (std::locale (""));
+    ss.precision (precision->value ());
+    ss << f->value ();
+    YCPString ret (ss.str ());
+
+    return ret;
+}
+
+
 static YCPValue
 f_tofloat (const YCPValue &v)
 {
@@ -329,6 +359,7 @@ YCPBuiltinFloat::YCPBuiltinFloat ()
 	{ "ceil",    "float (float)",		(void *)f_ceil,      ETC },
 	{ "trunc",   "float (float)",		(void *)f_trunc,     ETC },
 	{ "pow",     "float (float, float)",	(void *)f_pow,       ETC },
+	{ "tolstring","string (float, integer)",(void *)f_tolstring, ETC },
 	{ NULL, NULL, NULL, ETC }
     };
 

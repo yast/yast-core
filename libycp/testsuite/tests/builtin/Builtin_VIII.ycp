@@ -83,6 +83,7 @@
 //         tostring(float f, integer precision) -> string
 //
 ( tostring(0.12345, 4) == "0.1235" )
+( float::tolstring(0.12345, 4) == "0,1235" )
 
 
 //
