@@ -287,15 +287,19 @@ YCPBuiltinTerm::YCPBuiltinTerm ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "add",	"term (term, const any)",		(void *)t_add	},
-	{ "size",	"integer (term)",			(void *)t_size	},
-	{ "symbolof",	"symbol (term)",			(void *)t_symbolof },
-	{ "select",	"flex (term, integer, const flex)",	(void *)t_select, DECL_NIL|DECL_FLEX },
-	{ "toterm",	"term (any)",				(void *)t_toterm1 },
-	{ "toterm",	"term (symbol, const list <any>)",	(void *)t_toterm2 },
-	{ "remove",	"term (term, integer)",			(void *)t_remove },
-	{ "argsof",	"list <any> (term)",			(void *)t_argsof },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "add",	"term (term, const any)",		(void *)t_add,      ETC },
+	{ "size",	"integer (term)",			(void *)t_size,	    ETC },
+	{ "symbolof",	"symbol (term)",			(void *)t_symbolof, ETC },
+	{ "select",	"flex (term, integer, const flex)",	(void *)t_select, DECL_NIL|DECL_FLEX, ETCf },
+	{ "toterm",	"term (any)",				(void *)t_toterm1,  ETC },
+	{ "toterm",	"term (symbol, const list <any>)",	(void *)t_toterm2,  ETC },
+	{ "remove",	"term (term, integer)",			(void *)t_remove,   ETC },
+	{ "argsof",	"list <any> (term)",			(void *)t_argsof,   ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinTerm", declarations);

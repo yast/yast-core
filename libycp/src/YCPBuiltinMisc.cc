@@ -677,35 +677,39 @@ YCPBuiltinMisc::YCPBuiltinMisc ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "time",	"integer ()",			(void *)Time		},
-	{ "sleep",	"void (integer)",		(void *)Sleep		},
-	{ "random",	"integer (integer)",		(void *)Random		},
-        { "setenv",	"boolean (string,string)", 	(void *)Setenv1		},
-	{ "setenv",	"boolean (string,string,boolean)", (void *)Setenv2	}, 
-	{ "getenv",	"string (string)",		(void *)Getenv		},
-	{ "srandom",	"integer ()",			(void *)Srandom1	},
-	{ "srandom",	"void (integer)",		(void *)Srandom2	},
-	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
-	{ "eval",	"flex (const flex)",		(void *)Eval,		DECL_NIL|DECL_FLEX },
-	{ "sformat",	"string (string, ...)",		(void *)s_sformat,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "time",	"integer ()",			(void *)Time,       ETC },
+	{ "sleep",	"void (integer)",		(void *)Sleep,	    ETC },
+	{ "random",	"integer (integer)",		(void *)Random,	    ETC },
+        { "setenv",	"boolean (string,string)", 	(void *)Setenv1,    ETC },
+	{ "setenv",	"boolean (string,string,boolean)", (void *)Setenv2, ETC },
+	{ "getenv",	"string (string)",		(void *)Getenv,	    ETC },
+	{ "srandom",	"integer ()",			(void *)Srandom1,   ETC },
+	{ "srandom",	"void (integer)",		(void *)Srandom2,   ETC },
+	{ "eval",	"flex (block <flex>)",		(void *)Eval,		DECL_NIL|DECL_FLEX,                ETCf },
+	{ "eval",	"flex (const flex)",		(void *)Eval,		DECL_NIL|DECL_FLEX,		   ETCf },
+	{ "sformat",	"string (string, ...)",		(void *)s_sformat,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
 	// ordinary logging
-	{ "y2debug",	"void (string, ...)",		(void *)Y2Debug,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2milestone","void (string, ...)",		(void *)Y2Milestone,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2warning",	"void (string, ...)",		(void *)Y2Warning,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2error",	"void (string, ...)",		(void *)Y2Error,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2security", "void (string, ...)",		(void *)Y2Security,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2internal", "void (string, ...)",		(void *)Y2Internal,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
+	{ "y2debug",	"void (string, ...)",		(void *)Y2Debug,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2milestone","void (string, ...)",		(void *)Y2Milestone,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2warning",	"void (string, ...)",		(void *)Y2Warning,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2error",	"void (string, ...)",		(void *)Y2Error,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2security", "void (string, ...)",		(void *)Y2Security,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2internal", "void (string, ...)",		(void *)Y2Internal,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
 	// logging with a different call frame
-	{ "y2debug",	"void (integer, string, ...)",	(void *)Y2FDebug,	DECL_NIL|DECL_WILD },
-	{ "y2milestone","void (integer, string, ...)",	(void *)Y2FMilestone,	DECL_NIL|DECL_WILD },
-	{ "y2warning",	"void (integer, string, ...)",	(void *)Y2FWarning,	DECL_NIL|DECL_WILD },
-	{ "y2error",	"void (integer, string, ...)",	(void *)Y2FError,	DECL_NIL|DECL_WILD },
-	{ "y2security", "void (integer, string, ...)",	(void *)Y2FSecurity,	DECL_NIL|DECL_WILD },
-	{ "y2internal", "void (integer, string, ...)",	(void *)Y2FInternal,	DECL_NIL|DECL_WILD },
+	{ "y2debug",	"void (integer, string, ...)",	(void *)Y2FDebug,	DECL_NIL|DECL_WILD,		   ETCf },
+	{ "y2milestone","void (integer, string, ...)",	(void *)Y2FMilestone,	DECL_NIL|DECL_WILD,		   ETCf },
+	{ "y2warning",	"void (integer, string, ...)",	(void *)Y2FWarning,	DECL_NIL|DECL_WILD,		   ETCf },
+	{ "y2error",	"void (integer, string, ...)",	(void *)Y2FError,	DECL_NIL|DECL_WILD,                ETCf },
+	{ "y2security", "void (integer, string, ...)",	(void *)Y2FSecurity,	DECL_NIL|DECL_WILD,		   ETCf },
+	{ "y2internal", "void (integer, string, ...)",	(void *)Y2FInternal,	DECL_NIL|DECL_WILD,		   ETCf },
 	// user-level logging
-	{ "y2useritem", "void (string, ...)",		(void *)Y2UserItem,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ "y2usernote", "void (string, ...)",		(void *)Y2UserNote,	DECL_NIL|DECL_WILD|DECL_FORMATTED },
-	{ 0 }
+	{ "y2useritem", "void (string, ...)",		(void *)Y2UserItem,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ "y2usernote", "void (string, ...)",		(void *)Y2UserNote,	DECL_NIL|DECL_WILD|DECL_FORMATTED, ETCf },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinMisc", declarations);

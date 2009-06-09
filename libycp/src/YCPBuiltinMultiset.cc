@@ -106,14 +106,18 @@ YCPBuiltinMultiset::YCPBuiltinMultiset()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations_ns[] = {
-	{ "multiset", "",									NULL, DECL_NAMESPACE },
-	{ "includes",              "boolean (const list <flex>, const list <flex>)",		(void*) ms_includes, DECL_FLEX },
-	{ "difference",            "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_difference, DECL_FLEX },
-	{ "symmetric_difference",  "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_symmetric_difference, DECL_FLEX },
-	{ "intersection",          "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_intersection, DECL_FLEX },
-	{ "union",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_union, DECL_FLEX },
-	{ "merge",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_merge, DECL_FLEX },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "multiset", "",									NULL, DECL_NAMESPACE,                       ETCf },
+	{ "includes",              "boolean (const list <flex>, const list <flex>)",		(void*) ms_includes, DECL_FLEX,		    ETCf },
+	{ "difference",            "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_difference, DECL_FLEX,	    ETCf },
+	{ "symmetric_difference",  "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_symmetric_difference, DECL_FLEX, ETCf },
+	{ "intersection",          "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_intersection, DECL_FLEX,	    ETCf },
+	{ "union",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_union, DECL_FLEX,		    ETCf },
+	{ "merge",                 "list <flex> (const list <flex>, const list <flex>)",	(void*) ms_merge, DECL_FLEX,		    ETCf },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations("YCPBuiltinMultiset", declarations_ns);

@@ -306,29 +306,34 @@ f_tofloat (const YCPValue &v)
 
 YCPBuiltinFloat::YCPBuiltinFloat ()
 {
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "+",	     "float (float, float)",	(void *)f_plus },
-	{ "-",	     "float (float, float)",	(void *)f_minus },
-	{ "-",	     "float (float)",		(void *)f_neg },
-	{ "*",	     "float (float, float)",	(void *)f_mult },
-	{ "/",	     "float (float, float)",	(void *)f_div },
-	{ "tofloat", "float (const any)",	(void *)f_tofloat },
-	{ "tostring","string (float, integer)",	(void *)f_tostring },
-	{ 0 }
+	{ "+",	     "float (float, float)",	(void *)f_plus,     ETC },
+	{ "-",	     "float (float, float)",	(void *)f_minus,    ETC },
+	{ "-",	     "float (float)",		(void *)f_neg,      ETC },
+	{ "*",	     "float (float, float)",	(void *)f_mult,     ETC },
+	{ "/",	     "float (float, float)",	(void *)f_div,      ETC },
+	{ "tofloat", "float (const any)",	(void *)f_tofloat,  ETC },
+	{ "tostring","string (float, integer)",	(void *)f_tostring, ETC },
+	{ NULL, NULL, NULL, ETC }
     };
 
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations_ns[] = {
-	{ "float",   "",			NULL,			DECL_NAMESPACE },
-	{ "abs",     "float (float)",		(void *)f_abs },
-	{ "floor",   "float (float)",		(void *)f_floor },
-	{ "ceil",    "float (float)",		(void *)f_ceil },
-	{ "trunc",   "float (float)",		(void *)f_trunc },
-	{ "pow",     "float (float, float)",	(void *)f_pow },
-	{ 0 }
+	{ "float",   "",			NULL,    DECL_NAMESPACE, ETCf },
+	{ "abs",     "float (float)",		(void *)f_abs,       ETC },
+	{ "floor",   "float (float)",		(void *)f_floor,     ETC },
+	{ "ceil",    "float (float)",		(void *)f_ceil,      ETC },
+	{ "trunc",   "float (float)",		(void *)f_trunc,     ETC },
+	{ "pow",     "float (float, float)",	(void *)f_pow,       ETC },
+	{ NULL, NULL, NULL, ETC }
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinFloat", declarations);
     static_declarations.registerDeclarations ("YCPBuiltinFloat", declarations_ns);
+#undef ETC
+#undef ETCf
 }

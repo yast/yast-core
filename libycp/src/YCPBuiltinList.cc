@@ -1246,48 +1246,54 @@ l_tolist (const YCPValue &v)
 
 YCPBuiltinList::YCPBuiltinList ()
 {
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "find",	"flex (variable <flex>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX },
-	{ "prepend",	"list <flex> (const list <flex>, const flex)",						(void *)l_prepend,	DECL_FLEX },
-	{ "contains",	"boolean (const list <flex>, const flex)",						(void *)l_contains,	DECL_FLEX },
-	{ "setcontains","boolean (const list <flex>, const flex)",						(void *)l_setcontains,	DECL_FLEX },
-	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist	},
-	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX },
-	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist	},
-	{ "sublist",	"list <flex> (const list <flex>, integer)",						(void *)l_sublist1,     DECL_FLEX },
-	{ "sublist",	"list <flex> (const list <flex>, integer, integer)",					(void *)l_sublist2,     DECL_FLEX },
-	{ "filter",	"list <flex> (variable <flex>, const list <flex>, const block <boolean>)",		(void *)l_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "maplist",	"list <flex1> (variable <flex2>, const list <flex2>, const block <flex1>)",		(void *)l_maplist,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "listmap",	"map <flex1,flex2> (variable <flex3>, const list <flex3>, const block <map <flex1,flex2>>)",	(void *)l_listmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "flatten",	"list <flex> (const list <list <flex>>)",						(void *)l_flatten,	DECL_FLEX },
-	{ "toset",	"list <flex> (const list <flex>)",							(void *)l_toset,	DECL_FLEX },
-	{ "sort",	"list <flex> (const list <flex>)",							(void *)l_sortlist,	DECL_FLEX },
-	{ "sort",	"list <flex> (variable <flex>, variable <flex>, const list <flex>, const block <boolean>)", (void *)l_sort, 	DECL_SYMBOL|DECL_FLEX },
-	{ "lsort",	"list <flex> (const list <flex>)",							(void *)l_lsortlist,	DECL_FLEX },
-	{ "splitstring","list <string> (string, string)",							(void *)l_splitstring	},
-	{ "change", 	"list <flex> (const list <flex>, const flex)",						(void *)l_changelist,	DECL_FLEX|DECL_DEPRECATED },
-	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX|DECL_NIL },
-	{ "+",		"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
-	{ "+",		"list <any> (const list <any>, any)",							(void *)l_add		},
-	{ "isempty",	"boolean (const list <any>)",								(void *)l_isempty       },
-	{ "size",	"integer (const list <any>)",								(void *)l_size,		DECL_NIL },
-	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
-	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },
-	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "tolist",	"list <any> (const any)",								(void *)l_tolist,	DECL_DEPRECATED},
-	{ 0 }
+	{ "find",	"flex (variable <flex>, const list <flex>, const block <boolean>)",			(void *)l_find,		DECL_SYMBOL|DECL_FLEX,                  ETCf },
+	{ "prepend",	"list <flex> (const list <flex>, const flex)",						(void *)l_prepend,	DECL_FLEX,				ETCf },
+	{ "contains",	"boolean (const list <flex>, const flex)",						(void *)l_contains,	DECL_FLEX,				ETCf },
+	{ "setcontains","boolean (const list <flex>, const flex)",						(void *)l_setcontains,	DECL_FLEX,				ETCf },
+	{ "union",	"list <any> (const list <any>, const list <any>)",					(void *)l_unionlist,						 ETC },
+	{ "+",		"list <flex> (const list <flex>, const list <flex>)",					(void *)l_unionlist,	DECL_FLEX,				ETCf },
+	{ "merge",	"list <any> (const list <any>, const list <any>)",					(void *)l_mergelist,						 ETC },
+	{ "sublist",	"list <flex> (const list <flex>, integer)",						(void *)l_sublist1,     DECL_FLEX,                              ETCf },
+	{ "sublist",	"list <flex> (const list <flex>, integer, integer)",					(void *)l_sublist2,     DECL_FLEX,				ETCf },
+	{ "filter",	"list <flex> (variable <flex>, const list <flex>, const block <boolean>)",		(void *)l_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,	ETCf },
+	{ "maplist",	"list <flex1> (variable <flex2>, const list <flex2>, const block <flex1>)",		(void *)l_maplist,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,	ETCf },
+	{ "listmap",	"map <flex1,flex2> (variable <flex3>, const list <flex3>, const block <map <flex1,flex2>>)",	(void *)l_listmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,ETCf },
+	{ "flatten",	"list <flex> (const list <list <flex>>)",						(void *)l_flatten,	DECL_FLEX,				ETCf },
+	{ "toset",	"list <flex> (const list <flex>)",							(void *)l_toset,	DECL_FLEX,				ETCf },
+	{ "sort",	"list <flex> (const list <flex>)",							(void *)l_sortlist,	DECL_FLEX,                              ETCf },
+	{ "sort",	"list <flex> (variable <flex>, variable <flex>, const list <flex>, const block <boolean>)", (void *)l_sort, 	DECL_SYMBOL|DECL_FLEX,			ETCf },
+	{ "lsort",	"list <flex> (const list <flex>)",							(void *)l_lsortlist,	DECL_FLEX,				ETCf },
+	{ "splitstring","list <string> (string, string)",							(void *)l_splitstring,						 ETC },
+	{ "change", 	"list <flex> (const list <flex>, const flex)",						(void *)l_changelist,	DECL_FLEX|DECL_DEPRECATED,		ETCf },
+	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX|DECL_NIL,			ETCf },
+	{ "+",		"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX,				ETCf },
+	{ "+",		"list <any> (const list <any>, any)",							(void *)l_add,                                                   ETC },
+	{ "isempty",	"boolean (const list <any>)",								(void *)l_isempty,						 ETC },
+	{ "size",	"integer (const list <any>)",								(void *)l_size,		DECL_NIL,				ETCf },
+	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX,				ETCf },
+	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX,			ETCf },
+	{ "foreach",    "flex1 (variable <flex2>, const list <flex2>, const block <flex1>)",			(void *)l_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,	ETCf },
+	{ "tolist",	"list <any> (const any)",								(void *)l_tolist,	DECL_DEPRECATED,			ETCf },
+	{ NULL, NULL, NULL, ETC }
     };
 
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations_ns[] = {
-	{ "list",	"",											NULL,	                DECL_NAMESPACE },
-	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "swap",	"list <flex> (const list <flex>, const integer, const integer)",			(void *)l_swaplist,	DECL_FLEX },
-	{ 0 }
+	{ "list",	"",											NULL,	                DECL_NAMESPACE, ETCf },
+	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX, ETCf },
+	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX, ETCf },
+	{ "swap",	"list <flex> (const list <flex>, const integer, const integer)",			(void *)l_swaplist,	DECL_FLEX, ETCf },
+	{ NULL, NULL, NULL, ETC }
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinList", declarations);
     static_declarations.registerDeclarations ("YCPBuiltinList", declarations_ns);
+
+#undef ETC
+#undef ETCf
 }

@@ -309,20 +309,24 @@ YCPBuiltinInteger::YCPBuiltinInteger ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "+",  "integer (integer, integer)",	(void *)i_plus },
-	{ "-",  "integer (integer, integer)",	(void *)i_minus },
-	{ "-",  "integer (integer)",		(void *)i_neg },
-	{ "*",  "integer (integer, integer)",	(void *)i_mult },
-	{ "/",  "integer (integer, integer)",	(void *)i_div },
-	{ "%",  "integer (integer, integer)",	(void *)i_mod },
-	{ "&",  "integer (integer, integer)",	(void *)i_and },
-	{ "^",  "integer (integer, integer)",	(void *)i_xor },
-	{ "|",  "integer (integer, integer)",	(void *)i_or },
-	{ "<<", "integer (integer, integer)",	(void *)i_left },
-	{ ">>", "integer (integer, integer)",	(void *)i_right },
-	{ "~",  "integer (integer)",		(void *)i_bnot },
-	{ "tointeger", "integer (const any)",	(void *)i_tointeger },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "+",  "integer (integer, integer)",	(void *)i_plus,     ETC },
+	{ "-",  "integer (integer, integer)",	(void *)i_minus,    ETC },
+	{ "-",  "integer (integer)",		(void *)i_neg,	    ETC },
+	{ "*",  "integer (integer, integer)",	(void *)i_mult,	    ETC },
+	{ "/",  "integer (integer, integer)",	(void *)i_div,	    ETC },
+	{ "%",  "integer (integer, integer)",	(void *)i_mod,	    ETC },
+	{ "&",  "integer (integer, integer)",	(void *)i_and,	    ETC },
+	{ "^",  "integer (integer, integer)",	(void *)i_xor,      ETC },
+	{ "|",  "integer (integer, integer)",	(void *)i_or,	    ETC },
+	{ "<<", "integer (integer, integer)",	(void *)i_left,	    ETC },
+	{ ">>", "integer (integer, integer)",	(void *)i_right,    ETC },
+	{ "~",  "integer (integer)",		(void *)i_bnot,	    ETC },
+	{ "tointeger", "integer (const any)",	(void *)i_tointeger,ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinInteger", declarations);

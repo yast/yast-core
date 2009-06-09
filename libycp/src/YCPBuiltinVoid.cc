@@ -28,7 +28,11 @@ YCPBuiltinVoid::YCPBuiltinVoid ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinVoid", declarations);

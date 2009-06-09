@@ -3,6 +3,8 @@ Tue Jun  9 11:29:35 CEST 2009 - mvidner@suse.cz
 
 - Fixed makefiles to work with "install" calls changed via
   automake-1.11.
+- Fixed tons of warnings by explicitly initializing all members of
+  declaration_t.
 
 -------------------------------------------------------------------
 Mon Jun  1 08:54:18 CEST 2009 - mvidner@suse.cz

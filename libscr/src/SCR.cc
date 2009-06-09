@@ -380,24 +380,28 @@ SCR::SCR ()
 
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "SCR",		"",				0, DECL_NAMESPACE },
-	{ "Read",		"any (path)",			(void *)SCRRead },
-	{ "Read",		"any (path, any)",		(void *)SCRRead2 },
-	{ "Read",		"any (path, any, any)",		(void *)SCRRead3 },
-	{ "Write",		"boolean (path, any)",		(void *)SCRWrite2, DECL_NIL },
-	{ "Write",		"boolean (path, any, any)",	(void *)SCRWrite3 },
-	{ "Dir",		"list<string> (path)",		(void *)SCRDir },
-	{ "Execute",		"any (path)",			(void *)SCRExecute },
-	{ "Execute",		"any (path, any)",		(void *)SCRExecute2 },
-	{ "Execute",		"any (path, any, any)",		(void *)SCRExecute3 },
-	{ "Error",		"map<string,any> (path)",	(void *)SCRError },
-	{ "RegisterAgent",	"boolean (path, string)",	(void *)SCRRegisterAgentS },
-	{ "RegisterAgent",	"boolean (path, term)",		(void *)SCRRegisterAgentT },
-	{ "UnregisterAgent",	"boolean (path)",		(void *)SCRUnregisterAgent },
-	{ "UnregisterAllAgents","boolean ()",			(void *)SCRUnregisterAllAgents },
-	{ "UnmountAgent",	"boolean (path)",		(void *)SCRUnmountAgent },
-	{ "RegisterNewAgents",  "boolean ()",			(void *)SCRRegisterNewAgents },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "SCR",		"",				NULL,         DECL_NAMESPACE, ETCf },
+	{ "Read",		"any (path)",			(void *)SCRRead,	       ETC },
+	{ "Read",		"any (path, any)",		(void *)SCRRead2,	       ETC },
+	{ "Read",		"any (path, any, any)",		(void *)SCRRead3,	       ETC },
+	{ "Write",		"boolean (path, any)",		(void *)SCRWrite2, DECL_NIL,  ETCf },
+	{ "Write",		"boolean (path, any, any)",	(void *)SCRWrite3,	       ETC },
+	{ "Dir",		"list<string> (path)",		(void *)SCRDir,		       ETC },
+	{ "Execute",		"any (path)",			(void *)SCRExecute,            ETC },
+	{ "Execute",		"any (path, any)",		(void *)SCRExecute2,	       ETC },
+	{ "Execute",		"any (path, any, any)",		(void *)SCRExecute3,	       ETC },
+	{ "Error",		"map<string,any> (path)",	(void *)SCRError,	       ETC },
+	{ "RegisterAgent",	"boolean (path, string)",	(void *)SCRRegisterAgentS,     ETC },
+	{ "RegisterAgent",	"boolean (path, term)",		(void *)SCRRegisterAgentT,     ETC },
+	{ "UnregisterAgent",	"boolean (path)",		(void *)SCRUnregisterAgent,    ETC },
+	{ "UnregisterAllAgents","boolean ()",			(void *)SCRUnregisterAllAgents,ETC },
+	{ "UnmountAgent",	"boolean (path)",		(void *)SCRUnmountAgent,       ETC },
+	{ "RegisterNewAgents",  "boolean ()",			(void *)SCRRegisterNewAgents,  ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("SCR", declarations);

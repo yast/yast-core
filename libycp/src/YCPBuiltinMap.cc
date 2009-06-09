@@ -559,20 +559,24 @@ YCPBuiltinMap::YCPBuiltinMap ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "haskey", "boolean (const map <any,any>, const any)",								    (void *)m_haskey },
-	{ "mapmap", "map <flex3,flex4> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <map <flex3, flex4>>)",  (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "maplist","list <flex3> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <flex3>)",	    (void *)m_maplist,  DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "filter", "map <flex1,flex2> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <boolean>)",(void *)m_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "union",  "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
-	{ "+",	    "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap	},
-	{ "add",    "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_addmap,	DECL_FLEX },
-	{ "change", "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_changemap,DECL_FLEX|DECL_DEPRECATED },
-	{ "isempty", "boolean (const map <any,any>)",									    (void *)m_isempty   },
-	{ "size",   "integer (const map <any,any>)",									    (void *)m_size,	DECL_NIL },
-	{ "foreach","flex1 (variable <flex2>, variable <flex3>, const map <flex2,flex3>, const block <flex1>)",		    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX },
-	{ "tomap",  "map <any,any> (const any)",									    (void *)m_tomap,	DECL_FLEX },
-        { "remove", "map <flex1,flex2> (const map <flex1,flex2>, const flex1)", 					    (void *)m_remove,	DECL_FLEX },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "haskey", "boolean (const map <any,any>, const any)",								    (void *)m_haskey,                                                     ETC },
+	{ "mapmap", "map <flex3,flex4> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <map <flex3, flex4>>)",  (void *)m_mapmap,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX, ETCf },
+	{ "maplist","list <flex3> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <flex3>)",	    (void *)m_maplist,  DECL_LOOP|DECL_SYMBOL|DECL_FLEX,		 ETCf },
+	{ "filter", "map <flex1,flex2> (variable <flex1>, variable <flex2>, const map <flex1,flex2>, const block <boolean>)",(void *)m_filter,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,		 ETCf },
+	{ "union",  "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap,							  ETC },
+	{ "+",	    "map <any,any> (const map <any,any>, const map <any,any>)",						    (void *)m_unionmap,							  ETC },
+	{ "add",    "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_addmap,	DECL_FLEX,					 ETCf },
+	{ "change", "map <flex1,flex2> (const map <flex1,flex2>, const flex1, const flex2)",				    (void *)m_changemap,DECL_FLEX|DECL_DEPRECATED,                       ETCf },
+	{ "isempty", "boolean (const map <any,any>)",									    (void *)m_isempty,							  ETC },
+	{ "size",   "integer (const map <any,any>)",									    (void *)m_size,	DECL_NIL,					 ETCf },
+	{ "foreach","flex1 (variable <flex2>, variable <flex3>, const map <flex2,flex3>, const block <flex1>)",		    (void *)m_foreach,	DECL_LOOP|DECL_SYMBOL|DECL_FLEX,		 ETCf },
+	{ "tomap",  "map <any,any> (const any)",									    (void *)m_tomap,	DECL_FLEX,					 ETCf },
+        { "remove", "map <flex1,flex2> (const map <flex1,flex2>, const flex1)", 					    (void *)m_remove,	DECL_FLEX,					 ETCf },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
 	// "lookup" is in parser.yy
     };
 

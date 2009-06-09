@@ -167,32 +167,37 @@ WFM::WFM ()
 	return;
     }
 
+
     y2debug( "registering WFM builtins" );
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "WFM",		"",				NULL, 		DECL_NAMESPACE },
-	{ "SCROpen",		"integer (string, boolean)",	(void*)WFMSCROpen },
-	{ "SCRClose",		"void (integer)",		(void*)WFMSCRClose },
-	{ "SCRGetName",		"string (integer)",		(void*)WFMSCRGetName },
-	{ "SCRSetDefault",	"void (integer)",		(void*)WFMSCRSetDefault },
-	{ "SCRGetDefault",	"integer ()",			(void*)WFMSCRGetDefault },
-	{ "CallFunction",	"any (string, list <any>)",	(void*)WFMCallFunction1 },
-	{ "CallFunction",	"any (string)",			(void*)WFMCallFunction },
-	{ "call",		"any (string, list <any>)",	(void*)WFMCallFunction1 },
-	{ "call",		"any (string)",			(void*)WFMCallFunction },
-	{ "Args",		"list <any> ()",		(void*)WFMArgs },
-	{ "Args",		"any (integer)",		(void*)WFMArgs2 },
-	{ "GetLanguage",	"string ()",			(void*)WFMGetLanguage },
-	{ "GetEncoding",	"string ()",			(void*)WFMGetEncoding },
-	{ "GetEnvironmentEncoding",	"string ()",		(void*)WFMGetEnvironmentEncoding },
-	{ "SetLanguage",	"string (string)",		(void*)WFMSetLanguage },
-	{ "SetLanguage",	"string (string, string)",	(void*)WFMSetLanguage2 },
-	{ "Read",		"any (path,any)",		(void*)WFMRead },
-	{ "Write",		"boolean (path, any, any)",	(void*)WFMWrite3},
-	{ "Write",		"boolean (path, any)",		(void*)WFMWrite2},
-	{ "Execute",		"any (path, any)",		(void*)WFMExecute},
-	{ "ClientExists",	"boolean (string)",		(void*)WFMClientExists},
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "WFM",		"",				NULL, 		DECL_NAMESPACE, ETCf },
+	{ "SCROpen",		"integer (string, boolean)",	(void*)WFMSCROpen,               ETC }, 
+	{ "SCRClose",		"void (integer)",		(void*)WFMSCRClose,		 ETC },
+	{ "SCRGetName",		"string (integer)",		(void*)WFMSCRGetName,		 ETC },
+	{ "SCRSetDefault",	"void (integer)",		(void*)WFMSCRSetDefault,	 ETC },
+	{ "SCRGetDefault",	"integer ()",			(void*)WFMSCRGetDefault,	 ETC },
+	{ "CallFunction",	"any (string, list <any>)",	(void*)WFMCallFunction1,	 ETC },
+	{ "CallFunction",	"any (string)",			(void*)WFMCallFunction,		 ETC },
+	{ "call",		"any (string, list <any>)",	(void*)WFMCallFunction1,         ETC },
+	{ "call",		"any (string)",			(void*)WFMCallFunction,		 ETC },
+	{ "Args",		"list <any> ()",		(void*)WFMArgs,			 ETC },
+	{ "Args",		"any (integer)",		(void*)WFMArgs2,		 ETC },
+	{ "GetLanguage",	"string ()",			(void*)WFMGetLanguage,		 ETC },
+	{ "GetEncoding",	"string ()",			(void*)WFMGetEncoding,		 ETC },
+	{ "GetEnvironmentEncoding",	"string ()",		(void*)WFMGetEnvironmentEncoding,ETC },
+	{ "SetLanguage",	"string (string)",		(void*)WFMSetLanguage,           ETC },
+	{ "SetLanguage",	"string (string, string)",	(void*)WFMSetLanguage2,		 ETC },
+	{ "Read",		"any (path,any)",		(void*)WFMRead,			 ETC },
+	{ "Write",		"boolean (path, any, any)",	(void*)WFMWrite3,		 ETC },
+	{ "Write",		"boolean (path, any)",		(void*)WFMWrite2,		 ETC },
+	{ "Execute",		"any (path, any)",		(void*)WFMExecute,		 ETC },
+	{ "ClientExists",	"boolean (string)",		(void*)WFMClientExists,		 ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("WFM", declarations);

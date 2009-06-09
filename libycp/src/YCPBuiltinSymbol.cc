@@ -52,8 +52,12 @@ YCPBuiltinSymbol::YCPBuiltinSymbol ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "tosymbol",	"symbol (const string)",				(void*) s_tosymbol },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "tosymbol",	"symbol (const string)",		(void*) s_tosymbol, ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinSymbol", declarations);

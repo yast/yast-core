@@ -79,9 +79,13 @@ YCPBuiltinByteblock::YCPBuiltinByteblock ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "tobyteblock","byteblock (const any)", 	(void *)b_tobyteblock },
-	{ "size",   "integer (const byteblock)",	(void *)b_size },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "tobyteblock","byteblock (const any)", 	(void *)b_tobyteblock, ETC },
+	{ "size",   "integer (const byteblock)",	(void *)b_size,        ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinByteblock", declarations);

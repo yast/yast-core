@@ -146,13 +146,17 @@ YCPBuiltinPath::YCPBuiltinPath ()
 {
     // must be static, registerDeclarations saves a pointer to it!
     static declaration_t declarations[] = {
-	{ "+",	    "path (path, path)",	(void *)p_plus },
-	{ "+",	    "path (path, string)",	(void *)p_add },
-	{ "size",   "integer (path)",		(void *)p_size },
-	{ "add",    "path (path, string)",	(void *)p_add },
-	{ "add",    "path (path, path)",	(void *)p_plus },
-	{ "topath", "path (any)",		(void *)p_topath },
-	{ 0 }
+#define ETC 0, NULL, constTypePtr(), NULL
+#define ETCf   NULL, constTypePtr(), NULL
+	{ "+",	    "path (path, path)",	(void *)p_plus,   ETC },
+	{ "+",	    "path (path, string)",	(void *)p_add,	  ETC },
+	{ "size",   "integer (path)",		(void *)p_size,	  ETC },
+	{ "add",    "path (path, string)",	(void *)p_add,	  ETC },
+	{ "add",    "path (path, path)",	(void *)p_plus,	  ETC },
+	{ "topath", "path (any)",		(void *)p_topath, ETC },
+	{ NULL, NULL, NULL, ETC }
+#undef ETC
+#undef ETCf
     };
 
     static_declarations.registerDeclarations ("YCPBuiltinMap", declarations);
