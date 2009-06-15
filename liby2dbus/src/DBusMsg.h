@@ -66,14 +66,14 @@ class DBusMsg
 
 	bool addValue(int type, void* data);
 	bool addValue(int type, void* data, DBusMessageIter *i);
-	bool addValueAt(const YCPValue &val, DBusMessageIter *i);
+	bool addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encoding = true);
 	bool addYCPValue(const YCPValue &v, DBusMessageIter *i);
 	bool addYCPValueRaw(const YCPValue &val, DBusMessageIter *i);
 	void release();
 	DBusMessage *msg;
 
 	int typeInt(const YCPValue &val) const;
-	const char * typeStr(const YCPValue &val) const;
+	std::string typeStr(const YCPValue &val, bool bsv_enc = true) const;
 
 	YCPValue getYCPValue(DBusMessageIter *it) const;
 	YCPValue getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type = std::string()) const;

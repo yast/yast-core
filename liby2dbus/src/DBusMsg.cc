@@ -239,12 +239,12 @@ bool DBusMsg::addValue(const YCPValue &val)
     dbus_message_iter_init_append(msg, &it);
 
     // add the value
-    bool ret = addValueAt(val, &it);
+    bool ret = addValueAt(val, &it, false);
 
     return ret;
 }
 
-bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
+bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encoding)
 {
     int type = typeInt(val);
 
@@ -282,23 +282,13 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 	int sz = lst->size();
 	int index = 0;
 
-	// use string as fallback for empty map
-	std::string list_type(sz ? typeStr(lst->value(0)) : DBUS_TYPE_STRING_AS_STRING);
-
-	// dbus allows only basic complete types in a list
-	const std::string valid_list_types(DBUS_TYPE_INT64_AS_STRING DBUS_TYPE_DOUBLE_AS_STRING
-	    DBUS_TYPE_STRING_AS_STRING DBUS_TYPE_BOOLEAN_AS_STRING);
-
-	if (valid_list_types.find(list_type) == std::string::npos)
-	{
-	    y2error("Invalid type of list item (non-basic type): %s, ignoring the list", list_type.c_str());
-	    return false;
-	}
+	// use string as fallback for empty list
+	std::string list_type(sz ? typeStr(lst->value(0), bsv_encoding) : DBUS_TYPE_STRING_AS_STRING);
 
 	DBusMessageIter array_it;
 
 	// open array container
-	y2debug("Opening array container");
+	y2debug("Opening array container with type: %s", list_type.c_str());
 
 	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, list_type.c_str(), &array_it);
 	while(index < sz)
@@ -307,16 +297,17 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 
 	    YCPValue list_item = lst->value(index);
 
-	    if (typeStr(list_item) != list_type)
+	    if (typeStr(list_item, bsv_encoding) != list_type)
 	    {
 		y2error("Found different type in list: %s (expected %s) - ignoring item %s",
-		    typeStr(list_item), list_type.c_str(),
+		    typeStr(list_item, bsv_encoding).c_str(), list_type.c_str(),
 		    list_item->toString().c_str());
+		return false;
 	    }
 	    else
 	    {
 		// add the raw YCP value
-		addValueAt(lst->value(index), &array_it);
+		addValueAt(lst->value(index), &array_it, bsv_encoding);
 	    }
 
 	    index++;
@@ -334,7 +325,8 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 
 	YCPMap::const_iterator mit = map.begin();
 	// use string as fallback for empty map
-	std::string key_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->first));
+	std::string key_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->first, bsv_encoding));
+	std::string val_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->second, bsv_encoding));
 
 	// dbus allows only basic types as key type in a map
 	const std::string valid_key_types(DBUS_TYPE_INT64_AS_STRING DBUS_TYPE_DOUBLE_AS_STRING
@@ -346,10 +338,10 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 	    return false;
 	}
 
-	std::string map_signature("{" + key_type + "v}");
+	std::string map_signature("{" + key_type + (bsv_encoding ? "v" : val_type) + "}");
 
 	// open array container
-	y2debug("Opening DICT container");
+	y2debug("Opening DICT container with signature: %s", map_signature.c_str());
 	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, map_signature.c_str(), &array_it);
 
 	for(YCPMap::const_iterator mit = map.begin(); mit != map.end() ; ++mit)
@@ -358,10 +350,10 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 	    YCPValue val = mit->second;
 
 	    // error: this is a different key type than the announced type
-	    if (key_type != typeStr(key))
+	    if (key_type != typeStr(key, bsv_encoding))
 	    {
 		y2error("Found different key type %s (expected %s) - ignoring pair $[ %s : %s ]",
-		    typeStr(key), key_type.c_str(),
+		    typeStr(key, bsv_encoding).c_str(), key_type.c_str(),
 		    key->toString().c_str(), val->toString().c_str());
 
 		continue;
@@ -373,18 +365,24 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i)
 	    dbus_message_iter_open_container(&array_it, DBUS_TYPE_DICT_ENTRY, 0, &map_item_it);
 
 	    // add the key
-	    addValueAt(key, &map_item_it);
+	    addValueAt(key, &map_item_it, bsv_encoding);
 
-	    // add VARIANT container
-	    DBusMessageIter var_it2;
-	    y2debug("Opening VARIANT container with type %s", typeStr(val));
-	    dbus_message_iter_open_container(&map_item_it, DBUS_TYPE_VARIANT, typeStr(val), &var_it2);
+	    if (bsv_encoding)
+	    {
+		DBusMessageIter var_it2;
+		// add VARIANT container
+		y2debug("Opening VARIANT container with type %s", typeStr(val, bsv_encoding).c_str());
+		dbus_message_iter_open_container(&map_item_it, DBUS_TYPE_VARIANT, typeStr(val, bsv_encoding).c_str(), &var_it2);
+		// add the value
+		addValueAt(val, &var_it2, bsv_encoding);
 
-	    // add the key
-	    addValueAt(val, &var_it2);
-
-	    y2debug("Closing VARIANT container");
-	    dbus_message_iter_close_container(&map_item_it, &var_it2);
+		y2debug("Closing VARIANT container");
+		dbus_message_iter_close_container(&map_item_it, &var_it2);
+	    }
+	    else
+	    {
+		addValueAt(val, &map_item_it, bsv_encoding);
+	    }
 
 	    // close map item
 	    dbus_message_iter_close_container(&array_it, &map_item_it);
@@ -576,11 +574,11 @@ bool DBusMsg::addYCPValue(const YCPValue &v, DBusMessageIter *i)
     dbus_message_iter_append_basic(&sub, DBUS_TYPE_STRING, &ycp_type);
     y2debug("Adding variable type %s: %s", ycp_type, val->toString().c_str());
 
-    y2debug("Opening VARIANT container with type %s", typeStr(val));
+    y2debug("Opening VARIANT container with type %s", typeStr(val).c_str());
 
     // add VARIANT container
     DBusMessageIter var_it;
-    dbus_message_iter_open_container(&sub, DBUS_TYPE_VARIANT, typeStr(val), &var_it);
+    dbus_message_iter_open_container(&sub, DBUS_TYPE_VARIANT, typeStr(val).c_str(), &var_it);
 
     // add the raw YCP value
     addYCPValueRaw(val, &var_it);
@@ -1069,7 +1067,7 @@ int DBusMsg::typeInt(const YCPValue &val) const
     return DBUS_TYPE_INVALID;
 }
 
-const char * DBusMsg::typeStr(const YCPValue &val) const
+std::string DBusMsg::typeStr(const YCPValue &val, bool bsv_enc) const
 {
     if (val.isNull())
     {
@@ -1091,7 +1089,7 @@ const char * DBusMsg::typeStr(const YCPValue &val) const
     }
     else if (val->isTerm())
     {
-	return "a(bsv)";
+	return bsv_enc ? "a(bsv)" : "as";
     }
     else if (val->isBoolean())
     {
@@ -1099,7 +1097,16 @@ const char * DBusMsg::typeStr(const YCPValue &val) const
     }
     else if (val->isList())
     {
-	return "a(bsv)";
+	if (bsv_enc)
+	{
+	    return "a(bsv)";
+	}
+	else
+	{
+	    YCPList lst = val->asList();
+	    std::string val_type((lst->size() > 0) ? typeStr(lst->value(0)) : "s");
+	    return std::string("a") + val_type;
+	}
     }
     else if (val->isCode())
     {
@@ -1110,12 +1117,22 @@ const char * DBusMsg::typeStr(const YCPValue &val) const
 	YCPMap map = val->asMap();
 
 	// get key type, use string as a fallback for an empty map
-	std::string key_type((map.size() > 0) ? typeStr(map.begin()->first) : "s");
+	std::string key_type((map.size() > 0) ? typeStr(map.begin()->first, bsv_enc) : "s");
 
-	// key of the DBus DICT struct must be a basic type
-	// see http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-signatures
-	return (std::string(DBUS_TYPE_ARRAY_AS_STRING) + DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING +
-	    + key_type.c_str() + "(bsv)" + DBUS_DICT_ENTRY_END_CHAR_AS_STRING).c_str();
+	if (bsv_enc)
+	{
+	    // key of the DBus DICT struct must be a basic type
+	    // see http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-signatures
+	    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING +
+		+ key_type.c_str() + "(bsv)" + DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+	}
+	else
+	{
+	    std::string val_type((map.size() > 0) ? typeStr(map.begin()->second) : "s");
+
+	    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING +
+		+ key_type.c_str() + val_type + DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+	}
     }
     
     y2error("Unsupported type %s, value: %s", Type::vt2type(val->valuetype())->toString().c_str(),

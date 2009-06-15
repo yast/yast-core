@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Jun 15 17:24:03 CEST 2009 - lslezak@suse.cz
+
+- DBus service - fixed returning of nested values (e.g. list<map>),
+  removed extra check for map (bnc#512569)
+- 2.18.13
+
+-------------------------------------------------------------------
 Tue Jun  9 15:51:09 CEST 2009 - mvidner@suse.cz
 
 - Added 'string float::tolstring(float f, integer precision)' using the
