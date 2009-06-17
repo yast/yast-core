@@ -124,6 +124,13 @@ void DBusServerBase::run(bool forever)
     // mainloop
     while (true)
     {
+	if (!dbus_connection_get_is_connected(connection.getConnection()))
+	{
+	    y2debug ("Got disconnected");
+	    // otherwise receiving would call exit (!)
+	    break;
+	}
+
 	// try reading a message from DBus
 	DBusMsg request(connection.receive());
 
@@ -482,7 +489,7 @@ bool DBusServerBase::isActionAllowed(const DBusMsg &msg, DBusError *err)
 #endif
 }
 
-DBusServerBase::actionList DBusServerBase::createActionId(const DBusMsg &msg)
+DBusServerBase::actionList DBusServerBase::createActionId(const DBusMsg &)
 {
     y2debug("Using default empty list of action IDs");
     // default implementation is empty list

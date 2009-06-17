@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 17 13:53:30 CEST 2009 - mvidner@suse.cz
+
+- DBusServerBase: exit properly if the connection got closed
+
+-------------------------------------------------------------------
 Mon Jun 15 17:24:03 CEST 2009 - lslezak@suse.cz
 
 - DBus service - fixed returning of nested values (e.g. list<map>),
