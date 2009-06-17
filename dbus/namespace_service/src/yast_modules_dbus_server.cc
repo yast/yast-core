@@ -1,4 +1,3 @@
-
 /*
 
 */
@@ -12,6 +11,7 @@ int main(int argc, char **argv)
 
     bool forever = false;
     bool badopts = false;
+    bool use_session_bus = false;
 
     DBusModulesServer::NameSpaceList modules;
 
@@ -29,6 +29,10 @@ int main(int argc, char **argv)
 	    {
 		forever = true;
 	    }
+	    else if (!strcmp(argv[index], "--session"))
+	    {
+		use_session_bus = true;
+	    }
 	    else
 	    {
 		modules.push_back(argv[index]);
@@ -40,14 +44,15 @@ int main(int argc, char **argv)
 
     if (badopts)
     {
-	std::cerr << "Usage: " << argv[0] << " [--help] [--disable-timer] <namespace> <namespace>..." << std::endl;
+	std::cerr << "Usage: " << argv[0] << " [--help] [--disable-timer] [--session] <namespace> <namespace>..." << std::endl;
 	std::cerr << "       --help            Print this text\n";
 	std::cerr << "       --disable-timer   Disable automatic shutdown of the service, useful for debugging\n";
+	std::cerr << "       --session         Connect to the session bus (system is the default), useful for debugging\n";
 	std::cerr << "       <namespace>       Preload an yast namespace and export it on DBus\n";
 	return 1;
     }
 
-    DBusModulesServer server(modules);
+    DBusModulesServer server(modules, use_session_bus);
     bool connected = server.connect();
 
     if (connected)

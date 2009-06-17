@@ -1,0 +1,22 @@
+#! /bin/sh
+
+# A basic test: does the server reply to introspection?
+
+# TODO: more tests, probably in python or whatever so that
+# the responses can be inspected better
+
+# This launches the bus daemon,
+# exports DBUS_SESSION_BUS_ADDRESS and sets DBUS_SESSION_BUS_PID
+eval $(dbus-launch --sh-syntax)
+# Clean up at exit. This will also kill the server.
+trap "kill $DBUS_SESSION_BUS_PID" EXIT TERM INT
+
+echo -n "Hey, server, get on da bus... "
+PRG="../src/yast_modules_dbus_server --disable-timer --session"
+$PRG & sleep 3
+echo "off we go!"
+
+SEND0="dbus-send  --session --dest=org.opensuse.YaST.modules"
+CALL="$SEND0 --type=method_call"
+REPLY="$CALL --print-reply"
+$REPLY / org.freedesktop.DBus.Introspectable.Introspect

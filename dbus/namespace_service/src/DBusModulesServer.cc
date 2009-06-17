@@ -1,4 +1,3 @@
-
 /*
 
   DBus server
@@ -215,7 +214,11 @@ bool DBusModulesServer::registerNamespace(const Y2Namespace *ns)
 }
 
 
-DBusModulesServer::DBusModulesServer(const NameSpaceList &name_spaces) : e(this), manager_callback(this), wfm(NULL)
+DBusModulesServer::DBusModulesServer(const NameSpaceList &name_spaces, bool use_session_bus)
+    : e(this)
+    , manager_callback(this)
+    , wfm(NULL)
+    , m_use_session_bus(use_session_bus)
 {
     init_wfm();
 
@@ -326,7 +329,8 @@ constTypePtr DBusModulesServer::searchFuncType(const std::string &objname, const
 bool DBusModulesServer::connect()
 {
     registerManager();
-    return DBusServerBase::connect(SYSTEM, YAST_DBUS_SERVICE_NAME);
+    return DBusServerBase::connect(m_use_session_bus? SESSION: SYSTEM,
+				   YAST_DBUS_SERVICE_NAME);
 }
 
 /*

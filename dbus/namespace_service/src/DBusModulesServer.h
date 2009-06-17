@@ -1,4 +1,3 @@
-
 /*
   DBusModulesServer.h
 */
@@ -25,7 +24,7 @@ class DBusModulesServer : public DBusServerBase
 
 	typedef std::list<std::string> NameSpaceList;
 
-	DBusModulesServer(const NameSpaceList &name_spaces);
+	DBusModulesServer(const NameSpaceList &name_spaces,  bool use_session_bus);
 	virtual ~DBusModulesServer();
 
 	virtual bool connect();
@@ -95,8 +94,9 @@ class DBusModulesServer : public DBusServerBase
 	Y2Component *wfm;
 
 	void init_wfm();
+
+	bool m_use_session_bus;
 };
 
 
 #endif
-
