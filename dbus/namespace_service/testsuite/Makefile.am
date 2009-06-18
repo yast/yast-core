@@ -3,4 +3,6 @@ TESTS = t1
 
 SUBDIRS = modules
 
+EXTRA_DIST = $(wildcard *.test) t1
+
 CLEANFILES = $(wildcard *.test.reply)

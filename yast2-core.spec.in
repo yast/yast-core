@@ -23,7 +23,7 @@ BuildRequires:	libblocxx-devel
 BuildRequires:  libxcrypt-devel
 
 # for SCR DBus service
-BuildRequires:	dbus-1-devel PolicyKit-devel
+BuildRequires:	dbus-1-devel dbus-1-x11 PolicyKit-devel
 
 Summary:	-
 Requires:	perl = %{perl_version}

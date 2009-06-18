@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun 18 16:59:49 CEST 2009 - lslezak@suse.cz
+
+- DBus service - fixed returning "any" values (bnc#513503),
+  return correct signatures in DBus introspection data, return the
+  values according to it (bnc#513571), added basic testuite
+
+-------------------------------------------------------------------
 Wed Jun 17 13:53:30 CEST 2009 - mvidner@suse.cz
 
 - DBusServerBase: exit properly if the connection got closed
