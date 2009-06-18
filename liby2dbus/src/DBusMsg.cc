@@ -224,29 +224,63 @@ bool DBusMsg::addYCPValue(const YCPValue &val)
     return ret;
 }
 
-bool DBusMsg::addValue(const YCPValue &val)
+bool DBusMsg::addValueAs(const YCPValue &val, constTypePtr rettype)
 {
     if (val.isNull())
     {
-	y2milestone("Ignoring YCPNull value");
+	y2error("Ignoring YCPNull value");
 	return false;
     }
 
     y2debug("Adding YCP value: %s", val->toString().c_str());
+
+    if (!rettype)
+    {
+	// return as the current type if not specified
+	rettype = Type::vt2type(val->valuetype());
+    }
+    else
+    {
+	// the required type does not match the value
+	if (rettype->matchvalue(val) < 0)
+	{
+	    y2error("Value %s does not match requested type %s",
+		val->toString().c_str(), rettype->toString().c_str());
+	    return false;
+	}
+	else
+	{
+	    y2debug("Requested type matches the value");
+	}
+    }
+
 
     // create insert iterator
     DBusMessageIter it;
     dbus_message_iter_init_append(msg, &it);
 
     // add the value
-    bool ret = addValueAt(val, &it, false);
+    bool ret = addValueAt(val, &it, rettype);
 
     return ret;
 }
 
-bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encoding)
+bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, constTypePtr rtype)
 {
+    y2milestone("Returning YCP value as type: %s", rtype->toString().c_str());
+
     int type = typeInt(val);
+
+    DBusMessageIter variant_it;
+    DBusMessageIter *it_backup = i;
+    if (rtype && rtype->isAny())
+    {
+	// open variant container for "any" type
+	y2debug("Opening VARIANT container with type %s", typeStr(val, false).c_str());
+	dbus_message_iter_open_container(i, DBUS_TYPE_VARIANT, typeStr(val, false).c_str(), &variant_it);
+
+	i = &variant_it;
+    }
 
     if (val->isInteger())
     {
@@ -279,11 +313,19 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encod
     else if (val->isList())
     {
 	YCPList lst = val->asList();
-	int sz = lst->size();
-	int index = 0;
+	std::string list_type("v");
+	constTypePtr list_type_ptr = Type::Any;
+	
+	if (rtype->isList())
+	{
+	    list_type_ptr = ((constListTypePtr)rtype)->type();
+	    y2debug("Found type list<%s>", list_type_ptr->toString().c_str());
 
-	// use string as fallback for empty list
-	std::string list_type(sz ? typeStr(lst->value(0), bsv_encoding) : DBUS_TYPE_STRING_AS_STRING);
+	    if (!list_type_ptr->isAny())
+	    {
+		list_type = YCPTypeSignature(list_type_ptr);
+	    }
+	}
 
 	DBusMessageIter array_it;
 
@@ -291,24 +333,15 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encod
 	y2debug("Opening array container with type: %s", list_type.c_str());
 
 	dbus_message_iter_open_container(i, DBUS_TYPE_ARRAY, list_type.c_str(), &array_it);
+
+	int sz = lst->size();
+	int index = 0;
 	while(index < sz)
 	{
 	    y2debug("Adding YCP value at index %d", index);
 
-	    YCPValue list_item = lst->value(index);
-
-	    if (typeStr(list_item, bsv_encoding) != list_type)
-	    {
-		y2error("Found different type in list: %s (expected %s) - ignoring item %s",
-		    typeStr(list_item, bsv_encoding).c_str(), list_type.c_str(),
-		    list_item->toString().c_str());
-		return false;
-	    }
-	    else
-	    {
-		// add the raw YCP value
-		addValueAt(lst->value(index), &array_it, bsv_encoding);
-	    }
+	    // add the raw YCP value
+	    addValueAt(lst->value(index), &array_it, list_type_ptr);
 
 	    index++;
 	}
@@ -321,24 +354,40 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encod
     {
 	YCPMap map = val->asMap();
 
+	std::string map_key_type("s");
+	std::string map_val_type("v");
+
+	// YCPMap can contain only YCPString, YCPInteger or YCPSymbol as the key
+	constTypePtr map_key_type_ptr = Type::String;
+	constTypePtr map_val_type_ptr = Type::Any;
+	
+	if (rtype->isMap())
+	{
+	    map_key_type_ptr = ((constMapTypePtr)rtype)->keytype();
+
+	    if (map_key_type_ptr->isAny())
+	    {
+		map_key_type_ptr = Type::String;
+	    }
+
+	    map_val_type_ptr = ((constMapTypePtr)rtype)->valuetype();
+	    y2debug("Found type map<%s,%s>", map_key_type_ptr->toString().c_str(), map_val_type_ptr->toString().c_str());
+
+	    if (!map_key_type_ptr->isAny())
+	    {
+		map_key_type = YCPTypeSignature(map_key_type_ptr);
+	    }
+	    if (!map_val_type_ptr->isAny())
+	    {
+		map_val_type = YCPTypeSignature(map_val_type_ptr);
+	    }
+	}
+
 	DBusMessageIter array_it;
 
 	YCPMap::const_iterator mit = map.begin();
-	// use string as fallback for empty map
-	std::string key_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->first, bsv_encoding));
-	std::string val_type(mit == map.end() ? DBUS_TYPE_STRING_AS_STRING : typeStr(mit->second, bsv_encoding));
 
-	// dbus allows only basic types as key type in a map
-	const std::string valid_key_types(DBUS_TYPE_INT64_AS_STRING DBUS_TYPE_DOUBLE_AS_STRING
-	    DBUS_TYPE_STRING_AS_STRING DBUS_TYPE_BOOLEAN_AS_STRING);
-
-	if (valid_key_types.find(key_type) == std::string::npos)
-	{
-	    y2error("Invalid type of key in map (non-basic type): %s, ignoring the map", key_type.c_str());
-	    return false;
-	}
-
-	std::string map_signature("{" + key_type + (bsv_encoding ? "v" : val_type) + "}");
+	std::string map_signature("{" + map_key_type + map_val_type + "}");
 
 	// open array container
 	y2debug("Opening DICT container with signature: %s", map_signature.c_str());
@@ -349,40 +398,22 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encod
 	    YCPValue key = mit->first;
 	    YCPValue val = mit->second;
 
-	    // error: this is a different key type than the announced type
-	    if (key_type != typeStr(key, bsv_encoding))
-	    {
-		y2error("Found different key type %s (expected %s) - ignoring pair $[ %s : %s ]",
-		    typeStr(key, bsv_encoding).c_str(), key_type.c_str(),
-		    key->toString().c_str(), val->toString().c_str());
-
-		continue;
-	    }
-
 	    DBusMessageIter map_item_it;
 	    y2debug("Opening map item container");
 
 	    dbus_message_iter_open_container(&array_it, DBUS_TYPE_DICT_ENTRY, 0, &map_item_it);
 
+	    // convert YCPInteger key to string for "any" type
+	    if (key->isInteger() && map_key_type_ptr == Type::String)
+	    {
+		key = YCPString(key->toString());
+	    }
+
 	    // add the key
-	    addValueAt(key, &map_item_it, bsv_encoding);
+	    addValueAt(key, &map_item_it, map_key_type_ptr);
 
-	    if (bsv_encoding)
-	    {
-		DBusMessageIter var_it2;
-		// add VARIANT container
-		y2debug("Opening VARIANT container with type %s", typeStr(val, bsv_encoding).c_str());
-		dbus_message_iter_open_container(&map_item_it, DBUS_TYPE_VARIANT, typeStr(val, bsv_encoding).c_str(), &var_it2);
-		// add the value
-		addValueAt(val, &var_it2, bsv_encoding);
-
-		y2debug("Closing VARIANT container");
-		dbus_message_iter_close_container(&map_item_it, &var_it2);
-	    }
-	    else
-	    {
-		addValueAt(val, &map_item_it, bsv_encoding);
-	    }
+	    // add the value
+	    addValueAt(val, &map_item_it, map_val_type_ptr);
 
 	    // close map item
 	    dbus_message_iter_close_container(&array_it, &map_item_it);
@@ -399,6 +430,13 @@ bool DBusMsg::addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encod
 	    val->toString().c_str());
 
 	// TODO add as string?
+    }
+
+    if (rtype && rtype->isAny())
+    {
+	// close variant container for "any" type
+	y2debug("Closing VARIANT container");
+	dbus_message_iter_close_container(it_backup, &variant_it);
     }
 
     return true;
@@ -1103,9 +1141,7 @@ std::string DBusMsg::typeStr(const YCPValue &val, bool bsv_enc) const
 	}
 	else
 	{
-	    YCPList lst = val->asList();
-	    std::string val_type((lst->size() > 0) ? typeStr(lst->value(0)) : "s");
-	    return std::string("a") + val_type;
+	    return "av";
 	}
     }
     else if (val->isCode())
@@ -1128,10 +1164,7 @@ std::string DBusMsg::typeStr(const YCPValue &val, bool bsv_enc) const
 	}
 	else
 	{
-	    std::string val_type((map.size() > 0) ? typeStr(map.begin()->second) : "s");
-
-	    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING +
-		+ key_type.c_str() + val_type + DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+	    return "a{sv}";
 	}
     }
     
@@ -1169,4 +1202,77 @@ int DBusMsg::type() const
 const char *DBusMsg::YCPValueSignature()
 {
     return "(bsv)";
+}
+
+std::string DBusMsg::YCPTypeSignature(constTypePtr type)
+{
+    // handle any type specially
+    if (type->isAny())
+    {
+	return "v";
+    }
+
+    if (type->isList())
+    {
+	constTypePtr list_type = ((constListTypePtr)type)->type();
+	y2debug("type list<%s>", list_type->toString().c_str());
+
+	std::string list_type_str(YCPTypeSignature(list_type));
+
+	if (list_type_str.empty())
+	{
+	    throw SignatureException();
+	}
+
+	return std::string("a") + list_type_str;
+    }
+
+    if (type->isMap())
+    {
+	constMapTypePtr mt = (constMapTypePtr)type;
+	constTypePtr key_type = mt->keytype();
+	constTypePtr val_type = mt->valuetype();
+
+	if (key_type->isAny())
+	{
+	    key_type = Type::String;
+	}
+
+	y2debug("type map<%s,%s>", key_type->toString().c_str(), val_type->toString().c_str());
+
+	std::string key_type_str(YCPTypeSignature(key_type));
+	std::string val_type_str(YCPTypeSignature(val_type));
+
+	if (key_type_str.empty() || val_type_str.empty())
+	{
+	    throw SignatureException();
+	}
+
+	return std::string("a{") + key_type_str + val_type_str + "}";
+    }
+
+    YCPValueType vt = type->valueType();
+    std::string ret;
+
+    switch (vt)
+    {
+	case(YT_VOID) : ret = ""; break;
+	case(YT_BOOLEAN) : ret = DBUS_TYPE_BOOLEAN_AS_STRING; break;
+	case(YT_INTEGER) : ret = DBUS_TYPE_INT64_AS_STRING; break;
+	case(YT_FLOAT) : ret = DBUS_TYPE_DOUBLE_AS_STRING; break;
+	case(YT_STRING) : ret = DBUS_TYPE_STRING_AS_STRING; break;
+	case(YT_PATH) : ret = DBUS_TYPE_STRING_AS_STRING; break;
+	case(YT_SYMBOL) : ret = DBUS_TYPE_STRING_AS_STRING; break;
+	case(YT_TERM) : ret = DBUS_TYPE_STRING_AS_STRING; break;
+//	case(YT_CODE) : ret = DBUS_TYPE_STRING_AS_STRING; break;
+
+	default : y2error("Type '%s' is not supported", type->toString().c_str()); throw SignatureException();
+    }
+
+    return ret;
+}
+
+SignatureException::SignatureException()
+{
+    y2error("Signature exception");
 }

@@ -376,7 +376,7 @@ void DBusServerBase::run(bool forever)
 
 void DBusServerBase::register_method(const Object &obj, const Interface &intf, const Method &m, const DBusSignature &sig, methodHandler h)
 {
-    y2milestone("Registering DBus path: object %s interface %s method %s...", obj.c_str(), intf.c_str(), m.c_str());
+    y2milestone("Registering DBus path: object %s interface %s method %s signature %s...", obj.c_str(), intf.c_str(), m.c_str(), sig.asXML().c_str());
     Objects::iterator i = registered_objects.find(obj);
 
     // create a new data item

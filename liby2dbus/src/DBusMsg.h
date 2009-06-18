@@ -9,6 +9,8 @@
 #include <string>
 #include <dbus/dbus.h>
 
+#include <ycp/TypePtr.h>
+
 class YCPValue;
 
 // DBusMessage wrapper
@@ -43,7 +45,7 @@ class DBusMsg
 	bool addDouble(double val);
 
 	bool addYCPValue(const YCPValue &val);
-	bool addValue(const YCPValue &val);
+	bool addValueAs(const YCPValue &val, constTypePtr rettype = NULL);
 
 	YCPValue getYCPValue(int index) const;
 
@@ -61,12 +63,13 @@ class DBusMsg
 	std::string sender() const;
 
 	static const char *YCPValueSignature();
+	static std::string YCPTypeSignature(constTypePtr type);
 
     private:
 
 	bool addValue(int type, void* data);
 	bool addValue(int type, void* data, DBusMessageIter *i);
-	bool addValueAt(const YCPValue &val, DBusMessageIter *i, bool bsv_encoding = true);
+	bool addValueAt(const YCPValue &val, DBusMessageIter *i, constTypePtr rtype = NULL);
 	bool addYCPValue(const YCPValue &v, DBusMessageIter *i);
 	bool addYCPValueRaw(const YCPValue &val, DBusMessageIter *i);
 	void release();
@@ -77,6 +80,12 @@ class DBusMsg
 
 	YCPValue getYCPValue(DBusMessageIter *it) const;
 	YCPValue getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type = std::string()) const;
+};
+
+class SignatureException : std::exception
+{
+    public:
+	SignatureException();
 };
 
 #endif

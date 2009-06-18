@@ -1,0 +1,76 @@
+
+{
+
+module "TEST";
+
+global define list List()
+{return [];}
+
+global define list ListAny()
+{return [];}
+
+global define list ListAny1()
+{return [1, "string"];}
+
+global define list ListAny2()
+{return [["dssd", 123], ["zxcxczzx", 456]];}
+
+
+global define list<string> ListString()
+{return ["dssd", "sdfdfs"];}
+
+global define list<list<string> > ListListString()
+{return [["dssd", "sdfdfs"], ["zxcxczzx"]];}
+
+global define list<map> ListMap()
+{return [];}
+
+global define list<map<string, string> > ListMapStringString()
+{return [];}
+
+global define list<map<string, any> > ListMapStringAny()
+{return [ $["a" : "b"], $["c" : [10, 20, "haha", `Symbol]]];}
+
+global define map<string, any> MapStringAny()
+{return $[];}
+
+global define map<string, string> MapStringString()
+{return $[];}
+
+global define map<string, list<string> > MapStringListString()
+{return $[];}
+
+global define string String()
+{return "a";}
+
+global define any Any()
+{return "a";}
+
+global define any Any2()
+{return ["a"];}
+
+global define integer Integer()
+{return 10;}
+
+global define symbol Symbol()
+{return `s;}
+
+global define map MapAny()
+{return $[ ];}
+
+global define map MapAny2()
+{return $[ "3" : "l" ];}
+
+global define map MapAny3()
+{return $[ "3" : ["l", "3"] ];}
+
+global define map MapAny4()
+{return $[ "3" : $["l" : ["3", 10, $["a" : "b"]]]];}
+
+global define map MapAny5()
+{return $[ 3 : 4, "4" : "5" ];}
+
+global define void Void()
+{return;}
+
+}

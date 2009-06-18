@@ -1,5 +1,7 @@
 #! /bin/sh
 
+#set -x
+
 # A basic test: does the server reply to introspection?
 
 # TODO: more tests, probably in python or whatever so that
@@ -12,11 +14,32 @@ eval $(dbus-launch --sh-syntax)
 trap "kill $DBUS_SESSION_BUS_PID" EXIT TERM INT
 
 echo -n "Hey, server, get on da bus... "
-PRG="../src/yast_modules_dbus_server --disable-timer --session"
+
+# load the modules from the current directory
+export Y2DIR=.
+
+# start the server, preload TEST.ycp module
+PRG="../src/yast_modules_dbus_server --disable-timer --session TEST"
 $PRG & sleep 3
 echo "off we go!"
 
 SEND0="dbus-send  --session --dest=org.opensuse.YaST.modules"
 CALL="$SEND0 --type=method_call"
-REPLY="$CALL --print-reply"
-$REPLY / org.freedesktop.DBus.Introspectable.Introspect
+
+find . -name '*.test' | while read TESTFILE; do
+    TESTCALL=`echo "$TESTFILE" | sed -e "s#./\(.*\).test#\1#"`
+    echo -n "Testing $TESTCALL ... "
+    # call the DBus method, ignore the first two lines (the header)
+    REPLY=`$CALL --print-reply /org/opensuse/YaST/modules/TEST $TESTCALL | tail -n +2 > $TESTFILE.reply`
+
+    if diff -u $TESTFILE $TESTFILE.reply > /dev/null; then
+	echo "OK"
+    else
+	echo "FAILED!"
+	echo "Diff: "
+	diff -u $TESTFILE $TESTFILE.reply
+	exit 1
+    fi
+done
+
+

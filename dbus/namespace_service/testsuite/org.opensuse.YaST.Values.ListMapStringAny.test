@@ -1,0 +1,19 @@
+   array [
+      array [
+         dict entry(
+            string "a"
+            variant                string "b"
+         )
+      ]
+      array [
+         dict entry(
+            string "c"
+            variant                array [
+                  variant                      int64 10
+                  variant                      int64 20
+                  variant                      string "haha"
+                  variant                      string "`Symbol"
+               ]
+         )
+      ]
+   ]

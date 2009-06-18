@@ -22,6 +22,7 @@
 
 #include "yast_dbus_names.h"
 
+
 void DBusModulesServer::init_wfm()
 {
     if (Y2WFMComponent::instance() == NULL)
@@ -113,17 +114,31 @@ bool DBusModulesServer::registerFunction(const std::string &nspace, const char *
 
 	DBusSignature sig_marshalled;
 	DBusSignature sig_raw;
+	bool params_ok_raw = true;
 
-	// add return type
-	std::string rett(Y2Dtype(rettype));
+	std::string rett;
 
-	if (!rett.empty())
+	try
 	{
-	    sig_raw.retval = DBusArgument("ret", rett);
+	    // add return type
+	    rett = DBusMsg::YCPTypeSignature(rettype);
+	}
+	catch (const SignatureException &excpt)
+	{
+	    y2error("Ignoring function %s::%s in raw interface, unsupported return type: %s", nspace.c_str(), fname, rettype->toString().c_str());
+	    params_ok_raw = false;
 	}
 
-	// TODO FIXME void() ?
-	sig_marshalled.retval = DBusArgument("ret", "(bsv)");
+	// check void()
+	if (!rettype->isVoid() && !rettype->isNil())
+	{
+	    if (params_ok_raw)
+	    {
+		sig_raw.retval = DBusArgument("ret", rett);
+	    }
+
+	    sig_marshalled.retval = DBusArgument("ret", "(bsv)");
+	}
 
 	// add parameter types
 	int params = fptr->parameterCount();
@@ -131,20 +146,20 @@ bool DBusModulesServer::registerFunction(const std::string &nspace, const char *
 	DBusSignature::Params p_marshalled;
 	DBusSignature::Params p_raw;
 
-	bool params_ok_raw = true;
 
 	while(parindex < params)
 	{
-	    std::string partype_raw(Y2Dtype(fptr->parameterType(parindex)));
-
-	    if (!partype_raw.empty())
+	    try
 	    {
+		std::string partype_raw(DBusMsg::YCPTypeSignature(fptr->parameterType(parindex)));
+
 		DBusArgument param("param", partype_raw);
 		p_raw.push_back(param);
 	    }
-	    else
+	    catch (const SignatureException &excpt)
 	    {
-		y2warning("Function %s is not exported due to an unsupported parameter type", fname);
+		y2warning("Function %s::%s is not exported due to an unsupported type of parameter number %d",
+		    nspace.c_str(), fname, parindex);
 		params_ok_raw = false;
 	    }
 
@@ -257,33 +272,6 @@ void DBusModulesServer::registerManager()
     // register the manager object: register_function(object, interface, method, signature, handler)
     register_method(YAST_DBUS_OBJ_PREFIX, YAST_DBUS_MGR_INTERFACE, YAST_DBUS_MANAGER_UNLOCK_METHOD, void_sig, manager_callback);
     register_method(YAST_DBUS_OBJ_PREFIX, YAST_DBUS_MGR_INTERFACE, YAST_DBUS_MANAGER_LOCK_METHOD, void_sig, manager_callback);
-}
-
-std::string DBusModulesServer::Y2Dtype(constTypePtr type) const
-{
-    YCPValueType vt = type->valueType();
-    std::string ret;
-
-    switch (vt)
-    {
-	case(YT_VOID) : ret = ""; break;
-	case(YT_BOOLEAN) : ret = DBUS_TYPE_BOOLEAN_AS_STRING; break;
-	case(YT_INTEGER) : ret = DBUS_TYPE_INT64_AS_STRING; break;
-	case(YT_FLOAT) : ret = DBUS_TYPE_DOUBLE_AS_STRING; break;
-	case(YT_STRING) : ret = DBUS_TYPE_STRING_AS_STRING; break;
-	case(YT_PATH) : ret = DBUS_TYPE_STRING_AS_STRING; break;
-	case(YT_SYMBOL) : ret = DBUS_TYPE_STRING_AS_STRING; break;
-	case(YT_LIST) : ret = DBUS_TYPE_ARRAY_AS_STRING DBUS_TYPE_VARIANT_AS_STRING; break; /* av */
-	case(YT_MAP) : ret = DBUS_TYPE_ARRAY_AS_STRING
-	    DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING DBUS_TYPE_STRING_AS_STRING
-	    DBUS_TYPE_VARIANT_AS_STRING DBUS_DICT_ENTRY_END_CHAR_AS_STRING; break; /* a{sv} */
-	case(YT_TERM) : ret = DBUS_TYPE_STRING_AS_STRING; break;
-//	case(YT_CODE) : ret = DBUS_TYPE_STRING_AS_STRING; break;
-
-	default : y2warning("Value type %d is not supported", vt); break;
-    }
-
-    return ret;
 }
 
 constTypePtr DBusModulesServer::searchFuncType(const std::string &objname, const std::string &fname) const
@@ -413,6 +401,7 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
     y2debug("Requested object: %s, interface: %s, method: %s", object.c_str(), interface.c_str(), method.c_str());
 
     constTypePtr t = searchFuncType(object, method);
+    constTypePtr rettype = NULL;
 
     if (t)
     {
@@ -420,6 +409,8 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 
 	if (fptr)
 	{
+	    rettype = fptr->returnType();
+
 	    int reqarg = fptr->parameterCount();
 
 	    if (request.arguments() == reqarg)
@@ -528,7 +519,7 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 	    if (interface == YAST_DBUS_RAW_INTERFACE)
 	    {
 		y2debug("Returning direct DBus value");
-		reply.addValue(ret);
+		reply.addValueAs(ret, rettype);
 	    }
 	    else
 	    {
@@ -556,7 +547,7 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
     y2milestone("ModuleManager request: object: %s, method: %s, interface: %s",
 	object.c_str(), method.c_str(), interface.c_str());
 
-    YCPValue ret;
+    reply.createReply(request);
 
     if (object == YAST_DBUS_OBJ_PREFIX)
     {
@@ -577,18 +568,20 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 			if (arg->isString())
 			{
 			    std::string required_namespace(arg->asString()->value());
+			    bool ret;
 
 			    NameSpaceMap::const_iterator nsiter = nsmap.find(required_namespace);
 			    if (nsiter != nsmap.end())
 			    {
-				ret = YCPBoolean(true);
+				ret = true;
 			    }
 			    else
 			    {
-				bool retval = importNamespace(arg->asString()->value());
-
-				ret = YCPBoolean(retval);
+				ret = importNamespace(arg->asString()->value());
 			    }
+
+			    y2milestone("Result: %s", ret ? "true" : "false");
+			    reply.addBoolean(ret);
 			}
 			else
 			{
@@ -611,14 +604,6 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 		register_client(request.sender());
 	    }
 	}
-    }
-
-    reply.createReply(request);
-
-    if (!ret.isNull())
-    {
-	y2milestone("Result: %s", ret->toString().c_str());
-	reply.addValue(ret);
     }
 
     return reply;
