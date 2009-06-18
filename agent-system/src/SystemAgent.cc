@@ -63,7 +63,7 @@ static int return_one (const struct dirent *entry)
  * @param path path to remove
  * @param depth max. depth
  */
-static const void
+static void
 remove_directory (const string& path, int depth)
 {
     struct stat buf;
