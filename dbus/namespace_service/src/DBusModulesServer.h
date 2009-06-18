@@ -24,7 +24,7 @@ class DBusModulesServer : public DBusServerBase
 
 	typedef std::list<std::string> NameSpaceList;
 
-	DBusModulesServer(const NameSpaceList &name_spaces,  bool use_session_bus);
+	DBusModulesServer(const NameSpaceList &name_spaces,  bool test_mode);
 	virtual ~DBusModulesServer();
 
 	virtual bool connect();
@@ -95,7 +95,7 @@ class DBusModulesServer : public DBusServerBase
 
 	void init_wfm();
 
-	bool m_use_session_bus;
+	bool m_test_mode;
 };
 
 

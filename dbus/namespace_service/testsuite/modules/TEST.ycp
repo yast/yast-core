@@ -1,4 +1,7 @@
 
+// This is a testing module for the YaST DBuse service
+// Some methods are not called during tests, but the correct signature is checked in the introspection test
+
 {
 
 module "TEST";
@@ -6,7 +9,7 @@ module "TEST";
 global define list List()
 {return [];}
 
-global define list ListAny()
+global define list<any> ListAny()
 {return [];}
 
 global define list ListAny1()
@@ -14,7 +17,6 @@ global define list ListAny1()
 
 global define list ListAny2()
 {return [["dssd", 123], ["zxcxczzx", 456]];}
-
 
 global define list<string> ListString()
 {return ["dssd", "sdfdfs"];}
@@ -67,6 +69,9 @@ global define map MapAny3()
 global define map MapAny4()
 {return $[ "3" : $["l" : ["3", 10, $["a" : "b"]]]];}
 
+// Note: interger key is returned as string in map<any,X> type,
+// map<interger,X> must be used to return int,
+// Dbus requires a basic type as key, a variant cannot be sent
 global define map MapAny5()
 {return $[ 3 : 4, "4" : "5" ];}
 

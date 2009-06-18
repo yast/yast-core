@@ -23,7 +23,7 @@ class DBusServerBase
 {
     public:
 
-	DBusServerBase();
+	DBusServerBase(bool testmode = false);
 	virtual ~DBusServerBase();
 
 	virtual bool connect() = 0;
@@ -60,6 +60,7 @@ class DBusServerBase
 
 	std::string service_name;
 
+	bool test_mode;
 
     private:
 

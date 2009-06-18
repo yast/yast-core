@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 
     bool forever = false;
     bool badopts = false;
-    bool use_session_bus = false;
+    bool test_mode = false;
 
     DBusModulesServer::NameSpaceList modules;
 
@@ -29,9 +29,9 @@ int main(int argc, char **argv)
 	    {
 		forever = true;
 	    }
-	    else if (!strcmp(argv[index], "--session"))
+	    else if (!strcmp(argv[index], "--test"))
 	    {
-		use_session_bus = true;
+		test_mode = true;
 	    }
 	    else
 	    {
@@ -47,12 +47,13 @@ int main(int argc, char **argv)
 	std::cerr << "Usage: " << argv[0] << " [--help] [--disable-timer] [--session] <namespace> <namespace>..." << std::endl;
 	std::cerr << "       --help            Print this text\n";
 	std::cerr << "       --disable-timer   Disable automatic shutdown of the service, useful for debugging\n";
-	std::cerr << "       --session         Connect to the session bus (system is the default), useful for debugging\n";
+	std::cerr << "       --test            Set the test mode - Connect to the session bus (system is the default),\n";
+	std::cerr << "                         disable PolicyKit checks. Useful for testing or debugging.\n";
 	std::cerr << "       <namespace>       Preload an yast namespace and export it on DBus\n";
 	return 1;
     }
 
-    DBusModulesServer server(modules, use_session_bus);
+    DBusModulesServer server(modules, test_mode);
     bool connected = server.connect();
 
     if (connected)

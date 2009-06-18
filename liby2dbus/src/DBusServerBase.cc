@@ -21,8 +21,9 @@
 
 int timeout_counter = YAST_DBUS_SHUTDOWN_TIMEOUT_COUNT;
 
-DBusServerBase::DBusServerBase()
+DBusServerBase::DBusServerBase(bool testmode)
 {
+    test_mode = testmode;
     dbus_threads_init_default();
 }
 
@@ -261,8 +262,8 @@ void DBusServerBase::run(bool forever)
 	    policykit.checkPolkitChanges();
 #endif
 
-	    // check the policy using PolicyKit
-	    if (isActionAllowed(request, &dbus_error))
+	    // check the policy using PolicyKit, the check is disabled in the test mode
+	    if (test_mode || isActionAllowed(request, &dbus_error))
 	    {
 		// find the registered object
 		std::string objname = request.path();
