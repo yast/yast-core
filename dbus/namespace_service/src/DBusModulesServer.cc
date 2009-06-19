@@ -230,7 +230,8 @@ bool DBusModulesServer::registerNamespace(const Y2Namespace *ns)
 
 
 DBusModulesServer::DBusModulesServer(const NameSpaceList &name_spaces, bool test_mode)
-    : e(this)
+    : DBusServerBase(test_mode)
+    , e(this)
     , manager_callback(this)
     , wfm(NULL)
     , m_test_mode(test_mode)
