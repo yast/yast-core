@@ -288,7 +288,7 @@ f_tolstring (const YCPFloat &f, const YCPInteger &precision)
     std::ostringstream ss;
     ss.imbue (std::locale (""));
     ss.precision (precision->value ());
-    ss << f->value ();
+    ss << fixed<< f->value ();
     YCPString ret (ss.str ());
 
     return ret;

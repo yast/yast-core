@@ -84,6 +84,14 @@
 //
 ( tostring(0.12345, 4) == "0.1235" )
 ( float::tolstring(0.12345, 4) == "0,1235" )
+( tostring(0.0, 2) )
+( float::tolstring(0.0, 2) )
+( tostring(1.0, 2) )
+( float::tolstring(1.0, 2) )
+( tostring(1049.0/1024, 2) )
+( float::tolstring(1049.0/1024, 2) )
+( tostring(1126000000000000.0/1024/1024/1024/1024, 2) )
+( float::tolstring(1126000000000000.0/1024/1024/1024/1024, 2) )
 
 
 //
