@@ -31,7 +31,8 @@ Provides:	liby2util = 2.16.1
 Obsoletes:	liby2util < 2.16.1
 
 %description
--
+This package contains the scanner, parser, and interpreter runtime
+library for the YCP scripting language used in YaST2.
 
 @HEADER-DEVEL@
 Summary:	YaST2 - Core Libraries
@@ -46,7 +47,8 @@ Requires:	PolicyKit-devel dbus-1-devel
 Requires:	flex
 
 %description devel
--
+This package contains include and documentation files for developing
+applications using the YaST2 YCP interpreter.
 
 @PREP@
 
