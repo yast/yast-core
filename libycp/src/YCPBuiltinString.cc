@@ -708,8 +708,7 @@ s_mergestring (const YCPList &l, const YCPString &s)
      * @usage mergestring (["", "abc", "dev", "ghi"], "/") -> "/abc/dev/ghi"
      * @usage mergestring (["abc", "dev", "ghi", ""], "/") -> "abc/dev/ghi/"
      * @usage mergestring ([1, "a", 3], ".") -> "a"
-     * @usage mergestring (["1", "a", "3"], ".") -> "a"
-     * @usage mergestring ([], ".") -> "1.a.3"
+     * @usage mergestring ([], ".") -> ""
      * @usage mergestring (["abc", "dev", "ghi"], "") -> "abcdevghi"
      * @usage mergestring (["abc", "dev", "ghi"], "123") -> "abc123dev123ghi"
      */
