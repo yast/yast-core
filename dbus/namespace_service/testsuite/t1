@@ -11,22 +11,6 @@
 # TODO: more tests, probably in python or whatever so that
 # the responses can be inspected better
 
-# This launches the bus daemon,
-# exports DBUS_SESSION_BUS_ADDRESS and sets DBUS_SESSION_BUS_PID
-eval $(dbus-launch --sh-syntax)
-# Clean up at exit. This will also kill the server.
-trap "kill $DBUS_SESSION_BUS_PID" EXIT TERM INT
-
-echo -n "Hey, server, get on da bus... "
-
-# load the modules from the current directory
-export Y2DIR=.
-
-# start the server, preload TEST.ycp module
-PRG="../src/yast_modules_dbus_server --disable-timer --test TEST"
-$PRG & sleep 3
-echo "off we go!"
-
 SEND0="dbus-send  --session --dest=org.opensuse.YaST.modules"
 CALL="$SEND0 --type=method_call"
 
@@ -47,5 +31,3 @@ find . -name '*.test' | while read TESTFILE; do
 	exit 1
     fi
 done
-
-

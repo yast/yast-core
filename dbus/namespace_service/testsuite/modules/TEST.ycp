@@ -78,4 +78,7 @@ global define map MapAny5()
 global define void Void()
 {return;}
 
+global define any ParamMap(map<string,any> m)
+{return m;}
+
 }

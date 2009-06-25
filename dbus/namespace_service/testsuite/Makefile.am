@@ -1,8 +1,8 @@
 # adhoc testing, TODO use a decent framework (dejagnu does not qualify)
-TESTS = t1
+TESTS = test_all
 
 SUBDIRS = modules
 
-EXTRA_DIST = $(wildcard *.test) t1
+EXTRA_DIST = $(wildcard *.test) test_all test_server t1 t2
 
 CLEANFILES = $(wildcard *.test.reply)

@@ -1,0 +1,14 @@
+#! /bin/sh
+# run all applicable test cases with proper setup
+# $0
+# $0 ./a_single_testcase
+: ${CASES:=$@}
+# : ${CASES:=./t?} # t2 fails. also, it requires python
+ : ${CASES:=./t1}
+
+# load the modules from the current directory
+export Y2DIR=.
+./test_server \
+	../src/yast_modules_dbus_server --disable-timer --test TEST \
+	-- \
+	$CASES

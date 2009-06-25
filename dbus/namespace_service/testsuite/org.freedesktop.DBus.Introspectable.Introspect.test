@@ -28,6 +28,7 @@
   <method name='MapStringAny'><arg name='ret' type='a{sv}' direction='out'/></method>
   <method name='MapStringListString'><arg name='ret' type='a{sas}' direction='out'/></method>
   <method name='MapStringString'><arg name='ret' type='a{ss}' direction='out'/></method>
+  <method name='ParamMap'><arg name='ret' type='v' direction='out'/><arg name='param' type='a{sv}' direction='in'/></method>
   <method name='String'><arg name='ret' type='s' direction='out'/></method>
   <method name='Symbol'><arg name='ret' type='s' direction='out'/></method>
   <method name='Void'></method>
@@ -53,6 +54,7 @@
   <method name='MapStringAny'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='MapStringListString'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='MapStringString'><arg name='ret' type='(bsv)' direction='out'/></method>
+  <method name='ParamMap'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
   <method name='String'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='Symbol'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='Void'></method>

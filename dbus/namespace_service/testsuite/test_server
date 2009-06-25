@@ -1,0 +1,30 @@
+#! /bin/sh
+# A wrapper for DBus tests
+# Sets up a private session bus and calls all its arguments in turn
+# exiting on first failure
+# $0 server [arg1 arg2...] -- test1 test2...
+set -o errexit
+
+while [ "$1" != "--" ]; do
+  SERVER="$SERVER $1"
+  shift
+done
+shift # --
+
+# This launches the bus daemon,
+# exports DBUS_SESSION_BUS_ADDRESS and sets DBUS_SESSION_BUS_PID
+# FIXME dbus-launch is in dbus-1-x11, an unnecessary dependency
+eval $(dbus-launch --sh-syntax)
+# Clean up at exit. This will also kill the server.
+trap "kill $DBUS_SESSION_BUS_PID" EXIT TERM INT
+
+echo -n "Hey, server, get on da bus... "
+# start the server
+$SERVER & sleep 3
+echo "off we go!"
+
+while [ -n "$1" ]; do
+  echo Running $1
+  $1
+  shift
+done
