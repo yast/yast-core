@@ -1,6 +1,8 @@
 -------------------------------------------------------------------
-Fri Jun 26 14:49:59 CEST 2009 - mvidner@suse.cz
+Fri Jun 26 14:52:05 CEST 2009 - mvidner@suse.cz
 
+- yast_modules_dbus_server: return org.freedesktop.DBus.Error.UnknownMethod
+  for unknown methods
 - Disable --as-needed until this package is fixed.
 
 -------------------------------------------------------------------

@@ -404,12 +404,14 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
     constTypePtr t = searchFuncType(object, method);
     constTypePtr rettype = NULL;
 
+    bool found = false;
     if (t)
     {
 	constFunctionTypePtr fptr(t);
 
 	if (fptr)
 	{
+	    found = true;
 	    rettype = fptr->returnType();
 
 	    int reqarg = fptr->parameterCount();
@@ -498,14 +500,18 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 		y2error("Function %s::%s got %d parameters instead of %d", object.c_str(), method.c_str(), request.arguments(), fptr->parameterCount());
 	    }
 	}
-	else
-	{
-	    y2internal("Function %s::%s was not found although it was registered", object.c_str(), method.c_str());
-	}
     }
-    else
+
+    if (!found)
     {
 	y2internal("Function %s::%s was not found although it was registered", object.c_str(), method.c_str());
+	string msg = "Method '"+ interface + "." + method + "' "
+	    "on object '" + object + "' doesn't exist";
+	// anyway, why didnt dbus itself cry?
+	reply.createError(request, // in reply to
+			  msg,
+			  "org.freedesktop.DBus.Error.UnknownMethod");
+	return reply;
     }
 
     reply.createReply(request);
