@@ -54,6 +54,8 @@ applications using the YaST2 YCP interpreter.
 
 @PREP@
 
+%build
+export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
 @BUILD@
 
 @INSTALL@

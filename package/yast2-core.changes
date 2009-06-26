@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jun 26 14:49:59 CEST 2009 - mvidner@suse.cz
+
+- Disable --as-needed until this package is fixed.
+
+-------------------------------------------------------------------
 Fri Jun 19 14:14:13 CEST 2009 - mvidner@suse.cz
 
 - float::tolstring fixed to use the fixed notation
