@@ -28,7 +28,17 @@
   <method name='MapStringAny'><arg name='ret' type='a{sv}' direction='out'/></method>
   <method name='MapStringListString'><arg name='ret' type='a{sas}' direction='out'/></method>
   <method name='MapStringString'><arg name='ret' type='a{ss}' direction='out'/></method>
+  <method name='ParamAny'><arg name='ret' type='v' direction='out'/><arg name='param' type='v' direction='in'/></method>
+  <method name='ParamBoolean'><arg name='ret' type='v' direction='out'/><arg name='param' type='b' direction='in'/></method>
+  <method name='ParamFloat'><arg name='ret' type='v' direction='out'/><arg name='param' type='d' direction='in'/></method>
+  <method name='ParamInteger'><arg name='ret' type='v' direction='out'/><arg name='param' type='x' direction='in'/></method>
+  <method name='ParamList'><arg name='ret' type='v' direction='out'/><arg name='param' type='av' direction='in'/></method>
+  <method name='ParamLocale'><arg name='ret' type='v' direction='out'/><arg name='param' type='s' direction='in'/></method>
   <method name='ParamMap'><arg name='ret' type='v' direction='out'/><arg name='param' type='a{sv}' direction='in'/></method>
+  <method name='ParamMapA'><arg name='ret' type='v' direction='out'/><arg name='param' type='a{sv}' direction='in'/></method>
+  <method name='ParamPath'><arg name='ret' type='v' direction='out'/><arg name='param' type='s' direction='in'/></method>
+  <method name='ParamString'><arg name='ret' type='v' direction='out'/><arg name='param' type='s' direction='in'/></method>
+  <method name='ParamSymbol'><arg name='ret' type='v' direction='out'/><arg name='param' type='s' direction='in'/></method>
   <method name='String'><arg name='ret' type='s' direction='out'/></method>
   <method name='Symbol'><arg name='ret' type='s' direction='out'/></method>
   <method name='Void'></method>
@@ -54,7 +64,19 @@
   <method name='MapStringAny'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='MapStringListString'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='MapStringString'><arg name='ret' type='(bsv)' direction='out'/></method>
+  <method name='ParamAny'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamBlock'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamBoolean'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamByteblock'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamFloat'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamInteger'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamList'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamLocale'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
   <method name='ParamMap'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamMapA'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamPath'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamString'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
+  <method name='ParamSymbol'><arg name='ret' type='(bsv)' direction='out'/><arg name='param' type='(bsv)' direction='in'/></method>
   <method name='String'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='Symbol'><arg name='ret' type='(bsv)' direction='out'/></method>
   <method name='Void'></method>

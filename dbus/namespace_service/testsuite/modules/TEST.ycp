@@ -1,4 +1,3 @@
-
 // This is a testing module for the YaST DBuse service
 // Some methods are not called during tests, but the correct signature is checked in the introspection test
 
@@ -78,7 +77,53 @@ global define map MapAny5()
 global define void Void()
 {return;}
 
-global define any ParamMap(map<string,any> m)
-{return m;}
+// ParamFoo: test DBus->YCP conversion
+global define any ParamAny(any p)
+{return p;}
+
+//Valid YCP but useless
+//global define any ParamVoid(void p)
+//{return p;}
+
+global define any ParamBoolean(boolean p)
+{return p;}
+
+global define any ParamInteger(integer p)
+{return p;}
+
+global define any ParamFloat(float p)
+{return p;}
+
+global define any ParamString(string p)
+{return p;}
+
+global define any ParamLocale(locale p)
+{return p;}
+
+global define any ParamByteblock(byteblock p)
+{return p;}
+
+global define any ParamPath(path p)
+{return p;}
+
+global define any ParamSymbol(symbol p)
+{return p;}
+
+global define any ParamList(list p)
+{return p;}
+
+// FIXME this fails, expecting a plain string
+//global define any ParamTerm(term p)
+//{return p;}
+
+// inconsistent name, the first test
+global define any ParamMap(map<string,any> p)
+{return p;}
+
+global define any ParamMapA(map p)
+{return p;}
+
+global define any ParamBlock(block<any> p)
+{return p;}
 
 }
