@@ -27,7 +27,8 @@ polkit_policies_DATA = org.opensuse.yast.scr.policy
 # validate the policy files in 'make check' target
 check-local:
 	polkit-policy-file-validate $(polkit_policies_DATA)
-
+	ruby test_SCR_dbus_server.rb
+	
 # service activation config
 
 # FIXME?? dbus pkgconfig provides only 'session_bus_services_dir'
