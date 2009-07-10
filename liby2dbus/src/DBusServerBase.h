@@ -56,6 +56,7 @@ class DBusServerBase
 	virtual actionList createActionId(const DBusMsg &msg);
 
 	// handle unknown requests
+	// Some servers will try to autoload and retry
 	virtual DBusMsg unknownRequest(const DBusMsg &request);
 
 	std::string service_name;

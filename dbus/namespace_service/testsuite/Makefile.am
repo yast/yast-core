@@ -3,6 +3,6 @@ TESTS = test_all
 
 SUBDIRS = modules
 
-EXTRA_DIST = $(wildcard *.test) test_all test_server t1 t2
+EXTRA_DIST = $(wildcard *.test) test_all test_server dbustest.py t1 $(wildcard t*.py)
 
 CLEANFILES = $(wildcard *.test.reply)

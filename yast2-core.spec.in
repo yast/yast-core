@@ -25,7 +25,9 @@ BuildRequires:	libblocxx-devel
 BuildRequires:  libxcrypt-devel
 
 # for SCR DBus service
-BuildRequires:	dbus-1-devel dbus-1-x11 PolicyKit-devel
+BuildRequires:	dbus-1-devel PolicyKit-devel
+# for DBus testing 
+BuildRecommends: python-base dbus-1-python
 
 Summary:	YaST2 - Core Libraries
 Requires:	perl = %{perl_version}

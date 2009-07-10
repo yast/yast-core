@@ -474,12 +474,14 @@ bool DBusServerBase::isActionAllowed(const DBusMsg &msg, DBusError *err)
 	// check the policy here
 	if (policykit.isDBusUserAuthorized(*it, msg.sender(), connection.getConnection(), err))
 	{
-	    y2security("User is authorized to do action %s", it->c_str());
+	    y2security("User %s is authorized to do action %s",
+		       msg.sender().c_str(), it->c_str());
 	    return true;
 	}
 	else
 	{
-	    y2security("User is NOT authorized to do action %s", it->c_str());
+	    y2security("User %s is NOT authorized to do action %s",
+		       msg.sender().c_str(), it->c_str());
 	}
     }
 

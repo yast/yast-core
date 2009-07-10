@@ -35,6 +35,7 @@ class DBusModulesServer : public DBusServerBase
 	virtual actionList createActionId(const DBusMsg &msg);
 
 	// handle unknown requests
+	// Tries to autoimport and retry
 	virtual DBusMsg unknownRequest(const DBusMsg &request);
 
     private:

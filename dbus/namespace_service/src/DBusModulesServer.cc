@@ -407,6 +407,8 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
     bool found = false;
     if (t)
     {
+      try
+      {
 	constFunctionTypePtr fptr(t);
 
 	if (fptr)
@@ -433,7 +435,8 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 
 			while(index < reqarg)
 			{
-			    YCPValue arg = request.getYCPValue(index);
+			    constTypePtr argtype(fptr->parameterType(index));
+			    YCPValue arg = request.getYCPValue(index, argtype);
 
 			    if (arg.isNull())
 			    {
@@ -443,8 +446,6 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 			    }
 
 			    // check the data type compatibility
-			    constTypePtr argtype(fptr->parameterType(index));
-
 			    if (argtype->matchvalue(arg) < 0)
 			    {
 				if (interface == YAST_DBUS_RAW_INTERFACE)
@@ -490,6 +491,7 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 			}
 			else
 			{
+			    // FIXME should be a dbus error
 			    y2error("Wrong parameters to function %s::%s", object.c_str(), method.c_str());
 			}
 		    }
@@ -500,17 +502,26 @@ DBusMsg DBusModulesServer::handler(const DBusMsg &request)
 		y2error("Function %s::%s got %d parameters instead of %d", object.c_str(), method.c_str(), request.arguments(), fptr->parameterCount());
 	    }
 	}
+      }
+      catch (const DBusException& de)
+      {
+	  y2error ("Caught: %s", de.message().c_str());
+	  y2error ("Returning %s", de.name().c_str());
+	  reply.createError(request, de.message(), de.name());
+	  return reply;
+      }
     }
 
     if (!found)
     {
+// see also DBusServerBase::unknownRequest
 	y2internal("Function %s::%s was not found although it was registered", object.c_str(), method.c_str());
 	string msg = "Method '"+ interface + "." + method + "' "
 	    "on object '" + object + "' doesn't exist";
 	// anyway, why didnt dbus itself cry?
 	reply.createError(request, // in reply to
 			  msg,
-			  "org.freedesktop.DBus.Error.UnknownMethod");
+			  DBUS_ERROR_UNKNOWN_METHOD);
 	return reply;
     }
 
@@ -554,8 +565,6 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
     y2milestone("ModuleManager request: object: %s, method: %s, interface: %s",
 	object.c_str(), method.c_str(), interface.c_str());
 
-    reply.createReply(request);
-
     if (object == YAST_DBUS_OBJ_PREFIX)
     {
 	if (interface == YAST_DBUS_MGR_INTERFACE)
@@ -564,7 +573,9 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 	    {
 		if (request.arguments() == 1)
 		{
-		    YCPValue arg = request.getYCPValue(0);
+		  try
+		  {
+		    YCPValue arg = request.getYCPValue(0, Type::String);
 
 		    if (arg.isNull())
 		    {
@@ -588,6 +599,7 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 			    }
 
 			    y2milestone("Result: %s", ret ? "true" : "false");
+			    reply.createReply(request);
 			    reply.addBoolean(ret);
 			}
 			else
@@ -595,20 +607,29 @@ DBusMsg DBusModulesServer::managerHandler(const DBusMsg &request)
 			    y2error("Expecting 'string' parameter, got '%s'", Type::vt2type(arg->valuetype())->toString().c_str());
 			}
 		    }
-
+		  }
+		  catch (const DBusException& de)
+		  {
+		      y2error ("Caught: %s", de.message().c_str());
+		      y2error ("Returning %s", de.name().c_str());
+		      reply.createError(request, de.message(), de.name());
+		  }
 		}
 		else
 		{
 		    y2error("ModuleManager function %s got %d parameters instead of 1", method.c_str(), request.arguments());
+		    reply.createError(request, "Invalid number of parameters", DBUS_ERROR_INVALID_ARGS);
 		}
 	    }
 	    else if (method == YAST_DBUS_MANAGER_UNLOCK_METHOD)
 	    {
 		unregister_client(request.sender());
+		reply.createReply(request);
 	    }
 	    else if (method == YAST_DBUS_MANAGER_LOCK_METHOD)
 	    {
 		register_client(request.sender());
+		reply.createReply(request);
 	    }
 	}
     }

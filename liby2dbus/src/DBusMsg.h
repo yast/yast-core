@@ -1,4 +1,3 @@
-
 /*
   DBusMsg
 */
@@ -12,6 +11,8 @@
 #include <ycp/TypePtr.h>
 
 class YCPValue;
+class YCPList;
+class YCPMap;
 
 // DBusMessage wrapper
 class DBusMsg
@@ -41,13 +42,14 @@ class DBusMsg
 	bool addString(const std::string &val);
 	bool addInt64(dbus_int64_t val);
 	bool addInt32(dbus_int32_t val);
-	bool addBoolean(bool val);
+	bool addBoolean(dbus_bool_t val);
 	bool addDouble(double val);
 
 	bool addYCPValue(const YCPValue &val);
 	bool addValueAs(const YCPValue &val, constTypePtr rettype = NULL);
 
-	YCPValue getYCPValue(int index) const;
+	// ycptype may be Type::Any
+	YCPValue getYCPValue(int index, constTypePtr ycptype) const;
 
 	bool isMethodCall(const std::string &interface, const std::string &method) const;
 	int arguments() const;
@@ -78,8 +80,27 @@ class DBusMsg
 	int typeInt(const YCPValue &val) const;
 	std::string typeStr(const YCPValue &val, bool bsv_enc = true) const;
 
-	YCPValue getYCPValue(DBusMessageIter *it) const;
-	YCPValue getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type = std::string()) const;
+	YCPValue getYCPValue(DBusMessageIter *it, constTypePtr ycptype) const;
+	YCPValue getYCPValueRawType(DBusMessageIter *it, constTypePtr ycptype) const;
+	YCPValue getYCPValueRawAny(DBusMessageIter *it) const;
+	YCPValue getYCPValueBsv(DBusMessageIter *it, constTypePtr ycptype) const;
+
+	const char * getString(DBusMessageIter *it) const;
+	YCPList getYCPValueList(DBusMessageIter *it, constTypePtr valuetype) const;
+	YCPMap getYCPValueMap(DBusMessageIter *it, constTypePtr keytype, constTypePtr valuetype) const;
+	YCPValue getYCPValueInteger(DBusMessageIter *it) const;
+
+};
+
+class DBusException
+{
+    std::string m_name;
+    std::string m_message;
+public:
+    DBusException(const std::string& name, const std::string& message)
+	:m_name(name), m_message(message) {}
+    std::string name() const { return m_name; }
+    std::string message() const { return m_message; }
 };
 
 class SignatureException : std::exception
@@ -89,4 +110,3 @@ class SignatureException : std::exception
 };
 
 #endif
-

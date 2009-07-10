@@ -8,7 +8,7 @@ T_o = dbus.SessionBus().get_object('org.opensuse.YaST.modules',
 YT = dbus.Interface(T_o, 'org.opensuse.YaST.YCPValues')
 yp = (False, "map", dbus.Dictionary(signature="sv", variant_level=1))
 yrp = YT.ParamMap(yp)
-print yrp
+print "Explicit returned:", yrp
 assert yrp[0] == False
 assert yrp[1] == "map"
 rp = yrp[2]
@@ -20,8 +20,6 @@ T = dbus.Interface(T_o, 'org.opensuse.YaST.Values')
 # p = {} # ValueError: Unable to guess signature from an empty dict
 p = dbus.Dictionary(signature="sv")
 rp = T.ParamMap(p)
-print rp 
+print "Implicit returned:", rp
 assert isinstance(rp, dict)
 assert len(rp.values()) == 0
-
-# T.NoSuchMethod() # TODO it does not throw!

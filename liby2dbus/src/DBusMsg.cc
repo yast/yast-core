@@ -1,4 +1,3 @@
-
 /*
 
     DBusMsg
@@ -9,6 +8,8 @@
 #include "YCP.h"
 #include <ycp/Parser.h>
 #include <ycp/y2log.h>
+#include <y2util/stringutil.h>
+using namespace stringutil;
 
 DBusMsg::DBusMsg() : msg(NULL)
 {
@@ -123,9 +124,9 @@ bool DBusMsg::addInt32(dbus_int32_t val)
     return addValue(DBUS_TYPE_INT32, &val);
 }
 
-bool DBusMsg::addBoolean(bool val)
+bool DBusMsg::addBoolean(dbus_bool_t val)
 {
-    return addValue(DBUS_TYPE_INT64, &val);
+    return addValue(DBUS_TYPE_BOOLEAN, &val);
 }
 
 bool DBusMsg::addDouble(double val)
@@ -662,12 +663,307 @@ int DBusMsg::arguments() const
 }
 
 
-YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_type) const
+// returns NULL if "it" does not point to a string
+const char * DBusMsg::getString(DBusMessageIter *it) const
+{
+    const char *s = NULL;
+    if (dbus_message_iter_get_arg_type (it) == DBUS_TYPE_STRING)
+    {
+	dbus_message_iter_get_basic(it, &s);
+    }
+    return s;
+}
+
+// "it" is the inside iterator
+YCPList DBusMsg::getYCPValueList(DBusMessageIter *it, constTypePtr valuetype) const
+{
+    YCPList lst;
+
+    while (dbus_message_iter_get_arg_type (it) != DBUS_TYPE_INVALID)
+    {
+	// FIXME this can fail
+	YCPValue list_val = getYCPValue(it, valuetype);
+	lst->add(list_val);
+
+	dbus_message_iter_next(it);
+    }
+    return lst;
+}
+
+// "it" is the inside iterator
+YCPMap DBusMsg::getYCPValueMap(DBusMessageIter *it, constTypePtr keytype, constTypePtr valuetype) const
+{
+    YCPMap map;
+
+    while (dbus_message_iter_get_arg_type (it) != DBUS_TYPE_INVALID)
+    {
+	// is it a map or a list?
+	if (dbus_message_iter_get_arg_type(it) == DBUS_TYPE_DICT_ENTRY)
+	{
+	    DBusMessageIter mapit;
+	    dbus_message_iter_recurse(it, &mapit);
+
+	    // DICT keys cannot be structs, skip Bsv
+	    YCPValue key = getYCPValueRawType(&mapit, keytype);
+
+	    dbus_message_iter_next(&mapit);
+
+	    // read the value
+	    YCPValue val = getYCPValue(&mapit, valuetype);
+
+	    map->add(key, val);
+	}
+	// else FIXME how to signal error
+
+	dbus_message_iter_next(it);
+    }
+    return map;
+}
+
+// returns YCPNull without an error if "it" does not point to an integer/byte
+YCPValue DBusMsg::getYCPValueInteger(DBusMessageIter *it) const
+{
+    int type = dbus_message_iter_get_arg_type(it);
+    YCPValue ret;
+
+    switch (type) {
+	case DBUS_TYPE_INT64:
+	{
+	    dbus_int64_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_UINT64:
+	{
+	    // warning: YCPInteger is signed!
+	    dbus_uint64_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_INT32:
+	{
+	    dbus_int32_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_UINT32:
+	{
+	    dbus_uint32_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_INT16:
+	{
+	    dbus_int16_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_UINT16:
+	{
+	    dbus_uint16_t i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+	case DBUS_TYPE_BYTE:
+	{
+	    unsigned char i;
+	    dbus_message_iter_get_basic(it, &i);
+	    ret = YCPInteger(i);
+	    break;
+	}
+    }
+    return ret;
+}
+
+// here ycptype is NOT Type::Unspec
+YCPValue DBusMsg::getYCPValueRawType(DBusMessageIter *it, constTypePtr ycptype) const
+{
+    if (ycptype->isAny())
+	return getYCPValueRawAny(it);
+
+    YCPValue ret;
+
+    int type = dbus_message_iter_get_arg_type(it);
+    bool mismatch = true;
+
+    if (ycptype->isBoolean())
+    {
+	if (type == DBUS_TYPE_BOOLEAN)
+	{
+	    bool b;
+	    dbus_message_iter_get_basic(it, &b);
+	    ret = YCPBoolean(b);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isInteger())
+    {
+	ret = getYCPValueInteger(it);
+	mismatch = ret.isNull();
+    }
+    else if (ycptype->isFloat())
+    {
+	if (type == DBUS_TYPE_DOUBLE)
+	{
+	    double d;
+	    dbus_message_iter_get_basic(it, &d);
+	    ret = YCPFloat(d);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isList())
+    {
+	// DBUS_TYPE_ARRAY is used for YCPList and YCPMap
+	// TODO sending a dict where a list is expected will confusingly complain about value type mismatch
+	if (type == DBUS_TYPE_ARRAY)
+	{
+	    DBusMessageIter sub;
+	    dbus_message_iter_recurse(it, &sub);
+
+	    constListTypePtr list_type = (constListTypePtr) ycptype;
+	    constTypePtr valuetype = list_type->type();
+
+	    // FIXME this can fail
+	    ret = getYCPValueList(&sub, valuetype);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isMap())
+    {
+	if (type == DBUS_TYPE_ARRAY)
+	{
+	    DBusMessageIter sub;
+	    dbus_message_iter_recurse(it, &sub);
+
+	    constMapTypePtr map_type = (constMapTypePtr) ycptype;
+	    constTypePtr keytype = map_type->keytype();
+	    constTypePtr valuetype = map_type->valuetype();
+
+	    ret = getYCPValueMap(&sub, keytype, valuetype);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isTerm())
+    {
+	// array with first item being the name
+	if (type == DBUS_TYPE_ARRAY) 
+	{
+	    DBusMessageIter sub;
+	    dbus_message_iter_recurse(it, &sub);
+
+	    std::string term_name;
+	    YCPList term_list;
+
+	    if (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
+	    {
+		YCPValue ytn = getYCPValue(&sub, Type::String);
+		if (!ytn.isNull() && ytn->isString())
+		{
+		    term_name = ytn->asString()->value();
+		    dbus_message_iter_next(&sub);
+
+		    term_list = getYCPValueList(&sub, Type::Unspec);
+
+		    y2debug("Received TERM: name: %s, list: %s", term_name.c_str(), term_list->toString().c_str());
+
+		    ret = YCPTerm(term_name, term_list);
+		    mismatch = false;
+		}
+		else
+		{
+		    y2error("Expecting string (term name) in the list");
+		    return YCPVoid(); // FIXME
+		}
+	    }
+	}
+    }
+    else if (ycptype->isString())
+    {
+	const char *s = getString(it);
+	if (s != NULL)
+	{
+	    ret = YCPString(s);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isSymbol())
+    {
+	const char *s = getString(it);
+	if (s != NULL)
+	{
+	    ret = YCPSymbol(s);
+	    mismatch = false;
+	}
+    }
+    else if (ycptype->isPath())
+    {
+	const char *s = getString(it);
+	if (s != NULL)
+	{
+	    ret = YCPPath(s);
+	    mismatch = false;
+	}
+    }
+    // parsed YCP code, wow. 
+    //FIXME does the execution precede auth checks?!
+    else if (ycptype->isBlock())
+    {
+	const char *s = getString(it);
+	if (s != NULL)
+	{
+	    if (*s == '\0')
+	    {
+		y2warning("The code block is empty");
+		ret = YCPVoid();
+	    }
+	    else
+	    {
+		// parse the string, recreate the YCPBlock again
+		Parser parser(s);
+		parser.setBuffered();
+		YCodePtr p = parser.parse();
+
+		if (!p)
+		{
+		    y2error("Parse error in YCP code: %s", s);
+		    ret = YCPVoid();
+		}
+		else
+		{
+		    ret = p->isBlock ()? YCPCode (p): p->evaluate (true);
+		}
+	    }
+	    mismatch = false;
+	}
+    }
+    else 
+    {
+	y2error ("Missing code to convert DBus data to YCP type %s",
+		 ycptype->toString().c_str());
+    }
+
+    if (mismatch)
+    {
+	string e = form("Data mismatch, "
+			"expecting YCP type %s, got DBus type %c",
+		 ycptype->toString().c_str(), (char)type);
+	throw DBusException(DBUS_ERROR_INVALID_ARGS, e);
+    }
+
+    return ret;
+}
+
+YCPValue DBusMsg::getYCPValueRawAny(DBusMessageIter *it) const
 {
     YCPValue ret;
 
     int type = dbus_message_iter_get_arg_type(it);
-
     // TODO support more types
     if (type == DBUS_TYPE_BOOLEAN)
     {
@@ -679,59 +975,8 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
     {
 	const char *s;
 	dbus_message_iter_get_basic(it, &s);
+	ret = YCPString(s);
 
-	static const char* block_prefix = "block ";
-	static const int block_prefix_len = ::strlen(block_prefix);
-
-	// use ycp_type to return the correct type
-	if (ycp_type.empty() || ycp_type == "string")
-	    ret = YCPString(s);
-	else if (ycp_type == "symbol")
-	    ret = YCPSymbol(s);
-	else if (ycp_type == "path")
-	    ret = YCPPath(s);
-	else if (std::string(ycp_type, 0, block_prefix_len) == block_prefix)
-	{
-	    y2debug("Found YCP block");
-
-	    if (s == NULL || *s == '\0')
-	    {
-		y2warning("The code block is empty");
-		ret = YCPVoid();
-	    }
-	    else
-	    {
-		// parse the string, recreate the YCPBlock again
-		Parser parser(s);
-		parser.setBuffered();
-		YCodePtr p = parser.parse();
-		YCPValue contents = YCPNull ();
-		
-		if (!p)
-		{
-		    y2error("Parse error in YCP code: %s", s);
-		}
-		else
-		{
-		    if (p->isBlock ())
-		    {
-			contents = YCPCode (p);
-		    }
-		    else
-		    {
-			contents = p->evaluate (true);
-		    }
-		}
-
-		ret = !contents.isNull() ? contents : YCPVoid();
-	    }
-	}
-	else
-	{
-	    y2warning("Unknown STRING data, returning as YCPString");
-	    // default is YCPString
-	    ret = YCPString(s);
-	}
     }
     else if (type == DBUS_TYPE_ARRAY)
     {
@@ -739,14 +984,24 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
 	dbus_message_iter_recurse(it, &sub);
 
 	// DBUS_TYPE_ARRAY is used for YCPList and YCPMap
-	if (ycp_type == "list")
+	y2debug("Reading RAW DBus array");
+
+	// is the container a map or a list?
+	// An empty map is indistinguishable from a list!
+	if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
 	{
-	    y2debug("Found an YCPList container");
+	    y2debug("Found a map");
+	    ret = getYCPValueMap(&sub, Type::Any, Type::Unspec);
+	}
+	else
+	{
+	    y2debug("Found a list");
+
 	    YCPList lst;
 
 	    while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
 	    {
-		YCPValue list_val = getYCPValue(&sub);
+		YCPValue list_val = getYCPValue(&sub, Type::Unspec);
 		lst->add(list_val);
 
 		dbus_message_iter_next(&sub);
@@ -754,173 +1009,12 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
 
 	    ret = lst;
 	}
-	else if (ycp_type == "map")
-	{
-	    y2debug("Found an YCPMap container");
-	    YCPMap map;
-	    
-	    while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
-	    {
-		// is it a map or a list?
-		if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
-		{
-		    DBusMessageIter mapit;
-		    dbus_message_iter_recurse(&sub, &mapit);
-
-		    // read the key without the header
-		    YCPValue key = getYCPValueRaw(&mapit);
-
-		    dbus_message_iter_next(&mapit);
-
-		    // read the value
-		    YCPValue val = getYCPValue(&mapit);
-
-		    map->add(key, val);
-		}
-
-		dbus_message_iter_next(&sub);
-	    }
-
-	    ret = map;
-	}
-	else if (ycp_type == "term")
-	{
-	    y2debug("Found an YCPTerm container");
-
-	    YCPList term_list;
-	    std::string term_name;
-
-	    int index = 0;
-	    while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
-	    {
-		YCPValue list_val = getYCPValue(&sub);
-
-		if (index == 0)
-		{
-		    if (!list_val.isNull() && list_val->isString())
-		    {
-			term_name = list_val->asString()->value();
-		    }
-		    else
-		    {
-			y2error("Expecting string (term name) in the list");
-			return YCPVoid();
-		    }
-		}
-		else
-		{
-		    term_list->add(list_val);
-		}
-
-		dbus_message_iter_next(&sub);
-		index++;
-	    }
-
-	    y2debug("Received TERM: name: %s, list: %s", term_name.c_str(), term_list->toString().c_str());
-
-	    YCPTerm term(term_name, term_list);
-	    ret = term;
-	}
-	else if (ycp_type.empty())
-	{
-	    y2debug("Reading RAW DBus array");
-
-	    // is the container a map or a list?
-	    if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
-	    {
-		y2debug("Found a map");
-
-		YCPMap map;
-
-		while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
-		{
-		    // is it a map or a list?
-		    if (dbus_message_iter_get_arg_type(&sub) == DBUS_TYPE_DICT_ENTRY)
-		    {
-			DBusMessageIter mapit;
-			dbus_message_iter_recurse(&sub, &mapit);
-
-			// read the key without the header
-			YCPValue key = getYCPValueRaw(&mapit);
-
-			dbus_message_iter_next(&mapit);
-
-			// read the value
-			YCPValue val = getYCPValueRaw(&mapit);
-
-			map->add(key, val);
-		    }
-
-		    dbus_message_iter_next(&sub);
-		}
-
-		ret = map;
-	    }
-	    else
-	    {
-		y2debug("Found a list");
-
-		YCPList lst;
-
-		while (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
-		{
-		    YCPValue list_val = getYCPValue(&sub);
-		    lst->add(list_val);
-
-		    dbus_message_iter_next(&sub);
-		}
-
-		ret = lst;
-	    }
-	}
-	else
-	{
-	    y2error("Unknown container type for DBUS_TYPE_ARRAY: %s", ycp_type.c_str());
-	    ret = YCPVoid();
-	}
     }
     else if (type == DBUS_TYPE_DOUBLE)
     {
 	double d;
 	dbus_message_iter_get_basic(it, &d);
 	ret = YCPFloat(d);
-    }
-    else if (type == DBUS_TYPE_INT64)
-    {
-	dbus_int64_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
-    }
-    else if (type == DBUS_TYPE_UINT64)
-    {
-	// warning: YCPInteger is signed!
-	dbus_uint64_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
-    }
-    else if (type == DBUS_TYPE_INT32)
-    {
-	dbus_int32_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
-    }
-    else if (type == DBUS_TYPE_UINT32)
-    {
-	dbus_uint32_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
-    }
-    else if (type == DBUS_TYPE_INT16)
-    {
-	dbus_int16_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
-    }
-    else if (type == DBUS_TYPE_UINT16)
-    {
-	dbus_uint16_t i;
-	dbus_message_iter_get_basic(it, &i);
-	ret = YCPInteger(i);
     }
     else if (type == DBUS_TYPE_VARIANT)
     {
@@ -933,42 +1027,58 @@ YCPValue DBusMsg::getYCPValueRaw(DBusMessageIter *it, const std::string &ycp_typ
 	// there should be just one value inside the container
 	if (dbus_message_iter_get_arg_type (&sub) != DBUS_TYPE_INVALID)
 	{
-	    val = getYCPValueRaw(&sub);
+	    val = getYCPValueRawAny(&sub);
 	}
-
+	// FIXME YCPNull possible
 	ret = val;
     }
     else
     {
-	y2error("Unsupported DBus type: %d (%c)", type, (char)type);
-	ret = YCPVoid();
+	ret = getYCPValueInteger(it);
+	if (ret.isNull())
+	{
+	    string e = form("Unsupported DBus type: %d (%c)", type, (char)type);
+	    throw DBusException(DBUS_ERROR_INVALID_ARGS, e);
+	}
     }
 
     return ret;
 }
 
-YCPValue DBusMsg::getYCPValue(DBusMessageIter *it) const
+// main getter dispatcher 
+YCPValue DBusMsg::getYCPValue(DBusMessageIter *it, constTypePtr ycptype) const
 {
     int type = dbus_message_iter_get_arg_type(it);
     y2debug("Found DBus type: %d (%c)", type, (char)type);
 
+    YCPValue ret;
     if (type != DBUS_TYPE_STRUCT)
     {
-	YCPValue ret = getYCPValueRaw(it, "");
-	if (ret.isNull())
-	{
-	    ret = YCPVoid();
-	}
+	if (ycptype->isUnspec())
+	    ret = getYCPValueRawAny(it);
+	else
+	    ret = getYCPValueRawType(it, ycptype);
 
-	y2milestone("Using RAW dbus value '%s' instead of (bsv) YCPValue structure", ret->toString().c_str());
-
-	return ret;
+//	y2milestone("Using RAW dbus value '%s' instead of (bsv) YCPValue structure", ret->toString().c_str());
     }
+    else
+	ret = getYCPValueBsv(it, ycptype);
 
+    if (ret.isNull())	// TODO unify
+    {
+	ret = YCPVoid();
+    }
+    return ret;
+}
+
+// "it" must point to a struct
+// May throw a DBusException
+YCPValue DBusMsg::getYCPValueBsv(DBusMessageIter *it, constTypePtr ycptype) const
+{
     DBusMessageIter struct_iter;
     dbus_message_iter_recurse(it, &struct_iter);
 
-    type = dbus_message_iter_get_arg_type(&struct_iter);
+    int type = dbus_message_iter_get_arg_type(&struct_iter);
     bool received_nil = false;
     
     // read the nil flag at the beginning
@@ -987,26 +1097,43 @@ YCPValue DBusMsg::getYCPValue(DBusMessageIter *it) const
     }
     else
     {
-	y2error("Missing nil flag in the response");
-	return YCPVoid();
+	string e = form("1st field in BSV must be a boolean nil flag (seen '%c')", (char) type);
+	throw DBusException(DBUS_ERROR_INVALID_ARGS, e);
     }
 
     // read the data type in the header
     dbus_message_iter_next(&struct_iter);
 
-    std::string ycp_type;
+    constTypePtr vycptype = Type::Unspec;
     type = dbus_message_iter_get_arg_type(&struct_iter);
     if (type == DBUS_TYPE_STRING)
     {
 	const char *str;
 	dbus_message_iter_get_basic(&struct_iter, &str);
 	y2debug("HEADER: type: %s", str);
-	ycp_type = str;
+
+	std::string ycp_type = str;
+	if (ycp_type == "string" || ycp_type.empty())
+	    vycptype = Type::String;
+	else if (ycp_type == "symbol")
+	    vycptype = Type::Symbol;
+	else if (ycp_type == "path")
+	    vycptype = Type::Path;
+	else if (ycp_type == "list")
+	    vycptype = Type::List;
+	else if (ycp_type == "map")
+	    vycptype = Type::Map;
+	else if (ycp_type == "block")
+	    vycptype = Type::Block;
+	else {
+	    string e = form("Dunno how to translate BSV type '%s' to YCP type", str);
+	    throw DBusException(DBUS_ERROR_INVALID_SIGNATURE, e);
+	}
     }
     else
     {
-	y2error("Missing datatype flag in the response");
-	return YCPVoid();
+	string e = form("2nd field in BSV must be a string YCP type name (seen %d, '%c')", type, (char) type);
+	throw DBusException(DBUS_ERROR_INVALID_ARGS, e);
     }
     
     // read the YCP value in the variant container
@@ -1016,19 +1143,20 @@ YCPValue DBusMsg::getYCPValue(DBusMessageIter *it) const
 
     if (type != DBUS_TYPE_VARIANT)
     {
-	y2error("Expecting VARIANT type in the response");
-	return YCPVoid();
+	string e = form("3rd field in BSV must be a variant payload (seen %d, '%c')", type, (char) type);
+	throw DBusException(DBUS_ERROR_INVALID_ARGS, e);
     }
 
     DBusMessageIter variant_iter;
     dbus_message_iter_recurse(&struct_iter, &variant_iter);
 
-    YCPValue ret = getYCPValueRaw(&variant_iter, ycp_type);
+    YCPValue ret = getYCPValueRawType(&variant_iter, vycptype);
 
     return (received_nil) ? YCPVoid() : ret;
 }
 
-YCPValue DBusMsg::getYCPValue(int index) const
+// the public getter: idx
+YCPValue DBusMsg::getYCPValue(int index, constTypePtr ycptype) const
 {
     YCPValue ret = YCPNull();
 
@@ -1046,6 +1174,7 @@ YCPValue DBusMsg::getYCPValue(int index) const
 	int i = 0;
 
 	// iterate over the other arguments
+//wasteful API?
 	while (i < index && dbus_message_iter_next(&it))
 	{
 	    i++;
@@ -1053,7 +1182,7 @@ YCPValue DBusMsg::getYCPValue(int index) const
 
 	if (i == index)
 	{
-	    ret = getYCPValue(&it);
+	    ret = getYCPValue(&it, ycptype);
 	}
 	else
 	{

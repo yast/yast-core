@@ -94,6 +94,8 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 	&& request.interface() == YAST_SCR_INTERFACE
 	&& request.path() == SCR_OBJECT_PATH)
     {
+      try
+      {
 	std::string method(request.method());
 
 	YCPValue arg0;
@@ -118,7 +120,7 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 	    }
 	    else
 	    {
-		arg0 = request.getYCPValue(0);
+		arg0 = request.getYCPValue(0, Type::Path);
 
 		if (arg0.isNull() || !arg0->isPath())
 		{
@@ -141,8 +143,8 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 
 	if (check_ok)
 	{
-	    YCPValue arg = request.getYCPValue(1);
-	    YCPValue opt = request.getYCPValue(2);
+	    YCPValue arg = request.getYCPValue(1, Type::Unspec);
+	    YCPValue opt = request.getYCPValue(2, Type::Unspec);
 
 	    std::string caller(request.sender());
 
@@ -188,6 +190,13 @@ DBusMsg DBusServer::handler(const DBusMsg &request)
 	    else
 		reply.addYCPValue(YCPVoid());
 	}
+      }
+      catch (const DBusException& de)
+      {
+	  y2error ("Caught: %s", de.message().c_str());
+	  y2error ("Returning %s", de.name().c_str());
+	  reply.createError(request, de.message(), de.name());
+      }      
     }
 
     y2milestone("Finishing the callback");
@@ -205,30 +214,39 @@ DBusServer::actionList DBusServer::createActionId(const DBusMsg &msg)
 
     ret.push_back(action_id);
 
-    YCPValue path = msg.getYCPValue(0);
-    YCPValue arg = msg.getYCPValue(1);
-    YCPValue opt = msg.getYCPValue(2);
-
-    std::string path_str, arg_str, opt_str;
-
-    if (!path.isNull())
+    try
     {
-	path_str = path->toString();
+	YCPValue path = msg.getYCPValue(0, Type::Path);
+	YCPValue arg = msg.getYCPValue(1, Type::Unspec);
+	YCPValue opt = msg.getYCPValue(2, Type::Unspec);
+
+	std::string path_str, arg_str, opt_str;
+
+	if (!path.isNull())
+	{
+	    path_str = path->toString();
+	}
+
+	if (!arg.isNull() && arg->isString())
+	{
+	    arg_str = arg->asString()->value();
+	}
+
+	if (!opt.isNull() && opt->isString())
+	{
+	    opt_str = opt->asString()->value();
+	}
+
+	action_id = PolKit::createActionId(POLKIT_PREFIX, path_str, msg.method(), arg_str, opt_str);
+
+	ret.push_back(action_id);
     }
-    
-    if (!arg.isNull() && arg->isString())
+    catch (const DBusException& de)
     {
-	arg_str = arg->asString()->value();
+	y2error ("Caught: %s", de.message().c_str());
+	y2error ("While trying to create action ID.");
     }
 
-    if (!opt.isNull() && opt->isString())
-    {
-	opt_str = opt->asString()->value();
-    }
-
-    action_id = PolKit::createActionId(POLKIT_PREFIX, path_str, msg.method(), arg_str, opt_str);
-
-    ret.push_back(action_id);
 #endif
 
     return ret;

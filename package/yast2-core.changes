@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Thu Jul  2 17:02:39 CEST 2009 - mvidner@suse.cz
+
+- Enhanced DBus -> YCP value conversion by considering
+  also the expected YCP type.
+  Otherwise it is impossible to tell whether an empty array
+  should become an empty map or an empty list (bnc#516492).
+- Removed the dependency on dbus-1-x11
+  by calling dbus-daemon directly without dbus-launch.
+- 2.18.15
+
+-------------------------------------------------------------------
 Fri Jun 26 14:52:05 CEST 2009 - mvidner@suse.cz
 
 - yast_modules_dbus_server: return org.freedesktop.DBus.Error.UnknownMethod
