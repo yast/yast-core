@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Jul 10 15:31:15 CEST 2009 - mvidner@suse.cz
+
+- Return DBus errors in most cases that used to y2error only (bnc#520616).
+- In BSV types, "" again means "string" (broken in previous version).
+- Log also the user when reporting a PolKit check result.
+- o.o.Y.modules.ModuleManager.Import fixed to return false on failure.
+- 2.18.16
+
+-------------------------------------------------------------------
 Thu Jul  2 17:02:39 CEST 2009 - mvidner@suse.cz
 
 - Enhanced DBus -> YCP value conversion by considering
