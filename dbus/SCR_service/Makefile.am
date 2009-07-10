@@ -27,7 +27,11 @@ polkit_policies_DATA = org.opensuse.yast.scr.policy
 # validate the policy files in 'make check' target
 check-local:
 	polkit-policy-file-validate $(polkit_policies_DATA)
-	ruby test_SCR_dbus_server.rb
+	if type ruby; then \
+	  ruby test_SCR_dbus_server.rb; \
+	else \
+	  echo skiping test; \
+	fi
 	
 # service activation config
 
