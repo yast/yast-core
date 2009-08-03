@@ -1,5 +1,0 @@
-# DBus service activation config
-[D-BUS Service]
-Name=@YAST_DBUS_SERVICE@
-Exec=%YBINDIR%/yast_modules_dbus_server
-User=root

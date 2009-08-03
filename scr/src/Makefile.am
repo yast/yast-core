@@ -30,6 +30,13 @@ libpy2scr_la_SOURCES =				\
 
 libpy2scr_la_LDFLAGS = -version-info 2:0
 
+libpy2scr_la_LIBADD = $(top_builddir)/libscr/src/libscr.la
+
 INCLUDES = ${AGENT_INCLUDES}
 
+pkgincludedir = $(includedir)/scr
+# these go to $(pkgincludedir)
+pkginclude_HEADERS =		\
+	ScriptingAgent.h	\
+	SCRSubAgent.h
 

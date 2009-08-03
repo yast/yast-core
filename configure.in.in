@@ -94,88 +94,10 @@ if [[ "$yast_found_blocxx" != "yes" ]]; then
  AC_MSG_ERROR(Headers for blocxx are missing. Please install the package blocxx-devel.)
 fi
 
-PKG_CHECK_MODULES(DBUS, dbus-1)
-
-## check for PolicyKit
-AC_ARG_ENABLE([policykit],
-    AS_HELP_STRING([--enable-policykit], [Enable experimental PolicyKit support]),
-        [
-            case "${enableval}" in
-                yes) policykit=yes ;;
-                no) policykit=no ;;
-                *) AC_MSG_ERROR(--enable-policykit: Unknwon value ${enableval}) ;;
-            esac
-        ],
-        [policykit=yes])
-
-if test "x${policykit}" == xyes ; then
-    PKG_CHECK_MODULES(POLKIT, [ polkit-dbus >= 0.7 ],
-        [
-            HAVE_POLKIT=1
-            AC_DEFINE([HAVE_POLKIT], 1, [Have PolicyKit])
-            policydir=`pkg-config polkit-dbus --variable prefix`/share/PolicyKit/policy/
-            AC_SUBST(policydir)
-        ],
-        [
-            HAVE_POLKIT=0
-            AC_MSG_ERROR([*** PolicyKit support not found, install PolicyKit-devel: 'zypper in PolicyKit-devel' or libpolkit-dbus-dev.deb])
-        ])
-else
-    HAVE_POLKIT=0
-fi
-
-#
-# configuration for dbus/SCR_service
-#
-
-# set access mode according to the PolicyKit status
-# if policykit is disabled only root can access the service
-if test $HAVE_POLKIT -ne 0; then
-ACCESS_MODE=allow
-else
-ACCESS_MODE=deny
-fi
-
-YAST_DBUS_SERVICE=org.opensuse.YaST.modules
-AC_SUBST(YAST_DBUS_SERVICE)
-YAST_DBUS_RAW_INTERFACE=org.opensuse.YaST.Values
-AC_SUBST(YAST_DBUS_RAW_INTERFACE)
-YAST_DBUS_YCP_INTERFACE=org.opensuse.YaST.YCPValues
-AC_SUBST(YAST_DBUS_YCP_INTERFACE)
-YAST_DBUS_MGR_INTERFACE=org.opensuse.YaST.modules.ModuleManager
-AC_SUBST(YAST_DBUS_MGR_INTERFACE)
-YAST_DBUS_OBJ_PREFIX=/org/opensuse/YaST/modules
-AC_SUBST(YAST_DBUS_OBJ_PREFIX)
-
-YAST_POLKIT_PREFIX_MANAGER=org.opensuse.yast.module-manager
-AC_SUBST(YAST_POLKIT_PREFIX_MANAGER)
-
-YAST_SCR_SERVICE=org.opensuse.yast.SCR
-YAST_SCR_INTERFACE=$YAST_SCR_SERVICE.Methods
-# @ybindir@ expands to ${prefix}/lib/..., force full expansion here
-YAST_SCR_SERVICE_DIR=$ybindir
-AC_SUBST(YAST_SCR_SERVICE)
-AC_SUBST(YAST_SCR_INTERFACE)
-AC_SUBST(YAST_SCR_SERVICE_DIR)
-
-AC_SUBST(ACCESS_MODE)
-
-AC_SUBST(POLKIT_CFLAGS)
-AC_SUBST(POLKIT_LIBS)
-AC_SUBST(HAVE_POLKIT)
-AM_CONDITIONAL([HAVE_POLKIT], [test "x$HAVE_POLKIT" = x1])
 
 ## and generate the output
 AC_CONFIG_FILES([
 	scr/doc/SCR.html
 	scr/doc/intro_to_scr.html
-	dbus/namespace_service/src/yast_dbus_names.h
-	dbus/namespace_service/src/org.opensuse.yast.module-manager.policy
-	dbus/namespace_service/src/org.opensuse.YaST.modules.conf
-	dbus/namespace_service/src/org.opensuse.YaST.modules.service.in
-	dbus/SCR_service/org.opensuse.yast.SCR.conf
-	dbus/SCR_service/org.opensuse.yast.SCR.service.in
-	dbus/SCR_service/scr_names.h
-	dbus/SCR_service/test_SCR_dbus_server.rb
 ])
 @YAST2-OUTPUT@
