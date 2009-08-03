@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Aug  3 10:04:21 CEST 2009 - lslezak@suse.cz
+
+- the DBus code has been moved to separate packages
+  (yast2-dbus-client and yast2-dbus-server) (bnc#431208)
+- 2.18.17
+
+-------------------------------------------------------------------
 Fri Jul 10 15:31:15 CEST 2009 - mvidner@suse.cz
 
 - Return DBus errors in most cases that used to y2error only (bnc#520616).
