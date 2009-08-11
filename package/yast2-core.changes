@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug 11 13:10:57 CEST 2009 - mvidner@suse.cz
+
+- /var/log/YaST2/signal: do not make it executable
+
+-------------------------------------------------------------------
 Mon Aug  3 10:04:21 CEST 2009 - lslezak@suse.cz
 
 - the DBus code has been moved to separate packages

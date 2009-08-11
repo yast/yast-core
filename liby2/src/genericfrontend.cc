@@ -220,7 +220,7 @@ signal_log_open ()
 
     for (const char ** logfn_p = &logfns[0]; *logfn_p != NULL; ++logfn_p)
     {
-	signal_log_fd = open (*logfn_p, O_WRONLY | O_CREAT | O_APPEND, 0700);
+	signal_log_fd = open (*logfn_p, O_WRONLY | O_CREAT | O_APPEND, 0600);
 	if (signal_log_fd != -1)
 	    break;
     }
