@@ -1,7 +1,10 @@
 -------------------------------------------------------------------
-Tue Aug 11 13:10:57 CEST 2009 - mvidner@suse.cz
+Tue Aug 11 16:16:29 CEST 2009 - mvidner@suse.cz
 
+- ycp.pm: convert wide strings to byte strings,
+  to silence a warning when handling parsed XML (bnc#512536).
 - /var/log/YaST2/signal: do not make it executable
+- 2.18.18
 
 -------------------------------------------------------------------
 Mon Aug  3 10:04:21 CEST 2009 - lslezak@suse.cz

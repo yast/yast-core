@@ -349,6 +349,12 @@ sub TestCommand ()
     }
 }
 
+my $wide_string;
+{
+    use utf8; 			# this block contains UTF-8, man perlunicode
+    $wide_string = "TUČŇÁK";
+}
+
 my @output_string =
     (
      [ "", '""' ],
@@ -357,17 +363,23 @@ my @output_string =
      [ "tab\there", '"tab\011here"' ],
      [ "a backslash \\ and two \" quotes \".", '"a backslash \\\\ and two \\" quotes \\"."' ],
      [ "a trailing backslash\\", '"a trailing backslash\\\\"' ],
+     [ "tučňák", '"tučňák"'],	# byte string
+     [ $wide_string, '"TUČŇÁK"'], # text string (wide) should come out as bytes
      );
 
 sub TestOutput ()
 {
     print "TestOutput\n";
 
+    open NULL, ">", "/dev/null";
     for my $case (@output_string)
     {
 	my $output = $case->[1];
 	print "\t'$output': " if $verbose;
-	Result ($output eq ycp::WriteYcpString ($case->[0]));
+	my $actual = ycp::WriteYcpString ($case->[0]);
+	# this triggers a warning if we print a wide character (bnc#512536)
+	print NULL $actual;
+	Result ($output eq $actual);
     }
     for my $case (@byteblock_test_out)
     {

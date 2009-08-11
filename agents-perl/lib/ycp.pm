@@ -715,6 +715,13 @@ sub Return ($;$)
 sub WriteYcpString ($)
 {
     my $string = shift;
+    # We deal with binary strings (binmode raw), and most code is fine with it.
+    # But XML parsers will mark the strings as text, so convert them back.
+    # bnc#512536, thanks mls
+    # (Note that binmode STDOUT, :utf8 without the same for STDIN would
+    # make bnc#448217).
+    utf8::encode($string) if utf8::is_utf8($string);
+
     my @substrings = split /\\/, $string, -1;
     foreach my $substring (@substrings)
     {
