@@ -119,7 +119,10 @@ static int dup_stderr()
 	FILE * newstderr = fdopen( dupstderr, "a" );
 
 	if ( newstderr == NULL ) {
-	    fprintf( Y2LOG_STDERR, "y2log: Can't fdopen new stderr: %s.\n", strerror (errno) );
+	  char buf[100];
+	  //bnc#493152#c22
+	  strerror_r(errno, buf, sizeof(buf)-1);
+	  fprintf( Y2LOG_STDERR, "y2log: Can't fdopen new stderr: %s.\n", buf);
 	}
 	else {
 	    fcntl (fileno (newstderr), F_SETFD, fcntl (fileno (newstderr), F_GETFD) | FD_CLOEXEC);
@@ -127,7 +130,9 @@ static int dup_stderr()
 	}
     }
     else {
-	fprintf( Y2LOG_STDERR, "y2log: Can't dup stderr: %s.\n", strerror (errno) );
+        char buf[100];
+	strerror_r(errno, buf, sizeof(buf)-1);
+	fprintf( Y2LOG_STDERR, "y2log: Can't dup stderr: %s.\n", buf );
     }
     return 1;
 }
@@ -145,8 +150,10 @@ static FILE * open_logfile()
 	    logfile = fopen (logname, "a");
 	}
 	if (!logfile && !log_simple) {
+	    char buf[100];
+	    strerror_r(errno, buf, sizeof(buf)-1);
 	    fprintf (Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s.\n",
-		     logname, strerror (errno));
+		     logname, buf);
 	    return NULL;
 	}
     }
@@ -244,17 +251,19 @@ string y2_logfmt_prefix (loglevel_t level)
 #if 1
     // just 1 second precision
     time_t timestamp = time (NULL);
-    struct tm *brokentime = localtime (&timestamp);
+    struct tm brokentime;
+    localtime_r (&timestamp, &brokentime);
     char date[50];		// that's big enough
-    strftime (date, sizeof (date), Y2LOG_DATE, brokentime);
+    strftime (date, sizeof (date), Y2LOG_DATE, &brokentime);
 #else
     // 1 millisecond precision (use only for testing)
     timeval time;
     gettimeofday (&time, NULL);
     time_t timestamp = time.tv_sec;
-    struct tm *brokentime = localtime (&timestamp);
+    struct tm brokentime;
+    localtime_r (&timestamp, &brokentime);
     char tmp1[50], date[50];	// that's big enough
-    strftime (tmp1, sizeof (tmp1), Y2LOG_DATE, brokentime);
+    strftime (tmp1, sizeof (tmp1), Y2LOG_DATE, &brokentime);
     snprintf (date, sizeof (date), "%s.%03ld", tmp1, time.tv_usec / 1000);
 #endif
 

@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Thu Aug 13 09:06:06 CEST 2009 - mvidner@suse.cz
+
+- Applied the following fixes from Factory (bnc#530260):
+- avoid y2log in both signal handler and forked children (bnc#493152)
+- Resurrected logging in the signal handler, into
+  /var/log/YaST2/signal (or ./y2signal.log) (bnc#493152#c33).
+- /var/log/YaST2/signal: do not make it executable
+- 2.17.30
+
+-------------------------------------------------------------------
 Mon Feb  9 13:33:48 CET 2009 - lslezak@suse.cz
 
 - SCR DBus service - improved reading DBus messages, it decreases
