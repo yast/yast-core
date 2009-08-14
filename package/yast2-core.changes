@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Aug 14 17:03:17 CEST 2009 - lslezak@suse.cz
+
+- don't generate autodocs on ARM (doesn't work in qemu-arm)
+  (by jansimon.moeller@opensuse.org)
+- 2.18.19
+
+-------------------------------------------------------------------
 Tue Aug 11 16:16:29 CEST 2009 - mvidner@suse.cz
 
 - ycp.pm: convert wide strings to byte strings,

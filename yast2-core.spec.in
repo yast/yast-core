@@ -51,6 +51,14 @@ applications using the YaST2 YCP interpreter.
 @PREP@
 
 %build
+
+%ifarch %arm
+# disable autodoc building on ARM architecture
+sed -i Makefile.am -e 's/autodocs//'
+sed -i Makefile.in -e 's/autodocs//'
+sed -i SUBDIRS -e 's/autodocs//'
+%endif
+
 export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
 @BUILD@
 
