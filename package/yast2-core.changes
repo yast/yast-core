@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 17 13:45:47 CEST 2009 - juhliarik@suse.cz
+
+- added fix for problem with adding nil to list (bnc#216177) 
+
+-------------------------------------------------------------------
 Thu Aug 13 09:06:06 CEST 2009 - mvidner@suse.cz
 
 - Applied the following fixes from Factory (bnc#530260):
