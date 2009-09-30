@@ -22,9 +22,6 @@ BuildRequires:	libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
 
-# for SCR DBus service
-BuildRequires:	dbus-1-devel PolicyKit-devel
-
 Summary:	-
 Requires:	perl = %{perl_version}
 Provides:	liby2util = 2.16.1
@@ -40,7 +37,6 @@ Obsoletes:	liby2util-devel < 2.16.1
 Requires:	libxcrypt-devel hwinfo-devel
 Requires:	glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
 # required for libscr
-Requires:	PolicyKit-devel dbus-1-devel
 # for FlexLexer.h; I think that this dependency could be made
 # private but it seems not worth the effort
 Requires:	flex
@@ -101,13 +97,6 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 #  .packlist
 %{perl_vendorarch}/auto/ycp
 /var/adm/perl-modules/%name
-# DBus service
-@ybindir@/SCR_dbus_server
-# DBus service config
-/usr/share/dbus-1/system-services/org.opensuse.yast.SCR.service
-/etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
-# PolicyKit default policies
-/usr/share/PolicyKit/policy/org.opensuse.yast.scr.policy
 
 %files devel
 %defattr(-,root,root)

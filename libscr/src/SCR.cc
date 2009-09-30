@@ -29,96 +29,12 @@ $Id$
 #include "ycp/y2log.h"
 #include "scr/SCRAgent.h"
 
-#include "DBusConn.h"
-#include "DBusMsg.h"
-
 extern StaticDeclaration static_declarations;
 
 bool SCR::registered = false;
 
-// DBus related variables
-DBusConn *connection;
-
-bool check_dbus_env()
-{
-    const char* y2dbus = ::getenv("Y2DBUS");
-
-    if (y2dbus != NULL)
-    {
-	if (::strcmp(y2dbus, "1") == 0)
-	    return true;
-    }
-
-    return false;
-}
-
-static YCPValue CallDBus(const char *method, const YCPPath &path = YCPNull(), const YCPValue &args = YCPNull (),
-    const YCPValue &opt = YCPNull ())
-{
-
-    y2milestone("Calling DBus method %s: path: %s, args: %s, opt: %s", method, path.isNull() ? "NULL" : path->toString().c_str(), args.isNull() ? "NULL" : args->toString().c_str(), opt.isNull() ? "NULL" : opt->toString().c_str());
-
-	DBusMsg msg;
-	// TODO create constants for these strings
-	msg.createCall("org.opensuse.yast.SCR", "/SCR", "org.opensuse.yast.SCR.Methods", method);
-
-	if (!path.isNull())
-	{
-	    msg.addYCPValue(path);
-	}
-
-	if (!args.isNull())
-	{
-	    msg.addYCPValue(args);
-	}
-
-	if (!opt.isNull())
-	{
-	    msg.addYCPValue(opt);
-	}
-
-	// send the message and get the response
-	DBusMsg reply(connection->call(msg));
-
-	y2debug("Received reply type: %d", reply.type());
-
-	// return the first argument from the reply
-	YCPValue ret = reply.getYCPValue(0);
-
-	// validate the reply (check for exceptions)
-	if (reply.type() != DBUS_MESSAGE_TYPE_METHOD_RETURN)
-	{
-	    if (reply.type() == DBUS_MESSAGE_TYPE_ERROR)
-	    {
-		if (!ret.isNull())
-		{
-		    y2error("Received Error reply: %s", ret->toString().c_str());
-		}
-	    }
-
-	    return YCPVoid();
-	}
-
-	if (!ret.isNull())
-	{
-	    y2milestone("Received reply: %s", ret->toString().c_str());
-	}
-	else
-	{
-	    y2error("Received YCPNull or the value is missing");
-	}
-
-	return ret;
-}
-
 static YCPValue 
 SCRRead3 (const YCPPath &path, const YCPValue &args = YCPNull (), const YCPValue &opt = YCPNull ()) {
-
-    if (connection != NULL)
-    {
-	return CallDBus("Read", path, args, opt);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -143,11 +59,6 @@ static YCPValue
 SCRWrite2 (const YCPPath &path, const YCPValue& value_n) {
     YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
 
-    if (connection != NULL)
-    {
-	return CallDBus("Write", path, value);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -162,11 +73,6 @@ SCRWrite3 (const YCPPath &path, const YCPValue& value_n, const YCPValue& arg_n) 
     YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
     YCPValue arg =   arg_n.isNull()?   YCPVoid(): arg_n; // bnc#406138
 
-    if (connection != NULL)
-    {
-	return CallDBus("Write", path, value, arg);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -178,11 +84,6 @@ SCRWrite3 (const YCPPath &path, const YCPValue& value_n, const YCPValue& arg_n) 
 
 static YCPValue 
 SCRDir (const YCPPath& path) {
-    if (connection != NULL)
-    {
-	return CallDBus("Dir", path);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -194,11 +95,6 @@ SCRDir (const YCPPath& path) {
 
 static YCPValue 
 SCRExecute (const YCPPath &path) {
-    if (connection != NULL)
-    {
-	return CallDBus("Execute", path);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -210,11 +106,6 @@ SCRExecute (const YCPPath &path) {
 
 static YCPValue 
 SCRError (const YCPPath &path) {
-    if (connection != NULL)
-    {
-	return CallDBus("Error", path);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -229,11 +120,6 @@ SCRError (const YCPPath &path) {
 static YCPValue 
 SCRExecute2 (const YCPPath &path, const YCPValue &arg_n) {
     YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
-
-    if (connection != NULL)
-    {
-	return CallDBus("Execute", path, arg);
-    }
 
     if (! SCRAgent::instance())
     {
@@ -252,11 +138,6 @@ SCRExecute3 (const YCPPath &path, const YCPValue &arg_n, const YCPValue &opt_n) 
     YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
     YCPValue opt = opt_n.isNull()? YCPVoid(): opt_n; // bnc#406138
 
-    if (connection != NULL)
-    {
-	return CallDBus("Execute", path, arg, opt);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -271,11 +152,6 @@ SCRExecute3 (const YCPPath &path, const YCPValue &arg_n, const YCPValue &opt_n) 
 
 static YCPValue 
 SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
-    if (connection != NULL)
-    {
-	return CallDBus("RegisterAgent", path, arg);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -289,11 +165,6 @@ SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
 
 static YCPValue 
 SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
-    if (connection != NULL)
-    {
-	return CallDBus("RegisterAgent", path, arg);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -307,11 +178,6 @@ SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
 
 static YCPValue 
 SCRUnregisterAgent (const YCPPath &path) {
-    if (connection != NULL)
-    {
-	return CallDBus("UnregisterAgent", path);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -324,11 +190,6 @@ SCRUnregisterAgent (const YCPPath &path) {
 
 static YCPValue 
 SCRUnregisterAllAgents () {
-    if (connection != NULL)
-    {
-	return CallDBus("UnregisterAllAgents");
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -340,11 +201,6 @@ SCRUnregisterAllAgents () {
 
 static YCPValue 
 SCRUnmountAgent (const YCPPath &path) {
-    if (connection != NULL)
-    {
-	return CallDBus("UnmountAgent", path);
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -357,11 +213,6 @@ SCRUnmountAgent (const YCPPath &path) {
 
 static YCPValue 
 SCRRegisterNewAgents () {
-    if (connection != NULL)
-    {
-	return CallDBus("RegisterNewAgents");
-    }
-
     if (! SCRAgent::instance())
     {
 	ycperror ( "No SCR instance found" );
@@ -403,33 +254,5 @@ SCR::SCR ()
     static_declarations.registerDeclarations ("SCR", declarations);
     
     registered = true;
-
-    bool y2dbus = check_dbus_env();
-
-    // use std SCR or DBUS SCR?
-    if (y2dbus)
-    {
-	y2debug("Y2DBUS is set, using DBUS for SCR access");
-	connection = new DBusConn;
-
-	// connect to the system bus
-	if (!connection->connect(DBUS_BUS_SYSTEM))
-	{
-	    y2error("Cannot connect to DBus, exiting...");
-	    exit(1);
-	}
-    }
-    else
-    {
-	y2debug("Y2DBUS is not set, using embedded SCR");
-    }
 }
 
-SCR::~SCR()
-{
-    if (connection != NULL)
-    {
-	delete connection;
-	connection = NULL;
-    }
-}
