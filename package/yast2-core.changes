@@ -6,11 +6,6 @@ Wed Sep 30 14:08:15 CEST 2009 - lslezak@suse.cz
 - 2.17.31
 
 -------------------------------------------------------------------
-Fri Apr 17 13:45:47 CEST 2009 - juhliarik@suse.cz
-
-- added fix for problem with adding nil to list (bnc#216177) 
-
--------------------------------------------------------------------
 Thu Aug 13 09:06:06 CEST 2009 - mvidner@suse.cz
 
 - Applied the following fixes from Factory (bnc#530260):
@@ -19,6 +14,11 @@ Thu Aug 13 09:06:06 CEST 2009 - mvidner@suse.cz
   /var/log/YaST2/signal (or ./y2signal.log) (bnc#493152#c33).
 - /var/log/YaST2/signal: do not make it executable
 - 2.17.30
+
+-------------------------------------------------------------------
+Fri Apr 17 13:45:47 CEST 2009 - juhliarik@suse.cz
+
+- added fix for problem with adding nil to list (bnc#216177) 
 
 -------------------------------------------------------------------
 Mon Feb  9 13:33:48 CET 2009 - lslezak@suse.cz
