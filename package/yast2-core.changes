@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Oct  2 14:31:32 CEST 2009 - lslezak@suse.cz
+
+- backported tty_wrapper fixes from TRUNK (bnc#470645)
+- 2.17.32
+
+-------------------------------------------------------------------
 Wed Sep 30 14:08:15 CEST 2009 - lslezak@suse.cz
 
 - the DBus code has been moved to separate packages
