@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Nov  5 15:11:47 CET 2009 - jsrain@suse.cz
+
+- close unneeded file descriptors before execing another
+  program (bnc#441054)
+- 2.13.45
+
+-------------------------------------------------------------------
 Fri May 15 12:21:15 CEST 2009 - juhliarik@suse.cz
 
 - added WFM::ClientExists because it is required for reipl 
