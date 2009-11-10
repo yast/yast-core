@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Oct  2 14:31:32 CEST 2009 - lslezak@suse.cz
+
+- backported tty_wrapper fixes from TRUNK (bnc#470645)
+
+-------------------------------------------------------------------
 Thu Aug 13 09:06:06 CEST 2009 - mvidner@suse.cz
 
 - Applied the following fixes from Factory (bnc#530260):
