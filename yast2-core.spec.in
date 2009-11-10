@@ -30,6 +30,9 @@ Requires:	perl = %{perl_version}
 Provides:	liby2util = 2.16.1
 Obsoletes:	liby2util < 2.16.1
 
+# forward compatibility
+Provides:	yast2-dbus-client yast2-dbus-server
+
 %description
 -
 
@@ -59,10 +62,16 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @CLEAN@
 
 %post
-%run_ldconfig
+/sbin/ldconfig
+# This is a workaround for dbus reloading too soon. (bnc#502719#c4).
+# In oS 11.2 there exists rcdbus reload, so this is for a SLE backport.
+# The /dev/null is a workaround for http://bugs.freedesktop.org/show_bug.cgi?id=896#c23
+# But if there is nothing to reload, don't fail.
+dbus-send --print-reply --system --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig >/dev/null || true
 
 %postun
-%run_ldconfig
+/sbin/ldconfig
+dbus-send --print-reply --system --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig >/dev/null || true
 
 %files
 %defattr(-,root,root)
@@ -105,9 +114,16 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 @ybindir@/SCR_dbus_server
 # DBus service config
 /usr/share/dbus-1/system-services/org.opensuse.yast.SCR.service
-/etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
+%config /etc/dbus-1/system.d/org.opensuse.yast.SCR.conf
 # PolicyKit default policies
 /usr/share/PolicyKit/policy/org.opensuse.yast.scr.policy
+
+# DBus namespace service
+@ybindir@/yast_modules_dbus_server
+/usr/share/dbus-1/system-services/org.opensuse.YaST.modules.service
+%config /etc/dbus-1/system.d/org.opensuse.YaST.modules.conf
+/usr/share/PolicyKit/policy/org.opensuse.yast.module-manager.policy
+
 
 %files devel
 %defattr(-,root,root)

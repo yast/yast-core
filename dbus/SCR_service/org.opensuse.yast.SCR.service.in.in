@@ -1,5 +1,5 @@
 # DBus service activation config
 [D-BUS Service]
-Name=org.opensuse.yast.SCR
-Exec=@YBINDIR@/SCR_dbus_server
+Name=@YAST_SCR_SERVICE@
+Exec=%YBINDIR%/SCR_dbus_server
 User=root

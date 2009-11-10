@@ -1,0 +1,129 @@
+// This is a testing module for the YaST DBuse service
+// Some methods are not called during tests, but the correct signature is checked in the introspection test
+
+{
+
+module "TEST";
+
+global define list List()
+{return [];}
+
+global define list<any> ListAny()
+{return [];}
+
+global define list ListAny1()
+{return [1, "string"];}
+
+global define list ListAny2()
+{return [["dssd", 123], ["zxcxczzx", 456]];}
+
+global define list<string> ListString()
+{return ["dssd", "sdfdfs"];}
+
+global define list<list<string> > ListListString()
+{return [["dssd", "sdfdfs"], ["zxcxczzx"]];}
+
+global define list<map> ListMap()
+{return [];}
+
+global define list<map<string, string> > ListMapStringString()
+{return [];}
+
+global define list<map<string, any> > ListMapStringAny()
+{return [ $["a" : "b"], $["c" : [10, 20, "haha", `Symbol]]];}
+
+global define map<string, any> MapStringAny()
+{return $[];}
+
+global define map<string, string> MapStringString()
+{return $[];}
+
+global define map<string, list<string> > MapStringListString()
+{return $[];}
+
+global define string String()
+{return "a";}
+
+global define any Any()
+{return "a";}
+
+global define any Any2()
+{return ["a"];}
+
+global define integer Integer()
+{return 10;}
+
+global define symbol Symbol()
+{return `s;}
+
+global define map MapAny()
+{return $[ ];}
+
+global define map MapAny2()
+{return $[ "3" : "l" ];}
+
+global define map MapAny3()
+{return $[ "3" : ["l", "3"] ];}
+
+global define map MapAny4()
+{return $[ "3" : $["l" : ["3", 10, $["a" : "b"]]]];}
+
+// Note: interger key is returned as string in map<any,X> type,
+// map<interger,X> must be used to return int,
+// Dbus requires a basic type as key, a variant cannot be sent
+global define map MapAny5()
+{return $[ 3 : 4, "4" : "5" ];}
+
+global define void Void()
+{return;}
+
+// ParamFoo: test DBus->YCP conversion
+global define any ParamAny(any p)
+{return p;}
+
+//Valid YCP but useless
+//global define any ParamVoid(void p)
+//{return p;}
+
+global define any ParamBoolean(boolean p)
+{return p;}
+
+global define any ParamInteger(integer p)
+{return p;}
+
+global define any ParamFloat(float p)
+{return p;}
+
+global define any ParamString(string p)
+{return p;}
+
+global define any ParamLocale(locale p)
+{return p;}
+
+global define any ParamByteblock(byteblock p)
+{return p;}
+
+global define any ParamPath(path p)
+{return p;}
+
+global define any ParamSymbol(symbol p)
+{return p;}
+
+global define any ParamList(list p)
+{return p;}
+
+// FIXME this fails, expecting a plain string
+//global define any ParamTerm(term p)
+//{return p;}
+
+// inconsistent name, the first test
+global define any ParamMap(map<string,any> p)
+{return p;}
+
+global define any ParamMapA(map p)
+{return p;}
+
+global define any ParamBlock(block<any> p)
+{return p;}
+
+}

@@ -1,5 +1,5 @@
 #
-# Makefile.am for core/dbus
+# Makefile.am core/dbus
 #
 
-SUBDIRS=SCR_service
+SUBDIRS=SCR_service namespace_service

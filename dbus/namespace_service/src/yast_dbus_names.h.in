@@ -1,0 +1,33 @@
+/*
+ * Yast_dbus_names.h - generated from Yast_dbus_names.h.in
+ *
+ */
+
+#ifndef YAST_DBUS_NAMES_H
+#define YAST_DBUS_NAMES_H
+
+// name of the Yast DBus service
+#define YAST_DBUS_SERVICE_NAME "@YAST_DBUS_SERVICE@"
+
+// object(path) prefix
+#define YAST_DBUS_OBJ_PREFIX "@YAST_DBUS_OBJ_PREFIX@"
+
+// interface name for marshalled YCPValues - using (bsv) DBus structure
+#define YAST_DBUS_YCP_INTERFACE	"@YAST_DBUS_YCP_INTERFACE@"
+// interface name for raw (direct) DBus values
+#define YAST_DBUS_RAW_INTERFACE	"@YAST_DBUS_RAW_INTERFACE@"
+// interface name for management functions (Import, Lock...)
+#define YAST_DBUS_MGR_INTERFACE	"@YAST_DBUS_MGR_INTERFACE@"
+
+// prefix for PolicyKit action IDs - namespace calls
+#define YAST_POLKIT_PREFIX_MODULES "org.opensuse.yast.modules"
+// prefix for PolicyKit action IDs - manager calls
+#define YAST_POLKIT_PREFIX_MANAGER "@YAST_POLKIT_PREFIX_MANAGER@"
+
+
+#define YAST_DBUS_MANAGER_IMPORT_METHOD	"Import"
+#define YAST_DBUS_MANAGER_UNLOCK_METHOD	"Unlock"
+#define YAST_DBUS_MANAGER_LOCK_METHOD	"Lock"
+
+
+#endif

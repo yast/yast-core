@@ -5,16 +5,20 @@
     http://lists.opensuse.org/opensuse-packaging/2009-01/msg00132.html
     https://bugzilla.novell.com/show_bug.cgi?id=468390
 -->
+
+<!--
+  Only a root process may start a DBus Service requesting to own YAST_SCR_SERVICE
+-->
     <policy user="root">
-	<allow own="org.opensuse.yast.SCR"/>
-        <allow send_destination="org.opensuse.yast.SCR"/>
+	<allow own="@YAST_SCR_SERVICE@"/>
+        <allow send_destination="@YAST_SCR_SERVICE@"/>
     </policy>
     <policy context="default">
 	<!-- allowed iff compiled with PolicyKit -->
-        <@ACCESS_MODE@ send_destination="org.opensuse.yast.SCR"
-		 send_interface="org.opensuse.yast.SCR.Methods"/>
+        <@ACCESS_MODE@ send_destination="@YAST_SCR_SERVICE@"
+		 send_interface="@YAST_SCR_INTERFACE@"/>
 	<!-- introspection is allowed -->
-	<allow send_destination="org.opensuse.yast.SCR"
+	<allow send_destination="@YAST_SCR_SERVICE@"
 		 send_interface="org.freedesktop.DBus.Introspectable" />
     </policy>
 </busconfig>

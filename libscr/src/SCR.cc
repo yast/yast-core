@@ -83,7 +83,7 @@ static YCPValue CallDBus(const char *method, const YCPPath &path = YCPNull(), co
 	y2debug("Received reply type: %d", reply.type());
 
 	// return the first argument from the reply
-	YCPValue ret = reply.getYCPValue(0);
+	YCPValue ret = reply.getYCPValue(0, Type::Any);
 
 	// validate the reply (check for exceptions)
 	if (reply.type() != DBUS_MESSAGE_TYPE_METHOD_RETURN)

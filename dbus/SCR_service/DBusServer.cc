@@ -5,6 +5,8 @@
 
  */
 
+#include <ScriptingAgent.h>
+
 #include "DBusServer.h"
 #include "DBusMsg.h"
 
@@ -14,24 +16,13 @@
 
 #include <ycp/y2log.h>
 
-extern "C"
+#include "scr_names.h"
+
+#define TIMEOUT 15 /* 30 secs idle timeout */
+
+
+DBusServer::DBusServer() : cb(this)
 {
-// nanosleep()
-#include <time.h>
-// stat()
-#include <sys/stat.h>
-}
-
-// ostringstream
-#include <sstream>
-
-// use atomic type in signal handler (see bnc#434509)
-static sig_atomic_t finish = 0;
-
-
-DBusServer::DBusServer()
-{
-    dbus_threads_init_default();
     sa = new ScriptingAgent();
 }
 
@@ -43,467 +34,220 @@ DBusServer::~DBusServer()
     }
 }
 
+void DBusServer::registerFunctions()
+{
+    // parameters
+    DBusArgument param1("parmeter1", DBusMsg::YCPValueSignature());
+    DBusArgument param2("parmeter2", DBusMsg::YCPValueSignature());
+    DBusArgument param3("parmeter3", DBusMsg::YCPValueSignature());
+
+    // parameter list
+    DBusSignature::Params p;
+    p.push_back(param1);
+
+    DBusSignature sig_0param;
+    sig_0param.retval = DBusArgument("ret", DBusMsg::YCPValueSignature());
+
+    DBusSignature sig_1param(sig_0param);
+    sig_1param.params = p;
+
+    DBusSignature sig_2param(sig_1param);
+    p.push_back(param2);
+    sig_2param.params = p;
+
+    DBusSignature sig_3param(sig_2param);
+    p.push_back(param3);
+    sig_3param.params = p;
+
+    std::string object(SCR_OBJECT_PATH);
+
+    // register the manager object: register_function(object, interface, method, signature, handler)
+    register_method(object, YAST_SCR_INTERFACE, METHOD_READ, sig_3param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_WRITE, sig_3param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_EXECUTE, sig_3param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_DIR, sig_1param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_ERROR, sig_1param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_UNREGISTER, sig_1param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_UNREGISTER_ALL, sig_0param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_REGISTER_NEW, sig_0param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_REGISTER, sig_2param, cb);
+    register_method(object, YAST_SCR_INTERFACE, METHOD_UNMOUNT, sig_1param, cb);
+}
 
 bool DBusServer::connect()
 {
-    // connect to DBus, request a service name
-    return connection.connect(DBUS_BUS_SYSTEM, "org.opensuse.yast.SCR");
+    registerFunctions();
+    return DBusServerBase::connect(SYSTEM, YAST_SCR_SERVICE);
 }
 
-// set 30 second timer
-void DBusServer::resetTimer()
+DBusMsg DBusServer::handler(const DBusMsg &request)
 {
-    ::alarm(30);
-}
+    // create a reply to the message
+    DBusMsg reply;
+    reply.createReply(request);
 
-// NOTE: this is a signal handler, do only really necessary tasks here!
-// be aware of non-reentrant functions!
-void sig_timer(int signal, siginfo_t *info, void *data)
-{
-    if (signal == SIGALRM)
+    y2milestone("Received request from %s: interface: %s, method: %s, arguments: %d", request.sender().c_str(),
+	request.interface().c_str(), request.method().c_str(), request.arguments());
+  
+    // check this is a method call for the right object, interface & method
+    if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL
+	&& request.interface() == YAST_SCR_INTERFACE
+	&& request.path() == SCR_OBJECT_PATH)
     {
-	// set the finish flag for the main loop
-	finish = true;
-    }
-}
+      try
+      {
+	std::string method(request.method());
 
-void DBusServer::registerSignalHandler()
-{
-    struct sigaction new_action, old_action;
+	YCPValue arg0;
+	YCPPath pth;
 
-    // use sa_sigaction parameter
-    new_action.sa_flags = SA_SIGINFO;
-    new_action.sa_sigaction = &sig_timer;
-    ::sigemptyset(&new_action.sa_mask);
+	bool check_ok = false;
 
-    if (::sigaction(SIGALRM, &new_action, &old_action))
-    {
-	y2error("Cannot register SIGALRM handler!");
-    }
-}
-
-bool DBusServer::canFinish()
-{
-    // check if clients are still running,
-    // remove finished clients
-    for(Clients::iterator it = clients.begin();
-	it != clients.end();)
-    {
-	pid_t pid = it->second;
-
-	if (!isProcessRunning(pid))
+	// check missing arguments
+	if (method == METHOD_READ
+	    || method == METHOD_WRITE
+	    || method == METHOD_EXECUTE
+	    || method == METHOD_DIR
+	    || method == METHOD_ERROR
+	    || method == METHOD_UNREGISTER
+	    || method == METHOD_UNMOUNT
+	    || method == METHOD_REGISTER)
 	{
-	    Clients::iterator remove_it(it);
-
-	    // move the current iterator
-	    it++;
-
-	    y2milestone("Removing client %s (pid %d) from list", (remove_it->first).c_str(), pid);
-
-	    clients.erase(remove_it);
-	}
-	else
-	{
-	    // the process is still running
-	    // no need to check the other clients
-	    // we have to still run for at least this client
-	    y2debug("Client %s PID %d is still running", (it->first).c_str(), pid);
-	    break;
-	}
-    }
-
-    // if there is no client the server can be finished
-    return clients.size() == 0;
-}
-
-/**
- * Server that exposes a method call and waits for it to be called
- */
-void DBusServer::run(bool forever) 
-{
-    y2milestone("Listening for incoming DBus messages...");
-
-    if (forever)
-	y2milestone("Timer disabled");
-    else
-	registerSignalHandler();
-
-    // mainloop
-    while (true)
-    {
-	// the time is over
-	if (finish)
-	{
-	    y2milestone("Timout signal received");
-
-	    if (canFinish())
+	    if (request.arguments() == 0)
 	    {
-		break;
+		// return an ERROR
+		reply.createError(request, "Missing arguments", DBUS_ERROR_INVALID_ARGS);
 	    }
 	    else
 	    {
-		// reset the flag
-		finish = false;
+		arg0 = request.getYCPValue(0, Type::Path);
 
-		// set a new timer
-		resetTimer();
-	    }
-	}
-
-	// try reading a message from DBus
-	DBusMsg request(connection.receive());
-
-	// check if a message was received
-	if (request.empty())
-	{ 
-	    // wait for an incoming message, set 15 seconds timeout
-	    connection.setTimeout(15000);
-
-	    continue; 
-	}
-
-	// reset the timer when a message is received
-	if (! forever)
-	    resetTimer();
-
-	// create a reply to the message
-	DBusMsg reply;
-
-	y2milestone("Received request from %s: interface: %s, method: %s", request.sender().c_str(),
-	    request.interface().c_str(), request.method().c_str());
-      
-	// check this is a method call for the right object, interface & method
-	if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL && request.interface() == "org.opensuse.yast.SCR.Methods" && request.path() == "/SCR")
-	{
-	    std::string method(request.method());
-
-	    YCPValue arg0;
-	    YCPPath pth;
-
-	    bool check_ok = false;
-
-	    // check missing arguments
-	    if (method == "Read" || method == "Write" || method == "Execute" ||
-		method == "Dir" || method == "Error" || method == "UnregisterAgent" ||
-		method == "UnmountAgent" || method == "RegisterAgent")
-	    {
-		if (request.arguments() == 0)
+		if (arg0.isNull() || !arg0->isPath())
 		{
 		    // return an ERROR
-		    reply.createError(request, "Missing arguments", DBUS_ERROR_INVALID_ARGS);
+		    reply.createError(request, "Expecting YCPPath as the first argument", DBUS_ERROR_INVALID_ARGS);
 		}
 		else
 		{
-		    arg0 = request.getYCPValue(0);
-
-		    if (arg0.isNull() || !arg0->isPath())
-		    {
-			// return an ERROR
-			reply.createError(request, "Expecting YCPPath as the first argument", DBUS_ERROR_INVALID_ARGS);
-		    }
-		    else
-		    {
-			pth = arg0->asPath();
-			check_ok = true;
-		    }
-		}
-	    }
-	    else if (method == "UnregisterAllAgents" || method != "RegisterNewAgents")
-	    {
-		check_ok = true;
-	    }
-
-	    if (check_ok)
-	    {
-		YCPValue arg = request.getYCPValue(1);
-		YCPValue opt = request.getYCPValue(2);
-
-		std::string caller(request.sender());
-
-#ifdef HAVE_POLKIT
-		std::string arg_str, opt_str;
-		
-		if (!arg.isNull())
-		{
-		    arg_str = arg->toString();
-		}
-
-		if (!opt.isNull())
-		{
-		    opt_str = opt->toString();
-		}
-
-		// PolicyKit check
-		if (!isActionAllowed(caller, pth->toString(), method, arg_str, opt_str))
-		{
-		    // access denied
-		    reply.createError(request, "System policy does not allow you to do the action", DBUS_ERROR_ACCESS_DENIED);
-		}
-		else
-#endif
-		{
-		    y2debug("Request from: %s", caller.c_str());
-		    // remember the client
-		    if (clients.find(caller) == clients.end())
-		    {
-			// insert the dbus name and PID
-			Clients::value_type new_client(caller, callerPid(caller));
-			y2milestone("Added new client %s (pid %d)", caller.c_str(), new_client.second);
-			clients.insert(new_client);
-		    }
-
-
-		    YCPValue ret;
-
-		    if (method == "Read")
-			ret = sa->Read(pth, arg, opt);
-		    else if (method == "Write")
-			ret = sa->Write(pth, arg, opt);
-		    else if (method == "Execute")
-			ret = sa->Execute(pth, arg, opt);
-		    else if (method == "Dir")
-		    {
-			ret = sa->Dir(pth);
-			if (ret.isNull())
-			    ret = YCPList();
-		    }
-		    else if (method == "Error")
-			ret = sa->Error(pth);
-		    else if (method == "UnregisterAgent")
-			ret = sa->UnregisterAgent(pth);
-		    else if (method == "UnregisterAllAgents")
-			ret = sa->UnregisterAllAgents();
-		    else if (method == "UnmountAgent")
-			ret = sa->UnmountAgent(pth);
-		    else if (method == "RegisterNewAgents")
-			ret = sa->RegisterNewAgents();
-		    else if (method == "RegisterAgent")
-			ret = sa->RegisterAgent(pth, arg);
-		    else
-			y2internal("Unhandled method %s", method.c_str());
-
-		    reply.createReply(request);
-
-		    if (!ret.isNull())
-		    {
-			y2milestone("Result: %s", ret->toString().c_str());
-			reply.addYCPValue(ret);
-		    }
-		    else
-			reply.addYCPValue(YCPVoid());
+		    pth = arg0->asPath();
+		    check_ok = true;
 		}
 	    }
 	}
-	// handle Introspection request from "org.freedesktop.DBus.Introspectable" "Introspect"
-	else if (request.isMethodCall(DBUS_INTERFACE_INTROSPECTABLE, "Introspect"))
+	else if (method == METHOD_UNREGISTER_ALL || method != METHOD_REGISTER_NEW)
 	{
-	    y2milestone("Requesting path: %s", request.path().c_str());
-	    // define all exported methods here
-	    const char *introspect = (request.path() != "/SCR") ?
-// introcpection data for the root node
-DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
-"<node>"
-" <interface name='org.freedesktop.DBus.Introspectable'>"
-"  <method name='Introspect'>"
-"   <arg name='xml_data' type='s' direction='out'/>"
-"  </method>"
-" </interface>"
-" <node name='SCR'/>"
-"</node>" :
-
-// introcpection data for SCR node
-DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
-"<node>"
-" <interface name='org.opensuse.yast.SCR.Methods'>"
-"  <method name='Read'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='arg' type='(bsv)' direction='in'/>"
-"   <arg name='opt' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='Write'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='arg' type='(bsv)' direction='in'/>"
-"   <arg name='opt' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='Execute'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='arg' type='(bsv)' direction='in'/>"
-"   <arg name='opt' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='Dir'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='Error'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='UnregisterAgent'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='UnregisterAllAgents'>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='RegisterNewAgents'>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='RegisterAgent'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='arg' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-"  <method name='UnmountAgent'>"
-"   <arg name='path' type='(bsv)' direction='in'/>"
-"   <arg name='ret' type='(bsv)' direction='out'/>"
-"  </method>"
-" <interface name='org.freedesktop.DBus.Introspectable'>"
-"  <method name='Introspect'>"
-"   <arg name='xml_data' type='s' direction='out'/>"
-"  </method>"
-" </interface>"
-" </interface>"
-"</node>";
-
-	    // create a reply to the request
-	    reply.createReply(request);
-	    reply.addString(introspect);
+	    check_ok = true;
 	}
-	else if (request.type() == DBUS_MESSAGE_TYPE_METHOD_CALL)
+
+	y2debug("check_ok: %d", check_ok);
+
+	if (check_ok)
 	{
-	    y2warning("Ignoring unknown interface or method call: interface: %s, method: %s",
-		request.interface().c_str(), request.method().c_str());
+	    YCPValue arg = request.getYCPValue(1, Type::Unspec);
+	    YCPValue opt = request.getYCPValue(2, Type::Unspec);
 
-	    // report error
-	    reply.createError(request, "Unknown object, interface or method", DBUS_ERROR_UNKNOWN_METHOD);
-	}
-	else if (request.type() == DBUS_MESSAGE_TYPE_ERROR)
-	{
-	    DBusError error;
-	    dbus_error_init(&error);
+	    std::string caller(request.sender());
 
-	    dbus_set_error_from_message(&error, request.getMessage());
+		y2debug("Request from: %s", caller.c_str());
 
-	    if (dbus_error_is_set(&error))
+	    // remember the client
+	    register_client(caller);
+
+	    YCPValue ret;
+
+	    if (method == METHOD_READ)
+		ret = sa->Read(pth, arg, opt);
+	    else if (method == METHOD_WRITE)
+		ret = sa->Write(pth, arg, opt);
+	    else if (method == METHOD_EXECUTE)
+		ret = sa->Execute(pth, arg, opt);
+	    else if (method == METHOD_DIR)
 	    {
-		y2error("Received an error: %s: %s", error.name, error.message);
+		ret = sa->Dir(pth);
+		if (ret.isNull())
+		    ret = YCPList();
 	    }
+	    else if (method == METHOD_ERROR)
+		ret = sa->Error(pth);
+	    else if (method == METHOD_UNREGISTER)
+		ret = sa->UnregisterAgent(pth);
+	    else if (method == METHOD_UNREGISTER_ALL)
+		ret = sa->UnregisterAllAgents();
+	    else if (method == METHOD_UNMOUNT)
+		ret = sa->UnmountAgent(pth);
+	    else if (method == METHOD_REGISTER_NEW)
+		ret = sa->RegisterNewAgents();
+	    else if (method == METHOD_REGISTER)
+		ret = sa->RegisterAgent(pth, arg);
+	    else
+		y2internal("Unhandled method %s", method.c_str());
 
-	    dbus_error_free(&error);
-	}
-	else if (request.type() == DBUS_MESSAGE_TYPE_SIGNAL)
-	{
-	    y2error("Received a signal: interface: %s method: %s", request.interface().c_str(), request.method().c_str());
-	}
-
-	// was a reply set?
-	if (!reply.empty())
-	{
-	    // send the reply
-	    if (!connection.send(reply))
+	    if (!ret.isNull())
 	    {
-		y2error("Cannot send the result");
+		y2milestone("Result: %s", ret->toString().c_str());
+		reply.addYCPValue(ret);
 	    }
 	    else
-	    {
-		y2milestone("Flushing connection...");
-		connection.flush();
-		y2milestone("...done");
-	    }
+		reply.addYCPValue(YCPVoid());
 	}
-
-	y2milestone("Message processed");
+      }
+      catch (const DBusException& de)
+      {
+	  y2error ("Caught: %s", de.message().c_str());
+	  y2error ("Returning %s", de.name().c_str());
+	  reply.createError(request, de.message(), de.name());
+      }      
     }
 
-    y2milestone("Finishing the DBus service");
+    y2milestone("Finishing the callback");
+
+    return reply;
 }
+
+DBusServer::actionList DBusServer::createActionId(const DBusMsg &msg)
+{
+    actionList ret;
 
 #ifdef HAVE_POLKIT
-bool DBusServer::isActionAllowed(const std::string &caller, const std::string &path, const std::string &method,
-	    const std::string &arg, const std::string &opt)
-{
-    // create actionId
-    static const char *polkit_prefix = "org.opensuse.yast.scr";
-
     // check the access right to all methods at first (see bnc#449794)
-    std::string action_id(PolKit::createActionId(polkit_prefix, "", method, "", ""));
+    std::string action_id(PolKit::createActionId(POLKIT_PREFIX, "", msg.method(), "", ""));
 
-    if (policykit.isDBusUserAuthorized(action_id, caller, connection.getConnection()))
+    ret.push_back(action_id);
+
+    try
     {
-	y2security("User is authorized to do action %s", action_id.c_str());
-	return true;
+	YCPValue path = msg.getYCPValue(0, Type::Path);
+	YCPValue arg = msg.getYCPValue(1, Type::Unspec);
+	YCPValue opt = msg.getYCPValue(2, Type::Unspec);
+
+	std::string path_str, arg_str, opt_str;
+
+	if (!path.isNull())
+	{
+	    path_str = path->toString();
+	}
+
+	if (!arg.isNull() && arg->isString())
+	{
+	    arg_str = arg->asString()->value();
+	}
+
+	if (!opt.isNull() && opt->isString())
+	{
+	    opt_str = opt->asString()->value();
+	}
+
+	action_id = PolKit::createActionId(POLKIT_PREFIX, path_str, msg.method(), arg_str, opt_str);
+
+	ret.push_back(action_id);
     }
-    else
+    catch (const DBusException& de)
     {
-	y2debug("User is NOT authorized to do action %s", action_id.c_str());
+	y2error ("Caught: %s", de.message().c_str());
+	y2error ("While trying to create action ID.");
     }
 
-    action_id = PolKit::createActionId(polkit_prefix, path, method, arg, opt);
-
-    bool ret = false;
-
-    // check the policy here
-    if (policykit.isDBusUserAuthorized(action_id, caller, connection.getConnection()))
-    {
-	y2security("User is authorized to do action %s", action_id.c_str());
-	ret = true;
-    }
-    else
-    {
-	y2security("User is NOT authorized to do action %s", action_id.c_str());
-    }
-
-    return ret;
-}
 #endif
 
-
-bool DBusServer::isProcessRunning(pid_t pid)
-{
-    ostringstream sstr;
-    sstr << "/proc/" << pid;
-
-    struct stat stat_result;
-    bool ret = ::stat(sstr.str().c_str(), &stat_result) == 0;
-
-    y2milestone("Process /proc/%d is running: %s", pid, ret ? "true" : "false");
     return ret;
-}
-
-pid_t DBusServer::callerPid(const std::string &bus_name)
-{
-    pid_t pid;
-    DBusMsg query;
-
-    // ask the DBus server for the PID of the caller
-    query.createCall("org.freedesktop.DBus", "/org/freedesktop/DBus/Bus",
-	"org.freedesktop.DBus", "GetConnectionUnixProcessID");
-
-    query.addString(bus_name);
-
-    // send the request
-    DBusMsg reply(connection.call(query));
-    
-    // read the answer
-    DBusMessageIter iter;
-    dbus_message_iter_init(reply.getMessage(), &iter);
-
-    int type = dbus_message_iter_get_arg_type(&iter);
-    y2debug("Message type: %d, %c", type, (char)type);
-
-    if (type == DBUS_TYPE_UINT32)
-    {
-	dbus_message_iter_get_basic(&iter, &pid);
-    }
-    else
-    {
-	y2internal("Unexpected type in PID reply %d (%c)", type, (char)type);
-    }
-
-    y2milestone("Message from PID %d", pid);
-
-    return pid;
 }

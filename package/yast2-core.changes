@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov 10 20:35:11 CET 2009 - lslezak@suse.cz
+
+- backported changes from yast2-dbus-server package
+- 2.17.30.1
+
+-------------------------------------------------------------------
 Fri Oct  2 14:31:32 CEST 2009 - lslezak@suse.cz
 
 - backported tty_wrapper fixes from TRUNK (bnc#470645)

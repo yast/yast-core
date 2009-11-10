@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+
+#
+# Test code for SCR_service
+#
+# test_SCR_dbus_server.rb is generated from test_SCR_dbus_server.rb.in
+#
+require 'test/unit'
+
+begin
+  require "dbus"
+rescue Exception => e
+  $stderr.puts "Please install ruby-dbus"
+  exit
+end
+
+class DBusTest < Test::Unit::TestCase
+  def test_loading
+    # Get the bus
+    system_bus = DBus::SystemBus.instance
+    assert system_bus
+    
+    # Get the yast service
+    yast = system_bus.service("@YAST_SCR_SERVICE@")
+    assert yast
+    
+    # Get the object from this service
+    # (using the root object of the service, for SCR there's just one)
+    objYast = yast.object("/SCR")
+    assert objYast
+    
+    # Create a local object for accessing the interface provided by the remote object
+    # The local application can 'talk' through this object which internally proxies
+    # all calls to the remote one via DBus.
+    poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
+    assert poiSCR
+  end
+  def test_throughput
+    start = Time.now
+    count = 0
+    while (Time.now - start < 1)
+      system_bus = DBus::SystemBus.instance
+      assert system_bus
+    
+      # Get the yast service
+      yast = system_bus.service("@YAST_SCR_SERVICE@")
+      assert yast
+    
+      # Get the object from this service
+      objYast = yast.object("/SCR")
+      assert objYast
+      
+      poiSCR = DBus::ProxyObjectInterface.new(objYast, "@YAST_SCR_INTERFACE@")
+	  
+      res = poiSCR.define_method("Execute", "in path:(bsv), in arg:(bsv), in opt:(bsv), out ret:(bsv)")
+    
+      begin
+	r = poiSCR.Execute([false, "path", ["s",".target.bash_output"] ], 
+			   [false, "string", ["s","/bin/date +%r"] ], 
+			   [false, "", ["s",""] ])
+      rescue Exception => e
+      end
+      count += 1
+    end
+    elapsed = Time.now - start
+    persec = count / elapsed
+    puts "Throughput #{persec.to_i}/sec"
+  end
+end

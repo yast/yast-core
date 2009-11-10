@@ -32,14 +32,14 @@ bool DBusConn::connect(DBusBusType type, const std::string& service)
 	return true;
     }
 
-    y2milestone("Connecting to DBus...");
+    y2milestone("Connecting to DBus (%s bus)...", type == DBUS_BUS_SYSTEM ? "system" : "session");
    
-    // connect to the system bus
+    // connect to the bus
     connection = dbus_bus_get(type, &dbus_error);
 
     if (dbus_error_is_set(&dbus_error))
     {
-	y2error("Cannot connect to the system bus: %s", dbus_error.message);
+	y2error("Cannot connect to the bus: %s", dbus_error.message);
 	return false;
     }
 

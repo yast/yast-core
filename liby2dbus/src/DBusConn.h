@@ -32,6 +32,7 @@ class DBusConn
 	bool send(const DBusMsg &msg);
 	DBusMsg call(const DBusMsg &msg);
 	void flush();
+	// it the msg is empty, there was a timeout
 	DBusMsg receive();
 	DBusConnection *getConnection() const;
 };

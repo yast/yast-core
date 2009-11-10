@@ -1,12 +1,16 @@
 #
-# Makefile.am for dbus/service
+# Makefile.am for dbus/SCR_service
 #
 
-EXTRA_DIST=org.opensuse.yast.SCR.service.in org.opensuse.yast.SCR.conf.in org.opensuse.yast.scr.policy
+EXTRA_DIST=org.opensuse.yast.SCR.service.in.in \
+	org.opensuse.yast.SCR.conf.in \
+	org.opensuse.yast.scr.policy \
+	scr_names.h.in \
+	test_SCR_dbus_server.rb.in
 
 AM_CXXFLAGS = -DY2LOG=\"SCR-service\" -DSUSEVERSION=\"${SUSEVERSION}\"
 
-INCLUDES = ${AGENT_INCLUDES}
+INCLUDES = ${AGENT_INCLUDES} -I$(includedir)
 
 ybin_PROGRAMS = SCR_dbus_server
 
@@ -14,7 +18,8 @@ SCR_dbus_server_SOURCES = SCR_dbus_server.cc DBusServer.cc DBusServer.h
 
 SCR_dbus_server_CPPFLAGS = $(AM_CPPFLAGS) $(DBUS_CFLAGS) $(POLKIT_CFLAGS) -I$(top_builddir)/liby2dbus/src -I$(srcdir)/../../scr/src -I$(top_builddir)/libscr/src/include
 
-SCR_dbus_server_LDADD = ${AGENT_LIBADD} $(top_builddir)/liby2dbus/src/liby2dbus.la $(top_builddir)/scr/src/libpy2scr.la
+SCR_dbus_server_LDADD = ${AGENT_LIBADD} $(top_builddir)/liby2dbus/src/liby2dbus.la -lycp -ly2 -ly2util $(top_builddir)/scr/src/libpy2scr.la
+# -lycp -ly2 -ly2util ${libdir}/YaST2/plugin/libpy2scr.la
 
 # PolicyKit defaults
 polkit_policiesdir = `pkg-config --print-errors --variable policydir polkit`
@@ -23,36 +28,28 @@ polkit_policies_DATA = org.opensuse.yast.scr.policy
 # validate the policy files in 'make check' target
 check-local:
 	polkit-policy-file-validate $(polkit_policies_DATA)
-
-
+	if type ruby; then \
+	  ruby test_SCR_dbus_server.rb; \
+	else \
+	  echo skiping test; \
+	fi
+	
 # service activation config
 
 # FIXME?? dbus pkgconfig provides only 'session_bus_services_dir'
 dbus_servicesdir = `pkg-config --print-errors --variable prefix dbus-1`/share/dbus-1/system-services
 
-dbus_services_in_files = org.opensuse.yast.SCR.service.in
+# Can't use autoconf only because @ybindir@ expands to '${prefix}/...'. 
+# So must use %YBINDIR% and expand it via sed during make
+# Ouch, ouch, ouch
 
+dbus_services_in_files = org.opensuse.yast.SCR.service.in
 dbus_services_DATA = $(dbus_services_in_files:.service.in=.service)
 
 $(dbus_services_DATA): $(dbus_services_in_files)
-	sed -e "s|\@YBINDIR\@|$(ybindir)|" $< > $@
+	sed -e "s|\%YBINDIR\%|$(ybindir)|" $< > $@
 
 # service config
 
 dbus_confdir = `pkg-config --print-errors --variable sysconfdir dbus-1`/dbus-1/system.d
-
-dbus_conf_in_files = org.opensuse.yast.SCR.conf.in
-
-dbus_conf_DATA = $(dbus_conf_in_files:.conf.in=.conf)
-
-# set access mode according to the PolicyKit status
-# if policykit is disabled only root can access the service
-if HAVE_POLKIT
-dbus_access_mode=allow
-else
-dbus_access_mode=deny
-endif
-
-$(dbus_conf_DATA): $(dbus_conf_in_files)
-	sed -e "s|\@ACCESS_MODE\@|$(dbus_access_mode)|" $< > $@
-
+dbus_conf_DATA = org.opensuse.yast.SCR.conf
