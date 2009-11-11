@@ -124,6 +124,18 @@ else
     HAVE_POLKIT=0
 fi
 
+#
+# configuration for dbus/SCR_service
+#
+
+# set access mode according to the PolicyKit status
+# if policykit is disabled only root can access the service
+if test $HAVE_POLKIT -ne 0; then
+ACCESS_MODE=allow
+else
+ACCESS_MODE=deny
+fi
+
 YAST_DBUS_SERVICE=org.opensuse.YaST.modules
 AC_SUBST(YAST_DBUS_SERVICE)
 YAST_DBUS_RAW_INTERFACE=org.opensuse.YaST.Values
