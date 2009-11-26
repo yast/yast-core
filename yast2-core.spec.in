@@ -31,8 +31,8 @@ Provides:	liby2util = 2.16.1
 Obsoletes:	liby2util < 2.16.1
 
 # forward compatibility
-Provides:	yast2-dbus-client = 2.16.99
-Provides:	yast2-dbus-server = 2.16.99
+Provides:	yast2-dbus-client = 2.17.0
+Provides:	yast2-dbus-server = 2.17.0
 
 %description
 -
