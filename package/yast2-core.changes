@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov 26 09:44:00 UTC 2009 - lslezak@suse.cz
+
+- added versioned yast2-dbus-* Provides for smooth SP1 upgrade
+- 2.17.30.3
+
+-------------------------------------------------------------------
 Wed Nov 11 10:00:06 CET 2009 - jsrain@suse.cz
 
 - added missing macro substitution
