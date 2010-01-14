@@ -467,7 +467,7 @@ s_search (const YCPString &s1, const YCPString &s2)
      * @param string STRING1 String
      * @param string STRING2 Substring
      * @return integer OFFSET
-     * If substring is not found find returns `nil'.
+     * If substring is not found search returns `nil'.
      *
      * @description
      *
