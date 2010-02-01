@@ -15,14 +15,14 @@ AM_LDFLAGS = \
 	-Xlinker --no-whole-archive
 
 noinst_PROGRAMS = \
-	test_Y2SLog.prg		\
-	test_strutil.prg	\
+	test_Y2SLog		\
+	test_strutil		\
 	test_mkdir.prg		\
 	test_chroot.prg
 
-test_Y2SLog_prg_SOURCES = test_Y2SLog.cc
+test_Y2SLog_SOURCES = test_Y2SLog.cc
 
-test_strutil_prg_SOURCES = test_strutil.cc
+test_strutil_SOURCES = test_strutil.cc
 
 test_mkdir_prg_SOURCES = test_mkdir.cc
 

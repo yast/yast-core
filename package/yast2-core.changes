@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb  1 16:01:46 CET 2010 - mvidner@suse.cz
+
+- Re-enabled parts of liby2util-r testsuite.
+
+-------------------------------------------------------------------
 Mon Feb  1 15:50:51 CET 2010 - mvidner@suse.cz
 
 - Backported from trunk to allow compiling the old code on 11.2:

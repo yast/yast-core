@@ -40,13 +40,6 @@ proc prg-run { src } {
     return -1
   }
 
-  # check return code from runprg
-
-  if {$result != ""} {
-    warning "Run of $base_name results in '$result'"
-    return -1
-  }
-
   # ok, all is fine
 
   pass $base_name
