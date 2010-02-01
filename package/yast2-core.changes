@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Feb  1 15:50:51 CET 2010 - mvidner@suse.cz
+
+- Backported from trunk to allow compiling the old code on 11.2:
+ * Fixed char* constness for glibc-2.10 (r57367).
+ * Fixed makefiles to work with "install" calls changed via
+   automake-1.11 (r57509)
+
+-------------------------------------------------------------------
 Fri Oct  2 14:31:32 CEST 2009 - lslezak@suse.cz
 
 - backported tty_wrapper fixes from TRUNK (bnc#470645)

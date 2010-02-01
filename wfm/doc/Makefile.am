@@ -4,7 +4,7 @@ SUBDIRS =
 
 htmldir = $(yastdocdir)/ycp/WFM
 
-htmlfiles = $(wildcard html/*.html)
+htmlfiles = $(filter-out html/index.html,$(wildcard html/*.html))
 builtin = $(srcdir)/../src/Y2WFMComponent.cc 
 builtinxml := $(builtin:%.cc=%.xml)
 xmlfiles := $(foreach xml,$(builtinxml),$(notdir $(xml)))
