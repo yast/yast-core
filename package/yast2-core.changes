@@ -1,7 +1,10 @@
 -------------------------------------------------------------------
 Mon Feb  1 16:01:46 CET 2010 - mvidner@suse.cz
 
+- Fixed a crash in LogTail by adding a mutex to the shared variable
+  (bnc#565918).
 - Re-enabled parts of liby2util-r testsuite.
+- 2.17.33
 
 -------------------------------------------------------------------
 Mon Feb  1 15:50:51 CET 2010 - mvidner@suse.cz

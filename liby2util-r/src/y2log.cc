@@ -322,7 +322,10 @@ void y2_vlogger_blanik(loglevel_t level, const char *component, const char *file
 	else
 	    tolog = y2_logfmt_prefix (level) + common;
 	// store the message for worse times
+	static pthread_mutex_t blanik_mutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_mutex_lock (&blanik_mutex);
 	blanik.push_back (tolog);
+	pthread_mutex_unlock (&blanik_mutex);
     }
 }
 

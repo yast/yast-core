@@ -16,11 +16,15 @@ AM_LDFLAGS = \
 
 noinst_PROGRAMS = \
 	test_Y2SLog		\
+	test_thread_log.prg	\
 	test_strutil		\
 	test_mkdir.prg		\
 	test_chroot.prg
 
 test_Y2SLog_SOURCES = test_Y2SLog.cc
+
+test_thread_log_prg_SOURCES = test_thread_log.cc
+test_thread_log_prg_LDFLAGS = $(AM_LDFLAGS) -pthread
 
 test_strutil_SOURCES = test_strutil.cc
 
