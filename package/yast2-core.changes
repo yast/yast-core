@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Feb  1 16:01:46 CET 2010 - mvidner@suse.cz
+
+- Fixed a crash in LogTail by adding a mutex to the shared variable
+  (bnc#565918).
+- Re-enabled parts of liby2util-r testsuite.
+- 2.19.1
+
+-------------------------------------------------------------------
 Fri Dec 18 12:43:39 CET 2009 - aschnell@suse.de
 
 - allow Y2DIR to be a list of paths separated by ":"

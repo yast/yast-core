@@ -6,15 +6,15 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    if(argc<2)
+    const char * chroot = "/";
+    if(argc >= 2)
     {
-	cout << "must specify directory to chroot to" << endl;
-	return 1;
+	chroot = argv[1];
     }
     const char* aa[] = { "ls" , "-al", NULL };
 //    string aa = "ls";
     ExternalProgram* prog = new ExternalProgram(aa, ExternalProgram::Stderr_To_Stdout,
-	false, -1, true, argv[1]);
+	false, -1, true, chroot);
     if(!prog) return 1;
     string line;
     
@@ -25,5 +25,5 @@ int main(int argc, char* argv[])
 	cout << line;
     }
     cout << "program exited with " << prog->close() << endl;
-    return 0;    
+    return prog->close();
 }
