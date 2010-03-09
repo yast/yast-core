@@ -16,10 +16,6 @@ int ticks;
 
 void *PrintHello(void *threadid)
 {
-   long tid;
- 
- 
-   tid = (long)threadid;
    printf("Hello World! It's me, thread %p!\n", threadid);
    for (int i = 0; i < ticks; ++i)
      y2debug("Thread %p tick %d", threadid, i);
@@ -37,9 +33,8 @@ int main (int argc, char *argv[])
    intptr_t t;
    for(t=1; t<=NUM_THREADS; t++){
       printf("In main: creating thread %p\n", (void*)t);
-      rc = pthread_create(&threads[t], NULL, PrintHello, (void *)t);
- 
- 
+      rc = pthread_create(&threads[t-1], NULL, PrintHello, (void *)t);
+  
       if (rc){
          printf("ERROR; return code from pthread_create() is %d\n", rc);
 	 return 1;
@@ -49,4 +44,3 @@ int main (int argc, char *argv[])
    // if the bug exists, the program crashes before it can exit succesfully
    return 0;
 }
-

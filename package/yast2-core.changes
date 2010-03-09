@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  9 16:21:07 CET 2010 - mvidner@suse.cz
+
+- Fixed an ia64 crash in test_thread_log (a test case for bnc#565918).
+- 2.17.34
+
+-------------------------------------------------------------------
 Mon Feb  1 16:01:46 CET 2010 - mvidner@suse.cz
 
 - Fixed a crash in LogTail by adding a mutex to the shared variable
