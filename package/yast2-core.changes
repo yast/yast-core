@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Mar 11 15:36:27 CET 2010 - mvidner@suse.cz
+
+- Fixed the regexpsub algorithm not to loop endlessly
+  if the source string contains \1 (bnc#552914).
+- 2.17.35
+
+-------------------------------------------------------------------
 Tue Mar  9 16:21:07 CET 2010 - mvidner@suse.cz
 
 - Fixed an ia64 crash in test_thread_log (a test case for bnc#565918).
