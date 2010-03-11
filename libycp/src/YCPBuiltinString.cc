@@ -891,10 +891,10 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
 /// (regexp builtins)
 typedef struct REG_RET
 {
-    string result_str;
+    string result_str;		// for regexpsub
     string match_str[SUB_MAX];	// index 0 not used!!
     int match_nb;		// 0 - 9
-    string error_str;
+    string error_str;		// from regerror
     bool error;
     bool solved;
 } Reg_Ret;
@@ -903,6 +903,7 @@ typedef struct REG_RET
 /*
  * Universal regular expression solver.
  * It is used by all regexp* ycp builtins.
+ * Replacement is done if result is not ""
  */
 Reg_Ret solve_regular_expression (const char *input, const char *pattern,
 				  const char *result)
@@ -944,27 +945,38 @@ Reg_Ret solve_regular_expression (const char *input, const char *pattern,
 	return reg_ret;
     }
 
-    static const char *index[] = {
-        NULL, /* not used */
-        "\\1", "\\2", "\\3", "\\4",
-        "\\5", "\\6", "\\7", "\\8", "\\9"
-    };
-
     string input_str (input);
-    string result_str (result);
 
     for (unsigned int i=0; (i <= compiled.re_nsub) && (i <= SUB_MAX); i++) {
         reg_ret.match_str[i] = matchptr[i].rm_so >= 0 ? input_str.substr(matchptr[i].rm_so, matchptr[i].rm_eo - matchptr[i].rm_so) : "";
         reg_ret.match_nb = i;
-
-        string::size_type col = string::npos;
-        if(index[i] != NULL) col = result_str.find(index[i]);
-        while( col != string::npos ) {
-            result_str.replace( col, 2, reg_ret.match_str[i]  );
-            col = result_str.find(index[i], col + 1 );
-        }
     }
 
+
+    string result_str;
+    const char * done = result;	// text before 'done' has been dealt with
+    const char * bspos = result;
+
+
+    while (1) {
+      bspos = strchr (bspos, '\\');
+      if (bspos == NULL) // not found
+	break;
+
+      // STATE: \ seen
+      ++bspos;
+
+      if (*bspos >= '1' && *bspos <= '9') {
+	// copy non-backslash text
+	result_str.append (done, bspos - 1 - done);
+	// copy replacement string
+	result_str += reg_ret.match_str[*bspos - '0'];
+	done = bspos = bspos + 1;
+      }
+    }
+    // copy the rest
+    result_str += done;
+      
     reg_ret.result_str = result_str;
     regfree (&compiled);
     return reg_ret;
