@@ -28,7 +28,6 @@ ag_xf86config() .etc.xf86config		C++	Xf86ConfigAgent.*
 ag_password()   .etc.shadow		C++	PasswordAgent.*
 ag_hwprobe()    .probe			C++	HwProbe.*
 ag_exec()       .exec			C++	Exec.*
-ag_fdisk()      .disk			C++	FdiskAgent.*
 ag_hostnames()  .net.hostnames		script  YASTHOME/servers/ag_hostname
 anyagent	shown in 		C++	AnyAgent*.*
                 YASTHOME/scrconf/
