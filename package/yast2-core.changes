@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu May 20 15:19:37 CEST 2010 - mvidner@suse.cz
+
+- Fixed the regexpsub algorithm not to loop endlessly
+  if the source string contains \1 (bnc#552914, bnc#606427).
+- 2.17.30.5
+
+-------------------------------------------------------------------
 Thu Nov 26 12:11:51 UTC 2009 - lslezak@suse.cz
 
 - use 2.17.0 yast2-dbus-* Provides (instead of 2.16.99)
