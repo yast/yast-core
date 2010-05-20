@@ -794,7 +794,7 @@ YCPValue DBusMsg::getYCPValueRawType(DBusMessageIter *it, constTypePtr ycptype) 
     {
 	if (type == DBUS_TYPE_BOOLEAN)
 	{
-	    bool b;
+	    dbus_bool_t b; // not bool, bnc#606712
 	    dbus_message_iter_get_basic(it, &b);
 	    ret = YCPBoolean(b);
 	    mismatch = false;
@@ -965,7 +965,7 @@ YCPValue DBusMsg::getYCPValueRawAny(DBusMessageIter *it) const
     // TODO support more types
     if (type == DBUS_TYPE_BOOLEAN)
     {
-	bool b;
+	dbus_bool_t b; // not bool, bnc#606712
 	dbus_message_iter_get_basic(it, &b);
 	ret = YCPBoolean(b);
     }

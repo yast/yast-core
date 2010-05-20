@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Thu May 20 17:00:35 CEST 2010 - mvidner@suse.cz
+
+- Better fix: dbus_bool_t instead of int (bnc#606712).
+- Fixed retrieving boolean values on big-endian archs (bnc#606712).
+- Enabled the already existing test for this bug.
+- 2.17.30.6
+
+-------------------------------------------------------------------
 Thu May 20 15:19:37 CEST 2010 - mvidner@suse.cz
 
 - Fixed the regexpsub algorithm not to loop endlessly

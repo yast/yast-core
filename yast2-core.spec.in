@@ -24,6 +24,8 @@ BuildRequires:  libxcrypt-devel
 
 # for SCR DBus service
 BuildRequires:	dbus-1-devel PolicyKit-devel
+# its tests
+BuildRequires:  dbus-1-python
 
 Summary:	-
 Requires:	perl = %{perl_version}
