@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug 10 13:28:57 CEST 2010 - mvidner@suse.cz
+
+- Enable input buffering for YCP include files (bnc#629882).
+- 2.19.3
+
+-------------------------------------------------------------------
 Thu Mar 11 15:36:27 CET 2010 - mvidner@suse.cz
 
 - Fixed the regexpsub algorithm not to loop endlessly

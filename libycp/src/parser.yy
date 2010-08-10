@@ -1502,6 +1502,7 @@ statement:
 
 		// we duplicate the value, so scanner gets its own instance
 		p_parser->setScanner (new Scanner (fd, Scanner::doStrdup($2.v.sval)));
+		p_parser->setBuffered(); // was missing, bnc#629882
 
 		// pass the outer scanner's tables
 		p_parser->scanner()->initTables (scanner->scanner->globalTable(), scanner->scanner->localTable());
