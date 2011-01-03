@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan  3 20:53:16 UTC 2011 - lslezak@suse.cz
+
+- fixed packaging in openSUSE-11.4 (perl files) 
+- 2.20.0
+
+-------------------------------------------------------------------
 Tue Aug 10 13:28:57 CEST 2010 - mvidner@suse.cz
 
 - Enable input buffering for YCP include files (bnc#629882).

@@ -112,9 +112,12 @@ fi
 %{perl_vendorlib}/ycp.pm
 %dir %{perl_vendorlib}/YaST
 %{perl_vendorlib}/YaST/SCRAgent.pm
+
+%if 0%{?suse_version} == 0 || 0%{?suse_version} <= 1130
 #  .packlist
 %{perl_vendorarch}/auto/ycp
 /var/adm/perl-modules/%name
+%endif
 
 %files devel
 %defattr(-,root,root)
