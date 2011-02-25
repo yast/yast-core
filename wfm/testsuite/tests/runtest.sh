@@ -1,7 +1,9 @@
 #!/bin/bash
 
 unset LANG
+unset LC_MESSAGES
 unset LC_ALL
+unset LANGUAGE
 
 unset Y2DEBUG
 unset Y2DEBUGGER
