@@ -5,20 +5,6 @@
 AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
 
 serversdir = $(execcompdir)/servers
-servers_PROGRAMS = scr
-
-scr_SOURCES =						\
-	scr.cc
-
-scr_LDADD = ${AGENT_LIBADD}				\
-	$(top_builddir)/liby2/src/liby2.la
-
-scr_DEPENDENCIES = libpy2scr.la
-
-scr_LDFLAGS =					\
-	-Xlinker --whole-archive		\
-	libpy2scr.la				\
-	-Xlinker --no-whole-archive
 
 plugin_LTLIBRARIES = libpy2scr.la
 
