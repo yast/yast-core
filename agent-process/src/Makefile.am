@@ -9,9 +9,7 @@ noinst_LTLIBRARIES = liby2ag_process.la
 
 liby2ag_process_la_SOURCES =				\
 	ProcessAgent.cc					\
-	ProcessAgent.h					\
-	Process.cc					\
-	Process.h
+	ProcessAgent.h
 
 liby2ag_process_la_LDFLAGS = -version-info 2:0
 liby2ag_process_la_LIBADD = @AGENT_LIBADD@

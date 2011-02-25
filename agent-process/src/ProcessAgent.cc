@@ -27,7 +27,7 @@
  */
 
 #include "ProcessAgent.h"
-#include "Process.h"
+#include <y2util/Process.h>
 
 #include <y2util/ExternalProgram.h>
 

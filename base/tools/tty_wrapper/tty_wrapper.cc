@@ -30,7 +30,7 @@
 */
 
 
-#include "Process.h"
+#include <y2util/Process.h>
 #include <iostream>
 
 extern "C"
@@ -39,7 +39,6 @@ extern "C"
 #include <signal.h>
 #include <errno.h>
 }
-
 
 // use atomic type in signal handler
 static sig_atomic_t finish = false;

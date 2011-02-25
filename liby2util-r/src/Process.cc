@@ -26,7 +26,7 @@
  * $Id: ProcessAgent.cc 27914 2006-02-13 14:32:08Z locilka $
  */
 
-#include "Process.h"
+#include "y2util/Process.h"
 
 #include <signal.h>
 #include <fcntl.h>

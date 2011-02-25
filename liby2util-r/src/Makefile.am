@@ -23,7 +23,8 @@ liby2util_la_SOURCES =		\
 	miniini.cc \
 	stringutil.cc \
 	y2log.cc \
-	y2changes.cc
+	y2changes.cc \
+	Process.cc
 
 
 liby2util_la_LDFLAGS = -version-info 4:0:0
