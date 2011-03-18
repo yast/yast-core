@@ -58,7 +58,7 @@ public:
     //  ready to be printed in gdb
     static void MuDumpVal (const char *name);
 
-    virtual size_t mem_size () const { return sizeof (*this); }
+    virtual std::size_t mem_size () const { return sizeof (*this); }
 };
 
 // this makes it easier for gdb.

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 15 15:51:48 UTC 2011 - coolo@novell.com
+
+- fix build with gcc 4.6
+
+-------------------------------------------------------------------
 Mon Jan  3 20:53:16 UTC 2011 - lslezak@suse.cz
 
 - fixed packaging in openSUSE-11.4 (perl files) 
