@@ -1337,6 +1337,68 @@ s_cryptblowfish(const YCPString& original)
 
 
 static YCPValue
+s_cryptsha256(const YCPString& original)
+{
+    /**
+     * @builtin cryptsha256
+     * @short Encrypts a string with sha256
+     * @description
+     * Encrypts the string <tt>UNENCRYPTED</tt> using sha256
+     * password encryption. The password is not truncated.
+     *
+     * @param string UNENCRYPTED
+     * @return string
+     * @usage cryptsha256 ("readable") -> "$5$keev8D8I$kZdbw1WYM7XJtn4cpl1S3QtoKXnxIIFVSqwadMAGLE3"
+     */
+
+    if (original.isNull ())
+	return YCPNull ();
+
+    string unencrypted = original->value();
+    string encrypted;
+
+    if (crypt_pass (unencrypted, SHA256, &encrypted))
+        return YCPString (encrypted);
+    else
+    {
+	ycp2error ("Encryption using sha256 failed");
+        return YCPNull ();
+    }
+}
+
+
+static YCPValue
+s_cryptsha512(const YCPString& original)
+{
+    /**
+     * @builtin cryptsha512
+     * @short Encrypts a string with sha512
+     * @description
+     * Encrypts the string <tt>UNENCRYPTED</tt> using sha512
+     * password encryption. The password is not truncated.
+     *
+     * @param string UNENCRYPTED
+     * @return string
+     * @usage cryptsha512 ("readable") -> "$6$QskPAFTK$R40N1UI047Bg.nD96ZYSGnx71mgbBgb.UEtKuR8bGGxuzYgXjCTxKIQmqXrgftBzA20m2P9ayrUKQQ2pnWzm70"
+     */
+
+    if (original.isNull ())
+	return YCPNull ();
+
+    string unencrypted = original->value();
+    string encrypted;
+
+    if (crypt_pass (unencrypted, SHA512, &encrypted))
+        return YCPString (encrypted);
+    else
+    {
+	ycp2error ("Encryption using sha512 failed");
+        return YCPNull ();
+    }
+}
+
+
+static YCPValue
 s_dgettext (const YCPString& domain, const YCPString& text)
 {
     /**
@@ -1520,6 +1582,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "cryptmd5",	   "string (string)",			(void *)s_cryptmd5 },
 	{ "cryptbigcrypt", "string (string)",			(void *)s_cryptbigcrypt },
 	{ "cryptblowfish", "string (string)",			(void *)s_cryptblowfish },
+	{ "cryptsha256",   "string (string)",                   (void *)s_cryptsha256 },
+	{ "cryptsha512",   "string (string)",                   (void *)s_cryptsha512 },
 	{ "regexpmatch",   "boolean (string, string)",		(void *)s_regexpmatch },
 	{ "regexppos",	   "list<integer> (string, string)",	(void *)s_regexppos },
 	{ "regexpsub",	   "string (string, string, string)",	(void *)s_regexpsub },

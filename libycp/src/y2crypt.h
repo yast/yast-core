@@ -14,7 +14,7 @@
 using std::string;
 
 
-enum crypt_t { CRYPT, MD5, BIGCRYPT, BLOWFISH };
+enum crypt_t { CRYPT, MD5, BIGCRYPT, BLOWFISH, SHA256, SHA512 };
 
 bool
 crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted);
