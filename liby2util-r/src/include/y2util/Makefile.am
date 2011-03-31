@@ -12,6 +12,7 @@ pkginclude_HEADERS =		\
 	MemUsage.h \
 	PathInfo.h \
 	Pathname.h \
+	Process.h \
 	Rep.h \
 	RepDef.h \
 	TreeItem.h \
