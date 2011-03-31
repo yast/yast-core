@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 31 11:11:36 CEST 2011 - aschnell@suse.de
+
+- added sha256 and sha516 password encryption (fate #309705)
+- 2.21.0
+
+-------------------------------------------------------------------
 Tue Mar 15 15:51:48 UTC 2011 - coolo@novell.com
 
 - fix build with gcc 4.6

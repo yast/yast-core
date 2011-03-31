@@ -151,6 +151,28 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 	    free (salt);
 	    break;
 
+	case SHA256:
+	    salt = make_crypt_salt ("$5$", 0);
+	    if (!salt)
+	    {
+		y2error ("Cannot create salt for sha256 crypt");
+		return false;
+	    }
+	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    free (salt);
+	    break;
+
+	case SHA512:
+	    salt = make_crypt_salt ("$6$", 0);
+	    if (!salt)
+	    {
+		y2error ("Cannot create salt for sha512 crypt");
+		return false;
+	    }
+	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    free (salt);
+	    break;
+
 	default:
 	    y2error ("Don't know crypt type %d", use_crypt);
 	    return false;
