@@ -67,6 +67,13 @@ YCPListRep::add (const YCPValue& value)
 
 
 void
+YCPListRep::push_back(const YCPValue& value)
+{
+    elements.push_back(value);
+}
+
+
+void
 YCPListRep::set (const int i, const YCPValue& value)
 {
     if (i < 0)

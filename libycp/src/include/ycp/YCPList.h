@@ -48,6 +48,12 @@ class YCPListRep : public YCPValueRep
     YCPValueList elements;
 
 protected:
+
+    typedef YCPValueList::iterator iterator;
+    typedef YCPValueList::const_iterator const_iterator;
+    typedef YCPValueList::value_type value_type;
+    typedef YCPValueList::const_reference const_reference;
+
     friend class YCPList;
 
     /**
@@ -82,6 +88,13 @@ public:
      * yourself.
      */
     void add(const YCPValue& value);
+
+    /**
+     * Appends a value to the list. Takes over the memory management
+     * of that value. Use @ref YCPElementRep, if you need it
+     * yourself.
+     */
+    void push_back(const YCPValue& value);
 
     /**
      * Sets a value in the list. Takes over the memory management
@@ -269,6 +282,12 @@ class YCPList : public YCPValue
 {
     DEF_COW_COMMON(List, Value);
 public:
+
+    typedef YCPListRep::iterator iterator;
+    typedef YCPListRep::const_iterator const_iterator;
+    typedef YCPListRep::value_type value_type;
+    typedef YCPListRep::const_reference const_reference;
+
     YCPList() : YCPValue(new YCPListRep()) {}
     YCPList(bytecodeistream & str);
 
@@ -276,6 +295,7 @@ public:
     void reserve (int size) { ELEMENT->reserve (size); }
     bool isEmpty() const { return CONST_ELEMENT->isEmpty (); }
     void add(const YCPValue& value) { ELEMENT->add (value);  }
+    void push_back(const YCPValue& value) { ELEMENT->push_back(value); }
     void set(const int n, const YCPValue& value) { ELEMENT->set (n, value); }
     void remove(const int n) { ELEMENT->remove (n); }
     void swap(int x, int y) { ELEMENT->swap (x, y); }
