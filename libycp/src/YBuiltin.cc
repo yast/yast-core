@@ -53,6 +53,9 @@ static YCPBuiltinList builtin_list;		// trigger constructor
 #include "ycp/YCPBuiltinMultiset.h"
 static YCPBuiltinMultiset builtin_multiset;	// trigger constructor
 
+#include "ycp/YCPBuiltinSymbol.h"
+static YCPBuiltinSymbol builtin_symbol;		// trigger constructor
+
 #include "ycp/YCPBuiltinMap.h"
 static YCPBuiltinMap builtin_map;		// trigger constructor
 

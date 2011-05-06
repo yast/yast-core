@@ -2,6 +2,7 @@
 Thu May 05 17:24:04 CEST 2011 - aschnell@suse.de
 
 - backported multiset builtins needed by storage and iscsi
+- backported isempty and tosymbol builtins needed by storage
 - 2.17.37
 
 -------------------------------------------------------------------

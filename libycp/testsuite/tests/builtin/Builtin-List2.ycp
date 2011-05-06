@@ -65,6 +65,13 @@
 (sort (`x, `y, [ 3, 6, 2, 8 ], ``(x>y)))
 
 
+("** isempty **")
+
+(isempty ([]))
+(isempty ([1, 2, 3]))
+(isempty ((list) nil))
+
+
 ("** size **")
 
 (size ([]))

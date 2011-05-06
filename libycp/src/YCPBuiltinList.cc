@@ -914,6 +914,27 @@ l_add (const YCPList &list, const YCPValue &value)
 }
 
 
+static YCPValue
+l_isempty(const YCPList& l)
+{
+    /**
+     * @builtin isempty
+     * @id isempty-list
+     * @short Returns whether the list <tt>l</tt> is empty.
+     * @param list l List
+     * @return boolean Emptiness of list <tt>l</tt>
+     *
+     * @description
+     * Notice that the list <tt>l</tt> must not be nil.
+     *
+     * @usage isempty([]) -> true
+     * @usage isempty([19, 29]) -> false
+     */
+
+    return YCPBoolean(l->isEmpty());
+}
+
+
 // parameter is YCPValue because we accept 'nil'
 static YCPValue
 l_size (const YCPValue &list)
@@ -1352,6 +1373,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "add",	"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX|DECL_NIL },
 	{ "+",		"list <flex> (const list <flex>, const flex)",						(void *)l_add,		DECL_FLEX },
 	{ "+",		"list <any> (const list <any>, any)",							(void *)l_add		},
+	{ "isempty",	"boolean (const list <any>)",								(void *)l_isempty       },
 	{ "size",	"integer (const list <any>)",								(void *)l_size,		DECL_NIL },
 	{ "remove",	"list <flex> (const list <flex>, const integer)",					(void *)l_remove,	DECL_FLEX },
 	{ "select",	"flex (const list <flex>, integer, flex)",						(void *)l_select,	DECL_NIL|DECL_FLEX },

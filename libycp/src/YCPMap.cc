@@ -113,6 +113,13 @@ const YCPElementRep* YCPMapRep::shallowCopy() const
 }
 
 
+bool
+YCPMapRep::isEmpty() const
+{
+    return stl_map.empty();
+}
+
+
 long
 YCPMapRep::size() const
 {

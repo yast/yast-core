@@ -33,6 +33,14 @@ YCPStringRep::YCPStringRep(string s)
 {
 }
 
+
+bool
+YCPStringRep::isEmpty() const
+{
+    return v.empty();
+}
+
+
 string
 YCPStringRep::value() const
 {

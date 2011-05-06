@@ -19,7 +19,7 @@ pkginclude_HEADERS =					\
 	YCPDebugger.h					\
 	Type.h TypePtr.h				\
 	YCPBuiltinBoolean.h YCPBuiltinFloat.h		\
-	YCPBuiltinByteblock.h				\
+	YCPBuiltinByteblock.h YCPBuiltinSymbol.h	\
 	YCPBuiltinInteger.h YCPBuiltinList.h		\
 	YCPBuiltinMap.h	YCPBuiltinMisc.h		\
 	YCPBuiltinPath.h YCPBuiltinString.h		\

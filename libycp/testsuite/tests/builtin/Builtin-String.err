@@ -1,5 +1,22 @@
 Parsed:
 ----------------------------------------------------------------------
+"** isempty **"
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty ("")
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty ("linux")
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+isempty (nil)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-String.ycp:15 Argument (nil) to isempty(...) is nil
+Parsed:
+----------------------------------------------------------------------
 "** size **"
 ----------------------------------------------------------------------
 Parsed:
@@ -94,7 +111,7 @@ Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 42)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:48 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:55 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 5, 2)
@@ -103,7 +120,7 @@ Parsed:
 ----------------------------------------------------------------------
 substring ("some text", 42, 2)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:51 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:58 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 "** lsubstring **"
@@ -116,7 +133,7 @@ Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 42)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:57 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:64 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("ěščřžýáí", 5)
@@ -129,7 +146,7 @@ Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 42, 2)
 ----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:61 Substring index out of range
+[Interpreter] tests/builtin/Builtin-String.ycp:68 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("ěščřžýáí", 5, 2)
@@ -146,9 +163,9 @@ Parsed:
 ----------------------------------------------------------------------
 mergestring (["abc", "dev", "ghi", ""], "/")
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-String.ycp:69 No match for 'mergestring : <unspec> (list, string)'
-[Parser] tests/builtin/Builtin-String.ycp:69 Please fix parameter types to match one of:
-[Parser] tests/builtin/Builtin-String.ycp:69 'mergestring : string (const list <string>, string)'
-[Parser] tests/builtin/Builtin-String.ycp:69 Wrong parameters in call to mergestring(...)
-[Parser] tests/builtin/Builtin-String.ycp:69 Expected '(const list <string>, string)', seen '(list, string)'.
+[Parser] tests/builtin/Builtin-String.ycp:76 No match for 'mergestring : <unspec> (list, string)'
+[Parser] tests/builtin/Builtin-String.ycp:76 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-String.ycp:76 'mergestring : string (const list <string>, string)'
+[Parser] tests/builtin/Builtin-String.ycp:76 Wrong parameters in call to mergestring(...)
+[Parser] tests/builtin/Builtin-String.ycp:76 Expected '(const list <string>, string)', seen '(list, string)'.
 runycp: parser error

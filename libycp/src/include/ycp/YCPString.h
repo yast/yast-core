@@ -53,6 +53,12 @@ protected:
     YCPStringRep(string s);
 
 public:
+
+    /**
+     * Returns true, iff this string is empty.
+     */
+    bool isEmpty() const;
+
     /**
      * Returns the value of this object in form of a C++
      * string value.

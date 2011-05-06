@@ -58,6 +58,27 @@ extern StaticDeclaration static_declarations;
 
 
 static YCPValue
+s_isempty(const YCPString& s)
+{
+    /**
+     * @builtin isempty 
+     * @id isempty-string
+     * @short Returns whether the string <tt>s</tt> is empty.
+     * @param string s String
+     * @return boolean Emptiness of string <tt>s</tt>
+     *
+     * @description
+     * Notice that the string <tt>s</tt> must not be nil.
+     *
+     * @usage isempty("") -> true
+     * @usage isempty("test") -> false 
+     */
+
+    return YCPBoolean(s->isEmpty());
+}
+
+
+static YCPValue
 s_size (const YCPString &s)
 {
     /**
@@ -1562,6 +1583,7 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "tostring",	   "string (any)",			(void *)s_tostring },
 	{ "tohexstring",   "string (integer)",			(void *)s_tohexstring1 },
 	{ "tohexstring",   "string (integer, integer)",		(void *)s_tohexstring2 },
+	{ "isempty",	   "boolean (string)",			(void *)s_isempty },
 	{ "size",	   "integer (string)",			(void *)s_size },
 	{ "find",	   "integer (string, string)",		(void *)s_find,		DECL_DEPRECATED },
 	{ "search",	   "integer (string, string)",		(void *)s_search },

@@ -75,6 +75,13 @@
 (add ($[`a: 17, `b: 11], `b, nil))
 
 
+("** isempty **")
+
+(isempty ($[]))
+(isempty ($[1:"a", 2:"b"]))
+(isempty ((map) nil))
+
+
 ("** size **")
 
 (size ($[]))
