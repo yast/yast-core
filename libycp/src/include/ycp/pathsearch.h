@@ -29,8 +29,10 @@
 
 #include <string>
 #include <list>
+#include <vector>
 
 using std::string;
+using std::vector;
 
 
 class Y2PathSearch
@@ -100,9 +102,13 @@ public:
 protected:
     static bool searchPrefixWarn;
 
+    static vector<string> getPaths();
+
 private:
     static int defaultComponentLevel ();
 
+    static vector<string> paths;
+    static void initializePaths();
 };
 
 /**

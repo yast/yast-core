@@ -3,7 +3,7 @@
 
 @HEADER@
 # obviously
-BuildRequires:	gcc-c++
+BuildRequires:	gcc-c++ boost-devel
 # we have a parser
 BuildRequires:	flex bison
 # needed for all yast packages

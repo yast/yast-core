@@ -28,105 +28,103 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <boost/algorithm/string.hpp>
 
 #include <ycp/y2log.h>
 
 #include "pathsearch.h"
 
-// watch out, duplicated in YCPPathSearch::initialize
-static const char *paths[] =
-{
-    "/y2update",		// Necessary during installation, but
-				// can be achieved using -I and -M in
-				// the yast2 start script
-				// And more unimplemented stuff for scrconf...
-    "Y2DIR",			// replace with env. var. Y2DIR
-    "HOME",			// replace with users home dir + /.yast2
-    YAST2DIR
-};
-
-
-static const int NUM_LEVELS = sizeof (paths) / sizeof (paths[0]);
 
 bool Y2PathSearch::searchPrefixWarn = true;
 
-int
-Y2PathSearch::numberOfComponentLevels ()
+
+vector<string>
+Y2PathSearch::getPaths()
 {
-    return NUM_LEVELS;
+    vector<string> ret;
+
+    ret.push_back(string("/y2update"));
+
+    const char* y2dir = getenv("Y2DIR");
+    if (y2dir)
+    {
+	vector<string> y2dirs;
+	boost::split(y2dirs, y2dir, boost::is_any_of(":"));
+	for (vector<string>::const_iterator it = y2dirs.begin(); it != y2dirs.end(); ++it)
+	{
+	    if (*it != YAST2DIR)		// prevent path duplication
+		ret.push_back(*it);
+	}
+    }
+
+    const char* home = getenv("HOME");
+    if (home)
+    {
+	ret.push_back(string(home) + "/.yast2");
+    }
+
+    ret.push_back(string(YAST2DIR));
+
+    y2debug("getPaths %s", boost::join(ret, " ").c_str());
+
+    return ret;
+}
+
+
+vector<string> Y2PathSearch::paths;
+
+
+void
+Y2PathSearch::initializePaths()
+{
+    if (paths.empty())
+	paths = getPaths();
+}
+
+
+int
+Y2PathSearch::numberOfComponentLevels()
+{
+    initializePaths();
+    return paths.size();
 }
 
 
 string
 Y2PathSearch::searchPath (WHAT what, int level)
 {
-    static string *my_paths = 0;
+    initializePaths();
 
-    if (!my_paths)
-    {
-	// note: never deleted
-	my_paths = new string [NUM_LEVELS];
-
-	const char *home = getenv ("HOME");
-	const char *y2dir = getenv ("Y2DIR");
-
-	for (int i = 0; i < NUM_LEVELS; i++)
-	{
-	    // #330965, avoid publicly writable dirs in search path
-	    // (we return a nonexistent dir because the API does not
-	    // allow us to say Skip, and a cleanup patch to fix that
-	    // would be too large)
-	    static const char * not_there = YAST2DIR "/not-there";
-	    if (strcmp (paths[i], "HOME") == 0)
-	    {
-	      if (home)
-		my_paths[i] = string (home) + "/.yast2";
-	      else
-		my_paths[i] = string (not_there);
-	    }
-	    else if (strcmp (paths[i], "Y2DIR") == 0)
-	    {
-	      if (y2dir
-		     && (strcmp (YAST2DIR, y2dir) != 0))		// prevent path duplication
-		my_paths[i] = string (y2dir);
-	      else
-		my_paths[i] = string (not_there);
-	    }
-	    else
-	    {
-		my_paths[i] = string (paths[i]);
-	    }
-	}
-    }
+    int levels = paths.size();
 
     switch (what)
     {
 	case EXECCOMP:
-	    if (level == NUM_LEVELS - 1) // FIXME
+	    if (level == levels - 1) // FIXME
 	    {
 		return EXECCOMPDIR;
 	    }
 	    else
 	    {
-		return my_paths[level];
+		return paths[level];
 	    }
 	break;
 
 	case PLUGIN:
-	    if (level == NUM_LEVELS - 1) // FIXME
+	    if (level == levels - 1) // FIXME
 	    {
 		return PLUGINDIR;
 	    }
 	    else
 	    {
-		return my_paths[level] + "/plugin";
+		return paths[level] + "/plugin";
 	    }
 	break;
 
 	default:
 	break;
     }
-    return my_paths[level];
+    return paths[level];
 }
 
 
@@ -166,7 +164,10 @@ Y2PathSearch::completeFilename (const string& fname)
 string
 Y2PathSearch::findy2 (string filename, int mode, int level)
 {
-    for (int i = 0; i < NUM_LEVELS; i++)
+    initializePaths();
+
+    int levels = paths.size();
+    for (int i = 0; i < levels; i++)
     {
 	// for level == -1, all levels are scanned
 	if ((level >= 0) && (i != level))
@@ -180,7 +181,7 @@ Y2PathSearch::findy2 (string filename, int mode, int level)
 	if (access (pathname.c_str(), mode) == 0)
 	{
 	    // FIXME: this check is different for clients and for modules - see find
-	    if( searchPrefixWarn && i != NUM_LEVELS-1 )
+	    if( searchPrefixWarn && i != levels - 1 )
 	    {
 		y2warning( "Using special search prefix '%s' for '%s'",searchPath (GENERIC, i).c_str(), pathname.c_str() );
 	    }
@@ -247,7 +248,10 @@ Y2PathSearch::findy2plugin (string name, int level)
 int
 Y2PathSearch::defaultComponentLevel ()
 {
-    for (int i = 0; i < NUM_LEVELS; i++)
+    initializePaths();
+
+    int levels = paths.size();
+    for (int i = 0; i < levels; i++)
     {
 	if (searchPath (GENERIC, i) == YAST2DIR)
 	{
@@ -255,7 +259,7 @@ Y2PathSearch::defaultComponentLevel ()
 	}
     }
     /* NOTREACHED */
-    return NUM_LEVELS - 1;
+    return levels - 1;
 }
 
 
@@ -264,7 +268,7 @@ Y2PathSearch::currentComponentLevel ()
 {
     // Determine current component level
     int current_level = defaultComponentLevel ();
-    char *levelstring = getenv ("Y2LEVEL");
+    const char* levelstring = getenv ("Y2LEVEL");
     if (levelstring)
     {
 	current_level = atoi (levelstring);
@@ -277,26 +281,15 @@ std::list<string> YCPPathSearch::searchList[YCPPathSearch::num_Kind];
 
 bool YCPPathSearch::initialized = false;
 
-// watch out, duplicated in char *paths[]
+
 void
 YCPPathSearch::initialize (Kind kind, const char *suffix)
 {
-    const char *home = getenv ("HOME");
-    const char *y2dir = getenv ("Y2DIR");
-
     searchPrefixWarn = (getenv ("Y2SILENTSEARCH") == NULL);
 
-    addPath (kind, string (YAST2DIR) + suffix);
-    if (home)
-    {
-	string homey2 = string (home) + "/.yast2";
-	addPath (kind, homey2 + suffix);
-    }
-    if (y2dir)
-    {
-	addPath (kind, string (y2dir) + suffix);
-    }
-    addPath (kind, string ("/y2update") + suffix);
+    vector<string> paths = getPaths();
+    for (vector<string>::const_reverse_iterator it = paths.rbegin(); it != paths.rend(); ++it)
+	addPath(kind, *it + suffix);
 }
 
 
