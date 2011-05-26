@@ -3117,7 +3117,7 @@ YEFunction::evaluate (bool cse)
 
     if (ee.endlessRecursion ())
     {
-	y2error ("Returning nil instead of calling the function.");
+	ycp2error ("Returning nil instead of calling the function.");
 	return YCPVoid ();
     }
 
