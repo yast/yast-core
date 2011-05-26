@@ -155,7 +155,7 @@ Type::toStream (std::ostream & str) const
 
 
 std::ostream &
-Type::toXml( std::ostream & str, int indent ) const
+Type::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << " type=\"" << toXmlString() << "\"";
     if (m_const) str << " const=\"1\"";

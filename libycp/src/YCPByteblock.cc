@@ -138,7 +138,7 @@ YCPByteblockRep::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YCPByteblockRep::toXml (std::ostream & str, int indent ) const
+YCPByteblockRep::toXml (std::ostream & str, int /*indent*/ ) const
 {
     return Xmlcode::writeBytep (str, bytes, len);
 }

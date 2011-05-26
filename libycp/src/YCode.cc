@@ -198,7 +198,7 @@ YCode::toStream (std::ostream & str) const
 
 
 std::ostream &
-YCode::toXml (std::ostream & str, int indent ) const
+YCode::toXml (std::ostream & str, int /*indent*/ ) const
 {
     ykind k = kind ();
 #if DO_DEBUG
@@ -403,7 +403,7 @@ YConst::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YConst::toXml (std::ostream & str, int indent ) const
+YConst::toXml (std::ostream & str, int /*indent*/ ) const
 {
     if (m_kind == ycConstant) {
 	y2error ("Internal error, a constant not supposed to be written to xml");
@@ -509,7 +509,7 @@ YLocale::toStream (std::ostream & str) const
 
 // see also YELocale::toXml
 std::ostream &
-YLocale::toXml (std::ostream & str, int indent ) const
+YLocale::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_locale ) << "\"/>";
     return str;
@@ -781,7 +781,7 @@ YFunction::toStreamDefinition (std::ostream & str) const
 
 
 std::ostream &
-YFunction::toXmlDefinition (std::ostream & str, int indent ) const
+YFunction::toXmlDefinition (std::ostream & str, int /*indent*/ ) const
 {
     // see toXml(...)
     return str;

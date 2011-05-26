@@ -116,7 +116,7 @@ YStatement::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YStatement::toXml( std::ostream & str, int indent ) const
+YStatement::toXml( std::ostream & str, int /*indent*/ ) const
 {
     return str << "<statement line=" << m_line << "/>";
 }
@@ -160,7 +160,7 @@ YSBreak::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YSBreak::toXml (std::ostream & str, int indent ) const
+YSBreak::toXml (std::ostream & str, int /*indent*/ ) const
 {
     return str << "<break/>";
 }
@@ -204,7 +204,7 @@ YSContinue::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YSContinue::toXml (std::ostream & str, int indent ) const
+YSContinue::toXml (std::ostream & str, int /*indent*/ ) const
 {
     return str << "<continue/>";
 }
@@ -571,7 +571,7 @@ YSTypedef::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSTypedef::toXml( std::ostream & str, int indent ) const
+YSTypedef::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<typedef name=\"" << m_name << "\"";
     m_type->toXml( str, 0 );
@@ -635,7 +635,7 @@ YSAssign::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSAssign::toXml( std::ostream & str, int indent ) const
+YSAssign::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<assign name=\"" << m_entry->toString (false /*definition*/) << "\">";
     m_code->toXml( str, 0 );
@@ -1553,7 +1553,7 @@ YSTextdomain::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSTextdomain::toXml (std::ostream & str, int indent ) const
+YSTextdomain::toXml (std::ostream & str, int /*indent*/ ) const
 {
     return str << "<textdomain name=\"" << m_domain.asString() << "\"/>";
 }
@@ -1616,7 +1616,7 @@ YSInclude::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSInclude::toXml( std::ostream & str, int indent ) const
+YSInclude::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<include";
     if (m_skipped) str << " skipped=\"1\"";
@@ -1774,7 +1774,7 @@ YSImport::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSImport::toXml( std::ostream & str, int indent ) const
+YSImport::toXml( std::ostream & str, int /*indent*/ ) const
 {
     Xmlcode::pushNamespace (nameSpace());				// see YBlock::toXml(str) for popUptoNamespace()
     return str << "<import name=\"" << m_name.asString() << "\"/>";
@@ -1838,7 +1838,7 @@ YSFilename::toStream (std::ostream & str) const
 
 
 std::ostream &
-YSFilename::toXml(std::ostream & str, int indent ) const
+YSFilename::toXml(std::ostream & str, int /*indent*/ ) const
 {
     return str << "<filename name=\"" << m_filename.asString() << "\"/>";
 }

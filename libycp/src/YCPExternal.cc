@@ -78,7 +78,7 @@ YCPExternalRep::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YCPExternalRep::toXml (std::ostream & str, int indent ) const
+YCPExternalRep::toXml (std::ostream & str, int /*indent*/ ) const
 {
     y2error ("Trying to store an external payload in xml");
     return str;

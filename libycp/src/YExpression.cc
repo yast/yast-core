@@ -145,7 +145,7 @@ YEVariable::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YEVariable::toXml( std::ostream & str, int indent ) const
+YEVariable::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<variable name=\"";
     str << m_entry->toString (false /*definition*/);
@@ -217,7 +217,7 @@ YEReference::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEReference::toXml (std::ostream & str, int indent ) const
+YEReference::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yereference>";
     Xmlcode::writeEntry (str, m_entry);
@@ -388,7 +388,7 @@ YETerm::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YETerm::toXml (std::ostream & str, int indent ) const
+YETerm::toXml (std::ostream & str, int /*indent*/ ) const
 {
     u_int32_t count = 0;
     const ycodelist_t *codep = m_parameters;
@@ -533,7 +533,7 @@ YECompare::toStream (std::ostream & str) const
 
 
 std::ostream &
-YECompare::toXml (std::ostream & str, int indent ) const
+YECompare::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<compare op=\"" << Xmlcode::xmlify( compare_op_string( m_op ) ) << "\">";
     str << "<lhs>"; m_left->toXml( str, 0 ); str << "</lhs>";
@@ -646,7 +646,7 @@ YELocale::toStream (std::ostream & str) const
 
 // see also YLocale::toXml
 std::ostream &
-YELocale::toXml (std::ostream & str, int indent ) const
+YELocale::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_singular )
 	<< "\" plural=\"" << Xmlcode::xmlify( m_plural ) << "\">";
@@ -790,7 +790,7 @@ YEList::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEList::toXml (std::ostream & str, int indent ) const
+YEList::toXml (std::ostream & str, int /*indent*/ ) const
 {
     u_int32_t count = 0;
     const ycodelist_t *codep = m_first;
@@ -965,7 +965,7 @@ YEMap::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEMap::toXml( std::ostream & str, int indent ) const
+YEMap::toXml( std::ostream & str, int /*indent*/ ) const
 {
     mapval_t *mapp = m_first;
     u_int32_t count = 0;
@@ -1197,7 +1197,7 @@ YEPropagate::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YEPropagate::toXml (std::ostream & str, int indent ) const
+YEPropagate::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yepropagate from=\"" << Xmlcode::xmlify( m_from->toString() ) << "\" to=\"" << Xmlcode::xmlify( m_to->toString() ) << "\">";
     m_value->toXml( str, 0 );
@@ -1297,7 +1297,7 @@ YEUnary::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEUnary::toXml (std::ostream & str, int indent ) const
+YEUnary::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yeunary";
     extern StaticDeclaration static_declarations;
@@ -1412,7 +1412,7 @@ YEBinary::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEBinary::toXml (std::ostream & str, int indent ) const
+YEBinary::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yebinary";
     extern StaticDeclaration static_declarations;
@@ -1531,7 +1531,7 @@ YETriple::toStream (std::ostream & str) const
 
 
 std::ostream &
-YETriple::toXml (std::ostream & str, int indent ) const
+YETriple::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yetriple>";
     str << "<cond>"; m_expr->toXml( str, 0); str << "</cond>";
@@ -1638,7 +1638,7 @@ YEIs::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEIs::toXml (std::ostream & str, int indent ) const
+YEIs::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yeis "; m_type->toXml( str, 0); str << ">";
     str << "<expr>"; m_expr->toXml( str, 0); str << "</expr>";
@@ -1693,7 +1693,7 @@ YEReturn::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YEReturn::toXml (std::ostream & str, int indent ) const
+YEReturn::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yereturn>";
     m_expr->toXml( str, 0 );
@@ -1864,7 +1864,7 @@ YEBracket::toStream (std::ostream & str) const
 
 
 std::ostream &
-YEBracket::toXml (std::ostream & str, int indent ) const
+YEBracket::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<yebracket ";
     m_resultType->toXml( str, 0);
@@ -2991,7 +2991,7 @@ YECall::toStream (std::ostream & str) const
 
 
 std::ostream &
-YECall::toXml (std::ostream & str, int indent ) const
+YECall::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<call";
     if (!m_sentry->nameSpace()->name().empty()) {

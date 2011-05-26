@@ -83,7 +83,7 @@ YCPSymbolRep::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YCPSymbolRep::toXml (std::ostream & str, int indent ) const
+YCPSymbolRep::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<const type=\"symbol\" value=\"" << v.asString() << "\"/>";
     return str;

@@ -163,7 +163,7 @@ YCPEntryRep::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YCPEntryRep::toXml( std::ostream & str, int indent ) const
+YCPEntryRep::toXml( std::ostream & str, int /*indent*/ ) const
 {
     return Xmlcode::writeEntry (str, m_entry);
 }
@@ -226,7 +226,7 @@ YCPReferenceRep::toStream (std::ostream & str) const
 }
 
 std::ostream &
-YCPReferenceRep::toXml( std::ostream & str, int indent ) const
+YCPReferenceRep::toXml( std::ostream & str, int /*indent*/ ) const
 {
     // this is not used, instead YEVariable is used for xml
     return str;
@@ -235,13 +235,13 @@ YCPReferenceRep::toXml( std::ostream & str, int indent ) const
 
 
 std::ostream &
-YCPBreakRep::toXml( std::ostream & str, int indent ) const
+YCPBreakRep::toXml( std::ostream & str, int /*indent*/ ) const
 {
     return str << "<break/>";
 }
 
 std::ostream &
-YCPReturnRep::toXml( std::ostream & str, int indent ) const
+YCPReturnRep::toXml( std::ostream & str, int /*indent*/ ) const
 {
     return str << "<return/>";
 }

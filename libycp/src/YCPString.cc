@@ -132,7 +132,7 @@ YCPStringRep::toStream (std::ostream & str) const
 
 
 std::ostream &
-YCPStringRep::toXml (std::ostream & str, int indent ) const
+YCPStringRep::toXml (std::ostream & str, int /*indent*/ ) const
 {
     return str << "<const type=\"string\" value=\"" << Xmlcode::xmlify(v) << "\"/>";
 }
