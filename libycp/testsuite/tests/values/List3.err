@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any number
+    // list <string> l
+    // filename: "tests/values/List3.ycp"
+    any number = 42;
+    list <string> l = ["an invalid element in a list literal:", /* any -> string */number, "should not invalidate the entire list"];
+    return l;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/values/List3.ycp:4 Can't convert value '42' to type 'string'

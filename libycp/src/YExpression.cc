@@ -741,13 +741,15 @@ YEList::evaluate (bool cse)
 	YCPValue value = element->code->evaluate (cse);
 
 	if (value.isNull())
-	{
-	    return value;
+        {
+	    if (cse) {
+	        return value;   // expression is not a constant
+	    }
+	    else {
+	        value = YCPVoid();
+	    }
 	}
-	else
-	{
-	    list->add (value);
-	}
+	list->add (value);
 	element = element->next;
     }
     return list;

@@ -1,0 +1,1 @@
+(["an invalid element in a list literal:", nil, "should not invalidate the entire list"])

@@ -1,0 +1,8 @@
+// bnc#694520
+{
+  any number = 42;
+  list<string> l = ["an invalid element in a list literal:",
+		    (string) number, // fails
+		    "should not invalidate the entire list"];
+  return l;
+}
