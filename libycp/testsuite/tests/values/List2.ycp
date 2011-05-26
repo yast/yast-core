@@ -1,0 +1,6 @@
+// bnc#694520
+{
+  list l = nil;
+  l = add (l, 42);
+  return ["a nil list should not crash on add:", l];
+}

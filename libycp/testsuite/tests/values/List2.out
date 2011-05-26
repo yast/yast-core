@@ -1,0 +1,1 @@
+(["a nil list should not crash on add:", nil])

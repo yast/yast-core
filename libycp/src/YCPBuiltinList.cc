@@ -826,7 +826,7 @@ l_changelist (YCPList &list, const YCPValue &value)
 
 
 static YCPValue
-l_add (const YCPList &list, const YCPValue &value)
+l_add (const YCPValue &list, const YCPValue &value)
 {
     /**
      * @builtin add
@@ -842,12 +842,13 @@ l_add (const YCPList &list, const YCPValue &value)
      * @usage add ([1, 4], 8) -> [1, 4, 8]
      */
 
-    if (list.isNull ())
+    if (list.isNull () || !list->isList())
     {
+	ycp2error ("Adding to a nil list");
 	return YCPNull ();
     }
 
-    return list->functionalAdd (value);
+    return list->asList()->functionalAdd (value);
 }
 
 
