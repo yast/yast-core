@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri May 27 11:32:55 CEST 2011 - mvidner@suse.cz
+
+- Don't crash when adding to a nil list (bnc#694520).
+- A nil (type cast failure) in a list literal will not make the whole
+  list nil (bnc#694520).
+- 2.21.1
+
+-------------------------------------------------------------------
 Thu Mar 31 11:11:36 CEST 2011 - aschnell@suse.de
 
 - added sha256 and sha516 password encryption (fate #309705)
