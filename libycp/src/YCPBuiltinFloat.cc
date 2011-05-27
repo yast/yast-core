@@ -31,6 +31,7 @@
 #include "ycp/StaticDeclaration.h"
 
 #include "y2log.h"
+#include "y2string.h"
 
 extern StaticDeclaration static_declarations;
 
@@ -285,13 +286,14 @@ f_tolstring (const YCPFloat &f, const YCPInteger &precision)
     if (f.isNull () || precision.isNull ())
 	return YCPNull ();
 
-    std::ostringstream ss;
+    std::wostringstream ss;	// bnc#683881#c12: need wide chars
     ss.imbue (std::locale (""));
     ss.precision (precision->value ());
     ss << fixed<< f->value ();
-    YCPString ret (ss.str ());
 
-    return ret;
+    string in_utf8;
+    wchar2utf8 (ss.str (), &in_utf8);
+    return YCPString (in_utf8);
 }
 
 
