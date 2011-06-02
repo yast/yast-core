@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jun 02 09:58:11 CEST 2011 - aschnell@suse.de
+
+- added missing include statements
+- 2.21.3
+
+-------------------------------------------------------------------
 Fri May 27 17:17:14 CEST 2011 - mvidner@suse.cz
 
 - Fixed a garbled unbreakable space used as a thousand separator (bnc#683881).
