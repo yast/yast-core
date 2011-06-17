@@ -1,0 +1,10 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean b
+    // filename: "tests/expressions/Triple2.ycp"
+    boolean b = nil;
+    return b ? 1 : 2;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/expressions/Triple2.ycp:4 Condition expression evaluates to nil in ?: expression, using false instead.

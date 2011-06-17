@@ -21,6 +21,10 @@
 #include "ycp/YCPBoolean.h"
 #include "ycp/YCPCode.h"
 #include "ycp/StaticDeclaration.h"
+#include "ycp/y2log.h"
+#include "ycp/ExecutionEnvironment.h"
+
+extern ExecutionEnvironment ee;
 
 extern StaticDeclaration static_declarations;
 
@@ -60,16 +64,18 @@ b_or (const YCPCode &b1, const YCPCode &b2)
     
     if (b1_v.isNull () || b1_v->isVoid ())
     {
-	return YCPNull ();
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "First operand of '||' evaluates to nil, using 'false' instead.");
     }
-
-    if (b1_v->asBoolean ()->value ()) 
+    else if (b1_v->asBoolean ()->value ())
+    {
 	return YCPBoolean (true);
+    }
 
     YCPValue b2_v = b2->code ()->evaluate ();
     if (b2_v.isNull () || b2_v->isVoid ())
     {
-	return YCPNull ();
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Second operand of '||' evaluates to nil, using 'false' instead.");
+	return YCPBoolean (false);
     }
     
     return YCPBoolean (b2_v->asBoolean ()->value ());
@@ -92,7 +98,8 @@ b_and (const YCPCode &b1, const YCPCode &b2)
     
     if (b1_v.isNull () || b1_v->isVoid ())
     {
-	return YCPNull ();
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "First operand of '&&' evaluates to nil, using 'false' instead.");
+	return YCPBoolean (false);
     }
 
     if (! b1_v->asBoolean ()->value ()) 
@@ -101,7 +108,8 @@ b_and (const YCPCode &b1, const YCPCode &b2)
     YCPValue b2_v = b2->code ()->evaluate ();
     if (b2_v.isNull () || b2_v->isVoid ())
     {
-	return YCPNull ();
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Second operand of '&&' evaluates to nil, using 'false' instead.");
+	return YCPBoolean (false);
     }
     
     return YCPBoolean (b2_v->asBoolean ()->value ());

@@ -82,3 +82,27 @@ Parsed:
 ----------------------------------------------------------------------
 (false || false)
 ----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+(nil || true)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Boolean.ycp:0 First operand of '||' evaluates to nil, using 'false' instead.
+Parsed:
+----------------------------------------------------------------------
+(true || nil)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+(false || nil)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Boolean.ycp:0 Second operand of '||' evaluates to nil, using 'false' instead.
+Parsed:
+----------------------------------------------------------------------
+(nil && true)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Boolean.ycp:0 First operand of '&&' evaluates to nil, using 'false' instead.
+Parsed:
+----------------------------------------------------------------------
+(true && nil)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-Boolean.ycp:0 Second operand of '&&' evaluates to nil, using 'false' instead.

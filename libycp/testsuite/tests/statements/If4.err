@@ -1,0 +1,43 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean b
+    // filename: "tests/statements/If4.ycp"
+    boolean b = nil;
+    if (b)
+    {
+    return 1;
+}
+else
+    {
+    return 2;
+}
+    return 3;
+}
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If4.ycp:3 'if (b)' evaluates to non-boolean 'nil' (VOID), using 'false' instead.
+Parsed:
+----------------------------------------------------------------------
+{
+    // boolean boolean_returing_function ()
+    // filename: "tests/statements/If4.ycp"
+    boolean boolean_returing_function ()
+{
+    // boolean ret
+    boolean ret = nil;
+    return ret;
+}
+    if (boolean_returing_function ())
+    {
+    return 1;
+}
+else
+    {
+    return 2;
+}
+}
+----------------------------------------------------------------------
+[Interpreter] tests/statements/If4.ycp:18 'if (boolean_returing_function ())' evaluates to non-boolean 'nil' (RETURN), using 'false' instead.
+[Parser] tests/statements/If4.ycp:29 'if' expression not boolean
+[Parser] tests/statements/If4.ycp:29 Expected 'boolean', seen 'const void'.
+runycp: parser error

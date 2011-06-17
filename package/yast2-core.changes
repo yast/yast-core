@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun 17 16:21:50 CEST 2011 - jsuchome@suse.cz
+
+- when if-condition evaluates to nil, use false instead (bnc#687236)
+- 2.21.4
+
+-------------------------------------------------------------------
 Thu Jun 02 09:58:11 CEST 2011 - aschnell@suse.de
 
 - added missing include statements

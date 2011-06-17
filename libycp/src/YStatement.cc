@@ -1047,9 +1047,10 @@ YSIf::evaluate (bool cse)
     
     if (!bval->isBoolean())
     {
-	ycp2error ("'if (%s)' evaluates to non-boolean '%s' (%s).", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype_str());
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "'if (%s)' evaluates to non-boolean '%s' (%s), using 'false' instead.", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype_str());
+	bval	= YCPBoolean (false);
     }
-    else if (bval->asBoolean()->value() == true)
+    if (bval->asBoolean()->value() == true)
     {
 	if (m_true != 0)
 	{

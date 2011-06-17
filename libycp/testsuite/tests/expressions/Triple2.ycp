@@ -1,0 +1,5 @@
+{
+    // nil variable evaluates as fals
+    boolean b	= nil;
+    return (b ? 1 : 2);
+}

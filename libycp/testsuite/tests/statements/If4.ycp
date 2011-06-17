@@ -1,0 +1,34 @@
+{
+    boolean b	= nil;
+    if (b)
+    {
+	return 1;
+    }
+    else
+    {
+	return 2;
+    }
+    return 3; // should not happen
+}
+{
+    boolean boolean_returing_function () {
+	boolean ret	= nil;
+	return ret;
+    }
+    if (boolean_returing_function ())
+    {
+	return 1;
+    }
+    else
+    {
+	return 2;
+    }
+}
+{
+    // this is real parse error
+    if (nil)
+	return 1;
+    return 2;
+}
+
+

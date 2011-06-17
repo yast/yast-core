@@ -1500,10 +1500,11 @@ YETriple::evaluate (bool cse)
 
     YCPValue expr = m_expr->evaluate ();
 
-    if (expr.isNull ())
+    if (expr.isNull () || expr->isVoid())
     {
-	ycp2error ("Condition expression evaluates to nil in ?: expression");
-	return YCPNull ();
+	extern ExecutionEnvironment ee;
+	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Condition expression evaluates to nil in ?: expression, using false instead.");
+	return m_false->evaluate ();
     }
 
     if (expr->isBoolean())

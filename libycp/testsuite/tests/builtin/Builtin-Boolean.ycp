@@ -39,3 +39,8 @@
 (false || true)
 (false || false)
 
+(nil || true)
+(true || nil)
+(false || nil)
+(nil && true)
+(true && nil)
