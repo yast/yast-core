@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Aug  1 12:56:11 UTC 2011 - mvidner@suse.cz
+
+- Log YCP client arguments only with y2debug, not to reveal AutoYaST
+  passwords (bnc#492746).
+- 2.17.39
+
+-------------------------------------------------------------------
 Tue May 17 11:39:41 CEST 2011 - fehr@suse.de
 
 - backported allow Y2DIR to be a list of paths separated by ":"
