@@ -32,7 +32,7 @@ pkginclude_HEADERS =					\
 	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
 	SymbolTable.h Scanner.h Parser.h 		\
-	YSymbolEntry.h					\
+	YSymbolEntry.h YBreakpoint.h			\
 	y2log.h ycpless.h pathsearch.h			\
 	y2string.h					\
 	ExecutionEnvironment.h

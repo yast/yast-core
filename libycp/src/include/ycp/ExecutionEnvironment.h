@@ -20,20 +20,26 @@
 
 #include "y2log.h"
 #include "ycp/YStatement.h"
+#include "ycp/YExpression.h"
+
+#include <ycp/YCPValue.h>
 
 using namespace std;
 
 /// Function and source location, for backtraces
 struct CallFrame {
-    string called_function;
+    YECallPtr function;
     string filename;
     int linenumber;
+    YCPValue* params;
 
-    CallFrame (string f, int l, string func):
-        called_function (func),
+    CallFrame (string f, int l, YECallPtr func, YCPValue* p):
+        function (func),
         filename (f),
         linenumber (l)
-    {}
+    {
+	params = p;
+    }
 };
 
 /**
@@ -107,7 +113,7 @@ public:
      *
      * @param called_function	name of the function to be called at this point
      */
-    void pushframe (string called_function);
+    void pushframe (YECallPtr called_function, YCPValue params[]);
 
     /**
      * Pop the top call frame from the backtrace stack.

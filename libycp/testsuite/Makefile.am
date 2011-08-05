@@ -14,13 +14,13 @@ libdir = ../src/.libs
 noinst_PROGRAMS = testSignature runc runycp
 
 runc_SOURCES = runc.cc
-runc_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}
+runc_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ../../debugger/liby2debug.la ${Y2UTIL_LIBS}
 
 runycp_SOURCES = runycp.cc
-runycp_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS} 
+runycp_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ../../debugger/liby2debug.la ${Y2UTIL_LIBS} 
 
 testSignature_SOURCES = testSignature.cc
-testSignature_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ${Y2UTIL_LIBS}
+testSignature_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/liby2.la ../../debugger/liby2debug.la ${Y2UTIL_LIBS}
 
 PACKAGE=libycp
 

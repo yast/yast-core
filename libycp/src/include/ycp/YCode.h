@@ -143,7 +143,10 @@ public:
 	ysImport,		// import
 	ysBlock,		// a block as statement
 	ysSwitch,		// switch (since 10.0)
-	ysStatement		// [54] -- placeholder --
+	ysStatement,		// [54] -- placeholder --
+	
+	// internal
+	yiBreakpoint		// [55] -- debugger breakpoint
     };
 
 public:
@@ -361,7 +364,7 @@ class YFunction : public YCode
     YBlockPtr m_declaration;
 
     // the function definition ('body') is the block defining this function
-    YBlockPtr m_definition;
+    YCodePtr m_definition;
 
     bool m_is_global;
 
@@ -377,8 +380,9 @@ public:
     SymbolEntryPtr parameter (unsigned int position) const;
 
     // access to definition block (= 0 if declaration only)
-    YBlockPtr definition () const;
+    YCodePtr definition () const;
     void setDefinition (YBlockPtr body);
+    void setDefinition (YBreakpointPtr body);
     // read definition from stream
     void setDefinition (bytecodeistream & str);
 

@@ -105,6 +105,7 @@
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
 #include "exitcodes.h"
+#include <debugger/Debugger.h>
 
 /// number of symbols that are handled as error codes
 #define MAX_YCP_ERROR_EXIT_SYMBOLS	2
@@ -117,6 +118,7 @@ const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = {
 
 using std::string;
 ExecutionEnvironment ee;
+Debugger *debugger_instance;
 
 /// fallback name of the program
 static const char *progname = "genericfrontend";
@@ -127,6 +129,9 @@ static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)
 static bool has_parens (const char* arg);
 
 int signal_log_fd;		// fd to use for logging in signal handler
+
+bool debugger = false;
+bool debugger_remote = false;
 
 static
 void
@@ -710,6 +715,42 @@ main (int argc, char **argv)
 
 // FIXME the whole option parsing sucks **** !
 
+    // Check, if debugger should be enabled
+    if (!strcmp(argv[arg], "--debugger"))
+    {
+	// set the flag
+	debugger = true;
+	arg+=1;
+    }
+    
+    if (!strcmp(argv[arg], "--debugger-remote"))
+    {
+	// set the flag
+	debugger = true;
+	debugger_remote = true;
+	arg+=1;
+    }
+    
+    // also handle environment variable
+    if( getenv ("Y2DEBUGGER") )
+    {
+	if (strcmp (getenv ("Y2DEBUGGER"), "1")==0 )
+	    debugger = true;
+	else if (strcmp (getenv ("Y2DEBUGGER"), "2")==0 )
+	{
+	    debugger = true;
+	    debugger_remote = true;
+	}
+    }
+
+    if (debugger)
+    {
+	// initialize the Debugger instance
+	debugger_instance = new Debugger ();
+	debugger_instance->initialize (debugger_remote);
+    }
+
+
     // list of -I / -M pathes
     //   will be pushed to YCPPathSearch later to keep correct order
     //   (the last added path to YCPPathSearch will be searched first)
@@ -747,6 +788,9 @@ main (int argc, char **argv)
     char * client_name;
     YCPList arglist;
     parse_client_and_options (argc, argv, arg, client_name, arglist);
+    // add debugger information if needed
+    if (debugger)
+	arglist->add ( YCPSymbol("debugger") );
 
     // "arg" and these two are output params
     char * server_name;
@@ -824,8 +868,9 @@ main (int argc, char **argv)
     y2milestone ("YAST_IS_RUNNING is %s", getenv ("YAST_IS_RUNNING"));
 
 
+    YCPValue result = YCPVoid();
     // Now start communication
-    YCPValue result = client->doActualWork(arglist, server);   // give arglist collected above
+    result = client->doActualWork(arglist, server);   // give arglist collected above
 
     // get result
     server->result(result);
@@ -877,17 +922,19 @@ static void
 print_help()
 {
     fprintf (stderr, "\n"
-	     "Usage: %s [LogOpts] Client [ClientOpts] Server [Generic ServerOpts] "
+	     "Usage: %s [GenericOpts] Client [ClientOpts] Server [Generic ServerOpts] "
 	     "[Specific ServerOpts]\n",
 	     progname);
 
     fprintf (stderr,
-	     "LogOptions are:\n"
+	     "GenericOptions are:\n"
 	     "    -l | --logfile LogFile    : Set logfile\n"
 	     "    -c | --logconf ConfFile   : Configure logging\n"
 	     "    -n Namespace=Component    : Override component for namespace\n"
 	     "    -I Path                   : Add include search path\n"
 	     "    -M Path                   : Add module search path\n"
+	     "    --debugger                : Start local debugger\n"
+	     "    --debugger-remote         : Start remote debugger\n"
 	     "ClientOptions are:\n"
 	     "    -s                        : Get options as one YCPList from stdin\n"
 	     "    -f FileName               : Get YCPValue(s) from file\n"

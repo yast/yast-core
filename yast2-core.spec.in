@@ -48,7 +48,16 @@ Requires:	flex
 This package contains include and documentation files for developing
 applications using the YaST2 YCP interpreter.
 
+%package debugger
+Requires:       yast2-core = %version
+Group:          Development/Libraries
+Summary:	YaST2 - Core Libraries
+
+%description debugger
+YCP debugger client.
+
 @PREP@
+
 
 %build
 
@@ -131,3 +140,7 @@ fi
 %doc @docdir@
 %doc %{_datadir}/doc/yastdoc
 @ydatadir@/devtools/bin/generateYCPWrappers
+
+%files debugger
+%defattr(-,root,root)
+%attr(0755,-,-) /usr/lib/YaST2/bin/ycp-debugger

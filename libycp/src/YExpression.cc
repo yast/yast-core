@@ -3085,7 +3085,7 @@ YEFunction::evaluate (bool cse)
 	}
     }
     
-    YCPValue m_params [m_next_param_id];
+    YCPValue evaluated_params [m_next_param_id];
 
     for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
@@ -3103,13 +3103,13 @@ YEFunction::evaluate (bool cse)
 	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
 #endif
 
-	m_params [p] = value;
+	evaluated_params [p] = value;
     }
 
     // set the parameters for Y2Function
     for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
-	m_functioncall->attachParameter (m_params[p], p);
+	m_functioncall->attachParameter (evaluated_params[p], p);
     }
     
     extern ExecutionEnvironment ee;
@@ -3124,7 +3124,7 @@ YEFunction::evaluate (bool cse)
 	return YCPVoid ();
     }
 
-    ee.pushframe (toString ());
+    ee.pushframe ((YECallPtr)this, evaluated_params);
 
     YCPValue value = m_functioncall->evaluateCall ();
 

@@ -38,6 +38,7 @@
 #include "ycp/YCPCode.h"
 
 #include "ycp/YBlock.h"
+#include "ycp/YBreakpoint.h"
 
 #include "ycp/Bytecode.h"
 #include "ycp/Xmlcode.h"
@@ -598,7 +599,7 @@ YFunction::~YFunction ()
 }
 
 
-YBlockPtr
+YCodePtr
 YFunction::definition() const
 {
     return m_definition;
@@ -622,6 +623,15 @@ YFunction::setDefinition (YBlockPtr definition)
 
 
 void
+YFunction::setDefinition (YBreakpointPtr definition)
+{
+    m_definition = definition;
+    // skip setKind call, we are just setting a breakpoint wrapper here
+    return;
+}
+
+
+void
 YFunction::setDefinition (bytecodeistream & str)
 {
     if (Bytecode::readBool (str))
@@ -634,9 +644,11 @@ YFunction::setDefinition (bytecodeistream & str)
 	{
 	    Bytecode::pushNamespace (m_declaration->nameSpace());
 	}
+	
+	YBlockPtr def = (YBlockPtr)Bytecode::readCode (str);
+	def->setKind (YBlock::b_definition);
 
-	m_definition = (YBlockPtr)Bytecode::readCode (str);
-	m_definition->setKind (YBlock::b_definition);
+	m_definition = def;
 
 	if (m_declaration != 0)
 	{

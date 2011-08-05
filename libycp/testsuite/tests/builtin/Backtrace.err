@@ -22,7 +22,7 @@ Parsed:
 ----------------------------------------------------------------------
 [YCP] tests/builtin/Backtrace.ycp:6 My test
 [libycp] ExecutionEnvironment.cc(backtrace):132 ------------- Backtrace begin -------------
-[YCP] tests/builtin/Backtrace.ycp:10 aoo ((value + 1))
-[YCP] tests/builtin/Backtrace.ycp:14 boo ((foo_val + 1))
-[YCP] tests/builtin/Backtrace.ycp:17 foo (41)
+[YCP] tests/builtin/Backtrace.ycp:10 void aoo (integer value)
+[YCP] tests/builtin/Backtrace.ycp:14 void boo (integer value)
+[YCP] tests/builtin/Backtrace.ycp:17 void foo (integer foo_val)
 [libycp] ExecutionEnvironment.cc(backtrace):141 ------------- Backtrace end ---------------

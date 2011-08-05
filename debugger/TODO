@@ -1,0 +1,11 @@
+This are the items we still might want to implement in the debugger. Please, keep this file
+up-to-date, remove the finished items.
+
+
+Breakpoints:
+- set breakpoint to filename:linenumber
+- list breakpoints
+
+Infrastructure:
+- enable debugger at runtime
+

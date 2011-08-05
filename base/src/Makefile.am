@@ -12,6 +12,7 @@ YAST2CORE =					\
 	../../libycp/src/libycp.la		\
         ../../libycp/src/libycpvalues.la        \
 	../../liby2/src/liby2.la		\
+	../../debugger/liby2debug.la	\
 	../../libscr/src/libscr.la		
 
 

@@ -129,7 +129,7 @@ private:
     constTypePtr m_type;
     
     bool m_running;
-
+    
 public:
     //---------------------------------------------------------------
     // Constructor / Destructor

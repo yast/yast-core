@@ -34,4 +34,5 @@ INCLUDES =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/include				\
 	-I$(srcdir)/include/y2				\
+	-I$(srcdir)/../debugger			\
 	${Y2UTIL_CFLAGS}

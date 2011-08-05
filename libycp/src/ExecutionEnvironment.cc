@@ -100,10 +100,10 @@ ExecutionEnvironment::endlessRecursion ()
 }
 
 void
-ExecutionEnvironment::pushframe (string called_function)
+ExecutionEnvironment::pushframe (YECallPtr function, YCPValue m_params[])
 {
-    y2debug ("Push frame %s", called_function.c_str ());
-    CallFrame* frame = new CallFrame (filename(), linenumber (), called_function);
+    y2debug ("Push frame %s", function->entry()->name());
+    CallFrame* frame = new CallFrame (filename(), linenumber (), function, m_params);
     m_backtrace.push_back (frame);
     // backtrace( LOG_MILESTONE, 0 );
 }
@@ -134,7 +134,7 @@ ExecutionEnvironment::backtrace (loglevel_t level, uint omit) const
     while (it != m_backtrace.rend())
     {
 	ycp2log (level, (*it)->filename.c_str (), (*it)->linenumber
-		 , "", "%s", (*it)->called_function.c_str ());
+		 , "", "%s", (*it)->function->entry()->toString().c_str());
 	++it;
     };
 
