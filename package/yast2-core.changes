@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Aug  5 13:16:34 CEST 2011 - mvidner@suse.cz
+
+- YCP Debugger added, by Stano Visnovsky.
+- 2.21.5
+
+-------------------------------------------------------------------
 Fri Jun 17 16:21:50 CEST 2011 - jsuchome@suse.cz
 
 - when if-condition evaluates to nil, use false instead (bnc#687236)
