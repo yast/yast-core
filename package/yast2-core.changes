@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Fri Aug  5 08:54:30 CEST 2011 - mvidner@suse.cz
+
+- Prevent YaST hanging when threads are used (bnc#708367), backport:
+- Log the C backtrace when receiving a signal (FATE#302167).
+- avoid y2log in both signal handler and forked children (bnc#493152)
+- Resurrected logging in the signal handler, into
+  /var/log/YaST2/signal (or ./y2signal.log) (bnc#493152#c33).
+- /var/log/YaST2/signal: do not make it executable
+- 2.13.45.1
+
+-------------------------------------------------------------------
 Thu Nov  5 15:11:47 CET 2009 - jsrain@suse.cz
 
 - close unneeded file descriptors before execing another

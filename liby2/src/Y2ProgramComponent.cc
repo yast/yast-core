@@ -291,13 +291,14 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 
 	// Call chroot if desired.
 	if (chroot_path == "" || chroot_path == "/") {
-	    y2debug ("Going to execute %s", bin_file.c_str ());
+	    //bnc#493152#c24
+	    //y2debug ("Going to execute %s", bin_file.c_str ());
 	} else {
-	    y2debug ("Going to execute %s with chroot %s", bin_file.c_str (),
-		     chroot_path.c_str ());
+	    /*y2debug ("Going to execute %s with chroot %s", bin_file.c_str (),
+		     chroot_path.c_str ());*/
 	    if (chroot (chroot_path.c_str ()) != 0) {
-		y2error ("Cannot chroot to %s: %s", chroot_path.c_str (),
-			 strerror (errno));
+		/*y2error ("Cannot chroot to %s: %s", chroot_path.c_str (),
+			 strerror (errno));*/
 		_exit (5);
 	    }
 
@@ -307,7 +308,7 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 	execv (bin_file.c_str (), argv);	// execute program
 
 	// this code is only reached if exec failed
-	y2error ("Cannot execute external program %s", bin_file.c_str ());
+	//y2error ("Cannot execute external program %s", bin_file.c_str ());
 	_exit (5); // No sense in returning! I am forked away!!
     }
 
