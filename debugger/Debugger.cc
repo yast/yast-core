@@ -250,7 +250,16 @@ void Debugger::generateBacktrace ()
 		result += " with paramters: ";
         for( int i = 0; i < paramcount ; i++ )
         {
-          result += (*it)->params[0]->toString() + " ";
+          string param = (*it)->params[0]->toString();
+          if (param.length() > 80)
+          {
+              param = "<too long>";
+          }
+          result += param;
+          if (i < paramcount - 1)
+          {
+            result += ", ";
+          }
         }
         ++it;
     };
