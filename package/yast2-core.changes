@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 18 12:40:23 CEST 2011 - mvidner@suse.cz
+
+- change blowfish id from 2a to 2y (bnc#700876 bnc#706705 CVE-2011-2483)
+  (thanks to Ludwig Nussel)
+- 2.20.1
+
+-------------------------------------------------------------------
 Mon Jan  3 20:53:16 UTC 2011 - lslezak@suse.cz
 
 - fixed packaging in openSUSE-11.4 (perl files) 
