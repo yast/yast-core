@@ -140,7 +140,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 	    break;
 
 	case BLOWFISH:
-	    salt = make_crypt_salt ("$2a$", 0);
+	    salt = make_crypt_salt ("$2y$", 0);
 	    if (!salt)
 	    {
 		y2error ("Cannot create salt for blowfish crypt");
@@ -156,7 +156,9 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 	    return false;
     }
 
-    if (!newencrypted)
+    if (!newencrypted
+    /* catch retval magic by ow-crypt/libxcrypt */
+    || !strcmp(newencrypted, "*0") || !strcmp(newencrypted, "*1"))
     {
 	y2error ("crypt_r () returns 0 pointer");
 	return false;
