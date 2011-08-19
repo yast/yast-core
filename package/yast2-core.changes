@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 18 12:40:23 CEST 2011 - mvidner@suse.cz
+
+- change blowfish id from 2a to 2y (bnc#700876 bnc#706705 CVE-2011-2483)
+  (thanks to Ludwig Nussel)
+- 2.17.35.1
+
+-------------------------------------------------------------------
 Thu Mar 11 15:36:27 CET 2010 - mvidner@suse.cz
 
 - Fixed the regexpsub algorithm not to loop endlessly
