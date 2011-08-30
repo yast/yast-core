@@ -1,7 +1,5 @@
 [agent-ini] IniParser.cc(parse):XXX Can not open tests/nonex.in.test.
 [agent-ini] IniParser.cc(getTimeStamp):XXX Unable to stat 'tests/nonex.in.test': No such file or directory
-[agent-ini] IniParser.cc(UpdateIfModif):XXX Data file 'tests/nonex.in.test' was changed externaly!
-[agent-ini] IniParser.cc(parse):XXX Can not open tests/nonex.in.test.
 [YCP] tests/nonex.ycp:XXX KEY: nil
 [agent-ini] IniParser.cc(UpdateIfModif):XXX Data file 'tests/nonex.in.test' was changed externaly!
 [YCP] tests/nonex.ycp:XXX KEY: value

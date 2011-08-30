@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug 30 14:23:06 CEST 2011 - mvidner@suse.cz
+
+- ini-agent: Fixed a test failure "wrong stderr for nonex"
+  (bnc#706705#c16)
+- 2.17.35.3
+
+-------------------------------------------------------------------
 Tue Aug 30 13:20:39 CEST 2011 - mvidner@suse.cz
 
 - Log YCP client arguments only with y2debug, not to reveal AutoYaST
