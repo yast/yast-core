@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Wed Aug 31 18:10:21 CEST 2011 - mvidner@suse.cz
+
+- Log YCP client arguments only with y2debug, not to reveal AutoYaST
+  passwords (bnc#492746).
+- Fixed the regexpsub algorithm not to loop endlessly
+  if the source string contains \1 (bnc#552914).
+- ini-agent: Fixed a test failure "wrong stderr for nonex"
+  (bnc#706705#c16)
+- 2.13.47
+
+-------------------------------------------------------------------
 Thu Aug 18 12:40:23 CEST 2011 - mvidner@suse.cz
 
 - change blowfish id from 2a to 2y (bnc#700876 bnc#706705 CVE-2011-2483)

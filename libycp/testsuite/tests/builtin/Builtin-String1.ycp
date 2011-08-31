@@ -65,6 +65,14 @@
 
 (regexpsub ("aaabbb", "(.*ab).*", "s_\\1_e") == "s_aaab_e")
 (regexpsub ("aaabbb", "(.*abb)(.*)", "s_\\1_e\\2") == "s_aaabb_eb")
+// bnc#552914
+(regexpsub ("aaabbb", "(a*b)(.*)", "\\1") == "aaab")
+(regexpsub ("aaabbb", "(a*b)(.*)", "\\1\\1") == "aaabaaab")
+(regexpsub ("aaabbb", "(a*b)(.*)", "\\") == "\\")
+(regexpsub ("aaabbb", "(a*b)(.*)", "\\\\") == "\\\\")
+(regexpsub ("aaabbb", "(a*b)(.*)", "A\\NZ") == "A\\NZ")
+(regexpsub ("aaabbb", "(a*b)(.*)", "A\\\\1Z") == "A\\aaabZ")
+(regexpsub ("machine=i386\\2ci486\\2ci586\\2ci686", "^([^=]*)=(.*)", "\\2") == "i386\\2ci486\\2ci586\\2ci686")
 
 (regexptokenize ("aaabbBb", "(.*[[:upper:]]).*") == [ "aaabbB" ])
 (regexptokenize ("aaabbb", "(.*ab)(.*)") == ["aaab", "bb"])
