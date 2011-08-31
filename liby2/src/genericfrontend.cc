@@ -28,6 +28,10 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <signal.h>
+#include <execinfo.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
 #include <sstream>
 
 #include <ycp/y2log.h>
@@ -49,14 +53,119 @@ static void print_help ();
 static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)));
 static bool is_ycp_value (const char* arg);
 
+int signal_log_fd;		// fd to use for logging in signal handler
+
+static
+void
+signal_log_to_fd (int fd, const char * cs)
+{
+    ssize_t n = strlen (cs);
+    while (true) {
+       ssize_t w = write(fd, cs, n);
+       if (w == n)
+	   break;              // success
+       else if (w == -1) {
+	   if (errno == EINTR) {
+	       // perror("gotcha"); // bnc#470645
+	   }
+	   else {
+	       perror("write"); // other cases
+	       break;
+	   }
+       }
+       else {
+	   errno = 0;
+	   cs += w;
+	   n -= w;
+       }
+    }
+
+}
+
+static
+void
+signal_log (const char * cs)
+{
+    signal_log_to_fd (signal_log_fd, cs);
+}
+
+static
+void
+signal_log_timestamp ()
+{
+    char buffer[200];
+    time_t time_time;
+    struct tm tm_time;
+
+    time_time = time(NULL);
+    localtime_r (&time_time, &tm_time);
+
+    if (strftime(buffer, sizeof(buffer), "=== %F %T %z ===\n", &tm_time) != 0)
+    {
+	signal_log (buffer);
+    }
+}
+
+// FATE 302167, info '(libc) Backtraces'
+void
+signal_log_backtrace ()
+{
+    static const int N = 100;
+    void *frames[N];
+    size_t size = backtrace (frames, N);
+    // demangling is not signal safe
+    signal_log ("Backtrace: (use c++filt to demangle)\n");
+    backtrace_symbols_fd (frames, size, signal_log_fd);
+}
+
+void
+signal_log_open ()
+{
+    signal_log_fd = -1;
+
+    const char * logfns[] = {
+	"/var/log/YaST2/signal",
+	"y2signal.log",
+	NULL,			// sentinel
+    };
+
+    for (const char ** logfn_p = &logfns[0]; *logfn_p != NULL; ++logfn_p)
+    {
+	signal_log_fd = open (*logfn_p, O_WRONLY | O_CREAT | O_APPEND, 0600);
+	if (signal_log_fd != -1)
+	    break;
+    }
+}
+
 void
 signal_handler (int sig)
 {
     signal (sig, SIG_IGN);
-    fprintf (stderr, "YaST got signal %d at YCP file %s:%d\n",
-	     sig, ee.filename ().c_str (), ee.linenumber ());
-    y2error ("got signal %d at YCP file %s:%d",
-	     sig, ee.filename ().c_str (), ee.linenumber ());
+
+    // bnc#493152#c19 only signal-safe functions are allowed
+    char buffer[200];
+    int n = snprintf (buffer, sizeof(buffer),
+		      "YaST got signal %d at YCP file %s:%d\n",
+		      sig, ee.filename ().c_str (), ee.linenumber ());
+    if (n >= (int)sizeof(buffer) || n < 0)
+	strcpy (buffer, "YaST got a signal.\n");
+    signal_log_to_fd (STDERR_FILENO, buffer);
+
+    signal_log_open ();
+    if (signal_log_fd == -1)
+    {
+	signal_log_to_fd (STDERR_FILENO, "Could not open log file.\n");
+    }
+    else
+    {
+	signal_log_timestamp ();
+	signal_log (buffer);
+	signal_log_backtrace ();
+
+	if (close (signal_log_fd) == -1)
+	    perror ("log close");
+    }
+
     // bye
     signal (sig, SIG_DFL);
     kill ( getpid (), sig);

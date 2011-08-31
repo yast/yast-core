@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Wed Aug 31 19:06:00 CEST 2011 - mvidner@suse.cz
+
+- Prevent YaST hanging when threads are used (bnc#708367), backport:
+- Log the C backtrace when receiving a signal (FATE#302167).
+- avoid y2log in both signal handler and forked children (bnc#493152)
+- Resurrected logging in the signal handler, into
+  /var/log/YaST2/signal (or ./y2signal.log) (bnc#493152#c33).
+- /var/log/YaST2/signal: do not make it executable
+- 2.13.48
+
+-------------------------------------------------------------------
 Wed Aug 31 18:10:21 CEST 2011 - mvidner@suse.cz
 
 - Log YCP client arguments only with y2debug, not to reveal AutoYaST
