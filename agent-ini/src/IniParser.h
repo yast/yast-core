@@ -370,6 +370,7 @@ public:
     // apparently the uninitialized members are filled in
     // by the grammar definition
     IniParser () :
+	timestamp (0),
 	linecomments (), comments (),
 	sections (), params (), rewrites (),
 	started (false), multiple_files (false),
