@@ -43,64 +43,6 @@
 }
 
 {
-    // Pkg::GetSelections(`all) -> ["sel1", "sel2", ...]
-
-    list selections = Pkg::GetSelections(`all);
-    if (selections == nil)
-	return 1;
-    if (size (selections) <= 0)
-	return 2;
-    return 0;
-}
-
-{
-    // Pkg::GetSelections(`avail_base) -> ["sel1"]
-
-    list selections = Pkg::GetSelections(`avail_base);
-    if (selections == nil)
-	return 1;
-    if (size (selections) <= 0)
-	return 2;
-    return 0;
-}
-
-
-{
-    // Pkg::GetSelections(`avail_addon) -> ["sel1"]
-
-    list selections = Pkg::GetSelections(`avail_addon);
-    if (selections == nil)
-	return 1;
-    if (size (selections) <= 0)
-	return 2;
-    return 0;
-}
-
-
-{
-    // Pkg::GetSelections(`inst_base) -> ["sel1"]
-
-    list selections = Pkg::GetSelections(`inst_base);
-    if (selections == nil)
-	return 1;
-    if (size (selections) != 1)		// only 1
-	return 2;
-    return 0;
-}
-
-
-{
-    // Pkg::GetSelections(`inst_addon) -> ["sel1"]
-
-    list selections = Pkg::GetSelections(`inst_addon);
-    if (selections == nil)
-	return 1;
-    if (size (selections) <= 0)
-	return 2;
-    return 0;
-}
-
-{
     // Pkg::IsAvailable (string tag) -> boolean
     boolean result = Pkg::IsAvailable ("a");
     if (result == nil)

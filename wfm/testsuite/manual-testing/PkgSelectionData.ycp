@@ -1,9 +1,0 @@
-// Test Pkg::SelectionData
-
-{
-    integer src = Pkg::SourceCreate ("dir:///dist/7.3-i386");
-    y2milestone ("Pkg::SelectionData(\"default\") %1", Pkg::SelectionData("default"));
-    Pkg::SourceFinish (src);
-    return 0;
-}
-
