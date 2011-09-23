@@ -32,7 +32,5 @@
     string filename = Pkg::SourceProvideLocation (source, "3ddiag");
     y2milestone ("At %1", filename);
 
-    if (!Pkg::SourceFinish (source))
-	return 2;
     return 0;
 }

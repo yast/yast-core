@@ -8,7 +8,6 @@
     y2milestone ("Pkg::GetPackages(`selected, false) %1", Pkg::GetPackages(`selected, false));
     y2milestone ("Pkg::GetPackages(`available, true) %1", Pkg::GetPackages(`available, true));
     y2milestone ("Pkg::GetPackages(`available, false) %1", Pkg::GetPackages(`available, false));
-    Pkg::SourceFinish (src);
     return 0;
 }
 

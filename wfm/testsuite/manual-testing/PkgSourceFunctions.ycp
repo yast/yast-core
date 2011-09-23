@@ -6,7 +6,5 @@
     y2milestone ("Media %1", Pkg::SourceMediaData (source));
     y2milestone ("Product %1", Pkg::SourceProductData (source));
 
-    if (!Pkg::SourceFinish (source))
-	return 2;
     return 0;
 }
