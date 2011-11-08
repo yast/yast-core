@@ -280,7 +280,7 @@ longer lines. Example:</p>
 <p>Then begin regexp is: ([^=]+)="([^"]*) and end regexp is
 ([^"]"). These are compared at the end so they are the last
 possibility. But once we get into this "divided line" by accident,
-it becomes greedy, so be carefull to forgotten ". If "multiline" is
+it becomes greedy, so be carefull to forgotten &quot;. If "multiline" is
 not present, this mechanism does not take in effect of course.</p>
 
 <p>See also the option <a
@@ -473,7 +473,7 @@ equivalent IniAgent is:</p>
         "comments": [ "^[ \t]*#.*$", "#.*", "^[ \t]*$", ],
         "params" : [
             $[
-                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)\"", "%s=\"%s\"" ],
+                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\&quot;]*)\"", "%s=\"%s\"" ],
                 "multiline" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)", "([^\"]*)\"", ],
             ],
             $[
@@ -694,7 +694,7 @@ examples:<br />
       ],
       "params" : [
         $[
-        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s =       ],
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s = %s"   ],
     ],
     ]
   )
