@@ -1,45 +1,44 @@
 @HEADER-COMMENT@
 
-
 @HEADER@
 # obviously
-BuildRequires:	gcc-c++ boost-devel
+BuildRequires:  boost-devel gcc-c++
 # we have a parser
-BuildRequires:	flex bison
+BuildRequires:  bison flex
 # needed for all yast packages
-BuildRequires:	yast2-devtools
+BuildRequires:  yast2-devtools
 # testsuite
-BuildRequires:	dejagnu
+BuildRequires:  dejagnu
 # autodocs
-BuildRequires:	doxygen
+BuildRequires:  doxygen
 # docbook docs
-BuildRequires:	docbook-xsl-stylesheets libxslt
+BuildRequires:  docbook-xsl-stylesheets libxslt
 # catalog: convert URIs to local filenames
-BuildRequires:	sgml-skel
+BuildRequires:  sgml-skel
 # logging
 # renamed: http://lists.opensuse.org/opensuse-packaging/2007-11/msg00076.html
-BuildRequires:	libblocxx-devel
+BuildRequires:  libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
 
-Summary:	-
-Requires:	perl = %{perl_version}
-Provides:	liby2util = 2.16.1
-Obsoletes:	liby2util < 2.16.1
+Summary:        -
+Requires:       perl = %{perl_version}
+Provides:       liby2util = 2.16.1
+Obsoletes:      liby2util < 2.16.1
 
 %description
 -
 
 @HEADER-DEVEL@
 Summary:	-
-Provides:	liby2util-devel = 2.16.1
-Obsoletes:	liby2util-devel < 2.16.1
-Requires:	libxcrypt-devel hwinfo-devel
-Requires:	glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
+Provides:       liby2util-devel = 2.16.1
+Obsoletes:      liby2util-devel < 2.16.1
+Requires:       libxcrypt-devel hwinfo-devel
+Requires:       glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
 # required for libscr
 # for FlexLexer.h; I think that this dependency could be made
 # private but it seems not worth the effort
-Requires:	flex
+Requires:       flex
 
 %description devel
 -
@@ -110,3 +109,5 @@ mkdir -p "$RPM_BUILD_ROOT"@logdir@
 %doc @docdir@
 %doc %{_datadir}/doc/yastdoc
 @ydatadir@/devtools/bin/generateYCPWrappers
+
+%changelog
