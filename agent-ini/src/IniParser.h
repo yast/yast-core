@@ -372,6 +372,10 @@ private:
     /**
      * Write one ini file.
      */
+    int write_file(const string & filename, IniSection & section);
+    /**
+     * Write one ini file.
+     */
     int write_helper(IniSection&ini, ofstream&of,int depth);
 public:
     /**
