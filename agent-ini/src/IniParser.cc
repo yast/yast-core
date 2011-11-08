@@ -997,6 +997,12 @@ int IniParser::write_file(const string & filename, IniSection & section)
     // ensure that the directories exist
     Pathname pn(filename);
     PathInfo::assert_dir (pn.dirname ());
+
+    mode_t file_umask = section.isPrivate()? 0077: 0022;
+    mode_t orig_umask = umask(file_umask);
+    // rewriting an existing file wouldnt change its mode
+    unlink(filename.c_str());
+
     ofstream of(filename.c_str());
     if (!of.good()) {
         y2error ("Can not open file %s for write", filename.c_str());
@@ -1006,6 +1012,7 @@ int IniParser::write_file(const string & filename, IniSection & section)
     write_helper (section, of, 0);
 
     of.close();
+    umask(orig_umask);
     return 0;
 }
 
