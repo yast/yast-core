@@ -24,3 +24,13 @@
     // this must not produce a error in the log
     return SCR::Read (.string, ["not-here.txt", "never mind"]);
 }
+
+{
+    map out = nil;
+    string filename = "tmp.secret.string";
+
+    SCR::Write (.string, [filename, 0600], "This is secret\n");
+
+    out = (map) SCR::Execute (.bash_output, "stat -c %a " + filename);
+    return "secret file mode: " + out["stdout"]:"";
+}

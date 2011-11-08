@@ -3,6 +3,7 @@ Mon Nov  7 18:19:27 CET 2011 - mvidner@suse.cz
 
 - ini-agent: added Write(.section_private.SECTION, BOOLEAN)
   (bnc#713661, CVE-2011-3177)
+- system agent: added  Write(.target.string, [filename, mode], content)
 - 2.17.41
 
 -------------------------------------------------------------------

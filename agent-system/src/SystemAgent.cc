@@ -709,15 +709,41 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
     {
 	/**
 	 * @builtin Write (.target.string, string filename, string value) -> boolean
+	 * @builtin Write (.target.string, [string filename, integer filemode] , string value) -> boolean
 	 * Writes the string <tt>value</tt> into a file. If the file already
 	 * exists, the existing file is overwritten. The return value is
 	 * true, if the file has been written successfully.
+         *
+         * @example Write(.target.string, "/etc/papersize", "a4") -> true
+         * @example Write(.target.string, ["/etc/rsyncd.secrets", 0600], "user:passwd") -> true
 	 */
 
-	if (value.isNull() || !value->isString())
+	if (value.isNull() || !(value->isString() || value->isList()))
 	{
 	    ycp2error ("Bad filename arg for Write (.string ...)");
 	    return YCPBoolean (false);
+	}
+
+	string filename;
+	mode_t filemode = 0644;
+
+	if (value->isString())
+	{
+	    filename = value->asString()->value();
+	}
+	else
+	{			// value is list
+	    YCPList flist = value->asList();
+	    if ((flist->size() != 2)
+		|| (!flist->value(0)->isString())
+		|| (!flist->value(1)->isInteger()))
+	    {
+		ycp2error ("Bad [filename, mode] list in call to Write (%s, [ string filename, integer mode ], ...)",
+		    cmd.c_str ());
+		return YCPBoolean (false);
+	    }
+	    filename = flist->value(0)->asString()->value();
+	    filemode = (int)(flist->value(1)->asInteger()->value());
 	}
 
 	if (arg.isNull() || !arg->isString())
@@ -726,8 +752,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (false);
 	}
 
-	string filename = value->asString()->value();
-	int fd = open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	int fd = open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, filemode);
 	if (fd >= 0)
 	{
 	    string cont = arg->asString()->value();
@@ -1038,8 +1063,8 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	 * Creates a symbolic link named newpath which contains the
 	 * string oldpath.
 	 *
-	 * Symbolic links are interpreted at run-time as if the  con­
-	 * tents of the link had been substituted into the path being
+	 * Symbolic links are interpreted at run-time as if the contents
+	 * of the link had been substituted into the path being
 	 * followed to find a file or directory.
 	 *
 	 * The return value is true or false, depending of the success.
