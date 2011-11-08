@@ -1,0 +1,26 @@
+//
+// Multiple files test
+//
+// providers.rpm
+//
+
+
+{
+    SCR::RegisterAgent (.target, `ag_system ());
+    any out = nil;
+
+    SCR::Write (.v."1"."Totalise"."Password", "Secret password");
+    SCR::Write (.section_private."1", true);
+
+    SCR::Write (.v."2"."arcor"."Password", "Public password");
+
+    SCR::Write (., nil); //flush
+
+    out = SCR::Execute (.target.bash_output, "stat -c %a multi/private.in.1.test");
+    y2milestone("secret file mode: %1", out);
+
+    out = SCR::Execute (.target.bash_output, "stat -c %a multi/private.in.2.test");
+    y2milestone("public file mode: %1", out);
+
+    return nil;
+}

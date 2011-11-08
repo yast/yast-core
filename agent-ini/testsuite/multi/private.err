@@ -1,0 +1,11 @@
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.1.test to 1
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.2.test to 2
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."1"."Totalise"."Password" = "Secret password"
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2"."arcor"."Password" = "Public password"
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.1.test to 1
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.2.test to 2
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 1 to multi/private.in.1.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 2 to multi/private.in.2.test
+[YCP] multi/private.ycp:XXX secret file mode: $["exit":0, "stderr":"", "stdout":"600\n"]
+[YCP] multi/private.ycp:XXX public file mode: $["exit":0, "stderr":"", "stdout":"644\n"]
+[agent-ini] IniParser.cc(write):XXX File multi/private.in.*.test did not change. Not saving.
