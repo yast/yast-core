@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Fri Nov 25 14:11:01 CET 2011 - mvidner@suse.cz
+
+- ini-agent: Fixed a test failure "wrong stderr for nonex"
+  (bnc#706705#c16)
+- process-agent: a badly designed test is less likely to fail now
+- 2.17.42
+
+-------------------------------------------------------------------
 Mon Nov  7 18:19:27 CET 2011 - mvidner@suse.cz
 
 - ini-agent: added Write(.section_private.SECTION, BOOLEAN)

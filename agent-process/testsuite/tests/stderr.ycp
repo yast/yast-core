@@ -8,12 +8,12 @@
     string out1 = (string)SCR::Read(.read_stderr, id);
 
     SCR::Write(., id, "foo\n");
-    sleep(50);
+    sleep(250);
     // read "foo\n"
     string out2 = (string)SCR::Read(.read_stderr, id);
 
     SCR::Write(., id, "foo2\nfoo2\n");
-    sleep(50);
+    sleep(250);
     // read "foo2\nfoo2\n"
     string out3 = (string)SCR::Read(.read_stderr, id);
 
@@ -35,12 +35,12 @@
     string out1 = (string)SCR::Read(.read_line_stderr, id);
 
     SCR::Write(., id, "foo\n");
-    sleep(50);
+    sleep(250);
     // read "foo\n"
     string out2 = (string)SCR::Read(.read_line_stderr, id);
 
     SCR::Write(., id, "foo2\nfoo2\n");
-    sleep(50);
+    sleep(250);
     // read "foo2\n"
     string out3 = (string)SCR::Read(.read_line_stderr, id);
 
