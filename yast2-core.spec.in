@@ -5,7 +5,7 @@
 Group:	System/YaST
 License: GPL-2.0+
 # obviously
-BuildRequires:	gcc-c++ boost-devel
+BuildRequires:	gcc-c++ boost-devel libtool
 # we have a parser
 BuildRequires:	flex bison
 # needed for all yast packages
