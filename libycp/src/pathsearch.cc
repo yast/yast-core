@@ -128,32 +128,10 @@ Y2PathSearch::searchPath (WHAT what, int level)
 }
 
 
-// globsubst ("YaST::Foo::UI", "::", "/") == "YaST/Foo/UI"
-string Y2PathSearch::globsubst (const string& where,
-				const string& oldstr, const string& newstr)
-{
-    string ret;
-    string::size_type olen = oldstr.length ();
-    string::size_type p = 0, q;	// interval between occurences of oldstr
-    for (;;)
-    {
-	q = where.find (oldstr, p); // find oldstr
-	ret.append (where, p, q - p); // copy what is before it
-	if (q == string::npos)
-	{
-	    break;
-	}
-	ret.append (newstr);
-	p = q + olen;
-    }
-    return ret;
-}
-
-
 string
 Y2PathSearch::completeFilename (const string& fname)
 {
-    string slashes = globsubst (fname, "::", "/");
+    string slashes = boost::replace_all_copy(fname, "::", "/");
     char* cfn = canonicalize_file_name (slashes.c_str ());
     string ret = cfn ? string (cfn) : fname;
     free (cfn);
@@ -353,9 +331,8 @@ YCPPathSearch::findInclude (const string& name)
 string
 YCPPathSearch::findModule (string name, bool the_source)
 {
-    // TODO: more efficiently, do not search the whole string#
     string extension = (the_source ? ".ycp" : ".ybc");
-    if (name.rfind (extension) == string::npos)
+    if (!boost::ends_with(name, extension))
     {
 	name += extension;
     }
@@ -366,16 +343,9 @@ YCPPathSearch::findModule (string name, bool the_source)
 void
 YCPPathSearch::addPath (Kind kind, const string& path)
 {
-    std::list<std::string>::iterator it = searchList[kind].begin();
-    while (it != searchList[kind].end())
-    {
-	if (*it == path)
-	{
-	    return;					// already in list, drop duplicate
-	}
-	it++;
-    }
-    searchList[kind].push_front (path);
+    std::list<string>& l = searchList[kind];
+    if (std::find(l.begin(), l.end(), path) == l.end())
+	l.push_front(path);
 }
 
 
