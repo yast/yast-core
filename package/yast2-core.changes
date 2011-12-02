@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Dec  2 11:49:56 UTC 2011 - lslezak@suse.cz
+
+- process-agent - fixed testuite (removed potential race condition)
+- 2.22.0
+
+-------------------------------------------------------------------
 Fri Nov 25 14:11:01 CET 2011 - mvidner@suse.cz
 
 - ini-agent: Fixed a test failure "wrong stderr for nonex"

@@ -7,15 +7,33 @@
     // no output
     string out1 = (string)SCR::Read(.read, id);
 
-    SCR::Write(., id, "foo\n");
-    sleep(250);
-    // read "foo\n"
-    string out2 = (string)SCR::Read(.read, id);
+    string in1 = "foo\n";
+    SCR::Write(., id, in1);
 
+    // read "foo\n"
+    string out2 = "";
+    while (out2 != in1)
+    {
+	string o = (string)SCR::Read(.read, id);
+	if (o != nil)
+	{
+	    out2 = out2 + o;
+	}
+    }
+
+    string in2 = "foo2\nfoo2\n";
     SCR::Write(., id, "foo2\nfoo2\n");
-    sleep(250);
+
     // read "foo2\nfoo2\n"
-    string out3 = (string)SCR::Read(.read, id);
+    string out3 = "";
+    while (out3 != in2)
+    {
+	string o = (string)SCR::Read(.read, id);
+	if (o != nil)
+	{
+	    out3 = out3 + o;
+	}
+    }
 
     // no output
     string out4 = (string)SCR::Read(.read, id);
@@ -34,21 +52,32 @@
     string out1 = (string)SCR::Read(.read_line, id);
 
     SCR::Write(., id, "foo\n");
-    sleep(250);
+
     // read "foo\n"
-    string out2 = (string)SCR::Read(.read_line, id);
+    string out2 = nil;
+    while (out2 == nil)
+    {
+	out2 = (string)SCR::Read(.read_line, id);
+    }
 
     SCR::Write(., id, "foo2\nfoo2\n");
-    sleep(250);
-    // read "foo2\n"
-    string out3 = (string)SCR::Read(.read_line, id);
 
     // read "foo2\n"
-    string out4 = (string)SCR::Read(.read_line, id);
+    string out3 = nil;
+    while (out3 == nil)
+    {
+	out3 = (string)SCR::Read(.read_line, id);
+    }
+
+    // read "foo2\n"
+    string out4 = nil;
+    while (out4 == nil)
+    {
+	out4 = (string)SCR::Read(.read_line, id);
+    }
 
     // no output
     string out5 = (string)SCR::Read(.read_line, id);
-
 
     // close the communication channel
     SCR::Execute(.close, id);
