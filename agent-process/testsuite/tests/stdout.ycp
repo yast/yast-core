@@ -22,7 +22,7 @@
     }
 
     string in2 = "foo2\nfoo2\n";
-    SCR::Write(., id, "foo2\nfoo2\n");
+    SCR::Write(., id, in2);
 
     // read "foo2\nfoo2\n"
     string out3 = "";
