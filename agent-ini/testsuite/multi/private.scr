@@ -1,0 +1,24 @@
+.
+
+`ag_ini(
+  `IniAgent( [ "multi/private.in.*.test" ],
+    $[
+      "rewrite" : [
+	[ "multi/private\.in\.(.)\.test$", "multi/private.in.%s.test"],
+      ],
+      "subindent" : "  ",
+      "comments": [ "^[ \t]*#.*", "^[ \t]*$" ],
+      "sections" : [
+        $[
+        "begin" : [ "[ \t]*\\[Dialer[ \t]+(.*[^ \t])[ \t]*\\][ \t]*", "[Dialer %s]" ],
+	"end" : [ "^[ \t]*\\[End\\][ \t]*$", "[End]", ],
+        ],
+      ],
+      "params" : [
+        $[
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s = %s"],
+      ],
+    ],
+    ]
+  )
+)

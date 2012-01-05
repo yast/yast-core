@@ -241,6 +241,13 @@ private:
      */
     string end_comment;
 
+    /**
+     * It is effective only when the section corresponds to a file.
+     * The file will not be readable by group and others.
+     * bnc#713661
+     */
+    bool is_private;
+
     /** index to IniParser::rewrites for filename - section name mapping
      * It appears that read_by was used for both purposes,
      * causing bug (#19066).
@@ -435,7 +442,7 @@ public:
     IniSection (const IniParser *p)
 	: IniBase (-1),
 	  ip (p),
-	  end_comment (), rewrite_by(-1),
+	  end_comment (), is_private(false), rewrite_by(-1),
 	  container (), ivalues (), isections ()
 	    {}
 
@@ -446,7 +453,7 @@ public:
     IniSection (const IniSection &s) :
 	IniBase (s),
 	  ip (s.ip),
-	  end_comment (s.end_comment), rewrite_by (s.rewrite_by),
+          end_comment (s.end_comment), is_private(s.is_private), rewrite_by (s.rewrite_by),
 	  container (s.container)
 	{ reindex (); }
 
@@ -458,7 +465,9 @@ public:
 	    } 
 	    IniBase::operator = (s);
 	    ip = s.ip;
-	    end_comment = s.end_comment; rewrite_by = s.rewrite_by;
+	    end_comment = s.end_comment;
+            is_private = s.is_private;
+            rewrite_by = s.rewrite_by;
 	    container = s.container;
 
 	    reindex ();
@@ -474,7 +483,7 @@ public:
     IniSection (const IniParser *p, string n)
 	: IniBase (n),
 	  ip (p),
-	  end_comment (), rewrite_by(0),
+	  end_comment (), is_private(false), rewrite_by(0),
 	  container(), ivalues (), isections ()
 	    {}
     /**
@@ -510,6 +519,9 @@ public:
      * @return rewrite-by of section or -1 if the section wasn't found
      */
     int getSubSectionRewriteBy (const char*name);
+
+    void setPrivate(bool p) { is_private = p; }
+    bool isPrivate() const { return is_private; }
 
     /** 
      * If there is no comment at the beginning and no values and no

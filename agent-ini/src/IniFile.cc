@@ -75,6 +75,19 @@ YCPInteger as_integer (const YCPValue& v, const char * context)
     return YCPNull ();
 }
 
+/**
+ * Return the YCPBoolean or YCPNull if it is not one. Log an error.
+ */
+static
+YCPBoolean as_boolean (const YCPValue& v, const char * context)
+{
+    if (v->isBoolean ())
+	return v->asBoolean ();
+    ycp2error ("Expected a boolean for %s, got %s %s",
+	       context, v->valuetype_str(), v->toString().c_str());
+    return YCPNull ();
+}
+
 void IniSection::initValue (const string&key,const string&val,const string&comment,int rb)
 {
     string k = ip->changeCase (key);
@@ -486,6 +499,9 @@ int IniSection::Write (const YCPPath&p, const YCPValue&v, bool rewrite)
       return setSectionProp (p, v, 0, 1);
     if (s == "st" || s == "section_type" || s == "sectiontype")
       return setSectionProp (p, v, rewrite? 1:2, 1);
+    if (s == "section_private")
+      return setSectionProp (p, v, 3, 1);
+
     return -1;
 }
 
@@ -591,11 +607,17 @@ int IniSection::setSectionProp (const YCPPath&p,const YCPValue&in, int what, int
 			return -1;
 		    s.setRewriteBy (i->value());
 		}
-		else {
+		else if (what == 2) {
 		    YCPInteger i = as_integer (prop, "section_type");
 		    if (i.isNull())
 			return -1;
 		    s.setReadBy (i->value());
+		}
+		else if (what == 3) {
+		    YCPBoolean b = as_boolean (prop, "section_private");
+		    if (b.isNull())
+			return -1;
+		    s.setPrivate (b->value());
 		}
 
 		if (xi != xe)

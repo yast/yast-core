@@ -965,19 +965,7 @@ int IniParser::write()
 			    continue;
 			}
 			s.initReadBy ();
-			// ensure that the directories exist
-			Pathname pn (filename);
-			PathInfo::assert_dir (pn.dirname ());
-			ofstream of(filename.c_str());
-			if (!of.good())
-			{
-			    bugs++;
-			    y2error ("Can not open file %s for write", filename.c_str());
-			    continue;
-			}
-			write_helper (s, of, 0);
-			s.clean();
-			of.close ();
+                        bugs += write_file(filename, s);
 		    }
 		else
 		    {
@@ -997,24 +985,37 @@ int IniParser::write()
     }
     else
     {
-	// ensure that the directories exist
-	Pathname pn (file);
-	PathInfo::assert_dir (pn.dirname ());
-	ofstream of(file.c_str());
-	if (!of.good())
-	{
-	    y2error ("Can not open file %s for write", file.c_str());
-	    return -1;
-	}
-
-	write_helper (inifile, of, 0);
-
-	of.close();
+        bugs += write_file(file, inifile);
 	timestamp = getTimeStamp ();
     }
-    inifile.clean ();
     return bugs ? -1 : 0;
 }
+
+// return 0 on success, like write
+int IniParser::write_file(const string & filename, IniSection & section)
+{
+    // ensure that the directories exist
+    Pathname pn(filename);
+    PathInfo::assert_dir (pn.dirname ());
+
+    mode_t file_umask = section.isPrivate()? 0077: 0022;
+    mode_t orig_umask = umask(file_umask);
+    // rewriting an existing file wouldnt change its mode
+    unlink(filename.c_str());
+
+    ofstream of(filename.c_str());
+    if (!of.good()) {
+        y2error ("Can not open file %s for write", filename.c_str());
+        return -1;
+    }
+
+    write_helper (section, of, 0);
+
+    of.close();
+    umask(orig_umask);
+    return 0;
+}
+
 int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 {
     char * out_buffer;

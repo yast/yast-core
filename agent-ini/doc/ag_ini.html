@@ -280,7 +280,7 @@ longer lines. Example:</p>
 <p>Then begin regexp is: ([^=]+)="([^"]*) and end regexp is
 ([^"]"). These are compared at the end so they are the last
 possibility. But once we get into this "divided line" by accident,
-it becomes greedy, so be carefull to forgotten ". If "multiline" is
+it becomes greedy, so be carefull to forgotten &quot;. If "multiline" is
 not present, this mechanism does not take in effect of course.</p>
 
 <p>See also the option <a
@@ -473,7 +473,7 @@ equivalent IniAgent is:</p>
         "comments": [ "^[ \t]*#.*$", "#.*", "^[ \t]*$", ],
         "params" : [
             $[
-                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)\"", "%s=\"%s\"" ],
+                "match" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\&quot;]*)\"", "%s=\"%s\"" ],
                 "multiline" : [ "([a-zA-Z0-9_]+)[ \t]*=[ \t]*\"([^\"]*)", "([^\"]*)\"", ],
             ],
             $[
@@ -531,6 +531,13 @@ was read by.</td>
 <tt>.ini.section_type.<i>sectionname</i>.<i>sectionname</i></tt></td>
 <td>identifies type of the section, which is the index of rule this
 section was read by.</td>
+</tr>
+
+<tr>
+<td>
+<tt>.ini.section_private.<i>sectionname</i></tt></td>
+<td>a boolean write-only property for sections corresponding to files.
+If true, the file will not be readable by group and others.</td>
 </tr>
 
 <tr class="notimpl">
@@ -694,7 +701,7 @@ examples:<br />
       ],
       "params" : [
         $[
-        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s =       ],
+        "match" : [ "^[ \t]*([^=]*[^ \t=])[ \t]*=[ \t]*(.*[^ \t]|)[ \t]*$" , "%s = %s"   ],
     ],
     ]
   )
