@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jan  5 15:08:14 CET 2012 - mvidner@suse.cz
+
+- Relicensed agent-process from GPL-2.0 to GPL-2.0+
+  to match the rest of the package (bnc#728950).
+- 2.17.43
+
+-------------------------------------------------------------------
 Fri Nov 25 14:11:01 CET 2011 - mvidner@suse.cz
 
 - ini-agent: Fixed a test failure "wrong stderr for nonex"
