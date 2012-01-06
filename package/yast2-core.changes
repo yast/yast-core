@@ -1,5 +1,12 @@
 -------------------------------------------------------------------
-Mon Nov  7 18:19:27 CET 2011 - mvidner@suse.cz
+Thu Jan  5 15:08:14 CET 2012 - mvidner@suse.cz
+
+- Relicensed agent-process from GPL-2.0 to GPL-2.0+
+  to match the rest of the package (bnc#728950).
+- 2.22.2
+
+-------------------------------------------------------------------
+Thu Jan  5 15:00:00 CET 2012 - mvidner@suse.cz
 
 - ini-agent: added Write(.section_private.SECTION, BOOLEAN)
   (bnc#713661, CVE-2011-3177)
