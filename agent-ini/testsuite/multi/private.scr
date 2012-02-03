@@ -6,12 +6,11 @@
       "rewrite" : [
 	[ "multi/private\.in\.(.)\.test$", "multi/private.in.%s.test"],
       ],
-      "subindent" : "  ",
+      "subindent" : "",
       "comments": [ "^[ \t]*#.*", "^[ \t]*$" ],
       "sections" : [
         $[
-        "begin" : [ "[ \t]*\\[Dialer[ \t]+(.*[^ \t])[ \t]*\\][ \t]*", "[Dialer %s]" ],
-	"end" : [ "^[ \t]*\\[End\\][ \t]*$", "[End]", ],
+        "begin" : [ "[ \t]*\\[(.*[^ \t])[ \t]*\\][ \t]*", "[%s]" ],
         ],
       ],
       "params" : [

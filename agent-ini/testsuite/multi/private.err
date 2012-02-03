@@ -1,11 +1,45 @@
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.0.test to 0
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.1.test to 1
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.2.test to 2
-[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 1 to .v."1"."Totalise"."Password"
-[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Totalise to .v."1"."Totalise"."Password"
-[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."1"."Totalise"."Password" = "Secret password"
-[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2"."arcor"."Password" = "Public password"
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.3.test to 3
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."0".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."0".Section.Key = "existing public  implicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."1".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."1".Section.Key = "existing public  explicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."2".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."2".Section.Key = "existing private implicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."3".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."3".Section.Key = "existing private explicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 4 to .v."4".Section.Key
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."4".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."4".Section.Key = "new      public  implicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 5 to .v."5".Section.Key
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."5".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."5".Section.Key = "new      public  explicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 6 to .v."6".Section.Key
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."6".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."6".Section.Key = "new      private implicit"
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively 7 to .v."7".Section.Key
+[agent-ini] IniFile.cc(setValue):XXX Write: adding recursively Section to .v."7".Section.Key
+[agent-ini] IniFile.cc(setMyValue):XXX Adding value .v."7".Section.Key = "new      private explicit"
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.0.test to 0
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.1.test to 1
 [agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.2.test to 2
-[agent-ini] IniParser.cc(getFileName):XXX Rewriting 2 to multi/private.in.2.test
+[agent-ini] IniParser.cc(parse):XXX Rewriting multi/private.in.3.test to 3
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 0 to multi/private.in.0.test
 [agent-ini] IniParser.cc(getFileName):XXX Rewriting 1 to multi/private.in.1.test
-[YCP] multi/private.ycp:XXX secret file mode: $["exit":0, "stderr":"", "stdout":"600\n"]
-[YCP] multi/private.ycp:XXX public file mode: $["exit":0, "stderr":"", "stdout":"644\n"]
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 2 to multi/private.in.2.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 3 to multi/private.in.3.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 4 to multi/private.in.4.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 5 to multi/private.in.5.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 6 to multi/private.in.6.test
+[agent-ini] IniParser.cc(getFileName):XXX Rewriting 7 to multi/private.in.7.test
+[YCP] multi/private.ycp:XXX existing public  implicit file mode: 644
+[YCP] multi/private.ycp:XXX existing public  explicit file mode: 644
+[YCP] multi/private.ycp:XXX existing private implicit file mode: 600
+[YCP] multi/private.ycp:XXX existing private explicit file mode: 600
+[YCP] multi/private.ycp:XXX new      public  implicit file mode: 644
+[YCP] multi/private.ycp:XXX new      public  explicit file mode: 644
+[YCP] multi/private.ycp:XXX new      private implicit file mode: 644
+[YCP] multi/private.ycp:XXX new      private explicit file mode: 600
 [agent-ini] IniParser.cc(write):XXX File multi/private.in.*.test did not change. Not saving.

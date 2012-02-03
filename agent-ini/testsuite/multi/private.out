@@ -1,17 +1,25 @@
 (nil)
+multi/private.in.0.test  -------------------------------
+[Section]
+Key = existing public  implicit
 multi/private.in.1.test  -------------------------------
-[Dialer Totalise]
-  Password = Secret password
-[End]
+[Section]
+Key = existing public  explicit
 multi/private.in.2.test  -------------------------------
-[Dialer arcor]
-  Compuserve = 0
-  Provider = Arcor
-  Password = Public password
-[End]
-
-[Dialer mobilcom]
-  Compuserve = 0
-  Provider = Mobilcom
-  Phone = 0101901929
-[End]
+[Section]
+Key = existing private implicit
+multi/private.in.3.test  -------------------------------
+[Section]
+Key = existing private explicit
+multi/private.in.4.test  -------------------------------
+[Section]
+Key = new      public  implicit
+multi/private.in.5.test  -------------------------------
+[Section]
+Key = new      public  explicit
+multi/private.in.6.test  -------------------------------
+[Section]
+Key = new      private implicit
+multi/private.in.7.test  -------------------------------
+[Section]
+Key = new      private explicit

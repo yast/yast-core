@@ -1,26 +1,49 @@
-//
-// Multiple files test
-//
-// providers.rpm
-//
-
+// test private files, bnc#743355
 
 {
     SCR::RegisterAgent (.target, `ag_system ());
-    any out = nil;
 
-    SCR::Write (.v."1"."Totalise"."Password", "Secret password");
-    SCR::Write (.section_private."1", true);
+    // 8 combinations to test
+    // bitmask:
+    // 4: new file, 0: existing file
+    // 2: secret    0: public
+    // 1: explicit with section_private  0: implicit with permisions of existing file
 
-    SCR::Write (.v."2"."arcor"."Password", "Public password");
+    // #2, existing private implicit, was the one reported about sssd.conf
+    // #6, new      private implicit, is a contradiciton in requirements, XFAIL
 
+    string description(integer i) {
+        string new_s = ((i & 4) != 0)?
+          "new      ":
+          "existing ";
+        string private_s = ((i & 2) != 0)?
+          "private ":
+          "public  ";
+        string explicit_s = ((i & 1) != 0)?
+          "explicit":
+          "implicit";
+        return new_s + private_s + explicit_s;
+    }
+
+    // fix permissions of fixtures from svn/git
+    foreach(integer i, [2, 3], {
+        SCR::Execute (.target.bash, sformat("chmod 600 multi/private.in.%1.test", i));
+    });
+
+    foreach(integer i, [0, 1, 2, 3, 4, 5, 6, 7], {
+        string i_str = tostring(i);
+        SCR::Write (add(add(.v, i_str), .Section.Key), description(i));
+
+        if ((i & 1) != 0) {
+          SCR::Write (add(.section_private, i_str), (i & 2) != 0);
+        }
+    });
     SCR::Write (., nil); //flush
 
-    out = SCR::Execute (.target.bash_output, "stat -c %a multi/private.in.1.test");
-    y2milestone("secret file mode: %1", out);
-
-    out = SCR::Execute (.target.bash_output, "stat -c %a multi/private.in.2.test");
-    y2milestone("public file mode: %1", out);
+    foreach(integer i, [0, 1, 2, 3, 4, 5, 6, 7], {
+        map out = (map) SCR::Execute (.target.bash_output, sformat("stat -c %%a multi/private.in.%1.test", i));
+        y2milestone("%1 file mode: %2", description(i), out["stdout"]:"");
+    });
 
     return nil;
 }
