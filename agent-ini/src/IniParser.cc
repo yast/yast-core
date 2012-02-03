@@ -1000,8 +1000,6 @@ int IniParser::write_file(const string & filename, IniSection & section)
 
     mode_t file_umask = section.isPrivate()? 0077: 0022;
     mode_t orig_umask = umask(file_umask);
-    // rewriting an existing file wouldnt change its mode
-    unlink(filename.c_str());
 
     ofstream of(filename.c_str());
     if (!of.good()) {
