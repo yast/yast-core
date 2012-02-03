@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Feb  3 14:36:31 CET 2012 - mvidner@suse.cz
+
+- ini-agent: only change permissions of new files (bnc#743355)
+- 2.17.44
+
+-------------------------------------------------------------------
 Thu Jan  5 15:08:14 CET 2012 - mvidner@suse.cz
 
 - Relicensed agent-process from GPL-2.0 to GPL-2.0+

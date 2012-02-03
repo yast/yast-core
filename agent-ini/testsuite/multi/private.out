@@ -1,15 +1,7 @@
 (nil)
 multi/private.in.1.test  -------------------------------
 [Dialer Totalise]
-  Compuserve = 0
-  Provider = Totalise
-  Phone = 08453001470
   Password = Secret password
-[End]
-
-[Dialer force9]
-  Provider = Force9
-  Phone = 08451424000
 [End]
 multi/private.in.2.test  -------------------------------
 [Dialer arcor]
