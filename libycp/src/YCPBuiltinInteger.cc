@@ -321,7 +321,7 @@ i_tointeger2(const YCPString& v, const YCPInteger& b)
      * @param integer base
      * @return integer
      *
-     * @usage tointeger("20", 8) -> 8
+     * @usage tointeger("20", 8) -> 16
      * @usage tointeger("20", 10) -> 20
      * @usage tointeger("20", 16) -> 32
      * @usage tointeger("0x20", 16) -> 32
