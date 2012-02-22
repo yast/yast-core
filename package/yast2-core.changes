@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Feb 22 14:59:37 CET 2012 - aschnell@suse.de
+
+- added tointeger builtin with explicite base qualification
+- 2.22.4
+
+-------------------------------------------------------------------
 Fri Feb  3 14:36:31 CET 2012 - mvidner@suse.cz
 
 - ini-agent: only change permissions of new files (bnc#743355)

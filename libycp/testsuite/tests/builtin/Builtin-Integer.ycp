@@ -72,3 +72,20 @@
 (tointeger ("042") == 34)
 (tointeger ("") == nil)
 (tointeger ("foo") == nil)
+
+
+("** conversions with explicite base **")
+
+(tointeger ("1", 8) == 1)
+(tointeger ("1", 10) == 1)
+(tointeger ("1", 16) == 1)
+(tointeger ("10", 8) == 8)
+(tointeger ("10", 10) == 10)
+(tointeger ("10", 16) == 16)
+(tointeger ("010", 8) == 8)
+(tointeger ("010", 10) == 10)
+(tointeger ("010", 16) == 16)
+(tointeger ("0x10", 8) == nil)
+(tointeger ("0x10", 10) == nil)
+(tointeger ("0x10", 16) == 16)
+

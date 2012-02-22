@@ -18,6 +18,8 @@
 
 /-*/
 
+#include <sstream>
+
 #include "ycp/YCPBuiltinInteger.h"
 #include "ycp/YCPInteger.h"
 #include "ycp/YCPString.h"
@@ -40,7 +42,7 @@ i_plus (const YCPInteger &i1, const YCPInteger &i2)
      * 1 + 2 -> 3
      * </pre>
      */
-     
+
     if (i1.isNull () || i2.isNull ())
 	return YCPNull ();
 
@@ -264,15 +266,16 @@ i_bnot (const YCPInteger &i1)
 
 
 static YCPValue
-i_tointeger (const YCPValue &v)
+i_tointeger1(const YCPValue &v)
 {
     /**
      * @builtin tointeger
+     * @id tointeger-1
      * @short Converts a value to an integer.
      * @description
      * If the value can't be converted to an integer, nil is returned.
      * @param any VALUE
-     * @return integer 
+     * @return integer
      *
      * @usage tointeger (4.03) -> 4
      * @usage tointeger ("42") -> 42
@@ -305,6 +308,48 @@ i_tointeger (const YCPValue &v)
 }
 
 
+static YCPValue
+i_tointeger2(const YCPString& v, const YCPInteger& b)
+{
+    /**
+     * @builtin tointeger
+     * @id tointeger-2
+     * @short Converts a string to an integer.
+     * @description
+     * If the value can't be converted to an integer, nil is returned.
+     * @param string value
+     * @param integer base
+     * @return integer
+     *
+     * @usage tointeger("20", 8) -> 8
+     * @usage tointeger("20", 10) -> 20
+     * @usage tointeger("20", 16) -> 32
+     * @usage tointeger("0x20", 16) -> 32
+     */
+
+    std::istringstream s(v->value_cstr());
+    s.imbue(std::locale::classic());
+
+    switch (b->value())
+    {
+	case 8: s >> std::oct; break;
+	case 10: s >> std::dec; break;
+	case 16: s >> std::hex; break;
+
+	default:
+	    return YCPNull();
+    }
+
+    long long int i;
+    s >> i;
+
+    if (s.fail() || !s.eof())
+	return YCPNull();
+
+    return YCPInteger(i);
+}
+
+
 YCPBuiltinInteger::YCPBuiltinInteger ()
 {
     // must be static, registerDeclarations saves a pointer to it!
@@ -323,7 +368,8 @@ YCPBuiltinInteger::YCPBuiltinInteger ()
 	{ "<<", "integer (integer, integer)",	(void *)i_left,	    ETC },
 	{ ">>", "integer (integer, integer)",	(void *)i_right,    ETC },
 	{ "~",  "integer (integer)",		(void *)i_bnot,	    ETC },
-	{ "tointeger", "integer (const any)",	(void *)i_tointeger,ETC },
+	{ "tointeger", "integer (const any)",		(void *)i_tointeger1, ETC },
+	{ "tointeger", "integer (string, integer)",	(void *)i_tointeger2, ETC },
 	{ NULL, NULL, NULL, ETC }
 #undef ETC
 #undef ETCf
