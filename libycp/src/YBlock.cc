@@ -607,7 +607,6 @@ YBlock::evaluate (bool cse)
     YCPValue value = YCPVoid ();
     while (stmt)
     {
-	bool next_hit = false;
 	YStatementPtr statement = stmt->stmt;
 	
 #if DO_DEBUG
@@ -626,11 +625,9 @@ YBlock::evaluate (bool cse)
 	    }
 	    else if (command == Debugger::c_next)
 	    {
-		next_hit = true;
 		debugger_instance->setTracing (false);
 	    }
 	}
-	
 
 	value = statement->evaluate ();
 	
