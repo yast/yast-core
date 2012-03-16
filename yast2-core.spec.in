@@ -21,8 +21,6 @@ BuildRequires:	sgml-skel
 # logging
 # renamed: http://lists.opensuse.org/opensuse-packaging/2007-11/msg00076.html
 BuildRequires:	libblocxx-devel
-# libycp includes crypto built-ins
-BuildRequires:  libxcrypt-devel
 
 Summary:	YaST2 - Core Libraries
 Requires:	perl = %{perl_version}
@@ -37,7 +35,7 @@ library for the YCP scripting language used in YaST2.
 Summary:	YaST2 - Core Libraries
 Provides:	liby2util-devel = 2.16.1
 Obsoletes:	liby2util-devel < 2.16.1
-Requires:	libxcrypt-devel hwinfo-devel
+Requires:	hwinfo-devel
 Requires:	glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutils
 # required for libscr
 # for FlexLexer.h; I think that this dependency could be made

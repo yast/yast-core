@@ -24,14 +24,6 @@ fi
 # liby2:Y2SerialComponent needs termios.h in glibc-devel
 # (not term.h in ncurses-devel)
 
-# libycp: y2crypt needs xcrypt.h -> libxcrypt, libxcrypt-devel
-yast_found_xcrypt=no
-AC_CHECK_HEADER(xcrypt.h,[yast_found_xcrypt=yes])
-if [[ "$yast_found_xcrypt" = "no" ]]; then
- AC_MSG_ERROR(Headers for xcrypt are missing. Please install the package libxcrypt-devel.)
-fi
-
-
 Y2UTIL_CFLAGS='-I$(top_srcdir)/liby2util-r/src/include'
 Y2UTIL_LIBS='$(top_builddir)/liby2util-r/src/liby2util.la'
 AC_SUBST(Y2UTIL_CFLAGS)

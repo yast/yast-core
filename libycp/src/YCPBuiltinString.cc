@@ -19,10 +19,6 @@
 
 /-*/
 
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE		// for crypt
-#endif
-
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE		// for snprintf
 #endif

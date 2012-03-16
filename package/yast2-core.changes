@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 16 14:40:00 CET 2012 - aschnell@suse.de
+
+- do not use xcrypt (fate #312617)
+- 2.22.5
+
+-------------------------------------------------------------------
 Wed Feb 22 14:59:37 CET 2012 - aschnell@suse.de
 
 - added tointeger builtin with explicite base qualification

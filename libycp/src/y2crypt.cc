@@ -9,6 +9,10 @@
 #define _GNU_SOURCE
 #endif
 
+#ifndef _OW_SOURCE
+#define _OW_SOURCE
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -16,7 +20,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <xcrypt.h>
+
+extern "C" {
+#include <crypt.h>
+}
 
 #include "y2log.h"
 #include "y2crypt.h"
@@ -78,11 +85,8 @@ make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
     close (fd);
 
     char output[CRYPT_GENSALT_OUTPUT_SIZE];
-#if !defined(crypt_gensalt_r)
-#define crypt_gensalt_r xcrypt_gensalt_rn
-#endif
-    char* retval = crypt_gensalt_r (crypt_prefix, crypt_rounds, entropy,
-				     sizeof (entropy), output, sizeof (output));
+    char* retval = crypt_gensalt_rn (crypt_prefix, crypt_rounds, entropy,
+				     sizeof(entropy), output, sizeof(output));
 
     memset (entropy, 0, sizeof (entropy));
 
@@ -114,7 +118,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for standard crypt");
 		return false;
 	    }
-	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    newencrypted = crypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
@@ -125,10 +129,11 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for MD5 crypt");
 		return false;
 	    }
-	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    newencrypted = crypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
+#if 0
 	case BIGCRYPT:
 	    salt = make_crypt_salt ("", 0);
 	    if (!salt)
@@ -139,6 +144,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 	    newencrypted = bigcrypt (unencrypted.c_str (), salt);
 	    free (salt);
 	    break;
+#endif
 
 	case BLOWFISH:
 	    salt = make_crypt_salt ("$2y$", 0);
@@ -147,7 +153,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for blowfish crypt");
 		return false;
 	    }
-	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    newencrypted = crypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
@@ -158,7 +164,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for sha256 crypt");
 		return false;
 	    }
-	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    newencrypted = crypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 
@@ -169,7 +175,7 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 		y2error ("Cannot create salt for sha512 crypt");
 		return false;
 	    }
-	    newencrypted = xcrypt_r (unencrypted.c_str (), salt, &output);
+	    newencrypted = crypt_r (unencrypted.c_str (), salt, &output);
 	    free (salt);
 	    break;
 

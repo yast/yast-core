@@ -68,7 +68,7 @@ libycpvalues_la_LDFLAGS = -version-info 3:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
 libycp_la_LDFLAGS = -version-info 3:0:0
-libycp_la_LIBADD = ${Y2UTIL_LIBS} -lxcrypt libycpvalues.la $(top_builddir)/debugger/liby2debug.la
+libycp_la_LIBADD = ${Y2UTIL_LIBS} -lcrypt libycpvalues.la $(top_builddir)/debugger/liby2debug.la
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
 
