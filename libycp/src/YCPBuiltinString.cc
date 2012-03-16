@@ -1290,37 +1290,6 @@ s_cryptmd5 (const YCPString &s)
 
 
 static YCPValue 
-s_cryptbigcrypt(const YCPString& original)
-{
-    /**
-     * @builtin cryptbigcrypt
-     * @short Encrypts a string using bigcrypt
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using bigcrypt
-     * password encryption. The password is not truncated.
-     * @param string UNENCRYPTED
-     * @return string
-     *
-     * @usage cryptbigcrypt ("readable") -> "d4brTQmcVbtNg"
-     */
-
-    if (original.isNull ())
-	return YCPNull ();
-
-    string unencrypted = original->value();
-    string encrypted;
-
-    if (crypt_pass (unencrypted, BIGCRYPT, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using bigcrypt failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue 
 s_cryptblowfish(const YCPString& original)
 {
     /**
@@ -1598,7 +1567,6 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "mergestring",   "string (const list <string>, string)", (void *)s_mergestring,		 ETC },
 	{ "crypt",	   "string (string)",			(void *)s_crypt,			 ETC },
 	{ "cryptmd5",	   "string (string)",			(void *)s_cryptmd5,			 ETC },
-	{ "cryptbigcrypt", "string (string)",			(void *)s_cryptbigcrypt,		 ETC },
 	{ "cryptblowfish", "string (string)",			(void *)s_cryptblowfish,                 ETC },
 	{ "cryptsha256",   "string (string)",			(void *)s_cryptsha256,                   ETC },
 	{ "cryptsha512",   "string (string)",			(void *)s_cryptsha512,                   ETC },

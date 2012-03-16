@@ -133,19 +133,6 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 	    free (salt);
 	    break;
 
-#if 0
-	case BIGCRYPT:
-	    salt = make_crypt_salt ("", 0);
-	    if (!salt)
-	    {
-		y2error ("Cannot create salt for bigcrypt");
-		return false;
-	    }
-	    newencrypted = bigcrypt (unencrypted.c_str (), salt);
-	    free (salt);
-	    break;
-#endif
-
 	case BLOWFISH:
 	    salt = make_crypt_salt ("$2y$", 0);
 	    if (!salt)
