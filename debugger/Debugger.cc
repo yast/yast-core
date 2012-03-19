@@ -36,6 +36,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 
 #define ADDRESS     "/tmp/yast.socket"
 #define PORT	    16384

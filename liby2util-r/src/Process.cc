@@ -34,6 +34,7 @@
 #include <errno.h>
 #include <cstring>
 #include <y2util/Y2SLog.h>
+#include <unistd.h>
 
 
 /**

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 19 11:18:22 CET 2012 - aschnell@suse.de
+
+- fixed for gcc 4.7
+
+-------------------------------------------------------------------
 Fri Mar 16 14:40:00 CET 2012 - aschnell@suse.de
 
 - do not use xcrypt (removes bigcrypt) (fate #312617)

@@ -512,7 +512,7 @@ class Ptr : public PtrBase<_Bt> {
     /**
      * Constructor. From Ptr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    Ptr( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); }
+    Ptr( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); }
 
   public:
 
@@ -527,7 +527,7 @@ class Ptr : public PtrBase<_Bt> {
     /**
      * Assign from Ptr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    Ptr & operator=( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); return *this; }
+    Ptr & operator=( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); return *this; }
 
   public:
 
@@ -593,7 +593,7 @@ class constPtr : public constPtrBase<_Bt> {
     /**
      * Constructor. From constPtr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    constPtr( const constPtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); }
+    constPtr( const constPtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); }
 
   public:
 
@@ -608,7 +608,7 @@ class constPtr : public constPtrBase<_Bt> {
     /**
      * Assign from constPtr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    constPtr & operator=( const constPtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); return *this; }
+    constPtr & operator=( const constPtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); return *this; }
 
   public:
 
@@ -619,7 +619,7 @@ class constPtr : public constPtrBase<_Bt> {
     /**
      * Constructor. From nonconst Ptr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    constPtr( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); }
+    constPtr( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); }
 
   public:
 
@@ -630,7 +630,7 @@ class constPtr : public constPtrBase<_Bt> {
     /**
      * Assign from nonconst Ptr<..,_Bt>, i.e. pointer to an object that inherits _Bt.
      **/
-    constPtr & operator=( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( getBase( rhs ) ); return *this; }
+    constPtr & operator=( const PtrBase<_Bt> & rhs ) { _ptr.tryAssign( this->getBase( rhs ) ); return *this; }
 
   public:
 

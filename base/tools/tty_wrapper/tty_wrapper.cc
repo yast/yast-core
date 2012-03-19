@@ -33,6 +33,7 @@
 
 #include <y2util/Process.h>
 #include <iostream>
+#include <unistd.h>
 
 extern "C"
 {
