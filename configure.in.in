@@ -63,10 +63,12 @@ dnl	Y2CORE_CFLAGS="-std=c++0x"
 	# gnu++0x instead of c++0x so that
 	# we do not lose gnu extensions like typeof
 	Y2CORE_CFLAGS="-std=gnu++0x -DHAVE_CXX0X"
+	Y2CORE_CXXFLAGS="-std=gnu++0x -DHAVE_CXX0X"
 	AC_MSG_RESULT([c++0x])
 	;;
     *)
 	Y2CORE_CFLAGS=""
+	Y2CORE_CXXFLAGS=""
 	AC_MSG_RESULT([older than c++0x])
 	;;
 esac
