@@ -95,8 +95,8 @@ s_size (const YCPString &s)
     // UTF-8 based length
     std::wstring out;
     utf82wchar(s->value (), &out);
-    
-    return YCPInteger (wcslen (out.c_str()));;
+
+    return YCPInteger(out.size());
 }
 
 
