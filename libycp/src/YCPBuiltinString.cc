@@ -544,7 +544,8 @@ s_tolower (const YCPString &s)
      *
      * @description
      * Returns string with all alphabetic characters converted to lowercase.
-     * Notice: national characters are left unchanged.
+     * Notice: national characters are left unchanged. Use when working with
+     * e.g. options in config files.
      *
      * @usage tolower ("aBcDeF") -> "abcdef"
      * @usage tolower ("ABCÁÄÖČ") -> "abcÁÄÖČ"
@@ -567,12 +568,13 @@ s_toupper (const YCPString &s)
      * @builtin toupper
      * @short  Makes a string uppercase
      *
-     * @description 
+     * @description
      * Returns string with all alphabetic characters converted to
-     * uppercase.
-     
+     * uppercase. Notice: national characters are left unchanged. Use when
+     * working with e.g. options in config files.
+     *
      * @see toupper
-     * @usage tolower ("aBcDeF") -> "ABCDEF"
+     * @usage toupper ("aBcDeF") -> "ABCDEF"
      * @usage toupper ("abcáäöč") -> "ABCáäöč"
      */
 
