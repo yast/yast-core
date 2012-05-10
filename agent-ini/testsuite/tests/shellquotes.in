@@ -1,0 +1,4 @@
+Val1="string"
+Val2="string1"'string2'
+Val3="shell_quoted_value's \"speciality\""
+

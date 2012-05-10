@@ -1,0 +1,5 @@
+([])
+Val1='string'
+Val2='string1string2'
+Val3='shell_quoted_value'\''s "speciality"'
+Val4=''\''written'\'' "value"'

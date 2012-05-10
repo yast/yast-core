@@ -300,6 +300,8 @@ private:
     bool read_only;
     /** ini file sections are created in flat-mode */
     bool flat;
+    /** assume that value is shell string - quoted on write, unquoted on read */
+    bool shell_quoted_value;
 
     /** this string is printed before each line in subsections */
     string subindent;
@@ -377,6 +379,16 @@ private:
      * Write one ini file.
      */
     int write_helper(IniSection&ini, ofstream&of,int depth);
+
+    /**
+     * Creates copy of the value. The result is shell safe.
+     */
+    string quote_value( const char * value) const;
+
+    /**
+     * Creates copy of the value. Removes quotes and escape sequences according shell rules.
+     */
+    string unquote_value( const char * value) const;
 public:
     /**
      * If Write (.s.section_name, nil) was called in multiple files mode,

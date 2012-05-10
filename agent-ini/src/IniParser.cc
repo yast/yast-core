@@ -25,6 +25,7 @@
 
 #include "IniParser.h"
 #include "IniFile.h"
+#include "glib/gshell.h"
 
 IMPL_BASE_POINTER (Regex_t);
 
@@ -174,7 +175,7 @@ int IniParser::initMachine (const YCPMap&scr)
     //
     ignore_case_regexps = ignore_case = prefer_uppercase = first_upper = line_can_continue = no_nested_sections =
 	global_values = repeat_names = comments_last = join_multiline =
-	no_finalcomment_kill = read_only = flat = false;
+	no_finalcomment_kill = read_only = flat = shell_quoted_value = false;
 
     // read the options
     YCPValue v = scr->value(YCPString("options"));
@@ -204,6 +205,7 @@ int IniParser::initMachine (const YCPMap&scr)
 		    COMPARE_OPTION (no_finalcomment_kill)
 		    COMPARE_OPTION (read_only)
 		    COMPARE_OPTION (flat)
+                    COMPARE_OPTION (shell_quoted_value)
 			y2error ("Option not implemented yet: %s", sv.c_str());
 #undef  COMPARE_OPTION
 		}
@@ -561,6 +563,34 @@ int IniParser::parse()
     return 0;
 }
 
+string IniParser::quote_value( const char * value) const
+{
+    if( !shell_quoted_value)
+        return string( value);
+
+    char * qstr = NULL;
+    qstr = g_shell_quote( value);
+    
+    string ret = qstr;
+    g_free( qstr);
+
+    return ret;
+}
+
+string IniParser::unquote_value( const char * value) const
+{
+    if( !shell_quoted_value)
+        return string( value);
+
+    char * ustr = NULL;
+    ustr = g_shell_unquote( value);
+    
+    string ret = ustr;
+    g_free( ustr);
+
+    return ret;
+}
+
 int IniParser::parse_helper(IniSection&ini)
 {
     string comment = "";
@@ -631,10 +661,13 @@ int IniParser::parse_helper(IniSection&ini)
 				if (!global_values)
 				    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 				else
-				    ini.initValue (key, val, comment, matched_by);
+                                {
+				    ini.initValue (key, unquote_value( val.c_str()), comment, matched_by);
+                                }
 			    }
-			else {
-			    open_sections.front()->initValue(key, val, comment, matched_by);
+			else 
+                        {
+			    open_sections.front()->initValue(key, unquote_value( val.c_str()), comment, matched_by);
 			}
 			comment = "";
 		    }
@@ -803,11 +836,13 @@ int IniParser::parse_helper(IniSection&ini)
 					if (!global_values)
 					    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 					else
-					    ini.initValue (key, val, comment, i);
+                                        {
+					    ini.initValue (key, unquote_value( val.c_str()), comment, i);
+                                        }
 				    }
 				else
 				    {
-					open_sections.front()->initValue(key, val, comment, i);
+					open_sections.front()->initValue(key, unquote_value( val.c_str()), comment, i);
 				    }
 				comment = "";
 			    }
@@ -1053,9 +1088,10 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 		    IniEntry&e = ci->e ();
 		    if (e.getComment ()[0])
 			of << e.getComment();
-		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) {
+		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) 
+                    {
 			// bnc#492859, a fixed buffer is too small
-			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), e.getValue());
+			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), quote_value( e.getValue()).c_str());
 			of << indent2 << out_buffer << "\n";
 			free(out_buffer);
 		    }
@@ -1074,6 +1110,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
     ini.clean();
     return 0;
 }
+
 string IniParser::getFileName (const string&sec, int rb) const
 {
     string file = sec;
