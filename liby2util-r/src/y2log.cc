@@ -119,10 +119,10 @@ static int dup_stderr()
 	FILE * newstderr = fdopen( dupstderr, "a" );
 
 	if ( newstderr == NULL ) {
-	  char buf[100];
+	  char buf1[100];
 	  //bnc#493152#c22
-	  strerror_r(errno, buf, sizeof(buf)-1);
-	  fprintf( Y2LOG_STDERR, "y2log: Can't fdopen new stderr: %s.\n", buf);
+	  const char* buf2 = strerror_r(errno, buf1, sizeof(buf1)-1);
+	  fprintf(Y2LOG_STDERR, "y2log: Can't fdopen new stderr: %s.\n", buf2);
 	}
 	else {
 	    fcntl (fileno (newstderr), F_SETFD, fcntl (fileno (newstderr), F_GETFD) | FD_CLOEXEC);
@@ -130,9 +130,9 @@ static int dup_stderr()
 	}
     }
     else {
-        char buf[100];
-	strerror_r(errno, buf, sizeof(buf)-1);
-	fprintf( Y2LOG_STDERR, "y2log: Can't dup stderr: %s.\n", buf );
+	char buf1[100];
+	const char* buf2 = strerror_r(errno, buf1, sizeof(buf1)-1);
+	fprintf(Y2LOG_STDERR, "y2log: Can't dup stderr: %s.\n", buf2);
     }
     return 1;
 }
@@ -150,10 +150,10 @@ static FILE * open_logfile()
 	    logfile = fopen (logname, "a");
 	}
 	if (!logfile && !log_simple) {
-	    char buf[100];
-	    strerror_r(errno, buf, sizeof(buf)-1);
-	    fprintf (Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s.\n",
-		     logname, buf);
+	    char buf1[100];
+	    const char* buf2 = strerror_r(errno, buf1, sizeof(buf1)-1);
+	    fprintf(Y2LOG_STDERR, "y2log: Error opening logfile '%s': %s.\n",
+		    logname, buf2);
 	    return NULL;
 	}
     }
