@@ -22,6 +22,8 @@
 #include <sys/types.h>
 #include <glob.h>
 #include <cassert>
+#include <cstdarg>
+#include <stdexcept>
 
 #include "IniParser.h"
 #include "IniFile.h"
@@ -1021,9 +1023,32 @@ int IniParser::write_file(const string & filename, IniSection & section)
     return 0;
 }
 
+/** sprintf to a std::string, throwing runtime_error on OOM */
+std::string format (const char * format, ...) {
+    // copied from y2util/stringutil.h but added the throw
+    // since we don't want to silently corrupt config files
+    char * buf = 0;
+    std::string val;
+
+    va_list ap;
+    va_start( ap, format );
+
+    int numprinted = vasprintf(&buf, format, ap);
+    if (numprinted >= 0) {
+        val = buf;
+        free( buf );
+    }
+    else {
+        throw std::runtime_error("vasprintf failed in ag_ini. Out of memory?");
+    }
+
+    va_end( ap );
+    return val;
+}
+
 int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 {
-    char * out_buffer;
+    string out_buffer;
     string indent;
     string indent2;
     int readby = ini.getReadBy ();
@@ -1039,9 +1064,8 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
         of << ini.getComment();
     if (readby>=0 && readby < (int)sections.size ())
 	{
-	    asprintf (&out_buffer, sections[readby].begin.out.c_str (), ini.getName());
+            out_buffer = format (sections[readby].begin.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
-	    free (out_buffer);
 	}
     
     IniIterator
@@ -1064,9 +1088,8 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
                     {
                         const string val = shell_quoted_value ? YaST::agent_ini::quote(e.getValue()) : e.getValue();
 			// bnc#492859, a fixed buffer is too small
-			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), val.c_str());
+			out_buffer = format (params[e.getReadBy ()].line.out.c_str (), e.getName(), val.c_str());
 			of << indent2 << out_buffer << "\n";
-			free(out_buffer);
 		    }
 		    e.clean();
 		}
@@ -1076,9 +1099,8 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
         of << indent << ini.getEndComment();
     if (readby>=0 && readby < (int) sections.size () && sections[readby].end_valid)
 	{
-	    asprintf (&out_buffer, sections[readby].end.out.c_str (), ini.getName());
+	    out_buffer = format (sections[readby].end.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
-	    free(out_buffer);
 	}
     ini.clean();
     return 0;
