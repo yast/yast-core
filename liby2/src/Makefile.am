@@ -24,7 +24,7 @@ liby2_la_SOURCES = \
 
 liby2_la_LDFLAGS = -version-info 2:0
 # pthread added (74501)
-liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl -lpthread -lblocxx -lpcre
+liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl -lpthread
 
 libpy2serial_la_SOURCES =				\
 	Y2SerialComponent.cc Y2CCSerial.cc

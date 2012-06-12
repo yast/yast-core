@@ -1,7 +1,8 @@
 -------------------------------------------------------------------
 Tue Jun 12 13:53:23 CEST 2012 - aschnell@suse.de
 
-- improved efficiency of logging functions (fate #313242)
+- removed blocxx usage (fate #313242)
+- improved efficiency of logging functions
 - 2.23.1
 
 -------------------------------------------------------------------

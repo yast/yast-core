@@ -81,14 +81,6 @@ CREATE_PKGCONFIG=true
 @YAST2-CHECKS-PROGRAM@
 @YAST2-CHECKS-TESTSUITE@
 
-## check for blocxx
-dnl FIXME assumes PCRE
-AC_CHECK_HEADER(blocxx/BLOCXX_config.h, [yast_found_blocxx=yes])
-if [[ "$yast_found_blocxx" != "yes" ]]; then
- AC_MSG_ERROR(Headers for blocxx are missing. Please install the package blocxx-devel.)
-fi
-
-
 ## and generate the output
 AC_CONFIG_FILES([
 	scr/doc/SCR.html
