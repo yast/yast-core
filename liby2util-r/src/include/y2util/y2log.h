@@ -32,19 +32,19 @@ enum loglevel_t {
 /* Logging functions */
 
 // Implements y2_logger
-void y2_logger_function (loglevel_t level, const char *component, const char *file,
+void y2_logger_function (loglevel_t level, const string& component, const char *file,
 		const int line, const char *func, const char *format, ...)
     __attribute__ ((format (printf, 6, 7)));
 // The knights of Blanik only show up when nothing else can help, and so will
 // the messages logged here. fate#302166
-void y2_logger_blanik   (loglevel_t level, const char *component, const char *file,
+void y2_logger_blanik   (loglevel_t level, const string& component, const char *file,
 		const int line, const char *func, const char *format, ...)
     __attribute__ ((format (printf, 6, 7)));
 
 // Same as above, but with va_list
-void y2_vlogger_function (loglevel_t level, const char *component, const char *file,
+void y2_vlogger_function (loglevel_t level, const string& component, const char *file,
 		 const int line, const char *func, const char *format, va_list ap);
-void y2_vlogger_blanik   (loglevel_t level, const char *component, const char *file,
+void y2_vlogger_blanik   (loglevel_t level, const string& component, const char *file,
 		 const int line, const char *func, const char *format, va_list ap);
 
 void y2_logger_raw( const char* message );
@@ -118,7 +118,8 @@ do {									\
 /**
  * Should we bother evaluating the arguments to the logging function?
  */
-bool should_be_logged (int loglevel, string componentname);
+bool should_be_logged (int loglevel, const string& componentname);
+
 /**
  * Should we bother evaluating the arguments to the buffering function?
  */

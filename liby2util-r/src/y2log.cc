@@ -163,7 +163,7 @@ static FILE * open_logfile()
 /**
  * The universal logger function
  */
-void y2_logger_function(loglevel_t level, const char *component, const char *file,
+void y2_logger_function(loglevel_t level, const string& component, const char *file,
 	  const int line, const char *func, const char *format, ...)
 {
     va_list ap;
@@ -172,7 +172,7 @@ void y2_logger_function(loglevel_t level, const char *component, const char *fil
     va_end(ap);
 }
 
-void y2_logger_blanik(loglevel_t level, const char *component, const char *file,
+void y2_logger_blanik(loglevel_t level, const string& component, const char *file,
 	  const int line, const char *func, const char *format, ...)
 {
     va_list ap;
@@ -184,7 +184,7 @@ void y2_logger_blanik(loglevel_t level, const char *component, const char *file,
 /**
  * Formats the common part
  */
-string y2_logfmt_common(bool simple, const char *component, const char *file,
+string y2_logfmt_common(bool simple, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     /* Prepare the log text */
@@ -287,7 +287,7 @@ string y2_logfmt_prefix (loglevel_t level)
 }
 
 
-void y2_vlogger_function(loglevel_t level, const char *component, const char *file,
+void y2_vlogger_function(loglevel_t level, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     string common = y2_logfmt_common (log_simple,
@@ -308,7 +308,7 @@ void y2_vlogger_function(loglevel_t level, const char *component, const char *fi
     }
 }
 
-void y2_vlogger_blanik(loglevel_t level, const char *component, const char *file,
+void y2_vlogger_blanik(loglevel_t level, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     string common = y2_logfmt_common (log_simple,
@@ -557,7 +557,7 @@ void set_log_conf(string confname) {
 /**
  * Test if we should create a log entry
  */
-bool should_be_logged (int loglevel, string componentname) {
+bool should_be_logged (int loglevel, const string& componentname) {
 
     if(log_simple && !log_debug) return loglevel > 1;
 
@@ -576,8 +576,9 @@ bool should_be_logged (int loglevel, string componentname) {
     if(log_all_variable) return true;
 
     /* Specific component */
-    if(logconf.find(componentname) != logconf.end())
-	return logconf[componentname] == "true";
+    inisection::const_iterator it = logconf.find(componentname);
+    if (it != logconf.end())
+	return it->second == "true";
 
     return log_debug;
 }
