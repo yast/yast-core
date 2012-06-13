@@ -26,7 +26,6 @@ liby2util_la_SOURCES =		\
 	y2changes.cc \
 	Process.cc
 
-
-liby2util_la_LDFLAGS = -version-info 4:0:0
+liby2util_la_LDFLAGS = -version-info 5:0:0
 
 liby2util_la_LIBADD = -lutil
