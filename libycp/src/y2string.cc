@@ -11,6 +11,19 @@
 #include "y2string.h"
 
 
+template <class In, class Out> void
+recode_errors(const In& in, const Out* out)
+{
+}
+
+
+template <class Out> void
+recode_errors(const std::string& in, const Out* out)
+{
+    ycpwarning("recode errors, input is '%s'", in.c_str());
+}
+
+
 template <class In, class Out> bool
 recode_all (iconv_t cd, const In& in, Out* out, const typename Out::value_type
 	    errorsign)
@@ -25,6 +38,8 @@ recode_all (iconv_t cd, const In& in, Out* out, const typename Out::value_type
     out_t buffer[buffer_size];
 
     out->clear ();
+
+    bool errors = false;
 
     while (in_len != (size_t)(0))
     {
@@ -44,6 +59,7 @@ recode_all (iconv_t cd, const In& in, Out* out, const typename Out::value_type
 		out->append (1, errorsign);
 		in_ptr += sizeof (in_t);
 		in_len -= sizeof (in_t);
+		errors = true;
 	    }
 	    else if (errno == E2BIG && n == 0)
 	    {
@@ -53,6 +69,9 @@ recode_all (iconv_t cd, const In& in, Out* out, const typename Out::value_type
 	    }
 	}
     }
+
+    if (errors)
+	recode_errors(in, out);
 
     return true;
 }

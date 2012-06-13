@@ -130,28 +130,34 @@ Parsed:
 ----------------------------------------------------------------------
 "** lsubstring **"
 ----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:64 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 5)
 ----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:65 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 42)
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-String.ycp:65 Substring index out of range
+[Parser] tests/builtin/Builtin-String.ycp:66 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("ěščřžýáí", 5)
 ----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:68 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 5, 2)
 ----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:69 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("some text", 42, 2)
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-String.ycp:69 Substring index out of range
+[Parser] tests/builtin/Builtin-String.ycp:70 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("ěščřžýáí", 5, 2)

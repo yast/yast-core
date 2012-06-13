@@ -31,6 +31,7 @@
 #include <map>
 
 using std::string;
+using std::wstring;
 using std::vector;
 using std::map;
 using std::pair;

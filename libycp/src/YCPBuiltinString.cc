@@ -32,6 +32,7 @@
 #include <regex.h>
 #include <libintl.h>
 #include <string>
+#include <boost/algorithm/string.hpp>
 
 using std::string;
 
@@ -92,11 +93,14 @@ s_size (const YCPString &s)
     if (s.isNull ())
 	return YCPNull ();
 
-    // UTF-8 based length
-    std::wstring out;
-    utf82wchar(s->value (), &out);
-
-    return YCPInteger(out.size());
+    if (s->isAscii())
+    {
+	return YCPInteger(s->value().size());
+    }
+    else
+    {
+	return YCPInteger(s->wvalue().size());
+    }
 }
 
 
@@ -115,7 +119,7 @@ s_plus1 (const YCPString &s1, const YCPString &s2)
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
-    return YCPString (s1->value () + s2->value_cstr ());
+    return YCPString(s1->value() + s2->value());
 }
 
 
@@ -212,7 +216,6 @@ s_issubstring (const YCPString &target, const YCPString &sub)
 
     string s = target->value ();
     string substring = sub->value ();
-	//y2milestone ("'%s' '%s' %p", s.c_str(), substring.c_str(), (void *)(s.find (substring)));
     return YCPBoolean (s.find (substring) != string::npos);
 }
 
@@ -293,17 +296,32 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
     if (s.isNull () || i1.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    int start = i1->value ();
-
-    if ((start < 0)
-	|| ((size_t)start > ss.size ()))
+    if (s->isAscii())
     {
-	ycp2error("Substring index out of range");
-	return YCPString ("");
-    }
+	string ss = s->value ();
+	string::size_type start = i1->value();
 
-    return YCPString (ss.substr ((string::size_type) start, string::npos));
+	if (start < 0 || start > ss.size())
+	{
+	    ycp2error("Substring index out of range");
+	    return YCPString ("");
+	}
+
+	return YCPString(ss.substr(start, string::npos));
+    }
+    else
+    {
+	wstring ss = s->wvalue();
+	wstring::size_type start = i1->value();
+
+	if (start < 0 || start > ss.size())
+	{
+	    ycp2error("Substring index out of range");
+	    return YCPString("");
+	}
+
+	return YCPString(ss.substr(start, wstring::npos));
+    }
 }
 
 
@@ -332,125 +350,34 @@ s_substring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
     if (s.isNull () || i1.isNull() || i2.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    string::size_type start = i1->value ();
-    string::size_type length = i2->value ();
-
-    if (start > ss.size ())
+    if (s->isAscii())
     {
-	ycp2error ("Substring index out of range");
-	return YCPString ("");
+	string ss = s->value ();
+	string::size_type start = i1->value ();
+	string::size_type length = i2->value ();
+
+	if (start > ss.size ())
+	{
+	    ycp2error ("Substring index out of range");
+	    return YCPString ("");
+	}
+
+	return YCPString (ss.substr (start, length));
     }
-
-    return YCPString (ss.substr (start, length));
-}
-
-
-static YCPValue
-s_lsubstring1 (const YCPString &s, const YCPInteger &i1)
-{
-    /**
-     * @builtin lsubstring
-     * @id lsubstring-rest
-     * @short Extracts a substring in UTF-8 encoded string
-     *
-     * @description
-     * Extracts a substring of the string <tt>STRING</tt>, starting at
-     * <tt>OFFSET</tt> after the first one with length of at most
-     * <tt>LENGTH</tt>. <tt>OFFSET</tt> starts with 0. This method uses UTF-8 encoding.
-     *
-     * @param string STRING
-     * @param integer OFFSET
-     * @param integer LENGTH
-     * @return string
-     * @usage substring ("some text", 5) -> "text"
-     * @usage substring ("some text", 42) -> ""
-     */
-
-    if (s.isNull () || i1.isNull())
-	return YCPNull ();
-
-    string lss = s->value ();
-    wstring ss;
-    
-    if( ! utf82wchar( lss, &ss ) )
+    else
     {
-	y2error( "Unable to recode string '%s' to UTF-8", lss.c_str() );
-	return YCPNull ();
+	wstring ss = s->wvalue();
+	wstring::size_type start = i1->value();
+	wstring::size_type length = i2->value();
+
+	if (start > ss.size ())
+	{
+	    ycp2error ("Substring index out of range");
+	    return YCPString ("");
+	}
+
+	return YCPString(ss.substr(start, length));
     }
-    
-    string::size_type start = i1->value ();
-
-    if (start > ss.size ())
-    {
-	ycp2error ("Substring index out of range");
-	return YCPString ("");
-    }
-
-    ss = ss.substr ((wstring::size_type) start, wstring::npos);
-    
-    if( !wchar2utf8( ss, &lss ) )
-    {
-	y2error( "Unable to recode result string '%ls' from UTF-8", ss.c_str() );
-	return YCPNull ();
-    }
-    
-    return YCPString(lss);
-}
-
-
-static YCPValue
-s_lsubstring2 (const YCPString &s, const YCPInteger &i1, const YCPInteger &i2)
-{
-    /**
-     * @builtin lsubstring
-     * @id lsubstring-length
-     * @short Extracts a substring in UTF-8 encoded string
-     *
-     * @description
-     * Extracts a substring of the string <tt>STRING</tt>, starting at
-     * <tt>OFFSET</tt> after the first one with length of at most
-     * <tt>LENGTH</tt>. <tt>OFFSET</tt> starts with 0. This method uses UTF-8 encoding.
-     *
-     * @param string STRING
-     * @param integer OFFSET
-     * @param integer LENGTH
-     * @return string
-     * @usage lsubstring ("some text", 5, 2) -> "te"
-     * @usage lsubstring ("some text", 42, 2) -> ""
-     * @usage lsubstring("123456789", 2, 3) -> "345"
-     */
-
-    if (s.isNull () || i1.isNull() || i2.isNull ())
-	return YCPNull ();
-
-    string lss = s->value ();
-    wstring ss;
-    
-    if( ! utf82wchar( lss, &ss ) )
-    {
-	y2error( "Unable to recode string '%s' to UTF-8", lss.c_str() );
-	return YCPNull ();
-    }
-    
-    string::size_type start = i1->value ();
-    string::size_type length = i2->value ();
-
-    if (start > ss.size ())
-    {
-	ycp2error ("Substring index out of range");
-	return YCPString ("");
-    }
-
-    ss = ss.substr (start, length);
-    
-    if( !wchar2utf8( ss, &lss ) )
-    {
-	y2error( "Unable to recode result string '%ls' from UTF-8", ss.c_str() );
-	return YCPNull ();
-    }
-    
-    return YCPString(lss);
 }
 
 
@@ -485,13 +412,26 @@ s_search (const YCPString &s1, const YCPString &s2)
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
-    string ss1 = s1->value ();
-    string::size_type pos = ss1.find (s2->value ());
+    if (s1->isAscii() && s2->isAscii())
+    {
+	string ss1 = s1->value ();
+	string::size_type pos = ss1.find (s2->value ());
 
-    if (pos == string::npos)
-	return YCPVoid ();		// not found
+	if (pos == string::npos)
+	    return YCPVoid ();		// not found
+	else
+	    return YCPInteger (pos);	// found
+    }
     else
-	return YCPInteger (pos);	// found
+    {
+	wstring ss1 = s1->wvalue();
+	wstring::size_type pos = ss1.find(s2->wvalue());
+
+        if (pos == wstring::npos)
+            return YCPVoid();		// not found
+	else
+            return YCPInteger(pos);	// found
+    }
 }
 
 
@@ -544,7 +484,7 @@ s_tolower (const YCPString &s)
      *
      * @description
      * Returns string with all alphabetic characters converted to lowercase.
-     * Notice: national characters are left unchanged. Use when working with
+     * Notice: National characters are left unchanged. Use when working with
      * e.g. options in config files.
      *
      * @usage tolower ("aBcDeF") -> "abcdef"
@@ -554,10 +494,7 @@ s_tolower (const YCPString &s)
     if (s.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    for (unsigned i = 0; i < ss.size (); i++)
-	ss[i] = tolower (ss[i]);
-    return YCPString (ss);
+    return YCPString(boost::to_lower_copy(s->value(), locale::classic()));
 }
 
 
@@ -570,7 +507,7 @@ s_toupper (const YCPString &s)
      *
      * @description
      * Returns string with all alphabetic characters converted to
-     * uppercase. Notice: national characters are left unchanged. Use when
+     * uppercase. Notice: National characters are left unchanged. Use when
      * working with e.g. options in config files.
      *
      * @see toupper
@@ -581,10 +518,7 @@ s_toupper (const YCPString &s)
     if (s.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    for (unsigned i = 0; i < ss.size (); i++)
-	ss[i] = toupper (ss[i]);
-    return YCPString (ss);
+    return YCPString(boost::to_upper_copy(s->value(), locale::classic()));
 }
 
 
@@ -640,15 +574,28 @@ s_removechars (const YCPString &s, YCPString &r)
     if (s.isNull () || r.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    string include = r->value ();
-    string::size_type pos = 0;
-
-    while (pos = ss.find_first_of (include, pos), pos != string::npos)
+    if (s->isAscii() && r->isAscii())
     {
-	ss.erase (pos, ss.find_first_not_of (include, pos) - pos);
+	string ss = s->value();
+	string include = r->value();
+
+	string::size_type pos = 0;
+	while (pos = ss.find_first_of(include, pos), pos != string::npos)
+	    ss.erase(pos, ss.find_first_not_of(include, pos) - pos);
+
+	return YCPString(ss);
     }
-    return YCPString (ss);
+    else
+    {
+	wstring ss = s->wvalue();
+	wstring include = r->wvalue();
+
+	wstring::size_type pos = 0;
+	while (pos = ss.find_first_of(include, pos), pos != string::npos)
+	    ss.erase(pos, ss.find_first_not_of(include, pos) - pos);
+
+	return YCPString(ss);
+    }
 }
 
 
@@ -674,14 +621,28 @@ s_filterchars (const YCPString &s, const YCPString &i)
     if (s.isNull () || i.isNull ())
 	return YCPNull ();
 
-    string ss = s->value ();
-    string include = i->value ();
-    string::size_type pos = 0;
+    if (s->isAscii() && i->isAscii())
+    {
+	string ss = s->value();
+	string include = i->value();
 
-    while (pos = ss.find_first_not_of (include, pos), pos != string::npos)
-	ss.erase (pos, ss.find_first_of (include, pos) - pos);
+	string::size_type pos = 0;
+	while (pos = ss.find_first_not_of(include, pos), pos != string::npos)
+	    ss.erase(pos, ss.find_first_of(include, pos) - pos);
 
-    return YCPString (ss);
+	return YCPString(ss);
+    }
+    else
+    {
+	wstring ss = s->wvalue();
+	wstring include = i->wvalue();
+
+	wstring::size_type pos = 0;
+	while (pos = ss.find_first_not_of(include, pos), pos != wstring::npos)
+	    ss.erase(pos, ss.find_first_of(include, pos) - pos);
+
+	return YCPString(ss);
+    }
 }
 
 
@@ -775,13 +736,24 @@ s_findfirstnotof (const YCPString &s1, const YCPString &s2)
     if (s1->value ().empty ())
 	return YCPInteger ((long long int) 0);
 
-    string ss1 = s1->value ();
-    string::size_type pos = ss1.find_first_not_of (s2->value ());
+    if (s1->isAscii() && s2->isAscii())
+    {
+	string::size_type pos = s1->value().find_first_not_of(s2->value());
 
-    if (pos == string::npos)
-	return YCPVoid ();		// not found
+	if (pos == string::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
     else
-	return YCPInteger (pos);	// found
+    {
+	wstring::size_type pos = s1->wvalue().find_first_not_of(s2->wvalue());
+
+	if (pos == wstring::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
 }
 
 
@@ -812,13 +784,24 @@ s_findfirstof (const YCPString &s1, const YCPString &s2)
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
-    string ss1 = s1->value ();
-    string::size_type pos = ss1.find_first_of (s2->value ());
+    if (s1->isAscii() && s2->isAscii())
+    {
+	string::size_type pos = s1->value().find_first_of(s2->value());
 
-    if (pos == string::npos)
-	return YCPVoid ();		// not found
+	if (pos == string::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
     else
-	return YCPInteger (pos);	// found
+    {
+	wstring::size_type pos = s1->wvalue().find_first_of(s2->wvalue());
+
+	if (pos == wstring::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
 }
 
 
@@ -846,14 +829,26 @@ s_findlastof (const YCPString &s1, const YCPString &s2)
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
-    string ss1 = s1->value ();
-    string::size_type pos = ss1.find_last_of (s2->value ());
+    if (s1->isAscii() && s2->isAscii())
+    {
+	string::size_type pos = s1->value().find_last_of(s2->value());
 
-    if (pos == string::npos)
-	return YCPVoid ();		// not found
+	if (pos == string::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
     else
-	return YCPInteger (pos);	// found
+    {
+	wstring::size_type pos = s1->wvalue().find_last_of(s2->wvalue());
+
+	if (pos == wstring::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
 }
+
 
 static YCPValue
 s_findlastnotof (const YCPString &s1, const YCPString &s2)
@@ -880,11 +875,26 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
-    string::size_type pos = s1->value ().find_last_not_of( s2->value () );
+    if (s1->isAscii() && s2->isAscii())
+    {
+	string::size_type pos = s1->value().find_last_not_of(s2->value());
 
-    if ( pos == string::npos ) return YCPVoid();    // not found
-    else return YCPInteger( pos );                  // found
+	if (pos == string::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
+    else
+    {
+	wstring::size_type pos = s1->wvalue().find_last_not_of(s2->wvalue());
+
+	if (pos == wstring::npos)
+	    return YCPVoid();		// not found
+	else
+	    return YCPInteger(pos);	// found
+    }
 }
+
 
 /// (regexp builtins)
 typedef struct REG_RET
@@ -1579,8 +1589,8 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "dgettext",	   "string (string, string)",		(void *)s_dgettext,			 ETC },
 	{ "dngettext",	   "string (string, string, string, integer)",	(void *)s_dngettext,		 ETC },
 	{ "dpgettext",	   "string (string, string, string)",	(void *)s_dpgettext,                     ETC },
-	{ "lsubstring",	   "string (string, integer)",		(void *)s_lsubstring1,                   ETC },
-	{ "lsubstring",	   "string (string, integer, integer)",	(void *)s_lsubstring2,                   ETC },
+	{ "lsubstring",	   "string (string, integer)",		(void *)s_substring1, DECL_DEPRECATED,  ETCf },
+	{ "lsubstring",	   "string (string, integer, integer)",	(void *)s_substring2, DECL_DEPRECATED,  ETCf },
 	{ NULL, NULL, NULL, ETC }
 #undef ETC
 #undef ETCf

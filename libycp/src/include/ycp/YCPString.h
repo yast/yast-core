@@ -38,32 +38,53 @@
  */
 class YCPStringRep : public YCPValueRep
 {
+
     string v;
+    bool is_ascii;
 
 protected:
+
     friend class YCPString;
 
     /**
-     * Creates a new YCPStringRep from a C++ string. 
-     * @param s A string that is taken literally as value of the newly
-     * create YCPStringRep object. Not expansion of backslashes is done,
-     * s is not considered to be enclosed with quotes. If there are quotes,
-     * they are considered to be part of the string.
+     * Creates a new YCPStringRep from a C++ string.
+     * @param s A string that is taken literally as value of the newly create
+     * YCPStringRep object. Not expansion of backslashes is done, s is not
+     * considered to be enclosed with quotes. If there are quotes, they are
+     * considered to be part of the string. The string must be UTF-8 encoded.
      */
-    YCPStringRep(string s);
+    YCPStringRep(const string& s);
+
+    /**
+     * Creates a new YCPStringRep from a C++ wstring.
+     * @param s A wstring that is taken literally as value of the newly create
+     * YCPStringRep object. Not expansion of backslashes is done, s is not
+     * considered to be enclosed with quotes. If there are quotes, they are
+     * considered to be part of the string.
+     */
+    YCPStringRep(const wstring& s);
 
 public:
 
     /**
-     * Returns true, iff this string is empty.
+     * Returns true iff this string is empty.
      */
     bool isEmpty() const;
 
     /**
-     * Returns the value of this object in form of a C++
-     * string value.
+     * Returns true iff the string only contains ASCII characters.
      */
-    string value() const;
+    bool isAscii() const { return is_ascii; }
+
+    /**
+     * Returns the value of this object in form of a C++ string value.
+     */
+    const string& value() const;
+
+    /**
+     * Returns the value of this object in form of a C++ wstring value.
+     */
+    wstring wvalue() const;
 
     /**
      * Compares two YCPStrings for equality, greaterness or smallerness.
@@ -113,7 +134,8 @@ class YCPString : public YCPValue
 {
     DEF_COMMON(String, Value);
 public:
-    YCPString(string s) : YCPValue(new YCPStringRep(s)) {}
+    YCPString(const string& s) : YCPValue(new YCPStringRep(s)) {}
+    YCPString(const wstring& s) : YCPValue(new YCPStringRep(s)) {}
     YCPString(bytecodeistream & str);
 
     bool isEmpty() const { return CONST_ELEMENT->isEmpty(); }
@@ -122,4 +144,3 @@ public:
 #undef CONST_ELEMENT
 
 #endif   // YCPString_h
-    

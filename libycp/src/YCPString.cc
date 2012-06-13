@@ -18,6 +18,8 @@
 
 /-*/
 
+#include <algorithm>
+
 #include "y2string.h"
 
 #include "ycp/y2log.h"
@@ -28,9 +30,18 @@
 
 // YCPStringRep
 
-YCPStringRep::YCPStringRep(string s)
-    : v(s)
+YCPStringRep::YCPStringRep(const string& s)
+    : v(s), is_ascii(false)
 {
+    is_ascii = all_of(v.begin(), v.end(), isascii);
+}
+
+
+YCPStringRep::YCPStringRep(const wstring& s)
+    : v(), is_ascii(false)
+{
+    wchar2utf8(s, &v);
+    is_ascii = all_of(v.begin(), v.end(), isascii);
 }
 
 
@@ -41,10 +52,19 @@ YCPStringRep::isEmpty() const
 }
 
 
-string
+const string&
 YCPStringRep::value() const
 {
     return v;
+}
+
+
+wstring
+YCPStringRep::wvalue() const
+{
+    std::wstring ret;
+    utf82wchar(v, &ret);
+    return ret;
 }
 
 
@@ -153,4 +173,3 @@ YCPString::YCPString (bytecodeistream & str)
     : YCPValue (new YCPStringRep (fromStream (str)))
 {
 }
-

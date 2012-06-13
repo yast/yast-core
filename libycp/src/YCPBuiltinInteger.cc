@@ -327,7 +327,7 @@ i_tointeger2(const YCPString& v, const YCPInteger& b)
      * @usage tointeger("0x20", 16) -> 32
      */
 
-    std::istringstream s(v->value_cstr());
+    std::istringstream s(v->value());
     s.imbue(std::locale::classic());
 
     switch (b->value())

@@ -290,10 +290,7 @@ f_tolstring (const YCPFloat &f, const YCPInteger &precision)
     ss.imbue (std::locale (""));
     ss.precision (precision->value ());
     ss << fixed<< f->value ();
-
-    string in_utf8;
-    wchar2utf8 (ss.str (), &in_utf8);
-    return YCPString (in_utf8);
+    return YCPString(ss.str());
 }
 
 
