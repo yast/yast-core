@@ -569,10 +569,10 @@ string IniParser::quote_value( const char * value) const
         return string( value);
 
     char * qstr = NULL;
-    qstr = g_shell_quote( value);
+    qstr = YaST::g_shell_quote( value);
     
     string ret = qstr;
-    g_free( qstr);
+    YaST::g_free( qstr);
 
     return ret;
 }
@@ -583,10 +583,10 @@ string IniParser::unquote_value( const char * value) const
         return string( value);
 
     char * ustr = NULL;
-    ustr = g_shell_unquote( value);
+    ustr = YaST::g_shell_unquote( value);
     
     string ret = ustr;
-    g_free( ustr);
+    YaST::g_free( ustr);
 
     return ret;
 }

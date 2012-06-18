@@ -22,6 +22,8 @@
 
 #include "gtypes.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 /* slices - fast allocation/release of small memory blocks
@@ -36,5 +38,7 @@ void     g_slice_free1          	(gsize         block_size,
 } while (0)
 
 G_END_DECLS
+
+}
 
 #endif /* __G_SLICE_H__ */

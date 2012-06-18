@@ -8,15 +8,19 @@
 
 #include "gmacros.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 typedef signed long gssize;
-typedef unsigned long gsize;
+typedef size_t gsize;
 
 #define G_MAXSIZE   G_MAXULONG
 
 #define g_memmove(dest,src,len) G_STMT_START { memmove ((dest), (src), (len)); } G_STMT_END
 
 G_END_DECLS
+
+}
 
 #endif /* __GLIBCONFIG_H__ */

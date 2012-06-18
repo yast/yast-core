@@ -29,6 +29,8 @@
 
 #include "gtypes.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 /**
@@ -96,5 +98,7 @@ struct _GMemVTable {
 };
 
 G_END_DECLS
+
+}
 
 #endif /* __G_MEM_H__ */

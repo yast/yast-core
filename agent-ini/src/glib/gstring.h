@@ -29,6 +29,8 @@
 
 #include "gtypes.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 typedef struct _GString         GString;
@@ -57,5 +59,7 @@ GString*     g_string_insert_c          (GString         *string,
                                          gchar            c);
 
 G_END_DECLS
+
+}
 
 #endif /* __G_STRING_H__ */

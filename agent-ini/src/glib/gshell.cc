@@ -28,6 +28,8 @@
 #include "gstring.h"
 #include "gmem.h"
 
+namespace YaST {
+
 static gboolean 
 unquote_string_inplace (gchar* str, gchar** end)
 {
@@ -280,4 +282,6 @@ g_shell_unquote (const gchar *quoted_string)
   g_string_free (retval, TRUE);
 
   return NULL;
+}
+
 }

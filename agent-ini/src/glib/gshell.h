@@ -28,6 +28,8 @@
 #include "gtypes.h"
 #include "gmem.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 gchar*   g_shell_quote      (const gchar   *unquoted_string);
@@ -37,5 +39,7 @@ gboolean g_shell_parse_argv (const gchar   *command_line,
                              gchar       ***argvp);
 
 G_END_DECLS
+
+}
 
 #endif /* __G_SHELL_H__ */

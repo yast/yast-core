@@ -21,6 +21,8 @@
 #include "gmem.h"               /* gslice.h */
 #include "gslice.h"
 
+namespace YaST {
+
 /**
  * g_slice_alloc:
  * @block_size: the number of bytes to allocate
@@ -70,4 +72,6 @@ g_slice_free1 (gsize    mem_size,
                gpointer mem_block)
 {
       g_free (mem_block);
+}
+
 }

@@ -14,17 +14,17 @@ liby2ag_ini_la_SOURCES =	\
 	IniParser.h		\
 	IniFile.cc		\
 	IniFile.h		\
-	glib/gstrfuncs.c	\
+	glib/gstrfuncs.cc	\
 	glib/gtypes.h		\
-	glib/gshell.c		\
+	glib/gshell.cc		\
 	glib/gstring.h		\
-	glib/gstring.c		\
+	glib/gstring.cc		\
 	glib/glibconfig.h	\
 	glib/gshell.h		\
-	glib/gmem.c		\
+	glib/gmem.cc		\
 	glib/gstrfuncs.h	\
 	glib/gslice.h		\
-	glib/gslice.c		\
+	glib/gslice.cc		\
 	glib/gmacros.h		\
 	glib/gmem.h
 

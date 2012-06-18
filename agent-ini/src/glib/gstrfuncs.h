@@ -29,6 +29,8 @@
 
 #include "gtypes.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 /* String utility functions that return a newly allocated string which
@@ -37,5 +39,7 @@ G_BEGIN_DECLS
 gchar*	              g_strdup	       (const gchar *str) G_GNUC_MALLOC;
 
 G_END_DECLS
+
+}
 
 #endif /* __G_STRFUNCS_H__ */

@@ -32,6 +32,8 @@
 
 #include <stdlib.h>
 
+namespace YaST {
+
 #define standard_malloc	malloc
 #define standard_realloc	realloc
 #define standard_free		free
@@ -154,4 +156,6 @@ g_malloc_n (gsize n_blocks,
 	    gsize n_block_bytes)
 {
   return g_malloc (n_blocks * n_block_bytes);
+}
+
 }

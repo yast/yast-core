@@ -35,6 +35,8 @@
 #include "gmem.h"
 #include "gslice.h"
 
+namespace YaST {
+
 /**
  * SECTION:strings
  * @title: Strings
@@ -90,7 +92,7 @@ g_string_maybe_expand (GString *string,
   if (string->len + len >= string->allocated_len)
     {
       string->allocated_len = nearest_power (1, string->len + len + 1);
-      string->str = g_realloc (string->str, string->allocated_len);
+      string->str = (gchar*) g_realloc (string->str, string->allocated_len);
     }
 }
 
@@ -394,4 +396,6 @@ g_string_insert_c (GString *string,
   string->str[string->len] = 0;
 
   return string;
+}
+
 }

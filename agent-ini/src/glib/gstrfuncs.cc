@@ -36,6 +36,8 @@
 #include "gstrfuncs.h"
 #include "gmem.h"
 
+namespace YaST {
+
 /**
  * g_strdup:
  * @str: the string to duplicate
@@ -62,4 +64,6 @@ g_strdup (const gchar *str)
     new_str = NULL;
 
   return new_str;
+}
+
 }

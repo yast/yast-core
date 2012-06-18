@@ -30,6 +30,8 @@
 #include "glibconfig.h"
 #include "gmacros.h"
 
+namespace YaST {
+
 G_BEGIN_DECLS
 
 /* Provide type definitions for commonly used types.
@@ -46,5 +48,7 @@ typedef gint   gboolean;
 typedef void* gpointer;
 
 G_END_DECLS
+
+}
 
 #endif /* __G_TYPES_H__ */
