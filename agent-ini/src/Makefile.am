@@ -13,7 +13,9 @@ liby2ag_ini_la_SOURCES =	\
 	IniParser.cc		\
 	IniParser.h		\
 	IniFile.cc		\
-	IniFile.h		
+	IniFile.h		\
+	quotes.cc		\
+	quotes.h
 
 liby2ag_ini_la_LDFLAGS = -version-info 2:0
 liby2ag_ini_la_LIBADD = @AGENT_LIBADD@
