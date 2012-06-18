@@ -182,8 +182,8 @@
 
 /* Guard C code in headers, while including them from C++ */
 #ifdef  __cplusplus
-# define G_BEGIN_DECLS  extern "C" {
-# define G_END_DECLS    }
+# define G_BEGIN_DECLS
+# define G_END_DECLS
 #else
 # define G_BEGIN_DECLS
 # define G_END_DECLS
