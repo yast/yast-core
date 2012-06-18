@@ -2,6 +2,7 @@
 Mon Jun 18 17:53:23 CEST 2012 - aschnell@suse.de
 
 - fixed function name conflict in agent-ini (bnc#765519)
+- 2.23.2
 
 -------------------------------------------------------------------
 Wed Jun 13 13:38:17 CEST 2012 - aschnell@suse.de
