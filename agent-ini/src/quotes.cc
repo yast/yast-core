@@ -1,3 +1,15 @@
+/**
+ * YaST2: Core system
+ *
+ * Description:
+ *   YaST2 SCR: Functions for shell like (un)quoting
+ *
+ * Authors:
+ *   Michal Filka <mfilka@suse.cz>
+ *
+ * $Id$
+ */
+
 #include "quotes.h"
 
 using namespace std;
@@ -5,7 +17,6 @@ using namespace std;
 string quote( const string & unquoted_string)
 {
     string dest = "'";
-    string q;
 
     for( string::const_iterator sit = unquoted_string.begin(); sit != unquoted_string.end(); sit++)
     {
