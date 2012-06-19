@@ -4,37 +4,18 @@ using namespace std;
 
 string quote( const string & unquoted_string)
 {
-    string dest;
+    string dest = "'";
     string q;
 
     for( string::const_iterator sit = unquoted_string.begin(); sit != unquoted_string.end(); sit++)
     {
-        // try to resolve escape sequences here
-        // examle: a\ string != 'a\ string'
-        switch( *sit)
-        {
-            case ' ':
-                dest += *sit;
-                q = "'";
-                break;
-
-            case '\\':
-                dest += *(++sit);
-                q = "'";
-                break;
-
-            case '\'':
-                dest += "'\\''";
-                q = "'";
-                break;
-
-            default:
-                dest += *sit;
-                break;
-        }
+        if( *sit == '\'')
+            dest += "'\\''";
+        else
+            dest += *sit;
     }
 
-    dest = q + dest + q;
+    dest += "'";
 
     return dest;
 }
@@ -110,6 +91,8 @@ string unquote( const string & quoted_string)
                 *sit != '"' && 
                 *sit != '\'')
         {   
+            if( *sit == '\\')
+                sit++;
             res += *(sit++);
         }
 
