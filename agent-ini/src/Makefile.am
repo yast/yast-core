@@ -14,19 +14,8 @@ liby2ag_ini_la_SOURCES =	\
 	IniParser.h		\
 	IniFile.cc		\
 	IniFile.h		\
-	glib/gstrfuncs.cc	\
-	glib/gtypes.h		\
-	glib/gshell.cc		\
-	glib/gstring.h		\
-	glib/gstring.cc		\
-	glib/glibconfig.h	\
-	glib/gshell.h		\
-	glib/gmem.cc		\
-	glib/gstrfuncs.h	\
-	glib/gslice.h		\
-	glib/gslice.cc		\
-	glib/gmacros.h		\
-	glib/gmem.h
+	quotes.cc		\
+	quotes.h
 
 liby2ag_ini_la_LDFLAGS = -version-info 2:0
 liby2ag_ini_la_LIBADD = @AGENT_LIBADD@

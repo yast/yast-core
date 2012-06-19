@@ -380,15 +380,6 @@ private:
      */
     int write_helper(IniSection&ini, ofstream&of,int depth);
 
-    /**
-     * Creates copy of the value. The result is shell safe.
-     */
-    string quote_value( const char * value) const;
-
-    /**
-     * Creates copy of the value. Removes quotes and escape sequences according shell rules.
-     */
-    string unquote_value( const char * value) const;
 public:
     /**
      * If Write (.s.section_name, nil) was called in multiple files mode,
