@@ -113,6 +113,11 @@ string unquote( const string & quoted_string)
         string substr;
         if( parse_quoted_string( sit, end, substr))
             res += substr;
+        else
+        {
+            res = "";
+            break;
+        }
         sit++;
     }
     return res;
