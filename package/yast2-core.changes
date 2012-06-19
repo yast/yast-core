@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Tue Jun 19 07:42:53 UTC 2012 - mfilka@suse.com
+
+- increase version 
+- added testcases
+- handling of escape sequences when quoting
+- enable quoting only for sysconfig files
+- 2.23.3
+
+-------------------------------------------------------------------
 Mon Jun 18 18:03:51 UTC 2012 - mfilka@suse.com
 
 - (un)quoting rewriten to C++ due to bnc#765519

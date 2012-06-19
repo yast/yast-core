@@ -4,18 +4,37 @@ using namespace std;
 
 string quote( const string & unquoted_string)
 {
-    string dest /*= "'"*/;
+    string dest;
+    string q;
 
-    for( string::const_iterator sit = unquoted_string.begin(); sit < unquoted_string.end(); sit++)
-        if( *sit == '\'')
-            dest += "'\\''";
-        else
-            dest += *sit;
+    for( string::const_iterator sit = unquoted_string.begin(); sit != unquoted_string.end(); sit++)
+    {
+        // try to resolve escape sequences here
+        // examle: a\ string != 'a\ string'
+        switch( *sit)
+        {
+            case ' ':
+                dest += *sit;
+                q = "'";
+                break;
 
-    if( dest != unquoted_string)
-        dest = "'" + dest + "'";
+            case '\\':
+                dest += *(++sit);
+                q = "'";
+                break;
 
-//    dest += "'";
+            case '\'':
+                dest += "'\\''";
+                q = "'";
+                break;
+
+            default:
+                dest += *sit;
+                break;
+        }
+    }
+
+    dest = q + dest + q;
 
     return dest;
 }
@@ -30,7 +49,7 @@ bool parse_quoted_string( string::const_iterator & sit, string::const_iterator l
 
     if( quote_char == '"')
     {
-        while( sit < last)
+        while( sit != last)
         {
             switch( *sit)
             {
@@ -62,7 +81,7 @@ bool parse_quoted_string( string::const_iterator & sit, string::const_iterator l
     }
     else
     {
-        while( sit < last)
+        while( sit != last)
         {
             if( *sit == '\'')
             {
@@ -85,27 +104,16 @@ string unquote( const string & quoted_string)
     string::const_iterator sit = quoted_string.begin();
     string::const_iterator end = quoted_string.end();
 
-    while( sit < end)
+    while( sit != end)
     {
-        while(  sit < end && 
+        while(  sit != end && 
                 *sit != '"' && 
                 *sit != '\'')
         {   
-/*
-            if( *sit == '\\')
-            {
-                if( *(++sit) != '\n')
-                    res += *sit;
-            }
-            else
-                res += *sit;
-
-            sit++;
-*/
             res += *(sit++);
         }
 
-        if( !( sit < end))
+        if( !( sit != end))
             break;
 
         string substr;
