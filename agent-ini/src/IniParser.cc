@@ -1062,7 +1062,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 			of << e.getComment();
 		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) 
                     {
-                        string val = quote( e.getValue());
+                        const string val = quote( e.getValue());
 			// bnc#492859, a fixed buffer is too small
 			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), val.c_str());
 			of << indent2 << out_buffer << "\n";

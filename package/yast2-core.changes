@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 18 12:23:51 UTC 2012 - mfilka@suse.com
+
+- (un)quoting rewriten to C++ due to bnc#765519
+- 2.23.2 
+
+-------------------------------------------------------------------
 Wed Jun 13 13:38:17 CEST 2012 - aschnell@suse.de
 
 - fixed UTF-8 handling of several string builtins (bnc#755414)

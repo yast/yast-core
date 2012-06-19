@@ -3,7 +3,7 @@
 
 #include <string>
 
-std::string quote( std::string & unquoted_string);
-std::string unquote( std::string & unquoted_string);
+std::string quote( const std::string & quoted_string);
+std::string unquote( const std::string & unquoted_string);
 
 #endif

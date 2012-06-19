@@ -2,17 +2,20 @@
 
 using namespace std;
 
-string quote( string & unquoted_string)
+string quote( const string & unquoted_string)
 {
-    string dest = "'";
+    string dest /*= "'"*/;
 
-    for( string::iterator sit = unquoted_string.begin(); sit < unquoted_string.end(); sit++)
+    for( string::const_iterator sit = unquoted_string.begin(); sit < unquoted_string.end(); sit++)
         if( *sit == '\'')
             dest += "'\\''";
         else
             dest += *sit;
 
-    dest += "'";
+    if( dest != unquoted_string)
+        dest = "'" + dest + "'";
+
+//    dest += "'";
 
     return dest;
 }
@@ -21,7 +24,7 @@ string quote( string & unquoted_string)
 // preconditions:
 // - starts with ['"]
 // - as a consequence: size > 0
-bool parse_quoted_string( string::iterator & sit, string::iterator last, string & ret)
+bool parse_quoted_string( string::const_iterator & sit, string::const_iterator last, string & ret)
 {
     char quote_char = *( sit++);
 
@@ -76,17 +79,19 @@ bool parse_quoted_string( string::iterator & sit, string::iterator last, string 
     return false;
 }
 
-string unquote( string & quoted_string)
+string unquote( const string & quoted_string)
 {
     string res;
-    string::iterator sit = quoted_string.begin();
+    string::const_iterator sit = quoted_string.begin();
+    string::const_iterator end = quoted_string.end();
 
-    while( sit < quoted_string.end())
+    while( sit < end)
     {
-        while(  sit < quoted_string.end() && 
+        while(  sit < end && 
                 *sit != '"' && 
                 *sit != '\'')
         {   
+/*
             if( *sit == '\\')
             {
                 if( *(++sit) != '\n')
@@ -96,13 +101,15 @@ string unquote( string & quoted_string)
                 res += *sit;
 
             sit++;
+*/
+            res += *(sit++);
         }
 
-        if( !( sit < quoted_string.end()))
+        if( !( sit < end))
             break;
 
         string substr;
-        if( parse_quoted_string( sit, quoted_string.end(), substr))
+        if( parse_quoted_string( sit, end, substr))
             res += substr;
         sit++;
     }
