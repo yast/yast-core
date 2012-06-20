@@ -4,7 +4,7 @@
     `IniAgent( "tests/shellquotes.in.test",
 	$[
 	    /* values at the top level, allow comments after value */
-	    "options"	: [ "global_values", "shell_quoted_value" ],
+	    "options"	: [ "global_values", "shell_quoted_value", "join_multiline" ],
 	    /* empty lines, comments after value and whole-line comments */
 	    "comments"	: [ "^[ \t]*$", "[ \t]*#.*$", "^[ \t]*#.*$" ],
 	    /* matching rules */

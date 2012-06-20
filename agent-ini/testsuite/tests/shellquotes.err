@@ -1,0 +1,1 @@
+[Interpreter] tests/shellquotes.ycp:XXX Unquoting error: Missing enclosing double quote. Unquoted value: <"invalid - unclosed>.

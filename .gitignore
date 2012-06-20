@@ -1,0 +1,16 @@
+*/testsuite/tmp.*
+*/*/*.o
+*/*/*.lo
+*/*/*.ybc
+*/*/*/*.ybc
+Makefile
+Makefile.in
+*/Makefile
+*/*/Makefile.in
+*/*/Makefile
+*/*/Makefile.in
+*/*/*/Makefile
+*/*/*/Makefile.in
+*/*/.*
+*/*/*.sw?
+config.h
