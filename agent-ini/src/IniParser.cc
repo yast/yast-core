@@ -25,7 +25,7 @@
 
 #include "IniParser.h"
 #include "IniFile.h"
-#include "glib/gshell.h"
+#include "quotes.h"
 
 IMPL_BASE_POINTER (Regex_t);
 
@@ -563,34 +563,6 @@ int IniParser::parse()
     return 0;
 }
 
-string IniParser::quote_value( const char * value) const
-{
-    if( !shell_quoted_value)
-        return string( value);
-
-    char * qstr = NULL;
-    qstr = YaST::g_shell_quote( value);
-    
-    string ret = qstr;
-    YaST::g_free( qstr);
-
-    return ret;
-}
-
-string IniParser::unquote_value( const char * value) const
-{
-    if( !shell_quoted_value)
-        return string( value);
-
-    char * ustr = NULL;
-    ustr = YaST::g_shell_unquote( value);
-    
-    string ret = ustr;
-    YaST::g_free( ustr);
-
-    return ret;
-}
-
 int IniParser::parse_helper(IniSection&ini)
 {
     string comment = "";
@@ -662,12 +634,12 @@ int IniParser::parse_helper(IniSection&ini)
 				    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 				else
                                 {
-				    ini.initValue (key, unquote_value( val.c_str()), comment, matched_by);
+				    ini.initValue (key, shell_quoted_value ? unquote( val) : val, comment, matched_by);
                                 }
 			    }
 			else 
                         {
-			    open_sections.front()->initValue(key, unquote_value( val.c_str()), comment, matched_by);
+			    open_sections.front()->initValue(key, shell_quoted_value ? unquote( val) : val, comment, matched_by);
 			}
 			comment = "";
 		    }
@@ -837,12 +809,12 @@ int IniParser::parse_helper(IniSection&ini)
 					    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 					else
                                         {
-					    ini.initValue (key, unquote_value( val.c_str()), comment, i);
+					    ini.initValue (key, shell_quoted_value ? unquote( val) : val, comment, i);
                                         }
 				    }
 				else
 				    {
-					open_sections.front()->initValue(key, unquote_value( val.c_str()), comment, i);
+					open_sections.front()->initValue(key, shell_quoted_value ?unquote( val) : val, comment, i);
 				    }
 				comment = "";
 			    }
@@ -1090,8 +1062,9 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 			of << e.getComment();
 		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) 
                     {
+                        const string val = shell_quoted_value ? quote( e.getValue()) : e.getValue();
 			// bnc#492859, a fixed buffer is too small
-			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), quote_value( e.getValue()).c_str());
+			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), val.c_str());
 			of << indent2 << out_buffer << "\n";
 			free(out_buffer);
 		    }
