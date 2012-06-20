@@ -32,6 +32,7 @@
 
 #include "quotes.h"
 #include <ycp/y2log.h>
+#include <stdexcept>
 
 using namespace std;
 
@@ -52,14 +53,16 @@ string quote( const string & unquoted_string)
     return dest;
 }
 
-bool parse_dquoted_string( string::const_iterator & sit, const string::const_iterator & last, string & ret)
+string parse_dquoted_string( string::const_iterator & sit, const string::const_iterator & last)
 {
+    string ret;
+
     while( sit != last)
     {
         switch( *sit)
         {
             case '"':
-                return true;
+                return ret;
 
             case '\\':
                 switch( *(++sit))
@@ -85,16 +88,19 @@ bool parse_dquoted_string( string::const_iterator & sit, const string::const_ite
         }
     }
 
-    return false;
+    throw invalid_argument( "Missing enclosing dquote.");
+    return "";
 }
 
-bool parse_squoted_string( string::const_iterator & sit, const string::const_iterator & last, string & ret)
+string parse_squoted_string( string::const_iterator & sit, const string::const_iterator & last)
 {
+    string ret;
+
     while( sit != last)
     {
         if( *sit == '\'')
         {
-            return true;
+            return ret;
         }
         else
         {
@@ -102,7 +108,8 @@ bool parse_squoted_string( string::const_iterator & sit, const string::const_ite
         }
     }
 
-    return false;
+    throw invalid_argument( "Missing enclosing squote.");
+    return "";
 }
 
 /*
@@ -114,11 +121,11 @@ bool parse_squoted_string( string::const_iterator & sit, const string::const_ite
  * - starts with ['"] 
  * - as a consequence: size > 0
  */
-bool parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last, string & ret)
+string parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last)
 {
     char quote_char = *( sit++);
 
-    return quote_char == '"' ? parse_dquoted_string( sit, last, ret) : parse_squoted_string( sit, last, ret);
+    return quote_char == '"' ? parse_dquoted_string( sit, last) : parse_squoted_string( sit, last);
 }
 
 string unquote( const string & quoted_string)
@@ -127,35 +134,34 @@ string unquote( const string & quoted_string)
     string::const_iterator sit = quoted_string.begin();
     string::const_iterator end = quoted_string.end();
 
-    while( sit != end)
+    try
     {
-        while(  sit != end && 
-                *sit != '"' && 
-                *sit != '\'')
-        {   
-            if( *sit == '\\')
-            {
-                if( ++sit == end)
-                    return res;
+        while( sit != end)
+        {
+            while(  sit != end && 
+                    *sit != '"' && 
+                    *sit != '\'')
+            {   
+                if( *sit == '\\')
+                {
+                    if( ++sit == end)
+                        return res;
+                }
+                res += *(sit++);
             }
-            res += *(sit++);
-        }
 
-        if( !( sit != end))
-            break;
+            if( !( sit != end))
+                break;
 
-        string substr;
-        if( parse_quoted_string( sit, end, substr))
-        {
-            res += substr;
+            res += parse_quoted_string( sit, end);
+            sit++;
         }
-        else
-        {
-            res = "";
-            ycp2error( "Unquoting error: missing closing quote. Unquoted value: <%s>.", quoted_string.c_str());
-            break;
-        }
-        sit++;
     }
+    catch( invalid_argument &ia)
+    {
+        res = "";
+        ycp2error( "Unquoting error: %s Unquoted value: <%s>.", ia.what(), quoted_string.c_str());
+    }
+
     return res;
 }
