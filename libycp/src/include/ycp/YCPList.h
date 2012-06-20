@@ -112,6 +112,12 @@ public:
     void remove(const int n);
 
     /**
+     * Reverses the elements in the list. This function
+     * changes the list.
+     */
+    void reverse();
+
+    /**
      * Exchanges the elements at the indices x and y. This function
      * changes the list.
      */
@@ -248,6 +254,7 @@ public:
     void push_back(const YCPValue& value) { ELEMENT->push_back(value); }
     void set(const int n, const YCPValue& value) { ELEMENT->set (n, value); }
     void remove(const int n) { ELEMENT->remove (n); }
+    void reverse() { ELEMENT->reverse(); }
     void swap(int x, int y) { ELEMENT->swap (x, y); }
     bool contains (const YCPValue& value) const { return CONST_ELEMENT->contains (value); }
     void sortlist() { ELEMENT->sortlist (); }

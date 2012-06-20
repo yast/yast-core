@@ -1,0 +1,9 @@
+site.exp
+*.sum
+*.log
+*.prg
+tmp.out*
+tmp.err*
+tmp.log*
+test_Y2SLog
+test_strutil
