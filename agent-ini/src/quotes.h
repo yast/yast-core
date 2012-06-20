@@ -36,7 +36,14 @@
 
 #include <string>
 
+/*
+ * Enclose given string into quotes to get bash ready string.
+ */
 std::string quote( const std::string & quoted_string);
+
+/*
+ * Removes quotes and escape sequences according bash rules.
+ */
 std::string unquote( const std::string & unquoted_string);
 
 #endif

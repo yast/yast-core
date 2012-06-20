@@ -105,15 +105,19 @@ bool parse_squoted_string( string::const_iterator & sit, const string::const_ite
     return false;
 }
 
-// helper
-// preconditions:
-// - starts with ['"]
-// - as a consequence: size > 0
+/*
+ * helper which parses one quoted block.
+ * example:
+ * "string" -> string
+ *
+ * preconditions:
+ * - starts with ['"] 
+ * - as a consequence: size > 0
+ */
 bool parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last, string & ret)
 {
     char quote_char = *( sit++);
 
-    // missing closing quote
     return quote_char == '"' ? parse_dquoted_string( sit, last, ret) : parse_squoted_string( sit, last, ret);
 }
 
