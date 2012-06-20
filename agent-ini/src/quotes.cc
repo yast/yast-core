@@ -65,7 +65,7 @@ string parse_dquoted_string( string::const_iterator & sit, const string::const_i
                 return ret;
 
             case '\\':
-                if( sit == last)
+                if( sit +1 == last)
                     break;
 
                 switch( *(++sit))
@@ -75,8 +75,7 @@ string parse_dquoted_string( string::const_iterator & sit, const string::const_i
                     case '`':
                     case '$':
                     case '\n':
-                        if( sit != last)
-                            ret += *(sit++);
+                        ret += *(sit++);
                         break;
 
                     default:
