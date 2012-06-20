@@ -31,6 +31,7 @@
  */
 
 #include "quotes.h"
+#include <ycp/y2log.h>
 
 using namespace std;
 
@@ -141,10 +142,13 @@ string unquote( const string & quoted_string)
 
         string substr;
         if( parse_quoted_string( sit, end, substr))
+        {
             res += substr;
+        }
         else
         {
             res = "";
+            ycp2error( "Unquoting error: missing closing quote. Unquoted value: <%s>.", quoted_string.c_str());
             break;
         }
         sit++;
