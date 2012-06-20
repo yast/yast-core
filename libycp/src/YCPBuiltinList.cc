@@ -1225,8 +1225,6 @@ l_reverselist (const YCPList &v){
      * @id list.reverse
      * @short Creates new list with reversed order of elements.
      * @param list<flex1> v list
-     * @param integer i1 index of first element
-     * @param integer i2 index of second element
      * @return New list. Changed if offset is correct, otherwise return unchanged list 
      *
      * @description
