@@ -65,6 +65,9 @@ string parse_dquoted_string( string::const_iterator & sit, const string::const_i
                 return ret;
 
             case '\\':
+                if( sit == last)
+                    break;
+
                 switch( *(++sit))
                 {
                     case '"':
@@ -72,8 +75,7 @@ string parse_dquoted_string( string::const_iterator & sit, const string::const_i
                     case '`':
                     case '$':
                     case '\n':
-                        if( sit != last)
-                            ret += *(sit++);
+                        ret += *(sit++);
                         break;
 
                     default:
@@ -88,7 +90,7 @@ string parse_dquoted_string( string::const_iterator & sit, const string::const_i
         }
     }
 
-    throw invalid_argument( "Missing enclosing dquote.");
+    throw invalid_argument( "Missing enclosing double quote.");
     return "";
 }
 
@@ -108,7 +110,7 @@ string parse_squoted_string( string::const_iterator & sit, const string::const_i
         }
     }
 
-    throw invalid_argument( "Missing enclosing squote.");
+    throw invalid_argument( "Missing enclosing single quote.");
     return "";
 }
 
