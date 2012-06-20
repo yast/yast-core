@@ -152,7 +152,7 @@ string unquote( const string & quoted_string)
                 res += *(sit++);
             }
 
-            if( !( sit != end))
+            if( sit == end)
                 break;
 
             res += parse_quoted_string( sit, end);
