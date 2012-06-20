@@ -1225,7 +1225,7 @@ l_reverselist (const YCPList &v){
      * @id list.reverse
      * @short Creates new list with reversed order of elements.
      * @param list<flex1> v list
-     * @return New list. Changed if offset is correct, otherwise return unchanged list 
+     * @return New reversed list. 
      *
      * @description
      * Creates new list with reversed order of elements. Return nil if list is nil. 
