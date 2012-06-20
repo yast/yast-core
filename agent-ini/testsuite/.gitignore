@@ -1,0 +1,7 @@
+runag_ini
+site.*
+*.log
+*.sum
+tmp.*
+runini
+.*.swp
