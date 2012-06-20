@@ -1,0 +1,16 @@
+# ---------------------------------------------------------
+#
+#  Filename:    revlist.ycp
+#
+#  Purpose:     test cases for YCP list::reverse builtin
+#
+#  Creator:     fehr@suse.de
+#
+#  Maintainer:  fehr@suse.de
+#
+# --------------------------------------------------------
+
+(list::reverse([0,1,2,3]))
+(list::reverse([0]))
+(list::reverse([]))
+(list::reverse(nil))

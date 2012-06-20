@@ -1173,7 +1173,7 @@ l_swaplist (const YCPList &v, YCPInteger &i1, YCPInteger &i2){
     /**
      * @builtin list::swap
      * @id list.swap
-     * @short Creates new list with swaped elemetns at offset i1 and i2.
+     * @short Creates new list with swaped elements at offset i1 and i2.
      * @param list<flex1> v list
      * @param integer i1 index of first element
      * @param integer i2 index of second element
@@ -1215,6 +1215,34 @@ l_swaplist (const YCPList &v, YCPInteger &i1, YCPInteger &i2){
     }
     
     ret->swap(it1,it2);
+    return ret;
+}
+
+static YCPValue
+l_reverselist (const YCPList &v){
+    /**
+     * @builtin list::reverse
+     * @id list.reverse
+     * @short Creates new list with reversed order of elements.
+     * @param list<flex1> v list
+     * @param integer i1 index of first element
+     * @param integer i2 index of second element
+     * @return New list. Changed if offset is correct, otherwise return unchanged list 
+     *
+     * @description
+     * Creates new list with reversed order of elements. Return nil if list is nil. 
+     *
+     * @usage list::reverse ([0,1,2,3]) -> [3,2,1,0]
+     * @usage list::reverse ([]) -> []
+     */
+    if (v.isNull ())
+    {
+	ycp2error ("Cannot reverse 'nil' list");
+	return YCPNull ();
+    }
+
+    YCPList ret = v;
+    ret->reverse();
     return ret;
 }
 
@@ -1289,6 +1317,7 @@ YCPBuiltinList::YCPBuiltinList ()
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex1>, const list <flex1>, const block <flex1>)",  (void *)l_reduce1, DECL_LOOP|DECL_SYMBOL|DECL_FLEX, ETCf },
 	{ "reduce",	"flex1 (variable <flex1>, variable <flex2>, const flex1, const list <flex2>, const block <flex1>)", (void *)l_reduce2, DECL_LOOP|DECL_SYMBOL|DECL_FLEX, ETCf },
 	{ "swap",	"list <flex> (const list <flex>, const integer, const integer)",			(void *)l_swaplist,	DECL_FLEX, ETCf },
+	{ "reverse",	"list <flex> (const list <flex>)",	(void *)l_reverselist,	DECL_FLEX, ETCf },
 	{ NULL, NULL, NULL, ETC }
     };
 
