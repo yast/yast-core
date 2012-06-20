@@ -98,6 +98,12 @@ YCPListRep::remove (const int n)
 
 
 void
+YCPListRep::reverse()
+{
+    std::reverse(elements.begin(), elements.end());
+}
+
+void
 YCPListRep::swap (int x, int y)
 {
     // FIXME: should produce a warning
