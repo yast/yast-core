@@ -48,10 +48,10 @@ using namespace std;
         } while (0)
 #endif
 
-namespace Shell
+namespace YaST
 {
 
-    string quote( const string & unquoted_string)
+    string shell_quote( const string & unquoted_string)
     {
         string dest = "'";
 
@@ -145,7 +145,7 @@ namespace Shell
         return quote_char == '"' ? parse_dquoted_string( sit, last) : parse_squoted_string( sit, last);
     }
 
-    string unquote( const string & quoted_string)
+    string shell_unquote( const string & quoted_string)
     {
         string res;
         string::const_iterator sit = quoted_string.begin();

@@ -36,18 +36,18 @@
 
 #include <string>
 
-namespace Shell
+namespace YaST
 {
 
     /*
      * Enclose given string into quotes to get bash ready string.
      */
-    std::string quote( const std::string & quoted_string);
+    std::string shell_quote( const std::string & quoted_string);
 
     /*
      * Removes quotes and escape sequences according bash rules.
      */
-    std::string unquote( const std::string & unquoted_string);
+    std::string shell_unquote( const std::string & unquoted_string);
 
 }
 

@@ -634,12 +634,12 @@ int IniParser::parse_helper(IniSection&ini)
 				    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 				else
                                 {
-				    ini.initValue (key, shell_quoted_value ? Shell::unquote( val) : val, comment, matched_by);
+				    ini.initValue (key, shell_quoted_value ? YaST::shell_unquote( val) : val, comment, matched_by);
                                 }
 			    }
 			else 
                         {
-			    open_sections.front()->initValue(key, shell_quoted_value ? Shell::unquote( val) : val, comment, matched_by);
+			    open_sections.front()->initValue(key, shell_quoted_value ? YaST::shell_unquote( val) : val, comment, matched_by);
 			}
 			comment = "";
 		    }
@@ -809,12 +809,12 @@ int IniParser::parse_helper(IniSection&ini)
 					    scanner_error ("%s: values at the top level not allowed.", key.c_str ());
 					else
                                         {
-					    ini.initValue (key, shell_quoted_value ? Shell::unquote( val) : val, comment, i);
+					    ini.initValue (key, shell_quoted_value ? YaST::shell_unquote( val) : val, comment, i);
                                         }
 				    }
 				else
 				    {
-					open_sections.front()->initValue(key, shell_quoted_value ? Shell::unquote( val) : val, comment, i);
+					open_sections.front()->initValue(key, shell_quoted_value ? YaST::shell_unquote( val) : val, comment, i);
 				    }
 				comment = "";
 			    }
@@ -1062,7 +1062,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 			of << e.getComment();
 		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) 
                     {
-                        const string val = shell_quoted_value ? Shell::quote( e.getValue()) : e.getValue();
+                        const string val = shell_quoted_value ? YaST::shell_quote( e.getValue()) : e.getValue();
 			// bnc#492859, a fixed buffer is too small
 			asprintf (&out_buffer, params[e.getReadBy ()].line.out.c_str (), e.getName(), val.c_str());
 			of << indent2 << out_buffer << "\n";
