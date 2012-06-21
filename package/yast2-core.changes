@@ -1,9 +1,13 @@
 -------------------------------------------------------------------
+Thu Jun 21 07:03:03 UTC 2012 - mfilka@suse.com
+
+- enclosed (un)quoting functions into namespace 
+
+-------------------------------------------------------------------
 Tue Jun 19 07:42:53 UTC 2012 - mfilka@suse.com
 
 - increase version 
-- added testcases
-- handling of escape sequences when quoting
+- added testcases, logging
 - enable quoting only for sysconfig files
 - 2.23.3
 
