@@ -36,134 +36,151 @@
 
 using namespace std;
 
-string quote( const string & unquoted_string)
-{
-    string dest = "'";
+// y2log binding is not namespace ready, so an ugly hack follows.
+#ifdef ycp2error
+#   undef ycp2error
 
-    for( string::const_iterator sit = unquoted_string.begin(); sit != unquoted_string.end(); sit++)
+    extern ExecutionEnvironment ee; 
+
+#   define ycp2error(format,args...)               \
+        do {                                        \
+            y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);       \ 
+        } while (0)
+#endif
+
+namespace YaST
+{
+
+    string shell_quote( const string & unquoted_string)
     {
-        if( *sit == '\'')
-            dest += "'\\''";
-        else
-            dest += *sit;
+        string dest = "'";
+
+        for( string::const_iterator sit = unquoted_string.begin(); sit != unquoted_string.end(); sit++)
+        {
+            if( *sit == '\'')
+                dest += "'\\''";
+            else
+                dest += *sit;
+        }
+
+        dest += "'";
+
+        return dest;
     }
 
-    dest += "'";
-
-    return dest;
-}
-
-string parse_dquoted_string( string::const_iterator & sit, const string::const_iterator & last)
-{
-    string ret;
-
-    while( sit != last)
+    static string parse_dquoted_string( string::const_iterator & sit, const string::const_iterator & last)
     {
-        switch( *sit)
-        {
-            case '"':
-                return ret;
+        string ret;
 
-            case '\\':
-                if( sit +1 == last)
+        while( sit != last)
+        {
+            switch( *sit)
+            {
+                case '"':
+                    return ret;
+
+                case '\\':
+                    if( sit +1 == last)
+                        break;
+
+                    switch( *(++sit))
+                    {
+                        case '"':
+                        case '\\':
+                        case '`':
+                        case '$':
+                        case '\n':
+                            ret += *(sit++);
+                            break;
+
+                        default:
+                            ret += '\\';
+                            break;
+                    }
                     break;
 
-                switch( *(++sit))
-                {
-                    case '"':
-                    case '\\':
-                    case '`':
-                    case '$':
-                    case '\n':
-                        ret += *(sit++);
-                        break;
-
-                    default:
-                        ret += '\\';
-                        break;
-                }
-                break;
-
-            default:
-                ret += *(sit++);
-                break;
-        }
-    }
-
-    throw invalid_argument( "Missing enclosing double quote.");
-    return "";
-}
-
-string parse_squoted_string( string::const_iterator & sit, const string::const_iterator & last)
-{
-    string ret;
-
-    while( sit != last)
-    {
-        if( *sit == '\'')
-        {
-            return ret;
-        }
-        else
-        {
-            ret += *(sit++);
-        }
-    }
-
-    throw invalid_argument( "Missing enclosing single quote.");
-    return "";
-}
-
-/*
- * helper which parses one quoted block.
- * example:
- * "string" -> string
- *
- * preconditions:
- * - starts with ['"] 
- * - as a consequence: size > 0
- */
-string parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last)
-{
-    char quote_char = *( sit++);
-
-    return quote_char == '"' ? parse_dquoted_string( sit, last) : parse_squoted_string( sit, last);
-}
-
-string unquote( const string & quoted_string)
-{
-    string res;
-    string::const_iterator sit = quoted_string.begin();
-    string::const_iterator end = quoted_string.end();
-
-    try
-    {
-        while( sit != end)
-        {
-            while(  sit != end && 
-                    *sit != '"' && 
-                    *sit != '\'')
-            {   
-                if( *sit == '\\')
-                {
-                    if( ++sit == end)
-                        return res;
-                }
-                res += *(sit++);
+                default:
+                    ret += *(sit++);
+                    break;
             }
-
-            if( sit == end)
-                break;
-
-            res += parse_quoted_string( sit, end);
-            sit++;
         }
-    }
-    catch( invalid_argument &ia)
-    {
-        res = "";
-        ycp2error( "Unquoting error: %s Unquoted value: <%s>.", ia.what(), quoted_string.c_str());
+
+        throw invalid_argument( "Missing enclosing double quote.");
+        return "";
     }
 
-    return res;
+    static string parse_squoted_string( string::const_iterator & sit, const string::const_iterator & last)
+    {
+        string ret;
+
+        while( sit != last)
+        {
+            if( *sit == '\'')
+            {
+                return ret;
+            }
+            else
+            {
+                ret += *(sit++);
+            }
+        }
+
+        throw invalid_argument( "Missing enclosing single quote.");
+        return "";
+    }
+
+    /*
+     * helper which parses one quoted block.
+     * example:
+     * "string" -> string
+     *
+     * preconditions:
+     * - starts with ['"] 
+     * - as a consequence: size > 0
+     */
+    static string parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last)
+    {
+        char quote_char = *( sit++);
+
+        return quote_char == '"' ? parse_dquoted_string( sit, last) : parse_squoted_string( sit, last);
+    }
+
+    string shell_unquote( const string & quoted_string)
+    {
+        string res;
+        string::const_iterator sit = quoted_string.begin();
+        string::const_iterator end = quoted_string.end();
+
+        try
+        {
+            while( sit != end)
+            {
+                while(  sit != end && 
+                        *sit != '"' && 
+                        *sit != '\'')
+                {   
+                    if( *sit == '\\')
+                    {
+                        if( ++sit == end)
+                            return res;
+                    }
+                    res += *(sit++);
+                }
+
+                if( sit == end)
+                    break;
+
+                res += parse_quoted_string( sit, end);
+                sit++;
+            }
+        }
+        catch( invalid_argument &ia)
+        {
+            res = "";
+            ycp2error( "Unquoting error: %s Unquoted value: <%s>.", ia.what(), quoted_string.c_str());
+        }
+
+        return res;
+    }
+
 }
