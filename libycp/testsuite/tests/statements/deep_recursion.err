@@ -13,7 +13,7 @@ else
     return Multiply (10000, 42);
 }
 ----------------------------------------------------------------------
-[libycp] ExecutionEnvironment.cc(endlessRecursion):96 Recursion limit of 1001 call frames reached. Set the environment variable Y2RECURSIONLIMIT to change this
+[libycp] ExecutionEnvironment.cc(endlessRecursion):99 Recursion limit of 1001 call frames reached. Set the environment variable Y2RECURSIONLIMIT to change this
 [Interpreter] tests/statements/deep_recursion.ycp:5 Returning nil instead of calling the function.
 [Interpreter] tests/statements/deep_recursion.ycp:5 Argument (Multiply ((a - 1), b)) to +(...) evaluates to nil
 [Interpreter] tests/statements/deep_recursion.ycp:5 Argument (Multiply ((a - 1), b)) to +(...) evaluates to nil

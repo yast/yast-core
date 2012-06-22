@@ -29,7 +29,6 @@
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentCreator.h>
 
-extern ExecutionEnvironment ee;
 
 class TestY2Component : public Y2Component {
     virtual Y2Namespace *import (const char* name)
@@ -171,7 +170,7 @@ main (int argc, const char *argv[])
     if (make_depends)
 	parser->setDepends();
 	
-    ee.setFilename (string (fname));
+    YaST::ee.setFilename(string(fname));
 
     YCodePtr code = 0;
 

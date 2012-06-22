@@ -24,7 +24,6 @@
 #include "ycp/Xmlcode.h"
 #include "ycp/ExecutionEnvironment.h"
 
-extern ExecutionEnvironment ee;
 
 // YCPMapRep
 

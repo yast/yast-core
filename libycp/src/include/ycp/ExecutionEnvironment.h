@@ -26,6 +26,9 @@
 
 using namespace std;
 
+namespace YaST
+{
+
 /// Function and source location, for backtraces
 struct CallFrame {
     YECallPtr function;
@@ -136,5 +139,9 @@ public:
      **/
     CallStack callstack() const;
 };
+
+
+    extern ExecutionEnvironment ee;
+}
 
 #endif /* _execution_environment_h */

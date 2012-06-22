@@ -22,7 +22,6 @@
 #include "ycp/Bytecode.h"
 #include "ycp/ExecutionEnvironment.h"
 
-extern ExecutionEnvironment ee;
 
 // YCPExternalRep
 

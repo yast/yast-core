@@ -45,7 +45,6 @@
 
 #include <Debugger.h>
 
-extern ExecutionEnvironment ee;
 extern Debugger* debugger_instance;
 
 // ------------------------------------------------------------------
@@ -599,8 +598,8 @@ YBlock::evaluate (bool cse)
     string restore_name;
     if (!filename().empty())
     {
-	restore_name = ee.filename ();
-	ee.setFilename (filename());
+	restore_name = YaST::ee.filename();
+	YaST::ee.setFilename(filename());
     }
 
     stmtlist_t *stmt = m_statements;
@@ -612,7 +611,7 @@ YBlock::evaluate (bool cse)
 #if DO_DEBUG
 	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
 #endif
-	ee.setStatement (statement);
+	YaST::ee.setStatement(statement);
 
 	if (m_debug && statement->kind() != ysFunction )
 	{
@@ -655,7 +654,7 @@ YBlock::evaluate (bool cse)
     }
     if (!restore_name.empty())
     {
-	ee.setFilename (restore_name);
+	YaST::ee.setFilename(restore_name);
     }
     
     m_running = old_m_running;
@@ -708,8 +707,8 @@ YBlock::evaluateFrom (int statement_index)
     string restore_name;
     if (!filename().empty())
     {
-	restore_name = ee.filename ();
-	ee.setFilename (filename());
+	restore_name = YaST::ee.filename();
+	YaST::ee.setFilename(filename());
     }
 
     stmtlist_t *stmt = m_statements;
@@ -731,8 +730,8 @@ YBlock::evaluateFrom (int statement_index)
 	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
 #endif
 
-	ee.setStatement (statement);
-	value = statement->evaluate ();
+	YaST::ee.setStatement(statement);
+	value = statement->evaluate();
 
 	if (!value.isNull())
 	{
@@ -746,7 +745,7 @@ YBlock::evaluateFrom (int statement_index)
     }
     if (!restore_name.empty())
     {
-	ee.setFilename (restore_name);
+	YaST::ee.setFilename(restore_name);
     }
     
     m_running = old_m_running;

@@ -358,11 +358,9 @@ Y2Log (loglevel_t level, const YCPString & format, const YCPList & args)
 	return YCPNull ();
     }
 
-    extern ExecutionEnvironment ee;
-
     // The "" is a function name. TODO.  It will be useful but may
     // break ycp testsuites. Maybe it's the right time to do it.
-    ycp2log (level, ee.filename().c_str(), ee.linenumber(), "", "%s", arg->asString ()->value ().c_str ());
+    ycp2log(level, YaST::ee.filename().c_str(), YaST::ee.linenumber(), "", "%s", arg->asString()->value().c_str());
     return YCPVoid ();
 }
 
@@ -505,7 +503,6 @@ Y2FDebug (const YCPInteger & f, const YCPString & format, const YCPList & args)
 
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -513,7 +510,7 @@ Y2FDebug (const YCPInteger & f, const YCPString & format, const YCPList & args)
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_DEBUG, 0);
+	YaST::ee.backtrace(LOG_DEBUG, 0);
     }
 
     return YCPVoid ();
@@ -524,7 +521,6 @@ Y2FMilestone (const YCPInteger & f, const YCPString & format, const YCPList & ar
 {
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -532,7 +528,7 @@ Y2FMilestone (const YCPInteger & f, const YCPString & format, const YCPList & ar
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_MILESTONE, 0);
+	YaST::ee.backtrace(LOG_MILESTONE, 0);
     }
 
     return YCPVoid ();
@@ -543,7 +539,6 @@ Y2FWarning (const YCPInteger & f, const YCPString & format, const YCPList & args
 {
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -551,7 +546,7 @@ Y2FWarning (const YCPInteger & f, const YCPString & format, const YCPList & args
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_WARNING, 0);
+	YaST::ee.backtrace(LOG_WARNING, 0);
     }
 
     return YCPVoid ();
@@ -562,7 +557,6 @@ Y2FError (const YCPInteger & f, const YCPString & format, const YCPList & args)
 {
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -570,7 +564,7 @@ Y2FError (const YCPInteger & f, const YCPString & format, const YCPList & args)
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_ERROR, 0);
+	YaST::ee.backtrace(LOG_ERROR, 0);
     }
 
     return YCPVoid ();
@@ -581,7 +575,6 @@ Y2FSecurity (const YCPInteger & f, const YCPString & format, const YCPList & arg
 {
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -589,7 +582,7 @@ Y2FSecurity (const YCPInteger & f, const YCPString & format, const YCPList & arg
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_SECURITY, 0);
+	YaST::ee.backtrace(LOG_SECURITY, 0);
     }
 
     return YCPVoid ();
@@ -600,7 +593,6 @@ Y2FInternal (const YCPInteger & f, const YCPString & format, const YCPList & arg
 {
   // FIXME: positive: pretend one of our callers invoked the log
   // negative: print backtrace
-    extern ExecutionEnvironment ee;
 
     int frame = f->value ();
   
@@ -608,7 +600,7 @@ Y2FInternal (const YCPInteger & f, const YCPString & format, const YCPList & arg
 
     if (frame < 0)
     {
-	ee.backtrace (LOG_INTERNAL, 0);
+	YaST::ee.backtrace(LOG_INTERNAL, 0);
     }
 
     return YCPVoid ();

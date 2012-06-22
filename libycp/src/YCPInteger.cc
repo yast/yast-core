@@ -23,7 +23,6 @@
 #include "ycp/Bytecode.h"
 #include "ycp/ExecutionEnvironment.h"
 
-extern ExecutionEnvironment ee;
 
 // YCPIntegerRep
 
@@ -56,7 +55,7 @@ YCPIntegerRep::YCPIntegerRep(const char *r, bool *valid)
 
     if (converted != 1)
     {
-        ycp2warning (ee.filename().c_str(), ee.linenumber(), "Cannot convert '%s' to an integer", r);
+        ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Cannot convert '%s' to an integer", r);
         v = 0;
     }
 }

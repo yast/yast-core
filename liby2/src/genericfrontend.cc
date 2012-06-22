@@ -117,7 +117,12 @@ const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = {
 };
 
 using std::string;
-ExecutionEnvironment ee;
+
+namespace YaST
+{
+    ExecutionEnvironment ee;
+}
+
 Debugger *debugger_instance;
 
 /// fallback name of the program
@@ -242,7 +247,7 @@ signal_handler (int sig)
     char buffer[200];
     int n = snprintf (buffer, sizeof(buffer),
 		      "YaST got signal %d at YCP file %s:%d\n",
-		      sig, ee.filename ().c_str (), ee.linenumber ());
+		      sig, YaST::ee.filename().c_str(), YaST::ee.linenumber());
     if (n >= (int)sizeof(buffer) || n < 0)
 	strcpy (buffer, "YaST got a signal.\n");
     signal_log_to_fd (STDERR_FILENO, buffer);
