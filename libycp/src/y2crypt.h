@@ -13,11 +13,14 @@
 
 using std::string;
 
+namespace YaST
+{
 
 enum crypt_t { CRYPT, MD5, BLOWFISH, SHA256, SHA512 };
 
 bool
 crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted);
 
+}
 
 #endif

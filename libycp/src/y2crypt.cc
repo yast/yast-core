@@ -28,6 +28,8 @@ extern "C" {
 #include "y2log.h"
 #include "y2crypt.h"
 
+namespace YaST
+{
 
 static int
 read_loop (int fd, char* buffer, int count)
@@ -181,4 +183,6 @@ crypt_pass (string unencrypted, crypt_t use_crypt, string* encrypted)
 
     *encrypted = string (newencrypted);
     return true;
+}
+
 }
