@@ -55,8 +55,8 @@ ExecutionEnvironment::setLinenumber (int line)
 }
 
 
-const string 
-ExecutionEnvironment::filename () const
+const string&
+ExecutionEnvironment::filename() const
 {
     return m_filename;
 }

@@ -36,12 +36,9 @@ struct CallFrame {
     int linenumber;
     YCPValue* params;
 
-    CallFrame (string f, int l, YECallPtr func, YCPValue* p):
-        function (func),
-        filename (f),
-        linenumber (l)
+    CallFrame(const string& f, int l, YECallPtr func, YCPValue* p)
+	: function(func), filename(f), linenumber(l), params(p)
     {
-	params = p;
     }
 };
 
@@ -88,7 +85,7 @@ public:
     /**
      * Get the current file name.
      */
-    const string filename () const;
+    const string& filename() const;
 
     /**
      * Set the current file name for error outputs.
