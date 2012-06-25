@@ -41,7 +41,6 @@
 #include "Y2WFMComponent.h"
 #include "Y2SystemNamespace.h"
 
-extern ExecutionEnvironment ee;
 
 Y2WFMComponent* Y2WFMComponent::current_wfm = 0;
 
@@ -716,15 +715,15 @@ Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
     Y2Component* client_comp = Y2ComponentBroker::createClient (new_modulename.c_str ());
     if (client_comp)
     {
-	string filename = ee.filename ();
-	int linenumber = ee.linenumber ();
+	string filename = YaST::ee.filename();
+	int linenumber = YaST::ee.linenumber();
 	ycp2milestone (filename.c_str(), linenumber,
 		       "Calling YaST client %s", new_modulename.c_str ());
 	ycp2debug (filename.c_str(), linenumber,
 		       "(arguments: %s)", args->toString ().c_str ());
 	YCPValue result = client_comp->doActualWork (args, NULL);
-	ee.setFilename (filename);
-	ee.setLinenumber (linenumber);
+	YaST::ee.setFilename(filename);
+	YaST::ee.setLinenumber(linenumber);
 	ycp2milestone (filename.c_str(), linenumber, "Called YaST client returned.");
 	// some clients return plaintext secrets #248300
 	ycp2debug (filename.c_str(), linenumber,

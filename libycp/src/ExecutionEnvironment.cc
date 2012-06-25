@@ -18,9 +18,15 @@
 
 #include "ycp/y2log.h"
 
+namespace YaST
+{
+
 // the number of call frames to show warning at
 #define WARN_RECURSION 1001
 static const char * Y2RECURSIONLIMIT = "Y2RECURSIONLIMIT";
+
+
+    ExecutionEnvironment ee;
 
 
 ExecutionEnvironment::ExecutionEnvironment ()
@@ -52,8 +58,8 @@ ExecutionEnvironment::setLinenumber (int line)
 }
 
 
-const string 
-ExecutionEnvironment::filename () const
+const string&
+ExecutionEnvironment::filename() const
 {
     return m_filename;
 }
@@ -146,6 +152,8 @@ ExecutionEnvironment::CallStack ExecutionEnvironment::callstack() const
 {
     // backtrace( LOG_MILESTONE, 0 );
     return m_backtrace;
+}
+
 }
 
 /* EOF */

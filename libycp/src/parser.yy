@@ -162,9 +162,6 @@ static void i_check_void_assign (YYSTYPE *lhs, YYSTYPE *rhs, Parser *parser);
 // for unary and binary operators
 extern StaticDeclaration static_declarations;
 
-// for logging
-extern ExecutionEnvironment ee;
-
 /*
  * DO NOT USE static or global variables!
  * They make the parser non-reentrant. You need to put them into class Parser.
@@ -1542,8 +1539,8 @@ statement:
 			break;
 		    }
 
-		    ee.setLinenumber ($1.l);			// if YSImport logs an error
-		    ee.setFilename (p_parser->scanner ()->filename ());
+		    YaST::ee.setLinenumber($1.l);			// if YSImport logs an error
+		    YaST::ee.setFilename(p_parser->scanner()->filename());
 		    YSImportPtr imp = new YSImport (module, $1.l);
 		    if (imp->name().empty())
 		    {
@@ -2285,7 +2282,7 @@ definition:
 		    }
 		    else if (match > 0)		// propagated match
 		    {
-			ee.setLinenumber ($3.l);
+			YaST::ee.setLinenumber($3.l);
 			$3.c = new YEPropagate ($3.c, $3.t, $1.t);
 			match = 0;
 		    }
@@ -2808,7 +2805,7 @@ assignment:
 
 		if (match > 0)
 		{
-		    ee.setLinenumber ($3.l);
+		    YaST::ee.setLinenumber($3.l);
 		    $3.c = new YEPropagate ($3.c, $3.t, $1.t);
 		}
 
@@ -4062,7 +4059,7 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	    decl = static_declarations.findDeclaration (op, ft1);
 	    if (decl != 0)
 	    {
-		ee.setLinenumber (e1->l);
+		YaST::ee.setLinenumber(e1->l);
 		e1->c = new YEPropagate (e1->c, e1->t, e2->t);
 		ft = ft1;
 	    }
@@ -4076,7 +4073,7 @@ i_check_binary_op (YYSTYPE *result, YYSTYPE *e1, const char *op, YYSTYPE *e2, Pa
 	    decl = static_declarations.findDeclaration (op, ft1);
 	    if (decl != 0)
 	    {
-		ee.setLinenumber (e2->l);
+		YaST::ee.setLinenumber(e2->l);
 		e2->c = new YEPropagate (e2->c, e2->t, e1->t);
 		ft = ft1;
 	    }
@@ -4175,13 +4172,13 @@ i_check_compare_op (YYSTYPE *result, YYSTYPE *e1, YECompare::c_op op, YYSTYPE *e
     if ((e1_match_e2 > e2_match_e1)
 	     && (e2_match_e1 > 0))
     {
-	ee.setLinenumber (e1->l);
+	YaST::ee.setLinenumber(e1->l);
 	e1->c = new YEPropagate (e1->c, e1->t, e2->t);	// propagate e1
     }
     else if ((e2_match_e1 > e1_match_e2)
 	     && (e1_match_e2 > 0))
     {
-	ee.setLinenumber (e2->l);
+	YaST::ee.setLinenumber(e2->l);
 	e2->c = new YEPropagate (e2->c, e2->t, e1->t);	// propagate e2
     }
 
@@ -4290,7 +4287,7 @@ attach_parameter (Parser *parser, YCodePtr code, YYSTYPE *parm, YYSTYPE *parm1)
     y2debug ("attach_parameter (p %p(%s:%s), p1 %p)", parm, parm1 ? parm->t->toString().c_str() : parm->c->toString().c_str(), parm1 ? "" : parm->t->toString().c_str(), parm1);
 #endif
 
-    ee.setLinenumber (parm->l);
+    YaST::ee.setLinenumber(parm->l);
 
     constTypePtr t;
     string name;

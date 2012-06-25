@@ -11,6 +11,9 @@
 #include "y2string.h"
 
 
+namespace YaST
+{
+
 template <class In, class Out> void
 recode_errors(const In& in, const Out* out)
 {
@@ -158,4 +161,6 @@ wchar2utf8 (const std::wstring& in, std::string* out)
     }
 
     return recode (cd, in, out);
+}
+
 }

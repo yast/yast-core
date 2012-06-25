@@ -47,8 +47,6 @@ static Parser *parser = NULL;
 
 static char *outname = NULL;
 
-extern ExecutionEnvironment ee;
-
 static int quiet = 0;		// no output
 static int verbose = 0;		// much output
 static int no_std_path = 0;	// dont use builtin pathes
@@ -873,8 +871,8 @@ parsefile (const char *infname)
     
     if (! parser->atEOF () && parser->scanner ()->yylex () != END_OF_FILE)
     {
-	ee.setFilename (parser->scanner ()->filename ());
-	ee.setLinenumber (ln);
+	YaST::ee.setFilename(parser->scanner()->filename());
+	YaST::ee.setLinenumber(ln);
 	ycperror ("Unreachable code at the end of file");
 	c = NULL;
     }

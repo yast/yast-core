@@ -24,7 +24,6 @@
 #include "ycp/y2log.h"
 #include "ycp/ExecutionEnvironment.h"
 
-extern ExecutionEnvironment ee;
 
 extern StaticDeclaration static_declarations;
 
@@ -64,7 +63,7 @@ b_or (const YCPCode &b1, const YCPCode &b2)
     
     if (b1_v.isNull () || b1_v->isVoid ())
     {
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "First operand of '||' evaluates to nil, using 'false' instead.");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "First operand of '||' evaluates to nil, using 'false' instead.");
     }
     else if (b1_v->asBoolean ()->value ())
     {
@@ -74,7 +73,7 @@ b_or (const YCPCode &b1, const YCPCode &b2)
     YCPValue b2_v = b2->code ()->evaluate ();
     if (b2_v.isNull () || b2_v->isVoid ())
     {
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Second operand of '||' evaluates to nil, using 'false' instead.");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Second operand of '||' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
     
@@ -98,7 +97,7 @@ b_and (const YCPCode &b1, const YCPCode &b2)
     
     if (b1_v.isNull () || b1_v->isVoid ())
     {
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "First operand of '&&' evaluates to nil, using 'false' instead.");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "First operand of '&&' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
 
@@ -108,7 +107,7 @@ b_and (const YCPCode &b1, const YCPCode &b2)
     YCPValue b2_v = b2->code ()->evaluate ();
     if (b2_v.isNull () || b2_v->isVoid ())
     {
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Second operand of '&&' evaluates to nil, using 'false' instead.");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Second operand of '&&' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
     

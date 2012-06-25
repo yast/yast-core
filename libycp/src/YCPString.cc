@@ -40,7 +40,7 @@ YCPStringRep::YCPStringRep(const string& s)
 YCPStringRep::YCPStringRep(const wstring& s)
     : v(), is_ascii(false)
 {
-    wchar2utf8(s, &v);
+    YaST::wchar2utf8(s, &v);
     is_ascii = all_of(v.begin(), v.end(), isascii);
 }
 
@@ -63,7 +63,7 @@ wstring
 YCPStringRep::wvalue() const
 {
     std::wstring ret;
-    utf82wchar(v, &ret);
+    YaST::utf82wchar(v, &ret);
     return ret;
 }
 
@@ -87,7 +87,7 @@ YCPOrder YCPStringRep::compare(const YCPString& s, bool rl) const
 
         std::wstring wa, wb;
 
-        if (utf82wchar (a, &wa) && utf82wchar (b, &wb))
+        if (YaST::utf82wchar (a, &wa) && YaST::utf82wchar (b, &wb))
             tmp = wcscoll (wa.c_str (), wb.c_str ());
         else
             tmp = strcoll (a, b);

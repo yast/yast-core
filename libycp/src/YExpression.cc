@@ -1038,8 +1038,7 @@ YEPropagate::YEPropagate (YCodePtr value, constTypePtr from, constTypePtr to)
     //FIXME: save declaration/ptr to propagation function instead of from & to
     if (m_from->isFloat())
     {
-	extern ExecutionEnvironment ee;
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Implicit float conversion will loose accuracy");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Implicit float conversion will loose accuracy");
     }
 }
 
@@ -1502,8 +1501,7 @@ YETriple::evaluate (bool cse)
 
     if (expr.isNull () || expr->isVoid())
     {
-	extern ExecutionEnvironment ee;
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Condition expression evaluates to nil in ?: expression, using false instead.");
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Condition expression evaluates to nil in ?: expression, using false instead.");
 	return m_false->evaluate ();
     }
 
@@ -2373,8 +2371,7 @@ YEBuiltin::attachSymVariable (const char *name, constTypePtr type, unsigned int 
 	// no match, try with untyped variable
 	type = Type::Any;
 
-	extern ExecutionEnvironment ee;
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "Parameter '%s' has unspecified type", name);
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Parameter '%s' has unspecified type", name);
     }
 
     addedType = VariableTypePtr (new VariableType (type));	// it's a typed symbolic variable
@@ -3112,27 +3109,25 @@ YEFunction::evaluate (bool cse)
 	m_functioncall->attachParameter (evaluated_params[p], p);
     }
     
-    extern ExecutionEnvironment ee;
-
     // save the context info
-    int linenumber = ee.linenumber ();
-    string filename = ee.filename ();
+    int linenumber = YaST::ee.linenumber();
+    string filename = YaST::ee.filename();
 
-    if (ee.endlessRecursion ())
+    if (YaST::ee.endlessRecursion())
     {
 	ycp2error ("Returning nil instead of calling the function.");
 	return YCPVoid ();
     }
 
-    ee.pushframe ((YECallPtr)this, evaluated_params);
+    YaST::ee.pushframe((YECallPtr)this, evaluated_params);
 
     YCPValue value = m_functioncall->evaluateCall ();
 
     // restore the context info
-    ee.setLinenumber (linenumber);
-    ee.setFilename (filename);
+    YaST::ee.setLinenumber(linenumber);
+    YaST::ee.setFilename(filename);
     
-    ee.popframe ();
+    YaST::ee.popframe();
 
 #if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
@@ -3254,17 +3249,15 @@ YEFunctionPointer::evaluate (bool cse)
 	m_functioncall->attachParameter (m_params[p], p);
     }
     
-    extern ExecutionEnvironment ee;
-
     // save the context info
-    int linenumber = ee.linenumber ();
-    string filename = ee.filename ();
+    int linenumber = YaST::ee.linenumber();
+    string filename = YaST::ee.filename();
 
     YCPValue value = m_functioncall->evaluateCall ();
 
     // restore the context info
-    ee.setLinenumber (linenumber);
-    ee.setFilename (filename);
+    YaST::ee.setLinenumber(linenumber);
+    YaST::ee.setFilename(filename);
 
 #if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
@@ -3357,11 +3350,9 @@ Y2YCPFunction::evaluateCall ()
 	formalp->setValue (value);
     }
     
-    extern ExecutionEnvironment ee;
-
     // save the context info
-    int linenumber = ee.linenumber ();
-    string filename = ee.filename ();
+    int linenumber = YaST::ee.linenumber();
+    string filename = YaST::ee.filename();
 
     YCPValue value = definition->evaluate ();
 
@@ -3372,8 +3363,8 @@ Y2YCPFunction::evaluateCall ()
     }
 
     // restore the context info
-    ee.setLinenumber (linenumber);
-    ee.setFilename (filename);
+    YaST::ee.setLinenumber(linenumber);
+    YaST::ee.setFilename(filename);
 
     // pop parameter values for recursion
     for (unsigned int p = 0; p < func->parameterCount(); p++)

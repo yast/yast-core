@@ -14,6 +14,9 @@
 #include <string>
 
 
+namespace YaST
+{
+
 bool
 recode (iconv_t cd, const std::string& in, std::string* out);
 
@@ -56,5 +59,6 @@ utf82wchar (const std::string& in, std::wstring* out);
 bool
 wchar2utf8 (const std::wstring& in, std::string* out);
 
+}
 
 #endif
