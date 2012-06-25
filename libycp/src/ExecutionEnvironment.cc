@@ -26,6 +26,9 @@ namespace YaST
 static const char * Y2RECURSIONLIMIT = "Y2RECURSIONLIMIT";
 
 
+    ExecutionEnvironment ee;
+
+
 ExecutionEnvironment::ExecutionEnvironment ()
     : m_filename ("")
     , m_forced_filename (false)

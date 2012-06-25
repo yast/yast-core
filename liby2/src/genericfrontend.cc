@@ -118,11 +118,6 @@ const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = {
 
 using std::string;
 
-namespace YaST
-{
-    ExecutionEnvironment ee;
-}
-
 Debugger *debugger_instance;
 
 /// fallback name of the program
