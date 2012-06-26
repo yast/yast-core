@@ -2,6 +2,7 @@
 Fri Jun 22 15:53:00 CEST 2012 - aschnell@suse.de
 
 - allow C++ log functions to be used in namespaces
+- 2.23.4
 
 -------------------------------------------------------------------
 Tue Jun 19 07:42:53 UTC 2012 - mfilka@suse.com
