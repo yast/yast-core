@@ -43,7 +43,6 @@
 #define DO_DEBUG 0
 #endif
 
-extern ExecutionEnvironment ee;
 
 // ------------------------------------------------------------------
 
@@ -1047,7 +1046,7 @@ YSIf::evaluate (bool cse)
     
     if (!bval->isBoolean())
     {
-	ycp2warning (ee.filename().c_str(), ee.linenumber(), "'if (%s)' evaluates to non-boolean '%s' (%s), using 'false' instead.", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype_str());
+	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "'if (%s)' evaluates to non-boolean '%s' (%s), using 'false' instead.", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype_str());
 	bval	= YCPBoolean (false);
     }
     if (bval->asBoolean()->value() == true)
@@ -1628,7 +1627,7 @@ YSInclude::toXml( std::ostream & str, int /*indent*/ ) const
 YCPValue
 YSInclude::evaluate (bool cse)
 {
-    if (!cse && !m_skipped) ee.setFilename (m_filename);
+    if (!cse && !m_skipped) YaST::ee.setFilename(m_filename);
     return YCPNull();
 }
 
@@ -1851,7 +1850,7 @@ YSFilename::evaluate (bool cse)
 #if DO_DEBUG
     y2debug( "YSFilename to set %s", m_filename->c_str ());
 #endif
-    if (! cse) ee.setFilename (m_filename.asString());
+    if (! cse) YaST::ee.setFilename(m_filename.asString());
 
     return YCPNull ();
 }

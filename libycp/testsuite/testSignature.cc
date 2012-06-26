@@ -15,7 +15,6 @@
 
 using namespace std;
 
-ExecutionEnvironment ee;
 
 void
 fromSig (const char *s, constTypePtr t, string ts)

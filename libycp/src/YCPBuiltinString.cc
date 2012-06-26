@@ -1260,7 +1260,7 @@ s_crypt (const YCPString &s)
     string unencrypted = s->value();
     string encrypted;
 
-    if (crypt_pass (unencrypted, CRYPT, &encrypted))
+    if (YaST::crypt_pass(unencrypted, YaST::CRYPT, &encrypted))
         return YCPString (encrypted);
     else
     {
@@ -1291,7 +1291,7 @@ s_cryptmd5 (const YCPString &s)
     string unencrypted = s->value();
     string encrypted;
 
-    if (crypt_pass (unencrypted, MD5, &encrypted))
+    if (YaST::crypt_pass(unencrypted, YaST::MD5, &encrypted))
         return YCPString (encrypted);
     else
     {
@@ -1322,7 +1322,7 @@ s_cryptblowfish(const YCPString& original)
     string unencrypted = original->value();
     string encrypted;
 
-    if (crypt_pass (unencrypted, BLOWFISH, &encrypted))
+    if (YaST::crypt_pass(unencrypted, YaST::BLOWFISH, &encrypted))
         return YCPString (encrypted);
     else
     {
@@ -1353,7 +1353,7 @@ s_cryptsha256(const YCPString& original)
     string unencrypted = original->value();
     string encrypted;
 
-    if (crypt_pass (unencrypted, SHA256, &encrypted))
+    if (YaST::crypt_pass(unencrypted, YaST::SHA256, &encrypted))
         return YCPString (encrypted);
     else
     {
@@ -1384,7 +1384,7 @@ s_cryptsha512(const YCPString& original)
     string unencrypted = original->value();
     string encrypted;
 
-    if (crypt_pass (unencrypted, SHA512, &encrypted))
+    if (YaST::crypt_pass(unencrypted, YaST::SHA512, &encrypted))
         return YCPString (encrypted);
     else
     {

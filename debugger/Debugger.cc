@@ -41,8 +41,6 @@
 #define ADDRESS     "/tmp/yast.socket"
 #define PORT	    16384
 
-extern ExecutionEnvironment ee;
-
 Debugger::Debugger () : 
   m_socket (-1),
   m_descriptor (NULL),
@@ -235,8 +233,8 @@ void Debugger::removeBreakpoint (std::list<std::string> &args)
 void Debugger::generateBacktrace ()
 {
     std::string result = "Call stack:";
-    ExecutionEnvironment::CallStack stack = ee.callstack();
-    ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
+    YaST::ExecutionEnvironment::CallStack stack = YaST::ee.callstack();
+    YaST::ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
     while (it != stack.rend())
     {
         result = result 
@@ -298,11 +296,11 @@ SymbolEntryPtr Debugger::findSymbol (std::string arg)
     else 
     {
 	// try parameters
-	ExecutionEnvironment::CallStack stack = ee.callstack();
+	YaST::ExecutionEnvironment::CallStack stack = YaST::ee.callstack();
 	    
 	if( stack.size() > 0 )
 	{
-	    ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
+	    YaST::ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
 	    
     	    YSymbolEntryPtr ysentry = (YSymbolEntryPtr)((*it)->function->entry());
 
@@ -396,11 +394,11 @@ bool Debugger::processInput (command_t &command, std::list<std::string> &argumen
 	return false;
 	
     // First, send the current context
-    YStatementPtr statement = ee.statement ();
+    YStatementPtr statement = YaST::ee.statement();
     
 after_internal:
     if (statement)
-	sendOutput (ee.filename() + ":" + stringutil::numstring(ee.linenumber()) + " >>> " + statement->toString ());
+	sendOutput(YaST::ee.filename() + ":" + stringutil::numstring(YaST::ee.linenumber()) + " >>> " + statement->toString());
     else
 	sendOutput ("no code");
     

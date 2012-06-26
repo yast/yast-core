@@ -64,7 +64,7 @@ INCLUDES = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src
 	-I$(top_srcdir)/debugger
 
 # CURRENT:REVISION:AGE
-libycpvalues_la_LDFLAGS = -version-info 4:0:0
+libycpvalues_la_LDFLAGS = -version-info 5:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
 libycp_la_LDFLAGS = -version-info 3:0:0

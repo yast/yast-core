@@ -40,13 +40,7 @@
     y2ycp(LOG_WARNING,file,line,format,##args)
 #define ycp2error(format,args...) 		\
     do {					\
-	extern ExecutionEnvironment ee;		\
-	y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
-    } while (0)
-#define ycp2error(format,args...) 		\
-    do {					\
-	extern ExecutionEnvironment ee;		\
-	y2ycp(LOG_ERROR, ee.filename().c_str(), ee.linenumber(), format, ##args);	\
+	y2ycp(LOG_ERROR, YaST::ee.filename().c_str(), YaST::ee.linenumber(), format, ##args); \
     } while (0)
 #define ycp2security(file,line,format,args...) \
     y2ycp(LOG_SECURITY,file,line,format,##args)
@@ -56,8 +50,7 @@
 // logging cleanup
 #define ycp_log(level,format,args...) 		\
     do {					\
-	extern ExecutionEnvironment ee;		\
-	y2_logger(level, Y2LOG, ee.filename().c_str(), ee.linenumber(), "", format, ##args);	\
+	y2_logger(level, Y2LOG, YaST::ee.filename().c_str(), YaST::ee.linenumber(), "", format, ##args); \
     } while (0)
 
 

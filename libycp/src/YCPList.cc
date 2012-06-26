@@ -28,7 +28,6 @@
 #include "ycp/YCPCodeCompare.h"
 #include "ycp/ExecutionEnvironment.h"
 
-extern ExecutionEnvironment ee;
 
 // YCPListRep
 

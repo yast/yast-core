@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jun 22 15:53:00 CEST 2012 - aschnell@suse.de
+
+- allow C++ log functions to be used in namespaces
+
+-------------------------------------------------------------------
 Tue Jun 19 07:42:53 UTC 2012 - mfilka@suse.com
 
 - increase version 

@@ -36,6 +36,11 @@
 
 using namespace std;
 
+namespace YaST
+{
+    namespace agent_ini
+    {
+
 string quote( const string & unquoted_string)
 {
     string dest = "'";
@@ -166,4 +171,8 @@ string unquote( const string & quoted_string)
     }
 
     return res;
+}
+
+    }
+
 }
