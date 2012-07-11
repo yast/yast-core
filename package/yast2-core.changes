@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Wed Jul 11 14:55:26 CEST 2012 - mvidner@suse.cz
+
+- automake incompatibility: require 1.12, to produce parser.hh
+
+-------------------------------------------------------------------
+Wed Jul 11 12:07:52 CEST 2012 - fehr@suse.de
+
+- 2.23.5
+- added builtin list::reverse for YCP list
+
+-------------------------------------------------------------------
 Fri Jun 22 15:53:00 CEST 2012 - aschnell@suse.de
 
 - allow C++ log functions to be used in namespaces
