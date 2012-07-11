@@ -1,0 +1,11 @@
+*.log
+*.sum
+site.exp
+.deps
+.libs
+y2wfm
+runwfm
+runc
+tmp.*
+differr
+diffout
