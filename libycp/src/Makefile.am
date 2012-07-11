@@ -53,10 +53,10 @@ libycp_la_SOURCES = 					\
 	y2string.cc					\
 	y2crypt.cc y2crypt.h
 
-$(srcdir)/scanner.cc: scanner.ll parser.h
+$(srcdir)/scanner.cc: scanner.ll parser.hh
 	flex++ -o$@ $<
 
-BUILT_SOURCES = parser.h
+BUILT_SOURCES = parser.hh
 
 AM_YFLAGS = -d -v
 
@@ -75,5 +75,5 @@ CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
 # don't distribute generated files
 dist-hook:
 	rm $(distdir)/scanner.cc
-	rm $(distdir)/parser.cc
+	rm $(distdir)/parser.cc $(distdir)/parser.hh
 

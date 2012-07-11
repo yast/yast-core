@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 11 14:55:26 CEST 2012 - mvidner@suse.cz
+
+- automake incompatibility: require 1.12, to produce parser.hh
+
+-------------------------------------------------------------------
 Wed Jul 11 12:07:52 CEST 2012 - fehr@suse.de
 
 - 2.23.5

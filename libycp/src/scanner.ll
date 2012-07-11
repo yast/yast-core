@@ -23,7 +23,7 @@
 
 #include "ycp/y2log.h"
 #include "ycp/Import.h"
-#include "parser.h"
+#include "parser.hh"
 
 // We handle the line counting using a define
 // in case we need to fix it again or decide tou use option yylineno
