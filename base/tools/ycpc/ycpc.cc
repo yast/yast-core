@@ -25,7 +25,7 @@
 #include <ycp/Xmlcode.h>
 #include <ycp/Import.h>
 #include <ycp/y2log.h>
-#include <../../libycp/src/parser.h>
+#include <../../libycp/src/parser.hh>
 #include <ycp/pathsearch.h>
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentBroker.h>

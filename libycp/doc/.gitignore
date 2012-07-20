@@ -1,0 +1,17 @@
+YCPBuiltin*.xml
+combined.xml
+html
+CATALOG.local
+suse-html.dsl
+suse-print.dsl
+db2html.*
+ycp
+*.aux
+*.dsl
+*.dvi
+*.junk
+*.log
+*.out
+*.pdf
+*.xml
+.tex
