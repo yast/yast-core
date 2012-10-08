@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Oct  8 16:50:38 CEST 2012 - mvidner@suse.cz
+
+- Clarified how to return lists and maps from Perl (bnc#783846).
+- 2.23.6
+
+-------------------------------------------------------------------
 Wed Jul 11 14:55:26 CEST 2012 - mvidner@suse.cz
 
 - automake incompatibility: require 1.12, to produce parser.hh
