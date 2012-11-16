@@ -3126,7 +3126,7 @@ YEFunction::evaluate (bool cse)
 	}
     }
 
-    YCPValue evaluated_params [m_next_param_id];
+    YCPValue* evaluated_params = new YCPValue[m_next_param_id];
 
     for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
@@ -3137,6 +3137,7 @@ YEFunction::evaluate (bool cse)
 	if (value.isNull())
 	{
 	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
+            delete[](evaluated_params);
 	    return value;
 	}
 
@@ -3160,6 +3161,7 @@ YEFunction::evaluate (bool cse)
     if (YaST::ee.endlessRecursion())
     {
 	ycp2error ("Returning nil instead of calling the function.");
+        delete[](evaluated_params);
 	return YCPVoid ();
     }
 
@@ -3172,6 +3174,8 @@ YEFunction::evaluate (bool cse)
     YaST::ee.setFilename(filename);
 
     YaST::ee.popframe();
+    // FIXME: did the frame need ep to exist? otherwise we could delete it before evaluateCall
+    delete[](evaluated_params);
 
 #if DO_DEBUG
     y2debug("evaluate done (%s) = '%s'", qualifiedName ().c_str(), value.isNull() ? "NULL" : value->toString().c_str());
@@ -3266,7 +3270,7 @@ YEFunctionPointer::evaluate (bool cse)
     // FIXME: this could fail
     m_functioncall->reset ();
 
-    YCPValue m_params [m_next_param_id];
+    YCPValue * m_params = new YCPValue[m_next_param_id];
 
     for (unsigned int p = 0; p < m_next_param_id ; p++)
     {
@@ -3277,6 +3281,7 @@ YEFunctionPointer::evaluate (bool cse)
 	if (value.isNull())
 	{
 	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
+            delete[] m_params;
 	    return value;
 	}
 
@@ -3292,6 +3297,7 @@ YEFunctionPointer::evaluate (bool cse)
     {
 	m_functioncall->attachParameter (m_params[p], p);
     }
+    delete[] m_params; // can now already? why no frame push?
 
     // save the context info
     int linenumber = YaST::ee.linenumber();
