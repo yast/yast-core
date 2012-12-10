@@ -111,6 +111,7 @@ public:
     /**
      * Reset the currecn parameters, so the instance
      * can be reused for the next call (appendParameter etc)
+     * @return false if reset failed
      */    
     virtual bool reset () = 0;
     
