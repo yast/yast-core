@@ -109,9 +109,10 @@ public:
     virtual YCPValue evaluateCall () = 0;
 
     /**
-     * Reset the currecn parameters, so the instance
+     * Reset the current parameters, so the instance
      * can be reused for the next call (appendParameter etc)
-     */    
+     * @return false if reset failed
+     */
     virtual bool reset () = 0;
     
     virtual string name () const = 0;
