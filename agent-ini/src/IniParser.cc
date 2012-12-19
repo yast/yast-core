@@ -1032,8 +1032,9 @@ std::string format (const char * format, ...) {
 
     va_list ap;
     va_start( ap, format );
-
     int numprinted = vasprintf(&buf, format, ap);
+    va_end( ap );
+
     if (numprinted >= 0) {
         val = buf;
         free( buf );
@@ -1042,7 +1043,6 @@ std::string format (const char * format, ...) {
         throw std::runtime_error("vasprintf failed in ag_ini. Out of memory?");
     }
 
-    va_end( ap );
     return val;
 }
 
