@@ -1,7 +1,14 @@
 -------------------------------------------------------------------
+Mon Oct  8 16:50:38 CEST 2012 - mvidner@suse.cz
+
+- Clarified how to return lists and maps from Perl (bnc#783846).
+- 2.23.6
+
+-------------------------------------------------------------------
 Wed Jul 11 14:55:26 CEST 2012 - mvidner@suse.cz
 
 - automake incompatibility: require 1.12, to produce parser.hh
+- agent-ini: if we cannot format a string, fail loudly (bnc#763386#c10)
 
 -------------------------------------------------------------------
 Wed Jul 11 12:07:52 CEST 2012 - fehr@suse.de

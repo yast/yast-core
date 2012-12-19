@@ -18,7 +18,6 @@
 #   Purpose:       Call a perl script within a YCP script
 #
 #----------------------------------------------------------------------
-# $Id$
 
 package ycp;
 
@@ -633,7 +632,8 @@ If a second argument exists and is true, all scalars are written as strings.
 If a second argument exists and is false, all scalars are written as byteblocks.
 
 To send a list, call Return(\@list), not Return(@list).
-Similarly for a map. You can use references to anonymous lists [] and hashes {}.
+Similarly for a map.
+You can produce references to anonymous lists with [] and hashes with {}.
 
 The difference from L</ycpReturn> is that Return can return scalars directly,
 strings are properly escaped if needeed and paths can be returned.
