@@ -207,38 +207,7 @@ Type::toString () const
 string
 Type::toXmlString () const
 {
-    string ret;
-    switch (m_kind)
-    {
-	case UnspecT:	ret = "unspec"; break;
-	case ErrorT:	ret = "ERR"; break;
-	case AnyT:	ret = "any"; break;
-	case BooleanT:	ret = "boolean"; break;
-	case ByteblockT: ret = "byteblock"; break;
-	case FloatT:	ret = "float"; break;
-	case IntegerT:	ret = "integer"; break;
-	case LocaleT:	ret = "locale"; break;
-	case PathT:	ret = "path"; break;
-	case StringT:	ret = "string"; break;
-	case SymbolT:	ret = "symbol"; break;
-	case TermT:	ret = "term"; break;
-	case VoidT:	ret = "void"; break;
-	case WildcardT: ret = "..."; break;
-
-	case FlexT:	ret = "flex"; break;
-	case VariableT:	ret = "var"; break;
-	case BlockT:	ret = "block"; break;
-	case ListT:	ret = "list"; break;
-	case MapT:	ret = "map"; break;
-	case TupleT:	ret = "tuple"; break;
-	case FunctionT:	ret = "function"; break;
-
-	case NilT:	ret = "nil"; break;
-	case NFlexT:	ret = "nflex"; break;
-	// no default:, let gcc warn
-    }
-    if (ret.empty()) ret = "<UNHANDLED>";
-    return preToString() + ret + postToString();
+    return Xmlcode::xmlify(toString());
 }
 
 
