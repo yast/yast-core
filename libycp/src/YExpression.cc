@@ -1946,7 +1946,7 @@ YEBuiltin::toStream (std::ostream & str) const
 std::ostream &
 YEBuiltin::toXml( std::ostream & str, int indent ) const
 {
-    str << "<builtin name=\"" << m_decl->name << "\"";
+    str << "<builtin name=\"" << StaticDeclaration::Decl2String(m_decl) << "\"";
 
     if (m_parameterblock != 0)
     {
