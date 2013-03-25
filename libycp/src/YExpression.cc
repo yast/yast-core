@@ -2997,6 +2997,7 @@ std::ostream &
 YECall::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<call";
+    str << " category=\"" << m_sentry->catString() << "\"";
     if (!m_sentry->nameSpace()->name().empty()) {
 	str << " ns=\"" << m_sentry->nameSpace()->name() << "\"";
     }
