@@ -145,8 +145,8 @@ public:
     constTypePtr type () const;
     string catString () const;
     void setType (constTypePtr type);
-    YCPValue setValue (YCPValue value);
-    YCPValue value () const;
+    virtual YCPValue setValue (YCPValue value);
+    virtual YCPValue value () const;
     
     void push ();
     void pop ();
