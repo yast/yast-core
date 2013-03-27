@@ -866,7 +866,7 @@ Xmlcode::xmlify( const string & s )
 
     const char *cptr = s.c_str();
     const char *next;
-    while( (next = strpbrk( cptr, "&<>'\"" )) ) {
+    while( (next = strpbrk( cptr, "&<>'\"\n\t" )) ) {
 	result += string( cptr, next - cptr );
 	switch (*next) {
 	  case '&': result += "&amp;"; break;
@@ -874,6 +874,8 @@ Xmlcode::xmlify( const string & s )
 	  case '>': result += "&gt;"; break;
 	  case '"': result += "&quot;"; break;
 	  case '\'': result += "&apos;"; break;
+	  case '\n': result += "&#xA;"; break;
+	  case '\t': result += "&#x9;"; break;
 	}
 	cptr = next + 1;
     }
