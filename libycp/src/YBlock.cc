@@ -540,26 +540,30 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 
     stmtlist_t *stmt = m_statements;
     int index = 0;
+    const char * closing_tag = "";
     while (stmt)
     {
 	str << Xmlcode::spaces( indent );
 	if (index == defaultcase)
 	{
+      str << closing_tag;
 	    str << "<default>\n";
-	    stmt->stmt->toXml( str, indent+2 );
-	    str << endl << "</default>";
+      closing_tag = "</default>";
 	}
 	else if (! values[index].isNull ())
 	{
-	    str << "<case>";
+      str << closing_tag;
+	    str << "<case><value>";
 	    values[index]->toXml( str, 0 );
-	    str << endl;
-	    stmt->stmt->toXml( str, indent+2 );
-	    str << endl << "</case>";
+      str << "</value>" << endl << "<body>";
+
+      closing_tag = "</body></case>";
 	}
+	stmt->stmt->toXml( str, indent+2 );
 	stmt = stmt->next;
 	index++;
     }
+    str << closing_tag;
 
     return str;
 }
