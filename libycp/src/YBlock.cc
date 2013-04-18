@@ -525,15 +525,12 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
-    YCPValue values[statementcount];
-    
-    for (int i = 0; i < statementcount; i++)
-	values[i] = YCPNull ();
-	
+    vector<YCPValue> values[statementcount];
+
     for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
     {
-	values[ it->second ] = it->first;
+	values[ it->second ].push_back(it->first);
     }
     
     // s += environmentToString ();
@@ -550,12 +547,17 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 	    str << "<default>\n";
       closing_tag = "</default>";
 	}
-	else if (! values[index].isNull ())
+	else if (! values[index].empty ())
 	{
-      str << closing_tag;
-	    str << "<case><value>";
-	    values[index]->toXml( str, 0 );
-      str << "</value>" << endl << "<body>";
+      str << closing_tag << endl;
+	    str << "<case>" << endl;
+      for (vector<YCPValue>::iterator i = values[index].begin(); i != values[index].end(); ++i)
+      {
+        str << "<value>";
+	      (*i)->toXml( str, 0 );
+        str << "</value>" << endl;
+      }
+      str << "<body>" << endl;
 
       closing_tag = "</body></case>";
 	}
