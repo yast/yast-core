@@ -1719,7 +1719,7 @@ FunctionType::match (constTypePtr expected) const
 	    && expected->isFunction()))
     {
 	constFunctionTypePtr ft (expected);
-	if (m_returntype->match (ft->m_returntype) < 0)
+	if (ft->m_returntype->match (m_returntype) < 0)
 	{
 #if DO_DEBUG
 //	    y2debug ("return type mismatch");
