@@ -3001,7 +3001,7 @@ YECall::toXml (std::ostream & str, int /*indent*/ ) const
     if (!m_sentry->nameSpace()->name().empty()) {
 	str << " ns=\"" << m_sentry->nameSpace()->name() << "\"";
     }
-    str << " type=\"" << m_sentry->type()->toString() << "\"";
+    str << " type=\"" << m_sentry->type()->toXmlString() << "\"";
     str << " name=\"" << m_sentry->name() << "\">";
     if (m_next_param_id > 0) {
 	str << "<args>";
