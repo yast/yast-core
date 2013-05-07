@@ -1961,7 +1961,7 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
     // map: mapmap, maplist, filter, foreach
 
     ycodelist_t *block = NULL;
-    ycodelist_t *value = NULL;
+    std::vector<ycodelist_t *> values;
     ycodelist_t *p = m_parameters;
     u_int32_t count = 0;
     while (p) {
@@ -1983,8 +1983,7 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
 		str << " sym" << count << "=\"" << Xmlcode::xmlify( p->code->toString() ) << "\"";
 	    }
 	    else if (p->next) {
-		if (value) cerr << "Value already set!" << endl;
-		value = p;
+		    values.push_back(p);
 	    }
 	    else {
 		if (block) cerr << "Block already set!" << endl;
@@ -2003,9 +2002,12 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
 
     if (m_decl->flags & DECL_SYMBOL)
     {
-	str << "<expr>";
-	value->code->toXml( str, indent+2 );
-	str << "</expr>";
+      for(std::vector<ycodelist_t*>::iterator i = values.begin(); i != values.end(); ++i)
+      {
+        str << "<expr>";
+        (*i)->code->toXml( str, indent+2 );
+        str << "</expr>";
+      }
 	block->code->toXml( str, indent );
     }
     else {
