@@ -685,6 +685,14 @@ Y2WFMComponent::ClientExists (const YCPString& client)
     }
 }
 
+YCPList
+Y2WFMComponent::SetArgs (const YCPList &new_args)
+{
+  YCPList result = argumentlist;
+  argumentlist = new_args;
+  return result;
+}
+
 YCPValue
 Y2WFMComponent::CallFunction (const YCPString& client, const YCPList& args)
 {

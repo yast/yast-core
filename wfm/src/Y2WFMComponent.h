@@ -64,6 +64,7 @@ public:
     void SCRSetDefault (const YCPInteger &handle);
     YCPInteger SCRGetDefault () const;
     YCPValue Args (const YCPInteger& index = YCPNull ()) const;
+    YCPList  SetArgs (const YCPList& new_args);
     YCPString GetLanguage () const;
     YCPString GetEncoding () const;
     YCPString SetLanguage (const YCPString& language, const YCPString& encoding = YCPNull ());
