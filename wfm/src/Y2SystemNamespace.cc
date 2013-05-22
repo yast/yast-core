@@ -138,12 +138,13 @@ Y2SystemNamespace::useRemote (Y2ProgramComponent* sender)
 void
 Y2SystemNamespace::useLocal ()
 {
-    y2milestone ("redirecting to local");
+    y2milestone ("redirecting to local %u modules", m_functions.size());
     for ( vector<Y2SystemFunction*>::iterator it = m_functions.begin ();
 	it != m_functions.end () ; ++it )
     {
 	y2milestone ("Redirected: %s", (*it)->name ().c_str ());
 	(*it)->useLocal ();
+  y2milestone("Redirection done: %s",(*it)->name ().c_str ());
     }
     
     m_use_remote = false;
