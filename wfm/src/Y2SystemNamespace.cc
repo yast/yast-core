@@ -45,7 +45,7 @@ Y2SystemNamespace::Y2SystemNamespace (Y2Namespace* local_ns)
     , m_use_remote (false)
 {
     m_functions.clear ();
-    m_name = local_ns->name ();
+    m_name = "System::" + local_ns->name ();
     createTable ();
     local_ns->table ()->tableCopy (this);
 }
