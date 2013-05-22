@@ -754,6 +754,15 @@ Y2WFMComponent::import (const char* name_space)
     // System:: namespace access
     if (strstr (name_space, "System::") == name_space)
     {
+        // check if namespace is not already imported
+
+      	for ( SystemNamespaces::iterator ns = system_namespaces.begin ();
+          		ns != system_namespaces.end (); ns ++ )
+        {
+            if ((*ns)->name() == name_space)
+                return 0;
+	}
+
         char* subsys = const_cast<char*>(name_space) + 8; // skip the prefix
         Y2Component* local_comp = Y2ComponentBroker::getNamespaceComponent (subsys);
 
@@ -768,7 +777,6 @@ Y2WFMComponent::import (const char* name_space)
 
             Y2SystemNamespace* ns = new Y2SystemNamespace (local_ns);
 
-	    // FIXME: check for duplicates
 	    system_namespaces.push_back (ns);
 
             return ns;
