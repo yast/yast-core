@@ -148,8 +148,11 @@ std::ostream &
 YEVariable::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<variable name=\"";
-    str << m_entry->toString (false /*definition*/);
-    str << "\" category=\"" << m_entry->catString();
+    str << m_entry->name() << "\"";
+    string ns = m_entry->nameSpace()->name();
+    if (!ns.empty())
+      str << " ns=\"" << ns << "\"";
+    str << " category=\"" << m_entry->catString();
     str << "\" type=\"" << m_entry->type()->toXmlString();
 
     return str << "\"/>";
@@ -1949,7 +1952,10 @@ YEBuiltin::toStream (std::ostream & str) const
 std::ostream &
 YEBuiltin::toXml( std::ostream & str, int indent ) const
 {
-    str << "<builtin name=\"" << StaticDeclaration::Decl2String(m_decl) << "\"";
+    str << "<builtin name=\"" << m_decl->name << "\"";
+
+    if (m_decl->name_space)
+      str << " ns=\"" << m_decl->name_space->name << "\"";
 
     if (m_parameterblock != 0)
     {
