@@ -35,9 +35,11 @@ class Y2SystemNamespace : public Y2Namespace {
     bool m_use_remote;
 
     vector<Y2SystemFunction*> m_functions;
-    
+
     string m_name;
-    
+
+    void unregisterFunction(Y2SystemFunction *f);
+
     friend class Y2SystemFunction;
 
 public:

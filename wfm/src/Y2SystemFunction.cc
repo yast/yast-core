@@ -34,11 +34,12 @@
 
 #include "ycp/SymbolTable.h"
 
-Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type) :
+Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type, Y2SystemNamespace *name_space) :
     m_local (local_call)
     , m_remote (0)
     , m_use_remote (false)
     , m_type (type)
+    , m_namespace(name_space)
 {
 #ifdef DEBUG
     y2debug ("The local function: %s", m_local->name ().c_str ());
@@ -48,8 +49,7 @@ Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr
 Y2SystemFunction::~Y2SystemFunction ()
 {
     // FIXME deletes
-    
-    // FIXME unregister in Y2Namespace
+    m_namespace->unregisterFunction(this);
 }
 
 bool 
