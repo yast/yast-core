@@ -31,7 +31,7 @@ class Y2StdioFunction : public Y2Function {
     string m_namespace;
     string m_name;
     constFunctionTypePtr m_type;
-    YCPValue* m_parameters;
+    vector<YCPValue> m_parameters;
 
     Y2ProgramComponent* m_sender;
     

@@ -43,31 +43,21 @@ Y2StdioFunction::Y2StdioFunction (string ns, string name
     , m_type (type)
     , m_sender (sender)
 {
-    uint count = type->parameterCount ();
-   
-    m_parameters = new YCPValue[count];
-      
-    for (uint i=0; i < count; i++)
+    if (type)
     {
-	m_parameters[i] = YCPNull ();
+        uint count = type->parameterCount ();
+
+        m_parameters.reserve(count);
     }
 }
 
 Y2StdioFunction::~Y2StdioFunction ()
 {
-    delete[] m_parameters;
 }
 
 bool 
 Y2StdioFunction::attachParameter (const YCPValue& arg, const int pos)
 {
-    if (pos < 0 || pos > m_type->parameterCount ())
-    {
-	y2error ("Attaching parameter to function '%s::%s' at incorrect position: %d"
-	    , m_namespace.c_str(), m_name.c_str (), pos );
-	return false;
-    }
-
     m_parameters[pos] = arg;
     return true;
 }
@@ -89,43 +79,15 @@ Y2StdioFunction::appendParameter (const YCPValue& arg)
 	return false;
     }
 			    
-    // FIXME: check the type
-				
-    // lookup the first non-set parameter
-    for (int i = 0 ; i < m_type->parameterCount (); i++)
-    {
-	if (m_parameters[i].isNull ())
-	{
-#if DO_DEBUG
-	    y2debug ("Assigning parameter %d: %s", i, arg->toString ().c_str ());
-#endif
-	    m_parameters[i] = arg;
-	    return true;
-	}
-    }
-
-    // Our caller should report the place
-    // in a script where this happened
-    ycp2error ("Excessive parameter to %s::%s"
-	, m_namespace.c_str(), m_name.c_str ());
-															        // FIXME
-    return false;
+    m_parameters.push_back(arg);
+    return true;
 }
 
 
 bool 
 Y2StdioFunction::finishParameters ()
 {
-    for (int i = 0 ; i < m_type->parameterCount (); i++)
-    {
-	if (m_parameters [i].isNull ())
-	{
-	    y2error ("Missing parameter %d to %s::%s",
-	         i, m_namespace.c_str(), m_name.c_str ());
-	    return false;
-	}
-    }
-									         // FIXME
+    // FIXME if m_type is set, then check parameters
     return true;
 }
 
@@ -140,10 +102,10 @@ Y2StdioFunction::evaluateCall ()
 
     string params = "";
     
-    if (m_type->parameterCount () > 0)
+    if (m_parameters.size () > 0)
     {
 	params = m_parameters[0]->toString ();
-	for (int i = 1 ; i < m_type->parameterCount (); i++)
+	for (int i = 1 ; i < m_parameters.size(); i++)
 	{
 	    params += ", " + m_parameters[i]->toString ();
 	}
@@ -171,11 +133,7 @@ Y2StdioFunction::evaluateCall ()
 bool 
 Y2StdioFunction::reset ()
 {
-    for (int i = 0; i < m_type->parameterCount (); i++)
-    {
-	m_parameters[i] = YCPNull ();
-    }
-
+    m_parameters.clear();
     return true;
 }
 
