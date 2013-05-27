@@ -120,7 +120,9 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 [0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+ {
 	debug_scanner("<float>");
+	setlocale(LC_ALL,"C"); /* ensure that correct locale is used for parsing */
 	token_value.fval = atof (yytext);
+	setlocale(LC_ALL,"");
 	RESULT (Type::ConstFloat, C_FLOAT);
     }
 
