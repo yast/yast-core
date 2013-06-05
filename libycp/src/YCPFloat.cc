@@ -18,6 +18,7 @@
 /-*/
 
 #include <ctype.h>
+#include <sstream>
 
 #include "ycp/y2log.h"
 #include "ycp/YCPFloat.h"
@@ -70,17 +71,15 @@ YCPFloatRep::compare(const YCPFloat& f) const
 string
 YCPFloatRep::toString() const
 {
-    char s[64];
+    std::ostringstream ss;
+    ss.imbue(std::locale("C")); //ensure that we are not affected by LC_NUMERIC
+    ss << v;
     if ((v == (long)v)				// force decimal point for integer value range
 	&& (v < 100000))
     {
-	snprintf (s, 64, "%g.", v);
+	      ss << ".";
     }
-    else
-    {
-	snprintf (s, 64, "%g", v);
-    }
-    return string(s);
+    return ss.str();
 }
 
 
