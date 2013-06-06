@@ -102,10 +102,10 @@ Y2StdioFunction::evaluateCall ()
 
     string params = "";
     
-    if (m_parameters.size () > 0)
+    if (!m_parameters.empty())
     {
 	params = m_parameters[0]->toString ();
-	for (int i = 1 ; i < m_parameters.size(); i++)
+	for (size_t i = 1 ; i < m_parameters.size(); i++)
 	{
 	    params += ", " + m_parameters[i]->toString ();
 	}

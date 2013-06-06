@@ -126,8 +126,7 @@ Y2SystemFunction::reset ()
 void
 Y2SystemFunction::useRemote (Y2Function* remote_call)
 {
-    if (m_remote)
-      delete m_remote;
+    delete m_remote;
 
     m_remote = remote_call;
     m_use_remote = true;
