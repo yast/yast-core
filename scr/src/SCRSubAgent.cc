@@ -103,11 +103,5 @@ SCRSubAgent::mount (SCRAgent *parent)
 void
 SCRSubAgent::unmount ()
 {
-    if (my_comp)
-    {
-	y2debug ("Unmounting agent at '%s'", my_path->toString ().c_str ());
-	my_comp->result (YCPVoid ()); // tell server to terminate
-	delete my_comp;
 	my_comp = 0;
-    }
 }
