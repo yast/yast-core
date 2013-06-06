@@ -22,8 +22,10 @@
 #define Y2CCPlugin_h
 
 #include <regex.h>
+#include <map>
 
 #include "Y2ComponentCreator.h"
+#include "Y2PluginComponent.h"
 
 
 class Y2CCPlugin : public Y2ComponentCreator
@@ -48,6 +50,7 @@ class Y2CCPlugin : public Y2ComponentCreator
     void make_rxs () const;
     void free_rxs () const;
 
+    std::map<string,Y2PluginComponent*> components;
 public:
     /**
      * Creates a YaST2 Component Creator that can create plugin
