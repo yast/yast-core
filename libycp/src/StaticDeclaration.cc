@@ -120,7 +120,7 @@ StaticDeclaration::registerDeclarations (const char *filename,
 	    // new namespace, clear possibly old track_info
 	    if (track_info != 0)
 	    {
-		new Import (track_info->first, track_info->second);	// remember which predefined got activated
+		Import (track_info->first, track_info->second);	// remember which predefined got activated
 		m_active_predefined.push_back (*track_info);
 		delete track_info;
 		track_info = 0;
@@ -229,7 +229,7 @@ y2debug("%s sig[%s] type[%s]", name, signature.c_str(), type->toString().c_str()
     // clear possibly old track_info
     if (track_info != 0)
     {
-	new Import (track_info->first, track_info->second);	// remember which predefined got activated
+	Import i(track_info->first, track_info->second);	// remember which predefined got activated
 	m_active_predefined.push_back (*track_info);
 	delete track_info;
 	track_info = 0;
