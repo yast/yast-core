@@ -834,7 +834,7 @@ Xmlcode::writeFile( const YCodePtr code, const string & filename)
 	return false;
     }
     // write XML without any localization
-    outstream.imbue(std::locale("C"));
+    outstream.imbue(std::locale::classic());
 
     outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     outstream << "<ycp version=\"2.15.8.39280\">\n";

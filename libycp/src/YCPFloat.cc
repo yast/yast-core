@@ -72,7 +72,7 @@ string
 YCPFloatRep::toString() const
 {
     std::ostringstream ss;
-    ss.imbue(std::locale("C")); //ensure that we are not affected by LC_NUMERIC
+    ss.imbue(std::locale::classic()); //ensure that we are not affected by LC_NUMERIC
     ss << v;
     if ((v == (long)v)				// force decimal point for integer value range
 	&& (v < 100000))

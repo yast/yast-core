@@ -1189,7 +1189,7 @@ Bytecode::writeFile (const YCodePtr code, const string & filename)
     }
 
     // write Bytecode without any localization
-    outstream.imbue(std::locale("C"));
+    outstream.imbue(std::locale::classic());
 
     string header =  string (YaST_BYTECODE_HEADER YaST_BYTECODE_MAJOR "." YaST_BYTECODE_MINOR "." YaST_BYTECODE_RELEASE);
     outstream.write (header.c_str(), header.size() + 1);	// including trailing \0
