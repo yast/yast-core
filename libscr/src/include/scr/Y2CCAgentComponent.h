@@ -25,6 +25,13 @@ public:
      */
     Y2CCAgentComp (const char*);
 
+
+    /**
+     * Destructor of a Y2CCAgentComp object.
+     */
+    ~Y2CCAgentComp () { delete agent_instance; }
+
+
     /**
      * Returns true since all agents are server components.
      */
@@ -48,6 +55,10 @@ private:
      */
     const char* my_name;
 
+    /**
+     * Component for given name
+     */
+    AgentComp *agent_instance;
 };
 
 
@@ -56,6 +67,7 @@ Y2CCAgentComp<AgentComp>::Y2CCAgentComp (const char* my_name)
     : Y2ComponentCreator (Y2ComponentBroker::BUILTIN),
       my_name (my_name)
 {
+    agent_instance = new AgentComp(my_name);
 }
 
 
@@ -63,7 +75,9 @@ template <class AgentComp> Y2Component*
 Y2CCAgentComp<AgentComp>::create (const char* name) const
 {
     if (strcmp (name, my_name) == 0)
-	return new AgentComp (my_name);
+    {
+        return agent_instance;
+    }
 
     return 0;
 }
