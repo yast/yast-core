@@ -64,6 +64,8 @@ public:
      * of the component. You must use the symbol and the
      * signature of the term to decide, which component is to be created.
      * If you are not able to create a matching component, return 0.
+     * Instance of component is still owned by component creator and can
+     * be shared between calls.
      */
     virtual Y2Component *create(const char *name) const;
 
