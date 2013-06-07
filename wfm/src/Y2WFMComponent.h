@@ -64,6 +64,12 @@ public:
     void SCRSetDefault (const YCPInteger &handle);
     YCPInteger SCRGetDefault () const;
     YCPValue Args (const YCPInteger& index = YCPNull ()) const;
+
+    /**
+     * Sets WFM::Args. It useful for clients component that need to set WFM:Args
+     * builts
+     * @return Previous value
+     */
     YCPList  SetArgs (const YCPList& new_args);
     YCPString GetLanguage () const;
     YCPString GetEncoding () const;
