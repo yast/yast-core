@@ -9,6 +9,7 @@
 #define Y2CCAgentComponent_h
 
 
+#include <vector>
 #include <y2/Y2ComponentCreator.h>
 
 
@@ -29,7 +30,12 @@ public:
     /**
      * Destructor of a Y2CCAgentComp object.
      */
-    ~Y2CCAgentComp () { delete agent_instance; }
+    ~Y2CCAgentComp () { 
+      for (typename std::vector<AgentComp*>::iterator i = agent_instances.begin();
+           i != agent_instances.end();
+           ++i)
+        delete *i;
+    }
 
 
     /**
@@ -58,7 +64,7 @@ private:
     /**
      * Component for given name
      */
-    AgentComp *agent_instance;
+    mutable typename std::vector<AgentComp*> agent_instances;
 };
 
 
@@ -66,9 +72,7 @@ template <class AgentComp>
 Y2CCAgentComp<AgentComp>::Y2CCAgentComp (const char* my_name)
     : Y2ComponentCreator (Y2ComponentBroker::BUILTIN),
       my_name (my_name)
-{
-    agent_instance = new AgentComp(my_name);
-}
+{}
 
 
 template <class AgentComp> Y2Component*
@@ -76,7 +80,11 @@ Y2CCAgentComp<AgentComp>::create (const char* name) const
 {
     if (strcmp (name, my_name) == 0)
     {
-        return agent_instance;
+        // Agent cannot share one component instance because IniAgent component
+        // contain specific settings for given IniParser and it cannot be shared
+        AgentComp *instance = new AgentComp(my_name);
+        agent_instances.push_back(instance);
+        return instance;
     }
 
     return 0;
