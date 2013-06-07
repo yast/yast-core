@@ -11,7 +11,8 @@
 \-----------------------------------------------------------------------/
 
    File:	Y2StdioFunction.h
-		a remote function call
+		a remote function call. Its main usage is from Y2SystemFunction which use it
+    for remote calls.
 
    Author:	Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
