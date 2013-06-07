@@ -124,7 +124,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	debug_scanner("<float>");
 	std::string input(yytext);
 	std::istringstream is(input);
-	is.imbue(std::locale.classic()); /* ensure that we use C locale for float parsing */
+	is.imbue(std::locale::classic()); /* ensure that we use C locale for float parsing */
 	is >> token_value.fval;
 	RESULT (Type::ConstFloat, C_FLOAT);
     }
