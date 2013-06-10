@@ -5,9 +5,9 @@ require 'socket'
 socket = nil;
 
 if (ARGV.size == 1)
-	socket = TCPsocket.new( ARGV[0], 16384 );
+	socket = TCPSocket.new( ARGV[0], 16384 );
 else
-	socket = UNIXsocket.new( "/tmp/yast.socket" );
+	socket = UNIXSocket.new( "/tmp/yast.socket" );
 end
 
 def get_output(socket)
@@ -29,7 +29,7 @@ def wait_socket
 		end
 
 		if (input =="attach")
-			socket = UNIXsocket.new( "/tmp/yast.socket" );
+			socket = UNIXSocket.new( "/tmp/yast.socket" );
 			puts "Attached to YaST process"
 			return socket
 		end
