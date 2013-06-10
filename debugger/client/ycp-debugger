@@ -2,106 +2,94 @@
 
 require 'socket'
 
-socket = nil;
+socket = nil
 
 if (ARGV.size == 1)
-	socket = TCPSocket.new( ARGV[0], 16384 );
+	socket = TCPSocket.new ARGV[0], 16384
 else
-	socket = UNIXSocket.new( "/tmp/yast.socket" );
+	socket = UNIXSocket.new "/tmp/yast.socket"
 end
 
 def get_output(socket)
-			begin
-				res = socket.gets
-				if (res != "<EOF>\n")
-					puts(res)
-				end
-			end until ( res == "<EOF>\n" )
+  begin
+    res = socket.gets
+    puts res if res != "<EOF>\n"
+  end until (res == "<EOF>\n")
 end
 
 def wait_socket
 	begin
-		print( "yast-dbg (detached)> ");
-		input = STDIN.gets().chomp();
-		if (input == "q")
+		print "yast-dbg (detached)> "
+		input = gets().chomp()
+		if input == "q"
 			puts "Bye!"
 			exit 0
 		end
 
-		if (input =="attach")
-			socket = UNIXSocket.new( "/tmp/yast.socket" );
+		if input == "attach"
+			socket = UNIXSocket.new "/tmp/yast.socket"
 			puts "Attached to YaST process"
 			return socket
 		end
 
 		puts "You must attach to YaST process first using 'attach'"
-	end until false;
+	end until false
 end
 
 while !socket.eof? do
-		get_output(socket);
-		print( "yast-dbg> ");
-		input = STDIN.gets().chomp();
+  get_output(socket);
+  print "yast-dbg> "
+  input = gets().chomp()
 
-		if (input == "help")
-		    puts "Available commands:"
-		    puts
-		    puts "q		quit"
-		    puts "help		this help"
-		    puts "s		step"
-		    puts "n		next"
-		    puts "c		continue"
-		    puts "p <var>		print variable value"
-		    puts "b <fnc>		set breakpoint"
-		    puts "rb <fnc>	remove breakpoint"
-		    puts "bt		backtrace"
-		    puts "v <var>=<val>	set variable value"
-		    puts "attach		attach to current YaST process"
-		    puts "detach		detach from current YaST process"
-		    puts
-		    print( "yast-dbg> ");
-		    input = STDIN.gets().chomp();
-		end
+  if input == "help"
+    puts "Available commands:"
+    puts
+    puts "q		quit"
+    puts "help		this help"
+    puts "s		step"
+    puts "n		next"
+    puts "c		continue"
+    puts "p <var>		print variable value"
+    puts "b <fnc>		set breakpoint"
+    puts "rb <fnc>	remove breakpoint"
+    puts "bt		backtrace"
+    puts "v <var>=<val>	set variable value"
+    puts "attach		attach to current YaST process"
+    puts "detach		detach from current YaST process"
+    puts
+    print "yast-dbg> "
+    input = gets().chomp()
+  end
 
-		if (input == "q")
-			puts "Bye!"
-			exit 0
-		end
+  if input == "q"
+    puts "Bye!"
+    exit 0
+  end
 
-		if (input == "detach")
-			puts "Closing socket"
-			socket.close();
-			socket = wait_socket();
-			next
-		end
+  if input == "detach"
+    puts "Closing socket"
+    socket.close();
+    socket = wait_socket();
+    next
+  end
 		
-		begin
-			socket.puts(input) 
-		rescue Exception => e
-			puts e
-			exit 0
-		end;
+  begin
+    socket.puts input
+  rescue Exception => e
+    puts e
+    exit 0
+  end
 
-		# if printing value, show it, then get another output
-		if( input.split.first=="p" )
-			get_output(socket);
-		end
+  # if printing value, show it, then get another output
+  get_output(socket) if input.split.first == "p"
 
-		if( input=="bt" )
-			get_output(socket);
-		end
+  get_output(socket) if input == "bt"
 
-		if( input.split.first=="b" )
-			get_output(socket);
-		end
+  get_output(socket) if input.split.first == "b"
 
-		if( input.split.first=="rb" )
-			get_output(socket);
-		end
+  get_output(socket) if input.split.first == "rb"
 
-		if( input.split.first=="v" )
-			get_output(socket);
-		end
+  get_output(socket) if input.split.first == "v"
 end
 
 
