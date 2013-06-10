@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jun 10 12:06:08 UTC 2013 - lslezak@suse.cz
+
+- fixed YCP debugger client to make it run
+
+-------------------------------------------------------------------
 Mon Oct  8 16:50:38 CEST 2012 - mvidner@suse.cz
 
 - Clarified how to return lists and maps from Perl (bnc#783846).
