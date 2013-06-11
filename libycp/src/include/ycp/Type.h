@@ -206,7 +206,9 @@ public:
     virtual constTypePtr matchFlex (constTypePtr /*type*/, unsigned int /*number*/ = 0) const { return 0; }
 
     /**
-     * check match with expected type
+     * check match with expected type. Match is not symetric.. Match is not symetric.  
+     * So e.g. integere match any but not vica versa.
+     * @param expected is expeted type agaist that is matched, so integer.match(any)
      * <0: no match, ==0: full match, >0: propagated match
      */
     virtual int match (constTypePtr expected) const;
