@@ -48,7 +48,9 @@ YCPFloatRep::YCPFloatRep(const char *r)
 	(*endptr == 'E' && *(endptr+1) == '-' && isdigit(*(endptr+2)))||
 	(*endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2)))   )   // real float  
     {
-	v = atof(r);   // use default
+      istringstream ss(r);
+      ss.imbue(std::locale::classic()); //ensure that we are not affected by LC_NUMERIC
+      ss >> v;   // use default
     }
 }
 
