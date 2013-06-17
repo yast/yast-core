@@ -12,6 +12,6 @@ testscope
 hashcheck
 ycpc
 runc
-*.ycp
+./*.ycp
 *.ybc
 testSignature
