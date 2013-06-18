@@ -11,8 +11,12 @@
 \-----------------------------------------------------------------------/
 
    File:	Y2SystemNamespace.h
-		a wrapper interface for accessing a LiMaL namespace 
-		(configurable via SCROpen/SCRClose)
+		System namespace provide any module if it is prefixed by System like
+    System::Bootloader_API. System namespace allows to call module remotes.
+    It is useful when module do not use SCR for system access and touch it 
+    directly like LiMal library. Remote or local usage is based on SCR
+    builtin calls.
+  See: Y2StdioFunction to see how remote call is done.
 
    Author:	Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
@@ -35,9 +39,11 @@ class Y2SystemNamespace : public Y2Namespace {
     bool m_use_remote;
 
     vector<Y2SystemFunction*> m_functions;
-    
+
     string m_name;
-    
+
+    void unregisterFunction(Y2SystemFunction *f);
+
     friend class Y2SystemFunction;
 
 public:

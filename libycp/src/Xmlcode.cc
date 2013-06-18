@@ -833,6 +833,8 @@ Xmlcode::writeFile( const YCodePtr code, const string & filename)
 	y2error( "Failed to write '%s': %s", filename.c_str(), strerror( errno));
 	return false;
     }
+    // write XML without any localization
+    outstream.imbue(std::locale::classic());
 
     outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     outstream << "<ycp version=\"2.15.8.39280\">\n";
@@ -866,7 +868,7 @@ Xmlcode::xmlify( const string & s )
 
     const char *cptr = s.c_str();
     const char *next;
-    while( (next = strpbrk( cptr, "&<>'\"" )) ) {
+    while( (next = strpbrk( cptr, "&<>'\"\n\t" )) ) {
 	result += string( cptr, next - cptr );
 	switch (*next) {
 	  case '&': result += "&amp;"; break;
@@ -874,6 +876,8 @@ Xmlcode::xmlify( const string & s )
 	  case '>': result += "&gt;"; break;
 	  case '"': result += "&quot;"; break;
 	  case '\'': result += "&apos;"; break;
+	  case '\n': result += "&#xA;"; break;
+	  case '\t': result += "&#x9;"; break;
 	}
 	cptr = next + 1;
     }

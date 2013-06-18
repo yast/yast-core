@@ -35,9 +35,11 @@ class Y2SystemFunction : public Y2Function {
     bool m_use_remote;
     
     constFunctionTypePtr m_type;
+
+    Y2SystemNamespace *m_namespace;
     
 public:
-    Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type);
+    Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type, Y2SystemNamespace* system_namespace);
     
     virtual ~Y2SystemFunction ();
 

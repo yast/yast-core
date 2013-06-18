@@ -19,6 +19,8 @@
 
 %{
 
+#include <string>
+#include <sstream>
 #include <stdlib.h>
 
 #include "ycp/y2log.h"
@@ -120,7 +122,10 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 [0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+ {
 	debug_scanner("<float>");
-	token_value.fval = atof (yytext);
+	std::string input(yytext);
+	std::istringstream is(input);
+	is.imbue(std::locale::classic()); /* ensure that we use C locale for float parsing */
+	is >> token_value.fval;
 	RESULT (Type::ConstFloat, C_FLOAT);
     }
 

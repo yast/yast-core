@@ -1,0 +1,7 @@
+{
+    any f(integer i)
+    {
+      return 42;
+    }
+    return is(f, integer(any))==false;
+}

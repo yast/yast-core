@@ -18,6 +18,7 @@
 /-*/
 
 #include <ctype.h>
+#include <sstream>
 
 #include "ycp/y2log.h"
 #include "ycp/YCPFloat.h"
@@ -47,7 +48,9 @@ YCPFloatRep::YCPFloatRep(const char *r)
 	(*endptr == 'E' && *(endptr+1) == '-' && isdigit(*(endptr+2)))||
 	(*endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2)))   )   // real float  
     {
-	v = atof(r);   // use default
+      istringstream ss(r);
+      ss.imbue(std::locale::classic()); //ensure that we are not affected by LC_NUMERIC
+      ss >> v;   // use default
     }
 }
 
@@ -70,17 +73,15 @@ YCPFloatRep::compare(const YCPFloat& f) const
 string
 YCPFloatRep::toString() const
 {
-    char s[64];
+    std::ostringstream ss;
+    ss.imbue(std::locale::classic()); //ensure that we are not affected by LC_NUMERIC
+    ss << v;
     if ((v == (long)v)				// force decimal point for integer value range
 	&& (v < 100000))
     {
-	snprintf (s, 64, "%g.", v);
+	      ss << ".";
     }
-    else
-    {
-	snprintf (s, 64, "%g", v);
-    }
-    return string(s);
+    return ss.str();
 }
 
 

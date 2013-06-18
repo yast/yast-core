@@ -36,13 +36,6 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
 
 WFMSubAgent::~WFMSubAgent ()
 {
-    if (my_comp)
-    {
-	y2milestone ("Deleting SubAgent: %d %s", my_handle, my_name.c_str ());
-	my_comp->result (YCPVoid ());	// tell server to terminate
-	delete my_comp;
-    }
-
     if (my_agent)
     {
 	delete my_agent;

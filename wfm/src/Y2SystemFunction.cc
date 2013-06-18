@@ -34,11 +34,12 @@
 
 #include "ycp/SymbolTable.h"
 
-Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type) :
+Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr type, Y2SystemNamespace *name_space) :
     m_local (local_call)
     , m_remote (0)
     , m_use_remote (false)
     , m_type (type)
+    , m_namespace(name_space)
 {
 #ifdef DEBUG
     y2debug ("The local function: %s", m_local->name ().c_str ());
@@ -47,9 +48,12 @@ Y2SystemFunction::Y2SystemFunction (Y2Function* local_call, constFunctionTypePtr
 
 Y2SystemFunction::~Y2SystemFunction ()
 {
-    // FIXME deletes
-    
-    // FIXME unregister in Y2Namespace
+    m_namespace->unregisterFunction(this);
+
+    if(m_remote)
+      delete m_remote;
+
+    delete m_local;
 }
 
 bool 
@@ -122,9 +126,10 @@ Y2SystemFunction::reset ()
 void
 Y2SystemFunction::useRemote (Y2Function* remote_call)
 {
+    delete m_remote;
+
     m_remote = remote_call;
     m_use_remote = true;
-    // FIXME: delete old remote?
     
     y2milestone ("'%s': switched to remote", m_local->name ().c_str ());
 }
@@ -134,7 +139,11 @@ void
 Y2SystemFunction::useLocal ()
 {
     m_use_remote = false;
-    m_remote = 0; // FIXME: delete?
+    if (m_remote)
+    {
+        delete m_remote;
+        m_remote = 0;
+    }
 }
 
 

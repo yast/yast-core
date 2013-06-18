@@ -45,7 +45,7 @@ Y2SystemNamespace::Y2SystemNamespace (Y2Namespace* local_ns)
     , m_use_remote (false)
 {
     m_functions.clear ();
-    m_name = local_ns->name ();
+    m_name = "System::" + local_ns->name ();
     createTable ();
     local_ns->table ()->tableCopy (this);
 }
@@ -97,7 +97,7 @@ Y2SystemNamespace::createFunctionCall (const string name, constFunctionTypePtr t
     
     y2debug ("allocating new Y2SystemFunction %s::%s", m_name.c_str (), name.c_str ());
 
-    Y2SystemFunction* fnc = new Y2SystemFunction (local_func, type);
+    Y2SystemFunction* fnc = new Y2SystemFunction (local_func, type, this);
     m_functions.push_back (fnc);
     
     // currently we use remote communication
@@ -138,13 +138,27 @@ Y2SystemNamespace::useRemote (Y2ProgramComponent* sender)
 void
 Y2SystemNamespace::useLocal ()
 {
-    y2milestone ("redirecting to local");
+    y2milestone ("redirecting to local %u functions", m_functions.size());
     for ( vector<Y2SystemFunction*>::iterator it = m_functions.begin ();
 	it != m_functions.end () ; ++it )
     {
 	y2milestone ("Redirected: %s", (*it)->name ().c_str ());
 	(*it)->useLocal ();
+  y2milestone("Redirection done: %s",(*it)->name ().c_str ());
     }
     
     m_use_remote = false;
+}
+
+void Y2SystemNamespace::unregisterFunction(Y2SystemFunction *f)
+{
+    long to_remove =-1;
+    for( unsigned i = 0; i < m_functions.size(); i++)
+    {
+      // get our function
+      if (f == m_functions.at(i))
+        to_remove = i;
+    }
+    if (to_remove >= 0)
+      m_functions.erase(m_functions.begin()+to_remove);
 }

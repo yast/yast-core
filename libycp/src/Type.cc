@@ -1719,7 +1719,7 @@ FunctionType::match (constTypePtr expected) const
 	    && expected->isFunction()))
     {
 	constFunctionTypePtr ft (expected);
-	if (m_returntype->match (ft->m_returntype) < 0)
+	if (m_returntype->match(ft->m_returntype) < 0)
 	{
 #if DO_DEBUG
 //	    y2debug ("return type mismatch");
@@ -1755,7 +1755,10 @@ FunctionType::match (constTypePtr expected) const
 	    {
 		break;
 	    }
-	    if (m_arguments->parameterType(index)->match (ft->parameterType(index)) < 0)
+            // Do reverse matching because function int(any) should match any(int) ( it means
+            // that function that accept anything and return interger match interface that
+            // return anything and accept integer
+	    if (ft->parameterType(index)->match(m_arguments->parameterType(index)) < 0)
 	    {
 		return -1;
 	    }

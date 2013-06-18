@@ -525,41 +525,47 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
-    YCPValue values[statementcount];
-    
-    for (int i = 0; i < statementcount; i++)
-	values[i] = YCPNull ();
-	
+    vector<YCPValue> values[statementcount];
+
     for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
     {
-	values[ it->second ] = it->first;
+	values[ it->second ].push_back(it->first);
     }
     
     // s += environmentToString ();
 
     stmtlist_t *stmt = m_statements;
     int index = 0;
+    const char * closing_tag = "";
     while (stmt)
     {
 	str << Xmlcode::spaces( indent );
 	if (index == defaultcase)
 	{
+      str << closing_tag;
 	    str << "<default>\n";
-	    stmt->stmt->toXml( str, indent+2 );
-	    str << endl << "</default>";
+      closing_tag = "</default>";
 	}
-	else if (! values[index].isNull ())
+	else if (! values[index].empty ())
 	{
-	    str << "<case>";
-	    values[index]->toXml( str, 0 );
-	    str << endl;
-	    stmt->stmt->toXml( str, indent+2 );
-	    str << endl << "</case>";
+      str << closing_tag << endl;
+	    str << "<case>" << endl;
+      for (vector<YCPValue>::iterator i = values[index].begin(); i != values[index].end(); ++i)
+      {
+        str << "<value>";
+	      (*i)->toXml( str, 0 );
+        str << "</value>" << endl;
+      }
+      str << "<body>" << endl;
+
+      closing_tag = "</body></case>";
 	}
+	stmt->stmt->toXml( str, indent+2 );
 	stmt = stmt->next;
 	index++;
     }
+    str << closing_tag;
 
     return str;
 }
