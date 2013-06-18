@@ -1,4 +1,23 @@
 -------------------------------------------------------------------
+Fri Jun  7 09:05:24 UTC 2013 - jreidinger@suse.com
+
+- made SymbolEntry::value, setValue virtual (ABI change)
+- added Y2WFMComponent::SetArgs, needed for non-YCP clients
+- various fixes in handling YCP System::* calls
+- do not strictly check types of arguments for System remote calls
+- fixed parser annnd all serializers to use C locale for float
+- fixed some memory leaks
+- various fixes to the XML serialization of YCP
+- Fixed function type matching to be contravariant for arguments 
+  (BNC#825263) (return type has always been covariant, correctly)
+  Interface expected to handle "any" argument will no longer accept
+  implementations handling only a specific subtype. Conversely,
+  interfaces expected to handle a "string" will also accept 
+  implementation handling "any".
+  Affects the "is" builtin; breaks *-bindings relying on the bug.
+- 2.24.0
+
+-------------------------------------------------------------------
 Mon Oct  8 16:50:38 CEST 2012 - mvidner@suse.cz
 
 - Clarified how to return lists and maps from Perl (bnc#783846).

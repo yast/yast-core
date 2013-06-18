@@ -257,13 +257,11 @@ f_tostring (const YCPFloat &f, const YCPInteger &precision)
     if (f.isNull () || precision.isNull ())
 	return YCPNull ();
 
-    char *buffer;
-
-    if (asprintf (&buffer, "%.*f", int (precision->value ()), f->value ()) == -1)
-	return YCPNull (); // malloc error
-    YCPValue ret = YCPString (buffer);
-    free (buffer);
-    return ret;
+    std::ostringstream ss;
+    ss.imbue (std::locale::classic());
+    ss.precision (precision->value ());
+    ss << fixed << f->value ();
+    return YCPString(ss.str());
 }
 
 

@@ -111,6 +111,7 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
     if (filename.empty ())
 	return 0;
 
+    //FIXME memory leak, need store name and level to reuse it
     return new Y2PluginComponent (creates_servers, filename, tmp2, name, level);
 }
 
@@ -118,6 +119,10 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 Y2Component*
 Y2CCPlugin::provideNamespace(const char* name_space)
 {
+    std::map<string,Y2PluginComponent*>::iterator i = components.find(name_space);
+    if (i != components.end())
+      return i->second->component();
+
     y2debug ("Y2PluginComponent tries to locate namespace '%s'", name_space);
     Y2PluginComponent* comp = NULL;
     // try to load the library
@@ -134,8 +139,12 @@ Y2CCPlugin::provideNamespace(const char* name_space)
 	if (comp) break;
     }
 
+    if (!comp)
+      return NULL;
+
+    components[name_space] = comp;
     // return the internal component, that should provide the namespace
-    return comp ? comp->component () : NULL;
+    return comp->component ();
 }
 
 

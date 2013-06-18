@@ -148,8 +148,13 @@ std::ostream &
 YEVariable::toXml( std::ostream & str, int /*indent*/ ) const
 {
     str << "<variable name=\"";
-    str << m_entry->toString (false /*definition*/);
-    str << "\" category=\"" << m_entry->catString();
+    str << m_entry->name() << "\"";
+    string ns = m_entry->nameSpace()->name();
+    if (!ns.empty())
+      str << " ns=\"" << ns << "\"";
+    str << " category=\"" << m_entry->catString();
+    str << "\" type=\"" << m_entry->type()->toXmlString();
+
     return str << "\"/>";
 }
 
@@ -1947,7 +1952,10 @@ YEBuiltin::toStream (std::ostream & str) const
 std::ostream &
 YEBuiltin::toXml( std::ostream & str, int indent ) const
 {
-    str << "<builtin name=\"" << StaticDeclaration::Decl2String(m_decl) << "\"";
+    str << "<builtin name=\"" << m_decl->name << "\"";
+
+    if (m_decl->name_space)
+      str << " ns=\"" << m_decl->name_space->name << "\"";
 
     if (m_parameterblock != 0)
     {
@@ -1959,7 +1967,7 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
     // map: mapmap, maplist, filter, foreach
 
     ycodelist_t *block = NULL;
-    ycodelist_t *value = NULL;
+    std::vector<ycodelist_t *> values;
     ycodelist_t *p = m_parameters;
     u_int32_t count = 0;
     while (p) {
@@ -1981,8 +1989,7 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
 		str << " sym" << count << "=\"" << Xmlcode::xmlify( p->code->toString() ) << "\"";
 	    }
 	    else if (p->next) {
-		if (value) cerr << "Value already set!" << endl;
-		value = p;
+		    values.push_back(p);
 	    }
 	    else {
 		if (block) cerr << "Block already set!" << endl;
@@ -2001,9 +2008,12 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
 
     if (m_decl->flags & DECL_SYMBOL)
     {
-	str << "<expr>";
-	value->code->toXml( str, indent+2 );
-	str << "</expr>";
+      for(std::vector<ycodelist_t*>::iterator i = values.begin(); i != values.end(); ++i)
+      {
+        str << "<expr>";
+        (*i)->code->toXml( str, indent+2 );
+        str << "</expr>";
+      }
 	block->code->toXml( str, indent );
     }
     else {
@@ -2995,9 +3005,11 @@ std::ostream &
 YECall::toXml (std::ostream & str, int /*indent*/ ) const
 {
     str << "<call";
+    str << " category=\"" << m_sentry->catString() << "\"";
     if (!m_sentry->nameSpace()->name().empty()) {
 	str << " ns=\"" << m_sentry->nameSpace()->name() << "\"";
     }
+    str << " type=\"" << m_sentry->type()->toXmlString() << "\"";
     str << " name=\"" << m_sentry->name() << "\">";
     if (m_next_param_id > 0) {
 	str << "<args>";

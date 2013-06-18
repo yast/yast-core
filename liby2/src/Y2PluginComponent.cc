@@ -148,12 +148,7 @@ Y2PluginComponent::import (const char* name_space)
 void
 Y2PluginComponent::result (const YCPValue& result)
 {
-    if (comp)
-    {
-	comp->result (result);
-	delete comp;
-	comp = 0;
-    }
+    comp = 0;
 
     if (handle)
     {

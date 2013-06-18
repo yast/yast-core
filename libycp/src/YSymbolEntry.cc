@@ -269,7 +269,11 @@ YSymbolEntry::toXml (std::ostream & str, int indent ) const
     if (m_global) str << " global=\"1\"";
     str << " category=\"" << catString(); str << "\"";
     str << " type=\""; str << m_type->toXmlString(); str << "\"";
-    str << " name=\""; str << m_name.asString(); str << "\"/>";
+    str << " name=\""; str << m_name.asString(); str << "\"";
+    string ns = nameSpace()->name();
+    if (!ns.empty())
+      str << " ns=\"" << ns << "\"";
+    str << "/>";
     return str;
     // value is never written
 }

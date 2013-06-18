@@ -11,7 +11,8 @@
 \-----------------------------------------------------------------------/
 
    File:	Y2StdioFunction.h
-		a remote function call
+		a remote function call. Its main usage is from Y2SystemFunction which use it
+    for remote calls.
 
    Author:	Stanislav Visnovsky <visnov@suse.cz>
    Maintainer:	Stanislav Visnovsky <visnov@suse.cz>
@@ -31,7 +32,7 @@ class Y2StdioFunction : public Y2Function {
     string m_namespace;
     string m_name;
     constFunctionTypePtr m_type;
-    YCPValue* m_parameters;
+    vector<YCPValue> m_parameters;
 
     Y2ProgramComponent* m_sender;
     

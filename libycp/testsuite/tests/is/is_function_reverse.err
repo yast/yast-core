@@ -1,0 +1,12 @@
+Parsed:
+----------------------------------------------------------------------
+{
+    // any f (integer i)
+    // filename: "tests/is/is_function_reverse.ycp"
+    any f (integer i)
+{
+    return 42;
+}
+    return (is (f, integer (any)) == false);
+}
+----------------------------------------------------------------------

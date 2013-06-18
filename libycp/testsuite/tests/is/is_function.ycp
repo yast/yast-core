@@ -1,0 +1,7 @@
+{
+    integer f(any i)
+    {
+      return 42;
+    }
+    return is(f, any(integer));
+}
