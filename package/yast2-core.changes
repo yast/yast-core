@@ -8,6 +8,13 @@ Fri Jun  7 09:05:24 UTC 2013 - jreidinger@suse.com
 - fixed parser annnd all serializers to use C locale for float
 - fixed some memory leaks
 - various fixes to the XML serialization of YCP
+- Fixed function type matching to be contravariant for arguments 
+  (BNC#825263) (return typa has always been covariant, correctly)
+  Interface expected to handle "any" argument will no longer accepts
+  implementations handling only a specific subtype. Conversely,
+  interfaces expected to handle a "string" will also accept 
+  implementation handling "any".
+  Affects the "is" builtin; break *-bindings relying on the bug.
 - 2.24.0
 
 -------------------------------------------------------------------
