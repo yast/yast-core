@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 10 12:06:08 UTC 2013 - lslezak@suse.cz
+
+- fixed YCP debugger client to make it run
+- 2.24.0
+
+-------------------------------------------------------------------
 Fri Jun  7 09:05:24 UTC 2013 - jreidinger@suse.com
 
 - made SymbolEntry::value, setValue virtual (ABI change)
@@ -15,7 +21,6 @@ Fri Jun  7 09:05:24 UTC 2013 - jreidinger@suse.com
   interfaces expected to handle a "string" will also accept 
   implementation handling "any".
   Affects the "is" builtin; breaks *-bindings relying on the bug.
-- 2.24.0
 
 -------------------------------------------------------------------
 Mon Oct  8 16:50:38 CEST 2012 - mvidner@suse.cz
