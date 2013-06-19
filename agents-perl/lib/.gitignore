@@ -2,3 +2,8 @@ Makefile.perl
 pm_to_blib
 blib
 .made_mod
+MYMETA.json
+MYMETA.yml
+# automake parallel test harness helpers
+*.log
+*.trs
