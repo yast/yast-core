@@ -358,8 +358,6 @@ ScriptingAgent::UnregisterAllAgents ()
     for (SubAgents::iterator agent = agents.begin (); agent != agents.end ();
 	 ++agent)
     {
-	y2debug ("Path '%s' unregistered",
-		 (*agent)->get_path ()->toString ().c_str ());
         delete *agent;
     }
     agents.clear ();
