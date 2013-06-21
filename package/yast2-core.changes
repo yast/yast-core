@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun 21 07:50:17 UTC 2013 - jreidinger@suse.com
+
+- fixed the apparently harmless segfault when YaST finishing.
+- 2.24.1
+
+-------------------------------------------------------------------
 Mon Jun 10 12:06:08 UTC 2013 - lslezak@suse.cz
 
 - fixed YCP debugger client to make it run
