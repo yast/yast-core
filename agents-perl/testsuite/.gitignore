@@ -1,0 +1,3 @@
+# automake parallel test harness helpers
+*.log
+*.trs
