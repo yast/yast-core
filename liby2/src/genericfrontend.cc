@@ -657,18 +657,14 @@ main (int argc, char **argv)
     std::list<std::string> modpaths;
     std::list<std::string> incpaths;
 
-    // include paths
-    while (!strcmp(argv[arg], "-I"))
+    // include and module paths
+    while (!strcmp(argv[arg], "-I") || !strcmp(argv[arg], "-M"))
     {
-	arg++;
-	incpaths.push_front (string (argv[arg])); // push to front so first one is last in list
-	arg++;
-    }
+        if (!strcmp(argv[arg++], "-I"))
+            incpaths.push_front (string (argv[arg])); // push to front so first one is last in list
+        else
+            modpaths.push_front (string (argv[arg])); // push to front so first one is last in list
 
-    while (!strcmp(argv[arg], "-M"))
-    {
-	arg++;
-	modpaths.push_front (string (argv[arg])); // push to front so first one is last in list
 	arg++;
     }
 
