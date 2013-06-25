@@ -34,4 +34,11 @@ ylwrap
 stamp-h*
 package/*.tar.bz2
 package/*.spec
+# testsuites
+site.bak
+/test-driver
 tmp.*
+*/testsuite/*.log
+*/testsuite/*.sum
+*/testsuite/site.exp
+*.in.test
