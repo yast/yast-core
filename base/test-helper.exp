@@ -1,6 +1,10 @@
 # DRY!
 
 proc universal_yast_test { srcdir } {
+    # C locale
+    global env
+    set env(LANG) C
+
     # get all files matching tests/*.ycp
     set filenames [lsort [glob $srcdir/tests/*.ycp]]
 
