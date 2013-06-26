@@ -1121,6 +1121,7 @@ void print_help (const char *name)
     printf (opt_fmt, "--no-std-includes", "drop all built-in include paths");
     printf (opt_fmt, "--no-std-modules", "drop all built-in module paths");
     printf (opt_fmt, "-n, --no-std-paths", "no standard paths");
+    printf (opt_fmt, "-x, --xml", "for -c, produce a XML parse tree instead of YBC");
     printf (opt_fmt, "-o, --output", "output file for -c, -E, -p, -r");
     printf (opt_fmt, "-R, --recursive", "operate recursively");
     printf (opt_fmt, "-u, --ui {ncurses|qt}", "UI to start in combination with 'r'");
