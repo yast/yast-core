@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Jun 26 07:20:18 UTC 2013 - jreidinger@suse.com
+
+- YCP parser: fixed an endless loop for EOF in a string 
+  (gh#yast/yast-core#21)
+- 2.24.3
+
+-------------------------------------------------------------------
 Fri Jun 21 13:50:31 UTC 2013 - lslezak@suse.cz
 
 - y2base: handle interleaved -I and -M options, as used by
