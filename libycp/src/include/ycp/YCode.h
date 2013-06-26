@@ -77,7 +77,13 @@ class YCode : public Rep
   , public MemUsage
 #endif
 {
+protected:
+    mutable const char * comment_before;
+    mutable const char * comment_after;
+
+private:
     REP_BODY(YCode);
+
 public:
     enum ykind {
 	yxError = 0,
@@ -200,6 +206,17 @@ public:
      */
     virtual std::ostream & toXml (std::ostream & str, int indent ) const = 0;
 
+
+    /**
+     * \return comments as xml fragment:
+     *   ' comment_before="..." comment_after="..."'
+     */
+    std::string commentToXml () const;
+    /**
+     * Writes comment attributes to a xml stream
+     */
+    std::ostream & commentToXml (std::ostream & str ) const;
+
     /**
      * Is this code constant?
      *
@@ -250,6 +267,19 @@ public:
     * \return type of the value to be returned after calling \ref evaluate
     */
   virtual constTypePtr type() const;
+
+   /** Setter for comment before code
+    *  Take care about deallocation of pointer.
+    * \param comment pointer to comment
+    */
+    void setCommentBefore( const char * comment);
+
+   /** Setter for comment after code
+    *  Take care about deallocation of pointer.
+    * \param comment pointer to comment
+    */
+    void setCommentAfter( const char * comment);
+
 };
 
 
