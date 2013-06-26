@@ -19,12 +19,13 @@
 
    Implementation rules
 
-   yystype is a struct with four elements
+   yystype is a struct with five elements
 
     YCodePtr c		pointer to code (where applicable)
     tokenValue v	value of token (where applicable)
     constTypePtr t	type of current syntactic element
     int l		line number of syntactic element
+    string com          comment preceding the token
 
    c and v somehow represent a similar kind of information and are
    mostly valid alternating.
@@ -33,6 +34,9 @@
    identifiers, etc.
    c is used for the 'high level' (parser) syntax like expressions,
    statements, blocks, etc.
+   NOTE that the distinction is mostly between terminals and nonterminals,
+   but notably the 'type' nonterminal noes not have YCode and holds a Type
+   tree instead.
 
    t is valid everywhere since every syntactic element has a type.
 
@@ -40,6 +44,9 @@
 
    l is valid everywhere since every syntactic element appears at a
    distinctive line number in the source file.
+
+   com is valid for scanner tokens. As soon as there is an YCode, we
+   move it off com to c.
 /-*/
 %{
 #include <stdio.h>
@@ -85,6 +92,7 @@ struct yystype_type {
     tokenValue v;		// token (for scanner level syntax)
     constTypePtr t;		// type (NULL for error)
     int l;
+    std::string com;		// comment before the token
 };
 #define YYSTYPE yystype_type
 

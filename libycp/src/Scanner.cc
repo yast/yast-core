@@ -324,6 +324,18 @@ Scanner::scannedType () const
     return m_scannedType;
 }
 
+void
+Scanner::setCommentBefore (const string & comment_before)
+{
+    m_commentBefore = comment_before;
+}
+
+std::string
+Scanner::commentBefore () const
+{
+    return m_commentBefore;
+}
+
 
 int
 Scanner::lineNumber () const
