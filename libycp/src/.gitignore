@@ -6,3 +6,4 @@ parser.h
 parser.hh
 parser.output
 hashtable.h
+parser.tab.cc

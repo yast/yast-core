@@ -8,7 +8,7 @@ aclocal.m4
 autom4te.cache
 Makefile
 Makefile.in
-Makefile.am
+/Makefile.am
 Makefile.am.common
 config.h
 config.cache
