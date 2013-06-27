@@ -121,6 +121,11 @@ private:
     constTypePtr m_scannedType;
 
     /**
+     * Holds the comment before the most recent token
+     */
+    std::string m_commentBefore;
+
+    /**
      * Holds the line number of scanned_value
      */
     int m_lineNumber;
@@ -263,6 +268,8 @@ public:
      */
     constTypePtr scannedType() const;
 
+    std::string commentBefore () const;
+
     /**
      * Gets the line number of the latest scanned token.
      */
@@ -308,6 +315,8 @@ private:
      * of a token.
      */
     void setScannedToken (const tokenValue & value, constTypePtr type);
+
+    void setCommentBefore (const string & comment_before);
 
     /**
      * Internal helper function that deals with strings of arbitrary
