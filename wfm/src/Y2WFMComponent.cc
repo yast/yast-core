@@ -520,7 +520,7 @@ Y2WFMComponent::SetLanguage (const YCPString& language, const YCPString& encodin
 	    systemEncoding = proposedEncoding;
 	}
 
-	y2milestone ( "GET encoding for %s:  %s", currentLanguage.c_str(), proposedEncoding.c_str() );
+	y2debug ( "GET encoding for %s:  %s", currentLanguage.c_str(), proposedEncoding.c_str() );
 
 	// reset LC_CTYPE !!! (for ncurses)
 	setlocale( LC_CTYPE, locale.c_str() );
@@ -789,7 +789,7 @@ Y2WFMComponent::import (const char* name_space)
         return 0;
     }
 
-    y2milestone ("Y2WFMComponent::import (%s)", name_space);
+    y2debug ("Y2WFMComponent::import (%s)", name_space);
 
     // create the namespace
     // maybe this failed, but it does not mean any problems, block () will simply return 0
