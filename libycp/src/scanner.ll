@@ -261,6 +261,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 <bybl><<EOF>> {
 	logError("unterminated byteblock constant", LINE_VAR);
+	return SCANNER_ERROR;
     }
 
 <bybl>. {
@@ -380,6 +381,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 <str><<EOF>> {
 	logError("unterminated string constant", LINE_VAR);
+	return SCANNER_ERROR;
     }
 
  /* ----------------------------------- */
