@@ -138,7 +138,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 <comment>\* {
 	save_comment(yytext);
     }
-<comment>[^*]* {
+<comment>[^*\n]* {
 	save_comment(yytext);
     }
 
