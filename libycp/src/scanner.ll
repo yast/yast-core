@@ -19,6 +19,7 @@
 
 %{
 
+#include <list>
 #include <string>
 #include <sstream>
 #include <stdlib.h>
@@ -71,11 +72,29 @@ static SymbolTable *namespaceTable = NULL;
 // the namespace prefix when BEGIN(namespace) is called.
 static char *namespace_prefix = 0;
 
-static char *scanner_token;
-
 static tokenValue token_value;
 
-#define RESULT(type,token) setScannedToken(token_value, type); scanner_token = yytext; return token
+// If env Y2PARSECOMMENTS is set, we pass on the COMMENTS and WHITESPACES,
+// attaching it to the following token.
+static std::string saved_comment;
+
+ void save_comment(const char *text) {
+   if (getenv("Y2PARSECOMMENTS"))
+     saved_comment += text;
+ }
+
+ // TODO: detect that we've given the parser a comment
+ // that was ignored by the parser
+#define TOKEN(token) do {	    \
+   setCommentBefore(saved_comment); \
+   saved_comment = "";		    \
+   return (token);		    \
+ } while(0)
+
+#define VALUE_TOKEN(type,token) do {   \
+   setScannedToken(token_value, type); \
+   TOKEN(token);		       \
+ } while (0)
 
 %}
 
@@ -100,18 +119,41 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
  /*	Whitespace and Comments		*/
  /* ----------------------------------- */
 
+ /* Unix style Comments */
+^[\t ]*#.*$ {
+        save_comment(yytext);
+    }
+\/\* {
+        BEGIN (comment);
+	save_comment(yytext);
+    }
+<comment>\n {
+	save_comment(yytext);
+	INC_LINE;
+    }
+<comment>\*\/ {
+	save_comment(yytext);
+	BEGIN (INITIAL);
+    }
+<comment>\* {
+	save_comment(yytext);
+    }
+<comment>[^*]* {
+	save_comment(yytext);
+    }
 
-^[\t ]*#.*$			{ /* Ignore Unix style Comments */ }
-\/\*				{ BEGIN (comment); }
-<comment>\n			{ INC_LINE; }
-<comment>\*\/			{ BEGIN (INITIAL); }
-<comment>.			{ /* skip  */ }
+ /* C++ style comments */
+\/\/.*$	{
+	save_comment(yytext);
+    }
 
-\/\/.*$				{ /* Ignore C++ style comments */ }
-\n				{ /* Ignore newlines  */
+\n				{
 				  INC_LINE;
+          save_comment(yytext);
 				}
-[\f\t\r\v ]+			{ /* Ignore Whitespaces according to isspace(3) */ }
+[\f\t\r\v ]+			{
+          save_comment(yytext);
+}
 
 
  /* ----------------------------------- */
@@ -126,7 +168,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	std::istringstream is(input);
 	is.imbue(std::locale::classic()); /* ensure that we use C locale for float parsing */
 	is >> token_value.fval;
-	RESULT (Type::ConstFloat, C_FLOAT);
+	VALUE_TOKEN (Type::ConstFloat, C_FLOAT);
     }
 
 	/* integer constant  */
@@ -134,7 +176,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 [1-9][0-9]* {
 	debug_scanner("<int>");
 	token_value.ival = atoll (yytext);
-	RESULT (Type::ConstInteger, C_INTEGER);
+	VALUE_TOKEN (Type::ConstInteger, C_INTEGER);
     }
 
 	/* octal constant  */
@@ -142,7 +184,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 0[0-7]* {
 	debug_scanner("<oct>");
 	sscanf (yytext, "%Lo", &(token_value.ival));
-	RESULT (Type::ConstInteger, C_INTEGER);
+	VALUE_TOKEN (Type::ConstInteger, C_INTEGER);
     }
 
 	/* wrong octal constant */
@@ -156,7 +198,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 0x[0-9A-Fa-f]+ {
 	debug_scanner("<hex>");
 	sscanf (yytext, "0x%Lx", &(token_value.ival));
-	RESULT (Type::ConstInteger, C_INTEGER);
+	VALUE_TOKEN (Type::ConstInteger, C_INTEGER);
     }
     
 	/* wrong hexadecimal constant */
@@ -173,7 +215,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 \#\[ {
 	if (m_scandataBuffer == 0) m_scandataBuffer = extend_scanbuffer (sizeof (long));
-	if (m_scandataBuffer == 0) return SCANNER_ERROR;
+	if (m_scandataBuffer == 0) TOKEN(SCANNER_ERROR);
 	m_scandataBufferPtr = m_scandataBuffer + sizeof (long);
 	BEGIN (bybl);
     }
@@ -187,7 +229,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	long length = (long)(m_scandataBufferPtr - bytes);
 	memcpy (m_scandataBuffer, &length, sizeof (long));
 	token_value.cval = (unsigned char *)m_scandataBuffer;
-	RESULT (Type::ConstByteblock, C_BYTEBLOCK);
+	VALUE_TOKEN (Type::ConstByteblock, C_BYTEBLOCK);
     }
 
 	/* byteblock data  */
@@ -199,7 +241,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (used + needed/2 >= m_scandataBufferSize)
 	{
 	    if (extend_scanbuffer (needed) == 0)
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    m_scandataBufferPtr = m_scandataBuffer + used; // might be realloced
 	}
 	for (int i=0; i < needed/2; i++)
@@ -224,7 +266,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 <bybl>. {
 	logError("bad character in byteblock constant", LINE_VAR);
-	return SCANNER_ERROR;
+	TOKEN(SCANNER_ERROR);
     }
 
  /* ----------------------------------- */
@@ -238,7 +280,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (m_scandataBuffer == 0)
 	    m_scandataBuffer = extend_scanbuffer (1);
 	if (m_scandataBuffer == 0)
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 
 	m_scandataBufferPtr = m_scandataBuffer;
 	BEGIN (str);
@@ -252,7 +294,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	BEGIN (INITIAL);
 	*m_scandataBufferPtr = '\0';
 	token_value.sval = Scanner::doStrdup (m_scandataBuffer);
-	RESULT (Type::ConstString, STRING);
+	VALUE_TOKEN (Type::ConstString, STRING);
     }
 
 	/* string octal character  */
@@ -267,7 +309,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (result >= m_scandataBufferSize)
 	{
 	    if (extend_scanbuffer (1) == 0)
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    m_scandataBufferPtr = m_scandataBuffer + result;
 	}
 	(void) sscanf (yytext + 1, "%o", &result);
@@ -290,7 +332,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (offset >= m_scandataBufferSize)
 	{
 	    if (extend_scanbuffer (1) == 0)
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    m_scandataBufferPtr = m_scandataBuffer + offset;
 	}
 	switch (yytext[1])
@@ -316,7 +358,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (used + needed >= m_scandataBufferSize)
 	{
 	    if (extend_scanbuffer (needed) == 0)
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    m_scandataBufferPtr = m_scandataBuffer + used;  // might be realloced
 	}
 	strcpy (m_scandataBufferPtr, yptr);
@@ -330,7 +372,7 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 	if (offset >= m_scandataBufferSize)
 	{
 	    if (extend_scanbuffer (1) == 0)
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    m_scandataBufferPtr = m_scandataBuffer + offset;
 	}
 	*m_scandataBufferPtr++ = '\n';
@@ -348,19 +390,19 @@ SYMBOL ([[:alpha:]_][[:alnum:]_]+|[[:alpha:]][[:alnum:]_]*)
 
 nil {
 	debug_scanner("<nil>");
-	RESULT (Type::ConstVoid, C_VOID);
+	VALUE_TOKEN (Type::ConstVoid, C_VOID);
     }
 
 true  {
 	debug_scanner("<true>");
 	token_value.bval = true;
-	RESULT (Type::ConstBoolean, C_BOOLEAN);
+	VALUE_TOKEN (Type::ConstBoolean, C_BOOLEAN);
     }
 
 false  {
 	debug_scanner("<false>");
 	token_value.bval = false;
-	RESULT (Type::ConstBoolean, C_BOOLEAN);
+	VALUE_TOKEN (Type::ConstBoolean, C_BOOLEAN);
     }
 
  /* -- path  */
@@ -371,90 +413,89 @@ false  {
 	if (yytext[yyleng-1] == '-')
 	{
 	    logError ("dash behind path constant not allowed", LINE_VAR);
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 	}
-	RESULT (Type::ConstPath, C_PATH);
+	VALUE_TOKEN (Type::ConstPath, C_PATH);
     }
 
  /* ----------------------------------- */
  /*	Statement Keywords		*/
  /* ----------------------------------- */
-
-return		{ return RETURN;	};
-Wiederkehr	{ return RETURN;	};
-define		{ return DEFINE;	};
-definieren	{ return DEFINE;	};
-undefine	{ return UNDEFINE;	};
-continue	{ return CONTINUE;	};
-weiterleben	{ return CONTINUE;	};
-break		{ return BREAK;		};
-Ruhepause	{ return BREAK;		};
-if		{ return IF;		};
-falls		{ return IF;		};
-is		{ return IS;		};
-ist		{ return IS;		};
-else		{ return ELSE;		};
-sonstwas	{ return ELSE;		};
-do		{ return DO;		};
-mach		{ return DO;		};
-while		{ return WHILE;		};
-solange		{ return WHILE;		};
-repeat		{ return REPEAT;	};
-Wiederholungsaufforderung { return REPEAT;	};
-until		{ return UNTIL;		};
-bis		{ return UNTIL;		};
-empty		{ return EMPTY;		};
-list		{ return LIST;		};
-Verzeichnis	{ return LIST;		};
-map		{ return MAP;		};
-Karte		{ return MAP;		};
-struct		{ return STRUCT;	};
-block		{ return BLOCK;		};
-Klotz		{ return BLOCK;		};
-include		{ return INCLUDE;	};
-enthalten	{ return INCLUDE;	};
-import		{ return IMPORT;	};
-Einfuhrgenehmigung	{ return IMPORT;	};
-export		{ return EXPORT;	};
-global		{ return GLOBAL;	};
-weltumspannend	{ return GLOBAL;	};
-static		{ return STATIC;	};
-extern		{ return EXTERN;	};
-module		{ return MODULE;	};
-Baustein	{ return MODULE;	};
-textdomain	{ return TEXTDOMAIN;	};
-Textzielbereich	{ return TEXTDOMAIN;	};
-const		{ return CONST;		};
-typedef		{ return TYPEDEF;	};
-lookup		{ return LOOKUP;	};
-betrachten	{ return LOOKUP;	};
-select		{ return SELECT;	};
-switch		{ return SWITCH;	};
-case		{ return CASE;		};
-default		{ return DEFAULT;	};
-selektieren	{ return SELECT;	};
+return		{ TOKEN(RETURN);	};
+Wiederkehr	{ TOKEN(RETURN);	};
+define		{ TOKEN(DEFINE);	};
+definieren	{ TOKEN(DEFINE);	};
+undefine	{ TOKEN(UNDEFINE);	};
+continue	{ TOKEN(CONTINUE);	};
+weiterleben	{ TOKEN(CONTINUE);	};
+break		{ TOKEN(BREAK);		};
+Ruhepause	{ TOKEN(BREAK);		};
+if		{ TOKEN(IF);		};
+falls		{ TOKEN(IF);		};
+is		{ TOKEN(IS);		};
+ist		{ TOKEN(IS);		};
+else		{ TOKEN(ELSE);		};
+sonstwas	{ TOKEN(ELSE);		};
+do		{ TOKEN(DO);		};
+mach		{ TOKEN(DO);		};
+while		{ TOKEN(WHILE);		};
+solange		{ TOKEN(WHILE);		};
+repeat		{ TOKEN(REPEAT);	};
+Wiederholungsaufforderung { TOKEN(REPEAT);	};
+until		{ TOKEN(UNTIL);		};
+bis		{ TOKEN(UNTIL);		};
+empty		{ TOKEN(EMPTY);		};
+list		{ TOKEN(LIST);		};
+Verzeichnis	{ TOKEN(LIST);		};
+map		{ TOKEN(MAP);		};
+Karte		{ TOKEN(MAP);		};
+struct		{ TOKEN(STRUCT);	};
+block		{ TOKEN(BLOCK);		};
+Klotz		{ TOKEN(BLOCK);		};
+include		{ TOKEN(INCLUDE);	};
+enthalten	{ TOKEN(INCLUDE);	};
+import		{ TOKEN(IMPORT);	};
+Einfuhrgenehmigung	{ TOKEN(IMPORT);	};
+export		{ TOKEN(EXPORT);	};
+global		{ TOKEN(GLOBAL);	};
+weltumspannend	{ TOKEN(GLOBAL);	};
+static		{ TOKEN(STATIC);	};
+extern		{ TOKEN(EXTERN);	};
+module		{ TOKEN(MODULE);	};
+Baustein	{ TOKEN(MODULE);	};
+textdomain	{ TOKEN(TEXTDOMAIN);	};
+Textzielbereich	{ TOKEN(TEXTDOMAIN);	};
+const		{ TOKEN(CONST);		};
+typedef		{ TOKEN(TYPEDEF);	};
+lookup		{ TOKEN(LOOKUP);	};
+betrachten	{ TOKEN(LOOKUP);	};
+select		{ TOKEN(SELECT);	};
+switch		{ TOKEN(SWITCH);	};
+case		{ TOKEN(CASE);		};
+default		{ TOKEN(DEFAULT);	};
+selektieren	{ TOKEN(SELECT);	};
 
  /* ----------------------------------- */
  /*	Type Keywords			*/
  /* ----------------------------------- */
 
-any		{ RESULT (Type::Any, C_TYPE);	};
-void		{ RESULT (Type::Void, C_TYPE); };
-boolean		{ RESULT (Type::Boolean, C_TYPE); };
-integer		{ RESULT (Type::Integer, C_TYPE); };
-float		{ RESULT (Type::Float, C_TYPE); };
-string		{ RESULT (Type::String, C_TYPE); };
-byteblock	{ RESULT (Type::Byteblock, C_TYPE); };
+any		{ VALUE_TOKEN (Type::Any, C_TYPE);	};
+void		{ VALUE_TOKEN (Type::Void, C_TYPE); };
+boolean		{ VALUE_TOKEN (Type::Boolean, C_TYPE); };
+integer		{ VALUE_TOKEN (Type::Integer, C_TYPE); };
+float		{ VALUE_TOKEN (Type::Float, C_TYPE); };
+string		{ VALUE_TOKEN (Type::String, C_TYPE); };
+byteblock	{ VALUE_TOKEN (Type::Byteblock, C_TYPE); };
  /* list, map are keywords and done by parser.yy  */
-locale		{ RESULT (Type::Locale, C_TYPE); };
-term		{ RESULT (Type::Term, C_TYPE); };
-path		{ RESULT (Type::Path, C_TYPE); };
-symbol		{ RESULT (Type::Symbol, C_TYPE); };
+locale		{ VALUE_TOKEN (Type::Locale, C_TYPE); };
+term		{ VALUE_TOKEN (Type::Term, C_TYPE); };
+path		{ VALUE_TOKEN (Type::Path, C_TYPE); };
+symbol		{ VALUE_TOKEN (Type::Symbol, C_TYPE); };
 
  /* common mistyped names  */
-int	{ logError ("Seen 'int', use 'integer' instead", LINE_VAR); return SCANNER_ERROR; };
-char	{ logError ("Seen 'char', use 'string' instead", LINE_VAR); return SCANNER_ERROR; };
-bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER_ERROR; };
+int	{ logError ("Seen 'int', use 'integer' instead", LINE_VAR); TOKEN(SCANNER_ERROR); };
+char	{ logError ("Seen 'char', use 'string' instead", LINE_VAR); TOKEN(SCANNER_ERROR); };
+bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); TOKEN(SCANNER_ERROR); };
 
  /* ----------------------------------- */
  /*	Quotes				*/
@@ -465,7 +506,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 \`{SYMBOL} {
 	debug_scanner("<`symbol>");
 	token_value.yval = Scanner::doStrdup (yytext + 1);
-	RESULT (Type::ConstSymbol, C_SYMBOL);
+	VALUE_TOKEN (Type::ConstSymbol, C_SYMBOL);
     }
 
  /* -- double quoted symbol  */
@@ -473,7 +514,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 \`\`{SYMBOL} {
 	debug_scanner("<``symbol>");
 	logError ("*** Don't use ``symbol... but ``(symbol ... ***", LINE_VAR);
-	return SCANNER_ERROR;
+	TOKEN(SCANNER_ERROR);
     }
 
   /* -- symbols  */
@@ -515,7 +556,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		    logError ("Auto-Import '%s' failed", LINE_VAR, yytext);
 		}
 		logError ("Prefix '%s' is not a namespace", LINE_VAR, yytext);
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    }
 	    if (getenv (XREFDEBUG) != 0) y2milestone ("Autoimported (%s), table %p", yytext, namespaceTable);
 	    else y2debug ("builtin namespace (%s) -> table %p", yytext, namespaceTable);
@@ -538,7 +579,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    if (tentry == 0)
 	    {
 		logError ("Unknown namespace '%s'. Missing 'import'?", LINE_VAR, yytext);
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    }
 	    else if (tentry->sentry()->category() == SymbolEntry::c_self)	// self reference
 	    {
@@ -553,7 +594,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		if (! tentry->sentry()->isModule())
 		{
 		    logError ("Not a module '%s'", LINE_VAR, yytext);
-		    return SCANNER_ERROR;
+		    TOKEN(SCANNER_ERROR);
 		}
 		
 		const Y2Namespace *name_space = ((YSymbolEntryPtr)tentry->sentry())->payloadNamespace();
@@ -564,7 +605,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		if (namespaceTable == 0)
 		{
 		    logError ("Module table is empty", LINE_VAR);
-		    return SCANNER_ERROR;
+		    TOKEN(SCANNER_ERROR);
 		}
 		y2debug ("imported namespace (%s) -> table %p", yytext, namespaceTable);
 
@@ -626,7 +667,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		{
 		    logError ("Not a module '%s'", LINE_VAR, colon);
 		    delete[] namespace_prefix;
-		    return SCANNER_ERROR;
+		    TOKEN(SCANNER_ERROR);
 		}
 		
 		const Y2Namespace *name_space = tentry->sentry()->nameSpace();
@@ -637,7 +678,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		{
 		    logError ("Module table is empty", LINE_VAR);
 		    delete[] namespace_prefix;
-		    return SCANNER_ERROR;
+		    TOKEN(SCANNER_ERROR);
 		}
 
 	    }
@@ -653,7 +694,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 		    logError ("Unknown identifier '%s::%s'", LINE_VAR, namespace_prefix, yytext);
 		}
 		delete[] namespace_prefix;
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    }
 
 	    if (next == 0)
@@ -677,7 +718,7 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    case SymbolEntry::c_predefined:
 	    {
 		logError ("Module/Namespace name '%s' after '::' ?!", LINE_VAR, yytext);
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    }
 	    break;
 	    case SymbolEntry::c_variable:
@@ -686,30 +727,30 @@ bool	{ logError ("Seen 'bool', use 'boolean' instead", LINE_VAR); return SCANNER
 	    case SymbolEntry::c_builtin:
 	    {
 		token_value.tval = tentry;
-		RESULT (tentry->sentry()->type(), IDENTIFIER);
+		VALUE_TOKEN (tentry->sentry()->type(), IDENTIFIER);
 	    }
 	    break;
 	    case SymbolEntry::c_typedef:
 	    {
-		RESULT (tentry->sentry()->type(), C_TYPE);
+		VALUE_TOKEN (tentry->sentry()->type(), C_TYPE);
 	    }
 	    break;
 	    case SymbolEntry::c_const:
 	    {
 		// FIXME
 		token_value.sval = Scanner::doStrdup (yytext);
-		RESULT (Type::ConstString, STRING);
+		VALUE_TOKEN (Type::ConstString, STRING);
 	    }
 	    break;
 	}
 	logError ("Global identifier of unknown category '%s'", LINE_VAR, yytext);
-	return SCANNER_ERROR;
+	TOKEN(SCANNER_ERROR);
     }
 
 <namespace>. {
 	    debug_scanner("?%s?", yytext);
 	    logError ("Unexpected char '%s'", LINE_VAR, yytext);
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 	}
 
   /* plain symbol  */
@@ -731,7 +772,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	{
 	    debug_scanner("<Symbol(%s)>", yytext);
 	    token_value.nval = Scanner::doStrdup (yytext);
-	    RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
+	    VALUE_TOKEN (Type::Unspec, SYMBOL);	// symbol of unknown type
 	}
 	token_value.tval = tentry;
 	switch (tentry->sentry()->category())
@@ -742,13 +783,13 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    {
 		y2debug ("<Symbol equals module(%s@%p)>", yytext, tentry);
 		token_value.nval = Scanner::doStrdup (yytext);
-		RESULT (Type::Unspec, SYMBOL);	// symbol of unknown type
+		VALUE_TOKEN (Type::Unspec, SYMBOL);	// symbol of unknown type
 	    }
 	    break;
 	    case SymbolEntry::c_typedef:
 	    {
 		y2debug ("<Typedef(%s@%p)>", yytext, tentry);
-		RESULT (tentry->sentry()->type(), C_TYPE);
+		VALUE_TOKEN (tentry->sentry()->type(), C_TYPE);
 	    }
 	    break;
 	    case SymbolEntry::c_const:
@@ -756,14 +797,14 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 		y2debug ("<Const(%s@%p)>", yytext, tentry);
 		// FIXME
 		token_value.sval = Scanner::doStrdup (yytext);
-		RESULT (Type::ConstString, STRING);
+		VALUE_TOKEN (Type::ConstString, STRING);
 	    }
 	    break;
 	    case SymbolEntry::c_namespace:
 	    {
 		y2debug ("<Namespace(%s@%p)>", yytext, tentry);
 		token_value.tval = tentry;
-		RESULT (tentry->sentry()->type(), SYM_NAMESPACE);
+		VALUE_TOKEN (tentry->sentry()->type(), SYM_NAMESPACE);
 	    }
 	    break;
 	    case SymbolEntry::c_unspec:
@@ -776,14 +817,14 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    {
 		y2debug ("<identifier(%s@%p)>", yytext, tentry);
 		token_value.tval = tentry;
-		RESULT (tentry->sentry()->type(), IDENTIFIER);
+		VALUE_TOKEN (tentry->sentry()->type(), IDENTIFIER);
 	    }
 	    break;
 	    case SymbolEntry::c_filename:
 	    break;
 	}
 	logError ("Identifier of unknown category '%s'", LINE_VAR, yytext);
-	return SCANNER_ERROR;
+	TOKEN(SCANNER_ERROR);
     }
 
   /* global symbol  */
@@ -792,14 +833,14 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	if (builtinTable->find (name) != 0)
 	{
 	    logError ("Keyword used as variable '%s'", LINE_VAR, name);
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 	}
 	TableEntry *tentry = m_globalTable->find (name, SymbolEntry::c_unspec);
 	if (tentry == 0)
 	{
 	    y2debug ("'%s' not found in %p", name, m_globalTable);
 	    logError ("Unknown global variable '%s'", LINE_VAR, name);
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 	}
 	switch (tentry->sentry()->category())
 	{
@@ -812,7 +853,7 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    case SymbolEntry::c_module:
 	    {
 		logError ("Module name '%s' after '::' ?!", LINE_VAR, name);
-		return SCANNER_ERROR;
+		TOKEN(SCANNER_ERROR);
 	    }
 	    break;
 	    case SymbolEntry::c_variable:
@@ -821,26 +862,26 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
 	    case SymbolEntry::c_builtin:
 	    {
 		token_value.tval = tentry;
-		RESULT (tentry->sentry()->type(), IDENTIFIER);
+		VALUE_TOKEN (tentry->sentry()->type(), IDENTIFIER);
 	    }
 	    break;
 	    case SymbolEntry::c_typedef:
 	    {
-		RESULT (tentry->sentry()->type(), C_TYPE);
+		VALUE_TOKEN (tentry->sentry()->type(), C_TYPE);
 	    }
 	    break;
 	    case SymbolEntry::c_const:
 	    {
 		// FIXME
 		token_value.sval = Scanner::doStrdup (name);
-		RESULT (Type::ConstString, STRING);
+		VALUE_TOKEN (Type::ConstString, STRING);
 	    }
 	    break;
 	    case SymbolEntry::c_filename:
 	    break;
 	}
 	logError ("Global identifier of unknown category '%s'", LINE_VAR, name);
-	return SCANNER_ERROR;
+	TOKEN(SCANNER_ERROR);
     }
 
 
@@ -849,60 +890,60 @@ if (tentry!=0) y2debug ("'%s' is global", yytext);
  /* ----------------------------------- */
 
   /* -- locale  */
-_\(	{ return I18N;		}
+_\(	{ TOKEN(I18N);		}
 
   /* -- map expression  */
-\$\[	{ return MAPEXPR;	}
+\$\[	{ TOKEN(MAPEXPR);	}
 
   /* -- comparison operators  */
-==	{ return EQUALS;	}
-\<	{ return yytext[0];	}
-\>	{ return yytext[0];	}
-\<=	{ return LE;		}
-\>=	{ return GE;		}
-\!=	{ return NEQ;		}
+==	{ TOKEN(EQUALS);	}
+\<	{ TOKEN(yytext[0]);	}
+\>	{ TOKEN(yytext[0]);	}
+\<=	{ TOKEN(LE);		}
+\>=	{ TOKEN(GE);		}
+\!=	{ TOKEN(NEQ);		}
 
   /* -- boolean operators  */
-&&	{ return AND;		}
-\|\|	{ return OR; 		}
-\!	{ return yytext[0];	}
-\<\<	{ return LEFT;		}
-\>\>	{ return RIGHT;		}
+&&	{ TOKEN(AND);		}
+\|\|	{ TOKEN(OR); 		}
+\!	{ TOKEN(yytext[0]);	}
+\<\<	{ TOKEN(LEFT);		}
+\>\>	{ TOKEN(RIGHT);		}
 
   /* -- quotes  */
 
-::\`\`\{	{ return DCQUOTED_BLOCK; }
-::\{	{ return DCQUOTED_BLOCK; }
-\`\`\{	{ return QUOTED_BLOCK; }
-\`\`\(	{ return QUOTED_EXPRESSION; }
-\`\`	{ logError ("Lonely doubleqoute", LINE_VAR); return SCANNER_ERROR; }
-\`	{ logError ("Lonely qoute", LINE_VAR); return SCANNER_ERROR; }
+::\`\`\{	{ TOKEN(DCQUOTED_BLOCK); }
+::\{	{ TOKEN(DCQUOTED_BLOCK); }
+\`\`\{	{ TOKEN(QUOTED_BLOCK); }
+\`\`\(	{ TOKEN(QUOTED_EXPRESSION); }
+\`\`	{ logError ("Lonely doubleqoute", LINE_VAR); TOKEN(SCANNER_ERROR); }
+\`	{ logError ("Lonely qoute", LINE_VAR); TOKEN(SCANNER_ERROR); }
 
 
   /* -- bit operators  */
 \||\^|\&|~	{
-	    return yytext[0];
+	    TOKEN(yytext[0]);
 	}
 
   /* -- math operators  */
 \+|\-|\*|\/|\% {
-	    return yytext[0];
+	    TOKEN(yytext[0]);
 	}
 
 \]\:	{
-	    return CLOSEBRACKET;
+	    TOKEN(CLOSEBRACKET);
 	}
 
 \[|\]|\(|\)|,|\{|\}|:|\;|\=|\? {
-	    return yytext[0];
+	    TOKEN(yytext[0]);
 	}
 
 <<EOF>> {
-	    return END_OF_FILE;
+	    TOKEN(END_OF_FILE);
 	}
 
 .	{
 	    debug_scanner("?%s?", yytext);
 	    logError ("Unexpected char '%s'", LINE_VAR, yytext);
-	    return SCANNER_ERROR;
+	    TOKEN(SCANNER_ERROR);
 	}
