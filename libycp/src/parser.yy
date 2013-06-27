@@ -173,7 +173,7 @@ static YBlockPtr start_block (Parser *parser, constTypePtr type);
 
   Comments on types are passed in YYSTYPE.com.
  */
-static boolean parsing_comments();
+static bool parsing_comments();
 static void attach_comment(YCodePtr code, const std::string& comment);
 static void attach_comment_after(YCodePtr code, const std::string& comment);
 
