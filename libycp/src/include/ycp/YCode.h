@@ -78,6 +78,8 @@ class YCode : public Rep
 #endif
 {
 protected:
+    // Comments must be mutable, because it can be lazy moved from container
+    // element to its subelement like in YSExpression
     mutable const char * comment_before;
     mutable const char * comment_after;
 

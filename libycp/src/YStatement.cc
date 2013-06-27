@@ -259,6 +259,9 @@ YSExpression::toStream (std::ostream & str) const
 std::ostream &
 YSExpression::toXml( std::ostream & str, int indent ) const
 {
+    // This seems to be useless wrapper so we skip it in a XML,
+    // but if it has comment we must serialize it in the wrapped child
+    // The method is const, so comment_before and comment_after is mutable
     if (comment_before)
       m_expr->setCommentBefore(comment_before);
     if (comment_after)

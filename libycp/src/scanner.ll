@@ -74,7 +74,9 @@ static char *namespace_prefix = 0;
 
 static tokenValue token_value;
 
- static std::string saved_comment;
+// If env Y2PARSECOMMENTS is set, we pass on the COMMENTS and WHITESPACES,
+// attaching it to the following token.
+static std::string saved_comment;
 
  void save_comment(const char *text) {
    if (getenv("Y2PARSECOMMENTS"))

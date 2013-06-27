@@ -173,6 +173,7 @@ static YBlockPtr start_block (Parser *parser, constTypePtr type);
 
   Comments on types are passed in YYSTYPE.com.
  */
+static boolean parsing_comments();
 static void attach_comment(YCodePtr code, const std::string& comment);
 static void attach_comment_after(YCodePtr code, const std::string& comment);
 
@@ -182,7 +183,7 @@ static void attach_comment_after(YCodePtr code, const std::string& comment);
 // difficult to handle by y2r, so then we would modify these
 // macros to ignore the destination and attach to $$ instead.
 
-// attach comment from a terminal to the FOLLOWING YCode ( decrease by one is intention as it reverse order on stack )
+// attach comment from a terminal to the FOLLOWING YCode
 #define TOKEN_COMMENT(source_dollar) \
     attach_comment((&(source_dollar) + 1)->c , source_dollar.com)
 // attach comment from a terminal to an arbitrary nonterminal;
@@ -1058,7 +1059,7 @@ infix_expression:
 		    break;
 		}
 
-		if ($2.c->isConstant() && !getenv("Y2PARSECOMMENTS"))
+		if ($2.c->isConstant() && !parsing_comments()) //optimalize expresion if it is constant and we do not want to export comments attached to inner expression
 		{
 		    YConstPtr c = (YConstPtr)$2.c;
 		    if (c->kind() == YCode::ycBoolean)
@@ -1087,7 +1088,7 @@ infix_expression:
 		    break;
 		}
 
-		if ($2.c->isConstant() && !getenv("Y2PARSECOMMENTS"))
+		if ($2.c->isConstant() && !parsing_comments())
 		{
 		    YConstPtr c = (YConstPtr)$2.c;
 		    if (c->kind() == YCode::ycInteger)
@@ -1129,7 +1130,7 @@ infix_expression:
 		    yyTypeMismatch ("Expression before '?' must be boolean", Type::Boolean, $1.t, $1.l);
 		    $$.t = 0;
 		}
-		else if ($1.c->kind() == YCode::ycBoolean && !getenv("Y2PARSECOMMENTS"))
+		else if ($1.c->kind() == YCode::ycBoolean && !parsing_comments())
 		{
 		    if ($1.c->evaluate (true)->asBoolean()->value() == true)
 		    {
@@ -3221,7 +3222,7 @@ list:
 		}
 
 		YCPValue list = $2.c->evaluate (true);
-		if (list.isNull() || getenv("Y2PARSECOMMENTS")) //not a constant or we want comments attached to code
+		if (list.isNull() || parsing_comments()) //not a constant or we want comments attached to code
 		{
 		    $$.c = $2.c;
 		}
@@ -3242,7 +3243,6 @@ list:
 		}
 		$$.t = ListTypePtr (new ListType ($2.t));
 		$$.l = $1.l;
-                // FIXME COMMENT of $2 should be in $$ already...?
                 RULE_COMMENT($1);
                 RULE_COMMENT($3);
                 RULE_COMMENT($4);
@@ -3304,7 +3304,7 @@ map:
 		}
 
 		YCPValue map = $2.c->evaluate (true);
-		if (map.isNull() || getenv("Y2PARSECOMMENTS"))	// not a constant or we want comments attached to code
+		if (map.isNull() || parsing_comments())	// not a constant or we want comments attached to code
 		{
 		    $$.c = $2.c;
 		    $$.t = $2.t;
@@ -3320,7 +3320,6 @@ map:
 
 		$$.t = $2.t;
 		$$.l = $1.l;
-                // FIXME COMMENT of $2 should be in $$ already...?
                 RULE_COMMENT($1);
                 RULE_COMMENT($3);
                 RULE_COMMENT($4);
@@ -4705,17 +4704,17 @@ static
 void
 attach_comment(YCodePtr code, const std::string& comment)
 {
-    if (! code)
-    {
-      y2debug("PROBLEM: no place to attach comment %s", comment.c_str());
-        // FIXME: should not happen:
-        // we're trying to put it to an AST node
-        // which does not have an ycode;
-        // log an error, it is my bug here in the comment-parser
-	return;		    // FIXME probably attach it somewhere else
-    }
     if (comment.empty())
 	return;
+    if (! code)
+    {
+      y2error("No place to attach comment %s", comment.c_str());
+        // should not happen:
+        // we're trying to put it to an AST node
+        // which does not have an ycode;
+        // log an error, it is bug here in the comment-parser
+	return;
+    }
     // YCode::setCommentBefore takes ownership of its param
     // which should be new char[]
     char * newstr = new char[comment.size() + 1];
@@ -4727,10 +4726,17 @@ static
 void
 attach_comment_after(YCodePtr code, const std::string& comment)
 {
-    if (! code)
-	return;		    // FIXME probably attach it somewhere else
     if (comment.empty())
 	return;
+    if (! code)
+    {
+      y2error("No place to attach comment %s", comment.c_str());
+        // should not happen:
+        // we're trying to put it to an AST node
+        // which does not have an ycode;
+        // log an error, it is bug here in the comment-parser
+	return;
+    }
 
     // YCode::setCommentAfter takes ownership of its param
     // which should be new char[]
@@ -4832,4 +4838,9 @@ start_block (Parser *parser, constTypePtr type)
 #endif
 
     return top->theBlock;
+}
+
+static bool parsing_comments()
+{
+    return getenv("Y2PARSECOMMENTS") != NULL;
 }
