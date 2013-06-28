@@ -57,6 +57,12 @@ THis does not work because the environment may be already destroyed
 
 Y2LanguageLoader::Y2LanguageLoader ()
 {
+    if (getenv ("Y2DISABLELANGUAGEPLUGINS"))
+    {
+        // https://github.com/yast/yast-core/issues/20
+        return;
+    }
+
     glob_t glob_buf;
     int glob_flags = 0;
     if (YCPPathSearch::numberOfComponentLevels() == 0)
