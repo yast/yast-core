@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jul 12 08:46:23 UTC 2013 - mvidner@suse.com
+
+- factored out some common code in DejaGnu tests
+- 2.24.10
+
+-------------------------------------------------------------------
 Thu Jul 11 15:25:37 UTC 2013 - jreidinger@suse.com
 
 - Fix exporting comments in list elements (gh#yast/yast-core#36).
