@@ -868,7 +868,7 @@ Xmlcode::xmlify( const string & s )
 
     const char *cptr = s.c_str();
     const char *next;
-    while( (next = strpbrk( cptr, "&<>'\"\n\t" )) ) {
+    while( (next = strpbrk( cptr, "&<>'\"\n\t\f\v" )) ) {
 	result += string( cptr, next - cptr );
 	switch (*next) {
 	  case '&': result += "&amp;"; break;
@@ -878,6 +878,9 @@ Xmlcode::xmlify( const string & s )
 	  case '\'': result += "&apos;"; break;
 	  case '\n': result += "&#xA;"; break;
 	  case '\t': result += "&#x9;"; break;
+    case '\f':
+    case '\v':
+               break; //skip form-feed and vertical tab, lets ignore other non-xml chars for now and fix it when needed
 	}
 	cptr = next + 1;
     }
