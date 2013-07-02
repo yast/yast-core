@@ -1088,7 +1088,12 @@ infix_expression:
 		    break;
 		}
 
-		if ($2.c->isConstant() && !parsing_comments())
+    // If comments are parsed, constant subexpression elimination is disabled.
+    // But his breaks `case` labets with negative numbers, producing a 
+    // "Non constant value in case statement" parse error. This is because YCP lexer
+    // known only positive literals and negative numbers are done in the parser.
+    // Re-enabled CSE for unary minus.
+		if ($2.c->isConstant())
 		{
 		    YConstPtr c = (YConstPtr)$2.c;
 		    if (c->kind() == YCode::ycInteger)
