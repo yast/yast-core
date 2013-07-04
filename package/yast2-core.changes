@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Thu Jul  4 08:46:47 UTC 2013 - jreidinger@suse.com
+
+- Prevent invalid XML by filtering out vertical tab and form-feed in
+  xml output gh#yast/yast-core#25
+- Fixed "Non constant value in case statement" parse error for
+  `case -1:` with enabled comments parsing
+- 2.24.6
+
+-------------------------------------------------------------------
 Fri Jun 28 13:16:23 UTC 2013 - mvidner@suse.com
 
 - enabled ignoring language bindings (yast2-ruby-bindings,
