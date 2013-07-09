@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jul  9 17:00:37 UTC 2013 - jreidinger@suse.com
+
+- fix segfault during installation
+- 2.24.8
+
+-------------------------------------------------------------------
 Tue Jul  9 10:45:44 UTC 2013 - jreidinger@suse.com
 
 - Fix missing import in exported xml (gh#yast/y2r#41)
