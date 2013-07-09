@@ -47,7 +47,7 @@ Y2StdioFunction::Y2StdioFunction (string ns, string name
     {
         uint count = type->parameterCount ();
 
-        m_parameters.reserve(count);
+        m_parameters.resize(count);
     }
 }
 
@@ -58,6 +58,8 @@ Y2StdioFunction::~Y2StdioFunction ()
 bool 
 Y2StdioFunction::attachParameter (const YCPValue& arg, const int pos)
 {
+    if (pos >= m_parameters.size())
+        m_parameters.resize(pos+1);
     m_parameters[pos] = arg;
     return true;
 }
