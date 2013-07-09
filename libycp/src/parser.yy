@@ -1719,7 +1719,10 @@ statement:
 		}
                 else
                 {
-                    $$.c = NULL;
+                    if (parsing_comments()) //do not optimize import if we need all statements
+              		      $$.c = new YSImport (module, $1.l);
+                    else
+                        $$.c = NULL;
                 }
                 RULE_COMMENT($1);
                 RULE_COMMENT($2);
@@ -2849,6 +2852,7 @@ tupletypes:
 	    {
 		$$.v.val = 0;
 		$$.t = Type::Void;
+		$$.com = "";
 	    }
 |	tupletype
 ;
