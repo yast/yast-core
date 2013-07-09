@@ -2849,6 +2849,7 @@ tupletypes:
 	    {
 		$$.v.val = 0;
 		$$.t = Type::Void;
+		$$.com = "";
 	    }
 |	tupletype
 ;
