@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Jul  9 10:45:44 UTC 2013 - jreidinger@suse.com
+
+- Fix missing import in exported xml (gh#yast/y2r#41)
+- Fix exporting comments for methods without parameters
+  (gh#yast/yast-core#29)
+- 2.24.7
+
+-------------------------------------------------------------------
 Thu Jul  4 08:46:47 UTC 2013 - jreidinger@suse.com
 
 - Prevent invalid XML by filtering out vertical tab and form-feed in
