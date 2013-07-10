@@ -294,7 +294,7 @@ YCPPathRep::Component::toString() const
 	    case '\f':    s+= "\\f";   break;
 	    default:
 	    {
-		if (isprint (*c))
+		if ((unsigned char)*c >= 32) //keep this line consistent with YCPString#toString
 		    s+= *c;
 		else
 		{
