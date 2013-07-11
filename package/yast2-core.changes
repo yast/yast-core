@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Thu Jul 11 15:25:37 UTC 2013 - jreidinger@suse.com
+
+- Fix exporting comments in list elements (gh#yast/yast-core#36).
+- Fix exporting comments for function calls.
+- Fix printing paths containing UTF8 (gh#yast/yast-ruby-bindings#64).
+- Temporary disable tests that fails non-detereminic.
+- 2.24.9
+
+-------------------------------------------------------------------
 Thu Jul 11 09:15:38 UTC 2013 - mvidner@suse.com
 
 - Fixed tests that would always succeed on oS-12.3, with
