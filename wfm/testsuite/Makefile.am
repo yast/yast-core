@@ -8,6 +8,7 @@ AM_CXXFLAGS = -DY2LOG=\"wfm\"
 
 PACKAGE = wfm
 AUTOMAKE_OPTIONS = dejagnu
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 INCLUDES =					\
 	-I$(top_srcdir)/libycp/src/include	\
