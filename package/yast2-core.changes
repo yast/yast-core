@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul 11 09:15:38 UTC 2013 - mvidner@suse.com
+
+- Fixed tests that would always succeed on oS-12.3, with
+  "WARNING: could not find 'runtest'".
+- Ignore the language bindings in all tests.
+
+-------------------------------------------------------------------
 Tue Jul  9 17:00:37 UTC 2013 - jreidinger@suse.com
 
 - fix segfault during installation

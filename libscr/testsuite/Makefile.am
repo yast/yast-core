@@ -16,6 +16,7 @@ runscr_LDADD = ${AGENT_LIBADD}
 
 PACKAGE = libscr
 AUTOMAKE_OPTIONS = dejagnu
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp \
