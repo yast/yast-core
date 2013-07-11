@@ -34,3 +34,4 @@ ylwrap
 stamp-h*
 package/*.tar.bz2
 package/*.spec
+tmp.*
