@@ -3283,6 +3283,8 @@ list_elements:
 		((YEListPtr)$1.c)->attach ($3.c);
 		$$.c = $1.c;
 		$$.l = $1.l;
+
+		TOKEN_COMMENT($2);
 	    }
 ;
 
@@ -3427,6 +3429,7 @@ function_call:
 		    /* C_SYMBOL  */
 		    $$.c = new YETerm ($1.v.nval);
 		    $$.t = Type::Term;
+        $$.com = $1.com;
 		}
 		else							// function_name is function or builtin
 		{
@@ -3736,6 +3739,7 @@ parameters:
 #endif
 		$$.c = 0;
 		$$.t = Type::Unspec;
+    $$.com = "";
 	    }
 |	type identifier
 	    {
@@ -3855,8 +3859,6 @@ parameters:
 		    $$.t = 0;
 		    break;
 		}
-
-                TOKEN_COMMENT($3);
 
 		/* if the function was not found, better fail now */
 		if ($0.t != 0 )
