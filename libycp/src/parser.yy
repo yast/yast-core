@@ -3283,6 +3283,8 @@ list_elements:
 		((YEListPtr)$1.c)->attach ($3.c);
 		$$.c = $1.c;
 		$$.l = $1.l;
+
+		TOKEN_COMMENT($2);
 	    }
 ;
 
