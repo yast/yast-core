@@ -3,6 +3,7 @@
 #
 
 AUTOMAKE_OPTIONS = dejagnu
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 INCLUDES =							\
 	-I$(srcdir)/../../libycp/src/include			\

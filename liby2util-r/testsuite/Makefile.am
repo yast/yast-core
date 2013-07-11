@@ -4,6 +4,7 @@
 SUBDIRS = lib config liby2util.test tests
 PACKAGE = liby2util
 AUTOMAKE_OPTIONS = dejagnu
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 INCLUDES= -I$(srcdir)/../src/include
 

@@ -10,6 +10,7 @@ AM_CXXFLAGS = -DY2LOG=\"agent-process\"
 
 PACKAGE = ag_process
 AUTOMAKE_OPTIONS = dejagnu
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 INCLUDES = ${AGENT_INCLUDES}
 

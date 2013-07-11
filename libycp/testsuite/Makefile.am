@@ -25,7 +25,7 @@ testSignature_LDADD = ../src/libycp.la ../src/libycpvalues.la ../../liby2/src/li
 PACKAGE=libycp
 
 AUTOMAKE_OPTIONS = dejagnu
-RUNTEST = Y2DISABLELANGUAGEPLUGINS=1 runtest
+export Y2DISABLELANGUAGEPLUGINS = 1
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* ycp.log ycp.sum site.exp libycp.log libycp.sum site.bak log.tmp
