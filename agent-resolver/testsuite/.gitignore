@@ -1,2 +1,3 @@
 run_ag_process
 runresolver
+tests/*.scr
