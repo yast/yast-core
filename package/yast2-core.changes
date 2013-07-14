@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Jul 14 20:17:56 UTC 2013 - mvidner@suse.com
+
+- Adapt to move of crypt_gensalt to libowcrypt (FATE#314945).
+- 2.24.11
+
+-------------------------------------------------------------------
 Fri Jul 12 08:46:23 UTC 2013 - mvidner@suse.com
 
 - factored out some common code in DejaGnu tests
