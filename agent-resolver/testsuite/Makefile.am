@@ -7,6 +7,7 @@ AM_CXXFLAGS = -DY2LOG=\"agent-resolver\"
 PACKAGE = ag_resolver
 AUTOMAKE_OPTIONS = dejagnu
 export Y2DISABLELANGUAGEPLUGINS = 1
+export top_srcdir
 
 INCLUDES = ${AGENT_INCLUDES}
 

@@ -9,6 +9,7 @@ AM_CXXFLAGS = -DY2LOG=\"agent-any\"
 PACKAGE = ag_anyagent
 AUTOMAKE_OPTIONS = dejagnu
 export Y2DISABLELANGUAGEPLUGINS = 1
+export top_srcdir
 
 INCLUDES = ${AGENT_INCLUDES}
 
