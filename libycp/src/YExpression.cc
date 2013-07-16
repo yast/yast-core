@@ -3028,10 +3028,14 @@ YECall::toStream (std::ostream & str) const
 
 
 std::ostream &
-YECall::toXml (std::ostream & str, int /*indent*/ ) const
+YECall::toXml (std::ostream & str, int indent ) const
 {
     str << "<call";
     str << " category=\"" << m_sentry->catString() << "\"";
+    // indent is reinterpreted here as "our caller does not use our value"
+    if (indent < 0) {
+      str << " result=\"unused\"";
+    }
     commentToXml(str);
     if (!m_sentry->nameSpace()->name().empty()) {
 	str << " ns=\"" << m_sentry->nameSpace()->name() << "\"";
