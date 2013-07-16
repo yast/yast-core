@@ -565,7 +565,9 @@ YLocale::toStream (std::ostream & str) const
 std::ostream &
 YLocale::toXml (std::ostream & str, int /*indent*/ ) const
 {
-    str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_locale ) << "\"/>";
+    str << "<locale domain=\"" << m_domain->first << "\" text=\"" << Xmlcode::xmlify( m_locale ) << "\""
+        << commentToXml()
+        << "/>";
     return str;
 }
 

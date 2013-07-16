@@ -266,6 +266,17 @@ YSExpression::toXml( std::ostream & str, int indent ) const
       m_expr->setCommentBefore(comment_before);
     if (comment_after)
       m_expr->setCommentAfter(comment_after);
+
+    // This wrapper is not so useless after all: its presence means that
+    // the value of its child expression is unused. That information
+    // is better placed on the expression (function call) itself.
+    // m_expr can also be an YEBuiltin but there we don't care yet.
+    if (m_expr->kind() == YCode::yeFunctionPointer ||
+        m_expr->kind() == YCode::yeFunction) {
+      // HACK: reuse the indent parameter which is ignored otherwise anyway
+      indent = -1;
+    }
+
     m_expr->toXml( str, indent );
     comment_after = comment_before = NULL;
     return str;
