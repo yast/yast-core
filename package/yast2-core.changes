@@ -4,6 +4,8 @@ Tue Jul 16 08:40:03 UTC 2013 - mvidner@suse.com
 - XML: distinguish <call result="unused" ...> so that calls
   involving parameters passed by reference have a less ugly Ruby
   translation.
+- XML: added forgotten comment attributes to <locale>
+  (gh#yast/yast-core#39)
 - 2.24.12
 
 -------------------------------------------------------------------
