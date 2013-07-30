@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 30 08:28:27 UTC 2013 - yast-devel@opensuse.org
+
+- version 3.0.0
+
+-------------------------------------------------------------------
 Tue Jul 16 08:40:03 UTC 2013 - mvidner@suse.com
 
 - XML: distinguish <call result="unused" ...> so that calls
