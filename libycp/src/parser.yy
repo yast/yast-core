@@ -1101,12 +1101,14 @@ infix_expression:
 			$$.c = new YConst (YCode::ycInteger, YCPInteger (-(c->value()->asInteger()->value())));
 			$$.t = Type::Integer;
 			$$.l = $1.l;
+			RULE_COMMENT($1);
 		    }
 		    else if ($2.c->kind() == YCode::ycFloat)
 		    {
 			$$.c = new YConst (YCode::ycFloat, YCPFloat (-(c->value()->asFloat()->value())));
 			$$.t = Type::Float;
 			$$.l = $1.l;
+			RULE_COMMENT($1);
 		    }
 		    else
 		    {
