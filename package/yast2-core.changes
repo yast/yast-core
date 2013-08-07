@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Aug  7 07:46:14 UTC 2013 - dmajda@suse.cz
+
+- Do not lose comments before negative numbers in YCP parser
+  (gh#yast/ycp-killer#617).
+- 3.0.1
+
+-------------------------------------------------------------------
 Tue Jul 30 08:28:27 UTC 2013 - yast-devel@opensuse.org
 
 - version 3.0.0
