@@ -2877,15 +2877,6 @@ YECall::finalize()
 
 	// retrieve function type for formal parameter list
 	constFunctionTypePtr ftype = sentry->type();
-	
-	// not the correct number of parameters?
-	if ((int)m_next_param_id != ftype->parameterCount())
-	{
-	    // try to continue with the next one
-	    entry = next_overloaded;
-	    continue;
-	}
-    
 	bool accept = true;
 	// ok, check whether types match
 	for (uint check_count = 0; check_count < m_next_param_id ; check_count++)
