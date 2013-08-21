@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug 21 13:39:04 UTC 2013 - jreidinger@suse.com
+
+- Match properly types with wildcard in parameters
+- 3.0.2
+
+-------------------------------------------------------------------
 Wed Aug  7 07:46:14 UTC 2013 - dmajda@suse.cz
 
 - Do not lose comments before negative numbers in YCP parser
