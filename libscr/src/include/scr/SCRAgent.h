@@ -21,7 +21,6 @@
 #ifndef SCRAgent_h
 #define SCRAgent_h
 
-
 #include <YCP.h>
 #include <ycp/y2log.h>
 
@@ -133,6 +132,13 @@ public:
      * directly from C++. You must check if it is not 0.
      */
     SCRAgent *mainscragent;
+
+
+    /**
+     * Gets root on which agent operate.
+     * \return C string owned by instance.
+     */
+    virtual const char *root ();
 
     /**
      * Reads the scr config file and returns the term. It skips all lines

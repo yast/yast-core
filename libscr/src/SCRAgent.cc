@@ -107,3 +107,7 @@ SCRAgent::readconf (const char *filename)
     return ret;
 }
 
+const char *SCRAgent::root()
+{
+    return mainscragent ? mainscragent->root() : "/";
+}
