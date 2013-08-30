@@ -99,8 +99,7 @@ Y2CCProgram::provideNamespace(const char*)
     return NULL;
 }
 
-
+// Do not create program component creator for y2 servers, because now only scr exists
+// and it have own component creator, that handle also different root.
 Y2CCProgram g_y2ccprogram0 (true, true);
-Y2CCProgram g_y2ccprogram1 (true, false);
 Y2CCProgram g_y2ccprogram2 (false, true);
-Y2CCProgram g_y2ccprogram3 (false, false);
