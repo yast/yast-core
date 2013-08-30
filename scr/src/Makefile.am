@@ -9,7 +9,8 @@ serversdir = $(execcompdir)/servers
 plugin_LTLIBRARIES = libpy2scr.la
 
 libpy2scr_la_SOURCES =				\
-	Y2CCSCR.cc				\
+	Y2CCSCR.cc Y2CCSCR.h				\
+	Y2SCRComponent.cc Y2SCRComponent.h	\
 	ScriptingAgent.cc ScriptingAgent.h	\
 	StdioSCRAgent.cc StdioSCRAgent.h	\
 	SCRSubAgent.cc SCRSubAgent.h

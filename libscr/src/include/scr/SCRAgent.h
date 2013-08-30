@@ -138,7 +138,7 @@ public:
      * Gets root on which agent operate.
      * \return C string owned by instance.
      */
-    virtual const char *root ();
+    virtual const char *root () const;
 
     /**
      * Reads the scr config file and returns the term. It skips all lines

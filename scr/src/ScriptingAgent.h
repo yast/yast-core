@@ -27,7 +27,7 @@ public:
     /**
      * Constructor.
      */
-    ScriptingAgent ();
+    ScriptingAgent (const string& root = "/");
 
     // used only in agent-ini/testsuite...?
     // TODO try to eliminate it
@@ -36,12 +36,17 @@ public:
      * 
      * @param file	SCR configuration file to be registered.
      */
-    ScriptingAgent (const string& file);
+    ScriptingAgent (const string& root, const string& file);
 
     /**
      * Destructor. Also deletes subagents.
      */
     ~ScriptingAgent ();
+
+    /**
+     * Overwrites root to provide root for all of its subagents.
+     */
+    virtual const char* root() const;
 
     /**
      * Reads data.
@@ -122,6 +127,8 @@ private:
     // a Dir or we were not lucky with a path patch), set this flag so
     // that we do not unnecessarily sweep again
     bool done_sweep;
+
+    string root_path;
 
     // FIXME rethink the caching
     struct RegistrationDir {
