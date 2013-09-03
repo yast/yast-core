@@ -57,7 +57,7 @@ YCPValueRep::valuetype_str () const
 
 // value type checking
 
-bool YCPValueRep::isVoid()        const { return valuetype() == YT_VOID 
+bool YCPValueRep::isVoid()        const { return valuetype() == YT_VOID
 						|| valuetype() == YT_RETURN; }
 bool YCPValueRep::isBoolean()     const { return valuetype() == YT_BOOLEAN; }
 bool YCPValueRep::isInteger()     const { return valuetype() == YT_INTEGER; }

@@ -41,7 +41,7 @@
 #define ADDRESS     "/tmp/yast.socket"
 #define PORT	    16384
 
-Debugger::Debugger () : 
+Debugger::Debugger () :
   m_socket (-1),
   m_descriptor (NULL),
   m_outputstash (""),
@@ -52,10 +52,10 @@ Debugger::Debugger () :
 Debugger::~Debugger ()
 {
     // close the controll socket
-    if (m_socket) 
+    if (m_socket)
     {
 	close (m_socket);
-	if (m_remote) 
+	if (m_remote)
 	    unlink (ADDRESS);
     }
     m_socket = -1;
@@ -184,7 +184,7 @@ void Debugger::setBreakpoint (std::list<std::string> &args)
 	else
 	{
 	    YFunctionPtr fnc = ((YFunctionPtr)((YSymbolEntryPtr)sentry)->code());
-	
+
 	    // set the breakpoint wrapper
 	    if (fnc->definition ()->kind () == YCode::yiBreakpoint)
 	    {
@@ -192,9 +192,9 @@ void Debugger::setBreakpoint (std::list<std::string> &args)
 		sendOutput ("Breakpoint enabled");
 		return;
 	    }
-	
+
 	    YBreakpointPtr bp = new YBreakpoint (fnc->definition(), args.front () );
-	
+
 	    fnc->setDefinition (bp);
 	    std::string result = "Set breakpoint to " + sentry->toString();
 	    sendOutput (result);
@@ -215,7 +215,7 @@ void Debugger::removeBreakpoint (std::list<std::string> &args)
 	else
 	{
 	    YFunctionPtr fnc = ((YFunctionPtr)((YSymbolEntryPtr)sentry)->code());
-	
+
 	    if (fnc->definition ()->kind () == YCode::yiBreakpoint)
 	    {
 		// disable the breakpoint wrapper
@@ -237,11 +237,11 @@ void Debugger::generateBacktrace ()
     YaST::ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
     while (it != stack.rend())
     {
-        result = result 
+        result = result
     	  + "\n"
-    	  + ( (*it)->filename ) 
-          + ":" 
-          + stringutil::numstring((*it)->linenumber) 
+    	  + ( (*it)->filename )
+          + ":"
+          + stringutil::numstring((*it)->linenumber)
           + ": "
           + ((*it)->function->entry()->toString());
 
@@ -285,7 +285,7 @@ SymbolEntryPtr Debugger::findSymbol (std::string arg)
 	    if (c->name () == "wfm")
 	    {
 		Y2Namespace* ns = c->import (ns_name.c_str());
-		if (ns) 
+		if (ns)
 		    // this returns NULL in case the name was not found
 		    return ns->lookupSymbol (name.c_str());
 	    }
@@ -293,15 +293,15 @@ SymbolEntryPtr Debugger::findSymbol (std::string arg)
 		return NULL; // this is not YCP symbol
 	}
     }
-    else 
+    else
     {
 	// try parameters
 	YaST::ExecutionEnvironment::CallStack stack = YaST::ee.callstack();
-	    
+
 	if( stack.size() > 0 )
 	{
 	    YaST::ExecutionEnvironment::CallStack::const_reverse_iterator it = stack.rbegin();
-	    
+
     	    YSymbolEntryPtr ysentry = (YSymbolEntryPtr)((*it)->function->entry());
 
 	    // this returns NULL in case the name was not found
@@ -310,7 +310,7 @@ SymbolEntryPtr Debugger::findSymbol (std::string arg)
 	    if (sentry)
 		return sentry;
 	}
-	    
+
 	// try block stack
 	for( std::list<stackitem_t>::iterator blk = m_blockstack.begin(); blk != m_blockstack.end (); blk++)
 	{
@@ -349,7 +349,7 @@ void Debugger::setVariable (std::string assign)
     // first, split by '='
     std::vector<std::string> words;
     stringutil::split(assign, words, "=");
-    
+
     if( words.size() != 2 )
     {
 	sendOutput ("Set variable format is <name>=<constant>");
@@ -392,16 +392,16 @@ bool Debugger::processInput (command_t &command, std::list<std::string> &argumen
     // FIXME: use flex
     if (m_descriptor == NULL)
 	return false;
-	
+
     // First, send the current context
     YStatementPtr statement = YaST::ee.statement();
-    
+
 after_internal:
     if (statement)
 	sendOutput(YaST::ee.filename() + ":" + stringutil::numstring(YaST::ee.linenumber()) + " >>> " + statement->toString());
     else
 	sendOutput ("no code");
-    
+
     // clean up for next command
     s = "";
     args.clear();
@@ -414,12 +414,12 @@ after_internal:
 	}
 	s += c;
     }
-    
+
     if (s.empty ())
     {
 	y2error ("Communication with debugging UI closed");
 	close (m_socket);
-	
+
 	if (m_remote)
 	    unlink (ADDRESS);
 
@@ -427,7 +427,7 @@ after_internal:
 	m_descriptor = NULL;
 	return false;
     }
-    
+
     command = c_unknown;
     // FIXME: I said flex!
     if (s == "c")
@@ -466,13 +466,13 @@ after_internal:
 	command = Debugger::c_print;
 	args.push_back(s.substr(2));
     }
-    
+
     if (command == Debugger::c_print)
     {
 	printVariable (args.front () );
 	goto after_internal;
     }
-    
+
     if (command == Debugger::c_breakpoint)
     {
 	setBreakpoint (args);
@@ -490,13 +490,13 @@ after_internal:
 	generateBacktrace ();
 	goto after_internal;
     }
-    
+
     if (command == Debugger::c_setvalue)
     {
 	setVariable (args.front () );
 	goto after_internal;
     }
-    
+
     arguments = args;
     m_last_command = command;
 
@@ -511,7 +511,7 @@ bool Debugger::sendOutput( std::string output )
 	output = " ";
     output = output + "\n<EOF>\n";
     send (m_ns, output.c_str (), strlen( output.c_str ()), 0);
-    
+
     // clean up the output stash, it's sent already
     m_outputstash = "";
     return true;
@@ -547,10 +547,10 @@ void Debugger::pushBlock (Y2Namespace* block, bool tracing)
     stackitem_t si;
     si.ns = block;
     si.tracing = tracing;
-    
+
     m_blockstack.push_front (si);
 }
- 
+
 void Debugger::popBlock ()
 {
     m_blockstack.pop_front ();

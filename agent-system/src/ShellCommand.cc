@@ -148,7 +148,7 @@ shellcommand (const string &command, const string &tempdir)
 	    for ( int i = getdtablesize() - 1; i > 2; --i ) {
 		close( i );
 	    }
-	    
+
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
 		ret = WEXITSTATUS (ret);

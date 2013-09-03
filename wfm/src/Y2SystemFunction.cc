@@ -56,7 +56,7 @@ Y2SystemFunction::~Y2SystemFunction ()
     delete m_local;
 }
 
-bool 
+bool
 Y2SystemFunction::attachParameter (const YCPValue& arg, const int position)
 {
 #ifdef DEBUG
@@ -65,20 +65,20 @@ Y2SystemFunction::attachParameter (const YCPValue& arg, const int position)
 	, arg->toString ().c_str (), position);
 #endif
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
     return cur->attachParameter (arg, position);
 }
 
-constTypePtr 
+constTypePtr
 Y2SystemFunction::wantedParameterType () const
 {
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
     return cur->wantedParameterType ();
 }
 
 
-bool 
+bool
 Y2SystemFunction::appendParameter (const YCPValue& arg)
 {
 #ifdef DEBUG
@@ -87,25 +87,25 @@ Y2SystemFunction::appendParameter (const YCPValue& arg)
 	, arg->toString ().c_str ());
 #endif
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
     return cur->appendParameter (arg);
 }
 
 
-bool 
+bool
 Y2SystemFunction::finishParameters ()
 {
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
     return cur->finishParameters ();
 }
 
 
-YCPValue 
+YCPValue
 Y2SystemFunction::evaluateCall ()
 {
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
 #ifdef DEBUG
     y2debug ("Going to call proxied function '%s' (%p)", m_local->name ().c_str (), m_local);
 #endif
@@ -114,11 +114,11 @@ Y2SystemFunction::evaluateCall ()
 }
 
 
-bool 
+bool
 Y2SystemFunction::reset ()
 {
     Y2Function* cur = m_use_remote ? m_remote : m_local;
-    
+
     return cur->reset ();
 }
 
@@ -130,7 +130,7 @@ Y2SystemFunction::useRemote (Y2Function* remote_call)
 
     m_remote = remote_call;
     m_use_remote = true;
-    
+
     y2milestone ("'%s': switched to remote", m_local->name ().c_str ());
 }
 

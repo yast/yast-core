@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       Y2SerialComponent.cc
 
@@ -23,9 +23,9 @@
  */
 
 #include <stdio.h>
-#include <unistd.h>        
+#include <unistd.h>
 #include <stdlib.h>
-#include <sys/ioctl.h>  
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -75,7 +75,7 @@ string Y2SerialComponent::name() const
 YCPValue Y2SerialComponent::evaluate(const YCPValue& command)
 {
    if (fd_serial < 0)   // not yet initialized
-   { 
+   {
       if (! initializeConnection()) return YCPVoid();
    }
 
@@ -107,7 +107,7 @@ void Y2SerialComponent::setServerOptions(int argc, char **argv)
     for (int i=1; i<argc; i++)
     {
 	if (!strcmp(argv[i], "--timeout"))
-	{   
+	{
 	    if (i+1 <argc) {
 		i ++;
 		int newtimeout_seconds = atoi(argv[i]);
@@ -138,7 +138,7 @@ void Y2SerialComponent::setServerOptions(int argc, char **argv)
 YCPValue Y2SerialComponent::doActualWork(const YCPList& arglist, Y2Component *user_interface)
 {
    if (!initializeConnection()) return YCPVoid();
-    
+
    // We do NOT send the arglist to our partner on the other side!
    // The YaST2 serial protocol defines, that the client is set up
    // by the remote side and is given its arguments also there.
@@ -149,34 +149,34 @@ YCPValue Y2SerialComponent::doActualWork(const YCPList& arglist, Y2Component *us
       y2warning ("The %ld arguments are ignored. Remote side provides client arguments",
 	    (long)arglist->size());
    }
-   
+
    YCPValue value = YCPNull();
 
    while (!(value = receiveFromSerial()).isNull())
    {
-      if (value->isTerm() 
-	  && value->asTerm()->size() == 1 
+      if (value->isTerm()
+	  && value->asTerm()->size() == 1
 	  && value->asTerm()->name ()=="result")
       {
 	 close_tty();
-	 return value; 
+	 return value;
       }
       sendToSerial(user_interface->evaluate(value));
    }
    y2warning ("Communication ended prior to result() message");
    return YCPVoid();
-}    
+}
 
 
 int Y2SerialComponent::open_tty()
 {
     fd_serial = open(device_name.c_str(), O_RDWR | O_NOCTTY);
-    
+
     if (fd_serial < 0)
     {
        y2error ("Couldn't open device: %s", device_name.c_str());
     }
-    
+
     return fd_serial;   // success?
 }
 
@@ -192,7 +192,7 @@ int Y2SerialComponent::setup_serial_device()
 {
     struct serial_struct info;
     int ret = ioctl(fd_serial, TIOCGSERIAL, &info);   // get serial info
-    
+
     if (ret >= 0)
     {
        info.flags |=  ASYNC_CTS_FLOW;	// set RTS/CTS flow control
@@ -225,9 +225,9 @@ int Y2SerialComponent::make_raw()
        tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8; // 8 data bits
        tty.c_cflag &= ~CSTOPB;                     // only one stop bit.
        tty.c_cflag &= ~PARENB;                     // no parenty generation / checking
-       
+
        ret =  tcsetattr(fd_serial, 0 , &tty);      // set attributes
-       
+
        if (ret < 0)
        {
 	  y2error ("Couldn't set raw mode for: %s", device_name.c_str());
@@ -243,7 +243,7 @@ int Y2SerialComponent::make_raw()
 
 int Y2SerialComponent::set_fixed_line_speed(long speed) // returns 0 on success
 {
-    static struct { int mask; long speed; } 
+    static struct { int mask; long speed; }
     a_speed[] =
     {
 	{ B50,         50L }, { B75,       75L }, { B110,     110L }, { B134,     134L },
@@ -259,12 +259,12 @@ int Y2SerialComponent::set_fixed_line_speed(long speed) // returns 0 on success
 	{
 	    struct termios tty;
 	    int ret = tcgetattr(fd_serial, &tty);   // get attributes
-	    
+
 	    if (ret >= 0)
 	    {
 		cfsetispeed(&tty, a_speed[i].mask);
 		cfsetospeed(&tty, a_speed[i].mask);
-		
+
 		ret = tcsetattr(fd_serial, 0 , &tty);   // set attributes
 
 		if (ret < 0)
@@ -284,12 +284,12 @@ int Y2SerialComponent::set_fixed_line_speed(long speed) // returns 0 on success
 
     y2error ("No fixed standard line speed of %ld baud supported by %s.",
 	  speed, device_name.c_str());
-    
+
     y2error ("Allowed speeds are:");
-    
+
     for (int i=0; a_speed[i].speed >= 0; i++)
        y2error ("Baud: %ld", a_speed[i].speed);
-    
+
     return -1; // No such fixed speed
 }
 
@@ -310,7 +310,7 @@ bool Y2SerialComponent::await_readable(long timeout)
 bool Y2SerialComponent::initializeConnection()
 {
    if (fd_serial >= 0) return true;             // already established
-   
+
    int ret = open_tty();                        // logs for itself
 
    if (ret >= 0) ret = setup_serial_device();   // logs for itself
@@ -341,7 +341,7 @@ bool Y2SerialComponent::initializeConnection()
 	  }
 
 	 char buf[2];
-      
+
 	 // first write one space so the other side gets
 	 // fullfilled its necessities
 	 write(fd_serial, space_buf, 1);
@@ -369,7 +369,7 @@ bool Y2SerialComponent::initializeConnection()
    }
 
    close_tty();   // cleanup, connection NOT established
-   
+
    return false;
 }
 

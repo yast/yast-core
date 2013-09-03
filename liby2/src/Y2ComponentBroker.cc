@@ -49,7 +49,7 @@ void Y2ComponentBroker::registerComponentCreator(const Y2ComponentCreator *c, or
     // well as the "qt", "ncurses", "gtk" UI servers.
     //
     // 2008-02-18 sh@suse.de
-    
+
     if (!stop_register || force)
     {
 	// y2debug( "Registering component creator at %p - force: %d", c, (int) force );
@@ -135,7 +135,7 @@ Y2ComponentBroker::getNamespaceComponent (const char* name)
 
 	// the ui stuff is a mess, must prefer servers
 	Y2Component *comp = createServer (comp_name.c_str ());
-	if (! comp) 
+	if (! comp)
 	{
 	    // no server component, try client as well
 	    comp = Y2ComponentBroker::createClient (comp_name.c_str ());
@@ -151,8 +151,8 @@ Y2ComponentBroker::getNamespaceComponent (const char* name)
 	    y2warning ("Cannot create component based on exception list for namespaces!!!");
 	}
     }
-    
-    
+
+
 // uselessly repeats if it failed
 //    for (int level = 0; level < Y2PathSearch::numberOfComponentLevels ();
 //	 level++)
@@ -191,7 +191,7 @@ bool Y2ComponentBroker::registerNamespaceException(const char* name_space, const
     }
 
     namespace_exceptions.insert ( std::pair<string,string>(name_space,component_name) );
-    
+
     return true;
 }
 

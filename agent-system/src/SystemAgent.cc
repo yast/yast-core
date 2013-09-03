@@ -506,11 +506,11 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	parser.setBuffered(); // Read from file. Buffering is always possible here
 	YCodePtr p = parser.parse();
 	close(fd);
-	
+
 	if (!p)
 	{	return YCPError ("Parsing file '" + filename + "' failed");
 	}
-	
+
 	YCPValue contents = YCPNull ();
 	if (p->isBlock ())
 	{

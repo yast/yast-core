@@ -36,7 +36,7 @@ using std::string;
 IMPL_BASE_POINTER(SymbolEntry);
 
 UstringHash* SymbolEntry::_nameHash = NULL;
-Ustring SymbolEntry::emptyUstring = Ustring ( *( SymbolEntry::_nameHash ? SymbolEntry::_nameHash : (SymbolEntry::_nameHash = new UstringHash)), ""); 
+Ustring SymbolEntry::emptyUstring = Ustring ( *( SymbolEntry::_nameHash ? SymbolEntry::_nameHash : (SymbolEntry::_nameHash = new UstringHash)), "");
 
 #ifdef D_MEMUSAGE
 void __UUsage ()
@@ -122,13 +122,13 @@ SymbolEntry::setValue (YCPValue value)
 	}
 	return m_value->asReference()->entry()->setValue (value);
     }
-    
+
     // use YCPVoid for nil to avoid problems with function references
     if (value.isNull ())
     {
 	value = YCPVoid ();
     }
-	
+
     return m_value = value;
 }
 
@@ -173,7 +173,7 @@ SymbolEntry::name () const
 }
 
 
-SymbolEntry::category_t 
+SymbolEntry::category_t
 SymbolEntry::category () const
 {
     return m_category;
@@ -210,7 +210,7 @@ SymbolEntry::setGlobal (bool global)
 }
 
 
-string 
+string
 SymbolEntry::catString () const
 {
     switch (m_category)
@@ -259,7 +259,7 @@ SymbolEntry::catString () const
 }
 
 
-string 
+string
 SymbolEntry::toString (bool with_type) const
 {
     string s = (with_type && m_global) ? "global " : "";
@@ -290,7 +290,7 @@ SymbolEntry::toString (bool with_type) const
 	    {
 		constFunctionTypePtr ftype = m_type;
 		s += (((m_category == c_variable)||(m_category ==c_reference)) ? m_type->toString() : ftype->returnType()->toString()) + " ";
-		
+
 		if (m_global
 		    && m_namespace != 0
 		    && !m_namespace->name().empty())
@@ -301,7 +301,7 @@ SymbolEntry::toString (bool with_type) const
 		if (m_category == c_function)
 		{
 		    constFunctionTypePtr type = (constFunctionTypePtr)m_type;
-		    
+
 		    // are there any parameters
 		    if (type->parameters())
 		    {

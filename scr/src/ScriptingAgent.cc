@@ -25,8 +25,9 @@
 #include "ScriptingAgent.h"
 
 
-ScriptingAgent::ScriptingAgent ()
-    : done_sweep (false)
+ScriptingAgent::ScriptingAgent (const string &root_)
+    : done_sweep (false),
+      root_path(root_)
 {
     InitRegDirs ();
     // to test the old behavior
@@ -35,12 +36,13 @@ ScriptingAgent::ScriptingAgent ()
 }
 
 
-ScriptingAgent::ScriptingAgent (const string& file)
-    : done_sweep (false)
+ScriptingAgent::ScriptingAgent (const string &root_, const string& file)
+    : done_sweep (false),
+      root_path(root_)
 {
     InitRegDirs ();
     y2debug( "Scripting agent using only SCR %s", file.c_str () );
-    
+
     parseSingleConfigFile (file);
 }
 
@@ -55,7 +57,7 @@ ScriptingAgent::InitRegDirs ()
 	rd.name = Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level) + "/scrconf";
 	y2debug( "Scripting agent searching SCRs in %s", rd.name.c_str() );
 //	parseConfigFiles (rd.name);
-	
+
 	struct stat st;
 	if (stat (rd.name.c_str(), &st) != 0) {
 	    y2debug ("Can't read dir %s: %m", rd.name.c_str ());
@@ -72,6 +74,11 @@ ScriptingAgent::InitRegDirs ()
 ScriptingAgent::~ScriptingAgent ()
 {
     UnregisterAllAgents ();
+}
+
+const char* ScriptingAgent::root() const
+{
+    return root_path.c_str();
 }
 
 bool less_than_inodes (const pair<ino_t, string>& a,
@@ -604,7 +611,7 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 	ycp2error ("Couldn't mount agent to handle '%s'", path->toString().c_str ());
 	return YCPNull ();
     }
-    
+
     YCPTerm commandterm (command);
     commandterm->add (path->at ((*agent)->get_path ()->length ())); // relative path
 

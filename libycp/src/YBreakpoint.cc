@@ -90,7 +90,7 @@ YBreakpoint::toString() const
     return m_code->toString ();
 }
 
-YCodePtr 
+YCodePtr
 YBreakpoint::code() const
 {
     return m_code;
@@ -126,7 +126,7 @@ YBreakpoint::evaluate (bool cse)
 	else
 	    y2internal ("Debugger: process input failed");
     }
-    
+
     return m_code->evaluate (cse);
 }
 
@@ -144,7 +144,7 @@ YBreakpoint::enabled () const
 }
 
 void
-YBreakpoint::setEnabled (bool enable) 
+YBreakpoint::setEnabled (bool enable)
 {
     m_enabled = enable;
 }
