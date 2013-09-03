@@ -42,7 +42,8 @@ public:
 
 private:
 
-    /* mutable so we can lazy load it and set properly root */
+    /* SCR instances, owned by this class, keyed by target root.
+     * Target root must be valid absolute path like "/" or "/mnt".*/
     mutable std::map<std::string, Y2SCRComponent*> scr_instances;
 };
 

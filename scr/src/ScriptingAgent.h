@@ -44,7 +44,8 @@ public:
     ~ScriptingAgent ();
 
     /**
-     * Overwrites root to provide root for all of its subagents.
+     * Overrides root getter to provide root from constructor
+     * \see SCRAgent#root
      */
     virtual const char* root() const;
 

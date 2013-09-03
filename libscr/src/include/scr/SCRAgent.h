@@ -135,7 +135,9 @@ public:
 
 
     /**
-     * Gets root on which agent operate.
+     * Filesystem root on which to operate.
+     * It is useful for agents during installation to operate on different root
+     * (FATE#314695).
      * \return C string owned by instance.
      */
     virtual const char *root () const;

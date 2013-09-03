@@ -12,8 +12,3 @@ Y2SCRComponent::~Y2SCRComponent()
 {
   //agent is destructed in parent
 }
-
-SCRAgent* Y2SCRComponent::getSCRAgent()
-{
-  return agent;
-}

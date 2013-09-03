@@ -21,21 +21,30 @@ Y2CCSCR::~Y2CCSCR () {
       delete i->second;
 }
 
-Y2Component *Y2CCSCR::create( const char* name) const
+/* local helper for CC#create */
+void split_name( const char *name, string &root, string &real_name)
 {
-    string root;
+    real_name = name;
+    root = "/";
 
     if (strncmp (name, "chroot=", 7) == 0)
     {
-	const char *p = index (name, ':');
+      const char *p = index (name, ':');
 
-	if (p) {
-	    root = string (name, 7, p - name - 7);
-	    name = p + 1;
-	}
+      if (p) {
+        root = string (name, 7, p - name - 7);
+        real_name = string (p + 1);
+      }
     }
+}
 
-    if (strcmp(name, "scr") != 0)
+Y2Component *Y2CCSCR::create( const char* name) const
+{
+    string root, real_name;
+
+    split_name(name, root, real_name);
+
+    if (real_name != "scr")
         return NULL;
 
     map<string, Y2SCRComponent*>::iterator i = scr_instances.find(root);

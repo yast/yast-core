@@ -10,8 +10,6 @@ public:
   Y2SCRComponent(const char* root);
 
   ~Y2SCRComponent();
-
-  virtual SCRAgent* getSCRAgent ();
 };
 
 #endif
