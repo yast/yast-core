@@ -169,7 +169,7 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 	y2internal("Not input for the parser has been set");
 	return 0;
     }
-    
+
     init ();
 
     m_scanner->initTables (gTable, lTable);
@@ -182,7 +182,7 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
         m_parser_errors = 0;
         m_result = 0;
     }
-    
+
     if (m_lineno == -1)
     {
 	m_at_eof = true;

@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       YCPBoolean.cc
 
@@ -98,7 +98,7 @@ YCPBoolean::YCPBoolean (bool v)
 
 YCPBoolean::YCPBoolean (bytecodeistream & str)
     : YCPValue (*(
-	Bytecode::readBool (str) ? 
+	Bytecode::readBool (str) ?
 	trueboolean ? trueboolean : (trueboolean = new YCPBoolean (new YCPBooleanRep (true)) )
 	:
 	falseboolean ? falseboolean : (falseboolean = new YCPBoolean (new YCPBooleanRep (false)) )

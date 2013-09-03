@@ -79,7 +79,7 @@ Y2CCPlugin::createInLevel (const char* name, int level, int current_level) const
 
     // Some components need special care, because their name and the name
     // of their plugin differ.
-    
+
     // remote plugin can't handle "remote" component
     if (strcmp (name, "remote") == 0)
 	return 0;
@@ -134,7 +134,7 @@ Y2CCPlugin::provideNamespace(const char* name_space)
 	    continue;
 
 	y2debug ("Trying file '%s'", filename.c_str ());
-    
+
 	comp = new Y2PluginComponent (filename, name_space, name_space, name_space);
 	if (comp) break;
     }

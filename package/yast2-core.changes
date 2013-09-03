@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep  3 13:28:44 UTC 2013 - jreidinger@suse.com
+
+- libscr: added "root" attribute to SCRAgent (FATE#314695). Agents
+  must be adapted to respect it instead of relying on chroot(2)
+  having been run.
+
+-------------------------------------------------------------------
 Wed Aug  7 07:46:14 UTC 2013 - dmajda@suse.cz
 
 - Do not lose comments before negative numbers in YCP parser

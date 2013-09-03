@@ -124,7 +124,7 @@ YCPValue
 AnyAgent::otherCommand (const YCPTerm & term)
 {
     const string sym = term->name ();
-    
+
     y2debug( "Received term in otherCommand: %s", term->toString().c_str() );
 
     if (sym == "Description" && term->size () >= 4)

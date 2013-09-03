@@ -121,7 +121,7 @@ void IniSection::initValue (const string&key,const string&val,const string&comme
 IniSection& IniSection::initSection (const string&name,const string&comment,int rb, int wb)
 {
     string k = ip->changeCase (name);
-    
+
     IniSection s (ip);
     IniSectionIdxIterator sxi;
     if (!ip->repeatNames () && (sxi = isections.find (k)) != isections.end ())
@@ -239,7 +239,7 @@ void IniSection::Dump ()
 
     for (; sxi != sxe; ++sxi)
     {
-	printf ("{%s @%p}\n", sxi->first.c_str (), &*sxi->second);	
+	printf ("{%s @%p}\n", sxi->first.c_str (), &*sxi->second);
     }
 
     printf ("{Values}\n");
@@ -249,7 +249,7 @@ void IniSection::Dump ()
 
     for (; exi != exe; ++exi)
     {
-	printf ("{%s @%p}\n", exi->first.c_str (), &*exi->second);	
+	printf ("{%s @%p}\n", exi->first.c_str (), &*exi->second);
     }
 
     printf("</%s>\n", name.c_str());
@@ -277,7 +277,7 @@ void IniSection::reindex ()
 	    string k = ip->changeCase (ci->s ().getName ());
 	    isections.insert (IniSectionIndex::value_type (k, ci));
 	}
-    }    
+    }
 }
 
 int IniSection::getMyValue (const YCPPath &p, YCPValue &out, int what, int depth)
@@ -758,7 +758,7 @@ int IniSection::setAllDoIt (const YCPMap &in)
 	    if (mv->isVoid ())
 	    {
 		string del_name;
-		int del_rb;		
+		int del_rb;
 		if (!getMapString (mitem, "name", del_name) ||
 		    !getMapInteger (mitem, "file", del_rb))
 		{

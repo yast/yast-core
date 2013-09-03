@@ -46,7 +46,7 @@ p_size (const YCPPath &path)
      * @usage size (.hello.world) -> 2
      * @usage size (.) -> 0
      */
-     
+
     if (path.isNull ())
 	return YCPNull ();
 

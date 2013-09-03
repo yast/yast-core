@@ -149,7 +149,7 @@ void Y2ProgramComponent::result(const YCPValue& result)
     // has been issued. Therefore at this point the external
     // program may not have been started after all. So we need
     // to check, if it's running.
-    
+
     if (pid != -1)
     {
 	YCPTerm resultterm("result");
@@ -363,13 +363,13 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	}
 
 	YCodePtr c = parser.parse ();
-	
+
 	if (c == NULL || c->isError())
 	{
 	    y2error ("External program %s returned invalid data. (No other error means no data at all)", bin_file.c_str ());
 	    return YCPNull ();
 	}
-	
+
 	// evaluate, but not as constant
 	YCPValue ret = c->evaluate (true);
 	if (ret.isNull ())

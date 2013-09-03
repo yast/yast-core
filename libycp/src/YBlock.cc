@@ -121,13 +121,13 @@ YBlock::~YBlock ()
 	delete tp;
 	tp = next;
     }
-    
+
     if (m_includes)
 	delete m_includes;
 }
 
 
-const std::string 
+const std::string
 YBlock::filename () const
 {
     return m_point->filename();
@@ -253,7 +253,7 @@ YBlock::attachStatement (YStatementPtr statement)
 	m_last_statement->next = newstmt;
         m_last_statement = newstmt;
     }
-    
+
     return;
 }
 
@@ -378,7 +378,7 @@ YBlock::justReturn () const
 }
 
 
-const string 
+const string
 YBlock::name () const
 {
     return m_name;
@@ -482,16 +482,16 @@ YBlock::toStringSwitch (map<YCPValue, int, ycp_less> cases, int defaultcase) con
     // first, create reverse map of cases
     int statementcount = statementCount ();
     YCPValue values[statementcount];
-    
+
     for (int i = 0; i < statementcount; i++)
 	values[i] = YCPNull ();
-	
+
     for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
     {
 	values[ it->second ] = it->first;
     }
-    
+
     // create string output
     string s = "{";
 
@@ -532,7 +532,7 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
     {
 	values[ it->second ].push_back(it->first);
     }
-    
+
     // s += environmentToString ();
 
     stmtlist_t *stmt = m_statements;
@@ -588,7 +588,7 @@ YBlock::evaluate (bool cse)
     if (debugger_instance)
     {
 	m_debug = debugger_instance->tracing();
-	
+
 	debugger_instance->pushBlock (this, m_debug);
     }
 
@@ -597,7 +597,7 @@ YBlock::evaluate (bool cse)
     {
 	pushToStack ();
     }
-    
+
     bool old_m_running = m_running;
     m_running = true;
 
@@ -613,7 +613,7 @@ YBlock::evaluate (bool cse)
     while (stmt)
     {
 	YStatementPtr statement = stmt->stmt;
-	
+
 #if DO_DEBUG
 	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
 #endif
@@ -635,7 +635,7 @@ YBlock::evaluate (bool cse)
 	}
 
 	value = statement->evaluate ();
-	
+
 	// If we get continue from inner evaluation, we have to respect it
         if (debugger_instance)
         {
@@ -662,15 +662,15 @@ YBlock::evaluate (bool cse)
     {
 	YaST::ee.setFilename(restore_name);
     }
-    
+
     m_running = old_m_running;
-    
+
     // recursion handling - not used for modules
     if (! isModule () && m_running)
     {
 	popFromStack ();
     }
-    
+
     if (debugger_instance)
 	debugger_instance->popBlock ();
 
@@ -706,7 +706,7 @@ YBlock::evaluateFrom (int statement_index)
     {
 	pushToStack ();
     }
-    
+
     bool old_m_running = m_running;
     m_running = true;
 
@@ -719,19 +719,19 @@ YBlock::evaluateFrom (int statement_index)
 
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
-    
+
     // skip statements until index
     while (stmt && statement_index > 0)
     {
 	stmt = stmt->next;
 	statement_index--;
     }
-    
+
     // execute the rest of statements
     while (stmt)
     {
 	YStatementPtr statement = stmt->stmt;
-	
+
 #if DO_DEBUG
 	y2debug ("%d: %s", statement->line (), statement->toString ().c_str ());
 #endif
@@ -753,9 +753,9 @@ YBlock::evaluateFrom (int statement_index)
     {
 	YaST::ee.setFilename(restore_name);
     }
-    
+
     m_running = old_m_running;
-    
+
     // recursion handling - not used for modules
     if (! isModule () && m_running)
     {
@@ -788,7 +788,7 @@ YBlock::evaluate (int statement_index, bool skip_initial_imports)
 #if DO_DEBUG
     y2debug("YBlock::evaluate(#%d)\n", statement_index);
 #endif
-    
+
     stmtlist_t *stmt = m_statements;
     YCPValue value = YCPVoid ();
 
@@ -798,7 +798,7 @@ YBlock::evaluate (int statement_index, bool skip_initial_imports)
     {
 	stmt =stmt->next;
     }
-    
+
     while (stmt && statement_index > 0)
     {
 	stmt = stmt->next;
@@ -810,11 +810,11 @@ YBlock::evaluate (int statement_index, bool skip_initial_imports)
 	// we are at the end
 	return YCPNull ();
     }
-    
+
     y2milestone("YBlock::evaluating:\n%s", stmt->stmt->toString ().c_str());
 
     value = stmt->stmt->evaluate ();
-    
+
 #if DO_DEBUG
     y2debug("YBlock::evaluate statement done (value '%s')\n", value.isNull() ? "NULL" : value->toString().c_str());
 #endif
@@ -834,7 +834,7 @@ YBlock::statementCount () const
 	stmt = stmt->next;
 	res++;
     }
-    
+
     return res;
 }
 
@@ -966,7 +966,7 @@ YBlock::YBlock (bytecodeistream & str)
     }
 
     Bytecode::popUptoNamespace (this);
-    
+
     // for modules ensure symbol table
     if (isModule ())
     {
@@ -1006,7 +1006,7 @@ YBlock::toStream (std::ostream & str) const
 
 	// if its a module, write the table
 
-	if (isModule())	
+	if (isModule())
 	{
 	    yTElist_t *tptr = m_tenvironment;
 	    int tcount = 0;					// count the table entries
@@ -1099,13 +1099,13 @@ YBlock::toXml( std::ostream & str, int indent ) const
 #if 0
 	// if its a module, write the table
 
-	if (isModule())	
+	if (isModule())
 	{
 	    yTElist_t *tptr = m_tenvironment;
 
 	    if (tptr) {
 		str << Xmlcode::spaces( indent ) << "<table>\n";
-		
+
 		while (tptr)
 		{
 		    tptr->tentry->toXml( str, indent+2 );		// write the table entries
@@ -1131,7 +1131,7 @@ YBlock::toXml( std::ostream & str, int indent ) const
 	{
 	    str << Xmlcode::spaces( indent+2 ) << "<stmt>";
 	    stmt->stmt->toXml (str, 0 );				// YSImport will push it's namespace
-	    str << "</stmt>" << endl; 
+	    str << "</stmt>" << endl;
 	    stmt = stmt->next;
 	}
 
@@ -1162,7 +1162,7 @@ YBlock::addIncluded (string includefile)
     {
 	m_includes = new stringlist_t;
     }
-    
+
     if (find (m_includes->begin (), m_includes->end (), includefile) == m_includes->end ())
     {
 	m_includes->push_back (includefile);
@@ -1181,7 +1181,7 @@ YBlock::createFunctionCall (const string name, constFunctionTypePtr type)
 	    if (m_symbols[i]->name () == name && m_symbols[i]->isFunction ())
 	    {
 		// found
-		
+
 		// FIXME: handle overloading
 		return new Y2YCPFunction (m_symbols[i]);
 	    }
@@ -1192,7 +1192,7 @@ YBlock::createFunctionCall (const string name, constFunctionTypePtr type)
     }
 
     TableEntry *func_te = table()->find (name.c_str (), SymbolEntry::c_function);
-    
+
     if (func_te == NULL)
     {
 	// try local symbols
@@ -1201,7 +1201,7 @@ YBlock::createFunctionCall (const string name, constFunctionTypePtr type)
 	    if (m_symbols[i]->name () == name && m_symbols[i]->isFunction ())
 	    {
 		// found
-		
+
 		// FIXME: handle overloading
 		return new Y2YCPFunction (m_symbols[i]);
 	    }
@@ -1212,9 +1212,9 @@ YBlock::createFunctionCall (const string name, constFunctionTypePtr type)
     }
 
     // can't find the function definition
-    if (!func_te->sentry ()->isFunction ()) 
+    if (!func_te->sentry ()->isFunction ())
 	return NULL;
-    
+
 #if DO_DEBUG
     y2debug ("allocating new Y2YCPFunction %s", name.c_str ());
 #endif

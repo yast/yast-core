@@ -118,7 +118,7 @@ int getBeginEndType (const YCPMap&m)
 	return -1;
     if (!isYCPStringPair (m->value (YCPString ("begin"))))
 	return -1;
-    
+
     if (m->value(YCPString("end")).isNull())
 	return 1;
     if (!isYCPStringPair (m->value (YCPString ("end"))))
@@ -142,7 +142,7 @@ int getParamsType (const YCPMap&m)
 	return -1;
     if (!isYCPStringPair (m->value (YCPString ("match"))))
 	return -1;
-    
+
     if (m->value(YCPString("multiline")).isNull())
 	return 1;
     if (!isYCPStringPair (m->value (YCPString ("multiline"))))
@@ -193,7 +193,7 @@ int IniParser::initMachine (const YCPMap&scr)
 			continue;
 		    }
 		    string sv = v->asList()->value(i)->asString()->value();
-#define COMPARE_OPTION(X) if (sv == #X) X = true; else 
+#define COMPARE_OPTION(X) if (sv == #X) X = true; else
 		    COMPARE_OPTION (ignore_case_regexps)
 		    COMPARE_OPTION (ignore_case)
 		    COMPARE_OPTION (prefer_uppercase)
@@ -232,8 +232,8 @@ int IniParser::initMachine (const YCPMap&scr)
 	for (int i = 0; i<len;i++)
 	{
 	    YCPValue ival = v->asList()->value(i);
-	    if (ival->isList() && 
-		2 == ival->asList()->size() && 
+	    if (ival->isList() &&
+		2 == ival->asList()->size() &&
 		ival->asList()->value(0)->isString() &&
 		ival->asList()->value(1)->isString())
 	    {
@@ -624,7 +624,7 @@ int IniParser::parse_helper(IniSection&ini)
 		{
 		    RegexMatch m (params[matched_by].end, line);
 		    if (m)
-		    {    
+		    {
 			// it is the end of broken line
 			state = 0;
 			val = val + (join_multiline ? " " : "\n") + m[1];
@@ -639,7 +639,7 @@ int IniParser::parse_helper(IniSection&ini)
 				    ini.initValue(key, shell_quoted_value ? YaST::agent_ini::unquote(val) : val, comment, matched_by);
                                 }
 			    }
-			else 
+			else
                         {
 			    open_sections.front()->initValue(key, shell_quoted_value ? YaST::agent_ini::unquote(val) : val, comment, matched_by);
 			}
@@ -766,7 +766,7 @@ int IniParser::parse_helper(IniSection&ini)
 					    complain = true;
 					}
 				    }
-				    
+
 				    if (name_to_close.empty ()) {
 					// there was no name or we did not find the specified one
 					for (it = b; it != e; ++it) {
@@ -800,7 +800,7 @@ int IniParser::parse_helper(IniSection&ini)
 				val = m[2];
 				line = m.rest;
 				break;
-			    }				
+			    }
 			}
 			if (i != params.size ())
 			    {
@@ -960,7 +960,7 @@ int IniParser::write()
 		if (ci->t () == SECTION)
 		    {
 			IniSection&s = ci->s ();
-			int wb = s.getRewriteBy (); // bug #19066 
+			int wb = s.getRewriteBy (); // bug #19066
 			string filename = getFileName (s.getName (), wb);
 
 			// This is the only place where we unmark a
@@ -1067,7 +1067,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
             out_buffer = format (sections[readby].begin.out.c_str (), ini.getName());
 	    of << indent << out_buffer << "\n";
 	}
-    
+
     IniIterator
 	ci = ini.getContainerBegin (),
 	ce = ini.getContainerEnd ();
@@ -1084,7 +1084,7 @@ int IniParser::write_helper(IniSection&ini, ofstream&of, int depth)
 		    IniEntry&e = ci->e ();
 		    if (e.getComment ()[0])
 			of << e.getComment();
-		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ()) 
+		    if (e.getReadBy()>=0 && e.getReadBy() < (int)params.size ())
                     {
                         const string val = shell_quoted_value ? YaST::agent_ini::quote(e.getValue()) : e.getValue();
 			// bnc#492859, a fixed buffer is too small
@@ -1145,7 +1145,7 @@ string IniParser::changeCase (const string&str) const
 	string::iterator it = tmp.begin ();
 	if (it != tmp.end ())
 	    *it = toupper (*it);
-	}	    
+	}
     }
     return tmp;
 }
