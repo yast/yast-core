@@ -154,7 +154,13 @@ public:
     void setAsCurrentSCR() {
 	current_scr = this;
     }
-    
+
+protected:
+    /**
+     * Helper to compute complete path including target root.
+     */
+    string targetPath( const string &path) const;
+
 private:
     static SCRAgent* current_scr;
     //! returned by Error

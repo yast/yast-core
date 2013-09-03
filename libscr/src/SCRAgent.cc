@@ -111,3 +111,8 @@ const char *SCRAgent::root() const
 {
     return mainscragent ? mainscragent->root() : "/";
 }
+
+string SCRAgent::targetPath( const string &path) const
+{
+  return string(root()) + path;
+}
