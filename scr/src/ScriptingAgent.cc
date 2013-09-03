@@ -25,8 +25,9 @@
 #include "ScriptingAgent.h"
 
 
-ScriptingAgent::ScriptingAgent ()
-    : done_sweep (false)
+ScriptingAgent::ScriptingAgent (const string &root_)
+    : done_sweep (false),
+      root_path(root_)
 {
     InitRegDirs ();
     // to test the old behavior
@@ -35,8 +36,9 @@ ScriptingAgent::ScriptingAgent ()
 }
 
 
-ScriptingAgent::ScriptingAgent (const string& file)
-    : done_sweep (false)
+ScriptingAgent::ScriptingAgent (const string &root_, const string& file)
+    : done_sweep (false),
+      root_path(root_)
 {
     InitRegDirs ();
     y2debug( "Scripting agent using only SCR %s", file.c_str () );
@@ -72,6 +74,11 @@ ScriptingAgent::InitRegDirs ()
 ScriptingAgent::~ScriptingAgent ()
 {
     UnregisterAllAgents ();
+}
+
+const char* ScriptingAgent::root() const
+{
+    return root_path.c_str();
 }
 
 bool less_than_inodes (const pair<ino_t, string>& a,
