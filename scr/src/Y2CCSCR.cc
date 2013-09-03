@@ -12,10 +12,10 @@ using namespace std;
 
 Y2CCSCR::Y2CCSCR () :
   Y2ComponentCreator (Y2ComponentBroker::BUILTIN)
-{ 
+{
 }
 
-Y2CCSCR::~Y2CCSCR () { 
+Y2CCSCR::~Y2CCSCR () {
     for (map<string, Y2SCRComponent*>::iterator i = scr_instances.begin();
         i != scr_instances.end(); ++i)
       delete i->second;

@@ -135,10 +135,10 @@ YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
 {
     y2debug( "Starting evaluation" );
-    
+
     bool debugger = false;
     YCPList client_arglist = arglist;
-    
+
     // hack: look only at the last entry, if it's debugger or not
     if (arglist->size () > 0)
     {
@@ -192,7 +192,7 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     y2debug ("Script is: %s", script->toString().c_str());
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
-    
+
     if (debugger)
 	script = YCPCode ((YCodePtr)new YBreakpoint (script->asCode ()->code (), "code start"));
 
@@ -782,7 +782,7 @@ Y2WFMComponent::import (const char* name_space)
             Y2SystemNamespace* ns = new Y2SystemNamespace (local_ns);
 
             system_namespaces.push_back (ns);
-            
+
             y2milestone("Namespace %s properly imported", ns->name().c_str());
             return ns;
         }

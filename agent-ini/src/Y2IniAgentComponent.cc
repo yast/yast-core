@@ -50,7 +50,7 @@ YCPValue Y2IniAgentComponent::evaluate(const YCPValue& value)
         agent = new IniAgent();
         interpreter = new SCRInterpreter(agent);
     }
-    
+
     return interpreter->evaluate(value);
 }
 

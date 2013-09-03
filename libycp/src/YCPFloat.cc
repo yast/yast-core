@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       YCPFloat.cc
 
@@ -46,7 +46,7 @@ YCPFloatRep::YCPFloatRep(const char *r)
 	(*endptr == 'e' && *(endptr+1) == '+' && isdigit(*(endptr+2)))||
 	(*endptr == 'E' && isdigit(*(endptr+1))                      )||
 	(*endptr == 'E' && *(endptr+1) == '-' && isdigit(*(endptr+2)))||
-	(*endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2)))   )   // real float  
+	(*endptr == 'E' && *(endptr+1) == '+' && isdigit(*(endptr+2)))   )   // real float
     {
       istringstream ss(r);
       ss.imbue(std::locale::classic()); //ensure that we are not affected by LC_NUMERIC

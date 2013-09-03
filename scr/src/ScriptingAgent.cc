@@ -42,7 +42,7 @@ ScriptingAgent::ScriptingAgent (const string &root_, const string& file)
 {
     InitRegDirs ();
     y2debug( "Scripting agent using only SCR %s", file.c_str () );
-    
+
     parseSingleConfigFile (file);
 }
 
@@ -57,7 +57,7 @@ ScriptingAgent::InitRegDirs ()
 	rd.name = Y2PathSearch::searchPath (Y2PathSearch::GENERIC, level) + "/scrconf";
 	y2debug( "Scripting agent searching SCRs in %s", rd.name.c_str() );
 //	parseConfigFiles (rd.name);
-	
+
 	struct stat st;
 	if (stat (rd.name.c_str(), &st) != 0) {
 	    y2debug ("Can't read dir %s: %m", rd.name.c_str ());
@@ -611,7 +611,7 @@ ScriptingAgent::executeSubagentCommand (const char *command,
 	ycp2error ("Couldn't mount agent to handle '%s'", path->toString().c_str ());
 	return YCPNull ();
     }
-    
+
     YCPTerm commandterm (command);
     commandterm->add (path->at ((*agent)->get_path ()->length ())); // relative path
 

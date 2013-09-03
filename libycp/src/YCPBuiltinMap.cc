@@ -51,11 +51,11 @@ m_haskey (const YCPMap &map, const YCPValue &value)
      * @usage haskey($["a":1, "b":2], "a") -> true
      * @usage haskey($["a":1, "b":2], "c") -> false
      */
-     
+
     if (map.isNull ())
     {
 	return YCPNull ();
-    }	
+    }
     if (value.isNull ())
     {
 	ycp2error ("Cannot use 'nil' as key in haskey ()");
@@ -198,7 +198,7 @@ m_maplist (const YCPSymbol &key, const YCPSymbol &value,
 			    const YCPMap &map, const YCPCode &expr)
 {
     /**
-     * @builtin maplist 
+     * @builtin maplist
      * @id maplist-map
      * @short Maps an operation onto all elements key/value and create a list
      * @description
@@ -293,7 +293,7 @@ static YCPValue
 m_addmap (const YCPMap &map, const YCPValue &key, const YCPValue &value)
 {
     /**
-     * @builtin add 
+     * @builtin add
      * @id add-map
      * @short Add a key/value pair to a map
      *
@@ -315,7 +315,7 @@ m_addmap (const YCPMap &map, const YCPValue &key, const YCPValue &value)
 
     if (map.isNull ())
 	return YCPNull ();
-	
+
     if (key.isNull ())
     {
 	ycp2error ("Cannot use 'nil' as key in add ()");
@@ -346,13 +346,13 @@ m_changemap (YCPMap &map, const YCPValue &key, const YCPValue &value)
 
     if (map.isNull ())
 	return YCPNull ();
-	
+
     if (key.isNull ())
     {
 	ycp2error ("Cannot use 'nil' as key in change ()");
 	return YCPNull ();
     }
-    
+
     ycpinternal ("Change does not work as expected! The argument is not passed by reference.");
 
     map->add (key, value);
@@ -421,16 +421,16 @@ m_foreach (const YCPValue &key, const YCPValue &val, const YCPMap &map, const YC
      * <tt>KEY</tt> is bound to the key and <tt>VALUE</tt> is bound to the
      * value. The return value of the last execution of exp is the value
      * of the <tt>foreach</tt> construct.
-     * 
+     *
      * @param any KEY
      * @param any VALUE
      * @param map MAP
      * @param any EXPR
      * @return map
      *
-     * @usage foreach (integer k, integer v, $[1:1,2:4,3:9], { y2debug("v = %1", v); return v; }) -> 9 
+     * @usage foreach (integer k, integer v, $[1:1,2:4,3:9], { y2debug("v = %1", v); return v; }) -> 9
      */
-     
+
     if (map.isNull ())
 	return YCPNull ();
 
@@ -514,7 +514,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
 
     if (map.isNull ())
 	return YCPNull ();
-	
+
     if (key.isNull ())
     {
 	ycp2error ("Cannot use 'nil' as key in remove ()");
@@ -528,7 +528,7 @@ m_remove (const YCPMap &map, const YCPValue &key)
         ycp2error ( "Key %s for remove () does not exist", key->toString ().c_str ());
 	return ret;
     }
-    
+
     ret->remove (key);
     return ret;
 }
@@ -536,16 +536,16 @@ m_remove (const YCPMap &map, const YCPValue &key)
 // just put here the lookup builtin docs
     /**
      * @builtin lookup
-     * @short Select a map element (deprecated, use MAP[KEY]:DEFAULT)   
+     * @short Select a map element (deprecated, use MAP[KEY]:DEFAULT)
      * @param map MAP
      * @param any KEY
      * @param any DEFAULT
      * @return any
      *
      * @description
-     * Gets the <tt>KEY</tt>'s value of a map. 
+     * Gets the <tt>KEY</tt>'s value of a map.
      * Returns <tt>DEFAULT</tt>
-     * if the key does not exist. Returns nil if the found 
+     * if the key does not exist. Returns nil if the found
      * entry has a different type than the default value.
      * Functionality replaced with syntax: <code>map m = $["a":1, "b":2];
      * m["a"]:100 -> 1;

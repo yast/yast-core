@@ -78,13 +78,13 @@ static YCPValue
 Sleep (const YCPInteger & ms)
 {
     /**
-     * @builtin sleep 
+     * @builtin sleep
      * @short Sleeps a number of milliseconds.
      * @param integer MILLISECONDS Time in milliseconds
      * @return void
      * @usage sleep(3000) -> sleeps 3 sec.
      */
-     
+
     if (ms.isNull ())
 	return YCPNull ();
 
@@ -183,10 +183,10 @@ Setenv2 (const YCPString & name, const YCPString & value, const YCPBoolean & ove
      * @usage setenv("PATH", "/home/user", true)
      */
     //3rd argument (1) means that value will be overwrite if it exist
-    int ret = setenv(name->value().c_str(), value->value().c_str(), (overwrite->value() ? 1:0) ); 
+    int ret = setenv(name->value().c_str(), value->value().c_str(), (overwrite->value() ? 1:0) );
     if (ret == 0) {
         return YCPBoolean(true);
-    } else { 
+    } else {
         ycp2error ("[Setenv1] failed %s",strerror(errno));
         return YCPBoolean(false);
     }
@@ -233,10 +233,10 @@ Getenv (const YCPString & name)
      * @usage getenv ("USER") -> "root"
      * @usage getenv ("LC_CTYPE") -> "en_US.UTF-8"
      */
- 
+
     char *value = getenv(name->value().c_str());
-    if (value) { 
-        string ret (value);        
+    if (value) {
+        string ret (value);
         return YCPString(ret);
     } else {
         return YCPNull();
@@ -287,12 +287,12 @@ s_sformat (const YCPValue &format, const YCPValue &_argv)
      * @return string
      * @usage sformat ("%2 is greater %% than %1", 3, "five") -> "five is greater % than 3"
      */
-     
+
     if (format.isNull ()
 	|| !format->isString())
     {
 	return YCPNull ();
-    }	
+    }
     if (_argv.isNull ()
 	|| !_argv->isList())
     {
@@ -505,7 +505,7 @@ Y2FDebug (const YCPInteger & f, const YCPString & format, const YCPList & args)
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Debug (format, args);
 
     if (frame < 0)
@@ -523,7 +523,7 @@ Y2FMilestone (const YCPInteger & f, const YCPString & format, const YCPList & ar
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Milestone (format, args);
 
     if (frame < 0)
@@ -541,7 +541,7 @@ Y2FWarning (const YCPInteger & f, const YCPString & format, const YCPList & args
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Warning (format, args);
 
     if (frame < 0)
@@ -559,7 +559,7 @@ Y2FError (const YCPInteger & f, const YCPString & format, const YCPList & args)
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Error (format, args);
 
     if (frame < 0)
@@ -577,7 +577,7 @@ Y2FSecurity (const YCPInteger & f, const YCPString & format, const YCPList & arg
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Security (format, args);
 
     if (frame < 0)
@@ -595,7 +595,7 @@ Y2FInternal (const YCPInteger & f, const YCPString & format, const YCPList & arg
   // negative: print backtrace
 
     int frame = f->value ();
-  
+
     Y2Internal (format, args);
 
     if (frame < 0)
@@ -631,7 +631,7 @@ Y2UserItem (const YCPString & format, const YCPList & args)
     }
 
     y2useritem ("%s", arg->value().c_str());
-    
+
     return YCPVoid();
 }
 
@@ -660,7 +660,7 @@ Y2UserNote (const YCPString & format, const YCPList & args)
     }
 
     y2usernote ("%s", arg->value().c_str());
-    
+
     return YCPVoid();
 }
 

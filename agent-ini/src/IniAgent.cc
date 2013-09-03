@@ -147,7 +147,7 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
 YCPValue IniAgent::otherCommand(const YCPTerm& term)
 {
     string sym = term->name();
-    if (sym == "SysConfigFile") 
+    if (sym == "SysConfigFile")
     {
 	if (term->size () != 1 || !term->value (0)->isString ())
 	{
@@ -158,7 +158,7 @@ YCPValue IniAgent::otherCommand(const YCPTerm& term)
 	YCPTerm tt = generateSysConfigTemplate (file_name);
 	return otherCommand (tt);
     }
-    if (sym == "IniAgent") 
+    if (sym == "IniAgent")
     {
 	if (2 == term->size()) // fixme: we will provide some default actions if 2nd arg is missing in future
 	{

@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	false, -1, true, chroot);
     if(!prog) return 1;
     string line;
-    
+
     for(line = prog->receiveLine();
 	line.length() > 0;
 	line = prog->receiveLine())

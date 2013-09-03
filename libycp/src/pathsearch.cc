@@ -184,9 +184,9 @@ Y2PathSearch::findy2exe (string root, string compname, bool server,
 	subdir = (non_y2 ? "/clients_non_y2/" : "/clients/");
     }
     string pathname = root + searchPath (EXECCOMP, level) + subdir + compname;
-    
+
     y2debug ("Trying file %s", pathname.c_str ());
-    
+
     struct stat buf;
     if (stat (pathname.c_str (), &buf) == 0)
     {
@@ -207,7 +207,7 @@ Y2PathSearch::findy2plugin (string name, int level)
 {
     // All plugins must follow this naming convention.
     string filename = searchPath (PLUGIN, level) + "/libpy2" + name + ".so.2";
-    
+
     y2debug ("Testing existence of plugin %s", filename.c_str ());
 
     // Check if it is a regular file.
@@ -372,7 +372,7 @@ YCPPathSearch::bytecodeForFile (string filename)
 {
     y2debug ("Testing existence of bytecode for %s", filename.c_str() );
     string ybc;
-    
+
     // check the YCP extension
     if (filename.find_last_of ("ycp") == filename.length ()-1)
     {
@@ -385,7 +385,7 @@ YCPPathSearch::bytecodeForFile (string filename)
 	// no extension, no ybc lookup
 	return "";
     }
-    
+
     // check the modification times
     struct stat file_stat;
     if (stat (ybc.c_str (), &file_stat) != 0 || ! S_ISREG(file_stat.st_mode))
@@ -394,22 +394,22 @@ YCPPathSearch::bytecodeForFile (string filename)
 	return "";
     }
     time_t ybc_time = file_stat.st_mtime;
-    
+
     if (stat (filename.c_str (), &file_stat) != 0 || ! S_ISREG(file_stat.st_mode))
     {
 	// return empty file
 	return "";
     }
-    
+
     time_t ycp_time = file_stat.st_mtime;
-    
+
     // compare the times
     if (ycp_time > ybc_time)
     {
 	// too new
 	return "";
     }
-    
+
     return ybc;
 }
 

@@ -173,7 +173,7 @@ static int fillCache (const char *filename)
             if (strncmp (lbuf, "### END INFO", 12) == 0)
             {
                 if (last_key)   // one more key to process
-		{  
+		{
                     localCache->add (YCPString (last_key), YCPString ((info_buf.substr (0, info_buf.length () - 1)).c_str ()));
 		}
                 if (!processing_info) y2warning ("End of info without beggining!");
