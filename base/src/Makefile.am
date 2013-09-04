@@ -36,7 +36,7 @@ AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
 serversdir = $(execcompdir)/servers
 servers_PROGRAMS = scr
 
-INCLUDES = ${AGENT_INCLUDES}                 		\
+AM_CPPFLAGS = ${AGENT_INCLUDES}                 		\
 	-I$(srcdir)/../../libscr/src/include		\
 	-I$(srcdir)/../../scr/src
 
