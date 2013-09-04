@@ -6,7 +6,7 @@ SUBDIRS = config lib libycp.test tests
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
-INCLUDES = -I$(srcdir)/../src/include -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
+AM_CPPFLAGS = -I$(srcdir)/../src/include -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
 
 bindir = $(prefix)/bin
 libdir = ../src/.libs
