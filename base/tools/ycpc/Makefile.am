@@ -6,7 +6,7 @@ SUBDIRS = doc
 
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
-INCLUDES = -I$(top_srcdir)/libycp/src/include \
+AM_CPPFLAGS = -I$(top_srcdir)/libycp/src/include \
 	-I$(top_srcdir)/liby2/src/include \
 	-I$(top_srcdir)/libscr/src/include \
 	-I$(top_srcdir)/wfm/src		\
