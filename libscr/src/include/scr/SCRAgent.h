@@ -155,7 +155,6 @@ public:
 	current_scr = this;
     }
 
-protected:
     /**
      * Helper to compute complete path including target root.
      */
