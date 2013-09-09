@@ -157,6 +157,8 @@ public:
 
     /**
      * Helper to compute complete path including target root.
+     *
+     * \param path must start with a slash
      */
     string targetPath( const string &path) const;
 

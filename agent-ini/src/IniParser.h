@@ -359,7 +359,7 @@ private:
     /**
      * Needed to get target path
      */
-    SCRAgent *agent;
+    const SCRAgent &agent;
 
     /**
      * Open ini file.
@@ -405,7 +405,7 @@ public:
     IniSection inifile;
     // apparently the uninitialized members are filled in
     // by the grammar definition
-    IniParser (SCRAgent *agent_) :
+    IniParser (const SCRAgent &agent_) :
 	timestamp (0),
 	linecomments (), comments (),
 	sections (), params (), rewrites (),

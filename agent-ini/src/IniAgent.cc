@@ -18,7 +18,7 @@
 /**
  * Constructor
  */
-IniAgent::IniAgent() : SCRAgent(), parser(this)
+IniAgent::IniAgent() : SCRAgent(), parser(*this)
 {
 }
 
