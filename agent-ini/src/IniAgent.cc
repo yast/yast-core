@@ -18,7 +18,7 @@
 /**
  * Constructor
  */
-IniAgent::IniAgent() : SCRAgent()
+IniAgent::IniAgent() : SCRAgent(), parser(*this), last_root(NULL)
 {
 }
 
@@ -29,6 +29,8 @@ IniAgent::~IniAgent()
 {
     if (parser.isStarted())
 	parser.write();
+
+    free(last_root);
 }
 
 /**
@@ -41,6 +43,8 @@ YCPList IniAgent::Dir(const YCPPath& path)
 	    y2warning("Can't execute Dir before being mounted.");
 	    return YCPNull();
 	}
+
+    setLastRoot();
     parser.UpdateIfModif ();
 
     YCPList l;
@@ -60,6 +64,7 @@ YCPValue IniAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPValue
 	    y2warning("Can't execute Read before being mounted.");
 	    return YCPVoid();
 	}
+    setLastRoot();
     parser.UpdateIfModif ();
 
     YCPValue out = YCPVoid ();
@@ -79,6 +84,7 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
 	y2warning("Can't execute Write before being mounted.");
 	return YCPBoolean (false);
     }
+    setLastRoot();
     // no need to update if modified, we are changing value
 
     bool ok = false; // is the _path_ ok?
@@ -146,6 +152,7 @@ YCPBoolean IniAgent::Write(const YCPPath &path, const YCPValue& value, const YCP
  */
 YCPValue IniAgent::otherCommand(const YCPTerm& term)
 {
+    setLastRoot();
     string sym = term->name();
     if (sym == "SysConfigFile")
     {
@@ -239,4 +246,21 @@ YCPTerm IniAgent::generateSysConfigTemplate (string fn)
     m->add (YCPString ("params"), l);
     t->add (m);
     return t;
+}
+
+const char* IniAgent::root() const
+{
+    return last_root;
+}
+
+void IniAgent::setLastRoot()
+{
+    const char * current_root = mainscragent ? mainscragent->root() : "/";
+
+    //short eval if same
+    if (last_root && strcmp(current_root, last_root) == 0)
+      return;
+
+    free(last_root);
+    last_root = strdup(current_root);
 }

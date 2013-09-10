@@ -413,7 +413,7 @@ int IniParser::initMachine (const YCPMap&scr)
 
 int IniParser::scanner_start(const char*fn)
 {
-    scanner.open(fn);
+    scanner.open(agent.targetPath(fn));
     scanner_file = fn;
     scanner_line = 0;
     if (!scanner.is_open())
@@ -1010,7 +1010,7 @@ int IniParser::write_file(const string & filename, IniSection & section)
     mode_t file_umask = section.isPrivate()? 0077: 0022;
     mode_t orig_umask = umask(file_umask);
 
-    ofstream of(filename.c_str());
+    ofstream of(agent.targetPath(filename));
     if (!of.good()) {
         y2error ("Can not open file %s for write", filename.c_str());
         return -1;
