@@ -410,8 +410,7 @@ public:
 	linecomments (), comments (),
 	sections (), params (), rewrites (),
 	started (false), multiple_files (false),
-//	inifile ("toplevel")
-	inifile (this), agent(agent_)
+	 agent(agent_), inifile (this)
 	    {}
     ~IniParser ();
     /**
