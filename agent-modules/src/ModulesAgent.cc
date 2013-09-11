@@ -350,7 +350,7 @@ YCPValue ModulesAgent::otherCommand(const YCPTerm& term) {
 	    YCPString s = term->value(0)->asString();
 	    if (modules_conf != NULL)
 		delete modules_conf;
-	    modules_conf = new ModulesConf(s->value());
+	    modules_conf = new ModulesConf(targetPath(s->value()));
 	    return YCPVoid();
 	} else
 	    Y2_RETURN_VOID("Bad first arg of ModulesConf(): is not a string.");
