@@ -111,3 +111,18 @@ const char *SCRAgent::root() const
 {
     return mainscragent ? mainscragent->root() : "/";
 }
+
+string SCRAgent::targetPath( const string &path) const
+{
+    const char * root_path = root();
+    //short eval if root is same
+    if (strcmp(root_path, "/") == 0)
+        return path;
+
+    // we need full path if we have different root, otherwise
+    // /mnt + tests/a.test result in /mnttests/a.test
+    if (path[0] != '/')
+        abort();
+
+    return string(root_path) + path;
+}
