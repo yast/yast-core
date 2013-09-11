@@ -471,7 +471,7 @@ AnyAgent::Write (const YCPPath & path, const YCPValue & value,
 
 	y2debug (" to %s", fname);
 
-	std::ofstream dummy_file (fname);
+	std::ofstream dummy_file (targetPath(fname));
 	if (!dummy_file)
 	{
 	    ycp2error ("Can't open path %s", sfname.c_str ());
@@ -721,7 +721,7 @@ AnyAgent::readFile (const YCPValue & arg)
 
 	// open file
 
-	fp = fopen (s, "r");
+	fp = fopen (targetPath(ss).c_str(), "r");
 
 	if (fp == 0)
 	{
