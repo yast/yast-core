@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep 11 12:40:58 UTC 2013 - jreidinger@suse.com
+
+- respect target root in: ag_any, ag_ini, ag_modules, ag_resolver 
+
+-------------------------------------------------------------------
 Tue Sep  3 13:28:44 UTC 2013 - jreidinger@suse.com
 
 - libscr: added "root" attribute to SCRAgent (FATE#314695). Agents
