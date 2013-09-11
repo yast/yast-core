@@ -30,6 +30,23 @@ class IniAgent : public SCRAgent
 	YCPTerm generateSysConfigTemplate (string fn);
 
 	IniParser parser;
+
+          /**
+           * Helper to lazy load root when operation happen on agent. It must be
+           * placed everywhere where action with agent happen like Read, Write or
+           * OtherCommand. It must not be called on destructor as it depends on
+           * SCR root that can be already destructed.
+           */
+          void setLastRoot();
+
+          /**
+           * remember root used in last operation. It is needed during
+           * destructor write, because original scr can be already destructed
+           * leading to segfault
+           * C string is owned by class and should be destructed with free as it
+           * is allocated with strdup
+           */
+          char * last_root;
     public:
         /**
          * Default constructor.
@@ -61,6 +78,8 @@ class IniAgent : public SCRAgent
          * Used for mounting the agent.
          */    
         virtual YCPValue otherCommand(const YCPTerm& term);
+
+        virtual const char * root() const;
 };
 
 #endif /* _IniAgent_h */
