@@ -16,11 +16,11 @@
 /**
  * Execute shell command and feed its output to y2log
  */
-int shellcommand (const string &command, const string &tempdir = "");
+int shellcommand (const char* target_root, const string &command, const string &tempdir = "");
 
 /**
  * Execute shell command on background
  */
-int shellcommand_background (const string &command);
+int shellcommand_background (const char* target_root, const string &command);
 
 #endif /* ShellCommand_h */

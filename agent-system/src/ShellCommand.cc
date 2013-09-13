@@ -26,7 +26,7 @@
  * Execute shell command and feed its output to y2log
  */
 int
-shellcommand (const string &command, const string &tempdir)
+shellcommand ( const char *target_root, const string &command, const string &tempdir)
 {
     y2debug ("shellcommand start");
 
@@ -149,6 +149,17 @@ shellcommand (const string &command, const string &tempdir)
 		close( i );
 	    }
 
+      // we want to work on different target root
+      if (strcmp(target_root, "/") != 0)
+      {
+        int res = chroot(target_root);
+        if (res == -1)
+        {
+    	    y2error ("chroot failed, errno: %d", errno);
+          _exit(1);
+        }
+      }
+
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
 		ret = WEXITSTATUS (ret);
@@ -191,12 +202,12 @@ shellcommand (const string &command, const string &tempdir)
  * about it!
  */
 int
-shellcommand_background (const string &command)
+shellcommand_background (const char* target_root, const string &command)
 {
 
     if (!getenv ("Y2DEBUGSHELL") && !getenv ("Y2DEBUGALL"))
     {
-	system (string (command + " >/dev/null 2>&1 &").c_str ());
+	shellcommand (target_root, string (command + " >/dev/null 2>&1 &").c_str ());
 	// FIXME execl ("/bin/sh", "-c", command.c_str(), NULL);
 	return 0;
     }
@@ -212,7 +223,7 @@ shellcommand_background (const string &command)
     /* child process */
     if (!child)
     {
-	shellcommand (command, "");
+	shellcommand (target_root, command, "");
 	_exit (0);
     }
 
