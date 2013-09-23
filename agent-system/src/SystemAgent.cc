@@ -202,7 +202,7 @@ stat2map (const struct stat& sb)
  * Run shell command and returns its output.
  */
 static YCPMap
-shellcommand_output (const char* target_root, const string& script, const string& tempdir)
+shellcommand_output (const string &target_root, const string& script, const string& tempdir)
 {
     int ret = shellcommand (target_root, script, tempdir);
 
@@ -1037,19 +1037,24 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	string command = value->asString ()->value ();
 	command += ">/dev/null 2>&1";
 
-  string target_tmp = string(root()) + "/tmp/Yast_input_XXXXXX";
-  char *template_ = strdup(target_tmp.c_str());
-  int fd = mkstemp(template_);
+        string target_tmp = string(root()) + "/tmp/Yast_input_XXXXXX";
+        char *template_ = strdup(target_tmp.c_str());
+        int fd = mkstemp(template_);
 	string input = arg->asString ()->value ();
-  write(fd, input.c_str(), input.length());
-  close(fd);
-  command += " < ";
-  command += template_;
+        int res = write(fd, input.c_str(), input.length());
+        if (res != -1)
+            res = close(fd);
 
-  int res = shellcommand(root(), command);
+        command += " < ";
+        command += template_;
 
-  unlink(template_);
+        if (res != -1)
+          res = shellcommand(root(), command);
 
+        unlink(template_);
+
+        if (res == -1)
+            y2error ("writting to temporary file failed %s", strerror(errno));
 	return YCPInteger (res);
     }
 

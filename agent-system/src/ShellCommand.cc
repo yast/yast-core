@@ -26,7 +26,7 @@
  * Execute shell command and feed its output to y2log
  */
 int
-shellcommand ( const char *target_root, const string &command, const string &tempdir)
+shellcommand ( const string &target_root, const string &command, const string &tempdir)
 {
     y2debug ("shellcommand start");
 
@@ -149,16 +149,17 @@ shellcommand ( const char *target_root, const string &command, const string &tem
 		close( i );
 	    }
 
-      // we want to work on different target root
-      if (strcmp(target_root, "/") != 0)
-      {
-        int res = chroot(target_root);
-        if (res == -1)
-        {
-    	    y2error ("chroot failed, errno: %d", errno);
-          _exit(1);
-        }
-      }
+            // we want to work on different target root
+            if (target_root != "/")
+            {
+                int res = chroot(target_root.c_str());
+                if (res == -1)
+                {
+                    // avoid problem with y2log in fork (see commit 83852f9)
+                    // y2error ("chroot failed, errno: %d", errno);
+                    _exit(1);
+                }
+            }
 
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
@@ -202,7 +203,7 @@ shellcommand ( const char *target_root, const string &command, const string &tem
  * about it!
  */
 int
-shellcommand_background (const char* target_root, const string &command)
+shellcommand_background (const string &target_root, const string &command)
 {
 
     if (!getenv ("Y2DEBUGSHELL") && !getenv ("Y2DEBUGALL"))
