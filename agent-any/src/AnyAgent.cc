@@ -675,22 +675,44 @@ AnyAgent::readFile (const YCPValue & arg)
 	// always invalidate cache
 	buf.st_mtime = 0;
 
-	const char *original_locale = getenv ("LC_ALL");
-	if (setenv ("LC_ALL", "C", 1) < 0)
-	    y2error ("Cannot reset locales;");
+        int read_pipes[2];
+
+        int res = pipe(&read_pipes[0]);
+        if (res == -1)
+        {
+          y2error("Cannot open pipe: %s", strerror(errno));
+          return YCPNull();
+        }
+
 
 	fp = popen (s, "r");
 
-	if (original_locale)
-	{
-	    if (setenv ("LC_ALL", original_locale, 1) < 0)
-		y2error ("Cannot revert locales;");
-	}
-	else
-	{
-	    unsetenv ("LC_ALL");
-	}
+        switch (fork())
+        {
+          case -1:
+            y2error("fork failed: %s", strerror(errno));
+            return YCPNull();
+          case 0: //child
+            close(STDIN_FILENO);
+            close(STDERR_FILENO);
+            close(read_pipes[0]);
+            dup2(read_pipes[1], STDOUT_FILENO);
+            close(read_pipes[1]);
 
+            if (strcmp(root(), "/") != 0)
+            {
+              int res = chroot(root());
+              if (res == -1)
+                _exit(1);
+            }
+            //lets ignore if it fails, we even cannot log here
+            setenv ("LC_ALL", "C", 1);
+
+            _exit(system(s));
+          default: //parent
+            close(read_pipes[1]);
+            fp = fdopen(read_pipes[0], "r");
+        }
 	if (fp == 0)
 	{
 	    ycp2error ("Can't run '%s': %d", ss.c_str (), errno);
@@ -746,10 +768,7 @@ AnyAgent::readFile (const YCPValue & arg)
 	data->add (YCPString (line));
     }
 
-    if (mType == MTYPE_PROG)
-	pclose (fp);
-    else
-	fclose (fp);
+    fclose (fp);
 
     mtime = buf.st_mtime;
     alldata = data;
