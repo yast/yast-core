@@ -1,0 +1,5 @@
+{
+    list items = (list)SCR::Read(.);
+    string result = size(items) > 0 ? "OK, non-empty df": "WTF, empty df";
+    return result;
+}
