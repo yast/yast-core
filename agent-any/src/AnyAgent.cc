@@ -676,7 +676,7 @@ static FILE* program_stream(const char *s, SCRAgent* agent)
             // lets ignore if it fails, we even cannot log here
             setenv ("LC_ALL", "C", 1);
 
-            execlp("sh", "-c", s, NULL);
+            execlp("sh", "sh", "-c", s, NULL);
             // if exec fail exit with 1
             _exit(1);
         default: // parent
