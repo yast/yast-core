@@ -642,6 +642,58 @@ AnyAgent::evalArg (const YCPValue & arg)
 }
 
 
+static FILE* program_stream(const char *s, SCRAgent* agent)
+{
+    y2debug ("readFile, run (%s)", s);
+
+    int read_pipes[2];
+
+    int res = pipe(&read_pipes[0]);
+    if (res == -1)
+    {
+        y2error("Cannot open pipe: %s", strerror(errno));
+        return NULL;
+    }
+
+    switch (fork())
+    {
+        case -1:
+            y2error("fork failed: %s", strerror(errno));
+            return NULL;
+        case 0: // child
+            close(STDIN_FILENO);
+            close(STDERR_FILENO);
+            close(read_pipes[0]);
+            dup2(read_pipes[1], STDOUT_FILENO);
+            close(read_pipes[1]);
+
+            if (strcmp(agent->root(), "/") != 0)
+            {
+              int res = chroot(agent->root());
+              if (res == -1)
+                _exit(1);
+            }
+            // lets ignore if it fails, we even cannot log here
+            setenv ("LC_ALL", "C", 1);
+
+            execlp("sh", "sh", "-c", s, NULL);
+            // if exec fail exit with 1
+            _exit(1);
+        default: // parent
+            close(read_pipes[1]);
+            return fdopen(read_pipes[0], "r");
+    }
+}
+
+static inline FILE* file_stream(const char *s, SCRAgent* agent)
+{
+    y2debug ("readFile, read (%s)", s);
+
+    // open file
+    return fopen (agent->targetPath(s).c_str(), "r");
+}
+
+
 /**
  * readFile
  *
@@ -669,27 +721,10 @@ AnyAgent::readFile (const YCPValue & arg)
 
     if (mType == MTYPE_PROG)
     {
-	const char *s = ss.c_str ();
-	y2debug ("readFile, run (%s)", s);
 
 	// always invalidate cache
 	buf.st_mtime = 0;
-
-	const char *original_locale = getenv ("LC_ALL");
-	if (setenv ("LC_ALL", "C", 1) < 0)
-	    y2error ("Cannot reset locales;");
-
-	fp = popen (s, "r");
-
-	if (original_locale)
-	{
-	    if (setenv ("LC_ALL", original_locale, 1) < 0)
-		y2error ("Cannot revert locales;");
-	}
-	else
-	{
-	    unsetenv ("LC_ALL");
-	}
+        fp = program_stream(ss.c_str(), this);
 
 	if (fp == 0)
 	{
@@ -699,41 +734,37 @@ AnyAgent::readFile (const YCPValue & arg)
     }
     else
     {
-	const char *s = ss.c_str ();
+        const char *s = ss.c_str();
+        // Check modify time if we can use cache
+        if (stat (s, &buf) != 0)
+        {
+            mtime = 0;	// error case: reset mtime
+            if (errno == ENOENT)
+            {
+                ycp2error ("File not found %s", s);
+                return YCPList ();
+            }
 
-	y2debug ("readFile, read (%s)", s);
+            ycp2error ("Can't stat '%s' :%d", s, errno);
+            return YCPNull ();
+        }
 
-	if (stat (s, &buf) != 0)
-	{
-	    mtime = 0;	// error case: reset mtime
-	    if (errno == ENOENT)
-	    {
-		ycp2error ("File not found %s", s);
-		return YCPList ();
-	    }
+        if (buf.st_mtime == mtime)
+            return alldata;
 
-	    ycp2error ("Can't stat '%s' :%d", s, errno);
-	    return YCPNull ();
-	}
+        fp = file_stream(s, this);
 
-	if (buf.st_mtime == mtime)
-	    return alldata;
+        if (fp == 0)
+        {
+            if (errno == EACCES)
+            {
+                ycp2error ("Cant access %s", s);
+                return YCPList ();
+            }
 
-	// open file
-
-	fp = fopen (targetPath(ss).c_str(), "r");
-
-	if (fp == 0)
-	{
-	    if (errno == EACCES)
-	    {
-		ycp2error ("Cant access %s", s);
-		return YCPList ();
-	    }
-
-	    ycp2error ( "Error opening '%s': %d", s, errno);
-	    return YCPNull ();
-	}
+            ycp2error ( "Error opening '%s': %d", s, errno);
+            return YCPNull ();
+        }
     }
 
     // read complete file to alldata as YCPListRep (YCPStringRep)
@@ -746,10 +777,7 @@ AnyAgent::readFile (const YCPValue & arg)
 	data->add (YCPString (line));
     }
 
-    if (mType == MTYPE_PROG)
-	pclose (fp);
-    else
-	fclose (fp);
+    fclose (fp);
 
     mtime = buf.st_mtime;
     alldata = data;

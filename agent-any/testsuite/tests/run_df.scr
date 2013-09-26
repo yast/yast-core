@@ -1,0 +1,27 @@
+.
+
+`ag_anyagent(
+  `Description (
+      (`Run("/bin/df -P 2>/dev/null")),         // real file name
+      "\n",                     // Comment
+      true,                     // read-only
+      (`List (
+        `Tuple (
+          `spec (`String("^\t ")),
+          `Separator ("\t "),
+          `whole (`String("^\t ")),
+          `Separator ("\t "),
+          `used (`String("^\t ")),
+          `Separator ("\t "),
+          `free (`String("^ \t")),
+          `Separator ("\t "),
+          `prz (`String("^ \t")),
+          `Separator ("\t "),
+          `name (`String("^ \t\n")),
+          `Optional(`Whitespace()),
+          `Optional(`dummy (`String("^ \t\n")))
+        ),
+        "\n"
+      ))
+    )
+)

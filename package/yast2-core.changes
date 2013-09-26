@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep 25 14:16:30 UTC 2013 - jreidinger@suse.com
+
+- respect target root in: ag_any(for processes), system_agent 
+
+-------------------------------------------------------------------
 Wed Sep 11 12:40:58 UTC 2013 - jreidinger@suse.com
 
 - respect target root in: ag_any, ag_ini, ag_modules, ag_resolver 
