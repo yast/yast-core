@@ -97,8 +97,6 @@ struct yystype_type {
 #define YYSTYPE yystype_type
 
 // vp_parser is void*
-#define YYPARSE_PARAM vp_parser
-#define YYLEX_PARAM vp_parser
 #define p_parser ((Parser *) vp_parser)
 
 #if YYLSP_NEEDED
@@ -124,7 +122,7 @@ static void yyerror_no_module		(Parser *parser, int lineno, const char *module);
 
 //static void yyerror_decl_mismatch (Parser *parser, declaration_t *decl, const char *seen_type, int lineno);
 
-#define yyerror(text)				yyerror_with_lineinfo (p_parser, -1, text)
+#define yyerror(locp, text)				yyerror_with_lineinfo (p_parser, -1, text)
 #define yywarning(text,lineno)			yywarning_with_lineinfo (p_parser, lineno, text)
 #define yyConstAssignError(name, lineno)	yyerror_assign_const (p_parser, lineno, name)
 #define yyLerror(text,lineno)			yyerror_with_lineinfo (p_parser, lineno, text)
@@ -332,7 +330,7 @@ static int do_while_count = 0;
 
  /* expect one shift-reduce conflict (a dangling else) */
 %expect 2
-%pure_parser
+%pure-parser
 
   /* SCANNER_ERROR is returned when yylex does not have a valid token */
 %token  SCANNER_ERROR
@@ -382,9 +380,14 @@ static int do_while_count = 0;
 %left CLOSEBRACKET
 %left '['
 
+%lex-param {Parser *vp_parser }
+%parse-param {Parser *vp_parser}
+
+%code requires {
+  #include "ycp/Parser.h"
+}
 /* ---------------------------------------------------------------------- */
 %%
-
 ycp:	compact_expression
 	    {
 		inside_module = false; 		// reset for next call
