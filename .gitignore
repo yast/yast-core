@@ -19,7 +19,7 @@ config.log
 config.status
 config.sub
 configure
-configure.in
+configure.ac
 depcomp
 install-sh
 ltmain.sh
@@ -29,11 +29,11 @@ libtool.m4
 missing
 pluglib-bindings.ami
 autodocs*.ami
+autodocs/doxygen.conf
 ylwrap
 *.pc
 stamp-h*
 package/*.tar.bz2
-package/*.spec
 # testsuites
 site.bak
 /test-driver
