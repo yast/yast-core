@@ -29,6 +29,7 @@ libtool.m4
 missing
 pluglib-bindings.ami
 autodocs*.ami
+autodocs/doxygen.conf
 ylwrap
 *.pc
 stamp-h*
