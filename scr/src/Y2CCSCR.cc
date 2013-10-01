@@ -44,6 +44,9 @@ Y2Component *Y2CCSCR::create( const char* name) const
 
     split_name(name, root, real_name);
 
+    y2debug("Create component for %s: root '%s' real_name '%s'", name,
+      root.c_str(), real_name.c_str());
+
     if (real_name != "scr")
         return NULL;
 
