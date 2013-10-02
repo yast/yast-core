@@ -1,5 +1,13 @@
 # common setup for test cases of ag_backgound
 
+if { [catch {exec grep devpts.*mode=620 /proc/mounts} ] } {
+    # Something in our Jenkins instance remounts it with mode 600
+    # and then "spawn" fails.
+    puts "SKIP: need devpts with mode=620."
+    puts "  See also https://bugzilla.redhat.com/show_bug.cgi?id=510183"
+    exit 77
+}
+
 set prog "../ag_background"
 set env(PERL5LIB) "../lib"
 
@@ -15,7 +23,7 @@ spawn $prog $argv
 match_max 100000
 
 set timeout 15
-expect_after {    
+expect_after {
     default {
 	puts "OOPS"
 	puts "last matched <<$expect_out(buffer)>>"
