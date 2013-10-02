@@ -2877,14 +2877,39 @@ YECall::finalize()
 
 	// retrieve function type for formal parameter list
 	constFunctionTypePtr ftype = sentry->type();
+
+  bool wildcard = false;
+
+  // not the correct number of parameters?
+  if ((int)m_next_param_id != ftype->parameterCount())
+  {
+      // special handle wildcards
+      if (ftype->parameterType(ftype->parameterCount()-1)->isWildcard() &&
+        (int)m_next_param_id >= ftype->parameterCount()-1)
+      {
+        // wildcard, relax count check
+        wildcard = true;
+      }
+      else
+      {
+          // try to continue with the next one
+          entry = next_overloaded;
+          continue;
+      }
+  }
+
 	bool accept = true;
 	// ok, check whether types match
 	for (uint check_count = 0; check_count < m_next_param_id ; check_count++)
 	{
+      // no special care about parameters matched against wildcard
+      if (wildcard && check_count >= (ftype->parameterCount() - 1))
+        break;
+
 	    constTypePtr expected_type = ftype->parameterType (check_count);
 	    YCodePtr code = m_parameters[check_count];
 	    constTypePtr type = m_parameter_types[check_count];
-	    
+
 	    // if the parameter type is block, find out the type for the actual param
 	    if (expected_type->isBlock ())
 	    {
