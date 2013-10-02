@@ -10,7 +10,7 @@ PACKAGE = wfm
 AUTOMAKE_OPTIONS = dejagnu
 export Y2DISABLELANGUAGEPLUGINS = 1
 
-INCLUDES =					\
+AM_CPPFLAGS =					\
 	-I$(top_srcdir)/libycp/src/include	\
 	-I$(top_srcdir)/liby2/src/include	\
 	-I$(top_srcdir)/libscr/src/include	\

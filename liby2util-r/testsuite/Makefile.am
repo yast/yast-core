@@ -6,9 +6,7 @@ PACKAGE = liby2util
 AUTOMAKE_OPTIONS = dejagnu
 export Y2DISABLELANGUAGEPLUGINS = 1
 
-INCLUDES= -I$(srcdir)/../src/include
-
-AM_CPPFLAGS = -DY2LOG=\"liby2util-testsuite\"
+AM_CPPFLAGS = -I$(srcdir)/../src/include -DY2LOG=\"liby2util-testsuite\"
 
 AM_LDFLAGS = \
 	-Xlinker --whole-archive	\

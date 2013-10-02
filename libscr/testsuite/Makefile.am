@@ -4,7 +4,7 @@
 
 AM_CXXFLAGS = -DY2LOG=\"libscr\"
 
-INCLUDES =						\
+AM_CPPFLAGS =						\
 	-I$(top_srcdir)/libycp/src/include		\
 	-I$(top_srcdir)/liby2/src/include		\
 	-I$(srcdir)/../src/include			\

@@ -2,7 +2,7 @@
 # Makefile.am for tools/ttywrapper
 #
 
-INCLUDES = ${AGENT_INCLUDES}
+AM_CPPFLAGS = ${AGENT_INCLUDES}
 
 ybin_PROGRAMS = tty_wrapper
 
