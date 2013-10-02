@@ -29,7 +29,7 @@
 
 extern StaticDeclaration static_declarations;
 
-int yyparse (void *parser);
+int yyparse (Parser *parser);
 
 //-------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ Parser::parse (SymbolTable *gTable, SymbolTable *lTable)
 
     m_result = 0;
 
-    if (yyparse ((void *) this))
+    if (yyparse(this))
     {
 	// syntax error occured
         m_parser_errors = 0;
