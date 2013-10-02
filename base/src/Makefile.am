@@ -50,3 +50,6 @@ scr_LDFLAGS =                                   \
         $(top_builddir)/scr/src/libpy2scr.la            \
 	$(top_builddir)/wfm/src/libpy2wfm.la		\
         -Xlinker --no-whole-archive
+
+TESTS = scr-smoke-test
+EXTRA_DIST = $(TESTS)

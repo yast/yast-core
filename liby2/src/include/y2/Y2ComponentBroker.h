@@ -156,6 +156,10 @@ private:
      * If set to false only servers are created.
      * @return A pointer to the new component if one has been found, 0 if no
      * component matching spec has been found.
+     * Pointer returned by this function is owned by ComponentCreator so do not
+     * delete it at your own.
+     * @see Y2ComponentCreator#create for details what ComponentCreator must
+     * return
      */
     static Y2Component *createComponent(const char *name, bool look_for_clients);
 
