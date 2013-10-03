@@ -60,7 +60,7 @@ BUILT_SOURCES = parser.hh
 
 AM_YFLAGS = -d -v
 
-INCLUDES = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS} \
+AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS} \
 	-I$(top_srcdir)/debugger
 
 # CURRENT:REVISION:AGE

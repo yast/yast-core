@@ -13,7 +13,7 @@ liby2debug_la_SOURCES =	\
 
 #liby2debug_la_LIBADD = @AGENT_LIBADD@
 
-INCLUDES =	\
+AM_CPPFLAGS =	\
 	-I$(srcdir)/../libycp/src/include \
 	-I$(srcdir)/../liby2/src/include \
 	-I$(srcdir)/../liby2util-r/src/include \

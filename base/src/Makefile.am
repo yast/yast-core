@@ -36,7 +36,7 @@ AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
 serversdir = $(execcompdir)/servers
 servers_PROGRAMS = scr
 
-INCLUDES = ${AGENT_INCLUDES}                 		\
+AM_CPPFLAGS = ${AGENT_INCLUDES}                 		\
 	-I$(srcdir)/../../libscr/src/include		\
 	-I$(srcdir)/../../scr/src
 
@@ -50,3 +50,6 @@ scr_LDFLAGS =                                   \
         $(top_builddir)/scr/src/libpy2scr.la            \
 	$(top_builddir)/wfm/src/libpy2wfm.la		\
         -Xlinker --no-whole-archive
+
+TESTS = scr-smoke-test
+EXTRA_DIST = $(TESTS)
