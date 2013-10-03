@@ -245,7 +245,7 @@ struct FileDescr
      * Time of the last modification
      */
     time_t timestamp;
-    FileDescr (char*fn);
+    FileDescr (const char*fn);
     bool changed ();
     FileDescr () {}
 };
