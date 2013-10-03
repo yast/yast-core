@@ -472,7 +472,7 @@ bool FileDescr::changed ()
     return false;
 }
 
-FileDescr::FileDescr (char*fn_)
+FileDescr::FileDescr (const char*fn_)
 {
     fn = fn_;
     sn = fn_;
@@ -525,7 +525,7 @@ int IniParser::parse()
 		    y2error ("Cannot open %s.", *f);
 		else
 		{
-		    FileDescr fdsc (*f);
+		    FileDescr fdsc (agent.targetPath(*f).c_str());
 		    multi_files[*f] = fdsc;
 		    inifile.initSection (section_name, "", -1, section_index);
 		    parse_helper(inifile.getSection(section_name.c_str()));
@@ -541,7 +541,7 @@ int IniParser::parse()
 		    else
 		    {
 			y2debug ("File %s changed. Reloading.", *f);
-			FileDescr fdsc (*f);
+			FileDescr fdsc (agent.targetPath(*f).c_str());
 			multi_files [*f] = fdsc;
 			inifile.initSection (section_name, "", -1, section_index);
 			parse_helper(inifile.getSection(section_name.c_str()));
@@ -927,9 +927,9 @@ time_t IniParser::getTimeStamp()
 	printf ("bad call of getTimeStamp aborting. FIXME\n");//FIXME
 	abort ();
     }
-    if (stat(file.c_str(), &st))
+    if (stat(agent.targetPath(file).c_str(), &st))
     {
-	y2error("Unable to stat '%s': %s", file.c_str(), strerror(errno));
+	y2error("Unable to stat '%s': %s", agent.targetPath(file).c_str(), strerror(errno));
 	return 0;
     }
     return st.st_mtime;
