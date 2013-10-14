@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Oct 14 12:40:31 UTC 2013 - jreidinger@suse.com
+
+- minimal chroot: fixed System:: to actually chroot; hopefully
+  fixes bootloader setup at installation
+
+-------------------------------------------------------------------
 Tue Oct  1 14:59:08 UTC 2013 - jreidinger@suse.com
 
 - port from opensuse 13.1: fixed a segfault at the end of 'scr'
