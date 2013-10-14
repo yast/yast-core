@@ -33,10 +33,11 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
 {
     // TODO when perl-bootloader die, remove whole system namespacing
     // check if name is scr ( can be prepended by chroot like "chroot=/mnt:scr" )
-    if (name.find("scr") == string::npos)
+    if (name.find("scr") == string::npos && name.find("chroot") != string::npos)
     {
-      y2internal("WFMSubAgent support only scr component, but not '%s'.", name);
-      abort;
+      y2internal("WFMSubAgent support chrrot only for scr component, but not '%s'.",
+        name.c_str());
+      abort();
     }
 }
 
