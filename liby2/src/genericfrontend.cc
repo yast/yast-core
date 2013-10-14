@@ -772,9 +772,7 @@ main (int argc, char **argv)
     server->result(result);
 
     // Cleanup
-    delete server;
     delete[] server_argv;
-    delete client;
 
     // might be useful in tracking segmentation faults
     y2milestone ("Finished YaST2 component '%s'", progname);

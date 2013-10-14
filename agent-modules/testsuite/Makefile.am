@@ -11,7 +11,7 @@ AUTOMAKE_OPTIONS = dejagnu
 export Y2DISABLELANGUAGEPLUGINS = 1
 export top_srcdir
 
-INCLUDES = ${AGENT_INCLUDES}
+AM_CPPFLAGS = ${AGENT_INCLUDES}
 
 noinst_PROGRAMS = runmodules
 
