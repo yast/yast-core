@@ -77,7 +77,7 @@ WFMSubAgent::start ()
         }
         else
         {
-            Y2Component *my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
+            my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
         }
     }
 
