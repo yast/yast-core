@@ -58,21 +58,22 @@ WFMSubAgent::start ()
     {
 	y2debug ("Creating SubAgent: %d %s", my_handle, my_name.c_str ());
         // different behavior in chroot and non-chroot as for chroot we need to
-        // handle specially system namespace via scr_remote
+        // handle specially system namespace via scr_remote and agents call via
+        // Scripting agent
         // TODO remove after perl-bootloader die, then else branch is enough
         if (my_name.find("chroot") != string::npos)
         {
-            Y2Component *scr_comp = Y2ComponentBroker::createServer (my_name.c_str ());
+            // set to my_comp component for `System::` namespace and in my_agent
+            // ScriptingAgent with target root
+            // see Y2WFMComponent::SCRSetDefault implementation for details
+            // how it exactly works
             my_comp = Y2ComponentBroker::createServer ((my_name+"_remote").c_str ());
+            Y2Component *scr_comp = Y2ComponentBroker::createServer (my_name.c_str ());
             if (!scr_comp)
             {
-	        ycp2error ("Can't create component 'scr'");
+	        ycp2error ("Can't create component %s", my_name.c_str());
                 return false;
 	    }
-            // WFM subagent use specialized agent for remote and scr_remote as
-            // component
-            // see Y2WFMComponent::SCRSetDefault implementation for details 
-            // how it works
             my_agent = scr_comp->getSCRAgent();
         }
         else
