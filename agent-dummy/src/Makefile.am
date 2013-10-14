@@ -13,7 +13,7 @@ libpy2ag_dummy_la_SOURCES =			\
 libpy2ag_dummy_la_LDFLAGS = -version-info 2:0
 libpy2ag_dummy_la_LIBADD = @AGENT_LIBADD@
 
-INCLUDES =					\
+AM_CPPFLAGS =					\
 	-I$(top_srcdir)/libycp/src/include	\
 	-I$(top_srcdir)/liby2/src/include	\
 	-I$(top_srcdir)/libscr/src/include	\

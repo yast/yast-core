@@ -30,7 +30,7 @@ libpy2serial_la_SOURCES =				\
 	Y2SerialComponent.cc Y2CCSerial.cc
 libpy2serial_la_LDFLAGS = -version-info 2:0
 
-INCLUDES =						\
+AM_CPPFLAGS =						\
 	-I$(srcdir)/../../libycp/src/include		\
 	-I$(srcdir)/include				\
 	-I$(srcdir)/include/y2				\
