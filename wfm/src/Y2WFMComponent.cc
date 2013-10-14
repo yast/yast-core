@@ -121,6 +121,8 @@ bool Y2WFMComponent::createDefaultSCR ()
     WFMSubAgent* scr = new WFMSubAgent ("scr", 0);
 
     if (!scr->start ()) {
+        y2internal("Failed to start default SCR");
+        delete scr;
 	return false;
     }
 
@@ -338,7 +340,10 @@ Y2WFMComponent::SCRGetName (const YCPInteger &h)
 
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
-    return YCPString (it != scrs.end () ? (*it)->get_name () : "");
+    bool handle_found = it != scrs.end ();
+    if (!handle_found)
+        ycpinternal("SCRGetName for not existing handle %i", handle);
+    return YCPString ( handle_found ? (*it)->get_name () : "");
 }
 
 
