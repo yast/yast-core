@@ -159,6 +159,10 @@ shellcommand ( const string &target_root, const string &command, const string &t
                     // y2error ("chroot failed, errno: %d", errno);
                     _exit(1);
                 }
+
+                // Do not allow touch outside of chroot especially `cd ~` can
+                // cause errors
+                chdir("/");
             }
 
 	    ret = system (command.c_str ());
