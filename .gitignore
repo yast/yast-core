@@ -43,3 +43,4 @@ tmp.*
 */testsuite/*.sum
 */testsuite/site.exp
 *.in.test
+/config.h.in~
