@@ -106,7 +106,12 @@ YCPValue Y2ProgramComponent::evaluate(const YCPValue& command)
 
 	    l_argv[0] = argc >= 1 ? argv[0] : strdup(name().c_str()); // component name
 	    l_argv[1] = "stdio"; // I will speak to the server via his stdio
-	    l_argv[2] = strdup(name().c_str());
+            // work-around y2 server scr_remote, that need Scripting agent as server
+            if (name() == "scr_remote")
+                l_argv[2] = strdup("scr");
+            else
+                l_argv[2] = strdup(name().c_str());
+
 	    for (int arg = 1; arg < argc; arg++) l_argv[arg+2] = argv[arg];
 	    l_argv[l_argc] = 0; // Terminate array
 
