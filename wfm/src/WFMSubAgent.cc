@@ -44,10 +44,6 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
 
 WFMSubAgent::~WFMSubAgent ()
 {
-    if (my_agent)
-    {
-	delete my_agent;
-    }
 }
 
 
