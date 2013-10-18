@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Oct 18 12:03:31 UTC 2013 - jreidinger@suse.com
+
+- Do not delete agent outside of component in WFM otherwise
+  installation segfault
+
+-------------------------------------------------------------------
 Thu Oct 17 14:16:09 UTC 2013 - jreidinger@suse.com
 
 - chdir("/") after chroot otherwise commands fail with unreachable
