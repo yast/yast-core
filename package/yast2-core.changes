@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Oct 21 14:02:54 UTC 2013 - lslezak@suse.cz
+
+- generateYCPWrappers: check also for YCPNull to avoid segfault
+  when a parameter is missing (bnc#846467)
+- 3.0.3
+
+-------------------------------------------------------------------
 Tue Oct  1 14:59:08 UTC 2013 - jreidinger@suse.com
 
 - fixed a segfault at the end of 'scr' program used during the 
