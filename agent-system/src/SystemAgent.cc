@@ -363,6 +363,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	return YCPNull ();
     }
 
+    filename = targetPath(filename);
+
     if (cmd == "string")
     {
 	/**
@@ -697,12 +699,9 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    path->component_str (1).c_str () + ":" + passwd +
 	    "' |/usr/sbin/chpasswd -e >/dev/null 2>&1";
 
-	// Don't write the password into the log - even though it's crypted
-	// y2debug("Executing: '%s'", bashcommand.c_str());
+	int exitcode = shellcommand(root(), bashcommand.c_str());
 
-	int exitcode = system(bashcommand.c_str());
-
-	return YCPBoolean (WIFEXITED (exitcode) && WEXITSTATUS (exitcode) == 0);
+	return YCPBoolean(exitcode == 0);
     }
 
     else if (cmd == "string")
@@ -752,6 +751,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (false);
 	}
 
+        filename = targetPath(filename);
+
 	int fd = open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, filemode);
 	if (fd >= 0)
 	{
@@ -785,7 +786,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (false);
 	}
 
-	string filename = value->asString ()->value ();
+	string filename = targetPath(value->asString()->value());
 	YCPByteblock byteblock = arg->asByteblock ();
 
 	int fd = open (filename.c_str (), O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -856,6 +857,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    ycp2error ("Invalid empty filename in Write (%s, ...)", cmd.c_str ());
 	    return YCPBoolean (false);
 	}
+
+        filename = targetPath(filename);
 
 	// Create directory, if missing
 	size_t pos = 0;
@@ -1082,6 +1085,9 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	{
 	    return YCPError ("Bad arguments to Execute (.symlink, string old, string new)");
 	}
+
+        // the old path does not need root() prefix
+        // otherwise it would point to wrong place in the target system
 	const char *oldpath = value->asString()->value_cstr();
 	const string newpath = targetPath(arg->asString()->value());
 
