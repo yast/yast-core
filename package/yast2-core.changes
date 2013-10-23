@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Oct 23 11:32:20 UTC 2013 - lslezak@suse.cz
+
+- system-agent: handle chroot at more places
+
+-------------------------------------------------------------------
 Fri Oct 18 12:03:31 UTC 2013 - jreidinger@suse.com
 
 - Do not delete agent outside of component in WFM otherwise
