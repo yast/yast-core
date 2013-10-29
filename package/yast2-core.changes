@@ -8,6 +8,7 @@ Mon Oct 21 14:02:54 UTC 2013 - lslezak@suse.cz
 
 - generateYCPWrappers: check also for YCPNull to avoid segfault
   when a parameter is missing (bnc#846467)
+
 -------------------------------------------------------------------
 Fri Oct 18 12:40:31 UTC 2013 - jreidinger@suse.com
 
