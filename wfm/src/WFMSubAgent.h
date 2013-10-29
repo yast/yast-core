@@ -51,14 +51,6 @@ public:
     bool start ();
 
     /**
-     * Starts the subagent and evaluates one term to ensure that the component
-     * is created (mainly for remote components). Can also check for the
-     * correct SuSE Version. Returns true on success otherwise false and sets
-     * the error number.
-     */
-    bool start_and_check (bool, int*);
-
-    /**
      * Returns the name of the subagent.
      */
     string get_name () const { return my_name; }

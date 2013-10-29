@@ -80,39 +80,3 @@ WFMSubAgent::start ()
 
     return my_comp != 0;
 }
-
-
-bool
-WFMSubAgent::start_and_check (bool check_version, int* error)
-{
-    if (!start ())
-    {
-	*error = -1;
-	return false;
-    }
-
-    YCPValue q1 = YCPTerm ("SuSEVersion");
-    YCPValue q2 = YCPVoid ();
-
-    YCPValue a = my_comp->evaluate (check_version ? q1 : q2);
-
-    if (a.isNull ())
-    {
-	*error = -1;
-	return false;
-    }
-
-    if (check_version)
-    {
-	y2debug ("SuSEVersion \"%s\" %s", SUSEVERSION, a->toString ().c_str ());
-
-	if (!a->isString () || a->asString ()->value () != SUSEVERSION)
-	{
-	    *error = -2;
-	    return false;
-	}
-    }
-
-    return true;
-}
-
