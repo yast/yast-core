@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
-Tue Oct 15 12:40:31 UTC 2013 - jreidinger@suse.com
+Fri Oct 18 12:40:31 UTC 2013 - jreidinger@suse.com
 
 - minimal chroot: fixed System:: to actually chroot; hopefully
   fixes bootloader setup at installation
+
+-------------------------------------------------------------------
+Thu Oct 17 14:16:09 UTC 2013 - jreidinger@suse.com
+
+- chdir("/") after chroot otherwise commands fail with unreachable
+  location after `cd ~`
 
 -------------------------------------------------------------------
 Tue Oct 15 09:24:53 UTC 2013 - jreidinger@suse.com
