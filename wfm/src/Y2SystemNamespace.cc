@@ -71,7 +71,7 @@ Y2SystemNamespace::filename () const
 }
 
 YCPValue
-Y2SystemNamespace::evaluate (bool cse) 
+Y2SystemNamespace::evaluate (bool cse)
 {
     // run the local constructor
     m_local_ns->evaluate (cse);
@@ -80,11 +80,11 @@ Y2SystemNamespace::evaluate (bool cse)
 }
 
 
-Y2Function* 
+Y2Function*
 Y2SystemNamespace::createFunctionCall (const string name, constFunctionTypePtr type)
 {
     TableEntry *func_te = table()->find (name.c_str (), SymbolEntry::c_function);
-    
+
     // can't find the function definition
     if (!func_te->sentry ()->isFunction ())
         return 0;
@@ -94,12 +94,12 @@ Y2SystemNamespace::createFunctionCall (const string name, constFunctionTypePtr t
     {
 	return 0;
     }
-    
+
     y2debug ("allocating new Y2SystemFunction %s::%s", m_name.c_str (), name.c_str ());
 
     Y2SystemFunction* fnc = new Y2SystemFunction (local_func, type, this);
     m_functions.push_back (fnc);
-    
+
     // currently we use remote communication
     if (m_use_remote)
     {
@@ -127,7 +127,7 @@ Y2SystemNamespace::useRemote (Y2ProgramComponent* sender)
 	    , (*it)->type ()
 	    , sender));
     }
-    
+
     m_use_remote = true;
     m_remote_sender = sender;
 
@@ -146,7 +146,7 @@ Y2SystemNamespace::useLocal ()
 	(*it)->useLocal ();
   y2milestone("Redirection done: %s",(*it)->name ().c_str ());
     }
-    
+
     m_use_remote = false;
 }
 

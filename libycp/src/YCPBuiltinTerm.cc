@@ -38,7 +38,7 @@ t_size (const YCPTerm &term)
      * @id size-term
      * @short Returns the number of arguments of the term <tt>TERM</tt>.
      *
-     * @param term TERM 
+     * @param term TERM
      * @return integer Size of the <tt>TERM</tt>
      *
      * @usage size (`VBox(`Empty(),`Empty(),`Empty())) -> 3
@@ -62,8 +62,8 @@ t_add (const YCPTerm &term, const YCPValue &value)
      * Adds the value <tt>VALUE</tt> to the term <tt>TERM</tt> and returns the
      * newly created term. As always in YCP, <tt>TERM</tt> is not modified.
      *
-     * @param term TERM 
-     * @param any VALUE 
+     * @param term TERM
+     * @param any VALUE
      * @return term
      *
      * @see remove

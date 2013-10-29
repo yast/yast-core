@@ -202,9 +202,9 @@ stat2map (const struct stat& sb)
  * Run shell command and returns its output.
  */
 static YCPMap
-shellcommand_output (const string& script, const string& tempdir)
+shellcommand_output (const string &target_root, const string& script, const string& tempdir)
 {
-    int ret = shellcommand (script, tempdir);
+    int ret = shellcommand (target_root, script, tempdir);
 
     string output_stdout;
     int ret1 = read_file_to_string (string (tempdir + "/stdout").c_str (), output_stdout);
@@ -363,6 +363,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	return YCPNull ();
     }
 
+    filename = targetPath(filename);
+
     if (cmd == "string")
     {
 	/**
@@ -506,11 +508,11 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	parser.setBuffered(); // Read from file. Buffering is always possible here
 	YCodePtr p = parser.parse();
 	close(fd);
-	
+
 	if (!p)
 	{	return YCPError ("Parsing file '" + filename + "' failed");
 	}
-	
+
 	YCPValue contents = YCPNull ();
 	if (p->isBlock ())
 	{
@@ -697,12 +699,9 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    path->component_str (1).c_str () + ":" + passwd +
 	    "' |/usr/sbin/chpasswd -e >/dev/null 2>&1";
 
-	// Don't write the password into the log - even though it's crypted
-	// y2debug("Executing: '%s'", bashcommand.c_str());
+	int exitcode = shellcommand(root(), bashcommand.c_str());
 
-	int exitcode = system(bashcommand.c_str());
-
-	return YCPBoolean (WIFEXITED (exitcode) && WEXITSTATUS (exitcode) == 0);
+	return YCPBoolean(exitcode == 0);
     }
 
     else if (cmd == "string")
@@ -752,6 +751,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (false);
 	}
 
+        filename = targetPath(filename);
+
 	int fd = open(filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, filemode);
 	if (fd >= 0)
 	{
@@ -785,7 +786,7 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    return YCPBoolean (false);
 	}
 
-	string filename = value->asString ()->value ();
+	string filename = targetPath(value->asString()->value());
 	YCPByteblock byteblock = arg->asByteblock ();
 
 	int fd = open (filename.c_str (), O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -856,6 +857,8 @@ SystemAgent::Write (const YCPPath& path, const YCPValue& value,
 	    ycp2error ("Invalid empty filename in Write (%s, ...)", cmd.c_str ());
 	    return YCPBoolean (false);
 	}
+
+        filename = targetPath(filename);
 
 	// Create directory, if missing
 	size_t pos = 0;
@@ -999,15 +1002,15 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	/* execute script and return YCP{Integer|Map} */
 	if (cmd == "bash")
 	{
-	    return YCPInteger (shellcommand (exports + bashcommand));
+	    return YCPInteger (shellcommand (root(), exports + bashcommand));
 	}
 	else if (cmd == "bash_output")
 	{
-	    return shellcommand_output (exports + bashcommand, tempdir);
+	    return shellcommand_output (root(), exports + bashcommand, tempdir);
 	}
 	else if (cmd == "bash_background")
 	{
-	    return YCPInteger (shellcommand_background (exports + bashcommand));
+	    return YCPInteger (shellcommand_background (root(), exports + bashcommand));
 	}
     } // .bash*
 
@@ -1037,21 +1040,25 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	string command = value->asString ()->value ();
 	command += ">/dev/null 2>&1";
 
+        string target_tmp = string(root()) + "/tmp/Yast_input_XXXXXX";
+        char *template_ = strdup(target_tmp.c_str());
+        int fd = mkstemp(template_);
 	string input = arg->asString ()->value ();
-	input += "\n";
+        int res = write(fd, input.c_str(), input.length());
+        if (res != -1)
+            res = close(fd);
 
-	FILE* p = popen (command.c_str (), "w");
-	if (!p)
-	{
-	    return YCPError ("popen failed");
-	}
+        command += " < ";
+        command += template_;
 
-	fwrite (input.c_str (), input.length (), 1, p);
-	int ret = pclose (p);
+        if (res != -1)
+          res = shellcommand(root(), command);
 
-	if (WIFEXITED (ret))
-	    return YCPInteger (WEXITSTATUS (ret));
-	return YCPInteger (WTERMSIG (ret) + 128);
+        unlink(template_);
+
+        if (res == -1)
+            y2error ("writting to temporary file failed %s", strerror(errno));
+	return YCPInteger (res);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1078,8 +1085,11 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	{
 	    return YCPError ("Bad arguments to Execute (.symlink, string old, string new)");
 	}
+
+        // the old path does not need root() prefix
+        // otherwise it would point to wrong place in the target system
 	const char *oldpath = value->asString()->value_cstr();
-	const string newpath = arg->asString()->value();
+	const string newpath = targetPath(arg->asString()->value());
 
 	y2milestone ("symlink %s -> %s", oldpath, newpath.c_str());
 
@@ -1109,7 +1119,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    return YCPError ("Bad path argument to Execute (.mkdir, string path)");
 	}
 
-	string path = value->asString()->value();
+	string path = targetPath(value->asString()->value());
 
 	int mode = 0755;
 
@@ -1204,7 +1214,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    }
 	}
 
-	return YCPBoolean (shellcommand (mountcmd) == 0);
+	return YCPBoolean (shellcommand (root(), mountcmd) == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1267,7 +1277,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    }
 	}
 
-	return YCPBoolean (shellcommand (mountcmd) == 0);
+	return YCPBoolean (shellcommand (root(), mountcmd) == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1289,7 +1299,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
 	string umountcmd = "/bin/umount " + value->asString()->value();
 
-	return YCPBoolean (shellcommand (umountcmd) == 0);
+	return YCPBoolean (shellcommand (root(), umountcmd) == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1309,7 +1319,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    return YCPError ("Bad file in Execute (.remove, string file)");
 	}
 
-	int ret = unlink (value->asString ()->value_cstr ());
+	int ret = unlink (targetPath(value->asString ()->value()).c_str());
 
 	return YCPBoolean (ret == 0);
     }
@@ -1339,7 +1349,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    insmodcmd += string (" ") + arg->asString()->value();
 	}
 
-	return YCPBoolean (shellcommand (insmodcmd) == 0);
+	return YCPBoolean (shellcommand (root(), insmodcmd) == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1367,7 +1377,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	    modprobecmd += string (" ") + arg->asString()->value();
 	}
 
-	return YCPBoolean (shellcommand (modprobecmd) == 0);
+	return YCPBoolean (shellcommand (root(), modprobecmd) == 0);
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

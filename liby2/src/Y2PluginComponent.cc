@@ -85,7 +85,7 @@ Y2PluginComponent::setServerOptions (int argc, char** argv)
 {
     this->argc = argc;
     this->argv = argv;
-    
+
     if (comp)
     {
 	comp->setServerOptions (argc, argv);
@@ -242,7 +242,7 @@ Y2PluginComponent::loadPlugin (const char* name_space)
     for (int num = -1; ; num++)
     {
 	y2cc = locateSym (num);
-	
+
 	y2debug ("Component creator located; %p", y2cc);
 
 	if (!y2cc && num == -1)		// that's ok
@@ -254,7 +254,7 @@ Y2PluginComponent::loadPlugin (const char* name_space)
 	{
 	    break;
 	}
-	
+
 	// let's try to lookup namespace if we are asked for it
 	if (name_space != NULL)
 	{
@@ -303,7 +303,7 @@ Y2PluginComponent::locateSym (int num)
     {
 	snprintf (buffer, size, "g_y2cc%s%d", creator_name.c_str(), num);
     }
-    
+
 
     Y2ComponentCreator* y2cc = (Y2ComponentCreator*) dlsym (handle, buffer);
     if (dlerror() != 0)

@@ -3,7 +3,7 @@
  *
  * Description:
  *   YaST2 execution environment, i.e. processing context.
- *   Contains reference to the current statement, 
+ *   Contains reference to the current statement,
  *   the current file name and backtrace.
  *   This information can be used for logging, debugger etc.
  *
@@ -85,12 +85,12 @@ void
 ExecutionEnvironment::setStatement (YStatementPtr s)
 {
     m_statement = s;
-    
+
     if (s != NULL)
     {
 	m_linenumber = s->line ();
     }
-    
+
     return;
 }
 
@@ -131,12 +131,12 @@ ExecutionEnvironment::backtrace (loglevel_t level, uint omit) const
 {
     if (m_backtrace.empty ())
 	return;
-	
+
     // FIXME: omit
     CallStack::const_reverse_iterator it = m_backtrace.rbegin();
 
     y2logger(level, "------------- Backtrace begin -------------");
-    
+
     while (it != m_backtrace.rend())
     {
 	ycp2log (level, (*it)->filename.c_str (), (*it)->linenumber

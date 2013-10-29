@@ -69,17 +69,17 @@
  * YaST is licensed under GPL v2.
  *
  */
- 
+
 /**
  * \page exitcodes YaST2 Exit Codes
  *
  * All applications using liby2 library share a common \ref main function. The function handles the exit codes in the following way.
- * 
+ *
  * The exit codes are described in \ref exitcodes.h header file. A special handling is applied to the value returned from the client.
- *  - If a value is \ref YCPNull or \ref YCPVoid, exitcode \ref YAST_OK will be used. 
- *  - If the value is \ref YCPBoolean, \ref YAST_OK will be returned for true, \ref YAST_CLIENTRESULT for false. 
+ *  - If a value is \ref YCPNull or \ref YCPVoid, exitcode \ref YAST_OK will be used.
+ *  - If the value is \ref YCPBoolean, \ref YAST_OK will be returned for true, \ref YAST_CLIENTRESULT for false.
  *  - If the value is \ref YCPInteger, the value will be added to \ref YAST_CLIENTRESULT and the resulting
- * integer will be the process exitcode. 
+ * integer will be the process exitcode.
  *  - If the value is \ref YCPSymbol, for names defined by \ref ycp_error_exit_symbols \ref YAST_CLIENTRESULT
  * will be returned, otherwise \ref YAST_OK.
  */
@@ -111,7 +111,7 @@
 #define MAX_YCP_ERROR_EXIT_SYMBOLS	2
 
 /// symbol names that are handled as error codes when returned by the client
-const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = { 
+const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = {
     "abort",
     "cancel"
 };
@@ -622,7 +622,7 @@ main (int argc, char **argv)
 	debugger = true;
 	arg+=1;
     }
-    
+
     if (!strcmp(argv[arg], "--debugger-remote"))
     {
 	// set the flag
@@ -630,7 +630,7 @@ main (int argc, char **argv)
 	debugger_remote = true;
 	arg+=1;
     }
-    
+
     // also handle environment variable
     if( getenv ("Y2DEBUGGER") )
     {
@@ -786,7 +786,7 @@ main (int argc, char **argv)
     {
 	exit( result->asBoolean()->value() ? YAST_OK : YAST_CLIENTRESULT );
     }
-	
+
     if( result->isInteger () )
 	exit( YAST_CLIENTRESULT + result->asInteger ()->value () );
 
@@ -798,7 +798,7 @@ main (int argc, char **argv)
 	    if( symbol == ycp_error_exit_symbols[i] )
 		exit( YAST_CLIENTRESULT );
     }
-    
+
     // all other values
     exit (YAST_OK);
 }

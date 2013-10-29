@@ -1,8 +1,31 @@
 -------------------------------------------------------------------
+Wed Oct 23 11:32:20 UTC 2013 - lslezak@suse.cz
+
+- system-agent: handle chroot at more places
+
+-------------------------------------------------------------------
 Mon Oct 21 14:02:54 UTC 2013 - lslezak@suse.cz
 
 - generateYCPWrappers: check also for YCPNull to avoid segfault
   when a parameter is missing (bnc#846467)
+
+-------------------------------------------------------------------
+Fri Oct 18 12:40:31 UTC 2013 - jreidinger@suse.com
+
+- minimal chroot: fixed System:: to actually chroot; hopefully
+  fixes bootloader setup at installation
+
+-------------------------------------------------------------------
+Fri Oct 18 12:03:31 UTC 2013 - jreidinger@suse.com
+
+- Do not delete agent outside of component in WFM otherwise
+  installation segfault
+
+-------------------------------------------------------------------
+Thu Oct 17 14:16:09 UTC 2013 - jreidinger@suse.com
+
+- chdir("/") after chroot otherwise commands fail with unreachable
+  location after `cd ~`
 
 -------------------------------------------------------------------
 Tue Oct 15 09:24:53 UTC 2013 - jreidinger@suse.com
@@ -27,6 +50,11 @@ Tue Oct  1 14:59:08 UTC 2013 - jreidinger@suse.com
 - 3.1.1
 
 -------------------------------------------------------------------
+Wed Sep 25 14:16:30 UTC 2013 - jreidinger@suse.com
+
+- respect target root in: ag_any(for processes), system_agent
+
+-------------------------------------------------------------------
 Wed Sep 18 14:39:27 UTC 2013 - lslezak@suse.cz
 
 - do not use *.spec.in template, use *.spec file with RPM macros
@@ -34,10 +62,24 @@ Wed Sep 18 14:39:27 UTC 2013 - lslezak@suse.cz
 - 3.1.0
 
 -------------------------------------------------------------------
+Wed Sep 11 12:40:58 UTC 2013 - jreidinger@suse.com
+
+- respect target root in: ag_any, ag_ini, ag_modules, ag_resolver
+
+
+-------------------------------------------------------------------
 Wed Sep  4 14:24:39 UTC 2013 - mvidner@suse.com
 
 - Avoid automake warning:
   'INCLUDES' is the old name for 'AM_CPPFLAGS'
+
+-------------------------------------------------------------------
+Tue Sep  3 13:28:44 UTC 2013 - jreidinger@suse.com
+
+- libscr: added "root" attribute to SCRAgent (FATE#314695). Agents
+  must be adapted to respect it instead of relying on chroot(2)
+  having been run.
+
 
 -------------------------------------------------------------------
 Wed Aug  7 07:46:14 UTC 2013 - dmajda@suse.cz

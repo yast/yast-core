@@ -180,7 +180,7 @@ YEReference::YEReference (bytecodeistream & str)
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 YEReference::entry() const
 {
     return m_entry;
@@ -829,7 +829,7 @@ constTypePtr
 YEList::type () const
 {
     ycodelist_t *element = m_first;
-    
+
     constTypePtr res = m_first->code->type ();
     element = element->next;
 
@@ -838,7 +838,7 @@ YEList::type () const
 	res = res->commontype (element->code->type ());
 	element = element->next;
     }
-    
+
     return new ListType (res);
 }
 
@@ -1026,7 +1026,7 @@ YEMap::type () const
 	res_value = res_value->commontype (element->value->type ());
 	element = element->next;
     }
-    
+
     return new MapType (res_key, res_value);
 }
 
@@ -1191,7 +1191,7 @@ YEPropagate::evaluate (bool cse)
     {
 	return YCPInteger ((long long)(v->asFloat()->value()));
     }
-    else if (v->isReference () 
+    else if (v->isReference ()
 	&& m_to->match (v->asReference ()->entry ()->type ()) == 0)
     {
 	return v;
@@ -1457,20 +1457,20 @@ YEBinary::type () const
 	FunctionTypePtr ft = new FunctionType (Type::Unspec);
 	ft->concat (m_arg1->type ());
 	ft->concat (m_arg2->type ());
-	
+
 	constTypePtr cft = Type::determineFlexType (ft, m_decl->type);
         if (cft == 0)                                       // failed
         {
 	    y2internal ("Cannot determine type of the binary operator: %s", toString ().c_str ());
             return Type::Unspec;
         }
-	
+
 	return ((constFunctionTypePtr)cft)->returnType ();
 
     }
     else
     {
-	return ((constFunctionTypePtr)m_decl->type)->returnType (); 
+	return ((constFunctionTypePtr)m_decl->type)->returnType ();
     }
 }
 
@@ -1627,7 +1627,7 @@ YEIs::evaluate (bool cse)
     if (value->isCode())				// value is YCode
     {
 	YCodePtr code = value->asCode()->code();
-	
+
 	// is it a function? => function pointer
 	if (code->kind () != YCode::ycFunction)
 	{
@@ -2045,7 +2045,7 @@ YEBuiltin::toXml( std::ostream & str, int indent ) const
     else {
 	Xmlcode::writeYCodelist( str, m_parameters );
     }
-    
+
     if (m_parameterblock != 0)
     {
 	Xmlcode::popNamespace( m_parameterblock->nameSpace() );
@@ -2093,7 +2093,7 @@ constTypePtr
 YEBuiltin::finalize (Logger* problem_logger)
 {
     extern StaticDeclaration static_declarations;
-    
+
 #if DO_DEBUG
     y2debug ("YEBuiltin::finalize (%s)", StaticDeclaration::Decl2String (m_decl, true).c_str());
     y2debug ("m_type: %s", m_type->toString ().c_str());
@@ -2188,9 +2188,9 @@ YEBuiltin::finalize (Logger* problem_logger)
 	    if (*cptr == '%')
 	    {
 		cptr++;
-		
+
 		int number = 0;
-		
+
 		if ( (*cptr) > '0' && (*cptr) <= '9' )
 		{
 		    number = (*cptr)-'0'; // for more digits use atoi (cptr);
@@ -2583,7 +2583,7 @@ YEBuiltin::evaluate (bool cse)
     else
     {
 	if (m_parameterblock) m_parameterblock->pushToStack ();
-	
+
 	switch (type->parameterCount ())
 	{
 	    case 0:
@@ -2648,7 +2648,7 @@ YECall::YECall (TableEntry* entry)
     // lookup the maximal number of parameters for this entry (and overloads)
     // retrieve function type for formal parameter list
     int max = 0;
-    
+
     TableEntry* t = entry;
     while (t)
     {
@@ -2657,10 +2657,10 @@ YECall::YECall (TableEntry* entry)
 	{
 	    max = curr;
 	}
-	
+
 	t = t->next_overloaded ();
     }
-    
+
     if (max>0)
     {
 	m_parameters = new YCodePtr[max];
@@ -2683,7 +2683,7 @@ YECall::YECall (bytecodeistream & str)
     if (count>0)
     {
 	m_parameters = new YCodePtr[count];
-	
+
 	for (uint i = 0 ; i < count; i++)
 	{
 	    m_parameters[i] = Bytecode::readCode (str);
@@ -2694,7 +2694,7 @@ YECall::YECall (bytecodeistream & str)
 	    }
 	}
     }
-    
+
     m_next_param_id = count;
 
 #if DO_DEBUG
@@ -2709,7 +2709,7 @@ YECall::~YECall ()
     {
 	delete[] m_parameters;
     }
-    
+
     if (m_parameter_types)
     {
 	delete[] m_parameter_types;
@@ -2736,12 +2736,12 @@ YECallPtr YECall::readCall (bytecodeistream & str)
     YECallPtr res = 0;
 
     SymbolEntryPtr sentry = Bytecode::readEntry (str);
-    
+
     if (!sentry)
     {
 	return 0;
     }
-    
+
     if (str.isVersion (1,3,2) && sentry->isVariable ())
     {
 	// it is a function pointer from SLES9/9.1
@@ -2752,12 +2752,12 @@ YECallPtr YECall::readCall (bytecodeistream & str)
 	// it is direct function call
 	res = new YEFunction (0);
     }
-    
+
     res->m_sentry = sentry;
-    
+
     // read the parameters
     u_int32_t count = Bytecode::readInt32 (str);
-    
+
     if (count>0)
     {
 	res->m_parameters = new YCodePtr[count];
@@ -2780,7 +2780,7 @@ YECallPtr YECall::readCall (bytecodeistream & str)
 
 
 
-const SymbolEntryPtr 
+const SymbolEntryPtr
 YECall::entry() const
 {
     return m_sentry;
@@ -2812,7 +2812,7 @@ YECall::attachParameter (YCodePtr code, constTypePtr type)
     {
 	return Type::Unspec;
     }
-    
+
     // check, if there is not too many of params
     if ((m_parameters == 0)
 	|| (m_parameter_types == 0))
@@ -2820,7 +2820,7 @@ YECall::attachParameter (YCodePtr code, constTypePtr type)
 	// excessive parameter - we don't expect any
 	return Type::Error;
     }
-    
+
     // find next parameter slot to be filled, loop through chain
     //  of overloaded functions
 
@@ -2836,7 +2836,7 @@ YECall::attachParameter (YCodePtr code, constTypePtr type)
 
         t = t->next_overloaded ();
     }
-    
+
     if (m_next_param_id >= max)
     {
 	return Type::Error;
@@ -2869,7 +2869,7 @@ YECall::finalize()
     while (entry)
     {
 	// now check the parameters really. if they don't match,
-	// lookup also the overloaded ones    
+	// lookup also the overloaded ones
 	SymbolEntryPtr sentry = entry->sentry ();
 
 	// prepare the overloaded one, if exists
@@ -2877,7 +2877,7 @@ YECall::finalize()
 
 	// retrieve function type for formal parameter list
 	constFunctionTypePtr ftype = sentry->type();
-	
+
 	// not the correct number of parameters?
 	if ((int)m_next_param_id != ftype->parameterCount())
 	{
@@ -2885,7 +2885,7 @@ YECall::finalize()
 	    entry = next_overloaded;
 	    continue;
 	}
-    
+
 	bool accept = true;
 	// ok, check whether types match
 	for (uint check_count = 0; check_count < m_next_param_id ; check_count++)
@@ -2893,7 +2893,7 @@ YECall::finalize()
 	    constTypePtr expected_type = ftype->parameterType (check_count);
 	    YCodePtr code = m_parameters[check_count];
 	    constTypePtr type = m_parameter_types[check_count];
-	    
+
 	    // if the parameter type is block, find out the type for the actual param
 	    if (expected_type->isBlock ())
 	    {
@@ -2932,14 +2932,14 @@ YECall::finalize()
 		{
 #if DO_DEBUG
 		    y2debug ("Can't reference to type propagation '%s' -> '%s'", type->toString().c_str(), expected_type->toString().c_str());
-#endif		    
+#endif
 		    entry = next_overloaded;
 		    accept = false;
 		    break;
 		}
 	    }
 	}
-	
+
 	if (accept)
 	{
 #if DO_DEBUG
@@ -2950,7 +2950,7 @@ YECall::finalize()
 	    {
 		constTypePtr expected_type = ftype->parameterType (check_count);
 		constTypePtr type = m_parameters[check_count]->type ();
-	    
+
 		// if the parameter type is block, find out the type for the actual param
 		if (expected_type->isBlock ())
 		{
@@ -2973,7 +2973,7 @@ YECall::finalize()
 		    m_parameters[check_count] = new YEPropagate (m_parameters[check_count], type, expected_type);
 		}
 	    }
-	    
+
 	    // update the sentry
 	    m_entry = entry;
 	    m_sentry = m_entry->sentry ();
@@ -2996,7 +2996,7 @@ YECall::toString() const
     string s = m_sentry->toString(false);
 
     s += " (";
-    
+
     for (uint i = 0 ; i < m_next_param_id ; i++)
     {
 	s += m_parameters[i]->toString().c_str();
@@ -3107,7 +3107,7 @@ YEFunction::evaluate (bool cse)
     y2debug ("YEFunction::evaluate (%s)\n", toString().c_str());
 #endif
 
-    
+
     if (!m_functioncall)
     {
 	m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
@@ -3125,7 +3125,7 @@ YEFunction::evaluate (bool cse)
 	    return YCPVoid ();
 	}
     }
-    
+
     YCPValue evaluated_params [m_next_param_id];
 
     for (unsigned int p = 0; p < m_next_param_id ; p++)
@@ -3139,7 +3139,7 @@ YEFunction::evaluate (bool cse)
 	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
 	    return value;
 	}
-	
+
 #if DO_DEBUG
 	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
 #endif
@@ -3152,7 +3152,7 @@ YEFunction::evaluate (bool cse)
     {
 	m_functioncall->attachParameter (evaluated_params[p], p);
     }
-    
+
     // save the context info
     int linenumber = YaST::ee.linenumber();
     string filename = YaST::ee.filename();
@@ -3170,7 +3170,7 @@ YEFunction::evaluate (bool cse)
     // restore the context info
     YaST::ee.setLinenumber(linenumber);
     YaST::ee.setFilename(filename);
-    
+
     YaST::ee.popframe();
 
 #if DO_DEBUG
@@ -3192,12 +3192,12 @@ constTypePtr
 YEFunction::finalize()
 {
     constTypePtr res = YECall::finalize ();
-    
+
     if (res != 0)
     {
 	return res;
     }
-    
+
     m_functioncall = const_cast<Y2Namespace*>(m_sentry->nameSpace())->createFunctionCall (m_sentry->name (), m_sentry->type ());
     if (m_functioncall == 0)
     {
@@ -3247,7 +3247,7 @@ YEFunctionPointer::evaluate (bool cse)
 	    , ptr.isNull () ? "NULL" : ptr->toString ().c_str ());
 	return YCPVoid ();
     }
-    
+
     SymbolEntryPtr ptr_sentry = ptr->asReference ()->entry ();
 
     Y2Namespace* ns = const_cast<Y2Namespace*> (ptr_sentry->nameSpace ());
@@ -3256,16 +3256,16 @@ YEFunctionPointer::evaluate (bool cse)
 	ptr_sentry->name (),
 	ptr_sentry->type ()
     );
-    
+
     if (!m_functioncall)
     {
 	y2internal ("Cannot get function call object for %s", m_sentry->toString().c_str());
 	return YCPVoid ();
     }
 
-    // FIXME: this could fail    
+    // FIXME: this could fail
     m_functioncall->reset ();
-    
+
     YCPValue m_params [m_next_param_id];
 
     for (unsigned int p = 0; p < m_next_param_id ; p++)
@@ -3279,7 +3279,7 @@ YEFunctionPointer::evaluate (bool cse)
 	    ycp2error ("Parameter eval failed (%s)", m_parameters[p]->toString().c_str());
 	    return value;
 	}
-	
+
 #if DO_DEBUG
 	y2debug ("parameter %d = (%s)", p, value->toString().c_str());
 #endif
@@ -3292,7 +3292,7 @@ YEFunctionPointer::evaluate (bool cse)
     {
 	m_functioncall->attachParameter (m_params[p], p);
     }
-    
+
     // save the context info
     int linenumber = YaST::ee.linenumber();
     string filename = YaST::ee.filename();
@@ -3322,11 +3322,11 @@ Y2YCPFunction::Y2YCPFunction (YSymbolEntryPtr entry)
     y2debug ("Y2YCPFunction[%p] (%s)", this, entry->toString().c_str());
 #endif
     // cleanup an array for the parameters
-    
+
     uint count = ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount ();
-    
+
     m_parameters = new YCPValue[count];
-    
+
     for (uint i=0; i < count; i++)
     {
 	m_parameters[i] = YCPNull ();
@@ -3385,7 +3385,7 @@ Y2YCPFunction::evaluateCall ()
 
 	    return value;
 	}
-	
+
 	SymbolEntryPtr formalp = func->parameter (p);
 #if DO_DEBUG
 	y2debug ("formalp (%s) = (%s)", formalp->toString().c_str(), value->toString().c_str());
@@ -3393,7 +3393,7 @@ Y2YCPFunction::evaluateCall ()
 
 	formalp->setValue (value);
     }
-    
+
     // save the context info
     int linenumber = YaST::ee.linenumber();
     string filename = YaST::ee.filename();
@@ -3447,7 +3447,7 @@ Y2YCPFunction::wantedParameterType () const
 	    return param_tp;
 	}
     }
-    
+
     // all parameters done
     return Type::Unspec;
 }
@@ -3476,7 +3476,7 @@ Y2YCPFunction::appendParameter (const YCPValue& arg)
     }
 
     // FIXME: check the type
-    
+
     // lookup the first non-set parameter
     for (int i = 0 ; i < ((constFunctionTypePtr)(m_sentry->type ()))->parameterCount (); i++)
     {
@@ -3484,12 +3484,12 @@ Y2YCPFunction::appendParameter (const YCPValue& arg)
 	{
 #if DO_DEBUG
 	    y2debug ("Assigning parameter %d: %s", i, arg->toString ().c_str ());
-#endif	    
+#endif
 	    m_parameters[i] = arg;
 	    return true;
 	}
     }
-    
+
     // Our caller should report the place
     // in a script where this happened
     ycp2error ("Excessive parameter to %s", qualifiedName ().c_str ());

@@ -409,7 +409,7 @@ AnyAgent::unparseTuple (const YCPList & syntax, const YCPValue & value)
 	    if (element->valuetype () == YT_TERM)
 	    {
 		YCPTerm term = element->asTerm ();
-		if (!(term.isNull ()) && 
+		if (!(term.isNull ()) &&
 		    ((term->name () == "Skip") ||
 		     (term->name () == "Fillup")))
 		    continue;

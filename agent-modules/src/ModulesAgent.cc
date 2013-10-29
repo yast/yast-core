@@ -60,12 +60,12 @@ ModulesAgent::~ModulesAgent() {
 template <class T> YCPList map2list(const T &m) {
     YCPList list;
     typename T::const_iterator it = m.begin ();
-	
+
     for (; it != m.end (); ++it)
 	/* Preserve listing of the final comment */
 	if(it->first != "YaST2_final_modules_conf_comment")
 	    list->add(YCPString (it->first));
-	
+
     return list;
 }
 
@@ -75,10 +75,10 @@ template <class T> YCPList map2list(const T &m) {
 template <class T> YCPMap map2ycpmap(const T &m) {
     YCPMap ret_map;
     typename T::const_iterator it = m.begin ();
-	
+
     for (; it != m.end(); ++it)
 	ret_map->add (YCPString (it->first), YCPString (it->second));
-	
+
     return ret_map;
 }
 
@@ -96,7 +96,7 @@ ModuleEntry::EntryArg ycpmap2map (const YCPMap &m) {
 	    y2error("Map element must be string!");
 	    return ModuleEntry::EntryArg();
 	}
-    
+
     return ret_map;
 }
 
@@ -141,10 +141,10 @@ YCPList ModulesAgent::Dir(const YCPPath& path) {
  * Read
  */
 YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPValue& optarg) {
-	    
+
     if (modules_conf == NULL)
 	Y2_RETURN_VOID("Can't execute Read before being mounted.");
-	    
+
     y2debug("Read(%s)", path->toString().c_str());
 
     switch (path->length ()) {
@@ -220,7 +220,7 @@ YCPValue ModulesAgent::Read(const YCPPath &path, const YCPValue& arg, const YCPV
 	    return YCPString (modules_conf->getOption(PC(1), PC(2)));
 
     }
-    
+
     Y2_RETURN_VOID("Wrong path '%s' in Read().", path->toString().c_str());
 }
 
@@ -248,7 +248,7 @@ YCPBoolean ModulesAgent::Write(const YCPPath &path, const YCPValue& value, const
 		    return YCPBoolean (modules_conf->setOptions(VAL2STR(arg),
 								ycpmap2map (value->asMap ()),
 								ModuleEntry::SET));
-		else 
+		else
 		    Y2_RETURN_YCP_FALSE("Argument for Write () not map.");
 	    }
 	    return YCPBoolean (modules_conf->setArgument (PC(0), VAL2STR(arg),
@@ -306,7 +306,7 @@ YCPBoolean ModulesAgent::Write(const YCPPath &path, const YCPValue& value, const
 	    if (value->isMap ())
 		return YCPBoolean (modules_conf->setOptions(PC(1),
 			    ycpmap2map (value->asMap ()), ModuleEntry::SET));
-	    else 
+	    else
 		Y2_RETURN_YCP_FALSE("Argument for Write(.options) not map: %s.",
 			value->toString().c_str());
 	}
@@ -350,9 +350,9 @@ YCPValue ModulesAgent::otherCommand(const YCPTerm& term) {
 	    YCPString s = term->value(0)->asString();
 	    if (modules_conf != NULL)
 		delete modules_conf;
-	    modules_conf = new ModulesConf(s->value());
+	    modules_conf = new ModulesConf(targetPath(s->value()));
 	    return YCPVoid();
-	} else 
+	} else
 	    Y2_RETURN_VOID("Bad first arg of ModulesConf(): is not a string.");
     }
 

@@ -33,7 +33,7 @@ extern StaticDeclaration static_declarations;
 
 bool SCR::registered = false;
 
-static YCPValue 
+static YCPValue
 SCRRead3 (const YCPPath &path, const YCPValue &args = YCPNull (), const YCPValue &opt = YCPNull ()) {
     if (! SCRAgent::instance())
     {
@@ -41,21 +41,21 @@ SCRRead3 (const YCPPath &path, const YCPValue &args = YCPNull (), const YCPValue
 	return YCPVoid ();
     }
     YCPValue ret = SCRAgent::instance()->Read( path, args, opt );
-    
+
     return ret;
 }
 
-static YCPValue 
+static YCPValue
 SCRRead2 (const YCPPath &path, const YCPValue &arg) {
     return SCRRead3 (path, arg);
 }
 
-static YCPValue 
+static YCPValue
 SCRRead (const YCPPath &path) {
     return SCRRead3 (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRWrite2 (const YCPPath &path, const YCPValue& value_n) {
     YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
 
@@ -68,7 +68,7 @@ SCRWrite2 (const YCPPath &path, const YCPValue& value_n) {
     return SCRAgent::instance ()->Write (path, value);
 }
 
-static YCPValue 
+static YCPValue
 SCRWrite3 (const YCPPath &path, const YCPValue& value_n, const YCPValue& arg_n) {
     YCPValue value = value_n.isNull()? YCPVoid(): value_n; // bnc#406138
     YCPValue arg =   arg_n.isNull()?   YCPVoid(): arg_n; // bnc#406138
@@ -82,7 +82,7 @@ SCRWrite3 (const YCPPath &path, const YCPValue& value_n, const YCPValue& arg_n) 
     return SCRAgent::instance ()->Write (path, value, arg);
 }
 
-static YCPValue 
+static YCPValue
 SCRDir (const YCPPath& path) {
     if (! SCRAgent::instance())
     {
@@ -93,7 +93,7 @@ SCRDir (const YCPPath& path) {
     return SCRAgent::instance ()->Dir (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRExecute (const YCPPath &path) {
     if (! SCRAgent::instance())
     {
@@ -104,7 +104,7 @@ SCRExecute (const YCPPath &path) {
     return SCRAgent::instance ()->Execute (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRError (const YCPPath &path) {
     if (! SCRAgent::instance())
     {
@@ -113,11 +113,11 @@ SCRError (const YCPPath &path) {
     }
     y2debug( "Running SCR::Error on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
-    
+
     return SCRAgent::instance ()->Error (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRExecute2 (const YCPPath &path, const YCPValue &arg_n) {
     YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
 
@@ -129,11 +129,11 @@ SCRExecute2 (const YCPPath &path, const YCPValue &arg_n) {
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
     y2debug( "args: %s", arg->toString ().c_str () );
-    
+
     return SCRAgent::instance ()->Execute (path, arg);
 }
 
-static YCPValue 
+static YCPValue
 SCRExecute3 (const YCPPath &path, const YCPValue &arg_n, const YCPValue &opt_n) {
     YCPValue arg = arg_n.isNull()? YCPVoid(): arg_n; // bnc#406138
     YCPValue opt = opt_n.isNull()? YCPVoid(): opt_n; // bnc#406138
@@ -146,11 +146,11 @@ SCRExecute3 (const YCPPath &path, const YCPValue &arg_n, const YCPValue &opt_n) 
     y2debug( "Running SCR::Execute on SCR agent %p", SCRAgent::instance () );
     y2debug( "path: %s", path->toString ().c_str () );
     y2debug( "args: %s,%s", arg->toString ().c_str (), opt->toString ().c_str () );
-    
+
     return SCRAgent::instance ()->Execute (path, arg, opt);
 }
 
-static YCPValue 
+static YCPValue
 SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
     if (! SCRAgent::instance())
     {
@@ -163,7 +163,7 @@ SCRRegisterAgentS (const YCPPath &path, const YCPString &arg) {
     return SCRAgent::instance ()->RegisterAgent (path, arg);
 }
 
-static YCPValue 
+static YCPValue
 SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
     if (! SCRAgent::instance())
     {
@@ -176,7 +176,7 @@ SCRRegisterAgentT (const YCPPath &path, const YCPTerm &arg) {
     return SCRAgent::instance ()->RegisterAgent (path, arg);
 }
 
-static YCPValue 
+static YCPValue
 SCRUnregisterAgent (const YCPPath &path) {
     if (! SCRAgent::instance())
     {
@@ -188,7 +188,7 @@ SCRUnregisterAgent (const YCPPath &path) {
     return SCRAgent::instance ()->UnregisterAgent (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRUnregisterAllAgents () {
     if (! SCRAgent::instance())
     {
@@ -199,7 +199,7 @@ SCRUnregisterAllAgents () {
     return SCRAgent::instance ()->UnregisterAllAgents ();
 }
 
-static YCPValue 
+static YCPValue
 SCRUnmountAgent (const YCPPath &path) {
     if (! SCRAgent::instance())
     {
@@ -211,7 +211,7 @@ SCRUnmountAgent (const YCPPath &path) {
     return SCRAgent::instance ()->UnmountAgent (path);
 }
 
-static YCPValue 
+static YCPValue
 SCRRegisterNewAgents () {
     if (! SCRAgent::instance())
     {
@@ -226,7 +226,7 @@ SCR::SCR ()
 {
     // already done, we must avoid double registration
     if (registered) return;
-    
+
     y2debug( "Registering SCR builtins in %p", &static_declarations );
 
     // must be static, registerDeclarations saves a pointer to it!
@@ -256,7 +256,7 @@ SCR::SCR ()
     };
 
     static_declarations.registerDeclarations ("SCR", declarations);
-    
+
     registered = true;
 }
 

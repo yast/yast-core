@@ -55,7 +55,7 @@ Y2StdioFunction::~Y2StdioFunction ()
 {
 }
 
-bool 
+bool
 Y2StdioFunction::attachParameter (const YCPValue& arg, const int pos)
 {
     if (pos >= m_parameters.size())
@@ -64,7 +64,7 @@ Y2StdioFunction::attachParameter (const YCPValue& arg, const int pos)
     return true;
 }
 
-constTypePtr 
+constTypePtr
 Y2StdioFunction::wantedParameterType () const
 {
     y2internal ("Somebody asking for a parameter type redirector");
@@ -72,7 +72,7 @@ Y2StdioFunction::wantedParameterType () const
 }
 
 
-bool 
+bool
 Y2StdioFunction::appendParameter (const YCPValue& arg)
 {
     if (arg.isNull())
@@ -80,13 +80,13 @@ Y2StdioFunction::appendParameter (const YCPValue& arg)
 	ycp2error ("NULL parameter to %s::%s", m_namespace.c_str(), m_name.c_str ());
 	return false;
     }
-			    
+
     m_parameters.push_back(arg);
     return true;
 }
 
 
-bool 
+bool
 Y2StdioFunction::finishParameters ()
 {
     // FIXME if m_type is set, then check parameters
@@ -94,7 +94,7 @@ Y2StdioFunction::finishParameters ()
 }
 
 
-YCPValue 
+YCPValue
 Y2StdioFunction::evaluateCall ()
 {
     y2milestone ("Evaluating remote call to '%s::%s'"
@@ -103,7 +103,7 @@ Y2StdioFunction::evaluateCall ()
     // FIXME: ensure connected
 
     string params = "";
-    
+
     if (!m_parameters.empty())
     {
 	params = m_parameters[0]->toString ();
@@ -112,15 +112,15 @@ Y2StdioFunction::evaluateCall ()
 	    params += ", " + m_parameters[i]->toString ();
 	}
     }
-    
+
     string call = string ("{ import \"") + m_namespace
-	+ "\"; return " + m_namespace + "::" 
+	+ "\"; return " + m_namespace + "::"
 	+ m_name + "(" + params + "); }";
 
 #if DO_DEBUG
     y2debug ("Going to evaluate a call: %s", call.c_str ());
 #endif
-    
+
     Y2ProgramComponent* sender = dynamic_cast<Y2ProgramComponent*>(m_sender);
 
     // send command
@@ -132,7 +132,7 @@ Y2StdioFunction::evaluateCall ()
 }
 
 
-bool 
+bool
 Y2StdioFunction::reset ()
 {
     m_parameters.clear();

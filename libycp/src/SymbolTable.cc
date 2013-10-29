@@ -81,7 +81,7 @@ TableEntry::TableEntry (bytecodeistream & str)
 
 TableEntry::~TableEntry ()
 {
-    delete m_point;    
+    delete m_point;
 }
 
 
@@ -94,7 +94,7 @@ TableEntry::key() const
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 TableEntry::sentry() const
 {
     return m_entry;
@@ -263,7 +263,7 @@ SymbolTable::~SymbolTable()
 	    delete m_xrefs->top();
 	    m_xrefs->pop();
 	}
-	
+
 	delete m_xrefs;
     }
 
@@ -365,7 +365,7 @@ SymbolTable::closeXRefs ()
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 SymbolTable::getXRef (unsigned int position) const
 {
     if (!m_xrefs || m_xrefs->empty())
@@ -606,18 +606,18 @@ SymbolTable::enter (TableEntry *entry)
 		// first check, if the entry is from this table
 		if (bucket->sentry()->nameSpace() == entry->sentry()->nameSpace()
 		    && bucket->sentry()->category () == entry->sentry()->category ())
-		
+
 		{
 #if DO_DEBUG
 		    if (SymbolTableDebug) y2debug ("overloading");
-#endif		    
+#endif
 		    // put entry at end of the overloaded entries
 		    TableEntry *last = bucket;
 		    while (last->m_overloaded_next)
 		    {
 			last = last->m_overloaded_next;
 		    }
-		    
+
 		    last->m_overloaded_next = entry;
 		    entry->m_overloaded_prev = last;
 		}
@@ -740,7 +740,7 @@ SymbolTable::xref (const char *key)
 	{
 	    m_xrefs = new xrefs_t;
 	}
-	
+
 	m_xrefs->top()->push_back (tentry);
     }
     return tentry;
@@ -777,7 +777,7 @@ SymbolTable::remove (TableEntry *entry)
 	else
 	{
 	    int h = hash (entry->m_key);
-	    
+
 	    if (m_table[h] == entry)
 	    {
 		m_table[h] = candidate;		// next is new first
@@ -794,7 +794,7 @@ SymbolTable::remove (TableEntry *entry)
 			break;
 		    }
 		}
-		
+
 		if (!shadow)
 		{
 		    y2internal ("Could not fix the symbol table for %s", entry->key ());
@@ -813,7 +813,7 @@ SymbolTable::remove (TableEntry *entry)
     {
 	//y2debug ("SymbolTable: First in bucket\n");
 	int h = hash (entry->m_key);
-	
+
 	if (m_table[h] == entry)
 	{
 	    m_table[h] = entry->m_next;	// next is new first
@@ -832,11 +832,11 @@ SymbolTable::remove (TableEntry *entry)
 		    break;
 		}
 	    }
-		
+
 	    if (!shadow)
 	    {
 		y2internal ("Could not fix the symbol table for %s", entry->key ());
-	    }    
+	    }
 	}
     }
 
@@ -1003,7 +1003,7 @@ SymbolTable::tableCopy(Y2Namespace* tofill) const
 		y2milestone ("Converting symbolentry for '%s'", m_table[i]->key ());
 		tofill->enterSymbol (new SymbolEntry (tofill, i, m_table[i]->key ()
 		    , s->category (), s->type ()));
-		
+
 		// now, convert the m_next stuff, others should be fine
 		// because the parser is running using the local namespace
 		// FIXME: what about the overloaded ones?

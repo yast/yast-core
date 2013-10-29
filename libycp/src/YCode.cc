@@ -529,7 +529,7 @@ YLocale::YLocale (bytecodeistream & str)
     {
 	domains.insert (std::make_pair(dom,false));
 	m_domain = domains.find (dom);
-    }    
+    }
 }
 
 
@@ -613,10 +613,10 @@ YLocale::findDomain(const string& domain)
 }
 
 
-void 
+void
 YLocale::ensureBindDomain (const string& domain)
 {
-    if (domains.find (domain.c_str ()) == domains.end () 
+    if (domains.find (domain.c_str ()) == domains.end ()
 	|| ! domains[domain.c_str ()])
     {
 	bindDomainDir (domain, LOCALEDIR);
@@ -624,7 +624,7 @@ YLocale::ensureBindDomain (const string& domain)
 }
 
 
-void 
+void
 YLocale::bindDomainDir (const string& domain, const string& domain_path)
 {
 
@@ -634,7 +634,7 @@ YLocale::bindDomainDir (const string& domain, const string& domain_path)
     bindtextdomain (domain.c_str (), domain_path.c_str());
     bind_textdomain_codeset (domain.c_str (), "UTF-8");
     setDomainStatus (domain, true);
- 
+
 }
 
 // ------------------------------------------------------------------
@@ -699,7 +699,7 @@ YFunction::setDefinition (bytecodeistream & str)
 	{
 	    Bytecode::pushNamespace (m_declaration->nameSpace());
 	}
-	
+
 	YBlockPtr def = (YBlockPtr)Bytecode::readCode (str);
 	def->setKind (YBlock::b_definition);
 

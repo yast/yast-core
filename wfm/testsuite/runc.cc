@@ -34,16 +34,16 @@ class TestY2Component : public Y2Component {
     virtual Y2Namespace *import (const char* name)
     {
 	YBlockPtr block = (YBlockPtr)Bytecode::readModule (name);
-	if (block == 0 ) 
+	if (block == 0 )
 	{
 	    y2debug ("Cannot import module");
 	    return NULL;
 	}
-	
+
 	return block->nameSpace();
     }
     virtual string name () const { return "test";}
-    
+
 } TestComponent;
 
 
@@ -127,7 +127,7 @@ processfile (const char *infname, char *outfname)
 	    return 1;
 	}
     }
-    
+
     if (parser != 0)
     {
 	FILE *infile = fopen (infname, "r");
@@ -209,7 +209,7 @@ processfile (const char *infname, char *outfname)
 	    std::cout << result << std::endl;
 	}
     }
-    
+
     if (!quiet) printf ("done\n");
 
     return 0;
@@ -420,7 +420,7 @@ int main (int argc, char *argv[])
 	fprintf (stderr, "No input file or directory given\n");
 	exit (1);
     }
-	
+
     for (i = optind; i < argc;i++)
     {
 	if (recursive)
