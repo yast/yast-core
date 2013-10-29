@@ -61,12 +61,6 @@ public:
     int get_handle () const { return my_handle; }
 
     /**
-     * Returns the Y2Component of the subagent. This does not call start ().
-     * Is 0 if start () was not called or failed.
-     */
-    Y2Component* comp () { return my_comp; }
-
-    /**
      * Returns the SCRAgent of the subagent. This does not call start ().
      * Is 0 if start () was not called or failed or the Y2Component does not
      * support the getSCRAgent () function.
