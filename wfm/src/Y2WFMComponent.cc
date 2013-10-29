@@ -269,7 +269,7 @@ Y2WFMComponent::SCROpen (const YCPString& scrname, const YCPBoolean &checkversio
     WFMSubAgent* agent = new WFMSubAgent (name, handle);
 
     int error;
-    if (!agent->start_and_check (check_version, &error))
+    if (!agent->start())
     {
 	y2error ("SCROpen '%s' failed: %d", name.c_str (), error);
 	delete agent;
