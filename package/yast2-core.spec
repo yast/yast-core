@@ -124,7 +124,6 @@ fi
 %dir %{yast_ybindir}
 %dir %{yast_plugindir}
 %dir %{yast_scrconfdir}
-%dir %{yast_execcompdir}/servers
 %dir %{yast_execcompdir}/servers_non_y2
 
 /usr/bin/ycpc
@@ -136,7 +135,6 @@ fi
 %{yast_ybindir}/elf-arch
 %{yast_plugindir}/lib*.so.*
 %{yast_scrconfdir}/*.scr
-%{yast_execcompdir}/servers/scr_remote
 %{yast_execcompdir}/servers_non_y2/ag_*
 # perl part (stdio agents)
 # *: regular build compresses them, debug does not
