@@ -121,6 +121,8 @@ bool Y2WFMComponent::createDefaultSCR ()
     WFMSubAgent* scr = new WFMSubAgent ("scr", 0);
 
     if (!scr->start ()) {
+        y2internal("Failed to start default SCR");
+        delete scr;
 	return false;
     }
 
@@ -135,10 +137,10 @@ YCPValue
 Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver)
 {
     y2debug( "Starting evaluation" );
-    
+
     bool debugger = false;
     YCPList client_arglist = arglist;
-    
+
     // hack: look only at the last entry, if it's debugger or not
     if (arglist->size () > 0)
     {
@@ -192,7 +194,7 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     y2debug ("Script is: %s", script->toString().c_str());
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
-    
+
     if (debugger)
 	script = YCPCode ((YCodePtr)new YBreakpoint (script->asCode ()->code (), "code start"));
 
@@ -338,7 +340,10 @@ Y2WFMComponent::SCRGetName (const YCPInteger &h)
 
     int handle = h->value ();
     WFMSubAgents::iterator it = find_handle (handle);
-    return YCPString (it != scrs.end () ? (*it)->get_name () : "");
+    bool handle_found = it != scrs.end ();
+    if (!handle_found)
+        ycpinternal("SCRGetName for not existing handle %i", handle);
+    return YCPString ( handle_found ? (*it)->get_name () : "");
 }
 
 
@@ -782,7 +787,7 @@ Y2WFMComponent::import (const char* name_space)
             Y2SystemNamespace* ns = new Y2SystemNamespace (local_ns);
 
             system_namespaces.push_back (ns);
-            
+
             y2milestone("Namespace %s properly imported", ns->name().c_str());
             return ns;
         }

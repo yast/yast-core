@@ -36,26 +36,26 @@ public:
     /**
      * Clean up.
      */
-    ~Y2AgentComp ();
+    virtual ~Y2AgentComp ();
 
     /**
      * Returns the name of the component.
      */
-    string name () const { return my_name; }
+    virtual string name () const { return my_name; }
 
     /**
      * Evaluates a command to the agent.
      */
-    YCPValue evaluate (const YCPValue &command);
+    virtual YCPValue evaluate (const YCPValue &command);
 
     /**
      * Returns the SCRAgent of the Y2Component.
      */
-    SCRAgent* getSCRAgent ();
+    virtual SCRAgent* getSCRAgent ();
 
-    YCPValue Read (const YCPPath &path);
-    
-private:
+    virtual YCPValue Read (const YCPPath &path);
+
+protected:
 
     /**
      * Name of my agent.

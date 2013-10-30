@@ -95,8 +95,8 @@ bytecodeistream::bytecodeistream (string filename)
 
 bool bytecodeistream::isVersion (int major, int minor, int release)
 {
-    return (major == m_major) 
-	&& (minor == m_minor) 
+    return (major == m_major)
+	&& (minor == m_minor)
 	&& (release == m_release);
 }
 
@@ -106,14 +106,14 @@ bool bytecodeistream::isVersionAtMost (int major, int minor, int release)
     {
 	return false;
     }
-    
+
     if (m_major == major)
     {
 	if (m_minor > minor)
 	{
 	    return false;
 	}
-	
+
 	if ( (m_minor == minor) && (m_release > release))
 	{
 	    return false;
@@ -138,7 +138,7 @@ Bytecode::namespaceInit ()
     {
 	free (Bytecode::m_namespace_nesting_array);
     }
-    
+
     Bytecode::m_namespace_nesting_array = 0;
     Bytecode::m_namespace_nesting_level = -1;
     Bytecode::m_namespace_nesting_array_size = 0;
@@ -759,7 +759,7 @@ Bytecode::writeEntry (std::ostream & str, const SymbolEntryPtr sentry)
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 Bytecode::readEntry (bytecodeistream & str)
 {
     // read reference to namespaces (namespace_id) symbol table (position)
@@ -835,14 +835,14 @@ Bytecode::readCode (bytecodeistream & str)
     {
 	return new YConst ((YCode::ykind)code, str);
     }
-    
+
     // compatibility with 9.1/SLES
     if (str.isVersion (1,3,2) && code > YCode::yeExpression)
     {
 	// yeFunctionPointer did not exist then
 	code++;
     }
-    
+
     YCodePtr res = 0;
 
     // there used to be a try/catch here but it was moved to readFile
@@ -1070,7 +1070,7 @@ map <string, YBlockPtr>* Bytecode::m_bytecodeCache = NULL;
 
 // read file from module path
 
-YBlockPtr 
+YBlockPtr
 Bytecode::readModule (const string & mname)
 {
 #if DO_DEBUG
@@ -1087,7 +1087,7 @@ Bytecode::readModule (const string & mname)
 	ycperror ("Module '%s' not found", mname.c_str());
 	return 0;
     }
-    
+
     if (! m_bytecodeCache)
     {
 	m_bytecodeCache = new map <string, YBlockPtr>;
@@ -1102,7 +1102,7 @@ Bytecode::readModule (const string & mname)
 
 	return m_bytecodeCache->find (mname)->second;
     }
-    
+
     int tare_id = Bytecode::tareStack ();			// current nesting level is 0 for this module
     YBlockPtr block = (YBlockPtr)Bytecode::readFile (filename);
 
@@ -1139,7 +1139,7 @@ Bytecode::readFile (const string & filename)
 	return 0;
     }
     // check YaST_BYTECODE_HEADER
-    if ( 
+    if (
 	instream.isVersion (
 	    atoi (YaST_BYTECODE_MAJOR)
 	    , atoi (YaST_BYTECODE_MINOR)

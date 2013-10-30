@@ -19,6 +19,7 @@ config.log
 config.status
 config.sub
 configure
+configure.in
 configure.ac
 depcomp
 install-sh
@@ -42,3 +43,4 @@ tmp.*
 */testsuite/*.sum
 */testsuite/site.exp
 *.in.test
+/config.h.in~

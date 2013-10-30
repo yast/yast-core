@@ -21,21 +21,21 @@ StdioSCRAgent::Read (const YCPPath &path, const YCPValue &arg, const YCPValue &o
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::Read", this );
-    
+
     YCPTerm r ( "Read" );
     r.add (path);
-    if (!arg.isNull ()) 
+    if (!arg.isNull ())
     {
 	r.add (arg);
-	
+
 	if (! opt.isNull ())
 	{
 	    r.add (opt);
 	}
     }
-    
+
     return m_handler->evaluate (r);
 }
 
@@ -46,16 +46,16 @@ StdioSCRAgent::Write (const YCPPath &path, const YCPValue &value,
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::Write", this );
-    
+
     YCPTerm r ( "Write" );
     r.add (path);
-    
-    if (!value.isNull ()) 
+
+    if (!value.isNull ())
     {
 	r.add (value);
-	
+
 	if (! arg.isNull ())
 	{
 	    r.add (arg);
@@ -65,7 +65,7 @@ StdioSCRAgent::Write (const YCPPath &path, const YCPValue &value,
     {
 	r.add (YCPVoid ());
     }
-    
+
     YCPValue v = m_handler->evaluate (r);
 
     if (v.isNull())
@@ -87,12 +87,12 @@ StdioSCRAgent::Dir (const YCPPath &path)
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::Dir", this );
-    
+
     YCPTerm r ( "Dir" );
     r.add (path);
-    
+
     YCPValue v = m_handler->evaluate (r);
     if (v.isNull())
     {
@@ -114,21 +114,21 @@ StdioSCRAgent::Execute (const YCPPath &path, const YCPValue &value,
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::Execute", this );
-    
+
     YCPTerm r ( "Execute" );
     r.add (path);
-    if (!value.isNull ()) 
+    if (!value.isNull ())
     {
 	r.add (value);
-	
+
 	if (! arg.isNull ())
 	{
 	    r.add (arg);
 	}
     }
-    
+
     return m_handler->evaluate (r);
 }
 
@@ -138,12 +138,12 @@ StdioSCRAgent::Error (const YCPPath &path)
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::Error", this );
-    
+
     YCPTerm r ( "Error" );
     r.add (path);
-    
+
     YCPValue v = m_handler->evaluate (r);
     if (v.isNull())
     {
@@ -163,13 +163,13 @@ YCPBoolean
 StdioSCRAgent::RegisterAgent (const YCPPath& path, const YCPValue& value) {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::RegisterAgent", this );
 
     YCPTerm r ( "RegisterAgent" );
     r.add (path);
     r.add (value);
-    
+
     YCPValue v = m_handler->evaluate (r);
 
     if (v.isNull())
@@ -192,12 +192,12 @@ YCPBoolean
 StdioSCRAgent::UnregisterAgent (const YCPPath& path) {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2debug( "This is StdioSCRAgent(%p)::UnregisterAgent", this );
 
     YCPTerm r ( "UnregisterAgent" );
     r.add (path);
-    
+
     YCPValue v = m_handler->evaluate (r);
 
     if (v.isNull())
@@ -221,9 +221,9 @@ StdioSCRAgent::otherCommand (const YCPTerm &term)
 {
     if (! m_handler)
 	return YCPNull ();
-	
+
     y2error( "This is StdioSCRAgent(%p)::otherCommand (unhandled)", this );
-    
+
     return YCPNull ();
 }
 

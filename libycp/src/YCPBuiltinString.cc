@@ -57,7 +57,7 @@ static YCPValue
 s_isempty(const YCPString& s)
 {
     /**
-     * @builtin isempty 
+     * @builtin isempty
      * @id isempty-string
      * @short Returns whether the string <tt>s</tt> is empty.
      * @param string s String
@@ -67,7 +67,7 @@ s_isempty(const YCPString& s)
      * Notice that the string <tt>s</tt> must not be nil.
      *
      * @usage isempty("") -> true
-     * @usage isempty("test") -> false 
+     * @usage isempty("test") -> false
      */
 
     return YCPBoolean(s->isEmpty());
@@ -89,7 +89,7 @@ s_size (const YCPString &s)
      *
      * @usage size("size") -> 4
      */
-     
+
     if (s.isNull ())
 	return YCPNull ();
 
@@ -128,13 +128,13 @@ s_plus2 (const YCPString &s1, const YCPInteger &i2)
 {
     /**
      * @operator string s1 + integer i2 -> string
-     * @short String and integer Concatenation 
+     * @short String and integer Concatenation
      *
      * @description
      * Returns concatenation of <tt>s1</tt> and <tt>i2</tt> after
      * transforming <tt>i2</tt> to a string.
      *
-     * Example: 
+     * Example:
      *
      * <code>
      * "YaST" + 2 -> "YaST2"
@@ -158,7 +158,7 @@ s_plus3 (const YCPString &s1, const YCPPath &p2)
      * Returns concatenation of <tt>s1</tt> and <tt>p2</tt> after
      * transforming <tt>p2</tt> to a string.
      *
-     * Example: 
+     * Example:
      * <code>
      * "YaST" + .two -> "YaST.two"
      * </code>
@@ -183,7 +183,7 @@ s_plus4 (const YCPString &s1, const YCPSymbol &s2)
      * transforming <tt>s2</tt> to a string AND stripping the leading
      * backquote.
      *
-     * Example: 
+     * Example:
      * <code>
      * "YaST" + `two -> "YaSTtwo"
      * </code>
@@ -205,7 +205,7 @@ s_issubstring (const YCPString &target, const YCPString &sub)
      * @param string s String to be searched
      * @param string substring Pattern to be searched for
      * @return boolean
-     * @description 
+     * @description
      * Return true, if <tt>substring</tt> is a substring of <tt>s</tt>.
      *
      * @usage issubstring ("some text", "tex") -> true
@@ -280,7 +280,7 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
      * @param string STRING Original String
      * @param integer OFFSET Start position
      * @optarg integer LENGTH Length of new string
-     * @return string 
+     * @return string
      * @description
      *
      * Returns the portion of <tt>STRING</tt>  specified by the <tt>OFFSET</tt>
@@ -397,7 +397,7 @@ s_search (const YCPString &s1, const YCPString &s2)
      * The <tt>search</tt> function searches string for the first occurency of
      * a specified substring (possibly a single character) and returns its
      * starting position.
-     * 
+     *
      * Returns the first position in <tt>STRING1</tt> where the
      * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
      * <tt>OFFSET</tt> starts with 0.
@@ -452,7 +452,7 @@ s_find (const YCPString &s1, const YCPString &s2)
      * The <tt>find</tt> function searches string for the first occurency of
      * a specified substring (possibly a single character) and returns its
      * starting position.
-     * 
+     *
      * Returns the first position in <tt>STRING1</tt> where the
      * string <tt>STRING2</tt> is contained in <tt>STRING1</tt>.
      * <tt>OFFSET</tt> starts with 0.
@@ -526,7 +526,7 @@ static YCPValue
 s_toascii (const YCPString &s)
 {
     /**
-     * @builtin toascii 
+     * @builtin toascii
      * @short Returns characters below 0x7F included in <tt>STRING</tt>
      * @param string STRING
      * @return string
@@ -650,16 +650,16 @@ static YCPValue
 s_mergestring (const YCPList &l, const YCPString &s)
 {
     /**
-     * @builtin mergestring 
+     * @builtin mergestring
      * @short Joins list elements with a string
      * @param list<string> PIECES A List of strings
      * @param string GLUE
-     * @return string 
+     * @return string
      * @description
      *
      * Returns a string containing a string representation of all the list
      * elements in the same order, with the glue string between each element.
-     * 
+     *
      * List elements which are not of type strings are ignored.
      *
      * @see splitstring
@@ -671,10 +671,10 @@ s_mergestring (const YCPList &l, const YCPString &s)
      * @usage mergestring (["abc", "dev", "ghi"], "") -> "abcdevghi"
      * @usage mergestring (["abc", "dev", "ghi"], "123") -> "abc123dev123ghi"
      */
-     
+
     if (l.isNull ())
 	return YCPNull ();
-	
+
     if (s.isNull ())
     {
 	ycp2error ("Can't merge string using 'nil'");
@@ -728,7 +728,7 @@ s_findfirstnotof (const YCPString &s1, const YCPString &s2)
      * @usage findfirstnotof ("abcdefghi", "abcefghi") -> 3
      * @usage findfirstnotof ("aaaaa", "a") -> nil
      */
-     
+
     if (s1.isNull () || s2.isNull ())
 	return YCPNull ();
 
@@ -768,10 +768,10 @@ s_findfirstof (const YCPString &s1, const YCPString &s2)
      *
      * @description
      * The <tt>findfirstof</tt> function searches string for the first match of any
-     * character stored in chars and returns its position. 
+     * character stored in chars and returns its position.
      *
-     * If no match is found findfirstof returns `nil'. 
-     * 
+     * If no match is found findfirstof returns `nil'.
+     *
      * @return integer the position of the first character in <tt>STRING</tt> that is
      * contained in <tt>CHARS</tt>.
      *
@@ -809,7 +809,7 @@ static YCPValue
 s_findlastof (const YCPString &s1, const YCPString &s2)
 {
     /**
-     * @builtin findlastof 
+     * @builtin findlastof
      * @short Searches string for the last match
      * @description
      * The `findlastof' function searches string for the last match of any
@@ -863,7 +863,7 @@ s_findlastnotof (const YCPString &s1, const YCPString &s2)
      * position.
      *
      * If no match is found the function returns `nil'.
-     * 
+     *
      * @return integer The position of the last character in <tt>STRING</tt> that is
      * NOT contained in <tt>CHARS</tt>.
      *
@@ -984,7 +984,7 @@ Reg_Ret solve_regular_expression (const char *input, const char *pattern,
     }
     // copy the rest
     result_str += done;
-      
+
     reg_ret.result_str = result_str;
     regfree (&compiled);
     return reg_ret;
@@ -1007,7 +1007,7 @@ s_regexpmatch (const YCPString &i, const YCPString &p)
      * @usage regexpmatch ("aaabbbccc", "ab") -> true
      * @usage regexpmatch ("aaabbbccc", "^ab") -> false
      * @usage regexpmatch ("aaabbbccc", "ab+c") -> true
-     * @usage regexpmatch ("aaa(bbb)ccc", "\\(.*\\)") -> true     
+     * @usage regexpmatch ("aaa(bbb)ccc", "\\(.*\\)") -> true
      */
 
     if (i.isNull () || p.isNull ())
@@ -1027,11 +1027,11 @@ s_regexpmatch (const YCPString &i, const YCPString &p)
     return YCPBoolean (result.solved);
 }
 
-static YCPValue 
+static YCPValue
 s_regexppos(const YCPString& inp, const YCPString& pat)
 {
     /**
-     * @builtin regexppos 
+     * @builtin regexppos
      * @short  Returns a pair with position and length of the first match.
      * @param string INPUT
      * @param string PATTERN
@@ -1135,7 +1135,7 @@ s_regexptokenize (const YCPString &i, const YCPString &p)
      * If the pattern is invalid, 'nil' is returned.
      *
      * @usage
-     * Examples: 
+     * Examples:
      * // e ==  [ "aaabbB" ]
      * list e = regexptokenize ("aaabbBb", "(.*[A-Z]).*");
      *
@@ -1181,7 +1181,7 @@ static YCPValue
 s_tostring (const YCPValue &v)
 {
     /**
-     * @builtin tostring 
+     * @builtin tostring
      * @id tostring-any
      * @short Converts a value to a string.
      *
@@ -1249,7 +1249,7 @@ s_crypt (const YCPString &s)
      * Encrypts the string <tt>UNENCRYPTED</tt> using the standard
      * password encryption provided by the system.
      * @param string UNENCRYPTED
-     * @return string 
+     * @return string
      *
      * @usage crypt ("readable") -> "Y2PEyAiaeaFy6"
      */
@@ -1301,7 +1301,7 @@ s_cryptmd5 (const YCPString &s)
 }
 
 
-static YCPValue 
+static YCPValue
 s_cryptblowfish(const YCPString& original)
 {
     /**
@@ -1399,7 +1399,7 @@ s_dgettext (const YCPString& domain, const YCPString& text)
 {
     /**
      * @operator _(string text) -> string
-     * Translates the text using the current textdomain. 
+     * Translates the text using the current textdomain.
      *
      * Example <pre>
      * _("File") -> "Soubor"
@@ -1422,20 +1422,20 @@ s_dgettext (const YCPString& domain, const YCPString& text)
      * @usage dgettext ("base", "No") -> "Nie"
      */
 
-    if (domain.isNull () || domain->isVoid ()) 
+    if (domain.isNull () || domain->isVoid ())
     {
 	return YCPNull ();
     }
 
     // initialize text domain if not done so
-    string dom = domain->value ();    
+    string dom = domain->value ();
     YLocale::ensureBindDomain (dom);
-    
+
     if (text.isNull () || text->isVoid ())
     {
 	return YCPNull ();
     }
-    
+
     return YCPString (dgettext (dom.c_str(), text->value().c_str()));
 }
 
@@ -1445,8 +1445,8 @@ s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString
 {
     /**
      * @operator _(string singular, string plural, integer value) -> string
-     * Translates the text using a locale-aware plural form handling and the 
-     * current textdomain. The chosen form of the translation depends 
+     * Translates the text using a locale-aware plural form handling and the
+     * current textdomain. The chosen form of the translation depends
      * on the <tt>value</tt>.
      *
      * Example <pre>
@@ -1475,22 +1475,22 @@ s_dngettext (const YCPString& domain, const YCPString& singular, const YCPString
      * @usage dngettext ("base", "%1 File", "%1 Files", 2) -> "%1 soubory"
      */
 
-    if (domain.isNull () || domain->isVoid ()) 
+    if (domain.isNull () || domain->isVoid ())
     {
 	return YCPNull ();
     }
 
     // initialize text domain if not done so
-    string dom = domain->value ();    
+    string dom = domain->value ();
     YLocale::ensureBindDomain (dom);
-    
+
     if (singular.isNull () || singular->isVoid ()
 	|| plural.isNull () || plural->isVoid ()
 	|| count.isNull () || count->isVoid ())
     {
 	return YCPNull ();
     }
-    
+
     return YCPString (dngettext (domain->value().c_str(), singular->value().c_str(), plural->value().c_str(), count->value()));
 }
 
@@ -1518,7 +1518,7 @@ s_dpgettext (const YCPString& domain, const YCPString& domain_path, const YCPStr
 
     if ((domain.isNull () || domain->isVoid ()) ||
 	(domain_path.isNull () || domain_path->isVoid ()) ||
-	(text.isNull () || text->isVoid ())) 
+	(text.isNull () || text->isVoid ()))
     {
 	return YCPNull ();
     }
@@ -1528,7 +1528,7 @@ s_dpgettext (const YCPString& domain, const YCPString& domain_path, const YCPStr
     string dom_path = domain_path->value ();
 
     // check if domain exist
-    // it is important to bind domain back (LOCALEDIR) 
+    // it is important to bind domain back (LOCALEDIR)
     // if it is already binded
     bool known_domain = false;
     if (YLocale::findDomain(dom))

@@ -1,14 +1,14 @@
 /*---------------------------------------------------------------------\
-|                                                                      |  
-|                      __   __    ____ _____ ____                      |  
-|                      \ \ / /_ _/ ___|_   _|___ \                     |  
-|                       \ V / _` \___ \ | |   __) |                    |  
-|                        | | (_| |___) || |  / __/                     |  
-|                        |_|\__,_|____/ |_| |_____|                    |  
-|                                                                      |  
-|                               core system                            | 
-|                                                        (C) SuSE GmbH |  
-\----------------------------------------------------------------------/ 
+|                                                                      |
+|                      __   __    ____ _____ ____                      |
+|                      \ \ / /_ _/ ___|_   _|___ \                     |
+|                       \ V / _` \___ \ | |   __) |                    |
+|                        | | (_| |___) || |  / __/                     |
+|                        |_|\__,_|____/ |_| |_____|                    |
+|                                                                      |
+|                               core system                            |
+|                                                        (C) SuSE GmbH |
+\----------------------------------------------------------------------/
 
    File:       runycp.cc
 
@@ -126,7 +126,7 @@ main (int argc, const char *argv[])
 	        && (argv[argp][1] == '-')
 	        && (strcmp (argv[argp] + 2, "depends") == 0))
 	    {
-		make_depends = true;	
+		make_depends = true;
 	    }
 	    else if ((argv[argp][0] != '-')
 		     && fname == 0)
@@ -169,7 +169,7 @@ main (int argc, const char *argv[])
     parser->setBuffered();
     if (make_depends)
 	parser->setDepends();
-	
+
     YaST::ee.setFilename(string(fname));
 
     YCodePtr code = 0;
@@ -191,7 +191,7 @@ main (int argc, const char *argv[])
 	    break;
 	}
 
-	fprintf (stderr, 
+	fprintf (stderr,
 	    "Parsed:\n"
 	    "----------------------------------------------------------------------\n"
 	    "%s\n"

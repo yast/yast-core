@@ -26,7 +26,7 @@
  * Execute shell command and feed its output to y2log
  */
 int
-shellcommand (const string &command, const string &tempdir)
+shellcommand ( const string &target_root, const string &command, const string &tempdir)
 {
     y2debug ("shellcommand start");
 
@@ -148,7 +148,23 @@ shellcommand (const string &command, const string &tempdir)
 	    for ( int i = getdtablesize() - 1; i > 2; --i ) {
 		close( i );
 	    }
-	    
+
+            // we want to work on different target root
+            if (target_root != "/")
+            {
+                int res = chroot(target_root.c_str());
+                if (res == -1)
+                {
+                    // avoid problem with y2log in fork (see commit 83852f9)
+                    // y2error ("chroot failed, errno: %d", errno);
+                    _exit(1);
+                }
+
+                // Do not allow touch outside of chroot especially `cd ~` can
+                // cause errors
+                chdir("/");
+            }
+
 	    ret = system (command.c_str ());
 	    if (WIFEXITED (ret))
 		ret = WEXITSTATUS (ret);
@@ -191,12 +207,12 @@ shellcommand (const string &command, const string &tempdir)
  * about it!
  */
 int
-shellcommand_background (const string &command)
+shellcommand_background (const string &target_root, const string &command)
 {
 
     if (!getenv ("Y2DEBUGSHELL") && !getenv ("Y2DEBUGALL"))
     {
-	system (string (command + " >/dev/null 2>&1 &").c_str ());
+	shellcommand (target_root, string (command + " >/dev/null 2>&1 &").c_str ());
 	// FIXME execl ("/bin/sh", "-c", command.c_str(), NULL);
 	return 0;
     }
@@ -212,7 +228,7 @@ shellcommand_background (const string &command)
     /* child process */
     if (!child)
     {
-	shellcommand (command, "");
+	shellcommand (target_root, command, "");
 	_exit (0);
     }
 

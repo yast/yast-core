@@ -409,7 +409,7 @@ Type::fromSignature (const char ** signature)
 		}
 
 		t = MapTypePtr (new MapType (t1, t2, as_const));
-		next = '>'; 
+		next = '>';
 	    }
 	    break;
 	    case TupleT:    t = TupleTypePtr (new TupleType (t1, as_const)); next = 0; break;

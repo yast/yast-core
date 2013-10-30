@@ -115,7 +115,7 @@ Y2Namespace::symbolsToString () const
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 Y2Namespace::symbolEntry (unsigned int position) const
 {
     if (position >= m_symbolcount)
@@ -210,7 +210,7 @@ Y2Namespace::finish ()
     // it is important to allow a bytecode ignore changes in local symbols - the indexes for globals
     // are not changed
     if ( m_count == 0 ) return;
-    
+
 #if DO_DEBUG
     y2debug ("Going to reorder");
 #endif
@@ -229,7 +229,7 @@ Y2Namespace::finish ()
 	    next_index++;
 	}
     }
-    
+
     // then locals
     for (uint i = 0 ; i < m_count ; i++)
     {
@@ -300,14 +300,14 @@ Y2Namespace::initialize ()
 	// we are already initialized
 	return;
     }
-    
+
     // avoid recursion
     m_initialized = true;
 
     evaluate ();
-    
+
     if (table ())
-    { 
+    {
 	SymbolTable* t = table ();
 	t->disableUsage ();
 	if (t->find (name ().c_str ()))

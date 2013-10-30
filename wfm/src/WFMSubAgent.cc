@@ -31,15 +31,19 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
       my_comp (0),
       my_agent (0)
 {
+    // TODO when perl-bootloader die, remove whole system namespacing
+    // check if name is scr ( can be prepended by chroot like "chroot=/mnt:scr" )
+    if (name.find("scr") == string::npos && name.find("chroot") != string::npos)
+    {
+      y2internal("WFMSubAgent support chrrot only for scr component, but not '%s'.",
+        name.c_str());
+      abort();
+    }
 }
 
 
 WFMSubAgent::~WFMSubAgent ()
 {
-    if (my_agent)
-    {
-	delete my_agent;
-    }
 }
 
 
@@ -49,20 +53,29 @@ WFMSubAgent::start ()
     if (!my_comp)
     {
 	y2debug ("Creating SubAgent: %d %s", my_handle, my_name.c_str ());
-	my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
-
-	if (!my_comp)
-	{
-	    ycp2error ("Can't create component '%s'", my_name.c_str ());
-	}
-	else
-	{
-	    if (my_comp->getSCRAgent () == NULL)
-	    {
-		// the component does not have a SCR agent, better try to push over stdio
-		my_agent = new StdioSCRAgent (my_comp);
+        // different behavior in chroot and non-chroot as for chroot we need to
+        // handle specially system namespace via scr_remote and agents call via
+        // Scripting agent
+        // TODO remove after perl-bootloader die, then else branch is enough
+        if (my_name.find("chroot") != string::npos)
+        {
+            // set to my_comp component for `System::` namespace and in my_agent
+            // ScriptingAgent with target root
+            // see Y2WFMComponent::SCRSetDefault implementation for details
+            // how it exactly works
+            my_comp = Y2ComponentBroker::createServer ((my_name+"_remote").c_str ());
+            Y2Component *scr_comp = Y2ComponentBroker::createServer (my_name.c_str ());
+            if (!scr_comp)
+            {
+	        ycp2error ("Can't create component %s", my_name.c_str());
+                return false;
 	    }
-	}
+            my_agent = scr_comp->getSCRAgent();
+        }
+        else
+        {
+            my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
+        }
     }
 
     return my_comp != 0;

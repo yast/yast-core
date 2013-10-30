@@ -77,7 +77,7 @@ YCPList xml2ycp(xmlNode * node, bool symbol = false)
         switch (cur_node->type)
         {
             case XML_ELEMENT_NODE       :
-   
+
                   if ( !xmlStrcmp(cur_node->name,  (const xmlChar*) "symbol" ) ) {
                       char *prop = (char*) xmlGetProp(cur_node, (const xmlChar *)"name");
                       if (prop)
@@ -162,7 +162,7 @@ string YMLParser(xmlNodePtr &node)
 string YMLDocumentParser(xmlNodePtr &node)
 {
     if ( xmlStrcmp(node->name, (const xmlChar*) "YML") )
-    {   printf("no yml-tag found\n"); 
+    {   printf("no yml-tag found\n");
         exit (0);
     }
 
@@ -246,8 +246,8 @@ int main( void )
 
     if ( xmlStrcmp(current->name, (const xmlChar*) "YML") )
     {
-       fprintf(stderr, "error: wrong document type, root node YML expected"); 
-       xmlFreeDoc(xmldoc); 
+       fprintf(stderr, "error: wrong document type, root node YML expected");
+       xmlFreeDoc(xmldoc);
        return 0;
     }
 
@@ -276,7 +276,7 @@ int main( void )
     return 0;
 }
     /*
-    YCPTerm test("TEST"); test->add( YCPTerm("pups")); test->add( YCPTerm("furz")); YCPTerm popel("popel"); popel->add( YCPTerm("Müller")); popel->add( YCPTerm("Meier")); popel->add( YCPTerm("Piepenhuber")); test->add(popel); element = test; 
+    YCPTerm test("TEST"); test->add( YCPTerm("pups")); test->add( YCPTerm("furz")); YCPTerm popel("popel"); popel->add( YCPTerm("Müller")); popel->add( YCPTerm("Meier")); popel->add( YCPTerm("Piepenhuber")); test->add(popel); element = test;
     printf("TEST %s\n", test->toString().c_str() );
                              for (int i=0; i++ < offset; printf(" "));
                              printf("found ELEMENT %s\n", cur_node->name);

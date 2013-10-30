@@ -125,7 +125,7 @@ string parse_squoted_string( string::const_iterator & sit, const string::const_i
  * "string" -> string
  *
  * preconditions:
- * - starts with ['"] 
+ * - starts with ['"]
  * - as a consequence: size > 0
  */
 string parse_quoted_string( string::const_iterator & sit, const string::const_iterator & last)
@@ -145,10 +145,10 @@ string unquote( const string & quoted_string)
     {
         while( sit != end)
         {
-            while(  sit != end && 
-                    *sit != '"' && 
+            while(  sit != end &&
+                    *sit != '"' &&
                     *sit != '\'')
-            {   
+            {
                 if( *sit == '\\')
                 {
                     if( ++sit == end)

@@ -39,8 +39,8 @@ b_lnot (const YCPBoolean &b)
      * !false -> true
      * </pre>
      */
-     
-    if (b.isNull ()) 
+
+    if (b.isNull ())
 	return YCPNull ();
 
     return YCPBoolean (!(b->value ()));
@@ -58,9 +58,9 @@ b_or (const YCPCode &b1, const YCPCode &b2)
      * false || true -> true
      * </pre>
      */
-     
+
     YCPValue b1_v = b1->code ()->evaluate ();
-    
+
     if (b1_v.isNull () || b1_v->isVoid ())
     {
 	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "First operand of '||' evaluates to nil, using 'false' instead.");
@@ -76,7 +76,7 @@ b_or (const YCPCode &b1, const YCPCode &b2)
 	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Second operand of '||' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
-    
+
     return YCPBoolean (b2_v->asBoolean ()->value ());
 }
 
@@ -92,16 +92,16 @@ b_and (const YCPCode &b1, const YCPCode &b2)
      * false && true -> false
      * </pre>
      */
-     
+
     YCPValue b1_v = b1->code ()->evaluate ();
-    
+
     if (b1_v.isNull () || b1_v->isVoid ())
     {
 	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "First operand of '&&' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
 
-    if (! b1_v->asBoolean ()->value ()) 
+    if (! b1_v->asBoolean ()->value ())
 	return YCPBoolean (false);
 
     YCPValue b2_v = b2->code ()->evaluate ();
@@ -110,7 +110,7 @@ b_and (const YCPCode &b1, const YCPCode &b2)
 	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "Second operand of '&&' evaluates to nil, using 'false' instead.");
 	return YCPBoolean (false);
     }
-    
+
     return YCPBoolean (b2_v->asBoolean ()->value ());
 }
 

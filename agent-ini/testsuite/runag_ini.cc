@@ -27,7 +27,7 @@ main (int argc, char *argv[])
 	scrconf.replace (p, 4, ".scr");
     }
 
-    SCRAgent *agent = new ScriptingAgent (scrconf);
+    SCRAgent *agent = new ScriptingAgent ("/", scrconf);
     if (!agent)
     {
 	fprintf (stderr, "Failed to create Agent\n");

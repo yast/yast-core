@@ -21,7 +21,6 @@
 #ifndef SCRAgent_h
 #define SCRAgent_h
 
-
 #include <YCP.h>
 #include <ycp/y2log.h>
 
@@ -134,6 +133,15 @@ public:
      */
     SCRAgent *mainscragent;
 
+
+    /**
+     * Filesystem root on which to operate.
+     * It is useful for agents during installation to operate on different root
+     * (FATE#314695).
+     * \return C string owned by instance.
+     */
+    virtual const char *root () const;
+
     /**
      * Reads the scr config file and returns the term. It skips all lines
      * upto (including) the first starting with a ".", which is the path
@@ -146,7 +154,14 @@ public:
     void setAsCurrentSCR() {
 	current_scr = this;
     }
-    
+
+    /**
+     * Helper to compute complete path including target root.
+     *
+     * \param path must start with a slash
+     */
+    string targetPath( const string &path) const;
+
 private:
     static SCRAgent* current_scr;
     //! returned by Error
