@@ -4,4 +4,4 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # smoke test:
 echo "WHEN" "simply run with noting to do"
 echo "  IT" "exits with no error (in particular it does not segfault)"
-$DIR/scr_remote stdio scr < /dev/null
+$DIR/y2base stdio scr < /dev/null
