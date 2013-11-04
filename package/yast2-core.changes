@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Mon Nov  4 15:26:11 UTC 2013 - jreidinger@suse.com
+
+- remove remote libraries support on installed system. It requires
+  yast2-core on installed system which forbits goal for SLE12 to
+  not have yast on target system. The last piece that use it was
+  adapted since perl-Bootloader-0.800 .
+- 3.1.4
+
+-------------------------------------------------------------------
 Wed Oct 23 11:32:20 UTC 2013 - lslezak@suse.cz
 
 - system-agent: handle chroot at more places
