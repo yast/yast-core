@@ -1372,31 +1372,6 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    else if (cmd == "kill") {
-
-	/**
-	 * @builtin Execute(.target.kill, integer pid [, integer signal]) -> boolean
-	 * Kill process with signal (SIGTERM if not specified).
-	 *
-	 * The return value is true or false, depending of the success.
-	 *
-	 * @example Execute (.target.kill, 1, 9)
-	 */
-
-	if (value.isNull() || !value->isInteger())
-	    return YCPError("Bad PID in Execute (.kill, integer pid, integer signal)", YCPBoolean(false));
-
-	int signal = 15;
-	int pid = value->asInteger()->value();
-
-	if (!arg.isNull() && arg->isInteger())
-	    signal = arg->asInteger()->value();
-
-	return YCPBoolean (kill(pid,signal) != -1);
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     return YCPError (string("Undefined subpath for Execute (") + path->toString() + ")");
 }
 
