@@ -1397,46 +1397,6 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    else if (cmd == "control")
-    {
-
-	if (path->length()<2)
-	    return YCPError(string("Undefined subpath for Execute (.control."));
-
-	if (path->component_str(1) == "printer_reset")
-	{
-
-	    /**
-	     * @builtin Execute (.target.control.printer_reset, string device) -> boolean
-	     * Reset the given printer (trigger ioctl)
-	     *
-	     * The return value is true or false, depending of the success
-	     *
-	     */
-
-	    if (value.isNull() || !value->isString())
-	    {
-		return YCPError ("Bad filename in Execute (.control.printer_reset, string device");
-	    }
-
-	    string device = value->asString()->value();
-
-	    int fd = open(device.c_str(), O_RDWR);
-	    if (fd < 0)
-	    {
-		return YCPError (string("Open failed: \"" + device + "\" " + string(strerror(errno)?:"")));
-	    }
-
-	    int ret = ioctl(fd, LPRESET, NULL);
-	    close(fd);
-
-	    return YCPBoolean (ret == 0);
-	}
-
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     return YCPError (string("Undefined subpath for Execute (") + path->toString() + ")");
 }
 
