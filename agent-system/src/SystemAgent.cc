@@ -1209,69 +1209,6 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    else if (cmd == "smbmount")
-    {
-	/**
-	 * @builtin Execute (.target.smbmount, [ string server_and_dir, string mountpoint <, string logfile>], [, string options])) -> boolean
-	 *
-	 * Mounts a SMB share at a mountpoint.
-	 * if logfile is given, the stderr of the mount cmd will be appended to
-	 * this file
-	 *
-	 * The return value is true or false, depending of the success
-	 *
-	 * @example Execute (.target.smbmount, ["//windows/crap", "/crap"], "-o guest")
-	 * @example Execute (.target.smbmount, ["//smb/share", "/smbshare", "/var/log/y2mountlog"])
-	 */
-
-	if (value.isNull() || !value->isList())
-	{
-	    return YCPError ("Bad share argument to Execute (.smbmount, [ string share, string mountpoint <, string y2mountlog> ])");
-	}
-
-	YCPList mountlist = value->asList();
-	if (mountlist->size() < 2
-	    || !mountlist->value(0)->isString()
-	    || !mountlist->value(1)->isString())
-	{
-	    return YCPError ("Bad list values in argument to Execute (.smbmount, [ string share, string mountpoint ])");
-	}
-
-	string mountcmd = "/usr/bin/smbmount ";
-
-	if (!arg.isNull() && arg->isString())
-	{
-	    mountcmd += arg->asString()->value() + " ";
-	}
-	else
-	{
-	    return YCPError ("Bad mode argument to Execute (.smbmount, string path, integer mode)");
-	}
-
-	// share
-	mountcmd += mountlist->value(0)->asString()->value() + " ";
-
-	// mountpoint
-	mountcmd += mountlist->value(1)->asString()->value();
-
-	// logfile
-	if (mountlist->size() == 3)
-	{
-	    if (mountlist->value(2)->isString())
-	    {
-		mountcmd += " 2> " + mountlist->value(2)->asString()->value();
-	    }
-	    else
-	    {
-		return YCPError ("Bad logfile argument to Execute (.smbmount, [ string device, string mountpoint, string logfile ])");
-	    }
-	}
-
-	return YCPBoolean (shellcommand (mountcmd) == 0);
-    }
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     else if (cmd == "umount")
     {
 	/**
