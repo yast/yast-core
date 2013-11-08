@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov  8 10:25:56 UTC 2013 - jreidinger@suse.com
+
+- removed obsolete .target.control.printer_reset, .target.smbmount,
+  .target.kill ( use .process.kill )
+- 3.1.5
+
+-------------------------------------------------------------------
 Mon Nov  4 15:26:11 UTC 2013 - jreidinger@suse.com
 
 - remove remote libraries support on installed system. It requires
