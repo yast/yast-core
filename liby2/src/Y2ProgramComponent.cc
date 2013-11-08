@@ -106,7 +106,8 @@ YCPValue Y2ProgramComponent::evaluate(const YCPValue& command)
 
 	    l_argv[0] = argc >= 1 ? argv[0] : strdup(name().c_str()); // component name
 	    l_argv[1] = "stdio"; // I will speak to the server via his stdio
-	    l_argv[2] = strdup(name().c_str());
+            l_argv[2] = strdup(name().c_str());
+
 	    for (int arg = 1; arg < argc; arg++) l_argv[arg+2] = argv[arg];
 	    l_argv[l_argc] = 0; // Terminate array
 
@@ -149,7 +150,7 @@ void Y2ProgramComponent::result(const YCPValue& result)
     // has been issued. Therefore at this point the external
     // program may not have been started after all. So we need
     // to check, if it's running.
-    
+
     if (pid != -1)
     {
 	YCPTerm resultterm("result");
@@ -363,13 +364,13 @@ YCPValue Y2ProgramComponent::receiveFromExternal ()
 	}
 
 	YCodePtr c = parser.parse ();
-	
+
 	if (c == NULL || c->isError())
 	{
 	    y2error ("External program %s returned invalid data. (No other error means no data at all)", bin_file.c_str ());
 	    return YCPNull ();
 	}
-	
+
 	// evaluate, but not as constant
 	YCPValue ret = c->evaluate (true);
 	if (ret.isNull ())

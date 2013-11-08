@@ -31,25 +31,5 @@ y2base_LDFLAGS =			\
 	$(YAST2CORE)			\
 	-Xlinker --no-whole-archive
 
-AM_CXXFLAGS = -DY2LOG=\"scr\" -DSUSEVERSION=\"${SUSEVERSION}\"
-
-serversdir = $(execcompdir)/servers
-servers_PROGRAMS = scr
-
-AM_CPPFLAGS = ${AGENT_INCLUDES}                 		\
-	-I$(srcdir)/../../libscr/src/include		\
-	-I$(srcdir)/../../scr/src
-
-scr_SOURCES =                                           \
-        scr.cc
-
-scr_LDADD = ${AGENT_LIBADD}
-
-scr_LDFLAGS =                                   \
-        -Xlinker --whole-archive                \
-        $(top_builddir)/scr/src/libpy2scr.la            \
-	$(top_builddir)/wfm/src/libpy2wfm.la		\
-        -Xlinker --no-whole-archive
-
-TESTS = scr-smoke-test
+TESTS = y2base-smoke-test
 EXTRA_DIST = $(TESTS)

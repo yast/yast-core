@@ -174,7 +174,7 @@ WFM::WFM ()
 #define ETC 0, NULL, constTypePtr(), NULL
 #define ETCf   NULL, constTypePtr(), NULL
 	{ "WFM",		"",				NULL, 		DECL_NAMESPACE, ETCf },
-	{ "SCROpen",		"integer (string, boolean)",	(void*)WFMSCROpen,               ETC }, 
+	{ "SCROpen",		"integer (string, boolean)",	(void*)WFMSCROpen,               ETC },
 	{ "SCRClose",		"void (integer)",		(void*)WFMSCRClose,		 ETC },
 	{ "SCRGetName",		"string (integer)",		(void*)WFMSCRGetName,		 ETC },
 	{ "SCRSetDefault",	"void (integer)",		(void*)WFMSCRSetDefault,	 ETC },

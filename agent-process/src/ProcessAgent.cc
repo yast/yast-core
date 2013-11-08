@@ -2,17 +2,17 @@
  *
  * ------------------------------------------------------------------------------
  * Copyright (c) 2008 Novell, Inc. All Rights Reserved.
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the
  * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, contact Novell, Inc.
  *
@@ -424,7 +424,7 @@ YCPValue ProcessAgent::Execute(const YCPPath &path,
 
 		// store the path
 		argv[0] = commandline.c_str();
-		
+
 		// store arguments
 		int index = 0;
 		for (; index < args->size(); index++)
@@ -532,7 +532,7 @@ YCPValue ProcessAgent::Execute(const YCPPath &path,
 	     * @builtin Execute(.process.close, integer id) -> integer
 	     * Close input/output of the process and wait until the process ends
 	     *
-	     * Returns Exit value of the process 
+	     * Returns Exit value of the process
 	     *
 	     * @example Execute(.process.close, 12345) -> 0
 	     */

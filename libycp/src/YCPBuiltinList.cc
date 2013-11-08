@@ -1177,7 +1177,7 @@ l_swaplist (const YCPList &v, YCPInteger &i1, YCPInteger &i2){
      * @param list<flex1> v list
      * @param integer i1 index of first element
      * @param integer i2 index of second element
-     * @return New list. Changed if offset is correct, otherwise return unchanged list 
+     * @return New list. Changed if offset is correct, otherwise return unchanged list
      *
      * @description
      * Creates new list with swaped elemetns at offset i1 and i2. Return nil if list or
@@ -1213,7 +1213,7 @@ l_swaplist (const YCPList &v, YCPInteger &i1, YCPInteger &i2){
  	ycp2error("Index 'i2' is out of bounds for 'swap'");
 	return ret;
     }
-    
+
     ret->swap(it1,it2);
     return ret;
 }
@@ -1225,10 +1225,10 @@ l_reverselist (const YCPList &v){
      * @id list.reverse
      * @short Creates new list with reversed order of elements.
      * @param list<flex1> v list
-     * @return New reversed list. 
+     * @return New reversed list.
      *
      * @description
-     * Creates new list with reversed order of elements. Return nil if list is nil. 
+     * Creates new list with reversed order of elements. Return nil if list is nil.
      *
      * @usage list::reverse ([0,1,2,3]) -> [3,2,1,0]
      * @usage list::reverse ([]) -> []

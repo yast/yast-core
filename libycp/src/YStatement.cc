@@ -376,7 +376,7 @@ YSReturn::~YSReturn ()
 }
 
 
-YCodePtr 
+YCodePtr
 YSReturn::value() const
 {
     return m_value;
@@ -810,7 +810,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     if (current.isNull ())
     {
 	YCPList correct_until;
-	
+
 	for (int i = 0 ; i < idx ; i++)
 	{
 	    correct_until->add (arg->value (i));
@@ -819,7 +819,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	ycp2error ("Intermediate structure with index %s does not exist", correct_until->toString ().c_str ());
 	return YCPNull ();
     }
-#if DO_DEBUG	
+#if DO_DEBUG
     y2debug ("commit (%s, %d, %s, %s)", current->toString().c_str(), idx, arg->toString().c_str(), value.isNull () ? "nil" : value->toString().c_str());
 #endif
     YCPValue argval = arg->value (idx);
@@ -839,7 +839,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 
 	YCPList list = current->asList();
 	int argint = argval->asInteger()->value();
-	
+
 	YCPValue val = value;
 
 	//  not the end of the argument list, continue
@@ -851,9 +851,9 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 		return val;
 	    }
 	}
-	
+
 	list->set (argint, val.isNull() ? YCPVoid() : val);
-#if DO_DEBUG	
+#if DO_DEBUG
     y2debug ("list[%d] = %s -> %s", argint, val->toString().c_str(), list->toString().c_str());
 #endif
 	return list;
@@ -861,9 +861,9 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
     else if (current->isMap())
     {
 	YCPMap map = current->asMap();
-	
+
 	YCPValue val = value;
-	
+
 	if (idx < arg->size ()-1)
 	{
 	    val = commit (map->value (argval), idx+1, arg, value);		// recurse
@@ -873,7 +873,7 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	    }
 	}
 	map = map->functionalAdd (argval, val.isNull() ? YCPVoid() : val);
-#if DO_DEBUG	
+#if DO_DEBUG
     y2debug ("map[%s] = %s -> %s", argval->toString().c_str(), val->toString().c_str(), map->toString().c_str());
 #endif
 	return map;
@@ -887,9 +887,9 @@ YSBracket::commit (YCPValue current, int idx, YCPList arg, YCPValue value)
 	}
 	YCPTerm term = current->asTerm();
 	int argint = argval->asInteger()->value();
-	
+
 	YCPValue val = value;
-	
+
 	// not the end of the argument list, continue
 	if (idx < arg->size ()-1)
 	{
@@ -920,7 +920,7 @@ YSBracket::evaluate (bool cse)
 
     // now check the variable
 
-    YCPValue result = m_entry->value(); 
+    YCPValue result = m_entry->value();
     if (result.isNull())
     {
 	// initial assignment
@@ -1075,13 +1075,13 @@ YSIf::evaluate (bool cse)
     y2debug ("YSIf::evaluate(%s)\n", toString().c_str());
 #endif
     YCPValue bval = m_condition->evaluate (cse);
-    
+
     if (bval.isNull ())
     {
 	ycp2error ("if condition is nil.");
 	return YCPNull ();
     }
-    
+
     if (!bval->isBoolean())
     {
 	ycp2warning(YaST::ee.filename().c_str(), YaST::ee.linenumber(), "'if (%s)' evaluates to non-boolean '%s' (%s), using 'false' instead.", m_condition->toString().c_str(), bval->toString().c_str(), bval->valuetype_str());
@@ -1205,7 +1205,7 @@ YSWhile::evaluate (bool cse)
 	    ycp2error ("while condition is nil.");
 	    return YCPNull ();
 	}
-    
+
 	if (!bval->isBoolean())
 	{
 	    ycp2error ("'while (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -1389,7 +1389,7 @@ YSRepeat::evaluate (bool cse)
 		ycp2error ("until condition is nil.");
 		return YCPNull ();
 	    }
-    
+
 	    if (!bval->isBoolean())
 	    {
 		ycp2error ( "'repeat ... until (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -1528,7 +1528,7 @@ YSDo::evaluate (bool cse)
 		ycp2error ("while condition is nil.");
 		return YCPNull ();
 	    }
-    
+
 	    if (!bval->isBoolean())
 	    {
 		ycp2error ("'do (%s)' evaluates to non-boolean '(%s)'.", m_condition->toString().c_str(), bval->toString().c_str());
@@ -1839,7 +1839,7 @@ YSImport::evaluate (bool cse)
 #if DO_DEBUG
 	y2debug ("Evaluating namespace '%s'", m_name->c_str());
 #endif
-	
+
 	nameSpace()->initialize ();
     }
 
@@ -1957,9 +1957,9 @@ YSSwitch::YSSwitch (bytecodeistream & str)
 	int index = Bytecode::readInt32 (str);
 	m_cases[cv] = index;
     }
-    
+
     m_defaultcase = Bytecode::readInt32 (str);
-    
+
     m_block = (YBlockPtr)Bytecode::readCode (str);
     if (! m_block)
     {
@@ -1976,16 +1976,16 @@ YSSwitch::toStream (std::ostream & str) const
     m_condition->toStream (str);
 
     Bytecode::writeInt32 (str, m_cases.size ());
-    
+
     for (map<YCPValue, int, ycp_less>::const_iterator it = m_cases.begin ()
 	; it != m_cases.end () ; it++)
     {
 	Bytecode::writeValue (str, it->first);
 	Bytecode::writeInt32 (str, it->second);
     }
-    
+
     Bytecode::writeInt32 (str, m_defaultcase);
-    
+
     return m_block->toStream (str);
 }
 
@@ -2014,14 +2014,14 @@ YSSwitch::evaluate (bool cse)
 #endif
     if (cse)
 	return YCPNull ();
-	
+
     YCPValue condition = m_condition->evaluate ();
     if (condition.isNull ())
     {
 	ycperror ("switch condition evaluates to 'nil'");
 	return YCPNull ();
     }
-    
+
     // if there is a case for this value, execute
     if (m_cases.find (condition) != m_cases.end ())
     {
@@ -2033,7 +2033,7 @@ YSSwitch::evaluate (bool cse)
 	// break should not be propagated
 	if (!res.isNull () && res->isBreak ())
 	    res = YCPNull ();
-	    
+
 	return res;
     }
     // no case, try default if defined
@@ -2047,7 +2047,7 @@ YSSwitch::evaluate (bool cse)
 	// break should not be propagated
 	if (!res.isNull () && res->isBreak ())
 	    res = YCPNull ();
-	    
+
 	return res;
     }
 
@@ -2065,11 +2065,11 @@ YSSwitch::setCase (YCPValue value)
     // verify duplicate
     if (m_cases.find (value) != m_cases.end ())
 	return false;
-    
+
     int index = m_block->statementCount ();
-    
+
     m_cases[value]=index;
-    
+
     return true;
 }
 
@@ -2082,7 +2082,7 @@ YSSwitch::setDefaultCase ()
 	return false;
 
     m_defaultcase = m_block->statementCount ();
-    
+
     return true;
 }
 

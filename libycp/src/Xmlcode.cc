@@ -114,8 +114,8 @@ xmlcodeistream::xmlcodeistream( string filename)
 
 bool xmlcodeistream::isVersion( int major, int minor, int release)
 {
-    return( major == m_major) 
-	&&( minor == m_minor) 
+    return( major == m_major)
+	&&( minor == m_minor)
 	&&( release == m_release);
 }
 
@@ -125,14 +125,14 @@ bool xmlcodeistream::isVersionAtMost( int major, int minor, int release)
     {
 	return false;
     }
-    
+
     if( m_major == major)
     {
 	if( m_minor > minor)
 	{
 	    return false;
 	}
-	
+
 	if( ( m_minor == minor) &&( m_release > release))
 	{
 	    return false;
@@ -157,7 +157,7 @@ Xmlcode::namespaceInit( )
     {
 	free( Xmlcode::m_namespace_nesting_array);
     }
-    
+
     Xmlcode::m_namespace_nesting_array = 0;
     Xmlcode::m_namespace_nesting_level = -1;
     Xmlcode::m_namespace_nesting_array_size = 0;
@@ -457,7 +457,7 @@ Xmlcode::writeEntry( std::ostream & str, const SymbolEntryPtr sentry)
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 Xmlcode::readEntry( xmlcodeistream & str)
 {
     return 0;
@@ -487,14 +487,14 @@ Xmlcode::readCode( xmlcodeistream & str)
     {
 	return new YConst( (YCode::ykind)code, str);
     }
-    
+
     // compatibility with 9.1/SLES
     if( str.isVersion( 1,3,2) && code > YCode::yeExpression)
     {
 	// yeFunctionPointer did not exist then
 	code++;
     }
-    
+
     try
     {
 
@@ -728,7 +728,7 @@ map <string, YBlockPtr>* Xmlcode::m_xmlcodeCache = NULL;
 
 // read file from module path
 
-YBlockPtr 
+YBlockPtr
 Xmlcode::readModule( const string & mname)
 {
 #if DO_DEBUG
@@ -745,7 +745,7 @@ Xmlcode::readModule( const string & mname)
 	ycperror( "Module '%s' not found", mname.c_str());
 	return 0;
     }
-    
+
     if( ! m_xmlcodeCache)
     {
 	m_xmlcodeCache = new map <string, YBlockPtr>;
@@ -760,7 +760,7 @@ Xmlcode::readModule( const string & mname)
 
 	return m_xmlcodeCache->find( mname)->second;
     }
-    
+
     int tare_id = Xmlcode::tareStack( );			// current nesting level is 0 for this module
     YBlockPtr block =( YBlockPtr)Xmlcode::readFile( filename);
 
@@ -797,8 +797,8 @@ Xmlcode::readFile( const string & filename)
 	return 0;
     }
     // check YaST_BYTECODE_HEADER
-    if(  
-	instream.isVersion( 
+    if(
+	instream.isVersion(
 	    atoi( YaST_BYTECODE_MAJOR)
 	    , atoi( YaST_BYTECODE_MINOR)
 	    , atoi( YaST_BYTECODE_RELEASE))
@@ -808,7 +808,7 @@ Xmlcode::readFile( const string & filename)
 #if DO_DEBUG
 //	y2debug( "Header accepted");
 #endif
-	
+
 	return readCode( instream);
     }
 

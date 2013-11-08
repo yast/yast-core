@@ -50,7 +50,7 @@
 
 Y2CCWFM::Y2CCWFM()
     : Y2ComponentCreator(Y2ComponentBroker::SCRIPT)
-{    
+{
 }
 
 static void initializeBuiltins ()
@@ -69,13 +69,13 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
     {
 	return 0;
     }
-    
+
     if ( strcasecmp ( name, "wfm" ) == 0 )
     {
 	y2debug ("Creating just the component WFM");
 	return Y2WFMComponent::instance ();
     }
-    
+
     string modulename = name;
     string filename = string(name) + ".ycp";
     FILE *file = 0;
@@ -131,10 +131,10 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
 
     // to be on the safe side
     initializeBuiltins ();
-    
+
     // check, if there is a newer YBC client
     YCPCode script;
-    
+
     string ybc_filename = YCPPathSearch::bytecodeForFile (fullname);
     if (ybc_filename.empty ())
     {
@@ -144,7 +144,7 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
 
 	script = YCPCode( parser.parse() );
 	fclose(file);
-    
+
 	y2milestone ("Parsing finished");
     }
     else
@@ -153,7 +153,7 @@ Y2Component *Y2CCWFM::createInLevel(const char *name, int level, int) const
 	script = YCPCode ( Bytecode::readFile (ybc_filename) );
 	y2milestone ("Bytecode file loaded");
     }
-    
+
 #if KMTRACE
     kuntrace ();
 #endif
@@ -177,13 +177,6 @@ bool Y2CCWFM::isServerCreator() const
 
 Y2Component* Y2CCWFM::provideNamespace(const char* name)
 {
-    // first, check if we should provide System namespace
-    if (strstr (name, "System::") == name)
-    {
-	return Y2WFMComponent::instance ();
-
-    }
-    
     // check the filename
     string filename = YCPPathSearch::findModule (name);
     if (filename.empty())
@@ -197,7 +190,7 @@ Y2Component* Y2CCWFM::provideNamespace(const char* name)
     // But see bug 37338 - this helps for code paths which do not reach UI
     initializeBuiltins ();
 
-    y2debug ("Component to provide the namespace: %p", Y2WFMComponent::instance ());    
+    y2debug ("Component to provide the namespace: %p", Y2WFMComponent::instance ());
     return Y2WFMComponent::instance ();
 }
 

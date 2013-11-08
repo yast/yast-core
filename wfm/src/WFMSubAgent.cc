@@ -31,15 +31,18 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
       my_comp (0),
       my_agent (0)
 {
+    // check if name is scr ( can be prepended by chroot like "chroot=/mnt:scr" )
+    if (name.find("scr") == string::npos && name.find("chroot") != string::npos)
+    {
+      y2internal("WFMSubAgent support chrrot only for scr component, but not '%s'.",
+        name.c_str());
+      abort();
+    }
 }
 
 
 WFMSubAgent::~WFMSubAgent ()
 {
-    if (my_agent)
-    {
-	delete my_agent;
-    }
 }
 
 
@@ -49,57 +52,8 @@ WFMSubAgent::start ()
     if (!my_comp)
     {
 	y2debug ("Creating SubAgent: %d %s", my_handle, my_name.c_str ());
-	my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
-
-	if (!my_comp)
-	{
-	    ycp2error ("Can't create component '%s'", my_name.c_str ());
-	}
-	else
-	{
-	    if (my_comp->getSCRAgent () == NULL)
-	    {
-		// the component does not have a SCR agent, better try to push over stdio
-		my_agent = new StdioSCRAgent (my_comp);
-	    }
-	}
+        my_comp = Y2ComponentBroker::createServer (my_name.c_str ());
     }
 
     return my_comp != 0;
 }
-
-
-bool
-WFMSubAgent::start_and_check (bool check_version, int* error)
-{
-    if (!start ())
-    {
-	*error = -1;
-	return false;
-    }
-
-    YCPValue q1 = YCPTerm ("SuSEVersion");
-    YCPValue q2 = YCPVoid ();
-
-    YCPValue a = my_comp->evaluate (check_version ? q1 : q2);
-
-    if (a.isNull ())
-    {
-	*error = -1;
-	return false;
-    }
-
-    if (check_version)
-    {
-	y2debug ("SuSEVersion \"%s\" %s", SUSEVERSION, a->toString ().c_str ());
-
-	if (!a->isString () || a->asString ()->value () != SUSEVERSION)
-	{
-	    *error = -2;
-	    return false;
-	}
-    }
-
-    return true;
-}
-

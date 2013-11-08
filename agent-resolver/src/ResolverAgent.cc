@@ -173,7 +173,7 @@ static int fillCache (const char *filename)
             if (strncmp (lbuf, "### END INFO", 12) == 0)
             {
                 if (last_key)   // one more key to process
-		{  
+		{
                     localCache->add (YCPString (last_key), YCPString ((info_buf.substr (0, info_buf.length () - 1)).c_str ()));
 		}
                 if (!processing_info) y2warning ("End of info without beggining!");
@@ -481,7 +481,7 @@ ResolverAgent::~ResolverAgent ()
 {
     if (cacheValid && cacheDirty)
     {
-	flushCache(file_name.c_str ());
+	flushCache(targetPath(file_name).c_str ());
     }
 }
 
@@ -491,7 +491,7 @@ ResolverAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue& o
 {
     y2debug ("Read(.resolver%s)", path->toString().c_str());
 
-    fillCache (file_name.c_str ());
+    fillCache (targetPath(file_name).c_str ());
 
     if (path->isRoot())
     {
@@ -514,13 +514,13 @@ ResolverAgent::Write (const YCPPath& path, const YCPValue& value,
     y2debug ("Write (.resolver%s, %s)", path->toString().c_str(),
 	    value->toString().c_str());
 
-    fillCache (file_name.c_str ());
+    fillCache (targetPath(file_name).c_str ());
 
     if (path->isRoot())
     {
 	if (value.isNull() || value->isVoid())
 	{
-	    return YCPBoolean (flushCache (file_name.c_str ()) == 0);
+	    return YCPBoolean (flushCache (targetPath(file_name).c_str ()) == 0);
 	}
 	if (!value->isMap())
 	{

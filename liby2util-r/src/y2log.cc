@@ -394,7 +394,7 @@ void set_log_filename (string fname)
 	  maxlogsize *= 1024;
       else
 	  maxlogsize = limit;
-    } else 
+    } else
       maxlogsize = Y2LOG_MAXSIZE;
 
     char *env_maxlognum = getenv(Y2LOG_VAR_NUM);

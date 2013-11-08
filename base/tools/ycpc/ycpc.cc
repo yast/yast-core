@@ -866,9 +866,9 @@ parsefile (const char *infname)
     YCodePtr c = NULL;
 
     c = parser->parse ();
-    
+
     int ln = parser->scanner ()->lineNumber ();
-    
+
     if (! parser->atEOF () && parser->scanner ()->yylex () != END_OF_FILE)
     {
 	YaST::ee.setFilename(parser->scanner()->filename());
@@ -1372,7 +1372,7 @@ int main(int argc, char *argv[])
 		}
 	        continue;
 	    }
-	    
+
 	    ret = compilefile (argv[i], 0);
 
 	    if (ret == 1)
@@ -1458,7 +1458,7 @@ int main(int argc, char *argv[])
 	    if (compile)
 	    {
 		errno = 0;
-		
+
 		ret = compilefile (depit->path().c_str(), NULL);
 		if (ret == 1)
 		{

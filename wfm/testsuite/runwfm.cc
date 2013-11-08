@@ -104,7 +104,7 @@ main (int argc, char *argv[])
 
     parser->setInput (infile, fname);
     parser->setBuffered();
-    
+
     // register builtins;
     WFM wfm;
 
@@ -117,14 +117,14 @@ main (int argc, char *argv[])
 	{
 	    break;
 	}
-	
+
 	// Prepare the arguments. It has the form [script, [clientargs...]]
 	YCPList wfm_arglist;
 	wfm_arglist->add (YCPCode (value));
 	wfm_arglist->add (YCPString ("testing"));
 	wfm_arglist->add (YCPString ("testing-fullname"));
 	wfm_arglist->add (YCPList());
-	
+
 	workflowmanager->setupComponent ( "testing", "testing-fullname:"
 	    , YCPCode (value));
 

@@ -106,7 +106,7 @@ DummyAgent::Execute (const YCPPath& path, const YCPValue& value,
     {
 	v = checkPath(path, defaultMap, deflt);
     }
-    
+
     ycpdebug("%sExecute	%s", DUMMY_LOG_STRING,
 	    (path->toString() + " " + value->toString() +
 			      (arg.isNull()?"":(" "+arg->toString())) +

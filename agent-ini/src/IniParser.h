@@ -28,6 +28,8 @@
 #include <vector>
 #include <set>
 
+#include "scr/SCRAgent.h"
+
 #include "IniFile.h"
 
 using std::string;
@@ -243,7 +245,7 @@ struct FileDescr
      * Time of the last modification
      */
     time_t timestamp;
-    FileDescr (char*fn);
+    FileDescr (const char*fn);
     bool changed ();
     FileDescr () {}
 };
@@ -355,6 +357,11 @@ private:
     vector<string> files;
 
     /**
+     * Needed to get target path
+     */
+    const SCRAgent &agent;
+
+    /**
      * Open ini file.
      */
     int scanner_start(const char*fn);
@@ -398,13 +405,12 @@ public:
     IniSection inifile;
     // apparently the uninitialized members are filled in
     // by the grammar definition
-    IniParser () :
+    IniParser (const SCRAgent &agent_) :
 	timestamp (0),
 	linecomments (), comments (),
 	sections (), params (), rewrites (),
 	started (false), multiple_files (false),
-//	inifile ("toplevel")
-	inifile (this)
+	 agent(agent_), inifile (this)
 	    {}
     ~IniParser ();
     /**

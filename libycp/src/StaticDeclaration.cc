@@ -384,7 +384,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    && atype->isFunction())
 	{
 	    bool error = false;
-	    
+
 	    constFunctionTypePtr fdtype = dtype;
 	    constFunctionTypePtr fatype = atype;
 	    int dcount = fdtype->parameterCount();		// declaration count
@@ -393,17 +393,17 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    y2debug ("dcount %d, acout %d", dcount, acount);
 #endif
 	    int i;
-	    
+
 	    if (acount == 0)
 	    {
 		// no arguments actual and declared
 		if (dcount == 0) break;
-		
+
 		// no actual arguments allowed only if declared arguments are wildcard
 		error = ! (fdtype->parameterType (0)->isWildcard ());
-	    } 
+	    }
 	    else
-	    { 
+	    {
 		// need to check all arguments one by one
 		constTypePtr dt = 0;
 
@@ -435,7 +435,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 #if DO_DEBUG
 		y2debug ("loop exit %d", i);
 #endif
-	    
+
 		// this was not the last argument in declared arguments
 		// and the next one is not wildcard (can be omited completely)
 		// it's an error
@@ -454,7 +454,7 @@ StaticDeclaration::findDeclaration (declaration_t *decl, constTypePtr type, bool
 	    if (!error)		// full match
 		break;
 	}
-	
+
 	if (decl->tentry->next_overloaded () != 0)
 	{
 	    decl = ((YSymbolEntryPtr)decl->tentry->next_overloaded ()->sentry ())->declaration ();
@@ -508,7 +508,7 @@ StaticDeclaration::writeDeclaration (std::ostream & str, const declaration_t *de
 #if DO_DEBUG
     y2debug ("StaticDeclaration::writeDeclaration('%s':%s)", n.c_str(), decl->type->toString().c_str());
 #endif
- 
+
     Bytecode::writeCharp (str, n.c_str());
     decl->type->toStream (str);
     return str;

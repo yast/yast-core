@@ -82,7 +82,7 @@ while (@exports)
 		push (@tests, "// m_param$paramcount may be nil");
 	    }
 	    else {
-		push (@tests, "if (m_param$paramcount->isVoid()) {ycp2error(\"Parameter %d is nil, %s is required\", $paramcount, \"$type\"); return YCPVoid();}");
+		push (@tests, "if (m_param$paramcount.isNull() || m_param$paramcount->isVoid()) {ycp2error(\"Parameter %d is nil, %s is required\", $paramcount, \"$type\"); return YCPVoid();}");
 
 	    }
 	    $type = "m_param" . $paramcount . "->as" . $type . "()" ;

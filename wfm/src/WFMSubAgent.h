@@ -51,14 +51,6 @@ public:
     bool start ();
 
     /**
-     * Starts the subagent and evaluates one term to ensure that the component
-     * is created (mainly for remote components). Can also check for the
-     * correct SuSE Version. Returns true on success otherwise false and sets
-     * the error number.
-     */
-    bool start_and_check (bool, int*);
-
-    /**
      * Returns the name of the subagent.
      */
     string get_name () const { return my_name; }
@@ -67,12 +59,6 @@ public:
      * Returns the handle of the subagent.
      */
     int get_handle () const { return my_handle; }
-
-    /**
-     * Returns the Y2Component of the subagent. This does not call start ().
-     * Is 0 if start () was not called or failed.
-     */
-    Y2Component* comp () { return my_comp; }
 
     /**
      * Returns the SCRAgent of the subagent. This does not call start ().

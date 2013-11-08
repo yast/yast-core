@@ -18,7 +18,7 @@
 
 
 Name:           yast2-core
-Version:        3.1.3
+Version:        3.1.4
 Release:        0
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -124,7 +124,6 @@ fi
 %dir %{yast_ybindir}
 %dir %{yast_plugindir}
 %dir %{yast_scrconfdir}
-%dir %{yast_execcompdir}/servers
 %dir %{yast_execcompdir}/servers_non_y2
 
 /usr/bin/ycpc
@@ -136,7 +135,6 @@ fi
 %{yast_ybindir}/elf-arch
 %{yast_plugindir}/lib*.so.*
 %{yast_scrconfdir}/*.scr
-%{yast_execcompdir}/servers/scr
 %{yast_execcompdir}/servers_non_y2/ag_*
 # perl part (stdio agents)
 # *: regular build compresses them, debug does not

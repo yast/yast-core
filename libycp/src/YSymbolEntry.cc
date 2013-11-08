@@ -155,7 +155,7 @@ YSymbolEntry::onlyDeclared () const
 }
 
 
-string 
+string
 YSymbolEntry::toString (bool with_type) const
 {
     string s = (with_type && m_global) ? "global " : "";

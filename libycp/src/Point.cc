@@ -58,7 +58,7 @@ using std::string;
 
 Point::Point (std::string filename, int line, const Point *point)
     // the argument is converted to string in SymbolEntry constructor
-    : m_entry (new YSymbolEntry (filename.c_str()))	
+    : m_entry (new YSymbolEntry (filename.c_str()))
     , m_line (line)
     , m_point (point)
 {
@@ -87,7 +87,7 @@ Point::~Point (void)
 }
 
 
-SymbolEntryPtr 
+SymbolEntryPtr
 Point::sentry (void) const
 {
     return m_entry;
