@@ -103,21 +103,10 @@ Example in ruby remove file `/tmp/foo`.
     raise "Removing file failed" unless result
 ```
 
-
 Implemented paths are
-
-Execute (.target.bash, string command [, map env])	execute command in bash
-Execute (.target.bash_output, string command [, map env]) execute command in bash, return output
-Execute (.target.bash_background, string command [, map env]) execute command in bash, don't wait for return
-Execute (.target.symlink, string old, string new)	create symbolic link
-Execute (.target.mkdir, string dir [, integer mode])	create directory (with mode)
-Execute (.target.remove, string file)			remove file
-Execute (.target.inject, string file, string path)	inject file to target system
-Execute (.target.control.printer_reset, string device)	reset a printer device
 
 Execute (.target.mount, ...)
 Execute (.target.umount, ...)
-Execute (.target.smbmount, ...)
 Execute (.target.insmod, ...)
 Execute (.target.modprobe, ...)
 
