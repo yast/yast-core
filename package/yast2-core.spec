@@ -33,7 +33,7 @@ BuildRequires:	flex bison
 # incompatible change, parser.h -> parser.hh
 BuildRequires:  automake >= 1.12
 # needed for all yast packages
-BuildRequires:	yast2-devtools >= 3.0.6
+BuildRequires:	yast2-devtools >= 3.1.10
 # testsuite
 BuildRequires:	dejagnu
 # autodocs
