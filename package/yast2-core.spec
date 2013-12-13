@@ -84,10 +84,10 @@ YCP debugger client.
 %build
 
 %ifarch %arm
-# disable autodoc building on ARM architecture
-sed -i Makefile.am -e 's/autodocs//'
-sed -i Makefile.in -e 's/autodocs//'
+%if 0%{?qemu_user_space_build}
+# disable autodoc building on qemu-arm only
 sed -i SUBDIRS -e 's/autodocs//'
+%endif
 %endif
 
 export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
