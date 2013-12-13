@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Dec 13 10:53:16 UTC 2013 - guillaume@opensuse.org
+
+- Fix ARM build:
+  * disable autodoc on qemu-arm only instead of all ARM builds
+  * Update file list to sed to disable autodoc
+
+-------------------------------------------------------------------
 Fri Nov  8 10:25:56 UTC 2013 - jreidinger@suse.com
 
 - removed obsolete .target.control.printer_reset, .target.smbmount,
