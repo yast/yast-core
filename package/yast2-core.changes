@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Mon Mar 17 12:52:24 UTC 2014 - jreidinger@suse.com
 
-- do not precede executable programs over builtin components
+- do not prefer executable programs over builtin components
 - 3.1.6
 
 -------------------------------------------------------------------
