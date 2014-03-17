@@ -18,7 +18,7 @@
 
 
 Name:           yast2-core
-Version:        3.1.5
+Version:        3.1.6
 Release:        0
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
