@@ -47,6 +47,11 @@ bool Y2CCProgram::isServerCreator() const
 Y2Component *
 Y2CCProgram::createInLevel (const char *name, int level, int current_level) const
 {
+    // do not create component in wrong level, otherwise program precedence is
+    // ignored see https://github.com/yast/yast-ruby-bindings/issues/107
+    if (current_level != level)
+      return NULL;
+
     string root;
 
     if (strncmp (name, "chroot=", 7) == 0)

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar 17 12:52:24 UTC 2014 - jreidinger@suse.com
+
+- do not precede executable programs over builtin components
+- 3.1.6
+
+-------------------------------------------------------------------
 Fri Dec 13 10:53:16 UTC 2013 - guillaume@opensuse.org
 
 - Fix ARM build:
