@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue May  6 15:04:25 UTC 2014 - mvidner@suse.com
+
+- Do not mention YCP in signal handler (by tcech)
+- 3.1.7
+
+-------------------------------------------------------------------
 Mon Mar 17 12:52:24 UTC 2014 - jreidinger@suse.com
 
 - do not prefer executable programs over builtin components
