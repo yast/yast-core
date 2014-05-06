@@ -241,7 +241,7 @@ signal_handler (int sig)
     // bnc#493152#c19 only signal-safe functions are allowed
     char buffer[200];
     int n = snprintf (buffer, sizeof(buffer),
-		      "YaST got signal %d at YCP file %s:%d\n",
+		      "YaST got signal %d at file %s:%d\n",
 		      sig, YaST::ee.filename().c_str(), YaST::ee.linenumber());
     if (n >= (int)sizeof(buffer) || n < 0)
 	strcpy (buffer, "YaST got a signal.\n");
