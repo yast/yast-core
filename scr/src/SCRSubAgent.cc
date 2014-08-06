@@ -94,6 +94,15 @@ SCRSubAgent::mount (SCRAgent *parent)
 	{
 	    my_comp->evaluate (term->value (i));
 	}
+
+        if (strcmp(parent->root(), "/"))
+        {
+            ycpdebug("SetRoot(%s)", parent->root());
+
+            YCPTerm setRoot("SetRoot");
+            setRoot->add(YCPString(parent->root()));
+            my_comp->evaluate(setRoot);
+        }
     }
 
     return YCPBoolean (true);
