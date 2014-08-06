@@ -40,7 +40,7 @@ inifile miniini(const char *file) {
 		continue;
 	    /* sections */
 	    case '[':
-		*c++;
+		c++;
 		c[strlen(c) - 1] = 0;
 		strncpy(section, cutblanks(c), MAXLINE);
 		break;
