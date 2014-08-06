@@ -1666,7 +1666,7 @@ YEIs::toStream (std::ostream & str) const
 std::ostream &
 YEIs::toXml (std::ostream & str, int /*indent*/ ) const
 {
-    str << "<yeis "; m_type->toXml( str, 0); str;
+    str << "<yeis "; m_type->toXml( str, 0);
     commentToXml(str);
     str << ">";
     str << "<expr>"; m_expr->toXml( str, 0); str << "</expr>";
