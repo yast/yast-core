@@ -121,8 +121,10 @@ string SCRAgent::targetPath( const string &path) const
 
     // we need full path if we have different root, otherwise
     // /mnt + tests/a.test result in /mnttests/a.test
-    if (path[0] != '/')
+    if (path[0] != '/') {
+        y2error("Root is not absolute, aborting: %s", path.c_str());
         abort();
+    }
 
     return string(root_path) + path;
 }
