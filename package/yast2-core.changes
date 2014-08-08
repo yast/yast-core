@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Aug  8 07:59:56 UTC 2014 - mvidner@suse.com
+
+- Pass SCR root path to stdio agents (bnc#879365).
+- 3.1.8
+
+-------------------------------------------------------------------
 Tue May  6 15:04:25 UTC 2014 - mvidner@suse.com
 
 - Do not mention YCP in signal handler (by tcech)
