@@ -384,7 +384,7 @@ bool ModulesConf::parseFile(const string &fname, ModuleEntry::Mode m, const bool
 	    temp_line.erase(temp_line.find_last_not_of (WHITESPACE) + 1, temp_line.length ());
 
 	    if (!temp_line.empty ())
-		if (backslash = (temp_line.substr (temp_line.length () - 1) == "\\"))
+		if ((backslash = (temp_line.substr (temp_line.length () - 1) == "\\")))
 		    line += temp_line.substr (0, temp_line.length () - 1);
 	} while (backslash && is);
 

@@ -21,7 +21,6 @@
 #include <ycp/y2log.h>
 #include <y2/Y2ComponentBroker.h>
 #include <scr/SCRAgent.h>
-#include "../../scr/src/StdioSCRAgent.h"
 #include <WFMSubAgent.h>
 
 
@@ -34,7 +33,7 @@ WFMSubAgent::WFMSubAgent (const string& name, int handle)
     // check if name is scr ( can be prepended by chroot like "chroot=/mnt:scr" )
     if (name.find("scr") == string::npos && name.find("chroot") != string::npos)
     {
-      y2internal("WFMSubAgent support chrrot only for scr component, but not '%s'.",
+      y2internal("WFMSubAgent supports chroot only for scr component, but not '%s'.",
         name.c_str());
       abort();
     }
