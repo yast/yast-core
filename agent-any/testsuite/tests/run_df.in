@@ -1,0 +1,22 @@
+Filesystem     1024-blocks    Used Available Capacity Mounted on
+/dev/vda2         14672896 5391208   7916888      41% /
+devtmpfs            973860       0    973860       0% /dev
+tmpfs               981768     216    981552       1% /dev/shm
+tmpfs               981768   18184    963584       2% /run
+tmpfs               981768       0    981768       0% /sys/fs/cgroup
+/dev/vda2         14672896 5391208   7916888      41% /.snapshots
+/dev/vda2         14672896 5391208   7916888      41% /var/tmp
+/dev/vda2         14672896 5391208   7916888      41% /var/spool
+/dev/vda2         14672896 5391208   7916888      41% /var/opt
+/dev/vda2         14672896 5391208   7916888      41% /var/log
+/dev/vda2         14672896 5391208   7916888      41% /tmp
+/dev/vda2         14672896 5391208   7916888      41% /var/lib/pgsql
+/dev/vda2         14672896 5391208   7916888      41% /var/lib/named
+/dev/vda2         14672896 5391208   7916888      41% /var/lib/mailman
+/dev/vda2         14672896 5391208   7916888      41% /var/crash
+/dev/vda2         14672896 5391208   7916888      41% /usr/local
+/dev/vda2         14672896 5391208   7916888      41% /srv
+/dev/vda2         14672896 5391208   7916888      41% /opt
+/dev/vda2         14672896 5391208   7916888      41% /home
+/dev/vda2         14672896 5391208   7916888      41% /boot/grub2/x86_64-efi
+/dev/vda2         14672896 5391208   7916888      41% /boot/grub2/i386-pc

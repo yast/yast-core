@@ -2,7 +2,9 @@
 
 `ag_anyagent(
   `Description (
-      (`Run("/bin/df -P 2>/dev/null")),         // real file name
+// in production, .run.df has
+//      (`Run("/bin/df -P 2>/dev/null")),
+      (`File("tests/run_df.in")),         // real file name
       "\n",                     // Comment
       true,                     // read-only
       (`List (
