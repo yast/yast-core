@@ -770,7 +770,7 @@ int IniParser::parse_helper(IniSection&ini)
 				    if (name_to_close.empty ()) {
 					// there was no name or we did not find the specified one
 					for (it = b; it != e; ++it) {
-					    if ((*it)->getReadBy() == i)
+					    if ((size_t)(*it)->getReadBy() == i)
 						break;
 					}
 					if (it == e) {
