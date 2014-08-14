@@ -958,7 +958,6 @@ ListType::detailedtype (constTypePtr type) const
 #if DO_DEBUG
     y2debug ("ListType::detailedtype '%s', '%s'", toString().c_str(), type->toString().c_str());
 #endif
-#warning unfinished
     if (type->isVoid()
 	|| type->isUnspec())
     {
@@ -1154,7 +1153,6 @@ MapType::detailedtype (constTypePtr type) const
 #if DO_DEBUG
     y2debug ("MapType::detailedtype '%s', '%s'", toString().c_str(), type->toString().c_str());
 #endif
-#warning not implemented
     if (type->isVoid()
 	|| type->isUnspec())
     {
