@@ -105,7 +105,8 @@ YCPValue Y2ProgramComponent::evaluate(const YCPValue& command)
 	    char **l_argv = new char *[l_argc + 1];
 
 	    l_argv[0] = argc >= 1 ? argv[0] : strdup(name().c_str()); // component name
-	    l_argv[1] = "stdio"; // I will speak to the server via his stdio
+            char stdio[] = "stdio";
+            l_argv[1] = stdio; // I will speak to the server via his stdio
             l_argv[2] = strdup(name().c_str());
 
 	    for (int arg = 1; arg < argc; arg++) l_argv[arg+2] = argv[arg];
@@ -216,24 +217,17 @@ YCPValue Y2ProgramComponent::doActualWork(const YCPList& arglist, Y2Component *u
     else   // this is a real liby2 component
     {
 	// send arguments via stdio
-	argc = 4;   // name, -s
-	argv = new char *[argc+1];
-	argv[0] = strdup(name().c_str());
-	argv[1] = argv[0];
-	argv[2] = "-s";    // get arguments on stdin
-	argv[3] = "stdio"; // communicate via stdio
-	argv[argc] = NULL;
+        char * cname = strdup(name().c_str());
+        char   s[]     = "-s";    // get arguments on stdin
+        char   stdio[] = "stdio"; // communicate via stdio
+        char * argv[]  = { cname, cname, s, stdio, NULL};
 
 	// launch component if not yet done
 	if (pid == -1) launchExternalProgram(argv);
 
 	sendToExternal(arglist);   // now send arguments
 
-	if (argv)
-	{
-	    if (argv[0]) free(argv[0]);
-	    delete[] argv;
-	}
+        free(cname);
     }
 
     // Communication loop with module. Module sends 'result(...)',
