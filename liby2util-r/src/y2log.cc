@@ -95,16 +95,6 @@ static void do_log_syslog( const char* logmessage );
 static void do_log_yast( const char* logmessage );
 static void shift_log_files(string filename);
 
-static const char *log_messages[] = {
-    "debug",
-    "milestone",
-    "warning",
-    "error",
-    "error",
-    "error",
-    "error",
-};
-
 /**
  * y2log must use a private copy of stderr, esp. in case we're always logging
  * to it (option "-l -"). Some classes like liby2(ExternalProgram) redirect
