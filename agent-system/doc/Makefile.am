@@ -5,5 +5,5 @@
 SUBDIRS =
 
 htmldir = $(docdir)/agent-system
-html_DATA = systemagent.txt passwdagent.txt
+html_DATA = systemagent.md
 EXTRA_DIST = $(html_DATA)
