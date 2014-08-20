@@ -10,7 +10,7 @@ of the target system.
 Target agent is attached to `.target` path. See all available `.target` commands below.
 Target agent can be also invoked via WFM where it lives under `.local` root.
 Difference between WFM `.local` and SCR `.target` is only after SCR switch,
-which is used for example in installation, when `.local` always work always on
+which is used for example in installation, when `.local` always work on
 root `/` and `.target` work on SCR target.
 
 ## Commands For Execute
@@ -121,7 +121,11 @@ The return value is true or false, depending of the success
 Example in ruby how to mount floppy.
 
 ```
-    result = Yast::SCR.Execute(Yast::Path.new(".target.mount"), ["/dev/floppy", "/floppy", "/var/log/y2mountlog"], "-t msdos")
+    result = Yast::SCR.Execute(
+      Yast::Path.new(".target.mount"),
+      ["/dev/floppy", "/floppy", "/var/log/y2mountlog"],
+      "-t msdos"
+    )
     raise "Mounting floppy failed" unless result
 ```
 
