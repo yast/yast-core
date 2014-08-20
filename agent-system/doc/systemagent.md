@@ -7,7 +7,7 @@ of the target system.
 
 ## Paths
 
-Target agent are attached to `.target` under which lives commands.
+Target agent is attached to `.target` path. See all available `.target` commands below.
 Target agent can be also invoked via WFM where it lives under `.local` root.
 Difference between WFM `.local` and SCR `.target` is only after SCR switch,
 which is used for example in installation, when `.local` always work always on
@@ -30,7 +30,7 @@ Executes command in bash. _Returns_ map including `"exit"` for exit code,
 `"stdout"` for command stdout and `"stderr"` for command stderr. _Arguments_ are
 command as string and optional map of environment variables.
 
-Example in ruby that create temporary file and raise exception if not succeed.
+Example in ruby that creates temporary file and raises exception in case of failure.
 
 ```
     result = Yast::SCR.Execute(Yast::Path.new(".target.bash_output"), "mktemp")
@@ -38,6 +38,12 @@ Example in ruby that create temporary file and raise exception if not succeed.
       raise "Failed to create temporary file with #{result["stderr"]}"
     end
     file_path = result["stdout"]
+```
+
+Example in ruby passing ENV variable VERBOSE=1
+
+```
+  result = Yast::SCR.Execute(Yast::Path.new(".target.bash_output"), "mktemp", {"VERBOSE" => "1"})
 ```
 
 ### `.bash_input`
@@ -58,7 +64,7 @@ Executes command in bash in background. _Returns_ zero if succeed and -1 if
 failed. _Arguments_ are command as string and optional map of environment
 variables.
 
-Example in ruby that do time consuming job.
+Example in ruby that does time consuming job.
 
 ```
     result = Yast::SCR.Execute(Yast::Path.new(".target.bash_background"), "sleep 1000000")
@@ -69,7 +75,7 @@ Example in ruby that do time consuming job.
 
 ### `.symlink`
 Creates symlink. _Returns_ boolean depending on success. _Arguments_ are two
-strings one with source path and second with target one.
+strings, one with source path and second with target one.
 
 Example in ruby create symlink `/tmp2` pointing to `/tmp`
 
@@ -82,7 +88,7 @@ Example in ruby create symlink `/tmp2` pointing to `/tmp`
 
 Creates directory and all its parents. _Returns_ boolean depending on success.
 _Arguments_ are string with path and optional integer with mode. If mode is not
-specified 0755 is used.
+specified, 0755 is used.
 
 Example in ruby create directory `/tmp/foo/bar` with mode 0700.
 
@@ -94,7 +100,7 @@ Example in ruby create directory `/tmp/foo/bar` with mode 0700.
 ### `.remove`
 Removes a file. _Returns_ boolean depending on success.
 _Argument_ is string with path to file.
-+note+: Cannot remove a directory
+*note*: Cannot remove a directory
 
 Example in ruby remove file `/tmp/foo`.
 
@@ -106,9 +112,9 @@ Example in ruby remove file `/tmp/foo`.
 ### `.mount`
 
 Mounts a (block) device at a mountpoint.
-_Arguments_ are array with device, mountpoint strings and optional trird element
+_Arguments_ are array with device, mountpoint strings and optional third element
 for logfile and optional options to pass to mount.
-+note+: Deprecated use bash agent directly to run mount
+*note*: Deprecated use bash agent directly to run mount
 
 The return value is true or false, depending of the success
 
@@ -123,7 +129,7 @@ Example in ruby how to mount floppy.
 
 Unmounts a (block) device at a mountpoint.
 _Argument_ is mountpoint
-+note+: Deprecated use bash agent directly to run umount
+*note*: Deprecated use bash agent directly to run umount
 
 The return value is true or false, depending of the success
 
@@ -138,7 +144,7 @@ Example in ruby how to umount floppy.
 
 Load module in target system.
 _Arguments_ are module and options for it.
-+note+: Deprecated use bash agent directly to run insmod
+*note*: Deprecated use bash agent directly to run insmod
 
 The return value is true or false, depending of the success
 
@@ -153,7 +159,7 @@ Example in ruby how to insert module.
 
 Load module in target system.
 _Arguments_ are module and options for it.
-+note+: Deprecated use bash agent directly to run modprobe
+*note*: Deprecated use bash agent directly to run modprobe
 
 The return value is true or false, depending of the success
 
@@ -168,13 +174,13 @@ Example in ruby how to insert module.
 
 ### `.string`
 
-Reads/Writes file given content to file.
-_Arguments for writing_can have two types. The first is string filename and string value.
+Reads/writes file as a single string.
+_Arguments for writing_ can have two types. The first is string filename and string value.
 The second one is array with string filename and integer filemode and string content.
 _Arguments for reading_ is only string filename.
 
-The return value is content of file or nil if failed for reading and true or false, depending of
-the success, for writing.
+The return value fore reading is content of file or nil in case of failure.
+For writing it return true or false, depending of the success.
 
 Example in ruby how to read file content.
 
@@ -245,7 +251,7 @@ Example in ruby how to read/write byteblock.
 ```
 
 ### `.passwd`
-Write only command to set or modify the encrypted password of already existing 
+Write-only command to set or modify the encrypted password of already existing 
 user in /etc/passwd and /etc/shadow.
 _Argument_ is crypted password.
 The return value is true or false, depending of the success
@@ -258,7 +264,7 @@ Example in ruby how to change root password.
 ```
 
 ### `.tmpdir`
-Read only command to return the (instance specific) directory for storing temporary
+Read-only command to return the (instance specific) directory for storing temporary
 files. The directory (and its contents) will be removed by the SystemAgent
 destructor (usually when yast2 exits)
 
@@ -269,7 +275,7 @@ Example in ruby how to read tmpdir.
 ```
 
 ### `.dir`
-Read only command to read a directory. Returns a list of strings, one string for
+Read-only command to read a directory. Returns a list of strings, one string for
 each file contained in the directory path is pointing to.
 The entries '.' and '..' are NOT returned. Returns nil and
 doesn't log an error, if path does not point to a readable directory.
@@ -285,7 +291,7 @@ Example in ruby how to get list of files in directory.
 ```
 
 ### `.size`
-Read only command to read current size of file.
+Read-only command to read current size of file.
 Returns -1 if the file does not exist
 
 _Argument_ is string path to file.
@@ -297,20 +303,20 @@ Example in ruby how to get size of file.
 ```
 
 ### `.stat`
-Read only command to return a map with file information (see stat(2)). If
+Read-only command to return a map with file information (see stat(2)). If
 the file does not exist return an empty map.
 
 _Argument_ is string path to file.
 
 ### `.lstat`
-Read only command to return a map with file information (see lstat(2)). If
+Read-only command to return a map with file information (see lstat(2)). If
 the file does not exist return an empty map. Only difference to stat is that
-lstat do not follow link and return info about link itself
+lstat does not follow link(s) and returns info about link itself
 
 _Argument_ is string path to file.
 
 ### `.symlink`
-Read only command to get the content of the symbolic link filename. If the filename
-does not exist or is no symbolic link, nil is returned and an error logged.
+Read-only command to get the content of the symbolic link filename. If the filename
+does not exist or is not symbolic link, nil is returned and an error logged.
 
 _Argument_ is string path to symlink.
