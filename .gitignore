@@ -44,3 +44,5 @@ tmp.*
 */testsuite/site.exp
 *.in.test
 /config.h.in~
+/.yardoc
+/doc
