@@ -70,7 +70,6 @@ static bool log_to_syslog = false;
 static FILE *Y2CHANGES_STDERR = stderr;		/* Default output */
 
 /* static prototypes */
-static void do_log_syslog( const char* logmessage );
 static void do_log_yast( const char* logmessage );
 static void shift_log_files(string filename);
 
@@ -173,13 +172,6 @@ void y2changes_function (logcategory_t category, const char *format, ...)
     }
 
     va_end(ap);
-}
-
-
-static
-void do_log_syslog( const char* logmessage )
-{
-    syslog (LOG_NOTICE, "%s", logmessage);
 }
 
 /**

@@ -157,7 +157,6 @@ YCPListRep::shallowCopy() const
 YCPList
 YCPListRep::functionalAdd (const YCPValue& val, bool prepend) const
 {
-#warning TODO: implement this better. Avoid duplicating the list.
     YCPList newlist;
     newlist->reserve (size() + 1);
     if (prepend)
