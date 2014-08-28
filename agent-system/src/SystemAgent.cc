@@ -363,7 +363,9 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	return YCPNull ();
     }
 
-    filename = targetPath(filename);
+    // yast2 command need special handling as it search in y2path (bnc#891053)
+    if (cmd != "yast2")
+      filename = targetPath(filename);
 
     if (cmd == "string")
     {
@@ -474,10 +476,26 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 
 	if (cmd == "yast2")
 	{
-	    string tmp = Y2PathSearch::findy2 ("data/" + filename); // FIXME use ydatadir
-	    if (!tmp.empty ())
+            string path;
+            bool found = false;
+            for (int i = 0; i < Y2PathSearch::numberOfComponentLevels(); ++i)
+            {
+              path = Y2PathSearch::searchPath(Y2PathSearch::GENERIC, i);
+              if (path.back() != '/')
+                path.append("/");
+              path.append("data/" + filename);
+              // respect changed root
+              path = targetPath(path);
+              // try if we can read file. It also test existency
+              if (access(path.c_str(), R_OK)  == 0)
+              {
+                found = true;
+                break;
+              }
+            }
+	    if (found)
 	    {
-		filename = tmp;
+		filename = path;
 	    }
 	    else
 	    {
