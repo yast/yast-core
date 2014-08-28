@@ -65,11 +65,18 @@ Y2CCProgram::createInLevel (const char *name, int level, int current_level) cons
     }
 
     string file;
+    struct stat buf;
 
     if (index (name, '/') == NULL)	// no slash found
     {
-	file = Y2PathSearch::findy2exe (root, name, creates_servers,
-					creates_non_y2, level);
+        for (int i = 0; i < Y2PathSearch::numberOfComponentLevels(); ++i)
+        {
+          file = Y2PathSearch::findy2exe (root, name, creates_servers,
+					creates_non_y2, i);
+          // stop if we found file
+          if (!file.empty() && access (file.c_str (), X_OK) == 0)
+            break;
+        }
 	if (file.empty ())		// not found
 	    return 0;
     }
@@ -80,7 +87,6 @@ Y2CCProgram::createInLevel (const char *name, int level, int current_level) cons
 	file = name;
     }
 
-    struct stat buf;
     if (stat (file.c_str (), &buf) == 0)
     {
 	// Check at least if it is executable (for others) and
@@ -91,6 +97,11 @@ Y2CCProgram::createInLevel (const char *name, int level, int current_level) cons
 	    return new Y2ProgramComponent (root, file.c_str (), name,
 					   creates_non_y2, level);
 	}
+        else
+        {
+            y2error("Found program file '%s' is not regular file or executable",
+              file.c_str());
+        }
     }
 
     return 0;		// no such file or no read rights for directory
