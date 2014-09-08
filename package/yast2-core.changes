@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Sep  8 07:40:46 UTC 2014 - mvidner@suse.com
+
+- Enable buffering for parsing agent output (bnc#854809).
+- 2.17.46
+
+-------------------------------------------------------------------
 Wed May 23 15:35:00 CEST 2012 - mvidner@suse.cz
 
 - agent-ini: do not truncate strings longer than 2048
