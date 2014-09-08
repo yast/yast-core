@@ -1,5 +1,4 @@
 @HEADER-COMMENT@
-
 @HEADER@
 # obviously
 BuildRequires:  boost-devel gcc-c++
@@ -21,16 +20,27 @@ BuildRequires:  libblocxx-devel
 # libycp includes crypto built-ins
 BuildRequires:  libxcrypt-devel
 
-Summary:        -
+Summary:        YaST2 - Core Libraries
 Requires:       perl = %{perl_version}
 Provides:       liby2util = 2.16.1
 Obsoletes:      liby2util < 2.16.1
 
 %description
--
+This package contains the scanner, parser, and interpreter runtime
+library for the YCP scripting language used in YaST2.
+
+
+
+Authors:
+--------
+    Arvin Schnell <arvin@suse.de>
+    Klaus Kaempf <kkaempf@suse.de>
+    Mathias Kettner <kettner@suse.de>
+    Stefan Hundhammer <sh@suse.de>
 
 @HEADER-DEVEL@
-Summary:	-
+License:        GPL-2.0+
+Summary:        YaST2 - Include Files and Documentation for Core Libraries
 Provides:       liby2util-devel = 2.16.1
 Obsoletes:      liby2util-devel < 2.16.1
 Requires:       libxcrypt-devel hwinfo-devel
@@ -41,7 +51,18 @@ Requires:       glibc-devel libstdc++-devel pcre-devel libblocxx-devel sysfsutil
 Requires:       flex
 
 %description devel
--
+This package contains include and documentation files for developing
+applications using the YaST2 YCP interpreter.
+
+
+
+Authors:
+--------
+    Arvin Schnell <arvin@suse.de>
+    Klaus Kaempf <kkaempf@suse.de>
+    Mathias Kettner <kettner@suse.de>
+    Stefan Hundhammer <sh@suse.de>
+    Stanislav Visnovsky <visnov@suse.cz>
 
 @PREP@
 
