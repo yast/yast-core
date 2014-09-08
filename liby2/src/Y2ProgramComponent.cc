@@ -324,6 +324,7 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 
     // Prepare parser
     parser.setInput(from_external[0], argv[0]);  // set parser input to child output
+    parser.setBuffered();
 }
 
 
