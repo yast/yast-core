@@ -72,11 +72,17 @@ dnl	Y2CORE_CFLAGS="-std=c++0x"
 	AC_MSG_RESULT([older than c++0x])
 	;;
 esac
+
 AC_SUBST(Y2CORE_CFLAGS) dnl included in {C,CXX}FLAGS in YAST2-CHECKS-PROGRAM 
+
+AC_CHECK_HEADERS(xcrypt.h)
 
 AC_CHECK_LIB(owcrypt, crypt_gensalt_rn,
              [CRYPTO_LIBS="-lowcrypt -lcrypt"],
-             [CRYPTO_LIBS="-lcrypt"])
+             AC_CHECK_LIB(xcrypt, crypt_gensalt_rn,
+                    [CRYPTO_LIBS="-lxcrypt"],
+                    [CRYPTO_LIBS="-lcrypt"])
+)
 AC_SUBST(CRYPTO_LIBS)
 
 AX_CHECK_DOCBOOK

@@ -21,8 +21,14 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include "config.h"
+
 extern "C" {
+#ifdef HAVE_XCRYPT_H
+#include <xcrypt.h>
+#else
 #include <crypt.h>
+#endif
 }
 
 #include "y2log.h"
