@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Oct  8 07:55:04 UTC 2014 - mvidner@suse.com
+
+- Allow SCR.Read(.target.yast2, ...) on chroots (bnc#891053).
+
+-------------------------------------------------------------------
 Mon Sep  8 08:59:10 UTC 2014 - mvidner@suse.com
 
 - Enable buffering for parsing agent output (bnc#854809).
