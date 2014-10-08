@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Oct  8 12:02:35 UTC 2014 - mvidner@suse.com
+
+- Fixed searching for programs in Y2DIR
+  (gh#yast/yast-ruby-bindings#107)
+- 3.1.12
+
+-------------------------------------------------------------------
 Wed Oct  8 07:55:04 UTC 2014 - mvidner@suse.com
 
 - Allow SCR.Read(.target.yast2, ...) on chroots (bnc#891053).
