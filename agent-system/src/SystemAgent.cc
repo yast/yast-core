@@ -363,7 +363,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	return YCPNull ();
     }
 
-    // yast2 command need special handling as it search in y2path (bnc#891053)
+    // .yast2 needs special handling as it searches in y2path (bnc#891053)
     if (cmd != "yast2")
       filename = targetPath(filename);
 
@@ -480,18 +480,18 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
             bool found = false;
             for (int i = 0; i < Y2PathSearch::numberOfComponentLevels(); ++i)
             {
-              path = Y2PathSearch::searchPath(Y2PathSearch::GENERIC, i);
-              if (path.back() != '/')
-                path.append("/");
-              path.append("data/" + filename);
-              // respect changed root
-              path = targetPath(path);
-              // try if we can read file. It also test existency
-              if (access(path.c_str(), R_OK)  == 0)
-              {
-                found = true;
-                break;
-              }
+                path = Y2PathSearch::searchPath(Y2PathSearch::GENERIC, i);
+                if (path.back() != '/')
+                    path.append("/");
+                path.append("data/" + filename);
+                // respect changed root
+                path = targetPath(path);
+                // try if the file exists and we can read it
+                if (access(path.c_str(), R_OK)  == 0)
+                {
+                    found = true;
+                    break;
+                }
             }
 	    if (found)
 	    {
