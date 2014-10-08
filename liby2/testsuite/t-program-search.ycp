@@ -1,5 +1,0 @@
-{
-    // test that SCR can find programs in Y2DIR:
-    SCR::RegisterAgent(.program_search, `ag_program_search());
-    return SCR::Read(.program_search) == 42;
-}

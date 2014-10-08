@@ -1,5 +1,6 @@
 #!/bin/bash
-set -o pipefail
 PATH=../../base/src:/usr/lib/YaST2/bin:$PATH
-Y2DIR=`pwd` y2base -l /dev/stdout ./t-program-search.ycp stdio \
-    | { grep '<[2345]>'; true; } # display only errors, but dont fail on none
+# This will return
+# 0 if ag_program_search can be found
+# 5 if it cannot
+echo '`Read(.)' | Y2DIR=`pwd` y2base stdio ag_program_search
