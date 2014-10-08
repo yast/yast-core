@@ -1,0 +1,5 @@
+#!/bin/bash
+set -o pipefail
+PATH=../../base/src:/usr/lib/YaST2/bin:$PATH
+Y2DIR=`pwd` y2base -l /dev/stdout ./t-program-search.ycp stdio \
+    | { grep '<[2345]>'; true; } # display only errors, but dont fail on none
