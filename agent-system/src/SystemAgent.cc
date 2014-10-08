@@ -481,9 +481,7 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
             for (int i = 0; i < Y2PathSearch::numberOfComponentLevels(); ++i)
             {
                 path = Y2PathSearch::searchPath(Y2PathSearch::GENERIC, i);
-                if (path.back() != '/')
-                    path.append("/");
-                path.append("data/" + filename);
+                path.append("/data/" + filename);
                 // respect changed root
                 path = targetPath(path);
                 // try if the file exists and we can read it
