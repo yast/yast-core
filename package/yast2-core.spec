@@ -18,7 +18,7 @@
 
 
 Name:           yast2-core
-Version:        3.1.12
+Version:        3.1.13
 Release:        0
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -58,12 +58,7 @@ Requires:	yast2-core = %version
 Summary:	YaST2 - Core Libraries
 Provides:	liby2util-devel = 2.16.1
 Obsoletes:	liby2util-devel < 2.16.1
-Requires:	hwinfo-devel
-Requires:	glibc-devel libstdc++-devel sysfsutils
-# required for libscr
-# for FlexLexer.h; I think that this dependency could be made
-# private but it seems not worth the effort
-Requires:	flex
+Requires:	glibc-devel libstdc++-devel
 
 %description devel
 This package contains include and documentation files for developing
