@@ -31,11 +31,14 @@ pkginclude_HEADERS =					\
 	YCPCodeCompare.h				\
 	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
-	SymbolTable.h Scanner.h Parser.h 		\
+	SymbolTable.h Parser.h				\
 	YSymbolEntry.h YBreakpoint.h			\
 	y2log.h ycpless.h pathsearch.h			\
 	y2string.h					\
 	ExecutionEnvironment.h
+
+# do not install Scanner.h to avoid "flex" package dependency
+EXTRA_DIST=Scanner.h
 
 #<INSTALL-HEADER-TARGET>
 

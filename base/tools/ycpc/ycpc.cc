@@ -21,6 +21,7 @@
 #include <YCP.h>
 #include <ycp/YCode.h>
 #include <ycp/Parser.h>
+#include <ycp/Scanner.h>
 #include <ycp/Bytecode.h>
 #include <ycp/Xmlcode.h>
 #include <ycp/Import.h>
