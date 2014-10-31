@@ -2,13 +2,8 @@ language: cpp
 compiler:
     - gcc
 before_install:
-    - curl http://download.opensuse.org/repositories/YaST:/Head:/Travis/xUbuntu_12.04/Release.key | sudo apt-key add -
-    - echo "deb http://download.opensuse.org/repositories/YaST:/Head:/Travis/xUbuntu_12.04/ ./" | sudo tee -a /etc/apt/sources.list
-    - sudo apt-get update -q
-    - sudo apt-get install -y --no-install-recommends docbook-xsl xsltproc yast2-devtools bison flex libboost-dev pkg-config expect dejagnu libxcrypt-dev doxygen
-    # add extra locales for tests (see  http://docs.travis-ci.com/user/common-build-problems/),
-    # upgrade automake to process flex/bison files properly
-    - sudo apt-get --reinstall install language-pack-en language-pack-cs automake
+    - wget https://raw.githubusercontent.com/yast/yast-devtools/master/travis-tools/travis_setup.sh
+    - sh ./travis_setup.sh -p "docbook-xsl xsltproc yast2-devtools bison flex libboost-dev pkg-config expect dejagnu libxcrypt-dev doxygen language-pack-en language-pack-cs automake"
 script:
     - make -f Makefile.cvs
     - make -j 4
