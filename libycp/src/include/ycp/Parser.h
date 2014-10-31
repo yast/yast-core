@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <string>
 
-#include "ycp/Scanner.h"
 #include "ycp/YCode.h"
 
 class Scanner;
