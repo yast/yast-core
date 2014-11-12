@@ -740,7 +740,7 @@ AnyAgent::readFile (const YCPValue & arg)
     {
         const char *s = ss.c_str();
         // Check modify time if we can use cache
-        if (stat (s, &buf) != 0)
+        if (stat (targetPath(s).c_str(), &buf) != 0)
         {
             mtime = 0;	// error case: reset mtime
             if (errno == ENOENT)
