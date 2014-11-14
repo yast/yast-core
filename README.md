@@ -10,7 +10,7 @@ Agents are used to modify the underlaying system. Their most important feature i
 Agents for target system are managed by SCR instance. Each agent is attached to its unique path. The path is special YaST data type(TODO link). An agent itself is defined
 by its scrconf file where is specified if some base together with its parameters that should be used or path to a binary if the agent is implemented by script.
 Agents that is implemented in script communicate via YCP protocol and have predefined methods. Agents using base just configure such base. The base are
-library that is registered also to SCR, but without path. It is usually parser, that allows easier reading and writing files. For example of such library see [system agent documentation](http://yast-core.readthedocs.org/en/latest/doc/systemagent).
+library that is registered also to SCR, but without path. It is usually parser, that allows easier reading and writing files. For example of such library see [system agent documentation](doc/systemagent).
 
 ### Hints
 - Agents can be registered during runtime. See [SCR#RegisterAgent](http://www.rubydoc.info/github/yast/yast-ruby-bindings/Yast/SCR#RegisterAgent-class_method)
