@@ -5,5 +5,5 @@
 SUBDIRS =
 
 htmldir = $(docdir)/agent-system
-html_DATA = systemagent.md
+html_DATA =
 EXTRA_DIST = $(html_DATA)
