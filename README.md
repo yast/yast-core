@@ -6,7 +6,7 @@ Jenkins: [![Jenkins Build](http://img.shields.io/jenkins/s/https/ci.opensuse.org
 The core part of [YaST](http://yast.github.io) provides component system, agent infrastructure and for backward compatibility implementation of YCP language.
 
 ## Agents Infrastructure
-Agents are used to modify the underlaying system. Their the most important feature is that it can be switched to different target which is heavily used during installation.
+Agents are used to modify the underlaying system. Their most important feature is that it can be switched to different target which is heavily used during installation.
 Agents for target system are managed by SCR instance. Each agent is attached to its unique path. The path is special YaST data type(TODO link). An agent itself is defined
 by its scrconf file where is specified if some base together with its parameters that should be used or path to a binary if the agent is implemented by script.
 Agents that is implemented in script communicate via YCP protocol and have predefined methods. Agents using base just configure such base. The base are
