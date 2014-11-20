@@ -96,6 +96,7 @@ export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
 
 %install
 %yast_install
+make installcheck Y2DIR="$RPM_BUILD_ROOT/%{yast_dir}"
 
 mkdir -p "$RPM_BUILD_ROOT"%{yast_logdir}
 %perl_process_packlist
