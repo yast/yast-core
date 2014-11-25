@@ -1,9 +1,4 @@
 {
-    string cwd() {
-        map out = (map) SCR::Execute(.target.bash_output, "pwd");
-        return deletechars(out["stdout"]:"", "\n");
-    }
-
     any with_scr_root(string root, any () action) {
         string component = sformat("chroot=%1:scr", root);
         boolean check_version = false;
@@ -41,6 +36,6 @@
         return read == expected;
     }
 
-    string root = sformat("%1/data", cwd());
+    string root = sformat("%1/data", WFM::Args(0));
     return with_scr_root(root, test_anyagent);
 }

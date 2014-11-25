@@ -1,9 +1,10 @@
 #!/bin/sh
-if false; then
-    export Y2DEBUG=1
-    STRACE="strace -ostrace.log -efile -f"
-fi
-R=$RPM_BUILD_ROOT
-export LD_LIBRARY_PATH=$R/usr/lib64:$R/usr/lib64/YaST2/plugin
-export Y2DIR=$R/usr/share/YaST2:$R/usr/lib64/YaST2
-$STRACE $R/usr/lib/YaST2/bin/y2base -l ${1%.*}.log ./$1 testsuite
+T=../..                         # Top dir
+L=src/.libs                     # Lib subdir
+AG_ANY_DIR=$T/agent-any/$L
+ln -snf . $AG_ANY_DIR/plugin
+export Y2DIR=$AG_ANY_DIR
+export LD_LIBRARY_PATH=$T/liby2util-r/$L:$T/libycp/$L:$T/liby2/$L:$T/libscr/$L:$T/wfm/$L:$T/scr/$L
+# ignore incompatible ruby-bindings while developing
+export Y2DISABLELANGUAGEPLUGINS=1
+../$L/y2base -l ${1%.*}.log ./$1 -S "($(pwd))" testsuite
