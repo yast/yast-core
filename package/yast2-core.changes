@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Tue Nov 25 09:59:49 UTC 2014 - mvidner@suse.com
+
+- ag_any: respect target root also when the file
+  does not exist in the original root (boo#903747).
+  If applied at installation time as a DUD, it fixes
+  "Internal error... in SaveModulesToLoad" during
+  an upgrade to oS 13.2.
+- 3.1.12.1
+
+-------------------------------------------------------------------
 Wed Oct  8 12:02:35 UTC 2014 - mvidner@suse.com
 
 - Fixed searching for programs in Y2DIR

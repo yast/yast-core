@@ -10,6 +10,7 @@ Makefile
 Makefile.in
 /Makefile.am
 Makefile.am.common
+compile
 config.h
 config.cache
 config.guess
