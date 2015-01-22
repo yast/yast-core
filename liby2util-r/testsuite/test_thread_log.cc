@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #define NUM_THREADS     5
 
 #include <y2util/y2log.h>
