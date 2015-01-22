@@ -230,7 +230,7 @@ Y2WFMComponent::get_env_lang () const
     for (size_t i = 0; i < sizeof (names)/sizeof (names[0]); i++)
     {
 	const char* tmp = getenv (names[i]);
-	if (tmp)
+	if (tmp && tmp[0] != '\0')
 	    return tmp;
     }
 
