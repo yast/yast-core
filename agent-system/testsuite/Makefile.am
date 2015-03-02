@@ -19,6 +19,7 @@ noinst_PROGRAMS = runag_system
 runag_system_SOURCES = runag_system.cc
 runag_system_LDADD = ${AGENT_LIBADD}
 runag_system_LDFLAGS = 				\
+	${SANITIZER_LDFLAGS}			\
 	-Xlinker --whole-archive		\
 	../src/libpy2ag_system.la	\
 	-Xlinker --no-whole-archive

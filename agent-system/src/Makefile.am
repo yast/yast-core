@@ -11,7 +11,7 @@ libpy2ag_system_la_SOURCES =			\
 	ShellCommand.cc ShellCommand.h		\
 	SystemAgent.cc SystemAgent.h
 
-libpy2ag_system_la_LDFLAGS = -version-info 2:0
+libpy2ag_system_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 2:0
 libpy2ag_system_la_LIBADD = @AGENT_LIBADD@
 
 AM_CPPFLAGS = @AGENT_INCLUDES@

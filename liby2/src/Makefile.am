@@ -22,13 +22,13 @@ liby2_la_SOURCES = \
 	Y2PluginComponent.cc Y2CCPlugin.cc		\
 	Y2StdioComponent.cc Y2CCStdio.cc
 
-liby2_la_LDFLAGS = -version-info 4:0
+liby2_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 4:0
 # pthread added (74501)
 liby2_la_LIBADD = ${Y2UTIL_LIBS} -lutil -ldl -lpthread
 
 libpy2serial_la_SOURCES =				\
 	Y2SerialComponent.cc Y2CCSerial.cc
-libpy2serial_la_LDFLAGS = -version-info 2:0
+libpy2serial_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 2:0
 
 AM_CPPFLAGS =						\
 	-I$(srcdir)/../../libycp/src/include		\

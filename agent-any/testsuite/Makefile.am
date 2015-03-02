@@ -19,6 +19,7 @@ runag_anyagent_SOURCES = runag_anyagent.cc
 runag_anyagent_LDADD = ${AGENT_LIBADD}
 # why is whole-archive necessary?
 runag_anyagent_LDFLAGS = \
+	${SANITIZER_LDFLAGS}			\
 	-Xlinker --whole-archive		\
 	../src/libpy2ag_anyagent.la		\
 	-Xlinker --no-whole-archive

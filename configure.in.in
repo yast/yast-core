@@ -48,12 +48,17 @@ AGENT_LIBADD='dnl
  $(top_builddir)/liby2/src/liby2.la dnl
  ${Y2UTIL_LIBS}'
 
+# https://bugzilla.novell.com/show_bug.cgi?id=914255
+SANITIZER_CFLAGS=-fsanitize=undefined
+SANITIZER_LDFLAGS=-Wl,$SANITIZER_CFLAGS
+AC_SUBST(SANITIZER_LDFLAGS)
+
 AC_PROG_CXX
 
 # gnu++0x instead of c++0x so that
 # we do not lose gnu extensions like typeof
 # FIXME: rename to Y2CORE_CXXFLAGS and change in devtools:y2autoconf
-Y2CORE_CFLAGS="-std=gnu++0x"
+Y2CORE_CFLAGS="-std=gnu++0x $SANITIZER_CFLAGS"
 AC_SUBST(Y2CORE_CFLAGS) dnl included in CXXFLAGS in YAST2-CHECKS-PROGRAM
 
 AC_CHECK_HEADERS(xcrypt.h)

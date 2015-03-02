@@ -14,7 +14,7 @@ libpy2scr_la_SOURCES =				\
 	ScriptingAgent.cc ScriptingAgent.h	\
 	SCRSubAgent.cc SCRSubAgent.h
 
-libpy2scr_la_LDFLAGS = -version-info 2:0
+libpy2scr_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 2:0
 
 libpy2scr_la_LIBADD = $(top_builddir)/libscr/src/libscr.la
 

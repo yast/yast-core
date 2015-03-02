@@ -18,6 +18,7 @@ noinst_PROGRAMS = runscr
 runscr_SOURCES = runscr.cc
 runscr_LDADD = ${AGENT_LIBADD}
 runscr_LDFLAGS = 				\
+	${SANITIZER_LDFLAGS}			\
 	-Xlinker --whole-archive		\
 	$(top_builddir)/agent-dummy/src/libpy2ag_dummy.la	\
 	../src/libpy2scr.la				\

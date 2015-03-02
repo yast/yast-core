@@ -18,6 +18,7 @@ noinst_PROGRAMS = runag_ini
 runag_ini_SOURCES = runag_ini.cc
 runag_ini_LDADD = ${AGENT_LIBADD}
 runag_ini_LDFLAGS = 					\
+	${SANITIZER_LDFLAGS}				\
 	-Xlinker --whole-archive			\
 	$(top_builddir)/scr/src/libpy2scr.la		\
 	$(top_builddir)/agent-system/src/libpy2ag_system.la	\

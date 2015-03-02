@@ -10,7 +10,7 @@ libpy2ag_dummy_la_SOURCES =			\
 	DummyAgent.cc DummyAgent.h		\
 	Y2CCDummyAgent.cc
 
-libpy2ag_dummy_la_LDFLAGS = -version-info 2:0
+libpy2ag_dummy_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 2:0
 libpy2ag_dummy_la_LIBADD = @AGENT_LIBADD@
 
 AM_CPPFLAGS =					\

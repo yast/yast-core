@@ -64,10 +64,10 @@ AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/
 	-I$(top_srcdir)/debugger
 
 # CURRENT:REVISION:AGE
-libycpvalues_la_LDFLAGS = -version-info 6:0:0
+libycpvalues_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 6:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
-libycp_la_LDFLAGS = -version-info 5:0:0
+libycp_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 5:0:0
 libycp_la_LIBADD = ${Y2UTIL_LIBS} ${CRYPTO_LIBS} libycpvalues.la $(top_builddir)/debugger/liby2debug.la
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)

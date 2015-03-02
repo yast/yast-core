@@ -17,4 +17,4 @@ AM_CPPFLAGS =						\
 	-I$(srcdir)/include				\
 	${Y2UTIL_CFLAGS}
 
-libscr_la_LDFLAGS = -version-info 3:0
+libscr_la_LDFLAGS = ${SANITIZER_LDFLAGS} -version-info 3:0
