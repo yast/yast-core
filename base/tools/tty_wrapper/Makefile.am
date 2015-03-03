@@ -13,5 +13,4 @@ tty_wrapper_CPPFLAGS = $(AM_CPPFLAGS)
 tty_wrapper_LDADD = -ly2util
 
 tty_wrapper_LDFLAGS = 					\
-	${SANITIZER_LDFLAGS}				\
 	-L$(srcdir)/../../../liby2util-r/src -L$(libdir)

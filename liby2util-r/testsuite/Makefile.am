@@ -9,7 +9,6 @@ export Y2DISABLELANGUAGEPLUGINS = 1
 AM_CPPFLAGS = -I$(srcdir)/../src/include -DY2LOG=\"liby2util-testsuite\"
 
 AM_LDFLAGS = \
-	${SANITIZER_LDFLAGS}		\
 	-Xlinker --whole-archive	\
 	$(srcdir)/../src/liby2util.la	\
 	-Xlinker --no-whole-archive

@@ -18,7 +18,6 @@ noinst_PROGRAMS = runmodules
 runmodules_SOURCES = runmodules.cc
 runmodules_LDADD = ${AGENT_LIBADD}
 runmodules_LDFLAGS = 				\
-	${SANITIZER_LDFLAGS}			\
 	-Xlinker --whole-archive		\
 	../src/libpy2ag_modules.la	\
 	-Xlinker --no-whole-archive

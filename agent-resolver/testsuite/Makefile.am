@@ -16,7 +16,6 @@ noinst_PROGRAMS = runresolver
 runresolver_SOURCES = runresolver.cc
 runresolver_LDADD = ${AGENT_LIBADD}
 runresolver_LDFLAGS = 					\
-	${SANITIZER_LDFLAGS}				\
 	-Xlinker --whole-archive			\
 	../src/libpy2ag_resolver.la		\
 	-Xlinker --no-whole-archive

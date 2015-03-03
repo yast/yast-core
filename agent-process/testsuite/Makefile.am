@@ -19,7 +19,6 @@ noinst_PROGRAMS = run_ag_process
 run_ag_process_SOURCES = run_ag_process.cc
 run_ag_process_LDADD = ${AGENT_LIBADD}
 run_ag_process_LDFLAGS = 			\
-	${SANITIZER_LDFLAGS}			\
 	-Xlinker --whole-archive		\
 	../src/libpy2ag_process.la		\
 	-Xlinker --no-whole-archive

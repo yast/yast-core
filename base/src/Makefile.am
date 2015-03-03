@@ -26,7 +26,6 @@ y2base_DEPENDENCIES = $(YAST2CORE)
 y2base_LDADD = ${Y2UTIL_LIBS}
 
 y2base_LDFLAGS =			\
-	${SANITIZER_LDFLAGS}		\
 	-Xlinker --whole-archive	\
 	$(PERL_LDFLAGS)			\
 	$(YAST2CORE)			\
