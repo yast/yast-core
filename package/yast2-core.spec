@@ -20,6 +20,7 @@
 Name:           yast2-core
 Version:        3.1.14
 Release:        0
+Url:            https://github.com/yast/yast-core
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source0:        %{name}-%{version}.tar.bz2
@@ -55,6 +56,7 @@ library for the YCP scripting language used in YaST2.
 %package devel
 Requires:	yast2-core = %version
 
+Group:          Development/Libraries
 Summary:	YaST2 - Core Libraries
 Provides:	liby2util-devel = 2.16.1
 Obsoletes:	liby2util-devel < 2.16.1
