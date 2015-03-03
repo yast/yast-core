@@ -1,7 +1,7 @@
 #
 # spec file for package yast2-core
 #
-# Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2015 SUSE LINUX GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -16,7 +16,6 @@
 #
 
 
-
 Name:           yast2-core
 Version:        3.1.14
 Release:        0
@@ -25,42 +24,47 @@ Url:            https://github.com/yast/yast-core
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source0:        %{name}-%{version}.tar.bz2
 
-Group:	        System/YaST
-License:        GPL-2.0+
 # obviously
-BuildRequires:	gcc-c++ boost-devel libtool
+BuildRequires:  boost-devel
+BuildRequires:  gcc-c++
+BuildRequires:  libtool
 # we have a parser
-BuildRequires:	flex bison
+BuildRequires:  bison
+BuildRequires:  flex
 # incompatible change, parser.h -> parser.hh
 BuildRequires:  automake >= 1.12
 # needed for all yast packages
-BuildRequires:	yast2-devtools >= 3.1.10
+BuildRequires:  yast2-devtools >= 3.1.10
 # testsuite
-BuildRequires:	dejagnu
+BuildRequires:  dejagnu
 # autodocs
-BuildRequires:	doxygen
+BuildRequires:  doxygen
 # docbook docs
-BuildRequires:	docbook-xsl-stylesheets libxslt
+BuildRequires:  docbook-xsl-stylesheets
+BuildRequires:  libxslt
 # catalog: convert URIs to local filenames
-BuildRequires:	sgml-skel
+BuildRequires:  sgml-skel
 
-Summary:	YaST2 - Core Libraries
-Requires:	perl = %{perl_version}
-Provides:	liby2util = 2.16.1
-Obsoletes:	liby2util < 2.16.1
+Summary:        YaST2 - Core Libraries
+License:        GPL-2.0+
+Group:          System/YaST
+Requires:       perl = %{perl_version}
+Provides:       liby2util = 2.16.1
+Obsoletes:      liby2util < 2.16.1
 
 %description
 This package contains the scanner, parser, and interpreter runtime
 library for the YCP scripting language used in YaST2.
 
 %package devel
-Requires:	yast2-core = %version
+Requires:       yast2-core = %version
 
+Summary:        YaST2 - Core Libraries
 Group:          Development/Libraries
-Summary:	YaST2 - Core Libraries
-Provides:	liby2util-devel = 2.16.1
-Obsoletes:	liby2util-devel < 2.16.1
-Requires:	glibc-devel libstdc++-devel
+Provides:       liby2util-devel = 2.16.1
+Obsoletes:      liby2util-devel < 2.16.1
+Requires:       glibc-devel
+Requires:       libstdc++-devel
 
 %description devel
 This package contains include and documentation files for developing
@@ -68,15 +72,14 @@ applications using the YaST2 YCP interpreter.
 
 %package debugger
 Requires:       yast2-core = %version
+Summary:        YaST2 - Core Libraries
 Group:          Development/Libraries
-Summary:	YaST2 - Core Libraries
 
 %description debugger
 YCP debugger client.
 
 %prep
 %setup -n %{name}-%{version}
-
 
 %build
 
@@ -96,7 +99,6 @@ export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
 
 mkdir -p "$RPM_BUILD_ROOT"%{yast_logdir}
 %perl_process_packlist
-
 
 %post
 /sbin/ldconfig
@@ -163,3 +165,5 @@ fi
 %files debugger
 %defattr(-,root,root)
 %attr(0755,-,-) %{yast_ybindir}/ycp-debugger
+
+%changelog
