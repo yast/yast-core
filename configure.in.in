@@ -48,32 +48,13 @@ AGENT_LIBADD='dnl
  $(top_builddir)/liby2/src/liby2.la dnl
  ${Y2UTIL_LIBS}'
 
-## <ext/hash_map> produces ugly warnings in gcc 4.3, but its replacement,
-## <unordered_map>, is in C++0x which is not stablilized yet.
-## More importantly, this thing is in a public header so we need to propagate
-## the findings to yast2-core users
 AC_PROG_CXX
-AC_MSG_CHECKING([for version of C++ standard])
-GCCVER=`$CXX -v 2>&1 | tail -n1`
-case "$GCCVER" in
-[    gcc\ version\ 4.[3456789]*)]dnl **** quoting
-dnl we need a HAVE_* flag for a public header, yuck
-dnl	AC_DEFINE([HAVE_CXX0X], 1, [Define to 1 if the c++ compiler knows <unordered_map> and the like])
-dnl	Y2CORE_CFLAGS="-std=c++0x"
-	# gnu++0x instead of c++0x so that
-	# we do not lose gnu extensions like typeof
-	Y2CORE_CFLAGS="-std=gnu++0x -DHAVE_CXX0X"
-	Y2CORE_CXXFLAGS="-std=gnu++0x -DHAVE_CXX0X"
-	AC_MSG_RESULT([c++0x])
-	;;
-    *)
-	Y2CORE_CFLAGS=""
-	Y2CORE_CXXFLAGS=""
-	AC_MSG_RESULT([older than c++0x])
-	;;
-esac
 
-AC_SUBST(Y2CORE_CFLAGS) dnl included in {C,CXX}FLAGS in YAST2-CHECKS-PROGRAM 
+# gnu++0x instead of c++0x so that
+# we do not lose gnu extensions like typeof
+# FIXME: rename to Y2CORE_CXXFLAGS and change in devtools:y2autoconf
+Y2CORE_CFLAGS="-std=gnu++0x"
+AC_SUBST(Y2CORE_CFLAGS) dnl included in CXXFLAGS in YAST2-CHECKS-PROGRAM
 
 AC_CHECK_HEADERS(xcrypt.h)
 

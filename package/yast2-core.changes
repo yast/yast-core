@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  3 14:49:39 UTC 2015 - mvidner@suse.com
+
+- Fixed compilation (but not tests) with GCC 5 (boo#914255).
+- 3.1.16
+
+-------------------------------------------------------------------
 Thu Jan 22 19:10:06 UTC 2015 - lslezak@suse.cz
 
 - skip empty environment variables when activating the locale
