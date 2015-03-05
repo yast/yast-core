@@ -169,7 +169,7 @@ ScriptingAgent::parseSingleConfigFile (const string &filename)
 	    if (agent != agents.end ())
 	    {
 		// TODO promote more debugs to errors or warnings
-    		y2warning ("Ignoring re-registration of path '%s'", path->toString ().c_str ());
+    		y2debug ("Ignoring re-registration of path '%s'", path->toString ().c_str ());
 		// possible alternative: do not ignore
 		// - ok if the agent was not used yet (not mounted yet)
 		// - umount if mounted??
