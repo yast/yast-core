@@ -49,9 +49,9 @@ class UstringHash
 
   public:
 
-    const std::string & add( const std::string & nstr_r )
+    const std::string * add( const std::string & nstr_r )
     {
-	return *(_UstringHash.insert( nstr_r ).first);
+	return &(*(_UstringHash.insert( nstr_r ).first));
     }
 
     /**
@@ -128,12 +128,7 @@ class Ustring
  {
 
   private:
-
-    /**
-     * !!! It should actualy be const !!!
-     * But that way default copy and assingment can be used.
-     **/
-    std::string _name;
+    const std::string* _name;
 
   public:
 #ifdef D_MEMUSAGE
@@ -147,12 +142,21 @@ class Ustring
       :_name( nameHash_r.add( n ) )
     {}
 
+    Ustring( const Ustring& cpy)
+      :_name(cpy._name)
+    {}
+
+    const Ustring& operator=(const Ustring& orig)
+    {
+      _name = orig._name;
+      return *this;
+    }
   public:
 
     /**
      * Conversion to const std::string &
      **/
-    const std::string & asString() const { return _name; }
+    const std::string & asString() const { return *_name; }
 
     /**
      * Conversion to const std::string &
@@ -175,29 +179,29 @@ class Ustring
     }
 
     int compare( const Ustring & rhs ) const {
-      if ( *this == rhs )
+      if ( this == &rhs )
 	return 0;
-      return( *this < rhs ? -1 : 1 );
+      return _name->compare(rhs.asString());
     }
 
     /**
      * ustr->???(); // short for ((const std::string &)ustr).???();
      **/
-    const std::string * operator->() const { return & asString(); }
+    const std::string * operator->() const { return _name; }
 
     // operator ==
 
     friend bool operator==( const Ustring & lhs, const Ustring & rhs ) {
       // Ustrings share their string representation
-      return ( lhs->c_str() == rhs->c_str() );
+      return ( lhs._name == rhs._name );
     }
 
     friend bool operator==( const Ustring & lhs, const std::string & rhs ) {
-      return ( (const std::string &)lhs == rhs );
+      return ( lhs.asString() == rhs );
     }
 
     friend bool operator==( const std::string & lhs, const Ustring & rhs ) {
-      return ( lhs == (const std::string &)rhs );
+      return ( lhs == rhs.asString() );
     }
 
     // operator !=
