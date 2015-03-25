@@ -189,7 +189,7 @@ class Ustring
 
     friend bool operator==( const Ustring & lhs, const Ustring & rhs ) {
       // Ustrings share their string representation
-      return ( lhs->c_str() == rhs->c_str() );
+      return ( lhs.asString() ==  rhs.asString() );
     }
 
     friend bool operator==( const Ustring & lhs, const std::string & rhs ) {
