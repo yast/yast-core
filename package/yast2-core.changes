@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Mar 30 10:55:31 UTC 2015 - jreidinger@suse.com
+
+- Fix YCP symbol comparison with GCC 5 (thanks schubi for
+  performance measurement and mvidner for review) (boo#914255)
+- 3.1.17
+
+-------------------------------------------------------------------
 Tue Mar  3 14:49:39 UTC 2015 - mvidner@suse.com
 
 - Fixed compilation (but not tests) with GCC 5 (boo#914255).
