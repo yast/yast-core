@@ -12,13 +12,13 @@ Bug Reports
 -----------
 
 If you find a problem, please report it either using
-[Bugzilla](https://bugzilla.novell.com/enter_bug.cgi?format=guided&product=openSUSE+Factory&component=YaST2)
+[Bugzilla](https://bugzilla.suse.com/enter_bug.cgi?format=guided&product=openSUSE+Factory&component=YaST2)
 or [GitHub issues](../../issues). (For Bugzilla, use the [simplified
 registration](https://secure-www.novell.com/selfreg/jsp/createSimpleAccount.jsp)
 if you don't have an account yet.)
 
 If you find a problem, please report it either using
-[Bugzilla](https://bugzilla.novell.com/) or GitHub issues. We can't guarantee
+[Bugzilla](https://bugzilla.suse.com/) or GitHub issues. We can't guarantee
 that every bug will be fixed, but we'll try.
 
 When creating a bug report, please follow our [bug reporting
