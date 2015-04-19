@@ -1111,12 +1111,8 @@ string IniParser::getFileName (const string&sec, int rb) const
     string file = sec;
     if (-1 != rb && (int) rewrites.size () > rb)
     {
-	int max = rewrites[rb].out.length () + sec.length () + 1;
-	char*buf = new char[max + 1];
-	snprintf (buf, max, rewrites[rb].out.c_str (), sec.c_str());
-	y2debug ("Rewriting %s to %s", sec.c_str(), buf);
-	file = buf;
-	delete [] buf;
+	file = format(rewrites[rb].out.c_str (), sec.c_str());
+	y2debug ("Rewriting %s to %s", sec.c_str(), file.c_str());
     }
     return file;
 }
