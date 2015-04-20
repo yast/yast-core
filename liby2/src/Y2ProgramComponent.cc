@@ -302,7 +302,9 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 		_exit (5);
 	    }
 
-	    chdir ("/");
+	    if (chdir ("/") != 0) {
+		_exit (5);
+            }
 	}
 
 	// close all filedescriptors above stderr, bnc#501758

@@ -162,7 +162,9 @@ shellcommand ( const string &target_root, const string &command, const string &t
 
                 // Do not allow touch outside of chroot especially `cd ~` can
                 // cause errors
-                chdir("/");
+                res = chdir("/");
+                if (res == -1)
+                    _exit(1);
             }
 
 	    ret = system (command.c_str ());
