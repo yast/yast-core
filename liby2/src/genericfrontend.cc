@@ -104,6 +104,7 @@
 #include <YCP.h>
 #include <ycp/Parser.h>
 #include <ycp/pathsearch.h>
+#include <y2util/stringutil.h>
 #include "exitcodes.h"
 #include <debugger/Debugger.h>
 
@@ -852,17 +853,16 @@ print_help()
 static void
 print_error (const char* format, ...)
 {
-    char* msg;
-
     va_list ap;
     va_start (ap, format);
-    vasprintf (&msg, format, ap);
+
+    string str = stringutil::vform(format, ap);
+    const char * msg = str.c_str();
+
     va_end (ap);
 
-    fprintf (stderr, "%s\n", msg);
+    fputs (msg, stderr);
     y2error ("%s", msg);
-
-    free (msg);
 }
 
 

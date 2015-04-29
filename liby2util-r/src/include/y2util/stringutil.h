@@ -46,6 +46,18 @@ enum Trim {
   TRIM    = (L_TRIM|R_TRIM)
 };
 
+inline std::string vform( const char * format, va_list ap ) {
+  char * buf = 0;
+  std::string val;
+
+  int numprinted = vasprintf( &buf, format, ap );
+  if ( numprinted >= 0 ) {
+    val = buf;
+    free( buf );
+  }
+  return val;
+}
+
 inline std::string form( const char * format, ... )
     __attribute__ ((format (printf, 1, 2)));
 
@@ -59,34 +71,18 @@ inline std::string form( const char * format, ... )
  * </PRE>
  **/
 inline std::string form( const char * format, ... ) {
-  char * buf = 0;
   std::string val;
 
   va_list ap;
   va_start( ap, format );
 
-#if 1
-  int numprinted = vasprintf( &buf, format, ap );
-  if ( numprinted >= 0 ) {
-    val = buf;
-    free( buf );
-  }
-#else
-  // Don't know wheter we actually nedd two va_lists, one to
-  // evaluate the buffer size needed, and one to actually fill
-  // the buffer. Maybe there's a save way to reuse a va_lists.
-  va_list ap1;
-  va_start( ap1, format );
-  buf = new char[vsnprintf( NULL, 0, format, ap ) + 1];
-  vsprintf( buf, format, ap1 );
-  val = buf;
-  delete [] buf;
-  va_end( ap1 );
-#endif
+  val = vform(format, ap);
 
   va_end( ap );
   return val;
 }
+
+
 
 /**
  * Print number. Optional second argument sets the minimal string width (' ' padded).

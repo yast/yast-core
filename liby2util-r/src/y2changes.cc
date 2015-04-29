@@ -35,8 +35,6 @@
 
 /* Defines */
 
-#define _GNU_SOURCE 1				/* Needed for vasprintf below */
-
 #define Y2CHANGES_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
 
 // 1 timestamp, 2 level, 3 hostname
@@ -139,10 +137,7 @@ string y2_changesfmt_prefix (logcategory_t category)
     char date[50];		// that's big enough
     strftime (date, sizeof (date), Y2CHANGES_DATE, brokentime);
 
-    char * result_c = NULL;
-    asprintf (&result_c, Y2CHANGES_FORMAT, date, log_messages[category], hostname );
-    string result = result_c;
-    free (result_c);
+    string result = stringutil::form(Y2CHANGES_FORMAT, date, log_messages[category], hostname );
 
     return result;
 }
@@ -156,11 +151,7 @@ void y2changes_function (logcategory_t category, const char *format, ...)
     va_start(ap, format);
 
     /* Prepare the log text */
-    char *logtext = NULL;
-    vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
-    string common = logtext;
-    common += '\n';
-    free (logtext);
+    string common = stringutil::vform(format, ap) + '\n';
 
     if(log_to_syslog) {
 	syslog (LOG_NOTICE, Y2CHANGES_SYSLOG, category, common.c_str ());

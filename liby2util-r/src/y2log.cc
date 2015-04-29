@@ -36,8 +36,6 @@
 
 /* Defines */
 
-#define _GNU_SOURCE 1				/* Needed for vasprintf below */
-
 #define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
 
 // 1 component, 2 file, 3 func, 4 line, 5 logtext, 6 eol
@@ -177,8 +175,7 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     /* Prepare the log text */
-    char *logtext = NULL;
-    vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
+    string logtext = stringutil::vform(format, ap);
 
     /* Prepare the component */
     string comp = component;
@@ -211,18 +208,12 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 	func = "(" + func + ")";
 
     /* do we need EOL? */
-    bool eol = false;
-    size_t len = strlen(logtext);
-    if ((len==0) || ((len>0) && (logtext[len-1]!='\n')))
-	eol = true;
+    bool need_eol = logtext.empty () || (logtext.back () != '\n');
 
-    char * result_c;
-    asprintf(&result_c, simple? Y2LOG_SIMPLE: Y2LOG_COMMON,
-	     comp.c_str (), file, func.c_str (), line, logtext, eol?"\n":"");
-    string result = result_c;
-    free (result_c);
+    string result = stringutil::form(simple ? Y2LOG_SIMPLE : Y2LOG_COMMON,
+                                     comp.c_str (), file, func.c_str (), line,
+                                     logtext.c_str (), need_eol?"\n":"");
 
-    free (logtext);
     return result;
 }
 
@@ -267,10 +258,7 @@ string y2_logfmt_prefix (loglevel_t level)
     strcat (date, tmp2);
 #endif
 
-    char * result_c = NULL;
-    asprintf (&result_c, Y2LOG_FORMAT, date, level, hostname, pid);
-    string result = result_c;
-    free (result_c);
+    string result = stringutil::form(Y2LOG_FORMAT, date, level, hostname, pid);
 
     return result;
 }
