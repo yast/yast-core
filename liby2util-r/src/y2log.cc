@@ -93,7 +93,6 @@ static FILE *Y2LOG_STDERR = stderr;		/* Default output */
 /* static prototypes */
 static void do_log_syslog( const char* logmessage );
 static void do_log_yast( const char* logmessage );
-static void shift_log_files(string filename);
 
 /**
  * y2log must use a private copy of stderr, esp. in case we're always logging
@@ -344,7 +343,7 @@ void do_log_yast( const char* logmessage )
     if(!did_set_logname) set_log_filename("");
 
     /* Prepare the logfile */
-    shift_log_files (string (logname));
+    shift_log_files_if_needed (string (logname));
 
     FILE *logfile = open_logfile ();
     if (!logfile)
@@ -439,7 +438,7 @@ static string old (const string & filename, int i, const char * suffix) {
  * We do all of this ourselves because during the installation
  * logrotate does not run
  */
-static void shift_log_files(string filename)
+void shift_log_files_if_needed(string filename)
 {
     struct stat buf;
 

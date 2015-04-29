@@ -28,6 +28,7 @@
 #include <list>
 
 #include "y2util/y2changes.h"
+#include "y2util/y2log.h"
 #include "y2util/stringutil.h"
 #include "y2util/PathInfo.h"
 #include <syslog.h>
@@ -71,7 +72,6 @@ static FILE *Y2CHANGES_STDERR = stderr;		/* Default output */
 
 /* static prototypes */
 static void do_log_yast( const char* logmessage );
-static void shift_log_files(string filename);
 
 static const char *log_messages[] = {
     "item",
@@ -177,7 +177,7 @@ void y2changes_function (logcategory_t category, const char *format, ...)
 /**
  * Logfile name initialization
  */
-static void set_log_filename (string fname)
+static void y2changes_set_log_filename (string fname)
 {
     did_set_logname = true;
 
@@ -236,10 +236,10 @@ static
 void do_log_yast( const char* logmessage )
 {
     /* Prepare the logfile name */
-    if(!did_set_logname) set_log_filename("");
+    if(!did_set_logname) y2changes_set_log_filename("");
 
     /* Prepare the logfile */
-    shift_log_files (string (logname));
+    shift_log_files_if_needed (string (logname));
 
     FILE *logfile = open_logfile ();
     if (!logfile)
@@ -253,46 +253,5 @@ void do_log_yast( const char* logmessage )
     else
 	fflush (logfile);
 }
-
-static string old (const string & filename, int i, const char * suffix) {
-    char numbuf[8];
-    sprintf (numbuf, "%d", i);
-    return filename + "-" + numbuf + suffix;
-}
-
-/**
- * Maintain logfiles
- * We do all of this ourselves because during the installation
- * logrotate does not run
- */
-static void shift_log_files(string filename)
-{
-    struct stat buf;
-
-    if( stat(filename.c_str(), &buf) )
-	return;
-
-    if( buf.st_size <= maxlogsize )
-	return;
-
-    static const char * gz = ".gz";
-    // Delete the last logfile
-    remove (old (filename, maxlognum - 1, ""   ).c_str());
-    remove (old (filename, maxlognum - 1, gz).c_str());
-
-    // rename existing ones
-    for( int f = maxlognum-2; f > 0; f-- )
-    {
-	rename (old (filename, f, "").c_str(), old (filename, f+1, "").c_str());
-	rename (old (filename, f, gz).c_str(), old (filename, f+1, gz).c_str());
-    }
-
-    // rename and compress first one
-    rename( filename.c_str(), old (filename, 1, "").c_str() );
-    // fate#300637: compress!
-    // may fail, but so what
-    system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
-}
-
 
 /* EOF */
