@@ -344,23 +344,31 @@ bool Y2SerialComponent::initializeConnection()
 
 	 // first write one space so the other side gets
 	 // fullfilled its necessities
-	 write(fd_serial, space_buf, 1);
+	 if (write(fd_serial, space_buf, 1) != 1)
+	 {
+	    y2error ("Couldn't write 1 space: %s", strerror(errno));
+	 }
 
 	 // now wait for a space to be read
 	 // (the other side has the same behaviour)
 	 if (await_readable(TIMEOUT))
 	 {
-	    read(fd_serial, buf, 1);	            // read one byte
+	    size_t r = read(fd_serial, buf, 1);	    // read one byte
 
-	    if (buf[0] == ' ') spaces_read++;       // was a space
-	    else               spaces_read = 0;     // trash read --> reset
+	    if (r == 1 && buf[0] == ' ')
+		spaces_read++;                      // was a space
+	    else
+		spaces_read = 0;                    // trash read --> reset
 	 }
       }
 
       // now that we've got our NUMSPACES spaces write 2 * NUMSPACES spaces to
       // the other side to avoid syncing problems. the remote parser will kindly
       // ignore them.
-      write(fd_serial, space_buf, 2 * NUMSPACES);
+      if (write(fd_serial, space_buf, 2 * NUMSPACES) != 2 * NUMSPACES)
+      {
+          y2error ("Couldn't write spaces: %s", strerror(errno));
+      }
 
       // now set our parser to the serial line to start communication
       parser.setInput(fd_serial, device_name.c_str());
@@ -378,7 +386,12 @@ void Y2SerialComponent::sendToSerial(const YCPValue& v)
 {
     string s  = "(" + v->toString() + ")\n";    // store string in string variable ..
     const char *cs = s.c_str();        		// c_str is valid als long as s
-    write(fd_serial, cs, strlen(cs));
+    size_t len = s.length();
+    size_t w = write(fd_serial, cs, len);
+    if (w != len)
+    {
+        y2error ("wrote only %zu of %zu bytes: %s", w, len, strerror(errno));
+    }
 }
 
 YCPValue Y2SerialComponent::receiveFromSerial()

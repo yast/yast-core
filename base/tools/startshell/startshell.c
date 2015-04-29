@@ -26,10 +26,13 @@ inst_start_shell (char *tty_tv)
     fclose (stdout);
     fclose (stderr);
     setsid ();
-    fd_ii = open (tty_tv, O_RDWR);
+    fd_ii = open (tty_tv, O_RDWR); /* stdin at tty */
     ioctl (fd_ii, TIOCSCTTY, (void *)1);
-    dup (fd_ii);
-    dup (fd_ii);
+    /* we don't need the fd numbers;
+       and if an error occurs we don't have a fd to write it to */
+    int    dupfd __attribute__ ((unused));
+    dupfd = dup (fd_ii);        /* stdout at tty */
+    dupfd = dup (fd_ii);        /* stderr at tty */
 
     execve ("/bin/bash", args_apci, env_pci);
     fprintf (stderr, "Couldn't start shell (errno = %d)\n", errno);
