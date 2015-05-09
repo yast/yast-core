@@ -140,7 +140,7 @@ string y2_changesfmt_prefix (logcategory_t category)
     strftime (date, sizeof (date), Y2CHANGES_DATE, brokentime);
 
     char * result_c = NULL;
-    asprintf (&result_c, Y2CHANGES_FORMAT, date, log_messages[category], hostname );
+    if(asprintf (&result_c, Y2CHANGES_FORMAT, date, log_messages[category], hostname ));
     string result = result_c;
     free (result_c);
 
@@ -157,7 +157,7 @@ void y2changes_function (logcategory_t category, const char *format, ...)
 
     /* Prepare the log text */
     char *logtext = NULL;
-    vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
+    if(vasprintf(&logtext, format, ap)); /* GNU extension needs the define above */
     string common = logtext;
     common += '\n';
     free (logtext);
@@ -291,7 +291,7 @@ static void shift_log_files(string filename)
     rename( filename.c_str(), old (filename, 1, "").c_str() );
     // fate#300637: compress!
     // may fail, but so what
-    system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
+    if(system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str()));
 }
 
 

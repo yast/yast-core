@@ -28,8 +28,8 @@ inst_start_shell (char *tty_tv)
     setsid ();
     fd_ii = open (tty_tv, O_RDWR);
     ioctl (fd_ii, TIOCSCTTY, (void *)1);
-    dup (fd_ii);
-    dup (fd_ii);
+    if (dup (fd_ii));
+    if (dup (fd_ii));
 
     execve ("/bin/bash", args_apci, env_pci);
     fprintf (stderr, "Couldn't start shell (errno = %d)\n", errno);

@@ -302,7 +302,7 @@ void Y2ProgramComponent::launchExternalProgram (char **argv)
 		_exit (5);
 	    }
 
-	    chdir ("/");
+	    if(chdir ("/"));
 	}
 
 	// close all filedescriptors above stderr, bnc#501758
@@ -419,7 +419,7 @@ void Y2ProgramComponent::sendToExternal(const string& value)
     // result (..) from the input pipe, which is very important. Otherwise the
     // result value would be dropped.
 
-    write(to_external[1], "\n", 1);
+    if(write(to_external[1], "\n", 1));
 }
 
 
