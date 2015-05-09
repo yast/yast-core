@@ -104,7 +104,9 @@ static int dup_stderr()
     }
     return 1;
 }
+/* silence '-Wunused-variable' */
 static int variable_not_used = dup_stderr();
+void y2changes_function_not_used() {if (variable_not_used);}
 
 static FILE * open_logfile()
 {
