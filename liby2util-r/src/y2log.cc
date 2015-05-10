@@ -126,7 +126,9 @@ static int dup_stderr()
     }
     return 1;
 }
+/* silence '-Wunused-variable' */
 static int variable_not_used = dup_stderr();
+void y2log_function_not_used() {if (variable_not_used);}
 
 static FILE * open_logfile()
 {
@@ -179,7 +181,7 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 {
     /* Prepare the log text */
     char *logtext = NULL;
-    vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
+    if(vasprintf(&logtext, format, ap)); /* GNU extension needs the define above */
 
     /* Prepare the component */
     string comp = component;
@@ -218,8 +220,8 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 	eol = true;
 
     char * result_c;
-    asprintf(&result_c, simple? Y2LOG_SIMPLE: Y2LOG_COMMON,
-	     comp.c_str (), file, func.c_str (), line, logtext, eol?"\n":"");
+    if(asprintf(&result_c, simple? Y2LOG_SIMPLE: Y2LOG_COMMON,
+	     comp.c_str (), file, func.c_str (), line, logtext, eol?"\n":""));
     string result = result_c;
     free (result_c);
 
@@ -269,7 +271,7 @@ string y2_logfmt_prefix (loglevel_t level)
 #endif
 
     char * result_c = NULL;
-    asprintf (&result_c, Y2LOG_FORMAT, date, level, hostname, pid);
+    if(asprintf (&result_c, Y2LOG_FORMAT, date, level, hostname, pid));
     string result = result_c;
     free (result_c);
 
@@ -465,7 +467,7 @@ static void shift_log_files(string filename)
     rename( filename.c_str(), old (filename, 1, "").c_str() );
     // fate#300637: compress!
     // may fail, but so what
-    system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
+    if(system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str()));
 }
 
 

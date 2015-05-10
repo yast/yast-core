@@ -127,7 +127,7 @@ Y2StdioComponent::send (const YCPValue& v) const
 {
     string s = "(" + (v.isNull () ? "(nil)" : v->toString ()) + ")\n";
     y2debug ("send begin %s", s.c_str ());
-    write (to_stderr ? STDERR_FILENO : STDOUT_FILENO, s.c_str (), s.length ());
+    if(write (to_stderr ? STDERR_FILENO : STDOUT_FILENO, s.c_str (), s.length ()));
     y2debug ("send end %s", s.c_str ());
 }
 

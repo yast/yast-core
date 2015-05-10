@@ -856,7 +856,7 @@ print_error (const char* format, ...)
 
     va_list ap;
     va_start (ap, format);
-    vasprintf (&msg, format, ap);
+    if(vasprintf (&msg, format, ap));
     va_end (ap);
 
     fprintf (stderr, "%s\n", msg);
