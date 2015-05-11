@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon May 11 13:50:04 UTC 2015 - mvidner@suse.com
+
+- Fixed compilation warnings.
+
+-------------------------------------------------------------------
 Mon Mar 30 10:55:31 UTC 2015 - jreidinger@suse.com
 
 - Fix YCP symbol comparison with GCC 5 (thanks schubi for
