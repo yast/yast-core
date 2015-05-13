@@ -127,7 +127,15 @@ Y2StdioComponent::send (const YCPValue& v) const
 {
     string s = "(" + (v.isNull () ? "(nil)" : v->toString ()) + ")\n";
     y2debug ("send begin %s", s.c_str ());
-    write (to_stderr ? STDERR_FILENO : STDOUT_FILENO, s.c_str (), s.length ());
+
+    int fd = to_stderr ? STDERR_FILENO : STDOUT_FILENO;
+    size_t len = s.length ();
+    size_t w = write (fd, s.c_str (), len);
+    if (w != len)
+    {
+        y2error ("wrote only %zu of %zu bytes: %s", w, len, strerror(errno));
+    }
+
     y2debug ("send end %s", s.c_str ());
 }
 

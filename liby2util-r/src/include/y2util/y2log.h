@@ -160,6 +160,13 @@ void set_log_debug(bool on = true);
  */
 bool get_log_debug();
 
+/**
+ * Check if the logs need rotating; if yes, do it.
+ * We do all of this ourselves because during the installation
+ * logrotate does not run
+ */
+void shift_log_files_if_needed(string filename);
+
 // stores a few strings. can append one. can return all. old are forgotten.
 class LogTail {
 public:

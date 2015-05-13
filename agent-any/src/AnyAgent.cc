@@ -675,7 +675,9 @@ static FILE* program_stream(const char *s, SCRAgent* agent)
 
               // Do not allow touch outside of chroot especially `cd ~` can
               // cause errors
-              chdir("/");
+              res = chdir("/");
+              if (res == -1)
+                _exit(1);
             }
             // lets ignore if it fails, we even cannot log here
             setenv ("LC_ALL", "C", 1);

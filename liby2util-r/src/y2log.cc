@@ -36,8 +36,6 @@
 
 /* Defines */
 
-#define _GNU_SOURCE 1				/* Needed for vasprintf below */
-
 #define Y2LOG_DATE	"%Y-%m-%d %H:%M:%S"	/* The date format */
 
 // 1 component, 2 file, 3 func, 4 line, 5 logtext, 6 eol
@@ -93,7 +91,6 @@ static FILE *Y2LOG_STDERR = stderr;		/* Default output */
 /* static prototypes */
 static void do_log_syslog( const char* logmessage );
 static void do_log_yast( const char* logmessage );
-static void shift_log_files(string filename);
 
 /**
  * y2log must use a private copy of stderr, esp. in case we're always logging
@@ -178,8 +175,7 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     /* Prepare the log text */
-    char *logtext = NULL;
-    vasprintf(&logtext, format, ap); /* GNU extension needs the define above */
+    string logtext = stringutil::vform(format, ap);
 
     /* Prepare the component */
     string comp = component;
@@ -212,18 +208,12 @@ string y2_logfmt_common(bool simple, const string& component, const char *file,
 	func = "(" + func + ")";
 
     /* do we need EOL? */
-    bool eol = false;
-    size_t len = strlen(logtext);
-    if ((len==0) || ((len>0) && (logtext[len-1]!='\n')))
-	eol = true;
+    bool need_eol = logtext.empty () || (logtext.back () != '\n');
 
-    char * result_c;
-    asprintf(&result_c, simple? Y2LOG_SIMPLE: Y2LOG_COMMON,
-	     comp.c_str (), file, func.c_str (), line, logtext, eol?"\n":"");
-    string result = result_c;
-    free (result_c);
+    string result = stringutil::form(simple ? Y2LOG_SIMPLE : Y2LOG_COMMON,
+                                     comp.c_str (), file, func.c_str (), line,
+                                     logtext.c_str (), need_eol?"\n":"");
 
-    free (logtext);
     return result;
 }
 
@@ -268,10 +258,7 @@ string y2_logfmt_prefix (loglevel_t level)
     strcat (date, tmp2);
 #endif
 
-    char * result_c = NULL;
-    asprintf (&result_c, Y2LOG_FORMAT, date, level, hostname, pid);
-    string result = result_c;
-    free (result_c);
+    string result = stringutil::form(Y2LOG_FORMAT, date, level, hostname, pid);
 
     return result;
 }
@@ -344,7 +331,7 @@ void do_log_yast( const char* logmessage )
     if(!did_set_logname) set_log_filename("");
 
     /* Prepare the logfile */
-    shift_log_files (string (logname));
+    shift_log_files_if_needed (string (logname));
 
     FILE *logfile = open_logfile ();
     if (!logfile)
@@ -439,7 +426,7 @@ static string old (const string & filename, int i, const char * suffix) {
  * We do all of this ourselves because during the installation
  * logrotate does not run
  */
-static void shift_log_files(string filename)
+void shift_log_files_if_needed(string filename)
 {
     struct stat buf;
 
@@ -464,8 +451,9 @@ static void shift_log_files(string filename)
     // rename and compress first one
     rename( filename.c_str(), old (filename, 1, "").c_str() );
     // fate#300637: compress!
-    // may fail, but so what
-    system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
+    // If compression fails it is acceptable, and we cannot log anyway.
+    int r __attribute__ ((unused));
+    r = system( ("nice -n 20 gzip " + old (filename, 1, "") + " &").c_str());
 }
 
 
