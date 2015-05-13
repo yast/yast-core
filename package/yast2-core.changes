@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed May 13 19:56:50 CEST 2015 - besser82@fedoraproject.org
+
+- Fix more compilation warnings.
+
+-------------------------------------------------------------------
 Mon May 11 13:50:04 UTC 2015 - mvidner@suse.com
 
 - Fixed compilation warnings.

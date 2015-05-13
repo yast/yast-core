@@ -102,7 +102,7 @@ static int dup_stderr()
     }
     return 1;
 }
-static int variable_not_used = dup_stderr();
+static int variable_not_used __attribute__ ((unused)) = dup_stderr();
 
 static FILE * open_logfile()
 {
