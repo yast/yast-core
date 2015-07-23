@@ -92,6 +92,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <sstream>
 #include <iomanip>
 #include <string>
@@ -234,6 +235,33 @@ signal_log_open ()
     }
 }
 
+static
+void
+signal_postmortem_program ()
+{
+    pid_t cpid;
+    cpid = fork();
+
+    if (cpid == -1)
+    {
+        // could not fork; too bad, no postmortem
+    }
+    else if (cpid == 0)
+    {
+        // in child
+        // EXECCOMPDIR is usually /usr/lib/YaST2
+        const char * prog = EXECCOMPDIR "/bin/signal-postmortem";
+        execl(prog, prog, NULL);
+        // error, probably the program is not there
+        _exit(EXIT_FAILURE);
+    }
+    else
+    {
+        // in parent
+        wait(NULL);
+    }
+}
+
 void
 signal_handler (int sig, siginfo_t *si, void * /* unused_ucontext */)
 {
@@ -243,9 +271,9 @@ signal_handler (int sig, siginfo_t *si, void * /* unused_ucontext */)
     char buffer[300];
     int n = snprintf (buffer, sizeof(buffer),
                       "YaST got signal %d at file %s:%d\n"
-                      "  sender PID: %d\n",
+                      "  sender PID: %ld\n",
                       sig, YaST::ee.filename().c_str(), YaST::ee.linenumber(),
-                      si->si_pid);
+                      (long) si->si_pid);
     if (n >= (int)sizeof(buffer) || n < 0)
 	strcpy (buffer, "YaST got a signal.\n");
     signal_log_to_fd (STDERR_FILENO, buffer);
@@ -265,6 +293,8 @@ signal_handler (int sig, siginfo_t *si, void * /* unused_ucontext */)
 	if (close (signal_log_fd) == -1)
 	    perror ("log close");
     }
+
+    signal_postmortem_program();
 
     // bye
     signal (sig, SIG_DFL);
