@@ -314,25 +314,15 @@ signal_handler_setup ()
     sa.sa_flags = SA_SIGINFO;
     sa.sa_sigaction = signal_handler;
 
-#define sigaction_or_error(signum) \
-    do { \
-        if (sigaction(signum, &sa, NULL) == -1) \
-            perror("sigaction " # signum); \
-    } while (0)
-
     // Give some output for the SIGSEGV
     // and other signals too, #238172
     // Note that USR1 and USR2 are handled by the logger.
-    sigaction_or_error(SIGHUP);
-    sigaction_or_error(SIGINT);
-    sigaction_or_error(SIGQUIT);
-    sigaction_or_error(SIGILL);
-    sigaction_or_error(SIGABRT);
-    sigaction_or_error(SIGFPE);
-    sigaction_or_error(SIGSEGV);
-    sigaction_or_error(SIGTERM);
-
-#undef sigaction_or_error
+    for (int signum : { SIGHUP, SIGINT, SIGQUIT, SIGILL,
+                        SIGABRT, SIGFPE, SIGSEGV, SIGTERM })
+    {
+        if (sigaction(signum, &sa, NULL) == -1)
+            fprintf(stderr, "sigaction failed for signum %d\n", signum);
+    }
 }
 
 void
