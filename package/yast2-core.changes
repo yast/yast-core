@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Oct  6 14:44:02 UTC 2015 - mvidner@suse.com
+
+- In the signal handler, log the sender PID, and if present,
+  run /usr/lib/YaST2/bin/signal-postmortem (bsc#935686).
+- 3.1.18
+
+-------------------------------------------------------------------
 Wed May 13 19:56:50 CEST 2015 - besser82@fedoraproject.org
 
 - Fix more compilation warnings.

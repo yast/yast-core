@@ -92,6 +92,7 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <sstream>
 #include <iomanip>
 #include <string>
@@ -234,16 +235,45 @@ signal_log_open ()
     }
 }
 
+static
 void
-signal_handler (int sig)
+signal_postmortem_program ()
+{
+    pid_t cpid;
+    cpid = fork();
+
+    if (cpid == -1)
+    {
+        // could not fork; too bad, no postmortem
+    }
+    else if (cpid == 0)
+    {
+        // in child
+        // EXECCOMPDIR is usually /usr/lib/YaST2
+        const char * prog = EXECCOMPDIR "/bin/signal-postmortem";
+        execl(prog, prog, NULL);
+        // error, probably the program is not there
+        _exit(EXIT_FAILURE);
+    }
+    else
+    {
+        // in parent
+        wait(NULL);
+    }
+}
+
+void
+signal_handler (int sig, siginfo_t *si, void * /* unused_ucontext */)
 {
     signal (sig, SIG_IGN);
 
     // bnc#493152#c19 only signal-safe functions are allowed
-    char buffer[200];
+    char buffer[300];
     int n = snprintf (buffer, sizeof(buffer),
-		      "YaST got signal %d at file %s:%d\n",
-		      sig, YaST::ee.filename().c_str(), YaST::ee.linenumber());
+                      "YaST got signal %d at file %s:%d\n"
+                      "  sender PID: %ld\n",
+                      sig, YaST::ee.filename().c_str(), YaST::ee.linenumber(),
+                      (long) si->si_pid);
     if (n >= (int)sizeof(buffer) || n < 0)
 	strcpy (buffer, "YaST got a signal.\n");
     signal_log_to_fd (STDERR_FILENO, buffer);
@@ -264,11 +294,36 @@ signal_handler (int sig)
 	    perror ("log close");
     }
 
+    signal_postmortem_program();
+
     // bye
     signal (sig, SIG_DFL);
     kill ( getpid (), sig);
 }
 
+static
+void
+signal_handler_setup ()
+{
+    // Ignore SIGPIPE. No use in signals. Signals can't be assigned to
+    // components
+    signal(SIGPIPE, SIG_IGN);
+
+    struct sigaction sa;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_SIGINFO;
+    sa.sa_sigaction = signal_handler;
+
+    // Give some output for the SIGSEGV
+    // and other signals too, #238172
+    // Note that USR1 and USR2 are handled by the logger.
+    for (int signum : { SIGHUP, SIGINT, SIGQUIT, SIGILL,
+                        SIGABRT, SIGFPE, SIGSEGV, SIGTERM })
+    {
+        if (sigaction(signum, &sa, NULL) == -1)
+            fprintf(stderr, "sigaction failed for signum %d\n", signum);
+    }
+}
 
 void
 parse_client_and_options (int argc, char ** argv, int& arg, char  *& client_name, YCPList& arglist)
@@ -497,21 +552,7 @@ main (int argc, char **argv)
 
     progname = basename (argv[0]);	// get program name
 
-    // Ignore SIGPIPE. No use in signals. Signals can't be assigned to
-    // components
-    signal(SIGPIPE, SIG_IGN);
-
-    // Give some output for the SIGSEGV
-    // and other signals too, #238172
-    // Note that USR1 and USR2 are handled by the logger.
-    signal (SIGHUP,  signal_handler);
-    signal (SIGINT,  signal_handler);
-    signal (SIGQUIT, signal_handler);
-    signal (SIGILL , signal_handler);
-    signal (SIGABRT, signal_handler);
-    signal (SIGFPE,  signal_handler);
-    signal (SIGSEGV, signal_handler);
-    signal (SIGTERM, signal_handler);
+    signal_handler_setup();
 
     if (argc < 2) {
 	fprintf (stderr, "\nToo few arguments");
