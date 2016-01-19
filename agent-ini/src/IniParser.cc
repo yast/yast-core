@@ -413,7 +413,7 @@ int IniParser::initMachine (const YCPMap&scr)
 
 int IniParser::scanner_start(const char*fn)
 {
-    scanner.open(agent.targetPath(fn));
+    scanner.open(fn);
     scanner_file = fn;
     scanner_line = 0;
     if (!scanner.is_open())
@@ -494,7 +494,7 @@ int IniParser::parse()
 	int flags = 0;
 	for (int i = 0;i<len;i++)
 	{
-	    glob (files[i].c_str (),flags, NULL, &do_files);
+	    glob (agent.targetPath(files[i]).c_str(),flags, NULL, &do_files);
 	    flags = GLOB_APPEND;
 	}
 	char**f = do_files.gl_pathv;
@@ -525,7 +525,7 @@ int IniParser::parse()
 		    y2error ("Cannot open %s.", *f);
 		else
 		{
-		    FileDescr fdsc (agent.targetPath(*f).c_str());
+		    FileDescr fdsc (*f);
 		    multi_files[*f] = fdsc;
 		    inifile.initSection (section_name, "", -1, section_index);
 		    parse_helper(inifile.getSection(section_name.c_str()));
@@ -553,7 +553,7 @@ int IniParser::parse()
     }
     else
     {
-	if (scanner_start (file.c_str()))
+	if (scanner_start (agent.targetPath(file).c_str()))
 	    {
 		y2error ("Can not open %s.", file.c_str());
 		return -1;
