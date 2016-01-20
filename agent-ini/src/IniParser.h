@@ -234,8 +234,7 @@ struct param
 struct FileDescr
 {
     /**
-     * File name
-     * FIXME source/target
+     * Target file name including agent root prefix
      */
     string fn;
     /**
@@ -264,13 +263,12 @@ private:
     /**
      * Times of last modification of read files, used in multiple files
      * mode.
-     Is the key a filename?
-     * FIXME source/target
+     * Key is target filename.
      */
     map<string,FileDescr> multi_files;
     /**
      * File name of the ini file -- single file mode only.
-     * FIXME source/target
+     * It is logical name, so without agent root prefix and need to be prefixed when used.
      */
     string file;
     /**
@@ -337,8 +335,7 @@ private:
      */
     ifstream scanner;
     /**
-     * name of scanned file
-     * FIXME confirmed: target
+     * name of scanned file. It is target name including agent root.
      */
     string scanner_file;
     /**
@@ -386,7 +383,7 @@ private:
     int parse_helper(IniSection&ini);
     /**
      * Write one ini file.
-     * FIXME source/target
+     * @param filename is logical filename without agent root prefix
      */
     int write_file(const string & filename, IniSection & section);
     /**
@@ -466,8 +463,7 @@ public:
      * rewrites section name to file name using the rule rb.
      * @param sec section name
      * @param rb index of rewrite rule
-     * @return rewritten file name
-     * FIXME source/target
+     * @return rewritten file name. It do *not* add agent root prefix, so keep it logical one.
      */
     string getFileName (const string&sec, int rb) const;
     /**
