@@ -235,6 +235,7 @@ struct FileDescr
 {
     /**
      * File name
+     * FIXME source/target
      */
     string fn;
     /**
@@ -263,10 +264,13 @@ private:
     /**
      * Times of last modification of read files, used in multiple files
      * mode.
+     Is the key a filename?
+     * FIXME source/target
      */
     map<string,FileDescr> multi_files;
     /**
      * File name of the ini file -- single file mode only.
+     * FIXME source/target
      */
     string file;
     /**
@@ -334,6 +338,7 @@ private:
     ifstream scanner;
     /**
      * name of scanned file
+     * FIXME confirmed: target
      */
     string scanner_file;
     /**
@@ -352,7 +357,7 @@ private:
      */
     bool multiple_files;
     /**
-     * Vector of globe-expressions.
+     * Vector of glob-expressions. (logical, not target paths)
      */
     vector<string> files;
 
@@ -363,6 +368,7 @@ private:
 
     /**
      * Open ini file.
+     * @param fn target path
      */
     int scanner_start(const char*fn);
     /**
@@ -380,6 +386,7 @@ private:
     int parse_helper(IniSection&ini);
     /**
      * Write one ini file.
+     * FIXME source/target
      */
     int write_file(const string & filename, IniSection & section);
     /**
@@ -415,12 +422,12 @@ public:
     ~IniParser ();
     /**
      * Sets parser to single file mode and sets the file name to read.
-     * @param fn file name of ini file
+     * @param fn file name of ini file (logical, not target)
      */
     void initFiles (const char*fn);
     /**
      * Sets parser to multiple file mode and sets the glob-expressions.
-     * @param f list of glob-expressions
+     * @param f list of glob-expressions (logical, not target)
      */
     void initFiles (const YCPList&f);
     /**
@@ -460,6 +467,7 @@ public:
      * @param sec section name
      * @param rb index of rewrite rule
      * @return rewritten file name
+     * FIXME source/target
      */
     string getFileName (const string&sec, int rb) const;
     /**
