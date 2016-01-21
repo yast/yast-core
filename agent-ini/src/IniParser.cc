@@ -555,7 +555,7 @@ int IniParser::parse()
     {
 	if (scanner_start (agent.targetPath(file).c_str()))
 	    {
-		y2error ("Can not open %s.", file.c_str());
+		y2error ("Can not open %s.", agent.targetPath(file).c_str());
 		return -1;
 	    }
 	parse_helper(inifile);
@@ -970,11 +970,11 @@ int IniParser::write()
 			deleted_sections.erase (filename);
 
 			if (!s.isDirty ()) {
-			    y2debug ("Skipping file %s that was not changed.", filename.c_str());
+			    y2debug ("Skipping file %s that was not changed.", agent.targetPath(filename).c_str());
 			    continue;
 			}
 			s.initReadBy ();
-                        bugs += write_file(filename, s);
+                        bugs += write_file(agent.targetPath(filename), s);
 		    }
 		else
 		    {
@@ -994,25 +994,25 @@ int IniParser::write()
     }
     else
     {
-        bugs += write_file(file, inifile);
+        bugs += write_file(agent.targetPath(file), inifile);
 	timestamp = getTimeStamp ();
     }
     return bugs ? -1 : 0;
 }
 
 // return 0 on success, like write
-int IniParser::write_file(const string & logical_filename, IniSection & section)
+int IniParser::write_file(const string & target_filename, IniSection & section)
 {
     // ensure that the directories exist
-    Pathname pn(agent.targetPath(logical_filename).c_str());
+    Pathname pn(target_filename.c_str());
     PathInfo::assert_dir (pn.dirname ());
 
     mode_t file_umask = section.isPrivate()? 0077: 0022;
     mode_t orig_umask = umask(file_umask);
 
-    ofstream of(agent.targetPath(logical_filename));
+    ofstream of(target_filename);
     if (!of.good()) {
-        y2error ("Can not open file %s for write", logical_filename.c_str());
+        y2error ("Can not open file %s for write", target_filename.c_str());
         return -1;
     }
 

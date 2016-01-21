@@ -384,9 +384,9 @@ private:
     int parse_helper(IniSection&ini);
     /**
      * Write one ini file.
-     * @param filename is logical filename without agent root prefix
+     * @param target_filename is with agent root prefix
      */
-    int write_file(const string & filename, IniSection & section);
+    int write_file(const string & target_filename, IniSection & section);
     /**
      * Write one ini file.
      */
