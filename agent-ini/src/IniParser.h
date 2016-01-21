@@ -234,7 +234,7 @@ struct param
 struct FileDescr
 {
     /**
-     * File name
+     * Target file name including agent root prefix
      */
     string fn;
     /**
@@ -263,10 +263,13 @@ private:
     /**
      * Times of last modification of read files, used in multiple files
      * mode.
+     * Key is target filename.
      */
     map<string,FileDescr> multi_files;
     /**
      * File name of the ini file -- single file mode only.
+     * It is a logical name, so without the agent root prefix and
+     * it needs to be prefixed when used.
      */
     string file;
     /**
@@ -333,7 +336,7 @@ private:
      */
     ifstream scanner;
     /**
-     * name of scanned file
+     * name of scanned file. It is target name including agent root.
      */
     string scanner_file;
     /**
@@ -352,7 +355,7 @@ private:
      */
     bool multiple_files;
     /**
-     * Vector of globe-expressions.
+     * Vector of glob-expressions. (logical, not target paths)
      */
     vector<string> files;
 
@@ -363,6 +366,7 @@ private:
 
     /**
      * Open ini file.
+     * @param fn target path
      */
     int scanner_start(const char*fn);
     /**
@@ -380,8 +384,9 @@ private:
     int parse_helper(IniSection&ini);
     /**
      * Write one ini file.
+     * @param target_filename is with agent root prefix
      */
-    int write_file(const string & filename, IniSection & section);
+    int write_file(const string & target_filename, IniSection & section);
     /**
      * Write one ini file.
      */
@@ -415,12 +420,12 @@ public:
     ~IniParser ();
     /**
      * Sets parser to single file mode and sets the file name to read.
-     * @param fn file name of ini file
+     * @param fn file name of ini file (logical, not target)
      */
     void initFiles (const char*fn);
     /**
      * Sets parser to multiple file mode and sets the glob-expressions.
-     * @param f list of glob-expressions
+     * @param f list of glob-expressions (logical, not target)
      */
     void initFiles (const YCPList&f);
     /**
@@ -457,6 +462,7 @@ public:
     /**
      * Get the file name of section. If there is a rewrite rule rb,
      * rewrites section name to file name using the rule rb.
+     * It does *not* add agent root prefix, so it keeps it a logical name.
      * @param sec section name
      * @param rb index of rewrite rule
      * @return rewritten file name

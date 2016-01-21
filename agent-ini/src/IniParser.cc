@@ -163,9 +163,9 @@ void IniParser::initFiles (const YCPList&f)
 	else
 	    y2error ("Bad file specification: %s", f->value (i)->toString ().c_str());
 }
-void IniParser::initFiles (const char*fn)
+void IniParser::initFiles (const char* logical_filename)
 {
-    file = fn;
+    file = logical_filename;
     multiple_files = false;
 }
 int IniParser::initMachine (const YCPMap&scr)
@@ -411,10 +411,10 @@ int IniParser::initMachine (const YCPMap&scr)
     return 0;
 }
 
-int IniParser::scanner_start(const char*fn)
+int IniParser::scanner_start(const char* target_filename)
 {
-    scanner.open(agent.targetPath(fn));
-    scanner_file = fn;
+    scanner.open(target_filename);
+    scanner_file = target_filename;
     scanner_line = 0;
     if (!scanner.is_open())
         return -1;
@@ -472,14 +472,14 @@ bool FileDescr::changed ()
     return false;
 }
 
-FileDescr::FileDescr (const char*fn_)
+FileDescr::FileDescr (const char* target_filename)
 {
-    fn = fn_;
-    sn = fn_;
+    fn = target_filename;
+    sn = target_filename;
     struct stat st;
-    if (stat(fn_, &st))
+    if (stat(target_filename, &st))
     {
-	y2error("Unable to stat '%s': %s", fn_, strerror(errno));
+	y2error("Unable to stat '%s': %s", target_filename, strerror(errno));
 	timestamp = 0;
     }
     timestamp = st.st_mtime;
@@ -494,14 +494,14 @@ int IniParser::parse()
 	int flags = 0;
 	for (int i = 0;i<len;i++)
 	{
-	    glob (files[i].c_str (),flags, NULL, &do_files);
+	    glob (agent.targetPath(files[i]).c_str(),flags, NULL, &do_files);
 	    flags = GLOB_APPEND;
 	}
-	char**f = do_files.gl_pathv;
-	for (unsigned int i = 0;i<do_files.gl_pathc;i++, f++)
+	char**tgt_f = do_files.gl_pathv;
+	for (unsigned int i = 0;i<do_files.gl_pathc;i++, tgt_f++)
 	{
 	    int section_index = -1;
-	    string section_name = *f;
+	    string section_name = *tgt_f;
 	    //FIXME: create function out of it.
 	    // do we have name rewrite rules?
 	    for (size_t j = 0; j < rewrites.size (); j++)
@@ -511,22 +511,22 @@ int IniParser::parse()
 		    {
 			section_index = j;
 			section_name = m[1];
-			y2debug ("Rewriting %s to %s", *f, section_name.c_str());
+			y2debug ("Rewriting %s to %s", *tgt_f, section_name.c_str());
 			break;
 		    }
 		}
 
 	    // do we know about the file?
-	    map<string,FileDescr>::iterator ff = multi_files.find (*f);
-	    if (ff == multi_files.end())
+	    map<string,FileDescr>::iterator tgt_fi = multi_files.find (*tgt_f);
+	    if (tgt_fi == multi_files.end())
 	    {
 		// new file
-		if (scanner_start (*f))
-		    y2error ("Cannot open %s.", *f);
+		if (scanner_start (*tgt_f))
+		    y2error ("Cannot open %s.", *tgt_f);
 		else
 		{
-		    FileDescr fdsc (agent.targetPath(*f).c_str());
-		    multi_files[*f] = fdsc;
+		    FileDescr fdsc (*tgt_f);
+		    multi_files[*tgt_f] = fdsc;
 		    inifile.initSection (section_name, "", -1, section_index);
 		    parse_helper(inifile.getSection(section_name.c_str()));
 		    scanner_stop();
@@ -534,15 +534,15 @@ int IniParser::parse()
 	    }
 	    else
 	    {
-		if ((*ff).second.changed ())
+		if ((*tgt_fi).second.changed ())
 		{
-		    if (scanner_start (*f))
-			y2error ("Cannot open %s.", *f);
+		    if (scanner_start (*tgt_f))
+			y2error ("Cannot open %s.", *tgt_f);
 		    else
 		    {
-			y2debug ("File %s changed. Reloading.", *f);
-			FileDescr fdsc (agent.targetPath(*f).c_str());
-			multi_files [*f] = fdsc;
+			y2debug ("File %s changed. Reloading.", *tgt_f);
+			FileDescr fdsc (*tgt_f);
+			multi_files [*tgt_f] = fdsc;
 			inifile.initSection (section_name, "", -1, section_index);
 			parse_helper(inifile.getSection(section_name.c_str()));
 			scanner_stop();
@@ -553,9 +553,9 @@ int IniParser::parse()
     }
     else
     {
-	if (scanner_start (file.c_str()))
+	if (scanner_start (agent.targetPath(file).c_str()))
 	    {
-		y2error ("Can not open %s.", file.c_str());
+		y2error ("Can not open %s.", agent.targetPath(file).c_str());
 		return -1;
 	    }
 	parse_helper(inifile);
@@ -970,11 +970,11 @@ int IniParser::write()
 			deleted_sections.erase (filename);
 
 			if (!s.isDirty ()) {
-			    y2debug ("Skipping file %s that was not changed.", filename.c_str());
+			    y2debug ("Skipping file %s that was not changed.", agent.targetPath(filename).c_str());
 			    continue;
 			}
 			s.initReadBy ();
-                        bugs += write_file(filename, s);
+                        bugs += write_file(agent.targetPath(filename), s);
 		    }
 		else
 		    {
@@ -994,25 +994,25 @@ int IniParser::write()
     }
     else
     {
-        bugs += write_file(file, inifile);
+        bugs += write_file(agent.targetPath(file), inifile);
 	timestamp = getTimeStamp ();
     }
     return bugs ? -1 : 0;
 }
 
 // return 0 on success, like write
-int IniParser::write_file(const string & filename, IniSection & section)
+int IniParser::write_file(const string & target_filename, IniSection & section)
 {
     // ensure that the directories exist
-    Pathname pn(filename);
+    Pathname pn(target_filename.c_str());
     PathInfo::assert_dir (pn.dirname ());
 
     mode_t file_umask = section.isPrivate()? 0077: 0022;
     mode_t orig_umask = umask(file_umask);
 
-    ofstream of(agent.targetPath(filename));
+    ofstream of(target_filename);
     if (!of.good()) {
-        y2error ("Can not open file %s for write", filename.c_str());
+        y2error ("Can not open file %s for write", target_filename.c_str());
         return -1;
     }
 
