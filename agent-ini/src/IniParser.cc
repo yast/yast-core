@@ -541,7 +541,7 @@ int IniParser::parse()
 		    else
 		    {
 			y2debug ("File %s changed. Reloading.", *tgt_f);
-			FileDescr fdsc (agent.targetPath(*tgt_f).c_str());
+			FileDescr fdsc (*tgt_f);
 			multi_files [*tgt_f] = fdsc;
 			inifile.initSection (section_name, "", -1, section_index);
 			parse_helper(inifile.getSection(section_name.c_str()));
@@ -1004,7 +1004,7 @@ int IniParser::write()
 int IniParser::write_file(const string & logical_filename, IniSection & section)
 {
     // ensure that the directories exist
-    Pathname pn(logical_filename);
+    Pathname pn(agent.targetPath(logical_filename).c_str());
     PathInfo::assert_dir (pn.dirname ());
 
     mode_t file_umask = section.isPrivate()? 0077: 0022;
