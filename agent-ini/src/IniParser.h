@@ -268,7 +268,8 @@ private:
     map<string,FileDescr> multi_files;
     /**
      * File name of the ini file -- single file mode only.
-     * It is logical name, so without agent root prefix and need to be prefixed when used.
+     * It is a logical name, so without the agent root prefix and
+     * it needs to be prefixed when used.
      */
     string file;
     /**
@@ -461,9 +462,10 @@ public:
     /**
      * Get the file name of section. If there is a rewrite rule rb,
      * rewrites section name to file name using the rule rb.
+     * It does *not* add agent root prefix, so it keeps it a logical name.
      * @param sec section name
      * @param rb index of rewrite rule
-     * @return rewritten file name. It do *not* add agent root prefix, so keep it logical one.
+     * @return rewritten file name
      */
     string getFileName (const string&sec, int rb) const;
     /**
