@@ -17,7 +17,7 @@
 
 
 Name:           yast2-core
-Version:        3.1.19
+Version:        3.1.20
 Release:        0
 Url:            https://github.com/yast/yast-core
 
