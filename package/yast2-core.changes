@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb  2 15:15:39 UTC 2016 - mvidner@suse.com
+
+- Treat C/C++ warnings as errors but only via bcond_with werror.
+- 3.1.21
+
+-------------------------------------------------------------------
 Tue Feb  2 12:17:32 UTC 2016 - mvidner@suse.com
 
 - Treat C/C++ warnings as errors.
