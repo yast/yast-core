@@ -16,6 +16,12 @@
 #
 
 
+# Optionally treat C/C++ warnings as errors.
+# It is off by default so that it will not block mass tests of new GCC
+# but we want to enable it in a side repo
+# to be able to fix newly detected problems relatively early.
+%bcond_with werror
+
 Name:           yast2-core
 Version:        3.1.20
 Release:        0
@@ -91,6 +97,11 @@ sed -i SUBDIRS -e 's/autodocs//'
 %endif
 
 export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
+
+%if %{with werror}
+export   CFLAGS="${RPM_OPT_FLAGS} -Werror"
+export CXXFLAGS="${RPM_OPT_FLAGS} -Werror"
+%endif
 
 %yast_build
 
