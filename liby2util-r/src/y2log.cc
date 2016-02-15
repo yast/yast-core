@@ -173,6 +173,10 @@ void y2_logger_blanik(loglevel_t level, const string& component, const char *fil
  */
 string y2_logfmt_common(bool simple, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
+    __attribute__ ((format (printf, 6, 0)));
+
+string y2_logfmt_common(bool simple, const string& component, const char *file,
+           const int line, const char *function, const char *format, va_list ap)
 {
     /* Prepare the log text */
     string logtext = stringutil::vform(format, ap);
@@ -265,6 +269,10 @@ string y2_logfmt_prefix (loglevel_t level)
 
 
 void y2_vlogger_function(loglevel_t level, const string& component, const char *file,
+           const int line, const char *function, const char *format, va_list ap)
+    __attribute__ ((format (printf, 6, 0)));
+
+void y2_vlogger_function(loglevel_t level, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)
 {
     string common = y2_logfmt_common (log_simple,
@@ -284,6 +292,10 @@ void y2_vlogger_function(loglevel_t level, const string& component, const char *
 	do_log_yast (tolog.c_str ());
     }
 }
+
+void y2_vlogger_blanik(loglevel_t level, const string& component, const char *file,
+	   const int line, const char *function, const char *format, va_list ap)
+    __attribute__ ((format (printf, 6, 0)));
 
 void y2_vlogger_blanik(loglevel_t level, const string& component, const char *file,
 	   const int line, const char *function, const char *format, va_list ap)

@@ -46,6 +46,9 @@ enum Trim {
   TRIM    = (L_TRIM|R_TRIM)
 };
 
+inline std::string vform( const char * format, va_list ap )
+    __attribute__ ((format (printf, 1, 0)));
+
 inline std::string vform( const char * format, va_list ap ) {
   char * buf = 0;
   std::string val;

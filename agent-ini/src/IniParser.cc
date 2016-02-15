@@ -1023,6 +1023,9 @@ int IniParser::write_file(const string & target_filename, IniSection & section)
     return 0;
 }
 
+std::string format (const char * format, ...)
+    __attribute__ ((format (printf, 1, 2)));
+
 /** sprintf to a std::string, throwing runtime_error on OOM */
 std::string format (const char * format, ...) {
     // copied from y2util/stringutil.h but added the throw
