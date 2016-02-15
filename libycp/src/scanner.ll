@@ -19,6 +19,12 @@
 
 %{
 
+#ifdef __clang__
+// There are many "register" variables declared in generated flex code
+// which we cannot affect, but Clang warns about them. Shut that up.
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 #include <list>
 #include <string>
 #include <sstream>
