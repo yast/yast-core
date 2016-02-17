@@ -299,28 +299,28 @@ s_substring1 (const YCPString &s, const YCPInteger &i1)
     if (s->isAscii())
     {
 	string ss = s->value ();
-	string::size_type start = i1->value();
+	long long start = i1->value();
 
-	if (start < 0 || start > ss.size())
+	if (start < 0 || start > (long long)ss.size())
 	{
 	    ycp2error("Substring index out of range");
 	    return YCPString ("");
 	}
 
-	return YCPString(ss.substr(start, string::npos));
+	return YCPString(ss.substr((string::size_type) start, string::npos));
     }
     else
     {
 	wstring ss = s->wvalue();
-	wstring::size_type start = i1->value();
+	long long start = i1->value();
 
-	if (start < 0 || start > ss.size())
+	if (start < 0 || start > (long long)ss.size())
 	{
 	    ycp2error("Substring index out of range");
 	    return YCPString("");
 	}
 
-	return YCPString(ss.substr(start, wstring::npos));
+	return YCPString(ss.substr((wstring::size_type) start, wstring::npos));
     }
 }
 
