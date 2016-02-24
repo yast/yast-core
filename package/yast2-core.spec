@@ -112,6 +112,10 @@ export CXXFLAGS="${RPM_OPT_FLAGS} -Werror"
 
 %if %{with clang}
 export CC=clang CXX=clang++
+
+# warning/error: argument unused during compilation
+CFLAGS="${CFLAGS/-grecord-gcc-switches/}"
+CXXFLAGS="${CXXFLAGS/-grecord-gcc-switches/}"
 %endif
 
 %yast_build
