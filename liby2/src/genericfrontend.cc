@@ -902,7 +902,8 @@ print_error (const char* format, ...)
 
     va_end (ap);
 
-    fputs (msg, stderr);
+    fprintf (stderr, "%s\n", msg);
+
     y2error ("%s", msg);
 }
 
