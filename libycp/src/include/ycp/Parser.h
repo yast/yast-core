@@ -29,9 +29,9 @@
 #include "ycp/YCode.h"
 
 class Scanner;
-class blockstack_t;
-class scannerstack_t;
-class switchstack_t;
+struct blockstack_t;
+struct scannerstack_t;
+struct switchstack_t;
 class YBlock;
 
 /**

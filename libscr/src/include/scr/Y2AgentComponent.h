@@ -16,6 +16,7 @@
 #include <ycp/YCPCode.h>
 #include <ycp/YCPVoid.h>
 #include <ycp/YCPTerm.h>
+#include <ycp/YCPPath.h>
 
 class SCRAgent;
 

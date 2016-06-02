@@ -200,7 +200,7 @@ class IniSection;
 
 
 enum IniType { VALUE, SECTION,};
-struct IniContainerElement;
+class IniContainerElement;
 
 typedef list<IniContainerElement> IniContainer;
 typedef IniContainer::iterator IniIterator;

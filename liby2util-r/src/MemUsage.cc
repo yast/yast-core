@@ -51,11 +51,12 @@ void MemUsage::MuDump ()
 	ie = m_mu_instances->end ();
     for (; ii != ie; ++ii)
     {
-	const char * name = typeid (**ii).name ();
+	MemUsage * tracked_ptr = *ii;
+	const char * name = typeid (*tracked_ptr).name ();
 	std::string dename = demangle (name);
 	if (m_mu_size.find (dename) == m_mu_size.end())
 	{
-	    m_mu_size[dename] = (**ii).mem_size();
+	    m_mu_size[dename] = (*tracked_ptr).mem_size();
 	}
 	++ m_mu_count[dename];
     }
@@ -83,7 +84,8 @@ void MemUsage::MuDumpVal (const char *aname)
 	ie = m_mu_instances->end ();
     for (; ii != ie; ++ii)
     {
-	std::string dname = demangle (typeid (**ii).name ());
+	MemUsage * tracked_ptr = *ii;
+	std::string dname = demangle (typeid (*tracked_ptr).name ());
 	if (dname == aname)
 	{
 	    fprintf (stderr, "p *(%s *)%p\n", aname, *ii);

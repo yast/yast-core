@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun  2 13:46:02 UTC 2016 - mvidner@suse.com
+
+- Optionally build with Clang instead of GCC (via bcond_with clang)
+- Fixed most of Clang warnings.
+- 3.1.23
+
+-------------------------------------------------------------------
 Thu Mar  3 12:36:06 CET 2016 - gs@suse.de
 
 - Add missing newline to error messages (bsc#969236)

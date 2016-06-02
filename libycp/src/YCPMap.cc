@@ -178,7 +178,7 @@ YCPMapRep::compare(const YCPMap& m) const
 	{
 	    // equal length ==> pairwise comparison
 	    for( YCPMap::const_iterator pos_this = begin(), pos_m = m->begin();
-		 pos_this != end(), pos_m != m->end();
+		 pos_this != end();
 		 ++pos_this, ++pos_m )
 	    {
 		// compare keys

@@ -62,7 +62,12 @@ class Y2PluginComponent : public Y2Component
     /**
      * The component level the plugin was started in.
      */
+#ifdef __clang__
+    int level __attribute__((__unused__));
+    // 'level' can be removed for SLE13; now keeping it for ABI.
+#else
     int level;
+#endif
 
     /**
      * Handle of the dynamic loaded library.

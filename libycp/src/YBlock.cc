@@ -481,7 +481,7 @@ YBlock::toStringSwitch (map<YCPValue, int, ycp_less> cases, int defaultcase) con
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
-    YCPValue values[statementcount];
+    YCPValue * values = new YCPValue[statementcount];
 
     for (int i = 0; i < statementcount; i++)
 	values[i] = YCPNull ();
@@ -514,6 +514,7 @@ YBlock::toStringSwitch (map<YCPValue, int, ycp_less> cases, int defaultcase) con
 	stmt = stmt->next;
 	index++;
     }
+    delete[] values;
 
     s += "\n}\n";
     return s;
@@ -525,7 +526,8 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 {
     // first, create reverse map of cases
     int statementcount = statementCount ();
-    vector<YCPValue> values[statementcount];
+
+    vector<YCPValue> * values = new vector<YCPValue>[statementcount];
 
     for (map<YCPValue, int, ycp_less>::iterator it = cases.begin ();
 	it != cases.end (); it++ )
@@ -566,6 +568,7 @@ YBlock::toXmlSwitch( map<YCPValue, int, ycp_less> cases, int defaultcase, std::o
 	index++;
     }
     str << closing_tag;
+    delete[] values;
 
     return str;
 }

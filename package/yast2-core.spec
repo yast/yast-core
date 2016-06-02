@@ -15,6 +15,9 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
+# Optionally build with llvm-clang instead of gcc
+# because we are interested in the warnings it gives.
+%bcond_with clang
 
 # Optionally treat C/C++ warnings as errors.
 # It is off by default so that it will not block mass tests of new GCC
@@ -23,7 +26,7 @@
 %bcond_with werror
 
 Name:           yast2-core
-Version:        3.1.22
+Version:        3.1.23
 Release:        0
 Url:            https://github.com/yast/yast-core
 
@@ -32,7 +35,11 @@ Source0:        %{name}-%{version}.tar.bz2
 
 # obviously
 BuildRequires:  boost-devel
+%if %{with clang}
+BuildRequires:  llvm-clang
+%else
 BuildRequires:  gcc-c++
+%endif
 BuildRequires:  libtool
 # we have a parser
 BuildRequires:  bison
@@ -101,6 +108,14 @@ export SUSE_ASNEEDED=0 # disable --as-needed until this package is fixed
 %if %{with werror}
 export   CFLAGS="${RPM_OPT_FLAGS} -Werror"
 export CXXFLAGS="${RPM_OPT_FLAGS} -Werror"
+%endif
+
+%if %{with clang}
+export CC=clang CXX=clang++
+
+# warning/error: argument unused during compilation
+CFLAGS="${CFLAGS/-grecord-gcc-switches/}"
+CXXFLAGS="${CXXFLAGS/-grecord-gcc-switches/}"
 %endif
 
 %yast_build
