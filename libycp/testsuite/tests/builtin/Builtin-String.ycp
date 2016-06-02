@@ -58,6 +58,10 @@
 (substring ("some text", 5, 2))
 (substring ("some text", 42, 2))
 
+(substring ("some text", -1))
+(substring ("some text", 5, 0))
+(substring ("some text", 5, 42))
+(substring ("some text", 5, -42))
 
 ("** lsubstring **")
 

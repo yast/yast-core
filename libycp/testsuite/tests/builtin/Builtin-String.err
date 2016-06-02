@@ -128,36 +128,53 @@ substring ("some text", 42, 2)
 [Interpreter] tests/builtin/Builtin-String.ycp:59 Substring index out of range
 Parsed:
 ----------------------------------------------------------------------
+substring ("some text", -1)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-String.ycp:61 Substring index out of range
+Parsed:
+----------------------------------------------------------------------
+substring ("some text", 5, 0)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+substring ("some text", 5, 42)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
+substring ("some text", 5, -42)
+----------------------------------------------------------------------
+Parsed:
+----------------------------------------------------------------------
 "** lsubstring **"
-----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-String.ycp:64 Warning: lsubstring(...) is deprecated, please fix
-Parsed:
-----------------------------------------------------------------------
-lsubstring ("some text", 5)
-----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-String.ycp:65 Warning: lsubstring(...) is deprecated, please fix
-Parsed:
-----------------------------------------------------------------------
-lsubstring ("some text", 42)
-----------------------------------------------------------------------
-[Interpreter] tests/builtin/Builtin-String.ycp:65 Substring index out of range
-[Parser] tests/builtin/Builtin-String.ycp:66 Warning: lsubstring(...) is deprecated, please fix
-Parsed:
-----------------------------------------------------------------------
-lsubstring ("ěščřžýáí", 5)
 ----------------------------------------------------------------------
 [Parser] tests/builtin/Builtin-String.ycp:68 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
-lsubstring ("some text", 5, 2)
+lsubstring ("some text", 5)
 ----------------------------------------------------------------------
 [Parser] tests/builtin/Builtin-String.ycp:69 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
-lsubstring ("some text", 42, 2)
+lsubstring ("some text", 42)
 ----------------------------------------------------------------------
 [Interpreter] tests/builtin/Builtin-String.ycp:69 Substring index out of range
 [Parser] tests/builtin/Builtin-String.ycp:70 Warning: lsubstring(...) is deprecated, please fix
+Parsed:
+----------------------------------------------------------------------
+lsubstring ("ěščřžýáí", 5)
+----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:72 Warning: lsubstring(...) is deprecated, please fix
+Parsed:
+----------------------------------------------------------------------
+lsubstring ("some text", 5, 2)
+----------------------------------------------------------------------
+[Parser] tests/builtin/Builtin-String.ycp:73 Warning: lsubstring(...) is deprecated, please fix
+Parsed:
+----------------------------------------------------------------------
+lsubstring ("some text", 42, 2)
+----------------------------------------------------------------------
+[Interpreter] tests/builtin/Builtin-String.ycp:73 Substring index out of range
+[Parser] tests/builtin/Builtin-String.ycp:74 Warning: lsubstring(...) is deprecated, please fix
 Parsed:
 ----------------------------------------------------------------------
 lsubstring ("ěščřžýáí", 5, 2)
@@ -174,9 +191,9 @@ Parsed:
 ----------------------------------------------------------------------
 mergestring (["abc", "dev", "ghi", ""], "/")
 ----------------------------------------------------------------------
-[Parser] tests/builtin/Builtin-String.ycp:77 No match for 'mergestring : <unspec> (list, string)'
-[Parser] tests/builtin/Builtin-String.ycp:77 Please fix parameter types to match one of:
-[Parser] tests/builtin/Builtin-String.ycp:77 'mergestring : string (const list <string>, string)'
-[Parser] tests/builtin/Builtin-String.ycp:77 Wrong parameters in call to mergestring(...)
-[Parser] tests/builtin/Builtin-String.ycp:77 Expected '(const list <string>, string)', seen '(list, string)'.
+[Parser] tests/builtin/Builtin-String.ycp:81 No match for 'mergestring : <unspec> (list, string)'
+[Parser] tests/builtin/Builtin-String.ycp:81 Please fix parameter types to match one of:
+[Parser] tests/builtin/Builtin-String.ycp:81 'mergestring : string (const list <string>, string)'
+[Parser] tests/builtin/Builtin-String.ycp:81 Wrong parameters in call to mergestring(...)
+[Parser] tests/builtin/Builtin-String.ycp:81 Expected '(const list <string>, string)', seen '(list, string)'.
 runycp: parser error
