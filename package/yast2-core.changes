@@ -2,7 +2,7 @@
 Thu Jun  2 13:46:02 UTC 2016 - mvidner@suse.com
 
 - Optionally build with Clang instead of GCC (via bcond_with clang)
-- Fixed most of Clang warnings.
+- Fixed most of Clang warnings (bsc#982942)
 - 3.1.23
 
 -------------------------------------------------------------------
