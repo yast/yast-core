@@ -50,10 +50,6 @@ BuildRequires:  automake >= 1.12
 BuildRequires:  yast2-devtools >= 3.1.10
 # testsuite
 BuildRequires:  dejagnu
-# autodocs
-BuildRequires:  doxygen
-# docbook docs
-BuildRequires:  docbook-xsl-stylesheets
 BuildRequires:  libxslt
 # catalog: convert URIs to local filenames
 BuildRequires:  sgml-skel
@@ -62,8 +58,6 @@ Summary:        YaST2 - Core Libraries
 License:        GPL-2.0+
 Group:          System/YaST
 Requires:       perl = %{perl_version}
-Provides:       liby2util = 2.16.1
-Obsoletes:      liby2util < 2.16.1
 
 %description
 This package contains the scanner, parser, and interpreter runtime
