@@ -66,16 +66,10 @@ AC_CHECK_LIB(owcrypt, crypt_gensalt_rn,
 )
 AC_SUBST(CRYPTO_LIBS)
 
-AX_CHECK_DOCBOOK
 CREATE_PKGCONFIG=true
 ## some common checks
 @YAST2-CHECKS-COMMON@
 @YAST2-CHECKS-PROGRAM@
 @YAST2-CHECKS-TESTSUITE@
 
-## and generate the output
-AC_CONFIG_FILES([
-	scr/doc/SCR.html
-	scr/doc/intro_to_scr.html
-])
 @YAST2-OUTPUT@

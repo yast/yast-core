@@ -2,8 +2,6 @@
 # Makefile.am for ycpc command line compiler
 #
 
-SUBDIRS = doc
-
 AM_CXXFLAGS = -DY2LOG=\"libycp\"
 
 AM_CPPFLAGS = -I$(top_srcdir)/libycp/src/include \
