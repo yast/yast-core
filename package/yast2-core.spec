@@ -50,9 +50,6 @@ BuildRequires:  automake >= 1.12
 BuildRequires:  yast2-devtools >= 3.1.10
 # testsuite
 BuildRequires:  dejagnu
-BuildRequires:  libxslt
-# catalog: convert URIs to local filenames
-BuildRequires:  sgml-skel
 
 Summary:        YaST2 - Core Libraries
 License:        GPL-2.0+
