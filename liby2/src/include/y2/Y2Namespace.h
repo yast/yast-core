@@ -136,6 +136,10 @@ public:
     // ensure that the namespace is initialized
     virtual void initialize ();
 
+    /**
+     * @return true if this namespace wraps an exception
+     */
+    virtual bool getException(string& message);
 };
 
 
