@@ -432,7 +432,20 @@ AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
     if ((line == 0) || (*line == 0))
 	line = getLine ();
     if (line == 0)
+    {
+        // handle special terms that do not need data like optional data
+        if (syntax->valuetype() == YT_TERM)
+        {
+	    YCPTerm term = syntax->asTerm ();
+	    const string s = term->name ();
+            if (s == "Optional" || s == "Skip")
+		return YCPVoid ();
+            else if (s == "Match")
+		return currentMatch;
+        }
+
 	return YCPNull ();
+    }
     if (syntax.isNull ())
 	return YCPNull ();
 
