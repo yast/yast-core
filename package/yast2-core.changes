@@ -1,9 +1,8 @@
 -------------------------------------------------------------------
 Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
 
-- ag_any: Fix early exit when optional element read EOL like e.g
-  fstab without trailing new line
-  (bsc#429326#c11)
+- ag_anyangent: Do not fail the parse when an Optional syntax meets
+  EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
 - 3.2.0
 
 -------------------------------------------------------------------
