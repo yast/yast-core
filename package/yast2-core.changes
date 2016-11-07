@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
+
+- ag_any: Fix early exit when optional element read EOL like e.g
+  fstab without trailing new line
+  (bsc#429326#c11)
+- 3.2.0
+
+-------------------------------------------------------------------
 Tue Sep 20 13:33:01 UTC 2016 - jreidinger@suse.com
 
 - disable doc generation (FATE#320356)
