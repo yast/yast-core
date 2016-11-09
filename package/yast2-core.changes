@@ -3,7 +3,7 @@ Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
 
 - ag_anyangent: Do not fail the parse when an Optional syntax meets
   EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
-- 3.1.18.1
+- 3.1.24
 
 -------------------------------------------------------------------
 Thu Jun  2 13:46:02 UTC 2016 - mvidner@suse.com
