@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
+
+- ag_anyangent: Do not fail the parse when an Optional syntax meets
+  EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
+- 2.17.47
+
+-------------------------------------------------------------------
 Mon Sep  8 07:40:46 UTC 2014 - mvidner@suse.com
 
 - Enable buffering for parsing agent output (bnc#854809).
