@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
+
+- ag_anyangent: Do not fail the parse when an Optional syntax meets
+  EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
+- 3.1.18.1
+
+-------------------------------------------------------------------
 Thu Jun  2 13:46:02 UTC 2016 - mvidner@suse.com
 
 - Optionally build with Clang instead of GCC (via bcond_with clang)
@@ -9,7 +16,7 @@ Thu Jun  2 13:46:02 UTC 2016 - mvidner@suse.com
 Thu Mar  3 12:36:06 CET 2016 - gs@suse.de
 
 - Add missing newline to error messages (bsc#969236)
-- 3.1.22 
+- 3.1.22
 
 -------------------------------------------------------------------
 Tue Feb  2 15:15:39 UTC 2016 - mvidner@suse.com
