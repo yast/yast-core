@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
+
+- ag_anyangent: Do not fail the parse when an Optional syntax meets
+  EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
+- 3.1.12.2
+
+-------------------------------------------------------------------
 Tue Nov 25 09:59:49 UTC 2014 - mvidner@suse.com
 
 - ag_any: respect target root also when the file
