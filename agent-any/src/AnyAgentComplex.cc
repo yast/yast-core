@@ -425,16 +425,32 @@ AnyAgent::unparseTuple (const YCPList & syntax, const YCPValue & value)
 
 // parseData
 // toplevel parsing function
-
+// @return YCPNull if parsing failed like invalid syntax or EOF when some data
+//   needed. It returns YCPVoid if element is optional and not presented or just
+//   unwinding data like Var or Skip or if Or failed to match any of its
+//   elements. Otherwise it returns parsed data according to syntax parameter.
 YCPValue
 AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
 {
+    if (syntax.isNull ())
+	return YCPNull ();
     if ((line == 0) || (*line == 0))
 	line = getLine ();
     if (line == 0)
+    {
+        // If the syntax being parsed does not need any string, then EOF is in fact OK
+        if (syntax->valuetype() == YT_TERM)
+        {
+	    YCPTerm term = syntax->asTerm ();
+	    const string s = term->name ();
+            if (s == "Optional" || s == "Skip")
+		return YCPVoid ();
+            else if (s == "Match")
+		return currentMatch;
+        }
+
 	return YCPNull ();
-    if (syntax.isNull ())
-	return YCPNull ();
+    }
 
     y2debug ("parseData %s('%s',[%s])", (optional ? "?" : "!"), line,
 	     syntax->toString ().c_str ());

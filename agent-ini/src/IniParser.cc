@@ -1037,7 +1037,6 @@ std::string format (const char * format, ...) {
     va_start( ap, format );
     int numprinted = vasprintf(&buf, format, ap);
     va_end( ap );
-
     if (numprinted >= 0) {
         val = buf;
         free( buf );
