@@ -321,7 +321,11 @@ public:
      * and it is available from the first import
      * until the end of YaST run.
      * @param name_space the name of the required namespace
-     * @return on errors, NULL should be returned. The
+     * @return on errors, new way to report error is to return instance of
+     * Y2ErrorNamespace, which can be tested respective converted with
+     * <isErrorNamespace> respective <toErrorNamespace>. It have advantage
+     * that error can be properly propagated when chain of failures happen.
+     * The old way is to return NULL. In such case the
      * error reporting must be done by the component itself
      * (typically using y2log). On success, the method
      * should return a proper instance of the imported namespace
