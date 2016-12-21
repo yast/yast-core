@@ -44,11 +44,11 @@ class Debugger;
 class Y2Namespace {
 protected:
     typedef vector<SymbolEntryPtr> symbols_t;
-    
+
     SymbolTable* m_table;
     unsigned int m_symbolcount;
     symbols_t m_symbols;
-    
+
     friend class SymbolTable;
     friend class Debugger;
 
@@ -66,19 +66,15 @@ protected:
     // lookup symbol by name in m_symbols
     SymbolEntryPtr lookupSymbol (const char *name) const;
 
-    // find symbol by pointer
-    // return index if found, -1 if not found
-//    int findSymbol (const SymbolEntryPtr sentry) const;
 
     // release symbol from m_symbols
     //   it's no longer owned by this block but by a ysFunction()
     void releaseSymbol (unsigned int position);
-//    void releaseSymbol (SymbolEntryPtr sentry);
-    
+
     bool m_initialized;
 
 public:
-    
+
     Y2Namespace ();
 
     virtual ~Y2Namespace();
@@ -90,7 +86,7 @@ public:
     virtual const string name () const;
     //! used for error reporting
     virtual const string filename () const = 0;
-    
+
     //! gives the number of symbol declarations
     //  e.g. needed for function declarations which keep their symbolic
     //   parameters in a Y2Namespace
@@ -118,7 +114,7 @@ public:
     void createTable ();
 
     /**
-     * Creates a function call instance, which can be used to call a 
+     * Creates a function call instance, which can be used to call a
      * function from this namespace. The object is NOT owned anymore by this
      * instance, the caller can (and should) delete it.
      *
