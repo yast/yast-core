@@ -25,6 +25,7 @@
 using std::string;
 
 #include "ycp/YCPValue.h"
+#include "ycp/YCPVoid.h"
 #include "ycp/Type.h"
 
 #include "SymbolEntry.h"
@@ -132,11 +133,69 @@ public:
 
     // pop all local variables from stack, uses SymbolEntry::pop()
     void popFromStack ();
-    
+
     // ensure that the namespace is initialized
     virtual void initialize ();
 
 };
 
+#define ERROR_NAMESPACE_NAME "_ErrorNamespace"
+class Y2ErrorNamespace : public Y2Namespace
+{
+public:
+
+  /**
+   * constructs new namespace in case when error happen
+   *
+   * @param summary short summary what error happen
+   * @param details can be longer details for error like e.g. backtrace
+   */
+  Y2ErrorNamespace(const std::string & summary, const std::string & details);
+
+  ~Y2ErrorNamespace();
+
+  /**
+   * shot summary what error happen
+   */
+  const std::string & summary() const;
+
+  /**
+   * longer details for error
+   */
+  const std::string & details() const;
+
+  const string name () const { return ERROR_NAMESPACE_NAME; }
+
+  const string filename () const { return "virtual_error_place"; }
+
+  /**
+   * creating funcition call for error namespace always fail
+   */
+  virtual Y2Function* createFunctionCall (const string name, constFunctionTypePtr type)
+  {
+    return NULL;
+  }
+
+  /**
+   * Does nothing for error namespace
+   */
+  YCPValue evaluate (bool cse = false);
+
+private:
+
+  string summary_;
+
+  string details_;
+};
+
+inline bool isErrorNamespace(const Y2Namespace * inst)
+{
+  return inst->name() == ERROR_NAMESPACE_NAME;
+}
+
+inline Y2ErrorNamespace * toErrorNamespace(Y2Namespace * inst)
+{
+  return dynamic_cast<Y2ErrorNamespace*>(inst);
+}
 
 #endif // Y2Namespace_h

@@ -323,3 +323,24 @@ Y2Namespace::initialize ()
     }
 }
 
+Y2ErrorNamespace::Y2ErrorNamespace(const std::string & summary, const std::string & details) :
+  summary_(summary), details_(details)
+{}
+
+Y2ErrorNamespace::~Y2ErrorNamespace()
+{}
+
+const std::string & Y2ErrorNamespace::summary() const
+{
+  return summary_;
+}
+
+const std::string & Y2ErrorNamespace::details() const
+{
+  return details_;
+}
+
+YCPValue Y2ErrorNamespace::evaluate (bool cse)
+{
+  return YCPVoid();
+}
