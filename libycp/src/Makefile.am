@@ -36,7 +36,6 @@ libycp_la_SOURCES = 					\
 	ExecutionEnvironment.cc				\
 	StaticDeclaration.cc YCode.cc YCPCode.cc	\
 	YExpression.cc YStatement.cc YBlock.cc		\
-	YBreakpoint.cc					\
 	SymbolTable.cc					\
 	Scanner.cc Parser.cc 				\
 	parser.yy scanner.ll				\
@@ -60,15 +59,14 @@ BUILT_SOURCES = parser.hh
 
 AM_YFLAGS = -d -v
 
-AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS} \
-	-I$(top_srcdir)/debugger
+AM_CPPFLAGS = -I$(srcdir)/include -I$(srcdir)/include/ycp -I$(top_srcdir)/liby2/src/include ${Y2UTIL_CFLAGS}
 
 # CURRENT:REVISION:AGE
 libycpvalues_la_LDFLAGS = -version-info 6:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
 libycp_la_LDFLAGS = -version-info 5:0:0
-libycp_la_LIBADD = ${Y2UTIL_LIBS} ${CRYPTO_LIBS} libycpvalues.la $(top_builddir)/debugger/liby2debug.la
+libycp_la_LIBADD = ${Y2UTIL_LIBS} ${CRYPTO_LIBS} libycpvalues.la
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
 

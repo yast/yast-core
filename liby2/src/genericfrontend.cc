@@ -107,7 +107,6 @@
 #include <ycp/pathsearch.h>
 #include <y2util/stringutil.h>
 #include "exitcodes.h"
-#include <debugger/Debugger.h>
 
 /// number of symbols that are handled as error codes
 #define MAX_YCP_ERROR_EXIT_SYMBOLS	2
@@ -120,8 +119,6 @@ const char* ycp_error_exit_symbols[MAX_YCP_ERROR_EXIT_SYMBOLS] = {
 
 using std::string;
 
-Debugger *debugger_instance;
-
 /// fallback name of the program
 static const char *progname = "genericfrontend";
 
@@ -131,9 +128,6 @@ static void print_error (const char*, ...) __attribute__ ((format (printf, 1, 2)
 static bool has_parens (const char* arg);
 
 int signal_log_fd;		// fd to use for logging in signal handler
-
-bool debugger = false;
-bool debugger_remote = false;
 
 static
 void
@@ -657,41 +651,18 @@ main (int argc, char **argv)
 
 // FIXME the whole option parsing sucks **** !
 
-    // Check, if debugger should be enabled
+    // old backward compatibility stuff
     if (!strcmp(argv[arg], "--debugger"))
     {
-	// set the flag
-	debugger = true;
+        setenv("Y2DEBUGGER", "1", 1);
 	arg+=1;
     }
 
     if (!strcmp(argv[arg], "--debugger-remote"))
     {
-	// set the flag
-	debugger = true;
-	debugger_remote = true;
+        setenv("Y2DEBUGGER", "remote", 1);
 	arg+=1;
     }
-
-    // also handle environment variable
-    if( getenv ("Y2DEBUGGER") )
-    {
-	if (strcmp (getenv ("Y2DEBUGGER"), "1")==0 )
-	    debugger = true;
-	else if (strcmp (getenv ("Y2DEBUGGER"), "2")==0 )
-	{
-	    debugger = true;
-	    debugger_remote = true;
-	}
-    }
-
-    if (debugger)
-    {
-	// initialize the Debugger instance
-	debugger_instance = new Debugger ();
-	debugger_instance->initialize (debugger_remote);
-    }
-
 
     // list of -I / -M pathes
     //   will be pushed to YCPPathSearch later to keep correct order
@@ -726,9 +697,6 @@ main (int argc, char **argv)
     char * client_name;
     YCPList arglist;
     parse_client_and_options (argc, argv, arg, client_name, arglist);
-    // add debugger information if needed
-    if (debugger)
-	arglist->add ( YCPSymbol("debugger") );
 
     // "arg" and these two are output params
     char * server_name;

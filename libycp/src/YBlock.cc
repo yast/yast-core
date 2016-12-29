@@ -43,10 +43,6 @@
 #include "ycp/y2log.h"
 #include "ExecutionEnvironment.h"
 
-#include <Debugger.h>
-
-extern Debugger* debugger_instance;
-
 // ------------------------------------------------------------------
 
 IMPL_DERIVED_POINTER(YBlock, YCode);
@@ -586,15 +582,6 @@ YBlock::evaluate (bool cse)
     y2debug ("YBlock::evaluate([%d]%s)\n", (int)m_kind, toString().c_str());
 #endif
 
-    bool m_debug = false;
-
-    if (debugger_instance)
-    {
-	m_debug = debugger_instance->tracing();
-
-	debugger_instance->pushBlock (this, m_debug);
-    }
-
     // recursion handling - not used for modules
     if (! isModule () && m_running)
     {
@@ -622,34 +609,7 @@ YBlock::evaluate (bool cse)
 #endif
 	YaST::ee.setStatement(statement);
 
-	if (m_debug && statement->kind() != ysFunction )
-	{
-	    Debugger::command_t command;
-	    std::list<std::string> args;
-	    if (debugger_instance->processInput (command, args) && command==Debugger::c_continue)
-	    {
-		m_debug = false;
-		debugger_instance->setTracing (false);
-	    }
-	    else if (command == Debugger::c_next)
-	    {
-		debugger_instance->setTracing (false);
-	    }
-	}
-
 	value = statement->evaluate ();
-
-	// If we get continue from inner evaluation, we have to respect it
-        if (debugger_instance)
-        {
-    	    if (m_debug)
-    	    {
-		m_debug = debugger_instance->lastCommand() != Debugger::c_continue;
-		debugger_instance->setTracing (m_debug);
-	    }
-	    else
-		m_debug = debugger_instance->tracing ();
-	}
 
 	if (!value.isNull())
 	{
@@ -673,9 +633,6 @@ YBlock::evaluate (bool cse)
     {
 	popFromStack ();
     }
-
-    if (debugger_instance)
-	debugger_instance->popBlock ();
 
 #if DO_DEBUG
     y2debug ("YBlock::evaluate done (stmt %p, kind %d, value '%s')\n", stmt, m_kind, value.isNull() ? "NULL" : value->toString().c_str());

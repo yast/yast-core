@@ -74,14 +74,6 @@ Requires:       libstdc++-devel
 This package contains include and documentation files for developing
 applications using the YaST2 YCP interpreter.
 
-%package debugger
-Requires:       yast2-core = %version
-Summary:        YaST2 - Core Libraries
-Group:          Development/Libraries
-
-%description debugger
-YCP debugger client.
-
 %prep
 %setup -n %{name}-%{version}
 
@@ -178,9 +170,5 @@ fi
 %doc %{yast_docdir}
 %doc %{_datadir}/doc/yastdoc
 %{yast_ydatadir}/devtools/bin/generateYCPWrappers
-
-%files debugger
-%defattr(-,root,root)
-%attr(0755,-,-) %{yast_ybindir}/ycp-debugger
 
 %changelog
