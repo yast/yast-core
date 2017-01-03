@@ -149,7 +149,7 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	if (table == 0)
 	{
 	    y2internal ("Oops, no table for already loaded module '%s'\n", m_name->c_str());
-	    exit (1);
+	    return 0;
 	}
     }
 
