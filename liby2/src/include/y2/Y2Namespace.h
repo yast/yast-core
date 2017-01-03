@@ -141,17 +141,17 @@ class Y2ErrorNamespace : public Y2Namespace
 public:
 
   /**
-   * constructs new namespace in case when error happen
+   * Constructs a new namespace in case an error happens
    *
-   * @param summary short summary what error happen
-   * @param details can be longer details for error like e.g. backtrace
+   * @param summary short summary what error happened
+   * @param details can be longer details for the error e.g. backtrace
    */
   Y2ErrorNamespace(const std::string & summary, const std::string & details);
 
   ~Y2ErrorNamespace();
 
   /**
-   * shot summary what error happen
+   * short summary what error happened
    */
   const std::string & summary() const;
 
@@ -165,7 +165,7 @@ public:
   const string filename () const { return "virtual_error_place"; }
 
   /**
-   * creating funcition call for error namespace always fail
+   * creating a function call for the error namespace always fails
    */
   virtual Y2Function* createFunctionCall (const string name, constFunctionTypePtr type)
   {
@@ -173,7 +173,7 @@ public:
   }
 
   /**
-   * Does nothing for error namespace
+   * Does nothing for the error namespace
    */
   YCPValue evaluate (bool cse = false);
 

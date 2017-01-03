@@ -61,7 +61,7 @@ public:
 
     /**
      * loads module by name.
-     * @note if import failed it set {Import::name()} to {SymbolEntry::emptyUstring}
+     * @note if import failed it sets name() to SymbolEntry::emptyUstring
      * @see Import::import for parameters and details
      */
     Import (const string &name, Y2Namespace *name_space = 0);
@@ -72,8 +72,8 @@ public:
      * constructor is used, so delayed import is done.
      * @param[in] name of namespace to import
      * @param[in] preloaded_namespace if namespace is already preloaded,
-     * so it only register it and next call of import of this namespace will
-     * just return this preloaded_namespace. It take ownership of this namespace
+     * so it only registers it and next call of import of this namespace will
+     * just return this preloaded_namespace. It takes ownership of this namespace
      * @return 0 if done (successfully or not), -1 if we should retry
      */
     int import (const string &name, Y2Namespace *preloaded_namespace = 0);

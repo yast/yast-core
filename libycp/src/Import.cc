@@ -108,12 +108,13 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	    }
 	}
 
-        // for runtime error during loading lets act like if module is there, just error namespace is created
+        // for a runtime error during loading let's act
+        // like the module is there, but an error namespace is created
         if (isErrorNamespace(name_space))
         {
             ycp2error("Runtime error when loading module '%s'", cname);
             m_active_modules.insert (std::make_pair (m_name, name_space));			// insert to list of known modules
-	    m_module = m_active_modules.find (m_name);
+            m_module = m_active_modules.find (m_name);
             return 0;
         }
 
