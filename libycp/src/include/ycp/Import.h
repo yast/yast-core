@@ -59,12 +59,24 @@ protected:
 public:
     Import ();
 
-    // load module by name. If block != 0, it's already loaded
-    //   name_space is non-const since it might get evaluated
+    /**
+     * loads module by name.
+     * @note if import failed it set {Import::name()} to {SymbolEntry::emptyUstring}
+     * @see Import::import for parameters and details
+     */
     Import (const string &name, Y2Namespace *name_space = 0);
     ~Import ();
 
-    int import (const string &name, Y2Namespace *preloaded_namespace = 0);		// delayed import, use in case default constructor was used
+    /**
+     * imports namespace into component system. Used when default
+     * constructor is used, so delayed import is done.
+     * @param[in] name of namespace to import
+     * @param[in] preloaded_namespace if namespace is already preloaded,
+     * so it only register it and next call of import of this namespace will
+     * just return this preloaded_namespace. It take ownership of this namespace
+     * @return 0 if done (successfully or not), -1 if we should retry
+     */
+    int import (const string &name, Y2Namespace *preloaded_namespace = 0);
 
     string name () const;
     Y2Namespace *nameSpace () const;		// return NULL on failure
