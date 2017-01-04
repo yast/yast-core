@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Wed Jan  4 09:16:02 UTC 2017 - jreidinger@suse.com
+
+- Dropped the YCP debugger in yast2-core-debugger not to confuse
+  people who want to use the Byebug based Ruby debugger
+  (bsc#1018038)
+- 3.2.2
+
+-------------------------------------------------------------------
 Tue Jan  3 15:14:22 UTC 2017 - jreidinger@suse.com
 
 - Allow more detailed error specification when loading namespace
