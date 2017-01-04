@@ -108,6 +108,16 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	    }
 	}
 
+        // for a runtime error during loading let's act
+        // like the module is there, but an error namespace is created
+        if (isErrorNamespace(name_space))
+        {
+            ycp2error("Runtime error when loading module '%s'", cname);
+            m_active_modules.insert (std::make_pair (m_name, name_space));			// insert to list of known modules
+            m_module = m_active_modules.find (m_name);
+            return 0;
+        }
+
 	table = name_space->table();
 	if (table == 0)
 	{
@@ -126,6 +136,13 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
     }
     else
     {
+
+        if (isErrorNamespace(m_module->second))
+        {
+            //already failed to load, so just return 0
+            return 0;
+        }
+
 	table = m_module->second->table();
 #if DO_DEBUG
 	y2debug ("Module '%s' already loaded, name_space %p, table %p", m_name->c_str(), m_module->second, table);
@@ -133,7 +150,7 @@ Import::import (const string &name, Y2Namespace *preloaded_namespace)
 	if (table == 0)
 	{
 	    y2internal ("Oops, no table for already loaded module '%s'\n", m_name->c_str());
-	    exit (1);
+	    return 0;
 	}
     }
 

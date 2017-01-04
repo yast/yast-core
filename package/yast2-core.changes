@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Jan  3 15:14:22 UTC 2017 - jreidinger@suse.com
+
+- Allow more detailed error specification when loading namespace
+  to component system failed (bsc#932331)
+- 3.2.1
+
+-------------------------------------------------------------------
 Mon Nov  7 12:51:20 UTC 2016 - jreidinger@suse.com
 - ag_anyangent: Do not fail the parse when an Optional syntax meets
   EOF, e.g. for a fstab without a trailing newline (bsc#429326#c11)
