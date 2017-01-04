@@ -651,19 +651,6 @@ main (int argc, char **argv)
 
 // FIXME the whole option parsing sucks **** !
 
-    // old backward compatibility stuff
-    if (!strcmp(argv[arg], "--debugger"))
-    {
-        setenv("Y2DEBUGGER", "1", 1);
-	arg+=1;
-    }
-
-    if (!strcmp(argv[arg], "--debugger-remote"))
-    {
-        setenv("Y2DEBUGGER", "remote", 1);
-	arg+=1;
-    }
-
     // list of -I / -M pathes
     //   will be pushed to YCPPathSearch later to keep correct order
     //   (the last added path to YCPPathSearch will be searched first)
