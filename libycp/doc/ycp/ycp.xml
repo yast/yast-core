@@ -18,10 +18,6 @@
 <!ENTITY % implementationentities SYSTEM "implementation/ENTITIES.xml">
 %implementationentities;
 
-<!ENTITY debugger SYSTEM "debugger.xml">
-<!ENTITY % debuggerentities SYSTEM "debugger/ENTITIES.xml">
-%debuggerentities;
-
 ]>
 
 <book>
@@ -65,8 +61,6 @@ changes to its content, at any time, without obligation to notify any person or 
     &language;		<!-- about the language, syntax, semantics -->
 
     &usage;		<!--  descriptions for interpreter and tools -->
-
-    &debugger;		<!-- descriptions for debugger -->
 
 			<!-- Part2: ycp implementation documentation -->
 

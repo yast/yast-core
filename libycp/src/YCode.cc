@@ -38,7 +38,6 @@
 #include "ycp/YCPCode.h"
 
 #include "ycp/YBlock.h"
-#include "ycp/YBreakpoint.h"
 
 #include "ycp/Bytecode.h"
 #include "ycp/Xmlcode.h"
@@ -675,16 +674,6 @@ YFunction::setDefinition (YBlockPtr definition)
     definition->setKind (YBlock::b_definition);
     return;
 }
-
-
-void
-YFunction::setDefinition (YBreakpointPtr definition)
-{
-    m_definition = definition;
-    // skip setKind call, we are just setting a breakpoint wrapper here
-    return;
-}
-
 
 void
 YFunction::setDefinition (bytecodeistream & str)

@@ -34,7 +34,6 @@
 #include <ycp/Parser.h>
 #include <ycp/Bytecode.h>
 #include <ycp/YBlock.h>
-#include <ycp/YBreakpoint.h>
 #include <scr/SCRAgent.h>
 #include <scr/SCR.h>
 
@@ -137,22 +136,7 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
 {
     y2debug( "Starting evaluation" );
 
-    bool debugger = false;
     YCPList client_arglist = arglist;
-
-    // hack: look only at the last entry, if it's debugger or not
-    if (arglist->size () > 0)
-    {
-	YCPValue last = arglist->value (arglist->size ()-1);
-	if (last->isSymbol () && last->asSymbol()->symbol() == "debugger")
-	{
-	    y2debug ("Enabling debugger");
-	    debugger = true;
-
-	    // remove the flag from the arguments
-	    client_arglist->remove (arglist->size ()-1);
-	}
-    }
 
     // Prepare the arguments. It has the form [script, [clientargs...]]
     YCPList wfm_arglist;
@@ -193,9 +177,6 @@ Y2WFMComponent::doActualWork (const YCPList& arglist, Y2Component *displayserver
     y2debug ("Script is: %s", script->toString().c_str());
 
     y2debug ("Y2WFMComponent @ %p, displayserver @ %p", this, displayserver);
-
-    if (debugger)
-	script = YCPCode ((YCodePtr)new YBreakpoint (script->asCode ()->code (), "code start"));
 
     YCPValue v = script->asCode ()->evaluate ();
 

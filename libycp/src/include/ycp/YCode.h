@@ -152,8 +152,8 @@ public:
 	ysBlock,		// a block as statement
 	ysSwitch,		// switch (since 10.0)
 	ysStatement,		// [54] -- placeholder --
-	
-	// internal
+
+	// internal, no longer used, kept just to be backward compatible
 	yiBreakpoint		// [55] -- debugger breakpoint
     };
 
@@ -402,7 +402,6 @@ public:
     // access to definition block (= 0 if declaration only)
     YCodePtr definition () const;
     void setDefinition (YBlockPtr body);
-    void setDefinition (YBreakpointPtr body);
     // read definition from stream
     void setDefinition (bytecodeistream & str);
 

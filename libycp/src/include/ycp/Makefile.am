@@ -16,7 +16,6 @@ pkginclude_HEADERS =					\
 	YCPString.h YCPSymbol.h YCPTerm.h		\
 	YCPValue.h YCPVoid.h toString.h			\
 	YCPExternal.h					\
-	YCPDebugger.h					\
 	Type.h TypePtr.h				\
 	YCPBuiltinBoolean.h YCPBuiltinFloat.h		\
 	YCPBuiltinByteblock.h YCPBuiltinSymbol.h	\
@@ -32,7 +31,7 @@ pkginclude_HEADERS =					\
 	Bytecode.h Import.h Point.h			\
 	YExpression.h YStatement.h YBlock.h		\
 	SymbolTable.h Parser.h				\
-	YSymbolEntry.h YBreakpoint.h			\
+	YSymbolEntry.h					\
 	y2log.h ycpless.h pathsearch.h			\
 	y2string.h					\
 	ExecutionEnvironment.h
