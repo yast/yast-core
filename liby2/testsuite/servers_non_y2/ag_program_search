@@ -1,4 +1,0 @@
-#!/bin/sh
-# a trivial agent
-read COMMAND
-echo "(42)"

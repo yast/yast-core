@@ -1,7 +1,0 @@
-#!/bin/bash
-MYDIR=$(dirname $0)
-PATH=$MYDIR/../../base/src:/usr/lib/YaST2/bin:$PATH
-# This will return
-# 0 if ag_program_search can be found
-# 5 if it cannot
-echo '`Read(.)' | Y2DIR=$MYDIR y2base stdio ag_program_search
