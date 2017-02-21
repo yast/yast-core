@@ -136,7 +136,6 @@ fi
 
 /usr/bin/ycpc
 %{_libdir}/lib*.so.*
-%{yast_ybindir}/y2base
 %{yast_ybindir}/startshell
 %{yast_ybindir}/tty_wrapper
 %{yast_ybindir}/md_autorun
