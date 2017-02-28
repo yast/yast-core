@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Feb 28 15:16:58 UTC 2017 - jreidinger@suse.com
+
+- Drop y2base binary which is replaced by y2base ruby script from
+  yast2-ruby-bindings (bsc#1027181)
+- 3.2.3
+
+-------------------------------------------------------------------
 Wed Jan  4 09:16:02 UTC 2017 - jreidinger@suse.com
 
 - Dropped the YCP debugger in yast2-core-debugger not to confuse
