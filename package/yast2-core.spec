@@ -137,8 +137,6 @@ fi
 /usr/bin/ycpc
 %{_libdir}/lib*.so.*
 %{yast_ybindir}/startshell
-%{yast_ybindir}/tty_wrapper
-%{yast_ybindir}/md_autorun
 %{yast_ybindir}/elf-arch
 %{yast_plugindir}/lib*.so.*
 %{yast_scrconfdir}/*.scr
