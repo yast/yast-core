@@ -15,7 +15,6 @@ liby2_la_SOURCES = \
 	Y2ComponentBroker.cc Y2ComponentCreator.cc 	\
 	Y2Namespace.cc					\
 	Y2LanguageLoader.cc                             \
-	genericfrontend.cc				\
 	SymbolEntry.cc					\
 	Y2ErrorComponent.cc				\
 	Y2ProgramComponent.cc Y2CCProgram.cc		\
