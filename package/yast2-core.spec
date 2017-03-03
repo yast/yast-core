@@ -50,6 +50,8 @@ BuildRequires:  automake >= 1.12
 BuildRequires:  yast2-devtools >= 3.1.10
 # testsuite
 BuildRequires:  dejagnu
+# y2base is now in new ruby bindings, so force its update
+Conflicts:      yast2-ruby-bindings < 3.2.6
 
 Summary:        YaST2 - Core Libraries
 License:        GPL-2.0+
