@@ -26,7 +26,7 @@
 %bcond_with werror
 
 Name:           yast2-core
-Version:        3.2.2
+Version:        3.2.3
 Release:        0
 Url:            https://github.com/yast/yast-core
 
@@ -50,6 +50,8 @@ BuildRequires:  automake >= 1.12
 BuildRequires:  yast2-devtools >= 3.1.10
 # testsuite
 BuildRequires:  dejagnu
+# y2base is now in new ruby bindings, so force its update
+Conflicts:      yast2-ruby-bindings < 3.2.6
 
 Summary:        YaST2 - Core Libraries
 License:        GPL-2.0+
@@ -136,10 +138,7 @@ fi
 
 /usr/bin/ycpc
 %{_libdir}/lib*.so.*
-%{yast_ybindir}/y2base
 %{yast_ybindir}/startshell
-%{yast_ybindir}/tty_wrapper
-%{yast_ybindir}/md_autorun
 %{yast_ybindir}/elf-arch
 %{yast_plugindir}/lib*.so.*
 %{yast_scrconfdir}/*.scr

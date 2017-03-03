@@ -2,6 +2,6 @@
 # Makefile.am for core/base
 #
 
-SUBDIRS = src tools testsuite
+SUBDIRS = tools
 
 EXTRA_DIST = test-helper.exp
