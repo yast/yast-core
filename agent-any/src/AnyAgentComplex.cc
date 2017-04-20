@@ -520,7 +520,7 @@ AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
         if (tv.isNull())
         {
             if (optional)
-                y2milestone("Optional Tuple not found at line: '%s'", line);
+                y2debug("Optional Tuple not found at line: '%s'", line);
             else
                 y2error("Tuple not found at line: '%s'", line);
         }
