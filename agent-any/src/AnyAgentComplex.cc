@@ -232,14 +232,20 @@ AnyAgent::parseList (char const *&line, const YCPList & syntax, bool optional)
 	YCPValue vl = parseData (line, syntax->value (0), optional);
 	optional = false;
 	if (vl.isNull ())
-	    break;
+    {
+        if (!optional) y2warning("Value not found at line: '%s'", line);
+        break;
+    }
 	if (!vl->isVoid ())
 	    list->add (vl);
 	y2debug ("vl (%s)", vl->toString ().c_str ());
 	// value of separator/string
 	YCPValue vs = parseData (line, syntax->value (1), false);
 	if (vs.isNull ())
-	    break;
+    {
+        if (!optional) y2warning("Separator not found at line: '%s'", line);
+        break;
+    }
     }
 
     y2debug ("list (%s)", list->toString ().c_str ());
@@ -511,6 +517,13 @@ AnyAgent::parseData (char const *&line, const YCPValue & syntax, bool optional)
 		tupleName.push ("");
 		tupleValue.push (YCPNull ());
 		YCPValue tv = parseTuple (line, term->args (), optional);
+        if (tv.isNull())
+        {
+            if (optional)
+                y2milestone("Optional Tuple not found at line: '%s'", line);
+            else
+                y2error("Tuple not found at line: '%s'", line);
+        }
 		tupleName.pop ();
 		tupleValue.pop ();
 		return tv;

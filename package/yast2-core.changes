@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Apr 19 19:10:40 UTC 2017 - lslezak@suse.cz
+
+- AnyAgent - improved logging to easier find bugs similar to
+  bsc#1030425
+- 3.2.3
+
+-------------------------------------------------------------------
 Wed Jan  4 09:16:02 UTC 2017 - jreidinger@suse.com
 
 - Dropped the YCP debugger in yast2-core-debugger not to confuse
