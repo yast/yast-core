@@ -6,7 +6,7 @@ services:
 before_install:
   - docker build -t yast-core-image .
   # list the installed packages (just for easier debugging)
-  - docker run --rm -it yast-cluster-image rpm -qa | sort
+  - docker run --rm -it yast-core-image rpm -qa | sort
 
 script:
   # the "yast-travis-cpp" script is included in the base yastdevel/cpp image
