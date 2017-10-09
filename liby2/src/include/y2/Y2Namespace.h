@@ -75,7 +75,7 @@ public:
 
     Y2Namespace ();
 
-    virtual ~Y2Namespace();
+    virtual ~Y2Namespace() noexcept(false);
 
     // end of symbols, finish and clean up m_symbols
     void finish ();

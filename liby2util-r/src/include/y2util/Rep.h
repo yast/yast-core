@@ -81,7 +81,7 @@ class Rep {
     /**
      * Destructor. Throws exception if reference count is not zero.
      **/
-    virtual ~Rep() { if ( _counter ) throw( this ); }
+    virtual ~Rep() noexcept(false) { if ( _counter ) throw( this ); }
 
   public:
 
