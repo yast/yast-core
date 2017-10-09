@@ -1451,7 +1451,7 @@ YEBinary::toXml (std::ostream & str, int /*indent*/ ) const
 constTypePtr
 YEBinary::type () const
 {
-    if (m_decl->flags && DECL_FLEX)
+    if (m_decl->flags & DECL_FLEX)
     {
 	// reconstruct type
 	FunctionTypePtr ft = new FunctionType (Type::Unspec);
