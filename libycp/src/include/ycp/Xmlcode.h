@@ -38,6 +38,12 @@ class Y2Namespace;
 
 #include <fstream>
 
+// major and minor are macros in <sys/sysmacros.h> but they are also
+// included by <sys/types.h> which is indirectly included by <string>,
+// so they're hard not to include. Let's undef them.
+#undef major
+#undef minor
+
 /// An istream that remembers some data about the xmlcode.
 class xmlcodeistream : public std::ifstream
 {
