@@ -41,7 +41,7 @@ Y2Namespace::Y2Namespace ()
 {}
 
 
-Y2Namespace::~Y2Namespace ()
+Y2Namespace::~Y2Namespace () noexcept(false)
 {
 #if DO_DEBUG
     y2debug ("Y2Namespace::~Y2Namespace [%p]", this);
