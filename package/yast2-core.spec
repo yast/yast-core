@@ -44,6 +44,7 @@ BuildRequires:  libtool
 # we have a parser
 BuildRequires:  bison
 BuildRequires:  flex
+BuildRequires:  jemalloc-devel
 # incompatible change, parser.h -> parser.hh
 BuildRequires:  automake >= 1.12
 # needed for all yast packages

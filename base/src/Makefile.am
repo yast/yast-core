@@ -26,6 +26,7 @@ y2base_LDADD = ${Y2UTIL_LIBS}
 
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\
+	-ljemalloc              	\
 	$(PERL_LDFLAGS)			\
 	$(YAST2CORE)			\
 	-Xlinker --no-whole-archive
