@@ -24,6 +24,7 @@ y2base_DEPENDENCIES = $(YAST2CORE)
 
 y2base_LDADD = ${Y2UTIL_LIBS}
 
+# -ljemalloc: workaround for error when jemalloc is dlopened in ruby in old testsuite (bsc#1068883)
 y2base_LDFLAGS =			\
 	-Xlinker --whole-archive	\
 	-ljemalloc              	\

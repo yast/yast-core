@@ -44,6 +44,7 @@ BuildRequires:  libtool
 # we have a parser
 BuildRequires:  bison
 BuildRequires:  flex
+# workaround for error when jemalloc is dlopened in ruby in old testsuite (bsc#1068883)
 BuildRequires:  jemalloc-devel
 # incompatible change, parser.h -> parser.hh
 BuildRequires:  automake >= 1.12

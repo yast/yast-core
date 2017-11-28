@@ -3,7 +3,7 @@ Tue Nov 28 15:08:32 UTC 2017 - jreidinger@suse.com
 
 - add jemalloc dependency for y2base which is used only in old
   testsuite and that workarounds problem with dynamic dlopening
-  of jemalloc in ruby (bsc#106883)
+  of jemalloc in ruby (bsc#1068883)
 - 4.0.1
 
 -------------------------------------------------------------------
