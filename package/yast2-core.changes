@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Feb  6 16:16:58 UTC 2018 - mvidner@suse.com
+
+- glibc-2.27 compatibility: Removed an overly specific test case
+  for certain localized numbers (bsc#1079630)
+- 4.0.2
+
+-------------------------------------------------------------------
 Tue Nov 28 15:08:32 UTC 2017 - jreidinger@suse.com
 
 - add jemalloc dependency for y2base which is used only in old
