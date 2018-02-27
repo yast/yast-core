@@ -1402,6 +1402,7 @@ s_dgettext (const YCPString& domain, const YCPString& text)
      * Translates the text using the current textdomain.
      *
      * Example <pre>
+     * textdomain "base"
      * _("File") -> "Soubor"
      * </pre>
      */
