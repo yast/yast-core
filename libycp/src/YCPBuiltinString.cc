@@ -1599,3 +1599,6 @@ YCPBuiltinString::YCPBuiltinString ()
 
     static_declarations.registerDeclarations ("YCPBuiltinString", declarations);
 }
+
+/* just to make the y2makepot script happy:
+textdomain "example" */
