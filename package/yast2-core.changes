@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul 19 14:30:12 CEST 2018 - aschnell@suse.com
+
+- fixed detection of aarch64 during update by recognizing aarch64
+  in elf-arch (bsc#1099325)
+- 3.3.0
+
+-------------------------------------------------------------------
 Wed Jan  4 09:16:02 UTC 2017 - jreidinger@suse.com
 
 - Dropped the YCP debugger in yast2-core-debugger not to confuse
