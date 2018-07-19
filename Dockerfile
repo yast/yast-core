@@ -1,4 +1,4 @@
-FROM yastdevel/cpp:sle15
+FROM yastdevel/cpp
 # the tests require specific locale settings to pass
 ENV LANG=POSIX LC_ALL=
 # Remove the preinstalled yast2-core, it interferes with the built one
