@@ -63,6 +63,14 @@ machine_name (void)
 		case ELFCLASS64: return "s390x";
 	    }
 	    break;
+
+	case EM_RISCV:
+	    switch (e_class)
+	    {
+		case ELFCLASS32: return "riscv32";
+		case ELFCLASS64: return "riscv64";
+	    }
+	    break;
     }
 
     return "unknown";

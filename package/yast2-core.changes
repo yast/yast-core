@@ -3,6 +3,7 @@ Thu Jul 19 14:30:12 CEST 2018 - aschnell@suse.com
 
 - fixed detection of aarch64 during update by recognizing aarch64
   in elf-arch (bsc#1099325)
+- recognise RISC-V in elf-arch
 - 4.0.3
 
 -------------------------------------------------------------------
