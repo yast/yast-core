@@ -54,6 +54,7 @@ machine_name (void)
 	case EM_SPARC:	return "sparc";
 	case EM_ALPHA:	return "axp";
 	case EM_ARM:	return "arm";
+	case EM_AARCH64: return "aarch64";
 
 	case EM_S390:
 	    switch (e_class)

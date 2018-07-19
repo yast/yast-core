@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul 19 14:30:12 CEST 2018 - aschnell@suse.com
+
+- fixed detection of aarch64 during update by recognizing aarch64
+  in elf-arch (bsc#1099325)
+- 4.0.3
+
+-------------------------------------------------------------------
 Tue Feb  6 16:16:58 UTC 2018 - mvidner@suse.com
 
 - glibc-2.27 compatibility: Removed an overly specific test case
