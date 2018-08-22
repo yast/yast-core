@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 22 16:30:42 CEST 2018 - schubi@suse.de
+
+- Switched license in spec file from SPDX2 to SPDX3 format.
+
+-------------------------------------------------------------------
 Thu Jul 19 14:30:12 CEST 2018 - aschnell@suse.com
 
 - fixed detection of aarch64 during update by recognizing aarch64
