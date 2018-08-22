@@ -54,7 +54,7 @@ BuildRequires:  yast2-devtools >= 3.1.10
 BuildRequires:  dejagnu
 
 Summary:        YaST2 - Core Libraries
-License:        GPL-2.0+
+License:        GPL-2.0-or-later
 Group:          System/YaST
 Requires:       perl = %{perl_version}
 
