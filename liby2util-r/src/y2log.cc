@@ -86,6 +86,9 @@ static bool log_to_syslog = false;
 static bool log_all_variable = false;
 static bool log_simple = false;
 
+// read getenv only once to reduce chance for race condition with setenv set by another thread
+static bool y2log_should_be_buffered = getenv (Y2LOG_VAR_ONCRASH) != NULL;
+
 static FILE *Y2LOG_STDERR = stderr;		/* Default output */
 
 /* static prototypes */
@@ -596,7 +599,7 @@ bool get_log_debug()
 
 bool should_be_buffered ()
 {
-    return getenv (Y2LOG_VAR_ONCRASH) != NULL;
+    return y2log_should_be_buffered;
 }
 
 // stores a few strings. can append one. can return all. old are forgotten.
