@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 28 16:47:42 CEST 2018 - schubi@suse.de
+
+- Reduced risk of race condition between getenv and setenv while
+  logging (bsc#1103076)
+- 3.2.3
+
+-------------------------------------------------------------------
 Wed Jan  4 09:16:02 UTC 2017 - jreidinger@suse.com
 
 - Dropped the YCP debugger in yast2-core-debugger not to confuse
