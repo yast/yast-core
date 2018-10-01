@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 28 16:47:42 CEST 2018 - schubi@suse.de
+
+- Reduced risk of race condition between getenv and setenv while
+  logging (bsc#1103076)
+- 4.0.4
+
+-------------------------------------------------------------------
 Thu Jul 19 14:30:12 CEST 2018 - aschnell@suse.com
 
 - fixed detection of aarch64 during update by recognizing aarch64
