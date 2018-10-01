@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 28 16:47:42 CEST 2018 - schubi@suse.de
+
+- Reduced risk of race condition between getenv and setenv while
+  logging (bsc#1103076)
+- 4.0.4
+
+-------------------------------------------------------------------
 Wed Aug 22 16:30:42 CEST 2018 - schubi@suse.de
 
 - Switched license in spec file from SPDX2 to SPDX3 format.
