@@ -26,7 +26,7 @@
 %bcond_with werror
 
 Name:           yast2-core
-Version:        4.0.4
+Version:        4.1.0
 Release:        0
 Url:            https://github.com/yast/yast-core
 

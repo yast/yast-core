@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Wed Oct  3 09:59:03 UTC 2018 - lslezak@suse.cz
+
+- Use an exclusive lock when rotating the YaST logs to avoid race
+  conditions when several YaST processes run in paralell
+  (related to bsc#1094875)
+- 4.1.0
+
+-------------------------------------------------------------------
 Fri Sep 28 16:47:42 CEST 2018 - schubi@suse.de
 
 - Reduced risk of race condition between getenv and setenv while
