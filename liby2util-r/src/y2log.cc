@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/file.h>
 #include <unistd.h>
 #include <limits>
 #include <list>
@@ -94,6 +95,7 @@ static FILE *Y2LOG_STDERR = stderr;		/* Default output */
 /* static prototypes */
 static void do_log_syslog( const char* logmessage );
 static void do_log_yast( const char* logmessage );
+static void shift_log_files_if_needed_locked(string filename);
 
 /**
  * y2log must use a private copy of stderr, esp. in case we're always logging
@@ -346,7 +348,7 @@ void do_log_yast( const char* logmessage )
     if(!did_set_logname) set_log_filename("");
 
     /* Prepare the logfile */
-    shift_log_files_if_needed (string (logname));
+    shift_log_files_if_needed_locked (string (logname));
 
     FILE *logfile = open_logfile ();
     if (!logfile)
@@ -434,6 +436,32 @@ static string old (const string & filename, int i, const char * suffix) {
     char numbuf[8];
     sprintf (numbuf, "%d", i);
     return filename + "-" + numbuf + suffix;
+}
+
+/**
+ * Locking wrapper around shift_log_files_if_needed() to avoid race conditions
+ * when several processes access the log in parallel. This ensures only one
+ * process does the shift.
+ */
+static void shift_log_files_if_needed_locked(string filename)
+{
+    // locking needs a fd, so just open the file
+    int fd = open(filename.c_str(), O_RDONLY);
+
+    // file does not exists or other error, do not shift the files
+    if (fd == -1)
+    return;
+
+    // lock the file exclusively, this blocks until the lock is available
+    if (flock(fd, LOCK_EX) == 0)
+    {
+        // now we can do the log maintanace safely
+        shift_log_files_if_needed(filename);
+        // release the lock
+        flock(fd, LOCK_UN);
+    }
+
+    close(fd);
 }
 
 /**
