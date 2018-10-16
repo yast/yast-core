@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 16 16:46:48 CEST 2018 - schubi@suse.de
+
+- Added license file to spec.
+
+-------------------------------------------------------------------
 Wed Oct  3 09:59:03 UTC 2018 - lslezak@suse.cz
 
 - Use an exclusive lock when rotating the YaST logs to avoid race
