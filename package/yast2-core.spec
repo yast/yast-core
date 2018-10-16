@@ -171,6 +171,7 @@ fi
 %{_libdir}/pkgconfig/yast2-core.pc
 %doc %{yast_docdir}
 %doc %{_datadir}/doc/yastdoc
+%license COPYING
 %{yast_ydatadir}/devtools/bin/generateYCPWrappers
 
 %changelog
