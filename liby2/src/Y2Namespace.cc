@@ -93,7 +93,6 @@ Y2Namespace::symbolsToString () const
 {
     string s;
 
-    symbols_t::const_iterator it;
     for (unsigned int p = 0; p < m_symbolcount; p++)
     {
 	if ( m_symbols[p] )
