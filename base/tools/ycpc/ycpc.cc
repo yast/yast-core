@@ -253,7 +253,6 @@ class FileDep {
 	std::string m_name;
 	std::string m_path;
 	bool m_is_module;	///< module or include
-	bool m_have_source;
 	time_t m_srctime;
 	time_t m_bintime;
     public:
@@ -273,7 +272,6 @@ FileDep::FileDep (const std::string & name, const std::string & path, bool is_mo
     : m_name (name)
     , m_path (path)
     , m_is_module (is_module)
-    , m_have_source (have_source)
     , m_srctime (srctime)
     , m_bintime (bintime)
 {
