@@ -22,6 +22,7 @@
 #define YCPBoolean_h
 
 
+#include <boost/logic/tribool.hpp>
 #include "YCPValue.h"
 
 
@@ -98,6 +99,7 @@ class YCPBoolean : public YCPValue
     static YCPBoolean* falseboolean;
     
 public:
+    YCPBoolean(const boost::logic::tribool &tb) : YCPBoolean((bool)tb) {}
     YCPBoolean(bool v);
     YCPBoolean(const char *r) : YCPValue(new YCPBooleanRep(r)) {}
     YCPBoolean(bytecodeistream & str);
