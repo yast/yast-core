@@ -8,4 +8,4 @@ before_install:
 script:
   # the "yast-travis-cpp" script is included in the base yastdevel/cpp image
   # see https://github.com/yast/docker-yast-cpp/blob/master/yast-travis-cpp
-  - docker run -it -e TRAVIS=1 -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" yast-core-image yast-travis-cpp
+  - docker run -it --rm -e TRAVIS=1 -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e PERL5LIB=./agents-perl/lib yast-core-image yast-travis-cpp
