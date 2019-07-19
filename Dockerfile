@@ -1,4 +1,5 @@
-FROM yastdevel/cpp:sle12-sp4
+FROM yastdevel/cpp:sle12-sp5
+
 
 # the tests require specific locale settings to pass
 ENV LANG=POSIX LC_ALL=
