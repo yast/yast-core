@@ -68,8 +68,14 @@ read_loop (int fd, char* buffer, int count)
 static char*
 make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
 {
+#ifndef CRYPT_GENSALT_OUTPUT_SIZE
 #define CRYPT_GENSALT_OUTPUT_SIZE (7 + 22 + 1)
+#endif
 
+#ifdef CRYPT_GENSALT_IMPLEMENTS_AUTO_ENTROPY
+    const char *entropy = NULL;
+    const size_t entropy_len = 0;
+#else
 #ifndef RANDOM_DEVICE
 #define RANDOM_DEVICE "/dev/urandom"
 #endif
@@ -83,7 +89,8 @@ make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
     }
 
     char entropy[16];
-    if (read_loop (fd, entropy, sizeof(entropy)) != sizeof(entropy))
+    const size_t entropy_len = sizeof(entropy);
+    if (read_loop (fd, entropy, entropy_len) != entropy_len)
     {
 	close (fd);
 	y2error ("Unable to obtain entropy from %s\n", RANDOM_DEVICE);
@@ -91,12 +98,15 @@ make_crypt_salt (const char* crypt_prefix, int crypt_rounds)
     }
 
     close (fd);
+#endif
 
     char output[CRYPT_GENSALT_OUTPUT_SIZE];
     char* retval = crypt_gensalt_rn (crypt_prefix, crypt_rounds, entropy,
-				     sizeof(entropy), output, sizeof(output));
+				     entropy_len, output, sizeof(output));
 
-    memset (entropy, 0, sizeof (entropy));
+#ifndef CRYPT_GENSALT_IMPLEMENTS_AUTO_ENTROPY
+    memset (entropy, 0, entropy_len);
+#endif
 
     if (!retval)
     {
