@@ -1,4 +1,4 @@
-FROM registry.opensuse.org/yast/head/containers/yast-cpp:latest
+FROM registry.opensuse.org/yast/sle-15/sp2/containers/yast-cpp
 # the tests require specific locale settings to pass
 ENV LANG=POSIX LC_ALL=
 # Remove the preinstalled yast2-core, it interferes with the built one
