@@ -82,7 +82,6 @@
 
 // compile with full debug info, enable with YCP_YYDEBUG=1 in run-time env
 #define YYDEBUG 0
-#define YYERROR_VERBOSE 1
 #define YYINITDEPTH 1000
 #define YYMAXDEPTH 50000
 
@@ -330,7 +329,9 @@ static int do_while_count = 0;
 
  /* expect one shift-reduce conflict (a dangling else) */
 %expect 2
-%pure-parser
+%define api.pure
+// more details for errors
+%define parse.error verbose
 
   /* SCANNER_ERROR is returned when yylex does not have a valid token */
 %token  SCANNER_ERROR
