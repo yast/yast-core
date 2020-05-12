@@ -329,7 +329,7 @@ static int do_while_count = 0;
 
  /* expect one shift-reduce conflict (a dangling else) */
 %expect 2
-%pure-parser
+%define api.pure
 // more details for errors
 %define parse.error verbose
 
