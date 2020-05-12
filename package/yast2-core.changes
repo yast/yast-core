@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Tue May 12 11:15:20 UTC 2020 - Josef Reidinger <jreidinger@suse.com>
 
-- Fixed building with new bison (bsc#1171505)
+- Fixed building with new bison 3.6 (bsc#1171505)
 - 4.3.0
 
 -------------------------------------------------------------------
