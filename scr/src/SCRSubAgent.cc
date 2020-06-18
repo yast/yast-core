@@ -16,6 +16,7 @@
 
 #include <ycp/y2log.h>
 #include <y2/Y2ComponentBroker.h>
+#include <y2/Y2ProgramComponent.h>
 #include "SCRSubAgent.h"
 
 int
@@ -112,5 +113,17 @@ SCRSubAgent::mount (SCRAgent *parent)
 void
 SCRSubAgent::unmount ()
 {
-	my_comp = 0;
+    // In general, a Y2Component is owned by its Y2ComponentCreator.
+    // In practice, only some subclasses of Y2ComponentCreator
+    // delete the components they own; the others leak.
+    // Also it prevents UnmountAgent from working.
+    // Here we cheat and steal Y2ProgramComponent from Y2CCProgram,
+    // which is fine since that class does not delete the component it creates.
+    auto prog_comp = dynamic_cast<Y2ProgramComponent *>(my_comp);
+    if (prog_comp) {
+        prog_comp->result(YCPNull());
+        delete prog_comp;
+    }
+
+    my_comp = 0;
 }
