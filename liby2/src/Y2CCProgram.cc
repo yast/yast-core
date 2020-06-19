@@ -94,6 +94,13 @@ Y2CCProgram::createInLevel (const char *name, int level, int current_level) cons
 	if (S_ISREG (buf.st_mode) && ((buf.st_mode & S_IXOTH) == S_IXOTH)) {
 	    if (!root.empty ())
 		file = file.substr (root.length ());
+            // NOTE(ownership/memory management)
+            //
+            // Y2ComponentCreator says that we should own the components
+            // that we create. Notably Y2CCAgentComp does
+            // but this class doesn't, leaking memory.
+            // For a quick win, SCRSubAgent deletes its Y2ProgramComponent.
+            // If this class ever owns the comp, revert SCRSubAgent.
 	    return new Y2ProgramComponent (root, file.c_str (), name,
 					   creates_non_y2, level);
 	}

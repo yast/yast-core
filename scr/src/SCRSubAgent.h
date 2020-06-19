@@ -71,6 +71,13 @@ private:
 
     /**
      * The component. 0 means not created (mounted).
+     *
+     * FIXME: all components are supposed to be owned
+     * by their respective Y2ComponentCreator, but in practice
+     * many creators don't care,
+     * so this class takes a vigilante approach to delete my_comp
+     * if the component is_a Y2ProgramComponent whose Y2CCProgram
+     * is known not to care.
      */
     Y2Component *my_comp;
 
