@@ -121,7 +121,7 @@ SCRSubAgent::unmount ()
     // which is fine since that class does not delete the component it creates.
     auto prog_comp = dynamic_cast<Y2ProgramComponent *>(my_comp);
     if (prog_comp) {
-        prog_comp->result(YCPNull());
+        prog_comp->result(YCPVoid());
         delete prog_comp;
     }
 
