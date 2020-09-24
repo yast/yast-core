@@ -26,7 +26,7 @@
 %bcond_with werror
 
 Name:           yast2-core
-Version:        4.3.2
+Version:        4.3.3
 Release:        0
 Url:            https://github.com/yast/yast-core
 
@@ -111,11 +111,6 @@ mkdir -p "$RPM_BUILD_ROOT"%{yast_logdir}
 
 %post
 /sbin/ldconfig
-# bnc#485992, since oS 11.2
-C=blacklist
-if test -f /etc/modprobe.d/$C; then
-     mv -f /etc/modprobe.d/$C /etc/modprobe.d/50-$C.conf
-fi
 
 %postun -p /sbin/ldconfig
 
@@ -151,12 +146,6 @@ fi
 %{perl_vendorlib}/ycp.pm
 %dir %{perl_vendorlib}/YaST
 %{perl_vendorlib}/YaST/SCRAgent.pm
-
-%if 0%{?suse_version} == 0 || 0%{?suse_version} <= 1130
-#  .packlist
-%{perl_vendorarch}/auto/ycp
-/var/adm/perl-modules/%name
-%endif
 
 %files devel
 %defattr(-,root,root)

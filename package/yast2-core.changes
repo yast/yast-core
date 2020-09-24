@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep 24 13:56:22 UTC 2020 - Josef Reidinger <jreidinger@suse.com>
+
+- Drop crypt dependency as it is no longer needed (bsc#1176924)
+- 4.3.3
+
+-------------------------------------------------------------------
 Fri Sep 18 15:41:56 UTC 2020 - Martin Vidner <mvidner@suse.com>
 
 - Avoid 'Construct not supported' on UnmountAgent (bsc#1176594)
