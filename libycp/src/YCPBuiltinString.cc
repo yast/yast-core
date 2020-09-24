@@ -45,7 +45,6 @@ using std::string;
 #include "ycp/YCPVoid.h"
 #include "ycp/y2log.h"
 #include "y2string.h"
-#include "y2crypt.h"
 
 #include "ycp/StaticDeclaration.h"
 
@@ -1240,161 +1239,6 @@ s_timestring (const YCPString &fmt, const YCPInteger &time, const YCPBoolean &ut
 }
 
 static YCPValue
-s_crypt (const YCPString &s)
-{
-    /**
-     * @builtin crypt
-     * @short Encrypts a string
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using the standard
-     * password encryption provided by the system.
-     * @param string UNENCRYPTED
-     * @return string
-     *
-     * @usage crypt ("readable") -> "Y2PEyAiaeaFy6"
-     */
-
-    if (s.isNull ())
-	return YCPNull ();
-
-    string unencrypted = s->value();
-    string encrypted;
-
-    if (YaST::crypt_pass(unencrypted, YaST::CRYPT, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using crypt failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue
-s_cryptmd5 (const YCPString &s)
-{
-    /**
-     * @builtin cryptmd5
-     * @short Encrypts a string using md5
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using MD5
-     * password encryption.
-     * @param string  UNENCRYPTED
-     * @return string
-     *
-     * @usage cryptmd5 ("readable") -> "$1$BBtzrzzz$zc2vEB7XnA3Iq7pOgDsxD0"
-     */
-
-    if (s.isNull ())
-	return YCPNull ();
-
-    string unencrypted = s->value();
-    string encrypted;
-
-    if (YaST::crypt_pass(unencrypted, YaST::MD5, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using MD5 failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue
-s_cryptblowfish(const YCPString& original)
-{
-    /**
-     * @builtin cryptblowfish
-     * @short Encrypts a string with blowfish
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using blowfish
-     * password encryption. The password is not truncated.
-     *
-     * @param string UNENCRYPTED
-     * @return string
-     * @usage cryptblowfish ("readable") -> "$2a$05$B3lAUExB.Bqpy8Pq0TpZt.s7EydrmxJRuhOZR04YG01ptwOUR147C"
-     */
-
-    if (original.isNull ())
-	return YCPNull ();
-
-    string unencrypted = original->value();
-    string encrypted;
-
-    if (YaST::crypt_pass(unencrypted, YaST::BLOWFISH, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using blowfish failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue
-s_cryptsha256(const YCPString& original)
-{
-    /**
-     * @builtin cryptsha256
-     * @short Encrypts a string with sha256
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using sha256
-     * password encryption. The password is not truncated.
-     *
-     * @param string UNENCRYPTED
-     * @return string
-     * @usage cryptsha256 ("readable") -> "$5$keev8D8I$kZdbw1WYM7XJtn4cpl1S3QtoKXnxIIFVSqwadMAGLE3"
-     */
-
-    if (original.isNull ())
-	return YCPNull ();
-
-    string unencrypted = original->value();
-    string encrypted;
-
-    if (YaST::crypt_pass(unencrypted, YaST::SHA256, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using sha256 failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue
-s_cryptsha512(const YCPString& original)
-{
-    /**
-     * @builtin cryptsha512
-     * @short Encrypts a string with sha512
-     * @description
-     * Encrypts the string <tt>UNENCRYPTED</tt> using sha512
-     * password encryption. The password is not truncated.
-     *
-     * @param string UNENCRYPTED
-     * @return string
-     * @usage cryptsha512 ("readable") -> "$6$QskPAFTK$R40N1UI047Bg.nD96ZYSGnx71mgbBgb.UEtKuR8bGGxuzYgXjCTxKIQmqXrgftBzA20m2P9ayrUKQQ2pnWzm70"
-     */
-
-    if (original.isNull ())
-	return YCPNull ();
-
-    string unencrypted = original->value();
-    string encrypted;
-
-    if (YaST::crypt_pass(unencrypted, YaST::SHA512, &encrypted))
-        return YCPString (encrypted);
-    else
-    {
-	ycp2error ("Encryption using sha512 failed");
-        return YCPNull ();
-    }
-}
-
-
-static YCPValue
 s_dgettext (const YCPString& domain, const YCPString& text)
 {
     /**
@@ -1578,11 +1422,6 @@ YCPBuiltinString::YCPBuiltinString ()
 	{ "substring",	   "string (string, integer, integer)",	(void *)s_substring2,			 ETC },
 	{ "timestring",	   "string (string, integer, boolean)",	(void *)s_timestring,			 ETC },
 	{ "mergestring",   "string (const list <string>, string)", (void *)s_mergestring,		 ETC },
-	{ "crypt",	   "string (string)",			(void *)s_crypt,			 ETC },
-	{ "cryptmd5",	   "string (string)",			(void *)s_cryptmd5,			 ETC },
-	{ "cryptblowfish", "string (string)",			(void *)s_cryptblowfish,                 ETC },
-	{ "cryptsha256",   "string (string)",			(void *)s_cryptsha256,                   ETC },
-	{ "cryptsha512",   "string (string)",			(void *)s_cryptsha512,                   ETC },
 	{ "regexpmatch",   "boolean (string, string)",		(void *)s_regexpmatch,			 ETC },
 	{ "regexppos",	   "list<integer> (string, string)",	(void *)s_regexppos,			 ETC },
 	{ "regexpsub",	   "string (string, string, string)",	(void *)s_regexpsub,			 ETC },

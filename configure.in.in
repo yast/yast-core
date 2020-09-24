@@ -56,16 +56,6 @@ AC_PROG_CXX
 Y2CORE_CFLAGS="-std=gnu++0x"
 AC_SUBST(Y2CORE_CFLAGS) dnl included in CXXFLAGS in YAST2-CHECKS-PROGRAM
 
-AC_CHECK_HEADERS(xcrypt.h)
-
-AC_CHECK_LIB(owcrypt, crypt_gensalt_rn,
-             [CRYPTO_LIBS="-lowcrypt -lcrypt"],
-             AC_CHECK_LIB(xcrypt, crypt_gensalt_rn,
-                    [CRYPTO_LIBS="-lxcrypt"],
-                    [CRYPTO_LIBS="-lcrypt"])
-)
-AC_SUBST(CRYPTO_LIBS)
-
 CREATE_PKGCONFIG=true
 ## some common checks
 @YAST2-CHECKS-COMMON@
