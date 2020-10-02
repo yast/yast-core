@@ -99,6 +99,11 @@ export CC=clang CXX=clang++
 # warning/error: argument unused during compilation
 CFLAGS="${CFLAGS/-grecord-gcc-switches/}"
 CXXFLAGS="${CXXFLAGS/-grecord-gcc-switches/}"
+
+# "unsupported argument 'auto' to option 'flto='"
+# This time it comes from RPM macro expansion
+# so let's override /usr/lib/rpm/suse/macros
+%define _lto_cflags %{nil}
 %endif
 
 %yast_build
