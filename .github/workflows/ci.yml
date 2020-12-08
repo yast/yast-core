@@ -1,0 +1,31 @@
+
+# See https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  Package:
+    runs-on: ubuntu-latest
+    container: registry.opensuse.org/yast/head/containers/yast-cpp:latest
+
+    steps:
+
+    - name: Git Checkout
+      uses: actions/checkout@v1
+
+    - name: Prepare System
+      run: |
+        # Remove the preinstalled yast2-core, it interferes with the built one
+        # when running the tests... (huh??)
+        zypper --non-interactive rm yast2-core
+
+    - name: Package Build
+      run:  yast-ci-cpp
+      env:
+        # the tests require specific locale settings to pass
+        LANG: POSIX
+        LC_ALL: ""
+        # for the Perl syntax check
+        PERL5LIB: "./agents-perl/lib"
