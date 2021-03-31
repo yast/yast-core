@@ -8,7 +8,7 @@ on: [push, pull_request]
 jobs:
   Package:
     runs-on: ubuntu-latest
-    container: registry.opensuse.org/yast/head/containers/yast-cpp:latest
+    container: registry.opensuse.org/yast/sle-15/sp3/containers/yast-cpp:latest
 
     steps:
 
