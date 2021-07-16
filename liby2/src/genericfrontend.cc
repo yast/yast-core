@@ -62,7 +62,7 @@
  *
  * \section community Join the community
  *
- * Visit our web site at : http://en.opensuse.org/YaST or #yast on irc.freenode.net
+ * Visit our web site at : http://en.opensuse.org/YaST or #yast on irc.libera.chat
  *
  * \section License
  *
