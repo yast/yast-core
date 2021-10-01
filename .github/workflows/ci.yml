@@ -8,7 +8,9 @@ on: [push, pull_request]
 jobs:
   Package:
     runs-on: ubuntu-latest
-    container: registry.opensuse.org/yast/head/containers/yast-cpp:latest
+    container:
+      image: registry.opensuse.org/yast/head/containers/yast-cpp:latest
+      options: --privileged
 
     steps:
 
