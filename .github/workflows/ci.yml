@@ -9,7 +9,7 @@ jobs:
   Package:
     runs-on: ubuntu-latest
     container:
-      image: registry.opensuse.org/yast/sle-15/sp4/containers/yast-cpp:latest
+      image: registry.opensuse.org/yast/head/containers/yast-cpp:latest
 
     steps:
 
