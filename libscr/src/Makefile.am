@@ -18,3 +18,7 @@ AM_CPPFLAGS =						\
 	${Y2UTIL_CFLAGS}
 
 libscr_la_LDFLAGS = -version-info 3:0
+libscr_la_LIBADD = \
+	$(top_srcdir)/libycp/src/libycp.la \
+	$(top_srcdir)/libycp/src/libycpvalues.la \
+	${Y2UTIL_LIBS}

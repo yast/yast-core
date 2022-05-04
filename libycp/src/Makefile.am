@@ -65,7 +65,10 @@ libycpvalues_la_LDFLAGS = -version-info 6:0:0
 libycpvalues_la_LIBADD = ${Y2UTIL_LIBS} 
 
 libycp_la_LDFLAGS = -version-info 5:0:0
-libycp_la_LIBADD = ${Y2UTIL_LIBS} ${CRYPTO_LIBS} libycpvalues.la
+libycp_la_LIBADD = \
+	libycpvalues.la \
+	$(top_srcdir)/liby2/src/liby2.la \
+	${Y2UTIL_LIBS}
 
 CLEANFILES = parser.output parser.cc scanner.cc $(BUILT_SOURCES)
 
