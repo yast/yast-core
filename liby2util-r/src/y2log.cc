@@ -26,6 +26,8 @@
 #include <sys/types.h>
 #include <sys/file.h>
 #include <unistd.h>
+#include <time.h>
+#include <pthread.h>
 #include <limits>
 #include <list>
 
