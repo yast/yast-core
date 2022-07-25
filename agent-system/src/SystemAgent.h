@@ -53,8 +53,9 @@ public:
 
 private:
 
-    string tempdir;
-
+    // temporary directory, an absolute path with the current root (chroot) prefix!
+    string _tempdir;
+    string tempdir();
 };
 
 

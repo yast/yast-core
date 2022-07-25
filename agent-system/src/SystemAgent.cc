@@ -109,23 +109,48 @@ remove_directory (const string& path, int depth)
  */
 SystemAgent::SystemAgent ()
 {
-    // #237481: problems with pids with too many digits: 64bits: max 20 digits
-    char tmp1[19+20];
-    snprintf (tmp1, sizeof(tmp1), "/tmp/YaST2-%05d-XXXXXX", getpid ());
+}
 
-    const char* tmp2 = mkdtemp (tmp1);
-    if (!tmp2)
-    {
-	std::ostringstream stm;
-	stm << "Cannot create temporary directory " << tmp1 << ':'
-	    << strerror (errno);
-	y2error ("%s", stm.str().c_str());
-	// #343258: terminate will print the uncaught exception too, unlike plain exit
-	throw std::runtime_error (stm.str());
+/**
+ * @brief Temporary directory path
+ *
+ * Returns the temporary directory path, it creates the directory at the first
+ * call. The directory is automatically deleted in the destructor.
+ *
+ * @return string The returned path includes the current root (chroot) prefix.
+ */
+string SystemAgent::tempdir ()
+{
+    if (!_tempdir.empty()) {
+        return _tempdir;
     }
 
-    tempdir = tmp2;
-    y2debug ("tmp directory is %s", tempdir.c_str ());
+    // build the directory pattern: <scr_root>/<"tmp" if present>/YaST2-<pid>-XXXXXX
+    string dir_pattern(root());
+
+    // check if the "tmp" directory is present, if yes then use it
+    const char *tmp = "/tmp";
+    struct stat buf;
+    if (lstat((dir_pattern + tmp).c_str(), &buf) == 0 && S_ISDIR (buf.st_mode))
+    {
+        dir_pattern += tmp;
+    }
+
+    dir_pattern += "/YaST2-" + to_string(getpid()) + "-XXXXXX";
+
+    const char* tmp2 = mkdtemp ((char *)dir_pattern.c_str());
+    if (!tmp2)
+    {
+        string error = "Cannot create temporary directory " + dir_pattern + ':' + strerror(errno);
+        y2error ("%s", error.c_str());
+        // #343258: terminate will print the uncaught exception too, unlike plain exit
+        throw std::runtime_error (error);
+    }
+
+    _tempdir = tmp2;
+    y2debug ("tmp directory is %s", _tempdir.c_str ());
+
+    return _tempdir;
 }
 
 
@@ -135,7 +160,9 @@ SystemAgent::SystemAgent ()
 SystemAgent::~SystemAgent ()
 {
     // remove temp directory and all its subdirectories.
-    remove_directory (tempdir.c_str(), 20);
+    if (!_tempdir.empty()) {
+        remove_directory (_tempdir.c_str(), 20);
+    }
 }
 
 
@@ -332,7 +359,8 @@ SystemAgent::Read (const YCPPath& path, const YCPValue& arg, const YCPValue&)
 	 * @example Read (.target.tmpdir) -> "/some/temp/dir"
 	 */
 
-	return YCPString (tempdir);
+	// skip the chroot prefix, return the location relative to the current root
+	return YCPString (tempdir().substr(strlen(root())));
     }
 
     if (arg.isNull())
@@ -1022,7 +1050,7 @@ SystemAgent::Execute (const YCPPath& path, const YCPValue& value,
 	}
 	else if (cmd == "bash_output")
 	{
-	    return shellcommand_output (root(), exports + bashcommand, tempdir);
+	    return shellcommand_output (root(), exports + bashcommand, tempdir());
 	}
 	else if (cmd == "bash_background")
 	{

@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Mon Jul 25 14:19:37 UTC 2022 - Ladislav Slezák <lslezak@suse.cz>
+
+- Fixed ".target.tmpdir":
+  - Create the temporary directory in the target root (bsc#1199840)
+  - The temporary directory is now created only when needed
+  - Check if the target /tmp directory exists
+- 4.5.3
+
+-------------------------------------------------------------------
 Mon Jul  4 13:46:48 UTC 2022 - Martin Liška <mliska@suse.cz>
 
 - Fix building with GCC 13 and GCC 12.x (gh#yast/yast-core#156)
