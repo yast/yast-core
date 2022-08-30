@@ -28,7 +28,7 @@
 (random (10) == 1)
 (random (10) == 8)
 
-(srandom () > 1000000000)
+(srandom () != nil)
 
 
 ("** logging **")
