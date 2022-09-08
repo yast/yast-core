@@ -8,4 +8,4 @@ unset LANGUAGE
 unset Y2DEBUG
 unset Y2DEBUGGER
 
-(./runwfm -l - $1 >$2) 2>&1 | fgrep -v " <0> " | grep -v "^$" | sed -e 's/^....-..-.. ..:..:.. [^)]*) //g' -e 's/):[0-9]\+ /):XXX /' > $3
+(./runwfm -l - $1 >$2) 2>&1 | grep -F -v " <0> " | grep -v "^$" | sed -e 's/^....-..-.. ..:..:.. [^)]*) //g' -e 's/):[0-9]\+ /):XXX /' > $3

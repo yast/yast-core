@@ -12,7 +12,7 @@ SCR_FILE=${1%.*}".scr"
 rm -f "$SCR_FILE" 2>/dev/null
 echo -e ".\n\n\`ag_modules(\n    \`ModulesConf(\"$IN_FILE.test\")\n)\n" >"$SCR_FILE"
 
-(./runmodules -l - "$1" >"$2") 2>&1 | fgrep -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' >$3
+(./runmodules -l - "$1" >"$2") 2>&1 | grep -F -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' >$3
 
 cat "$IN_FILE.test" >>"$2" 2>/dev/null
 exit 0
