@@ -9,5 +9,5 @@ export Y2SILENTSEARCH=1
 # for float::tolstring
 export LC_NUMERIC=cs_CZ.UTF8
 
-(./runycp -l - -I tests/Include -M tests/Module $1 >$2) 2>&1 | fgrep -v 'Electric Fence' | fgrep -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' > $3
+(./runycp -l - -I tests/Include -M tests/Module $1 >$2) 2>&1 | grep -F -v 'Electric Fence' | grep -F -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' > $3
 exit 0

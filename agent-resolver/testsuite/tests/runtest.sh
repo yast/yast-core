@@ -12,7 +12,7 @@ SCR_FILE=${1%.*}".scr"
 rm -f "$SCR_FILE" 2>/dev/null
 echo -e ".\n\n\`ag_resolver(\n    \`ResolverAgent(\"$IN_FILE.test\")\n)\n" >"$SCR_FILE"
 
-(./runresolver -l - "$1" >"$2") 2>&1 | fgrep -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' >$3
+(./runresolver -l - "$1" >"$2") 2>&1 | grep -F -v " <0> " | grep -v "^$" | sed 's/^....-..-.. ..:..:.. [^)]*) //g' >$3
 
 cat "$IN_FILE.test" >>"$2" 2>/dev/null
 exit 0
