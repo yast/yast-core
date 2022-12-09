@@ -13,7 +13,7 @@ heavily used during installation.
 The agents for the target system are managed by a SCR instance. Each agent is
 attached to its unique YaST path. Read more about SCR, YaST paths and their
 relationship with the agents in the "YaST architecture" document at the
-[YaST documentation page](http://yast.github.io/documentation.html).
+[YaST documentation page](http://yast.github.io/documentation).
 
 Each agent is defined by its scrconf file which can contain either a base 
 with some parameters either a path to a binary if the agent
