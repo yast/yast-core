@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 01 19:57:03 UTC 2023 - Josef Reidinger <jreidinger@suse.com>
+
+- Branch package for SP6 (bsc#1208913)
+
+-------------------------------------------------------------------
 Thu Sep  8 06:28:05 UTC 2022 - Michal Filka <mchf@suse.cz>
 
 - bsc#1203227
