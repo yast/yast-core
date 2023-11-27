@@ -37,8 +37,7 @@
 ("** tolower and toascii **")
 
 (tolower ("aBcDeF"))
-(toascii ("aÖBÄc"))
-
+(toascii ("aÃ–BÃ„c"))
 
 ("** find et.al. **")
 
