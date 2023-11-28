@@ -34,11 +34,9 @@
 //(cryptmd5 ("readable"))
 
 
-("** tolower and toascii **")
+("** tolower **")
 
 (tolower ("aBcDeF"))
-(toascii ("aÖBÄc"))
-
 
 ("** find et.al. **")
 
