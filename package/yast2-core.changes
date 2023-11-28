@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Tue Nov 28 13:24:23 UTC 2023 - Stefan Hundhammer <shundhammer@suse.com>
 
-- Fixed testsuite (bsc#1217523)
+- Do not test YCP on non-UTF-8 strings (bsc#1217523)
 - 5.0.1
 
 -------------------------------------------------------------------
