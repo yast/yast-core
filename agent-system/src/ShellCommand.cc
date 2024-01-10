@@ -145,9 +145,10 @@ shellcommand ( const string &target_root, const string &command, const string &t
 
 	    // #223602
 	    // close all file descriptors above stderr
-	    for ( int i = getdtablesize() - 1; i > 2; --i ) {
-		close( i );
-	    }
+            //
+            // But Ruby uses some for thread communications,
+            // bsc#1218064, so don't.
+            // Systemd daemon handling has meanwhile solved the original bug.
 
             // we want to work on different target root
             if (target_root != "/")
