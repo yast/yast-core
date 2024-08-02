@@ -2,8 +2,7 @@
 
 [![Workflow Status](https://github.com/yast/yast-core/workflows/CI/badge.svg?branch=master)](
 https://github.com/yast/yast-core/actions?query=branch%3Amaster)
-[![Jenkins Status](https://ci.opensuse.org/buildStatus/icon?job=yast-yast-core-master)](
-https://ci.opensuse.org/view/Yast/job/yast-yast-core-master/)
+[![OBS](https://github.com/yast/yast-core/actions/workflows/submit.yml/badge.svg)](https://github.com/yast/yast-core/actions/workflows/submit.yml)
 
 The core part of [YaST](http://yast.github.io) providing the components system,
 the agents infrastructure and the implementation of the YCP language for
