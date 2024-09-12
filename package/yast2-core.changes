@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
-Fri Sep 01 19:57:03 UTC 2023 - Josef Reidinger <jreidinger@suse.com>
+Fri Mar 03 14:44:07 UTC 2023 - Ladislav Slezák <lslezak@suse.cz>
 
-- Branch package for SP6 (bsc#1208913)
+- Bump version to 4.6.0 (bsc#1208913)
 
 -------------------------------------------------------------------
 Thu Sep  8 06:28:05 UTC 2022 - Michal Filka <mchf@suse.cz>

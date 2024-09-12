@@ -1,7 +1,7 @@
 #
 # spec file for package yast2-core
 #
-# Copyright (c) 2015 SUSE LINUX GmbH, Nuernberg, Germany.
+# Copyright (c) 2023 SUSE LLC
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -12,11 +12,10 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
+# Please submit bugfixes or comments via https://bugs.opensuse.org/
 #
 
-# Optionally build with llvm-clang instead of gcc
-# because we are interested in the warnings it gives.
+
 %bcond_with clang
 
 # Optionally treat C/C++ warnings as errors.
@@ -28,7 +27,7 @@
 Name:           yast2-core
 Version:        4.6.0
 Release:        0
-Url:            https://github.com/yast/yast-core
+URL:            https://github.com/yast/yast-core
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source0:        %{name}-%{version}.tar.bz2
