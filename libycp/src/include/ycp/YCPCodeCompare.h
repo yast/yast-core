@@ -28,7 +28,7 @@
  *  "sort (`a, `b, l, ``( a[0] < b[0] ))"
  * Passed to std::sort
  */
-class YCPCodeCompare : public std::binary_function <const YCPValue &, const YCPValue &, bool>
+class YCPCodeCompare
 {
 private:
     SymbolEntryPtr se1;
@@ -44,8 +44,8 @@ public:
 	{
 	}
 
-    result_type operator () (first_argument_type a,
-			     second_argument_type b)
+    bool operator () (const YCPValue & a,
+                      const YCPValue & b)
 	{
 	    se1->setValue (a);
 	    se2->setValue (b);

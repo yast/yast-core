@@ -32,7 +32,7 @@
  * Compares two YCPValues and returns true if the first value is less than the
  * second one, false otherwise. Optionally the comparison is locale aware.
  */
-class ycp_less : public std::binary_function<YCPValue, YCPValue, bool>
+class ycp_less
 {
 
 public:
@@ -57,7 +57,7 @@ private:
  * Compares two YCPValues and returns true if they are equal, false otherwise.
  * Optionally the comparison is locale aware.
  */
-class ycp_equal_to : public std::binary_function<YCPValue, YCPValue, bool>
+class ycp_equal_to
 {
 
 public:
@@ -82,7 +82,7 @@ private:
  * Compares two YCPValues and returns true if they are not equal, false
  * otherwise.  Optionally the comparison is locale aware.
  */
-class ycp_not_equal_to : public std::binary_function<YCPValue, YCPValue, bool>
+class ycp_not_equal_to
 {
 
 public:

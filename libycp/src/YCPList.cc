@@ -23,6 +23,7 @@
 #include "ycp/y2log.h"
 #include "ycp/YCPList.h"
 #include <algorithm>
+#include <functional>
 #include "ycp/Bytecode.h"
 #include "ycp/Xmlcode.h"
 #include "ycp/YCPCodeCompare.h"
@@ -115,7 +116,8 @@ YCPListRep::swap (int x, int y)
 
 bool YCPListRep::contains (const YCPValue& value) const
 {
-    return find_if(begin(), end(), bind2nd(ycp_equal_to(), value)) != end();
+    using namespace std::placeholders;
+    return find_if(begin(), end(), std::bind(ycp_equal_to(), _1, value)) != end();
 }
 
 
