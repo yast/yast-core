@@ -26,7 +26,7 @@
 %bcond_with werror
 
 Name:           yast2-core
-Version:        5.0.3
+Version:        5.0.4
 Release:        0
 Url:            https://github.com/yast/yast-core
 
@@ -112,7 +112,6 @@ CXXFLAGS="${CXXFLAGS/-grecord-gcc-switches/}"
 %install
 %yast_install
 
-mkdir -p "$RPM_BUILD_ROOT"%{yast_logdir}
 %perl_process_packlist
 
 %post
@@ -129,7 +128,7 @@ mkdir -p "$RPM_BUILD_ROOT"%{yast_logdir}
 %endif
 %dir /usr/share/YaST2
 
-%dir %attr(0700,root,root) %{yast_logdir}
+%ghost %dir %attr(0700,root,root) %{yast_logdir}
 %dir %{yast_ybindir}
 %dir %{yast_plugindir}
 %dir %{yast_scrconfdir}
